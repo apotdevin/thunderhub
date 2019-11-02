@@ -1,0 +1,42 @@
+{
+  "name": "thunderhub",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apotdevin/thunderhub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/apotdevin/thunderhub/issues"
+  },
+  "homepage": "https://github.com/apotdevin/thunderhub#readme",
+  "dependencies": {
+    "apollo-server": "^2.9.7",
+    "dotenv": "^8.2.0",
+    "graphql": "^14.5.8",
+    "graphql-depth-limit": "^1.1.0",
+    "graphql-iso-date": "^3.6.1",
+    "graphql-rate-limit": "^2.0.1",
+    "ln-service": "^46.6.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "husky": "^3.0.9",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^2.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  }
+}
