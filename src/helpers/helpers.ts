@@ -1,4 +1,4 @@
-exports.getIp = req => {
+exports.getIp = (req: any) => {
   if (!req || !req.headers) {
     return "";
   }
