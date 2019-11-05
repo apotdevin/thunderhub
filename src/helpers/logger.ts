@@ -1,6 +1,5 @@
-const { createLogger, format, transports } = require("winston");
-const path = require("path");
-require("dotenv").config();
+import { createLogger, format, transports } from "winston";
+import path from "path";
 
 const combinedFormat =
   process.env.NODE_ENV === "development"
@@ -10,6 +9,7 @@ const combinedFormat =
             process && process.mainModule ? process.mainModule.filename : ""
           )
         }),
+        format.splat(),
         format.colorize(),
         format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         format.printf(
@@ -23,6 +23,7 @@ const combinedFormat =
             process && process.mainModule ? process.mainModule.filename : ""
           )
         }),
+        format.splat(),
         format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         format.printf(
           (info: any) =>
@@ -30,7 +31,7 @@ const combinedFormat =
         )
       );
 
-exports.logger = createLogger({
+export const logger = createLogger({
   level: process.env.LOG_LEVEL || "silly",
   format: combinedFormat,
   transports: [new transports.Console()]
