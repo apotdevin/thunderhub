@@ -1,39 +1,9 @@
-const { ApolloServer } = require("apollo-server");
-var { GraphQLSchema } = require("graphql");
-var { GraphQLObjectType } = require("graphql");
-var { GraphQLString } = require("graphql");
-
-const depthLimit = require("graphql-depth-limit");
-const { logger } = require("./helpers/logger");
-const { getIp } = require("./helpers/helpers");
-const lnService = require("ln-service");
-require("dotenv").config();
-
-const GraphqlSchema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: "Query",
-    fields: {
-      success: {
-        type: GraphQLString,
-        resolve: () => {
-          return "It was a success!";
-        }
-      },
-      warning: {
-        type: GraphQLString,
-        resolve: () => {
-          return "You have a warning.1312323";
-        }
-      },
-      error: {
-        type: GraphQLString,
-        resolve: () => {
-          return "Error occurred!";
-        }
-      }
-    }
-  })
-});
+import { ApolloServer } from "apollo-server";
+import { thunderHubSchema } from "./schemas";
+import { logger } from "./helpers/logger";
+import { getIp } from "./helpers/helpers";
+import depthLimit from "graphql-depth-limit";
+import lnService from "ln-service";
 
 const { lnd } = lnService.authenticatedLndGrpc({
   macaroon: process.env.LND_MAC,
@@ -47,7 +17,7 @@ lnService.getWalletInfo({ lnd }, (error: any, result: any) => {
 });
 
 const server = new ApolloServer({
-  schema: GraphqlSchema,
+  schema: thunderHubSchema,
   context: async ({ req }: any) => {
     const ip = getIp(req);
     return { ip, lnd };
