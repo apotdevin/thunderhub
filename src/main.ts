@@ -6,6 +6,7 @@ import depthLimit from "graphql-depth-limit";
 import lnService from "ln-service";
 
 const { lnd } = lnService.authenticatedLndGrpc({
+  cert: process.env.LND_CERT,
   macaroon: process.env.LND_MAC,
   socket: process.env.LND_IP
 });

@@ -8,6 +8,9 @@ export const ChannelType = new GraphQLObjectType({
       capacity: {
         type: GraphQLInt
       },
+      id: {
+        type: GraphQLString
+      },
       isActive: {
         type: GraphQLBoolean
       },
