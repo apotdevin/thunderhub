@@ -48,6 +48,7 @@ export const channels = {
       const channels = channelList.channels.map((channel, index) => {
         return {
           capacity: channel.capacity,
+          id: channel.id,
           isActive: channel.is_active,
           isClosing: channel.is_closing,
           isOpening: channel.is_opening,
