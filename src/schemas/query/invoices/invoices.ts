@@ -46,7 +46,7 @@ interface InvoicesProps {
 export const getInvoices = {
   type: new GraphQLList(GetInvoiceType),
   resolve: async (root: any, params: any, context: any) => {
-    await requestLimiter(context.ip, params, "channels", 1, "1s");
+    await requestLimiter(context.ip, params, "getInvoices", 1, "1s");
     const { lnd } = context;
 
     try {
