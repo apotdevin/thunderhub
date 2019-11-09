@@ -1,5 +1,5 @@
 import { GraphQLList, GraphQLString } from "graphql";
-import { getClosedChannels } from "ln-service";
+import { getClosedChannels as getLnClosedChannels } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { ClosedChannelType } from "../../../schemaTypes/query/info/closedChannels";
 import { requestLimiter } from "../../../helpers/rateLimiter";
@@ -52,7 +52,7 @@ const getCloseReason = (
     : UNKNOWN;
 };
 
-export const closedChannels = {
+export const getClosedChannels = {
   type: new GraphQLList(ClosedChannelType),
   args: {
     type: {
@@ -64,7 +64,7 @@ export const closedChannels = {
     const { lnd } = context;
 
     try {
-      const closedChannels: ChannelListProps = await getClosedChannels({
+      const closedChannels: ChannelListProps = await getLnClosedChannels({
         lnd: lnd
       });
 

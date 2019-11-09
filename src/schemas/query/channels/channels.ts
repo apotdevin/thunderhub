@@ -1,5 +1,5 @@
 import { GraphQLList } from "graphql";
-import { getChannels } from "ln-service";
+import { getChannels as getLnChannels } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { ChannelType } from "../../../schemaTypes/query/info/channels";
 import { requestLimiter } from "../../../helpers/rateLimiter";
@@ -34,33 +34,41 @@ interface ChannelProps {
   unsettled_balance: number;
 }
 
-export const channels = {
+export const getChannels = {
   type: new GraphQLList(ChannelType),
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, params, "channels", 1, "1s");
     const { lnd } = context;
 
     try {
-      const channelList: ChannelListProps = await getChannels({
+      const channelList: ChannelListProps = await getLnChannels({
         lnd: lnd
       });
 
       const channels = channelList.channels.map((channel, index) => {
         return {
           capacity: channel.capacity,
+          commitTransactionFee: channel.commit_transaction_fee,
+          commitTransactionWeight: channel.commit_transaction_weight,
           id: channel.id,
           isActive: channel.is_active,
           isClosing: channel.is_closing,
           isOpening: channel.is_opening,
           isPartnerInitiated: channel.is_partner_initiated,
           isPrivate: channel.is_private,
+          isStaticRemoteKey: channel.is_static_remote_key,
           localBalance: channel.local_balance,
           localReserve: channel.local_reserve,
           partnerPublicKey: channel.partner_public_key,
           recieved: channel.received,
           remoteBalance: channel.remote_balance,
           remoteReserve: channel.remote_reserve,
-          sent: channel.sent
+          sent: channel.sent,
+          timeOffline: channel.time_offline,
+          timeOnline: channel.time_online,
+          transactionId: channel.transaction_id,
+          transactionVout: channel.transaction_vout,
+          unsettledBalance: channel.unsettled_balance
         };
       });
 
