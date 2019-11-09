@@ -1,4 +1,4 @@
-import { getNetworkInfo } from "ln-service";
+import { getNetworkInfo as getLnNetworkInfo } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { requestLimiter } from "../../../helpers/rateLimiter";
 import { NetworkInfoType } from "../../../schemaTypes/query/info/networkInfo";
@@ -14,14 +14,14 @@ interface NetworkInfoProps {
   total_capacity: number;
 }
 
-export const networkInfo = {
+export const getNetworkInfo = {
   type: NetworkInfoType,
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, params, "networkInfo", 1, "1s");
     const { lnd } = context;
 
     try {
-      const info: NetworkInfoProps = await getNetworkInfo({
+      const info: NetworkInfoProps = await getLnNetworkInfo({
         lnd: lnd
       });
 

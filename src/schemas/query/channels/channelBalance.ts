@@ -1,4 +1,4 @@
-import { getChannelBalance } from "ln-service";
+import { getChannelBalance as getLnChannelBalance } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { ChannelBalanceType } from "../../../schemaTypes/query/info/channelBalance";
 import { requestLimiter } from "../../../helpers/rateLimiter";
@@ -8,14 +8,14 @@ interface ChannelBalanceProps {
   pending_balance: number;
 }
 
-export const channelBalance = {
+export const getChannelBalance = {
   type: ChannelBalanceType,
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, params, "channelBalance", 1, "1s");
     const { lnd } = context;
 
     try {
-      const channelBalance: ChannelBalanceProps = await getChannelBalance({
+      const channelBalance: ChannelBalanceProps = await getLnChannelBalance({
         lnd: lnd
       });
       return {

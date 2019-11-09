@@ -1,3 +1,9 @@
-import { info } from "./info";
+import { channelQueries } from "./channels";
+import { generalQueries } from "./general";
+import { invoiceQueries } from "./invoices";
 
-export const query = { ...info };
+export const query = {
+  ...channelQueries,
+  ...generalQueries,
+  ...invoiceQueries
+};

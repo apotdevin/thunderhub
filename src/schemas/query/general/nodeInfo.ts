@@ -20,7 +20,7 @@ interface NodeInfoProps {
   version: string;
 }
 
-export const nodeInfo = {
+export const getNodeInfo = {
   type: NodeInfoType,
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, params, "nodeInfo", 1, "1s");
