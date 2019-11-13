@@ -46,3 +46,68 @@ export const GET_WALLET_INFO = gql`
     }
   }
 `;
+
+export const GET_CHANNELS = gql`
+  query GetChannels {
+    getChannels {
+      capacity
+      commitTransactionFee
+      commitTransactionWeight
+      id
+      isActive
+      isClosing
+      isOpening
+      isPartnerInitiated
+      isPrivate
+      isStaticRemoteKey
+      localBalance
+      localReserve
+      partnerPublicKey
+      recieved
+      remoteBalance
+      remoteReserve
+      sent
+      timeOffline
+      timeOnline
+      transactionId
+      transactionVout
+      unsettledBalance
+    }
+  }
+`;
+
+export const GET_INVOICES = gql`
+  query GetInvoices {
+    getInvoices {
+      chainAddress
+      confirmedAt
+      createdAt
+      description
+      descriptionHash
+      expiresAt
+      id
+      isCanceled
+      isConfirmed
+      isHeld
+      isOutgoing
+      isPrivate
+      payments {
+        confirmedAt
+        createdAt
+        createdHeight
+        inChannel
+        isCanceled
+        isConfirmed
+        isHeld
+        mtokens
+        pendingIndex
+        tokens
+      }
+      received
+      receivedMtokens
+      request
+      secret
+      tokens
+    }
+  }
+`;
