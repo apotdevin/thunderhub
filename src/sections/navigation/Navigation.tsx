@@ -21,6 +21,12 @@ export const Navigation = () => {
           <Link to="/">Home</Link>
         </p>
         <p>
+          <Link to="/channels">Channels</Link>
+        </p>
+        <p>
+          <Link to="/invoices">Invoices</Link>
+        </p>
+        <p>
           <Link to="/unknown">Unknown</Link>
         </p>
       </Card>
