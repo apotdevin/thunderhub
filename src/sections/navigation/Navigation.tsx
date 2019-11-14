@@ -2,9 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { Card } from "../../components/generic/Styled";
 import { Link } from "react-router-dom";
+import { NodeInfo } from "../../components/nodeInfo/NodeInfo";
 
 const NavigationStyle = styled.div`
-  display: flex;
+  /* display: flex; */
   /* justify-content: center; */
   /* padding: 10px; */
   /* background-color: green; */
@@ -12,24 +13,39 @@ const NavigationStyle = styled.div`
   margin-left: 0.5rem;
 `;
 
+const StickyCard = styled(Card)`
+  position: -webkit-sticky;
+  position: sticky;
+  top: 10px;
+`;
+
+const LinkView = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+`;
+
 export const Navigation = () => {
   return (
     <NavigationStyle>
-      <Card>
-        ThunderHub
-        <p>
-          <Link to="/">Home</Link>
-        </p>
-        <p>
-          <Link to="/channels">Channels</Link>
-        </p>
-        <p>
-          <Link to="/invoices">Invoices</Link>
-        </p>
-        <p>
-          <Link to="/unknown">Unknown</Link>
-        </p>
-      </Card>
+      <StickyCard>
+        <LinkView>
+          <NodeInfo />
+          <p>
+            <Link to="/">Home</Link>
+          </p>
+          <p>
+            <Link to="/channels">Channels</Link>
+          </p>
+          <p>
+            <Link to="/invoices">Invoices</Link>
+          </p>
+          <p>
+            <Link to="/unknown">Unknown</Link>
+          </p>
+        </LinkView>
+      </StickyCard>
     </NavigationStyle>
   );
 };

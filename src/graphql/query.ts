@@ -33,11 +33,6 @@ export const GET_NODE_INFO = gql`
       version
       alias
     }
-  }
-`;
-
-export const GET_WALLET_INFO = gql`
-  query GetWalletInfo {
     getChainBalance
     getPendingChainBalance
     getChannelBalance {

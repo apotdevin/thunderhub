@@ -6,7 +6,7 @@ const FooterStyle = styled.div`
   justify-content: center;
   align-items: center;
   padding: 10px;
-  background-color: red;
+  /* background-color: #FB8B23; */
   grid-area: footer;
 `;
 
