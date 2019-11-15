@@ -42,6 +42,9 @@ export const Navigation = () => {
             <Link to="/invoices">Invoices</Link>
           </p>
           <p>
+            <Link to="/settings">Settings</Link>
+          </p>
+          <p>
             <Link to="/unknown">Unknown</Link>
           </p>
         </LinkView>

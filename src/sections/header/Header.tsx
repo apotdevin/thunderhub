@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { textColor } from "../../styles/Themes";
 
 const HeaderStyle = styled.div`
   display: flex;
@@ -11,7 +12,7 @@ const HeaderStyle = styled.div`
 `;
 
 const HeaderTitle = styled.div`
-  color: #262626;
+  color: ${textColor};
   font-weight: bolder;
 `;
 

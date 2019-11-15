@@ -6,6 +6,16 @@ export const backgroundColor = theme("mode", {
 });
 
 export const textColor = theme("mode", {
-  light: "black",
+  light: "262626",
   dark: "#EFFFFA"
+});
+
+export const cardColor = theme("mode", {
+  light: "white",
+  dark: "#120338"
+});
+
+export const cardBorderColor = theme("mode", {
+  light: "#e6e6e6",
+  dark: "#22075e"
 });

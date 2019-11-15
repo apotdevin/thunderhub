@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "./styles/GlobalStyle";
 import { Header } from "./sections/header/Header";
@@ -8,6 +8,7 @@ import { Content } from "./sections/content/Content";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { BrowserRouter } from "react-router-dom";
 import ApolloClient from "apollo-boost";
+import SettingsProvider, { SettingsContext } from "./context/SettingsContext";
 
 const client = new ApolloClient({
   uri: "http://localhost:3001"
@@ -25,19 +26,29 @@ const Container = styled.div`
   height: 100vh;
 `;
 
+const ContextApp: React.FC = () => {
+  const { theme } = useContext(SettingsContext);
+
+  return (
+    <ThemeProvider theme={{ mode: theme }}>
+      <GlobalStyles />
+      <Container>
+        <Header />
+        <Navigation />
+        <Content />
+        <Footer />
+      </Container>
+    </ThemeProvider>
+  );
+};
+
 const App: React.FC = () => {
   return (
     <BrowserRouter>
       <ApolloProvider client={client}>
-        <ThemeProvider theme={{ mode: "light" }}>
-          <GlobalStyles />
-          <Container>
-            <Header />
-            <Navigation />
-            <Content />
-            <Footer />
-          </Container>
-        </ThemeProvider>
+        <SettingsProvider>
+          <ContextApp />
+        </SettingsProvider>
       </ApolloProvider>
     </BrowserRouter>
   );

@@ -35,6 +35,7 @@ const Balance = styled.div`
   align-items: center;
   margin: 5px 0;
   padding: 0 5px;
+  cursor: default;
 `;
 
 const Alias = styled.div`
