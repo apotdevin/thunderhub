@@ -9,6 +9,7 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { BrowserRouter } from "react-router-dom";
 import ApolloClient from "apollo-boost";
 import SettingsProvider, { SettingsContext } from "./context/SettingsContext";
+import { BitcoinPrice } from "./components/bitcoinPrice/BitcoinPrice";
 
 const client = new ApolloClient({
   uri: "http://localhost:3001"
@@ -31,6 +32,7 @@ const ContextApp: React.FC = () => {
 
   return (
     <ThemeProvider theme={{ mode: theme }}>
+      <BitcoinPrice />
       <GlobalStyles />
       <Container>
         <Header />

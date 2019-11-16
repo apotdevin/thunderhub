@@ -2,27 +2,40 @@ import React, { createContext, useState } from "react";
 import merge from "lodash.merge";
 
 interface ChangeProps {
+  price?: number;
+  symbol?: string;
   currency?: string;
   theme?: string;
 }
 
 interface SettingsProps {
+  price: number;
+  symbol: string;
   currency: string;
   theme: string;
   setSettings: (newProps: ChangeProps) => void;
 }
 
 export const SettingsContext = createContext<SettingsProps>({
+  price: 0,
+  symbol: "",
   currency: "",
   theme: "",
   setSettings: () => {}
 });
 
 const SettingsProvider = ({ children }: any) => {
-  const setSettings = ({ currency, theme }: ChangeProps) => {
+  const savedTheme = localStorage.getItem("theme") || "light";
+  const savedCurrency = localStorage.getItem("currency") || "sat";
+
+  console.log(savedCurrency, savedTheme);
+
+  const setSettings = ({ price, symbol, currency, theme }: ChangeProps) => {
     updateSettings((prevState: any) => {
       const newState = { ...prevState };
       return merge(newState, {
+        price,
+        symbol,
         currency,
         theme
       });
@@ -30,8 +43,10 @@ const SettingsProvider = ({ children }: any) => {
   };
 
   const settingsState = {
-    currency: "sat",
-    theme: "light",
+    price: 0,
+    symbol: "",
+    currency: savedCurrency,
+    theme: savedTheme,
     setSettings
   };
 

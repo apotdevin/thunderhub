@@ -1,18 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { GET_NODE_INFO } from "../../graphql/query";
 import ReactTooltip from "react-tooltip";
 import styled from "styled-components";
-import { ReactComponent as HelpIcon } from "../../icons/help-circle.svg";
-import { ReactComponent as ZapIcon } from "../../icons/zap.svg";
-import { ReactComponent as ZapOffIcon } from "../../icons/zap-off.svg";
-
-const Separation = styled.div`
-  height: 2px;
-  background-color: #e6e6e6;
-  width: 100%;
-  margin: 20px 0;
-`;
+import { SettingsContext } from "../../context/SettingsContext";
+import { getValue } from "../../helpers/Helpers";
+import { Separation } from "../generic/Styled";
+import { QuestionIcon, Zap, ZapOff } from "../generic/Icons";
 
 const Title = styled.div`
   font-size: 18px;
@@ -43,22 +37,11 @@ const Alias = styled.div`
     ${({ bottomColor }: { bottomColor: string }) => bottomColor};
 `;
 
-const Question = styled(HelpIcon)`
-  height: 14px;
-`;
-
-const Zap = styled(ZapIcon)`
-  height: 18px;
-  color: ${({ color }: { color?: string }) => (color ? color : "black")};
-`;
-
-const ZapOff = styled(ZapOffIcon)`
-  height: 18px;
-  color: ${({ color }: { color?: string }) => (color ? color : "black")};
-`;
-
 export const NodeInfo = () => {
   const { loading, error, data } = useQuery(GET_NODE_INFO);
+
+  const { price, symbol, currency } = useContext(SettingsContext);
+  const priceProps = { price, symbol, currency };
 
   console.log(loading, error, data);
 
@@ -84,16 +67,16 @@ export const NodeInfo = () => {
     <>
       <Title>
         <Alias bottomColor={color}>{alias}</Alias>
-        <Question data-tip={`Version: ${version}`} />
+        <QuestionIcon data-tip={`Version: ${version}`} />
       </Title>
       <Separation />
       <Balance data-tip data-for="balance_tip">
         <Zap color={pendingBalance === 0 ? "#FFD300" : "#652EC7"} />
-        {confirmedBalance}
+        {getValue({ amount: confirmedBalance, ...priceProps })}
       </Balance>
       <Balance data-tip data-for="chain_balance_tip">
         <ZapOff color={pendingChainBalance === 0 ? "#FFD300" : "#652EC7"} />
-        {chainBalance}
+        {getValue({ amount: chainBalance, ...priceProps })}
       </Balance>
       <Balance
         data-tip

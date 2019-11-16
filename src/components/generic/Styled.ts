@@ -10,4 +10,13 @@ export const Card = styled.div`
   border: 1px solid ${cardBorderColor};
   margin-bottom: ${(props: { bottom?: string }) => props.bottom};
   width: 100%;
+  border-left: ${(props: { color?: string }) =>
+    props.color ? `2px solid ${props.color}` : ""};
+`;
+
+export const Separation = styled.div`
+  height: 2px;
+  background-color: #e6e6e6;
+  width: 100%;
+  margin: 20px 0;
 `;
