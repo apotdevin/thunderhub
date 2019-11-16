@@ -1,6 +1,19 @@
 import { GraphQLObjectType, GraphQLBoolean, GraphQLString } from "graphql";
 import { GraphQLInt } from "graphql";
 
+export const PartnerNodeType = new GraphQLObjectType({
+  name: "partnerNodeType",
+  fields: () => {
+    return {
+      alias: { type: GraphQLString },
+      capacity: { type: GraphQLString },
+      channelCount: { type: GraphQLInt },
+      color: { type: GraphQLString },
+      lastUpdate: { type: GraphQLString }
+    };
+  }
+});
+
 export const ChannelType = new GraphQLObjectType({
   name: "channelType",
   fields: () => {
@@ -26,7 +39,8 @@ export const ChannelType = new GraphQLObjectType({
       timeOnline: { type: GraphQLInt },
       transactionId: { type: GraphQLString },
       transactionVout: { type: GraphQLInt },
-      unsettledBalance: { type: GraphQLInt }
+      unsettledBalance: { type: GraphQLInt },
+      partnerNodeInfo: { type: PartnerNodeType }
     };
   }
 });

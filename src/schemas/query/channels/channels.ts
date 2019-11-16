@@ -1,5 +1,5 @@
 import { GraphQLList } from "graphql";
-import { getChannels as getLnChannels } from "ln-service";
+import { getChannels as getLnChannels, getNode } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { ChannelType } from "../../../schemaTypes/query/info/channels";
 import { requestLimiter } from "../../../helpers/rateLimiter";
@@ -42,10 +42,16 @@ export const getChannels = {
 
     try {
       const channelList: ChannelListProps = await getLnChannels({
-        lnd: lnd
+        lnd
       });
 
-      const channels = channelList.channels.map((channel, index) => {
+      const channels = channelList.channels.map(async channel => {
+        const nodeInfo = await getNode({
+          lnd,
+          is_omitting_channels: true,
+          public_key: channel.partner_public_key
+        });
+
         return {
           capacity: channel.capacity,
           commitTransactionFee: channel.commit_transaction_fee,
@@ -68,7 +74,14 @@ export const getChannels = {
           timeOnline: channel.time_online,
           transactionId: channel.transaction_id,
           transactionVout: channel.transaction_vout,
-          unsettledBalance: channel.unsettled_balance
+          unsettledBalance: channel.unsettled_balance,
+          partnerNodeInfo: {
+            alias: nodeInfo.alias,
+            capacity: nodeInfo.capacity,
+            channelCount: nodeInfo.channel_count,
+            color: nodeInfo.color,
+            lastUpdate: nodeInfo.updated_at
+          }
         };
       });
 
