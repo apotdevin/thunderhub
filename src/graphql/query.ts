@@ -67,6 +67,13 @@ export const GET_CHANNELS = gql`
       transactionId
       transactionVout
       unsettledBalance
+      partnerNodeInfo {
+        alias
+        capacity
+        channelCount
+        color
+        lastUpdate
+      }
     }
   }
 `;
@@ -103,6 +110,15 @@ export const GET_INVOICES = gql`
       request
       secret
       tokens
+    }
+  }
+`;
+
+export const GET_BITCOIN_PRICE = gql`
+  query GetBitcoinPrice($currency: String) {
+    getBitcoinPrice(currency: $currency) {
+      price
+      symbol
     }
   }
 `;

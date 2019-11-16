@@ -1,0 +1,84 @@
+import React, { useContext } from "react";
+import { Separation } from "../../components/generic/Styled";
+import { SettingsContext } from "../../context/SettingsContext";
+import { IconCircle, Sun, Moon } from "../generic/Icons";
+import styled from "styled-components";
+import { iconButtonBack } from "../../styles/Themes";
+
+const SelectedIcon = styled(IconCircle)`
+  cursor: pointer;
+  background-color: ${({ selected }: { selected: boolean }) =>
+    selected ? iconButtonBack : ""};
+`;
+
+const Symbol = styled.div`
+  margin: -3px 0 0 0;
+  font-weight: bold;
+`;
+
+const IconRow = styled.div`
+  margin: 5px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const SideSettings = () => {
+  const { theme, currency, setSettings } = useContext(SettingsContext);
+
+  return (
+    <>
+      <Separation />
+      <IconRow>
+        <SelectedIcon selected={currency === "sat"}>
+          <Symbol
+            onClick={() => {
+              localStorage.setItem("currency", "sat");
+              setSettings({ currency: "sat" });
+            }}
+          >
+            S
+          </Symbol>
+        </SelectedIcon>
+        <SelectedIcon selected={currency === "btc"}>
+          <Symbol
+            onClick={() => {
+              localStorage.setItem("currency", "btc");
+              setSettings({ currency: "btc" });
+            }}
+          >
+            ₿
+          </Symbol>
+        </SelectedIcon>
+        <SelectedIcon selected={currency === "EUR"}>
+          <Symbol
+            onClick={() => {
+              localStorage.setItem("currency", "EUR");
+              setSettings({ currency: "EUR" });
+            }}
+          >
+            €
+          </Symbol>
+        </SelectedIcon>
+      </IconRow>
+      <IconRow>
+        <SelectedIcon selected={theme === "light"}>
+          <Sun
+            onClick={() => {
+              localStorage.setItem("theme", "light");
+              setSettings({ theme: "light" });
+            }}
+          />
+        </SelectedIcon>
+        <SelectedIcon selected={theme === "dark"}>
+          <Moon
+            onClick={() => {
+              localStorage.setItem("theme", "dark");
+              setSettings({ theme: "dark" });
+            }}
+          />
+        </SelectedIcon>
+      </IconRow>
+    </>
+  );
+};

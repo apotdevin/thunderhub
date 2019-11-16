@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Card } from "../../components/generic/Styled";
 import { Link } from "react-router-dom";
 import { NodeInfo } from "../../components/nodeInfo/NodeInfo";
+import { SideSettings } from "../../components/sideSettings/SideSettings";
 
 const NavigationStyle = styled.div`
   /* display: flex; */
@@ -47,6 +48,7 @@ export const Navigation = () => {
           <p>
             <Link to="/unknown">Unknown</Link>
           </p>
+          <SideSettings />
         </LinkView>
       </StickyCard>
     </NavigationStyle>

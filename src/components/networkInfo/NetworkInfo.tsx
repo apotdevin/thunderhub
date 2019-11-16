@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { GET_NETWORK_INFO } from "../../graphql/query";
 import { Card } from "../generic/Styled";
+import { getValue } from "../../helpers/Helpers";
+import { SettingsContext } from "../../context/SettingsContext";
 
 export const NetworkInfo = () => {
   const { loading, error, data } = useQuery(GET_NETWORK_INFO);
+
+  const { price, symbol, currency } = useContext(SettingsContext);
+  const priceProps = { price, symbol, currency };
 
   console.log(loading, error, data);
 
@@ -25,11 +30,26 @@ export const NetworkInfo = () => {
 
   return (
     <Card bottom="10px">
-      <p>{`Total Capacity: ${totalCapacity}`}</p>
-      <p>{`Max Channel Size: ${maxChannelSize}`}</p>
-      <p>{`Average Channel Size: ${averageChannelSize}`}</p>
-      <p>{`Median Channel Size: ${medianChannelSize}`}</p>
-      <p>{`Min Channel Size: ${minChannelSize}`}</p>
+      <p>{`Total Capacity: ${getValue({
+        amount: totalCapacity,
+        ...priceProps
+      })}`}</p>
+      <p>{`Max Channel Size: ${getValue({
+        amount: maxChannelSize,
+        ...priceProps
+      })}`}</p>
+      <p>{`Average Channel Size: ${getValue({
+        amount: averageChannelSize,
+        ...priceProps
+      })}`}</p>
+      <p>{`Median Channel Size: ${getValue({
+        amount: medianChannelSize,
+        ...priceProps
+      })}`}</p>
+      <p>{`Min Channel Size: ${getValue({
+        amount: minChannelSize,
+        ...priceProps
+      })}`}</p>
       <p>{`Total Channels: ${channelCount}`}</p>
       <p>{`Total Nodes: ${nodeCount}`}</p>
       <p>{`Zombie Nodes: ${notRecentlyUpdatedPolicyCount}`}</p>
