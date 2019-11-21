@@ -31,7 +31,7 @@ export const ChannelType = new GraphQLObjectType({
       localBalance: { type: GraphQLInt },
       localReserve: { type: GraphQLInt },
       partnerPublicKey: { type: GraphQLString },
-      recieved: { type: GraphQLInt },
+      received: { type: GraphQLInt },
       remoteBalance: { type: GraphQLInt },
       remoteReserve: { type: GraphQLInt },
       sent: { type: GraphQLInt },

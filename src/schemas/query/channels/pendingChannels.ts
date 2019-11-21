@@ -1,4 +1,7 @@
-import { getPendingChannels as getLnPendingChannels } from "ln-service";
+import {
+  getPendingChannels as getLnPendingChannels,
+  getNode
+} from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { PendingChannelType } from "../../../schemaTypes/query/info/pendingChannels";
 import { GraphQLList } from "graphql";
@@ -35,9 +38,14 @@ export const getPendingChannels = {
         }
       );
 
-      const channels = pendingChannels.pending_channels.map(channel => {
+      const channels = pendingChannels.pending_channels.map(async channel => {
+        const nodeInfo = await getNode({
+          lnd,
+          is_omitting_channels: true,
+          public_key: channel.partner_public_key
+        });
+
         return {
-          closeTransactionId: channel.close_transaction_id,
           isActive: channel.is_active,
           isClosing: channel.is_closing,
           isOpening: channel.is_opening,
@@ -47,7 +55,14 @@ export const getPendingChannels = {
           received: channel.received,
           remoteBalance: channel.remote_balance,
           remoteReserve: channel.remote_reserve,
-          sent: channel.sent
+          sent: channel.sent,
+          partnerNodeInfo: {
+            alias: nodeInfo.alias,
+            capacity: nodeInfo.capacity,
+            channelCount: nodeInfo.channel_count,
+            color: nodeInfo.color,
+            lastUpdate: nodeInfo.updated_at
+          }
         };
       });
       return channels;
