@@ -1,11 +1,9 @@
 import React from "react";
-import { Channels } from "../../components/channels/channels/Channels";
 import { PendingChannels } from "../../components/channels/pendingChannels/PendingChannels";
 
-export const ChannelView = () => {
+export const PendingChannelView = () => {
   return (
     <>
-      <Channels />
       <PendingChannels />
     </>
   );

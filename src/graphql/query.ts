@@ -58,7 +58,7 @@ export const GET_CHANNELS = gql`
       localBalance
       localReserve
       partnerPublicKey
-      recieved
+      received
       remoteBalance
       remoteReserve
       sent
@@ -67,6 +67,30 @@ export const GET_CHANNELS = gql`
       transactionId
       transactionVout
       unsettledBalance
+      partnerNodeInfo {
+        alias
+        capacity
+        channelCount
+        color
+        lastUpdate
+      }
+    }
+  }
+`;
+
+export const GET_PENDING_CHANNELS = gql`
+  query GetPendingChannels {
+    getPendingChannels {
+      isActive
+      isClosing
+      isOpening
+      localBalance
+      localReserve
+      partnerPublicKey
+      received
+      remoteBalance
+      remoteReserve
+      sent
       partnerNodeInfo {
         alias
         capacity

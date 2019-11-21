@@ -63,6 +63,11 @@ export const NodeInfo = () => {
   const pendingChainBalance = data.getPendingChainBalance;
   const { confirmedBalance, pendingBalance } = data.getChannelBalance;
 
+  const formatCB = getValue({ amount: chainBalance, ...priceProps });
+  const formatPB = getValue({ amount: pendingChainBalance, ...priceProps });
+  const formatCCB = getValue({ amount: confirmedBalance, ...priceProps });
+  const formatPCB = getValue({ amount: pendingBalance, ...priceProps });
+
   return (
     <>
       <Title>
@@ -72,11 +77,11 @@ export const NodeInfo = () => {
       <Separation />
       <Balance data-tip data-for="balance_tip">
         <Zap color={pendingBalance === 0 ? "#FFD300" : "#652EC7"} />
-        {getValue({ amount: confirmedBalance, ...priceProps })}
+        {formatCCB}
       </Balance>
       <Balance data-tip data-for="chain_balance_tip">
         <ZapOff color={pendingChainBalance === 0 ? "#FFD300" : "#652EC7"} />
-        {getValue({ amount: chainBalance, ...priceProps })}
+        {formatCB}
       </Balance>
       <Balance
         data-tip
@@ -90,12 +95,12 @@ export const NodeInfo = () => {
       <Separation />
       <ReactTooltip effect={"solid"} place={"right"} />
       <ReactTooltip id={"balance_tip"} effect={"solid"} place={"right"}>
-        <div>{`Channel Balance: ${confirmedBalance}`}</div>
-        <div>{`Pending Channel Balance: ${pendingBalance}`}</div>
+        <div>{`Channel Balance: ${formatCCB}`}</div>
+        <div>{`Pending Channel Balance: ${formatPCB}`}</div>
       </ReactTooltip>
       <ReactTooltip id={"chain_balance_tip"} effect={"solid"} place={"right"}>
-        <div>{`Chain Balance: ${chainBalance}`}</div>
-        <div>{`Pending Chain Balance: ${pendingChainBalance}`}</div>
+        <div>{`Chain Balance: ${formatCB}`}</div>
+        <div>{`Pending Chain Balance: ${formatPB}`}</div>
       </ReactTooltip>
       <ReactTooltip id={"node_tip"} effect={"solid"} place={"right"}>
         <div>{`Active Channels: ${activeChannelsCount}`}</div>

@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { iconButtonBack } from "../../styles/Themes";
 
 const SelectedIcon = styled(IconCircle)`
+  margin: 0 5px;
   cursor: pointer;
   background-color: ${({ selected }: { selected: boolean }) =>
     selected ? iconButtonBack : ""};
