@@ -33,7 +33,9 @@ export const getPercent = (local: number, remote: number): number => {
   const total = remote + local;
   const percent = (local / total) * 100;
 
-  console.log(Math.round(percent));
+  if (remote === 0 && local === 0) {
+    return 0;
+  }
 
   return Math.round(percent);
 };

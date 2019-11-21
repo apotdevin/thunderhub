@@ -15,6 +15,11 @@ const client = new ApolloClient({
   uri: "http://localhost:3001"
 });
 
+const Wrapper = styled.div`
+  max-width: 900px;
+  margin: 0 auto 0 auto;
+`;
+
 const Container = styled.div`
   display: grid;
   grid-template-areas:
@@ -34,12 +39,14 @@ const ContextApp: React.FC = () => {
     <ThemeProvider theme={{ mode: theme }}>
       <BitcoinPrice />
       <GlobalStyles />
-      <Container>
-        <Header />
-        <Navigation />
-        <Content />
-        <Footer />
-      </Container>
+      <Wrapper>
+        <Container>
+          <Header />
+          <Navigation />
+          <Content />
+          <Footer />
+        </Container>
+      </Wrapper>
     </ThemeProvider>
   );
 };

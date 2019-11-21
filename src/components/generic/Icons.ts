@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { iconButtonColor } from "../../styles/Themes";
 import { ReactComponent as UpIcon } from "../../icons/arrow-up.svg";
 import { ReactComponent as DownIcon } from "../../icons/arrow-down.svg";
 import { ReactComponent as ZapIcon } from "../../icons/zap.svg";
@@ -9,7 +10,9 @@ import { ReactComponent as MoonIcon } from "../../icons/moon.svg";
 import { ReactComponent as SatoshiIcon } from "../../icons/satoshi.svg";
 import { ReactComponent as EuroIcon } from "../../icons/euro.svg";
 import { ReactComponent as BitcoinIcon } from "../../icons/bitcoin.svg";
-import { iconButtonColor } from "../../styles/Themes";
+import { ReactComponent as EyeOffIcon } from "../../icons/eye-off.svg";
+import { ReactComponent as ChevronUpIcon } from "../../icons/chevrons-up.svg";
+import { ReactComponent as ChevronDownIcon } from "../../icons/chevrons-down.svg";
 
 export const IconCircle = styled.div`
   display: flex;
@@ -72,6 +75,24 @@ export const Bitcoin = styled(BitcoinIcon)`
 `;
 export const Euro = styled(EuroIcon)`
 	height: 16px;
+	color: ${iconButtonColor}
+	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */
+`;
+
+export const EyeOff = styled(EyeOffIcon)`
+	height: 18px;
+	color: ${iconButtonColor}
+	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */
+`;
+
+export const ChevronDown = styled(ChevronDownIcon)`
+	height: 18px;
+	color: ${iconButtonColor}
+	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */
+`;
+
+export const ChevronUp = styled(ChevronUpIcon)`
+	height: 18px;
 	color: ${iconButtonColor}
 	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */
 `;

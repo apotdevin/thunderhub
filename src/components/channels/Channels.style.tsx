@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import {
   progressBackground,
-  progressLeft,
-  progressRight
+  progressFirst,
+  progressSecond
 } from "../../styles/Themes";
 
 export const Progress = styled.div`
@@ -15,17 +15,22 @@ export const Progress = styled.div`
     0 1px rgba(255, 255, 255, 0.08);
 `;
 
+interface ProgressBar {
+  percent: number;
+  order?: number;
+}
+
 export const ProgressBar = styled.div`
   height: 10px;
   border-radius: 15px;
   background-image: linear-gradient(
-    to right,
-    ${progressLeft} 0%,
-    ${progressLeft} ${({ percent }: { percent: number }) => `${percent}%`},
-    ${progressRight} ${({ percent }: { percent: number }) => `${percent}%`},
-    ${progressRight} 100%
+    to bottom,
+    rgba(255, 255, 255, 0.3),
+    rgba(0, 0, 0, 0.05)
   );
-  width: 100%;
+  background-color: ${({ order }: ProgressBar) =>
+    order === 2 ? progressFirst : progressSecond};
+  width: ${({ percent }: ProgressBar) => `${percent}%`};
 `;
 
 export const NodeBar = styled.div`
@@ -47,4 +52,37 @@ export const NodeTitle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const StatusLine = styled.div`
+  width: 100%;
+  position: relative;
+  right: -8px;
+  top: -8px;
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: flex-end;
+  /* align-items: flex-start; */
+  /* z-index: 2; */
+  margin: 0 0 -8px 0;
+  /* height: 36px; */
+  /* margin-left: 5px; */
+  /* margin: -8px -7px 0 0; */
+`;
+
+export const StatusDot = styled.div`
+  margin: 0 2px;
+  height: 8px;
+  width: 8px;
+  border-radius: 100%;
+  background-color: ${({ color }: { color: string }) => color};
+`;
+
+export const DetailLine = styled.div`
+  font-size: 14px;
+  word-wrap: break-word;
+`;
+
+export const MainInfo = styled.div`
+  cursor: pointer;
 `;

@@ -38,7 +38,7 @@ export const Invoices = () => {
         <Card bottom="10px" key={index}>
           <p>{`Amount: ${tokens}`}</p>
           <p>{`Confirmed: ${isConfirmed}`}</p>
-          <p>{`Recieved: ${received}`}</p>
+          <p>{`Received: ${received}`}</p>
         </Card>
       );
     });
