@@ -11,7 +11,7 @@ export const NetworkInfo = () => {
   const { price, symbol, currency } = useContext(SettingsContext);
   const priceProps = { price, symbol, currency };
 
-  console.log(loading, error, data);
+  // console.log(loading, error, data);
 
   if (loading || !data || !data.getNetworkInfo) {
     return <Card bottom="10px">Loading....</Card>;

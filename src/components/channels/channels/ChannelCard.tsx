@@ -15,9 +15,12 @@ import { SubCard, Separation } from "../../generic/Styled";
 import { SettingsContext } from "../../../context/SettingsContext";
 import { getStatusDot, getPrivate, getSymbol } from "../helpers";
 import { getTransactionLink, getNodeLink } from "../../generic/Helpers";
+import Modal from "../../modal/ReactModal";
+import { CloseChannel } from "../../closeChannel/CloseChannel";
 
 export const ChannelCard = ({ channelInfo, index }: any) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const { price, symbol, currency } = useContext(SettingsContext);
   const priceProps = { price, symbol, currency };
@@ -91,6 +94,8 @@ export const ChannelCard = ({ channelInfo, index }: any) => {
         {/* <div>{nodeCapacity}</div> */}
         {/* <div>{channelCount}</div> */}
         {/* <div>{lastUpdate}</div> */}
+        <Separation />
+        <button onClick={() => setModalOpen(true)}>Close Channel</button>
       </>
     );
   };
@@ -139,6 +144,9 @@ export const ChannelCard = ({ channelInfo, index }: any) => {
         <div>{`received: ${formatreceived}`}</div>
         <div>{`Sent: ${formatSent}`}</div>
       </ReactTooltip>
+      <Modal isOpen={modalOpen}>
+        <CloseChannel setModalOpen={setModalOpen} channelId={id} />
+      </Modal>
     </SubCard>
   );
 };
