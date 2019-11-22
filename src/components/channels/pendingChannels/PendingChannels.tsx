@@ -7,7 +7,7 @@ import { PendingCard } from "./PendingCard";
 export const PendingChannels = () => {
   const { loading, error, data } = useQuery(GET_PENDING_CHANNELS);
 
-  console.log(loading, error, data);
+  // console.log(loading, error, data);
 
   if (loading || !data || !data.getPendingChannels) {
     return <Card bottom="10px">Loading....</Card>;

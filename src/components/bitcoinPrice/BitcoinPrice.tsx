@@ -14,7 +14,7 @@ export const BitcoinPrice = () => {
     }
   }, [data]);
 
-  console.log("Bitcoin Price", loading, error, data);
+  // console.log("Bitcoin Price", loading, error, data);
 
   return <></>;
 };

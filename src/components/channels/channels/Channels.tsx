@@ -7,7 +7,7 @@ import { ChannelCard } from "./ChannelCard";
 export const Channels = () => {
   const { loading, error, data } = useQuery(GET_CHANNELS);
 
-  console.log(loading, error, data);
+  // console.log(loading, error, data);
 
   if (loading || !data || !data.getChannels) {
     return <Card bottom="10px">Loading....</Card>;

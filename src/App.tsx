@@ -10,6 +10,7 @@ import { BrowserRouter } from "react-router-dom";
 import ApolloClient from "apollo-boost";
 import SettingsProvider, { SettingsContext } from "./context/SettingsContext";
 import { BitcoinPrice } from "./components/bitcoinPrice/BitcoinPrice";
+import ReactModal from "react-modal";
 
 const client = new ApolloClient({
   uri: "http://localhost:3001"
@@ -62,5 +63,7 @@ const App: React.FC = () => {
     </BrowserRouter>
   );
 };
+
+ReactModal.setAppElement("#root");
 
 export default App;
