@@ -7,6 +7,7 @@ import { ChannelView } from "../../views/channels/ChannelView";
 import { InvoiceView } from "../../views/invoices/InvoiceView";
 import { SettingsView } from "../../views/settings/Settings";
 import { PendingChannelView } from "../../views/channels/PendingChannels";
+import { PaymentsView } from "../../views/paymentsView/PaymentsView";
 
 const ContentStyle = styled.div`
   /* display: flex;
@@ -26,6 +27,7 @@ export const Content = () => {
         <Route path="/channels" render={() => <ChannelView />} />
         <Route path="/pendingChannels" render={() => <PendingChannelView />} />
         <Route path="/invoices" render={() => <InvoiceView />} />
+        <Route path="/payments" render={() => <PaymentsView />} />
         <Route path="/settings" render={() => <SettingsView />} />
         <Route path="*" render={() => <NotFound />} />
       </Switch>

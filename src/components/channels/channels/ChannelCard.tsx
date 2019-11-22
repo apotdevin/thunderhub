@@ -13,7 +13,12 @@ import {
 import ReactTooltip from "react-tooltip";
 import { SubCard, Separation } from "../../generic/Styled";
 import { SettingsContext } from "../../../context/SettingsContext";
-import { getStatusDot, getPrivate, getSymbol } from "../helpers";
+import {
+  getStatusDot,
+  getPrivate,
+  getSymbol,
+  getTooltipType
+} from "../../generic/Helpers";
 import { getTransactionLink, getNodeLink } from "../../generic/Helpers";
 import Modal from "../../modal/ReactModal";
 import { CloseChannel } from "../../closeChannel/CloseChannel";
@@ -22,8 +27,10 @@ export const ChannelCard = ({ channelInfo, index }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { price, symbol, currency } = useContext(SettingsContext);
+  const { price, symbol, currency, theme } = useContext(SettingsContext);
   const priceProps = { price, symbol, currency };
+
+  const tooltipType = getTooltipType(theme);
 
   const getFormat = (amount: string) =>
     getValue({
@@ -76,13 +83,21 @@ export const ChannelCard = ({ channelInfo, index }: any) => {
       <>
         <Separation />
         <DetailLine>
-          Partner Public Key: {getNodeLink(partnerPublicKey)}
+          <div>Node Public Key:</div>
+          {getNodeLink(partnerPublicKey)}
         </DetailLine>
         <DetailLine>
-          Transaction Id: {getTransactionLink(transactionId)}
+          <div>Transaction Id:</div>
+          {getTransactionLink(transactionId)}
         </DetailLine>
-        <DetailLine>Channel Id: {id}</DetailLine>
-        <DetailLine>Commit Fee: {getFormat(commitTransactionFee)}</DetailLine>
+        <DetailLine>
+          <div>Channel Id:</div>
+          {id}
+        </DetailLine>
+        <DetailLine>
+          <div>Commit Fee:</div>
+          {getFormat(commitTransactionFee)}
+        </DetailLine>
         {/* <div>{commitTransactionWeight}</div> */}
         {/* <div>{isStaticRemoteKey}</div> */}
         {/* <div>{localReserve}</div> */}
@@ -132,6 +147,7 @@ export const ChannelCard = ({ channelInfo, index }: any) => {
         id={`node_balance_tip_${index}`}
         effect={"solid"}
         place={"bottom"}
+        type={tooltipType}
       >
         <div>{`Local Balance: ${formatLocal}`}</div>
         <div>{`Remote Balance: ${formatRemote}`}</div>
@@ -140,6 +156,7 @@ export const ChannelCard = ({ channelInfo, index }: any) => {
         id={`node_activity_tip_${index}`}
         effect={"solid"}
         place={"bottom"}
+        type={tooltipType}
       >
         <div>{`received: ${formatreceived}`}</div>
         <div>{`Sent: ${formatSent}`}</div>

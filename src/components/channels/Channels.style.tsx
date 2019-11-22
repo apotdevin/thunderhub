@@ -81,6 +81,8 @@ export const StatusDot = styled.div`
 export const DetailLine = styled.div`
   font-size: 14px;
   word-wrap: break-word;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const MainInfo = styled.div`
