@@ -15,6 +15,7 @@
     "@types/styled-components": "^4.4.0",
     "@types/styled-theming": "^2.2.2",
     "apollo-boost": "^0.4.4",
+    "date-fns": "^2.8.0",
     "graphql": "^14.5.8",
     "lodash.merge": "^4.6.2",
     "node-sass": "^4.13.0",

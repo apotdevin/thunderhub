@@ -15,7 +15,7 @@ export const PendingChannels = () => {
 
   return (
     <Card>
-      <h1 style={{ margin: "0" }}>Pending Channels</h1>
+      <h1 style={{ margin: "0", marginBottom: "10px" }}>Pending Channels</h1>
       {data.getPendingChannels.map((channel: any, index: number) => (
         <>
           <PendingCard channelInfo={channel} index={index} />

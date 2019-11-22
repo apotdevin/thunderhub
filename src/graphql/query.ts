@@ -138,6 +138,25 @@ export const GET_INVOICES = gql`
   }
 `;
 
+export const GET_PAYMENTS = gql`
+  query GetPayments {
+    getPayments {
+      createdAt
+      destination
+      fee
+      feeMtokens
+      hops
+      id
+      isConfirmed
+      isOutgoing
+      mtokens
+      request
+      secret
+      tokens
+    }
+  }
+`;
+
 export const GET_BITCOIN_PRICE = gql`
   query GetBitcoinPrice($currency: String) {
     getBitcoinPrice(currency: $currency) {

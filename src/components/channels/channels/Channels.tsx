@@ -15,7 +15,7 @@ export const Channels = () => {
 
   return (
     <Card>
-      <h1 style={{ margin: "0" }}>Channels</h1>
+      <h1 style={{ margin: "0", marginBottom: "10px" }}>Channels</h1>
       {data.getChannels.map((channel: any, index: number) => (
         <>
           <ChannelCard channelInfo={channel} index={index} />

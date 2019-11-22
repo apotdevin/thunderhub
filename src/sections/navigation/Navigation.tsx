@@ -46,6 +46,9 @@ export const Navigation = () => {
             <Link to="/invoices">Invoices</Link>
           </p>
           <p>
+            <Link to="/payments">Payments</Link>
+          </p>
+          <p>
             <Link to="/settings">Settings</Link>
           </p>
           <p>

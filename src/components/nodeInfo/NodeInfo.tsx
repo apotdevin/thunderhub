@@ -7,6 +7,7 @@ import { SettingsContext } from "../../context/SettingsContext";
 import { getValue } from "../../helpers/Helpers";
 import { Separation } from "../generic/Styled";
 import { QuestionIcon, Zap, ZapOff } from "../generic/Icons";
+import { getTooltipType } from "../generic/Helpers";
 
 const Title = styled.div`
   font-size: 18px;
@@ -40,9 +41,10 @@ const Alias = styled.div`
 export const NodeInfo = () => {
   const { loading, error, data } = useQuery(GET_NODE_INFO);
 
-  const { price, symbol, currency } = useContext(SettingsContext);
+  const { price, symbol, currency, theme } = useContext(SettingsContext);
   const priceProps = { price, symbol, currency };
 
+  const tooltipType = getTooltipType(theme);
   // console.log(loading, error, data);
 
   if (loading || !data || !data.getNodeInfo) {
@@ -93,16 +95,31 @@ export const NodeInfo = () => {
         </Info>
       </Balance>
       <Separation />
-      <ReactTooltip effect={"solid"} place={"right"} />
-      <ReactTooltip id={"balance_tip"} effect={"solid"} place={"right"}>
+      <ReactTooltip effect={"solid"} place={"right"} type={tooltipType} />
+      <ReactTooltip
+        id={"balance_tip"}
+        effect={"solid"}
+        place={"right"}
+        type={tooltipType}
+      >
         <div>{`Channel Balance: ${formatCCB}`}</div>
         <div>{`Pending Channel Balance: ${formatPCB}`}</div>
       </ReactTooltip>
-      <ReactTooltip id={"chain_balance_tip"} effect={"solid"} place={"right"}>
+      <ReactTooltip
+        id={"chain_balance_tip"}
+        effect={"solid"}
+        place={"right"}
+        type={tooltipType}
+      >
         <div>{`Chain Balance: ${formatCB}`}</div>
         <div>{`Pending Chain Balance: ${formatPB}`}</div>
       </ReactTooltip>
-      <ReactTooltip id={"node_tip"} effect={"solid"} place={"right"}>
+      <ReactTooltip
+        id={"node_tip"}
+        effect={"solid"}
+        place={"right"}
+        type={tooltipType}
+      >
         <div>{`Active Channels: ${activeChannelsCount}`}</div>
         <div>{`Pending Channels: ${pendingChannelsCount}`}</div>
         <div>{`Peers: ${peersCount}`}</div>
