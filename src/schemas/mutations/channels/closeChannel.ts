@@ -1,7 +1,12 @@
 import { closeChannel as lnCloseChannel } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { requestLimiter } from "../../../helpers/rateLimiter";
-import { GraphQLBoolean, GraphQLString } from "graphql";
+import {
+  GraphQLBoolean,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLNonNull
+} from "graphql";
 import { CloseChannelType } from "../../../schemaTypes/mutation.ts/channels/closeChannel";
 
 interface CloseChannelProps {
@@ -12,34 +17,29 @@ interface CloseChannelProps {
 export const closeChannel = {
   type: CloseChannelType,
   args: {
+    id: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
     forceClose: {
       type: GraphQLBoolean
     },
-    id: {
-      type: GraphQLString
+    targetConfirmations: {
+      type: GraphQLInt
     },
-    transactionId: {
-      type: GraphQLString
-    },
-    transactionOutput: {
-      type: GraphQLString
+    tokensPerVByte: {
+      type: GraphQLInt
     }
   },
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, params, "closeChannel", 1, "1s");
     const { lnd } = context;
 
-    if (!params.id && !params.transactionId && !params.transactionOutput)
-      throw new Error(
-        "Id, transaction id or transaction output index are required"
-      );
-
     try {
       const info: CloseChannelProps = await lnCloseChannel({
         lnd: lnd,
         id: params.id,
-        is_force_close: params.forceClose,
-        transaction_id: params.transactionId
+        target_confirmations: params.targetConfirmations,
+        tokens_per_vbyte: params.tokensPerVByte
       });
       return {
         transactionId: info.transaction_id,
