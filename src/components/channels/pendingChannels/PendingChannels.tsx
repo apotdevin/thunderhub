@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { GET_PENDING_CHANNELS } from "../../../graphql/query";
 import { Card } from "../../generic/Styled";
 import { PendingCard } from "./PendingCard";
 
 export const PendingChannels = () => {
+  const [indexOpen, setIndexOpen] = useState(0);
   const { loading, error, data } = useQuery(GET_PENDING_CHANNELS);
 
   // console.log(loading, error, data);
@@ -18,7 +19,12 @@ export const PendingChannels = () => {
       <h1 style={{ margin: "0", marginBottom: "10px" }}>Pending Channels</h1>
       {data.getPendingChannels.map((channel: any, index: number) => (
         <>
-          <PendingCard channelInfo={channel} index={index} />
+          <PendingCard
+            channelInfo={channel}
+            index={index + 1}
+            setIndexOpen={setIndexOpen}
+            indexOpen={indexOpen}
+          />
         </>
       ))}
     </Card>

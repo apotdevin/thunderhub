@@ -15,9 +15,19 @@ import { SettingsContext } from "../../../context/SettingsContext";
 import { getStatusDot, getTooltipType } from "../../generic/Helpers";
 import { getNodeLink } from "../../generic/Helpers";
 
-export const PendingCard = ({ channelInfo, index }: any) => {
-  const [isOpen, setIsOpen] = useState(false);
+interface PendingCardProps {
+  channelInfo: any;
+  index: number;
+  setIndexOpen: (index: number) => void;
+  indexOpen: number;
+}
 
+export const PendingCard = ({
+  channelInfo,
+  index,
+  setIndexOpen,
+  indexOpen
+}: PendingCardProps) => {
   const { price, symbol, currency, theme } = useContext(SettingsContext);
   const priceProps = { price, symbol, currency };
 
@@ -57,6 +67,14 @@ export const PendingCard = ({ channelInfo, index }: any) => {
   const formatreceived = getFormat(received);
   const formatSent = getFormat(sent);
 
+  const handleClick = () => {
+    if (indexOpen === index) {
+      setIndexOpen(0);
+    } else {
+      setIndexOpen(index);
+    }
+  };
+
   const renderDetails = () => {
     return (
       <>
@@ -75,11 +93,7 @@ export const PendingCard = ({ channelInfo, index }: any) => {
   };
 
   return (
-    <SubCard
-      color={nodeColor}
-      key={index}
-      onClick={() => setIsOpen(prev => !prev)}
-    >
+    <SubCard color={nodeColor} key={index} onClick={() => handleClick()}>
       <StatusLine>
         {getStatusDot(isActive, "active")}
         {getStatusDot(isOpening, "opening")}
@@ -99,7 +113,7 @@ export const PendingCard = ({ channelInfo, index }: any) => {
           </div>
         </NodeDetails>
       </NodeBar>
-      {isOpen && renderDetails()}
+      {index === indexOpen && renderDetails()}
       <ReactTooltip
         id={`node_balance_tip_${index}`}
         effect={"solid"}

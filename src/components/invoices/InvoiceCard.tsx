@@ -12,6 +12,13 @@ import {
 import { getStatusDot, getDateDif, getFormatDate } from "../generic/Helpers";
 import styled from "styled-components";
 
+interface InvoiceCardProps {
+  invoice: any;
+  index: number;
+  setIndexOpen: (index: number) => void;
+  indexOpen: number;
+}
+
 const DifLine = styled.div`
   font-size: 12px;
   color: #bfbfbf;
@@ -31,9 +38,12 @@ const formatDifference = (
   }
 };
 
-export const InvoiceCard = ({ invoice, index }: any) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+export const InvoiceCard = ({
+  invoice,
+  index,
+  setIndexOpen,
+  indexOpen
+}: InvoiceCardProps) => {
   const { price, symbol, currency } = useContext(SettingsContext);
   const priceProps = { price, symbol, currency };
 
@@ -68,6 +78,14 @@ export const InvoiceCard = ({ invoice, index }: any) => {
   const dif = received - tokens;
   const formatDif = getFormat(`${dif}`);
 
+  const handleClick = () => {
+    if (indexOpen === index) {
+      setIndexOpen(0);
+    } else {
+      setIndexOpen(index);
+    }
+  };
+
   const renderDetails = () => {
     return (
       <>
@@ -101,7 +119,7 @@ export const InvoiceCard = ({ invoice, index }: any) => {
   };
 
   return (
-    <SubCard key={index} onClick={() => setIsOpen(prev => !prev)}>
+    <SubCard key={index} onClick={() => handleClick()}>
       <StatusLine>{getStatusDot(isConfirmed, "active")}</StatusLine>
       <NodeBar>
         <NodeTitle>
@@ -110,7 +128,7 @@ export const InvoiceCard = ({ invoice, index }: any) => {
         </NodeTitle>
         <NodeDetails>{description}</NodeDetails>
       </NodeBar>
-      {isOpen && renderDetails()}
+      {index === indexOpen && renderDetails()}
     </SubCard>
   );
 };
