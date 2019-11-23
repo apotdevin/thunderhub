@@ -24,13 +24,16 @@
     "@types/graphql-depth-limit": "^1.1.2",
     "@types/graphql-iso-date": "^3.3.3",
     "@types/node-fetch": "^2.5.3",
+    "@types/underscore": "^1.9.4",
     "apollo-server": "^2.9.7",
+    "date-fns": "^2.8.1",
     "dotenv": "^8.2.0",
     "graphql": "^14.5.8",
     "graphql-depth-limit": "^1.1.0",
     "graphql-iso-date": "^3.6.1",
     "graphql-rate-limit": "^2.0.1",
     "ln-service": "^46.6.0",
+    "underscore": "^1.9.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {
