@@ -40,9 +40,6 @@ export const Navigation = () => {
             <Link to="/channels">Channels</Link>
           </p>
           <p>
-            <Link to="/pendingChannels">Pending Channels</Link>
-          </p>
-          <p>
             <Link to="/invoices">Invoices</Link>
           </p>
           <p>

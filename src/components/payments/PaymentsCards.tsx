@@ -17,9 +17,19 @@ import {
   getNodeLink
 } from "../generic/Helpers";
 
-export const PaymentsCard = ({ payment, index }: any) => {
-  const [isOpen, setIsOpen] = useState(false);
+interface PaymentsCardProps {
+  payment: any;
+  index: number;
+  setIndexOpen: (index: number) => void;
+  indexOpen: number;
+}
 
+export const PaymentsCard = ({
+  payment,
+  index,
+  setIndexOpen,
+  indexOpen
+}: PaymentsCardProps) => {
   const { price, symbol, currency } = useContext(SettingsContext);
   const priceProps = { price, symbol, currency };
 
@@ -45,6 +55,14 @@ export const PaymentsCard = ({ payment, index }: any) => {
   } = payment;
 
   const formatAmount = getFormat(tokens);
+
+  const handleClick = () => {
+    if (indexOpen === index) {
+      setIndexOpen(0);
+    } else {
+      setIndexOpen(index);
+    }
+  };
 
   const renderDetails = () => {
     return (
@@ -88,7 +106,7 @@ export const PaymentsCard = ({ payment, index }: any) => {
 
   return (
     <SubCard key={index}>
-      <MainInfo onClick={() => setIsOpen(prev => !prev)}>
+      <MainInfo onClick={() => handleClick()}>
         <StatusLine>{getStatusDot(isConfirmed, "active")}</StatusLine>
         <NodeBar>
           <NodeTitle>
@@ -125,7 +143,7 @@ export const PaymentsCard = ({ payment, index }: any) => {
           </NodeDetails>
         </NodeBar>
       </MainInfo>
-      {isOpen && renderDetails()}
+      {index === indexOpen && renderDetails()}
     </SubCard>
   );
 };

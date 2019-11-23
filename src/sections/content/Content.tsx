@@ -6,7 +6,6 @@ import { NotFound } from "../../views/notFound/NotFound";
 import { ChannelView } from "../../views/channels/ChannelView";
 import { InvoiceView } from "../../views/invoices/InvoiceView";
 import { SettingsView } from "../../views/settings/Settings";
-import { PendingChannelView } from "../../views/channels/PendingChannels";
 import { PaymentsView } from "../../views/paymentsView/PaymentsView";
 
 const ContentStyle = styled.div`
@@ -25,7 +24,6 @@ export const Content = () => {
       <Switch>
         <Route exact path="/" render={() => <Home />} />
         <Route path="/channels" render={() => <ChannelView />} />
-        <Route path="/pendingChannels" render={() => <PendingChannelView />} />
         <Route path="/invoices" render={() => <InvoiceView />} />
         <Route path="/payments" render={() => <PaymentsView />} />
         <Route path="/settings" render={() => <SettingsView />} />

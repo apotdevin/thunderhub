@@ -23,8 +23,19 @@ import { getTransactionLink, getNodeLink } from "../../generic/Helpers";
 import Modal from "../../modal/ReactModal";
 import { CloseChannel } from "../../closeChannel/CloseChannel";
 
-export const ChannelCard = ({ channelInfo, index }: any) => {
-  const [isOpen, setIsOpen] = useState(false);
+interface ChannelCardProps {
+  channelInfo: any;
+  index: number;
+  setIndexOpen: (index: number) => void;
+  indexOpen: number;
+}
+
+export const ChannelCard = ({
+  channelInfo,
+  index,
+  setIndexOpen,
+  indexOpen
+}: ChannelCardProps) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const { price, symbol, currency, theme } = useContext(SettingsContext);
@@ -78,6 +89,14 @@ export const ChannelCard = ({ channelInfo, index }: any) => {
   const formatreceived = getFormat(received);
   const formatSent = getFormat(sent);
 
+  const handleClick = () => {
+    if (indexOpen === index) {
+      setIndexOpen(0);
+    } else {
+      setIndexOpen(index);
+    }
+  };
+
   const renderDetails = () => {
     return (
       <>
@@ -117,7 +136,7 @@ export const ChannelCard = ({ channelInfo, index }: any) => {
 
   return (
     <SubCard color={nodeColor} key={index}>
-      <MainInfo onClick={() => setIsOpen(prev => !prev)}>
+      <MainInfo onClick={() => handleClick()}>
         <StatusLine>
           {getStatusDot(isActive, "active")}
           {getStatusDot(isOpening, "opening")}
@@ -142,7 +161,7 @@ export const ChannelCard = ({ channelInfo, index }: any) => {
           </NodeDetails>
         </NodeBar>
       </MainInfo>
-      {isOpen && renderDetails()}
+      {index === indexOpen && renderDetails()}
       <ReactTooltip
         id={`node_balance_tip_${index}`}
         effect={"solid"}
