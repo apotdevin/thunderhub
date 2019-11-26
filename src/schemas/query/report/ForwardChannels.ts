@@ -6,11 +6,15 @@ import { subHours, subDays } from "date-fns";
 import { countArray } from "./Helpers";
 import { ForwardCompleteProps } from "./ForwardReport.interface";
 import { ForwardChannelsType } from "../../../schemaTypes/query/report/ForwardChannels";
+import { sortBy } from "underscore";
 
 export const getForwardChannelsReport = {
   type: ForwardChannelsType,
   args: {
     time: {
+      type: GraphQLString
+    },
+    order: {
       type: GraphQLString
     }
   },
@@ -46,9 +50,16 @@ export const getForwardChannelsReport = {
       const incomingCount = countArray(forwardsList.forwards, true);
       const outgoingCount = countArray(forwardsList.forwards, false);
 
+      const sortedInCount = sortBy(incomingCount, params.order)
+        .reverse()
+        .slice(0, 5);
+      const sortedOutCount = sortBy(outgoingCount, params.order)
+        .reverse()
+        .slice(0, 5);
+
       return {
-        incoming: JSON.stringify(incomingCount),
-        outgoing: JSON.stringify(outgoingCount)
+        incoming: JSON.stringify(sortedInCount),
+        outgoing: JSON.stringify(sortedOutCount)
       };
     } catch (error) {
       logger.error("Error getting forward channel report: %o", error);
