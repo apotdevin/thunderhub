@@ -7,7 +7,8 @@ import {
   SubTitle,
   CardContent,
   Sub4Title,
-  ChannelRow
+  ChannelRow,
+  CardWithTitle
 } from "../generic/Styled";
 import { useQuery } from "@apollo/react-hooks";
 import { GET_FORWARD_REPORT } from "../../graphql/query";
@@ -20,7 +21,7 @@ import {
 import numeral from "numeral";
 import { ButtonRow } from "./Buttons";
 import { SettingsContext } from "../../context/SettingsContext";
-import { chartAxisColor } from "../../styles/Themes";
+import { chartAxisColor, chartBarColor } from "../../styles/Themes";
 import { getValue } from "../../helpers/Helpers";
 
 const getValueString = (amount: number): string => {
@@ -65,7 +66,7 @@ export const ForwardReport = () => {
 
   const parsedData: {}[] = JSON.parse(data.getForwardReport);
 
-  console.log(parsedData);
+  // console.log(parsedData);
   // console.log(chartAxisColor[theme]);
 
   const getLabelString = (value: number) => {
@@ -81,16 +82,16 @@ export const ForwardReport = () => {
       .reduce((a: number, c: number) => a + c, 0)
   );
 
-  return (
-    <Card bottom={"10"}>
-      <CardContent>
-        <TitleRow>
-          <SubTitle>Fowards</SubTitle>
-        </TitleRow>
+  const renderContent = () => {
+    if (parsedData.length <= 0) {
+      return <p>Your node has not forwarded any payments.</p>;
+    }
+    return (
+      <>
         <div>
           <VictoryChart
             domainPadding={50}
-            padding={{ top: 20, left: 50, right: 50, bottom: 20 }}
+            padding={{ top: 10, left: 50, right: 50, bottom: 20 }}
             containerComponent={
               <VictoryVoronoiContainer
                 voronoiDimension="x"
@@ -122,7 +123,10 @@ export const ForwardReport = () => {
               x="period"
               y={isType}
               style={{
-                data: { fill: "#43DDE2", width: barWidth }
+                data: {
+                  fill: chartBarColor[theme],
+                  width: barWidth
+                }
               }}
             />
           </VictoryChart>
@@ -139,7 +143,16 @@ export const ForwardReport = () => {
             setIsType={setIsType}
           />
         </div>
-      </CardContent>
-    </Card>
+      </>
+    );
+  };
+
+  return (
+    <CardWithTitle>
+      <SubTitle>Fowards</SubTitle>
+      <Card bottom={"10px"} full>
+        <CardContent>{renderContent()}</CardContent>
+      </Card>
+    </CardWithTitle>
   );
 };

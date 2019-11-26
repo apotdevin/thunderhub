@@ -2,7 +2,7 @@ import theme from "styled-theming";
 
 export const backgroundColor = theme("mode", {
   light: "#fafafa",
-  dark: "#1b1c22"
+  dark: "#151727"
 });
 
 export const textColor = theme("mode", {
@@ -12,17 +12,17 @@ export const textColor = theme("mode", {
 
 export const cardColor = theme("mode", {
   light: "white",
-  dark: "#25262c"
+  dark: "#1b1e32"
 });
 
 export const subCardColor = theme("mode", {
   light: "white",
-  dark: "#1b1c22"
+  dark: "#151727"
 });
 
 export const cardBorderColor = theme("mode", {
   light: "#f5f5f5",
-  dark: "transparent"
+  dark: "#242839"
 });
 
 export const progressBackground = theme("mode", {
@@ -67,10 +67,20 @@ export const chartLinkColor = theme("mode", {
 
 export const chartSelectedLinkColor = theme("mode", {
   light: "#43DDE2",
-  dark: "#43DDE2"
+  dark: "#6938f1"
 });
 
 export const chartAxisColor: { [key: string]: string } = {
   light: "#1b1c22",
   dark: "white"
 };
+
+export const chartBarColor: { [key: string]: string } = {
+  light: "#43DDE2",
+  dark: "#6938f1"
+};
+
+export const unSelectedNavButton = theme("mode", {
+  light: "grey",
+  dark: "grey"
+});

@@ -5,26 +5,38 @@ import {
   subCardColor,
   smallLinkColor,
   chartLinkColor,
-  chartSelectedLinkColor
+  chartSelectedLinkColor,
+  unSelectedNavButton
 } from "../../styles/Themes";
+
+export const CardWithTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+interface CardProps {
+  bottom?: string;
+  full?: boolean;
+}
 
 export const Card = styled.div`
   padding: 10px;
-  margin-bottom: 10px;
   background: ${cardColor};
   /* background: linear-gradient(#fff, #fcfcfc); */
   box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid ${cardBorderColor};
-  margin-bottom: ${(props: { bottom?: string }) => props.bottom};
+  margin-bottom: ${(props: CardProps) => props.bottom};
   width: 100%;
+  height: ${(props: CardProps) => props.full && "100%"};
   border-left: ${(props: { color?: string }) =>
     props.color ? `2px solid ${props.color}` : ""};
 `;
 
 export const Separation = styled.div`
   height: ${({ height }: { height?: number }) => (height ? height : "2")}px;
-  background-color: #e6e6e6;
+  background-color: ${unSelectedNavButton};
   width: 100%;
   margin: 20px 0;
 `;
@@ -63,7 +75,7 @@ export const ChartLink = styled.button`
   font-weight: bold;
 
   &:hover {
-    color: #08979c;
+    color: ${chartSelectedLinkColor};
   }
 `;
 
@@ -79,8 +91,8 @@ export const TitleRow = styled.div`
   align-items: center;
 `;
 
-export const SubTitle = styled.h3`
-  margin: 0;
+export const SubTitle = styled.h4`
+  margin: 5px 0;
 `;
 
 export const Sub4Title = styled.h4`

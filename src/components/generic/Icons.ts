@@ -13,6 +13,11 @@ import { ReactComponent as BitcoinIcon } from "../../icons/bitcoin.svg";
 import { ReactComponent as EyeOffIcon } from "../../icons/eye-off.svg";
 import { ReactComponent as ChevronUpIcon } from "../../icons/chevrons-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../icons/chevrons-down.svg";
+import { ReactComponent as HomeIcon } from "../../icons/home.svg";
+import { ReactComponent as CpuIcon } from "../../icons/cpu.svg";
+import { ReactComponent as SendIcon } from "../../icons/send.svg";
+import { ReactComponent as ServerIcon } from "../../icons/server.svg";
+import { ReactComponent as SettingsIcon } from "../../icons/settings.svg";
 
 export const IconCircle = styled.div`
   display: flex;
@@ -94,5 +99,32 @@ export const ChevronDown = styled(ChevronDownIcon)`
 export const ChevronUp = styled(ChevronUpIcon)`
 	height: 18px;
 	color: ${iconButtonColor}
+	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */
+`;
+
+export const Home = styled(HomeIcon)`
+	height: 18px;
+	/* color: ${iconButtonColor} */
+	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */
+`;
+
+export const Cpu = styled(CpuIcon)`
+	height: 18px;
+	/* color: ${iconButtonColor} */
+	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */
+`;
+export const Send = styled(SendIcon)`
+	height: 18px;
+	/* color: ${iconButtonColor} */
+	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */
+`;
+export const Server = styled(ServerIcon)`
+	height: 18px;
+	/* color: ${iconButtonColor} */
+	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */
+`;
+export const Settings = styled(SettingsIcon)`
+	height: 18px;
+	/* color: ${iconButtonColor} */
 	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */
 `;
