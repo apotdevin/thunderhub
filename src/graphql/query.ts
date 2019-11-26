@@ -165,3 +165,18 @@ export const GET_BITCOIN_PRICE = gql`
     }
   }
 `;
+
+export const GET_FORWARD_REPORT = gql`
+  query GetForwardReport($time: String) {
+    getForwardReport(time: $time)
+  }
+`;
+
+export const GET_FORWARD_CHANNELS_REPORT = gql`
+  query GetForwardChannelsReport($time: String, $order: String) {
+    getForwardChannelsReport(time: $time, order: $order) {
+      incoming
+      outgoing
+    }
+  }
+`;

@@ -3,7 +3,9 @@ import {
   cardColor,
   cardBorderColor,
   subCardColor,
-  smallLinkColor
+  smallLinkColor,
+  chartLinkColor,
+  chartSelectedLinkColor
 } from "../../styles/Themes";
 
 export const Card = styled.div`
@@ -48,4 +50,52 @@ export const SmallLink = styled.a`
   &:hover {
     text-decoration: underline;
   }
+`;
+
+export const ChartLink = styled.button`
+  text-decoration: none;
+  color: ${({ selected }: { selected: boolean }) =>
+    selected ? chartSelectedLinkColor : chartLinkColor};
+  background-color: transparent;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  font-weight: bold;
+
+  &:hover {
+    color: #08979c;
+  }
+`;
+
+export const ChartRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 3px;
+`;
+
+export const TitleRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const SubTitle = styled.h3`
+  margin: 0;
+`;
+
+export const Sub4Title = styled.h4`
+  margin: 10px 0;
+`;
+
+export const CardContent = styled.div`
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+`;
+
+export const ChannelRow = styled.div`
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
