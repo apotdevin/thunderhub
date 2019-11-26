@@ -6,7 +6,8 @@ import {
   ChartRow,
   ChartLink,
   CardContent,
-  ChannelRow
+  ChannelRow,
+  CardWithTitle
 } from "../generic/Styled";
 import { useQuery } from "@apollo/react-hooks";
 import { GET_FORWARD_CHANNELS_REPORT } from "../../graphql/query";
@@ -35,8 +36,8 @@ export const ForwardChannelsReport = () => {
   const parsedIncoming = JSON.parse(data.getForwardChannelsReport.incoming);
   const parsedOutgoing = JSON.parse(data.getForwardChannelsReport.outgoing);
 
-  // console.log(parsedIncoming);
-  // console.log(parsedOutgoing);
+  console.log(parsedIncoming);
+  console.log(parsedOutgoing);
 
   const getFormatString = (amount: number) => {
     if (isType !== "amount") {
@@ -45,10 +46,13 @@ export const ForwardChannelsReport = () => {
     return amount;
   };
 
-  return (
-    <Card bottom={"10"}>
-      <CardContent>
-        <SubTitle>Channel Forwards</SubTitle>
+  const renderContent = () => {
+    if (parsedIncoming.length <= 0 || parsedOutgoing.length <= 0) {
+      return <p>Your node has not forwarded any payments.</p>;
+    }
+
+    return (
+      <>
         <Sub4Title>Incoming</Sub4Title>
         {parsedIncoming.map((channel: any, index: number) => (
           <ChannelRow key={index}>
@@ -71,7 +75,16 @@ export const ForwardChannelsReport = () => {
             setIsType={setIsType}
           />
         </div>
-      </CardContent>
-    </Card>
+      </>
+    );
+  };
+
+  return (
+    <CardWithTitle>
+      <SubTitle>Channel Forwards</SubTitle>
+      <Card bottom={"10px"} full>
+        <CardContent>{renderContent()}</CardContent>
+      </Card>
+    </CardWithTitle>
   );
 };
