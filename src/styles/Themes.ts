@@ -59,3 +59,18 @@ export const smallLinkColor = theme("mode", {
   light: "#9254de",
   dark: "#adc6ff"
 });
+
+export const chartLinkColor = theme("mode", {
+  light: "#595959",
+  dark: "#8c8c8c"
+});
+
+export const chartSelectedLinkColor = theme("mode", {
+  light: "#43DDE2",
+  dark: "#43DDE2"
+});
+
+export const chartAxisColor: { [key: string]: string } = {
+  light: "#1b1c22",
+  dark: "white"
+};
