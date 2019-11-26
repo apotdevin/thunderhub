@@ -1,16 +1,12 @@
-import { reduce, sortBy } from "underscore";
+import { reduce, groupBy } from "underscore";
 import {
   ForwardProps,
   ReduceObjectProps,
-  FinalProps,
-  FinalList,
-  ListProps,
-  CountProps,
-  ChannelCounts
+  ListProps
 } from "./ForwardReport.interface";
 
-export const reduceForwardArray = (list: ListProps): FinalList => {
-  let reducedOrder: FinalList = {};
+export const reduceForwardArray = (list: ListProps) => {
+  const reducedOrder = [];
   for (const key in list) {
     if (list.hasOwnProperty(key)) {
       const element: ForwardProps[] = list[key];
@@ -20,39 +16,40 @@ export const reduceForwardArray = (list: ListProps): FinalList => {
           tokens: a.tokens + b.tokens
         };
       });
-      reducedOrder[key] = {
+      reducedOrder.push({
+        period: parseInt(key),
         amount: element.length,
         ...reducedArray
-      } as FinalProps;
+      });
     }
   }
 
   return reducedOrder;
 };
 
-export const countArray = (
-  list: ForwardProps[],
-  type: boolean
-): ChannelCounts[] => {
-  const count: CountProps = {};
-  list
-    .map(item => {
-      return type ? item.incoming_channel : item.outgoing_channel;
-    })
-    .forEach(channel => {
-      count[channel] = (count[channel] || 0) + 1;
-    });
+export const countArray = (list: ForwardProps[], type: boolean) => {
+  const inOrOut = type ? "incoming_channel" : "outgoing_channel";
+  const grouped = groupBy(list, inOrOut);
 
-  const mapped: ChannelCounts[] = [];
-  for (const key in count) {
-    if (count.hasOwnProperty(key)) {
-      const element = count[key];
-      mapped.push({
+  const channelInfo = [];
+  for (const key in grouped) {
+    if (grouped.hasOwnProperty(key)) {
+      const element = grouped[key];
+
+      const fee = element.map(forward => forward.fee).reduce((p, c) => p + c);
+
+      const tokens = element
+        .map(forward => forward.tokens)
+        .reduce((p, c) => p + c);
+
+      channelInfo.push({
         name: key,
-        count: element
+        amount: element.length,
+        fee: fee,
+        tokens: tokens
       });
     }
   }
-  sortBy(mapped, "count");
-  return mapped;
+
+  return channelInfo;
 };
