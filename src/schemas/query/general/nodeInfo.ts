@@ -2,6 +2,8 @@ import { getWalletInfo } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { NodeInfoType } from "../../../schemaTypes/query/info/nodeInfo";
 import { requestLimiter } from "../../../helpers/rateLimiter";
+import { getAuthLnd } from "../../../helpers/helpers";
+import { GraphQLNonNull, GraphQLString } from "graphql";
 
 interface NodeInfoProps {
   chains: string[];
@@ -22,9 +24,11 @@ interface NodeInfoProps {
 
 export const getNodeInfo = {
   type: NodeInfoType,
+  args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, params, "nodeInfo", 1, "1s");
-    const { lnd } = context;
+
+    const lnd = getAuthLnd(params.auth);
 
     try {
       const info: NodeInfoProps = await getWalletInfo({

@@ -2,6 +2,8 @@ import { getNetworkInfo as getLnNetworkInfo } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { requestLimiter } from "../../../helpers/rateLimiter";
 import { NetworkInfoType } from "../../../schemaTypes/query/info/networkInfo";
+import { GraphQLNonNull, GraphQLString } from "graphql";
+import { getAuthLnd } from "../../../helpers/helpers";
 
 interface NetworkInfoProps {
   average_channel_size: number;
@@ -16,9 +18,11 @@ interface NetworkInfoProps {
 
 export const getNetworkInfo = {
   type: NetworkInfoType,
+  args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, params, "networkInfo", 1, "1s");
-    const { lnd } = context;
+
+    const lnd = getAuthLnd(params.auth);
 
     try {
       const info: NetworkInfoProps = await getLnNetworkInfo({

@@ -2,6 +2,8 @@ import { getChannelBalance as getLnChannelBalance } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { ChannelBalanceType } from "../../../schemaTypes/query/info/channelBalance";
 import { requestLimiter } from "../../../helpers/rateLimiter";
+import { GraphQLNonNull, GraphQLString } from "graphql";
+import { getAuthLnd } from "../../../helpers/helpers";
 
 interface ChannelBalanceProps {
   channel_balance: number;
@@ -10,9 +12,11 @@ interface ChannelBalanceProps {
 
 export const getChannelBalance = {
   type: ChannelBalanceType,
+  args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, params, "channelBalance", 1, "1s");
-    const { lnd } = context;
+
+    const lnd = getAuthLnd(params.auth);
 
     try {
       const channelBalance: ChannelBalanceProps = await getLnChannelBalance({

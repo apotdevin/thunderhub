@@ -1,4 +1,4 @@
-import { GraphQLString } from "graphql";
+import { GraphQLString, GraphQLNonNull } from "graphql";
 import { getForwards as getLnForwards } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { requestLimiter } from "../../../helpers/rateLimiter";
@@ -7,16 +7,14 @@ import { countArray } from "./Helpers";
 import { ForwardCompleteProps } from "./ForwardReport.interface";
 import { ForwardChannelsType } from "../../../schemaTypes/query/report/ForwardChannels";
 import { sortBy } from "underscore";
+import { getAuthLnd } from "../../../helpers/helpers";
 
 export const getForwardChannelsReport = {
   type: ForwardChannelsType,
   args: {
-    time: {
-      type: GraphQLString
-    },
-    order: {
-      type: GraphQLString
-    }
+    auth: { type: new GraphQLNonNull(GraphQLString) },
+    time: { type: GraphQLString },
+    order: { type: GraphQLString }
   },
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(
@@ -26,7 +24,8 @@ export const getForwardChannelsReport = {
       1,
       "1s"
     );
-    const { lnd } = context;
+
+    const lnd = getAuthLnd(params.auth);
 
     let startDate = new Date();
     const endDate = new Date();
