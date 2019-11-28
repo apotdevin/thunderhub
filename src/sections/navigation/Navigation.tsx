@@ -14,15 +14,11 @@ import {
 } from "../../components/generic/Icons";
 
 const NavigationStyle = styled.div`
-  /* display: flex; */
-  /* justify-content: center; */
-  /* padding: 10px; */
-  /* background-color: green; */
   grid-area: nav;
   margin-left: 0.5rem;
 `;
 
-const StickyCard = styled(Card)`
+const StickyCard = styled.div`
   position: -webkit-sticky;
   position: sticky;
   top: 10px;
@@ -45,7 +41,6 @@ const NavSeparation = styled.div`
 
 const NavButton = styled(Link)`
   padding: 10px;
-  /* background-color: white; */
   background: ${({ selected }: { selected: boolean }) =>
     selected
       ? `linear-gradient(

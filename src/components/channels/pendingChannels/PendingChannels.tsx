@@ -6,7 +6,10 @@ import { PendingCard } from "./PendingCard";
 
 export const PendingChannels = () => {
   const [indexOpen, setIndexOpen] = useState(0);
-  const { loading, error, data } = useQuery(GET_PENDING_CHANNELS);
+  const auth = localStorage.getItem("uri");
+  const { loading, error, data } = useQuery(GET_PENDING_CHANNELS, {
+    variables: { auth }
+  });
 
   // console.log(loading, error, data);
 

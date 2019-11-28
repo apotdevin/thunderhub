@@ -17,6 +17,7 @@
     "@types/styled-theming": "^2.2.2",
     "@types/victory": "^33.0.0",
     "apollo-boost": "^0.4.4",
+    "crypto-js": "^3.1.9-1",
     "date-fns": "^2.8.0",
     "graphql": "^14.5.8",
     "lodash.merge": "^4.6.2",

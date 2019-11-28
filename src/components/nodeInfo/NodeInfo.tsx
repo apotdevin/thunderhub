@@ -39,7 +39,10 @@ const Alias = styled.div`
 `;
 
 export const NodeInfo = () => {
-  const { loading, error, data } = useQuery(GET_NODE_INFO);
+  const auth = localStorage.getItem("uri");
+  const { loading, error, data } = useQuery(GET_NODE_INFO, {
+    variables: { auth }
+  });
 
   const { price, symbol, currency, theme } = useContext(SettingsContext);
   const priceProps = { price, symbol, currency };

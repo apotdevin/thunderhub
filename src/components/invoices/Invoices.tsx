@@ -6,7 +6,10 @@ import { InvoiceCard } from "./InvoiceCard";
 
 export const Invoices = () => {
   const [indexOpen, setIndexOpen] = useState(0);
-  const { loading, error, data } = useQuery(GET_INVOICES);
+  const auth = localStorage.getItem("uri");
+  const { loading, error, data } = useQuery(GET_INVOICES, {
+    variables: { auth }
+  });
 
   console.log(loading, error, data);
 

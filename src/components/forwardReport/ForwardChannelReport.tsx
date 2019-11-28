@@ -18,11 +18,13 @@ import { SettingsContext } from "../../context/SettingsContext";
 
 export const ForwardChannelsReport = () => {
   const { price, symbol, currency } = useContext(SettingsContext);
-
   const [isTime, setIsTime] = useState<string>("week");
   const [isType, setIsType] = useState<string>("amount");
+
+  const auth = localStorage.getItem("uri");
+
   const { data, loading, error } = useQuery(GET_FORWARD_CHANNELS_REPORT, {
-    variables: { time: isTime, order: isType }
+    variables: { time: isTime, order: isType, auth }
   });
 
   if (!data || loading) {

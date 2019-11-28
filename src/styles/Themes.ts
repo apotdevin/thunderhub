@@ -84,3 +84,8 @@ export const unSelectedNavButton = theme("mode", {
   light: "grey",
   dark: "grey"
 });
+
+export const buttonBorderColor = theme("mode", {
+  light: "black",
+  dark: "#2e3245"
+});

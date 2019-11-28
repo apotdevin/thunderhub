@@ -18,3 +18,19 @@ export const CLOSE_CHANNEL = gql`
     }
   }
 `;
+
+export const PAY_INVOICE = gql`
+  mutation PayInvoice($request: String!) {
+    pay(request: $request) {
+      isConfirmed
+    }
+  }
+`;
+
+export const CREATE_INVOICE = gql`
+  mutation PayInvoice($amount: Int!) {
+    createInvoice(amount: $amount) {
+      request
+    }
+  }
+`;
