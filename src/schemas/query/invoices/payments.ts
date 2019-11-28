@@ -1,8 +1,9 @@
-import { GraphQLList } from "graphql";
+import { GraphQLList, GraphQLNonNull, GraphQLString } from "graphql";
 import { getPayments as getLnPayments } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { requestLimiter } from "../../../helpers/rateLimiter";
 import { GetPaymentType } from "../../../schemaTypes/query/info/payments";
+import { getAuthLnd } from "../../../helpers/helpers";
 
 interface PaymentProps {
   created_at: string;
@@ -25,9 +26,11 @@ interface PaymentsProps {
 
 export const getPayments = {
   type: new GraphQLList(GetPaymentType),
+  args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, params, "getPayments", 1, "1s");
-    const { lnd } = context;
+
+    const lnd = getAuthLnd(params.auth);
 
     try {
       const paymentList: PaymentsProps = await getLnPayments({

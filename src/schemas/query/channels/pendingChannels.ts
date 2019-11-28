@@ -4,8 +4,9 @@ import {
 } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { PendingChannelType } from "../../../schemaTypes/query/info/pendingChannels";
-import { GraphQLList } from "graphql";
+import { GraphQLList, GraphQLNonNull, GraphQLString } from "graphql";
 import { requestLimiter } from "../../../helpers/rateLimiter";
+import { getAuthLnd } from "../../../helpers/helpers";
 
 interface PendingChannelListProps {
   pending_channels: PendingChannelProps[];
@@ -27,9 +28,11 @@ interface PendingChannelProps {
 
 export const getPendingChannels = {
   type: new GraphQLList(PendingChannelType),
+  args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, params, "pendingChannels", 1, "1s");
-    const { lnd } = context;
+
+    const lnd = getAuthLnd(params.auth);
 
     try {
       const pendingChannels: PendingChannelListProps = await getLnPendingChannels(

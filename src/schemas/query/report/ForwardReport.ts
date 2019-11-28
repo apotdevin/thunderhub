@@ -1,4 +1,4 @@
-import { GraphQLString } from "graphql";
+import { GraphQLString, GraphQLNonNull } from "graphql";
 import { getForwards as getLnForwards } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { requestLimiter } from "../../../helpers/rateLimiter";
@@ -11,17 +11,18 @@ import {
 } from "date-fns";
 import { reduceForwardArray } from "./Helpers";
 import { ForwardCompleteProps } from "./ForwardReport.interface";
+import { getAuthLnd } from "../../../helpers/helpers";
 
 export const getForwardReport = {
   type: GraphQLString,
   args: {
-    time: {
-      type: GraphQLString
-    }
+    auth: { type: new GraphQLNonNull(GraphQLString) },
+    time: { type: GraphQLString }
   },
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, params, "getForwardReport", 1, "1s");
-    const { lnd } = context;
+
+    const lnd = getAuthLnd(params.auth);
 
     let startDate = new Date();
     const endDate = new Date();

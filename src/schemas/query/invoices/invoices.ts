@@ -1,8 +1,9 @@
-import { GraphQLList } from "graphql";
+import { GraphQLList, GraphQLNonNull, GraphQLString } from "graphql";
 import { getInvoices as getLnInvoices } from "ln-service";
 import { logger } from "../../../helpers/logger";
 import { requestLimiter } from "../../../helpers/rateLimiter";
 import { GetInvoiceType } from "../../../schemaTypes/query/info/invoices";
+import { getAuthLnd } from "../../../helpers/helpers";
 
 interface PaymentProps {
   confirmed_at: string;
@@ -45,9 +46,11 @@ interface InvoicesProps {
 
 export const getInvoices = {
   type: new GraphQLList(GetInvoiceType),
+  args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, params, "getInvoices", 1, "1s");
-    const { lnd } = context;
+
+    const lnd = getAuthLnd(params.auth);
 
     try {
       const invoiceList: InvoicesProps = await getLnInvoices({
