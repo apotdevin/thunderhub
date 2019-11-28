@@ -18,6 +18,7 @@ import { ReactComponent as CpuIcon } from "../../icons/cpu.svg";
 import { ReactComponent as SendIcon } from "../../icons/send.svg";
 import { ReactComponent as ServerIcon } from "../../icons/server.svg";
 import { ReactComponent as SettingsIcon } from "../../icons/settings.svg";
+import { ReactComponent as EditV3Icon } from "../../icons/edit-3.svg";
 
 export const IconCircle = styled.div`
   display: flex;
@@ -124,6 +125,12 @@ export const Server = styled(ServerIcon)`
 	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */
 `;
 export const Settings = styled(SettingsIcon)`
+	height: 18px;
+	/* color: ${iconButtonColor} */
+	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */
+`;
+
+export const EditV3 = styled(EditV3Icon)`
 	height: 18px;
 	/* color: ${iconButtonColor} */
 	/* color: ${({ color }: { color?: string }) => (color ? color : "black")}; */

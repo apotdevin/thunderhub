@@ -35,20 +35,20 @@ const getValueString = (amount: number): string => {
 
 export const ForwardReport = () => {
   const { theme, price, symbol, currency } = useContext(SettingsContext);
-  const priceProps = { price, symbol, currency };
+  const [isTime, setIsTime] = useState<string>("week");
+  const [isType, setIsType] = useState<string>("amount");
 
+  const auth = localStorage.getItem("uri");
+  const { data, loading, error } = useQuery(GET_FORWARD_REPORT, {
+    variables: { time: isTime, auth }
+  });
+
+  const priceProps = { price, symbol, currency };
   const getFormat = (amount: number) =>
     getValue({
       amount,
       ...priceProps
     });
-
-  const [isTime, setIsTime] = useState<string>("week");
-  const [isType, setIsType] = useState<string>("amount");
-
-  const { data, loading, error } = useQuery(GET_FORWARD_REPORT, {
-    variables: { time: isTime }
-  });
 
   if (!data || loading) {
     return <div>Loading</div>;

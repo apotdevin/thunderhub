@@ -93,10 +93,12 @@ export const TitleRow = styled.div`
 
 export const SubTitle = styled.h4`
   margin: 5px 0;
+  font-weight: 500;
 `;
 
-export const Sub4Title = styled.h4`
+export const Sub4Title = styled.h5`
   margin: 10px 0;
+  font-weight: 500;
 `;
 
 export const CardContent = styled.div`

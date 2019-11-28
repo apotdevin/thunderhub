@@ -6,7 +6,10 @@ import { ChannelCard } from "./ChannelCard";
 
 export const Channels = () => {
   const [indexOpen, setIndexOpen] = useState(0);
-  const { loading, error, data } = useQuery(GET_CHANNELS);
+  const auth = localStorage.getItem("uri");
+  const { loading, error, data } = useQuery(GET_CHANNELS, {
+    variables: { auth }
+  });
 
   // console.log(loading, error, data);
 

@@ -6,7 +6,10 @@ import { getValue } from "../../helpers/Helpers";
 import { SettingsContext } from "../../context/SettingsContext";
 
 export const NetworkInfo = () => {
-  const { loading, error, data } = useQuery(GET_NETWORK_INFO);
+  const auth = localStorage.getItem("uri");
+  const { loading, error, data } = useQuery(GET_NETWORK_INFO, {
+    variables: { auth }
+  });
 
   const { price, symbol, currency } = useContext(SettingsContext);
   const priceProps = { price, symbol, currency };

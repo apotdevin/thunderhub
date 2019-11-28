@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const GET_NETWORK_INFO = gql`
-  query GetNetworkInfo {
-    getNetworkInfo {
+  query GetNetworkInfo($auth: String!) {
+    getNetworkInfo(auth: $auth) {
       averageChannelSize
       channelCount
       maxChannelSize
@@ -16,8 +16,8 @@ export const GET_NETWORK_INFO = gql`
 `;
 
 export const GET_NODE_INFO = gql`
-  query GetNodeInfo {
-    getNodeInfo {
+  query GetNodeInfo($auth: String!) {
+    getNodeInfo(auth: $auth) {
       chains
       color
       activeChannelsCount
@@ -33,9 +33,9 @@ export const GET_NODE_INFO = gql`
       version
       alias
     }
-    getChainBalance
-    getPendingChainBalance
-    getChannelBalance {
+    getChainBalance(auth: $auth)
+    getPendingChainBalance(auth: $auth)
+    getChannelBalance(auth: $auth) {
       confirmedBalance
       pendingBalance
     }
@@ -43,8 +43,8 @@ export const GET_NODE_INFO = gql`
 `;
 
 export const GET_CHANNELS = gql`
-  query GetChannels {
-    getChannels {
+  query GetChannels($auth: String!) {
+    getChannels(auth: $auth) {
       capacity
       commitTransactionFee
       commitTransactionWeight
@@ -79,8 +79,8 @@ export const GET_CHANNELS = gql`
 `;
 
 export const GET_PENDING_CHANNELS = gql`
-  query GetPendingChannels {
-    getPendingChannels {
+  query GetPendingChannels($auth: String!) {
+    getPendingChannels(auth: $auth) {
       isActive
       isClosing
       isOpening
@@ -103,8 +103,8 @@ export const GET_PENDING_CHANNELS = gql`
 `;
 
 export const GET_INVOICES = gql`
-  query GetInvoices {
-    getInvoices {
+  query GetInvoices($auth: String!) {
+    getInvoices(auth: $auth) {
       chainAddress
       confirmedAt
       createdAt
@@ -139,8 +139,8 @@ export const GET_INVOICES = gql`
 `;
 
 export const GET_PAYMENTS = gql`
-  query GetPayments {
-    getPayments {
+  query GetPayments($auth: String!) {
+    getPayments(auth: $auth) {
       createdAt
       destination
       fee
@@ -167,14 +167,18 @@ export const GET_BITCOIN_PRICE = gql`
 `;
 
 export const GET_FORWARD_REPORT = gql`
-  query GetForwardReport($time: String) {
-    getForwardReport(time: $time)
+  query GetForwardReport($time: String, $auth: String!) {
+    getForwardReport(time: $time, auth: $auth)
   }
 `;
 
 export const GET_FORWARD_CHANNELS_REPORT = gql`
-  query GetForwardChannelsReport($time: String, $order: String) {
-    getForwardChannelsReport(time: $time, order: $order) {
+  query GetForwardChannelsReport(
+    $time: String
+    $order: String
+    $auth: String!
+  ) {
+    getForwardChannelsReport(time: $time, order: $order, auth: $auth) {
       incoming
       outgoing
     }

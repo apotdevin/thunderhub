@@ -6,7 +6,11 @@ import { PaymentsCard } from "./PaymentsCards";
 
 export const Payments = () => {
   const [indexOpen, setIndexOpen] = useState(0);
-  const { loading, error, data } = useQuery(GET_PAYMENTS);
+
+  const auth = localStorage.getItem("uri");
+  const { loading, error, data } = useQuery(GET_PAYMENTS, {
+    variables: { auth }
+  });
 
   console.log(loading, error, data);
 
