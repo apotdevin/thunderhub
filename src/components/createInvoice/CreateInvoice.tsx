@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CardWithTitle, SubTitle, Card, Sub4Title } from '../generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_INVOICE } from '../../graphql/mutation';
 import { Edit } from '../generic/Icons';
 import styled from 'styled-components';
 import { textColor, buttonBorderColor } from '../../styles/Themes';
+import { toast } from 'react-toastify';
+import { getErrorContent } from '../../utils/error';
 
 const SingleLine = styled.div`
     display: flex;
@@ -53,11 +55,14 @@ const Input = styled.input`
 
 export const CreateInvoiceCard = () => {
     const [amount, setAmount] = useState(10000);
-    const [createInvoice, { data, loading, error }] = useMutation(
-        CREATE_INVOICE,
-    );
+    const [createInvoice, { error }] = useMutation(CREATE_INVOICE);
 
-    // console.log(data, loading, error);
+    useEffect(() => {
+        if (error) {
+            const errorArray = error.graphQLErrors.map(x => x.message);
+            toast.error(getErrorContent(errorArray));
+        }
+    }, [error]);
 
     return (
         <CardWithTitle>
@@ -68,7 +73,7 @@ export const CreateInvoiceCard = () => {
                     <Input type={'number'} onChange={e => setAmount(10000)} />
                     <SimpleButton
                         onClick={() => {
-                            createInvoice({ variables: { amount: 10000 } });
+                            createInvoice({ variables: { amount } });
                         }}
                     >
                         <Edit />
