@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CardWithTitle, SubTitle, Card, Sub4Title } from '../generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_INVOICE } from '../../graphql/mutation';
-import { Send, Settings, EditV3 } from '../generic/Icons';
+import { Edit } from '../generic/Icons';
 import styled from 'styled-components';
 import { textColor, buttonBorderColor } from '../../styles/Themes';
 
@@ -71,7 +71,7 @@ export const CreateInvoiceCard = () => {
                             createInvoice({ variables: { amount: 10000 } });
                         }}
                     >
-                        <EditV3 />
+                        <Edit />
                         Create Invoice
                     </SimpleButton>
                 </SingleLine>

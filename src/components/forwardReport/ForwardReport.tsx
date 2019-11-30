@@ -158,7 +158,7 @@ export const ForwardReport = () => {
     return (
         <CardWithTitle>
             <SubTitle>Fowards</SubTitle>
-            <Card bottom={'10px'} full>
+            <Card bottom={'20px'} full>
                 <CardContent>{renderContent()}</CardContent>
             </Card>
         </CardWithTitle>

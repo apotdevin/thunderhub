@@ -3,8 +3,6 @@ import {
     Card,
     SubTitle,
     Sub4Title,
-    ChartRow,
-    ChartLink,
     CardContent,
     ChannelRow,
     CardWithTitle,
@@ -12,7 +10,6 @@ import {
 import { useQuery } from '@apollo/react-hooks';
 import { GET_FORWARD_CHANNELS_REPORT } from '../../graphql/query';
 import { ButtonRow } from './Buttons';
-import styled from 'styled-components';
 import { getValue } from '../../helpers/Helpers';
 import { SettingsContext } from '../../context/SettingsContext';
 import { AccountContext } from '../../context/AccountContext';
@@ -41,8 +38,8 @@ export const ForwardChannelsReport = () => {
     const parsedIncoming = JSON.parse(data.getForwardChannelsReport.incoming);
     const parsedOutgoing = JSON.parse(data.getForwardChannelsReport.outgoing);
 
-    console.log(parsedIncoming);
-    console.log(parsedOutgoing);
+    // console.log(parsedIncoming);
+    // console.log(parsedOutgoing);
 
     const getFormatString = (amount: number) => {
         if (isType !== 'amount') {
@@ -87,7 +84,7 @@ export const ForwardChannelsReport = () => {
     return (
         <CardWithTitle>
             <SubTitle>Channel Forwards</SubTitle>
-            <Card bottom={'10px'} full>
+            <Card bottom={'20px'} full>
                 <CardContent>{renderContent()}</CardContent>
             </Card>
         </CardWithTitle>

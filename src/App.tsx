@@ -19,7 +19,7 @@ const client = new ApolloClient({
 });
 
 const Wrapper = styled.div`
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto 0 auto;
 `;
 

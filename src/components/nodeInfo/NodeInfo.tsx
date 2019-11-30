@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { SettingsContext } from '../../context/SettingsContext';
 import { getValue } from '../../helpers/Helpers';
 import { Separation } from '../generic/Styled';
-import { QuestionIcon, Zap, ZapOff } from '../generic/Icons';
+import { QuestionIcon, Zap, ZapOff, Anchor } from '../generic/Icons';
 import { getTooltipType } from '../generic/Helpers';
 import { AccountContext } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
@@ -72,10 +72,12 @@ export const NodeInfo = () => {
     const pendingChainBalance = data.getPendingChainBalance;
     const { confirmedBalance, pendingBalance } = data.getChannelBalance;
 
-    const formatCB = getValue({ amount: chainBalance, ...priceProps });
-    const formatPB = getValue({ amount: pendingChainBalance, ...priceProps });
-    const formatCCB = getValue({ amount: confirmedBalance, ...priceProps });
-    const formatPCB = getValue({ amount: pendingBalance, ...priceProps });
+    const getFormat = (amount: number) => getValue({ amount, ...priceProps });
+
+    const formatCB = getFormat(chainBalance);
+    const formatPB = getFormat(pendingChainBalance);
+    const formatCCB = getFormat(confirmedBalance);
+    const formatPCB = getFormat(pendingBalance);
 
     return (
         <>
@@ -89,7 +91,7 @@ export const NodeInfo = () => {
                 {formatCCB}
             </Balance>
             <Balance data-tip data-for="chain_balance_tip">
-                <ZapOff
+                <Anchor
                     color={pendingChainBalance === 0 ? '#FFD300' : '#652EC7'}
                 />
                 {formatCB}

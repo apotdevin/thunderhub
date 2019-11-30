@@ -20,10 +20,11 @@ export const CardWithTitle = styled.div`
 interface CardProps {
     bottom?: string;
     full?: boolean;
+    padding?: string;
 }
 
 export const Card = styled.div`
-    padding: 10px;
+    padding: ${({ padding }) => (padding ? padding : '20px')};
     background: ${cardColor};
     /* background: linear-gradient(#fff, #fcfcfc); */
     box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
@@ -144,6 +145,7 @@ export const SingleLine = styled.div`
 `;
 
 export const SimpleButton = styled.button`
+    outline: none;
     padding: 5px;
     margin: 5px;
     text-decoration: none;
