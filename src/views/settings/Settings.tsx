@@ -66,7 +66,13 @@ export const SettingsView = () => {
                 {getStorageSaved().map((entry, index) => {
                     return (
                         <button
-                            onClick={() => changeAccount(entry.index)}
+                            onClick={() => {
+                                localStorage.setItem(
+                                    'account',
+                                    `auth${entry.index}`,
+                                );
+                                changeAccount(entry.index);
+                            }}
                             key={index}
                         >
                             {entry.index}

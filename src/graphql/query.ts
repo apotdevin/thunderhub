@@ -1,186 +1,197 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 export const GET_NETWORK_INFO = gql`
-  query GetNetworkInfo($auth: String!) {
-    getNetworkInfo(auth: $auth) {
-      averageChannelSize
-      channelCount
-      maxChannelSize
-      medianChannelSize
-      minChannelSize
-      nodeCount
-      notRecentlyUpdatedPolicyCount
-      totalCapacity
+    query GetNetworkInfo($auth: String!) {
+        getNetworkInfo(auth: $auth) {
+            averageChannelSize
+            channelCount
+            maxChannelSize
+            medianChannelSize
+            minChannelSize
+            nodeCount
+            notRecentlyUpdatedPolicyCount
+            totalCapacity
+        }
     }
-  }
 `;
 
 export const GET_NODE_INFO = gql`
-  query GetNodeInfo($auth: String!) {
-    getNodeInfo(auth: $auth) {
-      chains
-      color
-      activeChannelsCount
-      currentBlockHash
-      currentBlockHeight
-      isSyncedToChain
-      isSyncedToGraph
-      latestBlockAt
-      peersCount
-      pendingChannelsCount
-      publicKey
-      uris
-      version
-      alias
+    query GetNodeInfo($auth: String!) {
+        getNodeInfo(auth: $auth) {
+            chains
+            color
+            activeChannelsCount
+            currentBlockHash
+            currentBlockHeight
+            isSyncedToChain
+            isSyncedToGraph
+            latestBlockAt
+            peersCount
+            pendingChannelsCount
+            publicKey
+            uris
+            version
+            alias
+        }
+        getChainBalance(auth: $auth)
+        getPendingChainBalance(auth: $auth)
+        getChannelBalance(auth: $auth) {
+            confirmedBalance
+            pendingBalance
+        }
     }
-    getChainBalance(auth: $auth)
-    getPendingChainBalance(auth: $auth)
-    getChannelBalance(auth: $auth) {
-      confirmedBalance
-      pendingBalance
+`;
+
+export const GET_BALANCES = gql`
+    query GetNodeInfo($auth: String!) {
+        getChainBalance(auth: $auth)
+        getPendingChainBalance(auth: $auth)
+        getChannelBalance(auth: $auth) {
+            confirmedBalance
+            pendingBalance
+        }
     }
-  }
 `;
 
 export const GET_CHANNELS = gql`
-  query GetChannels($auth: String!) {
-    getChannels(auth: $auth) {
-      capacity
-      commitTransactionFee
-      commitTransactionWeight
-      id
-      isActive
-      isClosing
-      isOpening
-      isPartnerInitiated
-      isPrivate
-      isStaticRemoteKey
-      localBalance
-      localReserve
-      partnerPublicKey
-      received
-      remoteBalance
-      remoteReserve
-      sent
-      timeOffline
-      timeOnline
-      transactionId
-      transactionVout
-      unsettledBalance
-      partnerNodeInfo {
-        alias
-        capacity
-        channelCount
-        color
-        lastUpdate
-      }
+    query GetChannels($auth: String!) {
+        getChannels(auth: $auth) {
+            capacity
+            commitTransactionFee
+            commitTransactionWeight
+            id
+            isActive
+            isClosing
+            isOpening
+            isPartnerInitiated
+            isPrivate
+            isStaticRemoteKey
+            localBalance
+            localReserve
+            partnerPublicKey
+            received
+            remoteBalance
+            remoteReserve
+            sent
+            timeOffline
+            timeOnline
+            transactionId
+            transactionVout
+            unsettledBalance
+            partnerNodeInfo {
+                alias
+                capacity
+                channelCount
+                color
+                lastUpdate
+            }
+        }
     }
-  }
 `;
 
 export const GET_PENDING_CHANNELS = gql`
-  query GetPendingChannels($auth: String!) {
-    getPendingChannels(auth: $auth) {
-      isActive
-      isClosing
-      isOpening
-      localBalance
-      localReserve
-      partnerPublicKey
-      received
-      remoteBalance
-      remoteReserve
-      sent
-      partnerNodeInfo {
-        alias
-        capacity
-        channelCount
-        color
-        lastUpdate
-      }
+    query GetPendingChannels($auth: String!) {
+        getPendingChannels(auth: $auth) {
+            isActive
+            isClosing
+            isOpening
+            localBalance
+            localReserve
+            partnerPublicKey
+            received
+            remoteBalance
+            remoteReserve
+            sent
+            partnerNodeInfo {
+                alias
+                capacity
+                channelCount
+                color
+                lastUpdate
+            }
+        }
     }
-  }
 `;
 
 export const GET_INVOICES = gql`
-  query GetInvoices($auth: String!) {
-    getInvoices(auth: $auth) {
-      chainAddress
-      confirmedAt
-      createdAt
-      description
-      descriptionHash
-      expiresAt
-      id
-      isCanceled
-      isConfirmed
-      isHeld
-      isOutgoing
-      isPrivate
-      payments {
-        confirmedAt
-        createdAt
-        createdHeight
-        inChannel
-        isCanceled
-        isConfirmed
-        isHeld
-        mtokens
-        pendingIndex
-        tokens
-      }
-      received
-      receivedMtokens
-      request
-      secret
-      tokens
+    query GetInvoices($auth: String!) {
+        getInvoices(auth: $auth) {
+            chainAddress
+            confirmedAt
+            createdAt
+            description
+            descriptionHash
+            expiresAt
+            id
+            isCanceled
+            isConfirmed
+            isHeld
+            isOutgoing
+            isPrivate
+            payments {
+                confirmedAt
+                createdAt
+                createdHeight
+                inChannel
+                isCanceled
+                isConfirmed
+                isHeld
+                mtokens
+                pendingIndex
+                tokens
+            }
+            received
+            receivedMtokens
+            request
+            secret
+            tokens
+        }
     }
-  }
 `;
 
 export const GET_PAYMENTS = gql`
-  query GetPayments($auth: String!) {
-    getPayments(auth: $auth) {
-      createdAt
-      destination
-      fee
-      feeMtokens
-      hops
-      id
-      isConfirmed
-      isOutgoing
-      mtokens
-      request
-      secret
-      tokens
+    query GetPayments($auth: String!) {
+        getPayments(auth: $auth) {
+            createdAt
+            destination
+            fee
+            feeMtokens
+            hops
+            id
+            isConfirmed
+            isOutgoing
+            mtokens
+            request
+            secret
+            tokens
+        }
     }
-  }
 `;
 
 export const GET_BITCOIN_PRICE = gql`
-  query GetBitcoinPrice($currency: String) {
-    getBitcoinPrice(currency: $currency) {
-      price
-      symbol
+    query GetBitcoinPrice($currency: String) {
+        getBitcoinPrice(currency: $currency) {
+            price
+            symbol
+        }
     }
-  }
 `;
 
 export const GET_FORWARD_REPORT = gql`
-  query GetForwardReport($time: String, $auth: String!) {
-    getForwardReport(time: $time, auth: $auth)
-  }
+    query GetForwardReport($time: String, $auth: String!) {
+        getForwardReport(time: $time, auth: $auth)
+    }
 `;
 
 export const GET_FORWARD_CHANNELS_REPORT = gql`
-  query GetForwardChannelsReport(
-    $time: String
-    $order: String
-    $auth: String!
-  ) {
-    getForwardChannelsReport(time: $time, order: $order, auth: $auth) {
-      incoming
-      outgoing
+    query GetForwardChannelsReport(
+        $time: String
+        $order: String
+        $auth: String!
+    ) {
+        getForwardChannelsReport(time: $time, order: $order, auth: $auth) {
+            incoming
+            outgoing
+        }
     }
-  }
 `;

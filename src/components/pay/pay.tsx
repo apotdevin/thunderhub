@@ -21,7 +21,7 @@ export const PayCard = () => {
     return (
         <CardWithTitle>
             <SubTitle>Send Sats</SubTitle>
-            <Card bottom={'10px'}>
+            <Card bottom={'20px'}>
                 <SingleLine>
                     <Sub4Title>Request:</Sub4Title>
                     <Input onChange={e => setRequest(e.target.value)} />
