@@ -55,7 +55,7 @@ export const CreateInvoiceCard = () => {
   const [amount, setAmount] = useState(10000);
   const [createInvoice, { data, loading, error }] = useMutation(CREATE_INVOICE);
 
-  console.log(data, loading, error);
+  // console.log(data, loading, error);
 
   return (
     <CardWithTitle>
