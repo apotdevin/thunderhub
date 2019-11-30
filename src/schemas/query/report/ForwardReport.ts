@@ -1,72 +1,79 @@
-import { GraphQLString, GraphQLNonNull } from "graphql";
-import { getForwards as getLnForwards } from "ln-service";
-import { logger } from "../../../helpers/logger";
-import { requestLimiter } from "../../../helpers/rateLimiter";
-import { groupBy } from "underscore";
+import { GraphQLString, GraphQLNonNull } from 'graphql';
+import { getForwards as getLnForwards } from 'ln-service';
+import { logger } from '../../../helpers/logger';
+import { requestLimiter } from '../../../helpers/rateLimiter';
+import { groupBy } from 'underscore';
 import {
-  subHours,
-  subDays,
-  differenceInHours,
-  differenceInCalendarDays
-} from "date-fns";
-import { reduceForwardArray } from "./Helpers";
-import { ForwardCompleteProps } from "./ForwardReport.interface";
-import { getAuthLnd } from "../../../helpers/helpers";
+    subHours,
+    subDays,
+    differenceInHours,
+    differenceInCalendarDays,
+} from 'date-fns';
+import { reduceForwardArray } from './Helpers';
+import { ForwardCompleteProps } from './ForwardReport.interface';
+import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 
 export const getForwardReport = {
-  type: GraphQLString,
-  args: {
-    auth: { type: new GraphQLNonNull(GraphQLString) },
-    time: { type: GraphQLString }
-  },
-  resolve: async (root: any, params: any, context: any) => {
-    await requestLimiter(context.ip, params, "getForwardReport", 1, "1s");
+    type: GraphQLString,
+    args: {
+        auth: { type: new GraphQLNonNull(GraphQLString) },
+        time: { type: GraphQLString },
+    },
+    resolve: async (root: any, params: any, context: any) => {
+        await requestLimiter(context.ip, params, 'getForwardReport', 1, '1s');
 
-    const lnd = getAuthLnd(params.auth);
+        const lnd = getAuthLnd(params.auth);
 
-    let startDate = new Date();
-    const endDate = new Date();
-    let days = 7;
+        let startDate = new Date();
+        const endDate = new Date();
+        let days = 7;
 
-    if (params.time === "month") {
-      startDate = subDays(endDate, 30);
-      days = 30;
-    } else if (params.time === "week") {
-      startDate = subDays(endDate, 7);
-    } else {
-      startDate = subHours(endDate, 24);
-    }
+        if (params.time === 'month') {
+            startDate = subDays(endDate, 30);
+            days = 30;
+        } else if (params.time === 'week') {
+            startDate = subDays(endDate, 7);
+        } else {
+            startDate = subHours(endDate, 24);
+        }
 
-    try {
-      const forwardsList: ForwardCompleteProps = await getLnForwards({
-        lnd: lnd,
-        after: startDate,
-        before: endDate,
-        limit: 10000
-      });
+        try {
+            const forwardsList: ForwardCompleteProps = await getLnForwards({
+                lnd: lnd,
+                after: startDate,
+                before: endDate,
+                limit: 10000,
+            });
 
-      if (params.time === "month" || params.time === "week") {
-        const orderedDay = groupBy(forwardsList.forwards, item => {
-          return (
-            days - differenceInCalendarDays(endDate, new Date(item.created_at))
-          );
-        });
+            if (params.time === 'month' || params.time === 'week') {
+                const orderedDay = groupBy(forwardsList.forwards, item => {
+                    return (
+                        days -
+                        differenceInCalendarDays(
+                            endDate,
+                            new Date(item.created_at),
+                        )
+                    );
+                });
 
-        const reducedOrderedDay = reduceForwardArray(orderedDay);
+                const reducedOrderedDay = reduceForwardArray(orderedDay);
 
-        return JSON.stringify(reducedOrderedDay);
-      } else {
-        const orderedHour = groupBy(forwardsList.forwards, item => {
-          return 24 - differenceInHours(endDate, new Date(item.created_at));
-        });
+                return JSON.stringify(reducedOrderedDay);
+            } else {
+                const orderedHour = groupBy(forwardsList.forwards, item => {
+                    return (
+                        24 -
+                        differenceInHours(endDate, new Date(item.created_at))
+                    );
+                });
 
-        const reducedOrderedHour = reduceForwardArray(orderedHour);
+                const reducedOrderedHour = reduceForwardArray(orderedHour);
 
-        return JSON.stringify(reducedOrderedHour);
-      }
-    } catch (error) {
-      logger.error("Error getting forward report: %o", error);
-      throw new Error("Failed to get forward report.");
-    }
-  }
+                return JSON.stringify(reducedOrderedHour);
+            }
+        } catch (error) {
+            logger.error('Error getting forward report: %o', error);
+            throw new Error(getErrorMsg(error));
+        }
+    },
 };
