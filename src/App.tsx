@@ -13,6 +13,15 @@ import { BitcoinPrice } from './components/bitcoinPrice/BitcoinPrice';
 import ReactModal from 'react-modal';
 import AccountProvider, { AccountContext } from './context/AccountContext';
 import { LoginView } from './views/login/Login';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+toast.configure({
+    draggable: false,
+    pauseOnHover: false,
+    hideProgressBar: true,
+    closeButton: false,
+});
 
 const client = new ApolloClient({
     uri: 'http://localhost:3001',

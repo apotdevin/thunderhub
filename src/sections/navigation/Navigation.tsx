@@ -41,6 +41,8 @@ const NavSeparation = styled.div`
 
 const NavButton = styled(Link)`
     padding: 10px;
+    border-left: ${({ selected }: { selected: boolean }) =>
+        selected ? `3px solid white` : ''};
     background: ${({ selected }: { selected: boolean }) =>
         selected
             ? `linear-gradient(
@@ -56,6 +58,14 @@ const NavButton = styled(Link)`
     margin: 15px 0;
     color: ${({ selected }: { selected: boolean }) =>
         selected ? textColor : unSelectedNavButton};
+
+    &:hover {
+        background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0) 90%
+        );
+    }
 `;
 
 const HOME_LINK = '/';
