@@ -3,7 +3,7 @@ import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 import { PayType } from '../../../schemaTypes/mutation.ts/invoice/pay';
-import { getErrorMsg } from '../../../helpers/helpers';
+import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 
 interface HopProps {
     channel: string;
@@ -29,13 +29,12 @@ interface RequestProps {
 export const pay = {
     type: PayType,
     args: {
-        request: {
-            type: new GraphQLNonNull(GraphQLString),
-        },
+        request: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, params, 'payRequest', 1, '1s');
-        const { lnd } = context;
+        const lnd = getAuthLnd(params.auth);
 
         try {
             const payment: RequestProps = await payRequest({

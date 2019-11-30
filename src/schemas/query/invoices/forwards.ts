@@ -1,9 +1,9 @@
-import { GraphQLList } from 'graphql';
+import { GraphQLList, GraphQLString, GraphQLNonNull } from 'graphql';
 import { getForwards as getLnForwards } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GetForwardType } from '../../../schemaTypes/query/info/forwards';
-import { getErrorMsg } from '../../../helpers/helpers';
+import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 
 interface ForwardProps {
     created_at: string;
@@ -22,9 +22,10 @@ interface ForwardsProps {
 
 export const getForwards = {
     type: new GraphQLList(GetForwardType),
+    args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, params, 'getForwards', 1, '1s');
-        const { lnd } = context;
+        const lnd = getAuthLnd(params.auth);
 
         try {
             const forwardsList: ForwardsProps = await getLnForwards({

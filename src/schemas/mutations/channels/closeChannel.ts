@@ -8,7 +8,7 @@ import {
     GraphQLNonNull,
 } from 'graphql';
 import { CloseChannelType } from '../../../schemaTypes/mutation.ts/channels/closeChannel';
-import { getErrorMsg } from '../../../helpers/helpers';
+import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 
 interface CloseChannelProps {
     transaction_id: string;
@@ -18,22 +18,15 @@ interface CloseChannelProps {
 export const closeChannel = {
     type: CloseChannelType,
     args: {
-        id: {
-            type: new GraphQLNonNull(GraphQLString),
-        },
-        forceClose: {
-            type: GraphQLBoolean,
-        },
-        targetConfirmations: {
-            type: GraphQLInt,
-        },
-        tokensPerVByte: {
-            type: GraphQLInt,
-        },
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        forceClose: { type: GraphQLBoolean },
+        targetConfirmations: { type: GraphQLInt },
+        tokensPerVByte: { type: GraphQLInt },
+        auth: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, params, 'closeChannel', 1, '1s');
-        const { lnd } = context;
+        const lnd = getAuthLnd(params.auth);
 
         try {
             const info: CloseChannelProps = await lnCloseChannel({

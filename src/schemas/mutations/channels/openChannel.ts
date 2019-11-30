@@ -8,7 +8,7 @@ import {
     GraphQLNonNull,
 } from 'graphql';
 import { OpenChannelType } from '../../../schemaTypes/mutation.ts/channels/openChannel';
-import { getErrorMsg } from '../../../helpers/helpers';
+import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 
 interface OpenChannelProps {
     transaction_id: string;
@@ -18,19 +18,14 @@ interface OpenChannelProps {
 export const openChannel = {
     type: OpenChannelType,
     args: {
-        isPrivate: {
-            type: GraphQLBoolean,
-        },
-        amount: {
-            type: new GraphQLNonNull(GraphQLInt),
-        },
-        partnerPublicKey: {
-            type: new GraphQLNonNull(GraphQLString),
-        },
+        isPrivate: { type: GraphQLBoolean },
+        amount: { type: new GraphQLNonNull(GraphQLInt) },
+        partnerPublicKey: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, params, 'openChannel', 1, '1s');
-        const { lnd } = context;
+        const lnd = getAuthLnd(params.auth);
 
         try {
             const info: OpenChannelProps = await lnOpenChannel({

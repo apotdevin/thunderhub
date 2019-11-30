@@ -1,9 +1,9 @@
-import { GraphQLList, GraphQLString } from 'graphql';
+import { GraphQLList, GraphQLString, GraphQLNonNull } from 'graphql';
 import { getClosedChannels as getLnClosedChannels } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { ClosedChannelType } from '../../../schemaTypes/query/info/closedChannels';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getErrorMsg } from '../../../helpers/helpers';
+import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 
 const BREACH = 'BREACH';
 const COOPERATIVE = 'COOPERATIVE';
@@ -56,13 +56,12 @@ const getCloseReason = (
 export const getClosedChannels = {
     type: new GraphQLList(ClosedChannelType),
     args: {
-        type: {
-            type: GraphQLString,
-        },
+        type: { type: GraphQLString },
+        auth: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, params, 'closedChannels', 1, '1s');
-        const { lnd } = context;
+        const lnd = getAuthLnd(params.auth);
 
         try {
             const closedChannels: ChannelListProps = await getLnClosedChannels({
