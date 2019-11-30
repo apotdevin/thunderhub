@@ -57,3 +57,10 @@ export const getAuthLnd = (auth: string) => {
 
     return lnd;
 };
+
+export const getErrorMsg = (error: any): string => {
+    const code = error[0];
+    const msg = error[1];
+
+    return JSON.stringify({ code, msg });
+};
