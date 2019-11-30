@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Card } from '../../components/generic/Styled';
 import { Link, useLocation } from 'react-router-dom';
 import { NodeInfo } from '../../components/nodeInfo/NodeInfo';
 import { SideSettings } from '../../components/sideSettings/SideSettings';

@@ -17,7 +17,6 @@ import {
     Send,
     MoreVertical,
     Zap,
-    ZapOff,
     Anchor,
     Pocket,
     DownArrow,
