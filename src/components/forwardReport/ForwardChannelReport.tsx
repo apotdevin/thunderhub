@@ -15,13 +15,16 @@ import { ButtonRow } from "./Buttons";
 import styled from "styled-components";
 import { getValue } from "../../helpers/Helpers";
 import { SettingsContext } from "../../context/SettingsContext";
+import { AccountContext } from "../../context/AccountContext";
+import { getAuthString } from "../../utils/auth";
 
 export const ForwardChannelsReport = () => {
   const { price, symbol, currency } = useContext(SettingsContext);
   const [isTime, setIsTime] = useState<string>("week");
   const [isType, setIsType] = useState<string>("amount");
 
-  const auth = localStorage.getItem("uri");
+  const { host, read, cert } = useContext(AccountContext);
+	const auth = getAuthString(host, read, cert);
 
   const { data, loading, error } = useQuery(GET_FORWARD_CHANNELS_REPORT, {
     variables: { time: isTime, order: isType, auth }
