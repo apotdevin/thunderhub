@@ -1,58 +1,58 @@
 {
-  "name": "thunderhub",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.development.js",
-    "start": "node dist/server",
-    "dev": "nodemon dist/server"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/apotdevin/thunderhub.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/apotdevin/thunderhub/issues"
-  },
-  "homepage": "https://github.com/apotdevin/thunderhub#readme",
-  "dependencies": {
-    "@types/graphql-depth-limit": "^1.1.2",
-    "@types/graphql-iso-date": "^3.3.3",
-    "@types/node-fetch": "^2.5.3",
-    "@types/underscore": "^1.9.4",
-    "apollo-server": "^2.9.7",
-    "base64url": "^3.0.1",
-    "date-fns": "^2.8.1",
-    "dotenv": "^8.2.0",
-    "graphql": "^14.5.8",
-    "graphql-depth-limit": "^1.1.0",
-    "graphql-iso-date": "^3.6.1",
-    "graphql-rate-limit": "^2.0.1",
-    "ln-service": "^46.6.0",
-    "underscore": "^1.9.1",
-    "winston": "^3.2.1"
-  },
-  "devDependencies": {
-    "@types/webpack-env": "^1.14.1",
-    "clean-webpack-plugin": "^3.0.0",
-    "husky": "^3.0.9",
-    "prettier": "^1.18.2",
-    "pretty-quick": "^2.0.0",
-    "ts-loader": "^6.2.1",
-    "typescript": "^3.6.4",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10",
-    "webpack-merge": "^4.2.2",
-    "webpack-node-externals": "^1.7.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick"
+    "name": "thunderhub",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "webpack --config webpack.development.js",
+        "start": "node dist/server",
+        "dev": "nodemon dist/server"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/apotdevin/thunderhub.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/apotdevin/thunderhub/issues"
+    },
+    "homepage": "https://github.com/apotdevin/thunderhub#readme",
+    "dependencies": {
+        "@types/graphql-depth-limit": "^1.1.2",
+        "@types/graphql-iso-date": "^3.3.3",
+        "@types/node-fetch": "^2.5.3",
+        "@types/underscore": "^1.9.4",
+        "apollo-server": "^2.9.7",
+        "base64url": "^3.0.1",
+        "date-fns": "^2.8.1",
+        "dotenv": "^8.2.0",
+        "graphql": "^14.5.8",
+        "graphql-depth-limit": "^1.1.0",
+        "graphql-iso-date": "^3.6.1",
+        "graphql-rate-limit": "^2.0.1",
+        "ln-service": "^46.6.0",
+        "underscore": "^1.9.1",
+        "winston": "^3.2.1"
+    },
+    "devDependencies": {
+        "@types/webpack-env": "^1.14.1",
+        "clean-webpack-plugin": "^3.0.0",
+        "husky": "^3.0.9",
+        "prettier": "^1.18.2",
+        "pretty-quick": "^2.0.0",
+        "ts-loader": "^6.2.1",
+        "typescript": "^3.6.4",
+        "webpack": "^4.41.2",
+        "webpack-cli": "^3.3.10",
+        "webpack-merge": "^4.2.2",
+        "webpack-node-externals": "^1.7.2"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "pretty-quick"
+        }
     }
-  }
 }
