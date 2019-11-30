@@ -29,8 +29,8 @@ const Tile = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: ${({ start }: { start?: boolean }) =>
-        start ? 'flex-start' : 'flex-end'};
+    align-items: ${({ startTile }: { startTile?: boolean }) =>
+        startTile ? 'flex-start' : 'flex-end'};
 `;
 
 const TileTitle = styled.div`
@@ -79,9 +79,14 @@ export const AccountInfo = () => {
                 <Card bottom={'20px'}>
                     <SingleLine>
                         <Pocket
-                            color={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
+                            color={
+                                pendingChainBalance === 0 &&
+                                pendingBalance === 0
+                                    ? '#2bbc54'
+                                    : '#652EC7'
+                            }
                         />
-                        <Tile start>
+                        <Tile startTile={true}>
                             <TileTitle>Account</TileTitle>
                             <div>Total</div>
                         </Tile>
@@ -103,7 +108,7 @@ export const AccountInfo = () => {
                         <Zap
                             color={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
                         />
-                        <Tile start>
+                        <Tile startTile={true}>
                             <TileTitle>Account</TileTitle>
                             <div>Lightning</div>
                         </Tile>
@@ -136,7 +141,7 @@ export const AccountInfo = () => {
                                     : '#652EC7'
                             }
                         />
-                        <Tile start>
+                        <Tile startTile={true}>
                             <TileTitle>Account</TileTitle>
                             <div>Wallet</div>
                         </Tile>

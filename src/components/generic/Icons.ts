@@ -19,6 +19,7 @@ import { ReactComponent as EditIcon } from '../../icons/edit.svg';
 import { ReactComponent as MoreVerticalIcon } from '../../icons/more-vertical.svg';
 import { ReactComponent as AnchorIcon } from '../../icons/anchor.svg';
 import { ReactComponent as PocketIcon } from '../../icons/pocket.svg';
+import { ReactComponent as GlobeIcon } from '../../icons/globe.svg';
 
 export const IconCircle = styled.div`
     display: flex;
@@ -54,6 +55,11 @@ export const Anchor = styled(AnchorIcon)`
 `;
 
 export const Pocket = styled(PocketIcon)`
+    height: 18px;
+    color: ${({ color }: { color?: string }) => (color ? color : 'black')};
+`;
+
+export const Globe = styled(GlobeIcon)`
     height: 18px;
     color: ${({ color }: { color?: string }) => (color ? color : 'black')};
 `;
