@@ -1,30 +1,29 @@
-import React, { useState, useContext } from 'react';
-import {
-    Card,
-    ChartLink,
-    ChartRow,
-    TitleRow,
-    SubTitle,
-    CardContent,
-    Sub4Title,
-    ChannelRow,
-    CardWithTitle,
-} from '../generic/Styled';
+import React, { useContext } from 'react';
+import { Sub4Title, DarkSubTitle } from '../generic/Styled';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_FORWARD_REPORT } from '../../graphql/query';
+import numeral from 'numeral';
+import { SettingsContext } from '../../context/SettingsContext';
+import { getValue } from '../../helpers/Helpers';
+import { AccountContext } from '../../context/AccountContext';
+import { getAuthString } from '../../utils/auth';
 import {
     VictoryBar,
     VictoryChart,
     VictoryAxis,
     VictoryVoronoiContainer,
 } from 'victory';
-import numeral from 'numeral';
-import { ButtonRow } from './Buttons';
-import { SettingsContext } from '../../context/SettingsContext';
-import { chartAxisColor, chartBarColor } from '../../styles/Themes';
-import { getValue } from '../../helpers/Helpers';
-import { AccountContext } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
+import {
+    chartAxisColor,
+    chartBarColor,
+    chartGridColor,
+} from '../../styles/Themes';
+import { ChannelRow, CardContent } from '.';
+
+interface Props {
+    isTime: string;
+    isType: string;
+}
 
 const getValueString = (amount: number): string => {
     if (amount >= 100000) {
@@ -35,10 +34,8 @@ const getValueString = (amount: number): string => {
     return `${amount}`;
 };
 
-export const ForwardReport = () => {
+export const ForwardReport = ({ isTime, isType }: Props) => {
     const { theme, price, symbol, currency } = useContext(SettingsContext);
-    const [isTime, setIsTime] = useState<string>('week');
-    const [isType, setIsType] = useState<string>('amount');
 
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
@@ -109,7 +106,7 @@ export const ForwardReport = () => {
                             domain={[0, domain]}
                             tickFormat={() => ''}
                             style={{
-                                axis: { stroke: chartAxisColor[theme] },
+                                axis: { stroke: chartGridColor[theme] },
                             }}
                         />
                         <VictoryAxis
@@ -119,7 +116,7 @@ export const ForwardReport = () => {
                                     fill: chartAxisColor[theme],
                                     fontSize: 18,
                                 },
-                                grid: { stroke: chartAxisColor[theme] },
+                                grid: { stroke: chartGridColor[theme] },
                                 axis: { stroke: 'transparent' },
                             }}
                             tickFormat={a =>
@@ -140,27 +137,12 @@ export const ForwardReport = () => {
                     </VictoryChart>
                 </div>
                 <ChannelRow>
-                    <Sub4Title>Total:</Sub4Title>
+                    <DarkSubTitle>Total:</DarkSubTitle>
                     {total}
                 </ChannelRow>
-                <div style={{ marginTop: 'auto' }}>
-                    <ButtonRow
-                        isTime={isTime}
-                        isType={isType}
-                        setIsTime={setIsTime}
-                        setIsType={setIsType}
-                    />
-                </div>
             </>
         );
     };
 
-    return (
-        <CardWithTitle>
-            <SubTitle>Fowards</SubTitle>
-            <Card bottom={'20px'} full>
-                <CardContent>{renderContent()}</CardContent>
-            </Card>
-        </CardWithTitle>
-    );
+    return <CardContent>{renderContent()}</CardContent>;
 };

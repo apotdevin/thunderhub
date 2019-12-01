@@ -1,24 +1,20 @@
-import React, { useState, useContext } from 'react';
-import {
-    Card,
-    SubTitle,
-    Sub4Title,
-    CardContent,
-    ChannelRow,
-    CardWithTitle,
-} from '../generic/Styled';
+import React, { useContext } from 'react';
+import { Card, DarkSubTitle } from '../generic/Styled';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_FORWARD_CHANNELS_REPORT } from '../../graphql/query';
-import { ButtonRow } from './Buttons';
 import { getValue } from '../../helpers/Helpers';
 import { SettingsContext } from '../../context/SettingsContext';
 import { AccountContext } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
+import { ChannelRow, CardContent } from '.';
 
-export const ForwardChannelsReport = () => {
+interface Props {
+    isTime: string;
+    isType: string;
+}
+
+export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
     const { price, symbol, currency } = useContext(SettingsContext);
-    const [isTime, setIsTime] = useState<string>('week');
-    const [isType, setIsType] = useState<string>('amount');
 
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
@@ -35,13 +31,29 @@ export const ForwardChannelsReport = () => {
         );
     }
 
-    const parsedIncoming = JSON.parse(data.getForwardChannelsReport.incoming);
-    const parsedOutgoing = JSON.parse(data.getForwardChannelsReport.outgoing);
+    const fillArray = (array: {}[]) => {
+        const lengthMissing = 5 - array.length;
+        console.log(lengthMissing);
+        if (lengthMissing > 0) {
+            for (let i = 0; i < lengthMissing; i++) {
+                array.push({ name: '-', amount: '', fee: '', tokens: '' });
+            }
+        }
+        return array;
+    };
+
+    const parsedIncoming = fillArray(
+        JSON.parse(data.getForwardChannelsReport.incoming),
+    );
+    const parsedOutgoing = fillArray(
+        JSON.parse(data.getForwardChannelsReport.outgoing),
+    );
 
     // console.log(parsedIncoming);
     // console.log(parsedOutgoing);
 
-    const getFormatString = (amount: number) => {
+    const getFormatString = (amount: number | string) => {
+        if (typeof amount === 'string') return amount;
         if (isType !== 'amount') {
             return getValue({ amount, price, symbol, currency });
         }
@@ -55,38 +67,23 @@ export const ForwardChannelsReport = () => {
 
         return (
             <>
-                <Sub4Title>Incoming</Sub4Title>
+                <DarkSubTitle>Incoming</DarkSubTitle>
                 {parsedIncoming.map((channel: any, index: number) => (
                     <ChannelRow key={index}>
                         <div>{channel.name}</div>
                         <div>{getFormatString(channel[isType])}</div>
                     </ChannelRow>
                 ))}
-                <Sub4Title>Outgoing</Sub4Title>
+                <DarkSubTitle>Outgoing</DarkSubTitle>
                 {parsedOutgoing.map((channel: any, index: number) => (
                     <ChannelRow key={index}>
                         <div>{channel.name}</div>
                         <div>{getFormatString(channel[isType])}</div>
                     </ChannelRow>
                 ))}
-                <div style={{ marginTop: 'auto' }}>
-                    <ButtonRow
-                        isTime={isTime}
-                        isType={isType}
-                        setIsTime={setIsTime}
-                        setIsType={setIsType}
-                    />
-                </div>
             </>
         );
     };
 
-    return (
-        <CardWithTitle>
-            <SubTitle>Channel Forwards</SubTitle>
-            <Card bottom={'20px'} full>
-                <CardContent>{renderContent()}</CardContent>
-            </Card>
-        </CardWithTitle>
-    );
+    return <CardContent>{renderContent()}</CardContent>;
 };

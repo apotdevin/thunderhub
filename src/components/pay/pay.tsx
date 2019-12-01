@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     CardWithTitle,
     SubTitle,
@@ -11,12 +11,18 @@ import {
 import { useMutation } from '@apollo/react-hooks';
 import { PAY_INVOICE } from '../../graphql/mutation';
 import { Send, Settings } from '../generic/Icons';
+import { AccountContext } from '../../context/AccountContext';
+import { getAuthString } from '../../utils/auth';
 
 export const PayCard = () => {
     const [request, setRequest] = useState('');
+
+    const { host, read, cert } = useContext(AccountContext);
+    const auth = getAuthString(host, read, cert);
+
     const [makePayment, { data, loading, error }] = useMutation(PAY_INVOICE);
 
-    // console.log(data, loading, error);
+    console.log(data, loading, error);
 
     return (
         <CardWithTitle>
@@ -31,7 +37,7 @@ export const PayCard = () => {
                     <SimpleButton
                         enabled={request !== ''}
                         onClick={() => {
-                            makePayment({ variables: { request } });
+                            makePayment({ variables: { request, auth } });
                         }}
                     >
                         <Send />

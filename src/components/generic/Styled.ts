@@ -67,27 +67,6 @@ export const SmallLink = styled.a`
     }
 `;
 
-export const ChartLink = styled.button`
-    text-decoration: none;
-    color: ${({ selected }: { selected: boolean }) =>
-        selected ? chartSelectedLinkColor : chartLinkColor};
-    background-color: transparent;
-    cursor: pointer;
-    border: 0;
-    padding: 0;
-    font-weight: bold;
-
-    &:hover {
-        color: ${chartSelectedLinkColor};
-    }
-`;
-
-export const ChartRow = styled.div`
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 3px;
-`;
-
 export const TitleRow = styled.div`
     display: flex;
     justify-content: space-between;
@@ -102,19 +81,6 @@ export const SubTitle = styled.h4`
 export const Sub4Title = styled.h5`
     margin: 10px 0;
     font-weight: 500;
-`;
-
-export const CardContent = styled.div`
-    height: 100%;
-    display: flex;
-    flex-flow: column;
-`;
-
-export const ChannelRow = styled.div`
-    font-size: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 `;
 
 export const Input = styled.input`
@@ -145,6 +111,7 @@ export const SingleLine = styled.div`
 `;
 
 export const SimpleButton = styled.button`
+    cursor: pointer;
     outline: none;
     padding: 5px;
     margin: 5px;
@@ -157,7 +124,11 @@ export const SimpleButton = styled.button`
     align-items: center;
     justify-content: center;
     border-radius: 5px;
-    /* width: 150px; */
-    /* width: 20% */
     white-space: nowrap;
+`;
+
+export const DarkSubTitle = styled.div`
+    font-size: 14px;
+    color: ${unSelectedNavButton};
+    margin-bottom: 10px;
 `;

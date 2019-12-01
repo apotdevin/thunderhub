@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { CardWithTitle, SubTitle, Card, Sub4Title } from '../generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_INVOICE } from '../../graphql/mutation';
@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import { textColor, buttonBorderColor } from '../../styles/Themes';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
+import { AccountContext } from '../../context/AccountContext';
+import { getAuthString } from '../../utils/auth';
 
 const SingleLine = styled.div`
     display: flex;
@@ -55,7 +57,15 @@ const Input = styled.input`
 
 export const CreateInvoiceCard = () => {
     const [amount, setAmount] = useState(10000);
-    const [createInvoice, { error }] = useMutation(CREATE_INVOICE);
+
+    const { host, read, cert } = useContext(AccountContext);
+    const auth = getAuthString(host, read, cert);
+
+    const [createInvoice, { data, loading, error }] = useMutation(
+        CREATE_INVOICE,
+    );
+
+    console.log(data, loading);
 
     useEffect(() => {
         if (error) {
@@ -73,7 +83,7 @@ export const CreateInvoiceCard = () => {
                     <Input type={'number'} onChange={e => setAmount(10000)} />
                     <SimpleButton
                         onClick={() => {
-                            createInvoice({ variables: { amount } });
+                            createInvoice({ variables: { amount, auth } });
                         }}
                     >
                         <Edit />
