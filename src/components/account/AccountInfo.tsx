@@ -6,6 +6,7 @@ import {
     SingleLine,
     Separation,
     SimpleButton,
+    DarkSubTitle,
 } from '../generic/Styled';
 import { AccountContext } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
@@ -30,12 +31,6 @@ const Tile = styled.div`
     justify-content: space-between;
     align-items: ${({ startTile }: { startTile?: boolean }) =>
         startTile ? 'flex-start' : 'flex-end'};
-`;
-
-const TileTitle = styled.div`
-    font-size: 14px;
-    color: ${unSelectedNavButton};
-    margin-bottom: 10px;
 `;
 
 const ButtonRow = styled.div`
@@ -86,15 +81,15 @@ export const AccountInfo = () => {
                             }
                         />
                         <Tile startTile={true}>
-                            <TileTitle>Account</TileTitle>
+                            <DarkSubTitle>Account</DarkSubTitle>
                             <div>Total</div>
                         </Tile>
                         <Tile>
-                            <TileTitle>Current Balance</TileTitle>
+                            <DarkSubTitle>Current Balance</DarkSubTitle>
                             <div>{totalB}</div>
                         </Tile>
                         <Tile>
-                            <TileTitle>Pending Balance</TileTitle>
+                            <DarkSubTitle>Pending Balance</DarkSubTitle>
                             <div>{totalPB}</div>
                         </Tile>
                     </SingleLine>
@@ -108,15 +103,15 @@ export const AccountInfo = () => {
                             color={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
                         />
                         <Tile startTile={true}>
-                            <TileTitle>Account</TileTitle>
+                            <DarkSubTitle>Account</DarkSubTitle>
                             <div>Lightning</div>
                         </Tile>
                         <Tile>
-                            <TileTitle>Current Balance</TileTitle>
+                            <DarkSubTitle>Current Balance</DarkSubTitle>
                             <div>{formatCCB}</div>
                         </Tile>
                         <Tile>
-                            <TileTitle>Pending Balance</TileTitle>
+                            <DarkSubTitle>Pending Balance</DarkSubTitle>
                             <div>{formatPCB}</div>
                         </Tile>
                         <ButtonRow>
@@ -141,15 +136,15 @@ export const AccountInfo = () => {
                             }
                         />
                         <Tile startTile={true}>
-                            <TileTitle>Account</TileTitle>
+                            <DarkSubTitle>Account</DarkSubTitle>
                             <div>Wallet</div>
                         </Tile>
                         <Tile>
-                            <TileTitle>Current Balance</TileTitle>
+                            <DarkSubTitle>Current Balance</DarkSubTitle>
                             <div>{formatCB}</div>
                         </Tile>
                         <Tile>
-                            <TileTitle>Pending Balance</TileTitle>
+                            <DarkSubTitle>Pending Balance</DarkSubTitle>
                             <div>{formatPB}</div>
                         </Tile>
                         <ButtonRow>
