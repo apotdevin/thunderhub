@@ -24,16 +24,13 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
     });
 
     if (!data || loading) {
-        return (
-            <Card>
-                <div>Loading</div>
-            </Card>
-        );
+        return <div>Loading</div>;
     }
+
+    const { incoming, outgoing } = data.getForwardChannelsReport;
 
     const fillArray = (array: {}[]) => {
         const lengthMissing = 5 - array.length;
-        console.log(lengthMissing);
         if (lengthMissing > 0) {
             for (let i = 0; i < lengthMissing; i++) {
                 array.push({ name: '-', amount: '', fee: '', tokens: '' });
@@ -42,15 +39,14 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
         return array;
     };
 
-    const parsedIncoming = fillArray(
-        JSON.parse(data.getForwardChannelsReport.incoming),
-    );
-    const parsedOutgoing = fillArray(
-        JSON.parse(data.getForwardChannelsReport.outgoing),
-    );
+    const parse = (json: string) => JSON.parse(json);
 
-    // console.log(parsedIncoming);
-    // console.log(parsedOutgoing);
+    if (parse(incoming) <= 0 || parse(outgoing) <= 0) {
+        return null;
+    }
+
+    const parsedIncoming = fillArray(parse(incoming));
+    const parsedOutgoing = fillArray(parse(outgoing));
 
     const getFormatString = (amount: number | string) => {
         if (typeof amount === 'string') return amount;
@@ -60,30 +56,22 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
         return amount;
     };
 
-    const renderContent = () => {
-        if (parsedIncoming.length <= 0 || parsedOutgoing.length <= 0) {
-            return <p>Your node has not forwarded any payments.</p>;
-        }
-
-        return (
-            <>
-                <DarkSubTitle>Incoming</DarkSubTitle>
-                {parsedIncoming.map((channel: any, index: number) => (
-                    <ChannelRow key={index}>
-                        <div>{channel.name}</div>
-                        <div>{getFormatString(channel[isType])}</div>
-                    </ChannelRow>
-                ))}
-                <DarkSubTitle>Outgoing</DarkSubTitle>
-                {parsedOutgoing.map((channel: any, index: number) => (
-                    <ChannelRow key={index}>
-                        <div>{channel.name}</div>
-                        <div>{getFormatString(channel[isType])}</div>
-                    </ChannelRow>
-                ))}
-            </>
-        );
-    };
-
-    return <CardContent>{renderContent()}</CardContent>;
+    return (
+        <CardContent>
+            <DarkSubTitle>Incoming</DarkSubTitle>
+            {parsedIncoming.map((channel: any, index: number) => (
+                <ChannelRow key={index}>
+                    <div>{channel.name}</div>
+                    <div>{getFormatString(channel[isType])}</div>
+                </ChannelRow>
+            ))}
+            <DarkSubTitle>Outgoing</DarkSubTitle>
+            {parsedOutgoing.map((channel: any, index: number) => (
+                <ChannelRow key={index}>
+                    <div>{channel.name}</div>
+                    <div>{getFormatString(channel[isType])}</div>
+                </ChannelRow>
+            ))}
+        </CardContent>
+    );
 };

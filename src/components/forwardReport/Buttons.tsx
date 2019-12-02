@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChartRow, SimpleButton } from '../generic/Styled';
+import { SimpleButton, CardTitle } from '../generic/Styled';
 import styled from 'styled-components';
 import {
     chartSelectedLinkColor,
@@ -47,9 +47,9 @@ export const ButtonRow = ({ isTime, setIsTime, isType, setIsType }: any) => {
     };
 
     return (
-        <ChartRow>
+        <CardTitle>
             {buttonToShow(setIsTime, availableTimes, mappedTimes, timeIndex)}
             {buttonToShow(setIsType, availableTypes, mappedTypes, typeIndex)}
-        </ChartRow>
+        </CardTitle>
     );
 };

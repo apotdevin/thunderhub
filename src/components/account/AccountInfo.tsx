@@ -7,6 +7,7 @@ import {
     Separation,
     SimpleButton,
     DarkSubTitle,
+    ColorButton,
 } from '../generic/Styled';
 import { AccountContext } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
@@ -115,15 +116,15 @@ export const AccountInfo = () => {
                             <div>{formatPCB}</div>
                         </Tile>
                         <ButtonRow>
-                            <SimpleButton>
+                            <ColorButton color={'#FFD300'}>
                                 <Send />
-                            </SimpleButton>
-                            <SimpleButton>
+                            </ColorButton>
+                            <ColorButton color={'#FFD300'}>
                                 <DownArrow />
-                            </SimpleButton>
-                            <SimpleButton>
+                            </ColorButton>
+                            <ColorButton color={'#FFD300'}>
                                 <MoreVertical />
-                            </SimpleButton>
+                            </ColorButton>
                         </ButtonRow>
                     </SingleLine>
                     <Separation />
@@ -148,15 +149,15 @@ export const AccountInfo = () => {
                             <div>{formatPB}</div>
                         </Tile>
                         <ButtonRow>
-                            <SimpleButton>
+                            <ColorButton color={'#FFD300'}>
                                 <Send />
-                            </SimpleButton>
-                            <SimpleButton>
+                            </ColorButton>
+                            <ColorButton color={'#FFD300'}>
                                 <DownArrow />
-                            </SimpleButton>
-                            <SimpleButton>
+                            </ColorButton>
+                            <ColorButton color={'#FFD300'}>
                                 <MoreVertical />
-                            </SimpleButton>
+                            </ColorButton>
                         </ButtonRow>
                     </SingleLine>
                 </Card>

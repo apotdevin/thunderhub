@@ -4,17 +4,21 @@ import {
     cardBorderColor,
     subCardColor,
     smallLinkColor,
-    chartLinkColor,
-    chartSelectedLinkColor,
     unSelectedNavButton,
     textColor,
     buttonBorderColor,
+    chartLinkColor,
 } from '../../styles/Themes';
 
 export const CardWithTitle = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
+`;
+
+export const CardTitle = styled.div`
+    display: flex;
+    justify-content: space-between;
 `;
 
 interface CardProps {
@@ -26,7 +30,6 @@ interface CardProps {
 export const Card = styled.div`
     padding: ${({ padding }) => (padding ? padding : '20px')};
     background: ${cardColor};
-    /* background: linear-gradient(#fff, #fcfcfc); */
     box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     border: 1px solid ${cardBorderColor};
@@ -48,7 +51,6 @@ export const SubCard = styled.div`
     margin-bottom: 10px;
     padding: 10px;
     background: ${subCardColor};
-    /* padding-bottom: 5px; */
     border: 1px solid ${cardBorderColor};
     border-left: ${(props: { color?: string }) =>
         props.color ? `2px solid ${props.color}` : ''};
@@ -84,8 +86,9 @@ export const Sub4Title = styled.h5`
 `;
 
 export const Input = styled.input`
+    height: 30px;
     width: 100%;
-    margin: 10px 20px;
+    margin: 10px;
     border: 0;
     border-bottom: 2px solid #c8ccd4;
     background: none;
@@ -94,13 +97,15 @@ export const Input = styled.input`
     transition: all 0.5s ease;
 
     &:hover {
-        border-bottom: 2px solid #0077ff;
+        border-bottom: 2px solid
+            ${({ color }: { color?: string }) => (color ? color : '#0077ff')};
     }
 
     &:focus {
         outline: none;
         background: none;
-        border-bottom: 2px solid #0077ff;
+        border-bottom: 2px solid
+            ${({ color }: { color?: string }) => (color ? color : '#0077ff')};
     }
 `;
 
@@ -131,4 +136,13 @@ export const DarkSubTitle = styled.div`
     font-size: 14px;
     color: ${unSelectedNavButton};
     margin-bottom: 10px;
+`;
+
+export const ColorButton = styled(SimpleButton)`
+    color: ${chartLinkColor};
+
+    &:hover {
+        border: 1px solid ${({ color }: { color: string }) => color};
+        color: ${textColor};
+    }
 `;

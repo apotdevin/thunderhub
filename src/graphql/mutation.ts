@@ -36,3 +36,25 @@ export const CREATE_INVOICE = gql`
         }
     }
 `;
+
+export const DECODE_REQUEST = gql`
+    mutation decodeRequest($auth: String!, $request: String!) {
+        decodeRequest(auth: $auth, request: $request) {
+            chainAddress
+            cltvDelta
+            description
+            descriptionHash
+            destination
+            expiresAt
+            id
+            routes {
+                baseFeeMTokens
+                channel
+                cltvDelta
+                feeRate
+                publicKey
+            }
+            tokens
+        }
+    }
+`;
