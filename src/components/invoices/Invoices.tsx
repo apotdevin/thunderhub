@@ -30,6 +30,7 @@ export const Invoices = () => {
                     return (
                         <InvoiceCard
                             invoice={invoice}
+                            key={index}
                             index={index + 1}
                             setIndexOpen={setIndexOpen}
                             indexOpen={indexOpen}

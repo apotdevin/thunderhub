@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ForwardReport } from '../forwardReport/ForwardReport';
 import { ForwardChannelsReport } from '../forwardReport/ForwardChannelReport';
 import styled from 'styled-components';
-import { CardWithTitle, SubTitle, Card } from '../generic/Styled';
+import { CardWithTitle, SubTitle, Card, CardTitle } from '../generic/Styled';
 import { ButtonRow } from './Buttons';
 
 export const CardContent = styled.div`
@@ -20,11 +20,6 @@ export const ChannelRow = styled.div`
     align-items: center;
 `;
 
-export const ChartRow = styled.div`
-    display: flex;
-    justify-content: space-between;
-`;
-
 const Row = styled.div`
     display: flex;
 `;
@@ -37,7 +32,7 @@ export const ForwardBox = () => {
 
     return (
         <CardWithTitle>
-            <ChartRow>
+            <CardTitle>
                 <SubTitle>Foward Report</SubTitle>
                 <ButtonRow
                     isTime={isTime}
@@ -45,7 +40,7 @@ export const ForwardBox = () => {
                     setIsTime={setIsTime}
                     setIsType={setIsType}
                 />
-            </ChartRow>
+            </CardTitle>
             <Card bottom={'25px'}>
                 <Row>
                     <ForwardReport {...props} />

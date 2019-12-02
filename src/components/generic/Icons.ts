@@ -1,5 +1,4 @@
-import styled from 'styled-components';
-import { iconButtonColor } from '../../styles/Themes';
+import styled, { css } from 'styled-components';
 import { ReactComponent as UpIcon } from '../../icons/arrow-up.svg';
 import { ReactComponent as DownIcon } from '../../icons/arrow-down.svg';
 import { ReactComponent as ZapIcon } from '../../icons/zap.svg';
@@ -8,8 +7,12 @@ import { ReactComponent as HelpIcon } from '../../icons/help-circle.svg';
 import { ReactComponent as SunIcon } from '../../icons/sun.svg';
 import { ReactComponent as MoonIcon } from '../../icons/moon.svg';
 import { ReactComponent as EyeOffIcon } from '../../icons/eye-off.svg';
-import { ReactComponent as ChevronUpIcon } from '../../icons/chevrons-up.svg';
-import { ReactComponent as ChevronDownIcon } from '../../icons/chevrons-down.svg';
+import { ReactComponent as ChevronsUpIcon } from '../../icons/chevrons-up.svg';
+import { ReactComponent as ChevronsDownIcon } from '../../icons/chevrons-down.svg';
+import { ReactComponent as ChevronLeftIcon } from '../../icons/chevron-left.svg';
+import { ReactComponent as ChevronRightIcon } from '../../icons/chevron-right.svg';
+import { ReactComponent as ChevronUpIcon } from '../../icons/chevron-up.svg';
+import { ReactComponent as ChevronDownIcon } from '../../icons/chevron-down.svg';
 import { ReactComponent as HomeIcon } from '../../icons/home.svg';
 import { ReactComponent as CpuIcon } from '../../icons/cpu.svg';
 import { ReactComponent as SendIcon } from '../../icons/send.svg';
@@ -20,6 +23,21 @@ import { ReactComponent as MoreVerticalIcon } from '../../icons/more-vertical.sv
 import { ReactComponent as AnchorIcon } from '../../icons/anchor.svg';
 import { ReactComponent as PocketIcon } from '../../icons/pocket.svg';
 import { ReactComponent as GlobeIcon } from '../../icons/globe.svg';
+import { ReactComponent as XIcon } from '../../icons/x.svg';
+import { ReactComponent as LayersIcon } from '../../icons/layers.svg';
+import { ReactComponent as LoaderIcon } from '../../icons/loader.svg';
+import { FunctionComponent } from 'react';
+
+interface IconProps {
+    color?: string;
+    size?: string;
+}
+
+const GenericStyles = css`
+    height: ${({ size }: IconProps) => (size ? size : '18px')};
+    width: ${({ size }: IconProps) => (size ? size : '18px')};
+    color: ${({ color }: IconProps) => (color ? color : '')};
+`;
 
 export const IconCircle = styled.div`
     display: flex;
@@ -31,114 +49,38 @@ export const IconCircle = styled.div`
 
     &:hover {
         background-color: #e8e8e8;
-        /* color: #ffffb8; */
     }
 `;
 
-export const QuestionIcon = styled(HelpIcon)`
-    height: 16px;
-`;
+const styleIcon = (icon: FunctionComponent) =>
+    styled(icon)`
+        ${GenericStyles}
+    `;
 
-export const Zap = styled(ZapIcon)`
-    height: 18px;
-    color: ${({ color }: { color?: string }) => (color ? color : 'black')};
-`;
-
-export const ZapOff = styled(ZapOffIcon)`
-    height: 18px;
-    color: ${({ color }: { color?: string }) => (color ? color : 'black')};
-`;
-
-export const Anchor = styled(AnchorIcon)`
-    height: 18px;
-    color: ${({ color }: { color?: string }) => (color ? color : 'black')};
-`;
-
-export const Pocket = styled(PocketIcon)`
-    height: 18px;
-    color: ${({ color }: { color?: string }) => (color ? color : 'black')};
-`;
-
-export const Globe = styled(GlobeIcon)`
-    height: 18px;
-    color: ${({ color }: { color?: string }) => (color ? color : 'black')};
-`;
-
-export const UpArrow = styled(UpIcon)`
-	height: 18px;
-	color: ${iconButtonColor};
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-
-export const DownArrow = styled(DownIcon)`
-	height: 18px;
-	color: ${iconButtonColor}
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-export const Sun = styled(SunIcon)`
-	height: 18px;
-	color: ${iconButtonColor}
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-export const Moon = styled(MoonIcon)`
-	height: 18px;
-	color: ${iconButtonColor}
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-
-export const EyeOff = styled(EyeOffIcon)`
-	height: 18px;
-	color: ${iconButtonColor}
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-
-export const ChevronDown = styled(ChevronDownIcon)`
-	height: 18px;
-	color: ${iconButtonColor}
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-
-export const ChevronUp = styled(ChevronUpIcon)`
-	height: 18px;
-	color: ${iconButtonColor}
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-
-export const Home = styled(HomeIcon)`
-	height: 18px;
-	/* color: ${iconButtonColor} */
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-
-export const Cpu = styled(CpuIcon)`
-	height: 18px;
-	/* color: ${iconButtonColor} */
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-export const Send = styled(SendIcon)`
-	height: 16px;
-	/* color: ${iconButtonColor} */
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-export const Server = styled(ServerIcon)`
-	height: 18px;
-	/* color: ${iconButtonColor} */
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-export const Settings = styled(SettingsIcon)`
-	height: 18px;
-	/* color: ${iconButtonColor} */
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-
-export const Edit = styled(EditIcon)`
-	height: 16px;
-	/* color: ${iconButtonColor} */
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
-
-export const MoreVertical = styled(MoreVerticalIcon)`
-	height: 16px;
-	/* color: ${iconButtonColor} */
-	/* color: ${({ color }: { color?: string }) => (color ? color : 'black')}; */
-`;
+export const QuestionIcon = styleIcon(HelpIcon);
+export const Zap = styleIcon(ZapIcon);
+export const ZapOff = styleIcon(ZapOffIcon);
+export const Anchor = styleIcon(AnchorIcon);
+export const Pocket = styleIcon(PocketIcon);
+export const Globe = styleIcon(GlobeIcon);
+export const UpArrow = styleIcon(UpIcon);
+export const DownArrow = styleIcon(DownIcon);
+export const Sun = styleIcon(SunIcon);
+export const Moon = styleIcon(MoonIcon);
+export const EyeOff = styleIcon(EyeOffIcon);
+export const ChevronsDown = styleIcon(ChevronsDownIcon);
+export const ChevronsUp = styleIcon(ChevronsUpIcon);
+export const ChevronLeft = styleIcon(ChevronLeftIcon);
+export const ChevronRight = styleIcon(ChevronRightIcon);
+export const ChevronUp = styleIcon(ChevronUpIcon);
+export const ChevronDown = styleIcon(ChevronDownIcon);
+export const Home = styleIcon(HomeIcon);
+export const Cpu = styleIcon(CpuIcon);
+export const Send = styleIcon(SendIcon);
+export const Server = styleIcon(ServerIcon);
+export const Settings = styleIcon(SettingsIcon);
+export const Edit = styleIcon(EditIcon);
+export const MoreVertical = styleIcon(MoreVerticalIcon);
+export const XSvg = styleIcon(XIcon);
+export const Layers = styleIcon(LayersIcon);
+export const Loader = styleIcon(LoaderIcon);
