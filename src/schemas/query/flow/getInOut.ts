@@ -10,27 +10,7 @@ import { differenceInHours, differenceInCalendarDays } from 'date-fns';
 import { groupBy } from 'underscore';
 import { reduceInOutArray } from '../report/Helpers';
 import { InOutType } from '../../../schemaTypes/query/flow/InOut';
-
-interface PaymentProps {
-    created_at: string;
-    is_confirmed: boolean;
-    tokens: number;
-}
-
-interface PaymentsProps {
-    payments: PaymentProps[];
-}
-
-interface InvoiceProps {
-    created_at: string;
-    is_confirmed: boolean;
-    received: number;
-}
-
-interface InvoicesProps {
-    invoices: InvoiceProps[];
-    next: string;
-}
+import { InvoicesProps, PaymentsProps } from './getInOut.interface';
 
 export const getInOut = {
     type: InOutType,
