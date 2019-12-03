@@ -132,10 +132,15 @@ export const SimpleButton = styled.button`
     white-space: nowrap;
 `;
 
+interface DarkProps {
+    fontSize?: string;
+    bottom?: string;
+}
+
 export const DarkSubTitle = styled.div`
-    font-size: 14px;
+    font-size: ${({ fontSize }: DarkProps) => (fontSize ? fontSize : '14px')};
     color: ${unSelectedNavButton};
-    margin-bottom: 10px;
+    margin-bottom: ${({ bottom }: DarkProps) => (bottom ? bottom : '10px')};
 `;
 
 export const ColorButton = styled(SimpleButton)`

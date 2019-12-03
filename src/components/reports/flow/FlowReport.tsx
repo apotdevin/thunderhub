@@ -1,19 +1,13 @@
 import React, { useContext } from 'react';
-import { DarkSubTitle } from '../../generic/Styled';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_IN_OUT } from '../../../graphql/query';
 import numeral from 'numeral';
 import { SettingsContext } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
-import { AccountContext } from '../../../context/AccountContext';
-import { getAuthString } from '../../../utils/auth';
 import {
     VictoryBar,
     VictoryChart,
     VictoryAxis,
     VictoryVoronoiContainer,
     VictoryGroup,
-    VictoryPie,
 } from 'victory';
 import {
     chartAxisColor,
@@ -21,11 +15,12 @@ import {
     flowBarColor,
     flowBarColor2,
 } from '../../../styles/Themes';
-import { ChannelRow, CardContent, Row } from '.';
 
 interface Props {
     isTime: string;
     isType: string;
+    parsedData: {}[];
+    parsedData2: {}[];
 }
 
 const getValueString = (amount: number): string => {
@@ -37,15 +32,13 @@ const getValueString = (amount: number): string => {
     return `${amount}`;
 };
 
-export const FlowReport = ({ isTime, isType }: Props) => {
+export const FlowReport = ({
+    isTime,
+    isType,
+    parsedData,
+    parsedData2,
+}: Props) => {
     const { theme, price, symbol, currency } = useContext(SettingsContext);
-
-    const { host, read, cert } = useContext(AccountContext);
-    const auth = getAuthString(host, read, cert);
-
-    const { data, loading, error } = useQuery(GET_IN_OUT, {
-        variables: { time: isTime, auth },
-    });
 
     const priceProps = { price, symbol, currency };
     const getFormat = (amount: number) =>
@@ -54,12 +47,8 @@ export const FlowReport = ({ isTime, isType }: Props) => {
             ...priceProps,
         });
 
-    if (!data || loading) {
-        return <div>Loading</div>;
-    }
-
     let domain = 24;
-    let barWidth = 10;
+    let barWidth = 3;
     if (isTime === 'week') {
         domain = 7;
         barWidth = 15;
@@ -68,13 +57,6 @@ export const FlowReport = ({ isTime, isType }: Props) => {
         barWidth = 3;
     }
 
-    const parsedData: {}[] = JSON.parse(data.getInOut.invoices);
-    const parsedData2: {}[] = JSON.parse(data.getInOut.payments);
-    const invoicePie = [
-        { x: 'Confirmed', y: data.getInOut.confirmedInvoices },
-        { x: 'Unconfirmed', y: data.getInOut.unConfirmedInvoices },
-    ];
-
     const getLabelString = (value: number) => {
         if (isType === 'amount') {
             return numeral(value).format('0,0');
@@ -82,106 +64,67 @@ export const FlowReport = ({ isTime, isType }: Props) => {
         return getFormat(value);
     };
 
-    const total = getLabelString(
-        parsedData
-            .map((x: any) => x[isType])
-            .reduce((a: number, c: number) => a + c, 0),
-    );
-
-    if (parsedData.length <= 0) {
-        return <p>Your node has not forwarded any payments.</p>;
-    }
-
     return (
-        <Row>
-            <CardContent>
-                <div>
-                    <VictoryChart
-                        domainPadding={50}
-                        padding={{ top: 10, left: 50, right: 50, bottom: 20 }}
-                        containerComponent={
-                            <VictoryVoronoiContainer
-                                voronoiDimension="x"
-                                labels={({ datum }) =>
-                                    getLabelString(datum[isType])
-                                }
-                            />
-                        }
-                    >
-                        <VictoryAxis
-                            domain={[0, domain]}
-                            tickFormat={() => ''}
-                            style={{
-                                axis: { stroke: chartGridColor[theme] },
-                            }}
-                        />
-                        <VictoryAxis
-                            dependentAxis
-                            style={{
-                                tickLabels: {
-                                    fill: chartAxisColor[theme],
-                                    fontSize: 18,
-                                },
-                                grid: { stroke: chartGridColor[theme] },
-                                axis: { stroke: 'transparent' },
-                            }}
-                            tickFormat={a =>
-                                isType === 'tokens' ? getValueString(a) : a
-                            }
-                        />
-                        <VictoryGroup offset={barWidth}>
-                            <VictoryBar
-                                animate={{
-                                    duration: 100,
-                                }}
-                                cornerRadius={barWidth / 2}
-                                data={parsedData}
-                                x="period"
-                                y={isType}
-                                style={{
-                                    data: {
-                                        fill: flowBarColor[theme],
-                                        width: barWidth,
-                                    },
-                                }}
-                            />
-                            <VictoryBar
-                                animate={{
-                                    duration: 100,
-                                }}
-                                cornerRadius={barWidth / 2}
-                                data={parsedData2}
-                                x="period"
-                                y={isType}
-                                style={{
-                                    data: {
-                                        fill: flowBarColor2[theme],
-                                        width: barWidth,
-                                    },
-                                }}
-                            />
-                        </VictoryGroup>
-                    </VictoryChart>
-                </div>
-                <ChannelRow>
-                    <DarkSubTitle>Total:</DarkSubTitle>
-                    {total}
-                </ChannelRow>
-            </CardContent>
-            <CardContent>
-                <VictoryPie
-                    height={300}
-                    colorScale={['tomato', 'orange', 'gold', 'cyan', 'navy']}
-                    labels={({ datum }: any) => `${datum.y}`}
-                    padAngle={3}
-                    innerRadius={50}
-                    labelRadius={55}
-                    data={invoicePie}
+        <VictoryChart
+            height={100}
+            domainPadding={50}
+            padding={{ top: 10, left: 50, right: 50, bottom: 10 }}
+            containerComponent={
+                <VictoryVoronoiContainer
+                    voronoiDimension="x"
+                    labels={({ datum }) => getLabelString(datum[isType])}
+                />
+            }
+        >
+            <VictoryAxis
+                domain={[0, domain]}
+                tickFormat={() => ''}
+                style={{
+                    axis: { stroke: chartGridColor[theme] },
+                }}
+            />
+            <VictoryAxis
+                dependentAxis
+                style={{
+                    tickLabels: {
+                        fill: chartAxisColor[theme],
+                        fontSize: 8,
+                    },
+                    grid: { stroke: chartGridColor[theme] },
+                    axis: { stroke: 'transparent' },
+                }}
+                tickFormat={a => (isType === 'tokens' ? getFormat(a) : a)}
+            />
+            <VictoryGroup offset={barWidth}>
+                <VictoryBar
+                    data={parsedData}
+                    x="period"
+                    y={isType}
                     style={{
-                        labels: { fontSize: 24, fill: chartAxisColor[theme] },
+                        data: {
+                            fill: flowBarColor[theme],
+                            width: barWidth,
+                        },
+                        labels: {
+                            fontSize: '12px',
+                        },
                     }}
                 />
-            </CardContent>
-        </Row>
+                <VictoryBar
+                    data={parsedData2}
+                    x="period"
+                    y={isType}
+                    style={{
+                        data: {
+                            fill: flowBarColor2[theme],
+                            width: barWidth,
+                        },
+                        labels: {
+                            fontSize: '12px',
+                        },
+                    }}
+                />
+            </VictoryGroup>
+        </VictoryChart>
     );
 };
