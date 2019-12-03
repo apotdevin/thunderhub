@@ -90,6 +90,14 @@ export const getInOut = {
             return payment.isConfirmed && dif < periods;
         });
 
+        const allInvoices = invoices.filter(invoice => {
+            const dif = differenceFn(endDate, new Date(invoice.createdAt));
+            return dif < periods;
+        });
+
+        const totalConfirmed = confirmedInvoices.length;
+        const totalUnConfirmed = allInvoices.length - totalConfirmed;
+
         const orderedInvoices = groupBy(confirmedInvoices, invoice => {
             return periods - differenceFn(endDate, new Date(invoice.createdAt));
         });
@@ -103,6 +111,8 @@ export const getInOut = {
         return {
             invoices: JSON.stringify(reducedInvoices),
             payments: JSON.stringify(reducedPayments),
+            confirmedInvoices: totalConfirmed,
+            unConfirmedInvoices: totalUnConfirmed,
         };
     },
 };
