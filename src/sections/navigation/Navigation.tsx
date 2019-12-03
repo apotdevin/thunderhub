@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
 import { NodeInfo } from '../../components/nodeInfo/NodeInfo';
 import { SideSettings } from '../../components/sideSettings/SideSettings';
-import { textColor, unSelectedNavButton } from '../../styles/Themes';
+import {
+    textColor,
+    unSelectedNavButton,
+    navButtonColor,
+} from '../../styles/Themes';
 import {
     Home,
     Cpu,
@@ -11,6 +15,7 @@ import {
     Send,
     Settings,
 } from '../../components/generic/Icons';
+import { SettingsContext } from '../../context/SettingsContext';
 
 const NavigationStyle = styled.div`
     grid-area: nav;
@@ -38,11 +43,16 @@ const NavSeparation = styled.div`
     width: 10px;
 `;
 
+interface NavProps {
+    selected: boolean;
+    selectedColor?: string;
+}
+
 const NavButton = styled(Link)`
     padding: 10px;
-    border-left: ${({ selected }: { selected: boolean }) =>
-        selected ? `3px solid white` : ''};
-    background: ${({ selected }: { selected: boolean }) =>
+    border-left: ${({ selected, selectedColor }: NavProps) =>
+        selected ? `3px solid ${selectedColor ? selectedColor : 'white'}` : ''};
+    background: ${({ selected }: NavProps) =>
         selected
             ? `linear-gradient(
 		90deg,
@@ -55,7 +65,7 @@ const NavButton = styled(Link)`
     width: 100%;
     text-decoration: none;
     margin: 15px 0;
-    color: ${({ selected }: { selected: boolean }) =>
+    color: ${({ selected }: NavProps) =>
         selected ? textColor : unSelectedNavButton};
 
     &:hover {
@@ -64,6 +74,8 @@ const NavButton = styled(Link)`
             rgba(255, 255, 255, 0.1) 0%,
             rgba(255, 255, 255, 0) 90%
         );
+        border-left: ${({ selectedColor }: NavProps) =>
+            `3px solid ${selectedColor ? selectedColor : 'white'}`};
     }
 `;
 
@@ -74,6 +86,7 @@ const PAYMENT_LINK = '/payments';
 const SETTINGS_LINK = '/settings';
 
 export const Navigation = () => {
+    const { theme } = useContext(SettingsContext);
     const { pathname } = useLocation();
 
     return (
@@ -83,6 +96,7 @@ export const Navigation = () => {
                     <NodeInfo />
                     <ButtonSection>
                         <NavButton
+                            selectedColor={navButtonColor[theme]}
                             selected={pathname === HOME_LINK}
                             to={HOME_LINK}
                         >
@@ -91,6 +105,7 @@ export const Navigation = () => {
                             Home
                         </NavButton>
                         <NavButton
+                            selectedColor={navButtonColor[theme]}
                             selected={pathname === CHANNEL_LINK}
                             to={CHANNEL_LINK}
                         >
@@ -99,6 +114,7 @@ export const Navigation = () => {
                             Channels
                         </NavButton>
                         <NavButton
+                            selectedColor={navButtonColor[theme]}
                             selected={pathname === INVOICE_LINK}
                             to={INVOICE_LINK}
                         >
@@ -107,6 +123,7 @@ export const Navigation = () => {
                             Invoices
                         </NavButton>
                         <NavButton
+                            selectedColor={navButtonColor[theme]}
                             selected={pathname === PAYMENT_LINK}
                             to={PAYMENT_LINK}
                         >
@@ -115,6 +132,7 @@ export const Navigation = () => {
                             Payments
                         </NavButton>
                         <NavButton
+                            selectedColor={navButtonColor[theme]}
                             selected={pathname === SETTINGS_LINK}
                             to={SETTINGS_LINK}
                         >
