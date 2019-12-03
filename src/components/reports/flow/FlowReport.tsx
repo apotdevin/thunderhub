@@ -13,6 +13,7 @@ import {
     VictoryAxis,
     VictoryVoronoiContainer,
     VictoryGroup,
+    VictoryPie,
 } from 'victory';
 import {
     chartAxisColor,
@@ -20,7 +21,7 @@ import {
     flowBarColor,
     flowBarColor2,
 } from '../../../styles/Themes';
-import { ChannelRow, CardContent } from '.';
+import { ChannelRow, CardContent, Row } from '.';
 
 interface Props {
     isTime: string;
@@ -69,9 +70,10 @@ export const FlowReport = ({ isTime, isType }: Props) => {
 
     const parsedData: {}[] = JSON.parse(data.getInOut.invoices);
     const parsedData2: {}[] = JSON.parse(data.getInOut.payments);
-
-    // console.log(parsedData);
-    // console.log(chartAxisColor[theme]);
+    const invoicePie = [
+        { x: 'Confirmed', y: data.getInOut.confirmedInvoices },
+        { x: 'Unconfirmed', y: data.getInOut.unConfirmedInvoices },
+    ];
 
     const getLabelString = (value: number) => {
         if (isType === 'amount') {
@@ -86,12 +88,13 @@ export const FlowReport = ({ isTime, isType }: Props) => {
             .reduce((a: number, c: number) => a + c, 0),
     );
 
-    const renderContent = () => {
-        if (parsedData.length <= 0) {
-            return <p>Your node has not forwarded any payments.</p>;
-        }
-        return (
-            <>
+    if (parsedData.length <= 0) {
+        return <p>Your node has not forwarded any payments.</p>;
+    }
+
+    return (
+        <Row>
+            <CardContent>
                 <div>
                     <VictoryChart
                         domainPadding={50}
@@ -128,6 +131,10 @@ export const FlowReport = ({ isTime, isType }: Props) => {
                         />
                         <VictoryGroup offset={barWidth}>
                             <VictoryBar
+                                animate={{
+                                    duration: 100,
+                                }}
+                                cornerRadius={barWidth / 2}
                                 data={parsedData}
                                 x="period"
                                 y={isType}
@@ -139,6 +146,10 @@ export const FlowReport = ({ isTime, isType }: Props) => {
                                 }}
                             />
                             <VictoryBar
+                                animate={{
+                                    duration: 100,
+                                }}
+                                cornerRadius={barWidth / 2}
                                 data={parsedData2}
                                 x="period"
                                 y={isType}
@@ -156,9 +167,21 @@ export const FlowReport = ({ isTime, isType }: Props) => {
                     <DarkSubTitle>Total:</DarkSubTitle>
                     {total}
                 </ChannelRow>
-            </>
-        );
-    };
-
-    return <CardContent>{renderContent()}</CardContent>;
+            </CardContent>
+            <CardContent>
+                <VictoryPie
+                    height={300}
+                    colorScale={['tomato', 'orange', 'gold', 'cyan', 'navy']}
+                    labels={({ datum }: any) => `${datum.y}`}
+                    padAngle={3}
+                    innerRadius={50}
+                    labelRadius={55}
+                    data={invoicePie}
+                    style={{
+                        labels: { fontSize: 24, fill: chartAxisColor[theme] },
+                    }}
+                />
+            </CardContent>
+        </Row>
+    );
 };

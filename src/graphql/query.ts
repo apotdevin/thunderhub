@@ -201,6 +201,8 @@ export const GET_IN_OUT = gql`
         getInOut(auth: $auth, time: $time) {
             invoices
             payments
+            confirmedInvoices
+            unConfirmedInvoices
         }
     }
 `;
