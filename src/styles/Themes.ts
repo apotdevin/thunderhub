@@ -1,15 +1,21 @@
 import theme from 'styled-theming';
 
+// ---------------------------------------
+// APP COLORS
+// ---------------------------------------
 export const backgroundColor = theme('mode', {
     light: '#f5f7fb',
     dark: '#151727',
 });
 
 export const textColor = theme('mode', {
-    light: '262626',
+    light: '#262626',
     dark: '#EFFFFA',
 });
 
+// ---------------------------------------
+// CARD COLORS
+// ---------------------------------------
 export const cardColor = theme('mode', {
     light: '#ffffff',
     dark: '#1b1e32',
@@ -25,6 +31,9 @@ export const cardBorderColor = theme('mode', {
     dark: '#242839',
 });
 
+// ---------------------------------------
+// PROGRESS BAR COLORS
+// ---------------------------------------
 export const progressBackground = theme('mode', {
     light: 'rgba(0, 0, 0, 0.05)',
     dark: 'rgba(0, 0, 0, 1)',
@@ -40,6 +49,17 @@ export const progressSecond = theme('mode', {
     dark: '#1890ff',
 });
 
+// ---------------------------------------
+// NAVIGATION COLORS
+// ---------------------------------------
+export const navButtonColor: { [key: string]: string } = {
+    light: '#262626',
+    dark: 'white',
+};
+
+// ---------------------------------------
+// ICON COLORS
+// ---------------------------------------
 export const iconButtonColor = theme('mode', {
     light: 'black',
     dark: 'white',
@@ -51,7 +71,7 @@ export const iconButtonHover = theme('mode', {
 });
 
 export const iconButtonBack = theme('mode', {
-    light: '#f5f5f5',
+    light: 'white',
     dark: '#0D0C1D',
 });
 
@@ -95,7 +115,9 @@ export const chartBarColor: { [key: string]: string } = {
     dark: '#6938f1',
 };
 
+// ---------------------------------------
 // Flow Report Bar Colors
+// ---------------------------------------
 export const flowBarColor: { [key: string]: string } = {
     light: '#FD5F00',
     dark: '#FD5F00',
