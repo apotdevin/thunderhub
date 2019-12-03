@@ -195,3 +195,12 @@ export const GET_FORWARD_CHANNELS_REPORT = gql`
         }
     }
 `;
+
+export const GET_IN_OUT = gql`
+    query GetInOut($auth: String!, $time: String) {
+        getInOut(auth: $auth, time: $time) {
+            invoices
+            payments
+        }
+    }
+`;

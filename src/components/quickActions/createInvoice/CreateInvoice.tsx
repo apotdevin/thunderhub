@@ -32,7 +32,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
     console.log(data, loading);
 
     return (
-        <Card bottom={'25px'}>
+        <Card>
             <SingleLine>
                 <NoWrapTitle>Amount to receive:</NoWrapTitle>
                 <Input

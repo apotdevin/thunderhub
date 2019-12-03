@@ -1,7 +1,7 @@
 import theme from 'styled-theming';
 
 export const backgroundColor = theme('mode', {
-    light: '#fafafa',
+    light: '#f5f7fb',
     dark: '#151727',
 });
 
@@ -11,7 +11,7 @@ export const textColor = theme('mode', {
 });
 
 export const cardColor = theme('mode', {
-    light: 'white',
+    light: '#ffffff',
     dark: '#1b1e32',
 });
 
@@ -70,21 +70,6 @@ export const chartSelectedLinkColor = theme('mode', {
     dark: '#6938f1',
 });
 
-export const chartAxisColor: { [key: string]: string } = {
-    light: '#1b1c22',
-    dark: 'white',
-};
-
-export const chartGridColor: { [key: string]: string } = {
-    light: '#1b1c22',
-    dark: '#595959',
-};
-
-export const chartBarColor: { [key: string]: string } = {
-    light: '#43DDE2',
-    dark: '#6938f1',
-};
-
 export const unSelectedNavButton = theme('mode', {
     light: 'grey',
     dark: 'grey',
@@ -94,3 +79,28 @@ export const buttonBorderColor = theme('mode', {
     light: 'black',
     dark: '#2e3245',
 });
+
+export const chartAxisColor: { [key: string]: string } = {
+    light: '#1b1c22',
+    dark: 'white',
+};
+
+export const chartGridColor: { [key: string]: string } = {
+    light: '#e8e8e8',
+    dark: '#595959',
+};
+
+export const chartBarColor: { [key: string]: string } = {
+    light: '#6938f1',
+    dark: '#6938f1',
+};
+
+// Flow Report Bar Colors
+export const flowBarColor: { [key: string]: string } = {
+    light: '#FD5F00',
+    dark: '#FD5F00',
+};
+export const flowBarColor2: { [key: string]: string } = {
+    light: '#ffd300',
+    dark: '#ffd300',
+};

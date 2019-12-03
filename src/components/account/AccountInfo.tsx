@@ -71,7 +71,7 @@ export const AccountInfo = () => {
         <>
             <CardWithTitle>
                 <SubTitle>Resume</SubTitle>
-                <Card bottom={'20px'}>
+                <Card>
                     <SingleLine>
                         <Pocket
                             color={
@@ -98,7 +98,7 @@ export const AccountInfo = () => {
             </CardWithTitle>
             <CardWithTitle>
                 <SubTitle>Your accounts</SubTitle>
-                <Card bottom={'20px'}>
+                <Card>
                     <SingleLine>
                         <Zap
                             color={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
