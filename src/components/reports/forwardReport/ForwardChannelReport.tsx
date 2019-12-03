@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { Card, DarkSubTitle } from '../generic/Styled';
+import { DarkSubTitle } from '../../generic/Styled';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_FORWARD_CHANNELS_REPORT } from '../../graphql/query';
-import { getValue } from '../../helpers/Helpers';
-import { SettingsContext } from '../../context/SettingsContext';
-import { AccountContext } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
+import { GET_FORWARD_CHANNELS_REPORT } from '../../../graphql/query';
+import { getValue } from '../../../helpers/Helpers';
+import { SettingsContext } from '../../../context/SettingsContext';
+import { AccountContext } from '../../../context/AccountContext';
+import { getAuthString } from '../../../utils/auth';
 import { ChannelRow, CardContent } from '.';
 
 interface Props {

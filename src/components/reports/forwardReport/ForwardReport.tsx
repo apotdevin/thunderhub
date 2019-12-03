@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
-import { Sub4Title, DarkSubTitle } from '../generic/Styled';
+import { DarkSubTitle } from '../../generic/Styled';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_FORWARD_REPORT } from '../../graphql/query';
+import { GET_FORWARD_REPORT } from '../../../graphql/query';
 import numeral from 'numeral';
-import { SettingsContext } from '../../context/SettingsContext';
-import { getValue } from '../../helpers/Helpers';
-import { AccountContext } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
+import { SettingsContext } from '../../../context/SettingsContext';
+import { getValue } from '../../../helpers/Helpers';
+import { AccountContext } from '../../../context/AccountContext';
+import { getAuthString } from '../../../utils/auth';
 import {
     VictoryBar,
     VictoryChart,
@@ -17,7 +17,7 @@ import {
     chartAxisColor,
     chartBarColor,
     chartGridColor,
-} from '../../styles/Themes';
+} from '../../../styles/Themes';
 import { ChannelRow, CardContent } from '.';
 
 interface Props {

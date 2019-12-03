@@ -1,14 +1,16 @@
 import React from 'react';
 import { NetworkInfo } from '../../components/networkInfo/NetworkInfo';
 import { AccountInfo } from '../../components/account/AccountInfo';
-import { ForwardBox } from '../../components/forwardReport';
 import { QuickActions } from '../../components/quickActions/QuickActions';
+import { FlowBox } from '../../components/reports/flow';
+import { ForwardBox } from '../../components/reports/forwardReport';
 
 export const Home = () => {
     return (
         <>
             <AccountInfo />
             <QuickActions />
+            <FlowBox />
             <ForwardBox />
             <NetworkInfo />
         </>

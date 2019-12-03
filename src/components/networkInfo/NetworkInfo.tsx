@@ -48,7 +48,7 @@ export const NetworkInfo = () => {
     // console.log(loading, error, data);
 
     if (loading || !data || !data.getNetworkInfo) {
-        return <Card bottom="10px">Loading....</Card>;
+        return <Card>Loading....</Card>;
     }
 
     const {
@@ -73,7 +73,7 @@ export const NetworkInfo = () => {
     return (
         <CardWithTitle>
             <SubTitle>Network Info</SubTitle>
-            <Card bottom="10px">
+            <Card>
                 <SingleLine>
                     <Title>
                         <Globe color={'#2f6fb7'} />

@@ -33,7 +33,7 @@ export const Card = styled.div`
     box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     border: 1px solid ${cardBorderColor};
-    margin-bottom: ${(props: CardProps) => props.bottom};
+    margin-bottom: ${({ bottom }: CardProps) => (bottom ? bottom : '25px')};
     width: 100%;
     height: ${(props: CardProps) => props.full && '100%'};
     border-left: ${(props: { color?: string }) =>

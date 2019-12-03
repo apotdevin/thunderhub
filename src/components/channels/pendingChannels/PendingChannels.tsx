@@ -19,7 +19,7 @@ export const PendingChannels = () => {
     // console.log(loading, error, data);
 
     if (loading || !data || !data.getPendingChannels) {
-        return <Card bottom="10px">Loading....</Card>;
+        return <Card>Loading....</Card>;
     }
 
     return (

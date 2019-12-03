@@ -19,7 +19,7 @@ export const Invoices = () => {
     console.log(loading, error, data);
 
     if (loading || !data || !data.getInvoices) {
-        return <Card bottom="10px">Loading....</Card>;
+        return <Card>Loading....</Card>;
     }
 
     const renderInvoices = () => {
