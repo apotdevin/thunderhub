@@ -124,6 +124,10 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
                             }
                         />
                         <VictoryBar
+                            animate={{
+                                duration: 100,
+                            }}
+                            cornerRadius={barWidth / 2}
                             data={parsedData}
                             x="period"
                             y={isType}

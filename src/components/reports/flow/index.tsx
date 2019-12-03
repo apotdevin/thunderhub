@@ -19,7 +19,7 @@ export const ChannelRow = styled.div`
     align-items: center;
 `;
 
-const Row = styled.div`
+export const Row = styled.div`
     display: flex;
 `;
 
@@ -49,7 +49,7 @@ export const FlowBox = () => {
     return (
         <CardWithTitle>
             <CardTitle>
-                <SubTitle>Flow</SubTitle>
+                <SubTitle>Invoices and Payments Report</SubTitle>
                 <ButtonRow {...buttonProps} />
             </CardTitle>
             <Card>
