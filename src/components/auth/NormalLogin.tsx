@@ -14,10 +14,6 @@ export const LoginForm = ({ available }: { available?: number }) => {
     const [isRead, setRead] = useState('');
     const [isCert, setCert] = useState('');
 
-    const admin = base64url.fromBase64(isAdmin);
-    const read = base64url.fromBase64(isRead);
-    const cert = base64url.fromBase64(isCert);
-
     const testPassword = 'Test Password!';
 
     const canConnect =
@@ -28,6 +24,10 @@ export const LoginForm = ({ available }: { available?: number }) => {
         !!available;
 
     const handleConnect = () => {
+        const admin = base64url.fromBase64(isAdmin);
+        const read = base64url.fromBase64(isRead);
+        const cert = base64url.fromBase64(isCert);
+
         const encryptedAdmin = CryptoJS.AES.encrypt(
             admin,
             testPassword,
