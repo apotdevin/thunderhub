@@ -1,8 +1,4 @@
-import {
-    GraphQLObjectType,
-    GraphQLBoolean,
-    GraphQLString,
-} from 'graphql';
+import { GraphQLObjectType, GraphQLBoolean, GraphQLString } from 'graphql';
 import { GraphQLInt } from 'graphql';
 import { PartnerNodeType } from './channels';
 
