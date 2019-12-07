@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { LoginForm } from '../../components/auth/NormalLogin';
 import { ConnectLoginForm } from '../../components/auth/ConnectLogin';
 import { getNextAvailable } from '../../utils/storage';
+import { BTCLoginForm } from '../../components/auth/BTCLogin';
 
 const Login = styled.div`
     display: flex;
@@ -23,6 +24,7 @@ export const LoginView = () => {
                 <SubTitle> Login now:</SubTitle>
                 <LoginForm available={available} />
                 <ConnectLoginForm available={available} />
+                <BTCLoginForm available={available} />
             </Card>
         </Login>
     );

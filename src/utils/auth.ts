@@ -1,3 +1,5 @@
+import base64url from 'base64url';
+
 export const buildAuthString = (
     name: string,
     host: string,
@@ -57,4 +59,47 @@ export const getAuthLnd = (lndconnect: string) => {
     const socket = url.host;
 
     return { cert, macaroon, socket };
+};
+
+export const getBase64CertfromDerFormat = (url: string) => {
+    if (!url) return null;
+
+    const base64 = base64url.toBase64(url);
+
+    const prefix = '-----BEGIN CERTIFICATE-----\n';
+    const postfix = '-----END CERTIFICATE-----';
+    const pem = base64.match(/.{0,64}/g) || [];
+    const pemString = pem.join('\n');
+    const pemComplete = prefix + pemString + postfix;
+    const pemText = base64url.encode(pemComplete);
+
+    return pemText;
+};
+
+export const getConfigLnd = (json: string) => {
+    const parsedJson = JSON.parse(json);
+
+    const config = parsedJson.configurations;
+
+    if (config && config.length >= 1) {
+        const cert = config[0].certificateThumbprint || '';
+        const macaroon = config[0].adminMacaroon;
+        const readMacaroon = config[0].readonlyMacaroon;
+        const host = config[0].host;
+        const port = config[0].port;
+
+        return {
+            cert,
+            macaroon,
+            readMacaroon,
+            host: `${host}:${port}`,
+        };
+    }
+
+    return {
+        cert: '',
+        macaroon: '',
+        readMacaroon: '',
+        host: '',
+    };
 };
