@@ -10,10 +10,11 @@ import { BrowserRouter } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
 import SettingsProvider, { SettingsContext } from './context/SettingsContext';
 import { BitcoinPrice } from './components/bitcoinPrice/BitcoinPrice';
-import ReactModal from 'react-modal';
+import { ModalProvider } from 'styled-react-modal';
 import AccountProvider, { AccountContext } from './context/AccountContext';
 import { LoginView } from './views/login/Login';
 import { toast } from 'react-toastify';
+import { FadingBackground } from './components/modal/ReactModal';
 import 'react-toastify/dist/ReactToastify.css';
 
 toast.configure({
@@ -62,9 +63,11 @@ const ContextApp: React.FC = () => {
 
     return (
         <ThemeProvider theme={{ mode: theme }}>
-            <BitcoinPrice />
-            <GlobalStyles />
-            <Wrapper>{renderContent()}</Wrapper>
+            <ModalProvider backgroundComponent={FadingBackground}>
+                <BitcoinPrice />
+                <GlobalStyles />
+                <Wrapper>{renderContent()}</Wrapper>
+            </ModalProvider>
         </ThemeProvider>
     );
 };
@@ -82,7 +85,5 @@ const App: React.FC = () => {
         </BrowserRouter>
     );
 };
-
-ReactModal.setAppElement('#root');
 
 export default App;

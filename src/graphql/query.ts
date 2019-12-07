@@ -92,6 +92,7 @@ export const GET_CHANNELS = gql`
 export const GET_PENDING_CHANNELS = gql`
     query GetPendingChannels($auth: String!) {
         getPendingChannels(auth: $auth) {
+            closeTransactionId
             isActive
             isClosing
             isOpening
@@ -102,6 +103,9 @@ export const GET_PENDING_CHANNELS = gql`
             remoteBalance
             remoteReserve
             sent
+            transactionFee
+            transactionId
+            transactionVout
             partnerNodeInfo {
                 alias
                 capacity

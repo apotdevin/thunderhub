@@ -1,3 +1,4 @@
+import { FunctionComponent } from 'react';
 import styled, { css } from 'styled-components';
 import { ReactComponent as UpIcon } from '../../icons/arrow-up.svg';
 import { ReactComponent as DownIcon } from '../../icons/arrow-down.svg';
@@ -26,17 +27,20 @@ import { ReactComponent as GlobeIcon } from '../../icons/globe.svg';
 import { ReactComponent as XIcon } from '../../icons/x.svg';
 import { ReactComponent as LayersIcon } from '../../icons/layers.svg';
 import { ReactComponent as LoaderIcon } from '../../icons/loader.svg';
-import { FunctionComponent } from 'react';
+import { ReactComponent as CircleIcon } from '../../icons/circle.svg';
+import { ReactComponent as AlertTriangleIcon } from '../../icons/alert-triangle.svg';
 
 interface IconProps {
     color?: string;
     size?: string;
+    fillcolor?: string;
 }
 
 const GenericStyles = css`
     height: ${({ size }: IconProps) => (size ? size : '18px')};
     width: ${({ size }: IconProps) => (size ? size : '18px')};
     color: ${({ color }: IconProps) => (color ? color : '')};
+    fill: ${({ fillcolor }: IconProps) => (fillcolor ? fillcolor : '')};
 `;
 
 export const IconCircle = styled.div`
@@ -84,3 +88,5 @@ export const MoreVertical = styleIcon(MoreVerticalIcon);
 export const XSvg = styleIcon(XIcon);
 export const Layers = styleIcon(LayersIcon);
 export const Loader = styleIcon(LoaderIcon);
+export const Circle = styleIcon(CircleIcon);
+export const AlertTriangle = styleIcon(AlertTriangleIcon);

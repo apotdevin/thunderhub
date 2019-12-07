@@ -12,7 +12,11 @@ import {
 import ReactTooltip from 'react-tooltip';
 import { SubCard, Separation } from '../../generic/Styled';
 import { SettingsContext } from '../../../context/SettingsContext';
-import { getStatusDot, getTooltipType } from '../../generic/Helpers';
+import {
+    getStatusDot,
+    getTooltipType,
+    getTransactionLink,
+} from '../../generic/Helpers';
 import { getNodeLink } from '../../generic/Helpers';
 
 interface PendingCardProps {
@@ -40,6 +44,7 @@ export const PendingCard = ({
         });
 
     const {
+        closeTransactionId,
         isActive,
         isClosing,
         isOpening,
@@ -50,6 +55,9 @@ export const PendingCard = ({
         remoteBalance,
         // remoteReserve,
         sent,
+        transactionFee,
+        transactionId,
+        transactionVout,
         partnerNodeInfo,
     } = channelInfo;
 
@@ -82,6 +90,18 @@ export const PendingCard = ({
                 <DetailLine>
                     <div>Node Public Key:</div>
                     {getNodeLink(partnerPublicKey)}
+                </DetailLine>
+                <DetailLine>
+                    <div>Transaction Id:</div>
+                    {getTransactionLink(transactionId)}
+                </DetailLine>
+                <DetailLine>
+                    <div>Transaction Fee:</div>
+                    {getTransactionLink(transactionFee)}
+                </DetailLine>
+                <DetailLine>
+                    <div>Close Transaction Id:</div>
+                    {getTransactionLink(closeTransactionId)}
                 </DetailLine>
                 {/* <DetailLine>{localReserve}</DetailLine> */}
                 {/* <DetailLine>{remoteReserve}</DetailLine> */}

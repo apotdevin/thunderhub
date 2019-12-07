@@ -28,14 +28,13 @@ export const PendingChannels = () => {
                 Pending Channels
             </h1>
             {data.getPendingChannels.map((channel: any, index: number) => (
-                <>
-                    <PendingCard
-                        channelInfo={channel}
-                        index={index + 1}
-                        setIndexOpen={setIndexOpen}
-                        indexOpen={indexOpen}
-                    />
-                </>
+                <PendingCard
+                    channelInfo={channel}
+                    key={index}
+                    index={index + 1}
+                    setIndexOpen={setIndexOpen}
+                    indexOpen={indexOpen}
+                />
             ))}
         </Card>
     );

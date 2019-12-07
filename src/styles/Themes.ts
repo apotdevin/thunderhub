@@ -13,6 +13,11 @@ export const textColor = theme('mode', {
     dark: '#EFFFFA',
 });
 
+export const inverseTextColor = theme('mode', {
+    light: '#EFFFFA',
+    dark: '#262626',
+});
+
 // ---------------------------------------
 // CARD COLORS
 // ---------------------------------------
