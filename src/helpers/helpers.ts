@@ -40,7 +40,7 @@ export const getAuthLnd = (auth: string) => {
     // const macaroon = base64url.toBase64(encodedMacaroon);
 
     // const cert = base64url.toBase64(encodedCert);
-    const macaroon = base64url.toBase64(encodedMacaroon);
+    const macaroon = base64url.toBase64(encodedMacaroon).replace('==', '');
 
     // console.log(encodedCert);
 
@@ -61,7 +61,7 @@ export const getAuthLnd = (auth: string) => {
 export const getErrorMsg = (error: any[]): string => {
     const code = error[0];
     const msg = error[1];
-    const details = error.length > 2 ? error[2].details : '';
+    const details = error.length > 2 ? error[2].err.details : '';
 
     return JSON.stringify({ code, msg, details });
 };

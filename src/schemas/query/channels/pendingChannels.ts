@@ -24,6 +24,9 @@ interface PendingChannelProps {
     remote_balance: number;
     remote_reserve: number;
     sent: number;
+    transaction_fee: number;
+    transaction_id: string;
+    transaction_vout: number;
 }
 
 export const getPendingChannels = {
@@ -50,6 +53,7 @@ export const getPendingChannels = {
                     });
 
                     return {
+                        closeTransactionId: channel.close_transaction_id,
                         isActive: channel.is_active,
                         isClosing: channel.is_closing,
                         isOpening: channel.is_opening,
@@ -60,6 +64,9 @@ export const getPendingChannels = {
                         remoteBalance: channel.remote_balance,
                         remoteReserve: channel.remote_reserve,
                         sent: channel.sent,
+                        transactionFee: channel.transaction_fee,
+                        transactionId: channel.transaction_id,
+                        transactionVout: channel.transaction_vout,
                         partnerNodeInfo: {
                             alias: nodeInfo.alias,
                             capacity: nodeInfo.capacity,
