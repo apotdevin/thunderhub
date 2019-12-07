@@ -8,6 +8,7 @@ import {
     textColor,
     buttonBorderColor,
     chartLinkColor,
+    inverseTextColor,
 } from '../../styles/Themes';
 
 export const CardWithTitle = styled.div`
@@ -40,8 +41,12 @@ export const Card = styled.div`
         props.color ? `2px solid ${props.color}` : ''};
 `;
 
+interface SeparationProps {
+    height?: number;
+}
+
 export const Separation = styled.div`
-    height: ${({ height }: { height?: number }) => (height ? height : '2')}px;
+    height: ${({ height }: SeparationProps) => (height ? height : '1')}px;
     background-color: ${unSelectedNavButton};
     width: 100%;
     margin: 20px 0;
@@ -80,9 +85,17 @@ export const SubTitle = styled.h4`
     font-weight: 500;
 `;
 
+export const InverseSubtitle = styled(SubTitle)`
+    color: ${inverseTextColor};
+`;
+
 export const Sub4Title = styled.h5`
     margin: 10px 0;
     font-weight: 500;
+`;
+
+export const NoWrapTitle = styled(Sub4Title)`
+    white-space: nowrap;
 `;
 
 export const Input = styled.input`
@@ -130,6 +143,11 @@ export const SimpleButton = styled.button`
     justify-content: center;
     border-radius: 5px;
     white-space: nowrap;
+`;
+
+export const SimpleInverseButton = styled(SimpleButton)`
+    color: ${({ enabled = true }: { enabled?: boolean }) =>
+        enabled ? inverseTextColor : unSelectedNavButton};
 `;
 
 interface DarkProps {

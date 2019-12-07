@@ -1,33 +1,191 @@
-import React, { useState } from "react";
-import { CLOSE_CHANNEL } from "../../graphql/mutation";
-import { useMutation } from "@apollo/react-hooks";
+import React, { useState, useContext } from 'react';
+import { CLOSE_CHANNEL } from '../../graphql/mutation';
+import { useMutation } from '@apollo/react-hooks';
+import { AccountContext } from '../../context/AccountContext';
+import { getAuthString } from '../../utils/auth';
+import {
+    Input,
+    SimpleButton,
+    Separation,
+    SingleLine,
+    SubTitle,
+    NoWrapTitle,
+    Sub4Title,
+} from '../generic/Styled';
+import { Circle, AlertTriangle } from '../generic/Icons';
+import styled from 'styled-components';
+import { textColor, chartLinkColor } from '../../styles/Themes';
+import { toast } from 'react-toastify';
+import { getErrorContent } from '../../utils/error';
 
 interface CloseChannelProps {
-  setModalOpen: (status: boolean) => void;
-  channelId: string;
+    setModalOpen: (status: boolean) => void;
+    channelId: string;
+    channelName: string;
 }
 
+interface ButtonProps {
+    color: string;
+    selected?: boolean;
+}
+
+const Button = styled(SimpleButton)`
+    min-width: 70px;
+    border: 1px solid
+        ${({ color, selected }: ButtonProps) =>
+            selected ? color : chartLinkColor};
+
+    &:hover {
+        border: 1px solid ${({ color }: ButtonProps) => color};
+        color: ${textColor};
+    }
+`;
+
+const ButtonRow = styled.div`
+    display: flex;
+    width: auto;
+`;
+
+const WarningCard = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+
+const CenterLine = styled(SingleLine)`
+    justify-content: center;
+`;
+
 export const CloseChannel = ({
-  setModalOpen,
-  channelId
+    setModalOpen,
+    channelId,
+    channelName,
 }: CloseChannelProps) => {
-  const [isForce, setIsForce] = useState<boolean>(false);
-  // const [target, setTarget] = useState<number>(0);
-  // const [tokens, setTokens] = useState<number>(0);
+    const [isForce, setIsForce] = useState<boolean>(false);
+    const [isType, setIsType] = useState<string>('none');
+    const [amount, setAmount] = useState<number>(0);
+    const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
 
-  const [closeChannel] = useMutation(CLOSE_CHANNEL);
+    const { host, read, cert } = useContext(AccountContext);
+    const auth = getAuthString(host, read, cert);
 
-  // console.log(data);
+    const [closeChannel] = useMutation(CLOSE_CHANNEL, {
+        onCompleted: data => {
+            if (data.closeChannel) {
+                toast.success('Channel Closed');
+            }
+        },
+        onError: error => toast.error(getErrorContent(error)),
+        refetchQueries: ['GetChannels', 'GetPendingChannels'],
+    });
 
-  const handleClick = () => {
-    closeChannel({ variables: { id: channelId, forceClose: isForce } });
-    setModalOpen(false);
-  };
+    const handleClick = () => {
+        const props = {
+            id: channelId,
+            forceClose: isForce,
+            auth,
+            ...(isType !== 'none'
+                ? isType == 'fee'
+                    ? { tokens: amount }
+                    : { target: amount }
+                : {}),
+        };
+        closeChannel({ variables: props });
+        setModalOpen(false);
+    };
 
-  return (
-    <>
-      <button onClick={() => setIsForce(true)}>Force Close</button>
-      <button onClick={handleClick}>hello</button>
-    </>
-  );
+    const handleOnlyClose = () => setModalOpen(false);
+
+    const renderWarning = () => (
+        <WarningCard>
+            <AlertTriangle size={'32px'} color={'red'} />
+            <SubTitle>Are you sure you want to close the channel?</SubTitle>
+            <Sub4Title>{`${channelName} [${channelId}]`}</Sub4Title>
+            <Separation />
+            <SingleLine>
+                <Button color={'red'} onClick={handleClick}>
+                    Close Channel
+                </Button>
+                <Button color={'green'} onClick={handleOnlyClose}>
+                    Cancel
+                </Button>
+            </SingleLine>
+        </WarningCard>
+    );
+
+    const renderContent = () => (
+        <>
+            <SingleLine>
+                <SubTitle>{`Close Channel`}</SubTitle>
+                <Sub4Title>{`${channelName} [${channelId}]`}</Sub4Title>
+            </SingleLine>
+            <Separation />
+            <SingleLine>
+                <Sub4Title>Method:</Sub4Title>
+                <ButtonRow>
+                    <Button
+                        selected={isType === 'target'}
+                        color={'#0077ff'}
+                        onClick={() => setIsType('target')}
+                    >
+                        Target
+                    </Button>
+                    <Button
+                        selected={isType === 'fee'}
+                        color={'#0077ff'}
+                        onClick={() => setIsType('fee')}
+                    >
+                        Fee
+                    </Button>
+                    <Button
+                        selected={isType === 'none'}
+                        color={'#0077ff'}
+                        onClick={() => setIsType('none')}
+                    >
+                        Auto
+                    </Button>
+                </ButtonRow>
+            </SingleLine>
+            {isType !== 'none' && (
+                <SingleLine>
+                    <NoWrapTitle>
+                        {isType === 'target'
+                            ? 'Target Blocks:'
+                            : 'Fee (Sats/Byte)'}
+                    </NoWrapTitle>
+                    <Input
+                        // color={color}
+                        min={1}
+                        type={'number'}
+                        onChange={e => setAmount(parseInt(e.target.value))}
+                    />
+                </SingleLine>
+            )}
+            <SingleLine>
+                <Sub4Title>Force Close Channel:</Sub4Title>
+                <Button
+                    selected={isForce}
+                    color={'#0077ff'}
+                    onClick={() => setIsForce(prev => !prev)}
+                >
+                    <Circle
+                        color={'transparent'}
+                        fillcolor={isForce ? '#73d13d' : '#ff4d4f'}
+                    />
+                </Button>
+            </SingleLine>
+            <Separation />
+            <CenterLine>
+                <Button color={'#0077ff'} onClick={() => setIsConfirmed(true)}>
+                    Close Channel
+                </Button>
+                <Button color={'#0077ff'} onClick={handleOnlyClose}>
+                    Cancel
+                </Button>
+            </CenterLine>
+        </>
+    );
+
+    return isConfirmed ? renderWarning() : renderContent();
 };

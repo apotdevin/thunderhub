@@ -48,7 +48,7 @@ interface NavProps {
     selectedColor?: string;
 }
 
-const NavButton = styled(Link)`
+const NavButton = styled(({ selectedColor, ...rest }) => <Link {...rest} />)`
     padding: 10px;
     border-left: ${({ selected, selectedColor }: NavProps) =>
         selected ? `3px solid ${selectedColor ? selectedColor : 'white'}` : ''};

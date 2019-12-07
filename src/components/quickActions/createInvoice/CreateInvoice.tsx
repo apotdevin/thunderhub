@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Card, Sub4Title, Input, ColorButton } from '../../generic/Styled';
+import { Card, Input, ColorButton, NoWrapTitle } from '../../generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_INVOICE } from '../../../graphql/mutation';
 import { Edit } from '../../generic/Icons';
@@ -13,10 +13,6 @@ const SingleLine = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-`;
-
-const NoWrapTitle = styled(Sub4Title)`
-    white-space: nowrap;
 `;
 
 export const CreateInvoiceCard = ({ color }: { color: string }) => {
