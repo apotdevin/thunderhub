@@ -6,13 +6,10 @@ import {
     SimpleButton,
 } from '../../components/generic/Styled';
 import { AccountContext } from '../../context/AccountContext';
-import {
-    buildAuthString,
-    getAuthLnd,
-    getBase64CertfromDerFormat,
-} from '../../utils/auth';
+import { buildAuthString, getConfigLnd } from '../../utils/auth';
+import CryptoJS from 'crypto-js';
 
-export const ConnectLoginForm = ({ available }: { available: number }) => {
+export const BTCLoginForm = ({ available }: { available: number }) => {
     const { setAccount } = useContext(AccountContext);
 
     const [isName, setName] = useState('');
@@ -20,27 +17,33 @@ export const ConnectLoginForm = ({ available }: { available: number }) => {
 
     const canConnect = isUrl !== '' && !!available;
 
+    const testPassword = 'Test Password!';
+
     const handleConnect = () => {
-        const { cert, macaroon, socket } = getAuthLnd(isUrl);
+        console.log(JSON.parse(isUrl));
 
-        const base64Cert = getBase64CertfromDerFormat(cert) || '';
+        const { cert, macaroon, readMacaroon, host } = getConfigLnd(isUrl);
 
+        const encryptedAdmin = CryptoJS.AES.encrypt(
+            macaroon,
+            testPassword,
+        ).toString();
         const authString = buildAuthString(
             isName,
-            socket,
-            macaroon,
-            macaroon,
-            base64Cert,
+            host,
+            encryptedAdmin,
+            readMacaroon,
+            cert,
         );
 
         localStorage.setItem(`auth${available}`, authString);
 
         setAccount({
             loggedIn: true,
-            host: socket,
+            host,
             admin: macaroon,
-            read: macaroon,
-            cert: base64Cert,
+            read: readMacaroon,
+            cert,
         });
     };
 
@@ -51,7 +54,7 @@ export const ConnectLoginForm = ({ available }: { available: number }) => {
                 <Input onChange={e => setName(e.target.value)} />
             </SingleLine>
             <SingleLine>
-                <Sub4Title>LN Connect Url:</Sub4Title>
+                <Sub4Title>BTCPay Connect Url:</Sub4Title>
                 <Input onChange={e => setUrl(e.target.value)} />
             </SingleLine>
             <SimpleButton
