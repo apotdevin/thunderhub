@@ -16,6 +16,7 @@ import { LoginView } from './views/login/Login';
 import { toast } from 'react-toastify';
 import { FadingBackground } from './components/modal/ReactModal';
 import 'react-toastify/dist/ReactToastify.css';
+import { SessionLogin } from './views/login/SessionLogin';
 
 toast.configure({
     draggable: false,
@@ -47,18 +48,20 @@ const Container = styled.div`
 
 const ContextApp: React.FC = () => {
     const { theme } = useContext(SettingsContext);
-    const { loggedIn } = useContext(AccountContext);
+    const { loggedIn, admin, read } = useContext(AccountContext);
 
     const renderContent = () =>
-        loggedIn ? (
+        !loggedIn && admin === '' ? (
+            <LoginView />
+        ) : admin !== '' && read === '' ? (
+            <SessionLogin />
+        ) : (
             <Container>
                 <Header />
                 <Navigation />
                 <Content />
                 <Footer />
             </Container>
-        ) : (
-            <LoginView />
         );
 
     return (

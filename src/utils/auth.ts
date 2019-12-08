@@ -1,14 +1,27 @@
 import base64url from 'base64url';
 
-export const buildAuthString = (
-    name: string,
-    host: string,
-    admin: string,
-    read: string,
-    cert: string = '',
-) => {
-    const certString = cert !== '' ? `&cert=${cert}` : '';
-    return `https://${host}?name=${name}&admin=${admin}&read=${read}${certString}`;
+interface BuildProps {
+    available?: number;
+    name?: string;
+    host: string;
+    admin?: string;
+    read?: string;
+    cert?: string;
+}
+
+export const saveUserAuth = ({
+    available,
+    name,
+    host,
+    admin,
+    read,
+    cert,
+}: BuildProps) => {
+    localStorage.setItem(`auth${available}-host`, host);
+    name && localStorage.setItem(`auth${available}-name`, name);
+    admin && localStorage.setItem(`auth${available}-admin`, admin);
+    read && localStorage.setItem(`auth${available}-read`, read);
+    cert && localStorage.setItem(`auth${available}-cert`, cert);
 };
 
 export const getAuthString = (
@@ -20,33 +33,19 @@ export const getAuthString = (
     return `https://${host}?macaroon=${macaroon}${certString}`;
 };
 
-export const getAuthParams = (
-    auth: string | null,
-): {
-    name: string;
-    host: string;
-    admin: string;
-    read: string;
-    cert: string;
-} => {
-    if (!auth) {
-        return { name: '', cert: '', admin: '', read: '', host: '' };
-    }
-
-    const url = new URL(auth);
-
-    const name = url.searchParams.get('name') || '';
-    const cert = url.searchParams.get('cert') || '';
-    const admin = url.searchParams.get('admin') || '';
-    const read = url.searchParams.get('read') || '';
-    const host = url.host;
+export const getAuthParams = (available: string) => {
+    const host = localStorage.getItem(`${available}-host`) || '';
+    const name = localStorage.getItem(`${available}-name`) || '';
+    const admin = localStorage.getItem(`${available}-admin`) || '';
+    const read = localStorage.getItem(`${available}-read`) || '';
+    const cert = localStorage.getItem(`${available}-cert`) || '';
 
     return {
+        host,
         name,
-        cert,
         admin,
         read,
-        host,
+        cert,
     };
 };
 
@@ -76,6 +75,13 @@ export const getBase64CertfromDerFormat = (url: string) => {
     return pemText;
 };
 
+const emptyObject = {
+    cert: undefined,
+    macaroon: undefined,
+    readMacaroon: undefined,
+    host: undefined,
+};
+
 export const getConfigLnd = (json: string) => {
     const parsedJson = JSON.parse(json);
 
@@ -96,10 +102,5 @@ export const getConfigLnd = (json: string) => {
         };
     }
 
-    return {
-        cert: '',
-        macaroon: '',
-        readMacaroon: '',
-        host: '',
-    };
+    return emptyObject;
 };

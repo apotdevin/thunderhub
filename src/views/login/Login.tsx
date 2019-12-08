@@ -18,11 +18,11 @@ const ConnectButton = styled(ColorButton)`
     width: 100%;
     padding: 30px;
     margin: 30px 0;
-    font-size: 18px;
+    font-size: 14px;
 `;
 
 const Content = styled.div`
-    margin: 30px 0;
+    margin: 30px 0 0;
 `;
 
 export const LoginView = () => {
@@ -32,23 +32,23 @@ export const LoginView = () => {
     const renderButtons = () => (
         <>
             <ConnectButton color={'blue'} onClick={() => setIsType('login')}>
-                <SubTitle>input connection info</SubTitle>
+                <SubTitle>CONNECTION DETAILS</SubTitle>
             </ConnectButton>
             <ConnectButton
                 color={'yellow'}
                 onClick={() => setIsType('connect')}
             >
-                <SubTitle>lndconnect url</SubTitle>
+                <SubTitle>LNDCONNECT URL</SubTitle>
             </ConnectButton>
             <ConnectButton color={'green'} onClick={() => setIsType('btcpay')}>
-                <SubTitle>btcpayserver</SubTitle>
+                <SubTitle>BTCPAYSERVER INFO</SubTitle>
             </ConnectButton>
         </>
     );
     return (
         <Login>
             <h1>Welcome to ThunderHub</h1>
-            <Card>
+            <Card padding={'50px 100px'}>
                 <SubTitle> How do you want to connect?</SubTitle>
                 {isType === 'none' && renderButtons()}
                 <Content>
