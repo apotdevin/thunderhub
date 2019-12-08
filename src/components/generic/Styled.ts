@@ -52,13 +52,18 @@ export const Separation = styled.div`
     margin: 20px 0;
 `;
 
+interface SubCardProps {
+    color?: string;
+    padding?: string;
+}
+
 export const SubCard = styled.div`
     margin-bottom: 10px;
-    padding: 10px;
+    padding: ${({ padding }) => (padding ? padding : '10px')};
     background: ${subCardColor};
     border: 1px solid ${cardBorderColor};
-    border-left: ${(props: { color?: string }) =>
-        props.color ? `2px solid ${props.color}` : ''};
+    border-left: ${({ color }: SubCardProps) =>
+        color ? `2px solid ${color}` : ''};
 
     &:hover {
         box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
@@ -99,25 +104,26 @@ export const NoWrapTitle = styled(Sub4Title)`
 `;
 
 export const Input = styled.input`
+    padding: 5px;
     height: 30px;
-    width: 100%;
+    width: 80%;
     margin: 10px;
     border: 0;
-    border-bottom: 2px solid #c8ccd4;
+    border: 1px solid #c8ccd4;
     background: none;
     border-radius: 0;
     color: ${textColor};
     transition: all 0.5s ease;
 
     &:hover {
-        border-bottom: 2px solid
+        border: 2px solid
             ${({ color }: { color?: string }) => (color ? color : '#0077ff')};
     }
 
     &:focus {
         outline: none;
         background: none;
-        border-bottom: 2px solid
+        border: 2px solid
             ${({ color }: { color?: string }) => (color ? color : '#0077ff')};
     }
 `;
@@ -131,7 +137,7 @@ export const SingleLine = styled.div`
 export const SimpleButton = styled.button`
     cursor: pointer;
     outline: none;
-    padding: 5px;
+    padding: 10px;
     margin: 5px;
     text-decoration: none;
     background-color: transparent;

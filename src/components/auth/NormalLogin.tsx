@@ -18,6 +18,8 @@ export const LoginForm = ({ available }: { available?: number }) => {
     const [hasInfo, setHasInfo] = useState(false);
     const [isPass, setPass] = useState('');
 
+    if (!available) return null;
+
     const canConnect =
         isName !== '' && isHost !== '' && isRead !== '' && !!available;
 

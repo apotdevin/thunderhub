@@ -6,7 +6,7 @@ import CryptoJS from 'crypto-js';
 import { LoginButton, PasswordInput } from './Password';
 import { toast } from 'react-toastify';
 
-export const BTCLoginForm = ({ available }: { available: number }) => {
+export const BTCLoginForm = ({ available }: { available?: number }) => {
     const { setAccount } = useContext(AccountContext);
 
     const [isName, setName] = useState('');
@@ -14,6 +14,8 @@ export const BTCLoginForm = ({ available }: { available: number }) => {
 
     const [hasInfo, setHasInfo] = useState(false);
     const [isPass, setPass] = useState('');
+
+    if (!available) return null;
 
     const canConnect = isJson !== '' && !!available;
 
