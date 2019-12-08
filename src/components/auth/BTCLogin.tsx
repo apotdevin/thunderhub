@@ -1,42 +1,52 @@
 import React, { useState, useContext } from 'react';
-import {
-    Input,
-    SingleLine,
-    Sub4Title,
-    SimpleButton,
-} from '../../components/generic/Styled';
+import { Input, SingleLine, Sub4Title } from '../../components/generic/Styled';
 import { AccountContext } from '../../context/AccountContext';
-import { buildAuthString, getConfigLnd } from '../../utils/auth';
+import { getConfigLnd, saveUserAuth } from '../../utils/auth';
 import CryptoJS from 'crypto-js';
+import { LoginButton, PasswordInput } from './Password';
+import { toast } from 'react-toastify';
 
 export const BTCLoginForm = ({ available }: { available: number }) => {
     const { setAccount } = useContext(AccountContext);
 
     const [isName, setName] = useState('');
-    const [isUrl, setUrl] = useState('');
+    const [isJson, setJson] = useState('');
 
-    const canConnect = isUrl !== '' && !!available;
+    const [hasInfo, setHasInfo] = useState(false);
+    const [isPass, setPass] = useState('');
 
-    const testPassword = 'Test Password!';
+    const canConnect = isJson !== '' && !!available;
+
+    const handleClick = () => {
+        try {
+            JSON.parse(isJson);
+            setHasInfo(true);
+        } catch (error) {
+            toast.error('Invalid JSON Object');
+        }
+    };
 
     const handleConnect = () => {
-        console.log(JSON.parse(isUrl));
+        const { cert, macaroon, readMacaroon, host } = getConfigLnd(isJson);
 
-        const { cert, macaroon, readMacaroon, host } = getConfigLnd(isUrl);
+        const encryptedAdmin =
+            macaroon && isPass !== ''
+                ? CryptoJS.AES.encrypt(macaroon, isPass).toString()
+                : undefined;
 
-        const encryptedAdmin = CryptoJS.AES.encrypt(
-            macaroon,
-            testPassword,
-        ).toString();
-        const authString = buildAuthString(
-            isName,
+        if (!host) {
+            toast.error('Invalid connection credentials');
+            return;
+        }
+
+        saveUserAuth({
+            available,
+            name: isName,
             host,
-            encryptedAdmin,
-            readMacaroon,
+            admin: encryptedAdmin,
+            read: readMacaroon,
             cert,
-        );
-
-        localStorage.setItem(`auth${available}`, authString);
+        });
 
         setAccount({
             loggedIn: true,
@@ -47,7 +57,7 @@ export const BTCLoginForm = ({ available }: { available: number }) => {
         });
     };
 
-    return (
+    const renderContent = () => (
         <>
             <SingleLine>
                 <Sub4Title>Name:</Sub4Title>
@@ -55,15 +65,28 @@ export const BTCLoginForm = ({ available }: { available: number }) => {
             </SingleLine>
             <SingleLine>
                 <Sub4Title>BTCPay Connect Url:</Sub4Title>
-                <Input onChange={e => setUrl(e.target.value)} />
+                <Input onChange={e => setJson(e.target.value)} />
             </SingleLine>
-            <SimpleButton
-                disabled={!canConnect}
-                enabled={canConnect}
-                onClick={handleConnect}
-            >
-                Connect
-            </SimpleButton>
+            {canConnect && (
+                <LoginButton
+                    disabled={!canConnect}
+                    enabled={canConnect}
+                    onClick={handleClick}
+                    color={'yellow'}
+                >
+                    Connect
+                </LoginButton>
+            )}
         </>
+    );
+
+    return hasInfo ? (
+        <PasswordInput
+            isPass={isPass}
+            setPass={setPass}
+            callback={handleConnect}
+        />
+    ) : (
+        renderContent()
     );
 };

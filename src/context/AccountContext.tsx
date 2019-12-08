@@ -7,6 +7,7 @@ interface ChangeProps {
     name?: string;
     host?: string;
     admin?: string;
+    sessionAdmin?: string;
     read?: string;
     cert?: string;
 }
@@ -16,13 +17,12 @@ interface AccountProps {
     name: string;
     host: string;
     admin: string;
+    sessionAdmin: string;
     read: string;
     cert: string;
-    // accountList: [];
     setAccount: (newProps: ChangeProps) => void;
     changeAccount: (account: number) => void;
-    // addAccount: (account: number) => void;
-    // deleteAccount: (account: number) => void;
+    refreshAccount: () => void;
 }
 
 export const AccountContext = createContext<AccountProps>({
@@ -30,22 +30,20 @@ export const AccountContext = createContext<AccountProps>({
     name: '',
     host: '',
     admin: '',
+    sessionAdmin: '',
     read: '',
     cert: '',
-    // accountList: [],
     setAccount: () => {},
     changeAccount: () => {},
-    // addAccount: () => {},
-    // deleteAccount: () => {}
+    refreshAccount: () => {},
 });
 
 const AccountProvider = ({ children }: any) => {
     const activeAccount = localStorage.getItem('account') || 'auth1';
-    const auth = localStorage.getItem(activeAccount);
-
-    const { name, host, admin, read, cert } = getAuthParams(auth);
-
-    const loggedIn = host !== '' && admin !== '' && read !== '';
+    const sessionAdmin = sessionStorage.getItem('session') || '';
+    const { name, host, admin, read, cert } = getAuthParams(activeAccount);
+    const readMacaroon = read ? read : sessionAdmin;
+    const loggedIn = host !== '' && readMacaroon !== '';
 
     const setAccount = ({
         loggedIn,
@@ -74,6 +72,8 @@ const AccountProvider = ({ children }: any) => {
         if (!newAccount) return;
 
         const { name, host, admin, read, cert } = getAuthParams(newAccount);
+        sessionStorage.removeItem('session');
+
         updateAccount((prevState: any) => {
             const newState = { ...prevState };
             return merge(newState, {
@@ -86,15 +86,40 @@ const AccountProvider = ({ children }: any) => {
         });
     };
 
+    const refreshAccount = () => {
+        const activeAccount = localStorage.getItem('account') || 'auth1';
+        const sessionAdmin = sessionStorage.getItem('session') || '';
+        const { name, host, admin, read, cert } = getAuthParams(activeAccount);
+        const readMacaroon = read ? read : sessionAdmin;
+        const loggedIn = host !== '' && readMacaroon !== '';
+
+        console.log('REFRESHING', readMacaroon);
+
+        updateAccount((prevState: any) => {
+            const newState = { ...prevState };
+            return merge(newState, {
+                loggedIn,
+                name,
+                host,
+                admin,
+                sessionAdmin,
+                read: readMacaroon,
+                cert,
+            });
+        });
+    };
+
     const accountState = {
         loggedIn,
         name,
         host,
         admin,
-        read,
+        sessionAdmin,
+        read: readMacaroon,
         cert,
         setAccount,
         changeAccount,
+        refreshAccount,
     };
 
     const [settings, updateAccount] = useState(accountState);

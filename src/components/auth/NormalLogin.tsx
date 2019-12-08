@@ -1,9 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { Input, SingleLine, Sub4Title, SimpleButton } from '../generic/Styled';
+import { Input, SingleLine, Sub4Title } from '../generic/Styled';
 import { AccountContext } from '../../context/AccountContext';
-import { buildAuthString } from '../../utils/auth';
+import { saveUserAuth } from '../../utils/auth';
 import CryptoJS from 'crypto-js';
 import base64url from 'base64url';
+import { PasswordInput, LoginButton } from './Password';
 
 export const LoginForm = ({ available }: { available?: number }) => {
     const { setAccount } = useContext(AccountContext);
@@ -14,34 +15,38 @@ export const LoginForm = ({ available }: { available?: number }) => {
     const [isRead, setRead] = useState('');
     const [isCert, setCert] = useState('');
 
-    const testPassword = 'Test Password!';
+    const [hasInfo, setHasInfo] = useState(false);
+    const [isPass, setPass] = useState('');
 
     const canConnect =
-        isName !== '' &&
-        isHost !== '' &&
-        isAdmin !== '' &&
-        isRead !== '' &&
-        !!available;
+        isName !== '' && isHost !== '' && isRead !== '' && !!available;
+
+    const handleClick = () => {
+        if (isAdmin !== '') {
+            setHasInfo(true);
+        } else {
+            handleConnect();
+        }
+    };
 
     const handleConnect = () => {
         const admin = base64url.fromBase64(isAdmin);
         const read = base64url.fromBase64(isRead);
         const cert = base64url.fromBase64(isCert);
 
-        const encryptedAdmin = CryptoJS.AES.encrypt(
-            admin,
-            testPassword,
-        ).toString();
+        const encryptedAdmin =
+            admin && isPass !== ''
+                ? CryptoJS.AES.encrypt(admin, isPass).toString()
+                : undefined;
 
-        const authString = buildAuthString(
-            isName,
-            isHost,
-            encryptedAdmin,
+        saveUserAuth({
+            available,
+            name: isName,
+            host: isHost,
+            admin: encryptedAdmin,
             read,
             cert,
-        );
-
-        localStorage.setItem(`auth${available}`, authString);
+        });
 
         setAccount({
             loggedIn: true,
@@ -52,7 +57,7 @@ export const LoginForm = ({ available }: { available?: number }) => {
         });
     };
 
-    return (
+    const renderContent = () => (
         <>
             <SingleLine>
                 <Sub4Title>Name:</Sub4Title>
@@ -74,13 +79,26 @@ export const LoginForm = ({ available }: { available?: number }) => {
                 <Sub4Title>Certificate:</Sub4Title>
                 <Input onChange={e => setCert(e.target.value)} />
             </SingleLine>
-            <SimpleButton
-                disabled={!canConnect}
-                enabled={canConnect}
-                onClick={handleConnect}
-            >
-                Connect
-            </SimpleButton>
+            {canConnect && (
+                <LoginButton
+                    disabled={!canConnect}
+                    enabled={canConnect}
+                    onClick={handleClick}
+                    color={'yellow'}
+                >
+                    Connect
+                </LoginButton>
+            )}
         </>
+    );
+
+    return hasInfo ? (
+        <PasswordInput
+            isPass={isPass}
+            setPass={setPass}
+            callback={handleConnect}
+        />
+    ) : (
+        renderContent()
     );
 };
