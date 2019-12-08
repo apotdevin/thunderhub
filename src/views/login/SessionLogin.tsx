@@ -22,7 +22,7 @@ const Login = styled.div`
 `;
 
 export const SessionLogin = () => {
-    const { admin, refreshAccount } = useContext(AccountContext);
+    const { name, admin, refreshAccount } = useContext(AccountContext);
     const [pass, setPass] = useState('');
 
     const handleClick = () => {
@@ -41,7 +41,7 @@ export const SessionLogin = () => {
         <Login>
             <h1>Welcome to ThunderHub</h1>
             <CardWithTitle>
-                <SubTitle>Please Login:</SubTitle>
+                <SubTitle>{`Please Login (${name}):`}</SubTitle>
                 <Card>
                     <SingleLine>
                         <Sub4Title>Password:</Sub4Title>

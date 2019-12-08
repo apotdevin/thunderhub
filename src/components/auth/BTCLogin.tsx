@@ -6,7 +6,12 @@ import CryptoJS from 'crypto-js';
 import { LoginButton, PasswordInput } from './Password';
 import { toast } from 'react-toastify';
 
-export const BTCLoginForm = ({ available }: { available?: number }) => {
+interface AuthProps {
+    available?: number;
+    callback?: () => void;
+}
+
+export const BTCLoginForm = ({ available, callback }: AuthProps) => {
     const { setAccount } = useContext(AccountContext);
 
     const [isName, setName] = useState('');
@@ -57,6 +62,8 @@ export const BTCLoginForm = ({ available }: { available?: number }) => {
             read: readMacaroon,
             cert,
         });
+
+        callback && callback();
     };
 
     const renderContent = () => (

@@ -9,7 +9,12 @@ import {
 import { LoginButton, PasswordInput } from './Password';
 import CryptoJS from 'crypto-js';
 
-export const ConnectLoginForm = ({ available }: { available?: number }) => {
+interface AuthProps {
+    available?: number;
+    callback?: () => void;
+}
+
+export const ConnectLoginForm = ({ available, callback }: AuthProps) => {
     const { setAccount } = useContext(AccountContext);
 
     const [isName, setName] = useState('');
@@ -51,6 +56,8 @@ export const ConnectLoginForm = ({ available }: { available?: number }) => {
             read: macaroon,
             cert: base64Cert,
         });
+
+        callback && callback();
     };
 
     const renderContent = () => (
