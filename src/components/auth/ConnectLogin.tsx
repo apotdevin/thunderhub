@@ -9,7 +9,7 @@ import {
 import { LoginButton, PasswordInput } from './Password';
 import CryptoJS from 'crypto-js';
 
-export const ConnectLoginForm = ({ available }: { available: number }) => {
+export const ConnectLoginForm = ({ available }: { available?: number }) => {
     const { setAccount } = useContext(AccountContext);
 
     const [isName, setName] = useState('');
@@ -17,6 +17,8 @@ export const ConnectLoginForm = ({ available }: { available: number }) => {
 
     const [hasInfo, setHasInfo] = useState(false);
     const [isPass, setPass] = useState('');
+
+    if (!available) return null;
 
     const canConnect = isUrl !== '' && !!available;
 

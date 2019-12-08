@@ -67,7 +67,7 @@ const AccountProvider = ({ children }: any) => {
     };
 
     const changeAccount = (account: number) => {
-        const newAccount = localStorage.getItem(`auth${account}`);
+        const newAccount = localStorage.getItem(`auth${account}-name`);
 
         if (!newAccount) return;
 

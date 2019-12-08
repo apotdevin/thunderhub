@@ -1,13 +1,25 @@
 import base64url from 'base64url';
+import { getAvailable } from './storage';
 
 interface BuildProps {
-    available?: number;
+    available: number;
     name?: string;
     host: string;
     admin?: string;
     read?: string;
     cert?: string;
 }
+
+export const deleteAuth = (index: number) => {
+    localStorage.removeItem(`auth${index}-host`);
+    localStorage.removeItem(`auth${index}-name`);
+    localStorage.removeItem(`auth${index}-admin`);
+    localStorage.removeItem(`auth${index}-read`);
+    localStorage.removeItem(`auth${index}-cert`);
+    sessionStorage.removeItem('session');
+
+    localStorage.setItem('account', `auth${getAvailable()}`);
+};
 
 export const saveUserAuth = ({
     available,
@@ -17,8 +29,9 @@ export const saveUserAuth = ({
     read,
     cert,
 }: BuildProps) => {
+    localStorage.setItem('account', `auth${available}`);
     localStorage.setItem(`auth${available}-host`, host);
-    name && localStorage.setItem(`auth${available}-name`, name);
+    localStorage.setItem(`auth${available}-name`, name ? name : 'no name');
     admin && localStorage.setItem(`auth${available}-admin`, admin);
     read && localStorage.setItem(`auth${available}-read`, read);
     cert && localStorage.setItem(`auth${available}-cert`, cert);

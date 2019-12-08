@@ -1,10 +1,8 @@
 export const getStorageSaved = (): { index: number; name: string }[] => {
     let savedSpaces = [];
     for (let i = 1; i < 11; i++) {
-        const element = localStorage.getItem(`auth${i}`);
-        if (element) {
-            const url = new URL(element);
-            const name = url.searchParams.get('name') || 'NoName';
+        const name = localStorage.getItem(`auth${i}-name`);
+        if (name) {
             savedSpaces.push({ index: i, name });
         }
     }
@@ -15,7 +13,7 @@ export const getNextAvailable = (): number => {
     let available = 0;
     let counter = 1;
     while (available === 0 && counter < 11) {
-        const element = localStorage.getItem(`auth${counter}`);
+        const element = localStorage.getItem(`auth${counter}-name`);
         if (!element) {
             available = counter;
         } else {
@@ -23,4 +21,23 @@ export const getNextAvailable = (): number => {
         }
     }
     return available;
+};
+
+export const getAvailable = (): number => {
+    let available = 0;
+    let counter = 1;
+    while (available === 0 && counter < 11) {
+        const element = localStorage.getItem(`auth${counter}-name`);
+        if (element) {
+            available = counter;
+        } else {
+            counter++;
+        }
+    }
+    return available;
+};
+
+export const deleteStorage = () => {
+    localStorage.clear();
+    sessionStorage.clear();
 };

@@ -1,0 +1,56 @@
+import React from 'react';
+import {
+    CardWithTitle,
+    SubTitle,
+    Card,
+    SimpleButton,
+} from '../../components/generic/Styled';
+import { SettingsLine, ButtonRow } from './Settings';
+import { useContext } from 'react';
+import { SettingsContext } from '../../context/SettingsContext';
+
+export const InterfaceSettings = () => {
+    const { setSettings } = useContext(SettingsContext);
+    const cTheme = localStorage.getItem('theme') || 'dark';
+    const cCurrency = localStorage.getItem('currency') || 'sat';
+
+    const renderButton = (
+        title: string,
+        value: string,
+        type: string,
+        current: string,
+    ) => (
+        <SimpleButton
+            enabled={current === value}
+            onClick={() => {
+                localStorage.setItem(type, value);
+                setSettings({ [type]: value });
+            }}
+        >
+            {title}
+        </SimpleButton>
+    );
+
+    return (
+        <CardWithTitle>
+            <SubTitle>Interface</SubTitle>
+            <Card>
+                <SettingsLine>
+                    Theme:
+                    <ButtonRow>
+                        {renderButton('Light', 'light', 'theme', cTheme)}
+                        {renderButton('Dark', 'dark', 'theme', cTheme)}
+                    </ButtonRow>
+                </SettingsLine>
+                <SettingsLine>
+                    Currency:
+                    <ButtonRow>
+                        {renderButton('Bitcoin', 'btc', 'currency', cCurrency)}
+                        {renderButton('Satoshis', 'sat', 'currency', cCurrency)}
+                        {renderButton('Euro', 'EUR', 'currency', cCurrency)}
+                    </ButtonRow>
+                </SettingsLine>
+            </Card>
+        </CardWithTitle>
+    );
+};
