@@ -11,7 +11,7 @@ import styled from 'styled-components';
 import { progressBackground, textColor } from '../../styles/Themes';
 
 const Progress = styled.div`
-    width: 100%;
+    width: 80%;
     margin: 10px 10px 10px 15px;
     padding: 3px;
     border-radius: 15px;

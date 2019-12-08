@@ -6,7 +6,12 @@ import CryptoJS from 'crypto-js';
 import base64url from 'base64url';
 import { PasswordInput, LoginButton } from './Password';
 
-export const LoginForm = ({ available }: { available?: number }) => {
+interface AuthProps {
+    available?: number;
+    callback?: () => void;
+}
+
+export const LoginForm = ({ available, callback }: AuthProps) => {
     const { setAccount } = useContext(AccountContext);
 
     const [isName, setName] = useState('');
@@ -57,6 +62,8 @@ export const LoginForm = ({ available }: { available?: number }) => {
             read,
             cert,
         });
+
+        callback && callback();
     };
 
     const renderContent = () => (

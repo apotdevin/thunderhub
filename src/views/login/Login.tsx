@@ -21,26 +21,19 @@ const ConnectButton = styled(ColorButton)`
     font-size: 14px;
 `;
 
-const Content = styled.div`
-    margin: 30px 0 0;
-`;
-
 export const LoginView = () => {
     const [isType, setIsType] = useState('none');
     const next = getNextAvailable();
 
     const renderButtons = () => (
         <>
-            <ConnectButton color={'blue'} onClick={() => setIsType('login')}>
+            <ConnectButton color={'white'} onClick={() => setIsType('login')}>
                 <SubTitle>CONNECTION DETAILS</SubTitle>
             </ConnectButton>
-            <ConnectButton
-                color={'yellow'}
-                onClick={() => setIsType('connect')}
-            >
+            <ConnectButton color={'white'} onClick={() => setIsType('connect')}>
                 <SubTitle>LNDCONNECT URL</SubTitle>
             </ConnectButton>
-            <ConnectButton color={'green'} onClick={() => setIsType('btcpay')}>
+            <ConnectButton color={'white'} onClick={() => setIsType('btcpay')}>
                 <SubTitle>BTCPAYSERVER INFO</SubTitle>
             </ConnectButton>
         </>
@@ -49,15 +42,13 @@ export const LoginView = () => {
         <Login>
             <h1>Welcome to ThunderHub</h1>
             <Card padding={'50px 100px'}>
-                <SubTitle> How do you want to connect?</SubTitle>
+                {isType === 'none' && (
+                    <SubTitle> How do you want to connect?</SubTitle>
+                )}
                 {isType === 'none' && renderButtons()}
-                <Content>
-                    {isType === 'login' && <LoginForm available={next} />}
-                    {isType === 'connect' && (
-                        <ConnectLoginForm available={next} />
-                    )}
-                    {isType === 'btcpay' && <BTCLoginForm available={next} />}
-                </Content>
+                {isType === 'login' && <LoginForm available={next} />}
+                {isType === 'connect' && <ConnectLoginForm available={next} />}
+                {isType === 'btcpay' && <BTCLoginForm available={next} />}
             </Card>
         </Login>
     );

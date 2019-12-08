@@ -69,6 +69,11 @@ export const SettingsView = () => {
         </>
     );
 
+    const handleConnected = () => {
+        setIsType('none');
+        setWillAdd(false);
+    };
+
     return (
         <>
             <InterfaceSettings />
@@ -120,17 +125,26 @@ export const SettingsView = () => {
                         <>
                             {isType === 'login' && (
                                 <SubCard padding={'30px 50px'}>
-                                    <LoginForm available={next} />
+                                    <LoginForm
+                                        available={next}
+                                        callback={handleConnected}
+                                    />
                                 </SubCard>
                             )}
                             {isType === 'connect' && (
                                 <SubCard padding={'30px 50px'}>
-                                    <ConnectLoginForm available={next} />
+                                    <ConnectLoginForm
+                                        available={next}
+                                        callback={handleConnected}
+                                    />
                                 </SubCard>
                             )}
                             {isType === 'btcpay' && (
                                 <SubCard padding={'30px 50px'}>
-                                    <BTCLoginForm available={next} />
+                                    <BTCLoginForm
+                                        available={next}
+                                        callback={handleConnected}
+                                    />
                                 </SubCard>
                             )}
                         </>
