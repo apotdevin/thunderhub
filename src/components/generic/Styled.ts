@@ -116,14 +116,14 @@ export const Input = styled.input`
     transition: all 0.5s ease;
 
     &:hover {
-        border: 2px solid
+        border: 1px solid
             ${({ color }: { color?: string }) => (color ? color : '#0077ff')};
     }
 
     &:focus {
         outline: none;
         background: none;
-        border: 2px solid
+        border: 1px solid
             ${({ color }: { color?: string }) => (color ? color : '#0077ff')};
     }
 `;

@@ -1,11 +1,22 @@
 import React, { FunctionComponent } from 'react';
 import { Loader } from '../components/generic/Icons';
+import numeral from 'numeral';
+
+const getValueString = (amount: number): string => {
+    if (amount >= 100000) {
+        return `${amount / 1000000}m`;
+    } else if (amount >= 1000) {
+        return `${amount / 1000}k`;
+    }
+    return `${amount}`;
+};
 
 interface GetNumberProps {
     amount: string | number;
     price: number;
     symbol: string;
     currency: string;
+    breakNumber?: boolean;
 }
 
 export const getValue = ({
@@ -13,6 +24,7 @@ export const getValue = ({
     price,
     symbol,
     currency,
+    breakNumber,
 }: GetNumberProps): string => {
     let value: number = 0;
     if (typeof amount === 'string') {
@@ -28,7 +40,10 @@ export const getValue = ({
         const amountInFiat = (value / 100000000) * price;
         return `${symbol}${amountInFiat.toFixed(2)}`;
     } else {
-        return `${value} sats`;
+        const breakAmount = breakNumber
+            ? getValueString(value)
+            : numeral(value).format('0,0');
+        return `${breakAmount} sats`;
     }
 };
 

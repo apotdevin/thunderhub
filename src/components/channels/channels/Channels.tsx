@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_CHANNELS } from '../../../graphql/query';
-import { Card } from '../../generic/Styled';
+import { Card, CardWithTitle, SubTitle } from '../../generic/Styled';
 import { ChannelCard } from './ChannelCard';
 import { AccountContext } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
@@ -23,17 +23,19 @@ export const Channels = () => {
     }
 
     return (
-        <Card>
-            <h1 style={{ margin: '0', marginBottom: '10px' }}>Channels</h1>
-            {data.getChannels.map((channel: any, index: number) => (
-                <ChannelCard
-                    channelInfo={channel}
-                    index={index + 1}
-                    setIndexOpen={setIndexOpen}
-                    indexOpen={indexOpen}
-                    key={index}
-                />
-            ))}
-        </Card>
+        <CardWithTitle>
+            <SubTitle>Channels</SubTitle>
+            <Card>
+                {data.getChannels.map((channel: any, index: number) => (
+                    <ChannelCard
+                        channelInfo={channel}
+                        index={index + 1}
+                        setIndexOpen={setIndexOpen}
+                        indexOpen={indexOpen}
+                        key={index}
+                    />
+                ))}
+            </Card>
+        </CardWithTitle>
     );
 };

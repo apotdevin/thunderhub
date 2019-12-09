@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_PENDING_CHANNELS } from '../../../graphql/query';
-import { Card } from '../../generic/Styled';
+import { Card, CardWithTitle, SubTitle } from '../../generic/Styled';
 import { PendingCard } from './PendingCard';
 import { AccountContext } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
@@ -16,26 +16,32 @@ export const PendingChannels = () => {
         variables: { auth },
     });
 
-    // console.log(loading, error, data);
-
     if (loading || !data || !data.getPendingChannels) {
-        return <Card>Loading....</Card>;
+        return null;
+    }
+
+    if (
+        data &&
+        data.getPendingChannels &&
+        data.getPendingChannels.length <= 0
+    ) {
+        return null;
     }
 
     return (
-        <Card>
-            <h1 style={{ margin: '0', marginBottom: '10px' }}>
-                Pending Channels
-            </h1>
-            {data.getPendingChannels.map((channel: any, index: number) => (
-                <PendingCard
-                    channelInfo={channel}
-                    key={index}
-                    index={index + 1}
-                    setIndexOpen={setIndexOpen}
-                    indexOpen={indexOpen}
-                />
-            ))}
-        </Card>
+        <CardWithTitle>
+            <SubTitle>Pending Channels</SubTitle>
+            <Card>
+                {data.getPendingChannels.map((channel: any, index: number) => (
+                    <PendingCard
+                        channelInfo={channel}
+                        key={index}
+                        index={index + 1}
+                        setIndexOpen={setIndexOpen}
+                        indexOpen={indexOpen}
+                    />
+                ))}
+            </Card>
+        </CardWithTitle>
     );
 };

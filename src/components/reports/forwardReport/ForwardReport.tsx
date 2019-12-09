@@ -25,15 +25,6 @@ interface Props {
     isType: string;
 }
 
-const getValueString = (amount: number): string => {
-    if (amount >= 100000) {
-        return `${amount / 1000000}m`;
-    } else if (amount >= 1000) {
-        return `${amount / 1000}k`;
-    }
-    return `${amount}`;
-};
-
 export const ForwardReport = ({ isTime, isType }: Props) => {
     const { theme, price, symbol, currency } = useContext(SettingsContext);
 
@@ -45,10 +36,11 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
     });
 
     const priceProps = { price, symbol, currency };
-    const getFormat = (amount: number) =>
+    const getFormat = (amount: number, breakNumber?: boolean) =>
         getValue({
             amount,
             ...priceProps,
+            breakNumber,
         });
 
     if (!data || loading) {
@@ -66,9 +58,6 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
     }
 
     const parsedData: {}[] = JSON.parse(data.getForwardReport);
-
-    // console.log(parsedData);
-    // console.log(chartAxisColor[theme]);
 
     const getLabelString = (value: number) => {
         if (isType === 'amount') {
@@ -92,7 +81,12 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
                 <div>
                     <VictoryChart
                         domainPadding={50}
-                        padding={{ top: 10, left: 50, right: 50, bottom: 20 }}
+                        padding={{
+                            top: 10,
+                            left: isType === 'tokens' ? 100 : 50,
+                            right: 50,
+                            bottom: 20,
+                        }}
                         containerComponent={
                             <VictoryVoronoiContainer
                                 voronoiDimension="x"
@@ -120,7 +114,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
                                 axis: { stroke: 'transparent' },
                             }}
                             tickFormat={a =>
-                                isType === 'tokens' ? getValueString(a) : a
+                                isType === 'tokens' ? getFormat(a, true) : a
                             }
                         />
                         <VictoryBar

@@ -16,7 +16,7 @@ export const BitcoinPrice = () => {
             const { price, symbol } = data.getBitcoinPrice;
             setSettings({ price, symbol });
         }
-    }, [data]);
+    }, [data, loading, setSettings]);
 
     return null;
 };
