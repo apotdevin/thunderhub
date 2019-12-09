@@ -41,12 +41,12 @@ export const getErrorMsg = (error: any[]): string => {
     const code = error[0];
     const msg = error[1];
 
-    let details = ''
+    let details = '';
     if (error.length > 2) {
         if (error[2].err) {
-            details = error[2].err.details
-        } else if(error[2].details) {
-            details = error[2].details
+            details = error[2].err.details;
+        } else if (error[2].details) {
+            details = error[2].details;
         }
     }
 
