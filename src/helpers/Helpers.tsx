@@ -38,7 +38,7 @@ export const getValue = ({
         return `₿${amountInBtc}`;
     } else if (currency === 'EUR') {
         const amountInFiat = (value / 100000000) * price;
-        return `${symbol}${amountInFiat.toFixed(2)}`;
+        return `${symbol}${numeral(amountInFiat).format('0,0.00')}`;
     } else {
         const breakAmount = breakNumber
             ? getValueString(value)

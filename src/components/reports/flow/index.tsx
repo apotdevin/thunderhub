@@ -96,8 +96,16 @@ export const FlowBox = () => {
             };
         });
 
-    const totalInvoices: any = reduce(parsedData);
-    const totalPayments: any = reduce(parsedData2);
+    const emptyArray = {
+        tokens: 0,
+        period: 0,
+        amount: 0,
+    };
+
+    const totalInvoices: any =
+        parsedData.length > 0 ? reduce(parsedData) : emptyArray;
+    const totalPayments: any =
+        parsedData2.length > 0 ? reduce(parsedData2) : emptyArray;
 
     const flowPie = [
         { x: 'Invoice', y: totalInvoices[isType] },
