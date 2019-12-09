@@ -3,13 +3,17 @@ import { getValue } from '../../helpers/Helpers';
 import { SettingsContext } from '../../context/SettingsContext';
 import { Separation, SubCard } from '../generic/Styled';
 import {
-    DetailLine,
     StatusLine,
     NodeBar,
     NodeTitle,
     NodeDetails,
 } from '../channels/Channels.style';
-import { getStatusDot, getDateDif, getFormatDate } from '../generic/Helpers';
+import {
+    getStatusDot,
+    getDateDif,
+    getFormatDate,
+    renderLine,
+} from '../generic/Helpers';
 import styled from 'styled-components';
 
 interface InvoiceCardProps {
@@ -61,17 +65,17 @@ export const InvoiceCard = ({
         isConfirmed,
         received,
         tokens,
-        // chainAddress,
-        // descriptionHash,
-        // id,
-        // isCanceled,
-        // isHeld,
-        // isOutgoing,
-        // isPrivate,
+        chainAddress,
+        descriptionHash,
+        id,
+        isCanceled,
+        isHeld,
+        isOutgoing,
+        isPrivate,
         // payments,
         // receivedMtokens,
         // request,
-        // secret,
+        secret,
     } = invoice;
 
     const formatAmount = getFormat(tokens);
@@ -90,36 +94,33 @@ export const InvoiceCard = ({
         return (
             <>
                 <Separation />
-                {isConfirmed && (
-                    <DetailLine>
-                        <div>Confirmed</div>
-                        {`${getDateDif(confirmedAt)} ago (${getFormatDate(
+                {isConfirmed &&
+                    renderLine(
+                        'Confirmed:',
+                        `${getDateDif(confirmedAt)} ago (${getFormatDate(
                             confirmedAt,
-                        )})`}
-                    </DetailLine>
-                )}
-                <DetailLine>
-                    <div>Created:</div>
-                    {`${getDateDif(createdAt)} ago (${getFormatDate(
+                        )})`,
+                    )}
+                {renderLine(
+                    'Created:',
+                    `${getDateDif(createdAt)} ago (${getFormatDate(
                         createdAt,
-                    )})`}
-                </DetailLine>
-                <DetailLine>
-                    <div>Expires:</div>
-                    {`${getDateDif(expiresAt)} ago (${getFormatDate(
+                    )})`,
+                )}
+                {renderLine(
+                    'Expires:',
+                    `${getDateDif(expiresAt)} ago (${getFormatDate(
                         expiresAt,
-                    )})`}
-                </DetailLine>
-                {/* <DetailLine>{chainAddress}</DetailLine> */}
-                {/* <DetailLine>{descriptionHash}</DetailLine> */}
-                {/* <DetailLine>{isCanceled}</DetailLine> */}
-                {/* <DetailLine>{isHeld}</DetailLine> */}
-                {/* <DetailLine>{isOutgoing}</DetailLine> */}
-                {/* <DetailLine>{isPrivate}</DetailLine> */}
-                {/* <DetailLine>{payments}</DetailLine> */}
-                {/* <DetailLine>{receivedMtokens}</DetailLine> */}
-                {/* <DetailLine>{request}</DetailLine> */}
-                {/* <DetailLine>{secret}</DetailLine> */}
+                    )})`,
+                )}
+                {renderLine('Id:', id)}
+                {renderLine('Chain Address:', chainAddress)}
+                {renderLine('Description Hash:', descriptionHash)}
+                {renderLine('Is Canceled:', isCanceled)}
+                {renderLine('Is Held:', isHeld)}
+                {renderLine('Is Outgoing:', isOutgoing)}
+                {renderLine('Is Private:', isPrivate)}
+                {renderLine('Secret:', secret)}
             </>
         );
     };

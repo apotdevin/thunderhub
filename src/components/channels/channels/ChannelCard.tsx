@@ -11,17 +11,31 @@ import {
     MainInfo,
 } from '../Channels.style';
 import ReactTooltip from 'react-tooltip';
-import { SubCard, Separation } from '../../generic/Styled';
+import {
+    SubCard,
+    Separation,
+    DarkSubTitle,
+    Sub4Title,
+    ColorButton,
+} from '../../generic/Styled';
 import { SettingsContext } from '../../../context/SettingsContext';
 import {
     getStatusDot,
     getPrivate,
     getSymbol,
     getTooltipType,
+    getFormatDate,
+    getDateDif,
+    renderLine,
 } from '../../generic/Helpers';
 import { getTransactionLink, getNodeLink } from '../../generic/Helpers';
 import Modal from '../../modal/ReactModal';
 import { CloseChannel } from '../../closeChannel/CloseChannel';
+import styled from 'styled-components';
+
+const CloseButton = styled(ColorButton)`
+    margin-left: auto;
+`;
 
 interface ChannelCardProps {
     channelInfo: any;
@@ -52,35 +66,35 @@ export const ChannelCard = ({
     const {
         capacity,
         commitTransactionFee,
-        // commitTransactionWeight,
+        commitTransactionWeight,
         id,
         isActive,
         isClosing,
         isOpening,
         isPartnerInitiated,
         isPrivate,
-        // isStaticRemoteKey,
+        isStaticRemoteKey,
         localBalance,
-        // localReserve,
+        localReserve,
         partnerPublicKey,
         received,
         remoteBalance,
-        // remoteReserve,
+        remoteReserve,
         sent,
-        // timeOffline,
-        // timeOnline,
+        timeOffline,
+        timeOnline,
         transactionId,
-        // transactionVout,
-        // unsettledBalance,
+        transactionVout,
+        unsettledBalance,
         partnerNodeInfo,
     } = channelInfo;
 
     const {
         alias,
-        // capacity: nodeCapacity,
-        // channelCount,
+        capacity: nodeCapacity,
+        channelCount,
         color: nodeColor,
-        // lastUpdate
+        lastUpdate,
     } = partnerNodeInfo;
 
     const formatBalance = getFormat(capacity);
@@ -101,37 +115,37 @@ export const ChannelCard = ({
         return (
             <>
                 <Separation />
-                <DetailLine>
-                    <div>Node Public Key:</div>
-                    {getNodeLink(partnerPublicKey)}
-                </DetailLine>
-                <DetailLine>
-                    <div>Transaction Id:</div>
-                    {getTransactionLink(transactionId)}
-                </DetailLine>
-                <DetailLine>
-                    <div>Channel Id:</div>
-                    {id}
-                </DetailLine>
-                <DetailLine>
-                    <div>Commit Fee:</div>
-                    {getFormat(commitTransactionFee)}
-                </DetailLine>
-                {/* <div>{commitTransactionWeight}</div> */}
-                {/* <div>{isStaticRemoteKey}</div> */}
-                {/* <div>{localReserve}</div> */}
-                {/* <div>{remoteReserve}</div> */}
-                {/* <div>{timeOffline}</div> */}
-                {/* <div>{timeOnline}</div> */}
-                {/* <div>{transactionVout}</div> */}
-                {/* <div>{unsettledBalance}</div> */}
-                {/* <div>{nodeCapacity}</div> */}
-                {/* <div>{channelCount}</div> */}
-                {/* <div>{lastUpdate}</div> */}
+                {renderLine('Node Public Key:', getNodeLink(partnerPublicKey))}
+                {renderLine(
+                    'Transaction Id:',
+                    getTransactionLink(transactionId),
+                )}
+                {renderLine('Channel Id:', id)}
+                {renderLine('Commit Fee:', getFormat(commitTransactionFee))}
+                {renderLine(
+                    'Commit Weight:',
+                    getFormat(commitTransactionWeight),
+                )}
+                {renderLine('Is Static Remote Key:', isStaticRemoteKey)}
+                {renderLine('Local Reserve:', getFormat(localReserve))}
+                {renderLine('Remote Reserve:', getFormat(remoteReserve))}
+                {renderLine('Time Offline:', timeOffline)}
+                {renderLine('Time Online:', timeOnline)}
+                {renderLine('Transaction Vout:', transactionVout)}
+                {renderLine('Unsettled Balance:', unsettledBalance)}
+                <Sub4Title>Partner Node Info</Sub4Title>
+                {renderLine('Node Capacity:', getFormat(nodeCapacity))}
+                {renderLine('Channel Count:', channelCount)}
+                {renderLine(
+                    'Last Update:',
+                    `${getDateDif(lastUpdate)} ago (${getFormatDate(
+                        lastUpdate,
+                    )})`,
+                )}
                 <Separation />
-                <button onClick={() => setModalOpen(true)}>
+                <CloseButton color={'red'} onClick={() => setModalOpen(true)}>
                     Close Channel
-                </button>
+                </CloseButton>
             </>
         );
     };
