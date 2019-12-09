@@ -20,6 +20,7 @@ import styled from 'styled-components';
 import { BTCLoginForm } from '../../components/auth/BTCLogin';
 import { InterfaceSettings } from './Interface';
 import { deleteAuth } from '../../utils/auth';
+import { textColor } from '../../styles/Themes';
 
 export const ButtonRow = styled.div`
     width: auto;
@@ -41,6 +42,14 @@ const OutlineCard = styled(Card)`
 
 export const SettingsLine = styled(SingleLine)`
     margin: 10px 0;
+`;
+
+export const SettingsButton = styled(SimpleButton)`
+    padding: 10px;
+
+    &:hover {
+        border: 1px solid ${textColor};
+    }
 `;
 
 export const SettingsView = () => {
@@ -85,7 +94,7 @@ export const SettingsView = () => {
                         <ButtonRow>
                             {getStorageSaved().map((entry, index) => {
                                 return (
-                                    <SimpleButton
+                                    <SettingsButton
                                         enabled={
                                             currentAuth === `auth${entry.index}`
                                         }
@@ -100,7 +109,7 @@ export const SettingsView = () => {
                                         key={index}
                                     >
                                         {entry.name}
-                                    </SimpleButton>
+                                    </SettingsButton>
                                 );
                             })}
                         </ButtonRow>
@@ -108,7 +117,7 @@ export const SettingsView = () => {
                     {next && (
                         <SettingsLine>
                             Add Account
-                            <SimpleButton
+                            <SettingsButton
                                 onClick={() => {
                                     if (willAdd) {
                                         setIsType('none');
@@ -117,7 +126,7 @@ export const SettingsView = () => {
                                 }}
                             >
                                 {willAdd ? 'Cancel' : 'Add New Account'}
-                            </SimpleButton>
+                            </SettingsButton>
                         </SettingsLine>
                     )}
                     {isType === 'none' && willAdd && renderButtons()}
@@ -157,7 +166,7 @@ export const SettingsView = () => {
                     <ButtonRow>
                         {getStorageSaved().map((entry, index) => {
                             return (
-                                <SimpleButton
+                                <SettingsButton
                                     onClick={() => {
                                         deleteAuth(entry.index);
                                         refreshAccount();
@@ -165,22 +174,22 @@ export const SettingsView = () => {
                                     key={index}
                                 >
                                     {entry.name}
-                                </SimpleButton>
+                                </SettingsButton>
                             );
                         })}
                     </ButtonRow>
                 </SettingsLine>
                 <SettingsLine>
-                    Delete all Accounts:
+                    Delete all Accounts and Settings:
                     <ButtonRow>
-                        <SimpleButton
+                        <SettingsButton
                             onClick={() => {
                                 deleteStorage();
                                 refreshAccount();
                             }}
                         >
                             Delete All
-                        </SimpleButton>
+                        </SettingsButton>
                     </ButtonRow>
                 </SettingsLine>
             </OutlineCard>

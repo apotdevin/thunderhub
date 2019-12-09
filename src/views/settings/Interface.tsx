@@ -5,7 +5,7 @@ import {
     Card,
     SimpleButton,
 } from '../../components/generic/Styled';
-import { SettingsLine, ButtonRow } from './Settings';
+import { SettingsLine, ButtonRow, SettingsButton } from './Settings';
 import { useContext } from 'react';
 import { SettingsContext } from '../../context/SettingsContext';
 
@@ -20,7 +20,7 @@ export const InterfaceSettings = () => {
         type: string,
         current: string,
     ) => (
-        <SimpleButton
+        <SettingsButton
             enabled={current === value}
             onClick={() => {
                 localStorage.setItem(type, value);
@@ -28,7 +28,7 @@ export const InterfaceSettings = () => {
             }}
         >
             {title}
-        </SimpleButton>
+        </SettingsButton>
     );
 
     return (

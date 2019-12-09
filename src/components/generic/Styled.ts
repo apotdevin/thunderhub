@@ -137,7 +137,7 @@ export const SingleLine = styled.div`
 export const SimpleButton = styled.button`
     cursor: pointer;
     outline: none;
-    padding: 10px;
+    padding: 5px;
     margin: 5px;
     text-decoration: none;
     background-color: transparent;

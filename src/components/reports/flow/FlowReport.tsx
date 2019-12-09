@@ -23,15 +23,6 @@ interface Props {
     parsedData2: {}[];
 }
 
-const getValueString = (amount: number): string => {
-    if (amount >= 100000) {
-        return `${amount / 1000000}m`;
-    } else if (amount >= 1000) {
-        return `${amount / 1000}k`;
-    }
-    return `${amount}`;
-};
-
 export const FlowReport = ({
     isTime,
     isType,
@@ -68,7 +59,12 @@ export const FlowReport = ({
         <VictoryChart
             height={100}
             domainPadding={50}
-            padding={{ top: 10, left: 50, right: 50, bottom: 10 }}
+            padding={{
+                top: 10,
+                left: isType === 'tokens' ? 80 : 50,
+                right: 50,
+                bottom: 10,
+            }}
             containerComponent={
                 <VictoryVoronoiContainer
                     voronoiDimension="x"

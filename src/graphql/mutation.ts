@@ -37,6 +37,32 @@ export const CREATE_INVOICE = gql`
     }
 `;
 
+export const CREATE_ADDRESS = gql`
+    mutation CreateAddress($nested: Boolean, $auth: String!) {
+        createAddress(nested: $nested, auth: $auth)
+    }
+`;
+
+export const PAY_ADDRESS = gql`
+    mutation PayAddress(
+        $auth: String!
+        $address: String!
+        $tokens: Number!
+        $fee: Number
+        $target: Number
+        $sendAll: Boolean
+    ) {
+        sendToAddress(
+            auth: $auth
+            address: $address
+            tokens: $tokens
+            fee: $fee
+            target: $target
+            sendAll: $sendAll
+        )
+    }
+`;
+
 export const DECODE_REQUEST = gql`
     mutation decodeRequest($auth: String!, $request: String!) {
         decodeRequest(auth: $auth, request: $request) {
