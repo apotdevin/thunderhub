@@ -160,39 +160,42 @@ export const SettingsView = () => {
                     )}
                 </Card>
             </CardWithTitle>
-            <OutlineCard>
-                <SettingsLine>
-                    Delete Account:
-                    <ButtonRow>
-                        {getStorageSaved().map((entry, index) => {
-                            return (
-                                <SettingsButton
-                                    onClick={() => {
-                                        deleteAuth(entry.index);
-                                        refreshAccount();
-                                    }}
-                                    key={index}
-                                >
-                                    {entry.name}
-                                </SettingsButton>
-                            );
-                        })}
-                    </ButtonRow>
-                </SettingsLine>
-                <SettingsLine>
-                    Delete all Accounts and Settings:
-                    <ButtonRow>
-                        <SettingsButton
-                            onClick={() => {
-                                deleteStorage();
-                                refreshAccount();
-                            }}
-                        >
-                            Delete All
-                        </SettingsButton>
-                    </ButtonRow>
-                </SettingsLine>
-            </OutlineCard>
+            <CardWithTitle>
+                <SubTitle>Danger Zone</SubTitle>
+                <OutlineCard>
+                    <SettingsLine>
+                        Delete Account:
+                        <ButtonRow>
+                            {getStorageSaved().map((entry, index) => {
+                                return (
+                                    <SettingsButton
+                                        onClick={() => {
+                                            deleteAuth(entry.index);
+                                            refreshAccount();
+                                        }}
+                                        key={index}
+                                    >
+                                        {entry.name}
+                                    </SettingsButton>
+                                );
+                            })}
+                        </ButtonRow>
+                    </SettingsLine>
+                    <SettingsLine>
+                        Delete all Accounts and Settings:
+                        <ButtonRow>
+                            <SettingsButton
+                                onClick={() => {
+                                    deleteStorage();
+                                    refreshAccount();
+                                }}
+                            >
+                                Delete All
+                            </SettingsButton>
+                        </ButtonRow>
+                    </SettingsLine>
+                </OutlineCard>
+            </CardWithTitle>
         </>
     );
 };
