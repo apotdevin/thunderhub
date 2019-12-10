@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { CLOSE_CHANNEL } from '../../graphql/mutation';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { AccountContext } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
 import {
@@ -11,12 +11,14 @@ import {
     SubTitle,
     NoWrapTitle,
     Sub4Title,
+    ColorButton,
 } from '../generic/Styled';
 import { Circle, AlertTriangle } from '../generic/Icons';
 import styled from 'styled-components';
 import { textColor, chartLinkColor } from '../../styles/Themes';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
+import { GET_BITCOIN_FEES } from '../../graphql/query';
 
 interface CloseChannelProps {
     setModalOpen: (status: boolean) => void;
@@ -57,6 +59,14 @@ const CenterLine = styled(SingleLine)`
     justify-content: center;
 `;
 
+const RadioText = styled.div`
+    margin-left: 10px;
+`;
+
+const SmallInput = styled(Input)`
+    max-width: 150px;
+`;
+
 export const CloseChannel = ({
     setModalOpen,
     channelId,
@@ -67,8 +77,26 @@ export const CloseChannel = ({
     const [amount, setAmount] = useState<number>(0);
     const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
 
+    const [fast, setFast] = useState(0);
+    const [halfHour, setHalfHour] = useState(0);
+    const [hour, setHour] = useState(0);
+
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
+
+    const { data: feeData } = useQuery(GET_BITCOIN_FEES, {
+        onError: error => toast.error(getErrorContent(error)),
+    });
+
+    useEffect(() => {
+        if (feeData && feeData.getBitcoinFees) {
+            const { fast, halfHour, hour } = feeData.getBitcoinFees;
+            setAmount(fast);
+            setFast(fast);
+            setHalfHour(halfHour);
+            setHour(hour);
+        }
+    }, [feeData]);
 
     const [closeChannel] = useMutation(CLOSE_CHANNEL, {
         onCompleted: data => {
@@ -97,6 +125,17 @@ export const CloseChannel = ({
 
     const handleOnlyClose = () => setModalOpen(false);
 
+    const renderButton = (
+        onClick: () => void,
+        text: string,
+        selected: boolean,
+    ) => (
+        <ColorButton color={'white'} onClick={onClick}>
+            <Circle size={'10px'} fillcolor={selected ? 'white' : ''} />
+            <RadioText>{text}</RadioText>
+        </ColorButton>
+    );
+
     const renderWarning = () => (
         <WarningCard>
             <AlertTriangle size={'32px'} color={'red'} />
@@ -122,31 +161,48 @@ export const CloseChannel = ({
             </SingleLine>
             <Separation />
             <SingleLine>
-                <Sub4Title>Method:</Sub4Title>
+                <Sub4Title>Fee:</Sub4Title>
                 <ButtonRow>
-                    <Button
-                        selected={isType === 'target'}
-                        color={'#0077ff'}
-                        onClick={() => setIsType('target')}
-                    >
-                        Target
-                    </Button>
-                    <Button
-                        selected={isType === 'fee'}
-                        color={'#0077ff'}
-                        onClick={() => setIsType('fee')}
-                    >
-                        Fee
-                    </Button>
-                    <Button
-                        selected={isType === 'none'}
-                        color={'#0077ff'}
-                        onClick={() => setIsType('none')}
-                    >
-                        Auto
-                    </Button>
+                    {renderButton(
+                        () => setIsType('none'),
+                        'Auto',
+                        isType === 'none',
+                    )}
+                    {renderButton(
+                        () => setIsType('fee'),
+                        'Fee',
+                        isType === 'fee',
+                    )}
+                    {renderButton(
+                        () => setIsType('target'),
+                        'Target',
+                        isType === 'target',
+                    )}
                 </ButtonRow>
             </SingleLine>
+            {isType === 'none' && (
+                <SingleLine>
+                    <Sub4Title>Fee Amount:</Sub4Title>
+                    <ButtonRow>
+                        {renderButton(
+                            () => setAmount(fast),
+                            `Fastest (${fast} sats)`,
+                            amount === fast,
+                        )}
+                        {halfHour !== fast &&
+                            renderButton(
+                                () => setAmount(halfHour),
+                                `Half Hour (${halfHour} sats)`,
+                                amount === halfHour,
+                            )}
+                        {renderButton(
+                            () => setAmount(hour),
+                            `Hour (${hour} sats)`,
+                            amount === hour,
+                        )}
+                    </ButtonRow>
+                </SingleLine>
+            )}
             {isType !== 'none' && (
                 <SingleLine>
                     <NoWrapTitle>
@@ -154,8 +210,8 @@ export const CloseChannel = ({
                             ? 'Target Blocks:'
                             : 'Fee (Sats/Byte)'}
                     </NoWrapTitle>
-                    <Input
-                        // color={color}
+                    <SmallInput
+                        color={'white'}
                         min={1}
                         type={'number'}
                         onChange={e => setAmount(parseInt(e.target.value))}
@@ -164,23 +220,17 @@ export const CloseChannel = ({
             )}
             <SingleLine>
                 <Sub4Title>Force Close Channel:</Sub4Title>
-                <Button
-                    selected={isForce}
-                    color={'#0077ff'}
-                    onClick={() => setIsForce(prev => !prev)}
-                >
-                    <Circle
-                        color={'transparent'}
-                        fillcolor={isForce ? '#73d13d' : '#ff4d4f'}
-                    />
-                </Button>
+                <ButtonRow>
+                    {renderButton(() => setIsForce(true), `Yes`, isForce)}
+                    {renderButton(() => setIsForce(false), `No`, !isForce)}
+                </ButtonRow>
             </SingleLine>
             <Separation />
             <CenterLine>
-                <Button color={'#0077ff'} onClick={() => setIsConfirmed(true)}>
+                <Button color={'red'} onClick={() => setIsConfirmed(true)}>
                     Close Channel
                 </Button>
-                <Button color={'#0077ff'} onClick={handleOnlyClose}>
+                <Button color={'white'} onClick={handleOnlyClose}>
                     Cancel
                 </Button>
             </CenterLine>
