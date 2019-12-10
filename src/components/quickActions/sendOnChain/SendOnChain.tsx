@@ -5,8 +5,9 @@ import {
     ColorButton,
     NoWrapTitle,
     DarkSubTitle,
+    Separation,
 } from '../../generic/Styled';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { PAY_ADDRESS } from '../../../graphql/mutation';
 import { Send, Circle } from '../../generic/Icons';
 import styled from 'styled-components';
@@ -16,6 +17,7 @@ import { AccountContext } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import { SettingsContext } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
+import { GET_BITCOIN_FEES } from '../../../graphql/query';
 
 const SingleLine = styled.div`
     display: flex;
@@ -50,14 +52,39 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
     const [sendAll, setSendAll] = useState(false);
     const [isSent, setIsSent] = useState(false);
 
+    const [fast, setFast] = useState(0);
+    const [halfHour, setHalfHour] = useState(0);
+    const [hour, setHour] = useState(0);
+
     const { price, symbol, currency } = useContext(SettingsContext);
 
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
 
+    const { data: feeData } = useQuery(GET_BITCOIN_FEES, {
+        onError: error => toast.error(getErrorContent(error)),
+    });
+
+    useEffect(() => {
+        if (feeData && feeData.getBitcoinFees) {
+            const { fast, halfHour, hour } = feeData.getBitcoinFees;
+            setAmount(fast);
+            setFast(fast);
+            setHalfHour(halfHour);
+            setHour(hour);
+        }
+    }, [feeData]);
+
     const [payAddress, { data }] = useMutation(PAY_ADDRESS, {
         onError: error => toast.error(getErrorContent(error)),
     });
+
+    useEffect(() => {
+        if (data && data.sendToAddress && data.sendToAddress.id) {
+            setIsSent(true);
+            toast.success('Payment Sent!');
+        }
+    }, [data]);
 
     const priceProps = { price, symbol, currency };
     const getFormat = (amount: number) =>
@@ -83,12 +110,16 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
 
     const tokenAmount = sendAll ? { sendAll } : { tokens };
 
-    useEffect(() => {
-        if (data && data.sendToAddress && data.sendToAddress.id) {
-            setIsSent(true);
-            toast.success('On Chain Payment Sent!');
-        }
-    }, [data]);
+    const renderButton = (
+        onClick: () => void,
+        text: string,
+        selected: boolean,
+    ) => (
+        <ColorButton color={color} onClick={onClick}>
+            <Circle size={'10px'} fillcolor={selected ? 'white' : ''} />
+            <RadioText>{text}</RadioText>
+        </ColorButton>
+    );
 
     if (isSent && data && data.sendToAddress && data.sendToAddress.id) {
         return (
@@ -110,33 +141,12 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                     onChange={e => setAddress(e.target.value)}
                 />
             </SingleLine>
+            <Separation />
             <SingleLine>
                 <NoWrapTitle>Send All:</NoWrapTitle>
                 <ButtonRow>
-                    <ColorButton
-                        color={color}
-                        onClick={() => {
-                            setSendAll(true);
-                        }}
-                    >
-                        <Circle
-                            size={'10px'}
-                            fillcolor={sendAll ? 'white' : ''}
-                        />
-                        <RadioText>Yes</RadioText>
-                    </ColorButton>
-                    <ColorButton
-                        color={color}
-                        onClick={() => {
-                            setSendAll(false);
-                        }}
-                    >
-                        <Circle
-                            size={'10px'}
-                            fillcolor={!sendAll ? 'white' : ''}
-                        />
-                        <RadioText>No</RadioText>
-                    </ColorButton>
+                    {renderButton(() => setSendAll(true), 'Yes', sendAll)}
+                    {renderButton(() => setSendAll(false), 'No', !sendAll)}
                 </ButtonRow>
             </SingleLine>
             {!sendAll && (
@@ -152,46 +162,32 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                     </ButtonRow>
                 </SingleLine>
             )}
+            <Separation />
             <SingleLine>
                 <NoWrapTitle>Fee:</NoWrapTitle>
                 <ButtonRow>
-                    <ColorButton
-                        color={color}
-                        onClick={() => {
+                    {renderButton(
+                        () => {
                             setType('none');
-                        }}
-                    >
-                        <Circle
-                            size={'10px'}
-                            fillcolor={type === 'none' ? 'white' : ''}
-                        />
-                        <RadioText>Auto</RadioText>
-                    </ColorButton>
-                    <ColorButton
-                        color={color}
-                        onClick={() => {
-                            setType('fee');
-                        }}
-                    >
-                        <Circle
-                            size={'10px'}
-                            fillcolor={type === 'fee' ? 'white' : ''}
-                        />
-                        <RadioText>{`Fee (Sats/Byte)`}</RadioText>
-                    </ColorButton>
-                    <ColorButton
-                        color={color}
-                        onClick={() => {
-                            setType('target');
-                        }}
-                    >
-                        <Circle
-                            size={'10px'}
-                            fillcolor={type === 'target' ? 'white' : ''}
-                        />
-                        <RadioText>{`Target Confirmations`}</RadioText>
-                    </ColorButton>
+                            setAmount(fast);
+                        },
+                        'Auto',
+                        type === 'none',
+                    )}
+                    {renderButton(
+                        () => setType('fee'),
+                        'Fee (Sats/Byte)',
+                        type === 'fee',
+                    )}
+                    {renderButton(
+                        () => setType('target'),
+                        'Target Confirmations',
+                        type === 'target',
+                    )}
                 </ButtonRow>
+            </SingleLine>
+            <SingleLine>
+                <NoWrapTitle>Fee Amount:</NoWrapTitle>
                 {type !== 'none' && (
                     <ButtonRow>
                         <DarkSubTitle bottom={'0px'}>
@@ -204,7 +200,28 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                         />
                     </ButtonRow>
                 )}
+                {type === 'none' && (
+                    <ButtonRow>
+                        {renderButton(
+                            () => setAmount(fast),
+                            `Fastest (${fast} sats)`,
+                            amount === fast,
+                        )}
+                        {halfHour !== fast &&
+                            renderButton(
+                                () => setAmount(halfHour),
+                                `Half Hour (${halfHour} sats)`,
+                                amount === halfHour,
+                            )}
+                        {renderButton(
+                            () => setAmount(hour),
+                            `Hour (${hour} sats)`,
+                            amount === hour,
+                        )}
+                    </ButtonRow>
+                )}
             </SingleLine>
+            <Separation />
             <RightButton
                 color={color}
                 onClick={() => {

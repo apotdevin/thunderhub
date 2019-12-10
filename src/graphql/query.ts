@@ -181,6 +181,16 @@ export const GET_BITCOIN_PRICE = gql`
     }
 `;
 
+export const GET_BITCOIN_FEES = gql`
+    query GetBitcoinFees {
+        getBitcoinFees {
+            fast
+            halfHour
+            hour
+        }
+    }
+`;
+
 export const GET_FORWARD_REPORT = gql`
     query GetForwardReport($time: String, $auth: String!) {
         getForwardReport(time: $time, auth: $auth)
