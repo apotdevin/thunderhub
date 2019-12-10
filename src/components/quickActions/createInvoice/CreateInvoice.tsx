@@ -34,7 +34,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
                 <Input
                     color={color}
                     type={'number'}
-                    onChange={e => setAmount(10000)}
+                    onChange={e => setAmount(parseInt(e.target.value))}
                 />
                 <ColorButton
                     color={color}
