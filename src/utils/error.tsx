@@ -5,9 +5,6 @@ export const getErrorContent = (error: ApolloError): ReactNode => {
     const errors = error.graphQLErrors.map(x => x.message);
 
     const renderMessage = errors.map((error, i) => {
-        if (error === 'rateLimitReached') {
-            return 'Rate Limit Reached.';
-        }
         try {
             const errorMsg = JSON.parse(error);
             return (
@@ -16,7 +13,7 @@ export const getErrorContent = (error: ApolloError): ReactNode => {
                 >{`${errorMsg.details} [${errorMsg.msg}/${errorMsg.code}]`}</div>
             );
         } catch (e) {
-            console.log('JSON parsing error:', e);
+            return error;
         }
     });
 
