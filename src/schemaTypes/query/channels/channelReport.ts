@@ -10,6 +10,12 @@ export const ChannelReportType = new GraphQLObjectType({
             remote: {
                 type: GraphQLInt,
             },
+            maxIn: {
+                type: GraphQLInt,
+            },
+            maxOut: {
+                type: GraphQLInt,
+            },
         };
     },
 });
