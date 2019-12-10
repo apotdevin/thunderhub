@@ -25,6 +25,20 @@ export const getChannelReport = {
         try {
             const channels: GetChannelsProps = await getChannels({ lnd });
 
+            const maxOutgoing = Math.max.apply(
+                Math,
+                channels.channels.map(o => {
+                    return o.local_balance;
+                }),
+            );
+
+            const maxIncoming = Math.max.apply(
+                Math,
+                channels.channels.map(o => {
+                    return o.remote_balance;
+                }),
+            );
+
             const consolidated = channels.channels.reduce((p, c) => {
                 return {
                     remote_balance: p.remote_balance + c.remote_balance,
@@ -35,6 +49,8 @@ export const getChannelReport = {
             return {
                 local: consolidated.local_balance,
                 remote: consolidated.remote_balance,
+                maxIn: maxIncoming,
+                maxOut: maxOutgoing,
             };
         } catch (error) {
             logger.error('Error getting channel fees: %o', error);
