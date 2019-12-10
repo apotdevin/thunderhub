@@ -7,6 +7,8 @@ import { SettingsContext } from '../../../context/SettingsContext';
 import { AccountContext } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import { ChannelRow, CardContent } from '.';
+import { toast } from 'react-toastify';
+import { getErrorContent } from '../../../utils/error';
 
 interface Props {
     isTime: string;
@@ -19,8 +21,9 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
 
-    const { data, loading, error } = useQuery(GET_FORWARD_CHANNELS_REPORT, {
+    const { data, loading } = useQuery(GET_FORWARD_CHANNELS_REPORT, {
         variables: { time: isTime, order: isType, auth },
+        onError: error => toast.error(getErrorContent(error)),
     });
 
     if (!data || loading) {

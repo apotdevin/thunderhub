@@ -25,6 +25,8 @@ import {
 } from '../generic/Icons';
 import { unSelectedNavButton } from '../../styles/Themes';
 import { getValue } from '../../helpers/Helpers';
+import { toast } from 'react-toastify';
+import { getErrorContent } from '../../utils/error';
 
 const Tile = styled.div`
     display: flex;
@@ -42,11 +44,12 @@ export const AccountInfo = () => {
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
 
-    const { loading, error, data } = useQuery(GET_BALANCES, {
+    const { data } = useQuery(GET_BALANCES, {
         variables: { auth },
+        onError: error => toast.error(getErrorContent(error)),
     });
 
-    const { price, symbol, currency, theme } = useContext(SettingsContext);
+    const { price, symbol, currency } = useContext(SettingsContext);
     const priceProps = { price, symbol, currency };
 
     if (!data) {
@@ -138,7 +141,7 @@ export const AccountInfo = () => {
                         />
                         <Tile startTile={true}>
                             <DarkSubTitle>Account</DarkSubTitle>
-                            <div>Wallet</div>
+                            <div>Bitcoin</div>
                         </Tile>
                         <Tile>
                             <DarkSubTitle>Current Balance</DarkSubTitle>

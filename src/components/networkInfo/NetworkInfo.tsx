@@ -15,6 +15,8 @@ import { getAuthString } from '../../utils/auth';
 import styled from 'styled-components';
 import { unSelectedNavButton } from '../../styles/Themes';
 import { Globe, Cpu } from '../generic/Icons';
+import { toast } from 'react-toastify';
+import { getErrorContent } from '../../utils/error';
 
 const Tile = styled.div`
     display: flex;
@@ -38,14 +40,13 @@ export const NetworkInfo = () => {
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
 
-    const { loading, error, data } = useQuery(GET_NETWORK_INFO, {
+    const { loading, data } = useQuery(GET_NETWORK_INFO, {
         variables: { auth },
+        onError: error => toast.error(getErrorContent(error)),
     });
 
     const { price, symbol, currency } = useContext(SettingsContext);
     const priceProps = { price, symbol, currency };
-
-    // console.log(loading, error, data);
 
     if (loading || !data || !data.getNetworkInfo) {
         return <Card>Loading....</Card>;

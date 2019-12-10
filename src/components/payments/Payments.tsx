@@ -5,6 +5,8 @@ import { Card, CardWithTitle, SubTitle } from '../generic/Styled';
 import { PaymentsCard } from './PaymentsCards';
 import { AccountContext } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
+import { toast } from 'react-toastify';
+import { getErrorContent } from '../../utils/error';
 
 export const Payments = () => {
     const [indexOpen, setIndexOpen] = useState(0);
@@ -12,11 +14,10 @@ export const Payments = () => {
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
 
-    const { loading, error, data } = useQuery(GET_PAYMENTS, {
+    const { loading, data } = useQuery(GET_PAYMENTS, {
         variables: { auth },
+        onError: error => toast.error(getErrorContent(error)),
     });
-
-    console.log(loading, error, data);
 
     if (loading || !data || !data.getPayments) {
         return <Card>Loading....</Card>;

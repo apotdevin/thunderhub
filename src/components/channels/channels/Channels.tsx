@@ -5,6 +5,8 @@ import { Card, CardWithTitle, SubTitle } from '../../generic/Styled';
 import { ChannelCard } from './ChannelCard';
 import { AccountContext } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
+import { toast } from 'react-toastify';
+import { getErrorContent } from '../../../utils/error';
 
 export const Channels = () => {
     const [indexOpen, setIndexOpen] = useState(0);
@@ -12,11 +14,10 @@ export const Channels = () => {
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
 
-    const { loading, error, data } = useQuery(GET_CHANNELS, {
+    const { loading, data } = useQuery(GET_CHANNELS, {
         variables: { auth },
+        onError: error => toast.error(getErrorContent(error)),
     });
-
-    // console.log(loading, error, data);
 
     if (loading || !data || !data.getChannels) {
         return <Card>Loading....</Card>;

@@ -5,6 +5,8 @@ import { Card, CardWithTitle, SubTitle } from '../../generic/Styled';
 import { PendingCard } from './PendingCard';
 import { AccountContext } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
+import { toast } from 'react-toastify';
+import { getErrorContent } from '../../../utils/error';
 
 export const PendingChannels = () => {
     const [indexOpen, setIndexOpen] = useState(0);
@@ -12,8 +14,9 @@ export const PendingChannels = () => {
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
 
-    const { loading, error, data } = useQuery(GET_PENDING_CHANNELS, {
+    const { loading, data } = useQuery(GET_PENDING_CHANNELS, {
         variables: { auth },
+        onError: error => toast.error(getErrorContent(error)),
     });
 
     if (loading || !data || !data.getPendingChannels) {
