@@ -24,7 +24,8 @@ export const getForwards = {
     type: new GraphQLList(GetForwardType),
     args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'getForwards', 1, '1s');
+        await requestLimiter(context.ip, 'forwards');
+
         const lnd = getAuthLnd(params.auth);
 
         try {

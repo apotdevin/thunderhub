@@ -39,7 +39,7 @@ export const getChannels = {
     type: new GraphQLList(ChannelType),
     args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'channels', 1, '1s');
+        await requestLimiter(context.ip, 'channels');
 
         const lnd = getAuthLnd(params.auth);
 

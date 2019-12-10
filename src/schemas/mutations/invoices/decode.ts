@@ -32,7 +32,8 @@ export const decodeRequest = {
         auth: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'decodeRequest', 1, '1s');
+        await requestLimiter(context.ip, 'decode')
+
         const lnd = getAuthLnd(params.auth);
 
         try {

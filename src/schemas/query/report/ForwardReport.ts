@@ -20,7 +20,7 @@ export const getForwardReport = {
         time: { type: GraphQLString },
     },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'getForwardReport', 1, '1s');
+        await requestLimiter(context.ip, 'forwardReport');
 
         const lnd = getAuthLnd(params.auth);
 

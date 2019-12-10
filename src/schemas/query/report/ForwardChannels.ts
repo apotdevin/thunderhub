@@ -17,13 +17,7 @@ export const getForwardChannelsReport = {
         order: { type: GraphQLString },
     },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(
-            context.ip,
-            params,
-            'getForwardChannelsReport',
-            1,
-            '1s',
-        );
+        await requestLimiter(context.ip, 'forwardChannels')
 
         const lnd = getAuthLnd(params.auth);
 

@@ -26,7 +26,7 @@ export const getNodeInfo = {
     type: NodeInfoType,
     args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'nodeInfo', 1, '1s');
+        await requestLimiter(context.ip, 'nodeInfo');
 
         const lnd = getAuthLnd(params.auth);
 

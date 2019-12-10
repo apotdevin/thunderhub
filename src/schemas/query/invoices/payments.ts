@@ -28,7 +28,7 @@ export const getPayments = {
     type: new GraphQLList(GetPaymentType),
     args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'getPayments', 1, '1s');
+        await requestLimiter(context.ip, 'payments');
 
         const lnd = getAuthLnd(params.auth);
 

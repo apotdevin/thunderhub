@@ -15,7 +15,8 @@ export const createAddress = {
         nested: { type: GraphQLBoolean },
     },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'createAddress', 1, '1s');
+        await requestLimiter(context.ip, 'getAddress')
+
         const lnd = getAuthLnd(params.auth);
 
         const format = params.nested ? 'np2wpkh' : 'p2wpkh';
