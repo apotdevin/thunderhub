@@ -1,5 +1,7 @@
-import { getBitcoinPrice } from "./bitcoinPrice";
+import { getBitcoinPrice } from './bitcoinPrice';
+import { getBitcoinFees } from './bitcoinFee';
 
 export const dataQueries = {
-  getBitcoinPrice
+    getBitcoinPrice,
+    getBitcoinFees,
 };

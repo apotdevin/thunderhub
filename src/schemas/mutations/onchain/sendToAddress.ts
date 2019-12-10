@@ -18,18 +18,18 @@ interface SendProps {
     tokens: number;
 }
 
-export const sentToAddress = {
+export const sendToAddress = {
     type: SendToType,
     args: {
         auth: { type: new GraphQLNonNull(GraphQLString) },
         address: { type: new GraphQLNonNull(GraphQLString) },
-        tokens: { type: new GraphQLNonNull(GraphQLInt) },
+        tokens: { type: GraphQLInt },
         fee: { type: GraphQLInt },
         target: { type: GraphQLInt },
         sendAll: { type: GraphQLBoolean },
     },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'createAddress', 1, '1s');
+        await requestLimiter(context.ip, params, 'sendToAddress', 1, '1s');
         const lnd = getAuthLnd(params.auth);
 
         const props = params.fee
