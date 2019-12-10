@@ -15,6 +15,8 @@ import { GET_IN_OUT } from '../../../graphql/query';
 import { useQuery } from '@apollo/react-hooks';
 import { FlowPie } from './FlowPie';
 import { InvoicePie } from './InvoicePie';
+import { toast } from 'react-toastify';
+import { getErrorContent } from '../../../utils/error';
 
 export const ChannelRow = styled.div`
     font-size: 14px;
@@ -60,8 +62,9 @@ export const FlowBox = () => {
 
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
-    const { data, loading, error } = useQuery(GET_IN_OUT, {
+    const { data, loading } = useQuery(GET_IN_OUT, {
         variables: { time: isTime, auth },
+        onError: error => toast.error(getErrorContent(error)),
     });
 
     const buttonProps = {

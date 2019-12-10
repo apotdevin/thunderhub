@@ -19,6 +19,8 @@ import {
     chartGridColor,
 } from '../../../styles/Themes';
 import { ChannelRow, CardContent } from '.';
+import { toast } from 'react-toastify';
+import { getErrorContent } from '../../../utils/error';
 
 interface Props {
     isTime: string;
@@ -31,8 +33,9 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
 
-    const { data, loading, error } = useQuery(GET_FORWARD_REPORT, {
+    const { data, loading } = useQuery(GET_FORWARD_REPORT, {
         variables: { time: isTime, auth },
+        onError: error => toast.error(getErrorContent(error)),
     });
 
     const priceProps = { price, symbol, currency };

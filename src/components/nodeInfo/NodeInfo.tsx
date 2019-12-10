@@ -10,6 +10,8 @@ import { QuestionIcon, Zap, ZapOff, Anchor } from '../generic/Icons';
 import { getTooltipType } from '../generic/Helpers';
 import { AccountContext } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
+import { toast } from 'react-toastify';
+import { getErrorContent } from '../../utils/error';
 
 const Title = styled.div`
     font-size: 18px;
@@ -44,15 +46,15 @@ export const NodeInfo = () => {
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
 
-    const { loading, error, data } = useQuery(GET_NODE_INFO, {
+    const { loading, data } = useQuery(GET_NODE_INFO, {
         variables: { auth },
+        onError: error => toast.error(getErrorContent(error)),
     });
 
     const { price, symbol, currency, theme } = useContext(SettingsContext);
     const priceProps = { price, symbol, currency };
 
     const tooltipType = getTooltipType(theme);
-    // console.log(loading, error, data);
 
     if (loading || !data || !data.getNodeInfo) {
         return <div>....</div>;
