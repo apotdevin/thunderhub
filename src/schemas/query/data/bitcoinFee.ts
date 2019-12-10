@@ -14,7 +14,7 @@ export const getBitcoinFees = {
         },
     },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'bitcoinFee', 1, '1s');
+        await requestLimiter(context.ip, 'bitcoinFee')
 
         try {
             const response = await fetch(url);

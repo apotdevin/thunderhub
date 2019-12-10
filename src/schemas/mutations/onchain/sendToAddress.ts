@@ -29,7 +29,8 @@ export const sendToAddress = {
         sendAll: { type: GraphQLBoolean },
     },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'sendToAddress', 1, '1s');
+        await requestLimiter(context.ip, 'sendToAddress')
+        
         const lnd = getAuthLnd(params.auth);
 
         const props = params.fee

@@ -36,7 +36,8 @@ export const parsePayment = {
         auth: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'parsePayment', 1, '1s');
+        await requestLimiter(context.ip, 'parsePayment');
+
         const lnd = getAuthLnd(params.auth);
 
         try {

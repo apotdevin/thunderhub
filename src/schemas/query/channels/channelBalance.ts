@@ -14,7 +14,7 @@ export const getChannelBalance = {
     type: ChannelBalanceType,
     args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'channelBalance', 1, '1s');
+        await requestLimiter(context.ip, 'channelBalance');
 
         const lnd = getAuthLnd(params.auth);
 

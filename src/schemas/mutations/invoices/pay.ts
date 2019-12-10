@@ -33,7 +33,8 @@ export const pay = {
         auth: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'payRequest', 1, '1s');
+        await requestLimiter(context.ip, 'pay')
+
         const lnd = getAuthLnd(params.auth);
 
         try {

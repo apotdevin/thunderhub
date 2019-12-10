@@ -19,7 +19,7 @@ export const getInOut = {
         time: { type: GraphQLString },
     },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, params, 'getInvoices', 1, '1s');
+        await requestLimiter(context.ip, 'getInOut');
 
         const lnd = getAuthLnd(params.auth);
 
