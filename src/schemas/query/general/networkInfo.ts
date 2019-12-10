@@ -20,7 +20,7 @@ export const getNetworkInfo = {
     type: NetworkInfoType,
     args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, 'networkInfo')
+        await requestLimiter(context.ip, 'networkInfo');
 
         const lnd = getAuthLnd(params.auth);
 

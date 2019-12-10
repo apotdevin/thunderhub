@@ -60,7 +60,7 @@ export const getClosedChannels = {
         auth: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, 'closedChannels')
+        await requestLimiter(context.ip, 'closedChannels');
 
         const lnd = getAuthLnd(params.auth);
 

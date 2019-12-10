@@ -23,7 +23,7 @@ export const createInvoice = {
         auth: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (root: any, params: any, context: any) => {
-        await requestLimiter(context.ip, 'createInvoice')
+        await requestLimiter(context.ip, 'createInvoice');
 
         const lnd = getAuthLnd(params.auth);
 
