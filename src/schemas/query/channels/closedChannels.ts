@@ -66,7 +66,7 @@ export const getClosedChannels = {
 
         try {
             const closedChannels: ChannelListProps = await getLnClosedChannels({
-                lnd: lnd,
+                lnd,
             });
 
             const channels = closedChannels.channels.map(channel => {
