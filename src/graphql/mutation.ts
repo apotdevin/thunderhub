@@ -47,9 +47,9 @@ export const PAY_ADDRESS = gql`
     mutation PayAddress(
         $auth: String!
         $address: String!
-        $tokens: Number!
-        $fee: Number
-        $target: Number
+        $tokens: Int
+        $fee: Int
+        $target: Int
         $sendAll: Boolean
     ) {
         sendToAddress(
@@ -59,7 +59,13 @@ export const PAY_ADDRESS = gql`
             fee: $fee
             target: $target
             sendAll: $sendAll
-        )
+        ) {
+            confirmationCount
+            id
+            isConfirmed
+            isOutgoing
+            tokens
+        }
     }
 `;
 
