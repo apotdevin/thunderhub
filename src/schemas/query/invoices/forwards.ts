@@ -29,9 +29,7 @@ export const getForwards = {
         const lnd = getAuthLnd(params.auth);
 
         try {
-            const forwardsList: ForwardsProps = await getLnForwards({
-                lnd: lnd,
-            });
+            const forwardsList: ForwardsProps = await getLnForwards({ lnd });
 
             const forwards = forwardsList.forwards.map(forward => ({
                 createdAt: forward.created_at,

@@ -25,9 +25,7 @@ export const getNetworkInfo = {
         const lnd = getAuthLnd(params.auth);
 
         try {
-            const info: NetworkInfoProps = await getLnNetworkInfo({
-                lnd: lnd,
-            });
+            const info: NetworkInfoProps = await getLnNetworkInfo({ lnd });
 
             return {
                 averageChannelSize: info.average_channel_size,

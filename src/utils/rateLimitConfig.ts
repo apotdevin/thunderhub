@@ -9,6 +9,7 @@ export const RateConfig: RateConfigProps = {
     channelBalance: { max: 3, window: '1s' },
     channelFees: { max: 3, window: '1s' },
     channels: { max: 3, window: '1s' },
+    channelReport: { max: 3, window: '1s' },
     closedChannels: { max: 3, window: '1s' },
     pendingChannels: { max: 3, window: '1s' },
     bitcoinFee: { max: 3, window: '1s' },
