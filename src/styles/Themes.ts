@@ -101,7 +101,7 @@ export const unSelectedNavButton = theme('mode', {
 });
 
 export const buttonBorderColor = theme('mode', {
-    light: 'black',
+    light: '#d9d9d9',
     dark: '#2e3245',
 });
 
@@ -118,6 +118,14 @@ export const chartGridColor: { [key: string]: string } = {
 export const chartBarColor: { [key: string]: string } = {
     light: '#6938f1',
     dark: '#6938f1',
+};
+
+// ---------------------------------------
+// Liquidity Report Bar Colors
+// ---------------------------------------
+export const liquidityBarColor: { [key: string]: string } = {
+    light: '#a0d911',
+    dark: '#a0d911',
 };
 
 // ---------------------------------------

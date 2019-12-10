@@ -197,6 +197,17 @@ export const GET_FORWARD_REPORT = gql`
     }
 `;
 
+export const GET_LIQUID_REPORT = gql`
+    query GetLiquidReport($auth: String!) {
+        getChannelReport(auth: $auth) {
+            local
+            remote
+            maxIn
+            maxOut
+        }
+    }
+`;
+
 export const GET_FORWARD_CHANNELS_REPORT = gql`
     query GetForwardChannelsReport(
         $time: String
