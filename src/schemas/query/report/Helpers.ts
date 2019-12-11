@@ -74,3 +74,33 @@ export const countArray = (list: ForwardProps[], type: boolean) => {
 
     return channelInfo;
 };
+
+export const countRoutes = (list: ForwardProps[]) => {
+    const grouped = groupBy(list, 'route');
+
+    const channelInfo = [];
+    for (const key in grouped) {
+        if (grouped.hasOwnProperty(key)) {
+            const element = grouped[key];
+
+            const fee = element
+                .map(forward => forward.fee)
+                .reduce((p, c) => p + c);
+
+            const tokens = element
+                .map(forward => forward.tokens)
+                .reduce((p, c) => p + c);
+
+            channelInfo.push({
+                route: key,
+                in: element[0].incoming_channel,
+                out: element[0].outgoing_channel,
+                amount: element.length,
+                fee: fee,
+                tokens: tokens,
+            });
+        }
+    }
+
+    return channelInfo;
+};
