@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { DarkSubTitle } from '../../generic/Styled';
+import { Sub4Title } from '../../generic/Styled';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_FORWARD_REPORT } from '../../../graphql/query';
 import numeral from 'numeral';
@@ -18,7 +18,7 @@ import {
     chartBarColor,
     chartGridColor,
 } from '../../../styles/Themes';
-import { ChannelRow, CardContent } from '.';
+import { CardContent } from '.';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 
@@ -133,10 +133,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
                         />
                     </VictoryChart>
                 </div>
-                <ChannelRow>
-                    <DarkSubTitle>Total:</DarkSubTitle>
-                    {total}
-                </ChannelRow>
+                <Sub4Title>{`Total: ${total}`}</Sub4Title>
             </>
         );
     };

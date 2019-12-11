@@ -20,10 +20,22 @@ import styled from 'styled-components';
 
 const ButtonRow = styled.div`
     display: flex;
+    margin-bottom: 5px;
 `;
 
-const LastButton = styled(ColorButton)`
-    margin-right: 0;
+const TriButton = styled(ColorButton)`
+    margin: 0;
+    border-radius: 0;
+`;
+
+const LeftButton = styled(TriButton)`
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+`;
+
+const RightButton = styled(TriButton)`
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
 `;
 
 const TableLine = styled.div`
@@ -148,27 +160,27 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
 
     const renderButtons = () => (
         <ButtonRow>
-            <ColorButton
-                selected={type === 'route'}
+            <LeftButton
                 color={color}
-                onClick={() => setType('route')}
-            >
-                <GitCommit />
-            </ColorButton>
-            <ColorButton
                 selected={type === 'incoming'}
-                color={color}
                 onClick={() => setType('incoming')}
             >
                 <DownArrow />
-            </ColorButton>
-            <LastButton
+            </LeftButton>
+            <TriButton
+                selected={type === 'route'}
+                onClick={() => setType('route')}
+                color={color}
+            >
+                <GitCommit />
+            </TriButton>
+            <RightButton
                 selected={type === 'outgoing'}
                 color={color}
                 onClick={() => setType('outgoing')}
             >
                 <UpArrow />
-            </LastButton>
+            </RightButton>
         </ButtonRow>
     );
 
