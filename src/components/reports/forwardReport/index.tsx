@@ -34,7 +34,7 @@ export const ForwardBox = () => {
     const [isTime, setIsTime] = useState<string>('week');
     const [isType, setIsType] = useState<string>('amount');
 
-    const props = { isTime, isType };
+    const props = { isTime, isType, color: buttonBorder };
 
     const buttonProps = {
         isTime,

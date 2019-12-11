@@ -85,7 +85,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
                     <VictoryChart
                         domainPadding={50}
                         padding={{
-                            top: 10,
+                            top: 30,
                             left: isType === 'tokens' ? 100 : 50,
                             right: 50,
                             bottom: 20,

@@ -24,7 +24,6 @@ export const CardTitle = styled.div`
 
 interface CardProps {
     bottom?: string;
-    full?: boolean;
     padding?: string;
 }
 
@@ -36,9 +35,6 @@ export const Card = styled.div`
     border: 1px solid ${cardBorderColor};
     margin-bottom: ${({ bottom }: CardProps) => (bottom ? bottom : '25px')};
     width: 100%;
-    height: ${(props: CardProps) => props.full && '100%'};
-    border-left: ${(props: { color?: string }) =>
-        props.color ? `2px solid ${props.color}` : ''};
 `;
 
 interface SeparationProps {
@@ -167,11 +163,17 @@ export const DarkSubTitle = styled.div`
     margin-bottom: ${({ bottom }: DarkProps) => (bottom ? bottom : '10px')};
 `;
 
+interface ColorProps {
+    color: string;
+    selected?: boolean;
+}
 export const ColorButton = styled(SimpleButton)`
-    color: ${chartLinkColor};
+    color: ${({ selected }) => (selected ? textColor : chartLinkColor)};
+    border: ${({ selected, color }: ColorProps) =>
+        selected ? `1px solid ${color}` : ''};
 
     &:hover {
-        border: 1px solid ${({ color }: { color: string }) => color};
+        border: 1px solid ${({ color }: ColorProps) => color};
         color: ${textColor};
     }
 `;

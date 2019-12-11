@@ -1,5 +1,11 @@
-import React, { useContext } from 'react';
-import { DarkSubTitle } from '../../generic/Styled';
+import React, { useContext, useState } from 'react';
+import {
+    DarkSubTitle,
+    Separation,
+    SimpleButton,
+    ColorButton,
+    SingleLine,
+} from '../../generic/Styled';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_FORWARD_CHANNELS_REPORT } from '../../../graphql/query';
 import { getValue } from '../../../helpers/Helpers';
@@ -9,47 +15,73 @@ import { getAuthString } from '../../../utils/auth';
 import { ChannelRow, CardContent } from '.';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
+import { GitCommit, DownArrow, UpArrow } from '../../generic/Icons';
+import styled from 'styled-components';
+
+const ButtonRow = styled.div`
+    display: flex;
+`;
+
+const LastButton = styled(ColorButton)`
+    margin-right: 0;
+`;
+
+const TableLine = styled.div`
+    width: 35%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+`;
+
+const LastTableLine = styled(TableLine)`
+    width: auto;
+    text-align: right;
+`;
 
 interface Props {
     isTime: string;
     isType: string;
+    color: string;
 }
 
-export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
+export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
+    const [type, setType] = useState('route');
+
     const { price, symbol, currency } = useContext(SettingsContext);
 
     const { host, read, cert } = useContext(AccountContext);
     const auth = getAuthString(host, read, cert);
 
     const { data, loading } = useQuery(GET_FORWARD_CHANNELS_REPORT, {
-        variables: { time: isTime, order: isType, auth },
+        variables: { time: isTime, order: isType, auth, type },
         onError: error => toast.error(getErrorContent(error)),
     });
 
     if (!data || loading) {
-        return <div>Loading</div>;
+        return <div>Loading...</div>;
     }
 
-    const { incoming, outgoing } = data.getForwardChannelsReport;
+    const report = data.getForwardChannelsReport;
 
     const fillArray = (array: {}[]) => {
-        const lengthMissing = 5 - array.length;
+        const lengthMissing = 10 - array.length;
         if (lengthMissing > 0) {
             for (let i = 0; i < lengthMissing; i++) {
-                array.push({ name: '-', amount: '', fee: '', tokens: '' });
+                array.push({
+                    aliasIn: '-',
+                    aliasOut: '-',
+                    alias: '-',
+                    name: '-',
+                    amount: '',
+                    fee: '',
+                    tokens: '',
+                });
             }
         }
         return array;
     };
 
-    const parse = (json: string) => JSON.parse(json);
-
-    if (parse(incoming) <= 0 || parse(outgoing) <= 0) {
-        return null;
-    }
-
-    const parsedIncoming = fillArray(parse(incoming));
-    const parsedOutgoing = fillArray(parse(outgoing));
+    const parsed = fillArray(JSON.parse(report));
 
     const getFormatString = (amount: number | string) => {
         if (typeof amount === 'string') return amount;
@@ -59,22 +91,109 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
         return amount;
     };
 
+    const renderRoute = (parsed: {}[]) => {
+        const routes = parsed.map((channel: any, index: number) => (
+            <ChannelRow>
+                <TableLine>{channel.aliasIn}</TableLine>
+                <TableLine>{channel.aliasOut}</TableLine>
+                <LastTableLine>
+                    {getFormatString(channel[isType])}
+                </LastTableLine>
+            </ChannelRow>
+        ));
+
+        return (
+            <>
+                <ChannelRow>
+                    <DarkSubTitle>Incoming</DarkSubTitle>
+                    <DarkSubTitle>Outgoing</DarkSubTitle>
+                    <DarkSubTitle></DarkSubTitle>
+                </ChannelRow>
+                {routes}
+            </>
+        );
+    };
+
+    const renderChannels = (parsed: {}[]) => {
+        const channels = parsed.map((channel: any, index: number) => (
+            <ChannelRow key={index}>
+                <TableLine>{`${channel.alias}`}</TableLine>
+                <DarkSubTitle bottom={'0px'}>{`${channel.name}`}</DarkSubTitle>
+                <LastTableLine>
+                    {getFormatString(channel[isType])}
+                </LastTableLine>
+            </ChannelRow>
+        ));
+
+        return (
+            <>
+                <ChannelRow>
+                    <DarkSubTitle>Alias</DarkSubTitle>
+                    <DarkSubTitle>ID</DarkSubTitle>
+                    <DarkSubTitle></DarkSubTitle>
+                </ChannelRow>
+                {channels}
+            </>
+        );
+    };
+
+    const renderContent = (parsed: {}[]) => {
+        switch (type) {
+            case 'route':
+                return renderRoute(parsed);
+            default:
+                return renderChannels(parsed);
+        }
+    };
+
+    const renderButtons = () => (
+        <ButtonRow>
+            <ColorButton
+                selected={type === 'route'}
+                color={color}
+                onClick={() => setType('route')}
+            >
+                <GitCommit />
+            </ColorButton>
+            <ColorButton
+                selected={type === 'incoming'}
+                color={color}
+                onClick={() => setType('incoming')}
+            >
+                <DownArrow />
+            </ColorButton>
+            <LastButton
+                selected={type === 'outgoing'}
+                color={color}
+                onClick={() => setType('outgoing')}
+            >
+                <UpArrow />
+            </LastButton>
+        </ButtonRow>
+    );
+
+    const renderTop = (title: string) => (
+        <SingleLine>
+            <DarkSubTitle bottom={'0px'}>{title}</DarkSubTitle>
+            {renderButtons()}
+        </SingleLine>
+    );
+
+    const renderTitle = () => {
+        switch (type) {
+            case 'route':
+                return renderTop('Routes');
+            case 'incoming':
+                return renderTop('Incoming');
+            default:
+                return renderTop('Outgoing');
+        }
+    };
+
     return (
         <CardContent>
-            <DarkSubTitle>Incoming</DarkSubTitle>
-            {parsedIncoming.map((channel: any, index: number) => (
-                <ChannelRow key={index}>
-                    <div>{channel.name}</div>
-                    <div>{getFormatString(channel[isType])}</div>
-                </ChannelRow>
-            ))}
-            <DarkSubTitle>Outgoing</DarkSubTitle>
-            {parsedOutgoing.map((channel: any, index: number) => (
-                <ChannelRow key={index}>
-                    <div>{channel.name}</div>
-                    <div>{getFormatString(channel[isType])}</div>
-                </ChannelRow>
-            ))}
+            {renderTitle()}
+            {renderContent(parsed)}
         </CardContent>
     );
 };
