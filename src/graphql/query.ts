@@ -212,12 +212,15 @@ export const GET_FORWARD_CHANNELS_REPORT = gql`
     query GetForwardChannelsReport(
         $time: String
         $order: String
+        $type: String
         $auth: String!
     ) {
-        getForwardChannelsReport(time: $time, order: $order, auth: $auth) {
-            incoming
-            outgoing
-        }
+        getForwardChannelsReport(
+            time: $time
+            order: $order
+            auth: $auth
+            type: $type
+        )
     }
 `;
 
