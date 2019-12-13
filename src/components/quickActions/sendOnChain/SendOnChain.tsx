@@ -190,9 +190,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                 <NoWrapTitle>Fee Amount:</NoWrapTitle>
                 {type !== 'none' && (
                     <ButtonRow>
-                        <DarkSubTitle>
-                            {`(${feeFormat(amount)})`}
-                        </DarkSubTitle>
+                        <DarkSubTitle>{`(${feeFormat(amount)})`}</DarkSubTitle>
                         <SmallInput
                             color={color}
                             type={'number'}

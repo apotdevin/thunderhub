@@ -36,14 +36,14 @@ export const InterfaceSettings = () => {
             <SubTitle>Interface</SubTitle>
             <Card>
                 <SettingsLine>
-                    Theme:
+                    <SubTitle>Theme:</SubTitle>
                     <ButtonRow>
                         {renderButton('Light', 'light', 'theme', cTheme)}
                         {renderButton('Dark', 'dark', 'theme', cTheme)}
                     </ButtonRow>
                 </SettingsLine>
                 <SettingsLine>
-                    Currency:
+                    <SubTitle>Currency:</SubTitle>
                     <ButtonRow>
                         {renderButton('Bitcoin', 'btc', 'currency', cCurrency)}
                         {renderButton('Satoshis', 'sat', 'currency', cCurrency)}
