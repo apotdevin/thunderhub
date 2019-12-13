@@ -4,13 +4,11 @@ import {
     Progress,
     ProgressBar,
     NodeTitle,
-    NodeBar,
-    NodeDetails,
     StatusLine,
     DetailLine,
 } from '../Channels.style';
 import ReactTooltip from 'react-tooltip';
-import { SubCard, Separation } from '../../generic/Styled';
+import { SubCard, Separation, SingleLine } from '../../generic/Styled';
 import { SettingsContext } from '../../../context/SettingsContext';
 import {
     getStatusDot,
@@ -119,9 +117,9 @@ export const PendingCard = ({
                 {getStatusDot(isOpening, 'opening')}
                 {getStatusDot(isClosing, 'closing')}
             </StatusLine>
-            <NodeBar>
+            <SingleLine>
                 <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
-                <NodeDetails>
+                <SingleLine>
                     {formatBalance}
                     <div>
                         <Progress
@@ -145,8 +143,8 @@ export const PendingCard = ({
                             />
                         </Progress>
                     </div>
-                </NodeDetails>
-            </NodeBar>
+                </SingleLine>
+            </SingleLine>
             {index === indexOpen && renderDetails()}
             <ReactTooltip
                 id={`node_balance_tip_${index}`}

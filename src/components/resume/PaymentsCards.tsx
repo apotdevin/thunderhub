@@ -1,13 +1,16 @@
 import React, { useContext } from 'react';
 import { getValue } from '../../helpers/Helpers';
 import { SettingsContext } from '../../context/SettingsContext';
-import { Separation, SubCard } from '../generic/Styled';
+import {
+    Separation,
+    SubCard,
+    DarkSubTitle,
+    SingleLine,
+} from '../generic/Styled';
 import {
     DetailLine,
     StatusLine,
-    NodeBar,
     NodeTitle,
-    NodeDetails,
     MainInfo,
 } from '../channels/Channels.style';
 import {
@@ -16,6 +19,8 @@ import {
     getFormatDate,
     getNodeLink,
 } from '../generic/Helpers';
+import styled from 'styled-components';
+import { AddMargin } from './ResumeList';
 
 interface PaymentsCardProps {
     payment: any;
@@ -23,6 +28,10 @@ interface PaymentsCardProps {
     setIndexOpen: (index: number) => void;
     indexOpen: number;
 }
+
+const RedValue = styled.div`
+    color: red;
+`;
 
 export const PaymentsCard = ({
     payment,
@@ -40,18 +49,19 @@ export const PaymentsCard = ({
         });
 
     const {
-        createdAt,
+        alias,
+        date,
+        created_at,
         destination,
         fee,
-        feeMtokens,
+        fee_mtokens,
         hops,
-        isConfirmed,
+        is_confirmed,
         tokens,
-        // id,
-        // isOutgoing,
-        // mtokens,
-        // request,
-        // secret,
+        id,
+        is_outgoing,
+        mtokens,
+        secret,
     } = payment;
 
     const formatAmount = getFormat(tokens);
@@ -70,8 +80,8 @@ export const PaymentsCard = ({
                 <Separation />
                 <DetailLine>
                     <div>Created:</div>
-                    {`${getDateDif(createdAt)} ago (${getFormatDate(
-                        createdAt,
+                    {`${getDateDif(created_at)} ago (${getFormatDate(
+                        created_at,
                     )})`}
                 </DetailLine>
                 <DetailLine>
@@ -84,9 +94,9 @@ export const PaymentsCard = ({
                 </DetailLine>
                 <DetailLine>
                     <div>Fee msats:</div>
-                    {`${feeMtokens} sats`}
+                    {`${fee_mtokens} sats`}
                 </DetailLine>
-                <DetailLine data-tip data-for={`payment_hops_${index}`}>
+                <DetailLine>
                     <div>Hops:</div>
                     {hops.length}
                 </DetailLine>
@@ -98,10 +108,22 @@ export const PaymentsCard = ({
                         </div>
                     </DetailLine>
                 ))}
-                {/* <DetailLine>{id}</DetailLine> */}
-                {/* <DetailLine>{isOutgoing ? 'true': 'false'}</DetailLine> */}
-                {/* <DetailLine>{secret}</DetailLine> */}
-                {/* <DetailLine>{request}</DetailLine> */}
+                <DetailLine>
+                    <div>ID:</div>
+                    {id}
+                </DetailLine>
+                <DetailLine>
+                    <div>Is Outgoing:</div>
+                    {is_outgoing ? 'true' : 'false'}
+                </DetailLine>
+                <DetailLine>
+                    <div>Secret:</div>
+                    {secret}
+                </DetailLine>
+                <DetailLine>
+                    <div>M Tokens:</div>
+                    {mtokens}
+                </DetailLine>
             </>
         );
     };
@@ -109,41 +131,18 @@ export const PaymentsCard = ({
     return (
         <SubCard key={index}>
             <MainInfo onClick={() => handleClick()}>
-                <StatusLine>{getStatusDot(isConfirmed, 'active')}</StatusLine>
-                <NodeBar>
-                    <NodeTitle>
-                        {formatAmount}
-                        {/* <DifLine>
-						{formatDifference(formatDif, dif, isConfirmed)}
-					</DifLine> */}
-                    </NodeTitle>
-                    <NodeDetails>
-                        {/* {description} */}
-                        {/* {formatBalance} */}
-                        {/* <div>
-						<Progress
-							data-tip
-							data-for={`node_balance_tip_${index}`}
-						>
-							<ProgressBar
-								percent={getPercent(
-									localBalance,
-									remoteBalance
-								)}
-							/>
-						</Progress>
-						<Progress
-							data-tip
-							data-for={`node_activity_tip_${index}`}
-						>
-							<ProgressBar
-								order={2}
-								percent={getPercent(received, sent)}
-							/>
-						</Progress>
-					</div> */}
-                    </NodeDetails>
-                </NodeBar>
+                <StatusLine>{getStatusDot(is_confirmed, 'active')}</StatusLine>
+                <SingleLine>
+                    <SingleLine>
+                        <NodeTitle>{`Payment to: ${alias}`}</NodeTitle>
+                        <AddMargin>
+                            <DarkSubTitle>{`(${getDateDif(
+                                date,
+                            )} ago)`}</DarkSubTitle>
+                        </AddMargin>
+                    </SingleLine>
+                    <RedValue>{formatAmount}</RedValue>
+                </SingleLine>
             </MainInfo>
             {index === indexOpen && renderDetails()}
         </SubCard>

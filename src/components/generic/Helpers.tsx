@@ -60,7 +60,7 @@ export const renderLine = (title: string, content: any) => {
     if (!content) return null;
     return (
         <DetailLine>
-            <DarkSubTitle bottom={'0px'}>{title}</DarkSubTitle>
+            <DarkSubTitle>{title}</DarkSubTitle>
             {content}
         </DetailLine>
     );

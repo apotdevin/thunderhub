@@ -94,7 +94,7 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
                 <>
                     <Separation />
                     <SingleLine>
-                        <DarkSubTitle bottom={'0px'}>New Address:</DarkSubTitle>
+                        <DarkSubTitle>New Address:</DarkSubTitle>
                         {data.createAddress}
                     </SingleLine>
                 </>
