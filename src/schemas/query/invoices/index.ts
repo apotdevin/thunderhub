@@ -1,9 +1,7 @@
-import { getInvoices } from './invoices';
-import { getPayments } from './payments';
 import { getForwards } from './forwards';
+import { getResume } from './resume';
 
 export const invoiceQueries = {
-    getInvoices,
-    getPayments,
+    getResume,
     getForwards,
 };
