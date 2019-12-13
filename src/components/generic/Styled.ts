@@ -160,7 +160,7 @@ interface DarkProps {
 export const DarkSubTitle = styled.div`
     font-size: ${({ fontSize }: DarkProps) => (fontSize ? fontSize : '14px')};
     color: ${unSelectedNavButton};
-    margin-bottom: ${({ bottom }: DarkProps) => (bottom ? bottom : '10px')};
+    margin-bottom: ${({ bottom }: DarkProps) => (bottom ? bottom : '0px')};
 `;
 
 interface ColorProps {

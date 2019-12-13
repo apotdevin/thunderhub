@@ -4,19 +4,16 @@ import {
     Progress,
     ProgressBar,
     NodeTitle,
-    NodeBar,
-    NodeDetails,
     StatusLine,
-    DetailLine,
     MainInfo,
 } from '../Channels.style';
 import ReactTooltip from 'react-tooltip';
 import {
     SubCard,
     Separation,
-    DarkSubTitle,
     Sub4Title,
     ColorButton,
+    SingleLine,
 } from '../../generic/Styled';
 import { SettingsContext } from '../../../context/SettingsContext';
 import {
@@ -158,9 +155,9 @@ export const ChannelCard = ({
                     {getStatusDot(isOpening, 'opening')}
                     {getStatusDot(isClosing, 'closing')}
                 </StatusLine>
-                <NodeBar>
+                <SingleLine>
                     <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
-                    <NodeDetails>
+                    <SingleLine>
                         {formatBalance}
                         {getPrivate(isPrivate)}
                         {getSymbol(isPartnerInitiated)}
@@ -186,8 +183,8 @@ export const ChannelCard = ({
                                 />
                             </Progress>
                         </div>
-                    </NodeDetails>
-                </NodeBar>
+                    </SingleLine>
+                </SingleLine>
             </MainInfo>
             {index === indexOpen && renderDetails()}
             <ReactTooltip

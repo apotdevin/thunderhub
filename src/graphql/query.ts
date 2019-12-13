@@ -117,57 +117,11 @@ export const GET_PENDING_CHANNELS = gql`
     }
 `;
 
-export const GET_INVOICES = gql`
-    query GetInvoices($auth: String!) {
-        getInvoices(auth: $auth) {
-            chainAddress
-            confirmedAt
-            createdAt
-            description
-            descriptionHash
-            expiresAt
-            id
-            isCanceled
-            isConfirmed
-            isHeld
-            isOutgoing
-            isPrivate
-            payments {
-                confirmedAt
-                createdAt
-                createdHeight
-                inChannel
-                isCanceled
-                isConfirmed
-                isHeld
-                mtokens
-                pendingIndex
-                tokens
-            }
-            received
-            receivedMtokens
-            request
-            secret
-            tokens
-        }
-    }
-`;
-
-export const GET_PAYMENTS = gql`
-    query GetPayments($auth: String!) {
-        getPayments(auth: $auth) {
-            createdAt
-            destination
-            fee
-            feeMtokens
-            hops
-            id
-            isConfirmed
-            isOutgoing
-            mtokens
-            request
-            secret
-            tokens
+export const GET_RESUME = gql`
+    query GetResume($auth: String!, $token: String) {
+        getResume(auth: $auth, token: $token) {
+            token
+            resume
         }
     }
 `;

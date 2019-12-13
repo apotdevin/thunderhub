@@ -130,7 +130,7 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
         const channels = parsed.map((channel: any, index: number) => (
             <ChannelRow key={index}>
                 <TableLine>{`${channel.alias}`}</TableLine>
-                <DarkSubTitle bottom={'0px'}>{`${channel.name}`}</DarkSubTitle>
+                <DarkSubTitle>{`${channel.name}`}</DarkSubTitle>
                 <LastTableLine>
                     {getFormatString(channel[isType])}
                 </LastTableLine>
@@ -186,7 +186,7 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
 
     const renderTop = (title: string) => (
         <SingleLine>
-            <DarkSubTitle bottom={'0px'}>{title}</DarkSubTitle>
+            <DarkSubTitle>{title}</DarkSubTitle>
             {renderButtons()}
         </SingleLine>
     );

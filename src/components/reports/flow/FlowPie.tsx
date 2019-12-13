@@ -25,13 +25,13 @@ export const FlowPie = ({ flowPie, isType }: Props) => {
         <Row>
             <Col>
                 <PieRow>
-                    <DarkSubTitle bottom={'0px'}>{flowPie[0].x}</DarkSubTitle>
+                    <DarkSubTitle>{flowPie[0].x}</DarkSubTitle>
                     {isType === 'tokens'
                         ? getFormat(flowPie[0].y)
                         : flowPie[0].y}
                 </PieRow>
                 <PieRow>
-                    <DarkSubTitle bottom={'0px'}>{flowPie[1].x}</DarkSubTitle>
+                    <DarkSubTitle>{flowPie[1].x}</DarkSubTitle>
                     {isType === 'tokens'
                         ? getFormat(flowPie[1].y)
                         : flowPie[1].y}

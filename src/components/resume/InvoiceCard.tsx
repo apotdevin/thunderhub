@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { getValue } from '../../helpers/Helpers';
 import { SettingsContext } from '../../context/SettingsContext';
-import { Separation, SubCard } from '../generic/Styled';
 import {
-    StatusLine,
-    NodeBar,
-    NodeTitle,
-    NodeDetails,
-} from '../channels/Channels.style';
+    Separation,
+    SubCard,
+    SingleLine,
+    DarkSubTitle,
+} from '../generic/Styled';
+import { StatusLine, NodeTitle, MainInfo } from '../channels/Channels.style';
 import {
     getStatusDot,
     getDateDif,
@@ -15,6 +15,7 @@ import {
     renderLine,
 } from '../generic/Helpers';
 import styled from 'styled-components';
+import { AddMargin } from './ResumeList';
 
 interface InvoiceCardProps {
     invoice: any;
@@ -58,22 +59,23 @@ export const InvoiceCard = ({
         });
 
     const {
-        confirmedAt,
-        createdAt,
+        date,
+        confirmed_at,
+        created_at,
         description,
-        expiresAt,
-        isConfirmed,
+        expires_at,
+        is_confirmed,
         received,
         tokens,
-        chainAddress,
-        descriptionHash,
+        chain_address,
+        description_hash,
         id,
-        isCanceled,
-        isHeld,
-        isOutgoing,
-        isPrivate,
+        is_canceled,
+        is_held,
+        is_outgoing,
+        is_private,
         // payments,
-        // receivedMtokens,
+        // received_mtokens,
         // request,
         secret,
     } = invoice;
@@ -94,49 +96,53 @@ export const InvoiceCard = ({
         return (
             <>
                 <Separation />
-                {isConfirmed &&
+                {is_confirmed &&
                     renderLine(
                         'Confirmed:',
-                        `${getDateDif(confirmedAt)} ago (${getFormatDate(
-                            confirmedAt,
+                        `${getDateDif(confirmed_at)} ago (${getFormatDate(
+                            confirmed_at,
                         )})`,
                     )}
                 {renderLine(
                     'Created:',
-                    `${getDateDif(createdAt)} ago (${getFormatDate(
-                        createdAt,
+                    `${getDateDif(created_at)} ago (${getFormatDate(
+                        created_at,
                     )})`,
                 )}
                 {renderLine(
                     'Expires:',
-                    `${getDateDif(expiresAt)} ago (${getFormatDate(
-                        expiresAt,
+                    `${getDateDif(expires_at)} ago (${getFormatDate(
+                        expires_at,
                     )})`,
                 )}
                 {renderLine('Id:', id)}
-                {renderLine('Chain Address:', chainAddress)}
-                {renderLine('Description Hash:', descriptionHash)}
-                {renderLine('Is Canceled:', isCanceled)}
-                {renderLine('Is Held:', isHeld)}
-                {renderLine('Is Outgoing:', isOutgoing)}
-                {renderLine('Is Private:', isPrivate)}
+                {renderLine('Chain Address:', chain_address)}
+                {renderLine('Description Hash:', description_hash)}
+                {renderLine('Is Canceled:', is_canceled)}
+                {renderLine('Is Held:', is_held)}
+                {renderLine('Is Outgoing:', is_outgoing)}
+                {renderLine('Is Private:', is_private)}
                 {renderLine('Secret:', secret)}
             </>
         );
     };
 
     return (
-        <SubCard key={index} onClick={() => handleClick()}>
-            <StatusLine>{getStatusDot(isConfirmed, 'active')}</StatusLine>
-            <NodeBar>
-                <NodeTitle>
-                    {formatAmount}
-                    <DifLine>
-                        {formatDifference(formatDif, dif, isConfirmed)}
-                    </DifLine>
-                </NodeTitle>
-                <NodeDetails>{description}</NodeDetails>
-            </NodeBar>
+        <SubCard key={index}>
+            <MainInfo onClick={() => handleClick()}>
+                <StatusLine>{getStatusDot(is_confirmed, 'active')}</StatusLine>
+                <SingleLine>
+                    <SingleLine>
+                        <NodeTitle>{description}</NodeTitle>
+                        <AddMargin>
+                            <DarkSubTitle>{`(${getDateDif(
+                                date,
+                            )} ago)`}</DarkSubTitle>
+                        </AddMargin>
+                    </SingleLine>
+                    <SingleLine>{formatAmount}</SingleLine>
+                </SingleLine>
+            </MainInfo>
             {index === indexOpen && renderDetails()}
         </SubCard>
     );

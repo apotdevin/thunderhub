@@ -16,11 +16,11 @@ export const InvoicePie = ({ invoicePie }: Props) => {
         <Row>
             <Col>
                 <PieRow>
-                    <DarkSubTitle bottom={'0px'}>Confirmed:</DarkSubTitle>
+                    <DarkSubTitle>Confirmed:</DarkSubTitle>
                     {invoicePie[0].y}
                 </PieRow>
                 <PieRow>
-                    <DarkSubTitle bottom={'0px'}>Unconfirmed:</DarkSubTitle>
+                    <DarkSubTitle>Unconfirmed:</DarkSubTitle>
                     {invoicePie[1].y}
                 </PieRow>
             </Col>
