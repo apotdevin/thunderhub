@@ -17,7 +17,7 @@ interface HomeProps {
     session?: boolean;
 }
 
-export const EntryView = ({ session }: HomeProps) => {
+const EntryView = ({ session }: HomeProps) => {
     const [login, setLogin] = useState<boolean>(false);
     const history = useHistory();
 
@@ -40,3 +40,5 @@ export const EntryView = ({ session }: HomeProps) => {
         </Login>
     );
 };
+
+export default EntryView;
