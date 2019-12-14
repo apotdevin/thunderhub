@@ -11,6 +11,8 @@ import { useAccount, AccountProvider } from './context/AccountContext';
 import { toast } from 'react-toastify';
 import { FadingBackground } from './components/modal/ReactModal';
 import 'react-toastify/dist/ReactToastify.css';
+import { Header } from './sections/header/Header';
+import { Footer } from './sections/footer/Footer';
 
 const EntryView = React.lazy(() => import('./views/entry/Entry'));
 const MainView = React.lazy(() => import('./views/main/Main'));
@@ -52,7 +54,9 @@ const ContextApp: React.FC = () => {
             <ModalProvider backgroundComponent={FadingBackground}>
                 <BitcoinPrice />
                 <GlobalStyles />
+                <Header />
                 <Wrapper>{renderContent()}</Wrapper>
+                <Footer />
             </ModalProvider>
         </ThemeProvider>
     );
