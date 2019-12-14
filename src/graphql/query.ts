@@ -15,6 +15,14 @@ export const GET_NETWORK_INFO = gql`
     }
 `;
 
+export const GET_CAN_CONNECT = gql`
+    query GetNodeInfo($auth: String!) {
+        getNodeInfo(auth: $auth) {
+            alias
+        }
+    }
+`;
+
 export const GET_NODE_INFO = gql`
     query GetNodeInfo($auth: String!) {
         getNodeInfo(auth: $auth) {

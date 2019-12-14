@@ -99,7 +99,7 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
 
     const renderRoute = (parsed: {}[]) => {
         const routes = parsed.map((channel: any, index: number) => (
-            <ChannelRow>
+            <ChannelRow key={index}>
                 <TableLine>{channel.aliasIn}</TableLine>
                 <TableLine>{channel.aliasOut}</TableLine>
                 <LastTableLine>

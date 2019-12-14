@@ -9,6 +9,7 @@ import {
 import zxcvbn from 'zxcvbn';
 import styled from 'styled-components';
 import { progressBackground, textColor } from '../../styles/Themes';
+import { Loader } from '../generic/Icons';
 
 const Progress = styled.div`
     width: 80%;
@@ -65,9 +66,15 @@ interface PasswordProps {
     isPass: string;
     setPass: (pass: string) => void;
     callback: () => void;
+    loading: boolean;
 }
 
-export const PasswordInput = ({ isPass, setPass, callback }: PasswordProps) => {
+export const PasswordInput = ({
+    isPass,
+    setPass,
+    callback,
+    loading = false,
+}: PasswordProps) => {
     const strength = (100 * Math.min(zxcvbn(isPass).guesses_log10, 40)) / 40;
     const needed = 1;
     return (
@@ -86,7 +93,7 @@ export const PasswordInput = ({ isPass, setPass, callback }: PasswordProps) => {
                     />
                 </Progress>
             </SingleLine>
-            {strength >= needed && (
+            {strength >= needed && !loading && (
                 <LoginButton
                     disabled={strength < needed}
                     enabled={strength >= needed}
@@ -94,6 +101,11 @@ export const PasswordInput = ({ isPass, setPass, callback }: PasswordProps) => {
                     onClick={callback}
                 >
                     Connect
+                </LoginButton>
+            )}
+            {loading && (
+                <LoginButton disabled={true} color={'grey'}>
+                    <Loader />
                 </LoginButton>
             )}
         </>
