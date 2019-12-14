@@ -24,7 +24,10 @@ export const BTCLoginForm = ({ available, callback }: AuthProps) => {
     const [isPass, setPass] = useState('');
 
     const [tryToConnect, { data, loading }] = useLazyQuery(GET_CAN_CONNECT, {
-        onError: error => toast.error(getErrorContent(error)),
+        onError: error => {
+            setHasInfo(false);
+            toast.error(getErrorContent(error));
+        },
     });
 
     useEffect(() => {
