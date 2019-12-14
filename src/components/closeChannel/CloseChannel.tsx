@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CLOSE_CHANNEL } from '../../graphql/mutation';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { AccountContext } from '../../context/AccountContext';
+import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
 import {
     Input,
@@ -81,7 +81,7 @@ export const CloseChannel = ({
     const [halfHour, setHalfHour] = useState(0);
     const [hour, setHour] = useState(0);
 
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const { data: feeData } = useQuery(GET_BITCOIN_FEES, {
@@ -114,7 +114,7 @@ export const CloseChannel = ({
             forceClose: isForce,
             auth,
             ...(isType !== 'none'
-                ? isType == 'fee'
+                ? isType === 'fee'
                     ? { tokens: amount }
                     : { target: amount }
                 : {}),

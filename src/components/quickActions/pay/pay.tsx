@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
     Card,
     Sub4Title,
@@ -9,7 +9,7 @@ import {
 import { useMutation } from '@apollo/react-hooks';
 import { PAY_INVOICE } from '../../../graphql/mutation';
 import { Send } from '../../generic/Icons';
-import { AccountContext } from '../../../context/AccountContext';
+import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
@@ -17,7 +17,7 @@ import { getErrorContent } from '../../../utils/error';
 export const PayCard = ({ color }: { color: string }) => {
     const [request, setRequest] = useState('');
 
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const [makePayment] = useMutation(PAY_INVOICE, {

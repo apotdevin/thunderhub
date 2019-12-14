@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { getPercent, getValue } from '../../../helpers/Helpers';
 import {
     Progress,
@@ -15,7 +15,7 @@ import {
     ColorButton,
     SingleLine,
 } from '../../generic/Styled';
-import { SettingsContext } from '../../../context/SettingsContext';
+import { useSettings } from '../../../context/SettingsContext';
 import {
     getStatusDot,
     getPrivate,
@@ -49,7 +49,7 @@ export const ChannelCard = ({
 }: ChannelCardProps) => {
     const [modalOpen, setModalOpen] = useState(false);
 
-    const { price, symbol, currency, theme } = useContext(SettingsContext);
+    const { price, symbol, currency, theme } = useSettings();
     const priceProps = { price, symbol, currency };
 
     const tooltipType = getTooltipType(theme);

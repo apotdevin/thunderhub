@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { getValue } from '../../helpers/Helpers';
-import { SettingsContext } from '../../context/SettingsContext';
+import { useSettings } from '../../context/SettingsContext';
 import {
     Separation,
     SubCard,
@@ -14,7 +14,6 @@ import {
     getFormatDate,
     renderLine,
 } from '../generic/Helpers';
-import styled from 'styled-components';
 import { AddMargin } from './ResumeList';
 
 interface InvoiceCardProps {
@@ -24,32 +23,13 @@ interface InvoiceCardProps {
     indexOpen: number;
 }
 
-const DifLine = styled.div`
-    font-size: 12px;
-    color: #bfbfbf;
-`;
-
-const formatDifference = (
-    difference: string,
-    numDif: number,
-    status: boolean,
-) => {
-    if (numDif > 0) {
-        return `+ ${difference}`;
-    } else if (numDif < 0 && status) {
-        return `- ${difference}`;
-    } else {
-        return null;
-    }
-};
-
 export const InvoiceCard = ({
     invoice,
     index,
     setIndexOpen,
     indexOpen,
 }: InvoiceCardProps) => {
-    const { price, symbol, currency } = useContext(SettingsContext);
+    const { price, symbol, currency } = useSettings();
     const priceProps = { price, symbol, currency };
 
     const getFormat = (amount: string) =>
@@ -140,7 +120,10 @@ export const InvoiceCard = ({
                             )} ago)`}</DarkSubTitle>
                         </AddMargin>
                     </SingleLine>
-                    <SingleLine>{formatAmount}</SingleLine>
+                    <SingleLine>
+                        {formatAmount}
+                        {formatDif}
+                    </SingleLine>
                 </SingleLine>
             </MainInfo>
             {index === indexOpen && renderDetails()}

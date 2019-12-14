@@ -1,16 +1,10 @@
 import React from 'react';
-import {
-    CardWithTitle,
-    SubTitle,
-    Card,
-    SimpleButton,
-} from '../../components/generic/Styled';
+import { CardWithTitle, SubTitle, Card } from '../../components/generic/Styled';
 import { SettingsLine, ButtonRow, SettingsButton } from './Settings';
-import { useContext } from 'react';
-import { SettingsContext } from '../../context/SettingsContext';
+import { useSettings } from '../../context/SettingsContext';
 
 export const InterfaceSettings = () => {
-    const { setSettings } = useContext(SettingsContext);
+    const { setSettings } = useSettings();
     const cTheme = localStorage.getItem('theme') || 'dark';
     const cCurrency = localStorage.getItem('currency') || 'sat';
 

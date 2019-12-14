@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_NETWORK_INFO } from '../../graphql/query';
 import {
@@ -9,8 +9,8 @@ import {
     Separation,
 } from '../generic/Styled';
 import { getValue } from '../../helpers/Helpers';
-import { SettingsContext } from '../../context/SettingsContext';
-import { AccountContext } from '../../context/AccountContext';
+import { useSettings } from '../../context/SettingsContext';
+import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
 import styled from 'styled-components';
 import { unSelectedNavButton } from '../../styles/Themes';
@@ -37,7 +37,7 @@ const Title = styled.div`
 `;
 
 export const NetworkInfo = () => {
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const { loading, data } = useQuery(GET_NETWORK_INFO, {
@@ -45,7 +45,7 @@ export const NetworkInfo = () => {
         onError: error => toast.error(getErrorContent(error)),
     });
 
-    const { price, symbol, currency } = useContext(SettingsContext);
+    const { price, symbol, currency } = useSettings();
     const priceProps = { price, symbol, currency };
 
     if (loading || !data || !data.getNetworkInfo) {

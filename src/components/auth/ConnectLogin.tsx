@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Input, SingleLine, Sub4Title } from '../../components/generic/Styled';
-import { AccountContext } from '../../context/AccountContext';
+import { useAccount } from '../../context/AccountContext';
 import {
     getAuthLnd,
     getBase64CertfromDerFormat,
@@ -15,7 +15,7 @@ interface AuthProps {
 }
 
 export const ConnectLoginForm = ({ available, callback }: AuthProps) => {
-    const { setAccount } = useContext(AccountContext);
+    const { setAccount } = useAccount();
 
     const [isName, setName] = useState('');
     const [isUrl, setUrl] = useState('');

@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_PENDING_CHANNELS } from '../../../graphql/query';
 import { Card, CardWithTitle, SubTitle } from '../../generic/Styled';
 import { PendingCard } from './PendingCard';
-import { AccountContext } from '../../../context/AccountContext';
+import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
@@ -11,7 +11,7 @@ import { getErrorContent } from '../../../utils/error';
 export const PendingChannels = () => {
     const [indexOpen, setIndexOpen] = useState(0);
 
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const { loading, data } = useQuery(GET_PENDING_CHANNELS, {

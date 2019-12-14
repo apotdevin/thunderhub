@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Input, SingleLine, Sub4Title } from '../generic/Styled';
-import { AccountContext } from '../../context/AccountContext';
+import { useAccount } from '../../context/AccountContext';
 import { saveUserAuth } from '../../utils/auth';
 import CryptoJS from 'crypto-js';
 import base64url from 'base64url';
@@ -12,7 +12,7 @@ interface AuthProps {
 }
 
 export const LoginForm = ({ available, callback }: AuthProps) => {
-    const { setAccount } = useContext(AccountContext);
+    const { setAccount } = useAccount();
 
     const [isName, setName] = useState('');
     const [isHost, setHost] = useState('');

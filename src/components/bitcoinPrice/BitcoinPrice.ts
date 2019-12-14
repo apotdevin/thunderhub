@@ -1,12 +1,12 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_BITCOIN_PRICE } from '../../graphql/query';
-import { SettingsContext } from '../../context/SettingsContext';
+import { useSettings } from '../../context/SettingsContext';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 
 export const BitcoinPrice = () => {
-    const { setSettings } = useContext(SettingsContext);
+    const { setSettings } = useSettings();
     const { loading, data } = useQuery(GET_BITCOIN_PRICE, {
         onError: error => toast.error(getErrorContent(error)),
     });

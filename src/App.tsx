@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyles } from './styles/GlobalStyle';
 import { Header } from './sections/header/Header';
@@ -8,10 +8,10 @@ import { Content } from './sections/content/Content';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { BrowserRouter } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
-import SettingsProvider, { SettingsContext } from './context/SettingsContext';
+import { useSettings, SettingsProvider } from './context/SettingsContext';
 import { BitcoinPrice } from './components/bitcoinPrice/BitcoinPrice';
 import { ModalProvider } from 'styled-react-modal';
-import AccountProvider, { AccountContext } from './context/AccountContext';
+import { useAccount, AccountProvider } from './context/AccountContext';
 import { LoginView } from './views/login/Login';
 import { toast } from 'react-toastify';
 import { FadingBackground } from './components/modal/ReactModal';
@@ -47,8 +47,8 @@ const Container = styled.div`
 `;
 
 const ContextApp: React.FC = () => {
-    const { theme } = useContext(SettingsContext);
-    const { loggedIn, admin, read } = useContext(AccountContext);
+    const { theme } = useSettings();
+    const { loggedIn, admin, read } = useAccount();
 
     const renderContent = () =>
         !loggedIn && admin === '' ? (

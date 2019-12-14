@@ -1,16 +1,10 @@
-import React, { useContext, useState } from 'react';
-import {
-    DarkSubTitle,
-    Separation,
-    SimpleButton,
-    ColorButton,
-    SingleLine,
-} from '../../generic/Styled';
+import React, { useState } from 'react';
+import { DarkSubTitle, ColorButton, SingleLine } from '../../generic/Styled';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_FORWARD_CHANNELS_REPORT } from '../../../graphql/query';
 import { getValue } from '../../../helpers/Helpers';
-import { SettingsContext } from '../../../context/SettingsContext';
-import { AccountContext } from '../../../context/AccountContext';
+import { useSettings } from '../../../context/SettingsContext';
+import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import { ChannelRow, CardContent } from '.';
 import { toast } from 'react-toastify';
@@ -59,9 +53,9 @@ interface Props {
 export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
     const [type, setType] = useState('route');
 
-    const { price, symbol, currency } = useContext(SettingsContext);
+    const { price, symbol, currency } = useSettings();
 
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const { data, loading } = useQuery(GET_FORWARD_CHANNELS_REPORT, {

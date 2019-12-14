@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { DarkSubTitle } from '../../generic/Styled';
-import { SettingsContext } from '../../../context/SettingsContext';
+import { useSettings } from '../../../context/SettingsContext';
 import { VictoryPie } from 'victory';
 import { chartAxisColor } from '../../../styles/Themes';
 import { Row, Col, PieRow } from '.';
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const InvoicePie = ({ invoicePie }: Props) => {
-    const { theme } = useContext(SettingsContext);
+    const { theme } = useSettings();
 
     return (
         <Row>

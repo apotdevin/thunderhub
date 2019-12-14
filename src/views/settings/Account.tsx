@@ -1,20 +1,18 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
     CardWithTitle,
     SubTitle,
     Card,
     SubCard,
     ColorButton,
-    Sub4Title,
 } from '../../components/generic/Styled';
 import { LoginForm } from '../../components/auth/NormalLogin';
 import { ConnectLoginForm } from '../../components/auth/ConnectLogin';
 import { BTCLoginForm } from '../../components/auth/BTCLogin';
 import { SettingsLine, SettingsButton, ButtonRow } from './Settings';
-import { AccountContext } from '../../context/AccountContext';
+import { useAccount } from '../../context/AccountContext';
 import styled from 'styled-components';
 import { getNextAvailable, getStorageSaved } from '../../utils/storage';
-import { unSelectedNavButton, chartLinkColor } from '../../styles/Themes';
 
 const ConnectButton = styled(ColorButton)`
     width: 100%;
@@ -23,22 +21,10 @@ const ConnectButton = styled(ColorButton)`
     font-size: 14px;
 `;
 
-const CurrentField = styled.div`
-    color: ${chartLinkColor};
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    border: 1px solid ${unSelectedNavButton};
-    margin: 5px 0;
-    font-size: 14px;
-    padding: 5px 10px;
-    border-radius: 5px;
-`;
-
 export const AccountSettings = () => {
     const [isType, setIsType] = useState('none');
     const [willAdd, setWillAdd] = useState(false);
-    const { changeAccount, refreshAccount } = useContext(AccountContext);
+    const { changeAccount, refreshAccount } = useAccount();
 
     const next = getNextAvailable();
 

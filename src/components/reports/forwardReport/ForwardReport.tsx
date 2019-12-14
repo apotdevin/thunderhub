@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Sub4Title } from '../../generic/Styled';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_FORWARD_REPORT } from '../../../graphql/query';
 import numeral from 'numeral';
-import { SettingsContext } from '../../../context/SettingsContext';
+import { useSettings } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
-import { AccountContext } from '../../../context/AccountContext';
+import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import {
     VictoryBar,
@@ -28,9 +28,9 @@ interface Props {
 }
 
 export const ForwardReport = ({ isTime, isType }: Props) => {
-    const { theme, price, symbol, currency } = useContext(SettingsContext);
+    const { theme, price, symbol, currency } = useSettings();
 
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const { data, loading } = useQuery(GET_FORWARD_REPORT, {

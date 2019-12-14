@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
     Card,
     Sub4Title,
@@ -10,7 +10,7 @@ import {
 } from '../../generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { Layers } from '../../generic/Icons';
-import { AccountContext } from '../../../context/AccountContext';
+import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import { DECODE_REQUEST } from '../../../graphql/mutation';
 import { getErrorContent } from '../../../utils/error';
@@ -18,15 +18,15 @@ import { toast } from 'react-toastify';
 import { getLoadingButton, getValue } from '../../../helpers/Helpers';
 import { DetailLine } from '../../channels/Channels.style';
 import { getNodeLink } from '../../generic/Helpers';
-import { SettingsContext } from '../../../context/SettingsContext';
+import { useSettings } from '../../../context/SettingsContext';
 
 export const DecodeCard = ({ color }: { color: string }) => {
     const [request, setRequest] = useState('');
 
-    const { price, symbol, currency, theme } = useContext(SettingsContext);
+    const { price, symbol, currency } = useSettings();
     const priceProps = { price, symbol, currency };
 
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const [decode, { data, loading }] = useMutation(DECODE_REQUEST, {

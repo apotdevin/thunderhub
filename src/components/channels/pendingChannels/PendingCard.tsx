@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { getPercent, getValue } from '../../../helpers/Helpers';
 import {
     Progress,
@@ -9,7 +9,7 @@ import {
 } from '../Channels.style';
 import ReactTooltip from 'react-tooltip';
 import { SubCard, Separation, SingleLine } from '../../generic/Styled';
-import { SettingsContext } from '../../../context/SettingsContext';
+import { useSettings } from '../../../context/SettingsContext';
 import {
     getStatusDot,
     getTooltipType,
@@ -30,7 +30,7 @@ export const PendingCard = ({
     setIndexOpen,
     indexOpen,
 }: PendingCardProps) => {
-    const { price, symbol, currency, theme } = useContext(SettingsContext);
+    const { price, symbol, currency, theme } = useSettings();
     const priceProps = { price, symbol, currency };
 
     const tooltipType = getTooltipType(theme);
@@ -55,7 +55,7 @@ export const PendingCard = ({
         sent,
         transactionFee,
         transactionId,
-        transactionVout,
+        // transactionVout,
         partnerNodeInfo,
     } = channelInfo;
 

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import {
     CardWithTitle,
@@ -10,7 +10,7 @@ import {
 import { ButtonRow } from '../forwardReport/Buttons';
 import { FlowReport } from './FlowReport';
 import { getAuthString } from '../../../utils/auth';
-import { AccountContext } from '../../../context/AccountContext';
+import { useAccount } from '../../../context/AccountContext';
 import { GET_IN_OUT } from '../../../graphql/query';
 import { useQuery } from '@apollo/react-hooks';
 import { FlowPie } from './FlowPie';
@@ -60,7 +60,7 @@ export const FlowBox = () => {
     const [isTime, setIsTime] = useState<string>('month');
     const [isType, setIsType] = useState<string>('amount');
 
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
     const { data, loading } = useQuery(GET_IN_OUT, {
         variables: { time: isTime, auth },

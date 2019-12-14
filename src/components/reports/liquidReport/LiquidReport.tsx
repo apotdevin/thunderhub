@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { CardWithTitle, SubTitle, Card } from '../../generic/Styled';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_LIQUID_REPORT } from '../../../graphql/query';
-import { AccountContext } from '../../../context/AccountContext';
+import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import {
     VictoryChart,
@@ -11,7 +11,7 @@ import {
     VictoryVoronoiContainer,
     VictoryTooltip,
 } from 'victory';
-import { SettingsContext } from '../../../context/SettingsContext';
+import { useSettings } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
 import {
     chartGridColor,
@@ -20,10 +20,10 @@ import {
 } from '../../../styles/Themes';
 
 export const LiquidReport = () => {
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
-    const { theme, price, symbol, currency } = useContext(SettingsContext);
+    const { theme, price, symbol, currency } = useSettings();
 
     const priceProps = { price, symbol, currency };
     const getFormat = (amount: number) =>
