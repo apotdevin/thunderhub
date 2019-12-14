@@ -12,11 +12,10 @@ import { useSettings, SettingsProvider } from './context/SettingsContext';
 import { BitcoinPrice } from './components/bitcoinPrice/BitcoinPrice';
 import { ModalProvider } from 'styled-react-modal';
 import { useAccount, AccountProvider } from './context/AccountContext';
-import { LoginView } from './views/login/Login';
 import { toast } from 'react-toastify';
 import { FadingBackground } from './components/modal/ReactModal';
 import 'react-toastify/dist/ReactToastify.css';
-import { SessionLogin } from './views/login/SessionLogin';
+import { EntryView } from './views/entry/Entry';
 
 toast.configure({
     draggable: false,
@@ -52,9 +51,9 @@ const ContextApp: React.FC = () => {
 
     const renderContent = () =>
         !loggedIn && admin === '' ? (
-            <LoginView />
+            <EntryView />
         ) : admin !== '' && read === '' ? (
-            <SessionLogin />
+            <EntryView session={true} />
         ) : (
             <Container>
                 <Header />

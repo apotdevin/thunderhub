@@ -8,18 +8,9 @@ import {
     Card,
     SubTitle,
 } from '../../components/generic/Styled';
-import styled from 'styled-components';
 import { LoginButton } from '../../components/auth/Password';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
-
-const Login = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0;
-`;
 
 export const SessionLogin = () => {
     const { name, admin, refreshAccount } = useAccount();
@@ -38,27 +29,24 @@ export const SessionLogin = () => {
     };
 
     return (
-        <Login>
-            <h1>Welcome to ThunderHub</h1>
-            <CardWithTitle>
-                <SubTitle>{`Please Login (${name}):`}</SubTitle>
-                <Card>
-                    <SingleLine>
-                        <Sub4Title>Password:</Sub4Title>
-                        <Input onChange={e => setPass(e.target.value)} />
-                    </SingleLine>
-                    {pass !== '' && (
-                        <LoginButton
-                            disabled={pass === ''}
-                            enabled={pass !== ''}
-                            onClick={handleClick}
-                            color={'yellow'}
-                        >
-                            Connect
-                        </LoginButton>
-                    )}
-                </Card>
-            </CardWithTitle>
-        </Login>
+        <CardWithTitle>
+            <SubTitle>{`Please Login (${name}):`}</SubTitle>
+            <Card>
+                <SingleLine>
+                    <Sub4Title>Password:</Sub4Title>
+                    <Input onChange={e => setPass(e.target.value)} />
+                </SingleLine>
+                {pass !== '' && (
+                    <LoginButton
+                        disabled={pass === ''}
+                        enabled={pass !== ''}
+                        onClick={handleClick}
+                        color={'yellow'}
+                    >
+                        Connect
+                    </LoginButton>
+                )}
+            </Card>
+        </CardWithTitle>
     );
 };
