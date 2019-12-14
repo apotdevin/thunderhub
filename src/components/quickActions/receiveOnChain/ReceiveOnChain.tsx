@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Card,
     ColorButton,
@@ -12,7 +12,7 @@ import { Edit, Circle } from '../../generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
-import { AccountContext } from '../../../context/AccountContext';
+import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 
 const SingleLine = styled.div`
@@ -38,7 +38,7 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
     const [nested, setNested] = useState(false);
     const [received, setReceived] = useState(false);
 
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const [createAddress, { data }] = useMutation(CREATE_ADDRESS, {

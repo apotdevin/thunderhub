@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_RESUME } from '../../graphql/query';
 import { Card, CardWithTitle, SubTitle, ColorButton } from '../generic/Styled';
 import { InvoiceCard } from './InvoiceCard';
-import { AccountContext } from '../../context/AccountContext';
+import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
@@ -18,7 +18,7 @@ export const ResumeList = () => {
     const [indexOpen, setIndexOpen] = useState(0);
     const [token, setToken] = useState('');
 
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const { loading, data, fetchMore } = useQuery(GET_RESUME, {
@@ -28,10 +28,9 @@ export const ResumeList = () => {
 
     useEffect(() => {
         if (!loading && data && data.getResume && data.getResume.token) {
-            console.log('NEW TOKEN: ', data.getResume.token);
             setToken(data.getResume.token);
         }
-    }, [data]);
+    }, [data, loading]);
 
     if (loading || !data || !data.getResume) {
         return <Card>Loading....</Card>;

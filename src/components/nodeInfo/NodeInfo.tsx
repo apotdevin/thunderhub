@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_NODE_INFO } from '../../graphql/query';
 import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
-import { SettingsContext } from '../../context/SettingsContext';
+import { useSettings } from '../../context/SettingsContext';
 import { getValue } from '../../helpers/Helpers';
 import { Separation } from '../generic/Styled';
-import { QuestionIcon, Zap, ZapOff, Anchor } from '../generic/Icons';
+import { QuestionIcon, Zap, Anchor } from '../generic/Icons';
 import { getTooltipType } from '../generic/Helpers';
-import { AccountContext } from '../../context/AccountContext';
+import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
@@ -43,7 +43,7 @@ const Alias = styled.div`
 `;
 
 export const NodeInfo = () => {
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const { loading, data } = useQuery(GET_NODE_INFO, {
@@ -51,7 +51,7 @@ export const NodeInfo = () => {
         onError: error => toast.error(getErrorContent(error)),
     });
 
-    const { price, symbol, currency, theme } = useContext(SettingsContext);
+    const { price, symbol, currency, theme } = useSettings();
     const priceProps = { price, symbol, currency };
 
     const tooltipType = getTooltipType(theme);

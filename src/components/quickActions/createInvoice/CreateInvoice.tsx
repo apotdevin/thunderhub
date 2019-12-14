@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Card, Input, ColorButton, NoWrapTitle } from '../../generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_INVOICE } from '../../../graphql/mutation';
@@ -6,7 +6,7 @@ import { Edit } from '../../generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
-import { AccountContext } from '../../../context/AccountContext';
+import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 
 const SingleLine = styled.div`
@@ -18,7 +18,7 @@ const SingleLine = styled.div`
 export const CreateInvoiceCard = ({ color }: { color: string }) => {
     const [amount, setAmount] = useState(0);
 
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const [createInvoice, { data, loading }] = useMutation(CREATE_INVOICE, {

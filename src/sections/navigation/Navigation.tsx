@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
 import { NodeInfo } from '../../components/nodeInfo/NodeInfo';
@@ -9,7 +9,7 @@ import {
     navButtonColor,
 } from '../../styles/Themes';
 import { Home, Cpu, Server, Settings } from '../../components/generic/Icons';
-import { SettingsContext } from '../../context/SettingsContext';
+import { useSettings } from '../../context/SettingsContext';
 
 const NavigationStyle = styled.div`
     grid-area: nav;
@@ -79,7 +79,7 @@ const RESUME_LINK = '/resume';
 const SETTINGS_LINK = '/settings';
 
 export const Navigation = () => {
-    const { theme } = useContext(SettingsContext);
+    const { theme } = useSettings();
     const { pathname } = useLocation();
 
     return (

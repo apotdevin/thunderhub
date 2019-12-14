@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Separation } from '../../components/generic/Styled';
-import { SettingsContext } from '../../context/SettingsContext';
+import { useSettings } from '../../context/SettingsContext';
 import { IconCircle, Sun, Moon } from '../generic/Icons';
 import styled from 'styled-components';
 import { iconButtonBack } from '../../styles/Themes';
@@ -25,7 +25,7 @@ const IconRow = styled.div`
 `;
 
 export const SideSettings = () => {
-    const { theme, currency, setSettings } = useContext(SettingsContext);
+    const { theme, currency, setSettings } = useSettings();
 
     return (
         <>

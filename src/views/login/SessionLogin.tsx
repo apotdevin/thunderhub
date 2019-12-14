@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { AccountContext } from '../../context/AccountContext';
+import React, { useState } from 'react';
+import { useAccount } from '../../context/AccountContext';
 import {
     SingleLine,
     Sub4Title,
@@ -22,7 +22,7 @@ const Login = styled.div`
 `;
 
 export const SessionLogin = () => {
-    const { name, admin, refreshAccount } = useContext(AccountContext);
+    const { name, admin, refreshAccount } = useAccount();
     const [pass, setPass] = useState('');
 
     const handleClick = () => {

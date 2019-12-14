@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
     Card,
     CardWithTitle,
@@ -7,7 +7,7 @@ import {
     SimpleButton,
 } from '../../components/generic/Styled';
 import { getStorageSaved, deleteStorage } from '../../utils/storage';
-import { AccountContext } from '../../context/AccountContext';
+import { useAccount } from '../../context/AccountContext';
 import styled from 'styled-components';
 import { deleteAuth } from '../../utils/auth';
 import { textColor } from '../../styles/Themes';
@@ -36,7 +36,7 @@ export const SettingsButton = styled(SimpleButton)`
 `;
 
 export const DangerView = () => {
-    const { refreshAccount } = useContext(AccountContext);
+    const { refreshAccount } = useAccount();
 
     return (
         <CardWithTitle>

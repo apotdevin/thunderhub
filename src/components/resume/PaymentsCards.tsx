@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { getValue } from '../../helpers/Helpers';
-import { SettingsContext } from '../../context/SettingsContext';
+import { useSettings } from '../../context/SettingsContext';
 import {
     Separation,
     SubCard,
@@ -39,7 +39,7 @@ export const PaymentsCard = ({
     setIndexOpen,
     indexOpen,
 }: PaymentsCardProps) => {
-    const { price, symbol, currency } = useContext(SettingsContext);
+    const { price, symbol, currency } = useSettings();
     const priceProps = { price, symbol, currency };
 
     const getFormat = (amount: string) =>

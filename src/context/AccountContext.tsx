@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 import merge from 'lodash.merge';
 import { getAuthParams } from '../utils/auth';
 
@@ -131,4 +131,6 @@ const AccountProvider = ({ children }: any) => {
     );
 };
 
-export default AccountProvider;
+const useAccount = () => useContext(AccountContext);
+
+export { AccountProvider, useAccount };

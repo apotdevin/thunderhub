@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Card,
     Input,
@@ -13,9 +13,9 @@ import { Send, Circle } from '../../generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
-import { AccountContext } from '../../../context/AccountContext';
+import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
-import { SettingsContext } from '../../../context/SettingsContext';
+import { useSettings } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
 import { GET_BITCOIN_FEES } from '../../../graphql/query';
 
@@ -56,9 +56,9 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
     const [halfHour, setHalfHour] = useState(0);
     const [hour, setHour] = useState(0);
 
-    const { price, symbol, currency } = useContext(SettingsContext);
+    const { price, symbol, currency } = useSettings();
 
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const { data: feeData } = useQuery(GET_BITCOIN_FEES, {

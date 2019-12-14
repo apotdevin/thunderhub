@@ -1,19 +1,18 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
     Card,
     CardWithTitle,
     SubTitle,
     SingleLine,
     Separation,
-    SimpleButton,
     DarkSubTitle,
     ColorButton,
 } from '../generic/Styled';
-import { AccountContext } from '../../context/AccountContext';
+import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_BALANCES } from '../../graphql/query';
-import { SettingsContext } from '../../context/SettingsContext';
+import { useSettings } from '../../context/SettingsContext';
 import styled from 'styled-components';
 import {
     Send,
@@ -23,7 +22,6 @@ import {
     Pocket,
     DownArrow,
 } from '../generic/Icons';
-import { unSelectedNavButton } from '../../styles/Themes';
 import { getValue } from '../../helpers/Helpers';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
@@ -41,7 +39,7 @@ const ButtonRow = styled.div`
 `;
 
 export const AccountInfo = () => {
-    const { host, read, cert } = useContext(AccountContext);
+    const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
     const { data } = useQuery(GET_BALANCES, {
@@ -49,7 +47,7 @@ export const AccountInfo = () => {
         onError: error => toast.error(getErrorContent(error)),
     });
 
-    const { price, symbol, currency } = useContext(SettingsContext);
+    const { price, symbol, currency } = useSettings();
     const priceProps = { price, symbol, currency };
 
     if (!data) {

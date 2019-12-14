@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import numeral from 'numeral';
-import { SettingsContext } from '../../../context/SettingsContext';
+import { useSettings } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
 import {
     VictoryBar,
@@ -29,7 +29,7 @@ export const FlowReport = ({
     parsedData,
     parsedData2,
 }: Props) => {
-    const { theme, price, symbol, currency } = useContext(SettingsContext);
+    const { theme, price, symbol, currency } = useSettings();
 
     const priceProps = { price, symbol, currency };
     const getFormat = (amount: number) =>

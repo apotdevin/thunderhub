@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 import merge from 'lodash.merge';
 
 interface ChangeProps {
@@ -57,4 +57,6 @@ const SettingsProvider = ({ children }: any) => {
     );
 };
 
-export default SettingsProvider;
+const useSettings = () => useContext(SettingsContext);
+
+export { SettingsProvider, useSettings };
