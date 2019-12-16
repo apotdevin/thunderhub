@@ -9,6 +9,7 @@ const HeaderStyle = styled.div`
     padding: 10px 0;
     background-color: #fb8b23;
     grid-area: header;
+    margin-bottom: 10px;
 `;
 
 const HeaderTitle = styled.div`

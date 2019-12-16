@@ -30,6 +30,7 @@ const EntryView = ({ session }: HomeProps) => {
     return (
         <Login>
             <h1>Welcome to ThunderHub</h1>
+            <h2>This is the entry page</h2>
             {session ? (
                 <SessionLogin />
             ) : login ? (

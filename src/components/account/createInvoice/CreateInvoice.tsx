@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Input, ColorButton, NoWrapTitle } from '../../generic/Styled';
+import { Input, ColorButton, NoWrapTitle } from '../../generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_INVOICE } from '../../../graphql/mutation';
 import { Edit } from '../../generic/Icons';
@@ -28,26 +28,24 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
     console.log(data, loading);
 
     return (
-        <Card>
-            <SingleLine>
-                <NoWrapTitle>Amount to receive:</NoWrapTitle>
-                <Input
-                    color={color}
-                    type={'number'}
-                    onChange={e => setAmount(parseInt(e.target.value))}
-                />
-                <ColorButton
-                    color={color}
-                    disabled={amount === 0}
-                    enabled={amount > 0}
-                    onClick={() => {
-                        createInvoice({ variables: { amount, auth } });
-                    }}
-                >
-                    <Edit />
-                    Create Invoice
-                </ColorButton>
-            </SingleLine>
-        </Card>
+        <SingleLine>
+            <NoWrapTitle>Amount to receive:</NoWrapTitle>
+            <Input
+                color={color}
+                type={'number'}
+                onChange={e => setAmount(parseInt(e.target.value))}
+            />
+            <ColorButton
+                color={color}
+                disabled={amount === 0}
+                enabled={amount > 0}
+                onClick={() => {
+                    createInvoice({ variables: { amount, auth } });
+                }}
+            >
+                <Edit />
+                Create Invoice
+            </ColorButton>
+        </SingleLine>
     );
 };

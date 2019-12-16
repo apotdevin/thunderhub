@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-    Card,
     Sub4Title,
     Input,
     SingleLine,
@@ -26,25 +25,20 @@ export const PayCard = ({ color }: { color: string }) => {
     });
 
     return (
-        <Card bottom={'20px'}>
-            <SingleLine>
-                <Sub4Title>Request:</Sub4Title>
-                <Input
-                    color={color}
-                    onChange={e => setRequest(e.target.value)}
-                />
-                <ColorButton
-                    color={color}
-                    disabled={request === ''}
-                    enabled={request !== ''}
-                    onClick={() => {
-                        makePayment({ variables: { request, auth } });
-                    }}
-                >
-                    <Send />
-                    Send Sats
-                </ColorButton>
-            </SingleLine>
-        </Card>
+        <SingleLine>
+            <Sub4Title>Request:</Sub4Title>
+            <Input color={color} onChange={e => setRequest(e.target.value)} />
+            <ColorButton
+                color={color}
+                disabled={request === ''}
+                enabled={request !== ''}
+                onClick={() => {
+                    makePayment({ variables: { request, auth } });
+                }}
+            >
+                <Send />
+                Send Sats
+            </ColorButton>
+        </SingleLine>
     );
 };
