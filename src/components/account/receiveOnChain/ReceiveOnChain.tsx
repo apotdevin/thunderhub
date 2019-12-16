@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Card,
     ColorButton,
     NoWrapTitle,
     DarkSubTitle,
@@ -50,7 +49,7 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
     }, [data]);
 
     return (
-        <Card>
+        <>
             <SingleLine>
                 <ButtonRow>
                     <TitleWithSpacing>Type of Address:</TitleWithSpacing>
@@ -99,6 +98,6 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
                     </SingleLine>
                 </>
             )}
-        </Card>
+        </>
     );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Card,
     CardWithTitle,
@@ -21,10 +21,15 @@ import {
     Anchor,
     Pocket,
     DownArrow,
+    XSvg,
 } from '../generic/Icons';
 import { getValue } from '../../helpers/Helpers';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
+import { PayCard } from './pay/pay';
+import { CreateInvoiceCard } from './createInvoice/CreateInvoice';
+import { SendOnChainCard } from './sendOnChain/SendOnChain';
+import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 
 const Tile = styled.div`
     display: flex;
@@ -38,7 +43,10 @@ const ButtonRow = styled.div`
     display: flex;
 `;
 
+const sectionColor = '#FFD300';
+
 export const AccountInfo = () => {
+    const [state, setState] = useState<string>('none');
     const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
@@ -67,6 +75,131 @@ export const AccountInfo = () => {
 
     const totalB = getFormat(chainBalance + confirmedBalance);
     const totalPB = getFormat(pendingChainBalance + pendingBalance);
+
+    const renderContent = () => {
+        switch (state) {
+            case 'send_ln':
+                return <PayCard color={sectionColor} />;
+            case 'receive_ln':
+                return <CreateInvoiceCard color={sectionColor} />;
+            case 'send_chain':
+                return <SendOnChainCard color={sectionColor} />;
+            case 'receive_chain':
+                return <ReceiveOnChainCard color={sectionColor} />;
+            default:
+                return null;
+        }
+    };
+
+    const getTitle = () => {
+        switch (state) {
+            case 'send_ln':
+                return 'Send Sats over Lightning';
+            case 'receive_ln':
+                return 'Receive Sats over Lightning';
+            case 'send_chain':
+                return 'Send To On Chain Address';
+            case 'receive_chain':
+                return 'Create Address to Receive';
+            default:
+                return 'Your accounts';
+        }
+    };
+
+    const showLn =
+        state === 'send_ln' || state === 'receive_ln' || state === 'none';
+    const showChain =
+        state === 'send_chain' || state === 'receive_chain' || state === 'none';
+
+    const renderLnAccount = () => (
+        <SingleLine>
+            <Zap color={pendingBalance === 0 ? sectionColor : '#652EC7'} />
+            <Tile startTile={true}>
+                <DarkSubTitle>Account</DarkSubTitle>
+                <div>Lightning</div>
+            </Tile>
+            <Tile>
+                <DarkSubTitle>Current Balance</DarkSubTitle>
+                <div>{formatCCB}</div>
+            </Tile>
+            <Tile>
+                <DarkSubTitle>Pending Balance</DarkSubTitle>
+                <div>{formatPCB}</div>
+            </Tile>
+            <ButtonRow>
+                {showLn && showChain && (
+                    <>
+                        <ColorButton
+                            color={sectionColor}
+                            onClick={() => setState('send_ln')}
+                        >
+                            <Send />
+                        </ColorButton>
+                        <ColorButton
+                            color={sectionColor}
+                            onClick={() => setState('receive_ln')}
+                        >
+                            <DownArrow />
+                        </ColorButton>
+                    </>
+                )}
+                {showLn && !showChain && (
+                    <ColorButton
+                        color={sectionColor}
+                        onClick={() => setState('none')}
+                    >
+                        <XSvg />
+                    </ColorButton>
+                )}
+            </ButtonRow>
+        </SingleLine>
+    );
+
+    const renderChainAccount = () => (
+        <SingleLine>
+            <Anchor
+                color={pendingChainBalance === 0 ? sectionColor : '#652EC7'}
+            />
+            <Tile startTile={true}>
+                <DarkSubTitle>Account</DarkSubTitle>
+                <div>Bitcoin</div>
+            </Tile>
+            <Tile>
+                <DarkSubTitle>Current Balance</DarkSubTitle>
+                <div>{formatCB}</div>
+            </Tile>
+            <Tile>
+                <DarkSubTitle>Pending Balance</DarkSubTitle>
+                <div>{formatPB}</div>
+            </Tile>
+            <ButtonRow>
+                {showLn && showChain && (
+                    <>
+                        <ColorButton
+                            color={sectionColor}
+                            onClick={() => setState('send_chain')}
+                        >
+                            <Send />
+                        </ColorButton>
+                        <ColorButton
+                            color={sectionColor}
+                            onClick={() => setState('receive_chain')}
+                        >
+                            <DownArrow />
+                        </ColorButton>
+                    </>
+                )}
+                {!showLn && showChain && (
+                    <ColorButton
+                        color={sectionColor}
+                        onClick={() => setState('none')}
+                    >
+                        <XSvg />
+                    </ColorButton>
+                )}
+            </ButtonRow>
+        </SingleLine>
+    );
 
     return (
         <>
@@ -98,69 +231,13 @@ export const AccountInfo = () => {
                 </Card>
             </CardWithTitle>
             <CardWithTitle>
-                <SubTitle>Your accounts</SubTitle>
+                <SubTitle>{getTitle()}</SubTitle>
                 <Card>
-                    <SingleLine>
-                        <Zap
-                            color={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
-                        />
-                        <Tile startTile={true}>
-                            <DarkSubTitle>Account</DarkSubTitle>
-                            <div>Lightning</div>
-                        </Tile>
-                        <Tile>
-                            <DarkSubTitle>Current Balance</DarkSubTitle>
-                            <div>{formatCCB}</div>
-                        </Tile>
-                        <Tile>
-                            <DarkSubTitle>Pending Balance</DarkSubTitle>
-                            <div>{formatPCB}</div>
-                        </Tile>
-                        <ButtonRow>
-                            <ColorButton color={'#FFD300'}>
-                                <Send />
-                            </ColorButton>
-                            <ColorButton color={'#FFD300'}>
-                                <DownArrow />
-                            </ColorButton>
-                            <ColorButton color={'#FFD300'}>
-                                <MoreVertical />
-                            </ColorButton>
-                        </ButtonRow>
-                    </SingleLine>
-                    <Separation />
-                    <SingleLine>
-                        <Anchor
-                            color={
-                                pendingChainBalance === 0
-                                    ? '#FFD300'
-                                    : '#652EC7'
-                            }
-                        />
-                        <Tile startTile={true}>
-                            <DarkSubTitle>Account</DarkSubTitle>
-                            <div>Bitcoin</div>
-                        </Tile>
-                        <Tile>
-                            <DarkSubTitle>Current Balance</DarkSubTitle>
-                            <div>{formatCB}</div>
-                        </Tile>
-                        <Tile>
-                            <DarkSubTitle>Pending Balance</DarkSubTitle>
-                            <div>{formatPB}</div>
-                        </Tile>
-                        <ButtonRow>
-                            <ColorButton color={'#FFD300'}>
-                                <Send />
-                            </ColorButton>
-                            <ColorButton color={'#FFD300'}>
-                                <DownArrow />
-                            </ColorButton>
-                            <ColorButton color={'#FFD300'}>
-                                <MoreVertical />
-                            </ColorButton>
-                        </ButtonRow>
-                    </SingleLine>
+                    {showLn && renderLnAccount()}
+                    {showLn && <Separation />}
+                    {showChain && renderChainAccount()}
+                    {!showLn && showChain && <Separation />}
+                    {renderContent()}
                 </Card>
             </CardWithTitle>
         </>

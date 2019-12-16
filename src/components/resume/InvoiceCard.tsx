@@ -45,7 +45,7 @@ export const InvoiceCard = ({
         description,
         expires_at,
         is_confirmed,
-        received,
+        // received,
         tokens,
         chain_address,
         description_hash,
@@ -61,8 +61,6 @@ export const InvoiceCard = ({
     } = invoice;
 
     const formatAmount = getFormat(tokens);
-    const dif = received - tokens;
-    const formatDif = getFormat(`${dif}`);
 
     const handleClick = () => {
         if (indexOpen === index) {
@@ -120,10 +118,7 @@ export const InvoiceCard = ({
                             )} ago)`}</DarkSubTitle>
                         </AddMargin>
                     </SingleLine>
-                    <SingleLine>
-                        {formatAmount}
-                        {formatDif}
-                    </SingleLine>
+                    <SingleLine>{formatAmount}</SingleLine>
                 </SingleLine>
             </MainInfo>
             {index === indexOpen && renderDetails()}

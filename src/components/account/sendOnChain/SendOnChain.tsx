@@ -133,7 +133,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
     }
 
     return (
-        <Card>
+        <>
             <SingleLine>
                 <NoWrapTitle>Send to Address:</NoWrapTitle>
                 <Input
@@ -236,6 +236,6 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                 <Send />
                 Send To Address
             </RightButton>
-        </Card>
+        </>
     );
 };

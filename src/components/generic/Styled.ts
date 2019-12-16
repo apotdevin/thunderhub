@@ -104,10 +104,9 @@ export const Input = styled.input`
     height: 30px;
     width: 80%;
     margin: 10px;
-    border: 0;
     border: 1px solid #c8ccd4;
     background: none;
-    border-radius: 0;
+    border-radius: 5px;
     color: ${textColor};
     transition: all 0.5s ease;
 
