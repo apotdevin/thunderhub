@@ -1,15 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
-import { textColor } from '../../styles/Themes';
+import { textColor, cardColor } from '../../styles/Themes';
 
 const HeaderStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 10px 0;
-    background-color: #fb8b23;
+    background-color: ${cardColor};
     grid-area: header;
     margin-bottom: 10px;
+`;
+
+const Wrapper = styled.div`
+    max-width: 1000px;
+    margin: 0 auto 0 auto;
+    padding: 0 0.5rem;
+    width: 100%;
+    height: 100%;
 `;
 
 const HeaderTitle = styled.div`
@@ -20,7 +28,9 @@ const HeaderTitle = styled.div`
 export const Header = () => {
     return (
         <HeaderStyle>
-            <HeaderTitle>ThunderHub</HeaderTitle>
+            <Wrapper>
+                <HeaderTitle>ThunderHub</HeaderTitle>
+            </Wrapper>
         </HeaderStyle>
     );
 };
