@@ -30,6 +30,7 @@ import { ReactComponent as LoaderIcon } from '../../icons/loader.svg';
 import { ReactComponent as CircleIcon } from '../../icons/circle.svg';
 import { ReactComponent as AlertTriangleIcon } from '../../icons/alert-triangle.svg';
 import { ReactComponent as GitCommitIcon } from '../../icons/git-commit.svg';
+import { ReactComponent as GitBranchIcon } from '../../icons/git-branch.svg';
 
 interface IconProps {
     color?: string;
@@ -92,3 +93,4 @@ export const Loader = styleIcon(LoaderIcon);
 export const Circle = styleIcon(CircleIcon);
 export const AlertTriangle = styleIcon(AlertTriangleIcon);
 export const GitCommit = styleIcon(GitCommitIcon);
+export const GitBranch = styleIcon(GitBranchIcon);

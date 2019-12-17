@@ -6,10 +6,11 @@ import {
     NoWrapTitle,
     DarkSubTitle,
     Separation,
+    SingleLine,
 } from '../../generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { PAY_ADDRESS } from '../../../graphql/mutation';
-import { Send, Circle } from '../../generic/Icons';
+import { Circle, ChevronRight } from '../../generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
@@ -18,12 +19,6 @@ import { getAuthString } from '../../../utils/auth';
 import { useSettings } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
 import { useBitcoinInfo } from '../../../context/BitcoinContext';
-
-const SingleLine = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-`;
 
 const RadioText = styled.div`
     margin-left: 10px;
@@ -84,7 +79,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
         });
 
     const feeFormat = (amount: number) => {
-        if (type === 'fee') {
+        if (type === 'fee' || type === 'none') {
             return getFormat(amount);
         } else {
             return `${amount} blocks`;
@@ -180,7 +175,9 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                 <NoWrapTitle>Fee Amount:</NoWrapTitle>
                 {type !== 'none' && (
                     <ButtonRow>
-                        <DarkSubTitle>{`(${feeFormat(amount)})`}</DarkSubTitle>
+                        <DarkSubTitle>{`(~${feeFormat(
+                            amount * 223,
+                        )})`}</DarkSubTitle>
                         <SmallInput
                             color={color}
                             type={'number'}
@@ -190,6 +187,9 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                 )}
                 {type === 'none' && (
                     <ButtonRow>
+                        <DarkSubTitle>{`(~${feeFormat(
+                            amount * 223,
+                        )})`}</DarkSubTitle>
                         {renderButton(
                             () => setAmount(fast),
                             `Fastest (${fast} sats)`,
@@ -223,8 +223,8 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                     });
                 }}
             >
-                <Send />
                 Send To Address
+                <ChevronRight />
             </RightButton>
         </>
     );
