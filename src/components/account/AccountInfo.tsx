@@ -14,15 +14,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { GET_BALANCES } from '../../graphql/query';
 import { useSettings } from '../../context/SettingsContext';
 import styled from 'styled-components';
-import {
-    Send,
-    MoreVertical,
-    Zap,
-    Anchor,
-    Pocket,
-    DownArrow,
-    XSvg,
-} from '../generic/Icons';
+import { Send, Zap, Anchor, Pocket, DownArrow, XSvg } from '../generic/Icons';
 import { getValue } from '../../helpers/Helpers';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
