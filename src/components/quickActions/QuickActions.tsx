@@ -7,9 +7,10 @@ import {
     ColorButton,
 } from '../generic/Styled';
 import styled from 'styled-components';
-import { XSvg, Layers } from '../generic/Icons';
+import { XSvg, Layers, GitBranch } from '../generic/Icons';
 import { unSelectedNavButton } from '../../styles/Themes';
 import { DecodeCard } from './decode/Decode';
+import { OpenChannelCard } from './openChannel/OpenChannel';
 
 const sectionColor = '#69c0ff';
 
@@ -47,6 +48,8 @@ export const QuickActions = () => {
         switch (openCard) {
             case 'decode':
                 return 'Decode a Lightning Request';
+            case 'open_channel':
+                return 'Open a Channel';
             default:
                 return 'Quick Actions';
         }
@@ -56,9 +59,20 @@ export const QuickActions = () => {
         switch (openCard) {
             case 'decode':
                 return <DecodeCard color={sectionColor} />;
+            case 'open_channel':
+                return (
+                    <OpenChannelCard
+                        color={sectionColor}
+                        setOpenCard={setOpenCard}
+                    />
+                );
             default:
                 return (
                     <QuickRow>
+                        <QuickCard onClick={() => setOpenCard('open_channel')}>
+                            <GitBranch size={'24px'} color={sectionColor} />
+                            <QuickTitle>Open</QuickTitle>
+                        </QuickCard>
                         <QuickCard onClick={() => setOpenCard('decode')}>
                             <Layers size={'24px'} color={sectionColor} />
                             <QuickTitle>Decode</QuickTitle>

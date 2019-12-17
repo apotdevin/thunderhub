@@ -21,6 +21,27 @@ export const CLOSE_CHANNEL = gql`
     }
 `;
 
+export const OPEN_CHANNEL = gql`
+    mutation openChannel(
+        $amount: Int!
+        $partnerPublicKey: String!
+        $auth: String!
+        $tokensPerVByte: Int
+        $isPrivate: Boolean
+    ) {
+        openChannel(
+            amount: $amount
+            partnerPublicKey: $partnerPublicKey
+            auth: $auth
+            tokensPerVByte: $tokensPerVByte
+            isPrivate: $isPrivate
+        ) {
+            transactionId
+            transactionOutputIndex
+        }
+    }
+`;
+
 export const PAY_INVOICE = gql`
     mutation PayInvoice($request: String!, $auth: String!) {
         pay(request: $request, auth: $auth) {
