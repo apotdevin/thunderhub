@@ -18,10 +18,11 @@ interface OpenChannelProps {
 export const openChannel = {
     type: OpenChannelType,
     args: {
-        isPrivate: { type: GraphQLBoolean },
         amount: { type: new GraphQLNonNull(GraphQLInt) },
         partnerPublicKey: { type: new GraphQLNonNull(GraphQLString) },
         auth: { type: new GraphQLNonNull(GraphQLString) },
+        tokensPerVByte: { type: GraphQLInt },
+        isPrivate: { type: GraphQLBoolean },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'openChannel');
@@ -34,6 +35,7 @@ export const openChannel = {
                 is_private: params.isPrivate,
                 local_tokens: params.amount,
                 partner_public_key: params.partnerPublicKey,
+                chain_fee_tokens_per_vbyte: params.tokensPerVByte,
             });
             return {
                 transactionId: info.transaction_id,
