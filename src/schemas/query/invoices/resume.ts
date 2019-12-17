@@ -61,6 +61,7 @@ export const getResume = {
         let lastInvoiceDate = '';
         let firstInvoiceDate = '';
         let token = '';
+        let withInvoices = true;
 
         try {
             const invoiceList: InvoicesProps = await getInvoices({
@@ -76,28 +77,34 @@ export const getResume = {
                 };
             });
 
-            const { date } = invoices[invoices.length - 1];
-            firstInvoiceDate = invoices[0].date;
-            lastInvoiceDate = date;
-            token = invoiceList.next;
+            if (invoices.length <= 0) {
+                withInvoices = false;
+            } else {
+                const { date } = invoices[invoices.length - 1];
+                firstInvoiceDate = invoices[0].date;
+                lastInvoiceDate = date;
+                token = invoiceList.next;
+            }
         } catch (error) {
             logger.error('Error getting invoices: %o', error);
             throw new Error(getErrorMsg(error));
         }
 
-        const filteredPayments = payments.filter(payment => {
-            const last =
-                compareDesc(
-                    new Date(lastInvoiceDate),
-                    new Date(payment.date),
-                ) === 1;
-            const first =
-                compareDesc(
-                    new Date(payment.date),
-                    new Date(firstInvoiceDate),
-                ) === 1;
-            return last && first;
-        });
+        const filteredPayments = withInvoices
+            ? payments.filter(payment => {
+                  const last =
+                      compareDesc(
+                          new Date(lastInvoiceDate),
+                          new Date(payment.date),
+                      ) === 1;
+                  const first =
+                      compareDesc(
+                          new Date(payment.date),
+                          new Date(firstInvoiceDate),
+                      ) === 1;
+                  return last && first;
+              })
+            : payments;
 
         const resumeArray = sortBy(
             [...invoices, ...filteredPayments],
