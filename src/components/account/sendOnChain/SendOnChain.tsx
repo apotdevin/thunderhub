@@ -7,7 +7,7 @@ import {
     DarkSubTitle,
     Separation,
 } from '../../generic/Styled';
-import { useMutation, useQuery } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import { PAY_ADDRESS } from '../../../graphql/mutation';
 import { Send, Circle } from '../../generic/Icons';
 import styled from 'styled-components';
@@ -17,7 +17,7 @@ import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import { useSettings } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
-import { GET_BITCOIN_FEES } from '../../../graphql/query';
+import { useBitcoinInfo } from '../../../context/BitcoinContext';
 
 const SingleLine = styled.div`
     display: flex;
@@ -52,28 +52,18 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
     const [sendAll, setSendAll] = useState(false);
     const [isSent, setIsSent] = useState(false);
 
-    const [fast, setFast] = useState(0);
-    const [halfHour, setHalfHour] = useState(0);
-    const [hour, setHour] = useState(0);
-
     const { price, symbol, currency } = useSettings();
+
+    const { fast, halfHour, hour } = useBitcoinInfo();
 
     const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
-    const { data: feeData } = useQuery(GET_BITCOIN_FEES, {
-        onError: error => toast.error(getErrorContent(error)),
-    });
-
     useEffect(() => {
-        if (feeData && feeData.getBitcoinFees) {
-            const { fast, halfHour, hour } = feeData.getBitcoinFees;
+        if (type === 'none' && amount === 0) {
             setAmount(fast);
-            setFast(fast);
-            setHalfHour(halfHour);
-            setHour(hour);
         }
-    }, [feeData]);
+    }, [type, amount, fast]);
 
     const [payAddress, { data }] = useMutation(PAY_ADDRESS, {
         onError: error => toast.error(getErrorContent(error)),

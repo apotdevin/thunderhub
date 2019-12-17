@@ -5,7 +5,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { BrowserRouter } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
 import { useSettings, SettingsProvider } from './context/SettingsContext';
-import { BitcoinPrice } from './components/bitcoinPrice/BitcoinPrice';
+import { BitcoinPrice } from './components/bitcoinInfo/BitcoinPrice';
 import { ModalProvider } from 'styled-react-modal';
 import { useAccount, AccountProvider } from './context/AccountContext';
 import { toast } from 'react-toastify';
@@ -13,6 +13,8 @@ import { FadingBackground } from './components/modal/ReactModal';
 import 'react-toastify/dist/ReactToastify.css';
 import { Header } from './sections/header/Header';
 import { Footer } from './sections/footer/Footer';
+import { BitcoinInfoProvider } from './context/BitcoinContext';
+import { BitcoinFees } from './components/bitcoinInfo/BitcoinFees';
 
 const EntryView = React.lazy(() => import('./views/entry/Entry'));
 const MainView = React.lazy(() => import('./views/main/Main'));
@@ -53,6 +55,7 @@ const ContextApp: React.FC = () => {
         <ThemeProvider theme={{ mode: theme }}>
             <ModalProvider backgroundComponent={FadingBackground}>
                 <BitcoinPrice />
+                <BitcoinFees />
                 <GlobalStyles />
                 <Header />
                 <Wrapper>{renderContent()}</Wrapper>
@@ -68,7 +71,9 @@ const App: React.FC = () => {
             <ApolloProvider client={client}>
                 <AccountProvider>
                     <SettingsProvider>
-                        <ContextApp />
+                        <BitcoinInfoProvider>
+                            <ContextApp />
+                        </BitcoinInfoProvider>
                     </SettingsProvider>
                 </AccountProvider>
             </ApolloProvider>
