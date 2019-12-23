@@ -97,11 +97,12 @@ export const getResume = {
                           new Date(lastInvoiceDate),
                           new Date(payment.date),
                       ) === 1;
-                  const first =
-                      compareDesc(
-                          new Date(payment.date),
-                          new Date(firstInvoiceDate),
-                      ) === 1;
+                  const first = params.token
+                      ? compareDesc(
+                            new Date(payment.date),
+                            new Date(firstInvoiceDate),
+                        ) === 1
+                      : true;
                   return last && first;
               })
             : payments;
