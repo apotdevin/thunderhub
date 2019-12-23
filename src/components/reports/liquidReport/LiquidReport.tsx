@@ -18,6 +18,7 @@ import {
     chartAxisColor,
     liquidityBarColor,
 } from '../../../styles/Themes';
+import { LoadingCard } from '../../loading/LoadingCard';
 
 export const LiquidReport = () => {
     const { host, read, cert } = useAccount();
@@ -32,12 +33,12 @@ export const LiquidReport = () => {
             ...priceProps,
         });
 
-    const { data } = useQuery(GET_LIQUID_REPORT, { variables: { auth } });
+    const { data, loading } = useQuery(GET_LIQUID_REPORT, {
+        variables: { auth },
+    });
 
-    console.log(data);
-
-    if (!data || !data.getChannelReport) {
-        return null;
+    if (!data || !data.getChannelReport || loading) {
+        return <LoadingCard title={'Liquidity Report'} />;
     }
 
     const { local, remote, maxIn, maxOut } = data.getChannelReport;
