@@ -17,6 +17,7 @@ import { unSelectedNavButton } from '../../styles/Themes';
 import { Globe, Cpu } from '../generic/Icons';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
+import { LoadingCard } from '../loading/LoadingCard';
 
 const Tile = styled.div`
     display: flex;
@@ -49,7 +50,7 @@ export const NetworkInfo = () => {
     const priceProps = { price, symbol, currency };
 
     if (loading || !data || !data.getNetworkInfo) {
-        return <Card>Loading....</Card>;
+        return <LoadingCard title={'Network Info'} />;
     }
 
     const {

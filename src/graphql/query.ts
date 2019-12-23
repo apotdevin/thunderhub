@@ -26,18 +26,11 @@ export const GET_CAN_CONNECT = gql`
 export const GET_NODE_INFO = gql`
     query GetNodeInfo($auth: String!) {
         getNodeInfo(auth: $auth) {
-            chains
             color
             activeChannelsCount
-            currentBlockHash
-            currentBlockHeight
             isSyncedToChain
-            isSyncedToGraph
-            latestBlockAt
             peersCount
             pendingChannelsCount
-            publicKey
-            uris
             version
             alias
         }
@@ -193,6 +186,15 @@ export const GET_IN_OUT = gql`
             payments
             confirmedInvoices
             unConfirmedInvoices
+        }
+    }
+`;
+
+export const GET_CONNECT_INFO = gql`
+    query GetNodeInfo($auth: String!) {
+        getNodeInfo(auth: $auth) {
+            publicKey
+            uris
         }
     }
 `;

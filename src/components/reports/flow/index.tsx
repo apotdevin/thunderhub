@@ -17,6 +17,7 @@ import { FlowPie } from './FlowPie';
 import { InvoicePie } from './InvoicePie';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
+import { LoadingCard } from '../../loading/LoadingCard';
 
 export const ChannelRow = styled.div`
     font-size: 14px;
@@ -80,7 +81,7 @@ export const FlowBox = () => {
     };
 
     if (!data || loading) {
-        return <div>Loading</div>;
+        return <LoadingCard title={'Invoices and Payments Report'} />;
     }
 
     const parsedData: PeriodProps[] = JSON.parse(data.getInOut.invoices);

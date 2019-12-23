@@ -21,6 +21,7 @@ import {
 import { CardContent } from '.';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
+import { LoadingCard } from '../../loading/LoadingCard';
 
 interface Props {
     isTime: string;
@@ -47,7 +48,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
         });
 
     if (!data || loading) {
-        return <div>Loading</div>;
+        return <LoadingCard noCard={true} title={'Forward Report'} />;
     }
 
     let domain = 24;

@@ -22,6 +22,7 @@ import { PayCard } from './pay/pay';
 import { CreateInvoiceCard } from './createInvoice/CreateInvoice';
 import { SendOnChainCard } from './sendOnChain/SendOnChain';
 import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
+import { LoadingCard } from '../loading/LoadingCard';
 
 const Tile = styled.div`
     display: flex;
@@ -42,7 +43,7 @@ export const AccountInfo = () => {
     const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
-    const { data } = useQuery(GET_BALANCES, {
+    const { data, loading } = useQuery(GET_BALANCES, {
         variables: { auth },
         onError: error => toast.error(getErrorContent(error)),
     });
@@ -50,8 +51,13 @@ export const AccountInfo = () => {
     const { price, symbol, currency } = useSettings();
     const priceProps = { price, symbol, currency };
 
-    if (!data) {
-        return <div>Loading</div>;
+    if (!data || loading) {
+        return (
+            <>
+                <LoadingCard title={'Resume'} />
+                <LoadingCard title={'Your Accounts'} />
+            </>
+        );
     }
 
     const chainBalance = data.getChainBalance;
@@ -94,7 +100,7 @@ export const AccountInfo = () => {
             case 'receive_chain':
                 return 'Create Address to Receive';
             default:
-                return 'Your accounts';
+                return 'Your Accounts';
         }
     };
 

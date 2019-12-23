@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { GitCommit, DownArrow, UpArrow } from '../../generic/Icons';
 import styled from 'styled-components';
+import { LoadingCard } from '../../loading/LoadingCard';
 
 const ButtonRow = styled.div`
     display: flex;
@@ -64,7 +65,7 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
     });
 
     if (!data || loading) {
-        return <div>Loading...</div>;
+        return <LoadingCard noCard={true} title={'Forward Report'} />;
     }
 
     const report = data.getForwardChannelsReport;

@@ -101,7 +101,7 @@ export const PaymentsCard = ({
                     {hops.length}
                 </DetailLine>
                 {hops.map((hop: any, index: number) => (
-                    <DetailLine>
+                    <DetailLine key={index}>
                         <div>{`Hop ${index + 1}:`}</div>
                         <div style={{ textAlign: 'right' }} key={index}>
                             {hop}
