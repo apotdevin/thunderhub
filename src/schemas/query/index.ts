@@ -4,7 +4,6 @@ import { invoiceQueries } from './invoices';
 import { dataQueries } from './data';
 import { reportQueries } from './report';
 import { flowQueries } from './flow';
-import { routeQueries } from './route';
 
 export const query = {
     ...channelQueries,
@@ -13,5 +12,4 @@ export const query = {
     ...dataQueries,
     ...reportQueries,
     ...flowQueries,
-    ...routeQueries,
 };
