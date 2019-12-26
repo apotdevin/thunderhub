@@ -210,3 +210,9 @@ export const VERIFY_BACKUPS = gql`
         verifyBackups(auth: $auth, backup: $backup)
     }
 `;
+
+export const RECOVER_FUNDS = gql`
+    query RecoverFunds($auth: String!, $backup: String!) {
+        recoverFunds(auth: $auth, backup: $backup)
+    }
+`;
