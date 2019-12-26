@@ -40,7 +40,7 @@ export const getPendingChannels = {
         try {
             const pendingChannels: PendingChannelListProps = await getLnPendingChannels(
                 {
-                    lnd: lnd,
+                    lnd,
                 },
             );
 

@@ -31,7 +31,7 @@ export const closeChannel = {
 
         try {
             const info: CloseChannelProps = await lnCloseChannel({
-                lnd: lnd,
+                lnd,
                 id: params.id,
                 target_confirmations: params.targetConfirmations,
                 tokens_per_vbyte: params.tokensPerVByte,

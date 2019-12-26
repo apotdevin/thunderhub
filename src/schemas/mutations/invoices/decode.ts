@@ -38,7 +38,7 @@ export const decodeRequest = {
 
         try {
             const decode: DecodeProps = await decodePaymentRequest({
-                lnd: lnd,
+                lnd,
                 request: params.request,
             });
 

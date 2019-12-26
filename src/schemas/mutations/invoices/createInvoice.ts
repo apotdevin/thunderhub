@@ -29,7 +29,7 @@ export const createInvoice = {
 
         try {
             const invoice: InvoiceProps = await createInvoiceRequest({
-                lnd: lnd,
+                lnd,
                 tokens: params.amount,
             });
 

@@ -25,7 +25,7 @@ export const getChainBalance = {
 
         try {
             const value: ChainBalanceProps = await getBalance({
-                lnd: lnd,
+                lnd,
             });
             return value.chain_balance;
         } catch (error) {
@@ -45,7 +45,7 @@ export const getPendingChainBalance = {
 
         try {
             const pendingValue: PendingChainBalanceProps = await getPending({
-                lnd: lnd,
+                lnd,
             });
             return pendingValue.pending_chain_balance;
         } catch (error) {

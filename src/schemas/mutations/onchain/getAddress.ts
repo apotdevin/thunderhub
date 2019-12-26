@@ -23,7 +23,7 @@ export const createAddress = {
 
         try {
             const address: AddressProps = await createChainAddress({
-                lnd: lnd,
+                lnd,
                 is_unused: true,
                 format,
             });

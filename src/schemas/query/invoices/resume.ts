@@ -24,7 +24,7 @@ export const getResume = {
 
         try {
             const paymentList: PaymentsProps = await getPayments({
-                lnd: lnd,
+                lnd,
             });
 
             const getMappedPayments = () =>
@@ -65,7 +65,7 @@ export const getResume = {
 
         try {
             const invoiceList: InvoicesProps = await getInvoices({
-                lnd: lnd,
+                lnd,
                 ...invoiceProps,
             });
 

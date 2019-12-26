@@ -39,7 +39,7 @@ export const pay = {
 
         try {
             const payment: RequestProps = await payRequest({
-                lnd: lnd,
+                lnd,
                 request: params.request,
             });
 

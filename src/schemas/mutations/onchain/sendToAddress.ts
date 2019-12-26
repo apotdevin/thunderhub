@@ -43,7 +43,7 @@ export const sendToAddress = {
 
         try {
             const send: SendProps = await sendToChainAddress({
-                lnd: lnd,
+                lnd,
                 address: params.address,
                 tokens: params.tokens,
                 ...props,

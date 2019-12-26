@@ -39,7 +39,7 @@ export const getForwardReport = {
 
         try {
             const forwardsList: ForwardCompleteProps = await getLnForwards({
-                lnd: lnd,
+                lnd,
                 after: startDate,
                 before: endDate,
                 limit: 10000,
