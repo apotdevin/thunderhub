@@ -198,3 +198,15 @@ export const GET_CONNECT_INFO = gql`
         }
     }
 `;
+
+export const GET_BACKUPS = gql`
+    query GetBackups($auth: String!) {
+        getBackups(auth: $auth)
+    }
+`;
+
+export const VERIFY_BACKUPS = gql`
+    query VerifyBackups($auth: String!, $backup: String!) {
+        verifyBackups(auth: $auth, backup: $backup)
+    }
+`;

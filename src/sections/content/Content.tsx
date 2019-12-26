@@ -6,6 +6,7 @@ import { NotFound } from '../../views/notFound/NotFound';
 import { ChannelView } from '../../views/channels/ChannelView';
 import { SettingsView } from '../../views/settings/Settings';
 import { ResumeList } from '../../components/resume/ResumeList';
+import { BackupsView } from '../../views/backups/Backups';
 
 const ContentStyle = styled.div`
     /* display: flex;
@@ -23,6 +24,7 @@ export const Content = () => {
             <Switch>
                 <Route exact path="/" render={() => <Home />} />
                 <Route path="/channels" render={() => <ChannelView />} />
+                <Route path="/backups" render={() => <BackupsView />} />
                 <Route path="/resume" render={() => <ResumeList />} />
                 <Route path="/settings" render={() => <SettingsView />} />
                 <Route path="*" render={() => <NotFound />} />

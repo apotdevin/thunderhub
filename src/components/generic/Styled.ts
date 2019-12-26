@@ -99,6 +99,10 @@ export const NoWrapTitle = styled(Sub4Title)`
     white-space: nowrap;
 `;
 
+interface InputProps {
+    color?: string;
+}
+
 export const Input = styled.input`
     padding: 5px;
     height: 30px;
@@ -112,14 +116,14 @@ export const Input = styled.input`
 
     &:hover {
         border: 1px solid
-            ${({ color }: { color?: string }) => (color ? color : '#0077ff')};
+            ${({ color }: InputProps) => (color ? color : '#0077ff')};
     }
 
     &:focus {
         outline: none;
         background: none;
         border: 1px solid
-            ${({ color }: { color?: string }) => (color ? color : '#0077ff')};
+            ${({ color }: InputProps) => (color ? color : '#0077ff')};
     }
 `;
 

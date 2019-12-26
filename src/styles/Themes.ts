@@ -22,7 +22,7 @@ export const inverseTextColor = theme('mode', {
 // CARD COLORS
 // ---------------------------------------
 export const cardColor = theme('mode', {
-    light: '#ffffff',
+    light: '#fafafa',
     dark: '#1b1e32',
 });
 

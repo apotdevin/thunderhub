@@ -8,7 +8,13 @@ import {
     unSelectedNavButton,
     navButtonColor,
 } from '../../styles/Themes';
-import { Home, Cpu, Server, Settings } from '../../components/generic/Icons';
+import {
+    Home,
+    Cpu,
+    Server,
+    Settings,
+    Shield,
+} from '../../components/generic/Icons';
 import { useSettings } from '../../context/SettingsContext';
 
 const NavigationStyle = styled.div`
@@ -76,6 +82,7 @@ const NavButton = styled(({ selectedColor, ...rest }) => <Link {...rest} />)`
 const HOME_LINK = '/';
 const CHANNEL_LINK = '/channels';
 const RESUME_LINK = '/resume';
+const BACKUPS_LINK = '/backups';
 const SETTINGS_LINK = '/settings';
 
 export const Navigation = () => {
@@ -114,6 +121,15 @@ export const Navigation = () => {
                             <Server />
                             <NavSeparation />
                             Resume
+                        </NavButton>
+                        <NavButton
+                            selectedColor={navButtonColor[theme]}
+                            selected={pathname === BACKUPS_LINK}
+                            to={BACKUPS_LINK}
+                        >
+                            <Shield />
+                            <NavSeparation />
+                            Backups
                         </NavButton>
                         <NavButton
                             selectedColor={navButtonColor[theme]}
