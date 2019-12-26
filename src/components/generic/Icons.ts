@@ -33,6 +33,7 @@ import { ReactComponent as GitCommitIcon } from '../../icons/git-commit.svg';
 import { ReactComponent as GitBranchIcon } from '../../icons/git-branch.svg';
 import { ReactComponent as RadioIcon } from '../../icons/radio.svg';
 import { ReactComponent as CopyIcon } from '../../icons/copy.svg';
+import { ReactComponent as ShieldIcon } from '../../icons/shield.svg';
 
 interface IconProps {
     color?: string;
@@ -98,3 +99,4 @@ export const GitCommit = styleIcon(GitCommitIcon);
 export const GitBranch = styleIcon(GitBranchIcon);
 export const Radio = styleIcon(RadioIcon);
 export const Copy = styleIcon(CopyIcon);
+export const Shield = styleIcon(ShieldIcon);

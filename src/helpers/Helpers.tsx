@@ -73,3 +73,13 @@ export const getLoadingButton = (
         </>
     );
 };
+
+export const saveToPc = (jsonData: string, filename: string) => {
+    const fileData = jsonData;
+    const blob = new Blob([fileData], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = `${filename}.txt`;
+    link.href = url;
+    link.click();
+};

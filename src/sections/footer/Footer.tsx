@@ -6,10 +6,11 @@ const FooterStyle = styled.div`
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 10px;
+    padding: 30px;
     background-color: ${cardColor};
     grid-area: footer;
     height: 300px;
+    margin-top: 100px;
 `;
 
 const Wrapper = styled.div`
