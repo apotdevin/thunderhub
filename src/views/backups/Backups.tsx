@@ -9,6 +9,7 @@ import {
 } from '../../components/generic/Styled';
 import { DownloadBackups } from './DownloadBackups';
 import { VerifyBackups } from './VerifyBackups';
+import { RecoverFunds } from './RecoverFunds';
 
 const backupColor = '#ffffff';
 
@@ -21,11 +22,7 @@ export const BackupsView = () => {
             <Card>
                 <DownloadBackups color={backupColor} />
                 <VerifyBackups color={backupColor} />
-                <SingleLine>
-                    <DarkSubTitle>
-                        Restore All Channels from Backup
-                    </DarkSubTitle>
-                </SingleLine>
+                <RecoverFunds color={backupColor} />
             </Card>
         </CardWithTitle>
     );
