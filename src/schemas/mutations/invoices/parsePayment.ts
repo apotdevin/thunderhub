@@ -42,7 +42,7 @@ export const parsePayment = {
 
         try {
             const request: RequestProps = await parsePaymentRequest({
-                lnd: lnd,
+                lnd,
                 request: params.request,
             });
 

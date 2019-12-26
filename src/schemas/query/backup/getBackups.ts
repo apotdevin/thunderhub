@@ -14,7 +14,7 @@ export const getBackups = {
 
         try {
             const backups = await getLnBackups({
-                lnd: lnd,
+                lnd,
             });
             return JSON.stringify(backups);
         } catch (error) {

@@ -32,7 +32,7 @@ export const getNodeInfo = {
 
         try {
             const info: NodeInfoProps = await getWalletInfo({
-                lnd: lnd,
+                lnd,
             });
             return {
                 chains: info.chains,

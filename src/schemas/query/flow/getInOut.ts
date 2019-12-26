@@ -39,10 +39,10 @@ export const getInOut = {
 
         try {
             invoiceList = await getLnInvoices({
-                lnd: lnd,
+                lnd,
             });
             paymentList = await getLnPayments({
-                lnd: lnd,
+                lnd,
             });
         } catch (error) {
             logger.error('Error getting invoices: %o', error);

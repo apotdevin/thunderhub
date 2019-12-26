@@ -21,7 +21,7 @@ export const getChannelBalance = {
         try {
             const channelBalance: ChannelBalanceProps = await getLnChannelBalance(
                 {
-                    lnd: lnd,
+                    lnd,
                 },
             );
             return {

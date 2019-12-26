@@ -31,7 +31,7 @@ export const openChannel = {
 
         try {
             const info: OpenChannelProps = await lnOpenChannel({
-                lnd: lnd,
+                lnd,
                 is_private: params.isPrivate,
                 local_tokens: params.amount,
                 partner_public_key: params.partnerPublicKey,
