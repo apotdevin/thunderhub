@@ -4,6 +4,7 @@ import { invoiceQueries } from './invoices';
 import { dataQueries } from './data';
 import { reportQueries } from './report';
 import { flowQueries } from './flow';
+import { backupQueries } from './backup';
 
 export const query = {
     ...channelQueries,
@@ -12,4 +13,5 @@ export const query = {
     ...dataQueries,
     ...reportQueries,
     ...flowQueries,
+    ...backupQueries,
 };

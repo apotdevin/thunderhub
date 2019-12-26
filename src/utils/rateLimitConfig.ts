@@ -33,4 +33,6 @@ export const RateConfig: RateConfigProps = {
     pay: { max: 3, window: '1s' },
     getAddress: { max: 3, window: '1s' },
     sendToAddress: { max: 3, window: '1s' },
+    getBackups: { max: 3, window: '1s' },
+    verifyBackups: { max: 3, window: '1s' },
 };
