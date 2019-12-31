@@ -25,6 +25,7 @@ export const DownloadBackups = ({ color }: { color: string }) => {
     useEffect(() => {
         if (!loading && data && data.getBackups) {
             saveToPc(data.getBackups, 'lndChannelsBackupString');
+            localStorage.setItem('lastBackup', new Date().toString());
             toast.success('Downloaded!');
         }
     }, [data, loading]);
