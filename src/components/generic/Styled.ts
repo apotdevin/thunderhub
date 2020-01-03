@@ -75,12 +75,6 @@ export const SmallLink = styled.a`
     }
 `;
 
-export const TitleRow = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-`;
-
 export const SubTitle = styled.h4`
     margin: 5px 0;
     font-weight: 500;

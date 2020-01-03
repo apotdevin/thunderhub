@@ -216,3 +216,16 @@ export const RECOVER_FUNDS = gql`
         recoverFunds(auth: $auth, backup: $backup)
     }
 `;
+
+export const CHANNEL_FEES = gql`
+    query GetChannelFees($auth: String!) {
+        getChannelFees(auth: $auth) {
+            alias
+            color
+            baseFee
+            feeRate
+            transactionId
+            transactionVout
+        }
+    }
+`;

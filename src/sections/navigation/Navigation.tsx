@@ -14,6 +14,7 @@ import {
     Server,
     Settings,
     Shield,
+    Crosshair,
 } from '../../components/generic/Icons';
 import { useSettings } from '../../context/SettingsContext';
 
@@ -84,6 +85,7 @@ const CHANNEL_LINK = '/channels';
 const RESUME_LINK = '/resume';
 const BACKUPS_LINK = '/backups';
 const SETTINGS_LINK = '/settings';
+const FEES_LINK = '/fees';
 
 export const Navigation = () => {
     const { theme } = useSettings();
@@ -112,6 +114,15 @@ export const Navigation = () => {
                             <Cpu />
                             <NavSeparation />
                             Channels
+                        </NavButton>
+                        <NavButton
+                            selectedColor={navButtonColor[theme]}
+                            selected={pathname === FEES_LINK}
+                            to={FEES_LINK}
+                        >
+                            <Crosshair />
+                            <NavSeparation />
+                            Fees
                         </NavButton>
                         <NavButton
                             selectedColor={navButtonColor[theme]}

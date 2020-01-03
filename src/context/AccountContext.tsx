@@ -93,8 +93,6 @@ const AccountProvider = ({ children }: any) => {
         const readMacaroon = read ? read : sessionAdmin;
         const loggedIn = host !== '' && readMacaroon !== '';
 
-        console.log('REFRESHING', readMacaroon);
-
         updateAccount((prevState: any) => {
             const newState = { ...prevState };
             return merge(newState, {

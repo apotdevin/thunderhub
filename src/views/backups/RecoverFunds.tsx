@@ -14,11 +14,7 @@ import {
 } from '../../components/generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { XSvg, ChevronRight } from '../../components/generic/Icons';
-import styled from 'styled-components';
-
-const RightButton = styled(ColorButton)`
-    margin: 0 0 0 auto;
-`;
+import { SecureButton } from '../../components/secureButton/SecureButton';
 
 export const RecoverFunds = ({ color }: { color: string }) => {
     const [backupString, setBackupString] = useState<string>('');
@@ -43,12 +39,12 @@ export const RecoverFunds = ({ color }: { color: string }) => {
                 <DarkSubTitle>Backup String: </DarkSubTitle>
                 <Input onChange={e => setBackupString(e.target.value)} />
             </SingleLine>
-            <RightButton
-                disabled={backupString === ''}
+            <SecureButton
+                callback={recoverFunds}
+                variables={{ backup: backupString }}
                 color={color}
-                onClick={() =>
-                    recoverFunds({ variables: { auth, backup: backupString } })
-                }
+                enabled={true}
+                disabled={backupString === ''}
             >
                 {loading ? (
                     <ScaleLoader height={8} width={2} color={color} />
@@ -58,7 +54,7 @@ export const RecoverFunds = ({ color }: { color: string }) => {
                         <ChevronRight />
                     </>
                 )}
-            </RightButton>
+            </SecureButton>
         </SubCard>
     );
 

@@ -14,11 +14,10 @@ import { Circle, ChevronRight } from '../../generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
-import { useAccount } from '../../../context/AccountContext';
-import { getAuthString } from '../../../utils/auth';
 import { useSettings } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
 import { useBitcoinInfo } from '../../../context/BitcoinContext';
+import { SecureButton } from '../../secureButton/SecureButton';
 
 const RadioText = styled.div`
     margin-left: 10px;
@@ -35,10 +34,6 @@ const SmallInput = styled(Input)`
     max-width: 150px;
 `;
 
-const RightButton = styled(ColorButton)`
-    margin-left: auto;
-`;
-
 export const SendOnChainCard = ({ color }: { color: string }) => {
     const [address, setAddress] = useState('');
     const [tokens, setTokens] = useState(0);
@@ -47,12 +42,10 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
     const [sendAll, setSendAll] = useState(false);
     const [isSent, setIsSent] = useState(false);
 
+    const canSend = address !== '' && tokens > 0 && amount > 0;
+
     const { price, symbol, currency } = useSettings();
-
     const { fast, halfHour, hour } = useBitcoinInfo();
-
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
 
     useEffect(() => {
         if (type === 'none' && amount === 0) {
@@ -210,22 +203,16 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                 )}
             </SingleLine>
             <Separation />
-            <RightButton
+            <SecureButton
+                callback={payAddress}
+                variables={{ address, ...typeAmount, ...tokenAmount }}
                 color={color}
-                onClick={() => {
-                    payAddress({
-                        variables: {
-                            auth,
-                            address,
-                            ...typeAmount,
-                            ...tokenAmount,
-                        },
-                    });
-                }}
+                enabled={canSend}
+                disabled={!canSend}
             >
                 Send To Address
                 <ChevronRight />
-            </RightButton>
+            </SecureButton>
         </>
     );
 };
