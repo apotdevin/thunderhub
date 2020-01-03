@@ -36,4 +36,5 @@ export const RateConfig: RateConfigProps = {
     getBackups: { max: 3, window: '1s' },
     verifyBackups: { max: 3, window: '1s' },
     recoverFunds: { max: 3, window: '1s' },
+    updateFees: { max: 3, window: '1s' },
 };
