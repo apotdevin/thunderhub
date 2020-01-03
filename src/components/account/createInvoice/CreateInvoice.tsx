@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Input, ColorButton, NoWrapTitle } from '../../generic/Styled';
+import { Input, NoWrapTitle } from '../../generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_INVOICE } from '../../../graphql/mutation';
 import { Edit } from '../../generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
-import { useAccount } from '../../../context/AccountContext';
-import { getAuthString } from '../../../utils/auth';
+import { SecureButton } from '../../secureButton/SecureButton';
 
 const SingleLine = styled.div`
     display: flex;
@@ -17,9 +16,6 @@ const SingleLine = styled.div`
 
 export const CreateInvoiceCard = ({ color }: { color: string }) => {
     const [amount, setAmount] = useState(0);
-
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
 
     const [createInvoice, { data, loading }] = useMutation(CREATE_INVOICE, {
         onError: error => toast.error(getErrorContent(error)),
@@ -35,17 +31,16 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
                 type={'number'}
                 onChange={e => setAmount(parseInt(e.target.value))}
             />
-            <ColorButton
+            <SecureButton
+                callback={createInvoice}
+                variables={{ amount }}
                 color={color}
                 disabled={amount === 0}
                 enabled={amount > 0}
-                onClick={() => {
-                    createInvoice({ variables: { amount, auth } });
-                }}
             >
                 <Edit />
                 Create Invoice
-            </ColorButton>
+            </SecureButton>
         </SingleLine>
     );
 };

@@ -1,35 +1,35 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_CHANNELS } from '../../../graphql/query';
-import { Card, CardWithTitle, SubTitle } from '../../generic/Styled';
-import { ChannelCard } from './ChannelCard';
-import { useAccount } from '../../../context/AccountContext';
-import { getAuthString } from '../../../utils/auth';
+import { CHANNEL_FEES } from '../../graphql/query';
+import { Card, CardWithTitle, SubTitle } from '../../components/generic/Styled';
+import { useAccount } from '../../context/AccountContext';
+import { getAuthString } from '../../utils/auth';
 import { toast } from 'react-toastify';
-import { getErrorContent } from '../../../utils/error';
-import { LoadingCard } from '../../loading/LoadingCard';
+import { getErrorContent } from '../../utils/error';
+import { LoadingCard } from '../../components/loading/LoadingCard';
+import { FeeCard } from './FeeCard';
 
-export const Channels = () => {
+export const FeesView = () => {
     const [indexOpen, setIndexOpen] = useState(0);
 
     const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
-    const { loading, data } = useQuery(GET_CHANNELS, {
+    const { loading, data } = useQuery(CHANNEL_FEES, {
         variables: { auth },
         onError: error => toast.error(getErrorContent(error)),
     });
 
-    if (loading || !data || !data.getChannels) {
-        return <LoadingCard title={'Channels'} />;
+    if (loading || !data || !data.getChannelFees) {
+        return <LoadingCard title={'Fees'} />;
     }
 
     return (
         <CardWithTitle>
-            <SubTitle>Channels</SubTitle>
+            <SubTitle>Fees</SubTitle>
             <Card>
-                {data.getChannels.map((channel: any, index: number) => (
-                    <ChannelCard
+                {data.getChannelFees.map((channel: any, index: number) => (
+                    <FeeCard
                         channelInfo={channel}
                         index={index + 1}
                         setIndexOpen={setIndexOpen}

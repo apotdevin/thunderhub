@@ -34,6 +34,7 @@ import { ReactComponent as GitBranchIcon } from '../../icons/git-branch.svg';
 import { ReactComponent as RadioIcon } from '../../icons/radio.svg';
 import { ReactComponent as CopyIcon } from '../../icons/copy.svg';
 import { ReactComponent as ShieldIcon } from '../../icons/shield.svg';
+import { ReactComponent as CrosshairIcon } from '../../icons/crosshair.svg';
 
 interface IconProps {
     color?: string;
@@ -100,3 +101,4 @@ export const GitBranch = styleIcon(GitBranchIcon);
 export const Radio = styleIcon(RadioIcon);
 export const Copy = styleIcon(CopyIcon);
 export const Shield = styleIcon(ShieldIcon);
+export const Crosshair = styleIcon(CrosshairIcon);

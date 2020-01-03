@@ -29,6 +29,7 @@ import { getTransactionLink, getNodeLink } from '../../generic/Helpers';
 import Modal from '../../modal/ReactModal';
 import { CloseChannel } from '../../closeChannel/CloseChannel';
 import styled from 'styled-components';
+import { AdminSwitch } from '../../adminSwitch/AdminSwitch';
 
 const CloseButton = styled(ColorButton)`
     margin-left: auto;
@@ -139,10 +140,15 @@ export const ChannelCard = ({
                         lastUpdate,
                     )})`,
                 )}
-                <Separation />
-                <CloseButton color={'red'} onClick={() => setModalOpen(true)}>
-                    Close Channel
-                </CloseButton>
+                <AdminSwitch>
+                    <Separation />
+                    <CloseButton
+                        color={'red'}
+                        onClick={() => setModalOpen(true)}
+                    >
+                        Close Channel
+                    </CloseButton>
+                </AdminSwitch>
             </>
         );
     };

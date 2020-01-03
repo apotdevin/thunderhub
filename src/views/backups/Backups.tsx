@@ -11,6 +11,7 @@ import {
 import { DownloadBackups } from './DownloadBackups';
 import { VerifyBackups } from './VerifyBackups';
 import { RecoverFunds } from './RecoverFunds';
+import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 
 const backupColor = '#ffffff';
 
@@ -37,7 +38,9 @@ export const BackupsView = () => {
                 <Separation />
                 <DownloadBackups color={backupColor} />
                 <VerifyBackups color={backupColor} />
-                <RecoverFunds color={backupColor} />
+                <AdminSwitch>
+                    <RecoverFunds color={backupColor} />
+                </AdminSwitch>
             </Card>
         </CardWithTitle>
     );

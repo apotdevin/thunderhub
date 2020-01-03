@@ -11,6 +11,7 @@ import { XSvg, Layers, GitBranch } from '../generic/Icons';
 import { unSelectedNavButton } from '../../styles/Themes';
 import { DecodeCard } from './decode/Decode';
 import { OpenChannelCard } from './openChannel/OpenChannel';
+import { AdminSwitch } from '../adminSwitch/AdminSwitch';
 
 const sectionColor = '#69c0ff';
 
@@ -69,10 +70,14 @@ export const QuickActions = () => {
             default:
                 return (
                     <QuickRow>
-                        <QuickCard onClick={() => setOpenCard('open_channel')}>
-                            <GitBranch size={'24px'} color={sectionColor} />
-                            <QuickTitle>Open</QuickTitle>
-                        </QuickCard>
+                        <AdminSwitch>
+                            <QuickCard
+                                onClick={() => setOpenCard('open_channel')}
+                            >
+                                <GitBranch size={'24px'} color={sectionColor} />
+                                <QuickTitle>Open</QuickTitle>
+                            </QuickCard>
+                        </AdminSwitch>
                         <QuickCard onClick={() => setOpenCard('decode')}>
                             <Layers size={'24px'} color={sectionColor} />
                             <QuickTitle>Decode</QuickTitle>

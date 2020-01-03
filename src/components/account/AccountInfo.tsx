@@ -23,6 +23,7 @@ import { CreateInvoiceCard } from './createInvoice/CreateInvoice';
 import { SendOnChainCard } from './sendOnChain/SendOnChain';
 import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 import { LoadingCard } from '../loading/LoadingCard';
+import { AdminSwitch } from '../adminSwitch/AdminSwitch';
 
 const Tile = styled.div`
     display: flex;
@@ -124,32 +125,34 @@ export const AccountInfo = () => {
                 <DarkSubTitle>Pending Balance</DarkSubTitle>
                 <div>{formatPCB}</div>
             </Tile>
-            <ButtonRow>
-                {showLn && showChain && (
-                    <>
+            <AdminSwitch>
+                <ButtonRow>
+                    {showLn && showChain && (
+                        <>
+                            <ColorButton
+                                color={sectionColor}
+                                onClick={() => setState('send_ln')}
+                            >
+                                <Send />
+                            </ColorButton>
+                            <ColorButton
+                                color={sectionColor}
+                                onClick={() => setState('receive_ln')}
+                            >
+                                <DownArrow />
+                            </ColorButton>
+                        </>
+                    )}
+                    {showLn && !showChain && (
                         <ColorButton
                             color={sectionColor}
-                            onClick={() => setState('send_ln')}
+                            onClick={() => setState('none')}
                         >
-                            <Send />
+                            <XSvg />
                         </ColorButton>
-                        <ColorButton
-                            color={sectionColor}
-                            onClick={() => setState('receive_ln')}
-                        >
-                            <DownArrow />
-                        </ColorButton>
-                    </>
-                )}
-                {showLn && !showChain && (
-                    <ColorButton
-                        color={sectionColor}
-                        onClick={() => setState('none')}
-                    >
-                        <XSvg />
-                    </ColorButton>
-                )}
-            </ButtonRow>
+                    )}
+                </ButtonRow>
+            </AdminSwitch>
         </SingleLine>
     );
 
@@ -170,32 +173,34 @@ export const AccountInfo = () => {
                 <DarkSubTitle>Pending Balance</DarkSubTitle>
                 <div>{formatPB}</div>
             </Tile>
-            <ButtonRow>
-                {showLn && showChain && (
-                    <>
+            <AdminSwitch>
+                <ButtonRow>
+                    {showLn && showChain && (
+                        <>
+                            <ColorButton
+                                color={sectionColor}
+                                onClick={() => setState('send_chain')}
+                            >
+                                <Send />
+                            </ColorButton>
+                            <ColorButton
+                                color={sectionColor}
+                                onClick={() => setState('receive_chain')}
+                            >
+                                <DownArrow />
+                            </ColorButton>
+                        </>
+                    )}
+                    {!showLn && showChain && (
                         <ColorButton
                             color={sectionColor}
-                            onClick={() => setState('send_chain')}
+                            onClick={() => setState('none')}
                         >
-                            <Send />
+                            <XSvg />
                         </ColorButton>
-                        <ColorButton
-                            color={sectionColor}
-                            onClick={() => setState('receive_chain')}
-                        >
-                            <DownArrow />
-                        </ColorButton>
-                    </>
-                )}
-                {!showLn && showChain && (
-                    <ColorButton
-                        color={sectionColor}
-                        onClick={() => setState('none')}
-                    >
-                        <XSvg />
-                    </ColorButton>
-                )}
-            </ButtonRow>
+                    )}
+                </ButtonRow>
+            </AdminSwitch>
         </SingleLine>
     );
 

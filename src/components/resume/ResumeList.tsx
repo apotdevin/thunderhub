@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { PaymentsCard } from './PaymentsCards';
 import styled from 'styled-components';
+import { LoadingCard } from '../loading/LoadingCard';
 
 export const AddMargin = styled.div`
     margin-left: 10px;
@@ -33,7 +34,7 @@ export const ResumeList = () => {
     }, [data, loading]);
 
     if (loading || !data || !data.getResume) {
-        return <Card>Loading....</Card>;
+        return <LoadingCard title={'Resume'} />;
     }
 
     const renderInvoices = () => {

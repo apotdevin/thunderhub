@@ -11,8 +11,7 @@ import { Edit, Circle } from '../../generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
-import { useAccount } from '../../../context/AccountContext';
-import { getAuthString } from '../../../utils/auth';
+import { SecureButton } from '../../secureButton/SecureButton';
 
 const SingleLine = styled.div`
     display: flex;
@@ -36,9 +35,6 @@ const TitleWithSpacing = styled(NoWrapTitle)`
 export const ReceiveOnChainCard = ({ color }: { color: string }) => {
     const [nested, setNested] = useState(false);
     const [received, setReceived] = useState(false);
-
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
 
     const [createAddress, { data }] = useMutation(CREATE_ADDRESS, {
         onError: error => toast.error(getErrorContent(error)),
@@ -78,16 +74,16 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
                         <RadioText>NP2WPKH</RadioText>
                     </ColorButton>
                 </ButtonRow>
-                <ColorButton
+                <SecureButton
+                    callback={createAddress}
+                    variables={{ nested }}
                     color={color}
+                    enabled={!received}
                     disabled={received}
-                    onClick={() => {
-                        createAddress({ variables: { auth, nested } });
-                    }}
                 >
                     <Edit />
                     Create Address
-                </ColorButton>
+                </SecureButton>
             </SingleLine>
             {data && data.createAddress && (
                 <>
