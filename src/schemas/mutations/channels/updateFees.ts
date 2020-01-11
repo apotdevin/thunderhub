@@ -14,7 +14,7 @@ export const updateFees = {
     args: {
         auth: { type: new GraphQLNonNull(GraphQLString) },
         transactionId: { type: GraphQLString },
-        transactionVout: { type: GraphQLString },
+        transactionVout: { type: GraphQLInt },
         baseFee: { type: GraphQLInt },
         feeRate: { type: GraphQLInt },
     },
@@ -39,8 +39,8 @@ export const updateFees = {
             lnd,
             transaction_id: transactionId,
             transaction_vout: transactionVout,
-            ...(params.baseFee ? { base_fee_tokens: params.baseFee } : {}),
-            ...(params.feeRate ? { fee_rate: params.feeRate } : {}),
+            ...(params.baseFee && { base_fee_tokens: params.baseFee }),
+            ...(params.feeRate && { fee_rate: params.feeRate }),
         };
 
         try {
