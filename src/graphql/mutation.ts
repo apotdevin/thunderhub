@@ -111,3 +111,21 @@ export const DECODE_REQUEST = gql`
         }
     }
 `;
+
+export const UPDATE_FEES = gql`
+    mutation updateFees(
+        $auth: String!
+        $transactionId: String
+        $transactionVout: Int
+        $baseFee: Int
+        $feeRate: Int
+    ) {
+        updateFees(
+            auth: $auth
+            transactionId: $transactionId
+            transactionVout: $transactionVout
+            baseFee: $baseFee
+            feeRate: $feeRate
+        )
+    }
+`;
