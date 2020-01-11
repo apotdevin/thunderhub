@@ -25,7 +25,7 @@
         "@types/graphql-iso-date": "^3.3.3",
         "@types/node-fetch": "^2.5.3",
         "@types/underscore": "^1.9.4",
-        "apollo-server": "^2.9.7",
+        "apollo-server": "^2.9.15",
         "base64url": "^3.0.1",
         "date-fns": "^2.8.1",
         "dotenv": "^8.2.0",
