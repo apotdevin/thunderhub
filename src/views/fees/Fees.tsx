@@ -22,6 +22,7 @@ import { UPDATE_FEES } from '../../graphql/mutation';
 import { XSvg, ChevronRight } from '../../components/generic/Icons';
 import styled from 'styled-components';
 import { SecureButton } from '../../components/secureButton/SecureButton';
+import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 
 const SmallInput = styled(Input)`
     max-width: 150px;
@@ -58,60 +59,64 @@ export const FeesView = () => {
 
     return (
         <>
-            <CardWithTitle>
-                <SubTitle>Update Channel Fees</SubTitle>
-                <Card>
-                    <SingleLine>
-                        <Sub4Title>Channel Fees</Sub4Title>
-                        <ColorButton
-                            color={'white'}
-                            onClick={() => setIsEdit(prev => !prev)}
-                        >
-                            {isEdit ? <XSvg /> : 'Update'}
-                        </ColorButton>
-                    </SingleLine>
-                    {isEdit && (
-                        <>
-                            <Separation />
-                            <SingleLine>
-                                <DarkSubTitle>{`Base Fee (Sats):`}</DarkSubTitle>
-                                <SmallInput
-                                    color={'white'}
-                                    type={'number'}
-                                    onChange={e =>
-                                        setBaseFee(parseInt(e.target.value))
-                                    }
-                                />
-                            </SingleLine>
-                            <SingleLine>
-                                <DarkSubTitle>{`Fee Rate (Sats/Million):`}</DarkSubTitle>
-                                <SmallInput
-                                    color={'white'}
-                                    type={'number'}
-                                    onChange={e =>
-                                        setFeeRate(parseInt(e.target.value))
-                                    }
-                                />
-                            </SingleLine>
-                            <SingleLine>
-                                <SecureButton
-                                    callback={updateFees}
-                                    variables={{
-                                        ...(baseFee !== 0 && { baseFee }),
-                                        ...(feeRate !== 0 && { feeRate }),
-                                    }}
-                                    color={'white'}
-                                    enabled={baseFee >= 0 || feeRate >= 0}
-                                    disabled={baseFee === 0 && feeRate === 0}
-                                >
-                                    Update Fees
-                                    <ChevronRight />
-                                </SecureButton>
-                            </SingleLine>
-                        </>
-                    )}
-                </Card>
-            </CardWithTitle>
+            <AdminSwitch>
+                <CardWithTitle>
+                    <SubTitle>Update Channel Fees</SubTitle>
+                    <Card>
+                        <SingleLine>
+                            <Sub4Title>Channel Fees</Sub4Title>
+                            <ColorButton
+                                color={'white'}
+                                onClick={() => setIsEdit(prev => !prev)}
+                            >
+                                {isEdit ? <XSvg /> : 'Update'}
+                            </ColorButton>
+                        </SingleLine>
+                        {isEdit && (
+                            <>
+                                <Separation />
+                                <SingleLine>
+                                    <DarkSubTitle>{`Base Fee (Sats):`}</DarkSubTitle>
+                                    <SmallInput
+                                        color={'white'}
+                                        type={'number'}
+                                        onChange={e =>
+                                            setBaseFee(parseInt(e.target.value))
+                                        }
+                                    />
+                                </SingleLine>
+                                <SingleLine>
+                                    <DarkSubTitle>{`Fee Rate (Sats/Million):`}</DarkSubTitle>
+                                    <SmallInput
+                                        color={'white'}
+                                        type={'number'}
+                                        onChange={e =>
+                                            setFeeRate(parseInt(e.target.value))
+                                        }
+                                    />
+                                </SingleLine>
+                                <SingleLine>
+                                    <SecureButton
+                                        callback={updateFees}
+                                        variables={{
+                                            ...(baseFee !== 0 && { baseFee }),
+                                            ...(feeRate !== 0 && { feeRate }),
+                                        }}
+                                        color={'white'}
+                                        enabled={baseFee >= 0 || feeRate >= 0}
+                                        disabled={
+                                            baseFee === 0 && feeRate === 0
+                                        }
+                                    >
+                                        Update Fees
+                                        <ChevronRight />
+                                    </SecureButton>
+                                </SingleLine>
+                            </>
+                        )}
+                    </Card>
+                </CardWithTitle>
+            </AdminSwitch>
             <CardWithTitle>
                 <SubTitle>Channel Fees</SubTitle>
                 <Card>

@@ -18,8 +18,6 @@ import {
 import { useSettings } from '../../../context/SettingsContext';
 import {
     getStatusDot,
-    getPrivate,
-    getSymbol,
     getTooltipType,
     getFormatDate,
     getDateDif,
@@ -30,10 +28,24 @@ import Modal from '../../modal/ReactModal';
 import { CloseChannel } from '../../closeChannel/CloseChannel';
 import styled from 'styled-components';
 import { AdminSwitch } from '../../adminSwitch/AdminSwitch';
+import { DownArrow, UpArrow, EyeOff } from '../../generic/Icons';
 
 const CloseButton = styled(ColorButton)`
     margin-left: auto;
 `;
+
+const IconPadding = styled.div`
+    margin-left: 16px;
+    margin-right: 8px;
+`;
+
+const getSymbol = (status: boolean) => {
+    return status ? <UpArrow /> : <DownArrow />;
+};
+
+const getPrivate = (status: boolean) => {
+    return status && <EyeOff />;
+};
 
 interface ChannelCardProps {
     channelInfo: any;
@@ -63,41 +75,41 @@ export const ChannelCard = ({
 
     const {
         capacity,
-        commitTransactionFee,
-        commitTransactionWeight,
+        commit_transaction_fee,
+        commit_transaction_weight,
         id,
-        isActive,
-        isClosing,
-        isOpening,
-        isPartnerInitiated,
-        isPrivate,
-        isStaticRemoteKey,
-        localBalance,
-        localReserve,
-        partnerPublicKey,
+        is_active,
+        is_closing,
+        is_opening,
+        is_partner_initiated,
+        is_private,
+        is_static_remote_key,
+        local_balance,
+        local_reserve,
+        partner_public_key,
         received,
-        remoteBalance,
-        remoteReserve,
+        remote_balance,
+        remote_reserve,
         sent,
-        timeOffline,
-        timeOnline,
-        transactionId,
-        transactionVout,
-        unsettledBalance,
-        partnerNodeInfo,
+        time_offline,
+        time_online,
+        transaction_id,
+        transaction_vout,
+        unsettled_balance,
+        partner_node_info,
     } = channelInfo;
 
     const {
         alias,
         capacity: nodeCapacity,
-        channelCount,
+        channel_count,
         color: nodeColor,
-        lastUpdate,
-    } = partnerNodeInfo;
+        updated_at,
+    } = partner_node_info;
 
     const formatBalance = getFormat(capacity);
-    const formatLocal = getFormat(localBalance);
-    const formatRemote = getFormat(remoteBalance);
+    const formatLocal = getFormat(local_balance);
+    const formatRemote = getFormat(remote_balance);
     const formatreceived = getFormat(received);
     const formatSent = getFormat(sent);
 
@@ -113,31 +125,34 @@ export const ChannelCard = ({
         return (
             <>
                 <Separation />
-                {renderLine('Node Public Key:', getNodeLink(partnerPublicKey))}
+                {renderLine(
+                    'Node Public Key:',
+                    getNodeLink(partner_public_key),
+                )}
                 {renderLine(
                     'Transaction Id:',
-                    getTransactionLink(transactionId),
+                    getTransactionLink(transaction_id),
                 )}
                 {renderLine('Channel Id:', id)}
-                {renderLine('Commit Fee:', getFormat(commitTransactionFee))}
+                {renderLine('Commit Fee:', getFormat(commit_transaction_fee))}
                 {renderLine(
                     'Commit Weight:',
-                    getFormat(commitTransactionWeight),
+                    getFormat(commit_transaction_weight),
                 )}
-                {renderLine('Is Static Remote Key:', isStaticRemoteKey)}
-                {renderLine('Local Reserve:', getFormat(localReserve))}
-                {renderLine('Remote Reserve:', getFormat(remoteReserve))}
-                {renderLine('Time Offline:', timeOffline)}
-                {renderLine('Time Online:', timeOnline)}
-                {renderLine('Transaction Vout:', transactionVout)}
-                {renderLine('Unsettled Balance:', unsettledBalance)}
+                {renderLine('Is Static Remote Key:', is_static_remote_key)}
+                {renderLine('Local Reserve:', getFormat(local_reserve))}
+                {renderLine('Remote Reserve:', getFormat(remote_reserve))}
+                {renderLine('Time Offline:', time_offline)}
+                {renderLine('Time Online:', time_online)}
+                {renderLine('Transaction Vout:', transaction_vout)}
+                {renderLine('Unsettled Balance:', unsettled_balance)}
                 <Sub4Title>Partner Node Info</Sub4Title>
                 {renderLine('Node Capacity:', getFormat(nodeCapacity))}
-                {renderLine('Channel Count:', channelCount)}
+                {renderLine('Channel Count:', channel_count)}
                 {renderLine(
                     'Last Update:',
-                    `${getDateDif(lastUpdate)} ago (${getFormatDate(
-                        lastUpdate,
+                    `${getDateDif(updated_at)} ago (${getFormatDate(
+                        updated_at,
                     )})`,
                 )}
                 <AdminSwitch>
@@ -157,16 +172,18 @@ export const ChannelCard = ({
         <SubCard color={nodeColor} key={index}>
             <MainInfo onClick={() => handleClick()}>
                 <StatusLine>
-                    {getStatusDot(isActive, 'active')}
-                    {getStatusDot(isOpening, 'opening')}
-                    {getStatusDot(isClosing, 'closing')}
+                    {getStatusDot(is_active, 'active')}
+                    {getStatusDot(is_opening, 'opening')}
+                    {getStatusDot(is_closing, 'closing')}
                 </StatusLine>
                 <SingleLine>
                     <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
                     <SingleLine>
                         {formatBalance}
-                        {getPrivate(isPrivate)}
-                        {getSymbol(isPartnerInitiated)}
+                        <IconPadding>
+                            {getPrivate(is_private)}
+                            {getSymbol(is_partner_initiated)}
+                        </IconPadding>
                         <div>
                             <Progress
                                 data-tip
@@ -174,8 +191,8 @@ export const ChannelCard = ({
                             >
                                 <ProgressBar
                                     percent={getPercent(
-                                        localBalance,
-                                        remoteBalance,
+                                        local_balance,
+                                        remote_balance,
                                     )}
                                 />
                             </Progress>

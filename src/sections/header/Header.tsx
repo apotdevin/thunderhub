@@ -6,7 +6,7 @@ const HeaderStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px 0;
+    padding: 16px 0;
     background-color: ${cardColor};
     grid-area: header;
     margin-bottom: 10px;
@@ -15,9 +15,11 @@ const HeaderStyle = styled.div`
 const Wrapper = styled.div`
     max-width: 1000px;
     margin: 0 auto 0 auto;
-    padding: 0 0.5rem;
     width: 100%;
-    height: 100%;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 `;
 
 const HeaderTitle = styled.div`
@@ -30,6 +32,7 @@ export const Header = () => {
         <HeaderStyle>
             <Wrapper>
                 <HeaderTitle>ThunderHub</HeaderTitle>
+                <button>Login</button>
             </Wrapper>
         </HeaderStyle>
     );
