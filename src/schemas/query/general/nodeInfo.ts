@@ -1,4 +1,4 @@
-import { getWalletInfo } from 'ln-service';
+import { getWalletInfo, getClosedChannels } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { NodeInfoType } from '../../../schemaTypes/query/info/nodeInfo';
 import { requestLimiter } from '../../../helpers/rateLimiter';
@@ -34,21 +34,12 @@ export const getNodeInfo = {
             const info: NodeInfoProps = await getWalletInfo({
                 lnd,
             });
+            const closedChannels: { channels: [] } = await getClosedChannels({
+                lnd,
+            });
             return {
-                chains: info.chains,
-                color: info.color,
-                activeChannelsCount: info.active_channels_count,
-                alias: info.alias,
-                currentBlockHash: info.current_block_hash,
-                currentBlockHeight: info.current_block_height,
-                isSyncedToChain: info.is_synced_to_chain,
-                isSyncedToGraph: info.is_synced_to_graph,
-                latestBlockAt: info.latest_block_at,
-                peersCount: info.peers_count,
-                pendingChannelsCount: info.pending_channels_count,
-                publicKey: info.public_key,
-                uris: info.uris,
-                version: info.version,
+                ...info,
+                closed_channels_count: closedChannels.channels.length,
             };
         } catch (error) {
             logger.error('Error getting node info: %o', error);
