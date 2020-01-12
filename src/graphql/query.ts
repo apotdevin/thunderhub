@@ -26,13 +26,15 @@ export const GET_CAN_CONNECT = gql`
 export const GET_NODE_INFO = gql`
     query GetNodeInfo($auth: String!) {
         getNodeInfo(auth: $auth) {
+            chains
             color
-            activeChannelsCount
-            isSyncedToChain
-            peersCount
-            pendingChannelsCount
-            version
+            active_channels_count
+            closed_channels_count
             alias
+            is_synced_to_chain
+            peers_count
+            pending_channels_count
+            version
         }
         getChainBalance(auth: $auth)
         getPendingChainBalance(auth: $auth)
@@ -193,7 +195,7 @@ export const GET_IN_OUT = gql`
 export const GET_CONNECT_INFO = gql`
     query GetNodeInfo($auth: String!) {
         getNodeInfo(auth: $auth) {
-            publicKey
+            public_key
             uris
         }
     }

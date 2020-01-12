@@ -52,7 +52,7 @@ export const ConnectCard = () => {
         return <LoadingCard title={'Connect'} />;
     }
 
-    const { publicKey, uris } = data.getNodeInfo;
+    const { public_key, uris } = data.getNodeInfo;
 
     const onionAddress = uris.find((uri: string) => uri.indexOf('onion') >= 0);
     const normalAddress = uris.find((uri: string) => uri.indexOf('onion') < 0);
@@ -67,7 +67,7 @@ export const ConnectCard = () => {
                     <Radio color={sectionColor} />
                     <Tile startTile={true}>
                         <DarkSubTitle>Public Key</DarkSubTitle>
-                        <Key>{publicKey}</Key>
+                        <Key>{public_key}</Key>
                     </Tile>
                     <SingleLine>
                         {onionAddress ? (

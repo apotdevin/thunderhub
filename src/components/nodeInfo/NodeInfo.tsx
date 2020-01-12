@@ -61,14 +61,18 @@ export const NodeInfo = () => {
     }
 
     const {
+        chains,
         color,
-        activeChannelsCount,
-        isSyncedToChain,
-        peersCount,
-        pendingChannelsCount,
-        version,
+        active_channels_count,
+        closed_channels_count,
         alias,
+        is_synced_to_chain,
+        peers_count,
+        pending_channels_count,
+        version,
     } = data.getNodeInfo;
+
+    console.log('NodeInfo chains:', chains);
 
     const chainBalance = data.getChainBalance;
     const pendingChainBalance = data.getPendingChainBalance;
@@ -101,10 +105,10 @@ export const NodeInfo = () => {
             <Balance
                 data-tip
                 data-for="node_tip"
-            >{`${activeChannelsCount} | ${pendingChannelsCount} | ${peersCount}`}</Balance>
+            >{`${active_channels_count} | ${pending_channels_count} | ${closed_channels_count} | ${peers_count}`}</Balance>
             <Balance>
-                <Info bottomColor={isSyncedToChain ? '#95de64' : '#ff7875'}>
-                    {isSyncedToChain ? 'Synced' : 'Not Synced'}
+                <Info bottomColor={is_synced_to_chain ? '#95de64' : '#ff7875'}>
+                    {is_synced_to_chain ? 'Synced' : 'Not Synced'}
                 </Info>
             </Balance>
             <Separation />
@@ -133,9 +137,10 @@ export const NodeInfo = () => {
                 place={'right'}
                 type={tooltipType}
             >
-                <div>{`Active Channels: ${activeChannelsCount}`}</div>
-                <div>{`Pending Channels: ${pendingChannelsCount}`}</div>
-                <div>{`Peers: ${peersCount}`}</div>
+                <div>{`Active Channels: ${active_channels_count}`}</div>
+                <div>{`Pending Channels: ${pending_channels_count}`}</div>
+                <div>{`Closed Channels: ${closed_channels_count}`}</div>
+                <div>{`Peers: ${peers_count}`}</div>
             </ReactTooltip>
         </>
     );
