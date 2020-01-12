@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_CLOSED_CHANNELS } from '../../../graphql/query';
-import {
-    Card,
-    CardWithTitle,
-    SubTitle,
-} from '../../../components/generic/Styled';
+import { Card } from '../../../components/generic/Styled';
 import { ClosedCard } from './ClosedCard';
 import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
+import { LoadingCard } from '../../../components/loading/LoadingCard';
 
 export const ClosedChannels = () => {
     const [indexOpen, setIndexOpen] = useState(0);
@@ -24,23 +21,20 @@ export const ClosedChannels = () => {
     });
 
     if (loading || !data || !data.getClosedChannels) {
-        return null;
+        return <LoadingCard noTitle={true} />;
     }
 
     return (
-        <CardWithTitle>
-            <SubTitle>Closed Channels</SubTitle>
-            <Card>
-                {data.getClosedChannels.map((channel: any, index: number) => (
-                    <ClosedCard
-                        channelInfo={channel}
-                        key={index}
-                        index={index + 1}
-                        setIndexOpen={setIndexOpen}
-                        indexOpen={indexOpen}
-                    />
-                ))}
-            </Card>
-        </CardWithTitle>
+        <Card>
+            {data.getClosedChannels.map((channel: any, index: number) => (
+                <ClosedCard
+                    channelInfo={channel}
+                    key={index}
+                    index={index + 1}
+                    setIndexOpen={setIndexOpen}
+                    indexOpen={indexOpen}
+                />
+            ))}
+        </Card>
     );
 };

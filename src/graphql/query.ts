@@ -45,6 +45,16 @@ export const GET_NODE_INFO = gql`
     }
 `;
 
+export const GET_CHANNEL_AMOUNT_INFO = gql`
+    query GetChannelAmountInfo($auth: String!) {
+        getNodeInfo(auth: $auth) {
+            active_channels_count
+            closed_channels_count
+            pending_channels_count
+        }
+    }
+`;
+
 export const GET_BALANCES = gql`
     query GetNodeInfo($auth: String!) {
         getChainBalance(auth: $auth)

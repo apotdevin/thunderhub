@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_CHANNELS } from '../../../graphql/query';
-import {
-    Card,
-    CardWithTitle,
-    SubTitle,
-} from '../../../components/generic/Styled';
+import { Card } from '../../../components/generic/Styled';
 import { ChannelCard } from './ChannelCard';
 import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
@@ -25,23 +21,20 @@ export const Channels = () => {
     });
 
     if (loading || !data || !data.getChannels) {
-        return <LoadingCard title={'Channels'} />;
+        return <LoadingCard noTitle={true} />;
     }
 
     return (
-        <CardWithTitle>
-            <SubTitle>Channels</SubTitle>
-            <Card>
-                {data.getChannels.map((channel: any, index: number) => (
-                    <ChannelCard
-                        channelInfo={channel}
-                        index={index + 1}
-                        setIndexOpen={setIndexOpen}
-                        indexOpen={indexOpen}
-                        key={index}
-                    />
-                ))}
-            </Card>
-        </CardWithTitle>
+        <Card>
+            {data.getChannels.map((channel: any, index: number) => (
+                <ChannelCard
+                    channelInfo={channel}
+                    index={index + 1}
+                    setIndexOpen={setIndexOpen}
+                    indexOpen={indexOpen}
+                    key={index}
+                />
+            ))}
+        </Card>
     );
 };
