@@ -7,12 +7,15 @@ import {
     Input,
     NoWrapTitle,
     ColorButton,
+    SubTitle,
 } from '../../components/generic/Styled';
 import { LoginButton } from '../../components/auth/Password';
 import { Circle, ChevronRight } from '../generic/Icons';
 import styled from 'styled-components';
 import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
+import { useSettings } from '../../context/SettingsContext';
+import { textColorMap } from '../../styles/Themes';
 
 const RadioText = styled.div`
     margin-left: 10px;
@@ -40,6 +43,7 @@ export const LoginModal = ({
     callback,
     variables,
 }: LoginProps) => {
+    const { theme } = useSettings();
     const [pass, setPass] = useState<string>('');
     const [storeSession, setStoreSession] = useState<boolean>(false);
     const { host, cert } = useAccount();
@@ -66,14 +70,17 @@ export const LoginModal = ({
         selected: boolean,
     ) => (
         <ColorButton color={color} onClick={onClick}>
-            <Circle size={'10px'} fillcolor={selected ? 'white' : ''} />
+            <Circle
+                size={'10px'}
+                fillcolor={selected ? textColorMap[theme] : ''}
+            />
             <RadioText>{text}</RadioText>
         </ColorButton>
     );
 
     return (
-        <div>
-            LOGIN MODAL
+        <>
+            <SubTitle>Unlock your Account</SubTitle>
             <SingleLine>
                 <Sub4Title>Password:</Sub4Title>
                 <Input onChange={e => setPass(e.target.value)} />
@@ -104,6 +111,6 @@ export const LoginModal = ({
                     <ChevronRight />
                 </LoginButton>
             )}
-        </div>
+        </>
     );
 };

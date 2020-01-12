@@ -15,10 +15,11 @@ import {
 } from '../generic/Styled';
 import { Circle, AlertTriangle } from '../generic/Icons';
 import styled from 'styled-components';
-import { textColor, chartLinkColor } from '../../styles/Themes';
+import { textColor, chartLinkColor, textColorMap } from '../../styles/Themes';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { GET_BITCOIN_FEES } from '../../graphql/query';
+import { useSettings } from '../../context/SettingsContext';
 
 interface CloseChannelProps {
     setModalOpen: (status: boolean) => void;
@@ -81,6 +82,7 @@ export const CloseChannel = ({
     const [halfHour, setHalfHour] = useState(0);
     const [hour, setHour] = useState(0);
 
+    const { theme } = useSettings();
     const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
@@ -130,8 +132,11 @@ export const CloseChannel = ({
         text: string,
         selected: boolean,
     ) => (
-        <ColorButton color={'white'} onClick={onClick}>
-            <Circle size={'10px'} fillcolor={selected ? 'white' : ''} />
+        <ColorButton color={textColorMap[theme]} onClick={onClick}>
+            <Circle
+                size={'10px'}
+                fillcolor={selected ? textColorMap[theme] : ''}
+            />
             <RadioText>{text}</RadioText>
         </ColorButton>
     );
@@ -211,7 +216,7 @@ export const CloseChannel = ({
                             : 'Fee (Sats/Byte)'}
                     </NoWrapTitle>
                     <SmallInput
-                        color={'white'}
+                        color={textColorMap[theme]}
                         min={1}
                         type={'number'}
                         onChange={e => setAmount(parseInt(e.target.value))}
@@ -230,7 +235,7 @@ export const CloseChannel = ({
                 <Button color={'red'} onClick={() => setIsConfirmed(true)}>
                     Close Channel
                 </Button>
-                <Button color={'white'} onClick={handleOnlyClose}>
+                <Button color={textColorMap[theme]} onClick={handleOnlyClose}>
                     Cancel
                 </Button>
             </CenterLine>

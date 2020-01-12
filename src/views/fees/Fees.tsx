@@ -23,6 +23,8 @@ import { XSvg, ChevronRight } from '../../components/generic/Icons';
 import styled from 'styled-components';
 import { SecureButton } from '../../components/secureButton/SecureButton';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
+import { textColorMap } from '../../styles/Themes';
+import { useSettings } from '../../context/SettingsContext';
 
 const SmallInput = styled(Input)`
     max-width: 150px;
@@ -34,6 +36,7 @@ export const FeesView = () => {
     const [baseFee, setBaseFee] = useState(0);
     const [feeRate, setFeeRate] = useState(0);
 
+    const { theme } = useSettings();
     const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
@@ -66,7 +69,7 @@ export const FeesView = () => {
                         <SingleLine>
                             <Sub4Title>Channel Fees</Sub4Title>
                             <ColorButton
-                                color={'white'}
+                                color={textColorMap[theme]}
                                 onClick={() => setIsEdit(prev => !prev)}
                             >
                                 {isEdit ? <XSvg /> : 'Update'}
@@ -78,7 +81,7 @@ export const FeesView = () => {
                                 <SingleLine>
                                     <DarkSubTitle>{`Base Fee (Sats):`}</DarkSubTitle>
                                     <SmallInput
-                                        color={'white'}
+                                        color={textColorMap[theme]}
                                         type={'number'}
                                         onChange={e =>
                                             setBaseFee(parseInt(e.target.value))
@@ -88,7 +91,7 @@ export const FeesView = () => {
                                 <SingleLine>
                                     <DarkSubTitle>{`Fee Rate (Sats/Million):`}</DarkSubTitle>
                                     <SmallInput
-                                        color={'white'}
+                                        color={textColorMap[theme]}
                                         type={'number'}
                                         onChange={e =>
                                             setFeeRate(parseInt(e.target.value))
@@ -102,7 +105,7 @@ export const FeesView = () => {
                                             ...(baseFee !== 0 && { baseFee }),
                                             ...(feeRate !== 0 && { feeRate }),
                                         }}
-                                        color={'white'}
+                                        color={textColorMap[theme]}
                                         enabled={baseFee >= 0 || feeRate >= 0}
                                         disabled={
                                             baseFee === 0 && feeRate === 0

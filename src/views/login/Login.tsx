@@ -5,6 +5,8 @@ import { LoginForm } from '../../components/auth/NormalLogin';
 import { ConnectLoginForm } from '../../components/auth/ConnectLogin';
 import { getNextAvailable } from '../../utils/storage';
 import { BTCLoginForm } from '../../components/auth/BTCLogin';
+import { useSettings } from '../../context/SettingsContext';
+import { textColorMap } from '../../styles/Themes';
 
 const ConnectButton = styled(ColorButton)`
     width: 100%;
@@ -14,18 +16,28 @@ const ConnectButton = styled(ColorButton)`
 `;
 
 export const LoginView = () => {
+    const { theme } = useSettings();
     const [isType, setIsType] = useState('none');
     const next = getNextAvailable();
 
     const renderButtons = () => (
         <>
-            <ConnectButton color={'white'} onClick={() => setIsType('login')}>
+            <ConnectButton
+                color={textColorMap[theme]}
+                onClick={() => setIsType('login')}
+            >
                 <SubTitle>CONNECTION DETAILS</SubTitle>
             </ConnectButton>
-            <ConnectButton color={'white'} onClick={() => setIsType('connect')}>
+            <ConnectButton
+                color={textColorMap[theme]}
+                onClick={() => setIsType('connect')}
+            >
                 <SubTitle>LNDCONNECT URL</SubTitle>
             </ConnectButton>
-            <ConnectButton color={'white'} onClick={() => setIsType('btcpay')}>
+            <ConnectButton
+                color={textColorMap[theme]}
+                onClick={() => setIsType('btcpay')}
+            >
                 <SubTitle>BTCPAYSERVER INFO</SubTitle>
             </ConnectButton>
         </>

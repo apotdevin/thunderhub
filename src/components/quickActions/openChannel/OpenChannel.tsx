@@ -19,6 +19,7 @@ import { getValue } from '../../../helpers/Helpers';
 import { useSettings } from '../../../context/SettingsContext';
 import { useBitcoinInfo } from '../../../context/BitcoinContext';
 import styled from 'styled-components';
+import { textColorMap } from '../../../styles/Themes';
 
 const RadioText = styled.div`
     margin-left: 10px;
@@ -53,7 +54,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
 
     const { fast, halfHour, hour } = useBitcoinInfo();
 
-    const { price, symbol, currency } = useSettings();
+    const { price, symbol, currency, theme } = useSettings();
     const priceProps = { price, symbol, currency };
 
     const { host, read, cert } = useAccount();
@@ -85,7 +86,10 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
         selected: boolean,
     ) => (
         <ColorButton color={color} onClick={onClick}>
-            <Circle size={'10px'} fillcolor={selected ? 'white' : ''} />
+            <Circle
+                size={'10px'}
+                fillcolor={selected ? textColorMap[theme] : ''}
+            />
             <RadioText>{text}</RadioText>
         </ColorButton>
     );
