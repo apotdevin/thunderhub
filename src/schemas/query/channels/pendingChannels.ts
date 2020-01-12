@@ -3,7 +3,7 @@ import {
     getNode,
 } from 'ln-service';
 import { logger } from '../../../helpers/logger';
-import { PendingChannelType } from '../../../schemaTypes/query/info/pendingChannels';
+import { PendingChannelType } from '../../../schemaTypes/query/channels/pendingChannels';
 import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
@@ -53,26 +53,9 @@ export const getPendingChannels = {
                     });
 
                     return {
-                        closeTransactionId: channel.close_transaction_id,
-                        isActive: channel.is_active,
-                        isClosing: channel.is_closing,
-                        isOpening: channel.is_opening,
-                        localBalance: channel.local_balance,
-                        localReserve: channel.local_reserve,
-                        partnerPublicKey: channel.partner_public_key,
-                        received: channel.received,
-                        remoteBalance: channel.remote_balance,
-                        remoteReserve: channel.remote_reserve,
-                        sent: channel.sent,
-                        transactionFee: channel.transaction_fee,
-                        transactionId: channel.transaction_id,
-                        transactionVout: channel.transaction_vout,
-                        partnerNodeInfo: {
-                            alias: nodeInfo.alias,
-                            capacity: nodeInfo.capacity,
-                            channelCount: nodeInfo.channel_count,
-                            color: nodeInfo.color,
-                            lastUpdate: nodeInfo.updated_at,
+                        ...channel,
+                        partner_node_info: {
+                            ...nodeInfo,
                         },
                     };
                 },
