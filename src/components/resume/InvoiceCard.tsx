@@ -7,7 +7,11 @@ import {
     SingleLine,
     DarkSubTitle,
 } from '../generic/Styled';
-import { StatusLine, NodeTitle, MainInfo } from '../channels/Channels.style';
+import {
+    StatusLine,
+    NodeTitle,
+    MainInfo,
+} from '../../views/channels/Channels.style';
 import {
     getStatusDot,
     getDateDif,

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_PENDING_CHANNELS } from '../../../graphql/query';
-import { Card, CardWithTitle, SubTitle } from '../../generic/Styled';
+import {
+    Card,
+    CardWithTitle,
+    SubTitle,
+} from '../../../components/generic/Styled';
 import { PendingCard } from './PendingCard';
 import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
@@ -20,14 +24,6 @@ export const PendingChannels = () => {
     });
 
     if (loading || !data || !data.getPendingChannels) {
-        return null;
-    }
-
-    if (
-        data &&
-        data.getPendingChannels &&
-        data.getPendingChannels.length <= 0
-    ) {
         return null;
     }
 

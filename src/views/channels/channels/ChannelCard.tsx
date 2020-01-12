@@ -14,7 +14,7 @@ import {
     Sub4Title,
     ColorButton,
     SingleLine,
-} from '../../generic/Styled';
+} from '../../../components/generic/Styled';
 import { useSettings } from '../../../context/SettingsContext';
 import {
     getStatusDot,
@@ -22,13 +22,16 @@ import {
     getFormatDate,
     getDateDif,
     renderLine,
-} from '../../generic/Helpers';
-import { getTransactionLink, getNodeLink } from '../../generic/Helpers';
-import Modal from '../../modal/ReactModal';
-import { CloseChannel } from '../../closeChannel/CloseChannel';
+} from '../../../components/generic/Helpers';
+import {
+    getTransactionLink,
+    getNodeLink,
+} from '../../../components/generic/Helpers';
+import Modal from '../../../components/modal/ReactModal';
+import { CloseChannel } from '../../../components/closeChannel/CloseChannel';
 import styled from 'styled-components';
-import { AdminSwitch } from '../../adminSwitch/AdminSwitch';
-import { DownArrow, UpArrow, EyeOff } from '../../generic/Icons';
+import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
+import { DownArrow, UpArrow, EyeOff } from '../../../components/generic/Icons';
 
 const CloseButton = styled(ColorButton)`
     margin-left: auto;

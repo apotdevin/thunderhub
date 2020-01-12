@@ -12,7 +12,7 @@ import {
     StatusLine,
     NodeTitle,
     MainInfo,
-} from '../channels/Channels.style';
+} from '../../views/channels/Channels.style';
 import {
     getStatusDot,
     getDateDif,

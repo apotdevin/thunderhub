@@ -1,6 +1,6 @@
 import React from 'react';
 import { SmallLink, DarkSubTitle } from './Styled';
-import { StatusDot, DetailLine } from '../channels/Channels.style';
+import { StatusDot, DetailLine } from '../../views/channels/Channels.style';
 import { formatDistanceStrict, format } from 'date-fns';
 
 export const getTransactionLink = (transaction: string) => {
