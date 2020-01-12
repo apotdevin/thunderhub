@@ -12,6 +12,8 @@ import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { SecureButton } from '../../secureButton/SecureButton';
+import { textColorMap } from '../../../styles/Themes';
+import { useSettings } from '../../../context/SettingsContext';
 
 const SingleLine = styled.div`
     display: flex;
@@ -33,6 +35,8 @@ const TitleWithSpacing = styled(NoWrapTitle)`
 `;
 
 export const ReceiveOnChainCard = ({ color }: { color: string }) => {
+    const { theme } = useSettings();
+
     const [nested, setNested] = useState(false);
     const [received, setReceived] = useState(false);
 
@@ -57,7 +61,7 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
                     >
                         <Circle
                             size={'10px'}
-                            fillcolor={nested ? '' : 'white'}
+                            fillcolor={nested ? '' : textColorMap[theme]}
                         />
                         <RadioText>P2WPKH</RadioText>
                     </ColorButton>
@@ -69,7 +73,7 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
                     >
                         <Circle
                             size={'10px'}
-                            fillcolor={nested ? 'white' : ''}
+                            fillcolor={nested ? textColorMap[theme] : ''}
                         />
                         <RadioText>NP2WPKH</RadioText>
                     </ColorButton>

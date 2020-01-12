@@ -26,7 +26,7 @@ export const Content = () => {
                 <Route exact path="/" render={() => <Home />} />
                 <Route path="/channels" render={() => <ChannelView />} />
                 <Route path="/backups" render={() => <BackupsView />} />
-                <Route path="/resume" render={() => <ResumeList />} />
+                <Route path="/transactions" render={() => <ResumeList />} />
                 <Route path="/settings" render={() => <SettingsView />} />
                 <Route path="/fees" render={() => <FeesView />} />
                 <Route path="*" render={() => <NotFound />} />

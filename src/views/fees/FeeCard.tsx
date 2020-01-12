@@ -15,6 +15,8 @@ import { getErrorContent } from '../../utils/error';
 import styled from 'styled-components';
 import { ChevronRight } from '../../components/generic/Icons';
 import { SecureButton } from '../../components/secureButton/SecureButton';
+import { useSettings } from '../../context/SettingsContext';
+import { textColorMap } from '../../styles/Themes';
 
 const SmallInput = styled(Input)`
     max-width: 150px;
@@ -35,6 +37,8 @@ export const FeeCard = ({
 }: FeeCardProps) => {
     const [newBaseFee, setBaseFee] = useState(0);
     const [newFeeRate, setFeeRate] = useState(0);
+
+    const { theme } = useSettings();
 
     const {
         alias,
@@ -74,15 +78,15 @@ export const FeeCard = ({
                 <SingleLine>
                     <DarkSubTitle>{`Base Fee (Sats):`}</DarkSubTitle>
                     <SmallInput
-                        color={'white'}
-                        type={'number'}
+                        color={textColorMap[theme]}
+                        type={textColorMap[theme]}
                         onChange={e => setBaseFee(parseInt(e.target.value))}
                     />
                 </SingleLine>
                 <SingleLine>
                     <DarkSubTitle>{`Fee Rate (Sats/Million):`}</DarkSubTitle>
                     <SmallInput
-                        color={'white'}
+                        color={textColorMap[theme]}
                         type={'number'}
                         onChange={e => setFeeRate(parseInt(e.target.value))}
                     />
@@ -96,7 +100,7 @@ export const FeeCard = ({
                             ...(newBaseFee !== 0 && { baseFee: newBaseFee }),
                             ...(newFeeRate !== 0 && { feeRate: newFeeRate }),
                         }}
-                        color={'white'}
+                        color={textColorMap[theme]}
                         enabled={newBaseFee >= 0 || newFeeRate >= 0}
                         disabled={newBaseFee === 0 && newFeeRate === 0}
                     >

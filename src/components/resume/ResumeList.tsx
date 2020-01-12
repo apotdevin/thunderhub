@@ -8,8 +8,11 @@ import { getAuthString } from '../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { PaymentsCard } from './PaymentsCards';
-import styled from 'styled-components';
 import { LoadingCard } from '../loading/LoadingCard';
+import ScaleLoader from 'react-spinners/ScaleLoader';
+import styled from 'styled-components';
+import { useSettings } from '../../context/SettingsContext';
+import { textColorMap } from '../../styles/Themes';
 
 export const AddMargin = styled.div`
     margin-left: 10px;
@@ -18,7 +21,9 @@ export const AddMargin = styled.div`
 export const ResumeList = () => {
     const [indexOpen, setIndexOpen] = useState(0);
     const [token, setToken] = useState('');
+    const [fetching, setFetching] = useState(false);
 
+    const { theme } = useSettings();
     const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
@@ -34,14 +39,14 @@ export const ResumeList = () => {
     }, [data, loading]);
 
     if (loading || !data || !data.getResume) {
-        return <LoadingCard title={'Resume'} />;
+        return <LoadingCard title={'Transactions'} />;
     }
 
     const renderInvoices = () => {
         const resumeList = JSON.parse(data.getResume.resume);
         return (
             <CardWithTitle>
-                <SubTitle>Resume</SubTitle>
+                <SubTitle>Transactions</SubTitle>
                 <Card bottom={'5px'}>
                     {resumeList.map((entry: any, index: number) => {
                         if (entry.type === 'invoice') {
@@ -68,8 +73,10 @@ export const ResumeList = () => {
                     })}
                 </Card>
                 <ColorButton
-                    color={'green'}
-                    onClick={() =>
+                    color={textColorMap[theme]}
+                    disabled={fetching}
+                    onClick={() => {
+                        setFetching(true);
                         fetchMore({
                             variables: { auth, token },
                             updateQuery: (
@@ -85,6 +92,7 @@ export const ResumeList = () => {
                                     result.getResume.resume,
                                 );
 
+                                setFetching(false);
                                 return {
                                     getResume: {
                                         token: newToken,
@@ -96,10 +104,18 @@ export const ResumeList = () => {
                                     },
                                 };
                             },
-                        })
-                    }
+                        });
+                    }}
                 >
-                    Show More
+                    {fetching ? (
+                        <ScaleLoader
+                            height={10}
+                            width={2}
+                            color={textColorMap[theme]}
+                        />
+                    ) : (
+                        'Show More'
+                    )}
                 </ColorButton>
             </CardWithTitle>
         );

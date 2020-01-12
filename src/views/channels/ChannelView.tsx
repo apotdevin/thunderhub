@@ -13,6 +13,8 @@ import { useQuery } from '@apollo/react-hooks';
 import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
 import { GET_CHANNEL_AMOUNT_INFO } from '../../graphql/query';
+import { useSettings } from '../../context/SettingsContext';
+import { textColorMap } from '../../styles/Themes';
 
 export const ChannelView = () => {
     const [view, setView] = useState<number>(1);
@@ -22,6 +24,7 @@ export const ChannelView = () => {
         closed: 0,
     });
 
+    const { theme } = useSettings();
     const { host, read, cert } = useAccount();
     const auth = getAuthString(host, read, cert);
 
@@ -77,17 +80,26 @@ export const ChannelView = () => {
                 <SubTitle>{getTitle()}</SubTitle>
                 <SingleLine>
                     {showActive && amounts.active > 0 && (
-                        <ColorButton color={'white'} onClick={() => setView(1)}>
+                        <ColorButton
+                            color={textColorMap[theme]}
+                            onClick={() => setView(1)}
+                        >
                             {`Open (${amounts.active})`}
                         </ColorButton>
                     )}
                     {showPending && amounts.pending > 0 && (
-                        <ColorButton color={'white'} onClick={() => setView(2)}>
+                        <ColorButton
+                            color={textColorMap[theme]}
+                            onClick={() => setView(2)}
+                        >
                             {`Pending (${amounts.pending})`}
                         </ColorButton>
                     )}
                     {showClosed && amounts.closed > 0 && (
-                        <ColorButton color={'white'} onClick={() => setView(3)}>
+                        <ColorButton
+                            color={textColorMap[theme]}
+                            onClick={() => setView(3)}
+                        >
                             {`Closed (${amounts.closed})`}
                         </ColorButton>
                     )}

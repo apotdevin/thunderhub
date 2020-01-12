@@ -52,7 +52,9 @@ interface NavProps {
 const NavButton = styled(({ selectedColor, ...rest }) => <Link {...rest} />)`
     padding: 10px;
     border-left: ${({ selected, selectedColor }: NavProps) =>
-        selected ? `3px solid ${selectedColor ? selectedColor : 'white'}` : ''};
+        selected
+            ? `3px solid ${selectedColor ? selectedColor : textColor}`
+            : ''};
     background: ${({ selected }: NavProps) =>
         selected
             ? `linear-gradient(
@@ -76,13 +78,13 @@ const NavButton = styled(({ selectedColor, ...rest }) => <Link {...rest} />)`
             rgba(255, 255, 255, 0) 90%
         );
         border-left: ${({ selectedColor }: NavProps) =>
-            `3px solid ${selectedColor ? selectedColor : 'white'}`};
+            `3px solid ${selectedColor ? selectedColor : textColor}`};
     }
 `;
 
 const HOME_LINK = '/';
 const CHANNEL_LINK = '/channels';
-const RESUME_LINK = '/resume';
+const RESUME_LINK = '/transactions';
 const BACKUPS_LINK = '/backups';
 const SETTINGS_LINK = '/settings';
 const FEES_LINK = '/fees';
@@ -131,7 +133,7 @@ export const Navigation = () => {
                         >
                             <Server />
                             <NavSeparation />
-                            Resume
+                            Transactions
                         </NavButton>
                         <NavButton
                             selectedColor={navButtonColor[theme]}

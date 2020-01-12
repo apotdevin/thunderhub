@@ -18,6 +18,7 @@ import { useSettings } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
 import { useBitcoinInfo } from '../../../context/BitcoinContext';
 import { SecureButton } from '../../secureButton/SecureButton';
+import { textColorMap } from '../../../styles/Themes';
 
 const RadioText = styled.div`
     margin-left: 10px;
@@ -44,6 +45,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
 
     const canSend = address !== '' && tokens > 0 && amount > 0;
 
+    const { theme } = useSettings();
     const { price, symbol, currency } = useSettings();
     const { fast, halfHour, hour } = useBitcoinInfo();
 
@@ -94,7 +96,10 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
         selected: boolean,
     ) => (
         <ColorButton color={color} onClick={onClick}>
-            <Circle size={'10px'} fillcolor={selected ? 'white' : ''} />
+            <Circle
+                size={'10px'}
+                fillcolor={selected ? textColorMap[theme] : ''}
+            />
             <RadioText>{text}</RadioText>
         </ColorButton>
     );

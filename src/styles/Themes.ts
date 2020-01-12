@@ -13,6 +13,11 @@ export const textColor = theme('mode', {
     dark: '#EFFFFA',
 });
 
+export const textColorMap: { [key: string]: string } = {
+    light: '#262626',
+    dark: '#EFFFFA',
+};
+
 export const inverseTextColor = theme('mode', {
     light: '#EFFFFA',
     dark: '#262626',

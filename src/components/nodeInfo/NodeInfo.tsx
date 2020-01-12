@@ -1,8 +1,6 @@
 import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_NODE_INFO } from '../../graphql/query';
-import ReactTooltip from 'react-tooltip';
-import styled from 'styled-components';
 import { useSettings } from '../../context/SettingsContext';
 import { getValue } from '../../helpers/Helpers';
 import { Separation } from '../generic/Styled';
@@ -12,6 +10,10 @@ import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
+import { textColorMap } from '../../styles/Themes';
+import ReactTooltip from 'react-tooltip';
+import styled from 'styled-components';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 
 const Title = styled.div`
     font-size: 18px;
@@ -57,7 +59,9 @@ export const NodeInfo = () => {
     const tooltipType = getTooltipType(theme);
 
     if (loading || !data || !data.getNodeInfo) {
-        return <div>....</div>;
+        return (
+            <ScaleLoader height={10} width={2} color={textColorMap[theme]} />
+        );
     }
 
     const {
