@@ -1,7 +1,7 @@
 import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
 import { getChannels as getLnChannels, getNode } from 'ln-service';
 import { logger } from '../../../helpers/logger';
-import { ChannelType } from '../../../schemaTypes/query/info/channels';
+import { ChannelType } from '../../../schemaTypes/query/channels/channels';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 
@@ -58,36 +58,9 @@ export const getChannels = {
                         });
 
                         return {
-                            capacity: channel.capacity,
-                            commitTransactionFee:
-                                channel.commit_transaction_fee,
-                            commitTransactionWeight:
-                                channel.commit_transaction_weight,
-                            id: channel.id,
-                            isActive: channel.is_active,
-                            isClosing: channel.is_closing,
-                            isOpening: channel.is_opening,
-                            isPartnerInitiated: !channel.is_partner_initiated,
-                            isPrivate: channel.is_private,
-                            isStaticRemoteKey: channel.is_static_remote_key,
-                            localBalance: channel.local_balance,
-                            localReserve: channel.local_reserve,
-                            partnerPublicKey: channel.partner_public_key,
-                            received: channel.received,
-                            remoteBalance: channel.remote_balance,
-                            remoteReserve: channel.remote_reserve,
-                            sent: channel.sent,
-                            timeOffline: channel.time_offline,
-                            timeOnline: channel.time_online,
-                            transactionId: channel.transaction_id,
-                            transactionVout: channel.transaction_vout,
-                            unsettledBalance: channel.unsettled_balance,
-                            partnerNodeInfo: {
-                                alias: nodeInfo.alias,
-                                capacity: nodeInfo.capacity,
-                                channelCount: nodeInfo.channel_count,
-                                color: nodeInfo.color,
-                                lastUpdate: nodeInfo.updated_at,
+                            ...channel,
+                            partner_node_info: {
+                                ...nodeInfo,
                             },
                         };
                     }),

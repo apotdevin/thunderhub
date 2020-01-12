@@ -1,6 +1,6 @@
 import { getChannelBalance as getLnChannelBalance } from 'ln-service';
 import { logger } from '../../../helpers/logger';
-import { ChannelBalanceType } from '../../../schemaTypes/query/info/channelBalance';
+import { ChannelBalanceType } from '../../../schemaTypes/query/channels/channelBalance';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
