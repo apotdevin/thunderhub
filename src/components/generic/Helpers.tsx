@@ -1,7 +1,6 @@
 import React from 'react';
 import { SmallLink, DarkSubTitle } from './Styled';
 import { StatusDot, DetailLine } from '../channels/Channels.style';
-import { DownArrow, UpArrow, EyeOff } from './Icons';
 import { formatDistanceStrict, format } from 'date-fns';
 
 export const getTransactionLink = (transaction: string) => {
@@ -46,14 +45,6 @@ export const getStatusDot = (status: boolean, type: string) => {
     } else {
         return status ? <StatusDot color="#ff4d4f" /> : null;
     }
-};
-
-export const getSymbol = (status: boolean) => {
-    return status ? <DownArrow /> : <UpArrow />;
-};
-
-export const getPrivate = (status: boolean) => {
-    return status && <EyeOff />;
 };
 
 export const renderLine = (title: string, content: any) => {

@@ -58,33 +58,33 @@ export const GET_CHANNELS = gql`
     query GetChannels($auth: String!) {
         getChannels(auth: $auth) {
             capacity
-            commitTransactionFee
-            commitTransactionWeight
+            commit_transaction_fee
+            commit_transaction_weight
             id
-            isActive
-            isClosing
-            isOpening
-            isPartnerInitiated
-            isPrivate
-            isStaticRemoteKey
-            localBalance
-            localReserve
-            partnerPublicKey
+            is_active
+            is_closing
+            is_opening
+            is_partner_initiated
+            is_private
+            is_static_remote_key
+            local_balance
+            local_reserve
+            partner_public_key
             received
-            remoteBalance
-            remoteReserve
+            remote_balance
+            remote_reserve
             sent
-            timeOffline
-            timeOnline
-            transactionId
-            transactionVout
-            unsettledBalance
-            partnerNodeInfo {
+            time_offline
+            time_online
+            transaction_id
+            transaction_vout
+            unsettled_balance
+            partner_node_info {
                 alias
                 capacity
-                channelCount
+                channel_count
                 color
-                lastUpdate
+                updated_at
             }
         }
     }
@@ -93,26 +93,26 @@ export const GET_CHANNELS = gql`
 export const GET_PENDING_CHANNELS = gql`
     query GetPendingChannels($auth: String!) {
         getPendingChannels(auth: $auth) {
-            closeTransactionId
-            isActive
-            isClosing
-            isOpening
-            localBalance
-            localReserve
-            partnerPublicKey
+            close_transaction_id
+            is_active
+            is_closing
+            is_opening
+            local_balance
+            local_reserve
+            partner_public_key
             received
-            remoteBalance
-            remoteReserve
+            remote_balance
+            remote_reserve
             sent
-            transactionFee
-            transactionId
-            transactionVout
-            partnerNodeInfo {
+            transaction_fee
+            transaction_id
+            transaction_vout
+            partner_node_info {
                 alias
                 capacity
-                channelCount
+                channel_count
                 color
-                lastUpdate
+                updated_at
             }
         }
     }

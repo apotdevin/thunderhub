@@ -42,34 +42,31 @@ export const PendingCard = ({
         });
 
     const {
-        closeTransactionId,
-        isActive,
-        isClosing,
-        isOpening,
-        localBalance,
-        // localReserve,
-        partnerPublicKey,
+        close_transaction_id,
+        is_active,
+        is_closing,
+        is_opening,
+        local_balance,
+        // local_reserve,
+        partner_public_key,
         received,
-        remoteBalance,
-        // remoteReserve,
+        remote_balance,
+        // remote_reserve,
         sent,
-        transactionFee,
-        transactionId,
-        // transactionVout,
-        partnerNodeInfo,
+        transaction_fee,
+        transaction_id,
+        // transaction_vout,
+        partner_node_info,
     } = channelInfo;
 
     const {
         alias,
-        // capacity: nodeCapacity,
-        // channelCount,
         color: nodeColor,
-        // lastUpdate
-    } = partnerNodeInfo;
+    } = partner_node_info;
 
-    const formatBalance = getFormat(localBalance + remoteBalance);
-    const formatLocal = getFormat(localBalance);
-    const formatRemote = getFormat(remoteBalance);
+    const formatBalance = getFormat(local_balance + remote_balance);
+    const formatLocal = getFormat(local_balance);
+    const formatRemote = getFormat(remote_balance);
     const formatreceived = getFormat(received);
     const formatSent = getFormat(sent);
 
@@ -87,19 +84,19 @@ export const PendingCard = ({
                 <Separation />
                 <DetailLine>
                     <div>Node Public Key:</div>
-                    {getNodeLink(partnerPublicKey)}
+                    {getNodeLink(partner_public_key)}
                 </DetailLine>
                 <DetailLine>
                     <div>Transaction Id:</div>
-                    {getTransactionLink(transactionId)}
+                    {getTransactionLink(transaction_id)}
                 </DetailLine>
                 <DetailLine>
                     <div>Transaction Fee:</div>
-                    {getTransactionLink(transactionFee)}
+                    {getTransactionLink(transaction_fee)}
                 </DetailLine>
                 <DetailLine>
                     <div>Close Transaction Id:</div>
-                    {getTransactionLink(closeTransactionId)}
+                    {getTransactionLink(close_transaction_id)}
                 </DetailLine>
                 {/* <DetailLine>{localReserve}</DetailLine> */}
                 {/* <DetailLine>{remoteReserve}</DetailLine> */}
@@ -113,9 +110,9 @@ export const PendingCard = ({
     return (
         <SubCard color={nodeColor} key={index} onClick={() => handleClick()}>
             <StatusLine>
-                {getStatusDot(isActive, 'active')}
-                {getStatusDot(isOpening, 'opening')}
-                {getStatusDot(isClosing, 'closing')}
+                {getStatusDot(is_active, 'active')}
+                {getStatusDot(is_opening, 'opening')}
+                {getStatusDot(is_closing, 'closing')}
             </StatusLine>
             <SingleLine>
                 <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
@@ -128,8 +125,8 @@ export const PendingCard = ({
                         >
                             <ProgressBar
                                 percent={getPercent(
-                                    localBalance,
-                                    remoteBalance,
+                                    local_balance,
+                                    remote_balance,
                                 )}
                             />
                         </Progress>
