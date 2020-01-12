@@ -1,5 +1,6 @@
 import { GraphQLObjectType, GraphQLBoolean, GraphQLString } from 'graphql';
 import { GraphQLInt } from 'graphql';
+import { PartnerNodeType } from './channels';
 
 export const ClosedChannelType = new GraphQLObjectType({
     name: 'closedChannelType',
@@ -19,6 +20,7 @@ export const ClosedChannelType = new GraphQLObjectType({
             partner_public_key: { type: GraphQLString },
             transaction_id: { type: GraphQLString },
             transaction_vout: { type: GraphQLInt },
+            partner_node_info: { type: PartnerNodeType },
         };
     },
 });
