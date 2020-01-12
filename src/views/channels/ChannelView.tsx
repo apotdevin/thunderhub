@@ -1,12 +1,14 @@
-import React from "react";
-import { Channels } from "../../components/channels/channels/Channels";
-import { PendingChannels } from "../../components/channels/pendingChannels/PendingChannels";
+import React from 'react';
+import { Channels } from './channels/Channels';
+import { PendingChannels } from './pendingChannels/PendingChannels';
+import { ClosedChannels } from './closedChannels/ClosedChannels';
 
 export const ChannelView = () => {
-  return (
-    <>
-      <Channels />
-      <PendingChannels />
-    </>
-  );
+    return (
+        <>
+            <Channels />
+            <PendingChannels />
+            <ClosedChannels />
+        </>
+    );
 };

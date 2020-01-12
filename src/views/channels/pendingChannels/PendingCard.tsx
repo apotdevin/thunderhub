@@ -6,16 +6,21 @@ import {
     NodeTitle,
     StatusLine,
     DetailLine,
+    MainInfo,
 } from '../Channels.style';
 import ReactTooltip from 'react-tooltip';
-import { SubCard, Separation, SingleLine } from '../../generic/Styled';
+import {
+    SubCard,
+    Separation,
+    SingleLine,
+} from '../../../components/generic/Styled';
 import { useSettings } from '../../../context/SettingsContext';
 import {
     getStatusDot,
     getTooltipType,
     getTransactionLink,
-} from '../../generic/Helpers';
-import { getNodeLink } from '../../generic/Helpers';
+} from '../../../components/generic/Helpers';
+import { getNodeLink } from '../../../components/generic/Helpers';
 
 interface PendingCardProps {
     channelInfo: any;
@@ -105,40 +110,42 @@ export const PendingCard = ({
     };
 
     return (
-        <SubCard color={nodeColor} key={index} onClick={() => handleClick()}>
-            <StatusLine>
-                {getStatusDot(is_active, 'active')}
-                {getStatusDot(is_opening, 'opening')}
-                {getStatusDot(is_closing, 'closing')}
-            </StatusLine>
-            <SingleLine>
-                <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
+        <SubCard color={nodeColor} key={index}>
+            <MainInfo onClick={() => handleClick()}>
+                <StatusLine>
+                    {getStatusDot(is_active, 'active')}
+                    {getStatusDot(is_opening, 'opening')}
+                    {getStatusDot(is_closing, 'closing')}
+                </StatusLine>
                 <SingleLine>
-                    {formatBalance}
-                    <div>
-                        <Progress
-                            data-tip
-                            data-for={`node_balance_tip_${index}`}
-                        >
-                            <ProgressBar
-                                percent={getPercent(
-                                    local_balance,
-                                    remote_balance,
-                                )}
-                            />
-                        </Progress>
-                        <Progress
-                            data-tip
-                            data-for={`node_activity_tip_${index}`}
-                        >
-                            <ProgressBar
-                                order={2}
-                                percent={getPercent(received, sent)}
-                            />
-                        </Progress>
-                    </div>
+                    <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
+                    <SingleLine>
+                        {formatBalance}
+                        <div>
+                            <Progress
+                                data-tip
+                                data-for={`node_balance_tip_${index}`}
+                            >
+                                <ProgressBar
+                                    percent={getPercent(
+                                        local_balance,
+                                        remote_balance,
+                                    )}
+                                />
+                            </Progress>
+                            <Progress
+                                data-tip
+                                data-for={`node_activity_tip_${index}`}
+                            >
+                                <ProgressBar
+                                    order={2}
+                                    percent={getPercent(received, sent)}
+                                />
+                            </Progress>
+                        </div>
+                    </SingleLine>
                 </SingleLine>
-            </SingleLine>
+            </MainInfo>
             {index === indexOpen && renderDetails()}
             <ReactTooltip
                 id={`node_balance_tip_${index}`}

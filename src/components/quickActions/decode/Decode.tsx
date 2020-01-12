@@ -16,7 +16,7 @@ import { DECODE_REQUEST } from '../../../graphql/mutation';
 import { getErrorContent } from '../../../utils/error';
 import { toast } from 'react-toastify';
 import { getLoadingButton, getValue } from '../../../helpers/Helpers';
-import { DetailLine } from '../../channels/Channels.style';
+import { DetailLine } from '../../../views/channels/Channels.style';
 import { getNodeLink } from '../../generic/Helpers';
 import { useSettings } from '../../../context/SettingsContext';
 
