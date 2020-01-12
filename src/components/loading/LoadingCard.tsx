@@ -11,15 +11,17 @@ const Loading = styled.div`
 `;
 
 interface LoadingCardProps {
-    title: string;
+    title?: string;
     noCard?: boolean;
     color?: string;
+    noTitle?: boolean;
 }
 
 export const LoadingCard = ({
-    title,
+    title = '',
     color = 'white',
     noCard = false,
+    noTitle = false,
 }: LoadingCardProps) => {
     if (noCard) {
         return (
@@ -28,6 +30,17 @@ export const LoadingCard = ({
             </Loading>
         );
     }
+
+    if (noTitle) {
+        return (
+            <Card>
+                <Loading>
+                    <ScaleLoader height={20} color={color} />
+                </Loading>
+            </Card>
+        );
+    }
+
     return (
         <CardWithTitle>
             <CardTitle>
