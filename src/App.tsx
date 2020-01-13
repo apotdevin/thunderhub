@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 import { GlobalStyles } from './styles/GlobalStyle';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { BrowserRouter } from 'react-router-dom';
@@ -30,11 +30,6 @@ const client = new ApolloClient({
     uri: 'http://localhost:3001',
 });
 
-const Wrapper = styled.div`
-    max-width: 1000px;
-    margin: 0 auto 0 auto;
-`;
-
 const ContextApp: React.FC = () => {
     const { theme } = useSettings();
     const { loggedIn, admin, read } = useAccount();
@@ -58,7 +53,7 @@ const ContextApp: React.FC = () => {
                 <BitcoinFees />
                 <GlobalStyles />
                 <Header />
-                <Wrapper>{renderContent()}</Wrapper>
+                {renderContent()}
                 <Footer />
             </ModalProvider>
         </ThemeProvider>

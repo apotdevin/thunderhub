@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { Card, SubTitle, ColorButton } from '../../components/generic/Styled';
+import {
+    Card,
+    SubTitle,
+    ColorButton,
+    Wrapper,
+} from '../../../components/generic/Styled';
 import styled from 'styled-components';
-import { LoginForm } from '../../components/auth/NormalLogin';
-import { ConnectLoginForm } from '../../components/auth/ConnectLogin';
-import { getNextAvailable } from '../../utils/storage';
-import { BTCLoginForm } from '../../components/auth/BTCLogin';
-import { useSettings } from '../../context/SettingsContext';
-import { textColorMap } from '../../styles/Themes';
+import { LoginForm } from '../../../components/auth/NormalLogin';
+import { ConnectLoginForm } from '../../../components/auth/ConnectLogin';
+import { getNextAvailable } from '../../../utils/storage';
+import { BTCLoginForm } from '../../../components/auth/BTCLogin';
+import { useSettings } from '../../../context/SettingsContext';
+import { textColorMap } from '../../../styles/Themes';
 
 const ConnectButton = styled(ColorButton)`
     width: 100%;
@@ -43,14 +48,16 @@ export const LoginView = () => {
         </>
     );
     return (
-        <Card padding={'50px 100px'}>
-            {isType === 'none' && (
-                <SubTitle> How do you want to connect?</SubTitle>
-            )}
-            {isType === 'none' && renderButtons()}
-            {isType === 'login' && <LoginForm available={next} />}
-            {isType === 'connect' && <ConnectLoginForm available={next} />}
-            {isType === 'btcpay' && <BTCLoginForm available={next} />}
-        </Card>
+        <Wrapper>
+            <Card padding={'50px 100px'}>
+                {isType === 'none' && (
+                    <SubTitle> How do you want to connect?</SubTitle>
+                )}
+                {isType === 'none' && renderButtons()}
+                {isType === 'login' && <LoginForm available={next} />}
+                {isType === 'connect' && <ConnectLoginForm available={next} />}
+                {isType === 'btcpay' && <BTCLoginForm available={next} />}
+            </Card>
+        </Wrapper>
     );
 };
