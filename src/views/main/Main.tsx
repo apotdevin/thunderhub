@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Navigation } from '../../sections/navigation/Navigation';
 import { Content } from '../../sections/content/Content';
+import { Wrapper } from '../../components/generic/Styled';
 
 const Container = styled.div`
     display: grid;
@@ -12,10 +13,12 @@ const Container = styled.div`
 `;
 
 const MainView = () => (
-    <Container>
-        <Navigation />
-        <Content />
-    </Container>
+    <Wrapper>
+        <Container>
+            <Navigation />
+            <Content />
+        </Container>
+    </Wrapper>
 );
 
 export default MainView;

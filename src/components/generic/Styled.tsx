@@ -1,3 +1,4 @@
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import {
     cardColor,
@@ -174,3 +175,26 @@ export const ColorButton = styled(SimpleButton)`
         color: ${textColor};
     }
 `;
+
+const FullWidth = styled.div`
+    width: 100%;
+    background-color: ${({ withColor }: { withColor?: boolean }) =>
+        withColor && cardColor};
+`;
+
+const FixedWidth = styled.div`
+    max-width: 1000px;
+    margin: 0 auto 0 auto;
+`;
+
+export const Wrapper = ({
+    withColor,
+    children,
+}: {
+    withColor?: boolean;
+    children: ReactNode;
+}) => (
+    <FullWidth withColor={withColor}>
+        <FixedWidth>{children}</FixedWidth>
+    </FullWidth>
+);
