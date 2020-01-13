@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
-import { NodeInfo } from '../../components/nodeInfo/NodeInfo';
-import { SideSettings } from '../../components/sideSettings/SideSettings';
+import { NodeInfo } from '../../views/sidebar/nodeInfo/NodeInfo';
+import { SideSettings } from '../../views/sidebar/sideSettings/SideSettings';
 import {
     textColor,
     unSelectedNavButton,

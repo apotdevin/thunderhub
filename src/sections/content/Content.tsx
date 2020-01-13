@@ -5,7 +5,7 @@ import { Home } from '../../views/home/Home';
 import { NotFound } from '../../views/notFound/NotFound';
 import { ChannelView } from '../../views/channels/ChannelView';
 import { SettingsView } from '../../views/settings/Settings';
-import { ResumeList } from '../../components/resume/ResumeList';
+import { TransactionList } from '../../views/transactions/TransactionList';
 import { BackupsView } from '../../views/backups/Backups';
 import { FeesView } from '../../views/fees/Fees';
 
@@ -26,7 +26,10 @@ export const Content = () => {
                 <Route exact path="/" render={() => <Home />} />
                 <Route path="/channels" render={() => <ChannelView />} />
                 <Route path="/backups" render={() => <BackupsView />} />
-                <Route path="/transactions" render={() => <ResumeList />} />
+                <Route
+                    path="/transactions"
+                    render={() => <TransactionList />}
+                />
                 <Route path="/settings" render={() => <SettingsView />} />
                 <Route path="/fees" render={() => <FeesView />} />
                 <Route path="*" render={() => <NotFound />} />
