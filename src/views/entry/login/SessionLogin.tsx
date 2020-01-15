@@ -12,6 +12,7 @@ import {
 import { LoginButton } from '../../../components/auth/Password';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
+import { saveSessionAuth } from '../../../utils/auth';
 
 export const SessionLogin = () => {
     const { name, admin, refreshAccount } = useAccount();
@@ -22,7 +23,7 @@ export const SessionLogin = () => {
             const bytes = CryptoJS.AES.decrypt(admin, pass);
             const decrypted = bytes.toString(CryptoJS.enc.Utf8);
 
-            sessionStorage.setItem('session', decrypted);
+            saveSessionAuth(decrypted);
             refreshAccount();
         } catch (error) {
             toast.error('Wrong Password');

@@ -1,13 +1,13 @@
+import { useAccount } from '../../context/AccountContext';
+
 interface AdminSwitchProps {
     children: any;
 }
 
 export const AdminSwitch = ({ children }: AdminSwitchProps) => {
-    const currentAuth = localStorage.getItem('account') || 'auth1';
-    const adminMacaroon = localStorage.getItem(`${currentAuth}-admin`) || '';
-    const sessionAdmin = sessionStorage.getItem('session') || '';
+    const { admin, sessionAdmin } = useAccount();
 
-    if (!adminMacaroon && !sessionAdmin) {
+    if (!admin && !sessionAdmin) {
         return null;
     }
 

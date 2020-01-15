@@ -7,6 +7,7 @@ import {
 } from '../../components/generic/Styled';
 import styled from 'styled-components';
 import { unSelectedNavButton, chartLinkColor } from '../../styles/Themes';
+import { useAccount } from '../../context/AccountContext';
 
 const CurrentField = styled.div`
     color: ${chartLinkColor};
@@ -21,12 +22,7 @@ const CurrentField = styled.div`
 `;
 
 export const CurrentSettings = () => {
-    const currentAuth = localStorage.getItem('account') || 'auth1';
-    const currentName = localStorage.getItem(`${currentAuth}-name`);
-    const currentAdmin = localStorage.getItem(`${currentAuth}-admin`);
-    const currentRead = localStorage.getItem(`${currentAuth}-read`);
-    const currentCert = localStorage.getItem(`${currentAuth}-cert`);
-    const currentHost = localStorage.getItem(`${currentAuth}-host`);
+    const { name, host, admin, read, cert } = useAccount();
 
     const renderField = (title: string, field: string | null) => {
         if (!field) return null;
@@ -43,11 +39,11 @@ export const CurrentSettings = () => {
         <CardWithTitle>
             <SubTitle>Current Account:</SubTitle>
             <Card>
-                {renderField('Name:', currentName)}
-                {renderField('AES Encrypted Admin Macaroon:', currentAdmin)}
-                {renderField('Read-only Macaroon:', currentRead)}
-                {renderField('Certificate:', currentCert)}
-                {renderField('Host:', currentHost)}
+                {renderField('Name:', name)}
+                {renderField('Host:', host)}
+                {renderField('AES Encrypted Admin Macaroon:', admin)}
+                {renderField('Read-only Macaroon:', read)}
+                {renderField('Certificate:', cert)}
             </Card>
         </CardWithTitle>
     );

@@ -43,7 +43,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
     const [sendAll, setSendAll] = useState(false);
     const [isSent, setIsSent] = useState(false);
 
-    const canSend = address !== '' && tokens > 0 && amount > 0;
+    const canSend = address !== '' && (sendAll || tokens > 0) && amount > 0;
 
     const { theme } = useSettings();
     const { price, symbol, currency } = useSettings();

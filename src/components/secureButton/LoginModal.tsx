@@ -13,7 +13,7 @@ import { LoginButton } from '../../components/auth/Password';
 import { Circle, ChevronRight } from '../generic/Icons';
 import styled from 'styled-components';
 import { useAccount } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
+import { getAuthString, saveSessionAuth } from '../../utils/auth';
 import { useSettings } from '../../context/SettingsContext';
 import { textColorMap } from '../../styles/Themes';
 
@@ -46,7 +46,7 @@ export const LoginModal = ({
     const { theme } = useSettings();
     const [pass, setPass] = useState<string>('');
     const [storeSession, setStoreSession] = useState<boolean>(false);
-    const { host, cert } = useAccount();
+    const { host, cert, refreshAccount } = useAccount();
 
     const handleClick = () => {
         try {
@@ -54,7 +54,8 @@ export const LoginModal = ({
             const decrypted = bytes.toString(CryptoJS.enc.Utf8);
 
             if (storeSession) {
-                sessionStorage.setItem('session', decrypted);
+                saveSessionAuth(decrypted);
+                refreshAccount();
             }
             const auth = getAuthString(host, decrypted, cert);
             callback({ variables: { ...variables, auth } });

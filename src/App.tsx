@@ -15,6 +15,7 @@ import { Header } from './sections/header/Header';
 import { Footer } from './sections/footer/Footer';
 import { BitcoinInfoProvider } from './context/BitcoinContext';
 import { BitcoinFees } from './components/bitcoinInfo/BitcoinFees';
+import { LoadingCard } from './components/loading/LoadingCard';
 
 const EntryView = React.lazy(() => import('./views/entry/Entry'));
 const MainView = React.lazy(() => import('./views/main/Main'));
@@ -32,13 +33,15 @@ const client = new ApolloClient({
 
 const ContextApp: React.FC = () => {
     const { theme } = useSettings();
-    const { loggedIn, admin, read } = useAccount();
+    const { loggedIn, admin, read, sessionAdmin } = useAccount();
 
     const renderContent = () => (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+            fallback={<LoadingCard noCard={true} loadingHeight={'240px'} />}
+        >
             {!loggedIn && admin === '' ? (
                 <EntryView />
-            ) : admin !== '' && read === '' ? (
+            ) : admin !== '' && read === '' && sessionAdmin === '' ? (
                 <EntryView session={true} />
             ) : (
                 <MainView />

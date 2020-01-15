@@ -38,8 +38,8 @@ const Title = styled.div`
 `;
 
 export const NetworkInfo = () => {
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const { loading, data } = useQuery(GET_NETWORK_INFO, {
         variables: { auth },

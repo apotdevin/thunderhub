@@ -54,9 +54,15 @@ export const LoginView = () => {
                     <SubTitle> How do you want to connect?</SubTitle>
                 )}
                 {isType === 'none' && renderButtons()}
-                {isType === 'login' && <LoginForm available={next} />}
-                {isType === 'connect' && <ConnectLoginForm available={next} />}
-                {isType === 'btcpay' && <BTCLoginForm available={next} />}
+                {isType === 'login' && (
+                    <LoginForm available={next} withRedirect={true} />
+                )}
+                {isType === 'connect' && (
+                    <ConnectLoginForm available={next} withRedirect={true} />
+                )}
+                {isType === 'btcpay' && (
+                    <BTCLoginForm available={next} withRedirect={true} />
+                )}
             </Card>
         </Wrapper>
     );

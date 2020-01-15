@@ -57,8 +57,8 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
     const { price, symbol, currency, theme } = useSettings();
     const priceProps = { price, symbol, currency };
 
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const [openChannel] = useMutation(OPEN_CHANNEL, {
         onError: error => toast.error(getErrorContent(error)),

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Input, SingleLine, Sub4Title } from '../generic/Styled';
 import { useAccount } from '../../context/AccountContext';
-import { saveUserAuth, getAuthString } from '../../utils/auth';
+import { saveUserAuth, getAuthString, saveSessionAuth } from '../../utils/auth';
 import CryptoJS from 'crypto-js';
 import base64url from 'base64url';
 import { PasswordInput, LoginButton } from './Password';
@@ -9,14 +9,17 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { GET_CAN_CONNECT } from '../../graphql/query';
 import { getErrorContent } from '../../utils/error';
 import { toast } from 'react-toastify';
+import { useHistory } from 'react-router-dom';
 
 interface AuthProps {
     available: number;
     callback?: () => void;
+    withRedirect?: boolean;
 }
 
-export const LoginForm = ({ available, callback }: AuthProps) => {
+export const LoginForm = ({ available, callback, withRedirect }: AuthProps) => {
     const { setAccount } = useAccount();
+    const { push } = useHistory();
 
     const [isName, setName] = useState('');
     const [isHost, setHost] = useState('');
@@ -62,16 +65,21 @@ export const LoginForm = ({ available, callback }: AuthProps) => {
                 cert,
             });
 
+            saveSessionAuth(admin);
+
             setAccount({
                 loggedIn: true,
+                name: isName,
                 host: isHost,
                 admin: encryptedAdmin,
+                ...(read === '' && { sessionAdmin: admin }),
                 read,
                 cert,
             });
 
             toast.success('Connected!');
             callback && callback();
+            withRedirect && push('/');
         }
     }, [
         data,
@@ -103,7 +111,10 @@ export const LoginForm = ({ available, callback }: AuthProps) => {
 
     const renderContent = () => {
         const canConnect =
-            isName !== '' && isHost !== '' && isRead !== '' && !!available;
+            isName !== '' &&
+            isHost !== '' &&
+            (isAdmin !== '' || isRead !== '') &&
+            !!available;
         return (
             <>
                 <SingleLine>

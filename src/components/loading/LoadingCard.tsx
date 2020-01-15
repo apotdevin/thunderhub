@@ -7,6 +7,8 @@ import { textColorMap } from '../../styles/Themes';
 
 const Loading = styled.div`
     width: 100%;
+    height: ${({ loadingHeight }: { loadingHeight?: string }) =>
+        loadingHeight ? loadingHeight : 'auto'};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,6 +19,7 @@ interface LoadingCardProps {
     noCard?: boolean;
     color?: string;
     noTitle?: boolean;
+    loadingHeight?: string;
 }
 
 export const LoadingCard = ({
@@ -24,6 +27,7 @@ export const LoadingCard = ({
     color,
     noCard = false,
     noTitle = false,
+    loadingHeight,
 }: LoadingCardProps) => {
     const { theme } = useSettings();
 
@@ -31,7 +35,7 @@ export const LoadingCard = ({
 
     if (noCard) {
         return (
-            <Loading>
+            <Loading loadingHeight={loadingHeight}>
                 <ScaleLoader height={20} color={loadingColor} />
             </Loading>
         );
@@ -40,7 +44,7 @@ export const LoadingCard = ({
     if (noTitle) {
         return (
             <Card>
-                <Loading>
+                <Loading loadingHeight={loadingHeight}>
                     <ScaleLoader height={20} color={loadingColor} />
                 </Loading>
             </Card>
@@ -53,7 +57,7 @@ export const LoadingCard = ({
                 <SubTitle>{title}</SubTitle>
             </CardTitle>
             <Card>
-                <Loading>
+                <Loading loadingHeight={loadingHeight}>
                     <ScaleLoader height={20} color={loadingColor} />
                 </Loading>
             </Card>

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { LoginView } from './login/Login';
 import { SessionLogin } from './login/SessionLogin';
-import { useHistory } from 'react-router';
+import { useHistory, Switch, Route, useLocation } from 'react-router';
 import { HomePageView } from './HomePage';
 
 interface HomeProps {
@@ -9,21 +9,24 @@ interface HomeProps {
 }
 
 const EntryView = ({ session }: HomeProps) => {
-    const [login, setLogin] = useState<boolean>(false);
-    const history = useHistory();
+    const { push } = useHistory();
+    const location = useLocation();
 
     useEffect(() => {
-        if (history.location.pathname !== '/') {
-            history.push('/');
+        if (location.pathname !== '/' && location.pathname !== '/login') {
+            push('/');
         }
-    }, [history]);
+    }, [location, push]);
 
-    return session ? (
-        <SessionLogin />
-    ) : login ? (
-        <LoginView />
-    ) : (
-        <HomePageView setLogin={setLogin} />
+    const getView = () => {
+        return session ? <SessionLogin /> : <HomePageView />;
+    };
+
+    return (
+        <Switch>
+            <Route path="/login" render={() => <LoginView />} />
+            <Route path="/" render={() => getView()} />
+        </Switch>
     );
 };
 

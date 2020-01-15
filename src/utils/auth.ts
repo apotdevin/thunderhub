@@ -37,6 +37,9 @@ export const saveUserAuth = ({
     cert && localStorage.setItem(`auth${available}-cert`, cert);
 };
 
+export const saveSessionAuth = (sessionAdmin: string) =>
+    sessionStorage.setItem('session', sessionAdmin);
+
 export const getAuthString = (
     host: string,
     macaroon: string,

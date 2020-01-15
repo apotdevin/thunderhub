@@ -64,8 +64,8 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
 
     const { price, symbol, currency } = useSettings();
 
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const { data, loading } = useQuery(GET_FORWARD_CHANNELS_REPORT, {
         variables: { time: isTime, order: isType, auth, type },

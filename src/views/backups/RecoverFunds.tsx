@@ -20,8 +20,8 @@ export const RecoverFunds = ({ color }: { color: string }) => {
     const [backupString, setBackupString] = useState<string>('');
     const [isPasting, setIsPasting] = useState<boolean>(false);
 
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const [recoverFunds, { data, loading }] = useLazyQuery(RECOVER_FUNDS, {
         onError: error => toast.error(getErrorContent(error)),

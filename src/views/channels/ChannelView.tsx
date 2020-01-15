@@ -25,8 +25,8 @@ export const ChannelView = () => {
     });
 
     const { theme } = useSettings();
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const { data } = useQuery(GET_CHANNEL_AMOUNT_INFO, {
         variables: { auth },
