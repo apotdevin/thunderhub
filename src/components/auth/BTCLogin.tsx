@@ -81,6 +81,8 @@ export const BTCLoginForm = ({
         isName,
         isPass,
         setAccount,
+        withRedirect,
+        push,
     ]);
 
     const handleClick = () => {

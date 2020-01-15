@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useAccount } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { RECOVER_FUNDS } from '../../graphql/query';
 import { toast } from 'react-toastify';
@@ -19,9 +17,6 @@ import { SecureButton } from '../../components/secureButton/SecureButton';
 export const RecoverFunds = ({ color }: { color: string }) => {
     const [backupString, setBackupString] = useState<string>('');
     const [isPasting, setIsPasting] = useState<boolean>(false);
-
-    const { host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const [recoverFunds, { data, loading }] = useLazyQuery(RECOVER_FUNDS, {
         onError: error => toast.error(getErrorContent(error)),

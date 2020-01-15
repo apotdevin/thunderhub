@@ -29,7 +29,7 @@ export const ClosedCard = ({
     setIndexOpen,
     indexOpen,
 }: PendingCardProps) => {
-    const { price, symbol, currency, theme } = useSettings();
+    const { price, symbol, currency } = useSettings();
     const priceProps = { price, symbol, currency };
 
     const getFormat = (amount: string) =>

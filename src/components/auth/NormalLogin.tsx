@@ -93,6 +93,8 @@ export const LoginForm = ({ available, callback, withRedirect }: AuthProps) => {
         isPass,
         isRead,
         setAccount,
+        withRedirect,
+        push,
     ]);
 
     const handleConnect = () => {

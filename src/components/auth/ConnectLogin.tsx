@@ -77,7 +77,18 @@ export const ConnectLoginForm = ({
             callback && callback();
             withRedirect && push('/');
         }
-    }, [data, loading, available, callback, isName, isPass, isUrl, setAccount]);
+    }, [
+        data,
+        loading,
+        available,
+        callback,
+        isName,
+        isPass,
+        isUrl,
+        setAccount,
+        withRedirect,
+        push,
+    ]);
 
     const handleConnect = () => {
         const { cert, macaroon, socket } = getAuthLnd(isUrl);
