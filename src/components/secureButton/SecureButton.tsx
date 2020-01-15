@@ -24,13 +24,9 @@ export const SecureButton = ({
 }: SecureButtonProps) => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-    const { host, cert } = useAccount();
+    const { host, cert, admin, sessionAdmin } = useAccount();
 
-    const currentAuth = localStorage.getItem('account') || 'auth1';
-    const adminMacaroon = localStorage.getItem(`${currentAuth}-admin`) || '';
-    const sessionAdmin = sessionStorage.getItem('session') || '';
-
-    if (!adminMacaroon && !sessionAdmin) {
+    if (!admin && !sessionAdmin) {
         return null;
     }
 
@@ -55,7 +51,7 @@ export const SecureButton = ({
             <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>
                 <LoginModal
                     color={color}
-                    macaroon={adminMacaroon}
+                    macaroon={admin}
                     setModalOpen={setModalOpen}
                     callback={callback}
                     variables={variables}

@@ -7,6 +7,7 @@ import { ReactComponent as ZapOffIcon } from '../../icons/zap-off.svg';
 import { ReactComponent as HelpIcon } from '../../icons/help-circle.svg';
 import { ReactComponent as SunIcon } from '../../icons/sun.svg';
 import { ReactComponent as MoonIcon } from '../../icons/moon.svg';
+import { ReactComponent as EyeIcon } from '../../icons/eye.svg';
 import { ReactComponent as EyeOffIcon } from '../../icons/eye-off.svg';
 import { ReactComponent as ChevronsUpIcon } from '../../icons/chevrons-up.svg';
 import { ReactComponent as ChevronsDownIcon } from '../../icons/chevrons-down.svg';
@@ -35,11 +36,15 @@ import { ReactComponent as RadioIcon } from '../../icons/radio.svg';
 import { ReactComponent as CopyIcon } from '../../icons/copy.svg';
 import { ReactComponent as ShieldIcon } from '../../icons/shield.svg';
 import { ReactComponent as CrosshairIcon } from '../../icons/crosshair.svg';
+import { ReactComponent as KeyIcon } from '../../icons/key.svg';
+import { ReactComponent as SlidersIcon } from '../../icons/sliders.svg';
+import { ReactComponent as UsersIcon } from '../../icons/users.svg';
 
 interface IconProps {
     color?: string;
     size?: string;
     fillcolor?: string;
+    strokeWidth?: string;
 }
 
 const GenericStyles = css`
@@ -47,6 +52,8 @@ const GenericStyles = css`
     width: ${({ size }: IconProps) => (size ? size : '18px')};
     color: ${({ color }: IconProps) => (color ? color : '')};
     fill: ${({ fillcolor }: IconProps) => (fillcolor ? fillcolor : '')};
+    stroke-width: ${({ strokeWidth }: IconProps) =>
+        strokeWidth ? strokeWidth : '2px'};
 `;
 
 export const IconCircle = styled.div`
@@ -77,6 +84,7 @@ export const UpArrow = styleIcon(UpIcon);
 export const DownArrow = styleIcon(DownIcon);
 export const Sun = styleIcon(SunIcon);
 export const Moon = styleIcon(MoonIcon);
+export const Eye = styleIcon(EyeIcon);
 export const EyeOff = styleIcon(EyeOffIcon);
 export const ChevronsDown = styleIcon(ChevronsDownIcon);
 export const ChevronsUp = styleIcon(ChevronsUpIcon);
@@ -102,3 +110,6 @@ export const Radio = styleIcon(RadioIcon);
 export const Copy = styleIcon(CopyIcon);
 export const Shield = styleIcon(ShieldIcon);
 export const Crosshair = styleIcon(CrosshairIcon);
+export const Key = styleIcon(KeyIcon);
+export const Sliders = styleIcon(SlidersIcon);
+export const Users = styleIcon(UsersIcon);

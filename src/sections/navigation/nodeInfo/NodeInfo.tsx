@@ -45,8 +45,8 @@ const Alias = styled.div`
 `;
 
 export const NodeInfo = () => {
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const { loading, data } = useQuery(GET_NODE_INFO, {
         variables: { auth },

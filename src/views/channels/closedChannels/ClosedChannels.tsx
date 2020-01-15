@@ -12,8 +12,8 @@ import { LoadingCard } from '../../../components/loading/LoadingCard';
 export const ClosedChannels = () => {
     const [indexOpen, setIndexOpen] = useState(0);
 
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const { loading, data } = useQuery(GET_CLOSED_CHANNELS, {
         variables: { auth },

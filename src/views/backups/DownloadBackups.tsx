@@ -14,8 +14,8 @@ import { getErrorContent } from '../../utils/error';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 
 export const DownloadBackups = ({ color }: { color: string }) => {
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const [getBackups, { data, loading }] = useLazyQuery(GET_BACKUPS, {
         variables: { auth },

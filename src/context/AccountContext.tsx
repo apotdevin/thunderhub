@@ -42,14 +42,14 @@ const AccountProvider = ({ children }: any) => {
     const activeAccount = localStorage.getItem('account') || 'auth1';
     const sessionAdmin = sessionStorage.getItem('session') || '';
     const { name, host, admin, read, cert } = getAuthParams(activeAccount);
-    const readMacaroon = read ? read : sessionAdmin;
-    const loggedIn = host !== '' && readMacaroon !== '';
+    const loggedIn = host !== '' && (read !== '' || sessionAdmin !== '');
 
     const setAccount = ({
         loggedIn,
         name,
         host,
         admin,
+        sessionAdmin,
         read,
         cert,
     }: ChangeProps) => {
@@ -60,6 +60,7 @@ const AccountProvider = ({ children }: any) => {
                 name,
                 host,
                 admin,
+                sessionAdmin,
                 read,
                 cert,
             });
@@ -90,8 +91,7 @@ const AccountProvider = ({ children }: any) => {
         const activeAccount = localStorage.getItem('account') || 'auth1';
         const sessionAdmin = sessionStorage.getItem('session') || '';
         const { name, host, admin, read, cert } = getAuthParams(activeAccount);
-        const readMacaroon = read ? read : sessionAdmin;
-        const loggedIn = host !== '' && readMacaroon !== '';
+        const loggedIn = host !== '' && (read !== '' || sessionAdmin !== '');
 
         updateAccount((prevState: any) => {
             const newState = { ...prevState };
@@ -101,7 +101,7 @@ const AccountProvider = ({ children }: any) => {
                 host,
                 admin,
                 sessionAdmin,
-                read: readMacaroon,
+                read,
                 cert,
             });
         });
@@ -113,7 +113,7 @@ const AccountProvider = ({ children }: any) => {
         host,
         admin,
         sessionAdmin,
-        read: readMacaroon,
+        read,
         cert,
         setAccount,
         changeAccount,

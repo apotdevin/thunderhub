@@ -26,8 +26,8 @@ export const DecodeCard = ({ color }: { color: string }) => {
     const { price, symbol, currency } = useSettings();
     const priceProps = { price, symbol, currency };
 
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const [decode, { data, loading }] = useMutation(DECODE_REQUEST, {
         onError: error => toast.error(getErrorContent(error)),

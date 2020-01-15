@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { textColor, cardColor } from '../../styles/Themes';
+import { HomeButton } from '../../views/entry/HomePage.styled';
+import { Link } from 'react-router-dom';
+import { useAccount } from '../../context/AccountContext';
 
 const HeaderStyle = styled.div`
     display: flex;
@@ -28,11 +31,17 @@ const HeaderTitle = styled.div`
 `;
 
 export const Header = () => {
+    const { loggedIn } = useAccount();
+
     return (
         <HeaderStyle>
             <Wrapper>
                 <HeaderTitle>ThunderHub</HeaderTitle>
-                <button>Login</button>
+                {!loggedIn && (
+                    <Link to="/login" style={{ textDecoration: 'none' }}>
+                        <HomeButton>Login</HomeButton>
+                    </Link>
+                )}
             </Wrapper>
         </HeaderStyle>
     );

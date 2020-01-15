@@ -31,8 +31,8 @@ interface Props {
 export const ForwardReport = ({ isTime, isType }: Props) => {
     const { theme, price, symbol, currency } = useSettings();
 
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const { data, loading } = useQuery(GET_FORWARD_REPORT, {
         variables: { time: isTime, auth },

@@ -6,6 +6,7 @@ import {
     getBase64CertfromDerFormat,
     saveUserAuth,
     getAuthString,
+    saveSessionAuth,
 } from '../../utils/auth';
 import { LoginButton, PasswordInput } from './Password';
 import CryptoJS from 'crypto-js';
@@ -13,14 +14,21 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { GET_CAN_CONNECT } from '../../graphql/query';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
+import { useHistory } from 'react-router-dom';
 
 interface AuthProps {
     available: number;
     callback?: () => void;
+    withRedirect?: boolean;
 }
 
-export const ConnectLoginForm = ({ available, callback }: AuthProps) => {
+export const ConnectLoginForm = ({
+    available,
+    callback,
+    withRedirect,
+}: AuthProps) => {
     const { setAccount } = useAccount();
+    const { push } = useHistory();
 
     const [isName, setName] = useState('');
     const [isUrl, setUrl] = useState('');
@@ -54,18 +62,20 @@ export const ConnectLoginForm = ({ available, callback }: AuthProps) => {
                 cert: base64Cert,
             });
 
-            sessionStorage.setItem('session', macaroon);
+            saveSessionAuth(macaroon);
 
             setAccount({
                 loggedIn: true,
                 host: socket,
                 admin: encryptedAdmin,
+                sessionAdmin: macaroon,
                 read: macaroon,
                 cert: base64Cert,
             });
 
             toast.success('Connected!');
             callback && callback();
+            withRedirect && push('/');
         }
     }, [data, loading, available, callback, isName, isPass, isUrl, setAccount]);
 

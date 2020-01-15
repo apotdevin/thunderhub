@@ -8,14 +8,21 @@ import { toast } from 'react-toastify';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { GET_CAN_CONNECT } from '../../graphql/query';
 import { getErrorContent } from '../../utils/error';
+import { useHistory } from 'react-router-dom';
 
 interface AuthProps {
     available: number;
     callback?: () => void;
+    withRedirect?: boolean;
 }
 
-export const BTCLoginForm = ({ available, callback }: AuthProps) => {
+export const BTCLoginForm = ({
+    available,
+    callback,
+    withRedirect,
+}: AuthProps) => {
     const { setAccount } = useAccount();
+    const { push } = useHistory();
 
     const [isName, setName] = useState('');
     const [isJson, setJson] = useState('');
@@ -63,6 +70,7 @@ export const BTCLoginForm = ({ available, callback }: AuthProps) => {
 
             toast.success('Connected!');
             callback && callback();
+            withRedirect && push('/');
         }
     }, [
         data,

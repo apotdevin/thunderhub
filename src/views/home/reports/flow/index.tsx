@@ -61,8 +61,8 @@ export const FlowBox = () => {
     const [isTime, setIsTime] = useState<string>('month');
     const [isType, setIsType] = useState<string>('amount');
 
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
     const { data, loading } = useQuery(GET_IN_OUT, {
         variables: { time: isTime, auth },
         onError: error => toast.error(getErrorContent(error)),

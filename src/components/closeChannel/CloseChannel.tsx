@@ -83,8 +83,8 @@ export const CloseChannel = ({
     const [hour, setHour] = useState(0);
 
     const { theme } = useSettings();
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const { data: feeData } = useQuery(GET_BITCOIN_FEES, {
         onError: error => toast.error(getErrorContent(error)),

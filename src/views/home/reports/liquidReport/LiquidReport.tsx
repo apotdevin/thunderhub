@@ -25,8 +25,8 @@ import {
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 
 export const LiquidReport = () => {
-    const { host, read, cert } = useAccount();
-    const auth = getAuthString(host, read, cert);
+    const { host, read, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const { theme, price, symbol, currency } = useSettings();
 
