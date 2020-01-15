@@ -10,8 +10,6 @@ import {
 } from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { Circle, ChevronRight } from '../../../../components/generic/Icons';
-import { useAccount } from '../../../../context/AccountContext';
-import { getAuthString } from '../../../../utils/auth';
 import { OPEN_CHANNEL } from '../../../../graphql/mutation';
 import { getErrorContent } from '../../../../utils/error';
 import { toast } from 'react-toastify';
@@ -20,6 +18,7 @@ import { useSettings } from '../../../../context/SettingsContext';
 import { useBitcoinInfo } from '../../../../context/BitcoinContext';
 import styled from 'styled-components';
 import { textColorMap } from '../../../../styles/Themes';
+import { SecureButton } from '../../../../components/secureButton/SecureButton';
 
 const RadioText = styled.div`
     margin-left: 10px;
@@ -34,10 +33,6 @@ const ButtonRow = styled.div`
 
 const SmallInput = styled(Input)`
     max-width: 150px;
-`;
-
-const RightButton = styled(ColorButton)`
-    margin-left: auto;
 `;
 
 interface OpenChannelProps {
@@ -57,16 +52,16 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
     const { price, symbol, currency, theme } = useSettings();
     const priceProps = { price, symbol, currency };
 
-    const { host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
-
     const [openChannel] = useMutation(OPEN_CHANNEL, {
         onError: error => toast.error(getErrorContent(error)),
         onCompleted: () => {
-            toast.success('Channel Opened!');
+            toast.success('Channel Opened');
             setOpenCard('none');
         },
+        refetchQueries: ['GetChannels', 'GetPendingChannels'],
     });
+
+    const canOpen = publicKey !== '' && size > 0 && fee > 0;
 
     useEffect(() => {
         if (type === 'none' && fee === 0) {
@@ -183,23 +178,21 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
                 )}
             </SingleLine>
             <Separation />
-            <RightButton
-                color={color}
-                onClick={() => {
-                    openChannel({
-                        variables: {
-                            auth,
-                            amount: size,
-                            partnerPublicKey: publicKey,
-                            tokensPerVByte: fee,
-                            isPrivate: privateChannel,
-                        },
-                    });
+            <SecureButton
+                callback={openChannel}
+                variables={{
+                    amount: size,
+                    partnerPublicKey: publicKey,
+                    tokensPerVByte: fee,
+                    isPrivate: privateChannel,
                 }}
+                color={color}
+                enabled={canOpen}
+                disabled={!canOpen}
             >
                 Open Channel
                 <ChevronRight />
-            </RightButton>
+            </SecureButton>
         </Card>
     );
 };

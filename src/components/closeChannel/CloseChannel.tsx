@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CLOSE_CHANNEL } from '../../graphql/mutation';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { useAccount } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
 import {
     Input,
     SimpleButton,
@@ -20,6 +18,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { GET_BITCOIN_FEES } from '../../graphql/query';
 import { useSettings } from '../../context/SettingsContext';
+import { SecureButton } from '../secureButton/SecureButton';
 
 interface CloseChannelProps {
     setModalOpen: (status: boolean) => void;
@@ -83,8 +82,6 @@ export const CloseChannel = ({
     const [hour, setHour] = useState(0);
 
     const { theme } = useSettings();
-    const { host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const { data: feeData } = useQuery(GET_BITCOIN_FEES, {
         onError: error => toast.error(getErrorContent(error)),
@@ -107,23 +104,12 @@ export const CloseChannel = ({
             }
         },
         onError: error => toast.error(getErrorContent(error)),
-        refetchQueries: ['GetChannels', 'GetPendingChannels'],
+        refetchQueries: [
+            'GetChannels',
+            'GetPendingChannels',
+            'GetClosedChannels',
+        ],
     });
-
-    const handleClick = () => {
-        const props = {
-            id: channelId,
-            forceClose: isForce,
-            auth,
-            ...(isType !== 'none'
-                ? isType === 'fee'
-                    ? { tokens: amount }
-                    : { target: amount }
-                : {}),
-        };
-        closeChannel({ variables: props });
-        setModalOpen(false);
-    };
 
     const handleOnlyClose = () => setModalOpen(false);
 
@@ -148,9 +134,25 @@ export const CloseChannel = ({
             <Sub4Title>{`${channelName} [${channelId}]`}</Sub4Title>
             <Separation />
             <SingleLine>
-                <Button color={'red'} onClick={handleClick}>
-                    Close Channel
-                </Button>
+                <div onClick={() => setModalOpen(false)}>
+                    <SecureButton
+                        callback={closeChannel}
+                        variables={{
+                            id: channelId,
+                            forceClose: isForce,
+                            ...(isType !== 'none'
+                                ? isType === 'fee'
+                                    ? { tokens: amount }
+                                    : { target: amount }
+                                : {}),
+                        }}
+                        color={'red'}
+                        enabled={true}
+                        disabled={false}
+                    >
+                        Close Channel
+                    </SecureButton>
+                </div>
                 <Button color={'green'} onClick={handleOnlyClose}>
                     Cancel
                 </Button>

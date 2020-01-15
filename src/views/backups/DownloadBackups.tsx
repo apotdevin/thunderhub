@@ -14,7 +14,7 @@ import { getErrorContent } from '../../utils/error';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 
 export const DownloadBackups = ({ color }: { color: string }) => {
-    const { host, read, cert, sessionAdmin } = useAccount();
+    const { name, host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const [getBackups, { data, loading }] = useLazyQuery(GET_BACKUPS, {
@@ -24,11 +24,11 @@ export const DownloadBackups = ({ color }: { color: string }) => {
 
     useEffect(() => {
         if (!loading && data && data.getBackups) {
-            saveToPc(data.getBackups, 'lndChannelsBackupString');
+            saveToPc(data.getBackups, `Backup-${name}`);
             localStorage.setItem('lastBackup', new Date().toString());
-            toast.success('Downloaded!');
+            toast.success('Downloaded');
         }
-    }, [data, loading]);
+    }, [data, loading, name]);
 
     return (
         <SingleLine>
