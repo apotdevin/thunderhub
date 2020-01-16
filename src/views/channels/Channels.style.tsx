@@ -8,11 +8,8 @@ import {
 export const Progress = styled.div`
     width: 200px;
     margin: 5px;
-    padding: 3px;
-    border-radius: 15px;
+    padding: 2px;
     background: ${progressBackground};
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25),
-        0 1px rgba(255, 255, 255, 0.08);
 `;
 
 interface ProgressBar {
@@ -22,7 +19,6 @@ interface ProgressBar {
 
 export const ProgressBar = styled.div`
     height: 10px;
-    border-radius: 15px;
     background-image: linear-gradient(
         to bottom,
         rgba(255, 255, 255, 0.3),
@@ -34,7 +30,6 @@ export const ProgressBar = styled.div`
 `;
 
 export const NodeTitle = styled.div`
-    /* padding: 2px; */
     font-size: 16px;
     font-weight: bold;
 `;
@@ -45,14 +40,8 @@ export const StatusLine = styled.div`
     right: -8px;
     top: -8px;
     display: flex;
-    /* flex-direction: column; */
     justify-content: flex-end;
-    /* align-items: flex-start; */
-    /* z-index: 2; */
     margin: 0 0 -8px 0;
-    /* height: 36px; */
-    /* margin-left: 5px; */
-    /* margin: -8px -7px 0 0; */
 `;
 
 export const StatusDot = styled.div`
