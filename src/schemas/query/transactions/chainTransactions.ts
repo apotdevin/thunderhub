@@ -4,6 +4,7 @@ import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { GetChainTransactionsType } from '../../../schemaTypes/query/transactions/chainTransactions';
+import { sortBy } from 'underscore';
 
 interface TransactionProps {
     block_id: string;
@@ -22,21 +23,25 @@ interface TransactionsProps {
 
 export const getChainTransactions = {
     type: new GraphQLList(GetChainTransactionsType),
-    args: {
-        auth: { type: new GraphQLNonNull(GraphQLString) },
-        token: { type: GraphQLString },
-    },
+    args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'chainTransactions');
 
         const lnd = getAuthLnd(params.auth);
 
         try {
-            const transactions: TransactionsProps = await getLnChainTransactions(
+            const transactionList: TransactionsProps = await getLnChainTransactions(
                 {
                     lnd,
                 },
             );
+            const filteredTransaction = transactionList.transactions.filter(
+                transaction => transaction.tokens > 0,
+            );
+            const transactions = sortBy(
+                filteredTransaction,
+                'created_at',
+            ).reverse();
             return transactions;
         } catch (error) {
             logger.error('Error getting chain transactions: %o', error);
