@@ -15,6 +15,8 @@ import {
     Settings,
     Shield,
     Crosshair,
+    GitPullRequest,
+    LinkIcon,
 } from '../../components/generic/Icons';
 import { useSettings } from '../../context/SettingsContext';
 
@@ -82,16 +84,30 @@ const NavButton = styled(({ selectedColor, ...rest }) => <Link {...rest} />)`
     }
 `;
 
-const HOME_LINK = '/';
-const CHANNEL_LINK = '/channels';
-const RESUME_LINK = '/transactions';
-const BACKUPS_LINK = '/backups';
-const SETTINGS_LINK = '/settings';
-const FEES_LINK = '/fees';
+const HOME = '/';
+const CHANNEL = '/channels';
+const TRANS = '/transactions';
+const FORWARDS = '/forwards';
+const CHAIN_TRANS = '/chainTransactions';
+const BACKUPS = '/backups';
+const SETTINGS = '/settings';
+const FEES = '/fees';
 
 export const Navigation = () => {
     const { theme } = useSettings();
     const { pathname } = useLocation();
+
+    const renderNavButton = (title: string, link: string, NavIcon: any) => (
+        <NavButton
+            selectedColor={navButtonColor[theme]}
+            selected={pathname === link}
+            to={link}
+        >
+            <NavIcon />
+            <NavSeparation />
+            {title}
+        </NavButton>
+    );
 
     return (
         <NavigationStyle>
@@ -99,60 +115,14 @@ export const Navigation = () => {
                 <LinkView>
                     <NodeInfo />
                     <ButtonSection>
-                        <NavButton
-                            selectedColor={navButtonColor[theme]}
-                            selected={pathname === HOME_LINK}
-                            to={HOME_LINK}
-                        >
-                            <Home />
-                            <NavSeparation />
-                            Home
-                        </NavButton>
-                        <NavButton
-                            selectedColor={navButtonColor[theme]}
-                            selected={pathname === CHANNEL_LINK}
-                            to={CHANNEL_LINK}
-                        >
-                            <Cpu />
-                            <NavSeparation />
-                            Channels
-                        </NavButton>
-                        <NavButton
-                            selectedColor={navButtonColor[theme]}
-                            selected={pathname === FEES_LINK}
-                            to={FEES_LINK}
-                        >
-                            <Crosshair />
-                            <NavSeparation />
-                            Fees
-                        </NavButton>
-                        <NavButton
-                            selectedColor={navButtonColor[theme]}
-                            selected={pathname === RESUME_LINK}
-                            to={RESUME_LINK}
-                        >
-                            <Server />
-                            <NavSeparation />
-                            Transactions
-                        </NavButton>
-                        <NavButton
-                            selectedColor={navButtonColor[theme]}
-                            selected={pathname === BACKUPS_LINK}
-                            to={BACKUPS_LINK}
-                        >
-                            <Shield />
-                            <NavSeparation />
-                            Backups
-                        </NavButton>
-                        <NavButton
-                            selectedColor={navButtonColor[theme]}
-                            selected={pathname === SETTINGS_LINK}
-                            to={SETTINGS_LINK}
-                        >
-                            <Settings />
-                            <NavSeparation />
-                            Settings
-                        </NavButton>
+                        {renderNavButton('Home', HOME, Home)}
+                        {renderNavButton('Channels', CHANNEL, Cpu)}
+                        {renderNavButton('Fees', FEES, Crosshair)}
+                        {renderNavButton('Transactions', TRANS, Server)}
+                        {renderNavButton('Forwards', FORWARDS, GitPullRequest)}
+                        {renderNavButton('Chain', CHAIN_TRANS, LinkIcon)}
+                        {renderNavButton('Backups', BACKUPS, Shield)}
+                        {renderNavButton('Settings', SETTINGS, Settings)}
                     </ButtonSection>
                     <SideSettings />
                 </LinkView>

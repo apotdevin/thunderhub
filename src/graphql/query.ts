@@ -230,6 +230,21 @@ export const GET_IN_OUT = gql`
     }
 `;
 
+export const GET_CHAIN_TRANSACTIONS = gql`
+    query GetChainTransactions($auth: String!) {
+        getChainTransactions(auth: $auth) {
+            block_id
+            confirmation_count
+            confirmation_height
+            created_at
+            fee
+            id
+            output_addresses
+            tokens
+        }
+    }
+`;
+
 export const GET_CONNECT_INFO = gql`
     query GetNodeInfo($auth: String!) {
         getNodeInfo(auth: $auth) {

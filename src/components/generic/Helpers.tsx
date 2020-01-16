@@ -47,10 +47,10 @@ export const getStatusDot = (status: boolean, type: string) => {
     }
 };
 
-export const renderLine = (title: string, content: any) => {
+export const renderLine = (title: string, content: any, key?: string) => {
     if (!content) return null;
     return (
-        <DetailLine>
+        <DetailLine key={key}>
             <DarkSubTitle>{title}</DarkSubTitle>
             {content}
         </DetailLine>

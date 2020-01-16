@@ -39,6 +39,8 @@ import { ReactComponent as CrosshairIcon } from '../../icons/crosshair.svg';
 import { ReactComponent as KeyIcon } from '../../icons/key.svg';
 import { ReactComponent as SlidersIcon } from '../../icons/sliders.svg';
 import { ReactComponent as UsersIcon } from '../../icons/users.svg';
+import { ReactComponent as GitPullRequestIcon } from '../../icons/git-pull-request.svg';
+import { ReactComponent as Link } from '../../icons/link.svg';
 
 interface IconProps {
     color?: string;
@@ -113,3 +115,5 @@ export const Crosshair = styleIcon(CrosshairIcon);
 export const Key = styleIcon(KeyIcon);
 export const Sliders = styleIcon(SlidersIcon);
 export const Users = styleIcon(UsersIcon);
+export const GitPullRequest = styleIcon(GitPullRequestIcon);
+export const LinkIcon = styleIcon(Link);
