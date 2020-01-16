@@ -2,7 +2,7 @@ import { GraphQLList, GraphQLString, GraphQLNonNull } from 'graphql';
 import { getForwards as getLnForwards } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GetForwardType } from '../../../schemaTypes/query/info/forwards';
+import { GetForwardType } from '../../../schemaTypes/query/transactions/forwards';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 
 interface ForwardProps {
@@ -22,24 +22,22 @@ interface ForwardsProps {
 
 export const getForwards = {
     type: new GraphQLList(GetForwardType),
-    args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
+    args: {
+        auth: { type: new GraphQLNonNull(GraphQLString) },
+        token: { type: GraphQLString },
+    },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'forwards');
 
         const lnd = getAuthLnd(params.auth);
 
-        try {
-            const forwardsList: ForwardsProps = await getLnForwards({ lnd });
+        const props = params.token ? { token: params.token } : { limit: 25 };
 
-            const forwards = forwardsList.forwards.map(forward => ({
-                createdAt: forward.created_at,
-                fee: forward.fee,
-                feeMtokens: forward.fee_mtokens,
-                incomingChannel: forward.incoming_channel,
-                mtokens: forward.mtokens,
-                outgoingChannel: forward.outgoing_channel,
-                tokens: forward.tokens,
-            }));
+        try {
+            const forwards: ForwardsProps = await getLnForwards({
+                lnd,
+                ...props,
+            });
 
             return forwards;
         } catch (error) {

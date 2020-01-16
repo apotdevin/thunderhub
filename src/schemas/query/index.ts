@@ -1,6 +1,6 @@
 import { channelQueries } from './channels';
 import { generalQueries } from './general';
-import { invoiceQueries } from './invoices';
+import { invoiceQueries } from './transactions';
 import { dataQueries } from './data';
 import { reportQueries } from './report';
 import { flowQueries } from './flow';

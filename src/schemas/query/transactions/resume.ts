@@ -6,7 +6,7 @@ import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { PaymentsProps, InvoicesProps, NodeProps } from './resume.interface';
 import { compareDesc } from 'date-fns';
 import { sortBy } from 'underscore';
-import { GetResumeType } from '../../../schemaTypes/query/invoices/resume';
+import { GetResumeType } from '../../../schemaTypes/query/transactions/resume';
 
 export const getResume = {
     type: GetResumeType,
@@ -56,7 +56,7 @@ export const getResume = {
 
         const invoiceProps = params.token
             ? { token: params.token }
-            : { limit: 10 };
+            : { limit: 25 };
 
         let lastInvoiceDate = '';
         let firstInvoiceDate = '';
