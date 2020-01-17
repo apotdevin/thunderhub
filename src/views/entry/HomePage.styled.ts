@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ReactComponent as HeadlineImage } from '../../images/MoshingDoodle.svg';
+import { ReactComponent as HeadlineImage } from '../../assets/images/MoshingDoodle.svg';
 
 export const Headline = styled.div`
     display: flex;
