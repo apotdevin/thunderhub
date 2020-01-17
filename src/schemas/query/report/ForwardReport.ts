@@ -42,7 +42,6 @@ export const getForwardReport = {
                 lnd,
                 after: startDate,
                 before: endDate,
-                limit: 10000,
             });
 
             if (params.time === 'month' || params.time === 'week') {

@@ -1,6 +1,6 @@
-import { getForwards } from './forwards';
+import { getForwards } from './Forwards';
 import { getResume } from './resume';
-import { getChainTransactions } from './chainTransactions';
+import { getChainTransactions } from './ChainTransactions';
 
 export const invoiceQueries = {
     getResume,
