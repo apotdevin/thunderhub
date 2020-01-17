@@ -1,0 +1,53 @@
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 900;
+    src: url('../assets/fonts/Manrope/otf/Manrope-ExtraBold.otf')
+        format('opentype');
+}
+
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../assets/fonts/Manrope/otf/Manrope-Bold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../assets/fonts/Manrope/otf/Manrope-SemiBold.otf')
+        format('opentype');
+}
+
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 500;
+    src: url('../assets/fonts/Manrope/otf/Manrope-Medium.otf')
+        format('opentype');
+}
+
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../assets/fonts/Manrope/otf/Manrope-Regular.otf')
+        format('opentype');
+}
+
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 200;
+    src: url('../assets/fonts/Manrope/otf/Manrope-Light.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 100;
+    src: url('../assets/fonts/Manrope/otf/Manrope-ExtraLight.otf')
+        format('opentype');
+}

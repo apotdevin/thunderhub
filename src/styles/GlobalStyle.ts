@@ -1,5 +1,5 @@
-import { createGlobalStyle } from "styled-components";
-import { backgroundColor, textColor } from "./Themes";
+import { createGlobalStyle } from 'styled-components';
+import { backgroundColor, textColor } from './Themes';
 
 export const GlobalStyles = createGlobalStyle`
     html, body {
@@ -12,7 +12,8 @@ export const GlobalStyles = createGlobalStyle`
     body {
         background: ${backgroundColor};
         color: ${textColor};
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; */
+        font-family: Manrope;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
