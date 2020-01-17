@@ -245,6 +245,27 @@ export const GET_CHAIN_TRANSACTIONS = gql`
     }
 `;
 
+export const GET_FORWARDS = gql`
+    query GetForwards($auth: String!, $time: String) {
+        getForwards(auth: $auth, time: $time) {
+            forwards {
+                created_at
+                fee
+                fee_mtokens
+                incoming_channel
+                incoming_alias
+                incoming_color
+                mtokens
+                outgoing_channel
+                outgoing_alias
+                outgoing_color
+                tokens
+            }
+            token
+        }
+    }
+`;
+
 export const GET_CONNECT_INFO = gql`
     query GetNodeInfo($auth: String!) {
         getNodeInfo(auth: $auth) {
