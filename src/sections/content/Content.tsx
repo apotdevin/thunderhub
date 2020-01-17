@@ -9,6 +9,7 @@ import { TransactionList } from '../../views/transactions/TransactionList';
 import { BackupsView } from '../../views/backups/Backups';
 import { FeesView } from '../../views/fees/Fees';
 import { ChainTransactions } from '../../views/chain/ChainTransactions';
+import { ForwardsList } from '../../views/forwards/ForwardList';
 
 const ContentStyle = styled.div`
     /* display: flex;
@@ -31,7 +32,7 @@ export const Content = () => {
                     path="/transactions"
                     render={() => <TransactionList />}
                 />
-                <Route path="/forwards" render={() => <TransactionList />} />
+                <Route path="/forwards" render={() => <ForwardsList />} />
                 <Route
                     path="/chaintransactions"
                     render={() => <ChainTransactions />}
