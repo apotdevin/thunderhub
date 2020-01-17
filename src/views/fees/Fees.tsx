@@ -50,7 +50,7 @@ export const FeesView = () => {
         onCompleted: data => {
             setIsEdit(false);
             data.updateFees
-                ? toast.success('Fees updated')
+                ? toast.success('Fees Updated')
                 : toast.error('Error updating fees');
         },
         refetchQueries: ['GetChannelFees'],
