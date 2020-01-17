@@ -80,6 +80,9 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
 
     const fillArray = (array: {}[]) => {
         const lengthMissing = 10 - array.length;
+        if (lengthMissing === 10) {
+            return [];
+        }
         if (lengthMissing > 0) {
             for (let i = 0; i < lengthMissing; i++) {
                 array.push({
@@ -204,6 +207,10 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
                 return renderTop('Outgoing');
         }
     };
+
+    if (parsed.length <= 0) {
+        return null;
+    }
 
     return (
         <CardContent>

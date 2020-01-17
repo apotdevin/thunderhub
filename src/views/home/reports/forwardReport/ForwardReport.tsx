@@ -28,6 +28,12 @@ interface Props {
     isType: string;
 }
 
+const timeMap: { [key: string]: string } = {
+    day: 'today',
+    week: 'this week',
+    month: 'this month',
+};
+
 export const ForwardReport = ({ isTime, isType }: Props) => {
     const { theme, price, symbol, currency } = useSettings();
 
@@ -78,7 +84,9 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
 
     const renderContent = () => {
         if (parsedData.length <= 0) {
-            return <p>Your node has not forwarded any payments.</p>;
+            return (
+                <p>{`Your node has not forwarded any payments ${timeMap[isTime]}.`}</p>
+            );
         }
         return (
             <>
