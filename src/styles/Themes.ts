@@ -4,7 +4,7 @@ import theme from 'styled-theming';
 // APP COLORS
 // ---------------------------------------
 export const backgroundColor = theme('mode', {
-    light: '#f5f7fb',
+    light: '#f8f9fb',
     dark: '#151727',
 });
 
@@ -27,12 +27,12 @@ export const inverseTextColor = theme('mode', {
 // CARD COLORS
 // ---------------------------------------
 export const cardColor = theme('mode', {
-    light: '#fafafa',
+    light: '#ffffff',
     dark: '#1b1e32',
 });
 
 export const subCardColor = theme('mode', {
-    light: 'white',
+    light: '#f8f9fb',
     dark: '#151727',
 });
 
@@ -62,10 +62,10 @@ export const progressSecond = theme('mode', {
 // ---------------------------------------
 // NAVIGATION COLORS
 // ---------------------------------------
-export const navButtonColor: { [key: string]: string } = {
-    light: '#262626',
-    dark: 'white',
-};
+export const navBackgroundColor = theme('mode', {
+    light: 'rgba(255,255,255,0.8)',
+    dark: 'rgba(0,0,0,0.4)',
+});
 
 // ---------------------------------------
 // ICON COLORS

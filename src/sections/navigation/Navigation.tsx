@@ -6,7 +6,7 @@ import { SideSettings } from './sideSettings/SideSettings';
 import {
     textColor,
     unSelectedNavButton,
-    navButtonColor,
+    navBackgroundColor,
 } from '../../styles/Themes';
 import {
     Home,
@@ -18,7 +18,6 @@ import {
     GitPullRequest,
     LinkIcon,
 } from '../../components/generic/Icons';
-import { useSettings } from '../../context/SettingsContext';
 
 const NavigationStyle = styled.div`
     grid-area: nav;
@@ -28,14 +27,14 @@ const NavigationStyle = styled.div`
 const StickyCard = styled.div`
     position: -webkit-sticky;
     position: sticky;
-    top: 10px;
+    top: 16px;
 `;
 
 const LinkView = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 10px 0;
+    padding: 8px 0;
 `;
 
 const ButtonSection = styled.div`
@@ -43,7 +42,7 @@ const ButtonSection = styled.div`
 `;
 
 const NavSeparation = styled.div`
-    width: 10px;
+    margin-left: 8px;
 `;
 
 interface NavProps {
@@ -52,35 +51,20 @@ interface NavProps {
 }
 
 const NavButton = styled(({ selectedColor, ...rest }) => <Link {...rest} />)`
-    padding: 10px;
-    border-left: ${({ selected, selectedColor }: NavProps) =>
-        selected
-            ? `3px solid ${selectedColor ? selectedColor : textColor}`
-            : ''};
-    background: ${({ selected }: NavProps) =>
-        selected
-            ? `linear-gradient(
-		90deg,
-		rgba(255, 255, 255, 0.1) 0%,
-		rgba(255, 255, 255, 0) 90%
-	)`
-            : ''};
+    padding: 8px;
+    border-radius: 4px;
+    background: ${({ selected }: NavProps) => selected && navBackgroundColor};
     display: flex;
     align-items: center;
     width: 100%;
     text-decoration: none;
-    margin: 15px 0;
+    margin: 8px 0;
     color: ${({ selected }: NavProps) =>
         selected ? textColor : unSelectedNavButton};
 
     &:hover {
-        background: linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0.1) 0%,
-            rgba(255, 255, 255, 0) 90%
-        );
-        border-left: ${({ selectedColor }: NavProps) =>
-            `3px solid ${selectedColor ? selectedColor : textColor}`};
+        color: ${textColor};
+        background: ${navBackgroundColor};
     }
 `;
 
@@ -94,18 +78,12 @@ const SETTINGS = '/settings';
 const FEES = '/fees';
 
 export const Navigation = () => {
-    const { theme } = useSettings();
     const { pathname } = useLocation();
 
     const renderNavButton = (title: string, link: string, NavIcon: any) => (
-        <NavButton
-            selectedColor={navButtonColor[theme]}
-            selected={pathname === link}
-            to={link}
-        >
+        <NavButton selected={pathname === link} to={link}>
             <NavIcon />
-            <NavSeparation />
-            {title}
+            <NavSeparation>{title}</NavSeparation>
         </NavButton>
     );
 
