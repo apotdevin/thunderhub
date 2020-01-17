@@ -17,7 +17,7 @@ import { getErrorContent } from '../../../../utils/error';
 import { useSettings } from '../../../../context/SettingsContext';
 import { getValue } from '../../../../helpers/Helpers';
 import { useBitcoinInfo } from '../../../../context/BitcoinContext';
-import { SecureButton } from '../../../../components/secureButton/SecureButton';
+import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { textColorMap } from '../../../../styles/Themes';
 
 const RadioText = styled.div`

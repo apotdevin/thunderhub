@@ -6,7 +6,7 @@ import { Edit } from '../../../../components/generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
-import { SecureButton } from '../../../../components/secureButton/SecureButton';
+import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 
 const SingleLine = styled.div`
     display: flex;

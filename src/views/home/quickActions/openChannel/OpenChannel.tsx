@@ -18,7 +18,7 @@ import { useSettings } from '../../../../context/SettingsContext';
 import { useBitcoinInfo } from '../../../../context/BitcoinContext';
 import styled from 'styled-components';
 import { textColorMap } from '../../../../styles/Themes';
-import { SecureButton } from '../../../../components/secureButton/SecureButton';
+import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 
 const RadioText = styled.div`
     margin-left: 10px;

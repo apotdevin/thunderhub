@@ -18,7 +18,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { GET_BITCOIN_FEES } from '../../graphql/query';
 import { useSettings } from '../../context/SettingsContext';
-import { SecureButton } from '../secureButton/SecureButton';
+import { SecureButton } from '../buttons/secureButton/SecureButton';
 
 interface CloseChannelProps {
     setModalOpen: (status: boolean) => void;
