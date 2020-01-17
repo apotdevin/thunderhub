@@ -21,7 +21,7 @@ import { FeeCard } from './FeeCard';
 import { UPDATE_FEES } from '../../graphql/mutation';
 import { XSvg, ChevronRight } from '../../components/generic/Icons';
 import styled from 'styled-components';
-import { SecureButton } from '../../components/secureButton/SecureButton';
+import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 import { textColorMap } from '../../styles/Themes';
 import { useSettings } from '../../context/SettingsContext';

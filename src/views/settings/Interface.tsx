@@ -1,10 +1,13 @@
 import React from 'react';
 import { CardWithTitle, SubTitle, Card } from '../../components/generic/Styled';
-import { SettingsLine, ButtonRow, SettingsButton } from './Settings';
+import { SettingsLine, ButtonRow } from './Settings';
 import { useSettings } from '../../context/SettingsContext';
 
+import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { colorButtonBorder } from '../../styles/Themes';
+
 export const InterfaceSettings = () => {
-    const { setSettings } = useSettings();
+    const { setSettings, theme } = useSettings();
     const cTheme = localStorage.getItem('theme') || 'dark';
     const cCurrency = localStorage.getItem('currency') || 'sat';
 
@@ -14,15 +17,16 @@ export const InterfaceSettings = () => {
         type: string,
         current: string,
     ) => (
-        <SettingsButton
-            enabled={current === value}
+        <ColorButton
+            color={colorButtonBorder[theme]}
+            selected={current === value}
             onClick={() => {
                 localStorage.setItem(type, value);
                 setSettings({ [type]: value });
             }}
         >
             {title}
-        </SettingsButton>
+        </ColorButton>
     );
 
     return (

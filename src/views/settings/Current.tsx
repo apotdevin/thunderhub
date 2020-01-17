@@ -6,7 +6,7 @@ import {
     Sub4Title,
 } from '../../components/generic/Styled';
 import styled from 'styled-components';
-import { unSelectedNavButton, chartLinkColor } from '../../styles/Themes';
+import { chartLinkColor, colorButtonBackground } from '../../styles/Themes';
 import { useAccount } from '../../context/AccountContext';
 
 const CurrentField = styled.div`
@@ -14,11 +14,11 @@ const CurrentField = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    border: 1px solid ${unSelectedNavButton};
     margin: 10px 0;
     font-size: 14px;
     padding: 5px 10px;
     border-radius: 5px;
+    background-color: ${colorButtonBackground};
 `;
 
 export const CurrentSettings = () => {

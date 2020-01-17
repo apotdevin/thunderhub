@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import styled from 'styled-components';
 import { ChevronRight } from '../../components/generic/Icons';
-import { SecureButton } from '../../components/secureButton/SecureButton';
+import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { useSettings } from '../../context/SettingsContext';
 import { textColorMap } from '../../styles/Themes';
 

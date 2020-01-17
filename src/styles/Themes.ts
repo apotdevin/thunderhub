@@ -24,6 +24,24 @@ export const inverseTextColor = theme('mode', {
 });
 
 // ---------------------------------------
+// BUTTON COLORS
+// ---------------------------------------
+export const colorButtonBackground = theme('mode', {
+    light: '#f8f9fb',
+    dark: 'rgba(0,0,0,0.4)',
+});
+
+export const colorButtonColor = theme('mode', {
+    light: '#8c8c8c',
+    dark: '#8c8c8c',
+});
+
+export const colorButtonBorder: { [key: string]: string } = {
+    light: '#262626',
+    dark: '#EFFFFA',
+};
+
+// ---------------------------------------
 // CARD COLORS
 // ---------------------------------------
 export const cardColor = theme('mode', {

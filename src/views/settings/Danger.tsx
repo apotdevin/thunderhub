@@ -10,7 +10,9 @@ import { getStorageSaved, deleteStorage } from '../../utils/storage';
 import { useAccount } from '../../context/AccountContext';
 import styled from 'styled-components';
 import { deleteAuth } from '../../utils/auth';
-import { textColor } from '../../styles/Themes';
+import { textColor, colorButtonBorder } from '../../styles/Themes';
+import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { useSettings } from '../../context/SettingsContext';
 
 export const ButtonRow = styled.div`
     width: auto;
@@ -36,7 +38,8 @@ export const SettingsButton = styled(SimpleButton)`
 `;
 
 export const DangerView = () => {
-    const { refreshAccount } = useAccount();
+    const { theme } = useSettings();
+    const { name, refreshAccount } = useAccount();
 
     return (
         <CardWithTitle>
@@ -47,15 +50,15 @@ export const DangerView = () => {
                     <ButtonRow>
                         {getStorageSaved().map((entry, index) => {
                             return (
-                                <SettingsButton
+                                <ColorButton
+                                    color={colorButtonBorder[theme]}
                                     onClick={() => {
                                         deleteAuth(entry.index);
                                         refreshAccount();
                                     }}
-                                    key={index}
                                 >
                                     {entry.name}
-                                </SettingsButton>
+                                </ColorButton>
                             );
                         })}
                     </ButtonRow>
@@ -63,14 +66,15 @@ export const DangerView = () => {
                 <SettingsLine>
                     <SubTitle>Delete all Accounts and Settings:</SubTitle>
                     <ButtonRow>
-                        <SettingsButton
+                        <ColorButton
+                            color={colorButtonBorder[theme]}
                             onClick={() => {
                                 deleteStorage();
                                 refreshAccount();
                             }}
                         >
                             Delete All
-                        </SettingsButton>
+                        </ColorButton>
                     </ButtonRow>
                 </SettingsLine>
             </OutlineCard>

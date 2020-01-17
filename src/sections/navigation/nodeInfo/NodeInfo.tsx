@@ -109,7 +109,7 @@ export const NodeInfo = () => {
             <Balance
                 data-tip
                 data-for="node_tip"
-            >{`${active_channels_count} | ${pending_channels_count} | ${closed_channels_count} | ${peers_count}`}</Balance>
+            >{`${active_channels_count} / ${pending_channels_count} / ${closed_channels_count} / ${peers_count}`}</Balance>
             <Balance>
                 <Info bottomColor={is_synced_to_chain ? '#95de64' : '#ff7875'}>
                     {is_synced_to_chain ? 'Synced' : 'Not Synced'}

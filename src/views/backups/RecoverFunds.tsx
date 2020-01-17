@@ -12,7 +12,7 @@ import {
 } from '../../components/generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { XSvg, ChevronRight } from '../../components/generic/Icons';
-import { SecureButton } from '../../components/secureButton/SecureButton';
+import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 
 export const RecoverFunds = ({ color }: { color: string }) => {
     const [backupString, setBackupString] = useState<string>('');

@@ -9,7 +9,7 @@ import { PAY_INVOICE } from '../../../../graphql/mutation';
 import { Send } from '../../../../components/generic/Icons';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
-import { SecureButton } from '../../../../components/secureButton/SecureButton';
+import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 
 export const PayCard = ({ color }: { color: string }) => {
     const [request, setRequest] = useState('');

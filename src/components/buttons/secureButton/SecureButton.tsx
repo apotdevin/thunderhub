@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Modal from '../modal/ReactModal';
+import Modal from '../../modal/ReactModal';
 import { LoginModal } from './LoginModal';
-import { ColorButton } from '../generic/Styled';
-import { useAccount } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
+import { ColorButton } from '../../generic/Styled';
+import { useAccount } from '../../../context/AccountContext';
+import { getAuthString } from '../../../utils/auth';
 
 interface SecureButtonProps {
     callback: any;

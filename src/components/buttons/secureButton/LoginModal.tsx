@@ -8,14 +8,14 @@ import {
     NoWrapTitle,
     ColorButton,
     SubTitle,
-} from '../../components/generic/Styled';
-import { LoginButton } from '../../components/auth/Password';
-import { Circle, ChevronRight } from '../generic/Icons';
+} from '../../generic/Styled';
+import { LoginButton } from '../../auth/Password';
+import { Circle, ChevronRight } from '../../generic/Icons';
 import styled from 'styled-components';
-import { useAccount } from '../../context/AccountContext';
-import { getAuthString, saveSessionAuth } from '../../utils/auth';
-import { useSettings } from '../../context/SettingsContext';
-import { textColorMap } from '../../styles/Themes';
+import { useAccount } from '../../../context/AccountContext';
+import { getAuthString, saveSessionAuth } from '../../../utils/auth';
+import { useSettings } from '../../../context/SettingsContext';
+import { textColorMap } from '../../../styles/Themes';
 
 const RadioText = styled.div`
     margin-left: 10px;
