@@ -147,7 +147,6 @@ export const CloseChannel = ({
                                 : {}),
                         }}
                         color={'red'}
-                        enabled={true}
                         disabled={false}
                     >
                         Close Channel

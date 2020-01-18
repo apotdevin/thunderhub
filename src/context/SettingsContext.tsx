@@ -25,7 +25,7 @@ export const SettingsContext = createContext<SettingsProps>({
 });
 
 const SettingsProvider = ({ children }: any) => {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const savedTheme = localStorage.getItem('theme') || 'light';
     const savedCurrency = localStorage.getItem('currency') || 'sat';
 
     const setSettings = ({ price, symbol, currency, theme }: ChangeProps) => {

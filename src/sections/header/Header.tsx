@@ -36,7 +36,9 @@ export const Header = () => {
     return (
         <HeaderStyle>
             <Wrapper>
-                <HeaderTitle>ThunderHub</HeaderTitle>
+                <Link to="/" style={{ textDecoration: 'none' }}>
+                    <HeaderTitle>ThunderHub</HeaderTitle>
+                </Link>
                 {!loggedIn && (
                     <Link to="/login" style={{ textDecoration: 'none' }}>
                         <HomeButton>Login</HomeButton>

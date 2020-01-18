@@ -82,7 +82,6 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
                     callback={createAddress}
                     variables={{ nested }}
                     color={color}
-                    enabled={!received}
                     disabled={received}
                 >
                     <Edit />

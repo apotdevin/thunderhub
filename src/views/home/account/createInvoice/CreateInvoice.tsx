@@ -36,7 +36,6 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
                 variables={{ amount }}
                 color={color}
                 disabled={amount === 0}
-                enabled={amount > 0}
             >
                 <Edit />
                 Create Invoice

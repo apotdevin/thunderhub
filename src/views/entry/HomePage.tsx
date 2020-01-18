@@ -52,7 +52,7 @@ const detailCardContent = (title: string, text: string, Icon: any) => (
                 <Icon size={'40px'} strokeWidth={'1px'} />
             </Padding>
             <ColumnLine>
-                <SubTitle>{title}</SubTitle>
+                <SubTitle fontWeight={'900'}>{title}</SubTitle>
                 <Sub4Title>{text}</Sub4Title>
             </ColumnLine>
         </SingleLine>
