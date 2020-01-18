@@ -78,7 +78,8 @@ export const SmallLink = styled.a`
 
 export const SubTitle = styled.h4`
     margin: 5px 0;
-    font-weight: 500;
+    font-weight: ${({ fontWeight }: { fontWeight?: string }) =>
+        fontWeight ? fontWeight : '500'};
 `;
 
 export const InverseSubtitle = styled(SubTitle)`
@@ -125,6 +126,13 @@ export const Input = styled.input`
 export const SingleLine = styled.div`
     display: flex;
     justify-content: space-between;
+    align-items: center;
+`;
+
+export const RightAlign = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
     align-items: center;
 `;
 

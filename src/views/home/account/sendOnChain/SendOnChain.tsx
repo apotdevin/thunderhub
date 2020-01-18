@@ -212,7 +212,6 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                 callback={payAddress}
                 variables={{ address, ...typeAmount, ...tokenAmount }}
                 color={color}
-                enabled={canSend}
                 disabled={!canSend}
             >
                 Send To Address

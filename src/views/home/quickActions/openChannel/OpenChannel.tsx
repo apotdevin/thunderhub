@@ -187,7 +187,6 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
                     isPrivate: privateChannel,
                 }}
                 color={color}
-                enabled={canOpen}
                 disabled={!canOpen}
             >
                 Open Channel

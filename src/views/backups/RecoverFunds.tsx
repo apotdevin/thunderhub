@@ -38,7 +38,6 @@ export const RecoverFunds = ({ color }: { color: string }) => {
                 callback={recoverFunds}
                 variables={{ backup: backupString }}
                 color={color}
-                enabled={true}
                 disabled={backupString === ''}
             >
                 {loading ? (

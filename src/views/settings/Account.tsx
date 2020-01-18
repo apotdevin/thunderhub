@@ -88,7 +88,9 @@ export const AccountSettings = () => {
                             return (
                                 <ColorButton
                                     color={colorButtonBorder[theme]}
-                                    selected={name === entry.name}
+                                    selected={
+                                        name.localeCompare(entry.name) === 0
+                                    }
                                     onClick={() => {
                                         localStorage.setItem(
                                             'account',

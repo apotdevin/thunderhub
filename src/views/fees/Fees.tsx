@@ -8,7 +8,6 @@ import {
     SingleLine,
     Sub4Title,
     Separation,
-    ColorButton,
     DarkSubTitle,
     Input,
 } from '../../components/generic/Styled';
@@ -25,6 +24,7 @@ import { SecureButton } from '../../components/buttons/secureButton/SecureButton
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 import { textColorMap } from '../../styles/Themes';
 import { useSettings } from '../../context/SettingsContext';
+import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 
 const SmallInput = styled(Input)`
     max-width: 150px;
@@ -106,7 +106,6 @@ export const FeesView = () => {
                                             ...(feeRate !== 0 && { feeRate }),
                                         }}
                                         color={textColorMap[theme]}
-                                        enabled={baseFee >= 0 || feeRate >= 0}
                                         disabled={
                                             baseFee === 0 && feeRate === 0
                                         }

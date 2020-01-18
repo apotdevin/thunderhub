@@ -8,7 +8,7 @@ import { colorButtonBorder } from '../../styles/Themes';
 
 export const InterfaceSettings = () => {
     const { setSettings, theme } = useSettings();
-    const cTheme = localStorage.getItem('theme') || 'dark';
+    const cTheme = localStorage.getItem('theme') || 'light';
     const cCurrency = localStorage.getItem('currency') || 'sat';
 
     const renderButton = (

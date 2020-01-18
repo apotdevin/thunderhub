@@ -14,7 +14,6 @@ const GeneralButton = styled.button`
     cursor: pointer;
     outline: none;
     padding: 8px 16px;
-    margin: 0 4px;
     text-decoration: none;
     border-radius: 8px;
     white-space: nowrap;
@@ -30,9 +29,11 @@ interface BorderProps {
     borderColor?: string;
     withHover?: boolean;
     selected?: boolean;
+    withMargin?: boolean;
 }
 
 const BorderButton = styled(GeneralButton)`
+    margin: ${({ withMargin }) => (withMargin ? '0 4px' : '0')}
     ${({ selected }) => selected && `cursor: default`}
     border: none;
     background-color: ${colorButtonBackground};
@@ -70,6 +71,7 @@ interface ColorButtonProps {
     arrow?: boolean;
     withHover?: boolean;
     onClick?: any;
+    withMargin?: boolean;
 }
 
 const renderArrow = () => (
@@ -85,6 +87,7 @@ export const ColorButton = ({
     selected,
     arrow,
     withHover = true,
+    withMargin,
     onClick,
 }: ColorButtonProps) => {
     if (disabled) {
@@ -102,6 +105,7 @@ export const ColorButton = ({
             withHover={withHover}
             selected={selected}
             onClick={onClick}
+            withMargin={withMargin}
         >
             {children}
             {arrow && renderArrow()}

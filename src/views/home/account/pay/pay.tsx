@@ -27,7 +27,6 @@ export const PayCard = ({ color }: { color: string }) => {
                 callback={makePayment}
                 variables={{ request }}
                 color={color}
-                enabled={request !== ''}
                 disabled={request === ''}
             >
                 <Send />

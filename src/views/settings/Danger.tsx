@@ -39,7 +39,7 @@ export const SettingsButton = styled(SimpleButton)`
 
 export const DangerView = () => {
     const { theme } = useSettings();
-    const { name, refreshAccount } = useAccount();
+    const { refreshAccount } = useAccount();
 
     return (
         <CardWithTitle>

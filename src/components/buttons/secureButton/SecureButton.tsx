@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import Modal from '../../modal/ReactModal';
 import { LoginModal } from './LoginModal';
-import { ColorButton } from '../../generic/Styled';
 import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
+import { ColorButton } from '../colorButton/ColorButton';
 
 interface SecureButtonProps {
     callback: any;
     color: string;
     disabled: boolean;
-    enabled: boolean;
     children: any;
     variables: {};
 }
@@ -17,7 +16,6 @@ interface SecureButtonProps {
 export const SecureButton = ({
     callback,
     color,
-    enabled,
     disabled,
     children,
     variables,
@@ -40,12 +38,7 @@ export const SecureButton = ({
 
     return (
         <>
-            <ColorButton
-                color={color}
-                disabled={disabled}
-                enabled={enabled}
-                onClick={onClick}
-            >
+            <ColorButton color={color} disabled={disabled} onClick={onClick}>
                 {children}
             </ColorButton>
             <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>

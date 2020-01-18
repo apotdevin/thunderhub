@@ -101,7 +101,6 @@ export const FeeCard = ({
                             ...(newFeeRate !== 0 && { feeRate: newFeeRate }),
                         }}
                         color={textColorMap[theme]}
-                        enabled={newBaseFee >= 0 || newFeeRate >= 0}
                         disabled={newBaseFee === 0 && newFeeRate === 0}
                     >
                         Update Fees
