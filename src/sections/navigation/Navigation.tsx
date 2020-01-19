@@ -21,7 +21,6 @@ import {
 
 const NavigationStyle = styled.div`
     grid-area: nav;
-    margin-left: 0.5rem;
 `;
 
 const StickyCard = styled.div`

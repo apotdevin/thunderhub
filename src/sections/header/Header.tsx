@@ -4,6 +4,8 @@ import { textColor, cardColor } from '../../styles/Themes';
 import { HomeButton } from '../../views/entry/HomePage.styled';
 import { Link } from 'react-router-dom';
 import { useAccount } from '../../context/AccountContext';
+import { SingleLine, Sub4Title } from '../../components/generic/Styled';
+import { Cpu } from '../../components/generic/Icons';
 
 const HeaderStyle = styled.div`
     display: flex;
@@ -27,23 +29,32 @@ const Wrapper = styled.div`
 
 const HeaderTitle = styled.div`
     color: ${textColor};
-    font-weight: bolder;
+    font-weight: 900;
 `;
 
 export const Header = () => {
-    const { loggedIn } = useAccount();
+    const { loggedIn, name } = useAccount();
+
+    const renderLoggedIn = () => <Sub4Title>{`Account: ${name}`}</Sub4Title>;
+
+    const renderLoggedOut = () => (
+        <Link to="/login" style={{ textDecoration: 'none' }}>
+            <HomeButton>Login</HomeButton>
+        </Link>
+    );
 
     return (
         <HeaderStyle>
             <Wrapper>
                 <Link to="/" style={{ textDecoration: 'none' }}>
-                    <HeaderTitle>ThunderHub</HeaderTitle>
+                    <SingleLine>
+                        <Cpu/>
+                        <HeaderTitle>ThunderHub</HeaderTitle>
+                    </SingleLine>
                 </Link>
-                {!loggedIn && (
-                    <Link to="/login" style={{ textDecoration: 'none' }}>
-                        <HomeButton>Login</HomeButton>
-                    </Link>
-                )}
+                <SingleLine>
+                    {loggedIn ? renderLoggedIn() : renderLoggedOut()}
+                </SingleLine>
             </Wrapper>
         </HeaderStyle>
     );

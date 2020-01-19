@@ -4,6 +4,8 @@ import {
     textColor,
     colorButtonBackground,
     colorButtonColor,
+    disabledButtonBackground,
+    disabledButtonBorder,
 } from '../../../styles/Themes';
 import { ChevronRight } from '../../generic/Icons';
 
@@ -57,9 +59,9 @@ const BorderButton = styled(GeneralButton)`
 
 const DisabledButton = styled(GeneralButton)`
     border: none;
-    background-color: #262626;
+    background-color: ${disabledButtonBackground};
     color: #8c8c8c;
-    border: 1px solid #595959;
+    border: 1px solid ${disabledButtonBorder};
     cursor: default;
 `;
 

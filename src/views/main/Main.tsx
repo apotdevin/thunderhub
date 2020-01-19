@@ -9,7 +9,7 @@ const Container = styled.div`
     grid-template-areas: 'nav content content';
     grid-template-columns: 200px 1fr 200px;
     grid-template-rows: auto 1fr auto;
-    gap: 10px;
+    gap: 16px;
 `;
 
 const MainView = () => (
