@@ -41,6 +41,16 @@ export const colorButtonBorder: { [key: string]: string } = {
     dark: '#EFFFFA',
 };
 
+export const disabledButtonBackground = theme('mode', {
+    light: '#f5f5f5',
+    dark: 'rgba(0,0,0,0.4)',
+});
+
+export const disabledButtonBorder = theme('mode', {
+    light: '#f5f5f5',
+    dark: 'rgba(0,0,0,0.4)',
+});
+
 // ---------------------------------------
 // CARD COLORS
 // ---------------------------------------

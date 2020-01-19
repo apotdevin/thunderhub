@@ -5,6 +5,7 @@ import {
     SingleLine,
     DarkSubTitle,
     Input,
+    RightAlign,
 } from '../../components/generic/Styled';
 import { renderLine } from '../../components/generic/Helpers';
 import { MainInfo, NodeTitle, ColLine } from './Fees.style';
@@ -91,7 +92,7 @@ export const FeeCard = ({
                         onChange={e => setFeeRate(parseInt(e.target.value))}
                     />
                 </SingleLine>
-                <SingleLine>
+                <RightAlign>
                     <SecureButton
                         callback={updateFees}
                         variables={{
@@ -106,7 +107,7 @@ export const FeeCard = ({
                         Update Fees
                         <ChevronRight />
                     </SecureButton>
-                </SingleLine>
+                </RightAlign>
             </>
         );
     };

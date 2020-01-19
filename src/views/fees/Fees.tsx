@@ -10,6 +10,7 @@ import {
     Separation,
     DarkSubTitle,
     Input,
+    RightAlign,
 } from '../../components/generic/Styled';
 import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
@@ -98,7 +99,7 @@ export const FeesView = () => {
                                         }
                                     />
                                 </SingleLine>
-                                <SingleLine>
+                                <RightAlign>
                                     <SecureButton
                                         callback={updateFees}
                                         variables={{
@@ -113,7 +114,7 @@ export const FeesView = () => {
                                         Update Fees
                                         <ChevronRight />
                                     </SecureButton>
-                                </SingleLine>
+                                </RightAlign>
                             </>
                         )}
                     </Card>

@@ -12,13 +12,7 @@ import { ChainTransactions } from '../../views/chain/ChainTransactions';
 import { ForwardsList } from '../../views/forwards/ForwardList';
 
 const ContentStyle = styled.div`
-    /* display: flex;
-	justify-content: center;
-	align-items: center; */
-    /* padding: 0 10px; */
-    /* background-color: blue; */
     grid-area: content;
-    margin-right: 0.5rem;
 `;
 
 export const Content = () => {

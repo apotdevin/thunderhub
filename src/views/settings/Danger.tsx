@@ -51,7 +51,7 @@ export const DangerView = () => {
                         {getStorageSaved().map((entry, index) => {
                             return (
                                 <ColorButton
-                                    color={colorButtonBorder[theme]}
+                                    color={'red'}
                                     onClick={() => {
                                         deleteAuth(entry.index);
                                         refreshAccount();
@@ -67,7 +67,7 @@ export const DangerView = () => {
                     <SubTitle>Delete all Accounts and Settings:</SubTitle>
                     <ButtonRow>
                         <ColorButton
-                            color={colorButtonBorder[theme]}
+                            color={'red'}
                             onClick={() => {
                                 deleteStorage();
                                 refreshAccount();
