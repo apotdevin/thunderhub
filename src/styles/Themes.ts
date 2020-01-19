@@ -4,7 +4,7 @@ import theme from 'styled-theming';
 // APP COLORS
 // ---------------------------------------
 export const backgroundColor = theme('mode', {
-    light: '#f8f9fb',
+    light: '#F9FBFF',
     dark: '#151727',
 });
 
@@ -19,16 +19,16 @@ export const textColorMap: { [key: string]: string } = {
 };
 
 export const inverseTextColor = theme('mode', {
-    light: '#EFFFFA',
-    dark: '#262626',
+    light: 'white',
+    dark: 'black',
 });
 
 // ---------------------------------------
 // BUTTON COLORS
 // ---------------------------------------
 export const colorButtonBackground = theme('mode', {
-    light: '#f8f9fb',
-    dark: 'rgba(0,0,0,0.4)',
+    light: '#F4F8FF',
+    dark: '#252944',
 });
 
 export const colorButtonColor = theme('mode', {
@@ -37,9 +37,14 @@ export const colorButtonColor = theme('mode', {
 });
 
 export const colorButtonBorder: { [key: string]: string } = {
-    light: '#262626',
-    dark: '#EFFFFA',
+    light: '#99BAFF',
+    dark: '#525C99',
 };
+
+export const colorButtonSelectedBorder = theme('mode', {
+    light: '#99BAFF',
+    dark: '#525C99',
+});
 
 export const disabledButtonBackground = theme('mode', {
     light: '#f5f5f5',

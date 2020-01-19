@@ -1,11 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import {
     textColor,
     colorButtonBackground,
-    colorButtonColor,
     disabledButtonBackground,
     disabledButtonBorder,
+    colorButtonSelectedBorder,
+    inverseTextColor,
 } from '../../../styles/Themes';
 import { ChevronRight } from '../../generic/Icons';
 
@@ -37,22 +38,24 @@ interface BorderProps {
 const BorderButton = styled(GeneralButton)`
     margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
     ${({ selected }) => selected && `cursor: default`};
+    ${({ selected }) => selected && `font-weight: 900`};
     border: none;
     background-color: ${colorButtonBackground};
-    color: ${({ selected }) => (selected ? textColor : colorButtonColor)};
+    color: ${textColor};
     border: 1px solid
         ${({ borderColor, withHover, selected }: BorderProps) =>
             (borderColor && !withHover) || selected
                 ? selected
-                    ? '#595959'
+                    ? colorButtonSelectedBorder
                     : borderColor
                 : colorButtonBackground};
 
     &:hover {
-        color: ${textColor};
         ${({ borderColor, withHover, selected }: BorderProps) =>
             borderColor && withHover && !selected
-                ? `border: 1px solid ${borderColor}`
+                ? css`border: 1px solid ${colorButtonBackground}
+                background-color: ${borderColor}
+                color: ${inverseTextColor}`
                 : ''};
     }
 `;

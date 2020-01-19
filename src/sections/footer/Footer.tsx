@@ -1,29 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
-import { cardColor } from '../../styles/Themes';
+import { Wrapper } from '../../components/generic/Styled';
+import { Link } from 'react-router-dom';
 
 const FooterStyle = styled.div`
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 30px;
-    background-color: ${cardColor};
-    grid-area: footer;
+    padding: 30px 0;
     height: 300px;
-`;
-
-const Wrapper = styled.div`
-    max-width: 1000px;
-    margin: 0 auto 0 auto;
-    padding: 0 0.5rem;
-    width: 100%;
-    height: 100%;
 `;
 
 export const Footer = () => {
     return (
-        <FooterStyle>
-            <Wrapper>ThunderHub</Wrapper>
-        </FooterStyle>
+        <Wrapper withColor={true}>
+            <FooterStyle>
+                ThunderHub
+                <Link to={'/faq'}>FAQ</Link>
+                <Link to={'/terms'}>Terms of Use</Link>
+                <Link to={'/privacy'}>Privacy Policy</Link>
+            </FooterStyle>
+        </Wrapper>
     );
 };

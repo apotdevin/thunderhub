@@ -1,30 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import { textColor, cardColor } from '../../styles/Themes';
+import { textColor } from '../../styles/Themes';
 import { HomeButton } from '../../views/entry/HomePage.styled';
 import { Link } from 'react-router-dom';
 import { useAccount } from '../../context/AccountContext';
-import { SingleLine, Sub4Title } from '../../components/generic/Styled';
+import {
+    SingleLine,
+    Sub4Title,
+    Wrapper,
+} from '../../components/generic/Styled';
 import { Cpu } from '../../components/generic/Icons';
 
 const HeaderStyle = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 16px 0;
-    background-color: ${cardColor};
-    grid-area: header;
     margin-bottom: 10px;
-`;
-
-const Wrapper = styled.div`
-    max-width: 1000px;
-    margin: 0 auto 0 auto;
-    width: 100%;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 `;
 
 const HeaderTitle = styled.div`
@@ -44,18 +33,20 @@ export const Header = () => {
     );
 
     return (
-        <HeaderStyle>
-            <Wrapper>
-                <Link to="/" style={{ textDecoration: 'none' }}>
-                    <SingleLine>
-                        <Cpu />
-                        <HeaderTitle>ThunderHub</HeaderTitle>
-                    </SingleLine>
-                </Link>
+        <Wrapper withColor={true}>
+            <HeaderStyle>
                 <SingleLine>
-                    {loggedIn ? renderLoggedIn() : renderLoggedOut()}
+                    <Link to="/" style={{ textDecoration: 'none' }}>
+                        <SingleLine>
+                            <Cpu />
+                            <HeaderTitle>ThunderHub</HeaderTitle>
+                        </SingleLine>
+                    </Link>
+                    <SingleLine>
+                        {loggedIn ? renderLoggedIn() : renderLoggedOut()}
+                    </SingleLine>
                 </SingleLine>
-            </Wrapper>
-        </HeaderStyle>
+            </HeaderStyle>
+        </Wrapper>
     );
 };
