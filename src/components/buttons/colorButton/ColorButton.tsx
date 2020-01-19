@@ -31,12 +31,12 @@ interface BorderProps {
     borderColor?: string;
     withHover?: boolean;
     selected?: boolean;
-    withMargin?: boolean;
+    withMargin?: string;
 }
 
 const BorderButton = styled(GeneralButton)`
-    margin: ${({ withMargin }) => (withMargin ? '0 4px' : '0')}
-    ${({ selected }) => selected && `cursor: default`}
+    margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
+    ${({ selected }) => selected && `cursor: default`};
     border: none;
     background-color: ${colorButtonBackground};
     color: ${({ selected }) => (selected ? textColor : colorButtonColor)};
@@ -73,7 +73,7 @@ interface ColorButtonProps {
     arrow?: boolean;
     withHover?: boolean;
     onClick?: any;
-    withMargin?: boolean;
+    withMargin?: string;
 }
 
 const renderArrow = () => (

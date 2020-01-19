@@ -10,9 +10,8 @@ import { getStorageSaved, deleteStorage } from '../../utils/storage';
 import { useAccount } from '../../context/AccountContext';
 import styled from 'styled-components';
 import { deleteAuth } from '../../utils/auth';
-import { textColor, colorButtonBorder } from '../../styles/Themes';
+import { textColor } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { useSettings } from '../../context/SettingsContext';
 
 export const ButtonRow = styled.div`
     width: auto;
@@ -38,7 +37,6 @@ export const SettingsButton = styled(SimpleButton)`
 `;
 
 export const DangerView = () => {
-    const { theme } = useSettings();
     const { refreshAccount } = useAccount();
 
     return (
@@ -51,6 +49,7 @@ export const DangerView = () => {
                         {getStorageSaved().map((entry, index) => {
                             return (
                                 <ColorButton
+                                    withMargin={'0 0 0 8px'}
                                     color={'red'}
                                     onClick={() => {
                                         deleteAuth(entry.index);

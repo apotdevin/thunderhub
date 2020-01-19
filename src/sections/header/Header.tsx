@@ -48,7 +48,7 @@ export const Header = () => {
             <Wrapper>
                 <Link to="/" style={{ textDecoration: 'none' }}>
                     <SingleLine>
-                        <Cpu/>
+                        <Cpu />
                         <HeaderTitle>ThunderHub</HeaderTitle>
                     </SingleLine>
                 </Link>

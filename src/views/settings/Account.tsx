@@ -91,6 +91,7 @@ export const AccountSettings = () => {
                                     selected={
                                         name.localeCompare(entry.name) === 0
                                     }
+                                    withMargin={'0 0 0 8px'}
                                     onClick={() => {
                                         localStorage.setItem(
                                             'account',

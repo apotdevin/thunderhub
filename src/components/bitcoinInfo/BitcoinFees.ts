@@ -9,6 +9,7 @@ export const BitcoinFees = () => {
     const { setInfo } = useBitcoinInfo();
     const { loading, data } = useQuery(GET_BITCOIN_FEES, {
         onError: error => toast.error(getErrorContent(error)),
+        pollInterval: 60000,
     });
 
     useEffect(() => {

@@ -168,11 +168,8 @@ export const GET_RESUME = gql`
 `;
 
 export const GET_BITCOIN_PRICE = gql`
-    query GetBitcoinPrice($currency: String) {
-        getBitcoinPrice(currency: $currency) {
-            price
-            symbol
-        }
+    query GetBitcoinPrice {
+        getBitcoinPrice
     }
 `;
 
