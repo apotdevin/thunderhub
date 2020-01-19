@@ -7,7 +7,7 @@ import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { colorButtonBorder } from '../../styles/Themes';
 
 export const InterfaceSettings = () => {
-    const { setSettings, theme } = useSettings();
+    const { setSettings, theme, updateCurrency } = useSettings();
     const cTheme = localStorage.getItem('theme') || 'light';
     const cCurrency = localStorage.getItem('currency') || 'sat';
 
@@ -18,11 +18,13 @@ export const InterfaceSettings = () => {
         current: string,
     ) => (
         <ColorButton
+            withMargin={'0 0 0 8px'}
             color={colorButtonBorder[theme]}
             selected={current === value}
             onClick={() => {
                 localStorage.setItem(type, value);
-                setSettings({ [type]: value });
+                type === 'theme' && setSettings({ theme: value });
+                type === 'currency' && updateCurrency({ currency: value });
             }}
         >
             {title}
@@ -46,6 +48,12 @@ export const InterfaceSettings = () => {
                         {renderButton('Bitcoin', 'btc', 'currency', cCurrency)}
                         {renderButton('Satoshis', 'sat', 'currency', cCurrency)}
                         {renderButton('Euro', 'EUR', 'currency', cCurrency)}
+                        {renderButton(
+                            'US Dollar',
+                            'USD',
+                            'currency',
+                            cCurrency,
+                        )}
                     </ButtonRow>
                 </SettingsLine>
             </Card>

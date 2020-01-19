@@ -25,7 +25,7 @@ const IconRow = styled.div`
 `;
 
 export const SideSettings = () => {
-    const { theme, currency, setSettings } = useSettings();
+    const { theme, currency, updateCurrency, setSettings } = useSettings();
 
     return (
         <>
@@ -35,7 +35,7 @@ export const SideSettings = () => {
                     selected={currency === 'sat'}
                     onClick={() => {
                         localStorage.setItem('currency', 'sat');
-                        setSettings({ currency: 'sat' });
+                        updateCurrency({ currency: 'sat' });
                     }}
                 >
                     <Symbol>S</Symbol>
@@ -44,7 +44,7 @@ export const SideSettings = () => {
                     selected={currency === 'btc'}
                     onClick={() => {
                         localStorage.setItem('currency', 'btc');
-                        setSettings({ currency: 'btc' });
+                        updateCurrency({ currency: 'btc' });
                     }}
                 >
                     <Symbol>₿</Symbol>
@@ -53,10 +53,19 @@ export const SideSettings = () => {
                     selected={currency === 'EUR'}
                     onClick={() => {
                         localStorage.setItem('currency', 'EUR');
-                        setSettings({ currency: 'EUR' });
+                        updateCurrency({ currency: 'EUR' });
                     }}
                 >
                     <Symbol>€</Symbol>
+                </SelectedIcon>
+                <SelectedIcon
+                    selected={currency === 'USD'}
+                    onClick={() => {
+                        localStorage.setItem('currency', 'USD');
+                        updateCurrency({ currency: 'USD' });
+                    }}
+                >
+                    <Symbol>$</Symbol>
                 </SelectedIcon>
             </IconRow>
             <IconRow>

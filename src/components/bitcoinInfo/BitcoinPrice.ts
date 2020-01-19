@@ -7,14 +7,19 @@ import { getErrorContent } from '../../utils/error';
 
 export const BitcoinPrice = () => {
     const { setSettings } = useSettings();
-    const { loading, data } = useQuery(GET_BITCOIN_PRICE, {
+    const { loading, data, stopPolling } = useQuery(GET_BITCOIN_PRICE, {
         onError: error => toast.error(getErrorContent(error)),
+        pollInterval: 60000,
     });
 
     useEffect(() => {
         if (!loading && data && data.getBitcoinPrice) {
-            const { price, symbol } = data.getBitcoinPrice;
-            setSettings({ price, symbol });
+            try {
+                const prices = JSON.parse(data.getBitcoinPrice);
+                setSettings({ prices });
+            } catch (error) {
+                stopPolling();
+            }
         }
     }, [data, loading, setSettings]);
 

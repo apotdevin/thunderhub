@@ -36,14 +36,14 @@ export const getValue = ({
     if (currency === 'btc') {
         const amountInBtc = value / 100000000;
         return `₿${amountInBtc}`;
-    } else if (currency === 'EUR') {
-        const amountInFiat = (value / 100000000) * price;
-        return `${symbol}${numeral(amountInFiat).format('0,0.00')}`;
-    } else {
+    } else if (currency === 'sat') {
         const breakAmount = breakNumber
             ? getValueString(value)
             : numeral(value).format('0,0');
         return `${breakAmount} sats`;
+    } else {
+        const amountInFiat = (value / 100000000) * price;
+        return `${symbol}${numeral(amountInFiat).format('0,0.00')}`;
     }
 };
 
