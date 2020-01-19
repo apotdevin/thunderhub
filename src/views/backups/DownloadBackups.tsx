@@ -1,9 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-    ColorButton,
-    DarkSubTitle,
-    SingleLine,
-} from '../../components/generic/Styled';
+import { DarkSubTitle, SingleLine } from '../../components/generic/Styled';
 import { saveToPc } from '../../helpers/Helpers';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { GET_BACKUPS } from '../../graphql/query';
@@ -12,6 +8,7 @@ import { getAuthString } from '../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import ScaleLoader from 'react-spinners/ScaleLoader';
+import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 
 export const DownloadBackups = ({ color }: { color: string }) => {
     const { name, host, read, cert, sessionAdmin } = useAccount();
@@ -35,8 +32,8 @@ export const DownloadBackups = ({ color }: { color: string }) => {
             <DarkSubTitle>Backup All Channels</DarkSubTitle>
 
             <ColorButton
+                withMargin={'4px 0'}
                 disabled={loading}
-                color={color}
                 onClick={() => getBackups()}
             >
                 {loading ? (

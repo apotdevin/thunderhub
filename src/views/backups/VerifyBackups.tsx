@@ -6,19 +6,15 @@ import { VERIFY_BACKUPS } from '../../graphql/query';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import {
-    ColorButton,
     SingleLine,
     DarkSubTitle,
     Input,
     SubCard,
+    RightAlign,
 } from '../../components/generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { XSvg, ChevronRight } from '../../components/generic/Icons';
-import styled from 'styled-components';
-
-const RightButton = styled(ColorButton)`
-    margin: 0 0 0 auto;
-`;
+import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 
 export const VerifyBackups = ({ color }: { color: string }) => {
     const [backupString, setBackupString] = useState<string>('');
@@ -46,22 +42,25 @@ export const VerifyBackups = ({ color }: { color: string }) => {
                 <DarkSubTitle>Backup String: </DarkSubTitle>
                 <Input onChange={e => setBackupString(e.target.value)} />
             </SingleLine>
-            <RightButton
-                disabled={backupString === ''}
-                color={color}
-                onClick={() =>
-                    verifyBackup({ variables: { auth, backup: backupString } })
-                }
-            >
-                {loading ? (
-                    <ScaleLoader height={8} width={2} color={color} />
-                ) : (
-                    <>
-                        Verify
-                        <ChevronRight />
-                    </>
-                )}
-            </RightButton>
+            <RightAlign>
+                <ColorButton
+                    disabled={backupString === ''}
+                    onClick={() =>
+                        verifyBackup({
+                            variables: { auth, backup: backupString },
+                        })
+                    }
+                >
+                    {loading ? (
+                        <ScaleLoader height={8} width={2} color={color} />
+                    ) : (
+                        <>
+                            Verify
+                            <ChevronRight />
+                        </>
+                    )}
+                </ColorButton>
+            </RightAlign>
         </SubCard>
     );
 
@@ -70,8 +69,8 @@ export const VerifyBackups = ({ color }: { color: string }) => {
             <SingleLine>
                 <DarkSubTitle>Verify Channels Backup</DarkSubTitle>
                 <ColorButton
+                    withMargin={'4px 0'}
                     disabled={loading}
-                    color={color}
                     onClick={() => setIsPasting(prev => !prev)}
                 >
                     {isPasting ? <XSvg /> : 'Verify'}

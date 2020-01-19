@@ -4,7 +4,6 @@ import { SettingsLine, ButtonRow } from './Settings';
 import { useSettings } from '../../context/SettingsContext';
 
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { colorButtonBorder } from '../../styles/Themes';
 
 export const InterfaceSettings = () => {
     const { setSettings, theme, updateCurrency } = useSettings();
@@ -19,7 +18,6 @@ export const InterfaceSettings = () => {
     ) => (
         <ColorButton
             withMargin={'0 0 0 8px'}
-            color={colorButtonBorder[theme]}
             selected={current === value}
             onClick={() => {
                 localStorage.setItem(type, value);
