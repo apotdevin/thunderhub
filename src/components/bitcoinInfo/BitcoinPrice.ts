@@ -21,7 +21,7 @@ export const BitcoinPrice = () => {
                 stopPolling();
             }
         }
-    }, [data, loading, setSettings]);
+    }, [data, loading, setSettings, stopPolling]);
 
     return null;
 };
