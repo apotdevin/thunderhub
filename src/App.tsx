@@ -18,7 +18,7 @@ import { BitcoinFees } from './components/bitcoinInfo/BitcoinFees';
 import { LoadingCard } from './components/loading/LoadingCard';
 
 const EntryView = React.lazy(() => import('./views/entry/Entry'));
-const MainView = React.lazy(() => import('./views/main/Main'));
+const ContentView = React.lazy(() => import('./sections/content/Content'));
 
 toast.configure({
     draggable: false,
@@ -44,7 +44,7 @@ const ContextApp: React.FC = () => {
             ) : admin !== '' && read === '' && sessionAdmin === '' ? (
                 <EntryView session={true} />
             ) : (
-                <MainView />
+                <ContentView />
             )}
         </Suspense>
     );
