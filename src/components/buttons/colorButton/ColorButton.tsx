@@ -7,6 +7,7 @@ import {
     disabledButtonBorder,
     colorButtonSelectedBorder,
     inverseTextColor,
+    colorButtonBorder,
 } from '../../../styles/Themes';
 import { ChevronRight } from '../../generic/Icons';
 
@@ -52,10 +53,12 @@ const BorderButton = styled(GeneralButton)`
 
     &:hover {
         ${({ borderColor, withHover, selected }: BorderProps) =>
-            borderColor && withHover && !selected
+            withHover && !selected
                 ? css`border: 1px solid ${colorButtonBackground}
-                background-color: ${borderColor}
-                color: ${inverseTextColor}`
+                    background-color: ${
+                        borderColor ? borderColor : colorButtonBorder
+                    }
+                    color: ${inverseTextColor}`
                 : ''};
     }
 `;
@@ -68,6 +71,12 @@ const DisabledButton = styled(GeneralButton)`
     cursor: default;
 `;
 
+const renderArrow = () => (
+    <StyledArrow>
+        <ChevronRight size={'18px'} />
+    </StyledArrow>
+);
+
 interface ColorButtonProps {
     color?: string;
     disabled?: boolean;
@@ -78,12 +87,6 @@ interface ColorButtonProps {
     onClick?: any;
     withMargin?: string;
 }
-
-const renderArrow = () => (
-    <StyledArrow>
-        <ChevronRight size={'18px'} />
-    </StyledArrow>
-);
 
 export const ColorButton = ({
     color,

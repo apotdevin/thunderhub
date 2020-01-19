@@ -14,7 +14,6 @@ import { useAccount } from '../../context/AccountContext';
 import styled from 'styled-components';
 import { getNextAvailable, getStorageSaved } from '../../utils/storage';
 import { useSettings } from '../../context/SettingsContext';
-import { colorButtonBorder } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { XSvg } from '../../components/generic/Icons';
 
@@ -43,28 +42,18 @@ export const AccountSettings = () => {
         <SingleLine>
             {willAdd && (
                 <RightAlign>
-                    <ColorButton
-                        color={colorButtonBorder[theme]}
-                        onClick={() => setIsType('login')}
-                    >
+                    <ColorButton onClick={() => setIsType('login')}>
                         Connection Details
                     </ColorButton>
-                    <ColorButton
-                        color={colorButtonBorder[theme]}
-                        onClick={() => setIsType('connect')}
-                    >
+                    <ColorButton onClick={() => setIsType('connect')}>
                         LndConnect Url
                     </ColorButton>
-                    <ColorButton
-                        color={colorButtonBorder[theme]}
-                        onClick={() => setIsType('btcpay')}
-                    >
+                    <ColorButton onClick={() => setIsType('btcpay')}>
                         BTCPayServer Info
                     </ColorButton>
                 </RightAlign>
             )}
             <ColorButton
-                color={colorButtonBorder[theme]}
                 onClick={() => {
                     if (willAdd) {
                         setIsType('none');
@@ -87,7 +76,6 @@ export const AccountSettings = () => {
                         {getStorageSaved().map((entry, index) => {
                             return (
                                 <ColorButton
-                                    color={colorButtonBorder[theme]}
                                     selected={
                                         name.localeCompare(entry.name) === 0
                                     }

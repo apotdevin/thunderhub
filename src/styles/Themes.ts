@@ -31,19 +31,14 @@ export const colorButtonBackground = theme('mode', {
     dark: '#252944',
 });
 
-export const colorButtonColor = theme('mode', {
-    light: '#8c8c8c',
-    dark: '#8c8c8c',
-});
-
-export const colorButtonBorder: { [key: string]: string } = {
+export const colorButtonBorder = theme('mode', {
     light: '#99BAFF',
-    dark: '#525C99',
-};
+    dark: '#6E7ACC',
+});
 
 export const colorButtonSelectedBorder = theme('mode', {
     light: '#99BAFF',
-    dark: '#525C99',
+    dark: '#6E7ACC',
 });
 
 export const disabledButtonBackground = theme('mode', {
