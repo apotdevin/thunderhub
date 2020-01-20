@@ -102,7 +102,7 @@ interface InputProps {
 export const Input = styled.input`
     padding: 5px;
     height: 30px;
-    width: 80%;
+    width: 100%;
     margin: 8px 0;
     border: 1px solid #c8ccd4;
     background: none;

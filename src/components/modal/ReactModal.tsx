@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
-import { subCardColor } from '../../styles/Themes';
+import { cardColor } from '../../styles/Themes';
 import ReactModal, { BaseModalBackground } from 'styled-react-modal';
 
 export const FadingBackground = styled(BaseModalBackground)``;
@@ -16,7 +16,7 @@ const StyleModal = ReactModal.styled`
          top: 50%;
          left: 50%;
          transform: translateY(-50%) translateX(-50%);
-         background-color: ${subCardColor};
+         background-color: ${cardColor};
          padding: 20px;
          border-radius: 5px;
          outline: none;
