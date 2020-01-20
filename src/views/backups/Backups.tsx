@@ -12,8 +12,18 @@ import { DownloadBackups } from './DownloadBackups';
 import { VerifyBackups } from './VerifyBackups';
 import { RecoverFunds } from './RecoverFunds';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
+import styled from 'styled-components';
 
 const backupColor = '#ffffff';
+
+export const FixedWidth = styled.div`
+    width: 200px;
+`;
+
+export const NoWrap = styled.div`
+    margin-right: 16px;
+    white-space: nowrap;
+`;
 
 export const BackupsView = () => {
     const lastDate = localStorage.getItem('lastBackup');

@@ -43,11 +43,6 @@ const Button = styled(SimpleButton)`
     }
 `;
 
-const ButtonRow = styled.div`
-    display: flex;
-    width: auto;
-`;
-
 const WarningCard = styled.div`
     display: flex;
     flex-direction: column;
@@ -61,10 +56,6 @@ const CenterLine = styled(SingleLine)`
 
 const RadioText = styled.div`
     margin-left: 10px;
-`;
-
-const SmallInput = styled(Input)`
-    max-width: 150px;
 `;
 
 export const CloseChannel = ({
@@ -118,7 +109,7 @@ export const CloseChannel = ({
         text: string,
         selected: boolean,
     ) => (
-        <ColorButton onClick={onClick} withMargin={'4px'} withBorder={true}>
+        <ColorButton onClick={onClick} withMargin={'4px'}>
             <Circle
                 size={'10px'}
                 fillcolor={selected ? textColorMap[theme] : ''}
@@ -132,30 +123,28 @@ export const CloseChannel = ({
             <AlertTriangle size={'32px'} color={'red'} />
             <SubTitle>Are you sure you want to close the channel?</SubTitle>
             <Sub4Title>{`${channelName} [${channelId}]`}</Sub4Title>
-            <Separation />
-            <SingleLine>
-                <div onClick={() => setModalOpen(false)}>
-                    <SecureButton
-                        callback={closeChannel}
-                        variables={{
-                            id: channelId,
-                            forceClose: isForce,
-                            ...(isType !== 'none'
-                                ? isType === 'fee'
-                                    ? { tokens: amount }
-                                    : { target: amount }
-                                : {}),
-                        }}
-                        color={'red'}
-                        disabled={false}
-                    >
-                        Close Channel
-                    </SecureButton>
-                </div>
-                <ColorButton color={'green'} onClick={handleOnlyClose}>
-                    Cancel
-                </ColorButton>
-            </SingleLine>
+            <div onClick={() => setModalOpen(false)}>
+                <SecureButton
+                    callback={closeChannel}
+                    variables={{
+                        id: channelId,
+                        forceClose: isForce,
+                        ...(isType !== 'none'
+                            ? isType === 'fee'
+                                ? { tokens: amount }
+                                : { target: amount }
+                            : {}),
+                    }}
+                    color={'red'}
+                    disabled={false}
+                    withMargin={'4px'}
+                >
+                    Close Channel
+                </SecureButton>
+            </div>
+            <ColorButton withMargin={'4px'} onClick={handleOnlyClose}>
+                Cancel
+            </ColorButton>
         </WarningCard>
     );
 
@@ -168,28 +157,26 @@ export const CloseChannel = ({
             <Separation />
             <SingleLine>
                 <Sub4Title>Fee:</Sub4Title>
-                <ButtonRow>
-                    {renderButton(
-                        () => setIsType('none'),
-                        'Auto',
-                        isType === 'none',
-                    )}
-                    {renderButton(
-                        () => setIsType('fee'),
-                        'Fee',
-                        isType === 'fee',
-                    )}
-                    {renderButton(
-                        () => setIsType('target'),
-                        'Target',
-                        isType === 'target',
-                    )}
-                </ButtonRow>
+            </SingleLine>
+            <SingleLine>
+                {renderButton(
+                    () => setIsType('none'),
+                    'Auto',
+                    isType === 'none',
+                )}
+                {renderButton(() => setIsType('fee'), 'Fee', isType === 'fee')}
+                {renderButton(
+                    () => setIsType('target'),
+                    'Target',
+                    isType === 'target',
+                )}
             </SingleLine>
             {isType === 'none' && (
-                <SingleLine>
-                    <Sub4Title>Fee Amount:</Sub4Title>
-                    <ButtonRow>
+                <>
+                    <SingleLine>
+                        <Sub4Title>Fee Amount:</Sub4Title>
+                    </SingleLine>
+                    <SingleLine>
                         {renderButton(
                             () => setAmount(fast),
                             `Fastest (${fast} sats)`,
@@ -206,29 +193,33 @@ export const CloseChannel = ({
                             `Hour (${hour} sats)`,
                             amount === hour,
                         )}
-                    </ButtonRow>
-                </SingleLine>
+                    </SingleLine>
+                </>
             )}
             {isType !== 'none' && (
-                <SingleLine>
-                    <NoWrapTitle>
-                        {isType === 'target'
-                            ? 'Target Blocks:'
-                            : 'Fee (Sats/Byte)'}
-                    </NoWrapTitle>
-                    <SmallInput
-                        min={1}
-                        type={'number'}
-                        onChange={e => setAmount(parseInt(e.target.value))}
-                    />
-                </SingleLine>
+                <>
+                    <SingleLine>
+                        <Sub4Title>
+                            {isType === 'target'
+                                ? 'Target Blocks:'
+                                : 'Fee (Sats/Byte)'}
+                        </Sub4Title>
+                    </SingleLine>
+                    <SingleLine>
+                        <Input
+                            min={1}
+                            type={'number'}
+                            onChange={e => setAmount(parseInt(e.target.value))}
+                        />
+                    </SingleLine>
+                </>
             )}
             <SingleLine>
                 <Sub4Title>Force Close Channel:</Sub4Title>
-                <ButtonRow>
-                    {renderButton(() => setIsForce(true), `Yes`, isForce)}
-                    {renderButton(() => setIsForce(false), `No`, !isForce)}
-                </ButtonRow>
+            </SingleLine>
+            <SingleLine>
+                {renderButton(() => setIsForce(true), `Yes`, isForce)}
+                {renderButton(() => setIsForce(false), `No`, !isForce)}
             </SingleLine>
             <Separation />
             <CenterLine>

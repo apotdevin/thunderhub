@@ -22,6 +22,7 @@ const GeneralButton = styled.button`
     white-space: nowrap;
     font-size: 14px;
     box-sizing: border-box;
+    width: 100%;
 `;
 
 const StyledArrow = styled.div`

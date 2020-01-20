@@ -11,6 +11,8 @@ interface SecureButtonProps {
     disabled: boolean;
     children: any;
     variables: {};
+    withMargin?: string;
+    arrow?: boolean;
 }
 
 export const SecureButton = ({
@@ -19,6 +21,8 @@ export const SecureButton = ({
     disabled,
     children,
     variables,
+    withMargin,
+    arrow,
 }: SecureButtonProps) => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -38,7 +42,13 @@ export const SecureButton = ({
 
     return (
         <>
-            <ColorButton color={color} disabled={disabled} onClick={onClick}>
+            <ColorButton
+                withMargin={withMargin}
+                arrow={arrow}
+                color={color}
+                disabled={disabled}
+                onClick={onClick}
+            >
                 {children}
             </ColorButton>
             <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>

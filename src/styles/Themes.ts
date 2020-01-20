@@ -55,7 +55,7 @@ export const cardColor = theme('mode', {
 });
 
 export const subCardColor = theme('mode', {
-    light: '#f8f9fb',
+    light: '#FCFCFC',
     dark: '#151727',
 });
 
