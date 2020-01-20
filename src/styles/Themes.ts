@@ -36,11 +36,6 @@ export const colorButtonBorder = theme('mode', {
     dark: '#6E7ACC',
 });
 
-export const colorButtonSelectedBorder = theme('mode', {
-    light: '#99BAFF',
-    dark: '#6E7ACC',
-});
-
 export const disabledButtonBackground = theme('mode', {
     light: '#f5f5f5',
     dark: 'rgba(0,0,0,0.4)',
