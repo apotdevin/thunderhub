@@ -3,16 +3,14 @@ import { CLOSE_CHANNEL } from '../../graphql/mutation';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import {
     Input,
-    SimpleButton,
     Separation,
     SingleLine,
     SubTitle,
-    NoWrapTitle,
     Sub4Title,
 } from '../generic/Styled';
 import { Circle, AlertTriangle } from '../generic/Icons';
 import styled from 'styled-components';
-import { textColor, chartLinkColor, textColorMap } from '../../styles/Themes';
+import { textColorMap } from '../../styles/Themes';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { GET_BITCOIN_FEES } from '../../graphql/query';
@@ -25,23 +23,6 @@ interface CloseChannelProps {
     channelId: string;
     channelName: string;
 }
-
-interface ButtonProps {
-    color: string;
-    selected?: boolean;
-}
-
-const Button = styled(SimpleButton)`
-    min-width: 70px;
-    border: 1px solid
-        ${({ color, selected }: ButtonProps) =>
-            selected ? color : chartLinkColor};
-
-    &:hover {
-        border: 1px solid ${({ color }: ButtonProps) => color};
-        color: ${textColor};
-    }
-`;
 
 const WarningCard = styled.div`
     display: flex;
