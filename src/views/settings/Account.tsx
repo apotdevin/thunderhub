@@ -13,7 +13,6 @@ import { SettingsLine, ButtonRow } from './Settings';
 import { useAccount } from '../../context/AccountContext';
 import styled from 'styled-components';
 import { getNextAvailable, getStorageSaved } from '../../utils/storage';
-import { useSettings } from '../../context/SettingsContext';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { XSvg } from '../../components/generic/Icons';
 
@@ -24,7 +23,6 @@ const RightAlign = styled.div`
 `;
 
 export const AccountSettings = () => {
-    const { theme } = useSettings();
     const { name } = useAccount();
 
     const [isType, setIsType] = useState('none');

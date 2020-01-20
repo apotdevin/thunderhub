@@ -6,7 +6,7 @@ import { useSettings } from '../../context/SettingsContext';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 
 export const InterfaceSettings = () => {
-    const { setSettings, theme, updateCurrency } = useSettings();
+    const { setSettings, updateCurrency } = useSettings();
     const cTheme = localStorage.getItem('theme') || 'light';
     const cCurrency = localStorage.getItem('currency') || 'sat';
 
