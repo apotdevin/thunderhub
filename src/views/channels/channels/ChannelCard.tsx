@@ -12,8 +12,8 @@ import {
     SubCard,
     Separation,
     Sub4Title,
-    ColorButton,
     SingleLine,
+    RightAlign,
 } from '../../../components/generic/Styled';
 import { useSettings } from '../../../context/SettingsContext';
 import {
@@ -32,10 +32,7 @@ import { CloseChannel } from '../../../components/closeChannel/CloseChannel';
 import styled from 'styled-components';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { DownArrow, UpArrow, EyeOff } from '../../../components/generic/Icons';
-
-const CloseButton = styled(ColorButton)`
-    margin-left: auto;
-`;
+import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 
 const IconPadding = styled.div`
     margin-left: 16px;
@@ -160,12 +157,16 @@ export const ChannelCard = ({
                 )}
                 <AdminSwitch>
                     <Separation />
-                    <CloseButton
-                        color={'red'}
-                        onClick={() => setModalOpen(true)}
-                    >
-                        Close Channel
-                    </CloseButton>
+                    <RightAlign>
+                        <ColorButton
+                            withBorder={true}
+                            // color={'red'}
+                            arrow={true}
+                            onClick={() => setModalOpen(true)}
+                        >
+                            Close Channel
+                        </ColorButton>
+                    </RightAlign>
                 </AdminSwitch>
             </>
         );

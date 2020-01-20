@@ -9,7 +9,6 @@ import {
     SubTitle,
     NoWrapTitle,
     Sub4Title,
-    ColorButton,
 } from '../generic/Styled';
 import { Circle, AlertTriangle } from '../generic/Icons';
 import styled from 'styled-components';
@@ -19,6 +18,7 @@ import { getErrorContent } from '../../utils/error';
 import { GET_BITCOIN_FEES } from '../../graphql/query';
 import { useSettings } from '../../context/SettingsContext';
 import { SecureButton } from '../buttons/secureButton/SecureButton';
+import { ColorButton } from '../buttons/colorButton/ColorButton';
 
 interface CloseChannelProps {
     setModalOpen: (status: boolean) => void;
@@ -118,7 +118,7 @@ export const CloseChannel = ({
         text: string,
         selected: boolean,
     ) => (
-        <ColorButton color={textColorMap[theme]} onClick={onClick}>
+        <ColorButton onClick={onClick} withMargin={'4px'} withBorder={true}>
             <Circle
                 size={'10px'}
                 fillcolor={selected ? textColorMap[theme] : ''}
@@ -152,9 +152,9 @@ export const CloseChannel = ({
                         Close Channel
                     </SecureButton>
                 </div>
-                <Button color={'green'} onClick={handleOnlyClose}>
+                <ColorButton color={'green'} onClick={handleOnlyClose}>
                     Cancel
-                </Button>
+                </ColorButton>
             </SingleLine>
         </WarningCard>
     );
@@ -217,7 +217,6 @@ export const CloseChannel = ({
                             : 'Fee (Sats/Byte)'}
                     </NoWrapTitle>
                     <SmallInput
-                        color={textColorMap[theme]}
                         min={1}
                         type={'number'}
                         onChange={e => setAmount(parseInt(e.target.value))}
@@ -233,12 +232,22 @@ export const CloseChannel = ({
             </SingleLine>
             <Separation />
             <CenterLine>
-                <Button color={'red'} onClick={() => setIsConfirmed(true)}>
-                    Close Channel
-                </Button>
-                <Button color={textColorMap[theme]} onClick={handleOnlyClose}>
+                <ColorButton
+                    withMargin={'4px'}
+                    withBorder={true}
+                    onClick={handleOnlyClose}
+                >
                     Cancel
-                </Button>
+                </ColorButton>
+                <ColorButton
+                    arrow={true}
+                    withMargin={'4px'}
+                    withBorder={true}
+                    color={'red'}
+                    onClick={() => setIsConfirmed(true)}
+                >
+                    Close Channel
+                </ColorButton>
             </CenterLine>
         </>
     );

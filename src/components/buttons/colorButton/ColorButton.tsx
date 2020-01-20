@@ -5,7 +5,6 @@ import {
     colorButtonBackground,
     disabledButtonBackground,
     disabledButtonBorder,
-    colorButtonSelectedBorder,
     inverseTextColor,
     colorButtonBorder,
 } from '../../../styles/Themes';
@@ -31,29 +30,30 @@ const StyledArrow = styled.div`
 
 interface BorderProps {
     borderColor?: string;
-    withHover?: boolean;
     selected?: boolean;
     withMargin?: string;
+    withBorder?: boolean;
 }
 
 const BorderButton = styled(GeneralButton)`
     margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
     ${({ selected }) => selected && `cursor: default`};
     ${({ selected }) => selected && `font-weight: 900`};
-    border: none;
     background-color: ${colorButtonBackground};
     color: ${textColor};
     border: 1px solid
-        ${({ borderColor, withHover, selected }: BorderProps) =>
-            (borderColor && !withHover) || selected
-                ? selected
-                    ? colorButtonSelectedBorder
-                    : borderColor
+        ${({ borderColor, selected, withBorder }: BorderProps) =>
+            withBorder
+                ? borderColor
+                    ? borderColor
+                    : colorButtonBorder
+                : selected
+                ? colorButtonBorder
                 : colorButtonBackground};
 
     &:hover {
-        ${({ borderColor, withHover, selected }: BorderProps) =>
-            withHover && !selected
+        ${({ borderColor, selected }: BorderProps) =>
+            !selected
                 ? css`
                       border: 1px solid ${colorButtonBackground};
                       background-color: ${borderColor
@@ -85,9 +85,9 @@ interface ColorButtonProps {
     children?: any;
     selected?: boolean;
     arrow?: boolean;
-    withHover?: boolean;
     onClick?: any;
     withMargin?: string;
+    withBorder?: boolean;
 }
 
 export const ColorButton = ({
@@ -96,8 +96,8 @@ export const ColorButton = ({
     children,
     selected,
     arrow,
-    withHover = true,
     withMargin,
+    withBorder,
     onClick,
 }: ColorButtonProps) => {
     if (disabled) {
@@ -112,10 +112,10 @@ export const ColorButton = ({
     return (
         <BorderButton
             borderColor={color}
-            withHover={withHover}
             selected={selected}
             onClick={onClick}
             withMargin={withMargin}
+            withBorder={withBorder}
         >
             {children}
             {arrow && renderArrow()}
