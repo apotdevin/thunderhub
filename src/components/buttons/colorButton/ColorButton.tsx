@@ -26,7 +26,7 @@ const GeneralButton = styled.button`
 `;
 
 const StyledArrow = styled.div`
-    margin: 0 -8px -3px 4px;
+    margin: 0 -8px -5px 4px;
 `;
 
 interface BorderProps {
@@ -54,11 +54,13 @@ const BorderButton = styled(GeneralButton)`
     &:hover {
         ${({ borderColor, withHover, selected }: BorderProps) =>
             withHover && !selected
-                ? css`border: 1px solid ${colorButtonBackground}
-                    background-color: ${
-                        borderColor ? borderColor : colorButtonBorder
-                    }
-                    color: ${inverseTextColor}`
+                ? css`
+                      border: 1px solid ${colorButtonBackground};
+                      background-color: ${borderColor
+                          ? borderColor
+                          : colorButtonBorder};
+                      color: ${inverseTextColor};
+                  `
                 : ''};
     }
 `;

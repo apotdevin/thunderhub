@@ -9,8 +9,8 @@ import {
     SingleLine,
     DarkSubTitle,
     Input,
-    SubCard,
     RightAlign,
+    Separation,
 } from '../../components/generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { XSvg, ChevronRight } from '../../components/generic/Icons';
@@ -37,7 +37,7 @@ export const VerifyBackups = ({ color }: { color: string }) => {
     }, [data, loading]);
 
     const renderInput = () => (
-        <SubCard>
+        <>
             <SingleLine>
                 <DarkSubTitle>Backup String: </DarkSubTitle>
                 <Input onChange={e => setBackupString(e.target.value)} />
@@ -61,7 +61,8 @@ export const VerifyBackups = ({ color }: { color: string }) => {
                     )}
                 </ColorButton>
             </RightAlign>
-        </SubCard>
+            <Separation />
+        </>
     );
 
     return (
