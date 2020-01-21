@@ -99,7 +99,7 @@ export const iconButtonColor = theme('mode', {
 });
 
 export const iconButtonHover = theme('mode', {
-    light: '#e8e8e8',
+    light: '#CCCCCC',
     dark: '#e8e8e8',
 });
 

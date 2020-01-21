@@ -21,8 +21,14 @@ const Container = styled.div`
     display: grid;
     grid-template-areas: 'nav content content';
     grid-template-columns: 200px 1fr 200px;
-    grid-template-rows: auto 1fr auto;
+    /* grid-template-rows: auto 1fr auto; */
     gap: 16px;
+
+    @media (max-width: 770px) {
+        grid-template-areas: 'nav' 'content';
+        grid-template-columns: 100%;
+        /* grid-template-rows: auto 1fr; */
+    }
 `;
 
 const ContentStyle = styled.div`
