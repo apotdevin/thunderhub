@@ -4,7 +4,12 @@ import { GET_NODE_INFO } from '../../../graphql/query';
 import { useSettings } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
 import { Separation } from '../../../components/generic/Styled';
-import { QuestionIcon, Zap, Anchor } from '../../../components/generic/Icons';
+import {
+    QuestionIcon,
+    Zap,
+    Anchor,
+    Circle,
+} from '../../../components/generic/Icons';
 import { getTooltipType } from '../../../components/generic/Helpers';
 import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
@@ -14,6 +19,18 @@ import { textColorMap } from '../../../styles/Themes';
 import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import ScaleLoader from 'react-spinners/ScaleLoader';
+
+const Closed = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+`;
+
+const Margin = styled.div`
+    margin: 8px 0 2px;
+`;
 
 const Title = styled.div`
     font-size: 18px;
@@ -44,7 +61,11 @@ const Alias = styled.div`
         ${({ bottomColor }: { bottomColor: string }) => bottomColor};
 `;
 
-export const NodeInfo = () => {
+interface NodeInfoProps {
+    isOpen: boolean;
+}
+
+export const NodeInfo = ({ isOpen }: NodeInfoProps) => {
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
@@ -89,11 +110,41 @@ export const NodeInfo = () => {
     const formatCCB = getFormat(confirmedBalance);
     const formatPCB = getFormat(pendingBalance);
 
+    if (!isOpen) {
+        return (
+            <>
+                <Closed>
+                    <Circle
+                        strokeWidth={'0'}
+                        fillcolor={is_synced_to_chain ? '#95de64' : '#ff7875'}
+                    />
+                    {(pendingBalance > 0 || pendingChainBalance > 0) && (
+                        <Circle fillcolor={'#652EC7'} />
+                    )}
+                    <Margin>
+                        <Zap
+                            fillcolor={
+                                pendingBalance === 0 ? '#FFD300' : '#652EC7'
+                            }
+                            color={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
+                        />
+                    </Margin>
+                    <Anchor
+                        color={
+                            pendingChainBalance === 0 ? '#FFD300' : '#652EC7'
+                        }
+                    />
+                </Closed>
+                <Separation />
+            </>
+        );
+    }
+
     return (
         <>
             <Title>
                 <Alias bottomColor={color}>{alias}</Alias>
-                <QuestionIcon data-tip={`Version: ${version}`} />
+                {isOpen && <QuestionIcon data-tip={`Version: ${version}`} />}
             </Title>
             <Separation />
             <Balance data-tip data-for="balance_tip">
