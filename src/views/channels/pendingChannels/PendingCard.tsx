@@ -5,7 +5,6 @@ import {
     ProgressBar,
     NodeTitle,
     StatusLine,
-    DetailLine,
     MainInfo,
 } from '../Channels.style';
 import ReactTooltip from 'react-tooltip';
@@ -13,12 +12,16 @@ import {
     SubCard,
     Separation,
     SingleLine,
+    Sub4Title,
 } from '../../../components/generic/Styled';
 import { useSettings } from '../../../context/SettingsContext';
 import {
     getStatusDot,
     getTooltipType,
     getTransactionLink,
+    renderLine,
+    getDateDif,
+    getFormatDate,
 } from '../../../components/generic/Helpers';
 import { getNodeLink } from '../../../components/generic/Helpers';
 
@@ -52,19 +55,25 @@ export const PendingCard = ({
         is_closing,
         is_opening,
         local_balance,
-        // local_reserve,
+        local_reserve,
         partner_public_key,
         received,
         remote_balance,
-        // remote_reserve,
+        remote_reserve,
         sent,
         transaction_fee,
         transaction_id,
-        // transaction_vout,
+        transaction_vout,
         partner_node_info,
     } = channelInfo;
 
-    const { alias, color: nodeColor } = partner_node_info;
+    const {
+        alias,
+        capacity,
+        channelCount,
+        color: nodeColor,
+        updated_at,
+    } = partner_node_info;
 
     const formatBalance = getFormat(local_balance + remote_balance);
     const formatLocal = getFormat(local_balance);
@@ -84,27 +93,38 @@ export const PendingCard = ({
         return (
             <>
                 <Separation />
-                <DetailLine>
-                    <div>Node Public Key:</div>
-                    {getNodeLink(partner_public_key)}
-                </DetailLine>
-                <DetailLine>
-                    <div>Transaction Id:</div>
-                    {getTransactionLink(transaction_id)}
-                </DetailLine>
-                <DetailLine>
-                    <div>Transaction Fee:</div>
-                    {getTransactionLink(transaction_fee)}
-                </DetailLine>
-                <DetailLine>
-                    <div>Close Transaction Id:</div>
-                    {getTransactionLink(close_transaction_id)}
-                </DetailLine>
-                {/* <DetailLine>{localReserve}</DetailLine> */}
-                {/* <DetailLine>{remoteReserve}</DetailLine> */}
-                {/* <DetailLine>{nodeCapacity}</DetailLine> */}
-                {/* <DetailLine>{channelCount}</DetailLine> */}
-                {/* <DetailLine>{lastUpdate}</DetailLine> */}
+                {renderLine('State:', is_active ? 'Active' : 'Inactive')}
+                {renderLine('Status:', is_opening ? 'Opening' : 'Closing')}
+                {renderLine('Local Balance:', local_balance)}
+                {renderLine('Remote Balance:', remote_balance)}
+                {renderLine(
+                    'Node Public Key:',
+                    getNodeLink(partner_public_key),
+                )}
+                {renderLine(
+                    'Transaction Id:',
+                    getTransactionLink(transaction_id),
+                )}
+                {renderLine('Transaction Vout:', transaction_vout)}
+                {renderLine(
+                    'Transaction Fee:',
+                    getTransactionLink(transaction_fee),
+                )}
+                {renderLine(
+                    'Close Transaction Id:',
+                    getTransactionLink(close_transaction_id),
+                )}
+                {renderLine('Local Reserve:', local_reserve)}
+                {renderLine('Remote Reserve:', remote_reserve)}
+                <Sub4Title>Partner Node Info</Sub4Title>
+                {renderLine('Node Capacity:', capacity)}
+                {renderLine('Channels:', channelCount)}
+                {renderLine(
+                    'Last Update:',
+                    `${getDateDif(updated_at)} ago (${getFormatDate(
+                        updated_at,
+                    )})`,
+                )}
             </>
         );
     };
