@@ -1,111 +1,135 @@
 import theme from 'styled-theming';
 
+const themeColors = {
+    white: '#fff',
+    grey: '#f5f6f9',
+    grey2: '#f0f2f8',
+    grey3: '#e1e6ed',
+    blue2: '#6284e4',
+    blue3: '#5163ba',
+    blue4: '#20263d',
+    blue5: '#181c30',
+    blue6: '#1a1f35',
+    blue7: '#151727',
+    black: '#212735',
+};
+
+const chartColors = {
+    darkyellow: '#ffd300',
+    orange: '#ffa940',
+    orange2: '#FD5F00',
+    lightblue: '#1890ff',
+    green: '#a0d911',
+    purple: '#6938f1',
+};
+
+const fontColors = {
+    white: '#fff',
+    grey3: '#e1e6ed',
+    grey4: '#6e7887',
+    grey5: '#5e6575',
+    grey6: '#667587',
+    grey7: '#b0b3c7',
+    grey8: '#4a5669',
+    blue: '#ccd0e7',
+    blue1: '#9197b9',
+    blue3: '#5163ba',
+    black: '#212735',
+};
+
 // ---------------------------------------
 // APP COLORS
 // ---------------------------------------
 export const backgroundColor = theme('mode', {
-    light: '#F9FBFF',
-    dark: '#151727',
+    light: themeColors.grey,
+    dark: themeColors.blue5,
 });
 
 export const textColor = theme('mode', {
-    light: '#262626',
-    dark: '#EFFFFA',
+    light: fontColors.black,
+    dark: fontColors.white,
 });
 
 export const textColorMap: { [key: string]: string } = {
-    light: '#262626',
-    dark: '#EFFFFA',
+    light: fontColors.black,
+    dark: fontColors.white,
 };
 
 export const inverseTextColor = theme('mode', {
-    light: 'white',
-    dark: 'black',
-});
-
-// ---------------------------------------
-// BUTTON COLORS
-// ---------------------------------------
-export const colorButtonBackground = theme('mode', {
-    light: '#F4F8FF',
-    dark: '#252944',
-});
-
-export const colorButtonBorder = theme('mode', {
-    light: '#99BAFF',
-    dark: '#6E7ACC',
-});
-
-export const disabledButtonBackground = theme('mode', {
-    light: '#f5f5f5',
-    dark: 'rgba(0,0,0,0.4)',
-});
-
-export const disabledButtonBorder = theme('mode', {
-    light: '#f5f5f5',
-    dark: 'rgba(0,0,0,0.4)',
+    light: fontColors.white,
+    dark: fontColors.black,
 });
 
 // ---------------------------------------
 // CARD COLORS
 // ---------------------------------------
 export const cardColor = theme('mode', {
-    light: '#ffffff',
-    dark: '#1b1e32',
+    light: themeColors.white,
+    dark: themeColors.blue6,
 });
 
 export const subCardColor = theme('mode', {
-    light: '#FCFCFC',
-    dark: '#151727',
+    light: themeColors.grey,
+    dark: themeColors.blue7,
 });
 
 export const cardBorderColor = theme('mode', {
-    light: '#f5f5f5',
-    dark: '#242839',
+    light: themeColors.grey2,
+    dark: themeColors.blue4,
 });
 
 // ---------------------------------------
-// PROGRESS BAR COLORS
+// BUTTON COLORS
 // ---------------------------------------
-export const progressBackground = theme('mode', {
-    light: 'rgba(0, 0, 0, 0.05)',
-    dark: 'rgba(0, 0, 0, 1)',
+export const colorButtonBackground = theme('mode', {
+    light: themeColors.grey,
+    dark: themeColors.blue7,
 });
 
-export const progressFirst = theme('mode', {
-    light: '#ffa940',
-    dark: '#ffa940',
+export const colorButtonBorder = theme('mode', {
+    light: themeColors.blue3,
+    dark: themeColors.blue3,
 });
 
-export const progressSecond = theme('mode', {
-    light: '#1890ff',
-    dark: '#1890ff',
+export const disabledButtonBackground = theme('mode', {
+    light: themeColors.grey2,
+    dark: themeColors.blue7,
+});
+
+export const disabledButtonBorder = theme('mode', {
+    light: themeColors.grey,
+    dark: themeColors.blue6,
+});
+
+export const disabledTextColor = theme('mode', {
+    light: fontColors.grey7,
+    dark: fontColors.grey8,
+});
+
+export const hoverTextColor = theme('mode', {
+    light: fontColors.white,
+    dark: fontColors.white,
 });
 
 // ---------------------------------------
 // NAVIGATION COLORS
 // ---------------------------------------
 export const navBackgroundColor = theme('mode', {
-    light: 'rgba(255,255,255,0.8)',
-    dark: 'rgba(0,0,0,0.4)',
+    light: themeColors.white,
+    dark: themeColors.blue7,
+});
+
+export const navTextColor = theme('mode', {
+    light: fontColors.black,
+    dark: fontColors.white,
 });
 
 // ---------------------------------------
 // ICON COLORS
 // ---------------------------------------
-export const iconButtonColor = theme('mode', {
-    light: 'black',
-    dark: 'white',
-});
-
 export const iconButtonHover = theme('mode', {
-    light: '#CCCCCC',
-    dark: '#e8e8e8',
-});
-
-export const iconButtonBack = theme('mode', {
-    light: 'white',
-    dark: '#0D0C1D',
+    light: themeColors.blue3,
+    dark: themeColors.grey,
 });
 
 export const smallLinkColor = theme('mode', {
@@ -113,24 +137,30 @@ export const smallLinkColor = theme('mode', {
     dark: '#adc6ff',
 });
 
+// ---------------------------------------
+// PROGRESS BAR COLORS
+// ---------------------------------------
+export const progressBackground = theme('mode', {
+    light: themeColors.grey3,
+    dark: themeColors.black,
+});
+
+export const progressFirst = theme('mode', {
+    light: chartColors.orange,
+    dark: chartColors.orange,
+});
+
+export const progressSecond = theme('mode', {
+    light: chartColors.lightblue,
+    dark: chartColors.lightblue,
+});
+
+// ---------------------------------------
+// CHART COLORS
+// ---------------------------------------
 export const chartLinkColor = theme('mode', {
     light: '#595959',
     dark: '#8c8c8c',
-});
-
-export const chartSelectedLinkColor = theme('mode', {
-    light: '#43DDE2',
-    dark: '#6938f1',
-});
-
-export const unSelectedNavButton = theme('mode', {
-    light: 'grey',
-    dark: 'grey',
-});
-
-export const buttonBorderColor = theme('mode', {
-    light: '#d9d9d9',
-    dark: '#2e3245',
 });
 
 export const chartAxisColor: { [key: string]: string } = {
@@ -144,26 +174,36 @@ export const chartGridColor: { [key: string]: string } = {
 };
 
 export const chartBarColor: { [key: string]: string } = {
-    light: '#6938f1',
-    dark: '#6938f1',
+    light: chartColors.purple,
+    dark: chartColors.purple,
 };
 
 // ---------------------------------------
 // Liquidity Report Bar Colors
 // ---------------------------------------
 export const liquidityBarColor: { [key: string]: string } = {
-    light: '#a0d911',
-    dark: '#a0d911',
+    light: chartColors.green,
+    dark: chartColors.green,
 };
 
 // ---------------------------------------
 // Flow Report Bar Colors
 // ---------------------------------------
 export const flowBarColor: { [key: string]: string } = {
-    light: '#FD5F00',
-    dark: '#FD5F00',
+    light: chartColors.orange2,
+    dark: chartColors.orange2,
 };
 export const flowBarColor2: { [key: string]: string } = {
-    light: '#ffd300',
-    dark: '#ffd300',
+    light: chartColors.darkyellow,
+    dark: chartColors.darkyellow,
 };
+
+export const unSelectedNavButton = theme('mode', {
+    light: 'grey',
+    dark: 'grey',
+});
+
+export const buttonBorderColor = theme('mode', {
+    light: '#d9d9d9',
+    dark: '#2e3245',
+});

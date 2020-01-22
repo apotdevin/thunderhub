@@ -13,7 +13,7 @@ import { Cpu } from '../../components/generic/Icons';
 
 const HeaderStyle = styled.div`
     padding: 16px 0;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
 `;
 
 const HeaderTitle = styled.div`

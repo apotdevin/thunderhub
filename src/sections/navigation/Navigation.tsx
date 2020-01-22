@@ -4,9 +4,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { NodeInfo } from './nodeInfo/NodeInfo';
 import { SideSettings } from './sideSettings/SideSettings';
 import {
-    textColor,
     unSelectedNavButton,
     navBackgroundColor,
+    navTextColor,
 } from '../../styles/Themes';
 import {
     Home,
@@ -21,6 +21,7 @@ import {
 
 const NavigationStyle = styled.div`
     grid-area: nav;
+    width: ${({ isOpen }: { isOpen: boolean }) => (isOpen ? '200px' : '60px')};
 `;
 
 const StickyCard = styled.div`
@@ -66,12 +67,12 @@ const NavButton = styled(({ selectedColor, ...rest }) => <Link {...rest} />)(
         ${({ isOpen }: NavProps) => !isOpen && 'justify-content: center'};
         width: 100%;
         text-decoration: none;
-        margin: 8px 0;
+        margin: 4px 0;
         color: ${({ selected }: NavProps) =>
-            selected ? textColor : unSelectedNavButton};
+            selected ? navTextColor : unSelectedNavButton};
 
         &:hover {
-            color: ${textColor};
+            color: ${navTextColor};
             background: ${navBackgroundColor};
         }
     `,
@@ -103,7 +104,7 @@ export const Navigation = () => {
     );
 
     return (
-        <NavigationStyle>
+        <NavigationStyle isOpen={isOpen}>
             <StickyCard>
                 <LinkView>
                     <NodeInfo isOpen={isOpen} />
@@ -132,13 +133,7 @@ export const Navigation = () => {
                             isOpen,
                         )}
                     </ButtonSection>
-                    <SideSettings isOpen={isOpen} />
-                    <button
-                        style={{ width: '100%', margin: '50px 0' }}
-                        onClick={() => setIsOpen(prev => !prev)}
-                    >
-                        BLASD
-                    </button>
+                    <SideSettings isOpen={isOpen} setIsOpen={setIsOpen} />
                 </LinkView>
             </StickyCard>
         </NavigationStyle>
