@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { GET_NODE_INFO } from '../../../graphql/query';
 import { useSettings } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
-import { Separation } from '../../../components/generic/Styled';
+import { Separation, SingleLine } from '../../../components/generic/Styled';
 import {
     QuestionIcon,
     Zap,
@@ -81,7 +81,13 @@ export const NodeInfo = ({ isOpen }: NodeInfoProps) => {
 
     if (loading || !data || !data.getNodeInfo) {
         return (
-            <ScaleLoader height={10} width={2} color={textColorMap[theme]} />
+            <Closed>
+                <ScaleLoader
+                    height={10}
+                    width={2}
+                    color={textColorMap[theme]}
+                />
+            </Closed>
         );
     }
 
@@ -114,28 +120,64 @@ export const NodeInfo = ({ isOpen }: NodeInfoProps) => {
         return (
             <>
                 <Closed>
-                    <Circle
-                        strokeWidth={'0'}
-                        fillcolor={is_synced_to_chain ? '#95de64' : '#ff7875'}
-                    />
-                    {(pendingBalance > 0 || pendingChainBalance > 0) && (
-                        <Circle fillcolor={'#652EC7'} />
-                    )}
-                    <Margin>
-                        <Zap
+                    <div data-tip data-for="full_balance_tip">
+                        <Circle
+                            strokeWidth={'0'}
                             fillcolor={
-                                pendingBalance === 0 ? '#FFD300' : '#652EC7'
+                                is_synced_to_chain ? '#95de64' : '#ff7875'
                             }
-                            color={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
                         />
-                    </Margin>
-                    <Anchor
-                        color={
-                            pendingChainBalance === 0 ? '#FFD300' : '#652EC7'
-                        }
-                    />
+                        {(pendingBalance > 0 || pendingChainBalance > 0) && (
+                            <Circle fillcolor={'#652EC7'} />
+                        )}
+                        <Margin>
+                            <Zap
+                                fillcolor={
+                                    pendingBalance === 0 ? '#FFD300' : '#652EC7'
+                                }
+                                color={
+                                    pendingBalance === 0 ? '#FFD300' : '#652EC7'
+                                }
+                            />
+                        </Margin>
+                        <Anchor
+                            color={
+                                pendingChainBalance === 0
+                                    ? '#FFD300'
+                                    : '#652EC7'
+                            }
+                        />
+                    </div>
+                    <div data-tip data-for="full_node_tip">
+                        <SingleLine>{active_channels_count}</SingleLine>
+                        <SingleLine>{pending_channels_count}</SingleLine>
+                        <SingleLine>{closed_channels_count}</SingleLine>
+                        <SingleLine>{peers_count}</SingleLine>
+                    </div>
                 </Closed>
                 <Separation />
+                <ReactTooltip
+                    id={'full_balance_tip'}
+                    effect={'solid'}
+                    place={'right'}
+                    type={tooltipType}
+                >
+                    <div>{`Channel Balance: ${formatCCB}`}</div>
+                    <div>{`Pending Channel Balance: ${formatPCB}`}</div>
+                    <div>{`Chain Balance: ${formatCB}`}</div>
+                    <div>{`Pending Chain Balance: ${formatPB}`}</div>
+                </ReactTooltip>
+                <ReactTooltip
+                    id={'full_node_tip'}
+                    effect={'solid'}
+                    place={'right'}
+                    type={tooltipType}
+                >
+                    <div>{`Active Channels: ${active_channels_count}`}</div>
+                    <div>{`Pending Channels: ${pending_channels_count}`}</div>
+                    <div>{`Closed Channels: ${closed_channels_count}`}</div>
+                    <div>{`Peers: ${peers_count}`}</div>
+                </ReactTooltip>
             </>
         );
     }

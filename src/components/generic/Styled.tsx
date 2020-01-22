@@ -200,6 +200,10 @@ const FullWidth = styled.div`
 const FixedWidth = styled.div`
     max-width: 1000px;
     margin: 0 auto 0 auto;
+
+    @media (max-width: 770px) {
+        padding: 0 16px;
+    }
 `;
 
 export const Wrapper = ({

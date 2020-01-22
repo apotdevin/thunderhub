@@ -5,8 +5,9 @@ import {
     colorButtonBackground,
     disabledButtonBackground,
     disabledButtonBorder,
-    inverseTextColor,
+    disabledTextColor,
     colorButtonBorder,
+    hoverTextColor,
 } from '../../../styles/Themes';
 import { ChevronRight } from '../../generic/Icons';
 
@@ -60,7 +61,7 @@ const BorderButton = styled(GeneralButton)`
                       background-color: ${borderColor
                           ? borderColor
                           : colorButtonBorder};
-                      color: ${inverseTextColor};
+                      color: ${hoverTextColor};
                   `
                 : ''};
     }
@@ -69,7 +70,7 @@ const BorderButton = styled(GeneralButton)`
 const DisabledButton = styled(GeneralButton)`
     border: none;
     background-color: ${disabledButtonBackground};
-    color: #8c8c8c;
+    color: ${disabledTextColor};
     border: 1px solid ${disabledButtonBorder};
     cursor: default;
 `;
