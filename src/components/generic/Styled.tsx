@@ -29,7 +29,7 @@ interface CardProps {
 }
 
 export const Card = styled.div`
-    padding: ${({ padding }) => (padding ? padding : '20px')};
+    padding: ${({ padding }) => (padding ? padding : '16px')};
     background: ${cardColor};
     box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
@@ -201,7 +201,7 @@ const FixedWidth = styled.div`
     max-width: 1000px;
     margin: 0 auto 0 auto;
 
-    @media (max-width: 770px) {
+    @media (max-width: 1035px) {
         padding: 0 16px;
     }
 `;

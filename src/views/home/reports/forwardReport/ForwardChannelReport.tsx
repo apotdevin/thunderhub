@@ -10,7 +10,7 @@ import { getValue } from '../../../../helpers/Helpers';
 import { useSettings } from '../../../../context/SettingsContext';
 import { useAccount } from '../../../../context/AccountContext';
 import { getAuthString } from '../../../../utils/auth';
-import { ChannelRow, CardContent } from '../forwardReport';
+import { CardContent } from '../forwardReport';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import {
@@ -20,6 +20,13 @@ import {
 } from '../../../../components/generic/Icons';
 import styled from 'styled-components';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
+
+const ChannelRow = styled.div`
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
 
 const ButtonRow = styled.div`
     display: flex;
