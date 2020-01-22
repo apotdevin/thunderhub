@@ -15,18 +15,20 @@ export const CardContent = styled.div`
     display: flex;
     flex-flow: column;
     width: 50%;
-    padding: 0 20px;
-`;
+    padding: 0 16px;
 
-export const ChannelRow = styled.div`
-    font-size: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    @media (max-width: 578px) {
+        width: 100%;
+        padding: 0 8px;
+    }
 `;
 
 const Row = styled.div`
     display: flex;
+
+    @media (max-width: 578px) {
+        flex-wrap: wrap;
+    }
 `;
 
 const availableTimes = ['day', 'week', 'month'];

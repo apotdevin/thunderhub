@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import {
     CardWithTitle,
     SubTitle,
@@ -28,6 +28,14 @@ export const ChannelRow = styled.div`
 
 export const Row = styled.div`
     display: flex;
+
+    @media (max-width: 770px) {
+        ${({ noWrap }: { noWrap?: boolean }) =>
+            !noWrap &&
+            css`
+                flex-wrap: wrap;
+            `};
+    }
 `;
 
 export const PieRow = styled(Row)`
@@ -39,6 +47,12 @@ export const Col = styled.div`
     flex-direction: column;
     justify-content: space-around;
     min-width: 200px;
+
+    @media (max-width: 770px) {
+        min-width: unset;
+        width: 100%;
+        padding-bottom: 16px;
+    }
 `;
 
 const HalfCardWithTitle = styled(CardWithTitle)`
@@ -136,7 +150,7 @@ export const FlowBox = () => {
                     <FlowReport {...props} />
                 </Card>
             </CardWithTitle>
-            <Row>
+            <Row noWrap={true}>
                 <HalfCardWithTitle>
                     <CardTitle>
                         <Sub4Title>Total</Sub4Title>

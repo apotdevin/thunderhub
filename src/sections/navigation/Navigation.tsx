@@ -22,6 +22,10 @@ import {
 const NavigationStyle = styled.div`
     grid-area: nav;
     width: ${({ isOpen }: { isOpen: boolean }) => (isOpen ? '200px' : '60px')};
+
+    @media (max-width: 578px) {
+        display: none;
+    }
 `;
 
 const StickyCard = styled.div`

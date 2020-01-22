@@ -21,13 +21,11 @@ const Container = styled.div`
     display: grid;
     grid-template-areas: 'nav content content';
     grid-template-columns: auto 1fr 200px;
-    /* grid-template-rows: auto 1fr auto; */
     gap: 16px;
 
-    @media (max-width: 770px) {
-        /* grid-template-areas: 'nav' 'content'; */
-        /* grid-template-columns: 100%; */
-        /* grid-template-rows: auto 1fr; */
+    @media (max-width: 578px) {
+        display: flex;
+        flex-direction: column;
     }
 `;
 

@@ -23,18 +23,40 @@ const Tile = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    margin: 0 16px;
     align-items: ${({ start }: { start?: boolean }) =>
         start ? 'flex-start' : 'flex-end'};
+
+    @media (max-width: 578px) {
+        margin-bottom: 8px;
+    }
 `;
 
 const TileTitle = styled.div`
     font-size: 14px;
     color: ${unSelectedNavButton};
     margin-bottom: 10px;
+
+    @media (max-width: 578px) {
+        margin-bottom: 0;
+        margin-left: 16px;
+    }
 `;
 
 const Title = styled.div`
     width: 120px;
+
+    @media (max-width: 578px) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 16px;
+        width: 100%;
+    }
+`;
+
+const ResponsiveLine = styled(SingleLine)`
+    flex-wrap: wrap;
 `;
 
 export const NetworkInfo = () => {
@@ -76,7 +98,7 @@ export const NetworkInfo = () => {
         <CardWithTitle>
             <SubTitle>Network Info</SubTitle>
             <Card>
-                <SingleLine>
+                <ResponsiveLine>
                     <Title>
                         <Globe color={'#2f6fb7'} />
                         Global
@@ -97,9 +119,9 @@ export const NetworkInfo = () => {
                         <TileTitle>Zombie Nodes</TileTitle>
                         {notRecentlyUpdatedPolicyCount}
                     </Tile>
-                </SingleLine>
+                </ResponsiveLine>
                 <Separation />
-                <SingleLine>
+                <ResponsiveLine>
                     <Title>
                         <Cpu color={'#2f6fb7'} />
                         Channel Size
@@ -120,7 +142,7 @@ export const NetworkInfo = () => {
                         <TileTitle>Min</TileTitle>
                         {minSize}
                     </Tile>
-                </SingleLine>
+                </ResponsiveLine>
             </Card>
         </CardWithTitle>
     );
