@@ -117,7 +117,12 @@ export const Navigation = () => {
                         {renderNavButton('Home', HOME, Home, sidebar)}
                         {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
                         {renderNavButton('Fees', FEES, Crosshair, sidebar)}
-                        {renderNavButton('Transactions', TRANS, Server, sidebar)}
+                        {renderNavButton(
+                            'Transactions',
+                            TRANS,
+                            Server,
+                            sidebar,
+                        )}
                         {renderNavButton(
                             'Forwards',
                             FORWARDS,
