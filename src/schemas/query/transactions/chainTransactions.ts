@@ -35,11 +35,9 @@ export const getChainTransactions = {
                     lnd,
                 },
             );
-            const filteredTransaction = transactionList.transactions.filter(
-                transaction => transaction.tokens > 0,
-            );
+
             const transactions = sortBy(
-                filteredTransaction,
+                transactionList.transactions,
                 'created_at',
             ).reverse();
             return transactions;
