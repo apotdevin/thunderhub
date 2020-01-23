@@ -80,6 +80,7 @@ export const CloseChannel = ({
             'GetChannels',
             'GetPendingChannels',
             'GetClosedChannels',
+            'GetChannelAmountInfo',
         ],
     });
 
@@ -90,7 +91,7 @@ export const CloseChannel = ({
         text: string,
         selected: boolean,
     ) => (
-        <ColorButton onClick={onClick} withMargin={'4px'}>
+        <ColorButton onClick={onClick} withMargin={'4px'} fullWidth={true}>
             <Circle
                 size={'10px'}
                 fillcolor={selected ? textColorMap[theme] : ''}

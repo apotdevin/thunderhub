@@ -79,7 +79,7 @@ type fn = (prev: boolean) => boolean;
 
 interface SideSettingsProps {
     isOpen: boolean;
-    setIsOpen: (state: fn) => void;
+    setIsOpen: (state: any) => void;
 }
 
 export const SideSettings = ({ isOpen, setIsOpen }: SideSettingsProps) => {
@@ -161,7 +161,8 @@ export const SideSettings = ({ isOpen, setIsOpen }: SideSettingsProps) => {
                 <SelectedIcon
                     selected={true}
                     onClick={() => {
-                        setIsOpen(prev => !prev);
+                        localStorage.setItem('sidebar', (!isOpen).toString());
+                        setIsOpen({ sidebar: !isOpen });
                     }}
                 >
                     {isOpen ? <ChevronLeft /> : <ChevronRight />}

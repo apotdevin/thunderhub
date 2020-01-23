@@ -12,6 +12,7 @@ interface CurrencyChangeProps {
 interface ChangeProps {
     prices?: { [key: string]: PriceProps };
     theme?: string;
+    sidebar?: boolean;
 }
 
 interface SettingsProps {
@@ -20,6 +21,7 @@ interface SettingsProps {
     symbol: string;
     currency: string;
     theme: string;
+    sidebar: boolean;
     setSettings: (newProps: ChangeProps) => void;
     updateCurrency: (newProps: CurrencyChangeProps) => void;
 }
@@ -30,15 +32,18 @@ export const SettingsContext = createContext<SettingsProps>({
     symbol: '',
     currency: '',
     theme: '',
+    sidebar: true,
     setSettings: () => {},
     updateCurrency: () => {},
 });
 
 const SettingsProvider = ({ children }: any) => {
     const savedTheme = localStorage.getItem('theme') || 'light';
+    const savedSidebar =
+        localStorage.getItem('sidebar') === 'false' ? false : true;
     const savedCurrency = localStorage.getItem('currency') || 'sat';
 
-    const setSettings = ({ prices, theme }: ChangeProps) => {
+    const setSettings = ({ prices, theme, sidebar }: ChangeProps) => {
         let price = 0;
         let symbol = '';
 
@@ -58,6 +63,7 @@ const SettingsProvider = ({ children }: any) => {
                 prices,
                 ...(prices && { price, symbol }),
                 theme,
+                sidebar,
             });
         });
     };
@@ -95,6 +101,7 @@ const SettingsProvider = ({ children }: any) => {
         symbol: '',
         currency: savedCurrency,
         theme: savedTheme,
+        sidebar: savedSidebar,
         setSettings,
         updateCurrency,
     };
