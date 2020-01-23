@@ -101,7 +101,9 @@ export const SideSettings = ({ isOpen, setIsOpen }: SideSettingsProps) => {
                 localStorage.setItem(type, value);
                 type === 'currency' &&
                     updateCurrency({
-                        currency: getNextValue(currencyArray, value),
+                        currency: isOpen
+                            ? value
+                            : getNextValue(currencyArray, value),
                     });
                 type === 'theme' && setSettings({ theme: value });
             }}

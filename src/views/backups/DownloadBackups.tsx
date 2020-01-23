@@ -9,7 +9,6 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { FixedWidth } from './Backups';
 
 export const DownloadBackups = ({ color }: { color: string }) => {
     const { name, host, read, cert, sessionAdmin } = useAccount();
@@ -31,19 +30,18 @@ export const DownloadBackups = ({ color }: { color: string }) => {
     return (
         <SingleLine>
             <DarkSubTitle>Backup All Channels</DarkSubTitle>
-            <FixedWidth>
-                <ColorButton
-                    withMargin={'4px 0'}
-                    disabled={loading}
-                    onClick={() => getBackups()}
-                >
-                    {loading ? (
-                        <ScaleLoader height={8} width={2} color={color} />
-                    ) : (
-                        'Download'
-                    )}
-                </ColorButton>
-            </FixedWidth>
+            <ColorButton
+                withMargin={'4px 0'}
+                disabled={loading}
+                onClick={() => getBackups()}
+                arrow={true}
+            >
+                {loading ? (
+                    <ScaleLoader height={8} width={2} color={color} />
+                ) : (
+                    'Download'
+                )}
+            </ColorButton>
         </SingleLine>
     );
 };

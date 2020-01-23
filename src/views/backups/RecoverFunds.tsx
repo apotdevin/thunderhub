@@ -10,10 +10,10 @@ import {
     RightAlign,
 } from '../../components/generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import { XSvg, ChevronRight } from '../../components/generic/Icons';
+import { XSvg } from '../../components/generic/Icons';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { FixedWidth, NoWrap } from './Backups';
+import { NoWrap } from './Backups';
 
 export const RecoverFunds = ({ color }: { color: string }) => {
     const [backupString, setBackupString] = useState<string>('');
@@ -38,23 +38,17 @@ export const RecoverFunds = ({ color }: { color: string }) => {
                 <Input onChange={e => setBackupString(e.target.value)} />
             </SingleLine>
             <RightAlign>
-                <FixedWidth>
-                    <SecureButton
-                        callback={recoverFunds}
-                        variables={{ backup: backupString }}
-                        color={color}
-                        disabled={backupString === ''}
-                    >
-                        {loading ? (
-                            <ScaleLoader height={8} width={2} color={color} />
-                        ) : (
-                            <>
-                                Recover
-                                <ChevronRight />
-                            </>
-                        )}
-                    </SecureButton>
-                </FixedWidth>
+                <SecureButton
+                    callback={recoverFunds}
+                    variables={{ backup: backupString }}
+                    disabled={backupString === ''}
+                >
+                    {loading ? (
+                        <ScaleLoader height={8} width={2} color={color} />
+                    ) : (
+                        'Recover'
+                    )}
+                </SecureButton>
             </RightAlign>
         </>
     );
@@ -63,16 +57,13 @@ export const RecoverFunds = ({ color }: { color: string }) => {
         <>
             <SingleLine>
                 <DarkSubTitle>Recover Funds from Channels</DarkSubTitle>
-                <FixedWidth>
-                    <ColorButton
-                        withMargin={'4px 0'}
-                        disabled={loading}
-                        arrow={true}
-                        onClick={() => setIsPasting(prev => !prev)}
-                    >
-                        {isPasting ? <XSvg /> : 'Recover'}
-                    </ColorButton>
-                </FixedWidth>
+                <ColorButton
+                    withMargin={'4px 0'}
+                    disabled={loading}
+                    onClick={() => setIsPasting(prev => !prev)}
+                >
+                    {isPasting ? <XSvg /> : 'Recover'}
+                </ColorButton>
             </SingleLine>
             {isPasting && renderInput()}
         </>
