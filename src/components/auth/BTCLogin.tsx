@@ -3,12 +3,13 @@ import { Input, SingleLine, Sub4Title } from '../../components/generic/Styled';
 import { useAccount } from '../../context/AccountContext';
 import { getConfigLnd, saveUserAuth, getAuthString } from '../../utils/auth';
 import CryptoJS from 'crypto-js';
-import { LoginButton, PasswordInput } from './Password';
+import { PasswordInput } from './Password';
 import { toast } from 'react-toastify';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { GET_CAN_CONNECT } from '../../graphql/query';
 import { getErrorContent } from '../../utils/error';
 import { useHistory } from 'react-router-dom';
+import { ColorButton } from '../buttons/colorButton/ColorButton';
 
 interface AuthProps {
     available: number;
@@ -120,14 +121,15 @@ export const BTCLoginForm = ({
                     <Input onChange={e => setJson(e.target.value)} />
                 </SingleLine>
                 {canConnect && (
-                    <LoginButton
+                    <ColorButton
                         disabled={!canConnect}
-                        enabled={canConnect}
                         onClick={handleClick}
-                        color={'yellow'}
+                        withMargin={'16px 0 0'}
+                        fullWidth={true}
+                        arrow={true}
                     >
                         Connect
-                    </LoginButton>
+                    </ColorButton>
                 )}
             </>
         );

@@ -4,13 +4,14 @@ import { LoginModal } from './LoginModal';
 import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import { ColorButton } from '../colorButton/ColorButton';
+import { ColorButtonProps } from '../colorButton/ColorButton';
 
-interface SecureButtonProps {
+interface SecureButtonProps extends ColorButtonProps {
     callback: any;
-    color: string;
     disabled: boolean;
     children: any;
     variables: {};
+    color?: string;
     withMargin?: string;
     arrow?: boolean;
 }
@@ -21,8 +22,7 @@ export const SecureButton = ({
     disabled,
     children,
     variables,
-    withMargin,
-    arrow,
+    ...props
 }: SecureButtonProps) => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -43,11 +43,10 @@ export const SecureButton = ({
     return (
         <>
             <ColorButton
-                withMargin={withMargin}
-                arrow={arrow}
                 color={color}
                 disabled={disabled}
                 onClick={onClick}
+                {...props}
             >
                 {children}
             </ColorButton>

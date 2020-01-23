@@ -4,12 +4,13 @@ import { useAccount } from '../../context/AccountContext';
 import { saveUserAuth, getAuthString, saveSessionAuth } from '../../utils/auth';
 import CryptoJS from 'crypto-js';
 import base64url from 'base64url';
-import { PasswordInput, LoginButton } from './Password';
+import { PasswordInput } from './Password';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { GET_CAN_CONNECT } from '../../graphql/query';
 import { getErrorContent } from '../../utils/error';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
+import { ColorButton } from '../buttons/colorButton/ColorButton';
 
 interface AuthProps {
     available: number;
@@ -140,14 +141,15 @@ export const LoginForm = ({ available, callback, withRedirect }: AuthProps) => {
                     <Input onChange={e => setCert(e.target.value)} />
                 </SingleLine>
                 {canConnect && (
-                    <LoginButton
+                    <ColorButton
                         disabled={!canConnect}
-                        enabled={canConnect}
                         onClick={handleClick}
-                        color={'yellow'}
+                        withMargin={'16px 0 0'}
+                        fullWidth={true}
+                        arrow={true}
                     >
                         Connect
-                    </LoginButton>
+                    </ColorButton>
                 )}
             </>
         );

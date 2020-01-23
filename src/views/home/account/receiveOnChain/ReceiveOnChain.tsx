@@ -81,8 +81,9 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
                 <SecureButton
                     callback={createAddress}
                     variables={{ nested }}
-                    color={color}
                     disabled={received}
+                    withMargin={'0 0 0 16px'}
+                    arrow={true}
                 >
                     <Edit />
                     Create Address

@@ -11,6 +11,12 @@ import {
 } from '../../../styles/Themes';
 import { ChevronRight } from '../../generic/Icons';
 
+interface GeneralProps {
+    fullWidth?: boolean;
+    buttonWidth?: string;
+    withMargin?: string;
+}
+
 const GeneralButton = styled.button`
     display: flex;
     justify-content: center;
@@ -23,7 +29,9 @@ const GeneralButton = styled.button`
     white-space: nowrap;
     font-size: 14px;
     box-sizing: border-box;
-    width: 100%;
+    margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
+    width: ${({ fullWidth, buttonWidth }: GeneralProps) =>
+        fullWidth ? '100%' : buttonWidth ? buttonWidth : 'auto'};
 `;
 
 const StyledArrow = styled.div`
@@ -33,12 +41,10 @@ const StyledArrow = styled.div`
 interface BorderProps {
     borderColor?: string;
     selected?: boolean;
-    withMargin?: string;
     withBorder?: boolean;
 }
 
 const BorderButton = styled(GeneralButton)`
-    margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
     ${({ selected }) => selected && `cursor: default`};
     ${({ selected }) => selected && `font-weight: 900`};
     background-color: ${colorButtonBackground};
@@ -81,7 +87,7 @@ const renderArrow = () => (
     </StyledArrow>
 );
 
-interface ColorButtonProps {
+export interface ColorButtonProps {
     color?: string;
     disabled?: boolean;
     children?: any;
@@ -90,6 +96,8 @@ interface ColorButtonProps {
     onClick?: any;
     withMargin?: string;
     withBorder?: boolean;
+    fullWidth?: boolean;
+    width?: string;
 }
 
 export const ColorButton = ({
@@ -100,11 +108,17 @@ export const ColorButton = ({
     arrow,
     withMargin,
     withBorder,
+    fullWidth,
+    width,
     onClick,
 }: ColorButtonProps) => {
     if (disabled) {
         return (
-            <DisabledButton>
+            <DisabledButton
+                withMargin={withMargin}
+                fullWidth={fullWidth}
+                buttonWidth={width}
+            >
                 {children}
                 {arrow && renderArrow()}
             </DisabledButton>
@@ -118,6 +132,8 @@ export const ColorButton = ({
             onClick={onClick}
             withMargin={withMargin}
             withBorder={withBorder}
+            fullWidth={fullWidth}
+            buttonWidth={width}
         >
             {children}
             {arrow && renderArrow()}

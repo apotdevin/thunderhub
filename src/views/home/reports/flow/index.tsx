@@ -102,7 +102,7 @@ export const FlowBox = () => {
     const parsedData2: PeriodProps[] = JSON.parse(data.getInOut.payments);
 
     if (parsedData.length <= 0) {
-        return <p>Your node has not forwarded any payments.</p>;
+        return null;
     }
 
     const reduce = (array: PeriodProps[]) =>

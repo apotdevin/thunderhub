@@ -6,16 +6,15 @@ import {
     Sub4Title,
     Input,
     NoWrapTitle,
-    ColorButton,
     SubTitle,
 } from '../../generic/Styled';
-import { LoginButton } from '../../auth/Password';
 import { Circle, ChevronRight } from '../../generic/Icons';
 import styled from 'styled-components';
 import { useAccount } from '../../../context/AccountContext';
 import { getAuthString, saveSessionAuth } from '../../../utils/auth';
 import { useSettings } from '../../../context/SettingsContext';
 import { textColorMap } from '../../../styles/Themes';
+import { ColorButton } from '../colorButton/ColorButton';
 
 const RadioText = styled.div`
     margin-left: 10px;
@@ -30,7 +29,7 @@ const ButtonRow = styled.div`
 
 interface LoginProps {
     macaroon: string;
-    color: string;
+    color?: string;
     callback: any;
     variables: {};
     setModalOpen: (value: boolean) => void;
@@ -102,15 +101,14 @@ export const LoginModal = ({
                 </ButtonRow>
             </SingleLine>
             {pass !== '' && (
-                <LoginButton
+                <ColorButton
                     disabled={pass === ''}
-                    enabled={pass !== ''}
                     onClick={handleClick}
                     color={color}
                 >
                     Unlock
                     <ChevronRight />
-                </LoginButton>
+                </ColorButton>
             )}
         </>
     );
