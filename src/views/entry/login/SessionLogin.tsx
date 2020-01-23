@@ -9,10 +9,10 @@ import {
     SubTitle,
     Wrapper,
 } from '../../../components/generic/Styled';
-import { LoginButton } from '../../../components/auth/Password';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
 import { saveSessionAuth } from '../../../utils/auth';
+import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 
 export const SessionLogin = () => {
     const { name, admin, refreshAccount } = useAccount();
@@ -40,14 +40,15 @@ export const SessionLogin = () => {
                         <Input onChange={e => setPass(e.target.value)} />
                     </SingleLine>
                     {pass !== '' && (
-                        <LoginButton
+                        <ColorButton
                             disabled={pass === ''}
-                            enabled={pass !== ''}
                             onClick={handleClick}
-                            color={'yellow'}
+                            withMargin={'16px 0 0'}
+                            fullWidth={true}
+                            arrow={true}
                         >
                             Connect
-                        </LoginButton>
+                        </ColorButton>
                     )}
                 </Card>
             </CardWithTitle>

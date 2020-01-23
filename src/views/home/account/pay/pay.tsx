@@ -26,8 +26,9 @@ export const PayCard = ({ color }: { color: string }) => {
             <SecureButton
                 callback={makePayment}
                 variables={{ request }}
-                color={color}
                 disabled={request === ''}
+                withMargin={'0 0 0 16px'}
+                arrow={true}
             >
                 <Send />
                 Send Sats

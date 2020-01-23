@@ -41,7 +41,6 @@ import { ReactComponent as SlidersIcon } from '../../assets/icons/sliders.svg';
 import { ReactComponent as UsersIcon } from '../../assets/icons/users.svg';
 import { ReactComponent as GitPullRequestIcon } from '../../assets/icons/git-pull-request.svg';
 import { ReactComponent as Link } from '../../assets/icons/link.svg';
-import { inverseTextColor, iconButtonHover } from '../../styles/Themes';
 
 interface IconProps {
     color?: string;

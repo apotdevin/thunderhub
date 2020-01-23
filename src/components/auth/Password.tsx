@@ -1,15 +1,10 @@
 import React from 'react';
-import {
-    Input,
-    SingleLine,
-    Sub4Title,
-    SubTitle,
-    ColorButton,
-} from '../generic/Styled';
+import { Input, SingleLine, Sub4Title, SubTitle } from '../generic/Styled';
 import zxcvbn from 'zxcvbn';
 import styled from 'styled-components';
-import { progressBackground, textColor } from '../../styles/Themes';
+import { progressBackground } from '../../styles/Themes';
 import { Loader } from '../generic/Icons';
+import { ColorButton } from '../buttons/colorButton/ColorButton';
 
 const Progress = styled.div`
     width: 80%;
@@ -37,12 +32,6 @@ const ProgressBar = styled.div`
     background-color: ${({ barColor }: ProgressBar) =>
         barColor ? barColor : 'blue'};
     width: ${({ percent }: ProgressBar) => `${percent}%`};
-`;
-
-export const LoginButton = styled(ColorButton)`
-    margin: 20px 0 0 auto;
-    color: ${textColor};
-    padding: 10px 20px;
 `;
 
 const getColor = (percent: number) => {
@@ -94,19 +83,20 @@ export const PasswordInput = ({
                 </Progress>
             </SingleLine>
             {strength >= needed && !loading && (
-                <LoginButton
+                <ColorButton
                     disabled={strength < needed}
-                    enabled={strength >= needed}
-                    color={'yellow'}
                     onClick={callback}
+                    withMargin={'16px 0 0'}
+                    fullWidth={true}
+                    arrow={true}
                 >
                     Connect
-                </LoginButton>
+                </ColorButton>
             )}
             {loading && (
-                <LoginButton disabled={true} color={'grey'}>
+                <ColorButton disabled={true} color={'grey'}>
                     <Loader />
-                </LoginButton>
+                </ColorButton>
             )}
         </>
     );

@@ -211,11 +211,12 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
             <SecureButton
                 callback={payAddress}
                 variables={{ address, ...typeAmount, ...tokenAmount }}
-                color={color}
                 disabled={!canSend}
+                withMargin={'16px 0 0'}
+                fullWidth={true}
+                arrow={true}
             >
                 Send To Address
-                <ChevronRight />
             </SecureButton>
         </>
     );
