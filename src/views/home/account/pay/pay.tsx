@@ -14,7 +14,7 @@ import { SecureButton } from '../../../../components/buttons/secureButton/Secure
 export const PayCard = ({ color }: { color: string }) => {
     const [request, setRequest] = useState('');
 
-    const [makePayment] = useMutation(PAY_INVOICE, {
+    const [makePayment, { loading }] = useMutation(PAY_INVOICE, {
         onError: error => toast.error(getErrorContent(error)),
         onCompleted: () => toast.success('Payment Sent!'),
     });
@@ -29,6 +29,7 @@ export const PayCard = ({ color }: { color: string }) => {
                 disabled={request === ''}
                 withMargin={'0 0 0 16px'}
                 arrow={true}
+                loading={loading}
             >
                 <Send />
                 Send Sats

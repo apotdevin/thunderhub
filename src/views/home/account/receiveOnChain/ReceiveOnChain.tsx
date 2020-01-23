@@ -40,7 +40,7 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
     const [nested, setNested] = useState(false);
     const [received, setReceived] = useState(false);
 
-    const [createAddress, { data }] = useMutation(CREATE_ADDRESS, {
+    const [createAddress, { data, loading }] = useMutation(CREATE_ADDRESS, {
         onError: error => toast.error(getErrorContent(error)),
     });
 
@@ -84,6 +84,7 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
                     disabled={received}
                     withMargin={'0 0 0 16px'}
                     arrow={true}
+                    loading={loading}
                 >
                     <Edit />
                     Create Address

@@ -1,6 +1,6 @@
 import theme from 'styled-theming';
 
-const themeColors = {
+export const themeColors = {
     white: '#fff',
     grey: '#f5f6f9',
     grey2: '#f0f2f8',
@@ -14,7 +14,7 @@ const themeColors = {
     black: '#212735',
 };
 
-const chartColors = {
+export const chartColors = {
     darkyellow: '#ffd300',
     orange: '#ffa940',
     orange2: '#FD5F00',
@@ -23,7 +23,7 @@ const chartColors = {
     purple: '#6938f1',
 };
 
-const fontColors = {
+export const fontColors = {
     white: '#fff',
     grey3: '#e1e6ed',
     grey4: '#6e7887',
