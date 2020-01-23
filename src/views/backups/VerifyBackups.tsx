@@ -13,9 +13,9 @@ import {
     Separation,
 } from '../../components/generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import { XSvg, ChevronRight } from '../../components/generic/Icons';
+import { XSvg } from '../../components/generic/Icons';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { FixedWidth, NoWrap } from './Backups';
+import { NoWrap } from './Backups';
 
 export const VerifyBackups = ({ color }: { color: string }) => {
     const [backupString, setBackupString] = useState<string>('');
@@ -46,25 +46,20 @@ export const VerifyBackups = ({ color }: { color: string }) => {
                 <Input onChange={e => setBackupString(e.target.value)} />
             </SingleLine>
             <RightAlign>
-                <FixedWidth>
-                    <ColorButton
-                        disabled={backupString === ''}
-                        onClick={() =>
-                            verifyBackup({
-                                variables: { auth, backup: backupString },
-                            })
-                        }
-                    >
-                        {loading ? (
-                            <ScaleLoader height={8} width={2} color={color} />
-                        ) : (
-                            <>
-                                Verify
-                                <ChevronRight />
-                            </>
-                        )}
-                    </ColorButton>
-                </FixedWidth>
+                <ColorButton
+                    disabled={backupString === ''}
+                    onClick={() =>
+                        verifyBackup({
+                            variables: { auth, backup: backupString },
+                        })
+                    }
+                >
+                    {loading ? (
+                        <ScaleLoader height={8} width={2} color={color} />
+                    ) : (
+                        'Verify'
+                    )}
+                </ColorButton>
             </RightAlign>
             <Separation />
         </>
@@ -74,16 +69,13 @@ export const VerifyBackups = ({ color }: { color: string }) => {
         <>
             <SingleLine>
                 <DarkSubTitle>Verify Channels Backup</DarkSubTitle>
-                <FixedWidth>
-                    <ColorButton
-                        withMargin={'4px 0'}
-                        disabled={loading}
-                        arrow={true}
-                        onClick={() => setIsPasting(prev => !prev)}
-                    >
-                        {isPasting ? <XSvg /> : 'Verify'}
-                    </ColorButton>
-                </FixedWidth>
+                <ColorButton
+                    withMargin={'4px 0'}
+                    disabled={loading}
+                    onClick={() => setIsPasting(prev => !prev)}
+                >
+                    {isPasting ? <XSvg /> : 'Verify'}
+                </ColorButton>
             </SingleLine>
             {isPasting && renderInput()}
         </>

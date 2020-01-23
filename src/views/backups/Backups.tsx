@@ -16,10 +16,6 @@ import styled from 'styled-components';
 
 const backupColor = '#ffffff';
 
-export const FixedWidth = styled.div`
-    width: 200px;
-`;
-
 export const NoWrap = styled.div`
     margin-right: 16px;
     white-space: nowrap;
