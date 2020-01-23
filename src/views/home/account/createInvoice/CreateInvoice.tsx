@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Input, NoWrapTitle } from '../../../../components/generic/Styled';
+import { NoWrapTitle } from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_INVOICE } from '../../../../graphql/mutation';
-import { Edit, Copy } from '../../../../components/generic/Icons';
+import { Copy } from '../../../../components/generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
@@ -10,6 +10,7 @@ import { SecureButton } from '../../../../components/buttons/secureButton/Secure
 import QRCode from 'qrcode.react';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { Input } from '../../../../components/input/Input';
 
 const SingleLine = styled.div`
     display: flex;
@@ -103,6 +104,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
         <SingleLine>
             <NoWrapTitle>Amount to receive:</NoWrapTitle>
             <Input
+                withMargin={'0 0 0 24px'}
                 color={color}
                 type={'number'}
                 onChange={e => setAmount(parseInt(e.target.value))}
@@ -115,7 +117,6 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
                 arrow={true}
                 loading={loading}
             >
-                <Edit />
                 Create Invoice
             </SecureButton>
         </SingleLine>

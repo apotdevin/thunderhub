@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
     Card,
-    Input,
     ColorButton,
     NoWrapTitle,
     DarkSubTitle,
@@ -10,7 +9,7 @@ import {
 } from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { PAY_ADDRESS } from '../../../../graphql/mutation';
-import { Circle, ChevronRight } from '../../../../components/generic/Icons';
+import { Circle } from '../../../../components/generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
@@ -19,6 +18,8 @@ import { getValue } from '../../../../helpers/Helpers';
 import { useBitcoinInfo } from '../../../../context/BitcoinContext';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { textColorMap } from '../../../../styles/Themes';
+import { Input } from '../../../../components/input/Input';
+import { NoWrap } from '../../../backups/Backups';
 
 const RadioText = styled.div`
     margin-left: 10px;
@@ -31,8 +32,8 @@ const ButtonRow = styled.div`
     align-items: center;
 `;
 
-const SmallInput = styled(Input)`
-    max-width: 150px;
+const Margin = styled.div`
+    margin-left: 24px;
 `;
 
 export const SendOnChainCard = ({ color }: { color: string }) => {
@@ -120,6 +121,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
             <SingleLine>
                 <NoWrapTitle>Send to Address:</NoWrapTitle>
                 <Input
+                    withMargin={'0 0 0 24px'}
                     color={color}
                     onChange={e => setAddress(e.target.value)}
                 />
@@ -135,14 +137,15 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
             {!sendAll && (
                 <SingleLine>
                     <NoWrapTitle>Amount:</NoWrapTitle>
-                    <ButtonRow>
+                    <Margin>
                         <DarkSubTitle>{`(${getFormat(tokens)})`}</DarkSubTitle>
-                        <SmallInput
-                            color={color}
-                            type={'number'}
-                            onChange={e => setTokens(parseInt(e.target.value))}
-                        />
-                    </ButtonRow>
+                    </Margin>
+                    <Input
+                        withMargin={'0 0 0 8px'}
+                        color={color}
+                        type={'number'}
+                        onChange={e => setTokens(parseInt(e.target.value))}
+                    />
                 </SingleLine>
             )}
             <Separation />
@@ -173,10 +176,14 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                 <NoWrapTitle>Fee Amount:</NoWrapTitle>
                 {type !== 'none' && (
                     <ButtonRow>
-                        <DarkSubTitle>{`(~${feeFormat(
-                            amount * 223,
-                        )})`}</DarkSubTitle>
-                        <SmallInput
+                        <NoWrap>
+                            <DarkSubTitle>{`(~${
+                                type === 'target'
+                                    ? `${amount} blocks`
+                                    : feeFormat(amount * 223)
+                            })`}</DarkSubTitle>
+                        </NoWrap>
+                        <Input
                             color={color}
                             type={'number'}
                             onChange={e => setAmount(parseInt(e.target.value))}
@@ -185,9 +192,11 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                 )}
                 {type === 'none' && (
                     <ButtonRow>
-                        <DarkSubTitle>{`(~${feeFormat(
-                            amount * 223,
-                        )})`}</DarkSubTitle>
+                        <NoWrap>
+                            <DarkSubTitle>{`(~${feeFormat(
+                                amount * 223,
+                            )})`}</DarkSubTitle>
+                        </NoWrap>
                         {renderButton(
                             () => setAmount(fast),
                             `Fastest (${fast} sats)`,
