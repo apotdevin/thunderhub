@@ -41,8 +41,12 @@ export const LiquidReport = () => {
         variables: { auth },
     });
 
-    if (!data || !data.getChannelReport || loading) {
+    if (loading) {
         return <LoadingCard title={'Liquidity Report'} />;
+    }
+
+    if (!data || !data.getChannelReport) {
+        return null;
     }
 
     const { local, remote, maxIn, maxOut } = data.getChannelReport;

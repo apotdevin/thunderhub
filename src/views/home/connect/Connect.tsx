@@ -23,6 +23,18 @@ const Key = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 400px;
+
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    word-break: break-all;
+`;
+
+const Responsive = styled(SingleLine)`
+    @media (max-width: 578px) {
+        flex-direction: column;
+    }
 `;
 
 const Tile = styled.div`
@@ -31,6 +43,10 @@ const Tile = styled.div`
     justify-content: space-between;
     align-items: ${({ startTile }: { startTile?: boolean }) =>
         startTile ? 'flex-start' : 'flex-end'};
+
+    @media (max-width: 578px) {
+        margin: 16px 0;
+    }
 `;
 
 const TextPadding = styled.span`
@@ -63,7 +79,7 @@ export const ConnectCard = () => {
                 <SubTitle>Connect</SubTitle>
             </CardTitle>
             <Card>
-                <SingleLine>
+                <Responsive>
                     <Radio color={sectionColor} />
                     <Tile startTile={true}>
                         <DarkSubTitle>Public Key</DarkSubTitle>
@@ -96,7 +112,7 @@ export const ConnectCard = () => {
                             </CopyToClipboard>
                         ) : null}
                     </SingleLine>
-                </SingleLine>
+                </Responsive>
             </Card>
         </CardWithTitle>
     );

@@ -18,6 +18,7 @@ import {
     GitPullRequest,
     LinkIcon,
 } from '../../components/generic/Icons';
+import { useSettings } from '../../context/SettingsContext';
 
 const NavigationStyle = styled.div`
     grid-area: nav;
@@ -93,7 +94,7 @@ const FEES = '/fees';
 
 export const Navigation = () => {
     const { pathname } = useLocation();
-    const [isOpen, setIsOpen] = useState(false);
+    const { sidebar, setSettings } = useSettings();
 
     const renderNavButton = (
         title: string,
@@ -101,43 +102,43 @@ export const Navigation = () => {
         NavIcon: any,
         open: boolean = true,
     ) => (
-        <NavButton isOpen={isOpen} selected={pathname === link} to={link}>
+        <NavButton isOpen={sidebar} selected={pathname === link} to={link}>
             <NavIcon />
             {open && <NavSeparation>{title}</NavSeparation>}
         </NavButton>
     );
 
     return (
-        <NavigationStyle isOpen={isOpen}>
+        <NavigationStyle isOpen={sidebar}>
             <StickyCard>
                 <LinkView>
-                    <NodeInfo isOpen={isOpen} />
-                    <ButtonSection isOpen={isOpen}>
-                        {renderNavButton('Home', HOME, Home, isOpen)}
-                        {renderNavButton('Channels', CHANNEL, Cpu, isOpen)}
-                        {renderNavButton('Fees', FEES, Crosshair, isOpen)}
-                        {renderNavButton('Transactions', TRANS, Server, isOpen)}
+                    <NodeInfo isOpen={sidebar} />
+                    <ButtonSection isOpen={sidebar}>
+                        {renderNavButton('Home', HOME, Home, sidebar)}
+                        {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
+                        {renderNavButton('Fees', FEES, Crosshair, sidebar)}
+                        {renderNavButton('Transactions', TRANS, Server, sidebar)}
                         {renderNavButton(
                             'Forwards',
                             FORWARDS,
                             GitPullRequest,
-                            isOpen,
+                            sidebar,
                         )}
                         {renderNavButton(
                             'Chain',
                             CHAIN_TRANS,
                             LinkIcon,
-                            isOpen,
+                            sidebar,
                         )}
-                        {renderNavButton('Backups', BACKUPS, Shield, isOpen)}
+                        {renderNavButton('Backups', BACKUPS, Shield, sidebar)}
                         {renderNavButton(
                             'Settings',
                             SETTINGS,
                             Settings,
-                            isOpen,
+                            sidebar,
                         )}
                     </ButtonSection>
-                    <SideSettings isOpen={isOpen} setIsOpen={setIsOpen} />
+                    <SideSettings isOpen={sidebar} setIsOpen={setSettings} />
                 </LinkView>
             </StickyCard>
         </NavigationStyle>

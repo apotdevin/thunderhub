@@ -128,7 +128,12 @@ export const NodeInfo = ({ isOpen }: NodeInfoProps) => {
                             }
                         />
                         {(pendingBalance > 0 || pendingChainBalance > 0) && (
-                            <Circle fillcolor={'#652EC7'} />
+                            <div>
+                                <Circle
+                                    fillcolor={'#652EC7'}
+                                    strokeWidth={'0'}
+                                />
+                            </div>
                         )}
                         <Margin>
                             <Zap
