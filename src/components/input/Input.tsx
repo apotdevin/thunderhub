@@ -1,35 +1,74 @@
 import React from 'react';
-import styled from 'styled-components';
-import { textColor } from '../../styles/Themes';
+import styled, { css } from 'styled-components';
+import { textColor, colorButtonBorder } from '../../styles/Themes';
 
 interface InputProps {
     color?: string;
+    withMargin?: string;
+    fullWidth?: boolean;
+    inputWidth?: string;
+    maxWidth?: string;
 }
 
 export const StyledInput = styled.input`
     padding: 5px;
     height: 30px;
-    width: 100%;
     margin: 8px 0;
-    border: 1px solid #c8ccd4;
+    border: 1px solid ${textColor};
     background: none;
     border-radius: 5px;
     color: ${textColor};
     transition: all 0.5s ease;
+    ${({ maxWidth }: InputProps) =>
+        maxWidth &&
+        css`
+            max-width: ${maxWidth};
+        `}
+    width: ${({ fullWidth, inputWidth }: InputProps) =>
+        fullWidth ? '100%' : inputWidth ? inputWidth : 'auto'};
+    margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
 
     &:hover {
         border: 1px solid
-            ${({ color }: InputProps) => (color ? color : '#0077ff')};
+            ${({ color }: InputProps) => (color ? color : colorButtonBorder)};
     }
 
     &:focus {
         outline: none;
         background: none;
         border: 1px solid
-            ${({ color }: InputProps) => (color ? color : '#0077ff')};
+            ${({ color }: InputProps) => (color ? color : colorButtonBorder)};
     }
 `;
 
-export const Input = () => {
-    return <div>Hello</div>;
+interface InputCompProps {
+    type?: string;
+    color?: string;
+    withMargin?: string;
+    fullWidth?: boolean;
+    width?: string;
+    maxWidth?: string;
+    onChange: (e: any) => void;
+}
+
+export const Input = ({
+    type,
+    color,
+    withMargin,
+    fullWidth = true,
+    width,
+    maxWidth,
+    onChange,
+}: InputCompProps) => {
+    return (
+        <StyledInput
+            type={type}
+            color={color}
+            withMargin={withMargin}
+            onChange={e => onChange(e)}
+            fullWidth={fullWidth}
+            inputWidth={width}
+            maxWidth={maxWidth}
+        />
+    );
 };

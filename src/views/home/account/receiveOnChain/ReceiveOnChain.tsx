@@ -7,7 +7,7 @@ import {
 } from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_ADDRESS } from '../../../../graphql/mutation';
-import { Edit, Circle } from '../../../../components/generic/Icons';
+import { Circle } from '../../../../components/generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
@@ -86,7 +86,6 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
                     arrow={true}
                     loading={loading}
                 >
-                    <Edit />
                     Create Address
                 </SecureButton>
             </SingleLine>

@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-import {
-    Sub4Title,
-    Input,
-    SingleLine,
-} from '../../../../components/generic/Styled';
+import { Sub4Title, SingleLine } from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { PAY_INVOICE } from '../../../../graphql/mutation';
-import { Send } from '../../../../components/generic/Icons';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
+import { Input } from '../../../../components/input/Input';
 
 export const PayCard = ({ color }: { color: string }) => {
     const [request, setRequest] = useState('');
@@ -22,7 +18,11 @@ export const PayCard = ({ color }: { color: string }) => {
     return (
         <SingleLine>
             <Sub4Title>Request:</Sub4Title>
-            <Input color={color} onChange={e => setRequest(e.target.value)} />
+            <Input
+                withMargin={'0 0 0 24px'}
+                color={color}
+                onChange={e => setRequest(e.target.value)}
+            />
             <SecureButton
                 callback={makePayment}
                 variables={{ request }}
@@ -31,7 +31,6 @@ export const PayCard = ({ color }: { color: string }) => {
                 arrow={true}
                 loading={loading}
             >
-                <Send />
                 Send Sats
             </SecureButton>
         </SingleLine>
