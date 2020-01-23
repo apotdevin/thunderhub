@@ -73,8 +73,6 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
         }
     }, [data, loading]);
 
-    console.log(data, loading);
-
     const renderQr = () => (
         <Responsive>
             <QRWrapper>
@@ -115,6 +113,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
                 disabled={amount === 0}
                 withMargin={'0 0 0 16px'}
                 arrow={true}
+                loading={loading}
             >
                 <Edit />
                 Create Invoice

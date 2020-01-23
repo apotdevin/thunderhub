@@ -55,7 +55,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
         }
     }, [type, amount, fast]);
 
-    const [payAddress, { data }] = useMutation(PAY_ADDRESS, {
+    const [payAddress, { data, loading }] = useMutation(PAY_ADDRESS, {
         onError: error => toast.error(getErrorContent(error)),
     });
 
@@ -215,6 +215,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                 withMargin={'16px 0 0'}
                 fullWidth={true}
                 arrow={true}
+                loading={loading}
             >
                 Send To Address
             </SecureButton>

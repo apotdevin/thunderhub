@@ -10,6 +10,8 @@ import {
     hoverTextColor,
 } from '../../../styles/Themes';
 import { ChevronRight } from '../../generic/Icons';
+import { themeColors } from '../../../styles/Themes';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 
 interface GeneralProps {
     fullWidth?: boolean;
@@ -88,6 +90,7 @@ const renderArrow = () => (
 );
 
 export interface ColorButtonProps {
+    loading?: boolean;
     color?: string;
     disabled?: boolean;
     children?: any;
@@ -101,6 +104,7 @@ export interface ColorButtonProps {
 }
 
 export const ColorButton = ({
+    loading,
     color,
     disabled,
     children,
@@ -121,6 +125,18 @@ export const ColorButton = ({
             >
                 {children}
                 {arrow && renderArrow()}
+            </DisabledButton>
+        );
+    }
+
+    if (loading) {
+        return (
+            <DisabledButton
+                withMargin={withMargin}
+                fullWidth={fullWidth}
+                buttonWidth={width}
+            >
+                <ScaleLoader height={16} color={themeColors.blue2} />
             </DisabledButton>
         );
     }
