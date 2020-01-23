@@ -25,6 +25,10 @@ export const getChannelReport = {
         try {
             const channels: GetChannelsProps = await getChannels({ lnd });
 
+            if (channels.channels.length <= 0) {
+                return;
+            }
+
             const maxOutgoing = Math.max.apply(
                 Math,
                 channels.channels.map(o => {
@@ -53,7 +57,7 @@ export const getChannelReport = {
                 maxOut: maxOutgoing,
             };
         } catch (error) {
-            logger.error('Error getting channel fees: %o', error);
+            logger.error('Error getting channel report: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },
