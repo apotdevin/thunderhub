@@ -14,6 +14,7 @@ import { getErrorContent } from '../../../../utils/error';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { textColorMap } from '../../../../styles/Themes';
 import { useSettings } from '../../../../context/SettingsContext';
+import { useSize } from '../../../../hooks/UseSize';
 
 const SingleLine = styled.div`
     display: flex;
@@ -34,7 +35,16 @@ const TitleWithSpacing = styled(NoWrapTitle)`
     margin-right: 10px;
 `;
 
+const ResponsiveLine = styled(SingleLine)`
+    width: 100%;
+
+    @media (max-width: 578px) {
+        flex-direction: column;
+    }
+`;
+
 export const ReceiveOnChainCard = ({ color }: { color: string }) => {
+    const { width } = useSize();
     const { theme } = useSettings();
 
     const [nested, setNested] = useState(false);
@@ -50,52 +60,55 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
 
     return (
         <>
-            <SingleLine>
+            <ResponsiveLine>
                 <ButtonRow>
                     <TitleWithSpacing>Type of Address:</TitleWithSpacing>
-                    <ColorButton
-                        color={color}
-                        onClick={() => {
-                            setNested(false);
-                        }}
-                    >
-                        <Circle
-                            size={'10px'}
-                            fillcolor={nested ? '' : textColorMap[theme]}
-                        />
-                        <RadioText>P2WPKH</RadioText>
-                    </ColorButton>
-                    <ColorButton
-                        color={color}
-                        onClick={() => {
-                            setNested(true);
-                        }}
-                    >
-                        <Circle
-                            size={'10px'}
-                            fillcolor={nested ? textColorMap[theme] : ''}
-                        />
-                        <RadioText>NP2WPKH</RadioText>
-                    </ColorButton>
+                    <ResponsiveLine>
+                        <ColorButton
+                            color={color}
+                            onClick={() => {
+                                setNested(false);
+                            }}
+                        >
+                            <Circle
+                                size={'10px'}
+                                fillcolor={nested ? '' : textColorMap[theme]}
+                            />
+                            <RadioText>P2WPKH</RadioText>
+                        </ColorButton>
+                        <ColorButton
+                            color={color}
+                            onClick={() => {
+                                setNested(true);
+                            }}
+                        >
+                            <Circle
+                                size={'10px'}
+                                fillcolor={nested ? textColorMap[theme] : ''}
+                            />
+                            <RadioText>NP2WPKH</RadioText>
+                        </ColorButton>
+                    </ResponsiveLine>
                 </ButtonRow>
                 <SecureButton
                     callback={createAddress}
                     variables={{ nested }}
                     disabled={received}
-                    withMargin={'0 0 0 16px'}
+                    withMargin={width <= 578 ? '16px 0 0' : '0 0 0 16px'}
                     arrow={true}
                     loading={loading}
+                    fullWidth={width <= 578}
                 >
                     Create Address
                 </SecureButton>
-            </SingleLine>
+            </ResponsiveLine>
             {data && data.createAddress && (
                 <>
                     <Separation />
-                    <SingleLine>
+                    <ResponsiveLine>
                         <DarkSubTitle>New Address:</DarkSubTitle>
                         {data.createAddress}
-                    </SingleLine>
+                    </ResponsiveLine>
                 </>
             )}
         </>

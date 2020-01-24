@@ -19,7 +19,6 @@ import { useBitcoinInfo } from '../../../../context/BitcoinContext';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { textColorMap } from '../../../../styles/Themes';
 import { Input } from '../../../../components/input/Input';
-import { NoWrap } from '../../../backups/Backups';
 
 const RadioText = styled.div`
     margin-left: 10px;
@@ -30,10 +29,24 @@ const ButtonRow = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
+
+    @media (max-width: 578px) {
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-end;
+        margin: 8px 0 8px;
+    }
+`;
+
+const NoWrap = styled.div`
+    margin-left: 8px;
+    white-space: nowrap;
 `;
 
 const Margin = styled.div`
-    margin-left: 24px;
+    margin-left: 8px;
+    margin-right: 24px;
 `;
 
 export const SendOnChainCard = ({ color }: { color: string }) => {
@@ -136,10 +149,14 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
             </SingleLine>
             {!sendAll && (
                 <SingleLine>
-                    <NoWrapTitle>Amount:</NoWrapTitle>
-                    <Margin>
-                        <DarkSubTitle>{`(${getFormat(tokens)})`}</DarkSubTitle>
-                    </Margin>
+                    <SingleLine style={{ flexWrap: 'wrap' }}>
+                        <NoWrapTitle>Amount:</NoWrapTitle>
+                        <Margin>
+                            <DarkSubTitle>{`(${getFormat(
+                                tokens,
+                            )})`}</DarkSubTitle>
+                        </Margin>
+                    </SingleLine>
                     <Input
                         withMargin={'0 0 0 8px'}
                         color={color}
@@ -161,42 +178,45 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                         type === 'none',
                     )}
                     {renderButton(
-                        () => setType('fee'),
+                        () => {
+                            setType('fee');
+                            setAmount(0);
+                        },
                         'Fee (Sats/Byte)',
                         type === 'fee',
                     )}
                     {renderButton(
-                        () => setType('target'),
+                        () => {
+                            setType('target');
+                            setAmount(0);
+                        },
                         'Target Confirmations',
                         type === 'target',
                     )}
                 </ButtonRow>
             </SingleLine>
             <SingleLine>
-                <NoWrapTitle>Fee Amount:</NoWrapTitle>
+                <SingleLine style={{ flexWrap: 'wrap' }}>
+                    <NoWrapTitle>Fee Amount:</NoWrapTitle>
+                    <NoWrap>
+                        <DarkSubTitle>{`(~${
+                            type === 'target'
+                                ? `${amount} blocks`
+                                : feeFormat(amount * 223)
+                        })`}</DarkSubTitle>
+                    </NoWrap>
+                </SingleLine>
                 {type !== 'none' && (
-                    <ButtonRow>
-                        <NoWrap>
-                            <DarkSubTitle>{`(~${
-                                type === 'target'
-                                    ? `${amount} blocks`
-                                    : feeFormat(amount * 223)
-                            })`}</DarkSubTitle>
-                        </NoWrap>
+                    <>
                         <Input
                             color={color}
                             type={'number'}
                             onChange={e => setAmount(parseInt(e.target.value))}
                         />
-                    </ButtonRow>
+                    </>
                 )}
                 {type === 'none' && (
                     <ButtonRow>
-                        <NoWrap>
-                            <DarkSubTitle>{`(~${feeFormat(
-                                amount * 223,
-                            )})`}</DarkSubTitle>
-                        </NoWrap>
                         {renderButton(
                             () => setAmount(fast),
                             `Fastest (${fast} sats)`,

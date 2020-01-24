@@ -5,6 +5,8 @@ export const themeColors = {
     grey: '#f5f6f9',
     grey2: '#f0f2f8',
     grey3: '#e1e6ed',
+    grey7: '#b0b3c7',
+    grey8: '#4a5669',
     blue2: '#6284e4',
     blue3: '#5163ba',
     blue4: '#20263d',
@@ -122,6 +124,19 @@ export const navBackgroundColor = theme('mode', {
 export const navTextColor = theme('mode', {
     light: fontColors.black,
     dark: fontColors.white,
+});
+
+// ---------------------------------------
+// ICON COLORS
+// ---------------------------------------
+export const inputBackgroundColor = theme('mode', {
+    light: themeColors.grey,
+    dark: themeColors.blue5,
+});
+
+export const inputBorderColor = theme('mode', {
+    light: themeColors.grey8,
+    dark: themeColors.grey7,
 });
 
 // ---------------------------------------
