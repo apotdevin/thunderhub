@@ -11,6 +11,7 @@ import QRCode from 'qrcode.react';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Input } from '../../../../components/input/Input';
+import { useSize } from '../../../../hooks/UseSize';
 
 const SingleLine = styled.div`
     display: flex;
@@ -55,7 +56,16 @@ const ButtonContainer = styled.div`
     width: 140px;
 `;
 
+const ResponsiveLine = styled(SingleLine)`
+    width: 100%;
+
+    @media (max-width: 578px) {
+        flex-direction: column;
+    }
+`;
+
 export const CreateInvoiceCard = ({ color }: { color: string }) => {
+    const { width } = useSize();
     const [amount, setAmount] = useState(0);
     const [request, setRequest] = useState('');
 
@@ -101,10 +111,10 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
     );
 
     const renderContent = () => (
-        <SingleLine>
+        <ResponsiveLine>
             <NoWrapTitle>Amount to receive:</NoWrapTitle>
             <Input
-                withMargin={'0 0 0 24px'}
+                withMargin={width <= 578 ? '0 0 16px' : '0 0 0 24px'}
                 color={color}
                 type={'number'}
                 onChange={e => setAmount(parseInt(e.target.value))}
@@ -116,10 +126,11 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
                 withMargin={'0 0 0 16px'}
                 arrow={true}
                 loading={loading}
+                fullWidth={width <= 578}
             >
                 Create Invoice
             </SecureButton>
-        </SingleLine>
+        </ResponsiveLine>
     );
 
     return request !== '' ? renderQr() : renderContent();

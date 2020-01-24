@@ -20,9 +20,9 @@ const StyleModal = ReactModal.styled`
          padding: 20px;
          border-radius: 5px;
          outline: none;
-         min-width: 430px;
+         min-width: 578px;
 
-         @media (max-width: 430px) {
+         @media (max-width: 578px) {
              top: 100%;
              border-radius: 0px;
              transform: translateY(-100%) translateX(-50%);

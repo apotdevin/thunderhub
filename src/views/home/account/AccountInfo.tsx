@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import {
     Card,
     CardWithTitle,
@@ -31,6 +31,7 @@ import { SendOnChainCard } from './sendOnChain/SendOnChain';
 import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
+import { useSize } from '../../../hooks/UseSize';
 
 const Tile = styled.div`
     display: flex;
@@ -44,9 +45,28 @@ const ButtonRow = styled.div`
     display: flex;
 `;
 
+const Responsive = styled(SingleLine)`
+    @media (max-width: 578px) {
+        flex-direction: column;
+    }
+`;
+
 const sectionColor = '#FFD300';
 
+interface WrapperProps {
+    width?: number;
+    children: ReactNode;
+}
+
+const ResponsiveWrapper = ({ children, width = 0 }: WrapperProps) => {
+    if (width <= 578) {
+        return <Responsive>{children}</Responsive>;
+    }
+    return <>{children}</>;
+};
+
 export const AccountInfo = () => {
+    const { width } = useSize();
     const [state, setState] = useState<string>('none');
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
@@ -119,23 +139,27 @@ export const AccountInfo = () => {
 
     const renderLnAccount = () => (
         <SingleLine>
-            <Zap color={pendingBalance === 0 ? sectionColor : '#652EC7'} />
-            <Tile startTile={true}>
-                <DarkSubTitle>Account</DarkSubTitle>
-                <div>Lightning</div>
-            </Tile>
-            <Tile>
-                <DarkSubTitle>Current Balance</DarkSubTitle>
-                <div>{formatCCB}</div>
-            </Tile>
-            <Tile>
-                <DarkSubTitle>Pending Balance</DarkSubTitle>
-                <div>{formatPCB}</div>
-            </Tile>
+            <ResponsiveWrapper width={width}>
+                <Zap color={pendingBalance === 0 ? sectionColor : '#652EC7'} />
+                <Tile startTile={true}>
+                    <DarkSubTitle>Account</DarkSubTitle>
+                    <div>Lightning</div>
+                </Tile>
+            </ResponsiveWrapper>
+            <ResponsiveWrapper width={width}>
+                <Tile>
+                    <DarkSubTitle>Current Balance</DarkSubTitle>
+                    <div>{formatCCB}</div>
+                </Tile>
+                <Tile>
+                    <DarkSubTitle>Pending Balance</DarkSubTitle>
+                    <div>{formatPCB}</div>
+                </Tile>
+            </ResponsiveWrapper>
             <AdminSwitch>
                 <ButtonRow>
                     {showLn && showChain && (
-                        <>
+                        <ResponsiveWrapper width={width}>
                             <ColorButton
                                 color={sectionColor}
                                 onClick={() => setState('send_ln')}
@@ -148,7 +172,7 @@ export const AccountInfo = () => {
                             >
                                 <DownArrow />
                             </ColorButton>
-                        </>
+                        </ResponsiveWrapper>
                     )}
                     {showLn && !showChain && (
                         <ColorButton
@@ -165,25 +189,29 @@ export const AccountInfo = () => {
 
     const renderChainAccount = () => (
         <SingleLine>
-            <Anchor
-                color={pendingChainBalance === 0 ? sectionColor : '#652EC7'}
-            />
-            <Tile startTile={true}>
-                <DarkSubTitle>Account</DarkSubTitle>
-                <div>Bitcoin</div>
-            </Tile>
-            <Tile>
-                <DarkSubTitle>Current Balance</DarkSubTitle>
-                <div>{formatCB}</div>
-            </Tile>
-            <Tile>
-                <DarkSubTitle>Pending Balance</DarkSubTitle>
-                <div>{formatPB}</div>
-            </Tile>
+            <ResponsiveWrapper width={width}>
+                <Anchor
+                    color={pendingChainBalance === 0 ? sectionColor : '#652EC7'}
+                />
+                <Tile startTile={true}>
+                    <DarkSubTitle>Account</DarkSubTitle>
+                    <div>Bitcoin</div>
+                </Tile>
+            </ResponsiveWrapper>
+            <ResponsiveWrapper width={width}>
+                <Tile>
+                    <DarkSubTitle>Current Balance</DarkSubTitle>
+                    <div>{formatCB}</div>
+                </Tile>
+                <Tile>
+                    <DarkSubTitle>Pending Balance</DarkSubTitle>
+                    <div>{formatPB}</div>
+                </Tile>
+            </ResponsiveWrapper>
             <AdminSwitch>
                 <ButtonRow>
                     {showLn && showChain && (
-                        <>
+                        <ResponsiveWrapper width={width}>
                             <ColorButton
                                 color={sectionColor}
                                 onClick={() => setState('send_chain')}
@@ -196,7 +224,7 @@ export const AccountInfo = () => {
                             >
                                 <DownArrow />
                             </ColorButton>
-                        </>
+                        </ResponsiveWrapper>
                     )}
                     {!showLn && showChain && (
                         <ColorButton
@@ -229,14 +257,16 @@ export const AccountInfo = () => {
                             <DarkSubTitle>Account</DarkSubTitle>
                             <div>Total</div>
                         </Tile>
-                        <Tile>
-                            <DarkSubTitle>Current Balance</DarkSubTitle>
-                            <div>{totalB}</div>
-                        </Tile>
-                        <Tile>
-                            <DarkSubTitle>Pending Balance</DarkSubTitle>
-                            <div>{totalPB}</div>
-                        </Tile>
+                        <ResponsiveWrapper width={width}>
+                            <Tile>
+                                <DarkSubTitle>Current Balance</DarkSubTitle>
+                                <div>{totalB}</div>
+                            </Tile>
+                            <Tile>
+                                <DarkSubTitle>Pending Balance</DarkSubTitle>
+                                <div>{totalPB}</div>
+                            </Tile>
+                        </ResponsiveWrapper>
                     </SingleLine>
                 </Card>
             </CardWithTitle>

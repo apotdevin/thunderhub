@@ -1,6 +1,11 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { textColor, colorButtonBorder } from '../../styles/Themes';
+import {
+    textColor,
+    colorButtonBorder,
+    inputBackgroundColor,
+    inputBorderColor,
+} from '../../styles/Themes';
 
 interface InputProps {
     color?: string;
@@ -14,11 +19,12 @@ export const StyledInput = styled.input`
     padding: 5px;
     height: 30px;
     margin: 8px 0;
-    border: 1px solid ${textColor};
+    border: 1px solid ${inputBorderColor};
     background: none;
     border-radius: 5px;
     color: ${textColor};
     transition: all 0.5s ease;
+    background-color: ${inputBackgroundColor};
     ${({ maxWidth }: InputProps) =>
         maxWidth &&
         css`
@@ -35,7 +41,6 @@ export const StyledInput = styled.input`
 
     &:focus {
         outline: none;
-        background: none;
         border: 1px solid
             ${({ color }: InputProps) => (color ? color : colorButtonBorder)};
     }
