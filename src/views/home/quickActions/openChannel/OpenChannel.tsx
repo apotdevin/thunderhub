@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
     Card,
-    Input,
     SingleLine,
     Separation,
     DarkSubTitle,
@@ -19,6 +18,8 @@ import { useBitcoinInfo } from '../../../../context/BitcoinContext';
 import styled from 'styled-components';
 import { textColorMap } from '../../../../styles/Themes';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
+import { Input } from '../../../../components/input/Input';
+import { useSize } from '../../../../hooks/UseSize';
 
 const RadioText = styled.div`
     margin-left: 10px;
@@ -29,10 +30,28 @@ const ButtonRow = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
+
+    @media (max-width: 578px) {
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-end;
+        margin: 8px 0 8px;
+    }
 `;
 
-const SmallInput = styled(Input)`
-    max-width: 150px;
+const ResponsiveWrap = styled(SingleLine)`
+    @media (max-width: 578px) {
+        flex-wrap: wrap;
+    }
+`;
+
+const ResponsiveLine = styled(SingleLine)`
+    width: 100%;
+
+    @media (max-width: 578px) {
+        flex-direction: column;
+    }
 `;
 
 interface OpenChannelProps {
@@ -41,6 +60,7 @@ interface OpenChannelProps {
 }
 
 export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
+    const { width } = useSize();
     const [size, setSize] = useState(0);
     const [fee, setFee] = useState(0);
     const [publicKey, setPublicKey] = useState('');
@@ -91,24 +111,27 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
 
     return (
         <Card bottom={'20px'}>
-            <SingleLine>
+            <ResponsiveLine>
                 <NoWrapTitle>Node Public Key:</NoWrapTitle>
                 <Input
                     color={color}
+                    withMargin={width <= 578 ? '' : '0 0 0 8px'}
                     onChange={e => setPublicKey(e.target.value)}
                 />
-            </SingleLine>
-            <SingleLine>
-                <NoWrapTitle>Channel Size:</NoWrapTitle>
-                <ButtonRow>
+            </ResponsiveLine>
+            <ResponsiveLine>
+                <ResponsiveWrap>
+                    <NoWrapTitle>Channel Size:</NoWrapTitle>
                     <DarkSubTitle>{`(${getFormat(size)})`}</DarkSubTitle>
-                    <SmallInput
-                        color={color}
-                        type={'number'}
-                        onChange={e => setSize(parseInt(e.target.value))}
-                    />
-                </ButtonRow>
-            </SingleLine>
+                </ResponsiveWrap>
+                <Input
+                    color={color}
+                    withMargin={width <= 578 ? '' : '0 0 0 8px'}
+                    type={'number'}
+                    onChange={e => setSize(parseInt(e.target.value))}
+                />
+            </ResponsiveLine>
+            <Separation />
             <SingleLine>
                 <NoWrapTitle>Private Channel:</NoWrapTitle>
                 <ButtonRow>
@@ -124,6 +147,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
                     )}
                 </ButtonRow>
             </SingleLine>
+            <Separation />
             <SingleLine>
                 <NoWrapTitle>Fee:</NoWrapTitle>
                 <ButtonRow>
@@ -143,13 +167,13 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
                 </ButtonRow>
             </SingleLine>
             <SingleLine>
-                <NoWrapTitle>Fee Amount:</NoWrapTitle>
+                <ResponsiveWrap>
+                    <NoWrapTitle>Fee Amount:</NoWrapTitle>
+                    <DarkSubTitle>{`(~${getFormat(fee * 223)})`}</DarkSubTitle>
+                </ResponsiveWrap>
                 {type !== 'none' && (
                     <ButtonRow>
-                        <DarkSubTitle>{`(~${getFormat(
-                            fee * 223,
-                        )})`}</DarkSubTitle>
-                        <SmallInput
+                        <Input
                             color={color}
                             type={'number'}
                             onChange={e => setFee(parseInt(e.target.value))}
@@ -179,6 +203,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
             </SingleLine>
             <Separation />
             <SecureButton
+                fullWidth={true}
                 callback={openChannel}
                 variables={{
                     amount: size,

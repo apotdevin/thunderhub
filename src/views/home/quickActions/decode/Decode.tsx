@@ -2,25 +2,34 @@ import React, { useState } from 'react';
 import {
     Card,
     Sub4Title,
-    Input,
     SingleLine,
     Separation,
-    DarkSubTitle,
-    ColorButton,
 } from '../../../../components/generic/Styled';
+import { renderLine } from '../../../../components/generic/Helpers';
 import { useMutation } from '@apollo/react-hooks';
-import { Layers } from '../../../../components/generic/Icons';
 import { useAccount } from '../../../../context/AccountContext';
 import { getAuthString } from '../../../../utils/auth';
 import { DECODE_REQUEST } from '../../../../graphql/mutation';
 import { getErrorContent } from '../../../../utils/error';
 import { toast } from 'react-toastify';
-import { getLoadingButton, getValue } from '../../../../helpers/Helpers';
-import { DetailLine } from '../../../channels/Channels.style';
+import { getValue } from '../../../../helpers/Helpers';
 import { getNodeLink } from '../../../../components/generic/Helpers';
 import { useSettings } from '../../../../context/SettingsContext';
+import styled from 'styled-components';
+import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import { Input } from '../../../../components/input/Input';
+import { useSize } from '../../../../hooks/UseSize';
+
+const ResponsiveLine = styled(SingleLine)`
+    width: 100%;
+
+    @media (max-width: 578px) {
+        flex-direction: column;
+    }
+`;
 
 export const DecodeCard = ({ color }: { color: string }) => {
+    const { width } = useSize();
     const [request, setRequest] = useState('');
 
     const { price, symbol, currency } = useSettings();
@@ -39,29 +48,6 @@ export const DecodeCard = ({ color }: { color: string }) => {
             ...priceProps,
         });
 
-    const renderValue = (value: string, type?: string) => {
-        switch (type) {
-            case 'node_link':
-                return getNodeLink(value);
-            case 'value':
-                return getFormat(value);
-            default:
-                return value;
-        }
-    };
-
-    const renderLine = (title: string, value: string, type?: string) => {
-        if (!value) {
-            return null;
-        }
-        return (
-            <DetailLine>
-                <DarkSubTitle>{title}</DarkSubTitle>
-                {renderValue(value, type)}
-            </DetailLine>
-        );
-    };
-
     const renderData = () => {
         if (!data || !data.decodeRequest) return null;
 
@@ -73,7 +59,6 @@ export const DecodeCard = ({ color }: { color: string }) => {
             destination,
             expiresAt,
             id,
-            // routes,
             tokens,
         } = data.decodeRequest;
 
@@ -81,24 +66,23 @@ export const DecodeCard = ({ color }: { color: string }) => {
             <>
                 <Separation />
                 {renderLine('Id:', id)}
-                {renderLine('Destination:', destination, 'node_link')}
+                {renderLine('Destination:', getNodeLink(destination))}
                 {renderLine('Description:', description)}
                 {renderLine('Description Hash:', descriptionHash)}
                 {renderLine('Chain Address:', chainAddress)}
                 {renderLine('CLTV Delta:', cltvDelta)}
                 {renderLine('Expires At:', expiresAt)}
-                {renderLine('Amount:', tokens, 'value')}
+                {renderLine('Amount:', getFormat(tokens))}
             </>
         );
     };
 
-    console.log(data);
-
     return (
         <Card bottom={'20px'}>
-            <SingleLine>
+            <ResponsiveLine>
                 <Sub4Title>Request:</Sub4Title>
                 <Input
+                    withMargin={width <= 578 ? '0 0 8px' : '0 0 0 24px'}
                     color={color}
                     value={request}
                     onChange={e => setRequest(e.target.value)}
@@ -106,15 +90,18 @@ export const DecodeCard = ({ color }: { color: string }) => {
                 <ColorButton
                     color={color}
                     disabled={request === ''}
-                    enabled={request !== ''}
+                    withMargin={width <= 578 ? '0' : '0 0 0 16px'}
+                    arrow={true}
+                    loading={loading}
+                    fullWidth={width <= 578}
                     onClick={() => {
                         setRequest('');
                         decode({ variables: { request, auth } });
                     }}
                 >
-                    {getLoadingButton(Layers, loading, 'Decode')}
+                    Decode
                 </ColorButton>
-            </SingleLine>
+            </ResponsiveLine>
             {renderData()}
         </Card>
     );

@@ -1,5 +1,3 @@
-import React, { FunctionComponent } from 'react';
-import { Loader } from '../components/generic/Icons';
 import numeral from 'numeral';
 
 const getValueString = (amount: number): string => {
@@ -56,22 +54,6 @@ export const getPercent = (local: number, remote: number): number => {
     }
 
     return Math.round(percent);
-};
-
-export const getLoadingButton = (
-    ButtonIcon: FunctionComponent,
-    loading: boolean,
-    text: string,
-) => {
-    if (loading) {
-        return <Loader />;
-    }
-    return (
-        <>
-            <ButtonIcon />
-            {text}
-        </>
-    );
 };
 
 export const saveToPc = (jsonData: string, filename: string) => {

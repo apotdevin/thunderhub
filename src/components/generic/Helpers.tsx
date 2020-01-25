@@ -1,5 +1,5 @@
 import React from 'react';
-import { SmallLink, DarkSubTitle } from './Styled';
+import { SmallLink, DarkSubTitle, OverflowText } from './Styled';
 import { StatusDot, DetailLine } from '../../views/channels/Channels.style';
 import { formatDistanceStrict, format } from 'date-fns';
 
@@ -52,7 +52,7 @@ export const renderLine = (title: string, content: any, key?: string) => {
     return (
         <DetailLine key={key}>
             <DarkSubTitle>{title}</DarkSubTitle>
-            {content}
+            <OverflowText>{content}</OverflowText>
         </DetailLine>
     );
 };
