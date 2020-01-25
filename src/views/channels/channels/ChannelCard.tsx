@@ -39,6 +39,32 @@ const IconPadding = styled.div`
     margin-right: 8px;
 `;
 
+const ResponsiveLine = styled(SingleLine)`
+    width: 100%;
+    flex-wrap: wrap;
+
+    @media (max-width: 578px) {
+        flex-direction: column;
+    }
+`;
+
+const ResponsiveCol = styled.div`
+    flex-grow: 1;
+
+    @media (max-width: 578px) {
+        width: 100%;
+    }
+`;
+
+const ResponsiveSingle = styled(SingleLine)`
+    flex-grow: 1;
+    min-width: 200px;
+
+    @media (max-width: 578px) {
+        width: 100%;
+    }
+`;
+
 const getSymbol = (status: boolean) => {
     return status ? <UpArrow /> : <DownArrow />;
 };
@@ -160,7 +186,6 @@ export const ChannelCard = ({
                     <RightAlign>
                         <ColorButton
                             withBorder={true}
-                            // color={'red'}
                             arrow={true}
                             onClick={() => setModalOpen(true)}
                         >
@@ -180,15 +205,15 @@ export const ChannelCard = ({
                     {getStatusDot(is_opening, 'opening')}
                     {getStatusDot(is_closing, 'closing')}
                 </StatusLine>
-                <SingleLine>
+                <ResponsiveLine>
                     <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
-                    <SingleLine>
+                    <ResponsiveSingle>
                         {formatBalance}
                         <IconPadding>
                             {getPrivate(is_private)}
                             {getSymbol(is_partner_initiated)}
                         </IconPadding>
-                        <div>
+                        <ResponsiveCol>
                             <Progress
                                 data-tip
                                 data-for={`node_balance_tip_${index}`}
@@ -209,9 +234,9 @@ export const ChannelCard = ({
                                     percent={getPercent(received, sent)}
                                 />
                             </Progress>
-                        </div>
-                    </SingleLine>
-                </SingleLine>
+                        </ResponsiveCol>
+                    </ResponsiveSingle>
+                </ResponsiveLine>
             </MainInfo>
             {index === indexOpen && renderDetails()}
             <ReactTooltip
