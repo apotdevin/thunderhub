@@ -48,6 +48,7 @@ export const StyledInput = styled.input`
 
 interface InputCompProps {
     type?: string;
+    value?: string;
     color?: string;
     withMargin?: string;
     fullWidth?: boolean;
@@ -58,6 +59,7 @@ interface InputCompProps {
 
 export const Input = ({
     type,
+    value,
     color,
     withMargin,
     fullWidth = true,
@@ -68,6 +70,7 @@ export const Input = ({
     return (
         <StyledInput
             type={type}
+            value={value}
             color={color}
             withMargin={withMargin}
             onChange={e => onChange(e)}

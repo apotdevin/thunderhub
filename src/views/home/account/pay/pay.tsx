@@ -38,7 +38,7 @@ export const PayCard = ({ color }: { color: string }) => {
                 callback={makePayment}
                 variables={{ request }}
                 disabled={request === ''}
-                withMargin={'0 0 0 16px'}
+                withMargin={width <= 578 ? '0' : '0 0 0 16px'}
                 arrow={true}
                 loading={loading}
                 fullWidth={width <= 578}

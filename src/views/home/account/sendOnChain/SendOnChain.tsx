@@ -19,9 +19,24 @@ import { useBitcoinInfo } from '../../../../context/BitcoinContext';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { textColorMap } from '../../../../styles/Themes';
 import { Input } from '../../../../components/input/Input';
+import { useSize } from '../../../../hooks/UseSize';
 
 const RadioText = styled.div`
     margin-left: 10px;
+`;
+
+const ResponsiveWrap = styled(SingleLine)`
+    @media (max-width: 578px) {
+        flex-wrap: wrap;
+    }
+`;
+
+const ResponsiveLine = styled(SingleLine)`
+    width: 100%;
+
+    @media (max-width: 578px) {
+        flex-direction: column;
+    }
 `;
 
 const ButtonRow = styled.div`
@@ -50,6 +65,7 @@ const Margin = styled.div`
 `;
 
 export const SendOnChainCard = ({ color }: { color: string }) => {
+    const { width } = useSize();
     const [address, setAddress] = useState('');
     const [tokens, setTokens] = useState(0);
     const [type, setType] = useState('none');
@@ -131,14 +147,14 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
 
     return (
         <>
-            <SingleLine>
+            <ResponsiveLine>
                 <NoWrapTitle>Send to Address:</NoWrapTitle>
                 <Input
-                    withMargin={'0 0 0 24px'}
+                    withMargin={width <= 578 ? '' : '0 0 0 24px'}
                     color={color}
                     onChange={e => setAddress(e.target.value)}
                 />
-            </SingleLine>
+            </ResponsiveLine>
             <Separation />
             <SingleLine>
                 <NoWrapTitle>Send All:</NoWrapTitle>
@@ -149,14 +165,14 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
             </SingleLine>
             {!sendAll && (
                 <SingleLine>
-                    <SingleLine style={{ flexWrap: 'wrap' }}>
+                    <ResponsiveWrap>
                         <NoWrapTitle>Amount:</NoWrapTitle>
                         <Margin>
                             <DarkSubTitle>{`(${getFormat(
                                 tokens,
                             )})`}</DarkSubTitle>
                         </Margin>
-                    </SingleLine>
+                    </ResponsiveWrap>
                     <Input
                         withMargin={'0 0 0 8px'}
                         color={color}
@@ -196,7 +212,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                 </ButtonRow>
             </SingleLine>
             <SingleLine>
-                <SingleLine style={{ flexWrap: 'wrap' }}>
+                <ResponsiveWrap>
                     <NoWrapTitle>Fee Amount:</NoWrapTitle>
                     <NoWrap>
                         <DarkSubTitle>{`(~${
@@ -205,12 +221,13 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                                 : feeFormat(amount * 223)
                         })`}</DarkSubTitle>
                     </NoWrap>
-                </SingleLine>
+                </ResponsiveWrap>
                 {type !== 'none' && (
                     <>
                         <Input
                             color={color}
                             type={'number'}
+                            withMargin={'0 0 0 8px'}
                             onChange={e => setAmount(parseInt(e.target.value))}
                         />
                     </>

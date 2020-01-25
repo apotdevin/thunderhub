@@ -53,6 +53,7 @@ export const StatusDot = styled.div`
 `;
 
 export const DetailLine = styled.div`
+    margin: 4px 0;
     font-size: 14px;
     word-wrap: break-word;
     display: flex;

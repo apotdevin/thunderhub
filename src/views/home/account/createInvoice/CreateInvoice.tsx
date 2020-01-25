@@ -123,7 +123,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
                 callback={createInvoice}
                 variables={{ amount }}
                 disabled={amount === 0}
-                withMargin={'0 0 0 16px'}
+                withMargin={width <= 578 ? '' : '0 0 0 16px'}
                 arrow={true}
                 loading={loading}
                 fullWidth={width <= 578}

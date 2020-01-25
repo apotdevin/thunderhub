@@ -217,3 +217,13 @@ export const Wrapper = ({
         <FixedWidth>{children}</FixedWidth>
     </FullWidth>
 );
+
+export const OverflowText = styled.div`
+    margin-left: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-all;
+`;
