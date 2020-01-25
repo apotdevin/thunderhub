@@ -6,7 +6,6 @@ import {
 } from '../../styles/Themes';
 
 export const Progress = styled.div`
-    width: 200px;
     margin: 5px;
     padding: 2px;
     background: ${progressBackground};
@@ -32,6 +31,15 @@ export const ProgressBar = styled.div`
 export const NodeTitle = styled.div`
     font-size: 16px;
     font-weight: bold;
+    width: 240px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @media (max-width: 578px) {
+        align-self: flex-start;
+        width: 100%;
+    }
 `;
 
 export const StatusLine = styled.div`

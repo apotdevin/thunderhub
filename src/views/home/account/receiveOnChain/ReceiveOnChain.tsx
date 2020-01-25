@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import {
     NoWrapTitle,
     DarkSubTitle,
-    Separation,
     OverflowText,
 } from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_ADDRESS } from '../../../../graphql/mutation';
-import { Circle, Copy } from '../../../../components/generic/Icons';
+import { Circle } from '../../../../components/generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
