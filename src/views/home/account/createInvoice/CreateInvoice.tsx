@@ -52,10 +52,6 @@ const Column = styled.div`
     align-items: center;
 `;
 
-const ButtonContainer = styled.div`
-    width: 140px;
-`;
-
 const ResponsiveLine = styled(SingleLine)`
     width: 100%;
 
@@ -95,17 +91,15 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
             </QRWrapper>
             <Column>
                 <WrapRequest>{request}</WrapRequest>
-                <ButtonContainer>
-                    <CopyToClipboard
-                        text={request}
-                        onCopy={() => toast.success('Request Copied')}
-                    >
-                        <ColorButton>
-                            <Copy />
-                            Copy
-                        </ColorButton>
-                    </CopyToClipboard>
-                </ButtonContainer>
+                <CopyToClipboard
+                    text={request}
+                    onCopy={() => toast.success('Request Copied')}
+                >
+                    <ColorButton>
+                        <Copy />
+                        Copy
+                    </ColorButton>
+                </CopyToClipboard>
             </Column>
         </Responsive>
     );

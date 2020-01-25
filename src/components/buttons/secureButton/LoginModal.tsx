@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import {
     SingleLine,
     Sub4Title,
-    Input,
     NoWrapTitle,
     SubTitle,
 } from '../../generic/Styled';
@@ -15,6 +14,7 @@ import { getAuthString, saveSessionAuth } from '../../../utils/auth';
 import { useSettings } from '../../../context/SettingsContext';
 import { textColorMap } from '../../../styles/Themes';
 import { ColorButton } from '../colorButton/ColorButton';
+import { Input } from '../../input/Input';
 
 const RadioText = styled.div`
     margin-left: 10px;
@@ -25,6 +25,14 @@ const ButtonRow = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+`;
+
+const ResponsiveLine = styled(SingleLine)`
+    width: 100%;
+
+    @media (max-width: 578px) {
+        flex-direction: column;
+    }
 `;
 
 interface LoginProps {
@@ -81,11 +89,11 @@ export const LoginModal = ({
     return (
         <>
             <SubTitle>Unlock your Account</SubTitle>
-            <SingleLine>
+            <ResponsiveLine>
                 <Sub4Title>Password:</Sub4Title>
                 <Input onChange={e => setPass(e.target.value)} />
-            </SingleLine>
-            <SingleLine>
+            </ResponsiveLine>
+            <ResponsiveLine>
                 <NoWrapTitle>Don't ask me again this session:</NoWrapTitle>
                 <ButtonRow>
                     {renderButton(
@@ -99,17 +107,17 @@ export const LoginModal = ({
                         !storeSession,
                     )}
                 </ButtonRow>
-            </SingleLine>
-            {pass !== '' && (
-                <ColorButton
-                    disabled={pass === ''}
-                    onClick={handleClick}
-                    color={color}
-                >
-                    Unlock
-                    <ChevronRight />
-                </ColorButton>
-            )}
+            </ResponsiveLine>
+            <ColorButton
+                disabled={pass === ''}
+                onClick={handleClick}
+                color={color}
+                fullWidth={true}
+                withMargin={'16px 0 0'}
+            >
+                Unlock
+                <ChevronRight />
+            </ColorButton>
         </>
     );
 };
