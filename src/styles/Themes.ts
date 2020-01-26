@@ -62,6 +62,11 @@ export const inverseTextColor = theme('mode', {
     dark: fontColors.black,
 });
 
+export const burgerColor = theme('mode', {
+    light: themeColors.grey2,
+    dark: themeColors.blue4,
+});
+
 // ---------------------------------------
 // CARD COLORS
 // ---------------------------------------

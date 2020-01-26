@@ -3,7 +3,12 @@ import { useQuery } from '@apollo/react-hooks';
 import { GET_NODE_INFO } from '../../../graphql/query';
 import { useSettings } from '../../../context/SettingsContext';
 import { getValue } from '../../../helpers/Helpers';
-import { Separation, SingleLine } from '../../../components/generic/Styled';
+import {
+    Separation,
+    SingleLine,
+    SubTitle,
+    Sub4Title,
+} from '../../../components/generic/Styled';
 import {
     QuestionIcon,
     Zap,
@@ -62,10 +67,11 @@ const Alias = styled.div`
 `;
 
 interface NodeInfoProps {
-    isOpen: boolean;
+    isOpen?: boolean;
+    isBurger?: boolean;
 }
 
-export const NodeInfo = ({ isOpen }: NodeInfoProps) => {
+export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
@@ -115,6 +121,43 @@ export const NodeInfo = ({ isOpen }: NodeInfoProps) => {
     const formatPB = getFormat(pendingChainBalance);
     const formatCCB = getFormat(confirmedBalance);
     const formatPCB = getFormat(pendingBalance);
+
+    if (isBurger) {
+        return (
+            <>
+                <SingleLine>
+                    <SubTitle>{alias}</SubTitle>
+                    <Circle
+                        strokeWidth={'0'}
+                        fillcolor={is_synced_to_chain ? '#95de64' : '#ff7875'}
+                    />
+                </SingleLine>
+                <SingleLine>
+                    <Sub4Title>Channels</Sub4Title>
+                    {`${active_channels_count} / ${pending_channels_count} / ${closed_channels_count} / ${peers_count}`}
+                </SingleLine>
+                <SingleLine>
+                    <Zap
+                        color={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
+                        fillcolor={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
+                    />
+                    {pendingBalance > 0
+                        ? `${formatCCB} / ${formatPCB}`
+                        : formatCCB}
+                </SingleLine>
+                <SingleLine>
+                    <Anchor
+                        color={
+                            pendingChainBalance === 0 ? '#FFD300' : '#652EC7'
+                        }
+                    />
+                    {pendingChainBalance > 0
+                        ? `${formatCB} / ${formatPB}`
+                        : formatCB}
+                </SingleLine>
+            </>
+        );
+    }
 
     if (!isOpen) {
         return (
