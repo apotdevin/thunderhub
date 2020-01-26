@@ -1,9 +1,11 @@
 module.exports = {
     stories: ['../src/**/*.stories.tsx'],
     addons: [
-        '@storybook/preset-create-react-app',
+        '@storybook/addon-knobs/register',
         '@storybook/addon-actions',
+        '@storybook/preset-create-react-app',
         '@storybook/addon-links',
+        '@storybook/addon-viewport/register',
     ],
     webpackFinal: async config => {
         config.module.rules.push({
