@@ -5,16 +5,21 @@ import {
     Card,
     SubCard,
     SingleLine,
+    Sub4Title,
 } from '../../components/generic/Styled';
 import { LoginForm } from '../../components/auth/NormalLogin';
 import { ConnectLoginForm } from '../../components/auth/ConnectLogin';
 import { BTCLoginForm } from '../../components/auth/BTCLogin';
-import { SettingsLine, ButtonRow } from './Settings';
+import { SettingsLine } from './Settings';
 import { useAccount } from '../../context/AccountContext';
 import styled from 'styled-components';
 import { getNextAvailable, getStorageSaved } from '../../utils/storage';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { XSvg } from '../../components/generic/Icons';
+import {
+    MultiButton,
+    SingleButton,
+} from 'components/buttons/multiButton/MultiButton';
 
 const RightAlign = styled.div`
     display: flex;
@@ -69,15 +74,14 @@ export const AccountSettings = () => {
             <SubTitle>Account</SubTitle>
             <Card>
                 <SettingsLine>
-                    <SubTitle>Change Account</SubTitle>
-                    <ButtonRow>
+                    <Sub4Title>Change Account</Sub4Title>
+                    <MultiButton>
                         {getStorageSaved().map((entry, index) => {
                             return (
-                                <ColorButton
+                                <SingleButton
                                     selected={
                                         name.localeCompare(entry.name) === 0
                                     }
-                                    withMargin={'0 0 0 8px'}
                                     onClick={() => {
                                         localStorage.setItem(
                                             'account',
@@ -88,14 +92,14 @@ export const AccountSettings = () => {
                                     }}
                                 >
                                     {entry.name}
-                                </ColorButton>
+                                </SingleButton>
                             );
                         })}
-                    </ButtonRow>
+                    </MultiButton>
                 </SettingsLine>
                 {next && (
                     <SettingsLine>
-                        <SubTitle>Add Account</SubTitle>
+                        <Sub4Title>Add Account</Sub4Title>
                         {renderButtons()}
                     </SettingsLine>
                 )}

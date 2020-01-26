@@ -27,7 +27,7 @@ const GeneralButton = styled.button`
     outline: none;
     padding: 8px 16px;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 4px;
     white-space: nowrap;
     font-size: 14px;
     box-sizing: border-box;

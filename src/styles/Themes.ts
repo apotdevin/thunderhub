@@ -114,6 +114,19 @@ export const hoverTextColor = theme('mode', {
 });
 
 // ---------------------------------------
+// MULTI BUTTON COLORS
+// ---------------------------------------
+export const multiButtonColor = theme('mode', {
+    light: themeColors.grey2,
+    dark: themeColors.blue7,
+});
+
+export const multiSelectColor = theme('mode', {
+    light: fontColors.black,
+    dark: fontColors.white,
+});
+
+// ---------------------------------------
 // NAVIGATION COLORS
 // ---------------------------------------
 export const navBackgroundColor = theme('mode', {

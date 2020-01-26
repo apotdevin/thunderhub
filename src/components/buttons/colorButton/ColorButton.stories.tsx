@@ -5,22 +5,16 @@ import { text, boolean, color } from '@storybook/addon-knobs';
 
 export default {
     title: 'Color Button',
-    parameters: {
-        myAddon: {
-            data: 'this data is passed to the addon',
-        },
-    },
 };
 
 export const Default = () => {
     const withColor = boolean('With Color', false);
 
-    const buttonColor = () =>
-        withColor ? { color: color('Color', 'yellow') } : {};
+    const buttonColor = withColor ? { color: color('Color', 'yellow') } : {};
 
     return (
         <ColorButton
-            {...buttonColor()}
+            {...buttonColor}
             loading={boolean('Loading', false)}
             disabled={boolean('Disabled', false)}
             arrow={boolean('With Arrow', false)}
