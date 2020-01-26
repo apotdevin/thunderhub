@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
 import {
-    SingleLine,
     Sub4Title,
     NoWrapTitle,
     SubTitle,
+    ResponsiveLine,
 } from '../../generic/Styled';
 import { Circle, ChevronRight } from '../../generic/Icons';
 import styled from 'styled-components';
@@ -25,14 +25,6 @@ const ButtonRow = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-`;
-
-const ResponsiveLine = styled(SingleLine)`
-    width: 100%;
-
-    @media (max-width: 578px) {
-        flex-direction: column;
-    }
 `;
 
 interface LoginProps {

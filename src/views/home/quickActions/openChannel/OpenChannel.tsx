@@ -5,6 +5,7 @@ import {
     Separation,
     DarkSubTitle,
     NoWrapTitle,
+    ResponsiveLine,
 } from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { ChevronRight } from '../../../../components/generic/Icons';
@@ -26,14 +27,6 @@ import {
 const ResponsiveWrap = styled(SingleLine)`
     @media (max-width: 578px) {
         flex-wrap: wrap;
-    }
-`;
-
-const ResponsiveLine = styled(SingleLine)`
-    width: 100%;
-
-    @media (max-width: 578px) {
-        flex-direction: column;
     }
 `;
 

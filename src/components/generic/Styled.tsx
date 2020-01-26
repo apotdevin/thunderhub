@@ -199,3 +199,29 @@ export const OverflowText = styled.div`
     -ms-word-break: break-all;
     word-break: break-all;
 `;
+
+export const ResponsiveLine = styled(SingleLine)`
+    width: 100%;
+    flex-wrap: wrap;
+
+    @media (max-width: 578px) {
+        flex-direction: column;
+    }
+`;
+
+export const ResponsiveCol = styled.div`
+    flex-grow: 1;
+
+    @media (max-width: 578px) {
+        width: 100%;
+    }
+`;
+
+export const ResponsiveSingle = styled(SingleLine)`
+    flex-grow: 1;
+    min-width: 200px;
+
+    @media (max-width: 578px) {
+        width: 100%;
+    }
+`;

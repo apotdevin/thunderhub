@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { NoWrapTitle } from '../../../../components/generic/Styled';
+import {
+    NoWrapTitle,
+    ResponsiveLine,
+} from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_INVOICE } from '../../../../graphql/mutation';
 import { Copy } from '../../../../components/generic/Icons';
@@ -12,12 +15,6 @@ import { ColorButton } from '../../../../components/buttons/colorButton/ColorBut
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Input } from '../../../../components/input/Input';
 import { useSize } from '../../../../hooks/UseSize';
-
-const SingleLine = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-`;
 
 const Responsive = styled.div`
     display: flex;
@@ -50,14 +47,6 @@ const Column = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-`;
-
-const ResponsiveLine = styled(SingleLine)`
-    width: 100%;
-
-    @media (max-width: 578px) {
-        flex-direction: column;
-    }
 `;
 
 export const CreateInvoiceCard = ({ color }: { color: string }) => {

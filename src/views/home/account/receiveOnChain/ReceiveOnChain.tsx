@@ -3,6 +3,7 @@ import {
     NoWrapTitle,
     DarkSubTitle,
     OverflowText,
+    ResponsiveLine,
 } from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_ADDRESS } from '../../../../graphql/mutation';
@@ -18,12 +19,6 @@ import {
     SingleButton,
 } from 'components/buttons/multiButton/MultiButton';
 
-const SingleLine = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-`;
-
 const ButtonRow = styled.div`
     width: auto;
     display: flex;
@@ -31,14 +26,6 @@ const ButtonRow = styled.div`
 
 const TitleWithSpacing = styled(NoWrapTitle)`
     margin-right: 10px;
-`;
-
-const ResponsiveLine = styled(SingleLine)`
-    width: 100%;
-
-    @media (max-width: 578px) {
-        flex-direction: column;
-    }
 `;
 
 export const ReceiveOnChainCard = () => {

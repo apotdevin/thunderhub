@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import {
     Card,
     Sub4Title,
-    SingleLine,
     Separation,
+    ResponsiveLine,
 } from '../../../../components/generic/Styled';
 import { renderLine } from '../../../../components/generic/Helpers';
 import { useMutation } from '@apollo/react-hooks';
@@ -15,18 +15,9 @@ import { toast } from 'react-toastify';
 import { getValue } from '../../../../helpers/Helpers';
 import { getNodeLink } from '../../../../components/generic/Helpers';
 import { useSettings } from '../../../../context/SettingsContext';
-import styled from 'styled-components';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../../../components/input/Input';
 import { useSize } from '../../../../hooks/UseSize';
-
-const ResponsiveLine = styled(SingleLine)`
-    width: 100%;
-
-    @media (max-width: 578px) {
-        flex-direction: column;
-    }
-`;
 
 export const DecodeCard = ({ color }: { color: string }) => {
     const { width } = useSize();
