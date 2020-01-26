@@ -112,7 +112,7 @@ export const ChannelCard = ({
     const formatBalance = getFormat(capacity);
     const formatLocal = getFormat(local_balance);
     const formatRemote = getFormat(remote_balance);
-    const formatreceived = getFormat(received);
+    const formatReceived = getFormat(received);
     const formatSent = getFormat(sent);
 
     const handleClick = () => {
@@ -127,6 +127,14 @@ export const ChannelCard = ({
         return (
             <>
                 <Separation />
+                {renderLine(
+                    'Balancedness:',
+                    getPercent(local_balance, remote_balance) / 100,
+                )}
+                {renderLine('Local Balance:', formatLocal)}
+                {renderLine('Remote Balance:', formatRemote)}
+                {renderLine('Received:', formatReceived)}
+                {renderLine('Sent:', formatSent)}
                 {renderLine(
                     'Node Public Key:',
                     getNodeLink(partner_public_key),
@@ -230,7 +238,7 @@ export const ChannelCard = ({
                 place={'bottom'}
                 type={tooltipType}
             >
-                <div>{`received: ${formatreceived}`}</div>
+                <div>{`Received: ${formatReceived}`}</div>
                 <div>{`Sent: ${formatSent}`}</div>
             </ReactTooltip>
             <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>

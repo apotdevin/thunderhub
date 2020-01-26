@@ -10,6 +10,7 @@ import {
     Separation,
     DarkSubTitle,
     RightAlign,
+    ResponsiveLine,
 } from 'components/generic/Styled';
 import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
@@ -21,8 +22,6 @@ import { UPDATE_FEES } from '../../graphql/mutation';
 import { XSvg, ChevronRight } from 'components/generic/Icons';
 import { SecureButton } from 'components/buttons/secureButton/SecureButton';
 import { AdminSwitch } from 'components/adminSwitch/AdminSwitch';
-import { textColorMap } from '../../styles/Themes';
-import { useSettings } from '../../context/SettingsContext';
 import { ColorButton } from 'components/buttons/colorButton/ColorButton';
 import { Input } from 'components/input/Input';
 
@@ -32,7 +31,6 @@ export const FeesView = () => {
     const [baseFee, setBaseFee] = useState(0);
     const [feeRate, setFeeRate] = useState(0);
 
-    const { theme } = useSettings();
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
@@ -65,7 +63,6 @@ export const FeesView = () => {
                         <SingleLine>
                             <Sub4Title>Channel Fees</Sub4Title>
                             <ColorButton
-                                color={textColorMap[theme]}
                                 onClick={() => setIsEdit(prev => !prev)}
                             >
                                 {isEdit ? <XSvg /> : 'Update'}
@@ -74,26 +71,26 @@ export const FeesView = () => {
                         {isEdit && (
                             <>
                                 <Separation />
-                                <SingleLine>
+                                <ResponsiveLine>
                                     <DarkSubTitle>{`Base Fee (Sats):`}</DarkSubTitle>
                                     <Input
-                                        color={textColorMap[theme]}
+                                        placeholder={'Sats'}
                                         type={'number'}
                                         onChange={e =>
                                             setBaseFee(parseInt(e.target.value))
                                         }
                                     />
-                                </SingleLine>
-                                <SingleLine>
+                                </ResponsiveLine>
+                                <ResponsiveLine>
                                     <DarkSubTitle>{`Fee Rate (Sats/Million):`}</DarkSubTitle>
                                     <Input
-                                        color={textColorMap[theme]}
+                                        placeholder={'Sats/Million'}
                                         type={'number'}
                                         onChange={e =>
                                             setFeeRate(parseInt(e.target.value))
                                         }
                                     />
-                                </SingleLine>
+                                </ResponsiveLine>
                                 <RightAlign>
                                     <SecureButton
                                         callback={updateFees}
@@ -101,10 +98,11 @@ export const FeesView = () => {
                                             ...(baseFee !== 0 && { baseFee }),
                                             ...(feeRate !== 0 && { feeRate }),
                                         }}
-                                        color={textColorMap[theme]}
                                         disabled={
                                             baseFee === 0 && feeRate === 0
                                         }
+                                        fullWidth={true}
+                                        withMargin={'16px 0 0'}
                                     >
                                         Update Fees
                                         <ChevronRight />

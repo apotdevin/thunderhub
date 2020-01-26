@@ -5,6 +5,7 @@ import {
     SingleLine,
     DarkSubTitle,
     RightAlign,
+    ResponsiveLine,
 } from '../../components/generic/Styled';
 import { renderLine } from '../../components/generic/Helpers';
 import { MainInfo, NodeTitle, ColLine } from './Fees.style';
@@ -71,22 +72,24 @@ export const FeeCard = ({
                 {renderLine('Transaction Id:', transactionId)}
                 {renderLine('Transaction Vout:', transactionVout)}
                 <Separation />
-                <SingleLine>
+                <ResponsiveLine>
                     <DarkSubTitle>{`Base Fee (Sats):`}</DarkSubTitle>
                     <Input
+                        placeholder={'Sats'}
                         color={textColorMap[theme]}
                         type={textColorMap[theme]}
                         onChange={e => setBaseFee(parseInt(e.target.value))}
                     />
-                </SingleLine>
-                <SingleLine>
+                </ResponsiveLine>
+                <ResponsiveLine>
                     <DarkSubTitle>{`Fee Rate (Sats/Million):`}</DarkSubTitle>
                     <Input
+                        placeholder={'Sats/Million'}
                         color={textColorMap[theme]}
                         type={'number'}
                         onChange={e => setFeeRate(parseInt(e.target.value))}
                     />
-                </SingleLine>
+                </ResponsiveLine>
                 <RightAlign>
                     <SecureButton
                         callback={updateFees}
@@ -98,6 +101,8 @@ export const FeeCard = ({
                         }}
                         color={textColorMap[theme]}
                         disabled={newBaseFee === 0 && newFeeRate === 0}
+                        fullWidth={true}
+                        withMargin={'16px 0 0'}
                     >
                         Update Fees
                         <ChevronRight />
@@ -110,7 +115,7 @@ export const FeeCard = ({
     return (
         <SubCard color={color} key={index}>
             <MainInfo onClick={() => handleClick()}>
-                <SingleLine>
+                <ResponsiveLine>
                     <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
                     <ColLine>
                         <SingleLine>
@@ -134,7 +139,7 @@ export const FeeCard = ({
                             </SingleLine>
                         </SingleLine>
                     </ColLine>
-                </SingleLine>
+                </ResponsiveLine>
             </MainInfo>
             {index === indexOpen && renderDetails()}
         </SubCard>

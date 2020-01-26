@@ -6,6 +6,7 @@ import {
     Separation,
     SingleLine,
     DarkSubTitle,
+    ResponsiveLine,
 } from '../../../components/generic/Styled';
 import { useSettings } from '../../../context/SettingsContext';
 import {
@@ -26,14 +27,11 @@ interface PendingCardProps {
     indexOpen: number;
 }
 
-const ResponsiveLine = styled(SingleLine)`
-    width: 100%;
-    flex-wrap: wrap;
-`;
-
 const Column = styled.div`
     display: flex;
     flex-direction: column;
+    flex-basis: 30%;
+    width: 100%;
 `;
 
 export const ClosedCard = ({

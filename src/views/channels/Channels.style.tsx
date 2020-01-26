@@ -37,8 +37,8 @@ export const NodeTitle = styled.div`
     text-overflow: ellipsis;
 
     @media (max-width: 578px) {
-        align-self: flex-start;
-        width: 100%;
+        width: unset;
+        margin-bottom: 8px;
     }
 `;
 
