@@ -6,8 +6,9 @@ import {
     SubCard,
     SingleLine,
     DarkSubTitle,
+    ResponsiveLine,
 } from '../../components/generic/Styled';
-import { NodeTitle, MainInfo } from '../channels/Channels.style';
+import { MainInfo } from '../channels/Channels.style';
 import {
     getDateDif,
     getFormatDate,
@@ -82,19 +83,19 @@ export const TransactionsCard = ({
     return (
         <SubCard key={index}>
             <MainInfo onClick={() => handleClick()}>
-                <SingleLine>
+                <ResponsiveLine>
                     <SingleLine>{`${
                         fee !== null ? 'Sent' : 'Received'
                     }:  ${formatAmount}`}</SingleLine>
-                    <SingleLine>
+                    <ResponsiveLine>
                         <AddMargin>
                             <DarkSubTitle>{`(${getDateDif(
                                 created_at,
                             )} ago)`}</DarkSubTitle>
                         </AddMargin>
-                        <NodeTitle>{getFormatDate(created_at)}</NodeTitle>
-                    </SingleLine>
-                </SingleLine>
+                        {getFormatDate(created_at)}
+                    </ResponsiveLine>
+                </ResponsiveLine>
             </MainInfo>
             {index === indexOpen && renderDetails()}
         </SubCard>

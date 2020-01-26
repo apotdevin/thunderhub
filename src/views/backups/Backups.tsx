@@ -4,15 +4,17 @@ import {
     CardTitle,
     SubTitle,
     Card,
-    SingleLine,
     Separation,
     Sub4Title,
+    ResponsiveLine,
+    DarkSubTitle,
 } from '../../components/generic/Styled';
 import { DownloadBackups } from './DownloadBackups';
 import { VerifyBackups } from './VerifyBackups';
 import { RecoverFunds } from './RecoverFunds';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 import styled from 'styled-components';
+import { getDateDif, getFormatDate } from 'components/generic/Helpers';
 
 const backupColor = '#ffffff';
 
@@ -26,7 +28,7 @@ export const BackupsView = () => {
 
     const getDate = () => {
         if (lastDate) {
-            return lastDate;
+            return `${getDateDif(lastDate)} ago (${getFormatDate(lastDate)})`;
         }
         return 'Has not been backed up!';
     };
@@ -37,10 +39,10 @@ export const BackupsView = () => {
                 <SubTitle>General Backup</SubTitle>
             </CardTitle>
             <Card>
-                <SingleLine>
-                    <SubTitle>Last Backup Date:</SubTitle>
+                <ResponsiveLine>
+                    <DarkSubTitle>Last Backup Date:</DarkSubTitle>
                     <Sub4Title>{getDate()}</Sub4Title>
-                </SingleLine>
+                </ResponsiveLine>
                 <Separation />
                 <DownloadBackups color={backupColor} />
                 <VerifyBackups color={backupColor} />
