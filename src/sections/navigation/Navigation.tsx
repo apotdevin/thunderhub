@@ -7,7 +7,7 @@ import {
     unSelectedNavButton,
     navBackgroundColor,
     navTextColor,
-    cardColor,
+    subCardColor,
 } from '../../styles/Themes';
 import {
     Home,
@@ -102,7 +102,7 @@ const BurgerNav = styled(({ selectedColor, ...rest }) => <Link {...rest} />)(
         padding: 16px 16px 8px;
         border-radius: 4px;
         text-decoration: none;
-        background: ${({ selected }: NavProps) => selected && cardColor};
+        background: ${({ selected }: NavProps) => selected && subCardColor};
         ${({ isOpen }: NavProps) => !isOpen && 'justify-content: center'};
         color: ${({ selected }: NavProps) =>
             selected ? navTextColor : unSelectedNavButton};
