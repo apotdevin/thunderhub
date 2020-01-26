@@ -1,6 +1,6 @@
 import React from 'react';
 import { getValue } from '../../../helpers/Helpers';
-import { NodeTitle, DetailLine, MainInfo } from '../Channels.style';
+import { NodeTitle, MainInfo } from '../Channels.style';
 import {
     SubCard,
     Separation,
@@ -8,7 +8,10 @@ import {
     DarkSubTitle,
 } from '../../../components/generic/Styled';
 import { useSettings } from '../../../context/SettingsContext';
-import { getTransactionLink } from '../../../components/generic/Helpers';
+import {
+    getTransactionLink,
+    renderLine,
+} from '../../../components/generic/Helpers';
 import { getNodeLink } from '../../../components/generic/Helpers';
 import styled from 'styled-components';
 
@@ -22,6 +25,16 @@ interface PendingCardProps {
     setIndexOpen: (index: number) => void;
     indexOpen: number;
 }
+
+const ResponsiveLine = styled(SingleLine)`
+    width: 100%;
+    flex-wrap: wrap;
+`;
+
+const Column = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
 
 export const ClosedCard = ({
     channelInfo,
@@ -82,8 +95,6 @@ export const ClosedCard = ({
         return types.join(', ');
     };
 
-    console.log(getCloseType());
-
     const handleClick = () => {
         if (indexOpen === index) {
             setIndexOpen(0);
@@ -96,38 +107,26 @@ export const ClosedCard = ({
         return (
             <>
                 <Separation />
-                <DetailLine>
-                    <div>Channel Id:</div>
-                    {id}
-                </DetailLine>
-                <DetailLine>
-                    <div>Node Public Key:</div>
-                    {getNodeLink(partner_public_key)}
-                </DetailLine>
-                <DetailLine>
-                    <div>Transaction Id:</div>
-                    {getTransactionLink(transaction_id)}
-                </DetailLine>
-                <DetailLine>
-                    <div>Transaction Vout:</div>
-                    {transaction_vout}
-                </DetailLine>
-                <DetailLine>
-                    <div>Close Transaction Id:</div>
-                    {getTransactionLink(close_transaction_id)}
-                </DetailLine>
-                <DetailLine>
-                    <div>Close Confirm Height:</div>
-                    {close_confirm_height}
-                </DetailLine>
-                <DetailLine>
-                    <div>Final Local Balance:</div>
-                    {final_local_balance}
-                </DetailLine>
-                <DetailLine>
-                    <div>Final Time Lock Balance:</div>
-                    {final_time_locked_balance}
-                </DetailLine>
+                {renderLine('Channel Id:', id)}
+                {renderLine(
+                    'Node Public Key:',
+                    getNodeLink(partner_public_key),
+                )}
+                {renderLine(
+                    'Transaction Id:',
+                    getTransactionLink(transaction_id),
+                )}
+                {renderLine('Transaction Vout:', transaction_vout)}
+                {renderLine(
+                    'Close Transaction Id:',
+                    getTransactionLink(close_transaction_id),
+                )}
+                {renderLine('Close Confirm Height:', close_confirm_height)}
+                {renderLine('Final Local Balance:', final_local_balance)}
+                {renderLine(
+                    'Final Time Lock Balance:',
+                    final_time_locked_balance,
+                )}
             </>
         );
     };
@@ -135,14 +134,19 @@ export const ClosedCard = ({
     return (
         <SubCard color={nodeColor} key={index}>
             <MainInfo onClick={() => handleClick()}>
-                <SingleLine>
+                <ResponsiveLine>
                     <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
-                    {formatCapacity}
-                    <SingleLine>
-                        <DarkSubTitle>Close Type:</DarkSubTitle>
-                        <Padding>{getCloseType()}</Padding>
-                    </SingleLine>
-                </SingleLine>
+                    <Column>
+                        <SingleLine>
+                            <DarkSubTitle>Size:</DarkSubTitle>
+                            <Padding>{formatCapacity}</Padding>
+                        </SingleLine>
+                        <SingleLine>
+                            <DarkSubTitle>Close Type:</DarkSubTitle>
+                            <Padding>{getCloseType()}</Padding>
+                        </SingleLine>
+                    </Column>
+                </ResponsiveLine>
             </MainInfo>
             {index === indexOpen && renderDetails()}
         </SubCard>

@@ -11,8 +11,10 @@ import ReactTooltip from 'react-tooltip';
 import {
     SubCard,
     Separation,
-    SingleLine,
     Sub4Title,
+    ResponsiveLine,
+    ResponsiveSingle,
+    ResponsiveCol,
 } from '../../../components/generic/Styled';
 import { useSettings } from '../../../context/SettingsContext';
 import {
@@ -24,33 +26,6 @@ import {
     getFormatDate,
 } from '../../../components/generic/Helpers';
 import { getNodeLink } from '../../../components/generic/Helpers';
-import styled from 'styled-components';
-
-const ResponsiveCol = styled.div`
-    flex-grow: 1;
-
-    @media (max-width: 578px) {
-        width: 100%;
-    }
-`;
-
-const ResponsiveLine = styled(SingleLine)`
-    width: 100%;
-    flex-wrap: wrap;
-
-    @media (max-width: 578px) {
-        flex-direction: column;
-    }
-`;
-
-const ResponsiveSingle = styled(SingleLine)`
-    flex-grow: 1;
-    min-width: 200px;
-
-    @media (max-width: 578px) {
-        width: 100%;
-    }
-`;
 
 interface PendingCardProps {
     channelInfo: any;

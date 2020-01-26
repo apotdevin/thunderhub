@@ -12,8 +12,10 @@ import {
     SubCard,
     Separation,
     Sub4Title,
-    SingleLine,
     RightAlign,
+    ResponsiveLine,
+    ResponsiveSingle,
+    ResponsiveCol,
 } from '../../../components/generic/Styled';
 import { useSettings } from '../../../context/SettingsContext';
 import {
@@ -37,32 +39,6 @@ import { ColorButton } from '../../../components/buttons/colorButton/ColorButton
 const IconPadding = styled.div`
     margin-left: 16px;
     margin-right: 8px;
-`;
-
-const ResponsiveLine = styled(SingleLine)`
-    width: 100%;
-    flex-wrap: wrap;
-
-    @media (max-width: 578px) {
-        flex-direction: column;
-    }
-`;
-
-const ResponsiveCol = styled.div`
-    flex-grow: 1;
-
-    @media (max-width: 578px) {
-        width: 100%;
-    }
-`;
-
-const ResponsiveSingle = styled(SingleLine)`
-    flex-grow: 1;
-    min-width: 200px;
-
-    @media (max-width: 578px) {
-        width: 100%;
-    }
 `;
 
 const getSymbol = (status: boolean) => {

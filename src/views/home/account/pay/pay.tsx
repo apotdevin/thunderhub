@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Sub4Title, SingleLine } from '../../../../components/generic/Styled';
+import {
+    Sub4Title,
+    ResponsiveLine,
+} from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { PAY_INVOICE } from '../../../../graphql/mutation';
 import { toast } from 'react-toastify';
@@ -7,15 +10,6 @@ import { getErrorContent } from '../../../../utils/error';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
 import { useSize } from '../../../../hooks/UseSize';
-import styled from 'styled-components';
-
-const ResponsiveLine = styled(SingleLine)`
-    width: 100%;
-
-    @media (max-width: 578px) {
-        flex-direction: column;
-    }
-`;
 
 export const PayCard = ({ color }: { color: string }) => {
     const { width } = useSize();
