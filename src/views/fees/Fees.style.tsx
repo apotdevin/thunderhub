@@ -3,13 +3,11 @@ import styled from 'styled-components';
 export const ColLine = styled.div`
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; */
-    /* flex-grow: 2; */
     flex-basis: 30%;
+    width: 100%;
 `;
 
 export const NodeTitle = styled.div`
-    /* padding: 2px; */
     font-size: 16px;
     font-weight: bold;
 `;
@@ -20,14 +18,8 @@ export const StatusLine = styled.div`
     right: -8px;
     top: -8px;
     display: flex;
-    /* flex-direction: column; */
     justify-content: flex-end;
-    /* align-items: flex-start; */
-    /* z-index: 2; */
     margin: 0 0 -8px 0;
-    /* height: 36px; */
-    /* margin-left: 5px; */
-    /* margin: -8px -7px 0 0; */
 `;
 
 export const StatusDot = styled.div`
