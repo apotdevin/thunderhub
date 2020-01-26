@@ -15,13 +15,8 @@ import { getErrorContent } from '../../utils/error';
 import { PaymentsCard } from './PaymentsCards';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import styled from 'styled-components';
 import { useSettings } from '../../context/SettingsContext';
 import { textColorMap } from '../../styles/Themes';
-
-export const AddMargin = styled.div`
-    margin-left: 10px;
-`;
 
 export const TransactionList = () => {
     const [indexOpen, setIndexOpen] = useState(0);

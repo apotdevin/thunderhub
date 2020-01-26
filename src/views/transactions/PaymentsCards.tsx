@@ -5,22 +5,17 @@ import {
     Separation,
     SubCard,
     DarkSubTitle,
-    SingleLine,
+    ResponsiveLine,
 } from '../../components/generic/Styled';
-import {
-    DetailLine,
-    StatusLine,
-    NodeTitle,
-    MainInfo,
-} from '../channels/Channels.style';
+import { StatusLine, NodeTitle, MainInfo } from '../channels/Channels.style';
 import {
     getStatusDot,
     getDateDif,
     getFormatDate,
     getNodeLink,
+    renderLine,
 } from '../../components/generic/Helpers';
 import styled from 'styled-components';
-import { AddMargin } from './TransactionList';
 
 interface PaymentsCardProps {
     payment: any;
@@ -78,52 +73,23 @@ export const PaymentsCard = ({
         return (
             <>
                 <Separation />
-                <DetailLine>
-                    <div>Created:</div>
-                    {`${getDateDif(created_at)} ago (${getFormatDate(
+                {renderLine(
+                    'Created:',
+                    `${getDateDif(created_at)} ago (${getFormatDate(
                         created_at,
-                    )})`}
-                </DetailLine>
-                <DetailLine>
-                    <div>Destination Node:</div>
-                    {getNodeLink(destination)}
-                </DetailLine>
-                <DetailLine>
-                    <div>Fee:</div>
-                    {getFormat(fee)}
-                </DetailLine>
-                <DetailLine>
-                    <div>Fee msats:</div>
-                    {`${fee_mtokens} sats`}
-                </DetailLine>
-                <DetailLine>
-                    <div>Hops:</div>
-                    {hops.length}
-                </DetailLine>
-                {hops.map((hop: any, index: number) => (
-                    <DetailLine key={index}>
-                        <div>{`Hop ${index + 1}:`}</div>
-                        <div style={{ textAlign: 'right' }} key={index}>
-                            {hop}
-                        </div>
-                    </DetailLine>
-                ))}
-                <DetailLine>
-                    <div>ID:</div>
-                    {id}
-                </DetailLine>
-                <DetailLine>
-                    <div>Is Outgoing:</div>
-                    {is_outgoing ? 'true' : 'false'}
-                </DetailLine>
-                <DetailLine>
-                    <div>Secret:</div>
-                    {secret}
-                </DetailLine>
-                <DetailLine>
-                    <div>M Tokens:</div>
-                    {mtokens}
-                </DetailLine>
+                    )})`,
+                )}
+                {renderLine('Destination Node:', getNodeLink(destination))}
+                {renderLine('Fee:', getFormat(fee))}
+                {renderLine('Fee msats:', `${fee_mtokens} millisats`)}
+                {renderLine('Hops:', hops.length)}
+                {hops.map((hop: any, index: number) =>
+                    renderLine(`Hop ${index + 1}:`, hop),
+                )}
+                {renderLine('Id:', id)}
+                {renderLine('Is Outgoing:', is_outgoing ? 'true' : 'false')}
+                {renderLine('Secret:', secret)}
+                {renderLine('M Tokens:', `${mtokens} millisats`)}
             </>
         );
     };
@@ -132,17 +98,11 @@ export const PaymentsCard = ({
         <SubCard key={index}>
             <MainInfo onClick={() => handleClick()}>
                 <StatusLine>{getStatusDot(is_confirmed, 'active')}</StatusLine>
-                <SingleLine>
-                    <SingleLine>
-                        <NodeTitle>{`Payment to: ${alias}`}</NodeTitle>
-                        <AddMargin>
-                            <DarkSubTitle>{`(${getDateDif(
-                                date,
-                            )} ago)`}</DarkSubTitle>
-                        </AddMargin>
-                    </SingleLine>
+                <ResponsiveLine>
+                    <NodeTitle>{`Payment to: ${alias}`}</NodeTitle>
+                    <DarkSubTitle>{`(${getDateDif(date)} ago)`}</DarkSubTitle>
                     <RedValue>{formatAmount}</RedValue>
-                </SingleLine>
+                </ResponsiveLine>
             </MainInfo>
             {index === indexOpen && renderDetails()}
         </SubCard>
