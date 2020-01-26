@@ -32,7 +32,7 @@ export const Card = styled.div`
     padding: ${({ padding }) => (padding ? padding : '16px')};
     background: ${cardColor};
     box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    border-radius: 4px;
     border: 1px solid ${cardBorderColor};
     margin-bottom: ${({ bottom }: CardProps) => (bottom ? bottom : '25px')};
     width: 100%;

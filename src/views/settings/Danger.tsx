@@ -5,6 +5,7 @@ import {
     SubTitle,
     SingleLine,
     SimpleButton,
+    Sub4Title,
 } from '../../components/generic/Styled';
 import { getStorageSaved, deleteStorage } from '../../utils/storage';
 import { useAccount } from '../../context/AccountContext';
@@ -12,6 +13,10 @@ import styled from 'styled-components';
 import { deleteAuth } from '../../utils/auth';
 import { textColor } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import {
+    MultiButton,
+    SingleButton,
+} from 'components/buttons/multiButton/MultiButton';
 
 export const ButtonRow = styled.div`
     width: auto;
@@ -44,12 +49,11 @@ export const DangerView = () => {
             <SubTitle>Danger Zone</SubTitle>
             <OutlineCard>
                 <SettingsLine>
-                    <SubTitle>Delete Account:</SubTitle>
-                    <ButtonRow>
+                    <Sub4Title>Delete Account:</Sub4Title>
+                    <MultiButton>
                         {getStorageSaved().map((entry, index) => {
                             return (
-                                <ColorButton
-                                    withMargin={'0 0 0 8px'}
+                                <SingleButton
                                     color={'red'}
                                     onClick={() => {
                                         deleteAuth(entry.index);
@@ -57,13 +61,13 @@ export const DangerView = () => {
                                     }}
                                 >
                                     {entry.name}
-                                </ColorButton>
+                                </SingleButton>
                             );
                         })}
-                    </ButtonRow>
+                    </MultiButton>
                 </SettingsLine>
                 <SettingsLine>
-                    <SubTitle>Delete all Accounts and Settings:</SubTitle>
+                    <Sub4Title>Delete all Accounts and Settings:</Sub4Title>
                     <ButtonRow>
                         <ColorButton
                             color={'red'}

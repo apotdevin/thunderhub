@@ -1,9 +1,17 @@
 import React from 'react';
-import { CardWithTitle, SubTitle, Card } from '../../components/generic/Styled';
-import { SettingsLine, ButtonRow } from './Settings';
+import {
+    CardWithTitle,
+    SubTitle,
+    Card,
+    Sub4Title,
+} from '../../components/generic/Styled';
+import { SettingsLine } from './Settings';
 import { useSettings } from '../../context/SettingsContext';
 
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import {
+    MultiButton,
+    SingleButton,
+} from 'components/buttons/multiButton/MultiButton';
 
 export const InterfaceSettings = () => {
     const { setSettings, updateCurrency } = useSettings();
@@ -16,8 +24,7 @@ export const InterfaceSettings = () => {
         type: string,
         current: string,
     ) => (
-        <ColorButton
-            withMargin={'0 0 0 8px'}
+        <SingleButton
             selected={current === value}
             onClick={() => {
                 localStorage.setItem(type, value);
@@ -26,7 +33,7 @@ export const InterfaceSettings = () => {
             }}
         >
             {title}
-        </ColorButton>
+        </SingleButton>
     );
 
     return (
@@ -34,15 +41,15 @@ export const InterfaceSettings = () => {
             <SubTitle>Interface</SubTitle>
             <Card>
                 <SettingsLine>
-                    <SubTitle>Theme:</SubTitle>
-                    <ButtonRow>
+                    <Sub4Title>Theme:</Sub4Title>
+                    <MultiButton>
                         {renderButton('Light', 'light', 'theme', cTheme)}
                         {renderButton('Dark', 'dark', 'theme', cTheme)}
-                    </ButtonRow>
+                    </MultiButton>
                 </SettingsLine>
                 <SettingsLine>
-                    <SubTitle>Currency:</SubTitle>
-                    <ButtonRow>
+                    <Sub4Title>Currency:</Sub4Title>
+                    <MultiButton margin={'0 0 0 16px'}>
                         {renderButton('Bitcoin', 'btc', 'currency', cCurrency)}
                         {renderButton('Satoshis', 'sat', 'currency', cCurrency)}
                         {renderButton('Euro', 'EUR', 'currency', cCurrency)}
@@ -52,7 +59,7 @@ export const InterfaceSettings = () => {
                             'currency',
                             cCurrency,
                         )}
-                    </ButtonRow>
+                    </MultiButton>
                 </SettingsLine>
             </Card>
         </CardWithTitle>
