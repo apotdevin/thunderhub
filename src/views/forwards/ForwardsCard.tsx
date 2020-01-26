@@ -4,9 +4,9 @@ import { useSettings } from '../../context/SettingsContext';
 import {
     Separation,
     SubCard,
-    SingleLine,
     ColumnLine,
-    DarkSubTitle,
+    ResponsiveLine,
+    ResponsiveSingle,
 } from '../../components/generic/Styled';
 import { MainInfo } from '../channels/Channels.style';
 import {
@@ -14,15 +14,6 @@ import {
     getFormatDate,
     renderLine,
 } from '../../components/generic/Helpers';
-import styled from 'styled-components';
-
-const AddMargin = styled.div`
-    margin-left: 16px;
-`;
-
-const StyledDark = styled(DarkSubTitle)`
-    margin-right: 8px;
-`;
 
 interface ForwardCardProps {
     forward: any;
@@ -83,35 +74,19 @@ export const ForwardCard = ({
     return (
         <SubCard key={index}>
             <MainInfo onClick={() => handleClick()}>
-                <SingleLine>
-                    <ColumnLine>
-                        <SingleLine>
-                            <StyledDark>Incoming:</StyledDark>
-                            {incoming_alias}
-                        </SingleLine>
-                        <SingleLine>
-                            <StyledDark>Outgoing:</StyledDark>
-                            {outgoing_alias}
-                        </SingleLine>
-                    </ColumnLine>
-                    <SingleLine>
+                <ResponsiveLine>
+                    <ResponsiveSingle>
                         <ColumnLine>
-                            <SingleLine>
-                                <StyledDark>Amount:</StyledDark>
-                                {formatAmount}
-                            </SingleLine>
-                            <SingleLine>
-                                <StyledDark>Fee:</StyledDark>
-                                {formatFee}
-                            </SingleLine>
+                            {renderLine('Incoming:', incoming_alias)}
+                            {renderLine('Outgoing:', outgoing_alias)}
                         </ColumnLine>
-                    </SingleLine>
-                    <AddMargin>
-                        <DarkSubTitle>{`(${getDateDif(
-                            created_at,
-                        )} ago)`}</DarkSubTitle>
-                    </AddMargin>
-                </SingleLine>
+                    </ResponsiveSingle>
+                    <ColumnLine>
+                        {renderLine('Amount:', formatAmount)}
+                        {renderLine('Fee:', formatFee)}
+                        {renderLine('Date:', `${getDateDif(created_at)} ago`)}
+                    </ColumnLine>
+                </ResponsiveLine>
             </MainInfo>
             {index === indexOpen && renderDetails()}
         </SubCard>

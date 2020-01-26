@@ -111,8 +111,10 @@ export const RightAlign = styled.div`
 export const ColumnLine = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+
+    @media (max-width: 578px) {
+        width: 100%;
+    }
 `;
 
 export const SimpleButton = styled.button`
