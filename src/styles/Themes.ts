@@ -63,8 +63,8 @@ export const inverseTextColor = theme('mode', {
 });
 
 export const burgerColor = theme('mode', {
-    light: themeColors.grey2,
-    dark: themeColors.blue4,
+    light: themeColors.white,
+    dark: themeColors.blue6,
 });
 
 // ---------------------------------------
