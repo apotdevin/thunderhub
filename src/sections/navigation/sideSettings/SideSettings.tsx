@@ -14,7 +14,7 @@ import {
     inverseTextColor,
 } from '../../../styles/Themes';
 
-const IconCircle = styled.div`
+const SelectedIcon = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,6 +22,8 @@ const IconCircle = styled.div`
     width: 30px;
     height: 30px;
     border-radius: 100%;
+    margin: 0 5px;
+    cursor: pointer;
 
     @media (min-width: 579px) {
         &:hover {
@@ -29,11 +31,6 @@ const IconCircle = styled.div`
             color: ${inverseTextColor};
         }
     }
-`;
-
-const SelectedIcon = styled(IconCircle)`
-    margin: 0 5px;
-    cursor: pointer;
     background-color: ${({ selected }: { selected: boolean }) =>
         selected ? progressBackground : ''};
 `;
