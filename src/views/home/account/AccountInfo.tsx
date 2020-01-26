@@ -109,9 +109,9 @@ export const AccountInfo = () => {
             case 'receive_ln':
                 return <CreateInvoiceCard color={sectionColor} />;
             case 'send_chain':
-                return <SendOnChainCard color={sectionColor} />;
+                return <SendOnChainCard />;
             case 'receive_chain':
-                return <ReceiveOnChainCard color={sectionColor} />;
+                return <ReceiveOnChainCard />;
             default:
                 return null;
         }

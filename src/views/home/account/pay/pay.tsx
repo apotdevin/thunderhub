@@ -30,6 +30,7 @@ export const PayCard = ({ color }: { color: string }) => {
         <ResponsiveLine>
             <Sub4Title>Request:</Sub4Title>
             <Input
+                placeholder={'Lightning Invoice'}
                 withMargin={width <= 578 ? '0 0 16px' : '0 0 0 24px'}
                 color={color}
                 onChange={e => setRequest(e.target.value)}

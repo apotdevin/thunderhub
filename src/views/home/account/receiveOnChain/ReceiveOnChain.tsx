@@ -6,25 +6,22 @@ import {
 } from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_ADDRESS } from '../../../../graphql/mutation';
-import { Circle } from '../../../../components/generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
-import { textColorMap } from '../../../../styles/Themes';
-import { useSettings } from '../../../../context/SettingsContext';
 import { useSize } from '../../../../hooks/UseSize';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import {
+    MultiButton,
+    SingleButton,
+} from 'components/buttons/multiButton/MultiButton';
 
 const SingleLine = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-`;
-
-const RadioText = styled.div`
-    margin-left: 10px;
 `;
 
 const ButtonRow = styled.div`
@@ -44,9 +41,8 @@ const ResponsiveLine = styled(SingleLine)`
     }
 `;
 
-export const ReceiveOnChainCard = ({ color }: { color: string }) => {
+export const ReceiveOnChainCard = () => {
     const { width } = useSize();
-    const { theme } = useSettings();
 
     const [nested, setNested] = useState(false);
     const [received, setReceived] = useState(false);
@@ -86,36 +82,24 @@ export const ReceiveOnChainCard = ({ color }: { color: string }) => {
                 <ResponsiveLine>
                     <ButtonRow>
                         <TitleWithSpacing>Type of Address:</TitleWithSpacing>
-                        <ResponsiveLine>
-                            <ColorButton
-                                color={color}
+                        <MultiButton>
+                            <SingleButton
+                                selected={!nested}
                                 onClick={() => {
                                     setNested(false);
                                 }}
                             >
-                                <Circle
-                                    size={'10px'}
-                                    fillcolor={
-                                        nested ? '' : textColorMap[theme]
-                                    }
-                                />
-                                <RadioText>P2WPKH</RadioText>
-                            </ColorButton>
-                            <ColorButton
-                                color={color}
+                                P2WPKH
+                            </SingleButton>
+                            <SingleButton
+                                selected={nested}
                                 onClick={() => {
                                     setNested(true);
                                 }}
                             >
-                                <Circle
-                                    size={'10px'}
-                                    fillcolor={
-                                        nested ? textColorMap[theme] : ''
-                                    }
-                                />
-                                <RadioText>NP2WPKH</RadioText>
-                            </ColorButton>
-                        </ResponsiveLine>
+                                NP2WPKH
+                            </SingleButton>
+                        </MultiButton>
                     </ButtonRow>
                     <SecureButton
                         callback={createAddress}

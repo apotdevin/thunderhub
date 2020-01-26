@@ -1,6 +1,6 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import { select, color, boolean } from '@storybook/addon-knobs';
+import { select, color, boolean, text } from '@storybook/addon-knobs';
 import { Input } from './Input';
 
 export default {
@@ -15,6 +15,7 @@ export const Default = () => {
     return (
         <Input
             {...buttonColor}
+            placeholder={text('Placeholder', 'placeholder')}
             fullWidth={boolean('Full Width', false)}
             type={select('Type', ['normal', 'number'], 'normal')}
             onChange={action('change')}

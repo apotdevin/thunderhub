@@ -8,7 +8,6 @@ import { getErrorContent } from '../../utils/error';
 import {
     SingleLine,
     DarkSubTitle,
-    Input,
     RightAlign,
     Separation,
 } from '../../components/generic/Styled';
@@ -16,6 +15,7 @@ import ScaleLoader from 'react-spinners/ScaleLoader';
 import { XSvg } from '../../components/generic/Icons';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { NoWrap } from './Backups';
+import { Input } from 'components/input/Input';
 
 export const VerifyBackups = ({ color }: { color: string }) => {
     const [backupString, setBackupString] = useState<string>('');

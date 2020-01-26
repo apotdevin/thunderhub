@@ -108,6 +108,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
         <ResponsiveLine>
             <NoWrapTitle>Amount to receive:</NoWrapTitle>
             <Input
+                placeholder={'Sats'}
                 withMargin={width <= 578 ? '0 0 16px' : '0 0 0 24px'}
                 color={color}
                 type={'number'}

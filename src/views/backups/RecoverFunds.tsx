@@ -6,7 +6,6 @@ import { getErrorContent } from '../../utils/error';
 import {
     SingleLine,
     DarkSubTitle,
-    Input,
     RightAlign,
 } from '../../components/generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
@@ -14,6 +13,7 @@ import { XSvg } from '../../components/generic/Icons';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { NoWrap } from './Backups';
+import { Input } from 'components/input/Input';
 
 export const RecoverFunds = ({ color }: { color: string }) => {
     const [backupString, setBackupString] = useState<string>('');

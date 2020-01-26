@@ -4,7 +4,6 @@ import {
     Separation,
     SingleLine,
     DarkSubTitle,
-    Input,
     RightAlign,
 } from '../../components/generic/Styled';
 import { renderLine } from '../../components/generic/Helpers';
@@ -13,15 +12,11 @@ import { useMutation } from '@apollo/react-hooks';
 import { UPDATE_FEES } from '../../graphql/mutation';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
-import styled from 'styled-components';
 import { ChevronRight } from '../../components/generic/Icons';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { useSettings } from '../../context/SettingsContext';
 import { textColorMap } from '../../styles/Themes';
-
-const SmallInput = styled(Input)`
-    max-width: 150px;
-`;
+import { Input } from '../../components/input/Input';
 
 interface FeeCardProps {
     channelInfo: any;
@@ -78,7 +73,7 @@ export const FeeCard = ({
                 <Separation />
                 <SingleLine>
                     <DarkSubTitle>{`Base Fee (Sats):`}</DarkSubTitle>
-                    <SmallInput
+                    <Input
                         color={textColorMap[theme]}
                         type={textColorMap[theme]}
                         onChange={e => setBaseFee(parseInt(e.target.value))}
@@ -86,7 +81,7 @@ export const FeeCard = ({
                 </SingleLine>
                 <SingleLine>
                     <DarkSubTitle>{`Fee Rate (Sats/Million):`}</DarkSubTitle>
-                    <SmallInput
+                    <Input
                         color={textColorMap[theme]}
                         type={'number'}
                         onChange={e => setFeeRate(parseInt(e.target.value))}
