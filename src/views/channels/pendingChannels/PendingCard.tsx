@@ -24,6 +24,33 @@ import {
     getFormatDate,
 } from '../../../components/generic/Helpers';
 import { getNodeLink } from '../../../components/generic/Helpers';
+import styled from 'styled-components';
+
+const ResponsiveCol = styled.div`
+    flex-grow: 1;
+
+    @media (max-width: 578px) {
+        width: 100%;
+    }
+`;
+
+const ResponsiveLine = styled(SingleLine)`
+    width: 100%;
+    flex-wrap: wrap;
+
+    @media (max-width: 578px) {
+        flex-direction: column;
+    }
+`;
+
+const ResponsiveSingle = styled(SingleLine)`
+    flex-grow: 1;
+    min-width: 200px;
+
+    @media (max-width: 578px) {
+        width: 100%;
+    }
+`;
 
 interface PendingCardProps {
     channelInfo: any;
@@ -137,11 +164,11 @@ export const PendingCard = ({
                     {getStatusDot(is_opening, 'opening')}
                     {getStatusDot(is_closing, 'closing')}
                 </StatusLine>
-                <SingleLine>
+                <ResponsiveLine>
                     <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
-                    <SingleLine>
+                    <ResponsiveSingle>
                         {formatBalance}
-                        <div>
+                        <ResponsiveCol>
                             <Progress
                                 data-tip
                                 data-for={`node_balance_tip_${index}`}
@@ -162,9 +189,9 @@ export const PendingCard = ({
                                     percent={getPercent(received, sent)}
                                 />
                             </Progress>
-                        </div>
-                    </SingleLine>
-                </SingleLine>
+                        </ResponsiveCol>
+                    </ResponsiveSingle>
+                </ResponsiveLine>
             </MainInfo>
             {index === indexOpen && renderDetails()}
             <ReactTooltip

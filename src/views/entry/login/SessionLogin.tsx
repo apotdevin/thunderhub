@@ -37,7 +37,10 @@ export const SessionLogin = () => {
                 <Card>
                     <SingleLine>
                         <Sub4Title>Password:</Sub4Title>
-                        <Input onChange={e => setPass(e.target.value)} />
+                        <Input
+                            withMargin={'0 0 0 16px'}
+                            onChange={e => setPass(e.target.value)}
+                        />
                     </SingleLine>
                     {pass !== '' && (
                         <ColorButton
