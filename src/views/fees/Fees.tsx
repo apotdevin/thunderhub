@@ -9,27 +9,22 @@ import {
     Sub4Title,
     Separation,
     DarkSubTitle,
-    Input,
     RightAlign,
-} from '../../components/generic/Styled';
+} from 'components/generic/Styled';
 import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
-import { LoadingCard } from '../../components/loading/LoadingCard';
+import { LoadingCard } from 'components/loading/LoadingCard';
 import { FeeCard } from './FeeCard';
 import { UPDATE_FEES } from '../../graphql/mutation';
-import { XSvg, ChevronRight } from '../../components/generic/Icons';
-import styled from 'styled-components';
-import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
-import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
+import { XSvg, ChevronRight } from 'components/generic/Icons';
+import { SecureButton } from 'components/buttons/secureButton/SecureButton';
+import { AdminSwitch } from 'components/adminSwitch/AdminSwitch';
 import { textColorMap } from '../../styles/Themes';
 import { useSettings } from '../../context/SettingsContext';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-
-const SmallInput = styled(Input)`
-    max-width: 150px;
-`;
+import { ColorButton } from 'components/buttons/colorButton/ColorButton';
+import { Input } from 'components/input/Input';
 
 export const FeesView = () => {
     const [indexOpen, setIndexOpen] = useState(0);
@@ -81,7 +76,7 @@ export const FeesView = () => {
                                 <Separation />
                                 <SingleLine>
                                     <DarkSubTitle>{`Base Fee (Sats):`}</DarkSubTitle>
-                                    <SmallInput
+                                    <Input
                                         color={textColorMap[theme]}
                                         type={'number'}
                                         onChange={e =>
@@ -91,7 +86,7 @@ export const FeesView = () => {
                                 </SingleLine>
                                 <SingleLine>
                                     <DarkSubTitle>{`Fee Rate (Sats/Million):`}</DarkSubTitle>
-                                    <SmallInput
+                                    <Input
                                         color={textColorMap[theme]}
                                         type={'number'}
                                         onChange={e =>

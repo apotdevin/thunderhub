@@ -1,10 +1,11 @@
 import React from 'react';
-import { Input, SingleLine, Sub4Title, SubTitle } from '../generic/Styled';
+import { SingleLine, Sub4Title, SubTitle } from '../generic/Styled';
 import zxcvbn from 'zxcvbn';
 import styled from 'styled-components';
 import { progressBackground } from '../../styles/Themes';
 import { Loader } from '../generic/Icons';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
+import { Input } from 'components/input/Input';
 
 const Progress = styled.div`
     width: 80%;

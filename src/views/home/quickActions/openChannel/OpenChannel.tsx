@@ -4,11 +4,10 @@ import {
     SingleLine,
     Separation,
     DarkSubTitle,
-    ColorButton,
     NoWrapTitle,
 } from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
-import { Circle, ChevronRight } from '../../../../components/generic/Icons';
+import { ChevronRight } from '../../../../components/generic/Icons';
 import { OPEN_CHANNEL } from '../../../../graphql/mutation';
 import { getErrorContent } from '../../../../utils/error';
 import { toast } from 'react-toastify';
@@ -16,29 +15,13 @@ import { getValue } from '../../../../helpers/Helpers';
 import { useSettings } from '../../../../context/SettingsContext';
 import { useBitcoinInfo } from '../../../../context/BitcoinContext';
 import styled from 'styled-components';
-import { textColorMap } from '../../../../styles/Themes';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
 import { useSize } from '../../../../hooks/UseSize';
-
-const RadioText = styled.div`
-    margin-left: 10px;
-`;
-
-const ButtonRow = styled.div`
-    width: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-
-    @media (max-width: 578px) {
-        flex-direction: column;
-        justify-content: flex-end;
-        align-items: flex-end;
-        margin: 8px 0 8px;
-    }
-`;
+import {
+    SingleButton,
+    MultiButton,
+} from 'components/buttons/multiButton/MultiButton';
 
 const ResponsiveWrap = styled(SingleLine)`
     @media (max-width: 578px) {
@@ -69,7 +52,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
 
     const { fast, halfHour, hour } = useBitcoinInfo();
 
-    const { price, symbol, currency, theme } = useSettings();
+    const { price, symbol, currency } = useSettings();
     const priceProps = { price, symbol, currency };
 
     const [openChannel] = useMutation(OPEN_CHANNEL, {
@@ -100,13 +83,9 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
         text: string,
         selected: boolean,
     ) => (
-        <ColorButton color={color} onClick={onClick}>
-            <Circle
-                size={'10px'}
-                fillcolor={selected ? textColorMap[theme] : ''}
-            />
-            <RadioText>{text}</RadioText>
-        </ColorButton>
+        <SingleButton selected={selected} onClick={onClick}>
+            {text}
+        </SingleButton>
     );
 
     return (
@@ -114,6 +93,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
             <ResponsiveLine>
                 <NoWrapTitle>Node Public Key:</NoWrapTitle>
                 <Input
+                    placeholder={'Public Key'}
                     color={color}
                     withMargin={width <= 578 ? '' : '0 0 0 8px'}
                     onChange={e => setPublicKey(e.target.value)}
@@ -125,6 +105,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
                     <DarkSubTitle>{`(${getFormat(size)})`}</DarkSubTitle>
                 </ResponsiveWrap>
                 <Input
+                    placeholder={'Sats'}
                     color={color}
                     withMargin={width <= 578 ? '' : '0 0 0 8px'}
                     type={'number'}
@@ -134,7 +115,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
             <Separation />
             <SingleLine>
                 <NoWrapTitle>Private Channel:</NoWrapTitle>
-                <ButtonRow>
+                <MultiButton margin={'8px 0 8px 16px'}>
                     {renderButton(
                         () => setPrivateChannel(true),
                         'Yes',
@@ -145,12 +126,12 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
                         'No',
                         !privateChannel,
                     )}
-                </ButtonRow>
+                </MultiButton>
             </SingleLine>
             <Separation />
             <SingleLine>
                 <NoWrapTitle>Fee:</NoWrapTitle>
-                <ButtonRow>
+                <MultiButton margin={'8px 0 8px 16px'}>
                     {renderButton(
                         () => {
                             setType('none');
@@ -164,7 +145,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
                         'Fee (Sats/Byte)',
                         type === 'fee',
                     )}
-                </ButtonRow>
+                </MultiButton>
             </SingleLine>
             <SingleLine>
                 <ResponsiveWrap>
@@ -172,16 +153,17 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
                     <DarkSubTitle>{`(~${getFormat(fee * 223)})`}</DarkSubTitle>
                 </ResponsiveWrap>
                 {type !== 'none' && (
-                    <ButtonRow>
-                        <Input
-                            color={color}
-                            type={'number'}
-                            onChange={e => setFee(parseInt(e.target.value))}
-                        />
-                    </ButtonRow>
+                    <Input
+                        withMargin={'8px 0 8px 16px'}
+                        placeholder={'Sats/Byte'}
+                        color={color}
+                        type={'number'}
+                        onChange={e => setFee(parseInt(e.target.value))}
+                    />
+                    // </MultiButton>
                 )}
                 {type === 'none' && (
-                    <ButtonRow>
+                    <MultiButton margin={'8px 0 8px 16px'}>
                         {renderButton(
                             () => setFee(fast),
                             `Fastest (${fast} sats)`,
@@ -198,7 +180,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
                             `Hour (${hour} sats)`,
                             fee === hour,
                         )}
-                    </ButtonRow>
+                    </MultiButton>
                 )}
             </SingleLine>
             <Separation />

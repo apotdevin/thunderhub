@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input, SingleLine, Sub4Title } from '../../components/generic/Styled';
+import { SingleLine, Sub4Title } from '../../components/generic/Styled';
 import { useAccount } from '../../context/AccountContext';
 import {
     getAuthLnd,
@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { useHistory } from 'react-router-dom';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
+import { Input } from 'components/input/Input';
 
 interface AuthProps {
     available: number;

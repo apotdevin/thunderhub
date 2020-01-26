@@ -3,7 +3,6 @@ import { useAccount } from '../../../context/AccountContext';
 import {
     SingleLine,
     Sub4Title,
-    Input,
     CardWithTitle,
     Card,
     SubTitle,
@@ -13,6 +12,7 @@ import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
 import { saveSessionAuth } from '../../../utils/auth';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
+import { Input } from 'components/input/Input';
 
 export const SessionLogin = () => {
     const { name, admin, refreshAccount } = useAccount();

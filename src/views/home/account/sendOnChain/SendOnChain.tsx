@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
     Card,
-    ColorButton,
     NoWrapTitle,
     DarkSubTitle,
     Separation,
@@ -9,7 +8,6 @@ import {
 } from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { PAY_ADDRESS } from '../../../../graphql/mutation';
-import { Circle } from '../../../../components/generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
@@ -17,13 +15,12 @@ import { useSettings } from '../../../../context/SettingsContext';
 import { getValue } from '../../../../helpers/Helpers';
 import { useBitcoinInfo } from '../../../../context/BitcoinContext';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
-import { textColorMap } from '../../../../styles/Themes';
 import { Input } from '../../../../components/input/Input';
 import { useSize } from '../../../../hooks/UseSize';
-
-const RadioText = styled.div`
-    margin-left: 10px;
-`;
+import {
+    MultiButton,
+    SingleButton,
+} from 'components/buttons/multiButton/MultiButton';
 
 const ResponsiveWrap = styled(SingleLine)`
     @media (max-width: 578px) {
@@ -39,21 +36,6 @@ const ResponsiveLine = styled(SingleLine)`
     }
 `;
 
-const ButtonRow = styled.div`
-    width: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-
-    @media (max-width: 578px) {
-        flex-direction: column;
-        justify-content: flex-end;
-        align-items: flex-end;
-        margin: 8px 0 8px;
-    }
-`;
-
 const NoWrap = styled.div`
     margin-left: 8px;
     white-space: nowrap;
@@ -64,7 +46,7 @@ const Margin = styled.div`
     margin-right: 24px;
 `;
 
-export const SendOnChainCard = ({ color }: { color: string }) => {
+export const SendOnChainCard = () => {
     const { width } = useSize();
     const [address, setAddress] = useState('');
     const [tokens, setTokens] = useState(0);
@@ -75,7 +57,6 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
 
     const canSend = address !== '' && (sendAll || tokens > 0) && amount > 0;
 
-    const { theme } = useSettings();
     const { price, symbol, currency } = useSettings();
     const { fast, halfHour, hour } = useBitcoinInfo();
 
@@ -125,13 +106,9 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
         text: string,
         selected: boolean,
     ) => (
-        <ColorButton color={color} onClick={onClick}>
-            <Circle
-                size={'10px'}
-                fillcolor={selected ? textColorMap[theme] : ''}
-            />
-            <RadioText>{text}</RadioText>
-        </ColorButton>
+        <SingleButton selected={selected} onClick={onClick}>
+            {text}
+        </SingleButton>
     );
 
     if (isSent && data && data.sendToAddress && data.sendToAddress.id) {
@@ -150,18 +127,18 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
             <ResponsiveLine>
                 <NoWrapTitle>Send to Address:</NoWrapTitle>
                 <Input
+                    placeholder={'Address'}
                     withMargin={width <= 578 ? '' : '0 0 0 24px'}
-                    color={color}
                     onChange={e => setAddress(e.target.value)}
                 />
             </ResponsiveLine>
             <Separation />
             <SingleLine>
                 <NoWrapTitle>Send All:</NoWrapTitle>
-                <ButtonRow>
+                <MultiButton>
                     {renderButton(() => setSendAll(true), 'Yes', sendAll)}
                     {renderButton(() => setSendAll(false), 'No', !sendAll)}
-                </ButtonRow>
+                </MultiButton>
             </SingleLine>
             {!sendAll && (
                 <SingleLine>
@@ -174,8 +151,8 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                         </Margin>
                     </ResponsiveWrap>
                     <Input
+                        placeholder={'Sats'}
                         withMargin={'0 0 0 8px'}
-                        color={color}
                         type={'number'}
                         onChange={e => setTokens(parseInt(e.target.value))}
                     />
@@ -184,7 +161,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
             <Separation />
             <SingleLine>
                 <NoWrapTitle>Fee:</NoWrapTitle>
-                <ButtonRow>
+                <MultiButton margin={'8px 0 8px 16px'}>
                     {renderButton(
                         () => {
                             setType('none');
@@ -209,7 +186,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                         'Target Confirmations',
                         type === 'target',
                     )}
-                </ButtonRow>
+                </MultiButton>
             </SingleLine>
             <SingleLine>
                 <ResponsiveWrap>
@@ -225,7 +202,9 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                 {type !== 'none' && (
                     <>
                         <Input
-                            color={color}
+                            placeholder={
+                                type === 'target' ? 'Blocks' : 'Sats/Byte'
+                            }
                             type={'number'}
                             withMargin={'0 0 0 8px'}
                             onChange={e => setAmount(parseInt(e.target.value))}
@@ -233,7 +212,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                     </>
                 )}
                 {type === 'none' && (
-                    <ButtonRow>
+                    <MultiButton margin={'8px 0 8px 16px'}>
                         {renderButton(
                             () => setAmount(fast),
                             `Fastest (${fast} sats)`,
@@ -250,7 +229,7 @@ export const SendOnChainCard = ({ color }: { color: string }) => {
                             `Hour (${hour} sats)`,
                             amount === hour,
                         )}
-                    </ButtonRow>
+                    </MultiButton>
                 )}
             </SingleLine>
             <Separation />

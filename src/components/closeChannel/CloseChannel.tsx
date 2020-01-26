@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { CLOSE_CHANNEL } from '../../graphql/mutation';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import {
-    Input,
-    Separation,
-    SingleLine,
-    SubTitle,
-    Sub4Title,
-} from '../generic/Styled';
-import { Circle, AlertTriangle } from '../generic/Icons';
+import { Separation, SingleLine, SubTitle, Sub4Title } from '../generic/Styled';
+import { AlertTriangle } from '../generic/Icons';
 import styled from 'styled-components';
-import { textColorMap } from '../../styles/Themes';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { GET_BITCOIN_FEES } from '../../graphql/query';
-import { useSettings } from '../../context/SettingsContext';
 import { SecureButton } from '../buttons/secureButton/SecureButton';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
+import {
+    MultiButton,
+    SingleButton,
+} from 'components/buttons/multiButton/MultiButton';
+import { Input } from 'components/input/Input';
 
 interface CloseChannelProps {
     setModalOpen: (status: boolean) => void;
@@ -35,10 +32,6 @@ const CenterLine = styled(SingleLine)`
     justify-content: center;
 `;
 
-const RadioText = styled.div`
-    margin-left: 10px;
-`;
-
 export const CloseChannel = ({
     setModalOpen,
     channelId,
@@ -52,8 +45,6 @@ export const CloseChannel = ({
     const [fast, setFast] = useState(0);
     const [halfHour, setHalfHour] = useState(0);
     const [hour, setHour] = useState(0);
-
-    const { theme } = useSettings();
 
     const { data: feeData } = useQuery(GET_BITCOIN_FEES, {
         onError: error => toast.error(getErrorContent(error)),
@@ -91,13 +82,9 @@ export const CloseChannel = ({
         text: string,
         selected: boolean,
     ) => (
-        <ColorButton onClick={onClick} withMargin={'4px'} fullWidth={true}>
-            <Circle
-                size={'10px'}
-                fillcolor={selected ? textColorMap[theme] : ''}
-            />
-            <RadioText>{text}</RadioText>
-        </ColorButton>
+        <SingleButton selected={selected} onClick={onClick}>
+            {text}
+        </SingleButton>
     );
 
     const renderWarning = () => (
@@ -140,7 +127,7 @@ export const CloseChannel = ({
             <SingleLine>
                 <Sub4Title>Fee:</Sub4Title>
             </SingleLine>
-            <SingleLine>
+            <MultiButton>
                 {renderButton(
                     () => setIsType('none'),
                     'Auto',
@@ -152,13 +139,13 @@ export const CloseChannel = ({
                     'Target',
                     isType === 'target',
                 )}
-            </SingleLine>
+            </MultiButton>
             {isType === 'none' && (
                 <>
                     <SingleLine>
                         <Sub4Title>Fee Amount:</Sub4Title>
                     </SingleLine>
-                    <SingleLine>
+                    <MultiButton>
                         {renderButton(
                             () => setAmount(fast),
                             `Fastest (${fast} sats)`,
@@ -175,7 +162,7 @@ export const CloseChannel = ({
                             `Hour (${hour} sats)`,
                             amount === hour,
                         )}
-                    </SingleLine>
+                    </MultiButton>
                 </>
             )}
             {isType !== 'none' && (
@@ -189,7 +176,9 @@ export const CloseChannel = ({
                     </SingleLine>
                     <SingleLine>
                         <Input
-                            min={1}
+                            placeholder={
+                                isType === 'target' ? 'Blocks' : 'Sats/Byte'
+                            }
                             type={'number'}
                             onChange={e => setAmount(parseInt(e.target.value))}
                         />
@@ -199,10 +188,10 @@ export const CloseChannel = ({
             <SingleLine>
                 <Sub4Title>Force Close Channel:</Sub4Title>
             </SingleLine>
-            <SingleLine>
+            <MultiButton>
                 {renderButton(() => setIsForce(true), `Yes`, isForce)}
                 {renderButton(() => setIsForce(false), `No`, !isForce)}
-            </SingleLine>
+            </MultiButton>
             <Separation />
             <CenterLine>
                 <ColorButton

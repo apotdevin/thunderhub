@@ -95,34 +95,6 @@ export const NoWrapTitle = styled(Sub4Title)`
     white-space: nowrap;
 `;
 
-interface InputProps {
-    color?: string;
-}
-
-export const Input = styled.input`
-    padding: 5px;
-    height: 30px;
-    width: 100%;
-    margin: 8px 0;
-    border: 1px solid #c8ccd4;
-    background: none;
-    border-radius: 5px;
-    color: ${textColor};
-    transition: all 0.5s ease;
-
-    &:hover {
-        border: 1px solid
-            ${({ color }: InputProps) => (color ? color : '#0077ff')};
-    }
-
-    &:focus {
-        outline: none;
-        background: none;
-        border: 1px solid
-            ${({ color }: InputProps) => (color ? color : '#0077ff')};
-    }
-`;
-
 export const SingleLine = styled.div`
     display: flex;
     justify-content: space-between;
