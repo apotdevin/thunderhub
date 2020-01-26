@@ -18,13 +18,16 @@ const IconCircle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    outline: none;
     width: 30px;
     height: 30px;
     border-radius: 100%;
 
-    &:hover {
-        background-color: ${iconButtonHover};
-        color: ${inverseTextColor};
+    @media (min-width: 579px) {
+        &:hover {
+            background-color: ${iconButtonHover};
+            color: ${inverseTextColor};
+        }
     }
 `;
 
@@ -76,11 +79,16 @@ const getNextValue = (array: string[], current: string): string => {
 };
 
 interface SideSettingsProps {
-    isOpen: boolean;
-    setIsOpen: (state: any) => void;
+    isOpen?: boolean;
+    isBurger?: boolean;
+    setIsOpen?: (state: any) => void;
 }
 
-export const SideSettings = ({ isOpen, setIsOpen }: SideSettingsProps) => {
+export const SideSettings = ({
+    isOpen,
+    isBurger,
+    setIsOpen,
+}: SideSettingsProps) => {
     const { theme, currency, updateCurrency, setSettings } = useSettings();
 
     const renderIcon = (
@@ -99,9 +107,10 @@ export const SideSettings = ({ isOpen, setIsOpen }: SideSettingsProps) => {
                 localStorage.setItem(type, value);
                 type === 'currency' &&
                     updateCurrency({
-                        currency: isOpen
-                            ? value
-                            : getNextValue(currencyArray, value),
+                        currency:
+                            isOpen || isBurger
+                                ? value
+                                : getNextValue(currencyArray, value),
                     });
                 type === 'theme' && setSettings({ theme: value });
             }}
@@ -154,20 +163,42 @@ export const SideSettings = ({ isOpen, setIsOpen }: SideSettingsProps) => {
         }
     };
 
+    if (isBurger) {
+        return (
+            <>
+                <IconRow>
+                    {renderIcon('currency', 'sat', 'S')}
+                    {renderIcon('currency', 'btc', '₿')}
+                    {renderIcon('currency', 'EUR', '€')}
+                    {renderIcon('currency', 'USD', '$')}
+                </IconRow>
+                <IconRow>
+                    {renderIcon('theme', 'light', '', false, Sun)}
+                    {renderIcon('theme', 'dark', '', false, Moon)}
+                </IconRow>
+            </>
+        );
+    }
+
     return (
         <>
             {renderContent()}
-            <IconRow center={!isOpen}>
-                <SelectedIcon
-                    selected={true}
-                    onClick={() => {
-                        localStorage.setItem('sidebar', (!isOpen).toString());
-                        setIsOpen({ sidebar: !isOpen });
-                    }}
-                >
-                    {isOpen ? <ChevronLeft /> : <ChevronRight />}
-                </SelectedIcon>
-            </IconRow>
+            {setIsOpen && (
+                <IconRow center={!isOpen}>
+                    <SelectedIcon
+                        selected={true}
+                        onClick={() => {
+                            localStorage.setItem(
+                                'sidebar',
+                                (!isOpen).toString(),
+                            );
+                            setIsOpen({ sidebar: !isOpen });
+                        }}
+                    >
+                        {isOpen ? <ChevronLeft /> : <ChevronRight />}
+                    </SelectedIcon>
+                </IconRow>
+            )}
         </>
     );
 };

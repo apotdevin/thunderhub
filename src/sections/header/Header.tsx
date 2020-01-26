@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import styled, { css } from 'styled-components';
 import { textColor } from '../../styles/Themes';
 import { HomeButton } from '../../views/entry/HomePage.styled';
 import { Link } from 'react-router-dom';
@@ -9,11 +9,17 @@ import {
     Sub4Title,
     Wrapper,
 } from '../../components/generic/Styled';
-import { Cpu } from '../../components/generic/Icons';
+import { Cpu, MenuIcon } from '../../components/generic/Icons';
+import { BurgerMenu } from 'components/burgerMenu/BurgerMenu';
+import { useSize } from 'hooks/UseSize';
 
 const HeaderStyle = styled.div`
     padding: 16px 0;
-    margin-bottom: 16px;
+    ${({ open }: { open: boolean }) =>
+        !open &&
+        css`
+            margin-bottom: 16px;
+        `}
 `;
 
 const HeaderTitle = styled.div`
@@ -21,10 +27,28 @@ const HeaderTitle = styled.div`
     font-weight: 900;
 `;
 
-export const Header = () => {
-    const { loggedIn, name } = useAccount();
+const IconWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
 
-    const renderLoggedIn = () => <Sub4Title>{`Account: ${name}`}</Sub4Title>;
+export const Header = () => {
+    const { width } = useSize();
+    const { loggedIn, name } = useAccount();
+    const [open, setOpen] = useState(false);
+
+    const renderLoggedIn = () => {
+        if (width <= 578) {
+            return (
+                <IconWrapper onClick={() => setOpen(prev => !prev)}>
+                    <MenuIcon size={'24px'}>Menu</MenuIcon>
+                </IconWrapper>
+            );
+        } else {
+            return <Sub4Title>{`Account: ${name}`}</Sub4Title>;
+        }
+    };
 
     const renderLoggedOut = () => (
         <Link to="/login" style={{ textDecoration: 'none' }}>
@@ -33,20 +57,25 @@ export const Header = () => {
     );
 
     return (
-        <Wrapper withColor={true}>
-            <HeaderStyle>
-                <SingleLine>
-                    <Link to="/" style={{ textDecoration: 'none' }}>
-                        <SingleLine>
-                            <Cpu />
-                            <HeaderTitle>ThunderHub</HeaderTitle>
-                        </SingleLine>
-                    </Link>
+        <>
+            <Wrapper withColor={true}>
+                <HeaderStyle open={open}>
                     <SingleLine>
-                        {loggedIn ? renderLoggedIn() : renderLoggedOut()}
+                        <Link to="/" style={{ textDecoration: 'none' }}>
+                            <SingleLine>
+                                <Cpu />
+                                <HeaderTitle>ThunderHub</HeaderTitle>
+                            </SingleLine>
+                        </Link>
+                        <SingleLine>
+                            {loggedIn ? renderLoggedIn() : renderLoggedOut()}
+                        </SingleLine>
                     </SingleLine>
-                </SingleLine>
-            </HeaderStyle>
-        </Wrapper>
+                </HeaderStyle>
+            </Wrapper>
+            {open && width <= 578 && (
+                <BurgerMenu open={open} setOpen={setOpen} />
+            )}
+        </>
     );
 };
