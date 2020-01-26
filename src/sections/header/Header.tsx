@@ -9,9 +9,10 @@ import {
     Sub4Title,
     Wrapper,
 } from '../../components/generic/Styled';
-import { Cpu, MenuIcon } from '../../components/generic/Icons';
+import { Cpu, MenuIcon, XSvg } from '../../components/generic/Icons';
 import { BurgerMenu } from 'components/burgerMenu/BurgerMenu';
 import { useSize } from 'hooks/UseSize';
+import { useTransition, animated } from 'react-spring';
 
 const HeaderStyle = styled.div`
     padding: 16px 0;
@@ -31,18 +32,35 @@ const IconWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 24px;
+    height: 24px;
 `;
+
+const AnimatedBurger = animated(MenuIcon);
+const AnimatedClose = animated(XSvg);
 
 export const Header = () => {
     const { width } = useSize();
     const { loggedIn, name } = useAccount();
     const [open, setOpen] = useState(false);
 
+    const transitions = useTransition(open, null, {
+        from: { position: 'absolute', opacity: 0 },
+        enter: { opacity: 1 },
+        leave: { opacity: 0 },
+    });
+
     const renderLoggedIn = () => {
         if (width <= 578) {
             return (
                 <IconWrapper onClick={() => setOpen(prev => !prev)}>
-                    <MenuIcon size={'24px'}>Menu</MenuIcon>
+                    {transitions.map(({ item, key, props }) =>
+                        item ? (
+                            <AnimatedClose style={props} size={'24px'} />
+                        ) : (
+                            <AnimatedBurger style={props} size={'24px'} />
+                        ),
+                    )}
                 </IconWrapper>
             );
         } else {
