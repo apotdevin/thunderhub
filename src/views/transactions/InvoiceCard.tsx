@@ -5,6 +5,7 @@ import {
     Separation,
     SubCard,
     SingleLine,
+    ResponsiveLine,
     DarkSubTitle,
 } from '../../components/generic/Styled';
 import { StatusLine, NodeTitle, MainInfo } from '../channels/Channels.style';
@@ -14,7 +15,6 @@ import {
     getFormatDate,
     renderLine,
 } from '../../components/generic/Helpers';
-import { AddMargin } from './TransactionList';
 
 interface InvoiceCardProps {
     invoice: any;
@@ -109,17 +109,11 @@ export const InvoiceCard = ({
         <SubCard key={index}>
             <MainInfo onClick={() => handleClick()}>
                 <StatusLine>{getStatusDot(is_confirmed, 'active')}</StatusLine>
-                <SingleLine>
-                    <SingleLine>
-                        <NodeTitle>{description}</NodeTitle>
-                        <AddMargin>
-                            <DarkSubTitle>{`(${getDateDif(
-                                date,
-                            )} ago)`}</DarkSubTitle>
-                        </AddMargin>
-                    </SingleLine>
+                <ResponsiveLine>
+                    <NodeTitle>{description}</NodeTitle>
+                    <DarkSubTitle>{`(${getDateDif(date)} ago)`}</DarkSubTitle>
                     <SingleLine>{formatAmount}</SingleLine>
-                </SingleLine>
+                </ResponsiveLine>
             </MainInfo>
             {index === indexOpen && renderDetails()}
         </SubCard>
