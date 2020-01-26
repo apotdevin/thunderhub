@@ -75,8 +75,6 @@ const getNextValue = (array: string[], current: string): string => {
     return value;
 };
 
-type fn = (prev: boolean) => boolean;
-
 interface SideSettingsProps {
     isOpen: boolean;
     setIsOpen: (state: any) => void;

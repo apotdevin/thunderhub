@@ -53,7 +53,9 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "storybook": "start-storybook -p 9009 -s public",
+        "build-storybook": "build-storybook -s public"
     },
     "eslintConfig": {
         "extends": "react-app"
@@ -71,9 +73,17 @@
         ]
     },
     "devDependencies": {
+        "@storybook/addon-actions": "^5.3.9",
+        "@storybook/addon-info": "^5.3.9",
+        "@storybook/addon-links": "^5.3.9",
+        "@storybook/addons": "^5.3.9",
+        "@storybook/preset-create-react-app": "^1.5.2",
+        "@storybook/react": "^5.3.9",
+        "awesome-typescript-loader": "^5.2.1",
         "husky": "^4.2.1",
         "prettier": "1.19.1",
-        "pretty-quick": "^2.0.1"
+        "pretty-quick": "^2.0.1",
+        "react-docgen-typescript-loader": "^3.6.0"
     },
     "husky": {
         "hooks": {
