@@ -11,6 +11,7 @@ import {
     chartLinkColor,
     inverseTextColor,
 } from '../../styles/Themes';
+import { ThemeSet } from 'styled-theming';
 
 export const CardWithTitle = styled.div`
     display: flex;
@@ -165,10 +166,21 @@ export const ColorButton = styled(SimpleButton)`
     }
 `;
 
+interface FullWidthProps {
+    withColor?: boolean;
+    color?: string | ThemeSet;
+    textColor?: string | ThemeSet;
+}
+
 const FullWidth = styled.div`
     width: 100%;
-    background-color: ${({ withColor }: { withColor?: boolean }) =>
-        withColor && cardColor};
+    ${({ textColor }: FullWidthProps) =>
+        textColor &&
+        css`
+            color: ${textColor};
+        `}
+    background-color: ${({ withColor, color }: FullWidthProps) =>
+        withColor && (color ? color : cardColor)};
 `;
 
 const FixedWidth = styled.div`
@@ -183,11 +195,15 @@ const FixedWidth = styled.div`
 export const Wrapper = ({
     withColor,
     children,
+    color,
+    textColor,
 }: {
     withColor?: boolean;
+    color?: any;
+    textColor?: any;
     children: ReactNode;
 }) => (
-    <FullWidth withColor={withColor}>
+    <FullWidth withColor={withColor} color={color} textColor={textColor}>
         <FixedWidth>{children}</FixedWidth>
     </FullWidth>
 );
