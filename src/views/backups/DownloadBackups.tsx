@@ -7,10 +7,9 @@ import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
-import ScaleLoader from 'react-spinners/ScaleLoader';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 
-export const DownloadBackups = ({ color }: { color: string }) => {
+export const DownloadBackups = () => {
     const { name, host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
@@ -35,12 +34,9 @@ export const DownloadBackups = ({ color }: { color: string }) => {
                 disabled={loading}
                 onClick={() => getBackups()}
                 arrow={true}
+                loading={loading}
             >
-                {loading ? (
-                    <ScaleLoader height={8} width={2} color={color} />
-                ) : (
-                    'Download'
-                )}
+                Download
             </ColorButton>
         </SingleLine>
     );

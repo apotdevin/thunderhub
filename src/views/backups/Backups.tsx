@@ -16,8 +16,6 @@ import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 import styled from 'styled-components';
 import { getDateDif, getFormatDate } from 'components/generic/Helpers';
 
-const backupColor = '#ffffff';
-
 export const NoWrap = styled.div`
     margin-right: 16px;
     white-space: nowrap;
@@ -44,10 +42,10 @@ export const BackupsView = () => {
                     <Sub4Title>{getDate()}</Sub4Title>
                 </ResponsiveLine>
                 <Separation />
-                <DownloadBackups color={backupColor} />
-                <VerifyBackups color={backupColor} />
+                <DownloadBackups />
+                <VerifyBackups />
                 <AdminSwitch>
-                    <RecoverFunds color={backupColor} />
+                    <RecoverFunds />
                 </AdminSwitch>
             </Card>
         </CardWithTitle>

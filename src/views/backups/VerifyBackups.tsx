@@ -8,16 +8,14 @@ import { getErrorContent } from '../../utils/error';
 import {
     SingleLine,
     DarkSubTitle,
-    RightAlign,
     Separation,
 } from '../../components/generic/Styled';
-import ScaleLoader from 'react-spinners/ScaleLoader';
 import { XSvg } from '../../components/generic/Icons';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { NoWrap } from './Backups';
 import { Input } from 'components/input/Input';
 
-export const VerifyBackups = ({ color }: { color: string }) => {
+export const VerifyBackups = () => {
     const [backupString, setBackupString] = useState<string>('');
     const [isPasting, setIsPasting] = useState<boolean>(false);
 
@@ -43,24 +41,24 @@ export const VerifyBackups = ({ color }: { color: string }) => {
                 <NoWrap>
                     <DarkSubTitle>Backup String: </DarkSubTitle>
                 </NoWrap>
-                <Input onChange={e => setBackupString(e.target.value)} />
+                <Input
+                    withMargin={'8px 0 0'}
+                    onChange={e => setBackupString(e.target.value)}
+                />
             </SingleLine>
-            <RightAlign>
-                <ColorButton
-                    disabled={backupString === ''}
-                    onClick={() =>
-                        verifyBackup({
-                            variables: { auth, backup: backupString },
-                        })
-                    }
-                >
-                    {loading ? (
-                        <ScaleLoader height={8} width={2} color={color} />
-                    ) : (
-                        'Verify'
-                    )}
-                </ColorButton>
-            </RightAlign>
+            <ColorButton
+                fullWidth={true}
+                withMargin={'8px 0 4px'}
+                disabled={backupString === ''}
+                loading={loading}
+                onClick={() =>
+                    verifyBackup({
+                        variables: { auth, backup: backupString },
+                    })
+                }
+            >
+                Verify
+            </ColorButton>
             <Separation />
         </>
     );

@@ -83,7 +83,7 @@ export const TransactionsCard = ({
     return (
         <SubCard key={index}>
             <MainInfo onClick={() => handleClick()}>
-                <ResponsiveLine>
+                <ResponsiveLine withWrap={true}>
                     <SingleLine>{`${
                         fee !== null ? 'Sent' : 'Received'
                     }:  ${formatAmount}`}</SingleLine>

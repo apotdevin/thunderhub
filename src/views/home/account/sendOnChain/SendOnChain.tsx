@@ -138,9 +138,11 @@ export const SendOnChainCard = () => {
                     <ResponsiveWrap>
                         <NoWrapTitle>Amount:</NoWrapTitle>
                         <Margin>
-                            <DarkSubTitle>{`(${getFormat(
-                                tokens,
-                            )})`}</DarkSubTitle>
+                            <NoWrap>
+                                <DarkSubTitle>{`(${getFormat(
+                                    tokens,
+                                )})`}</DarkSubTitle>
+                            </NoWrap>
                         </Margin>
                     </ResponsiveWrap>
                     <Input

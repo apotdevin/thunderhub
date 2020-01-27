@@ -18,6 +18,13 @@ import { ForwardCard } from './ForwardsCard';
 import { textColorMap } from '../../styles/Themes';
 import { useSettings } from '../../context/SettingsContext';
 
+const timeMap: { [key: string]: string } = {
+    day: 'today',
+    week: 'this week',
+    month: 'this month',
+    threeMonths: 'these past 3 months',
+};
+
 export const ForwardsList = () => {
     const [time, setTime] = useState('week');
     const [indexOpen, setIndexOpen] = useState(0);
@@ -45,6 +52,10 @@ export const ForwardsList = () => {
         </ColorButton>
     );
 
+    const renderNoForwards = () => (
+        <p>{`Your node has not forwarded any payments ${timeMap[time]}.`}</p>
+    );
+
     return (
         <CardWithTitle>
             <CardTitle>
@@ -57,6 +68,7 @@ export const ForwardsList = () => {
                 </SingleLine>
             </CardTitle>
             <Card>
+                {data.getForwards.forwards.length <= 0 && renderNoForwards()}
                 {data.getForwards.forwards.map(
                     (forward: any, index: number) => (
                         <ForwardCard
