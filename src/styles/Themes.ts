@@ -68,6 +68,19 @@ export const burgerColor = theme('mode', {
 });
 
 // ---------------------------------------
+// HOMEPAGE COLORS
+// ---------------------------------------
+export const headerColor = theme('mode', {
+    light: themeColors.blue7,
+    dark: themeColors.blue7,
+});
+
+export const headerTextColor = theme('mode', {
+    light: fontColors.white,
+    dark: fontColors.white,
+});
+
+// ---------------------------------------
 // CARD COLORS
 // ---------------------------------------
 export const cardColor = theme('mode', {

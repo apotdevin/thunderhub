@@ -116,7 +116,7 @@ export const ColorButton = ({
     width,
     onClick,
 }: ColorButtonProps) => {
-    if (disabled) {
+    if (disabled && !loading) {
         return (
             <DisabledButton
                 withMargin={withMargin}

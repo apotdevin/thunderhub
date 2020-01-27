@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_RESUME } from '../../graphql/query';
-import {
-    Card,
-    CardWithTitle,
-    SubTitle,
-    ColorButton,
-} from '../../components/generic/Styled';
+import { Card, CardWithTitle, SubTitle } from '../../components/generic/Styled';
 import { InvoiceCard } from './InvoiceCard';
 import { useAccount } from '../../context/AccountContext';
 import { getAuthString } from '../../utils/auth';
@@ -14,9 +9,9 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { PaymentsCard } from './PaymentsCards';
 import { LoadingCard } from '../../components/loading/LoadingCard';
-import ScaleLoader from 'react-spinners/ScaleLoader';
 import { useSettings } from '../../context/SettingsContext';
 import { textColorMap } from '../../styles/Themes';
+import { ColorButton } from 'components/buttons/colorButton/ColorButton';
 
 export const TransactionList = () => {
     const [indexOpen, setIndexOpen] = useState(0);
@@ -73,6 +68,8 @@ export const TransactionList = () => {
                     })}
                 </Card>
                 <ColorButton
+                    selected={true}
+                    loading={fetching}
                     color={textColorMap[theme]}
                     disabled={fetching}
                     onClick={() => {
@@ -107,15 +104,7 @@ export const TransactionList = () => {
                         });
                     }}
                 >
-                    {fetching ? (
-                        <ScaleLoader
-                            height={10}
-                            width={2}
-                            color={textColorMap[theme]}
-                        />
-                    ) : (
-                        'Show More'
-                    )}
+                    Show More
                 </ColorButton>
             </CardWithTitle>
         );

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { LoginView } from './login/Login';
 import { SessionLogin } from './login/SessionLogin';
 import { useHistory, Switch, Route, useLocation } from 'react-router';
-import { HomePageView } from './HomePage';
+import { HomePageView } from './homepage/HomePage';
 
 interface HomeProps {
     session?: boolean;
