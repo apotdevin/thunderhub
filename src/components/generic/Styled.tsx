@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import {
     cardColor,
     cardBorderColor,
@@ -204,7 +204,11 @@ export const OverflowText = styled.div`
 
 export const ResponsiveLine = styled(SingleLine)`
     width: 100%;
-    flex-wrap: wrap;
+    ${({ withWrap }: { withWrap?: boolean }) =>
+        withWrap &&
+        css`
+            flex-wrap: wrap;
+        `}
 
     @media (max-width: 578px) {
         flex-direction: column;

@@ -3,19 +3,14 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { RECOVER_FUNDS } from '../../graphql/query';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
-import {
-    SingleLine,
-    DarkSubTitle,
-    RightAlign,
-} from '../../components/generic/Styled';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import { SingleLine, DarkSubTitle } from '../../components/generic/Styled';
 import { XSvg } from '../../components/generic/Icons';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { NoWrap } from './Backups';
 import { Input } from 'components/input/Input';
 
-export const RecoverFunds = ({ color }: { color: string }) => {
+export const RecoverFunds = () => {
     const [backupString, setBackupString] = useState<string>('');
     const [isPasting, setIsPasting] = useState<boolean>(false);
 
@@ -37,19 +32,16 @@ export const RecoverFunds = ({ color }: { color: string }) => {
                 </NoWrap>
                 <Input onChange={e => setBackupString(e.target.value)} />
             </SingleLine>
-            <RightAlign>
-                <SecureButton
-                    callback={recoverFunds}
-                    variables={{ backup: backupString }}
-                    disabled={backupString === ''}
-                >
-                    {loading ? (
-                        <ScaleLoader height={8} width={2} color={color} />
-                    ) : (
-                        'Recover'
-                    )}
-                </SecureButton>
-            </RightAlign>
+            <SecureButton
+                fullWidth={true}
+                withMargin={'8px 0 4px'}
+                callback={recoverFunds}
+                variables={{ backup: backupString }}
+                disabled={backupString === ''}
+                loading={loading}
+            >
+                Recover
+            </SecureButton>
         </>
     );
 

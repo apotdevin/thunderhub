@@ -28,7 +28,9 @@ const Tile = styled.div`
         start ? 'flex-start' : 'flex-end'};
 
     @media (max-width: 578px) {
-        margin-bottom: 8px;
+        margin: 0 0 8px;
+        flex-direction: row;
+        width: 100%;
     }
 `;
 
@@ -39,7 +41,6 @@ const TileTitle = styled.div`
 
     @media (max-width: 578px) {
         margin-bottom: 0;
-        margin-left: 16px;
     }
 `;
 

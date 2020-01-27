@@ -95,7 +95,9 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
             <ResponsiveLine>
                 <ResponsiveWrap>
                     <NoWrapTitle>Channel Size:</NoWrapTitle>
-                    <DarkSubTitle>{`(${getFormat(size)})`}</DarkSubTitle>
+                    <NoWrapTitle>
+                        <DarkSubTitle>{`(${getFormat(size)})`}</DarkSubTitle>
+                    </NoWrapTitle>
                 </ResponsiveWrap>
                 <Input
                     placeholder={'Sats'}

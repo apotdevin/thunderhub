@@ -110,7 +110,9 @@ export const InvoiceCard = ({
             <MainInfo onClick={() => handleClick()}>
                 <StatusLine>{getStatusDot(is_confirmed, 'active')}</StatusLine>
                 <ResponsiveLine>
-                    <NodeTitle>{description}</NodeTitle>
+                    <NodeTitle>
+                        {description ? description : 'Invoice'}
+                    </NodeTitle>
                     <DarkSubTitle>{`(${getDateDif(date)} ago)`}</DarkSubTitle>
                     <SingleLine>{formatAmount}</SingleLine>
                 </ResponsiveLine>
