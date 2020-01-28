@@ -12,23 +12,34 @@ import {
 import {
     chartAxisColor,
     chartGridColor,
+    // chartColors,
     flowBarColor,
     flowBarColor2,
 } from '../../../../styles/Themes';
+// import { WaterfallProps } from '.';
+
+// const beforeMap = {
+//     amount: 'amountBefore',
+//     tokens: 'tokensBefore',
+// };
 
 interface Props {
     isTime: string;
     isType: string;
+    // isGraph: string;
     parsedData: {}[];
     parsedData2: {}[];
+    // waterfall: WaterfallProps[];
 }
 
 export const FlowReport = ({
     isTime,
     isType,
+    // isGraph,
     parsedData,
     parsedData2,
-}: Props) => {
+}: // waterfall,
+Props) => {
     const { theme, price, symbol, currency } = useSettings();
 
     const priceProps = { price, symbol, currency };
@@ -120,6 +131,30 @@ export const FlowReport = ({
                         },
                     }}
                 />
+                {/* {isGraph === 'graph' && (
+                    <VictoryBar
+                        data={waterfall}
+                        x="period"
+                        y={isType}
+                        y0={beforeMap[isType]}
+                        style={{
+                            data: {
+                                fill: ({ data, index }: any) => {
+                                    console.log(data, index);
+                                    return data[index][isType] -
+                                        data[index][beforeMap[isType]] >
+                                        0
+                                        ? chartColors.green
+                                        : 'red';
+                                },
+                                width: barWidth,
+                            },
+                            labels: {
+                                fontSize: '12px',
+                            },
+                        }}
+                    />
+                )} */}
             </VictoryGroup>
         </VictoryChart>
     );
