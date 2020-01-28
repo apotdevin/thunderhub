@@ -4,28 +4,31 @@ import { CardTitle, ColorButton } from '../../../../components/generic/Styled';
 interface ButtonProps {
     isTime: string;
     isType: string;
+    // isGraph?: string;
     setIsTime: (text: string) => void;
     setIsType: (text: string) => void;
-    availableTimes: string[];
-    mappedTimes: string[];
-    availableTypes: string[];
-    mappedTypes: string[];
-    buttonBorder: string;
+    // setIsGraph?: (text: string) => void;
 }
+
+const availableTimes = ['day', 'week', 'month'];
+const mappedTimes = ['Day', 'Week', 'Month'];
+const availableTypes = ['amount', 'tokens'];
+const mappedTypes = ['Amount', 'Value'];
+// const availableGraphs = ['waterfall', 'bar'];
+// const mappedGraphs = ['Waterfall', 'Bar'];
+const buttonBorder = `#FD5F00`;
 
 export const ButtonRow = ({
     isTime,
     setIsTime,
     isType,
     setIsType,
-    availableTimes,
-    availableTypes,
-    mappedTimes,
-    mappedTypes,
-    buttonBorder,
-}: ButtonProps) => {
+}: // isGraph = 'bar',
+// setIsGraph,
+ButtonProps) => {
     const timeIndex = availableTimes.indexOf(isTime);
     const typeIndex = availableTypes.indexOf(isType);
+    // const graphIndex = availableGraphs.indexOf(isGraph);
 
     const toggleButtons = (array: string[], index: number) => {
         if (index === array.length - 1) {
@@ -54,6 +57,13 @@ export const ButtonRow = ({
         <CardTitle>
             {buttonToShow(setIsTime, availableTimes, mappedTimes, timeIndex)}
             {buttonToShow(setIsType, availableTypes, mappedTypes, typeIndex)}
+            {/* {setIsGraph &&
+                buttonToShow(
+                    setIsGraph,
+                    availableGraphs,
+                    mappedGraphs,
+                    graphIndex,
+                )} */}
         </CardTitle>
     );
 };

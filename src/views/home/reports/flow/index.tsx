@@ -18,6 +18,7 @@ import { InvoicePie } from './InvoicePie';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
+// import { getWaterfall } from './Helpers';
 
 export const ChannelRow = styled.div`
     font-size: 14px;
@@ -59,17 +60,19 @@ const HalfCardWithTitle = styled(CardWithTitle)`
     width: 50%;
 `;
 
-interface PeriodProps {
+export interface PeriodProps {
     period: number;
     amount: number;
     tokens: number;
 }
 
-const availableTimes = ['day', 'week', 'month'];
-const mappedTimes = ['Day', 'Week', 'Month'];
-const availableTypes = ['amount', 'tokens'];
-const mappedTypes = ['Amount', 'Value'];
-const buttonBorder = `#FD5F00`;
+export interface WaterfallProps {
+    period: number;
+    amount: number;
+    tokens: number;
+    amountBefore: number;
+    tokensBefore: number;
+}
 
 export const FlowBox = () => {
     const [isTime, setIsTime] = useState<string>('month');
@@ -85,13 +88,10 @@ export const FlowBox = () => {
     const buttonProps = {
         isTime,
         isType,
+        // isGraph,
         setIsTime,
         setIsType,
-        availableTimes,
-        availableTypes,
-        mappedTimes,
-        mappedTypes,
-        buttonBorder,
+        // setIsGraph,
     };
 
     if (!data || loading) {
@@ -100,6 +100,8 @@ export const FlowBox = () => {
 
     const parsedData: PeriodProps[] = JSON.parse(data.getInOut.invoices);
     const parsedData2: PeriodProps[] = JSON.parse(data.getInOut.payments);
+
+    // const waterfall: WaterfallProps[] = getWaterfall(parsedData, parsedData2);
 
     if (parsedData.length <= 0) {
         return null;
@@ -135,7 +137,12 @@ export const FlowBox = () => {
         { x: 'Unconfirmed', y: data.getInOut.unConfirmedInvoices },
     ];
 
-    const props = { isTime, isType, parsedData, parsedData2 };
+    const props = {
+        isTime,
+        isType,
+        parsedData,
+        parsedData2,
+    };
     const pieProps = { invoicePie };
     const flowProps = { flowPie, isType };
 
