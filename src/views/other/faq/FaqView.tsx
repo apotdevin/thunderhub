@@ -14,7 +14,7 @@ import {
     SmallText,
     IconMargin,
     IconTitle,
-} from './FaqView.styled';
+} from '../OtherViews.styled';
 
 export const FaqView = () => {
     return (
