@@ -37,7 +37,7 @@ export const HomeButton = styled.button`
     padding: 8px 24px;
     text-decoration: 2px solid blue;
     font-size: 16px;
-    background-image: linear-gradient(to right, #fd5f00, #ffa940);
+    background-image: linear-gradient(to right, #fd5f00, #f99325);
     color: white;
     border: none;
     display: flex;
@@ -46,4 +46,5 @@ export const HomeButton = styled.button`
     border-radius: 8px;
     white-space: nowrap;
     min-width: 100px;
+    width: 100%;
 `;

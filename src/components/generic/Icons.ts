@@ -42,6 +42,8 @@ import { ReactComponent as UsersIcon } from '../../assets/icons/users.svg';
 import { ReactComponent as GitPullRequestIcon } from '../../assets/icons/git-pull-request.svg';
 import { ReactComponent as Link } from '../../assets/icons/link.svg';
 import { ReactComponent as Menu } from '../../assets/icons/menu.svg';
+import { ReactComponent as Mail } from '../../assets/icons/mail.svg';
+import { ReactComponent as Github } from '../../assets/icons/github.svg';
 
 interface IconProps {
     color?: string;
@@ -106,3 +108,5 @@ export const Users = styleIcon(UsersIcon);
 export const GitPullRequest = styleIcon(GitPullRequestIcon);
 export const LinkIcon = styleIcon(Link);
 export const MenuIcon = styleIcon(Menu);
+export const MailIcon = styleIcon(Mail);
+export const GithubIcon = styleIcon(Github);

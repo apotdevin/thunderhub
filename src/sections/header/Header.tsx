@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { headerColor, headerTextColor } from '../../styles/Themes';
 import { HomeButton } from '../../views/entry/homepage/HomePage.styled';
 import { Link } from 'react-router-dom';
@@ -16,12 +16,6 @@ import { useTransition, animated } from 'react-spring';
 
 const HeaderStyle = styled.div`
     padding: 16px 0;
-    ${({ open, withPadding }: { open: boolean; withPadding?: boolean }) =>
-        !open &&
-        withPadding &&
-        css`
-            margin-bottom: 16px;
-        `}
 `;
 
 const HeaderTitle = styled.div`
@@ -82,7 +76,7 @@ export const Header = () => {
                 color={headerColor}
                 textColor={headerTextColor}
             >
-                <HeaderStyle open={open} withPadding={loggedIn}>
+                <HeaderStyle>
                     <SingleLine>
                         <Link to="/" style={{ textDecoration: 'none' }}>
                             <SingleLine>

@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { headerColor, headerTextColor } from 'styles/Themes';
 
 const FooterStyle = styled.div`
-    margin-top: 80px;
     padding: 40px 0;
     height: 300px;
     color: ${headerTextColor};

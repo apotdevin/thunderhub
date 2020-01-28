@@ -1,5 +1,182 @@
 import React from 'react';
+import { Section } from 'components/section/Section';
+import { themeColors, fontColors } from 'styles/Themes';
+import { Send, GithubIcon, MailIcon } from 'components/generic/Icons';
+import {
+    Title,
+    Center,
+    Subtitle,
+    Question,
+    Text,
+    SectionTitle,
+    DetailCard,
+    DetailLine,
+    SmallText,
+    IconMargin,
+    IconTitle,
+} from './FaqView.styled';
 
 export const FaqView = () => {
-    return <div>Hello this is the FAQ view</div>;
+    return (
+        <>
+            <Section color={themeColors.blue3} padding={'40px 0 48px'}>
+                <Title>FAQ: Answers to Common Questions</Title>
+                <Center>
+                    <Subtitle>
+                        Learn about ThunderHub by reading these frequently asked
+                        questions.
+                    </Subtitle>
+                </Center>
+            </Section>
+            <Section color={themeColors.grey} padding={'60px 0 16px'}>
+                <Question>What is ThunderHub?</Question>
+                <Text>
+                    ThunderHub is a <b>LND node manager</b> that you can open on
+                    any browser and any device.
+                </Text>
+            </Section>
+            <Section color={themeColors.grey} padding={'19px 0 16px'}>
+                <Question>How much does it cost?</Question>
+                <Text>
+                    <b>No cost</b>, ThunderHub is open source so no need to
+                    spend any precious sats here.
+                </Text>
+            </Section>
+            <Section color={themeColors.grey} padding={'19px 0 16px'}>
+                <Question>What is the value of ThunderHub?</Question>
+                <Text>
+                    ThunderHub brings a <b>full LND lightning node manager </b>
+                    directly to your device without the need of installing
+                    plugins, extensions or apps, having specific browsers or
+                    operating systems and is completely <b>open source.</b>
+                </Text>
+                <Text>
+                    ThunderHub provides a <b>simple and easy to use </b>manager
+                    without needing to give us any private information.
+                    Everything is stored directly in your browser and sensitive
+                    information (like your admin macaroon) are AES-256 encrypted
+                    with a password only you know.
+                </Text>
+                <Text>
+                    <b>
+                        No need to trust us, the code is public and available
+                        for anyone to audit.
+                    </b>
+                </Text>
+            </Section>
+            <Section color={themeColors.grey} padding={'19px 0 16px'}>
+                <Question>Is ThunderHub safe to use?</Question>
+                <Text>
+                    ThunderHub is open source and available for anyone to audit.
+                    <b>
+                        This still doesn't mean it's completely bullet proof
+                        against attackers.
+                    </b>
+                </Text>
+                <Text>
+                    If you connect using your admin macaroon, it is
+                    <b> AES-256 encrypted, password protected</b> and
+                    <b> stored only in your browser. </b>
+                    The password is only known by you and you need to unlock
+                    your account everytime you want to perform an admin only
+                    change such as managing channels or sending and recieving
+                    bitcoin or lightning payments.
+                </Text>
+                <Text>
+                    If you want a more secure alternative, you can connect using
+                    a view-only macaroon and use ThunderHub only for monitoring
+                    your node.
+                </Text>
+            </Section>
+            <Section color={themeColors.grey} padding={'19px 0 16px'}>
+                <Question>What happens if I forget my password?</Question>
+                <Text>
+                    The password is only known by you and is used to unlock an
+                    encrypted macaroon stored only on your browser making it
+                    impossible for us to help you with this situation.
+                </Text>
+                <Text>
+                    The fix is simple. Delete that account (Don't worry, this
+                    doesn't delete anything or affect in any way your node) and
+                    connect again with your desired macaroons.
+                </Text>
+            </Section>
+            <Section color={themeColors.grey} padding={'19px 0 16px'}>
+                <Question>Am I being tracked in anyway?</Question>
+                <Text>
+                    We do not track anything from our users and store no
+                    information on our servers. Should it be needed in the
+                    future, we will notify users and ask for explicit consent
+                    before hand.
+                </Text>
+            </Section>
+            <Section color={themeColors.grey} padding={'19px 0 60px'}>
+                <Question>
+                    Can I use ThunderHub without having my own Lightning Node?
+                </Question>
+                <Text>
+                    ThunderHub provides full lightning node management which is
+                    only possible when you are the owner of the lightning node
+                    to which it is connecting. So in short,
+                    <b> no </b> you cannot use ThunderHub without having your
+                    own node.
+                </Text>
+                <Text>
+                    Nowadays with the posibility of using pruned bitcoin nodes
+                    (Bitcoin nodes which only have a section of the Bitcoin
+                    blockchain), you can get a lightning node up and running in
+                    the cloud <b>for under €15/month.</b>
+                </Text>
+            </Section>
+            <Section color={themeColors.grey3} padding={'24px 0 80px'}>
+                <Center>
+                    <SectionTitle textColor={fontColors.blue3}>
+                        Need to contact us?
+                    </SectionTitle>
+                </Center>
+                <DetailLine>
+                    <DetailCard>
+                        <Question>
+                            <IconTitle>
+                                <IconMargin>
+                                    <Send size={'24px'} />
+                                </IconMargin>
+                                Telegram
+                            </IconTitle>
+                        </Question>
+                        <SmallText>
+                            Write to me on Telegram @apotdevin. I usually answer
+                            quick.
+                        </SmallText>
+                    </DetailCard>
+                    <DetailCard>
+                        <Question>
+                            <IconTitle>
+                                <IconMargin>
+                                    <GithubIcon size={'24px'} />
+                                </IconMargin>
+                                Github
+                            </IconTitle>
+                        </Question>
+                        <SmallText>
+                            See the code, open issues or contribute on github.
+                        </SmallText>
+                    </DetailCard>
+                    <DetailCard>
+                        <Question>
+                            <IconTitle>
+                                <IconMargin>
+                                    <MailIcon size={'24px'} />
+                                </IconMargin>
+                                Email
+                            </IconTitle>
+                        </Question>
+                        <SmallText>
+                            Write us an email at thunderhub@protonmail.com
+                        </SmallText>
+                    </DetailCard>
+                </DetailLine>
+            </Section>
+        </>
+    );
 };

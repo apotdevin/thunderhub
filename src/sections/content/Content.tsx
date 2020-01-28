@@ -35,38 +35,38 @@ const ContentStyle = styled.div`
 
 const Content = () => {
     return (
-        <Wrapper>
-            <Switch>
-                <Route exact path="/" render={() => getGrid(Home)} />
-                <Route path="/channels" render={() => getGrid(ChannelView)} />
-                <Route path="/backups" render={() => getGrid(BackupsView)} />
-                <Route
-                    path="/transactions"
-                    render={() => getGrid(TransactionList)}
-                />
-                <Route path="/forwards" render={() => getGrid(ForwardsList)} />
-                <Route
-                    path="/chaintransactions"
-                    render={() => getGrid(ChainTransactions)}
-                />
-                <Route path="/settings" render={() => getGrid(SettingsView)} />
-                <Route path="/fees" render={() => getGrid(FeesView)} />
-                <Route path="/terms" render={() => <TermsView />} />
-                <Route path="/privacy" render={() => <PrivacyView />} />
-                <Route path="/faq" render={() => <FaqView />} />
-                <Route path="*" render={() => <NotFound />} />
-            </Switch>
-        </Wrapper>
+        <Switch>
+            <Route exact path="/" render={() => getGrid(Home)} />
+            <Route path="/channels" render={() => getGrid(ChannelView)} />
+            <Route path="/backups" render={() => getGrid(BackupsView)} />
+            <Route
+                path="/transactions"
+                render={() => getGrid(TransactionList)}
+            />
+            <Route path="/forwards" render={() => getGrid(ForwardsList)} />
+            <Route
+                path="/chaintransactions"
+                render={() => getGrid(ChainTransactions)}
+            />
+            <Route path="/settings" render={() => getGrid(SettingsView)} />
+            <Route path="/fees" render={() => getGrid(FeesView)} />
+            <Route path="/terms" render={() => <TermsView />} />
+            <Route path="/privacy" render={() => <PrivacyView />} />
+            <Route path="/faq" render={() => <FaqView />} />
+            <Route path="*" render={() => <NotFound />} />
+        </Switch>
     );
 };
 
 const getGrid = (Content: any) => (
-    <Container>
-        <Navigation />
-        <ContentStyle>
-            <Content />
-        </ContentStyle>
-    </Container>
+    <Wrapper>
+        <Container>
+            <Navigation />
+            <ContentStyle>
+                <Content />
+            </ContentStyle>
+        </Container>
+    </Wrapper>
 );
 
 export default Content;
