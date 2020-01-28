@@ -1,20 +1,8 @@
 import React from 'react';
 import { Section } from 'components/section/Section';
-import { themeColors, fontColors } from 'styles/Themes';
-import { Send, GithubIcon, MailIcon } from 'components/generic/Icons';
-import {
-    Title,
-    Center,
-    Subtitle,
-    Question,
-    Text,
-    SectionTitle,
-    DetailCard,
-    DetailLine,
-    SmallText,
-    IconMargin,
-    IconTitle,
-} from '../OtherViews.styled';
+import { themeColors } from 'styles/Themes';
+import { Title, Center, Subtitle, Question, Text } from '../OtherViews.styled';
+import { ContactSection } from '../ContactSection';
 
 export const FaqView = () => {
     return (
@@ -96,18 +84,19 @@ export const FaqView = () => {
                     impossible for us to help you with this situation.
                 </Text>
                 <Text>
-                    The fix is simple. Delete that account (Don't worry, this
-                    doesn't delete anything or affect in any way your node) and
-                    connect again with your desired macaroons.
+                    The fix is simple. <b>Delete that account on ThunderHub </b>
+                    (Don't worry, this doesn't delete anything or affect in any
+                    way your node) <b>and connect again </b>with your desired
+                    macaroons.
                 </Text>
             </Section>
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
                 <Question>Am I being tracked in anyway?</Question>
                 <Text>
-                    We do not track anything from our users and store no
-                    information on our servers. Should it be needed in the
-                    future, we will notify users and ask for explicit consent
-                    before hand.
+                    <b>We do not track anything from our users </b>and
+                    <b> store no information on our servers. </b>
+                    Should it be needed in the future, we will notify users and
+                    ask for explicit consent before hand.
                 </Text>
             </Section>
             <Section color={themeColors.grey} padding={'19px 0 60px'}>
@@ -128,55 +117,7 @@ export const FaqView = () => {
                     the cloud <b>for under €15/month.</b>
                 </Text>
             </Section>
-            <Section color={themeColors.grey3} padding={'24px 0 80px'}>
-                <Center>
-                    <SectionTitle textColor={fontColors.blue3}>
-                        Need to contact us?
-                    </SectionTitle>
-                </Center>
-                <DetailLine>
-                    <DetailCard>
-                        <Question>
-                            <IconTitle>
-                                <IconMargin>
-                                    <Send size={'24px'} />
-                                </IconMargin>
-                                Telegram
-                            </IconTitle>
-                        </Question>
-                        <SmallText>
-                            Write to me on Telegram @apotdevin. I usually answer
-                            quick.
-                        </SmallText>
-                    </DetailCard>
-                    <DetailCard>
-                        <Question>
-                            <IconTitle>
-                                <IconMargin>
-                                    <GithubIcon size={'24px'} />
-                                </IconMargin>
-                                Github
-                            </IconTitle>
-                        </Question>
-                        <SmallText>
-                            See the code, open issues or contribute on github.
-                        </SmallText>
-                    </DetailCard>
-                    <DetailCard>
-                        <Question>
-                            <IconTitle>
-                                <IconMargin>
-                                    <MailIcon size={'24px'} />
-                                </IconMargin>
-                                Email
-                            </IconTitle>
-                        </Question>
-                        <SmallText>
-                            Write us an email at thunderhub@protonmail.com
-                        </SmallText>
-                    </DetailCard>
-                </DetailLine>
-            </Section>
+            <ContactSection />
         </>
     );
 };
