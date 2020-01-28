@@ -24,7 +24,7 @@ export const CardTitle = styled.div`
     justify-content: space-between;
 `;
 
-interface CardProps {
+export interface CardProps {
     bottom?: string;
     padding?: string;
 }

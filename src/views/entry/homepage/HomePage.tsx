@@ -13,8 +13,7 @@ import { Link } from 'react-router-dom';
 import { DetailSection } from './DetailSection';
 
 const Padding = styled.div`
-    padding: ${({ padding }: { padding?: string }) =>
-        padding ? padding : '16px'};
+    padding: 4px 4px 0 0;
 `;
 
 const SlantedWrapper = styled.div`
@@ -39,6 +38,13 @@ const SlantedEdge = styled.div`
     z-index: -5;
 `;
 
+const FullWidth = styled.div`
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 18px;
+`;
+
 export const HomePageView = () => {
     return (
         <>
@@ -50,19 +56,26 @@ export const HomePageView = () => {
                 <Headline>
                     <LeftHeadline>
                         <h1>Control The Power of Lighting</h1>
-                        <h4>
+                        <p>
                             Take full control of your lightning node. Think of
                             something else to place here. Think Think Think
-                        </h4>
-                        <h5>Available everywhere you can open a website.</h5>
-                        <Link to="/login" style={{ textDecoration: 'none' }}>
-                            <HomeButton>
-                                <Padding padding={'4px 4px 0 0'}>
-                                    <Zap fillcolor={'white'} />
-                                </Padding>
-                                Control The Lightning
-                            </HomeButton>
-                        </Link>
+                        </p>
+                        <FullWidth>
+                            <Link
+                                to="/login"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <HomeButton>
+                                    <Padding>
+                                        <Zap
+                                            fillcolor={'white'}
+                                            color={'white'}
+                                        />
+                                    </Padding>
+                                    Control The Lightning
+                                </HomeButton>
+                            </Link>
+                        </FullWidth>
                     </LeftHeadline>
                     <StyledImage />
                 </Headline>
