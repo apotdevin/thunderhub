@@ -8,8 +8,6 @@ import {
     SingleLine,
     Separation,
 } from '../../../components/generic/Styled';
-import { getValue } from '../../../helpers/Helpers';
-import { useSettings } from '../../../context/SettingsContext';
 import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import styled from 'styled-components';
@@ -18,6 +16,7 @@ import { Globe, Cpu } from '../../../components/generic/Icons';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
+import { Price } from 'components/price/Price';
 
 const Tile = styled.div`
     display: flex;
@@ -69,9 +68,6 @@ export const NetworkInfo = () => {
         onError: error => toast.error(getErrorContent(error)),
     });
 
-    const { price, symbol, currency } = useSettings();
-    const priceProps = { price, symbol, currency };
-
     if (loading || !data || !data.getNetworkInfo) {
         return <LoadingCard title={'Network Info'} />;
     }
@@ -87,13 +83,11 @@ export const NetworkInfo = () => {
         totalCapacity,
     } = data.getNetworkInfo;
 
-    const getFormat = (amount: number) => getValue({ amount, ...priceProps });
-
-    const capacity = getFormat(totalCapacity);
-    const maxSize = getFormat(maxChannelSize);
-    const averageSize = getFormat(averageChannelSize);
-    const medianSize = getFormat(medianChannelSize);
-    const minSize = getFormat(minChannelSize);
+    const capacity = <Price amount={totalCapacity} />;
+    const maxSize = <Price amount={maxChannelSize} />;
+    const averageSize = <Price amount={averageChannelSize} />;
+    const medianSize = <Price amount={medianChannelSize} />;
+    const minSize = <Price amount={minChannelSize} />;
 
     return (
         <CardWithTitle>

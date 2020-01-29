@@ -1,10 +1,10 @@
 import React from 'react';
 import { DarkSubTitle } from '../../../../components/generic/Styled';
 import { useSettings } from '../../../../context/SettingsContext';
-import { getValue } from '../../../../helpers/Helpers';
 import { VictoryPie } from 'victory';
 import { chartAxisColor } from '../../../../styles/Themes';
 import { Row, Col, PieRow } from '../flow';
+import { Price } from 'components/price/Price';
 
 interface Props {
     flowPie: { x: string; y: number }[];
@@ -12,29 +12,26 @@ interface Props {
 }
 
 export const FlowPie = ({ flowPie, isType }: Props) => {
-    const { theme, price, symbol, currency } = useSettings();
-
-    const priceProps = { price, symbol, currency };
-    const getFormat = (amount: number) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
+    const { theme } = useSettings();
 
     return (
         <Row>
             <Col>
                 <PieRow>
                     <DarkSubTitle>{flowPie[0].x}</DarkSubTitle>
-                    {isType === 'tokens'
-                        ? getFormat(flowPie[0].y)
-                        : flowPie[0].y}
+                    {isType === 'tokens' ? (
+                        <Price amount={flowPie[0].y} />
+                    ) : (
+                        flowPie[0].y
+                    )}
                 </PieRow>
                 <PieRow>
                     <DarkSubTitle>{flowPie[1].x}</DarkSubTitle>
-                    {isType === 'tokens'
-                        ? getFormat(flowPie[1].y)
-                        : flowPie[1].y}
+                    {isType === 'tokens' ? (
+                        <Price amount={flowPie[1].y} />
+                    ) : (
+                        flowPie[1].y
+                    )}
                 </PieRow>
             </Col>
             <VictoryPie

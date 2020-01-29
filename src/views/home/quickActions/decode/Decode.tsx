@@ -12,19 +12,15 @@ import { getAuthString } from '../../../../utils/auth';
 import { DECODE_REQUEST } from '../../../../graphql/mutation';
 import { getErrorContent } from '../../../../utils/error';
 import { toast } from 'react-toastify';
-import { getValue } from '../../../../helpers/Helpers';
 import { getNodeLink } from '../../../../components/generic/Helpers';
-import { useSettings } from '../../../../context/SettingsContext';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../../../components/input/Input';
 import { useSize } from '../../../../hooks/UseSize';
+import { Price } from 'components/price/Price';
 
 export const DecodeCard = ({ color }: { color: string }) => {
     const { width } = useSize();
     const [request, setRequest] = useState('');
-
-    const { price, symbol, currency } = useSettings();
-    const priceProps = { price, symbol, currency };
 
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
@@ -32,12 +28,6 @@ export const DecodeCard = ({ color }: { color: string }) => {
     const [decode, { data, loading }] = useMutation(DECODE_REQUEST, {
         onError: error => toast.error(getErrorContent(error)),
     });
-
-    const getFormat = (amount: string) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
 
     const renderData = () => {
         if (!data || !data.decodeRequest) return null;
@@ -63,7 +53,7 @@ export const DecodeCard = ({ color }: { color: string }) => {
                 {renderLine('Chain Address:', chainAddress)}
                 {renderLine('CLTV Delta:', cltvDelta)}
                 {renderLine('Expires At:', expiresAt)}
-                {renderLine('Amount:', getFormat(tokens))}
+                {renderLine('Amount:', <Price amount={tokens} />)}
             </>
         );
     };

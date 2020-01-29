@@ -4,7 +4,6 @@ import { useQuery } from '@apollo/react-hooks';
 import { GET_FORWARD_REPORT } from '../../../../graphql/query';
 import numeral from 'numeral';
 import { useSettings } from '../../../../context/SettingsContext';
-import { getValue } from '../../../../helpers/Helpers';
 import { useAccount } from '../../../../context/AccountContext';
 import { getAuthString } from '../../../../utils/auth';
 import {
@@ -22,6 +21,7 @@ import { CardContent } from '../forwardReport';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
+import { Price } from 'components/price/Price';
 
 interface Props {
     isTime: string;
@@ -35,7 +35,7 @@ const timeMap: { [key: string]: string } = {
 };
 
 export const ForwardReport = ({ isTime, isType }: Props) => {
-    const { theme, price, symbol, currency } = useSettings();
+    const { theme } = useSettings();
 
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
@@ -44,14 +44,6 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
         variables: { time: isTime, auth },
         onError: error => toast.error(getErrorContent(error)),
     });
-
-    const priceProps = { price, symbol, currency };
-    const getFormat = (amount: number, breakNumber?: boolean) =>
-        getValue({
-            amount,
-            ...priceProps,
-            breakNumber,
-        });
 
     if (!data || loading) {
         return <LoadingCard noCard={true} title={'Forward Report'} />;
@@ -73,7 +65,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
         if (isType === 'amount') {
             return numeral(value).format('0,0');
         }
-        return getFormat(value);
+        return <Price amount={value} />;
     };
 
     const total = getLabelString(
@@ -103,7 +95,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
                             <VictoryVoronoiContainer
                                 voronoiDimension="x"
                                 labels={({ datum }) =>
-                                    getLabelString(datum[isType])
+                                    `${getLabelString(datum[isType])}`
                                 }
                             />
                         }
@@ -126,7 +118,11 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
                                 axis: { stroke: 'transparent' },
                             }}
                             tickFormat={a =>
-                                isType === 'tokens' ? getFormat(a, true) : a
+                                isType === 'tokens' ? (
+                                    <Price amount={a} breakNumber={true} />
+                                ) : (
+                                    a
+                                )
                             }
                         />
                         <VictoryBar

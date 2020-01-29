@@ -1,7 +1,6 @@
 import React from 'react';
 import numeral from 'numeral';
 import { useSettings } from '../../../../context/SettingsContext';
-import { getValue } from '../../../../helpers/Helpers';
 import {
     VictoryBar,
     VictoryChart,
@@ -16,6 +15,7 @@ import {
     flowBarColor,
     flowBarColor2,
 } from '../../../../styles/Themes';
+import { Price } from 'components/price/Price';
 // import { WaterfallProps } from '.';
 
 // const beforeMap = {
@@ -40,14 +40,7 @@ export const FlowReport = ({
     parsedData2,
 }: // waterfall,
 Props) => {
-    const { theme, price, symbol, currency } = useSettings();
-
-    const priceProps = { price, symbol, currency };
-    const getFormat = (amount: number) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
+    const { theme } = useSettings();
 
     let domain = 24;
     let barWidth = 3;
@@ -63,7 +56,7 @@ Props) => {
         if (isType === 'amount') {
             return numeral(value).format('0,0');
         }
-        return getFormat(value);
+        return <Price amount={value} />;
     };
 
     return (
@@ -79,7 +72,7 @@ Props) => {
             containerComponent={
                 <VictoryVoronoiContainer
                     voronoiDimension="x"
-                    labels={({ datum }) => getLabelString(datum[isType])}
+                    labels={({ datum }) => `${getLabelString(datum[isType])}`}
                 />
             }
         >
@@ -100,7 +93,9 @@ Props) => {
                     grid: { stroke: chartGridColor[theme] },
                     axis: { stroke: 'transparent' },
                 }}
-                tickFormat={a => (isType === 'tokens' ? getFormat(a) : a)}
+                tickFormat={a =>
+                    isType === 'tokens' ? <Price amount={a} /> : a
+                }
             />
             <VictoryGroup offset={barWidth}>
                 <VictoryBar

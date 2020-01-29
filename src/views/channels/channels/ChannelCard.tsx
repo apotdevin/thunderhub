@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getPercent, getValue } from '../../../helpers/Helpers';
+import { getPercent } from '../../../helpers/Helpers';
 import {
     Progress,
     ProgressBar,
@@ -35,6 +35,7 @@ import styled from 'styled-components';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { DownArrow, UpArrow, EyeOff } from '../../../components/generic/Icons';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
+import { Price } from 'components/price/Price';
 
 const IconPadding = styled.div`
     margin-left: 16px;
@@ -64,16 +65,9 @@ export const ChannelCard = ({
 }: ChannelCardProps) => {
     const [modalOpen, setModalOpen] = useState(false);
 
-    const { price, symbol, currency, theme } = useSettings();
-    const priceProps = { price, symbol, currency };
+    const { theme } = useSettings();
 
     const tooltipType = getTooltipType(theme);
-
-    const getFormat = (amount: string) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
 
     const {
         capacity,
@@ -103,17 +97,23 @@ export const ChannelCard = ({
 
     const {
         alias,
-        capacity: nodeCapacity,
+        capacity: node_capacity,
         channel_count,
         color: nodeColor,
         updated_at,
     } = partner_node_info;
 
-    const formatBalance = getFormat(capacity);
-    const formatLocal = getFormat(local_balance);
-    const formatRemote = getFormat(remote_balance);
-    const formatReceived = getFormat(received);
-    const formatSent = getFormat(sent);
+    const formatBalance = <Price amount={capacity} />;
+    const formatLocal = <Price amount={local_balance} />;
+    const formatRemote = <Price amount={remote_balance} />;
+    const formatReceived = <Price amount={received} />;
+    const formatSent = <Price amount={sent} />;
+
+    const commitFee = <Price amount={commit_transaction_fee} />;
+    const commitWeight = <Price amount={commit_transaction_weight} />;
+    const localReserve = <Price amount={local_reserve} />;
+    const remoteReserve = <Price amount={remote_reserve} />;
+    const nodeCapacity = <Price amount={node_capacity} />;
 
     const handleClick = () => {
         if (indexOpen === index) {
@@ -144,20 +144,17 @@ export const ChannelCard = ({
                     getTransactionLink(transaction_id),
                 )}
                 {renderLine('Channel Id:', id)}
-                {renderLine('Commit Fee:', getFormat(commit_transaction_fee))}
-                {renderLine(
-                    'Commit Weight:',
-                    getFormat(commit_transaction_weight),
-                )}
+                {renderLine('Commit Fee:', commitFee)}
+                {renderLine('Commit Weight:', commitWeight)}
                 {renderLine('Is Static Remote Key:', is_static_remote_key)}
-                {renderLine('Local Reserve:', getFormat(local_reserve))}
-                {renderLine('Remote Reserve:', getFormat(remote_reserve))}
+                {renderLine('Local Reserve:', localReserve)}
+                {renderLine('Remote Reserve:', remoteReserve)}
                 {renderLine('Time Offline:', time_offline)}
                 {renderLine('Time Online:', time_online)}
                 {renderLine('Transaction Vout:', transaction_vout)}
                 {renderLine('Unsettled Balance:', unsettled_balance)}
                 <Sub4Title>Partner Node Info</Sub4Title>
-                {renderLine('Node Capacity:', getFormat(nodeCapacity))}
+                {renderLine('Node Capacity:', nodeCapacity)}
                 {renderLine('Channel Count:', channel_count)}
                 {renderLine(
                     'Last Update:',

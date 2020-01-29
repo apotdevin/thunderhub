@@ -1,6 +1,4 @@
 import React from 'react';
-import { getValue } from '../../helpers/Helpers';
-import { useSettings } from '../../context/SettingsContext';
 import {
     Separation,
     SubCard,
@@ -15,6 +13,7 @@ import {
     getFormatDate,
     renderLine,
 } from '../../components/generic/Helpers';
+import { Price } from 'components/price/Price';
 
 interface InvoiceCardProps {
     invoice: any;
@@ -29,15 +28,6 @@ export const InvoiceCard = ({
     setIndexOpen,
     indexOpen,
 }: InvoiceCardProps) => {
-    const { price, symbol, currency } = useSettings();
-    const priceProps = { price, symbol, currency };
-
-    const getFormat = (amount: string) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
-
     const {
         date,
         confirmed_at,
@@ -60,7 +50,7 @@ export const InvoiceCard = ({
         secret,
     } = invoice;
 
-    const formatAmount = getFormat(tokens);
+    const formatAmount = <Price amount={tokens} />;
 
     const handleClick = () => {
         if (indexOpen === index) {

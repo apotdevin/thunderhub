@@ -12,8 +12,6 @@ import { PAY_ADDRESS } from '../../../../graphql/mutation';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
-import { useSettings } from '../../../../context/SettingsContext';
-import { getValue } from '../../../../helpers/Helpers';
 import { useBitcoinInfo } from '../../../../context/BitcoinContext';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
@@ -22,6 +20,7 @@ import {
     MultiButton,
     SingleButton,
 } from 'components/buttons/multiButton/MultiButton';
+import { Price } from 'components/price/Price';
 
 const ResponsiveWrap = styled(SingleLine)`
     @media (max-width: 578px) {
@@ -50,7 +49,6 @@ export const SendOnChainCard = () => {
 
     const canSend = address !== '' && (sendAll || tokens > 0) && amount > 0;
 
-    const { price, symbol, currency } = useSettings();
     const { fast, halfHour, hour } = useBitcoinInfo();
 
     useEffect(() => {
@@ -70,16 +68,9 @@ export const SendOnChainCard = () => {
         }
     }, [data]);
 
-    const priceProps = { price, symbol, currency };
-    const getFormat = (amount: number) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
-
     const feeFormat = (amount: number) => {
         if (type === 'fee' || type === 'none') {
-            return getFormat(amount);
+            return <Price amount={amount} />;
         } else {
             return `${amount} blocks`;
         }
@@ -139,9 +130,9 @@ export const SendOnChainCard = () => {
                         <NoWrapTitle>Amount:</NoWrapTitle>
                         <Margin>
                             <NoWrap>
-                                <DarkSubTitle>{`(${getFormat(
-                                    tokens,
-                                )})`}</DarkSubTitle>
+                                <DarkSubTitle>
+                                    <Price amount={tokens} />
+                                </DarkSubTitle>
                             </NoWrap>
                         </Margin>
                     </ResponsiveWrap>

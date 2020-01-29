@@ -16,26 +16,19 @@ import {
     VictoryTooltip,
 } from 'victory';
 import { useSettings } from '../../../../context/SettingsContext';
-import { getValue } from '../../../../helpers/Helpers';
 import {
     chartGridColor,
     chartAxisColor,
     liquidityBarColor,
 } from '../../../../styles/Themes';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
+import { Price } from 'components/price/Price';
 
 export const LiquidReport = () => {
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
-    const { theme, price, symbol, currency } = useSettings();
-
-    const priceProps = { price, symbol, currency };
-    const getFormat = (amount: number) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
+    const { theme } = useSettings();
 
     const { data, loading } = useQuery(GET_LIQUID_REPORT, {
         variables: { auth },
@@ -73,7 +66,9 @@ export const LiquidReport = () => {
                     containerComponent={
                         <VictoryVoronoiContainer
                             voronoiDimension="x"
-                            labels={({ datum }) => getFormat(datum.y)}
+                            labels={({ datum }) =>
+                                `${(<Price amount={datum.y} />)}`
+                            }
                             labelComponent={
                                 <VictoryTooltip orientation={'left'} />
                             }
@@ -99,7 +94,7 @@ export const LiquidReport = () => {
                             grid: { stroke: chartGridColor[theme] },
                             axis: { stroke: 'transparent' },
                         }}
-                        tickFormat={a => getFormat(a)}
+                        tickFormat={a => `${(<Price amount={a} />)}`}
                     />
                     <VictoryBar
                         horizontal
