@@ -2,7 +2,6 @@ import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_NODE_INFO } from '../../../graphql/query';
 import { useSettings } from '../../../context/SettingsContext';
-import { getValue } from '../../../helpers/Helpers';
 import {
     Separation,
     SingleLine,
@@ -24,6 +23,7 @@ import { textColorMap } from '../../../styles/Themes';
 import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import ScaleLoader from 'react-spinners/ScaleLoader';
+import { Price } from 'components/price/Price';
 
 const Closed = styled.div`
     display: flex;
@@ -80,8 +80,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         onError: error => toast.error(getErrorContent(error)),
     });
 
-    const { price, symbol, currency, theme } = useSettings();
-    const priceProps = { price, symbol, currency };
+    const { theme } = useSettings();
 
     const tooltipType = getTooltipType(theme);
 
@@ -115,12 +114,10 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     const pendingChainBalance = data.getPendingChainBalance;
     const { confirmedBalance, pendingBalance } = data.getChannelBalance;
 
-    const getFormat = (amount: number) => getValue({ amount, ...priceProps });
-
-    const formatCB = getFormat(chainBalance);
-    const formatPB = getFormat(pendingChainBalance);
-    const formatCCB = getFormat(confirmedBalance);
-    const formatPCB = getFormat(pendingBalance);
+    const formatCB = <Price amount={chainBalance} />;
+    const formatPB = <Price amount={pendingChainBalance} />;
+    const formatCCB = <Price amount={confirmedBalance} />;
+    const formatPCB = <Price amount={pendingBalance} />;
 
     if (isBurger) {
         return (

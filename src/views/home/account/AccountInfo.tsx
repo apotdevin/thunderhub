@@ -12,7 +12,6 @@ import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_BALANCES } from '../../../graphql/query';
-import { useSettings } from '../../../context/SettingsContext';
 import styled from 'styled-components';
 import {
     Send,
@@ -22,7 +21,6 @@ import {
     DownArrow,
     XSvg,
 } from '../../../components/generic/Icons';
-import { getValue } from '../../../helpers/Helpers';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { PayCard } from './pay/pay';
@@ -32,6 +30,7 @@ import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { useSize } from '../../../hooks/UseSize';
+import { Price } from 'components/price/Price';
 
 const Tile = styled.div`
     display: flex;
@@ -76,9 +75,6 @@ export const AccountInfo = () => {
         onError: error => toast.error(getErrorContent(error)),
     });
 
-    const { price, symbol, currency } = useSettings();
-    const priceProps = { price, symbol, currency };
-
     if (!data || loading) {
         return (
             <>
@@ -92,15 +88,13 @@ export const AccountInfo = () => {
     const pendingChainBalance = data.getPendingChainBalance;
     const { confirmedBalance, pendingBalance } = data.getChannelBalance;
 
-    const getFormat = (amount: number) => getValue({ amount, ...priceProps });
+    const formatCB = <Price amount={chainBalance} />;
+    const formatPB = <Price amount={pendingChainBalance} />;
+    const formatCCB = <Price amount={confirmedBalance} />;
+    const formatPCB = <Price amount={pendingBalance} />;
 
-    const formatCB = getFormat(chainBalance);
-    const formatPB = getFormat(pendingChainBalance);
-    const formatCCB = getFormat(confirmedBalance);
-    const formatPCB = getFormat(pendingBalance);
-
-    const totalB = getFormat(chainBalance + confirmedBalance);
-    const totalPB = getFormat(pendingChainBalance + pendingBalance);
+    const totalB = <Price amount={chainBalance + confirmedBalance} />;
+    const totalPB = <Price amount={pendingChainBalance + pendingBalance} />;
 
     const renderContent = () => {
         switch (state) {

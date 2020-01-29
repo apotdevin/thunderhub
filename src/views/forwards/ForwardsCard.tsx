@@ -1,6 +1,4 @@
 import React from 'react';
-import { getValue } from '../../helpers/Helpers';
-import { useSettings } from '../../context/SettingsContext';
 import {
     Separation,
     SubCard,
@@ -14,6 +12,7 @@ import {
     getFormatDate,
     renderLine,
 } from '../../components/generic/Helpers';
+import { Price } from 'components/price/Price';
 
 interface ForwardCardProps {
     forward: any;
@@ -28,15 +27,6 @@ export const ForwardCard = ({
     setIndexOpen,
     indexOpen,
 }: ForwardCardProps) => {
-    const { price, symbol, currency } = useSettings();
-    const priceProps = { price, symbol, currency };
-
-    const getFormat = (amount: string) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
-
     const {
         created_at,
         fee,
@@ -48,8 +38,8 @@ export const ForwardCard = ({
         tokens,
     } = forward;
 
-    const formatAmount = getFormat(tokens);
-    const formatFee = getFormat(fee);
+    const formatAmount = <Price amount={tokens} />;
+    const formatFee = <Price amount={fee} />;
 
     const handleClick = () => {
         if (indexOpen === index) {

@@ -12,8 +12,6 @@ import { ChevronRight } from '../../../../components/generic/Icons';
 import { OPEN_CHANNEL } from '../../../../graphql/mutation';
 import { getErrorContent } from '../../../../utils/error';
 import { toast } from 'react-toastify';
-import { getValue } from '../../../../helpers/Helpers';
-import { useSettings } from '../../../../context/SettingsContext';
 import { useBitcoinInfo } from '../../../../context/BitcoinContext';
 import styled from 'styled-components';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
@@ -23,6 +21,7 @@ import {
     SingleButton,
     MultiButton,
 } from 'components/buttons/multiButton/MultiButton';
+import { Price } from 'components/price/Price';
 
 const ResponsiveWrap = styled(SingleLine)`
     @media (max-width: 578px) {
@@ -45,9 +44,6 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
 
     const { fast, halfHour, hour } = useBitcoinInfo();
 
-    const { price, symbol, currency } = useSettings();
-    const priceProps = { price, symbol, currency };
-
     const [openChannel] = useMutation(OPEN_CHANNEL, {
         onError: error => toast.error(getErrorContent(error)),
         onCompleted: () => {
@@ -64,12 +60,6 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
             setFee(fast);
         }
     }, [type, fee, fast]);
-
-    const getFormat = (amount: string | number) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
 
     const renderButton = (
         onClick: () => void,
@@ -96,7 +86,9 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
                 <ResponsiveWrap>
                     <NoWrapTitle>Channel Size:</NoWrapTitle>
                     <NoWrapTitle>
-                        <DarkSubTitle>{`(${getFormat(size)})`}</DarkSubTitle>
+                        <DarkSubTitle>
+                            <Price amount={size} />
+                        </DarkSubTitle>
                     </NoWrapTitle>
                 </ResponsiveWrap>
                 <Input
@@ -145,7 +137,9 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
             <SingleLine>
                 <ResponsiveWrap>
                     <NoWrapTitle>Fee Amount:</NoWrapTitle>
-                    <DarkSubTitle>{`(~${getFormat(fee * 223)})`}</DarkSubTitle>
+                    <DarkSubTitle>
+                        <Price amount={fee * 223} />
+                    </DarkSubTitle>
                 </ResponsiveWrap>
                 {type !== 'none' && (
                     <Input

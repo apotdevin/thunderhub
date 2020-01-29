@@ -6,8 +6,6 @@ import {
 } from '../../../../components/generic/Styled';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_FORWARD_CHANNELS_REPORT } from '../../../../graphql/query';
-import { getValue } from '../../../../helpers/Helpers';
-import { useSettings } from '../../../../context/SettingsContext';
 import { useAccount } from '../../../../context/AccountContext';
 import { getAuthString } from '../../../../utils/auth';
 import { CardContent } from '../forwardReport';
@@ -20,6 +18,7 @@ import {
 } from '../../../../components/generic/Icons';
 import styled from 'styled-components';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
+import { Price } from 'components/price/Price';
 
 const ChannelRow = styled.div`
     font-size: 14px;
@@ -69,8 +68,6 @@ interface Props {
 export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
     const [type, setType] = useState('route');
 
-    const { price, symbol, currency } = useSettings();
-
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
@@ -111,7 +108,7 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
     const getFormatString = (amount: number | string) => {
         if (typeof amount === 'string') return amount;
         if (isType !== 'amount') {
-            return getValue({ amount, price, symbol, currency });
+            return <Price amount={amount} />;
         }
         return amount;
     };

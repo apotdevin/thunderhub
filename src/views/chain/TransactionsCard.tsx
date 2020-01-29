@@ -1,6 +1,4 @@
 import React from 'react';
-import { getValue } from '../../helpers/Helpers';
-import { useSettings } from '../../context/SettingsContext';
 import {
     Separation,
     SubCard,
@@ -15,6 +13,7 @@ import {
     renderLine,
 } from '../../components/generic/Helpers';
 import styled from 'styled-components';
+import { Price } from 'components/price/Price';
 
 export const AddMargin = styled.div`
     margin-right: 10px;
@@ -33,15 +32,6 @@ export const TransactionsCard = ({
     setIndexOpen,
     indexOpen,
 }: TransactionsCardProps) => {
-    const { price, symbol, currency } = useSettings();
-    const priceProps = { price, symbol, currency };
-
-    const getFormat = (amount: string) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
-
     const {
         block_id,
         confirmation_count,
@@ -53,7 +43,7 @@ export const TransactionsCard = ({
         tokens,
     } = transaction;
 
-    const formatAmount = getFormat(tokens);
+    const formatAmount = <Price amount={tokens} />;
 
     const handleClick = () => {
         if (indexOpen === index) {

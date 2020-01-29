@@ -1,5 +1,4 @@
 import React from 'react';
-import { getValue } from '../../../helpers/Helpers';
 import { NodeTitle, MainInfo } from '../Channels.style';
 import {
     SubCard,
@@ -8,13 +7,13 @@ import {
     DarkSubTitle,
     ResponsiveLine,
 } from '../../../components/generic/Styled';
-import { useSettings } from '../../../context/SettingsContext';
 import {
     getTransactionLink,
     renderLine,
 } from '../../../components/generic/Helpers';
 import { getNodeLink } from '../../../components/generic/Helpers';
 import styled from 'styled-components';
+import { Price } from 'components/price/Price';
 
 const Padding = styled.div`
     padding-left: 8px;
@@ -40,15 +39,6 @@ export const ClosedCard = ({
     setIndexOpen,
     indexOpen,
 }: PendingCardProps) => {
-    const { price, symbol, currency } = useSettings();
-    const priceProps = { price, symbol, currency };
-
-    const getFormat = (amount: string) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
-
     const {
         capacity,
         close_confirm_height,
@@ -69,7 +59,7 @@ export const ClosedCard = ({
 
     const { alias, color: nodeColor } = partner_node_info;
 
-    const formatCapacity = getFormat(capacity);
+    const formatCapacity = <Price amount={capacity} />;
 
     const getCloseType = (): string => {
         let types: string[] = [];

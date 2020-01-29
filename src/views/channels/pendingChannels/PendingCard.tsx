@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPercent, getValue } from '../../../helpers/Helpers';
+import { getPercent } from '../../../helpers/Helpers';
 import {
     Progress,
     ProgressBar,
@@ -26,6 +26,7 @@ import {
     getFormatDate,
 } from '../../../components/generic/Helpers';
 import { getNodeLink } from '../../../components/generic/Helpers';
+import { Price } from 'components/price/Price';
 
 interface PendingCardProps {
     channelInfo: any;
@@ -40,16 +41,9 @@ export const PendingCard = ({
     setIndexOpen,
     indexOpen,
 }: PendingCardProps) => {
-    const { price, symbol, currency, theme } = useSettings();
-    const priceProps = { price, symbol, currency };
+    const { theme } = useSettings();
 
     const tooltipType = getTooltipType(theme);
-
-    const getFormat = (amount: string) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
 
     const {
         close_transaction_id,
@@ -77,11 +71,11 @@ export const PendingCard = ({
         updated_at,
     } = partner_node_info;
 
-    const formatBalance = getFormat(local_balance + remote_balance);
-    const formatLocal = getFormat(local_balance);
-    const formatRemote = getFormat(remote_balance);
-    const formatreceived = getFormat(received);
-    const formatSent = getFormat(sent);
+    const formatBalance = <Price amount={local_balance + remote_balance} />;
+    const formatLocal = <Price amount={local_balance} />;
+    const formatRemote = <Price amount={remote_balance} />;
+    const formatReceived = <Price amount={received} />;
+    const formatSent = <Price amount={sent} />;
 
     const handleClick = () => {
         if (indexOpen === index) {
@@ -184,7 +178,7 @@ export const PendingCard = ({
                 place={'bottom'}
                 type={tooltipType}
             >
-                <div>{`received: ${formatreceived}`}</div>
+                <div>{`received: ${formatReceived}`}</div>
                 <div>{`Sent: ${formatSent}`}</div>
             </ReactTooltip>
         </SubCard>

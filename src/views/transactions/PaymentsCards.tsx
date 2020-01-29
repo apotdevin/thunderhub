@@ -1,6 +1,4 @@
 import React from 'react';
-import { getValue } from '../../helpers/Helpers';
-import { useSettings } from '../../context/SettingsContext';
 import {
     Separation,
     SubCard,
@@ -16,6 +14,7 @@ import {
     renderLine,
 } from '../../components/generic/Helpers';
 import styled from 'styled-components';
+import { Price } from 'components/price/Price';
 
 interface PaymentsCardProps {
     payment: any;
@@ -34,15 +33,6 @@ export const PaymentsCard = ({
     setIndexOpen,
     indexOpen,
 }: PaymentsCardProps) => {
-    const { price, symbol, currency } = useSettings();
-    const priceProps = { price, symbol, currency };
-
-    const getFormat = (amount: string) =>
-        getValue({
-            amount,
-            ...priceProps,
-        });
-
     const {
         alias,
         date,
@@ -59,7 +49,8 @@ export const PaymentsCard = ({
         secret,
     } = payment;
 
-    const formatAmount = getFormat(tokens);
+    const formatAmount = <Price amount={tokens} />;
+    const formatFee = <Price amount={fee} />;
 
     const handleClick = () => {
         if (indexOpen === index) {
@@ -80,7 +71,7 @@ export const PaymentsCard = ({
                     )})`,
                 )}
                 {renderLine('Destination Node:', getNodeLink(destination))}
-                {renderLine('Fee:', getFormat(fee))}
+                {renderLine('Fee:', formatFee)}
                 {renderLine('Fee msats:', `${fee_mtokens} millisats`)}
                 {renderLine('Hops:', hops.length)}
                 {hops.map((hop: any, index: number) =>

@@ -6,7 +6,7 @@ interface PriceProps {
     symbol: string;
 }
 interface CurrencyChangeProps {
-    currency?: string;
+    currency: string;
 }
 
 interface ChangeProps {
@@ -47,14 +47,14 @@ const SettingsProvider = ({ children }: any) => {
         let price = 0;
         let symbol = '';
 
-        if (
-            prices &&
-            savedCurrency !== 'sat' &&
-            savedCurrency !== 'btc' &&
-            prices[savedCurrency]
-        ) {
-            price = prices[savedCurrency].last;
-            symbol = prices[savedCurrency].symbol;
+        const lookupCurrency =
+            savedCurrency === 'sat' || savedCurrency === 'btc'
+                ? 'EUR'
+                : savedCurrency;
+
+        if (prices && prices[lookupCurrency]) {
+            price = prices[lookupCurrency].last;
+            symbol = prices[lookupCurrency].symbol;
         }
 
         updateSettings((prevState: any) => {
@@ -69,27 +69,28 @@ const SettingsProvider = ({ children }: any) => {
     };
 
     const updateCurrency = ({ currency }: CurrencyChangeProps) => {
-        const prices: { [key: string]: PriceProps } = settings.prices;
+        const prices: { [key: string]: PriceProps } = settings?.prices;
         let price = 0;
         let symbol = '';
+        let isFiat = false;
 
         if (
-            currency &&
-            settings &&
-            settings.prices &&
-            savedCurrency !== 'sat' &&
-            savedCurrency !== 'btc' &&
+            prices &&
+            currency !== 'sat' &&
+            currency !== 'btc' &&
             prices[currency]
         ) {
             price = prices[currency].last;
             symbol = prices[currency].symbol;
+            isFiat = true;
         }
+
+        console.log(price, symbol, isFiat);
 
         updateSettings((prevState: any) => {
             const newState = { ...prevState };
             return merge(newState, {
-                price,
-                symbol,
+                ...(isFiat && { price, symbol }),
                 currency,
             });
         });
