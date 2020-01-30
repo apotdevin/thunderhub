@@ -14,7 +14,7 @@ import {
 } from 'components/buttons/multiButton/MultiButton';
 
 export const InterfaceSettings = () => {
-    const { setSettings, updateCurrency } = useSettings();
+    const { setSettings } = useSettings();
     const cTheme = localStorage.getItem('theme') || 'light';
     const cCurrency = localStorage.getItem('currency') || 'sat';
 
@@ -29,7 +29,7 @@ export const InterfaceSettings = () => {
             onClick={() => {
                 localStorage.setItem(type, value);
                 type === 'theme' && setSettings({ theme: value });
-                type === 'currency' && updateCurrency({ currency: value });
+                type === 'currency' && setSettings({ currency: value });
             }}
         >
             {title}

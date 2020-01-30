@@ -9,9 +9,17 @@ export const Price = ({
     amount: number;
     breakNumber?: boolean;
 }) => {
-    const { price, symbol, currency } = useSettings();
+    const { currency, prices } = useSettings();
 
-    const priceProps = { price, symbol, currency };
+    const current: { last: number; symbol: string } = prices[currency] ?? {
+        last: 0,
+        symbol: '',
+    };
+    const priceProps = {
+        price: current.last,
+        symbol: current.symbol,
+        currency,
+    };
 
     const getFormat = (amount: number) =>
         getValue({ amount, ...priceProps, breakNumber });
