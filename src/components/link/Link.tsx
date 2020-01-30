@@ -11,21 +11,17 @@ interface StyledProps {
 
 const styledCss = css`
     color: ${({ fontColor }: StyledProps) => fontColor ?? textColor};
-    cursor: pointer;
-    padding: 0 2px;
-    background: linear-gradient(
-        to bottom,
-        ${({ underline }: StyledProps) => underline ?? linkHighlight} 0%,
-        ${({ underline }: StyledProps) => underline ?? linkHighlight} 100%
-    );
-    background-position: 0 100%;
-    background-size: 2px 2px;
-    background-repeat: repeat-x;
     text-decoration: none;
-    transition: background-size 0.5s;
 
     :hover {
-        background-size: 4px 50px;
+        background: linear-gradient(
+            to bottom,
+            ${({ underline }: StyledProps) => underline ?? linkHighlight} 0%,
+            ${({ underline }: StyledProps) => underline ?? linkHighlight} 100%
+        );
+        background-position: 0 100%;
+        background-size: 2px 2px;
+        background-repeat: repeat-x;
     }
 `;
 
