@@ -62,7 +62,7 @@ const detailCardContent = (title: string, text: string, Icon: any) => (
 
 export const DetailSection = () => {
     return (
-        <Section withColor={false}>
+        <Section padding={'0 0 48px'} withColor={false}>
             <DetailLine>
                 {detailCardContent(
                     'Make Payments',
