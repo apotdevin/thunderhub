@@ -31,7 +31,8 @@ export const ContactSection = () => (
                     </IconTitle>
                 </Question>
                 <SmallText>
-                    Write to me on Telegram @apotdevin. I usually answer quick.
+                    Write to me on Telegram @apotdevin. Usually a quick
+                    response.
                 </SmallText>
             </DetailCard>
             <DetailCard>

@@ -6,7 +6,7 @@ import { themeColors } from 'styles/Themes';
 
 export const Compatible = () => {
     return (
-        <Section color={themeColors.grey2} padding={'80px 0 40px'}>
+        <Section color={themeColors.grey2} padding={'40px 0'}>
             <Center>
                 <h2>Compatible with the latest LND node versions.</h2>
             </Center>
