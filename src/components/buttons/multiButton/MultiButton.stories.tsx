@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { action } from '@storybook/addon-actions';
 import { boolean, color } from '@storybook/addon-knobs';
 import { MultiButton, SingleButton } from './MultiButton';
 import { action } from '@storybook/addon-actions';

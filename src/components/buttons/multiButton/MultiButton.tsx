@@ -1,10 +1,10 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import {
-    colorButtonBorder,
     multiSelectColor,
+    colorButtonBorder,
     multiButtonColor,
-} from 'styles/Themes';
+} from '../../../styles/Themes';
 
 interface StyledSingleProps {
     selected?: boolean;
@@ -71,12 +71,8 @@ const MultiBackground = styled.div`
     padding: 4px;
     background: ${multiButtonColor};
     flex-wrap: wrap;
-    ${({ margin }: MultiBackProps) =>
-        margin &&
-        css`
-            margin: ${margin};
-        `}
-    }
+
+    ${({ margin }: MultiBackProps) => margin && `margin: ${margin}`}
 `;
 
 interface MultiButtonProps {
