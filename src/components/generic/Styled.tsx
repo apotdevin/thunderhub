@@ -1,4 +1,3 @@
-import React, { ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import {
     cardColor,
@@ -11,7 +10,6 @@ import {
     chartLinkColor,
     inverseTextColor,
 } from '../../styles/Themes';
-import { ThemeSet } from 'styled-theming';
 
 export const CardWithTitle = styled.div`
     display: flex;
@@ -165,48 +163,6 @@ export const ColorButton = styled(SimpleButton)`
         color: ${textColor};
     }
 `;
-
-interface FullWidthProps {
-    withColor?: boolean;
-    color?: string | ThemeSet;
-    textColor?: string | ThemeSet;
-}
-
-const FullWidth = styled.div`
-    width: 100%;
-    ${({ textColor }: FullWidthProps) =>
-        textColor &&
-        css`
-            color: ${textColor};
-        `}
-    background-color: ${({ withColor, color }: FullWidthProps) =>
-        withColor && (color ? color : cardColor)};
-`;
-
-const FixedWidth = styled.div`
-    max-width: 1000px;
-    margin: 0 auto 0 auto;
-
-    @media (max-width: 1035px) {
-        padding: 0 16px;
-    }
-`;
-
-export const Wrapper = ({
-    withColor,
-    children,
-    color,
-    textColor,
-}: {
-    withColor?: boolean;
-    color?: any;
-    textColor?: any;
-    children: ReactNode;
-}) => (
-    <FullWidth withColor={withColor} color={color} textColor={textColor}>
-        <FixedWidth>{children}</FixedWidth>
-    </FullWidth>
-);
 
 export const OverflowText = styled.div`
     margin-left: 16px;

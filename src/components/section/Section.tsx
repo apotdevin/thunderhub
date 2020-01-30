@@ -24,6 +24,10 @@ const FullWidth = styled.div`
         `}
     background-color: ${({ withColor, color }: FullWidthProps) =>
         withColor && (color ? color : backgroundColor)};
+
+    @media (max-width: 578px) {
+        padding: 16px 0;
+    }
 `;
 
 const FixedWidth = styled.div`

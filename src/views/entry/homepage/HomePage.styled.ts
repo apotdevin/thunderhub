@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import { ReactComponent as HeadlineImage } from '../../../assets/images/MoshingDoodle.svg';
+import { fontColors } from 'styles/Themes';
 
 export const Headline = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 32px 0 120px;
+    padding: 48px 0 140px;
 
     @media (max-width: 578px) {
         flex-direction: column-reverse;
@@ -45,6 +46,20 @@ export const HomeButton = styled.button`
     justify-content: center;
     border-radius: 8px;
     white-space: nowrap;
-    min-width: 100px;
     width: 100%;
+`;
+
+export const Title = styled.h1`
+    width: 100%;
+    text-align: center;
+    color: ${({ textColor }: { textColor?: string }) =>
+        textColor ? textColor : fontColors.white};
+    font-size: 32px;
+    margin-bottom: 0;
+`;
+
+export const Text = styled.p`
+    color: ${fontColors.white};
+    text-align: justify;
+    max-width: 400px;
 `;

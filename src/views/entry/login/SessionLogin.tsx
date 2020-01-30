@@ -6,13 +6,13 @@ import {
     CardWithTitle,
     Card,
     SubTitle,
-    Wrapper,
 } from '../../../components/generic/Styled';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
 import { saveSessionAuth } from '../../../utils/auth';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Input } from 'components/input/Input';
+import { Section } from 'components/section/Section';
 
 export const SessionLogin = () => {
     const { name, admin, refreshAccount } = useAccount();
@@ -31,7 +31,7 @@ export const SessionLogin = () => {
     };
 
     return (
-        <Wrapper>
+        <Section>
             <CardWithTitle>
                 <SubTitle>{`Please Login (${name}):`}</SubTitle>
                 <Card>
@@ -55,6 +55,6 @@ export const SessionLogin = () => {
                     )}
                 </Card>
             </CardWithTitle>
-        </Wrapper>
+        </Section>
     );
 };

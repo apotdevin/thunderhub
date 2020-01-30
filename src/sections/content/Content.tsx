@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Navigation } from '../../sections/navigation/Navigation';
-import { Wrapper } from '../../components/generic/Styled';
 import { Switch, Route } from 'react-router';
 
 import { Home } from '../../views/home/Home';
@@ -16,6 +15,7 @@ import { ForwardsList } from '../../views/forwards/ForwardList';
 import { TermsView } from '../../views/other/terms/TermsView';
 import { PrivacyView } from '../../views/other/privacy/PrivacyView';
 import { FaqView } from '../../views/other/faq/FaqView';
+import { Section } from 'components/section/Section';
 
 const Container = styled.div`
     display: grid;
@@ -59,14 +59,14 @@ const Content = () => {
 };
 
 const getGrid = (Content: any) => (
-    <Wrapper>
+    <Section padding={'16px 0 32px'}>
         <Container>
             <Navigation />
             <ContentStyle>
                 <Content />
             </ContentStyle>
         </Container>
-    </Wrapper>
+    </Section>
 );
 
 export default Content;
