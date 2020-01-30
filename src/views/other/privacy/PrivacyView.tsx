@@ -1,7 +1,7 @@
 import React from 'react';
 import { Section } from 'components/section/Section';
 import { themeColors } from 'styles/Themes';
-import { Title, Question, Text } from '../OtherViews.styled';
+import { Title, Question, Text, BulletPoint } from '../OtherViews.styled';
 import { ContactSection } from '../ContactSection';
 
 export const PrivacyView = () => {
@@ -11,7 +11,7 @@ export const PrivacyView = () => {
                 <Title>Privacy Policy</Title>
             </Section>
             <Section color={themeColors.grey} padding={'60px 0 16px'}>
-                <Text>Last Updated: January 28, 2020</Text>
+                <Text>Last Updated: January 30, 2020</Text>
             </Section>
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
                 <Text>
@@ -37,15 +37,77 @@ export const PrivacyView = () => {
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
                 <Question>Collection, Storage, and Use of Information</Question>
                 <Text>
-                    ThunderHub's site and application are designed to collect as
-                    little information as possible. The following outlines what
-                    is (and is not) collected, and how it's handled. What we do
-                    collect from users is stored either locally on the user's
-                    device, or using browser storage APIs that keep inaccessible
-                    to us without user action. Sensitive information such as
+                    ThunderHub's site is designed to collect as little
+                    information as possible. The following outlines what is (and
+                    is not) collected, and how it's handled. What we do collect
+                    from users is stored either locally on the user's device, or
+                    using browser storage APIs that keep inaccessible to us
+                    without user action. Sensitive information such as
                     authentication credentials are AES-256 encrypted and stored
                     using a password known only to the user.
                 </Text>
+                <Text>
+                    <b>Node Credentials</b> - In order to communicate with your
+                    Lightning node, we ask for sensitive information to do so.
+                    This information is stored using your browser's own storage
+                    APIs, and is encrypted using a password only known to the
+                    user. This information is never recorded outside of the
+                    user's browser storage.
+                </Text>
+                <Text>
+                    <b>Error Reporting / Usage Statistics</b> - No information
+                    is recorded. If information must be recorded further on, it
+                    will be with explicit user consent from the user and efforts
+                    will be taken to keep the information anonymous and private.
+                </Text>
+                <Text>
+                    <b>Personal information</b> - Information such as your name,
+                    IP address, email address, or browsing activity are never
+                    collected without explicit consent. While there is no plan
+                    to ever ask for permission to passively collect it, some
+                    interactions such as support requests or bug reports may
+                    optionally ask for it.
+                </Text>
+            </Section>
+            <Section color={themeColors.grey} padding={'19px 0 16px'}>
+                <Question>Third Parties</Question>
+                <Text>
+                    The following is a list of third parties who may obtain user
+                    information through use of the Site and App, as well as
+                    links to their respective privacy policies. While we aim to
+                    only leverage third parties that we find to be
+                    privacy-friendly, and try to keep them as opt-in as
+                    possible, we are not liable for any privacy violations as a
+                    result of the user's interaction with third party services.
+                    Any services found to be exploiting our user's information
+                    will be removed as quickly as possible.
+                </Text>
+                <Text>
+                    <b>Hosting</b> - The following services are used for the
+                    hosting and distrubtion of our site and application. Your
+                    information is subject to their policies when interacting
+                    with them.
+                </Text>
+                <BulletPoint>
+                    <b>Github</b> - Github's ..............
+                </BulletPoint>
+                <BulletPoint>
+                    <b>AWS</b> - AWS's ..............
+                </BulletPoint>
+                <Text>
+                    <b>APIs</b> - For information that your node can't get
+                    alone, we link to or use APIs in our application that
+                    leverage the following services. Your information is subject
+                    to their policies when interacting with them.
+                </Text>
+                <BulletPoint>
+                    <b>Earn.com's Bitcoin Fee API</b> - Earn.com's
+                    ..............
+                </BulletPoint>
+                <BulletPoint>
+                    <b>Blockchain Explorer and Price API</b> - Blockchain's
+                    ..............
+                </BulletPoint>
             </Section>
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
                 <Question>Law Enforcement Purposes</Question>

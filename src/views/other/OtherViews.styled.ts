@@ -43,6 +43,10 @@ export const SmallText = styled(Text)`
     text-align: start;
 `;
 
+export const BulletPoint = styled(Text)`
+    margin-left: 32px;
+`;
+
 export const DetailCard = styled(Card)<CardProps>`
     background-color: ${themeColors.white};
     margin-bottom: 0;
