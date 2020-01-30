@@ -86,7 +86,7 @@ export const SideSettings = ({
     isBurger,
     setIsOpen,
 }: SideSettingsProps) => {
-    const { theme, currency, updateCurrency, setSettings } = useSettings();
+    const { theme, currency, setSettings } = useSettings();
 
     const renderIcon = (
         type: string,
@@ -103,7 +103,7 @@ export const SideSettings = ({
             onClick={() => {
                 localStorage.setItem(type, value);
                 type === 'currency' &&
-                    updateCurrency({
+                    setSettings({
                         currency:
                             isOpen || isBurger
                                 ? value
