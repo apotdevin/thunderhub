@@ -4,7 +4,7 @@ import { useSettings } from '../../../../context/SettingsContext';
 import { VictoryPie } from 'victory';
 import { chartAxisColor } from '../../../../styles/Themes';
 import { Row, Col, PieRow } from '../flow';
-import { Price } from 'components/price/Price';
+import { getPrice } from 'components/price/Price';
 
 interface Props {
     flowPie: { x: string; y: number }[];
@@ -12,26 +12,23 @@ interface Props {
 }
 
 export const FlowPie = ({ flowPie, isType }: Props) => {
-    const { theme } = useSettings();
+    const { theme, ...context } = useSettings();
+    const format = getPrice(context);
 
     return (
         <Row>
             <Col>
                 <PieRow>
                     <DarkSubTitle>{flowPie[0].x}</DarkSubTitle>
-                    {isType === 'tokens' ? (
-                        <Price amount={flowPie[0].y} />
-                    ) : (
-                        flowPie[0].y
-                    )}
+                    {isType === 'tokens'
+                        ? format({ amount: flowPie[0].y })
+                        : flowPie[0].y}
                 </PieRow>
                 <PieRow>
                     <DarkSubTitle>{flowPie[1].x}</DarkSubTitle>
-                    {isType === 'tokens' ? (
-                        <Price amount={flowPie[1].y} />
-                    ) : (
-                        flowPie[1].y
-                    )}
+                    {isType === 'tokens'
+                        ? format({ amount: flowPie[1].y })
+                        : flowPie[1].y}
                 </PieRow>
             </Col>
             <VictoryPie

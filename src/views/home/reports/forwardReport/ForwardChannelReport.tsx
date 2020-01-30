@@ -18,7 +18,8 @@ import {
 } from '../../../../components/generic/Icons';
 import styled from 'styled-components';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { Price } from 'components/price/Price';
+import { getPrice } from 'components/price/Price';
+import { useSettings } from 'context/SettingsContext';
 
 const ChannelRow = styled.div`
     font-size: 14px;
@@ -67,6 +68,8 @@ interface Props {
 
 export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
     const [type, setType] = useState('route');
+    const context = useSettings();
+    const format = getPrice(context);
 
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
@@ -108,7 +111,7 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
     const getFormatString = (amount: number | string) => {
         if (typeof amount === 'string') return amount;
         if (isType !== 'amount') {
-            return <Price amount={amount} />;
+            return format({ amount: amount });
         }
         return amount;
     };

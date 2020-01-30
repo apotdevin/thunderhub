@@ -23,7 +23,7 @@ import { textColorMap } from '../../../styles/Themes';
 import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import { Price } from 'components/price/Price';
+import { getPrice } from 'components/price/Price';
 
 const Closed = styled.div`
     display: flex;
@@ -80,7 +80,8 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         onError: error => toast.error(getErrorContent(error)),
     });
 
-    const { theme } = useSettings();
+    const { theme, ...context } = useSettings();
+    const format = getPrice(context);
 
     const tooltipType = getTooltipType(theme);
 
@@ -114,10 +115,10 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     const pendingChainBalance = data.getPendingChainBalance;
     const { confirmedBalance, pendingBalance } = data.getChannelBalance;
 
-    const formatCB = <Price amount={chainBalance} />;
-    const formatPB = <Price amount={pendingChainBalance} />;
-    const formatCCB = <Price amount={confirmedBalance} />;
-    const formatPCB = <Price amount={pendingBalance} />;
+    const formatCB = format({ amount: chainBalance });
+    const formatPB = format({ amount: pendingChainBalance });
+    const formatCCB = format({ amount: confirmedBalance });
+    const formatPCB = format({ amount: pendingBalance });
 
     if (isBurger) {
         return (
@@ -148,7 +149,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
                             pendingChainBalance === 0 ? '#FFD300' : '#652EC7'
                         }
                     />
-                    {pendingChainBalance > 0
+                    {pendingChainBalance >= 0
                         ? `${formatCB} / ${formatPB}`
                         : formatCB}
                 </SingleLine>

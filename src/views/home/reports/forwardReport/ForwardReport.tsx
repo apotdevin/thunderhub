@@ -21,7 +21,7 @@ import { CardContent } from '../forwardReport';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { Price } from 'components/price/Price';
+import { getPrice } from 'components/price/Price';
 
 interface Props {
     isTime: string;
@@ -35,7 +35,8 @@ const timeMap: { [key: string]: string } = {
 };
 
 export const ForwardReport = ({ isTime, isType }: Props) => {
-    const { theme } = useSettings();
+    const { theme, ...context } = useSettings();
+    const format = getPrice(context);
 
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
@@ -65,7 +66,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
         if (isType === 'amount') {
             return numeral(value).format('0,0');
         }
-        return <Price amount={value} />;
+        return format({ amount: value });
     };
 
     const total = getLabelString(
@@ -118,11 +119,9 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
                                 axis: { stroke: 'transparent' },
                             }}
                             tickFormat={a =>
-                                isType === 'tokens' ? (
-                                    <Price amount={a} breakNumber={true} />
-                                ) : (
-                                    a
-                                )
+                                isType === 'tokens'
+                                    ? format({ amount: a, breakNumber: true })
+                                    : a
                             }
                         />
                         <VictoryBar
