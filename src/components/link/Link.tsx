@@ -1,19 +1,26 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { textColor, linkHighlight } from '../../styles/Themes';
+import { ThemeSet } from 'styled-theming';
+import { Link as RouterLink } from 'react-router-dom';
 
-const StyledLink = styled.a`
-    color: ${textColor};
+interface StyledProps {
+    fontColor?: string | ThemeSet;
+    underline?: string | ThemeSet;
+}
+
+const styledCss = css`
+    color: ${({ fontColor }: StyledProps) => fontColor ?? textColor};
     cursor: pointer;
-    padding: 2px 2px 1px;
+    padding: 0 2px;
     background: linear-gradient(
         to bottom,
-        ${linkHighlight} 0%,
-        ${linkHighlight} 100%
+        ${({ underline }: StyledProps) => underline ?? linkHighlight} 0%,
+        ${({ underline }: StyledProps) => underline ?? linkHighlight} 100%
     );
     background-position: 0 100%;
-    background-repeat: repeat-x;
     background-size: 2px 2px;
+    background-repeat: repeat-x;
     text-decoration: none;
     transition: background-size 0.5s;
 
@@ -22,11 +29,38 @@ const StyledLink = styled.a`
     }
 `;
 
+const StyledLink = styled(RouterLink)`
+    ${styledCss}
+`;
+
+const StyledALink = styled.a`
+    ${styledCss}
+`;
+
 interface LinkProps {
     children: any;
-    to: string;
+    to?: string;
+    href?: string;
+    color?: string | ThemeSet;
+    underline?: string | ThemeSet;
 }
 
-export const Link = ({ children, to }: LinkProps) => {
-    return <StyledLink href={to}>{children}</StyledLink>;
+export const Link = ({ children, to, href, color, underline }: LinkProps) => {
+    const props = { fontColor: color, underline };
+
+    if (!to && !href) return null;
+
+    if (to) {
+        return (
+            <StyledLink to={to} {...props}>
+                {children}
+            </StyledLink>
+        );
+    } else {
+        return (
+            <StyledALink href={href} {...props}>
+                {children}
+            </StyledALink>
+        );
+    }
 };

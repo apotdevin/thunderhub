@@ -16,6 +16,7 @@ import { Footer } from './sections/footer/Footer';
 import { BitcoinInfoProvider } from './context/BitcoinContext';
 import { BitcoinFees } from './components/bitcoinInfo/BitcoinFees';
 import { LoadingCard } from './components/loading/LoadingCard';
+import { ScrollToTop } from 'components/scrollToTop/ScrollToTop';
 
 const EntryView = React.lazy(() => import('./views/entry/Entry'));
 const ContentView = React.lazy(() => import('./sections/content/Content'));
@@ -52,6 +53,7 @@ const ContextApp: React.FC = () => {
     return (
         <ThemeProvider theme={{ mode: theme }}>
             <ModalProvider backgroundComponent={FadingBackground}>
+                <ScrollToTop />
                 <BitcoinPrice />
                 <BitcoinFees />
                 <GlobalStyles />

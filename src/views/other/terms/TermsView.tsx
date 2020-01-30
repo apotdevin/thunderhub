@@ -1,8 +1,9 @@
 import React from 'react';
 import { Section } from 'components/section/Section';
-import { themeColors } from 'styles/Themes';
+import { themeColors, fontColors } from 'styles/Themes';
 import { Title, Question, Text } from '../OtherViews.styled';
 import { ContactSection } from '../ContactSection';
+import { Link } from 'components/link/Link';
 
 export const TermsView = () => {
     return (
@@ -16,10 +17,16 @@ export const TermsView = () => {
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
                 <Question>1. Terms</Question>
                 <Text>
-                    ThunderHub ("us", "we", or "our") provides the website
-                    https://thunderhub.io (the "Site"). Your use of or access to
-                    the site is subject to the following Terms of Service (the
-                    "Agreement").
+                    ThunderHub ("us", "we", or "our") provides the website{' '}
+                    <Link
+                        href={'https://thunderhub.io'}
+                        color={fontColors.black}
+                        underline={fontColors.blue2}
+                    >
+                        https://thunderhub.io
+                    </Link>{' '}
+                    (the "Site"). Your use of or access to the site is subject
+                    to the following Terms of Service (the "Agreement").
                 </Text>
             </Section>
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
@@ -75,8 +82,15 @@ export const TermsView = () => {
                     collect, use, store, and disclose your personal information,
                     and is hereby incorporated by this reference into these
                     Terms. You agree to the collection, use, storage, and
-                    disclosure of your data in accordance with our Privacy
-                    Policy.
+                    disclosure of your data in accordance with our{' '}
+                    <Link
+                        to={'/privacy'}
+                        color={fontColors.black}
+                        underline={fontColors.blue2}
+                    >
+                        Privacy Policy
+                    </Link>
+                    .
                 </Text>
             </Section>
             <ContactSection />
