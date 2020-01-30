@@ -14,7 +14,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { GET_BALANCES } from '../../../graphql/query';
 import styled from 'styled-components';
 import {
-    Send,
+    UpArrow,
     Zap,
     Anchor,
     Pocket,
@@ -158,7 +158,7 @@ export const AccountInfo = () => {
                                 color={sectionColor}
                                 onClick={() => setState('send_ln')}
                             >
-                                <Send />
+                                <UpArrow />
                             </ColorButton>
                             <ColorButton
                                 color={sectionColor}
@@ -210,7 +210,7 @@ export const AccountInfo = () => {
                                 color={sectionColor}
                                 onClick={() => setState('send_chain')}
                             >
-                                <Send />
+                                <UpArrow />
                             </ColorButton>
                             <ColorButton
                                 color={sectionColor}

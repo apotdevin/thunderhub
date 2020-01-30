@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Wrapper } from '../../components/generic/Styled';
 import { Link } from 'react-router-dom';
 import { headerColor, headerTextColor } from 'styles/Themes';
+import { Section } from 'components/section/Section';
 
 const FooterStyle = styled.div`
     padding: 40px 0;
@@ -12,13 +12,13 @@ const FooterStyle = styled.div`
 
 export const Footer = () => {
     return (
-        <Wrapper withColor={true} color={headerColor}>
+        <Section withColor={true} color={headerColor}>
             <FooterStyle>
                 ThunderHub
                 <Link to={'/faq'}>FAQ</Link>
                 <Link to={'/terms'}>Terms of Use</Link>
                 <Link to={'/privacy'}>Privacy Policy</Link>
             </FooterStyle>
-        </Wrapper>
+        </Section>
     );
 };

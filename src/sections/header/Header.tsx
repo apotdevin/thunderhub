@@ -4,15 +4,12 @@ import { headerColor, headerTextColor } from '../../styles/Themes';
 import { HomeButton } from '../../views/entry/homepage/HomePage.styled';
 import { Link } from 'react-router-dom';
 import { useAccount } from '../../context/AccountContext';
-import {
-    SingleLine,
-    Sub4Title,
-    Wrapper,
-} from '../../components/generic/Styled';
-import { Cpu, MenuIcon, XSvg } from '../../components/generic/Icons';
+import { SingleLine, Sub4Title } from '../../components/generic/Styled';
+import { Cpu, MenuIcon, XSvg, Zap } from '../../components/generic/Icons';
 import { BurgerMenu } from 'components/burgerMenu/BurgerMenu';
 import { useSize } from 'hooks/UseSize';
 import { useTransition, animated } from 'react-spring';
+import { Section } from 'components/section/Section';
 
 const HeaderStyle = styled.div`
     padding: 16px 0;
@@ -65,13 +62,15 @@ export const Header = () => {
 
     const renderLoggedOut = () => (
         <Link to="/login" style={{ textDecoration: 'none' }}>
-            <HomeButton>Login</HomeButton>
+            <HomeButton>
+                <Zap fillcolor={'white'} color={'white'} />
+            </HomeButton>
         </Link>
     );
 
     return (
         <>
-            <Wrapper
+            <Section
                 withColor={true}
                 color={headerColor}
                 textColor={headerTextColor}
@@ -89,7 +88,7 @@ export const Header = () => {
                         </SingleLine>
                     </SingleLine>
                 </HeaderStyle>
-            </Wrapper>
+            </Section>
             {open && width <= 578 && (
                 <BurgerMenu open={open} setOpen={setOpen} />
             )}

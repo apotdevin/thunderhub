@@ -164,7 +164,7 @@ export const navTextColor = theme('mode', {
 });
 
 // ---------------------------------------
-// ICON COLORS
+// INPUT COLORS
 // ---------------------------------------
 export const inputBackgroundColor = theme('mode', {
     light: themeColors.grey,
@@ -172,7 +172,7 @@ export const inputBackgroundColor = theme('mode', {
 });
 
 export const inputBorderColor = theme('mode', {
-    light: themeColors.grey8,
+    light: themeColors.grey3,
     dark: themeColors.grey7,
 });
 

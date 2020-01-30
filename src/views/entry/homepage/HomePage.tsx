@@ -1,65 +1,42 @@
 import React from 'react';
-import { Wrapper } from '../../../components/generic/Styled';
 import {
     Headline,
     LeftHeadline,
     StyledImage,
     HomeButton,
+    Title,
+    Text,
 } from './HomePage.styled';
-import styled from 'styled-components';
 import { Zap } from '../../../components/generic/Icons';
 import { headerColor, inverseTextColor } from '../../../styles/Themes';
 import { Link } from 'react-router-dom';
-import { DetailSection } from './DetailSection';
-
-const Padding = styled.div`
-    padding: 4px 4px 0 0;
-`;
-
-const SlantedWrapper = styled.div`
-    width: 100%;
-    height: 200px;
-    margin-bottom: -260px;
-    overflow: hidden;
-    z-index: -5;
-`;
-
-const SlantedEdge = styled.div`
-    content: '';
-    width: 100%;
-    height: 100%;
-    background: ${headerColor};
-    -webkit-transform-origin: 100% 0;
-    -ms-transform-origin: 100% 0;
-    transform-origin: 100% 0;
-    -webkit-transform: skew(84deg);
-    -ms-transform: skew(84deg);
-    transform: skew(88deg);
-    z-index: -5;
-`;
-
-const FullWidth = styled.div`
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-top: 18px;
-`;
+import { DetailSection } from './Sections/DetailSection';
+import { ContactSection } from 'views/other/ContactSection';
+import { Compatible } from './Sections/Compatible';
+import { Section } from 'components/section/Section';
+import { InfoSection } from './Sections/InfoSection';
+import { CallToAction } from './Sections/CallToAction';
+import {
+    FullWidth,
+    SlantedWrapper,
+    SlantedEdge,
+    Padding,
+} from './Sections/Sections.styled';
 
 export const HomePageView = () => {
     return (
         <>
-            <Wrapper
-                withColor={true}
-                color={headerColor}
-                textColor={inverseTextColor}
-            >
+            <Section color={headerColor} textColor={inverseTextColor}>
                 <Headline>
                     <LeftHeadline>
-                        <h1>Control The Power of Lighting</h1>
-                        <p>
-                            Take full control of your lightning node. Think of
-                            something else to place here. Think Think Think
-                        </p>
+                        <Title>Control The Power of Lighting</Title>
+                        <FullWidth>
+                            <Text>
+                                Take full control of your lightning node for
+                                quick monitoring and management inside your
+                                browser.
+                            </Text>
+                        </FullWidth>
                         <FullWidth>
                             <Link
                                 to="/login"
@@ -79,14 +56,15 @@ export const HomePageView = () => {
                     </LeftHeadline>
                     <StyledImage />
                 </Headline>
-            </Wrapper>
+            </Section>
             <SlantedWrapper>
                 <SlantedEdge />
             </SlantedWrapper>
             <DetailSection />
-            <Wrapper>
-                <div>Another Line</div>
-            </Wrapper>
+            <Compatible />
+            <InfoSection />
+            <CallToAction />
+            <ContactSection />
         </>
     );
 };

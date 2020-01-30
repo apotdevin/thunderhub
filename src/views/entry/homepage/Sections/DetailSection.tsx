@@ -1,12 +1,11 @@
 import React from 'react';
 import {
-    Wrapper,
     Card,
     SubTitle,
     ColumnLine,
     Sub4Title,
     SingleLine,
-} from '../../../components/generic/Styled';
+} from '../../../../components/generic/Styled';
 import styled from 'styled-components';
 import {
     Eye,
@@ -15,8 +14,9 @@ import {
     Server,
     Sliders,
     Users,
-} from '../../../components/generic/Icons';
-import { cardColor } from '../../../styles/Themes';
+} from '../../../../components/generic/Icons';
+import { cardColor } from '../../../../styles/Themes';
+import { Section } from 'components/section/Section';
 
 const Padding = styled.div`
     padding: ${({ padding }: { padding?: string }) =>
@@ -62,7 +62,7 @@ const detailCardContent = (title: string, text: string, Icon: any) => (
 
 export const DetailSection = () => {
     return (
-        <Wrapper>
+        <Section withColor={false}>
             <DetailLine>
                 {detailCardContent(
                     'Make Payments',
@@ -95,6 +95,6 @@ export const DetailSection = () => {
                     Sliders,
                 )}
             </DetailLine>
-        </Wrapper>
+        </Section>
     );
 };
