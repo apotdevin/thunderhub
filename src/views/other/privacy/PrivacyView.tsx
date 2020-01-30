@@ -1,10 +1,25 @@
 import React from 'react';
 import { Section } from 'components/section/Section';
-import { themeColors } from 'styles/Themes';
+import { themeColors, fontColors } from 'styles/Themes';
 import { Title, Question, Text, BulletPoint } from '../OtherViews.styled';
 import { ContactSection } from '../ContactSection';
+import { Link } from 'components/link/Link';
 
 export const PrivacyView = () => {
+    const props = { color: fontColors.black, underline: fontColors.blue2 };
+
+    const renderLinks = (terms: string, privacy: string) => (
+        <>
+            <Link href={terms} {...props}>
+                Privacy Policy
+            </Link>{' '}
+            and{' '}
+            <Link href={privacy} {...props}>
+                Terms of Service
+            </Link>
+        </>
+    );
+
     return (
         <>
             <Section color={themeColors.blue3} padding={'40px 0 64px'}>
@@ -24,9 +39,12 @@ export const PrivacyView = () => {
                 <Text>
                     This Privacy Policy describes our policies and procedures
                     regarding our collection and use of your information in
-                    connection with your access and use of
-                    https://thunderhub.io/ (the "Site"). By using this service,
-                    you acknowledge and agree to this Privacy Policy.
+                    connection with your access and use of{' '}
+                    <Link href={'https://thunderhub.io'} {...props}>
+                        https://thunderhub.io
+                    </Link>{' '}
+                    (the "Site"). By using this service, you acknowledge and
+                    agree to this Privacy Policy.
                 </Text>
                 <Text>
                     The terms "us," "we," or "our" refer to ThunderHub. The
@@ -89,10 +107,18 @@ export const PrivacyView = () => {
                     with them.
                 </Text>
                 <BulletPoint>
-                    <b>Github</b> - Github's ..............
+                    <b>Github</b> - Github's{' '}
+                    {renderLinks(
+                        'https://help.github.com/en/articles/github-privacy-statement',
+                        'https://help.github.com/en/articles/github-terms-of-service',
+                    )}
                 </BulletPoint>
                 <BulletPoint>
-                    <b>AWS</b> - AWS's ..............
+                    <b>AWS</b> - AWS's{' '}
+                    {renderLinks(
+                        'https://aws.amazon.com/privacy/',
+                        'https://aws.amazon.com/service-terms/',
+                    )}
                 </BulletPoint>
                 <Text>
                     <b>APIs</b> - For information that your node can't get
@@ -102,11 +128,17 @@ export const PrivacyView = () => {
                 </Text>
                 <BulletPoint>
                     <b>Earn.com's Bitcoin Fee API</b> - Earn.com's
-                    ..............
+                    {renderLinks(
+                        'https://earn.com/privacy/',
+                        'https://earn.com/terms-of-use/',
+                    )}
                 </BulletPoint>
                 <BulletPoint>
                     <b>Blockchain Explorer and Price API</b> - Blockchain's
-                    ..............
+                    {renderLinks(
+                        'https://www.blockchain.com/legal/privacy',
+                        'https://www.blockchain.com/legal/terms',
+                    )}
                 </BulletPoint>
             </Section>
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
