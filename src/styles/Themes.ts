@@ -35,6 +35,7 @@ export const fontColors = {
     grey8: '#4a5669',
     blue: '#ccd0e7',
     blue1: '#9197b9',
+    blue2: '#6284e4',
     blue3: '#5163ba',
     black: '#212735',
 };
@@ -65,6 +66,11 @@ export const inverseTextColor = theme('mode', {
 export const burgerColor = theme('mode', {
     light: themeColors.white,
     dark: themeColors.blue6,
+});
+
+export const linkHighlight = theme('mode', {
+    light: fontColors.blue2,
+    dark: fontColors.blue3,
 });
 
 // ---------------------------------------
