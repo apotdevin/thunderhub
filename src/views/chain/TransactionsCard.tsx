@@ -13,7 +13,8 @@ import {
     renderLine,
 } from '../../components/generic/Helpers';
 import styled from 'styled-components';
-import { Price } from 'components/price/Price';
+import { getPrice } from 'components/price/Price';
+import { useSettings } from 'context/SettingsContext';
 
 export const AddMargin = styled.div`
     margin-right: 10px;
@@ -32,6 +33,9 @@ export const TransactionsCard = ({
     setIndexOpen,
     indexOpen,
 }: TransactionsCardProps) => {
+    const context = useSettings();
+    const format = getPrice(context);
+
     const {
         block_id,
         confirmation_count,
@@ -43,7 +47,7 @@ export const TransactionsCard = ({
         tokens,
     } = transaction;
 
-    const formatAmount = <Price amount={tokens} />;
+    const formatAmount = format({ amount: tokens });
 
     const handleClick = () => {
         if (indexOpen === index) {

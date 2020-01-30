@@ -26,7 +26,7 @@ import {
     getFormatDate,
 } from '../../../components/generic/Helpers';
 import { getNodeLink } from '../../../components/generic/Helpers';
-import { Price } from 'components/price/Price';
+import { getPrice } from 'components/price/Price';
 
 interface PendingCardProps {
     channelInfo: any;
@@ -41,7 +41,8 @@ export const PendingCard = ({
     setIndexOpen,
     indexOpen,
 }: PendingCardProps) => {
-    const { theme } = useSettings();
+    const { theme, ...context } = useSettings();
+    const format = getPrice(context);
 
     const tooltipType = getTooltipType(theme);
 
@@ -71,11 +72,11 @@ export const PendingCard = ({
         updated_at,
     } = partner_node_info;
 
-    const formatBalance = <Price amount={local_balance + remote_balance} />;
-    const formatLocal = <Price amount={local_balance} />;
-    const formatRemote = <Price amount={remote_balance} />;
-    const formatReceived = <Price amount={received} />;
-    const formatSent = <Price amount={sent} />;
+    const formatBalance = format({ amount: local_balance + remote_balance });
+    const formatLocal = format({ amount: local_balance });
+    const formatRemote = format({ amount: remote_balance });
+    const formatReceived = format({ amount: received });
+    const formatSent = format({ amount: sent });
 
     const handleClick = () => {
         if (indexOpen === index) {

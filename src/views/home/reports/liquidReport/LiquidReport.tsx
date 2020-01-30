@@ -22,13 +22,14 @@ import {
     liquidityBarColor,
 } from '../../../../styles/Themes';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { Price } from 'components/price/Price';
+import { getPrice } from 'components/price/Price';
 
 export const LiquidReport = () => {
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
-    const { theme } = useSettings();
+    const { theme, ...context } = useSettings();
+    const format = getPrice(context);
 
     const { data, loading } = useQuery(GET_LIQUID_REPORT, {
         variables: { auth },
@@ -67,7 +68,7 @@ export const LiquidReport = () => {
                         <VictoryVoronoiContainer
                             voronoiDimension="x"
                             labels={({ datum }) =>
-                                `${(<Price amount={datum.y} />)}`
+                                `${format({ amount: datum.y })}`
                             }
                             labelComponent={
                                 <VictoryTooltip orientation={'left'} />
@@ -94,7 +95,7 @@ export const LiquidReport = () => {
                             grid: { stroke: chartGridColor[theme] },
                             axis: { stroke: 'transparent' },
                         }}
-                        tickFormat={a => `${(<Price amount={a} />)}`}
+                        tickFormat={a => `${format({ amount: a })}`}
                     />
                     <VictoryBar
                         horizontal

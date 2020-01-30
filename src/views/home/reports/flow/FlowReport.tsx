@@ -15,7 +15,7 @@ import {
     flowBarColor,
     flowBarColor2,
 } from '../../../../styles/Themes';
-import { Price } from 'components/price/Price';
+import { getPrice } from 'components/price/Price';
 // import { WaterfallProps } from '.';
 
 // const beforeMap = {
@@ -40,7 +40,8 @@ export const FlowReport = ({
     parsedData2,
 }: // waterfall,
 Props) => {
-    const { theme } = useSettings();
+    const { theme, ...context } = useSettings();
+    const format = getPrice(context);
 
     let domain = 24;
     let barWidth = 3;
@@ -56,7 +57,7 @@ Props) => {
         if (isType === 'amount') {
             return numeral(value).format('0,0');
         }
-        return <Price amount={value} />;
+        return format({ amount: value });
     };
 
     return (
@@ -94,7 +95,7 @@ Props) => {
                     axis: { stroke: 'transparent' },
                 }}
                 tickFormat={a =>
-                    isType === 'tokens' ? <Price amount={a} /> : a
+                    isType === 'tokens' ? format({ amount: a }) : a
                 }
             />
             <VictoryGroup offset={barWidth}>

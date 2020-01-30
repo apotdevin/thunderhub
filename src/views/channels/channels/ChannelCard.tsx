@@ -35,7 +35,7 @@ import styled from 'styled-components';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { DownArrow, UpArrow, EyeOff } from '../../../components/generic/Icons';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { Price } from 'components/price/Price';
+import { getPrice } from 'components/price/Price';
 
 const IconPadding = styled.div`
     margin-left: 16px;
@@ -65,7 +65,8 @@ export const ChannelCard = ({
 }: ChannelCardProps) => {
     const [modalOpen, setModalOpen] = useState(false);
 
-    const { theme } = useSettings();
+    const { theme, ...context } = useSettings();
+    const format = getPrice(context);
 
     const tooltipType = getTooltipType(theme);
 
@@ -103,17 +104,16 @@ export const ChannelCard = ({
         updated_at,
     } = partner_node_info;
 
-    const formatBalance = <Price amount={capacity} />;
-    const formatLocal = <Price amount={local_balance} />;
-    const formatRemote = <Price amount={remote_balance} />;
-    const formatReceived = <Price amount={received} />;
-    const formatSent = <Price amount={sent} />;
-
-    const commitFee = <Price amount={commit_transaction_fee} />;
-    const commitWeight = <Price amount={commit_transaction_weight} />;
-    const localReserve = <Price amount={local_reserve} />;
-    const remoteReserve = <Price amount={remote_reserve} />;
-    const nodeCapacity = <Price amount={node_capacity} />;
+    const formatBalance = format({ amount: capacity });
+    const formatLocal = format({ amount: local_balance });
+    const formatRemote = format({ amount: remote_balance });
+    const formatReceived = format({ amount: received });
+    const formatSent = format({ amount: sent });
+    const commitFee = format({ amount: commit_transaction_fee });
+    const commitWeight = format({ amount: commit_transaction_weight });
+    const localReserve = format({ amount: local_reserve });
+    const remoteReserve = format({ amount: remote_reserve });
+    const nodeCapacity = format({ amount: node_capacity });
 
     const handleClick = () => {
         if (indexOpen === index) {

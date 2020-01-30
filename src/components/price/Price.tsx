@@ -26,3 +26,28 @@ export const Price = ({
 
     return <>{getFormat(amount)}</>;
 };
+
+export const getPrice = (context: any) => ({
+    amount,
+    breakNumber = false,
+}: {
+    amount: number;
+    breakNumber?: boolean;
+}) => {
+    const { currency, prices } = context;
+
+    const current: { last: number; symbol: string } = prices[currency] ?? {
+        last: 0,
+        symbol: '',
+    };
+    const priceProps = {
+        price: current.last,
+        symbol: current.symbol,
+        currency,
+    };
+
+    const getFormat = (amount: number) =>
+        getValue({ amount, ...priceProps, breakNumber });
+
+    return getFormat(amount);
+};
