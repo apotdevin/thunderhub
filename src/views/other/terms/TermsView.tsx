@@ -6,6 +6,8 @@ import { ContactSection } from '../ContactSection';
 import { Link } from 'components/link/Link';
 
 export const TermsView = () => {
+    const props = { color: fontColors.blue2, underline: fontColors.blue2 };
+
     return (
         <>
             <Section color={themeColors.blue3} padding={'40px 0 64px'}>
@@ -18,11 +20,7 @@ export const TermsView = () => {
                 <Question>1. Terms</Question>
                 <Text>
                     ThunderHub ("us", "we", or "our") provides the website{' '}
-                    <Link
-                        href={'https://thunderhub.io'}
-                        color={fontColors.black}
-                        underline={fontColors.blue2}
-                    >
+                    <Link href={'https://thunderhub.io'} {...props}>
                         https://thunderhub.io
                     </Link>{' '}
                     (the "Site"). Your use of or access to the site is subject
@@ -83,11 +81,7 @@ export const TermsView = () => {
                     and is hereby incorporated by this reference into these
                     Terms. You agree to the collection, use, storage, and
                     disclosure of your data in accordance with our{' '}
-                    <Link
-                        to={'/privacy'}
-                        color={fontColors.black}
-                        underline={fontColors.blue2}
-                    >
+                    <Link to={'/privacy'} {...props}>
                         Privacy Policy
                     </Link>
                     .

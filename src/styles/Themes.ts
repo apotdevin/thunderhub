@@ -69,7 +69,7 @@ export const burgerColor = theme('mode', {
 });
 
 export const linkHighlight = theme('mode', {
-    light: fontColors.blue2,
+    light: fontColors.blue3,
     dark: fontColors.blue3,
 });
 

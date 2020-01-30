@@ -6,7 +6,7 @@ import { ContactSection } from '../ContactSection';
 import { Link } from 'components/link/Link';
 
 export const PrivacyView = () => {
-    const props = { color: fontColors.black, underline: fontColors.blue2 };
+    const props = { color: fontColors.blue2, underline: fontColors.blue2 };
 
     const renderLinks = (terms: string, privacy: string) => (
         <>
@@ -127,14 +127,14 @@ export const PrivacyView = () => {
                     to their policies when interacting with them.
                 </Text>
                 <BulletPoint>
-                    <b>Earn.com's Bitcoin Fee API</b> - Earn.com's
+                    <b>Earn.com's Bitcoin Fee API</b> - Earn.com's{' '}
                     {renderLinks(
                         'https://earn.com/privacy/',
                         'https://earn.com/terms-of-use/',
                     )}
                 </BulletPoint>
                 <BulletPoint>
-                    <b>Blockchain Explorer and Price API</b> - Blockchain's
+                    <b>Blockchain Explorer and Price API</b> - Blockchain's{' '}
                     {renderLinks(
                         'https://www.blockchain.com/legal/privacy',
                         'https://www.blockchain.com/legal/terms',
