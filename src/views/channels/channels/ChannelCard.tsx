@@ -187,7 +187,9 @@ export const ChannelCard = ({
                     {getStatusDot(is_closing, 'closing')}
                 </StatusLine>
                 <ResponsiveLine>
-                    <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
+                    <NodeTitle style={{ flexGrow: 2 }}>
+                        {alias ? alias : 'Unknown'}
+                    </NodeTitle>
                     <ResponsiveSingle>
                         {formatBalance}
                         <IconPadding>
