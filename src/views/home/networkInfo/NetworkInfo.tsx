@@ -44,12 +44,13 @@ const TileTitle = styled.div`
 `;
 
 const Title = styled.div`
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     width: 120px;
 
     @media (max-width: 578px) {
-        display: flex;
         justify-content: center;
-        align-items: center;
         padding-bottom: 16px;
         width: 100%;
     }
@@ -57,6 +58,11 @@ const Title = styled.div`
 
 const ResponsiveLine = styled(SingleLine)`
     flex-wrap: wrap;
+`;
+
+const Padding = styled.span`
+    margin-bottom: -2px;
+    margin-right: 2px;
 `;
 
 export const NetworkInfo = () => {
@@ -95,7 +101,9 @@ export const NetworkInfo = () => {
             <Card>
                 <ResponsiveLine>
                     <Title>
-                        <Globe color={'#2f6fb7'} />
+                        <Padding>
+                            <Globe color={'#2f6fb7'} />
+                        </Padding>
                         Global
                     </Title>
                     <Tile>
@@ -118,7 +126,9 @@ export const NetworkInfo = () => {
                 <Separation />
                 <ResponsiveLine>
                     <Title>
-                        <Cpu color={'#2f6fb7'} />
+                        <Padding>
+                            <Cpu color={'#2f6fb7'} />
+                        </Padding>
                         Channel Size
                     </Title>
                     <Tile>
