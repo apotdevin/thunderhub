@@ -26,7 +26,7 @@ export const FaqView = () => {
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
                 <Question>How much does it cost?</Question>
                 <Text>
-                    <b>No cost</b>, ThunderHub is open source so no need to
+                    <b>No cost</b>, ThunderHub is open-source so no need to
                     spend any precious sats here.
                 </Text>
             </Section>
@@ -36,7 +36,7 @@ export const FaqView = () => {
                     ThunderHub brings a <b>full LND lightning node manager </b>
                     directly to your device without the need of installing
                     plugins, extensions or apps, having specific browsers or
-                    operating systems and is completely <b>open source.</b>
+                    operating systems and is completely <b>open-source.</b>
                 </Text>
                 <Text>
                     ThunderHub provides a <b>simple and easy to use </b>manager
@@ -55,7 +55,7 @@ export const FaqView = () => {
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
                 <Question>Is ThunderHub safe to use?</Question>
                 <Text>
-                    ThunderHub is open source and available for anyone to audit.
+                    ThunderHub is open-source and available for anyone to audit.
                     <b>
                         This still doesn't mean it's completely bullet proof
                         against attackers.
