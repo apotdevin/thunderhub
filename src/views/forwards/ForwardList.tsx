@@ -17,6 +17,7 @@ import { LoadingCard } from '../../components/loading/LoadingCard';
 import { ForwardCard } from './ForwardsCard';
 import { textColorMap } from '../../styles/Themes';
 import { useSettings } from '../../context/SettingsContext';
+import { ForwardBox } from 'views/home/reports/forwardReport';
 
 const timeMap: { [key: string]: string } = {
     day: 'today',
@@ -57,30 +58,34 @@ export const ForwardsList = () => {
     );
 
     return (
-        <CardWithTitle>
-            <CardTitle>
-                <SubTitle>Forwards</SubTitle>
-                <SingleLine>
-                    {renderButton('day', 'D')}
-                    {renderButton('week', '1W')}
-                    {renderButton('month', '1M')}
-                    {renderButton('threeMonths', '3M')}
-                </SingleLine>
-            </CardTitle>
-            <Card>
-                {data.getForwards.forwards.length <= 0 && renderNoForwards()}
-                {data.getForwards.forwards.map(
-                    (forward: any, index: number) => (
-                        <ForwardCard
-                            forward={forward}
-                            key={index}
-                            index={index + 1}
-                            setIndexOpen={setIndexOpen}
-                            indexOpen={indexOpen}
-                        />
-                    ),
-                )}
-            </Card>
-        </CardWithTitle>
+        <>
+            <ForwardBox />
+            <CardWithTitle>
+                <CardTitle>
+                    <SubTitle>Forwards</SubTitle>
+                    <SingleLine>
+                        {renderButton('day', 'D')}
+                        {renderButton('week', '1W')}
+                        {renderButton('month', '1M')}
+                        {renderButton('threeMonths', '3M')}
+                    </SingleLine>
+                </CardTitle>
+                <Card>
+                    {data.getForwards.forwards.length <= 0 &&
+                        renderNoForwards()}
+                    {data.getForwards.forwards.map(
+                        (forward: any, index: number) => (
+                            <ForwardCard
+                                forward={forward}
+                                key={index}
+                                index={index + 1}
+                                setIndexOpen={setIndexOpen}
+                                indexOpen={indexOpen}
+                            />
+                        ),
+                    )}
+                </Card>
+            </CardWithTitle>
+        </>
     );
 };

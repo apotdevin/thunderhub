@@ -12,6 +12,7 @@ import { LoadingCard } from '../../components/loading/LoadingCard';
 import { useSettings } from '../../context/SettingsContext';
 import { textColorMap } from '../../styles/Themes';
 import { ColorButton } from 'components/buttons/colorButton/ColorButton';
+import { FlowBox } from 'views/home/reports/flow';
 
 export const TransactionList = () => {
     const [indexOpen, setIndexOpen] = useState(0);
@@ -37,9 +38,11 @@ export const TransactionList = () => {
         return <LoadingCard title={'Transactions'} />;
     }
 
-    const renderInvoices = () => {
-        const resumeList = JSON.parse(data.getResume.resume);
-        return (
+    const resumeList = JSON.parse(data.getResume.resume);
+
+    return (
+        <>
+            <FlowBox />
             <CardWithTitle>
                 <SubTitle>Transactions</SubTitle>
                 <Card bottom={'5px'}>
@@ -107,8 +110,6 @@ export const TransactionList = () => {
                     Show More
                 </ColorButton>
             </CardWithTitle>
-        );
-    };
-
-    return renderInvoices();
+        </>
+    );
 };
