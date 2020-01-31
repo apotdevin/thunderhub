@@ -24,6 +24,7 @@ import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { getPrice } from 'components/price/Price';
+import { AnimatedNumber } from 'components/animated/AnimatedNumber';
 
 const Closed = styled.div`
     display: flex;
@@ -139,9 +140,11 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
                         color={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
                         fillcolor={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
                     />
-                    {pendingBalance > 0
-                        ? `${formatCCB} / ${formatPCB}`
-                        : formatCCB}
+                    {pendingBalance > 0 ? (
+                        `${formatCCB} / ${formatPCB}`
+                    ) : (
+                        <AnimatedNumber amount={confirmedBalance} />
+                    )}
                 </SingleLine>
                 <SingleLine>
                     <Anchor
@@ -149,9 +152,11 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
                             pendingChainBalance === 0 ? '#FFD300' : '#652EC7'
                         }
                     />
-                    {pendingChainBalance >= 0
-                        ? `${formatCB} / ${formatPB}`
-                        : formatCB}
+                    {pendingChainBalance > 0 ? (
+                        `${formatCB} / ${formatPB}`
+                    ) : (
+                        <AnimatedNumber amount={chainBalance} />
+                    )}
                 </SingleLine>
             </>
         );
@@ -237,13 +242,13 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
             <Separation />
             <Balance data-tip data-for="balance_tip">
                 <Zap color={pendingBalance === 0 ? '#FFD300' : '#652EC7'} />
-                {formatCCB}
+                <AnimatedNumber amount={confirmedBalance} />
             </Balance>
             <Balance data-tip data-for="chain_balance_tip">
                 <Anchor
                     color={pendingChainBalance === 0 ? '#FFD300' : '#652EC7'}
                 />
-                {formatCB}
+                <AnimatedNumber amount={chainBalance} />
             </Balance>
             <Balance
                 data-tip
