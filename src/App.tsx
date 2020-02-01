@@ -5,7 +5,6 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { BrowserRouter } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
 import { useSettings, SettingsProvider } from './context/SettingsContext';
-import { BitcoinPrice } from './components/bitcoinInfo/BitcoinPrice';
 import { ModalProvider } from 'styled-react-modal';
 import { useAccount, AccountProvider } from './context/AccountContext';
 import { toast } from 'react-toastify';
@@ -14,7 +13,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Header } from './sections/header/Header';
 import { Footer } from './sections/footer/Footer';
 import { BitcoinInfoProvider } from './context/BitcoinContext';
-import { BitcoinFees } from './components/bitcoinInfo/BitcoinFees';
 import { LoadingCard } from './components/loading/LoadingCard';
 import { ScrollToTop } from 'components/scrollToTop/ScrollToTop';
 
@@ -57,8 +55,6 @@ const ContextApp: React.FC = () => {
         <ThemeProvider theme={{ mode: theme }}>
             <ModalProvider backgroundComponent={FadingBackground}>
                 <ScrollToTop />
-                <BitcoinPrice />
-                <BitcoinFees />
                 <GlobalStyles />
                 <Header />
                 {renderContent()}
