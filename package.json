@@ -55,7 +55,8 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "storybook": "start-storybook -p 9009 -s public",
-        "build-storybook": "build-storybook -s public"
+        "build-storybook": "build-storybook -s public",
+        "deploy": "yarn build && aws s3 --profile EBFullAccess sync build/ s3://thunderhub-client"
     },
     "eslintConfig": {
         "extends": "react-app"
