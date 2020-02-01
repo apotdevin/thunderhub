@@ -8,11 +8,6 @@ const url = 'https://bitcoinfees.earn.com/api/v1/fees/recommended';
 
 export const getBitcoinFees = {
     type: BitcoinFeeType,
-    args: {
-        currency: {
-            type: GraphQLString,
-        },
-    },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'bitcoinFee');
 

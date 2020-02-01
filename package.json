@@ -8,7 +8,8 @@
         "build": "webpack --config webpack.production.js",
         "build:dev": "webpack --config webpack.development.js",
         "start": "node dist/server",
-        "dev": "nodemon dist/server"
+        "dev": "nodemon dist/server",
+        "deploy": "yarn build && eb deploy"
     },
     "repository": {
         "type": "git",
