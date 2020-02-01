@@ -22,7 +22,7 @@ export const PrivacyView = () => {
 
     return (
         <>
-            <Section color={themeColors.blue3} padding={'40px 0 64px'}>
+            <Section color={themeColors.blue3} padding={'40px 0'}>
                 <Title>Privacy Policy</Title>
             </Section>
             <Section color={themeColors.grey} padding={'60px 0 16px'}>

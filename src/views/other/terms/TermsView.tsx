@@ -10,7 +10,7 @@ export const TermsView = () => {
 
     return (
         <>
-            <Section color={themeColors.blue3} padding={'40px 0 64px'}>
+            <Section color={themeColors.blue3} padding={'40px 0'}>
                 <Title>Terms of Service</Title>
             </Section>
             <Section color={themeColors.grey} padding={'60px 0 16px'}>
