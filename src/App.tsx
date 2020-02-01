@@ -29,7 +29,10 @@ toast.configure({
 });
 
 const client = new ApolloClient({
-    uri: 'http://localhost:3001',
+    uri:
+        process.env.NODE_ENV === 'development'
+            ? 'http://localhost:3001'
+            : 'https://api.thunderhub.io/',
 });
 
 const ContextApp: React.FC = () => {
