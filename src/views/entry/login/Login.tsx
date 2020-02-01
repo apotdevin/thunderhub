@@ -49,7 +49,7 @@ export const LoginView = () => {
     );
     return (
         <Section padding={'48px 0 60px'}>
-            <Card padding={'50px 100px'} bottom={'0'}>
+            <Card bottom={'0'}>
                 {isType === 'none' && (
                     <SubTitle> How do you want to connect?</SubTitle>
                 )}

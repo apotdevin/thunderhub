@@ -3,12 +3,17 @@ import { Section } from 'components/section/Section';
 import { themeColors } from 'styles/Themes';
 import { Title, Center, Subtitle, Question, Text } from '../OtherViews.styled';
 import { ContactSection } from '../ContactSection';
+import styled from 'styled-components';
+
+const FaqTitle = styled(Title)`
+    margin-bottom: 0px;
+`;
 
 export const FaqView = () => {
     return (
         <>
             <Section color={themeColors.blue3} padding={'40px 0 48px'}>
-                <Title>FAQ: Answers to Common Questions</Title>
+                <FaqTitle>FAQ: Answers to Common Questions</FaqTitle>
                 <Center>
                     <Subtitle>
                         Learn about ThunderHub by reading these frequently asked

@@ -15,7 +15,10 @@ export const Title = styled.h1`
     color: ${({ textColor }: { textColor?: string }) =>
         textColor ? textColor : fontColors.grey3};
     font-size: 40px;
-    margin-bottom: 0;
+
+    @media (max-width: 578px) {
+        font-size: 24px;
+    }
 `;
 
 export const SectionTitle = styled.h2`
