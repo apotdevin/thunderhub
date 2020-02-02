@@ -18,6 +18,7 @@ import {
 import { Radio, Copy } from '../../../components/generic/Icons';
 import styled from 'styled-components';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { mediaWidths } from 'styles/Themes';
 
 const Key = styled.div`
     overflow: hidden;
@@ -32,7 +33,7 @@ const Key = styled.div`
 `;
 
 const Responsive = styled(SingleLine)`
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         flex-direction: column;
     }
 `;
@@ -44,7 +45,7 @@ const Tile = styled.div`
     align-items: ${({ startTile }: { startTile?: boolean }) =>
         startTile ? 'flex-start' : 'flex-end'};
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         margin: 16px 0;
     }
 `;

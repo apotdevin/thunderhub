@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-import { headerColor, headerTextColor, themeColors } from '../../styles/Themes';
+import {
+    headerColor,
+    headerTextColor,
+    themeColors,
+    mediaWidths,
+} from '../../styles/Themes';
 import { HomeButton } from '../../views/entry/homepage/HomePage.styled';
 import { Link } from 'react-router-dom';
 import { useAccount } from '../../context/AccountContext';
@@ -34,7 +39,7 @@ const HeaderTitle = styled.div`
     ${({ withPadding }: { withPadding: boolean }) =>
         withPadding &&
         css`
-            @media (max-width: 578px) {
+            @media (${mediaWidths.mobile}) {
                 margin-bottom: 16px;
             }
         `}

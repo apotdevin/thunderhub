@@ -9,6 +9,7 @@ import {
     CardTitle,
 } from '../../../../components/generic/Styled';
 import { ButtonRow } from './Buttons';
+import { mediaWidths } from 'styles/Themes';
 
 export const CardContent = styled.div`
     height: 100%;
@@ -17,7 +18,7 @@ export const CardContent = styled.div`
     width: 50%;
     padding: 0 16px;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         width: 100%;
         padding: 0 8px;
     }
@@ -26,7 +27,7 @@ export const CardContent = styled.div`
 const Row = styled.div`
     display: flex;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         flex-wrap: wrap;
     }
 `;

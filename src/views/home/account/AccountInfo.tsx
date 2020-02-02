@@ -31,6 +31,7 @@ import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { useSize } from '../../../hooks/UseSize';
 import { Price } from 'components/price/Price';
+import { mediaWidths } from 'styles/Themes';
 
 const Tile = styled.div`
     display: flex;
@@ -45,7 +46,7 @@ const ButtonRow = styled.div`
 `;
 
 const Responsive = styled(SingleLine)`
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         flex-direction: column;
     }
 `;

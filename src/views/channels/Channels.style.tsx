@@ -3,6 +3,7 @@ import {
     progressBackground,
     progressFirst,
     progressSecond,
+    mediaWidths,
 } from '../../styles/Themes';
 
 export const Progress = styled.div`
@@ -36,7 +37,7 @@ export const NodeTitle = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         width: unset;
         margin-bottom: 8px;
     }

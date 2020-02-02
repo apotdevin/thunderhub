@@ -9,6 +9,7 @@ import {
     navTextColor,
     subCardColor,
     cardBorderColor,
+    mediaWidths,
 } from '../../styles/Themes';
 import {
     Home,
@@ -26,7 +27,7 @@ const NavigationStyle = styled.div`
     grid-area: nav;
     width: ${({ isOpen }: { isOpen: boolean }) => (isOpen ? '200px' : '60px')};
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         display: none;
     }
 `;

@@ -40,6 +40,10 @@ export const fontColors = {
     black: '#212735',
 };
 
+export const mediaWidths = {
+    mobile: 'max-width: 700px',
+};
+
 // ---------------------------------------
 // APP COLORS
 // ---------------------------------------

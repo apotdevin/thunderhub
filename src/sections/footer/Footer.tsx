@@ -1,6 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { headerColor, headerTextColor, fontColors } from 'styles/Themes';
+import {
+    headerColor,
+    headerTextColor,
+    fontColors,
+    mediaWidths,
+} from 'styles/Themes';
 import { Section } from 'components/section/Section';
 import { Link } from 'components/link/Link';
 import { Emoji } from 'components/emoji/Emoji';
@@ -16,7 +21,7 @@ const FooterStyle = styled.div`
     display: flex;
     justify-content: space-between;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         flex-direction: column;
         padding: 0 0 40px;
         justify-content: center;
@@ -30,7 +35,7 @@ const SideFooter = styled.div`
     justify-content: flex-start;
     align-items: flex-start;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         width: 100%;
         justify-content: center;
         align-items: center;
@@ -43,7 +48,7 @@ const RightFooter = styled(SideFooter)`
     align-items: flex-end;
     width: 80%;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         margin-top: 32px;
     }
 `;
@@ -57,7 +62,7 @@ const SideText = styled.p`
     font-size: 14px;
     color: ${fontColors.grey7};
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         padding-right: 0;
     }
 `;

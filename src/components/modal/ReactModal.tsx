@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
-import { cardColor } from '../../styles/Themes';
+import { cardColor, mediaWidths } from '../../styles/Themes';
 import ReactModal, { BaseModalBackground } from 'styled-react-modal';
 
 export const FadingBackground = styled(BaseModalBackground)``;
@@ -22,7 +22,7 @@ const StyleModal = ReactModal.styled`
          outline: none;
          min-width: 578px;
 
-         @media (max-width: 578px) {
+         @media (${mediaWidths.mobile}) {
              top: 100%;
              border-radius: 0px;
              transform: translateY(-100%) translateX(-50%);
