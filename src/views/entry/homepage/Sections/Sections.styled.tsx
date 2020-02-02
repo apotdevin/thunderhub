@@ -76,7 +76,6 @@ export const ImagePlace = styled.img`
     height: auto;
     justify-content: center;
     align-items: center;
-    background-color: grey;
 `;
 
 export const WrapSingleLine = styled(SingleLine)`
