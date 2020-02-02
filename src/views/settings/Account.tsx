@@ -3,16 +3,15 @@ import {
     CardWithTitle,
     SubTitle,
     Card,
-    SubCard,
     SingleLine,
     Sub4Title,
+    Separation,
 } from '../../components/generic/Styled';
 import { LoginForm } from '../../components/auth/NormalLogin';
 import { ConnectLoginForm } from '../../components/auth/ConnectLogin';
 import { BTCLoginForm } from '../../components/auth/BTCLogin';
 import { SettingsLine } from './Settings';
 import { useAccount } from '../../context/AccountContext';
-import styled from 'styled-components';
 import { getNextAvailable, getStorageSaved } from '../../utils/storage';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { XSvg } from '../../components/generic/Icons';
@@ -21,51 +20,42 @@ import {
     SingleButton,
 } from 'components/buttons/multiButton/MultiButton';
 
-const RightAlign = styled.div`
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-`;
-
 export const AccountSettings = () => {
     const { name } = useAccount();
 
-    const [isType, setIsType] = useState('none');
+    const [isType, setIsType] = useState('login');
     const [willAdd, setWillAdd] = useState(false);
     const { changeAccount, refreshAccount } = useAccount();
 
     const next = getNextAvailable();
 
     const handleConnected = () => {
-        setIsType('none');
         setWillAdd(false);
     };
 
     const renderButtons = () => (
         <SingleLine>
-            {willAdd && (
-                <RightAlign>
-                    <ColorButton onClick={() => setIsType('login')}>
-                        Connection Details
-                    </ColorButton>
-                    <ColorButton onClick={() => setIsType('connect')}>
-                        LndConnect Url
-                    </ColorButton>
-                    <ColorButton onClick={() => setIsType('btcpay')}>
-                        BTCPayServer Info
-                    </ColorButton>
-                </RightAlign>
-            )}
-            <ColorButton
-                onClick={() => {
-                    if (willAdd) {
-                        setIsType('none');
-                    }
-                    setWillAdd(prev => !prev);
-                }}
-            >
-                {willAdd ? <XSvg /> : 'Add New Account'}
-            </ColorButton>
+            <Sub4Title>Connection Type:</Sub4Title>
+            <MultiButton margin={'0 0 16px'}>
+                <SingleButton
+                    selected={isType === 'login'}
+                    onClick={() => setIsType('login')}
+                >
+                    Connection Details
+                </SingleButton>
+                <SingleButton
+                    selected={isType === 'connect'}
+                    onClick={() => setIsType('connect')}
+                >
+                    LndConnect Url
+                </SingleButton>
+                <SingleButton
+                    selected={isType === 'btcpay'}
+                    onClick={() => setIsType('btcpay')}
+                >
+                    BTCPayServer Info
+                </SingleButton>
+            </MultiButton>
         </SingleLine>
     );
 
@@ -100,34 +90,39 @@ export const AccountSettings = () => {
                 {next && (
                     <SettingsLine>
                         <Sub4Title>Add Account</Sub4Title>
-                        {renderButtons()}
+                        <ColorButton
+                            onClick={() => {
+                                if (willAdd) {
+                                    setIsType('login');
+                                }
+                                setWillAdd(prev => !prev);
+                            }}
+                        >
+                            {willAdd ? <XSvg /> : 'Add New Account'}
+                        </ColorButton>
                     </SettingsLine>
                 )}
                 {willAdd && (
                     <>
+                        <Separation />
+                        {renderButtons()}
                         {isType === 'login' && (
-                            <SubCard padding={'30px 50px'}>
-                                <LoginForm
-                                    available={next}
-                                    callback={handleConnected}
-                                />
-                            </SubCard>
+                            <LoginForm
+                                available={next}
+                                callback={handleConnected}
+                            />
                         )}
                         {isType === 'connect' && (
-                            <SubCard padding={'30px 50px'}>
-                                <ConnectLoginForm
-                                    available={next}
-                                    callback={handleConnected}
-                                />
-                            </SubCard>
+                            <ConnectLoginForm
+                                available={next}
+                                callback={handleConnected}
+                            />
                         )}
                         {isType === 'btcpay' && (
-                            <SubCard padding={'30px 50px'}>
-                                <BTCLoginForm
-                                    available={next}
-                                    callback={handleConnected}
-                                />
-                            </SubCard>
+                            <BTCLoginForm
+                                available={next}
+                                callback={handleConnected}
+                            />
                         )}
                     </>
                 )}

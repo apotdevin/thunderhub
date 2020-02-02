@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { SingleLine, Sub4Title } from '../../components/generic/Styled';
 import { useAccount } from '../../context/AccountContext';
 import { getConfigLnd, saveUserAuth, getAuthString } from '../../utils/auth';
 import CryptoJS from 'crypto-js';
@@ -11,17 +10,21 @@ import { getErrorContent } from '../../utils/error';
 import { useHistory } from 'react-router-dom';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { Input } from 'components/input/Input';
+import { Line, StyledTitle } from './Auth.styled';
+import { ChevronLeft } from 'components/generic/Icons';
 
 interface AuthProps {
     available: number;
-    callback?: () => void;
     withRedirect?: boolean;
+    callback?: () => void;
+    goBack?: () => void;
 }
 
 export const BTCLoginForm = ({
     available,
     callback,
     withRedirect,
+    goBack,
 }: AuthProps) => {
     const { setAccount } = useAccount();
     const { push } = useHistory();
@@ -113,14 +116,19 @@ export const BTCLoginForm = ({
         const canConnect = isJson !== '' && !!available;
         return (
             <>
-                <SingleLine>
-                    <Sub4Title>Name:</Sub4Title>
+                {goBack && (
+                    <ColorButton onClick={goBack}>
+                        <ChevronLeft />
+                    </ColorButton>
+                )}
+                <Line>
+                    <StyledTitle>Name:</StyledTitle>
                     <Input onChange={e => setName(e.target.value)} />
-                </SingleLine>
-                <SingleLine>
-                    <Sub4Title>BTCPay Connect Url:</Sub4Title>
+                </Line>
+                <Line>
+                    <StyledTitle>BTCPay Connect Url:</StyledTitle>
                     <Input onChange={e => setJson(e.target.value)} />
-                </SingleLine>
+                </Line>
                 {canConnect && (
                     <ColorButton
                         disabled={!canConnect}

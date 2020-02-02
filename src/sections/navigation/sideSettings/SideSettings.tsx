@@ -12,6 +12,7 @@ import {
     progressBackground,
     iconButtonHover,
     inverseTextColor,
+    unSelectedNavButton,
 } from '../../../styles/Themes';
 
 const SelectedIcon = styled.div`
@@ -121,7 +122,7 @@ export const SideSettings = ({
         if (!isOpen) {
             return (
                 <>
-                    <Separation />
+                    <Separation lineColor={unSelectedNavButton} />
                     <IconRow center={true}>
                         {renderIcon(
                             'currency',
@@ -144,7 +145,7 @@ export const SideSettings = ({
         } else {
             return (
                 <>
-                    <Separation />
+                    <Separation lineColor={unSelectedNavButton} />
                     <IconRow>
                         {renderIcon('currency', 'sat', 'S')}
                         {renderIcon('currency', 'btc', '₿')}
