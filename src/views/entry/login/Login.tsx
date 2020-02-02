@@ -1,59 +1,54 @@
 import React, { useState } from 'react';
-import {
-    Card,
-    SubTitle,
-    ColorButton,
-} from '../../../components/generic/Styled';
+import { Card } from '../../../components/generic/Styled';
 import styled from 'styled-components';
 import { LoginForm } from '../../../components/auth/NormalLogin';
 import { ConnectLoginForm } from '../../../components/auth/ConnectLogin';
 import { getNextAvailable } from '../../../utils/storage';
 import { BTCLoginForm } from '../../../components/auth/BTCLogin';
-import { useSettings } from '../../../context/SettingsContext';
-import { textColorMap } from '../../../styles/Themes';
 import { Section } from 'components/section/Section';
+import {
+    MultiButton,
+    SingleButton,
+} from 'components/buttons/multiButton/MultiButton';
 
-const ConnectButton = styled(ColorButton)`
+const ConnectTitle = styled.h1`
     width: 100%;
-    padding: 30px;
-    margin: 30px 0;
-    font-size: 14px;
+    text-align: center;
 `;
 
 export const LoginView = () => {
-    const { theme } = useSettings();
-    const [isType, setIsType] = useState('none');
+    const [isType, setIsType] = useState('login');
     const next = getNextAvailable();
 
     const renderButtons = () => (
         <>
-            <ConnectButton
-                color={textColorMap[theme]}
-                onClick={() => setIsType('login')}
-            >
-                <SubTitle>CONNECTION DETAILS</SubTitle>
-            </ConnectButton>
-            <ConnectButton
-                color={textColorMap[theme]}
-                onClick={() => setIsType('connect')}
-            >
-                <SubTitle>LNDCONNECT URL</SubTitle>
-            </ConnectButton>
-            <ConnectButton
-                color={textColorMap[theme]}
-                onClick={() => setIsType('btcpay')}
-            >
-                <SubTitle>BTCPAYSERVER INFO</SubTitle>
-            </ConnectButton>
+            <MultiButton margin={'16px 0'}>
+                <SingleButton
+                    selected={isType === 'login'}
+                    onClick={() => setIsType('login')}
+                >
+                    Details
+                </SingleButton>
+                <SingleButton
+                    selected={isType === 'connect'}
+                    onClick={() => setIsType('connect')}
+                >
+                    LndConnect
+                </SingleButton>
+                <SingleButton
+                    selected={isType === 'btcpay'}
+                    onClick={() => setIsType('btcpay')}
+                >
+                    BTCPayServer
+                </SingleButton>
+            </MultiButton>
         </>
     );
     return (
-        <Section padding={'48px 0 60px'}>
+        <Section padding={'0 0 60px'}>
+            <ConnectTitle>{'How do you want to connect?'}</ConnectTitle>
             <Card bottom={'0'}>
-                {isType === 'none' && (
-                    <SubTitle> How do you want to connect?</SubTitle>
-                )}
-                {isType === 'none' && renderButtons()}
+                {renderButtons()}
                 {isType === 'login' && (
                     <LoginForm available={next} withRedirect={true} />
                 )}

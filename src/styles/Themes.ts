@@ -73,6 +73,21 @@ export const linkHighlight = theme('mode', {
     dark: fontColors.blue3,
 });
 
+export const separationColor = theme('mode', {
+    light: themeColors.grey2,
+    dark: themeColors.black,
+});
+
+export const unSelectedNavButton = theme('mode', {
+    light: 'grey',
+    dark: 'grey',
+});
+
+export const buttonBorderColor = theme('mode', {
+    light: '#d9d9d9',
+    dark: '#2e3245',
+});
+
 // ---------------------------------------
 // HOMEPAGE COLORS
 // ---------------------------------------
@@ -95,7 +110,7 @@ export const cardColor = theme('mode', {
 });
 
 export const subCardColor = theme('mode', {
-    light: themeColors.grey,
+    light: themeColors.white,
     dark: themeColors.blue7,
 });
 
@@ -249,13 +264,3 @@ export const flowBarColor2: { [key: string]: string } = {
     light: chartColors.darkyellow,
     dark: chartColors.darkyellow,
 };
-
-export const unSelectedNavButton = theme('mode', {
-    light: 'grey',
-    dark: 'grey',
-});
-
-export const buttonBorderColor = theme('mode', {
-    light: '#d9d9d9',
-    dark: '#2e3245',
-});

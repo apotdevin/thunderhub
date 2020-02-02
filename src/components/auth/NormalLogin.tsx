@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { SingleLine, Sub4Title } from '../generic/Styled';
 import { useAccount } from '../../context/AccountContext';
 import { saveUserAuth, getAuthString, saveSessionAuth } from '../../utils/auth';
 import CryptoJS from 'crypto-js';
@@ -12,16 +11,31 @@ import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { Input } from 'components/input/Input';
+import { Line, StyledTitle } from './Auth.styled';
+import { SingleLine, Sub4Title } from 'components/generic/Styled';
+import {
+    MultiButton,
+    SingleButton,
+} from 'components/buttons/multiButton/MultiButton';
+import { ChevronLeft } from 'components/generic/Icons';
 
 interface AuthProps {
     available: number;
     callback?: () => void;
     withRedirect?: boolean;
+    goBack?: () => void;
 }
 
-export const LoginForm = ({ available, callback, withRedirect }: AuthProps) => {
+export const LoginForm = ({
+    available,
+    callback,
+    withRedirect,
+    goBack,
+}: AuthProps) => {
     const { setAccount } = useAccount();
     const { push } = useHistory();
+
+    const [viewOnly, setViewOnly] = useState(true);
 
     const [isName, setName] = useState('');
     const [isHost, setHost] = useState('');
@@ -122,25 +136,64 @@ export const LoginForm = ({ available, callback, withRedirect }: AuthProps) => {
         return (
             <>
                 <SingleLine>
-                    <Sub4Title>Name:</Sub4Title>
-                    <Input onChange={e => setName(e.target.value)} />
+                    {goBack && (
+                        <ColorButton onClick={goBack}>
+                            <ChevronLeft />
+                        </ColorButton>
+                    )}
+                    <Sub4Title>Type of Account:</Sub4Title>
+                    <MultiButton>
+                        <SingleButton
+                            selected={viewOnly}
+                            onClick={() => setViewOnly(true)}
+                        >
+                            ViewOnly
+                        </SingleButton>
+                        <SingleButton
+                            selected={!viewOnly}
+                            onClick={() => setViewOnly(false)}
+                        >
+                            Admin
+                        </SingleButton>
+                    </MultiButton>
                 </SingleLine>
-                <SingleLine>
-                    <Sub4Title>Host:</Sub4Title>
-                    <Input onChange={e => setHost(e.target.value)} />
-                </SingleLine>
-                <SingleLine>
-                    <Sub4Title>Admin:</Sub4Title>
-                    <Input onChange={e => setAdmin(e.target.value)} />
-                </SingleLine>
-                <SingleLine>
-                    <Sub4Title>Readonly:</Sub4Title>
-                    <Input onChange={e => setRead(e.target.value)} />
-                </SingleLine>
-                <SingleLine>
-                    <Sub4Title>Certificate:</Sub4Title>
-                    <Input onChange={e => setCert(e.target.value)} />
-                </SingleLine>
+                <Line>
+                    <StyledTitle>Name:</StyledTitle>
+                    <Input
+                        placeholder={'Name for this node'}
+                        onChange={e => setName(e.target.value)}
+                    />
+                </Line>
+                <Line>
+                    <StyledTitle>Host:</StyledTitle>
+                    <Input
+                        placeholder={'Url and port (e.g.: www.node.com:443)'}
+                        onChange={e => setHost(e.target.value)}
+                    />
+                </Line>
+                {!viewOnly && (
+                    <Line>
+                        <StyledTitle>Admin:</StyledTitle>
+                        <Input
+                            placeholder={'HEX encoded admin macaroon'}
+                            onChange={e => setAdmin(e.target.value)}
+                        />
+                    </Line>
+                )}
+                <Line>
+                    <StyledTitle>Readonly:</StyledTitle>
+                    <Input
+                        placeholder={'HEX encoded readonly macaroon'}
+                        onChange={e => setRead(e.target.value)}
+                    />
+                </Line>
+                <Line>
+                    <StyledTitle>Certificate:</StyledTitle>
+                    <Input
+                        placeholder={'Certificate'}
+                        onChange={e => setCert(e.target.value)}
+                    />
+                </Line>
                 {canConnect && (
                     <ColorButton
                         disabled={!canConnect}

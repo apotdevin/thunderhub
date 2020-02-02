@@ -9,7 +9,9 @@ import {
     buttonBorderColor,
     chartLinkColor,
     inverseTextColor,
+    separationColor,
 } from '../../styles/Themes';
+import { ThemeSet } from 'styled-theming';
 
 export const CardWithTitle = styled.div`
     display: flex;
@@ -39,11 +41,13 @@ export const Card = styled.div`
 
 interface SeparationProps {
     height?: number;
+    lineColor?: string | ThemeSet;
 }
 
 export const Separation = styled.div`
     height: ${({ height }: SeparationProps) => (height ? height : '1')}px;
-    background-color: ${unSelectedNavButton};
+    background-color: ${({ lineColor }: SeparationProps) =>
+        lineColor ?? separationColor};
     width: 100%;
     margin: 20px 0;
 `;

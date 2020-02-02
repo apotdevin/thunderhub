@@ -19,7 +19,7 @@ import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
-import { textColorMap } from '../../../styles/Themes';
+import { textColorMap, unSelectedNavButton } from '../../../styles/Themes';
 import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import ScaleLoader from 'react-spinners/ScaleLoader';
@@ -206,7 +206,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
                         <SingleLine>{peers_count}</SingleLine>
                     </div>
                 </Closed>
-                <Separation />
+                <Separation lineColor={unSelectedNavButton} />
                 <ReactTooltip
                     id={'full_balance_tip'}
                     effect={'solid'}
@@ -239,7 +239,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
                 <Alias bottomColor={color}>{alias}</Alias>
                 {isOpen && <QuestionIcon data-tip={`Version: ${version}`} />}
             </Title>
-            <Separation />
+            <Separation lineColor={unSelectedNavButton} />
             <Balance data-tip data-for="balance_tip">
                 <Zap color={pendingBalance === 0 ? '#FFD300' : '#652EC7'} />
                 <AnimatedNumber amount={confirmedBalance} />
@@ -259,7 +259,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
                     {is_synced_to_chain ? 'Synced' : 'Not Synced'}
                 </Info>
             </Balance>
-            <Separation />
+            <Separation lineColor={unSelectedNavButton} />
             <ReactTooltip effect={'solid'} place={'right'} type={tooltipType} />
             <ReactTooltip
                 id={'balance_tip'}
