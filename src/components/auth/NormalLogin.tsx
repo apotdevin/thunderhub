@@ -176,7 +176,7 @@ export const LoginForm = ({
                         <StyledTitle>Admin:</StyledTitle>
                         <Input
                             placeholder={
-                                'HEX Admin macaroon (e.g.: 0201036c6e6402eb01030a100e385f...)'
+                                'Base64 Admin macaroon (e.g.: AgEDbG5kAusBAw...)'
                             }
                             onChange={e => setAdmin(e.target.value)}
                         />
@@ -186,7 +186,7 @@ export const LoginForm = ({
                     <StyledTitle>Readonly:</StyledTitle>
                     <Input
                         placeholder={
-                            'HEX Readonly macaroon (e.g.: 0201036c6e6402eb01030a100e385f...)'
+                            'Base64 Readonly macaroon (e.g.: AgEDbG5kApoBAw...)'
                         }
                         onChange={e => setRead(e.target.value)}
                     />
@@ -195,7 +195,7 @@ export const LoginForm = ({
                     <StyledTitle>Certificate:</StyledTitle>
                     <Input
                         placeholder={
-                            'HEX TLS Certificate (e.g.: 2d2d2d2d2d424547494e20434552...)'
+                            'Base64 TLS Certificate (e.g.: LS0tLS1CRUdJTi...)'
                         }
                         onChange={e => setCert(e.target.value)}
                     />

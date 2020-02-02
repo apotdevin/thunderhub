@@ -20,8 +20,9 @@ import {
     MultiButton,
     SingleButton,
 } from 'components/buttons/multiButton/MultiButton';
-import { Price } from 'components/price/Price';
+import { Price, getPrice } from 'components/price/Price';
 import { mediaWidths } from 'styles/Themes';
+import { useSettings } from 'context/SettingsContext';
 
 const ResponsiveWrap = styled(SingleLine)`
     @media (${mediaWidths.mobile}) {
@@ -40,6 +41,9 @@ const Margin = styled.div`
 `;
 
 export const SendOnChainCard = () => {
+    const context = useSettings();
+    const format = getPrice(context);
+
     const { width } = useSize();
     const [address, setAddress] = useState('');
     const [tokens, setTokens] = useState(0);
@@ -71,7 +75,7 @@ export const SendOnChainCard = () => {
 
     const feeFormat = (amount: number) => {
         if (type === 'fee' || type === 'none') {
-            return <Price amount={amount} />;
+            return format({ amount });
         } else {
             return `${amount} blocks`;
         }
