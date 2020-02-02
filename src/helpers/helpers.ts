@@ -21,7 +21,7 @@ export const getAuthLnd = (auth: string) => {
     const socket = url.host;
 
     const cert = base64url.toBase64(encodedCert);
-    const macaroon = base64url.toBase64(encodedMacaroon).replace('==', '');
+    const macaroon = base64url.toBase64(encodedMacaroon);
 
     const params =
         encodedCert !== ''
