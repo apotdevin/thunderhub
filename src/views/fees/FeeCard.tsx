@@ -4,8 +4,8 @@ import {
     Separation,
     SingleLine,
     DarkSubTitle,
-    RightAlign,
     ResponsiveLine,
+    NoWrapTitle,
 } from '../../components/generic/Styled';
 import { renderLine } from '../../components/generic/Helpers';
 import { MainInfo, NodeTitle, ColLine } from './Fees.style';
@@ -18,6 +18,7 @@ import { SecureButton } from '../../components/buttons/secureButton/SecureButton
 import { useSettings } from '../../context/SettingsContext';
 import { textColorMap } from '../../styles/Themes';
 import { Input } from '../../components/input/Input';
+import { AdminSwitch } from 'components/adminSwitch/AdminSwitch';
 
 interface FeeCardProps {
     channelInfo: any;
@@ -73,7 +74,9 @@ export const FeeCard = ({
                 {renderLine('Transaction Vout:', transactionVout)}
                 <Separation />
                 <ResponsiveLine>
-                    <DarkSubTitle>{`Base Fee (Sats):`}</DarkSubTitle>
+                    <NoWrapTitle>
+                        <DarkSubTitle>{`Base Fee:`}</DarkSubTitle>
+                    </NoWrapTitle>
                     <Input
                         placeholder={'Sats'}
                         color={textColorMap[theme]}
@@ -82,7 +85,9 @@ export const FeeCard = ({
                     />
                 </ResponsiveLine>
                 <ResponsiveLine>
-                    <DarkSubTitle>{`Fee Rate (Sats/Million):`}</DarkSubTitle>
+                    <NoWrapTitle>
+                        <DarkSubTitle>{`Fee Rate:`}</DarkSubTitle>
+                    </NoWrapTitle>
                     <Input
                         placeholder={'Sats/Million'}
                         color={textColorMap[theme]}
@@ -90,14 +95,18 @@ export const FeeCard = ({
                         onChange={e => setFeeRate(parseInt(e.target.value))}
                     />
                 </ResponsiveLine>
-                <RightAlign>
+                <AdminSwitch>
                     <SecureButton
                         callback={updateFees}
                         variables={{
                             transactionId,
                             transactionVout,
-                            ...(newBaseFee !== 0 && { baseFee: newBaseFee }),
-                            ...(newFeeRate !== 0 && { feeRate: newFeeRate }),
+                            ...(newBaseFee !== 0 && {
+                                baseFee: newBaseFee,
+                            }),
+                            ...(newFeeRate !== 0 && {
+                                feeRate: newFeeRate,
+                            }),
                         }}
                         color={textColorMap[theme]}
                         disabled={newBaseFee === 0 && newFeeRate === 0}
@@ -107,7 +116,7 @@ export const FeeCard = ({
                         Update Fees
                         <ChevronRight />
                     </SecureButton>
-                </RightAlign>
+                </AdminSwitch>
             </>
         );
     };
@@ -119,7 +128,9 @@ export const FeeCard = ({
                     <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
                     <ColLine>
                         <SingleLine>
-                            <DarkSubTitle>{`Base Fee:`}</DarkSubTitle>
+                            <NoWrapTitle>
+                                <DarkSubTitle>{`Base Fee:`}</DarkSubTitle>
+                            </NoWrapTitle>
                             <SingleLine>
                                 {baseFee}
                                 <DarkSubTitle>
@@ -128,7 +139,9 @@ export const FeeCard = ({
                             </SingleLine>
                         </SingleLine>
                         <SingleLine>
-                            <DarkSubTitle>{`Fee Rate:`}</DarkSubTitle>
+                            <NoWrapTitle>
+                                <DarkSubTitle>{`Fee Rate:`}</DarkSubTitle>
+                            </NoWrapTitle>
                             <SingleLine>
                                 {feeRate}
                                 <DarkSubTitle>

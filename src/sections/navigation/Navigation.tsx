@@ -8,6 +8,7 @@ import {
     navBackgroundColor,
     navTextColor,
     subCardColor,
+    cardBorderColor,
 } from '../../styles/Themes';
 import {
     Home,
@@ -89,6 +90,7 @@ const BurgerRow = styled.div`
     justify-content: flex-start;
     align-items: center;
     overflow: scroll;
+    background: ${cardBorderColor};
     margin: 0 -16px;
     padding: 16px;
 `;

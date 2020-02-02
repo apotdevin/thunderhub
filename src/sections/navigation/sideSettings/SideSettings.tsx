@@ -1,5 +1,5 @@
 import React from 'react';
-import { Separation } from '../../../components/generic/Styled';
+import { Separation, SingleLine } from '../../../components/generic/Styled';
 import { useSettings } from '../../../context/SettingsContext';
 import {
     Sun,
@@ -47,6 +47,10 @@ const IconRow = styled.div`
     justify-content: center;
     align-items: center;
     ${({ center }: { center?: boolean }) => center && 'width: 100%'}
+`;
+
+const BurgerPadding = styled(SingleLine)`
+    margin: 16px 0;
 `;
 
 const currencyArray = ['sat', 'btc', 'EUR', 'USD'];
@@ -163,7 +167,7 @@ export const SideSettings = ({
 
     if (isBurger) {
         return (
-            <>
+            <BurgerPadding>
                 <IconRow>
                     {renderIcon('currency', 'sat', 'S')}
                     {renderIcon('currency', 'btc', '₿')}
@@ -174,7 +178,7 @@ export const SideSettings = ({
                     {renderIcon('theme', 'light', '', false, Sun)}
                     {renderIcon('theme', 'dark', '', false, Moon)}
                 </IconRow>
-            </>
+            </BurgerPadding>
         );
     }
 

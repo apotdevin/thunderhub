@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { headerColor, headerTextColor } from '../../styles/Themes';
+import styled, { css } from 'styled-components';
+import { headerColor, headerTextColor, themeColors } from '../../styles/Themes';
 import { HomeButton } from '../../views/entry/homepage/HomePage.styled';
 import { Link } from 'react-router-dom';
 import { useAccount } from '../../context/AccountContext';
-import { SingleLine, Sub4Title } from '../../components/generic/Styled';
+import {
+    SingleLine,
+    Sub4Title,
+    ResponsiveLine,
+} from '../../components/generic/Styled';
 import { Cpu, MenuIcon, XSvg, Zap } from '../../components/generic/Icons';
 import { BurgerMenu } from 'components/burgerMenu/BurgerMenu';
 import { useSize } from 'hooks/UseSize';
@@ -15,9 +19,25 @@ const HeaderStyle = styled.div`
     padding: 16px 0;
 `;
 
+const IconPadding = styled.div`
+    padding-right: 6px;
+    margin-bottom: -4px;
+`;
+
 const HeaderTitle = styled.div`
     color: ${headerTextColor};
     font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ${({ withPadding }: { withPadding: boolean }) =>
+        withPadding &&
+        css`
+            @media (max-width: 578px) {
+                margin-bottom: 16px;
+            }
+        `}
 `;
 
 const IconWrapper = styled.div`
@@ -26,6 +46,16 @@ const IconWrapper = styled.div`
     align-items: center;
     width: 24px;
     height: 24px;
+`;
+
+const LinkWrapper = styled.div`
+    color: ${headerTextColor};
+    margin: ${({ last }: { last?: boolean }) =>
+        last ? '0 16px 0 4px' : '0 4px'};
+
+    :hover {
+        color: ${themeColors.blue2};
+    }
 `;
 
 const AnimatedBurger = animated(MenuIcon);
@@ -61,12 +91,26 @@ export const Header = () => {
     };
 
     const renderLoggedOut = () => (
-        <Link to="/login" style={{ textDecoration: 'none' }}>
-            <HomeButton>
-                <Zap fillcolor={'white'} color={'white'} />
-            </HomeButton>
-        </Link>
+        <>
+            <Link to="/faq" style={{ textDecoration: 'none' }}>
+                <LinkWrapper>Faq</LinkWrapper>
+            </Link>
+            <Link to="/terms" style={{ textDecoration: 'none' }}>
+                <LinkWrapper>Terms</LinkWrapper>
+            </Link>
+            <Link to="/privacy" style={{ textDecoration: 'none' }}>
+                <LinkWrapper last={true}>Privacy</LinkWrapper>
+            </Link>
+            <Link to="/login" style={{ textDecoration: 'none' }}>
+                <HomeButton>
+                    <Zap fillcolor={'white'} color={'white'} />
+                </HomeButton>
+            </Link>
+        </>
     );
+
+    const HeaderWrapper =
+        width <= 578 && !loggedIn ? ResponsiveLine : SingleLine;
 
     return (
         <>
@@ -76,17 +120,21 @@ export const Header = () => {
                 textColor={headerTextColor}
             >
                 <HeaderStyle>
-                    <SingleLine>
+                    <HeaderWrapper>
                         <Link to="/" style={{ textDecoration: 'none' }}>
-                            <SingleLine>
-                                <Cpu />
-                                <HeaderTitle>ThunderHub</HeaderTitle>
-                            </SingleLine>
+                            <HeaderTitle
+                                withPadding={width <= 578 && !loggedIn}
+                            >
+                                <IconPadding>
+                                    <Cpu color={'white'} />
+                                </IconPadding>
+                                ThunderHub
+                            </HeaderTitle>
                         </Link>
                         <SingleLine>
                             {loggedIn ? renderLoggedIn() : renderLoggedOut()}
                         </SingleLine>
-                    </SingleLine>
+                    </HeaderWrapper>
                 </HeaderStyle>
             </Section>
             {open && width <= 578 && (
