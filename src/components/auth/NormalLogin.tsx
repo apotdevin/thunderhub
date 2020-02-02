@@ -175,7 +175,9 @@ export const LoginForm = ({
                     <Line>
                         <StyledTitle>Admin:</StyledTitle>
                         <Input
-                            placeholder={'HEX encoded admin macaroon'}
+                            placeholder={
+                                'HEX Admin macaroon (e.g.: 0201036c6e6402eb01030a100e385f...)'
+                            }
                             onChange={e => setAdmin(e.target.value)}
                         />
                     </Line>
@@ -183,14 +185,18 @@ export const LoginForm = ({
                 <Line>
                     <StyledTitle>Readonly:</StyledTitle>
                     <Input
-                        placeholder={'HEX encoded readonly macaroon'}
+                        placeholder={
+                            'HEX Readonly macaroon (e.g.: 0201036c6e6402eb01030a100e385f...)'
+                        }
                         onChange={e => setRead(e.target.value)}
                     />
                 </Line>
                 <Line>
                     <StyledTitle>Certificate:</StyledTitle>
                     <Input
-                        placeholder={'Certificate'}
+                        placeholder={
+                            'HEX TLS Certificate (e.g.: 2d2d2d2d2d424547494e20434552...)'
+                        }
                         onChange={e => setCert(e.target.value)}
                     />
                 </Line>
