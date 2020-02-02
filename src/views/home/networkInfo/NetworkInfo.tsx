@@ -11,7 +11,7 @@ import {
 import { useAccount } from '../../../context/AccountContext';
 import { getAuthString } from '../../../utils/auth';
 import styled from 'styled-components';
-import { unSelectedNavButton } from '../../../styles/Themes';
+import { unSelectedNavButton, mediaWidths } from '../../../styles/Themes';
 import { Globe, Cpu } from '../../../components/generic/Icons';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
@@ -26,7 +26,7 @@ const Tile = styled.div`
     align-items: ${({ start }: { start?: boolean }) =>
         start ? 'flex-start' : 'flex-end'};
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         margin: 0 0 8px;
         flex-direction: row;
         width: 100%;
@@ -38,7 +38,7 @@ const TileTitle = styled.div`
     color: ${unSelectedNavButton};
     margin-bottom: 10px;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         margin-bottom: 0;
     }
 `;
@@ -49,7 +49,7 @@ const Title = styled.div`
     align-items: center;
     width: 120px;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         justify-content: center;
         padding-bottom: 16px;
         width: 100%;

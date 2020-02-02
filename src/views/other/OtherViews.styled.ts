@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Card, CardProps } from 'components/generic/Styled';
-import { themeColors, fontColors } from 'styles/Themes';
+import { themeColors, fontColors, mediaWidths } from 'styles/Themes';
 
 export const Center = styled.div`
     display: flex;
@@ -16,7 +16,7 @@ export const Title = styled.h1`
         textColor ? textColor : fontColors.grey3};
     font-size: 40px;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         font-size: 24px;
     }
 `;
@@ -59,7 +59,7 @@ export const DetailCard = styled(Card)<CardProps>`
     flex: 1 0 30%;
     border: 1px solid ${themeColors.grey2};
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         flex: 1 0 100%;
     }
 `;
@@ -70,7 +70,7 @@ export const DetailLine = styled.div`
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         margin: 0;
     }
 `;

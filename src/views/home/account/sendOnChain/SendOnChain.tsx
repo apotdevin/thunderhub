@@ -21,9 +21,10 @@ import {
     SingleButton,
 } from 'components/buttons/multiButton/MultiButton';
 import { Price } from 'components/price/Price';
+import { mediaWidths } from 'styles/Themes';
 
 const ResponsiveWrap = styled(SingleLine)`
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         flex-wrap: wrap;
     }
 `;

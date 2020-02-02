@@ -15,7 +15,7 @@ import {
     Sliders,
     Users,
 } from '../../../../components/generic/Icons';
-import { cardColor } from '../../../../styles/Themes';
+import { cardColor, mediaWidths } from '../../../../styles/Themes';
 import { Section } from 'components/section/Section';
 
 const Padding = styled.div`
@@ -30,7 +30,7 @@ const DetailCard = styled(Card)`
     z-index: 1;
     flex: 1 0 30%;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         flex: 1 0 100%;
     }
 `;
@@ -41,7 +41,7 @@ const DetailLine = styled.div`
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         margin: 0;
     }
 `;

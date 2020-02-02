@@ -15,13 +15,14 @@ import { ColorButton } from '../../../../components/buttons/colorButton/ColorBut
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Input } from '../../../../components/input/Input';
 import { useSize } from '../../../../hooks/UseSize';
+import { mediaWidths } from 'styles/Themes';
 
 const Responsive = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         flex-direction: column;
     }
 `;

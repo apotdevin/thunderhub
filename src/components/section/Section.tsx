@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeSet } from 'styled-theming';
-import { backgroundColor } from 'styles/Themes';
+import { backgroundColor, mediaWidths } from 'styles/Themes';
 
 interface FullWidthProps {
     padding?: string;
@@ -25,7 +25,7 @@ const FullWidth = styled.div`
     background-color: ${({ withColor, color }: FullWidthProps) =>
         withColor && (color ? color : backgroundColor)};
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         padding: 16px 0;
     }
 `;

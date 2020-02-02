@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { ReactComponent as HeadlineImage } from '../../../assets/images/MoshingDoodle.svg';
-import { fontColors } from 'styles/Themes';
+import { fontColors, mediaWidths } from 'styles/Themes';
 
 export const Headline = styled.div`
     display: flex;
@@ -8,7 +8,7 @@ export const Headline = styled.div`
     justify-content: space-between;
     padding: 48px 0 140px;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         flex-direction: column-reverse;
     }
 `;
@@ -18,7 +18,7 @@ export const LeftHeadline = styled.div`
     display: flex;
     flex-direction: column;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         width: 100%;
         text-align: center;
     }
@@ -27,7 +27,7 @@ export const LeftHeadline = styled.div`
 export const StyledImage = styled(HeadlineImage)`
     width: 500px;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         width: unset;
     }
 `;

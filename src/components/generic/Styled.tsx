@@ -10,6 +10,7 @@ import {
     chartLinkColor,
     inverseTextColor,
     separationColor,
+    mediaWidths,
 } from '../../styles/Themes';
 import { ThemeSet } from 'styled-theming';
 
@@ -115,7 +116,7 @@ export const ColumnLine = styled.div`
     display: flex;
     flex-direction: column;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         width: 100%;
     }
 `;
@@ -186,7 +187,7 @@ export const ResponsiveLine = styled(SingleLine)`
             flex-wrap: wrap;
         `}
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         flex-direction: column;
     }
 `;
@@ -194,7 +195,7 @@ export const ResponsiveLine = styled(SingleLine)`
 export const ResponsiveCol = styled.div`
     flex-grow: 1;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         width: 100%;
     }
 `;
@@ -203,7 +204,7 @@ export const ResponsiveSingle = styled(SingleLine)`
     flex-grow: 1;
     min-width: 200px;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         width: 100%;
     }
 `;

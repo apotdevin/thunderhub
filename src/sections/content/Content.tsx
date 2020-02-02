@@ -18,6 +18,7 @@ import { FaqView } from '../../views/other/faq/FaqView';
 import { Section } from 'components/section/Section';
 import { BitcoinPrice } from '../../components/bitcoinInfo/BitcoinPrice';
 import { BitcoinFees } from '../../components/bitcoinInfo/BitcoinFees';
+import { mediaWidths } from 'styles/Themes';
 
 const Container = styled.div`
     display: grid;
@@ -25,7 +26,7 @@ const Container = styled.div`
     grid-template-columns: auto 1fr 200px;
     gap: 16px;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         display: flex;
         flex-direction: column;
     }

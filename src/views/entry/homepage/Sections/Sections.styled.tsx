@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { SingleLine } from 'components/generic/Styled';
-import { headerColor } from 'styles/Themes';
+import { headerColor, mediaWidths } from 'styles/Themes';
 
 export const Padding = styled.div`
     padding: 4px 4px 0 0;
@@ -41,7 +41,7 @@ export const InfoRow = styled.div`
     justify-content: space-between;
     align-items: stretch;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         flex-direction: ${({ reverse }: { reverse?: boolean }) =>
             reverse ? 'column-reverse' : 'column'};
     }
@@ -52,7 +52,7 @@ export const HalfSection = styled.div`
     display: flex;
     flex-direction: column;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         width: 100%;
         text-align: center;
     }
@@ -65,7 +65,7 @@ export const ImageSection = styled(HalfSection)`
 export const TextSection = styled(HalfSection)`
     padding: 0 32px;
 
-    @media (max-width: 578px) {
+    @media (${mediaWidths.mobile}) {
         padding: 0 8px;
     }
 `;
