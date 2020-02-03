@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 export const CLOSE_CHANNEL = gql`
     mutation CloseChannel(
         $id: String!
-        $auth: String!
+        $auth: authType!
         $forceClose: Boolean
         $target: Int
         $tokens: Int
@@ -25,7 +25,7 @@ export const OPEN_CHANNEL = gql`
     mutation openChannel(
         $amount: Int!
         $partnerPublicKey: String!
-        $auth: String!
+        $auth: authType!
         $tokensPerVByte: Int
         $isPrivate: Boolean
     ) {
@@ -43,7 +43,7 @@ export const OPEN_CHANNEL = gql`
 `;
 
 export const PAY_INVOICE = gql`
-    mutation PayInvoice($request: String!, $auth: String!) {
+    mutation PayInvoice($request: String!, $auth: authType!) {
         pay(request: $request, auth: $auth) {
             isConfirmed
         }
@@ -51,7 +51,7 @@ export const PAY_INVOICE = gql`
 `;
 
 export const CREATE_INVOICE = gql`
-    mutation PayInvoice($amount: Int!, $auth: String!) {
+    mutation PayInvoice($amount: Int!, $auth: authType!) {
         createInvoice(amount: $amount, auth: $auth) {
             request
         }
@@ -59,14 +59,14 @@ export const CREATE_INVOICE = gql`
 `;
 
 export const CREATE_ADDRESS = gql`
-    mutation CreateAddress($nested: Boolean, $auth: String!) {
+    mutation CreateAddress($nested: Boolean, $auth: authType!) {
         createAddress(nested: $nested, auth: $auth)
     }
 `;
 
 export const PAY_ADDRESS = gql`
     mutation PayAddress(
-        $auth: String!
+        $auth: authType!
         $address: String!
         $tokens: Int
         $fee: Int
@@ -91,7 +91,7 @@ export const PAY_ADDRESS = gql`
 `;
 
 export const DECODE_REQUEST = gql`
-    mutation decodeRequest($auth: String!, $request: String!) {
+    mutation decodeRequest($auth: authType!, $request: String!) {
         decodeRequest(auth: $auth, request: $request) {
             chainAddress
             cltvDelta
@@ -114,7 +114,7 @@ export const DECODE_REQUEST = gql`
 
 export const UPDATE_FEES = gql`
     mutation updateFees(
-        $auth: String!
+        $auth: authType!
         $transactionId: String
         $transactionVout: Int
         $baseFee: Int
