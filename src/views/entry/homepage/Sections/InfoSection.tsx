@@ -49,7 +49,7 @@ export const InfoSection = () => {
                 </InfoRow>
             </Section>
             <Section padding={'48px 0'}>
-                <InfoRow reverse={true}>
+                <InfoRow>
                     <TextSection>
                         <h2>Channel Management</h2>
                         <Text>
@@ -64,7 +64,7 @@ export const InfoSection = () => {
                 </InfoRow>
             </Section>
             <Section padding={'48px 0'}>
-                <InfoRow>
+                <InfoRow reverse={true}>
                     <ImageSection>
                         <ImagePlace src={Forwards} />
                     </ImageSection>
@@ -79,7 +79,7 @@ export const InfoSection = () => {
                 </InfoRow>
             </Section>
             <Section padding={'48px 0 80px'}>
-                <InfoRow reverse={true}>
+                <InfoRow>
                     <TextSection>
                         <h2>Night/Day Mode</h2>
                         <Text>
