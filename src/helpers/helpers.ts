@@ -13,15 +13,20 @@ export const getIp = (req: any) => {
     return ip;
 };
 
-export const getAuthLnd = (auth: string) => {
-    const url = new URL(auth);
+export const getAuthLnd = (auth: {
+    cert: string;
+    macaroon: string;
+    host: string;
+}) => {
+    const encodedCert = auth.cert || '';
+    const encodedMacaroon = auth.macaroon || '';
+    const socket = auth.host || '';
 
-    const encodedCert = url.searchParams.get('cert') || '';
-    const encodedMacaroon = url.searchParams.get('macaroon') || '';
-    const socket = url.host;
+    // const cert = base64url.toBase64(encodedCert);
+    // const macaroon = base64url.toBase64(encodedMacaroon);
 
-    const cert = base64url.toBase64(encodedCert);
-    const macaroon = base64url.toBase64(encodedMacaroon);
+    const cert = encodedCert;
+    const macaroon = encodedMacaroon;
 
     const params =
         encodedCert !== ''

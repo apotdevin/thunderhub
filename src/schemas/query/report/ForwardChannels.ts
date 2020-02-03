@@ -12,6 +12,7 @@ import { countArray, countRoutes } from './Helpers';
 import { ForwardCompleteProps } from './ForwardReport.interface';
 import { sortBy } from 'underscore';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 interface NodeProps {
     alias: string;
@@ -25,7 +26,7 @@ interface ChannelsProps {
 export const getForwardChannelsReport = {
     type: GraphQLString,
     args: {
-        auth: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(AuthType) },
         time: { type: GraphQLString },
         order: { type: GraphQLString },
         type: { type: GraphQLString },

@@ -9,6 +9,7 @@ import {
 } from 'graphql';
 import { OpenChannelType } from '../../../schemaTypes/mutation.ts/channels/openChannel';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 interface OpenChannelProps {
     transaction_id: string;
@@ -20,7 +21,7 @@ export const openChannel = {
     args: {
         amount: { type: new GraphQLNonNull(GraphQLInt) },
         partnerPublicKey: { type: new GraphQLNonNull(GraphQLString) },
-        auth: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(AuthType) },
         tokensPerVByte: { type: GraphQLInt },
         isPrivate: { type: GraphQLBoolean },
     },

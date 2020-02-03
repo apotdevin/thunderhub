@@ -1,9 +1,10 @@
-import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLList, GraphQLNonNull } from 'graphql';
 import { getChannels as getLnChannels, getNode } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { ChannelType } from '../../../schemaTypes/query/channels/channels';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 interface ChannelListProps {
     channels: ChannelProps[];
@@ -37,7 +38,7 @@ interface ChannelProps {
 
 export const getChannels = {
     type: new GraphQLList(ChannelType),
-    args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
+    args: { auth: { type: new GraphQLNonNull(AuthType) } },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'channels');
 

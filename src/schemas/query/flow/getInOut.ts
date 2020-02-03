@@ -11,11 +11,12 @@ import { groupBy } from 'underscore';
 import { reduceInOutArray } from '../report/Helpers';
 import { InOutType } from '../../../schemaTypes/query/flow/InOut';
 import { InvoicesProps, PaymentsProps } from './getInOut.interface';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 export const getInOut = {
     type: InOutType,
     args: {
-        auth: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(AuthType) },
         time: { type: GraphQLString },
     },
     resolve: async (root: any, params: any, context: any) => {

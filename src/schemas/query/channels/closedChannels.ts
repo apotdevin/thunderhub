@@ -4,6 +4,7 @@ import { logger } from '../../../helpers/logger';
 import { ClosedChannelType } from '../../../schemaTypes/query/channels/closedChannels';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 interface ChannelListProps {
     channels: ChannelProps[];
@@ -30,7 +31,7 @@ export const getClosedChannels = {
     type: new GraphQLList(ClosedChannelType),
     args: {
         type: { type: GraphQLString },
-        auth: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(AuthType) },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'closedChannels');

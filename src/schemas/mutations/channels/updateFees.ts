@@ -8,11 +8,12 @@ import {
     GraphQLInt,
 } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 export const updateFees = {
     type: GraphQLBoolean,
     args: {
-        auth: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(AuthType) },
         transactionId: { type: GraphQLString },
         transactionVout: { type: GraphQLInt },
         baseFee: { type: GraphQLInt },

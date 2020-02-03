@@ -1,9 +1,10 @@
 import { getFeeRates, getChannels, getNode } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLNonNull, GraphQLString, GraphQLList } from 'graphql';
+import { GraphQLNonNull, GraphQLList } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { ChannelFeeType } from '../../../schemaTypes/query/channels/channelFees';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 interface GetChannelsProps {
     channels: ChannelsProps[];
@@ -32,7 +33,7 @@ interface NodeProps {
 
 export const getChannelFees = {
     type: new GraphQLList(ChannelFeeType),
-    args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
+    args: { auth: { type: new GraphQLNonNull(AuthType) } },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'channelFees');
 

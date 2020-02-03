@@ -1,9 +1,10 @@
 import { createInvoice as createInvoiceRequest } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLNonNull, GraphQLInt, GraphQLString } from 'graphql';
+import { GraphQLNonNull, GraphQLInt } from 'graphql';
 import { InvoiceType } from '../../../schemaTypes/mutation.ts/invoice/createInvoice';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 interface InvoiceProps {
     chain_address: string;
@@ -20,7 +21,7 @@ export const createInvoice = {
     type: InvoiceType,
     args: {
         amount: { type: new GraphQLNonNull(GraphQLInt) },
-        auth: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(AuthType) },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'createInvoice');
