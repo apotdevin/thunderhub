@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const GET_NETWORK_INFO = gql`
-    query GetNetworkInfo($auth: String!) {
+    query GetNetworkInfo($auth: authType!) {
         getNetworkInfo(auth: $auth) {
             averageChannelSize
             channelCount
@@ -16,7 +16,7 @@ export const GET_NETWORK_INFO = gql`
 `;
 
 export const GET_CAN_CONNECT = gql`
-    query GetNodeInfo($auth: String!) {
+    query GetNodeInfo($auth: authType!) {
         getNodeInfo(auth: $auth) {
             alias
         }
@@ -24,7 +24,7 @@ export const GET_CAN_CONNECT = gql`
 `;
 
 export const GET_NODE_INFO = gql`
-    query GetNodeInfo($auth: String!) {
+    query GetNodeInfo($auth: authType!) {
         getNodeInfo(auth: $auth) {
             chains
             color
@@ -46,7 +46,7 @@ export const GET_NODE_INFO = gql`
 `;
 
 export const GET_CHANNEL_AMOUNT_INFO = gql`
-    query GetChannelAmountInfo($auth: String!) {
+    query GetChannelAmountInfo($auth: authType!) {
         getNodeInfo(auth: $auth) {
             active_channels_count
             closed_channels_count
@@ -56,7 +56,7 @@ export const GET_CHANNEL_AMOUNT_INFO = gql`
 `;
 
 export const GET_BALANCES = gql`
-    query GetNodeInfo($auth: String!) {
+    query GetNodeInfo($auth: authType!) {
         getChainBalance(auth: $auth)
         getPendingChainBalance(auth: $auth)
         getChannelBalance(auth: $auth) {
@@ -67,7 +67,7 @@ export const GET_BALANCES = gql`
 `;
 
 export const GET_CHANNELS = gql`
-    query GetChannels($auth: String!) {
+    query GetChannels($auth: authType!) {
         getChannels(auth: $auth) {
             capacity
             commit_transaction_fee
@@ -103,7 +103,7 @@ export const GET_CHANNELS = gql`
 `;
 
 export const GET_PENDING_CHANNELS = gql`
-    query GetPendingChannels($auth: String!) {
+    query GetPendingChannels($auth: authType!) {
         getPendingChannels(auth: $auth) {
             close_transaction_id
             is_active
@@ -131,7 +131,7 @@ export const GET_PENDING_CHANNELS = gql`
 `;
 
 export const GET_CLOSED_CHANNELS = gql`
-    query GetClosedChannels($auth: String!) {
+    query GetClosedChannels($auth: authType!) {
         getClosedChannels(auth: $auth) {
             capacity
             close_confirm_height
@@ -159,7 +159,7 @@ export const GET_CLOSED_CHANNELS = gql`
 `;
 
 export const GET_RESUME = gql`
-    query GetResume($auth: String!, $token: String) {
+    query GetResume($auth: authType!, $token: String) {
         getResume(auth: $auth, token: $token) {
             token
             resume
@@ -184,13 +184,13 @@ export const GET_BITCOIN_FEES = gql`
 `;
 
 export const GET_FORWARD_REPORT = gql`
-    query GetForwardReport($time: String, $auth: String!) {
+    query GetForwardReport($time: String, $auth: authType!) {
         getForwardReport(time: $time, auth: $auth)
     }
 `;
 
 export const GET_LIQUID_REPORT = gql`
-    query GetLiquidReport($auth: String!) {
+    query GetLiquidReport($auth: authType!) {
         getChannelReport(auth: $auth) {
             local
             remote
@@ -205,7 +205,7 @@ export const GET_FORWARD_CHANNELS_REPORT = gql`
         $time: String
         $order: String
         $type: String
-        $auth: String!
+        $auth: authType!
     ) {
         getForwardChannelsReport(
             time: $time
@@ -217,7 +217,7 @@ export const GET_FORWARD_CHANNELS_REPORT = gql`
 `;
 
 export const GET_IN_OUT = gql`
-    query GetInOut($auth: String!, $time: String) {
+    query GetInOut($auth: authType!, $time: String) {
         getInOut(auth: $auth, time: $time) {
             invoices
             payments
@@ -228,7 +228,7 @@ export const GET_IN_OUT = gql`
 `;
 
 export const GET_CHAIN_TRANSACTIONS = gql`
-    query GetChainTransactions($auth: String!) {
+    query GetChainTransactions($auth: authType!) {
         getChainTransactions(auth: $auth) {
             block_id
             confirmation_count
@@ -243,7 +243,7 @@ export const GET_CHAIN_TRANSACTIONS = gql`
 `;
 
 export const GET_FORWARDS = gql`
-    query GetForwards($auth: String!, $time: String) {
+    query GetForwards($auth: authType!, $time: String) {
         getForwards(auth: $auth, time: $time) {
             forwards {
                 created_at
@@ -264,7 +264,7 @@ export const GET_FORWARDS = gql`
 `;
 
 export const GET_CONNECT_INFO = gql`
-    query GetNodeInfo($auth: String!) {
+    query GetNodeInfo($auth: authType!) {
         getNodeInfo(auth: $auth) {
             public_key
             uris
@@ -273,25 +273,25 @@ export const GET_CONNECT_INFO = gql`
 `;
 
 export const GET_BACKUPS = gql`
-    query GetBackups($auth: String!) {
+    query GetBackups($auth: authType!) {
         getBackups(auth: $auth)
     }
 `;
 
 export const VERIFY_BACKUPS = gql`
-    query VerifyBackups($auth: String!, $backup: String!) {
+    query VerifyBackups($auth: authType!, $backup: String!) {
         verifyBackups(auth: $auth, backup: $backup)
     }
 `;
 
 export const RECOVER_FUNDS = gql`
-    query RecoverFunds($auth: String!, $backup: String!) {
+    query RecoverFunds($auth: authType!, $backup: String!) {
         recoverFunds(auth: $auth, backup: $backup)
     }
 `;
 
 export const CHANNEL_FEES = gql`
-    query GetChannelFees($auth: String!) {
+    query GetChannelFees($auth: authType!) {
         getChannelFees(auth: $auth) {
             alias
             color

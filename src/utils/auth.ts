@@ -44,10 +44,11 @@ export const getAuthString = (
     host: string,
     macaroon: string,
     cert: string = '',
-) => {
-    const certString = cert !== '' ? `&cert=${cert}` : '';
-    return `https://${host}?macaroon=${macaroon}${certString}`;
-};
+) => ({
+    host,
+    macaroon,
+    cert,
+});
 
 export const getAuthParams = (available: string) => {
     const host = localStorage.getItem(`${available}-host`) || '';
