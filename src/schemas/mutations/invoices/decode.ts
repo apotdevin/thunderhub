@@ -4,6 +4,7 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { DecodeType } from '../../../schemaTypes/mutation.ts/invoice/decode';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 interface RouteProps {
     base_fee_mtokens: string;
@@ -29,7 +30,7 @@ export const decodeRequest = {
     type: DecodeType,
     args: {
         request: { type: new GraphQLNonNull(GraphQLString) },
-        auth: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(AuthType) },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'decode');

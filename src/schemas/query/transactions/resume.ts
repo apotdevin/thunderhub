@@ -7,11 +7,12 @@ import { PaymentsProps, InvoicesProps, NodeProps } from './Resume.interface';
 import { compareDesc } from 'date-fns';
 import { sortBy } from 'underscore';
 import { GetResumeType } from '../../../schemaTypes/query/transactions/resume';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 export const getResume = {
     type: GetResumeType,
     args: {
-        auth: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(AuthType) },
         token: { type: GraphQLString },
     },
     resolve: async (root: any, params: any, context: any) => {

@@ -3,6 +3,7 @@ import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLNonNull, GraphQLString, GraphQLBoolean } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 interface AddressProps {
     address: string;
@@ -11,7 +12,7 @@ interface AddressProps {
 export const createAddress = {
     type: GraphQLString,
     args: {
-        auth: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(AuthType) },
         nested: { type: GraphQLBoolean },
     },
     resolve: async (root: any, params: any, context: any) => {

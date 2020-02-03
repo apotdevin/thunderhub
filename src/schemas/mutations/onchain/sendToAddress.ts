@@ -9,6 +9,7 @@ import {
 } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { SendToType } from '../../../schemaTypes/mutation.ts/onchain/sentToAddress';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 interface SendProps {
     confirmation_count: number;
@@ -21,7 +22,7 @@ interface SendProps {
 export const sendToAddress = {
     type: SendToType,
     args: {
-        auth: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(AuthType) },
         address: { type: new GraphQLNonNull(GraphQLString) },
         tokens: { type: GraphQLInt },
         fee: { type: GraphQLInt },

@@ -3,6 +3,7 @@ import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLNonNull, GraphQLString, GraphQLBoolean } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 interface BackupProps {
     backup: string;
@@ -11,7 +12,7 @@ interface BackupProps {
 export const recoverFunds = {
     type: GraphQLBoolean,
     args: {
-        auth: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(AuthType) },
         backup: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (root: any, params: any, context: any) => {

@@ -4,8 +4,9 @@ import {
 } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLInt, GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLInt, GraphQLNonNull } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 interface ChainBalanceProps {
     chain_balance: number;
@@ -17,7 +18,7 @@ interface PendingChainBalanceProps {
 
 export const getChainBalance = {
     type: GraphQLInt,
-    args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
+    args: { auth: { type: new GraphQLNonNull(AuthType) } },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'chainBalance');
 
@@ -37,7 +38,7 @@ export const getChainBalance = {
 
 export const getPendingChainBalance = {
     type: GraphQLInt,
-    args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
+    args: { auth: { type: new GraphQLNonNull(AuthType) } },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'pendingChainBalance');
 

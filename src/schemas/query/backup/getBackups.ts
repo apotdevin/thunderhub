@@ -3,10 +3,11 @@ import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 export const getBackups = {
     type: GraphQLString,
-    args: { auth: { type: new GraphQLNonNull(GraphQLString) } },
+    args: { auth: { type: new GraphQLNonNull(AuthType) } },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'getBackups');
 

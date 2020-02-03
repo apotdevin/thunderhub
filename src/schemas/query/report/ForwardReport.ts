@@ -12,11 +12,12 @@ import {
 import { reduceForwardArray } from './Helpers';
 import { ForwardCompleteProps } from './ForwardReport.interface';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import { AuthType } from '../../../schemaTypes/Auth';
 
 export const getForwardReport = {
     type: GraphQLString,
     args: {
-        auth: { type: new GraphQLNonNull(GraphQLString) },
+        auth: { type: new GraphQLNonNull(AuthType) },
         time: { type: GraphQLString },
     },
     resolve: async (root: any, params: any, context: any) => {
