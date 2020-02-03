@@ -14,20 +14,27 @@ const CallToActionButton = styled(HomeButton)`
 
 export const CallToAction = () => {
     return (
-        <Section color={themeColors.grey2} padding={'80px 0'}>
-            <Center>
-                <h2>Ready to take control of your Lightning Node?</h2>
-            </Center>
-            <Center>
-                <Link to="/login" style={{ textDecoration: 'none' }}>
-                    <CallToActionButton>
-                        <Padding>
-                            <Zap fillcolor={'white'} color={'white'} />
-                        </Padding>
-                        Control The Lightning
-                    </CallToActionButton>
-                </Link>
-            </Center>
-        </Section>
+        <>
+            <Section color={themeColors.grey} padding={'80px 0'}>
+                <Center>
+                    <h1>And much more...</h1>
+                </Center>
+            </Section>
+            <Section color={themeColors.grey2} padding={'80px 0'}>
+                <Center>
+                    <h2>Ready to take control of your Lightning Node?</h2>
+                </Center>
+                <Center>
+                    <Link to="/login" style={{ textDecoration: 'none' }}>
+                        <CallToActionButton>
+                            <Padding>
+                                <Zap fillcolor={'white'} color={'white'} />
+                            </Padding>
+                            Control The Lightning
+                        </CallToActionButton>
+                    </Link>
+                </Center>
+            </Section>
+        </>
     );
 };

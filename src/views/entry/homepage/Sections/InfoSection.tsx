@@ -7,6 +7,11 @@ import {
     TextSection,
 } from './Sections.styled';
 import { Text } from 'views/other/OtherViews.styled';
+import Transactions from '../../../../assets/images/Transactions.png';
+import Reports from '../../../../assets/images/Reports.png';
+import Forwards from '../../../../assets/images/Forwards.png';
+import Channels from '../../../../assets/images/Channels.png';
+import NightLight from '../../../../assets/images/NightLight.png';
 
 export const InfoSection = () => {
     return (
@@ -22,14 +27,14 @@ export const InfoSection = () => {
                         </Text>
                     </TextSection>
                     <ImageSection>
-                        <ImagePlace src={'https://www.placecage.com/500/300'} />
+                        <ImagePlace src={Transactions} />
                     </ImageSection>
                 </InfoRow>
             </Section>
             <Section padding={'48px 0'}>
                 <InfoRow reverse={true}>
                     <ImageSection>
-                        <ImagePlace src={'https://www.placecage.com/500/300'} />
+                        <ImagePlace src={Reports} />
                     </ImageSection>
                     <TextSection>
                         <h2>Transaction Reports</h2>
@@ -44,25 +49,7 @@ export const InfoSection = () => {
                 </InfoRow>
             </Section>
             <Section padding={'48px 0'}>
-                <InfoRow>
-                    <TextSection>
-                        <h2>Forwarded Payments</h2>
-                        <Text>
-                            Quick glance at the forwarded payments that have
-                            been going through your node. See the incoming and
-                            outgoing channels being used.
-                        </Text>
-                    </TextSection>
-                    <ImageSection>
-                        <ImagePlace src={'https://www.placecage.com/500/300'} />
-                    </ImageSection>
-                </InfoRow>
-            </Section>
-            <Section padding={'48px 0'}>
                 <InfoRow reverse={true}>
-                    <ImageSection>
-                        <ImagePlace src={'https://www.placecage.com/500/300'} />
-                    </ImageSection>
                     <TextSection>
                         <h2>Channel Management</h2>
                         <Text>
@@ -71,63 +58,39 @@ export const InfoSection = () => {
                             close them.
                         </Text>
                     </TextSection>
+                    <ImageSection>
+                        <ImagePlace src={Channels} />
+                    </ImageSection>
                 </InfoRow>
             </Section>
             <Section padding={'48px 0'}>
                 <InfoRow>
-                    <TextSection>
-                        <h2>Forward Fees</h2>
-                        <Text>
-                            Manage the fees charged for using your channels to
-                            forward payments. Change them for individual
-                            channels or all of them at once.
-                        </Text>
-                    </TextSection>
                     <ImageSection>
-                        <ImagePlace src={'https://www.placecage.com/500/300'} />
-                    </ImageSection>
-                </InfoRow>
-            </Section>
-            <Section padding={'48px 0'}>
-                <InfoRow reverse={true}>
-                    <ImageSection>
-                        <ImagePlace src={'https://www.placecage.com/500/300'} />
+                        <ImagePlace src={Forwards} />
                     </ImageSection>
                     <TextSection>
-                        <h2>Transactions</h2>
+                        <h2>Forwarded Payments</h2>
                         <Text>
-                            See in detail all your transactions. When they were
-                            created, confirmed or if they expired.
+                            Quick glance at the forwarded payments that have
+                            been going through your node. See the incoming and
+                            outgoing channels being used.
                         </Text>
                     </TextSection>
-                </InfoRow>
-            </Section>
-            <Section padding={'48px 0'}>
-                <InfoRow>
-                    <TextSection>
-                        <h2>Backups</h2>
-                        <Text>
-                            Backup your channels, verify the backup and recover
-                            channels if needed.
-                        </Text>
-                    </TextSection>
-                    <ImageSection>
-                        <ImagePlace src={'https://www.placecage.com/500/300'} />
-                    </ImageSection>
                 </InfoRow>
             </Section>
             <Section padding={'48px 0 80px'}>
                 <InfoRow reverse={true}>
-                    <ImageSection>
-                        <ImagePlace src={'https://www.placecage.com/500/300'} />
-                    </ImageSection>
                     <TextSection>
-                        <h2>Night Mode</h2>
+                        <h2>Night/Day Mode</h2>
                         <Text>
                             Prefer working in the dark? We have an awesome night
-                            mode just for your needs.
+                            mode just for you. Want it more bright? Got you
+                            covered as well.
                         </Text>
                     </TextSection>
+                    <ImageSection>
+                        <ImagePlace src={NightLight} />
+                    </ImageSection>
                 </InfoRow>
             </Section>
         </>
