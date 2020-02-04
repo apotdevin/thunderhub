@@ -9,28 +9,35 @@ import styled from 'styled-components';
 import { chartLinkColor, colorButtonBackground } from '../../styles/Themes';
 import { useAccount } from '../../context/AccountContext';
 
-const CurrentField = styled.div`
+const CurrentField = styled.textarea`
+    width: 100%;
     color: ${chartLinkColor};
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     margin: 10px 0;
     font-size: 14px;
     padding: 5px 10px;
     border-radius: 5px;
     background-color: ${colorButtonBackground};
+    border: none;
+    word-wrap: break-word;
+    resize: none;
 `;
 
 export const CurrentSettings = () => {
     const { name, host, admin, read, cert } = useAccount();
 
-    const renderField = (title: string, field: string | null) => {
+    const renderField = (
+        title: string,
+        field: string | null,
+        rows?: number,
+    ) => {
         if (!field) return null;
 
         return (
             <>
                 <Sub4Title>{title}</Sub4Title>
-                <CurrentField>{field}</CurrentField>
+                <CurrentField rows={rows ?? 3} readOnly={true}>
+                    {field}
+                </CurrentField>
             </>
         );
     };
@@ -39,9 +46,9 @@ export const CurrentSettings = () => {
         <CardWithTitle>
             <SubTitle>Current Account:</SubTitle>
             <Card>
-                {renderField('Name:', name)}
-                {renderField('Host:', host)}
-                {renderField('AES Encrypted Admin Macaroon:', admin)}
+                {renderField('Name:', name, 1)}
+                {renderField('Host:', host, 1)}
+                {renderField('AES-256 Encrypted Admin Macaroon:', admin)}
                 {renderField('Read-only Macaroon:', read)}
                 {renderField('Certificate:', cert)}
             </Card>
