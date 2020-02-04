@@ -74,13 +74,15 @@ export const getAuthLnd = (lndconnect: string) => {
     const macaroon = url.searchParams.get('macaroon') || '';
     const socket = url.host;
 
-    return { cert, macaroon, socket };
+    return {
+        cert: base64url.toBase64(cert),
+        macaroon: base64url.toBase64(macaroon),
+        socket,
+    };
 };
 
-export const getBase64CertfromDerFormat = (url: string) => {
-    if (!url) return null;
-
-    const base64 = base64url.toBase64(url);
+export const getBase64CertfromDerFormat = (base64: string) => {
+    if (!base64) return null;
 
     const prefix = '-----BEGIN CERTIFICATE-----\n';
     const postfix = '-----END CERTIFICATE-----';

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useAccount } from '../../context/AccountContext';
 import { saveUserAuth, getAuthString, saveSessionAuth } from '../../utils/auth';
 import CryptoJS from 'crypto-js';
-import base64url from 'base64url';
 import { PasswordInput } from './Password';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { GET_CAN_CONNECT } from '../../graphql/query';
@@ -63,9 +62,9 @@ export const LoginForm = ({
 
     useEffect(() => {
         if (!loading && data && data.getNodeInfo && data.getNodeInfo.alias) {
-            const admin = base64url.fromBase64(isAdmin);
-            const read = base64url.fromBase64(isRead);
-            const cert = base64url.fromBase64(isCert);
+            const admin = isAdmin;
+            const read = isRead;
+            const cert = isCert;
 
             const encryptedAdmin =
                 admin && isPass !== ''
@@ -114,9 +113,9 @@ export const LoginForm = ({
     ]);
 
     const handleConnect = () => {
-        const admin = base64url.fromBase64(isAdmin);
-        const read = base64url.fromBase64(isRead);
-        const cert = base64url.fromBase64(isCert);
+        const admin = isAdmin;
+        const read = isRead;
+        const cert = isCert;
 
         const correctMacaroon = read ? read : admin;
 
