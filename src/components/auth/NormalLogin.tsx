@@ -174,9 +174,7 @@ export const LoginForm = ({
                     <Line>
                         <StyledTitle>Admin:</StyledTitle>
                         <Input
-                            placeholder={
-                                'Base64 Admin macaroon (e.g.: AgEDbG5kAusBAw...)'
-                            }
+                            placeholder={'Base64 or HEX Admin macaroon'}
                             onChange={e => setAdmin(e.target.value)}
                         />
                     </Line>
@@ -184,18 +182,14 @@ export const LoginForm = ({
                 <Line>
                     <StyledTitle>Readonly:</StyledTitle>
                     <Input
-                        placeholder={
-                            'Base64 Readonly macaroon (e.g.: AgEDbG5kApoBAw...)'
-                        }
+                        placeholder={'Base64 or HEX Readonly macaroon'}
                         onChange={e => setRead(e.target.value)}
                     />
                 </Line>
                 <Line>
                     <StyledTitle>Certificate:</StyledTitle>
                     <Input
-                        placeholder={
-                            'Base64 TLS Certificate (e.g.: LS0tLS1CRUdJTi...)'
-                        }
+                        placeholder={'Base64 or HEX TLS Certificate'}
                         onChange={e => setCert(e.target.value)}
                     />
                 </Line>
