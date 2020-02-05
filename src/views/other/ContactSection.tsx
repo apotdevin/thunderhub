@@ -1,6 +1,6 @@
 import React from 'react';
 import { Section } from 'components/section/Section';
-import { themeColors, fontColors } from 'styles/Themes';
+import { fontColors, homeBackgroundColor } from 'styles/Themes';
 import { Send, GithubIcon, MailIcon } from 'components/generic/Icons';
 import {
     Center,
@@ -14,7 +14,7 @@ import {
 } from './OtherViews.styled';
 
 export const ContactSection = () => (
-    <Section color={themeColors.grey3} padding={'24px 0 80px'}>
+    <Section color={homeBackgroundColor} padding={'24px 0 80px'}>
         <Center>
             <SectionTitle textColor={fontColors.blue3}>
                 Need to contact us?

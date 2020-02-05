@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { SingleLine } from 'components/generic/Styled';
-import { headerColor, mediaWidths, inverseTextColor } from 'styles/Themes';
+import { headerColor, mediaWidths } from 'styles/Themes';
 
 export const Padding = styled.div`
     padding: 4px 4px 0 0;
@@ -84,14 +84,8 @@ export const WrapSingleLine = styled(SingleLine)`
     flex-grow: 1;
 `;
 
-export const StyledH1 = styled.h1`
-    color: ${inverseTextColor};
-`;
+export const StyledH1 = styled.h1``;
 
-export const StyledH2 = styled.h2`
-    color: ${inverseTextColor};
-`;
+export const StyledH2 = styled.h2``;
 
-export const StyledP = styled.p`
-    color: ${inverseTextColor};
-`;
+export const StyledP = styled.p``;

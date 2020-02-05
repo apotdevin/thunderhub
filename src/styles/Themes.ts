@@ -105,6 +105,16 @@ export const headerTextColor = theme('mode', {
     dark: fontColors.white,
 });
 
+export const homeBackgroundColor = theme('mode', {
+    light: themeColors.grey,
+    dark: themeColors.blue4,
+});
+
+export const homeBackgroundSecondColor = theme('mode', {
+    light: themeColors.grey2,
+    dark: themeColors.blue6,
+});
+
 // ---------------------------------------
 // CARD COLORS
 // ---------------------------------------
