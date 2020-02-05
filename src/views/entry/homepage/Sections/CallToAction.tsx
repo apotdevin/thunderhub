@@ -2,7 +2,7 @@ import React from 'react';
 import { Center } from 'views/other/OtherViews.styled';
 import { Section } from 'components/section/Section';
 import { Padding, StyledH2, StyledH1 } from './Sections.styled';
-import { themeColors } from 'styles/Themes';
+import { homeBackgroundColor, homeBackgroundSecondColor } from 'styles/Themes';
 import { Link } from 'react-router-dom';
 import { HomeButton } from '../HomePage.styled';
 import { Zap } from 'components/generic/Icons';
@@ -15,12 +15,12 @@ const CallToActionButton = styled(HomeButton)`
 export const CallToAction = () => {
     return (
         <>
-            <Section color={themeColors.grey} padding={'80px 0'}>
+            <Section color={homeBackgroundColor} padding={'80px 0'}>
                 <Center>
                     <StyledH1>And much more...</StyledH1>
                 </Center>
             </Section>
-            <Section color={themeColors.grey2} padding={'80px 0'}>
+            <Section color={homeBackgroundSecondColor} padding={'80px 0'}>
                 <Center>
                     <StyledH2>
                         Ready to take control of your Lightning Node?

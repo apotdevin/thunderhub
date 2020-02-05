@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Card, CardProps } from 'components/generic/Styled';
-import { themeColors, fontColors, mediaWidths } from 'styles/Themes';
+import { fontColors, mediaWidths, textColor } from 'styles/Themes';
 
 export const Center = styled.div`
     display: flex;
@@ -44,6 +44,7 @@ export const Text = styled.p`
 `;
 
 export const SmallText = styled(Text)`
+    color: ${textColor};
     text-align: start;
 `;
 
@@ -52,12 +53,10 @@ export const BulletPoint = styled(Text)`
 `;
 
 export const DetailCard = styled(Card)<CardProps>`
-    background-color: ${themeColors.white};
     margin-bottom: 0;
     margin: 8px 16px;
     z-index: 1;
     flex: 1 0 30%;
-    border: 1px solid ${themeColors.grey2};
 
     @media (${mediaWidths.mobile}) {
         flex: 1 0 100%;
@@ -77,6 +76,7 @@ export const DetailLine = styled.div`
 
 export const IconTitle = styled.div`
     display: flex;
+    color: ${textColor};
 `;
 
 export const IconMargin = styled.span`
