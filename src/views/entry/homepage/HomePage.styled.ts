@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { ReactComponent as HeadlineImage } from '../../../assets/images/MoshingDoodle.svg';
+import styled, { keyframes } from 'styled-components';
+import { ReactComponent as HeadlineImage } from '../../../assets/images/ThunderHub.svg';
 import { fontColors, mediaWidths } from 'styles/Themes';
 
 export const Headline = styled.div`
@@ -24,8 +24,32 @@ export const LeftHeadline = styled.div`
     }
 `;
 
+const flicker = keyframes`
+    0%    { opacity: 1;   }
+    3%    { opacity: 0.4; }
+    6%    { opacity: 1;   }
+    7%    { opacity: 0.4; }
+    8%    { opacity: 1;   }
+    9%    { opacity: 0.4; }
+    10%   { opacity: 0;   }
+    100%  { opacity: 0;   }
+`;
+
 export const StyledImage = styled(HeadlineImage)`
     width: 500px;
+
+    & .glowEffect {
+        animation: ${flicker} 3s infinite step-end;
+    }
+    & .glowEffectTwo {
+        animation: ${flicker} 5s infinite step-end;
+    }
+    & .glowEffectThree {
+        animation: ${flicker} 7s infinite step-end;
+    }
+    & .glowEffectFour {
+        animation: ${flicker} 3.5s infinite step-end;
+    }
 
     @media (${mediaWidths.mobile}) {
         width: unset;
