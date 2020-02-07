@@ -100,11 +100,11 @@ export const AccountInfo = () => {
     const renderContent = () => {
         switch (state) {
             case 'send_ln':
-                return <PayCard color={sectionColor} />;
+                return <PayCard setOpen={() => setState('none')} />;
             case 'receive_ln':
                 return <CreateInvoiceCard color={sectionColor} />;
             case 'send_chain':
-                return <SendOnChainCard />;
+                return <SendOnChainCard setOpen={() => setState('none')} />;
             case 'receive_chain':
                 return <ReceiveOnChainCard />;
             default:

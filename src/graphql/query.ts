@@ -56,7 +56,7 @@ export const GET_CHANNEL_AMOUNT_INFO = gql`
 `;
 
 export const GET_BALANCES = gql`
-    query GetNodeInfo($auth: authType!) {
+    query GetBalances($auth: authType!) {
         getChainBalance(auth: $auth)
         getPendingChainBalance(auth: $auth)
         getChannelBalance(auth: $auth) {
