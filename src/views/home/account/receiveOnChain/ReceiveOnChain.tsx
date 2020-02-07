@@ -51,7 +51,7 @@ export const ReceiveOnChainCard = () => {
                         <OverflowText>{data.createAddress}</OverflowText>
                         <CopyToClipboard
                             text={data.createAddress}
-                            onCopy={() => toast.success('Request Copied')}
+                            onCopy={() => toast.success('Address Copied')}
                         >
                             <ColorButton
                                 fullWidth={width <= 578}

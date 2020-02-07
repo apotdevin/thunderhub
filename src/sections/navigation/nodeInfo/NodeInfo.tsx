@@ -99,7 +99,6 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     }
 
     const {
-        chains,
         color,
         active_channels_count,
         closed_channels_count,
@@ -109,8 +108,6 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         pending_channels_count,
         version,
     } = data.getNodeInfo;
-
-    console.log('NodeInfo chains:', chains);
 
     const chainBalance = data.getChainBalance;
     const pendingChainBalance = data.getPendingChainBalance;

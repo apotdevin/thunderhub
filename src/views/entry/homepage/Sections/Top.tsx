@@ -24,7 +24,7 @@ export const TopSection = () => {
             <Section color={headerColor} textColor={inverseTextColor}>
                 <Headline>
                     <LeftHeadline>
-                        <Title>Control The Power of Lighting</Title>
+                        <Title>Control The Power of Lightning</Title>
                         <FullWidth>
                             <Text>
                                 Take full control of your lightning node for

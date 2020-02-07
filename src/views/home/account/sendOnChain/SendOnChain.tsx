@@ -6,6 +6,7 @@ import {
     Separation,
     SingleLine,
     ResponsiveLine,
+    SubTitle,
 } from '../../../../components/generic/Styled';
 import { useMutation } from '@apollo/react-hooks';
 import { PAY_ADDRESS } from '../../../../graphql/mutation';
@@ -23,6 +24,9 @@ import {
 import { Price, getPrice } from 'components/price/Price';
 import { mediaWidths } from 'styles/Themes';
 import { useSettings } from 'context/SettingsContext';
+import Modal from 'components/modal/ReactModal';
+import { ColorButton } from 'components/buttons/colorButton/ColorButton';
+import { renderLine } from 'components/generic/Helpers';
 
 const ResponsiveWrap = styled(SingleLine)`
     @media (${mediaWidths.mobile}) {
@@ -40,9 +44,11 @@ const Margin = styled.div`
     margin-right: 24px;
 `;
 
-export const SendOnChainCard = () => {
+export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
     const context = useSettings();
     const format = getPrice(context);
+
+    const [modalOpen, setModalOpen] = useState(false);
 
     const { width } = useSize();
     const [address, setAddress] = useState('');
@@ -50,28 +56,25 @@ export const SendOnChainCard = () => {
     const [type, setType] = useState('none');
     const [amount, setAmount] = useState(0);
     const [sendAll, setSendAll] = useState(false);
-    const [isSent, setIsSent] = useState(false);
 
     const canSend = address !== '' && (sendAll || tokens > 0) && amount > 0;
 
     const { fast, halfHour, hour } = useBitcoinInfo();
+
+    const [payAddress, { loading }] = useMutation(PAY_ADDRESS, {
+        onError: error => toast.error(getErrorContent(error)),
+        onCompleted: () => {
+            toast.success('Payment Sent!');
+            setOpen();
+        },
+        refetchQueries: ['GetNodeInfo', 'GetBalances'],
+    });
 
     useEffect(() => {
         if (type === 'none' && amount === 0) {
             setAmount(fast);
         }
     }, [type, amount, fast]);
-
-    const [payAddress, { data, loading }] = useMutation(PAY_ADDRESS, {
-        onError: error => toast.error(getErrorContent(error)),
-    });
-
-    useEffect(() => {
-        if (data && data.sendToAddress && data.sendToAddress.id) {
-            setIsSent(true);
-            toast.success('Payment Sent!');
-        }
-    }, [data]);
 
     const feeFormat = (amount: number) => {
         if (type === 'fee' || type === 'none') {
@@ -99,17 +102,6 @@ export const SendOnChainCard = () => {
             {text}
         </SingleButton>
     );
-
-    if (isSent && data && data.sendToAddress && data.sendToAddress.id) {
-        return (
-            <Card>
-                <SingleLine>
-                    <DarkSubTitle>Payment Id:</DarkSubTitle>
-                    {data.sendToAddress.id}
-                </SingleLine>
-            </Card>
-        );
-    }
 
     return (
         <>
@@ -224,17 +216,41 @@ export const SendOnChainCard = () => {
                 )}
             </SingleLine>
             <Separation />
-            <SecureButton
-                callback={payAddress}
-                variables={{ address, ...typeAmount, ...tokenAmount }}
+            <ColorButton
                 disabled={!canSend}
                 withMargin={'16px 0 0'}
-                fullWidth={true}
-                arrow={true}
                 loading={loading}
+                fullWidth={true}
+                onClick={() => {
+                    setModalOpen(true);
+                }}
             >
-                Send To Address
-            </SecureButton>
+                Send
+            </ColorButton>
+            <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>
+                <SingleLine>
+                    <SubTitle>Send to Address</SubTitle>
+                </SingleLine>
+                {renderLine('Amount:', <Price amount={tokens} />)}
+                {renderLine('Address:', address)}
+                {renderLine(
+                    'Fee:',
+                    type === 'target'
+                        ? `${amount} Blocks`
+                        : `${amount} Sats/Byte`,
+                )}
+                <SecureButton
+                    callback={payAddress}
+                    variables={{ address, ...typeAmount, ...tokenAmount }}
+                    disabled={!canSend}
+                    withMargin={'16px 0 0'}
+                    fullWidth={true}
+                    arrow={true}
+                    loading={loading}
+                >
+                    Send To Address
+                </SecureButton>
+            </Modal>
         </>
     );
 };
