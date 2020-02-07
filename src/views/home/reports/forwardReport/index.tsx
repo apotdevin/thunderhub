@@ -9,7 +9,8 @@ import {
     CardTitle,
 } from '../../../../components/generic/Styled';
 import { ButtonRow } from './Buttons';
-import { mediaWidths } from 'styles/Themes';
+import { mediaWidths, mediaDimensions } from 'styles/Themes';
+import { useSize } from 'hooks/UseSize';
 
 export const CardContent = styled.div`
     height: 100%;
@@ -39,6 +40,7 @@ const mappedTypes = ['Amount', 'Fees', 'Value'];
 const buttonBorder = `#6938f1`;
 
 export const ForwardBox = () => {
+    const { width } = useSize();
     const [isTime, setIsTime] = useState<string>('week');
     const [isType, setIsType] = useState<string>('amount');
 
@@ -62,7 +64,11 @@ export const ForwardBox = () => {
                 <SubTitle>Foward Report</SubTitle>
                 <ButtonRow {...buttonProps} />
             </CardTitle>
-            <Card>
+            <Card
+                cardPadding={
+                    width <= mediaDimensions.mobile ? '8px' : undefined
+                }
+            >
                 <Row>
                     <ForwardReport {...props} />
                     <ForwardChannelsReport {...props} />

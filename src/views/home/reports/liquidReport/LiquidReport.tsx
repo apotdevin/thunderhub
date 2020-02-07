@@ -20,11 +20,14 @@ import {
     chartGridColor,
     chartAxisColor,
     liquidityBarColor,
+    mediaDimensions,
 } from '../../../../styles/Themes';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from 'components/price/Price';
+import { useSize } from 'hooks/UseSize';
 
 export const LiquidReport = () => {
+    const { width } = useSize();
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
@@ -54,7 +57,11 @@ export const LiquidReport = () => {
     return (
         <CardWithTitle>
             <SubTitle>Liquidity Report</SubTitle>
-            <Card>
+            <Card
+                cardPadding={
+                    width <= mediaDimensions.mobile ? '8px 0' : undefined
+                }
+            >
                 <VictoryChart
                     height={100}
                     domainPadding={10}

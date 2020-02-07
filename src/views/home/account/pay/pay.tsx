@@ -19,6 +19,7 @@ import { getAuthString } from 'utils/auth';
 import { ColorButton } from 'components/buttons/colorButton/ColorButton';
 import { renderLine, getNodeLink } from 'components/generic/Helpers';
 import { Price } from 'components/price/Price';
+import { mediaDimensions } from 'styles/Themes';
 
 export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
     const { width } = useSize();
@@ -79,14 +80,20 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
                 <Sub4Title>Invoice:</Sub4Title>
                 <Input
                     placeholder={'Lightning Invoice'}
-                    withMargin={width <= 578 ? '0 0 16px' : '0 0 0 24px'}
+                    withMargin={
+                        width <= mediaDimensions.mobile
+                            ? '0 0 16px'
+                            : '0 0 0 24px'
+                    }
                     onChange={e => setRequest(e.target.value)}
                 />
                 <ColorButton
                     disabled={request === ''}
-                    withMargin={width <= 578 ? '0' : '0 0 0 16px'}
+                    withMargin={
+                        width <= mediaDimensions.mobile ? '0' : '0 0 0 16px'
+                    }
                     loading={decodeLoading}
-                    fullWidth={width <= 578}
+                    fullWidth={width <= mediaDimensions.mobile}
                     onClick={() => {
                         decode({ variables: { request, auth } });
                     }}

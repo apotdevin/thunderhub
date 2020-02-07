@@ -40,8 +40,11 @@ export const fontColors = {
     black: '#212735',
 };
 
+export const mediaDimensions = {
+    mobile: 700,
+};
 export const mediaWidths = {
-    mobile: 'max-width: 700px',
+    mobile: `max-width: ${mediaDimensions.mobile}px`,
 };
 
 // ---------------------------------------

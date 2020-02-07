@@ -17,6 +17,7 @@ import { ColorButton } from '../../../../components/buttons/colorButton/ColorBut
 import { Input } from '../../../../components/input/Input';
 import { useSize } from '../../../../hooks/UseSize';
 import { Price } from 'components/price/Price';
+import { mediaDimensions } from 'styles/Themes';
 
 export const DecodeCard = ({ color }: { color: string }) => {
     const { width } = useSize();
@@ -64,7 +65,11 @@ export const DecodeCard = ({ color }: { color: string }) => {
                 <Sub4Title>Request:</Sub4Title>
                 <Input
                     placeholder={'Lightning Invoice'}
-                    withMargin={width <= 578 ? '0 0 8px' : '0 0 0 24px'}
+                    withMargin={
+                        width <= mediaDimensions.mobile
+                            ? '0 0 8px'
+                            : '0 0 0 24px'
+                    }
                     color={color}
                     value={request}
                     onChange={e => setRequest(e.target.value)}
@@ -72,10 +77,12 @@ export const DecodeCard = ({ color }: { color: string }) => {
                 <ColorButton
                     color={color}
                     disabled={request === ''}
-                    withMargin={width <= 578 ? '0' : '0 0 0 16px'}
+                    withMargin={
+                        width <= mediaDimensions.mobile ? '0' : '0 0 0 16px'
+                    }
                     arrow={true}
                     loading={loading}
-                    fullWidth={width <= 578}
+                    fullWidth={width <= mediaDimensions.mobile}
                     onClick={() => {
                         setRequest('');
                         decode({ variables: { request, auth } });

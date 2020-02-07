@@ -22,7 +22,7 @@ import {
     MultiButton,
 } from 'components/buttons/multiButton/MultiButton';
 import { Price } from 'components/price/Price';
-import { mediaWidths } from 'styles/Themes';
+import { mediaWidths, mediaDimensions } from 'styles/Themes';
 
 const ResponsiveWrap = styled(SingleLine)`
     @media (${mediaWidths.mobile}) {
@@ -79,7 +79,9 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
                 <Input
                     placeholder={'Public Key'}
                     color={color}
-                    withMargin={width <= 578 ? '' : '0 0 0 8px'}
+                    withMargin={
+                        width <= mediaDimensions.mobile ? '' : '0 0 0 8px'
+                    }
                     onChange={e => setPublicKey(e.target.value)}
                 />
             </ResponsiveLine>
@@ -95,7 +97,9 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
                 <Input
                     placeholder={'Sats'}
                     color={color}
-                    withMargin={width <= 578 ? '' : '0 0 0 8px'}
+                    withMargin={
+                        width <= mediaDimensions.mobile ? '' : '0 0 0 8px'
+                    }
                     type={'number'}
                     onChange={e => setSize(parseInt(e.target.value))}
                 />

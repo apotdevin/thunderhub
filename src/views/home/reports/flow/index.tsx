@@ -18,6 +18,8 @@ import { InvoicePie } from './InvoicePie';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
+import { useSize } from 'hooks/UseSize';
+import { mediaDimensions } from 'styles/Themes';
 // import { getWaterfall } from './Helpers';
 
 export const ChannelRow = styled.div`
@@ -75,6 +77,7 @@ export interface WaterfallProps {
 }
 
 export const FlowBox = () => {
+    const { width } = useSize();
     const [isTime, setIsTime] = useState<string>('month');
     const [isType, setIsType] = useState<string>('amount');
 
@@ -153,7 +156,12 @@ export const FlowBox = () => {
                     <SubTitle>Invoices and Payments Report</SubTitle>
                     <ButtonRow {...buttonProps} />
                 </CardTitle>
-                <Card bottom={'10px'}>
+                <Card
+                    bottom={'10px'}
+                    cardPadding={
+                        width <= mediaDimensions.mobile ? '8px 0' : undefined
+                    }
+                >
                     <FlowReport {...props} />
                 </Card>
             </CardWithTitle>
@@ -162,7 +170,11 @@ export const FlowBox = () => {
                     <CardTitle>
                         <Sub4Title>Total</Sub4Title>
                     </CardTitle>
-                    <Card>
+                    <Card
+                        cardPadding={
+                            width <= mediaDimensions.mobile ? '8px' : undefined
+                        }
+                    >
                         <FlowPie {...flowProps} />
                     </Card>
                 </HalfCardWithTitle>
@@ -171,7 +183,11 @@ export const FlowBox = () => {
                     <CardTitle>
                         <Sub4Title>Invoices</Sub4Title>
                     </CardTitle>
-                    <Card>
+                    <Card
+                        cardPadding={
+                            width <= mediaDimensions.mobile ? '8px' : undefined
+                        }
+                    >
                         <InvoicePie {...pieProps} />
                     </Card>
                 </HalfCardWithTitle>
