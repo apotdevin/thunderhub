@@ -103,7 +103,7 @@ export const FlowBox = () => {
 
     // const waterfall: WaterfallProps[] = getWaterfall(parsedData, parsedData2);
 
-    if (parsedData.length <= 0) {
+    if (parsedData.length <= 0 && parsedData2.length <= 0) {
         return null;
     }
 
