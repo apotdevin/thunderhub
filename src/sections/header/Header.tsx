@@ -5,6 +5,7 @@ import {
     headerTextColor,
     themeColors,
     mediaWidths,
+    mediaDimensions,
 } from '../../styles/Themes';
 import { HomeButton } from '../../views/entry/homepage/HomePage.styled';
 import { Link } from 'react-router-dom';
@@ -78,7 +79,7 @@ export const Header = () => {
     });
 
     const renderLoggedIn = () => {
-        if (width <= 578) {
+        if (width <= mediaDimensions.mobile) {
             return (
                 <IconWrapper onClick={() => setOpen(prev => !prev)}>
                     {transitions.map(({ item, key, props }) =>
@@ -115,7 +116,9 @@ export const Header = () => {
     );
 
     const HeaderWrapper =
-        width <= 578 && !loggedIn ? ResponsiveLine : SingleLine;
+        width <= mediaDimensions.mobile && !loggedIn
+            ? ResponsiveLine
+            : SingleLine;
 
     return (
         <>
@@ -128,7 +131,9 @@ export const Header = () => {
                     <HeaderWrapper>
                         <Link to="/" style={{ textDecoration: 'none' }}>
                             <HeaderTitle
-                                withPadding={width <= 578 && !loggedIn}
+                                withPadding={
+                                    width <= mediaDimensions.mobile && !loggedIn
+                                }
                             >
                                 <IconPadding>
                                     <Cpu color={'white'} />
@@ -142,7 +147,7 @@ export const Header = () => {
                     </HeaderWrapper>
                 </HeaderStyle>
             </Section>
-            {open && width <= 578 && (
+            {open && width <= mediaDimensions.mobile && (
                 <BurgerMenu open={open} setOpen={setOpen} />
             )}
         </>

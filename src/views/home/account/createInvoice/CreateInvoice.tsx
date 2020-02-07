@@ -15,7 +15,7 @@ import { ColorButton } from '../../../../components/buttons/colorButton/ColorBut
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Input } from '../../../../components/input/Input';
 import { useSize } from '../../../../hooks/UseSize';
-import { mediaWidths } from 'styles/Themes';
+import { mediaWidths, mediaDimensions } from 'styles/Themes';
 
 const Responsive = styled.div`
     display: flex;
@@ -99,7 +99,9 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
             <NoWrapTitle>Amount to receive:</NoWrapTitle>
             <Input
                 placeholder={'Sats'}
-                withMargin={width <= 578 ? '0 0 16px' : '0 0 0 24px'}
+                withMargin={
+                    width <= mediaDimensions.mobile ? '0 0 16px' : '0 0 0 24px'
+                }
                 color={color}
                 type={'number'}
                 onChange={e => setAmount(parseInt(e.target.value))}
@@ -108,10 +110,10 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
                 callback={createInvoice}
                 variables={{ amount }}
                 disabled={amount === 0}
-                withMargin={width <= 578 ? '' : '0 0 0 16px'}
+                withMargin={width <= mediaDimensions.mobile ? '' : '0 0 0 16px'}
                 arrow={true}
                 loading={loading}
-                fullWidth={width <= 578}
+                fullWidth={width <= mediaDimensions.mobile}
             >
                 Create Invoice
             </SecureButton>

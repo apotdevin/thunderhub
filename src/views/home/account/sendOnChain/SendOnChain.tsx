@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Card,
     NoWrapTitle,
     DarkSubTitle,
     Separation,
@@ -22,7 +21,7 @@ import {
     SingleButton,
 } from 'components/buttons/multiButton/MultiButton';
 import { Price, getPrice } from 'components/price/Price';
-import { mediaWidths } from 'styles/Themes';
+import { mediaWidths, mediaDimensions } from 'styles/Themes';
 import { useSettings } from 'context/SettingsContext';
 import Modal from 'components/modal/ReactModal';
 import { ColorButton } from 'components/buttons/colorButton/ColorButton';
@@ -109,7 +108,9 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
                 <NoWrapTitle>Send to Address:</NoWrapTitle>
                 <Input
                     placeholder={'Address'}
-                    withMargin={width <= 578 ? '' : '0 0 0 24px'}
+                    withMargin={
+                        width <= mediaDimensions.mobile ? '' : '0 0 0 24px'
+                    }
                     onChange={e => setAddress(e.target.value)}
                 />
             </ResponsiveLine>

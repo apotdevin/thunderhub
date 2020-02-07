@@ -27,11 +27,11 @@ export const CardTitle = styled.div`
 
 export interface CardProps {
     bottom?: string;
-    padding?: string;
+    cardPadding?: string;
 }
 
 export const Card = styled.div`
-    padding: ${({ padding }) => (padding ? padding : '16px')};
+    padding: ${({ cardPadding }: CardProps) => cardPadding ?? '16px'};
     background: ${cardColor};
     box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
     border-radius: 4px;

@@ -18,6 +18,7 @@ import {
     MultiButton,
     SingleButton,
 } from 'components/buttons/multiButton/MultiButton';
+import { mediaDimensions } from 'styles/Themes';
 
 const ButtonRow = styled.div`
     width: auto;
@@ -54,10 +55,12 @@ export const ReceiveOnChainCard = () => {
                             onCopy={() => toast.success('Address Copied')}
                         >
                             <ColorButton
-                                fullWidth={width <= 578}
+                                fullWidth={width <= mediaDimensions.mobile}
                                 arrow={true}
                                 withMargin={
-                                    width <= 578 ? '8px 0 0' : '0 0 0 16px'
+                                    width <= mediaDimensions.mobile
+                                        ? '8px 0 0'
+                                        : '0 0 0 16px'
                                 }
                             >
                                 Copy
@@ -92,10 +95,14 @@ export const ReceiveOnChainCard = () => {
                         callback={createAddress}
                         variables={{ nested }}
                         disabled={received}
-                        withMargin={width <= 578 ? '16px 0 0' : '0 0 0 16px'}
+                        withMargin={
+                            width <= mediaDimensions.mobile
+                                ? '16px 0 0'
+                                : '0 0 0 16px'
+                        }
                         arrow={true}
                         loading={loading}
-                        fullWidth={width <= 578}
+                        fullWidth={width <= mediaDimensions.mobile}
                     >
                         Create Address
                     </SecureButton>

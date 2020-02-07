@@ -31,7 +31,7 @@ import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { useSize } from '../../../hooks/UseSize';
 import { Price } from 'components/price/Price';
-import { mediaWidths } from 'styles/Themes';
+import { mediaWidths, mediaDimensions } from 'styles/Themes';
 
 const Tile = styled.div`
     display: flex;
@@ -59,7 +59,7 @@ interface WrapperProps {
 }
 
 const ResponsiveWrapper = ({ children, width = 0 }: WrapperProps) => {
-    if (width <= 578) {
+    if (width <= mediaDimensions.mobile) {
         return <Responsive>{children}</Responsive>;
     }
     return <>{children}</>;
