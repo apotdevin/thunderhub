@@ -7,10 +7,12 @@ import { Link as RouterLink } from 'react-router-dom';
 interface StyledProps {
     fontColor?: string | ThemeSet;
     underline?: string | ThemeSet;
+    inheritColor?: boolean;
 }
 
 const styledCss = css`
-    color: ${({ fontColor }: StyledProps) => fontColor ?? textColor};
+    color: ${({ fontColor, inheritColor }: StyledProps) =>
+        inheritColor ? 'inherit' : fontColor ?? textColor};
     text-decoration: none;
 
     :hover {
@@ -39,10 +41,18 @@ interface LinkProps {
     href?: string;
     color?: string | ThemeSet;
     underline?: string | ThemeSet;
+    inheritColor?: boolean;
 }
 
-export const Link = ({ children, to, href, color, underline }: LinkProps) => {
-    const props = { fontColor: color, underline };
+export const Link = ({
+    children,
+    to,
+    href,
+    color,
+    underline,
+    inheritColor,
+}: LinkProps) => {
+    const props = { fontColor: color, underline, inheritColor };
 
     if (!to && !href) return null;
 

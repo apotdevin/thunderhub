@@ -19,6 +19,8 @@ import { Section } from 'components/section/Section';
 import { BitcoinPrice } from '../../components/bitcoinInfo/BitcoinPrice';
 import { BitcoinFees } from '../../components/bitcoinInfo/BitcoinFees';
 import { mediaWidths } from 'styles/Themes';
+import { useConnectionState } from 'context/ConnectionContext';
+import { LoadingView, ErrorView } from 'views/stateViews/StateCards';
 
 const Container = styled.div`
     display: grid;
@@ -37,6 +39,23 @@ const ContentStyle = styled.div`
 `;
 
 const Content = () => {
+    const { loading, error } = useConnectionState();
+
+    const renderSettings = (type: string) => (
+        <Switch>
+            <Route path="/settings" render={() => getGrid(SettingsView)} />
+            <Route
+                path="*"
+                render={() =>
+                    getGrid(type === 'error' ? ErrorView : LoadingView)
+                }
+            />
+        </Switch>
+    );
+
+    if (loading) return renderSettings('loading');
+    if (error) return renderSettings('error');
+
     return (
         <>
             <BitcoinPrice />

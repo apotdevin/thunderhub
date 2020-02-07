@@ -2,8 +2,7 @@ import React from 'react';
 import { CardWithTitle, CardTitle, SubTitle, Card } from '../generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import styled from 'styled-components';
-import { useSettings } from '../../context/SettingsContext';
-import { textColorMap } from '../../styles/Themes';
+import { themeColors } from '../../styles/Themes';
 
 const Loading = styled.div`
     width: 100%;
@@ -29,9 +28,7 @@ export const LoadingCard = ({
     noTitle = false,
     loadingHeight,
 }: LoadingCardProps) => {
-    const { theme } = useSettings();
-
-    const loadingColor = color ? color : textColorMap[theme];
+    const loadingColor = color ? color : themeColors.blue3;
 
     if (noCard) {
         return (

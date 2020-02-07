@@ -4,27 +4,23 @@ import { GlobalStyles } from './styles/GlobalStyle';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { BrowserRouter } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
-import { useSettings, SettingsProvider } from './context/SettingsContext';
+import { useSettings } from './context/SettingsContext';
 import { ModalProvider } from 'styled-react-modal';
-import { useAccount, AccountProvider } from './context/AccountContext';
+import { useAccount } from './context/AccountContext';
 import { toast } from 'react-toastify';
 import { FadingBackground } from './components/modal/ReactModal';
 import 'react-toastify/dist/ReactToastify.css';
 import { Header } from './sections/header/Header';
 import { Footer } from './sections/footer/Footer';
-import { BitcoinInfoProvider } from './context/BitcoinContext';
 import { LoadingCard } from './components/loading/LoadingCard';
 import { ScrollToTop } from 'components/scrollToTop/ScrollToTop';
+import { ContextProvider } from 'context/ContextProvider';
+import { ConnectionCheck } from 'components/connectionCheck/ConnectionCheck';
 
 const EntryView = React.lazy(() => import('./views/entry/Entry'));
 const ContentView = React.lazy(() => import('./sections/content/Content'));
 
-toast.configure({
-    draggable: false,
-    pauseOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-});
+toast.configure({ draggable: false });
 
 const client = new ApolloClient({
     uri:
@@ -68,13 +64,10 @@ const App: React.FC = () => {
     return (
         <BrowserRouter>
             <ApolloProvider client={client}>
-                <AccountProvider>
-                    <SettingsProvider>
-                        <BitcoinInfoProvider>
-                            <ContextApp />
-                        </BitcoinInfoProvider>
-                    </SettingsProvider>
-                </AccountProvider>
+                <ContextProvider>
+                    <ConnectionCheck />
+                    <ContextApp />
+                </ContextProvider>
             </ApolloProvider>
         </BrowserRouter>
     );
