@@ -92,7 +92,7 @@ export const Header = () => {
                 </IconWrapper>
             );
         } else {
-            return <Sub4Title>{`Account: ${name}`}</Sub4Title>;
+            return <Sub4Title>{name}</Sub4Title>;
         }
     };
 

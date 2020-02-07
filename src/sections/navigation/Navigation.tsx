@@ -22,6 +22,7 @@ import {
     LinkIcon,
 } from '../../components/generic/Icons';
 import { useSettings } from '../../context/SettingsContext';
+import { useConnectionState } from 'context/ConnectionContext';
 
 const NavigationStyle = styled.div`
     grid-area: nav;
@@ -129,6 +130,7 @@ interface NavigationProps {
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     const { pathname } = useLocation();
     const { sidebar, setSettings } = useSettings();
+    const { connected } = useConnectionState();
 
     const renderNavButton = (
         title: string,
@@ -187,7 +189,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
         <NavigationStyle isOpen={sidebar}>
             <StickyCard>
                 <LinkView>
-                    <NodeInfo isOpen={sidebar} />
+                    {connected && <NodeInfo isOpen={sidebar} />}
                     {renderLinks()}
                     <SideSettings isOpen={sidebar} setIsOpen={setSettings} />
                 </LinkView>
