@@ -1,6 +1,6 @@
 {
     "name": "thunderhub",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -18,10 +18,6 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/apotdevin/thunderhub/issues"
-    },
-    "homepage": "https://github.com/apotdevin/thunderhub#readme",
     "dependencies": {
         "@types/graphql-depth-limit": "^1.1.2",
         "@types/graphql-iso-date": "^3.3.3",
