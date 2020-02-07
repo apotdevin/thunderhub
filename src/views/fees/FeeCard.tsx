@@ -73,29 +73,29 @@ export const FeeCard = ({
                 {renderLine('Transaction Id:', transactionId)}
                 {renderLine('Transaction Vout:', transactionVout)}
                 <Separation />
-                <ResponsiveLine>
-                    <NoWrapTitle>
-                        <DarkSubTitle>{`Base Fee:`}</DarkSubTitle>
-                    </NoWrapTitle>
-                    <Input
-                        placeholder={'Sats'}
-                        color={textColorMap[theme]}
-                        type={textColorMap[theme]}
-                        onChange={e => setBaseFee(parseInt(e.target.value))}
-                    />
-                </ResponsiveLine>
-                <ResponsiveLine>
-                    <NoWrapTitle>
-                        <DarkSubTitle>{`Fee Rate:`}</DarkSubTitle>
-                    </NoWrapTitle>
-                    <Input
-                        placeholder={'Sats/Million'}
-                        color={textColorMap[theme]}
-                        type={'number'}
-                        onChange={e => setFeeRate(parseInt(e.target.value))}
-                    />
-                </ResponsiveLine>
                 <AdminSwitch>
+                    <ResponsiveLine>
+                        <NoWrapTitle>
+                            <DarkSubTitle>{`Base Fee:`}</DarkSubTitle>
+                        </NoWrapTitle>
+                        <Input
+                            placeholder={'Sats'}
+                            color={textColorMap[theme]}
+                            type={textColorMap[theme]}
+                            onChange={e => setBaseFee(parseInt(e.target.value))}
+                        />
+                    </ResponsiveLine>
+                    <ResponsiveLine>
+                        <NoWrapTitle>
+                            <DarkSubTitle>{`Fee Rate:`}</DarkSubTitle>
+                        </NoWrapTitle>
+                        <Input
+                            placeholder={'Sats/Million'}
+                            color={textColorMap[theme]}
+                            type={'number'}
+                            onChange={e => setFeeRate(parseInt(e.target.value))}
+                        />
+                    </ResponsiveLine>
                     <SecureButton
                         callback={updateFees}
                         variables={{
