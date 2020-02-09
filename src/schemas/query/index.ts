@@ -5,6 +5,7 @@ import { dataQueries } from './data';
 import { reportQueries } from './report';
 import { flowQueries } from './flow';
 import { backupQueries } from './backup';
+import { routeQueries } from './route';
 
 export const query = {
     ...channelQueries,
@@ -14,4 +15,5 @@ export const query = {
     ...reportQueries,
     ...flowQueries,
     ...backupQueries,
+    ...routeQueries,
 };
