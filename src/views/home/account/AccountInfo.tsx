@@ -8,10 +8,6 @@ import {
     DarkSubTitle,
     ColorButton,
 } from '../../../components/generic/Styled';
-import { useAccount } from '../../../context/AccountContext';
-import { getAuthString } from '../../../utils/auth';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_BALANCES } from '../../../graphql/query';
 import styled from 'styled-components';
 import {
     UpArrow,
@@ -21,8 +17,6 @@ import {
     DownArrow,
     XSvg,
 } from '../../../components/generic/Icons';
-import { toast } from 'react-toastify';
-import { getErrorContent } from '../../../utils/error';
 import { PayCard } from './pay/pay';
 import { CreateInvoiceCard } from './createInvoice/CreateInvoice';
 import { SendOnChainCard } from './sendOnChain/SendOnChain';
@@ -32,6 +26,7 @@ import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { useSize } from '../../../hooks/UseSize';
 import { Price } from 'components/price/Price';
 import { mediaWidths, mediaDimensions } from 'styles/Themes';
+import { useStatusState } from 'context/StatusContext';
 
 const Tile = styled.div`
     display: flex;
@@ -68,15 +63,16 @@ const ResponsiveWrapper = ({ children, width = 0 }: WrapperProps) => {
 export const AccountInfo = () => {
     const { width } = useSize();
     const [state, setState] = useState<string>('none');
-    const { host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
-    const { data, loading } = useQuery(GET_BALANCES, {
-        variables: { auth },
-        onError: error => toast.error(getErrorContent(error)),
-    });
+    const {
+        loading,
+        chainBalance,
+        chainPending,
+        channelBalance,
+        channelPending,
+    } = useStatusState();
 
-    if (!data || loading) {
+    if (loading) {
         return (
             <>
                 <LoadingCard title={'Resume'} />
@@ -85,17 +81,13 @@ export const AccountInfo = () => {
         );
     }
 
-    const chainBalance = data.getChainBalance;
-    const pendingChainBalance = data.getPendingChainBalance;
-    const { confirmedBalance, pendingBalance } = data.getChannelBalance;
-
     const formatCB = <Price amount={chainBalance} />;
-    const formatPB = <Price amount={pendingChainBalance} />;
-    const formatCCB = <Price amount={confirmedBalance} />;
-    const formatPCB = <Price amount={pendingBalance} />;
+    const formatPB = <Price amount={chainPending} />;
+    const formatCCB = <Price amount={channelBalance} />;
+    const formatPCB = <Price amount={channelPending} />;
 
-    const totalB = <Price amount={chainBalance + confirmedBalance} />;
-    const totalPB = <Price amount={pendingChainBalance + pendingBalance} />;
+    const totalB = <Price amount={chainBalance + channelBalance} />;
+    const totalPB = <Price amount={chainPending + channelPending} />;
 
     const renderContent = () => {
         switch (state) {
@@ -135,7 +127,7 @@ export const AccountInfo = () => {
     const renderLnAccount = () => (
         <SingleLine>
             <ResponsiveWrapper width={width}>
-                <Zap color={pendingBalance === 0 ? sectionColor : '#652EC7'} />
+                <Zap color={channelPending === 0 ? sectionColor : '#652EC7'} />
                 <Tile startTile={true}>
                     <DarkSubTitle>Account</DarkSubTitle>
                     <div>Lightning</div>
@@ -185,9 +177,7 @@ export const AccountInfo = () => {
     const renderChainAccount = () => (
         <SingleLine>
             <ResponsiveWrapper width={width}>
-                <Anchor
-                    color={pendingChainBalance === 0 ? sectionColor : '#652EC7'}
-                />
+                <Anchor color={chainPending === 0 ? sectionColor : '#652EC7'} />
                 <Tile startTile={true}>
                     <DarkSubTitle>Account</DarkSubTitle>
                     <div>Bitcoin</div>
@@ -242,8 +232,7 @@ export const AccountInfo = () => {
                     <SingleLine>
                         <Pocket
                             color={
-                                pendingChainBalance === 0 &&
-                                pendingBalance === 0
+                                chainPending === 0 && channelPending === 0
                                     ? '#2bbc54'
                                     : '#652EC7'
                             }

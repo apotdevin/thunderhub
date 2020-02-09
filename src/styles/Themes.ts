@@ -23,6 +23,7 @@ export const chartColors = {
     lightblue: '#1890ff',
     green: '#a0d911',
     purple: '#6938f1',
+    red: 'red',
 };
 
 export const fontColors = {
@@ -149,6 +150,11 @@ export const colorButtonBorder = theme('mode', {
     dark: themeColors.blue3,
 });
 
+export const colorButtonBorderTwo = theme('mode', {
+    light: themeColors.grey2,
+    dark: themeColors.blue7,
+});
+
 export const disabledButtonBackground = theme('mode', {
     light: themeColors.grey2,
     dark: themeColors.blue7,
@@ -205,7 +211,7 @@ export const inputBackgroundColor = theme('mode', {
 
 export const inputBorderColor = theme('mode', {
     light: themeColors.grey3,
-    dark: themeColors.grey7,
+    dark: themeColors.grey8,
 });
 
 // ---------------------------------------

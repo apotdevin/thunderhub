@@ -69,26 +69,18 @@ const AccountProvider = ({ children }: any) => {
 
     const changeAccount = (account: number) => {
         const newAccount = localStorage.getItem(`auth${account}-name`);
-
         if (!newAccount) return;
 
-        const { name, host, admin, read, cert } = getAuthParams(newAccount);
         sessionStorage.removeItem('session');
+        localStorage.setItem('account', `auth${account}`);
 
-        updateAccount((prevState: any) => {
-            const newState = { ...prevState };
-            return merge(newState, {
-                name,
-                host,
-                admin,
-                read,
-                cert,
-            });
-        });
+        refreshAccount(`auth${account}`);
     };
 
-    const refreshAccount = () => {
-        const activeAccount = localStorage.getItem('account') || 'auth1';
+    const refreshAccount = (account?: string) => {
+        const activeAccount = account
+            ? account
+            : localStorage.getItem('account') || 'auth1';
         const sessionAdmin = sessionStorage.getItem('session') || '';
         const { name, host, admin, read, cert } = getAuthParams(activeAccount);
         const loggedIn = host !== '' && (read !== '' || sessionAdmin !== '');

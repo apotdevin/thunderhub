@@ -44,6 +44,7 @@ import { ReactComponent as Link } from '../../assets/icons/link.svg';
 import { ReactComponent as Menu } from '../../assets/icons/menu.svg';
 import { ReactComponent as Mail } from '../../assets/icons/mail.svg';
 import { ReactComponent as Github } from '../../assets/icons/github.svg';
+import { ReactComponent as Repeat } from '../../assets/icons/repeat.svg';
 
 interface IconProps {
     color?: string;
@@ -110,3 +111,4 @@ export const LinkIcon = styleIcon(Link);
 export const MenuIcon = styleIcon(Menu);
 export const MailIcon = styleIcon(Mail);
 export const GithubIcon = styleIcon(Github);
+export const RepeatIcon = styleIcon(Repeat);

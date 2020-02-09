@@ -47,7 +47,11 @@ export const getStatusDot = (status: boolean, type: string) => {
     }
 };
 
-export const renderLine = (title: string, content: any, key?: string) => {
+export const renderLine = (
+    title: string,
+    content: any,
+    key?: string | number,
+) => {
     if (!content) return null;
     return (
         <DetailLine key={key}>

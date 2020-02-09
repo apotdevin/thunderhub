@@ -25,6 +25,7 @@ import styled from 'styled-components';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { getPrice } from 'components/price/Price';
 import { AnimatedNumber } from 'components/animated/AnimatedNumber';
+import { useStatusState } from 'context/StatusContext';
 
 const Closed = styled.div`
     display: flex;
@@ -73,6 +74,14 @@ interface NodeInfoProps {
 }
 
 export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
+    const {
+        syncedToChain,
+        chainBalance,
+        chainPending,
+        channelBalance,
+        channelPending,
+    } = useStatusState();
+
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
@@ -103,20 +112,15 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         active_channels_count,
         closed_channels_count,
         alias,
-        is_synced_to_chain,
         peers_count,
         pending_channels_count,
         version,
     } = data.getNodeInfo;
 
-    const chainBalance = data.getChainBalance;
-    const pendingChainBalance = data.getPendingChainBalance;
-    const { confirmedBalance, pendingBalance } = data.getChannelBalance;
-
     const formatCB = format({ amount: chainBalance });
-    const formatPB = format({ amount: pendingChainBalance });
-    const formatCCB = format({ amount: confirmedBalance });
-    const formatPCB = format({ amount: pendingBalance });
+    const formatPB = format({ amount: chainPending });
+    const formatCCB = format({ amount: channelBalance });
+    const formatPCB = format({ amount: channelPending });
 
     if (isBurger) {
         return (
@@ -125,7 +129,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
                     <SubTitle>{alias}</SubTitle>
                     <Circle
                         strokeWidth={'0'}
-                        fillcolor={is_synced_to_chain ? '#95de64' : '#ff7875'}
+                        fillcolor={syncedToChain ? '#95de64' : '#ff7875'}
                     />
                 </SingleLine>
                 <SingleLine>
@@ -134,22 +138,20 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
                 </SingleLine>
                 <SingleLine>
                     <Zap
-                        color={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
-                        fillcolor={pendingBalance === 0 ? '#FFD300' : '#652EC7'}
+                        color={channelPending === 0 ? '#FFD300' : '#652EC7'}
+                        fillcolor={channelPending === 0 ? '#FFD300' : '#652EC7'}
                     />
-                    {pendingBalance > 0 ? (
+                    {channelPending > 0 ? (
                         `${formatCCB} / ${formatPCB}`
                     ) : (
-                        <AnimatedNumber amount={confirmedBalance} />
+                        <AnimatedNumber amount={channelBalance} />
                     )}
                 </SingleLine>
                 <SingleLine>
                     <Anchor
-                        color={
-                            pendingChainBalance === 0 ? '#FFD300' : '#652EC7'
-                        }
+                        color={chainPending === 0 ? '#FFD300' : '#652EC7'}
                     />
-                    {pendingChainBalance > 0 ? (
+                    {chainPending > 0 ? (
                         `${formatCB} / ${formatPB}`
                     ) : (
                         <AnimatedNumber amount={chainBalance} />
@@ -166,11 +168,9 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
                     <div data-tip data-for="full_balance_tip">
                         <Circle
                             strokeWidth={'0'}
-                            fillcolor={
-                                is_synced_to_chain ? '#95de64' : '#ff7875'
-                            }
+                            fillcolor={syncedToChain ? '#95de64' : '#ff7875'}
                         />
-                        {(pendingBalance > 0 || pendingChainBalance > 0) && (
+                        {(channelPending > 0 || chainPending > 0) && (
                             <div>
                                 <Circle
                                     fillcolor={'#652EC7'}
@@ -181,19 +181,15 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
                         <Margin>
                             <Zap
                                 fillcolor={
-                                    pendingBalance === 0 ? '#FFD300' : '#652EC7'
+                                    channelPending === 0 ? '#FFD300' : '#652EC7'
                                 }
                                 color={
-                                    pendingBalance === 0 ? '#FFD300' : '#652EC7'
+                                    channelPending === 0 ? '#FFD300' : '#652EC7'
                                 }
                             />
                         </Margin>
                         <Anchor
-                            color={
-                                pendingChainBalance === 0
-                                    ? '#FFD300'
-                                    : '#652EC7'
-                            }
+                            color={chainPending === 0 ? '#FFD300' : '#652EC7'}
                         />
                     </div>
                     <div data-tip data-for="full_node_tip">
@@ -238,13 +234,11 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
             </Title>
             <Separation lineColor={unSelectedNavButton} />
             <Balance data-tip data-for="balance_tip">
-                <Zap color={pendingBalance === 0 ? '#FFD300' : '#652EC7'} />
-                <AnimatedNumber amount={confirmedBalance} />
+                <Zap color={channelPending === 0 ? '#FFD300' : '#652EC7'} />
+                <AnimatedNumber amount={channelBalance} />
             </Balance>
             <Balance data-tip data-for="chain_balance_tip">
-                <Anchor
-                    color={pendingChainBalance === 0 ? '#FFD300' : '#652EC7'}
-                />
+                <Anchor color={chainPending === 0 ? '#FFD300' : '#652EC7'} />
                 <AnimatedNumber amount={chainBalance} />
             </Balance>
             <Balance
@@ -252,8 +246,8 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
                 data-for="node_tip"
             >{`${active_channels_count} / ${pending_channels_count} / ${closed_channels_count} / ${peers_count}`}</Balance>
             <Balance>
-                <Info bottomColor={is_synced_to_chain ? '#95de64' : '#ff7875'}>
-                    {is_synced_to_chain ? 'Synced' : 'Not Synced'}
+                <Info bottomColor={syncedToChain ? '#95de64' : '#ff7875'}>
+                    {syncedToChain ? 'Synced' : 'Not Synced'}
                 </Info>
             </Balance>
             <Separation lineColor={unSelectedNavButton} />

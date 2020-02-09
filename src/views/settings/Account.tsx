@@ -19,17 +19,25 @@ import {
     MultiButton,
     SingleButton,
 } from 'components/buttons/multiButton/MultiButton';
+import { useHistory } from 'react-router-dom';
+import { useConnectionDispatch } from 'context/ConnectionContext';
+import { useStatusDispatch } from 'context/StatusContext';
 
 export const AccountSettings = () => {
-    const { name } = useAccount();
+    const { push } = useHistory();
+    const { name, changeAccount } = useAccount();
+
+    const dispatch = useConnectionDispatch();
+    const dispatchState = useStatusDispatch();
 
     const [isType, setIsType] = useState('login');
     const [willAdd, setWillAdd] = useState(false);
-    const { changeAccount, refreshAccount } = useAccount();
 
     const next = getNextAvailable();
 
     const handleConnected = () => {
+        dispatch({ type: 'disconnected' });
+        dispatchState({ type: 'disconnected' });
         setWillAdd(false);
     };
 
@@ -73,12 +81,10 @@ export const AccountSettings = () => {
                                         name.localeCompare(entry.name) === 0
                                     }
                                     onClick={() => {
-                                        localStorage.setItem(
-                                            'account',
-                                            `auth${entry.index}`,
-                                        );
+                                        dispatch({ type: 'disconnected' });
+                                        dispatchState({ type: 'disconnected' });
                                         changeAccount(entry.index);
-                                        refreshAccount();
+                                        push('/');
                                     }}
                                 >
                                     {entry.name}
@@ -110,18 +116,21 @@ export const AccountSettings = () => {
                             <LoginForm
                                 available={next}
                                 callback={handleConnected}
+                                withRedirect={true}
                             />
                         )}
                         {isType === 'connect' && (
                             <ConnectLoginForm
                                 available={next}
                                 callback={handleConnected}
+                                withRedirect={true}
                             />
                         )}
                         {isType === 'btcpay' && (
                             <BTCLoginForm
                                 available={next}
                                 callback={handleConnected}
+                                withRedirect={true}
                             />
                         )}
                     </>
