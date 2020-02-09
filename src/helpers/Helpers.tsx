@@ -45,12 +45,20 @@ export const getValue = ({
     }
 };
 
-export const getPercent = (local: number, remote: number): number => {
+export const getPercent = (
+    local: number,
+    remote: number,
+    withDecimals?: boolean,
+): number => {
     const total = remote + local;
     const percent = (local / total) * 100;
 
     if (remote === 0 && local === 0) {
         return 0;
+    }
+
+    if (withDecimals) {
+        return Math.round(percent * 100) / 100;
     }
 
     return Math.round(percent);

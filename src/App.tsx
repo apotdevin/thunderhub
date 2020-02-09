@@ -16,6 +16,7 @@ import { LoadingCard } from './components/loading/LoadingCard';
 import { ScrollToTop } from 'components/scrollToTop/ScrollToTop';
 import { ContextProvider } from 'context/ContextProvider';
 import { ConnectionCheck } from 'components/connectionCheck/ConnectionCheck';
+import { StatusCheck } from 'components/statusCheck/StatusCheck';
 
 const EntryView = React.lazy(() => import('./views/entry/Entry'));
 const ContentView = React.lazy(() => import('./sections/content/Content'));
@@ -42,7 +43,11 @@ const ContextApp: React.FC = () => {
             ) : admin !== '' && read === '' && sessionAdmin === '' ? (
                 <EntryView session={true} />
             ) : (
-                <ContentView />
+                <>
+                    <ConnectionCheck />
+                    <StatusCheck />
+                    <ContentView />
+                </>
             )}
         </Suspense>
     );
@@ -65,7 +70,6 @@ const App: React.FC = () => {
         <BrowserRouter>
             <ApolloProvider client={client}>
                 <ContextProvider>
-                    <ConnectionCheck />
                     <ContextApp />
                 </ContextProvider>
             </ApolloProvider>

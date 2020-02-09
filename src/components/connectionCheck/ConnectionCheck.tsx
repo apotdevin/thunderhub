@@ -11,12 +11,12 @@ export const ConnectionCheck = () => {
     const { connected } = useConnectionState();
     const dispatch = useConnectionDispatch();
 
-    const { host, read, cert, sessionAdmin } = useAccount();
+    const { loggedIn, host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     useQuery(GET_CAN_CONNECT, {
         variables: { auth },
-        skip: connected,
+        skip: connected || !loggedIn,
         onError: () => {
             dispatch({ type: 'error' });
         },

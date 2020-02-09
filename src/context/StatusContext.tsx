@@ -1,13 +1,18 @@
 import React, { createContext, useContext, useReducer } from 'react';
 
 type State = {
-    connected: boolean;
     loading: boolean;
-    error: boolean;
+    syncedToChain: boolean;
+    version: string;
+    chainBalance: number;
+    chainPending: number;
+    channelBalance: number;
+    channelPending: number;
 };
 
 type ActionType = {
-    type: 'connected' | 'loading' | 'error' | 'disconnected';
+    type: 'connected' | 'disconnected';
+    state?: State;
 };
 
 type Dispatch = (action: ActionType) => void;
@@ -15,26 +20,28 @@ type Dispatch = (action: ActionType) => void;
 const StateContext = createContext<State | undefined>(undefined);
 const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
-const stateReducer = (state: State, action: ActionType) => {
+const stateReducer = (state: State, action: ActionType): State => {
     switch (action.type) {
         case 'connected':
-            return { connected: true, loading: false, error: false };
-        case 'loading':
-            return { connected: false, loading: true, error: false };
+            return action.state || initialState;
         case 'disconnected':
-            return { connected: false, loading: true, error: false };
+            return initialState;
         default:
-            return { connected: false, loading: false, error: true };
+            return initialState;
     }
 };
 
 const initialState = {
-    connected: false,
     loading: true,
-    error: false,
+    syncedToChain: false,
+    version: '',
+    chainBalance: 0,
+    chainPending: 0,
+    channelBalance: 0,
+    channelPending: 0,
 };
 
-const ConnectionProvider = ({ children }: any) => {
+const StatusProvider = ({ children }: any) => {
     const [state, dispatch] = useReducer(stateReducer, initialState);
 
     return (
@@ -46,24 +53,22 @@ const ConnectionProvider = ({ children }: any) => {
     );
 };
 
-const useConnectionState = () => {
+const useStatusState = () => {
     const context = useContext(StateContext);
     if (context === undefined) {
-        throw new Error(
-            'useConnectionState must be used within a ConnectionProvider',
-        );
+        throw new Error('useStatusState must be used within a StatusProvider');
     }
     return context;
 };
 
-const useConnectionDispatch = () => {
+const useStatusDispatch = () => {
     const context = useContext(DispatchContext);
     if (context === undefined) {
         throw new Error(
-            'useConnectionDispatch must be used within a ConnectionProvider',
+            'useStatusDispatch must be used within a StatusProvider',
         );
     }
     return context;
 };
 
-export { ConnectionProvider, useConnectionState, useConnectionDispatch };
+export { StatusProvider, useStatusState, useStatusDispatch };

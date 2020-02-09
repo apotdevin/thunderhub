@@ -126,7 +126,7 @@ export const BTCLoginForm = ({
                     <Input onChange={e => setName(e.target.value)} />
                 </Line>
                 <Line>
-                    <StyledTitle>BTCPay Connect Url:</StyledTitle>
+                    <StyledTitle>BTCPayServer Connect JSON:</StyledTitle>
                     <Input onChange={e => setJson(e.target.value)} />
                 </Line>
                 {canConnect && (

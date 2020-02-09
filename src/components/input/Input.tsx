@@ -48,7 +48,7 @@ export const StyledInput = styled.input`
 
 interface InputCompProps {
     type?: string;
-    value?: string;
+    value?: number | string;
     placeholder?: string;
     color?: string;
     withMargin?: string;

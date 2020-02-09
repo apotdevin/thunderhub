@@ -55,20 +55,9 @@ export const GET_CHANNEL_AMOUNT_INFO = gql`
     }
 `;
 
-export const GET_BALANCES = gql`
-    query GetBalances($auth: authType!) {
-        getChainBalance(auth: $auth)
-        getPendingChainBalance(auth: $auth)
-        getChannelBalance(auth: $auth) {
-            confirmedBalance
-            pendingBalance
-        }
-    }
-`;
-
 export const GET_CHANNELS = gql`
-    query GetChannels($auth: authType!) {
-        getChannels(auth: $auth) {
+    query GetChannels($auth: authType!, $active: Boolean) {
+        getChannels(auth: $auth, active: $active) {
             capacity
             commit_transaction_fee
             commit_transaction_weight
@@ -300,5 +289,21 @@ export const CHANNEL_FEES = gql`
             transactionId
             transactionVout
         }
+    }
+`;
+
+export const GET_ROUTES = gql`
+    query GetRoutes(
+        $auth: authType!
+        $outgoing: String!
+        $incoming: String!
+        $tokens: Int!
+    ) {
+        getRoutes(
+            auth: $auth
+            outgoing: $outgoing
+            incoming: $incoming
+            tokens: $tokens
+        )
     }
 `;

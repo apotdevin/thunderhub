@@ -7,6 +7,7 @@ import {
     disabledButtonBorder,
     disabledTextColor,
     colorButtonBorder,
+    colorButtonBorderTwo,
     hoverTextColor,
 } from '../../../styles/Themes';
 import { ChevronRight } from '../../generic/Icons';
@@ -59,7 +60,7 @@ const BorderButton = styled(GeneralButton)`
                     : colorButtonBorder
                 : selected
                 ? colorButtonBorder
-                : colorButtonBackground};
+                : colorButtonBorderTwo};
 
     &:hover {
         ${({ borderColor, selected }: BorderProps) =>
