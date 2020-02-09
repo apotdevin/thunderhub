@@ -38,4 +38,6 @@ export const RateConfig: RateConfigProps = {
     recoverFunds: { max: 3, window: '1s' },
     updateFees: { max: 3, window: '1s' },
     chainTransactions: { max: 3, window: '1s' },
+    getRoutes: { max: 3, window: '1s' },
+    payViaRoute: { max: 3, window: '1s' },
 };
