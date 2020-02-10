@@ -43,7 +43,7 @@ const IconPadding = styled.div`
 `;
 
 const getSymbol = (status: boolean) => {
-    return status ? <UpArrow /> : <DownArrow />;
+    return status ? <DownArrow /> : <UpArrow />;
 };
 
 const getPrivate = (status: boolean) => {
