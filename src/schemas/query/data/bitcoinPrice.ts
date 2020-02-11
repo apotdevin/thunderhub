@@ -1,15 +1,14 @@
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLString } from 'graphql';
+import { GraphQLString, GraphQLBoolean } from 'graphql';
 import fetch from 'node-fetch';
-import { defaultParams } from '../../../helpers/defaultProps';
 
 const url = 'https://blockchain.info/ticker';
 
 export const getBitcoinPrice = {
     type: GraphQLString,
     args: {
-        ...defaultParams,
+        logger: { type: GraphQLBoolean },
         currency: {
             type: GraphQLString,
         },
