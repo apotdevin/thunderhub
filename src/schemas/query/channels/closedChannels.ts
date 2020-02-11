@@ -1,10 +1,11 @@
-import { GraphQLList, GraphQLString, GraphQLNonNull } from 'graphql';
+import { GraphQLList, GraphQLString } from 'graphql';
 import { getClosedChannels as getLnClosedChannels, getNode } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { ClosedChannelType } from '../../../schemaTypes/query/channels/closedChannels';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface ChannelListProps {
     channels: ChannelProps[];
@@ -30,8 +31,8 @@ interface ChannelProps {
 export const getClosedChannels = {
     type: new GraphQLList(ClosedChannelType),
     args: {
+        ...defaultParams,
         type: { type: GraphQLString },
-        auth: { type: new GraphQLNonNull(AuthType) },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'closedChannels');
@@ -58,7 +59,8 @@ export const getClosedChannels = {
             });
             return channels;
         } catch (error) {
-            logger.error('Error getting closed channels: %o', error);
+            params.logger &&
+                logger.error('Error getting closed channels: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

@@ -1,4 +1,4 @@
-import { GraphQLString, GraphQLNonNull } from 'graphql';
+import { GraphQLString } from 'graphql';
 import { getForwards as getLnForwards } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
@@ -12,12 +12,12 @@ import {
 import { reduceForwardArray } from './Helpers';
 import { ForwardCompleteProps } from './ForwardReport.interface';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 export const getForwardReport = {
     type: GraphQLString,
     args: {
-        auth: { type: new GraphQLNonNull(AuthType) },
+        ...defaultParams,
         time: { type: GraphQLString },
     },
     resolve: async (root: any, params: any, context: any) => {
@@ -72,7 +72,8 @@ export const getForwardReport = {
                 return JSON.stringify(reducedOrderedHour);
             }
         } catch (error) {
-            logger.error('Error getting forward report: %o', error);
+            params.logger &&
+                logger.error('Error getting forward report: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

@@ -2,9 +2,9 @@ import { getNetworkInfo as getLnNetworkInfo } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { NetworkInfoType } from '../../../schemaTypes/query/info/networkInfo';
-import { GraphQLNonNull } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface NetworkInfoProps {
     average_channel_size: number;
@@ -19,7 +19,7 @@ interface NetworkInfoProps {
 
 export const getNetworkInfo = {
     type: NetworkInfoType,
-    args: { auth: { type: new GraphQLNonNull(AuthType) } },
+    args: defaultParams,
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'networkInfo');
 
@@ -40,7 +40,8 @@ export const getNetworkInfo = {
                 totalCapacity: info.total_capacity,
             };
         } catch (error) {
-            logger.error('Error getting network info: %o', error);
+            params.logger &&
+                logger.error('Error getting network info: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

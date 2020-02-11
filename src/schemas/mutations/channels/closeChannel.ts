@@ -9,7 +9,7 @@ import {
 } from 'graphql';
 import { CloseChannelType } from '../../../schemaTypes/mutation.ts/channels/closeChannel';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface CloseChannelProps {
     transaction_id: string;
@@ -19,11 +19,11 @@ interface CloseChannelProps {
 export const closeChannel = {
     type: CloseChannelType,
     args: {
+        ...defaultParams,
         id: { type: new GraphQLNonNull(GraphQLString) },
         forceClose: { type: GraphQLBoolean },
         targetConfirmations: { type: GraphQLInt },
         tokensPerVByte: { type: GraphQLInt },
-        auth: { type: new GraphQLNonNull(AuthType) },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'closeChannel');
@@ -42,7 +42,7 @@ export const closeChannel = {
                 transactionOutputIndex: info.transaction_vout,
             };
         } catch (error) {
-            logger.error('Error closing channel: %o', error);
+            params.logger && logger.error('Error closing channel: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

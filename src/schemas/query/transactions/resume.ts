@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLString } from 'graphql';
 import { getPayments, getInvoices, getNode } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
@@ -7,12 +7,12 @@ import { PaymentsProps, InvoicesProps, NodeProps } from './Resume.interface';
 import { compareDesc } from 'date-fns';
 import { sortBy } from 'underscore';
 import { GetResumeType } from '../../../schemaTypes/query/transactions/resume';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 export const getResume = {
     type: GetResumeType,
     args: {
-        auth: { type: new GraphQLNonNull(AuthType) },
+        ...defaultParams,
         token: { type: GraphQLString },
     },
     resolve: async (root: any, params: any, context: any) => {
@@ -51,7 +51,7 @@ export const getResume = {
                 );
             payments = await getMappedPayments();
         } catch (error) {
-            logger.error('Error getting payments: %o', error);
+            params.logger && logger.error('Error getting payments: %o', error);
             throw new Error(getErrorMsg(error));
         }
 
@@ -87,7 +87,7 @@ export const getResume = {
                 token = invoiceList.next;
             }
         } catch (error) {
-            logger.error('Error getting invoices: %o', error);
+            params.logger && logger.error('Error getting invoices: %o', error);
             throw new Error(getErrorMsg(error));
         }
 

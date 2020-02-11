@@ -1,11 +1,11 @@
-import { GraphQLList, GraphQLNonNull } from 'graphql';
+import { GraphQLList } from 'graphql';
 import { getChainTransactions as getLnChainTransactions } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { GetChainTransactionsType } from '../../../schemaTypes/query/transactions/chainTransactions';
 import { sortBy } from 'underscore';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface TransactionProps {
     block_id: string;
@@ -24,7 +24,7 @@ interface TransactionsProps {
 
 export const getChainTransactions = {
     type: new GraphQLList(GetChainTransactionsType),
-    args: { auth: { type: new GraphQLNonNull(AuthType) } },
+    args: defaultParams,
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'chainTransactions');
 
@@ -43,7 +43,8 @@ export const getChainTransactions = {
             ).reverse();
             return transactions;
         } catch (error) {
-            logger.error('Error getting chain transactions: %o', error);
+            params.logger &&
+                logger.error('Error getting chain transactions: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

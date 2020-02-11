@@ -4,9 +4,9 @@ import {
 } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLInt, GraphQLNonNull } from 'graphql';
+import { GraphQLInt } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface ChainBalanceProps {
     chain_balance: number;
@@ -18,7 +18,7 @@ interface PendingChainBalanceProps {
 
 export const getChainBalance = {
     type: GraphQLInt,
-    args: { auth: { type: new GraphQLNonNull(AuthType) } },
+    args: defaultParams,
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'chainBalance');
 
@@ -30,7 +30,8 @@ export const getChainBalance = {
             });
             return value.chain_balance;
         } catch (error) {
-            logger.error('Error getting chain balance: %o', error);
+            params.logger &&
+                logger.error('Error getting chain balance: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },
@@ -38,7 +39,7 @@ export const getChainBalance = {
 
 export const getPendingChainBalance = {
     type: GraphQLInt,
-    args: { auth: { type: new GraphQLNonNull(AuthType) } },
+    args: defaultParams,
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'pendingChainBalance');
 
@@ -50,7 +51,8 @@ export const getPendingChainBalance = {
             });
             return pendingValue.pending_chain_balance;
         } catch (error) {
-            logger.error('Error getting pending chain balance: %o', error);
+            params.logger &&
+                logger.error('Error getting pending chain balance: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

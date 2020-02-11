@@ -3,8 +3,7 @@ import { logger } from '../../../helpers/logger';
 import { NodeInfoType } from '../../../schemaTypes/query/info/nodeInfo';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
-import { GraphQLNonNull } from 'graphql';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface NodeInfoProps {
     chains: string[];
@@ -25,7 +24,7 @@ interface NodeInfoProps {
 
 export const getNodeInfo = {
     type: NodeInfoType,
-    args: { auth: { type: new GraphQLNonNull(AuthType) } },
+    args: defaultParams,
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'nodeInfo');
 
@@ -43,7 +42,7 @@ export const getNodeInfo = {
                 closed_channels_count: closedChannels.channels.length,
             };
         } catch (error) {
-            logger.error('Error getting node info: %o', error);
+            params.logger && logger.error('Error getting node info: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

@@ -4,7 +4,7 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { DecodeType } from '../../../schemaTypes/mutation.ts/invoice/decode';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface RouteProps {
     base_fee_mtokens: string;
@@ -29,8 +29,8 @@ interface DecodeProps {
 export const decodeRequest = {
     type: DecodeType,
     args: {
+        ...defaultParams,
         request: { type: new GraphQLNonNull(GraphQLString) },
-        auth: { type: new GraphQLNonNull(AuthType) },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'decode');
@@ -85,7 +85,7 @@ export const decodeRequest = {
                 tokens,
             };
         } catch (error) {
-            logger.error('Error paying request: %o', error);
+            params.logger && logger.error('Error paying request: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

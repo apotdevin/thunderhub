@@ -9,7 +9,7 @@ import {
 } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { SendToType } from '../../../schemaTypes/mutation.ts/onchain/sentToAddress';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface SendProps {
     confirmation_count: number;
@@ -22,7 +22,7 @@ interface SendProps {
 export const sendToAddress = {
     type: SendToType,
     args: {
-        auth: { type: new GraphQLNonNull(AuthType) },
+        ...defaultParams,
         address: { type: new GraphQLNonNull(GraphQLString) },
         tokens: { type: GraphQLInt },
         fee: { type: GraphQLInt },
@@ -59,7 +59,7 @@ export const sendToAddress = {
                 tokens: send.tokens,
             };
         } catch (error) {
-            logger.error('Error creating address: %o', error);
+            params.logger && logger.error('Error creating address: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

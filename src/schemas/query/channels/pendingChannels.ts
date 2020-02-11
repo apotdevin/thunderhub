@@ -4,10 +4,10 @@ import {
 } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { PendingChannelType } from '../../../schemaTypes/query/channels/pendingChannels';
-import { GraphQLList, GraphQLNonNull } from 'graphql';
+import { GraphQLList } from 'graphql';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface PendingChannelListProps {
     pending_channels: PendingChannelProps[];
@@ -32,7 +32,7 @@ interface PendingChannelProps {
 
 export const getPendingChannels = {
     type: new GraphQLList(PendingChannelType),
-    args: { auth: { type: new GraphQLNonNull(AuthType) } },
+    args: defaultParams,
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'pendingChannels');
 
@@ -63,7 +63,8 @@ export const getPendingChannels = {
             );
             return channels;
         } catch (error) {
-            logger.error('Error getting pending channels: %o', error);
+            params.logger &&
+                logger.error('Error getting pending channels: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

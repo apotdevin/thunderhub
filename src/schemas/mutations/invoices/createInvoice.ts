@@ -4,7 +4,7 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLNonNull, GraphQLInt } from 'graphql';
 import { InvoiceType } from '../../../schemaTypes/mutation.ts/invoice/createInvoice';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface InvoiceProps {
     chain_address: string;
@@ -16,12 +16,11 @@ interface InvoiceProps {
     tokens: number;
 }
 
-// TODO: Allow more params
 export const createInvoice = {
     type: InvoiceType,
     args: {
+        ...defaultParams,
         amount: { type: new GraphQLNonNull(GraphQLInt) },
-        auth: { type: new GraphQLNonNull(AuthType) },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'createInvoice');
@@ -44,7 +43,7 @@ export const createInvoice = {
                 tokens: invoice.tokens,
             };
         } catch (error) {
-            logger.error('Error creating invoice: %o', error);
+            params.logger && logger.error('Error creating invoice: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

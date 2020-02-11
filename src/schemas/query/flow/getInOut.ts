@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLString } from 'graphql';
 import {
     getInvoices as getLnInvoices,
     getPayments as getLnPayments,
@@ -11,12 +11,12 @@ import { groupBy } from 'underscore';
 import { reduceInOutArray } from '../report/Helpers';
 import { InOutType } from '../../../schemaTypes/query/flow/InOut';
 import { InvoicesProps, PaymentsProps } from './getInOut.interface';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 export const getInOut = {
     type: InOutType,
     args: {
-        auth: { type: new GraphQLNonNull(AuthType) },
+        ...defaultParams,
         time: { type: GraphQLString },
     },
     resolve: async (root: any, params: any, context: any) => {
@@ -46,7 +46,7 @@ export const getInOut = {
                 lnd,
             });
         } catch (error) {
-            logger.error('Error getting invoices: %o', error);
+            params.logger && logger.error('Error getting invoices: %o', error);
             throw new Error(getErrorMsg(error));
         }
 
