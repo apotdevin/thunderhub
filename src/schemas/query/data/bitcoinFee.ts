@@ -1,14 +1,16 @@
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import fetch from 'node-fetch';
 import { BitcoinFeeType } from '../../../schemaTypes/query/data/bitcoinFee';
-import { defaultParams } from '../../../helpers/defaultProps';
+import { GraphQLBoolean } from 'graphql';
+import fetch from 'node-fetch';
 
 const url = 'https://bitcoinfees.earn.com/api/v1/fees/recommended';
 
 export const getBitcoinFees = {
     type: BitcoinFeeType,
-    args: defaultParams,
+    args: {
+        logger: { type: GraphQLBoolean },
+    },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'bitcoinFee');
 
