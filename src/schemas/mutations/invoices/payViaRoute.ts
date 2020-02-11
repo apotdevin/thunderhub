@@ -3,12 +3,12 @@ import { payViaRoutes, createInvoice } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 export const payViaRoute = {
     type: GraphQLBoolean,
     args: {
-        auth: { type: new GraphQLNonNull(AuthType) },
+        ...defaultParams,
         route: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (root: any, params: any, context: any) => {
@@ -20,7 +20,7 @@ export const payViaRoute = {
         try {
             route = JSON.parse(params.route);
         } catch (error) {
-            logger.error('Corrupt route json: %o', error);
+            params.logger && logger.error('Corrupt route json: %o', error);
             throw new Error('Corrupt Route JSON');
         }
 
@@ -29,12 +29,12 @@ export const payViaRoute = {
             tokens: params.tokens,
             description: 'Balancing Channel',
         }).catch((error: any) => {
-            logger.error('Error getting invoice: %o', error);
+            params.logger && logger.error('Error getting invoice: %o', error);
             throw new Error(getErrorMsg(error));
         });
 
         await payViaRoutes({ lnd, routes: [route], id }).catch((error: any) => {
-            logger.error('Error making payment: %o', error);
+            params.logger && logger.error('Error making payment: %o', error);
             throw new Error(getErrorMsg(error));
         });
 

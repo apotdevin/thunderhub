@@ -4,7 +4,7 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 import { PayType } from '../../../schemaTypes/mutation.ts/invoice/pay';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface HopProps {
     channel: string;
@@ -30,8 +30,8 @@ interface RequestProps {
 export const pay = {
     type: PayType,
     args: {
+        ...defaultParams,
         request: { type: new GraphQLNonNull(GraphQLString) },
-        auth: { type: new GraphQLNonNull(AuthType) },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'pay');
@@ -66,7 +66,7 @@ export const pay = {
                 tokens: payment.tokens,
             };
         } catch (error) {
-            logger.error('Error paying request: %o', error);
+            params.logger && logger.error('Error paying request: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

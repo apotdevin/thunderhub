@@ -22,9 +22,6 @@ export const getAuthLnd = (auth: {
     const encodedMacaroon = auth.macaroon || '';
     const socket = auth.host || '';
 
-    // const cert = base64url.toBase64(encodedCert);
-    // const macaroon = base64url.toBase64(encodedMacaroon);
-
     const cert = encodedCert;
     const macaroon = encodedMacaroon;
 

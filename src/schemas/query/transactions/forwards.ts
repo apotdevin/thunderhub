@@ -1,4 +1,4 @@
-import { GraphQLString, GraphQLNonNull } from 'graphql';
+import { GraphQLString } from 'graphql';
 import {
     getForwards as getLnForwards,
     getChannel,
@@ -12,7 +12,7 @@ import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { sortBy } from 'underscore';
 import { ForwardCompleteProps } from '../report/ForwardReport.interface';
 import { subHours, subDays, subMonths, subYears } from 'date-fns';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface NodeProps {
     alias: string;
@@ -26,7 +26,7 @@ interface ChannelsProps {
 export const getForwards = {
     type: GetForwardType,
     args: {
-        auth: { type: new GraphQLNonNull(AuthType) },
+        ...defaultParams,
         time: { type: GraphQLString },
     },
     resolve: async (root: any, params: any, context: any) => {
@@ -117,7 +117,7 @@ export const getForwards = {
                 forwards,
             };
         } catch (error) {
-            logger.error('Error getting forwards: %o', error);
+            params.logger && logger.error('Error getting forwards: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

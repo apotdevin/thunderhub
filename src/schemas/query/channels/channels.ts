@@ -1,10 +1,10 @@
-import { GraphQLList, GraphQLNonNull, GraphQLBoolean } from 'graphql';
+import { GraphQLList, GraphQLBoolean } from 'graphql';
 import { getChannels as getLnChannels, getNode } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { ChannelType } from '../../../schemaTypes/query/channels/channels';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface ChannelListProps {
     channels: ChannelProps[];
@@ -39,9 +39,7 @@ interface ChannelProps {
 export const getChannels = {
     type: new GraphQLList(ChannelType),
     args: {
-        auth: {
-            type: new GraphQLNonNull(AuthType),
-        },
+        ...defaultParams,
         active: { type: GraphQLBoolean },
     },
     resolve: async (root: any, params: any, context: any) => {
@@ -76,7 +74,7 @@ export const getChannels = {
             const channels = await getChannelList();
             return channels;
         } catch (error) {
-            logger.error('Error getting channels: %o', error);
+            params.logger && logger.error('Error getting channels: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

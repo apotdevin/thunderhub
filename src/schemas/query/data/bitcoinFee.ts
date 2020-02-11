@@ -1,13 +1,14 @@
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLString } from 'graphql';
 import fetch from 'node-fetch';
 import { BitcoinFeeType } from '../../../schemaTypes/query/data/bitcoinFee';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 const url = 'https://bitcoinfees.earn.com/api/v1/fees/recommended';
 
 export const getBitcoinFees = {
     type: BitcoinFeeType,
+    args: defaultParams,
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'bitcoinFee');
 
@@ -26,7 +27,8 @@ export const getBitcoinFees = {
                 throw new Error('Problem getting Bitcoin fees.');
             }
         } catch (error) {
-            logger.error('Error getting bitcoin fees: %o', error);
+            params.logger &&
+                logger.error('Error getting bitcoin fees: %o', error);
             throw new Error('Problem getting Bitcoin fees.');
         }
     },

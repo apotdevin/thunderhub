@@ -9,7 +9,7 @@ import {
 } from 'graphql';
 import { OpenChannelType } from '../../../schemaTypes/mutation.ts/channels/openChannel';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface OpenChannelProps {
     transaction_id: string;
@@ -19,9 +19,9 @@ interface OpenChannelProps {
 export const openChannel = {
     type: OpenChannelType,
     args: {
+        ...defaultParams,
         amount: { type: new GraphQLNonNull(GraphQLInt) },
         partnerPublicKey: { type: new GraphQLNonNull(GraphQLString) },
-        auth: { type: new GraphQLNonNull(AuthType) },
         tokensPerVByte: { type: GraphQLInt },
         isPrivate: { type: GraphQLBoolean },
     },
@@ -43,7 +43,7 @@ export const openChannel = {
                 transactionOutputIndex: info.transaction_vout,
             };
         } catch (error) {
-            logger.error('Error opening channel: %o', error);
+            params.logger && logger.error('Error opening channel: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

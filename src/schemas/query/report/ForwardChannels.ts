@@ -1,4 +1,4 @@
-import { GraphQLString, GraphQLNonNull } from 'graphql';
+import { GraphQLString } from 'graphql';
 import {
     getForwards as getLnForwards,
     getNode,
@@ -12,7 +12,7 @@ import { countArray, countRoutes } from './Helpers';
 import { ForwardCompleteProps } from './ForwardReport.interface';
 import { sortBy } from 'underscore';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface NodeProps {
     alias: string;
@@ -26,7 +26,7 @@ interface ChannelsProps {
 export const getForwardChannelsReport = {
     type: GraphQLString,
     args: {
-        auth: { type: new GraphQLNonNull(AuthType) },
+        ...defaultParams,
         time: { type: GraphQLString },
         order: { type: GraphQLString },
         type: { type: GraphQLString },
@@ -159,7 +159,8 @@ export const getForwardChannelsReport = {
                 return JSON.stringify(sortedOutCount);
             }
         } catch (error) {
-            logger.error('Error getting forward channel report: %o', error);
+            params.logger &&
+                logger.error('Error getting forward channel report: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

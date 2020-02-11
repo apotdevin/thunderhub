@@ -1,19 +1,14 @@
 import { updateRoutingFees } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import {
-    GraphQLBoolean,
-    GraphQLString,
-    GraphQLNonNull,
-    GraphQLInt,
-} from 'graphql';
+import { GraphQLBoolean, GraphQLString, GraphQLInt } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 export const updateFees = {
     type: GraphQLBoolean,
     args: {
-        auth: { type: new GraphQLNonNull(AuthType) },
+        ...defaultParams,
         transactionId: { type: GraphQLString },
         transactionVout: { type: GraphQLInt },
         baseFee: { type: GraphQLInt },
@@ -48,7 +43,8 @@ export const updateFees = {
             await updateRoutingFees(props);
             return true;
         } catch (error) {
-            logger.error('Error updating routing fees: %o', error);
+            params.logger &&
+                logger.error('Error updating routing fees: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

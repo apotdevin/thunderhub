@@ -1,10 +1,9 @@
 import { getChannels } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLNonNull } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { ChannelReportType } from '../../../schemaTypes/query/channels/channelReport';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface GetChannelsProps {
     channels: ChannelsProps[];
@@ -17,7 +16,7 @@ interface ChannelsProps {
 
 export const getChannelReport = {
     type: ChannelReportType,
-    args: { auth: { type: new GraphQLNonNull(AuthType) } },
+    args: defaultParams,
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'channelReport');
 
@@ -58,7 +57,8 @@ export const getChannelReport = {
                 maxOut: maxOutgoing,
             };
         } catch (error) {
-            logger.error('Error getting channel report: %o', error);
+            params.logger &&
+                logger.error('Error getting channel report: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },

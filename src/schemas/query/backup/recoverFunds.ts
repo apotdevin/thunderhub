@@ -3,7 +3,7 @@ import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLNonNull, GraphQLString, GraphQLBoolean } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
-import { AuthType } from '../../../schemaTypes/Auth';
+import { defaultParams } from '../../../helpers/defaultProps';
 
 interface BackupProps {
     backup: string;
@@ -12,7 +12,7 @@ interface BackupProps {
 export const recoverFunds = {
     type: GraphQLBoolean,
     args: {
-        auth: { type: new GraphQLNonNull(AuthType) },
+        ...defaultParams,
         backup: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (root: any, params: any, context: any) => {
@@ -24,7 +24,7 @@ export const recoverFunds = {
         try {
             backupObj = JSON.parse(params.backup);
         } catch (error) {
-            logger.error('Corrupt backup file: %o', error);
+            params.logger && logger.error('Corrupt backup file: %o', error);
             throw new Error('Corrupt backup file');
         }
 
@@ -37,7 +37,8 @@ export const recoverFunds = {
             });
             return true;
         } catch (error) {
-            logger.error('Error recovering funds from channels: %o', error);
+            params.logger &&
+                logger.error('Error recovering funds from channels: %o', error);
             throw new Error(getErrorMsg(error));
         }
     },
