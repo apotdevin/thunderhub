@@ -26,7 +26,7 @@ export const PrivacyView = () => {
                 <Title>Privacy Policy</Title>
             </Section>
             <Section color={themeColors.grey} padding={'60px 0 16px'}>
-                <Text>Last Updated: January 30, 2020</Text>
+                <Text>Last Updated: February 12, 2020</Text>
             </Section>
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
                 <Text>
@@ -69,8 +69,9 @@ export const PrivacyView = () => {
                     Lightning node, we ask for sensitive information to do so.
                     This information is stored using your browser's own storage
                     APIs, and is encrypted using a password only known to the
-                    user. This information is never recorded outside of the
-                    user's browser storage.
+                    user. This information is used by the server to connect to
+                    your node but is never recorded outside of the user's
+                    browser storage.
                 </Text>
                 <Text>
                     <b>Error Reporting / Usage Statistics</b> - No information

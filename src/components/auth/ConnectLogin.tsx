@@ -18,6 +18,7 @@ import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { Input } from 'components/input/Input';
 import { Line, StyledTitle } from './Auth.styled';
 import { ChevronLeft } from 'components/generic/Icons';
+import { RiskCheckboxAndConfirm } from './Checkboxes';
 
 interface AuthProps {
     available: number;
@@ -37,6 +38,7 @@ export const ConnectLoginForm = ({
 
     const [isName, setName] = useState('');
     const [isUrl, setUrl] = useState('');
+    const [checked, setChecked] = useState(false);
 
     const [hasInfo, setHasInfo] = useState(false);
     const [isPass, setPass] = useState('');
@@ -106,7 +108,7 @@ export const ConnectLoginForm = ({
     };
 
     const renderContent = () => {
-        const canConnect = isUrl !== '' && !!available;
+        const canConnect = isUrl !== '' && !!available && checked;
         return (
             <>
                 {goBack && (
@@ -122,17 +124,12 @@ export const ConnectLoginForm = ({
                     <StyledTitle>LND Connect Url:</StyledTitle>
                     <Input onChange={e => setUrl(e.target.value)} />
                 </Line>
-                {canConnect && (
-                    <ColorButton
-                        disabled={!canConnect}
-                        onClick={() => setHasInfo(true)}
-                        withMargin={'16px 0 0'}
-                        fullWidth={true}
-                        arrow={true}
-                    >
-                        Connect
-                    </ColorButton>
-                )}
+                <RiskCheckboxAndConfirm
+                    disabled={!canConnect}
+                    handleClick={() => setHasInfo(true)}
+                    checked={checked}
+                    onChange={setChecked}
+                />
             </>
         );
     };

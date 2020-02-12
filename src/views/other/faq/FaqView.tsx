@@ -24,8 +24,8 @@ export const FaqView = () => {
             <Section color={themeColors.grey} padding={'60px 0 16px'}>
                 <Question>What is ThunderHub?</Question>
                 <Text>
-                    ThunderHub is a <b>LND node manager</b> that you can open on
-                    any browser and any device.
+                    ThunderHub is a <b>LND node manager</b> that you can open in
+                    any browser and on any device.
                 </Text>
             </Section>
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
@@ -38,7 +38,7 @@ export const FaqView = () => {
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
                 <Question>What is the value of ThunderHub?</Question>
                 <Text>
-                    ThunderHub brings a <b>full LND lightning node manager </b>
+                    ThunderHub brings a <b>full lightning node manager </b>
                     directly to your device without the need of installing
                     plugins, extensions or apps, having specific browsers or
                     operating systems and is completely <b>open-source.</b>
@@ -51,10 +51,7 @@ export const FaqView = () => {
                     with a password only you know.
                 </Text>
                 <Text>
-                    <b>
-                        No need to trust us, the code is public and available
-                        for anyone to audit.
-                    </b>
+                    <b>The code is public and available for anyone to audit.</b>
                 </Text>
             </Section>
             <Section color={themeColors.grey} padding={'19px 0 16px'}>
@@ -72,8 +69,14 @@ export const FaqView = () => {
                     <b> stored only in your browser. </b>
                     The password is only known by you and you need to unlock
                     your account everytime you want to perform an admin only
-                    change such as managing channels or sending and recieving
+                    change such as managing channels or sending and receiving
                     bitcoin or lightning payments.
+                </Text>
+                <Text>
+                    The ThunderHub server uses your credentials to connect to
+                    your node but they are never stored outside of your browser.
+                    Still, this involves a certain degree of trust you must be
+                    aware of.
                 </Text>
                 <Text>
                     If you want a more secure alternative, you can connect using

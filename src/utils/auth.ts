@@ -68,7 +68,18 @@ export const getAuthParams = (available: string) => {
 
 export const getAuthLnd = (lndconnect: string) => {
     const auth = lndconnect.replace('lndconnect', 'https');
-    const url = new URL(auth);
+
+    let url;
+
+    try {
+        url = new URL(auth);
+    } catch (error) {
+        return {
+            cert: '',
+            macaroon: '',
+            socket: '',
+        };
+    }
 
     const cert = url.searchParams.get('cert') || '';
     const macaroon = url.searchParams.get('macaroon') || '';
