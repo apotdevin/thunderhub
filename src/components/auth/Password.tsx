@@ -1,20 +1,15 @@
 import React from 'react';
-import { SingleLine, Sub4Title, SubTitle } from '../generic/Styled';
+import { Sub4Title, SubTitle } from '../generic/Styled';
 import zxcvbn from 'zxcvbn';
 import styled from 'styled-components';
 import { progressBackground } from '../../styles/Themes';
-import { Loader } from '../generic/Icons';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { Input } from 'components/input/Input';
+import { Line } from './Auth.styled';
 
 const Progress = styled.div`
-    width: 80%;
-    margin: 10px 10px 10px 15px;
-    padding: 3px;
-    border-radius: 15px;
+    width: 100%;
     background: ${progressBackground};
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25),
-        0 1px rgba(255, 255, 255, 0.08);
 `;
 
 interface ProgressBar {
@@ -24,12 +19,6 @@ interface ProgressBar {
 
 const ProgressBar = styled.div`
     height: 10px;
-    border-radius: 15px;
-    background-image: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.3),
-        rgba(0, 0, 0, 0.05)
-    );
     background-color: ${({ barColor }: ProgressBar) =>
         barColor ? barColor : 'blue'};
     width: ${({ percent }: ProgressBar) => `${percent}%`};
@@ -66,15 +55,15 @@ export const PasswordInput = ({
     loading = false,
 }: PasswordProps) => {
     const strength = (100 * Math.min(zxcvbn(isPass).guesses_log10, 40)) / 40;
-    const needed = 1;
+    const needed = 20;
     return (
         <>
             <SubTitle>Please Input a Password</SubTitle>
-            <SingleLine>
+            <Line>
                 <Sub4Title>Password:</Sub4Title>
                 <Input onChange={e => setPass(e.target.value)} />
-            </SingleLine>
-            <SingleLine>
+            </Line>
+            <Line>
                 <Sub4Title>Strength:</Sub4Title>
                 <Progress>
                     <ProgressBar
@@ -82,23 +71,17 @@ export const PasswordInput = ({
                         barColor={getColor(strength)}
                     />
                 </Progress>
-            </SingleLine>
-            {strength >= needed && !loading && (
-                <ColorButton
-                    disabled={strength < needed}
-                    onClick={callback}
-                    withMargin={'16px 0 0'}
-                    fullWidth={true}
-                    arrow={true}
-                >
-                    Connect
-                </ColorButton>
-            )}
-            {loading && (
-                <ColorButton disabled={true} color={'grey'}>
-                    <Loader />
-                </ColorButton>
-            )}
+            </Line>
+            <ColorButton
+                disabled={strength < needed}
+                onClick={callback}
+                withMargin={'32px 0 0'}
+                fullWidth={true}
+                arrow={true}
+                loading={loading}
+            >
+                Connect
+            </ColorButton>
         </>
     );
 };

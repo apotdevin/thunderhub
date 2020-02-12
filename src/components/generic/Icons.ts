@@ -30,6 +30,7 @@ import { ReactComponent as LayersIcon } from '../../assets/icons/layers.svg';
 import { ReactComponent as LoaderIcon } from '../../assets/icons/loader.svg';
 import { ReactComponent as CircleIcon } from '../../assets/icons/circle.svg';
 import { ReactComponent as AlertTriangleIcon } from '../../assets/icons/alert-triangle.svg';
+import { ReactComponent as AlertCircleIcon } from '../../assets/icons/alert-circle.svg';
 import { ReactComponent as GitCommitIcon } from '../../assets/icons/git-commit.svg';
 import { ReactComponent as GitBranchIcon } from '../../assets/icons/git-branch.svg';
 import { ReactComponent as RadioIcon } from '../../assets/icons/radio.svg';
@@ -45,6 +46,7 @@ import { ReactComponent as Menu } from '../../assets/icons/menu.svg';
 import { ReactComponent as Mail } from '../../assets/icons/mail.svg';
 import { ReactComponent as Github } from '../../assets/icons/github.svg';
 import { ReactComponent as Repeat } from '../../assets/icons/repeat.svg';
+import { ReactComponent as CheckIcon } from '../../assets/icons/check.svg';
 
 interface IconProps {
     color?: string;
@@ -97,6 +99,7 @@ export const Layers = styleIcon(LayersIcon);
 export const Loader = styleIcon(LoaderIcon);
 export const Circle = styleIcon(CircleIcon);
 export const AlertTriangle = styleIcon(AlertTriangleIcon);
+export const AlertCircle = styleIcon(AlertCircleIcon);
 export const GitCommit = styleIcon(GitCommitIcon);
 export const GitBranch = styleIcon(GitBranchIcon);
 export const Radio = styleIcon(RadioIcon);
@@ -112,3 +115,4 @@ export const MenuIcon = styleIcon(Menu);
 export const MailIcon = styleIcon(Mail);
 export const GithubIcon = styleIcon(Github);
 export const RepeatIcon = styleIcon(Repeat);
+export const Check = styleIcon(CheckIcon);

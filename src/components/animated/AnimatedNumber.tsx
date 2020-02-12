@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSpring, animated } from 'react-spring';
-import { getValue } from 'helpers/Helpers';
-import { useSettings } from 'context/SettingsContext';
+import { getValue } from '../../helpers/Helpers';
+import { useSettings } from '../../context/SettingsContext';
 
 interface AnimatedProps {
     amount: number;

@@ -12,6 +12,7 @@ import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { Input } from 'components/input/Input';
 import { Line, StyledTitle } from './Auth.styled';
 import { ChevronLeft } from 'components/generic/Icons';
+import { RiskCheckboxAndConfirm } from './Checkboxes';
 
 interface AuthProps {
     available: number;
@@ -31,6 +32,7 @@ export const BTCLoginForm = ({
 
     const [isName, setName] = useState('');
     const [isJson, setJson] = useState('');
+    const [checked, setChecked] = useState(false);
 
     const [hasInfo, setHasInfo] = useState(false);
     const [isPass, setPass] = useState('');
@@ -113,7 +115,7 @@ export const BTCLoginForm = ({
     };
 
     const renderContent = () => {
-        const canConnect = isJson !== '' && !!available;
+        const canConnect = isJson !== '' && !!available && checked;
         return (
             <>
                 {goBack && (
@@ -129,17 +131,12 @@ export const BTCLoginForm = ({
                     <StyledTitle>BTCPayServer Connect JSON:</StyledTitle>
                     <Input onChange={e => setJson(e.target.value)} />
                 </Line>
-                {canConnect && (
-                    <ColorButton
-                        disabled={!canConnect}
-                        onClick={handleClick}
-                        withMargin={'16px 0 0'}
-                        fullWidth={true}
-                        arrow={true}
-                    >
-                        Connect
-                    </ColorButton>
-                )}
+                <RiskCheckboxAndConfirm
+                    disabled={!canConnect}
+                    handleClick={handleClick}
+                    checked={checked}
+                    onChange={setChecked}
+                />
             </>
         );
     };
