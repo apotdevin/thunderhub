@@ -36,6 +36,7 @@ import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { DownArrow, UpArrow, EyeOff } from '../../../components/generic/Icons';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { getPrice } from 'components/price/Price';
+import { usePriceState } from 'context/PriceContext';
 
 const IconPadding = styled.div`
     margin-left: 16px;
@@ -65,8 +66,9 @@ export const ChannelCard = ({
 }: ChannelCardProps) => {
     const [modalOpen, setModalOpen] = useState(false);
 
-    const { theme, ...context } = useSettings();
-    const format = getPrice(context);
+    const { theme, currency } = useSettings();
+    const priceContext = usePriceState();
+    const format = getPrice(currency, priceContext);
 
     const tooltipType = getTooltipType(theme);
 

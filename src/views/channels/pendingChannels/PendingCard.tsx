@@ -27,6 +27,7 @@ import {
 } from '../../../components/generic/Helpers';
 import { getNodeLink } from '../../../components/generic/Helpers';
 import { getPrice } from 'components/price/Price';
+import { usePriceState } from 'context/PriceContext';
 
 interface PendingCardProps {
     channelInfo: any;
@@ -41,8 +42,9 @@ export const PendingCard = ({
     setIndexOpen,
     indexOpen,
 }: PendingCardProps) => {
-    const { theme, ...context } = useSettings();
-    const format = getPrice(context);
+    const { theme, currency } = useSettings();
+    const priceContext = usePriceState();
+    const format = getPrice(currency, priceContext);
 
     const tooltipType = getTooltipType(theme);
 

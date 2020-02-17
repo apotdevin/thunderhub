@@ -12,7 +12,7 @@ import { PAY_ADDRESS } from '../../../../graphql/mutation';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
-import { useBitcoinInfo } from '../../../../context/BitcoinContext';
+import { useBitcoinState } from '../../../../context/BitcoinContext';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
 import { useSize } from '../../../../hooks/UseSize';
@@ -26,6 +26,7 @@ import { useSettings } from 'context/SettingsContext';
 import Modal from 'components/modal/ReactModal';
 import { ColorButton } from 'components/buttons/colorButton/ColorButton';
 import { renderLine } from 'components/generic/Helpers';
+import { usePriceState } from 'context/PriceContext';
 
 const ResponsiveWrap = styled(SingleLine)`
     @media (${mediaWidths.mobile}) {
@@ -44,8 +45,9 @@ const Margin = styled.div`
 `;
 
 export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
-    const context = useSettings();
-    const format = getPrice(context);
+    const { currency } = useSettings();
+    const priceContext = usePriceState();
+    const format = getPrice(currency, priceContext);
 
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -58,7 +60,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
 
     const canSend = address !== '' && (sendAll || tokens > 0) && amount > 0;
 
-    const { fast, halfHour, hour } = useBitcoinInfo();
+    const { fast, halfHour, hour } = useBitcoinState();
 
     const [payAddress, { loading }] = useMutation(PAY_ADDRESS, {
         onError: error => toast.error(getErrorContent(error)),

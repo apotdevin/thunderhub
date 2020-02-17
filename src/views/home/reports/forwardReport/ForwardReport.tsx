@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from 'components/price/Price';
+import { usePriceState } from 'context/PriceContext';
 
 interface Props {
     isTime: string;
@@ -35,8 +36,9 @@ const timeMap: { [key: string]: string } = {
 };
 
 export const ForwardReport = ({ isTime, isType }: Props) => {
-    const { theme, ...context } = useSettings();
-    const format = getPrice(context);
+    const { theme, currency } = useSettings();
+    const priceContext = usePriceState();
+    const format = getPrice(currency, priceContext);
 
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);

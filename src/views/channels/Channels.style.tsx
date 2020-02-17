@@ -8,7 +8,6 @@ import {
 
 export const Progress = styled.div`
     margin: 5px;
-    padding: 2px;
     background: ${progressBackground};
 `;
 

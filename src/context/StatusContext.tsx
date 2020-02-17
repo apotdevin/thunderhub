@@ -45,11 +45,11 @@ const StatusProvider = ({ children }: any) => {
     const [state, dispatch] = useReducer(stateReducer, initialState);
 
     return (
-        <StateContext.Provider value={state}>
-            <DispatchContext.Provider value={dispatch}>
+        <DispatchContext.Provider value={dispatch}>
+            <StateContext.Provider value={state}>
                 {children}
-            </DispatchContext.Provider>
-        </StateContext.Provider>
+            </StateContext.Provider>
+        </DispatchContext.Provider>
     );
 };
 
