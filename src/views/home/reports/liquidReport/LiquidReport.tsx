@@ -25,14 +25,16 @@ import {
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from 'components/price/Price';
 import { useSize } from 'hooks/UseSize';
+import { usePriceState } from 'context/PriceContext';
 
 export const LiquidReport = () => {
     const { width } = useSize();
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
-    const { theme, ...context } = useSettings();
-    const format = getPrice(context);
+    const { theme, currency } = useSettings();
+    const priceContext = usePriceState();
+    const format = getPrice(currency, priceContext);
 
     const { data, loading } = useQuery(GET_LIQUID_REPORT, {
         variables: { auth },

@@ -1,11 +1,14 @@
 import React, { createContext, useContext, useReducer } from 'react';
 
+type PriceProps = {
+    last: number;
+    symbol: string;
+};
+
 type State = {
     loading: boolean;
     error: boolean;
-    fast: number;
-    halfHour: number;
-    hour: number;
+    prices?: { [key: string]: PriceProps };
 };
 
 type ActionType = {
@@ -18,12 +21,10 @@ type Dispatch = (action: ActionType) => void;
 export const StateContext = createContext<State | undefined>(undefined);
 export const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
-const initialState = {
+const initialState: State = {
     loading: true,
     error: false,
-    fast: 0,
-    halfHour: 0,
-    hour: 0,
+    prices: { EUR: { last: 0, symbol: '€' } },
 };
 
 const stateReducer = (state: State, action: ActionType): State => {
@@ -41,7 +42,7 @@ const stateReducer = (state: State, action: ActionType): State => {
     }
 };
 
-const BitcoinInfoProvider = ({ children }: any) => {
+const PriceProvider = ({ children }: any) => {
     const [state, dispatch] = useReducer(stateReducer, initialState);
 
     return (
@@ -53,24 +54,20 @@ const BitcoinInfoProvider = ({ children }: any) => {
     );
 };
 
-const useBitcoinState = () => {
+const usePriceState = () => {
     const context = useContext(StateContext);
     if (context === undefined) {
-        throw new Error(
-            'useBitcoinState must be used within a BitcoinInfoProvider',
-        );
+        throw new Error('usePriceState must be used within a PriceProvider');
     }
     return context;
 };
 
-const useBitcoinDispatch = () => {
+const usePriceDispatch = () => {
     const context = useContext(DispatchContext);
     if (context === undefined) {
-        throw new Error(
-            'useBitcoinDispatch must be used within a BitcoinInfoProvider',
-        );
+        throw new Error('usePriceDispatch must be used within a PriceProvider');
     }
     return context;
 };
 
-export { BitcoinInfoProvider, useBitcoinState, useBitcoinDispatch };
+export { PriceProvider, usePriceState, usePriceDispatch };

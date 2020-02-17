@@ -26,6 +26,7 @@ import ScaleLoader from 'react-spinners/ScaleLoader';
 import { getPrice } from 'components/price/Price';
 import { AnimatedNumber } from 'components/animated/AnimatedNumber';
 import { useStatusState } from 'context/StatusContext';
+import { usePriceState } from 'context/PriceContext';
 
 const Closed = styled.div`
     display: flex;
@@ -90,8 +91,9 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         onError: error => toast.error(getErrorContent(error)),
     });
 
-    const { theme, ...context } = useSettings();
-    const format = getPrice(context);
+    const { theme, currency } = useSettings();
+    const priceContext = usePriceState();
+    const format = getPrice(currency, priceContext);
 
     const tooltipType = getTooltipType(theme);
 

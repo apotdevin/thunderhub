@@ -1,6 +1,13 @@
 import React from 'react';
 import { useSettings } from 'context/SettingsContext';
 import { getValue } from 'helpers/Helpers';
+import { usePriceState } from 'context/PriceContext';
+
+type PriceProps = {
+    price: number;
+    symbol: string;
+    currency: string;
+};
 
 export const Price = ({
     amount,
@@ -9,17 +16,27 @@ export const Price = ({
     amount: number;
     breakNumber?: boolean;
 }) => {
-    const { currency, prices } = useSettings();
+    const { currency } = useSettings();
+    const { prices, loading, error } = usePriceState();
 
-    const current: { last: number; symbol: string } = prices[currency] ?? {
-        last: 0,
+    let priceProps: PriceProps = {
+        price: 0,
         symbol: '',
+        currency: currency !== 'btc' && currency !== 'sat' ? 'sat' : currency,
     };
-    const priceProps = {
-        price: current.last,
-        symbol: current.symbol,
-        currency,
-    };
+
+    if (prices && !loading && !error) {
+        const current: { last: number; symbol: string } = prices[currency] ?? {
+            last: 0,
+            symbol: '',
+        };
+
+        priceProps = {
+            price: current.last,
+            symbol: current.symbol,
+            currency,
+        };
+    }
 
     const getFormat = (amount: number) =>
         getValue({ amount, ...priceProps, breakNumber });
@@ -27,24 +44,40 @@ export const Price = ({
     return <>{getFormat(amount)}</>;
 };
 
-export const getPrice = (context: any) => ({
+export const getPrice = (
+    currency: string,
+    priceContext: {
+        error: boolean;
+        loading: boolean;
+        prices?: { [key: string]: { last: number; symbol: string } };
+    },
+) => ({
     amount,
     breakNumber = false,
 }: {
     amount: number;
     breakNumber?: boolean;
 }) => {
-    const { currency, prices } = context;
+    const { prices, loading, error } = priceContext;
 
-    const current: { last: number; symbol: string } = prices[currency] ?? {
-        last: 0,
+    let priceProps: PriceProps = {
+        price: 0,
         symbol: '',
+        currency: currency !== 'btc' && currency !== 'sat' ? 'sat' : currency,
     };
-    const priceProps = {
-        price: current.last,
-        symbol: current.symbol,
-        currency,
-    };
+
+    if (prices && !loading && !error) {
+        const current: { last: number; symbol: string } = prices[currency] ?? {
+            last: 0,
+            symbol: '',
+        };
+
+        priceProps = {
+            price: current.last,
+            symbol: current.symbol,
+            currency,
+        };
+    }
 
     const getFormat = (amount: number) =>
         getValue({ amount, ...priceProps, breakNumber });

@@ -16,6 +16,7 @@ import {
     flowBarColor2,
 } from '../../../../styles/Themes';
 import { getPrice } from 'components/price/Price';
+import { usePriceState } from 'context/PriceContext';
 // import { WaterfallProps } from '.';
 
 // const beforeMap = {
@@ -40,8 +41,9 @@ export const FlowReport = ({
     parsedData2,
 }: // waterfall,
 Props) => {
-    const { theme, ...context } = useSettings();
-    const format = getPrice(context);
+    const { theme, currency } = useSettings();
+    const priceContext = usePriceState();
+    const format = getPrice(currency, priceContext);
 
     let domain = 24;
     let barWidth = 3;

@@ -1,14 +1,12 @@
 import { useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_BITCOIN_PRICE } from '../../graphql/query';
-import { useSettings } from '../../context/SettingsContext';
-import { toast } from 'react-toastify';
-import { getErrorContent } from '../../utils/error';
+import { usePriceDispatch } from '../../context/PriceContext';
 
 export const BitcoinPrice = () => {
-    const { setSettings } = useSettings();
+    const setPrices = usePriceDispatch();
     const { loading, data, stopPolling } = useQuery(GET_BITCOIN_PRICE, {
-        onError: error => toast.error(getErrorContent(error)),
+        onError: () => setPrices({ type: 'error' }),
         pollInterval: 60000,
     });
 
@@ -16,12 +14,16 @@ export const BitcoinPrice = () => {
         if (!loading && data && data.getBitcoinPrice) {
             try {
                 const prices = JSON.parse(data.getBitcoinPrice);
-                setSettings({ prices });
+                setPrices({
+                    type: 'fetched',
+                    state: { loading: false, error: false, prices },
+                });
             } catch (error) {
                 stopPolling();
+                setPrices({ type: 'error' });
             }
         }
-    }, [data, loading, setSettings, stopPolling]);
+    }, [data, loading, setPrices, stopPolling]);
 
     return null;
 };

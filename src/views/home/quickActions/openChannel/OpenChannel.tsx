@@ -12,7 +12,7 @@ import { ChevronRight } from '../../../../components/generic/Icons';
 import { OPEN_CHANNEL } from '../../../../graphql/mutation';
 import { getErrorContent } from '../../../../utils/error';
 import { toast } from 'react-toastify';
-import { useBitcoinInfo } from '../../../../context/BitcoinContext';
+import { useBitcoinState } from '../../../../context/BitcoinContext';
 import styled from 'styled-components';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
@@ -43,7 +43,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
     const [privateChannel, setPrivateChannel] = useState(false);
     const [type, setType] = useState('none');
 
-    const { fast, halfHour, hour } = useBitcoinInfo();
+    const { fast, halfHour, hour } = useBitcoinState();
 
     const [openChannel] = useMutation(OPEN_CHANNEL, {
         onError: error => toast.error(getErrorContent(error)),

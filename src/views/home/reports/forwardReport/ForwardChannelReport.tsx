@@ -20,6 +20,7 @@ import styled from 'styled-components';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from 'components/price/Price';
 import { useSettings } from 'context/SettingsContext';
+import { usePriceState } from 'context/PriceContext';
 
 const ChannelRow = styled.div`
     font-size: 14px;
@@ -68,8 +69,10 @@ interface Props {
 
 export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
     const [type, setType] = useState('route');
-    const context = useSettings();
-    const format = getPrice(context);
+
+    const { currency } = useSettings();
+    const priceContext = usePriceState();
+    const format = getPrice(currency, priceContext);
 
     const { host, read, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);

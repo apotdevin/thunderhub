@@ -4,14 +4,17 @@ import { SettingsProvider } from './SettingsContext';
 import { BitcoinInfoProvider } from './BitcoinContext';
 import { ConnectionProvider } from './ConnectionContext';
 import { StatusProvider } from './StatusContext';
+import { PriceProvider } from './PriceContext';
 
 export const ContextProvider: React.FC = ({ children }) => (
     <AccountProvider>
         <SettingsProvider>
             <BitcoinInfoProvider>
-                <ConnectionProvider>
-                    <StatusProvider>{children}</StatusProvider>
-                </ConnectionProvider>
+                <PriceProvider>
+                    <ConnectionProvider>
+                        <StatusProvider>{children}</StatusProvider>
+                    </ConnectionProvider>
+                </PriceProvider>
             </BitcoinInfoProvider>
         </SettingsProvider>
     </AccountProvider>

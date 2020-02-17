@@ -5,6 +5,7 @@ import { VictoryPie } from 'victory';
 import { chartAxisColor } from '../../../../styles/Themes';
 import { Row, Col, PieRow } from '../flow';
 import { getPrice } from 'components/price/Price';
+import { usePriceState } from 'context/PriceContext';
 
 interface Props {
     flowPie: { x: string; y: number }[];
@@ -12,8 +13,9 @@ interface Props {
 }
 
 export const FlowPie = ({ flowPie, isType }: Props) => {
-    const { theme, ...context } = useSettings();
-    const format = getPrice(context);
+    const { theme, currency } = useSettings();
+    const priceContext = usePriceState();
+    const format = getPrice(currency, priceContext);
 
     return (
         <Row>
