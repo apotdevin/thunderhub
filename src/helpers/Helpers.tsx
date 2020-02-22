@@ -32,6 +32,7 @@ export const getValue = ({
     }
 
     if (currency === 'btc') {
+        if (!value) return `₿0.0`;
         const amountInBtc = value / 100000000;
         return `₿${amountInBtc}`;
     } else if (currency === 'sat') {

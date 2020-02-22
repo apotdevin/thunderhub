@@ -23,6 +23,7 @@ type BalancedRouteProps = {
     incoming: any;
     outgoing: any;
     amount: number;
+    maxFee: number;
     auth: {};
     blocked: boolean;
     setBlocked: () => void;
@@ -33,6 +34,7 @@ export const BalanceRoute = ({
     incoming,
     outgoing,
     amount,
+    maxFee,
     auth,
     blocked,
     setBlocked,
@@ -81,6 +83,7 @@ export const BalanceRoute = ({
                         outgoing: outgoing.id,
                         incoming: incoming.partner_public_key,
                         tokens: amount,
+                        ...(maxFee && { maxFee }),
                     },
                 });
             }}

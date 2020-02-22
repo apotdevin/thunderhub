@@ -37,6 +37,9 @@ export const BalanceView = () => {
     const [outgoing, setOutgoing] = useState();
     const [incoming, setIncoming] = useState();
     const [amount, setAmount] = useState();
+
+    const [maxFee, setMaxFee] = useState();
+
     const [blocked, setBlocked] = useState(false);
 
     const { loading, data } = useQuery(GET_CHANNELS, {
@@ -77,6 +80,7 @@ export const BalanceView = () => {
                 setIncoming(undefined);
                 break;
             case 'all':
+                setMaxFee(undefined);
                 setAmount(undefined);
                 setOutgoing(undefined);
                 setIncoming(undefined);
@@ -184,6 +188,25 @@ export const BalanceView = () => {
                         onChange={e => {
                             setAmount(parseInt(e.target.value));
                         }}
+                        withMargin={'0 0 8px'}
+                    />
+                )}
+                <ResponsiveLine>
+                    <Sub4Title>Max Fee</Sub4Title>
+                    <DarkSubTitle>
+                        <NoWrapTitle>
+                            <Price amount={maxFee} />
+                        </NoWrapTitle>
+                    </DarkSubTitle>
+                </ResponsiveLine>
+                {!blocked && (
+                    <Input
+                        value={maxFee}
+                        placeholder={'Sats (Leave empty to search all routes)'}
+                        type={'number'}
+                        onChange={e => {
+                            setMaxFee(parseInt(e.target.value));
+                        }}
                         withMargin={'0 0 24px'}
                     />
                 )}
@@ -193,6 +216,7 @@ export const BalanceView = () => {
                             incoming,
                             outgoing,
                             amount,
+                            maxFee,
                             auth,
                             blocked,
                             setBlocked: () => setBlocked(true),
