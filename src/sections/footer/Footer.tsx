@@ -80,15 +80,31 @@ const StyledRouter = styled(RouterLink)`
     }
 `;
 
+const Line = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+`;
+
+const Version = styled.div`
+    font-size: 12px;
+    margin-left: 8px;
+`;
+
+const APP_VERSION = process.env.REACT_APP_VERSION || '0.0.0';
+
 export const Footer = () => {
     const { loggedIn } = useAccount();
     return (
         <Section withColor={true} color={headerColor}>
             <FooterStyle>
                 <SideFooter>
-                    <RouterLink to="/" style={{ textDecoration: 'none' }}>
-                        <Title>ThunderHub</Title>
-                    </RouterLink>
+                    <Line>
+                        <RouterLink to="/" style={{ textDecoration: 'none' }}>
+                            <Title>ThunderHub</Title>
+                        </RouterLink>
+                        <Version>{`v${APP_VERSION}`}</Version>
+                    </Line>
                     <SideText>
                         Open-source lightning node manager to control and
                         monitor your LND node.
