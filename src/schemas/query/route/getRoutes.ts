@@ -12,6 +12,7 @@ export const getRoutes = {
         outgoing: { type: new GraphQLNonNull(GraphQLString) },
         incoming: { type: new GraphQLNonNull(GraphQLString) },
         tokens: { type: new GraphQLNonNull(GraphQLInt) },
+        maxFee: { type: GraphQLInt },
     },
     resolve: async (root: any, params: any, context: any) => {
         await requestLimiter(context.ip, 'getRoutes');
@@ -26,6 +27,7 @@ export const getRoutes = {
             incoming_peer: params.incoming,
             destination: public_key,
             tokens: params.tokens,
+            ...(params.maxFee && { max_fee: params.maxFee }),
         }).catch((error: any) => {
             params.logger && logger.error('Error getting routes: %o', error);
             throw new Error(getErrorMsg(error));
