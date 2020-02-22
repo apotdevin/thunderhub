@@ -40,4 +40,5 @@ export const RateConfig: RateConfigProps = {
     chainTransactions: { max: 3, window: '1s' },
     getRoutes: { max: 3, window: '1s' },
     payViaRoute: { max: 3, window: '1s' },
+    adminCheck: { max: 3, window: '1s' },
 };
