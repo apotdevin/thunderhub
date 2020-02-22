@@ -11,8 +11,12 @@ export const ConnectionCheck = () => {
     const { connected } = useConnectionState();
     const dispatch = useConnectionDispatch();
 
-    const { loggedIn, host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
+    const { loggedIn, host, viewOnly, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(
+        host,
+        viewOnly !== '' ? viewOnly : sessionAdmin,
+        cert,
+    );
 
     useQuery(GET_CAN_CONNECT, {
         variables: { auth },

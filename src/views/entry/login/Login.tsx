@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Separation } from '../../../components/generic/Styled';
 import styled from 'styled-components';
-import { LoginForm } from '../../../components/auth/NormalLogin';
-import { ConnectLoginForm } from '../../../components/auth/ConnectLogin';
-import { getNextAvailable } from '../../../utils/storage';
-import { BTCLoginForm } from '../../../components/auth/BTCLogin';
 import { Section } from 'components/section/Section';
 import {
     MultiButton,
@@ -12,6 +8,7 @@ import {
 } from 'components/buttons/multiButton/MultiButton';
 import { Text } from 'views/other/OtherViews.styled';
 import { Link } from 'components/link/Link';
+import { Auth } from 'components/auth';
 
 const ConnectTitle = styled.h1`
     width: 100%;
@@ -20,7 +17,7 @@ const ConnectTitle = styled.h1`
 
 export const LoginView = () => {
     const [isType, setIsType] = useState('login');
-    const next = getNextAvailable();
+    const [status, setStatus] = useState('none');
 
     const renderButtons = () => (
         <>
@@ -46,19 +43,6 @@ export const LoginView = () => {
             </MultiButton>
         </>
     );
-
-    const renderView = () => {
-        switch (isType) {
-            case 'login':
-                return <LoginForm available={next} withRedirect={true} />;
-            case 'connect':
-                return (
-                    <ConnectLoginForm available={next} withRedirect={true} />
-                );
-            default:
-                return <BTCLoginForm available={next} withRedirect={true} />;
-        }
-    };
 
     const renderText = () => {
         switch (isType) {
@@ -111,9 +95,15 @@ export const LoginView = () => {
         <Section padding={'0 0 60px'}>
             <ConnectTitle>{'How do you want to connect?'}</ConnectTitle>
             <Card bottom={'0'}>
-                {renderButtons()}
-                {renderText()}
-                {renderView()}
+                {status === 'none' && renderButtons()}
+                {status === 'none' && renderText()}
+                <Auth
+                    type={isType}
+                    status={status}
+                    setStatus={setStatus}
+                    withRedirect={true}
+                    callback={() => setStatus('none')}
+                />
             </Card>
         </Section>
     );

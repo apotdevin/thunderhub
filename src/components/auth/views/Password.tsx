@@ -1,11 +1,11 @@
 import React from 'react';
-import { Sub4Title, SubTitle } from '../generic/Styled';
+import { Sub4Title, SubTitle } from '../../generic/Styled';
 import zxcvbn from 'zxcvbn';
 import styled from 'styled-components';
-import { progressBackground } from '../../styles/Themes';
-import { ColorButton } from '../buttons/colorButton/ColorButton';
+import { progressBackground } from '../../../styles/Themes';
+import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import { Input } from 'components/input/Input';
-import { Line } from './Auth.styled';
+import { Line } from '../Auth.styled';
 
 const Progress = styled.div`
     width: 100%;
@@ -49,7 +49,7 @@ interface PasswordProps {
 }
 
 export const PasswordInput = ({
-    isPass,
+    isPass = '',
     setPass,
     callback,
     loading = false,

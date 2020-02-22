@@ -7,9 +7,6 @@ import {
     Sub4Title,
     Separation,
 } from '../../components/generic/Styled';
-import { LoginForm } from '../../components/auth/NormalLogin';
-import { ConnectLoginForm } from '../../components/auth/ConnectLogin';
-import { BTCLoginForm } from '../../components/auth/BTCLogin';
 import { SettingsLine } from './Settings';
 import { useAccount } from '../../context/AccountContext';
 import { getNextAvailable, getStorageSaved } from '../../utils/storage';
@@ -22,8 +19,11 @@ import {
 import { useHistory } from 'react-router-dom';
 import { useConnectionDispatch } from 'context/ConnectionContext';
 import { useStatusDispatch } from 'context/StatusContext';
+import { Auth } from 'components/auth';
 
 export const AccountSettings = () => {
+    const [status, setStatus] = useState('none');
+
     const { push } = useHistory();
     const { name, changeAccount } = useAccount();
 
@@ -34,12 +34,6 @@ export const AccountSettings = () => {
     const [willAdd, setWillAdd] = useState(false);
 
     const next = getNextAvailable();
-
-    const handleConnected = () => {
-        dispatch({ type: 'disconnected' });
-        dispatchState({ type: 'disconnected' });
-        setWillAdd(false);
-    };
 
     const renderButtons = () => (
         <SingleLine>
@@ -111,28 +105,14 @@ export const AccountSettings = () => {
                 {willAdd && (
                     <>
                         <Separation />
-                        {renderButtons()}
-                        {isType === 'login' && (
-                            <LoginForm
-                                available={next}
-                                callback={handleConnected}
-                                withRedirect={true}
-                            />
-                        )}
-                        {isType === 'connect' && (
-                            <ConnectLoginForm
-                                available={next}
-                                callback={handleConnected}
-                                withRedirect={true}
-                            />
-                        )}
-                        {isType === 'btcpay' && (
-                            <BTCLoginForm
-                                available={next}
-                                callback={handleConnected}
-                                withRedirect={true}
-                            />
-                        )}
+                        {status === 'none' && renderButtons()}
+                        <Auth
+                            type={isType}
+                            status={status}
+                            setStatus={setStatus}
+                            withRedirect={true}
+                            callback={() => setStatus('none')}
+                        />
                     </>
                 )}
             </Card>

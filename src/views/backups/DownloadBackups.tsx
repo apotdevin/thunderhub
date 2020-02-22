@@ -10,8 +10,12 @@ import { getErrorContent } from '../../utils/error';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 
 export const DownloadBackups = () => {
-    const { name, host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
+    const { name, host, viewOnly, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(
+        host,
+        viewOnly !== '' ? viewOnly : sessionAdmin,
+        cert,
+    );
 
     const [getBackups, { data, loading }] = useLazyQuery(GET_BACKUPS, {
         variables: { auth },

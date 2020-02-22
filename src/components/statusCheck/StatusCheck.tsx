@@ -12,8 +12,12 @@ export const StatusCheck = () => {
     const { connected } = useConnectionState();
     const dispatch = useStatusDispatch();
 
-    const { loggedIn, host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
+    const { loggedIn, host, viewOnly, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(
+        host,
+        viewOnly !== '' ? viewOnly : sessionAdmin,
+        cert,
+    );
 
     const { data, loading, error, stopPolling } = useQuery(GET_NODE_INFO, {
         variables: { auth },
@@ -36,13 +40,14 @@ export const StatusCheck = () => {
                 getChannelBalance,
                 getNodeInfo,
             } = data;
-            const { is_synced_to_chain, version } = getNodeInfo;
+            const { alias, is_synced_to_chain, version } = getNodeInfo;
             const { confirmedBalance, pendingBalance } = getChannelBalance;
 
             const versionNumber = version.split(' ');
 
             const state = {
                 loading: false,
+                alias,
                 syncedToChain: is_synced_to_chain,
                 version: versionNumber[0],
                 chainBalance: getChainBalance,

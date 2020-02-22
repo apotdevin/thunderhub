@@ -66,8 +66,12 @@ const Padding = styled.span`
 `;
 
 export const NetworkInfo = () => {
-    const { host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
+    const { host, viewOnly, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(
+        host,
+        viewOnly !== '' ? viewOnly : sessionAdmin,
+        cert,
+    );
 
     const { loading, data } = useQuery(GET_NETWORK_INFO, {
         variables: { auth },

@@ -27,14 +27,17 @@ import { Text } from 'views/other/OtherViews.styled';
 
 export const BalanceView = () => {
     const { version } = useStatusState();
-    const { host, read, cert, sessionAdmin } = useAccount();
+    const { host, viewOnly, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(
+        host,
+        viewOnly !== '' ? viewOnly : sessionAdmin,
+        cert,
+    );
 
     const [outgoing, setOutgoing] = useState();
     const [incoming, setIncoming] = useState();
     const [amount, setAmount] = useState();
     const [blocked, setBlocked] = useState(false);
-
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
 
     const { loading, data } = useQuery(GET_CHANNELS, {
         variables: { auth, active: true },

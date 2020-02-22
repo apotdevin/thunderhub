@@ -32,7 +32,7 @@ const client = new ApolloClient({
 
 const ContextApp: React.FC = () => {
     const { theme } = useSettings();
-    const { loggedIn, admin, read, sessionAdmin } = useAccount();
+    const { loggedIn, admin, viewOnly, sessionAdmin } = useAccount();
 
     const renderContent = () => (
         <Suspense
@@ -40,7 +40,7 @@ const ContextApp: React.FC = () => {
         >
             {!loggedIn && admin === '' ? (
                 <EntryView />
-            ) : admin !== '' && read === '' && sessionAdmin === '' ? (
+            ) : admin !== '' && viewOnly === '' && sessionAdmin === '' ? (
                 <EntryView session={true} />
             ) : (
                 <>
