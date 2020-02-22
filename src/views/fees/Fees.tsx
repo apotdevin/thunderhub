@@ -31,8 +31,12 @@ export const FeesView = () => {
     const [baseFee, setBaseFee] = useState(0);
     const [feeRate, setFeeRate] = useState(0);
 
-    const { host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
+    const { host, viewOnly, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(
+        host,
+        viewOnly !== '' ? viewOnly : sessionAdmin,
+        cert,
+    );
 
     const { loading, data } = useQuery(CHANNEL_FEES, {
         variables: { auth },

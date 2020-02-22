@@ -20,8 +20,12 @@ export const TransactionList = () => {
     const [fetching, setFetching] = useState(false);
 
     const { theme } = useSettings();
-    const { host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
+    const { host, viewOnly, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(
+        host,
+        viewOnly !== '' ? viewOnly : sessionAdmin,
+        cert,
+    );
 
     const { loading, data, fetchMore } = useQuery(GET_RESUME, {
         variables: { auth, token: '' },

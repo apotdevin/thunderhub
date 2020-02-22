@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer } from 'react';
 
 type State = {
     loading: boolean;
+    alias: string;
     syncedToChain: boolean;
     version: string;
     chainBalance: number;
@@ -33,6 +34,7 @@ const stateReducer = (state: State, action: ActionType): State => {
 
 const initialState = {
     loading: true,
+    alias: '',
     syncedToChain: false,
     version: '',
     chainBalance: 0,

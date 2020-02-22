@@ -6,7 +6,7 @@ interface BuildProps {
     name?: string;
     host: string;
     admin?: string;
-    read?: string;
+    viewOnly?: string;
     cert?: string;
 }
 
@@ -26,14 +26,14 @@ export const saveUserAuth = ({
     name,
     host,
     admin,
-    read,
+    viewOnly,
     cert,
 }: BuildProps) => {
     localStorage.setItem('account', `auth${available}`);
     localStorage.setItem(`auth${available}-host`, host);
     localStorage.setItem(`auth${available}-name`, name ? name : 'no name');
     admin && localStorage.setItem(`auth${available}-admin`, admin);
-    read && localStorage.setItem(`auth${available}-read`, read);
+    viewOnly && localStorage.setItem(`auth${available}-read`, viewOnly);
     cert && localStorage.setItem(`auth${available}-cert`, cert);
 };
 
@@ -54,14 +54,14 @@ export const getAuthParams = (available: string) => {
     const host = localStorage.getItem(`${available}-host`) || '';
     const name = localStorage.getItem(`${available}-name`) || '';
     const admin = localStorage.getItem(`${available}-admin`) || '';
-    const read = localStorage.getItem(`${available}-read`) || '';
+    const viewOnly = localStorage.getItem(`${available}-read`) || '';
     const cert = localStorage.getItem(`${available}-cert`) || '';
 
     return {
         host,
         name,
         admin,
-        read,
+        viewOnly,
         cert,
     };
 };
@@ -107,8 +107,8 @@ export const getBase64CertfromDerFormat = (base64: string) => {
 
 const emptyObject = {
     cert: undefined,
-    macaroon: undefined,
-    readMacaroon: undefined,
+    admin: undefined,
+    viewOnly: undefined,
     host: undefined,
 };
 
@@ -119,15 +119,15 @@ export const getConfigLnd = (json: string) => {
 
     if (config && config.length >= 1) {
         const cert = config[0].certificateThumbprint || '';
-        const macaroon = config[0].adminMacaroon;
-        const readMacaroon = config[0].readonlyMacaroon;
+        const admin = config[0].adminMacaroon;
+        const viewOnly = config[0].readonlyMacaroon;
         const host = config[0].host;
         const port = config[0].port;
 
         return {
             cert,
-            macaroon,
-            readMacaroon,
+            admin,
+            viewOnly,
             host: `${host}:${port}`,
         };
     }

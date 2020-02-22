@@ -11,8 +11,12 @@ import { TransactionsCard } from './TransactionsCard';
 
 export const ChainTransactions = () => {
     const [indexOpen, setIndexOpen] = useState(0);
-    const { host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
+    const { host, viewOnly, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(
+        host,
+        viewOnly !== '' ? viewOnly : sessionAdmin,
+        cert,
+    );
 
     const { loading, data } = useQuery(GET_CHAIN_TRANSACTIONS, {
         variables: { auth },
@@ -22,8 +26,6 @@ export const ChainTransactions = () => {
     if (loading || !data || !data.getChainTransactions) {
         return <LoadingCard title={'Chain Transactions'} />;
     }
-
-    console.log(loading, data);
 
     return (
         <CardWithTitle>

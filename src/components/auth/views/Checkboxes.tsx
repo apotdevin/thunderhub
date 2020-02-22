@@ -1,6 +1,6 @@
 import React from 'react';
 import { Checkbox } from 'components/checkbox/Checkbox';
-import { CheckboxText, StyledContainer, FixedWidth } from './Auth.styled';
+import { CheckboxText, StyledContainer, FixedWidth } from '../Auth.styled';
 import { AlertCircle } from 'components/generic/Icons';
 import { fontColors } from 'styles/Themes';
 import { ColorButton } from 'components/buttons/colorButton/ColorButton';
@@ -19,7 +19,6 @@ export const RiskCheckboxAndConfirm = ({
     onChange,
 }: CheckboxProps) => (
     <>
-        <WarningBox />
         <Checkbox checked={checked} onChange={onChange}>
             <CheckboxText>
                 I'm feeling reckless - I understand that Lightning, LND and
@@ -36,6 +35,7 @@ export const RiskCheckboxAndConfirm = ({
         >
             Connect
         </ColorButton>
+        <WarningBox />
     </>
 );
 

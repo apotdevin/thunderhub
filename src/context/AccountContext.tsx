@@ -8,7 +8,7 @@ interface ChangeProps {
     host?: string;
     admin?: string;
     sessionAdmin?: string;
-    read?: string;
+    viewOnly?: string;
     cert?: string;
 }
 
@@ -18,7 +18,7 @@ interface AccountProps {
     host: string;
     admin: string;
     sessionAdmin: string;
-    read: string;
+    viewOnly: string;
     cert: string;
     setAccount: (newProps: ChangeProps) => void;
     changeAccount: (account: number) => void;
@@ -31,7 +31,7 @@ export const AccountContext = createContext<AccountProps>({
     host: '',
     admin: '',
     sessionAdmin: '',
-    read: '',
+    viewOnly: '',
     cert: '',
     setAccount: () => {},
     changeAccount: () => {},
@@ -41,8 +41,8 @@ export const AccountContext = createContext<AccountProps>({
 const AccountProvider = ({ children }: any) => {
     const activeAccount = localStorage.getItem('account') || 'auth1';
     const sessionAdmin = sessionStorage.getItem('session') || '';
-    const { name, host, admin, read, cert } = getAuthParams(activeAccount);
-    const loggedIn = host !== '' && (read !== '' || sessionAdmin !== '');
+    const { name, host, admin, viewOnly, cert } = getAuthParams(activeAccount);
+    const loggedIn = host !== '' && (viewOnly !== '' || sessionAdmin !== '');
 
     const setAccount = ({
         loggedIn,
@@ -50,7 +50,7 @@ const AccountProvider = ({ children }: any) => {
         host,
         admin,
         sessionAdmin,
-        read,
+        viewOnly,
         cert,
     }: ChangeProps) => {
         updateAccount((prevState: any) => {
@@ -61,7 +61,7 @@ const AccountProvider = ({ children }: any) => {
                 host,
                 admin,
                 sessionAdmin,
-                read,
+                viewOnly,
                 cert,
             });
         });
@@ -82,8 +82,11 @@ const AccountProvider = ({ children }: any) => {
             ? account
             : localStorage.getItem('account') || 'auth1';
         const sessionAdmin = sessionStorage.getItem('session') || '';
-        const { name, host, admin, read, cert } = getAuthParams(activeAccount);
-        const loggedIn = host !== '' && (read !== '' || sessionAdmin !== '');
+        const { name, host, admin, viewOnly, cert } = getAuthParams(
+            activeAccount,
+        );
+        const loggedIn =
+            host !== '' && (viewOnly !== '' || sessionAdmin !== '');
 
         updateAccount((prevState: any) => {
             const newState = { ...prevState };
@@ -93,7 +96,7 @@ const AccountProvider = ({ children }: any) => {
                 host,
                 admin,
                 sessionAdmin,
-                read,
+                viewOnly,
                 cert,
             });
         });
@@ -105,7 +108,7 @@ const AccountProvider = ({ children }: any) => {
         host,
         admin,
         sessionAdmin,
-        read,
+        viewOnly,
         cert,
         setAccount,
         changeAccount,

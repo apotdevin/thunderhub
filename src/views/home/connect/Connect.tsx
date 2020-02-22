@@ -57,8 +57,12 @@ const TextPadding = styled.span`
 const sectionColor = '#fa541c';
 
 export const ConnectCard = () => {
-    const { host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
+    const { host, viewOnly, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(
+        host,
+        viewOnly !== '' ? viewOnly : sessionAdmin,
+        cert,
+    );
 
     const { loading, data } = useQuery(GET_CONNECT_INFO, {
         variables: { auth },

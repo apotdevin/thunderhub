@@ -19,8 +19,12 @@ export const VerifyBackups = () => {
     const [backupString, setBackupString] = useState<string>('');
     const [isPasting, setIsPasting] = useState<boolean>(false);
 
-    const { host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
+    const { host, viewOnly, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(
+        host,
+        viewOnly !== '' ? viewOnly : sessionAdmin,
+        cert,
+    );
 
     const [verifyBackup, { data, loading }] = useLazyQuery(VERIFY_BACKUPS, {
         onError: error => toast.error(getErrorContent(error)),

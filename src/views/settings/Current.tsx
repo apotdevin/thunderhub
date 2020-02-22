@@ -23,7 +23,7 @@ const CurrentField = styled.textarea`
 `;
 
 export const CurrentSettings = () => {
-    const { name, host, admin, read, cert } = useAccount();
+    const { name, host, admin, viewOnly, cert } = useAccount();
 
     const renderField = (
         title: string,
@@ -49,7 +49,7 @@ export const CurrentSettings = () => {
                 {renderField('Name:', name, 1)}
                 {renderField('Host:', host, 1)}
                 {renderField('AES-256 Encrypted Admin Macaroon:', admin)}
-                {renderField('Read-only Macaroon:', read)}
+                {renderField('Read-only Macaroon:', viewOnly)}
                 {renderField('Certificate:', cert)}
             </Card>
         </CardWithTitle>

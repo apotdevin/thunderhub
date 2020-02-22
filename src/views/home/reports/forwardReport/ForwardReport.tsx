@@ -40,8 +40,12 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
     const priceContext = usePriceState();
     const format = getPrice(currency, priceContext);
 
-    const { host, read, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(host, read !== '' ? read : sessionAdmin, cert);
+    const { host, viewOnly, cert, sessionAdmin } = useAccount();
+    const auth = getAuthString(
+        host,
+        viewOnly !== '' ? viewOnly : sessionAdmin,
+        cert,
+    );
 
     const { data, loading } = useQuery(GET_FORWARD_REPORT, {
         variables: { time: isTime, auth },

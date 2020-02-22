@@ -18,8 +18,22 @@ export const GET_NETWORK_INFO = gql`
 export const GET_CAN_CONNECT = gql`
     query GetNodeInfo($auth: authType!) {
         getNodeInfo(auth: $auth) {
+            chains
+            color
+            active_channels_count
+            closed_channels_count
             alias
+            is_synced_to_chain
+            peers_count
+            pending_channels_count
+            version
         }
+    }
+`;
+
+export const GET_CAN_ADMIN = gql`
+    query AdminCheck($auth: authType!) {
+        adminCheck(auth: $auth)
     }
 `;
 
