@@ -312,12 +312,14 @@ export const GET_ROUTES = gql`
         $outgoing: String!
         $incoming: String!
         $tokens: Int!
+        $maxFee: Int
     ) {
         getRoutes(
             auth: $auth
             outgoing: $outgoing
             incoming: $incoming
             tokens: $tokens
+            maxFee: $maxFee
         )
     }
 `;
