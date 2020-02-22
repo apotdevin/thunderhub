@@ -76,6 +76,12 @@ export interface WaterfallProps {
     tokensBefore: number;
 }
 
+const timeMap: { [key: string]: string } = {
+    day: 'today',
+    week: 'this week',
+    month: 'this month',
+};
+
 export const FlowBox = () => {
     const { width } = useSize();
     const [isTime, setIsTime] = useState<string>('month');
@@ -111,7 +117,22 @@ export const FlowBox = () => {
     // const waterfall: WaterfallProps[] = getWaterfall(parsedData, parsedData2);
 
     if (parsedData.length <= 0 && parsedData2.length <= 0) {
-        return null;
+        return (
+            <CardWithTitle>
+                <CardTitle>
+                    <SubTitle>Invoices and Payments Report</SubTitle>
+                    <ButtonRow {...buttonProps} />
+                </CardTitle>
+                <Card
+                    bottom={'10px'}
+                    cardPadding={
+                        width <= mediaDimensions.mobile ? '8px 0' : undefined
+                    }
+                >
+                    <p>{`Your node has not forwarded any payments ${timeMap[isTime]}.`}</p>
+                </Card>
+            </CardWithTitle>
+        );
     }
 
     const reduce = (array: PeriodProps[]) =>
