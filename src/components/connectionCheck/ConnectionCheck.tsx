@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
     useConnectionState,
     useConnectionDispatch,
@@ -18,16 +19,19 @@ export const ConnectionCheck = () => {
         cert,
     );
 
-    useQuery(GET_CAN_CONNECT, {
+    const { data, loading } = useQuery(GET_CAN_CONNECT, {
         variables: { auth },
         skip: connected || !loggedIn,
         onError: () => {
             dispatch({ type: 'error' });
         },
-        onCompleted: () => {
-            dispatch({ type: 'connected' });
-        },
     });
+
+    useEffect(() => {
+        if (!loading && data && data.getNodeInfo) {
+            dispatch({ type: 'connected' });
+        }
+    }, [data, loading]);
 
     return null;
 };

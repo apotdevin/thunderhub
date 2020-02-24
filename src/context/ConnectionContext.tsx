@@ -20,7 +20,6 @@ const stateReducer = (state: State, action: ActionType) => {
         case 'connected':
             return { connected: true, loading: false, error: false };
         case 'loading':
-            return { connected: false, loading: true, error: false };
         case 'disconnected':
             return { connected: false, loading: true, error: false };
         default:

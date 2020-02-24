@@ -127,8 +127,9 @@ export const QRLogin = ({ handleSet }: QRLoginProps) => {
                 return (
                     <QRTextWrapper>
                         <SubTitle>
-                            Make sure you have given ThunderHub the correct
-                            permissions to use the camara.
+                            Make sure you have a camara available and that you
+                            have given ThunderHub the correct permissions to use
+                            it.
                         </SubTitle>
                     </QRTextWrapper>
                 );

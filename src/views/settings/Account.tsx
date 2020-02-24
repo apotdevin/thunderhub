@@ -57,6 +57,12 @@ export const AccountSettings = () => {
                 >
                     BTCPayServer Info
                 </SingleButton>
+                <SingleButton
+                    selected={isType === 'qrcode'}
+                    onClick={() => setIsType('qrcode')}
+                >
+                    QR Code
+                </SingleButton>
             </MultiButton>
         </SingleLine>
     );
@@ -71,14 +77,21 @@ export const AccountSettings = () => {
                         {getStorageSaved().map((entry, index) => {
                             return (
                                 <SingleButton
+                                    key={index}
                                     selected={
                                         name.localeCompare(entry.name) === 0
                                     }
                                     onClick={() => {
-                                        dispatch({ type: 'disconnected' });
-                                        dispatchState({ type: 'disconnected' });
-                                        changeAccount(entry.index);
-                                        push('/');
+                                        if (
+                                            name.localeCompare(entry.name) !== 0
+                                        ) {
+                                            dispatch({ type: 'disconnected' });
+                                            dispatchState({
+                                                type: 'disconnected',
+                                            });
+                                            changeAccount(entry.index);
+                                            push('/');
+                                        }
                                     }}
                                 >
                                     {entry.name}
