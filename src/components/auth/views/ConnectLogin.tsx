@@ -5,8 +5,7 @@ import { Line, StyledTitle } from '../Auth.styled';
 import { RiskCheckboxAndConfirm } from './Checkboxes';
 
 interface AuthProps {
-    available: number;
-    handleSet?: ({
+    handleSet: ({
         name,
         host,
         admin,
@@ -21,7 +20,7 @@ interface AuthProps {
     }) => void;
 }
 
-export const ConnectLoginForm = ({ available, handleSet }: AuthProps) => {
+export const ConnectLoginForm = ({ handleSet }: AuthProps) => {
     const [name, setName] = useState('');
     const [url, setUrl] = useState('');
     const [checked, setChecked] = useState(false);
@@ -30,16 +29,15 @@ export const ConnectLoginForm = ({ available, handleSet }: AuthProps) => {
         const { cert, macaroon, socket } = getAuthLnd(url);
         const base64Cert = getBase64CertfromDerFormat(cert) || '';
 
-        handleSet &&
-            handleSet({
-                name,
-                host: socket,
-                admin: macaroon,
-                cert: base64Cert,
-            });
+        handleSet({
+            name,
+            host: socket,
+            admin: macaroon,
+            cert: base64Cert,
+        });
     };
 
-    const canConnect = url !== '' && !!available && checked;
+    const canConnect = url !== '' && checked;
 
     return (
         <>

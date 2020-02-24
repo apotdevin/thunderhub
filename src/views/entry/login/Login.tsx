@@ -40,34 +40,19 @@ export const LoginView = () => {
                 >
                     BTCPayServer
                 </SingleButton>
+                <SingleButton
+                    selected={isType === 'qrcode'}
+                    onClick={() => setIsType('qrcode')}
+                >
+                    QR Code
+                </SingleButton>
             </MultiButton>
         </>
     );
 
     const renderText = () => {
         switch (isType) {
-            case 'login':
-                return null;
-            case 'connect':
-                return (
-                    <>
-                        <Separation />
-                        <Text>
-                            To connect via LNDConnect paste the LNDConnectUrl
-                            down below.
-                            {' Find the url format specification '}
-                            <Link
-                                href={
-                                    'https://github.com/LN-Zap/lndconnect/blob/master/lnd_connect_uri.md'
-                                }
-                            >
-                                here.
-                            </Link>
-                        </Text>
-                        <Separation />
-                    </>
-                );
-            default:
+            case 'btcpay':
                 return (
                     <>
                         <Separation />
@@ -88,6 +73,27 @@ export const LoginView = () => {
                         <Separation />
                     </>
                 );
+            case 'connect':
+                return (
+                    <>
+                        <Separation />
+                        <Text>
+                            To connect via LNDConnect paste the LNDConnectUrl
+                            down below.
+                            {' Find the url format specification '}
+                            <Link
+                                href={
+                                    'https://github.com/LN-Zap/lndconnect/blob/master/lnd_connect_uri.md'
+                                }
+                            >
+                                here.
+                            </Link>
+                        </Text>
+                        <Separation />
+                    </>
+                );
+            default:
+                return null;
         }
     };
 
@@ -101,7 +107,6 @@ export const LoginView = () => {
                     type={isType}
                     status={status}
                     setStatus={setStatus}
-                    withRedirect={true}
                     callback={() => setStatus('none')}
                 />
             </Card>

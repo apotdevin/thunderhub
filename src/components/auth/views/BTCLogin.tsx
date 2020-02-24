@@ -6,8 +6,7 @@ import { Line, StyledTitle } from '../Auth.styled';
 import { RiskCheckboxAndConfirm } from './Checkboxes';
 
 interface AuthProps {
-    available: number;
-    handleSet?: ({
+    handleSet: ({
         name,
         host,
         admin,
@@ -22,7 +21,7 @@ interface AuthProps {
     }) => void;
 }
 
-export const BTCLoginForm = ({ available, handleSet }: AuthProps) => {
+export const BTCLoginForm = ({ handleSet }: AuthProps) => {
     const [name, setName] = useState('');
     const [json, setJson] = useState('');
     const [checked, setChecked] = useState(false);
@@ -31,13 +30,13 @@ export const BTCLoginForm = ({ available, handleSet }: AuthProps) => {
         try {
             JSON.parse(json);
             const { cert, admin, viewOnly, host } = getConfigLnd(json);
-            handleSet && handleSet({ name, host, admin, viewOnly, cert });
+            handleSet({ name, host, admin, viewOnly, cert });
         } catch (error) {
-            toast.error('Invalid JSON Object');
+            toast.error('Invalid JSON');
         }
     };
 
-    const canConnect = json !== '' && !!available && checked;
+    const canConnect = json !== '' && checked;
     return (
         <>
             <Line>

@@ -230,7 +230,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
             >
                 Send
             </ColorButton>
-            <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>
+            <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
                 <SingleLine>
                     <SubTitle>Send to Address</SubTitle>
                 </SingleLine>

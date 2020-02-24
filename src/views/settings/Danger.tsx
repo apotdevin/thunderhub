@@ -44,27 +44,49 @@ export const SettingsButton = styled(SimpleButton)`
 export const DangerView = () => {
     const { refreshAccount } = useAccount();
 
+    const renderButton = () => {
+        const saved = getStorageSaved();
+        if (saved.length > 1) {
+            return (
+                <MultiButton>
+                    {saved.map((entry, index) => {
+                        return (
+                            <SingleButton
+                                color={'red'}
+                                onClick={() => {
+                                    deleteAuth(entry.index);
+                                    refreshAccount();
+                                }}
+                            >
+                                {entry.name}
+                            </SingleButton>
+                        );
+                    })}
+                </MultiButton>
+            );
+        } else if (saved.length === 1) {
+            return (
+                <ColorButton
+                    color={'red'}
+                    onClick={() => {
+                        deleteAuth(saved[0].index);
+                        refreshAccount();
+                    }}
+                >
+                    {saved[0].name}
+                </ColorButton>
+            );
+        }
+        return null;
+    };
+
     return (
         <CardWithTitle>
             <SubTitle>Danger Zone</SubTitle>
             <OutlineCard>
                 <SettingsLine>
                     <Sub4Title>Delete Account:</Sub4Title>
-                    <MultiButton>
-                        {getStorageSaved().map((entry, index) => {
-                            return (
-                                <SingleButton
-                                    color={'red'}
-                                    onClick={() => {
-                                        deleteAuth(entry.index);
-                                        refreshAccount();
-                                    }}
-                                >
-                                    {entry.name}
-                                </SingleButton>
-                            );
-                        })}
-                    </MultiButton>
+                    {renderButton()}
                 </SettingsLine>
                 <SettingsLine>
                     <Sub4Title>Delete all Accounts and Settings:</Sub4Title>

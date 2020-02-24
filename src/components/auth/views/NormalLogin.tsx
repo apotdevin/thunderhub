@@ -9,8 +9,7 @@ import {
 import { RiskCheckboxAndConfirm } from './Checkboxes';
 
 interface AuthProps {
-    available: number;
-    handleSet?: ({
+    handleSet: ({
         name,
         host,
         admin,
@@ -25,7 +24,7 @@ interface AuthProps {
     }) => void;
 }
 
-export const LoginForm = ({ available, handleSet }: AuthProps) => {
+export const LoginForm = ({ handleSet }: AuthProps) => {
     const [isViewOnly, setIsViewOnly] = useState(true);
     const [checked, setChecked] = useState(false);
 
@@ -36,14 +35,13 @@ export const LoginForm = ({ available, handleSet }: AuthProps) => {
     const [cert, setCert] = useState('');
 
     const handleClick = () => {
-        handleSet && handleSet({ name, host, admin, viewOnly, cert });
+        handleSet({ name, host, admin, viewOnly, cert });
     };
 
     const canConnect =
         name !== '' &&
         host !== '' &&
         (admin !== '' || viewOnly !== '') &&
-        !!available &&
         checked;
     return (
         <>

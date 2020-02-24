@@ -1,45 +1,10 @@
 import React from 'react';
 import { Sub4Title, SubTitle } from '../../generic/Styled';
 import zxcvbn from 'zxcvbn';
-import styled from 'styled-components';
-import { progressBackground } from '../../../styles/Themes';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import { Input } from 'components/input/Input';
 import { Line } from '../Auth.styled';
-
-const Progress = styled.div`
-    width: 100%;
-    background: ${progressBackground};
-`;
-
-interface ProgressBar {
-    percent: number;
-    barColor?: string;
-}
-
-const ProgressBar = styled.div`
-    height: 10px;
-    background-color: ${({ barColor }: ProgressBar) =>
-        barColor ? barColor : 'blue'};
-    width: ${({ percent }: ProgressBar) => `${percent}%`};
-`;
-
-const getColor = (percent: number) => {
-    switch (true) {
-        case percent < 20:
-            return '#ff4d4f';
-        case percent < 40:
-            return '#ff7a45';
-        case percent < 60:
-            return '#ffa940';
-        case percent < 80:
-            return '#bae637';
-        case percent <= 100:
-            return '#73d13d';
-        default:
-            return '';
-    }
-};
+import { LoadingBar } from 'components/loadingBar/LoadingBar';
 
 interface PasswordProps {
     isPass: string;
@@ -65,12 +30,7 @@ export const PasswordInput = ({
             </Line>
             <Line>
                 <Sub4Title>Strength:</Sub4Title>
-                <Progress>
-                    <ProgressBar
-                        percent={strength}
-                        barColor={getColor(strength)}
-                    />
-                </Progress>
+                <LoadingBar percent={strength} />
             </Line>
             <ColorButton
                 disabled={strength < needed}

@@ -6,6 +6,7 @@ import { textColor } from '../../styles/Themes';
 import { AccountSettings } from './Account';
 import { DangerView } from './Danger';
 import { CurrentSettings } from './Current';
+import { SyncSettings } from './Sync';
 
 export const ButtonRow = styled.div`
     width: auto;
@@ -13,11 +14,11 @@ export const ButtonRow = styled.div`
 `;
 
 export const SettingsLine = styled(SingleLine)`
-    margin: 10px 0;
+    margin: 8px 0;
 `;
 
 export const SettingsButton = styled(SimpleButton)`
-    padding: 10px;
+    padding: 8px;
 
     &:hover {
         border: 1px solid ${textColor};
@@ -28,6 +29,7 @@ export const SettingsView = () => {
     return (
         <>
             <InterfaceSettings />
+            <SyncSettings />
             <CurrentSettings />
             <AccountSettings />
             <DangerView />

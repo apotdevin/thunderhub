@@ -242,7 +242,7 @@ export const ChannelCard = ({
                 <div>{`Received: ${formatReceived}`}</div>
                 <div>{`Sent: ${formatSent}`}</div>
             </ReactTooltip>
-            <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>
+            <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
                 <CloseChannel
                     setModalOpen={setModalOpen}
                     channelId={id}

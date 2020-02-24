@@ -134,3 +134,21 @@ export const getConfigLnd = (json: string) => {
 
     return emptyObject;
 };
+
+export const getQRConfig = (json: string) => {
+    const config = JSON.parse(json);
+
+    if (config) {
+        const { name = '', cert = '', admin, viewOnly, host } = config;
+
+        return {
+            name,
+            cert,
+            admin,
+            viewOnly,
+            host,
+        };
+    }
+
+    return { ...emptyObject, name: undefined };
+};

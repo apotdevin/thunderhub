@@ -105,7 +105,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
                     Send Sats
                 </ColorButton>
             </ResponsiveLine>
-            <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>
+            <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
                 {renderData()}
                 <SecureButton
                     callback={makePayment}

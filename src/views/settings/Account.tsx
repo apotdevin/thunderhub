@@ -110,7 +110,6 @@ export const AccountSettings = () => {
                             type={isType}
                             status={status}
                             setStatus={setStatus}
-                            withRedirect={true}
                             callback={() => setStatus('none')}
                         />
                     </>
