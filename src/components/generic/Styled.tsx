@@ -80,9 +80,19 @@ export const SmallLink = styled.a`
     }
 `;
 
+type SubTitleProps = {
+    subtitleColor?: string | ThemeSet;
+    fontWeight?: string;
+};
+
 export const SubTitle = styled.h4`
     margin: 5px 0;
-    font-weight: ${({ fontWeight }: { fontWeight?: string }) =>
+    ${({ subtitleColor }: SubTitleProps) =>
+        subtitleColor &&
+        css`
+            color: ${subtitleColor};
+        `}
+    font-weight: ${({ fontWeight }: SubTitleProps) =>
         fontWeight ? fontWeight : '500'};
 `;
 

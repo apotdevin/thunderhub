@@ -5,7 +5,6 @@ import {
     Card,
     Sub4Title,
     Separation,
-    InverseSubtitle,
 } from '../../components/generic/Styled';
 import { SettingsLine } from './Settings';
 import {
@@ -19,6 +18,7 @@ import QRCode from 'qrcode.react';
 import styled from 'styled-components';
 import { useInterval } from 'hooks/UseInterval';
 import Modal from 'components/modal/ReactModal';
+import { themeColors } from 'styles/Themes';
 
 const QRWrapper = styled.div`
     display: flex;
@@ -113,7 +113,9 @@ export const SyncSettings = () => {
                 closeCallback={() => setState('none')}
             >
                 <QRWrapper>
-                    <InverseSubtitle>Scan with ThunderHub</InverseSubtitle>
+                    <SubTitle subtitleColor={themeColors.black}>
+                        Scan with ThunderHub
+                    </SubTitle>
                     <QRLoop connection={connection} />
                 </QRWrapper>
             </Modal>
