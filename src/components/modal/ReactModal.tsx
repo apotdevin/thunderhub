@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { css } from 'styled-components';
-import { cardColor, mediaWidths } from '../../styles/Themes';
+import { cardColor, mediaWidths, themeColors } from '../../styles/Themes';
 import ReactModal from 'styled-react-modal';
 
 interface ModalProps {
@@ -32,10 +32,11 @@ const generalCSS = css`
 const StyleModal = ReactModal.styled`
          ${generalCSS}
         min-width: 578px;
-`;
+        `;
 
 const StyleModalSmall = ReactModal.styled`
-${generalCSS}
+        ${generalCSS}
+        background-color: ${themeColors.white};
 `;
 
 const Modal = ({

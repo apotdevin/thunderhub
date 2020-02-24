@@ -5,6 +5,7 @@ import {
     Card,
     Sub4Title,
     Separation,
+    InverseSubtitle,
 } from '../../components/generic/Styled';
 import { SettingsLine } from './Settings';
 import {
@@ -112,7 +113,7 @@ export const SyncSettings = () => {
                 closeCallback={() => setState('none')}
             >
                 <QRWrapper>
-                    <SubTitle>Scan with ThunderHub</SubTitle>
+                    <InverseSubtitle>Scan with ThunderHub</InverseSubtitle>
                     <QRLoop connection={connection} />
                 </QRWrapper>
             </Modal>
