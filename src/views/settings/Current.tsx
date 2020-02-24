@@ -35,9 +35,7 @@ export const CurrentSettings = () => {
         return (
             <>
                 <Sub4Title>{title}</Sub4Title>
-                <CurrentField rows={rows ?? 3} readOnly={true}>
-                    {field}
-                </CurrentField>
+                <CurrentField rows={rows ?? 3} readOnly={true} value={field} />
             </>
         );
     };
