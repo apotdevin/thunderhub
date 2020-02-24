@@ -50,7 +50,7 @@ export const SecureButton = ({
             >
                 {children}
             </ColorButton>
-            <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>
+            <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
                 <LoginModal
                     color={color}
                     macaroon={admin}

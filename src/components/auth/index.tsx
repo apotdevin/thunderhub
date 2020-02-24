@@ -3,6 +3,7 @@ import { getNextAvailable } from 'utils/storage';
 import { LoginForm } from './views/NormalLogin';
 import { ConnectLoginForm } from './views/ConnectLogin';
 import { BTCLoginForm } from './views/BTCLogin';
+import { QRLogin } from './views/QRLogin';
 import { ViewCheck } from './checks/ViewCheck';
 import CryptoJS from 'crypto-js';
 import { useAccount } from 'context/AccountContext';
@@ -15,18 +16,11 @@ import { useStatusDispatch } from 'context/StatusContext';
 type AuthProps = {
     type: string;
     status: string;
-    withRedirect?: boolean;
     callback: () => void;
     setStatus: (state: string) => void;
 };
 
-export const Auth = ({
-    type,
-    status,
-    withRedirect,
-    callback,
-    setStatus,
-}: AuthProps) => {
+export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     const next = getNextAvailable();
 
     const { changeAccount } = useAccount();
@@ -50,6 +44,34 @@ export const Auth = ({
         admin,
         viewOnly,
         cert,
+        skipCheck,
+    }: {
+        name?: string;
+        host?: string;
+        admin?: string;
+        viewOnly?: string;
+        cert?: string;
+        skipCheck?: boolean;
+    }) => {
+        if (skipCheck) {
+            quickSave({ name, cert, admin, viewOnly, host });
+        } else {
+            name && setName(name);
+            host && setHost(host);
+            admin && setAdmin(admin);
+            viewOnly && setViewOnly(viewOnly);
+            cert && setCert(cert);
+
+            setStatus('confirmNode');
+        }
+    };
+
+    const quickSave = ({
+        name,
+        host,
+        admin,
+        viewOnly,
+        cert,
     }: {
         name?: string;
         host?: string;
@@ -57,13 +79,20 @@ export const Auth = ({
         viewOnly?: string;
         cert?: string;
     }) => {
-        name && setName(name);
-        host && setHost(host);
-        admin && setAdmin(admin);
-        viewOnly && setViewOnly(viewOnly);
-        cert && setCert(cert);
+        saveUserAuth({
+            available: next,
+            name,
+            host: host || '',
+            admin,
+            viewOnly,
+            cert,
+        });
 
-        setStatus('confirmNode');
+        dispatch({ type: 'disconnected' });
+        dispatchState({ type: 'disconnected' });
+        changeAccount(next);
+
+        push('/');
     };
 
     const handleSave = () => {
@@ -85,7 +114,7 @@ export const Auth = ({
         dispatchState({ type: 'disconnected' });
         changeAccount(next);
 
-        withRedirect && push('/');
+        push('/');
     };
 
     const handleConnect = () => {
@@ -99,13 +128,13 @@ export const Auth = ({
     const renderView = () => {
         switch (type) {
             case 'login':
-                return <LoginForm handleSet={handleSet} available={next} />;
+                return <LoginForm handleSet={handleSet} />;
+            case 'qrcode':
+                return <QRLogin handleSet={handleSet} />;
             case 'connect':
-                return (
-                    <ConnectLoginForm handleSet={handleSet} available={next} />
-                );
+                return <ConnectLoginForm handleSet={handleSet} />;
             default:
-                return <BTCLoginForm handleSet={handleSet} available={next} />;
+                return <BTCLoginForm handleSet={handleSet} />;
         }
     };
 

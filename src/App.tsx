@@ -8,7 +8,6 @@ import { useSettings } from './context/SettingsContext';
 import { ModalProvider } from 'styled-react-modal';
 import { useAccount } from './context/AccountContext';
 import { toast } from 'react-toastify';
-import { FadingBackground } from './components/modal/ReactModal';
 import 'react-toastify/dist/ReactToastify.css';
 import { Header } from './sections/header/Header';
 import { Footer } from './sections/footer/Footer';
@@ -17,6 +16,7 @@ import { ScrollToTop } from 'components/scrollToTop/ScrollToTop';
 import { ContextProvider } from 'context/ContextProvider';
 import { ConnectionCheck } from 'components/connectionCheck/ConnectionCheck';
 import { StatusCheck } from 'components/statusCheck/StatusCheck';
+import { BaseModalBackground } from 'styled-react-modal';
 
 const EntryView = React.lazy(() => import('./views/entry/Entry'));
 const ContentView = React.lazy(() => import('./sections/content/Content'));
@@ -54,7 +54,7 @@ const ContextApp: React.FC = () => {
 
     return (
         <ThemeProvider theme={{ mode: theme }}>
-            <ModalProvider backgroundComponent={FadingBackground}>
+            <ModalProvider backgroundComponent={BaseModalBackground}>
                 <ScrollToTop />
                 <GlobalStyles />
                 <Header />

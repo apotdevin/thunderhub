@@ -33,3 +33,11 @@ export const FixedWidth = styled.div`
     margin: 0px;
     margin-right: 8px;
 `;
+
+export const QRTextWrapper = styled.div`
+    display: flex;
+    margin: 16px 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+`;

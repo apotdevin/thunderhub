@@ -1,45 +1,59 @@
 import React, { ReactNode } from 'react';
-import styled from 'styled-components';
+import { css } from 'styled-components';
 import { cardColor, mediaWidths } from '../../styles/Themes';
-import ReactModal, { BaseModalBackground } from 'styled-react-modal';
-
-export const FadingBackground = styled(BaseModalBackground)``;
+import ReactModal from 'styled-react-modal';
 
 interface ModalProps {
     children: ReactNode;
     isOpen: boolean;
-    setIsOpen: (set: boolean) => void;
+    noMinWidth?: boolean;
+    closeCallback: () => void;
 }
 
-const StyleModal = ReactModal.styled`
-        position: absolute;
-         top: 50%;
-         left: 50%;
-         transform: translateY(-50%) translateX(-50%);
-         background-color: ${cardColor};
-         padding: 20px;
-         border-radius: 5px;
-         outline: none;
-         min-width: 578px;
+const generalCSS = css`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    background-color: ${cardColor};
+    padding: 20px;
+    border-radius: 5px;
+    outline: none;
 
-         @media (${mediaWidths.mobile}) {
-             top: 100%;
-             border-radius: 0px;
-             transform: translateY(-100%) translateX(-50%);
-             width: 100%;
-             min-width: 325px;
-         }
+    @media (${mediaWidths.mobile}) {
+        top: 100%;
+        border-radius: 0px;
+        transform: translateY(-100%) translateX(-50%);
+        width: 100%;
+        min-width: 325px;
+    }
 `;
 
-const Modal = ({ children, isOpen, setIsOpen }: ModalProps) => {
+const StyleModal = ReactModal.styled`
+         ${generalCSS}
+        min-width: 578px;
+`;
+
+const StyleModalSmall = ReactModal.styled`
+${generalCSS}
+`;
+
+const Modal = ({
+    children,
+    isOpen,
+    noMinWidth = false,
+    closeCallback,
+}: ModalProps) => {
+    const Styled = noMinWidth ? StyleModalSmall : StyleModal;
+
     return (
-        <StyleModal
+        <Styled
             isOpen={isOpen}
-            onBackgroundClick={() => setIsOpen(!isOpen)}
-            onEscapeKeydown={() => setIsOpen(!isOpen)}
+            onBackgroundClick={closeCallback}
+            onEscapeKeydown={closeCallback}
         >
             {children}
-        </StyleModal>
+        </Styled>
     );
 };
 
