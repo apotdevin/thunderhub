@@ -1,0 +1,57 @@
+Coverage of LND's API
+
+- [ ] GenSeed
+- [ ] InitWallet
+- [ ] UnlockWallet
+- [ ] ChangePassword
+- [x] WalletBalance
+- [x] ChannelBalance
+- [x] GetTransactions
+- [ ] EstimateFee
+- [x] SendCoins
+- [ ] ListUnspent
+- [ ] SubscribeTransactions
+- [ ] SendMany
+- [x] NewAddress
+- [ ] SignMessage
+- [ ] VerifyMessage
+- [ ] ConnectPeer
+- [ ] DisconnectPeer
+- [ ] ListPeers
+- [x] GetInfo
+- [x] PendingChannels
+- [x] ListChannels
+- [ ] SubscribeChannelEvents
+- [x] ClosedChannels
+- [ ] OpenChannelSync
+- [x] OpenChannel
+- [x] CloseChannel
+- [ ] AbandonChannel
+- [x] SendPayment
+- [ ] SendPaymentSync
+- [ ] SendToRoute
+- [ ] SendToRouteSync
+- [x] AddInvoice
+- [x] ListInvoices
+- [ ] LookupInvoice
+- [ ] SubscribeInvoices
+- [x] DecodePayReq
+- [x] ListPayments
+- [ ] DeleteAllPayments
+- [ ] DescribeGraph
+- [x] GetChanInfo
+- [x] GetNodeInfo
+- [ ] QueryRoutes
+- [x] GetNetworkInfo
+- [ ] StopDaemon
+- [ ] SubscribeChannelGraph
+- [ ] DebugLevel
+- [x] FeeReport
+- [x] UpdateChannelPolicy
+- [x] ForwardingHistory
+- [x] ExportChannelBackup
+- [x] ExportAllChannelBackups
+- [x] VerifyChanBackup
+- [x] RestoreChannelBackups
+- [ ] SubscribeChannelBackups
+- [ ] Messages
