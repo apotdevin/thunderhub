@@ -27,9 +27,9 @@ const styledCss = css`
     }
 `;
 
-const StyledLink = styled(RouterLink)`
-    ${styledCss}
-`;
+const StyledLink = styled(({ inheritColor, fontColor, underline, ...rest }) => (
+    <RouterLink {...rest} />
+))(() => styledCss);
 
 const StyledALink = styled.a`
     ${styledCss}

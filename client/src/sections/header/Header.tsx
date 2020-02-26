@@ -84,9 +84,17 @@ export const Header = () => {
                 <IconWrapper onClick={() => setOpen(prev => !prev)}>
                     {transitions.map(({ item, key, props }) =>
                         item ? (
-                            <AnimatedClose style={props} size={'24px'} />
+                            <AnimatedClose
+                                key={key}
+                                style={props}
+                                size={'24px'}
+                            />
                         ) : (
-                            <AnimatedBurger style={props} size={'24px'} />
+                            <AnimatedBurger
+                                key={key}
+                                style={props}
+                                size={'24px'}
+                            />
                         ),
                     )}
                 </IconWrapper>

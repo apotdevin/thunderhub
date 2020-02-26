@@ -31,7 +31,7 @@ export const ConnectionCheck = () => {
         if (!loading && data && data.getNodeInfo) {
             dispatch({ type: 'connected' });
         }
-    }, [data, loading]);
+    }, [data, loading, dispatch]);
 
     return null;
 };

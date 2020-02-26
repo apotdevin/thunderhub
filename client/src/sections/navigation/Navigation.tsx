@@ -62,11 +62,10 @@ const NavSeparation = styled.div`
 
 interface NavProps {
     selected: boolean;
-    selectedColor?: string;
     isOpen?: boolean;
 }
 
-const NavButton = styled(({ selectedColor, ...rest }) => <Link {...rest} />)(
+const NavButton = styled(({ isOpen, ...rest }) => <Link {...rest} />)(
     () => css`
         padding: 4px;
         border-radius: 4px;
