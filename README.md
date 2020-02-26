@@ -1,20 +1,23 @@
 # **ThunderHub - Lightning Node Manager**
 
-To run ThunderHub you will need the following two repos cloned and running on your machine.
+To run ThunderHub you first need to clone this repository.
 
-Backend: [ThunderHub Server](https://github.com/apotdevin/thunderhub-server) \
-Frontend: [ThunderHub Client](https://github.com/apotdevin/thunderhub-client)
+```javascript
+git clone https://github.com/apotdevin/thunderhub.git
+```
 
 ## **Requirements**
 
-* Node installed
-* Yarn or NPM installed
+- Node installed
+- Yarn or NPM installed
 
-After cloning both repositories run `yarn` or `npm install` in both of them to get all the necessary modules installed.
+After cloning the repository, go into both the `/client` and the `/server` folders, and run `yarn` or `npm install` in both of them to get all the necessary modules installed.
 
 ## **ThunderHub - Server**
 
 ### To get the server running use the following commands
+
+##### This must be done in the `/server` folder.
 
 ```javascript
 //With yarn:
@@ -33,6 +36,8 @@ If the server starts succesfully, you should see `info [server.js]: Server ready
 ## **ThunderHub - Client**
 
 ### To get the React frontend running use the following commands
+
+##### This must be done in the `/client` folder.
 
 ```javascript
 //With yarn:
