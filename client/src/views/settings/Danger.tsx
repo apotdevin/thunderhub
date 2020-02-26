@@ -52,6 +52,7 @@ export const DangerView = () => {
                     {saved.map((entry, index) => {
                         return (
                             <SingleButton
+                                key={index}
                                 color={'red'}
                                 onClick={() => {
                                     deleteAuth(entry.index);

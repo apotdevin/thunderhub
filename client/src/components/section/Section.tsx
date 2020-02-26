@@ -6,7 +6,7 @@ import { backgroundColor, mediaWidths } from 'styles/Themes';
 interface FullWidthProps {
     padding?: string;
     withColor?: boolean;
-    color?: string | ThemeSet;
+    sectionColor?: string | ThemeSet;
     textColor?: string | ThemeSet;
 }
 
@@ -22,8 +22,8 @@ const FullWidth = styled.div`
         css`
             color: ${textColor};
         `}
-    background-color: ${({ withColor, color }: FullWidthProps) =>
-        withColor && (color ? color : backgroundColor)};
+    background-color: ${({ withColor, sectionColor }: FullWidthProps) =>
+        withColor && (sectionColor ? sectionColor : backgroundColor)};
 
     @media (${mediaWidths.mobile}) {
         padding: 16px 0;
@@ -60,7 +60,7 @@ export const Section = ({
         <FullWidth
             padding={padding}
             withColor={withColor}
-            color={color}
+            sectionColor={color}
             textColor={textColor}
         >
             <Fixed>{children}</Fixed>
