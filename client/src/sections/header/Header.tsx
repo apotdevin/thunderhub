@@ -15,11 +15,18 @@ import {
     Sub4Title,
     ResponsiveLine,
 } from '../../components/generic/Styled';
-import { Cpu, MenuIcon, XSvg, Zap } from '../../components/generic/Icons';
+import {
+    Cpu,
+    MenuIcon,
+    XSvg,
+    Zap,
+    Circle,
+} from '../../components/generic/Icons';
 import { BurgerMenu } from 'components/burgerMenu/BurgerMenu';
 import { useSize } from 'hooks/UseSize';
 import { useTransition, animated } from 'react-spring';
 import { Section } from 'components/section/Section';
+import { useStatusState } from 'context/StatusContext';
 
 const HeaderStyle = styled.div`
     padding: 16px 0;
@@ -69,8 +76,9 @@ const AnimatedClose = animated(XSvg);
 
 export const Header = () => {
     const { width } = useSize();
-    const { loggedIn, name } = useAccount();
+    const { loggedIn } = useAccount();
     const [open, setOpen] = useState(false);
+    const { syncedToChain } = useStatusState();
 
     const transitions = useTransition(open, null, {
         from: { position: 'absolute', opacity: 0 },
@@ -100,7 +108,13 @@ export const Header = () => {
                 </IconWrapper>
             );
         } else {
-            return <Sub4Title>{name}</Sub4Title>;
+            return (
+                <Circle
+                    size={'12px'}
+                    strokeWidth={'0'}
+                    fillcolor={syncedToChain ? '#95de64' : '#ff7875'}
+                />
+            );
         }
     };
 
