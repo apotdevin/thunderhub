@@ -99,40 +99,48 @@ export const AccountSettings = () => {
         );
     };
 
+    const renderChangeAccount = () => {
+        const accounts = getStorageSaved();
+
+        if (accounts.length <= 1) {
+            return null;
+        }
+
+        return (
+            <SettingsLine>
+                <Sub4Title>Change Account</Sub4Title>
+                <MultiButton>
+                    {accounts.map((entry, index) => {
+                        return (
+                            <SingleButton
+                                key={index}
+                                selected={name.localeCompare(entry.name) === 0}
+                                onClick={() => {
+                                    if (name.localeCompare(entry.name) !== 0) {
+                                        dispatch({ type: 'disconnected' });
+                                        dispatchState({
+                                            type: 'disconnected',
+                                        });
+                                        changeAccount(entry.index);
+                                        push('/');
+                                    }
+                                }}
+                            >
+                                {entry.name}
+                            </SingleButton>
+                        );
+                    })}
+                </MultiButton>
+            </SettingsLine>
+        );
+    };
+
     return (
         <CardWithTitle>
             <SubTitle>Account</SubTitle>
             <Card>
                 {admin && viewOnly && renderSwitch()}
-                <SettingsLine>
-                    <Sub4Title>Change Account</Sub4Title>
-                    <MultiButton>
-                        {getStorageSaved().map((entry, index) => {
-                            return (
-                                <SingleButton
-                                    key={index}
-                                    selected={
-                                        name.localeCompare(entry.name) === 0
-                                    }
-                                    onClick={() => {
-                                        if (
-                                            name.localeCompare(entry.name) !== 0
-                                        ) {
-                                            dispatch({ type: 'disconnected' });
-                                            dispatchState({
-                                                type: 'disconnected',
-                                            });
-                                            changeAccount(entry.index);
-                                            push('/');
-                                        }
-                                    }}
-                                >
-                                    {entry.name}
-                                </SingleButton>
-                            );
-                        })}
-                    </MultiButton>
-                </SettingsLine>
+                {renderChangeAccount()}
                 {next && (
                     <SettingsLine>
                         <Sub4Title>Add Account</Sub4Title>
