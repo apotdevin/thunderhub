@@ -12,6 +12,7 @@ import { saveUserAuth } from 'utils/auth';
 import { PasswordInput } from './views/Password';
 import { useConnectionDispatch } from 'context/ConnectionContext';
 import { useStatusDispatch } from 'context/StatusContext';
+import { toast } from 'react-toastify';
 
 type AuthProps = {
     type: string;
@@ -29,12 +30,12 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     const dispatch = useConnectionDispatch();
     const dispatchState = useStatusDispatch();
 
-    const [name, setName] = useState();
-    const [host, setHost] = useState();
-    const [admin, setAdmin] = useState();
-    const [viewOnly, setViewOnly] = useState();
-    const [cert, setCert] = useState();
-    const [password, setPassword] = useState();
+    const [name, setName] = useState<string>();
+    const [host, setHost] = useState<string>();
+    const [admin, setAdmin] = useState<string>();
+    const [viewOnly, setViewOnly] = useState<string>();
+    const [cert, setCert] = useState<string>();
+    const [password, setPassword] = useState<string>();
 
     const [adminChecked, setAdminChecked] = useState(false);
 
@@ -53,7 +54,11 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
         cert?: string;
         skipCheck?: boolean;
     }) => {
-        if (skipCheck) {
+        if (!host) {
+            toast.error('A host url is needed to connect.');
+        } else if (!admin && !viewOnly) {
+            toast.error('View-Only or Admin macaroon are needed to connect.');
+        } else if (skipCheck) {
             quickSave({ name, cert, admin, viewOnly, host });
         } else {
             name && setName(name);
@@ -96,25 +101,31 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     };
 
     const handleSave = () => {
-        const encryptedAdmin =
-            admin && password
-                ? CryptoJS.AES.encrypt(admin, password).toString()
-                : undefined;
+        if (!host) {
+            toast.error('A host url is needed to connect.');
+        } else if (!admin && !viewOnly) {
+            toast.error('View-Only or Admin macaroon are needed to connect.');
+        } else {
+            const encryptedAdmin =
+                admin && password
+                    ? CryptoJS.AES.encrypt(admin, password).toString()
+                    : undefined;
 
-        saveUserAuth({
-            available: next,
-            name,
-            host,
-            admin: encryptedAdmin,
-            viewOnly,
-            cert,
-        });
+            saveUserAuth({
+                available: next,
+                name,
+                host,
+                admin: encryptedAdmin,
+                viewOnly,
+                cert,
+            });
 
-        dispatch({ type: 'disconnected' });
-        dispatchState({ type: 'disconnected' });
-        changeAccount(next);
+            dispatch({ type: 'disconnected' });
+            dispatchState({ type: 'disconnected' });
+            changeAccount(next);
 
-        push('/');
+            push('/');
+        }
     };
 
     const handleConnect = () => {
@@ -141,7 +152,7 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     return (
         <>
             {status === 'none' && renderView()}
-            {status === 'confirmNode' && (
+            {status === 'confirmNode' && host && (
                 <ViewCheck
                     host={host}
                     admin={admin}

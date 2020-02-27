@@ -34,11 +34,11 @@ export const BalanceView = () => {
         cert,
     );
 
-    const [outgoing, setOutgoing] = useState();
+    const [outgoing, setOutgoing] = useState<{ id: string } | null>();
     const [incoming, setIncoming] = useState();
-    const [amount, setAmount] = useState();
+    const [amount, setAmount] = useState<number>();
 
-    const [maxFee, setMaxFee] = useState();
+    const [maxFee, setMaxFee] = useState<number>();
 
     const [blocked, setBlocked] = useState(false);
 
@@ -176,7 +176,7 @@ export const BalanceView = () => {
                     <Sub4Title>Amount</Sub4Title>
                     <DarkSubTitle>
                         <NoWrapTitle>
-                            <Price amount={amount} />
+                            <Price amount={amount ?? 0} />
                         </NoWrapTitle>
                     </DarkSubTitle>
                 </ResponsiveLine>
@@ -195,7 +195,7 @@ export const BalanceView = () => {
                     <Sub4Title>Max Fee</Sub4Title>
                     <DarkSubTitle>
                         <NoWrapTitle>
-                            <Price amount={maxFee} />
+                            <Price amount={maxFee ?? 0} />
                         </NoWrapTitle>
                     </DarkSubTitle>
                 </ResponsiveLine>
@@ -210,7 +210,7 @@ export const BalanceView = () => {
                         withMargin={'0 0 24px'}
                     />
                 )}
-                {incoming && outgoing && (
+                {incoming && outgoing && amount && (
                     <BalanceRoute
                         {...{
                             incoming,

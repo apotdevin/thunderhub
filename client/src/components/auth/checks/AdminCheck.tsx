@@ -10,7 +10,7 @@ import { XSvg, Check } from 'components/generic/Icons';
 type AdminProps = {
     host: string;
     admin: string;
-    cert: string;
+    cert?: string;
     setChecked: (state: boolean) => void;
 };
 

@@ -12,9 +12,9 @@ import { Text } from 'views/other/OtherViews.styled';
 
 type ViewProps = {
     host: string;
-    admin: string;
-    viewOnly: string;
-    cert: string;
+    admin?: string;
+    viewOnly?: string;
+    cert?: string;
     adminChecked: boolean;
     callback: () => void;
     setAdminChecked: (state: boolean) => void;
@@ -34,7 +34,7 @@ export const ViewCheck = ({
     const [confirmed, setConfirmed] = useState(false);
 
     const { data, loading } = useQuery(GET_CAN_CONNECT, {
-        variables: { auth: getAuthString(host, viewOnly ?? admin, cert) },
+        variables: { auth: getAuthString(host, viewOnly ?? admin ?? '', cert) },
         onCompleted: () => setConfirmed(true),
         onError: () => setConfirmed(false),
     });
@@ -138,12 +138,14 @@ export const ViewCheck = ({
                 <Sub4Title>View-Only Macaroon</Sub4Title>
                 {content()}
             </SingleLine>
-            <AdminCheck
-                host={host}
-                admin={admin}
-                cert={cert}
-                setChecked={setAdminChecked}
-            />
+            {admin && (
+                <AdminCheck
+                    host={host}
+                    admin={admin}
+                    cert={cert}
+                    setChecked={setAdminChecked}
+                />
+            )}
             {renderButton()}
         </>
     );

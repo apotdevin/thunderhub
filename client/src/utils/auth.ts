@@ -31,7 +31,7 @@ export const saveUserAuth = ({
 }: BuildProps) => {
     localStorage.setItem('account', `auth${available}`);
     localStorage.setItem(`auth${available}-host`, host);
-    localStorage.setItem(`auth${available}-name`, name ? name : 'no name');
+    localStorage.setItem(`auth${available}-name`, name ? name : `${available}`);
     admin && localStorage.setItem(`auth${available}-admin`, admin);
     viewOnly && localStorage.setItem(`auth${available}-read`, viewOnly);
     cert && localStorage.setItem(`auth${available}-cert`, cert);
