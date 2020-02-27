@@ -11,12 +11,13 @@ import { getStorageSaved, deleteStorage } from '../../utils/storage';
 import { useAccount } from '../../context/AccountContext';
 import styled from 'styled-components';
 import { deleteAuth } from '../../utils/auth';
-import { textColor } from '../../styles/Themes';
+import { textColor, fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
     MultiButton,
     SingleButton,
 } from 'components/buttons/multiButton/MultiButton';
+import { AlertCircle } from 'components/generic/Icons';
 
 export const ButtonRow = styled.div`
     width: auto;
@@ -39,6 +40,26 @@ export const SettingsButton = styled(SimpleButton)`
     &:hover {
         border: 1px solid ${textColor};
     }
+`;
+
+export const CheckboxText = styled.div`
+    font-size: 13px;
+    color: ${fontColors.grey7};
+    text-align: justify;
+`;
+
+export const StyledContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 16px;
+`;
+
+export const FixedWidth = styled.div`
+    height: 18px;
+    width: 18px;
+    margin: 0px;
+    margin-right: 8px;
 `;
 
 export const DangerView = () => {
@@ -103,6 +124,15 @@ export const DangerView = () => {
                         </ColorButton>
                     </ButtonRow>
                 </SettingsLine>
+                <StyledContainer>
+                    <FixedWidth>
+                        <AlertCircle color={fontColors.grey7} />
+                    </FixedWidth>
+                    <CheckboxText>
+                        This does not affect in any way your node, only the
+                        ThunderHub accounts saved in this browser.
+                    </CheckboxText>
+                </StyledContainer>
             </OutlineCard>
         </CardWithTitle>
     );

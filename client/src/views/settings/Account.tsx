@@ -9,7 +9,12 @@ import {
 } from '../../components/generic/Styled';
 import { SettingsLine } from './Settings';
 import { useAccount } from '../../context/AccountContext';
-import { getNextAvailable, getStorageSaved } from '../../utils/storage';
+import {
+    getNextAvailable,
+    getStorageSaved,
+    getAccountIndex,
+    deleteAccountPermissions,
+} from '../../utils/storage';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { XSvg } from '../../components/generic/Icons';
 import {
@@ -25,7 +30,7 @@ export const AccountSettings = () => {
     const [status, setStatus] = useState('none');
 
     const { push } = useHistory();
-    const { name, changeAccount } = useAccount();
+    const { name, admin, viewOnly, changeAccount } = useAccount();
 
     const dispatch = useConnectionDispatch();
     const dispatchState = useStatusDispatch();
@@ -67,10 +72,38 @@ export const AccountSettings = () => {
         </SingleLine>
     );
 
+    const handleDelete = (admin?: boolean) => {
+        const index = getAccountIndex(name);
+        deleteAccountPermissions(index, admin);
+        dispatch({ type: 'disconnected' });
+        dispatchState({
+            type: 'disconnected',
+        });
+        changeAccount(index);
+        push('/');
+    };
+
+    const renderSwitch = () => {
+        return (
+            <SettingsLine>
+                <Sub4Title>Change Permissions</Sub4Title>
+                <MultiButton>
+                    <SingleButton onClick={() => handleDelete()}>
+                        View-Only
+                    </SingleButton>
+                    <SingleButton onClick={() => handleDelete(true)}>
+                        Admin-Only
+                    </SingleButton>
+                </MultiButton>
+            </SettingsLine>
+        );
+    };
+
     return (
         <CardWithTitle>
             <SubTitle>Account</SubTitle>
             <Card>
+                {admin && viewOnly && renderSwitch()}
                 <SettingsLine>
                     <Sub4Title>Change Account</Sub4Title>
                     <MultiButton>

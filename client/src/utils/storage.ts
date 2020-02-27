@@ -9,6 +9,28 @@ export const getStorageSaved = (): { index: number; name: string }[] => {
     return savedSpaces;
 };
 
+export const getAccountIndex = (name: string): number => {
+    let index = 0;
+    for (let i = 1; i < 11; i++) {
+        const savedName = localStorage.getItem(`auth${i}-name`);
+        if (name === savedName) {
+            index = i;
+        }
+    }
+    return index;
+};
+
+export const deleteAccountPermissions = (
+    index: number,
+    admin?: boolean,
+): void => {
+    if (admin) {
+        localStorage.removeItem(`auth${index}-read`);
+    } else {
+        localStorage.removeItem(`auth${index}-admin`);
+    }
+};
+
 export const getNextAvailable = (): number => {
     let available = 0;
     let counter = 1;
