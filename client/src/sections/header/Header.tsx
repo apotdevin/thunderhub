@@ -10,11 +10,7 @@ import {
 import { HomeButton } from '../../views/entry/homepage/HomePage.styled';
 import { Link } from 'react-router-dom';
 import { useAccount } from '../../context/AccountContext';
-import {
-    SingleLine,
-    Sub4Title,
-    ResponsiveLine,
-} from '../../components/generic/Styled';
+import { SingleLine, ResponsiveLine } from '../../components/generic/Styled';
 import {
     Cpu,
     MenuIcon,
