@@ -7,7 +7,7 @@ import { Line } from '../Auth.styled';
 import { LoadingBar } from 'components/loadingBar/LoadingBar';
 
 interface PasswordProps {
-    isPass: string;
+    isPass?: string;
     setPass: (pass: string) => void;
     callback: () => void;
     loading: boolean;
@@ -20,7 +20,7 @@ export const PasswordInput = ({
     loading = false,
 }: PasswordProps) => {
     const strength = (100 * Math.min(zxcvbn(isPass).guesses_log10, 40)) / 40;
-    const needed = 20;
+    const needed = process.env.NODE_ENV === 'development' ? 1 : 20;
     return (
         <>
             <SubTitle>Please Input a Password</SubTitle>

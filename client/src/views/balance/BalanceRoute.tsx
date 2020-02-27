@@ -23,7 +23,7 @@ type BalancedRouteProps = {
     incoming: any;
     outgoing: any;
     amount: number;
-    maxFee: number;
+    maxFee?: number;
     auth: {};
     blocked: boolean;
     setBlocked: () => void;
