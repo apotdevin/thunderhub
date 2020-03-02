@@ -1,0 +1,32 @@
+version: "3"
+services:
+  ##########################
+  ### SETUP SERVER CONTAINER
+  ##########################
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./server/
+    restart: always
+  ##########################
+  ### SETUP CLIENT CONTAINER
+  ##########################
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "80:80"
+    volumes:
+      - ./client/
+    depends_on:
+      - backend
+    restart: always
