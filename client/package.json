@@ -45,7 +45,7 @@
         "react-spring": "^8.0.27",
         "react-toastify": "^5.4.1",
         "react-tooltip": "^4.0.3",
-        "snyk": "^1.297.1",
+        "snyk": "^1.297.2",
         "styled-components": "^5.0.1",
         "styled-react-modal": "^2.0.0",
         "styled-theming": "^2.2.0",
