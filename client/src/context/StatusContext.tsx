@@ -5,6 +5,9 @@ type State = {
     alias: string;
     syncedToChain: boolean;
     version: string;
+    mayorVersion: number;
+    minorVersion: number;
+    revision: number;
     chainBalance: number;
     chainPending: number;
     channelBalance: number;
@@ -37,6 +40,9 @@ const initialState = {
     alias: '',
     syncedToChain: false,
     version: '',
+    mayorVersion: 0,
+    minorVersion: 0,
+    revision: 0,
     chainBalance: 0,
     chainPending: 0,
     channelBalance: 0,

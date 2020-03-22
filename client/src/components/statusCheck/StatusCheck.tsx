@@ -23,7 +23,7 @@ export const StatusCheck = () => {
         variables: { auth },
         skip: !connected || !loggedIn,
         pollInterval: 10000,
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     useEffect(() => {
@@ -44,12 +44,17 @@ export const StatusCheck = () => {
             const { confirmedBalance, pendingBalance } = getChannelBalance;
 
             const versionNumber = version.split(' ');
+            const onlyVersion = versionNumber[0].split('-');
+            const numbers = onlyVersion[0].split('.');
 
             const state = {
                 loading: false,
                 alias,
                 syncedToChain: is_synced_to_chain,
                 version: versionNumber[0],
+                mayorVersion: numbers[0],
+                minorVersion: numbers[1],
+                revision: numbers[2],
                 chainBalance: getChainBalance,
                 chainPending: getPendingChainBalance,
                 channelBalance: confirmedBalance,
