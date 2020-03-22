@@ -12,7 +12,7 @@
         "@types/node": "13.7.6",
         "@types/numeral": "^0.0.26",
         "@types/qrcode.react": "^1.0.0",
-        "@types/react": "16.9.23",
+        "@types/react": "16.9.24",
         "@types/react-copy-to-clipboard": "^4.3.0",
         "@types/react-dom": "16.9.5",
         "@types/react-modal": "^3.10.5",
