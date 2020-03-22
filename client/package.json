@@ -9,7 +9,7 @@
         "@types/lodash.debounce": "^4.0.6",
         "@types/lodash.merge": "^4.6.6",
         "@types/lodash.sortby": "^4.7.6",
-        "@types/node": "13.7.6",
+        "@types/node": "13.7.7",
         "@types/numeral": "^0.0.26",
         "@types/qrcode.react": "^1.0.0",
         "@types/react": "16.9.23",
