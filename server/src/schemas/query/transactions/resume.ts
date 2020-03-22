@@ -3,7 +3,7 @@ import { getPayments, getInvoices, getNode } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
-import { PaymentsProps, InvoicesProps, NodeProps } from './Resume.interface';
+import { PaymentsProps, InvoicesProps, NodeProps } from './resume.interface';
 import { compareDesc } from 'date-fns';
 import { sortBy } from 'underscore';
 import { GetResumeType } from '../../../schemaTypes/query/transactions/resume';
