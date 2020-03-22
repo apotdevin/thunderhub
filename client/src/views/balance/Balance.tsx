@@ -26,7 +26,7 @@ import { useStatusState } from 'context/StatusContext';
 import { Text } from 'views/other/OtherViews.styled';
 
 export const BalanceView = () => {
-    const { version } = useStatusState();
+    const { minorVersion } = useStatusState();
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
     const auth = getAuthString(
         host,
@@ -44,10 +44,10 @@ export const BalanceView = () => {
 
     const { loading, data } = useQuery(GET_CHANNELS, {
         variables: { auth, active: true },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
-    if (version !== '0.9.0-beta') {
+    if (minorVersion < 9) {
         return (
             <CardWithTitle>
                 <SingleLine>
@@ -185,7 +185,7 @@ export const BalanceView = () => {
                         value={amount}
                         placeholder={'Sats'}
                         type={'number'}
-                        onChange={e => {
+                        onChange={(e) => {
                             setAmount(parseInt(e.target.value));
                         }}
                         withMargin={'0 0 8px'}
@@ -204,7 +204,7 @@ export const BalanceView = () => {
                         value={maxFee}
                         placeholder={'Sats (Leave empty to search all routes)'}
                         type={'number'}
-                        onChange={e => {
+                        onChange={(e) => {
                             setMaxFee(parseInt(e.target.value));
                         }}
                         withMargin={'0 0 24px'}
