@@ -15,9 +15,9 @@ Coverage of LND's API
 - [x] NewAddress
 - [ ] SignMessage
 - [ ] VerifyMessage
-- [ ] ConnectPeer
-- [ ] DisconnectPeer
-- [ ] ListPeers
+- [x] ConnectPeer
+- [x] DisconnectPeer
+- [x] ListPeers
 - [x] GetInfo
 - [x] PendingChannels
 - [x] ListChannels

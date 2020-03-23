@@ -21,7 +21,7 @@ export const Channels = () => {
 
     const { loading, data } = useQuery(GET_CHANNELS, {
         variables: { auth },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     if (loading || !data || !data.getChannels) {
@@ -36,7 +36,7 @@ export const Channels = () => {
                     index={index + 1}
                     setIndexOpen={setIndexOpen}
                     indexOpen={indexOpen}
-                    key={index}
+                    key={`${index}-${channel.id}`}
                 />
             ))}
         </Card>

@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { CLOSE_CHANNEL } from '../../graphql/mutation';
+import { CLOSE_CHANNEL } from '../../../graphql/mutation';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { Separation, SingleLine, SubTitle, Sub4Title } from '../generic/Styled';
-import { AlertTriangle } from '../generic/Icons';
+import {
+    Separation,
+    SingleLine,
+    SubTitle,
+    Sub4Title,
+} from '../../generic/Styled';
+import { AlertTriangle } from '../../generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import { getErrorContent } from '../../utils/error';
-import { GET_BITCOIN_FEES } from '../../graphql/query';
-import { SecureButton } from '../buttons/secureButton/SecureButton';
-import { ColorButton } from '../buttons/colorButton/ColorButton';
+import { getErrorContent } from '../../../utils/error';
+import { GET_BITCOIN_FEES } from '../../../graphql/query';
+import { SecureButton } from '../../buttons/secureButton/SecureButton';
+import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import {
     MultiButton,
     SingleButton,
@@ -47,7 +52,7 @@ export const CloseChannel = ({
     const [hour, setHour] = useState(0);
 
     const { data: feeData } = useQuery(GET_BITCOIN_FEES, {
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     useEffect(() => {
@@ -61,12 +66,12 @@ export const CloseChannel = ({
     }, [feeData]);
 
     const [closeChannel] = useMutation(CLOSE_CHANNEL, {
-        onCompleted: data => {
+        onCompleted: (data) => {
             if (data.closeChannel) {
                 toast.success('Channel Closed');
             }
         },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
         refetchQueries: [
             'GetChannels',
             'GetPendingChannels',
@@ -91,26 +96,23 @@ export const CloseChannel = ({
         <WarningCard>
             <AlertTriangle size={'32px'} color={'red'} />
             <SubTitle>Are you sure you want to close the channel?</SubTitle>
-            <Sub4Title>{`${channelName} [${channelId}]`}</Sub4Title>
-            <div onClick={() => setModalOpen(false)}>
-                <SecureButton
-                    callback={closeChannel}
-                    variables={{
-                        id: channelId,
-                        forceClose: isForce,
-                        ...(isType !== 'none'
-                            ? isType === 'fee'
-                                ? { tokens: amount }
-                                : { target: amount }
-                            : {}),
-                    }}
-                    color={'red'}
-                    disabled={false}
-                    withMargin={'4px'}
-                >
-                    Close Channel
-                </SecureButton>
-            </div>
+            <SecureButton
+                callback={closeChannel}
+                variables={{
+                    id: channelId,
+                    forceClose: isForce,
+                    ...(isType !== 'none'
+                        ? isType === 'fee'
+                            ? { tokens: amount }
+                            : { target: amount }
+                        : {}),
+                }}
+                color={'red'}
+                disabled={false}
+                withMargin={'4px'}
+            >
+                {`Close Channel [ ${channelName}/${channelId} ]`}
+            </SecureButton>
             <ColorButton withMargin={'4px'} onClick={handleOnlyClose}>
                 Cancel
             </ColorButton>
@@ -180,7 +182,9 @@ export const CloseChannel = ({
                                 isType === 'target' ? 'Blocks' : 'Sats/Byte'
                             }
                             type={'number'}
-                            onChange={e => setAmount(parseInt(e.target.value))}
+                            onChange={(e) =>
+                                setAmount(parseInt(e.target.value))
+                            }
                         />
                     </SingleLine>
                 </>

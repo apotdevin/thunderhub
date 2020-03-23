@@ -34,9 +34,9 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
     );
 
     const [makePayment, { loading }] = useMutation(PAY_INVOICE, {
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
         onCompleted: () => {
-            toast.success('Payment Sent!');
+            toast.success('Payment Sent');
             setRequest('');
             setModalOpen(false);
             setOpen();
@@ -46,7 +46,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
     const [decode, { data, loading: decodeLoading }] = useMutation(
         DECODE_REQUEST,
         {
-            onError: error => toast.error(getErrorContent(error)),
+            onError: (error) => toast.error(getErrorContent(error)),
         },
     );
 
@@ -89,7 +89,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
                             ? '0 0 16px'
                             : '0 0 0 24px'
                     }
-                    onChange={e => setRequest(e.target.value)}
+                    onChange={(e) => setRequest(e.target.value)}
                 />
                 <ColorButton
                     disabled={request === ''}
