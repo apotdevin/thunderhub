@@ -21,6 +21,7 @@ import {
     GitPullRequest,
     LinkIcon,
     RepeatIcon,
+    Users,
 } from '../../components/generic/Icons';
 import { useSettings } from '../../context/SettingsContext';
 import { useConnectionState } from 'context/ConnectionContext';
@@ -114,6 +115,7 @@ const BurgerNav = styled(({ selectedColor, ...rest }) => <Link {...rest} />)(
 );
 
 const HOME = '/';
+const PEERS = '/peers';
 const CHANNEL = '/channels';
 const BALANCE = '/balance';
 const TRANS = '/transactions';
@@ -159,6 +161,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     const renderLinks = () => (
         <ButtonSection isOpen={sidebar}>
             {renderNavButton('Home', HOME, Home, sidebar)}
+            {renderNavButton('Peers', PEERS, Users, sidebar)}
             {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
             {renderNavButton('Balance', BALANCE, RepeatIcon, sidebar)}
             {renderNavButton('Fees', FEES, Crosshair, sidebar)}
@@ -173,6 +176,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     const renderBurger = () => (
         <BurgerRow>
             {renderBurgerNav('Home', HOME, Home)}
+            {renderBurgerNav('Peers', PEERS, Users)}
             {renderBurgerNav('Channels', CHANNEL, Cpu)}
             {renderBurgerNav('Balance', BALANCE, RepeatIcon)}
             {renderBurgerNav('Fees', FEES, Crosshair)}

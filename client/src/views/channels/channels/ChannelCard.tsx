@@ -30,7 +30,7 @@ import {
     getNodeLink,
 } from '../../../components/generic/Helpers';
 import Modal from '../../../components/modal/ReactModal';
-import { CloseChannel } from '../../../components/closeChannel/CloseChannel';
+import { CloseChannel } from '../../../components/modal/closeChannel/CloseChannel';
 import styled from 'styled-components';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { DownArrow, UpArrow, EyeOff } from '../../../components/generic/Icons';
@@ -181,7 +181,7 @@ export const ChannelCard = ({
     };
 
     return (
-        <SubCard color={nodeColor} key={index}>
+        <SubCard color={nodeColor} key={`${index}-${id}`}>
             <MainInfo onClick={() => handleClick()}>
                 <StatusLine>
                     {getStatusDot(is_active, 'active')}

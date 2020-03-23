@@ -22,6 +22,7 @@ import { mediaWidths } from 'styles/Themes';
 import { useConnectionState } from 'context/ConnectionContext';
 import { LoadingView, ErrorView } from 'views/stateViews/StateCards';
 import { BalanceView } from 'views/balance/Balance';
+import { PeersList } from 'views/peers/PeersList';
 
 const Container = styled.div`
     display: grid;
@@ -63,6 +64,7 @@ const Content = () => {
             <BitcoinFees />
             <Switch>
                 <Route exact path="/" render={() => getGrid(Home)} />
+                <Route path="/peers" render={() => getGrid(PeersList)} />
                 <Route path="/channels" render={() => getGrid(ChannelView)} />
                 <Route path="/balance" render={() => getGrid(BalanceView)} />
                 <Route path="/backups" render={() => getGrid(BackupsView)} />

@@ -135,3 +135,25 @@ export const PAY_VIA_ROUTE = gql`
         payViaRoute(auth: $auth, route: $route)
     }
 `;
+
+export const REMOVE_PEER = gql`
+    mutation RemovePeer($auth: authType!, $publicKey: String!) {
+        removePeer(auth: $auth, publicKey: $publicKey)
+    }
+`;
+
+export const ADD_PEER = gql`
+    mutation AddPeer(
+        $auth: authType!
+        $publicKey: String!
+        $socket: String!
+        $isTemporary: Boolean
+    ) {
+        addPeer(
+            auth: $auth
+            publicKey: $publicKey
+            socket: $socket
+            isTemporary: $isTemporary
+        )
+    }
+`;
