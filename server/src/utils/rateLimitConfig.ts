@@ -41,4 +41,7 @@ export const RateConfig: RateConfigProps = {
     getRoutes: { max: 3, window: '1s' },
     payViaRoute: { max: 3, window: '1s' },
     adminCheck: { max: 3, window: '1s' },
+    getPeers: { max: 3, window: '1s' },
+    addPeer: { max: 3, window: '1s' },
+    removePeer: { max: 3, window: '1s' },
 };

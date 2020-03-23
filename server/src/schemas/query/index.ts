@@ -6,6 +6,7 @@ import { reportQueries } from './report';
 import { flowQueries } from './flow';
 import { backupQueries } from './backup';
 import { routeQueries } from './route';
+import { peerQueries } from './peer';
 
 export const query = {
     ...channelQueries,
@@ -16,4 +17,5 @@ export const query = {
     ...flowQueries,
     ...backupQueries,
     ...routeQueries,
+    ...peerQueries,
 };
