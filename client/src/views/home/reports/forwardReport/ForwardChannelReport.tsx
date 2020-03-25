@@ -7,7 +7,6 @@ import {
 import { useQuery } from '@apollo/react-hooks';
 import { GET_FORWARD_CHANNELS_REPORT } from '../../../../graphql/query';
 import { useAccount } from '../../../../context/AccountContext';
-import { getAuthString } from '../../../../utils/auth';
 import { CardContent } from '../forwardReport';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
@@ -75,15 +74,15 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
     const format = getPrice(currency, priceContext);
 
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { data, loading } = useQuery(GET_FORWARD_CHANNELS_REPORT, {
         variables: { time: isTime, order: isType, auth, type },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     if (!data || loading) {

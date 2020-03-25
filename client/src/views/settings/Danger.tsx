@@ -7,10 +7,10 @@ import {
     SimpleButton,
     Sub4Title,
 } from '../../components/generic/Styled';
-import { getStorageSaved, deleteStorage } from '../../utils/storage';
+import { deleteStorage } from '../../utils/storage';
 import { useAccount } from '../../context/AccountContext';
 import styled from 'styled-components';
-import { deleteAuth } from '../../utils/auth';
+import { deleteAccountPermissions } from '../../utils/storage';
 import { textColor, fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
@@ -18,6 +18,9 @@ import {
     SingleButton,
 } from 'components/buttons/multiButton/MultiButton';
 import { AlertCircle } from 'components/generic/Icons';
+import { useConnectionDispatch } from 'context/ConnectionContext';
+import { useStatusDispatch } from 'context/StatusContext';
+import { useHistory } from 'react-router-dom';
 
 export const ButtonRow = styled.div`
     width: auto;
@@ -63,49 +66,86 @@ export const FixedWidth = styled.div`
 `;
 
 export const DangerView = () => {
-    const { refreshAccount } = useAccount();
+    const {
+        deleteAccount,
+        refreshAccount,
+        changeAccount,
+        accounts,
+        admin,
+        viewOnly,
+        name,
+    } = useAccount();
+
+    const dispatch = useConnectionDispatch();
+    const dispatchState = useStatusDispatch();
+
+    const { push } = useHistory();
 
     const renderButton = () => {
-        const saved = getStorageSaved();
-        if (saved.length > 1) {
+        if (accounts.length > 1) {
             return (
                 <MultiButton>
-                    {saved.map((entry, index) => {
+                    {accounts.map(({ name: accountName }, index) => {
                         return (
                             <SingleButton
-                                key={index}
+                                key={`${index}-${accountName}`}
                                 color={'red'}
                                 onClick={() => {
-                                    deleteAuth(entry.index);
-                                    refreshAccount();
+                                    deleteAccount(accountName);
                                 }}
                             >
-                                {entry.name}
+                                {accountName}
                             </SingleButton>
                         );
                     })}
                 </MultiButton>
             );
-        } else if (saved.length === 1) {
+        } else if (accounts.length === 1) {
             return (
                 <ColorButton
                     color={'red'}
                     onClick={() => {
-                        deleteAuth(saved[0].index);
-                        refreshAccount();
+                        deleteAccount(accounts[0].name);
                     }}
                 >
-                    {saved[0].name}
+                    {accounts[0].name}
                 </ColorButton>
             );
         }
         return null;
     };
 
+    const handleDelete = (admin?: boolean) => {
+        deleteAccountPermissions(name, accounts, admin);
+        dispatch({ type: 'disconnected' });
+        dispatchState({
+            type: 'disconnected',
+        });
+        changeAccount(name);
+        push('/');
+    };
+
+    const renderSwitch = () => {
+        return (
+            <SettingsLine>
+                <Sub4Title>Change Permissions</Sub4Title>
+                <MultiButton>
+                    <SingleButton onClick={() => handleDelete()}>
+                        View-Only
+                    </SingleButton>
+                    <SingleButton onClick={() => handleDelete(true)}>
+                        Admin-Only
+                    </SingleButton>
+                </MultiButton>
+            </SettingsLine>
+        );
+    };
+
     return (
         <CardWithTitle>
             <SubTitle>Danger Zone</SubTitle>
             <OutlineCard>
+                {admin && viewOnly && renderSwitch()}
                 <SettingsLine>
                     <Sub4Title>Delete Account:</Sub4Title>
                     {renderButton()}

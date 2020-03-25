@@ -9,7 +9,6 @@ import {
     Separation,
 } from '../../../components/generic/Styled';
 import { useAccount } from '../../../context/AccountContext';
-import { getAuthString } from '../../../utils/auth';
 import styled from 'styled-components';
 import { unSelectedNavButton, mediaWidths } from '../../../styles/Themes';
 import { Globe, Cpu } from '../../../components/generic/Icons';
@@ -67,15 +66,15 @@ const Padding = styled.span`
 
 export const NetworkInfo = () => {
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { loading, data } = useQuery(GET_NETWORK_INFO, {
         variables: { auth },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     if (loading || !data || !data.getNetworkInfo) {

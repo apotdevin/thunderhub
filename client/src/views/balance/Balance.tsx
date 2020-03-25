@@ -10,7 +10,6 @@ import {
     SingleLine,
 } from 'components/generic/Styled';
 import { useAccount } from 'context/AccountContext';
-import { getAuthString } from 'utils/auth';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_CHANNELS } from 'graphql/query';
 import { toast } from 'react-toastify';
@@ -28,11 +27,11 @@ import { Text } from 'views/other/OtherViews.styled';
 export const BalanceView = () => {
     const { minorVersion } = useStatusState();
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const [outgoing, setOutgoing] = useState<{ id: string } | null>();
     const [incoming, setIncoming] = useState();
@@ -157,6 +156,7 @@ export const BalanceView = () => {
 
             return (
                 <BalanceCard
+                    key={`${index}-${channel.id}`}
                     {...{ index, channel, withArrow: true }}
                     {...callback}
                 />

@@ -5,7 +5,6 @@ import { GET_FORWARD_REPORT } from '../../../../graphql/query';
 import numeral from 'numeral';
 import { useSettings } from '../../../../context/SettingsContext';
 import { useAccount } from '../../../../context/AccountContext';
-import { getAuthString } from '../../../../utils/auth';
 import {
     VictoryBar,
     VictoryChart,
@@ -41,15 +40,15 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
     const format = getPrice(currency, priceContext);
 
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { data, loading } = useQuery(GET_FORWARD_REPORT, {
         variables: { time: isTime, auth },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     if (!data || loading) {
@@ -124,7 +123,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
                                 grid: { stroke: chartGridColor[theme] },
                                 axis: { stroke: 'transparent' },
                             }}
-                            tickFormat={a =>
+                            tickFormat={(a) =>
                                 isType === 'tokens'
                                     ? format({ amount: a, breakNumber: true })
                                     : a

@@ -15,7 +15,6 @@ import { Input } from '../../../../components/input/Input';
 import { useSize } from '../../../../hooks/UseSize';
 import Modal from 'components/modal/ReactModal';
 import { useAccount } from 'context/AccountContext';
-import { getAuthString } from 'utils/auth';
 import { ColorButton } from 'components/buttons/colorButton/ColorButton';
 import { renderLine, getNodeLink } from 'components/generic/Helpers';
 import { Price } from 'components/price/Price';
@@ -27,11 +26,11 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
     const [modalOpen, setModalOpen] = useState(false);
 
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const [makePayment, { loading }] = useMutation(PAY_INVOICE, {
         onError: (error) => toast.error(getErrorContent(error)),

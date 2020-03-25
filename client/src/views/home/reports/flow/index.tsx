@@ -9,7 +9,6 @@ import {
 } from '../../../../components/generic/Styled';
 import { ButtonRow } from '../forwardReport/Buttons';
 import { FlowReport } from './FlowReport';
-import { getAuthString } from '../../../../utils/auth';
 import { useAccount } from '../../../../context/AccountContext';
 import { GET_IN_OUT } from '../../../../graphql/query';
 import { useQuery } from '@apollo/react-hooks';
@@ -88,14 +87,14 @@ export const FlowBox = () => {
     const [isType, setIsType] = useState<string>('amount');
 
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
     const { data, loading } = useQuery(GET_IN_OUT, {
         variables: { time: isTime, auth },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     const buttonProps = {

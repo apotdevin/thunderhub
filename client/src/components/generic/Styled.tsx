@@ -50,7 +50,7 @@ export const Separation = styled.div`
     background-color: ${({ lineColor }: SeparationProps) =>
         lineColor ?? separationColor};
     width: 100%;
-    margin: 20px 0;
+    margin: 16px 0;
 `;
 
 interface SubCardProps {

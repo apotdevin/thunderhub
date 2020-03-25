@@ -1,7 +1,6 @@
 import React from 'react';
 import { GET_CAN_ADMIN } from 'graphql/query';
 import { useQuery } from '@apollo/react-hooks';
-import { getAuthString } from 'utils/auth';
 import { SingleLine, Sub4Title } from 'components/generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { themeColors } from 'styles/Themes';
@@ -17,7 +16,7 @@ type AdminProps = {
 export const AdminCheck = ({ host, admin, cert, setChecked }: AdminProps) => {
     const { data, loading } = useQuery(GET_CAN_ADMIN, {
         skip: !admin,
-        variables: { auth: getAuthString(host, admin, cert) },
+        variables: { auth: { host, macaroon: admin, cert } },
         onError: () => {
             setChecked(false);
         },

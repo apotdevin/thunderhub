@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_CAN_CONNECT } from 'graphql/query';
-import { getAuthString } from 'utils/auth';
 import { SingleLine, Sub4Title, Separation } from 'components/generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { themeColors } from 'styles/Themes';
@@ -19,6 +18,7 @@ type ViewProps = {
     callback: () => void;
     setAdminChecked: (state: boolean) => void;
     handleConnect: () => void;
+    setName: (name: string) => void;
 };
 
 export const ViewCheck = ({
@@ -30,14 +30,21 @@ export const ViewCheck = ({
     setAdminChecked,
     handleConnect,
     callback,
+    setName,
 }: ViewProps) => {
     const [confirmed, setConfirmed] = useState(false);
 
     const { data, loading } = useQuery(GET_CAN_CONNECT, {
-        variables: { auth: getAuthString(host, viewOnly ?? admin ?? '', cert) },
+        variables: { auth: { host, macaroon: viewOnly ?? admin ?? '', cert } },
         onCompleted: () => setConfirmed(true),
         onError: () => setConfirmed(false),
     });
+
+    useEffect(() => {
+        if (!loading && data && data.getNodeInfo) {
+            setName(data.getNodeInfo.alias);
+        }
+    }, [loading, data, setName]);
 
     const content = () => {
         if (loading) {

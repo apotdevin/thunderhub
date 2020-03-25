@@ -7,7 +7,6 @@ import {
 import { useQuery } from '@apollo/react-hooks';
 import { GET_LIQUID_REPORT } from '../../../../graphql/query';
 import { useAccount } from '../../../../context/AccountContext';
-import { getAuthString } from '../../../../utils/auth';
 import {
     VictoryChart,
     VictoryAxis,
@@ -30,11 +29,11 @@ import { usePriceState } from 'context/PriceContext';
 export const LiquidReport = () => {
     const { width } = useSize();
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { theme, currency } = useSettings();
     const priceContext = usePriceState();
@@ -108,7 +107,7 @@ export const LiquidReport = () => {
                             grid: { stroke: chartGridColor[theme] },
                             axis: { stroke: 'transparent' },
                         }}
-                        tickFormat={a => `${format({ amount: a })}`}
+                        tickFormat={(a) => `${format({ amount: a })}`}
                     />
                     <VictoryBar
                         horizontal

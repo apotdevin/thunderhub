@@ -7,13 +7,11 @@ import { RiskCheckboxAndConfirm } from './Checkboxes';
 
 interface AuthProps {
     handleSet: ({
-        name,
         host,
         admin,
         viewOnly,
         cert,
     }: {
-        name?: string;
         host?: string;
         admin?: string;
         viewOnly?: string;
@@ -22,7 +20,6 @@ interface AuthProps {
 }
 
 export const BTCLoginForm = ({ handleSet }: AuthProps) => {
-    const [name, setName] = useState('');
     const [json, setJson] = useState('');
     const [checked, setChecked] = useState(false);
 
@@ -30,7 +27,7 @@ export const BTCLoginForm = ({ handleSet }: AuthProps) => {
         try {
             JSON.parse(json);
             const { cert, admin, viewOnly, host } = getConfigLnd(json);
-            handleSet({ name, host, admin, viewOnly, cert });
+            handleSet({ host, admin, viewOnly, cert });
         } catch (error) {
             toast.error('Invalid JSON');
         }
@@ -40,12 +37,8 @@ export const BTCLoginForm = ({ handleSet }: AuthProps) => {
     return (
         <>
             <Line>
-                <StyledTitle>Name:</StyledTitle>
-                <Input onChange={e => setName(e.target.value)} />
-            </Line>
-            <Line>
                 <StyledTitle>BTCPayServer Connect JSON:</StyledTitle>
-                <Input onChange={e => setJson(e.target.value)} />
+                <Input onChange={(e) => setJson(e.target.value)} />
             </Line>
             <RiskCheckboxAndConfirm
                 disabled={!canConnect}

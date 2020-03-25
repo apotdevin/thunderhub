@@ -16,7 +16,6 @@ import {
 } from '../../../components/generic/Icons';
 import { getTooltipType } from '../../../components/generic/Helpers';
 import { useAccount } from '../../../context/AccountContext';
-import { getAuthString } from '../../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { textColorMap, unSelectedNavButton } from '../../../styles/Themes';
@@ -59,7 +58,7 @@ const Balance = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 5px 0;
+    margin: 2px 0;
     padding: 0 5px;
     cursor: default;
 `;
@@ -84,15 +83,15 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     } = useStatusState();
 
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { loading, data } = useQuery(GET_NODE_INFO, {
         variables: { auth },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     const { theme, currency } = useSettings();
@@ -236,7 +235,11 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         <>
             <Title>
                 <Alias bottomColor={color}>{alias}</Alias>
-                {isOpen && <QuestionIcon data-tip={`Version: ${version}`} />}
+                {isOpen && (
+                    <QuestionIcon
+                        data-tip={`Version: ${version.split(' ')[0]}`}
+                    />
+                )}
             </Title>
             <Separation lineColor={unSelectedNavButton} />
             <Balance data-tip data-for="balance_tip">
