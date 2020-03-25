@@ -85,16 +85,16 @@ export const DangerView = () => {
         if (accounts.length > 1) {
             return (
                 <MultiButton>
-                    {accounts.map(({ name }, index) => {
+                    {accounts.map(({ name: accountName }, index) => {
                         return (
                             <SingleButton
-                                key={`${index}-${name}`}
+                                key={`${index}-${accountName}`}
                                 color={'red'}
                                 onClick={() => {
-                                    deleteAccount(name);
+                                    deleteAccount(accountName);
                                 }}
                             >
-                                {name}
+                                {accountName}
                             </SingleButton>
                         );
                     })}
