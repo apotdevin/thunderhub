@@ -76,7 +76,7 @@ export const AccountSettings = () => {
                     {accounts.map(({ name: accountName }, index) => {
                         return (
                             <SingleButton
-                                key={`${index}-${name}`}
+                                key={`${index}-${accountName}`}
                                 selected={accountName.localeCompare(name) === 0}
                                 onClick={() => {
                                     if (accountName.localeCompare(name) !== 0) {
