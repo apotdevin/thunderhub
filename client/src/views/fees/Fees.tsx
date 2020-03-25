@@ -13,7 +13,6 @@ import {
     ResponsiveLine,
 } from 'components/generic/Styled';
 import { useAccount } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { LoadingCard } from 'components/loading/LoadingCard';
@@ -32,20 +31,20 @@ export const FeesView = () => {
     const [feeRate, setFeeRate] = useState(0);
 
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { loading, data } = useQuery(CHANNEL_FEES, {
         variables: { auth },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     const [updateFees] = useMutation(UPDATE_FEES, {
-        onError: error => toast.error(getErrorContent(error)),
-        onCompleted: data => {
+        onError: (error) => toast.error(getErrorContent(error)),
+        onCompleted: (data) => {
             setIsEdit(false);
             data.updateFees
                 ? toast.success('Fees Updated')
@@ -67,7 +66,7 @@ export const FeesView = () => {
                         <SingleLine>
                             <Sub4Title>Channel Fees</Sub4Title>
                             <ColorButton
-                                onClick={() => setIsEdit(prev => !prev)}
+                                onClick={() => setIsEdit((prev) => !prev)}
                             >
                                 {isEdit ? <XSvg /> : 'Update'}
                             </ColorButton>
@@ -80,7 +79,7 @@ export const FeesView = () => {
                                     <Input
                                         placeholder={'Sats'}
                                         type={'number'}
-                                        onChange={e =>
+                                        onChange={(e) =>
                                             setBaseFee(parseInt(e.target.value))
                                         }
                                     />
@@ -90,7 +89,7 @@ export const FeesView = () => {
                                     <Input
                                         placeholder={'Sats/Million'}
                                         type={'number'}
-                                        onChange={e =>
+                                        onChange={(e) =>
                                             setFeeRate(parseInt(e.target.value))
                                         }
                                     />

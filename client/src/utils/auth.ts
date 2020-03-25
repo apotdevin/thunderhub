@@ -1,69 +1,70 @@
 import base64url from 'base64url';
-import { getAvailable } from './storage';
+import { saveAccounts } from './storage';
 
 interface BuildProps {
-    available: number;
     name?: string;
     host: string;
     admin?: string;
     viewOnly?: string;
     cert?: string;
+    accounts: any;
 }
 
-export const deleteAuth = (index: number) => {
-    localStorage.removeItem(`auth${index}-host`);
-    localStorage.removeItem(`auth${index}-name`);
-    localStorage.removeItem(`auth${index}-admin`);
-    localStorage.removeItem(`auth${index}-read`);
-    localStorage.removeItem(`auth${index}-cert`);
-    sessionStorage.removeItem('session');
-
-    localStorage.setItem('account', `auth${getAvailable()}`);
-};
-
 export const saveUserAuth = ({
-    available,
-    name,
+    name = '',
     host,
-    admin,
-    viewOnly,
-    cert,
+    admin = '',
+    viewOnly = '',
+    cert = '',
+    accounts,
 }: BuildProps) => {
-    localStorage.setItem('account', `auth${available}`);
-    localStorage.setItem(`auth${available}-host`, host);
-    localStorage.setItem(`auth${available}-name`, name ? name : `${available}`);
-    admin && localStorage.setItem(`auth${available}-admin`, admin);
-    viewOnly && localStorage.setItem(`auth${available}-read`, viewOnly);
-    cert && localStorage.setItem(`auth${available}-cert`, cert);
+    const newAccount = {
+        name,
+        host,
+        admin,
+        viewOnly,
+        cert,
+    };
+
+    const newAccounts = [...accounts, newAccount];
+    saveAccounts(newAccounts);
 };
 
 export const saveSessionAuth = (sessionAdmin: string) =>
     sessionStorage.setItem('session', sessionAdmin);
 
-export const getAuthString = (
-    host: string,
-    macaroon: string,
-    cert: string = '',
-) => ({
-    host,
-    macaroon,
-    cert,
-});
+export const getAuth = (account?: string) => {
+    const accounts = JSON.parse(localStorage.getItem('accounts') || '[]');
+    const currentActive = Math.max(
+        parseInt(account ?? (localStorage.getItem('active') || '0')),
+        0,
+    );
+    const sessionAdmin = sessionStorage.getItem('session') || '';
 
-export const getAuthParams = (available: string) => {
-    const host = localStorage.getItem(`${available}-host`) || '';
-    const name = localStorage.getItem(`${available}-name`) || '';
-    const admin = localStorage.getItem(`${available}-admin`) || '';
-    const viewOnly = localStorage.getItem(`${available}-read`) || '';
-    const cert = localStorage.getItem(`${available}-cert`) || '';
+    const accountsLength = accounts.length;
 
-    return {
-        host,
-        name,
-        admin,
-        viewOnly,
-        cert,
+    const active =
+        accountsLength > 0 && currentActive >= accountsLength
+            ? 0
+            : currentActive;
+
+    const defaultAccount = {
+        name: '',
+        host: '',
+        admin: '',
+        viewOnly: '',
+        cert: '',
     };
+
+    const activeAccount =
+        accountsLength > 0 && active < accountsLength
+            ? accounts[active]
+            : defaultAccount;
+
+    const { name, host, admin, viewOnly, cert } = activeAccount;
+    const loggedIn = host !== '' && (viewOnly !== '' || sessionAdmin !== '');
+
+    return { name, host, admin, viewOnly, cert, accounts, loggedIn };
 };
 
 export const getAuthLnd = (lndconnect: string) => {

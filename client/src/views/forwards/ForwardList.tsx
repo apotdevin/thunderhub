@@ -8,7 +8,6 @@ import {
     SingleLine,
 } from '../../components/generic/Styled';
 import { useAccount } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
 import { GET_FORWARDS } from '../../graphql/query';
 import { useQuery } from '@apollo/react-hooks';
 import { toast } from 'react-toastify';
@@ -32,15 +31,15 @@ export const ForwardsList = () => {
 
     const { theme } = useSettings();
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { loading, data } = useQuery(GET_FORWARDS, {
         variables: { auth, time },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     if (loading || !data || !data.getForwards) {

@@ -11,7 +11,6 @@ import {
 } from '../../components/generic/Styled';
 import { useQuery } from '@apollo/react-hooks';
 import { useAccount } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
 import { GET_CHANNEL_AMOUNT_INFO } from '../../graphql/query';
 import { useSettings } from '../../context/SettingsContext';
 import { textColorMap } from '../../styles/Themes';
@@ -26,11 +25,11 @@ export const ChannelView = () => {
 
     const { theme } = useSettings();
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { data } = useQuery(GET_CHANNEL_AMOUNT_INFO, {
         variables: { auth },

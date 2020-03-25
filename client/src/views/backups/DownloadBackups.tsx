@@ -4,22 +4,21 @@ import { saveToPc } from '../../helpers/Helpers';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { GET_BACKUPS } from '../../graphql/query';
 import { useAccount } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 
 export const DownloadBackups = () => {
     const { name, host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const [getBackups, { data, loading }] = useLazyQuery(GET_BACKUPS, {
         variables: { auth },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     useEffect(() => {

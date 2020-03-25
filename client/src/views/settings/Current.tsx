@@ -44,8 +44,8 @@ export const CurrentSettings = () => {
         <CardWithTitle>
             <SubTitle>Current Account:</SubTitle>
             <Card>
-                {renderField('Name:', name, 1)}
-                {renderField('Host:', host, 1)}
+                {renderField('Name:', name, 2)}
+                {renderField('Host:', host, 2)}
                 {renderField('AES-256 Encrypted Admin Macaroon:', admin)}
                 {renderField('Read-only Macaroon:', viewOnly)}
                 {renderField('Certificate:', cert)}

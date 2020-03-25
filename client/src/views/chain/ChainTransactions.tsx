@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { SubTitle, Card, CardWithTitle } from '../../components/generic/Styled';
 import { useAccount } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
 import { GET_CHAIN_TRANSACTIONS } from '../../graphql/query';
 import { useQuery } from '@apollo/react-hooks';
 import { toast } from 'react-toastify';
@@ -12,15 +11,15 @@ import { TransactionsCard } from './TransactionsCard';
 export const ChainTransactions = () => {
     const [indexOpen, setIndexOpen] = useState(0);
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { loading, data } = useQuery(GET_CHAIN_TRANSACTIONS, {
         variables: { auth },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     if (loading || !data || !data.getChainTransactions) {

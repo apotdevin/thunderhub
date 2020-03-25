@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_PEERS } from 'graphql/query';
 import { useAccount } from 'context/AccountContext';
-import { getAuthString } from 'utils/auth';
 import { CardWithTitle, SubTitle, Card } from 'components/generic/Styled';
 import { PeersCard } from './PeersCard';
 import { LoadingCard } from 'components/loading/LoadingCard';
@@ -11,17 +10,15 @@ import { AddPeer } from './AddPeer';
 export const PeersList = () => {
     const [indexOpen, setIndexOpen] = useState(0);
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { loading, data } = useQuery(GET_PEERS, {
         variables: { auth },
     });
-
-    console.log(data, loading);
 
     if (loading || !data || !data.getPeers) {
         return <LoadingCard title={'Peers'} />;

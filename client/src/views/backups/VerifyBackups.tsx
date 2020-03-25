@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAccount } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { VERIFY_BACKUPS } from '../../graphql/query';
 import { toast } from 'react-toastify';
@@ -20,14 +19,14 @@ export const VerifyBackups = () => {
     const [isPasting, setIsPasting] = useState<boolean>(false);
 
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const [verifyBackup, { data, loading }] = useLazyQuery(VERIFY_BACKUPS, {
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     useEffect(() => {
@@ -47,7 +46,7 @@ export const VerifyBackups = () => {
                 </NoWrap>
                 <Input
                     withMargin={'8px 0 0'}
-                    onChange={e => setBackupString(e.target.value)}
+                    onChange={(e) => setBackupString(e.target.value)}
                 />
             </SingleLine>
             <ColorButton
@@ -74,7 +73,7 @@ export const VerifyBackups = () => {
                 <ColorButton
                     withMargin={'4px 0'}
                     disabled={loading}
-                    onClick={() => setIsPasting(prev => !prev)}
+                    onClick={() => setIsPasting((prev) => !prev)}
                 >
                     {isPasting ? <XSvg /> : 'Verify'}
                 </ColorButton>
