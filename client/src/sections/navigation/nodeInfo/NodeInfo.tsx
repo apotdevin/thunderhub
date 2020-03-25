@@ -235,7 +235,11 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         <>
             <Title>
                 <Alias bottomColor={color}>{alias}</Alias>
-                {isOpen && <QuestionIcon data-tip={`Version: ${version}`} />}
+                {isOpen && (
+                    <QuestionIcon
+                        data-tip={`Version: ${version.split(' ')[0]}`}
+                    />
+                )}
             </Title>
             <Separation lineColor={unSelectedNavButton} />
             <Balance data-tip data-for="balance_tip">
