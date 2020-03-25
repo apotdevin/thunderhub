@@ -2,7 +2,6 @@ import { useConnectionState } from 'context/ConnectionContext';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_NODE_INFO } from 'graphql/query';
 import { useAccount } from 'context/AccountContext';
-import { getAuthString } from 'utils/auth';
 import { useStatusDispatch } from 'context/StatusContext';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -13,11 +12,11 @@ export const StatusCheck = () => {
     const dispatch = useStatusDispatch();
 
     const { loggedIn, host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { data, loading, error, stopPolling } = useQuery(GET_NODE_INFO, {
         variables: { auth },

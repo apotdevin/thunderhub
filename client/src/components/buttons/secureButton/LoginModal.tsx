@@ -10,7 +10,7 @@ import {
 import { Circle, ChevronRight } from '../../generic/Icons';
 import styled from 'styled-components';
 import { useAccount } from '../../../context/AccountContext';
-import { getAuthString, saveSessionAuth } from '../../../utils/auth';
+import { saveSessionAuth } from '../../../utils/auth';
 import { useSettings } from '../../../context/SettingsContext';
 import { textColorMap } from '../../../styles/Themes';
 import { ColorButton } from '../colorButton/ColorButton';
@@ -56,7 +56,7 @@ export const LoginModal = ({
                 saveSessionAuth(decrypted);
                 refreshAccount();
             }
-            const auth = getAuthString(host, decrypted, cert);
+            const auth = { host, macaroon: decrypted, cert };
             callback({ variables: { ...variables, auth } });
             setModalOpen(false);
         } catch (error) {
@@ -83,7 +83,7 @@ export const LoginModal = ({
             <SubTitle>Unlock your Account</SubTitle>
             <ResponsiveLine>
                 <Sub4Title>Password:</Sub4Title>
-                <Input onChange={e => setPass(e.target.value)} />
+                <Input onChange={(e) => setPass(e.target.value)} />
             </ResponsiveLine>
             <ResponsiveLine>
                 <NoWrapTitle>Don't ask me again this session:</NoWrapTitle>

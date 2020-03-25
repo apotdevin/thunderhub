@@ -4,7 +4,6 @@ import { GET_RESUME } from '../../graphql/query';
 import { Card, CardWithTitle, SubTitle } from '../../components/generic/Styled';
 import { InvoiceCard } from './InvoiceCard';
 import { useAccount } from '../../context/AccountContext';
-import { getAuthString } from '../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { PaymentsCard } from './PaymentsCards';
@@ -21,15 +20,15 @@ export const TransactionList = () => {
 
     const { theme } = useSettings();
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { loading, data, fetchMore } = useQuery(GET_RESUME, {
         variables: { auth, token: '' },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     useEffect(() => {

@@ -8,7 +8,6 @@ import {
 import { renderLine } from '../../../../components/generic/Helpers';
 import { useMutation } from '@apollo/react-hooks';
 import { useAccount } from '../../../../context/AccountContext';
-import { getAuthString } from '../../../../utils/auth';
 import { DECODE_REQUEST } from '../../../../graphql/mutation';
 import { getErrorContent } from '../../../../utils/error';
 import { toast } from 'react-toastify';
@@ -24,14 +23,14 @@ export const DecodeCard = ({ color }: { color: string }) => {
     const [request, setRequest] = useState('');
 
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const [decode, { data, loading }] = useMutation(DECODE_REQUEST, {
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     const renderData = () => {
@@ -76,7 +75,7 @@ export const DecodeCard = ({ color }: { color: string }) => {
                     }
                     color={color}
                     value={request}
-                    onChange={e => setRequest(e.target.value)}
+                    onChange={(e) => setRequest(e.target.value)}
                 />
                 <ColorButton
                     color={color}

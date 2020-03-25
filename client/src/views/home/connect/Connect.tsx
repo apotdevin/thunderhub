@@ -1,6 +1,5 @@
 import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { getAuthString } from '../../../utils/auth';
 import { useAccount } from '../../../context/AccountContext';
 import { GET_CONNECT_INFO } from '../../../graphql/query';
 import { toast } from 'react-toastify';
@@ -58,15 +57,15 @@ const sectionColor = '#fa541c';
 
 export const ConnectCard = () => {
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { loading, data } = useQuery(GET_CONNECT_INFO, {
         variables: { auth },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     if (!data || loading) {

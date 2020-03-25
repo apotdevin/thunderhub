@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Modal from '../../modal/ReactModal';
 import { LoginModal } from './LoginModal';
 import { useAccount } from '../../../context/AccountContext';
-import { getAuthString } from '../../../utils/auth';
 import { ColorButton } from '../colorButton/ColorButton';
 import { ColorButtonProps } from '../colorButton/ColorButton';
 
@@ -32,7 +31,7 @@ export const SecureButton = ({
         return null;
     }
 
-    const auth = getAuthString(host, sessionAdmin, cert);
+    const auth = { host, macaroon: sessionAdmin, cert };
 
     const handleClick = () => setModalOpen(true);
 

@@ -4,7 +4,6 @@ import { GET_CLOSED_CHANNELS } from '../../../graphql/query';
 import { Card } from '../../../components/generic/Styled';
 import { ClosedCard } from './ClosedCard';
 import { useAccount } from '../../../context/AccountContext';
-import { getAuthString } from '../../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
@@ -13,15 +12,15 @@ export const ClosedChannels = () => {
     const [indexOpen, setIndexOpen] = useState(0);
 
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { loading, data } = useQuery(GET_CLOSED_CHANNELS, {
         variables: { auth },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     if (loading || !data || !data.getClosedChannels) {

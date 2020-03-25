@@ -33,16 +33,6 @@ export const saveUserAuth = ({
 export const saveSessionAuth = (sessionAdmin: string) =>
     sessionStorage.setItem('session', sessionAdmin);
 
-export const getAuthString = (
-    host: string,
-    macaroon: string,
-    cert: string = '',
-) => ({
-    host,
-    macaroon,
-    cert,
-});
-
 export const getAuth = (account?: string) => {
     const accounts = JSON.parse(localStorage.getItem('accounts') || '[]');
     const currentActive = Math.max(

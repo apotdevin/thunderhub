@@ -16,7 +16,6 @@ import {
 } from '../../../components/generic/Icons';
 import { getTooltipType } from '../../../components/generic/Helpers';
 import { useAccount } from '../../../context/AccountContext';
-import { getAuthString } from '../../../utils/auth';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { textColorMap, unSelectedNavButton } from '../../../styles/Themes';
@@ -84,11 +83,11 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     } = useStatusState();
 
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { loading, data } = useQuery(GET_NODE_INFO, {
         variables: { auth },

@@ -6,18 +6,17 @@ import {
 import { useQuery } from '@apollo/react-hooks';
 import { GET_CAN_CONNECT } from 'graphql/query';
 import { useAccount } from 'context/AccountContext';
-import { getAuthString } from 'utils/auth';
 
 export const ConnectionCheck = () => {
     const { connected } = useConnectionState();
     const dispatch = useConnectionDispatch();
 
     const { loggedIn, host, viewOnly, cert, sessionAdmin } = useAccount();
-    const auth = getAuthString(
+    const auth = {
         host,
-        viewOnly !== '' ? viewOnly : sessionAdmin,
+        macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
         cert,
-    );
+    };
 
     const { data, loading } = useQuery(GET_CAN_CONNECT, {
         variables: { auth },
