@@ -59,7 +59,7 @@ const Balance = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 5px 0;
+    margin: 2px 0;
     padding: 0 5px;
     cursor: default;
 `;
@@ -92,7 +92,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
 
     const { loading, data } = useQuery(GET_NODE_INFO, {
         variables: { auth },
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     const { theme, currency } = useSettings();

@@ -157,6 +157,7 @@ export const BalanceView = () => {
 
             return (
                 <BalanceCard
+                    key={`${index}-${channel.id}`}
                     {...{ index, channel, withArrow: true }}
                     {...callback}
                 />

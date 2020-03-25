@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { getNextAvailable } from 'utils/storage';
 import { LoginForm } from './views/NormalLogin';
 import { ConnectLoginForm } from './views/ConnectLogin';
 import { BTCLoginForm } from './views/BTCLogin';
@@ -22,9 +21,7 @@ type AuthProps = {
 };
 
 export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
-    const next = getNextAvailable();
-
-    const { changeAccount } = useAccount();
+    const { changeAccount, accounts } = useAccount();
     const { push } = useHistory();
 
     const dispatch = useConnectionDispatch();
@@ -40,14 +37,12 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     const [adminChecked, setAdminChecked] = useState(false);
 
     const handleSet = ({
-        name,
         host,
         admin,
         viewOnly,
         cert,
         skipCheck,
     }: {
-        name?: string;
         host?: string;
         admin?: string;
         viewOnly?: string;
@@ -61,7 +56,6 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
         } else if (skipCheck) {
             quickSave({ name, cert, admin, viewOnly, host });
         } else {
-            name && setName(name);
             host && setHost(host);
             admin && setAdmin(admin);
             viewOnly && setViewOnly(viewOnly);
@@ -72,7 +66,7 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     };
 
     const quickSave = ({
-        name,
+        name = 'Unknown',
         host,
         admin,
         viewOnly,
@@ -85,17 +79,17 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
         cert?: string;
     }) => {
         saveUserAuth({
-            available: next,
             name,
             host: host || '',
             admin,
             viewOnly,
             cert,
+            accounts,
         });
 
         dispatch({ type: 'disconnected' });
         dispatchState({ type: 'disconnected' });
-        changeAccount(next);
+        changeAccount(name);
 
         push('/');
     };
@@ -112,17 +106,17 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
                     : undefined;
 
             saveUserAuth({
-                available: next,
                 name,
                 host,
                 admin: encryptedAdmin,
                 viewOnly,
                 cert,
+                accounts,
             });
 
             dispatch({ type: 'disconnected' });
             dispatchState({ type: 'disconnected' });
-            changeAccount(next);
+            changeAccount(name || 'Unknown');
 
             push('/');
         }
@@ -162,6 +156,7 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
                     setAdminChecked={setAdminChecked}
                     handleConnect={handleConnect}
                     callback={callback}
+                    setName={setName}
                 />
             )}
             {status === 'password' && (

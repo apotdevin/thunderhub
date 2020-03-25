@@ -9,12 +9,6 @@ import {
 } from '../../components/generic/Styled';
 import { SettingsLine } from './Settings';
 import { useAccount } from '../../context/AccountContext';
-import {
-    getNextAvailable,
-    getStorageSaved,
-    getAccountIndex,
-    deleteAccountPermissions,
-} from '../../utils/storage';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { XSvg } from '../../components/generic/Icons';
 import {
@@ -30,15 +24,13 @@ export const AccountSettings = () => {
     const [status, setStatus] = useState('none');
 
     const { push } = useHistory();
-    const { name, admin, viewOnly, changeAccount } = useAccount();
+    const { name, changeAccount, accounts } = useAccount();
 
     const dispatch = useConnectionDispatch();
     const dispatchState = useStatusDispatch();
 
     const [isType, setIsType] = useState('login');
     const [willAdd, setWillAdd] = useState(false);
-
-    const next = getNextAvailable();
 
     const renderButtons = () => (
         <SingleLine>
@@ -72,36 +64,7 @@ export const AccountSettings = () => {
         </SingleLine>
     );
 
-    const handleDelete = (admin?: boolean) => {
-        const index = getAccountIndex(name);
-        deleteAccountPermissions(index, admin);
-        dispatch({ type: 'disconnected' });
-        dispatchState({
-            type: 'disconnected',
-        });
-        changeAccount(index);
-        push('/');
-    };
-
-    const renderSwitch = () => {
-        return (
-            <SettingsLine>
-                <Sub4Title>Change Permissions</Sub4Title>
-                <MultiButton>
-                    <SingleButton onClick={() => handleDelete()}>
-                        View-Only
-                    </SingleButton>
-                    <SingleButton onClick={() => handleDelete(true)}>
-                        Admin-Only
-                    </SingleButton>
-                </MultiButton>
-            </SettingsLine>
-        );
-    };
-
     const renderChangeAccount = () => {
-        const accounts = getStorageSaved();
-
         if (accounts.length <= 1) {
             return null;
         }
@@ -110,23 +73,23 @@ export const AccountSettings = () => {
             <SettingsLine>
                 <Sub4Title>Change Account</Sub4Title>
                 <MultiButton>
-                    {accounts.map((entry, index) => {
+                    {accounts.map(({ name: accountName }, index) => {
                         return (
                             <SingleButton
-                                key={index}
-                                selected={name.localeCompare(entry.name) === 0}
+                                key={`${index}-${name}`}
+                                selected={accountName.localeCompare(name) === 0}
                                 onClick={() => {
-                                    if (name.localeCompare(entry.name) !== 0) {
+                                    if (accountName.localeCompare(name) !== 0) {
                                         dispatch({ type: 'disconnected' });
                                         dispatchState({
                                             type: 'disconnected',
                                         });
-                                        changeAccount(entry.index);
+                                        changeAccount(accountName);
                                         push('/');
                                     }
                                 }}
                             >
-                                {entry.name}
+                                {accountName}
                             </SingleButton>
                         );
                     })}
@@ -139,23 +102,20 @@ export const AccountSettings = () => {
         <CardWithTitle>
             <SubTitle>Account</SubTitle>
             <Card>
-                {admin && viewOnly && renderSwitch()}
                 {renderChangeAccount()}
-                {next && (
-                    <SettingsLine>
-                        <Sub4Title>Add Account</Sub4Title>
-                        <ColorButton
-                            onClick={() => {
-                                if (willAdd) {
-                                    setIsType('login');
-                                }
-                                setWillAdd(prev => !prev);
-                            }}
-                        >
-                            {willAdd ? <XSvg /> : 'Add New Account'}
-                        </ColorButton>
-                    </SettingsLine>
-                )}
+                <SettingsLine>
+                    <Sub4Title>Add Account</Sub4Title>
+                    <ColorButton
+                        onClick={() => {
+                            if (willAdd) {
+                                setIsType('login');
+                            }
+                            setWillAdd((prev) => !prev);
+                        }}
+                    >
+                        {willAdd ? <XSvg /> : 'Add New Account'}
+                    </ColorButton>
+                </SettingsLine>
                 {willAdd && (
                     <>
                         <Separation />

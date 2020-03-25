@@ -6,13 +6,11 @@ import { RiskCheckboxAndConfirm } from './Checkboxes';
 
 interface AuthProps {
     handleSet: ({
-        name,
         host,
         admin,
         viewOnly,
         cert,
     }: {
-        name?: string;
         host?: string;
         admin?: string;
         viewOnly?: string;
@@ -21,7 +19,6 @@ interface AuthProps {
 }
 
 export const ConnectLoginForm = ({ handleSet }: AuthProps) => {
-    const [name, setName] = useState('');
     const [url, setUrl] = useState('');
     const [checked, setChecked] = useState(false);
 
@@ -30,7 +27,6 @@ export const ConnectLoginForm = ({ handleSet }: AuthProps) => {
         const base64Cert = getBase64CertfromDerFormat(cert) || '';
 
         handleSet({
-            name,
             host: socket,
             admin: macaroon,
             cert: base64Cert,
@@ -42,12 +38,8 @@ export const ConnectLoginForm = ({ handleSet }: AuthProps) => {
     return (
         <>
             <Line>
-                <StyledTitle>Name:</StyledTitle>
-                <Input onChange={e => setName(e.target.value)} />
-            </Line>
-            <Line>
                 <StyledTitle>LND Connect Url:</StyledTitle>
-                <Input onChange={e => setUrl(e.target.value)} />
+                <Input onChange={(e) => setUrl(e.target.value)} />
             </Line>
             <RiskCheckboxAndConfirm
                 disabled={!canConnect}

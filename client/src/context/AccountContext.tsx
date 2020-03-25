@@ -1,6 +1,15 @@
 import React, { createContext, useState, useContext } from 'react';
 import merge from 'lodash.merge';
-import { getAuthParams } from '../utils/auth';
+import { getAuth } from 'utils/auth';
+import { saveAccounts } from 'utils/storage';
+
+interface SingleAccountProps {
+    name: string;
+    host: string;
+    admin: string;
+    viewOnly: string;
+    cert: string;
+}
 
 interface ChangeProps {
     loggedIn?: boolean;
@@ -20,8 +29,10 @@ interface AccountProps {
     sessionAdmin: string;
     viewOnly: string;
     cert: string;
+    accounts: SingleAccountProps[];
     setAccount: (newProps: ChangeProps) => void;
-    changeAccount: (account: number) => void;
+    changeAccount: (account: string) => void;
+    deleteAccount: (account: string) => void;
     refreshAccount: () => void;
 }
 
@@ -33,16 +44,16 @@ export const AccountContext = createContext<AccountProps>({
     sessionAdmin: '',
     viewOnly: '',
     cert: '',
+    accounts: [],
     setAccount: () => {},
     changeAccount: () => {},
+    deleteAccount: () => {},
     refreshAccount: () => {},
 });
 
 const AccountProvider = ({ children }: any) => {
-    const activeAccount = localStorage.getItem('account') || 'auth1';
     const sessionAdmin = sessionStorage.getItem('session') || '';
-    const { name, host, admin, viewOnly, cert } = getAuthParams(activeAccount);
-    const loggedIn = host !== '' && (viewOnly !== '' || sessionAdmin !== '');
+    const { name, host, admin, viewOnly, cert, accounts, loggedIn } = getAuth();
 
     const setAccount = ({
         loggedIn,
@@ -67,30 +78,68 @@ const AccountProvider = ({ children }: any) => {
         });
     };
 
-    const changeAccount = (account: number) => {
-        const newAccount = localStorage.getItem(`auth${account}-name`);
-        if (!newAccount) return;
+    const changeAccount = (currentActive: string) => {
+        const accounts = JSON.parse(localStorage.getItem('accounts') || '[]');
+        const index = accounts.findIndex(
+            (account: any) => account.name === currentActive,
+        );
+
+        if (index < 0) return;
 
         sessionStorage.removeItem('session');
-        localStorage.setItem('account', `auth${account}`);
+        localStorage.setItem('active', `${index}`);
 
-        refreshAccount(`auth${account}`);
+        refreshAccount(`${index}`);
+    };
+
+    const deleteAccount = (accountName: string) => {
+        const currentAccounts = JSON.parse(
+            localStorage.getItem('accounts') || '[]',
+        );
+        const current = currentAccounts.find(
+            (account: any) => account.name === accountName,
+        );
+
+        if (!current) return;
+
+        const isCurrentAccount = current.name === name;
+
+        const changedAccounts = [...currentAccounts].filter(
+            (account) => account.name !== accountName,
+        );
+        const length = changedAccounts.length;
+
+        if (isCurrentAccount) {
+            sessionStorage.removeItem('session');
+            localStorage.setItem('active', `${length - 1}`);
+        } else {
+            const newIndex = changedAccounts.findIndex(
+                (account: any) => account.name === name,
+            );
+            localStorage.setItem('active', `${newIndex}`);
+        }
+
+        saveAccounts(changedAccounts);
+
+        refreshAccount();
     };
 
     const refreshAccount = (account?: string) => {
-        const activeAccount = account
-            ? account
-            : localStorage.getItem('account') || 'auth1';
         const sessionAdmin = sessionStorage.getItem('session') || '';
-        const { name, host, admin, viewOnly, cert } = getAuthParams(
-            activeAccount,
-        );
-        const loggedIn =
-            host !== '' && (viewOnly !== '' || sessionAdmin !== '');
+        const {
+            name,
+            host,
+            admin,
+            viewOnly,
+            cert,
+            accounts,
+            loggedIn,
+        } = getAuth(account);
 
         updateAccount((prevState: any) => {
             const newState = { ...prevState };
-            return merge(newState, {
+
+            const merged = merge(newState, {
                 loggedIn,
                 name,
                 host,
@@ -99,6 +148,8 @@ const AccountProvider = ({ children }: any) => {
                 viewOnly,
                 cert,
             });
+
+            return { ...merged, accounts };
         });
     };
 
@@ -110,8 +161,10 @@ const AccountProvider = ({ children }: any) => {
         sessionAdmin,
         viewOnly,
         cert,
+        accounts,
         setAccount,
         changeAccount,
+        deleteAccount,
         refreshAccount,
     };
 

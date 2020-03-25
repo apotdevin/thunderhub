@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_CAN_CONNECT } from 'graphql/query';
 import { getAuthString } from 'utils/auth';
@@ -19,6 +19,7 @@ type ViewProps = {
     callback: () => void;
     setAdminChecked: (state: boolean) => void;
     handleConnect: () => void;
+    setName: (name: string) => void;
 };
 
 export const ViewCheck = ({
@@ -30,6 +31,7 @@ export const ViewCheck = ({
     setAdminChecked,
     handleConnect,
     callback,
+    setName,
 }: ViewProps) => {
     const [confirmed, setConfirmed] = useState(false);
 
@@ -38,6 +40,12 @@ export const ViewCheck = ({
         onCompleted: () => setConfirmed(true),
         onError: () => setConfirmed(false),
     });
+
+    useEffect(() => {
+        if (!loading && data && data.getNodeInfo) {
+            setName(data.getNodeInfo.alias);
+        }
+    }, [loading, data, setName]);
 
     const content = () => {
         if (loading) {

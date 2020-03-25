@@ -21,8 +21,6 @@ export const PeersList = () => {
         variables: { auth },
     });
 
-    console.log(data, loading);
-
     if (loading || !data || !data.getPeers) {
         return <LoadingCard title={'Peers'} />;
     }

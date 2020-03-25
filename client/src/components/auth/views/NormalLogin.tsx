@@ -10,13 +10,11 @@ import { RiskCheckboxAndConfirm } from './Checkboxes';
 
 interface AuthProps {
     handleSet: ({
-        name,
         host,
         admin,
         viewOnly,
         cert,
     }: {
-        name?: string;
         host?: string;
         admin?: string;
         viewOnly?: string;
@@ -28,21 +26,17 @@ export const LoginForm = ({ handleSet }: AuthProps) => {
     const [isViewOnly, setIsViewOnly] = useState(true);
     const [checked, setChecked] = useState(false);
 
-    const [name, setName] = useState('');
     const [host, setHost] = useState('');
     const [admin, setAdmin] = useState('');
     const [viewOnly, setRead] = useState('');
     const [cert, setCert] = useState('');
 
     const handleClick = () => {
-        handleSet({ name, host, admin, viewOnly, cert });
+        handleSet({ host, admin, viewOnly, cert });
     };
 
     const canConnect =
-        name !== '' &&
-        host !== '' &&
-        (admin !== '' || viewOnly !== '') &&
-        checked;
+        host !== '' && (admin !== '' || viewOnly !== '') && checked;
     return (
         <>
             <SingleLine>
@@ -63,17 +57,10 @@ export const LoginForm = ({ handleSet }: AuthProps) => {
                 </MultiButton>
             </SingleLine>
             <Line>
-                <StyledTitle>Name:</StyledTitle>
-                <Input
-                    placeholder={'Name for this node (e.g.: My Awesome Node)'}
-                    onChange={e => setName(e.target.value)}
-                />
-            </Line>
-            <Line>
                 <StyledTitle>Host:</StyledTitle>
                 <Input
                     placeholder={'Url and port (e.g.: www.node.com:443)'}
-                    onChange={e => setHost(e.target.value)}
+                    onChange={(e) => setHost(e.target.value)}
                 />
             </Line>
             {!isViewOnly && (
@@ -81,7 +68,7 @@ export const LoginForm = ({ handleSet }: AuthProps) => {
                     <StyledTitle>Admin:</StyledTitle>
                     <Input
                         placeholder={'Base64 or HEX Admin macaroon'}
-                        onChange={e => setAdmin(e.target.value)}
+                        onChange={(e) => setAdmin(e.target.value)}
                     />
                 </Line>
             )}
@@ -89,14 +76,14 @@ export const LoginForm = ({ handleSet }: AuthProps) => {
                 <StyledTitle>Readonly:</StyledTitle>
                 <Input
                     placeholder={'Base64 or HEX Readonly macaroon'}
-                    onChange={e => setRead(e.target.value)}
+                    onChange={(e) => setRead(e.target.value)}
                 />
             </Line>
             <Line>
                 <StyledTitle>Certificate:</StyledTitle>
                 <Input
                     placeholder={'Base64 or HEX TLS Certificate'}
-                    onChange={e => setCert(e.target.value)}
+                    onChange={(e) => setCert(e.target.value)}
                 />
             </Line>
             <RiskCheckboxAndConfirm
