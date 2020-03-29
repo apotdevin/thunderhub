@@ -12,6 +12,7 @@ import {
     MultiButton,
     SingleButton,
 } from 'components/buttons/multiButton/MultiButton';
+import { useAccount } from 'context/AccountContext';
 
 export const InterfaceSettings = () => {
     const {
@@ -21,6 +22,12 @@ export const InterfaceSettings = () => {
         setSettings,
         refreshSettings,
     } = useSettings();
+
+    const { accounts } = useAccount();
+
+    const viewOnlyAccounts = accounts.filter(
+        (account) => account.viewOnly !== '',
+    );
 
     const renderButton = (
         title: string,
@@ -54,13 +61,25 @@ export const InterfaceSettings = () => {
                         {renderButton('Dark', 'dark', 'theme', theme)}
                     </MultiButton>
                 </SettingsLine>
-                <SettingsLine>
-                    <Sub4Title>Show all accounts on homepage:</Sub4Title>
-                    <MultiButton>
-                        {renderButton('Yes', 'true', 'nodeInfo', `${nodeInfo}`)}
-                        {renderButton('No', 'false', 'nodeInfo', `${nodeInfo}`)}
-                    </MultiButton>
-                </SettingsLine>
+                {viewOnlyAccounts.length > 1 && (
+                    <SettingsLine>
+                        <Sub4Title>Show all accounts on homepage:</Sub4Title>
+                        <MultiButton>
+                            {renderButton(
+                                'Yes',
+                                'true',
+                                'nodeInfo',
+                                `${nodeInfo}`,
+                            )}
+                            {renderButton(
+                                'No',
+                                'false',
+                                'nodeInfo',
+                                `${nodeInfo}`,
+                            )}
+                        </MultiButton>
+                    </SettingsLine>
+                )}
                 <SettingsLine>
                     <Sub4Title>Currency:</Sub4Title>
                     <MultiButton margin={'0 0 0 16px'}>

@@ -40,7 +40,7 @@ export const NodeBar = () => {
         }
     };
 
-    if (viewOnlyAccounts.length <= 0 || !nodeInfo) {
+    if (viewOnlyAccounts.length <= 1 || !nodeInfo) {
         return null;
     }
 
