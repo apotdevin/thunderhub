@@ -79,9 +79,24 @@ export const getAuth = (account?: string) => {
             : defaultAccount;
 
     const { name, host, admin, viewOnly, cert, id } = activeAccount;
+    const currentId =
+        id ??
+        uuidv5(
+            `${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`,
+            THUNDERHUB_NAMESPACE,
+        );
     const loggedIn = host !== '' && (viewOnly !== '' || sessionAdmin !== '');
 
-    return { name, host, admin, viewOnly, cert, id, accounts, loggedIn };
+    return {
+        name,
+        host,
+        admin,
+        viewOnly,
+        cert,
+        id: currentId,
+        accounts,
+        loggedIn,
+    };
 };
 
 export const getAuthLnd = (lndconnect: string) => {
