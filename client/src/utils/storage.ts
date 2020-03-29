@@ -3,13 +3,13 @@ export const saveAccounts = (accounts: any[]) => {
 };
 
 export const deleteAccountPermissions = (
-    name: string,
+    id: string,
     accounts: any[],
     admin?: boolean,
 ): void => {
     const changedAccounts = [...accounts];
     changedAccounts.find((account, index) => {
-        if (account.name === name) {
+        if (account.id === id) {
             if (admin) {
                 changedAccounts[index] = { ...account, viewOnly: '' };
             } else {

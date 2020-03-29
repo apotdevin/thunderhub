@@ -48,7 +48,7 @@ import { ReactComponent as Github } from '../../assets/icons/github.svg';
 import { ReactComponent as Repeat } from '../../assets/icons/repeat.svg';
 import { ReactComponent as CheckIcon } from '../../assets/icons/check.svg';
 
-interface IconProps {
+export interface IconProps {
     color?: string;
     size?: string;
     fillcolor?: string;

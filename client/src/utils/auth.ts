@@ -1,5 +1,8 @@
 import base64url from 'base64url';
 import { saveAccounts } from './storage';
+import { v5 as uuidv5 } from 'uuid';
+
+const THUNDERHUB_NAMESPACE = '00000000-0000-0000-0000-000000000000';
 
 interface BuildProps {
     name?: string;
@@ -18,17 +21,30 @@ export const saveUserAuth = ({
     cert = '',
     accounts,
 }: BuildProps) => {
+    const id = getAccountId(host, viewOnly, admin, cert);
     const newAccount = {
         name,
         host,
         admin,
         viewOnly,
         cert,
+        id,
     };
 
     const newAccounts = [...accounts, newAccount];
     saveAccounts(newAccounts);
 };
+
+export const getAccountId = (
+    host: string = '',
+    viewOnly: string = '',
+    admin: string = '',
+    cert: string = '',
+) =>
+    uuidv5(
+        `${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`,
+        THUNDERHUB_NAMESPACE,
+    );
 
 export const saveSessionAuth = (sessionAdmin: string) =>
     sessionStorage.setItem('session', sessionAdmin);
@@ -54,6 +70,7 @@ export const getAuth = (account?: string) => {
         admin: '',
         viewOnly: '',
         cert: '',
+        id: '',
     };
 
     const activeAccount =
@@ -61,10 +78,10 @@ export const getAuth = (account?: string) => {
             ? accounts[active]
             : defaultAccount;
 
-    const { name, host, admin, viewOnly, cert } = activeAccount;
+    const { name, host, admin, viewOnly, cert, id } = activeAccount;
     const loggedIn = host !== '' && (viewOnly !== '' || sessionAdmin !== '');
 
-    return { name, host, admin, viewOnly, cert, accounts, loggedIn };
+    return { name, host, admin, viewOnly, cert, id, accounts, loggedIn };
 };
 
 export const getAuthLnd = (lndconnect: string) => {

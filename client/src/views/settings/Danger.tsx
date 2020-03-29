@@ -73,7 +73,7 @@ export const DangerView = () => {
         accounts,
         admin,
         viewOnly,
-        name,
+        id,
     } = useAccount();
 
     const dispatch = useConnectionDispatch();
@@ -85,13 +85,13 @@ export const DangerView = () => {
         if (accounts.length > 1) {
             return (
                 <MultiButton>
-                    {accounts.map(({ name: accountName }, index) => {
+                    {accounts.map(({ name: accountName, id: accountId }) => {
                         return (
                             <SingleButton
-                                key={`${index}-${accountName}`}
+                                key={accountId}
                                 color={'red'}
                                 onClick={() => {
-                                    deleteAccount(accountName);
+                                    deleteAccount(accountId);
                                 }}
                             >
                                 {accountName}
@@ -105,7 +105,7 @@ export const DangerView = () => {
                 <ColorButton
                     color={'red'}
                     onClick={() => {
-                        deleteAccount(accounts[0].name);
+                        deleteAccount(accounts[0].id);
                     }}
                 >
                     {accounts[0].name}
@@ -116,12 +116,12 @@ export const DangerView = () => {
     };
 
     const handleDelete = (admin?: boolean) => {
-        deleteAccountPermissions(name, accounts, admin);
+        deleteAccountPermissions(id, accounts, admin);
         dispatch({ type: 'disconnected' });
         dispatchState({
             type: 'disconnected',
         });
-        changeAccount(name);
+        changeAccount(id);
         push('/');
     };
 

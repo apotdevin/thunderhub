@@ -7,7 +7,7 @@ import { ViewCheck } from './checks/ViewCheck';
 import CryptoJS from 'crypto-js';
 import { useAccount } from 'context/AccountContext';
 import { useHistory } from 'react-router-dom';
-import { saveUserAuth } from 'utils/auth';
+import { saveUserAuth, getAccountId } from 'utils/auth';
 import { PasswordInput } from './views/Password';
 import { useConnectionDispatch } from 'context/ConnectionContext';
 import { useStatusDispatch } from 'context/StatusContext';
@@ -49,7 +49,19 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
         cert?: string;
         skipCheck?: boolean;
     }) => {
-        if (!host) {
+        const id = getAccountId(
+            host ?? '',
+            viewOnly ?? '',
+            admin ?? '',
+            cert ?? '',
+        );
+
+        const accountExists =
+            accounts.findIndex((account) => account.id === id) > -1;
+
+        if (accountExists) {
+            toast.error('Account already exists.');
+        } else if (!host) {
             toast.error('A host url is needed to connect.');
         } else if (!admin && !viewOnly) {
             toast.error('View-Only or Admin macaroon are needed to connect.');
@@ -87,9 +99,11 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
             accounts,
         });
 
+        const id = getAccountId(host, viewOnly, admin, cert);
+
         dispatch({ type: 'disconnected' });
         dispatchState({ type: 'disconnected' });
-        changeAccount(name);
+        changeAccount(id);
 
         push('/');
     };
@@ -114,9 +128,11 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
                 accounts,
             });
 
+            const id = getAccountId(host, viewOnly, admin, cert);
+
             dispatch({ type: 'disconnected' });
             dispatchState({ type: 'disconnected' });
-            changeAccount(name || 'Unknown');
+            changeAccount(id);
 
             push('/');
         }
