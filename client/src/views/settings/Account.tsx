@@ -24,7 +24,7 @@ export const AccountSettings = () => {
     const [status, setStatus] = useState('none');
 
     const { push } = useHistory();
-    const { name, changeAccount, accounts } = useAccount();
+    const { id, changeAccount, accounts } = useAccount();
 
     const dispatch = useConnectionDispatch();
     const dispatchState = useStatusDispatch();
@@ -73,18 +73,18 @@ export const AccountSettings = () => {
             <SettingsLine>
                 <Sub4Title>Change Account</Sub4Title>
                 <MultiButton>
-                    {accounts.map(({ name: accountName }, index) => {
+                    {accounts.map(({ name: accountName, id: accountId }) => {
                         return (
                             <SingleButton
-                                key={`${index}-${accountName}`}
-                                selected={accountName.localeCompare(name) === 0}
+                                key={accountId}
+                                selected={accountId === id}
                                 onClick={() => {
-                                    if (accountName.localeCompare(name) !== 0) {
+                                    if (accountId !== id) {
                                         dispatch({ type: 'disconnected' });
                                         dispatchState({
                                             type: 'disconnected',
                                         });
-                                        changeAccount(accountName);
+                                        changeAccount(accountId);
                                         push('/');
                                     }
                                 }}
