@@ -6,11 +6,13 @@ import { FlowBox } from './reports/flow';
 import { ForwardBox } from './reports/forwardReport';
 import { LiquidReport } from './reports/liquidReport/LiquidReport';
 import { ConnectCard } from './connect/Connect';
+import { NodeBar } from 'components/nodeInfo/NodeBar';
 
 export const Home = () => {
     return (
         <>
             <AccountInfo />
+            <NodeBar />
             <ConnectCard />
             <QuickActions />
             <FlowBox />

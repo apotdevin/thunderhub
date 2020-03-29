@@ -9,6 +9,7 @@ interface SingleAccountProps {
     admin: string;
     viewOnly: string;
     cert: string;
+    id: string;
 }
 
 interface ChangeProps {
@@ -19,6 +20,7 @@ interface ChangeProps {
     sessionAdmin?: string;
     viewOnly?: string;
     cert?: string;
+    id?: string;
 }
 
 interface AccountProps {
@@ -29,6 +31,7 @@ interface AccountProps {
     sessionAdmin: string;
     viewOnly: string;
     cert: string;
+    id: string;
     accounts: SingleAccountProps[];
     setAccount: (newProps: ChangeProps) => void;
     changeAccount: (account: string) => void;
@@ -44,6 +47,7 @@ export const AccountContext = createContext<AccountProps>({
     sessionAdmin: '',
     viewOnly: '',
     cert: '',
+    id: '',
     accounts: [],
     setAccount: () => {},
     changeAccount: () => {},
@@ -53,7 +57,16 @@ export const AccountContext = createContext<AccountProps>({
 
 const AccountProvider = ({ children }: any) => {
     const sessionAdmin = sessionStorage.getItem('session') || '';
-    const { name, host, admin, viewOnly, cert, accounts, loggedIn } = getAuth();
+    const {
+        name,
+        host,
+        admin,
+        viewOnly,
+        cert,
+        id,
+        accounts,
+        loggedIn,
+    } = getAuth();
 
     const setAccount = ({
         loggedIn,
@@ -63,6 +76,7 @@ const AccountProvider = ({ children }: any) => {
         sessionAdmin,
         viewOnly,
         cert,
+        id,
     }: ChangeProps) => {
         updateAccount((prevState: any) => {
             const newState = { ...prevState };
@@ -74,14 +88,17 @@ const AccountProvider = ({ children }: any) => {
                 sessionAdmin,
                 viewOnly,
                 cert,
+                id,
             });
         });
     };
 
-    const changeAccount = (currentActive: string) => {
-        const accounts = JSON.parse(localStorage.getItem('accounts') || '[]');
-        const index = accounts.findIndex(
-            (account: any) => account.name === currentActive,
+    const changeAccount = (changeToId: string) => {
+        const currentAccounts = JSON.parse(
+            localStorage.getItem('accounts') || '[]',
+        );
+        const index = currentAccounts.findIndex(
+            (account: any) => account.id === changeToId,
         );
 
         if (index < 0) return;
@@ -92,20 +109,20 @@ const AccountProvider = ({ children }: any) => {
         refreshAccount(`${index}`);
     };
 
-    const deleteAccount = (accountName: string) => {
+    const deleteAccount = (deleteId: string) => {
         const currentAccounts = JSON.parse(
             localStorage.getItem('accounts') || '[]',
         );
         const current = currentAccounts.find(
-            (account: any) => account.name === accountName,
+            (account: any) => account.id === deleteId,
         );
 
         if (!current) return;
 
-        const isCurrentAccount = current.name === name;
+        const isCurrentAccount = current.id === id;
 
         const changedAccounts = [...currentAccounts].filter(
-            (account) => account.name !== accountName,
+            (account) => account.id !== deleteId,
         );
         const length = changedAccounts.length;
 
@@ -114,7 +131,7 @@ const AccountProvider = ({ children }: any) => {
             localStorage.setItem('active', `${length - 1}`);
         } else {
             const newIndex = changedAccounts.findIndex(
-                (account: any) => account.name === name,
+                (account: any) => account.id === id,
             );
             localStorage.setItem('active', `${newIndex}`);
         }
@@ -132,6 +149,7 @@ const AccountProvider = ({ children }: any) => {
             admin,
             viewOnly,
             cert,
+            id,
             accounts,
             loggedIn,
         } = getAuth(account);
@@ -147,6 +165,7 @@ const AccountProvider = ({ children }: any) => {
                 sessionAdmin,
                 viewOnly,
                 cert,
+                id,
             });
 
             return { ...merged, accounts };
@@ -161,6 +180,7 @@ const AccountProvider = ({ children }: any) => {
         sessionAdmin,
         viewOnly,
         cert,
+        id,
         accounts,
         setAccount,
         changeAccount,
