@@ -1,8 +1,7 @@
 {
-    "name": "thunderhub",
-    "version": "0.1.7",
+    "name": "thunderhub-server",
+    "version": "0.1.14",
     "description": "",
-    "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "webpack --config webpack.production.js",
@@ -16,8 +15,8 @@
         "url": "git+https://github.com/apotdevin/thunderhub.git"
     },
     "keywords": [],
-    "author": "",
-    "license": "ISC",
+    "author": "apotdevin",
+    "license": "MIT",
     "dependencies": {
         "@types/graphql-depth-limit": "^1.1.2",
         "@types/graphql-iso-date": "^3.3.3",
