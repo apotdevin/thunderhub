@@ -13,8 +13,8 @@ Coverage of LND's API
 - [ ] SubscribeTransactions
 - [ ] SendMany
 - [x] NewAddress
-- [ ] SignMessage
-- [ ] VerifyMessage
+- [x] SignMessage
+- [x] VerifyMessage
 - [x] ConnectPeer
 - [x] DisconnectPeer
 - [x] ListPeers

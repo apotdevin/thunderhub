@@ -8,7 +8,6 @@ import { NotFound } from '../../views/notFound/NotFound';
 import { ChannelView } from '../../views/channels/ChannelView';
 import { SettingsView } from '../../views/settings/Settings';
 import { TransactionList } from '../../views/transactions/TransactionList';
-import { BackupsView } from '../../views/backups/Backups';
 import { FeesView } from '../../views/fees/Fees';
 import { ChainTransactions } from '../../views/chain/ChainTransactions';
 import { ForwardsList } from '../../views/forwards/ForwardList';
@@ -23,6 +22,7 @@ import { useConnectionState } from 'context/ConnectionContext';
 import { LoadingView, ErrorView } from 'views/stateViews/StateCards';
 import { BalanceView } from 'views/balance/Balance';
 import { PeersList } from 'views/peers/PeersList';
+import { ToolsView } from 'views/tools';
 
 const Container = styled.div`
     display: grid;
@@ -67,7 +67,7 @@ const Content = () => {
                 <Route path="/peers" render={() => getGrid(PeersList)} />
                 <Route path="/channels" render={() => getGrid(ChannelView)} />
                 <Route path="/balance" render={() => getGrid(BalanceView)} />
-                <Route path="/backups" render={() => getGrid(BackupsView)} />
+                <Route path="/tools" render={() => getGrid(ToolsView)} />
                 <Route
                     path="/transactions"
                     render={() => getGrid(TransactionList)}

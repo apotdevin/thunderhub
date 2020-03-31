@@ -44,4 +44,6 @@ export const RateConfig: RateConfigProps = {
     getPeers: { max: 10, window: '1s' },
     addPeer: { max: 10, window: '1s' },
     removePeer: { max: 10, window: '1s' },
+    signMessage: { max: 10, window: '1s' },
+    verifyMessage: { max: 10, window: '1s' },
 };
