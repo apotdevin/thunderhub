@@ -8,18 +8,12 @@ import {
     Sub4Title,
     ResponsiveLine,
     DarkSubTitle,
-} from '../../components/generic/Styled';
+} from '../../../components/generic/Styled';
 import { DownloadBackups } from './DownloadBackups';
 import { VerifyBackups } from './VerifyBackups';
 import { RecoverFunds } from './RecoverFunds';
-import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
-import styled from 'styled-components';
+import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { getDateDif, getFormatDate } from 'components/generic/Helpers';
-
-export const NoWrap = styled.div`
-    margin-right: 16px;
-    white-space: nowrap;
-`;
 
 export const BackupsView = () => {
     const lastDate = localStorage.getItem('lastBackup');
@@ -34,7 +28,7 @@ export const BackupsView = () => {
     return (
         <CardWithTitle>
             <CardTitle>
-                <SubTitle>General Backup</SubTitle>
+                <SubTitle>Backups</SubTitle>
             </CardTitle>
             <Card>
                 <ResponsiveLine>

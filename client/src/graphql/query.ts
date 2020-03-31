@@ -287,6 +287,22 @@ export const VERIFY_BACKUPS = gql`
     }
 `;
 
+export const SIGN_MESSAGE = gql`
+    query SignMessage($auth: authType!, $message: String!) {
+        signMessage(auth: $auth, message: $message)
+    }
+`;
+
+export const VERIFY_MESSAGE = gql`
+    query VerifyMessage(
+        $auth: authType!
+        $message: String!
+        $signature: String!
+    ) {
+        verifyMessage(auth: $auth, message: $message, signature: $signature)
+    }
+`;
+
 export const RECOVER_FUNDS = gql`
     query RecoverFunds($auth: authType!, $backup: String!) {
         recoverFunds(auth: $auth, backup: $backup)

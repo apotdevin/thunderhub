@@ -121,7 +121,7 @@ const BALANCE = '/balance';
 const TRANS = '/transactions';
 const FORWARDS = '/forwards';
 const CHAIN_TRANS = '/chainTransactions';
-const BACKUPS = '/backups';
+const TOOLS = '/tools';
 const SETTINGS = '/settings';
 const FEES = '/fees';
 
@@ -168,7 +168,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
             {renderNavButton('Transactions', TRANS, Server, sidebar)}
             {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
             {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
-            {renderNavButton('Backups', BACKUPS, Shield, sidebar)}
+            {renderNavButton('Tools', TOOLS, Shield, sidebar)}
             {renderNavButton('Settings', SETTINGS, Settings, sidebar)}
         </ButtonSection>
     );
@@ -183,7 +183,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
             {renderBurgerNav('Transactions', TRANS, Server)}
             {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}
             {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
-            {renderBurgerNav('Backups', BACKUPS, Shield)}
+            {renderBurgerNav('Tools', TOOLS, Shield)}
             {renderBurgerNav('Settings', SETTINGS, Settings)}
         </BurgerRow>
     );

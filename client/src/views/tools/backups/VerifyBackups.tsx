@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useAccount } from '../../context/AccountContext';
+import { useAccount } from '../../../context/AccountContext';
 import { useLazyQuery } from '@apollo/react-hooks';
-import { VERIFY_BACKUPS } from '../../graphql/query';
+import { VERIFY_BACKUPS } from '../../../graphql/query';
 import { toast } from 'react-toastify';
-import { getErrorContent } from '../../utils/error';
+import { getErrorContent } from '../../../utils/error';
 import {
     SingleLine,
     DarkSubTitle,
     Separation,
-} from '../../components/generic/Styled';
-import { XSvg } from '../../components/generic/Icons';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { NoWrap } from './Backups';
+} from '../../../components/generic/Styled';
+import { XSvg } from '../../../components/generic/Icons';
+import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Input } from 'components/input/Input';
+import { NoWrap } from '../Tools.styled';
 
 export const VerifyBackups = () => {
     const [backupString, setBackupString] = useState<string>('');
@@ -73,6 +73,7 @@ export const VerifyBackups = () => {
                 <ColorButton
                     withMargin={'4px 0'}
                     disabled={loading}
+                    arrow={!isPasting}
                     onClick={() => setIsPasting((prev) => !prev)}
                 >
                     {isPasting ? <XSvg /> : 'Verify'}
