@@ -5,19 +5,19 @@ import {
     SingleLine,
     DarkSubTitle,
     ResponsiveLine,
-} from '../../components/generic/Styled';
-import { MainInfo } from '../channels/Channels.style';
+} from '../../../components/generic/Styled';
+import { MainInfo } from '../../channels/Channels.style';
 import {
     getDateDif,
     getFormatDate,
     renderLine,
-} from '../../components/generic/Helpers';
+} from '../../../components/generic/Helpers';
 import styled from 'styled-components';
 import { getPrice } from 'components/price/Price';
 import { useSettings } from 'context/SettingsContext';
 import { usePriceState } from 'context/PriceContext';
 
-export const AddMargin = styled.div`
+const AddMargin = styled.div`
     margin-right: 10px;
 `;
 
