@@ -8,6 +8,7 @@ import { backupQueries } from './backup';
 import { routeQueries } from './route';
 import { peerQueries } from './peer';
 import { messageQueries } from './message';
+import { chainQueries } from './chain';
 
 export const query = {
     ...channelQueries,
@@ -20,4 +21,5 @@ export const query = {
     ...routeQueries,
     ...peerQueries,
     ...messageQueries,
+    ...chainQueries,
 };

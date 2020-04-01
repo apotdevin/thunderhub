@@ -187,6 +187,10 @@ export const OverflowText = styled.div`
     word-wrap: break-word;
     -ms-word-break: break-all;
     word-break: break-all;
+
+    @media (${mediaWidths.mobile}) {
+        margin-left: 8px;
+    }
 `;
 
 export const ResponsiveLine = styled(SingleLine)`
