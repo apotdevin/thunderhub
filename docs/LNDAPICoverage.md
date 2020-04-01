@@ -9,7 +9,7 @@ Coverage of LND's API
 - [x] GetTransactions
 - [ ] EstimateFee
 - [x] SendCoins
-- [ ] ListUnspent
+- [x] ListUnspent
 - [ ] SubscribeTransactions
 - [ ] SendMany
 - [x] NewAddress
