@@ -1,6 +1,6 @@
 {
     "name": "thunderhub-server",
-    "version": "0.1.15",
+    "version": "0.1.16",
     "description": "",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
