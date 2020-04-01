@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { SubTitle, Card, CardWithTitle } from '../../components/generic/Styled';
-import { useAccount } from '../../context/AccountContext';
-import { GET_CHAIN_TRANSACTIONS } from '../../graphql/query';
+import {
+    SubTitle,
+    Card,
+    CardWithTitle,
+} from '../../../components/generic/Styled';
+import { useAccount } from '../../../context/AccountContext';
+import { GET_CHAIN_TRANSACTIONS } from '../../../graphql/query';
 import { useQuery } from '@apollo/react-hooks';
 import { toast } from 'react-toastify';
-import { getErrorContent } from '../../utils/error';
-import { LoadingCard } from '../../components/loading/LoadingCard';
+import { getErrorContent } from '../../../utils/error';
+import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { TransactionsCard } from './TransactionsCard';
 
 export const ChainTransactions = () => {

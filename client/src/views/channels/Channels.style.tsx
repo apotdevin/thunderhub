@@ -66,6 +66,10 @@ export const DetailLine = styled.div`
     word-wrap: break-word;
     display: flex;
     justify-content: space-between;
+
+    @media (${mediaWidths.mobile}) {
+        flex-wrap: wrap;
+    }
 `;
 
 export const MainInfo = styled.div`

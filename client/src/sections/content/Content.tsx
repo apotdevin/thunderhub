@@ -9,7 +9,6 @@ import { ChannelView } from '../../views/channels/ChannelView';
 import { SettingsView } from '../../views/settings/Settings';
 import { TransactionList } from '../../views/transactions/TransactionList';
 import { FeesView } from '../../views/fees/Fees';
-import { ChainTransactions } from '../../views/chain/ChainTransactions';
 import { ForwardsList } from '../../views/forwards/ForwardList';
 import { TermsView } from '../../views/other/terms/TermsView';
 import { PrivacyView } from '../../views/other/privacy/PrivacyView';
@@ -23,6 +22,7 @@ import { LoadingView, ErrorView } from 'views/stateViews/StateCards';
 import { BalanceView } from 'views/balance/Balance';
 import { PeersList } from 'views/peers/PeersList';
 import { ToolsView } from 'views/tools';
+import { ChainView } from 'views/chain/ChainView';
 
 const Container = styled.div`
     display: grid;
@@ -75,7 +75,7 @@ const Content = () => {
                 <Route path="/forwards" render={() => getGrid(ForwardsList)} />
                 <Route
                     path="/chaintransactions"
-                    render={() => getGrid(ChainTransactions)}
+                    render={() => getGrid(ChainView)}
                 />
                 <Route path="/settings" render={() => getGrid(SettingsView)} />
                 <Route path="/fees" render={() => getGrid(FeesView)} />
