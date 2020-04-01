@@ -4,6 +4,7 @@ services:
   ### SETUP SERVER CONTAINER
   ##########################
   backend:
+    image: apotdevin/thunderhub-server
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -18,13 +19,12 @@ services:
   ### SETUP CLIENT CONTAINER
   ##########################
   frontend:
+    image: apotdevin/thunderhub-client
     build:
       context: ./client
       dockerfile: Dockerfile
-    environment:
-      - NODE_ENV=production
     ports:
-      - "80:80"
+      - "5000:5000"
     volumes:
       - ./client/
     depends_on:
