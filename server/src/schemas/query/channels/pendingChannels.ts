@@ -3,11 +3,11 @@ import {
     getNode,
 } from 'ln-service';
 import { logger } from '../../../helpers/logger';
-import { PendingChannelType } from '../../../schemaTypes/query/channels/pendingChannels';
 import { GraphQLList } from 'graphql';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { PendingChannelType } from '../../types/QueryType';
 
 interface PendingChannelListProps {
     pending_channels: PendingChannelProps[];
@@ -46,7 +46,7 @@ export const getPendingChannels = {
             );
 
             const channels = pendingChannels.pending_channels.map(
-                async channel => {
+                async (channel) => {
                     const nodeInfo = await getNode({
                         lnd,
                         is_omitting_channels: true,

@@ -1,11 +1,11 @@
 import { GraphQLList, GraphQLString } from 'graphql';
 import { getClosedChannels as getLnClosedChannels, getNode } from 'ln-service';
 import { logger } from '../../../helpers/logger';
-import { ClosedChannelType } from '../../../schemaTypes/query/channels/closedChannels';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 
 import { defaultParams } from '../../../helpers/defaultProps';
+import { ClosedChannelType } from '../../types/QueryType';
 
 interface ChannelListProps {
     channels: ChannelProps[];
@@ -43,7 +43,7 @@ export const getClosedChannels = {
             const closedChannels: ChannelListProps = await getLnClosedChannels({
                 lnd,
             });
-            const channels = closedChannels.channels.map(async channel => {
+            const channels = closedChannels.channels.map(async (channel) => {
                 const nodeInfo = await getNode({
                     lnd,
                     is_omitting_channels: true,

@@ -2,8 +2,8 @@ import { getChannels } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
-import { ChannelReportType } from '../../../schemaTypes/query/channels/channelReport';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { ChannelReportType } from '../../types/QueryType';
 
 interface GetChannelsProps {
     channels: ChannelsProps[];
@@ -31,14 +31,14 @@ export const getChannelReport = {
 
             const maxOutgoing = Math.max.apply(
                 Math,
-                channels.channels.map(o => {
+                channels.channels.map((o) => {
                     return o.local_balance;
                 }),
             );
 
             const maxIncoming = Math.max.apply(
                 Math,
-                channels.channels.map(o => {
+                channels.channels.map((o) => {
                     return o.remote_balance;
                 }),
             );
