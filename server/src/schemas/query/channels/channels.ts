@@ -1,10 +1,10 @@
 import { GraphQLList, GraphQLBoolean } from 'graphql';
 import { getChannels as getLnChannels, getNode } from 'ln-service';
 import { logger } from '../../../helpers/logger';
-import { ChannelType } from '../../../schemaTypes/query/channels/channels';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { ChannelType } from '../../types/QueryType';
 
 interface ChannelListProps {
     channels: ChannelProps[];
@@ -55,7 +55,7 @@ export const getChannels = {
 
             const getChannelList = () =>
                 Promise.all(
-                    channelList.channels.map(async channel => {
+                    channelList.channels.map(async (channel) => {
                         const nodeInfo = await getNode({
                             lnd,
                             is_omitting_channels: true,

@@ -8,8 +8,8 @@ import {
     GraphQLInt,
 } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
-import { SendToType } from '../../../schemaTypes/mutation/onchain/sentToAddress';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { SendToType } from '../../types/MutationType';
 
 interface SendProps {
     confirmation_count: number;

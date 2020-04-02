@@ -3,8 +3,8 @@ import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLList } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
-import { ChannelFeeType } from '../../../schemaTypes/query/channels/channelFees';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { ChannelFeeType } from '../../types/QueryType';
 
 interface GetChannelsProps {
     channels: ChannelsProps[];
@@ -46,7 +46,7 @@ export const getChannelFees = {
 
             const getConsolidated = () =>
                 Promise.all(
-                    channels.channels.map(async channel => {
+                    channels.channels.map(async (channel) => {
                         const nodeInfo: NodeProps = await getNode({
                             lnd,
                             is_omitting_channels: true,
@@ -54,7 +54,7 @@ export const getChannelFees = {
                         });
 
                         const fees = channelFees.channels.find(
-                            channelFee =>
+                            (channelFee) =>
                                 channelFee.transaction_id ===
                                 channel.transaction_id,
                         );

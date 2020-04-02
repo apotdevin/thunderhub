@@ -2,9 +2,9 @@ import { pay as payRequest } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
-import { PayType } from '../../../schemaTypes/mutation/invoice/pay';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { PayType } from '../../types/MutationType';
 
 interface HopProps {
     channel: string;

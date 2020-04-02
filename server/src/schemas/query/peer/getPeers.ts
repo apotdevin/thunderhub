@@ -5,7 +5,7 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 
 import { defaultParams } from '../../../helpers/defaultProps';
-import { PeerType } from './getPeers.types';
+import { PeerType } from '../../types/QueryType';
 
 interface PeerProps {
     bytes_received: number;

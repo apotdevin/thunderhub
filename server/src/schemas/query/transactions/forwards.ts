@@ -7,12 +7,12 @@ import {
 } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GetForwardType } from '../../../schemaTypes/query/transactions/forwards';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { sortBy } from 'underscore';
 import { ForwardCompleteProps } from '../report/ForwardReport.interface';
 import { subHours, subDays, subMonths, subYears } from 'date-fns';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { GetForwardType } from '../../types/QueryType';
 
 interface NodeProps {
     alias: string;
@@ -80,7 +80,7 @@ export const getForwards = {
 
         const getAlias = (array: any[], publicKey: string) =>
             Promise.all(
-                array.map(async forward => {
+                array.map(async (forward) => {
                     const inNodeAlias = await getNodeAlias(
                         forward.incoming_channel,
                         publicKey,

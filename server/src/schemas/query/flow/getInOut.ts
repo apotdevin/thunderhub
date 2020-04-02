@@ -9,9 +9,9 @@ import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { differenceInHours, differenceInCalendarDays } from 'date-fns';
 import { groupBy } from 'underscore';
 import { reduceInOutArray } from '../report/Helpers';
-import { InOutType } from '../../../schemaTypes/query/flow/InOut';
 import { InvoicesProps, PaymentsProps } from './getInOut.interface';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { InOutType } from '../../types/QueryType';
 
 export const getInOut = {
     type: InOutType,
@@ -50,28 +50,28 @@ export const getInOut = {
             throw new Error(getErrorMsg(error));
         }
 
-        const invoices = invoiceList.invoices.map(invoice => ({
+        const invoices = invoiceList.invoices.map((invoice) => ({
             createdAt: invoice.created_at,
             isConfirmed: invoice.is_confirmed,
             tokens: invoice.received,
         }));
 
-        const payments = paymentList.payments.map(payment => ({
+        const payments = paymentList.payments.map((payment) => ({
             createdAt: payment.created_at,
             isConfirmed: payment.is_confirmed,
             tokens: payment.tokens,
         }));
 
-        const confirmedInvoices = invoices.filter(invoice => {
+        const confirmedInvoices = invoices.filter((invoice) => {
             const dif = differenceFn(endDate, new Date(invoice.createdAt));
             return invoice.isConfirmed && dif < periods;
         });
-        const confirmedPayments = payments.filter(payment => {
+        const confirmedPayments = payments.filter((payment) => {
             const dif = differenceFn(endDate, new Date(payment.createdAt));
             return payment.isConfirmed && dif < periods;
         });
 
-        const allInvoices = invoices.filter(invoice => {
+        const allInvoices = invoices.filter((invoice) => {
             const dif = differenceFn(endDate, new Date(invoice.createdAt));
             return dif < periods;
         });
@@ -79,10 +79,10 @@ export const getInOut = {
         const totalConfirmed = confirmedInvoices.length;
         const totalUnConfirmed = allInvoices.length - totalConfirmed;
 
-        const orderedInvoices = groupBy(confirmedInvoices, invoice => {
+        const orderedInvoices = groupBy(confirmedInvoices, (invoice) => {
             return periods - differenceFn(endDate, new Date(invoice.createdAt));
         });
-        const orderedPayments = groupBy(confirmedPayments, payment => {
+        const orderedPayments = groupBy(confirmedPayments, (payment) => {
             return periods - differenceFn(endDate, new Date(payment.createdAt));
         });
 

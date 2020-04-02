@@ -2,9 +2,9 @@ import { parsePaymentRequest } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
-import { ParsePaymentType } from '../../../schemaTypes/mutation/invoice/parsePayment';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { ParsePaymentType } from '../../types/MutationType';
 
 interface RouteProps {
     base_fee_mtokens: string;

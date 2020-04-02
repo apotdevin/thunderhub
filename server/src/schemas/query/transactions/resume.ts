@@ -6,8 +6,8 @@ import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { PaymentsProps, InvoicesProps, NodeProps } from './resume.interface';
 import { compareDesc } from 'date-fns';
 import { sortBy } from 'underscore';
-import { GetResumeType } from '../../../schemaTypes/query/transactions/resume';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { GetResumeType } from '../../types/QueryType';
 
 export const getResume = {
     type: GetResumeType,
@@ -30,7 +30,7 @@ export const getResume = {
 
             const getMappedPayments = () =>
                 Promise.all(
-                    paymentList.payments.map(async payment => {
+                    paymentList.payments.map(async (payment) => {
                         let nodeInfo: NodeProps;
                         try {
                             nodeInfo = await getNode({
@@ -70,7 +70,7 @@ export const getResume = {
                 ...invoiceProps,
             });
 
-            invoices = invoiceList.invoices.map(invoice => {
+            invoices = invoiceList.invoices.map((invoice) => {
                 return {
                     type: 'invoice',
                     date: invoice.confirmed_at || invoice.created_at,
@@ -92,7 +92,7 @@ export const getResume = {
         }
 
         const filteredPayments = withInvoices
-            ? payments.filter(payment => {
+            ? payments.filter((payment) => {
                   const last =
                       compareDesc(
                           new Date(lastInvoiceDate),

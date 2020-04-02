@@ -1,9 +1,9 @@
 import { getWalletInfo, getClosedChannels } from 'ln-service';
 import { logger } from '../../../helpers/logger';
-import { NodeInfoType } from '../../../schemaTypes/query/info/nodeInfo';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { NodeInfoType } from '../../types/QueryType';
 
 interface NodeInfoProps {
     chains: string[];

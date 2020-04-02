@@ -2,9 +2,9 @@ import { createInvoice as createInvoiceRequest } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLNonNull, GraphQLInt } from 'graphql';
-import { InvoiceType } from '../../../schemaTypes/mutation/invoice/createInvoice';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { InvoiceType } from '../../types/MutationType';
 
 interface InvoiceProps {
     chain_address: string;
