@@ -8,7 +8,7 @@ import {
     GraphQLInt,
 } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
-import { SendToType } from '../../../schemaTypes/mutation.ts/onchain/sentToAddress';
+import { SendToType } from '../../../schemaTypes/mutation/onchain/sentToAddress';
 import { defaultParams } from '../../../helpers/defaultProps';
 
 interface SendProps {

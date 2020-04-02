@@ -3,7 +3,7 @@ import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
-import { DecodeType } from '../../../schemaTypes/mutation.ts/invoice/decode';
+import { DecodeType } from '../../../schemaTypes/mutation/invoice/decode';
 import { defaultParams } from '../../../helpers/defaultProps';
 
 interface RouteProps {
@@ -43,8 +43,8 @@ export const decodeRequest = {
                 request: params.request,
             });
 
-            const routes = decode.routes.map(route => {
-                route.map(nodeChannel => {
+            const routes = decode.routes.map((route) => {
+                route.map((nodeChannel) => {
                     const {
                         base_fee_mtokens,
                         channel,

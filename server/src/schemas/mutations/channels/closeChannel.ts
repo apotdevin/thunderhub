@@ -7,7 +7,7 @@ import {
     GraphQLInt,
     GraphQLNonNull,
 } from 'graphql';
-import { CloseChannelType } from '../../../schemaTypes/mutation.ts/channels/closeChannel';
+import { CloseChannelType } from '../../../schemaTypes/mutation/channels/closeChannel';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 

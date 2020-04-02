@@ -7,7 +7,7 @@ import {
     GraphQLInt,
     GraphQLNonNull,
 } from 'graphql';
-import { OpenChannelType } from '../../../schemaTypes/mutation.ts/channels/openChannel';
+import { OpenChannelType } from '../../../schemaTypes/mutation/channels/openChannel';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 
