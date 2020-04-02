@@ -1,10 +1,10 @@
 import { getNetworkInfo as getLnNetworkInfo } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { NetworkInfoType } from '../../../schemaTypes/query/info/networkInfo';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 
 import { defaultParams } from '../../../helpers/defaultProps';
+import { NetworkInfoType } from '../../types/QueryType';
 
 interface NetworkInfoProps {
     average_channel_size: number;

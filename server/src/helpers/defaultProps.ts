@@ -1,5 +1,5 @@
 import { GraphQLNonNull, GraphQLBoolean } from 'graphql';
-import { AuthType } from '../schemaTypes/Auth';
+import { AuthType } from '../schemas/types/GeneralType';
 
 export const defaultParams = {
     auth: { type: new GraphQLNonNull(AuthType) },

@@ -1,9 +1,9 @@
 import { getChannelBalance as getLnChannelBalance } from 'ln-service';
 import { logger } from '../../../helpers/logger';
-import { ChannelBalanceType } from '../../../schemaTypes/query/channels/channelBalance';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { ChannelBalanceType } from '../../types/QueryType';
 
 interface ChannelBalanceProps {
     channel_balance: number;

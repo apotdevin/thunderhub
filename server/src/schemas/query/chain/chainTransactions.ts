@@ -3,9 +3,9 @@ import { getChainTransactions as getLnChainTransactions } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
-import { GetChainTransactionsType } from '../../../schemaTypes/query/transactions/chainTransactions';
 import { sortBy } from 'underscore';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { GetChainTransactionsType } from '../../types/QueryType';
 
 interface TransactionProps {
     block_id: string;

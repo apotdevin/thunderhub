@@ -1,8 +1,8 @@
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { BitcoinFeeType } from '../../../schemaTypes/query/data/bitcoinFee';
 import { GraphQLBoolean } from 'graphql';
 import fetch from 'node-fetch';
+import { BitcoinFeeType } from '../../types/QueryType';
 
 const url = 'https://bitcoinfees.earn.com/api/v1/fees/recommended';
 
