@@ -1,5 +1,5 @@
 {
-    "name": "thunderhub-client",
+    "name": "@thunderhub/client",
     "version": "0.2.0",
     "description": "",
     "scripts": {
@@ -9,7 +9,8 @@
         "eject": "react-scripts eject",
         "storybook": "start-storybook -p 9009 -s public",
         "build-storybook": "build-storybook -s public",
-        "deploy": "yarn build && aws s3 --profile EBFullAccess sync build/ s3://thunderhub-client"
+        "deploy": "yarn build && aws s3 --profile EBFullAccess sync build/ s3://thunderhub-client",
+        "precommit": "pretty-quick --staged"
     },
     "repository": {
         "type": "git",
@@ -83,9 +84,6 @@
         "@storybook/preset-create-react-app": "^2.1.1",
         "@storybook/react": "^5.3.18",
         "awesome-typescript-loader": "^5.2.1",
-        "husky": "^4.2.3",
-        "prettier": "2.0.2",
-        "pretty-quick": "^2.0.1",
         "react-docgen-typescript-loader": "^3.7.2"
     },
     "eslintConfig": {
@@ -102,10 +100,5 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "pretty-quick --staged"
-        }
     }
 }

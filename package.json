@@ -1,0 +1,26 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "build:server": "lerna run build:dev --stream --scope @thunderhub/server",
+    "run:server": "lerna run dev --stream --scope @thunderhub/server",
+    "run:client": "lerna run start --stream --scope @thunderhub/client"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "lerna": "^3.20.2",
+    "husky": "^4.2.3",
+    "prettier": "2.0.2",
+    "pretty-quick": "^2.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npx lerna run --concurrency 1 --stream precommit"
+    }
+  }
+}
