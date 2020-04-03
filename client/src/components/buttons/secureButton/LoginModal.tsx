@@ -12,9 +12,10 @@ import styled from 'styled-components';
 import { useAccount } from '../../../context/AccountContext';
 import { saveSessionAuth } from '../../../utils/auth';
 import { useSettings } from '../../../context/SettingsContext';
-import { textColorMap } from '../../../styles/Themes';
+import { textColorMap, mediaDimensions } from '../../../styles/Themes';
 import { ColorButton } from '../colorButton/ColorButton';
 import { Input } from '../../input/Input';
+import { useSize } from 'hooks/UseSize';
 
 const RadioText = styled.div`
     margin-left: 10px;
@@ -42,7 +43,9 @@ export const LoginModal = ({
     callback,
     variables,
 }: LoginProps) => {
+    const { width } = useSize();
     const { theme } = useSettings();
+
     const [pass, setPass] = useState<string>('');
     const [storeSession, setStoreSession] = useState<boolean>(false);
     const { host, cert, refreshAccount } = useAccount();
@@ -83,7 +86,13 @@ export const LoginModal = ({
             <SubTitle>Unlock your Account</SubTitle>
             <ResponsiveLine>
                 <Sub4Title>Password:</Sub4Title>
-                <Input onChange={(e) => setPass(e.target.value)} />
+                <Input
+                    withMargin={
+                        width <= mediaDimensions.mobile ? '0' : '0 0 0 16px'
+                    }
+                    type={'password'}
+                    onChange={(e) => setPass(e.target.value)}
+                />
             </ResponsiveLine>
             <ResponsiveLine>
                 <NoWrapTitle>Don't ask me again this session:</NoWrapTitle>

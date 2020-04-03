@@ -26,7 +26,7 @@ export const PasswordInput = ({
             <SubTitle>Please Input a Password</SubTitle>
             <Line>
                 <Sub4Title>Password:</Sub4Title>
-                <Input onChange={e => setPass(e.target.value)} />
+                <Input onChange={(e) => setPass(e.target.value)} />
             </Line>
             <Line>
                 <Sub4Title>Strength:</Sub4Title>
