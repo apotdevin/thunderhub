@@ -6,6 +6,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "webpack --config webpack.production.js",
         "build:dev": "webpack --config webpack.development.js",
+        "build:json": "webpack --config webpack.development.js --json > compilation-stats.json",
         "start": "node dist/server",
         "dev": "nodemon dist/server",
         "deploy": "yarn build && eb deploy",
@@ -40,6 +41,7 @@
         "webpack": "^4.42.1",
         "webpack-cli": "^3.3.11",
         "webpack-merge": "^4.2.2",
-        "webpack-node-externals": "^1.7.2"
+        "webpack-node-externals": "^1.7.2",
+        "webpack-shell-plugin": "^0.5.0"
     }
 }

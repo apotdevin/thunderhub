@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "build:server": "lerna run build:dev --stream --scope @thunderhub/server",
+    "build:server:prod": "lerna run build --stream --scope @thunderhub/server",
     "run:server": "lerna run dev --stream --scope @thunderhub/server",
+    "run:server:prod": "lerna run start --stream --scope @thunderhub/server",
     "run:client": "lerna run start --stream --scope @thunderhub/client"
   },
   "workspaces": {
@@ -14,7 +16,7 @@
   },
   "dependencies": {
     "base64url": "^3.0.1",
-    "date-fns": "^2.0.0-beta.5",
+    "date-fns": "^2.11.1",
     "graphql": "^14.6.0"
   },
   "devDependencies": {
