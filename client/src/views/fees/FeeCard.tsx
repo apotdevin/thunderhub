@@ -48,8 +48,8 @@ export const FeeCard = ({
     } = channelInfo;
 
     const [updateFees] = useMutation(UPDATE_FEES, {
-        onError: error => toast.error(getErrorContent(error)),
-        onCompleted: data => {
+        onError: (error) => toast.error(getErrorContent(error)),
+        onCompleted: (data) => {
             setIndexOpen(0);
             data.updateFees
                 ? toast.success('Channel fees updated')
@@ -82,7 +82,9 @@ export const FeeCard = ({
                             placeholder={'Sats'}
                             color={textColorMap[theme]}
                             type={textColorMap[theme]}
-                            onChange={e => setBaseFee(parseInt(e.target.value))}
+                            onChange={(e) =>
+                                setBaseFee(parseInt(e.target.value))
+                            }
                         />
                     </ResponsiveLine>
                     <ResponsiveLine>
@@ -93,7 +95,9 @@ export const FeeCard = ({
                             placeholder={'Sats/Million'}
                             color={textColorMap[theme]}
                             type={'number'}
-                            onChange={e => setFeeRate(parseInt(e.target.value))}
+                            onChange={(e) =>
+                                setFeeRate(parseInt(e.target.value))
+                            }
                         />
                     </ResponsiveLine>
                     <SecureButton

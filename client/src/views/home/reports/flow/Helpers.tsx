@@ -21,10 +21,10 @@ export const getWaterfall = (
 
     for (let i = initialPeriod; i <= lastPeriod; i++) {
         const currentInvoice = invoices.find(
-            invoice => invoice.period === i,
+            (invoice) => invoice.period === i,
         ) ?? { period: undefined, amount: 0, tokens: 0 };
         const currentPayment = payments.find(
-            payment => payment.period === i,
+            (payment) => payment.period === i,
         ) ?? { period: undefined, amount: 0, tokens: 0 };
 
         const amountChange = currentInvoice.amount - currentPayment.amount;

@@ -17,7 +17,7 @@ const StyledBackground = styled.div`
     align-items: center;
 `;
 
-const ThemeDecorator = storyFn => {
+const ThemeDecorator = (storyFn) => {
     const background = boolean('No Background', false);
     const cardBackground = boolean('Card Background', true);
     return (

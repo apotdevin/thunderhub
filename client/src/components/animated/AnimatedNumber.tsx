@@ -43,7 +43,7 @@ export const AnimatedNumber = ({ amount }: AnimatedProps) => {
 
     return (
         <animated.div>
-            {value.interpolate(amount => getValue({ amount, ...priceProps }))}
+            {value.interpolate((amount) => getValue({ amount, ...priceProps }))}
         </animated.div>
     );
 };

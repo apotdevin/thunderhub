@@ -1,1 +1,1 @@
-declare module "ln-service";
+declare module 'ln-service';

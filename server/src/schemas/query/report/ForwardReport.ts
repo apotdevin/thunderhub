@@ -46,7 +46,7 @@ export const getForwardReport = {
             });
 
             if (params.time === 'month' || params.time === 'week') {
-                const orderedDay = groupBy(forwardsList.forwards, item => {
+                const orderedDay = groupBy(forwardsList.forwards, (item) => {
                     return (
                         days -
                         differenceInCalendarDays(
@@ -60,7 +60,7 @@ export const getForwardReport = {
 
                 return JSON.stringify(reducedOrderedDay);
             } else {
-                const orderedHour = groupBy(forwardsList.forwards, item => {
+                const orderedHour = groupBy(forwardsList.forwards, (item) => {
                     return (
                         24 -
                         differenceInHours(endDate, new Date(item.created_at))
