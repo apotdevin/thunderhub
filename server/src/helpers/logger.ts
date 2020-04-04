@@ -1,8 +1,9 @@
 import { createLogger, format, transports } from 'winston';
 import path from 'path';
+import { envConfig } from '../utils/envConfig';
 
 const combinedFormat =
-    process.env.NODE_ENV === 'development'
+    envConfig.env === 'development'
         ? format.combine(
               format.label({
                   label: path.basename(
@@ -36,7 +37,7 @@ const combinedFormat =
           );
 
 export const logger = createLogger({
-    level: process.env.LOG_LEVEL || 'silly',
+    level: envConfig.logLevel,
     format: combinedFormat,
     transports: [new transports.Console()],
 });

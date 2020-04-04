@@ -3,6 +3,7 @@ import { thunderHubSchema } from './schemas';
 import { logger } from './helpers/logger';
 import { getIp } from './helpers/helpers';
 import depthLimit from 'graphql-depth-limit';
+import { envConfig } from './utils/envConfig';
 
 const server = new ApolloServer({
     schema: thunderHubSchema,
@@ -15,7 +16,7 @@ const server = new ApolloServer({
     ],
 });
 
-server.listen({ port: process.env.PORT || 3001 }).then(({ url }: any) => {
+server.listen({ port: envConfig.port }).then(({ url }: any) => {
     logger.info(`Server ready at ${url}`);
 });
 

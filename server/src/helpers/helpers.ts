@@ -1,5 +1,5 @@
-import base64url from 'base64url';
 import { authenticatedLndGrpc } from 'ln-service';
+import { envConfig } from '../utils/envConfig';
 
 export const getIp = (req: any) => {
     if (!req || !req.headers) {
@@ -9,7 +9,7 @@ export const getIp = (req: any) => {
     const before = forwarded
         ? forwarded.split(/, /)[0]
         : req.connection.remoteAddress;
-    const ip = process.env.NODE_ENV === 'development' ? '1.2.3.4' : before;
+    const ip = envConfig.env === 'development' ? '1.2.3.4' : before;
     return ip;
 };
 

@@ -2,8 +2,7 @@ import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLString, GraphQLBoolean } from 'graphql';
 import fetch from 'node-fetch';
-
-const url = 'https://blockchain.info/ticker';
+import { appUrls } from '../../../utils/appUrls';
 
 export const getBitcoinPrice = {
     type: GraphQLString,
@@ -17,7 +16,7 @@ export const getBitcoinPrice = {
         await requestLimiter(context.ip, 'bitcoinPrice');
 
         try {
-            const response = await fetch(url);
+            const response = await fetch(appUrls.ticker);
             const json = await response.json();
 
             return JSON.stringify(json);
