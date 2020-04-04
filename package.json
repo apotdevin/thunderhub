@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "base64url": "^3.0.1",
-    "date-fns": "^2.11.1",
+    "date-fns": "^2.0.0-beta.5",
     "graphql": "^14.6.0"
   },
   "devDependencies": {
