@@ -5,8 +5,7 @@
     "build:server": "lerna run build:dev --stream --scope @thunderhub/server",
     "build:server:prod": "lerna run build --stream --scope @thunderhub/server",
     "run:server": "lerna run dev --stream --scope @thunderhub/server",
-    "run:server:prod": "lerna run start --stream --scope @thunderhub/server",
-    "run:client": "lerna run start --stream --scope @thunderhub/client"
+    "run:server:prod": "lerna run start --stream --scope @thunderhub/server"
   },
   "workspaces": {
     "packages": [
