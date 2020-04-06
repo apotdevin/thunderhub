@@ -47,4 +47,7 @@ export const RateConfig: RateConfigProps = {
     signMessage: { max: 10, window: '1s' },
     verifyMessage: { max: 10, window: '1s' },
     getUtxos: { max: 10, window: '1s' },
+    getOffers: { max: 10, window: '1s' },
+    getCountries: { max: 10, window: '1s' },
+    getCurrencies: { max: 10, window: '1s' },
 };

@@ -47,6 +47,8 @@ import { ReactComponent as Mail } from '../../assets/icons/mail.svg';
 import { ReactComponent as Github } from '../../assets/icons/github.svg';
 import { ReactComponent as Repeat } from '../../assets/icons/repeat.svg';
 import { ReactComponent as CheckIcon } from '../../assets/icons/check.svg';
+import { ReactComponent as StarIcon } from '../../assets/icons/star.svg';
+import { ReactComponent as HalfStarIcon } from '../../assets/icons/half-star.svg';
 
 export interface IconProps {
     color?: string;
@@ -116,3 +118,5 @@ export const MailIcon = styleIcon(Mail);
 export const GithubIcon = styleIcon(Github);
 export const RepeatIcon = styleIcon(Repeat);
 export const Check = styleIcon(CheckIcon);
+export const Star = styleIcon(StarIcon);
+export const HalfStar = styleIcon(HalfStarIcon);

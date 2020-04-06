@@ -124,6 +124,7 @@ const CHAIN_TRANS = '/chainTransactions';
 const TOOLS = '/tools';
 const SETTINGS = '/settings';
 const FEES = '/fees';
+const TRADER = '/trader';
 
 interface NavigationProps {
     isBurger?: boolean;
@@ -169,6 +170,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
             {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
             {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
             {renderNavButton('Tools', TOOLS, Shield, sidebar)}
+            {renderNavButton('Trader', TRADER, Shield, sidebar)}
             {renderNavButton('Settings', SETTINGS, Settings, sidebar)}
         </ButtonSection>
     );
@@ -184,6 +186,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
             {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}
             {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
             {renderBurgerNav('Tools', TOOLS, Shield)}
+            {renderBurgerNav('Trader', TRADER, Shield)}
             {renderBurgerNav('Settings', SETTINGS, Settings)}
         </BurgerRow>
     );
