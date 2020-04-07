@@ -31,36 +31,96 @@ export const NewOptions = [
         title: 'Asset Code',
         optionOne: 'BTC',
         optionTwo: 'BTCLN',
+        options: [
+            {
+                name: 'BTC',
+                title: 'Bitcoin',
+            },
+            {
+                name: 'BTCLN',
+                title: 'Lightning Bitcoin',
+            },
+        ],
     },
     {
         name: 'side',
         title: 'Side',
         optionOne: 'buy',
         optionTwo: 'sell',
+        options: [
+            {
+                name: 'buy',
+                title: 'Buy',
+            },
+            {
+                name: 'sell',
+                title: 'Sell',
+            },
+        ],
     },
     {
         name: 'include_global',
         title: 'Include Global Offers',
         optionOne: 'true',
         optionTwo: 'false',
+        options: [
+            {
+                name: 'true',
+                title: 'Yes',
+            },
+            {
+                name: 'false',
+                title: 'No',
+            },
+        ],
     },
     {
         name: 'only_working_now',
         title: 'Only Working Now Offers',
         optionOne: 'true',
         optionTwo: 'false',
+        options: [
+            {
+                name: 'true',
+                title: 'Yes',
+            },
+            {
+                name: 'false',
+                title: 'No',
+            },
+        ],
     },
     {
         name: 'country',
         title: 'Country',
+        searchable: true,
     },
     {
         name: 'currency_code',
         title: 'Currency',
+        searchable: true,
     },
     {
         name: 'payment_method_type',
         title: 'Payment Type',
+        options: [
+            {
+                name: 'Bank wire',
+                title: 'Bank wire',
+            },
+            {
+                name: 'Cash',
+                title: 'Cash',
+            },
+            {
+                name: 'Cryptocurrency',
+                title: 'Cryptocurrency',
+            },
+            {
+                name: 'Online payment system',
+                title: 'Online payment system',
+            },
+        ],
     },
     // {
     //     name: 'payment_method_id',
@@ -86,23 +146,4 @@ export const NewOptions = [
     //     name: 'user_average_release_time_minutes_max',
     //     title: 'Max User Release Time',
     // },
-];
-
-export const PaymentOptions = [
-    {
-        name: 'Bank wire',
-        title: 'Bank wire',
-    },
-    {
-        name: 'Cash',
-        title: 'Cash',
-    },
-    {
-        name: 'Cryptocurrency',
-        title: 'Cryptocurrency',
-    },
-    {
-        name: 'Online payment system',
-        title: 'Online payment system',
-    },
 ];

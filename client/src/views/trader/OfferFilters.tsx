@@ -4,6 +4,7 @@ import {
     Separation,
     ResponsiveLine,
     NoWrapTitle,
+    DarkSubTitle,
 } from 'components/generic/Styled';
 import { ColorButton } from 'components/buttons/colorButton/ColorButton';
 import {
@@ -17,7 +18,6 @@ import { SortOptions } from './OfferConfigs';
 import { QueryProps } from './TraderView';
 import { XSvg } from 'components/generic/Icons';
 import { renderLine } from 'components/generic/Helpers';
-import { NewOptions } from './Modal/NewOptions';
 import { chartColors } from 'styles/Themes';
 
 type ActionType = {
@@ -33,13 +33,13 @@ type ActionType = {
     changeLimit?: number;
 };
 
-function reducer(state: QueryProps, action: ActionType): QueryProps {
+const reducer = (state: QueryProps, action: ActionType): QueryProps => {
     const { sort, filters } = state;
     switch (action.type) {
         case 'addSort':
             let direction = {};
             if (sort && !sort.direction) {
-                direction = { direction: 'asc' };
+                direction = { direction: 'desc' };
             }
             const newSort = { ...sort, ...direction, ...action.newItem };
             return { ...state, sort: newSort };
@@ -66,7 +66,7 @@ function reducer(state: QueryProps, action: ActionType): QueryProps {
         default:
             throw new Error();
     }
-}
+};
 
 interface FilterProps {
     offerFilters: QueryProps;
@@ -84,8 +84,6 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
 
     const [filterState, dispatch] = useReducer(reducer, offerFilters);
 
-    const [newFilter, setNewFilter] = useState<FilterType | {}>({});
-    const [newOptions, setNewOptions] = useState<FilterType[] | []>([]);
     const [modalType, setModalType] = useState<string>('none');
     const [willApply, setWillApply] = useState<boolean>(false);
 
@@ -103,69 +101,6 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
         push({ search: `?filter=${btoa(JSON.stringify(filterState))}` });
 
     const handleRemoveAll = () => push({ search: '' });
-
-    const renderOptions = () => {
-        const filterType = newFilter['name'];
-        switch (filterType) {
-            case 'asset_code':
-            case 'side':
-            case 'include_global':
-            case 'only_working_now':
-                return (
-                    <SingleLine>
-                        <ColorButton
-                            withMargin={'0 4px 0 0'}
-                            onClick={() => {
-                                dispatch({
-                                    type: 'addFilter',
-                                    newItem: {
-                                        [newFilter['name']]:
-                                            newFilter['optionOne'],
-                                    },
-                                });
-                                setNewFilter({});
-                            }}
-                        >
-                            {newFilter['optionOne']}
-                        </ColorButton>
-                        <ColorButton
-                            withMargin={'0 0 0 4px'}
-                            onClick={() => {
-                                dispatch({
-                                    type: 'addFilter',
-                                    newItem: {
-                                        [newFilter['name']]:
-                                            newFilter['optionTwo'],
-                                    },
-                                });
-                                setNewFilter({});
-                            }}
-                        >
-                            {newFilter['optionTwo']}
-                        </ColorButton>
-                    </SingleLine>
-                );
-            case 'country':
-            case 'currency_code':
-                return (
-                    <NewOptions
-                        type={filterType}
-                        setModalType={setModalType}
-                        setNewOptions={setNewOptions}
-                    />
-                );
-            case 'payment_method_type':
-                return (
-                    <NewOptions
-                        type={filterType}
-                        setModalType={setModalType}
-                        setNewOptions={setNewOptions}
-                    />
-                );
-            default:
-                return null;
-        }
-    };
 
     const handleRemove = (removeKey: string) => {
         dispatch({ type: 'removeFilter', removeKey });
@@ -220,37 +155,19 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
                     {renderLimitOptions()}
                 </ResponsiveLine>
                 <Separation />
-                {!!!newFilter['name'] && (
-                    <ResponsiveLine>
-                        <NoWrapTitle>New Filter:</NoWrapTitle>
-                        <ColorButton
-                            arrow={true}
-                            onClick={() => setModalType('new')}
-                        >
-                            Add
-                        </ColorButton>
-                    </ResponsiveLine>
-                )}
-                {!!newFilter['name'] && (
-                    <ResponsiveLine>
-                        <NoWrapTitle>{`${newFilter['title']}:`}</NoWrapTitle>
-                        <SingleLine>
-                            {renderOptions()}
-                            <ColorButton
-                                withMargin={'0 0 0 8px'}
-                                onClick={() => setNewFilter({})}
-                            >
-                                <XSvg />
-                            </ColorButton>
-                        </SingleLine>
-                    </ResponsiveLine>
-                )}
-                {Object.keys(filterState.filters).length > 0 && (
-                    <>
-                        <Separation />
-                        <NoWrapTitle>Applied Filters</NoWrapTitle>
-                        {renderAppliedFilters()}
-                    </>
+                <ResponsiveLine>
+                    <NoWrapTitle>Filters</NoWrapTitle>
+                    <ColorButton
+                        arrow={true}
+                        onClick={() => setModalType('new')}
+                    >
+                        New Filter
+                    </ColorButton>
+                </ResponsiveLine>
+                {Object.keys(filterState.filters).length > 0 ? (
+                    renderAppliedFilters()
+                ) : (
+                    <DarkSubTitle>None</DarkSubTitle>
                 )}
                 <Separation />
                 <ResponsiveLine>
@@ -332,10 +249,7 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
                 <FilterModal
                     type={modalType}
                     dispatch={dispatch}
-                    newOptions={newOptions}
                     setModalType={setModalType}
-                    setNewFilter={setNewFilter}
-                    setNewOptions={setNewOptions}
                 />
             </Modal>
         </>

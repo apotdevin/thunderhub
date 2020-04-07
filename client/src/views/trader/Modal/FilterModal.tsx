@@ -1,83 +1,110 @@
 import React, { useState, useEffect } from 'react';
-import { ColorButton } from 'components/buttons/colorButton/ColorButton';
 import { SubTitle } from 'components/generic/Styled';
-import { SortOptions, NewOptions, PaymentOptions } from '../OfferConfigs';
-import { OfferModalBox } from '../OfferCard.styled';
+import { SortOptions, NewOptions } from '../OfferConfigs';
 import { FilterType } from '../OfferFilters';
-import { Input } from 'components/input/Input';
+import { useQuery } from '@apollo/react-hooks';
+import {
+    GET_HODL_COUNTRIES,
+    GET_HODL_CURRENCIES,
+} from 'graphql/hodlhodl/query';
+import { themeColors } from 'styles/Themes';
+import ScaleLoader from 'react-spinners/ScaleLoader';
+import { FilteredList } from './FilteredList';
 
 interface FilterProps {
     type: string;
     dispatch: any;
-    newOptions: FilterType[];
+    final?: {};
+    newOptions?: FilterType[];
     setModalType: (type: string) => void;
-    setNewFilter: (type: {}) => void;
-    setNewOptions: (type: FilterType[]) => void;
+}
+
+interface CountryType {
+    code: string;
+    name: string;
+    native_name: string;
+    currency_code: string;
+    currency_name: string;
+}
+
+interface CurrencyType {
+    code: string;
+    name: string;
+    type: string;
 }
 
 export const FilterModal = ({
     type,
     dispatch,
+    final,
     newOptions,
     setModalType,
-    setNewFilter,
-    setNewOptions,
 }: FilterProps) => {
-    let options: { name: string; title: string }[] = newOptions ?? [];
-    let title: string = '';
-    let searchable: boolean = false;
+    const searchable: boolean = final?.['searchable'] || false;
+    const skipable: boolean =
+        !final && !(type === 'Country' || type === 'Currency');
 
-    switch (type) {
-        case 'sort':
-            title = 'Sort Offers by:';
-            options = SortOptions;
-            break;
-        case 'new':
-            title = 'Add New Filter:';
-            options = NewOptions;
-            break;
-        case 'country':
-            title = 'Countries:';
-            searchable = true;
-            break;
-        case 'currency_code':
-            title = 'Currencies:';
-            searchable = true;
-            break;
-        case 'payment_method_type':
-            title = 'Payment Types:';
-            searchable = true;
-            break;
-        default:
-            break;
-    }
+    const [selected, setSelected] = useState<{} | undefined>();
 
-    const [searchTerm, setSearchTerm] = useState<string>('');
-    const [filteredOptions, setOptions] = useState<
-        { name: string; title: string }[]
-    >(options);
+    const [options, setOptions] = useState(newOptions ?? []);
+    const [title, setTitle] = useState(final?.['title'] || '');
 
-    const handleChange = (event: any) => {
-        setSearchTerm(event.target.value);
-    };
+    const query = type === 'Country' ? GET_HODL_COUNTRIES : GET_HODL_CURRENCIES;
+
+    const { loading, data, error } = useQuery(query, {
+        skip: skipable,
+    });
+
+    console.log({ data });
 
     useEffect(() => {
-        const filtered = options.filter(
-            (option: { name: string; title: string }) => {
-                const inName = option.name
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase());
-                const inTitle = option.title
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase());
+        switch (type) {
+            case 'sort':
+                setTitle('Sort Offers by:');
+                setOptions(SortOptions);
+                break;
+            case 'new':
+                setTitle('Add New Filter:');
+                setOptions(NewOptions);
+                break;
+            default:
+                break;
+        }
+    }, [type]);
 
-                return inName || inTitle;
-            },
-        );
-        setOptions(filtered);
-    }, [searchTerm, options]);
+    useEffect(() => {
+        if (!loading && data && data.getCountries) {
+            const countryOptions = data.getCountries.map(
+                (country: CountryType) => {
+                    const { code, name, native_name } = country;
+                    return { name: code, title: `${name} (${native_name})` };
+                },
+            );
+
+            setOptions(countryOptions);
+        }
+        if (!loading && data && data.getCurrencies) {
+            const filtered = data.getCurrencies.filter(
+                (currency: CurrencyType) => currency.type === 'fiat',
+            );
+
+            const currencyOptions = filtered.map((currency: CurrencyType) => {
+                const { code, name } = currency;
+                return { name: code, title: name };
+            });
+
+            setOptions(currencyOptions);
+        }
+    }, [data, loading]);
 
     const handleClick = (name: string, option?: {}) => () => {
+        if (final) {
+            dispatch({
+                type: 'addFilter',
+                newItem: { [final['name']]: name },
+            });
+            setModalType('none');
+        }
         switch (type) {
             case 'sort':
                 if (name === 'none') {
@@ -90,56 +117,39 @@ export const FilterModal = ({
                         newItem: { by: name },
                     });
                 }
+                setModalType('none');
                 break;
             case 'new':
-                if (name === 'payment_method_type') {
-                    setNewOptions(PaymentOptions);
-                }
-                option && setNewFilter(option);
-                break;
-            case 'country':
-            case 'currency_code':
-            case 'payment_method_type':
-                dispatch({
-                    type: 'addFilter',
-                    newItem: { [type]: name },
-                });
-                setNewFilter({});
+                setSelected(option);
                 break;
             default:
                 break;
         }
-        setModalType('none');
     };
+
+    if (selected) {
+        return (
+            <>
+                <FilterModal
+                    type={selected['title']}
+                    dispatch={dispatch}
+                    final={selected}
+                    newOptions={selected['options']}
+                    setModalType={setModalType}
+                />
+            </>
+        );
+    }
 
     return (
         <>
             <SubTitle>{title}</SubTitle>
-            {searchable && (
-                <Input
-                    placeholder={'Search'}
-                    fullWidth={true}
-                    onChange={handleChange}
-                    withMargin={'0 0 8px 0'}
-                />
-            )}
-            <OfferModalBox>
-                {filteredOptions.map(
-                    (
-                        option: { name: string; title: string },
-                        index: number,
-                    ) => (
-                        <ColorButton
-                            key={`${index}-${option.name}`}
-                            fullWidth={true}
-                            withMargin={'0 0 2px 0'}
-                            onClick={handleClick(option.name, option)}
-                        >
-                            {option.title}
-                        </ColorButton>
-                    ),
-                )}
-            </OfferModalBox>
+            <FilteredList
+                searchable={searchable}
+                options={options}
+                handleClick={handleClick}
+            />
+            {loading && <ScaleLoader height={20} color={themeColors.blue3} />}
         </>
     );
 };
