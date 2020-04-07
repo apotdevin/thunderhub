@@ -21,10 +21,16 @@ import { NewOptions } from './Modal/NewOptions';
 import { chartColors } from 'styles/Themes';
 
 type ActionType = {
-    type: 'addFilter' | 'addSort' | 'removeSort' | 'removeFilter';
+    type:
+        | 'addFilter'
+        | 'addSort'
+        | 'removeSort'
+        | 'removeFilter'
+        | 'changeLimit';
     state?: QueryProps;
     newItem?: {};
     removeKey?: string;
+    changeLimit?: number;
 };
 
 function reducer(state: QueryProps, action: ActionType): QueryProps {
@@ -47,6 +53,14 @@ function reducer(state: QueryProps, action: ActionType): QueryProps {
                 const remaining = { ...filters };
                 delete remaining[action.removeKey];
                 return { ...state, filters: remaining };
+            }
+            return state;
+        case 'changeLimit':
+            if (action.changeLimit) {
+                return {
+                    ...state,
+                    pagination: { limit: action.changeLimit, offset: 0 },
+                };
             }
             return state;
         default:
@@ -173,9 +187,38 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
         return <>{activeFilters.map((filter) => filter)}</>;
     };
 
+    const renderLimitOptions = () => {
+        const currentLimit = filterState.pagination.limit;
+
+        const renderButton = (value: number, margin?: string) => (
+            <ColorButton
+                onClick={() =>
+                    dispatch({ type: 'changeLimit', changeLimit: value })
+                }
+                selected={currentLimit === value}
+                withMargin={margin}
+            >
+                {value}
+            </ColorButton>
+        );
+
+        return (
+            <SingleLine>
+                {renderButton(25)}
+                {renderButton(50, '0 4px 0')}
+                {renderButton(100)}
+            </SingleLine>
+        );
+    };
+
     const renderFilters = () => {
         return (
             <>
+                <Separation />
+                <ResponsiveLine>
+                    <NoWrapTitle>Results:</NoWrapTitle>
+                    {renderLimitOptions()}
+                </ResponsiveLine>
                 <Separation />
                 {!!!newFilter['name'] && (
                     <ResponsiveLine>
@@ -248,6 +291,7 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
                         </MultiButton>
                     </ResponsiveLine>
                 )}
+                <Separation />
                 <SingleLine>
                     <ColorButton
                         fullWidth={true}

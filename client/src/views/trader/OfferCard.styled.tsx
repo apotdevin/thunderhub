@@ -13,9 +13,11 @@ export const StyleArrow = styled(ChevronRight)`
 `;
 
 export const OfferModalBox = styled.div`
-    overflow-y: scroll;
+    overflow-y: auto;
     max-height: 640px;
+    min-height: 240px;
     @media (${mediaWidths.mobile}) {
         max-height: 240px;
+        min-height: 120px;
     }
 `;

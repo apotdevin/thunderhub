@@ -80,7 +80,7 @@ const Content = () => {
                 />
                 <Route path="/settings" render={() => getGrid(SettingsView)} />
                 <Route path="/fees" render={() => getGrid(FeesView)} />
-                <Route path="/trader" render={() => getGrid(TraderView)} />
+                <Route path="/trading" render={() => getGrid(TraderView)} />
                 <Route path="/terms" render={() => <TermsView />} />
                 <Route path="/privacy" render={() => <PrivacyView />} />
                 <Route path="/faq" render={() => <FaqView />} />

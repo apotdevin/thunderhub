@@ -49,6 +49,7 @@ import { ReactComponent as Repeat } from '../../assets/icons/repeat.svg';
 import { ReactComponent as CheckIcon } from '../../assets/icons/check.svg';
 import { ReactComponent as StarIcon } from '../../assets/icons/star.svg';
 import { ReactComponent as HalfStarIcon } from '../../assets/icons/half-star.svg';
+import { ReactComponent as CreditCardIcon } from '../../assets/icons/credit-card.svg';
 
 export interface IconProps {
     color?: string;
@@ -120,3 +121,4 @@ export const RepeatIcon = styleIcon(Repeat);
 export const Check = styleIcon(CheckIcon);
 export const Star = styleIcon(StarIcon);
 export const HalfStar = styleIcon(HalfStarIcon);
+export const CreditCard = styleIcon(CreditCardIcon);

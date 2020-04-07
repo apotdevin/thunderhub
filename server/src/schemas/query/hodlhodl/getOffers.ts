@@ -31,15 +31,11 @@ export const getOffers = {
         }
 
         try {
-            const params = {
-                pagination: {
-                    limit: 10,
-                    offset: 0,
-                },
+            const fullParams = {
                 ...queryParams,
             };
 
-            const paramString = getHodlParams(params);
+            const paramString = getHodlParams(fullParams);
 
             const response = await fetch(
                 `${appUrls.hodlhodl}/v1/offers${paramString}`,

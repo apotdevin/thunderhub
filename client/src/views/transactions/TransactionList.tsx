@@ -8,8 +8,6 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { PaymentsCard } from './PaymentsCards';
 import { LoadingCard } from '../../components/loading/LoadingCard';
-import { useSettings } from '../../context/SettingsContext';
-import { textColorMap } from '../../styles/Themes';
 import { ColorButton } from 'components/buttons/colorButton/ColorButton';
 import { FlowBox } from 'views/home/reports/flow';
 
@@ -18,7 +16,6 @@ export const TransactionList = () => {
     const [token, setToken] = useState('');
     const [fetching, setFetching] = useState(false);
 
-    const { theme } = useSettings();
     const { host, viewOnly, cert, sessionAdmin } = useAccount();
     const auth = {
         host,
@@ -48,7 +45,7 @@ export const TransactionList = () => {
             <FlowBox />
             <CardWithTitle>
                 <SubTitle>Transactions</SubTitle>
-                <Card bottom={'5px'}>
+                <Card bottom={'8px'}>
                     {resumeList.map((entry: any, index: number) => {
                         if (entry.type === 'invoice') {
                             return (
@@ -74,9 +71,7 @@ export const TransactionList = () => {
                     })}
                 </Card>
                 <ColorButton
-                    selected={true}
                     loading={fetching}
-                    color={textColorMap[theme]}
                     disabled={fetching}
                     onClick={() => {
                         setFetching(true);

@@ -35,11 +35,17 @@ export const NewOptions = ({
 }: NewOptionProps) => {
     let query;
     let title;
+    let skip = false;
 
     switch (type) {
         case 'currency_code':
             query = GET_HODL_CURRENCIES;
             title = 'Currencies';
+            break;
+        case 'payment_method_type':
+            query = GET_HODL_CURRENCIES;
+            title = 'Payment Types';
+            skip = true;
             break;
         default:
             query = GET_HODL_COUNTRIES;
@@ -47,8 +53,8 @@ export const NewOptions = ({
             break;
     }
 
-    const [disabled, setDisabled] = useState<boolean>(true);
-    const { loading, data, error } = useQuery(query);
+    const [disabled, setDisabled] = useState<boolean>(!skip);
+    const { loading, data, error } = useQuery(query, { skip });
 
     useEffect(() => {
         if (!loading && data && data.getCountries) {
@@ -77,12 +83,14 @@ export const NewOptions = ({
         }
     }, [data, loading, setNewOptions]);
 
-    if (loading || !data || (!data.getCountries && !data.getCurrencies)) {
-        return (
-            <ColorButton disabled={true}>
-                <ScaleLoader height={20} color={themeColors.blue3} />
-            </ColorButton>
-        );
+    if (type !== 'payment_method_type') {
+        if (loading || !data || (!data.getCountries && !data.getCurrencies)) {
+            return (
+                <ColorButton disabled={true}>
+                    <ScaleLoader height={20} color={themeColors.blue3} />
+                </ColorButton>
+            );
+        }
     }
 
     return (

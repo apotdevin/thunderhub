@@ -14,8 +14,14 @@ import { OfferFilters } from './OfferFilters';
 import { useLocation } from 'react-router-dom';
 import qs from 'qs';
 import { toast } from 'react-toastify';
+import { Link } from 'components/link/Link';
+import { ColorButton } from 'components/buttons/colorButton/ColorButton';
 
 export interface QueryProps {
+    pagination: {
+        limit: number;
+        offset: number;
+    };
     filters: {};
     sort: {
         by: string;
@@ -24,6 +30,10 @@ export interface QueryProps {
 }
 
 const defaultQuery: QueryProps = {
+    pagination: {
+        limit: 25,
+        offset: 0,
+    },
     filters: {},
     sort: {
         by: '',
@@ -51,25 +61,38 @@ export const TraderView = () => {
     };
 
     const [indexOpen, setIndexOpen] = useState(0);
+    const [page, setPage] = useState(1);
+    const [fetching, setFetching] = useState(false);
 
-    const { data, loading, error } = useQuery(GET_HODL_OFFERS, {
+    const { data, loading, fetchMore, error } = useQuery(GET_HODL_OFFERS, {
         variables: { filter: JSON.stringify(queryObject) },
     });
 
     if (loading || !data || !data.getOffers) {
-        return <LoadingCard title={'Trade Bitcoin'} />;
+        return <LoadingCard title={'P2P Trading'} />;
     }
+
+    const amountOfOffers = data.getOffers.length;
+    const {
+        pagination: { limit },
+    } = queryObject;
 
     return (
         <CardWithTitle>
             <ResponsiveLine>
-                <SubTitle>Trade Bitcoin</SubTitle>
-                <DarkSubTitle bottom={'8px'}>Powered by HodlHodl</DarkSubTitle>
+                <SubTitle>P2P Trading</SubTitle>
+                <DarkSubTitle>
+                    Powered by{' '}
+                    <Link href={'https://hodlhodl.com/'}>HodlHodl</Link>
+                </DarkSubTitle>
             </ResponsiveLine>
             <Card bottom={'16px'}>
                 <OfferFilters offerFilters={queryObject} />
             </Card>
-            <Card>
+            <Card bottom={'8px'}>
+                {amountOfOffers <= 0 && (
+                    <DarkSubTitle>No Offers Found</DarkSubTitle>
+                )}
                 {data.getOffers.map((offer: any, index: number) => (
                     <OfferCard
                         offer={offer}
@@ -80,6 +103,41 @@ export const TraderView = () => {
                     />
                 ))}
             </Card>
+            {amountOfOffers > 0 && amountOfOffers === limit * page && (
+                <ColorButton
+                    loading={fetching}
+                    disabled={fetching}
+                    onClick={() => {
+                        setFetching(true);
+
+                        fetchMore({
+                            variables: {
+                                filter: JSON.stringify({
+                                    ...queryObject,
+                                    pagination: { limit, offset: limit * page },
+                                }),
+                            },
+                            updateQuery: (
+                                prev,
+                                { fetchMoreResult: result },
+                            ) => {
+                                if (!result) return prev;
+
+                                setFetching(false);
+                                setPage((prev) => (prev += 1));
+                                return {
+                                    getOffers: [
+                                        ...prev.getOffers,
+                                        ...result.getOffers,
+                                    ],
+                                };
+                            },
+                        });
+                    }}
+                >
+                    Show More
+                </ColorButton>
+            )}
         </CardWithTitle>
     );
 };
