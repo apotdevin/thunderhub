@@ -56,10 +56,11 @@ export const Separation = styled.div`
 interface SubCardProps {
     color?: string;
     padding?: string;
+    withMargin?: string;
 }
 
 export const SubCard = styled.div`
-    margin-bottom: 10px;
+    margin: ${({ withMargin }) => (withMargin ? withMargin : '0 0 10px 0')};
     padding: ${({ padding }) => (padding ? padding : '16px')};
     background: ${subCardColor};
     border: 1px solid ${cardBorderColor};

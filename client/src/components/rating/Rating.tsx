@@ -11,6 +11,10 @@ const StyledHalfStar = styled(HalfStar)`
     margin-bottom: -1px;
 `;
 
+const StyledRatings = styled.div`
+    display: flex;
+`;
+
 interface RatingProps {
     rating: number | null;
     size?: string;
@@ -54,5 +58,5 @@ export const Rating = ({
         }
     }
 
-    return <span>{stars.map((star) => star)}</span>;
+    return <StyledRatings>{stars.map((star) => star)}</StyledRatings>;
 };

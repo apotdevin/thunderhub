@@ -28,7 +28,6 @@ export const GET_HODL_OFFERS = gql`
             id
             version
             asset_code
-            searchable
             country
             country_code
             working_now

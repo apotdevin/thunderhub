@@ -29,8 +29,6 @@ export const NewOptions = [
     {
         name: 'asset_code',
         title: 'Asset Code',
-        optionOne: 'BTC',
-        optionTwo: 'BTCLN',
         options: [
             {
                 name: 'BTC',
@@ -45,24 +43,20 @@ export const NewOptions = [
     {
         name: 'side',
         title: 'Side',
-        optionOne: 'buy',
-        optionTwo: 'sell',
         options: [
             {
                 name: 'buy',
-                title: 'Buy',
+                title: 'I want to sell Bitcoin',
             },
             {
                 name: 'sell',
-                title: 'Sell',
+                title: 'I want to buy Bitcoin',
             },
         ],
     },
     {
         name: 'include_global',
         title: 'Include Global Offers',
-        optionOne: 'true',
-        optionTwo: 'false',
         options: [
             {
                 name: 'true',
@@ -77,8 +71,6 @@ export const NewOptions = [
     {
         name: 'only_working_now',
         title: 'Only Working Now Offers',
-        optionOne: 'true',
-        optionTwo: 'false',
         options: [
             {
                 name: 'true',

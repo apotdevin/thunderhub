@@ -8,10 +8,21 @@ import {
     Separation,
 } from 'components/generic/Styled';
 import { Rating } from 'components/rating/Rating';
-import { TradesAmount, StyleArrow } from './OfferCard.styled';
-import { DetailLine, MainInfo } from 'views/channels/Channels.style';
-import { ChevronLeft, ChevronRight } from 'components/generic/Icons';
+import {
+    TradesAmount,
+    StyleArrow,
+    StyledTitle,
+    StyledLogin,
+    StyledDescription,
+} from './OfferCard.styled';
+import { MainInfo } from 'views/channels/Channels.style';
 import { themeColors } from 'styles/Themes';
+import { renderLine } from 'components/generic/Helpers';
+import numeral from 'numeral';
+import { MethodBoxes } from './MethodBoxes';
+
+const format = (value: number | string, format: string = '0,0.00') =>
+    numeral(value).format(format);
 
 interface OfferCardProps {
     offer: any;
@@ -30,7 +41,6 @@ export const OfferCard = ({
         id,
         version,
         asset_code,
-        searchable,
         country,
         country_code,
         working_now,
@@ -53,24 +63,16 @@ export const OfferCard = ({
     const { author_fee_rate } = fee;
 
     const {
-        // id,
-        // version,
-        payment_method_id,
-        payment_method_type,
-        payment_method_name,
-    } = payment_method_instructions || {};
-
-    const {
         login,
         online_status,
         rating,
-        trades_count,
+        trades_count = 0,
         url,
         verified,
         verified_by,
         strong_hodler,
-        // country,
-        // country_code,
+        country: traderCountry,
+        country_code: traderCode,
         average_payment_time_minutes,
         average_release_time_minutes,
         days_since_last_trade,
@@ -84,34 +86,72 @@ export const OfferCard = ({
         }
     };
 
+    const renderPayments = (): string => {
+        if (payment_method_instructions) {
+            const methods = payment_method_instructions.map(
+                (method: {
+                    payment_method_name: string;
+                    payment_method_type: string;
+                }) =>
+                    `${method.payment_method_name} (${method.payment_method_type})`,
+            );
+
+            return methods.join(', ');
+        }
+        return '';
+    };
+
     const renderDetails = () => (
         <>
             <Separation />
-            Hello
+            <StyledDescription>{description}</StyledDescription>
+            <Separation />
+            {renderLine('Price', format(price))}
+            {renderLine('Min Amount:', format(min_amount))}
+            {renderLine('Max Amount:', format(max_amount))}
+            {renderLine(`First Trade Limit:`, first_trade_limit)}
+            {renderLine(`Payment Options:`, renderPayments())}
+            {renderLine('Country:', `${country} (${country_code})`)}
+            {renderLine('Available Now:', working_now ? 'Yes' : 'No')}
+            <Separation />
+            <Sub4Title>Trader</Sub4Title>
+            {renderLine('User:', login)}
+            {renderLine('Online:', online_status)}
+            {renderLine('Rating:', rating)}
+            {renderLine('Amount of Trades:', trades_count)}
+            {renderLine('Verified:', verified)}
+            {renderLine('Verified By:', verified_by)}
+            {renderLine('Strong Hodler:', strong_hodler)}
+            {renderLine('Country:', `${traderCountry} (${traderCode})`)}
+            {renderLine('Average Payment Time:', average_payment_time_minutes)}
+            {renderLine('Average Release Time:', average_release_time_minutes)}
+            {renderLine('Days since last trade:', days_since_last_trade)}
         </>
     );
 
     return (
-        <SubCard key={`${index}-${id}`}>
+        <SubCard withMargin={'16px 0 24px'} key={`${index}-${id}`}>
             <MainInfo onClick={() => handleClick()}>
-                {/* <SubTitle>{price}</SubTitle> */}
+                <MethodBoxes methods={payment_method_instructions} />
                 <ResponsiveLine>
                     <SubTitle>
-                        {/* {asset_code} */}
                         {side !== 'buy' ? asset_code : currency_code}
                         <StyleArrow color={themeColors.blue3} />
                         {side !== 'buy' ? currency_code : asset_code}
-                        {/* {currency_code} */}
                     </SubTitle>
                     <SingleLine>
-                        {`${login}`}
-                        {trades_count && trades_count > 0 && (
+                        <StyledLogin>{login}</StyledLogin>
+                        {trades_count > 0 && (
                             <TradesAmount>{`(${trades_count}) `}</TradesAmount>
                         )}
                         <Rating rating={rating} />
                     </SingleLine>
                 </ResponsiveLine>
-                {title}
+                <StyledTitle>{title}</StyledTitle>
+                {renderLine(
+                    `Min/Max amount:`,
+                    `${format(min_amount, '0a')}/${format(max_amount, '0a')}`,
+                )}
             </MainInfo>
             {index === indexOpen && renderDetails()}
         </SubCard>

@@ -41,8 +41,7 @@ export const FilterModal = ({
     setModalType,
 }: FilterProps) => {
     const searchable: boolean = final?.['searchable'] || false;
-    const skipable: boolean =
-        !final && !(type === 'Country' || type === 'Currency');
+    const skipable: boolean = type !== 'Country' && type !== 'Currency';
 
     const [selected, setSelected] = useState<{} | undefined>();
 

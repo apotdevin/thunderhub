@@ -21,3 +21,29 @@ export const OfferModalBox = styled.div`
         min-height: 120px;
     }
 `;
+
+export const StyledTitle = styled.div`
+    font-size: 14px;
+    @media (${mediaWidths.mobile}) {
+        text-align: center;
+        margin-top: 8px;
+    }
+`;
+
+export const StyledLogin = styled.div`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-all;
+`;
+
+export const StyledDescription = styled(StyledLogin)`
+    font-size: 14px;
+
+    @media (${mediaWidths.mobile}) {
+        max-height: 160px;
+        overflow-y: auto;
+    }
+`;
