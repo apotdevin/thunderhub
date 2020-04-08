@@ -115,7 +115,7 @@ export const OfferCard = ({
             {renderLine('Country:', `${country} (${country_code})`)}
             {renderLine('Available Now:', working_now ? 'Yes' : 'No')}
             {renderLine(`Balance:`, format(balance))}
-            {renderLine(`Payment Window:`, payment_window_minutes)}
+            {renderLine(`Payment Window (min):`, payment_window_minutes)}
             {renderLine(`Confirmations:`, confirmations)}
             {renderLine(`Fee Rate:`, `${format(author_fee_rate * 100)}%`)}
             <Separation />
@@ -128,8 +128,14 @@ export const OfferCard = ({
             {renderLine('Verified By:', verified_by)}
             {renderLine('Strong Hodler:', strong_hodler)}
             {renderLine('Country:', `${traderCountry} (${traderCode})`)}
-            {renderLine('Average Payment Time:', average_payment_time_minutes)}
-            {renderLine('Average Release Time:', average_release_time_minutes)}
+            {renderLine(
+                'Average Payment Time (min):',
+                average_payment_time_minutes,
+            )}
+            {renderLine(
+                'Average Release Time (min):',
+                average_release_time_minutes,
+            )}
             {renderLine('Days since last trade:', days_since_last_trade)}
             <SingleLine>
                 <Link
@@ -137,12 +143,20 @@ export const OfferCard = ({
                     underline={'transparent'}
                     fullWidth={true}
                 >
-                    <ColorButton withMargin={'16px 4px 0 0'} fullWidth={true}>
+                    <ColorButton
+                        withBorder={true}
+                        withMargin={'16px 8px 0 0'}
+                        fullWidth={true}
+                    >
                         View Offer
                     </ColorButton>
                 </Link>
                 <Link href={url} underline={'transparent'} fullWidth={true}>
-                    <ColorButton withMargin={'16px 0 0 4px'} fullWidth={true}>
+                    <ColorButton
+                        withBorder={true}
+                        withMargin={'16px 0 0 8px'}
+                        fullWidth={true}
+                    >
                         View trader
                     </ColorButton>
                 </Link>
@@ -169,7 +183,7 @@ export const OfferCard = ({
                     </SingleLine>
                 </ResponsiveLine>
                 <StyledTitle>{title}</StyledTitle>
-                {renderLine('Price:', price)}
+                {renderLine('Price:', format(price))}
                 {renderLine(
                     `Min/Max amount:`,
                     `${format(min_amount, '0a')}/${format(max_amount, '0a')}`,

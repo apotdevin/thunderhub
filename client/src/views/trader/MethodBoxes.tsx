@@ -16,7 +16,7 @@ const StyledMethodBoxes = styled.div`
     width: 100%;
     position: relative;
     right: -16px;
-    top: -32px;
+    top: -26px;
     display: flex;
     justify-content: flex-end;
     margin: 0 0 -24px 0;

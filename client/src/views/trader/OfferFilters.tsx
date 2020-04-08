@@ -4,7 +4,6 @@ import {
     Separation,
     ResponsiveLine,
     NoWrapTitle,
-    DarkSubTitle,
 } from 'components/generic/Styled';
 import { ColorButton } from 'components/buttons/colorButton/ColorButton';
 import {
@@ -164,11 +163,8 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
                         New Filter
                     </ColorButton>
                 </ResponsiveLine>
-                {Object.keys(filterState.filters).length > 0 ? (
-                    renderAppliedFilters()
-                ) : (
-                    <DarkSubTitle>None</DarkSubTitle>
-                )}
+                {Object.keys(filterState.filters).length > 0 &&
+                    renderAppliedFilters()}
                 <Separation />
                 <ResponsiveLine>
                     <NoWrapTitle>Sort By:</NoWrapTitle>

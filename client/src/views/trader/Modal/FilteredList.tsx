@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ColorButton } from 'components/buttons/colorButton/ColorButton';
 import { OfferModalBox } from '../OfferCard.styled';
 import { Input } from 'components/input/Input';
+import { Sub4Title } from 'components/generic/Styled';
 
 interface FilteredProps {
     searchable: boolean;
@@ -50,20 +51,24 @@ export const FilteredList = ({
                 />
             )}
             <OfferModalBox>
-                {filteredOptions.map(
-                    (
-                        option: { name: string; title: string },
-                        index: number,
-                    ) => (
-                        <ColorButton
-                            key={`${index}-${option.name}`}
-                            fullWidth={true}
-                            withMargin={'0 0 2px 0'}
-                            onClick={handleClick(option.name, option)}
-                        >
-                            {option.title}
-                        </ColorButton>
-                    ),
+                {filteredOptions.length > 0 ? (
+                    filteredOptions.map(
+                        (
+                            option: { name: string; title: string },
+                            index: number,
+                        ) => (
+                            <ColorButton
+                                key={`${index}-${option.name}`}
+                                fullWidth={true}
+                                withMargin={'0 0 2px 0'}
+                                onClick={handleClick(option.name, option)}
+                            >
+                                {option.title}
+                            </ColorButton>
+                        ),
+                    )
+                ) : (
+                    <Sub4Title>No results</Sub4Title>
                 )}
             </OfferModalBox>
         </>
