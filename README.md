@@ -103,6 +103,8 @@ After cloning the repository run `yarn` to get all the necessary modules install
 
 ### **ThunderHub - Server**
 
+To be able to use the HodlHodl integration create a `.env` file in the `/server` folder with `HODL_KEY='[YOUR API KEY]'` and replace `[YOUR API KEY]` with the one that HodlHodl provides you.
+
 #### To get the server running use the following commands
 
 ```javascript
