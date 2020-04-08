@@ -8,12 +8,18 @@ interface StyledProps {
     fontColor?: string | ThemeSet;
     underline?: string | ThemeSet;
     inheritColor?: boolean;
+    fullWidth?: boolean;
 }
 
 const styledCss = css`
     color: ${({ fontColor, inheritColor }: StyledProps) =>
         inheritColor ? 'inherit' : fontColor ?? textColor};
     text-decoration: none;
+    ${({ fullWidth }: StyledProps) =>
+        fullWidth &&
+        css`
+            width: 100%;
+        `};
 
     :hover {
         background: linear-gradient(
@@ -27,9 +33,11 @@ const styledCss = css`
     }
 `;
 
-const StyledLink = styled(({ inheritColor, fontColor, underline, ...rest }) => (
-    <RouterLink {...rest} />
-))(() => styledCss);
+const StyledLink = styled(
+    ({ inheritColor, fontColor, underline, fullWidth, ...rest }) => (
+        <RouterLink {...rest} />
+    ),
+)(() => styledCss);
 
 const StyledALink = styled.a`
     ${styledCss}
@@ -42,6 +50,7 @@ interface LinkProps {
     color?: string | ThemeSet;
     underline?: string | ThemeSet;
     inheritColor?: boolean;
+    fullWidth?: boolean;
 }
 
 export const Link = ({
@@ -51,8 +60,9 @@ export const Link = ({
     color,
     underline,
     inheritColor,
+    fullWidth,
 }: LinkProps) => {
-    const props = { fontColor: color, underline, inheritColor };
+    const props = { fontColor: color, underline, inheritColor, fullWidth };
 
     if (!to && !href) return null;
 

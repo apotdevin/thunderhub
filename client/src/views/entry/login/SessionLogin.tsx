@@ -38,8 +38,9 @@ export const SessionLogin = () => {
                     <SingleLine>
                         <Sub4Title>Password:</Sub4Title>
                         <Input
+                            type={'password'}
                             withMargin={'0 0 0 16px'}
-                            onChange={e => setPass(e.target.value)}
+                            onChange={(e) => setPass(e.target.value)}
                         />
                     </SingleLine>
                     {pass !== '' && (

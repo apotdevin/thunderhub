@@ -76,7 +76,7 @@ export const Input = ({
             value={value}
             color={color}
             withMargin={withMargin}
-            onChange={e => onChange(e)}
+            onChange={(e) => onChange(e)}
             fullWidth={fullWidth}
             inputWidth={width}
             maxWidth={maxWidth}

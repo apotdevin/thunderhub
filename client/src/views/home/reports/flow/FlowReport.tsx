@@ -96,7 +96,7 @@ Props) => {
                     grid: { stroke: chartGridColor[theme] },
                     axis: { stroke: 'transparent' },
                 }}
-                tickFormat={a =>
+                tickFormat={(a) =>
                     isType === 'tokens' ? format({ amount: a }) : a
                 }
             />

@@ -56,7 +56,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
     const [request, setRequest] = useState('');
 
     const [createInvoice, { data, loading }] = useMutation(CREATE_INVOICE, {
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     useEffect(() => {
@@ -104,7 +104,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
                 }
                 color={color}
                 type={'number'}
-                onChange={e => setAmount(parseInt(e.target.value))}
+                onChange={(e) => setAmount(parseInt(e.target.value))}
             />
             <SecureButton
                 callback={createInvoice}

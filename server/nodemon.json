@@ -1,4 +1,4 @@
 {
-  "ignore": ["src"],
-  "watch": ["dist/"]
+    "ignore": ["src"],
+    "watch": ["dist/"]
 }

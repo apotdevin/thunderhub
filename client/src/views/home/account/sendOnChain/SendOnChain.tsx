@@ -63,7 +63,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
     const { fast, halfHour, hour } = useBitcoinState();
 
     const [payAddress, { loading }] = useMutation(PAY_ADDRESS, {
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
         onCompleted: () => {
             toast.success('Payment Sent!');
             setOpen();
@@ -113,7 +113,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
                     withMargin={
                         width <= mediaDimensions.mobile ? '' : '0 0 0 24px'
                     }
-                    onChange={e => setAddress(e.target.value)}
+                    onChange={(e) => setAddress(e.target.value)}
                 />
             </ResponsiveLine>
             <Separation />
@@ -140,7 +140,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
                         placeholder={'Sats'}
                         withMargin={'0 0 0 8px'}
                         type={'number'}
-                        onChange={e => setTokens(parseInt(e.target.value))}
+                        onChange={(e) => setTokens(parseInt(e.target.value))}
                     />
                 </SingleLine>
             )}
@@ -193,7 +193,9 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
                             }
                             type={'number'}
                             withMargin={'0 0 0 8px'}
-                            onChange={e => setAmount(parseInt(e.target.value))}
+                            onChange={(e) =>
+                                setAmount(parseInt(e.target.value))
+                            }
                         />
                     </>
                 )}

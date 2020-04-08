@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { ApolloError } from 'apollo-boost';
 
 export const getErrorContent = (error: ApolloError): ReactNode => {
-    const errors = error.graphQLErrors.map(x => x.message);
+    const errors = error.graphQLErrors.map((x) => x.message);
 
     const renderMessage = errors.map((error, i) => {
         try {
