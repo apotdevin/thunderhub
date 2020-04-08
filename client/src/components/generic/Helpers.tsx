@@ -1,7 +1,8 @@
 import React from 'react';
-import { SmallLink, DarkSubTitle, OverflowText } from './Styled';
+import { SmallLink, DarkSubTitle, OverflowText, SingleLine } from './Styled';
 import { StatusDot, DetailLine } from '../../views/channels/Channels.style';
 import { formatDistanceStrict, format } from 'date-fns';
+import { XSvg } from './Icons';
 
 export const getTransactionLink = (transaction: string) => {
     const link = `https://www.blockchain.com/btc/tx/${transaction}`;
@@ -51,12 +52,23 @@ export const renderLine = (
     title: string,
     content: any,
     key?: string | number,
+    deleteCallback?: () => void,
 ) => {
     if (!content) return null;
     return (
         <DetailLine key={key}>
             <DarkSubTitle>{title}</DarkSubTitle>
-            <OverflowText>{content}</OverflowText>
+            <SingleLine>
+                <OverflowText>{content}</OverflowText>
+                {deleteCallback && (
+                    <div
+                        style={{ margin: '0 0 -4px 4px' }}
+                        onClick={deleteCallback}
+                    >
+                        <XSvg />
+                    </div>
+                )}
+            </SingleLine>
         </DetailLine>
     );
 };

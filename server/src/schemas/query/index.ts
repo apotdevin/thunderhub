@@ -9,6 +9,7 @@ import { routeQueries } from './route';
 import { peerQueries } from './peer';
 import { messageQueries } from './message';
 import { chainQueries } from './chain';
+import { hodlQueries } from './hodlhodl';
 
 export const query = {
     ...channelQueries,
@@ -22,4 +23,5 @@ export const query = {
     ...peerQueries,
     ...messageQueries,
     ...chainQueries,
+    ...hodlQueries,
 };

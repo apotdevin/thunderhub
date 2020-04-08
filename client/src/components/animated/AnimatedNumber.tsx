@@ -2,7 +2,7 @@ import React from 'react';
 import { useSpring, animated } from 'react-spring';
 import { getValue } from '../../helpers/Helpers';
 import { useSettings } from '../../context/SettingsContext';
-import { usePriceState } from 'context/PriceContext';
+import { usePriceState } from '../../context/PriceContext';
 
 type PriceProps = {
     price: number;
