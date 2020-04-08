@@ -20,6 +20,8 @@ import { themeColors } from 'styles/Themes';
 import { renderLine } from 'components/generic/Helpers';
 import numeral from 'numeral';
 import { MethodBoxes } from './MethodBoxes';
+import { Link } from 'components/link/Link';
+import { ColorButton } from 'components/buttons/colorButton/ColorButton';
 
 const format = (value: number | string, format: string = '0,0.00') =>
     numeral(value).format(format);
@@ -39,7 +41,6 @@ export const OfferCard = ({
 }: OfferCardProps) => {
     const {
         id,
-        version,
         asset_code,
         country,
         country_code,
@@ -109,10 +110,14 @@ export const OfferCard = ({
             {renderLine('Price', format(price))}
             {renderLine('Min Amount:', format(min_amount))}
             {renderLine('Max Amount:', format(max_amount))}
-            {renderLine(`First Trade Limit:`, first_trade_limit)}
+            {renderLine(`First Trade Limit:`, format(first_trade_limit))}
             {renderLine(`Payment Options:`, renderPayments())}
             {renderLine('Country:', `${country} (${country_code})`)}
             {renderLine('Available Now:', working_now ? 'Yes' : 'No')}
+            {renderLine(`Balance:`, format(balance))}
+            {renderLine(`Payment Window:`, payment_window_minutes)}
+            {renderLine(`Confirmations:`, confirmations)}
+            {renderLine(`Fee Rate:`, `${format(author_fee_rate * 100)}%`)}
             <Separation />
             <Sub4Title>Trader</Sub4Title>
             {renderLine('User:', login)}
@@ -126,6 +131,22 @@ export const OfferCard = ({
             {renderLine('Average Payment Time:', average_payment_time_minutes)}
             {renderLine('Average Release Time:', average_release_time_minutes)}
             {renderLine('Days since last trade:', days_since_last_trade)}
+            <SingleLine>
+                <Link
+                    href={`https://hodlhodl.com/offers/${id}`}
+                    underline={'transparent'}
+                    fullWidth={true}
+                >
+                    <ColorButton withMargin={'16px 4px 0 0'} fullWidth={true}>
+                        View Offer
+                    </ColorButton>
+                </Link>
+                <Link href={url} underline={'transparent'} fullWidth={true}>
+                    <ColorButton withMargin={'16px 0 0 4px'} fullWidth={true}>
+                        View trader
+                    </ColorButton>
+                </Link>
+            </SingleLine>
         </>
     );
 
@@ -148,6 +169,7 @@ export const OfferCard = ({
                     </SingleLine>
                 </ResponsiveLine>
                 <StyledTitle>{title}</StyledTitle>
+                {renderLine('Price:', price)}
                 {renderLine(
                     `Min/Max amount:`,
                     `${format(min_amount, '0a')}/${format(max_amount, '0a')}`,

@@ -66,7 +66,12 @@ export const TraderView = () => {
 
     const { data, loading, fetchMore, error } = useQuery(GET_HODL_OFFERS, {
         variables: { filter: JSON.stringify(queryObject) },
+        onError: () => toast.error('Error getting offers. Please try again.'),
     });
+
+    if (error) {
+        return null;
+    }
 
     if (loading || !data || !data.getOffers) {
         return <LoadingCard title={'P2P Trading'} />;

@@ -26,7 +26,6 @@ export const GET_HODL_OFFERS = gql`
     query GetOffers($filter: String) {
         getOffers(filter: $filter) {
             id
-            version
             asset_code
             country
             country_code

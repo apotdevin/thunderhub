@@ -24,6 +24,8 @@ export const OfferModalBox = styled.div`
 
 export const StyledTitle = styled.div`
     font-size: 14px;
+    margin-bottom: 16px;
+
     @media (${mediaWidths.mobile}) {
         text-align: center;
         margin-top: 8px;
@@ -40,10 +42,15 @@ export const StyledLogin = styled.div`
 `;
 
 export const StyledDescription = styled(StyledLogin)`
+    overflow-y: auto;
     font-size: 14px;
+    max-height: 160px;
+`;
 
-    @media (${mediaWidths.mobile}) {
-        max-height: 160px;
-        overflow-y: auto;
-    }
+export const OptionsLoading = styled.div`
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
 `;

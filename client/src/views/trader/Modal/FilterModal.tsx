@@ -10,6 +10,8 @@ import {
 import { themeColors } from 'styles/Themes';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { FilteredList } from './FilteredList';
+import { OptionsLoading } from '../OfferCard.styled';
+import { toast } from 'react-toastify';
 
 interface FilterProps {
     type: string;
@@ -52,9 +54,8 @@ export const FilterModal = ({
 
     const { loading, data, error } = useQuery(query, {
         skip: skipable,
+        onError: () => toast.error('Error Loading Options. Please try again.'),
     });
-
-    console.log({ data });
 
     useEffect(() => {
         switch (type) {
@@ -126,6 +127,10 @@ export const FilterModal = ({
         }
     };
 
+    if (error) {
+        return null;
+    }
+
     if (selected) {
         return (
             <>
@@ -148,7 +153,11 @@ export const FilterModal = ({
                 options={options}
                 handleClick={handleClick}
             />
-            {loading && <ScaleLoader height={20} color={themeColors.blue3} />}
+            <OptionsLoading>
+                {loading && (
+                    <ScaleLoader height={20} color={themeColors.blue3} />
+                )}
+            </OptionsLoading>
         </>
     );
 };
