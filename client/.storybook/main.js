@@ -7,7 +7,7 @@ module.exports = {
         '@storybook/addon-links',
         '@storybook/addon-viewport/register',
     ],
-    webpackFinal: async config => {
+    webpackFinal: async (config) => {
         config.module.rules.push({
             test: /\.(ts|tsx)$/,
             use: [

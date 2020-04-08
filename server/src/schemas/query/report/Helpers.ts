@@ -56,11 +56,11 @@ export const countArray = (list: ForwardProps[], type: boolean) => {
             const element = grouped[key];
 
             const fee = element
-                .map(forward => forward.fee)
+                .map((forward) => forward.fee)
                 .reduce((p, c) => p + c);
 
             const tokens = element
-                .map(forward => forward.tokens)
+                .map((forward) => forward.tokens)
                 .reduce((p, c) => p + c);
 
             channelInfo.push({
@@ -84,11 +84,11 @@ export const countRoutes = (list: ForwardProps[]) => {
             const element = grouped[key];
 
             const fee = element
-                .map(forward => forward.fee)
+                .map((forward) => forward.fee)
                 .reduce((p, c) => p + c);
 
             const tokens = element
-                .map(forward => forward.tokens)
+                .map((forward) => forward.tokens)
                 .reduce((p, c) => p + c);
 
             channelInfo.push({

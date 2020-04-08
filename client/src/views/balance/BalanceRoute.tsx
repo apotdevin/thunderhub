@@ -42,7 +42,7 @@ export const BalanceRoute = ({
 }: BalancedRouteProps) => {
     const [getRoute, { loading, data, called }] = useLazyQuery(GET_ROUTES, {
         fetchPolicy: 'no-cache',
-        onError: error => {
+        onError: (error) => {
             callback();
             toast.error(getErrorContent(error));
         },
@@ -52,7 +52,7 @@ export const BalanceRoute = ({
         incoming && outgoing && amount && data && data.getRoutes && blocked;
 
     const [payRoute, { loading: loadingP }] = useMutation(PAY_VIA_ROUTE, {
-        onError: error => {
+        onError: (error) => {
             callback();
             toast.error(getErrorContent(error));
         },

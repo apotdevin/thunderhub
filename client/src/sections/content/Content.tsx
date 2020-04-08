@@ -23,6 +23,7 @@ import { BalanceView } from 'views/balance/Balance';
 import { PeersList } from 'views/peers/PeersList';
 import { ToolsView } from 'views/tools';
 import { ChainView } from 'views/chain/ChainView';
+import { TraderView } from 'views/trader/TraderView';
 
 const Container = styled.div`
     display: grid;
@@ -79,6 +80,7 @@ const Content = () => {
                 />
                 <Route path="/settings" render={() => getGrid(SettingsView)} />
                 <Route path="/fees" render={() => getGrid(FeesView)} />
+                <Route path="/trading" render={() => getGrid(TraderView)} />
                 <Route path="/terms" render={() => <TermsView />} />
                 <Route path="/privacy" render={() => <PrivacyView />} />
                 <Route path="/faq" render={() => <FaqView />} />

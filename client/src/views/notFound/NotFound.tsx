@@ -1,6 +1,6 @@
-import React from "react";
-import { Card } from "../../components/generic/Styled";
+import React from 'react';
+import { Card } from '../../components/generic/Styled';
 
 export const NotFound = () => {
-  return <Card>Not Found</Card>;
+    return <Card>Not Found</Card>;
 };

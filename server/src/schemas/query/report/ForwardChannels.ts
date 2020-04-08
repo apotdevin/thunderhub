@@ -72,7 +72,7 @@ export const getForwardChannelsReport = {
 
         const getRouteAlias = (array: any[], publicKey: string) =>
             Promise.all(
-                array.map(async channel => {
+                array.map(async (channel) => {
                     const nodeAliasIn = await getNodeAlias(
                         channel.in,
                         publicKey,
@@ -94,7 +94,7 @@ export const getForwardChannelsReport = {
 
         const getAlias = (array: any[], publicKey: string) =>
             Promise.all(
-                array.map(async channel => {
+                array.map(async (channel) => {
                     const nodeAlias = await getNodeAlias(
                         channel.name,
                         publicKey,
@@ -120,7 +120,7 @@ export const getForwardChannelsReport = {
             });
 
             if (params.type === 'route') {
-                const mapped = forwardsList.forwards.map(forward => {
+                const mapped = forwardsList.forwards.map((forward) => {
                     return {
                         route: `${forward.incoming_channel} - ${forward.outgoing_channel}`,
                         ...forward,

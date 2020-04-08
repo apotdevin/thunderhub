@@ -1,0 +1,31 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "server:dev": "lerna run build:dev --stream --scope @thunderhub/server",
+    "server:prod": "lerna run build --stream --scope @thunderhub/server",
+    "server:run": "lerna run start --stream --scope @thunderhub/server"
+  },
+  "workspaces": {
+    "packages": [
+      "client",
+      "server"
+    ]
+  },
+  "dependencies": {
+    "base64url": "^3.0.1",
+    "date-fns": "^2.0.0-beta.5",
+    "graphql": "^14.6.0"
+  },
+  "devDependencies": {
+    "husky": "^4.2.3",
+    "lerna": "^3.20.2",
+    "prettier": "2.0.2",
+    "pretty-quick": "^2.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npx lerna run --concurrency 1 --stream precommit"
+    }
+  }
+}

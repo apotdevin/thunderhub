@@ -36,7 +36,7 @@ export const ReceiveOnChainCard = () => {
     const [received, setReceived] = useState(false);
 
     const [createAddress, { data, loading }] = useMutation(CREATE_ADDRESS, {
-        onError: error => toast.error(getErrorContent(error)),
+        onError: (error) => toast.error(getErrorContent(error)),
     });
 
     useEffect(() => {

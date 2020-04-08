@@ -22,6 +22,7 @@ import {
     LinkIcon,
     RepeatIcon,
     Users,
+    CreditCard,
 } from '../../components/generic/Icons';
 import { useSettings } from '../../context/SettingsContext';
 import { useConnectionState } from 'context/ConnectionContext';
@@ -59,6 +60,7 @@ const ButtonSection = styled.div`
 
 const NavSeparation = styled.div`
     margin-left: 8px;
+    font-size: 14px;
 `;
 
 interface NavProps {
@@ -124,6 +126,7 @@ const CHAIN_TRANS = '/chainTransactions';
 const TOOLS = '/tools';
 const SETTINGS = '/settings';
 const FEES = '/fees';
+const TRADER = '/trading';
 
 interface NavigationProps {
     isBurger?: boolean;
@@ -169,6 +172,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
             {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
             {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
             {renderNavButton('Tools', TOOLS, Shield, sidebar)}
+            {renderNavButton('P2P Trading', TRADER, CreditCard, sidebar)}
             {renderNavButton('Settings', SETTINGS, Settings, sidebar)}
         </ButtonSection>
     );
@@ -184,6 +188,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
             {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}
             {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
             {renderBurgerNav('Tools', TOOLS, Shield)}
+            {renderBurgerNav('Trading', TRADER, CreditCard)}
             {renderBurgerNav('Settings', SETTINGS, Settings)}
         </BurgerRow>
     );

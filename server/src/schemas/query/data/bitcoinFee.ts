@@ -3,8 +3,7 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLBoolean } from 'graphql';
 import fetch from 'node-fetch';
 import { BitcoinFeeType } from '../../types/QueryType';
-
-const url = 'https://bitcoinfees.earn.com/api/v1/fees/recommended';
+import { appUrls } from '../../../utils/appUrls';
 
 export const getBitcoinFees = {
     type: BitcoinFeeType,
@@ -15,7 +14,7 @@ export const getBitcoinFees = {
         await requestLimiter(context.ip, 'bitcoinFee');
 
         try {
-            const response = await fetch(url);
+            const response = await fetch(appUrls.fees);
             const json = await response.json();
 
             if (json) {
