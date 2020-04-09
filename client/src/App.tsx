@@ -24,7 +24,10 @@ const ContentView = React.lazy(() => import('./sections/content/Content'));
 toast.configure({ draggable: false });
 
 const client = new ApolloClient({
-    uri: process.env.REACT_APP_API_URL ?? 'http://localhost:3001',
+    uri:
+        process.env.REACT_APP_API_URL ?? process.env.NODE_ENV === 'production'
+            ? 'https://api.thunderhub.io'
+            : 'http://localhost:3001',
 });
 
 const ContextApp: React.FC = () => {
