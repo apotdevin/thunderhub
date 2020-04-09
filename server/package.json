@@ -6,8 +6,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "webpack --config webpack.production.js",
         "build:dev": "webpack --config webpack.development.js",
-        "start": "node  --http-parser=legacy dist/server",
-        "dev": "nodemon --http-parser=legacy dist/server",
+        "start": "node --insecure-http-parser dist/server",
+        "dev": "nodemon --insecure-http-parser dist/server",
         "deploy": "yarn build && eb deploy",
         "precommit": "pretty-quick --staged"
     },

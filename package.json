@@ -4,7 +4,8 @@
   "scripts": {
     "server:dev": "lerna run build:dev --stream --scope @thunderhub/server",
     "server:prod": "lerna run build --stream --scope @thunderhub/server",
-    "server:run": "lerna run start --stream --scope @thunderhub/server"
+    "server:start": "lerna run start --stream --scope @thunderhub/server",
+    "deploy": "lerna run deploy --stream"
   },
   "workspaces": {
     "packages": [
