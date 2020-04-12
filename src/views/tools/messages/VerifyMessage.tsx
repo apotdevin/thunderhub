@@ -15,6 +15,7 @@ import { NoWrap } from './Messages';
 import { Input } from '../../../components/input/Input';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Column, WrapRequest } from '../Tools.styled';
+import { getNodeLink } from '../../../components/generic/Helpers';
 
 export const VerifyMessage = () => {
   const [message, setMessage] = useState<string>('');
@@ -74,7 +75,7 @@ export const VerifyMessage = () => {
 
   const renderMessage = () => (
     <Column>
-      <WrapRequest>{signedBy}</WrapRequest>
+      <WrapRequest>{getNodeLink(signedBy)}</WrapRequest>
       <CopyToClipboard
         text={signedBy}
         onCopy={() => toast.success('Public Node Key Copied')}
