@@ -87,11 +87,15 @@ const TransactionsView = () => {
                   const prevEntries = JSON.parse(prev.getResume.resume);
                   const newEntries = JSON.parse(result.getResume.resume);
 
+                  const allTransactions = newToken
+                    ? [...prevEntries, ...newEntries]
+                    : prevEntries;
+
                   setFetching(false);
                   return {
                     getResume: {
                       token: newToken,
-                      resume: JSON.stringify([...prevEntries, ...newEntries]),
+                      resume: JSON.stringify(allTransactions),
                       __typename: 'getResumeType',
                     },
                   };

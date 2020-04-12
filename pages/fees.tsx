@@ -11,6 +11,7 @@ import {
   DarkSubTitle,
   RightAlign,
   ResponsiveLine,
+  NoWrapTitle,
 } from '../src/components/generic/Styled';
 import { useAccount } from '../src/context/AccountContext';
 import { toast } from 'react-toastify';
@@ -73,7 +74,9 @@ const FeesView = () => {
               <>
                 <Separation />
                 <ResponsiveLine>
-                  <DarkSubTitle>{'Base Fee (Sats):'}</DarkSubTitle>
+                  <NoWrapTitle>
+                    <DarkSubTitle>{'Base Fee:'}</DarkSubTitle>
+                  </NoWrapTitle>
                   <Input
                     placeholder={'Sats'}
                     type={'number'}
@@ -81,7 +84,9 @@ const FeesView = () => {
                   />
                 </ResponsiveLine>
                 <ResponsiveLine>
-                  <DarkSubTitle>{'Fee Rate (Sats/Million):'}</DarkSubTitle>
+                  <NoWrapTitle>
+                    <DarkSubTitle>{'Fee Rate:'}</DarkSubTitle>
+                  </NoWrapTitle>
                   <Input
                     placeholder={'Sats/Million'}
                     type={'number'}

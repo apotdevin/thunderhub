@@ -63,7 +63,7 @@ const TradingView = () => {
 
   const { data, loading, fetchMore, error } = useQuery(GET_HODL_OFFERS, {
     variables: { filter: JSON.stringify(queryObject) },
-    onError: () => toast.error('Error getting offers. Please try again.'),
+    onError: () => {},
   });
 
   if (error) {
