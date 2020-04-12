@@ -5,7 +5,11 @@ import {
   DarkSubTitle,
   ResponsiveLine,
 } from '../../components/generic/Styled';
-import { StatusLine, NodeTitle, MainInfo } from '../channels/Channels.style';
+import {
+  StatusLine,
+  NodeTitle,
+  MainInfo,
+} from '../../components/generic/CardGeneric';
 import {
   getStatusDot,
   getDateDif,

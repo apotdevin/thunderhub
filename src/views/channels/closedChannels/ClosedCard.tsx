@@ -1,5 +1,5 @@
 import React from 'react';
-import { NodeTitle, MainInfo } from '../Channels.style';
+import { NodeTitle, MainInfo } from '../../../components/generic/CardGeneric';
 import {
   SubCard,
   Separation,

@@ -15,7 +15,7 @@ import {
   StyledLogin,
   StyledDescription,
 } from './OfferCard.styled';
-import { MainInfo } from '../channels/Channels.style';
+import { MainInfo } from '../../components/generic/CardGeneric';
 import { themeColors } from '../../styles/Themes';
 import { renderLine } from '../../components/generic/Helpers';
 import numeral from 'numeral';

@@ -8,7 +8,11 @@ import {
   NoWrapTitle,
 } from '../../components/generic/Styled';
 import { renderLine } from '../../components/generic/Helpers';
-import { MainInfo, NodeTitle, ColLine } from './Fees.style';
+import {
+  MainInfo,
+  NodeTitle,
+  ColLine,
+} from '../../components/generic/CardGeneric';
 import { useMutation } from '@apollo/react-hooks';
 import { UPDATE_FEES } from '../../graphql/mutation';
 import { toast } from 'react-toastify';

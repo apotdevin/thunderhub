@@ -99,8 +99,8 @@ export const getResume = {
     };
 
     const filteredPayments = withInvoices
-      ? payments
-      : payments.filter(filterArray);
+      ? payments.filter(filterArray)
+      : payments;
 
     const resumeArray = sortBy(
       [...invoices, ...filteredPayments],

@@ -5,7 +5,7 @@ import {
   DarkSubTitle,
   ResponsiveLine,
 } from '../../components/generic/Styled';
-import { MainInfo } from '../../views/channels/Channels.style';
+import { MainInfo } from '../../components/generic/CardGeneric';
 import { Circle, ChevronRight, XSvg } from '../../components/generic/Icons';
 import { getPercent } from '../../utils/Helpers';
 import { Price } from '../../components/price/Price';

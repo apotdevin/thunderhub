@@ -1,6 +1,6 @@
 import React from 'react';
 import { Separation, SubCard } from '../../../components/generic/Styled';
-import { MainInfo } from '../../channels/Channels.style';
+import { MainInfo } from '../../../components/generic/CardGeneric';
 import { renderLine } from '../../../components/generic/Helpers';
 import { getPrice } from '../../../components/price/Price';
 import { useSettings } from '../../../context/SettingsContext';

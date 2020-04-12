@@ -6,7 +6,7 @@ import {
   NodeTitle,
   StatusLine,
   MainInfo,
-} from '../Channels.style';
+} from '../../../components/generic/CardGeneric';
 import ReactTooltip from 'react-tooltip';
 import {
   SubCard,

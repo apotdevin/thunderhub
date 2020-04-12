@@ -6,7 +6,7 @@ import {
   ResponsiveLine,
   ResponsiveSingle,
 } from '../../components/generic/Styled';
-import { MainInfo } from '../channels/Channels.style';
+import { MainInfo } from '../../components/generic/CardGeneric';
 import {
   getDateDif,
   getFormatDate,
