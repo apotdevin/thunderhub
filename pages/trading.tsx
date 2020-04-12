@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import { Link } from '../src/components/link/Link';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { useRouter } from 'next/router';
+import { decode } from '../src/utils/Helpers';
 
 export interface QueryProps {
   pagination: {
@@ -45,8 +46,13 @@ const TradingView = () => {
 
   let decoded: QueryProps = defaultQuery;
   if (query?.filter) {
+    const { filter } = query;
     try {
-      decoded = JSON.parse(atob(query.filter[0]));
+      if (typeof filter === 'string') {
+        decoded = JSON.parse(decode(filter));
+      } else {
+        decoded = JSON.parse(decode(filter[0]));
+      }
     } catch (error) {
       toast.error('Incorrect url.');
     }

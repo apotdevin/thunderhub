@@ -76,3 +76,8 @@ export const saveToPc = (jsonData: string, filename: string) => {
   link.href = url;
   link.click();
 };
+
+export const encode = (data: string): string =>
+  Buffer.from(data, 'binary').toString('base64');
+export const decode = (data: string): string =>
+  Buffer.from(data, 'base64').toString('binary');

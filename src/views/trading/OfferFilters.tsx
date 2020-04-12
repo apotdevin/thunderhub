@@ -18,6 +18,7 @@ import { XSvg } from '../../components/generic/Icons';
 import { renderLine } from '../../components/generic/Helpers';
 import { chartColors } from '../../styles/Themes';
 import { useRouter } from 'next/router';
+import { encode } from '../../utils/Helpers';
 
 type ActionType = {
   type: 'addFilter' | 'addSort' | 'removeSort' | 'removeFilter' | 'changeLimit';
@@ -91,10 +92,13 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
     </SingleButton>
   );
 
-  const handleSave = () =>
-    push({ search: `?filter=${btoa(JSON.stringify(filterState))}` });
+  const handleSave = () => {
+    const stringFormat = JSON.stringify(filterState);
+    const encoded = encode(stringFormat);
+    push(`/trading?filter=${encoded}`);
+  };
 
-  const handleRemoveAll = () => push({ search: '' });
+  const handleRemoveAll = () => push('/trading');
 
   const handleRemove = (removeKey: string) => {
     dispatch({ type: 'removeFilter', removeKey });
