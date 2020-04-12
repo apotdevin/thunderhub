@@ -1,0 +1,12 @@
+.git
+.gitignore
+.cache
+*.md
+!README*.md
+/node_modules
+/.next
+/docs
+/.github
+.env
+.vscode
+CHANGELOG.md

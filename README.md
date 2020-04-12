@@ -1,7 +1,7 @@
 # **ThunderHub - Lightning Node Manager**
 
-![Home Screenshot](assets/Home.png)
-[![license](https://img.shields.io/github/license/DAVFoundation/captain-n3m0.svg?style=flat-square)](https://github.com/DAVFoundation/captain-n3m0/blob/master/LICENSE) [![Known Vulnerabilities](https://snyk.io/test/github/apotdevin/thunderhub/badge.svg?targetFile=client/package.json)](https://snyk.io/test/github/apotdevin/thunderhub) [![Known Vulnerabilities](https://snyk.io/test/github/apotdevin/thunderhub/badge.svg?targetFile=server/package.json)](https://snyk.io/test/github/apotdevin/thunderhub) [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+![Home Screenshot](./docs/Home.png)
+[![license](https://img.shields.io/github/license/DAVFoundation/captain-n3m0.svg?style=flat-square)](https://github.com/DAVFoundation/captain-n3m0/blob/master/LICENSE)
 
 ## Table Of Contents
 
@@ -16,21 +16,13 @@ ThunderHub is an **open-source** LND node manager where you can manage and monit
 
 ### Tech Stack
 
-The repository consists of two packages (client and server) and is maintained with LernaJS and Yarn Workspaces.
+This repository consists of a **NextJS** server that handles both the backend **Graphql Server** and the frontend **React App**.
 
-#### Client
-
-[![Known Vulnerabilities](https://snyk.io/test/github/apotdevin/thunderhub/badge.svg?targetFile=client/package.json)](https://snyk.io/test/github/apotdevin/thunderhub)
-
+- NextJS
 - ReactJS
 - Typescript
 - Styled-Components
 - Apollo
-
-#### Server
-
-[![Known Vulnerabilities](https://snyk.io/test/github/apotdevin/thunderhub/badge.svg?targetFile=server/package.json)](https://snyk.io/test/github/apotdevin/thunderhub)
-
 - Apollo-Server
 - GraphQL
 - Ln-Service
@@ -99,46 +91,28 @@ git clone https://github.com/apotdevin/thunderhub.git
 - Node installed
 - Yarn installed
 
-After cloning the repository run `yarn` to get all the necessary modules installed. Yarn workspaces will handle installing modules for both the client and the server.
+After cloning the repository run `yarn` to get all the necessary modules installed.
 
-### **ThunderHub - Server**
-
-To be able to use the HodlHodl integration create a `.env` file in the `/server` folder with `HODL_KEY='[YOUR API KEY]'` and replace `[YOUR API KEY]` with the one that HodlHodl provides you.
-
-#### To get the server running use the following commands
+After `yarn` has finished installing all the dependencies you can proceed to build and run the app with the following commands.
 
 ```javascript
-yarn server:prod
-yarn server:run
-```
-
-If the server starts succesfully, you should see `info [server.js]: Server ready at http://localhost:3001/` in the terminal
-
-### **ThunderHub - Client**
-
-#### To get the React frontend running use the following commands
-
-##### This must be done in the `/client` folder
-
-```javascript
+yarn build
 yarn start
 ```
 
-If the frontend starts succesfully, you should see `Compiled successfully! You can now view app in the browser.` in the terminal and a browser window should have opened in your browser.
+This will start the server on port 3000, so just head to `localhost:3000` to see the app running.
+
+#### HodlHodl Integration
+
+To be able to use the HodlHodl integration create a `.env` file in the root folder with `HODL_KEY='[YOUR API KEY]'` and replace `[YOUR API KEY]` with the one that HodlHodl provides you.
 
 ## Development
 
 If you want to develop on ThunderHub and want hot reloading when you do changes, use the following commands:
 
-### ThunderHub - Server
-
 ```javascript
-yarn server:dev
+yarn dev
 ```
-
-### ThunderHub - Client
-
-Running the commands `yarn start` in the `client` folder works for development.
 
 #### Storybook
 
