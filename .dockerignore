@@ -9,4 +9,5 @@
 /.github
 .env
 .vscode
+.storybook
 CHANGELOG.md

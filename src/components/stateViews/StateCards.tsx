@@ -1,11 +1,12 @@
 import React from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import styled from 'styled-components';
-import { SubTitle, Card, SingleLine } from '../generic/Styled';
+import { SubTitle, Card } from '../generic/Styled';
 import { themeColors, mediaWidths, fontColors } from '../../styles/Themes';
-import { Link } from '../link/Link';
-import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { SectionTitle } from '../typography/Styled';
+import { CurrentSettings } from '../../views/settings/Current';
+import { AccountSettings } from '../../views/settings/Account';
+import { DangerView } from '../../views/settings/Danger';
 
 const FullDiv = styled.div`
   display: flex;
@@ -45,21 +46,22 @@ const StyledParagraph = styled.p`
 `;
 
 export const ErrorView = () => (
-  <Card>
-    <StyledTitle textColor={fontColors.blue3}>Connection Error</StyledTitle>
-    <StyledParagraph>
-      ThunderHub was unable to connect to your node.
-    </StyledParagraph>
-    <StyledParagraph>
-      Please make sure it's online and that the connection details are correct.
-    </StyledParagraph>
-    <StyledSubtitle>If the problem persists please contact us.</StyledSubtitle>
-    <SingleLine>
-      <ColorButton fullWidth={true} withMargin={'16px 0 0'} arrow={true}>
-        <Link to={'/settings'} inheritColor={true}>
-          Go to settings
-        </Link>
-      </ColorButton>
-    </SingleLine>
-  </Card>
+  <>
+    <Card>
+      <StyledTitle textColor={fontColors.blue3}>Connection Error</StyledTitle>
+      <StyledParagraph>
+        ThunderHub was unable to connect to your node.
+      </StyledParagraph>
+      <StyledParagraph>
+        Please make sure it's online and that the connection details are
+        correct.
+      </StyledParagraph>
+      <StyledSubtitle>
+        If the problem persists please contact us.
+      </StyledSubtitle>
+    </Card>
+    <CurrentSettings />
+    <AccountSettings />
+    <DangerView />
+  </>
 );
