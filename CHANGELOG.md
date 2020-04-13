@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/apotdevin/thunderhub/compare/v0.2.2...v0.3.1) (2020-04-13)
+
+
+### Bug Fixes
+
+* dockerfile and small changes ([6aebc91](https://github.com/apotdevin/thunderhub/commit/6aebc9190889fcc1c0eb82585e61be26518edd66))
+
 ## [0.3.0](https://github.com/apotdevin/thunderhub/compare/v0.2.2...v0.3.0) (2020-04-12)
 
 ### Feature
