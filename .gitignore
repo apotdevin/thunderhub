@@ -29,3 +29,9 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+.ebextensions/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

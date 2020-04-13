@@ -34,6 +34,10 @@ const StyledALink = styled.a`
   }
 `;
 
+const NoStyling = styled.a`
+  text-decoration: none;
+`;
+
 interface LinkProps {
   children: any;
   href?: string;
@@ -42,6 +46,7 @@ interface LinkProps {
   underline?: string | ThemeSet;
   inheritColor?: boolean;
   fullWidth?: boolean;
+  noStyling?: boolean;
 }
 
 export const Link = ({
@@ -52,22 +57,25 @@ export const Link = ({
   underline,
   inheritColor,
   fullWidth,
+  noStyling,
 }: LinkProps) => {
   const props = { fontColor: color, underline, inheritColor, fullWidth };
 
   if (!href && !to) return null;
 
+  const CorrectLink = noStyling ? NoStyling : StyledALink;
+
   if (href) {
     return (
-      <StyledALink href={href} {...props}>
+      <CorrectLink href={href} {...props}>
         {children}
-      </StyledALink>
+      </CorrectLink>
     );
   }
 
   return (
     <RouterLink href={to}>
-      <StyledALink {...props}>{children}</StyledALink>
+      <CorrectLink {...props}>{children}</CorrectLink>
     </RouterLink>
   );
   // }
