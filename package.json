@@ -68,7 +68,6 @@
     "@storybook/react": "^5.3.18",
     "@types/node": "^13.11.1",
     "@types/react": "^16.9.34",
-    "@types/storybook__react": "^5.2.1",
     "babel-loader": "^8.1.0",
     "babel-plugin-inline-react-svg": "^1.1.1",
     "babel-plugin-styled-components": "^1.10.7",
