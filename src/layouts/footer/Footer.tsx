@@ -120,12 +120,15 @@ export const Footer = () => {
             FAQ
           </Link>
           <Link
-            href={'github.com/apotdevin/thunderhub'}
+            href={'https://github.com/apotdevin/thunderhub'}
             color={fontColors.blue}
           >
             Github
           </Link>
-          <Link href={'twitter.com/thunderhubio'} color={fontColors.blue}>
+          <Link
+            href={'https://twitter.com/thunderhubio'}
+            color={fontColors.blue}
+          >
             Twitter
           </Link>
           <Link to={'/terms'} color={fontColors.blue}>
