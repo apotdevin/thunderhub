@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.2](https://github.com/apotdevin/thunderhub/compare/v0.3.1...v0.3.2) (2020-04-14)
+
+
+### Improvements
+
+* add seo head and fix env ([7c900be](https://github.com/apotdevin/thunderhub/commit/7c900be4d09a775e2b46a2b1264785c0ae20d29e))
+* disabled strong password and link fixes ([115266b](https://github.com/apotdevin/thunderhub/commit/115266b264b0b613dc4690e2bce690e344d570aa))
+* fix envs and add base path ([00c7851](https://github.com/apotdevin/thunderhub/commit/00c78513ec3611a7a3bb39732abfa35abcffbbe6))
+
 ### [0.3.1](https://github.com/apotdevin/thunderhub/compare/v0.2.2...v0.3.1) (2020-04-13)
 
 
