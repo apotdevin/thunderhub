@@ -1,11 +1,7 @@
-const dotEnvResult = require('dotenv').config();
+require('dotenv').config();
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
-
-if (dotEnvResult.error) {
-  throw dotEnvResult.error;
-}
 
 module.exports = withBundleAnalyzer({
   poweredByHeader: false,
