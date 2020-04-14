@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { textColor, linkHighlight } from '../../styles/Themes';
 import { ThemeSet } from 'styled-theming';
 import RouterLink from 'next/link';
+import getConfig from 'next/config';
 
 interface StyledProps {
   fontColor?: string | ThemeSet;
@@ -11,7 +12,7 @@ interface StyledProps {
   fullWidth?: boolean;
 }
 
-const StyledALink = styled.a`
+const StyledLink = styled.a`
   cursor: pointer;
   color: ${({ fontColor, inheritColor }: StyledProps) =>
     inheritColor ? 'inherit' : fontColor ?? textColor};
@@ -49,6 +50,9 @@ interface LinkProps {
   noStyling?: boolean;
 }
 
+const { publicRuntimeConfig } = getConfig();
+const { basePath } = publicRuntimeConfig;
+
 export const Link = ({
   children,
   href,
@@ -63,7 +67,7 @@ export const Link = ({
 
   if (!href && !to) return null;
 
-  const CorrectLink = noStyling ? NoStyling : StyledALink;
+  const CorrectLink = noStyling ? NoStyling : StyledLink;
 
   if (href) {
     return (
@@ -74,9 +78,8 @@ export const Link = ({
   }
 
   return (
-    <RouterLink href={to}>
+    <RouterLink href={`${basePath}${to}`}>
       <CorrectLink {...props}>{children}</CorrectLink>
     </RouterLink>
   );
-  // }
 };

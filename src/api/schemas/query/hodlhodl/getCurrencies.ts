@@ -4,7 +4,10 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { logger } from '../../../helpers/logger';
 import { appUrls } from '../../../utils/appUrls';
 import { HodlCurrencyType } from '../../types/HodlType';
-import { envConfig } from '../../../utils/envConfig';
+import getConfig from 'next/config';
+
+const { serverRuntimeConfig } = getConfig();
+const { hodlKey } = serverRuntimeConfig;
 
 export const getCurrencies = {
   type: new GraphQLList(HodlCurrencyType),
@@ -13,7 +16,7 @@ export const getCurrencies = {
     await requestLimiter(context.ip, 'getCurrencies');
 
     const headers = {
-      Authorization: `Bearer ${envConfig.hodlKey}`,
+      Authorization: `Bearer ${hodlKey}`,
     };
 
     try {

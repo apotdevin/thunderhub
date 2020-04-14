@@ -6,6 +6,7 @@ import { Input } from '../../input/Input';
 import { Line, CheckboxText } from '../Auth.styled';
 import { LoadingBar } from '../../loadingBar/LoadingBar';
 import { Checkbox } from '../../checkbox/Checkbox';
+import getConfig from 'next/config';
 
 interface PasswordProps {
   isPass?: string;
@@ -13,6 +14,9 @@ interface PasswordProps {
   callback: () => void;
   loading: boolean;
 }
+
+const { publicRuntimeConfig } = getConfig();
+const { nodeEnv } = publicRuntimeConfig;
 
 const PasswordInput = ({
   isPass = '',
@@ -22,7 +26,7 @@ const PasswordInput = ({
 }: PasswordProps) => {
   const [checked, setChecked] = useState(false);
   const strength = (100 * Math.min(zxcvbn(isPass).guesses_log10, 40)) / 40;
-  const needed = process.env.NODE_ENV !== 'development' ? 1 : checked ? 10 : 20;
+  const needed = nodeEnv === 'development' ? 1 : checked ? 10 : 20;
 
   return (
     <>

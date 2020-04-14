@@ -13,6 +13,7 @@ import { useAccount } from '../../context/AccountContext';
 import RouterLink from 'next/link';
 import { HomeButton } from '../../views/homepage/HomePage.styled';
 import { Zap } from '../../components/generic/Icons';
+import getConfig from 'next/config';
 
 const FooterStyle = styled.div`
   padding: 40px 0;
@@ -91,6 +92,9 @@ const Version = styled.div`
   margin-left: 8px;
 `;
 
+const { publicRuntimeConfig } = getConfig();
+const { npmVersion } = publicRuntimeConfig;
+
 export const Footer = () => {
   const { loggedIn } = useAccount();
   return (
@@ -101,7 +105,7 @@ export const Footer = () => {
             <Link to={'/'}>
               <Title>ThunderHub</Title>
             </Link>
-            <Version>{'0.3.0'}</Version>
+            <Version>{npmVersion}</Version>
           </Line>
           <SideText>
             Open-source lightning node manager to control and monitor your LND

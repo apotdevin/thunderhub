@@ -4,7 +4,10 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { logger } from '../../../helpers/logger';
 import { appUrls } from '../../../utils/appUrls';
 import { HodlCountryType } from '../../types/HodlType';
-import { envConfig } from '../../../utils/envConfig';
+import getConfig from 'next/config';
+
+const { serverRuntimeConfig } = getConfig();
+const { hodlKey } = serverRuntimeConfig;
 
 export const getCountries = {
   type: new GraphQLList(HodlCountryType),
@@ -13,7 +16,7 @@ export const getCountries = {
     await requestLimiter(context.ip, 'getCountries');
 
     const headers = {
-      Authorization: `Bearer ${envConfig.hodlKey}`,
+      Authorization: `Bearer ${hodlKey}`,
     };
 
     try {

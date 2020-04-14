@@ -1,9 +1,12 @@
 import { createLogger, format, transports } from 'winston';
+import getConfig from 'next/config';
 import path from 'path';
-import { envConfig } from '../utils/envConfig';
+
+const { serverRuntimeConfig } = getConfig();
+const { logLevel, nodeEnv } = serverRuntimeConfig;
 
 const combinedFormat =
-  envConfig.env === 'development'
+  nodeEnv === 'development'
     ? format.combine(
         format.label({
           label: path.basename(
@@ -33,7 +36,7 @@ const combinedFormat =
       );
 
 export const logger = createLogger({
-  level: envConfig.logLevel,
+  level: logLevel,
   format: combinedFormat,
   transports: [new transports.Console()],
 });
