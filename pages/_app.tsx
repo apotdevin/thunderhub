@@ -21,7 +21,6 @@ import {
 } from '../src/components/stateViews/StateCards';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../src/styles/FontStyles.css';
 
 toast.configure({ draggable: false });
 
