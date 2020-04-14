@@ -55,7 +55,7 @@ const RightFooter = styled(SideFooter)`
 `;
 
 const Title = styled.div`
-  font-weight: 900;
+  font-weight: 800;
   color: ${headerTextColor};
 `;
 

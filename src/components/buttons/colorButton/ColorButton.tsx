@@ -49,7 +49,7 @@ interface BorderProps {
 
 const BorderButton = styled(GeneralButton)`
   ${({ selected }) => selected && 'cursor: default'};
-  ${({ selected }) => selected && 'font-weight: 900'};
+  ${({ selected }) => selected && 'font-weight: 800'};
   background-color: ${colorButtonBackground};
   color: ${textColor};
   border: 1px solid

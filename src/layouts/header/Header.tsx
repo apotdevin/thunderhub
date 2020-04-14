@@ -35,7 +35,7 @@ const IconPadding = styled.div`
 
 const HeaderTitle = styled.div`
   color: ${headerTextColor};
-  font-weight: 900;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;

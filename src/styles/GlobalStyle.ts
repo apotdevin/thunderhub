@@ -12,15 +12,9 @@ export const GlobalStyles = createGlobalStyle`
     body {
         background: ${backgroundColor};
         color: ${textColor};
-        /* color: ${textColor}; */
-        /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; */
-        font-family: Manrope;
+        font-family: 'Manrope', sans-serif;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        /* align-items: center; */
-        /* display: flex; */
-        /* justify-content: center; */
-        /* height: 100vh; */
     }
 `;
