@@ -32,7 +32,7 @@ export const ProgressBar = styled.div`
 
 export const NodeTitle = styled.div`
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 700;
   width: 240px;
   white-space: nowrap;
   overflow: hidden;

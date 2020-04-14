@@ -41,7 +41,7 @@ const Margin = styled.div`
 
 const Title = styled.div`
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 700;
   display: flex;
   justify-content: center;
   align-items: center;

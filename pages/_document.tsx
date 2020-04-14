@@ -48,6 +48,10 @@ export default class MyDocument extends Document {
             content="Manage and monitor your lightning network node right inside your browser"
             key="description"
           />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap"
+            rel="stylesheet"
+          ></link>
         </Head>
         <body>
           <Main />

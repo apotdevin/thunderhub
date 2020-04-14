@@ -38,7 +38,7 @@ const SelectedIcon = styled.div`
 
 const Symbol = styled.div`
   margin-top: 2px;
-  font-weight: bold;
+  font-weight: 700;
 `;
 
 const IconRow = styled.div`
