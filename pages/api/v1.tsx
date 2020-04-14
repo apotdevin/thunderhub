@@ -1,7 +1,11 @@
 import { ApolloServer } from 'apollo-server-micro';
 import { thunderHubSchema } from '../../src/api/schemas';
 import { getIp } from '../../src/api/helpers/helpers';
+import getConfig from 'next/config';
 import Cors from 'micro-cors';
+
+const { publicRuntimeConfig } = getConfig();
+const { apiUrl } = publicRuntimeConfig;
 
 const cors = Cors({
   origin: true,
@@ -15,7 +19,7 @@ const apolloServer = new ApolloServer({
   },
 });
 
-const handler = apolloServer.createHandler({ path: '/api/v1' });
+const handler = apolloServer.createHandler({ path: apiUrl });
 
 export const config = {
   api: {

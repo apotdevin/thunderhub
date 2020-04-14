@@ -1,11 +1,13 @@
 import { ApolloClient, InMemoryCache, HttpLink } from 'apollo-boost';
 import fetch from 'isomorphic-unfetch';
 import withApollo from 'next-with-apollo';
+import getConfig from 'next/config';
 
-const GRAPHQL_URL = '/api/v1';
+const { publicRuntimeConfig } = getConfig();
+const { apiUrl } = publicRuntimeConfig;
 
 const link = new HttpLink({
-  uri: GRAPHQL_URL,
+  uri: apiUrl,
   credentials: 'same-origin',
   fetch,
 });
