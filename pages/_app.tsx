@@ -22,6 +22,7 @@ import {
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../src/styles/FontStyles.css';
+import Head from 'next/head';
 
 toast.configure({ draggable: false });
 
@@ -65,13 +66,28 @@ class MyApp extends App<any> {
   render() {
     const { Component, pageProps, apollo } = this.props;
     return (
-      <ApolloProvider client={apollo}>
-        <ContextProvider>
-          <Wrapper>
-            <Component {...pageProps} />
-          </Wrapper>
-        </ContextProvider>
-      </ApolloProvider>
+      <>
+        <Head>
+          <title>ThunderHub - Lightning Node Manager</title>
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+            key="viewport"
+          />
+          <meta
+            name="description"
+            content="Manage and monitor your lightning network node right inside your browser"
+            key="description"
+          />
+        </Head>
+        <ApolloProvider client={apollo}>
+          <ContextProvider>
+            <Wrapper>
+              <Component {...pageProps} />
+            </Wrapper>
+          </ContextProvider>
+        </ApolloProvider>
+      </>
     );
   }
 }
