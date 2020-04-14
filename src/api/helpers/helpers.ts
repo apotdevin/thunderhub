@@ -1,5 +1,8 @@
 import { authenticatedLndGrpc } from 'ln-service';
-import { envConfig } from '../utils/envConfig';
+import getConfig from 'next/config';
+
+const { serverRuntimeConfig } = getConfig();
+const { nodeEnv } = serverRuntimeConfig;
 
 export const getIp = (req: any) => {
   if (!req || !req.headers) {
@@ -9,7 +12,7 @@ export const getIp = (req: any) => {
   const before = forwarded
     ? forwarded.split(/, /)[0]
     : req.connection.remoteAddress;
-  const ip = envConfig.env === 'development' ? '1.2.3.4' : before;
+  const ip = nodeEnv === 'development' ? '1.2.3.4' : before;
   return ip;
 };
 

@@ -1,13 +1,23 @@
-const { parsed: localEnv } = require('dotenv').config();
-const webpack = require('webpack');
-module.exports = {
-  webpack: config => {
-    config.plugins.push(new webpack.EnvironmentPlugin(localEnv));
-    return config;
-  },
-};
-
+const dotEnvResult = require('dotenv').config();
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
-module.exports = withBundleAnalyzer({});
+
+if (dotEnvResult.error) {
+  throw dotEnvResult.error;
+}
+
+module.exports = withBundleAnalyzer({
+  poweredByHeader: false,
+  assetPrefix: process.env.BASE_PATH || '',
+  serverRuntimeConfig: {
+    nodeEnv: process.env.NODE_ENV || 'development',
+    logLevel: process.env.LOG_LEVEL || 'silly',
+    hodlKey: process.env.HODL_KEY || '',
+  },
+  publicRuntimeConfig: {
+    nodeEnv: process.env.NODE_ENV || 'development',
+    basePath: process.env.BASE_PATH || '',
+    npmVersion: process.env.npm_package_version || '0.0.0',
+  },
+});
