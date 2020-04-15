@@ -7,6 +7,7 @@ import {
   TextSection,
 } from './Sections.styled';
 import { Text } from '../../../components/typography/Styled';
+import { appendBasePath } from '../../../utils/basePath';
 
 export const InfoSection = () => {
   return (
@@ -21,14 +22,16 @@ export const InfoSection = () => {
             </Text>
           </TextSection>
           <ImageSection>
-            <ImagePlace src={'/static/images/Transactions.png'} />
+            <ImagePlace
+              src={appendBasePath('/static/images/Transactions.png')}
+            />
           </ImageSection>
         </InfoRow>
       </Section>
       <Section padding={'48px 0'}>
         <InfoRow reverse={true}>
           <ImageSection>
-            <ImagePlace src={'/static/images/Transactions.png'} />
+            <ImagePlace src={appendBasePath('/static/images/Reports.png')} />
           </ImageSection>
           <TextSection>
             <h2>Transaction Reports</h2>
@@ -51,14 +54,14 @@ export const InfoSection = () => {
             </Text>
           </TextSection>
           <ImageSection>
-            <ImagePlace src={'/static/images/Transactions.png'} />
+            <ImagePlace src={appendBasePath('/static/images/Channels.png')} />
           </ImageSection>
         </InfoRow>
       </Section>
       <Section padding={'48px 0'}>
         <InfoRow reverse={true}>
           <ImageSection>
-            <ImagePlace src={'/static/images/Transactions.png'} />
+            <ImagePlace src={appendBasePath('/static/images/Forwards.png')} />
           </ImageSection>
           <TextSection>
             <h2>Forwarded Payments</h2>
@@ -80,7 +83,7 @@ export const InfoSection = () => {
             </Text>
           </TextSection>
           <ImageSection>
-            <ImagePlace src={'/static/images/Transactions.png'} />
+            <ImagePlace src={appendBasePath('/static/images/NightLight.png')} />
           </ImageSection>
         </InfoRow>
       </Section>
