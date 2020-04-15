@@ -37,7 +37,6 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <title>ThunderHub - Lightning Node Manager</title>
           <meta
             name="viewport"
             content="initial-scale=1.0, width=device-width"
