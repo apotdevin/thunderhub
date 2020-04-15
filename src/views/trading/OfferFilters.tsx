@@ -19,6 +19,7 @@ import { renderLine } from '../../components/generic/Helpers';
 import { chartColors } from '../../styles/Themes';
 import { useRouter } from 'next/router';
 import { encode } from '../../utils/Helpers';
+import { appendBasePath } from '../../utils/basePath';
 
 type ActionType = {
   type: 'addFilter' | 'addSort' | 'removeSort' | 'removeFilter' | 'changeLimit';
@@ -95,10 +96,10 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
   const handleSave = () => {
     const stringFormat = JSON.stringify(filterState);
     const encoded = encode(stringFormat);
-    push(`/trading?filter=${encoded}`);
+    push(appendBasePath(`/trading?filter=${encoded}`));
   };
 
-  const handleRemoveAll = () => push('/trading');
+  const handleRemoveAll = () => push(appendBasePath('/trading'));
 
   const handleRemove = (removeKey: string) => {
     dispatch({ type: 'removeFilter', removeKey });

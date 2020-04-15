@@ -78,7 +78,10 @@ export const Link = ({
   }
 
   return (
-    <RouterLink href={`${basePath}${to}`}>
+    <RouterLink
+      href={`${basePath}${to}`}
+      prefetch={basePath === '' ? true : false}
+    >
       <CorrectLink {...props}>{children}</CorrectLink>
     </RouterLink>
   );
