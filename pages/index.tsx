@@ -4,6 +4,7 @@ import { useAccount } from '../src/context/AccountContext';
 import { SessionLogin } from '../src/views/login/SessionLogin';
 import { useRouter } from 'next/router';
 import { HomePageView } from '../src/views/homepage/HomePage';
+import { appendBasePath } from '../src/utils/basePath';
 
 const ContextApp: React.FC = () => {
   const { push } = useRouter();
@@ -11,7 +12,7 @@ const ContextApp: React.FC = () => {
 
   if (loggedIn) {
     if (admin === '' || viewOnly !== '' || sessionAdmin !== '') {
-      push('/home');
+      push(appendBasePath('/home'));
     }
   }
 

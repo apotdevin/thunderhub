@@ -12,6 +12,7 @@ import { useStatusDispatch } from '../../context/StatusContext';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { LoadingCard } from '../loading/LoadingCard';
+import { appendBasePath } from '../../utils/basePath';
 
 const PasswordInput = dynamic(() => import('./views/Password'), {
   ssr: false,
@@ -114,7 +115,7 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     dispatchState({ type: 'disconnected' });
     changeAccount(id);
 
-    push('/');
+    push(appendBasePath('/'));
   };
 
   const handleSave = () => {
@@ -143,7 +144,7 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
       dispatchState({ type: 'disconnected' });
       changeAccount(id);
 
-      push('/');
+      push(appendBasePath('/'));
     }
   };
 

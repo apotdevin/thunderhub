@@ -12,10 +12,9 @@ import styled from 'styled-components';
 import { useAccount } from '../../../context/AccountContext';
 import { saveSessionAuth } from '../../../utils/auth';
 import { useSettings } from '../../../context/SettingsContext';
-import { textColorMap, mediaDimensions } from '../../../styles/Themes';
+import { textColorMap } from '../../../styles/Themes';
 import { ColorButton } from '../colorButton/ColorButton';
 import { Input } from '../../input/Input';
-import { useSize } from '../../../hooks/UseSize';
 
 const RadioText = styled.div`
   margin-left: 10px;
@@ -43,7 +42,6 @@ export const LoginModal = ({
   callback,
   variables,
 }: LoginProps) => {
-  const { width } = useSize();
   const { theme } = useSettings();
 
   const [pass, setPass] = useState<string>('');
@@ -84,7 +82,8 @@ export const LoginModal = ({
       <ResponsiveLine>
         <Sub4Title>Password:</Sub4Title>
         <Input
-          withMargin={width <= mediaDimensions.mobile ? '0' : '0 0 0 16px'}
+          withMargin={'0 0 0 16px'}
+          mobileMargin={'0'}
           type={'password'}
           onChange={e => setPass(e.target.value)}
         />

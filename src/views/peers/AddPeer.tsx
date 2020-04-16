@@ -17,8 +17,6 @@ import {
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
 import { Input } from '../../components/input/Input';
-import { mediaDimensions } from '../../styles/Themes';
-import { useSize } from '../../hooks/UseSize';
 import { useMutation } from '@apollo/react-hooks';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
@@ -30,8 +28,6 @@ export const AddPeer = () => {
   const [temp, setTemp] = useState<boolean>(false);
   const [key, setKey] = useState<string>('');
   const [socket, setSocket] = useState<string>('');
-
-  const { width } = useSize();
 
   const [addPeer, { loading }] = useMutation(ADD_PEER, {
     onError: error => toast.error(getErrorContent(error)),
@@ -62,9 +58,8 @@ export const AddPeer = () => {
         <Sub4Title style={{ whiteSpace: 'nowrap' }}>Peer Public Key:</Sub4Title>
         <Input
           placeholder={'Peer Public Key'}
-          withMargin={
-            width <= mediaDimensions.mobile ? '0 0 16px' : '0 0 0 24px'
-          }
+          withMargin={'0 0 0 24px'}
+          mobileMargin={'0 0 16px'}
           onChange={e => setKey(e.target.value)}
         />
       </ResponsiveLine>
@@ -72,9 +67,8 @@ export const AddPeer = () => {
         <Sub4Title style={{ whiteSpace: 'nowrap' }}>Peer Socket:</Sub4Title>
         <Input
           placeholder={'Socket'}
-          withMargin={
-            width <= mediaDimensions.mobile ? '0 0 16px' : '0 0 0 24px'
-          }
+          withMargin={'0 0 0 24px'}
+          mobileMargin={'0 0 16px'}
           onChange={e => setSocket(e.target.value)}
         />
       </ResponsiveLine>

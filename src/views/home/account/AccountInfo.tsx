@@ -1,12 +1,12 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardWithTitle,
   SubTitle,
-  SingleLine,
   Separation,
   DarkSubTitle,
   ColorButton,
+  ResponsiveLine,
 } from '../../../components/generic/Styled';
 import styled from 'styled-components';
 import {
@@ -23,9 +23,8 @@ import { SendOnChainCard } from './sendOnChain/SendOnChain';
 import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
-import { useSize } from '../../../hooks/UseSize';
 import { Price } from '../../../components/price/Price';
-import { mediaWidths, mediaDimensions } from '../../../styles/Themes';
+import { mediaWidths } from '../../../styles/Themes';
 import { useStatusState } from '../../../context/StatusContext';
 
 const Tile = styled.div`
@@ -34,34 +33,22 @@ const Tile = styled.div`
   justify-content: space-between;
   align-items: ${({ startTile }: { startTile?: boolean }) =>
     startTile ? 'flex-start' : 'flex-end'};
+
+  @media (${mediaWidths.mobile}) {
+    width: 100%;
+    flex-direction: row;
+    align-items: flex-end;
+    margin: 0 0 8px;
+  }
 `;
 
 const ButtonRow = styled.div`
   display: flex;
 `;
 
-const Responsive = styled(SingleLine)`
-  @media (${mediaWidths.mobile}) {
-    flex-direction: column;
-  }
-`;
-
 const sectionColor = '#FFD300';
 
-interface WrapperProps {
-  width?: number;
-  children: ReactNode;
-}
-
-const ResponsiveWrapper = ({ children, width = 0 }: WrapperProps) => {
-  if (width <= mediaDimensions.mobile) {
-    return <Responsive>{children}</Responsive>;
-  }
-  return <>{children}</>;
-};
-
 export const AccountInfo = () => {
-  const { width } = useSize();
   const [state, setState] = useState<string>('none');
 
   const {
@@ -124,43 +111,41 @@ export const AccountInfo = () => {
   const showChain =
     state === 'send_chain' || state === 'receive_chain' || state === 'none';
 
+  const renderBalances = (current: JSX.Element, pending: JSX.Element) => (
+    <>
+      <Tile>
+        <DarkSubTitle>Current Balance</DarkSubTitle>
+        <div>{formatCCB}</div>
+      </Tile>
+      <Tile>
+        <DarkSubTitle>Pending Balance</DarkSubTitle>
+        <div>{formatPCB}</div>
+      </Tile>
+    </>
+  );
+
+  const renderButtons = (send: string, receive: string) => (
+    <>
+      <ColorButton color={sectionColor} onClick={() => setState(send)}>
+        <UpArrow />
+      </ColorButton>
+      <ColorButton color={sectionColor} onClick={() => setState(receive)}>
+        <DownArrow />
+      </ColorButton>
+    </>
+  );
+
   const renderLnAccount = () => (
-    <SingleLine>
-      <ResponsiveWrapper width={width}>
-        <Zap color={channelPending === 0 ? sectionColor : '#652EC7'} />
-        <Tile startTile={true}>
-          <DarkSubTitle>Account</DarkSubTitle>
-          <div>Lightning</div>
-        </Tile>
-      </ResponsiveWrapper>
-      <ResponsiveWrapper width={width}>
-        <Tile>
-          <DarkSubTitle>Current Balance</DarkSubTitle>
-          <div>{formatCCB}</div>
-        </Tile>
-        <Tile>
-          <DarkSubTitle>Pending Balance</DarkSubTitle>
-          <div>{formatPCB}</div>
-        </Tile>
-      </ResponsiveWrapper>
+    <ResponsiveLine>
+      <Zap color={channelPending === 0 ? sectionColor : '#652EC7'} />
+      <Tile startTile={true}>
+        <DarkSubTitle>Account</DarkSubTitle>
+        <div>Lightning</div>
+      </Tile>
+      {renderBalances(formatCCB, formatPCB)}
       <AdminSwitch>
         <ButtonRow>
-          {showLn && showChain && (
-            <ResponsiveWrapper width={width}>
-              <ColorButton
-                color={sectionColor}
-                onClick={() => setState('send_ln')}
-              >
-                <UpArrow />
-              </ColorButton>
-              <ColorButton
-                color={sectionColor}
-                onClick={() => setState('receive_ln')}
-              >
-                <DownArrow />
-              </ColorButton>
-            </ResponsiveWrapper>
-          )}
+          {showLn && showChain && renderButtons('send_ln', 'receive_ln')}
           {showLn && !showChain && (
             <ColorButton color={sectionColor} onClick={() => setState('none')}>
               <XSvg />
@@ -168,46 +153,20 @@ export const AccountInfo = () => {
           )}
         </ButtonRow>
       </AdminSwitch>
-    </SingleLine>
+    </ResponsiveLine>
   );
 
   const renderChainAccount = () => (
-    <SingleLine>
-      <ResponsiveWrapper width={width}>
-        <Anchor color={chainPending === 0 ? sectionColor : '#652EC7'} />
-        <Tile startTile={true}>
-          <DarkSubTitle>Account</DarkSubTitle>
-          <div>Bitcoin</div>
-        </Tile>
-      </ResponsiveWrapper>
-      <ResponsiveWrapper width={width}>
-        <Tile>
-          <DarkSubTitle>Current Balance</DarkSubTitle>
-          <div>{formatCB}</div>
-        </Tile>
-        <Tile>
-          <DarkSubTitle>Pending Balance</DarkSubTitle>
-          <div>{formatPB}</div>
-        </Tile>
-      </ResponsiveWrapper>
+    <ResponsiveLine>
+      <Anchor color={chainPending === 0 ? sectionColor : '#652EC7'} />
+      <Tile startTile={true}>
+        <DarkSubTitle>Account</DarkSubTitle>
+        <div>Bitcoin</div>
+      </Tile>
+      {renderBalances(formatCB, formatPB)}
       <AdminSwitch>
         <ButtonRow>
-          {showLn && showChain && (
-            <ResponsiveWrapper width={width}>
-              <ColorButton
-                color={sectionColor}
-                onClick={() => setState('send_chain')}
-              >
-                <UpArrow />
-              </ColorButton>
-              <ColorButton
-                color={sectionColor}
-                onClick={() => setState('receive_chain')}
-              >
-                <DownArrow />
-              </ColorButton>
-            </ResponsiveWrapper>
-          )}
+          {showLn && showChain && renderButtons('send_chain', 'receive_chain')}
           {!showLn && showChain && (
             <ColorButton color={sectionColor} onClick={() => setState('none')}>
               <XSvg />
@@ -215,7 +174,7 @@ export const AccountInfo = () => {
           )}
         </ButtonRow>
       </AdminSwitch>
-    </SingleLine>
+    </ResponsiveLine>
   );
 
   return (
@@ -223,7 +182,7 @@ export const AccountInfo = () => {
       <CardWithTitle>
         <SubTitle>Resume</SubTitle>
         <Card>
-          <SingleLine>
+          <ResponsiveLine>
             <Pocket
               color={
                 chainPending === 0 && channelPending === 0
@@ -235,17 +194,8 @@ export const AccountInfo = () => {
               <DarkSubTitle>Account</DarkSubTitle>
               <div>Total</div>
             </Tile>
-            <ResponsiveWrapper width={width}>
-              <Tile>
-                <DarkSubTitle>Current Balance</DarkSubTitle>
-                <div>{totalB}</div>
-              </Tile>
-              <Tile>
-                <DarkSubTitle>Pending Balance</DarkSubTitle>
-                <div>{totalPB}</div>
-              </Tile>
-            </ResponsiveWrapper>
-          </SingleLine>
+            {renderBalances(totalB, totalPB)}
+          </ResponsiveLine>
         </Card>
       </CardWithTitle>
       <CardWithTitle>

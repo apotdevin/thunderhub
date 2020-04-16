@@ -16,8 +16,6 @@ import { InvoicePie } from './InvoicePie';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { useSize } from '../../../../hooks/UseSize';
-import { mediaDimensions } from '../../../../styles/Themes';
 import { GET_IN_OUT } from '../../../../graphql/query';
 // import { getWaterfall } from './Helpers';
 
@@ -82,7 +80,6 @@ const timeMap: { [key: string]: string } = {
 };
 
 export const FlowBox = () => {
-  const { width } = useSize();
   const [isTime, setIsTime] = useState<string>('month');
   const [isType, setIsType] = useState<string>('amount');
 
@@ -122,10 +119,7 @@ export const FlowBox = () => {
           <SubTitle>Invoices and Payments Report</SubTitle>
           <ButtonRow {...buttonProps} />
         </CardTitle>
-        <Card
-          bottom={'10px'}
-          cardPadding={width <= mediaDimensions.mobile ? '8px 0' : undefined}
-        >
+        <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
           <p>{`Your node has not forwarded any payments ${timeMap[isTime]}.`}</p>
         </Card>
       </CardWithTitle>
@@ -178,10 +172,7 @@ export const FlowBox = () => {
           <SubTitle>Invoices and Payments Report</SubTitle>
           <ButtonRow {...buttonProps} />
         </CardTitle>
-        <Card
-          bottom={'10px'}
-          cardPadding={width <= mediaDimensions.mobile ? '8px 0' : undefined}
-        >
+        <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
           <FlowReport {...props} />
         </Card>
       </CardWithTitle>
@@ -190,9 +181,7 @@ export const FlowBox = () => {
           <CardTitle>
             <Sub4Title>Total</Sub4Title>
           </CardTitle>
-          <Card
-            cardPadding={width <= mediaDimensions.mobile ? '8px' : undefined}
-          >
+          <Card mobileCardPadding={'8px'}>
             <FlowPie {...flowProps} />
           </Card>
         </HalfCardWithTitle>
@@ -201,9 +190,7 @@ export const FlowBox = () => {
           <CardTitle>
             <Sub4Title>Invoices</Sub4Title>
           </CardTitle>
-          <Card
-            cardPadding={width <= mediaDimensions.mobile ? '8px' : undefined}
-          >
+          <Card mobileCardPadding={'8px'}>
             <InvoicePie {...pieProps} />
           </Card>
         </HalfCardWithTitle>
