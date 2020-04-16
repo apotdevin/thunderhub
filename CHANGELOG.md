@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.4](https://github.com/apotdevin/thunderhub/compare/v0.3.3...v0.3.4) (2020-04-16)
+
+
+### Improvements
+
+* codegen and types for apollo ([a10edec](https://github.com/apotdevin/thunderhub/commit/a10edec4fec75cbcd8c864f6b5ce05a7f7fb57fd))
+* increase yarn timeout ([6016c1f](https://github.com/apotdevin/thunderhub/commit/6016c1f737a4a4adaea606e522cdf7ed05579f65))
+
 ### [0.3.3](https://github.com/apotdevin/thunderhub/compare/v0.3.2...v0.3.3) (2020-04-16)
 
 
