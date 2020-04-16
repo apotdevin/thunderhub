@@ -107,6 +107,8 @@ export const DangerView = () => {
           color={'red'}
           onClick={() => {
             deleteAccount(accounts[0].id);
+            refreshAccount();
+            push(appendBasePath('/'));
           }}
         >
           {accounts[0].name}

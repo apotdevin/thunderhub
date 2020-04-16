@@ -56,9 +56,6 @@ export const AccountContext = createContext<AccountProps>({
 });
 
 const AccountProvider = ({ children }: any) => {
-  // const sessionAdmin = sessionStorage.getItem('session') || '';
-  // const { name, host, admin, viewOnly, cert, id, accounts, loggedIn } = getAuth();
-
   useEffect(() => {
     refreshAccount();
   }, []);

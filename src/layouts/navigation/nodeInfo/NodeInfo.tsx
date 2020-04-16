@@ -89,6 +89,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   };
 
   const { loading, data } = useGetNodeInfoQuery({
+    skip: host === '' || (viewOnly === '' && sessionAdmin === ''),
     variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });

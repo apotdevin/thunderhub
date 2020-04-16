@@ -13,7 +13,7 @@ export const Price = ({
   amount,
   breakNumber = false,
 }: {
-  amount: number;
+  amount: number | string;
   breakNumber?: boolean;
 }) => {
   const { currency } = useSettings();
@@ -38,10 +38,7 @@ export const Price = ({
     };
   }
 
-  const getFormat = (amount: number) =>
-    getValue({ amount, ...priceProps, breakNumber });
-
-  return <>{getFormat(amount)}</>;
+  return <>{getValue({ amount, ...priceProps, breakNumber })}</>;
 };
 
 export const getPrice = (
@@ -55,7 +52,7 @@ export const getPrice = (
   amount,
   breakNumber = false,
 }: {
-  amount: number;
+  amount: number | string;
   breakNumber?: boolean;
 }) => {
   const { prices, loading, error } = priceContext;
@@ -79,8 +76,5 @@ export const getPrice = (
     };
   }
 
-  const getFormat = (amount: number) =>
-    getValue({ amount, ...priceProps, breakNumber });
-
-  return getFormat(amount);
+  return getValue({ amount, ...priceProps, breakNumber });
 };

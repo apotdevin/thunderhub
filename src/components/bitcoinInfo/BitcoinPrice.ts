@@ -5,6 +5,7 @@ import { useGetBitcoinPriceQuery } from '../../generated/graphql';
 export const BitcoinPrice = () => {
   const setPrices = usePriceDispatch();
   const { loading, data, stopPolling } = useGetBitcoinPriceQuery({
+    fetchPolicy: 'network-only',
     onError: () => setPrices({ type: 'error' }),
     pollInterval: 60000,
   });

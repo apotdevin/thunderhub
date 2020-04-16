@@ -44,11 +44,11 @@ export const Card = styled.div`
     ${({ cardPadding, mobileCardPadding }) =>
       mobileCardPadding
         ? css`
-            margin: ${mobileCardPadding};
+            padding: ${mobileCardPadding};
           `
         : cardPadding
         ? css`
-            margin: ${cardPadding};
+            padding: ${cardPadding};
           `
         : ''};
   }

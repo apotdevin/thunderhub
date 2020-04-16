@@ -1,12 +1,11 @@
-import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { fontColors, mediaWidths } from '../../styles/Themes';
-import { appendBasePath } from '../../utils/basePath';
+import ThunderHub from '../../assets/ThunderHub.svg';
 
 export const Headline = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   padding: 48px 0 140px;
 
   @media (${mediaWidths.mobile}) {
@@ -36,12 +35,8 @@ const flicker = keyframes`
     100%  { opacity: 0;   }
 `;
 
-const HeadlineImage = () => (
-  <img src={appendBasePath('/static/images/ThunderHub.svg')} />
-);
-
-export const StyledImage = styled(HeadlineImage)`
-  width: 500px;
+export const StyledImage = styled(ThunderHub)`
+  width: 360px;
 
   & .glowEffect {
     animation: ${flicker} 3s infinite step-end;

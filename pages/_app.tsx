@@ -36,9 +36,12 @@ const Wrapper: React.FC = ({ children }) => {
   const isInArray = withoutGrid.includes(pathname);
 
   const renderContent = () => {
-    if (loading) return <LoadingView />;
-    if (error) return <ErrorView />;
-    return <>{children}</>;
+    if (loading || error) {
+      return (
+        <GridWrapper>{loading ? <LoadingView /> : <ErrorView />}</GridWrapper>
+      );
+    }
+    return <GridWrapper without={isInArray}>{children}</GridWrapper>;
   };
 
   const renderGetters = () => (
@@ -54,7 +57,7 @@ const Wrapper: React.FC = ({ children }) => {
         <GlobalStyles />
         {loggedIn && renderGetters()}
         <Header />
-        <GridWrapper without={isInArray}>{renderContent()}</GridWrapper>
+        {renderContent()}
         <Footer />
       </ModalProvider>
     </ThemeProvider>
