@@ -17,11 +17,10 @@ import {
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
 import { Input } from '../../components/input/Input';
-import { useMutation } from '@apollo/react-hooks';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
-import { ADD_PEER } from '../../graphql/mutation';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
+import { useAddPeerMutation } from '../../generated/graphql';
 
 export const AddPeer = () => {
   const [isAdding, setIsAdding] = useState<boolean>(false);
@@ -29,7 +28,7 @@ export const AddPeer = () => {
   const [key, setKey] = useState<string>('');
   const [socket, setSocket] = useState<string>('');
 
-  const [addPeer, { loading }] = useMutation(ADD_PEER, {
+  const [addPeer, { loading }] = useAddPeerMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: () => {
       toast.success('Peer Added');

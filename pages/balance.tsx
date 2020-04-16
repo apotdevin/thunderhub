@@ -10,8 +10,6 @@ import {
   SingleLine,
 } from '../src/components/generic/Styled';
 import { useAccount } from '../src/context/AccountContext';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_CHANNELS } from '../src/graphql/query';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
@@ -23,6 +21,7 @@ import { BalanceRoute } from '../src/views/balance/BalanceRoute';
 import { Price } from '../src/components/price/Price';
 import { useStatusState } from '../src/context/StatusContext';
 import { Text } from '../src/components/typography/Styled';
+import { useGetChannelsQuery } from '../src/generated/graphql';
 
 const BalanceView = () => {
   const { minorVersion } = useStatusState();
@@ -41,7 +40,7 @@ const BalanceView = () => {
 
   const [blocked, setBlocked] = useState(false);
 
-  const { loading, data } = useQuery(GET_CHANNELS, {
+  const { loading, data } = useGetChannelsQuery({
     variables: { auth, active: true },
     onError: error => toast.error(getErrorContent(error)),
   });

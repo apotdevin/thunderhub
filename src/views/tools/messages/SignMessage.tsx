@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAccount } from '../../../context/AccountContext';
-import { useLazyQuery } from '@apollo/react-hooks';
-import { SIGN_MESSAGE } from '../../../graphql/query';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import {
@@ -17,6 +15,7 @@ import { SecureButton } from '../../../components/buttons/secureButton/SecureBut
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { Column, WrapRequest } from '../Tools.styled';
+import { useSignMessageLazyQuery } from '../../../generated/graphql';
 
 export const SignMessage = () => {
   const [message, setMessage] = useState<string>('');
@@ -30,7 +29,7 @@ export const SignMessage = () => {
     cert,
   };
 
-  const [signMessage, { data, loading }] = useLazyQuery(SIGN_MESSAGE, {
+  const [signMessage, { data, loading }] = useSignMessageLazyQuery({
     onError: error => toast.error(getErrorContent(error)),
   });
 

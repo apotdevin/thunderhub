@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/react-hooks';
 import { useAccount } from '../src/context/AccountContext';
 import {
   CardWithTitle,
@@ -9,7 +8,7 @@ import {
 import { PeersCard } from '../src/views/peers/PeersCard';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { AddPeer } from '../src/views/peers/AddPeer';
-import { GET_PEERS } from '../src/graphql/query';
+import { useGetPeersQuery } from '../src/generated/graphql';
 
 const PeersView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
@@ -20,7 +19,7 @@ const PeersView = () => {
     cert,
   };
 
-  const { loading, data } = useQuery(GET_PEERS, {
+  const { loading, data } = useGetPeersQuery({
     variables: { auth },
   });
 

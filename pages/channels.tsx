@@ -9,11 +9,10 @@ import {
   SingleLine,
   ColorButton,
 } from '../src/components/generic/Styled';
-import { useQuery } from '@apollo/react-hooks';
 import { useAccount } from '../src/context/AccountContext';
-import { GET_CHANNEL_AMOUNT_INFO } from '../src/graphql/query';
 import { useSettings } from '../src/context/SettingsContext';
 import { textColorMap } from '../src/styles/Themes';
+import { useGetChannelAmountInfoQuery } from '../src/generated/graphql';
 
 const ChannelView = () => {
   const [view, setView] = useState<number>(1);
@@ -31,7 +30,7 @@ const ChannelView = () => {
     cert,
   };
 
-  const { data } = useQuery(GET_CHANNEL_AMOUNT_INFO, {
+  const { data } = useGetChannelAmountInfoQuery({
     variables: { auth },
   });
 

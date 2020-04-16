@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAccount } from '../../../context/AccountContext';
-import { useLazyQuery } from '@apollo/react-hooks';
-import { VERIFY_BACKUPS } from '../../../graphql/query';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import {
@@ -13,6 +11,7 @@ import { XSvg } from '../../../components/generic/Icons';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../../components/input/Input';
 import { NoWrap } from '../Tools.styled';
+import { useVerifyBackupsLazyQuery } from '../../../generated/graphql';
 
 export const VerifyBackups = () => {
   const [backupString, setBackupString] = useState<string>('');
@@ -25,7 +24,7 @@ export const VerifyBackups = () => {
     cert,
   };
 
-  const [verifyBackup, { data, loading }] = useLazyQuery(VERIFY_BACKUPS, {
+  const [verifyBackup, { data, loading }] = useVerifyBackupsLazyQuery({
     onError: error => toast.error(getErrorContent(error)),
   });
 

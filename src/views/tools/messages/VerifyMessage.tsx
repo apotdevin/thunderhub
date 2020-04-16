@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAccount } from '../../../context/AccountContext';
-import { useLazyQuery } from '@apollo/react-hooks';
-import { VERIFY_MESSAGE } from '../../../graphql/query';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import {
@@ -16,6 +14,7 @@ import { Input } from '../../../components/input/Input';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Column, WrapRequest } from '../Tools.styled';
 import { getNodeLink } from '../../../components/generic/Helpers';
+import { useVerifyMessageLazyQuery } from '../../../generated/graphql';
 
 export const VerifyMessage = () => {
   const [message, setMessage] = useState<string>('');
@@ -30,7 +29,7 @@ export const VerifyMessage = () => {
     macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
   };
 
-  const [signMessage, { data, loading }] = useLazyQuery(VERIFY_MESSAGE, {
+  const [signMessage, { data, loading }] = useVerifyMessageLazyQuery({
     onError: error => toast.error(getErrorContent(error)),
   });
 

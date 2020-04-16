@@ -7,9 +7,7 @@ import {
   NoWrapTitle,
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
-import { useMutation } from '@apollo/react-hooks';
 import { ChevronRight } from '../../../../components/generic/Icons';
-import { OPEN_CHANNEL } from '../../../../graphql/mutation';
 import { getErrorContent } from '../../../../utils/error';
 import { toast } from 'react-toastify';
 import { useBitcoinState } from '../../../../context/BitcoinContext';
@@ -22,6 +20,7 @@ import {
 } from '../../../../components/buttons/multiButton/MultiButton';
 import { Price } from '../../../../components/price/Price';
 import { mediaWidths } from '../../../../styles/Themes';
+import { useOpenChannelMutation } from '../../../../generated/graphql';
 
 const ResponsiveWrap = styled(SingleLine)`
   @media (${mediaWidths.mobile}) {
@@ -43,7 +42,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
 
   const { fast, halfHour, hour } = useBitcoinState();
 
-  const [openChannel] = useMutation(OPEN_CHANNEL, {
+  const [openChannel] = useOpenChannelMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: () => {
       toast.success('Channel Opened');

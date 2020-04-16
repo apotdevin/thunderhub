@@ -8,8 +8,6 @@ import {
   SingleLine,
 } from '../src/components/generic/Styled';
 import { useAccount } from '../src/context/AccountContext';
-import { GET_FORWARDS } from '../src/graphql/query';
-import { useQuery } from '@apollo/react-hooks';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
@@ -17,6 +15,7 @@ import { ForwardCard } from '../src/views/forwards/ForwardsCard';
 import { textColorMap } from '../src/styles/Themes';
 import { useSettings } from '../src/context/SettingsContext';
 import { ForwardBox } from '../src/views/home/reports/forwardReport';
+import { useGetForwardsQuery } from '../src/generated/graphql';
 
 const timeMap: { [key: string]: string } = {
   day: 'today',
@@ -37,7 +36,7 @@ const ForwardsView = () => {
     cert,
   };
 
-  const { loading, data } = useQuery(GET_FORWARDS, {
+  const { loading, data } = useGetForwardsQuery({
     variables: { auth, time },
     onError: error => toast.error(getErrorContent(error)),
   });

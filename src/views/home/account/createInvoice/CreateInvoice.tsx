@@ -3,8 +3,6 @@ import {
   NoWrapTitle,
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
-import { useMutation } from '@apollo/react-hooks';
-import { CREATE_INVOICE } from '../../../../graphql/mutation';
 import { Copy } from '../../../../components/generic/Icons';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
@@ -15,6 +13,7 @@ import { ColorButton } from '../../../../components/buttons/colorButton/ColorBut
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Input } from '../../../../components/input/Input';
 import { mediaWidths } from '../../../../styles/Themes';
+import { useCreateInvoiceMutation } from '../../../../generated/graphql';
 
 const Responsive = styled.div`
   display: flex;
@@ -53,7 +52,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
   const [amount, setAmount] = useState(0);
   const [request, setRequest] = useState('');
 
-  const [createInvoice, { data, loading }] = useMutation(CREATE_INVOICE, {
+  const [createInvoice, { data, loading }] = useCreateInvoiceMutation({
     onError: error => toast.error(getErrorContent(error)),
   });
 

@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_RESUME } from '../src/graphql/query';
 import {
   Card,
   CardWithTitle,
@@ -14,6 +12,7 @@ import { PaymentsCard } from '../src/views/transactions/PaymentsCards';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { FlowBox } from '../src/views/home/reports/flow';
+import { useGetResumeQuery } from '../src/generated/graphql';
 
 const TransactionsView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
@@ -27,7 +26,7 @@ const TransactionsView = () => {
     cert,
   };
 
-  const { loading, data, fetchMore } = useQuery(GET_RESUME, {
+  const { loading, data, fetchMore } = useGetResumeQuery({
     variables: { auth, token: '' },
     onError: error => toast.error(getErrorContent(error)),
   });
