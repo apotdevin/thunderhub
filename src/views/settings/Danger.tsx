@@ -20,6 +20,7 @@ import { AlertCircle } from '../../components/generic/Icons';
 import { useConnectionDispatch } from '../../context/ConnectionContext';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { useRouter } from 'next/router';
+import { appendBasePath } from '../../utils/basePath';
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -122,7 +123,7 @@ export const DangerView = () => {
       type: 'disconnected',
     });
     changeAccount(id);
-    push('/');
+    push(appendBasePath('/'));
   };
 
   const renderSwitch = () => {
@@ -156,7 +157,7 @@ export const DangerView = () => {
               onClick={() => {
                 deleteStorage();
                 refreshAccount();
-                push('/');
+                push(appendBasePath('/'));
               }}
             >
               Delete All

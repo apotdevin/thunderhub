@@ -21,6 +21,7 @@ import {
 } from '../src/components/stateViews/StateCards';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Head from 'next/head';
 
 toast.configure({ draggable: false });
 
@@ -30,7 +31,7 @@ const Wrapper: React.FC = ({ children }) => {
   const { theme } = useSettings();
   const { loggedIn } = useAccount();
   const { pathname } = useRouter();
-  const { connected, loading, error } = useConnectionState();
+  const { loading, error } = useConnectionState();
 
   const isInArray = withoutGrid.includes(pathname);
 
@@ -64,13 +65,18 @@ class MyApp extends App<any> {
   render() {
     const { Component, pageProps, apollo } = this.props;
     return (
-      <ApolloProvider client={apollo}>
-        <ContextProvider>
-          <Wrapper>
-            <Component {...pageProps} />
-          </Wrapper>
-        </ContextProvider>
-      </ApolloProvider>
+      <>
+        <Head>
+          <title>ThunderHub - Lightning Node Manager</title>
+        </Head>
+        <ApolloProvider client={apollo}>
+          <ContextProvider>
+            <Wrapper>
+              <Component {...pageProps} />
+            </Wrapper>
+          </ContextProvider>
+        </ApolloProvider>
+      </>
     );
   }
 }

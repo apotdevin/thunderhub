@@ -22,7 +22,7 @@ const StyledMethodBoxes = styled.div`
   margin: 0 0 -24px 0;
   flex-wrap: wrap;
   overflow: hidden;
-  height: 24px;
+  height: 23px;
 `;
 
 const StyledMethod = styled.div`

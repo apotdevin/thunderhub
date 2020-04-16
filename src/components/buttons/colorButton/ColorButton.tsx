@@ -10,14 +10,17 @@ import {
   colorButtonBorderTwo,
   hoverTextColor,
   themeColors,
+  mediaWidths,
 } from '../../../styles/Themes';
 import { ChevronRight } from '../../generic/Icons';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 
 interface GeneralProps {
   fullWidth?: boolean;
+  mobileFullWidth?: boolean;
   buttonWidth?: string;
   withMargin?: string;
+  mobileMargin?: string;
 }
 
 const GeneralButton = styled.button`
@@ -35,6 +38,29 @@ const GeneralButton = styled.button`
   margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
   width: ${({ fullWidth, buttonWidth }: GeneralProps) =>
     fullWidth ? '100%' : buttonWidth ? buttonWidth : 'auto'};
+
+  @media (${mediaWidths.mobile}) {
+    ${({ withMargin, mobileMargin }) =>
+      mobileMargin
+        ? css`
+            margin: ${mobileMargin};
+          `
+        : withMargin
+        ? css`
+            margin: ${withMargin};
+          `
+        : '0'};
+    ${({ fullWidth, mobileFullWidth }) =>
+      mobileFullWidth
+        ? css`
+            width: 100%;
+          `
+        : fullWidth
+        ? css`
+            width: 100%;
+          `
+        : ''};
+  }
 `;
 
 const StyledArrow = styled.div`
@@ -97,8 +123,10 @@ export interface ColorButtonProps {
   arrow?: boolean;
   onClick?: any;
   withMargin?: string;
+  mobileMargin?: string;
   withBorder?: boolean;
   fullWidth?: boolean;
+  mobileFullWidth?: boolean;
   width?: string;
 }
 
@@ -110,8 +138,10 @@ export const ColorButton = ({
   selected,
   arrow,
   withMargin,
+  mobileMargin,
   withBorder,
   fullWidth,
+  mobileFullWidth,
   width,
   onClick,
 }: ColorButtonProps) => {
@@ -119,7 +149,9 @@ export const ColorButton = ({
     return (
       <DisabledButton
         withMargin={withMargin}
+        mobileMargin={mobileMargin}
         fullWidth={fullWidth}
+        mobileFullWidth={mobileFullWidth}
         buttonWidth={width}
       >
         {children}
@@ -132,7 +164,9 @@ export const ColorButton = ({
     return (
       <DisabledButton
         withMargin={withMargin}
+        mobileMargin={mobileMargin}
         fullWidth={fullWidth}
+        mobileFullWidth={mobileFullWidth}
         buttonWidth={width}
       >
         <ScaleLoader height={16} color={themeColors.blue2} />
@@ -146,8 +180,10 @@ export const ColorButton = ({
       selected={selected}
       onClick={onClick}
       withMargin={withMargin}
+      mobileMargin={mobileMargin}
       withBorder={withBorder}
       fullWidth={fullWidth}
+      mobileFullWidth={mobileFullWidth}
       buttonWidth={width}
     >
       {children}

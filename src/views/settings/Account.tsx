@@ -19,6 +19,7 @@ import { useConnectionDispatch } from '../../context/ConnectionContext';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { Auth } from '../../components/auth';
 import { useRouter } from 'next/router';
+import { appendBasePath } from '../../utils/basePath';
 
 export const AccountSettings = () => {
   const [status, setStatus] = useState('none');
@@ -85,7 +86,7 @@ export const AccountSettings = () => {
                       type: 'disconnected',
                     });
                     changeAccount(accountId);
-                    push('/');
+                    push(appendBasePath('/'));
                   }
                 }}
               >

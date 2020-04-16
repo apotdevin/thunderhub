@@ -5,7 +5,7 @@ import getConfig from 'next/config';
 import Cors from 'micro-cors';
 
 const { publicRuntimeConfig } = getConfig();
-const { apiUrl } = publicRuntimeConfig;
+const { apiBaseUrl } = publicRuntimeConfig;
 
 const cors = Cors({
   origin: true,
@@ -19,7 +19,7 @@ const apolloServer = new ApolloServer({
   },
 });
 
-const handler = apolloServer.createHandler({ path: apiUrl });
+const handler = apolloServer.createHandler({ path: apiBaseUrl });
 
 export const config = {
   api: {

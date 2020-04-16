@@ -11,6 +11,7 @@ interface SecureButtonProps extends ColorButtonProps {
   variables: {};
   color?: string;
   withMargin?: string;
+  mobileMargin?: string;
   arrow?: boolean;
 }
 

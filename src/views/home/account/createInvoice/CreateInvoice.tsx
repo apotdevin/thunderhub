@@ -14,8 +14,7 @@ import QRCode from 'qrcode.react';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Input } from '../../../../components/input/Input';
-import { useSize } from '../../../../hooks/UseSize';
-import { mediaWidths, mediaDimensions } from '../../../../styles/Themes';
+import { mediaWidths } from '../../../../styles/Themes';
 
 const Responsive = styled.div`
   display: flex;
@@ -51,7 +50,6 @@ const Column = styled.div`
 `;
 
 export const CreateInvoiceCard = ({ color }: { color: string }) => {
-  const { width } = useSize();
   const [amount, setAmount] = useState(0);
   const [request, setRequest] = useState('');
 
@@ -90,7 +88,8 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
       <NoWrapTitle>Amount to receive:</NoWrapTitle>
       <Input
         placeholder={'Sats'}
-        withMargin={width <= mediaDimensions.mobile ? '0 0 16px' : '0 0 0 24px'}
+        withMargin={'0 0 0 16px'}
+        mobileMargin={'0 0 16px'}
         color={color}
         type={'number'}
         onChange={e => setAmount(Number(e.target.value))}
@@ -99,10 +98,11 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
         callback={createInvoice}
         variables={{ amount }}
         disabled={amount === 0}
-        withMargin={width <= mediaDimensions.mobile ? '' : '0 0 0 16px'}
+        withMargin={'0 0 0 16px'}
+        mobileMargin={'0'}
         arrow={true}
         loading={loading}
-        fullWidth={width <= mediaDimensions.mobile}
+        mobileFullWidth={true}
       >
         Create Invoice
       </SecureButton>

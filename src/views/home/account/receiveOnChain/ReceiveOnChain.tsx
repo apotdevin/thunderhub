@@ -11,14 +11,12 @@ import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
-import { useSize } from '../../../../hooks/UseSize';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import {
   MultiButton,
   SingleButton,
 } from '../../../../components/buttons/multiButton/MultiButton';
-import { mediaDimensions } from '../../../../styles/Themes';
 
 const ButtonRow = styled.div`
   width: auto;
@@ -30,8 +28,6 @@ const TitleWithSpacing = styled(NoWrapTitle)`
 `;
 
 export const ReceiveOnChainCard = () => {
-  const { width } = useSize();
-
   const [nested, setNested] = useState(false);
   const [received, setReceived] = useState(false);
 
@@ -55,11 +51,9 @@ export const ReceiveOnChainCard = () => {
               onCopy={() => toast.success('Address Copied')}
             >
               <ColorButton
-                fullWidth={width <= mediaDimensions.mobile}
                 arrow={true}
-                withMargin={
-                  width <= mediaDimensions.mobile ? '8px 0 0' : '0 0 0 16px'
-                }
+                withMargin={'0 0 0 16px'}
+                mobileMargin={'16px 0 0'}
               >
                 Copy
               </ColorButton>
@@ -93,12 +87,11 @@ export const ReceiveOnChainCard = () => {
             callback={createAddress}
             variables={{ nested }}
             disabled={received}
-            withMargin={
-              width <= mediaDimensions.mobile ? '16px 0 0' : '0 0 0 16px'
-            }
+            withMargin={'0 0 0 16px'}
+            mobileMargin={'16px 0 0'}
             arrow={true}
             loading={loading}
-            fullWidth={width <= mediaDimensions.mobile}
+            mobileFullWidth={true}
           >
             Create Address
           </SecureButton>
