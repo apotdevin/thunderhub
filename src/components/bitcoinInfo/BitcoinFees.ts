@@ -5,6 +5,7 @@ import { useGetBitcoinFeesQuery } from '../../generated/graphql';
 export const BitcoinFees = () => {
   const setInfo = useBitcoinDispatch();
   const { loading, data, stopPolling } = useGetBitcoinFeesQuery({
+    fetchPolicy: 'network-only',
     onError: () => {
       setInfo({ type: 'error' });
       stopPolling();

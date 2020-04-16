@@ -28,7 +28,7 @@ export const CallToAction = () => {
           <StyledH2>Ready to take control of your Lightning Node?</StyledH2>
         </Center>
         <Center>
-          <Link to={'/login'}>
+          <Link to={'/login'} noStyling={true}>
             <CallToActionButton>
               <Padding>
                 <Zap fillcolor={'white'} color={'white'} />

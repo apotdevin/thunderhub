@@ -177,14 +177,14 @@ export const NetworkInfoType = new GraphQLObjectType({
   name: 'networkInfoType',
   fields: () => {
     return {
-      averageChannelSize: { type: GraphQLInt },
+      averageChannelSize: { type: GraphQLString },
       channelCount: { type: GraphQLInt },
       maxChannelSize: { type: GraphQLInt },
       medianChannelSize: { type: GraphQLInt },
       minChannelSize: { type: GraphQLInt },
       nodeCount: { type: GraphQLInt },
       notRecentlyUpdatedPolicyCount: { type: GraphQLInt },
-      totalCapacity: { type: GraphQLInt },
+      totalCapacity: { type: GraphQLString },
     };
   },
 });
