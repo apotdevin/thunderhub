@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useMutation, useQuery } from '@apollo/react-hooks';
+import React, { useState } from 'react';
+import { useMutation } from '@apollo/react-hooks';
 import {
   Separation,
   SingleLine,
@@ -17,8 +17,8 @@ import {
   SingleButton,
 } from '../../buttons/multiButton/MultiButton';
 import { Input } from '../../input/Input';
-import { GET_BITCOIN_FEES } from '../../../graphql/query';
 import { CLOSE_CHANNEL } from '../../../graphql/mutation';
+import { useBitcoinState } from '../../../context/BitcoinContext';
 
 interface CloseChannelProps {
   setModalOpen: (status: boolean) => void;
@@ -47,23 +47,7 @@ export const CloseChannel = ({
   const [amount, setAmount] = useState<number>(0);
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
 
-  const [fast, setFast] = useState(0);
-  const [halfHour, setHalfHour] = useState(0);
-  const [hour, setHour] = useState(0);
-
-  const { data: feeData } = useQuery(GET_BITCOIN_FEES, {
-    onError: error => toast.error(getErrorContent(error)),
-  });
-
-  useEffect(() => {
-    if (feeData && feeData.getBitcoinFees) {
-      const { fast, halfHour, hour } = feeData.getBitcoinFees;
-      setAmount(fast);
-      setFast(fast);
-      setHalfHour(halfHour);
-      setHour(hour);
-    }
-  }, [feeData]);
+  const { fast, halfHour, hour } = useBitcoinState();
 
   const [closeChannel] = useMutation(CLOSE_CHANNEL, {
     onCompleted: data => {

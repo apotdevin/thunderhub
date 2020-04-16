@@ -10,13 +10,12 @@ import {
 import { ButtonRow } from '../forwardReport/Buttons';
 import { FlowReport } from './FlowReport';
 import { useAccount } from '../../../../context/AccountContext';
-import { useQuery } from '@apollo/react-hooks';
 import { FlowPie } from './FlowPie';
 import { InvoicePie } from './InvoicePie';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { GET_IN_OUT } from '../../../../graphql/query';
+import { useGetInOutQuery } from '../../../../generated/graphql';
 // import { getWaterfall } from './Helpers';
 
 export const ChannelRow = styled.div`
@@ -89,7 +88,7 @@ export const FlowBox = () => {
     macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
     cert,
   };
-  const { data, loading } = useQuery(GET_IN_OUT, {
+  const { data, loading } = useGetInOutQuery({
     variables: { time: isTime, auth },
     onError: error => toast.error(getErrorContent(error)),
   });

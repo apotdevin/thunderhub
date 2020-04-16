@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/react-hooks';
 import { SingleLine, Sub4Title, Separation } from '../../generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { themeColors } from '../../../styles/Themes';
@@ -7,7 +6,7 @@ import { Check, XSvg } from '../../generic/Icons';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import { AdminCheck } from './AdminCheck';
 import { Text } from '../../typography/Styled';
-import { GET_CAN_CONNECT } from '../../../graphql/query';
+import { useGetCanConnectQuery } from '../../../generated/graphql';
 
 type ViewProps = {
   host: string;
@@ -34,7 +33,7 @@ export const ViewCheck = ({
 }: ViewProps) => {
   const [confirmed, setConfirmed] = useState(false);
 
-  const { data, loading } = useQuery(GET_CAN_CONNECT, {
+  const { data, loading } = useGetCanConnectQuery({
     variables: { auth: { host, macaroon: viewOnly ?? admin ?? '', cert } },
     onCompleted: () => setConfirmed(true),
     onError: () => setConfirmed(false),

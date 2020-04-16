@@ -1,6 +1,4 @@
 import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_NODE_INFO } from '../../../graphql/query';
 import { useSettings } from '../../../context/SettingsContext';
 import {
   Separation,
@@ -26,6 +24,7 @@ import { getPrice } from '../../../../src/components/price/Price';
 import { AnimatedNumber } from '../../../../src/components/animated/AnimatedNumber';
 import { useStatusState } from '../../../context/StatusContext';
 import { usePriceState } from '../../../context/PriceContext';
+import { useGetNodeInfoQuery } from '../../../generated/graphql';
 
 const Closed = styled.div`
   display: flex;
@@ -89,7 +88,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     cert,
   };
 
-  const { loading, data } = useQuery(GET_NODE_INFO, {
+  const { loading, data } = useGetNodeInfoQuery({
     variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });

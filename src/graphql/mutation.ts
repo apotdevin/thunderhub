@@ -22,7 +22,7 @@ export const CLOSE_CHANNEL = gql`
 `;
 
 export const OPEN_CHANNEL = gql`
-  mutation openChannel(
+  mutation OpenChannel(
     $amount: Int!
     $partnerPublicKey: String!
     $auth: authType!
@@ -51,7 +51,7 @@ export const PAY_INVOICE = gql`
 `;
 
 export const CREATE_INVOICE = gql`
-  mutation PayInvoice($amount: Int!, $auth: authType!) {
+  mutation CreateInvoice($amount: Int!, $auth: authType!) {
     createInvoice(amount: $amount, auth: $auth) {
       request
     }
@@ -91,7 +91,7 @@ export const PAY_ADDRESS = gql`
 `;
 
 export const DECODE_REQUEST = gql`
-  mutation decodeRequest($auth: authType!, $request: String!) {
+  mutation DecodeRequest($auth: authType!, $request: String!) {
     decodeRequest(auth: $auth, request: $request) {
       chainAddress
       cltvDelta
@@ -113,7 +113,7 @@ export const DECODE_REQUEST = gql`
 `;
 
 export const UPDATE_FEES = gql`
-  mutation updateFees(
+  mutation UpdateFees(
     $auth: authType!
     $transactionId: String
     $transactionVout: Int

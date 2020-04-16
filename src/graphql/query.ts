@@ -16,7 +16,7 @@ export const GET_NETWORK_INFO = gql`
 `;
 
 export const GET_CAN_CONNECT = gql`
-  query GetNodeInfo($auth: authType!) {
+  query GetCanConnect($auth: authType!) {
     getNodeInfo(auth: $auth) {
       chains
       color
@@ -32,7 +32,7 @@ export const GET_CAN_CONNECT = gql`
 `;
 
 export const GET_CAN_ADMIN = gql`
-  query AdminCheck($auth: authType!) {
+  query GetCanAdmin($auth: authType!) {
     adminCheck(auth: $auth)
   }
 `;
@@ -267,7 +267,7 @@ export const GET_FORWARDS = gql`
 `;
 
 export const GET_CONNECT_INFO = gql`
-  query GetNodeInfo($auth: authType!) {
+  query GetCanConnectInfo($auth: authType!) {
     getNodeInfo(auth: $auth) {
       public_key
       uris
@@ -310,7 +310,7 @@ export const RECOVER_FUNDS = gql`
 `;
 
 export const CHANNEL_FEES = gql`
-  query GetChannelFees($auth: authType!) {
+  query ChannelFees($auth: authType!) {
     getChannelFees(auth: $auth) {
       alias
       color

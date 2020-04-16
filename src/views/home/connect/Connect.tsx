@@ -1,7 +1,5 @@
 import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
 import { useAccount } from '../../../context/AccountContext';
-import { GET_CONNECT_INFO } from '../../../graphql/query';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
@@ -18,6 +16,7 @@ import { Radio, Copy } from '../../../components/generic/Icons';
 import styled from 'styled-components';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { mediaWidths } from '../../../styles/Themes';
+import { useGetCanConnectInfoQuery } from '../../../generated/graphql';
 
 const Key = styled.div`
   overflow: hidden;
@@ -63,7 +62,7 @@ export const ConnectCard = () => {
     cert,
   };
 
-  const { loading, data } = useQuery(GET_CONNECT_INFO, {
+  const { loading, data } = useGetCanConnectInfoQuery({
     variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });

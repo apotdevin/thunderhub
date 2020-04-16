@@ -1,6 +1,5 @@
 import React from 'react';
 import { Sub4Title } from '../../../../components/generic/Styled';
-import { useQuery } from '@apollo/react-hooks';
 import numeral from 'numeral';
 import { useSettings } from '../../../../context/SettingsContext';
 import { useAccount } from '../../../../context/AccountContext';
@@ -21,7 +20,7 @@ import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
-import { GET_FORWARD_REPORT } from '../../../../graphql/query';
+import { useGetForwardReportQuery } from '../../../../generated/graphql';
 
 interface Props {
   isTime: string;
@@ -46,7 +45,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
     cert,
   };
 
-  const { data, loading } = useQuery(GET_FORWARD_REPORT, {
+  const { data, loading } = useGetForwardReportQuery({
     variables: { time: isTime, auth },
     onError: error => toast.error(getErrorContent(error)),
   });

@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_BITCOIN_FEES } from '../../graphql/query';
 import { useBitcoinDispatch } from '../../context/BitcoinContext';
+import { useGetBitcoinFeesQuery } from '../../generated/graphql';
 
 export const BitcoinFees = () => {
   const setInfo = useBitcoinDispatch();
-  const { loading, data, stopPolling } = useQuery(GET_BITCOIN_FEES, {
+  const { loading, data, stopPolling } = useGetBitcoinFeesQuery({
     onError: () => {
       setInfo({ type: 'error' });
       stopPolling();

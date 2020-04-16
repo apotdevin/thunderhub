@@ -4,7 +4,6 @@ import {
   ColorButton,
   SingleLine,
 } from '../../../../components/generic/Styled';
-import { useQuery } from '@apollo/react-hooks';
 import { useAccount } from '../../../../context/AccountContext';
 import { CardContent } from '.';
 import { toast } from 'react-toastify';
@@ -19,7 +18,7 @@ import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { useSettings } from '../../../../context/SettingsContext';
 import { usePriceState } from '../../../../context/PriceContext';
-import { GET_FORWARD_CHANNELS_REPORT } from '../../../../graphql/query';
+import { useGetForwardChannelsReportQuery } from '../../../../generated/graphql';
 
 const ChannelRow = styled.div`
   font-size: 14px;
@@ -80,7 +79,7 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
     cert,
   };
 
-  const { data, loading } = useQuery(GET_FORWARD_CHANNELS_REPORT, {
+  const { data, loading } = useGetForwardChannelsReportQuery({
     variables: { time: isTime, order: isType, auth, type },
     onError: error => toast.error(getErrorContent(error)),
   });

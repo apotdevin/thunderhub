@@ -13,7 +13,8 @@
     "release:push": "standard-version && git push --follow-tags origin master",
     "release:test": "standard-version --dry-run",
     "analyze": "cross-env ANALYZE=true next build",
-    "storybook": "start-storybook -p 6006 -c .storybook"
+    "storybook": "start-storybook -p 6006 -c .storybook",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "keywords": [],
   "author": "",
@@ -62,6 +63,12 @@
     "@babel/core": "^7.9.0",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
+    "@graphql-codegen/cli": "^1.13.2",
+    "@graphql-codegen/introspection": "1.13.2",
+    "@graphql-codegen/typescript": "1.13.2",
+    "@graphql-codegen/typescript-operations": "^1.13.2",
+    "@graphql-codegen/typescript-react-apollo": "1.13.2",
+    "@graphql-codegen/typescript-resolvers": "1.13.2",
     "@next/bundle-analyzer": "^9.3.5",
     "@storybook/addon-actions": "^5.3.18",
     "@storybook/addon-knobs": "^5.3.18",
