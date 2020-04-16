@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.5](https://github.com/apotdevin/thunderhub/compare/v0.3.4...v0.3.5) (2020-04-16)
+
+
+### Bug Fixes
+
+* type adjustments ([4947c36](https://github.com/apotdevin/thunderhub/commit/4947c363ab11e0f3738720e16b19dec2101e2297))
+
+
+### Improvements
+
+* styling small bugs and refactors ([3b8f4aa](https://github.com/apotdevin/thunderhub/commit/3b8f4aad6100f436d99f8ba774d5a0e2fa626af0))
+
 ### [0.3.4](https://github.com/apotdevin/thunderhub/compare/v0.3.3...v0.3.4) (2020-04-16)
 
 
