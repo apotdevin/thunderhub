@@ -9,7 +9,8 @@
     "start": "cross-env NODE_OPTIONS='--insecure-http-parser' next start",
     "tslint": "tslint -p . -c tslint.json",
     "prettier": "prettier --write **/*.{ts,tsx,js,css,html}",
-    "release": "standard-version && git push --follow-tags origin master",
+    "release": "standard-version",
+    "release:push": "standard-version && git push --follow-tags origin master",
     "release:test": "standard-version --dry-run",
     "analyze": "cross-env ANALYZE=true next build",
     "storybook": "start-storybook -p 6006 -c .storybook"
