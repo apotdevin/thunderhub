@@ -79,6 +79,7 @@ export const Link = ({
 
   const linkProps = {
     href: `${basePath}${to}`,
+    ...(basePath !== '' ? { prefetch: false } : {}),
   };
 
   return (
