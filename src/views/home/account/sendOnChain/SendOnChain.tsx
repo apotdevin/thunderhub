@@ -15,13 +15,12 @@ import { getErrorContent } from '../../../../utils/error';
 import { useBitcoinState } from '../../../../context/BitcoinContext';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
-import { useSize } from '../../../../hooks/UseSize';
 import {
   MultiButton,
   SingleButton,
 } from '../../../../components/buttons/multiButton/MultiButton';
 import { Price, getPrice } from '../../../../components/price/Price';
-import { mediaWidths, mediaDimensions } from '../../../../styles/Themes';
+import { mediaWidths } from '../../../../styles/Themes';
 import { useSettings } from '../../../../context/SettingsContext';
 import Modal from '../../../../components/modal/ReactModal';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
@@ -51,7 +50,6 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { width } = useSize();
   const [address, setAddress] = useState('');
   const [tokens, setTokens] = useState(0);
   const [type, setType] = useState('none');
@@ -109,7 +107,8 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
         <NoWrapTitle>Send to Address:</NoWrapTitle>
         <Input
           placeholder={'Address'}
-          withMargin={width <= mediaDimensions.mobile ? '' : '0 0 0 24px'}
+          withMargin={'0 0 0 24px'}
+          mobileMargin={'0'}
           onChange={e => setAddress(e.target.value)}
         />
       </ResponsiveLine>

@@ -12,7 +12,6 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
-import { useSize } from '../../../../hooks/UseSize';
 import Modal from '../../../../components/modal/ReactModal';
 import { useAccount } from '../../../../context/AccountContext';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
@@ -21,10 +20,8 @@ import {
   getNodeLink,
 } from '../../../../components/generic/Helpers';
 import { Price } from '../../../../components/price/Price';
-import { mediaDimensions } from '../../../../styles/Themes';
 
 export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
-  const { width } = useSize();
   const [request, setRequest] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -81,16 +78,16 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
         <Sub4Title>Invoice:</Sub4Title>
         <Input
           placeholder={'Lightning Invoice'}
-          withMargin={
-            width <= mediaDimensions.mobile ? '0 0 16px' : '0 0 0 24px'
-          }
+          withMargin={'0 0 0 24px'}
+          mobileMargin={'0 0 16px'}
           onChange={e => setRequest(e.target.value)}
         />
         <ColorButton
           disabled={request === ''}
-          withMargin={width <= mediaDimensions.mobile ? '0' : '0 0 0 16px'}
+          withMargin={'0 0 0 16px'}
+          mobileMargin={'0'}
           loading={decodeLoading}
-          fullWidth={width <= mediaDimensions.mobile}
+          mobileFullWidth={true}
           onClick={() => {
             decode({ variables: { request, auth } });
           }}

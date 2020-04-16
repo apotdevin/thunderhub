@@ -5,13 +5,15 @@ import {
   colorButtonBorder,
   inputBackgroundColor,
   inputBorderColor,
+  mediaWidths,
 } from '../../styles/Themes';
 
 interface InputProps {
   color?: string;
   withMargin?: string;
+  mobileMargin?: string;
   fullWidth?: boolean;
-  inputWidth?: string;
+  mobileFullWidth?: boolean;
   maxWidth?: string;
 }
 
@@ -30,9 +32,31 @@ export const StyledInput = styled.input`
       css`
         max-width: ${maxWidth};
       `}
-    width: ${({ fullWidth, inputWidth }: InputProps) =>
-      fullWidth ? '100%' : inputWidth ? inputWidth : 'auto'};
+    width: ${({ fullWidth }: InputProps) => (fullWidth ? '100%' : 'auto')};
     margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
+
+    @media (${mediaWidths.mobile}) {
+    ${({ withMargin, mobileMargin }) =>
+      mobileMargin
+        ? css`
+            margin: ${mobileMargin};
+          `
+        : withMargin
+        ? css`
+            margin: ${withMargin};
+          `
+        : ''};
+    ${({ fullWidth, mobileFullWidth }) =>
+      mobileFullWidth
+        ? css`
+            width: 100%;
+          `
+        : fullWidth
+        ? css`
+            width: 100%;
+          `
+        : ''};
+  }
 
     &:hover {
         border: 1px solid
@@ -52,8 +76,9 @@ interface InputCompProps {
   placeholder?: string;
   color?: string;
   withMargin?: string;
+  mobileMargin?: string;
   fullWidth?: boolean;
-  width?: string;
+  mobileFullWidth?: boolean;
   maxWidth?: string;
   onChange: (e: any) => void;
 }
@@ -64,8 +89,9 @@ export const Input = ({
   placeholder,
   color,
   withMargin,
+  mobileMargin,
+  mobileFullWidth,
   fullWidth = true,
-  width,
   maxWidth,
   onChange,
 }: InputCompProps) => {
@@ -76,9 +102,10 @@ export const Input = ({
       value={value}
       color={color}
       withMargin={withMargin}
+      mobileMargin={mobileMargin}
       onChange={e => onChange(e)}
       fullWidth={fullWidth}
-      inputWidth={width}
+      mobileFullWidth={mobileFullWidth}
       maxWidth={maxWidth}
     />
   );

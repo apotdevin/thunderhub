@@ -16,13 +16,12 @@ import { useBitcoinState } from '../../../../context/BitcoinContext';
 import styled from 'styled-components';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
-import { useSize } from '../../../../hooks/UseSize';
 import {
   SingleButton,
   MultiButton,
 } from '../../../../components/buttons/multiButton/MultiButton';
 import { Price } from '../../../../components/price/Price';
-import { mediaWidths, mediaDimensions } from '../../../../styles/Themes';
+import { mediaWidths } from '../../../../styles/Themes';
 
 const ResponsiveWrap = styled(SingleLine)`
   @media (${mediaWidths.mobile}) {
@@ -36,7 +35,6 @@ interface OpenChannelProps {
 }
 
 export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
-  const { width } = useSize();
   const [size, setSize] = useState(0);
   const [fee, setFee] = useState(0);
   const [publicKey, setPublicKey] = useState('');
@@ -79,7 +77,8 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
         <Input
           placeholder={'Public Key'}
           color={color}
-          withMargin={width <= mediaDimensions.mobile ? '' : '0 0 0 8px'}
+          withMargin={'0 0 0 8px'}
+          mobileMargin={'0'}
           onChange={e => setPublicKey(e.target.value)}
         />
       </ResponsiveLine>
@@ -95,7 +94,8 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
         <Input
           placeholder={'Sats'}
           color={color}
-          withMargin={width <= mediaDimensions.mobile ? '' : '0 0 0 8px'}
+          withMargin={'0 0 0 8px'}
+          mobileMargin={'0'}
           type={'number'}
           onChange={e => setSize(Number(e.target.value))}
         />

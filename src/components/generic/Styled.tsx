@@ -28,6 +28,7 @@ export const CardTitle = styled.div`
 export interface CardProps {
   bottom?: string;
   cardPadding?: string;
+  mobileCardPadding?: string;
 }
 
 export const Card = styled.div`
@@ -38,6 +39,19 @@ export const Card = styled.div`
   border: 1px solid ${cardBorderColor};
   margin-bottom: ${({ bottom }: CardProps) => (bottom ? bottom : '25px')};
   width: 100%;
+
+  @media (${mediaWidths.mobile}) {
+    ${({ cardPadding, mobileCardPadding }) =>
+      mobileCardPadding
+        ? css`
+            margin: ${mobileCardPadding};
+          `
+        : cardPadding
+        ? css`
+            margin: ${cardPadding};
+          `
+        : ''};
+  }
 `;
 
 interface SeparationProps {

@@ -31,7 +31,7 @@ const Wrapper: React.FC = ({ children }) => {
   const { theme } = useSettings();
   const { loggedIn } = useAccount();
   const { pathname } = useRouter();
-  const { connected, loading, error } = useConnectionState();
+  const { loading, error } = useConnectionState();
 
   const isInArray = withoutGrid.includes(pathname);
 

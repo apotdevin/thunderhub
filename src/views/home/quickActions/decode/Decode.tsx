@@ -16,12 +16,9 @@ import { getErrorContent } from '../../../../utils/error';
 import { toast } from 'react-toastify';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../../../components/input/Input';
-import { useSize } from '../../../../hooks/UseSize';
 import { Price } from '../../../../components/price/Price';
-import { mediaDimensions } from '../../../../styles/Themes';
 
 export const DecodeCard = ({ color }: { color: string }) => {
-  const { width } = useSize();
   const [request, setRequest] = useState('');
 
   const { host, viewOnly, cert, sessionAdmin } = useAccount();
@@ -70,9 +67,8 @@ export const DecodeCard = ({ color }: { color: string }) => {
         <Sub4Title>Request:</Sub4Title>
         <Input
           placeholder={'Lightning Invoice'}
-          withMargin={
-            width <= mediaDimensions.mobile ? '0 0 8px' : '0 0 0 24px'
-          }
+          withMargin={'0 0 0 24px'}
+          mobileMargin={'0 0 16px'}
           color={color}
           value={request}
           onChange={e => setRequest(e.target.value)}
@@ -80,10 +76,11 @@ export const DecodeCard = ({ color }: { color: string }) => {
         <ColorButton
           color={color}
           disabled={request === ''}
-          withMargin={width <= mediaDimensions.mobile ? '0' : '0 0 0 16px'}
+          withMargin={'0 0 0 16px'}
+          mobileMargin={'0'}
           arrow={true}
           loading={loading}
-          fullWidth={width <= mediaDimensions.mobile}
+          mobileFullWidth={true}
           onClick={() => {
             setRequest('');
             decode({ variables: { request, auth } });
