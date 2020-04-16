@@ -6,7 +6,7 @@ import { chartAxisColor } from '../../../../styles/Themes';
 import { Row, Col, PieRow } from '.';
 
 interface Props {
-  invoicePie: { x: string; y: string }[];
+  invoicePie: { x: string; y: number }[];
 }
 
 export const InvoicePie = ({ invoicePie }: Props) => {
