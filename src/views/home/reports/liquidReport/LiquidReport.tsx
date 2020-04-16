@@ -4,7 +4,6 @@ import {
   SubTitle,
   Card,
 } from '../../../../components/generic/Styled';
-import { useQuery } from '@apollo/react-hooks';
 import { useAccount } from '../../../../context/AccountContext';
 import {
   VictoryChart,
@@ -22,7 +21,7 @@ import {
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
-import { GET_LIQUID_REPORT } from '../../../../graphql/query';
+import { useGetLiquidReportQuery } from '../../../../generated/graphql';
 
 export const LiquidReport = () => {
   const { host, viewOnly, cert, sessionAdmin } = useAccount();
@@ -36,7 +35,7 @@ export const LiquidReport = () => {
   const priceContext = usePriceState();
   const format = getPrice(currency, priceContext);
 
-  const { data, loading } = useQuery(GET_LIQUID_REPORT, {
+  const { data, loading } = useGetLiquidReportQuery({
     variables: { auth },
   });
 

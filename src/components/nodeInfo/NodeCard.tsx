@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import 'intersection-observer'; // Polyfill
-import { useQuery } from '@apollo/react-hooks';
 import { SingleLine, DarkSubTitle, ResponsiveLine } from '../generic/Styled';
 import { themeColors } from '../../styles/Themes';
 import ScaleLoader from 'react-spinners/ScaleLoader';
@@ -9,7 +8,7 @@ import { Price } from '../price/Price';
 import Modal from '../modal/ReactModal';
 import { StatusDot, StatusLine, QuickCard } from './NodeInfo.styled';
 import { NodeInfoModal } from './NodeInfoModal';
-import { GET_NODE_INFO } from '../../graphql/query';
+import { useGetNodeInfoQuery } from '../../generated/graphql';
 
 export const getStatusDot = (status: boolean) => {
   return status ? <StatusDot color="#95de64" /> : <StatusDot color="#ff4d4f" />;
@@ -18,22 +17,6 @@ export const getStatusDot = (status: boolean) => {
 interface NodeCardProps {
   account: any;
   accountId: string;
-}
-
-interface QueryData {
-  getNodeInfo: {
-    active_channels_count: number;
-    closed_channels_count: number;
-    alias: string;
-    pending_channels_count: number;
-    is_synced_to_chain: boolean;
-  };
-  getChannelBalance: {
-    confirmedBalance: number;
-    pendingBalance: number;
-  };
-  getChainBalance: number;
-  getPendingChainBalance: number;
 }
 
 export const NodeCard = ({ account, accountId }: NodeCardProps) => {
@@ -51,7 +34,7 @@ export const NodeCard = ({ account, accountId }: NodeCardProps) => {
     cert,
   };
 
-  const { data, loading, error } = useQuery<QueryData>(GET_NODE_INFO, {
+  const { data, loading, error } = useGetNodeInfoQuery({
     variables: { auth },
     skip: !inView,
     pollInterval: 10000,

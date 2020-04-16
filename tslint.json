@@ -1,4 +1,7 @@
 {
+  "linterOptions": {
+    "exclude": ["src/generated/*.tsx"]
+  },
   "extends": ["tslint-config-airbnb", "tslint-react-hooks"],
   "rules": {
     "no-conditional-assignment": true,

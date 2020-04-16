@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_CHANNELS } from '../../../graphql/query';
 import { Card } from '../../../components/generic/Styled';
 import { ChannelCard } from './ChannelCard';
 import { useAccount } from '../../../context/AccountContext';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
+import { useGetChannelsQuery } from '../../../generated/graphql';
 
 export const Channels = () => {
   const [indexOpen, setIndexOpen] = useState(0);
@@ -18,7 +17,7 @@ export const Channels = () => {
     cert,
   };
 
-  const { loading, data } = useQuery(GET_CHANNELS, {
+  const { loading, data } = useGetChannelsQuery({
     variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });

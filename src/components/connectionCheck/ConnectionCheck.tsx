@@ -3,9 +3,8 @@ import {
   useConnectionState,
   useConnectionDispatch,
 } from '../../context/ConnectionContext';
-import { useQuery } from '@apollo/react-hooks';
 import { useAccount } from '../../context/AccountContext';
-import { GET_CAN_CONNECT } from '../../graphql/query';
+import { useGetCanConnectQuery } from '../../generated/graphql';
 
 export const ConnectionCheck = () => {
   const { connected } = useConnectionState();
@@ -18,7 +17,7 @@ export const ConnectionCheck = () => {
     cert,
   };
 
-  const { data, loading } = useQuery(GET_CAN_CONNECT, {
+  const { data, loading } = useGetCanConnectQuery({
     variables: { auth },
     skip: connected || !loggedIn,
     onError: () => {

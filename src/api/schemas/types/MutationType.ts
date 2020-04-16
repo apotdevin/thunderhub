@@ -42,8 +42,8 @@ export const InvoiceType = new GraphQLObjectType({
   },
 });
 
-const RoutesType = new GraphQLObjectType({
-  name: 'routeType',
+const DecodeRoutesType = new GraphQLObjectType({
+  name: 'DecodeRoutesType',
   fields: () => ({
     baseFeeMTokens: { type: GraphQLString },
     channel: { type: GraphQLString },
@@ -64,14 +64,14 @@ export const DecodeType = new GraphQLObjectType({
       destination: { type: GraphQLString },
       expiresAt: { type: GraphQLString },
       id: { type: GraphQLString },
-      routes: { type: new GraphQLList(RoutesType) },
+      routes: { type: new GraphQLList(DecodeRoutesType) },
       tokens: { type: GraphQLInt },
     };
   },
 });
 
-const RouteType = new GraphQLObjectType({
-  name: 'RouteType',
+const PaymentRouteType = new GraphQLObjectType({
+  name: 'PaymentRouteType',
   fields: () => ({
     mTokenFee: { type: GraphQLString },
     channel: { type: GraphQLString },
@@ -96,7 +96,7 @@ export const ParsePaymentType = new GraphQLObjectType({
       isExpired: { type: GraphQLBoolean },
       mTokens: { type: GraphQLString },
       network: { type: GraphQLString },
-      routes: { type: new GraphQLList(RouteType) },
+      routes: { type: new GraphQLList(PaymentRouteType) },
       tokens: { type: GraphQLInt },
     };
   },

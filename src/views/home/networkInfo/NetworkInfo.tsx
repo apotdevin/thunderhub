@@ -1,5 +1,4 @@
 import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
 import {
   Card,
   CardWithTitle,
@@ -15,7 +14,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { Price } from '../../../components/price/Price';
-import { GET_NETWORK_INFO } from '../../../graphql/query';
+import { useGetNetworkInfoQuery } from '../../../generated/graphql';
 
 const Tile = styled.div`
   display: flex;
@@ -72,7 +71,7 @@ export const NetworkInfo = () => {
     cert,
   };
 
-  const { loading, data } = useQuery(GET_NETWORK_INFO, {
+  const { loading, data } = useGetNetworkInfoQuery({
     variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });

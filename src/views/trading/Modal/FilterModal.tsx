@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { SubTitle } from '../../../components/generic/Styled';
 import { SortOptions, NewOptions } from '../OfferConfigs';
 import { FilterType } from '../OfferFilters';
-import { useQuery } from '@apollo/react-hooks';
-import {
-  GET_HODL_COUNTRIES,
-  GET_HODL_CURRENCIES,
-} from '../../../graphql/hodlhodl/query';
 import { themeColors } from '../../../styles/Themes';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { FilteredList } from './FilteredList';
 import { OptionsLoading } from '../OfferCard.styled';
 import { toast } from 'react-toastify';
+import {
+  useGetCountriesQuery,
+  useGetCurrenciesQuery,
+  GetCountriesQuery,
+  GetCurrenciesQuery,
+} from '../../../generated/graphql';
 
 interface FilterProps {
   type: string;
@@ -50,9 +51,10 @@ export const FilterModal = ({
   const [options, setOptions] = useState(newOptions ?? []);
   const [title, setTitle] = useState(final?.['title'] || '');
 
-  const query = type === 'Country' ? GET_HODL_COUNTRIES : GET_HODL_CURRENCIES;
+  const useQuery =
+    type === 'Country' ? useGetCountriesQuery : useGetCurrenciesQuery;
 
-  const { loading, data, error } = useQuery(query, {
+  const { loading, data, error } = useQuery({
     skip: skipable,
     onError: () => toast.error('Error Loading Options. Please try again.'),
   });
@@ -73,16 +75,18 @@ export const FilterModal = ({
   }, [type]);
 
   useEffect(() => {
-    if (!loading && data && data.getCountries) {
-      const countryOptions = data.getCountries.map((country: CountryType) => {
-        const { code, name, native_name } = country;
-        return { name: code, title: `${name} (${native_name})` };
-      });
+    if (!loading && data && (data as GetCountriesQuery).getCountries) {
+      const countryOptions = (data as GetCountriesQuery).getCountries.map(
+        (country: CountryType) => {
+          const { code, name, native_name } = country;
+          return { name: code, title: `${name} (${native_name})` };
+        }
+      );
 
       setOptions(countryOptions);
     }
-    if (!loading && data && data.getCurrencies) {
-      const filtered = data.getCurrencies.filter(
+    if (!loading && data && (data as GetCurrenciesQuery).getCurrencies) {
+      const filtered = (data as GetCurrenciesQuery).getCurrencies.filter(
         (currency: CurrencyType) => currency.type === 'fiat'
       );
 

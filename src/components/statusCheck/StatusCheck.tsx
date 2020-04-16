@@ -1,11 +1,10 @@
 import { useConnectionState } from '../../context/ConnectionContext';
-import { useQuery } from '@apollo/react-hooks';
 import { useAccount } from '../../context/AccountContext';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
-import { GET_NODE_INFO } from '../../graphql/query';
+import { useGetNodeInfoQuery } from '../../generated/graphql';
 
 export const StatusCheck = () => {
   const { connected } = useConnectionState();
@@ -18,7 +17,7 @@ export const StatusCheck = () => {
     cert,
   };
 
-  const { data, loading, error, stopPolling } = useQuery(GET_NODE_INFO, {
+  const { data, loading, error, stopPolling } = useGetNodeInfoQuery({
     variables: { auth },
     skip: !connected || !loggedIn,
     pollInterval: 10000,
@@ -51,9 +50,9 @@ export const StatusCheck = () => {
         alias,
         syncedToChain: is_synced_to_chain,
         version: versionNumber[0],
-        mayorVersion: numbers[0],
-        minorVersion: numbers[1],
-        revision: numbers[2],
+        mayorVersion: Number(numbers[0]),
+        minorVersion: Number(numbers[1]),
+        revision: Number(numbers[2]),
         chainBalance: getChainBalance,
         chainPending: getPendingChainBalance,
         channelBalance: confirmedBalance,
