@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.3](https://github.com/apotdevin/thunderhub/compare/v0.3.2...v0.3.3) (2020-04-16)
+
+
+### Bug Fixes
+
+* change dockerfile ([cd313fb](https://github.com/apotdevin/thunderhub/commit/cd313fbae233007b448b461bf153d70b8761fc4f))
+* remove file import ([294780a](https://github.com/apotdevin/thunderhub/commit/294780ab02b99e75c9a95fe393d4a0c5ab19c6f4))
+
+
+### Improvements
+
+* basepath fixes ([758281b](https://github.com/apotdevin/thunderhub/commit/758281b7bc5017aa09aae4aaebfaeee8314d2f6a))
+* changes and config for ssr and nextjs ([#26](https://github.com/apotdevin/thunderhub/issues/26)) ([83d9b20](https://github.com/apotdevin/thunderhub/commit/83d9b202050e889d7ae9a80d516b6b76ee9faafb))
+
 ### [0.3.2](https://github.com/apotdevin/thunderhub/compare/v0.3.1...v0.3.2) (2020-04-14)
 
 
