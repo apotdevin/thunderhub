@@ -309,14 +309,14 @@ export type ChannelReportType = {
 
 export type NetworkInfoType = {
   __typename?: 'networkInfoType';
-  averageChannelSize?: Maybe<Scalars['String']>;
+  averageChannelSize?: Maybe<Scalars['Int']>;
   channelCount?: Maybe<Scalars['Int']>;
-  maxChannelSize?: Maybe<Scalars['String']>;
-  medianChannelSize?: Maybe<Scalars['String']>;
+  maxChannelSize?: Maybe<Scalars['Int']>;
+  medianChannelSize?: Maybe<Scalars['Int']>;
   minChannelSize?: Maybe<Scalars['Int']>;
   nodeCount?: Maybe<Scalars['Int']>;
   notRecentlyUpdatedPolicyCount?: Maybe<Scalars['Int']>;
-  totalCapacity?: Maybe<Scalars['String']>;
+  totalCapacity?: Maybe<Scalars['Int']>;
 };
 
 export type NodeInfoType = {
