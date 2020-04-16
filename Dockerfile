@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 # Install app dependencies
 COPY package.json /usr/src/app/
 COPY yarn.lock /usr/src/app/
-RUN yarn --network-timeout 1000000 --production=true
+RUN yarn --network-timeout 300000 --production=true
 RUN yarn add cross-env
 
 # Bundle app source
