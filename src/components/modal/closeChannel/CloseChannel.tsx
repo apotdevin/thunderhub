@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/react-hooks';
 import {
   Separation,
   SingleLine,
@@ -17,8 +16,8 @@ import {
   SingleButton,
 } from '../../buttons/multiButton/MultiButton';
 import { Input } from '../../input/Input';
-import { CLOSE_CHANNEL } from '../../../graphql/mutation';
 import { useBitcoinState } from '../../../context/BitcoinContext';
+import { useCloseChannelMutation } from '../../../generated/graphql';
 
 interface CloseChannelProps {
   setModalOpen: (status: boolean) => void;
@@ -49,7 +48,7 @@ export const CloseChannel = ({
 
   const { fast, halfHour, hour } = useBitcoinState();
 
-  const [closeChannel] = useMutation(CLOSE_CHANNEL, {
+  const [closeChannel] = useCloseChannelMutation({
     onCompleted: data => {
       if (data.closeChannel) {
         toast.success('Channel Closed');

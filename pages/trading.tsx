@@ -6,8 +6,6 @@ import {
   DarkSubTitle,
   ResponsiveLine,
 } from '../src/components/generic/Styled';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_HODL_OFFERS } from '../src/graphql/hodlhodl/query';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { OfferCard } from '../src/views/trading/OfferCard';
 import { OfferFilters } from '../src/views/trading/OfferFilters';
@@ -16,6 +14,7 @@ import { Link } from '../src/components/link/Link';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { useRouter } from 'next/router';
 import { decode } from '../src/utils/Helpers';
+import { useGetOffersQuery } from '../src/generated/graphql';
 
 export interface QueryProps {
   pagination: {
@@ -67,7 +66,7 @@ const TradingView = () => {
   const [page, setPage] = useState(1);
   const [fetching, setFetching] = useState(false);
 
-  const { data, loading, fetchMore, error } = useQuery(GET_HODL_OFFERS, {
+  const { data, loading, fetchMore, error } = useGetOffersQuery({
     variables: { filter: JSON.stringify(queryObject) },
     onError: () => {},
   });

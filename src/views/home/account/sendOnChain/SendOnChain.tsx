@@ -7,8 +7,6 @@ import {
   ResponsiveLine,
   SubTitle,
 } from '../../../../components/generic/Styled';
-import { useMutation } from '@apollo/react-hooks';
-import { PAY_ADDRESS } from '../../../../graphql/mutation';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
@@ -26,6 +24,7 @@ import Modal from '../../../../components/modal/ReactModal';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { renderLine } from '../../../../components/generic/Helpers';
 import { usePriceState } from '../../../../context/PriceContext';
+import { usePayAddressMutation } from '../../../../generated/graphql';
 
 const ResponsiveWrap = styled(SingleLine)`
   @media (${mediaWidths.mobile}) {
@@ -60,7 +59,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
 
   const { fast, halfHour, hour } = useBitcoinState();
 
-  const [payAddress, { loading }] = useMutation(PAY_ADDRESS, {
+  const [payAddress, { loading }] = usePayAddressMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: () => {
       toast.success('Payment Sent!');

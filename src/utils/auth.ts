@@ -183,3 +183,23 @@ export const getQRConfig = (json: string) => {
 
   return { ...emptyObject, name: undefined };
 };
+
+export const getAuthObj = (
+  host: string | undefined,
+  viewOnly: string | undefined,
+  session: string | undefined,
+  cert: string | undefined
+): {} | undefined => {
+  if (!host) {
+    return undefined;
+  }
+  if (!viewOnly && !session) {
+    return undefined;
+  }
+
+  return {
+    host,
+    macaroon: viewOnly !== '' ? viewOnly : session,
+    cert,
+  };
+};

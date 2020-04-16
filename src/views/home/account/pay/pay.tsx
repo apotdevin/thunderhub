@@ -6,8 +6,6 @@ import {
   Separation,
   SingleLine,
 } from '../../../../components/generic/Styled';
-import { useMutation } from '@apollo/react-hooks';
-import { PAY_INVOICE, DECODE_REQUEST } from '../../../../graphql/mutation';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
@@ -20,6 +18,10 @@ import {
   getNodeLink,
 } from '../../../../components/generic/Helpers';
 import { Price } from '../../../../components/price/Price';
+import {
+  usePayInvoiceMutation,
+  useDecodeRequestMutation,
+} from '../../../../generated/graphql';
 
 export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const [request, setRequest] = useState('');
@@ -32,7 +34,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
     cert,
   };
 
-  const [makePayment, { loading }] = useMutation(PAY_INVOICE, {
+  const [makePayment, { loading }] = usePayInvoiceMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: () => {
       toast.success('Payment Sent');
@@ -42,12 +44,9 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
     },
   });
 
-  const [decode, { data, loading: decodeLoading }] = useMutation(
-    DECODE_REQUEST,
-    {
-      onError: error => toast.error(getErrorContent(error)),
-    }
-  );
+  const [decode, { data, loading: decodeLoading }] = useDecodeRequestMutation({
+    onError: error => toast.error(getErrorContent(error)),
+  });
 
   useEffect(() => {
     if (data && data.decodeRequest) setModalOpen(true);

@@ -1,5 +1,4 @@
 import React from 'react';
-import { useMutation } from '@apollo/react-hooks';
 import { SubTitle } from '../../generic/Styled';
 import { AlertTriangle } from '../../generic/Icons';
 import styled from 'styled-components';
@@ -7,7 +6,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { SecureButton } from '../../buttons/secureButton/SecureButton';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
-import { REMOVE_PEER } from '../../../graphql/mutation';
+import { useRemovePeerMutation } from '../../../generated/graphql';
 
 interface RemovePeerProps {
   setModalOpen: (status: boolean) => void;
@@ -27,7 +26,7 @@ export const RemovePeerModal = ({
   publicKey,
   peerAlias,
 }: RemovePeerProps) => {
-  const [removePeer, { loading }] = useMutation(REMOVE_PEER, {
+  const [removePeer, { loading }] = useRemovePeerMutation({
     onCompleted: data => {
       toast.success('Peer Removed');
     },

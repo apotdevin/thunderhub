@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { DarkSubTitle, SingleLine } from '../../../components/generic/Styled';
 import { saveToPc } from '../../../utils/Helpers';
-import { useLazyQuery } from '@apollo/react-hooks';
-import { GET_BACKUPS } from '../../../graphql/query';
 import { useAccount } from '../../../context/AccountContext';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
+import { useGetBackupsLazyQuery } from '../../../generated/graphql';
 
 export const DownloadBackups = () => {
   const { name, host, viewOnly, cert, sessionAdmin } = useAccount();
@@ -16,7 +15,7 @@ export const DownloadBackups = () => {
     cert,
   };
 
-  const [getBackups, { data, loading }] = useLazyQuery(GET_BACKUPS, {
+  const [getBackups, { data, loading }] = useGetBackupsLazyQuery({
     variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });

@@ -9,14 +9,13 @@ import {
   renderLine,
   getNodeLink,
 } from '../../../../components/generic/Helpers';
-import { useMutation } from '@apollo/react-hooks';
 import { useAccount } from '../../../../context/AccountContext';
-import { DECODE_REQUEST } from '../../../../graphql/mutation';
 import { getErrorContent } from '../../../../utils/error';
 import { toast } from 'react-toastify';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../../../components/input/Input';
 import { Price } from '../../../../components/price/Price';
+import { useDecodeRequestMutation } from '../../../../generated/graphql';
 
 export const DecodeCard = ({ color }: { color: string }) => {
   const [request, setRequest] = useState('');
@@ -28,7 +27,7 @@ export const DecodeCard = ({ color }: { color: string }) => {
     cert,
   };
 
-  const [decode, { data, loading }] = useMutation(DECODE_REQUEST, {
+  const [decode, { data, loading }] = useDecodeRequestMutation({
     onError: error => toast.error(getErrorContent(error)),
   });
 

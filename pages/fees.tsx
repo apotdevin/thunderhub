@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import { CHANNEL_FEES } from '../src/graphql/query';
 import {
   Card,
   CardWithTitle,
@@ -18,12 +16,16 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { FeeCard } from '../src/views/fees/FeeCard';
-import { UPDATE_FEES } from '../src/graphql/mutation';
 import { XSvg, ChevronRight } from '../src/components/generic/Icons';
 import { SecureButton } from '../src/components/buttons/secureButton/SecureButton';
 import { AdminSwitch } from '../src/components/adminSwitch/AdminSwitch';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { Input } from '../src/components/input/Input';
+import { getAuthObj } from '../src/utils/auth';
+import {
+  useChannelFeesQuery,
+  useUpdateFeesMutation,
+} from '../src/generated/graphql';
 
 const FeesView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
@@ -32,18 +34,15 @@ const FeesView = () => {
   const [feeRate, setFeeRate] = useState(0);
 
   const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const auth = getAuthObj(host, viewOnly, sessionAdmin, cert);
 
-  const { loading, data } = useQuery(CHANNEL_FEES, {
+  const { loading, data } = useChannelFeesQuery({
+    skip: !auth,
     variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  const [updateFees] = useMutation(UPDATE_FEES, {
+  const [updateFees] = useUpdateFeesMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: data => {
       setIsEdit(false);

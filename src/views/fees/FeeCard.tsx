@@ -13,8 +13,6 @@ import {
   NodeTitle,
   ColLine,
 } from '../../components/generic/CardGeneric';
-import { useMutation } from '@apollo/react-hooks';
-import { UPDATE_FEES } from '../../graphql/mutation';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { ChevronRight } from '../../components/generic/Icons';
@@ -23,6 +21,7 @@ import { useSettings } from '../../context/SettingsContext';
 import { textColorMap } from '../../styles/Themes';
 import { Input } from '../../components/input/Input';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
+import { useUpdateFeesMutation } from '../../generated/graphql';
 
 interface FeeCardProps {
   channelInfo: any;
@@ -51,7 +50,7 @@ export const FeeCard = ({
     transactionVout,
   } = channelInfo;
 
-  const [updateFees] = useMutation(UPDATE_FEES, {
+  const [updateFees] = useUpdateFeesMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: data => {
       setIndexOpen(0);

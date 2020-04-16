@@ -5,19 +5,21 @@ import {
   Separation,
   SingleLine,
 } from '../../components/generic/Styled';
-import { useMutation, useLazyQuery } from '@apollo/react-hooks';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { themeColors, chartColors } from '../../styles/Themes';
 import { renderLine } from '../../components/generic/Helpers';
 import { HopCard } from './Balance.styled';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
-import { PAY_VIA_ROUTE } from '../../graphql/mutation';
 import { GET_ROUTES } from '../../graphql/query';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Price } from '../../components/price/Price';
 import { getPercent } from '../../utils/Helpers';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
+import {
+  usePayViaRouteMutation,
+  useGetRoutesLazyQuery,
+} from '../../generated/graphql';
 
 type BalancedRouteProps = {
   incoming: any;
@@ -40,7 +42,7 @@ export const BalanceRoute = ({
   setBlocked,
   callback,
 }: BalancedRouteProps) => {
-  const [getRoute, { loading, data, called }] = useLazyQuery(GET_ROUTES, {
+  const [getRoute, { loading, data, called }] = useGetRoutesLazyQuery({
     fetchPolicy: 'no-cache',
     onError: error => {
       callback();
@@ -51,7 +53,7 @@ export const BalanceRoute = ({
   const canShow = (): boolean =>
     incoming && outgoing && amount && data && data.getRoutes && blocked;
 
-  const [payRoute, { loading: loadingP }] = useMutation(PAY_VIA_ROUTE, {
+  const [payRoute, { loading: loadingP }] = usePayViaRouteMutation({
     onError: error => {
       callback();
       toast.error(getErrorContent(error));

@@ -5,8 +5,6 @@ import {
   OverflowText,
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
-import { useMutation } from '@apollo/react-hooks';
-import { CREATE_ADDRESS } from '../../../../graphql/mutation';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
@@ -17,6 +15,7 @@ import {
   MultiButton,
   SingleButton,
 } from '../../../../components/buttons/multiButton/MultiButton';
+import { useCreateAddressMutation } from '../../../../generated/graphql';
 
 const ButtonRow = styled.div`
   width: auto;
@@ -31,7 +30,7 @@ export const ReceiveOnChainCard = () => {
   const [nested, setNested] = useState(false);
   const [received, setReceived] = useState(false);
 
-  const [createAddress, { data, loading }] = useMutation(CREATE_ADDRESS, {
+  const [createAddress, { data, loading }] = useCreateAddressMutation({
     onError: error => toast.error(getErrorContent(error)),
   });
 
