@@ -14,7 +14,10 @@ import { BitcoinFees } from '../src/components/bitcoinInfo/BitcoinFees';
 import { BitcoinPrice } from '../src/components/bitcoinInfo/BitcoinPrice';
 import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
 import { useRouter } from 'next/router';
-import { useConnectionState } from '../src/context/ConnectionContext';
+import {
+  useConnectionState,
+  useConnectionDispatch,
+} from '../src/context/ConnectionContext';
 import {
   LoadingView,
   ErrorView,
@@ -22,12 +25,14 @@ import {
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Head from 'next/head';
+import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
 
 toast.configure({ draggable: false });
 
 const withoutGrid = ['/', '/login', '/faq', '/privacy', '/terms'];
 
 const Wrapper: React.FC = ({ children }) => {
+  const dispatch = useConnectionDispatch();
   const { theme } = useSettings();
   const { loggedIn } = useAccount();
   const { pathname } = useRouter();
@@ -36,7 +41,10 @@ const Wrapper: React.FC = ({ children }) => {
   const isInArray = withoutGrid.includes(pathname);
 
   const renderContent = () => {
-    if (loading || error) {
+    if (error && pathname === '/') {
+      dispatch({ type: 'disconnected' });
+    }
+    if ((loading || error) && pathname !== '/') {
       return (
         <GridWrapper>{loading ? <LoadingView /> : <ErrorView />}</GridWrapper>
       );
@@ -56,9 +64,13 @@ const Wrapper: React.FC = ({ children }) => {
       <ModalProvider backgroundComponent={BaseModalBackground}>
         <GlobalStyles />
         {loggedIn && renderGetters()}
-        <Header />
-        {renderContent()}
-        <Footer />
+        <PageWrapper>
+          <HeaderBodyWrapper>
+            <Header />
+            {renderContent()}
+          </HeaderBodyWrapper>
+          <Footer />
+        </PageWrapper>
       </ModalProvider>
     </ThemeProvider>
   );

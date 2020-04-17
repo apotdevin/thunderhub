@@ -10,11 +10,11 @@ export const ConnectionCheck = () => {
   const { connected } = useConnectionState();
   const dispatch = useConnectionDispatch();
 
-  const { loggedIn, auth } = useAccount();
+  const { auth } = useAccount();
 
   const { data, loading } = useGetCanConnectQuery({
     variables: { auth },
-    skip: connected || !loggedIn || !auth,
+    skip: connected,
     onError: () => {
       dispatch({ type: 'error' });
     },

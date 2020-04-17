@@ -4,6 +4,10 @@ import { CheckboxText, StyledContainer, FixedWidth } from '../Auth.styled';
 import { AlertCircle } from '../../generic/Icons';
 import { fontColors } from '../../../styles/Themes';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
+const { trustNeeded } = publicRuntimeConfig;
 
 type CheckboxProps = {
   handleClick: () => void;
@@ -21,8 +25,8 @@ export const RiskCheckboxAndConfirm = ({
   <>
     <Checkbox checked={checked} onChange={onChange}>
       <CheckboxText>
-        I'm feeling reckless - I understand that Lightning, LND and ThunderHub
-        are under constant development and that there is always a risk of losing
+        I'm feeling reckless. Lightning, LND and ThunderHub are under constant
+        development and I understand that there is always a risk of losing
         funds.
       </CheckboxText>
     </Checkbox>
@@ -40,6 +44,9 @@ export const RiskCheckboxAndConfirm = ({
 );
 
 export const WarningBox = () => {
+  if (!trustNeeded) {
+    return null;
+  }
   return (
     <StyledContainer>
       <FixedWidth>
