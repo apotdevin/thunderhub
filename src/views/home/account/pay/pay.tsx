@@ -27,12 +27,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const [request, setRequest] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const [makePayment, { loading }] = usePayInvoiceMutation({
     onError: error => toast.error(getErrorContent(error)),

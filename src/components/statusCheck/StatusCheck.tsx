@@ -10,16 +10,11 @@ export const StatusCheck = () => {
   const { connected } = useConnectionState();
   const dispatch = useStatusDispatch();
 
-  const { loggedIn, host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { loggedIn, auth } = useAccount();
 
   const { data, loading, error, stopPolling } = useGetNodeInfoQuery({
     variables: { auth },
-    skip: !connected || !loggedIn,
+    skip: !connected || !loggedIn || !auth,
     pollInterval: 10000,
     onError: error => toast.error(getErrorContent(error)),
   });

@@ -10,14 +10,10 @@ import { useGetChannelsQuery } from '../../../generated/graphql';
 export const Channels = () => {
   const [indexOpen, setIndexOpen] = useState(0);
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const { loading, data } = useGetChannelsQuery({
+    skip: !auth,
     variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });

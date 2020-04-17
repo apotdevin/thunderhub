@@ -55,14 +55,10 @@ const TextPadding = styled.span`
 const sectionColor = '#fa541c';
 
 export const ConnectCard = () => {
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const { loading, data } = useGetCanConnectInfoQuery({
+    skip: !auth,
     variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });

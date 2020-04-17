@@ -72,14 +72,10 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
   const priceContext = usePriceState();
   const format = getPrice(currency, priceContext);
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const { data, loading } = useGetForwardChannelsReportQuery({
+    skip: !auth,
     variables: { time: isTime, order: isType, auth, type },
     onError: error => toast.error(getErrorContent(error)),
   });

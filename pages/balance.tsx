@@ -25,12 +25,7 @@ import { useGetChannelsQuery } from '../src/generated/graphql';
 
 const BalanceView = () => {
   const { minorVersion } = useStatusState();
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const [outgoing, setOutgoing] = useState<{ id: string } | null>();
   const [incoming, setIncoming] = useState();
@@ -41,6 +36,7 @@ const BalanceView = () => {
   const [blocked, setBlocked] = useState(false);
 
   const { loading, data } = useGetChannelsQuery({
+    skip: !auth,
     variables: { auth, active: true },
     onError: error => toast.error(getErrorContent(error)),
   });

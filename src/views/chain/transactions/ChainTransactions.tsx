@@ -13,14 +13,10 @@ import { useGetChainTransactionsQuery } from '../../../generated/graphql';
 
 export const ChainTransactions = () => {
   const [indexOpen, setIndexOpen] = useState(0);
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const { loading, data } = useGetChainTransactionsQuery({
+    skip: !auth,
     variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });

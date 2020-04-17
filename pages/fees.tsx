@@ -21,7 +21,6 @@ import { SecureButton } from '../src/components/buttons/secureButton/SecureButto
 import { AdminSwitch } from '../src/components/adminSwitch/AdminSwitch';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { Input } from '../src/components/input/Input';
-import { getAuthObj } from '../src/utils/auth';
 import {
   useChannelFeesQuery,
   useUpdateFeesMutation,
@@ -33,8 +32,7 @@ const FeesView = () => {
   const [baseFee, setBaseFee] = useState(0);
   const [feeRate, setFeeRate] = useState(0);
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = getAuthObj(host, viewOnly, sessionAdmin, cert);
+  const { auth } = useAccount();
 
   const { loading, data } = useChannelFeesQuery({
     skip: !auth,

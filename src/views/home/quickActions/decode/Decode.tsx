@@ -20,12 +20,7 @@ import { useDecodeRequestMutation } from '../../../../generated/graphql';
 export const DecodeCard = ({ color }: { color: string }) => {
   const [request, setRequest] = useState('');
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const [decode, { data, loading }] = useDecodeRequestMutation({
     onError: error => toast.error(getErrorContent(error)),

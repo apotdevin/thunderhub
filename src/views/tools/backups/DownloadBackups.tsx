@@ -8,12 +8,7 @@ import { ColorButton } from '../../../components/buttons/colorButton/ColorButton
 import { useGetBackupsLazyQuery } from '../../../generated/graphql';
 
 export const DownloadBackups = () => {
-  const { name, host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { name, auth } = useAccount();
 
   const [getBackups, { data, loading }] = useGetBackupsLazyQuery({
     variables: { auth },

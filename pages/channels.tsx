@@ -23,14 +23,10 @@ const ChannelView = () => {
   });
 
   const { theme } = useSettings();
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const { data } = useGetChannelAmountInfoQuery({
+    skip: !auth,
     variables: { auth },
   });
 

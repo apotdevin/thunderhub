@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import merge from 'lodash.merge';
-import { getAuth } from '../utils/auth';
+import { getAuth, getAuthObj } from '../utils/auth';
 import { saveAccounts } from '../utils/storage';
 
 interface SingleAccountProps {
@@ -10,6 +10,13 @@ interface SingleAccountProps {
   viewOnly: string;
   cert: string;
   id: string;
+}
+
+interface AuthProps {
+  host: string;
+  admin: string;
+  viewOnly: string;
+  cert: string;
 }
 
 interface ChangeProps {
@@ -32,6 +39,7 @@ interface AccountProps {
   viewOnly: string;
   cert: string;
   id: string;
+  auth: AuthProps | undefined;
   accounts: SingleAccountProps[];
   setAccount: (newProps: ChangeProps) => void;
   changeAccount: (account: string) => void;
@@ -48,6 +56,7 @@ export const AccountContext = createContext<AccountProps>({
   viewOnly: '',
   cert: '',
   id: '',
+  auth: undefined,
   accounts: [],
   setAccount: () => {},
   changeAccount: () => {},
@@ -81,6 +90,7 @@ const AccountProvider = ({ children }: any) => {
         viewOnly,
         cert,
         id,
+        auth: getAuthObj(host, viewOnly, sessionAdmin, cert),
       });
     });
   };
@@ -158,6 +168,7 @@ const AccountProvider = ({ children }: any) => {
         viewOnly,
         cert,
         id,
+        auth: getAuthObj(host, viewOnly, sessionAdmin, cert),
       });
 
       return { ...merged, accounts };
@@ -173,6 +184,7 @@ const AccountProvider = ({ children }: any) => {
     viewOnly: '',
     cert: '',
     id: '',
+    auth: undefined,
     accounts: [],
     setAccount,
     changeAccount,

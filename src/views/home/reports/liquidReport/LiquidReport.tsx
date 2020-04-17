@@ -24,18 +24,14 @@ import { usePriceState } from '../../../../context/PriceContext';
 import { useGetLiquidReportQuery } from '../../../../generated/graphql';
 
 export const LiquidReport = () => {
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const { theme, currency } = useSettings();
   const priceContext = usePriceState();
   const format = getPrice(currency, priceContext);
 
   const { data, loading } = useGetLiquidReportQuery({
+    skip: !auth,
     variables: { auth },
   });
 

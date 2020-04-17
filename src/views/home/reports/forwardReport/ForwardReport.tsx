@@ -38,14 +38,10 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
   const priceContext = usePriceState();
   const format = getPrice(currency, priceContext);
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const { data, loading } = useGetForwardReportQuery({
+    skip: !auth,
     variables: { time: isTime, auth },
     onError: error => toast.error(getErrorContent(error)),
   });

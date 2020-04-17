@@ -12,14 +12,10 @@ import { useGetPeersQuery } from '../src/generated/graphql';
 
 const PeersView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const { loading, data } = useGetPeersQuery({
+    skip: !auth,
     variables: { auth },
   });
 

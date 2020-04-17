@@ -82,13 +82,9 @@ export const FlowBox = () => {
   const [isTime, setIsTime] = useState<string>('month');
   const [isType, setIsType] = useState<string>('amount');
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
   const { data, loading } = useGetInOutQuery({
+    skip: !auth,
     variables: { time: isTime, auth },
     onError: error => toast.error(getErrorContent(error)),
   });
