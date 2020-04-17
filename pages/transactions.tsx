@@ -12,19 +12,14 @@ import { PaymentsCard } from '../src/views/transactions/PaymentsCards';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { FlowBox } from '../src/views/home/reports/flow';
-import { useGetResumeQuery } from '../src/generated/graphql';
+import { useGetResumeQuery, GetResumeQuery } from '../src/generated/graphql';
 
 const TransactionsView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
   const [token, setToken] = useState('');
   const [fetching, setFetching] = useState(false);
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const { loading, data, fetchMore } = useGetResumeQuery({
     variables: { auth, token: '' },
@@ -80,7 +75,12 @@ const TransactionsView = () => {
               setFetching(true);
               fetchMore({
                 variables: { auth, token },
-                updateQuery: (prev, { fetchMoreResult: result }) => {
+                updateQuery: (
+                  prev,
+                  {
+                    fetchMoreResult: result,
+                  }: { fetchMoreResult: GetResumeQuery }
+                ) => {
                   if (!result) return prev;
                   const newToken = result.getResume.token || '';
                   const prevEntries = JSON.parse(prev.getResume.resume);

@@ -10,16 +10,11 @@ export const ConnectionCheck = () => {
   const { connected } = useConnectionState();
   const dispatch = useConnectionDispatch();
 
-  const { loggedIn, host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { loggedIn, auth } = useAccount();
 
   const { data, loading } = useGetCanConnectQuery({
     variables: { auth },
-    skip: connected || !loggedIn,
+    skip: connected || !loggedIn || !auth,
     onError: () => {
       dispatch({ type: 'error' });
     },

@@ -29,14 +29,10 @@ const ForwardsView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
 
   const { theme } = useSettings();
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const { loading, data } = useGetForwardsQuery({
+    skip: !auth,
     variables: { auth, time },
     onError: error => toast.error(getErrorContent(error)),
   });

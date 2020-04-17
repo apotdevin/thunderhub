@@ -81,15 +81,10 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     channelPending,
   } = useStatusState();
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const { loading, data } = useGetNodeInfoQuery({
-    skip: host === '' || (viewOnly === '' && sessionAdmin === ''),
+    skip: !auth,
     variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });

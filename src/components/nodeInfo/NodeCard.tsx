@@ -9,6 +9,7 @@ import Modal from '../modal/ReactModal';
 import { StatusDot, StatusLine, QuickCard } from './NodeInfo.styled';
 import { NodeInfoModal } from './NodeInfoModal';
 import { useGetNodeInfoQuery } from '../../generated/graphql';
+import { getAuthObj } from '../../utils/auth';
 
 export const getStatusDot = (status: boolean) => {
   return status ? <StatusDot color="#95de64" /> : <StatusDot color="#ff4d4f" />;
@@ -28,15 +29,11 @@ export const NodeCard = ({ account, accountId }: NodeCardProps) => {
     triggerOnce: true,
   });
 
-  const auth = {
-    host,
-    macaroon: viewOnly,
-    cert,
-  };
+  const auth = getAuthObj(host, viewOnly, '', cert);
 
   const { data, loading, error } = useGetNodeInfoQuery({
+    skip: !inView || !auth,
     variables: { auth },
-    skip: !inView,
     pollInterval: 10000,
   });
 

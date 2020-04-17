@@ -22,12 +22,7 @@ export const SignMessage = () => {
   const [isPasting, setIsPasting] = useState<boolean>(false);
   const [signed, setSigned] = useState<string>('');
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-    cert,
-  };
+  const { auth } = useAccount();
 
   const [signMessage, { data, loading }] = useSignMessageLazyQuery({
     onError: error => toast.error(getErrorContent(error)),
