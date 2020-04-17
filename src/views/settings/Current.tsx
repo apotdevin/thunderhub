@@ -36,6 +36,10 @@ export const CurrentSettings = () => {
     );
   };
 
+  if (admin === '' && viewOnly === '') {
+    return null;
+  }
+
   return (
     <CardWithTitle>
       <SubTitle>Current Account:</SubTitle>

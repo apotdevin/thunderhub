@@ -81,6 +81,10 @@ export const DangerView = () => {
 
   const { push } = useRouter();
 
+  if (accounts.length <= 0) {
+    return null;
+  }
+
   const renderButton = () => {
     if (accounts.length > 1) {
       return (

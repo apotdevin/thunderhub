@@ -17,5 +17,6 @@ module.exports = withBundleAnalyzer({
     apiBaseUrl: `${process.env.API_BASE_URL || ''}/api/v1`,
     basePath: process.env.BASE_PATH || '',
     npmVersion: process.env.npm_package_version || '0.0.0',
+    trustNeeded: process.env.TRUST || false,
   },
 });

@@ -22,6 +22,7 @@ const TransactionsView = () => {
   const { auth } = useAccount();
 
   const { loading, data, fetchMore } = useGetResumeQuery({
+    skip: !auth,
     variables: { auth, token: '' },
     onError: error => toast.error(getErrorContent(error)),
   });

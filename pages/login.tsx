@@ -6,9 +6,35 @@ import {
   MultiButton,
   SingleButton,
 } from '../src/components/buttons/multiButton/MultiButton';
-import { Text } from '../src/components/typography/Styled';
 import { Link } from '../src/components/link/Link';
 import { Auth } from '../src/components/auth';
+import { mediaWidths, unSelectedNavButton } from '../src/styles/Themes';
+
+const Text = styled.p`
+  width: 100%;
+  text-align: center;
+`;
+
+const HelpBox = styled.div`
+  font-size: 14px;
+  color: ${unSelectedNavButton};
+  cursor: pointer;
+`;
+
+const Help = styled.div`
+  width: 100%;
+  text-align: right;
+  margin-bottom: -24px;
+
+  :hover {
+    font-weight: bold;
+  }
+
+  @media (${mediaWidths.mobile}) {
+    text-align: center;
+    margin-bottom: 0;
+  }
+`;
 
 const ConnectTitle = styled.h1`
   width: 100%;
@@ -18,31 +44,44 @@ const ConnectTitle = styled.h1`
 const LoginView = () => {
   const [isType, setIsType] = useState('login');
   const [status, setStatus] = useState('none');
+  const [help, setHelp] = useState(false);
 
   const renderButtons = () => (
     <>
       <MultiButton margin={'16px 0'}>
         <SingleButton
           selected={isType === 'login'}
-          onClick={() => setIsType('login')}
+          onClick={() => {
+            setHelp(false);
+            setIsType('login');
+          }}
         >
           Details
         </SingleButton>
         <SingleButton
           selected={isType === 'connect'}
-          onClick={() => setIsType('connect')}
+          onClick={() => {
+            setHelp(false);
+            setIsType('connect');
+          }}
         >
           LndConnect
         </SingleButton>
         <SingleButton
           selected={isType === 'btcpay'}
-          onClick={() => setIsType('btcpay')}
+          onClick={() => {
+            setHelp(false);
+            setIsType('btcpay');
+          }}
         >
           BTCPayServer
         </SingleButton>
         <SingleButton
           selected={isType === 'qrcode'}
-          onClick={() => setIsType('qrcode')}
+          onClick={() => {
+            setHelp(false);
+            setIsType('qrcode');
+          }}
         >
           QR Code
         </SingleButton>
@@ -92,12 +131,25 @@ const LoginView = () => {
     }
   };
 
+  const renderHelp = () => {
+    switch (isType) {
+      case 'btcpay':
+      case 'connect':
+        return <Help>Need Help?</Help>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <Section padding={'0 0 60px'}>
       <ConnectTitle>{'How do you want to connect?'}</ConnectTitle>
       <Card bottom={'0'}>
         {status === 'none' && renderButtons()}
-        {status === 'none' && renderText()}
+        <HelpBox onClick={() => setHelp(prev => !prev)}>
+          {!help && renderHelp()}
+          {status === 'none' && help && renderText()}
+        </HelpBox>
         <Auth
           type={isType}
           status={status}
