@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.6](https://github.com/apotdevin/thunderhub/compare/v0.3.5...v0.3.6) (2020-04-17)
+
+
+### Improvements
+
+* improve login ux ([b9f63c1](https://github.com/apotdevin/thunderhub/commit/b9f63c15248238f4c6e311dca504fd50417ce876))
+
 ### [0.3.5](https://github.com/apotdevin/thunderhub/compare/v0.3.4...v0.3.5) (2020-04-16)
 
 
