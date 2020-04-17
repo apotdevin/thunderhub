@@ -145,11 +145,15 @@ const LoginView = () => {
     <Section padding={'0 0 60px'}>
       <ConnectTitle>{'How do you want to connect?'}</ConnectTitle>
       <Card bottom={'0'}>
-        {status === 'none' && renderButtons()}
-        <HelpBox onClick={() => setHelp(prev => !prev)}>
-          {!help && renderHelp()}
-          {status === 'none' && help && renderText()}
-        </HelpBox>
+        {status === 'none' && (
+          <>
+            {renderButtons()}
+            <HelpBox onClick={() => setHelp(prev => !prev)}>
+              {!help && renderHelp()}
+              {help && renderText()}
+            </HelpBox>
+          </>
+        )}
         <Auth
           type={isType}
           status={status}
