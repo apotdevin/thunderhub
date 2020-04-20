@@ -13,7 +13,7 @@ import { NoWrap } from './Messages';
 import { Input } from '../../../components/input/Input';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Column, WrapRequest } from '../Tools.styled';
-import { getNodeLink } from '../../../components/generic/Helpers';
+import { getNodeLink } from '../../../components/generic/helpers';
 import { useVerifyMessageLazyQuery } from '../../../generated/graphql';
 
 export const VerifyMessage = () => {

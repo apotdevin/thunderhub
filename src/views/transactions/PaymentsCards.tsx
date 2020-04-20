@@ -16,7 +16,7 @@ import {
   getFormatDate,
   getNodeLink,
   renderLine,
-} from '../../components/generic/Helpers';
+} from '../../components/generic/helpers';
 import styled from 'styled-components';
 import { Price } from '../../components/price/Price';
 

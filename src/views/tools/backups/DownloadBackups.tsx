@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { DarkSubTitle, SingleLine } from '../../../components/generic/Styled';
-import { saveToPc } from '../../../utils/Helpers';
+import { saveToPc } from '../../../utils/helpers';
 import { useAccount } from '../../../context/AccountContext';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';

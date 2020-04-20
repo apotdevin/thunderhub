@@ -43,9 +43,9 @@ export const OPEN_CHANNEL = gql`
 `;
 
 export const PAY_INVOICE = gql`
-  mutation PayInvoice($request: String!, $auth: authType!) {
-    pay(request: $request, auth: $auth) {
-      isConfirmed
+  mutation PayInvoice($request: String!, $auth: authType!, $tokens: Int) {
+    pay(request: $request, auth: $auth, tokens: $tokens) {
+      is_confirmed
     }
   }
 `;
@@ -85,28 +85,6 @@ export const PAY_ADDRESS = gql`
       id
       isConfirmed
       isOutgoing
-      tokens
-    }
-  }
-`;
-
-export const DECODE_REQUEST = gql`
-  mutation DecodeRequest($auth: authType!, $request: String!) {
-    decodeRequest(auth: $auth, request: $request) {
-      chainAddress
-      cltvDelta
-      description
-      descriptionHash
-      destination
-      expiresAt
-      id
-      routes {
-        baseFeeMTokens
-        channel
-        cltvDelta
-        feeRate
-        publicKey
-      }
       tokens
     }
   }
