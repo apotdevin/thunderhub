@@ -115,11 +115,11 @@ export const AccountInfo = () => {
     <>
       <Tile>
         <DarkSubTitle>Current Balance</DarkSubTitle>
-        <div>{formatCCB}</div>
+        <div>{current}</div>
       </Tile>
       <Tile>
         <DarkSubTitle>Pending Balance</DarkSubTitle>
-        <div>{formatPCB}</div>
+        <div>{pending}</div>
       </Tile>
     </>
   );
