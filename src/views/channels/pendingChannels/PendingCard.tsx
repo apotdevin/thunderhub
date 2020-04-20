@@ -25,7 +25,7 @@ import {
   getDateDif,
   getFormatDate,
   getNodeLink,
-} from '../../../components/generic/hhelpers';
+} from '../../../components/generic/helpers';
 import { getPrice } from '../../../components/price/Price';
 import { usePriceState } from '../../../context/PriceContext';
 

@@ -18,7 +18,7 @@ import { ColorButton } from '../../../../components/buttons/colorButton/ColorBut
 import {
   renderLine,
   getNodeLink,
-} from '../../../../components/generic/hhelpers';
+} from '../../../../components/generic/helpers';
 import { Price } from '../../../../components/price/Price';
 import {
   usePayInvoiceMutation,

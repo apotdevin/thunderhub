@@ -16,7 +16,7 @@ import {
   getDateDif,
   getFormatDate,
   renderLine,
-} from '../../components/generic/hhelpers';
+} from '../../components/generic/helpers';
 import { Price } from '../../components/price/Price';
 
 interface InvoiceCardProps {

@@ -22,7 +22,7 @@ import { mediaWidths } from '../../../../styles/Themes';
 import { useSettings } from '../../../../context/SettingsContext';
 import Modal from '../../../../components/modal/ReactModal';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { renderLine } from '../../../../components/generic/hhelpers';
+import { renderLine } from '../../../../components/generic/helpers';
 import { usePriceState } from '../../../../context/PriceContext';
 import { usePayAddressMutation } from '../../../../generated/graphql';
 

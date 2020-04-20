@@ -14,7 +14,7 @@ import {
   getFormatDate,
   getTooltipType,
   getNodeLink,
-} from '../../components/generic/hhelpers';
+} from '../../components/generic/helpers';
 import styled from 'styled-components';
 import { DownArrow, UpArrow } from '../../components/generic/Icons';
 import {

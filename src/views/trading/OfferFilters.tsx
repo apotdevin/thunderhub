@@ -15,7 +15,7 @@ import { FilterModal } from './Modal/FilterModal';
 import { SortOptions } from './OfferConfigs';
 import { QueryProps } from '../../../pages/trading';
 import { XSvg } from '../../components/generic/Icons';
-import { renderLine } from '../../components/generic/hhelpers';
+import { renderLine } from '../../components/generic/helpers';
 import { chartColors } from '../../styles/Themes';
 import { useRouter } from 'next/router';
 import { encode } from '../../utils/helpers';

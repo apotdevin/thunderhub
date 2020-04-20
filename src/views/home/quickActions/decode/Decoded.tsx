@@ -9,7 +9,7 @@ import {
   getNodeLink,
   getDateDif,
   getFormatDate,
-} from '../../../../components/generic/hhelpers';
+} from '../../../../components/generic/helpers';
 import { Price } from '../../../../components/price/Price';
 
 interface DecodedProps {

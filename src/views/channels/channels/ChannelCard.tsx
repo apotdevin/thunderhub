@@ -26,7 +26,7 @@ import {
   renderLine,
   getTransactionLink,
   getNodeLink,
-} from '../../../components/generic/hhelpers';
+} from '../../../components/generic/helpers';
 import Modal from '../../../components/modal/ReactModal';
 import { CloseChannel } from '../../../components/modal/closeChannel/CloseChannel';
 import styled from 'styled-components';

@@ -11,7 +11,7 @@ import {
   getTransactionLink,
   renderLine,
   getNodeLink,
-} from '../../../components/generic/hhelpers';
+} from '../../../components/generic/helpers';
 import styled from 'styled-components';
 import { Price } from '../../../components/price/Price';
 

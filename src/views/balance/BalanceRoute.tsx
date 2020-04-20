@@ -8,7 +8,7 @@ import {
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { themeColors, chartColors } from '../../styles/Themes';
-import { renderLine } from '../../components/generic/hhelpers';
+import { renderLine } from '../../components/generic/helpers';
 import { HopCard } from './Balance.styled';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { GET_ROUTES } from '../../graphql/query';

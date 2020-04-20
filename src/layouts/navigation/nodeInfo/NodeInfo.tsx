@@ -12,7 +12,7 @@ import {
   Anchor,
   Circle,
 } from '../../../components/generic/Icons';
-import { getTooltipType } from '../../../components/generic/hhelpers';
+import { getTooltipType } from '../../../components/generic/helpers';
 import { useAccount } from '../../../context/AccountContext';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
