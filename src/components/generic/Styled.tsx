@@ -170,13 +170,13 @@ export const SimpleInverseButton = styled(SimpleButton)`
 
 interface DarkProps {
   fontSize?: string;
-  bottom?: string;
+  withMargin?: string;
 }
 
 export const DarkSubTitle = styled.div`
   font-size: ${({ fontSize }: DarkProps) => (fontSize ? fontSize : '14px')};
   color: ${unSelectedNavButton};
-  margin-bottom: ${({ bottom }: DarkProps) => (bottom ? bottom : '0px')};
+  margin: ${({ withMargin }: DarkProps) => (withMargin ? withMargin : '0')};
 `;
 
 interface ColorProps {

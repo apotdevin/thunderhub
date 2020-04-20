@@ -103,7 +103,6 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
       }
       withMargin={'16px 0 0'}
       loading={loading}
-      arrow={true}
       fullWidth={true}
     >
       Send

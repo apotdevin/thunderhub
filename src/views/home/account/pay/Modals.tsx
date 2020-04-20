@@ -131,6 +131,9 @@ export const KeysendModal: React.FC<KeysendProps> = ({
           onChange={e => setTokens(Number(e.target.value))}
         />
       </SingleLine>
+      <DarkSubTitle withMargin={'16px 0'}>
+        Remember Keysend is an experimental feature. Use at your own risk.
+      </DarkSubTitle>
       {children}
     </>
   );
