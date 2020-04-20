@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.7](https://github.com/apotdevin/thunderhub/compare/v0.3.6...v0.3.7) (2020-04-20)
+
+
+### Features
+
+* keysend integration ([#27](https://github.com/apotdevin/thunderhub/issues/27)) ([b4473c5](https://github.com/apotdevin/thunderhub/commit/b4473c50bd5856b4b1fd95426626085757006c77))
+
 ### [0.3.6](https://github.com/apotdevin/thunderhub/compare/v0.3.5...v0.3.6) (2020-04-17)
 
 
