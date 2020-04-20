@@ -5,6 +5,8 @@ import {
   SubTitle,
   Separation,
   SingleLine,
+  NoWrapTitle,
+  DarkSubTitle,
 } from '../../../../components/generic/Styled';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
@@ -20,58 +22,106 @@ import {
 import { Price } from '../../../../components/price/Price';
 import {
   usePayInvoiceMutation,
-  useDecodeRequestMutation,
+  useGetNodeLazyQuery,
+  useDecodeRequestQuery,
 } from '../../../../generated/graphql';
+import { useStatusState } from '../../../../context/StatusContext';
+import {
+  isLightningInvoice,
+  cleanLightningInvoice,
+} from '../../../../utils/hhelpers';
+import { KeysendModal, RequestModal } from './Modals';
 
 export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
-  const [request, setRequest] = useState('');
-  const [modalOpen, setModalOpen] = useState(false);
+  const [request, setRequest] = useState<string>('');
+  const [tokens, setTokens] = useState<number>(0);
+  const [modalType, setModalType] = useState('none');
 
   const { auth } = useAccount();
+  const { minorVersion } = useStatusState();
+
+  const canKeysend = minorVersion >= 9;
 
   const [makePayment, { loading }] = usePayInvoiceMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: () => {
       toast.success('Payment Sent');
       setRequest('');
-      setModalOpen(false);
+      setTokens(0);
+      setModalType('none');
       setOpen();
     },
   });
 
-  const [decode, { data, loading: decodeLoading }] = useDecodeRequestMutation({
-    onError: error => toast.error(getErrorContent(error)),
-  });
+  const handleClick = () => {
+    const isRequest = isLightningInvoice(request);
 
-  useEffect(() => {
-    if (data && data.decodeRequest) setModalOpen(true);
-  }, [data, setModalOpen]);
-
-  const renderData = () => {
-    if (!data || !data.decodeRequest) return null;
-
-    const { description, destination, expiresAt, tokens } = data.decodeRequest;
-
-    return (
-      <>
-        <SingleLine>
-          <SubTitle>Pay Invoice</SubTitle>
-          <Price amount={tokens} />
-        </SingleLine>
-        <Separation />
-        {renderLine('Description:', description)}
-        {renderLine('Destination:', getNodeLink(destination))}
-        {renderLine('Expires At:', expiresAt)}
-      </>
-    );
+    if (!isRequest && canKeysend) {
+      setModalType('keysend');
+    } else {
+      if (!isRequest) {
+        toast.error('Invalid Invoice');
+        return;
+      }
+      setModalType('request');
+    }
   };
+
+  const renderModal = () => {
+    if (modalType === 'request') {
+      return (
+        <RequestModal request={request} auth={auth}>
+          {renderButton()}
+        </RequestModal>
+      );
+    }
+    if (modalType === 'keysend') {
+      return (
+        <KeysendModal
+          tokens={tokens}
+          auth={auth}
+          publicKey={request}
+          setTokens={setTokens}
+        >
+          {renderButton()}
+        </KeysendModal>
+      );
+    }
+    return null;
+  };
+
+  const renderButton = () => (
+    <SecureButton
+      callback={makePayment}
+      variables={
+        modalType === 'none'
+          ? { request: cleanLightningInvoice(request) }
+          : { request, tokens }
+      }
+      disabled={
+        modalType === 'request' ? request === '' : request === '' || tokens <= 0
+      }
+      withMargin={'16px 0 0'}
+      loading={loading}
+      arrow={true}
+      fullWidth={true}
+    >
+      Send
+    </SecureButton>
+  );
 
   return (
     <>
       <ResponsiveLine>
-        <Sub4Title>Invoice:</Sub4Title>
+        <NoWrapTitle>
+          <Sub4Title as={'div'}>
+            {canKeysend ? 'Invoice or Public Key:' : 'Invoice:'}
+          </Sub4Title>
+        </NoWrapTitle>
         <Input
-          placeholder={'Lightning Invoice'}
+          placeholder={
+            canKeysend ? 'Lightning Invoice or Public Key' : 'Invoice'
+          }
           withMargin={'0 0 0 24px'}
           mobileMargin={'0 0 16px'}
           onChange={e => setRequest(e.target.value)}
@@ -80,28 +130,21 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
           disabled={request === ''}
           withMargin={'0 0 0 16px'}
           mobileMargin={'0'}
-          loading={decodeLoading}
           mobileFullWidth={true}
-          onClick={() => {
-            decode({ variables: { request, auth } });
-          }}
+          onClick={() => handleClick()}
         >
           Send Sats
         </ColorButton>
       </ResponsiveLine>
-      <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
-        {renderData()}
-        <SecureButton
-          callback={makePayment}
-          variables={{ request }}
-          disabled={request === ''}
-          withMargin={'16px 0 0'}
-          loading={loading}
-          arrow={true}
-          fullWidth={true}
-        >
-          Send
-        </SecureButton>
+      <Modal
+        isOpen={modalType !== 'none'}
+        closeCallback={() => {
+          setModalType('none');
+          setTokens(0);
+          setRequest('');
+        }}
+      >
+        {renderModal()}
       </Modal>
     </>
   );

@@ -4,7 +4,7 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
-import { DecodeType } from '../../types/MutationType';
+import { DecodeType } from '../../types/QueryType';
 
 interface RouteProps {
   base_fee_mtokens: string;
@@ -43,47 +43,7 @@ export const decodeRequest = {
         request: params.request,
       });
 
-      const routes = decode.routes.map(route => {
-        route.map(nodeChannel => {
-          const {
-            base_fee_mtokens,
-            channel,
-            cltv_delta,
-            fee_rate,
-            public_key,
-          } = nodeChannel;
-          return {
-            baseFeeTokens: base_fee_mtokens,
-            channel,
-            cltvDelta: cltv_delta,
-            feeRate: fee_rate,
-            publicKey: public_key,
-          };
-        });
-      });
-
-      const {
-        chain_address,
-        cltv_delta,
-        description,
-        description_hash,
-        destination,
-        expires_at,
-        id,
-        tokens,
-      } = decode;
-
-      return {
-        chainAddress: chain_address,
-        cltvDelta: cltv_delta,
-        description,
-        descriptionHash: description_hash,
-        destination,
-        expiresAt: expires_at,
-        id,
-        routes,
-        tokens,
-      };
+      return decode;
     } catch (error) {
       params.logger && logger.error('Error paying request: %o', error);
       throw new Error(getErrorMsg(error));

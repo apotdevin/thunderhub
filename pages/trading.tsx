@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 import { Link } from '../src/components/link/Link';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { useRouter } from 'next/router';
-import { decode } from '../src/utils/Helpers';
+import { decode } from '../src/utils/hhelpers';
 import { useGetOffersQuery } from '../src/generated/graphql';
 
 export interface QueryProps {

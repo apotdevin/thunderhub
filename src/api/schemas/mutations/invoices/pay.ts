@@ -1,10 +1,17 @@
-import { pay as payRequest } from 'ln-service';
+import {
+  pay as payRequest,
+  decodePaymentRequest,
+  payViaPaymentDetails,
+} from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLString, GraphQLNonNull } from 'graphql';
+import { GraphQLString, GraphQLNonNull, GraphQLInt } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { PayType } from '../../types/MutationType';
+import { randomBytes, createHash } from 'crypto';
+
+const KEYSEND_TYPE = '5482373484';
 
 interface HopProps {
   channel: string;
@@ -23,6 +30,20 @@ interface RequestProps {
   is_outgoing: boolean;
   mtokens: string;
   secret: string;
+  safe_fee: boolean;
+  safe_tokens: boolean;
+  tokens: number;
+}
+
+interface DetailsProps {
+  fee: number;
+  fee_mtokens: string;
+  hops: HopProps[];
+  id: string;
+  mtokens: string;
+  safe_fee: boolean;
+  safe_tokens: boolean;
+  secret: string;
   tokens: number;
 }
 
@@ -32,39 +53,58 @@ export const pay = {
   args: {
     ...defaultParams,
     request: { type: new GraphQLNonNull(GraphQLString) },
+    tokens: { type: GraphQLInt },
   },
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'pay');
-
     const lnd = getAuthLnd(params.auth);
 
+    let isRequest = false;
     try {
-      const payment: RequestProps = await payRequest({
+      await decodePaymentRequest({
         lnd,
         request: params.request,
       });
+      isRequest = true;
+    } catch (error) {
+      params.logger && logger.error('Error decoding request: %o', error);
+    }
 
-      const hops = payment.hops.map(hop => {
-        return {
-          channel: hop.channel,
-          channelCapacity: hop.channel_capacity,
-          mTokenFee: hop.fee_mtokens,
-          forwardMTokens: hop.forward_mtokens,
-          timeout: hop.timeout,
-        };
+    if (isRequest) {
+      try {
+        const payment: RequestProps = await payRequest({
+          lnd,
+          request: params.request,
+        });
+        return payment;
+      } catch (error) {
+        params.logger && logger.error('Error paying request: %o', error);
+        throw new Error(getErrorMsg(error));
+      }
+    }
+
+    if (!params.tokens) {
+      throw new Error('Amount of tokens is needed for keysend');
+    }
+
+    const preimage = randomBytes(32);
+    const secret = preimage.toString('hex');
+    const id = createHash('sha256').update(preimage).digest().toString('hex');
+
+    try {
+      const payment: DetailsProps = await payViaPaymentDetails({
+        id,
+        lnd,
+        tokens: params.tokens,
+        destination: params.request,
+        messages: [
+          {
+            type: KEYSEND_TYPE,
+            value: secret,
+          },
+        ],
       });
-
-      return {
-        fee: payment.fee,
-        feeMTokens: payment.fee_mtokens,
-        hops,
-        id: payment.id,
-        isConfirmed: payment.is_confirmed,
-        isOutgoing: payment.is_outgoing,
-        mtokens: payment.mtokens,
-        secret: payment.secret,
-        tokens: payment.tokens,
-      };
+      return payment;
     } catch (error) {
       params.logger && logger.error('Error paying request: %o', error);
       throw new Error(getErrorMsg(error));

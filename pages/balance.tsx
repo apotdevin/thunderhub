@@ -13,7 +13,7 @@ import { useAccount } from '../src/context/AccountContext';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
-import { getPercent } from '../src/utils/Helpers';
+import { getPercent } from '../src/utils/hhelpers';
 import { Input } from '../src/components/input/Input';
 import sortBy from 'lodash.sortby';
 import { BalanceCard } from '../src/views/balance/BalanceCard';

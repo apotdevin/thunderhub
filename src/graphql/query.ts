@@ -105,6 +105,48 @@ export const GET_CHANNELS = gql`
   }
 `;
 
+export const GET_NODE = gql`
+  query GetNode(
+    $auth: authType!
+    $publicKey: String!
+    $withoutChannels: Boolean
+  ) {
+    getNode(
+      auth: $auth
+      publicKey: $publicKey
+      withoutChannels: $withoutChannels
+    ) {
+      alias
+      capacity
+      channel_count
+      color
+      updated_at
+    }
+  }
+`;
+
+export const DECODE_REQUEST = gql`
+  query DecodeRequest($auth: authType!, $request: String!) {
+    decodeRequest(auth: $auth, request: $request) {
+      chain_address
+      cltv_delta
+      description
+      description_hash
+      destination
+      expires_at
+      id
+      routes {
+        base_fee_mtokens
+        channel
+        cltv_delta
+        fee_rate
+        public_key
+      }
+      tokens
+    }
+  }
+`;
+
 export const GET_PENDING_CHANNELS = gql`
   query GetPendingChannels($auth: authType!) {
     getPendingChannels(auth: $auth) {

@@ -18,7 +18,7 @@ import { XSvg } from '../../components/generic/Icons';
 import { renderLine } from '../../components/generic/Helpers';
 import { chartColors } from '../../styles/Themes';
 import { useRouter } from 'next/router';
-import { encode } from '../../utils/Helpers';
+import { encode } from '../../utils/hhelpers';
 import { appendBasePath } from '../../utils/basePath';
 
 type ActionType = {

@@ -14,7 +14,7 @@ import { SecureButton } from '../../components/buttons/secureButton/SecureButton
 import { GET_ROUTES } from '../../graphql/query';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Price } from '../../components/price/Price';
-import { getPercent } from '../../utils/Helpers';
+import { getPercent } from '../../utils/hhelpers';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 import {
   usePayViaRouteMutation,

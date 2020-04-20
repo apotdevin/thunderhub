@@ -23,7 +23,7 @@ import {
   NodeTitle,
   MainInfo,
 } from '../../components/generic/CardGeneric';
-import { getPercent } from '../../utils/Helpers';
+import { getPercent } from '../../utils/hhelpers';
 import { useSettings } from '../../context/SettingsContext';
 import ReactTooltip from 'react-tooltip';
 import { usePriceState } from '../../context/PriceContext';

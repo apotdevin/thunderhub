@@ -7,7 +7,7 @@ import {
 } from '../../components/generic/Styled';
 import { MainInfo } from '../../components/generic/CardGeneric';
 import { Circle, ChevronRight, XSvg } from '../../components/generic/Icons';
-import { getPercent } from '../../utils/Helpers';
+import { getPercent } from '../../utils/hhelpers';
 import { Price } from '../../components/price/Price';
 import { themeColors, chartColors } from '../../styles/Themes';
 import {

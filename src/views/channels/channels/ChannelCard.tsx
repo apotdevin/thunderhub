@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getPercent } from '../../../utils/Helpers';
+import { getPercent } from '../../../utils/hhelpers';
 import {
   Progress,
   ProgressBar,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSettings } from '../../context/SettingsContext';
-import { getValue } from '../../utils/Helpers';
+import { getValue } from '../../utils/hhelpers';
 import { usePriceState } from '../../context/PriceContext';
 
 type PriceProps = {
