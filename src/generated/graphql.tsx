@@ -24,6 +24,8 @@ export type Query = {
   getNetworkInfo?: Maybe<NetworkInfoType>;
   getNodeInfo?: Maybe<NodeInfoType>;
   adminCheck?: Maybe<Scalars['Boolean']>;
+  getNode?: Maybe<PartnerNodeType>;
+  decodeRequest?: Maybe<DecodeType>;
   getResume?: Maybe<GetResumeType>;
   getForwards?: Maybe<GetForwardType>;
   getBitcoinPrice?: Maybe<Scalars['String']>;
@@ -92,6 +94,19 @@ export type QueryGetNodeInfoArgs = {
 export type QueryAdminCheckArgs = {
   auth: AuthType;
   logger?: Maybe<Scalars['Boolean']>;
+};
+
+export type QueryGetNodeArgs = {
+  auth: AuthType;
+  logger?: Maybe<Scalars['Boolean']>;
+  publicKey: Scalars['String'];
+  withoutChannels?: Maybe<Scalars['Boolean']>;
+};
+
+export type QueryDecodeRequestArgs = {
+  auth: AuthType;
+  logger?: Maybe<Scalars['Boolean']>;
+  request: Scalars['String'];
 };
 
 export type QueryGetResumeArgs = {
@@ -338,6 +353,30 @@ export type NodeInfoType = {
   version?: Maybe<Scalars['String']>;
 };
 
+export type DecodeType = {
+  __typename?: 'decodeType';
+  chain_address?: Maybe<Scalars['String']>;
+  cltv_delta?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  description_hash?: Maybe<Scalars['String']>;
+  destination?: Maybe<Scalars['String']>;
+  expires_at?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  mtokens?: Maybe<Scalars['String']>;
+  routes?: Maybe<Array<Maybe<DecodeRoutesType>>>;
+  safe_tokens?: Maybe<Scalars['Int']>;
+  tokens?: Maybe<Scalars['Int']>;
+};
+
+export type DecodeRoutesType = {
+  __typename?: 'DecodeRoutesType';
+  base_fee_mtokens?: Maybe<Scalars['String']>;
+  channel?: Maybe<Scalars['String']>;
+  cltv_delta?: Maybe<Scalars['Int']>;
+  fee_rate?: Maybe<Scalars['Int']>;
+  public_key?: Maybe<Scalars['String']>;
+};
+
 export type GetResumeType = {
   __typename?: 'getResumeType';
   token?: Maybe<Scalars['String']>;
@@ -497,7 +536,6 @@ export type Mutation = {
   parsePayment?: Maybe<ParsePaymentType>;
   pay?: Maybe<PayType>;
   createInvoice?: Maybe<InvoiceType>;
-  decodeRequest?: Maybe<DecodeType>;
   payViaRoute?: Maybe<Scalars['Boolean']>;
   createAddress?: Maybe<Scalars['String']>;
   sendToAddress?: Maybe<SendToType>;
@@ -542,18 +580,13 @@ export type MutationPayArgs = {
   auth: AuthType;
   logger?: Maybe<Scalars['Boolean']>;
   request: Scalars['String'];
+  tokens?: Maybe<Scalars['Int']>;
 };
 
 export type MutationCreateInvoiceArgs = {
   auth: AuthType;
   logger?: Maybe<Scalars['Boolean']>;
   amount: Scalars['Int'];
-};
-
-export type MutationDecodeRequestArgs = {
-  auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
-  request: Scalars['String'];
 };
 
 export type MutationPayViaRouteArgs = {
@@ -633,22 +666,24 @@ export type PaymentRouteType = {
 export type PayType = {
   __typename?: 'payType';
   fee?: Maybe<Scalars['Int']>;
-  feeMTokens?: Maybe<Scalars['String']>;
+  fee_mtokens?: Maybe<Scalars['String']>;
   hops?: Maybe<Array<Maybe<HopsType>>>;
   id?: Maybe<Scalars['String']>;
-  isConfirmed?: Maybe<Scalars['Boolean']>;
-  isOutgoing?: Maybe<Scalars['Boolean']>;
+  is_confirmed?: Maybe<Scalars['Boolean']>;
+  is_outgoing?: Maybe<Scalars['Boolean']>;
   mtokens?: Maybe<Scalars['String']>;
   secret?: Maybe<Scalars['String']>;
+  safe_fee?: Maybe<Scalars['Int']>;
+  safe_tokens?: Maybe<Scalars['Int']>;
   tokens?: Maybe<Scalars['Int']>;
 };
 
 export type HopsType = {
   __typename?: 'hopsType';
   channel?: Maybe<Scalars['String']>;
-  channelCapacity?: Maybe<Scalars['Int']>;
-  mTokenFee?: Maybe<Scalars['String']>;
-  forwardMTokens?: Maybe<Scalars['String']>;
+  channel_capacity?: Maybe<Scalars['Int']>;
+  fee_mtokens?: Maybe<Scalars['String']>;
+  forward_mtokens?: Maybe<Scalars['String']>;
   timeout?: Maybe<Scalars['Int']>;
 };
 
@@ -661,28 +696,6 @@ export type InvoiceType = {
   request?: Maybe<Scalars['String']>;
   secret?: Maybe<Scalars['String']>;
   tokens?: Maybe<Scalars['Int']>;
-};
-
-export type DecodeType = {
-  __typename?: 'decodeType';
-  chainAddress?: Maybe<Scalars['String']>;
-  cltvDelta?: Maybe<Scalars['Int']>;
-  description?: Maybe<Scalars['String']>;
-  descriptionHash?: Maybe<Scalars['String']>;
-  destination?: Maybe<Scalars['String']>;
-  expiresAt?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  routes?: Maybe<Array<Maybe<DecodeRoutesType>>>;
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type DecodeRoutesType = {
-  __typename?: 'DecodeRoutesType';
-  baseFeeMTokens?: Maybe<Scalars['String']>;
-  channel?: Maybe<Scalars['String']>;
-  cltvDelta?: Maybe<Scalars['Int']>;
-  feeRate?: Maybe<Scalars['Int']>;
-  publicKey?: Maybe<Scalars['String']>;
 };
 
 export type SendToType = {
@@ -832,10 +845,11 @@ export type OpenChannelMutation = { __typename?: 'Mutation' } & {
 export type PayInvoiceMutationVariables = {
   request: Scalars['String'];
   auth: AuthType;
+  tokens?: Maybe<Scalars['Int']>;
 };
 
 export type PayInvoiceMutation = { __typename?: 'Mutation' } & {
-  pay?: Maybe<{ __typename?: 'payType' } & Pick<PayType, 'isConfirmed'>>;
+  pay?: Maybe<{ __typename?: 'payType' } & Pick<PayType, 'is_confirmed'>>;
 };
 
 export type CreateInvoiceMutationVariables = {
@@ -874,42 +888,6 @@ export type PayAddressMutation = { __typename?: 'Mutation' } & {
       SendToType,
       'confirmationCount' | 'id' | 'isConfirmed' | 'isOutgoing' | 'tokens'
     >
-  >;
-};
-
-export type DecodeRequestMutationVariables = {
-  auth: AuthType;
-  request: Scalars['String'];
-};
-
-export type DecodeRequestMutation = { __typename?: 'Mutation' } & {
-  decodeRequest?: Maybe<
-    { __typename?: 'decodeType' } & Pick<
-      DecodeType,
-      | 'chainAddress'
-      | 'cltvDelta'
-      | 'description'
-      | 'descriptionHash'
-      | 'destination'
-      | 'expiresAt'
-      | 'id'
-      | 'tokens'
-    > & {
-        routes?: Maybe<
-          Array<
-            Maybe<
-              { __typename?: 'DecodeRoutesType' } & Pick<
-                DecodeRoutesType,
-                | 'baseFeeMTokens'
-                | 'channel'
-                | 'cltvDelta'
-                | 'feeRate'
-                | 'publicKey'
-              >
-            >
-          >
-        >;
-      }
   >;
 };
 
@@ -1096,6 +1074,57 @@ export type GetChannelsQuery = { __typename?: 'Query' } & {
           }
       >
     >
+  >;
+};
+
+export type GetNodeQueryVariables = {
+  auth: AuthType;
+  publicKey: Scalars['String'];
+  withoutChannels?: Maybe<Scalars['Boolean']>;
+};
+
+export type GetNodeQuery = { __typename?: 'Query' } & {
+  getNode?: Maybe<
+    { __typename?: 'partnerNodeType' } & Pick<
+      PartnerNodeType,
+      'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
+    >
+  >;
+};
+
+export type DecodeRequestQueryVariables = {
+  auth: AuthType;
+  request: Scalars['String'];
+};
+
+export type DecodeRequestQuery = { __typename?: 'Query' } & {
+  decodeRequest?: Maybe<
+    { __typename?: 'decodeType' } & Pick<
+      DecodeType,
+      | 'chain_address'
+      | 'cltv_delta'
+      | 'description'
+      | 'description_hash'
+      | 'destination'
+      | 'expires_at'
+      | 'id'
+      | 'tokens'
+    > & {
+        routes?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'DecodeRoutesType' } & Pick<
+                DecodeRoutesType,
+                | 'base_fee_mtokens'
+                | 'channel'
+                | 'cltv_delta'
+                | 'fee_rate'
+                | 'public_key'
+              >
+            >
+          >
+        >;
+      }
   >;
 };
 
@@ -1802,9 +1831,9 @@ export type OpenChannelMutationOptions = ApolloReactCommon.BaseMutationOptions<
   OpenChannelMutationVariables
 >;
 export const PayInvoiceDocument = gql`
-  mutation PayInvoice($request: String!, $auth: authType!) {
-    pay(request: $request, auth: $auth) {
-      isConfirmed
+  mutation PayInvoice($request: String!, $auth: authType!, $tokens: Int) {
+    pay(request: $request, auth: $auth, tokens: $tokens) {
+      is_confirmed
     }
   }
 `;
@@ -1828,6 +1857,7 @@ export type PayInvoiceMutationFn = ApolloReactCommon.MutationFunction<
  *   variables: {
  *      request: // value for 'request'
  *      auth: // value for 'auth'
+ *      tokens: // value for 'tokens'
  *   },
  * });
  */
@@ -2024,71 +2054,6 @@ export type PayAddressMutationResult = ApolloReactCommon.MutationResult<
 export type PayAddressMutationOptions = ApolloReactCommon.BaseMutationOptions<
   PayAddressMutation,
   PayAddressMutationVariables
->;
-export const DecodeRequestDocument = gql`
-  mutation DecodeRequest($auth: authType!, $request: String!) {
-    decodeRequest(auth: $auth, request: $request) {
-      chainAddress
-      cltvDelta
-      description
-      descriptionHash
-      destination
-      expiresAt
-      id
-      routes {
-        baseFeeMTokens
-        channel
-        cltvDelta
-        feeRate
-        publicKey
-      }
-      tokens
-    }
-  }
-`;
-export type DecodeRequestMutationFn = ApolloReactCommon.MutationFunction<
-  DecodeRequestMutation,
-  DecodeRequestMutationVariables
->;
-
-/**
- * __useDecodeRequestMutation__
- *
- * To run a mutation, you first call `useDecodeRequestMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDecodeRequestMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [decodeRequestMutation, { data, loading, error }] = useDecodeRequestMutation({
- *   variables: {
- *      auth: // value for 'auth'
- *      request: // value for 'request'
- *   },
- * });
- */
-export function useDecodeRequestMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    DecodeRequestMutation,
-    DecodeRequestMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    DecodeRequestMutation,
-    DecodeRequestMutationVariables
-  >(DecodeRequestDocument, baseOptions);
-}
-export type DecodeRequestMutationHookResult = ReturnType<
-  typeof useDecodeRequestMutation
->;
-export type DecodeRequestMutationResult = ApolloReactCommon.MutationResult<
-  DecodeRequestMutation
->;
-export type DecodeRequestMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  DecodeRequestMutation,
-  DecodeRequestMutationVariables
 >;
 export const UpdateFeesDocument = gql`
   mutation UpdateFees(
@@ -2698,6 +2663,143 @@ export type GetChannelsLazyQueryHookResult = ReturnType<
 export type GetChannelsQueryResult = ApolloReactCommon.QueryResult<
   GetChannelsQuery,
   GetChannelsQueryVariables
+>;
+export const GetNodeDocument = gql`
+  query GetNode(
+    $auth: authType!
+    $publicKey: String!
+    $withoutChannels: Boolean
+  ) {
+    getNode(
+      auth: $auth
+      publicKey: $publicKey
+      withoutChannels: $withoutChannels
+    ) {
+      alias
+      capacity
+      channel_count
+      color
+      updated_at
+    }
+  }
+`;
+
+/**
+ * __useGetNodeQuery__
+ *
+ * To run a query within a React component, call `useGetNodeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNodeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNodeQuery({
+ *   variables: {
+ *      auth: // value for 'auth'
+ *      publicKey: // value for 'publicKey'
+ *      withoutChannels: // value for 'withoutChannels'
+ *   },
+ * });
+ */
+export function useGetNodeQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetNodeQuery,
+    GetNodeQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<GetNodeQuery, GetNodeQueryVariables>(
+    GetNodeDocument,
+    baseOptions
+  );
+}
+export function useGetNodeLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetNodeQuery,
+    GetNodeQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<GetNodeQuery, GetNodeQueryVariables>(
+    GetNodeDocument,
+    baseOptions
+  );
+}
+export type GetNodeQueryHookResult = ReturnType<typeof useGetNodeQuery>;
+export type GetNodeLazyQueryHookResult = ReturnType<typeof useGetNodeLazyQuery>;
+export type GetNodeQueryResult = ApolloReactCommon.QueryResult<
+  GetNodeQuery,
+  GetNodeQueryVariables
+>;
+export const DecodeRequestDocument = gql`
+  query DecodeRequest($auth: authType!, $request: String!) {
+    decodeRequest(auth: $auth, request: $request) {
+      chain_address
+      cltv_delta
+      description
+      description_hash
+      destination
+      expires_at
+      id
+      routes {
+        base_fee_mtokens
+        channel
+        cltv_delta
+        fee_rate
+        public_key
+      }
+      tokens
+    }
+  }
+`;
+
+/**
+ * __useDecodeRequestQuery__
+ *
+ * To run a query within a React component, call `useDecodeRequestQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDecodeRequestQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDecodeRequestQuery({
+ *   variables: {
+ *      auth: // value for 'auth'
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useDecodeRequestQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    DecodeRequestQuery,
+    DecodeRequestQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    DecodeRequestQuery,
+    DecodeRequestQueryVariables
+  >(DecodeRequestDocument, baseOptions);
+}
+export function useDecodeRequestLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    DecodeRequestQuery,
+    DecodeRequestQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    DecodeRequestQuery,
+    DecodeRequestQueryVariables
+  >(DecodeRequestDocument, baseOptions);
+}
+export type DecodeRequestQueryHookResult = ReturnType<
+  typeof useDecodeRequestQuery
+>;
+export type DecodeRequestLazyQueryHookResult = ReturnType<
+  typeof useDecodeRequestLazyQuery
+>;
+export type DecodeRequestQueryResult = ApolloReactCommon.QueryResult<
+  DecodeRequestQuery,
+  DecodeRequestQueryVariables
 >;
 export const GetPendingChannelsDocument = gql`
   query GetPendingChannels($auth: authType!) {

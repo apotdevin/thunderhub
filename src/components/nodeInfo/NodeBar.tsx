@@ -12,7 +12,7 @@ import { QuestionIcon } from '../generic/Icons';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import { useSettings } from '../../context/SettingsContext';
-import { getTooltipType } from '../generic/Helpers';
+import { getTooltipType } from '../generic/helpers';
 
 const StyledQuestion = styled(QuestionIcon)`
   margin-left: 8px;

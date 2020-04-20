@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getPercent } from '../../../utils/Helpers';
+import { getPercent } from '../../../utils/helpers';
 import {
   Progress,
   ProgressBar,
@@ -26,7 +26,7 @@ import {
   renderLine,
   getTransactionLink,
   getNodeLink,
-} from '../../../components/generic/Helpers';
+} from '../../../components/generic/helpers';
 import Modal from '../../../components/modal/ReactModal';
 import { CloseChannel } from '../../../components/modal/closeChannel/CloseChannel';
 import styled from 'styled-components';

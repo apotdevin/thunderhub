@@ -81,3 +81,18 @@ export const encode = (data: string): string =>
   Buffer.from(data, 'binary').toString('base64');
 export const decode = (data: string): string =>
   Buffer.from(data, 'base64').toString('binary');
+
+export const isLightningInvoice = (invoice: string): boolean => {
+  let isValidLightningInvoice = false;
+  if (
+    invoice.toLowerCase().startsWith('lightning:lnb') ||
+    invoice.toLowerCase().startsWith('lnb')
+  ) {
+    isValidLightningInvoice = true;
+  }
+  return isValidLightningInvoice;
+};
+
+export const cleanLightningInvoice = invoice => {
+  return invoice.replace('LIGHTNING:', '').replace('lightning:', '');
+};

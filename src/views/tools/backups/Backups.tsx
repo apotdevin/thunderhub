@@ -13,7 +13,7 @@ import { DownloadBackups } from './DownloadBackups';
 import { VerifyBackups } from './VerifyBackups';
 import { RecoverFunds } from './RecoverFunds';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
-import { getDateDif, getFormatDate } from '../../../components/generic/Helpers';
+import { getDateDif, getFormatDate } from '../../../components/generic/helpers';
 
 export const BackupsView = () => {
   const [lastDate, setLastDate] = useState('');

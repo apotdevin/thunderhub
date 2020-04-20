@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSpring, animated } from 'react-spring';
-import { getValue } from '../../utils/Helpers';
+import { getValue } from '../../utils/helpers';
 import { useSettings } from '../../context/SettingsContext';
 import { usePriceState } from '../../context/PriceContext';
 

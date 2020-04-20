@@ -7,7 +7,7 @@ import {
   ResponsiveLine,
   NoWrapTitle,
 } from '../../components/generic/Styled';
-import { renderLine } from '../../components/generic/Helpers';
+import { renderLine } from '../../components/generic/helpers';
 import {
   MainInfo,
   NodeTitle,

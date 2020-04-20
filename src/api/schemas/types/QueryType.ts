@@ -42,6 +42,36 @@ export const ChannelReportType = new GraphQLObjectType({
   },
 });
 
+const DecodeRoutesType = new GraphQLObjectType({
+  name: 'DecodeRoutesType',
+  fields: () => ({
+    base_fee_mtokens: { type: GraphQLString },
+    channel: { type: GraphQLString },
+    cltv_delta: { type: GraphQLInt },
+    fee_rate: { type: GraphQLInt },
+    public_key: { type: GraphQLString },
+  }),
+});
+
+export const DecodeType = new GraphQLObjectType({
+  name: 'decodeType',
+  fields: () => {
+    return {
+      chain_address: { type: GraphQLString },
+      cltv_delta: { type: GraphQLInt },
+      description: { type: GraphQLString },
+      description_hash: { type: GraphQLString },
+      destination: { type: GraphQLString },
+      expires_at: { type: GraphQLString },
+      id: { type: GraphQLString },
+      mtokens: { type: GraphQLString },
+      routes: { type: new GraphQLList(DecodeRoutesType) },
+      safe_tokens: { type: GraphQLInt },
+      tokens: { type: GraphQLInt },
+    };
+  },
+});
+
 export const PartnerNodeType = new GraphQLObjectType({
   name: 'partnerNodeType',
   fields: () => {

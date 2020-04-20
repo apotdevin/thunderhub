@@ -42,34 +42,6 @@ export const InvoiceType = new GraphQLObjectType({
   },
 });
 
-const DecodeRoutesType = new GraphQLObjectType({
-  name: 'DecodeRoutesType',
-  fields: () => ({
-    baseFeeMTokens: { type: GraphQLString },
-    channel: { type: GraphQLString },
-    cltvDelta: { type: GraphQLInt },
-    feeRate: { type: GraphQLInt },
-    publicKey: { type: GraphQLString },
-  }),
-});
-
-export const DecodeType = new GraphQLObjectType({
-  name: 'decodeType',
-  fields: () => {
-    return {
-      chainAddress: { type: GraphQLString },
-      cltvDelta: { type: GraphQLInt },
-      description: { type: GraphQLString },
-      descriptionHash: { type: GraphQLString },
-      destination: { type: GraphQLString },
-      expiresAt: { type: GraphQLString },
-      id: { type: GraphQLString },
-      routes: { type: new GraphQLList(DecodeRoutesType) },
-      tokens: { type: GraphQLInt },
-    };
-  },
-});
-
 const PaymentRouteType = new GraphQLObjectType({
   name: 'PaymentRouteType',
   fields: () => ({
@@ -106,9 +78,9 @@ const HopsType = new GraphQLObjectType({
   name: 'hopsType',
   fields: () => ({
     channel: { type: GraphQLString },
-    channelCapacity: { type: GraphQLInt },
-    mTokenFee: { type: GraphQLString },
-    forwardMTokens: { type: GraphQLString },
+    channel_capacity: { type: GraphQLInt },
+    fee_mtokens: { type: GraphQLString },
+    forward_mtokens: { type: GraphQLString },
     timeout: { type: GraphQLInt },
   }),
 });
@@ -118,13 +90,15 @@ export const PayType = new GraphQLObjectType({
   fields: () => {
     return {
       fee: { type: GraphQLInt },
-      feeMTokens: { type: GraphQLString },
+      fee_mtokens: { type: GraphQLString },
       hops: { type: new GraphQLList(HopsType) },
       id: { type: GraphQLString },
-      isConfirmed: { type: GraphQLBoolean },
-      isOutgoing: { type: GraphQLBoolean },
+      is_confirmed: { type: GraphQLBoolean },
+      is_outgoing: { type: GraphQLBoolean },
       mtokens: { type: GraphQLString },
       secret: { type: GraphQLString },
+      safe_fee: { type: GraphQLInt },
+      safe_tokens: { type: GraphQLInt },
       tokens: { type: GraphQLInt },
     };
   },

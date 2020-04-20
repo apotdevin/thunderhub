@@ -11,7 +11,7 @@ import {
   getDateDif,
   getFormatDate,
   renderLine,
-} from '../../../components/generic/Helpers';
+} from '../../../components/generic/helpers';
 import styled from 'styled-components';
 import { getPrice } from '../../../components/price/Price';
 import { useSettings } from '../../../context/SettingsContext';
