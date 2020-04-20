@@ -18,7 +18,7 @@ import { ColorButton } from '../../../../components/buttons/colorButton/ColorBut
 import {
   renderLine,
   getNodeLink,
-} from '../../../../components/generic/Helpers';
+} from '../../../../components/generic/hhelpers';
 import { Price } from '../../../../components/price/Price';
 import {
   usePayInvoiceMutation,
@@ -29,7 +29,7 @@ import { useStatusState } from '../../../../context/StatusContext';
 import {
   isLightningInvoice,
   cleanLightningInvoice,
-} from '../../../../utils/hhelpers';
+} from '../../../../utils/helpers';
 import { KeysendModal, RequestModal } from './Modals';
 
 export const PayCard = ({ setOpen }: { setOpen: () => void }) => {

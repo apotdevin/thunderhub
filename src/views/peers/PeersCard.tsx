@@ -14,7 +14,7 @@ import {
   getFormatDate,
   getTooltipType,
   getNodeLink,
-} from '../../components/generic/Helpers';
+} from '../../components/generic/hhelpers';
 import styled from 'styled-components';
 import { DownArrow, UpArrow } from '../../components/generic/Icons';
 import {
@@ -23,7 +23,7 @@ import {
   NodeTitle,
   MainInfo,
 } from '../../components/generic/CardGeneric';
-import { getPercent } from '../../utils/hhelpers';
+import { getPercent } from '../../utils/helpers';
 import { useSettings } from '../../context/SettingsContext';
 import ReactTooltip from 'react-tooltip';
 import { usePriceState } from '../../context/PriceContext';

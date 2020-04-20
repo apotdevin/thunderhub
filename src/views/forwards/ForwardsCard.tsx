@@ -11,7 +11,7 @@ import {
   getDateDif,
   getFormatDate,
   renderLine,
-} from '../../components/generic/Helpers';
+} from '../../components/generic/hhelpers';
 import { Price } from '../../components/price/Price';
 
 interface ForwardCardProps {

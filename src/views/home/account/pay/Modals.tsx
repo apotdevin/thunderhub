@@ -15,7 +15,7 @@ import {
   getNodeLink,
   getDateDif,
   getFormatDate,
-} from '../../../../components/generic/Helpers';
+} from '../../../../components/generic/hhelpers';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { Input } from '../../../../components/input/Input';
 import styled from 'styled-components';

@@ -15,10 +15,10 @@ import { FilterModal } from './Modal/FilterModal';
 import { SortOptions } from './OfferConfigs';
 import { QueryProps } from '../../../pages/trading';
 import { XSvg } from '../../components/generic/Icons';
-import { renderLine } from '../../components/generic/Helpers';
+import { renderLine } from '../../components/generic/hhelpers';
 import { chartColors } from '../../styles/Themes';
 import { useRouter } from 'next/router';
-import { encode } from '../../utils/hhelpers';
+import { encode } from '../../utils/helpers';
 import { appendBasePath } from '../../utils/basePath';
 
 type ActionType = {

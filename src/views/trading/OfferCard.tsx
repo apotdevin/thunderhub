@@ -17,7 +17,7 @@ import {
 } from './OfferCard.styled';
 import { MainInfo } from '../../components/generic/CardGeneric';
 import { themeColors } from '../../styles/Themes';
-import { renderLine } from '../../components/generic/Helpers';
+import { renderLine } from '../../components/generic/hhelpers';
 import numeral from 'numeral';
 import { MethodBoxes } from './MethodBoxes';
 import { Link } from '../../components/link/Link';

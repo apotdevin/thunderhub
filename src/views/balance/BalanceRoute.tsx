@@ -8,13 +8,13 @@ import {
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { themeColors, chartColors } from '../../styles/Themes';
-import { renderLine } from '../../components/generic/Helpers';
+import { renderLine } from '../../components/generic/hhelpers';
 import { HopCard } from './Balance.styled';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { GET_ROUTES } from '../../graphql/query';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Price } from '../../components/price/Price';
-import { getPercent } from '../../utils/hhelpers';
+import { getPercent } from '../../utils/helpers';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 import {
   usePayViaRouteMutation,

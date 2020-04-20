@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPercent } from '../../../utils/hhelpers';
+import { getPercent } from '../../../utils/helpers';
 import {
   Progress,
   ProgressBar,
@@ -25,7 +25,7 @@ import {
   getDateDif,
   getFormatDate,
   getNodeLink,
-} from '../../../components/generic/Helpers';
+} from '../../../components/generic/hhelpers';
 import { getPrice } from '../../../components/price/Price';
 import { usePriceState } from '../../../context/PriceContext';
 

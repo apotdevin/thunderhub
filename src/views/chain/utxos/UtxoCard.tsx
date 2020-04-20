@@ -1,7 +1,7 @@
 import React from 'react';
 import { Separation, SubCard } from '../../../components/generic/Styled';
 import { MainInfo } from '../../../components/generic/CardGeneric';
-import { renderLine } from '../../../components/generic/Helpers';
+import { renderLine } from '../../../components/generic/hhelpers';
 import { getPrice } from '../../../components/price/Price';
 import { useSettings } from '../../../context/SettingsContext';
 import { usePriceState } from '../../../context/PriceContext';
