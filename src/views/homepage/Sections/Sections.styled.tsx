@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { SingleLine } from '../../../components/generic/Styled';
 import { headerColor, mediaWidths } from '../../../styles/Themes';
 
 export const Padding = styled.div`
@@ -70,6 +69,18 @@ export const TextSection = styled(HalfSection)`
   }
 `;
 
+export const Row = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+
+  @media (${mediaWidths.mobile}) {
+    justify-content: space-between;
+    /* flex-direction: column; */
+  }
+`;
+
 export const ImagePlace = styled.img`
   display: flex;
   width: 100%;
@@ -78,14 +89,49 @@ export const ImagePlace = styled.img`
   align-items: center;
 `;
 
-export const WrapSingleLine = styled(SingleLine)`
-  flex-wrap: wrap;
-  justify-content: space-around;
-  flex-grow: 1;
+export const VersionColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  padding: 40px 0 60px;
+  height: 300px;
+
+  @media (${mediaWidths.mobile}) {
+    padding: 0 0 40px;
+    height: 200px;
+  }
+`;
+
+export const StyledLND = styled.img`
+  display: block;
+  max-width: 260px;
+  width: auto;
+  height: auto;
+
+  @media (${mediaWidths.mobile}) {
+    max-width: 80%;
+  }
 `;
 
 export const StyledH1 = styled.h1``;
 
 export const StyledH2 = styled.h2``;
 
-export const StyledP = styled.p``;
+export const StyledP = styled.div`
+  font-size: 18px;
+  padding: 4px 0;
+
+  @media (${mediaWidths.mobile}) {
+    padding: 0 4px;
+  }
+`;
+
+export const ClippedSection = styled.div`
+  clip-path: polygon(0 5%, 100% 0, 100% 95%, 0 100%);
+
+  @media (${mediaWidths.mobile}) {
+    clip-path: polygon(0 2%, 100% 0, 100% 98%, 0 100%);
+  }
+`;

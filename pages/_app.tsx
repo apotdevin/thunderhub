@@ -60,7 +60,7 @@ const Wrapper: React.FC = ({ children }) => {
   );
 
   return (
-    <ThemeProvider theme={{ mode: theme }}>
+    <ThemeProvider theme={{ mode: isInArray ? 'light' : theme }}>
       <ModalProvider backgroundComponent={BaseModalBackground}>
         <GlobalStyles />
         {loggedIn && renderGetters()}
