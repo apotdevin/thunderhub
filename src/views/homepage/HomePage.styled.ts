@@ -5,22 +5,25 @@ import ThunderHub from '../../assets/ThunderHub.svg';
 export const Headline = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   padding: 48px 0 140px;
 
   @media (${mediaWidths.mobile}) {
-    flex-direction: column-reverse;
+    flex-direction: column;
+    padding: 0 0 60px;
+    width: 100%;
   }
 `;
 
 export const LeftHeadline = styled.div`
-  width: 50%;
+  width: 35%;
   display: flex;
   flex-direction: column;
 
   @media (${mediaWidths.mobile}) {
     width: 100%;
     text-align: center;
+    margin-bottom: 0;
   }
 `;
 
@@ -52,7 +55,7 @@ export const StyledImage = styled(ThunderHub)`
   }
 
   @media (${mediaWidths.mobile}) {
-    width: unset;
+    width: 100%;
   }
 `;
 
@@ -73,17 +76,26 @@ export const HomeButton = styled.button`
   width: 100%;
 `;
 
-export const Title = styled.h1`
+export const HomeTitle = styled.h1`
   width: 100%;
   text-align: center;
   color: ${({ textColor }: { textColor?: string }) =>
     textColor ? textColor : fontColors.white};
-  font-size: 32px;
-  margin-bottom: 0;
+  font-size: 56px;
+  margin: 0;
+  font-weight: 900;
+
+  @media (${mediaWidths.mobile}) {
+    font-size: 24px;
+  }
 `;
 
-export const Text = styled.p`
+export const HomeText = styled.p`
   color: ${fontColors.white};
-  text-align: justify;
-  max-width: 400px;
+  text-align: center;
+  font-size: 20px;
+
+  @media (${mediaWidths.mobile}) {
+    font-size: 15px;
+  }
 `;

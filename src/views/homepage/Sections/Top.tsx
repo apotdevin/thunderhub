@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Headline,
   LeftHeadline,
   StyledImage,
   HomeButton,
-  Title,
-  Text,
+  HomeTitle,
+  HomeText,
 } from '../HomePage.styled';
 import { Zap } from '../../../components/generic/Icons';
 import { headerColor, inverseTextColor } from '../../../styles/Themes';
@@ -17,32 +17,67 @@ import {
   SlantedEdge,
 } from './Sections.styled';
 import { Link } from '../../../components/link/Link';
+import { useTransition, animated, config } from 'react-spring';
+import { ViewSwitch } from '../../../components/viewSwitch/ViewSwitch';
 
 export const TopSection = () => {
+  const [state] = useState(true);
+
+  const transition = useTransition(state, null, {
+    config: config.slow,
+    from: { transform: 'translate3d(-80px,0,0)', opacity: 0 },
+    enter: { transform: 'translate3d(0,0,0)', opacity: 1 },
+  });
+
+  const transition2 = useTransition(state, null, {
+    config: config.slow,
+    from: { transform: 'translate3d(80px,0,0)', opacity: 0 },
+    enter: { transform: 'translate3d(0,0,0)', opacity: 1 },
+  });
+
+  const renderButton = () => (
+    <FullWidth>
+      <Link to="/login" underline={'transparent'}>
+        <HomeButton>
+          <Padding>
+            <Zap fillcolor={'white'} color={'white'} />
+          </Padding>
+          Control The Lightning
+        </HomeButton>
+      </Link>
+    </FullWidth>
+  );
+
   return (
     <>
       <Section color={headerColor} textColor={inverseTextColor}>
         <Headline>
           <LeftHeadline>
-            <Title>Control The Power of Lightning</Title>
-            <FullWidth>
-              <Text>
-                Take full control of your lightning node for quick monitoring
-                and management inside your browser.
-              </Text>
-            </FullWidth>
-            <FullWidth>
-              <Link to="/login" underline={'transparent'}>
-                <HomeButton>
-                  <Padding>
-                    <Zap fillcolor={'white'} color={'white'} />
-                  </Padding>
-                  Control The Lightning
-                </HomeButton>
-              </Link>
-            </FullWidth>
+            {transition.map(({ props }) => (
+              <animated.div style={props}>
+                <HomeTitle>Control the Lightning</HomeTitle>
+                <FullWidth>
+                  <HomeText>
+                    Monitor and manage your node from any browser and any
+                    device.
+                  </HomeText>
+                </FullWidth>
+                <ViewSwitch hideMobile={true}>{renderButton()}</ViewSwitch>
+              </animated.div>
+            ))}
           </LeftHeadline>
-          <StyledImage />
+          {transition2.map(({ props }) => (
+            <animated.div style={props}>
+              <StyledImage />
+            </animated.div>
+          ))}
+          <ViewSwitch>
+            {transition.map(({ props }) => (
+              <animated.div style={{ marginTop: '16px', ...props }}>
+                {renderButton()}
+              </animated.div>
+            ))}
+          </ViewSwitch>
         </Headline>
       </Section>
       <SlantedWrapper>
