@@ -8,7 +8,6 @@ import {
 } from '../generic/Styled';
 import { Price } from '../price/Price';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
-import { useConnectionDispatch } from '../../context/ConnectionContext';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { useAccount } from '../../context/AccountContext';
 
@@ -18,8 +17,7 @@ interface NodeInfoModalProps {
 }
 
 export const NodeInfoModal = ({ account, accountId }: NodeInfoModalProps) => {
-  const dispatch = useConnectionDispatch();
-  const dispatchState = useStatusDispatch();
+  const dispatch = useStatusDispatch();
 
   const { changeAccount } = useAccount();
 
@@ -88,8 +86,7 @@ export const NodeInfoModal = ({ account, accountId }: NodeInfoModalProps) => {
         withMargin={'16px 0 0'}
         fullWidth={true}
         onClick={() => {
-          dispatch({ type: 'disconnected' });
-          dispatchState({
+          dispatch({
             type: 'disconnected',
           });
           changeAccount(accountId);

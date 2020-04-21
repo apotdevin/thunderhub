@@ -14,42 +14,40 @@ import { BitcoinFees } from '../src/components/bitcoinInfo/BitcoinFees';
 import { BitcoinPrice } from '../src/components/bitcoinInfo/BitcoinPrice';
 import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
 import { useRouter } from 'next/router';
-import {
-  useConnectionState,
-  useConnectionDispatch,
-} from '../src/context/ConnectionContext';
-import {
-  LoadingView,
-  ErrorView,
-} from '../src/components/stateViews/StateCards';
+import { LoadingView } from '../src/components/stateViews/StateCards';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Head from 'next/head';
 import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
+import ContextApp from '.';
+import { useStatusState } from '../src/context/StatusContext';
 
-toast.configure({ draggable: false });
-
-const withoutGrid = ['/', '/login', '/faq', '/privacy', '/terms'];
+toast.configure({ draggable: false, pauseOnFocusLoss: false });
 
 const Wrapper: React.FC = ({ children }) => {
-  const dispatch = useConnectionDispatch();
+  const { push } = useRouter();
   const { theme } = useSettings();
-  const { loggedIn } = useAccount();
+  const { loggedIn, name } = useAccount();
   const { pathname } = useRouter();
-  const { loading, error } = useConnectionState();
+  const { error } = useStatusState();
 
-  const isInArray = withoutGrid.includes(pathname);
+  const isRoot = pathname === '/';
 
   const renderContent = () => {
-    if (error && pathname === '/') {
-      dispatch({ type: 'disconnected' });
+    if (error) {
+      if (!isRoot) {
+        toast.error(`Unable to connect to ${name}`);
+      }
+      return <ContextApp hasError={true} />;
     }
-    if ((loading || error) && pathname !== '/') {
-      return (
-        <GridWrapper>{loading ? <LoadingView /> : <ErrorView />}</GridWrapper>
-      );
-    }
-    return <GridWrapper without={isInArray}>{children}</GridWrapper>;
+    // if (loading && !isRoot) {
+    //   return (
+    //     <GridWrapper>
+    //       <LoadingView />
+    //     </GridWrapper>
+    //   );
+    // }
+    return <GridWrapper without={isRoot}>{children}</GridWrapper>;
   };
 
   const renderGetters = () => (
@@ -60,7 +58,7 @@ const Wrapper: React.FC = ({ children }) => {
   );
 
   return (
-    <ThemeProvider theme={{ mode: isInArray ? 'light' : theme }}>
+    <ThemeProvider theme={{ mode: isRoot ? 'light' : theme }}>
       <ModalProvider backgroundComponent={BaseModalBackground}>
         <GlobalStyles />
         {loggedIn && renderGetters()}

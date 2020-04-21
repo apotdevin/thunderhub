@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAccount } from '../../context/AccountContext';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import CryptoJS from 'crypto-js';
@@ -9,31 +9,54 @@ import { Input } from '../../components/input/Input';
 import { Section } from '../../components/section/Section';
 import { Title } from '../../components/typography/Styled';
 import styled from 'styled-components';
-import { textColor } from '../../styles/Themes';
+import { inverseTextColor, mediaWidths } from '../../styles/Themes';
+import { useGetCanConnectLazyQuery } from '../../generated/graphql';
 
 const StyledTitle = styled(Title)`
-  font-size: 28px;
-  color: ${textColor};
+  font-size: 24px;
+  color: ${inverseTextColor};
+
+  @media (${mediaWidths.mobile}) {
+    font-size: 18px;
+  }
 `;
 
 export const SessionLogin = () => {
-  const { name, admin, refreshAccount } = useAccount();
+  const { name, host, admin, cert, refreshAccount } = useAccount();
   const [pass, setPass] = useState('');
+
+  const [getCanConnect, { data, loading }] = useGetCanConnectLazyQuery({
+    fetchPolicy: 'network-only',
+    onError: () => {
+      toast.error('Unable to connect to this node');
+    },
+  });
+
+  useEffect(() => {
+    if (!loading && data?.getNodeInfo) {
+      const bytes = CryptoJS.AES.decrypt(admin, pass);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+
+      saveSessionAuth(decrypted);
+      refreshAccount();
+    }
+  }, [data, loading]);
 
   const handleClick = () => {
     try {
       const bytes = CryptoJS.AES.decrypt(admin, pass);
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
 
-      saveSessionAuth(decrypted);
-      refreshAccount();
+      getCanConnect({
+        variables: { auth: { host, macaroon: decrypted, cert } },
+      });
     } catch (error) {
       toast.error('Wrong Password');
     }
   };
 
   return (
-    <Section padding={'36px 0'}>
+    <Section withColor={false}>
       <StyledTitle>{`Please Login (${name}):`}</StyledTitle>
       <Card cardPadding={'32px'} mobileCardPadding={'16px'}>
         <SingleLine>
@@ -45,11 +68,11 @@ export const SessionLogin = () => {
           />
         </SingleLine>
         <ColorButton
-          disabled={pass === ''}
+          disabled={pass === '' || loading}
           onClick={handleClick}
           withMargin={'16px 0 0'}
           fullWidth={true}
-          arrow={true}
+          loading={loading}
         >
           Connect
         </ColorButton>

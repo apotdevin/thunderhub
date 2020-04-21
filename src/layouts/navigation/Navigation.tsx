@@ -24,9 +24,9 @@ import {
   CreditCard,
 } from '../../components/generic/Icons';
 import { useSettings } from '../../context/SettingsContext';
-import { useConnectionState } from '../../context/ConnectionContext';
 import { useRouter } from 'next/router';
 import { Link } from '../../components/link/Link';
+import { useStatusState } from '../../context/StatusContext';
 
 const NavigationStyle = styled.div`
   grid-area: nav;
@@ -132,7 +132,7 @@ interface NavigationProps {
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const { pathname } = useRouter();
   const { sidebar, setSettings } = useSettings();
-  const { connected } = useConnectionState();
+  const { connected } = useStatusState();
 
   const renderNavButton = (
     title: string,

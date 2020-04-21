@@ -1,12 +1,12 @@
 import styled, { keyframes } from 'styled-components';
-import { fontColors, mediaWidths } from '../../styles/Themes';
+import { fontColors, mediaWidths, headerColor } from '../../styles/Themes';
 import ThunderHub from '../../assets/ThunderHub.svg';
 
 export const Headline = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 48px 0 140px;
+  padding: 32px 0 120px;
 
   @media (${mediaWidths.mobile}) {
     flex-direction: column;
@@ -59,23 +59,6 @@ export const StyledImage = styled(ThunderHub)`
   }
 `;
 
-export const HomeButton = styled.button`
-  cursor: pointer;
-  outline: none;
-  padding: 8px 24px;
-  text-decoration: 2px solid blue;
-  font-size: 16px;
-  background-image: linear-gradient(to right, #fd5f00, #f99325);
-  color: white;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  white-space: nowrap;
-  width: 100%;
-`;
-
 export const HomeTitle = styled.h1`
   width: 100%;
   text-align: center;
@@ -98,4 +81,34 @@ export const HomeText = styled.p`
   @media (${mediaWidths.mobile}) {
     font-size: 15px;
   }
+`;
+
+export const SlantedWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-bottom: -290px;
+  overflow: hidden;
+  z-index: -5;
+`;
+
+export const SlantedEdge = styled.div`
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: ${headerColor};
+  -webkit-transform-origin: 100% 0;
+  -ms-transform-origin: 100% 0;
+  transform-origin: 100% 0;
+  -webkit-transform: skew(84deg);
+  -ms-transform: skew(84deg);
+  transform: skew(88deg);
+  z-index: -5;
+`;
+
+export const FullWidth = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 8px;
 `;

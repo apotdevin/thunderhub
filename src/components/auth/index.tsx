@@ -7,7 +7,6 @@ import { ViewCheck } from './checks/ViewCheck';
 import CryptoJS from 'crypto-js';
 import { useAccount } from '../../context/AccountContext';
 import { saveUserAuth, getAccountId } from '../../utils/auth';
-import { useConnectionDispatch } from '../../context/ConnectionContext';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -35,8 +34,7 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
   const { changeAccount, accounts } = useAccount();
   const { push } = useRouter();
 
-  const dispatch = useConnectionDispatch();
-  const dispatchState = useStatusDispatch();
+  const dispatch = useStatusDispatch();
 
   const [name, setName] = useState<string>();
   const [host, setHost] = useState<string>();
@@ -112,7 +110,6 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     const id = getAccountId(host, viewOnly, admin, cert);
 
     dispatch({ type: 'disconnected' });
-    dispatchState({ type: 'disconnected' });
     changeAccount(id);
 
     push(appendBasePath('/'));
@@ -141,7 +138,6 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
       const id = getAccountId(host, viewOnly, admin, cert);
 
       dispatch({ type: 'disconnected' });
-      dispatchState({ type: 'disconnected' });
       changeAccount(id);
 
       push(appendBasePath('/'));

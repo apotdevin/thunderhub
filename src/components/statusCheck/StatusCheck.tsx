@@ -1,29 +1,26 @@
-import { useConnectionState } from '../../context/ConnectionContext';
 import { useAccount } from '../../context/AccountContext';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { getErrorContent } from '../../utils/error';
 import { useGetNodeInfoQuery } from '../../generated/graphql';
 
 export const StatusCheck = () => {
-  const { connected } = useConnectionState();
   const dispatch = useStatusDispatch();
 
   const { loggedIn, auth } = useAccount();
 
   const { data, loading, error, stopPolling } = useGetNodeInfoQuery({
+    fetchPolicy: 'network-only',
     variables: { auth },
-    skip: !connected || !loggedIn || !auth,
+    skip: !loggedIn || !auth,
     pollInterval: 10000,
-    onError: error => toast.error(getErrorContent(error)),
+    onError: () => dispatch({ type: 'error' }),
   });
 
   useEffect(() => {
-    if (!connected || !loggedIn) {
+    if (!loggedIn) {
       stopPolling();
     }
-  }, [connected, loggedIn, stopPolling]);
+  }, [loggedIn, stopPolling]);
 
   useEffect(() => {
     if (data && !loading && !error) {
@@ -41,7 +38,8 @@ export const StatusCheck = () => {
       const numbers = onlyVersion[0].split('.');
 
       const state = {
-        loading: false,
+        error: false,
+        connected: true,
         alias,
         syncedToChain: is_synced_to_chain,
         version: versionNumber[0],
