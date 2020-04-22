@@ -1,17 +1,12 @@
 import * as React from 'react';
 import { useAccount } from '../../context/AccountContext';
 import { Section } from '../../components/section/Section';
-import { Card, SubCard, SingleLine } from '../../components/generic/Styled';
+import { Card, SingleLine } from '../../components/generic/Styled';
 import styled from 'styled-components';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { useGetCanConnectLazyQuery } from '../../generated/graphql';
 import { toast } from 'react-toastify';
-
-const ConnectTitle = styled.div`
-  width: 100%;
-  font-size: 18px;
-  padding-bottom: 8px;
-`;
+import { ConnectTitle } from './HomePage.styled';
 
 const AccountLine = styled.div`
   margin: 8px 0;
@@ -22,7 +17,7 @@ const TypeText = styled.div`
   margin-right: 8px;
 `;
 
-export const Accounts = () => {
+export const Accounts = ({ change }: { change?: boolean }) => {
   const [newAccount, setNewAccount] = React.useState();
   const { id, changeAccount, accounts } = useAccount();
 
@@ -67,10 +62,12 @@ export const Accounts = () => {
 
   return (
     <Section withColor={false}>
-      <ConnectTitle>{'Other Accounts'}</ConnectTitle>
+      <ConnectTitle change={change}>
+        {change ? 'Accounts' : 'Other Accounts'}
+      </ConnectTitle>
       <Card>
         {accounts.map((account, index) => {
-          if (account.id === id) {
+          if (account.id === id && !change) {
             return;
           }
           return (

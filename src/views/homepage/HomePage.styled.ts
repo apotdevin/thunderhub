@@ -112,3 +112,11 @@ export const FullWidth = styled.div`
   width: 100%;
   margin-top: 8px;
 `;
+
+export const ConnectTitle = styled.div`
+  width: 100%;
+  font-size: 18px;
+  ${({ change }: { change?: boolean }) =>
+    change && `color: ${fontColors.white};`}
+  padding-bottom: 8px;
+`;

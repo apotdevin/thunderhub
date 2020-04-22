@@ -98,17 +98,19 @@ export const SmallLink = styled.a`
 type SubTitleProps = {
   subtitleColor?: string | ThemeSet;
   fontWeight?: string;
+  inverseColor?: boolean;
 };
 
-export const SubTitle = styled.h4`
+export const SubTitle = styled.h4<SubTitleProps>`
+    color: ${({ inverseColor }) =>
+      inverseColor ? inverseTextColor : textColor};
     margin: 5px 0;
-    ${({ subtitleColor }: SubTitleProps) =>
+    ${({ subtitleColor }) =>
       subtitleColor &&
       css`
         color: ${subtitleColor};
       `}
-    font-weight: ${({ fontWeight }: SubTitleProps) =>
-      fontWeight ? fontWeight : '500'};
+    font-weight: ${({ fontWeight }) => (fontWeight ? fontWeight : '500')};
 `;
 
 export const InverseSubtitle = styled(SubTitle)`

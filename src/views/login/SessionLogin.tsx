@@ -11,6 +11,7 @@ import { Title } from '../../components/typography/Styled';
 import styled from 'styled-components';
 import { inverseTextColor, mediaWidths } from '../../styles/Themes';
 import { useGetCanConnectLazyQuery } from '../../generated/graphql';
+import { useStatusDispatch } from '../../context/StatusContext';
 
 const StyledTitle = styled(Title)`
   font-size: 24px;
@@ -24,11 +25,13 @@ const StyledTitle = styled(Title)`
 export const SessionLogin = () => {
   const { name, host, admin, cert, refreshAccount } = useAccount();
   const [pass, setPass] = useState('');
+  const dispatch = useStatusDispatch();
 
   const [getCanConnect, { data, loading }] = useGetCanConnectLazyQuery({
     fetchPolicy: 'network-only',
     onError: () => {
       toast.error('Unable to connect to this node');
+      dispatch({ type: 'disconnected' });
     },
   });
 
@@ -39,6 +42,7 @@ export const SessionLogin = () => {
 
       saveSessionAuth(decrypted);
       refreshAccount();
+      dispatch({ type: 'connected' });
     }
   }, [data, loading]);
 

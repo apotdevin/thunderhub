@@ -2,27 +2,28 @@ import { useAccount } from '../../context/AccountContext';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { useEffect } from 'react';
 import { useGetNodeInfoQuery } from '../../generated/graphql';
+import { useRouter } from 'next/router';
+import { appendBasePath } from '../../utils/basePath';
+import { toast } from 'react-toastify';
 
 export const StatusCheck = () => {
   const dispatch = useStatusDispatch();
+  const { push } = useRouter();
 
-  const { loggedIn, auth } = useAccount();
+  const { name, auth } = useAccount();
 
-  const { data, loading, error, stopPolling } = useGetNodeInfoQuery({
+  const { data, loading, error } = useGetNodeInfoQuery({
     fetchPolicy: 'network-only',
     variables: { auth },
-    skip: !loggedIn || !auth,
     pollInterval: 10000,
-    onError: () => dispatch({ type: 'error' }),
   });
 
   useEffect(() => {
-    if (!loggedIn) {
-      stopPolling();
+    if (error) {
+      toast.error(`Unable to connect to ${name}`);
+      dispatch({ type: 'disconnected' });
+      push(appendBasePath('/'));
     }
-  }, [loggedIn, stopPolling]);
-
-  useEffect(() => {
     if (data && !loading && !error) {
       const {
         getChainBalance,
@@ -38,8 +39,6 @@ export const StatusCheck = () => {
       const numbers = onlyVersion[0].split('.');
 
       const state = {
-        error: false,
-        connected: true,
         alias,
         syncedToChain: is_synced_to_chain,
         version: versionNumber[0],

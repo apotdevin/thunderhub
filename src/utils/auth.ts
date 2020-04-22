@@ -55,7 +55,6 @@ export const getAuth = (account?: string) => {
     Number(account ?? (localStorage.getItem('active') || '0')),
     0
   );
-  const sessionAdmin = sessionStorage.getItem('session') || '';
 
   const accountsLength = accounts.length;
 
@@ -83,7 +82,6 @@ export const getAuth = (account?: string) => {
       `${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`,
       THUNDERHUB_NAMESPACE
     );
-  const loggedIn = host !== '' && (viewOnly !== '' || sessionAdmin !== '');
 
   return {
     name,
@@ -93,7 +91,6 @@ export const getAuth = (account?: string) => {
     cert,
     id: currentId,
     accounts,
-    loggedIn,
   };
 };
 

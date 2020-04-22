@@ -9,45 +9,30 @@ import { Header } from '../src/layouts/header/Header';
 import { Footer } from '../src/layouts/footer/Footer';
 import { ApolloProvider } from '@apollo/react-hooks';
 import withApollo from '../config/apolloClient';
-import { useAccount } from '../src/context/AccountContext';
 import { BitcoinFees } from '../src/components/bitcoinInfo/BitcoinFees';
 import { BitcoinPrice } from '../src/components/bitcoinInfo/BitcoinPrice';
 import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
 import { useRouter } from 'next/router';
-import { LoadingView } from '../src/components/stateViews/StateCards';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Head from 'next/head';
 import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
-import ContextApp from '.';
 import { useStatusState } from '../src/context/StatusContext';
 
 toast.configure({ draggable: false, pauseOnFocusLoss: false });
 
 const Wrapper: React.FC = ({ children }) => {
-  const { push } = useRouter();
   const { theme } = useSettings();
-  const { loggedIn, name } = useAccount();
   const { pathname } = useRouter();
-  const { error } = useStatusState();
+  const { connected } = useStatusState();
 
   const isRoot = pathname === '/';
 
   const renderContent = () => {
-    if (error) {
-      if (!isRoot) {
-        toast.error(`Unable to connect to ${name}`);
-      }
-      return <ContextApp hasError={true} />;
+    if (isRoot) {
+      return <>{children}</>;
     }
-    // if (loading && !isRoot) {
-    //   return (
-    //     <GridWrapper>
-    //       <LoadingView />
-    //     </GridWrapper>
-    //   );
-    // }
-    return <GridWrapper without={isRoot}>{children}</GridWrapper>;
+    return <GridWrapper>{children}</GridWrapper>;
   };
 
   const renderGetters = () => (
@@ -61,7 +46,7 @@ const Wrapper: React.FC = ({ children }) => {
     <ThemeProvider theme={{ mode: isRoot ? 'light' : theme }}>
       <ModalProvider backgroundComponent={BaseModalBackground}>
         <GlobalStyles />
-        {loggedIn && renderGetters()}
+        {connected && renderGetters()}
         <PageWrapper>
           <HeaderBodyWrapper>
             <Header />

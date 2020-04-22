@@ -21,9 +21,8 @@ const AnimatedBurger = animated(MenuIcon);
 const AnimatedClose = animated(XSvg);
 
 export const Header = () => {
-  const { loggedIn } = useAccount();
   const [open, setOpen] = useState(false);
-  const { syncedToChain } = useStatusState();
+  const { syncedToChain, connected } = useStatusState();
 
   const transitions = useTransition(open, null, {
     from: { position: 'absolute', opacity: 0 },
@@ -58,16 +57,16 @@ export const Header = () => {
     <>
       <Section withColor={true} color={headerColor} textColor={headerTextColor}>
         <HeaderStyle>
-          <HeaderLine loggedIn={loggedIn}>
-            <Link to={loggedIn ? '/home' : '/'} underline={'transparent'}>
-              <HeaderTitle withPadding={!loggedIn}>
+          <HeaderLine loggedIn={connected}>
+            <Link to={connected ? '/home' : '/'} underline={'transparent'}>
+              <HeaderTitle withPadding={!connected}>
                 <IconPadding>
                   <Cpu color={'white'} />
                 </IconPadding>
                 ThunderHub
               </HeaderTitle>
             </Link>
-            <SingleLine>{loggedIn && renderLoggedIn()}</SingleLine>
+            <SingleLine>{connected && renderLoggedIn()}</SingleLine>
           </HeaderLine>
         </HeaderStyle>
       </Section>

@@ -8,11 +8,8 @@ import {
 } from '../../components/buttons/multiButton/MultiButton';
 import { Link } from '../../components/link/Link';
 import { Auth } from '../../components/auth';
-import {
-  mediaWidths,
-  unSelectedNavButton,
-  fontColors,
-} from '../../styles/Themes';
+import { mediaWidths, unSelectedNavButton } from '../../styles/Themes';
+import { ConnectTitle } from './HomePage.styled';
 
 const Text = styled.p`
   width: 100%;
@@ -38,14 +35,6 @@ const Help = styled.div`
     text-align: center;
     margin-bottom: 0;
   }
-`;
-
-const ConnectTitle = styled.div`
-  width: 100%;
-  font-size: 18px;
-  ${({ change }: { change?: boolean }) =>
-    change && `color: ${fontColors.white};`}
-  padding-bottom: 8px;
 `;
 
 export const LoginBox = ({ change }: { change?: boolean }) => {
@@ -150,7 +139,9 @@ export const LoginBox = ({ change }: { change?: boolean }) => {
 
   return (
     <Section withColor={false}>
-      <ConnectTitle change={change}>{'Connect to your Node'}</ConnectTitle>
+      <ConnectTitle change={change}>
+        {change ? 'Connect to your Node' : 'Connect to another Node'}
+      </ConnectTitle>
       <Card>
         {status === 'none' && (
           <>
