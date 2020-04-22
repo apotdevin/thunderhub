@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useReducer } from 'react';
 
-type State = {
+type StateStatus = {
   loading: boolean;
+  connected: boolean;
+};
+
+type State = {
   alias: string;
   syncedToChain: boolean;
   version: string;
@@ -14,17 +18,20 @@ type State = {
   channelPending: number;
 };
 
+type CompleteState = State & StateStatus;
+
 type ActionType = {
-  type: 'connected' | 'disconnected';
+  type: 'connected' | 'disconnected' | 'loading';
   state?: State;
 };
 
 type Dispatch = (action: ActionType) => void;
 
-const StateContext = createContext<State | undefined>(undefined);
+const StateContext = createContext<CompleteState | undefined>(undefined);
 const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
 const initialState = {
+  connected: false,
   loading: false,
   alias: '',
   syncedToChain: false,
@@ -38,12 +45,16 @@ const initialState = {
   channelPending: 0,
 };
 
-const stateReducer = (state: State, action: ActionType): State => {
+const stateReducer = (state: State, action: ActionType): CompleteState => {
   switch (action.type) {
     case 'connected':
-      return action.state || initialState;
+      return (
+        { ...action.state, loading: false, connected: true } || initialState
+      );
     case 'disconnected':
       return initialState;
+    case 'loading':
+      return { ...initialState, loading: true };
     default:
       return initialState;
   }

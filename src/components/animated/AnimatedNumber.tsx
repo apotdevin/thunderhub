@@ -14,7 +14,7 @@ type AnimatedProps = {
   amount: number;
 };
 
-export const AnimatedNumber = ({ amount }: AnimatedProps) => {
+export const AnimatedNumber = ({ amount = 0 }: AnimatedProps) => {
   const { value } = useSpring({
     from: { value: 0 },
     value: amount,

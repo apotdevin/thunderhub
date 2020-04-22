@@ -4,7 +4,6 @@ import { mediaWidths } from '../../styles/Themes';
 
 import { Section } from '../section/Section';
 import { Navigation } from '../../layouts/navigation/Navigation';
-import { ConnectionCheck } from '../connectionCheck/ConnectionCheck';
 import { StatusCheck } from '../statusCheck/StatusCheck';
 
 const Container = styled.div`
@@ -23,22 +22,10 @@ const ContentStyle = styled.div`
   grid-area: content;
 `;
 
-interface GridWrapperProps {
-  without?: boolean;
-}
-
-export const GridWrapper: React.FC<GridWrapperProps> = ({
-  children,
-  without = false,
-}) => {
-  if (without) {
-    return <>{children}</>;
-  }
-
+export const GridWrapper: React.FC = ({ children }) => {
   return (
     <Section padding={'16px 0 32px'}>
       <Container>
-        <ConnectionCheck />
         <StatusCheck />
         <Navigation />
         <ContentStyle>{children}</ContentStyle>

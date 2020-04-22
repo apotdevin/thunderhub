@@ -20,7 +20,6 @@ interface AuthProps {
 }
 
 interface ChangeProps {
-  loggedIn?: boolean;
   name?: string;
   host?: string;
   admin?: string;
@@ -31,7 +30,6 @@ interface ChangeProps {
 }
 
 interface AccountProps {
-  loggedIn: boolean;
   name: string;
   host: string;
   admin: string;
@@ -41,14 +39,12 @@ interface AccountProps {
   id: string;
   auth: AuthProps | undefined;
   accounts: SingleAccountProps[];
-  setAccount: (newProps: ChangeProps) => void;
   changeAccount: (account: string) => void;
   deleteAccount: (account: string) => void;
   refreshAccount: () => void;
 }
 
 export const AccountContext = createContext<AccountProps>({
-  loggedIn: false,
   name: '',
   host: '',
   admin: '',
@@ -58,7 +54,6 @@ export const AccountContext = createContext<AccountProps>({
   id: '',
   auth: undefined,
   accounts: [],
-  setAccount: () => {},
   changeAccount: () => {},
   deleteAccount: () => {},
   refreshAccount: () => {},
@@ -68,32 +63,6 @@ const AccountProvider = ({ children }: any) => {
   useEffect(() => {
     refreshAccount();
   }, []);
-
-  const setAccount = ({
-    loggedIn,
-    name,
-    host,
-    admin,
-    sessionAdmin,
-    viewOnly,
-    cert,
-    id,
-  }: ChangeProps) => {
-    updateAccount((prevState: any) => {
-      const newState = { ...prevState };
-      return merge(newState, {
-        loggedIn,
-        name,
-        host,
-        admin,
-        sessionAdmin,
-        viewOnly,
-        cert,
-        id,
-        auth: getAuthObj(host, viewOnly, sessionAdmin, cert),
-      });
-    });
-  };
 
   const changeAccount = (changeToId: string) => {
     const currentAccounts = JSON.parse(
@@ -145,22 +114,14 @@ const AccountProvider = ({ children }: any) => {
 
   const refreshAccount = (account?: string) => {
     const sessionAdmin = sessionStorage.getItem('session') || '';
-    const {
-      name,
-      host,
-      admin,
-      viewOnly,
-      cert,
-      id,
-      accounts,
-      loggedIn,
-    } = getAuth(account);
+    const { name, host, admin, viewOnly, cert, id, accounts } = getAuth(
+      account
+    );
 
     updateAccount((prevState: any) => {
       const newState = { ...prevState };
 
       const merged = merge(newState, {
-        loggedIn,
         name,
         host,
         admin,
@@ -176,7 +137,6 @@ const AccountProvider = ({ children }: any) => {
   };
 
   const accountState = {
-    loggedIn: false,
     name: '',
     host: '',
     admin: '',
@@ -186,7 +146,6 @@ const AccountProvider = ({ children }: any) => {
     id: '',
     auth: undefined,
     accounts: [],
-    setAccount,
     changeAccount,
     deleteAccount,
     refreshAccount,

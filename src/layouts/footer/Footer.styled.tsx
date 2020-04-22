@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { headerTextColor, fontColors, mediaWidths } from '../../styles/Themes';
-import { HomeButton } from '../../views/homepage/HomePage.styled';
 
 export const FooterWrapper = styled.div`
   position: absolute;
@@ -65,14 +64,6 @@ export const SideText = styled.p`
 export const CopyrightText = styled(SideText)`
   font-size: 12px;
   color: ${fontColors.blue};
-`;
-
-export const StyledRouter = styled.div`
-  margin-top: 16px;
-
-  ${HomeButton} {
-    font-size: 14px;
-  }
 `;
 
 export const Line = styled.div`

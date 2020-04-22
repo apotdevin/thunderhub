@@ -1,26 +1,29 @@
 import styled, { keyframes } from 'styled-components';
-import { fontColors, mediaWidths } from '../../styles/Themes';
+import { fontColors, mediaWidths, headerColor } from '../../styles/Themes';
 import ThunderHub from '../../assets/ThunderHub.svg';
 
 export const Headline = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  padding: 48px 0 140px;
+  justify-content: space-between;
+  padding: 32px 0 120px;
 
   @media (${mediaWidths.mobile}) {
-    flex-direction: column-reverse;
+    flex-direction: column;
+    padding: 0 0 60px;
+    width: 100%;
   }
 `;
 
 export const LeftHeadline = styled.div`
-  width: 50%;
+  width: 35%;
   display: flex;
   flex-direction: column;
 
   @media (${mediaWidths.mobile}) {
     width: 100%;
     text-align: center;
+    margin-bottom: 0;
   }
 `;
 
@@ -52,38 +55,68 @@ export const StyledImage = styled(ThunderHub)`
   }
 
   @media (${mediaWidths.mobile}) {
-    width: unset;
+    width: 100%;
   }
 `;
 
-export const HomeButton = styled.button`
-  cursor: pointer;
-  outline: none;
-  padding: 8px 24px;
-  text-decoration: 2px solid blue;
-  font-size: 16px;
-  background-image: linear-gradient(to right, #fd5f00, #f99325);
-  color: white;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  white-space: nowrap;
-  width: 100%;
-`;
-
-export const Title = styled.h1`
+export const HomeTitle = styled.h1`
   width: 100%;
   text-align: center;
   color: ${({ textColor }: { textColor?: string }) =>
     textColor ? textColor : fontColors.white};
-  font-size: 32px;
-  margin-bottom: 0;
+  font-size: 56px;
+  margin: 0;
+  font-weight: 900;
+
+  @media (${mediaWidths.mobile}) {
+    font-size: 24px;
+  }
 `;
 
-export const Text = styled.p`
+export const HomeText = styled.p`
   color: ${fontColors.white};
-  text-align: justify;
-  max-width: 400px;
+  text-align: center;
+  font-size: 20px;
+
+  @media (${mediaWidths.mobile}) {
+    font-size: 15px;
+  }
+`;
+
+export const SlantedWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-bottom: -290px;
+  overflow: hidden;
+  z-index: -5;
+`;
+
+export const SlantedEdge = styled.div`
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: ${headerColor};
+  -webkit-transform-origin: 100% 0;
+  -ms-transform-origin: 100% 0;
+  transform-origin: 100% 0;
+  -webkit-transform: skew(84deg);
+  -ms-transform: skew(84deg);
+  transform: skew(88deg);
+  z-index: -5;
+`;
+
+export const FullWidth = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 8px;
+`;
+
+export const ConnectTitle = styled.div`
+  width: 100%;
+  font-size: 18px;
+  ${({ change }: { change?: boolean }) =>
+    change && `color: ${fontColors.white};`}
+  padding-bottom: 8px;
 `;

@@ -19,6 +19,7 @@ interface LoadingCardProps {
   color?: string;
   noTitle?: boolean;
   loadingHeight?: string;
+  inverseColor?: boolean;
 }
 
 export const LoadingCard = ({
@@ -27,6 +28,7 @@ export const LoadingCard = ({
   noCard = false,
   noTitle = false,
   loadingHeight,
+  inverseColor,
 }: LoadingCardProps) => {
   const loadingColor = color ? color : themeColors.blue3;
 
@@ -51,7 +53,7 @@ export const LoadingCard = ({
   return (
     <CardWithTitle>
       <CardTitle>
-        <SubTitle>{title}</SubTitle>
+        <SubTitle inverseColor={inverseColor}>{title}</SubTitle>
       </CardTitle>
       <Card>
         <Loading loadingHeight={loadingHeight}>

@@ -2,9 +2,6 @@ import React from 'react';
 import { Section } from '../../components/section/Section';
 import { Link } from '../../components/link/Link';
 import { Emoji } from '../../components/emoji/Emoji';
-import { useAccount } from '../../context/AccountContext';
-import RouterLink from 'next/link';
-import { Zap } from '../../components/generic/Icons';
 import getConfig from 'next/config';
 import { headerColor, fontColors } from '../../styles/Themes';
 import {
@@ -17,15 +14,12 @@ import {
   SideText,
   CopyrightText,
   RightFooter,
-  StyledRouter,
 } from './Footer.styled';
-import { HomeButton } from '../../views/homepage/HomePage.styled';
 
 const { publicRuntimeConfig } = getConfig();
 const { npmVersion } = publicRuntimeConfig;
 
 export const Footer = () => {
-  const { loggedIn } = useAccount();
   return (
     <FooterWrapper>
       <Section withColor={true} color={headerColor}>
@@ -50,9 +44,6 @@ export const Footer = () => {
             </CopyrightText>
           </SideFooter>
           <RightFooter>
-            <Link to={'/faq'} color={fontColors.blue}>
-              FAQ
-            </Link>
             <Link
               href={'https://github.com/apotdevin/thunderhub'}
               color={fontColors.blue}
@@ -65,22 +56,6 @@ export const Footer = () => {
             >
               Twitter
             </Link>
-            <Link to={'/terms'} color={fontColors.blue}>
-              Terms of Use
-            </Link>
-            <Link to={'/privacy'} color={fontColors.blue}>
-              Privacy Policy
-            </Link>
-            {!loggedIn && (
-              <RouterLink href="/login">
-                <StyledRouter>
-                  <HomeButton>
-                    <Zap fillcolor={'white'} color={'white'} />
-                    LOGIN
-                  </HomeButton>
-                </StyledRouter>
-              </RouterLink>
-            )}
           </RightFooter>
         </FooterStyle>
       </Section>

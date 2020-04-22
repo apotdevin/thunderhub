@@ -52,14 +52,14 @@ export const AccountInfo = () => {
   const [state, setState] = useState<string>('none');
 
   const {
-    loading,
+    connected,
     chainBalance,
     chainPending,
     channelBalance,
     channelPending,
   } = useStatusState();
 
-  if (loading) {
+  if (!connected) {
     return (
       <>
         <LoadingCard title={'Resume'} />
