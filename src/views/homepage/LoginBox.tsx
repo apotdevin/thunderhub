@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Card, Separation } from '../src/components/generic/Styled';
+import { Card, Separation } from '../../components/generic/Styled';
 import styled from 'styled-components';
-import { Section } from '../src/components/section/Section';
+import { Section } from '../../components/section/Section';
 import {
   MultiButton,
   SingleButton,
-} from '../src/components/buttons/multiButton/MultiButton';
-import { Link } from '../src/components/link/Link';
-import { Auth } from '../src/components/auth';
-import { mediaWidths, unSelectedNavButton } from '../src/styles/Themes';
+} from '../../components/buttons/multiButton/MultiButton';
+import { Link } from '../../components/link/Link';
+import { Auth } from '../../components/auth';
+import { mediaWidths, unSelectedNavButton } from '../../styles/Themes';
+import { ConnectTitle } from './HomePage.styled';
 
 const Text = styled.p`
   width: 100%;
@@ -36,12 +37,7 @@ const Help = styled.div`
   }
 `;
 
-const ConnectTitle = styled.h1`
-  width: 100%;
-  text-align: center;
-`;
-
-const LoginView = () => {
+export const LoginBox = ({ change }: { change?: boolean }) => {
   const [isType, setIsType] = useState('login');
   const [status, setStatus] = useState('none');
   const [help, setHelp] = useState(false);
@@ -142,9 +138,11 @@ const LoginView = () => {
   };
 
   return (
-    <Section padding={'0 0 60px'}>
-      <ConnectTitle>{'How do you want to connect?'}</ConnectTitle>
-      <Card bottom={'0'}>
+    <Section withColor={false}>
+      <ConnectTitle change={change}>
+        {change ? 'Connect to your Node' : 'Connect to another Node'}
+      </ConnectTitle>
+      <Card>
         {status === 'none' && (
           <>
             {renderButtons()}
@@ -164,5 +162,3 @@ const LoginView = () => {
     </Section>
   );
 };
-
-export default LoginView;

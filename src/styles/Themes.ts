@@ -111,12 +111,17 @@ export const headerTextColor = theme('mode', {
 
 export const homeBackgroundColor = theme('mode', {
   light: themeColors.grey,
-  dark: themeColors.blue4,
+  dark: themeColors.grey,
 });
 
 export const homeBackgroundSecondColor = theme('mode', {
   light: themeColors.grey2,
-  dark: themeColors.blue6,
+  dark: themeColors.grey2,
+});
+
+export const homeCompatibleColor = theme('mode', {
+  light: themeColors.blue5,
+  dark: themeColors.blue5,
 });
 
 // ---------------------------------------

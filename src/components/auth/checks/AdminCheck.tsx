@@ -14,6 +14,7 @@ type AdminProps = {
 
 export const AdminCheck = ({ host, admin, cert, setChecked }: AdminProps) => {
   const { data, loading } = useGetCanAdminQuery({
+    fetchPolicy: 'network-only',
     skip: !admin,
     variables: { auth: { host, macaroon: admin, cert } },
     onError: () => {

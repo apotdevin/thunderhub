@@ -15,7 +15,6 @@ import {
   MultiButton,
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
-import { useConnectionDispatch } from '../../context/ConnectionContext';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { Auth } from '../../components/auth';
 import { useRouter } from 'next/router';
@@ -27,8 +26,7 @@ export const AccountSettings = () => {
   const { push } = useRouter();
   const { id, changeAccount, accounts } = useAccount();
 
-  const dispatch = useConnectionDispatch();
-  const dispatchState = useStatusDispatch();
+  const dispatch = useStatusDispatch();
 
   const [isType, setIsType] = useState('login');
   const [willAdd, setWillAdd] = useState(false);
@@ -82,9 +80,6 @@ export const AccountSettings = () => {
                 onClick={() => {
                   if (accountId !== id) {
                     dispatch({ type: 'disconnected' });
-                    dispatchState({
-                      type: 'disconnected',
-                    });
                     changeAccount(accountId);
                     push(appendBasePath('/'));
                   }

@@ -9,47 +9,30 @@ import { Header } from '../src/layouts/header/Header';
 import { Footer } from '../src/layouts/footer/Footer';
 import { ApolloProvider } from '@apollo/react-hooks';
 import withApollo from '../config/apolloClient';
-import { useAccount } from '../src/context/AccountContext';
 import { BitcoinFees } from '../src/components/bitcoinInfo/BitcoinFees';
 import { BitcoinPrice } from '../src/components/bitcoinInfo/BitcoinPrice';
 import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
 import { useRouter } from 'next/router';
-import {
-  useConnectionState,
-  useConnectionDispatch,
-} from '../src/context/ConnectionContext';
-import {
-  LoadingView,
-  ErrorView,
-} from '../src/components/stateViews/StateCards';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Head from 'next/head';
 import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
+import { useStatusState } from '../src/context/StatusContext';
 
-toast.configure({ draggable: false });
-
-const withoutGrid = ['/', '/login', '/faq', '/privacy', '/terms'];
+toast.configure({ draggable: false, pauseOnFocusLoss: false });
 
 const Wrapper: React.FC = ({ children }) => {
-  const dispatch = useConnectionDispatch();
   const { theme } = useSettings();
-  const { loggedIn } = useAccount();
   const { pathname } = useRouter();
-  const { loading, error } = useConnectionState();
+  const { connected } = useStatusState();
 
-  const isInArray = withoutGrid.includes(pathname);
+  const isRoot = pathname === '/';
 
   const renderContent = () => {
-    if (error && pathname === '/') {
-      dispatch({ type: 'disconnected' });
+    if (isRoot) {
+      return <>{children}</>;
     }
-    if ((loading || error) && pathname !== '/') {
-      return (
-        <GridWrapper>{loading ? <LoadingView /> : <ErrorView />}</GridWrapper>
-      );
-    }
-    return <GridWrapper without={isInArray}>{children}</GridWrapper>;
+    return <GridWrapper>{children}</GridWrapper>;
   };
 
   const renderGetters = () => (
@@ -60,10 +43,10 @@ const Wrapper: React.FC = ({ children }) => {
   );
 
   return (
-    <ThemeProvider theme={{ mode: theme }}>
+    <ThemeProvider theme={{ mode: isRoot ? 'light' : theme }}>
       <ModalProvider backgroundComponent={BaseModalBackground}>
         <GlobalStyles />
-        {loggedIn && renderGetters()}
+        {connected && renderGetters()}
         <PageWrapper>
           <HeaderBodyWrapper>
             <Header />

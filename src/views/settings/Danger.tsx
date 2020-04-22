@@ -17,7 +17,6 @@ import {
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
 import { AlertCircle } from '../../components/generic/Icons';
-import { useConnectionDispatch } from '../../context/ConnectionContext';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { useRouter } from 'next/router';
 import { appendBasePath } from '../../utils/basePath';
@@ -76,8 +75,7 @@ export const DangerView = () => {
     id,
   } = useAccount();
 
-  const dispatch = useConnectionDispatch();
-  const dispatchState = useStatusDispatch();
+  const dispatch = useStatusDispatch();
 
   const { push } = useRouter();
 
@@ -125,9 +123,6 @@ export const DangerView = () => {
   const handleDelete = (admin?: boolean) => {
     deleteAccountPermissions(id, accounts, admin);
     dispatch({ type: 'disconnected' });
-    dispatchState({
-      type: 'disconnected',
-    });
     changeAccount(id);
     push(appendBasePath('/'));
   };
