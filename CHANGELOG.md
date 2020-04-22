@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.9](https://github.com/apotdevin/thunderhub/compare/v0.3.8...v0.3.9) (2020-04-22)
+
+
+### Features
+
+* new home ([#28](https://github.com/apotdevin/thunderhub/issues/28)) ([85581cc](https://github.com/apotdevin/thunderhub/commit/85581cc992bb0c243dc6df63ef099ba773f4d55f))
+
 ### [0.3.8](https://github.com/apotdevin/thunderhub/compare/v0.3.7...v0.3.8) (2020-04-20)
 
 
