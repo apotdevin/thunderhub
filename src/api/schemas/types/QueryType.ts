@@ -288,3 +288,15 @@ export const GetResumeType = new GraphQLObjectType({
     resume: { type: GraphQLString },
   }),
 });
+
+export const GetMessagesType = new GraphQLObjectType({
+  name: 'getMessagesType',
+  fields: () => ({
+    date: { type: GraphQLString },
+    id: { type: GraphQLString },
+    contentType: { type: GraphQLString },
+    sender: { type: GraphQLString },
+    alias: { type: GraphQLString },
+    message: { type: GraphQLString },
+  }),
+});
