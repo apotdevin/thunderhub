@@ -7,26 +7,45 @@ import { getErrorContent } from '../../utils/error';
 
 export const ChatFetcher = () => {
   const { auth } = useAccount();
-  const { initialized, chats } = useChatState();
+  const { initialized, lastChat } = useChatState();
   const dispatch = useChatDispatch();
 
-  console.log({ initialized, chats });
-
   const { data, loading, error } = useGetMessagesQuery({
-    skip: !auth,
-    pollInterval: 10000,
-    variables: { auth, initialize: !initialized },
+    skip: !auth || !initialized,
+    pollInterval: 1000,
+    fetchPolicy: 'network-only',
+    variables: { auth, initialize: false },
     onError: error => toast.error(getErrorContent(error)),
   });
 
   React.useEffect(() => {
-    if (!loading && !error && data?.getMessages) {
-      if (!initialized) {
-        console.log({ data });
-        dispatch({ type: 'initialized', chats: data.getMessages });
+    if (data?.getMessages?.messages) {
+      const messages = [...data.getMessages.messages];
+      let index = -1;
+
+      for (let i = 0; i < messages.length; i += 1) {
+        if (index < 0) {
+          const element = messages[i];
+          const { id } = element;
+
+          if (id === lastChat) {
+            index = i;
+          }
+        }
       }
+
+      let newMessages = [];
+      if (index < 1) {
+        return;
+      }
+
+      newMessages = messages.slice(0, index);
+      const last = newMessages[0].id;
+      // console.log('New messages', { newMessages });
+      dispatch({ type: 'additional', chats: newMessages, lastChat: last });
     }
-  }, [loading, error, data]);
+  }, [data, loading, error]);
 
   return null;
 };
+2;

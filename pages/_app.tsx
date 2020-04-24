@@ -19,6 +19,7 @@ import Head from 'next/head';
 import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
 import { useStatusState } from '../src/context/StatusContext';
 import { ChatFetcher } from '../src/components/chat/ChatFetcher';
+import { ChatInit } from '../src/components/chat/ChatInit';
 
 toast.configure({ draggable: false, pauseOnFocusLoss: false });
 
@@ -41,6 +42,7 @@ const Wrapper: React.FC = ({ children }) => {
       <BitcoinPrice />
       <BitcoinFees />
       <ChatFetcher />
+      <ChatInit />
     </>
   );
 

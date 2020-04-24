@@ -19,14 +19,17 @@ const StyledSubCard = styled(SubCard)`
 interface ContactsProps {
   contacts: { key: string; alias: string }[];
   setActive: (active: string) => void;
+  setUser: (active: string) => void;
 }
 
 export const ContactCard = ({
   contact,
   setActive,
+  setUser,
 }: {
   contact: { key: string; alias: string };
   setActive: (active: string) => void;
+  setUser: (active: string) => void;
 }) => {
   const [nodeName, setNodeName] = React.useState(contact.alias ?? '');
   const { auth } = useAccount();
@@ -35,7 +38,6 @@ export const ContactCard = ({
   });
 
   React.useEffect(() => {
-    console.log(contact);
     if (!contact.alias) {
       getInfo();
     }
@@ -46,7 +48,7 @@ export const ContactCard = ({
       const { alias } = data.getNode;
       const name = alias && alias !== '' ? alias : contact.key.substring(0, 6);
       setNodeName(name);
-      console.log({ name });
+      setUser(name);
     }
   }, [data, loading]);
 
@@ -57,13 +59,18 @@ export const ContactCard = ({
   );
 };
 
-export const Contacts = ({ contacts, setActive }: ContactsProps) => {
-  console.log('CONTRACTss: ', { contacts });
+export const Contacts = ({ contacts, setActive, setUser }: ContactsProps) => {
   return (
     <ContactColumn>
       {contacts.map(contact => {
         if (contact) {
-          return <ContactCard setActive={setActive} contact={contact} />;
+          return (
+            <ContactCard
+              setActive={setActive}
+              contact={contact}
+              setUser={setUser}
+            />
+          );
         }
       })}
     </ContactColumn>

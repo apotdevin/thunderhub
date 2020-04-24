@@ -16,13 +16,12 @@ const ChatLayout = styled.div`
 `;
 
 const ChatView = () => {
-  const { chats, initialized } = useChatState();
+  const { chats } = useChatState();
   const bySender = separateBySender(chats);
   const senders = getSenders(bySender);
 
   const [active, setActive] = React.useState('');
-
-  console.log({ bySender, senders, active });
+  const [user, setUser] = React.useState('');
 
   React.useEffect(() => {
     if (senders.length > 0) {
@@ -35,8 +34,12 @@ const ChatView = () => {
       <SubTitle>Chats</SubTitle>
       <Card>
         <ChatLayout>
-          <Contacts contacts={senders} setActive={setActive} />
-          <ChatBox messages={bySender[active]} />
+          <Contacts
+            contacts={senders}
+            setActive={setActive}
+            setUser={setUser}
+          />
+          <ChatBox messages={bySender[active]} alias={user} />
         </ChatLayout>
       </Card>
     </CardWithTitle>

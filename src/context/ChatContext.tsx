@@ -12,13 +12,15 @@ type ChatProps = {
 type State = {
   initialized: boolean;
   chats: ChatProps[];
+  lastChat: string;
 };
 
 type CompleteState = State;
 
 type ActionType = {
-  type: 'initialized';
+  type: 'initialized' | 'additional';
   chats: ChatProps[];
+  lastChat: string;
 };
 
 type Dispatch = (action: ActionType) => void;
@@ -29,6 +31,7 @@ const DispatchContext = createContext<Dispatch | undefined>(undefined);
 const initialState = {
   initialized: false,
   chats: [],
+  lastChat: '',
 };
 
 const stateReducer = (state: State, action: ActionType): CompleteState => {
@@ -36,9 +39,14 @@ const stateReducer = (state: State, action: ActionType): CompleteState => {
     case 'initialized':
       return {
         initialized: true,
-        chats: action.chats,
+        ...action,
       };
-    //     case 'connected':
+    case 'additional':
+      return {
+        initialized: true,
+        chats: [...state.chats, ...action.chats],
+        lastChat: action.lastChat,
+      };
     //       return (
     //         { ...action.state, loading: false, connected: true } || initialState
     //       );

@@ -1,7 +1,11 @@
 import React from 'react';
 import { SmallLink, DarkSubTitle, OverflowText, SingleLine } from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
-import { format, formatDistanceToNowStrict } from 'date-fns';
+import {
+  format,
+  formatDistanceToNowStrict,
+  differenceInCalendarDays,
+} from 'date-fns';
 import { XSvg } from './Icons';
 
 export const getTransactionLink = (transaction: string) => {
@@ -27,16 +31,29 @@ export const getDateDif = (date: string) => {
 };
 
 export const getFormatDate = (date: string) => {
-  return format(new Date(date), 'dd-MM-yyyy - HH:mm:ss');
+  return format(new Date(date), 'dd/MM/yyyy - HH:mm:ss');
 };
 
 export const getMessageDate = (date: string): string => {
   const distance = formatDistanceToNowStrict(new Date(date));
 
-  if (distance.indexOf('minutes') >= 0 || distance.indexOf('seconds') >= 0) {
+  if (distance.indexOf('minute') >= 0 || distance.indexOf('second') >= 0) {
     return `${distance} ago`;
   }
   return format(new Date(date), 'HH:mm');
+};
+
+export const getDayChange = (date: string): string => {
+  return format(new Date(date), 'dd/MM/yy');
+};
+
+export const getIsDifferentDay = (current: string, next: string): boolean => {
+  const today = new Date(current);
+  const tomorrow = new Date(next);
+
+  const difference = differenceInCalendarDays(today, tomorrow);
+
+  return difference > 0 ? true : false;
 };
 
 export const getTooltipType = (theme: string) => {

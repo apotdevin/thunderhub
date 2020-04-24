@@ -431,12 +431,15 @@ export const GET_MESSAGES = gql`
       initialize: $initialize
       lastMessage: $lastMessage
     ) {
-      date
-      contentType
-      alias
-      message
-      id
-      sender
+      token
+      messages {
+        date
+        contentType
+        alias
+        message
+        id
+        sender
+      }
     }
   }
 `;

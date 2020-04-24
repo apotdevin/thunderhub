@@ -47,7 +47,7 @@ export type Query = {
   getOffers?: Maybe<Array<Maybe<HodlOfferType>>>;
   getCountries?: Maybe<Array<Maybe<HodlCountryType>>>;
   getCurrencies?: Maybe<Array<Maybe<HodlCurrencyType>>>;
-  getMessages?: Maybe<Array<Maybe<GetMessagesType>>>;
+  getMessages?: Maybe<GetMessagesType>;
 };
 
 export type QueryGetChannelBalanceArgs = {
@@ -222,6 +222,7 @@ export type QueryGetOffersArgs = {
 export type QueryGetMessagesArgs = {
   auth: AuthType;
   logger?: Maybe<Scalars['Boolean']>;
+  token?: Maybe<Scalars['String']>;
   initialize?: Maybe<Scalars['Boolean']>;
   lastMessage?: Maybe<Scalars['String']>;
 };
@@ -539,6 +540,12 @@ export type HodlCurrencyType = {
 
 export type GetMessagesType = {
   __typename?: 'getMessagesType';
+  token?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<MessagesType>>>;
+};
+
+export type MessagesType = {
+  __typename?: 'messagesType';
   date?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   contentType?: Maybe<Scalars['String']>;
@@ -1524,14 +1531,18 @@ export type GetMessagesQueryVariables = {
 
 export type GetMessagesQuery = { __typename?: 'Query' } & {
   getMessages?: Maybe<
-    Array<
-      Maybe<
-        { __typename?: 'getMessagesType' } & Pick<
-          GetMessagesType,
-          'date' | 'contentType' | 'alias' | 'message' | 'id' | 'sender'
-        >
-      >
-    >
+    { __typename?: 'getMessagesType' } & Pick<GetMessagesType, 'token'> & {
+        messages?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'messagesType' } & Pick<
+                MessagesType,
+                'date' | 'contentType' | 'alias' | 'message' | 'id' | 'sender'
+              >
+            >
+          >
+        >;
+      }
   >;
 };
 
@@ -4138,12 +4149,15 @@ export const GetMessagesDocument = gql`
       initialize: $initialize
       lastMessage: $lastMessage
     ) {
-      date
-      contentType
-      alias
-      message
-      id
-      sender
+      token
+      messages {
+        date
+        contentType
+        alias
+        message
+        id
+        sender
+      }
     }
   }
 `;
