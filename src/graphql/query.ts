@@ -360,6 +360,7 @@ export const CHANNEL_FEES = gql`
       feeRate
       transactionId
       transactionVout
+      public_key
     }
   }
 `;
@@ -415,6 +416,27 @@ export const GET_UTXOS = gql`
       tokens
       transaction_id
       transaction_vout
+    }
+  }
+`;
+
+export const GET_MESSAGES = gql`
+  query GetMessages(
+    $auth: authType!
+    $initialize: Boolean
+    $lastMessage: String
+  ) {
+    getMessages(
+      auth: $auth
+      initialize: $initialize
+      lastMessage: $lastMessage
+    ) {
+      date
+      contentType
+      alias
+      message
+      id
+      sender
     }
   }
 `;

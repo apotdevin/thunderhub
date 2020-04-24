@@ -50,6 +50,7 @@ import CheckIcon from '../../assets/icons/check.svg';
 import StarIcon from '../../assets/icons/star.svg';
 import HalfStarIcon from '../../assets/icons/half-star.svg';
 import CreditCardIcon from '../../assets/icons/credit-card.svg';
+import MessageCircleIcon from '../../assets/icons/message-circle.svg';
 
 export interface IconProps {
   color?: string;
@@ -122,3 +123,4 @@ export const Check = styleIcon(CheckIcon);
 export const Star = styleIcon(StarIcon);
 export const HalfStar = styleIcon(HalfStarIcon);
 export const CreditCard = styleIcon(CreditCardIcon);
+export const MessageCircle = styleIcon(MessageCircleIcon);

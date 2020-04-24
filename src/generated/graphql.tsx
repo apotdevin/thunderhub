@@ -47,6 +47,7 @@ export type Query = {
   getOffers?: Maybe<Array<Maybe<HodlOfferType>>>;
   getCountries?: Maybe<Array<Maybe<HodlCountryType>>>;
   getCurrencies?: Maybe<Array<Maybe<HodlCurrencyType>>>;
+  getMessages?: Maybe<Array<Maybe<GetMessagesType>>>;
 };
 
 export type QueryGetChannelBalanceArgs = {
@@ -218,6 +219,13 @@ export type QueryGetOffersArgs = {
   filter?: Maybe<Scalars['String']>;
 };
 
+export type QueryGetMessagesArgs = {
+  auth: AuthType;
+  logger?: Maybe<Scalars['Boolean']>;
+  initialize?: Maybe<Scalars['Boolean']>;
+  lastMessage?: Maybe<Scalars['String']>;
+};
+
 export type ChannelBalanceType = {
   __typename?: 'channelBalanceType';
   confirmedBalance?: Maybe<Scalars['Int']>;
@@ -312,6 +320,7 @@ export type ChannelFeeType = {
   feeRate?: Maybe<Scalars['Int']>;
   transactionId?: Maybe<Scalars['String']>;
   transactionVout?: Maybe<Scalars['Int']>;
+  public_key?: Maybe<Scalars['String']>;
 };
 
 export type ChannelReportType = {
@@ -528,6 +537,16 @@ export type HodlCurrencyType = {
   type?: Maybe<Scalars['String']>;
 };
 
+export type GetMessagesType = {
+  __typename?: 'getMessagesType';
+  date?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  contentType?: Maybe<Scalars['String']>;
+  sender?: Maybe<Scalars['String']>;
+  alias?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   closeChannel?: Maybe<CloseChannelType>;
@@ -541,6 +560,7 @@ export type Mutation = {
   sendToAddress?: Maybe<SendToType>;
   addPeer?: Maybe<Scalars['Boolean']>;
   removePeer?: Maybe<Scalars['Boolean']>;
+  sendMessage?: Maybe<Scalars['Boolean']>;
 };
 
 export type MutationCloseChannelArgs = {
@@ -623,6 +643,15 @@ export type MutationRemovePeerArgs = {
   auth: AuthType;
   logger?: Maybe<Scalars['Boolean']>;
   publicKey: Scalars['String'];
+};
+
+export type MutationSendMessageArgs = {
+  auth: AuthType;
+  logger?: Maybe<Scalars['Boolean']>;
+  publicKey: Scalars['String'];
+  messageType?: Maybe<Scalars['String']>;
+  tokens?: Maybe<Scalars['Int']>;
+  message: Scalars['String'];
 };
 
 export type CloseChannelType = {
@@ -1412,6 +1441,7 @@ export type ChannelFeesQuery = { __typename?: 'Query' } & {
           | 'feeRate'
           | 'transactionId'
           | 'transactionVout'
+          | 'public_key'
         >
       >
     >
@@ -1480,6 +1510,25 @@ export type GetUtxosQuery = { __typename?: 'Query' } & {
           | 'tokens'
           | 'transaction_id'
           | 'transaction_vout'
+        >
+      >
+    >
+  >;
+};
+
+export type GetMessagesQueryVariables = {
+  auth: AuthType;
+  initialize?: Maybe<Scalars['Boolean']>;
+  lastMessage?: Maybe<Scalars['String']>;
+};
+
+export type GetMessagesQuery = { __typename?: 'Query' } & {
+  getMessages?: Maybe<
+    Array<
+      Maybe<
+        { __typename?: 'getMessagesType' } & Pick<
+          GetMessagesType,
+          'date' | 'contentType' | 'alias' | 'message' | 'id' | 'sender'
         >
       >
     >
@@ -3830,6 +3879,7 @@ export const ChannelFeesDocument = gql`
       feeRate
       transactionId
       transactionVout
+      public_key
     }
   }
 `;
@@ -4076,4 +4126,73 @@ export type GetUtxosLazyQueryHookResult = ReturnType<
 export type GetUtxosQueryResult = ApolloReactCommon.QueryResult<
   GetUtxosQuery,
   GetUtxosQueryVariables
+>;
+export const GetMessagesDocument = gql`
+  query GetMessages(
+    $auth: authType!
+    $initialize: Boolean
+    $lastMessage: String
+  ) {
+    getMessages(
+      auth: $auth
+      initialize: $initialize
+      lastMessage: $lastMessage
+    ) {
+      date
+      contentType
+      alias
+      message
+      id
+      sender
+    }
+  }
+`;
+
+/**
+ * __useGetMessagesQuery__
+ *
+ * To run a query within a React component, call `useGetMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMessagesQuery({
+ *   variables: {
+ *      auth: // value for 'auth'
+ *      initialize: // value for 'initialize'
+ *      lastMessage: // value for 'lastMessage'
+ *   },
+ * });
+ */
+export function useGetMessagesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetMessagesQuery,
+    GetMessagesQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<GetMessagesQuery, GetMessagesQueryVariables>(
+    GetMessagesDocument,
+    baseOptions
+  );
+}
+export function useGetMessagesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMessagesQuery,
+    GetMessagesQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetMessagesQuery,
+    GetMessagesQueryVariables
+  >(GetMessagesDocument, baseOptions);
+}
+export type GetMessagesQueryHookResult = ReturnType<typeof useGetMessagesQuery>;
+export type GetMessagesLazyQueryHookResult = ReturnType<
+  typeof useGetMessagesLazyQuery
+>;
+export type GetMessagesQueryResult = ApolloReactCommon.QueryResult<
+  GetMessagesQuery,
+  GetMessagesQueryVariables
 >;

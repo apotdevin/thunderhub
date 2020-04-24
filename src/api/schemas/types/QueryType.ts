@@ -26,6 +26,7 @@ export const ChannelFeeType = new GraphQLObjectType({
       feeRate: { type: GraphQLInt },
       transactionId: { type: GraphQLString },
       transactionVout: { type: GraphQLInt },
+      public_key: { type: GraphQLString },
     };
   },
 });

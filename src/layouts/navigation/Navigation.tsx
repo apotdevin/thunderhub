@@ -22,6 +22,7 @@ import {
   RepeatIcon,
   Users,
   CreditCard,
+  MessageCircle,
 } from '../../components/generic/Icons';
 import { useSettings } from '../../context/SettingsContext';
 import { useRouter } from 'next/router';
@@ -123,6 +124,7 @@ const TOOLS = '/tools';
 const SETTINGS = '/settings';
 const FEES = '/fees';
 const TRADER = '/trading';
+const CHAT = '/chat';
 
 interface NavigationProps {
   isBurger?: boolean;
@@ -172,6 +174,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
       {renderNavButton('Tools', TOOLS, Shield, sidebar)}
       {renderNavButton('P2P Trading', TRADER, CreditCard, sidebar)}
+      {renderNavButton('Chat', CHAT, MessageCircle, sidebar)}
       {renderNavButton('Settings', SETTINGS, Settings, sidebar)}
     </ButtonSection>
   );
@@ -188,6 +191,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Trading', TRADER, CreditCard)}
+      {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}
     </BurgerRow>
   );

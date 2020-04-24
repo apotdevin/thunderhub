@@ -1,7 +1,7 @@
 import React from 'react';
 import { SmallLink, DarkSubTitle, OverflowText, SingleLine } from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
-import { format, formatDistanceStrict } from 'date-fns';
+import { format, formatDistanceToNowStrict } from 'date-fns';
 import { XSvg } from './Icons';
 
 export const getTransactionLink = (transaction: string) => {
@@ -23,11 +23,20 @@ export const getNodeLink = (publicKey: string) => {
 };
 
 export const getDateDif = (date: string) => {
-  return formatDistanceStrict(new Date(date), new Date());
+  return formatDistanceToNowStrict(new Date(date));
 };
 
 export const getFormatDate = (date: string) => {
   return format(new Date(date), 'dd-MM-yyyy - HH:mm:ss');
+};
+
+export const getMessageDate = (date: string): string => {
+  const distance = formatDistanceToNowStrict(new Date(date));
+
+  if (distance.indexOf('minutes') >= 0 || distance.indexOf('seconds') >= 0) {
+    return `${distance} ago`;
+  }
+  return format(new Date(date), 'HH:mm');
 };
 
 export const getTooltipType = (theme: string) => {
