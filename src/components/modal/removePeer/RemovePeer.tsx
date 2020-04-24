@@ -51,7 +51,7 @@ export const RemovePeerModal = ({
         disabled={loading}
         withMargin={'4px'}
       >
-        {`Remove Peer [${peerAlias ?? 'Unknown'}]`}
+        {`Remove Peer [${peerAlias || publicKey?.substring(0, 6)}]`}
       </SecureButton>
       <ColorButton withMargin={'4px'} onClick={handleOnlyClose}>
         Cancel

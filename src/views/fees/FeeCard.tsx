@@ -48,6 +48,7 @@ export const FeeCard = ({
     feeRate,
     transactionId,
     transactionVout,
+    public_key,
   } = channelInfo;
 
   const [updateFees] = useUpdateFeesMutation({
@@ -128,7 +129,7 @@ export const FeeCard = ({
     <SubCard color={color} key={index}>
       <MainInfo onClick={() => handleClick()}>
         <ResponsiveLine>
-          <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
+          <NodeTitle>{alias || public_key?.substring(0, 6)}</NodeTitle>
           <ColLine>
             <SingleLine>
               <NoWrapTitle>

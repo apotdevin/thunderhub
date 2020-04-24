@@ -39,7 +39,7 @@ export const getResume = {
                 public_key: payment.destination,
               });
             } catch (error) {
-              nodeInfo = { alias: 'unknown' };
+              nodeInfo = { alias: payment.destination?.substring(0, 6) };
             }
             return {
               type: 'payment',

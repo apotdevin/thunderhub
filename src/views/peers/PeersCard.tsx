@@ -136,7 +136,7 @@ export const PeersCard = ({
       <MainInfo onClick={() => handleClick()}>
         <ResponsiveLine>
           <NodeTitle style={{ flexGrow: 2 }}>
-            {alias ? alias : 'Unknown'}
+            {alias || public_key?.substring(0, 6)}
           </NodeTitle>
           <ResponsiveSingle>
             <IconPadding>{getSymbol(is_inbound)}</IconPadding>

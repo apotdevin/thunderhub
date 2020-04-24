@@ -180,7 +180,7 @@ export const ChannelCard = ({
         </StatusLine>
         <ResponsiveLine>
           <NodeTitle style={{ flexGrow: 2 }}>
-            {alias ? alias : 'Unknown'}
+            {alias || partner_public_key?.substring(0, 6)}
           </NodeTitle>
           <ResponsiveSingle>
             {formatBalance}

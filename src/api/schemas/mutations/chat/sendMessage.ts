@@ -32,7 +32,7 @@ export const sendMessage = {
       const nodeInfo = await getWalletInfo({
         lnd,
       });
-      userAlias = nodeInfo.alias ?? 'Unknown';
+      userAlias = nodeInfo.alias;
       userKey = nodeInfo.public_key;
     } catch (error) {
       throw new Error(getErrorMsg(error));

@@ -53,7 +53,13 @@ export const BalanceCard = ({
   callback,
   closeCallback,
 }: BalanceCardProps) => {
-  const { partner_node_info, local_balance, remote_balance, id } = channel;
+  const {
+    partner_node_info,
+    local_balance,
+    remote_balance,
+    id,
+    partner_public_key,
+  } = channel;
   const { alias } = partner_node_info;
 
   const balancedness = getPercent(remote_balance, local_balance) / 100;
@@ -66,7 +72,9 @@ export const BalanceCard = ({
       <MainInfo onClick={() => callback && callback()}>
         <ResponsiveLine withWrap={true}>
           <ChannelLineSection>
-            {alias === '' ? `Unknown - ${id}` : `${alias} - ${id}`}
+            {alias && alias !== ''
+              ? `${alias} - ${id}`
+              : `${partner_public_key?.substring(0, 6)} - ${id}`}
           </ChannelLineSection>
           <ChannelColumnSection>
             <SingleLine>
