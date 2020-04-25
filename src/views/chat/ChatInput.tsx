@@ -8,7 +8,15 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { useAccount } from '../../context/AccountContext';
 
-export const ChatInput = ({ alias }: { alias: string }) => {
+export const ChatInput = ({
+  alias,
+  sender: customSender,
+  withMargin,
+}: {
+  alias: string;
+  sender?: string;
+  withMargin?: string;
+}) => {
   const [message, setMessage] = React.useState('');
   const { id } = useAccount();
 
@@ -27,7 +35,7 @@ export const ChatInput = ({ alias }: { alias: string }) => {
         newChat: {
           date: new Date().toISOString(),
           message,
-          sender,
+          sender: customSender || sender,
           isSent: true,
         },
         userId: id,
@@ -40,14 +48,14 @@ export const ChatInput = ({ alias }: { alias: string }) => {
       <Input
         value={message}
         placeholder={`message ${alias}`}
-        withMargin={'0 8px 0 16px'}
+        withMargin={withMargin}
         onChange={e => setMessage(e.target.value)}
       />
       <SecureButton
         callback={sendMessage}
         loading={loading}
         disabled={loading}
-        variables={{ message, publicKey: sender, tokens: 30 }}
+        variables={{ message, publicKey: customSender || sender, tokens: 30 }}
         withMargin={'0 0 0 8px'}
       >
         Send

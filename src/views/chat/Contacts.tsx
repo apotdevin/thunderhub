@@ -1,27 +1,9 @@
 import * as React from 'react';
-import styled from 'styled-components';
-import { SubCard } from '../../components/generic/Styled';
 import { useGetNodeLazyQuery } from '../../generated/graphql';
 import { useAccount } from '../../context/AccountContext';
 import { useChatDispatch, useChatState } from '../../context/ChatContext';
-
-const ContactColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  width: 30%;
-`;
-
-const StyledSubCard = styled(SubCard)`
-  width: 100%;
-  cursor: pointer;
-`;
-
-interface ContactsProps {
-  contacts: { key: string; alias: string }[];
-  setUser: (active: string) => void;
-}
+import { ChatStyledSubCard, ChatContactColumn } from './Chat.styled';
+import { DarkSubTitle } from '../../components/generic/Styled';
 
 export const ContactCard = ({
   contact,
@@ -58,7 +40,7 @@ export const ContactCard = ({
   }, [data, loading]);
 
   return (
-    <StyledSubCard
+    <ChatStyledSubCard
       onClick={() => {
         dispatch({ type: 'changeActive', sender: contact.key, userId: id });
         setUser(nodeName);
@@ -66,13 +48,18 @@ export const ContactCard = ({
       key={contact.key}
     >
       {nodeName}
-    </StyledSubCard>
+    </ChatStyledSubCard>
   );
 };
 
+interface ContactsProps {
+  contacts: { key: string; alias: string }[];
+  setUser: (active: string) => void;
+}
+
 export const Contacts = ({ contacts, setUser }: ContactsProps) => {
   return (
-    <ContactColumn>
+    <ChatContactColumn>
       {contacts.map(contact => {
         if (contact) {
           return (
@@ -82,6 +69,9 @@ export const Contacts = ({ contacts, setUser }: ContactsProps) => {
           );
         }
       })}
-    </ContactColumn>
+      <ChatStyledSubCard onClick={() => setUser('New Chat')}>
+        <DarkSubTitle>New Chat</DarkSubTitle>
+      </ChatStyledSubCard>
+    </ChatContactColumn>
   );
 };
