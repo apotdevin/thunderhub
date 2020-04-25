@@ -36,8 +36,8 @@ export const ChatInit = () => {
   React.useEffect(() => {
     if (!initLoading && !initError && initData?.getMessages) {
       const { messages } = initData.getMessages;
-      const lastChat = messages[0].id;
-      const sender = messages[0].sender;
+      const lastChat = messages[0]?.id || '';
+      const sender = messages[0]?.sender || '';
 
       dispatch({
         type: 'initialized',

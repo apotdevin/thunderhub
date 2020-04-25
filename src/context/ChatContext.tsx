@@ -28,7 +28,12 @@ type State = {
 };
 
 type ActionType = {
-  type: 'initialized' | 'additional' | 'changeActive' | 'newChat';
+  type:
+    | 'initialized'
+    | 'additional'
+    | 'changeActive'
+    | 'newChat'
+    | 'disconnected';
   chats?: ChatProps[];
   sentChats?: SentChatProps[];
   newChat?: SentChatProps;

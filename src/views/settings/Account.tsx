@@ -19,6 +19,7 @@ import { useStatusDispatch } from '../../context/StatusContext';
 import { Auth } from '../../components/auth';
 import { useRouter } from 'next/router';
 import { appendBasePath } from '../../utils/basePath';
+import { useChatDispatch } from '../../context/ChatContext';
 
 export const AccountSettings = () => {
   const [status, setStatus] = useState('none');
@@ -27,6 +28,7 @@ export const AccountSettings = () => {
   const { id, changeAccount, accounts } = useAccount();
 
   const dispatch = useStatusDispatch();
+  const dispatchChat = useChatDispatch();
 
   const [isType, setIsType] = useState('login');
   const [willAdd, setWillAdd] = useState(false);
@@ -80,6 +82,7 @@ export const AccountSettings = () => {
                 onClick={() => {
                   if (accountId !== id) {
                     dispatch({ type: 'disconnected' });
+                    dispatchChat({ type: 'disconnected' });
                     changeAccount(accountId);
                     push(appendBasePath('/'));
                   }
