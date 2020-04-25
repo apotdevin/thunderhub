@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { headerColor, headerTextColor } from '../../styles/Themes';
-import { useAccount } from '../../context/AccountContext';
 import { SingleLine } from '../../components/generic/Styled';
 import { Cpu, MenuIcon, XSvg, Circle } from '../../components/generic/Icons';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
@@ -16,9 +15,6 @@ import {
   HeaderTitle,
   IconPadding,
 } from './Header.styled';
-
-const AnimatedBurger = animated(MenuIcon);
-const AnimatedClose = animated(XSvg);
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -36,9 +32,13 @@ export const Header = () => {
         <IconWrapper onClick={() => setOpen(prev => !prev)}>
           {transitions.map(({ item, key, props }) =>
             item ? (
-              <AnimatedClose key={key} style={props} size={'24px'} />
+              <animated.div key={key} style={props}>
+                <XSvg size={'24px'} />
+              </animated.div>
             ) : (
-              <AnimatedBurger key={key} style={props} size={'24px'} />
+              <animated.div key={key} style={props}>
+                <MenuIcon size={'24px'} />
+              </animated.div>
             )
           )}
         </IconWrapper>

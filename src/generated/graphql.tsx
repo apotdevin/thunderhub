@@ -656,9 +656,9 @@ export type MutationSendMessageArgs = {
   auth: AuthType;
   logger?: Maybe<Scalars['Boolean']>;
   publicKey: Scalars['String'];
+  message: Scalars['String'];
   messageType?: Maybe<Scalars['String']>;
   tokens?: Maybe<Scalars['Int']>;
-  message: Scalars['String'];
 };
 
 export type CloseChannelType = {
@@ -970,6 +970,18 @@ export type AddPeerMutationVariables = {
 export type AddPeerMutation = { __typename?: 'Mutation' } & Pick<
   Mutation,
   'addPeer'
+>;
+
+export type SendMessageMutationVariables = {
+  auth: AuthType;
+  publicKey: Scalars['String'];
+  message: Scalars['String'];
+  tokens?: Maybe<Scalars['Int']>;
+};
+
+export type SendMessageMutation = { __typename?: 'Mutation' } & Pick<
+  Mutation,
+  'sendMessage'
 >;
 
 export type GetNetworkInfoQueryVariables = {
@@ -2335,6 +2347,67 @@ export type AddPeerMutationResult = ApolloReactCommon.MutationResult<
 export type AddPeerMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AddPeerMutation,
   AddPeerMutationVariables
+>;
+export const SendMessageDocument = gql`
+  mutation SendMessage(
+    $auth: authType!
+    $publicKey: String!
+    $message: String!
+    $tokens: Int
+  ) {
+    sendMessage(
+      auth: $auth
+      publicKey: $publicKey
+      message: $message
+      tokens: $tokens
+    )
+  }
+`;
+export type SendMessageMutationFn = ApolloReactCommon.MutationFunction<
+  SendMessageMutation,
+  SendMessageMutationVariables
+>;
+
+/**
+ * __useSendMessageMutation__
+ *
+ * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
+ *   variables: {
+ *      auth: // value for 'auth'
+ *      publicKey: // value for 'publicKey'
+ *      message: // value for 'message'
+ *      tokens: // value for 'tokens'
+ *   },
+ * });
+ */
+export function useSendMessageMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SendMessageMutation,
+    SendMessageMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    SendMessageMutation,
+    SendMessageMutationVariables
+  >(SendMessageDocument, baseOptions);
+}
+export type SendMessageMutationHookResult = ReturnType<
+  typeof useSendMessageMutation
+>;
+export type SendMessageMutationResult = ApolloReactCommon.MutationResult<
+  SendMessageMutation
+>;
+export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SendMessageMutation,
+  SendMessageMutationVariables
 >;
 export const GetNetworkInfoDocument = gql`
   query GetNetworkInfo($auth: authType!) {

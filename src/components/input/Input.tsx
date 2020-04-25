@@ -81,6 +81,7 @@ interface InputCompProps {
   mobileFullWidth?: boolean;
   maxWidth?: string;
   onChange: (e: any) => void;
+  onKeyDown?: (e: any) => void;
 }
 
 export const Input = ({
@@ -94,6 +95,7 @@ export const Input = ({
   fullWidth = true,
   maxWidth,
   onChange,
+  onKeyDown,
 }: InputCompProps) => {
   return (
     <StyledInput
@@ -107,6 +109,7 @@ export const Input = ({
       fullWidth={fullWidth}
       mobileFullWidth={mobileFullWidth}
       maxWidth={maxWidth}
+      onKeyDown={onKeyDown}
     />
   );
 };

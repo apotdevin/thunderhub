@@ -15,31 +15,28 @@ const ChatLayout = styled.div`
   height: 600px;
 `;
 
+const ChatTitle = styled.div`
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  margin: 0 0 8px 8px;
+`;
+
 const ChatView = () => {
-  const { chats } = useChatState();
-  const bySender = separateBySender(chats);
+  const { chats, sender, sentChats } = useChatState();
+  const bySender = separateBySender([...chats, ...sentChats]);
   const senders = getSenders(bySender);
 
-  const [active, setActive] = React.useState('');
   const [user, setUser] = React.useState('');
-
-  React.useEffect(() => {
-    if (senders.length > 0) {
-      setActive(senders[0].key);
-    }
-  }, [chats]);
 
   return (
     <CardWithTitle>
       <SubTitle>Chats</SubTitle>
       <Card>
+        <ChatTitle>{user}</ChatTitle>
         <ChatLayout>
-          <Contacts
-            contacts={senders}
-            setActive={setActive}
-            setUser={setUser}
-          />
-          <ChatBox messages={bySender[active]} alias={user} />
+          <Contacts contacts={senders} setUser={setUser} />
+          <ChatBox messages={bySender[sender]} alias={user} />
         </ChatLayout>
       </Card>
     </CardWithTitle>

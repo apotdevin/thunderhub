@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { MessageType } from './Chat.types';
 import {
   getMessageDate,
@@ -7,18 +7,13 @@ import {
   getDayChange,
 } from '../../components/generic/helpers';
 import { DetailLine } from '../../components/generic/CardGeneric';
-import {
-  OverflowText,
-  DarkSubTitle,
-  SingleLine,
-} from '../../components/generic/Styled';
-import { cardBorderColor, subCardColor } from '../../styles/Themes';
+import { OverflowText, DarkSubTitle } from '../../components/generic/Styled';
+import { cardBorderColor, subCardColor, cardColor } from '../../styles/Themes';
 import { sortBy } from 'underscore';
 import { NoWrap } from '../tools/Tools.styled';
-import { Input } from '../../components/input/Input';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { ChatInput } from './ChatInput';
 
-const ContactColumn = styled.div`
+const ChatColumn = styled.div`
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-start;
@@ -28,6 +23,9 @@ const ContactColumn = styled.div`
   border: 1px solid ${cardBorderColor};
   margin: 0 0 10px 10px;
   padding-bottom: 8px;
+  height: 100%;
+  min-height: 0;
+  background-color: ${subCardColor};
 `;
 
 const ColumnWithInput = styled.div`
@@ -36,9 +34,14 @@ const ColumnWithInput = styled.div`
   flex-direction: column;
 `;
 
-const StyledLine = styled(DetailLine)`
+const StyledLine = styled<{ rightAlign: boolean }>(DetailLine)`
   width: 100%;
   align-items: center;
+  ${({ rightAlign }) =>
+    rightAlign &&
+    css`
+      justify-content: flex-end;
+    `};
 `;
 
 const DaySeparator = styled.div`
@@ -49,18 +52,17 @@ const DaySeparator = styled.div`
   padding: 8px;
 `;
 
+const StyledDark = styled(DarkSubTitle)`
+  font-size: 12px;
+  width: 50px;
+  margin-left: 18px;
+`;
+
 const StyledChatMessage = styled(OverflowText)`
-  background-color: ${subCardColor};
+  background-color: ${cardColor};
   max-width: 60%;
   padding: 8px 16px;
   border-radius: 8px;
-`;
-
-const ChatTitle = styled.div`
-  width: 100%;
-  text-align: center;
-  font-size: 18px;
-  margin: 0 0 8px 8px;
 `;
 
 interface ChatBox {
@@ -68,16 +70,23 @@ interface ChatBox {
   alias: string;
 }
 
-export const MessageCard = ({ message }: { message: MessageType }) => {
+export const MessageCard = ({
+  message,
+  key,
+}: {
+  message: MessageType;
+  key?: string;
+}) => {
   if (!message.message) {
     return null;
   }
+  const { date, message: chatMessage, isSent } = message;
   return (
-    <StyledLine key={message.id}>
-      <StyledChatMessage>{message.message}</StyledChatMessage>
-      <DarkSubTitle withMargin={'8px'}>
-        <NoWrap>{getMessageDate(message.date)}</NoWrap>
-      </DarkSubTitle>
+    <StyledLine key={key} rightAlign={isSent}>
+      <StyledChatMessage>{chatMessage}</StyledChatMessage>
+      <StyledDark withMargin={'8px'}>
+        <NoWrap>{getMessageDate(date)}</NoWrap>
+      </StyledDark>
     </StyledLine>
   );
 };
@@ -91,31 +100,25 @@ export const ChatBox = ({ messages, alias }: ChatBox) => {
 
   return (
     <ColumnWithInput>
-      <ChatTitle>{`- ${alias} -`}</ChatTitle>
-      <ContactColumn>
+      <ChatColumn>
         {sorted.map((message, index: number) => {
           const nextDate =
             index < sorted.length - 1 ? sorted[index + 1].date : message.date;
           const isDifferent = getIsDifferentDay(message.date, nextDate);
           return (
-            <>
+            <div
+              style={{ width: '100%' }}
+              key={`${message.sender}/${message.date}`}
+            >
               <MessageCard message={message} />
               {isDifferent && (
                 <DaySeparator>{getDayChange(nextDate)}</DaySeparator>
               )}
-            </>
+            </div>
           );
         })}
-      </ContactColumn>
-      <SingleLine>
-        <Input
-          // fullWidth={false}
-          placeholder={'Message'}
-          withMargin={'0 8px 0 16px'}
-          onChange={() => {}}
-        />
-        <ColorButton>Send</ColorButton>
-      </SingleLine>
+      </ChatColumn>
+      <ChatInput alias={alias} />
     </ColumnWithInput>
   );
 };

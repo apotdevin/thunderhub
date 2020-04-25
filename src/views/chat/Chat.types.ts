@@ -5,4 +5,5 @@ export interface MessageType {
   message?: string;
   id?: string;
   sender?: string;
+  isSent?: boolean;
 }

@@ -4,9 +4,13 @@ import { useGetMessagesQuery } from '../../generated/graphql';
 import { useAccount } from '../../context/AccountContext';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
+import { useRouter } from 'next/router';
 
 export const ChatFetcher = () => {
+  const newChatToastId = 'newChatToastId';
+
   const { auth } = useAccount();
+  const { pathname } = useRouter();
   const { initialized, lastChat } = useChatState();
   const dispatch = useChatDispatch();
 
@@ -39,6 +43,12 @@ export const ChatFetcher = () => {
         return;
       }
 
+      if (pathname !== '/chat') {
+        if (!toast.isActive(newChatToastId)) {
+          toast.success('You have a new message', { position: 'bottom-right' });
+        }
+      }
+
       newMessages = messages.slice(0, index);
       const last = newMessages[0].id;
       // console.log('New messages', { newMessages });
@@ -48,4 +58,3 @@ export const ChatFetcher = () => {
 
   return null;
 };
-2;

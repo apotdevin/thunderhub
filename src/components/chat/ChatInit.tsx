@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 
 export const ChatInit = () => {
-  const { auth } = useAccount();
+  const { auth, id } = useAccount();
   const dispatch = useChatDispatch();
 
   const [
@@ -17,33 +17,33 @@ export const ChatInit = () => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  // let savedChats = [];
   React.useEffect(() => {
-    // const storageChats = localStorage.getItem('incomingChats') || '';
-    // if (storageChats !== '') {
-    //   try {
-    //     savedChats = JSON.parse(storageChats);
-    //     const lastChat = savedChats[0].id;
-    //     dispatch({ type: 'initialized', chats: savedChats, lastChat });
-    //   } catch (error) {
-    //     localStorage.removeItem('incomingChats');
-    //     getMessages();
-    //   }
-    // } else {
+    const storageChats = localStorage.getItem(`${id}-sentChats`) || '';
+    if (storageChats !== '') {
+      try {
+        const savedChats = JSON.parse(storageChats);
+        dispatch({
+          type: 'initialized',
+          sentChats: savedChats,
+        });
+      } catch (error) {
+        localStorage.removeItem('sentChats');
+      }
+    }
     getMessages();
-    // }
   }, []);
 
   React.useEffect(() => {
     if (!initLoading && !initError && initData?.getMessages) {
       const { messages } = initData.getMessages;
-
-      //   localStorage.setItem('incomingChats', JSON.stringify(messages));
       const lastChat = messages[0].id;
+      const sender = messages[0].sender;
+
       dispatch({
         type: 'initialized',
         chats: messages,
         lastChat,
+        sender,
       });
     }
   }, [initLoading, initError, initData]);

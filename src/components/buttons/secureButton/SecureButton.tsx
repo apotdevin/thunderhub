@@ -15,14 +15,14 @@ interface SecureButtonProps extends ColorButtonProps {
   arrow?: boolean;
 }
 
-export const SecureButton = ({
+export const SecureButton: React.FC<SecureButtonProps> = ({
   callback,
   color,
   disabled,
   children,
   variables,
   ...props
-}: SecureButtonProps) => {
+}) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const { host, cert, admin, sessionAdmin } = useAccount();

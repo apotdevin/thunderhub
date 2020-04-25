@@ -135,3 +135,19 @@ export const ADD_PEER = gql`
     )
   }
 `;
+
+export const SEND_MESSAGE = gql`
+  mutation SendMessage(
+    $auth: authType!
+    $publicKey: String!
+    $message: String!
+    $tokens: Int
+  ) {
+    sendMessage(
+      auth: $auth
+      publicKey: $publicKey
+      message: $message
+      tokens: $tokens
+    )
+  }
+`;

@@ -9,51 +9,76 @@ type ChatProps = {
   sender?: string;
 };
 
+type SentChatProps = {
+  date?: string;
+  contentType?: string;
+  alias?: string;
+  message?: string;
+  id?: string;
+  sender?: string;
+  isSent?: boolean;
+};
+
 type State = {
   initialized: boolean;
   chats: ChatProps[];
+  sentChats: SentChatProps[];
   lastChat: string;
+  sender: string;
 };
 
-type CompleteState = State;
-
 type ActionType = {
-  type: 'initialized' | 'additional';
-  chats: ChatProps[];
-  lastChat: string;
+  type: 'initialized' | 'additional' | 'changeActive' | 'newChat';
+  chats?: ChatProps[];
+  sentChats?: SentChatProps[];
+  newChat?: SentChatProps;
+  lastChat?: string;
+  sender?: string;
+  userId?: string;
 };
 
 type Dispatch = (action: ActionType) => void;
 
-const StateContext = createContext<CompleteState | undefined>(undefined);
+const StateContext = createContext<State | undefined>(undefined);
 const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
 const initialState = {
   initialized: false,
   chats: [],
   lastChat: '',
+  sender: '',
+  sentChats: [],
 };
 
-const stateReducer = (state: State, action: ActionType): CompleteState => {
+const stateReducer = (state: State, action: ActionType): State => {
   switch (action.type) {
     case 'initialized':
       return {
+        ...state,
         initialized: true,
         ...action,
       };
     case 'additional':
       return {
+        ...state,
         initialized: true,
         chats: [...state.chats, ...action.chats],
         lastChat: action.lastChat,
       };
-    //       return (
-    //         { ...action.state, loading: false, connected: true } || initialState
-    //       );
-    //     case 'disconnected':
-    //       return initialState;
-    //     case 'loading':
-    //       return { ...initialState, loading: true };
+    case 'changeActive':
+      return {
+        ...state,
+        sender: action.sender,
+      };
+    case 'newChat':
+      localStorage.setItem(
+        `${action.userId}-sentChats`,
+        JSON.stringify([...state.sentChats, action.newChat])
+      );
+      return {
+        ...state,
+        sentChats: [...state.sentChats, action.newChat],
+      };
     default:
       return initialState;
   }

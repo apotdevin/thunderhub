@@ -17,9 +17,9 @@ export const sendMessage = {
   args: {
     ...defaultParams,
     publicKey: { type: new GraphQLNonNull(GraphQLString) },
+    message: { type: new GraphQLNonNull(GraphQLString) },
     messageType: { type: GraphQLString },
     tokens: { type: GraphQLInt },
-    message: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'sendMessage');

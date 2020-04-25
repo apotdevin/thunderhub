@@ -35,10 +35,15 @@ export const getFormatDate = (date: string) => {
 };
 
 export const getMessageDate = (date: string): string => {
-  const distance = formatDistanceToNowStrict(new Date(date));
+  let distance = formatDistanceToNowStrict(new Date(date));
 
   if (distance.indexOf('minute') >= 0 || distance.indexOf('second') >= 0) {
-    return `${distance} ago`;
+    distance = distance.replace('minutes', 'min');
+    distance = distance.replace('minute', 'min');
+    distance = distance.replace('seconds', 'sec');
+    distance = distance.replace('second', 'sec');
+    distance = distance.replace('0 sec', 'now');
+    return distance;
   }
   return format(new Date(date), 'HH:mm');
 };

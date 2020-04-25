@@ -68,7 +68,7 @@ const GenericStyles = css`
     strokeWidth ? strokeWidth : '2px'};
 `;
 
-const styleIcon = (icon: FunctionComponent) =>
+const styleIcon = (icon: HTMLObjectElement) =>
   styled(icon)`
     ${GenericStyles}
   `;
