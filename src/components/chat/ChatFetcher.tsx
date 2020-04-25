@@ -40,9 +40,12 @@ export const ChatFetcher = () => {
             }
           }
         }
-        if (index < 1) {
-          return;
-        }
+      } else {
+        index = 100;
+      }
+
+      if (index < 1) {
+        return;
       }
 
       if (pathname !== '/chat') {
@@ -52,7 +55,7 @@ export const ChatFetcher = () => {
       }
 
       const newMessages = messages.slice(0, index);
-      const last = newMessages[0].id;
+      const last = newMessages[0]?.id;
       dispatch({ type: 'additional', chats: newMessages, lastChat: last });
     }
   }, [data, loading, error]);
