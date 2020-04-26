@@ -31,7 +31,7 @@ const ChannelView = () => {
   });
 
   useEffect(() => {
-    if (data && data.getNodeInfo) {
+    if (data?.getNodeInfo) {
       const {
         active_channels_count,
         closed_channels_count,
@@ -45,10 +45,6 @@ const ChannelView = () => {
       });
     }
   }, [data]);
-
-  const showActive = amounts.pending > 0 || amounts.closed > 0;
-  const showPending = amounts.active > 0 || amounts.closed > 0;
-  const showClosed = amounts.pending > 0 || amounts.active > 0;
 
   const getView = () => {
     switch (view) {
@@ -77,21 +73,15 @@ const ChannelView = () => {
       <CardTitle>
         <SubTitle>{getTitle()}</SubTitle>
         <SingleLine>
-          {showActive && amounts.active > 0 && (
-            <ColorButton color={textColorMap[theme]} onClick={() => setView(1)}>
-              {`Open (${amounts.active})`}
-            </ColorButton>
-          )}
-          {showPending && amounts.pending > 0 && (
-            <ColorButton color={textColorMap[theme]} onClick={() => setView(2)}>
-              {`Pending (${amounts.pending})`}
-            </ColorButton>
-          )}
-          {showClosed && amounts.closed > 0 && (
-            <ColorButton color={textColorMap[theme]} onClick={() => setView(3)}>
-              {`Closed (${amounts.closed})`}
-            </ColorButton>
-          )}
+          <ColorButton color={textColorMap[theme]} onClick={() => setView(1)}>
+            {`Open (${amounts.active})`}
+          </ColorButton>
+          <ColorButton color={textColorMap[theme]} onClick={() => setView(2)}>
+            {`Pending (${amounts.pending})`}
+          </ColorButton>
+          <ColorButton color={textColorMap[theme]} onClick={() => setView(3)}>
+            {`Closed (${amounts.closed})`}
+          </ColorButton>
         </SingleLine>
       </CardTitle>
       {getView()}
