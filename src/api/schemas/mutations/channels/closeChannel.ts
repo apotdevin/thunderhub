@@ -36,6 +36,7 @@ export const closeChannel = {
         id: params.id,
         target_confirmations: params.targetConfirmations,
         tokens_per_vbyte: params.tokensPerVByte,
+        is_force_close: params.forceClose,
       });
       return {
         transactionId: info.transaction_id,
