@@ -83,6 +83,7 @@ const stateReducer = (state: State, action: ActionType): State => {
       return {
         ...state,
         sentChats: [...state.sentChats, action.newChat],
+        ...(action.sender && { sender: action.sender }),
       };
     default:
       return initialState;

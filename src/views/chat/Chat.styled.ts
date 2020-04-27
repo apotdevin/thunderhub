@@ -5,7 +5,16 @@ import {
   DarkSubTitle,
   SubCard,
 } from '../../components/generic/Styled';
-import { cardBorderColor, subCardColor, cardColor } from '../../styles/Themes';
+import {
+  cardBorderColor,
+  subCardColor,
+  mediaWidths,
+  textColor,
+  chatSubCardColor,
+  colorButtonBorder,
+  chatBubbleColor,
+  chatSentBubbleColor,
+} from '../../styles/Themes';
 
 export const ChatColumn = styled.div`
   display: flex;
@@ -26,6 +35,7 @@ export const ChatColumnWithInput = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
 `;
 
 export const ChatStyledLine = styled<{ rightAlign: boolean }>(DetailLine)`
@@ -52,8 +62,10 @@ export const ChatStyledDark = styled(DarkSubTitle)`
   margin-left: 18px;
 `;
 
-export const ChatStyledMessage = styled(OverflowText)`
-  background-color: ${cardColor};
+export const ChatStyledMessage = styled(OverflowText)<{ isSent?: boolean }>`
+  background-color: ${({ isSent }) =>
+    isSent ? chatSentBubbleColor : chatBubbleColor};
+  color: white;
   max-width: 60%;
   padding: 8px 16px;
   border-radius: 8px;
@@ -68,13 +80,49 @@ export const ChatContactColumn = styled.div`
   margin-right: 16px;
 `;
 
-export const ChatStyledSubCard = styled(SubCard)`
-  width: 100%;
-  cursor: pointer;
-`;
-
 export const ChatStyledStart = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+`;
+
+export const ChatTitle = styled.div`
+  width: 100%;
+  font-weight: bolder;
+  text-align: center;
+  color: ${textColor};
+  font-size: 24px;
+
+  @media (${mediaWidths.mobile}) {
+    font-size: 16px;
+  }
+`;
+
+export const ChatSubCard = styled(SubCard)<{ open?: boolean }>`
+  background: ${chatSubCardColor};
+  cursor: pointer;
+  width: 100%;
+
+  &:hover {
+    box-shadow: unset;
+    ${({ open }) =>
+      !open &&
+      css`
+        background-color: ${colorButtonBorder};
+        color: white;
+      `}
+  }
+`;
+
+export const ChatStyledSubTitle = styled.h4`
+  margin: 5px 0;
+  font-weight: 500;
+`;
+
+export const ChatBoxAlias = styled.div`
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  font-size: 18px;
+  margin-top: 8px;
 `;

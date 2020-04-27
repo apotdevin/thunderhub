@@ -39,6 +39,7 @@ export const ChatInput = ({
           isSent: true,
         },
         userId: id,
+        sender: customSender || sender,
       });
     }
   }, [loading, data]);

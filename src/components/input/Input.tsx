@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, ThemeSet } from 'styled-components';
 import {
   textColor,
   colorButtonBorder,
@@ -10,6 +10,7 @@ import {
 
 interface InputProps {
   color?: string;
+  backgroundColor?: ThemeSet | string;
   withMargin?: string;
   mobileMargin?: string;
   fullWidth?: boolean;
@@ -17,7 +18,7 @@ interface InputProps {
   maxWidth?: string;
 }
 
-export const StyledInput = styled.input`
+export const StyledInput = styled.input<InputProps>`
     padding: 5px;
     height: 30px;
     margin: 8px 0;
@@ -26,13 +27,14 @@ export const StyledInput = styled.input`
     border-radius: 5px;
     color: ${textColor};
     transition: all 0.5s ease;
-    background-color: ${inputBackgroundColor};
-    ${({ maxWidth }: InputProps) =>
+    background-color: ${({ backgroundColor }) =>
+      backgroundColor || inputBackgroundColor};
+    ${({ maxWidth }) =>
       maxWidth &&
       css`
         max-width: ${maxWidth};
       `}
-    width: ${({ fullWidth }: InputProps) => (fullWidth ? '100%' : 'auto')};
+    width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
     margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
 
     @media (${mediaWidths.mobile}) {
@@ -60,13 +62,13 @@ export const StyledInput = styled.input`
 
     &:hover {
         border: 1px solid
-            ${({ color }: InputProps) => (color ? color : colorButtonBorder)};
+            ${({ color }) => (color ? color : colorButtonBorder)};
     }
 
     &:focus {
         outline: none;
         border: 1px solid
-            ${({ color }: InputProps) => (color ? color : colorButtonBorder)};
+            ${({ color }) => (color ? color : colorButtonBorder)};
     }
 `;
 
@@ -75,6 +77,7 @@ interface InputCompProps {
   value?: number | string;
   placeholder?: string;
   color?: string;
+  backgroundColor?: ThemeSet | string;
   withMargin?: string;
   mobileMargin?: string;
   fullWidth?: boolean;
@@ -89,6 +92,7 @@ export const Input = ({
   value,
   placeholder,
   color,
+  backgroundColor,
   withMargin,
   mobileMargin,
   mobileFullWidth,
@@ -103,6 +107,7 @@ export const Input = ({
       placeholder={placeholder}
       value={value}
       color={color}
+      backgroundColor={backgroundColor}
       withMargin={withMargin}
       mobileMargin={mobileMargin}
       onChange={e => onChange(e)}

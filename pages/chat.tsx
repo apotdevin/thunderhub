@@ -13,6 +13,7 @@ import { ChatBox } from '../src/views/chat/ChatBox';
 import { ChatStart } from '../src/views/chat/ChatStart';
 import { useStatusState } from '../src/context/StatusContext';
 import { Text } from '../src/components/typography/Styled';
+import { LoadingCard } from '../src/components/loading/LoadingCard';
 
 const ChatLayout = styled.div`
   display: flex;
@@ -20,22 +21,19 @@ const ChatLayout = styled.div`
     withHeight && 'height: 600px'}
 `;
 
-const ChatTitle = styled.div`
-  width: 100%;
-  text-align: center;
-  font-size: 18px;
-  margin: 0 0 8px 8px;
-`;
-
 const ChatView = () => {
   const { minorVersion } = useStatusState();
-  const { chats, sender, sentChats } = useChatState();
+  const { chats, sender, sentChats, initialized } = useChatState();
   const bySender = separateBySender([...chats, ...sentChats]);
   const senders = getSenders(bySender);
 
   const [user, setUser] = React.useState('');
 
-  if (minorVersion < 9) {
+  if (!initialized) {
+    return <LoadingCard title={'Chats'} />;
+  }
+
+  if (minorVersion < 9 && initialized) {
     return (
       <CardWithTitle>
         <SingleLine>
@@ -54,9 +52,8 @@ const ChatView = () => {
 
   const renderChats = () => (
     <>
-      <ChatTitle>{user}</ChatTitle>
       <ChatLayout withHeight={user !== 'New Chat'}>
-        <Contacts contacts={senders} setUser={setUser} />
+        <Contacts contacts={senders} user={user} setUser={setUser} />
         {user === 'New Chat' ? (
           <ChatStart noTitle={true} />
         ) : (

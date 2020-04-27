@@ -2,14 +2,15 @@ import * as React from 'react';
 import { useGetNodeLazyQuery } from '../../generated/graphql';
 import { useAccount } from '../../context/AccountContext';
 import { useChatDispatch, useChatState } from '../../context/ChatContext';
-import { ChatStyledSubCard, ChatContactColumn } from './Chat.styled';
-import { DarkSubTitle } from '../../components/generic/Styled';
+import { ChatContactColumn, ChatSubCard } from './Chat.styled';
 
 export const ContactCard = ({
   contact,
+  user,
   setUser,
 }: {
   contact: { key: string; alias: string };
+  user: string;
   setUser: (active: string) => void;
 }) => {
   const { sender } = useChatState();
@@ -22,25 +23,31 @@ export const ContactCard = ({
   });
 
   React.useEffect(() => {
+    if (
+      contact.alias &&
+      contact.key.indexOf(sender) >= 0 &&
+      user !== 'New Chat'
+    ) {
+      setUser(contact.alias);
+    }
     if (!contact.alias) {
       getInfo();
     }
-  }, [contact]);
+  }, [contact, sender]);
 
   React.useEffect(() => {
     if (!loading && data?.getNode) {
       const { alias } = data.getNode;
       const name = alias && alias !== '' ? alias : contact.key.substring(0, 6);
       setNodeName(name);
-
       if (contact.key.indexOf(sender) >= 0) {
         setUser(name);
       }
     }
-  }, [data, loading]);
+  }, [data, loading, sender]);
 
   return (
-    <ChatStyledSubCard
+    <ChatSubCard
       onClick={() => {
         dispatch({ type: 'changeActive', sender: contact.key, userId: id });
         setUser(nodeName);
@@ -48,30 +55,31 @@ export const ContactCard = ({
       key={contact.key}
     >
       {nodeName}
-    </ChatStyledSubCard>
+    </ChatSubCard>
   );
 };
 
 interface ContactsProps {
+  user: string;
   contacts: { key: string; alias: string }[];
   setUser: (active: string) => void;
 }
 
-export const Contacts = ({ contacts, setUser }: ContactsProps) => {
+export const Contacts = ({ contacts, user, setUser }: ContactsProps) => {
   return (
     <ChatContactColumn>
       {contacts.map(contact => {
         if (contact) {
           return (
             <div style={{ width: '100%' }} key={contact.key}>
-              <ContactCard contact={contact} setUser={setUser} />
+              <ContactCard contact={contact} setUser={setUser} user={user} />
             </div>
           );
         }
       })}
-      <ChatStyledSubCard onClick={() => setUser('New Chat')}>
-        <DarkSubTitle>New Chat</DarkSubTitle>
-      </ChatStyledSubCard>
+      <ChatSubCard onClick={() => setUser('New Chat')}>
+        <div style={{ fontSize: '14px' }}>New Chat</div>
+      </ChatSubCard>
     </ChatContactColumn>
   );
 };

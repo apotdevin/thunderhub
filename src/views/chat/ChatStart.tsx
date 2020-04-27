@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Title } from '../../components/typography/Styled';
 import { Input } from '../../components/input/Input';
 import { useGetPeersQuery } from '../../generated/graphql';
 import { useAccount } from '../../context/AccountContext';
@@ -11,9 +10,14 @@ import {
   Separation,
 } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { XSvg } from '../../components/generic/Icons';
+import { XSvg, ChevronRight } from '../../components/generic/Icons';
 import { ChatInput } from './ChatInput';
-import { ChatStyledStart } from './Chat.styled';
+import {
+  ChatStyledStart,
+  ChatTitle,
+  ChatSubCard,
+  ChatStyledSubTitle,
+} from './Chat.styled';
 
 interface PeerProps {
   peer: any;
@@ -45,18 +49,24 @@ const PeerChatCard = ({ peer, index, setIndexOpen, indexOpen }: PeerProps) => {
   };
 
   return (
-    <SubCard>
-      <ResponsiveSingle>
-        <SubTitle>{alias || public_key.slice(0, 6)}</SubTitle>
-        <ColorButton
-          onClick={handleClick}
-          arrow={index === indexOpen ? false : true}
-        >
-          {index === indexOpen ? <XSvg /> : 'Chat'}
-        </ColorButton>
+    <ChatSubCard open={index === indexOpen}>
+      <ResponsiveSingle onClick={handleClick}>
+        <ChatStyledSubTitle>
+          {alias || public_key.slice(0, 6)}
+        </ChatStyledSubTitle>
+        <SingleLine>
+          {index === indexOpen ? (
+            <XSvg />
+          ) : (
+            <>
+              Chat
+              <ChevronRight />
+            </>
+          )}
+        </SingleLine>
       </ResponsiveSingle>
       {index === indexOpen && renderDetails()}
-    </SubCard>
+    </ChatSubCard>
   );
 };
 
@@ -104,7 +114,7 @@ export const ChatStart = ({ noTitle }: { noTitle?: boolean }) => {
 
   return (
     <ChatStyledStart>
-      {!noTitle && <Title>Start your first chat</Title>}
+      {!noTitle && <ChatTitle>Start your first chat</ChatTitle>}
       <SubTitle>Chat with a new peer</SubTitle>
       {!willSend && (
         <SingleLine>

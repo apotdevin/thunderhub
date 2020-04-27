@@ -11,13 +11,13 @@ export const ChatFetcher = () => {
 
   const { auth } = useAccount();
   const { pathname } = useRouter();
-  const { initialized, lastChat, chats, sentChats } = useChatState();
+  const { lastChat, chats, sentChats } = useChatState();
   const dispatch = useChatDispatch();
 
   const noChatsAvailable = chats.length <= 0 && sentChats.length <= 0;
 
   const { data, loading, error } = useGetMessagesQuery({
-    skip: !auth || !initialized || noChatsAvailable,
+    skip: !auth || noChatsAvailable,
     pollInterval: 1000,
     fetchPolicy: 'network-only',
     variables: { auth, initialize: !noChatsAvailable },

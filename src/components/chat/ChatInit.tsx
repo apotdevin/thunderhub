@@ -22,10 +22,14 @@ export const ChatInit = () => {
     if (storageChats !== '') {
       try {
         const savedChats = JSON.parse(storageChats);
-        dispatch({
-          type: 'initialized',
-          sentChats: savedChats,
-        });
+        if (savedChats.length > 0) {
+          const sender = savedChats[0].sender;
+          dispatch({
+            type: 'initialized',
+            sentChats: savedChats,
+            sender,
+          });
+        }
       } catch (error) {
         localStorage.removeItem('sentChats');
       }
@@ -36,8 +40,14 @@ export const ChatInit = () => {
   React.useEffect(() => {
     if (!initLoading && !initError && initData?.getMessages) {
       const { messages } = initData.getMessages;
-      const lastChat = messages[0]?.id || '';
-      const sender = messages[0]?.sender || '';
+
+      if (messages.length <= 0) {
+        dispatch({ type: 'initialized' });
+        return;
+      }
+
+      const lastChat = messages[0].id || '';
+      const sender = messages[0].sender || '';
 
       dispatch({
         type: 'initialized',

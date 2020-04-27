@@ -15,6 +15,7 @@ import {
   ChatColumnWithInput,
   ChatColumn,
   ChatDaySeparator,
+  ChatBoxAlias,
 } from './Chat.styled';
 
 interface ChatBox {
@@ -35,7 +36,7 @@ export const MessageCard = ({
   const { date, message: chatMessage, isSent } = message;
   return (
     <ChatStyledLine key={key} rightAlign={isSent}>
-      <ChatStyledMessage>{chatMessage}</ChatStyledMessage>
+      <ChatStyledMessage isSent={isSent}>{chatMessage}</ChatStyledMessage>
       <ChatStyledDark withMargin={'8px'}>
         <NoWrap>{getMessageDate(date)}</NoWrap>
       </ChatStyledDark>
@@ -71,6 +72,7 @@ export const ChatBox = ({ messages, alias }: ChatBox) => {
         })}
       </ChatColumn>
       <ChatInput withMargin={'0 8px 0 16px'} alias={alias} />
+      <ChatBoxAlias>{alias}</ChatBoxAlias>
     </ChatColumnWithInput>
   );
 };
