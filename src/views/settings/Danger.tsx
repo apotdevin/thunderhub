@@ -16,7 +16,7 @@ import {
   MultiButton,
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
-import { AlertCircle } from '../../components/generic/Icons';
+import { AlertCircle } from 'react-feather';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { useRouter } from 'next/router';
 import { appendBasePath } from '../../utils/basePath';
@@ -167,7 +167,7 @@ export const DangerView = () => {
         </SettingsLine>
         <StyledContainer>
           <FixedWidth>
-            <AlertCircle color={fontColors.grey7} />
+            <AlertCircle size={18} color={fontColors.grey7} />
           </FixedWidth>
           <CheckboxText>
             This does not affect in any way your node, only the ThunderHub

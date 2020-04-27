@@ -8,11 +8,7 @@ import { useAccount } from '../../../../context/AccountContext';
 import { CardContent } from '.';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
-import {
-  GitCommit,
-  DownArrow,
-  UpArrow,
-} from '../../../../components/generic/Icons';
+import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
 import styled from 'styled-components';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
@@ -175,21 +171,21 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
         selected={type === 'incoming'}
         onClick={() => setType('incoming')}
       >
-        <DownArrow />
+        <ArrowDown size={18} />
       </LeftButton>
       <TriButton
         selected={type === 'route'}
         onClick={() => setType('route')}
         color={color}
       >
-        <GitCommit />
+        <GitCommit size={18} />
       </TriButton>
       <RightButton
         selected={type === 'outgoing'}
         color={color}
         onClick={() => setType('outgoing')}
       >
-        <UpArrow />
+        <ArrowUp size={18} />
       </RightButton>
     </ButtonRow>
   );

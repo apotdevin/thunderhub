@@ -1,7 +1,7 @@
 import React from 'react';
 import { Checkbox } from '../../checkbox/Checkbox';
 import { CheckboxText, StyledContainer, FixedWidth } from '../Auth.styled';
-import { AlertCircle } from '../../generic/Icons';
+import { AlertCircle } from 'react-feather';
 import { fontColors } from '../../../styles/Themes';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import getConfig from 'next/config';
@@ -50,7 +50,7 @@ export const WarningBox = () => {
   return (
     <StyledContainer>
       <FixedWidth>
-        <AlertCircle color={fontColors.grey7} />
+        <AlertCircle size={18} color={fontColors.grey7} />
       </FixedWidth>
       <CheckboxText>
         Macaroons are handled by the ThunderHub server to connect to your LND

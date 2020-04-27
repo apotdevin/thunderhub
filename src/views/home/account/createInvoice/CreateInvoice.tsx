@@ -3,7 +3,7 @@ import {
   NoWrapTitle,
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
-import { Copy } from '../../../../components/generic/Icons';
+import { Copy } from 'react-feather';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
@@ -74,7 +74,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
           onCopy={() => toast.success('Request Copied')}
         >
           <ColorButton>
-            <Copy />
+            <Copy size={18} />
             Copy
           </ColorButton>
         </CopyToClipboard>

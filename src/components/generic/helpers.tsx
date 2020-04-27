@@ -6,7 +6,7 @@ import {
   formatDistanceToNowStrict,
   differenceInCalendarDays,
 } from 'date-fns';
-import { XSvg } from './Icons';
+import { X } from 'react-feather';
 
 export const getTransactionLink = (transaction: string) => {
   const link = `https://www.blockchain.com/btc/tx/${transaction}`;
@@ -93,7 +93,7 @@ export const renderLine = (
         <OverflowText>{content}</OverflowText>
         {deleteCallback && (
           <div style={{ margin: '0 0 -4px 4px' }} onClick={deleteCallback}>
-            <XSvg />
+            <X size={18} />
           </div>
         )}
       </SingleLine>

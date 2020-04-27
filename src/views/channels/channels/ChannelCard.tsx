@@ -31,7 +31,7 @@ import Modal from '../../../components/modal/ReactModal';
 import { CloseChannel } from '../../../components/modal/closeChannel/CloseChannel';
 import styled from 'styled-components';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
-import { DownArrow, UpArrow, EyeOff } from '../../../components/generic/Icons';
+import { ArrowDown, ArrowUp, EyeOff } from 'react-feather';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { getPrice } from '../../../components/price/Price';
 import { usePriceState } from '../../../context/PriceContext';
@@ -42,7 +42,7 @@ const IconPadding = styled.div`
 `;
 
 const getSymbol = (status: boolean) => {
-  return status ? <DownArrow /> : <UpArrow />;
+  return status ? <ArrowDown size={18} /> : <ArrowUp size={18} />;
 };
 
 const getPrivate = (status: boolean) => {

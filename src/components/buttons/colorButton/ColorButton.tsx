@@ -12,7 +12,7 @@ import {
   themeColors,
   mediaWidths,
 } from '../../../styles/Themes';
-import { ChevronRight } from '../../generic/Icons';
+import { ChevronRight } from 'react-feather';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 
 interface GeneralProps {
@@ -110,7 +110,7 @@ const DisabledButton = styled(GeneralButton)`
 
 const renderArrow = () => (
   <StyledArrow>
-    <ChevronRight size={'18px'} />
+    <ChevronRight size={18} />
   </StyledArrow>
 );
 

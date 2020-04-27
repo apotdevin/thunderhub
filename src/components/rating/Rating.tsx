@@ -1,5 +1,6 @@
 import React from 'react';
-import { Star, HalfStar } from '../../components/generic/Icons';
+import { Star } from 'react-feather';
+import { HalfStar } from '../../assets/half-star.svg';
 import { themeColors } from '../../styles/Themes';
 import styled from 'styled-components';
 
@@ -8,6 +9,9 @@ const StyledStar = styled(Star)`
 `;
 
 const StyledHalfStar = styled(HalfStar)`
+  height: 18px;
+  width: 18px;
+  stroke-width: 2px;
   margin-bottom: -1px;
 `;
 
@@ -45,7 +49,7 @@ export const Rating = ({
   for (let i = 0; i < 5; i += 1) {
     if (i < amount) {
       stars.push(
-        <StyledStar key={i} {...starConfig} fillcolor={themeColors.blue3} />
+        <StyledStar key={i} {...starConfig} fill={themeColors.blue3} />
       );
     } else if (hasHalf && i === amount) {
       stars.push(<StyledHalfStar key={i} {...starConfig} />);

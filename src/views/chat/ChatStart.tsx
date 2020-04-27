@@ -10,7 +10,7 @@ import {
   Separation,
 } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { XSvg, ChevronRight } from '../../components/generic/Icons';
+import { X, ChevronRight } from 'react-feather';
 import { ChatInput } from './ChatInput';
 import {
   ChatStyledStart,
@@ -56,11 +56,11 @@ const PeerChatCard = ({ peer, index, setIndexOpen, indexOpen }: PeerProps) => {
         </ChatStyledSubTitle>
         <SingleLine>
           {index === indexOpen ? (
-            <XSvg />
+            <X size={18} />
           ) : (
             <>
               Chat
-              <ChevronRight />
+              <ChevronRight size={18} />
             </>
           )}
         </SingleLine>
@@ -105,7 +105,7 @@ export const ChatStart = ({ noTitle }: { noTitle?: boolean }) => {
       <SingleLine>
         <SubTitle>{`Message to: ${publicKey.slice(0, 6)}...`}</SubTitle>
         <ColorButton onClick={() => setWillSend(p => !p)}>
-          <XSvg />
+          <X size={18} />
         </ColorButton>
       </SingleLine>
       <ChatInput alias={''} sender={publicKey} />
@@ -129,7 +129,7 @@ export const ChatStart = ({ noTitle }: { noTitle?: boolean }) => {
             arrow={willSend ? false : true}
             disabled={publicKey === ''}
           >
-            {willSend ? <XSvg /> : 'Chat'}
+            {willSend ? <X size={18} /> : 'Chat'}
           </ColorButton>
         </SingleLine>
       )}

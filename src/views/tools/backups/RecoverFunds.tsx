@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { SingleLine, DarkSubTitle } from '../../../components/generic/Styled';
-import { XSvg } from '../../../components/generic/Icons';
+import { X } from 'react-feather';
 import { SecureButton } from '../../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../../components/input/Input';
@@ -54,7 +54,7 @@ export const RecoverFunds = () => {
           arrow={!isPasting}
           onClick={() => setIsPasting(prev => !prev)}
         >
-          {isPasting ? <XSvg /> : 'Recover'}
+          {isPasting ? <X size={18} /> : 'Recover'}
         </ColorButton>
       </SingleLine>
       {isPasting && renderInput()}

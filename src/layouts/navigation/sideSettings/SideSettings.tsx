@@ -1,12 +1,7 @@
 import React from 'react';
 import { Separation, SingleLine } from '../../../components/generic/Styled';
 import { useSettings } from '../../../context/SettingsContext';
-import {
-  Sun,
-  Moon,
-  ChevronLeft,
-  ChevronRight,
-} from '../../../components/generic/Icons';
+import { Sun, Moon, ChevronLeft, ChevronRight } from 'react-feather';
 import styled from 'styled-components';
 import {
   progressBackground,
@@ -61,10 +56,6 @@ const currencyMap: { [key: string]: string } = {
   EUR: '€',
   USD: '$',
 };
-const themeMap: { [key: string]: string } = {
-  light: Sun,
-  dark: Moon,
-};
 
 const getNextValue = (array: string[], current: string): string => {
   const length = array.length;
@@ -115,7 +106,13 @@ export const SideSettings = ({
       }}
     >
       {type === 'currency' && <Symbol>{text}</Symbol>}
-      {type === 'theme' && <Icon />}
+      {type === 'theme' ? (
+        theme === 'light' ? (
+          <Sun size={18} />
+        ) : (
+          <Moon size={18} />
+        )
+      ) : null}
     </SelectedIcon>
   );
 
@@ -133,7 +130,7 @@ export const SideSettings = ({
               getNextValue(themeArray, theme),
               '',
               true,
-              themeMap[getNextValue(themeArray, theme)]
+              getNextValue(themeArray, theme) === 'light' ? Sun : Moon
             )}
           </IconRow>
         </>
@@ -185,7 +182,7 @@ export const SideSettings = ({
               setIsOpen({ sidebar: !isOpen });
             }}
           >
-            {isOpen ? <ChevronLeft /> : <ChevronRight />}
+            {isOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
           </SelectedIcon>
         </IconRow>
       )}

@@ -7,7 +7,7 @@ import {
   SubTitle,
   ResponsiveLine,
 } from '../../generic/Styled';
-import { Circle, ChevronRight } from '../../generic/Icons';
+import { Circle, ChevronRight } from 'react-feather';
 import styled from 'styled-components';
 import { useAccount } from '../../../context/AccountContext';
 import { saveSessionAuth } from '../../../utils/auth';
@@ -71,7 +71,7 @@ export const LoginModal = ({
     selected: boolean
   ) => (
     <ColorButton color={color} onClick={onClick}>
-      <Circle size={'10px'} fillcolor={selected ? textColorMap[theme] : ''} />
+      <Circle size={10} fill={selected ? textColorMap[theme] : ''} />
       <RadioText>{text}</RadioText>
     </ColorButton>
   );
@@ -103,7 +103,7 @@ export const LoginModal = ({
         withMargin={'16px 0 0'}
       >
         Unlock
-        <ChevronRight />
+        <ChevronRight size={18} />
       </ColorButton>
     </>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { SubTitle } from '../../generic/Styled';
-import { AlertTriangle } from '../../generic/Icons';
+import { AlertTriangle } from 'react-feather';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
@@ -40,7 +40,7 @@ export const RemovePeerModal = ({
 
   return (
     <WarningCard>
-      <AlertTriangle size={'32px'} color={'red'} />
+      <AlertTriangle size={32} color={'red'} />
       <SubTitle>Are you sure you want to remove this peer?</SubTitle>
       <SecureButton
         callback={removePeer}

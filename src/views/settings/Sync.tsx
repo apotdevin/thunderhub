@@ -12,7 +12,7 @@ import {
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { XSvg } from '../../components/generic/Icons';
+import { X } from 'react-feather';
 import { useAccount } from '../../context/AccountContext';
 import QRCode from 'qrcode.react';
 import styled from 'styled-components';
@@ -135,7 +135,7 @@ export const SyncSettings = () => {
               )
             }
           >
-            {state !== 'none' ? <XSvg /> : 'Sync'}
+            {state !== 'none' ? <X size={18} /> : 'Sync'}
           </ColorButton>
         </SettingsLine>
         {state === 'generate' && renderSettings()}

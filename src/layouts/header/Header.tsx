@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { headerColor, headerTextColor } from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
-import { Cpu, MenuIcon, XSvg, Circle } from '../../components/generic/Icons';
+import { Cpu, Menu, X, Circle } from 'react-feather';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
 import { useTransition, animated } from 'react-spring';
 import { Section } from '../../components/section/Section';
@@ -33,11 +33,11 @@ export const Header = () => {
           {transitions.map(({ item, key, props }) =>
             item ? (
               <animated.div key={key} style={props}>
-                <XSvg size={'24px'} />
+                <X size={24} />
               </animated.div>
             ) : (
               <animated.div key={key} style={props}>
-                <MenuIcon size={'24px'} />
+                <Menu size={24} />
               </animated.div>
             )
           )}
@@ -45,9 +45,9 @@ export const Header = () => {
       </ViewSwitch>
       <ViewSwitch hideMobile={true}>
         <Circle
-          size={'12px'}
+          size={12}
           strokeWidth={'0'}
-          fillcolor={syncedToChain ? '#95de64' : '#ff7875'}
+          color={syncedToChain ? '#95de64' : '#ff7875'}
         />
       </ViewSwitch>
     </>

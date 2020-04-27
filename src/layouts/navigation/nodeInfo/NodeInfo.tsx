@@ -6,12 +6,7 @@ import {
   SubTitle,
   Sub4Title,
 } from '../../../components/generic/Styled';
-import {
-  QuestionIcon,
-  Zap,
-  Anchor,
-  Circle,
-} from '../../../components/generic/Icons';
+import { HelpCircle, Zap, Anchor, Circle } from 'react-feather';
 import { getTooltipType } from '../../../components/generic/helpers';
 import { useAccount } from '../../../context/AccountContext';
 import { toast } from 'react-toastify';
@@ -124,8 +119,9 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         <SingleLine>
           <SubTitle>{alias}</SubTitle>
           <Circle
+            size={18}
             strokeWidth={'0'}
-            fillcolor={syncedToChain ? '#95de64' : '#ff7875'}
+            fill={syncedToChain ? '#95de64' : '#ff7875'}
           />
         </SingleLine>
         <SingleLine>
@@ -135,7 +131,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         <SingleLine>
           <Zap
             color={channelPending === 0 ? '#FFD300' : '#652EC7'}
-            fillcolor={channelPending === 0 ? '#FFD300' : '#652EC7'}
+            fill={channelPending === 0 ? '#FFD300' : '#652EC7'}
           />
           {channelPending > 0 ? (
             `${formatCCB} / ${formatPCB}`
@@ -144,7 +140,10 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
           )}
         </SingleLine>
         <SingleLine>
-          <Anchor color={chainPending === 0 ? '#FFD300' : '#652EC7'} />
+          <Anchor
+            size={18}
+            color={chainPending === 0 ? '#FFD300' : '#652EC7'}
+          />
           {chainPending > 0 ? (
             `${formatCB} / ${formatPB}`
           ) : (
@@ -161,21 +160,26 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         <Closed>
           <div data-tip data-for="full_balance_tip">
             <Circle
+              size={18}
               strokeWidth={'0'}
-              fillcolor={syncedToChain ? '#95de64' : '#ff7875'}
+              fill={syncedToChain ? '#95de64' : '#ff7875'}
             />
             {(channelPending > 0 || chainPending > 0) && (
               <div>
-                <Circle fillcolor={'#652EC7'} strokeWidth={'0'} />
+                <Circle size={18} fill={'#652EC7'} strokeWidth={'0'} />
               </div>
             )}
             <Margin>
               <Zap
-                fillcolor={channelPending === 0 ? '#FFD300' : '#652EC7'}
+                size={18}
+                fill={channelPending === 0 ? '#FFD300' : '#652EC7'}
                 color={channelPending === 0 ? '#FFD300' : '#652EC7'}
               />
             </Margin>
-            <Anchor color={chainPending === 0 ? '#FFD300' : '#652EC7'} />
+            <Anchor
+              size={18}
+              color={chainPending === 0 ? '#FFD300' : '#652EC7'}
+            />
           </div>
           <div data-tip data-for="full_node_tip">
             <SingleLine>{active_channels_count}</SingleLine>
@@ -214,18 +218,20 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   return (
     <>
       <Title>
-        <Alias bottomColor={color}>{alias}</Alias>
-        {isOpen && (
-          <QuestionIcon data-tip={`Version: ${version.split(' ')[0]}`} />
-        )}
+        <Alias
+          bottomColor={color}
+          data-tip={`Version: ${version.split(' ')[0]}`}
+        >
+          {alias}
+        </Alias>
       </Title>
       <Separation lineColor={unSelectedNavButton} />
       <Balance data-tip data-for="balance_tip">
-        <Zap color={channelPending === 0 ? '#FFD300' : '#652EC7'} />
+        <Zap size={18} color={channelPending === 0 ? '#FFD300' : '#652EC7'} />
         <AnimatedNumber amount={channelBalance} />
       </Balance>
       <Balance data-tip data-for="chain_balance_tip">
-        <Anchor color={chainPending === 0 ? '#FFD300' : '#652EC7'} />
+        <Anchor size={18} color={chainPending === 0 ? '#FFD300' : '#652EC7'} />
         <AnimatedNumber amount={chainBalance} />
       </Balance>
       <Balance

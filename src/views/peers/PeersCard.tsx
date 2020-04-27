@@ -16,7 +16,7 @@ import {
   getNodeLink,
 } from '../../components/generic/helpers';
 import styled from 'styled-components';
-import { DownArrow, UpArrow } from '../../components/generic/Icons';
+import { ArrowDown, ArrowUp } from 'react-feather';
 import {
   Progress,
   ProgressBar,
@@ -39,7 +39,7 @@ const IconPadding = styled.div`
 `;
 
 const getSymbol = (status: boolean) => {
-  return status ? <DownArrow /> : <UpArrow />;
+  return status ? <ArrowDown size={18} /> : <ArrowUp size={18} />;
 };
 
 interface PeerProps {

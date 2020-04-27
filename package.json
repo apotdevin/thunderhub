@@ -45,6 +45,7 @@
     "react": "^16.13.1",
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
+    "react-feather": "^2.0.8",
     "react-intersection-observer": "^8.26.1",
     "react-qr-reader": "^2.2.1",
     "react-spinners": "^0.8.1",

@@ -18,12 +18,12 @@ import {
   Shield,
   Crosshair,
   GitPullRequest,
-  LinkIcon,
-  RepeatIcon,
+  Link as LinkIcon,
+  Repeat,
   Users,
   CreditCard,
   MessageCircle,
-} from '../../components/generic/Icons';
+} from 'react-feather';
 import { useSettings } from '../../context/SettingsContext';
 import { useRouter } from 'next/router';
 import { Link } from '../../components/link/Link';
@@ -144,7 +144,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   ) => (
     <Link to={link}>
       <NavButton isOpen={sidebar} selected={pathname === link}>
-        <NavIcon />
+        <NavIcon size={18} />
         {open && <NavSeparation>{title}</NavSeparation>}
       </NavButton>
     </Link>
@@ -167,7 +167,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Home', HOME, Home, sidebar)}
       {renderNavButton('Peers', PEERS, Users, sidebar)}
       {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
-      {renderNavButton('Balance', BALANCE, RepeatIcon, sidebar)}
+      {renderNavButton('Balance', BALANCE, Repeat, sidebar)}
       {renderNavButton('Fees', FEES, Crosshair, sidebar)}
       {renderNavButton('Transactions', TRANS, Server, sidebar)}
       {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
@@ -184,7 +184,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Home', HOME, Home)}
       {renderBurgerNav('Peers', PEERS, Users)}
       {renderBurgerNav('Channels', CHANNEL, Cpu)}
-      {renderBurgerNav('Balance', BALANCE, RepeatIcon)}
+      {renderBurgerNav('Balance', BALANCE, Repeat)}
       {renderBurgerNav('Fees', FEES, Crosshair)}
       {renderBurgerNav('Transactions', TRANS, Server)}
       {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}

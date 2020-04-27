@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Card } from '../generic/Styled';
-import { ChevronLeft, ChevronRight } from '../generic/Icons';
+import { ChevronLeft, ChevronRight } from 'react-feather';
 import {
   inverseTextColor,
   buttonBorderColor,

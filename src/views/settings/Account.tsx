@@ -10,7 +10,7 @@ import {
 import { SettingsLine } from '../../../pages/settings';
 import { useAccount } from '../../context/AccountContext';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { XSvg } from '../../components/generic/Icons';
+import { X } from 'react-feather';
 import {
   MultiButton,
   SingleButton,
@@ -112,7 +112,7 @@ export const AccountSettings = () => {
               setWillAdd(prev => !prev);
             }}
           >
-            {willAdd ? <XSvg /> : 'Add New Account'}
+            {willAdd ? <X size={18} /> : 'Add New Account'}
           </ColorButton>
         </SettingsLine>
         {willAdd && (

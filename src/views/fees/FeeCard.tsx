@@ -15,7 +15,7 @@ import {
 } from '../../components/generic/CardGeneric';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
-import { ChevronRight } from '../../components/generic/Icons';
+import { ChevronRight } from 'react-feather';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { useSettings } from '../../context/SettingsContext';
 import { textColorMap } from '../../styles/Themes';
@@ -118,7 +118,7 @@ export const FeeCard = ({
             withMargin={'16px 0 0'}
           >
             Update Fees
-            <ChevronRight />
+            <ChevronRight size={18} />
           </SecureButton>
         </AdminSwitch>
       </>

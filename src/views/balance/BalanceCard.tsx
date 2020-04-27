@@ -6,7 +6,7 @@ import {
   ResponsiveLine,
 } from '../../components/generic/Styled';
 import { MainInfo } from '../../components/generic/CardGeneric';
-import { Circle, ChevronRight, XSvg } from '../../components/generic/Icons';
+import { Circle, ChevronRight, X } from 'react-feather';
 import { getPercent } from '../../utils/helpers';
 import { Price } from '../../components/price/Price';
 import { themeColors, chartColors } from '../../styles/Themes';
@@ -101,12 +101,16 @@ export const BalanceCard = ({
           <ChannelColumnSection>
             <SingleLine>
               <CirclePadding>
-                <Circle strokeWidth={'0'} fillcolor={getColor(balancedness)} />
+                <Circle
+                  size={18}
+                  strokeWidth={'0'}
+                  fill={getColor(balancedness)}
+                />
               </CirclePadding>
-              {withArrow && <ChevronRight />}
+              {withArrow && <ChevronRight size={18} />}
               {closeCallback && (
                 <ColorButton onClick={closeCallback}>
-                  <XSvg />
+                  <X size={18} />
                 </ColorButton>
               )}
             </SingleLine>

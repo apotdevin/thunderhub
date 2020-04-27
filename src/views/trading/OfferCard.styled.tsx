@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { unSelectedNavButton, mediaWidths } from '../../styles/Themes';
-import { ChevronRight } from '../../components/generic/Icons';
+import { ChevronRight } from 'react-feather';
 
 export const TradesAmount = styled.div`
   font-size: 14px;
