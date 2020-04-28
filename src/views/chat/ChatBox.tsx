@@ -6,7 +6,6 @@ import {
   getDayChange,
 } from '../../components/generic/helpers';
 import { sortBy } from 'underscore';
-import { NoWrap } from '../tools/Tools.styled';
 import { ChatInput } from './ChatInput';
 import {
   ChatStyledLine,
@@ -16,8 +15,9 @@ import {
   ChatColumn,
   ChatDaySeparator,
   ChatBoxAlias,
+  ChatFeePaid,
+  ChatFeeDateColumn,
 } from './Chat.styled';
-import { DarkSubTitle } from '../../components/generic/Styled';
 
 interface ChatBox {
   messages: MessageType[];
@@ -37,13 +37,15 @@ export const MessageCard = ({
   const { date, message: chatMessage, isSent, feePaid } = message;
   return (
     <ChatStyledLine key={key} rightAlign={isSent}>
-      {isSent && feePaid > 0 ? (
-        <DarkSubTitle>{`${feePaid} sats`}</DarkSubTitle>
-      ) : null}
       <ChatStyledMessage isSent={isSent}>{chatMessage}</ChatStyledMessage>
-      <ChatStyledDark withMargin={'8px'}>
-        <NoWrap>{getMessageDate(date)}</NoWrap>
-      </ChatStyledDark>
+      <ChatFeeDateColumn>
+        <ChatStyledDark withMargin={'8px'}>
+          {getMessageDate(date)}
+        </ChatStyledDark>
+        {isSent && feePaid > 0 ? (
+          <ChatFeePaid>{`${feePaid} sats`}</ChatFeePaid>
+        ) : null}
+      </ChatFeeDateColumn>
     </ChatStyledLine>
   );
 };

@@ -14,6 +14,7 @@ import {
   colorButtonBorder,
   chatBubbleColor,
   chatSentBubbleColor,
+  chartColors,
 } from '../../styles/Themes';
 
 export const ChatColumn = styled.div`
@@ -52,14 +53,14 @@ export const ChatDaySeparator = styled.div`
   width: 100%;
   font-size: 14px;
   text-align: center;
-  margin: 8px 16px;
+  margin: 8px 0;
   padding: 8px;
 `;
 
 export const ChatStyledDark = styled(DarkSubTitle)`
   font-size: 12px;
-  width: 50px;
-  margin-left: 18px;
+  margin: 0;
+  white-space: nowrap;
 `;
 
 export const ChatStyledMessage = styled(OverflowText)<{ isSent?: boolean }>`
@@ -115,7 +116,6 @@ export const ChatSubCard = styled(SubCard)<{ open?: boolean }>`
 `;
 
 export const ChatStyledSubTitle = styled.h4`
-  margin: 5px 0;
   font-weight: 500;
 `;
 
@@ -125,4 +125,17 @@ export const ChatBoxAlias = styled.div`
   width: 100%;
   font-size: 18px;
   margin-top: 8px;
+`;
+
+export const ChatFeePaid = styled.div`
+  font-size: 12px;
+  color: ${chartColors.orange2};
+`;
+
+export const ChatFeeDateColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 5px 16px;
+  width: 50px;
 `;
