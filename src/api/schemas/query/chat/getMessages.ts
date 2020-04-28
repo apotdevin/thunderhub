@@ -1,5 +1,5 @@
 import { GraphQLString, GraphQLBoolean } from 'graphql';
-import { getInvoices } from 'ln-service';
+import { getInvoices, verifyMessage } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
@@ -40,32 +40,58 @@ export const getMessages = {
       throw new Error(getErrorMsg(error));
     }
 
-    const filtered: [] = invoiceList.invoices.map(invoice => {
-      if (!invoice.is_confirmed) {
-        return;
-      }
+    const getFiltered = () =>
+      Promise.all(
+        invoiceList.invoices.map(async invoice => {
+          if (!invoice.is_confirmed) {
+            return;
+          }
 
-      const messages = invoice.payments[0].messages;
+          const messages = invoice.payments[0].messages;
 
-      let customRecords = {};
-      messages.map(message => {
-        const { type, value } = message;
+          let customRecords: { [key: string]: string } = {};
+          messages.map(message => {
+            const { type, value } = message;
 
-        const obj = decodeMessage({ type, value });
-        customRecords = { ...customRecords, ...obj };
-      });
+            const obj = decodeMessage({ type, value });
+            customRecords = { ...customRecords, ...obj };
+          });
 
-      if (Object.keys(customRecords).length <= 0) {
-        return;
-      }
+          if (Object.keys(customRecords).length <= 0) {
+            return;
+          }
 
-      return {
-        date: invoice.confirmed_at,
-        id: invoice.id,
-        ...customRecords,
-      };
-    });
+          let isVerified = false;
 
+          if (customRecords.signature) {
+            const messageToVerify = JSON.stringify({
+              sender: customRecords.sender,
+              message: customRecords.message,
+            });
+
+            const [error, { signed_by }] = await to(
+              verifyMessage({
+                lnd,
+                message: messageToVerify,
+                signature: customRecords.signature,
+              })
+            );
+
+            if (!error && signed_by === customRecords.sender) {
+              isVerified = true;
+            }
+          }
+
+          return {
+            date: invoice.confirmed_at,
+            id: invoice.id,
+            verified: isVerified,
+            ...customRecords,
+          };
+        })
+      );
+
+    const filtered = await getFiltered();
     const final = filtered.filter(message => !!message);
 
     // logger.warn('Invoices: %o', final);

@@ -303,6 +303,7 @@ export const MessagesType = new GraphQLObjectType({
   fields: () => ({
     date: { type: GraphQLString },
     id: { type: GraphQLString },
+    verified: { type: GraphQLBoolean },
     contentType: { type: GraphQLString },
     sender: { type: GraphQLString },
     alias: { type: GraphQLString },

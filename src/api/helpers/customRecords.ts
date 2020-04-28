@@ -19,6 +19,7 @@ interface CreateCustomRecordsProps {
   contentType: string;
   requestType: string;
   secret: string;
+  signature: string;
 }
 
 interface CustomRecordsProps {
@@ -33,6 +34,7 @@ export const createCustomRecords = ({
   contentType,
   requestType,
   secret,
+  signature,
 }: CreateCustomRecordsProps): CustomRecordsProps[] => {
   return [
     {
@@ -59,6 +61,10 @@ export const createCustomRecords = ({
       type: REQUEST_TYPE,
       value: bufferUtfToHex(requestType),
     },
+    {
+      type: SIGNATURE_TYPE,
+      value: bufferUtfToHex(signature),
+    },
   ];
 };
 
@@ -69,8 +75,8 @@ export const decodeMessage = ({
   switch (type) {
     case MESSAGE_TYPE:
       return { message: bufferHexToUtf(value) };
-    // case SIGNATURE_TYPE:
-    //   return { signature: Buffer.from(value, 'hex').toString('utf8') };
+    case SIGNATURE_TYPE:
+      return { signature: bufferHexToUtf(value) };
     case SENDER_TYPE:
       return { sender: value };
     case ALIAS_TYPE:

@@ -1,4 +1,9 @@
-import { payViaPaymentDetails, getWalletInfo, probeForRoute } from 'ln-service';
+import {
+  payViaPaymentDetails,
+  getWalletInfo,
+  probeForRoute,
+  signMessage,
+} from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLString, GraphQLNonNull, GraphQLInt } from 'graphql';
@@ -6,6 +11,14 @@ import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { createCustomRecords } from '../../../helpers/customRecords';
 import { randomBytes, createHash } from 'crypto';
+
+const to = promise => {
+  return promise
+    .then(data => {
+      return [null, data];
+    })
+    .catch(err => [err]);
+};
 
 export const sendMessage = {
   type: GraphQLInt,
@@ -53,12 +66,25 @@ export const sendMessage = {
     const secret = preimage.toString('hex');
     const id = createHash('sha256').update(preimage).digest().toString('hex');
 
+    const messageToSign = JSON.stringify({
+      sender: userKey,
+      message: params.message,
+    });
+
+    const [error, { signature }] = await to(
+      signMessage({ lnd, message: messageToSign })
+    );
+    if (error) {
+      throw new Error(getErrorMsg(error));
+    }
+
     const customRecords = createCustomRecords({
       message: params.message,
       sender: userKey,
       alias: userAlias,
       contentType: 'text',
       requestType: '',
+      signature,
       secret,
     });
 

@@ -548,6 +548,7 @@ export type MessagesType = {
   __typename?: 'messagesType';
   date?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
+  verified?: Maybe<Scalars['Boolean']>;
   contentType?: Maybe<Scalars['String']>;
   sender?: Maybe<Scalars['String']>;
   alias?: Maybe<Scalars['String']>;
@@ -1551,7 +1552,13 @@ export type GetMessagesQuery = { __typename?: 'Query' } & {
             Maybe<
               { __typename?: 'messagesType' } & Pick<
                 MessagesType,
-                'date' | 'contentType' | 'alias' | 'message' | 'id' | 'sender'
+                | 'date'
+                | 'contentType'
+                | 'alias'
+                | 'message'
+                | 'id'
+                | 'sender'
+                | 'verified'
               >
             >
           >
@@ -4235,6 +4242,7 @@ export const GetMessagesDocument = gql`
         message
         id
         sender
+        verified
       }
     }
   }

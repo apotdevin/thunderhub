@@ -14,7 +14,7 @@
     "release:test": "standard-version --dry-run",
     "analyze": "cross-env ANALYZE=true next build",
     "storybook": "start-storybook -p 6006 -c .storybook",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "keywords": [],
   "author": "",

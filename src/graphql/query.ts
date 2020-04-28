@@ -439,6 +439,7 @@ export const GET_MESSAGES = gql`
         message
         id
         sender
+        verified
       }
     }
   }

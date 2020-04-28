@@ -63,9 +63,16 @@ export const ChatStyledDark = styled(DarkSubTitle)`
   white-space: nowrap;
 `;
 
-export const ChatStyledMessage = styled(OverflowText)<{ isSent?: boolean }>`
-  background-color: ${({ isSent }) =>
-    isSent ? chatSentBubbleColor : chatBubbleColor};
+export const ChatStyledMessage = styled(OverflowText)<{
+  isSent?: boolean;
+  verified?: boolean;
+}>`
+  background-color: ${({ isSent, verified }) =>
+    !verified
+      ? chartColors.orange2
+      : isSent
+      ? chatSentBubbleColor
+      : chatBubbleColor};
   color: white;
   max-width: 60%;
   padding: 8px 16px;

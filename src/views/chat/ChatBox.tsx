@@ -34,10 +34,12 @@ export const MessageCard = ({
   if (!message.message) {
     return null;
   }
-  const { date, message: chatMessage, isSent, feePaid } = message;
+  const { date, message: chatMessage, isSent, feePaid, verified } = message;
   return (
     <ChatStyledLine key={key} rightAlign={isSent}>
-      <ChatStyledMessage isSent={isSent}>{chatMessage}</ChatStyledMessage>
+      <ChatStyledMessage verified={isSent || verified} isSent={isSent}>
+        {chatMessage}
+      </ChatStyledMessage>
       <ChatFeeDateColumn>
         <ChatStyledDark withMargin={'8px'}>
           {getMessageDate(date)}
