@@ -106,13 +106,7 @@ export const SideSettings = ({
       }}
     >
       {type === 'currency' && <Symbol>{text}</Symbol>}
-      {type === 'theme' ? (
-        theme === 'light' ? (
-          <Sun size={18} />
-        ) : (
-          <Moon size={18} />
-        )
-      ) : null}
+      {type === 'theme' && <Icon size={18} />}
     </SelectedIcon>
   );
 
