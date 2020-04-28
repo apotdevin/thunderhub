@@ -28,7 +28,7 @@ export const ChatInput = ({
   });
 
   React.useEffect(() => {
-    if (!loading && data?.sendMessage) {
+    if (!loading && data?.sendMessage >= 0) {
       setMessage('');
       dispatch({
         type: 'newChat',
@@ -37,6 +37,7 @@ export const ChatInput = ({
           message,
           sender: customSender || sender,
           isSent: true,
+          feePaid: data.sendMessage,
         },
         userId: id,
         sender: customSender || sender,
@@ -56,7 +57,12 @@ export const ChatInput = ({
         callback={sendMessage}
         loading={loading}
         disabled={loading}
-        variables={{ message, publicKey: customSender || sender, tokens: 30 }}
+        variables={{
+          message,
+          publicKey: customSender || sender,
+          tokens: 30,
+          maxFee: 100,
+        }}
         withMargin={'0 0 0 8px'}
       >
         Send

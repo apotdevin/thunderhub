@@ -6,7 +6,7 @@ import {
   SubTitle,
   Sub4Title,
 } from '../../../components/generic/Styled';
-import { HelpCircle, Zap, Anchor, Circle } from 'react-feather';
+import { Zap, Anchor, Circle } from 'react-feather';
 import { getTooltipType } from '../../../components/generic/helpers';
 import { useAccount } from '../../../context/AccountContext';
 import { toast } from 'react-toastify';

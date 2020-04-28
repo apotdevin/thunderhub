@@ -17,6 +17,7 @@ type SentChatProps = {
   id?: string;
   sender?: string;
   isSent?: boolean;
+  feePaid?: number;
 };
 
 type State = {

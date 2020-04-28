@@ -52,11 +52,11 @@ export const getErrorDetails = (error: any[]): string => {
   return details;
 };
 
-export const getErrorMsg = (error: any[]): string => {
-  const code = error[0];
-  const msg = error[1];
+export const getErrorMsg = (error: any[] | string): string => {
+  if (typeof error === 'string') {
+    return error;
+  }
 
   const details = getErrorDetails(error);
-
-  return JSON.stringify({ code, msg, details });
+  return details;
 };

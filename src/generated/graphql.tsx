@@ -567,7 +567,7 @@ export type Mutation = {
   sendToAddress?: Maybe<SendToType>;
   addPeer?: Maybe<Scalars['Boolean']>;
   removePeer?: Maybe<Scalars['Boolean']>;
-  sendMessage?: Maybe<Scalars['Boolean']>;
+  sendMessage?: Maybe<Scalars['Int']>;
 };
 
 export type MutationCloseChannelArgs = {
@@ -659,6 +659,7 @@ export type MutationSendMessageArgs = {
   message: Scalars['String'];
   messageType?: Maybe<Scalars['String']>;
   tokens?: Maybe<Scalars['Int']>;
+  maxFee?: Maybe<Scalars['Int']>;
 };
 
 export type CloseChannelType = {
@@ -977,6 +978,7 @@ export type SendMessageMutationVariables = {
   publicKey: Scalars['String'];
   message: Scalars['String'];
   tokens?: Maybe<Scalars['Int']>;
+  maxFee?: Maybe<Scalars['Int']>;
 };
 
 export type SendMessageMutation = { __typename?: 'Mutation' } & Pick<
@@ -2354,12 +2356,14 @@ export const SendMessageDocument = gql`
     $publicKey: String!
     $message: String!
     $tokens: Int
+    $maxFee: Int
   ) {
     sendMessage(
       auth: $auth
       publicKey: $publicKey
       message: $message
       tokens: $tokens
+      maxFee: $maxFee
     )
   }
 `;
@@ -2385,6 +2389,7 @@ export type SendMessageMutationFn = ApolloReactCommon.MutationFunction<
  *      publicKey: // value for 'publicKey'
  *      message: // value for 'message'
  *      tokens: // value for 'tokens'
+ *      maxFee: // value for 'maxFee'
  *   },
  * });
  */

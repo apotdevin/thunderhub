@@ -6,4 +6,5 @@ export interface MessageType {
   id?: string;
   sender?: string;
   isSent?: boolean;
+  feePaid?: number;
 }

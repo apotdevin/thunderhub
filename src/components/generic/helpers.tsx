@@ -5,6 +5,7 @@ import {
   format,
   formatDistanceToNowStrict,
   differenceInCalendarDays,
+  isToday,
 } from 'date-fns';
 import { X } from 'react-feather';
 
@@ -49,6 +50,10 @@ export const getMessageDate = (date: string): string => {
 };
 
 export const getDayChange = (date: string): string => {
+  if (isToday(new Date(date))) {
+    return 'Today';
+  }
+
   return format(new Date(date), 'dd/MM/yy');
 };
 
