@@ -8,10 +8,12 @@ export const ContactCard = ({
   contact,
   user,
   setUser,
+  setShow,
 }: {
   contact: { key: string; alias: string };
   user: string;
   setUser: (active: string) => void;
+  setShow: (active: boolean) => void;
 }) => {
   const { sender } = useChatState();
   const dispatch = useChatDispatch();
@@ -51,6 +53,7 @@ export const ContactCard = ({
       onClick={() => {
         dispatch({ type: 'changeActive', sender: contact.key, userId: id });
         setUser(nodeName);
+        setShow(false);
       }}
       key={contact.key}
     >
@@ -61,23 +64,41 @@ export const ContactCard = ({
 
 interface ContactsProps {
   user: string;
+  hide?: boolean;
   contacts: { key: string; alias: string }[];
   setUser: (active: string) => void;
+  setShow: (active: boolean) => void;
 }
 
-export const Contacts = ({ contacts, user, setUser }: ContactsProps) => {
+export const Contacts = ({
+  contacts,
+  user,
+  setUser,
+  setShow,
+  hide,
+}: ContactsProps) => {
   return (
-    <ChatContactColumn>
+    <ChatContactColumn hide={hide}>
       {contacts.map(contact => {
         if (contact) {
           return (
             <div style={{ width: '100%' }} key={contact.key}>
-              <ContactCard contact={contact} setUser={setUser} user={user} />
+              <ContactCard
+                contact={contact}
+                setUser={setUser}
+                user={user}
+                setShow={setShow}
+              />
             </div>
           );
         }
       })}
-      <ChatSubCard onClick={() => setUser('New Chat')}>
+      <ChatSubCard
+        onClick={() => {
+          setUser('New Chat');
+          setShow(false);
+        }}
+      >
         <div style={{ fontSize: '14px' }}>New Chat</div>
       </ChatSubCard>
     </ChatContactColumn>

@@ -31,13 +31,13 @@ export interface CardProps {
   mobileCardPadding?: string;
 }
 
-export const Card = styled.div`
-  padding: ${({ cardPadding }: CardProps) => cardPadding ?? '16px'};
+export const Card = styled.div<CardProps>`
+  padding: ${({ cardPadding }) => cardPadding ?? '16px'};
   background: ${cardColor};
   box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   border: 1px solid ${cardBorderColor};
-  margin-bottom: ${({ bottom }: CardProps) => (bottom ? bottom : '25px')};
+  margin-bottom: ${({ bottom }) => (bottom ? bottom : '25px')};
   width: 100%;
 
   @media (${mediaWidths.mobile}) {

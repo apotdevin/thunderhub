@@ -72,7 +72,7 @@ export const ChatBox = ({ messages, alias }: ChatBox) => {
               key={`${message.sender}/${message.date}`}
             >
               {index === sorted.length - 1 && (
-                <ChatDaySeparator>
+                <ChatDaySeparator isLast={true}>
                   {getDayChange(message.date)}
                 </ChatDaySeparator>
               )}
@@ -86,7 +86,7 @@ export const ChatBox = ({ messages, alias }: ChatBox) => {
           );
         })}
       </ChatColumn>
-      <ChatInput withMargin={'0 8px 0 16px'} alias={alias} />
+      <ChatInput withMargin={'0'} alias={alias} />
       <ChatBoxAlias>{alias}</ChatBoxAlias>
     </ChatColumnWithInput>
   );

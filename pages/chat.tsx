@@ -14,6 +14,9 @@ import { ChatStart } from '../src/views/chat/ChatStart';
 import { useStatusState } from '../src/context/StatusContext';
 import { Text } from '../src/components/typography/Styled';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
+import { ChatCard } from '../src/views/chat/Chat.styled';
+import { ViewSwitch } from '../src/components/viewSwitch/ViewSwitch';
+import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 
 const ChatLayout = styled.div`
   display: flex;
@@ -28,6 +31,7 @@ const ChatView = () => {
   const senders = getSenders(bySender);
 
   const [user, setUser] = React.useState('');
+  const [showContacts, setShowContacts] = React.useState(false);
 
   if (!initialized) {
     return <LoadingCard title={'Chats'} />;
@@ -50,29 +54,61 @@ const ChatView = () => {
     );
   }
 
-  const renderChats = () => (
-    <>
+  const renderChats = () => {
+    if (showContacts) {
+      return (
+        <Contacts
+          contacts={senders}
+          user={user}
+          setUser={setUser}
+          setShow={setShowContacts}
+        />
+      );
+    }
+    return (
       <ChatLayout withHeight={user !== 'New Chat'}>
-        <Contacts contacts={senders} user={user} setUser={setUser} />
+        <Contacts
+          contacts={senders}
+          user={user}
+          setUser={setUser}
+          setShow={setShowContacts}
+          hide={true}
+        />
         {user === 'New Chat' ? (
           <ChatStart noTitle={true} />
         ) : (
           <ChatBox messages={bySender[sender]} alias={user} />
         )}
       </ChatLayout>
-    </>
-  );
+    );
+  };
 
   return (
     <CardWithTitle>
-      <SubTitle>Chats</SubTitle>
-      <Card>
+      {!showContacts && user !== 'New Chat' && (
+        <>
+          <ViewSwitch hideMobile={true}>
+            <SingleLine>
+              <SubTitle>Chat</SubTitle>
+            </SingleLine>
+          </ViewSwitch>
+          <ViewSwitch>
+            <SingleLine>
+              <ColorButton onClick={() => setShowContacts(true)}>
+                Contacts
+              </ColorButton>
+              <SubTitle>{user}</SubTitle>
+            </SingleLine>
+          </ViewSwitch>
+        </>
+      )}
+      <ChatCard mobileCardPadding={'0'}>
         {chats.length <= 0 && sentChats.length <= 0 ? (
           <ChatStart />
         ) : (
           renderChats()
         )}
-      </Card>
+      </ChatCard>
     </CardWithTitle>
   );
 };

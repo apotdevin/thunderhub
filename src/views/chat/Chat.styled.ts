@@ -4,6 +4,7 @@ import {
   OverflowText,
   DarkSubTitle,
   SubCard,
+  Card,
 } from '../../components/generic/Styled';
 import {
   cardBorderColor,
@@ -15,6 +16,7 @@ import {
   chatBubbleColor,
   chatSentBubbleColor,
   chartColors,
+  backgroundColor,
 } from '../../styles/Themes';
 
 export const ChatColumn = styled.div`
@@ -30,6 +32,11 @@ export const ChatColumn = styled.div`
   height: 100%;
   min-height: 0;
   background-color: ${subCardColor};
+
+  @media (${mediaWidths.mobile}) {
+    border: none;
+    background-color: ${backgroundColor};
+  }
 `;
 
 export const ChatColumnWithInput = styled.div`
@@ -49,12 +56,16 @@ export const ChatStyledLine = styled<{ rightAlign: boolean }>(DetailLine)`
     `};
 `;
 
-export const ChatDaySeparator = styled.div`
+export const ChatDaySeparator = styled.div<{ isLast?: boolean }>`
   width: 100%;
   font-size: 14px;
   text-align: center;
-  margin: 8px 0;
+  margin: ${({ isLast }) => (isLast ? '32px 0 8px' : '8px 0')};
   padding: 8px;
+
+  @media (${mediaWidths.mobile}) {
+    margin: 8px 0;
+  }
 `;
 
 export const ChatStyledDark = styled(DarkSubTitle)`
@@ -77,21 +88,36 @@ export const ChatStyledMessage = styled(OverflowText)<{
   max-width: 60%;
   padding: 8px 16px;
   border-radius: 8px;
+
+  @media (${mediaWidths.mobile}) {
+    max-width: 80%;
+    margin: 0;
+  }
 `;
 
-export const ChatContactColumn = styled.div`
+export const ChatContactColumn = styled.div<{ hide?: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   width: 30%;
   margin-right: 16px;
+
+  @media (${mediaWidths.mobile}) {
+    width: 100%;
+    background-color: ${backgroundColor};
+    ${({ hide }) => hide && 'display: none;'}
+  }
 `;
 
 export const ChatStyledStart = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+
+  @media (${mediaWidths.mobile}) {
+    background-color: ${backgroundColor};
+  }
 `;
 
 export const ChatTitle = styled.div`
@@ -120,6 +146,10 @@ export const ChatSubCard = styled(SubCard)<{ open?: boolean }>`
         color: white;
       `}
   }
+
+  @media (${mediaWidths.mobile}) {
+    margin: 16px 0 -4px;
+  }
 `;
 
 export const ChatStyledSubTitle = styled.h4`
@@ -132,6 +162,10 @@ export const ChatBoxAlias = styled.div`
   width: 100%;
   font-size: 18px;
   margin-top: 8px;
+
+  @media (${mediaWidths.mobile}) {
+    display: none;
+  }
 `;
 
 export const ChatFeePaid = styled.div`
@@ -145,4 +179,14 @@ export const ChatFeeDateColumn = styled.div`
   justify-content: center;
   margin: 5px 16px;
   width: 50px;
+
+  @media (${mediaWidths.mobile}) {
+    display: none;
+  }
+`;
+
+export const ChatCard = styled(Card)`
+  @media (${mediaWidths.mobile}) {
+    border: none;
+  }
 `;
