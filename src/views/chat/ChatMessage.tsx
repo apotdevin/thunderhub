@@ -17,8 +17,7 @@ import { getErrorContent } from '../../utils/error';
 import { SecureWrapper } from '../../components/buttons/secureButton/SecureWrapper';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { useAccount } from '../../context/AccountContext';
-import { Circle, Send } from 'react-feather';
-import { LoadingCard } from '../../components/loading/LoadingCard';
+import { Circle } from 'react-feather';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 
 interface SendButtonProps {
@@ -134,7 +133,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
   }
 
   if (!verified && !isSent) {
-    color = chartColors.orange2;
+    color = 'black';
   }
 
   return (

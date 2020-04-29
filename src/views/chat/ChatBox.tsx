@@ -66,17 +66,17 @@ export const ChatBox = ({ messages, alias }: ChatBoxProps) => {
           const isDifferent = getIsDifferentDay(message.date, nextDate);
           return (
             <React.Fragment key={`${message.sender}/${message.date}`}>
-              {index === sorted.length - 1 && (
-                <ChatDaySeparator isLast={true}>
-                  {getDayChange(message.date)}
-                </ChatDaySeparator>
-              )}
+              <MessageCard message={message} />
               {isDifferent && (
                 <ChatDaySeparator>
                   {getDayChange(message.date)}
                 </ChatDaySeparator>
               )}
-              <MessageCard message={message} />
+              {index === sorted.length - 1 && (
+                <ChatDaySeparator isLast={true}>
+                  {getDayChange(message.date)}
+                </ChatDaySeparator>
+              )}
             </React.Fragment>
           );
         })}

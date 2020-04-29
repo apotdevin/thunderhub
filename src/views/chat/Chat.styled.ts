@@ -60,8 +60,7 @@ export const ChatDaySeparator = styled.div<{ isLast?: boolean }>`
   width: 100%;
   font-size: 14px;
   text-align: center;
-  margin: ${({ isLast }) => (isLast ? '32px 0 8px' : '8px 0')};
-  padding: 8px;
+  padding: ${({ isLast }) => (isLast ? '32px 0 8px' : '8px 0')};
 
   @media (${mediaWidths.mobile}) {
     margin: 8px 0;
