@@ -39,8 +39,12 @@ export const getAuthLnd = (auth: {
   return lnd;
 };
 
-export const getErrorDetails = (error: any[]): string => {
+export const getErrorDetails = (error: any): string => {
   let details = '';
+
+  if (error.message) {
+    return error.message;
+  }
   if (error.length > 2) {
     if (error[2].err) {
       details = error[2].err.details;

@@ -26,7 +26,6 @@ export const StyledInput = styled.input<InputProps>`
     background: none;
     border-radius: 5px;
     color: ${textColor};
-    transition: all 0.5s ease;
     background-color: ${({ backgroundColor }) =>
       backgroundColor || inputBackgroundColor};
     ${({ maxWidth }) =>

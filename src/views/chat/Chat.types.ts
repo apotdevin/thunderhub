@@ -8,4 +8,5 @@ export interface MessageType {
   isSent?: boolean;
   feePaid?: number;
   verified?: boolean;
+  tokens?: string;
 }

@@ -7,6 +7,7 @@ import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { useAccount } from '../../context/AccountContext';
+import { handleMessage } from './helpers/chatHelpers';
 
 export const ChatInput = ({
   alias,
@@ -27,6 +28,10 @@ export const ChatInput = ({
     onError: error => toast.error(getErrorContent(error)),
   });
 
+  const [formattedMessage, contentType, tokens, canSend] = handleMessage(
+    message
+  );
+
   React.useEffect(() => {
     if (!loading && data?.sendMessage >= 0) {
       setMessage('');
@@ -34,10 +39,12 @@ export const ChatInput = ({
         type: 'newChat',
         newChat: {
           date: new Date().toISOString(),
-          message,
+          message: formattedMessage,
           sender: customSender || sender,
           isSent: true,
           feePaid: data.sendMessage,
+          contentType,
+          tokens,
         },
         userId: id,
         sender: customSender || sender,
@@ -56,12 +63,13 @@ export const ChatInput = ({
       <SecureButton
         callback={sendMessage}
         loading={loading}
-        disabled={loading}
+        disabled={loading || message === '' || !canSend}
         variables={{
-          message,
+          message: formattedMessage,
+          messageType: contentType,
           publicKey: customSender || sender,
-          tokens: 30,
-          maxFee: 100,
+          ...(tokens > 0 && { tokens }),
+          maxFee: 50,
         }}
         withMargin={'0 0 0 8px'}
       >

@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled, { css, ThemeSet } from 'styled-components';
 import { DetailLine } from '../../components/generic/CardGeneric';
 import {
   OverflowText,
@@ -75,18 +75,13 @@ export const ChatStyledDark = styled(DarkSubTitle)`
 `;
 
 export const ChatStyledMessage = styled(OverflowText)<{
-  isSent?: boolean;
-  verified?: boolean;
+  bubbleColor: string | ThemeSet;
 }>`
-  background-color: ${({ isSent, verified }) =>
-    !verified
-      ? chartColors.orange2
-      : isSent
-      ? chatSentBubbleColor
-      : chatBubbleColor};
+  position: relative;
+  background-color: ${({ bubbleColor }) => bubbleColor || chatBubbleColor};
   color: white;
   max-width: 60%;
-  padding: 8px 16px;
+  padding: 12px 16px;
   border-radius: 8px;
 
   @media (${mediaWidths.mobile}) {
@@ -188,5 +183,30 @@ export const ChatFeeDateColumn = styled.div`
 export const ChatCard = styled(Card)`
   @media (${mediaWidths.mobile}) {
     border: none;
+  }
+`;
+
+export const ChatBubbleMessage = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const StatusChatDot = styled.div`
+  position: absolute;
+  top: -4px;
+  right: 3px;
+`;
+
+export const ChatSendButton = styled.div`
+  margin: 0 0 0 16px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: ${chatSentBubbleColor};
+  white-space: nowrap;
+  cursor: pointer;
+
+  :hover {
+    color: ${chatSentBubbleColor};
+    background: white;
   }
 `;

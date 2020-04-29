@@ -4,20 +4,23 @@ import {
   probeForRoute,
   signMessage,
 } from 'ln-service';
-import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLString, GraphQLNonNull, GraphQLInt } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { createCustomRecords } from '../../../helpers/customRecords';
 import { randomBytes, createHash } from 'crypto';
+import { logger } from '../../../helpers/logger';
 
 const to = promise => {
   return promise
     .then(data => {
-      return [null, data];
+      return data;
     })
-    .catch(err => [err]);
+    .catch(err => {
+      logger.error('%o', err);
+      throw new Error(getErrorMsg(err));
+    });
 };
 
 export const sendMessage = {
@@ -34,33 +37,40 @@ export const sendMessage = {
     await requestLimiter(context.ip, 'sendMessage');
     const lnd = getAuthLnd(params.auth);
 
-    let userAlias = '';
-    let userKey = '';
-
     if (params.maxFee) {
-      try {
-        const { route } = await probeForRoute({
+      const tokens = Math.max(params.tokens, 100);
+      const { route } = await to(
+        probeForRoute({
           destination: params.publicKey,
           lnd,
-          tokens: params.tokens,
-        });
-        if (route.safe_fee > params.maxFee) {
-          throw 'Higher fee limit must be set';
-        }
-      } catch (error) {
-        throw new Error(getErrorMsg(error));
+          tokens,
+        })
+      );
+
+      if (!route) {
+        throw new Error('No route found');
+      }
+
+      if (route.safe_fee > params.maxFee) {
+        throw new Error('Higher fee limit must be set');
       }
     }
 
-    try {
-      const nodeInfo = await getWalletInfo({
-        lnd,
-      });
-      userAlias = nodeInfo.alias;
-      userKey = nodeInfo.public_key;
-    } catch (error) {
-      throw new Error(getErrorMsg(error));
+    let satsToSend = params.tokens || 1;
+    let messageToSend = params.message;
+    if (params.messageType === 'paymentrequest') {
+      satsToSend = 1;
+      messageToSend = `${params.tokens},${params.message}`;
     }
+
+    const nodeInfo = await to(
+      getWalletInfo({
+        lnd,
+      })
+    );
+
+    const userAlias = nodeInfo.alias;
+    const userKey = nodeInfo.public_key;
 
     const preimage = randomBytes(32);
     const secret = preimage.toString('hex');
@@ -68,38 +78,32 @@ export const sendMessage = {
 
     const messageToSign = JSON.stringify({
       sender: userKey,
-      message: params.message,
+      message: messageToSend,
     });
 
-    const [error, { signature }] = await to(
+    const { signature } = await to(
       signMessage({ lnd, message: messageToSign })
     );
-    if (error) {
-      throw new Error(getErrorMsg(error));
-    }
 
     const customRecords = createCustomRecords({
-      message: params.message,
+      message: messageToSend,
       sender: userKey,
       alias: userAlias,
-      contentType: 'text',
+      contentType: params.messageType || 'text',
       requestType: '',
       signature,
       secret,
     });
 
-    try {
-      const { safe_fee } = await payViaPaymentDetails({
+    const { safe_fee } = await to(
+      payViaPaymentDetails({
         id,
         lnd,
-        tokens: params.tokens,
+        tokens: satsToSend,
         destination: params.publicKey,
         messages: customRecords,
-      });
-      return safe_fee;
-    } catch (error) {
-      params.logger && logger.error('Error paying request: %o', error);
-      throw new Error(getErrorMsg(error));
-    }
+      })
+    );
+    return safe_fee;
   },
 };

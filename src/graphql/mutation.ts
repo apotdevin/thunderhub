@@ -141,6 +141,7 @@ export const SEND_MESSAGE = gql`
     $auth: authType!
     $publicKey: String!
     $message: String!
+    $messageType: String
     $tokens: Int
     $maxFee: Int
   ) {
@@ -148,6 +149,7 @@ export const SEND_MESSAGE = gql`
       auth: $auth
       publicKey: $publicKey
       message: $message
+      messageType: $messageType
       tokens: $tokens
       maxFee: $maxFee
     )

@@ -7,6 +7,7 @@ type ChatProps = {
   message?: string;
   id?: string;
   sender?: string;
+  tokens?: number;
 };
 
 type SentChatProps = {
@@ -18,6 +19,7 @@ type SentChatProps = {
   sender?: string;
   isSent?: boolean;
   feePaid?: number;
+  tokens?: number;
 };
 
 type State = {

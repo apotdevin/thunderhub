@@ -308,5 +308,6 @@ export const MessagesType = new GraphQLObjectType({
     sender: { type: GraphQLString },
     alias: { type: GraphQLString },
     message: { type: GraphQLString },
+    tokens: { type: GraphQLInt },
   }),
 });

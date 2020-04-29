@@ -440,6 +440,7 @@ export const GET_MESSAGES = gql`
         id
         sender
         verified
+        tokens
       }
     }
   }

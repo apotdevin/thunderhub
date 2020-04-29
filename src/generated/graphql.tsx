@@ -553,6 +553,7 @@ export type MessagesType = {
   sender?: Maybe<Scalars['String']>;
   alias?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
+  tokens?: Maybe<Scalars['Int']>;
 };
 
 export type Mutation = {
@@ -978,6 +979,7 @@ export type SendMessageMutationVariables = {
   auth: AuthType;
   publicKey: Scalars['String'];
   message: Scalars['String'];
+  messageType?: Maybe<Scalars['String']>;
   tokens?: Maybe<Scalars['Int']>;
   maxFee?: Maybe<Scalars['Int']>;
 };
@@ -1559,6 +1561,7 @@ export type GetMessagesQuery = { __typename?: 'Query' } & {
                 | 'id'
                 | 'sender'
                 | 'verified'
+                | 'tokens'
               >
             >
           >
@@ -2362,6 +2365,7 @@ export const SendMessageDocument = gql`
     $auth: authType!
     $publicKey: String!
     $message: String!
+    $messageType: String
     $tokens: Int
     $maxFee: Int
   ) {
@@ -2369,6 +2373,7 @@ export const SendMessageDocument = gql`
       auth: $auth
       publicKey: $publicKey
       message: $message
+      messageType: $messageType
       tokens: $tokens
       maxFee: $maxFee
     )
@@ -2395,6 +2400,7 @@ export type SendMessageMutationFn = ApolloReactCommon.MutationFunction<
  *      auth: // value for 'auth'
  *      publicKey: // value for 'publicKey'
  *      message: // value for 'message'
+ *      messageType: // value for 'messageType'
  *      tokens: // value for 'tokens'
  *      maxFee: // value for 'maxFee'
  *   },
@@ -4243,6 +4249,7 @@ export const GetMessagesDocument = gql`
         id
         sender
         verified
+        tokens
       }
     }
   }

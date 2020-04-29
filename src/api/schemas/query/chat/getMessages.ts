@@ -85,6 +85,7 @@ export const getMessages = {
           return {
             date: invoice.confirmed_at,
             id: invoice.id,
+            tokens: invoice.tokens,
             verified: isVerified,
             ...customRecords,
           };

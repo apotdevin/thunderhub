@@ -9,7 +9,6 @@ import { sortBy } from 'underscore';
 import { ChatInput } from './ChatInput';
 import {
   ChatStyledLine,
-  ChatStyledMessage,
   ChatStyledDark,
   ChatColumnWithInput,
   ChatColumn,
@@ -18,11 +17,7 @@ import {
   ChatFeePaid,
   ChatFeeDateColumn,
 } from './Chat.styled';
-
-interface ChatBox {
-  messages: MessageType[];
-  alias: string;
-}
+import { ChatBubble } from './ChatMessage';
 
 export const MessageCard = ({
   message,
@@ -34,12 +29,10 @@ export const MessageCard = ({
   if (!message.message) {
     return null;
   }
-  const { date, message: chatMessage, isSent, feePaid, verified } = message;
+  const { date, isSent, feePaid } = message;
   return (
     <ChatStyledLine key={key} rightAlign={isSent}>
-      <ChatStyledMessage verified={isSent || verified} isSent={isSent}>
-        {chatMessage}
-      </ChatStyledMessage>
+      <ChatBubble message={message} />
       <ChatFeeDateColumn>
         <ChatStyledDark withMargin={'8px'}>
           {getMessageDate(date)}
@@ -52,7 +45,12 @@ export const MessageCard = ({
   );
 };
 
-export const ChatBox = ({ messages, alias }: ChatBox) => {
+interface ChatBoxProps {
+  messages: MessageType[];
+  alias: string;
+}
+
+export const ChatBox = ({ messages, alias }: ChatBoxProps) => {
   if (!messages) {
     return null;
   }
@@ -67,10 +65,7 @@ export const ChatBox = ({ messages, alias }: ChatBox) => {
             index < sorted.length - 1 ? sorted[index + 1].date : message.date;
           const isDifferent = getIsDifferentDay(message.date, nextDate);
           return (
-            <div
-              style={{ width: '100%' }}
-              key={`${message.sender}/${message.date}`}
-            >
+            <React.Fragment key={`${message.sender}/${message.date}`}>
               {index === sorted.length - 1 && (
                 <ChatDaySeparator isLast={true}>
                   {getDayChange(message.date)}
@@ -82,7 +77,7 @@ export const ChatBox = ({ messages, alias }: ChatBox) => {
                 </ChatDaySeparator>
               )}
               <MessageCard message={message} />
-            </div>
+            </React.Fragment>
           );
         })}
       </ChatColumn>
