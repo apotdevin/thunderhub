@@ -16,6 +16,7 @@ import {
   ChatBoxAlias,
   ChatFeePaid,
   ChatFeeDateColumn,
+  ChatBoxTopAlias,
 } from './Chat.styled';
 import { ChatBubble } from './ChatBubble';
 import { useChatState } from '../../context/ChatContext';
@@ -87,7 +88,9 @@ export const ChatBox = ({ messages, alias }: ChatBoxProps) => {
         })}
       </ChatColumn>
       <ChatInput withMargin={'0'} alias={alias} />
-      <ChatBoxAlias>{alias}</ChatBoxAlias>
+      <ChatBoxAlias>
+        <ChatBoxTopAlias>{alias}</ChatBoxTopAlias>
+      </ChatBoxAlias>
     </ChatColumnWithInput>
   );
 };

@@ -159,7 +159,8 @@ export const ChatStyledSubTitle = styled.h4`
 
 export const ChatBoxAlias = styled.div`
   position: absolute;
-  text-align: center;
+  display: flex;
+  justify-content: center;
   width: 100%;
   font-size: 18px;
   margin-top: 8px;
@@ -167,6 +168,12 @@ export const ChatBoxAlias = styled.div`
   @media (${mediaWidths.mobile}) {
     display: none;
   }
+`;
+
+export const ChatBoxTopAlias = styled.div`
+  background: ${subCardColor};
+  padding: 4px 16px;
+  border-radius: 8px;
 `;
 
 export const ChatFeePaid = styled.div`
