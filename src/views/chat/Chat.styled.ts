@@ -1,11 +1,5 @@
 import styled, { css, ThemeSet } from 'styled-components';
-import { DetailLine } from '../../components/generic/CardGeneric';
-import {
-  OverflowText,
-  DarkSubTitle,
-  SubCard,
-  Card,
-} from '../../components/generic/Styled';
+import { DarkSubTitle, SubCard, Card } from '../../components/generic/Styled';
 import {
   cardBorderColor,
   subCardColor,
@@ -17,6 +11,7 @@ import {
   chatSentBubbleColor,
   chartColors,
   backgroundColor,
+  unSelectedNavButton,
 } from '../../styles/Themes';
 
 export const ChatColumn = styled.div`
@@ -222,4 +217,14 @@ export const ChatSendButton = styled.div`
     color: ${chatSentBubbleColor};
     background: white;
   }
+`;
+
+export const ChatContactDate = styled.div`
+  font-size: 12px;
+  color: ${unSelectedNavButton};
+`;
+
+export const ChatSubText = styled(ChatContactDate)`
+  overflow: hidden;
+  max-height: 32px;
 `;

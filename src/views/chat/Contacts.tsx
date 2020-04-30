@@ -2,7 +2,16 @@ import * as React from 'react';
 import { useGetNodeLazyQuery } from '../../generated/graphql';
 import { useAccount } from '../../context/AccountContext';
 import { useChatDispatch, useChatState } from '../../context/ChatContext';
-import { ChatContactColumn, ChatSubCard } from './Chat.styled';
+import {
+  ChatContactColumn,
+  ChatSubCard,
+  ChatContactDate,
+  ChatSubText,
+} from './Chat.styled';
+import { SingleLine } from '../../components/generic/Styled';
+import { getMessageDate } from '../../components/generic/helpers';
+import { MessageType } from './Chat.types';
+import { getSubMessage } from '../../utils/chat';
 
 export const ContactCard = ({
   contact,
@@ -10,29 +19,34 @@ export const ContactCard = ({
   setUser,
   setShow,
 }: {
-  contact: { key: string; alias: string };
+  contact: MessageType;
   user: string;
   setUser: (active: string) => void;
   setShow: (active: boolean) => void;
 }) => {
+  const {
+    alias,
+    sender: contactSender,
+    message,
+    contentType,
+    tokens,
+    isSent,
+    date,
+  } = contact;
   const { sender } = useChatState();
   const dispatch = useChatDispatch();
-  const [nodeName, setNodeName] = React.useState(contact.alias || '');
+  const [nodeName, setNodeName] = React.useState(alias || '');
 
   const { auth, id } = useAccount();
   const [getInfo, { data, loading }] = useGetNodeLazyQuery({
-    variables: { auth, publicKey: contact.key },
+    variables: { auth, publicKey: contactSender },
   });
 
   React.useEffect(() => {
-    if (
-      contact.alias &&
-      contact.key.indexOf(sender) >= 0 &&
-      user !== 'New Chat'
-    ) {
-      setUser(contact.alias);
+    if (alias && contactSender.indexOf(sender) >= 0 && user !== 'New Chat') {
+      setUser(alias);
     }
-    if (!contact.alias) {
+    if (!alias) {
       getInfo();
     }
   }, [contact, sender]);
@@ -40,9 +54,10 @@ export const ContactCard = ({
   React.useEffect(() => {
     if (!loading && data?.getNode) {
       const { alias } = data.getNode;
-      const name = alias && alias !== '' ? alias : contact.key.substring(0, 6);
+      const name =
+        alias && alias !== '' ? alias : contactSender.substring(0, 6);
       setNodeName(name);
-      if (contact.key.indexOf(sender) >= 0) {
+      if (contactSender.indexOf(sender) >= 0) {
         setUser(name);
       }
     }
@@ -51,13 +66,19 @@ export const ContactCard = ({
   return (
     <ChatSubCard
       onClick={() => {
-        dispatch({ type: 'changeActive', sender: contact.key, userId: id });
+        dispatch({ type: 'changeActive', sender: contactSender, userId: id });
         setUser(nodeName);
         setShow(false);
       }}
-      key={contact.key}
+      key={contactSender}
     >
-      {nodeName}
+      <SingleLine>
+        {nodeName}
+        <ChatContactDate>{getMessageDate(date, 'dd/MM/yy')}</ChatContactDate>
+      </SingleLine>
+      <ChatSubText>
+        {getSubMessage(contentType, message, tokens, isSent)}
+      </ChatSubText>
     </ChatSubCard>
   );
 };
@@ -65,7 +86,7 @@ export const ContactCard = ({
 interface ContactsProps {
   user: string;
   hide?: boolean;
-  contacts: { key: string; alias: string }[];
+  contacts: MessageType[];
   setUser: (active: string) => void;
   setShow: (active: boolean) => void;
 }
@@ -82,14 +103,14 @@ export const Contacts = ({
       {contacts.map(contact => {
         if (contact) {
           return (
-            <div style={{ width: '100%' }} key={contact.key}>
+            <React.Fragment key={contact.sender}>
               <ContactCard
                 contact={contact}
                 setUser={setUser}
                 user={user}
                 setShow={setShow}
               />
-            </div>
+            </React.Fragment>
           );
         }
       })}

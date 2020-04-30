@@ -35,7 +35,7 @@ export const getFormatDate = (date: string) => {
   return format(new Date(date), 'dd/MM/yyyy - HH:mm:ss');
 };
 
-export const getMessageDate = (date: string): string => {
+export const getMessageDate = (date: string, formatType?: string): string => {
   let distance = formatDistanceToNowStrict(new Date(date));
 
   if (distance.indexOf('minute') >= 0 || distance.indexOf('second') >= 0) {
@@ -46,7 +46,7 @@ export const getMessageDate = (date: string): string => {
     distance = distance.replace('0 sec', 'now');
     return distance;
   }
-  return format(new Date(date), 'HH:mm');
+  return format(new Date(date), formatType || 'HH:mm');
 };
 
 export const getDayChange = (date: string): string => {
