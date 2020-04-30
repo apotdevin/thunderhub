@@ -46,14 +46,23 @@ export const ChatColumnWithInput = styled.div`
   position: relative;
 `;
 
-export const ChatStyledLine = styled<{ rightAlign: boolean }>(DetailLine)`
+export const ChatStyledLine = styled.div<{ rightAlign: boolean }>`
+  padding: 0 8px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 100%;
-  align-items: center;
+  align-items: flex-start;
   ${({ rightAlign }) =>
     rightAlign &&
     css`
-      justify-content: flex-end;
+      align-items: flex-end;
     `};
+
+  @media (${mediaWidths.mobile}) {
+    padding: 0;
+  }
 `;
 
 export const ChatDaySeparator = styled.div<{ isLast?: boolean }>`
@@ -73,9 +82,12 @@ export const ChatStyledDark = styled(DarkSubTitle)`
   white-space: nowrap;
 `;
 
-export const ChatStyledMessage = styled(OverflowText)<{
+interface ChatStyledMessageProps {
   bubbleColor: string | ThemeSet;
-}>`
+}
+
+export const ChatStyledMessage = styled.div<ChatStyledMessageProps>`
+  margin: 0;
   position: relative;
   background-color: ${({ bubbleColor }) => bubbleColor || chatBubbleColor};
   color: white;
@@ -163,20 +175,15 @@ export const ChatBoxAlias = styled.div`
 `;
 
 export const ChatFeePaid = styled.div`
+  margin-right: 8px;
   font-size: 12px;
   color: ${chartColors.orange2};
 `;
 
 export const ChatFeeDateColumn = styled.div`
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  margin: 5px 16px;
-  width: 50px;
-
-  @media (${mediaWidths.mobile}) {
-    display: none;
-  }
+  margin: 0 0 8px;
 `;
 
 export const ChatCard = styled(Card)`
@@ -188,11 +195,18 @@ export const ChatCard = styled(Card)`
 export const ChatBubbleMessage = styled.div`
   display: flex;
   align-items: center;
+
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 `;
 
 export const StatusChatDot = styled.div`
   position: absolute;
-  top: -4px;
+  top: -3px;
   right: 3px;
 `;
 

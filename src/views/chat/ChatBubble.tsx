@@ -129,7 +129,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
   }
 
   if (contentType === 'paymentrequest') {
-    dotColor = 'yellow';
+    dotColor = 'white';
   }
 
   if (!verified && !isSent) {
@@ -144,7 +144,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
       </ChatBubbleMessage>
       {dotColor !== '' && (
         <StatusChatDot>
-          <Circle size={8} color={dotColor} fill={dotColor} />
+          <Circle size={10} color={dotColor} fill={dotColor} />
         </StatusChatDot>
       )}
     </ChatStyledMessage>

@@ -39,28 +39,16 @@ export const getAuthLnd = (auth: {
   return lnd;
 };
 
-export const getErrorDetails = (error: any): string => {
-  let details = '';
-
-  if (error.message) {
-    return error.message;
-  }
-  if (error.length > 2) {
-    if (error[2].err) {
-      details = error[2].err.details;
-    } else if (error[2].details) {
-      details = error[2].details;
-    }
-  }
-
-  return details;
-};
-
 export const getErrorMsg = (error: any[] | string): string => {
   if (typeof error === 'string') {
     return error;
   }
+  if (error.length === 2) {
+    return error[1];
+  }
+  if (error.length > 2) {
+    return error[2].err?.message || 'Error';
+  }
 
-  const details = getErrorDetails(error);
-  return details;
+  return 'Error';
 };

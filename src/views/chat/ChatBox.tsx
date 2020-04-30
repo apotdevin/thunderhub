@@ -17,7 +17,7 @@ import {
   ChatFeePaid,
   ChatFeeDateColumn,
 } from './Chat.styled';
-import { ChatBubble } from './ChatMessage';
+import { ChatBubble } from './ChatBubble';
 
 export const MessageCard = ({
   message,
@@ -34,12 +34,12 @@ export const MessageCard = ({
     <ChatStyledLine key={key} rightAlign={isSent}>
       <ChatBubble message={message} />
       <ChatFeeDateColumn>
-        <ChatStyledDark withMargin={'8px'}>
-          {getMessageDate(date)}
-        </ChatStyledDark>
         {isSent && feePaid > 0 ? (
           <ChatFeePaid>{`${feePaid} sats`}</ChatFeePaid>
         ) : null}
+        <ChatStyledDark withMargin={'8px'}>
+          {getMessageDate(date)}
+        </ChatStyledDark>
       </ChatFeeDateColumn>
     </ChatStyledLine>
   );

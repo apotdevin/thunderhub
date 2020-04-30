@@ -38,7 +38,7 @@ export const sendMessage = {
     const lnd = getAuthLnd(params.auth);
 
     if (params.maxFee) {
-      const tokens = Math.max(params.tokens, 100);
+      const tokens = Math.max(params.tokens || 100, 100);
       const { route } = await to(
         probeForRoute({
           destination: params.publicKey,

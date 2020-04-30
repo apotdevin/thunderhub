@@ -1,8 +1,9 @@
 import { pay as payRequest } from 'ln-service';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLBoolean } from 'graphql';
-import { getAuthLnd, getErrorDetails } from '../../../helpers/helpers';
+import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { logger } from '../../../helpers/logger';
 
 export const adminCheck = {
   type: GraphQLBoolean,
@@ -20,10 +21,11 @@ export const adminCheck = {
         request: 'admin check',
       });
     } catch (error) {
-      const details = getErrorDetails(error);
-      if (details.includes('invalid character in string')) return true;
+      const errorMessage = getErrorMsg(error);
+      if (errorMessage.indexOf('invalid character in string') >= 0) return true;
 
-      throw new Error();
+      logger.error('%o', error);
+      throw new Error(errorMessage);
     }
   },
 };
