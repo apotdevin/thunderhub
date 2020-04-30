@@ -19,6 +19,9 @@ import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { useAccount } from '../../context/AccountContext';
 import { Circle } from 'react-feather';
 import ScaleLoader from 'react-spinners/ScaleLoader';
+import { useSettings } from '../../context/SettingsContext';
+import { usePriceState } from '../../context/PriceContext';
+import { getPrice } from '../../components/price/Price';
 
 interface SendButtonProps {
   amount: number;
@@ -76,6 +79,10 @@ interface ChatBubbleProps {
 }
 
 export const ChatBubble = ({ message }: ChatBubbleProps) => {
+  const { currency } = useSettings();
+  const priceContext = usePriceState();
+  const format = getPrice(currency, priceContext);
+
   const {
     contentType,
     message: chatMessage,
@@ -95,37 +102,37 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
     if (contentType === 'payment') {
       dotColor = chartColors.red;
       if (chatMessage === 'payment') {
-        textMessage = `You sent ${tokens} sats`;
+        textMessage = `You sent ${format({ amount: tokens })}`;
       } else {
-        textMessage = `${chatMessage} (${tokens} sats)`;
+        textMessage = `${chatMessage} (${format({ amount: tokens })})`;
       }
     } else if (contentType === 'paymentrequest') {
       if (chatMessage === 'paymentrequest') {
-        textMessage = `You requested ${tokens} sats`;
+        textMessage = `You requested ${format({ amount: tokens })}`;
       } else {
-        textMessage = `${chatMessage} (${tokens} sats)`;
+        textMessage = `${chatMessage} (${format({ amount: tokens })})`;
       }
     }
   } else {
     if (contentType === 'payment') {
       dotColor = chartColors.green;
       if (chatMessage === 'payment' || !chatMessage) {
-        textMessage = `You received ${tokens} sats`;
+        textMessage = `You received ${format({ amount: tokens })}`;
       } else {
-        textMessage = `${chatMessage} (${tokens} sats)`;
+        textMessage = `${chatMessage} (${format({ amount: tokens })})`;
       }
     } else if (contentType === 'paymentrequest') {
       showButton = true;
       const messageSplit = chatMessage.split(',');
       amount = verified
         ? Number(messageSplit[0])
-        : Math.abs(Number(messageSplit[0]) / 1000);
+        : Math.abs(Number(messageSplit[0]) / 1000); // This is only for Juggernaut compatibility.
       const finalMessage = [...messageSplit];
       finalMessage.shift();
       if (messageSplit[1] === 'paymentrequest' || !messageSplit[1]) {
-        textMessage = `${amount} sats requested from you`;
+        textMessage = `${format({ amount })} requested from you`;
       } else {
-        textMessage = `${finalMessage.join(' ')} (${amount} sats)`;
+        textMessage = `${finalMessage.join(' ')} (${format({ amount })})`;
       }
     }
   }
