@@ -43,12 +43,12 @@ export const getErrorMsg = (error: any[] | string): string => {
   if (typeof error === 'string') {
     return error;
   }
-  if (error.length === 2) {
+  if (error.length >= 2) {
     return error[1];
   }
-  if (error.length > 2) {
-    return error[2].err?.message || 'Error';
-  }
+  // if (error.length > 2) {
+  //   return error[2].err?.message || 'Error';
+  // }
 
   return 'Error';
 };
