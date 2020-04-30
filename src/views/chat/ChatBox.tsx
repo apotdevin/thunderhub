@@ -29,7 +29,7 @@ export const MessageCard = ({
   key?: string;
 }) => {
   const { hideFee, hideNonVerified } = useChatState();
-  if (!message.message) {
+  if (!message.message && message.contentType === 'text') {
     return null;
   }
   const { date, isSent, feePaid, verified } = message;

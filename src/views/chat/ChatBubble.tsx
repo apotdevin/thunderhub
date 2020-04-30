@@ -109,7 +109,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
   } else {
     if (contentType === 'payment') {
       dotColor = chartColors.green;
-      if (chatMessage === 'payment') {
+      if (chatMessage === 'payment' || !chatMessage) {
         textMessage = `You received ${tokens} sats`;
       } else {
         textMessage = `${chatMessage} (${tokens} sats)`;
@@ -117,10 +117,12 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
     } else if (contentType === 'paymentrequest') {
       showButton = true;
       const messageSplit = chatMessage.split(',');
-      amount = Number(messageSplit[0]);
+      amount = verified
+        ? Number(messageSplit[0])
+        : Math.abs(Number(messageSplit[0]) / 1000);
       const finalMessage = [...messageSplit];
       finalMessage.shift();
-      if (messageSplit[1] === 'paymentrequest') {
+      if (messageSplit[1] === 'paymentrequest' || !messageSplit[1]) {
         textMessage = `${amount} sats requested from you`;
       } else {
         textMessage = `${finalMessage.join(' ')} (${amount} sats)`;

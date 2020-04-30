@@ -6,7 +6,8 @@ const getMessage = error => {
     case 'PaymentRejectedByDestination':
       return 'This node does not accept keysend payments.';
     case 'FailedToFindPayableRouteToDestination':
-      return 'Did not find a route to this node. Try opening a direct channel to them.';
+    case 'NoRouteFound':
+      return 'Did not find a route to this node. Try opening a direct channel to them with sufficient liquidity.';
     default:
       return error;
   }

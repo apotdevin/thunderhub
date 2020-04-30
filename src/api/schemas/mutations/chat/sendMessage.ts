@@ -48,7 +48,7 @@ export const sendMessage = {
       );
 
       if (!route) {
-        throw new Error('No route found');
+        throw new Error('NoRouteFound');
       }
 
       if (route.safe_fee > params.maxFee) {
