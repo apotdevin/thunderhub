@@ -1,0 +1,192 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.14.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-LODASH-567746:
+    - ln-service > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - styled-components > @babel/traverse > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - next > @babel/types > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - next > babel-plugin-transform-define > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - styled-components > babel-plugin-styled-components > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-area > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-axis > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-bar > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-box-plot > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-brush-container > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-brush-line > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-candlestick > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-polar-axis > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-shared-events > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-chart > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-cursor-container > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-selection-container > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-tooltip > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-voronoi-container > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-zoom-container > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-errorbar > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-group > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-legend > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-line > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-pie > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-scatter > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-stack > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-voronoi > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - winston > async > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - graphql-rate-limit > graphql-shield > yup > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - styled-components > @babel/traverse > @babel/generator > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - next > @babel/preset-env > @babel/plugin-transform-block-scoping > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - next > styled-jsx > @babel/types > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-area > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-axis > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-bar > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-box-plot > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-brush-container > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-brush-line > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-candlestick > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-polar-axis > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-shared-events > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-chart > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-cursor-container > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-selection-container > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-tooltip > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-voronoi-container > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-zoom-container > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-errorbar > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-group > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-legend > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-line > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-pie > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-scatter > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-stack > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-voronoi > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-chart > victory-axis > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-brush-container > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-chart > victory-polar-axis > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-chart > victory-shared-events > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-group > victory-shared-events > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-stack > victory-shared-events > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-cursor-container > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-selection-container > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-voronoi-container > victory-tooltip > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-voronoi-container > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-zoom-container > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - styled-components > @babel/traverse > @babel/helper-split-export-declaration > @babel/types > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - next > @babel/preset-env > @babel/plugin-transform-classes > @babel/helper-define-map > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - styled-components > babel-plugin-styled-components > @babel/helper-annotate-as-pure > @babel/types > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-chart > victory-axis > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-brush-container > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-chart > victory-polar-axis > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-chart > victory-shared-events > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-group > victory-shared-events > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-stack > victory-shared-events > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-cursor-container > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-selection-container > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-voronoi-container > victory-tooltip > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-voronoi-container > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-zoom-container > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-voronoi-container > victory-tooltip > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - next > @babel/preset-env > @babel/plugin-transform-unicode-regex > @babel/helper-create-regexp-features-plugin > @babel/helper-regex > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - styled-components > @babel/traverse > @babel/helper-function-name > @babel/helper-get-function-arity > @babel/types > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - victory > victory-create-container > victory-voronoi-container > victory-tooltip > victory-core > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - next > @babel/preset-env > @babel/plugin-transform-exponentiation-operator > @babel/helper-builder-binary-assignment-operator-visitor > @babel/helper-explode-assignable-expression > @babel/traverse > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - react-spinners > @emotion/core > @emotion/css > babel-plugin-emotion > @babel/helper-module-imports > @babel/types > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - next > @babel/preset-env > @babel/plugin-transform-exponentiation-operator > @babel/helper-builder-binary-assignment-operator-visitor > @babel/helper-explode-assignable-expression > @babel/traverse > @babel/generator > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - next > @babel/preset-env > @babel/plugin-transform-exponentiation-operator > @babel/helper-builder-binary-assignment-operator-visitor > @babel/helper-explode-assignable-expression > @babel/traverse > @babel/helper-split-export-declaration > @babel/types > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
+    - next > @babel/preset-env > @babel/plugin-transform-exponentiation-operator > @babel/helper-builder-binary-assignment-operator-visitor > @babel/helper-explode-assignable-expression > @babel/traverse > @babel/helper-function-name > @babel/helper-get-function-arity > @babel/types > lodash:
+        patched: '2020-04-30T21:11:18.793Z'
