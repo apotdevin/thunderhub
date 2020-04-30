@@ -19,6 +19,10 @@ export const ChatInit = () => {
 
   React.useEffect(() => {
     const storageChats = localStorage.getItem(`${id}-sentChats`) || '';
+    const hideFee = localStorage.getItem('hideFee') === 'true' ? true : false;
+    const hideNonVerified =
+      localStorage.getItem('hideNonVerified') === 'true' ? true : false;
+
     if (storageChats !== '') {
       try {
         const savedChats = JSON.parse(storageChats);
@@ -28,6 +32,8 @@ export const ChatInit = () => {
             type: 'initialized',
             sentChats: savedChats,
             sender,
+            hideFee,
+            hideNonVerified,
           });
         }
       } catch (error) {

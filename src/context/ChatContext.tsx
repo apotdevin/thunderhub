@@ -28,6 +28,8 @@ type State = {
   sentChats: SentChatProps[];
   lastChat: string;
   sender: string;
+  hideFee: boolean;
+  hideNonVerified: boolean;
 };
 
 type ActionType = {
@@ -36,6 +38,8 @@ type ActionType = {
     | 'additional'
     | 'changeActive'
     | 'newChat'
+    | 'hideNonVerified'
+    | 'hideFee'
     | 'disconnected';
   chats?: ChatProps[];
   sentChats?: SentChatProps[];
@@ -43,6 +47,8 @@ type ActionType = {
   lastChat?: string;
   sender?: string;
   userId?: string;
+  hideFee?: boolean;
+  hideNonVerified?: boolean;
 };
 
 type Dispatch = (action: ActionType) => void;
@@ -56,6 +62,8 @@ const initialState = {
   lastChat: '',
   sender: '',
   sentChats: [],
+  hideFee: false,
+  hideNonVerified: false,
 };
 
 const stateReducer = (state: State, action: ActionType): State => {
@@ -87,6 +95,20 @@ const stateReducer = (state: State, action: ActionType): State => {
         ...state,
         sentChats: [...state.sentChats, action.newChat],
         ...(action.sender && { sender: action.sender }),
+      };
+    case 'hideFee':
+      const hideFee = !state.hideFee;
+      localStorage.setItem('hideFee', JSON.stringify(hideFee));
+      return {
+        ...state,
+        hideFee,
+      };
+    case 'hideNonVerified':
+      const hideNonVerified = !state.hideNonVerified;
+      localStorage.setItem('hideNonVerified', JSON.stringify(hideNonVerified));
+      return {
+        ...state,
+        hideNonVerified,
       };
     default:
       return initialState;

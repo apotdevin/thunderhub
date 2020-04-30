@@ -18,6 +18,7 @@ import {
   ChatFeeDateColumn,
 } from './Chat.styled';
 import { ChatBubble } from './ChatBubble';
+import { useChatState } from '../../context/ChatContext';
 
 export const MessageCard = ({
   message,
@@ -26,15 +27,19 @@ export const MessageCard = ({
   message: MessageType;
   key?: string;
 }) => {
+  const { hideFee, hideNonVerified } = useChatState();
   if (!message.message) {
     return null;
   }
-  const { date, isSent, feePaid } = message;
+  const { date, isSent, feePaid, verified } = message;
+
+  if (hideNonVerified && !verified && !isSent) return null;
+
   return (
     <ChatStyledLine key={key} rightAlign={isSent}>
       <ChatBubble message={message} />
       <ChatFeeDateColumn>
-        {isSent && feePaid > 0 ? (
+        {!hideFee && isSent && feePaid > 0 ? (
           <ChatFeePaid>{`${feePaid} sats`}</ChatFeePaid>
         ) : null}
         <ChatStyledDark withMargin={'8px'}>

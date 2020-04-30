@@ -110,7 +110,7 @@
   "lint-staged": {
     "*.+(ts|tsx)": [
       "prettier --write",
-      "jest --findRelatedTests",
+      "jest --bail --findRelatedTests",
       "tslint"
     ]
   }
