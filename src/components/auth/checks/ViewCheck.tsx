@@ -34,6 +34,7 @@ export const ViewCheck = ({
   const [confirmed, setConfirmed] = useState(false);
 
   const { data, loading } = useGetCanConnectQuery({
+    fetchPolicy: 'network-only',
     variables: { auth: { host, macaroon: viewOnly ?? admin ?? '', cert } },
     onCompleted: () => setConfirmed(true),
     onError: () => setConfirmed(false),

@@ -115,7 +115,7 @@ export const FlowBox = () => {
           <ButtonRow {...buttonProps} />
         </CardTitle>
         <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
-          <p>{`Your node has not forwarded any payments ${timeMap[isTime]}.`}</p>
+          <p>{`Your node has not received or sent any payments ${timeMap[isTime]}.`}</p>
         </Card>
       </CardWithTitle>
     );

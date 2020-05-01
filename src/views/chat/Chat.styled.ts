@@ -233,5 +233,5 @@ export const ChatContactDate = styled.div`
 
 export const ChatSubText = styled(ChatContactDate)`
   overflow: hidden;
-  max-height: 32px;
+  max-height: 34px;
 `;

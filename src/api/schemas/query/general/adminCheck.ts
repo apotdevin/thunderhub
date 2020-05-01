@@ -21,10 +21,16 @@ export const adminCheck = {
         request: 'admin check',
       });
     } catch (error) {
-      const errorMessage = getErrorMsg(error);
-      if (errorMessage.indexOf('invalid character in string') >= 0) return true;
+      params.logger && logger.error('%o', error);
+      if (error.length >= 2) {
+        if (error[2]?.err?.details?.indexOf('permission denied') >= 0) {
+          throw new Error('PermissionDenied');
+        }
+      }
 
-      logger.error('%o', error);
+      const errorMessage = getErrorMsg(error);
+      if (errorMessage.indexOf('UnexpectedSendPaymentError') >= 0) return true;
+
       throw new Error(errorMessage);
     }
   },
