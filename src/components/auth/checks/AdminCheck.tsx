@@ -2,7 +2,7 @@ import React from 'react';
 import { SingleLine, Sub4Title } from '../../generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { themeColors } from '../../../styles/Themes';
-import { XSvg, Check } from '../../generic/Icons';
+import { X, Check } from 'react-feather';
 import { useGetCanAdminQuery } from '../../../generated/graphql';
 
 type AdminProps = {
@@ -30,9 +30,9 @@ export const AdminCheck = ({ host, admin, cert, setChecked }: AdminProps) => {
       return <ScaleLoader height={20} color={themeColors.blue3} />;
     }
     if (data?.adminCheck) {
-      return <Check />;
+      return <Check size={18} />;
     }
-    return <XSvg />;
+    return <X size={18} />;
   };
 
   return (

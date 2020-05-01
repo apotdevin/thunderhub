@@ -17,6 +17,11 @@ export interface PaymentsProps {
   payments: PaymentProps[];
 }
 
+interface InvoiceMessagesType {
+  type: string;
+  value: string;
+}
+
 export interface InvoicePaymentProps {
   confirmed_at: string;
   created_at: string;
@@ -25,6 +30,7 @@ export interface InvoicePaymentProps {
   is_canceled: boolean;
   is_confirmed: boolean;
   is_held: boolean;
+  messages: InvoiceMessagesType[];
   mtokens: string;
   pending_index: number;
   tokens: number;

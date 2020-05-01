@@ -41,6 +41,11 @@ export const Price = ({
   return <>{getValue({ amount, ...priceProps, breakNumber })}</>;
 };
 
+interface GetPriceProps {
+  amount: number | string;
+  breakNumber?: boolean;
+}
+
 export const getPrice = (
   currency: string,
   priceContext: {
@@ -48,13 +53,7 @@ export const getPrice = (
     loading: boolean;
     prices?: { [key: string]: { last: number; symbol: string } };
   }
-) => ({
-  amount,
-  breakNumber = false,
-}: {
-  amount: number | string;
-  breakNumber?: boolean;
-}) => {
+) => ({ amount, breakNumber = false }: GetPriceProps): string => {
   const { prices, loading, error } = priceContext;
 
   let priceProps: PriceProps = {

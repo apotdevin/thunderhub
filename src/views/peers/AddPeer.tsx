@@ -11,7 +11,7 @@ import {
   Sub4Title,
 } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { XSvg } from '../../components/generic/Icons';
+import { X } from 'react-feather';
 import {
   MultiButton,
   SingleButton,
@@ -102,7 +102,7 @@ export const AddPeer = () => {
             withMargin={'4px 0'}
             onClick={() => setIsAdding(prev => !prev)}
           >
-            {isAdding ? <XSvg /> : 'Add'}
+            {isAdding ? <X size={18} /> : 'Add'}
           </ColorButton>
         </SingleLine>
         {isAdding && renderAdding()}

@@ -7,7 +7,7 @@ import {
   DarkSubTitle,
   Separation,
 } from '../../../components/generic/Styled';
-import { XSvg, Copy } from '../../../components/generic/Icons';
+import { X, Copy } from 'react-feather';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { NoWrap } from './Messages';
 import { Input } from '../../../components/input/Input';
@@ -80,7 +80,7 @@ export const VerifyMessage = () => {
         onCopy={() => toast.success('Public Node Key Copied')}
       >
         <ColorButton>
-          <Copy />
+          <Copy size={18} />
           Copy
         </ColorButton>
       </CopyToClipboard>
@@ -97,7 +97,7 @@ export const VerifyMessage = () => {
           arrow={!isPasting}
           onClick={() => setIsPasting(prev => !prev)}
         >
-          {isPasting ? <XSvg /> : 'Verify'}
+          {isPasting ? <X size={18} /> : 'Verify'}
         </ColorButton>
       </SingleLine>
       {isPasting && renderInput()}

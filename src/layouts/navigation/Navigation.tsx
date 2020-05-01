@@ -18,11 +18,12 @@ import {
   Shield,
   Crosshair,
   GitPullRequest,
-  LinkIcon,
-  RepeatIcon,
+  Link as LinkIcon,
+  Repeat,
   Users,
   CreditCard,
-} from '../../components/generic/Icons';
+  MessageCircle,
+} from 'react-feather';
 import { useSettings } from '../../context/SettingsContext';
 import { useRouter } from 'next/router';
 import { Link } from '../../components/link/Link';
@@ -123,6 +124,7 @@ const TOOLS = '/tools';
 const SETTINGS = '/settings';
 const FEES = '/fees';
 const TRADER = '/trading';
+const CHAT = '/chat';
 
 interface NavigationProps {
   isBurger?: boolean;
@@ -142,7 +144,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   ) => (
     <Link to={link}>
       <NavButton isOpen={sidebar} selected={pathname === link}>
-        <NavIcon />
+        <NavIcon size={18} />
         {open && <NavSeparation>{title}</NavSeparation>}
       </NavButton>
     </Link>
@@ -165,13 +167,14 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Home', HOME, Home, sidebar)}
       {renderNavButton('Peers', PEERS, Users, sidebar)}
       {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
-      {renderNavButton('Balance', BALANCE, RepeatIcon, sidebar)}
+      {renderNavButton('Balance', BALANCE, Repeat, sidebar)}
       {renderNavButton('Fees', FEES, Crosshair, sidebar)}
       {renderNavButton('Transactions', TRANS, Server, sidebar)}
       {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
       {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
       {renderNavButton('Tools', TOOLS, Shield, sidebar)}
       {renderNavButton('P2P Trading', TRADER, CreditCard, sidebar)}
+      {renderNavButton('Chat', CHAT, MessageCircle, sidebar)}
       {renderNavButton('Settings', SETTINGS, Settings, sidebar)}
     </ButtonSection>
   );
@@ -181,13 +184,14 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Home', HOME, Home)}
       {renderBurgerNav('Peers', PEERS, Users)}
       {renderBurgerNav('Channels', CHANNEL, Cpu)}
-      {renderBurgerNav('Balance', BALANCE, RepeatIcon)}
+      {renderBurgerNav('Balance', BALANCE, Repeat)}
       {renderBurgerNav('Fees', FEES, Crosshair)}
       {renderBurgerNav('Transactions', TRANS, Server)}
       {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Trading', TRADER, CreditCard)}
+      {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}
     </BurgerRow>
   );

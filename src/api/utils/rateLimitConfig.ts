@@ -50,4 +50,6 @@ export const RateConfig: RateConfigProps = {
   getOffers: { max: 10, window: '1s' },
   getCountries: { max: 10, window: '1s' },
   getCurrencies: { max: 10, window: '1s' },
+  sendMessage: { max: 10, window: '1s' },
+  getMessages: { max: 10, window: '1s' },
 };

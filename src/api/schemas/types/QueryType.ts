@@ -26,6 +26,7 @@ export const ChannelFeeType = new GraphQLObjectType({
       feeRate: { type: GraphQLInt },
       transactionId: { type: GraphQLString },
       transactionVout: { type: GraphQLInt },
+      public_key: { type: GraphQLString },
     };
   },
 });
@@ -286,5 +287,27 @@ export const GetResumeType = new GraphQLObjectType({
   fields: () => ({
     token: { type: GraphQLString },
     resume: { type: GraphQLString },
+  }),
+});
+
+export const GetMessagesType = new GraphQLObjectType({
+  name: 'getMessagesType',
+  fields: () => ({
+    token: { type: GraphQLString },
+    messages: { type: new GraphQLList(MessagesType) },
+  }),
+});
+
+export const MessagesType = new GraphQLObjectType({
+  name: 'messagesType',
+  fields: () => ({
+    date: { type: GraphQLString },
+    id: { type: GraphQLString },
+    verified: { type: GraphQLBoolean },
+    contentType: { type: GraphQLString },
+    sender: { type: GraphQLString },
+    alias: { type: GraphQLString },
+    message: { type: GraphQLString },
+    tokens: { type: GraphQLInt },
   }),
 });

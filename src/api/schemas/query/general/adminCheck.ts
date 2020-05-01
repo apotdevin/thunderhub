@@ -1,8 +1,9 @@
 import { pay as payRequest } from 'ln-service';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLBoolean } from 'graphql';
-import { getAuthLnd, getErrorDetails } from '../../../helpers/helpers';
+import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { logger } from '../../../helpers/logger';
 
 export const adminCheck = {
   type: GraphQLBoolean,
@@ -20,10 +21,17 @@ export const adminCheck = {
         request: 'admin check',
       });
     } catch (error) {
-      const details = getErrorDetails(error);
-      if (details.includes('invalid character in string')) return true;
+      params.logger && logger.error('%o', error);
+      if (error.length >= 2) {
+        if (error[2]?.err?.details?.indexOf('permission denied') >= 0) {
+          throw new Error('PermissionDenied');
+        }
+      }
 
-      throw new Error();
+      const errorMessage = getErrorMsg(error);
+      if (errorMessage.indexOf('UnexpectedSendPaymentError') >= 0) return true;
+
+      throw new Error(errorMessage);
     }
   },
 };

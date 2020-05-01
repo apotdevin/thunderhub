@@ -143,6 +143,29 @@ export const cardBorderColor = theme('mode', {
 });
 
 // ---------------------------------------
+// CHAT COLORS
+// ---------------------------------------
+export const chatSubCardColor = theme('mode', {
+  light: themeColors.grey2,
+  dark: themeColors.blue7,
+});
+
+export const chatInputColor = theme('mode', {
+  light: themeColors.grey2,
+  dark: themeColors.blue7,
+});
+
+export const chatBubbleColor = theme('mode', {
+  light: themeColors.blue2,
+  dark: themeColors.blue2,
+});
+
+export const chatSentBubbleColor = theme('mode', {
+  light: themeColors.blue3,
+  dark: themeColors.blue3,
+});
+
+// ---------------------------------------
 // BUTTON COLORS
 // ---------------------------------------
 export const colorButtonBackground = theme('mode', {

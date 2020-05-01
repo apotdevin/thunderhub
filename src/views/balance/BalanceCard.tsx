@@ -6,7 +6,7 @@ import {
   ResponsiveLine,
 } from '../../components/generic/Styled';
 import { MainInfo } from '../../components/generic/CardGeneric';
-import { Circle, ChevronRight, XSvg } from '../../components/generic/Icons';
+import { Circle, ChevronRight, X } from 'react-feather';
 import { getPercent } from '../../utils/helpers';
 import { Price } from '../../components/price/Price';
 import { themeColors, chartColors } from '../../styles/Themes';
@@ -53,7 +53,13 @@ export const BalanceCard = ({
   callback,
   closeCallback,
 }: BalanceCardProps) => {
-  const { partner_node_info, local_balance, remote_balance, id } = channel;
+  const {
+    partner_node_info,
+    local_balance,
+    remote_balance,
+    id,
+    partner_public_key,
+  } = channel;
   const { alias } = partner_node_info;
 
   const balancedness = getPercent(remote_balance, local_balance) / 100;
@@ -66,7 +72,9 @@ export const BalanceCard = ({
       <MainInfo onClick={() => callback && callback()}>
         <ResponsiveLine withWrap={true}>
           <ChannelLineSection>
-            {alias === '' ? `Unknown - ${id}` : `${alias} - ${id}`}
+            {alias && alias !== ''
+              ? `${alias} - ${id}`
+              : `${partner_public_key?.substring(0, 6)} - ${id}`}
           </ChannelLineSection>
           <ChannelColumnSection>
             <SingleLine>
@@ -93,12 +101,16 @@ export const BalanceCard = ({
           <ChannelColumnSection>
             <SingleLine>
               <CirclePadding>
-                <Circle strokeWidth={'0'} fillcolor={getColor(balancedness)} />
+                <Circle
+                  size={18}
+                  strokeWidth={'0'}
+                  fill={getColor(balancedness)}
+                />
               </CirclePadding>
-              {withArrow && <ChevronRight />}
+              {withArrow && <ChevronRight size={18} />}
               {closeCallback && (
                 <ColorButton onClick={closeCallback}>
-                  <XSvg />
+                  <X size={18} />
                 </ColorButton>
               )}
             </SingleLine>

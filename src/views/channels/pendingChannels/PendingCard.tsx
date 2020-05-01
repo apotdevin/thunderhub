@@ -150,7 +150,7 @@ export const PendingCard = ({
           {getStatusDot(is_closing, 'closing')}
         </StatusLine>
         <ResponsiveLine>
-          <NodeTitle>{alias ? alias : 'Unknown'}</NodeTitle>
+          <NodeTitle>{alias || partner_public_key?.substring(0, 6)}</NodeTitle>
           <ResponsiveSingle>
             {formatBalance}
             <ResponsiveCol>

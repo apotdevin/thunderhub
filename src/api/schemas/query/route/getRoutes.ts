@@ -34,7 +34,7 @@ export const getRoutes = {
     });
 
     if (!route) {
-      throw new Error('No route found.');
+      throw new Error('NoRouteFound');
     }
 
     return JSON.stringify(route);

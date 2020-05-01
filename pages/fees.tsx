@@ -16,7 +16,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { FeeCard } from '../src/views/fees/FeeCard';
-import { XSvg, ChevronRight } from '../src/components/generic/Icons';
+import { ChevronRight, X } from 'react-feather';
 import { SecureButton } from '../src/components/buttons/secureButton/SecureButton';
 import { AdminSwitch } from '../src/components/adminSwitch/AdminSwitch';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
@@ -64,7 +64,7 @@ const FeesView = () => {
             <SingleLine>
               <Sub4Title>Channel Fees</Sub4Title>
               <ColorButton onClick={() => setIsEdit(prev => !prev)}>
-                {isEdit ? <XSvg /> : 'Update'}
+                {isEdit ? <X size={18} /> : 'Update'}
               </ColorButton>
             </SingleLine>
             {isEdit && (
@@ -102,7 +102,7 @@ const FeesView = () => {
                     withMargin={'16px 0 0'}
                   >
                     Update Fees
-                    <ChevronRight />
+                    <ChevronRight size={18} />
                   </SecureButton>
                 </RightAlign>
               </>
