@@ -17,7 +17,8 @@
     "generate": "graphql-codegen --config codegen.yml",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "build:image": "docker build --no-cache -t thunderhub/test ."
   },
   "keywords": [],
   "author": "",
