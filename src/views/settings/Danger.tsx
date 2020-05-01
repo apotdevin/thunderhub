@@ -20,6 +20,7 @@ import { AlertCircle } from 'react-feather';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { useRouter } from 'next/router';
 import { appendBasePath } from '../../utils/basePath';
+import { useChatDispatch } from '../../context/ChatContext';
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -76,6 +77,7 @@ export const DangerView = () => {
   } = useAccount();
 
   const dispatch = useStatusDispatch();
+  const chatDispatch = useChatDispatch();
 
   const { push } = useRouter();
 
@@ -105,14 +107,7 @@ export const DangerView = () => {
     }
     if (accounts.length === 1) {
       return (
-        <ColorButton
-          color={'red'}
-          onClick={() => {
-            deleteAccount(accounts[0].id);
-            refreshAccount();
-            push(appendBasePath('/'));
-          }}
-        >
+        <ColorButton color={'red'} onClick={handleDeleteAll}>
           {accounts[0].name}
         </ColorButton>
       );
@@ -120,9 +115,18 @@ export const DangerView = () => {
     return null;
   };
 
+  const handleDeleteAll = () => {
+    dispatch({ type: 'disconnected' });
+    chatDispatch({ type: 'disconnected' });
+    deleteStorage();
+    refreshAccount();
+    push(appendBasePath('/'));
+  };
+
   const handleDelete = (admin?: boolean) => {
     deleteAccountPermissions(id, accounts, admin);
     dispatch({ type: 'disconnected' });
+    chatDispatch({ type: 'disconnected' });
     changeAccount(id);
     push(appendBasePath('/'));
   };
@@ -153,14 +157,7 @@ export const DangerView = () => {
         <SettingsLine>
           <Sub4Title>Delete all Accounts and Settings:</Sub4Title>
           <ButtonRow>
-            <ColorButton
-              color={'red'}
-              onClick={() => {
-                deleteStorage();
-                refreshAccount();
-                push(appendBasePath('/'));
-              }}
-            >
+            <ColorButton color={'red'} onClick={handleDeleteAll}>
               Delete All
             </ColorButton>
           </ButtonRow>
