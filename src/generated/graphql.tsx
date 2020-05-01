@@ -47,6 +47,7 @@ export type Query = {
   getOffers?: Maybe<Array<Maybe<HodlOfferType>>>;
   getCountries?: Maybe<Array<Maybe<HodlCountryType>>>;
   getCurrencies?: Maybe<Array<Maybe<HodlCurrencyType>>>;
+  getMessages?: Maybe<GetMessagesType>;
 };
 
 export type QueryGetChannelBalanceArgs = {
@@ -218,6 +219,14 @@ export type QueryGetOffersArgs = {
   filter?: Maybe<Scalars['String']>;
 };
 
+export type QueryGetMessagesArgs = {
+  auth: AuthType;
+  logger?: Maybe<Scalars['Boolean']>;
+  token?: Maybe<Scalars['String']>;
+  initialize?: Maybe<Scalars['Boolean']>;
+  lastMessage?: Maybe<Scalars['String']>;
+};
+
 export type ChannelBalanceType = {
   __typename?: 'channelBalanceType';
   confirmedBalance?: Maybe<Scalars['Int']>;
@@ -312,6 +321,7 @@ export type ChannelFeeType = {
   feeRate?: Maybe<Scalars['Int']>;
   transactionId?: Maybe<Scalars['String']>;
   transactionVout?: Maybe<Scalars['Int']>;
+  public_key?: Maybe<Scalars['String']>;
 };
 
 export type ChannelReportType = {
@@ -528,6 +538,24 @@ export type HodlCurrencyType = {
   type?: Maybe<Scalars['String']>;
 };
 
+export type GetMessagesType = {
+  __typename?: 'getMessagesType';
+  token?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<MessagesType>>>;
+};
+
+export type MessagesType = {
+  __typename?: 'messagesType';
+  date?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  verified?: Maybe<Scalars['Boolean']>;
+  contentType?: Maybe<Scalars['String']>;
+  sender?: Maybe<Scalars['String']>;
+  alias?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  tokens?: Maybe<Scalars['Int']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   closeChannel?: Maybe<CloseChannelType>;
@@ -541,6 +569,7 @@ export type Mutation = {
   sendToAddress?: Maybe<SendToType>;
   addPeer?: Maybe<Scalars['Boolean']>;
   removePeer?: Maybe<Scalars['Boolean']>;
+  sendMessage?: Maybe<Scalars['Int']>;
 };
 
 export type MutationCloseChannelArgs = {
@@ -623,6 +652,16 @@ export type MutationRemovePeerArgs = {
   auth: AuthType;
   logger?: Maybe<Scalars['Boolean']>;
   publicKey: Scalars['String'];
+};
+
+export type MutationSendMessageArgs = {
+  auth: AuthType;
+  logger?: Maybe<Scalars['Boolean']>;
+  publicKey: Scalars['String'];
+  message: Scalars['String'];
+  messageType?: Maybe<Scalars['String']>;
+  tokens?: Maybe<Scalars['Int']>;
+  maxFee?: Maybe<Scalars['Int']>;
 };
 
 export type CloseChannelType = {
@@ -934,6 +973,20 @@ export type AddPeerMutationVariables = {
 export type AddPeerMutation = { __typename?: 'Mutation' } & Pick<
   Mutation,
   'addPeer'
+>;
+
+export type SendMessageMutationVariables = {
+  auth: AuthType;
+  publicKey: Scalars['String'];
+  message: Scalars['String'];
+  messageType?: Maybe<Scalars['String']>;
+  tokens?: Maybe<Scalars['Int']>;
+  maxFee?: Maybe<Scalars['Int']>;
+};
+
+export type SendMessageMutation = { __typename?: 'Mutation' } & Pick<
+  Mutation,
+  'sendMessage'
 >;
 
 export type GetNetworkInfoQueryVariables = {
@@ -1412,6 +1465,7 @@ export type ChannelFeesQuery = { __typename?: 'Query' } & {
           | 'feeRate'
           | 'transactionId'
           | 'transactionVout'
+          | 'public_key'
         >
       >
     >
@@ -1483,6 +1537,36 @@ export type GetUtxosQuery = { __typename?: 'Query' } & {
         >
       >
     >
+  >;
+};
+
+export type GetMessagesQueryVariables = {
+  auth: AuthType;
+  initialize?: Maybe<Scalars['Boolean']>;
+  lastMessage?: Maybe<Scalars['String']>;
+};
+
+export type GetMessagesQuery = { __typename?: 'Query' } & {
+  getMessages?: Maybe<
+    { __typename?: 'getMessagesType' } & Pick<GetMessagesType, 'token'> & {
+        messages?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'messagesType' } & Pick<
+                MessagesType,
+                | 'date'
+                | 'contentType'
+                | 'alias'
+                | 'message'
+                | 'id'
+                | 'sender'
+                | 'verified'
+                | 'tokens'
+              >
+            >
+          >
+        >;
+      }
   >;
 };
 
@@ -2275,6 +2359,73 @@ export type AddPeerMutationResult = ApolloReactCommon.MutationResult<
 export type AddPeerMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AddPeerMutation,
   AddPeerMutationVariables
+>;
+export const SendMessageDocument = gql`
+  mutation SendMessage(
+    $auth: authType!
+    $publicKey: String!
+    $message: String!
+    $messageType: String
+    $tokens: Int
+    $maxFee: Int
+  ) {
+    sendMessage(
+      auth: $auth
+      publicKey: $publicKey
+      message: $message
+      messageType: $messageType
+      tokens: $tokens
+      maxFee: $maxFee
+    )
+  }
+`;
+export type SendMessageMutationFn = ApolloReactCommon.MutationFunction<
+  SendMessageMutation,
+  SendMessageMutationVariables
+>;
+
+/**
+ * __useSendMessageMutation__
+ *
+ * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
+ *   variables: {
+ *      auth: // value for 'auth'
+ *      publicKey: // value for 'publicKey'
+ *      message: // value for 'message'
+ *      messageType: // value for 'messageType'
+ *      tokens: // value for 'tokens'
+ *      maxFee: // value for 'maxFee'
+ *   },
+ * });
+ */
+export function useSendMessageMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SendMessageMutation,
+    SendMessageMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    SendMessageMutation,
+    SendMessageMutationVariables
+  >(SendMessageDocument, baseOptions);
+}
+export type SendMessageMutationHookResult = ReturnType<
+  typeof useSendMessageMutation
+>;
+export type SendMessageMutationResult = ApolloReactCommon.MutationResult<
+  SendMessageMutation
+>;
+export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SendMessageMutation,
+  SendMessageMutationVariables
 >;
 export const GetNetworkInfoDocument = gql`
   query GetNetworkInfo($auth: authType!) {
@@ -3830,6 +3981,7 @@ export const ChannelFeesDocument = gql`
       feeRate
       transactionId
       transactionVout
+      public_key
     }
   }
 `;
@@ -4076,4 +4228,78 @@ export type GetUtxosLazyQueryHookResult = ReturnType<
 export type GetUtxosQueryResult = ApolloReactCommon.QueryResult<
   GetUtxosQuery,
   GetUtxosQueryVariables
+>;
+export const GetMessagesDocument = gql`
+  query GetMessages(
+    $auth: authType!
+    $initialize: Boolean
+    $lastMessage: String
+  ) {
+    getMessages(
+      auth: $auth
+      initialize: $initialize
+      lastMessage: $lastMessage
+    ) {
+      token
+      messages {
+        date
+        contentType
+        alias
+        message
+        id
+        sender
+        verified
+        tokens
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetMessagesQuery__
+ *
+ * To run a query within a React component, call `useGetMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMessagesQuery({
+ *   variables: {
+ *      auth: // value for 'auth'
+ *      initialize: // value for 'initialize'
+ *      lastMessage: // value for 'lastMessage'
+ *   },
+ * });
+ */
+export function useGetMessagesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetMessagesQuery,
+    GetMessagesQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<GetMessagesQuery, GetMessagesQueryVariables>(
+    GetMessagesDocument,
+    baseOptions
+  );
+}
+export function useGetMessagesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetMessagesQuery,
+    GetMessagesQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetMessagesQuery,
+    GetMessagesQueryVariables
+  >(GetMessagesDocument, baseOptions);
+}
+export type GetMessagesQueryHookResult = ReturnType<typeof useGetMessagesQuery>;
+export type GetMessagesLazyQueryHookResult = ReturnType<
+  typeof useGetMessagesLazyQuery
+>;
+export type GetMessagesQueryResult = ApolloReactCommon.QueryResult<
+  GetMessagesQuery,
+  GetMessagesQueryVariables
 >;

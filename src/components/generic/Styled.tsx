@@ -31,13 +31,13 @@ export interface CardProps {
   mobileCardPadding?: string;
 }
 
-export const Card = styled.div`
-  padding: ${({ cardPadding }: CardProps) => cardPadding ?? '16px'};
+export const Card = styled.div<CardProps>`
+  padding: ${({ cardPadding }) => cardPadding ?? '16px'};
   background: ${cardColor};
   box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   border: 1px solid ${cardBorderColor};
-  margin-bottom: ${({ bottom }: CardProps) => (bottom ? bottom : '25px')};
+  margin-bottom: ${({ bottom }) => (bottom ? bottom : '25px')};
   width: 100%;
 
   @media (${mediaWidths.mobile}) {
@@ -198,12 +198,13 @@ export const ColorButton = styled(SimpleButton)`
 
 export const OverflowText = styled.div`
   margin-left: 16px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
+
   -ms-word-break: break-all;
   word-break: break-all;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 
   @media (${mediaWidths.mobile}) {
     margin-left: 8px;

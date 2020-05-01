@@ -11,5 +11,3 @@
 .vscode
 .storybook
 CHANGELOG.md
-.elasticbeanstalk/*
-.ebextensions/*

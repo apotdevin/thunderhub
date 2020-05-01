@@ -7,7 +7,7 @@ import {
   DarkSubTitle,
   Separation,
 } from '../../../components/generic/Styled';
-import { XSvg } from '../../../components/generic/Icons';
+import { X } from 'react-feather';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../../components/input/Input';
 import { NoWrap } from '../Tools.styled';
@@ -70,7 +70,7 @@ export const VerifyBackups = () => {
           arrow={!isPasting}
           onClick={() => setIsPasting(prev => !prev)}
         >
-          {isPasting ? <XSvg /> : 'Verify'}
+          {isPasting ? <X size={18} /> : 'Verify'}
         </ColorButton>
       </SingleLine>
       {isPasting && renderInput()}

@@ -14,7 +14,7 @@ import Modal from '../../components/modal/ReactModal';
 import { FilterModal } from './Modal/FilterModal';
 import { SortOptions } from './OfferConfigs';
 import { QueryProps } from '../../../pages/trading';
-import { XSvg } from '../../components/generic/Icons';
+import { X } from 'react-feather';
 import { renderLine } from '../../components/generic/helpers';
 import { chartColors } from '../../styles/Themes';
 import { useRouter } from 'next/router';
@@ -222,7 +222,7 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
           arrow={!willApply}
           onClick={() => setWillApply(prev => !prev)}
         >
-          {willApply ? <XSvg /> : 'Apply'}
+          {willApply ? <X size={18} /> : 'Apply'}
         </ColorButton>
       </SingleLine>
       {willApply && renderFilters()}

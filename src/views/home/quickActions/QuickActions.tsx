@@ -7,7 +7,7 @@ import {
   ColorButton,
 } from '../../../components/generic/Styled';
 import styled from 'styled-components';
-import { XSvg, Layers, GitBranch } from '../../../components/generic/Icons';
+import { X, Layers, GitBranch } from 'react-feather';
 import { unSelectedNavButton } from '../../../styles/Themes';
 import { DecodeCard } from './decode/Decode';
 import { OpenChannelCard } from './openChannel/OpenChannel';
@@ -69,12 +69,12 @@ export const QuickActions = () => {
           <QuickRow>
             <AdminSwitch>
               <QuickCard onClick={() => setOpenCard('open_channel')}>
-                <GitBranch size={'24px'} color={sectionColor} />
+                <GitBranch size={24} color={sectionColor} />
                 <QuickTitle>Open</QuickTitle>
               </QuickCard>
             </AdminSwitch>
             <QuickCard onClick={() => setOpenCard('decode')}>
-              <Layers size={'24px'} color={sectionColor} />
+              <Layers size={24} color={sectionColor} />
               <QuickTitle>Decode</QuickTitle>
             </QuickCard>
           </QuickRow>
@@ -88,7 +88,7 @@ export const QuickActions = () => {
         <SubTitle>{getTitle()}</SubTitle>
         {openCard !== 'none' && (
           <ColorButton onClick={() => setOpenCard('none')} color={sectionColor}>
-            <XSvg />
+            <X size={18} />
           </ColorButton>
         )}
       </CardTitle>

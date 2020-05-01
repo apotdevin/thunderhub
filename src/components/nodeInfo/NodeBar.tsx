@@ -8,13 +8,13 @@ import {
   StyledNodeBar,
   NodeBarContainer,
 } from './NodeInfo.styled';
-import { QuestionIcon } from '../generic/Icons';
+import { HelpCircle } from 'react-feather';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import { useSettings } from '../../context/SettingsContext';
 import { getTooltipType } from '../generic/helpers';
 
-const StyledQuestion = styled(QuestionIcon)`
+const StyledQuestion = styled(HelpCircle)`
   margin-left: 8px;
 `;
 
@@ -47,7 +47,7 @@ export const NodeBar = () => {
       <SubTitle>
         Your Nodes
         <span data-tip data-for="node_info_question">
-          <StyledQuestion size={'14px'} />
+          <StyledQuestion size={14} />
         </span>
       </SubTitle>
       <NodeBarContainer>
@@ -56,14 +56,14 @@ export const NodeBar = () => {
             handleScroll(true);
           }}
         >
-          <ArrowLeft />
+          <ArrowLeft size={18} />
         </div>
         <div
           onClick={() => {
             handleScroll();
           }}
         >
-          <ArrowRight />
+          <ArrowRight size={18} />
         </div>
         <StyledNodeBar ref={slider}>
           {viewOnlyAccounts.map((account, index) => (

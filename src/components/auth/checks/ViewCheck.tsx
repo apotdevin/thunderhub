@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SingleLine, Sub4Title, Separation } from '../../generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { themeColors } from '../../../styles/Themes';
-import { Check, XSvg } from '../../generic/Icons';
+import { Check, X } from 'react-feather';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import { AdminCheck } from './AdminCheck';
 import { Text } from '../../typography/Styled';
@@ -34,6 +34,7 @@ export const ViewCheck = ({
   const [confirmed, setConfirmed] = useState(false);
 
   const { data, loading } = useGetCanConnectQuery({
+    fetchPolicy: 'network-only',
     variables: { auth: { host, macaroon: viewOnly ?? admin ?? '', cert } },
     onCompleted: () => setConfirmed(true),
     onError: () => setConfirmed(false),
@@ -50,9 +51,9 @@ export const ViewCheck = ({
       return <ScaleLoader height={20} color={themeColors.blue3} />;
     }
     if (data?.getNodeInfo.alias && viewOnly) {
-      return <Check />;
+      return <Check size={18} />;
     }
-    return <XSvg />;
+    return <X size={18} />;
   };
 
   const renderInfo = () => {

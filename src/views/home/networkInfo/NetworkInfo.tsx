@@ -9,7 +9,7 @@ import {
 import { useAccount } from '../../../context/AccountContext';
 import styled from 'styled-components';
 import { unSelectedNavButton, mediaWidths } from '../../../styles/Themes';
-import { Globe, Cpu } from '../../../components/generic/Icons';
+import { Globe, Cpu } from 'react-feather';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
@@ -100,7 +100,7 @@ export const NetworkInfo = () => {
         <ResponsiveLine>
           <Title>
             <Padding>
-              <Globe color={'#2f6fb7'} />
+              <Globe size={18} color={'#2f6fb7'} />
             </Padding>
             Global
           </Title>
@@ -125,7 +125,7 @@ export const NetworkInfo = () => {
         <ResponsiveLine>
           <Title>
             <Padding>
-              <Cpu color={'#2f6fb7'} />
+              <Cpu size={18} color={'#2f6fb7'} />
             </Padding>
             Channel Size
           </Title>

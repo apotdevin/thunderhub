@@ -7,7 +7,7 @@ import {
   DarkSubTitle,
   Separation,
 } from '../../../components/generic/Styled';
-import { XSvg, Copy } from '../../../components/generic/Icons';
+import { X, Copy } from 'react-feather';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { NoWrap } from './Messages';
 import { Input } from '../../../components/input/Input';
@@ -67,7 +67,7 @@ export const SignMessage = () => {
         onCopy={() => toast.success('Signature Copied')}
       >
         <ColorButton>
-          <Copy />
+          <Copy size={18} />
           Copy
         </ColorButton>
       </CopyToClipboard>
@@ -84,7 +84,7 @@ export const SignMessage = () => {
           arrow={!isPasting}
           onClick={() => setIsPasting(prev => !prev)}
         >
-          {isPasting ? <XSvg /> : 'Sign'}
+          {isPasting ? <X size={18} /> : 'Sign'}
         </ColorButton>
       </SingleLine>
       {isPasting && renderInput()}

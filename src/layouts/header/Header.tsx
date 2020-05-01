@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { headerColor, headerTextColor } from '../../styles/Themes';
-import { useAccount } from '../../context/AccountContext';
 import { SingleLine } from '../../components/generic/Styled';
-import { Cpu, MenuIcon, XSvg, Circle } from '../../components/generic/Icons';
+import { Cpu, Menu, X, Circle } from 'react-feather';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
 import { useTransition, animated } from 'react-spring';
 import { Section } from '../../components/section/Section';
@@ -16,9 +15,6 @@ import {
   HeaderTitle,
   IconPadding,
 } from './Header.styled';
-
-const AnimatedBurger = animated(MenuIcon);
-const AnimatedClose = animated(XSvg);
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -36,18 +32,22 @@ export const Header = () => {
         <IconWrapper onClick={() => setOpen(prev => !prev)}>
           {transitions.map(({ item, key, props }) =>
             item ? (
-              <AnimatedClose key={key} style={props} size={'24px'} />
+              <animated.div key={key} style={props}>
+                <X size={24} />
+              </animated.div>
             ) : (
-              <AnimatedBurger key={key} style={props} size={'24px'} />
+              <animated.div key={key} style={props}>
+                <Menu size={24} />
+              </animated.div>
             )
           )}
         </IconWrapper>
       </ViewSwitch>
       <ViewSwitch hideMobile={true}>
         <Circle
-          size={'12px'}
+          size={12}
           strokeWidth={'0'}
-          fillcolor={syncedToChain ? '#95de64' : '#ff7875'}
+          color={syncedToChain ? '#95de64' : '#ff7875'}
         />
       </ViewSwitch>
     </>

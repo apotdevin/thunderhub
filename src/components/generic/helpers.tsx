@@ -1,8 +1,13 @@
 import React from 'react';
 import { SmallLink, DarkSubTitle, OverflowText, SingleLine } from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
-import { format, formatDistanceStrict } from 'date-fns';
-import { XSvg } from './Icons';
+import {
+  format,
+  formatDistanceToNowStrict,
+  differenceInCalendarDays,
+  isToday,
+} from 'date-fns';
+import { X } from 'react-feather';
 
 export const getTransactionLink = (transaction: string) => {
   const link = `https://www.blockchain.com/btc/tx/${transaction}`;
@@ -23,11 +28,42 @@ export const getNodeLink = (publicKey: string) => {
 };
 
 export const getDateDif = (date: string) => {
-  return formatDistanceStrict(new Date(date), new Date());
+  return formatDistanceToNowStrict(new Date(date));
 };
 
 export const getFormatDate = (date: string) => {
-  return format(new Date(date), 'dd-MM-yyyy - HH:mm:ss');
+  return format(new Date(date), 'dd/MM/yyyy - HH:mm:ss');
+};
+
+export const getMessageDate = (date: string, formatType?: string): string => {
+  let distance = formatDistanceToNowStrict(new Date(date));
+
+  if (distance.indexOf('minute') >= 0 || distance.indexOf('second') >= 0) {
+    distance = distance.replace('minutes', 'min');
+    distance = distance.replace('minute', 'min');
+    distance = distance.replace('seconds', 'sec');
+    distance = distance.replace('second', 'sec');
+    distance = distance.replace('0 sec', 'now');
+    return distance;
+  }
+  return format(new Date(date), formatType || 'HH:mm');
+};
+
+export const getDayChange = (date: string): string => {
+  if (isToday(new Date(date))) {
+    return 'Today';
+  }
+
+  return format(new Date(date), 'dd/MM/yy');
+};
+
+export const getIsDifferentDay = (current: string, next: string): boolean => {
+  const today = new Date(current);
+  const tomorrow = new Date(next);
+
+  const difference = differenceInCalendarDays(today, tomorrow);
+
+  return difference > 0 ? true : false;
 };
 
 export const getTooltipType = (theme: string) => {
@@ -62,7 +98,7 @@ export const renderLine = (
         <OverflowText>{content}</OverflowText>
         {deleteCallback && (
           <div style={{ margin: '0 0 -4px 4px' }} onClick={deleteCallback}>
-            <XSvg />
+            <X size={18} />
           </div>
         )}
       </SingleLine>

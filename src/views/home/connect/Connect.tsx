@@ -12,7 +12,7 @@ import {
   DarkSubTitle,
   ColorButton,
 } from '../../../components/generic/Styled';
-import { Radio, Copy } from '../../../components/generic/Icons';
+import { Radio, Copy } from 'react-feather';
 import styled from 'styled-components';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { mediaWidths } from '../../../styles/Themes';
@@ -79,7 +79,7 @@ export const ConnectCard = () => {
       </CardTitle>
       <Card>
         <Responsive>
-          <Radio color={sectionColor} />
+          <Radio size={18} color={sectionColor} />
           <Tile startTile={true}>
             <DarkSubTitle>Public Key</DarkSubTitle>
             <Key>{public_key}</Key>
@@ -91,7 +91,7 @@ export const ConnectCard = () => {
                 onCopy={() => toast.success('Onion Address Copied')}
               >
                 <ColorButton color={sectionColor}>
-                  <Copy />
+                  <Copy size={18} />
                   <TextPadding>Onion</TextPadding>
                 </ColorButton>
               </CopyToClipboard>
@@ -102,7 +102,7 @@ export const ConnectCard = () => {
                 onCopy={() => toast.success('Public Address Copied')}
               >
                 <ColorButton color={sectionColor}>
-                  <Copy />
+                  <Copy size={18} />
                 </ColorButton>
               </CopyToClipboard>
             ) : null}

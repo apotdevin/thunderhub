@@ -164,7 +164,7 @@ export const OfferCard = ({
         <ResponsiveLine>
           <SubTitle>
             {side !== 'buy' ? asset_code : currency_code}
-            <StyleArrow color={themeColors.blue3} />
+            <StyleArrow size={18} color={themeColors.blue3} />
             {side !== 'buy' ? currency_code : asset_code}
           </SubTitle>
           <SingleLine>

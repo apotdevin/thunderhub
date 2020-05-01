@@ -5,7 +5,7 @@ import {
   SubTitle,
   Sub4Title,
 } from '../../generic/Styled';
-import { AlertTriangle } from '../../generic/Icons';
+import { AlertTriangle } from 'react-feather';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
@@ -77,7 +77,7 @@ export const CloseChannel = ({
 
   const renderWarning = () => (
     <WarningCard>
-      <AlertTriangle size={'32px'} color={'red'} />
+      <AlertTriangle size={32} color={'red'} />
       <SubTitle>Are you sure you want to close the channel?</SubTitle>
       <SecureButton
         callback={closeChannel}

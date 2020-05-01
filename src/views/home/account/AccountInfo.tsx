@@ -9,14 +9,7 @@ import {
   ResponsiveLine,
 } from '../../../components/generic/Styled';
 import styled from 'styled-components';
-import {
-  UpArrow,
-  Zap,
-  Anchor,
-  Pocket,
-  DownArrow,
-  XSvg,
-} from '../../../components/generic/Icons';
+import { ArrowUp, Zap, Anchor, Pocket, ArrowDown, X } from 'react-feather';
 import { PayCard } from './pay/pay';
 import { CreateInvoiceCard } from './createInvoice/CreateInvoice';
 import { SendOnChainCard } from './sendOnChain/SendOnChain';
@@ -127,17 +120,17 @@ export const AccountInfo = () => {
   const renderButtons = (send: string, receive: string) => (
     <>
       <ColorButton color={sectionColor} onClick={() => setState(send)}>
-        <UpArrow />
+        <ArrowUp size={18} />
       </ColorButton>
       <ColorButton color={sectionColor} onClick={() => setState(receive)}>
-        <DownArrow />
+        <ArrowDown size={18} />
       </ColorButton>
     </>
   );
 
   const renderLnAccount = () => (
     <ResponsiveLine>
-      <Zap color={channelPending === 0 ? sectionColor : '#652EC7'} />
+      <Zap size={18} color={channelPending === 0 ? sectionColor : '#652EC7'} />
       <Tile startTile={true}>
         <DarkSubTitle>Account</DarkSubTitle>
         <div>Lightning</div>
@@ -148,7 +141,7 @@ export const AccountInfo = () => {
           {showLn && showChain && renderButtons('send_ln', 'receive_ln')}
           {showLn && !showChain && (
             <ColorButton color={sectionColor} onClick={() => setState('none')}>
-              <XSvg />
+              <X size={18} />
             </ColorButton>
           )}
         </ButtonRow>
@@ -158,7 +151,7 @@ export const AccountInfo = () => {
 
   const renderChainAccount = () => (
     <ResponsiveLine>
-      <Anchor color={chainPending === 0 ? sectionColor : '#652EC7'} />
+      <Anchor size={18} color={chainPending === 0 ? sectionColor : '#652EC7'} />
       <Tile startTile={true}>
         <DarkSubTitle>Account</DarkSubTitle>
         <div>Bitcoin</div>
@@ -169,7 +162,7 @@ export const AccountInfo = () => {
           {showLn && showChain && renderButtons('send_chain', 'receive_chain')}
           {!showLn && showChain && (
             <ColorButton color={sectionColor} onClick={() => setState('none')}>
-              <XSvg />
+              <X size={18} />
             </ColorButton>
           )}
         </ButtonRow>
@@ -184,6 +177,7 @@ export const AccountInfo = () => {
         <Card>
           <ResponsiveLine>
             <Pocket
+              size={18}
               color={
                 chainPending === 0 && channelPending === 0
                   ? '#2bbc54'

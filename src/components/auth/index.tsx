@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { LoadingCard } from '../loading/LoadingCard';
 import { appendBasePath } from '../../utils/basePath';
+import { useChatDispatch } from '../../context/ChatContext';
 
 const PasswordInput = dynamic(() => import('./views/Password'), {
   ssr: false,
@@ -34,6 +35,7 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
   const { changeAccount, accounts } = useAccount();
   const { push } = useRouter();
 
+  const dispatchChat = useChatDispatch();
   const dispatch = useStatusDispatch();
 
   const [name, setName] = useState<string>();
@@ -110,6 +112,7 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     const id = getAccountId(host, viewOnly, admin, cert);
 
     dispatch({ type: 'disconnected' });
+    dispatchChat({ type: 'disconnected' });
     changeAccount(id);
 
     push(appendBasePath('/'));
@@ -138,6 +141,7 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
       const id = getAccountId(host, viewOnly, admin, cert);
 
       dispatch({ type: 'disconnected' });
+      dispatchChat({ type: 'disconnected' });
       changeAccount(id);
 
       push(appendBasePath('/'));

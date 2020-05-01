@@ -71,6 +71,7 @@ export const getChannelFees = {
               feeRate: fee_rate,
               transactionId: transaction_id,
               transactionVout: transaction_vout,
+              public_key: channel.partner_public_key,
             };
           })
         );

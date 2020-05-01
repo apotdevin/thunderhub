@@ -16,7 +16,7 @@ import {
   getNodeLink,
 } from '../../components/generic/helpers';
 import styled from 'styled-components';
-import { DownArrow, UpArrow } from '../../components/generic/Icons';
+import { ArrowDown, ArrowUp } from 'react-feather';
 import {
   Progress,
   ProgressBar,
@@ -39,7 +39,7 @@ const IconPadding = styled.div`
 `;
 
 const getSymbol = (status: boolean) => {
-  return status ? <DownArrow /> : <UpArrow />;
+  return status ? <ArrowDown size={18} /> : <ArrowUp size={18} />;
 };
 
 interface PeerProps {
@@ -136,7 +136,7 @@ export const PeersCard = ({
       <MainInfo onClick={() => handleClick()}>
         <ResponsiveLine>
           <NodeTitle style={{ flexGrow: 2 }}>
-            {alias ? alias : 'Unknown'}
+            {alias || public_key?.substring(0, 6)}
           </NodeTitle>
           <ResponsiveSingle>
             <IconPadding>{getSymbol(is_inbound)}</IconPadding>

@@ -7,7 +7,7 @@ import {
   NoWrapTitle,
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
-import { ChevronRight } from '../../../../components/generic/Icons';
+import { ChevronRight } from 'react-feather';
 import { getErrorContent } from '../../../../utils/error';
 import { toast } from 'react-toastify';
 import { useBitcoinState } from '../../../../context/BitcoinContext';
@@ -178,7 +178,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
         disabled={!canOpen}
       >
         Open Channel
-        <ChevronRight />
+        <ChevronRight size={18} />
       </SecureButton>
     </Card>
   );
