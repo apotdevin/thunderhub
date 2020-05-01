@@ -50,7 +50,7 @@ const Wrapper: React.FC = ({ children }) => {
     <ThemeProvider theme={{ mode: isRoot ? 'light' : theme }}>
       <ModalProvider backgroundComponent={BaseModalBackground}>
         <GlobalStyles />
-        {connected && renderGetters()}
+        {connected && !isRoot && renderGetters()}
         <PageWrapper>
           <HeaderBodyWrapper>
             <Header />
