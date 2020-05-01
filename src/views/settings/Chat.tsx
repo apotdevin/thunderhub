@@ -14,16 +14,32 @@ import {
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
 
 export const ChatSettings = () => {
-  const { hideFee, hideNonVerified } = useChatState();
+  const { hideFee, hideNonVerified, maxFee } = useChatState();
   const dispatch = useChatDispatch();
 
-  const renderButton = (title: string, type: string, current: boolean) => (
+  const renderButton = (
+    title: string,
+    type: string,
+    current: boolean,
+    value: boolean | number
+  ) => (
     <SingleButton
       selected={current}
       onClick={() => {
-        type === 'fee'
-          ? dispatch({ type: 'hideFee' })
-          : dispatch({ type: 'hideNonVerified' });
+        switch (type) {
+          case 'fee':
+            typeof value === 'boolean' &&
+              dispatch({ type: 'hideFee', hideFee: value });
+            break;
+          case 'nonverified':
+            typeof value === 'boolean' &&
+              dispatch({ type: 'hideNonVerified', hideNonVerified: value });
+            break;
+          default:
+            typeof value === 'number' &&
+              dispatch({ type: 'changeFee', maxFee: value });
+            break;
+        }
       }}
     >
       {title}
@@ -37,15 +53,25 @@ export const ChatSettings = () => {
         <SettingsLine>
           <Sub4Title>Fee:</Sub4Title>
           <MultiButton>
-            {renderButton('Hide', 'fee', hideFee)}
-            {renderButton('Show', 'fee', !hideFee)}
+            {renderButton('Hide', 'fee', hideFee, true)}
+            {renderButton('Show', 'fee', !hideFee, false)}
           </MultiButton>
         </SettingsLine>
         <SettingsLine>
           <Sub4Title>Non-Verified Messages:</Sub4Title>
           <MultiButton>
-            {renderButton('Hide', 'nonverified', hideNonVerified)}
-            {renderButton('Show', 'nonverified', !hideNonVerified)}
+            {renderButton('Hide', 'nonverified', hideNonVerified, true)}
+            {renderButton('Show', 'nonverified', !hideNonVerified, false)}
+          </MultiButton>
+        </SettingsLine>
+        <SettingsLine>
+          <Sub4Title>{'Max Fee (sats):'}</Sub4Title>
+          <MultiButton>
+            {renderButton('10', 'maxFee', maxFee === 10, 10)}
+            {renderButton('20', 'maxFee', maxFee === 20, 20)}
+            {renderButton('30', 'maxFee', maxFee === 30, 30)}
+            {renderButton('50', 'maxFee', maxFee === 50, 50)}
+            {renderButton('100', 'maxFee', maxFee === 100, 100)}
           </MultiButton>
         </SettingsLine>
       </Card>

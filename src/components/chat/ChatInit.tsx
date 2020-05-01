@@ -22,6 +22,7 @@ export const ChatInit = () => {
     const hideFee = localStorage.getItem('hideFee') === 'true' ? true : false;
     const hideNonVerified =
       localStorage.getItem('hideNonVerified') === 'true' ? true : false;
+    const maxFee = Number(localStorage.getItem('maxChatFee')) || 20;
 
     if (storageChats !== '') {
       try {
@@ -34,6 +35,7 @@ export const ChatInit = () => {
             sender,
             hideFee,
             hideNonVerified,
+            maxFee,
           });
         }
       } catch (error) {

@@ -28,7 +28,7 @@ interface SendButtonProps {
 }
 
 const SendButton = ({ amount }: SendButtonProps) => {
-  const { sender } = useChatState();
+  const { sender, maxFee } = useChatState();
   const dispatch = useChatDispatch();
   const { id } = useAccount();
 
@@ -64,7 +64,7 @@ const SendButton = ({ amount }: SendButtonProps) => {
         messageType: 'payment',
         publicKey: sender,
         tokens: amount,
-        maxFee: 5,
+        maxFee,
       }}
     >
       <ChatSendButton>

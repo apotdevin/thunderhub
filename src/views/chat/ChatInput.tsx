@@ -21,7 +21,7 @@ export const ChatInput = ({
   const [message, setMessage] = React.useState('');
   const { id } = useAccount();
 
-  const { sender } = useChatState();
+  const { sender, maxFee } = useChatState();
   const dispatch = useChatDispatch();
 
   const [sendMessage, { loading, data }] = useSendMessageMutation({
@@ -69,7 +69,7 @@ export const ChatInput = ({
           messageType: contentType,
           publicKey: customSender || sender,
           ...(tokens > 0 && { tokens }),
-          maxFee: 50,
+          maxFee,
         }}
         withMargin={'0 0 0 8px'}
       >

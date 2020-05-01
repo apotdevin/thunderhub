@@ -30,6 +30,7 @@ type State = {
   sender: string;
   hideFee: boolean;
   hideNonVerified: boolean;
+  maxFee: number;
 };
 
 type ActionType = {
@@ -40,6 +41,7 @@ type ActionType = {
     | 'newChat'
     | 'hideNonVerified'
     | 'hideFee'
+    | 'changeFee'
     | 'disconnected';
   chats?: ChatProps[];
   sentChats?: SentChatProps[];
@@ -49,6 +51,7 @@ type ActionType = {
   userId?: string;
   hideFee?: boolean;
   hideNonVerified?: boolean;
+  maxFee?: number;
 };
 
 type Dispatch = (action: ActionType) => void;
@@ -64,6 +67,7 @@ const initialState = {
   sentChats: [],
   hideFee: false,
   hideNonVerified: false,
+  maxFee: 20,
 };
 
 const stateReducer = (state: State, action: ActionType): State => {
@@ -97,18 +101,25 @@ const stateReducer = (state: State, action: ActionType): State => {
         ...(action.sender && { sender: action.sender }),
       };
     case 'hideFee':
-      const hideFee = !state.hideFee;
-      localStorage.setItem('hideFee', JSON.stringify(hideFee));
+      localStorage.setItem('hideFee', JSON.stringify(action.hideFee));
       return {
         ...state,
-        hideFee,
+        hideFee: action.hideFee,
       };
     case 'hideNonVerified':
-      const hideNonVerified = !state.hideNonVerified;
-      localStorage.setItem('hideNonVerified', JSON.stringify(hideNonVerified));
+      localStorage.setItem(
+        'hideNonVerified',
+        JSON.stringify(action.hideNonVerified)
+      );
       return {
         ...state,
-        hideNonVerified,
+        hideNonVerified: action.hideNonVerified,
+      };
+    case 'changeFee':
+      localStorage.setItem('maxChatFee', JSON.stringify(action.maxFee));
+      return {
+        ...state,
+        maxFee: action.maxFee,
       };
     default:
       return initialState;
