@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.10](https://github.com/apotdevin/thunderhub/compare/v0.3.9...v0.3.10) (2020-05-01)
+
+
+### Features
+
+* chat integration ([#34](https://github.com/apotdevin/thunderhub/issues/34)) ([24c5109](https://github.com/apotdevin/thunderhub/commit/24c5109a06952a74dcab846da17547e7aa7983ed))
+
+
+### Bug Fixes
+
+* enable channel force close ([457546e](https://github.com/apotdevin/thunderhub/commit/457546e6765ba0bc7359a5ba15d92dcf8ba1a053))
+
+
+### Improvements
+
+* show all channel tabs ([b8ea159](https://github.com/apotdevin/thunderhub/commit/b8ea1597a07860cf048c7c68ab0fb1a5cc32af13))
+
 ### [0.3.9](https://github.com/apotdevin/thunderhub/compare/v0.3.8...v0.3.9) (2020-04-22)
 
 
