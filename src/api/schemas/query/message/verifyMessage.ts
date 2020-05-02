@@ -26,7 +26,7 @@ export const verifyMessage = {
 
       return message.signed_by;
     } catch (error) {
-      params.logger && logger.error('Error verifying message: %o', error);
+      logger.error('Error verifying message: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

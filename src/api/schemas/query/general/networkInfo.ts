@@ -39,7 +39,7 @@ export const getNetworkInfo = {
         totalCapacity: info.total_capacity,
       };
     } catch (error) {
-      params.logger && logger.error('Error getting network info: %o', error);
+      logger.error('Error getting network info: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

@@ -57,7 +57,7 @@ export const getChannelReport = {
         maxOut: maxOutgoing,
       };
     } catch (error) {
-      params.logger && logger.error('Error getting channel report: %o', error);
+      logger.error('Error getting channel report: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

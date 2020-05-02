@@ -31,7 +31,7 @@ export const createAddress = {
 
       return address.address;
     } catch (error) {
-      params.logger && logger.error('Error creating address: %o', error);
+      logger.error('Error creating address: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

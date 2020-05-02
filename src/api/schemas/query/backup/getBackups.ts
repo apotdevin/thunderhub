@@ -19,7 +19,7 @@ export const getBackups = {
       });
       return JSON.stringify(backups);
     } catch (error) {
-      params.logger && logger.error('Error getting backups: %o', error);
+      logger.error('Error getting backups: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

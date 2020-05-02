@@ -57,7 +57,7 @@ export const getPeers = {
       const peerList = await getPeerList();
       return peerList;
     } catch (error) {
-      params.logger && logger.error('Error getting peers: %o', error);
+      logger.error('Error getting peers: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

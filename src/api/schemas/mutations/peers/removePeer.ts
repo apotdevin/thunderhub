@@ -23,7 +23,7 @@ export const removePeer = {
       });
       return success;
     } catch (error) {
-      params.logger && logger.error('Error removing peer: %o', error);
+      logger.error('Error removing peer: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

@@ -64,7 +64,7 @@ export const getForwardReport = {
 
       return JSON.stringify(reducedOrderedHour);
     } catch (error) {
-      params.logger && logger.error('Error getting forward report: %o', error);
+      logger.error('Error getting forward report: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

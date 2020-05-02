@@ -27,7 +27,7 @@ export const addPeer = {
       });
       return success;
     } catch (error) {
-      params.logger && logger.error('Error adding peer: %o', error);
+      logger.error('Error adding peer: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

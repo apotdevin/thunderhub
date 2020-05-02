@@ -73,7 +73,7 @@ export const parsePayment = {
         tokens: request.tokens,
       };
     } catch (error) {
-      params.logger && logger.error('Error decoding request: %o', error);
+      logger.error('Error decoding request: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

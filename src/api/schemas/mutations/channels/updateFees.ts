@@ -37,7 +37,7 @@ export const updateFees = {
       await updateRoutingFees(props);
       return true;
     } catch (error) {
-      params.logger && logger.error('Error updating routing fees: %o', error);
+      logger.error('Error updating routing fees: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

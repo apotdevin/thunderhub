@@ -21,7 +21,7 @@ export const getBitcoinPrice = {
 
       return JSON.stringify(json);
     } catch (error) {
-      params.logger && logger.error('Error getting bitcoin price: %o', error);
+      logger.error('Error getting bitcoin price: %o', error);
       throw new Error('Problem getting Bitcoin price.');
     }
   },

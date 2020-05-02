@@ -20,7 +20,7 @@ export const payViaRoute = {
     try {
       route = JSON.parse(params.route);
     } catch (error) {
-      params.logger && logger.error('Corrupt route json: %o', error);
+      logger.error('Corrupt route json: %o', error);
       throw new Error('Corrupt Route JSON');
     }
 
@@ -29,12 +29,12 @@ export const payViaRoute = {
       tokens: params.tokens,
       description: 'Balancing Channel',
     }).catch((error: any) => {
-      params.logger && logger.error('Error getting invoice: %o', error);
+      logger.error('Error getting invoice: %o', error);
       throw new Error(getErrorMsg(error));
     });
 
     await payViaRoutes({ lnd, routes: [route], id }).catch((error: any) => {
-      params.logger && logger.error('Error making payment: %o', error);
+      logger.error('Error making payment: %o', error);
       throw new Error(getErrorMsg(error));
     });
 

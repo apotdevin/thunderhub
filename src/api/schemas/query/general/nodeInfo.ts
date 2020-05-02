@@ -42,7 +42,7 @@ export const getNodeInfo = {
         closed_channels_count: closedChannels.channels.length,
       };
     } catch (error) {
-      params.logger && logger.error('Error getting node info: %o', error);
+      logger.error('Error getting node info: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

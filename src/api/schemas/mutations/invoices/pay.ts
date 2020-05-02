@@ -67,7 +67,7 @@ export const pay = {
       });
       isRequest = true;
     } catch (error) {
-      params.logger && logger.error('Error decoding request: %o', error);
+      logger.error('Error decoding request: %o', error);
     }
 
     if (isRequest) {
@@ -78,7 +78,7 @@ export const pay = {
         });
         return payment;
       } catch (error) {
-        params.logger && logger.error('Error paying request: %o', error);
+        logger.error('Error paying request: %o', error);
         throw new Error(getErrorMsg(error));
       }
     }
@@ -106,7 +106,7 @@ export const pay = {
       });
       return payment;
     } catch (error) {
-      params.logger && logger.error('Error paying request: %o', error);
+      logger.error('Error paying request: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

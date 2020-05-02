@@ -43,7 +43,7 @@ export const createInvoice = {
         tokens: invoice.tokens,
       };
     } catch (error) {
-      params.logger && logger.error('Error creating invoice: %o', error);
+      logger.error('Error creating invoice: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

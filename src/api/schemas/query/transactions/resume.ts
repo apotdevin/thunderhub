@@ -51,7 +51,7 @@ export const getResume = {
         );
       payments = await getMappedPayments();
     } catch (error) {
-      params.logger && logger.error('Error getting payments: %o', error);
+      logger.error('Error getting payments: %o', error);
       throw new Error(getErrorMsg(error));
     }
 
@@ -85,7 +85,7 @@ export const getResume = {
         token = invoiceList.next;
       }
     } catch (error) {
-      params.logger && logger.error('Error getting invoices: %o', error);
+      logger.error('Error getting invoices: %o', error);
       throw new Error(getErrorMsg(error));
     }
 

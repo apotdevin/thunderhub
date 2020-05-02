@@ -48,7 +48,7 @@ export const getOffers = {
       }
       throw new Error('Problem getting HodlHodl offers.');
     } catch (error) {
-      params.logger && logger.error('Error getting HodlHodl offers: %o', error);
+      logger.error('Error getting HodlHodl offers: %o', error);
       throw new Error('Problem getting HodlHodl offers.');
     }
   },

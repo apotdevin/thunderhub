@@ -43,7 +43,7 @@ export const closeChannel = {
         transactionOutputIndex: info.transaction_vout,
       };
     } catch (error) {
-      params.logger && logger.error('Error closing channel: %o', error);
+      logger.error('Error closing channel: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },
