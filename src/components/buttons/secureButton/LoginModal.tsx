@@ -7,25 +7,12 @@ import {
   SubTitle,
   ResponsiveLine,
 } from '../../generic/Styled';
-import { Circle, ChevronRight } from 'react-feather';
-import styled from 'styled-components';
+import { ChevronRight } from 'react-feather';
 import { useAccount } from '../../../context/AccountContext';
 import { saveSessionAuth } from '../../../utils/auth';
-import { useSettings } from '../../../context/SettingsContext';
-import { textColorMap } from '../../../styles/Themes';
 import { ColorButton } from '../colorButton/ColorButton';
 import { Input } from '../../input/Input';
-
-const RadioText = styled.div`
-  margin-left: 10px;
-`;
-
-const ButtonRow = styled.div`
-  width: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+import { MultiButton, SingleButton } from '../multiButton/MultiButton';
 
 interface LoginProps {
   macaroon: string;
@@ -42,8 +29,6 @@ export const LoginModal = ({
   callback,
   variables,
 }: LoginProps) => {
-  const { theme } = useSettings();
-
   const [pass, setPass] = useState<string>('');
   const [storeSession, setStoreSession] = useState<boolean>(false);
   const { host, cert, refreshAccount } = useAccount();
@@ -70,10 +55,9 @@ export const LoginModal = ({
     text: string,
     selected: boolean
   ) => (
-    <ColorButton color={color} onClick={onClick}>
-      <Circle size={10} fill={selected ? textColorMap[theme] : ''} />
-      <RadioText>{text}</RadioText>
-    </ColorButton>
+    <SingleButton selected={selected} color={color} onClick={onClick}>
+      {text}
+    </SingleButton>
   );
 
   return (
@@ -90,10 +74,10 @@ export const LoginModal = ({
       </ResponsiveLine>
       <ResponsiveLine>
         <NoWrapTitle>Don't ask me again this session:</NoWrapTitle>
-        <ButtonRow>
+        <MultiButton>
           {renderButton(() => setStoreSession(true), 'Yes', storeSession)}
           {renderButton(() => setStoreSession(false), 'No', !storeSession)}
-        </ButtonRow>
+        </MultiButton>
       </ResponsiveLine>
       <ColorButton
         disabled={pass === ''}
