@@ -114,7 +114,7 @@ export const getForwards = {
         forwards,
       };
     } catch (error) {
-      params.logger && logger.error('Error getting forwards: %o', error);
+      logger.error('Error getting forwards: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

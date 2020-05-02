@@ -74,7 +74,7 @@ export const getChannels = {
       const channels = await getChannelList();
       return channels;
     } catch (error) {
-      params.logger && logger.error('Error getting channels: %o', error);
+      logger.error('Error getting channels: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

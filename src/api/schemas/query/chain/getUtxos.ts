@@ -36,7 +36,7 @@ export const getUtxos = {
 
       return utxos;
     } catch (error) {
-      params.logger && logger.error('Error getting utxos: %o', error);
+      logger.error('Error getting utxos: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

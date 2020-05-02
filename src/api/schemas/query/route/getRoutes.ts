@@ -29,7 +29,7 @@ export const getRoutes = {
       tokens: params.tokens,
       ...(params.maxFee && { max_fee: params.maxFee }),
     }).catch((error: any) => {
-      params.logger && logger.error('Error getting routes: %o', error);
+      logger.error('Error getting routes: %o', error);
       throw new Error(getErrorMsg(error));
     });
 

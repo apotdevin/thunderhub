@@ -59,7 +59,7 @@ export const sendToAddress = {
         tokens: send.tokens,
       };
     } catch (error) {
-      params.logger && logger.error('Error creating address: %o', error);
+      logger.error('Error creating address: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

@@ -24,7 +24,7 @@ export const recoverFunds = {
     try {
       backupObj = JSON.parse(params.backup);
     } catch (error) {
-      params.logger && logger.error('Corrupt backup file: %o', error);
+      logger.error('Corrupt backup file: %o', error);
       throw new Error('Corrupt backup file');
     }
 

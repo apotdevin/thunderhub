@@ -21,7 +21,7 @@ export const adminCheck = {
         request: 'admin check',
       });
     } catch (error) {
-      params.logger && logger.error('%o', error);
+      logger.info('%o', error);
       if (error.length >= 2) {
         if (error[2]?.err?.details?.indexOf('permission denied') >= 0) {
           throw new Error('PermissionDenied');

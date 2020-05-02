@@ -27,7 +27,7 @@ export const getNode = {
       });
       return nodeInfo;
     } catch (error) {
-      params.logger && logger.error('Error getting closed channels: %o', error);
+      logger.error('Error getting closed channels: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

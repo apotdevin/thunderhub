@@ -80,7 +80,7 @@ export const getChannelFees = {
 
       return consolidated;
     } catch (error) {
-      params.logger && logger.error('Error getting channel fees: %o', error);
+      logger.error('Error getting channel fees: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

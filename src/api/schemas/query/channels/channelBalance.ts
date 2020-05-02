@@ -27,7 +27,7 @@ export const getChannelBalance = {
         pendingBalance: channelBalance.pending_balance,
       };
     } catch (error) {
-      params.logger && logger.error('Error getting channel balance: %o', error);
+      logger.error('Error getting channel balance: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

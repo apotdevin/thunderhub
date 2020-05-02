@@ -25,7 +25,7 @@ export const verifyBackups = {
     try {
       backupObj = JSON.parse(params.backup);
     } catch (error) {
-      params.logger && logger.error('Corrupt backup file: %o', error);
+      logger.error('Corrupt backup file: %o', error);
       throw new Error('Corrupt backup file');
     }
 
@@ -39,7 +39,7 @@ export const verifyBackups = {
       });
       return is_valid;
     } catch (error) {
-      params.logger && logger.error('Error verifying backups: %o', error);
+      logger.error('Error verifying backups: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

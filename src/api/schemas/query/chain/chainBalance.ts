@@ -30,7 +30,7 @@ export const getChainBalance = {
       });
       return value.chain_balance;
     } catch (error) {
-      params.logger && logger.error('Error getting chain balance: %o', error);
+      logger.error('Error getting chain balance: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

@@ -46,7 +46,7 @@ export const getInOut = {
         lnd,
       });
     } catch (error) {
-      params.logger && logger.error('Error getting invoices: %o', error);
+      logger.error('Error getting invoices: %o', error);
       throw new Error(getErrorMsg(error));
     }
 

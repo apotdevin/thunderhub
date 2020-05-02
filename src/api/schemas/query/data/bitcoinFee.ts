@@ -27,7 +27,7 @@ export const getBitcoinFees = {
       }
       throw new Error('Problem getting Bitcoin fees.');
     } catch (error) {
-      params.logger && logger.error('Error getting bitcoin fees: %o', error);
+      logger.error('Error getting bitcoin fees: %o', error);
       throw new Error('Problem getting Bitcoin fees.');
     }
   },

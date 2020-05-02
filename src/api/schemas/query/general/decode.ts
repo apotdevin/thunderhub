@@ -45,7 +45,7 @@ export const decodeRequest = {
 
       return decode;
     } catch (error) {
-      params.logger && logger.error('Error paying request: %o', error);
+      logger.error('Error paying request: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

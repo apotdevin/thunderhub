@@ -24,7 +24,7 @@ export const signMessage = {
 
       return message.signature;
     } catch (error) {
-      params.logger && logger.error('Error signing message: %o', error);
+      logger.error('Error signing message: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },
