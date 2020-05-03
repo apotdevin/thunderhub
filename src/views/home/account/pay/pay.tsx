@@ -118,6 +118,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
           </Sub4Title>
         </NoWrapTitle>
         <Input
+          value={request}
           placeholder={
             canKeysend ? 'Lightning Invoice or Public Key' : 'Invoice'
           }
