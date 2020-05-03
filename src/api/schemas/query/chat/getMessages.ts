@@ -1,19 +1,10 @@
 import { GraphQLString, GraphQLBoolean } from 'graphql';
 import { getInvoices, verifyMessage } from 'ln-service';
-import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import { getAuthLnd, to } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { decodeMessage } from '../../../helpers/customRecords';
 import { GetMessagesType } from '../../types/QueryType';
-
-const to = promise => {
-  return promise
-    .then(data => {
-      return [null, data];
-    })
-    .catch(err => [err]);
-};
 
 export const getMessages = {
   type: GetMessagesType,
@@ -28,17 +19,12 @@ export const getMessages = {
 
     const lnd = getAuthLnd(params.auth);
 
-    const [error, invoiceList] = await to(
+    const invoiceList = await to(
       getInvoices({
         lnd,
         limit: params.initialize ? 100 : 5,
       })
     );
-
-    if (error) {
-      logger.error('Error getting invoices: %o', error);
-      throw new Error(getErrorMsg(error));
-    }
 
     const getFiltered = () =>
       Promise.all(
@@ -69,7 +55,7 @@ export const getMessages = {
               message: customRecords.message,
             });
 
-            const [error, { signed_by }] = await to(
+            const { signed_by } = await to(
               verifyMessage({
                 lnd,
                 message: messageToVerify,
@@ -77,7 +63,7 @@ export const getMessages = {
               })
             );
 
-            if (!error && signed_by === customRecords.sender) {
+            if (signed_by === customRecords.sender) {
               isVerified = true;
             }
           }
