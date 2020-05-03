@@ -26,6 +26,7 @@ export type Query = {
   adminCheck?: Maybe<Scalars['Boolean']>;
   getNode?: Maybe<PartnerNodeType>;
   decodeRequest?: Maybe<DecodeType>;
+  getWalletInfo?: Maybe<WalletInfoType>;
   getResume?: Maybe<GetResumeType>;
   getForwards?: Maybe<GetForwardType>;
   getBitcoinPrice?: Maybe<Scalars['String']>;
@@ -52,73 +53,64 @@ export type Query = {
 
 export type QueryGetChannelBalanceArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGetChannelsArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   active?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGetClosedChannelsArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   type?: Maybe<Scalars['String']>;
 };
 
 export type QueryGetPendingChannelsArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGetChannelFeesArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGetChannelReportArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGetNetworkInfoArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGetNodeInfoArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryAdminCheckArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGetNodeArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   publicKey: Scalars['String'];
   withoutChannels?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryDecodeRequestArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   request: Scalars['String'];
+};
+
+export type QueryGetWalletInfoArgs = {
+  auth: AuthType;
 };
 
 export type QueryGetResumeArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   token?: Maybe<Scalars['String']>;
 };
 
 export type QueryGetForwardsArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   time?: Maybe<Scalars['String']>;
 };
 
@@ -133,13 +125,11 @@ export type QueryGetBitcoinFeesArgs = {
 
 export type QueryGetForwardReportArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   time?: Maybe<Scalars['String']>;
 };
 
 export type QueryGetForwardChannelsReportArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   time?: Maybe<Scalars['String']>;
   order?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
@@ -147,30 +137,25 @@ export type QueryGetForwardChannelsReportArgs = {
 
 export type QueryGetInOutArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   time?: Maybe<Scalars['String']>;
 };
 
 export type QueryGetBackupsArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryVerifyBackupsArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   backup: Scalars['String'];
 };
 
 export type QueryRecoverFundsArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   backup: Scalars['String'];
 };
 
 export type QueryGetRoutesArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   outgoing: Scalars['String'];
   incoming: Scalars['String'];
   tokens: Scalars['Int'];
@@ -179,40 +164,33 @@ export type QueryGetRoutesArgs = {
 
 export type QueryGetPeersArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QuerySignMessageArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   message: Scalars['String'];
 };
 
 export type QueryVerifyMessageArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   message: Scalars['String'];
   signature: Scalars['String'];
 };
 
 export type QueryGetChainBalanceArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGetPendingChainBalanceArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGetChainTransactionsArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGetUtxosArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGetOffersArgs = {
@@ -221,7 +199,6 @@ export type QueryGetOffersArgs = {
 
 export type QueryGetMessagesArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   token?: Maybe<Scalars['String']>;
   initialize?: Maybe<Scalars['Boolean']>;
   lastMessage?: Maybe<Scalars['String']>;
@@ -385,6 +362,19 @@ export type DecodeRoutesType = {
   cltv_delta?: Maybe<Scalars['Int']>;
   fee_rate?: Maybe<Scalars['Int']>;
   public_key?: Maybe<Scalars['String']>;
+};
+
+export type WalletInfoType = {
+  __typename?: 'walletInfoType';
+  build_tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  commit_hash?: Maybe<Scalars['String']>;
+  is_autopilotrpc_enabled?: Maybe<Scalars['Boolean']>;
+  is_chainrpc_enabled?: Maybe<Scalars['Boolean']>;
+  is_invoicesrpc_enabled?: Maybe<Scalars['Boolean']>;
+  is_signrpc_enabled?: Maybe<Scalars['Boolean']>;
+  is_walletrpc_enabled?: Maybe<Scalars['Boolean']>;
+  is_watchtowerrpc_enabled?: Maybe<Scalars['Boolean']>;
+  is_wtclientrpc_enabled?: Maybe<Scalars['Boolean']>;
 };
 
 export type GetResumeType = {
@@ -574,7 +564,6 @@ export type Mutation = {
 
 export type MutationCloseChannelArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   id: Scalars['String'];
   forceClose?: Maybe<Scalars['Boolean']>;
   targetConfirmations?: Maybe<Scalars['Int']>;
@@ -583,7 +572,6 @@ export type MutationCloseChannelArgs = {
 
 export type MutationOpenChannelArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   amount: Scalars['Int'];
   partnerPublicKey: Scalars['String'];
   tokensPerVByte?: Maybe<Scalars['Int']>;
@@ -592,7 +580,6 @@ export type MutationOpenChannelArgs = {
 
 export type MutationUpdateFeesArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   transactionId?: Maybe<Scalars['String']>;
   transactionVout?: Maybe<Scalars['Int']>;
   baseFee?: Maybe<Scalars['Int']>;
@@ -601,38 +588,32 @@ export type MutationUpdateFeesArgs = {
 
 export type MutationParsePaymentArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   request: Scalars['String'];
 };
 
 export type MutationPayArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   request: Scalars['String'];
   tokens?: Maybe<Scalars['Int']>;
 };
 
 export type MutationCreateInvoiceArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   amount: Scalars['Int'];
 };
 
 export type MutationPayViaRouteArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   route: Scalars['String'];
 };
 
 export type MutationCreateAddressArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   nested?: Maybe<Scalars['Boolean']>;
 };
 
 export type MutationSendToAddressArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   address: Scalars['String'];
   tokens?: Maybe<Scalars['Int']>;
   fee?: Maybe<Scalars['Int']>;
@@ -642,7 +623,6 @@ export type MutationSendToAddressArgs = {
 
 export type MutationAddPeerArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   publicKey: Scalars['String'];
   socket: Scalars['String'];
   isTemporary?: Maybe<Scalars['Boolean']>;
@@ -650,13 +630,11 @@ export type MutationAddPeerArgs = {
 
 export type MutationRemovePeerArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   publicKey: Scalars['String'];
 };
 
 export type MutationSendMessageArgs = {
   auth: AuthType;
-  logger?: Maybe<Scalars['Boolean']>;
   publicKey: Scalars['String'];
   message: Scalars['String'];
   messageType?: Maybe<Scalars['String']>;
@@ -1567,6 +1545,27 @@ export type GetMessagesQuery = { __typename?: 'Query' } & {
           >
         >;
       }
+  >;
+};
+
+export type GetWalletInfoQueryVariables = {
+  auth: AuthType;
+};
+
+export type GetWalletInfoQuery = { __typename?: 'Query' } & {
+  getWalletInfo?: Maybe<
+    { __typename?: 'walletInfoType' } & Pick<
+      WalletInfoType,
+      | 'build_tags'
+      | 'commit_hash'
+      | 'is_autopilotrpc_enabled'
+      | 'is_chainrpc_enabled'
+      | 'is_invoicesrpc_enabled'
+      | 'is_signrpc_enabled'
+      | 'is_walletrpc_enabled'
+      | 'is_watchtowerrpc_enabled'
+      | 'is_wtclientrpc_enabled'
+    >
   >;
 };
 
@@ -4302,4 +4301,68 @@ export type GetMessagesLazyQueryHookResult = ReturnType<
 export type GetMessagesQueryResult = ApolloReactCommon.QueryResult<
   GetMessagesQuery,
   GetMessagesQueryVariables
+>;
+export const GetWalletInfoDocument = gql`
+  query GetWalletInfo($auth: authType!) {
+    getWalletInfo(auth: $auth) {
+      build_tags
+      commit_hash
+      is_autopilotrpc_enabled
+      is_chainrpc_enabled
+      is_invoicesrpc_enabled
+      is_signrpc_enabled
+      is_walletrpc_enabled
+      is_watchtowerrpc_enabled
+      is_wtclientrpc_enabled
+    }
+  }
+`;
+
+/**
+ * __useGetWalletInfoQuery__
+ *
+ * To run a query within a React component, call `useGetWalletInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetWalletInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetWalletInfoQuery({
+ *   variables: {
+ *      auth: // value for 'auth'
+ *   },
+ * });
+ */
+export function useGetWalletInfoQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetWalletInfoQuery,
+    GetWalletInfoQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    GetWalletInfoQuery,
+    GetWalletInfoQueryVariables
+  >(GetWalletInfoDocument, baseOptions);
+}
+export function useGetWalletInfoLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetWalletInfoQuery,
+    GetWalletInfoQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetWalletInfoQuery,
+    GetWalletInfoQueryVariables
+  >(GetWalletInfoDocument, baseOptions);
+}
+export type GetWalletInfoQueryHookResult = ReturnType<
+  typeof useGetWalletInfoQuery
+>;
+export type GetWalletInfoLazyQueryHookResult = ReturnType<
+  typeof useGetWalletInfoLazyQuery
+>;
+export type GetWalletInfoQueryResult = ApolloReactCommon.QueryResult<
+  GetWalletInfoQuery,
+  GetWalletInfoQueryVariables
 >;

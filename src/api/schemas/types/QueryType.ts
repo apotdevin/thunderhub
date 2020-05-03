@@ -243,6 +243,23 @@ export const NodeInfoType = new GraphQLObjectType({
   },
 });
 
+export const WalletInfoType = new GraphQLObjectType({
+  name: 'walletInfoType',
+  fields: () => {
+    return {
+      build_tags: { type: new GraphQLList(GraphQLString) },
+      commit_hash: { type: GraphQLString },
+      is_autopilotrpc_enabled: { type: GraphQLBoolean },
+      is_chainrpc_enabled: { type: GraphQLBoolean },
+      is_invoicesrpc_enabled: { type: GraphQLBoolean },
+      is_signrpc_enabled: { type: GraphQLBoolean },
+      is_walletrpc_enabled: { type: GraphQLBoolean },
+      is_watchtowerrpc_enabled: { type: GraphQLBoolean },
+      is_wtclientrpc_enabled: { type: GraphQLBoolean },
+    };
+  },
+});
+
 export const GetChainTransactionsType = new GraphQLObjectType({
   name: 'getTransactionsType',
   fields: () => ({

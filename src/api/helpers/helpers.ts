@@ -1,4 +1,5 @@
 import { authenticatedLndGrpc } from 'ln-service';
+import { logger } from './logger';
 import getConfig from 'next/config';
 
 const { serverRuntimeConfig } = getConfig();
@@ -48,4 +49,15 @@ export const getErrorMsg = (error: any[] | string): string => {
   // }
 
   return 'Error';
+};
+
+export const to = promise => {
+  return promise
+    .then(data => {
+      return data;
+    })
+    .catch(err => {
+      logger.error('%o', err);
+      throw new Error(getErrorMsg(err));
+    });
 };

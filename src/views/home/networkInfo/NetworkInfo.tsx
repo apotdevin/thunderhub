@@ -66,11 +66,14 @@ const Padding = styled.span`
 export const NetworkInfo = () => {
   const { auth } = useAccount();
 
-  const { loading, data } = useGetNetworkInfoQuery({
+  const { loading, data, error } = useGetNetworkInfoQuery({
     skip: !auth,
     variables: { auth },
-    onError: error => toast.error(getErrorContent(error)),
   });
+
+  if (error) {
+    return null;
+  }
 
   if (loading || !data || !data.getNetworkInfo) {
     return <LoadingCard title={'Network Info'} />;

@@ -12,6 +12,7 @@
     "release": "standard-version",
     "release:push": "standard-version && git push --follow-tags origin master",
     "release:test": "standard-version --dry-run",
+    "release:minor": "standard-version --release-as minor && git push --follow-tags origin master",
     "analyze": "cross-env ANALYZE=true next build",
     "storybook": "start-storybook -p 6006 -c .storybook",
     "generate": "graphql-codegen --config codegen.yml",

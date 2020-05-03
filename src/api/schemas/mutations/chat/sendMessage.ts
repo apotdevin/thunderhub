@@ -6,22 +6,10 @@ import {
 } from 'ln-service';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLString, GraphQLNonNull, GraphQLInt } from 'graphql';
-import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import { getAuthLnd, to } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { createCustomRecords } from '../../../helpers/customRecords';
 import { randomBytes, createHash } from 'crypto';
-import { logger } from '../../../helpers/logger';
-
-const to = promise => {
-  return promise
-    .then(data => {
-      return data;
-    })
-    .catch(err => {
-      logger.error('%o', err);
-      throw new Error(getErrorMsg(err));
-    });
-};
 
 export const sendMessage = {
   type: GraphQLInt,
