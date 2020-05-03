@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/apotdevin/thunderhub/compare/v0.4.1...v0.5.0) (2020-05-03)
+
+
+### Features
+
+* ✨ add wallet version query and view ([ac577b5](https://github.com/apotdevin/thunderhub/commit/ac577b54380adf489c50d2965d29d1c538cb7908))
+
+
+### Improvements
+
+* 🔧 lnd 10 support ([82296f3](https://github.com/apotdevin/thunderhub/commit/82296f3fbb7c883677dd07a5650c8d68b9684eaf))
+* 🔧 remove logger param ([dc4f329](https://github.com/apotdevin/thunderhub/commit/dc4f329ed3bcf9c6c639a6777e42a1e13b29e712))
+
 ### [0.4.1](https://github.com/apotdevin/thunderhub/compare/v0.4.0...v0.4.1) (2020-05-01)
 
 
