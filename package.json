@@ -37,7 +37,7 @@
     "graphql-tag": "^2.10.3",
     "intersection-observer": "^0.8.0",
     "isomorphic-unfetch": "^3.0.0",
-    "ln-service": "^47.16.0",
+    "ln-service": "^48.0.5",
     "lodash.debounce": "^4.0.8",
     "lodash.groupby": "^4.6.0",
     "lodash.merge": "^4.6.2",

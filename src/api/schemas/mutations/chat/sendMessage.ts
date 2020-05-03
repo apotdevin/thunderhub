@@ -90,7 +90,7 @@ export const sendMessage = {
       sender: userKey,
       alias: userAlias,
       contentType: params.messageType || 'text',
-      requestType: '',
+      requestType: params.messageType || 'text',
       signature,
       secret,
     });

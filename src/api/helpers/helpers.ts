@@ -21,17 +21,14 @@ export const getAuthLnd = (auth: {
   macaroon: string;
   host: string;
 }) => {
-  const encodedCert = auth.cert || '';
-  const encodedMacaroon = auth.macaroon || '';
+  const cert = auth.cert || '';
+  const macaroon = auth.macaroon || '';
   const socket = auth.host || '';
-
-  const cert = encodedCert;
-  const macaroon = encodedMacaroon;
 
   const params = {
     macaroon,
     socket,
-    ...(encodedCert !== '' ? { cert } : {}),
+    ...(cert !== '' ? { cert } : {}),
   };
 
   const { lnd } = authenticatedLndGrpc(params);
