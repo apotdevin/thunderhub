@@ -24,7 +24,7 @@ export const NodeBar = () => {
   const slider = useRef<HTMLDivElement>(null);
 
   const { theme } = useSettings();
-  const tooltipType = getTooltipType(theme);
+  const tooltipType: any = getTooltipType(theme);
 
   const viewOnlyAccounts = accounts.filter(account => account.viewOnly !== '');
 

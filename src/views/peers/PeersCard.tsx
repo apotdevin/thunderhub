@@ -61,7 +61,7 @@ export const PeersCard = ({
   const priceContext = usePriceState();
 
   const format = getPrice(currency, priceContext);
-  const tooltipType = getTooltipType(theme);
+  const tooltipType: any = getTooltipType(theme);
 
   const {
     bytes_received,

@@ -88,7 +88,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   const priceContext = usePriceState();
   const format = getPrice(currency, priceContext);
 
-  const tooltipType = getTooltipType(theme);
+  const tooltipType: any = getTooltipType(theme);
 
   if (loading || !data || !data.getNodeInfo) {
     return (

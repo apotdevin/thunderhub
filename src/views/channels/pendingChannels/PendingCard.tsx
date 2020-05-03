@@ -70,7 +70,7 @@ export const PendingCard = ({
   const priceContext = usePriceState();
   const format = getPrice(currency, priceContext);
 
-  const tooltipType = getTooltipType(theme);
+  const tooltipType: any = getTooltipType(theme);
 
   const {
     close_transaction_id,
