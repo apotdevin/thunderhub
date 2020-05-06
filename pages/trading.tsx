@@ -68,7 +68,6 @@ const TradingView = () => {
 
   const { data, loading, fetchMore, error } = useGetOffersQuery({
     variables: { filter: JSON.stringify(queryObject) },
-    onError: () => {},
   });
 
   if (error) {

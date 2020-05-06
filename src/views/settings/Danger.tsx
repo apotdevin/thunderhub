@@ -85,6 +85,22 @@ export const DangerView = () => {
     return null;
   }
 
+  const handleDeleteAll = () => {
+    dispatch({ type: 'disconnected' });
+    chatDispatch({ type: 'disconnected' });
+    deleteStorage();
+    refreshAccount();
+    push(appendBasePath('/'));
+  };
+
+  const handleDelete = (admin?: boolean) => {
+    deleteAccountPermissions(id, accounts, admin);
+    dispatch({ type: 'disconnected' });
+    chatDispatch({ type: 'disconnected' });
+    changeAccount(id);
+    push(appendBasePath('/'));
+  };
+
   const renderButton = () => {
     if (accounts.length > 1) {
       return (
@@ -113,22 +129,6 @@ export const DangerView = () => {
       );
     }
     return null;
-  };
-
-  const handleDeleteAll = () => {
-    dispatch({ type: 'disconnected' });
-    chatDispatch({ type: 'disconnected' });
-    deleteStorage();
-    refreshAccount();
-    push(appendBasePath('/'));
-  };
-
-  const handleDelete = (admin?: boolean) => {
-    deleteAccountPermissions(id, accounts, admin);
-    dispatch({ type: 'disconnected' });
-    chatDispatch({ type: 'disconnected' });
-    changeAccount(id);
-    push(appendBasePath('/'));
   };
 
   const renderSwitch = () => {

@@ -34,7 +34,9 @@ export const SecureWrapper: React.FC<SecureButtonProps> = ({
 
   return (
     <>
-      <div onClick={onClick}>{children}</div>
+      <div role={'button'} onClick={onClick} onKeyDown={onClick} tabIndex={0}>
+        {children}
+      </div>
       <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
         <LoginModal
           color={color}

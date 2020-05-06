@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Sub4Title,
   ResponsiveLine,
-  SubTitle,
-  Separation,
-  SingleLine,
   NoWrapTitle,
-  DarkSubTitle,
 } from '../../../../components/generic/Styled';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
@@ -15,16 +11,7 @@ import { Input } from '../../../../components/input/Input';
 import Modal from '../../../../components/modal/ReactModal';
 import { useAccount } from '../../../../context/AccountContext';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import {
-  renderLine,
-  getNodeLink,
-} from '../../../../components/generic/helpers';
-import { Price } from '../../../../components/price/Price';
-import {
-  usePayInvoiceMutation,
-  useGetNodeLazyQuery,
-  useDecodeRequestQuery,
-} from '../../../../generated/graphql';
+import { usePayInvoiceMutation } from '../../../../generated/graphql';
 import { useStatusState } from '../../../../context/StatusContext';
 import {
   isLightningInvoice,
@@ -67,6 +54,25 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
     }
   };
 
+  const renderButton = () => (
+    <SecureButton
+      callback={makePayment}
+      variables={
+        modalType === 'none'
+          ? { request: cleanLightningInvoice(request) }
+          : { request, tokens }
+      }
+      disabled={
+        modalType === 'request' ? request === '' : request === '' || tokens <= 0
+      }
+      withMargin={'16px 0 0'}
+      loading={loading}
+      fullWidth={true}
+    >
+      Send
+    </SecureButton>
+  );
+
   const renderModal = () => {
     if (modalType === 'request') {
       return (
@@ -89,25 +95,6 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
     }
     return null;
   };
-
-  const renderButton = () => (
-    <SecureButton
-      callback={makePayment}
-      variables={
-        modalType === 'none'
-          ? { request: cleanLightningInvoice(request) }
-          : { request, tokens }
-      }
-      disabled={
-        modalType === 'request' ? request === '' : request === '' || tokens <= 0
-      }
-      withMargin={'16px 0 0'}
-      loading={loading}
-      fullWidth={true}
-    >
-      Send
-    </SecureButton>
-  );
 
   return (
     <>

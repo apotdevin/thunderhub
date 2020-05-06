@@ -10,7 +10,7 @@ export const separateBySender = (chats: any[]) => {
 export const getSenders = (bySender: {}): MessagesType[] => {
   const senders: MessagesType[] = [];
   for (const key in bySender) {
-    if (bySender.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(bySender, key)) {
       const messages = bySender[key];
       const sorted = sortBy(messages, 'date').reverse();
       const element: MessageType[] = sorted.filter(p => p.verified || p.isSent);

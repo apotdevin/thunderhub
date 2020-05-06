@@ -83,6 +83,33 @@ const BalanceView = () => {
     }
   };
 
+  const renderChannels = (isOutgoing?: boolean) => {
+    const channels = sortBy(data.getChannels, [
+      (channel: any) =>
+        getPercent(channel.remote_balance, channel.local_balance),
+    ]);
+
+    const finalChannels = isOutgoing ? channels : channels.reverse();
+
+    return finalChannels.map((channel: any, index: number) => {
+      if (!isOutgoing && outgoing && outgoing.id === channel.id) {
+        return null;
+      }
+
+      const callback = isOutgoing
+        ? !outgoing && { callback: () => setOutgoing(channel) }
+        : outgoing && !incoming && { callback: () => setIncoming(channel) };
+
+      return (
+        <BalanceCard
+          key={`${index}-${channel.id}`}
+          {...{ index, channel, withArrow: true }}
+          {...callback}
+        />
+      );
+    });
+  };
+
   const renderIncoming = () => {
     if (!outgoing) return null;
 
@@ -127,33 +154,6 @@ const BalanceView = () => {
         )}
       </>
     );
-  };
-
-  const renderChannels = (isOutgoing?: boolean) => {
-    const channels = sortBy(data.getChannels, [
-      (channel: any) =>
-        getPercent(channel.remote_balance, channel.local_balance),
-    ]);
-
-    const finalChannels = isOutgoing ? channels : channels.reverse();
-
-    return finalChannels.map((channel: any, index: number) => {
-      if (!isOutgoing && outgoing && outgoing.id === channel.id) {
-        return null;
-      }
-
-      const callback = isOutgoing
-        ? !outgoing && { callback: () => setOutgoing(channel) }
-        : outgoing && !incoming && { callback: () => setIncoming(channel) };
-
-      return (
-        <BalanceCard
-          key={`${index}-${channel.id}`}
-          {...{ index, channel, withArrow: true }}
-          {...callback}
-        />
-      );
-    });
   };
 
   return (

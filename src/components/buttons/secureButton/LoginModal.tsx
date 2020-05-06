@@ -73,7 +73,7 @@ export const LoginModal = ({
         />
       </ResponsiveLine>
       <ResponsiveLine>
-        <NoWrapTitle>Don't ask me again this session:</NoWrapTitle>
+        <NoWrapTitle>{`Don't ask me again this session:`}</NoWrapTitle>
         <MultiButton>
           {renderButton(() => setStoreSession(true), 'Yes', storeSession)}
           {renderButton(() => setStoreSession(false), 'No', !storeSession)}

@@ -16,12 +16,16 @@ import { useChatDispatch } from '../../context/ChatContext';
 
 const PasswordInput = dynamic(() => import('./views/Password'), {
   ssr: false,
-  loading: () => <LoadingCard noCard={true} />,
+  loading: function Loading() {
+    return <LoadingCard noCard={true} />;
+  },
 });
 
 const QRLogin = dynamic(() => import('./views/QRLogin'), {
   ssr: false,
-  loading: () => <LoadingCard noCard={true} />,
+  loading: function Loading() {
+    return <LoadingCard noCard={true} />;
+  },
 });
 
 type AuthProps = {
@@ -46,6 +50,37 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
   const [password, setPassword] = useState<string>();
 
   const [adminChecked, setAdminChecked] = useState(false);
+
+  const quickSave = ({
+    name = 'Unknown',
+    host,
+    admin,
+    viewOnly,
+    cert,
+  }: {
+    name?: string;
+    host?: string;
+    admin?: string;
+    viewOnly?: string;
+    cert?: string;
+  }) => {
+    saveUserAuth({
+      name,
+      host: host || '',
+      admin,
+      viewOnly,
+      cert,
+      accounts,
+    });
+
+    const id = getAccountId(host, viewOnly, admin, cert);
+
+    dispatch({ type: 'disconnected' });
+    dispatchChat({ type: 'disconnected' });
+    changeAccount(id);
+
+    push(appendBasePath('/'));
+  };
 
   const handleSet = ({
     host,
@@ -85,37 +120,6 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
 
       setStatus('confirmNode');
     }
-  };
-
-  const quickSave = ({
-    name = 'Unknown',
-    host,
-    admin,
-    viewOnly,
-    cert,
-  }: {
-    name?: string;
-    host?: string;
-    admin?: string;
-    viewOnly?: string;
-    cert?: string;
-  }) => {
-    saveUserAuth({
-      name,
-      host: host || '',
-      admin,
-      viewOnly,
-      cert,
-      accounts,
-    });
-
-    const id = getAccountId(host, viewOnly, admin, cert);
-
-    dispatch({ type: 'disconnected' });
-    dispatchChat({ type: 'disconnected' });
-    changeAccount(id);
-
-    push(appendBasePath('/'));
   };
 
   const handleSave = () => {

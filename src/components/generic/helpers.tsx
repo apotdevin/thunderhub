@@ -97,7 +97,13 @@ export const renderLine = (
       <SingleLine>
         <OverflowText>{content}</OverflowText>
         {deleteCallback && (
-          <div style={{ margin: '0 0 -4px 4px' }} onClick={deleteCallback}>
+          <div
+            role={'button'}
+            tabIndex={0}
+            style={{ margin: '0 0 -4px 4px' }}
+            onClick={deleteCallback}
+            onKeyDown={deleteCallback}
+          >
             <X size={18} />
           </div>
         )}
