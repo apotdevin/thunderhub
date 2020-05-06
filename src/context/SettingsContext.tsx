@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-use-before-define */
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import merge from 'lodash.merge';
 
@@ -22,8 +23,8 @@ export const SettingsContext = createContext<SettingsProps>({
   theme: '',
   sidebar: true,
   nodeInfo: false,
-  setSettings: () => {},
-  refreshSettings: () => {},
+  setSettings: () => ({}),
+  refreshSettings: () => ({}),
 });
 
 const SettingsProvider = ({ children }: any) => {

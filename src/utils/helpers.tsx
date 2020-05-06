@@ -25,7 +25,7 @@ export const getValue = ({
   currency,
   breakNumber,
 }: GetNumberProps): string => {
-  let value: number = 0;
+  let value = 0;
   if (typeof amount === 'string') {
     value = Number(amount);
   } else {

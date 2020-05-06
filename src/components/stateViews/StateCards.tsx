@@ -53,8 +53,7 @@ export const ErrorView = () => (
         ThunderHub was unable to connect to your node.
       </StyledParagraph>
       <StyledParagraph>
-        Please make sure it's online and that the connection details are
-        correct.
+        {`Please make sure it's online and that the connection details are correct.`}
       </StyledParagraph>
       <StyledSubtitle>
         If the problem persists please contact us.

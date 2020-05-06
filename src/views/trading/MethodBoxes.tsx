@@ -40,8 +40,10 @@ export const MethodBoxes = ({ methods }: MethodBoxesProps) => {
 
   return (
     <StyledMethodBoxes>
-      {methods.map(method => (
-        <StyledMethod>{method.payment_method_name}</StyledMethod>
+      {methods.map((method, index) => (
+        <StyledMethod key={`${method.payment_method_name}/${index}`}>
+          {method.payment_method_name}
+        </StyledMethod>
       ))}
     </StyledMethodBoxes>
   );

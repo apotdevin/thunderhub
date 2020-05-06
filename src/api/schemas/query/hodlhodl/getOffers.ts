@@ -27,7 +27,9 @@ export const getOffers = {
     if (params.filter) {
       try {
         queryParams = JSON.parse(params.filter);
-      } catch (error) {}
+      } catch (error) {
+        queryParams = defaultQuery;
+      }
     }
 
     try {

@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-use-before-define */
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import merge from 'lodash.merge';
 import { getAuth, getAuthObj } from '../utils/auth';
@@ -54,9 +55,9 @@ export const AccountContext = createContext<AccountProps>({
   id: '',
   auth: undefined,
   accounts: [],
-  changeAccount: () => {},
-  deleteAccount: () => {},
-  refreshAccount: () => {},
+  changeAccount: () => ({}),
+  deleteAccount: () => ({}),
+  refreshAccount: () => ({}),
 });
 
 const AccountProvider = ({ children }: any) => {

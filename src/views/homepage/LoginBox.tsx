@@ -92,15 +92,13 @@ export const LoginBox = ({ change }: { change?: boolean }) => {
           <>
             <Separation />
             <Text>
-              To connect with your BTCPayServer instance you need the connection
-              JSON that they provide.
+              {`To connect with your BTCPayServer instance you need the connection JSON that they provide.`}
             </Text>
             <Text>To access this JSON in your BPS instance, go to:</Text>
             <Text>
-              Server Settings > Services > gRPC server > Show QR Code > QR Code
-              Information > Open Config file
+              {`Server Settings > Services > gRPC server > Show QR Code > QR Code Information > Open Config file`}
             </Text>
-            <Text>Then copy the complete JSON and paste it below.</Text>
+            <Text>{`Then copy the complete JSON and paste it below.`}</Text>
             <Separation />
           </>
         );
@@ -109,8 +107,9 @@ export const LoginBox = ({ change }: { change?: boolean }) => {
           <>
             <Separation />
             <Text>
-              To connect via LNDConnect paste the LNDConnectUrl down below.
-              {' Find the url format specification '}
+              {
+                'To connect via LNDConnect paste the LNDConnectUrl down below. Find the url format specification '
+              }
               <Link
                 href={
                   'github.com/LN-Zap/lndconnect/blob/master/lnd_connect_uri.md'

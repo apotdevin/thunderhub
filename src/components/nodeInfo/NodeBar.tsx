@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import * as React from 'react';
 import { useAccount } from '../../context/AccountContext';
 import { NodeCard } from './NodeCard';
 import { CardWithTitle, SubTitle } from '../generic/Styled';
@@ -21,7 +21,7 @@ const StyledQuestion = styled(HelpCircle)`
 export const NodeBar = () => {
   const { accounts } = useAccount();
   const { nodeInfo } = useSettings();
-  const slider = useRef<HTMLDivElement>(null);
+  const slider = React.useRef<HTMLDivElement>(null);
 
   const { theme } = useSettings();
   const tooltipType: any = getTooltipType(theme);
@@ -52,24 +52,34 @@ export const NodeBar = () => {
       </SubTitle>
       <NodeBarContainer>
         <div
+          role={'button'}
           onClick={() => {
             handleScroll(true);
           }}
+          onKeyDown={() => {
+            handleScroll(true);
+          }}
+          tabIndex={0}
         >
           <ArrowLeft size={18} />
         </div>
         <div
+          role={'button'}
           onClick={() => {
             handleScroll();
           }}
+          onKeyDown={() => {
+            handleScroll();
+          }}
+          tabIndex={-1}
         >
           <ArrowRight size={18} />
         </div>
         <StyledNodeBar ref={slider}>
-          {viewOnlyAccounts.map((account, index) => (
-            <div key={account.id}>
+          {viewOnlyAccounts.map(account => (
+            <React.Fragment key={account.id}>
               <NodeCard account={account} accountId={account.id} />
-            </div>
+            </React.Fragment>
           ))}
         </StyledNodeBar>
       </NodeBarContainer>
