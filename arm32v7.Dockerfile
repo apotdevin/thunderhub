@@ -1,24 +1,33 @@
-FROM arm32v7/node:12-alpine
+# ---------------
+# Install Dependencies
+# ---------------
+# FROM node:12-alpine as build
+FROM arm32v7/node:12-alpine as build
 
-# Create app directory
-WORKDIR /usr/src/app
-
-# Install build dependencies
-RUN apk update && apk upgrade \
-    && apk --no-cache add --virtual build-deps build-base python \
-    && yarn add node-gyp node-pre-gyp
+# Install dependencies neccesary for node-gyp on node alpine
+RUN apk add --update --no-cache \
+    python \
+    make \
+    g++
 
 # Install app dependencies
-COPY package.json /usr/src/app/
-COPY yarn.lock /usr/src/app/
-RUN yarn --network-timeout 300000 --production=true
-RUN yarn add cross-env
+COPY package.json .
+COPY yarn.lock .
 
-# Remove build dependencies
-RUN apk del build-deps
+# ENV npm_config_arch arm
+RUN yarn install --network-timeout 100000 --silent --production=true
+RUN yarn add --dev cross-env
+
+# ---------------
+# Build App
+# ---------------
+FROM arm32v7/node:12-alpine
+
+# Copy dependencies from build stage
+COPY --from=build node_modules node_modules
 
 # Bundle app source
-COPY . /usr/src/app
+COPY . .
 RUN yarn build
 EXPOSE 3000
 
