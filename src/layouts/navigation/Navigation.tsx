@@ -140,7 +140,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     title: string,
     link: string,
     NavIcon: any,
-    open: boolean = true
+    open = true
   ) => (
     <Link to={link}>
       <NavButton isOpen={sidebar} selected={pathname === link}>

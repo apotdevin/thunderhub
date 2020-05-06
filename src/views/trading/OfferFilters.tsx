@@ -32,18 +32,20 @@ type ActionType = {
 const reducer = (state: QueryProps, action: ActionType): QueryProps => {
   const { sort, filters } = state;
   switch (action.type) {
-    case 'addSort':
+    case 'addSort': {
       let direction = {};
       if (sort && !sort.direction) {
         direction = { direction: 'desc' };
       }
       const newSort = { ...sort, ...direction, ...action.newItem };
       return { ...state, sort: newSort };
+    }
     case 'removeSort':
       return { ...state, sort: { by: '', direction: '' } };
-    case 'addFilter':
+    case 'addFilter': {
       const newFilters = { ...filters, ...action.newItem };
       return { ...state, filters: newFilters };
+    }
     case 'removeFilter':
       if (action.removeKey) {
         const remaining = { ...filters };
@@ -109,7 +111,7 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
     const currentFilters = filterState.filters;
     const activeFilters = [];
     for (const key in currentFilters) {
-      if (currentFilters.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(currentFilters, key)) {
         const element = currentFilters[key];
         activeFilters.push(
           renderLine(key, element, `${key}-${element}`, () => handleRemove(key))

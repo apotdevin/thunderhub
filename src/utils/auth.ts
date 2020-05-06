@@ -13,6 +13,12 @@ interface BuildProps {
   accounts: any;
 }
 
+export const getAccountId = (host = '', viewOnly = '', admin = '', cert = '') =>
+  uuidv5(
+    `${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`,
+    THUNDERHUB_NAMESPACE
+  );
+
 export const saveUserAuth = ({
   name = '',
   host,
@@ -34,17 +40,6 @@ export const saveUserAuth = ({
   const newAccounts = [...accounts, newAccount];
   saveAccounts(newAccounts);
 };
-
-export const getAccountId = (
-  host: string = '',
-  viewOnly: string = '',
-  admin: string = '',
-  cert: string = ''
-) =>
-  uuidv5(
-    `${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`,
-    THUNDERHUB_NAMESPACE
-  );
 
 export const saveSessionAuth = (sessionAdmin: string) =>
   sessionStorage.setItem('session', sessionAdmin);

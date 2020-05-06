@@ -9,7 +9,7 @@ import { InOutListProps, InOutProps } from '../flow/getInOut.interface';
 export const reduceForwardArray = (list: ListProps) => {
   const reducedOrder = [];
   for (const key in list) {
-    if (list.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(list, key)) {
       const element: ForwardProps[] = list[key];
       const reducedArray: ReduceObjectProps = reduce(
         element,
@@ -34,7 +34,7 @@ export const reduceForwardArray = (list: ListProps) => {
 export const reduceInOutArray = (list: InOutListProps) => {
   const reducedOrder = [];
   for (const key in list) {
-    if (list.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(list, key)) {
       const element: InOutProps[] = list[key];
       const reducedArray: InOutProps = reduce(
         element,
@@ -58,7 +58,7 @@ export const countArray = (list: ForwardProps[], type: boolean) => {
 
   const channelInfo = [];
   for (const key in grouped) {
-    if (grouped.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(grouped, key)) {
       const element = grouped[key];
 
       const fee = element
@@ -86,7 +86,7 @@ export const countRoutes = (list: ForwardProps[]) => {
 
   const channelInfo = [];
   for (const key in grouped) {
-    if (grouped.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(grouped, key)) {
       const element = grouped[key];
 
       const fee = element

@@ -25,9 +25,7 @@ export const RiskCheckboxAndConfirm = ({
   <>
     <Checkbox checked={checked} onChange={onChange}>
       <CheckboxText>
-        I'm feeling reckless. Lightning, LND and ThunderHub are under constant
-        development and I understand that there is always a risk of losing
-        funds.
+        {`I'm feeling reckless. Lightning, LND and ThunderHub are under constant development and I understand that there is always a risk of losing funds.`}
       </CheckboxText>
     </Checkbox>
     <ColorButton

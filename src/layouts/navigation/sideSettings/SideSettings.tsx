@@ -88,7 +88,7 @@ export const SideSettings = ({
     type: string,
     value: string,
     text: string,
-    on: boolean = false,
+    on = false,
     Icon?: any
   ) => (
     <SelectedIcon

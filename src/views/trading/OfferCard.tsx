@@ -23,7 +23,7 @@ import { MethodBoxes } from './MethodBoxes';
 import { Link } from '../../components/link/Link';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 
-const format = (value: number | string, format: string = '0,0.00') =>
+const format = (value: number | string, format = '0,0.00') =>
   numeral(value).format(format);
 
 interface OfferCardProps {

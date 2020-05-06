@@ -307,14 +307,6 @@ export const GetResumeType = new GraphQLObjectType({
   }),
 });
 
-export const GetMessagesType = new GraphQLObjectType({
-  name: 'getMessagesType',
-  fields: () => ({
-    token: { type: GraphQLString },
-    messages: { type: new GraphQLList(MessagesType) },
-  }),
-});
-
 export const MessagesType = new GraphQLObjectType({
   name: 'messagesType',
   fields: () => ({
@@ -326,5 +318,13 @@ export const MessagesType = new GraphQLObjectType({
     alias: { type: GraphQLString },
     message: { type: GraphQLString },
     tokens: { type: GraphQLInt },
+  }),
+});
+
+export const GetMessagesType = new GraphQLObjectType({
+  name: 'getMessagesType',
+  fields: () => ({
+    token: { type: GraphQLString },
+    messages: { type: new GraphQLList(MessagesType) },
   }),
 });
