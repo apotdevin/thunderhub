@@ -25,7 +25,7 @@ COPY --from=build node_modules node_modules
 
 # Bundle app source
 COPY . .
-RUN yarn tslint
+RUN yarn lint
 RUN yarn test
 RUN yarn build
 EXPOSE 3000
