@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.3](https://github.com/apotdevin/thunderhub/compare/v0.5.2...v0.5.3) (2020-05-06)
+
+
+### Bug Fixes
+
+* 🐛 lint script and dockerfile ([9d2cbd3](https://github.com/apotdevin/thunderhub/commit/9d2cbd39a605c940c3d12d1ef780fe28503a5a58))
+
 ### [0.5.2](https://github.com/apotdevin/thunderhub/compare/v0.5.1...v0.5.2) (2020-05-06)
 
 
