@@ -1,0 +1,77 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": { "jsx": true }
+  },
+  "settings": {
+    "react": {
+      "createClass": "createReactClass", // Regex for Component Factory to use,
+                                         // default to "createReactClass"
+      "pragma": "React",  // Pragma to use, default to "React"
+      "version": "detect", // React version. "detect" automatically picks the version you have installed.
+                           // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
+                           // default to latest and warns if missing
+                           // It will default to "detect" in the future
+      "flowVersion": "0.53" // Flow version
+    },
+    "propWrapperFunctions": [
+        // The names of any function used to wrap propTypes, e.g. `forbidExtraProps`. If this isn't set, any propTypes wrapped in a function will be skipped.
+        "forbidExtraProps",
+        {"property": "freeze", "object": "Object"},
+        {"property": "myFavoriteWrapper"}
+    ],
+    "linkComponents": [
+      // Components used as alternatives to <a> for linking, eg. <Link to={ url } />
+      "Hyperlink",
+      {"name": "Link", "linkAttribute": "to"}
+    ]
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "camelcase": "off",
+    "@typescript-eslint/camelcase": "off",
+    // "no-conditional-assignment": 2,
+    // "no-unbound-method": 2,
+    // "no-sparse-arrays": 2,
+    // "restrict-plus-operands": 2,
+    // "no-invalid-template-strings": 2,
+    // "no-boolean-literal-compare": 2,
+    // "no-console": 2,
+    // "object-shorthand-properties-first": 2,
+    // "ter-arrow-parens": [2, "as-needed"],
+    // "trailing-comma": 2,
+    // "indent": [2, "spaces", 4],
+    // "import-name": 2,
+    // "align": 2,
+    // "function-name": [
+      // 2,
+    //   {
+    //     "function-regex": "^[a-zA-Z$][\\w\\d]+$",
+    //     "method-regex": "^[a-z$][\\w\\d]+$",
+    //     "private-method-regex": "^[a-z$][\\w\\d]+$",
+    //     "protected-method-regex": "^[a-z$][\\w\\d]+$",
+    //     "static-method-regex": "^[a-z$][\\w\\d]+$"
+    //   }
+    // ],
+    // "variable-name": {
+    //   "options": [
+    //     "ban-keywords",
+    //     "check-format",
+    //     "allow-leading-underscore",
+    //     "allow-pascal-case"
+    //   ]
+    // },
+    // "react-hooks-nesting": 2,
+    "prettier/prettier": ["error", {}, { "usePrettierrc": true }],
+    "react/prop-types": "off"
+  }
+}

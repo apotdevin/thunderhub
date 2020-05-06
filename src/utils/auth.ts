@@ -35,12 +35,7 @@ export const saveUserAuth = ({
   saveAccounts(newAccounts);
 };
 
-export const getAccountId = (
-  host: string = '',
-  viewOnly: string = '',
-  admin: string = '',
-  cert: string = ''
-) =>
+export const getAccountId = (host = '', viewOnly = '', admin = '', cert = '') =>
   uuidv5(
     `${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`,
     THUNDERHUB_NAMESPACE
