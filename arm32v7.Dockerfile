@@ -13,15 +13,15 @@ RUN apk add --update --no-cache \
 # Install app dependencies
 COPY package.json .
 COPY yarn.lock .
-
-# ENV npm_config_arch arm
-RUN yarn install --network-timeout 100000 --silent --production=true
+RUN yarn install --network-timeout 100000 --silent --prod
 RUN yarn add --dev cross-env
 
 # ---------------
 # Build App
 # ---------------
 FROM arm32v7/node:12-alpine
+
+WORKDIR /app
 
 # Copy dependencies from build stage
 COPY --from=build node_modules node_modules
