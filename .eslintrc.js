@@ -1,0 +1,42 @@
+module.exports = {
+  root: true,
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaFeatures: { jsx: true },
+  },
+  plugins: ['react', 'jest', 'import', 'prettier'],
+  settings: {
+    react: {
+      createClass: 'createReactClass',
+      pragma: 'React',
+      version: 'detect',
+      flowVersion: '0.53',
+    },
+    propWrapperFunctions: [
+      'forbidExtraProps',
+      { property: 'freeze', object: 'Object' },
+      { property: 'myFavoriteWrapper' },
+    ],
+    linkComponents: ['Hyperlink', { name: 'Link', linkAttribute: 'to' }],
+  },
+  extends: [
+    "eslint:recommended",
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:jsx-a11y/recommended',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:jest/recommended',
+    'prettier/@typescript-eslint',
+    'plugin:prettier/recommended',
+  ],
+  rules: {
+    'import/no-unresolved': 'off',
+    camelcase: 'off',
+    '@typescript-eslint/camelcase': 'off',
+    'prettier/prettier': 'error',
+    'react/prop-types': 'off',
+  },
+};

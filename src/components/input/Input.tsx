@@ -1,5 +1,6 @@
 import React from 'react';
-import styled, { css, ThemeSet } from 'styled-components';
+import styled, { css } from 'styled-components';
+import { ThemeSet } from 'styled-theming';
 import {
   textColor,
   colorButtonBorder,

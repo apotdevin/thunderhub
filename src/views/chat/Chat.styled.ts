@@ -1,4 +1,5 @@
-import styled, { css, ThemeSet } from 'styled-components';
+import styled, { css } from 'styled-components';
+import { ThemeSet } from 'styled-theming';
 import { DarkSubTitle, SubCard, Card } from '../../components/generic/Styled';
 import {
   cardBorderColor,
