@@ -5,11 +5,15 @@ import { NodeInfo } from '../../layouts/navigation/nodeInfo/NodeInfo';
 import { SideSettings } from '../../layouts/navigation/sideSettings/SideSettings';
 import { Navigation } from '../../layouts/navigation/Navigation';
 
-const StyledBurger = styled.div`
+type StyledProps = {
+  open: boolean;
+};
+
+const StyledBurger = styled.div<StyledProps>`
   padding: 16px 16px 0;
   background-color: ${burgerColor};
   box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-  ${({ open }: { open: boolean }) =>
+  ${({ open }) =>
     open &&
     css`
       margin-bottom: 16px;
