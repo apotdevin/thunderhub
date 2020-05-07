@@ -59,10 +59,9 @@ interface SeparationProps {
   lineColor?: string | ThemeSet;
 }
 
-export const Separation = styled.div`
-  height: ${({ height }: SeparationProps) => (height ? height : '1')}px;
-  background-color: ${({ lineColor }: SeparationProps) =>
-    lineColor ?? separationColor};
+export const Separation = styled.div<SeparationProps>`
+  height: ${({ height }) => (height ? height : '1')}px;
+  background-color: ${({ lineColor }) => lineColor ?? separationColor};
   width: 100%;
   margin: 16px 0;
 `;
@@ -73,13 +72,12 @@ interface SubCardProps {
   withMargin?: string;
 }
 
-export const SubCard = styled.div`
+export const SubCard = styled.div<SubCardProps>`
   margin: ${({ withMargin }) => (withMargin ? withMargin : '0 0 10px 0')};
   padding: ${({ padding }) => (padding ? padding : '16px')};
   background: ${subCardColor};
   border: 1px solid ${cardBorderColor};
-  border-left: ${({ color }: SubCardProps) =>
-    color ? `2px solid ${color}` : ''};
+  border-left: ${({ color }) => (color ? `2px solid ${color}` : '')};
 
   &:hover {
     box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
@@ -148,15 +146,14 @@ export const ColumnLine = styled.div`
   }
 `;
 
-export const SimpleButton = styled.button`
+export const SimpleButton = styled.button<{ enabled?: boolean }>`
   cursor: pointer;
   outline: none;
   padding: 5px;
   margin: 5px;
   text-decoration: none;
   background-color: transparent;
-  color: ${({ enabled = true }: { enabled?: boolean }) =>
-    enabled ? textColor : unSelectedNavButton};
+  color: ${({ enabled = true }) => (enabled ? textColor : unSelectedNavButton)};
   border: 1px solid ${buttonBorderColor};
   display: flex;
   align-items: center;
@@ -175,20 +172,19 @@ interface DarkProps {
   withMargin?: string;
 }
 
-export const DarkSubTitle = styled.div`
-  font-size: ${({ fontSize }: DarkProps) => (fontSize ? fontSize : '14px')};
+export const DarkSubTitle = styled.div<DarkProps>`
+  font-size: ${({ fontSize }) => (fontSize ? fontSize : '14px')};
   color: ${unSelectedNavButton};
-  margin: ${({ withMargin }: DarkProps) => (withMargin ? withMargin : '0')};
+  margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
 `;
 
 interface ColorProps {
   color: string;
   selected?: boolean;
 }
-export const ColorButton = styled(SimpleButton)`
+export const ColorButton = styled(SimpleButton)<ColorProps>`
   color: ${({ selected }) => (selected ? textColor : chartLinkColor)};
-  border: ${({ selected, color }: ColorProps) =>
-    selected ? `1px solid ${color}` : ''};
+  border: ${({ selected, color }) => (selected ? `1px solid ${color}` : '')};
 
   &:hover {
     border: 1px solid ${({ color }: ColorProps) => color};

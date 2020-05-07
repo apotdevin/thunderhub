@@ -29,9 +29,9 @@ import { useRouter } from 'next/router';
 import { Link } from '../../components/link/Link';
 import { useStatusState } from '../../context/StatusContext';
 
-const NavigationStyle = styled.div`
+const NavigationStyle = styled.div<{ isOpen: boolean }>`
   grid-area: nav;
-  width: ${({ isOpen }: { isOpen: boolean }) => (isOpen ? '200px' : '60px')};
+  width: ${({ isOpen }) => (isOpen ? '200px' : '60px')};
 
   @media (${mediaWidths.mobile}) {
     display: none;
@@ -51,9 +51,9 @@ const LinkView = styled.div`
   padding: 8px 0;
 `;
 
-const ButtonSection = styled.div`
+const ButtonSection = styled.div<{ isOpen: boolean }>`
   width: 100%;
-  ${({ isOpen }: { isOpen: boolean }) =>
+  ${({ isOpen }) =>
     !isOpen &&
     css`
       margin: 8px 0;
@@ -70,18 +70,17 @@ interface NavProps {
   isOpen?: boolean;
 }
 
-const NavButton = styled.div`
+const NavButton = styled.div<NavProps>`
   padding: 4px;
   border-radius: 4px;
-  background: ${({ selected }: NavProps) => selected && navBackgroundColor};
+  background: ${({ selected }) => selected && navBackgroundColor};
   display: flex;
   align-items: center;
-  ${({ isOpen }: NavProps) => !isOpen && 'justify-content: center'};
+  ${({ isOpen }) => !isOpen && 'justify-content: center'};
   width: 100%;
   text-decoration: none;
   margin: 4px 0;
-  color: ${({ selected }: NavProps) =>
-    selected ? navTextColor : unSelectedNavButton};
+  color: ${({ selected }) => (selected ? navTextColor : unSelectedNavButton)};
 
   &:hover {
     color: ${navTextColor};
@@ -99,7 +98,7 @@ const BurgerRow = styled.div`
   padding: 16px;
 `;
 
-const BurgerNav = styled.a`
+const BurgerNav = styled.a<NavProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -107,10 +106,9 @@ const BurgerNav = styled.a`
   padding: 16px 16px 8px;
   border-radius: 4px;
   text-decoration: none;
-  background: ${({ selected }: NavProps) => selected && subCardColor};
-  ${({ isOpen }: NavProps) => !isOpen && 'justify-content: center'};
-  color: ${({ selected }: NavProps) =>
-    selected ? navTextColor : unSelectedNavButton};
+  background: ${({ selected }) => selected && subCardColor};
+  ${({ isOpen }) => !isOpen && 'justify-content: center'};
+  color: ${({ selected }) => (selected ? navTextColor : unSelectedNavButton)};
 `;
 
 const HOME = '/home';
