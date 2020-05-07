@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.4](https://github.com/apotdevin/thunderhub/compare/v0.5.3...v0.5.4) (2020-05-07)
+
+
+### Bug Fixes
+
+* 🐛 eslint plugins ([aa39ab5](https://github.com/apotdevin/thunderhub/commit/aa39ab54710fd9dc6737a1ce4a01d471ffe2825e))
+* 🐛 linting ([dc0e5d7](https://github.com/apotdevin/thunderhub/commit/dc0e5d7cd690bc37e0f6176ae676f4ce3e810430))
+* 🐛 type error ([816306f](https://github.com/apotdevin/thunderhub/commit/816306f2cd921be5aafa2ed59d9b22a5718899d4))
+
 ### [0.5.3](https://github.com/apotdevin/thunderhub/compare/v0.5.2...v0.5.3) (2020-05-06)
 
 
