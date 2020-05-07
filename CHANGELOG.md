@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.5](https://github.com/apotdevin/thunderhub/compare/v0.5.4...v0.5.5) (2020-05-07)
+
+
+### Features
+
+* multi arch ([#36](https://github.com/apotdevin/thunderhub/issues/36)) ([32ad0c3](https://github.com/apotdevin/thunderhub/commit/32ad0c3302cbb57538d30f6712cecb94d1429295))
+
 ### [0.5.4](https://github.com/apotdevin/thunderhub/compare/v0.5.3...v0.5.4) (2020-05-07)
 
 
