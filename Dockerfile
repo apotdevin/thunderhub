@@ -12,7 +12,7 @@ RUN apk add --update --no-cache \
 # Install app dependencies
 COPY package.json .
 COPY yarn.lock .
-RUN yarn install --silent --production=true
+RUN yarn install --silent --prod
 RUN yarn add --dev cross-env
 
 # ---------------
@@ -20,13 +20,13 @@ RUN yarn add --dev cross-env
 # ---------------
 FROM node:12-alpine
 
+WORKDIR /app
+
 # Copy dependencies from build stage
 COPY --from=build node_modules node_modules
 
 # Bundle app source
 COPY . .
-RUN yarn lint
-RUN yarn test
 RUN yarn build
 EXPOSE 3000
 
