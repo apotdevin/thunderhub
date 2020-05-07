@@ -20,6 +20,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "build:image": "docker build --no-cache -t apotdevin/thunderhub:test .",
+    "build:32": "docker build --no-cache -f arm32v7.Dockerfile -t apotdevin/thunderhub:test32 .",
+    "build:64": "docker build --no-cache -f arm64v8.Dockerfile -t apotdevin/thunderhub:test64 .",
     "upgrade-latest": "yarn upgrade-interactive --latest"
   },
   "keywords": [],
