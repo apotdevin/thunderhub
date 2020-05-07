@@ -20,7 +20,7 @@ module.exports = {
     linkComponents: ['Hyperlink', { name: 'Link', linkAttribute: 'to' }],
   },
   extends: [
-    "eslint:recommended",
+    'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
@@ -33,6 +33,7 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
   rules: {
+    '@typescript-eslint/explicit-function-return-type': 'off',
     'import/no-unresolved': 'off',
     camelcase: 'off',
     '@typescript-eslint/camelcase': 'off',

@@ -11,14 +11,14 @@ export const IconPadding = styled.div`
   margin-bottom: -4px;
 `;
 
-export const HeaderTitle = styled.div`
+export const HeaderTitle = styled.div<{ withPadding: boolean }>`
   color: ${headerTextColor};
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  ${({ withPadding }: { withPadding: boolean }) =>
+  ${({ withPadding }) =>
     withPadding &&
     css`
       @media (${mediaWidths.mobile}) {
@@ -35,19 +35,18 @@ export const IconWrapper = styled.div`
   height: 24px;
 `;
 
-export const LinkWrapper = styled.div`
+export const LinkWrapper = styled.div<{ last?: boolean }>`
   color: ${headerTextColor};
-  margin: ${({ last }: { last?: boolean }) =>
-    last ? '0 16px 0 4px' : '0 4px'};
+  margin: ${({ last }) => (last ? '0 16px 0 4px' : '0 4px')};
 
   :hover {
     color: ${themeColors.blue2};
   }
 `;
 
-export const HeaderLine = styled(SingleLine)`
+export const HeaderLine = styled(SingleLine)<{ loggedIn: boolean }>`
   @media (${mediaWidths.mobile}) {
-    ${({ loggedIn }: { loggedIn: boolean }) =>
+    ${({ loggedIn }) =>
       !loggedIn &&
       css`
         width: 100%;

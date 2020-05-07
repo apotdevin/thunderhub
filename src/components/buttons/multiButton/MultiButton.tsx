@@ -11,7 +11,7 @@ interface StyledSingleProps {
   buttonColor?: string;
 }
 
-const StyledSingleButton = styled.button`
+const StyledSingleButton = styled.button<StyledSingleProps>`
   border-radius: 4px;
   cursor: pointer;
   outline: none;
@@ -22,7 +22,7 @@ const StyledSingleButton = styled.button`
   color: ${multiSelectColor};
   flex-grow: 1;
 
-  ${({ selected, buttonColor }: StyledSingleProps) =>
+  ${({ selected, buttonColor }) =>
     selected
       ? css`
           color: white;
@@ -61,7 +61,7 @@ interface MultiBackProps {
   margin?: string;
 }
 
-const MultiBackground = styled.div`
+const MultiBackground = styled.div<MultiBackProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -70,7 +70,7 @@ const MultiBackground = styled.div`
   background: ${multiButtonColor};
   flex-wrap: wrap;
 
-  ${({ margin }: MultiBackProps) => margin && `margin: ${margin}`}
+  ${({ margin }) => margin && `margin: ${margin}`}
 `;
 
 interface MultiButtonProps {

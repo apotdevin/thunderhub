@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { MessageType } from './Chat.types';
+import { ThemeSet } from 'styled-theming';
 import {
   ChatStyledMessage,
   ChatBubbleMessage,
@@ -91,7 +92,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
     tokens,
   } = message;
 
-  let color = chatBubbleColor;
+  let color: ThemeSet | string = chatBubbleColor;
   let textMessage = chatMessage;
   let dotColor = '';
   let showButton = false;

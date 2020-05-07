@@ -23,7 +23,7 @@ interface GeneralProps {
   mobileMargin?: string;
 }
 
-const GeneralButton = styled.button`
+const GeneralButton = styled.button<GeneralProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,7 +36,7 @@ const GeneralButton = styled.button`
   font-size: 14px;
   box-sizing: border-box;
   margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
-  width: ${({ fullWidth, buttonWidth }: GeneralProps) =>
+  width: ${({ fullWidth, buttonWidth }) =>
     fullWidth ? '100%' : buttonWidth ? buttonWidth : 'auto'};
 
   @media (${mediaWidths.mobile}) {
@@ -73,13 +73,13 @@ interface BorderProps {
   withBorder?: boolean;
 }
 
-const BorderButton = styled(GeneralButton)`
+const BorderButton = styled(GeneralButton)<BorderProps>`
   ${({ selected }) => selected && 'cursor: default'};
   ${({ selected }) => selected && 'font-weight: 800'};
   background-color: ${colorButtonBackground};
   color: ${textColor};
   border: 1px solid
-    ${({ borderColor, selected, withBorder }: BorderProps) =>
+    ${({ borderColor, selected, withBorder }) =>
       withBorder
         ? borderColor
           ? borderColor

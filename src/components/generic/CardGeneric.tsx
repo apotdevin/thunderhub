@@ -18,16 +18,16 @@ interface ProgressBar {
   order?: number;
 }
 
-export const ProgressBar = styled.div`
+export const ProgressBar = styled.div<ProgressBar>`
   height: 10px;
   background-image: linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0.3),
     rgba(0, 0, 0, 0.05)
   );
-  background-color: ${({ order }: ProgressBar) =>
+  background-color: ${({ order }) =>
     order === 2 ? progressFirst : progressSecond};
-  width: ${({ percent }: ProgressBar) => `${percent}%`};
+  width: ${({ percent }) => `${percent}%`};
 `;
 
 export const NodeTitle = styled.div`
@@ -83,13 +83,13 @@ export interface CardProps {
   cardPadding?: string;
 }
 
-export const Card = styled.div`
-  padding: ${({ cardPadding }: CardProps) => cardPadding ?? '16px'};
+export const Card = styled.div<CardProps>`
+  padding: ${({ cardPadding }) => cardPadding ?? '16px'};
   background: ${cardColor};
   box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   border: 1px solid ${cardBorderColor};
-  margin-bottom: ${({ bottom }: CardProps) => (bottom ? bottom : '25px')};
+  margin-bottom: ${({ bottom }) => (bottom ? bottom : '25px')};
   width: 100%;
 `;
 

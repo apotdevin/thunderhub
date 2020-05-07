@@ -21,7 +21,7 @@ const FixedWidth = styled.div`
   margin-right: 8px;
 `;
 
-const StyledCheckbox = styled.div`
+const StyledCheckbox = styled.div<{ checked: boolean }>`
   height: 16px;
   width: 16px;
   margin: 0;
@@ -33,8 +33,7 @@ const StyledCheckbox = styled.div`
   box-sizing: border-box;
   border-radius: 50%;
 
-  ${({ checked }: { checked: boolean }) =>
-    checked && `background-color: ${themeColors.blue2}`}
+  ${({ checked }) => checked && `background-color: ${themeColors.blue2}`}
 `;
 
 type CheckboxProps = {

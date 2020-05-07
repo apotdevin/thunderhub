@@ -10,7 +10,7 @@ import {
   unSelectedNavButton,
 } from '../../../styles/Themes';
 
-const SelectedIcon = styled.div`
+const SelectedIcon = styled.div<{ selected: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -27,8 +27,7 @@ const SelectedIcon = styled.div`
       color: ${inverseTextColor};
     }
   }
-  background-color: ${({ selected }: { selected: boolean }) =>
-    selected ? progressBackground : ''};
+  background-color: ${({ selected }) => (selected ? progressBackground : '')};
 `;
 
 const Symbol = styled.div`
@@ -36,12 +35,12 @@ const Symbol = styled.div`
   font-weight: 700;
 `;
 
-const IconRow = styled.div`
+const IconRow = styled.div<{ center?: boolean }>`
   margin: 5px 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  ${({ center }: { center?: boolean }) => center && 'width: 100%'}
+  ${({ center }) => center && 'width: 100%'}
 `;
 
 const BurgerPadding = styled(SingleLine)`
