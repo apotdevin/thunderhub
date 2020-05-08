@@ -19,9 +19,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "build:image": "docker build --no-cache -t apotdevin/thunderhub:test .",
-    "build:32": "docker build --no-cache -f arm32v7.Dockerfile -t apotdevin/thunderhub:test32 .",
-    "build:64": "docker build --no-cache -f arm64v8.Dockerfile -t apotdevin/thunderhub:test64 .",
+    "build:image": "docker build --no-cache -t apotdevin/thunderhub:v0.5.5-amd64 .",
+    "build:32": "docker build --no-cache -f arm32v7.Dockerfile -t apotdevin/thunderhub:v0.5.5-arm32v7 .",
+    "build:64": "docker build --no-cache -f arm64v8.Dockerfile -t apotdevin/thunderhub:v0.5.5-arm64v8 .",
+    "build:manifest": "docker manifest create apotdevin/thunderhub:v0.5.5 apotdevin/thunderhub:v0.5.5-amd64 apotdevin/thunderhub:v0.5.5-arm32v7",
     "upgrade-latest": "yarn upgrade-interactive --latest"
   },
   "keywords": [],
