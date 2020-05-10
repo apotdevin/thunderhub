@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import getConfig from 'next/config';
+import Cookies from 'js-cookie';
 
 const themeTypes = ['dark', 'light'];
 const currencyTypes = ['sat', 'btc', 'EUR', 'USD'];
@@ -16,6 +17,10 @@ type State = {
   hideNonVerified: boolean;
   maxFee: number;
   chatPollingSpeed: number;
+};
+
+type ConfigInitProps = {
+  initialConfig: State;
 };
 
 type ActionType = {
@@ -73,8 +78,18 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const ConfigProvider = ({ children }: any) => {
-  const [state, dispatch] = useReducer(stateReducer, initialState);
+const ConfigProvider: React.FC<ConfigInitProps> = ({
+  children,
+  initialConfig,
+}) => {
+  const [state, dispatch] = useReducer(stateReducer, {
+    ...initialState,
+    ...initialConfig,
+  });
+
+  useEffect(() => {
+    Cookies.set('config', state, { expires: 365, sameSite: 'strict' });
+  }, [state]);
 
   return (
     <DispatchContext.Provider value={dispatch}>

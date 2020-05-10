@@ -1,8 +1,7 @@
-import App from 'next/app';
-import React from 'react';
+import * as React from 'react';
 import { ContextProvider } from '../src/context/ContextProvider';
 import { ThemeProvider } from 'styled-components';
-import { useConfigState } from '../src/context/ConfigContext';
+import { useConfigState, ConfigProvider } from '../src/context/ConfigContext';
 import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { GlobalStyles } from '../src/styles/GlobalStyle';
 import { Header } from '../src/layouts/header/Header';
@@ -20,6 +19,7 @@ import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
 import { useStatusState } from '../src/context/StatusContext';
 import { ChatFetcher } from '../src/components/chat/ChatFetcher';
 import { ChatInit } from '../src/components/chat/ChatInit';
+import { parseCookies } from '../src/utils/cookies';
 
 toast.configure({ draggable: false, pauseOnFocusLoss: false });
 
@@ -63,24 +63,36 @@ const Wrapper: React.FC = ({ children }) => {
   );
 };
 
-class MyApp extends App<any> {
-  render() {
-    const { Component, pageProps, apollo } = this.props;
-    return (
-      <>
-        <Head>
-          <title>ThunderHub - Lightning Node Manager</title>
-        </Head>
-        <ApolloProvider client={apollo}>
-          <ContextProvider>
-            <Wrapper>
-              <Component {...pageProps} />
-            </Wrapper>
-          </ContextProvider>
-        </ApolloProvider>
-      </>
-    );
-  }
-}
+const App = ({ Component, pageProps, apollo, initialConfig }: any) => (
+  <>
+    <Head>
+      <title>ThunderHub - Lightning Node Manager</title>
+    </Head>
+    <ApolloProvider client={apollo}>
+      <ConfigProvider initialConfig={initialConfig}>
+        <ContextProvider>
+          <Wrapper>
+            <Component {...pageProps} />
+          </Wrapper>
+        </ContextProvider>
+      </ConfigProvider>
+    </ApolloProvider>
+  </>
+);
 
-export default withApollo(MyApp);
+App.getInitialProps = async props => {
+  const cookies = parseCookies(props.ctx.req);
+  if (!cookies?.config) {
+    return { initialConfig: {} };
+  }
+  try {
+    const config = JSON.parse(cookies.config);
+    return {
+      initialConfig: config,
+    };
+  } catch (error) {
+    return { initialConfig: {} };
+  }
+};
+
+export default withApollo(App);
