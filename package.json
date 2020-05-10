@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--insecure-http-parser' next",
+    "dev:compatible": "next",
     "build": "next build",
     "start": "cross-env NODE_OPTIONS='--insecure-http-parser' next start",
+    "start:compatible": "next start",
     "lint": "eslint */**/*.{js,ts,tsx} --quiet --fix",
     "prettier": "prettier --write **/*.{ts,tsx,js,css,html}",
     "release": "standard-version",

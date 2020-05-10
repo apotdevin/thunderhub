@@ -1,6 +1,9 @@
 import React from 'react';
 import { Separation, SingleLine } from '../../../components/generic/Styled';
-import { useSettings } from '../../../context/SettingsContext';
+import {
+  useConfigState,
+  useConfigDispatch,
+} from '../../../context/ConfigContext';
 import { Sun, Moon, ChevronLeft, ChevronRight } from 'react-feather';
 import styled from 'styled-components';
 import {
@@ -9,6 +12,7 @@ import {
   inverseTextColor,
   unSelectedNavButton,
 } from '../../../styles/Themes';
+import { usePriceState } from '../../../context/PriceContext';
 
 const SelectedIcon = styled.div<{ selected: boolean }>`
   display: flex;
@@ -49,11 +53,17 @@ const BurgerPadding = styled(SingleLine)`
 
 const currencyArray = ['sat', 'btc', 'EUR', 'USD'];
 const themeArray = ['light', 'dark'];
+
 const currencyMap: { [key: string]: string } = {
   sat: 'S',
   btc: '₿',
   EUR: '€',
   USD: '$',
+};
+
+const currencyNoFiatMap: { [key: string]: string } = {
+  sat: 'S',
+  btc: '₿',
 };
 
 const getNextValue = (array: string[], current: string): string => {
@@ -71,17 +81,13 @@ const getNextValue = (array: string[], current: string): string => {
 };
 
 interface SideSettingsProps {
-  isOpen?: boolean;
   isBurger?: boolean;
-  setIsOpen?: (state: any) => void;
 }
 
-export const SideSettings = ({
-  isOpen,
-  isBurger,
-  setIsOpen,
-}: SideSettingsProps) => {
-  const { theme, currency, setSettings } = useSettings();
+export const SideSettings = ({ isBurger }: SideSettingsProps) => {
+  const { dontShow } = usePriceState();
+  const { theme, currency, sidebar } = useConfigState();
+  const dispatch = useConfigDispatch();
 
   const renderIcon = (
     type: string,
@@ -97,11 +103,12 @@ export const SideSettings = ({
       onClick={() => {
         localStorage.setItem(type, value);
         type === 'currency' &&
-          setSettings({
+          dispatch({
+            type: 'change',
             currency:
-              isOpen || isBurger ? value : getNextValue(currencyArray, value),
+              sidebar || isBurger ? value : getNextValue(currencyArray, value),
           });
-        type === 'theme' && setSettings({ theme: value });
+        type === 'theme' && dispatch({ type: 'change', theme: value });
       }}
     >
       {type === 'currency' && <Symbol>{text}</Symbol>}
@@ -110,12 +117,13 @@ export const SideSettings = ({
   );
 
   const renderContent = () => {
-    if (!isOpen) {
+    if (!sidebar) {
+      const correctMap = dontShow ? currencyNoFiatMap : currencyMap;
       return (
         <>
           <Separation lineColor={unSelectedNavButton} />
           <IconRow center={true}>
-            {renderIcon('currency', currency, currencyMap[currency], true)}
+            {renderIcon('currency', currency, correctMap[currency], true)}
           </IconRow>
           <IconRow center={true}>
             {renderIcon(
@@ -135,8 +143,8 @@ export const SideSettings = ({
         <IconRow>
           {renderIcon('currency', 'sat', 'S')}
           {renderIcon('currency', 'btc', '₿')}
-          {renderIcon('currency', 'EUR', '€')}
-          {renderIcon('currency', 'USD', '$')}
+          {!dontShow && renderIcon('currency', 'EUR', '€')}
+          {!dontShow && renderIcon('currency', 'USD', '$')}
         </IconRow>
         <IconRow>
           {renderIcon('theme', 'light', '', false, Sun)}
@@ -166,19 +174,17 @@ export const SideSettings = ({
   return (
     <>
       {renderContent()}
-      {setIsOpen && (
-        <IconRow center={!isOpen}>
-          <SelectedIcon
-            selected={true}
-            onClick={() => {
-              localStorage.setItem('sidebar', (!isOpen).toString());
-              setIsOpen({ sidebar: !isOpen });
-            }}
-          >
-            {isOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
-          </SelectedIcon>
-        </IconRow>
-      )}
+      <IconRow center={!sidebar}>
+        <SelectedIcon
+          selected={true}
+          onClick={() => {
+            localStorage.setItem('sidebar', (!sidebar).toString());
+            dispatch({ type: 'change', sidebar: !sidebar });
+          }}
+        >
+          {sidebar ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+        </SelectedIcon>
+      </IconRow>
     </>
   );
 };

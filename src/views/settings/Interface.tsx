@@ -6,22 +6,19 @@ import {
   Sub4Title,
 } from '../../components/generic/Styled';
 import { SettingsLine } from '../../../pages/settings';
-import { useSettings } from '../../context/SettingsContext';
+import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 
 import {
   MultiButton,
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
 import { useAccount } from '../../context/AccountContext';
+import { usePriceState } from '../../context/PriceContext';
 
 export const InterfaceSettings = () => {
-  const {
-    theme,
-    currency,
-    nodeInfo,
-    setSettings,
-    refreshSettings,
-  } = useSettings();
+  const { dontShow } = usePriceState();
+  const { theme, currency, multiNodeInfo } = useConfigState();
+  const dispatch = useConfigDispatch();
 
   const { accounts } = useAccount();
 
@@ -37,11 +34,13 @@ export const InterfaceSettings = () => {
       selected={current === value}
       onClick={() => {
         localStorage.setItem(type, value);
-        type === 'theme' && setSettings({ theme: value });
-        type === 'currency' && setSettings({ currency: value });
+        type === 'theme' && dispatch({ type: 'change', theme: value });
+        type === 'currency' && dispatch({ type: 'change', currency: value });
         type === 'nodeInfo' &&
-          setSettings({ nodeInfo: value === 'true' ? true : false });
-        refreshSettings();
+          dispatch({
+            type: 'change',
+            multiNodeInfo: value === 'true' ? true : false,
+          });
       }}
     >
       {title}
@@ -63,18 +62,18 @@ export const InterfaceSettings = () => {
           <SettingsLine>
             <Sub4Title>Show all accounts on homepage:</Sub4Title>
             <MultiButton>
-              {renderButton('Yes', 'true', 'nodeInfo', `${nodeInfo}`)}
-              {renderButton('No', 'false', 'nodeInfo', `${nodeInfo}`)}
+              {renderButton('Yes', 'true', 'nodeInfo', `${multiNodeInfo}`)}
+              {renderButton('No', 'false', 'nodeInfo', `${multiNodeInfo}`)}
             </MultiButton>
           </SettingsLine>
         )}
         <SettingsLine>
           <Sub4Title>Currency:</Sub4Title>
           <MultiButton margin={'0 0 0 16px'}>
-            {renderButton('Bitcoin', 'btc', 'currency', currency)}
             {renderButton('Satoshis', 'sat', 'currency', currency)}
-            {renderButton('Euro', 'EUR', 'currency', currency)}
-            {renderButton('US Dollar', 'USD', 'currency', currency)}
+            {renderButton('Bitcoin', 'btc', 'currency', currency)}
+            {!dontShow && renderButton('Euro', 'EUR', 'currency', currency)}
+            {!dontShow && renderButton('USD', 'USD', 'currency', currency)}
           </MultiButton>
         </SettingsLine>
       </Card>

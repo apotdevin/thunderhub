@@ -17,7 +17,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { ChevronRight } from 'react-feather';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
-import { useSettings } from '../../context/SettingsContext';
+import { useConfigState } from '../../context/ConfigContext';
 import { textColorMap } from '../../styles/Themes';
 import { Input } from '../../components/input/Input';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
@@ -39,7 +39,7 @@ export const FeeCard = ({
   const [newBaseFee, setBaseFee] = useState(0);
   const [newFeeRate, setFeeRate] = useState(0);
 
-  const { theme } = useSettings();
+  const { theme } = useConfigState();
 
   const {
     alias,
@@ -59,7 +59,7 @@ export const FeeCard = ({
         ? toast.success('Channel fees updated')
         : toast.error('Error updating channel fees');
     },
-    refetchQueries: ['GetChannelFees'],
+    refetchQueries: ['ChannelFees'],
   });
 
   const handleClick = () => {

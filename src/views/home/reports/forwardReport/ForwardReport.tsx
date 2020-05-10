@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sub4Title } from '../../../../components/generic/Styled';
 import numeral from 'numeral';
-import { useSettings } from '../../../../context/SettingsContext';
+import { useConfigState } from '../../../../context/ConfigContext';
 import { useAccount } from '../../../../context/AccountContext';
 import {
   VictoryBar,
@@ -34,9 +34,9 @@ const timeMap: { [key: string]: string } = {
 };
 
 export const ForwardReport = ({ isTime, isType }: Props) => {
-  const { theme, currency } = useSettings();
+  const { theme, currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
-  const format = getPrice(currency, priceContext);
+  const format = getPrice(currency, displayValues, priceContext);
 
   const { auth } = useAccount();
 

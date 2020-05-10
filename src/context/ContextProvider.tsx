@@ -1,6 +1,6 @@
 import React from 'react';
 import { AccountProvider } from './AccountContext';
-import { SettingsProvider } from './SettingsContext';
+import { ConfigProvider } from './ConfigContext';
 import { BitcoinInfoProvider } from './BitcoinContext';
 import { StatusProvider } from './StatusContext';
 import { PriceProvider } from './PriceContext';
@@ -8,7 +8,7 @@ import { ChatProvider } from './ChatContext';
 
 export const ContextProvider: React.FC = ({ children }) => (
   <AccountProvider>
-    <SettingsProvider>
+    <ConfigProvider>
       <BitcoinInfoProvider>
         <PriceProvider>
           <ChatProvider>
@@ -16,6 +16,6 @@ export const ContextProvider: React.FC = ({ children }) => (
           </ChatProvider>
         </PriceProvider>
       </BitcoinInfoProvider>
-    </SettingsProvider>
+    </ConfigProvider>
   </AccountProvider>
 );

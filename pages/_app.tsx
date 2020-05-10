@@ -2,7 +2,7 @@ import App from 'next/app';
 import React from 'react';
 import { ContextProvider } from '../src/context/ContextProvider';
 import { ThemeProvider } from 'styled-components';
-import { useSettings } from '../src/context/SettingsContext';
+import { useConfigState } from '../src/context/ConfigContext';
 import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { GlobalStyles } from '../src/styles/GlobalStyle';
 import { Header } from '../src/layouts/header/Header';
@@ -24,7 +24,7 @@ import { ChatInit } from '../src/components/chat/ChatInit';
 toast.configure({ draggable: false, pauseOnFocusLoss: false });
 
 const Wrapper: React.FC = ({ children }) => {
-  const { theme } = useSettings();
+  const { theme } = useConfigState();
   const { pathname } = useRouter();
   const { connected } = useStatusState();
 

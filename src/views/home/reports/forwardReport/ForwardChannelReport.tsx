@@ -12,7 +12,7 @@ import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
 import styled from 'styled-components';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
-import { useSettings } from '../../../../context/SettingsContext';
+import { useConfigState } from '../../../../context/ConfigContext';
 import { usePriceState } from '../../../../context/PriceContext';
 import { useGetForwardChannelsReportQuery } from '../../../../generated/graphql';
 
@@ -64,9 +64,9 @@ interface Props {
 export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
   const [type, setType] = useState('route');
 
-  const { currency } = useSettings();
+  const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
-  const format = getPrice(currency, priceContext);
+  const format = getPrice(currency, displayValues, priceContext);
 
   const { auth } = useAccount();
 

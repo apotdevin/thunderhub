@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-var-requires: 0 */
 require('dotenv').config();
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
@@ -17,6 +18,9 @@ module.exports = withBundleAnalyzer({
     apiBaseUrl: `${process.env.API_BASE_URL || ''}/api/v1`,
     basePath: process.env.BASE_PATH || '',
     npmVersion: process.env.npm_package_version || '0.0.0',
-    trustNeeded: process.env.TRUST || false,
+    defaultTheme: process.env.THEME || 'dark',
+    defaultCurrency: process.env.CURRENCY || 'sat',
+    fetchPrices: process.env.FETCH_PRICES === 'true' ? true : false,
+    fetchFees: process.env.FETCH_FEES === 'true' ? true : false,
   },
 });

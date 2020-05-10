@@ -24,7 +24,7 @@ import {
   MainInfo,
 } from '../../components/generic/CardGeneric';
 import { getPercent } from '../../utils/helpers';
-import { useSettings } from '../../context/SettingsContext';
+import { useConfigState } from '../../context/ConfigContext';
 import ReactTooltip from 'react-tooltip';
 import { usePriceState } from '../../context/PriceContext';
 import { getPrice } from '../../components/price/Price';
@@ -57,10 +57,10 @@ export const PeersCard = ({
 }: PeerProps) => {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { theme, currency } = useSettings();
+  const { theme, currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
 
-  const format = getPrice(currency, priceContext);
+  const format = getPrice(currency, displayValues, priceContext);
   const tooltipType: any = getTooltipType(theme);
 
   const {

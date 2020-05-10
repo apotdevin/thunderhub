@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSettings } from '../../context/SettingsContext';
+import { useConfigState } from '../../context/ConfigContext';
 import { getValue } from '../../utils/helpers';
 import { usePriceState } from '../../context/PriceContext';
 
@@ -16,8 +16,12 @@ export const Price = ({
   amount: number | string;
   breakNumber?: boolean;
 }) => {
-  const { currency } = useSettings();
-  const { prices, loading, error } = usePriceState();
+  const { currency, displayValues } = useConfigState();
+  const { prices, dontShow } = usePriceState();
+
+  if (!displayValues) {
+    return <>-</>;
+  }
 
   let priceProps: PriceProps = {
     price: 0,
@@ -25,7 +29,7 @@ export const Price = ({
     currency: currency !== 'btc' && currency !== 'sat' ? 'sat' : currency,
   };
 
-  if (prices && !loading && !error) {
+  if (prices && !dontShow) {
     const current: { last: number; symbol: string } = prices[currency] ?? {
       last: 0,
       symbol: '',
@@ -48,13 +52,17 @@ interface GetPriceProps {
 
 export const getPrice = (
   currency: string,
+  displayValues: boolean,
   priceContext: {
-    error: boolean;
-    loading: boolean;
+    dontShow: boolean;
     prices?: { [key: string]: { last: number; symbol: string } };
   }
 ) => ({ amount, breakNumber = false }: GetPriceProps): string => {
-  const { prices, loading, error } = priceContext;
+  const { prices, dontShow } = priceContext;
+
+  if (!displayValues) {
+    return '-';
+  }
 
   let priceProps: PriceProps = {
     price: 0,
@@ -62,7 +70,7 @@ export const getPrice = (
     currency: currency !== 'btc' && currency !== 'sat' ? 'sat' : currency,
   };
 
-  if (prices && !loading && !error) {
+  if (prices && !dontShow) {
     const current: { last: number; symbol: string } = prices[currency] ?? {
       last: 0,
       symbol: '',
