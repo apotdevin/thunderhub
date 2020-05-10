@@ -31,6 +31,7 @@ type State = {
   hideFee: boolean;
   hideNonVerified: boolean;
   maxFee: number;
+  chatPollingSpeed: number;
 };
 
 type ActionType = {
@@ -42,6 +43,7 @@ type ActionType = {
     | 'hideNonVerified'
     | 'hideFee'
     | 'changeFee'
+    | 'pollingSpeed'
     | 'disconnected';
   chats?: ChatProps[];
   sentChats?: SentChatProps[];
@@ -52,6 +54,7 @@ type ActionType = {
   hideFee?: boolean;
   hideNonVerified?: boolean;
   maxFee?: number;
+  chatPollingSpeed?: number;
 };
 
 type Dispatch = (action: ActionType) => void;
@@ -68,6 +71,7 @@ const initialState = {
   hideFee: false,
   hideNonVerified: false,
   maxFee: 20,
+  chatPollingSpeed: 1000,
 };
 
 const stateReducer = (state: State, action: ActionType): State => {
@@ -121,8 +125,17 @@ const stateReducer = (state: State, action: ActionType): State => {
         ...state,
         maxFee: action.maxFee,
       };
+    case 'pollingSpeed':
+      localStorage.setItem(
+        'chatPollingSpeed',
+        JSON.stringify(action.chatPollingSpeed)
+      );
+      return {
+        ...state,
+        chatPollingSpeed: action.chatPollingSpeed,
+      };
     default:
-      return initialState;
+      return state;
   }
 };
 

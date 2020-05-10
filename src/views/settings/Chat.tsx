@@ -14,7 +14,12 @@ import {
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
 
 export const ChatSettings = () => {
-  const { hideFee, hideNonVerified, maxFee } = useChatState();
+  const {
+    hideFee,
+    hideNonVerified,
+    maxFee,
+    chatPollingSpeed: cps,
+  } = useChatState();
   const dispatch = useChatDispatch();
 
   const renderButton = (
@@ -34,6 +39,10 @@ export const ChatSettings = () => {
           case 'nonverified':
             typeof value === 'boolean' &&
               dispatch({ type: 'hideNonVerified', hideNonVerified: value });
+            break;
+          case 'pollingSpeed':
+            typeof value === 'number' &&
+              dispatch({ type: 'pollingSpeed', chatPollingSpeed: value });
             break;
           default:
             typeof value === 'number' &&
@@ -72,6 +81,16 @@ export const ChatSettings = () => {
             {renderButton('30', 'maxFee', maxFee === 30, 30)}
             {renderButton('50', 'maxFee', maxFee === 50, 50)}
             {renderButton('100', 'maxFee', maxFee === 100, 100)}
+          </MultiButton>
+        </SettingsLine>
+        <SettingsLine>
+          <Sub4Title>{'Polling Speed:'}</Sub4Title>
+          <MultiButton>
+            {renderButton('1s', 'pollingSpeed', cps === 1000, 1000)}
+            {renderButton('10s', 'pollingSpeed', cps === 10000, 10000)}
+            {renderButton('1m', 'pollingSpeed', cps === 60000, 60000)}
+            {renderButton('10m', 'pollingSpeed', cps === 600000, 600000)}
+            {renderButton('None', 'pollingSpeed', cps === 0, 0)}
           </MultiButton>
         </SettingsLine>
       </Card>

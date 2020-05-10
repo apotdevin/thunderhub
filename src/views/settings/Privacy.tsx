@@ -39,7 +39,7 @@ export const PrivacySettings = () => {
       <SubTitle>Privacy</SubTitle>
       <Card>
         <SettingsLine>
-          <Sub4Title>Fetch Bitcoin fees:</Sub4Title>
+          <Sub4Title>Fetch Bitcoin Fees:</Sub4Title>
           <MultiButton>
             {renderButton('On', true, 'fetchFees', fetchFees)}
             {renderButton('Off', false, 'fetchFees', fetchFees)}

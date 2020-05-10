@@ -11,14 +11,20 @@ export const ChatFetcher = () => {
 
   const { auth } = useAccount();
   const { pathname } = useRouter();
-  const { lastChat, chats, sentChats, initialized } = useChatState();
+  const {
+    lastChat,
+    chats,
+    sentChats,
+    initialized,
+    chatPollingSpeed,
+  } = useChatState();
   const dispatch = useChatDispatch();
 
   const noChatsAvailable = chats.length <= 0 && sentChats.length <= 0;
 
   const { data, loading, error } = useGetMessagesQuery({
     skip: !auth || initialized || noChatsAvailable,
-    pollInterval: 1000,
+    pollInterval: chatPollingSpeed,
     fetchPolicy: 'network-only',
     variables: { auth, initialize: !noChatsAvailable },
     onError: error => toast.error(getErrorContent(error)),

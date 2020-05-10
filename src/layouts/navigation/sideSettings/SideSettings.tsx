@@ -52,6 +52,8 @@ const BurgerPadding = styled(SingleLine)`
 `;
 
 const currencyArray = ['sat', 'btc', 'EUR', 'USD'];
+const currencyNoFiatArray = ['sat', 'btc'];
+
 const themeArray = ['light', 'dark'];
 
 const currencyMap: { [key: string]: string } = {
@@ -60,7 +62,6 @@ const currencyMap: { [key: string]: string } = {
   EUR: '€',
   USD: '$',
 };
-
 const currencyNoFiatMap: { [key: string]: string } = {
   sat: 'S',
   btc: '₿',
@@ -89,6 +90,9 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
   const { theme, currency, sidebar } = useConfigState();
   const dispatch = useConfigDispatch();
 
+  const correctMap = dontShow ? currencyNoFiatMap : currencyMap;
+  const correctArray = dontShow ? currencyNoFiatArray : currencyArray;
+
   const renderIcon = (
     type: string,
     value: string,
@@ -106,7 +110,7 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
           dispatch({
             type: 'change',
             currency:
-              sidebar || isBurger ? value : getNextValue(currencyArray, value),
+              sidebar || isBurger ? value : getNextValue(correctArray, value),
           });
         type === 'theme' && dispatch({ type: 'change', theme: value });
       }}
@@ -118,7 +122,6 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
 
   const renderContent = () => {
     if (!sidebar) {
-      const correctMap = dontShow ? currencyNoFiatMap : currencyMap;
       return (
         <>
           <Separation lineColor={unSelectedNavButton} />
@@ -160,8 +163,8 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         <IconRow>
           {renderIcon('currency', 'sat', 'S')}
           {renderIcon('currency', 'btc', '₿')}
-          {renderIcon('currency', 'EUR', '€')}
-          {renderIcon('currency', 'USD', '$')}
+          {!dontShow && renderIcon('currency', 'EUR', '€')}
+          {!dontShow && renderIcon('currency', 'USD', '$')}
         </IconRow>
         <IconRow>
           {renderIcon('theme', 'light', '', false, Sun)}
