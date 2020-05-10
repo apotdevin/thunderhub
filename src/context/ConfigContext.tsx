@@ -12,6 +12,10 @@ type State = {
   fetchFees: boolean;
   fetchPrices: boolean;
   displayValues: boolean;
+  hideFee: boolean;
+  hideNonVerified: boolean;
+  maxFee: number;
+  chatPollingSpeed: number;
 };
 
 type ActionType = {
@@ -23,6 +27,10 @@ type ActionType = {
   fetchFees?: boolean;
   fetchPrices?: boolean;
   displayValues?: boolean;
+  hideFee?: boolean;
+  hideNonVerified?: boolean;
+  maxFee?: number;
+  chatPollingSpeed?: number;
 };
 
 type Dispatch = (action: ActionType) => void;
@@ -38,7 +46,7 @@ const {
   fetchFees,
 } = publicRuntimeConfig;
 
-const initialState = {
+const initialState: State = {
   currency: currencyTypes.indexOf(defC) > -1 ? defC : 'sat',
   theme: themeTypes.indexOf(defT) > -1 ? defT : 'dark',
   sidebar: true,
@@ -46,6 +54,10 @@ const initialState = {
   fetchFees,
   fetchPrices,
   displayValues: true,
+  hideFee: false,
+  hideNonVerified: false,
+  maxFee: 20,
+  chatPollingSpeed: 1000,
 };
 
 const stateReducer = (state: State, action: ActionType): State => {

@@ -5,19 +5,16 @@ import { useAccount } from '../../context/AccountContext';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { useRouter } from 'next/router';
+import { useConfigState } from '../../context/ConfigContext';
 
 export const ChatFetcher = () => {
   const newChatToastId = 'newChatToastId';
 
+  const { chatPollingSpeed } = useConfigState();
+
   const { auth } = useAccount();
   const { pathname } = useRouter();
-  const {
-    lastChat,
-    chats,
-    sentChats,
-    initialized,
-    chatPollingSpeed,
-  } = useChatState();
+  const { lastChat, chats, sentChats, initialized } = useChatState();
   const dispatch = useChatDispatch();
 
   const noChatsAvailable = chats.length <= 0 && sentChats.length <= 0;
@@ -64,7 +61,7 @@ export const ChatFetcher = () => {
       const last = newMessages[0]?.id;
       dispatch({ type: 'additional', chats: newMessages, lastChat: last });
     }
-  }, [data, loading, error]);
+  }, [data, loading, error, dispatch, lastChat, pathname]);
 
   return null;
 };

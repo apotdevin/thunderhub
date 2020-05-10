@@ -29,7 +29,8 @@ interface SendButtonProps {
 }
 
 const SendButton = ({ amount }: SendButtonProps) => {
-  const { sender, maxFee } = useChatState();
+  const { maxFee } = useConfigState();
+  const { sender } = useChatState();
   const dispatch = useChatDispatch();
   const { id } = useAccount();
 
@@ -54,7 +55,7 @@ const SendButton = ({ amount }: SendButtonProps) => {
         sender,
       });
     }
-  }, [loading, data]);
+  }, [loading, data, amount, dispatch, sender, id]);
 
   return (
     <SecureWrapper
