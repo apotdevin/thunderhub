@@ -10,7 +10,7 @@ import {
   ColorButton,
 } from '../src/components/generic/Styled';
 import { useAccount } from '../src/context/AccountContext';
-import { useSettings } from '../src/context/SettingsContext';
+import { useConfigState } from '../src/context/ConfigContext';
 import { textColorMap } from '../src/styles/Themes';
 import { useGetChannelAmountInfoQuery } from '../src/generated/graphql';
 
@@ -22,7 +22,7 @@ const ChannelView = () => {
     closed: 0,
   });
 
-  const { theme } = useSettings();
+  const { theme } = useConfigState();
   const { auth } = useAccount();
 
   const { data } = useGetChannelAmountInfoQuery({

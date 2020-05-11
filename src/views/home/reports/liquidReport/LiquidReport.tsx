@@ -12,7 +12,7 @@ import {
   VictoryVoronoiContainer,
   VictoryTooltip,
 } from 'victory';
-import { useSettings } from '../../../../context/SettingsContext';
+import { useConfigState } from '../../../../context/ConfigContext';
 import {
   chartGridColor,
   chartAxisColor,
@@ -26,9 +26,9 @@ import { useGetLiquidReportQuery } from '../../../../generated/graphql';
 export const LiquidReport = () => {
   const { auth } = useAccount();
 
-  const { theme, currency } = useSettings();
+  const { theme, currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
-  const format = getPrice(currency, priceContext);
+  const format = getPrice(currency, displayValues, priceContext);
 
   const { data, loading } = useGetLiquidReportQuery({
     skip: !auth,

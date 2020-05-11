@@ -38,6 +38,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
       setModalType('none');
       setOpen();
     },
+    refetchQueries: ['GetInOut', 'GetNodeInfo', 'GetBalances'],
   });
 
   const handleClick = () => {

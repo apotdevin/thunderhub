@@ -19,10 +19,6 @@ export const ChatInit = () => {
 
   React.useEffect(() => {
     const storageChats = localStorage.getItem(`${id}-sentChats`) || '';
-    const hideFee = localStorage.getItem('hideFee') === 'true' ? true : false;
-    const hideNonVerified =
-      localStorage.getItem('hideNonVerified') === 'true' ? true : false;
-    const maxFee = Number(localStorage.getItem('maxChatFee')) || 20;
 
     if (storageChats !== '') {
       try {
@@ -33,9 +29,6 @@ export const ChatInit = () => {
             type: 'initialized',
             sentChats: savedChats,
             sender,
-            hideFee,
-            hideNonVerified,
-            maxFee,
           });
         }
       } catch (error) {
@@ -43,7 +36,7 @@ export const ChatInit = () => {
       }
     }
     getMessages();
-  }, []);
+  }, [dispatch, getMessages, id]);
 
   React.useEffect(() => {
     if (!initLoading && !initError && initData?.getMessages) {
@@ -64,7 +57,7 @@ export const ChatInit = () => {
         sender,
       });
     }
-  }, [initLoading, initError, initData]);
+  }, [initLoading, initError, initData, dispatch]);
 
   return null;
 };

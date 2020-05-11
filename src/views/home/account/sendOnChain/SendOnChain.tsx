@@ -19,7 +19,7 @@ import {
 } from '../../../../components/buttons/multiButton/MultiButton';
 import { Price, getPrice } from '../../../../components/price/Price';
 import { mediaWidths } from '../../../../styles/Themes';
-import { useSettings } from '../../../../context/SettingsContext';
+import { useConfigState } from '../../../../context/ConfigContext';
 import Modal from '../../../../components/modal/ReactModal';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { renderLine } from '../../../../components/generic/helpers';
@@ -43,21 +43,20 @@ const Margin = styled.div`
 `;
 
 export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
-  const { currency } = useSettings();
+  const { fast, halfHour, hour, dontShow } = useBitcoinState();
+  const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
-  const format = getPrice(currency, priceContext);
+  const format = getPrice(currency, displayValues, priceContext);
 
   const [modalOpen, setModalOpen] = useState(false);
 
   const [address, setAddress] = useState('');
   const [tokens, setTokens] = useState(0);
-  const [type, setType] = useState('none');
+  const [type, setType] = useState(dontShow ? 'fee' : 'none');
   const [amount, setAmount] = useState(0);
   const [sendAll, setSendAll] = useState(false);
 
   const canSend = address !== '' && (sendAll || tokens > 0) && amount > 0;
-
-  const { fast, halfHour, hour } = useBitcoinState();
 
   const [payAddress, { loading }] = usePayAddressMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -143,14 +142,15 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
       <SingleLine>
         <NoWrapTitle>Fee:</NoWrapTitle>
         <MultiButton margin={'8px 0 8px 16px'}>
-          {renderButton(
-            () => {
-              setType('none');
-              setAmount(fast);
-            },
-            'Auto',
-            type === 'none'
-          )}
+          {!dontShow &&
+            renderButton(
+              () => {
+                setType('none');
+                setAmount(fast);
+              },
+              'Auto',
+              type === 'none'
+            )}
           {renderButton(
             () => {
               setType('fee');

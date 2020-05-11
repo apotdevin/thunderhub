@@ -14,7 +14,7 @@ import {
 } from '../../../components/generic/helpers';
 import styled from 'styled-components';
 import { getPrice } from '../../../components/price/Price';
-import { useSettings } from '../../../context/SettingsContext';
+import { useConfigState } from '../../../context/ConfigContext';
 import { usePriceState } from '../../../context/PriceContext';
 
 const AddMargin = styled.div`
@@ -34,9 +34,9 @@ export const TransactionsCard = ({
   setIndexOpen,
   indexOpen,
 }: TransactionsCardProps) => {
-  const { currency } = useSettings();
+  const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
-  const format = getPrice(currency, priceContext);
+  const format = getPrice(currency, displayValues, priceContext);
 
   const {
     block_id,

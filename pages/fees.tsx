@@ -48,7 +48,7 @@ const FeesView = () => {
         ? toast.success('Fees Updated')
         : toast.error('Error updating fees');
     },
-    refetchQueries: ['GetChannelFees'],
+    refetchQueries: ['ChannelFees'],
   });
 
   if (loading || !data || !data.getChannelFees) {

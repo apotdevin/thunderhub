@@ -13,7 +13,7 @@ import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ForwardCard } from '../src/views/forwards/ForwardsCard';
 import { textColorMap } from '../src/styles/Themes';
-import { useSettings } from '../src/context/SettingsContext';
+import { useConfigState } from '../src/context/ConfigContext';
 import { ForwardBox } from '../src/views/home/reports/forwardReport';
 import { useGetForwardsQuery } from '../src/generated/graphql';
 
@@ -28,7 +28,7 @@ const ForwardsView = () => {
   const [time, setTime] = useState('week');
   const [indexOpen, setIndexOpen] = useState(0);
 
-  const { theme } = useSettings();
+  const { theme } = useConfigState();
   const { auth } = useAccount();
 
   const { loading, data } = useGetForwardsQuery({

@@ -1,16 +1,21 @@
 import React, { createContext, useContext, useReducer } from 'react';
 
 type State = {
-  loading: boolean;
-  error: boolean;
+  dontShow: boolean;
+  fast: number;
+  halfHour: number;
+  hour: number;
+};
+
+type ChangeState = {
   fast: number;
   halfHour: number;
   hour: number;
 };
 
 type ActionType = {
-  type: 'fetched' | 'error';
-  state?: State;
+  type: 'fetched' | 'dontShow';
+  state?: ChangeState;
 };
 
 type Dispatch = (action: ActionType) => void;
@@ -19,8 +24,7 @@ export const StateContext = createContext<State | undefined>(undefined);
 export const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
 const initialState = {
-  loading: true,
-  error: false,
+  dontShow: true,
   fast: 0,
   halfHour: 0,
   hour: 0,
@@ -28,16 +32,12 @@ const initialState = {
 
 const stateReducer = (state: State, action: ActionType): State => {
   switch (action.type) {
+    case 'dontShow':
+      return { ...initialState, dontShow: true };
     case 'fetched':
-      return action.state || initialState;
-    case 'error':
-      return {
-        ...initialState,
-        loading: false,
-        error: true,
-      };
+      return { ...initialState, ...action.state, dontShow: false };
     default:
-      return initialState;
+      return state;
   }
 };
 

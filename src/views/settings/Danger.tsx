@@ -21,6 +21,7 @@ import { useStatusDispatch } from '../../context/StatusContext';
 import { useRouter } from 'next/router';
 import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
+import Cookies from 'js-cookie';
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -90,6 +91,7 @@ export const DangerView = () => {
     chatDispatch({ type: 'disconnected' });
     deleteStorage();
     refreshAccount();
+    Cookies.remove('config');
     push(appendBasePath('/'));
   };
 

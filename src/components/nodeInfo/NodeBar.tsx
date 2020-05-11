@@ -11,7 +11,7 @@ import {
 import { HelpCircle } from 'react-feather';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
-import { useSettings } from '../../context/SettingsContext';
+import { useConfigState } from '../../context/ConfigContext';
 import { getTooltipType } from '../generic/helpers';
 
 const StyledQuestion = styled(HelpCircle)`
@@ -20,10 +20,9 @@ const StyledQuestion = styled(HelpCircle)`
 
 export const NodeBar = () => {
   const { accounts } = useAccount();
-  const { nodeInfo } = useSettings();
+  const { multiNodeInfo, theme } = useConfigState();
   const slider = React.useRef<HTMLDivElement>(null);
 
-  const { theme } = useSettings();
   const tooltipType: any = getTooltipType(theme);
 
   const viewOnlyAccounts = accounts.filter(account => account.viewOnly !== '');
@@ -38,7 +37,7 @@ export const NodeBar = () => {
     }
   };
 
-  if (viewOnlyAccounts.length <= 1 || !nodeInfo) {
+  if (viewOnlyAccounts.length <= 1 || !multiNodeInfo) {
     return null;
   }
 

@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { useAccount } from '../../context/AccountContext';
 import { handleMessage } from './helpers/chatHelpers';
+import { useConfigState } from '../../context/ConfigContext';
 
 export const ChatInput = ({
   alias,
@@ -21,7 +22,8 @@ export const ChatInput = ({
   const [message, setMessage] = React.useState('');
   const { id } = useAccount();
 
-  const { sender, maxFee } = useChatState();
+  const { maxFee } = useConfigState();
+  const { sender } = useChatState();
   const dispatch = useChatDispatch();
 
   const [sendMessage, { loading, data }] = useSendMessageMutation({
@@ -50,7 +52,17 @@ export const ChatInput = ({
         sender: customSender || sender,
       });
     }
-  }, [loading, data]);
+  }, [
+    loading,
+    data,
+    formattedMessage,
+    customSender,
+    sender,
+    contentType,
+    tokens,
+    id,
+    dispatch,
+  ]);
 
   return (
     <SingleLine>

@@ -11,11 +11,16 @@ import {
   MultiButton,
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
-import { useChatState, useChatDispatch } from '../../context/ChatContext';
+import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 
 export const ChatSettings = () => {
-  const { hideFee, hideNonVerified, maxFee } = useChatState();
-  const dispatch = useChatDispatch();
+  const {
+    hideFee,
+    hideNonVerified,
+    maxFee,
+    chatPollingSpeed: cps,
+  } = useConfigState();
+  const dispatch = useConfigDispatch();
 
   const renderButton = (
     title: string,
@@ -29,15 +34,19 @@ export const ChatSettings = () => {
         switch (type) {
           case 'fee':
             typeof value === 'boolean' &&
-              dispatch({ type: 'hideFee', hideFee: value });
+              dispatch({ type: 'change', hideFee: value });
             break;
           case 'nonverified':
             typeof value === 'boolean' &&
-              dispatch({ type: 'hideNonVerified', hideNonVerified: value });
+              dispatch({ type: 'change', hideNonVerified: value });
+            break;
+          case 'pollingSpeed':
+            typeof value === 'number' &&
+              dispatch({ type: 'change', chatPollingSpeed: value });
             break;
           default:
             typeof value === 'number' &&
-              dispatch({ type: 'changeFee', maxFee: value });
+              dispatch({ type: 'change', maxFee: value });
             break;
         }
       }}
@@ -72,6 +81,18 @@ export const ChatSettings = () => {
             {renderButton('30', 'maxFee', maxFee === 30, 30)}
             {renderButton('50', 'maxFee', maxFee === 50, 50)}
             {renderButton('100', 'maxFee', maxFee === 100, 100)}
+          </MultiButton>
+        </SettingsLine>
+        <SettingsLine>
+          <Sub4Title>{'Polling Speed:'}</Sub4Title>
+          <MultiButton>
+            {renderButton('1s', 'pollingSpeed', cps === 1000, 1000)}
+            {renderButton('5s', 'pollingSpeed', cps === 5000, 5000)}
+            {renderButton('10s', 'pollingSpeed', cps === 10000, 10000)}
+            {renderButton('1m', 'pollingSpeed', cps === 60000, 60000)}
+            {renderButton('10m', 'pollingSpeed', cps === 600000, 600000)}
+            {renderButton('30m', 'pollingSpeed', cps === 1800000, 1800000)}
+            {renderButton('None', 'pollingSpeed', cps === 0, 0)}
           </MultiButton>
         </SettingsLine>
       </Card>
