@@ -34,13 +34,12 @@ interface OpenChannelProps {
 }
 
 export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
+  const { fast, halfHour, hour, dontShow } = useBitcoinState();
   const [size, setSize] = useState(0);
   const [fee, setFee] = useState(0);
   const [publicKey, setPublicKey] = useState('');
   const [privateChannel, setPrivateChannel] = useState(false);
-  const [type, setType] = useState('none');
-
-  const { fast, halfHour, hour } = useBitcoinState();
+  const [type, setType] = useState(dontShow ? 'fee' : 'none');
 
   const [openChannel] = useOpenChannelMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -108,24 +107,26 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
         </MultiButton>
       </SingleLine>
       <Separation />
-      <SingleLine>
-        <NoWrapTitle>Fee:</NoWrapTitle>
-        <MultiButton margin={'8px 0 8px 16px'}>
-          {renderButton(
-            () => {
-              setType('none');
-              setFee(fast);
-            },
-            'Auto',
-            type === 'none'
-          )}
-          {renderButton(
-            () => setType('fee'),
-            'Fee (Sats/Byte)',
-            type === 'fee'
-          )}
-        </MultiButton>
-      </SingleLine>
+      {!dontShow && (
+        <SingleLine>
+          <NoWrapTitle>Fee:</NoWrapTitle>
+          <MultiButton margin={'8px 0 8px 16px'}>
+            {renderButton(
+              () => {
+                setType('none');
+                setFee(fast);
+              },
+              'Auto',
+              type === 'none'
+            )}
+            {renderButton(
+              () => setType('fee'),
+              'Fee (Sats/Byte)',
+              type === 'fee'
+            )}
+          </MultiButton>
+        </SingleLine>
+      )}
       <SingleLine>
         <ResponsiveWrap>
           <NoWrapTitle>Fee Amount:</NoWrapTitle>
@@ -141,7 +142,6 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
             type={'number'}
             onChange={e => setFee(Number(e.target.value))}
           />
-          // </MultiButton>
         )}
         {type === 'none' && (
           <MultiButton margin={'8px 0 8px 16px'}>

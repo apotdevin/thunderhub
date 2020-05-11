@@ -1,13 +1,7 @@
 import React from 'react';
 import { Checkbox } from '../../checkbox/Checkbox';
-import { CheckboxText, StyledContainer, FixedWidth } from '../Auth.styled';
-import { AlertCircle } from 'react-feather';
-import { fontColors } from '../../../styles/Themes';
+import { CheckboxText } from '../Auth.styled';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
-import getConfig from 'next/config';
-
-const { publicRuntimeConfig } = getConfig();
-const { trustNeeded } = publicRuntimeConfig;
 
 type CheckboxProps = {
   handleClick: () => void;
@@ -37,24 +31,5 @@ export const RiskCheckboxAndConfirm = ({
     >
       Connect
     </ColorButton>
-    <WarningBox />
   </>
 );
-
-export const WarningBox = () => {
-  if (!trustNeeded) {
-    return null;
-  }
-  return (
-    <StyledContainer>
-      <FixedWidth>
-        <AlertCircle size={18} color={fontColors.grey7} />
-      </FixedWidth>
-      <CheckboxText>
-        Macaroons are handled by the ThunderHub server to connect to your LND
-        node but are never stored. Still, this involves a certain degree of
-        trust you must be aware of.
-      </CheckboxText>
-    </StyledContainer>
-  );
-};

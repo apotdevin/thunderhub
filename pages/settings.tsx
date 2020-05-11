@@ -8,6 +8,7 @@ import { DangerView } from '../src/views/settings/Danger';
 import { CurrentSettings } from '../src/views/settings/Current';
 import { SyncSettings } from '../src/views/settings/Sync';
 import { ChatSettings } from '../src/views/settings/Chat';
+import { PrivacySettings } from '../src/views/settings/Privacy';
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -30,6 +31,7 @@ const SettingsView = () => {
   return (
     <>
       <InterfaceSettings />
+      <PrivacySettings />
       <ChatSettings />
       <SyncSettings />
       <CurrentSettings />

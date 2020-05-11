@@ -19,7 +19,7 @@ import {
   ChatBoxTopAlias,
 } from './Chat.styled';
 import { ChatBubble } from './ChatBubble';
-import { useChatState } from '../../context/ChatContext';
+import { useConfigState } from '../../context/ConfigContext';
 
 export const MessageCard = ({
   message,
@@ -28,7 +28,7 @@ export const MessageCard = ({
   message: MessageType;
   key?: string;
 }) => {
-  const { hideFee, hideNonVerified } = useChatState();
+  const { hideFee, hideNonVerified } = useConfigState();
   if (!message.message && message.contentType === 'text') {
     return null;
   }

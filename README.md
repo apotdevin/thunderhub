@@ -1,22 +1,32 @@
 # **ThunderHub - Lightning Node Manager**
 
-![Home Screenshot](./docs/Home.png)
+![Home Screenshot](/docs/Home.png)
 [![license](https://img.shields.io/github/license/DAVFoundation/captain-n3m0.svg?style=flat-square)](https://github.com/DAVFoundation/captain-n3m0/blob/master/LICENSE)
 
 ## Table Of Contents
 
 - [Introduction](#introduction)
+- [Integrations](#integrations)
 - [Features](#features)
 - [Installation](#installation)
 - [Development](#development)
+- [Docker deployment](#docker)
 
 ## Introduction
 
 ThunderHub is an **open-source** LND node manager where you can manage and monitor your node on any device or browser. It allows you to take control of the lightning network with a simple and intuitive UX and the most up-to-date tech stack.
 
+### Integrations
+
+**BTCPay Server**
+ThunderHub is currently integrated into BTCPay for easier deployment. If you already have a BTCPay server and want to add ThunderHub or even want to start a BTCPay server from zero, be sure to check out this [tutorial](https://apotdevin.com/blog/thunderhub-btcpay)
+
+**Raspiblitz**
+For Raspiblitz users you can also get ThunderHub running by following this [gist](https://gist.github.com/openoms/8ba963915c786ce01892f2c9fa2707bc)
+
 ### Tech Stack
 
-This repository consists of a **NextJS** server that handles both the backend **Graphql Server** and the frontend **React App**.
+This repository consists of a **NextJS** server that handles both the backend **Graphql Server** and the frontend **React App**. ThunderHub connects to your Lightning Network node by using the gRPC ports.
 
 - NextJS
 - ReactJS
@@ -50,7 +60,7 @@ This repository consists of a **NextJS** server that handles both the backend **
 - Send and Receive Bitcoin payments.
 - Decode lightning payment requests.
 - Open and close channels.
-- Balance your channels through circular payments. ([Check out the Tutorial](https://medium.com/coinmonks/lightning-network-channel-balancing-with-thunderhub-972b41bf9243))
+- Balance your channels through circular payments. ([Check out the Tutorial](https://apotdevin.com/blog/thunderhub-balancing))
 - Update your all your channels fees or individual ones.
 - Backup, verify and recover all your channels.
 - Sign and verify messages.
@@ -70,54 +80,135 @@ This repository consists of a **NextJS** server that handles both the backend **
 
 ### Deployment
 
-- Docker images for easier deployment (WIP)
+- Docker images for easier deployment
 
 ### Future Features
 
+- Channel health/recommendations view
 - Loop In and Out to provide liquidity or remove it from your channels.
-- Integration with HodlHodl
 - Storefront interface
+
+## **Requirements**
+
+- Yarn/npm installed
+- Node installed (Version 12.16.0 or higher)
+
+**Older Versions of Node**
+Earlier versions of Node can be used if you replace the following commands:
+
+```js
+//Yarn
+yarn start -> yarn start:compatible
+yarn dev -> yarn dev:compatible
+
+//NPM
+npm start -> npm start:compatible
+npm run dev -> npm run dev:compatible
+```
+
+**HodlHodl integration will not work with older versions of Node!**
+
+## Config
+
+You can define some environment variables that ThunderHub can start with. To do this create a `.env` file in the root directory with the following parameters:
+
+```js
+THEME = 'dark' | 'light'; // Default: 'dark'
+CURRENCY = 'sat' | 'btc' | 'eur' | 'usd'; // Default: 'sat'
+FETCH_PRICES = true | false // Default: true
+FETCH_FEES = true | false // Default: true
+HODL_KEY='[Key provided by HodlHodl]' //Default: ''
+BASE_PATH='[Base path where you want to have thunderhub running i.e. '/btcpay']' //Default: '/'
+```
+
+### Fetching prices and fees
+
+ThunderHub fetches fiat prices from [Blockchain.com](https://blockchain.info/ticker)'s api and bitcoin on chain fees from [Earn.com](https://bitcoinfees.earn.com/api/v1/fees/recommended)'s api.
+
+If you want to deactivate these requests you can set `FETCH_PRICES=false` and `FETCH_FEES=false` in your `.env` file or manually change them inside the settings view of ThunderHub.
+
+### Running on different base path
+
+Adding a BASE_PATH will run the ThunderHub server on a different base path.
+For example:
+
+- default base path of `/` runs ThunderHub on `http://localhost:3000`
+- base path of `/thub` runs ThunderHub on `http://localhost:3000/thub`
+
+To run on a base path, ThunderHub needs to be behind a proxy with the following configuration (NGINX example):
+
+```nginx
+location /thub/ {
+  rewrite ^/thub(.*)$ $1 break;
+  proxy_pass http://localhost:3000/;
+}
+```
 
 ## Installation
 
 To run ThunderHub you first need to clone this repository.
 
-```javascript
+```js
 git clone https://github.com/apotdevin/thunderhub.git
 ```
 
-### **Requirements**
+After cloning the repository run `yarn` or `npm install` to get all the necessary modules installed.
 
-- Node installed
-- Yarn installed
-
-After cloning the repository run `yarn` to get all the necessary modules installed.
-
-After `yarn` has finished installing all the dependencies you can proceed to build and run the app with the following commands.
+After all the dependencies have finished installing, you can proceed to build and run the app with the following commands.
 
 ```javascript
+//Yarn
 yarn build
 yarn start
+
+//NPM
+npm run build
+npm start
 ```
 
-This will start the server on port 3000, so just head to `localhost:3000` to see the app running.
+This will start the server on port 3000, so just go to `localhost:3000` to see the app running.
 
-#### HodlHodl Integration
+If you want to specify a different port (for example port `4000`) run with:
 
-To be able to use the HodlHodl integration create a `.env` file in the root folder with `HODL_KEY='[YOUR API KEY]'` and replace `[YOUR API KEY]` with the one that HodlHodl provides you.
+```js
+// Yarn
+yarn start -p 4000
+
+// NPM
+npm start -p 4000
+```
 
 ## Development
 
 If you want to develop on ThunderHub and want hot reloading when you do changes, use the following commands:
 
-```javascript
+```js
+//Yarn
 yarn dev
+
+//NPM
+npm run dev
 ```
 
 #### Storybook
 
 You can also get storybook running for quicker component development.
 
-```javascript
+```js
+//Yarn
 yarn storybook
+
+//NPM
+npm run storybook
 ```
+
+## Docker
+
+ThunderHub also provides docker images for easier deployment. [Docker Hub](https://hub.docker.com/repository/docker/apotdevin/thunderhub)
+
+To get ThunderHub running with docker follow these steps:
+
+1. `docker pull apotdevin/thunderhub:v0.5.5` (Or the latest version you find)
+2. `docker run --rm -it -p 3000:3000/tcp apotdevin/thunderhub:v0.5.5`
+
+You can now go to `localhost:3000` to see your running instance of ThunderHub

@@ -1,6 +1,6 @@
 import React from 'react';
 import { DarkSubTitle } from '../../../../components/generic/Styled';
-import { useSettings } from '../../../../context/SettingsContext';
+import { useConfigState } from '../../../../context/ConfigContext';
 import { VictoryPie } from 'victory';
 import { chartAxisColor } from '../../../../styles/Themes';
 import { Row, Col, PieRow } from '.';
@@ -13,9 +13,9 @@ interface Props {
 }
 
 export const FlowPie = ({ flowPie, isType }: Props) => {
-  const { theme, currency } = useSettings();
+  const { theme, currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
-  const format = getPrice(currency, priceContext);
+  const format = getPrice(currency, displayValues, priceContext);
 
   return (
     <Row>

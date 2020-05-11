@@ -5,9 +5,12 @@ import { useAccount } from '../../context/AccountContext';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { useRouter } from 'next/router';
+import { useConfigState } from '../../context/ConfigContext';
 
 export const ChatFetcher = () => {
   const newChatToastId = 'newChatToastId';
+
+  const { chatPollingSpeed } = useConfigState();
 
   const { auth } = useAccount();
   const { pathname } = useRouter();
@@ -18,7 +21,7 @@ export const ChatFetcher = () => {
 
   const { data, loading, error } = useGetMessagesQuery({
     skip: !auth || initialized || noChatsAvailable,
-    pollInterval: 1000,
+    pollInterval: chatPollingSpeed,
     fetchPolicy: 'network-only',
     variables: { auth, initialize: !noChatsAvailable },
     onError: error => toast.error(getErrorContent(error)),
@@ -58,7 +61,7 @@ export const ChatFetcher = () => {
       const last = newMessages[0]?.id;
       dispatch({ type: 'additional', chats: newMessages, lastChat: last });
     }
-  }, [data, loading, error]);
+  }, [data, loading, error, dispatch, lastChat, pathname]);
 
   return null;
 };

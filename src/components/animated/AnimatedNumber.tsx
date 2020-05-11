@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSpring, animated } from 'react-spring';
 import { getValue } from '../../utils/helpers';
-import { useSettings } from '../../context/SettingsContext';
+import { useConfigState } from '../../context/ConfigContext';
 import { usePriceState } from '../../context/PriceContext';
 
 type PriceProps = {
@@ -19,8 +19,12 @@ export const AnimatedNumber = ({ amount = 0 }: AnimatedProps) => {
     from: { value: 0 },
     value: amount,
   });
-  const { currency } = useSettings();
-  const { prices } = usePriceState();
+  const { currency, displayValues } = useConfigState();
+  const { prices, dontShow } = usePriceState();
+
+  if (!displayValues) {
+    return <>-</>;
+  }
 
   let priceProps: PriceProps = {
     price: 0,
@@ -28,7 +32,7 @@ export const AnimatedNumber = ({ amount = 0 }: AnimatedProps) => {
     currency: currency !== 'btc' && currency !== 'sat' ? 'sat' : currency,
   };
 
-  if (prices) {
+  if (prices && !dontShow) {
     const current: { last: number; symbol: string } = prices[currency] ?? {
       last: 0,
       symbol: '',

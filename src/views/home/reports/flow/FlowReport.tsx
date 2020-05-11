@@ -1,6 +1,6 @@
 import React from 'react';
 import numeral from 'numeral';
-import { useSettings } from '../../../../context/SettingsContext';
+import { useConfigState } from '../../../../context/ConfigContext';
 import {
   VictoryBar,
   VictoryChart,
@@ -41,9 +41,9 @@ export const FlowReport = ({
   parsedData2,
 }: // waterfall,
 Props) => {
-  const { theme, currency } = useSettings();
+  const { theme, currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
-  const format = getPrice(currency, priceContext);
+  const format = getPrice(currency, displayValues, priceContext);
 
   let domain = 24;
   let barWidth = 3;

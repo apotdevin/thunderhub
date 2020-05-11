@@ -41,12 +41,12 @@ export const CloseChannel = ({
   channelId,
   channelName,
 }: CloseChannelProps) => {
+  const { fast, halfHour, hour, dontShow } = useBitcoinState();
+
   const [isForce, setIsForce] = useState<boolean>(false);
-  const [isType, setIsType] = useState<string>('none');
+  const [isType, setIsType] = useState<string>(dontShow ? 'fee' : 'none');
   const [amount, setAmount] = useState<number>(0);
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
-
-  const { fast, halfHour, hour } = useBitcoinState();
 
   const [closeChannel] = useCloseChannelMutation({
     onCompleted: data => {
@@ -113,7 +113,8 @@ export const CloseChannel = ({
         <Sub4Title>Fee:</Sub4Title>
       </SingleLine>
       <MultiButton>
-        {renderButton(() => setIsType('none'), 'Auto', isType === 'none')}
+        {!dontShow &&
+          renderButton(() => setIsType('none'), 'Auto', isType === 'none')}
         {renderButton(() => setIsType('fee'), 'Fee', isType === 'fee')}
         {renderButton(() => setIsType('target'), 'Target', isType === 'target')}
       </MultiButton>

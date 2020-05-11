@@ -6,14 +6,17 @@ type PriceProps = {
 };
 
 type State = {
-  loading: boolean;
-  error: boolean;
+  dontShow: boolean;
+  prices?: { [key: string]: PriceProps };
+};
+
+type ChangeState = {
   prices?: { [key: string]: PriceProps };
 };
 
 type ActionType = {
-  type: 'fetched' | 'error';
-  state?: State;
+  type: 'fetched' | 'dontShow';
+  state?: ChangeState;
 };
 
 type Dispatch = (action: ActionType) => void;
@@ -22,23 +25,18 @@ export const StateContext = createContext<State | undefined>(undefined);
 export const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
 const initialState: State = {
-  loading: true,
-  error: false,
+  dontShow: true,
   prices: { EUR: { last: 0, symbol: '€' } },
 };
 
 const stateReducer = (state: State, action: ActionType): State => {
   switch (action.type) {
+    case 'dontShow':
+      return { ...initialState, dontShow: true };
     case 'fetched':
-      return action.state || initialState;
-    case 'error':
-      return {
-        ...initialState,
-        loading: false,
-        error: true,
-      };
+      return { ...initialState, ...action.state, dontShow: false };
     default:
-      return initialState;
+      return state;
   }
 };
 

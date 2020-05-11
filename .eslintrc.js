@@ -4,6 +4,11 @@ module.exports = {
   parserOptions: {
     ecmaFeatures: { jsx: true },
   },
+  env: {
+    browser: true,
+    amd: true,
+    node: true,
+  },
   plugins: ['react', 'jest', 'import', 'prettier'],
   settings: {
     react: {
@@ -37,7 +42,12 @@ module.exports = {
     'import/no-unresolved': 'off',
     camelcase: 'off',
     '@typescript-eslint/camelcase': 'off',
-    'prettier/prettier': 'error',
     'react/prop-types': 'off',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
 };

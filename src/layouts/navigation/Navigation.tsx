@@ -24,7 +24,7 @@ import {
   CreditCard,
   MessageCircle,
 } from 'react-feather';
-import { useSettings } from '../../context/SettingsContext';
+import { useConfigState } from '../../context/ConfigContext';
 import { useRouter } from 'next/router';
 import { Link } from '../../components/link/Link';
 import { useStatusState } from '../../context/StatusContext';
@@ -131,7 +131,7 @@ interface NavigationProps {
 
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const { pathname } = useRouter();
-  const { sidebar, setSettings } = useSettings();
+  const { sidebar } = useConfigState();
   const { connected } = useStatusState();
 
   const renderNavButton = (
@@ -204,7 +204,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
         <LinkView>
           {connected && <NodeInfo isOpen={sidebar} />}
           {renderLinks()}
-          <SideSettings isOpen={sidebar} setIsOpen={setSettings} />
+          <SideSettings />
         </LinkView>
       </StickyCard>
     </NavigationStyle>
