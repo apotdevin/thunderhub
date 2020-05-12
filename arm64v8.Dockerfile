@@ -1,7 +1,7 @@
 # ---------------
 # Install Dependencies
 # ---------------
-FROM node:12-alpine as build
+FROM arm64v8/node:12-alpine as build
 
 # Install dependencies neccesary for node-gyp on node alpine
 RUN apk add --update --no-cache \
@@ -25,9 +25,6 @@ WORKDIR /app
 
 # Copy dependencies from build stage
 COPY --from=build node_modules node_modules
-
-# Rebuild dependency for current arch
-RUN npm rebuild ln-service
 
 # Bundle app source
 COPY . .
