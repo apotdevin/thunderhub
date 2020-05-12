@@ -1,7 +1,7 @@
 # ---------------
 # Install Dependencies
 # ---------------
-FROM arm32v7/node:12-alpine as build
+FROM node:12-alpine as build
 
 # Install dependencies neccesary for node-gyp on node alpine
 RUN apk add --update --no-cache \
@@ -11,9 +11,10 @@ RUN apk add --update --no-cache \
 
 # Install app dependencies
 COPY package.json .
-COPY yarn.lock .
-RUN yarn install --network-timeout 100000 --silent --prod
-RUN yarn add --dev cross-env
+RUN npm install --production --silent
+
+# Install dependencies necessary for build and start
+RUN npm install -D cross-env typescript @types/react @next/bundle-analyzer
 
 # ---------------
 # Build App
@@ -25,9 +26,12 @@ WORKDIR /app
 # Copy dependencies from build stage
 COPY --from=build node_modules node_modules
 
+# Rebuild dependency for current arch
+RUN npm rebuild ln-service
+
 # Bundle app source
 COPY . .
-RUN yarn build
+RUN npm run build
 EXPOSE 3000
 
-CMD [ "yarn", "start" ]
+CMD [ "npm", "start" ]
