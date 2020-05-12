@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-unfetch';
 import { GraphQLList, GraphQLString } from 'graphql';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { logger } from '../../../helpers/logger';
