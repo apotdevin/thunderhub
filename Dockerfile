@@ -11,9 +11,10 @@ RUN apk add --update --no-cache \
 
 # Install app dependencies
 COPY package.json .
-COPY yarn.lock .
-RUN yarn install --silent --prod
-RUN yarn add --dev cross-env
+RUN npm install --production --silent
+
+# Install dependencies necessary for build and start
+RUN npm install -D cross-env typescript @types/react @next/bundle-analyzer
 
 # ---------------
 # Build App
@@ -27,7 +28,7 @@ COPY --from=build node_modules node_modules
 
 # Bundle app source
 COPY . .
-RUN yarn build
+RUN npm run build
 EXPOSE 3000
 
-CMD [ "yarn", "start" ]
+CMD [ "npm", "start" ]
