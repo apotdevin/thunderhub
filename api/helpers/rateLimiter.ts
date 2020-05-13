@@ -1,5 +1,13 @@
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
-import { RateConfig } from '../utils/rateLimitConfig';
+
+interface RateConfigProps {
+  [key: string]: {
+    max: number;
+    window: string;
+  };
+}
+
+export const RateConfig: RateConfigProps = {};
 
 const rateLimiter = getGraphQLRateLimiter({
   identifyContext: (ctx: string) => ctx,
@@ -7,8 +15,7 @@ const rateLimiter = getGraphQLRateLimiter({
 });
 
 export const requestLimiter = async (rate: string, field: string) => {
-  if (!RateConfig[field]) throw new Error('Invalid Rate Field');
-  const { max, window } = RateConfig[field];
+  const { max, window } = RateConfig[field] || { max: 5, window: '5s' };
   const errorMessage = await rateLimiter(
     {
       parent: rate,
