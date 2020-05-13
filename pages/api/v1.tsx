@@ -1,6 +1,6 @@
 import { ApolloServer } from 'apollo-server-micro';
-import { thunderHubSchema } from 'src/api/schemas';
-import { getIp } from 'src/api/helpers/helpers';
+import { thunderHubSchema } from 'api/schemas';
+import { getIp } from 'api/helpers/helpers';
 import getConfig from 'next/config';
 import Cors from 'micro-cors';
 
