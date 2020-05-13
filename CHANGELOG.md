@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.6](https://github.com/apotdevin/thunderhub/compare/v0.5.5...v0.5.6) (2020-05-13)
+
+
+### Features
+
+* ✨ privacy settings ([#37](https://github.com/apotdevin/thunderhub/issues/37)) ([3d29616](https://github.com/apotdevin/thunderhub/commit/3d2961630020cdfc6163a8059389130f09a38d9e))
+
+
+### Bug Fixes
+
+* 🐛 docker images ([85c6a28](https://github.com/apotdevin/thunderhub/commit/85c6a28ce5eb3426da61facb8d9709f9b5b63d9c))
+
+
+### Improvements
+
+* 🔧 add docker scripts ([ef5c2d1](https://github.com/apotdevin/thunderhub/commit/ef5c2d16f444b4aa0146498044a5828aa51eb6b9))
+* 🔧 move api folder ([b4ac4f5](https://github.com/apotdevin/thunderhub/commit/b4ac4f504faa4d96426077511a41e9ea7896d2b0))
+* 🔧 update deps ([69555ab](https://github.com/apotdevin/thunderhub/commit/69555abfff4190a91311e00430c64b44a9f7cdb0))
+
 ### [0.5.5](https://github.com/apotdevin/thunderhub/compare/v0.5.4...v0.5.5) (2020-05-07)
 
 
