@@ -175,7 +175,7 @@ If you want to specify a different port (for example port `4000`) run with:
 yarn start -p 4000
 
 // NPM
-npm start -p 4000
+npm start -- -p 4000
 ```
 
 ## Development
