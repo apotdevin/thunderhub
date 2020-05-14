@@ -54,7 +54,7 @@ export const StatusCheck = () => {
 
       dispatch({ type: 'connected', state });
     }
-  }, [data, dispatch, error, loading]);
+  }, [data, dispatch, error, loading, name, push]);
 
   return null;
 };

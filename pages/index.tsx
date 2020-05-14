@@ -48,7 +48,7 @@ const ContextApp = () => {
       dispatch({ type: 'connected' });
       push(appendBasePath('/home'));
     }
-  }, [loading, data, error]);
+  }, [loading, data, error, dispatch, push]);
 
   useEffect(() => {
     if (viewOnly !== '' || sessionAdmin !== '') {
@@ -62,7 +62,7 @@ const ContextApp = () => {
         },
       });
     }
-  }, [viewOnly, sessionAdmin]);
+  }, [viewOnly, sessionAdmin, getCanConnect, cert, host]);
 
   return (
     <>

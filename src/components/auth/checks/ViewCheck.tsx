@@ -50,7 +50,7 @@ export const ViewCheck = ({
     if (loading) {
       return <ScaleLoader height={20} color={themeColors.blue3} />;
     }
-    if (data?.getNodeInfo.alias && viewOnly) {
+    if (data?.getNodeInfo.alias) {
       return <Check size={18} />;
     }
     return <X size={18} />;
@@ -103,6 +103,9 @@ export const ViewCheck = ({
     if (!adminChecked && viewOnly) {
       return 'Connect (View-Only)';
     }
+    if (!adminChecked && admin) {
+      return 'Connect (View-Only)';
+    }
     return 'Connect';
   };
 
@@ -117,10 +120,10 @@ export const ViewCheck = ({
       {renderInfo()}
       {!confirmed && !loading && renderText()}
       <SingleLine>
-        <Sub4Title>View-Only Macaroon</Sub4Title>
+        <Sub4Title>{viewOnly ? 'View-Only Macaroon' : 'Connected'}</Sub4Title>
         {content()}
       </SingleLine>
-      {admin && (
+      {admin && confirmed && (
         <AdminCheck
           host={host}
           admin={admin}
