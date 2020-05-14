@@ -57,9 +57,9 @@ export const LoginForm = ({ handleSet }: AuthProps) => {
         </MultiButton>
       </SingleLine>
       <Line>
-        <StyledTitle>Host:</StyledTitle>
+        <StyledTitle>{'Url (host:grpc port):'}</StyledTitle>
         <Input
-          placeholder={'Url and port (e.g.: www.node.com:443)'}
+          placeholder={'Host and port (e.g.: www.node.com:443)'}
           onChange={e => setHost(e.target.value)}
         />
       </Line>
@@ -73,7 +73,9 @@ export const LoginForm = ({ handleSet }: AuthProps) => {
         </Line>
       )}
       <Line>
-        <StyledTitle>Readonly:</StyledTitle>
+        <StyledTitle>
+          {!isViewOnly ? 'Readonly (optional):' : 'Readonly:'}
+        </StyledTitle>
         <Input
           placeholder={'Base64 or HEX Readonly macaroon'}
           onChange={e => setRead(e.target.value)}

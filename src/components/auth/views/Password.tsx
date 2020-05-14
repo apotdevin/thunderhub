@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sub4Title, SubTitle } from '../../generic/Styled';
+import { Sub4Title, SubTitle, DarkSubTitle } from '../../generic/Styled';
 import zxcvbn from 'zxcvbn';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import { Input } from '../../input/Input';
@@ -31,6 +31,9 @@ const PasswordInput = ({
   return (
     <>
       <SubTitle>Please Input a Password</SubTitle>
+      <DarkSubTitle>
+        This password will be used to encrypt your admin macaroon.
+      </DarkSubTitle>
       <Line>
         <Sub4Title>Password:</Sub4Title>
         <Input onChange={e => setPass(e.target.value)} />

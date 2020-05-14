@@ -102,7 +102,8 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
       cert ?? ''
     );
 
-    const accountExists = accounts.findIndex(account => account.id === id) > -1;
+    const accountExists =
+      accounts.filter(account => account.id === id).length > 0;
 
     if (accountExists) {
       toast.error('Account already exists.');
@@ -128,6 +129,11 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     } else if (!admin && !viewOnly) {
       toast.error('View-Only or Admin macaroon are needed to connect.');
     } else {
+      let correctViewOnly = viewOnly;
+      if (!viewOnly && admin && !password) {
+        correctViewOnly = admin;
+      }
+
       const encryptedAdmin =
         admin && password
           ? CryptoJS.AES.encrypt(admin, password).toString()
@@ -137,12 +143,12 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
         name,
         host,
         admin: encryptedAdmin,
-        viewOnly,
+        viewOnly: correctViewOnly,
         cert,
         accounts,
       });
 
-      const id = getAccountId(host, viewOnly, admin, cert);
+      const id = getAccountId(host, correctViewOnly, encryptedAdmin, cert);
 
       dispatch({ type: 'disconnected' });
       dispatchChat({ type: 'disconnected' });
@@ -193,7 +199,10 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
         <PasswordInput
           isPass={password}
           setPass={setPassword}
-          callback={handleSave}
+          callback={() => {
+            handleSave();
+            setStatus('none');
+          }}
           loading={false}
         />
       )}

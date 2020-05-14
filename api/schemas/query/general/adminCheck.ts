@@ -21,16 +21,21 @@ export const adminCheck = {
         request: 'admin check',
       });
     } catch (error) {
-      logger.info('%o', error);
       if (error.length >= 2) {
         if (error[2]?.err?.details?.indexOf('permission denied') >= 0) {
+          logger.warn('Admin permission check failed.');
           throw new Error('PermissionDenied');
+        }
+        if (
+          error[2]?.err?.details?.indexOf('invalid character in string:') >= 0
+        ) {
+          logger.info('Admin permission checked');
+          return true;
         }
       }
 
+      logger.info('%o', error);
       const errorMessage = getErrorMsg(error);
-      if (errorMessage.indexOf('UnexpectedSendPaymentError') >= 0) return true;
-
       throw new Error(errorMessage);
     }
   },
