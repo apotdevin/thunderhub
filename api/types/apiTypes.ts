@@ -1,5 +1,3 @@
-type VerifiedUserType = { user: string };
-
 type SSOType = {
   macaroon: string | null;
   cert: string | null;
@@ -9,6 +7,7 @@ type SSOType = {
 export type ContextType = {
   ip: string;
   secret: string;
-  verifiedUsers: VerifiedUserType[];
+  ssoVerified: boolean;
+  accountVerified: string;
   sso: SSOType;
 };

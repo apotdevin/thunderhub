@@ -36,20 +36,31 @@ const apolloServer = new ApolloServer({
   context: async ({ req }) => {
     const ip = getIp(req);
 
-    const verifiedUsers = [];
+    let ssoVerified = false;
     if (req?.cookies?.SSOAuth) {
       try {
-        const verified = jwt.verify(req.cookies.SSOAuth, secret);
-        verifiedUsers.push(verified);
+        jwt.verify(req.cookies.SSOAuth, secret);
+        ssoVerified = true;
       } catch (error) {
-        logger.warn('Error verifying SSO_AUTH cookie');
+        logger.warn('Error verifying SSO authentication cookie');
+      }
+    }
+
+    let accountVerified = '';
+    if (req?.cookies?.AccountAuth) {
+      try {
+        const account = jwt.verify(req.cookies.AccountAuth, secret);
+        accountVerified = account['name'] || '';
+      } catch (error) {
+        logger.warn('Error verifying account authentication cookie');
       }
     }
 
     const context: ContextType = {
       ip,
       secret,
-      verifiedUsers,
+      ssoVerified,
+      accountVerified,
       sso: { macaroon: ssoMacaroon, cert: ssoCert, host: lnServerUrl },
     };
 
