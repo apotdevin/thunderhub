@@ -1,7 +1,7 @@
-import { logger } from '../../../helpers/logger';
-import { requestLimiter } from '../../../helpers/rateLimiter';
 import { GraphQLBoolean } from 'graphql';
 import fetch from 'node-fetch';
+import { logger } from '../../../helpers/logger';
+import { requestLimiter } from '../../../helpers/rateLimiter';
 import { BitcoinFeeType } from '../../types/QueryType';
 import { appUrls } from '../../../utils/appUrls';
 

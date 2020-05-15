@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 import { useAccount } from '../src/context/AccountContext';
 import { SessionLogin } from '../src/views/login/SessionLogin';
-import { useRouter } from 'next/router';
 import { appendBasePath } from '../src/utils/basePath';
 import { TopSection } from '../src/views/homepage/Top';
 import { LoginBox } from '../src/views/homepage/LoginBox';
@@ -13,7 +14,6 @@ import {
 import { useGetCanConnectLazyQuery } from '../src/generated/graphql';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { Section } from '../src/components/section/Section';
-import { toast } from 'react-toastify';
 
 const ContextApp = () => {
   const { push } = useRouter();

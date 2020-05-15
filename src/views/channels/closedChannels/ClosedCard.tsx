@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import { NodeTitle, MainInfo } from '../../../components/generic/CardGeneric';
 import {
   SubCard,
@@ -12,7 +13,6 @@ import {
   renderLine,
   getNodeLink,
 } from '../../../components/generic/helpers';
-import styled from 'styled-components';
 import { Price } from '../../../components/price/Price';
 
 const Padding = styled.div`

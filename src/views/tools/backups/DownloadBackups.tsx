@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { DarkSubTitle, SingleLine } from '../../../components/generic/Styled';
 import { saveToPc } from '../../../utils/helpers';
 import { useAccount } from '../../../context/AccountContext';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { useGetBackupsLazyQuery } from '../../../generated/graphql';

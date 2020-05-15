@@ -1,4 +1,6 @@
 import React from 'react';
+import { Circle, ChevronRight, X } from 'react-feather';
+import numeral from 'numeral';
 import {
   SubCard,
   SingleLine,
@@ -6,18 +8,16 @@ import {
   ResponsiveLine,
 } from '../../components/generic/Styled';
 import { MainInfo } from '../../components/generic/CardGeneric';
-import { Circle, ChevronRight, X } from 'react-feather';
 import { getPercent } from '../../utils/helpers';
 import { Price } from '../../components/price/Price';
 import { themeColors, chartColors } from '../../styles/Themes';
+import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
   ChannelColumnSection,
   Padding,
   ChannelLineSection,
   CirclePadding,
 } from './Balance.styled';
-import numeral from 'numeral';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 
 type BalanceCardProps = {
   index: number;

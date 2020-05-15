@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { Copy } from 'react-feather';
+import styled from 'styled-components';
+import { toast } from 'react-toastify';
+import QRCode from 'qrcode.react';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { getErrorContent } from '../../../../utils/error';
+import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
+import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import {
   NoWrapTitle,
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
-import { Copy } from 'react-feather';
-import styled from 'styled-components';
-import { toast } from 'react-toastify';
-import { getErrorContent } from '../../../../utils/error';
-import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
-import QRCode from 'qrcode.react';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { Input } from '../../../../components/input/Input';
 import { mediaWidths } from '../../../../styles/Themes';
 import { useCreateInvoiceMutation } from '../../../../generated/graphql';

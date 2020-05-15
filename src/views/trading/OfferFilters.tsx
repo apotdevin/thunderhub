@@ -1,4 +1,6 @@
 import React, { useState, useReducer } from 'react';
+import { X } from 'react-feather';
+import { useRouter } from 'next/router';
 import {
   SingleLine,
   Separation,
@@ -11,15 +13,13 @@ import {
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
 import Modal from '../../components/modal/ReactModal';
-import { FilterModal } from './Modal/FilterModal';
-import { SortOptions } from './OfferConfigs';
 import { QueryProps } from '../../../pages/trading';
-import { X } from 'react-feather';
 import { renderLine } from '../../components/generic/helpers';
 import { chartColors } from '../../styles/Themes';
-import { useRouter } from 'next/router';
 import { encode } from '../../utils/helpers';
 import { appendBasePath } from '../../utils/basePath';
+import { SortOptions } from './OfferConfigs';
+import { FilterModal } from './Modal/FilterModal';
 
 type ActionType = {
   type: 'addFilter' | 'addSort' | 'removeSort' | 'removeFilter' | 'changeLimit';

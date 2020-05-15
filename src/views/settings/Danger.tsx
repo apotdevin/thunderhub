@@ -1,4 +1,8 @@
 import React from 'react';
+import styled from 'styled-components';
+import { AlertCircle } from 'react-feather';
+import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 import {
   Card,
   CardWithTitle,
@@ -9,19 +13,15 @@ import {
 } from '../../components/generic/Styled';
 import { deleteStorage, deleteAccountPermissions } from '../../utils/storage';
 import { useAccount } from '../../context/AccountContext';
-import styled from 'styled-components';
 import { textColor, fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
   MultiButton,
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
-import { AlertCircle } from 'react-feather';
 import { useStatusDispatch } from '../../context/StatusContext';
-import { useRouter } from 'next/router';
 import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
-import Cookies from 'js-cookie';
 
 export const ButtonRow = styled.div`
   width: auto;

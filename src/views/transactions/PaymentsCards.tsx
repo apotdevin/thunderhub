@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import {
   Separation,
   SubCard,
@@ -17,7 +18,6 @@ import {
   getNodeLink,
   renderLine,
 } from '../../components/generic/helpers';
-import styled from 'styled-components';
 import { Price } from '../../components/price/Price';
 
 interface PaymentsCardProps {

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { X } from 'react-feather';
+import { useRouter } from 'next/router';
 import {
   CardWithTitle,
   SubTitle,
@@ -10,14 +12,12 @@ import {
 import { SettingsLine } from '../../../pages/settings';
 import { useAccount } from '../../context/AccountContext';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { X } from 'react-feather';
 import {
   MultiButton,
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { Auth } from '../../components/auth';
-import { useRouter } from 'next/router';
 import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
 

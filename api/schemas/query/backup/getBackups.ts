@@ -1,7 +1,7 @@
 import { getBackups as getLnBackups } from 'ln-service';
+import { GraphQLString } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLString } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 

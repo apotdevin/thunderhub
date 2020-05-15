@@ -1,15 +1,14 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import {
   SubCard,
   Sub4Title,
   Separation,
   SingleLine,
 } from '../../components/generic/Styled';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { themeColors, chartColors } from '../../styles/Themes';
 import { renderLine } from '../../components/generic/helpers';
-import { HopCard } from './Balance.styled';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { GET_ROUTES } from '../../graphql/query';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
@@ -20,6 +19,7 @@ import {
   usePayViaRouteMutation,
   useGetRoutesLazyQuery,
 } from '../../generated/graphql';
+import { HopCard } from './Balance.styled';
 
 type BalancedRouteProps = {
   incoming: any;

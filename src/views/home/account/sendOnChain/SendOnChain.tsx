@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { toast } from 'react-toastify';
 import {
   NoWrapTitle,
   DarkSubTitle,
@@ -7,8 +9,6 @@ import {
   ResponsiveLine,
   SubTitle,
 } from '../../../../components/generic/Styled';
-import styled from 'styled-components';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { useBitcoinState } from '../../../../context/BitcoinContext';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';

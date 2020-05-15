@@ -1,7 +1,5 @@
 import { GraphQLString } from 'graphql';
 import { getForwards as getLnForwards } from 'ln-service';
-import { logger } from '../../../helpers/logger';
-import { requestLimiter } from '../../../helpers/rateLimiter';
 import { groupBy } from 'underscore';
 import {
   subHours,
@@ -9,10 +7,12 @@ import {
   differenceInHours,
   differenceInCalendarDays,
 } from 'date-fns';
-import { reduceForwardArray } from './Helpers';
-import { ForwardCompleteProps } from './ForwardReport.interface';
+import { logger } from '../../../helpers/logger';
+import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { reduceForwardArray } from './Helpers';
+import { ForwardCompleteProps } from './ForwardReport.interface';
 
 export const getForwardReport = {
   type: GraphQLString,

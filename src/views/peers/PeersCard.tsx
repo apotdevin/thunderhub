@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+import { ArrowDown, ArrowUp } from 'react-feather';
+import ReactTooltip from 'react-tooltip';
 import {
   SubCard,
   Separation,
@@ -15,8 +18,6 @@ import {
   getTooltipType,
   getNodeLink,
 } from '../../components/generic/helpers';
-import styled from 'styled-components';
-import { ArrowDown, ArrowUp } from 'react-feather';
 import {
   Progress,
   ProgressBar,
@@ -25,7 +26,6 @@ import {
 } from '../../components/generic/CardGeneric';
 import { getPercent } from '../../utils/helpers';
 import { useConfigState } from '../../context/ConfigContext';
-import ReactTooltip from 'react-tooltip';
 import { usePriceState } from '../../context/PriceContext';
 import { getPrice } from '../../components/price/Price';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';

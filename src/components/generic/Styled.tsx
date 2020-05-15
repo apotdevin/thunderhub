@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { ThemeSet } from 'styled-theming';
 import {
   cardColor,
   cardBorderColor,
@@ -12,7 +13,6 @@ import {
   separationColor,
   mediaWidths,
 } from '../../styles/Themes';
-import { ThemeSet } from 'styled-theming';
 
 export const CardWithTitle = styled.div`
   display: flex;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { SingleLine, SimpleButton } from '../src/components/generic/Styled';
 import styled from 'styled-components';
+import { SingleLine, SimpleButton } from '../src/components/generic/Styled';
 import { InterfaceSettings } from '../src/views/settings/Interface';
 import { textColor } from '../src/styles/Themes';
 import { AccountSettings } from '../src/views/settings/Account';

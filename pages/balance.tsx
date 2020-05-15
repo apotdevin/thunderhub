@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import sortBy from 'lodash.sortby';
 import {
   CardWithTitle,
   Card,
@@ -10,12 +12,10 @@ import {
   SingleLine,
 } from '../src/components/generic/Styled';
 import { useAccount } from '../src/context/AccountContext';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { getPercent } from '../src/utils/helpers';
 import { Input } from '../src/components/input/Input';
-import sortBy from 'lodash.sortby';
 import { BalanceCard } from '../src/views/balance/BalanceCard';
 import { BalanceRoute } from '../src/views/balance/BalanceRoute';
 import { Price } from '../src/components/price/Price';

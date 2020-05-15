@@ -1,6 +1,6 @@
+import path from 'path';
 import { createLogger, format, transports } from 'winston';
 import getConfig from 'next/config';
-import path from 'path';
 
 const { serverRuntimeConfig } = getConfig();
 const { logLevel, nodeEnv } = serverRuntimeConfig;

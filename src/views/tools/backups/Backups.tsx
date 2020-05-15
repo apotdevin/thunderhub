@@ -9,11 +9,11 @@ import {
   ResponsiveLine,
   DarkSubTitle,
 } from '../../../components/generic/Styled';
+import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
+import { getDateDif, getFormatDate } from '../../../components/generic/helpers';
 import { DownloadBackups } from './DownloadBackups';
 import { VerifyBackups } from './VerifyBackups';
 import { RecoverFunds } from './RecoverFunds';
-import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
-import { getDateDif, getFormatDate } from '../../../components/generic/helpers';
 
 export const BackupsView = () => {
   const [lastDate, setLastDate] = useState('');

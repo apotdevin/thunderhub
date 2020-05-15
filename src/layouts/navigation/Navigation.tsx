@@ -1,15 +1,5 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { NodeInfo } from './nodeInfo/NodeInfo';
-import { SideSettings } from './sideSettings/SideSettings';
-import {
-  unSelectedNavButton,
-  navBackgroundColor,
-  navTextColor,
-  subCardColor,
-  cardBorderColor,
-  mediaWidths,
-} from '../../styles/Themes';
 import {
   Home,
   Cpu,
@@ -24,10 +14,20 @@ import {
   CreditCard,
   MessageCircle,
 } from 'react-feather';
-import { useConfigState } from '../../context/ConfigContext';
 import { useRouter } from 'next/router';
+import {
+  unSelectedNavButton,
+  navBackgroundColor,
+  navTextColor,
+  subCardColor,
+  cardBorderColor,
+  mediaWidths,
+} from '../../styles/Themes';
+import { useConfigState } from '../../context/ConfigContext';
 import { Link } from '../../components/link/Link';
 import { useStatusState } from '../../context/StatusContext';
+import { SideSettings } from './sideSettings/SideSettings';
+import { NodeInfo } from './nodeInfo/NodeInfo';
 
 const NavigationStyle = styled.div<{ isOpen: boolean }>`
   grid-area: nav;

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { SingleLine, Sub4Title, Separation } from '../../generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import { themeColors } from '../../../styles/Themes';
 import { Check, X } from 'react-feather';
+import { themeColors } from '../../../styles/Themes';
+import { SingleLine, Sub4Title, Separation } from '../../generic/Styled';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
-import { AdminCheck } from './AdminCheck';
 import { Text } from '../../typography/Styled';
 import { useGetCanConnectQuery } from '../../../generated/graphql';
+import { AdminCheck } from './AdminCheck';
 
 type ViewProps = {
   host: string;

@@ -1,9 +1,9 @@
 import { GraphQLList } from 'graphql';
 import { getChainTransactions as getLnChainTransactions } from 'ln-service';
+import { sortBy } from 'underscore';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
-import { sortBy } from 'underscore';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { GetChainTransactionsType } from '../../types/QueryType';
 

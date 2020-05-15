@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { useAccount } from '../../context/AccountContext';
-import { NodeCard } from './NodeCard';
+import { HelpCircle } from 'react-feather';
+import styled from 'styled-components';
+import ReactTooltip from 'react-tooltip';
 import { CardWithTitle, SubTitle } from '../generic/Styled';
+import { useAccount } from '../../context/AccountContext';
+import { useConfigState } from '../../context/ConfigContext';
+import { getTooltipType } from '../generic/helpers';
 import {
   ArrowLeft,
   ArrowRight,
   StyledNodeBar,
   NodeBarContainer,
 } from './NodeInfo.styled';
-import { HelpCircle } from 'react-feather';
-import styled from 'styled-components';
-import ReactTooltip from 'react-tooltip';
-import { useConfigState } from '../../context/ConfigContext';
-import { getTooltipType } from '../generic/helpers';
+import { NodeCard } from './NodeCard';
 
 const StyledQuestion = styled(HelpCircle)`
   margin-left: 8px;

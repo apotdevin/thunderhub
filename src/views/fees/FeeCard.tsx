@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import { ChevronRight } from 'react-feather';
 import {
   SubCard,
   Separation,
@@ -13,9 +15,7 @@ import {
   NodeTitle,
   ColLine,
 } from '../../components/generic/CardGeneric';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
-import { ChevronRight } from 'react-feather';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { useConfigState } from '../../context/ConfigContext';
 import { textColorMap } from '../../styles/Themes';

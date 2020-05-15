@@ -1,12 +1,12 @@
 import { getUtxos as getLnUtxos } from 'ln-service';
-import { logger } from '../../../helpers/logger';
-import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
   GraphQLInt,
   GraphQLObjectType,
   GraphQLString,
   GraphQLList,
 } from 'graphql';
+import { logger } from '../../../helpers/logger';
+import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { boolean, color } from '@storybook/addon-knobs';
-import { MultiButton, SingleButton } from './MultiButton';
 import { action } from '@storybook/addon-actions';
+import { MultiButton, SingleButton } from './MultiButton';
 
 export default {
   title: 'Multi Button',

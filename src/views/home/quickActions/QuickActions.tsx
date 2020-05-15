@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+import { X, Layers, GitBranch } from 'react-feather';
 import {
   CardWithTitle,
   SubTitle,
@@ -6,12 +8,10 @@ import {
   CardTitle,
   ColorButton,
 } from '../../../components/generic/Styled';
-import styled from 'styled-components';
-import { X, Layers, GitBranch } from 'react-feather';
 import { unSelectedNavButton } from '../../../styles/Themes';
+import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { DecodeCard } from './decode/Decode';
 import { OpenChannelCard } from './openChannel/OpenChannel';
-import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 
 const sectionColor = '#69c0ff';
 

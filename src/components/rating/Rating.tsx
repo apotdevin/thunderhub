@@ -1,8 +1,8 @@
 import React from 'react';
 import { Star } from 'react-feather';
+import styled from 'styled-components';
 import { HalfStar } from '../../assets/half-star.svg';
 import { themeColors } from '../../styles/Themes';
-import styled from 'styled-components';
 
 const StyledStar = styled(Star)`
   margin-bottom: -1px;

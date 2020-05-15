@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 import {
   CardWithTitle,
   SubTitle,
@@ -9,10 +11,8 @@ import {
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { OfferCard } from '../src/views/trading/OfferCard';
 import { OfferFilters } from '../src/views/trading/OfferFilters';
-import { toast } from 'react-toastify';
 import { Link } from '../src/components/link/Link';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
-import { useRouter } from 'next/router';
 import { decode } from '../src/utils/helpers';
 import { useGetOffersQuery } from '../src/generated/graphql';
 

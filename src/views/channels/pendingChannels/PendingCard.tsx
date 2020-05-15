@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactTooltip from 'react-tooltip';
 import { getPercent } from '../../../utils/helpers';
 import {
   Progress,
@@ -7,7 +8,6 @@ import {
   StatusLine,
   MainInfo,
 } from '../../../components/generic/CardGeneric';
-import ReactTooltip from 'react-tooltip';
 import {
   SubCard,
   Separation,

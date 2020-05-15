@@ -2,9 +2,9 @@ import {
   getChainBalance as getBalance,
   getPendingChainBalance as getPending,
 } from 'ln-service';
+import { GraphQLInt } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLInt } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Card } from '../../../components/generic/Styled';
-import { PendingCard } from './PendingCard';
-import { useAccount } from '../../../context/AccountContext';
 import { toast } from 'react-toastify';
+import { useAccount } from '../../../context/AccountContext';
+import { Card } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { useGetPendingChannelsQuery } from '../../../generated/graphql';
+import { PendingCard } from './PendingCard';
 
 export const PendingChannels = () => {
   const [indexOpen, setIndexOpen] = useState(0);

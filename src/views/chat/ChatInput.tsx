@@ -1,14 +1,14 @@
 import * as React from 'react';
+import { toast } from 'react-toastify';
 import { Input } from '../../components/input/Input';
 import { SingleLine } from '../../components/generic/Styled';
 import { useSendMessageMutation } from '../../generated/graphql';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { useAccount } from '../../context/AccountContext';
-import { handleMessage } from './helpers/chatHelpers';
 import { useConfigState } from '../../context/ConfigContext';
+import { handleMessage } from './helpers/chatHelpers';
 
 export const ChatInput = ({
   alias,

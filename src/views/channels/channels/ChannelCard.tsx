@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import ReactTooltip from 'react-tooltip';
+import styled from 'styled-components';
+import { ArrowDown, ArrowUp, EyeOff } from 'react-feather';
 import { getPercent } from '../../../utils/helpers';
 import {
   Progress,
@@ -7,7 +10,6 @@ import {
   StatusLine,
   MainInfo,
 } from '../../../components/generic/CardGeneric';
-import ReactTooltip from 'react-tooltip';
 import {
   SubCard,
   Separation,
@@ -29,9 +31,7 @@ import {
 } from '../../../components/generic/helpers';
 import Modal from '../../../components/modal/ReactModal';
 import { CloseChannel } from '../../../components/modal/closeChannel/CloseChannel';
-import styled from 'styled-components';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
-import { ArrowDown, ArrowUp, EyeOff } from 'react-feather';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { getPrice } from '../../../components/price/Price';
 import { usePriceState } from '../../../context/PriceContext';

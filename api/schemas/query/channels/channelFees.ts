@@ -1,7 +1,7 @@
 import { getFeeRates, getChannels, getNode } from 'ln-service';
+import { GraphQLList } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLList } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { ChannelFeeType } from '../../types/QueryType';

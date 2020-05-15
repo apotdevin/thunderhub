@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { toast } from 'react-toastify';
+import CopyToClipboard from 'react-copy-to-clipboard';
 import {
   NoWrapTitle,
   DarkSubTitle,
   OverflowText,
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
-import styled from 'styled-components';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import {
   MultiButton,

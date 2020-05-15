@@ -1,7 +1,7 @@
 import { updateRoutingFees } from 'ln-service';
+import { GraphQLBoolean, GraphQLString, GraphQLInt } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLBoolean, GraphQLString, GraphQLInt } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 

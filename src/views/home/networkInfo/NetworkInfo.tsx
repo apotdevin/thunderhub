@@ -1,4 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
+import { Globe, Cpu } from 'react-feather';
+import { toast } from 'react-toastify';
 import {
   Card,
   CardWithTitle,
@@ -7,10 +10,7 @@ import {
   Separation,
 } from '../../../components/generic/Styled';
 import { useAccount } from '../../../context/AccountContext';
-import styled from 'styled-components';
 import { unSelectedNavButton, mediaWidths } from '../../../styles/Themes';
-import { Globe, Cpu } from 'react-feather';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { Price } from '../../../components/price/Price';

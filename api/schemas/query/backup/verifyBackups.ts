@@ -1,7 +1,7 @@
 import { verifyBackups as verifyLnBackups } from 'ln-service';
+import { GraphQLNonNull, GraphQLString, GraphQLBoolean } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLNonNull, GraphQLString, GraphQLBoolean } from 'graphql';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 

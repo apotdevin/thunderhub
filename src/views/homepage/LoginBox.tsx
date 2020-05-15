@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Card, Separation } from '../../components/generic/Styled';
 import styled from 'styled-components';
+import { Card, Separation } from '../../components/generic/Styled';
 import { Section } from '../../components/section/Section';
 import {
   MultiButton,

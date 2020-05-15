@@ -2,16 +2,16 @@ import * as React from 'react';
 import { useGetNodeLazyQuery } from '../../generated/graphql';
 import { useAccount } from '../../context/AccountContext';
 import { useChatDispatch, useChatState } from '../../context/ChatContext';
+import { SingleLine } from '../../components/generic/Styled';
+import { getMessageDate } from '../../components/generic/helpers';
+import { getSubMessage } from '../../utils/chat';
+import { MessageType } from './Chat.types';
 import {
   ChatContactColumn,
   ChatSubCard,
   ChatContactDate,
   ChatSubText,
 } from './Chat.styled';
-import { SingleLine } from '../../components/generic/Styled';
-import { getMessageDate } from '../../components/generic/helpers';
-import { MessageType } from './Chat.types';
-import { getSubMessage } from '../../utils/chat';
 
 export const ContactCard = ({
   contact,

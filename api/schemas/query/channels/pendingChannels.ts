@@ -2,8 +2,8 @@ import {
   getPendingChannels as getLnPendingChannels,
   getNode,
 } from 'ln-service';
-import { logger } from '../../../helpers/logger';
 import { GraphQLList } from 'graphql';
+import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';

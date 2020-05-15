@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useTransition, animated, config } from 'react-spring';
+import { headerColor, inverseTextColor } from '../../styles/Themes';
+import { Section } from '../../components/section/Section';
 import {
   Headline,
   LeftHeadline,
@@ -9,9 +12,6 @@ import {
   SlantedWrapper,
   SlantedEdge,
 } from './HomePage.styled';
-import { headerColor, inverseTextColor } from '../../styles/Themes';
-import { Section } from '../../components/section/Section';
-import { useTransition, animated, config } from 'react-spring';
 
 export const TopSection = () => {
   const [state] = useState(true);

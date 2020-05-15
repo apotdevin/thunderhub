@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
+import { AlertTriangle } from 'react-feather';
+import styled from 'styled-components';
+import { toast } from 'react-toastify';
 import {
   Separation,
   SingleLine,
   SubTitle,
   Sub4Title,
 } from '../../generic/Styled';
-import { AlertTriangle } from 'react-feather';
-import styled from 'styled-components';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
 import { SecureButton } from '../../buttons/secureButton/SecureButton';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';

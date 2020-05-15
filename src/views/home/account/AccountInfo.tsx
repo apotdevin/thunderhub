@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+import { ArrowUp, Zap, Anchor, Pocket, ArrowDown, X } from 'react-feather';
 import {
   Card,
   CardWithTitle,
@@ -8,17 +10,15 @@ import {
   ColorButton,
   ResponsiveLine,
 } from '../../../components/generic/Styled';
-import styled from 'styled-components';
-import { ArrowUp, Zap, Anchor, Pocket, ArrowDown, X } from 'react-feather';
-import { PayCard } from './pay/pay';
-import { CreateInvoiceCard } from './createInvoice/CreateInvoice';
-import { SendOnChainCard } from './sendOnChain/SendOnChain';
-import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { Price } from '../../../components/price/Price';
 import { mediaWidths } from '../../../styles/Themes';
 import { useStatusState } from '../../../context/StatusContext';
+import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
+import { SendOnChainCard } from './sendOnChain/SendOnChain';
+import { PayCard } from './pay/pay';
+import { CreateInvoiceCard } from './createInvoice/CreateInvoice';
 
 const Tile = styled.div`
   display: flex;

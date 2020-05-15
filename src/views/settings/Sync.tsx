@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { X } from 'react-feather';
+import QRCode from 'qrcode.react';
+import styled from 'styled-components';
 import {
   CardWithTitle,
   SubTitle,
@@ -12,10 +15,7 @@ import {
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { X } from 'react-feather';
 import { useAccount } from '../../context/AccountContext';
-import QRCode from 'qrcode.react';
-import styled from 'styled-components';
 import { useInterval } from '../../hooks/UseInterval';
 import Modal from '../../components/modal/ReactModal';
 import { themeColors } from '../../styles/Themes';

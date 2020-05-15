@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Sub4Title, SubTitle, DarkSubTitle } from '../../generic/Styled';
 import zxcvbn from 'zxcvbn';
+import getConfig from 'next/config';
+import { Sub4Title, SubTitle, DarkSubTitle } from '../../generic/Styled';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import { Input } from '../../input/Input';
 import { Line, CheckboxText } from '../Auth.styled';
 import { LoadingBar } from '../../loadingBar/LoadingBar';
 import { Checkbox } from '../../checkbox/Checkbox';
-import getConfig from 'next/config';
 
 interface PasswordProps {
   isPass?: string;

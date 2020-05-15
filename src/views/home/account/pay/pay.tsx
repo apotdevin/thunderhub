@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import {
   Sub4Title,
   ResponsiveLine,
   NoWrapTitle,
 } from '../../../../components/generic/Styled';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';

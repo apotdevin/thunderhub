@@ -1,6 +1,5 @@
 import React from 'react';
 import numeral from 'numeral';
-import { useConfigState } from '../../../../context/ConfigContext';
 import {
   VictoryBar,
   VictoryChart,
@@ -8,6 +7,7 @@ import {
   VictoryVoronoiContainer,
   VictoryGroup,
 } from 'victory';
+import { useConfigState } from '../../../../context/ConfigContext';
 import {
   chartAxisColor,
   chartGridColor,

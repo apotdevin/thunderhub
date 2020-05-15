@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useAccount } from '../../../context/AccountContext';
 import { toast } from 'react-toastify';
-import { getErrorContent } from '../../../utils/error';
+import { X, Copy } from 'react-feather';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { Input } from '../../../components/input/Input';
+import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import {
   SingleLine,
   DarkSubTitle,
   Separation,
 } from '../../../components/generic/Styled';
-import { X, Copy } from 'react-feather';
-import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { NoWrap } from './Messages';
-import { Input } from '../../../components/input/Input';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import { getErrorContent } from '../../../utils/error';
+import { useAccount } from '../../../context/AccountContext';
 import { Column, WrapRequest } from '../Tools.styled';
 import { getNodeLink } from '../../../components/generic/helpers';
 import { useVerifyMessageLazyQuery } from '../../../generated/graphql';
+import { NoWrap } from './Messages';
 
 export const VerifyMessage = () => {
   const [message, setMessage] = useState<string>('');

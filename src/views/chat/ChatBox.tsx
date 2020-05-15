@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { MessageType } from './Chat.types';
+import { sortBy } from 'underscore';
 import {
   getMessageDate,
   getIsDifferentDay,
   getDayChange,
 } from '../../components/generic/helpers';
-import { sortBy } from 'underscore';
+import { useConfigState } from '../../context/ConfigContext';
+import { MessageType } from './Chat.types';
 import { ChatInput } from './ChatInput';
 import {
   ChatStyledLine,
@@ -19,7 +20,6 @@ import {
   ChatBoxTopAlias,
 } from './Chat.styled';
 import { ChatBubble } from './ChatBubble';
-import { useConfigState } from '../../context/ConfigContext';
 
 export const MessageCard = ({
   message,

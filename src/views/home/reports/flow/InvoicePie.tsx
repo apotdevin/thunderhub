@@ -1,7 +1,7 @@
 import React from 'react';
+import { VictoryPie } from 'victory';
 import { DarkSubTitle } from '../../../../components/generic/Styled';
 import { useConfigState } from '../../../../context/ConfigContext';
-import { VictoryPie } from 'victory';
 import { chartAxisColor } from '../../../../styles/Themes';
 import { Row, Col, PieRow } from '.';
 

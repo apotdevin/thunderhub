@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { X, ChevronRight } from 'react-feather';
 import { Input } from '../../components/input/Input';
 import { useGetPeersQuery } from '../../generated/graphql';
 import { useAccount } from '../../context/AccountContext';
@@ -10,7 +11,6 @@ import {
   Separation,
 } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { X, ChevronRight } from 'react-feather';
 import { ChatInput } from './ChatInput';
 import {
   ChatStyledStart,
