@@ -5,6 +5,8 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import Head from 'next/head';
+import { AuthSSOCheck } from 'src/components/authSSOCheck/AuthSSOCheck';
+import { getUrlParam } from 'src/utils/url';
 import { ContextProvider } from '../src/context/ContextProvider';
 import { useConfigState, ConfigProvider } from '../src/context/ConfigContext';
 import { GlobalStyles } from '../src/styles/GlobalStyle';
@@ -20,8 +22,6 @@ import { useStatusState } from '../src/context/StatusContext';
 import { ChatFetcher } from '../src/components/chat/ChatFetcher';
 import { ChatInit } from '../src/components/chat/ChatInit';
 import { parseCookies } from '../src/utils/cookies';
-import { AuthSSOCheck } from 'src/components/authSSOCheck/AuthSSOCheck';
-import { getUrlParam } from 'src/utils/url';
 
 toast.configure({ draggable: false, pauseOnFocusLoss: false });
 

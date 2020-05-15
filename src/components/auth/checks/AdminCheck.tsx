@@ -1,10 +1,10 @@
 import React from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { X, Check } from 'react-feather';
+import { getAuthObj } from 'src/utils/auth';
 import { SingleLine, Sub4Title } from '../../generic/Styled';
 import { themeColors } from '../../../styles/Themes';
 import { useGetCanAdminQuery } from '../../../generated/graphql';
-import { getAuthObj } from 'src/utils/auth';
 
 type AdminProps = {
   host: string;

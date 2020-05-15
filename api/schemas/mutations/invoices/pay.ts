@@ -5,6 +5,7 @@ import {
   payViaPaymentDetails,
 } from 'ln-service';
 import { GraphQLString, GraphQLNonNull, GraphQLInt } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -14,7 +15,6 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { PayType } from '../../types/MutationType';
-import { ContextType } from 'api/types/apiTypes';
 
 const KEYSEND_TYPE = '5482373484';
 

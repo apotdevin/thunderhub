@@ -5,6 +5,7 @@ import {
   GraphQLInt,
   GraphQLNonNull,
 } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -14,7 +15,6 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { CloseChannelType } from '../../types/MutationType';
-import { ContextType } from 'api/types/apiTypes';
 
 interface CloseChannelProps {
   transaction_id: string;

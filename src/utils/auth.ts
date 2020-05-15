@@ -1,7 +1,7 @@
 import base64url from 'base64url';
 import { v5 as uuidv5 } from 'uuid';
-import { saveAccounts } from './storage';
 import { SingleAccountProps } from 'src/context/AccountContext';
+import { saveAccounts } from './storage';
 
 export const SSO_USER = 'SSO_USER';
 const THUNDERHUB_NAMESPACE = '00000000-0000-0000-0000-000000000000';

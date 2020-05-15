@@ -1,5 +1,6 @@
 import { createInvoice as createInvoiceRequest } from 'ln-service';
 import { GraphQLNonNull, GraphQLInt } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -9,7 +10,6 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { InvoiceType } from '../../types/MutationType';
-import { ContextType } from 'api/types/apiTypes';
 
 interface InvoiceProps {
   chain_address: string;

@@ -1,15 +1,17 @@
 import { updateRoutingFees } from 'ln-service';
 import { GraphQLBoolean, GraphQLString, GraphQLInt } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import {
+  getErrorMsg,
+  getAuthLnd,
   getAuthLnd,
   getErrorMsg,
   getCorrectAuth,
 } from '../../../helpers/helpers';
+
 import { defaultParams } from '../../../helpers/defaultProps';
-import { ContextType } from 'api/types/apiTypes';
 
 export const updateFees = {
   type: GraphQLBoolean,

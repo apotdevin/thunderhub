@@ -1,10 +1,10 @@
 import { GraphQLList, GraphQLString } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { logger } from '../../../helpers/logger';
 import { appUrls } from '../../../utils/appUrls';
 import { HodlOfferType } from '../../types/HodlType';
 import { getHodlParams } from '../../../helpers/hodlHelpers';
-import { ContextType } from 'api/types/apiTypes';
 
 const defaultQuery = {
   filters: {},

@@ -1,5 +1,6 @@
 import { pay as payRequest } from 'ln-service';
 import { GraphQLBoolean } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
   getAuthLnd,
@@ -8,7 +9,6 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { logger } from '../../../helpers/logger';
-import { ContextType } from 'api/types/apiTypes';
 
 export const adminCheck = {
   type: GraphQLBoolean,

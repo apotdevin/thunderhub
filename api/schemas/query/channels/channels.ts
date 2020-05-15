@@ -1,5 +1,6 @@
 import { GraphQLList, GraphQLBoolean } from 'graphql';
 import { getChannels as getLnChannels, getNode } from 'ln-service';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -9,7 +10,6 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { ChannelType } from '../../types/QueryType';
-import { ContextType } from 'api/types/apiTypes';
 
 interface ChannelListProps {
   channels: ChannelProps[];

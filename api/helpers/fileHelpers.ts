@@ -1,8 +1,8 @@
 import fs from 'fs';
 import crypto from 'crypto';
 import path from 'path';
-import { logger } from 'api/helpers/logger';
 import os from 'os';
+import { logger } from 'api/helpers/logger';
 
 export const readCert = (certPath: string): string | null => {
   if (certPath === '') {

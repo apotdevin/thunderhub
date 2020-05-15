@@ -1,5 +1,6 @@
 import { GraphQLList, GraphQLString } from 'graphql';
 import { getClosedChannels as getLnClosedChannels, getNode } from 'ln-service';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -10,7 +11,6 @@ import {
 
 import { defaultParams } from '../../../helpers/defaultProps';
 import { ClosedChannelType } from '../../types/QueryType';
-import { ContextType } from 'api/types/apiTypes';
 
 interface ChannelListProps {
   channels: ChannelProps[];

@@ -1,5 +1,6 @@
 import { verifyMessage as verifyLnMessage } from 'ln-service';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -8,7 +9,6 @@ import {
   getCorrectAuth,
 } from '../../../helpers/helpers';
 import { logger } from '../../../helpers/logger';
-import { ContextType } from 'api/types/apiTypes';
 
 export const verifyMessage = {
   type: GraphQLString,

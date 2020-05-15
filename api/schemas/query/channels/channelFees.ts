@@ -1,5 +1,6 @@
 import { getFeeRates, getChannels, getNode } from 'ln-service';
 import { GraphQLList } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -9,7 +10,6 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { ChannelFeeType } from '../../types/QueryType';
-import { ContextType } from 'api/types/apiTypes';
 
 interface GetChannelsProps {
   channels: ChannelsProps[];

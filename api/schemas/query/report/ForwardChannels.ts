@@ -7,6 +7,7 @@ import {
 } from 'ln-service';
 import { subHours, subDays } from 'date-fns';
 import { sortBy } from 'underscore';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -17,7 +18,6 @@ import {
 import { defaultParams } from '../../../helpers/defaultProps';
 import { countArray, countRoutes } from './Helpers';
 import { ForwardCompleteProps } from './ForwardReport.interface';
-import { ContextType } from 'api/types/apiTypes';
 
 interface NodeProps {
   alias: string;

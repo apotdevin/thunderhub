@@ -1,15 +1,15 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
+import { SSO_USER, getAuthObj } from 'src/utils/auth';
+import { Lock } from 'react-feather';
+import { chartColors } from 'src/styles/Themes';
 import { useAccount } from '../../context/AccountContext';
 import { Section } from '../../components/section/Section';
 import { Card, SingleLine } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { useGetCanConnectLazyQuery } from '../../generated/graphql';
 import { ConnectTitle, LockPadding } from './HomePage.styled';
-import { SSO_USER, getAuthObj } from 'src/utils/auth';
-import { Lock } from 'react-feather';
-import { chartColors } from 'src/styles/Themes';
 
 const AccountLine = styled.div`
   margin: 8px 0;

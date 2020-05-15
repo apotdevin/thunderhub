@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { Check, X } from 'react-feather';
+import { getAuthObj } from 'src/utils/auth';
 import { themeColors } from '../../../styles/Themes';
 import { SingleLine, Sub4Title, Separation } from '../../generic/Styled';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import { Text } from '../../typography/Styled';
 import { useGetCanConnectQuery } from '../../../generated/graphql';
 import { AdminCheck } from './AdminCheck';
-import { getAuthObj } from 'src/utils/auth';
 
 type ViewProps = {
   host: string;

@@ -1,6 +1,7 @@
 import { GraphQLList } from 'graphql';
 import { getChainTransactions as getLnChainTransactions } from 'ln-service';
 import { sortBy } from 'underscore';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -10,7 +11,6 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { GetChainTransactionsType } from '../../types/QueryType';
-import { ContextType } from 'api/types/apiTypes';
 
 interface TransactionProps {
   block_id: string;

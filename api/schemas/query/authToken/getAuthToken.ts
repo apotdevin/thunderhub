@@ -1,10 +1,10 @@
 import { GraphQLString } from 'graphql';
-import { requestLimiter } from '../../../helpers/rateLimiter';
 import getConfig from 'next/config';
 import jwt from 'jsonwebtoken';
 import { SSO_USER } from 'src/utils/auth';
 import { readCookie, refreshCookie } from 'api/helpers/fileHelpers';
 import { ContextType } from 'api/types/apiTypes';
+import { requestLimiter } from '../../../helpers/rateLimiter';
 
 const { serverRuntimeConfig } = getConfig();
 const { cookiePath } = serverRuntimeConfig;

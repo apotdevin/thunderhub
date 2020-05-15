@@ -5,6 +5,7 @@ import {
 } from 'ln-service';
 import { differenceInHours, differenceInCalendarDays } from 'date-fns';
 import { groupBy } from 'underscore';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -16,7 +17,6 @@ import { reduceInOutArray } from '../report/Helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { InOutType } from '../../types/QueryType';
 import { InvoicesProps, PaymentsProps } from './getInOut.interface';
-import { ContextType } from 'api/types/apiTypes';
 
 export const getInOut = {
   type: InOutType,

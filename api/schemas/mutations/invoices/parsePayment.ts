@@ -1,5 +1,6 @@
 import { parsePaymentRequest } from 'ln-service';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -9,7 +10,6 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { ParsePaymentType } from '../../types/MutationType';
-import { ContextType } from 'api/types/apiTypes';
 
 interface RouteProps {
   base_fee_mtokens: string;

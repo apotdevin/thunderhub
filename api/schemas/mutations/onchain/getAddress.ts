@@ -1,5 +1,6 @@
 import { createChainAddress } from 'ln-service';
 import { GraphQLString, GraphQLBoolean } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -8,7 +9,6 @@ import {
   getCorrectAuth,
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
-import { ContextType } from 'api/types/apiTypes';
 
 interface AddressProps {
   address: string;

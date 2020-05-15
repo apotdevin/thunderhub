@@ -1,11 +1,11 @@
 import { GraphQLString, GraphQLBoolean } from 'graphql';
 import { getInvoices, verifyMessage } from 'ln-service';
+import { ContextType } from 'api/types/apiTypes';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, to, getCorrectAuth } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { decodeMessage } from '../../../helpers/customRecords';
 import { GetMessagesType } from '../../types/QueryType';
-import { ContextType } from 'api/types/apiTypes';
 
 export const getMessages = {
   type: GetMessagesType,

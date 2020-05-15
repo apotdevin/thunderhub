@@ -1,5 +1,6 @@
 import { addPeer as addLnPeer } from 'ln-service';
 import { GraphQLBoolean, GraphQLString, GraphQLNonNull } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -8,7 +9,6 @@ import {
   getCorrectAuth,
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
-import { ContextType } from 'api/types/apiTypes';
 
 export const addPeer = {
   type: GraphQLBoolean,

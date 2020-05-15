@@ -1,4 +1,5 @@
 import { getChannels } from 'ln-service';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -8,7 +9,6 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { ChannelReportType } from '../../types/QueryType';
-import { ContextType } from 'api/types/apiTypes';
 
 interface GetChannelsProps {
   channels: ChannelsProps[];

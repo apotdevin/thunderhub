@@ -2,6 +2,7 @@ import { GraphQLString } from 'graphql';
 import { getPayments, getInvoices, getNode } from 'ln-service';
 import { compareDesc } from 'date-fns';
 import { sortBy } from 'underscore';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -9,10 +10,9 @@ import {
   getErrorMsg,
   getCorrectAuth,
 } from '../../../helpers/helpers';
-import { PaymentsProps, InvoicesProps, NodeProps } from './resume.interface';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { GetResumeType } from '../../types/QueryType';
-import { ContextType } from 'api/types/apiTypes';
+import { PaymentsProps, InvoicesProps, NodeProps } from './resume.interface';
 
 export const getResume = {
   type: GetResumeType,

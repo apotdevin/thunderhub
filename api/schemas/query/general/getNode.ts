@@ -1,5 +1,6 @@
 import { GraphQLString, GraphQLNonNull, GraphQLBoolean } from 'graphql';
 import { getNode as getLnNode } from 'ln-service';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -10,7 +11,6 @@ import {
 
 import { defaultParams } from '../../../helpers/defaultProps';
 import { PartnerNodeType } from '../../types/QueryType';
-import { ContextType } from 'api/types/apiTypes';
 
 export const getNode = {
   type: PartnerNodeType,

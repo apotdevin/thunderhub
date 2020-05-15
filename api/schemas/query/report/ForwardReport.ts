@@ -7,6 +7,7 @@ import {
   differenceInHours,
   differenceInCalendarDays,
 } from 'date-fns';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -17,7 +18,6 @@ import {
 import { defaultParams } from '../../../helpers/defaultProps';
 import { reduceForwardArray } from './Helpers';
 import { ForwardCompleteProps } from './ForwardReport.interface';
-import { ContextType } from 'api/types/apiTypes';
 
 export const getForwardReport = {
   type: GraphQLString,

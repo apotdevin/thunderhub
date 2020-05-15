@@ -7,6 +7,7 @@ import {
 } from 'ln-service';
 import { sortBy } from 'underscore';
 import { subHours, subDays, subMonths, subYears } from 'date-fns';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -17,7 +18,6 @@ import {
 import { ForwardCompleteProps } from '../report/ForwardReport.interface';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { GetForwardType } from '../../types/QueryType';
-import { ContextType } from 'api/types/apiTypes';
 
 interface NodeProps {
   alias: string;

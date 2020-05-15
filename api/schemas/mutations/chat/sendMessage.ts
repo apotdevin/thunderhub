@@ -6,11 +6,11 @@ import {
   signMessage,
 } from 'ln-service';
 import { GraphQLString, GraphQLNonNull, GraphQLInt } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, to, getCorrectAuth } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { createCustomRecords } from '../../../helpers/customRecords';
-import { ContextType } from 'api/types/apiTypes';
 
 export const sendMessage = {
   type: GraphQLInt,
