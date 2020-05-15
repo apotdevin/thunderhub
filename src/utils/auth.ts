@@ -26,7 +26,7 @@ interface SSOAuthProps {
 
 export const saveSSOUser = ({ accounts }: SSOAuthProps) => {
   const filteredAccounts = accounts.filter(
-    account => account.name === SSO_USER
+    account => account.host === SSO_USER
   );
 
   if (!filteredAccounts || filteredAccounts.length <= 0) {
