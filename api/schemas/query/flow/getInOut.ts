@@ -16,6 +16,7 @@ import { reduceInOutArray } from '../report/Helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { InOutType } from '../../types/QueryType';
 import { InvoicesProps, PaymentsProps } from './getInOut.interface';
+import { ContextType } from 'api/types/apiTypes';
 
 export const getInOut = {
   type: InOutType,
@@ -23,7 +24,7 @@ export const getInOut = {
     ...defaultParams,
     time: { type: GraphQLString },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getInOut');
 
     const auth = getCorrectAuth(params.auth, context.sso);

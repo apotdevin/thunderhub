@@ -3,11 +3,12 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, to, getCorrectAuth } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { WalletInfoType } from '../../types/QueryType';
+import { ContextType } from 'api/types/apiTypes';
 
 export const getWalletInfo = {
   type: WalletInfoType,
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getWalletInfo');
 
     const auth = getCorrectAuth(params.auth, context.sso);

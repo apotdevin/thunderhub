@@ -4,25 +4,25 @@ import getConfig from 'next/config';
 import jwt from 'jsonwebtoken';
 import { SSO_USER } from 'src/utils/auth';
 import { readCookie, refreshCookie } from 'api/helpers/fileHelpers';
+import { ContextType } from 'api/types/apiTypes';
 
 const { serverRuntimeConfig } = getConfig();
-const {
-  cookiePath,
-  lnServerUrl,
-  lnCertPath,
-  macaroonPath,
-} = serverRuntimeConfig;
+const { cookiePath } = serverRuntimeConfig;
 
 export const getAuthToken = {
   type: GraphQLString,
   args: {
     cookie: { type: GraphQLString },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     const { ip, secret } = context;
     await requestLimiter(ip, 'setup');
 
     if (!params.cookie) {
+      return null;
+    }
+
+    if (cookiePath === '') {
       return null;
     }
 
@@ -37,10 +37,7 @@ export const getAuthToken = {
     // });
 
     if (cookieFile === params.cookie) {
-      const token = jwt.sign(
-        { user: SSO_USER, lnServerUrl, lnCertPath, macaroonPath },
-        secret
-      );
+      const token = jwt.sign({ user: SSO_USER }, secret);
 
       // console.log('Created token: ', { token });
       return token;

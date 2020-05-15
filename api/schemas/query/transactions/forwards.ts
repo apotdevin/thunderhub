@@ -17,6 +17,7 @@ import {
 import { ForwardCompleteProps } from '../report/ForwardReport.interface';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { GetForwardType } from '../../types/QueryType';
+import { ContextType } from 'api/types/apiTypes';
 
 interface NodeProps {
   alias: string;
@@ -33,7 +34,7 @@ export const getForwards = {
     ...defaultParams,
     time: { type: GraphQLString },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'forwards');
 
     const auth = getCorrectAuth(params.auth, context.sso);

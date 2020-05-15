@@ -12,6 +12,7 @@ import {
 import { PaymentsProps, InvoicesProps, NodeProps } from './resume.interface';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { GetResumeType } from '../../types/QueryType';
+import { ContextType } from 'api/types/apiTypes';
 
 export const getResume = {
   type: GetResumeType,
@@ -19,7 +20,7 @@ export const getResume = {
     ...defaultParams,
     token: { type: GraphQLString },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'payments');
 
     const auth = getCorrectAuth(params.auth, context.sso);

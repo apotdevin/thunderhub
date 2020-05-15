@@ -5,6 +5,7 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { logger } from '../../../helpers/logger';
 import { appUrls } from '../../../utils/appUrls';
 import { HodlCountryType } from '../../types/HodlType';
+import { ContextType } from 'api/types/apiTypes';
 
 const { serverRuntimeConfig } = getConfig();
 const { hodlKey } = serverRuntimeConfig;
@@ -12,7 +13,7 @@ const { hodlKey } = serverRuntimeConfig;
 export const getCountries = {
   type: new GraphQLList(HodlCountryType),
   args: {},
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getCountries');
 
     const headers = {

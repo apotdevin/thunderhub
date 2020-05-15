@@ -9,6 +9,7 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { ParsePaymentType } from '../../types/MutationType';
+import { ContextType } from 'api/types/apiTypes';
 
 interface RouteProps {
   base_fee_mtokens: string;
@@ -40,7 +41,7 @@ export const parsePayment = {
     ...defaultParams,
     request: { type: new GraphQLNonNull(GraphQLString) },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'parsePayment');
 
     const auth = getCorrectAuth(params.auth, context.sso);

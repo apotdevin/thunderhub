@@ -10,6 +10,7 @@ import {
 
 import { defaultParams } from '../../../helpers/defaultProps';
 import { PeerType } from '../../types/QueryType';
+import { ContextType } from 'api/types/apiTypes';
 
 interface PeerProps {
   bytes_received: number;
@@ -26,7 +27,7 @@ interface PeerProps {
 export const getPeers = {
   type: new GraphQLList(PeerType),
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getPeers');
 
     const auth = getCorrectAuth(params.auth, context.sso);

@@ -10,6 +10,7 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getAuthLnd, to, getCorrectAuth } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { createCustomRecords } from '../../../helpers/customRecords';
+import { ContextType } from 'api/types/apiTypes';
 
 export const sendMessage = {
   type: GraphQLInt,
@@ -21,7 +22,7 @@ export const sendMessage = {
     tokens: { type: GraphQLInt },
     maxFee: { type: GraphQLInt },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'sendMessage');
 
     const auth = getCorrectAuth(params.auth, context.sso);

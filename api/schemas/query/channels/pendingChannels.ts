@@ -12,6 +12,7 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { PendingChannelType } from '../../types/QueryType';
+import { ContextType } from 'api/types/apiTypes';
 
 interface PendingChannelListProps {
   pending_channels: PendingChannelProps[];
@@ -37,7 +38,7 @@ interface PendingChannelProps {
 export const getPendingChannels = {
   type: new GraphQLList(PendingChannelType),
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'pendingChannels');
 
     const auth = getCorrectAuth(params.auth, context.sso);

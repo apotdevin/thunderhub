@@ -14,6 +14,7 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { PayType } from '../../types/MutationType';
+import { ContextType } from 'api/types/apiTypes';
 
 const KEYSEND_TYPE = '5482373484';
 
@@ -59,7 +60,7 @@ export const pay = {
     request: { type: new GraphQLNonNull(GraphQLString) },
     tokens: { type: GraphQLInt },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'pay');
 
     const auth = getCorrectAuth(params.auth, context.sso);

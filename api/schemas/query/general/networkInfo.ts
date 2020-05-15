@@ -9,6 +9,7 @@ import {
 
 import { defaultParams } from '../../../helpers/defaultProps';
 import { NetworkInfoType } from '../../types/QueryType';
+import { ContextType } from 'api/types/apiTypes';
 
 interface NetworkInfoProps {
   average_channel_size: number;
@@ -24,7 +25,7 @@ interface NetworkInfoProps {
 export const getNetworkInfo = {
   type: NetworkInfoType,
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'networkInfo');
 
     const auth = getCorrectAuth(params.auth, context.sso);

@@ -8,6 +8,7 @@ import {
   getCorrectAuth,
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { ContextType } from 'api/types/apiTypes';
 
 export const payViaRoute = {
   type: GraphQLBoolean,
@@ -15,7 +16,7 @@ export const payViaRoute = {
     ...defaultParams,
     route: { type: new GraphQLNonNull(GraphQLString) },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'payViaRoute');
 
     const auth = getCorrectAuth(params.auth, context.sso);

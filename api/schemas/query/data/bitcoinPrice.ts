@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { appUrls } from '../../../utils/appUrls';
+import { ContextType } from 'api/types/apiTypes';
 
 export const getBitcoinPrice = {
   type: GraphQLString,
@@ -12,7 +13,7 @@ export const getBitcoinPrice = {
       type: GraphQLString,
     },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'bitcoinPrice');
 
     try {

@@ -8,6 +8,7 @@ import {
   getCorrectAuth,
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { ContextType } from 'api/types/apiTypes';
 
 export const getRoutes = {
   type: GraphQLString,
@@ -18,7 +19,7 @@ export const getRoutes = {
     tokens: { type: new GraphQLNonNull(GraphQLInt) },
     maxFee: { type: GraphQLInt },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getRoutes');
 
     const auth = getCorrectAuth(params.auth, context.sso);

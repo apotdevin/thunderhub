@@ -13,6 +13,7 @@ import {
   getCorrectAuth,
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { ContextType } from 'api/types/apiTypes';
 
 const GetUtxosType = new GraphQLObjectType({
   name: 'getUtxosType',
@@ -30,7 +31,7 @@ const GetUtxosType = new GraphQLObjectType({
 export const getUtxos = {
   type: new GraphQLList(GetUtxosType),
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getUtxos');
 
     const auth = getCorrectAuth(params.auth, context.sso);

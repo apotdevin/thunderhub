@@ -4,6 +4,7 @@ import { logger } from '../../../helpers/logger';
 import { appUrls } from '../../../utils/appUrls';
 import { HodlOfferType } from '../../types/HodlType';
 import { getHodlParams } from '../../../helpers/hodlHelpers';
+import { ContextType } from 'api/types/apiTypes';
 
 const defaultQuery = {
   filters: {},
@@ -18,7 +19,7 @@ export const getOffers = {
   args: {
     filter: { type: GraphQLString },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getOffers');
 
     let queryParams = defaultQuery;

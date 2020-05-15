@@ -5,6 +5,7 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import { logger } from '../../../helpers/logger';
 import { appUrls } from '../../../utils/appUrls';
 import { HodlCurrencyType } from '../../types/HodlType';
+import { ContextType } from 'api/types/apiTypes';
 
 const { serverRuntimeConfig } = getConfig();
 const { hodlKey } = serverRuntimeConfig;
@@ -12,7 +13,7 @@ const { hodlKey } = serverRuntimeConfig;
 export const getCurrencies = {
   type: new GraphQLList(HodlCurrencyType),
   args: {},
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getCurrencies');
 
     const headers = {

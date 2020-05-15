@@ -17,6 +17,7 @@ import {
 import { defaultParams } from '../../../helpers/defaultProps';
 import { countArray, countRoutes } from './Helpers';
 import { ForwardCompleteProps } from './ForwardReport.interface';
+import { ContextType } from 'api/types/apiTypes';
 
 interface NodeProps {
   alias: string;
@@ -35,7 +36,7 @@ export const getForwardChannelsReport = {
     order: { type: GraphQLString },
     type: { type: GraphQLString },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'forwardChannels');
 
     const auth = getCorrectAuth(params.auth, context.sso);

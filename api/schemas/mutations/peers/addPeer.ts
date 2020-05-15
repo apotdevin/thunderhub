@@ -8,6 +8,7 @@ import {
   getCorrectAuth,
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { ContextType } from 'api/types/apiTypes';
 
 export const addPeer = {
   type: GraphQLBoolean,
@@ -17,7 +18,7 @@ export const addPeer = {
     socket: { type: new GraphQLNonNull(GraphQLString) },
     isTemporary: { type: GraphQLBoolean },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'addPeer');
 
     const auth = getCorrectAuth(params.auth, context.sso);

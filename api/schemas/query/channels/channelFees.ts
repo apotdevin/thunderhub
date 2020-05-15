@@ -9,6 +9,7 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { ChannelFeeType } from '../../types/QueryType';
+import { ContextType } from 'api/types/apiTypes';
 
 interface GetChannelsProps {
   channels: ChannelsProps[];
@@ -38,7 +39,7 @@ interface NodeProps {
 export const getChannelFees = {
   type: new GraphQLList(ChannelFeeType),
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'channelFees');
 
     const auth = getCorrectAuth(params.auth, context.sso);

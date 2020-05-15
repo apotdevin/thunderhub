@@ -6,19 +6,25 @@ import Cors from 'micro-cors';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { logger } from 'api/helpers/logger';
-import { readMacaroons, readCert } from 'api/helpers/fileHelpers';
+import { readMacaroons, readCert, readCookie } from 'api/helpers/fileHelpers';
+import { ContextType } from 'api/types/apiTypes';
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 const { apiBaseUrl } = publicRuntimeConfig;
-const { macaroonPath, lnCertPath, lnServerUrl } = serverRuntimeConfig;
+const {
+  cookiePath,
+  macaroonPath,
+  lnCertPath,
+  lnServerUrl,
+} = serverRuntimeConfig;
 
-// const secret = crypto.randomBytes(64).toString('hex');
-const secret = '123456789';
+const secret = crypto.randomBytes(64).toString('hex');
+// const secret = '123456789';
 
 const ssoMacaroon = readMacaroons(macaroonPath);
 const ssoCert = readCert(lnCertPath);
 
-// logger.info('%o', { macaroonPath, ssoMacaroon, ssoCert });
+readCookie(cookiePath);
 
 const cors = Cors({
   origin: true,
@@ -34,19 +40,20 @@ const apolloServer = new ApolloServer({
     if (req?.cookies?.SSOAuth) {
       try {
         const verified = jwt.verify(req.cookies.SSOAuth, secret);
-        // console.log({ verified });
         verifiedUsers.push(verified);
       } catch (error) {
         logger.warn('Error verifying SSO_AUTH cookie');
       }
     }
 
-    return {
+    const context: ContextType = {
       ip,
       secret,
       verifiedUsers,
       sso: { macaroon: ssoMacaroon, cert: ssoCert, host: lnServerUrl },
     };
+
+    return context;
   },
 });
 

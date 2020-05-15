@@ -8,11 +8,12 @@ import {
   getCorrectAuth,
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
+import { ContextType } from 'api/types/apiTypes';
 
 export const getBackups = {
   type: GraphQLString,
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getBackups');
 
     const auth = getCorrectAuth(params.auth, context.sso);

@@ -8,6 +8,7 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { ChannelBalanceType } from '../../types/QueryType';
+import { ContextType } from 'api/types/apiTypes';
 
 interface ChannelBalanceProps {
   channel_balance: number;
@@ -17,7 +18,7 @@ interface ChannelBalanceProps {
 export const getChannelBalance = {
   type: ChannelBalanceType,
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'channelBalance');
 
     const auth = getCorrectAuth(params.auth, context.sso);

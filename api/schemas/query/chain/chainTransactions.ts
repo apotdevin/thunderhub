@@ -10,6 +10,7 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { GetChainTransactionsType } from '../../types/QueryType';
+import { ContextType } from 'api/types/apiTypes';
 
 interface TransactionProps {
   block_id: string;
@@ -29,7 +30,7 @@ interface TransactionsProps {
 export const getChainTransactions = {
   type: new GraphQLList(GetChainTransactionsType),
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'chainTransactions');
 
     const auth = getCorrectAuth(params.auth, context.sso);

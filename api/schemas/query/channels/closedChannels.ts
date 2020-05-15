@@ -10,6 +10,7 @@ import {
 
 import { defaultParams } from '../../../helpers/defaultProps';
 import { ClosedChannelType } from '../../types/QueryType';
+import { ContextType } from 'api/types/apiTypes';
 
 interface ChannelListProps {
   channels: ChannelProps[];
@@ -38,7 +39,7 @@ export const getClosedChannels = {
     ...defaultParams,
     type: { type: GraphQLString },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'closedChannels');
 
     const auth = getCorrectAuth(params.auth, context.sso);

@@ -8,13 +8,14 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { logger } from '../../../helpers/logger';
+import { ContextType } from 'api/types/apiTypes';
 
 export const adminCheck = {
   type: GraphQLBoolean,
   args: {
     ...defaultParams,
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'adminCheck');
 
     const auth = getCorrectAuth(params.auth, context.sso);

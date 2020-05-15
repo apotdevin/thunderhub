@@ -8,6 +8,7 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { NodeInfoType } from '../../types/QueryType';
+import { ContextType } from 'api/types/apiTypes';
 
 interface NodeInfoProps {
   chains: string[];
@@ -29,7 +30,7 @@ interface NodeInfoProps {
 export const getNodeInfo = {
   type: NodeInfoType,
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'nodeInfo');
 
     const auth = getCorrectAuth(params.auth, context.sso);

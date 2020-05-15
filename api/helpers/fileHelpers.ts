@@ -5,6 +5,10 @@ import { logger } from 'api/helpers/logger';
 import os from 'os';
 
 export const readCert = (certPath: string): string | null => {
+  if (certPath === '') {
+    return null;
+  }
+
   const certExists = fs.existsSync(certPath);
 
   if (!certExists) {
@@ -24,6 +28,10 @@ export const readCert = (certPath: string): string | null => {
 };
 
 export const readMacaroons = (macaroonPath: string): string | null => {
+  if (macaroonPath === '') {
+    return null;
+  }
+
   const adminExists = fs.existsSync(`${macaroonPath}admin.macaroon`);
 
   if (!adminExists) {
@@ -68,6 +76,10 @@ export const createDirectory = (dirname: string) => {
 };
 
 export const readCookie = (cookieFile: string): string => {
+  if (cookieFile === '') {
+    return null;
+  }
+
   const exists = fs.existsSync(cookieFile);
   if (exists) {
     try {

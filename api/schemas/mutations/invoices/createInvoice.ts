@@ -9,6 +9,7 @@ import {
 } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { InvoiceType } from '../../types/MutationType';
+import { ContextType } from 'api/types/apiTypes';
 
 interface InvoiceProps {
   chain_address: string;
@@ -26,7 +27,7 @@ export const createInvoice = {
     ...defaultParams,
     amount: { type: new GraphQLNonNull(GraphQLInt) },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'createInvoice');
 
     const auth = getCorrectAuth(params.auth, context.sso);

@@ -8,6 +8,7 @@ import {
   getCorrectAuth,
 } from '../../../helpers/helpers';
 import { logger } from '../../../helpers/logger';
+import { ContextType } from 'api/types/apiTypes';
 
 export const signMessage = {
   type: GraphQLString,
@@ -15,7 +16,7 @@ export const signMessage = {
     ...defaultParams,
     message: { type: new GraphQLNonNull(GraphQLString) },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'signMessage');
 
     const auth = getCorrectAuth(params.auth, context.sso);

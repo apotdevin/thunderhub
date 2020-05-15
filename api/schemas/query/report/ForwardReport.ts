@@ -17,6 +17,7 @@ import {
 import { defaultParams } from '../../../helpers/defaultProps';
 import { reduceForwardArray } from './Helpers';
 import { ForwardCompleteProps } from './ForwardReport.interface';
+import { ContextType } from 'api/types/apiTypes';
 
 export const getForwardReport = {
   type: GraphQLString,
@@ -24,7 +25,7 @@ export const getForwardReport = {
     ...defaultParams,
     time: { type: GraphQLString },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'forwardReport');
 
     const auth = getCorrectAuth(params.auth, context.sso);
