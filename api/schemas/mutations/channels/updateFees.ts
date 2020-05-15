@@ -6,8 +6,6 @@ import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
   getErrorMsg,
   getAuthLnd,
-  getAuthLnd,
-  getErrorMsg,
   getCorrectAuth,
 } from '../../../helpers/helpers';
 
