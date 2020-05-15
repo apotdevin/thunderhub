@@ -461,3 +461,9 @@ export const GET_WALLET_INFO = gql`
     }
   }
 `;
+
+export const GET_AUTH_TOKEN = gql`
+  query GetAuthToken($cookie: String) {
+    getAuthToken(cookie: $cookie)
+  }
+`;

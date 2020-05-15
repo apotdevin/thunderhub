@@ -1,7 +1,9 @@
 import base64url from 'base64url';
 import { v5 as uuidv5 } from 'uuid';
 import { saveAccounts } from './storage';
+import { SingleAccountProps } from 'src/context/AccountContext';
 
+export const SSO_USER = 'SSO_USER';
 const THUNDERHUB_NAMESPACE = '00000000-0000-0000-0000-000000000000';
 
 interface BuildProps {
@@ -10,7 +12,7 @@ interface BuildProps {
   admin?: string;
   viewOnly?: string;
   cert?: string;
-  accounts: any;
+  accounts: SingleAccountProps[];
 }
 
 export const getAccountId = (host = '', viewOnly = '', admin = '', cert = '') =>
@@ -18,6 +20,20 @@ export const getAccountId = (host = '', viewOnly = '', admin = '', cert = '') =>
     `${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`,
     THUNDERHUB_NAMESPACE
   );
+
+interface SSOAuthProps {
+  accounts: SingleAccountProps[];
+}
+
+export const saveSSOUser = ({ accounts }: SSOAuthProps) => {
+  const filteredAccounts = accounts.filter(
+    account => account.name === SSO_USER
+  );
+
+  if (!filteredAccounts || filteredAccounts.length <= 0) {
+    saveAccounts([...accounts, { name: SSO_USER, id: SSO_USER }]);
+  }
+};
 
 export const saveUserAuth = ({
   name = '',
@@ -71,6 +87,7 @@ export const getAuth = (account?: string) => {
       : defaultAccount;
 
   const { name, host, admin, viewOnly, cert, id } = activeAccount;
+
   const currentId =
     id ??
     uuidv5(
@@ -180,8 +197,14 @@ export const getAuthObj = (
   host: string | undefined,
   viewOnly: string | undefined,
   session: string | undefined,
-  cert: string | undefined
+  cert: string | undefined,
+  name: string
 ): {} | undefined => {
+  if (name === SSO_USER) {
+    return {
+      account: SSO_USER,
+    };
+  }
   if (!host) {
     return undefined;
   }

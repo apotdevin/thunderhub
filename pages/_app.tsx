@@ -20,6 +20,8 @@ import { useStatusState } from '../src/context/StatusContext';
 import { ChatFetcher } from '../src/components/chat/ChatFetcher';
 import { ChatInit } from '../src/components/chat/ChatInit';
 import { parseCookies } from '../src/utils/cookies';
+import { AuthSSOCheck } from 'src/components/authSSOCheck/AuthSSOCheck';
+import { getUrlParam } from 'src/utils/url';
 
 toast.configure({ draggable: false, pauseOnFocusLoss: false });
 
@@ -63,7 +65,13 @@ const Wrapper: React.FC = ({ children }) => {
   );
 };
 
-const App = ({ Component, pageProps, apollo, initialConfig }: any) => (
+const App = ({
+  Component,
+  pageProps,
+  apollo,
+  initialConfig,
+  cookieParam,
+}: any) => (
   <>
     <Head>
       <title>ThunderHub - Lightning Node Manager</title>
@@ -71,6 +79,7 @@ const App = ({ Component, pageProps, apollo, initialConfig }: any) => (
     <ApolloProvider client={apollo}>
       <ConfigProvider initialConfig={initialConfig}>
         <ContextProvider>
+          <AuthSSOCheck cookieParam={cookieParam} />
           <Wrapper>
             <Component {...pageProps} />
           </Wrapper>
@@ -81,17 +90,24 @@ const App = ({ Component, pageProps, apollo, initialConfig }: any) => (
 );
 
 App.getInitialProps = async props => {
+  const cookieParam = getUrlParam(props.router?.query?.token);
+
   const cookies = parseCookies(props.ctx.req);
+
+  const ssoVerified = !!cookies?.['SSOAuth'];
+  const defaultState = { ssoVerified };
+
   if (!cookies?.config) {
-    return { initialConfig: {} };
+    return { initialConfig: {}, ...defaultState };
   }
   try {
     const config = JSON.parse(cookies.config);
     return {
-      initialConfig: config,
+      initialConfig: { ...config, ...defaultState },
+      cookieParam,
     };
   } catch (error) {
-    return { initialConfig: {} };
+    return { initialConfig: {}, cookieParam, ...defaultState };
   }
 };
 

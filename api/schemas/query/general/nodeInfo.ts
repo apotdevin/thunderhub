@@ -28,6 +28,8 @@ export const getNodeInfo = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'nodeInfo');
 
+    // console.log({ context, params });
+
     const lnd = getAuthLnd(params.auth);
 
     try {

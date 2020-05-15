@@ -10,6 +10,10 @@ module.exports = withBundleAnalyzer({
     nodeEnv: process.env.NODE_ENV || 'development',
     logLevel: process.env.LOG_LEVEL || 'silly',
     hodlKey: process.env.HODL_KEY || '',
+    cookiePath: process.env.COOKIE_PATH || '',
+    lnServerUrl: process.env.LN_SERVER_URL || '',
+    lnCertPath: process.env.LN_CERT_PATH || '',
+    macaroonPath: process.env.MACAROON_PATH || '',
   },
   publicRuntimeConfig: {
     nodeEnv: process.env.NODE_ENV || 'development',

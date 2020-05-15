@@ -4,7 +4,7 @@ import merge from 'lodash.merge';
 import { getAuth, getAuthObj } from '../utils/auth';
 import { saveAccounts } from '../utils/storage';
 
-interface SingleAccountProps {
+export interface SingleAccountProps {
   name: string;
   host: string;
   admin: string;
@@ -130,7 +130,7 @@ const AccountProvider = ({ children }: any) => {
         viewOnly,
         cert,
         id,
-        auth: getAuthObj(host, viewOnly, sessionAdmin, cert),
+        auth: getAuthObj(host, viewOnly, sessionAdmin, cert, name),
       });
 
       return { ...merged, accounts };

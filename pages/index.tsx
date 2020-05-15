@@ -14,6 +14,7 @@ import {
 import { useGetCanConnectLazyQuery } from '../src/generated/graphql';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { Section } from '../src/components/section/Section';
+import { SSO_USER } from 'src/utils/auth';
 
 const ContextApp = () => {
   const { push } = useRouter();
@@ -29,7 +30,10 @@ const ContextApp = () => {
   const { loading: statusLoading } = useStatusState();
   const dispatch = useStatusDispatch();
 
-  const change = accounts.length <= 1 && admin === '';
+  const change =
+    accounts.length <= 1 &&
+    accounts.filter(a => a.name === SSO_USER).length < 1 &&
+    admin === '';
   const isSession = admin !== '' && viewOnly === '';
 
   const [getCanConnect, { data, loading, error }] = useGetCanConnectLazyQuery({

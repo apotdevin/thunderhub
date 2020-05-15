@@ -17,6 +17,7 @@ type State = {
   hideNonVerified: boolean;
   maxFee: number;
   chatPollingSpeed: number;
+  ssoVerified: boolean;
 };
 
 type ConfigInitProps = {
@@ -63,6 +64,7 @@ const initialState: State = {
   hideNonVerified: false,
   maxFee: 20,
   chatPollingSpeed: 1000,
+  ssoVerified: false,
 };
 
 const stateReducer = (state: State, action: ActionType): State => {

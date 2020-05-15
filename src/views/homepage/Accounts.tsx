@@ -6,7 +6,10 @@ import { Section } from '../../components/section/Section';
 import { Card, SingleLine } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { useGetCanConnectLazyQuery } from '../../generated/graphql';
-import { ConnectTitle } from './HomePage.styled';
+import { ConnectTitle, LockPadding } from './HomePage.styled';
+import { SSO_USER } from 'src/utils/auth';
+import { Lock } from 'react-feather';
+import { chartColors } from 'src/styles/Themes';
 
 const AccountLine = styled.div`
   margin: 8px 0;
@@ -32,9 +35,12 @@ export const Accounts = ({ change }: { change?: boolean }) => {
     if (!loading && data?.getNodeInfo && newAccount) {
       changeAccount(newAccount);
     }
-  }, [data, loading, newAccount]);
+  }, [data, loading, newAccount, changeAccount]);
 
-  if (accounts.length <= 1) {
+  if (
+    accounts.length <= 1 &&
+    accounts.filter(a => a.name === SSO_USER).length < 1
+  ) {
     return null;
   }
 
@@ -46,6 +52,27 @@ export const Accounts = ({ change }: { change?: boolean }) => {
       return '(Admin Only)';
     }
     return null;
+  };
+
+  const getTitle = (name: string) => {
+    if (name === SSO_USER) {
+      return (
+        <div>
+          SSO Account
+          <LockPadding>
+            <Lock color={chartColors.green} size={14} />
+          </LockPadding>
+        </div>
+      );
+    }
+    return name;
+  };
+
+  const getButtonTitle = account => {
+    if (account.viewOnly || account.name === SSO_USER) {
+      return 'Connect';
+    }
+    return 'Login';
   };
 
   const handleClick = account => () => {
@@ -73,7 +100,7 @@ export const Accounts = ({ change }: { change?: boolean }) => {
           return (
             <AccountLine key={`${account.id}-${index}`}>
               <SingleLine>
-                {account.name}
+                {getTitle(account.name)}
                 <SingleLine>
                   <TypeText>{isType(account.admin, account.viewOnly)}</TypeText>
                   <ColorButton
@@ -82,7 +109,7 @@ export const Accounts = ({ change }: { change?: boolean }) => {
                     loading={newAccount === account.id && loading}
                     disabled={loading}
                   >
-                    {account.viewOnly ? 'Connect' : 'Login'}
+                    {getButtonTitle(account)}
                   </ColorButton>
                 </SingleLine>
               </SingleLine>
