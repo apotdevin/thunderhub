@@ -1,6 +1,7 @@
 import { authenticatedLndGrpc } from 'ln-service';
 import getConfig from 'next/config';
 import { logger } from './logger';
+import { SSO_USER } from 'src/utils/auth';
 
 const { serverRuntimeConfig } = getConfig();
 const { nodeEnv } = serverRuntimeConfig;
@@ -15,6 +16,14 @@ export const getIp = (req: any) => {
     : req.connection.remoteAddress;
   const ip = nodeEnv === 'development' ? '1.2.3.4' : before;
   return ip;
+};
+
+export const getCorrectAuth = (auth, contextAuth) => {
+  if (auth.host === SSO_USER) {
+    return { ...contextAuth };
+  } else {
+    return { ...auth };
+  }
 };
 
 export const getAuthLnd = (auth: {

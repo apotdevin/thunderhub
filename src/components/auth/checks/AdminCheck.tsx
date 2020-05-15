@@ -4,6 +4,7 @@ import { X, Check } from 'react-feather';
 import { SingleLine, Sub4Title } from '../../generic/Styled';
 import { themeColors } from '../../../styles/Themes';
 import { useGetCanAdminQuery } from '../../../generated/graphql';
+import { getAuthObj } from 'src/utils/auth';
 
 type AdminProps = {
   host: string;
@@ -16,7 +17,7 @@ export const AdminCheck = ({ host, admin, cert, setChecked }: AdminProps) => {
   const { data, loading } = useGetCanAdminQuery({
     fetchPolicy: 'network-only',
     skip: !admin,
-    variables: { auth: { host, macaroon: admin, cert } },
+    variables: { auth: getAuthObj(host, undefined, admin, cert) },
     onError: () => {
       setChecked(false);
     },

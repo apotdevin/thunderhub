@@ -1,7 +1,11 @@
 import { pay as payRequest } from 'ln-service';
 import { GraphQLBoolean } from 'graphql';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { logger } from '../../../helpers/logger';
 
@@ -13,7 +17,8 @@ export const adminCheck = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'adminCheck');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     try {
       await payRequest({

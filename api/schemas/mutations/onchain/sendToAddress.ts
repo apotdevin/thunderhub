@@ -7,7 +7,11 @@ import {
 } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { SendToType } from '../../types/MutationType';
 
@@ -32,7 +36,8 @@ export const sendToAddress = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'sendToAddress');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     const props = params.fee
       ? { fee_tokens_per_vbyte: params.fee }

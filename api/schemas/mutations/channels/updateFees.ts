@@ -3,6 +3,11 @@ import { GraphQLBoolean, GraphQLString, GraphQLInt } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 
 export const updateFees = {
@@ -17,8 +22,9 @@ export const updateFees = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'updateFees');
 
-    const { auth, transactionId, transactionVout, baseFee, feeRate } = params;
+    const { transactionId, transactionVout, baseFee, feeRate } = params;
 
+    const auth = getCorrectAuth(params.auth, context.sso);
     const lnd = getAuthLnd(auth);
 
     if (!baseFee && !feeRate) {

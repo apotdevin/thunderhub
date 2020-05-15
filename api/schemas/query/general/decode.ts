@@ -2,7 +2,11 @@ import { decodePaymentRequest } from 'ln-service';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { DecodeType } from '../../types/QueryType';
 
@@ -35,7 +39,8 @@ export const decodeRequest = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'decode');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     try {
       const decode: DecodeProps = await decodePaymentRequest({

@@ -7,7 +7,7 @@ import { Card, SingleLine } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { useGetCanConnectLazyQuery } from '../../generated/graphql';
 import { ConnectTitle, LockPadding } from './HomePage.styled';
-import { SSO_USER } from 'src/utils/auth';
+import { SSO_USER, getAuthObj } from 'src/utils/auth';
 import { Lock } from 'react-feather';
 import { chartColors } from 'src/styles/Themes';
 
@@ -54,8 +54,8 @@ export const Accounts = ({ change }: { change?: boolean }) => {
     return null;
   };
 
-  const getTitle = (name: string) => {
-    if (name === SSO_USER) {
+  const getTitle = (host: string) => {
+    if (host === SSO_USER) {
       return (
         <div>
           SSO Account
@@ -68,19 +68,26 @@ export const Accounts = ({ change }: { change?: boolean }) => {
     return name;
   };
 
-  const getButtonTitle = account => {
-    if (account.viewOnly || account.name === SSO_USER) {
+  const getButtonTitle = (account): string => {
+    if (account.viewOnly || account.host === SSO_USER) {
       return 'Connect';
     }
     return 'Login';
   };
 
+  const getArrow = (account): boolean => {
+    if (account.viewOnly || account.host === SSO_USER) {
+      return false;
+    }
+    return true;
+  };
+
   const handleClick = account => () => {
     const { id, viewOnly, cert, host } = account;
-    if (viewOnly) {
+    if (viewOnly || host === SSO_USER) {
       setNewAccount(id);
       getCanConnect({
-        variables: { auth: { host, macaroon: viewOnly, cert } },
+        variables: { auth: getAuthObj(host, viewOnly, undefined, cert) },
       });
     } else {
       changeAccount(id);
@@ -100,12 +107,12 @@ export const Accounts = ({ change }: { change?: boolean }) => {
           return (
             <AccountLine key={`${account.id}-${index}`}>
               <SingleLine>
-                {getTitle(account.name)}
+                {getTitle(account.host)}
                 <SingleLine>
                   <TypeText>{isType(account.admin, account.viewOnly)}</TypeText>
                   <ColorButton
                     onClick={handleClick(account)}
-                    arrow={account.viewOnly ? false : true}
+                    arrow={getArrow(account)}
                     loading={newAccount === account.id && loading}
                     disabled={loading}
                   >

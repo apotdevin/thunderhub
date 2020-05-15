@@ -1,7 +1,11 @@
 import { getNetworkInfo as getLnNetworkInfo } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 
 import { defaultParams } from '../../../helpers/defaultProps';
 import { NetworkInfoType } from '../../types/QueryType';
@@ -23,7 +27,8 @@ export const getNetworkInfo = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'networkInfo');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     try {
       const info: NetworkInfoProps = await getLnNetworkInfo({ lnd });

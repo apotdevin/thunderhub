@@ -7,7 +7,11 @@ import { differenceInHours, differenceInCalendarDays } from 'date-fns';
 import { groupBy } from 'underscore';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { reduceInOutArray } from '../report/Helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { InOutType } from '../../types/QueryType';
@@ -22,7 +26,8 @@ export const getInOut = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'getInOut');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     const endDate = new Date();
     let periods = 7;

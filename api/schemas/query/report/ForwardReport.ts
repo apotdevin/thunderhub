@@ -9,7 +9,11 @@ import {
 } from 'date-fns';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { reduceForwardArray } from './Helpers';
 import { ForwardCompleteProps } from './ForwardReport.interface';
@@ -23,7 +27,8 @@ export const getForwardReport = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'forwardReport');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     let startDate = new Date();
     const endDate = new Date();

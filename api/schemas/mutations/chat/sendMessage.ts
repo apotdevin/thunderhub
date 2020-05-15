@@ -7,7 +7,7 @@ import {
 } from 'ln-service';
 import { GraphQLString, GraphQLNonNull, GraphQLInt } from 'graphql';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, to } from '../../../helpers/helpers';
+import { getAuthLnd, to, getCorrectAuth } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { createCustomRecords } from '../../../helpers/customRecords';
 
@@ -23,7 +23,9 @@ export const sendMessage = {
   },
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'sendMessage');
-    const lnd = getAuthLnd(params.auth);
+
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     if (params.maxFee) {
       const tokens = Math.max(params.tokens || 100, 100);

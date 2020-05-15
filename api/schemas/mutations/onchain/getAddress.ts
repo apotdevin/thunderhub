@@ -2,7 +2,11 @@ import { createChainAddress } from 'ln-service';
 import { GraphQLString, GraphQLBoolean } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 
 interface AddressProps {
@@ -18,7 +22,8 @@ export const createAddress = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'getAddress');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     const format = params.nested ? 'np2wpkh' : 'p2wpkh';
 

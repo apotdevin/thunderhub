@@ -2,7 +2,11 @@ import { addPeer as addLnPeer } from 'ln-service';
 import { GraphQLBoolean, GraphQLString, GraphQLNonNull } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 
 export const addPeer = {
@@ -16,7 +20,8 @@ export const addPeer = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'addPeer');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     try {
       const success: boolean = await addLnPeer({

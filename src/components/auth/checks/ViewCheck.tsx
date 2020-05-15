@@ -7,6 +7,7 @@ import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import { Text } from '../../typography/Styled';
 import { useGetCanConnectQuery } from '../../../generated/graphql';
 import { AdminCheck } from './AdminCheck';
+import { getAuthObj } from 'src/utils/auth';
 
 type ViewProps = {
   host: string;
@@ -35,7 +36,9 @@ export const ViewCheck = ({
 
   const { data, loading } = useGetCanConnectQuery({
     fetchPolicy: 'network-only',
-    variables: { auth: { host, macaroon: viewOnly ?? admin ?? '', cert } },
+    variables: {
+      auth: getAuthObj(host, viewOnly, admin, cert),
+    },
     onCompleted: () => setConfirmed(true),
     onError: () => setConfirmed(false),
   });

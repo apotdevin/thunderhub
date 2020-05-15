@@ -69,9 +69,13 @@ const AccountProvider = ({ children }: any) => {
     const currentAccounts = JSON.parse(
       localStorage.getItem('accounts') || '[]'
     );
-    const index = currentAccounts.findIndex(
-      (account: any) => account.id === changeToId
-    );
+
+    let index = -1;
+    for (let i = 0; i < currentAccounts.length; i++) {
+      if (currentAccounts[i].id === changeToId) {
+        index = i;
+      }
+    }
 
     if (index < 0) return;
 
@@ -130,7 +134,7 @@ const AccountProvider = ({ children }: any) => {
         viewOnly,
         cert,
         id,
-        auth: getAuthObj(host, viewOnly, sessionAdmin, cert, name),
+        auth: getAuthObj(host, viewOnly, sessionAdmin, cert),
       });
 
       return { ...merged, accounts };

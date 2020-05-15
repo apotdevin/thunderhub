@@ -15,11 +15,10 @@ interface BuildProps {
   accounts: SingleAccountProps[];
 }
 
+const getUUID = (text: string): string => uuidv5(text, THUNDERHUB_NAMESPACE);
+
 export const getAccountId = (host = '', viewOnly = '', admin = '', cert = '') =>
-  uuidv5(
-    `${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`,
-    THUNDERHUB_NAMESPACE
-  );
+  getUUID(`${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`);
 
 interface SSOAuthProps {
   accounts: SingleAccountProps[];
@@ -31,7 +30,15 @@ export const saveSSOUser = ({ accounts }: SSOAuthProps) => {
   );
 
   if (!filteredAccounts || filteredAccounts.length <= 0) {
-    saveAccounts([...accounts, { name: SSO_USER, id: SSO_USER }]);
+    saveAccounts([
+      ...accounts,
+      {
+        name: 'SSO Account',
+        id: getUUID(SSO_USER),
+        host: SSO_USER,
+        viewOnly: SSO_USER,
+      },
+    ]);
   }
 };
 
@@ -89,11 +96,7 @@ export const getAuth = (account?: string) => {
   const { name, host, admin, viewOnly, cert, id } = activeAccount;
 
   const currentId =
-    id ??
-    uuidv5(
-      `${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`,
-      THUNDERHUB_NAMESPACE
-    );
+    id ?? getUUID(`${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`);
 
   return {
     name,
@@ -197,16 +200,17 @@ export const getAuthObj = (
   host: string | undefined,
   viewOnly: string | undefined,
   session: string | undefined,
-  cert: string | undefined,
-  name: string
+  cert: string | undefined
 ): {} | undefined => {
-  if (name === SSO_USER) {
-    return {
-      account: SSO_USER,
-    };
-  }
   if (!host) {
     return undefined;
+  }
+  if (host === SSO_USER) {
+    return {
+      host: SSO_USER,
+      macaroon: SSO_USER,
+      cert: SSO_USER,
+    };
   }
   if (!viewOnly && !session) {
     return undefined;

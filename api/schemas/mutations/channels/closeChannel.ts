@@ -7,7 +7,11 @@ import {
 } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { CloseChannelType } from '../../types/MutationType';
 
@@ -28,7 +32,8 @@ export const closeChannel = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'closeChannel');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     try {
       const info: CloseChannelProps = await lnCloseChannel({

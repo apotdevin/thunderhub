@@ -6,12 +6,19 @@ import Cors from 'micro-cors';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { logger } from 'api/helpers/logger';
+import { readMacaroons, readCert } from 'api/helpers/fileHelpers';
 
-const { publicRuntimeConfig } = getConfig();
+const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 const { apiBaseUrl } = publicRuntimeConfig;
+const { macaroonPath, lnCertPath, lnServerUrl } = serverRuntimeConfig;
 
 // const secret = crypto.randomBytes(64).toString('hex');
 const secret = '123456789';
+
+const ssoMacaroon = readMacaroons(macaroonPath);
+const ssoCert = readCert(lnCertPath);
+
+// logger.info('%o', { macaroonPath, ssoMacaroon, ssoCert });
 
 const cors = Cors({
   origin: true,
@@ -34,7 +41,12 @@ const apolloServer = new ApolloServer({
       }
     }
 
-    return { ip, secret, verifiedUsers };
+    return {
+      ip,
+      secret,
+      verifiedUsers,
+      sso: { macaroon: ssoMacaroon, cert: ssoCert, host: lnServerUrl },
+    };
   },
 });
 

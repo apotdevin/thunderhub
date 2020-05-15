@@ -9,7 +9,11 @@ import { sortBy } from 'underscore';
 import { subHours, subDays, subMonths, subYears } from 'date-fns';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { ForwardCompleteProps } from '../report/ForwardReport.interface';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { GetForwardType } from '../../types/QueryType';
@@ -32,7 +36,8 @@ export const getForwards = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'forwards');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     let startDate = new Date();
     const endDate = new Date();

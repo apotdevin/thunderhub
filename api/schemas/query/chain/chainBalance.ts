@@ -5,7 +5,11 @@ import {
 import { GraphQLInt } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 
 interface ChainBalanceProps {
@@ -22,7 +26,8 @@ export const getChainBalance = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'chainBalance');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     try {
       const value: ChainBalanceProps = await getBalance({
@@ -42,7 +47,8 @@ export const getPendingChainBalance = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'pendingChainBalance');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     try {
       const pendingValue: PendingChainBalanceProps = await getPending({

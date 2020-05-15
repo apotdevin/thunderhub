@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { useAccount } from '../../context/AccountContext';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
-import { saveSessionAuth } from '../../utils/auth';
+import { saveSessionAuth, getAuthObj } from '../../utils/auth';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../components/input/Input';
 import { Section } from '../../components/section/Section';
@@ -44,7 +44,7 @@ export const SessionLogin = () => {
       refreshAccount();
       dispatch({ type: 'connected' });
     }
-  }, [data, loading]);
+  }, [data, loading, admin, dispatch, pass, refreshAccount]);
 
   const handleClick = () => {
     try {
@@ -52,7 +52,7 @@ export const SessionLogin = () => {
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
 
       getCanConnect({
-        variables: { auth: { host, macaroon: decrypted, cert } },
+        variables: { auth: getAuthObj(host, decrypted, undefined, cert) },
       });
     } catch (error) {
       toast.error('Wrong Password');

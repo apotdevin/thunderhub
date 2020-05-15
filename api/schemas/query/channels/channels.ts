@@ -2,7 +2,11 @@ import { GraphQLList, GraphQLBoolean } from 'graphql';
 import { getChannels as getLnChannels, getNode } from 'ln-service';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { ChannelType } from '../../types/QueryType';
 
@@ -45,7 +49,8 @@ export const getChannels = {
   resolve: async (root: any, params: any, context: any) => {
     await requestLimiter(context.ip, 'channels');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context.sso);
+    const lnd = getAuthLnd(auth);
 
     try {
       const channelList: ChannelListProps = await getLnChannels({
