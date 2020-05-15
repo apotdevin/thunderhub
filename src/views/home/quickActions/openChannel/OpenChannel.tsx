@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { ChevronRight } from 'react-feather';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
 import {
   Card,
   SingleLine,
@@ -7,11 +10,8 @@ import {
   NoWrapTitle,
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
-import { ChevronRight } from 'react-feather';
 import { getErrorContent } from '../../../../utils/error';
-import { toast } from 'react-toastify';
 import { useBitcoinState } from '../../../../context/BitcoinContext';
-import styled from 'styled-components';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
 import {

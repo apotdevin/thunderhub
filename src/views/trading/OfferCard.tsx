@@ -1,4 +1,5 @@
 import React from 'react';
+import numeral from 'numeral';
 import {
   SubCard,
   Sub4Title,
@@ -8,6 +9,12 @@ import {
   Separation,
 } from '../../components/generic/Styled';
 import { Rating } from '../../components/rating/Rating';
+import { MainInfo } from '../../components/generic/CardGeneric';
+import { themeColors } from '../../styles/Themes';
+import { renderLine } from '../../components/generic/helpers';
+import { Link } from '../../components/link/Link';
+import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { MethodBoxes } from './MethodBoxes';
 import {
   TradesAmount,
   StyleArrow,
@@ -15,13 +22,6 @@ import {
   StyledLogin,
   StyledDescription,
 } from './OfferCard.styled';
-import { MainInfo } from '../../components/generic/CardGeneric';
-import { themeColors } from '../../styles/Themes';
-import { renderLine } from '../../components/generic/helpers';
-import numeral from 'numeral';
-import { MethodBoxes } from './MethodBoxes';
-import { Link } from '../../components/link/Link';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 
 const format = (value: number | string, format = '0,0.00') =>
   numeral(value).format(format);

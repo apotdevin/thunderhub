@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import {
   SubTitle,
   Card,
@@ -8,7 +9,6 @@ import {
   SingleLine,
 } from '../src/components/generic/Styled';
 import { useAccount } from '../src/context/AccountContext';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ForwardCard } from '../src/views/forwards/ForwardsCard';

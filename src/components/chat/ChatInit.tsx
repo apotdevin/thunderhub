@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { toast } from 'react-toastify';
 import { useChatDispatch } from '../../context/ChatContext';
 import { useGetMessagesLazyQuery } from '../../generated/graphql';
 import { useAccount } from '../../context/AccountContext';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 
 export const ChatInit = () => {

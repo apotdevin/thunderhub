@@ -1,10 +1,10 @@
 import React from 'react';
+import styled from 'styled-components';
 import {
   CardWithTitle,
   SubTitle,
   Card,
 } from '../../../components/generic/Styled';
-import styled from 'styled-components';
 import { SignMessage } from './SignMessage';
 import { VerifyMessage } from './VerifyMessage';
 

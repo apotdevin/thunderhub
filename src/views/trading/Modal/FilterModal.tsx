@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import ScaleLoader from 'react-spinners/ScaleLoader';
+import { toast } from 'react-toastify';
 import { SubTitle } from '../../../components/generic/Styled';
 import { SortOptions, NewOptions } from '../OfferConfigs';
 import { FilterType } from '../OfferFilters';
 import { themeColors } from '../../../styles/Themes';
-import ScaleLoader from 'react-spinners/ScaleLoader';
-import { FilteredList } from './FilteredList';
 import { OptionsLoading } from '../OfferCard.styled';
-import { toast } from 'react-toastify';
 import {
   useGetCountriesQuery,
   useGetCurrenciesQuery,
   GetCountriesQuery,
   GetCurrenciesQuery,
 } from '../../../generated/graphql';
+import { FilteredList } from './FilteredList';
 
 interface FilterProps {
   type: string;

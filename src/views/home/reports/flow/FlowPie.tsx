@@ -1,11 +1,11 @@
 import React from 'react';
+import { VictoryPie } from 'victory';
 import { DarkSubTitle } from '../../../../components/generic/Styled';
 import { useConfigState } from '../../../../context/ConfigContext';
-import { VictoryPie } from 'victory';
 import { chartAxisColor } from '../../../../styles/Themes';
-import { Row, Col, PieRow } from '.';
 import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
+import { Row, Col, PieRow } from '.';
 
 interface Props {
   flowPie: { x: string; y: number }[];

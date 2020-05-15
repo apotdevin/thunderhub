@@ -1,6 +1,4 @@
 import React from 'react';
-import { SmallLink, DarkSubTitle, OverflowText, SingleLine } from './Styled';
-import { StatusDot, DetailLine } from './CardGeneric';
 import {
   format,
   formatDistanceToNowStrict,
@@ -8,6 +6,8 @@ import {
   isToday,
 } from 'date-fns';
 import { X } from 'react-feather';
+import { SmallLink, DarkSubTitle, OverflowText, SingleLine } from './Styled';
+import { StatusDot, DetailLine } from './CardGeneric';
 
 export const getTransactionLink = (transaction: string) => {
   const link = `https://www.blockchain.com/btc/tx/${transaction}`;

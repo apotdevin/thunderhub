@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import {
   Separation,
   SubCard,
@@ -12,7 +13,6 @@ import {
   getFormatDate,
   renderLine,
 } from '../../../components/generic/helpers';
-import styled from 'styled-components';
 import { getPrice } from '../../../components/price/Price';
 import { useConfigState } from '../../../context/ConfigContext';
 import { usePriceState } from '../../../context/PriceContext';

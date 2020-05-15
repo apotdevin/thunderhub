@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useAccount } from '../../../context/AccountContext';
 import { toast } from 'react-toastify';
+import { X } from 'react-feather';
+import { useAccount } from '../../../context/AccountContext';
 import { getErrorContent } from '../../../utils/error';
 import {
   SingleLine,
   DarkSubTitle,
   Separation,
 } from '../../../components/generic/Styled';
-import { X } from 'react-feather';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../../components/input/Input';
 import { NoWrap } from '../Tools.styled';

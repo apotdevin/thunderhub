@@ -1,10 +1,10 @@
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 import { useAccount } from '../../context/AccountContext';
 import { useStatusDispatch } from '../../context/StatusContext';
-import { useEffect } from 'react';
 import { useGetNodeInfoQuery } from '../../generated/graphql';
-import { useRouter } from 'next/router';
 import { appendBasePath } from '../../utils/basePath';
-import { toast } from 'react-toastify';
 
 export const StatusCheck = () => {
   const dispatch = useStatusDispatch();

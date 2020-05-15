@@ -1,8 +1,8 @@
 import React from 'react';
-import { SubTitle } from '../../generic/Styled';
 import { AlertTriangle } from 'react-feather';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
+import { SubTitle } from '../../generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { SecureButton } from '../../buttons/secureButton/SecureButton';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';

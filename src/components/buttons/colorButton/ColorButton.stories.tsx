@@ -1,7 +1,7 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import { ColorButton } from './ColorButton';
 import { text, boolean, color } from '@storybook/addon-knobs';
+import { ColorButton } from './ColorButton';
 
 export default {
   title: 'Color Button',

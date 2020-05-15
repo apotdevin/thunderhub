@@ -1,7 +1,7 @@
 import { createInvoice as createInvoiceRequest } from 'ln-service';
+import { GraphQLNonNull, GraphQLInt } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLNonNull, GraphQLInt } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { InvoiceType } from '../../types/MutationType';

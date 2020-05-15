@@ -1,11 +1,11 @@
 import * as React from 'react';
+import styled from 'styled-components';
+import { toast } from 'react-toastify';
 import { useAccount } from '../../context/AccountContext';
 import { Section } from '../../components/section/Section';
 import { Card, SingleLine } from '../../components/generic/Styled';
-import styled from 'styled-components';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { useGetCanConnectLazyQuery } from '../../generated/graphql';
-import { toast } from 'react-toastify';
 import { ConnectTitle } from './HomePage.styled';
 
 const AccountLine = styled.div`

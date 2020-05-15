@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import QrReader from 'react-qr-reader';
-import Modal from '../../modal/ReactModal';
 import { toast } from 'react-toastify';
+import sortBy from 'lodash.sortby';
+import Modal from '../../modal/ReactModal';
 import { getQRConfig } from '../../../utils/auth';
 import { Line, QRTextWrapper } from '../Auth.styled';
-import sortBy from 'lodash.sortby';
 import { LoadingBar } from '../../loadingBar/LoadingBar';
 import { SubTitle } from '../../generic/Styled';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';

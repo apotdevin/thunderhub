@@ -1,5 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { ChevronRight } from 'react-feather';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 import {
   textColor,
   colorButtonBackground,
@@ -12,8 +14,6 @@ import {
   themeColors,
   mediaWidths,
 } from '../../../styles/Themes';
-import { ChevronRight } from 'react-feather';
-import ScaleLoader from 'react-spinners/ScaleLoader';
 
 interface GeneralProps {
   fullWidth?: boolean;

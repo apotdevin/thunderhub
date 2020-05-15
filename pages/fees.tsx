@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import { ChevronRight, X } from 'react-feather';
 import {
   Card,
   CardWithTitle,
@@ -12,11 +14,9 @@ import {
   NoWrapTitle,
 } from '../src/components/generic/Styled';
 import { useAccount } from '../src/context/AccountContext';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { FeeCard } from '../src/views/fees/FeeCard';
-import { ChevronRight, X } from 'react-feather';
 import { SecureButton } from '../src/components/buttons/secureButton/SecureButton';
 import { AdminSwitch } from '../src/components/adminSwitch/AdminSwitch';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';

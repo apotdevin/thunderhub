@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { Cpu, Menu, X, Circle } from 'react-feather';
+import { useTransition, animated } from 'react-spring';
 import { headerColor, headerTextColor } from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
-import { Cpu, Menu, X, Circle } from 'react-feather';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
-import { useTransition, animated } from 'react-spring';
 import { Section } from '../../components/section/Section';
 import { useStatusState } from '../../context/StatusContext';
 import { Link } from '../../components/link/Link';

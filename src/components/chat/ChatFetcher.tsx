@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { useGetMessagesQuery } from '../../generated/graphql';
 import { useAccount } from '../../context/AccountContext';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
-import { useRouter } from 'next/router';
 import { useConfigState } from '../../context/ConfigContext';
 
 export const ChatFetcher = () => {

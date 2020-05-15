@@ -1,8 +1,8 @@
 import React from 'react';
-import { SingleLine, SimpleButton } from '../../components/generic/Styled';
 import styled from 'styled-components';
-import { InterfaceSettings } from './Interface';
+import { SingleLine, SimpleButton } from '../../components/generic/Styled';
 import { textColor } from '../../styles/Themes';
+import { InterfaceSettings } from './Interface';
 import { AccountSettings } from './Account';
 import { DangerView } from './Danger';
 import { CurrentSettings } from './Current';

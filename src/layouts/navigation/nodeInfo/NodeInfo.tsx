@@ -1,22 +1,22 @@
 import React from 'react';
-import { useConfigState } from '../../../context/ConfigContext';
+import { Zap, Anchor, Circle } from 'react-feather';
+import { toast } from 'react-toastify';
+import ReactTooltip from 'react-tooltip';
+import styled from 'styled-components';
+import ScaleLoader from 'react-spinners/ScaleLoader';
+import { getPrice } from 'src/components/price/Price';
+import { AnimatedNumber } from 'src/components/animated/AnimatedNumber';
+import { textColorMap, unSelectedNavButton } from '../../../styles/Themes';
+import { getErrorContent } from '../../../utils/error';
+import { useAccount } from '../../../context/AccountContext';
+import { getTooltipType } from '../../../components/generic/helpers';
 import {
   Separation,
   SingleLine,
   SubTitle,
   Sub4Title,
 } from '../../../components/generic/Styled';
-import { Zap, Anchor, Circle } from 'react-feather';
-import { getTooltipType } from '../../../components/generic/helpers';
-import { useAccount } from '../../../context/AccountContext';
-import { toast } from 'react-toastify';
-import { getErrorContent } from '../../../utils/error';
-import { textColorMap, unSelectedNavButton } from '../../../styles/Themes';
-import ReactTooltip from 'react-tooltip';
-import styled from 'styled-components';
-import ScaleLoader from 'react-spinners/ScaleLoader';
-import { getPrice } from 'src/components/price/Price';
-import { AnimatedNumber } from 'src/components/animated/AnimatedNumber';
+import { useConfigState } from '../../../context/ConfigContext';
 import { useStatusState } from '../../../context/StatusContext';
 import { usePriceState } from '../../../context/PriceContext';
 import { useGetNodeInfoQuery } from '../../../generated/graphql';

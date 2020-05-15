@@ -1,9 +1,9 @@
 import React from 'react';
+import styled from 'styled-components';
 import { Section } from '../section/Section';
 import { Title } from '../typography/Styled';
-import { LoadingCard } from './LoadingCard';
-import styled from 'styled-components';
 import { textColor, mediaWidths } from '../../styles/Themes';
+import { LoadingCard } from './LoadingCard';
 
 const StyledTitle = styled(Title)`
   font-size: 28px;

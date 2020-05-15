@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { css } from 'styled-components';
-import { cardColor, mediaWidths, themeColors } from '../../styles/Themes';
 import ReactModal from 'styled-react-modal';
+import { cardColor, mediaWidths, themeColors } from '../../styles/Themes';
 
 interface ModalProps {
   children: ReactNode;

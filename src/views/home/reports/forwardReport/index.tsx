@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { ForwardReport } from './ForwardReport';
-import { ForwardChannelsReport } from './ForwardChannelReport';
 import styled from 'styled-components';
 import {
   CardWithTitle,
@@ -8,8 +6,10 @@ import {
   Card,
   CardTitle,
 } from '../../../../components/generic/Styled';
-import { ButtonRow } from './Buttons';
 import { mediaWidths } from '../../../../styles/Themes';
+import { ForwardReport } from './ForwardReport';
+import { ForwardChannelsReport } from './ForwardChannelReport';
+import { ButtonRow } from './Buttons';
 
 export const CardContent = styled.div`
   height: 100%;

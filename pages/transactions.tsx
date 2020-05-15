@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import {
   Card,
   CardWithTitle,
@@ -6,7 +7,6 @@ import {
 } from '../src/components/generic/Styled';
 import { InvoiceCard } from '../src/views/transactions/InvoiceCard';
 import { useAccount } from '../src/context/AccountContext';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../src/utils/error';
 import { PaymentsCard } from '../src/views/transactions/PaymentsCards';
 import { LoadingCard } from '../src/components/loading/LoadingCard';

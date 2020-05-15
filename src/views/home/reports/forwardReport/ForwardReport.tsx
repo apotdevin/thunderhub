@@ -1,26 +1,26 @@
 import React from 'react';
-import { Sub4Title } from '../../../../components/generic/Styled';
 import numeral from 'numeral';
-import { useConfigState } from '../../../../context/ConfigContext';
-import { useAccount } from '../../../../context/AccountContext';
 import {
   VictoryBar,
   VictoryChart,
   VictoryAxis,
   VictoryVoronoiContainer,
 } from 'victory';
+import { toast } from 'react-toastify';
 import {
   chartAxisColor,
   chartBarColor,
   chartGridColor,
 } from '../../../../styles/Themes';
-import { CardContent } from '.';
-import { toast } from 'react-toastify';
+import { useAccount } from '../../../../context/AccountContext';
+import { useConfigState } from '../../../../context/ConfigContext';
+import { Sub4Title } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
 import { useGetForwardReportQuery } from '../../../../generated/graphql';
+import { CardContent } from '.';
 
 interface Props {
   isTime: string;

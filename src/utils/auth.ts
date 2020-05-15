@@ -1,6 +1,6 @@
 import base64url from 'base64url';
-import { saveAccounts } from './storage';
 import { v5 as uuidv5 } from 'uuid';
+import { saveAccounts } from './storage';
 
 const THUNDERHUB_NAMESPACE = '00000000-0000-0000-0000-000000000000';
 

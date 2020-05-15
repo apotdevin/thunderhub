@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useAccount } from '../../context/AccountContext';
-import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import { useAccount } from '../../context/AccountContext';
+import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { saveSessionAuth } from '../../utils/auth';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../components/input/Input';
 import { Section } from '../../components/section/Section';
 import { Title } from '../../components/typography/Styled';
-import styled from 'styled-components';
 import { inverseTextColor, mediaWidths } from '../../styles/Themes';
 import { useGetCanConnectLazyQuery } from '../../generated/graphql';
 import { useStatusDispatch } from '../../context/StatusContext';

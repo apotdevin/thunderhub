@@ -1,12 +1,12 @@
 import { closeChannel as lnCloseChannel } from 'ln-service';
-import { logger } from '../../../helpers/logger';
-import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
   GraphQLBoolean,
   GraphQLString,
   GraphQLInt,
   GraphQLNonNull,
 } from 'graphql';
+import { logger } from '../../../helpers/logger';
+import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { CloseChannelType } from '../../types/MutationType';

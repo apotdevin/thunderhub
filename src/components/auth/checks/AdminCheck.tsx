@@ -1,8 +1,8 @@
 import React from 'react';
-import { SingleLine, Sub4Title } from '../../generic/Styled';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import { themeColors } from '../../../styles/Themes';
 import { X, Check } from 'react-feather';
+import { SingleLine, Sub4Title } from '../../generic/Styled';
+import { themeColors } from '../../../styles/Themes';
 import { useGetCanAdminQuery } from '../../../generated/graphql';
 
 type AdminProps = {

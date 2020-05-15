@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { X } from 'react-feather';
+import { toast } from 'react-toastify';
 import {
   CardWithTitle,
   SubTitle,
@@ -11,13 +13,11 @@ import {
   Sub4Title,
 } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { X } from 'react-feather';
 import {
   MultiButton,
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
 import { Input } from '../../components/input/Input';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { useAddPeerMutation } from '../../generated/graphql';

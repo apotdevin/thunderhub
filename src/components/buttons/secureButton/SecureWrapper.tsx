@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from '../../modal/ReactModal';
-import { LoginModal } from './LoginModal';
 import { useAccount } from '../../../context/AccountContext';
+import { LoginModal } from './LoginModal';
 
 interface SecureButtonProps {
   callback: any;

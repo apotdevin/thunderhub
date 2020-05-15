@@ -1,7 +1,7 @@
 import { removePeer as removeLnPeer } from 'ln-service';
+import { GraphQLBoolean, GraphQLString, GraphQLNonNull } from 'graphql';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { GraphQLBoolean, GraphQLString, GraphQLNonNull } from 'graphql';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 

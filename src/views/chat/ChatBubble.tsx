@@ -1,28 +1,28 @@
 import * as React from 'react';
-import { MessageType } from './Chat.types';
 import { ThemeSet } from 'styled-theming';
-import {
-  ChatStyledMessage,
-  ChatBubbleMessage,
-  StatusChatDot,
-  ChatSendButton,
-} from './Chat.styled';
+import { toast } from 'react-toastify';
+import { Circle } from 'react-feather';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 import {
   chatBubbleColor,
   chatSentBubbleColor,
   chartColors,
 } from '../../styles/Themes';
 import { useSendMessageMutation } from '../../generated/graphql';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { SecureWrapper } from '../../components/buttons/secureButton/SecureWrapper';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { useAccount } from '../../context/AccountContext';
-import { Circle } from 'react-feather';
-import ScaleLoader from 'react-spinners/ScaleLoader';
 import { useConfigState } from '../../context/ConfigContext';
 import { usePriceState } from '../../context/PriceContext';
 import { getPrice } from '../../components/price/Price';
+import {
+  ChatStyledMessage,
+  ChatBubbleMessage,
+  StatusChatDot,
+  ChatSendButton,
+} from './Chat.styled';
+import { MessageType } from './Chat.types';
 
 interface SendButtonProps {
   amount: number;

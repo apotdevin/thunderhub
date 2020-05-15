@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
+import { ChevronRight } from 'react-feather';
 import {
   Sub4Title,
   NoWrapTitle,
   SubTitle,
   ResponsiveLine,
 } from '../../generic/Styled';
-import { ChevronRight } from 'react-feather';
 import { useAccount } from '../../../context/AccountContext';
 import { saveSessionAuth } from '../../../utils/auth';
 import { ColorButton } from '../colorButton/ColorButton';

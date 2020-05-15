@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { getConfigLnd } from '../../../utils/auth';
 import { toast } from 'react-toastify';
+import { getConfigLnd } from '../../../utils/auth';
 import { Input } from '../../input/Input';
 import { Line, StyledTitle } from '../Auth.styled';
 import { RiskCheckboxAndConfirm } from './Checkboxes';

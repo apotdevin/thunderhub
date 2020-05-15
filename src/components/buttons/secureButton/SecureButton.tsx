@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Modal from '../../modal/ReactModal';
-import { LoginModal } from './LoginModal';
 import { useAccount } from '../../../context/AccountContext';
 import { ColorButton, ColorButtonProps } from '../colorButton/ColorButton';
+import { LoginModal } from './LoginModal';
 
 interface SecureButtonProps extends ColorButtonProps {
   callback: any;

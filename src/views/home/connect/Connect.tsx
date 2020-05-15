@@ -1,6 +1,9 @@
 import React from 'react';
-import { useAccount } from '../../../context/AccountContext';
 import { toast } from 'react-toastify';
+import { Radio, Copy } from 'react-feather';
+import styled from 'styled-components';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { useAccount } from '../../../context/AccountContext';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import {
@@ -12,9 +15,6 @@ import {
   DarkSubTitle,
   ColorButton,
 } from '../../../components/generic/Styled';
-import { Radio, Copy } from 'react-feather';
-import styled from 'styled-components';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { mediaWidths } from '../../../styles/Themes';
 import { useGetCanConnectInfoQuery } from '../../../generated/graphql';
 

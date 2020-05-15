@@ -1,4 +1,6 @@
 import * as React from 'react';
+import styled from 'styled-components';
+import { Users } from 'react-feather';
 import { useChatState } from '../src/context/ChatContext';
 import { separateBySender, getSenders } from '../src/utils/chat';
 import {
@@ -8,7 +10,6 @@ import {
   SingleLine,
 } from '../src/components/generic/Styled';
 import { Contacts } from '../src/views/chat/Contacts';
-import styled from 'styled-components';
 import { ChatBox } from '../src/views/chat/ChatBox';
 import { ChatStart } from '../src/views/chat/ChatStart';
 import { useStatusState } from '../src/context/StatusContext';
@@ -17,7 +18,6 @@ import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ChatCard } from '../src/views/chat/Chat.styled';
 import { ViewSwitch } from '../src/components/viewSwitch/ViewSwitch';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
-import { Users } from 'react-feather';
 
 const ChatLayout = styled.div`
   display: flex;

@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { toast } from 'react-toastify';
 import { useAccount } from '../../../../context/AccountContext';
 import { getErrorContent } from '../../../../utils/error';
-import { toast } from 'react-toastify';
 import { useDecodeRequestQuery } from '../../../../generated/graphql';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import {

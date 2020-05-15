@@ -1,6 +1,6 @@
 import { authenticatedLndGrpc } from 'ln-service';
-import { logger } from './logger';
 import getConfig from 'next/config';
+import { logger } from './logger';
 
 const { serverRuntimeConfig } = getConfig();
 const { nodeEnv } = serverRuntimeConfig;

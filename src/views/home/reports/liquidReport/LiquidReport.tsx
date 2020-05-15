@@ -1,17 +1,17 @@
 import React from 'react';
 import {
-  CardWithTitle,
-  SubTitle,
-  Card,
-} from '../../../../components/generic/Styled';
-import { useAccount } from '../../../../context/AccountContext';
-import {
   VictoryChart,
   VictoryAxis,
   VictoryBar,
   VictoryVoronoiContainer,
   VictoryTooltip,
 } from 'victory';
+import {
+  CardWithTitle,
+  SubTitle,
+  Card,
+} from '../../../../components/generic/Styled';
+import { useAccount } from '../../../../context/AccountContext';
 import { useConfigState } from '../../../../context/ConfigContext';
 import {
   chartGridColor,

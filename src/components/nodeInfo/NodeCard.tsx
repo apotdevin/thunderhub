@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import 'intersection-observer'; // Polyfill
+import ScaleLoader from 'react-spinners/ScaleLoader';
 import { SingleLine, DarkSubTitle, ResponsiveLine } from '../generic/Styled';
 import { themeColors } from '../../styles/Themes';
-import ScaleLoader from 'react-spinners/ScaleLoader';
 import { Price } from '../price/Price';
 import Modal from '../modal/ReactModal';
-import { StatusDot, StatusLine, QuickCard } from './NodeInfo.styled';
-import { NodeInfoModal } from './NodeInfoModal';
 import { useGetNodeInfoQuery } from '../../generated/graphql';
 import { getAuthObj } from '../../utils/auth';
+import { StatusDot, StatusLine, QuickCard } from './NodeInfo.styled';
+import { NodeInfoModal } from './NodeInfoModal';
 
 export const getStatusDot = (status: boolean) => {
   return status ? <StatusDot color="#95de64" /> : <StatusDot color="#ff4d4f" />;

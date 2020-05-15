@@ -1,12 +1,12 @@
 import { sendToChainAddress } from 'ln-service';
-import { logger } from '../../../helpers/logger';
-import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
   GraphQLNonNull,
   GraphQLString,
   GraphQLBoolean,
   GraphQLInt,
 } from 'graphql';
+import { logger } from '../../../helpers/logger';
+import { requestLimiter } from '../../../helpers/rateLimiter';
 import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { SendToType } from '../../types/MutationType';

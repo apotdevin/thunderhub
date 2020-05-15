@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
+import { toast } from 'react-toastify';
 import {
   CardWithTitle,
   SubTitle,
@@ -8,14 +9,13 @@ import {
   Sub4Title,
 } from '../../../../components/generic/Styled';
 import { ButtonRow } from '../forwardReport/Buttons';
-import { FlowReport } from './FlowReport';
 import { useAccount } from '../../../../context/AccountContext';
-import { FlowPie } from './FlowPie';
-import { InvoicePie } from './InvoicePie';
-import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { useGetInOutQuery } from '../../../../generated/graphql';
+import { InvoicePie } from './InvoicePie';
+import { FlowPie } from './FlowPie';
+import { FlowReport } from './FlowReport';
 // import { getWaterfall } from './Helpers';
 
 export const ChannelRow = styled.div`

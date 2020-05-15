@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import {
   useDecodeRequestQuery,
   useGetNodeQuery,
@@ -18,7 +19,6 @@ import {
 } from '../../../../components/generic/helpers';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { Input } from '../../../../components/input/Input';
-import styled from 'styled-components';
 
 export const WithMargin = styled.div`
   margin-right: 4px;

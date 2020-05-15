@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
+import styled from 'styled-components';
+import { getErrorContent } from '../../../../utils/error';
+import { useAccount } from '../../../../context/AccountContext';
 import {
   DarkSubTitle,
   ColorButton,
   SingleLine,
 } from '../../../../components/generic/Styled';
-import { useAccount } from '../../../../context/AccountContext';
-import { CardContent } from '.';
-import { toast } from 'react-toastify';
-import { getErrorContent } from '../../../../utils/error';
-import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
-import styled from 'styled-components';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { useConfigState } from '../../../../context/ConfigContext';
 import { usePriceState } from '../../../../context/PriceContext';
 import { useGetForwardChannelsReportQuery } from '../../../../generated/graphql';
+import { CardContent } from '.';
 
 const ChannelRow = styled.div`
   font-size: 14px;

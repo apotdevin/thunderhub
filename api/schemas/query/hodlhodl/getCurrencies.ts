@@ -1,10 +1,10 @@
 import fetch from 'node-fetch';
 import { GraphQLList } from 'graphql';
+import getConfig from 'next/config';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { logger } from '../../../helpers/logger';
 import { appUrls } from '../../../utils/appUrls';
 import { HodlCurrencyType } from '../../types/HodlType';
-import getConfig from 'next/config';
 
 const { serverRuntimeConfig } = getConfig();
 const { hodlKey } = serverRuntimeConfig;

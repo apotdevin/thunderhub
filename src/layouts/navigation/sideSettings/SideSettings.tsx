@@ -1,11 +1,11 @@
 import React from 'react';
+import { Sun, Moon, ChevronLeft, ChevronRight } from 'react-feather';
+import styled from 'styled-components';
 import { Separation, SingleLine } from '../../../components/generic/Styled';
 import {
   useConfigState,
   useConfigDispatch,
 } from '../../../context/ConfigContext';
-import { Sun, Moon, ChevronLeft, ChevronRight } from 'react-feather';
-import styled from 'styled-components';
 import {
   progressBackground,
   iconButtonHover,

@@ -1,11 +1,11 @@
 import React from 'react';
+import styled from 'styled-components';
 import {
   CardWithTitle,
   SubTitle,
   Card,
   Sub4Title,
 } from '../../components/generic/Styled';
-import styled from 'styled-components';
 import { chartLinkColor, colorButtonBackground } from '../../styles/Themes';
 import { useAccount } from '../../context/AccountContext';
 

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Card } from '../../../components/generic/Styled';
-import { ChannelCard } from './ChannelCard';
-import { useAccount } from '../../../context/AccountContext';
 import { toast } from 'react-toastify';
+import { useAccount } from '../../../context/AccountContext';
+import { Card } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { useGetChannelsQuery } from '../../../generated/graphql';
+import { ChannelCard } from './ChannelCard';
 
 export const Channels = () => {
   const [indexOpen, setIndexOpen] = useState(0);

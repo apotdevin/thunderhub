@@ -1,8 +1,8 @@
 import React from 'react';
+import getConfig from 'next/config';
 import { Section } from '../../components/section/Section';
 import { Link } from '../../components/link/Link';
 import { Emoji } from '../../components/emoji/Emoji';
-import getConfig from 'next/config';
 import { headerColor, fontColors } from '../../styles/Themes';
 import {
   FooterWrapper,
