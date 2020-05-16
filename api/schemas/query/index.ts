@@ -12,6 +12,7 @@ import { chainQueries } from './chain';
 import { hodlQueries } from './hodlhodl';
 import { chatQueries } from './chat';
 import { authTokenQueries } from './authToken';
+import { serverQueries } from './server';
 
 export const query = {
   ...channelQueries,
@@ -28,4 +29,5 @@ export const query = {
   ...hodlQueries,
   ...chatQueries,
   ...authTokenQueries,
+  ...serverQueries,
 };

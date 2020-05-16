@@ -3,28 +3,129 @@ import crypto from 'crypto';
 import path from 'path';
 import os from 'os';
 import { logger } from 'api/helpers/logger';
+import yaml from 'js-yaml';
+import AES from 'crypto-js/aes';
+import { getUUID } from 'src/utils/auth';
 
-export const readCert = (certPath: string): string | null => {
-  if (certPath === '') {
+export const readFile = (filePath: string, encoding = 'hex'): string | null => {
+  if (filePath === '') {
     return null;
   }
 
-  const certExists = fs.existsSync(certPath);
+  const fileExists = fs.existsSync(filePath);
 
-  if (!certExists) {
-    logger.error(`No tls certificate file found at path: ${certPath}`);
+  if (!fileExists) {
+    logger.error(`No file found at path: ${filePath}`);
     return null;
   } else {
     try {
-      const ssoCert = fs.readFileSync(certPath, 'hex');
-      return ssoCert;
+      const file = fs.readFileSync(filePath, encoding);
+      return file;
     } catch (err) {
-      logger.error(
-        'Something went wrong while reading the tls certificate: \n' + err
-      );
+      logger.error('Something went wrong while reading the file: \n' + err);
       return null;
     }
   }
+};
+
+type AccountType = {
+  name: string;
+  serverUrl: string;
+  macaroonPath: string;
+  certificatePath: string;
+  password: string | null;
+};
+
+type AccountConfigType = {
+  masterPassword: string | null;
+  accounts: AccountType[];
+};
+
+export const parseYaml = (filePath: string): AccountConfigType | null => {
+  if (filePath === '') {
+    return null;
+  }
+
+  const yamlConfig = readFile(filePath, 'utf-8');
+
+  if (!yamlConfig) {
+    return null;
+  }
+
+  try {
+    const yamlObject = yaml.safeLoad(yamlConfig);
+    return yamlObject;
+  } catch (err) {
+    logger.error(
+      'Something went wrong while parsing the YAML config file: \n' + err
+    );
+    return null;
+  }
+};
+
+export const getAccounts = (filePath: string) => {
+  if (filePath === '') {
+    return null;
+  }
+
+  const accountConfig = parseYaml(filePath);
+
+  if (!accountConfig) {
+    return null;
+  }
+
+  const { masterPassword, accounts } = accountConfig;
+
+  if (!accounts || accounts.length <= 0) {
+    return null;
+  }
+
+  const parsedAccounts = accounts
+    .map((account, index) => {
+      const {
+        name,
+        serverUrl,
+        macaroonPath,
+        certificatePath,
+        password,
+      } = account;
+      const missingFields = [];
+      if (!name) missingFields.push('name');
+      if (!serverUrl) missingFields.push('server url');
+      if (!macaroonPath) missingFields.push('macaroon path');
+      if (missingFields.length > 0) {
+        const text = missingFields.join(', ');
+        logger.error(`Account in index ${index} is missing the fields ${text}`);
+        return null;
+      }
+      if (!certificatePath)
+        logger.warn(
+          `No certificate for account ${name}. Make sure you don't need it to connect.`
+        );
+
+      const cert = readFile(certificatePath);
+      const clearMacaroon = readFile(macaroonPath);
+
+      if (!clearMacaroon) return null;
+
+      const macaroon = AES.encrypt(
+        clearMacaroon,
+        password || masterPassword
+      ).toString();
+
+      const id = getUUID(`${name}${serverUrl}${macaroon}${cert}`);
+
+      return {
+        name,
+        id,
+        host: serverUrl,
+        macaroon,
+        cert,
+      };
+    })
+    .filter(Boolean);
+
+  return parsedAccounts;
 };
 
 export const readMacaroons = (macaroonPath: string): string | null => {

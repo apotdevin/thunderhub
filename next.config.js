@@ -14,6 +14,7 @@ module.exports = withBundleAnalyzer({
     lnServerUrl: process.env.LN_SERVER_URL || '',
     lnCertPath: process.env.LN_CERT_PATH || '',
     macaroonPath: process.env.MACAROON_PATH || '',
+    accountConfigPath: process.env.ACCOUNT_CONFIG_PATH || '',
   },
   publicRuntimeConfig: {
     nodeEnv: process.env.NODE_ENV || 'development',

@@ -4,10 +4,19 @@ type SSOType = {
   host: string | null;
 };
 
+type AccountType = {
+  name: string;
+  id: string;
+  host: string;
+  macaroon: string;
+  cert: string | null;
+};
+
 export type ContextType = {
   ip: string;
   secret: string;
   ssoVerified: boolean;
-  accountVerified: string;
+  accountPassword: string;
   sso: SSOType;
+  accounts: AccountType[];
 };

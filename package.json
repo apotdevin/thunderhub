@@ -44,6 +44,7 @@
     "graphql-tag": "^2.10.3",
     "intersection-observer": "^0.10.0",
     "js-cookie": "^2.2.1",
+    "js-yaml": "^3.13.1",
     "jsonwebtoken": "^8.5.1",
     "ln-service": "^48.0.5",
     "lodash.debounce": "^4.0.8",

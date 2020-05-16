@@ -15,7 +15,8 @@ interface BuildProps {
   accounts: SingleAccountProps[];
 }
 
-const getUUID = (text: string): string => uuidv5(text, THUNDERHUB_NAMESPACE);
+export const getUUID = (text: string): string =>
+  uuidv5(text, THUNDERHUB_NAMESPACE);
 
 export const getAccountId = (host = '', viewOnly = '', admin = '', cert = '') =>
   getUUID(`${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`);

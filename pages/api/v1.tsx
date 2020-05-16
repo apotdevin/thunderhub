@@ -6,7 +6,12 @@ import getConfig from 'next/config';
 import Cors from 'micro-cors';
 import jwt from 'jsonwebtoken';
 import { logger } from 'api/helpers/logger';
-import { readMacaroons, readCert, readCookie } from 'api/helpers/fileHelpers';
+import {
+  readMacaroons,
+  readFile,
+  readCookie,
+  getAccounts,
+} from 'api/helpers/fileHelpers';
 import { ContextType } from 'api/types/apiTypes';
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
@@ -16,13 +21,17 @@ const {
   macaroonPath,
   lnCertPath,
   lnServerUrl,
+  accountConfigPath,
 } = serverRuntimeConfig;
 
 const secret = crypto.randomBytes(64).toString('hex');
 // const secret = '123456789';
 
 const ssoMacaroon = readMacaroons(macaroonPath);
-const ssoCert = readCert(lnCertPath);
+const ssoCert = readFile(lnCertPath);
+const accountConfig = getAccounts(accountConfigPath);
+
+// console.log({ secret, ssoMacaroon, ssoCert, accountConfig });
 
 readCookie(cookiePath);
 
@@ -46,11 +55,11 @@ const apolloServer = new ApolloServer({
       }
     }
 
-    let accountVerified = '';
+    let accountPassword = '';
     if (req?.cookies?.AccountAuth) {
       try {
         const account = jwt.verify(req.cookies.AccountAuth, secret);
-        accountVerified = account['name'] || '';
+        accountPassword = account['password'] || '';
       } catch (error) {
         logger.warn('Error verifying account authentication cookie');
       }
@@ -60,8 +69,9 @@ const apolloServer = new ApolloServer({
       ip,
       secret,
       ssoVerified,
-      accountVerified,
+      accountPassword,
       sso: { macaroon: ssoMacaroon, cert: ssoCert, host: lnServerUrl },
+      accounts: accountConfig,
     };
 
     return context;

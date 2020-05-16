@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import CryptoJS from 'crypto-js';
+import AES from 'crypto-js/aes';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useAccount } from '../../context/AccountContext';
@@ -135,9 +135,7 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
       }
 
       const encryptedAdmin =
-        admin && password
-          ? CryptoJS.AES.encrypt(admin, password).toString()
-          : undefined;
+        admin && password ? AES.encrypt(admin, password).toString() : undefined;
 
       saveUserAuth({
         name,
