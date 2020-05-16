@@ -4,7 +4,7 @@ import {
   AccountProps,
   CLIENT_ACCOUNT,
   AuthType,
-} from '../NewAccountContext';
+} from '../AccountContext';
 
 export const getAccountById = (id: string, accounts: CompleteAccount[]) => {
   const correctAccount: CompleteAccount | null = accounts.find(

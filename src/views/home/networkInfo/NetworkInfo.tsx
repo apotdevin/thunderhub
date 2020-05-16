@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Globe, Cpu } from 'react-feather';
-import { toast } from 'react-toastify';
+import { useAccountState } from 'src/context/AccountContext';
 import {
   Card,
   CardWithTitle,
@@ -9,9 +9,7 @@ import {
   SingleLine,
   Separation,
 } from '../../../components/generic/Styled';
-import { useAccount } from '../../../context/AccountContext';
 import { unSelectedNavButton, mediaWidths } from '../../../styles/Themes';
-import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { Price } from '../../../components/price/Price';
 import { useGetNetworkInfoQuery } from '../../../generated/graphql';
@@ -64,7 +62,7 @@ const Padding = styled.span`
 `;
 
 export const NetworkInfo = () => {
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { loading, data, error } = useGetNetworkInfoQuery({
     skip: !auth,

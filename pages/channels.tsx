@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAccountState } from 'src/context/AccountContext';
 import { Channels } from '../src/views/channels/channels/Channels';
 import { PendingChannels } from '../src/views/channels/pendingChannels/PendingChannels';
 import { ClosedChannels } from '../src/views/channels/closedChannels/ClosedChannels';
@@ -9,7 +10,6 @@ import {
   SingleLine,
   ColorButton,
 } from '../src/components/generic/Styled';
-import { useAccount } from '../src/context/AccountContext';
 import { useConfigState } from '../src/context/ConfigContext';
 import { textColorMap } from '../src/styles/Themes';
 import { useGetChannelAmountInfoQuery } from '../src/generated/graphql';
@@ -23,7 +23,7 @@ const ChannelView = () => {
   });
 
   const { theme } = useConfigState();
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { data } = useGetChannelAmountInfoQuery({
     skip: !auth,

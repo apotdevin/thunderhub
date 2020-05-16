@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useAccountState } from 'src/context/NewAccountContext';
 import {
   Card,
   CardWithTitle,
   SubTitle,
 } from '../src/components/generic/Styled';
-import { InvoiceCard } from '../src/views/transactions/InvoiceCard';
-import { useAccount } from '../src/context/AccountContext';
+import { InvoiceCard } from '../ssrc/context/AccountContextCard';
 import { getErrorContent } from '../src/utils/error';
 import { PaymentsCard } from '../src/views/transactions/PaymentsCards';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
@@ -19,7 +19,7 @@ const TransactionsView = () => {
   const [token, setToken] = useState('');
   const [fetching, setFetching] = useState(false);
 
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { loading, data, fetchMore } = useGetResumeQuery({
     skip: !auth,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useAccountState } from 'src/context/NewAccountContext';
+import { useAccountState } from 'src/context/AccountContext';
 import { Card, Separation } from '../../components/generic/Styled';
 import { Section } from '../../components/section/Section';
 import {

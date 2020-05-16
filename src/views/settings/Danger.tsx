@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { AlertCircle } from 'react-feather';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
+import { useAccountState } from 'src/context/AccountContext';
 import {
   Card,
   CardWithTitle,
@@ -12,7 +13,6 @@ import {
   Sub4Title,
 } from '../../components/generic/Styled';
 import { deleteStorage, deleteAccountPermissions } from '../../utils/storage';
-import { useAccount } from '../../context/AccountContext';
 import { textColor, fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
@@ -75,7 +75,7 @@ export const DangerView = () => {
     admin,
     viewOnly,
     id,
-  } = useAccount();
+  } = useAccountState();
 
   const dispatch = useStatusDispatch();
   const chatDispatch = useChatDispatch();

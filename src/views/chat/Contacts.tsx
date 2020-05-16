@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { useAccountState } from 'src/context/AccountContext';
 import { useGetNodeLazyQuery } from '../../generated/graphql';
-import { useAccount } from '../../context/AccountContext';
 import { useChatDispatch, useChatState } from '../../context/ChatContext';
 import { SingleLine } from '../../components/generic/Styled';
 import { getMessageDate } from '../../components/generic/helpers';
@@ -37,7 +37,7 @@ export const ContactCard = ({
   const dispatch = useChatDispatch();
   const [nodeName, setNodeName] = React.useState(alias || '');
 
-  const { auth, id } = useAccount();
+  const { auth, account } = useAccountState();
   const [getInfo, { data, loading }] = useGetNodeLazyQuery({
     variables: { auth, publicKey: contactSender },
   });
@@ -49,7 +49,7 @@ export const ContactCard = ({
     if (!alias) {
       getInfo();
     }
-  }, [contact, sender]);
+  }, [contact, sender, alias, contactSender, getInfo, setUser, user]);
 
   React.useEffect(() => {
     if (!loading && data?.getNode) {
@@ -61,12 +61,16 @@ export const ContactCard = ({
         setUser(name);
       }
     }
-  }, [data, loading, sender]);
+  }, [data, loading, sender, contactSender, setUser]);
 
   return (
     <ChatSubCard
       onClick={() => {
-        dispatch({ type: 'changeActive', sender: contactSender, userId: id });
+        dispatch({
+          type: 'changeActive',
+          sender: contactSender,
+          userId: account.id,
+        });
         setUser(nodeName);
         setShow(false);
       }}

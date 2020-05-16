@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { Radio, Copy } from 'react-feather';
 import styled from 'styled-components';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { useAccount } from '../../../context/AccountContext';
+import { useAccountState } from 'src/context/AccountContext';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import {
@@ -55,7 +55,7 @@ const TextPadding = styled.span`
 const sectionColor = '#fa541c';
 
 export const ConnectCard = () => {
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { loading, data } = useGetCanConnectInfoQuery({
     skip: !auth,

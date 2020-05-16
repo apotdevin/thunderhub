@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAccount } from '../src/context/AccountContext';
+import { useAccountState } from 'src/context/AccountContext';
 import {
   CardWithTitle,
   SubTitle,
@@ -12,7 +12,7 @@ import { useGetPeersQuery } from '../src/generated/graphql';
 
 const PeersView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { loading, data } = useGetPeersQuery({
     skip: !auth,

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
 import styled from 'styled-components';
+import { useAccountState } from 'src/context/AccountContext';
 import { getErrorContent } from '../../../../utils/error';
-import { useAccount } from '../../../../context/AccountContext';
 import {
   DarkSubTitle,
   ColorButton,
@@ -68,7 +68,7 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { data, loading } = useGetForwardChannelsReportQuery({
     skip: !auth,

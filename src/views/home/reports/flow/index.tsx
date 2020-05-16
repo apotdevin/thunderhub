@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { toast } from 'react-toastify';
+import { useAccountState } from 'src/context/AccountContext';
 import {
   CardWithTitle,
   SubTitle,
@@ -9,7 +10,6 @@ import {
   Sub4Title,
 } from '../../../../components/generic/Styled';
 import { ButtonRow } from '../forwardReport/Buttons';
-import { useAccount } from '../../../../context/AccountContext';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { useGetInOutQuery } from '../../../../generated/graphql';
@@ -82,7 +82,7 @@ export const FlowBox = () => {
   const [isTime, setIsTime] = useState<string>('month');
   const [isType, setIsType] = useState<string>('amount');
 
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
   const { data, loading } = useGetInOutQuery({
     skip: !auth,
     variables: { time: isTime, auth },

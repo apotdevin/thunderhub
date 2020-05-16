@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
-import { useAccount } from '../../../../context/AccountContext';
+import { useAccountState } from 'src/context/AccountContext';
 import { getErrorContent } from '../../../../utils/error';
 import { useDecodeRequestQuery } from '../../../../generated/graphql';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
@@ -18,7 +18,7 @@ interface DecodedProps {
 }
 
 export const Decoded = ({ request, setShow }: DecodedProps) => {
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { data, loading } = useDecodeRequestQuery({
     variables: { auth, request },

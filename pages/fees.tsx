@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ChevronRight, X } from 'react-feather';
+import { useAccountState } from 'src/context/AccountContext';
 import {
   Card,
   CardWithTitle,
@@ -13,7 +14,6 @@ import {
   ResponsiveLine,
   NoWrapTitle,
 } from '../src/components/generic/Styled';
-import { useAccount } from '../src/context/AccountContext';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { FeeCard } from '../src/views/fees/FeeCard';
@@ -32,7 +32,7 @@ const FeesView = () => {
   const [baseFee, setBaseFee] = useState(0);
   const [feeRate, setFeeRate] = useState(0);
 
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { loading, data } = useChannelFeesQuery({
     skip: !auth,

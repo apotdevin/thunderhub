@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X } from 'react-feather';
 import { useRouter } from 'next/router';
+import { useAccountState } from 'src/context/AccountContext';
 import {
   CardWithTitle,
   SubTitle,
@@ -10,7 +11,6 @@ import {
   Separation,
 } from '../../components/generic/Styled';
 import { SettingsLine } from '../../../pages/settings';
-import { useAccount } from '../../context/AccountContext';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
   MultiButton,
@@ -25,7 +25,7 @@ export const AccountSettings = () => {
   const [status, setStatus] = useState('none');
 
   const { push } = useRouter();
-  const { id, changeAccount, accounts } = useAccount();
+  const { id, changeAccount, accounts } = useAccountState();
 
   const dispatch = useStatusDispatch();
   const dispatchChat = useChatDispatch();

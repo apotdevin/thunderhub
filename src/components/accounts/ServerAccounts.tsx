@@ -4,7 +4,7 @@ import {
   useAccountDispatch,
   SERVER_ACCOUNT,
   SSO_ACCOUNT,
-} from 'src/context/NewAccountContext';
+} from 'src/context/AccountContext';
 import { addIdAndTypeToAccount } from 'src/context/helpers/context';
 import { useConfigState } from 'src/context/ConfigContext';
 

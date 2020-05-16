@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import {
   useAccountState,
   useAccountDispatch,
-} from 'src/context/NewAccountContext';
+} from 'src/context/AccountContext';
 import { getAccountId } from '../../utils/auth';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { LoadingCard } from '../loading/LoadingCard';

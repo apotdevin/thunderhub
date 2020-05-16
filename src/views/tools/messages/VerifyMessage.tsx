@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { X, Copy } from 'react-feather';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { useAccountState } from 'src/context/AccountContext';
 import { Input } from '../../../components/input/Input';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import {
@@ -10,7 +11,6 @@ import {
   Separation,
 } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
-import { useAccount } from '../../../context/AccountContext';
 import { Column, WrapRequest } from '../Tools.styled';
 import { getNodeLink } from '../../../components/generic/helpers';
 import { useVerifyMessageLazyQuery } from '../../../generated/graphql';
@@ -22,7 +22,7 @@ export const VerifyMessage = () => {
   const [isPasting, setIsPasting] = useState<boolean>(false);
   const [signedBy, setSignedBy] = useState<string>('');
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
+  const { host, viewOnly, cert, sessionAdmin } = useAccountState();
   const auth = {
     host,
     cert,

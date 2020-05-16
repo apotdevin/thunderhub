@@ -2,7 +2,7 @@ import {
   CLIENT_ACCOUNT,
   SSO_ACCOUNT,
   CompleteAccount,
-} from '../NewAccountContext';
+} from '../AccountContext';
 import { getAccountById, deleteAccountById } from './context';
 
 const firstAccount = {

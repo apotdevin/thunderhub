@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useAccountState } from 'src/context/AccountContext';
 import {
   CardWithTitle,
   SubTitle,
@@ -7,7 +8,6 @@ import {
   Sub4Title,
 } from '../../components/generic/Styled';
 import { chartLinkColor, colorButtonBackground } from '../../styles/Themes';
-import { useAccount } from '../../context/AccountContext';
 
 const CurrentField = styled.textarea`
   width: 100%;
@@ -23,7 +23,7 @@ const CurrentField = styled.textarea`
 `;
 
 export const CurrentSettings = () => {
-  const { name, host, admin, viewOnly, cert } = useAccount();
+  const { name, host, admin, viewOnly, cert } = useAccountState();
 
   const renderField = (title: string, field: string | null, rows?: number) => {
     if (!field) return null;

@@ -7,12 +7,12 @@ import {
   VictoryVoronoiContainer,
 } from 'victory';
 import { toast } from 'react-toastify';
+import { useAccountState } from 'src/context/AccountContext';
 import {
   chartAxisColor,
   chartBarColor,
   chartGridColor,
 } from '../../../../styles/Themes';
-import { useAccount } from '../../../../context/AccountContext';
 import { useConfigState } from '../../../../context/ConfigContext';
 import { Sub4Title } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
@@ -38,7 +38,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { data, loading } = useGetForwardReportQuery({
     skip: !auth,

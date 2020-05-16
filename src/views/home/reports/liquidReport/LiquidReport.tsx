@@ -6,12 +6,12 @@ import {
   VictoryVoronoiContainer,
   VictoryTooltip,
 } from 'victory';
+import { useAccountState } from 'src/context/AccountContext';
 import {
   CardWithTitle,
   SubTitle,
   Card,
 } from '../../../../components/generic/Styled';
-import { useAccount } from '../../../../context/AccountContext';
 import { useConfigState } from '../../../../context/ConfigContext';
 import {
   chartGridColor,
@@ -24,7 +24,7 @@ import { usePriceState } from '../../../../context/PriceContext';
 import { useGetLiquidReportQuery } from '../../../../generated/graphql';
 
 export const LiquidReport = () => {
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { theme, currency, displayValues } = useConfigState();
   const priceContext = usePriceState();

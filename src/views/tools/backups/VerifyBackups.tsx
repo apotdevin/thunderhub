@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { X } from 'react-feather';
-import { useAccount } from '../../../context/AccountContext';
+import { useAccountState } from 'src/context/AccountContext';
 import { getErrorContent } from '../../../utils/error';
 import {
   SingleLine,
@@ -17,7 +17,7 @@ export const VerifyBackups = () => {
   const [backupString, setBackupString] = useState<string>('');
   const [isPasting, setIsPasting] = useState<boolean>(false);
 
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const [verifyBackup, { data, loading }] = useVerifyBackupsLazyQuery({
     onError: error => toast.error(getErrorContent(error)),

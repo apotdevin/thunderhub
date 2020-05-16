@@ -3,7 +3,7 @@ import getConfig from 'next/config';
 import jwt from 'jsonwebtoken';
 import { readCookie, refreshCookie } from 'api/helpers/fileHelpers';
 import { ContextType } from 'api/types/apiTypes';
-import { SSO_ACCOUNT } from 'src/context/NewAccountContext';
+import { SSO_ACCOUNT } from 'src/context/AccountContext';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 
 const { serverRuntimeConfig } = getConfig();

@@ -6,9 +6,9 @@ import styled from 'styled-components';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { getPrice } from 'src/components/price/Price';
 import { AnimatedNumber } from 'src/components/animated/AnimatedNumber';
+import { useAccountState } from 'src/context/AccountContext';
 import { textColorMap, unSelectedNavButton } from '../../../styles/Themes';
 import { getErrorContent } from '../../../utils/error';
-import { useAccount } from '../../../context/AccountContext';
 import { getTooltipType } from '../../../components/generic/helpers';
 import {
   Separation,
@@ -76,7 +76,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     channelPending,
   } = useStatusState();
 
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { loading, data } = useGetNodeInfoQuery({
     skip: !auth,
