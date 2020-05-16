@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import { SSO_USER, getAuthObj } from 'src/utils/auth';
+import { SSO_USER, getAuthObj, SERVER_USER } from 'src/utils/auth';
 import { Lock } from 'react-feather';
 import { chartColors } from 'src/styles/Themes';
 import { useAccount } from '../../context/AccountContext';
@@ -39,7 +39,7 @@ export const Accounts = ({ change }: { change?: boolean }) => {
 
   if (
     accounts.length <= 1 &&
-    accounts.filter(a => a.name === SSO_USER).length < 1
+    accounts.filter(a => a.host === SSO_USER).length < 1
   ) {
     return null;
   }
@@ -54,11 +54,12 @@ export const Accounts = ({ change }: { change?: boolean }) => {
     return null;
   };
 
-  const getTitle = (host: string) => {
-    if (host === SSO_USER) {
+  const getTitle = account => {
+    const { host, name } = account;
+    if (host === SSO_USER || host === SERVER_USER) {
       return (
         <div>
-          SSO Account
+          {host === SSO_USER ? 'SSO Account' : name}
           <LockPadding>
             <Lock color={chartColors.green} size={14} />
           </LockPadding>
@@ -107,7 +108,7 @@ export const Accounts = ({ change }: { change?: boolean }) => {
           return (
             <AccountLine key={`${account.id}-${index}`}>
               <SingleLine>
-                {getTitle(account.host)}
+                {getTitle(account)}
                 <SingleLine>
                   <TypeText>{isType(account.admin, account.viewOnly)}</TypeText>
                   <ColorButton

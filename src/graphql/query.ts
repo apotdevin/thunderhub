@@ -467,3 +467,12 @@ export const GET_AUTH_TOKEN = gql`
     getAuthToken(cookie: $cookie)
   }
 `;
+
+export const GET_SERVER_ACCOUNTS = gql`
+  query GetServerAccounts {
+    getServerAccounts {
+      name
+      id
+    }
+  }
+`;

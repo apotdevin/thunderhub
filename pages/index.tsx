@@ -32,7 +32,7 @@ const ContextApp = () => {
 
   const change =
     accounts.length <= 1 &&
-    accounts.filter(a => a.name === SSO_USER).length < 1 &&
+    accounts.filter(a => a.host === SSO_USER).length < 1 &&
     admin === '';
   const isSession = admin !== '' && viewOnly === '';
 

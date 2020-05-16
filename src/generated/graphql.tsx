@@ -50,6 +50,7 @@ export type Query = {
   getCurrencies?: Maybe<Array<Maybe<HodlCurrencyType>>>;
   getMessages?: Maybe<GetMessagesType>;
   getAuthToken?: Maybe<Scalars['String']>;
+  getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
 };
 
 export type QueryGetChannelBalanceArgs = {
@@ -549,6 +550,12 @@ export type MessagesType = {
   alias?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   tokens?: Maybe<Scalars['Int']>;
+};
+
+export type ServerAccountType = {
+  __typename?: 'serverAccountType';
+  name: Scalars['String'];
+  id: Scalars['String'];
 };
 
 export type Mutation = {
@@ -1582,6 +1589,21 @@ export type GetAuthTokenQuery = { __typename?: 'Query' } & Pick<
   Query,
   'getAuthToken'
 >;
+
+export type GetServerAccountsQueryVariables = {};
+
+export type GetServerAccountsQuery = { __typename?: 'Query' } & {
+  getServerAccounts?: Maybe<
+    Array<
+      Maybe<
+        { __typename?: 'serverAccountType' } & Pick<
+          ServerAccountType,
+          'name' | 'id'
+        >
+      >
+    >
+  >;
+};
 
 export const GetCountriesDocument = gql`
   query GetCountries {
@@ -4433,4 +4455,60 @@ export type GetAuthTokenLazyQueryHookResult = ReturnType<
 export type GetAuthTokenQueryResult = ApolloReactCommon.QueryResult<
   GetAuthTokenQuery,
   GetAuthTokenQueryVariables
+>;
+export const GetServerAccountsDocument = gql`
+  query GetServerAccounts {
+    getServerAccounts {
+      name
+      id
+    }
+  }
+`;
+
+/**
+ * __useGetServerAccountsQuery__
+ *
+ * To run a query within a React component, call `useGetServerAccountsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetServerAccountsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetServerAccountsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetServerAccountsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetServerAccountsQuery,
+    GetServerAccountsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    GetServerAccountsQuery,
+    GetServerAccountsQueryVariables
+  >(GetServerAccountsDocument, baseOptions);
+}
+export function useGetServerAccountsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetServerAccountsQuery,
+    GetServerAccountsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetServerAccountsQuery,
+    GetServerAccountsQueryVariables
+  >(GetServerAccountsDocument, baseOptions);
+}
+export type GetServerAccountsQueryHookResult = ReturnType<
+  typeof useGetServerAccountsQuery
+>;
+export type GetServerAccountsLazyQueryHookResult = ReturnType<
+  typeof useGetServerAccountsLazyQuery
+>;
+export type GetServerAccountsQueryResult = ApolloReactCommon.QueryResult<
+  GetServerAccountsQuery,
+  GetServerAccountsQueryVariables
 >;
