@@ -113,7 +113,7 @@ export const getAccounts = (filePath: string) => {
         password || masterPassword
       ).toString();
 
-      const id = getUUID(`${name}${serverUrl}${macaroon}${cert}`);
+      const id = getUUID(`${name}${serverUrl}${clearMacaroon}${cert}`);
 
       return {
         name,

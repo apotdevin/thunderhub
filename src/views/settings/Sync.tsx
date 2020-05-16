@@ -33,7 +33,7 @@ export const SyncSettings = () => {
 
   const getValue = () => {
     switch (true) {
-      case account.type === CLIENT_ACCOUNT && !!account.viewOnly:
+      case account?.type === CLIENT_ACCOUNT && !!account.viewOnly:
         return 'viewOnly';
       default:
         return 'adminOnly';
@@ -43,7 +43,7 @@ export const SyncSettings = () => {
   const [state, setState] = useState('none');
   const [type, setType] = useState(getValue());
 
-  if (account.type !== CLIENT_ACCOUNT) {
+  if (!account || account.type !== CLIENT_ACCOUNT) {
     return null;
   }
 

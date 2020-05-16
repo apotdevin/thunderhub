@@ -19,7 +19,7 @@ export const getIp = (req: any) => {
 };
 
 export const getCorrectAuth = (auth, contextAuth) => {
-  if (auth.host === SSO_ACCOUNT) {
+  if (auth.type === SSO_ACCOUNT) {
     return { ...contextAuth };
   } else {
     return { ...auth };

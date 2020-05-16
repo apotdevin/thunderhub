@@ -16,7 +16,7 @@ export const getAuthToken = {
   },
   resolve: async (_: undefined, params: any, context: ContextType) => {
     const { ip, secret } = context;
-    await requestLimiter(ip, 'setup');
+    await requestLimiter(ip, 'getAuthToken');
 
     if (!params.cookie) {
       return null;

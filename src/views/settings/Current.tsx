@@ -25,7 +25,7 @@ const CurrentField = styled.textarea`
 export const CurrentSettings = () => {
   const { account } = useAccountState();
 
-  if (account.type !== CLIENT_ACCOUNT) {
+  if (account?.type !== CLIENT_ACCOUNT) {
     return null;
   }
 

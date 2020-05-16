@@ -7,6 +7,8 @@ import {
   useAccountDispatch,
   CLIENT_ACCOUNT,
 } from 'src/context/AccountContext';
+import { useRouter } from 'next/router';
+import { appendBasePath } from 'src/utils/basePath';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { getAuthObj } from '../../utils/auth';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
@@ -27,6 +29,7 @@ const StyledTitle = styled(Title)`
 `;
 
 export const SessionLogin = () => {
+  const { push } = useRouter();
   const { account } = useAccountState();
   const dispatchAccount = useAccountDispatch();
 
@@ -48,8 +51,9 @@ export const SessionLogin = () => {
 
       dispatchAccount({ type: 'addSession', session: decrypted });
       dispatch({ type: 'connected' });
+      push(appendBasePath('/home'));
     }
-  }, [data, loading, dispatch, pass, account, dispatchAccount]);
+  }, [data, loading, dispatch, pass, account, dispatchAccount, push]);
 
   if (!account || account.type !== CLIENT_ACCOUNT) {
     return null;
