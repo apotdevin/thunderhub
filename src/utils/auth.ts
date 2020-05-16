@@ -3,7 +3,6 @@ import { v5 as uuidv5 } from 'uuid';
 import { SingleAccountProps } from 'src/context/AccountContext';
 import { saveAccounts } from './storage';
 
-export const SSO_USER = 'SSO_USER';
 const THUNDERHUB_NAMESPACE = '00000000-0000-0000-0000-000000000000';
 
 interface BuildProps {
@@ -20,28 +19,6 @@ export const getUUID = (text: string): string =>
 
 export const getAccountId = (host = '', viewOnly = '', admin = '', cert = '') =>
   getUUID(`${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`);
-
-interface SSOAuthProps {
-  accounts: SingleAccountProps[];
-}
-
-export const saveSSOUser = ({ accounts }: SSOAuthProps) => {
-  const filteredAccounts = accounts.filter(
-    account => account.host === SSO_USER
-  );
-
-  if (!filteredAccounts || filteredAccounts.length <= 0) {
-    saveAccounts([
-      ...accounts,
-      {
-        name: 'SSO Account',
-        id: getUUID(SSO_USER),
-        host: SSO_USER,
-        viewOnly: SSO_USER,
-      },
-    ]);
-  }
-};
 
 export const saveUserAuth = ({
   name = '',
@@ -64,9 +41,6 @@ export const saveUserAuth = ({
   const newAccounts = [...accounts, newAccount];
   saveAccounts(newAccounts);
 };
-
-export const saveSessionAuth = (sessionAdmin: string) =>
-  sessionStorage.setItem('session', sessionAdmin);
 
 export const getAuth = (account?: string) => {
   const accounts = JSON.parse(localStorage.getItem('accounts') || '[]');
@@ -200,26 +174,19 @@ export const getQRConfig = (json: string) => {
 export const getAuthObj = (
   host: string | undefined,
   viewOnly: string | undefined,
-  session: string | undefined,
+  admin: string | undefined,
   cert: string | undefined
 ): {} | undefined => {
   if (!host) {
     return undefined;
   }
-  if (host === SSO_USER) {
-    return {
-      host: SSO_USER,
-      macaroon: SSO_USER,
-      cert: SSO_USER,
-    };
-  }
-  if (!viewOnly && !session) {
+  if (!viewOnly && !admin) {
     return undefined;
   }
 
   return {
     host,
-    macaroon: viewOnly !== '' ? viewOnly : session,
+    macaroon: viewOnly && viewOnly !== '' ? viewOnly : admin,
     cert,
   };
 };

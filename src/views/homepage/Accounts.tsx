@@ -1,10 +1,15 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import { SSO_USER, getAuthObj, SERVER_USER } from 'src/utils/auth';
+import { getAuthObj } from 'src/utils/auth';
 import { Lock } from 'react-feather';
 import { chartColors } from 'src/styles/Themes';
-import { useAccount } from '../../context/AccountContext';
+import {
+  useAccountState,
+  CLIENT_ACCOUNT,
+  useAccountDispatch,
+  SSO_ACCOUNT,
+} from 'src/context/NewAccountContext';
 import { Section } from '../../components/section/Section';
 import { Card, SingleLine } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
@@ -20,9 +25,20 @@ const TypeText = styled.div`
   margin-right: 8px;
 `;
 
-export const Accounts = ({ change }: { change?: boolean }) => {
+export const Accounts = () => {
   const [newAccount, setNewAccount] = React.useState();
-  const { id, changeAccount, accounts } = useAccount();
+
+  const { session, accounts, activeAccount, account } = useAccountState();
+  const dispatch = useAccountDispatch();
+
+  const colorChange = account && account.type === CLIENT_ACCOUNT;
+
+  const change =
+    !session &&
+    account &&
+    account.type === CLIENT_ACCOUNT &&
+    account.admin !== '' &&
+    account.viewOnly === '';
 
   const [getCanConnect, { data, loading }] = useGetCanConnectLazyQuery({
     fetchPolicy: 'network-only',
@@ -33,13 +49,13 @@ export const Accounts = ({ change }: { change?: boolean }) => {
 
   React.useEffect(() => {
     if (!loading && data?.getNodeInfo && newAccount) {
-      changeAccount(newAccount);
+      dispatch({ type: 'changeAccount', changeId: newAccount });
     }
-  }, [data, loading, newAccount, changeAccount]);
+  }, [data, loading, newAccount, dispatch]);
 
   if (
     accounts.length <= 1 &&
-    accounts.filter(a => a.host === SSO_USER).length < 1
+    accounts.filter(a => a.type !== CLIENT_ACCOUNT).length < 1
   ) {
     return null;
   }
@@ -55,11 +71,11 @@ export const Accounts = ({ change }: { change?: boolean }) => {
   };
 
   const getTitle = account => {
-    const { host, name } = account;
-    if (host === SSO_USER || host === SERVER_USER) {
+    const { type, name } = account;
+    if (type !== CLIENT_ACCOUNT) {
       return (
         <div>
-          {host === SSO_USER ? 'SSO Account' : name}
+          {type === SSO_ACCOUNT ? 'SSO Account' : name}
           <LockPadding>
             <Lock color={chartColors.green} size={14} />
           </LockPadding>
@@ -70,14 +86,14 @@ export const Accounts = ({ change }: { change?: boolean }) => {
   };
 
   const getButtonTitle = (account): string => {
-    if (account.viewOnly || account.host === SSO_USER) {
+    if (account.viewOnly || account.type === SSO_ACCOUNT) {
       return 'Connect';
     }
     return 'Login';
   };
 
   const getArrow = (account): boolean => {
-    if (account.viewOnly || account.host === SSO_USER) {
+    if (account.viewOnly || account.type === SSO_ACCOUNT) {
       return false;
     }
     return true;
@@ -85,24 +101,24 @@ export const Accounts = ({ change }: { change?: boolean }) => {
 
   const handleClick = account => () => {
     const { id, viewOnly, cert, host } = account;
-    if (viewOnly || host === SSO_USER) {
+    if (viewOnly || host === SSO_ACCOUNT) {
       setNewAccount(id);
       getCanConnect({
         variables: { auth: getAuthObj(host, viewOnly, undefined, cert) },
       });
     } else {
-      changeAccount(id);
+      dispatch({ type: 'changeAccount', changeId: id });
     }
   };
 
   return (
     <Section withColor={false}>
-      <ConnectTitle change={change}>
-        {change ? 'Accounts' : 'Other Accounts'}
+      <ConnectTitle change={!colorChange}>
+        {!change ? 'Accounts' : 'Other Accounts'}
       </ConnectTitle>
       <Card>
         {accounts.map((account, index) => {
-          if (account.id === id && !change) {
+          if (account.id === activeAccount && !change) {
             return;
           }
           return (
@@ -110,7 +126,11 @@ export const Accounts = ({ change }: { change?: boolean }) => {
               <SingleLine>
                 {getTitle(account)}
                 <SingleLine>
-                  <TypeText>{isType(account.admin, account.viewOnly)}</TypeText>
+                  {account.type === CLIENT_ACCOUNT && (
+                    <TypeText>
+                      {isType(account.admin, account.viewOnly)}
+                    </TypeText>
+                  )}
                   <ColorButton
                     onClick={handleClick(account)}
                     arrow={getArrow(account)}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useAccountState } from 'src/context/NewAccountContext';
 import { Card, Separation } from '../../components/generic/Styled';
 import { Section } from '../../components/section/Section';
 import {
@@ -37,10 +38,13 @@ const Help = styled.div`
   }
 `;
 
-export const LoginBox = ({ change }: { change?: boolean }) => {
+export const LoginBox = () => {
   const [isType, setIsType] = useState('login');
   const [status, setStatus] = useState('none');
   const [help, setHelp] = useState(false);
+  const { accounts } = useAccountState();
+
+  const change = accounts.length <= 0;
 
   const renderButtons = () => (
     <>
@@ -138,9 +142,7 @@ export const LoginBox = ({ change }: { change?: boolean }) => {
 
   return (
     <Section withColor={false}>
-      <ConnectTitle change={change}>
-        {change ? 'Connect to your Node' : 'Connect to another Node'}
-      </ConnectTitle>
+      <ConnectTitle change={change}>Connect to your Node</ConnectTitle>
       <Card>
         {status === 'none' && (
           <>

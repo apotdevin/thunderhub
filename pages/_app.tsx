@@ -5,8 +5,10 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import Head from 'next/head';
-import { AuthSSOCheck } from 'src/components/authSSOCheck/AuthSSOCheck';
+import { AuthSSOCheck } from 'src/components/accounts/AuthSSOCheck';
 import { getUrlParam } from 'src/utils/url';
+import { ChatInit } from 'src/components/chat/ChatInit';
+import { ServerAccounts } from 'src/components/accounts/ServerAccounts';
 import { ContextProvider } from '../src/context/ContextProvider';
 import { useConfigState, ConfigProvider } from '../src/context/ConfigContext';
 import { GlobalStyles } from '../src/styles/GlobalStyle';
@@ -20,7 +22,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
 import { useStatusState } from '../src/context/StatusContext';
 import { ChatFetcher } from '../src/components/chat/ChatFetcher';
-import { ChatInit } from '../src/components/chat/ChatInit';
 import { parseCookies } from '../src/utils/cookies';
 
 toast.configure({ draggable: false, pauseOnFocusLoss: false });
@@ -80,6 +81,7 @@ const App = ({
       <ConfigProvider initialConfig={initialConfig}>
         <ContextProvider>
           <AuthSSOCheck cookieParam={cookieParam} />
+          <ServerAccounts />
           <Wrapper>
             <Component {...pageProps} />
           </Wrapper>

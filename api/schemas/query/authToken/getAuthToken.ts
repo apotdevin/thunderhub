@@ -1,9 +1,9 @@
 import { GraphQLString } from 'graphql';
 import getConfig from 'next/config';
 import jwt from 'jsonwebtoken';
-import { SSO_USER } from 'src/utils/auth';
 import { readCookie, refreshCookie } from 'api/helpers/fileHelpers';
 import { ContextType } from 'api/types/apiTypes';
+import { SSO_ACCOUNT } from 'src/context/NewAccountContext';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 
 const { serverRuntimeConfig } = getConfig();
@@ -28,6 +28,8 @@ export const getAuthToken = {
 
     const cookieFile = readCookie(cookiePath);
 
+    // console.log({ param: params.cookie, cookiePath, cookieFile });
+
     // refreshCookie(cookiePath);
 
     // console.log('Cookie in file: ', {
@@ -37,7 +39,7 @@ export const getAuthToken = {
     // });
 
     if (cookieFile === params.cookie) {
-      const token = jwt.sign({ user: SSO_USER }, secret);
+      const token = jwt.sign({ user: SSO_ACCOUNT }, secret);
 
       // console.log('Created token: ', { token });
       return token;

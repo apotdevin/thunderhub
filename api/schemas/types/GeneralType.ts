@@ -4,6 +4,9 @@ export const AuthType = new GraphQLInputObjectType({
   name: 'authType',
   fields: () => {
     return {
+      type: {
+        type: GraphQLString,
+      },
       host: {
         type: GraphQLString,
       },

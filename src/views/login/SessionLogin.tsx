@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { useAccount } from '../../context/AccountContext';
+import {
+  useAccountState,
+  useAccountDispatch,
+  CLIENT_ACCOUNT,
+} from 'src/context/NewAccountContext';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
-import { saveSessionAuth, getAuthObj } from '../../utils/auth';
+import { getAuthObj } from '../../utils/auth';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../components/input/Input';
 import { Section } from '../../components/section/Section';
@@ -23,7 +27,9 @@ const StyledTitle = styled(Title)`
 `;
 
 export const SessionLogin = () => {
-  const { name, host, admin, cert, refreshAccount } = useAccount();
+  const { account } = useAccountState();
+  const dispatchAccount = useAccountDispatch();
+
   const [pass, setPass] = useState('');
   const dispatch = useStatusDispatch();
 
@@ -36,23 +42,28 @@ export const SessionLogin = () => {
   });
 
   useEffect(() => {
-    if (!loading && data?.getNodeInfo) {
-      const bytes = CryptoJS.AES.decrypt(admin, pass);
+    if (!loading && data?.getNodeInfo && account.type === CLIENT_ACCOUNT) {
+      const bytes = CryptoJS.AES.decrypt(account.admin, pass);
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
 
-      saveSessionAuth(decrypted);
-      refreshAccount();
+      dispatchAccount({ type: 'addSession', session: decrypted });
       dispatch({ type: 'connected' });
     }
-  }, [data, loading, admin, dispatch, pass, refreshAccount]);
+  }, [data, loading, dispatch, pass, account, dispatchAccount]);
+
+  if (!account || account.type !== CLIENT_ACCOUNT) {
+    return null;
+  }
 
   const handleClick = () => {
     try {
-      const bytes = CryptoJS.AES.decrypt(admin, pass);
+      const bytes = CryptoJS.AES.decrypt(account.admin, pass);
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
 
       getCanConnect({
-        variables: { auth: getAuthObj(host, decrypted, undefined, cert) },
+        variables: {
+          auth: getAuthObj(account.host, decrypted, undefined, account.cert),
+        },
       });
     } catch (error) {
       toast.error('Wrong Password');
@@ -61,7 +72,7 @@ export const SessionLogin = () => {
 
   return (
     <Section withColor={false}>
-      <StyledTitle>{`Please Login (${name}):`}</StyledTitle>
+      <StyledTitle>{`Please Login (${account.name}):`}</StyledTitle>
       <Card cardPadding={'32px'} mobileCardPadding={'16px'}>
         <SingleLine>
           <Sub4Title>Password:</Sub4Title>
