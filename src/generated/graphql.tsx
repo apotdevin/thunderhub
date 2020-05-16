@@ -563,6 +563,7 @@ export type ServerAccountType = {
   __typename?: 'serverAccountType';
   name: Scalars['String'];
   id: Scalars['String'];
+  loggedIn: Scalars['Boolean'];
 };
 
 export type Mutation = {
@@ -1605,7 +1606,7 @@ export type GetServerAccountsQuery = { __typename?: 'Query' } & {
       Maybe<
         { __typename?: 'serverAccountType' } & Pick<
           ServerAccountType,
-          'name' | 'id'
+          'name' | 'id' | 'loggedIn'
         >
       >
     >
@@ -4478,6 +4479,7 @@ export const GetServerAccountsDocument = gql`
     getServerAccounts {
       name
       id
+      loggedIn
     }
   }
 `;

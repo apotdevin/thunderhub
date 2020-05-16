@@ -6,24 +6,11 @@ import {
   SSO_ACCOUNT,
 } from 'src/context/AccountContext';
 import { addIdAndTypeToAccount } from 'src/context/helpers/context';
-import { useConfigState } from 'src/context/ConfigContext';
 
 export const ServerAccounts = () => {
-  const { ssoVerified } = useConfigState();
   const dispatch = useAccountDispatch();
 
   const { data, loading } = useGetServerAccountsQuery();
-
-  React.useEffect(() => {
-    if (ssoVerified) {
-      dispatch({
-        type: 'addAccounts',
-        accountsToAdd: [
-          { name: 'SSO Account', id: SSO_ACCOUNT, type: SSO_ACCOUNT },
-        ],
-      });
-    }
-  }, [ssoVerified, dispatch]);
 
   React.useEffect(() => {
     const session = sessionStorage.getItem('session') || null;
@@ -37,10 +24,13 @@ export const ServerAccounts = () => {
 
   React.useEffect(() => {
     if (!loading && data?.getServerAccounts) {
-      const accountsToAdd = data.getServerAccounts.map(a => ({
-        ...a,
-        type: SERVER_ACCOUNT,
-      }));
+      const accountsToAdd = data.getServerAccounts.map(a => {
+        const type = a?.id === SSO_ACCOUNT ? SSO_ACCOUNT : SERVER_ACCOUNT;
+        return {
+          ...a,
+          type,
+        };
+      });
       dispatch({ type: 'addAccounts', accountsToAdd });
     }
   }, [loading, data, dispatch]);

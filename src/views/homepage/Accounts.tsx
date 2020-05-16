@@ -9,7 +9,11 @@ import {
   CLIENT_ACCOUNT,
   useAccountDispatch,
   SSO_ACCOUNT,
+  SERVER_ACCOUNT,
 } from 'src/context/AccountContext';
+import { useRouter } from 'next/router';
+import { appendBasePath } from 'src/utils/basePath';
+import { useStatusDispatch } from 'src/context/StatusContext';
 import { Section } from '../../components/section/Section';
 import { Card, SingleLine } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
@@ -26,6 +30,8 @@ const TypeText = styled.div`
 `;
 
 export const Accounts = () => {
+  const { push } = useRouter();
+  const dispatchStatus = useStatusDispatch();
   const [newAccount, setNewAccount] = React.useState();
 
   const { session, accounts, activeAccount, account } = useAccountState();
@@ -50,8 +56,10 @@ export const Accounts = () => {
   React.useEffect(() => {
     if (!loading && data?.getNodeInfo && newAccount) {
       dispatch({ type: 'changeAccount', changeId: newAccount });
+      dispatchStatus({ type: 'connected' });
+      push(appendBasePath('/home'));
     }
-  }, [data, loading, newAccount, dispatch]);
+  }, [data, loading, newAccount, dispatch, push, dispatchStatus]);
 
   if (
     accounts.length <= 1 &&
@@ -89,6 +97,9 @@ export const Accounts = () => {
     if (account.viewOnly || account.type === SSO_ACCOUNT) {
       return 'Connect';
     }
+    if (account.type === SERVER_ACCOUNT && account.loggedIn) {
+      return 'Connect';
+    }
     return 'Login';
   };
 
@@ -96,15 +107,28 @@ export const Accounts = () => {
     if (account.viewOnly || account.type === SSO_ACCOUNT) {
       return false;
     }
+    if (account.type === SERVER_ACCOUNT && account.loggedIn) {
+      return false;
+    }
     return true;
   };
 
   const handleClick = account => () => {
-    const { id, viewOnly, cert, host } = account;
-    if (viewOnly || host === SSO_ACCOUNT) {
+    const { id, viewOnly, cert, host, type, loggedIn } = account;
+    if (viewOnly) {
       setNewAccount(id);
       getCanConnect({
         variables: { auth: getAuthObj(host, viewOnly, undefined, cert) },
+      });
+    } else if (type === SSO_ACCOUNT) {
+      setNewAccount(id);
+      getCanConnect({
+        variables: { auth: { type: SSO_ACCOUNT } },
+      });
+    } else if (type === SERVER_ACCOUNT && loggedIn) {
+      setNewAccount(id);
+      getCanConnect({
+        variables: { auth: { type: SERVER_ACCOUNT } },
       });
     } else {
       dispatch({ type: 'changeAccount', changeId: id });

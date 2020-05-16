@@ -40,6 +40,7 @@ export type CompleteAccount =
       type: 'sso' | 'server';
       id: string;
       name: string;
+      loggedIn?: boolean;
     };
 
 type State = {

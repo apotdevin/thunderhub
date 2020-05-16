@@ -89,7 +89,11 @@ export const SessionLogin = () => {
     }
   }, [data, loading, dispatch, pass, account, dispatchAccount, push]);
 
-  if (!account || account.type === SSO_ACCOUNT) {
+  if (!account || account?.type === SSO_ACCOUNT) {
+    return null;
+  }
+
+  if (account?.type !== CLIENT_ACCOUNT && account.loggedIn) {
     return null;
   }
 

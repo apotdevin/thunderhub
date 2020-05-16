@@ -65,18 +65,21 @@ export const parseYaml = (filePath: string): AccountConfigType | null => {
 
 export const getAccounts = (filePath: string) => {
   if (filePath === '') {
+    logger.verbose('No account config file path provided');
     return null;
   }
 
   const accountConfig = parseYaml(filePath);
 
   if (!accountConfig) {
+    logger.verbose('No account config file found');
     return null;
   }
 
   const { masterPassword, accounts } = accountConfig;
 
   if (!accounts || accounts.length <= 0) {
+    logger.warn('Account config found but had no accounts');
     return null;
   }
 
@@ -89,15 +92,25 @@ export const getAccounts = (filePath: string) => {
         certificatePath,
         password,
       } = account;
+
       const missingFields = [];
       if (!name) missingFields.push('name');
       if (!serverUrl) missingFields.push('server url');
       if (!macaroonPath) missingFields.push('macaroon path');
+
       if (missingFields.length > 0) {
         const text = missingFields.join(', ');
         logger.error(`Account in index ${index} is missing the fields ${text}`);
         return null;
       }
+
+      if (!password && !masterPassword) {
+        logger.error(
+          `You must set a password for account ${name} or set a master password`
+        );
+        return null;
+      }
+
       if (!certificatePath)
         logger.warn(
           `No certificate for account ${name}. Make sure you don't need it to connect.`
@@ -130,6 +143,7 @@ export const getAccounts = (filePath: string) => {
 
 export const readMacaroons = (macaroonPath: string): string | null => {
   if (macaroonPath === '') {
+    logger.verbose('No macaroon path provided');
     return null;
   }
 
@@ -157,6 +171,7 @@ export const createDirectory = (dirname: string) => {
     const curDir = path.resolve(parentDir, childDir);
     try {
       if (!fs.existsSync(curDir)) {
+        logger.verbose(`Creating cookie directory at: ${curDir}`);
         fs.mkdirSync(curDir);
       }
     } catch (err) {
@@ -178,6 +193,7 @@ export const createDirectory = (dirname: string) => {
 
 export const readCookie = (cookieFile: string): string => {
   if (cookieFile === '') {
+    logger.verbose('No cookie path provided');
     return null;
   }
 
@@ -207,6 +223,7 @@ export const readCookie = (cookieFile: string): string => {
 
 export const refreshCookie = (cookieFile: string) => {
   try {
+    logger.verbose('Refreshing cookie for next authentication');
     fs.writeFileSync(cookieFile, crypto.randomBytes(64).toString('hex'));
   } catch (err) {
     logger.error('Something went wrong while refreshing cookie: \n' + err);

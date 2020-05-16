@@ -87,7 +87,7 @@ const apolloServer = new ApolloServer({
       secret,
       ssoVerified,
       account,
-      sso: { macaroon: ssoMacaroon, cert: ssoCert, host: lnServerUrl },
+      sso: { macaroon: ssoMacaroon, cert: ssoCert, host: lnServerUrl || null },
       accounts: accountConfig,
     };
 

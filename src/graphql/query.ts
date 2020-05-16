@@ -473,6 +473,7 @@ export const GET_SERVER_ACCOUNTS = gql`
     getServerAccounts {
       name
       id
+      loggedIn
     }
   }
 `;

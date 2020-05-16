@@ -335,5 +335,6 @@ export const ServerAccountType = new GraphQLObjectType({
   fields: () => ({
     name: { type: new GraphQLNonNull(GraphQLString) },
     id: { type: new GraphQLNonNull(GraphQLString) },
+    loggedIn: { type: new GraphQLNonNull(GraphQLBoolean) },
   }),
 });
