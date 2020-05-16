@@ -19,7 +19,7 @@ export const signMessage = {
   resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'signMessage');
 
-    const auth = getCorrectAuth(params.auth, context.sso);
+    const auth = getCorrectAuth(params.auth, context);
     const lnd = getAuthLnd(auth);
 
     try {

@@ -23,7 +23,7 @@ export const createAddress = {
   resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getAddress');
 
-    const auth = getCorrectAuth(params.auth, context.sso);
+    const auth = getCorrectAuth(params.auth, context);
     const lnd = getAuthLnd(auth);
 
     const format = params.nested ? 'np2wpkh' : 'p2wpkh';

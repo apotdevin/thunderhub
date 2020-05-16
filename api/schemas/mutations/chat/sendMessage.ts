@@ -25,7 +25,7 @@ export const sendMessage = {
   resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'sendMessage');
 
-    const auth = getCorrectAuth(params.auth, context.sso);
+    const auth = getCorrectAuth(params.auth, context);
     const lnd = getAuthLnd(auth);
 
     if (params.maxFee) {

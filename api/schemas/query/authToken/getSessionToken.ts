@@ -17,13 +17,21 @@ export const getSessionToken = {
 
     const account = context.accounts.find(a => a.id === params.id) || null;
 
-    console.log({ account });
     if (!account) return null;
 
     try {
       const bytes = AES.decrypt(account.macaroon, params.password);
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-      return jwt.sign({ password: decrypted }, secret);
+      const token = jwt.sign(
+        {
+          id: params.id,
+          macaroon: decrypted,
+          cert: account.cert,
+          host: account.host,
+        },
+        secret
+      );
+      return AES.encrypt(token, secret).toString();
     } catch (error) {
       throw new Error('Wrong password');
     }

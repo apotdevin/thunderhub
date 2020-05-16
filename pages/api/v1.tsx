@@ -13,6 +13,8 @@ import {
   getAccounts,
 } from 'api/helpers/fileHelpers';
 import { ContextType } from 'api/types/apiTypes';
+import AES from 'crypto-js/aes';
+import CryptoJS from 'crypto-js';
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 const { apiBaseUrl, nodeEnv } = publicRuntimeConfig;
@@ -24,10 +26,11 @@ const {
   accountConfigPath,
 } = serverRuntimeConfig;
 
-const secret =
-  nodeEnv === 'development'
-    ? '123456789'
-    : crypto.randomBytes(64).toString('hex');
+// const secret =
+//   nodeEnv === 'development'
+//     ? '123456789'
+//     : crypto.randomBytes(64).toString('hex');
+const secret = '123456789';
 
 const ssoMacaroon = readMacaroons(macaroonPath);
 const ssoCert = readFile(lnCertPath);
@@ -53,17 +56,29 @@ const apolloServer = new ApolloServer({
         jwt.verify(req.cookies.SSOAuth, secret);
         ssoVerified = true;
       } catch (error) {
-        logger.warn('Error verifying SSO authentication cookie');
+        logger.verbose('SSO authentication cookie failed');
       }
     }
 
-    let accountPassword = '';
+    let account = null;
     if (req?.cookies?.AccountAuth) {
       try {
-        const account = jwt.verify(req.cookies.AccountAuth, secret);
-        accountPassword = account['password'] || '';
+        const bytes = AES.decrypt(req.cookies.AccountAuth, secret);
+        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+        const cookieAccount = jwt.verify(decrypted, secret);
+        const accountId = cookieAccount['id'] || '';
+        const accountMacaroon = cookieAccount['macaroon'] || '';
+        const accountCert = cookieAccount['cert'] || '';
+        const accountHost = cookieAccount['host'] || '';
+
+        account = {
+          id: accountId,
+          host: accountHost,
+          cert: accountCert,
+          macaroon: accountMacaroon,
+        };
       } catch (error) {
-        logger.warn('Error verifying account authentication cookie');
+        logger.verbose('Account authentication cookie failed');
       }
     }
 
@@ -71,7 +86,7 @@ const apolloServer = new ApolloServer({
       ip,
       secret,
       ssoVerified,
-      accountPassword,
+      account,
       sso: { macaroon: ssoMacaroon, cert: ssoCert, host: lnServerUrl },
       accounts: accountConfig,
     };

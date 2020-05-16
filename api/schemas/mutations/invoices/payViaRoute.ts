@@ -19,7 +19,7 @@ export const payViaRoute = {
   resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'payViaRoute');
 
-    const auth = getCorrectAuth(params.auth, context.sso);
+    const auth = getCorrectAuth(params.auth, context);
     const lnd = getAuthLnd(auth);
 
     let route;

@@ -25,7 +25,7 @@ export const updateFees = {
 
     const { transactionId, transactionVout, baseFee, feeRate } = params;
 
-    const auth = getCorrectAuth(params.auth, context.sso);
+    const auth = getCorrectAuth(params.auth, context);
     const lnd = getAuthLnd(auth);
 
     if (!baseFee && !feeRate) {

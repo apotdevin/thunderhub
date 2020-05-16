@@ -1,6 +1,7 @@
 import { authenticatedLndGrpc } from 'ln-service';
 import getConfig from 'next/config';
-import { SSO_ACCOUNT } from 'src/context/AccountContext';
+import { SSO_ACCOUNT, SERVER_ACCOUNT } from 'src/context/AccountContext';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from './logger';
 
 const { serverRuntimeConfig } = getConfig();
@@ -18,12 +19,24 @@ export const getIp = (req: any) => {
   return ip;
 };
 
-export const getCorrectAuth = (auth, contextAuth) => {
-  if (auth.type === SSO_ACCOUNT) {
-    return { ...contextAuth };
-  } else {
-    return { ...auth };
+export const getCorrectAuth = (auth, context: ContextType) => {
+  if (auth.type === SERVER_ACCOUNT) {
+    const { account } = context;
+    if (!account) return {};
+
+    const foundAccount = context.accounts.find(a => a.id === account.id);
+    if (!foundAccount) return {};
+
+    return {
+      host: account.host,
+      macaroon: account.macaroon,
+      cert: account.cert,
+    };
   }
+  if (auth.type === SSO_ACCOUNT) {
+    return { ...context.sso };
+  }
+  return { ...auth };
 };
 
 export const getAuthLnd = (auth: {

@@ -27,7 +27,7 @@ export const getChainBalance = {
   resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'chainBalance');
 
-    const auth = getCorrectAuth(params.auth, context.sso);
+    const auth = getCorrectAuth(params.auth, context);
     const lnd = getAuthLnd(auth);
 
     try {
@@ -48,7 +48,7 @@ export const getPendingChainBalance = {
   resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'pendingChainBalance');
 
-    const auth = getCorrectAuth(params.auth, context.sso);
+    const auth = getCorrectAuth(params.auth, context);
     const lnd = getAuthLnd(auth);
 
     try {
