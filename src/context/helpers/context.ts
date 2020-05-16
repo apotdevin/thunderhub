@@ -3,6 +3,7 @@ import {
   CompleteAccount,
   AccountProps,
   CLIENT_ACCOUNT,
+  AuthType,
 } from '../NewAccountContext';
 
 export const getAccountById = (id: string, accounts: CompleteAccount[]) => {
@@ -29,8 +30,7 @@ export const deleteAccountById = (
 
   let activeId: string | null = currentId;
   if (currentId === id) {
-    sessionStorage.removeItem('session');
-    activeId = newAccounts[0].id;
+    activeId = null;
   }
 
   return { accounts: newAccounts, id: activeId };
@@ -44,5 +44,28 @@ export const addIdAndTypeToAccount = (
     ...account,
     type: CLIENT_ACCOUNT,
     id: getUUID(`${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`),
+  };
+};
+
+export const getAuthFromAccount = (
+  account: CompleteAccount,
+  session?: string
+): AuthType => {
+  if (account.type !== CLIENT_ACCOUNT) {
+    return {
+      type: account.type,
+    };
+  }
+  const { host, viewOnly, cert } = account;
+  if (!host) {
+    return null;
+  }
+  if (!viewOnly && !session) {
+    return null;
+  }
+  return {
+    host,
+    macaroon: viewOnly && viewOnly !== '' ? viewOnly : session,
+    cert,
   };
 };

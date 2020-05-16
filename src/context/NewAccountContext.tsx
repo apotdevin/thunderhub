@@ -3,6 +3,7 @@ import {
   getAccountById,
   deleteAccountById,
   addIdAndTypeToAccount,
+  getAuthFromAccount,
 } from './helpers/context';
 
 export type SERVER_ACCOUNT_TYPE = 'sso' | 'server';
@@ -20,6 +21,16 @@ export type AccountProps = {
   cert: string;
 };
 
+export type AuthType =
+  | {
+      host: string;
+      macaroon: string;
+      cert: string | null;
+    }
+  | {
+      type: SERVER_ACCOUNT_TYPE;
+    };
+
 export type CompleteAccount =
   | ({
       type: 'client';
@@ -32,6 +43,7 @@ export type CompleteAccount =
     };
 
 type State = {
+  auth: AuthType | null;
   activeAccount: string | null;
   session: string | null;
   account: CompleteAccount | null;
@@ -68,6 +80,7 @@ const StateContext = React.createContext<State | undefined>(undefined);
 const DispatchContext = React.createContext<Dispatch | undefined>(undefined);
 
 const initialState: State = {
+  auth: null,
   session: null,
   activeAccount: null,
   account: null,
@@ -78,10 +91,14 @@ const stateReducer = (state: State, action: ActionType): State => {
   switch (action.type) {
     case 'changeAccount': {
       const { account, id } = getAccountById(action.changeId, state.accounts);
+      const auth = getAuthFromAccount(account);
+
       localStorage.setItem('active', `${id}`);
       sessionStorage.removeItem('session');
+
       return {
         ...state,
+        auth,
         session: null,
         account,
         activeAccount: id,
@@ -97,10 +114,11 @@ const stateReducer = (state: State, action: ActionType): State => {
         state.accounts
       );
       localStorage.setItem('accounts', JSON.stringify(accounts));
+      !id && sessionStorage.removeItem('session');
       return {
         ...state,
         accounts,
-        ...(id && { activeId: id, session: null }),
+        ...(!id && { activeId: null, session: null, account: null }),
       };
     }
     case 'addAccounts': {
@@ -137,12 +155,14 @@ const stateReducer = (state: State, action: ActionType): State => {
       sessionStorage.setItem('session', action.session);
       return {
         ...state,
+        auth: getAuthFromAccount(state.account, action.session),
         session: action.session,
       };
     case 'removeSession':
       sessionStorage.removeItem('session');
       return {
         ...state,
+        auth: getAuthFromAccount(state.account),
         session: null,
       };
     case 'deleteAll':

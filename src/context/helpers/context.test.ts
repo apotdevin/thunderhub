@@ -51,7 +51,7 @@ describe('Context Helpers', () => {
     test('account exists and is current account', () => {
       const { accounts, id } = deleteAccountById('123', '123', testAccounts);
 
-      expect(id).toBe('1234');
+      expect(id).toBe(null);
       expect(accounts).toStrictEqual([secondAccount]);
     });
     test('account does not exists', () => {
