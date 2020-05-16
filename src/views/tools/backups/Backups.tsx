@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAccountState } from 'src/context/AccountContext';
 import {
   CardWithTitle,
   CardTitle,
@@ -17,9 +18,10 @@ import { RecoverFunds } from './RecoverFunds';
 
 export const BackupsView = () => {
   const [lastDate, setLastDate] = useState('');
+  const { account } = useAccountState();
 
   useEffect(() => {
-    const date = localStorage.getItem('lastBackup');
+    const date = localStorage.getItem(`lastBackup-${account.id}`);
     setLastDate(date);
   }, []);
 

@@ -1,88 +1,13 @@
 import base64url from 'base64url';
 import { v5 as uuidv5 } from 'uuid';
-import { SingleAccountProps } from 'src/context/AccountContext';
-import { saveAccounts } from './storage';
 
 const THUNDERHUB_NAMESPACE = '00000000-0000-0000-0000-000000000000';
-
-interface BuildProps {
-  name?: string;
-  host: string;
-  admin?: string;
-  viewOnly?: string;
-  cert?: string;
-  accounts: SingleAccountProps[];
-}
 
 export const getUUID = (text: string): string =>
   uuidv5(text, THUNDERHUB_NAMESPACE);
 
 export const getAccountId = (host = '', viewOnly = '', admin = '', cert = '') =>
   getUUID(`${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`);
-
-export const saveUserAuth = ({
-  name = '',
-  host,
-  admin = '',
-  viewOnly = '',
-  cert = '',
-  accounts,
-}: BuildProps) => {
-  const id = getAccountId(host, viewOnly, admin, cert);
-  const newAccount = {
-    name,
-    host,
-    admin,
-    viewOnly,
-    cert,
-    id,
-  };
-
-  const newAccounts = [...accounts, newAccount];
-  saveAccounts(newAccounts);
-};
-
-export const getAuth = (account?: string) => {
-  const accounts = JSON.parse(localStorage.getItem('accounts') || '[]');
-  const currentActive = Math.max(
-    Number(account ?? (localStorage.getItem('active') || '0')),
-    0
-  );
-
-  const accountsLength = accounts.length;
-
-  const active =
-    accountsLength > 0 && currentActive >= accountsLength ? 0 : currentActive;
-
-  const defaultAccount = {
-    name: '',
-    host: '',
-    admin: '',
-    viewOnly: '',
-    cert: '',
-    id: '',
-  };
-
-  const activeAccount =
-    accountsLength > 0 && active < accountsLength
-      ? accounts[active]
-      : defaultAccount;
-
-  const { name, host, admin, viewOnly, cert, id } = activeAccount;
-
-  const currentId =
-    id ?? getUUID(`${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`);
-
-  return {
-    name,
-    host,
-    admin,
-    viewOnly,
-    cert,
-    id: currentId,
-    accounts,
-  };
-};
 
 export const getAuthLnd = (lndconnect: string) => {
   const auth = lndconnect.replace('lndconnect', 'https');

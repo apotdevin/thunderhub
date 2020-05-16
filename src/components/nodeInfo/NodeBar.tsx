@@ -2,7 +2,7 @@ import * as React from 'react';
 import { HelpCircle } from 'react-feather';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
-import { useAccountState } from 'src/context/AccountContext';
+import { useAccountState, CLIENT_ACCOUNT } from 'src/context/AccountContext';
 import { CardWithTitle, SubTitle } from '../generic/Styled';
 import { useConfigState } from '../../context/ConfigContext';
 import { getTooltipType } from '../generic/helpers';
@@ -25,7 +25,9 @@ export const NodeBar = () => {
 
   const tooltipType: any = getTooltipType(theme);
 
-  const viewOnlyAccounts = accounts.filter(account => account.viewOnly !== '');
+  const viewOnlyAccounts = accounts.filter(
+    account => account.type === CLIENT_ACCOUNT && account.viewOnly !== ''
+  );
 
   const handleScroll = (decrease?: boolean) => {
     if (slider.current !== null) {

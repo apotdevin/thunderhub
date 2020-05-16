@@ -8,7 +8,7 @@ import { ColorButton } from '../../../components/buttons/colorButton/ColorButton
 import { useGetBackupsLazyQuery } from '../../../generated/graphql';
 
 export const DownloadBackups = () => {
-  const { name, auth } = useAccountState();
+  const { account, auth } = useAccountState();
 
   const [getBackups, { data, loading }] = useGetBackupsLazyQuery({
     variables: { auth },
@@ -17,11 +17,11 @@ export const DownloadBackups = () => {
 
   useEffect(() => {
     if (!loading && data && data.getBackups) {
-      saveToPc(data.getBackups, `Backup-${name}`);
-      localStorage.setItem('lastBackup', new Date().toString());
+      saveToPc(data.getBackups, `ChannelBackup-${account.name}-${account.id}`);
+      localStorage.setItem(`lastBackup-${account.id}`, new Date().toString());
       toast.success('Downloaded');
     }
-  }, [data, loading, name]);
+  }, [data, loading, account]);
 
   return (
     <SingleLine>

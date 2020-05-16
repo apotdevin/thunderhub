@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAccountState } from 'src/context/AccountContext';
+import { useAccountState, CLIENT_ACCOUNT } from 'src/context/AccountContext';
 import {
   CardWithTitle,
   SubTitle,
@@ -22,7 +22,9 @@ export const InterfaceSettings = () => {
 
   const { accounts } = useAccountState();
 
-  const viewOnlyAccounts = accounts.filter(account => account.viewOnly !== '');
+  const viewOnlyAccounts = accounts.filter(
+    account => account.type === CLIENT_ACCOUNT && account.viewOnly !== ''
+  );
 
   const renderButton = (
     title: string,

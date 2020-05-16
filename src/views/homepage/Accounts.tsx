@@ -9,7 +9,7 @@ import {
   CLIENT_ACCOUNT,
   useAccountDispatch,
   SSO_ACCOUNT,
-} from 'src/context/NewAccountContext';
+} from 'src/context/AccountContext';
 import { Section } from '../../components/section/Section';
 import { Card, SingleLine } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';

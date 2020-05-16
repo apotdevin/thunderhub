@@ -42,7 +42,7 @@ export const SecureWrapper: React.FC<SecureButtonProps> = ({
         <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
           <LoginModal
             color={color}
-            macaroon={admin}
+            macaroon={account.admin}
             setModalOpen={setModalOpen}
             callback={callback}
             variables={variables}

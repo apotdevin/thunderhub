@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { X } from 'react-feather';
 import { useRouter } from 'next/router';
-import { useAccountState } from 'src/context/AccountContext';
+import {
+  useAccountState,
+  useAccountDispatch,
+} from 'src/context/AccountContext';
 import {
   CardWithTitle,
   SubTitle,
@@ -25,10 +28,11 @@ export const AccountSettings = () => {
   const [status, setStatus] = useState('none');
 
   const { push } = useRouter();
-  const { id, changeAccount, accounts } = useAccountState();
+  const { account, accounts } = useAccountState();
 
   const dispatch = useStatusDispatch();
   const dispatchChat = useChatDispatch();
+  const dispatchAccount = useAccountDispatch();
 
   const [isType, setIsType] = useState('login');
   const [willAdd, setWillAdd] = useState(false);
@@ -78,12 +82,15 @@ export const AccountSettings = () => {
             return (
               <SingleButton
                 key={accountId}
-                selected={accountId === id}
+                selected={accountId === account.id}
                 onClick={() => {
-                  if (accountId !== id) {
+                  if (accountId !== account.id) {
                     dispatch({ type: 'disconnected' });
                     dispatchChat({ type: 'disconnected' });
-                    changeAccount(accountId);
+                    dispatchAccount({
+                      type: 'changeAccount',
+                      changeId: accountId,
+                    });
                     push(appendBasePath('/'));
                   }
                 }}

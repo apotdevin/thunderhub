@@ -22,12 +22,7 @@ export const VerifyMessage = () => {
   const [isPasting, setIsPasting] = useState<boolean>(false);
   const [signedBy, setSignedBy] = useState<string>('');
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccountState();
-  const auth = {
-    host,
-    cert,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-  };
+  const { auth } = useAccountState();
 
   const [signMessage, { data, loading }] = useVerifyMessageLazyQuery({
     onError: error => toast.error(getErrorContent(error)),

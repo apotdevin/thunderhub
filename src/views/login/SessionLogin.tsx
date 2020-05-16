@@ -6,7 +6,7 @@ import {
   useAccountState,
   useAccountDispatch,
   CLIENT_ACCOUNT,
-} from 'src/context/NewAccountContext';
+} from 'src/context/AccountContext';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { getAuthObj } from '../../utils/auth';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/NewAccountContext';
+import { useAccountState } from 'src/context/AccountContext';
+import { InvoiceCard } from 'src/views/transactions/InvoiceCard';
 import {
   Card,
   CardWithTitle,
   SubTitle,
 } from '../src/components/generic/Styled';
-import { InvoiceCard } from '../ssrc/context/AccountContextCard';
 import { getErrorContent } from '../src/utils/error';
 import { PaymentsCard } from '../src/views/transactions/PaymentsCards';
 import { LoadingCard } from '../src/components/loading/LoadingCard';

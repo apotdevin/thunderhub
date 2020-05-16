@@ -3,7 +3,11 @@ import styled from 'styled-components';
 import { AlertCircle } from 'react-feather';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
-import { useAccountState } from 'src/context/AccountContext';
+import {
+  useAccountState,
+  useAccountDispatch,
+  CLIENT_ACCOUNT,
+} from 'src/context/AccountContext';
 import {
   Card,
   CardWithTitle,
@@ -67,53 +71,39 @@ export const FixedWidth = styled.div`
 `;
 
 export const DangerView = () => {
-  const {
-    deleteAccount,
-    refreshAccount,
-    changeAccount,
-    accounts,
-    admin,
-    viewOnly,
-    id,
-  } = useAccountState();
+  const { account, accounts } = useAccountState();
+
+  const clientAccounts = accounts.filter(a => a.type === CLIENT_ACCOUNT);
 
   const dispatch = useStatusDispatch();
   const chatDispatch = useChatDispatch();
+  const dispatchAccount = useAccountDispatch();
 
   const { push } = useRouter();
-
-  if (accounts.length <= 0) {
-    return null;
-  }
 
   const handleDeleteAll = () => {
     dispatch({ type: 'disconnected' });
     chatDispatch({ type: 'disconnected' });
+    dispatchAccount({ type: 'deleteAll' });
     deleteStorage();
-    refreshAccount();
     Cookies.remove('config');
     push(appendBasePath('/'));
   };
 
-  const handleDelete = (admin?: boolean) => {
-    deleteAccountPermissions(id, accounts, admin);
-    dispatch({ type: 'disconnected' });
-    chatDispatch({ type: 'disconnected' });
-    changeAccount(id);
-    push(appendBasePath('/'));
-  };
-
   const renderButton = () => {
-    if (accounts.length > 1) {
+    if (clientAccounts.length > 1) {
       return (
         <MultiButton>
-          {accounts.map(({ name: accountName, id: accountId }) => {
+          {clientAccounts.map(({ name: accountName, id: accountId }) => {
             return (
               <SingleButton
                 key={accountId}
                 color={'red'}
                 onClick={() => {
-                  deleteAccount(accountId);
+                  dispatchAccount({
+                    type: 'deleteAccount',
+                    changeId: accountId,
+                  });
                 }}
               >
                 {accountName}
@@ -123,10 +113,10 @@ export const DangerView = () => {
         </MultiButton>
       );
     }
-    if (accounts.length === 1) {
+    if (clientAccounts.length === 1) {
       return (
         <ColorButton color={'red'} onClick={handleDeleteAll}>
-          {accounts[0].name}
+          {clientAccounts[0].name}
         </ColorButton>
       );
     }
@@ -138,8 +128,25 @@ export const DangerView = () => {
       <SettingsLine>
         <Sub4Title>Change Permissions</Sub4Title>
         <MultiButton>
-          <SingleButton onClick={() => handleDelete()}>View-Only</SingleButton>
-          <SingleButton onClick={() => handleDelete(true)}>
+          <SingleButton
+            onClick={() =>
+              dispatchAccount({
+                type: 'changePermission',
+                changeId: account.id,
+                changeToViewOnly: true,
+              })
+            }
+          >
+            View-Only
+          </SingleButton>
+          <SingleButton
+            onClick={() =>
+              dispatchAccount({
+                type: 'changePermission',
+                changeId: account.id,
+              })
+            }
+          >
             Admin-Only
           </SingleButton>
         </MultiButton>
@@ -151,11 +158,16 @@ export const DangerView = () => {
     <CardWithTitle>
       <SubTitle>Danger Zone</SubTitle>
       <OutlineCard>
-        {admin && viewOnly && renderSwitch()}
-        <SettingsLine>
-          <Sub4Title>Delete Account:</Sub4Title>
-          {renderButton()}
-        </SettingsLine>
+        {account.type === CLIENT_ACCOUNT &&
+          account.admin &&
+          account.viewOnly &&
+          renderSwitch()}
+        {clientAccounts.length <= 0 && (
+          <SettingsLine>
+            <Sub4Title>Delete Account:</Sub4Title>
+            {renderButton()}
+          </SettingsLine>
+        )}
         <SettingsLine>
           <Sub4Title>Delete all Accounts and Settings:</Sub4Title>
           <ButtonRow>

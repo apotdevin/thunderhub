@@ -3,6 +3,7 @@ import { useGetAuthTokenQuery } from 'src/generated/graphql';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { useAccountState } from 'src/context/AccountContext';
+import { appendBasePath } from 'src/utils/basePath';
 
 type AuthCheckProps = {
   cookieParam: string | null;
@@ -23,7 +24,7 @@ export const AuthSSOCheck = ({ cookieParam }: AuthCheckProps) => {
       Cookies.set('SSOAuth', data.getAuthToken, {
         sameSite: 'strict',
       });
-      push('/');
+      push(appendBasePath('/'));
     }
   }, [query, push, data, loading, cookieParam, accounts]);
 

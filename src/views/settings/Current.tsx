@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useAccountState } from 'src/context/AccountContext';
+import { useAccountState, CLIENT_ACCOUNT } from 'src/context/AccountContext';
 import {
   CardWithTitle,
   SubTitle,
@@ -23,7 +23,13 @@ const CurrentField = styled.textarea`
 `;
 
 export const CurrentSettings = () => {
-  const { name, host, admin, viewOnly, cert } = useAccountState();
+  const { account } = useAccountState();
+
+  if (account.type !== CLIENT_ACCOUNT) {
+    return null;
+  }
+
+  const { name, host, viewOnly, admin, cert } = account;
 
   const renderField = (title: string, field: string | null, rows?: number) => {
     if (!field) return null;

@@ -217,6 +217,7 @@ export type ChannelBalanceType = {
 };
 
 export type AuthType = {
+  type?: Maybe<Scalars['String']>;
   host?: Maybe<Scalars['String']>;
   macaroon?: Maybe<Scalars['String']>;
   cert?: Maybe<Scalars['String']>;

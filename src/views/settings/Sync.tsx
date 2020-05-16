@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X } from 'react-feather';
 import QRCode from 'qrcode.react';
 import styled from 'styled-components';
-import { useAccountState } from 'src/context/AccountContext';
+import { useAccountState, CLIENT_ACCOUNT } from 'src/context/AccountContext';
 import {
   CardWithTitle,
   SubTitle,
@@ -29,11 +29,11 @@ const QRWrapper = styled.div`
 `;
 
 export const SyncSettings = () => {
-  const { name, host, admin, viewOnly, cert } = useAccountState();
+  const { account } = useAccountState();
 
   const getValue = () => {
     switch (true) {
-      case !!viewOnly:
+      case account.type === CLIENT_ACCOUNT && !!account.viewOnly:
         return 'viewOnly';
       default:
         return 'adminOnly';
@@ -42,6 +42,12 @@ export const SyncSettings = () => {
 
   const [state, setState] = useState('none');
   const [type, setType] = useState(getValue());
+
+  if (account.type !== CLIENT_ACCOUNT) {
+    return null;
+  }
+
+  const { viewOnly, admin, host, cert } = account;
 
   const getObject = () => {
     switch (type) {
