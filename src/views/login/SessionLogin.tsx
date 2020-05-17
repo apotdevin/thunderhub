@@ -14,6 +14,7 @@ import { appendBasePath } from 'src/utils/basePath';
 import Cookies from 'js-cookie';
 import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { useGetSessionTokenLazyQuery } from 'src/graphql/queries/__generated__/getSessionToken.generated';
+import { getAuthFromAccount } from 'src/context/helpers/context';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { getAuthObj } from '../../utils/auth';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
@@ -66,11 +67,11 @@ export const SessionLogin = () => {
       });
       getCanConnect({
         variables: {
-          auth: { type: SERVER_ACCOUNT },
+          auth: getAuthFromAccount(account),
         },
       });
     }
-  }, [sLoading, sData, push, getCanConnect]);
+  }, [sLoading, sData, push, getCanConnect, account]);
 
   useEffect(() => {
     if (!loading && data?.getNodeInfo && account.type === SERVER_ACCOUNT) {

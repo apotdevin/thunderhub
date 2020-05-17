@@ -123,12 +123,12 @@ export const Accounts = () => {
     } else if (type === SSO_ACCOUNT) {
       setNewAccount(id);
       getCanConnect({
-        variables: { auth: { type: SSO_ACCOUNT } },
+        variables: { auth: { type: SSO_ACCOUNT, id } },
       });
     } else if (type === SERVER_ACCOUNT && loggedIn) {
       setNewAccount(id);
       getCanConnect({
-        variables: { auth: { type: SERVER_ACCOUNT } },
+        variables: { auth: { type: SERVER_ACCOUNT, id } },
       });
     } else {
       dispatch({ type: 'changeAccount', changeId: id });
