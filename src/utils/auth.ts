@@ -103,10 +103,10 @@ export const getAuthObj = (
   cert: string | undefined
 ): {} | undefined => {
   if (!host) {
-    return undefined;
+    return null;
   }
   if (!viewOnly && !admin) {
-    return undefined;
+    return null;
   }
 
   return {

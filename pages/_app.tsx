@@ -93,11 +93,8 @@ const App = ({
 
 App.getInitialProps = async props => {
   const cookieParam = getUrlParam(props.router?.query?.token);
-
   const cookies = parseCookies(props.ctx.req);
-
-  const ssoVerified = !!cookies?.['SSOAuth'];
-  const defaultState = { ssoVerified };
+  const defaultState = {};
 
   if (!cookies?.config) {
     return { initialConfig: {}, ...defaultState };

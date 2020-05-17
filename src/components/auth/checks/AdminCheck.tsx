@@ -17,7 +17,7 @@ export const AdminCheck = ({ host, admin, cert, setChecked }: AdminProps) => {
   const { data, loading } = useGetCanAdminQuery({
     fetchPolicy: 'network-only',
     skip: !admin,
-    variables: { auth: getAuthObj(host, undefined, admin, cert) },
+    variables: { auth: getAuthObj(host, null, admin, cert) },
     onError: () => {
       setChecked(false);
     },

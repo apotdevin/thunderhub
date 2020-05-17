@@ -118,7 +118,7 @@ export const Accounts = () => {
     if (viewOnly) {
       setNewAccount(id);
       getCanConnect({
-        variables: { auth: getAuthObj(host, viewOnly, undefined, cert) },
+        variables: { auth: getAuthObj(host, viewOnly, null, cert) },
       });
     } else if (type === SSO_ACCOUNT) {
       setNewAccount(id);

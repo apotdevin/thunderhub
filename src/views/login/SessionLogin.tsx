@@ -105,7 +105,7 @@ export const SessionLogin = () => {
 
         getCanConnect({
           variables: {
-            auth: getAuthObj(account.host, decrypted, undefined, account.cert),
+            auth: getAuthObj(account.host, decrypted, null, account.cert),
           },
         });
       } catch (error) {

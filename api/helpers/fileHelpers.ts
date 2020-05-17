@@ -93,7 +93,7 @@ export const getAccounts = (filePath: string) => {
         password,
       } = account;
 
-      const missingFields = [];
+      const missingFields: string[] = [];
       if (!name) missingFields.push('name');
       if (!serverUrl) missingFields.push('server url');
       if (!macaroonPath) missingFields.push('macaroon path');
@@ -191,7 +191,7 @@ export const createDirectory = (dirname: string) => {
   }, initDir);
 };
 
-export const readCookie = (cookieFile: string): string => {
+export const readCookie = (cookieFile: string): string | null => {
   if (cookieFile === '') {
     logger.verbose('No cookie path provided');
     return null;

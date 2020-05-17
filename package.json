@@ -25,7 +25,8 @@
     "build:32": "docker build --no-cache -f arm32v7.Dockerfile -t apotdevin/thunderhub:test-arm32v7 .",
     "build:64": "docker build -f arm64v8.Dockerfile -t apotdevin/thunderhub:test-arm64v8 .",
     "build:manifest": "docker manifest create apotdevin/thunderhub:test apotdevin/thunderhub:test-amd64 apotdevin/thunderhub:test-arm32v7 apotdevin/thunderhub:test-arm64v8",
-    "upgrade-latest": "yarn upgrade-interactive --latest"
+    "upgrade-latest": "yarn upgrade-interactive --latest",
+    "tsc": "tsc"
   },
   "keywords": [],
   "author": "",

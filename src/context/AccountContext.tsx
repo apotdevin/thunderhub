@@ -23,12 +23,14 @@ export type AccountProps = {
 
 export type AuthType =
   | {
+      type: ACCOUNT_TYPE;
       host: string;
       macaroon: string;
       cert: string | null;
     }
   | {
       type: SERVER_ACCOUNT_TYPE;
+      id: string;
     };
 
 export type CompleteAccount =

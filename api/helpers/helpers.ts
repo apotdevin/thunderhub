@@ -1,11 +1,22 @@
 import { authenticatedLndGrpc } from 'ln-service';
 import getConfig from 'next/config';
-import { SSO_ACCOUNT, SERVER_ACCOUNT } from 'src/context/AccountContext';
+import {
+  SSO_ACCOUNT,
+  SERVER_ACCOUNT,
+  AuthType,
+  CLIENT_ACCOUNT,
+} from 'src/context/AccountContext';
 import { ContextType } from 'api/types/apiTypes';
 import { logger } from './logger';
 
 const { serverRuntimeConfig } = getConfig();
 const { nodeEnv } = serverRuntimeConfig;
+
+type LndAuthType = {
+  cert: string;
+  macaroon: string;
+  host: string;
+};
 
 export const getIp = (req: any) => {
   if (!req || !req.headers) {
@@ -19,31 +30,33 @@ export const getIp = (req: any) => {
   return ip;
 };
 
-export const getCorrectAuth = (auth, context: ContextType) => {
+export const getCorrectAuth = (
+  auth: AuthType,
+  context: ContextType
+): LndAuthType => {
   if (auth.type === SERVER_ACCOUNT) {
     const { account } = context;
-    if (!account) return {};
+    if (!account || account.id !== auth.id)
+      throw new Error('This account is not authenticated');
 
     const foundAccount = context.accounts.find(a => a.id === account.id);
-    if (!foundAccount) return {};
+    if (!foundAccount) throw new Error('This account does not exist');
 
-    return {
-      host: account.host,
-      macaroon: account.macaroon,
-      cert: account.cert,
-    };
+    return account;
   }
   if (auth.type === SSO_ACCOUNT) {
+    if (!context.ssoVerified)
+      throw new Error('This account is not authenticated');
     return { ...context.sso };
   }
-  return { ...auth };
+  if (auth.type === CLIENT_ACCOUNT) {
+    const { host, macaroon, cert } = auth;
+    return { host, macaroon, cert };
+  }
+  throw new Error('This account type does not exist');
 };
 
-export const getAuthLnd = (auth: {
-  cert: string;
-  macaroon: string;
-  host: string;
-}) => {
+export const getAuthLnd = (auth: LndAuthType) => {
   const cert = auth.cert || '';
   const macaroon = auth.macaroon || '';
   const socket = auth.host || '';

@@ -16,7 +16,6 @@ import {
   SimpleButton,
   Sub4Title,
 } from '../../components/generic/Styled';
-import { deleteStorage, deleteAccountPermissions } from '../../utils/storage';
 import { textColor, fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
@@ -73,6 +72,7 @@ export const FixedWidth = styled.div`
 export const DangerView = () => {
   const { account, accounts } = useAccountState();
 
+  const clientAccount = account.type === CLIENT_ACCOUNT ? account : null;
   const clientAccounts = accounts.filter(a => a.type === CLIENT_ACCOUNT);
 
   const dispatch = useStatusDispatch();
@@ -81,11 +81,16 @@ export const DangerView = () => {
 
   const { push } = useRouter();
 
+  if (clientAccounts.length <= 0) {
+    return null;
+  }
+
   const handleDeleteAll = () => {
     dispatch({ type: 'disconnected' });
     chatDispatch({ type: 'disconnected' });
     dispatchAccount({ type: 'deleteAll' });
-    deleteStorage();
+    localStorage.clear();
+    sessionStorage.clear();
     Cookies.remove('config');
     push(appendBasePath('/'));
   };
@@ -132,7 +137,7 @@ export const DangerView = () => {
             onClick={() =>
               dispatchAccount({
                 type: 'changePermission',
-                changeId: account.id,
+                changeId: clientAccount.id,
                 changeToViewOnly: true,
               })
             }
@@ -143,7 +148,7 @@ export const DangerView = () => {
             onClick={() =>
               dispatchAccount({
                 type: 'changePermission',
-                changeId: account.id,
+                changeId: clientAccount.id,
               })
             }
           >
@@ -158,16 +163,11 @@ export const DangerView = () => {
     <CardWithTitle>
       <SubTitle>Danger Zone</SubTitle>
       <OutlineCard>
-        {account.type === CLIENT_ACCOUNT &&
-          account.admin &&
-          account.viewOnly &&
-          renderSwitch()}
-        {clientAccounts.length <= 0 && (
-          <SettingsLine>
-            <Sub4Title>Delete Account:</Sub4Title>
-            {renderButton()}
-          </SettingsLine>
-        )}
+        {clientAccount?.admin && clientAccount?.viewOnly && renderSwitch()}
+        <SettingsLine>
+          <Sub4Title>Delete Account:</Sub4Title>
+          {renderButton()}
+        </SettingsLine>
         <SettingsLine>
           <Sub4Title>Delete all Accounts and Settings:</Sub4Title>
           <ButtonRow>

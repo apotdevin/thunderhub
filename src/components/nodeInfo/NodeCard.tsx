@@ -29,7 +29,7 @@ export const NodeCard = ({ account, accountId }: NodeCardProps) => {
     triggerOnce: true,
   });
 
-  const auth = getAuthObj(host, viewOnly, '', cert);
+  const auth = getAuthObj(host, viewOnly, null, cert);
 
   const { data, loading, error } = useGetNodeInfoQuery({
     skip: !inView || !auth,

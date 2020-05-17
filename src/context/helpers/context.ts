@@ -51,9 +51,11 @@ export const getAuthFromAccount = (
   account: CompleteAccount,
   session?: string
 ): AuthType => {
+  if (!account) return null;
   if (account.type !== CLIENT_ACCOUNT) {
     return {
       type: account.type,
+      id: account.id,
     };
   }
   const { host, viewOnly, cert } = account;
@@ -64,6 +66,7 @@ export const getAuthFromAccount = (
     return null;
   }
   return {
+    type: account.type,
     host,
     macaroon: viewOnly && viewOnly !== '' ? viewOnly : session,
     cert,

@@ -11,9 +11,9 @@ module.exports = withBundleAnalyzer({
     logLevel: process.env.LOG_LEVEL || 'silly',
     hodlKey: process.env.HODL_KEY || '',
     cookiePath: process.env.COOKIE_PATH || '',
-    lnServerUrl: process.env.LN_SERVER_URL || '',
-    lnCertPath: process.env.LN_CERT_PATH || '',
-    macaroonPath: process.env.MACAROON_PATH || '',
+    lnServerUrl: process.env.SSO_SERVER_URL || '',
+    lnCertPath: process.env.SSO_CERT_PATH || '',
+    macaroonPath: process.env.SSO_MACAROON_PATH || '',
     accountConfigPath: process.env.ACCOUNT_CONFIG_PATH || '',
   },
   publicRuntimeConfig: {
