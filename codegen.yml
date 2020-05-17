@@ -2,12 +2,18 @@ overwrite: true
 schema: 'http://localhost:3000/api/v1'
 documents: 'src/graphql/**/*.ts'
 generates:
-  src/generated/graphql.tsx:
+  src/graphql/types.ts:
+    - typescript
+  src/graphql/:
+    preset: near-operation-file
+    presetConfig:
+      baseTypesPath: types.ts
+      extension: .generated.tsx
+      folder: __generated__
     config:
       withComponent: false
       withHOC: false
       withHooks: true
     plugins:
-      - 'typescript'
       - 'typescript-operations'
       - 'typescript-react-apollo'

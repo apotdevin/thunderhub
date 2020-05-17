@@ -1,1000 +1,16 @@
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-export type Maybe<T> = T | null;
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
-  DateTime: any;
-};
-
-export type Query = {
-  __typename?: 'Query';
-  getChannelBalance?: Maybe<ChannelBalanceType>;
-  getChannels?: Maybe<Array<Maybe<ChannelType>>>;
-  getClosedChannels?: Maybe<Array<Maybe<ClosedChannelType>>>;
-  getPendingChannels?: Maybe<Array<Maybe<PendingChannelType>>>;
-  getChannelFees?: Maybe<Array<Maybe<ChannelFeeType>>>;
-  getChannelReport?: Maybe<ChannelReportType>;
-  getNetworkInfo?: Maybe<NetworkInfoType>;
-  getNodeInfo?: Maybe<NodeInfoType>;
-  adminCheck?: Maybe<Scalars['Boolean']>;
-  getNode?: Maybe<PartnerNodeType>;
-  decodeRequest?: Maybe<DecodeType>;
-  getWalletInfo?: Maybe<WalletInfoType>;
-  getResume?: Maybe<GetResumeType>;
-  getForwards?: Maybe<GetForwardType>;
-  getBitcoinPrice?: Maybe<Scalars['String']>;
-  getBitcoinFees?: Maybe<BitcoinFeeType>;
-  getForwardReport?: Maybe<Scalars['String']>;
-  getForwardChannelsReport?: Maybe<Scalars['String']>;
-  getInOut?: Maybe<InOutType>;
-  getBackups?: Maybe<Scalars['String']>;
-  verifyBackups?: Maybe<Scalars['Boolean']>;
-  recoverFunds?: Maybe<Scalars['Boolean']>;
-  getRoutes?: Maybe<Scalars['String']>;
-  getPeers?: Maybe<Array<Maybe<PeerType>>>;
-  signMessage?: Maybe<Scalars['String']>;
-  verifyMessage?: Maybe<Scalars['String']>;
-  getChainBalance?: Maybe<Scalars['Int']>;
-  getPendingChainBalance?: Maybe<Scalars['Int']>;
-  getChainTransactions?: Maybe<Array<Maybe<GetTransactionsType>>>;
-  getUtxos?: Maybe<Array<Maybe<GetUtxosType>>>;
-  getOffers?: Maybe<Array<Maybe<HodlOfferType>>>;
-  getCountries?: Maybe<Array<Maybe<HodlCountryType>>>;
-  getCurrencies?: Maybe<Array<Maybe<HodlCurrencyType>>>;
-  getMessages?: Maybe<GetMessagesType>;
-  getAuthToken?: Maybe<Scalars['String']>;
-  getSessionToken?: Maybe<Scalars['String']>;
-  getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
-};
-
-export type QueryGetChannelBalanceArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetChannelsArgs = {
-  auth: AuthType;
-  active?: Maybe<Scalars['Boolean']>;
-};
-
-export type QueryGetClosedChannelsArgs = {
-  auth: AuthType;
-  type?: Maybe<Scalars['String']>;
-};
-
-export type QueryGetPendingChannelsArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetChannelFeesArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetChannelReportArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetNetworkInfoArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetNodeInfoArgs = {
-  auth: AuthType;
-};
-
-export type QueryAdminCheckArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetNodeArgs = {
-  auth: AuthType;
-  publicKey: Scalars['String'];
-  withoutChannels?: Maybe<Scalars['Boolean']>;
-};
-
-export type QueryDecodeRequestArgs = {
-  auth: AuthType;
-  request: Scalars['String'];
-};
-
-export type QueryGetWalletInfoArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetResumeArgs = {
-  auth: AuthType;
-  token?: Maybe<Scalars['String']>;
-};
-
-export type QueryGetForwardsArgs = {
-  auth: AuthType;
-  time?: Maybe<Scalars['String']>;
-};
-
-export type QueryGetBitcoinPriceArgs = {
-  logger?: Maybe<Scalars['Boolean']>;
-  currency?: Maybe<Scalars['String']>;
-};
-
-export type QueryGetBitcoinFeesArgs = {
-  logger?: Maybe<Scalars['Boolean']>;
-};
-
-export type QueryGetForwardReportArgs = {
-  auth: AuthType;
-  time?: Maybe<Scalars['String']>;
-};
-
-export type QueryGetForwardChannelsReportArgs = {
-  auth: AuthType;
-  time?: Maybe<Scalars['String']>;
-  order?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-export type QueryGetInOutArgs = {
-  auth: AuthType;
-  time?: Maybe<Scalars['String']>;
-};
-
-export type QueryGetBackupsArgs = {
-  auth: AuthType;
-};
-
-export type QueryVerifyBackupsArgs = {
-  auth: AuthType;
-  backup: Scalars['String'];
-};
-
-export type QueryRecoverFundsArgs = {
-  auth: AuthType;
-  backup: Scalars['String'];
-};
-
-export type QueryGetRoutesArgs = {
-  auth: AuthType;
-  outgoing: Scalars['String'];
-  incoming: Scalars['String'];
-  tokens: Scalars['Int'];
-  maxFee?: Maybe<Scalars['Int']>;
-};
-
-export type QueryGetPeersArgs = {
-  auth: AuthType;
-};
-
-export type QuerySignMessageArgs = {
-  auth: AuthType;
-  message: Scalars['String'];
-};
-
-export type QueryVerifyMessageArgs = {
-  auth: AuthType;
-  message: Scalars['String'];
-  signature: Scalars['String'];
-};
-
-export type QueryGetChainBalanceArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetPendingChainBalanceArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetChainTransactionsArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetUtxosArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetOffersArgs = {
-  filter?: Maybe<Scalars['String']>;
-};
-
-export type QueryGetMessagesArgs = {
-  auth: AuthType;
-  token?: Maybe<Scalars['String']>;
-  initialize?: Maybe<Scalars['Boolean']>;
-  lastMessage?: Maybe<Scalars['String']>;
-};
-
-export type QueryGetAuthTokenArgs = {
-  cookie?: Maybe<Scalars['String']>;
-};
-
-export type QueryGetSessionTokenArgs = {
-  id?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
-};
-
-export type ChannelBalanceType = {
-  __typename?: 'channelBalanceType';
-  confirmedBalance?: Maybe<Scalars['Int']>;
-  pendingBalance?: Maybe<Scalars['Int']>;
-};
-
-export type AuthType = {
-  type?: Maybe<Scalars['String']>;
-  host?: Maybe<Scalars['String']>;
-  macaroon?: Maybe<Scalars['String']>;
-  cert?: Maybe<Scalars['String']>;
-};
-
-export type ChannelType = {
-  __typename?: 'channelType';
-  capacity?: Maybe<Scalars['Int']>;
-  commit_transaction_fee?: Maybe<Scalars['Int']>;
-  commit_transaction_weight?: Maybe<Scalars['Int']>;
-  id?: Maybe<Scalars['String']>;
-  is_active?: Maybe<Scalars['Boolean']>;
-  is_closing?: Maybe<Scalars['Boolean']>;
-  is_opening?: Maybe<Scalars['Boolean']>;
-  is_partner_initiated?: Maybe<Scalars['Boolean']>;
-  is_private?: Maybe<Scalars['Boolean']>;
-  is_static_remote_key?: Maybe<Scalars['Boolean']>;
-  local_balance?: Maybe<Scalars['Int']>;
-  local_reserve?: Maybe<Scalars['Int']>;
-  partner_public_key?: Maybe<Scalars['String']>;
-  received?: Maybe<Scalars['Int']>;
-  remote_balance?: Maybe<Scalars['Int']>;
-  remote_reserve?: Maybe<Scalars['Int']>;
-  sent?: Maybe<Scalars['Int']>;
-  time_offline?: Maybe<Scalars['Int']>;
-  time_online?: Maybe<Scalars['Int']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  transaction_vout?: Maybe<Scalars['Int']>;
-  unsettled_balance?: Maybe<Scalars['Int']>;
-  partner_node_info?: Maybe<PartnerNodeType>;
-};
-
-export type PartnerNodeType = {
-  __typename?: 'partnerNodeType';
-  alias?: Maybe<Scalars['String']>;
-  capacity?: Maybe<Scalars['String']>;
-  channel_count?: Maybe<Scalars['Int']>;
-  color?: Maybe<Scalars['String']>;
-  updated_at?: Maybe<Scalars['String']>;
-};
-
-export type ClosedChannelType = {
-  __typename?: 'closedChannelType';
-  capacity?: Maybe<Scalars['Int']>;
-  close_confirm_height?: Maybe<Scalars['Int']>;
-  close_transaction_id?: Maybe<Scalars['String']>;
-  final_local_balance?: Maybe<Scalars['Int']>;
-  final_time_locked_balance?: Maybe<Scalars['Int']>;
-  id?: Maybe<Scalars['String']>;
-  is_breach_close?: Maybe<Scalars['Boolean']>;
-  is_cooperative_close?: Maybe<Scalars['Boolean']>;
-  is_funding_cancel?: Maybe<Scalars['Boolean']>;
-  is_local_force_close?: Maybe<Scalars['Boolean']>;
-  is_remote_force_close?: Maybe<Scalars['Boolean']>;
-  partner_public_key?: Maybe<Scalars['String']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  transaction_vout?: Maybe<Scalars['Int']>;
-  partner_node_info?: Maybe<PartnerNodeType>;
-};
-
-export type PendingChannelType = {
-  __typename?: 'pendingChannelType';
-  close_transaction_id?: Maybe<Scalars['String']>;
-  is_active?: Maybe<Scalars['Boolean']>;
-  is_closing?: Maybe<Scalars['Boolean']>;
-  is_opening?: Maybe<Scalars['Boolean']>;
-  local_balance?: Maybe<Scalars['Int']>;
-  local_reserve?: Maybe<Scalars['Int']>;
-  partner_public_key?: Maybe<Scalars['String']>;
-  received?: Maybe<Scalars['Int']>;
-  remote_balance?: Maybe<Scalars['Int']>;
-  remote_reserve?: Maybe<Scalars['Int']>;
-  sent?: Maybe<Scalars['Int']>;
-  transaction_fee?: Maybe<Scalars['Int']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  transaction_vout?: Maybe<Scalars['Int']>;
-  partner_node_info?: Maybe<PartnerNodeType>;
-};
-
-export type ChannelFeeType = {
-  __typename?: 'channelFeeType';
-  alias?: Maybe<Scalars['String']>;
-  color?: Maybe<Scalars['String']>;
-  baseFee?: Maybe<Scalars['Int']>;
-  feeRate?: Maybe<Scalars['Int']>;
-  transactionId?: Maybe<Scalars['String']>;
-  transactionVout?: Maybe<Scalars['Int']>;
-  public_key?: Maybe<Scalars['String']>;
-};
-
-export type ChannelReportType = {
-  __typename?: 'channelReportType';
-  local?: Maybe<Scalars['Int']>;
-  remote?: Maybe<Scalars['Int']>;
-  maxIn?: Maybe<Scalars['Int']>;
-  maxOut?: Maybe<Scalars['Int']>;
-};
-
-export type NetworkInfoType = {
-  __typename?: 'networkInfoType';
-  averageChannelSize?: Maybe<Scalars['String']>;
-  channelCount?: Maybe<Scalars['Int']>;
-  maxChannelSize?: Maybe<Scalars['Int']>;
-  medianChannelSize?: Maybe<Scalars['Int']>;
-  minChannelSize?: Maybe<Scalars['Int']>;
-  nodeCount?: Maybe<Scalars['Int']>;
-  notRecentlyUpdatedPolicyCount?: Maybe<Scalars['Int']>;
-  totalCapacity?: Maybe<Scalars['String']>;
-};
-
-export type NodeInfoType = {
-  __typename?: 'nodeInfoType';
-  chains?: Maybe<Array<Maybe<Scalars['String']>>>;
-  color?: Maybe<Scalars['String']>;
-  active_channels_count?: Maybe<Scalars['Int']>;
-  closed_channels_count?: Maybe<Scalars['Int']>;
-  alias?: Maybe<Scalars['String']>;
-  current_block_hash?: Maybe<Scalars['String']>;
-  current_block_height?: Maybe<Scalars['Boolean']>;
-  is_synced_to_chain?: Maybe<Scalars['Boolean']>;
-  is_synced_to_graph?: Maybe<Scalars['Boolean']>;
-  latest_block_at?: Maybe<Scalars['String']>;
-  peers_count?: Maybe<Scalars['Int']>;
-  pending_channels_count?: Maybe<Scalars['Int']>;
-  public_key?: Maybe<Scalars['String']>;
-  uris?: Maybe<Array<Maybe<Scalars['String']>>>;
-  version?: Maybe<Scalars['String']>;
-};
-
-export type DecodeType = {
-  __typename?: 'decodeType';
-  chain_address?: Maybe<Scalars['String']>;
-  cltv_delta?: Maybe<Scalars['Int']>;
-  description?: Maybe<Scalars['String']>;
-  description_hash?: Maybe<Scalars['String']>;
-  destination?: Maybe<Scalars['String']>;
-  expires_at?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  mtokens?: Maybe<Scalars['String']>;
-  routes?: Maybe<Array<Maybe<DecodeRoutesType>>>;
-  safe_tokens?: Maybe<Scalars['Int']>;
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type DecodeRoutesType = {
-  __typename?: 'DecodeRoutesType';
-  base_fee_mtokens?: Maybe<Scalars['String']>;
-  channel?: Maybe<Scalars['String']>;
-  cltv_delta?: Maybe<Scalars['Int']>;
-  fee_rate?: Maybe<Scalars['Int']>;
-  public_key?: Maybe<Scalars['String']>;
-};
-
-export type WalletInfoType = {
-  __typename?: 'walletInfoType';
-  build_tags?: Maybe<Array<Maybe<Scalars['String']>>>;
-  commit_hash?: Maybe<Scalars['String']>;
-  is_autopilotrpc_enabled?: Maybe<Scalars['Boolean']>;
-  is_chainrpc_enabled?: Maybe<Scalars['Boolean']>;
-  is_invoicesrpc_enabled?: Maybe<Scalars['Boolean']>;
-  is_signrpc_enabled?: Maybe<Scalars['Boolean']>;
-  is_walletrpc_enabled?: Maybe<Scalars['Boolean']>;
-  is_watchtowerrpc_enabled?: Maybe<Scalars['Boolean']>;
-  is_wtclientrpc_enabled?: Maybe<Scalars['Boolean']>;
-};
-
-export type GetResumeType = {
-  __typename?: 'getResumeType';
-  token?: Maybe<Scalars['String']>;
-  resume?: Maybe<Scalars['String']>;
-};
-
-export type GetForwardType = {
-  __typename?: 'getForwardType';
-  token?: Maybe<Scalars['String']>;
-  forwards?: Maybe<Array<Maybe<ForwardType>>>;
-};
-
-export type ForwardType = {
-  __typename?: 'forwardType';
-  created_at?: Maybe<Scalars['String']>;
-  fee?: Maybe<Scalars['Int']>;
-  fee_mtokens?: Maybe<Scalars['String']>;
-  incoming_channel?: Maybe<Scalars['String']>;
-  incoming_alias?: Maybe<Scalars['String']>;
-  incoming_color?: Maybe<Scalars['String']>;
-  mtokens?: Maybe<Scalars['String']>;
-  outgoing_channel?: Maybe<Scalars['String']>;
-  outgoing_alias?: Maybe<Scalars['String']>;
-  outgoing_color?: Maybe<Scalars['String']>;
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type BitcoinFeeType = {
-  __typename?: 'bitcoinFeeType';
-  fast?: Maybe<Scalars['Int']>;
-  halfHour?: Maybe<Scalars['Int']>;
-  hour?: Maybe<Scalars['Int']>;
-};
-
-export type InOutType = {
-  __typename?: 'InOutType';
-  invoices?: Maybe<Scalars['String']>;
-  payments?: Maybe<Scalars['String']>;
-  confirmedInvoices?: Maybe<Scalars['Int']>;
-  unConfirmedInvoices?: Maybe<Scalars['Int']>;
-};
-
-export type PeerType = {
-  __typename?: 'peerType';
-  bytes_received?: Maybe<Scalars['Int']>;
-  bytes_sent?: Maybe<Scalars['Int']>;
-  is_inbound?: Maybe<Scalars['Boolean']>;
-  is_sync_peer?: Maybe<Scalars['Boolean']>;
-  ping_time?: Maybe<Scalars['Int']>;
-  public_key?: Maybe<Scalars['String']>;
-  socket?: Maybe<Scalars['String']>;
-  tokens_received?: Maybe<Scalars['Int']>;
-  tokens_sent?: Maybe<Scalars['Int']>;
-  partner_node_info?: Maybe<PartnerNodeType>;
-};
-
-export type GetTransactionsType = {
-  __typename?: 'getTransactionsType';
-  block_id?: Maybe<Scalars['String']>;
-  confirmation_count?: Maybe<Scalars['Int']>;
-  confirmation_height?: Maybe<Scalars['Int']>;
-  created_at?: Maybe<Scalars['String']>;
-  fee?: Maybe<Scalars['Int']>;
-  id?: Maybe<Scalars['String']>;
-  output_addresses?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type GetUtxosType = {
-  __typename?: 'getUtxosType';
-  address?: Maybe<Scalars['String']>;
-  address_format?: Maybe<Scalars['String']>;
-  confirmation_count?: Maybe<Scalars['Int']>;
-  output_script?: Maybe<Scalars['String']>;
-  tokens?: Maybe<Scalars['Int']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  transaction_vout?: Maybe<Scalars['Int']>;
-};
-
-export type HodlOfferType = {
-  __typename?: 'hodlOfferType';
-  id?: Maybe<Scalars['String']>;
-  version?: Maybe<Scalars['String']>;
-  asset_code?: Maybe<Scalars['String']>;
-  searchable?: Maybe<Scalars['Boolean']>;
-  country?: Maybe<Scalars['String']>;
-  country_code?: Maybe<Scalars['String']>;
-  working_now?: Maybe<Scalars['Boolean']>;
-  side?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  currency_code?: Maybe<Scalars['String']>;
-  price?: Maybe<Scalars['String']>;
-  min_amount?: Maybe<Scalars['String']>;
-  max_amount?: Maybe<Scalars['String']>;
-  first_trade_limit?: Maybe<Scalars['String']>;
-  fee?: Maybe<HodlOfferFeeType>;
-  balance?: Maybe<Scalars['String']>;
-  payment_window_minutes?: Maybe<Scalars['Int']>;
-  confirmations?: Maybe<Scalars['Int']>;
-  payment_method_instructions?: Maybe<Array<Maybe<HodlOfferPaymentType>>>;
-  trader?: Maybe<HodlOfferTraderType>;
-};
-
-export type HodlOfferFeeType = {
-  __typename?: 'hodlOfferFeeType';
-  author_fee_rate?: Maybe<Scalars['String']>;
-};
-
-export type HodlOfferPaymentType = {
-  __typename?: 'hodlOfferPaymentType';
-  id?: Maybe<Scalars['String']>;
-  version?: Maybe<Scalars['String']>;
-  payment_method_id?: Maybe<Scalars['String']>;
-  payment_method_type?: Maybe<Scalars['String']>;
-  payment_method_name?: Maybe<Scalars['String']>;
-};
-
-export type HodlOfferTraderType = {
-  __typename?: 'hodlOfferTraderType';
-  login?: Maybe<Scalars['String']>;
-  online_status?: Maybe<Scalars['String']>;
-  rating?: Maybe<Scalars['String']>;
-  trades_count?: Maybe<Scalars['Int']>;
-  url?: Maybe<Scalars['String']>;
-  verified?: Maybe<Scalars['Boolean']>;
-  verified_by?: Maybe<Scalars['String']>;
-  strong_hodler?: Maybe<Scalars['Boolean']>;
-  country?: Maybe<Scalars['String']>;
-  country_code?: Maybe<Scalars['String']>;
-  average_payment_time_minutes?: Maybe<Scalars['Int']>;
-  average_release_time_minutes?: Maybe<Scalars['Int']>;
-  days_since_last_trade?: Maybe<Scalars['Int']>;
-};
-
-export type HodlCountryType = {
-  __typename?: 'hodlCountryType';
-  code?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  native_name?: Maybe<Scalars['String']>;
-  currency_code?: Maybe<Scalars['String']>;
-  currency_name?: Maybe<Scalars['String']>;
-};
-
-export type HodlCurrencyType = {
-  __typename?: 'hodlCurrencyType';
-  code?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-export type GetMessagesType = {
-  __typename?: 'getMessagesType';
-  token?: Maybe<Scalars['String']>;
-  messages?: Maybe<Array<Maybe<MessagesType>>>;
-};
-
-export type MessagesType = {
-  __typename?: 'messagesType';
-  date?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  verified?: Maybe<Scalars['Boolean']>;
-  contentType?: Maybe<Scalars['String']>;
-  sender?: Maybe<Scalars['String']>;
-  alias?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type ServerAccountType = {
-  __typename?: 'serverAccountType';
-  name: Scalars['String'];
-  id: Scalars['String'];
-  loggedIn: Scalars['Boolean'];
-};
-
-export type Mutation = {
-  __typename?: 'Mutation';
-  closeChannel?: Maybe<CloseChannelType>;
-  openChannel?: Maybe<OpenChannelType>;
-  updateFees?: Maybe<Scalars['Boolean']>;
-  parsePayment?: Maybe<ParsePaymentType>;
-  pay?: Maybe<PayType>;
-  createInvoice?: Maybe<InvoiceType>;
-  payViaRoute?: Maybe<Scalars['Boolean']>;
-  createAddress?: Maybe<Scalars['String']>;
-  sendToAddress?: Maybe<SendToType>;
-  addPeer?: Maybe<Scalars['Boolean']>;
-  removePeer?: Maybe<Scalars['Boolean']>;
-  sendMessage?: Maybe<Scalars['Int']>;
-};
-
-export type MutationCloseChannelArgs = {
-  auth: AuthType;
-  id: Scalars['String'];
-  forceClose?: Maybe<Scalars['Boolean']>;
-  targetConfirmations?: Maybe<Scalars['Int']>;
-  tokensPerVByte?: Maybe<Scalars['Int']>;
-};
-
-export type MutationOpenChannelArgs = {
-  auth: AuthType;
-  amount: Scalars['Int'];
-  partnerPublicKey: Scalars['String'];
-  tokensPerVByte?: Maybe<Scalars['Int']>;
-  isPrivate?: Maybe<Scalars['Boolean']>;
-};
-
-export type MutationUpdateFeesArgs = {
-  auth: AuthType;
-  transactionId?: Maybe<Scalars['String']>;
-  transactionVout?: Maybe<Scalars['Int']>;
-  baseFee?: Maybe<Scalars['Int']>;
-  feeRate?: Maybe<Scalars['Int']>;
-};
-
-export type MutationParsePaymentArgs = {
-  auth: AuthType;
-  request: Scalars['String'];
-};
-
-export type MutationPayArgs = {
-  auth: AuthType;
-  request: Scalars['String'];
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type MutationCreateInvoiceArgs = {
-  auth: AuthType;
-  amount: Scalars['Int'];
-};
-
-export type MutationPayViaRouteArgs = {
-  auth: AuthType;
-  route: Scalars['String'];
-};
-
-export type MutationCreateAddressArgs = {
-  auth: AuthType;
-  nested?: Maybe<Scalars['Boolean']>;
-};
-
-export type MutationSendToAddressArgs = {
-  auth: AuthType;
-  address: Scalars['String'];
-  tokens?: Maybe<Scalars['Int']>;
-  fee?: Maybe<Scalars['Int']>;
-  target?: Maybe<Scalars['Int']>;
-  sendAll?: Maybe<Scalars['Boolean']>;
-};
-
-export type MutationAddPeerArgs = {
-  auth: AuthType;
-  publicKey: Scalars['String'];
-  socket: Scalars['String'];
-  isTemporary?: Maybe<Scalars['Boolean']>;
-};
-
-export type MutationRemovePeerArgs = {
-  auth: AuthType;
-  publicKey: Scalars['String'];
-};
-
-export type MutationSendMessageArgs = {
-  auth: AuthType;
-  publicKey: Scalars['String'];
-  message: Scalars['String'];
-  messageType?: Maybe<Scalars['String']>;
-  tokens?: Maybe<Scalars['Int']>;
-  maxFee?: Maybe<Scalars['Int']>;
-};
-
-export type CloseChannelType = {
-  __typename?: 'closeChannelType';
-  transactionId?: Maybe<Scalars['String']>;
-  transactionOutputIndex?: Maybe<Scalars['String']>;
-};
-
-export type OpenChannelType = {
-  __typename?: 'openChannelType';
-  transactionId?: Maybe<Scalars['String']>;
-  transactionOutputIndex?: Maybe<Scalars['String']>;
-};
-
-export type ParsePaymentType = {
-  __typename?: 'parsePaymentType';
-  chainAddresses?: Maybe<Array<Maybe<Scalars['String']>>>;
-  cltvDelta?: Maybe<Scalars['Int']>;
-  createdAt?: Maybe<Scalars['DateTime']>;
-  description?: Maybe<Scalars['String']>;
-  descriptionHash?: Maybe<Scalars['String']>;
-  destination?: Maybe<Scalars['String']>;
-  expiresAt?: Maybe<Scalars['DateTime']>;
-  id?: Maybe<Scalars['String']>;
-  isExpired?: Maybe<Scalars['Boolean']>;
-  mTokens?: Maybe<Scalars['String']>;
-  network?: Maybe<Scalars['String']>;
-  routes?: Maybe<Array<Maybe<PaymentRouteType>>>;
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type PaymentRouteType = {
-  __typename?: 'PaymentRouteType';
-  mTokenFee?: Maybe<Scalars['String']>;
-  channel?: Maybe<Scalars['String']>;
-  cltvDelta?: Maybe<Scalars['Int']>;
-  feeRate?: Maybe<Scalars['Int']>;
-  publicKey?: Maybe<Scalars['String']>;
-};
-
-export type PayType = {
-  __typename?: 'payType';
-  fee?: Maybe<Scalars['Int']>;
-  fee_mtokens?: Maybe<Scalars['String']>;
-  hops?: Maybe<Array<Maybe<HopsType>>>;
-  id?: Maybe<Scalars['String']>;
-  is_confirmed?: Maybe<Scalars['Boolean']>;
-  is_outgoing?: Maybe<Scalars['Boolean']>;
-  mtokens?: Maybe<Scalars['String']>;
-  secret?: Maybe<Scalars['String']>;
-  safe_fee?: Maybe<Scalars['Int']>;
-  safe_tokens?: Maybe<Scalars['Int']>;
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type HopsType = {
-  __typename?: 'hopsType';
-  channel?: Maybe<Scalars['String']>;
-  channel_capacity?: Maybe<Scalars['Int']>;
-  fee_mtokens?: Maybe<Scalars['String']>;
-  forward_mtokens?: Maybe<Scalars['String']>;
-  timeout?: Maybe<Scalars['Int']>;
-};
-
-export type InvoiceType = {
-  __typename?: 'invoiceType';
-  chainAddress?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['DateTime']>;
-  description?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  request?: Maybe<Scalars['String']>;
-  secret?: Maybe<Scalars['String']>;
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type SendToType = {
-  __typename?: 'sendToType';
-  confirmationCount?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  isConfirmed?: Maybe<Scalars['Boolean']>;
-  isOutgoing?: Maybe<Scalars['Boolean']>;
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type GetCountriesQueryVariables = {};
-
-export type GetCountriesQuery = { __typename?: 'Query' } & {
-  getCountries?: Maybe<
-    Array<
-      Maybe<
-        { __typename?: 'hodlCountryType' } & Pick<
-          HodlCountryType,
-          'code' | 'name' | 'native_name' | 'currency_code' | 'currency_name'
-        >
-      >
-    >
-  >;
-};
-
-export type GetCurrenciesQueryVariables = {};
-
-export type GetCurrenciesQuery = { __typename?: 'Query' } & {
-  getCurrencies?: Maybe<
-    Array<
-      Maybe<
-        { __typename?: 'hodlCurrencyType' } & Pick<
-          HodlCurrencyType,
-          'code' | 'name' | 'type'
-        >
-      >
-    >
-  >;
-};
-
-export type GetOffersQueryVariables = {
-  filter?: Maybe<Scalars['String']>;
-};
-
-export type GetOffersQuery = { __typename?: 'Query' } & {
-  getOffers?: Maybe<
-    Array<
-      Maybe<
-        { __typename?: 'hodlOfferType' } & Pick<
-          HodlOfferType,
-          | 'id'
-          | 'asset_code'
-          | 'country'
-          | 'country_code'
-          | 'working_now'
-          | 'side'
-          | 'title'
-          | 'description'
-          | 'currency_code'
-          | 'price'
-          | 'min_amount'
-          | 'max_amount'
-          | 'first_trade_limit'
-          | 'balance'
-          | 'payment_window_minutes'
-          | 'confirmations'
-        > & {
-            fee?: Maybe<
-              { __typename?: 'hodlOfferFeeType' } & Pick<
-                HodlOfferFeeType,
-                'author_fee_rate'
-              >
-            >;
-            payment_method_instructions?: Maybe<
-              Array<
-                Maybe<
-                  { __typename?: 'hodlOfferPaymentType' } & Pick<
-                    HodlOfferPaymentType,
-                    | 'id'
-                    | 'version'
-                    | 'payment_method_id'
-                    | 'payment_method_type'
-                    | 'payment_method_name'
-                  >
-                >
-              >
-            >;
-            trader?: Maybe<
-              { __typename?: 'hodlOfferTraderType' } & Pick<
-                HodlOfferTraderType,
-                | 'login'
-                | 'online_status'
-                | 'rating'
-                | 'trades_count'
-                | 'url'
-                | 'verified'
-                | 'verified_by'
-                | 'strong_hodler'
-                | 'country'
-                | 'country_code'
-                | 'average_payment_time_minutes'
-                | 'average_release_time_minutes'
-                | 'days_since_last_trade'
-              >
-            >;
-          }
-      >
-    >
-  >;
-};
-
-export type CloseChannelMutationVariables = {
-  id: Scalars['String'];
-  auth: AuthType;
-  forceClose?: Maybe<Scalars['Boolean']>;
-  target?: Maybe<Scalars['Int']>;
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type CloseChannelMutation = { __typename?: 'Mutation' } & {
-  closeChannel?: Maybe<
-    { __typename?: 'closeChannelType' } & Pick<
-      CloseChannelType,
-      'transactionId' | 'transactionOutputIndex'
-    >
-  >;
-};
-
-export type OpenChannelMutationVariables = {
-  amount: Scalars['Int'];
-  partnerPublicKey: Scalars['String'];
-  auth: AuthType;
-  tokensPerVByte?: Maybe<Scalars['Int']>;
-  isPrivate?: Maybe<Scalars['Boolean']>;
-};
-
-export type OpenChannelMutation = { __typename?: 'Mutation' } & {
-  openChannel?: Maybe<
-    { __typename?: 'openChannelType' } & Pick<
-      OpenChannelType,
-      'transactionId' | 'transactionOutputIndex'
-    >
-  >;
-};
-
-export type PayInvoiceMutationVariables = {
-  request: Scalars['String'];
-  auth: AuthType;
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type PayInvoiceMutation = { __typename?: 'Mutation' } & {
-  pay?: Maybe<{ __typename?: 'payType' } & Pick<PayType, 'is_confirmed'>>;
-};
-
-export type CreateInvoiceMutationVariables = {
-  amount: Scalars['Int'];
-  auth: AuthType;
-};
-
-export type CreateInvoiceMutation = { __typename?: 'Mutation' } & {
-  createInvoice?: Maybe<
-    { __typename?: 'invoiceType' } & Pick<InvoiceType, 'request'>
-  >;
-};
-
-export type CreateAddressMutationVariables = {
-  nested?: Maybe<Scalars['Boolean']>;
-  auth: AuthType;
-};
-
-export type CreateAddressMutation = { __typename?: 'Mutation' } & Pick<
-  Mutation,
-  'createAddress'
->;
-
-export type PayAddressMutationVariables = {
-  auth: AuthType;
-  address: Scalars['String'];
-  tokens?: Maybe<Scalars['Int']>;
-  fee?: Maybe<Scalars['Int']>;
-  target?: Maybe<Scalars['Int']>;
-  sendAll?: Maybe<Scalars['Boolean']>;
-};
-
-export type PayAddressMutation = { __typename?: 'Mutation' } & {
-  sendToAddress?: Maybe<
-    { __typename?: 'sendToType' } & Pick<
-      SendToType,
-      'confirmationCount' | 'id' | 'isConfirmed' | 'isOutgoing' | 'tokens'
-    >
-  >;
-};
-
-export type UpdateFeesMutationVariables = {
-  auth: AuthType;
-  transactionId?: Maybe<Scalars['String']>;
-  transactionVout?: Maybe<Scalars['Int']>;
-  baseFee?: Maybe<Scalars['Int']>;
-  feeRate?: Maybe<Scalars['Int']>;
-};
-
-export type UpdateFeesMutation = { __typename?: 'Mutation' } & Pick<
-  Mutation,
-  'updateFees'
->;
-
-export type PayViaRouteMutationVariables = {
-  auth: AuthType;
-  route: Scalars['String'];
-};
-
-export type PayViaRouteMutation = { __typename?: 'Mutation' } & Pick<
-  Mutation,
-  'payViaRoute'
->;
-
-export type RemovePeerMutationVariables = {
-  auth: AuthType;
-  publicKey: Scalars['String'];
-};
-
-export type RemovePeerMutation = { __typename?: 'Mutation' } & Pick<
-  Mutation,
-  'removePeer'
->;
-
-export type AddPeerMutationVariables = {
-  auth: AuthType;
-  publicKey: Scalars['String'];
-  socket: Scalars['String'];
-  isTemporary?: Maybe<Scalars['Boolean']>;
-};
-
-export type AddPeerMutation = { __typename?: 'Mutation' } & Pick<
-  Mutation,
-  'addPeer'
->;
-
-export type SendMessageMutationVariables = {
-  auth: AuthType;
-  publicKey: Scalars['String'];
-  message: Scalars['String'];
-  messageType?: Maybe<Scalars['String']>;
-  tokens?: Maybe<Scalars['Int']>;
-  maxFee?: Maybe<Scalars['Int']>;
-};
-
-export type SendMessageMutation = { __typename?: 'Mutation' } & Pick<
-  Mutation,
-  'sendMessage'
->;
+import * as Types from '../types';
 
 export type GetNetworkInfoQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetNetworkInfoQuery = { __typename?: 'Query' } & {
-  getNetworkInfo?: Maybe<
+  getNetworkInfo?: Types.Maybe<
     { __typename?: 'networkInfoType' } & Pick<
-      NetworkInfoType,
+      Types.NetworkInfoType,
       | 'averageChannelSize'
       | 'channelCount'
       | 'maxChannelSize'
@@ -1008,13 +24,13 @@ export type GetNetworkInfoQuery = { __typename?: 'Query' } & {
 };
 
 export type GetCanConnectQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetCanConnectQuery = { __typename?: 'Query' } & {
-  getNodeInfo?: Maybe<
+  getNodeInfo?: Types.Maybe<
     { __typename?: 'nodeInfoType' } & Pick<
-      NodeInfoType,
+      Types.NodeInfoType,
       | 'chains'
       | 'color'
       | 'active_channels_count'
@@ -1029,25 +45,25 @@ export type GetCanConnectQuery = { __typename?: 'Query' } & {
 };
 
 export type GetCanAdminQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetCanAdminQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'adminCheck'
 >;
 
 export type GetNodeInfoQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetNodeInfoQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'getChainBalance' | 'getPendingChainBalance'
 > & {
-    getNodeInfo?: Maybe<
+    getNodeInfo?: Types.Maybe<
       { __typename?: 'nodeInfoType' } & Pick<
-        NodeInfoType,
+        Types.NodeInfoType,
         | 'chains'
         | 'color'
         | 'active_channels_count'
@@ -1059,22 +75,22 @@ export type GetNodeInfoQuery = { __typename?: 'Query' } & Pick<
         | 'version'
       >
     >;
-    getChannelBalance?: Maybe<
+    getChannelBalance?: Types.Maybe<
       { __typename?: 'channelBalanceType' } & Pick<
-        ChannelBalanceType,
+        Types.ChannelBalanceType,
         'confirmedBalance' | 'pendingBalance'
       >
     >;
   };
 
 export type GetChannelAmountInfoQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetChannelAmountInfoQuery = { __typename?: 'Query' } & {
-  getNodeInfo?: Maybe<
+  getNodeInfo?: Types.Maybe<
     { __typename?: 'nodeInfoType' } & Pick<
-      NodeInfoType,
+      Types.NodeInfoType,
       | 'active_channels_count'
       | 'closed_channels_count'
       | 'pending_channels_count'
@@ -1083,16 +99,16 @@ export type GetChannelAmountInfoQuery = { __typename?: 'Query' } & {
 };
 
 export type GetChannelsQueryVariables = {
-  auth: AuthType;
-  active?: Maybe<Scalars['Boolean']>;
+  auth: Types.AuthType;
+  active?: Types.Maybe<Types.Scalars['Boolean']>;
 };
 
 export type GetChannelsQuery = { __typename?: 'Query' } & {
-  getChannels?: Maybe<
+  getChannels?: Types.Maybe<
     Array<
-      Maybe<
+      Types.Maybe<
         { __typename?: 'channelType' } & Pick<
-          ChannelType,
+          Types.ChannelType,
           | 'capacity'
           | 'commit_transaction_fee'
           | 'commit_transaction_weight'
@@ -1116,9 +132,9 @@ export type GetChannelsQuery = { __typename?: 'Query' } & {
           | 'transaction_vout'
           | 'unsettled_balance'
         > & {
-            partner_node_info?: Maybe<
+            partner_node_info?: Types.Maybe<
               { __typename?: 'partnerNodeType' } & Pick<
-                PartnerNodeType,
+                Types.PartnerNodeType,
                 'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
               >
             >;
@@ -1129,29 +145,29 @@ export type GetChannelsQuery = { __typename?: 'Query' } & {
 };
 
 export type GetNodeQueryVariables = {
-  auth: AuthType;
-  publicKey: Scalars['String'];
-  withoutChannels?: Maybe<Scalars['Boolean']>;
+  auth: Types.AuthType;
+  publicKey: Types.Scalars['String'];
+  withoutChannels?: Types.Maybe<Types.Scalars['Boolean']>;
 };
 
 export type GetNodeQuery = { __typename?: 'Query' } & {
-  getNode?: Maybe<
+  getNode?: Types.Maybe<
     { __typename?: 'partnerNodeType' } & Pick<
-      PartnerNodeType,
+      Types.PartnerNodeType,
       'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
     >
   >;
 };
 
 export type DecodeRequestQueryVariables = {
-  auth: AuthType;
-  request: Scalars['String'];
+  auth: Types.AuthType;
+  request: Types.Scalars['String'];
 };
 
 export type DecodeRequestQuery = { __typename?: 'Query' } & {
-  decodeRequest?: Maybe<
+  decodeRequest?: Types.Maybe<
     { __typename?: 'decodeType' } & Pick<
-      DecodeType,
+      Types.DecodeType,
       | 'chain_address'
       | 'cltv_delta'
       | 'description'
@@ -1161,11 +177,11 @@ export type DecodeRequestQuery = { __typename?: 'Query' } & {
       | 'id'
       | 'tokens'
     > & {
-        routes?: Maybe<
+        routes?: Types.Maybe<
           Array<
-            Maybe<
+            Types.Maybe<
               { __typename?: 'DecodeRoutesType' } & Pick<
-                DecodeRoutesType,
+                Types.DecodeRoutesType,
                 | 'base_fee_mtokens'
                 | 'channel'
                 | 'cltv_delta'
@@ -1180,15 +196,15 @@ export type DecodeRequestQuery = { __typename?: 'Query' } & {
 };
 
 export type GetPendingChannelsQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetPendingChannelsQuery = { __typename?: 'Query' } & {
-  getPendingChannels?: Maybe<
+  getPendingChannels?: Types.Maybe<
     Array<
-      Maybe<
+      Types.Maybe<
         { __typename?: 'pendingChannelType' } & Pick<
-          PendingChannelType,
+          Types.PendingChannelType,
           | 'close_transaction_id'
           | 'is_active'
           | 'is_closing'
@@ -1204,9 +220,9 @@ export type GetPendingChannelsQuery = { __typename?: 'Query' } & {
           | 'transaction_id'
           | 'transaction_vout'
         > & {
-            partner_node_info?: Maybe<
+            partner_node_info?: Types.Maybe<
               { __typename?: 'partnerNodeType' } & Pick<
-                PartnerNodeType,
+                Types.PartnerNodeType,
                 'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
               >
             >;
@@ -1217,15 +233,15 @@ export type GetPendingChannelsQuery = { __typename?: 'Query' } & {
 };
 
 export type GetClosedChannelsQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetClosedChannelsQuery = { __typename?: 'Query' } & {
-  getClosedChannels?: Maybe<
+  getClosedChannels?: Types.Maybe<
     Array<
-      Maybe<
+      Types.Maybe<
         { __typename?: 'closedChannelType' } & Pick<
-          ClosedChannelType,
+          Types.ClosedChannelType,
           | 'capacity'
           | 'close_confirm_height'
           | 'close_transaction_id'
@@ -1241,9 +257,9 @@ export type GetClosedChannelsQuery = { __typename?: 'Query' } & {
           | 'transaction_id'
           | 'transaction_vout'
         > & {
-            partner_node_info?: Maybe<
+            partner_node_info?: Types.Maybe<
               { __typename?: 'partnerNodeType' } & Pick<
-                PartnerNodeType,
+                Types.PartnerNodeType,
                 'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
               >
             >;
@@ -1254,93 +270,96 @@ export type GetClosedChannelsQuery = { __typename?: 'Query' } & {
 };
 
 export type GetResumeQueryVariables = {
-  auth: AuthType;
-  token?: Maybe<Scalars['String']>;
+  auth: Types.AuthType;
+  token?: Types.Maybe<Types.Scalars['String']>;
 };
 
 export type GetResumeQuery = { __typename?: 'Query' } & {
-  getResume?: Maybe<
-    { __typename?: 'getResumeType' } & Pick<GetResumeType, 'token' | 'resume'>
+  getResume?: Types.Maybe<
+    { __typename?: 'getResumeType' } & Pick<
+      Types.GetResumeType,
+      'token' | 'resume'
+    >
   >;
 };
 
 export type GetBitcoinPriceQueryVariables = {};
 
 export type GetBitcoinPriceQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'getBitcoinPrice'
 >;
 
 export type GetBitcoinFeesQueryVariables = {};
 
 export type GetBitcoinFeesQuery = { __typename?: 'Query' } & {
-  getBitcoinFees?: Maybe<
+  getBitcoinFees?: Types.Maybe<
     { __typename?: 'bitcoinFeeType' } & Pick<
-      BitcoinFeeType,
+      Types.BitcoinFeeType,
       'fast' | 'halfHour' | 'hour'
     >
   >;
 };
 
 export type GetForwardReportQueryVariables = {
-  time?: Maybe<Scalars['String']>;
-  auth: AuthType;
+  time?: Types.Maybe<Types.Scalars['String']>;
+  auth: Types.AuthType;
 };
 
 export type GetForwardReportQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'getForwardReport'
 >;
 
 export type GetLiquidReportQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetLiquidReportQuery = { __typename?: 'Query' } & {
-  getChannelReport?: Maybe<
+  getChannelReport?: Types.Maybe<
     { __typename?: 'channelReportType' } & Pick<
-      ChannelReportType,
+      Types.ChannelReportType,
       'local' | 'remote' | 'maxIn' | 'maxOut'
     >
   >;
 };
 
 export type GetForwardChannelsReportQueryVariables = {
-  time?: Maybe<Scalars['String']>;
-  order?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-  auth: AuthType;
+  time?: Types.Maybe<Types.Scalars['String']>;
+  order?: Types.Maybe<Types.Scalars['String']>;
+  type?: Types.Maybe<Types.Scalars['String']>;
+  auth: Types.AuthType;
 };
 
 export type GetForwardChannelsReportQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'getForwardChannelsReport'
 >;
 
 export type GetInOutQueryVariables = {
-  auth: AuthType;
-  time?: Maybe<Scalars['String']>;
+  auth: Types.AuthType;
+  time?: Types.Maybe<Types.Scalars['String']>;
 };
 
 export type GetInOutQuery = { __typename?: 'Query' } & {
-  getInOut?: Maybe<
+  getInOut?: Types.Maybe<
     { __typename?: 'InOutType' } & Pick<
-      InOutType,
+      Types.InOutType,
       'invoices' | 'payments' | 'confirmedInvoices' | 'unConfirmedInvoices'
     >
   >;
 };
 
 export type GetChainTransactionsQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetChainTransactionsQuery = { __typename?: 'Query' } & {
-  getChainTransactions?: Maybe<
+  getChainTransactions?: Types.Maybe<
     Array<
-      Maybe<
+      Types.Maybe<
         { __typename?: 'getTransactionsType' } & Pick<
-          GetTransactionsType,
+          Types.GetTransactionsType,
           | 'block_id'
           | 'confirmation_count'
           | 'confirmation_height'
@@ -1356,18 +375,18 @@ export type GetChainTransactionsQuery = { __typename?: 'Query' } & {
 };
 
 export type GetForwardsQueryVariables = {
-  auth: AuthType;
-  time?: Maybe<Scalars['String']>;
+  auth: Types.AuthType;
+  time?: Types.Maybe<Types.Scalars['String']>;
 };
 
 export type GetForwardsQuery = { __typename?: 'Query' } & {
-  getForwards?: Maybe<
-    { __typename?: 'getForwardType' } & Pick<GetForwardType, 'token'> & {
-        forwards?: Maybe<
+  getForwards?: Types.Maybe<
+    { __typename?: 'getForwardType' } & Pick<Types.GetForwardType, 'token'> & {
+        forwards?: Types.Maybe<
           Array<
-            Maybe<
+            Types.Maybe<
               { __typename?: 'forwardType' } & Pick<
-                ForwardType,
+                Types.ForwardType,
                 | 'created_at'
                 | 'fee'
                 | 'fee_mtokens'
@@ -1388,75 +407,78 @@ export type GetForwardsQuery = { __typename?: 'Query' } & {
 };
 
 export type GetCanConnectInfoQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetCanConnectInfoQuery = { __typename?: 'Query' } & {
-  getNodeInfo?: Maybe<
-    { __typename?: 'nodeInfoType' } & Pick<NodeInfoType, 'public_key' | 'uris'>
+  getNodeInfo?: Types.Maybe<
+    { __typename?: 'nodeInfoType' } & Pick<
+      Types.NodeInfoType,
+      'public_key' | 'uris'
+    >
   >;
 };
 
 export type GetBackupsQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetBackupsQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'getBackups'
 >;
 
 export type VerifyBackupsQueryVariables = {
-  auth: AuthType;
-  backup: Scalars['String'];
+  auth: Types.AuthType;
+  backup: Types.Scalars['String'];
 };
 
 export type VerifyBackupsQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'verifyBackups'
 >;
 
 export type SignMessageQueryVariables = {
-  auth: AuthType;
-  message: Scalars['String'];
+  auth: Types.AuthType;
+  message: Types.Scalars['String'];
 };
 
 export type SignMessageQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'signMessage'
 >;
 
 export type VerifyMessageQueryVariables = {
-  auth: AuthType;
-  message: Scalars['String'];
-  signature: Scalars['String'];
+  auth: Types.AuthType;
+  message: Types.Scalars['String'];
+  signature: Types.Scalars['String'];
 };
 
 export type VerifyMessageQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'verifyMessage'
 >;
 
 export type RecoverFundsQueryVariables = {
-  auth: AuthType;
-  backup: Scalars['String'];
+  auth: Types.AuthType;
+  backup: Types.Scalars['String'];
 };
 
 export type RecoverFundsQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'recoverFunds'
 >;
 
 export type ChannelFeesQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type ChannelFeesQuery = { __typename?: 'Query' } & {
-  getChannelFees?: Maybe<
+  getChannelFees?: Types.Maybe<
     Array<
-      Maybe<
+      Types.Maybe<
         { __typename?: 'channelFeeType' } & Pick<
-          ChannelFeeType,
+          Types.ChannelFeeType,
           | 'alias'
           | 'color'
           | 'baseFee'
@@ -1471,28 +493,28 @@ export type ChannelFeesQuery = { __typename?: 'Query' } & {
 };
 
 export type GetRoutesQueryVariables = {
-  auth: AuthType;
-  outgoing: Scalars['String'];
-  incoming: Scalars['String'];
-  tokens: Scalars['Int'];
-  maxFee?: Maybe<Scalars['Int']>;
+  auth: Types.AuthType;
+  outgoing: Types.Scalars['String'];
+  incoming: Types.Scalars['String'];
+  tokens: Types.Scalars['Int'];
+  maxFee?: Types.Maybe<Types.Scalars['Int']>;
 };
 
 export type GetRoutesQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'getRoutes'
 >;
 
 export type GetPeersQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetPeersQuery = { __typename?: 'Query' } & {
-  getPeers?: Maybe<
+  getPeers?: Types.Maybe<
     Array<
-      Maybe<
+      Types.Maybe<
         { __typename?: 'peerType' } & Pick<
-          PeerType,
+          Types.PeerType,
           | 'bytes_received'
           | 'bytes_sent'
           | 'is_inbound'
@@ -1503,9 +525,9 @@ export type GetPeersQuery = { __typename?: 'Query' } & {
           | 'tokens_received'
           | 'tokens_sent'
         > & {
-            partner_node_info?: Maybe<
+            partner_node_info?: Types.Maybe<
               { __typename?: 'partnerNodeType' } & Pick<
-                PartnerNodeType,
+                Types.PartnerNodeType,
                 'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
               >
             >;
@@ -1516,15 +538,15 @@ export type GetPeersQuery = { __typename?: 'Query' } & {
 };
 
 export type GetUtxosQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetUtxosQuery = { __typename?: 'Query' } & {
-  getUtxos?: Maybe<
+  getUtxos?: Types.Maybe<
     Array<
-      Maybe<
+      Types.Maybe<
         { __typename?: 'getUtxosType' } & Pick<
-          GetUtxosType,
+          Types.GetUtxosType,
           | 'address'
           | 'address_format'
           | 'confirmation_count'
@@ -1539,19 +561,22 @@ export type GetUtxosQuery = { __typename?: 'Query' } & {
 };
 
 export type GetMessagesQueryVariables = {
-  auth: AuthType;
-  initialize?: Maybe<Scalars['Boolean']>;
-  lastMessage?: Maybe<Scalars['String']>;
+  auth: Types.AuthType;
+  initialize?: Types.Maybe<Types.Scalars['Boolean']>;
+  lastMessage?: Types.Maybe<Types.Scalars['String']>;
 };
 
 export type GetMessagesQuery = { __typename?: 'Query' } & {
-  getMessages?: Maybe<
-    { __typename?: 'getMessagesType' } & Pick<GetMessagesType, 'token'> & {
-        messages?: Maybe<
+  getMessages?: Types.Maybe<
+    { __typename?: 'getMessagesType' } & Pick<
+      Types.GetMessagesType,
+      'token'
+    > & {
+        messages?: Types.Maybe<
           Array<
-            Maybe<
+            Types.Maybe<
               { __typename?: 'messagesType' } & Pick<
-                MessagesType,
+                Types.MessagesType,
                 | 'date'
                 | 'contentType'
                 | 'alias'
@@ -1569,13 +594,13 @@ export type GetMessagesQuery = { __typename?: 'Query' } & {
 };
 
 export type GetWalletInfoQueryVariables = {
-  auth: AuthType;
+  auth: Types.AuthType;
 };
 
 export type GetWalletInfoQuery = { __typename?: 'Query' } & {
-  getWalletInfo?: Maybe<
+  getWalletInfo?: Types.Maybe<
     { __typename?: 'walletInfoType' } & Pick<
-      WalletInfoType,
+      Types.WalletInfoType,
       | 'build_tags'
       | 'commit_hash'
       | 'is_autopilotrpc_enabled'
@@ -1590,22 +615,22 @@ export type GetWalletInfoQuery = { __typename?: 'Query' } & {
 };
 
 export type GetAuthTokenQueryVariables = {
-  cookie?: Maybe<Scalars['String']>;
+  cookie?: Types.Maybe<Types.Scalars['String']>;
 };
 
 export type GetAuthTokenQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'getAuthToken'
 >;
 
 export type GetServerAccountsQueryVariables = {};
 
 export type GetServerAccountsQuery = { __typename?: 'Query' } & {
-  getServerAccounts?: Maybe<
+  getServerAccounts?: Types.Maybe<
     Array<
-      Maybe<
+      Types.Maybe<
         { __typename?: 'serverAccountType' } & Pick<
-          ServerAccountType,
+          Types.ServerAccountType,
           'name' | 'id' | 'loggedIn'
         >
       >
@@ -1614,872 +639,15 @@ export type GetServerAccountsQuery = { __typename?: 'Query' } & {
 };
 
 export type GetSessionTokenQueryVariables = {
-  id: Scalars['String'];
-  password: Scalars['String'];
+  id: Types.Scalars['String'];
+  password: Types.Scalars['String'];
 };
 
 export type GetSessionTokenQuery = { __typename?: 'Query' } & Pick<
-  Query,
+  Types.Query,
   'getSessionToken'
 >;
 
-export const GetCountriesDocument = gql`
-  query GetCountries {
-    getCountries {
-      code
-      name
-      native_name
-      currency_code
-      currency_name
-    }
-  }
-`;
-
-/**
- * __useGetCountriesQuery__
- *
- * To run a query within a React component, call `useGetCountriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCountriesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetCountriesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetCountriesQuery,
-    GetCountriesQueryVariables
-  >
-) {
-  return ApolloReactHooks.useQuery<
-    GetCountriesQuery,
-    GetCountriesQueryVariables
-  >(GetCountriesDocument, baseOptions);
-}
-export function useGetCountriesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetCountriesQuery,
-    GetCountriesQueryVariables
-  >
-) {
-  return ApolloReactHooks.useLazyQuery<
-    GetCountriesQuery,
-    GetCountriesQueryVariables
-  >(GetCountriesDocument, baseOptions);
-}
-export type GetCountriesQueryHookResult = ReturnType<
-  typeof useGetCountriesQuery
->;
-export type GetCountriesLazyQueryHookResult = ReturnType<
-  typeof useGetCountriesLazyQuery
->;
-export type GetCountriesQueryResult = ApolloReactCommon.QueryResult<
-  GetCountriesQuery,
-  GetCountriesQueryVariables
->;
-export const GetCurrenciesDocument = gql`
-  query GetCurrencies {
-    getCurrencies {
-      code
-      name
-      type
-    }
-  }
-`;
-
-/**
- * __useGetCurrenciesQuery__
- *
- * To run a query within a React component, call `useGetCurrenciesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCurrenciesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCurrenciesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetCurrenciesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetCurrenciesQuery,
-    GetCurrenciesQueryVariables
-  >
-) {
-  return ApolloReactHooks.useQuery<
-    GetCurrenciesQuery,
-    GetCurrenciesQueryVariables
-  >(GetCurrenciesDocument, baseOptions);
-}
-export function useGetCurrenciesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetCurrenciesQuery,
-    GetCurrenciesQueryVariables
-  >
-) {
-  return ApolloReactHooks.useLazyQuery<
-    GetCurrenciesQuery,
-    GetCurrenciesQueryVariables
-  >(GetCurrenciesDocument, baseOptions);
-}
-export type GetCurrenciesQueryHookResult = ReturnType<
-  typeof useGetCurrenciesQuery
->;
-export type GetCurrenciesLazyQueryHookResult = ReturnType<
-  typeof useGetCurrenciesLazyQuery
->;
-export type GetCurrenciesQueryResult = ApolloReactCommon.QueryResult<
-  GetCurrenciesQuery,
-  GetCurrenciesQueryVariables
->;
-export const GetOffersDocument = gql`
-  query GetOffers($filter: String) {
-    getOffers(filter: $filter) {
-      id
-      asset_code
-      country
-      country_code
-      working_now
-      side
-      title
-      description
-      currency_code
-      price
-      min_amount
-      max_amount
-      first_trade_limit
-      fee {
-        author_fee_rate
-      }
-      balance
-      payment_window_minutes
-      confirmations
-      payment_method_instructions {
-        id
-        version
-        payment_method_id
-        payment_method_type
-        payment_method_name
-      }
-      trader {
-        login
-        online_status
-        rating
-        trades_count
-        url
-        verified
-        verified_by
-        strong_hodler
-        country
-        country_code
-        average_payment_time_minutes
-        average_release_time_minutes
-        days_since_last_trade
-      }
-    }
-  }
-`;
-
-/**
- * __useGetOffersQuery__
- *
- * To run a query within a React component, call `useGetOffersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetOffersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetOffersQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useGetOffersQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetOffersQuery,
-    GetOffersQueryVariables
-  >
-) {
-  return ApolloReactHooks.useQuery<GetOffersQuery, GetOffersQueryVariables>(
-    GetOffersDocument,
-    baseOptions
-  );
-}
-export function useGetOffersLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetOffersQuery,
-    GetOffersQueryVariables
-  >
-) {
-  return ApolloReactHooks.useLazyQuery<GetOffersQuery, GetOffersQueryVariables>(
-    GetOffersDocument,
-    baseOptions
-  );
-}
-export type GetOffersQueryHookResult = ReturnType<typeof useGetOffersQuery>;
-export type GetOffersLazyQueryHookResult = ReturnType<
-  typeof useGetOffersLazyQuery
->;
-export type GetOffersQueryResult = ApolloReactCommon.QueryResult<
-  GetOffersQuery,
-  GetOffersQueryVariables
->;
-export const CloseChannelDocument = gql`
-  mutation CloseChannel(
-    $id: String!
-    $auth: authType!
-    $forceClose: Boolean
-    $target: Int
-    $tokens: Int
-  ) {
-    closeChannel(
-      id: $id
-      forceClose: $forceClose
-      targetConfirmations: $target
-      tokensPerVByte: $tokens
-      auth: $auth
-    ) {
-      transactionId
-      transactionOutputIndex
-    }
-  }
-`;
-export type CloseChannelMutationFn = ApolloReactCommon.MutationFunction<
-  CloseChannelMutation,
-  CloseChannelMutationVariables
->;
-
-/**
- * __useCloseChannelMutation__
- *
- * To run a mutation, you first call `useCloseChannelMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCloseChannelMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [closeChannelMutation, { data, loading, error }] = useCloseChannelMutation({
- *   variables: {
- *      id: // value for 'id'
- *      auth: // value for 'auth'
- *      forceClose: // value for 'forceClose'
- *      target: // value for 'target'
- *      tokens: // value for 'tokens'
- *   },
- * });
- */
-export function useCloseChannelMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CloseChannelMutation,
-    CloseChannelMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    CloseChannelMutation,
-    CloseChannelMutationVariables
-  >(CloseChannelDocument, baseOptions);
-}
-export type CloseChannelMutationHookResult = ReturnType<
-  typeof useCloseChannelMutation
->;
-export type CloseChannelMutationResult = ApolloReactCommon.MutationResult<
-  CloseChannelMutation
->;
-export type CloseChannelMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CloseChannelMutation,
-  CloseChannelMutationVariables
->;
-export const OpenChannelDocument = gql`
-  mutation OpenChannel(
-    $amount: Int!
-    $partnerPublicKey: String!
-    $auth: authType!
-    $tokensPerVByte: Int
-    $isPrivate: Boolean
-  ) {
-    openChannel(
-      amount: $amount
-      partnerPublicKey: $partnerPublicKey
-      auth: $auth
-      tokensPerVByte: $tokensPerVByte
-      isPrivate: $isPrivate
-    ) {
-      transactionId
-      transactionOutputIndex
-    }
-  }
-`;
-export type OpenChannelMutationFn = ApolloReactCommon.MutationFunction<
-  OpenChannelMutation,
-  OpenChannelMutationVariables
->;
-
-/**
- * __useOpenChannelMutation__
- *
- * To run a mutation, you first call `useOpenChannelMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useOpenChannelMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [openChannelMutation, { data, loading, error }] = useOpenChannelMutation({
- *   variables: {
- *      amount: // value for 'amount'
- *      partnerPublicKey: // value for 'partnerPublicKey'
- *      auth: // value for 'auth'
- *      tokensPerVByte: // value for 'tokensPerVByte'
- *      isPrivate: // value for 'isPrivate'
- *   },
- * });
- */
-export function useOpenChannelMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    OpenChannelMutation,
-    OpenChannelMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    OpenChannelMutation,
-    OpenChannelMutationVariables
-  >(OpenChannelDocument, baseOptions);
-}
-export type OpenChannelMutationHookResult = ReturnType<
-  typeof useOpenChannelMutation
->;
-export type OpenChannelMutationResult = ApolloReactCommon.MutationResult<
-  OpenChannelMutation
->;
-export type OpenChannelMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  OpenChannelMutation,
-  OpenChannelMutationVariables
->;
-export const PayInvoiceDocument = gql`
-  mutation PayInvoice($request: String!, $auth: authType!, $tokens: Int) {
-    pay(request: $request, auth: $auth, tokens: $tokens) {
-      is_confirmed
-    }
-  }
-`;
-export type PayInvoiceMutationFn = ApolloReactCommon.MutationFunction<
-  PayInvoiceMutation,
-  PayInvoiceMutationVariables
->;
-
-/**
- * __usePayInvoiceMutation__
- *
- * To run a mutation, you first call `usePayInvoiceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePayInvoiceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [payInvoiceMutation, { data, loading, error }] = usePayInvoiceMutation({
- *   variables: {
- *      request: // value for 'request'
- *      auth: // value for 'auth'
- *      tokens: // value for 'tokens'
- *   },
- * });
- */
-export function usePayInvoiceMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    PayInvoiceMutation,
-    PayInvoiceMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    PayInvoiceMutation,
-    PayInvoiceMutationVariables
-  >(PayInvoiceDocument, baseOptions);
-}
-export type PayInvoiceMutationHookResult = ReturnType<
-  typeof usePayInvoiceMutation
->;
-export type PayInvoiceMutationResult = ApolloReactCommon.MutationResult<
-  PayInvoiceMutation
->;
-export type PayInvoiceMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  PayInvoiceMutation,
-  PayInvoiceMutationVariables
->;
-export const CreateInvoiceDocument = gql`
-  mutation CreateInvoice($amount: Int!, $auth: authType!) {
-    createInvoice(amount: $amount, auth: $auth) {
-      request
-    }
-  }
-`;
-export type CreateInvoiceMutationFn = ApolloReactCommon.MutationFunction<
-  CreateInvoiceMutation,
-  CreateInvoiceMutationVariables
->;
-
-/**
- * __useCreateInvoiceMutation__
- *
- * To run a mutation, you first call `useCreateInvoiceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateInvoiceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createInvoiceMutation, { data, loading, error }] = useCreateInvoiceMutation({
- *   variables: {
- *      amount: // value for 'amount'
- *      auth: // value for 'auth'
- *   },
- * });
- */
-export function useCreateInvoiceMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CreateInvoiceMutation,
-    CreateInvoiceMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    CreateInvoiceMutation,
-    CreateInvoiceMutationVariables
-  >(CreateInvoiceDocument, baseOptions);
-}
-export type CreateInvoiceMutationHookResult = ReturnType<
-  typeof useCreateInvoiceMutation
->;
-export type CreateInvoiceMutationResult = ApolloReactCommon.MutationResult<
-  CreateInvoiceMutation
->;
-export type CreateInvoiceMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateInvoiceMutation,
-  CreateInvoiceMutationVariables
->;
-export const CreateAddressDocument = gql`
-  mutation CreateAddress($nested: Boolean, $auth: authType!) {
-    createAddress(nested: $nested, auth: $auth)
-  }
-`;
-export type CreateAddressMutationFn = ApolloReactCommon.MutationFunction<
-  CreateAddressMutation,
-  CreateAddressMutationVariables
->;
-
-/**
- * __useCreateAddressMutation__
- *
- * To run a mutation, you first call `useCreateAddressMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateAddressMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createAddressMutation, { data, loading, error }] = useCreateAddressMutation({
- *   variables: {
- *      nested: // value for 'nested'
- *      auth: // value for 'auth'
- *   },
- * });
- */
-export function useCreateAddressMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CreateAddressMutation,
-    CreateAddressMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    CreateAddressMutation,
-    CreateAddressMutationVariables
-  >(CreateAddressDocument, baseOptions);
-}
-export type CreateAddressMutationHookResult = ReturnType<
-  typeof useCreateAddressMutation
->;
-export type CreateAddressMutationResult = ApolloReactCommon.MutationResult<
-  CreateAddressMutation
->;
-export type CreateAddressMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateAddressMutation,
-  CreateAddressMutationVariables
->;
-export const PayAddressDocument = gql`
-  mutation PayAddress(
-    $auth: authType!
-    $address: String!
-    $tokens: Int
-    $fee: Int
-    $target: Int
-    $sendAll: Boolean
-  ) {
-    sendToAddress(
-      auth: $auth
-      address: $address
-      tokens: $tokens
-      fee: $fee
-      target: $target
-      sendAll: $sendAll
-    ) {
-      confirmationCount
-      id
-      isConfirmed
-      isOutgoing
-      tokens
-    }
-  }
-`;
-export type PayAddressMutationFn = ApolloReactCommon.MutationFunction<
-  PayAddressMutation,
-  PayAddressMutationVariables
->;
-
-/**
- * __usePayAddressMutation__
- *
- * To run a mutation, you first call `usePayAddressMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePayAddressMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [payAddressMutation, { data, loading, error }] = usePayAddressMutation({
- *   variables: {
- *      auth: // value for 'auth'
- *      address: // value for 'address'
- *      tokens: // value for 'tokens'
- *      fee: // value for 'fee'
- *      target: // value for 'target'
- *      sendAll: // value for 'sendAll'
- *   },
- * });
- */
-export function usePayAddressMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    PayAddressMutation,
-    PayAddressMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    PayAddressMutation,
-    PayAddressMutationVariables
-  >(PayAddressDocument, baseOptions);
-}
-export type PayAddressMutationHookResult = ReturnType<
-  typeof usePayAddressMutation
->;
-export type PayAddressMutationResult = ApolloReactCommon.MutationResult<
-  PayAddressMutation
->;
-export type PayAddressMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  PayAddressMutation,
-  PayAddressMutationVariables
->;
-export const UpdateFeesDocument = gql`
-  mutation UpdateFees(
-    $auth: authType!
-    $transactionId: String
-    $transactionVout: Int
-    $baseFee: Int
-    $feeRate: Int
-  ) {
-    updateFees(
-      auth: $auth
-      transactionId: $transactionId
-      transactionVout: $transactionVout
-      baseFee: $baseFee
-      feeRate: $feeRate
-    )
-  }
-`;
-export type UpdateFeesMutationFn = ApolloReactCommon.MutationFunction<
-  UpdateFeesMutation,
-  UpdateFeesMutationVariables
->;
-
-/**
- * __useUpdateFeesMutation__
- *
- * To run a mutation, you first call `useUpdateFeesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateFeesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateFeesMutation, { data, loading, error }] = useUpdateFeesMutation({
- *   variables: {
- *      auth: // value for 'auth'
- *      transactionId: // value for 'transactionId'
- *      transactionVout: // value for 'transactionVout'
- *      baseFee: // value for 'baseFee'
- *      feeRate: // value for 'feeRate'
- *   },
- * });
- */
-export function useUpdateFeesMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    UpdateFeesMutation,
-    UpdateFeesMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    UpdateFeesMutation,
-    UpdateFeesMutationVariables
-  >(UpdateFeesDocument, baseOptions);
-}
-export type UpdateFeesMutationHookResult = ReturnType<
-  typeof useUpdateFeesMutation
->;
-export type UpdateFeesMutationResult = ApolloReactCommon.MutationResult<
-  UpdateFeesMutation
->;
-export type UpdateFeesMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateFeesMutation,
-  UpdateFeesMutationVariables
->;
-export const PayViaRouteDocument = gql`
-  mutation PayViaRoute($auth: authType!, $route: String!) {
-    payViaRoute(auth: $auth, route: $route)
-  }
-`;
-export type PayViaRouteMutationFn = ApolloReactCommon.MutationFunction<
-  PayViaRouteMutation,
-  PayViaRouteMutationVariables
->;
-
-/**
- * __usePayViaRouteMutation__
- *
- * To run a mutation, you first call `usePayViaRouteMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePayViaRouteMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [payViaRouteMutation, { data, loading, error }] = usePayViaRouteMutation({
- *   variables: {
- *      auth: // value for 'auth'
- *      route: // value for 'route'
- *   },
- * });
- */
-export function usePayViaRouteMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    PayViaRouteMutation,
-    PayViaRouteMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    PayViaRouteMutation,
-    PayViaRouteMutationVariables
-  >(PayViaRouteDocument, baseOptions);
-}
-export type PayViaRouteMutationHookResult = ReturnType<
-  typeof usePayViaRouteMutation
->;
-export type PayViaRouteMutationResult = ApolloReactCommon.MutationResult<
-  PayViaRouteMutation
->;
-export type PayViaRouteMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  PayViaRouteMutation,
-  PayViaRouteMutationVariables
->;
-export const RemovePeerDocument = gql`
-  mutation RemovePeer($auth: authType!, $publicKey: String!) {
-    removePeer(auth: $auth, publicKey: $publicKey)
-  }
-`;
-export type RemovePeerMutationFn = ApolloReactCommon.MutationFunction<
-  RemovePeerMutation,
-  RemovePeerMutationVariables
->;
-
-/**
- * __useRemovePeerMutation__
- *
- * To run a mutation, you first call `useRemovePeerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRemovePeerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [removePeerMutation, { data, loading, error }] = useRemovePeerMutation({
- *   variables: {
- *      auth: // value for 'auth'
- *      publicKey: // value for 'publicKey'
- *   },
- * });
- */
-export function useRemovePeerMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    RemovePeerMutation,
-    RemovePeerMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    RemovePeerMutation,
-    RemovePeerMutationVariables
-  >(RemovePeerDocument, baseOptions);
-}
-export type RemovePeerMutationHookResult = ReturnType<
-  typeof useRemovePeerMutation
->;
-export type RemovePeerMutationResult = ApolloReactCommon.MutationResult<
-  RemovePeerMutation
->;
-export type RemovePeerMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RemovePeerMutation,
-  RemovePeerMutationVariables
->;
-export const AddPeerDocument = gql`
-  mutation AddPeer(
-    $auth: authType!
-    $publicKey: String!
-    $socket: String!
-    $isTemporary: Boolean
-  ) {
-    addPeer(
-      auth: $auth
-      publicKey: $publicKey
-      socket: $socket
-      isTemporary: $isTemporary
-    )
-  }
-`;
-export type AddPeerMutationFn = ApolloReactCommon.MutationFunction<
-  AddPeerMutation,
-  AddPeerMutationVariables
->;
-
-/**
- * __useAddPeerMutation__
- *
- * To run a mutation, you first call `useAddPeerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddPeerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addPeerMutation, { data, loading, error }] = useAddPeerMutation({
- *   variables: {
- *      auth: // value for 'auth'
- *      publicKey: // value for 'publicKey'
- *      socket: // value for 'socket'
- *      isTemporary: // value for 'isTemporary'
- *   },
- * });
- */
-export function useAddPeerMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    AddPeerMutation,
-    AddPeerMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    AddPeerMutation,
-    AddPeerMutationVariables
-  >(AddPeerDocument, baseOptions);
-}
-export type AddPeerMutationHookResult = ReturnType<typeof useAddPeerMutation>;
-export type AddPeerMutationResult = ApolloReactCommon.MutationResult<
-  AddPeerMutation
->;
-export type AddPeerMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AddPeerMutation,
-  AddPeerMutationVariables
->;
-export const SendMessageDocument = gql`
-  mutation SendMessage(
-    $auth: authType!
-    $publicKey: String!
-    $message: String!
-    $messageType: String
-    $tokens: Int
-    $maxFee: Int
-  ) {
-    sendMessage(
-      auth: $auth
-      publicKey: $publicKey
-      message: $message
-      messageType: $messageType
-      tokens: $tokens
-      maxFee: $maxFee
-    )
-  }
-`;
-export type SendMessageMutationFn = ApolloReactCommon.MutationFunction<
-  SendMessageMutation,
-  SendMessageMutationVariables
->;
-
-/**
- * __useSendMessageMutation__
- *
- * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSendMessageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
- *   variables: {
- *      auth: // value for 'auth'
- *      publicKey: // value for 'publicKey'
- *      message: // value for 'message'
- *      messageType: // value for 'messageType'
- *      tokens: // value for 'tokens'
- *      maxFee: // value for 'maxFee'
- *   },
- * });
- */
-export function useSendMessageMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    SendMessageMutation,
-    SendMessageMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    SendMessageMutation,
-    SendMessageMutationVariables
-  >(SendMessageDocument, baseOptions);
-}
-export type SendMessageMutationHookResult = ReturnType<
-  typeof useSendMessageMutation
->;
-export type SendMessageMutationResult = ApolloReactCommon.MutationResult<
-  SendMessageMutation
->;
-export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SendMessageMutation,
-  SendMessageMutationVariables
->;
 export const GetNetworkInfoDocument = gql`
   query GetNetworkInfo($auth: authType!) {
     getNetworkInfo(auth: $auth) {
