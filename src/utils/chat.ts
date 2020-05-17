@@ -1,7 +1,7 @@
 import groupBy from 'lodash.groupby';
 import { sortBy } from 'underscore';
+import { MessagesType } from 'src/graphql/types';
 import { MessageType } from '../views/chat/Chat.types';
-import { MessagesType } from '../generated/graphql';
 
 export const separateBySender = (chats: any[]) => {
   return groupBy(chats, 'sender');

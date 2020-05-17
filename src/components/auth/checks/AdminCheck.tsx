@@ -2,9 +2,9 @@ import React from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { X, Check } from 'react-feather';
 import { getAuthObj } from 'src/utils/auth';
+import { useGetCanAdminQuery } from 'src/graphql/queries/__generated__/adminCheck.generated';
 import { SingleLine, Sub4Title } from '../../generic/Styled';
 import { themeColors } from '../../../styles/Themes';
-import { useGetCanAdminQuery } from '../../../generated/graphql';
 
 type AdminProps = {
   host: string;

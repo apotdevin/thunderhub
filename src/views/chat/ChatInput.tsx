@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
+import { useSendMessageMutation } from 'src/graphql/mutations/__generated__/sendMessage.generated';
 import { Input } from '../../components/input/Input';
 import { SingleLine } from '../../components/generic/Styled';
-import { useSendMessageMutation } from '../../generated/graphql';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetInOutQuery } from 'src/graphql/queries/__generated__/getInOut.generated';
 import {
   CardWithTitle,
   SubTitle,
@@ -12,7 +13,6 @@ import {
 import { ButtonRow } from '../forwardReport/Buttons';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { useGetInOutQuery } from '../../../../generated/graphql';
 import { InvoicePie } from './InvoicePie';
 import { FlowPie } from './FlowPie';
 import { FlowReport } from './FlowReport';

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import sortBy from 'lodash.sortby';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
 import {
   CardWithTitle,
   Card,
@@ -21,7 +22,6 @@ import { BalanceRoute } from '../src/views/balance/BalanceRoute';
 import { Price } from '../src/components/price/Price';
 import { useStatusState } from '../src/context/StatusContext';
 import { Text } from '../src/components/typography/Styled';
-import { useGetChannelsQuery } from '../src/generated/graphql';
 
 const BalanceView = () => {
   const { minorVersion } = useStatusState();

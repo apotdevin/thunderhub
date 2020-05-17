@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
 import styled from 'styled-components';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetForwardChannelsReportQuery } from 'src/graphql/queries/__generated__/getForwardChannelsReport.generated';
 import { getErrorContent } from '../../../../utils/error';
 import {
   DarkSubTitle,
@@ -13,7 +14,6 @@ import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { useConfigState } from '../../../../context/ConfigContext';
 import { usePriceState } from '../../../../context/PriceContext';
-import { useGetForwardChannelsReportQuery } from '../../../../generated/graphql';
 import { CardContent } from '.';
 
 const ChannelRow = styled.div`

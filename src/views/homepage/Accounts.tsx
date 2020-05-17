@@ -14,10 +14,10 @@ import {
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
 import { useStatusDispatch } from 'src/context/StatusContext';
+import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { Section } from '../../components/section/Section';
 import { Card, SingleLine } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { useGetCanConnectLazyQuery } from '../../generated/graphql';
 import { ConnectTitle, LockPadding } from './HomePage.styled';
 
 const AccountLine = styled.div`

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useAccountState } from 'src/context/AccountContext';
-import { useGetNodeLazyQuery } from '../../generated/graphql';
+import { useGetNodeLazyQuery } from 'src/graphql/queries/__generated__/getNode.generated';
 import { useChatDispatch, useChatState } from '../../context/ChatContext';
 import { SingleLine } from '../../components/generic/Styled';
 import { getMessageDate } from '../../components/generic/helpers';

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
+import { useDecodeRequestQuery } from 'src/graphql/queries/__generated__/decodeRequest.generated';
 import { getErrorContent } from '../../../../utils/error';
-import { useDecodeRequestQuery } from '../../../../generated/graphql';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import {
   renderLine,

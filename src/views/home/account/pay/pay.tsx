@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
+import { usePayInvoiceMutation } from 'src/graphql/mutations/__generated__/pay.generated';
 import {
   Sub4Title,
   ResponsiveLine,
@@ -11,7 +12,6 @@ import { SecureButton } from '../../../../components/buttons/secureButton/Secure
 import { Input } from '../../../../components/input/Input';
 import Modal from '../../../../components/modal/ReactModal';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { usePayInvoiceMutation } from '../../../../generated/graphql';
 import { useStatusState } from '../../../../context/StatusContext';
 import {
   isLightningInvoice,

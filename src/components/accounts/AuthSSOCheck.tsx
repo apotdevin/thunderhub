@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { useGetAuthTokenQuery } from 'src/generated/graphql';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { useAccountState } from 'src/context/AccountContext';
 import { appendBasePath } from 'src/utils/basePath';
+import { useGetAuthTokenQuery } from 'src/graphql/queries/__generated__/getAuthToken.generated';
 
 type AuthCheckProps = {
   cookieParam: string | null;

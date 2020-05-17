@@ -1,4 +1,3 @@
-import { useGetServerAccountsQuery } from 'src/generated/graphql';
 import * as React from 'react';
 import {
   useAccountDispatch,
@@ -6,6 +5,7 @@ import {
   SSO_ACCOUNT,
 } from 'src/context/AccountContext';
 import { addIdAndTypeToAccount } from 'src/context/helpers/context';
+import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/getServerAccounts.generated';
 
 export const ServerAccounts = () => {
   const dispatch = useAccountDispatch();

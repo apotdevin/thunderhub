@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ChevronRight, X } from 'react-feather';
 import { useAccountState } from 'src/context/AccountContext';
+import { useChannelFeesQuery } from 'src/graphql/queries/__generated__/getChannelFees.generated';
+import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
 import {
   Card,
   CardWithTitle,
@@ -21,10 +23,6 @@ import { SecureButton } from '../src/components/buttons/secureButton/SecureButto
 import { AdminSwitch } from '../src/components/adminSwitch/AdminSwitch';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { Input } from '../src/components/input/Input';
-import {
-  useChannelFeesQuery,
-  useUpdateFeesMutation,
-} from '../src/generated/graphql';
 
 const FeesView = () => {
   const [indexOpen, setIndexOpen] = useState(0);

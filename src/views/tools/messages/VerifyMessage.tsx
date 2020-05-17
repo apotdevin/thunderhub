@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { X, Copy } from 'react-feather';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useAccountState } from 'src/context/AccountContext';
+import { useVerifyMessageLazyQuery } from 'src/graphql/queries/__generated__/verifyMessage.generated';
 import { Input } from '../../../components/input/Input';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import {
@@ -13,7 +14,6 @@ import {
 import { getErrorContent } from '../../../utils/error';
 import { Column, WrapRequest } from '../Tools.styled';
 import { getNodeLink } from '../../../components/generic/helpers';
-import { useVerifyMessageLazyQuery } from '../../../generated/graphql';
 import { NoWrap } from './Messages';
 
 export const VerifyMessage = () => {

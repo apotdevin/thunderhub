@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetChannelAmountInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { Channels } from '../src/views/channels/channels/Channels';
 import { PendingChannels } from '../src/views/channels/pendingChannels/PendingChannels';
 import { ClosedChannels } from '../src/views/channels/closedChannels/ClosedChannels';
@@ -12,7 +13,6 @@ import {
 } from '../src/components/generic/Styled';
 import { useConfigState } from '../src/context/ConfigContext';
 import { textColorMap } from '../src/styles/Themes';
-import { useGetChannelAmountInfoQuery } from '../src/generated/graphql';
 
 const ChannelView = () => {
   const [view, setView] = useState<number>(1);

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Globe, Cpu } from 'react-feather';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetNetworkInfoQuery } from 'src/graphql/queries/__generated__/getNetworkInfo.generated';
 import {
   Card,
   CardWithTitle,
@@ -12,7 +13,6 @@ import {
 import { unSelectedNavButton, mediaWidths } from '../../../styles/Themes';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { Price } from '../../../components/price/Price';
-import { useGetNetworkInfoQuery } from '../../../generated/graphql';
 
 const Tile = styled.div`
   display: flex;

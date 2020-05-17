@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
 import {
   CardWithTitle,
   SubTitle,
@@ -8,7 +9,6 @@ import {
 import { PeersCard } from '../src/views/peers/PeersCard';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { AddPeer } from '../src/views/peers/AddPeer';
-import { useGetPeersQuery } from '../src/generated/graphql';
 
 const PeersView = () => {
   const [indexOpen, setIndexOpen] = useState(0);

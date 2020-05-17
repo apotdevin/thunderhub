@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { X } from 'react-feather';
 import { useAccountState } from 'src/context/AccountContext';
+import { useVerifyBackupsLazyQuery } from 'src/graphql/queries/__generated__/verifyBackups.generated';
 import { getErrorContent } from '../../../utils/error';
 import {
   SingleLine,
@@ -11,7 +12,6 @@ import {
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../../components/input/Input';
 import { NoWrap } from '../Tools.styled';
-import { useVerifyBackupsLazyQuery } from '../../../generated/graphql';
 
 export const VerifyBackups = () => {
   const [backupString, setBackupString] = useState<string>('');

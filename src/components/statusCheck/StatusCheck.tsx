@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { useStatusDispatch } from '../../context/StatusContext';
-import { useGetNodeInfoQuery } from '../../generated/graphql';
 import { appendBasePath } from '../../utils/basePath';
 
 export const StatusCheck = () => {

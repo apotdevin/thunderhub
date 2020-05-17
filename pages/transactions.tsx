@@ -3,6 +3,10 @@ import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
 import { InvoiceCard } from 'src/views/transactions/InvoiceCard';
 import {
+  useGetResumeQuery,
+  GetResumeQuery,
+} from 'src/graphql/queries/__generated__/getResume.generated';
+import {
   Card,
   CardWithTitle,
   SubTitle,
@@ -12,7 +16,6 @@ import { PaymentsCard } from '../src/views/transactions/PaymentsCards';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { FlowBox } from '../src/views/home/reports/flow';
-import { useGetResumeQuery, GetResumeQuery } from '../src/generated/graphql';
 
 const TransactionsView = () => {
   const [indexOpen, setIndexOpen] = useState(0);

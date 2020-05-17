@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetUtxosQuery } from 'src/graphql/queries/__generated__/getUtxos.generated';
 import {
   SubTitle,
   Card,
@@ -8,7 +9,6 @@ import {
 } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
-import { useGetUtxosQuery } from '../../../generated/graphql';
 import { UtxoCard } from './UtxoCard';
 
 export const ChainUtxos = () => {

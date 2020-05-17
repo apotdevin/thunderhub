@@ -7,6 +7,7 @@ import {
   VictoryTooltip,
 } from 'victory';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetLiquidReportQuery } from 'src/graphql/queries/__generated__/getChannelReport.generated';
 import {
   CardWithTitle,
   SubTitle,
@@ -21,7 +22,6 @@ import {
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
-import { useGetLiquidReportQuery } from '../../../../generated/graphql';
 
 export const LiquidReport = () => {
   const { auth } = useAccountState();

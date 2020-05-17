@@ -4,12 +4,12 @@ import { toast } from 'react-toastify';
 import { Circle } from 'react-feather';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { useAccountState } from 'src/context/AccountContext';
+import { useSendMessageMutation } from 'src/graphql/mutations/__generated__/sendMessage.generated';
 import {
   chatBubbleColor,
   chatSentBubbleColor,
   chartColors,
 } from '../../styles/Themes';
-import { useSendMessageMutation } from '../../generated/graphql';
 import { getErrorContent } from '../../utils/error';
 import { SecureWrapper } from '../../components/buttons/secureButton/SecureWrapper';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';

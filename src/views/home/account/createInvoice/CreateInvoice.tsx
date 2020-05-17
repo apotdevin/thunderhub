@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import QRCode from 'qrcode.react';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { useCreateInvoiceMutation } from 'src/graphql/mutations/__generated__/createInvoice.generated';
 import { getErrorContent } from '../../../../utils/error';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
@@ -13,7 +14,6 @@ import {
 } from '../../../../components/generic/Styled';
 import { Input } from '../../../../components/input/Input';
 import { mediaWidths } from '../../../../styles/Themes';
-import { useCreateInvoiceMutation } from '../../../../generated/graphql';
 
 const Responsive = styled.div`
   display: flex;

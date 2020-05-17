@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AlertTriangle } from 'react-feather';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
+import { useCloseChannelMutation } from 'src/graphql/mutations/__generated__/closeChannel.generated';
 import {
   Separation,
   SingleLine,
@@ -17,7 +18,6 @@ import {
 } from '../../buttons/multiButton/MultiButton';
 import { Input } from '../../input/Input';
 import { useBitcoinState } from '../../../context/BitcoinContext';
-import { useCloseChannelMutation } from '../../../generated/graphql';
 
 interface CloseChannelProps {
   setModalOpen: (status: boolean) => void;

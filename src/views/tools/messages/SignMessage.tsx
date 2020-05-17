@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { X, Copy } from 'react-feather';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useAccountState } from 'src/context/AccountContext';
+import { useSignMessageLazyQuery } from 'src/graphql/queries/__generated__/signMessage.generated';
 import { Input } from '../../../components/input/Input';
 import { SecureButton } from '../../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
@@ -14,7 +15,6 @@ import {
 import { getErrorContent } from '../../../utils/error';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { Column, WrapRequest } from '../Tools.styled';
-import { useSignMessageLazyQuery } from '../../../generated/graphql';
 import { NoWrap } from './Messages';
 
 export const SignMessage = () => {

@@ -12,6 +12,8 @@ import {
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
 import Cookies from 'js-cookie';
+import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
+import { useGetSessionTokenLazyQuery } from 'src/graphql/queries/__generated__/getSessionToken.generated';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { getAuthObj } from '../../utils/auth';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
@@ -19,10 +21,6 @@ import { Input } from '../../components/input/Input';
 import { Section } from '../../components/section/Section';
 import { Title } from '../../components/typography/Styled';
 import { inverseTextColor, mediaWidths } from '../../styles/Themes';
-import {
-  useGetCanConnectLazyQuery,
-  useGetSessionTokenLazyQuery,
-} from '../../generated/graphql';
 import { useStatusDispatch } from '../../context/StatusContext';
 
 const StyledTitle = styled(Title)`

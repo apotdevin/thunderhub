@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { X, ChevronRight } from 'react-feather';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
 import { Input } from '../../components/input/Input';
-import { useGetPeersQuery } from '../../generated/graphql';
 import {
   SubCard,
   ResponsiveSingle,

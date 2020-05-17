@@ -1,9 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import {
-  useDecodeRequestQuery,
-  useGetNodeQuery,
-} from '../../../../generated/graphql';
+import { useDecodeRequestQuery } from 'src/graphql/queries/__generated__/decodeRequest.generated';
+import { useGetNodeQuery } from 'src/graphql/queries/__generated__/getNode.generated';
 import {
   SingleLine,
   SubTitle,

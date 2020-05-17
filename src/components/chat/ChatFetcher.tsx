@@ -2,8 +2,8 @@ import * as React from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetMessagesQuery } from 'src/graphql/queries/__generated__/getMessages.generated';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
-import { useGetMessagesQuery } from '../../generated/graphql';
 import { getErrorContent } from '../../utils/error';
 import { useConfigState } from '../../context/ConfigContext';
 

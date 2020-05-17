@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetBackupsLazyQuery } from 'src/graphql/queries/__generated__/getBackups.generated';
 import { DarkSubTitle, SingleLine } from '../../../components/generic/Styled';
 import { saveToPc } from '../../../utils/helpers';
 import { getErrorContent } from '../../../utils/error';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { useGetBackupsLazyQuery } from '../../../generated/graphql';
 
 export const DownloadBackups = () => {
   const { account, auth } = useAccountState();

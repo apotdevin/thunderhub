@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronRight } from 'react-feather';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import { useOpenChannelMutation } from 'src/graphql/mutations/__generated__/openChannel.generated';
 import {
   Card,
   SingleLine,
@@ -20,7 +21,6 @@ import {
 } from '../../../../components/buttons/multiButton/MultiButton';
 import { Price } from '../../../../components/price/Price';
 import { mediaWidths } from '../../../../styles/Themes';
-import { useOpenChannelMutation } from '../../../../generated/graphql';
 
 const ResponsiveWrap = styled(SingleLine)`
   @media (${mediaWidths.mobile}) {

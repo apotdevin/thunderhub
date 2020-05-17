@@ -8,6 +8,7 @@ import {
 } from 'victory';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetForwardReportQuery } from 'src/graphql/queries/__generated__/getForwardReport.generated';
 import {
   chartAxisColor,
   chartBarColor,
@@ -19,7 +20,6 @@ import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
-import { useGetForwardReportQuery } from '../../../../generated/graphql';
 import { CardContent } from '.';
 
 interface Props {

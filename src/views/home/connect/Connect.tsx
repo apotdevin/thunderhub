@@ -4,6 +4,7 @@ import { Radio, Copy } from 'react-feather';
 import styled from 'styled-components';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useAccountState } from 'src/context/AccountContext';
+import { useGetCanConnectInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import {
@@ -16,7 +17,6 @@ import {
   ColorButton,
 } from '../../../components/generic/Styled';
 import { mediaWidths } from '../../../styles/Themes';
-import { useGetCanConnectInfoQuery } from '../../../generated/graphql';
 
 const Key = styled.div`
   overflow: hidden;
