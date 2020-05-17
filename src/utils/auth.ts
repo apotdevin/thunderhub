@@ -1,5 +1,6 @@
 import base64url from 'base64url';
 import { v5 as uuidv5 } from 'uuid';
+import { CLIENT_ACCOUNT } from '../context/AccountContext';
 
 const THUNDERHUB_NAMESPACE = '00000000-0000-0000-0000-000000000000';
 
@@ -101,7 +102,7 @@ export const getAuthObj = (
   viewOnly: string | undefined,
   admin: string | undefined,
   cert: string | undefined
-): {} | undefined => {
+) => {
   if (!host) {
     return null;
   }
@@ -110,6 +111,7 @@ export const getAuthObj = (
   }
 
   return {
+    type: CLIENT_ACCOUNT,
     host,
     macaroon: viewOnly && viewOnly !== '' ? viewOnly : admin,
     cert,

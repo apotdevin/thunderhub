@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Cookies from 'js-cookie';
 import {
   getAccountById,
   deleteAccountById,
@@ -49,18 +50,29 @@ type State = {
   auth: AuthType | null;
   activeAccount: string | null;
   session: string | null;
+  ssoSaved: boolean;
   account: CompleteAccount | null;
   accounts: CompleteAccount[];
 };
 
 type ActionType =
   | {
+      type: 'initialize';
+      changeId: string;
+      accountsToAdd: CompleteAccount[];
+      session: string;
+    }
+  | {
       type: 'changeAccount' | 'deleteAccount';
       changeId: string;
     }
   | {
+      type: 'logout';
+    }
+  | {
       type: 'addAccounts';
       accountsToAdd: CompleteAccount[];
+      isSSO?: boolean;
     }
   | {
       type: 'addAccountAndSave';
@@ -91,12 +103,30 @@ const initialState: State = {
   auth: null,
   session: null,
   activeAccount: null,
+  ssoSaved: false,
   account: null,
   accounts: [],
 };
 
 const stateReducer = (state: State, action: ActionType): State => {
   switch (action.type) {
+    case 'initialize': {
+      const { accountsToAdd, changeId, session } = action;
+
+      const { account, id } = getAccountById(changeId, accountsToAdd);
+
+      if (!account) return state;
+
+      const auth = getAuthFromAccount(account);
+      return {
+        ...state,
+        auth,
+        account,
+        accounts: accountsToAdd,
+        activeAccount: id,
+        session,
+      };
+    }
     case 'changeAccount': {
       const { account, id } = getAccountById(action.changeId, state.accounts);
 
@@ -104,6 +134,7 @@ const stateReducer = (state: State, action: ActionType): State => {
 
       const auth = getAuthFromAccount(account);
 
+      account.type === SERVER_ACCOUNT && Cookies.remove('AccountAuth');
       localStorage.setItem('active', `${id}`);
       sessionStorage.removeItem('session');
 
@@ -115,6 +146,17 @@ const stateReducer = (state: State, action: ActionType): State => {
         activeAccount: id,
       };
     }
+    case 'logout':
+      sessionStorage.clear();
+      Cookies.remove('AccountAuth');
+      Cookies.remove('SSOAuth');
+      return {
+        ...state,
+        account: null,
+        activeAccount: null,
+        auth: null,
+        session: null,
+      };
     case 'deleteAccount': {
       if (!state.accounts || state?.accounts?.length <= 0) {
         return state;
@@ -134,9 +176,14 @@ const stateReducer = (state: State, action: ActionType): State => {
     }
     case 'addAccounts': {
       if (action.accountsToAdd.length > 0) {
+        const savedAccounts = JSON.parse(
+          localStorage.getItem('accounts') || '[]'
+        );
+        const accountsToAdd = savedAccounts.map(a => addIdAndTypeToAccount(a));
         return {
           ...state,
-          accounts: [...state.accounts, ...action.accountsToAdd],
+          accounts: [...accountsToAdd, ...action.accountsToAdd],
+          ...(action.isSSO && { ssoSaved: true }),
         };
       }
       return state;
@@ -206,9 +253,11 @@ const stateReducer = (state: State, action: ActionType): State => {
       };
     }
     case 'deleteAll':
-      sessionStorage.removeItem('session');
-      localStorage.removeItem('accounts');
-      localStorage.removeItem('active');
+      localStorage.clear();
+      sessionStorage.clear();
+      Cookies.remove('config');
+      Cookies.remove('AccountAuth');
+      Cookies.remove('SSOAuth');
       return initialState;
     default:
       return state;

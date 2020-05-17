@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
-import { useAccountState } from 'src/context/AccountContext';
+import {
+  useAccountState,
+  SSO_ACCOUNT,
+  useAccountDispatch,
+} from 'src/context/AccountContext';
 import { appendBasePath } from 'src/utils/basePath';
 import { useGetAuthTokenQuery } from 'src/graphql/queries/__generated__/getAuthToken.generated';
 
@@ -10,8 +14,9 @@ type AuthCheckProps = {
 };
 
 export const AuthSSOCheck = ({ cookieParam }: AuthCheckProps) => {
-  const { query, push } = useRouter();
-  const { accounts } = useAccountState();
+  const { push } = useRouter();
+  const { accounts, ssoSaved } = useAccountState();
+  const dispatch = useAccountDispatch();
 
   const { data, loading } = useGetAuthTokenQuery({
     skip: !cookieParam,
@@ -20,13 +25,25 @@ export const AuthSSOCheck = ({ cookieParam }: AuthCheckProps) => {
   });
 
   React.useEffect(() => {
-    if (cookieParam && !loading && data?.getAuthToken) {
+    if (cookieParam && !loading && data?.getAuthToken && !ssoSaved) {
       Cookies.set('SSOAuth', data.getAuthToken, {
         sameSite: 'strict',
       });
+      dispatch({
+        type: 'addAccounts',
+        accountsToAdd: [
+          {
+            name: 'SSO Account',
+            id: SSO_ACCOUNT,
+            loggedIn: true,
+            type: SSO_ACCOUNT,
+          },
+        ],
+        isSSO: true,
+      });
       push(appendBasePath('/'));
     }
-  }, [query, push, data, loading, cookieParam, accounts]);
+  }, [push, data, loading, cookieParam, accounts, dispatch, ssoSaved]);
 
   return null;
 };

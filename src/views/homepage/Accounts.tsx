@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { getAuthObj } from 'src/utils/auth';
-import { Lock } from 'react-feather';
+import { Lock, Unlock } from 'react-feather';
 import { chartColors } from 'src/styles/Themes';
 import {
   useAccountState,
@@ -79,13 +79,17 @@ export const Accounts = () => {
   };
 
   const getTitle = account => {
-    const { type, name } = account;
+    const { type, name, loggedIn } = account;
     if (type !== CLIENT_ACCOUNT) {
+      const props = {
+        color: chartColors.green,
+        size: 14,
+      };
       return (
         <div>
           {type === SSO_ACCOUNT ? 'SSO Account' : name}
           <LockPadding>
-            <Lock color={chartColors.green} size={14} />
+            {loggedIn ? <Unlock {...props} /> : <Lock {...props} />}
           </LockPadding>
         </div>
       );

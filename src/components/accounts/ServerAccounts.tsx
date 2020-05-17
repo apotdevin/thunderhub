@@ -10,16 +10,24 @@ import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/get
 export const ServerAccounts = () => {
   const dispatch = useAccountDispatch();
 
-  const { data, loading } = useGetServerAccountsQuery();
+  const { data, loading } = useGetServerAccountsQuery({
+    fetchPolicy: 'network-only',
+  });
 
   React.useEffect(() => {
     const session = sessionStorage.getItem('session') || null;
     const changeId = localStorage.getItem('active') || null;
     const savedAccounts = JSON.parse(localStorage.getItem('accounts') || '[]');
     const accountsToAdd = savedAccounts.map(a => addIdAndTypeToAccount(a));
-    dispatch({ type: 'addAccounts', accountsToAdd });
-    changeId && dispatch({ type: 'changeAccount', changeId });
-    session && dispatch({ type: 'addSession', session });
+    const storedAccounts = JSON.parse(
+      localStorage.getItem('storedAccounts') || '[]'
+    );
+    dispatch({
+      type: 'initialize',
+      accountsToAdd: [...accountsToAdd, ...storedAccounts],
+      changeId,
+      session,
+    });
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -27,10 +35,13 @@ export const ServerAccounts = () => {
       const accountsToAdd = data.getServerAccounts.map(a => {
         const type = a?.id === SSO_ACCOUNT ? SSO_ACCOUNT : SERVER_ACCOUNT;
         return {
-          ...a,
+          name: a.name,
+          id: a.id,
+          loggedIn: a.loggedIn,
           type,
         };
       });
+      localStorage.setItem('storedAccounts', JSON.stringify(accountsToAdd));
       dispatch({ type: 'addAccounts', accountsToAdd });
     }
   }, [loading, data, dispatch]);

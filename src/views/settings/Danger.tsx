@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { AlertCircle } from 'react-feather';
 import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
 import {
   useAccountState,
   useAccountDispatch,
@@ -72,7 +71,7 @@ export const FixedWidth = styled.div`
 export const DangerView = () => {
   const { account, accounts } = useAccountState();
 
-  const clientAccount = account.type === CLIENT_ACCOUNT ? account : null;
+  const clientAccount = account?.type === CLIENT_ACCOUNT ? account : null;
   const clientAccounts = accounts.filter(a => a.type === CLIENT_ACCOUNT);
 
   const dispatch = useStatusDispatch();
@@ -89,9 +88,6 @@ export const DangerView = () => {
     dispatch({ type: 'disconnected' });
     chatDispatch({ type: 'disconnected' });
     dispatchAccount({ type: 'deleteAll' });
-    localStorage.clear();
-    sessionStorage.clear();
-    Cookies.remove('config');
     push(appendBasePath('/'));
   };
 

@@ -18,24 +18,27 @@ export const ChatInit = () => {
   });
 
   React.useEffect(() => {
-    const storageChats = localStorage.getItem(`${account.id}-sentChats`) || '';
+    if (account) {
+      const storageChats =
+        localStorage.getItem(`${account.id}-sentChats`) || '';
 
-    if (storageChats !== '') {
-      try {
-        const savedChats = JSON.parse(storageChats);
-        if (savedChats.length > 0) {
-          const sender = savedChats[0].sender;
-          dispatch({
-            type: 'initialized',
-            sentChats: savedChats,
-            sender,
-          });
+      if (storageChats !== '') {
+        try {
+          const savedChats = JSON.parse(storageChats);
+          if (savedChats.length > 0) {
+            const sender = savedChats[0].sender;
+            dispatch({
+              type: 'initialized',
+              sentChats: savedChats,
+              sender,
+            });
+          }
+        } catch (error) {
+          localStorage.removeItem('sentChats');
         }
-      } catch (error) {
-        localStorage.removeItem('sentChats');
       }
+      getMessages();
     }
-    getMessages();
   }, [dispatch, getMessages, account]);
 
   React.useEffect(() => {

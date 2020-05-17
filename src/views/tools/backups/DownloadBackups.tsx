@@ -16,7 +16,7 @@ export const DownloadBackups = () => {
   });
 
   useEffect(() => {
-    if (!loading && data && data.getBackups) {
+    if (account && !loading && data && data.getBackups) {
       saveToPc(data.getBackups, `ChannelBackup-${account.name}-${account.id}`);
       localStorage.setItem(`lastBackup-${account.id}`, new Date().toString());
       toast.success('Downloaded');

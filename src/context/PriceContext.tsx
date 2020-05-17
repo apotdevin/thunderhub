@@ -14,10 +14,14 @@ type ChangeState = {
   prices?: { [key: string]: PriceProps };
 };
 
-type ActionType = {
-  type: 'fetched' | 'dontShow';
-  state?: ChangeState;
-};
+type ActionType =
+  | {
+      type: 'fetched';
+      state: ChangeState;
+    }
+  | {
+      type: 'dontShow';
+    };
 
 type Dispatch = (action: ActionType) => void;
 
@@ -40,7 +44,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const PriceProvider = ({ children }: any) => {
+const PriceProvider = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (

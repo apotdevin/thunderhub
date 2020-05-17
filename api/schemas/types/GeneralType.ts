@@ -1,11 +1,11 @@
-import { GraphQLInputObjectType, GraphQLString } from 'graphql';
+import { GraphQLInputObjectType, GraphQLString, GraphQLNonNull } from 'graphql';
 
 export const AuthType = new GraphQLInputObjectType({
   name: 'authType',
   fields: () => {
     return {
       type: {
-        type: GraphQLString,
+        type: new GraphQLNonNull(GraphQLString),
       },
       id: {
         type: GraphQLString,
