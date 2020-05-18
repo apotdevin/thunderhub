@@ -5,21 +5,20 @@ export const FooterWrapper = styled.div`
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 250px;
+  height: 120px;
 `;
 
 export const FooterStyle = styled.div`
-  padding: 40px 0 16px;
-  min-height: 250px;
+  padding: 16px 0;
+  min-height: 120px;
   color: ${headerTextColor};
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   @media (${mediaWidths.mobile}) {
-    flex-direction: column;
-    padding: 0 0 40px;
-    justify-content: center;
-    align-items: center;
+    padding-bottom: 32px;
   }
 `;
 
@@ -30,20 +29,17 @@ export const SideFooter = styled.div`
   align-items: flex-start;
 
   @media (${mediaWidths.mobile}) {
-    width: 100%;
     justify-content: center;
     align-items: center;
-    text-align: center;
   }
 `;
 
 export const RightFooter = styled(SideFooter)`
   justify-content: flex-start;
   align-items: flex-end;
-  width: 80%;
 
   @media (${mediaWidths.mobile}) {
-    margin-top: 32px;
+    margin: 16px 0;
   }
 `;
 
@@ -52,7 +48,7 @@ export const Title = styled.div`
   color: ${headerTextColor};
 `;
 
-export const SideText = styled.p`
+export const SideText = styled.div`
   font-size: 14px;
   color: ${fontColors.grey7};
 
@@ -61,18 +57,31 @@ export const SideText = styled.p`
   }
 `;
 
-export const CopyrightText = styled(SideText)`
-  font-size: 12px;
-  color: ${fontColors.blue};
-`;
-
 export const Line = styled.div`
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
 `;
 
 export const Version = styled.div`
   font-size: 12px;
   margin-left: 8px;
+`;
+
+export const FooterRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  @media (${mediaWidths.mobile}) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
+export const FooterCenterText = styled(SideText)`
+  width: 100%;
+  text-align: center;
+  margin-top: 16px;
 `;
