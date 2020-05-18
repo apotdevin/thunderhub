@@ -126,13 +126,13 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     } else if (!admin && !viewOnly) {
       toast.error('View-Only or Admin macaroon are needed to connect.');
     } else {
-      let correctViewOnly = viewOnly;
+      let correctViewOnly = viewOnly || null;
       if (!viewOnly && admin && !password) {
         correctViewOnly = admin;
       }
 
       const encryptedAdmin =
-        admin && password ? AES.encrypt(admin, password).toString() : undefined;
+        admin && password ? AES.encrypt(admin, password).toString() : null;
 
       dispatch({ type: 'disconnected' });
       dispatchChat({ type: 'disconnected' });
@@ -145,9 +145,10 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
           viewOnly: correctViewOnly,
           cert,
         },
+        ...(!correctViewOnly && { session: admin }),
       });
 
-      push(appendBasePath('/'));
+      push(appendBasePath('/home'));
     }
   };
 

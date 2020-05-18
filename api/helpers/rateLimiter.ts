@@ -1,4 +1,5 @@
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
+import { logger } from './logger';
 
 interface RateConfigProps {
   [key: string]: {
@@ -25,5 +26,8 @@ export const requestLimiter = async (rate: string, field: string) => {
     },
     { max, window }
   );
-  if (errorMessage) throw new Error(errorMessage);
+  if (errorMessage) {
+    logger.warn(`Rate limit reached for '${field}' from ip ${rate}`);
+    throw new Error(errorMessage);
+  }
 };

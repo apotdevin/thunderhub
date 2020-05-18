@@ -6,7 +6,6 @@ import {
   useAccountState,
   useAccountDispatch,
   CLIENT_ACCOUNT,
-  SSO_ACCOUNT,
   SERVER_ACCOUNT,
 } from 'src/context/AccountContext';
 import { useRouter } from 'next/router';
@@ -23,6 +22,7 @@ import { Section } from '../../components/section/Section';
 import { Title } from '../../components/typography/Styled';
 import { inverseTextColor, mediaWidths } from '../../styles/Themes';
 import { useStatusDispatch } from '../../context/StatusContext';
+import { dontShowSessionLogin } from './helpers';
 
 const StyledTitle = styled(Title)`
   font-size: 24px;
@@ -88,11 +88,7 @@ export const SessionLogin = () => {
     }
   }, [data, loading, dispatch, pass, account, dispatchAccount, push]);
 
-  if (!account || account?.type === SSO_ACCOUNT) {
-    return null;
-  }
-
-  if (account?.type !== CLIENT_ACCOUNT && account.loggedIn) {
+  if (dontShowSessionLogin(account)) {
     return null;
   }
 
@@ -115,9 +111,21 @@ export const SessionLogin = () => {
     }
   };
 
+  const getTitle = () => {
+    if (account.type === CLIENT_ACCOUNT) {
+      if (!account.viewOnly) {
+        return `Login to ${account.name} (admin-only):`;
+      }
+    }
+    if (account.type === SERVER_ACCOUNT) {
+      return `Login to ${account.name} (server account):`;
+    }
+    return `Login to ${account.name}`;
+  };
+
   return (
     <Section withColor={false}>
-      <StyledTitle>{`Please Login (${account.name}):`}</StyledTitle>
+      <StyledTitle>{getTitle()}</StyledTitle>
       <Card cardPadding={'32px'} mobileCardPadding={'16px'}>
         <SingleLine>
           <Sub4Title>Password:</Sub4Title>

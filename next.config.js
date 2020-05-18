@@ -8,7 +8,7 @@ module.exports = withBundleAnalyzer({
   assetPrefix: process.env.BASE_PATH || '',
   serverRuntimeConfig: {
     nodeEnv: process.env.NODE_ENV || 'development',
-    logLevel: process.env.LOG_LEVEL || 'silly',
+    logLevel: process.env.LOG_LEVEL || 'info',
     hodlKey: process.env.HODL_KEY || '',
     cookiePath: process.env.COOKIE_PATH || '',
     lnServerUrl: process.env.SSO_SERVER_URL || '',

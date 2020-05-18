@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { readCookie, refreshCookie } from 'api/helpers/fileHelpers';
 import { ContextType } from 'api/types/apiTypes';
 import { SSO_ACCOUNT } from 'src/context/AccountContext';
+import { logger } from 'api/helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 
 const { serverRuntimeConfig } = getConfig();
@@ -23,25 +24,16 @@ export const getAuthToken = {
     }
 
     if (cookiePath === '') {
+      logger.warn('SSO auth not available since no cookie path was provided');
       return null;
     }
 
     const cookieFile = readCookie(cookiePath);
 
-    // console.log({ param: params.cookie, cookiePath, cookieFile });
-
-    // refreshCookie(cookiePath);
-
-    // console.log('Cookie in file: ', {
-    //   cookieFile,
-    //   param: params.cookie,
-    //   secret,
-    // });
+    refreshCookie(cookiePath);
 
     if (cookieFile === params.cookie) {
       const token = jwt.sign({ user: SSO_ACCOUNT }, secret);
-
-      // console.log('Created token: ', { token });
       return token;
     }
 

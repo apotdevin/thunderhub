@@ -26,17 +26,14 @@ const {
   accountConfigPath,
 } = serverRuntimeConfig;
 
-// const secret =
-//   nodeEnv === 'development'
-//     ? '123456789'
-//     : crypto.randomBytes(64).toString('hex');
-const secret = '123456789';
+const secret =
+  nodeEnv === 'development'
+    ? '123456789'
+    : crypto.randomBytes(64).toString('hex');
 
 const ssoMacaroon = readMacaroons(macaroonPath);
 const ssoCert = readFile(lnCertPath);
 const accountConfig = getAccounts(accountConfigPath);
-
-// console.log({ secret, ssoMacaroon, ssoCert, accountConfig });
 
 readCookie(cookiePath);
 

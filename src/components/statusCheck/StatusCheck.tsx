@@ -12,7 +12,7 @@ export const StatusCheck = () => {
 
   const { account, auth } = useAccountState();
 
-  const { data, loading, error } = useGetNodeInfoQuery({
+  const { data, loading, error, stopPolling } = useGetNodeInfoQuery({
     skip: !auth,
     fetchPolicy: 'network-only',
     variables: { auth },
@@ -22,6 +22,7 @@ export const StatusCheck = () => {
   useEffect(() => {
     if (error) {
       toast.error(`Unable to connect to ${account.name}`);
+      stopPolling();
       dispatch({ type: 'disconnected' });
       push(appendBasePath('/'));
     }

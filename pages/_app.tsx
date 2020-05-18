@@ -9,6 +9,8 @@ import { AuthSSOCheck } from 'src/components/accounts/AuthSSOCheck';
 import { getUrlParam } from 'src/utils/url';
 import { ChatInit } from 'src/components/chat/ChatInit';
 import { ServerAccounts } from 'src/components/accounts/ServerAccounts';
+import { useAccountState } from 'src/context/AccountContext';
+import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { ContextProvider } from '../src/context/ContextProvider';
 import { useConfigState, ConfigProvider } from '../src/context/ConfigContext';
 import { GlobalStyles } from '../src/styles/GlobalStyle';
@@ -30,12 +32,16 @@ const Wrapper: React.FC = ({ children }) => {
   const { theme } = useConfigState();
   const { pathname } = useRouter();
   const { connected } = useStatusState();
+  const { hasAccount } = useAccountState();
 
   const isRoot = pathname === '/';
 
   const renderContent = () => {
     if (isRoot) {
       return <>{children}</>;
+    }
+    if (hasAccount === 'false') {
+      return <LoadingCard noCard={true} />;
     }
     return <GridWrapper>{children}</GridWrapper>;
   };

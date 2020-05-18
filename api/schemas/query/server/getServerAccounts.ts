@@ -21,10 +21,11 @@ export const getServerAccounts = {
     }
 
     const currentId = account?.id;
-    const withStatus = accounts.map(a => ({
-      ...a,
-      loggedIn: a.id === currentId,
-    }));
+    const withStatus =
+      accounts?.map(a => ({
+        ...a,
+        loggedIn: a.id === currentId,
+      })) || [];
 
     return ssoAccount ? [...withStatus, ssoAccount] : withStatus;
   },

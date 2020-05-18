@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "bs": "yarn build && yarn start",
     "dev": "cross-env NODE_OPTIONS='--insecure-http-parser' next",
     "dev:compatible": "next",
     "build": "next build",

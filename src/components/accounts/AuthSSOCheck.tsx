@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import {
   useAccountState,
-  SSO_ACCOUNT,
   useAccountDispatch,
+  SSO_ACCOUNT,
 } from 'src/context/AccountContext';
 import { appendBasePath } from 'src/utils/basePath';
 import { useGetAuthTokenQuery } from 'src/graphql/queries/__generated__/getAuthToken.generated';

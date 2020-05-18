@@ -65,23 +65,25 @@ export const parseYaml = (filePath: string): AccountConfigType | null => {
 
 export const getAccounts = (filePath: string) => {
   if (filePath === '') {
-    logger.verbose('No account config file path provided');
+    logger.info('No account config file path provided');
     return null;
   }
 
   const accountConfig = parseYaml(filePath);
 
   if (!accountConfig) {
-    logger.verbose('No account config file found');
+    logger.info(`No account config file found at path ${filePath}`);
     return null;
   }
 
   const { masterPassword, accounts } = accountConfig;
 
   if (!accounts || accounts.length <= 0) {
-    logger.warn('Account config found but had no accounts');
+    logger.warn(`Account config found at path ${filePath} but had no accounts`);
     return null;
   }
+
+  const readAccounts = [];
 
   const parsedAccounts = accounts
     .map((account, index) => {
@@ -116,10 +118,18 @@ export const getAccounts = (filePath: string) => {
           `No certificate for account ${name}. Make sure you don't need it to connect.`
         );
 
-      const cert = readFile(certificatePath);
+      const cert = (certificatePath && readFile(certificatePath)) || null;
       const clearMacaroon = readFile(macaroonPath);
 
-      if (!clearMacaroon) return null;
+      if (certificatePath && !cert)
+        logger.warn(
+          `No certificate for account ${name}. Make sure you don't need it to connect.`
+        );
+
+      if (!clearMacaroon) {
+        logger.error(`No macarron found for account ${name}.`);
+        return null;
+      }
 
       const macaroon = AES.encrypt(
         clearMacaroon,
@@ -127,6 +137,8 @@ export const getAccounts = (filePath: string) => {
       ).toString();
 
       const id = getUUID(`${name}${serverUrl}${clearMacaroon}${cert}`);
+
+      readAccounts.push(name);
 
       return {
         name,
@@ -137,6 +149,9 @@ export const getAccounts = (filePath: string) => {
       };
     })
     .filter(Boolean);
+
+  const allAccounts = readAccounts.join(', ');
+  logger.info(`Server accounts that will be available: ${allAccounts}`);
 
   return parsedAccounts;
 };

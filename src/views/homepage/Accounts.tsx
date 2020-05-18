@@ -18,6 +18,7 @@ import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/get
 import { Section } from '../../components/section/Section';
 import { Card, SingleLine } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { dontShowSessionLogin } from '../login/helpers';
 import { ConnectTitle, LockPadding } from './HomePage.styled';
 
 const AccountLine = styled.div`
@@ -34,17 +35,8 @@ export const Accounts = () => {
   const dispatchStatus = useStatusDispatch();
   const [newAccount, setNewAccount] = React.useState();
 
-  const { session, accounts, activeAccount, account } = useAccountState();
+  const { accounts, activeAccount, account } = useAccountState();
   const dispatch = useAccountDispatch();
-
-  const colorChange = account && account.type === CLIENT_ACCOUNT;
-
-  const change =
-    !session &&
-    account &&
-    account.type === CLIENT_ACCOUNT &&
-    account.admin !== '' &&
-    account.viewOnly === '';
 
   const [getCanConnect, { data, loading }] = useGetCanConnectLazyQuery({
     fetchPolicy: 'network-only',
@@ -61,10 +53,30 @@ export const Accounts = () => {
     }
   }, [data, loading, newAccount, dispatch, push, dispatchStatus]);
 
-  if (
-    accounts.length <= 1 &&
-    accounts.filter(a => a.type !== CLIENT_ACCOUNT).length < 1
-  ) {
+  const change = accounts.length > 0 && dontShowSessionLogin(account);
+
+  if (accounts.length <= 0) {
+    return null;
+  }
+
+  const filteredAccounts = accounts.filter(a => {
+    console.log({ a, activeAccount });
+    if (a.type === CLIENT_ACCOUNT) {
+      if (a.id === activeAccount && !a.viewOnly) {
+        return false;
+      }
+    }
+    if (a.type === SERVER_ACCOUNT) {
+      if (a.id === activeAccount && !a.loggedIn) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  console.log('accounttsss: ', filteredAccounts);
+
+  if (filteredAccounts.length < 1) {
     return null;
   }
 
@@ -141,14 +153,11 @@ export const Accounts = () => {
 
   return (
     <Section withColor={false}>
-      <ConnectTitle change={!colorChange}>
-        {!change ? 'Accounts' : 'Other Accounts'}
+      <ConnectTitle change={change}>
+        {change ? 'Accounts' : 'Other Accounts'}
       </ConnectTitle>
       <Card>
-        {accounts.map((account, index) => {
-          if (account.id === activeAccount && !change) {
-            return;
-          }
+        {filteredAccounts.map((account, index) => {
           return (
             <AccountLine key={`${account.id}-${index}`}>
               <SingleLine>
