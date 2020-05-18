@@ -60,7 +60,6 @@ export const Accounts = () => {
   }
 
   const filteredAccounts = accounts.filter(a => {
-    console.log({ a, activeAccount });
     if (a.type === CLIENT_ACCOUNT) {
       if (a.id === activeAccount && !a.viewOnly) {
         return false;
@@ -73,8 +72,6 @@ export const Accounts = () => {
     }
     return true;
   });
-
-  console.log('accounttsss: ', filteredAccounts);
 
   if (filteredAccounts.length < 1) {
     return null;
