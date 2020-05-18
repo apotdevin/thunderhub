@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Spacer } from 'src/components/spacer/Spacer';
 import { SessionLogin } from '../src/views/login/SessionLogin';
 import { TopSection } from '../src/views/homepage/Top';
 import { LoginBox } from '../src/views/homepage/LoginBox';
@@ -28,6 +29,7 @@ const ContextApp = () => {
           <LoginBox />
         </>
       )}
+      <Spacer />
     </>
   );
 };
