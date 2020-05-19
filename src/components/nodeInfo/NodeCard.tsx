@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import 'intersection-observer'; // Polyfill
 import ScaleLoader from 'react-spinners/ScaleLoader';
+import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { SingleLine, DarkSubTitle, ResponsiveLine } from '../generic/Styled';
 import { themeColors } from '../../styles/Themes';
 import { Price } from '../price/Price';
 import Modal from '../modal/ReactModal';
-import { useGetNodeInfoQuery } from '../../generated/graphql';
 import { getAuthObj } from '../../utils/auth';
 import { StatusDot, StatusLine, QuickCard } from './NodeInfo.styled';
 import { NodeInfoModal } from './NodeInfoModal';
@@ -29,7 +29,7 @@ export const NodeCard = ({ account, accountId }: NodeCardProps) => {
     triggerOnce: true,
   });
 
-  const auth = getAuthObj(host, viewOnly, '', cert);
+  const auth = getAuthObj(host, viewOnly, null, cert);
 
   const { data, loading, error } = useGetNodeInfoQuery({
     skip: !inView || !auth,

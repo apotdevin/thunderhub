@@ -3,7 +3,8 @@ import { toast } from 'react-toastify';
 import { Radio, Copy } from 'react-feather';
 import styled from 'styled-components';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { useAccount } from '../../../context/AccountContext';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetCanConnectInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import {
@@ -16,7 +17,6 @@ import {
   ColorButton,
 } from '../../../components/generic/Styled';
 import { mediaWidths } from '../../../styles/Themes';
-import { useGetCanConnectInfoQuery } from '../../../generated/graphql';
 
 const Key = styled.div`
   overflow: hidden;
@@ -55,7 +55,7 @@ const TextPadding = styled.span`
 const sectionColor = '#fa541c';
 
 export const ConnectCard = () => {
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { loading, data } = useGetCanConnectInfoQuery({
     skip: !auth,

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { toast } from 'react-toastify';
-import { SubTitle } from '../../../components/generic/Styled';
-import { SortOptions, NewOptions } from '../OfferConfigs';
-import { FilterType } from '../OfferFilters';
-import { themeColors } from '../../../styles/Themes';
-import { OptionsLoading } from '../OfferCard.styled';
 import {
   useGetCountriesQuery,
   useGetCurrenciesQuery,
   GetCountriesQuery,
   GetCurrenciesQuery,
-} from '../../../generated/graphql';
+} from 'src/graphql/hodlhodl/__generated__/query.generated';
+import { SubTitle } from '../../../components/generic/Styled';
+import { SortOptions, NewOptions } from '../OfferConfigs';
+import { FilterType } from '../OfferFilters';
+import { themeColors } from '../../../styles/Themes';
+import { OptionsLoading } from '../OfferCard.styled';
 import { FilteredList } from './FilteredList';
 
 interface FilterProps {

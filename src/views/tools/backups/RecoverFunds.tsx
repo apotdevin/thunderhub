@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { X } from 'react-feather';
+import { useRecoverFundsLazyQuery } from 'src/graphql/queries/__generated__/recoverFunds.generated';
 import { getErrorContent } from '../../../utils/error';
 import { SingleLine, DarkSubTitle } from '../../../components/generic/Styled';
 import { SecureButton } from '../../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../../components/input/Input';
 import { NoWrap } from '../Tools.styled';
-import { useRecoverFundsLazyQuery } from '../../../generated/graphql';
 
 export const RecoverFunds = () => {
   const [backupString, setBackupString] = useState<string>('');

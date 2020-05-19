@@ -5,6 +5,12 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import Head from 'next/head';
+import { AuthSSOCheck } from 'src/components/accounts/AuthSSOCheck';
+import { getUrlParam } from 'src/utils/url';
+import { ChatInit } from 'src/components/chat/ChatInit';
+import { ServerAccounts } from 'src/components/accounts/ServerAccounts';
+import { useAccountState } from 'src/context/AccountContext';
+import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { ContextProvider } from '../src/context/ContextProvider';
 import { useConfigState, ConfigProvider } from '../src/context/ConfigContext';
 import { GlobalStyles } from '../src/styles/GlobalStyle';
@@ -18,7 +24,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
 import { useStatusState } from '../src/context/StatusContext';
 import { ChatFetcher } from '../src/components/chat/ChatFetcher';
-import { ChatInit } from '../src/components/chat/ChatInit';
 import { parseCookies } from '../src/utils/cookies';
 
 toast.configure({ draggable: false, pauseOnFocusLoss: false });
@@ -27,12 +32,16 @@ const Wrapper: React.FC = ({ children }) => {
   const { theme } = useConfigState();
   const { pathname } = useRouter();
   const { connected } = useStatusState();
+  const { hasAccount } = useAccountState();
 
   const isRoot = pathname === '/';
 
   const renderContent = () => {
     if (isRoot) {
       return <>{children}</>;
+    }
+    if (hasAccount === 'false') {
+      return <LoadingCard noCard={true} />;
     }
     return <GridWrapper>{children}</GridWrapper>;
   };
@@ -63,7 +72,13 @@ const Wrapper: React.FC = ({ children }) => {
   );
 };
 
-const App = ({ Component, pageProps, apollo, initialConfig }: any) => (
+const App = ({
+  Component,
+  pageProps,
+  apollo,
+  initialConfig,
+  cookieParam,
+}: any) => (
   <>
     <Head>
       <title>ThunderHub - Lightning Node Manager</title>
@@ -71,6 +86,8 @@ const App = ({ Component, pageProps, apollo, initialConfig }: any) => (
     <ApolloProvider client={apollo}>
       <ConfigProvider initialConfig={initialConfig}>
         <ContextProvider>
+          <AuthSSOCheck cookieParam={cookieParam} />
+          <ServerAccounts />
           <Wrapper>
             <Component {...pageProps} />
           </Wrapper>
@@ -81,17 +98,21 @@ const App = ({ Component, pageProps, apollo, initialConfig }: any) => (
 );
 
 App.getInitialProps = async props => {
+  const cookieParam = getUrlParam(props.router?.query?.token);
   const cookies = parseCookies(props.ctx.req);
+  const defaultState = {};
+
   if (!cookies?.config) {
-    return { initialConfig: {} };
+    return { initialConfig: {}, ...defaultState };
   }
   try {
     const config = JSON.parse(cookies.config);
     return {
-      initialConfig: config,
+      initialConfig: { ...config, ...defaultState },
+      cookieParam,
     };
   } catch (error) {
-    return { initialConfig: {} };
+    return { initialConfig: {}, cookieParam, ...defaultState };
   }
 };
 

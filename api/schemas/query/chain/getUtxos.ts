@@ -5,9 +5,14 @@ import {
   GraphQLString,
   GraphQLList,
 } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 
 const GetUtxosType = new GraphQLObjectType({
@@ -26,10 +31,11 @@ const GetUtxosType = new GraphQLObjectType({
 export const getUtxos = {
   type: new GraphQLList(GetUtxosType),
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getUtxos');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context);
+    const lnd = getAuthLnd(auth);
 
     try {
       const { utxos } = await getLnUtxos({ lnd });

@@ -1,8 +1,13 @@
 import { signMessage as signLnMessage } from 'ln-service';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { logger } from '../../../helpers/logger';
 
 export const signMessage = {
@@ -11,10 +16,11 @@ export const signMessage = {
     ...defaultParams,
     message: { type: new GraphQLNonNull(GraphQLString) },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'signMessage');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context);
+    const lnd = getAuthLnd(auth);
 
     try {
       const message: { signature: string } = await signLnMessage({

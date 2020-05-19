@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
+import { useAccountState } from 'src/context/AccountContext';
+import { useSendMessageMutation } from 'src/graphql/mutations/__generated__/sendMessage.generated';
 import { Input } from '../../components/input/Input';
 import { SingleLine } from '../../components/generic/Styled';
-import { useSendMessageMutation } from '../../generated/graphql';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
-import { useAccount } from '../../context/AccountContext';
 import { useConfigState } from '../../context/ConfigContext';
 import { handleMessage } from './helpers/chatHelpers';
 
@@ -20,7 +20,7 @@ export const ChatInput = ({
   withMargin?: string;
 }) => {
   const [message, setMessage] = React.useState('');
-  const { id } = useAccount();
+  const { account } = useAccountState();
 
   const { maxFee } = useConfigState();
   const { sender } = useChatState();
@@ -48,7 +48,7 @@ export const ChatInput = ({
           contentType,
           tokens,
         },
-        userId: id,
+        userId: account.id,
         sender: customSender || sender,
       });
     }
@@ -60,7 +60,7 @@ export const ChatInput = ({
     sender,
     contentType,
     tokens,
-    id,
+    account,
     dispatch,
   ]);
 

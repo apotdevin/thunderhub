@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetUtxosQuery } from 'src/graphql/queries/__generated__/getUtxos.generated';
 import {
   SubTitle,
   Card,
   CardWithTitle,
 } from '../../../components/generic/Styled';
-import { useAccount } from '../../../context/AccountContext';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
-import { useGetUtxosQuery } from '../../../generated/graphql';
 import { UtxoCard } from './UtxoCard';
 
 export const ChainUtxos = () => {
   const [indexOpen, setIndexOpen] = useState(0);
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { loading, data } = useGetUtxosQuery({
     skip: !auth,

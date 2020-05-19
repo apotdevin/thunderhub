@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetMessagesLazyQuery } from 'src/graphql/queries/__generated__/getMessages.generated';
 import { useChatDispatch } from '../../context/ChatContext';
-import { useGetMessagesLazyQuery } from '../../generated/graphql';
-import { useAccount } from '../../context/AccountContext';
 import { getErrorContent } from '../../utils/error';
 
 export const ChatInit = () => {
-  const { auth, id } = useAccount();
+  const { auth, account } = useAccountState();
   const dispatch = useChatDispatch();
 
   const [
@@ -18,25 +18,28 @@ export const ChatInit = () => {
   });
 
   React.useEffect(() => {
-    const storageChats = localStorage.getItem(`${id}-sentChats`) || '';
+    if (account) {
+      const storageChats =
+        localStorage.getItem(`${account.id}-sentChats`) || '';
 
-    if (storageChats !== '') {
-      try {
-        const savedChats = JSON.parse(storageChats);
-        if (savedChats.length > 0) {
-          const sender = savedChats[0].sender;
-          dispatch({
-            type: 'initialized',
-            sentChats: savedChats,
-            sender,
-          });
+      if (storageChats !== '') {
+        try {
+          const savedChats = JSON.parse(storageChats);
+          if (savedChats.length > 0) {
+            const sender = savedChats[0].sender;
+            dispatch({
+              type: 'initialized',
+              sentChats: savedChats,
+              sender,
+            });
+          }
+        } catch (error) {
+          localStorage.removeItem('sentChats');
         }
-      } catch (error) {
-        localStorage.removeItem('sentChats');
       }
+      getMessages();
     }
-    getMessages();
-  }, [dispatch, getMessages, id]);
+  }, [dispatch, getMessages, account]);
 
   React.useEffect(() => {
     if (!initLoading && !initError && initData?.getMessages) {

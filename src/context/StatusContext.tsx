@@ -60,7 +60,7 @@ const stateReducer = (state: State, action: ActionType): CompleteState => {
   }
 };
 
-const StatusProvider = ({ children }: any) => {
+const StatusProvider = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (

@@ -6,5 +6,5 @@ export const PageWrapper = styled.div`
 `;
 
 export const HeaderBodyWrapper = styled.div`
-  padding-bottom: 250px;
+  padding-bottom: 120px;
 `;

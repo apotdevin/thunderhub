@@ -1,7 +1,12 @@
 import { getWalletInfo, getClosedChannels } from 'ln-service';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { NodeInfoType } from '../../types/QueryType';
 
@@ -25,10 +30,11 @@ interface NodeInfoProps {
 export const getNodeInfo = {
   type: NodeInfoType,
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'nodeInfo');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context);
+    const lnd = getAuthLnd(auth);
 
     try {
       const info: NodeInfoProps = await getWalletInfo({

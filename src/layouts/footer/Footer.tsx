@@ -12,8 +12,9 @@ import {
   Title,
   Version,
   SideText,
-  CopyrightText,
   RightFooter,
+  FooterRow,
+  FooterCenterText,
 } from './Footer.styled';
 
 const { publicRuntimeConfig } = getConfig();
@@ -24,39 +25,33 @@ export const Footer = () => {
     <FooterWrapper>
       <Section withColor={true} color={headerColor}>
         <FooterStyle>
-          <SideFooter>
-            <Line>
-              <Link to={'/'}>
+          <FooterRow>
+            <SideFooter>
+              <Line>
                 <Title>ThunderHub</Title>
+                <Version>{npmVersion}</Version>
+              </Line>
+              <SideText>Open-source Lightning Node Manager.</SideText>
+            </SideFooter>
+            <RightFooter>
+              <Link
+                href={'https://github.com/apotdevin/thunderhub'}
+                color={fontColors.blue}
+              >
+                Github
               </Link>
-              <Version>{npmVersion}</Version>
-            </Line>
-            <SideText>
-              Open-source lightning node manager to control and monitor your LND
-              node.
-            </SideText>
-            <SideText>
-              Made in Munich with <Emoji symbol={'🧡'} label={'heart'} /> and{' '}
-              <Emoji symbol={'⚡'} label={'lightning'} />.
-            </SideText>
-            <CopyrightText>
-              Copyright © 2020. All rights reserved. ThunderHub
-            </CopyrightText>
-          </SideFooter>
-          <RightFooter>
-            <Link
-              href={'https://github.com/apotdevin/thunderhub'}
-              color={fontColors.blue}
-            >
-              Github
-            </Link>
-            <Link
-              href={'https://twitter.com/thunderhubio'}
-              color={fontColors.blue}
-            >
-              Twitter
-            </Link>
-          </RightFooter>
+              <Link
+                href={'https://twitter.com/thunderhubio'}
+                color={fontColors.blue}
+              >
+                Twitter
+              </Link>
+            </RightFooter>
+          </FooterRow>
+          <FooterCenterText>
+            Made in Munich with <Emoji symbol={'🧡'} label={'heart'} /> and{' '}
+            <Emoji symbol={'⚡'} label={'lightning'} />.
+          </FooterCenterText>
         </FooterStyle>
       </Section>
     </FooterWrapper>

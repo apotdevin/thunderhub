@@ -4,6 +4,7 @@ import {
   GraphQLInt,
   GraphQLBoolean,
   GraphQLList,
+  GraphQLNonNull,
 } from 'graphql';
 
 export const ChannelBalanceType = new GraphQLObjectType({
@@ -326,5 +327,14 @@ export const GetMessagesType = new GraphQLObjectType({
   fields: () => ({
     token: { type: GraphQLString },
     messages: { type: new GraphQLList(MessagesType) },
+  }),
+});
+
+export const ServerAccountType = new GraphQLObjectType({
+  name: 'serverAccountType',
+  fields: () => ({
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    id: { type: new GraphQLNonNull(GraphQLString) },
+    loggedIn: { type: new GraphQLNonNull(GraphQLBoolean) },
   }),
 });

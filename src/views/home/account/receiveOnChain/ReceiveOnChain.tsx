@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { useCreateAddressMutation } from 'src/graphql/mutations/__generated__/createAddress.generated';
 import {
   NoWrapTitle,
   DarkSubTitle,
@@ -15,7 +16,6 @@ import {
   MultiButton,
   SingleButton,
 } from '../../../../components/buttons/multiButton/MultiButton';
-import { useCreateAddressMutation } from '../../../../generated/graphql';
 
 const ButtonRow = styled.div`
   width: auto;

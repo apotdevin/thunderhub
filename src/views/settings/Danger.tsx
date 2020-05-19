@@ -2,7 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { AlertCircle } from 'react-feather';
 import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
+import {
+  useAccountState,
+  useAccountDispatch,
+  CLIENT_ACCOUNT,
+} from 'src/context/AccountContext';
 import {
   Card,
   CardWithTitle,
@@ -11,8 +15,6 @@ import {
   SimpleButton,
   Sub4Title,
 } from '../../components/generic/Styled';
-import { deleteStorage, deleteAccountPermissions } from '../../utils/storage';
-import { useAccount } from '../../context/AccountContext';
 import { textColor, fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
@@ -67,53 +69,41 @@ export const FixedWidth = styled.div`
 `;
 
 export const DangerView = () => {
-  const {
-    deleteAccount,
-    refreshAccount,
-    changeAccount,
-    accounts,
-    admin,
-    viewOnly,
-    id,
-  } = useAccount();
+  const { accounts } = useAccountState();
+
+  const clientAccounts = accounts.filter(a => a.type === CLIENT_ACCOUNT);
 
   const dispatch = useStatusDispatch();
   const chatDispatch = useChatDispatch();
+  const dispatchAccount = useAccountDispatch();
 
   const { push } = useRouter();
 
-  if (accounts.length <= 0) {
+  if (clientAccounts.length <= 0) {
     return null;
   }
 
   const handleDeleteAll = () => {
     dispatch({ type: 'disconnected' });
     chatDispatch({ type: 'disconnected' });
-    deleteStorage();
-    refreshAccount();
-    Cookies.remove('config');
-    push(appendBasePath('/'));
-  };
-
-  const handleDelete = (admin?: boolean) => {
-    deleteAccountPermissions(id, accounts, admin);
-    dispatch({ type: 'disconnected' });
-    chatDispatch({ type: 'disconnected' });
-    changeAccount(id);
+    dispatchAccount({ type: 'deleteAll' });
     push(appendBasePath('/'));
   };
 
   const renderButton = () => {
-    if (accounts.length > 1) {
+    if (clientAccounts.length > 1) {
       return (
         <MultiButton>
-          {accounts.map(({ name: accountName, id: accountId }) => {
+          {clientAccounts.map(({ name: accountName, id: accountId }) => {
             return (
               <SingleButton
                 key={accountId}
                 color={'red'}
                 onClick={() => {
-                  deleteAccount(accountId);
+                  dispatchAccount({
+                    type: 'deleteAccount',
+                    changeId: accountId,
+                  });
                 }}
               >
                 {accountName}
@@ -123,35 +113,20 @@ export const DangerView = () => {
         </MultiButton>
       );
     }
-    if (accounts.length === 1) {
+    if (clientAccounts.length === 1) {
       return (
         <ColorButton color={'red'} onClick={handleDeleteAll}>
-          {accounts[0].name}
+          {clientAccounts[0].name}
         </ColorButton>
       );
     }
     return null;
   };
 
-  const renderSwitch = () => {
-    return (
-      <SettingsLine>
-        <Sub4Title>Change Permissions</Sub4Title>
-        <MultiButton>
-          <SingleButton onClick={() => handleDelete()}>View-Only</SingleButton>
-          <SingleButton onClick={() => handleDelete(true)}>
-            Admin-Only
-          </SingleButton>
-        </MultiButton>
-      </SettingsLine>
-    );
-  };
-
   return (
     <CardWithTitle>
       <SubTitle>Danger Zone</SubTitle>
       <OutlineCard>
-        {admin && viewOnly && renderSwitch()}
         <SettingsLine>
           <Sub4Title>Delete Account:</Sub4Title>
           {renderButton()}

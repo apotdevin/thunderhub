@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import sortBy from 'lodash.sortby';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
 import {
   CardWithTitle,
   Card,
@@ -11,7 +13,6 @@ import {
   NoWrapTitle,
   SingleLine,
 } from '../src/components/generic/Styled';
-import { useAccount } from '../src/context/AccountContext';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { getPercent } from '../src/utils/helpers';
@@ -21,11 +22,10 @@ import { BalanceRoute } from '../src/views/balance/BalanceRoute';
 import { Price } from '../src/components/price/Price';
 import { useStatusState } from '../src/context/StatusContext';
 import { Text } from '../src/components/typography/Styled';
-import { useGetChannelsQuery } from '../src/generated/graphql';
 
 const BalanceView = () => {
   const { minorVersion } = useStatusState();
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const [outgoing, setOutgoing] = useState<{ id: string } | null>();
   const [incoming, setIncoming] = useState();

@@ -5,9 +5,14 @@ import {
 } from 'ln-service';
 import { differenceInHours, differenceInCalendarDays } from 'date-fns';
 import { groupBy } from 'underscore';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { reduceInOutArray } from '../report/Helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { InOutType } from '../../types/QueryType';
@@ -19,10 +24,11 @@ export const getInOut = {
     ...defaultParams,
     time: { type: GraphQLString },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getInOut');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context);
+    const lnd = getAuthLnd(auth);
 
     const endDate = new Date();
     let periods = 7;

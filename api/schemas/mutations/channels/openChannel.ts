@@ -5,9 +5,14 @@ import {
   GraphQLInt,
   GraphQLNonNull,
 } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { OpenChannelType } from '../../types/MutationType';
 
@@ -25,10 +30,11 @@ export const openChannel = {
     tokensPerVByte: { type: GraphQLInt },
     isPrivate: { type: GraphQLBoolean },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'openChannel');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context);
+    const lnd = getAuthLnd(auth);
 
     try {
       const info: OpenChannelProps = await lnOpenChannel({

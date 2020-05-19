@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
+import { usePayAddressMutation } from 'src/graphql/mutations/__generated__/sendToAddress.generated';
 import {
   NoWrapTitle,
   DarkSubTitle,
@@ -24,7 +25,6 @@ import Modal from '../../../../components/modal/ReactModal';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { renderLine } from '../../../../components/generic/helpers';
 import { usePriceState } from '../../../../context/PriceContext';
-import { usePayAddressMutation } from '../../../../generated/graphql';
 
 const ResponsiveWrap = styled(SingleLine)`
   @media (${mediaWidths.mobile}) {

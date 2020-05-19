@@ -1,18 +1,18 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-import { useAccount } from '../../context/AccountContext';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { useStatusDispatch } from '../../context/StatusContext';
-import { useGetNodeInfoQuery } from '../../generated/graphql';
 import { appendBasePath } from '../../utils/basePath';
 
 export const StatusCheck = () => {
   const dispatch = useStatusDispatch();
   const { push } = useRouter();
 
-  const { name, auth } = useAccount();
+  const { account, auth } = useAccountState();
 
-  const { data, loading, error } = useGetNodeInfoQuery({
+  const { data, loading, error, stopPolling } = useGetNodeInfoQuery({
     skip: !auth,
     fetchPolicy: 'network-only',
     variables: { auth },
@@ -21,7 +21,8 @@ export const StatusCheck = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error(`Unable to connect to ${name}`);
+      toast.error(`Unable to connect to ${account.name}`);
+      stopPolling();
       dispatch({ type: 'disconnected' });
       push(appendBasePath('/'));
     }
@@ -54,7 +55,7 @@ export const StatusCheck = () => {
 
       dispatch({ type: 'connected', state });
     }
-  }, [data, dispatch, error, loading, name, push]);
+  }, [data, dispatch, error, loading, push, account]);
 
   return null;
 };

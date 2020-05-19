@@ -1,93 +1,14 @@
 import base64url from 'base64url';
 import { v5 as uuidv5 } from 'uuid';
-import { saveAccounts } from './storage';
+import { CLIENT_ACCOUNT } from '../context/AccountContext';
 
 const THUNDERHUB_NAMESPACE = '00000000-0000-0000-0000-000000000000';
 
-interface BuildProps {
-  name?: string;
-  host: string;
-  admin?: string;
-  viewOnly?: string;
-  cert?: string;
-  accounts: any;
-}
+export const getUUID = (text: string): string =>
+  uuidv5(text, THUNDERHUB_NAMESPACE);
 
 export const getAccountId = (host = '', viewOnly = '', admin = '', cert = '') =>
-  uuidv5(
-    `${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`,
-    THUNDERHUB_NAMESPACE
-  );
-
-export const saveUserAuth = ({
-  name = '',
-  host,
-  admin = '',
-  viewOnly = '',
-  cert = '',
-  accounts,
-}: BuildProps) => {
-  const id = getAccountId(host, viewOnly, admin, cert);
-  const newAccount = {
-    name,
-    host,
-    admin,
-    viewOnly,
-    cert,
-    id,
-  };
-
-  const newAccounts = [...accounts, newAccount];
-  saveAccounts(newAccounts);
-};
-
-export const saveSessionAuth = (sessionAdmin: string) =>
-  sessionStorage.setItem('session', sessionAdmin);
-
-export const getAuth = (account?: string) => {
-  const accounts = JSON.parse(localStorage.getItem('accounts') || '[]');
-  const currentActive = Math.max(
-    Number(account ?? (localStorage.getItem('active') || '0')),
-    0
-  );
-
-  const accountsLength = accounts.length;
-
-  const active =
-    accountsLength > 0 && currentActive >= accountsLength ? 0 : currentActive;
-
-  const defaultAccount = {
-    name: '',
-    host: '',
-    admin: '',
-    viewOnly: '',
-    cert: '',
-    id: '',
-  };
-
-  const activeAccount =
-    accountsLength > 0 && active < accountsLength
-      ? accounts[active]
-      : defaultAccount;
-
-  const { name, host, admin, viewOnly, cert, id } = activeAccount;
-  const currentId =
-    id ??
-    uuidv5(
-      `${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`,
-      THUNDERHUB_NAMESPACE
-    );
-
-  return {
-    name,
-    host,
-    admin,
-    viewOnly,
-    cert,
-    id: currentId,
-    accounts,
-  };
-};
+  getUUID(`${host}-${viewOnly}-${admin !== '' ? 1 : 0}-${cert}`);
 
 export const getAuthLnd = (lndconnect: string) => {
   const auth = lndconnect.replace('lndconnect', 'https');
@@ -179,19 +100,20 @@ export const getQRConfig = (json: string) => {
 export const getAuthObj = (
   host: string | undefined,
   viewOnly: string | undefined,
-  session: string | undefined,
+  admin: string | undefined,
   cert: string | undefined
-): {} | undefined => {
+) => {
   if (!host) {
-    return undefined;
+    return null;
   }
-  if (!viewOnly && !session) {
-    return undefined;
+  if (!viewOnly && !admin) {
+    return null;
   }
 
   return {
+    type: CLIENT_ACCOUNT,
     host,
-    macaroon: viewOnly !== '' ? viewOnly : session,
+    macaroon: viewOnly && viewOnly !== '' ? viewOnly : admin,
     cert,
   };
 };

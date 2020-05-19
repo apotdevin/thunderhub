@@ -30,20 +30,33 @@ type State = {
   sender: string;
 };
 
-type ActionType = {
-  type:
-    | 'initialized'
-    | 'additional'
-    | 'changeActive'
-    | 'newChat'
-    | 'disconnected';
-  chats?: ChatProps[];
-  sentChats?: SentChatProps[];
-  newChat?: SentChatProps;
-  lastChat?: string;
-  sender?: string;
-  userId?: string;
-};
+type ActionType =
+  | {
+      type: 'initialized';
+      chats?: ChatProps[];
+      lastChat?: string;
+      sender?: string;
+      sentChats?: SentChatProps[];
+    }
+  | {
+      type: 'additional';
+      chats: ChatProps[];
+      lastChat: string;
+    }
+  | {
+      type: 'changeActive';
+      sender: string;
+      userId: string;
+    }
+  | {
+      type: 'newChat';
+      sender: string;
+      userId: string;
+      newChat: SentChatProps;
+    }
+  | {
+      type: 'disconnected';
+    };
 
 type Dispatch = (action: ActionType) => void;
 
@@ -88,6 +101,8 @@ const stateReducer = (state: State, action: ActionType): State => {
         sentChats: [...state.sentChats, action.newChat],
         ...(action.sender && { sender: action.sender }),
       };
+    case 'disconnected':
+      return initialState;
     default:
       return state;
   }

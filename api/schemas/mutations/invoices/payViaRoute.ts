@@ -1,8 +1,13 @@
 import { GraphQLNonNull, GraphQLBoolean, GraphQLString } from 'graphql';
 import { payViaRoutes, createInvoice } from 'ln-service';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 
 export const payViaRoute = {
@@ -11,10 +16,11 @@ export const payViaRoute = {
     ...defaultParams,
     route: { type: new GraphQLNonNull(GraphQLString) },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'payViaRoute');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context);
+    const lnd = getAuthLnd(auth);
 
     let route;
     try {

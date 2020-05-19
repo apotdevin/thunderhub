@@ -1,8 +1,14 @@
 import { updateRoutingFees } from 'ln-service';
 import { GraphQLBoolean, GraphQLString, GraphQLInt } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import {
+  getErrorMsg,
+  getAuthLnd,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
+
 import { defaultParams } from '../../../helpers/defaultProps';
 
 export const updateFees = {
@@ -14,11 +20,12 @@ export const updateFees = {
     baseFee: { type: GraphQLInt },
     feeRate: { type: GraphQLInt },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'updateFees');
 
-    const { auth, transactionId, transactionVout, baseFee, feeRate } = params;
+    const { transactionId, transactionVout, baseFee, feeRate } = params;
 
+    const auth = getCorrectAuth(params.auth, context);
     const lnd = getAuthLnd(auth);
 
     if (!baseFee && !feeRate) {

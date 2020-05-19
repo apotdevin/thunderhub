@@ -2,11 +2,11 @@ import React from 'react';
 import { AlertTriangle } from 'react-feather';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
+import { useRemovePeerMutation } from 'src/graphql/mutations/__generated__/removePeer.generated';
 import { SubTitle } from '../../generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { SecureButton } from '../../buttons/secureButton/SecureButton';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
-import { useRemovePeerMutation } from '../../../generated/graphql';
 
 interface RemovePeerProps {
   setModalOpen: (status: boolean) => void;

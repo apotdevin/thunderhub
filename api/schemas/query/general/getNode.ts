@@ -1,8 +1,13 @@
 import { GraphQLString, GraphQLNonNull, GraphQLBoolean } from 'graphql';
 import { getNode as getLnNode } from 'ln-service';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 
 import { defaultParams } from '../../../helpers/defaultProps';
 import { PartnerNodeType } from '../../types/QueryType';
@@ -14,10 +19,11 @@ export const getNode = {
     publicKey: { type: new GraphQLNonNull(GraphQLString) },
     withoutChannels: { type: GraphQLBoolean },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'closedChannels');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context);
+    const lnd = getAuthLnd(auth);
 
     try {
       const nodeInfo = await getLnNode({

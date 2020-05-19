@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import CryptoJS from 'crypto-js';
+import AES from 'crypto-js/aes';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-import { useAccount } from '../../context/AccountContext';
-import { saveUserAuth, getAccountId } from '../../utils/auth';
+import {
+  useAccountState,
+  useAccountDispatch,
+} from 'src/context/AccountContext';
+import { getAccountId } from '../../utils/auth';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { LoadingCard } from '../loading/LoadingCard';
 import { appendBasePath } from '../../utils/basePath';
@@ -36,11 +39,12 @@ type AuthProps = {
 };
 
 export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
-  const { changeAccount, accounts } = useAccount();
+  const { accounts } = useAccountState();
   const { push } = useRouter();
 
-  const dispatchChat = useChatDispatch();
   const dispatch = useStatusDispatch();
+  const dispatchChat = useChatDispatch();
+  const dispatchAccount = useAccountDispatch();
 
   const [name, setName] = useState<string>();
   const [host, setHost] = useState<string>();
@@ -64,20 +68,12 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     viewOnly?: string;
     cert?: string;
   }) => {
-    saveUserAuth({
-      name,
-      host: host || '',
-      admin,
-      viewOnly,
-      cert,
-      accounts,
-    });
-
-    const id = getAccountId(host, viewOnly, admin, cert);
-
     dispatch({ type: 'disconnected' });
     dispatchChat({ type: 'disconnected' });
-    changeAccount(id);
+    dispatchAccount({
+      type: 'addAccountAndSave',
+      accountToAdd: { name, host, admin, viewOnly, cert },
+    });
 
     push(appendBasePath('/'));
   };
@@ -102,8 +98,9 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
       cert ?? ''
     );
 
-    const accountExists =
-      accounts.filter(account => account.id === id).length > 0;
+    const accountExists = accounts
+      ? accounts.filter(account => account.id === id).length > 0
+      : false;
 
     if (accountExists) {
       toast.error('Account already exists.');
@@ -129,32 +126,29 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     } else if (!admin && !viewOnly) {
       toast.error('View-Only or Admin macaroon are needed to connect.');
     } else {
-      let correctViewOnly = viewOnly;
+      let correctViewOnly = viewOnly || null;
       if (!viewOnly && admin && !password) {
         correctViewOnly = admin;
       }
 
       const encryptedAdmin =
-        admin && password
-          ? CryptoJS.AES.encrypt(admin, password).toString()
-          : undefined;
-
-      saveUserAuth({
-        name,
-        host,
-        admin: encryptedAdmin,
-        viewOnly: correctViewOnly,
-        cert,
-        accounts,
-      });
-
-      const id = getAccountId(host, correctViewOnly, encryptedAdmin, cert);
+        admin && password ? AES.encrypt(admin, password).toString() : null;
 
       dispatch({ type: 'disconnected' });
       dispatchChat({ type: 'disconnected' });
-      changeAccount(id);
+      dispatchAccount({
+        type: 'addAccountAndSave',
+        accountToAdd: {
+          name,
+          host,
+          admin: encryptedAdmin,
+          viewOnly: correctViewOnly,
+          cert,
+        },
+        ...(!correctViewOnly && { session: admin }),
+      });
 
-      push(appendBasePath('/'));
+      push(appendBasePath('/home'));
     }
   };
 

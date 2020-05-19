@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetMessagesQuery } from 'src/graphql/queries/__generated__/getMessages.generated';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
-import { useGetMessagesQuery } from '../../generated/graphql';
-import { useAccount } from '../../context/AccountContext';
 import { getErrorContent } from '../../utils/error';
 import { useConfigState } from '../../context/ConfigContext';
 
@@ -12,7 +12,7 @@ export const ChatFetcher = () => {
 
   const { chatPollingSpeed } = useConfigState();
 
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
   const { pathname } = useRouter();
   const { lastChat, chats, sentChats, initialized } = useChatState();
   const dispatch = useChatDispatch();

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
+import { useAccountState, CLIENT_ACCOUNT } from 'src/context/AccountContext';
+import { getAuthFromAccount } from 'src/context/helpers/context';
 import Modal from '../../modal/ReactModal';
-import { useAccount } from '../../../context/AccountContext';
 import { ColorButton, ColorButtonProps } from '../colorButton/ColorButton';
 import { LoginModal } from './LoginModal';
 
 interface SecureButtonProps extends ColorButtonProps {
   callback: any;
   disabled: boolean;
-  children: any;
   variables: {};
   color?: string;
   withMargin?: string;
@@ -25,19 +25,20 @@ export const SecureButton: React.FC<SecureButtonProps> = ({
 }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const { host, cert, admin, sessionAdmin } = useAccount();
+  const { session, account } = useAccountState();
 
-  if (!admin && !sessionAdmin) {
+  if (account.type === CLIENT_ACCOUNT && !account.admin && !session) {
     return null;
   }
 
-  const auth = { host, macaroon: sessionAdmin, cert };
+  const auth = getAuthFromAccount(account, session);
 
   const handleClick = () => setModalOpen(true);
 
-  const onClick = sessionAdmin
-    ? () => callback({ variables: { ...variables, auth } })
-    : handleClick;
+  const onClick =
+    session || account.type !== CLIENT_ACCOUNT
+      ? () => callback({ variables: { ...variables, auth } })
+      : handleClick;
 
   return (
     <>
@@ -49,15 +50,17 @@ export const SecureButton: React.FC<SecureButtonProps> = ({
       >
         {children}
       </ColorButton>
-      <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
-        <LoginModal
-          color={color}
-          macaroon={admin}
-          setModalOpen={setModalOpen}
-          callback={callback}
-          variables={variables}
-        />
-      </Modal>
+      {account.type === CLIENT_ACCOUNT && (
+        <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
+          <LoginModal
+            color={color}
+            macaroon={account.admin}
+            setModalOpen={setModalOpen}
+            callback={callback}
+            variables={variables}
+          />
+        </Modal>
+      )}
     </>
   );
 };

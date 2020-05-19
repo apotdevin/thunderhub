@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
 import {
   SubTitle,
   Card,
@@ -8,14 +10,12 @@ import {
   ColorButton,
   SingleLine,
 } from '../src/components/generic/Styled';
-import { useAccount } from '../src/context/AccountContext';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ForwardCard } from '../src/views/forwards/ForwardsCard';
 import { textColorMap } from '../src/styles/Themes';
 import { useConfigState } from '../src/context/ConfigContext';
 import { ForwardBox } from '../src/views/home/reports/forwardReport';
-import { useGetForwardsQuery } from '../src/generated/graphql';
 
 const timeMap: { [key: string]: string } = {
   day: 'today',
@@ -29,7 +29,7 @@ const ForwardsView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
 
   const { theme } = useConfigState();
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { loading, data } = useGetForwardsQuery({
     skip: !auth,

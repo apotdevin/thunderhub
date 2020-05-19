@@ -2,8 +2,8 @@ import * as React from 'react';
 import { HelpCircle } from 'react-feather';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
+import { useAccountState, CLIENT_ACCOUNT } from 'src/context/AccountContext';
 import { CardWithTitle, SubTitle } from '../generic/Styled';
-import { useAccount } from '../../context/AccountContext';
 import { useConfigState } from '../../context/ConfigContext';
 import { getTooltipType } from '../generic/helpers';
 import {
@@ -19,13 +19,15 @@ const StyledQuestion = styled(HelpCircle)`
 `;
 
 export const NodeBar = () => {
-  const { accounts } = useAccount();
+  const { accounts } = useAccountState();
   const { multiNodeInfo, theme } = useConfigState();
   const slider = React.useRef<HTMLDivElement>(null);
 
   const tooltipType: any = getTooltipType(theme);
 
-  const viewOnlyAccounts = accounts.filter(account => account.viewOnly !== '');
+  const viewOnlyAccounts = accounts.filter(
+    account => account.type === CLIENT_ACCOUNT && account.viewOnly !== ''
+  );
 
   const handleScroll = (decrease?: boolean) => {
     if (slider.current !== null) {

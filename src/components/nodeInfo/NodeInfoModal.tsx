@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAccountDispatch } from 'src/context/AccountContext';
 import {
   SubTitle,
   SingleLine,
@@ -9,7 +10,6 @@ import {
 import { Price } from '../price/Price';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { useStatusDispatch } from '../../context/StatusContext';
-import { useAccount } from '../../context/AccountContext';
 
 interface NodeInfoModalProps {
   account: any;
@@ -19,7 +19,7 @@ interface NodeInfoModalProps {
 export const NodeInfoModal = ({ account, accountId }: NodeInfoModalProps) => {
   const dispatch = useStatusDispatch();
 
-  const { changeAccount } = useAccount();
+  const dispatchAccount = useAccountDispatch();
 
   const {
     active_channels_count,
@@ -89,7 +89,7 @@ export const NodeInfoModal = ({ account, accountId }: NodeInfoModalProps) => {
           dispatch({
             type: 'disconnected',
           });
-          changeAccount(accountId);
+          dispatchAccount({ type: 'changeAccount', changeId: accountId });
         }}
       >
         Change to this Account

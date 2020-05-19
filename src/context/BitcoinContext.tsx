@@ -13,10 +13,14 @@ type ChangeState = {
   hour: number;
 };
 
-type ActionType = {
-  type: 'fetched' | 'dontShow';
-  state?: ChangeState;
-};
+type ActionType =
+  | {
+      type: 'fetched';
+      state: ChangeState;
+    }
+  | {
+      type: 'dontShow';
+    };
 
 type Dispatch = (action: ActionType) => void;
 
@@ -41,7 +45,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const BitcoinInfoProvider = ({ children }: any) => {
+const BitcoinInfoProvider = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (

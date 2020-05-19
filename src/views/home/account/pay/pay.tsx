@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useAccountState } from 'src/context/AccountContext';
+import { usePayInvoiceMutation } from 'src/graphql/mutations/__generated__/pay.generated';
 import {
   Sub4Title,
   ResponsiveLine,
@@ -9,9 +11,7 @@ import { getErrorContent } from '../../../../utils/error';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
 import Modal from '../../../../components/modal/ReactModal';
-import { useAccount } from '../../../../context/AccountContext';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { usePayInvoiceMutation } from '../../../../generated/graphql';
 import { useStatusState } from '../../../../context/StatusContext';
 import {
   isLightningInvoice,
@@ -24,7 +24,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const [tokens, setTokens] = useState<number>(0);
   const [modalType, setModalType] = useState('none');
 
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
   const { minorVersion } = useStatusState();
 
   const canKeysend = minorVersion >= 9;
