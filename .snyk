@@ -1,0 +1,46 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.14.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-LODASH-567746:
+    - victory > victory-histogram > lodash:
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/plugin-helpers > @graphql-toolkit/common > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - victory > victory-histogram > victory-core > lodash:
+        patched: '2020-05-19T05:51:08.235Z'
+    - victory > victory-histogram > victory-bar > lodash:
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > @graphql-toolkit/common > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - victory > victory-histogram > victory-bar > victory-core > lodash:
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > @babel/core > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > @babel/core > @babel/helper-module-transforms > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > babel-preset-fbjs > @babel/plugin-transform-block-scoping > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > @babel/core > @babel/helpers > @babel/traverse > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > babel-preset-fbjs > @babel/plugin-transform-classes > @babel/helper-define-map > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > @babel/core > @babel/helper-module-transforms > @babel/helper-replace-supers > @babel/traverse > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > babel-preset-fbjs > @babel/plugin-transform-object-super > @babel/helper-replace-supers > @babel/traverse > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > @babel/core > @babel/helper-module-transforms > @babel/helper-replace-supers > @babel/traverse > @babel/generator > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > babel-preset-fbjs > @babel/plugin-proposal-class-properties > @babel/helper-create-class-features-plugin > @babel/helper-replace-supers > @babel/traverse > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > @babel/core > @babel/helper-module-transforms > @babel/helper-replace-supers > @babel/traverse > @babel/helper-split-export-declaration > @babel/types > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > babel-preset-fbjs > @babel/plugin-proposal-class-properties > @babel/helper-create-class-features-plugin > @babel/helper-replace-supers > @babel/traverse > @babel/generator > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > babel-preset-fbjs > @babel/plugin-proposal-class-properties > @babel/helper-create-class-features-plugin > @babel/helper-replace-supers > @babel/traverse > @babel/helper-split-export-declaration > @babel/types > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > @babel/core > @babel/helper-module-transforms > @babel/helper-replace-supers > @babel/traverse > @babel/helper-function-name > @babel/template > @babel/types > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
+    - '@graphql-codegen/near-operation-file-preset > @graphql-codegen/visitor-plugin-common > @graphql-toolkit/relay-operation-optimizer > relay-compiler > babel-preset-fbjs > @babel/plugin-proposal-class-properties > @babel/helper-create-class-features-plugin > @babel/helper-replace-supers > @babel/traverse > @babel/helper-function-name > @babel/template > @babel/types > lodash':
+        patched: '2020-05-19T05:51:08.235Z'
