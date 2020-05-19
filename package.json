@@ -27,7 +27,9 @@
     "build:64": "docker build -f arm64v8.Dockerfile -t apotdevin/thunderhub:test-arm64v8 .",
     "build:manifest": "docker manifest create apotdevin/thunderhub:test apotdevin/thunderhub:test-amd64 apotdevin/thunderhub:test-arm32v7 apotdevin/thunderhub:test-arm64v8",
     "upgrade-latest": "yarn upgrade-interactive --latest",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "keywords": [],
   "author": "",
@@ -75,7 +77,8 @@
     "uuid": "^8.0.0",
     "victory": "^34.3.6",
     "winston": "^3.2.1",
-    "zxcvbn": "^4.4.2"
+    "zxcvbn": "^4.4.2",
+    "snyk": "^1.321.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
@@ -137,5 +140,6 @@
       "jest --bail --findRelatedTests",
       "eslint --fix"
     ]
-  }
+  },
+  "snyk": true
 }
