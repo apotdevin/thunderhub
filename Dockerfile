@@ -1,6 +1,6 @@
-# ---------------
+# ----------------
 # Install Dependencies
-# ---------------
+# ----------------
 FROM node:12-alpine as build
 
 # Install dependencies neccesary for node-gyp on node alpine
