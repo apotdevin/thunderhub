@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccount } from '../../../context/AccountContext';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
 import { Card } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
-import { useGetChannelsQuery } from '../../../generated/graphql';
 import { ChannelCard } from './ChannelCard';
 
 export const Channels = () => {
   const [indexOpen, setIndexOpen] = useState(0);
 
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { loading, data } = useGetChannelsQuery({
     skip: !auth,

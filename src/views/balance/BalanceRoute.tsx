@@ -1,5 +1,7 @@
 import React from 'react';
 import { toast } from 'react-toastify';
+import { useGetRoutesLazyQuery } from 'src/graphql/queries/__generated__/getRoutes.generated';
+import { usePayViaRouteMutation } from 'src/graphql/mutations/__generated__/payViaRoute.generated';
 import {
   SubCard,
   Sub4Title,
@@ -10,15 +12,10 @@ import { getErrorContent } from '../../utils/error';
 import { themeColors, chartColors } from '../../styles/Themes';
 import { renderLine } from '../../components/generic/helpers';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
-import { GET_ROUTES } from '../../graphql/query';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Price } from '../../components/price/Price';
 import { getPercent } from '../../utils/helpers';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
-import {
-  usePayViaRouteMutation,
-  useGetRoutesLazyQuery,
-} from '../../generated/graphql';
 import { HopCard } from './Balance.styled';
 
 type BalancedRouteProps = {

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetWalletInfoQuery } from 'src/graphql/queries/__generated__/getWalletInfo.generated';
 import {
   CardWithTitle,
   SubTitle,
@@ -6,15 +8,13 @@ import {
   Sub4Title,
   Separation,
 } from '../../components/generic/Styled';
-import { useGetWalletInfoQuery } from '../../generated/graphql';
-import { useAccount } from '../../context/AccountContext';
 import { useStatusState } from '../../context/StatusContext';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { renderLine } from '../../components/generic/helpers';
 
 export const WalletVersion = () => {
   const { minorVersion } = useStatusState();
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
   const { data, loading, error } = useGetWalletInfoQuery({
     skip: minorVersion < 10,
     variables: { auth },

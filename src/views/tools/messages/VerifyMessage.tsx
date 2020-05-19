@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { X, Copy } from 'react-feather';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { useAccountState } from 'src/context/AccountContext';
+import { useVerifyMessageLazyQuery } from 'src/graphql/queries/__generated__/verifyMessage.generated';
 import { Input } from '../../../components/input/Input';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import {
@@ -10,10 +12,8 @@ import {
   Separation,
 } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
-import { useAccount } from '../../../context/AccountContext';
 import { Column, WrapRequest } from '../Tools.styled';
 import { getNodeLink } from '../../../components/generic/helpers';
-import { useVerifyMessageLazyQuery } from '../../../generated/graphql';
 import { NoWrap } from './Messages';
 
 export const VerifyMessage = () => {
@@ -22,12 +22,7 @@ export const VerifyMessage = () => {
   const [isPasting, setIsPasting] = useState<boolean>(false);
   const [signedBy, setSignedBy] = useState<string>('');
 
-  const { host, viewOnly, cert, sessionAdmin } = useAccount();
-  const auth = {
-    host,
-    cert,
-    macaroon: viewOnly !== '' ? viewOnly : sessionAdmin,
-  };
+  const { auth } = useAccountState();
 
   const [signMessage, { data, loading }] = useVerifyMessageLazyQuery({
     onError: error => toast.error(getErrorContent(error)),

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { X, ChevronRight } from 'react-feather';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
 import { Input } from '../../components/input/Input';
-import { useGetPeersQuery } from '../../generated/graphql';
-import { useAccount } from '../../context/AccountContext';
 import {
   SubCard,
   ResponsiveSingle,
@@ -74,7 +74,7 @@ export const ChatStart = ({ noTitle }: { noTitle?: boolean }) => {
   const [indexOpen, setIndexOpen] = React.useState(0);
   const [willSend, setWillSend] = React.useState(false);
   const [publicKey, setPublicKey] = React.useState('');
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
   const { loading, data } = useGetPeersQuery({
     skip: !auth,
     variables: { auth },

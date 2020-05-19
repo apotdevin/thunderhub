@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import { useGetOffersQuery } from 'src/graphql/hodlhodl/__generated__/query.generated';
 import {
   CardWithTitle,
   SubTitle,
@@ -14,7 +15,6 @@ import { OfferFilters } from '../src/views/trading/OfferFilters';
 import { Link } from '../src/components/link/Link';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { decode } from '../src/utils/helpers';
-import { useGetOffersQuery } from '../src/generated/graphql';
 
 export interface QueryProps {
   pagination: {

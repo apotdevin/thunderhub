@@ -3,9 +3,14 @@ import {
   getPendingChainBalance as getPending,
 } from 'ln-service';
 import { GraphQLInt } from 'graphql';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 
 interface ChainBalanceProps {
@@ -19,10 +24,11 @@ interface PendingChainBalanceProps {
 export const getChainBalance = {
   type: GraphQLInt,
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'chainBalance');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context);
+    const lnd = getAuthLnd(auth);
 
     try {
       const value: ChainBalanceProps = await getBalance({
@@ -39,10 +45,11 @@ export const getChainBalance = {
 export const getPendingChainBalance = {
   type: GraphQLInt,
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'pendingChainBalance');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context);
+    const lnd = getAuthLnd(auth);
 
     try {
       const pendingValue: PendingChainBalanceProps = await getPending({

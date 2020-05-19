@@ -2,9 +2,14 @@ import { GraphQLString } from 'graphql';
 import { getPayments, getInvoices, getNode } from 'ln-service';
 import { compareDesc } from 'date-fns';
 import { sortBy } from 'underscore';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { GetResumeType } from '../../types/QueryType';
 import { PaymentsProps, InvoicesProps, NodeProps } from './resume.interface';
@@ -15,10 +20,11 @@ export const getResume = {
     ...defaultParams,
     token: { type: GraphQLString },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'payments');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context);
+    const lnd = getAuthLnd(auth);
 
     let payments;
     let invoices;

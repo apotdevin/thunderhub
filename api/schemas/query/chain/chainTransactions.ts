@@ -1,9 +1,14 @@
 import { GraphQLList } from 'graphql';
 import { getChainTransactions as getLnChainTransactions } from 'ln-service';
 import { sortBy } from 'underscore';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getErrorMsg, getAuthLnd } from '../../../helpers/helpers';
+import {
+  getAuthLnd,
+  getErrorMsg,
+  getCorrectAuth,
+} from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { GetChainTransactionsType } from '../../types/QueryType';
 
@@ -25,10 +30,11 @@ interface TransactionsProps {
 export const getChainTransactions = {
   type: new GraphQLList(GetChainTransactionsType),
   args: defaultParams,
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'chainTransactions');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context);
+    const lnd = getAuthLnd(auth);
 
     try {
       const transactionList: TransactionsProps = await getLnChainTransactions({

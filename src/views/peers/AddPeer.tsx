@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X } from 'react-feather';
 import { toast } from 'react-toastify';
+import { useAddPeerMutation } from 'src/graphql/mutations/__generated__/addPeer.generated';
 import {
   CardWithTitle,
   SubTitle,
@@ -20,7 +21,6 @@ import {
 import { Input } from '../../components/input/Input';
 import { getErrorContent } from '../../utils/error';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
-import { useAddPeerMutation } from '../../generated/graphql';
 
 export const AddPeer = () => {
   const [isAdding, setIsAdding] = useState<boolean>(false);

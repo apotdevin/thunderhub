@@ -3,16 +3,16 @@ import { ThemeSet } from 'styled-theming';
 import { toast } from 'react-toastify';
 import { Circle } from 'react-feather';
 import ScaleLoader from 'react-spinners/ScaleLoader';
+import { useAccountState } from 'src/context/AccountContext';
+import { useSendMessageMutation } from 'src/graphql/mutations/__generated__/sendMessage.generated';
 import {
   chatBubbleColor,
   chatSentBubbleColor,
   chartColors,
 } from '../../styles/Themes';
-import { useSendMessageMutation } from '../../generated/graphql';
 import { getErrorContent } from '../../utils/error';
 import { SecureWrapper } from '../../components/buttons/secureButton/SecureWrapper';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
-import { useAccount } from '../../context/AccountContext';
 import { useConfigState } from '../../context/ConfigContext';
 import { usePriceState } from '../../context/PriceContext';
 import { getPrice } from '../../components/price/Price';
@@ -32,7 +32,7 @@ const SendButton = ({ amount }: SendButtonProps) => {
   const { maxFee } = useConfigState();
   const { sender } = useChatState();
   const dispatch = useChatDispatch();
-  const { id } = useAccount();
+  const { account } = useAccountState();
 
   const [sendMessage, { loading, data }] = useSendMessageMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -51,11 +51,11 @@ const SendButton = ({ amount }: SendButtonProps) => {
           contentType: 'payment',
           tokens: amount,
         },
-        userId: id,
+        userId: account.id,
         sender,
       });
     }
-  }, [loading, data, amount, dispatch, sender, id]);
+  }, [loading, data, amount, dispatch, sender, account]);
 
   return (
     <SecureWrapper

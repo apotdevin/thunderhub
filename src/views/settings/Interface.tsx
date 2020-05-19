@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAccountState, CLIENT_ACCOUNT } from 'src/context/AccountContext';
 import {
   CardWithTitle,
   SubTitle,
@@ -12,7 +13,6 @@ import {
   MultiButton,
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
-import { useAccount } from '../../context/AccountContext';
 import { usePriceState } from '../../context/PriceContext';
 
 export const InterfaceSettings = () => {
@@ -20,9 +20,11 @@ export const InterfaceSettings = () => {
   const { theme, currency, multiNodeInfo } = useConfigState();
   const dispatch = useConfigDispatch();
 
-  const { accounts } = useAccount();
+  const { accounts } = useAccountState();
 
-  const viewOnlyAccounts = accounts.filter(account => account.viewOnly !== '');
+  const viewOnlyAccounts = accounts.filter(
+    account => account.type === CLIENT_ACCOUNT && account.viewOnly !== ''
+  );
 
   const renderButton = (
     title: string,

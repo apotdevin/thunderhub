@@ -1,7 +1,8 @@
 import { GraphQLString, GraphQLBoolean } from 'graphql';
 import { getInvoices, verifyMessage } from 'ln-service';
+import { ContextType } from 'api/types/apiTypes';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, to } from '../../../helpers/helpers';
+import { getAuthLnd, to, getCorrectAuth } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { decodeMessage } from '../../../helpers/customRecords';
 import { GetMessagesType } from '../../types/QueryType';
@@ -14,10 +15,11 @@ export const getMessages = {
     initialize: { type: GraphQLBoolean },
     lastMessage: { type: GraphQLString },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getMessages');
 
-    const lnd = getAuthLnd(params.auth);
+    const auth = getCorrectAuth(params.auth, context);
+    const lnd = getAuthLnd(auth);
 
     const invoiceList = await to(
       getInvoices({

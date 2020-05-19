@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetBackupsLazyQuery } from 'src/graphql/queries/__generated__/getBackups.generated';
 import { DarkSubTitle, SingleLine } from '../../../components/generic/Styled';
 import { saveToPc } from '../../../utils/helpers';
-import { useAccount } from '../../../context/AccountContext';
 import { getErrorContent } from '../../../utils/error';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { useGetBackupsLazyQuery } from '../../../generated/graphql';
 
 export const DownloadBackups = () => {
-  const { name, auth } = useAccount();
+  const { account, auth } = useAccountState();
 
   const [getBackups, { data, loading }] = useGetBackupsLazyQuery({
     variables: { auth },
@@ -16,12 +16,12 @@ export const DownloadBackups = () => {
   });
 
   useEffect(() => {
-    if (!loading && data && data.getBackups) {
-      saveToPc(data.getBackups, `Backup-${name}`);
-      localStorage.setItem('lastBackup', new Date().toString());
+    if (account && !loading && data && data.getBackups) {
+      saveToPc(data.getBackups, `ChannelBackup-${account.name}-${account.id}`);
+      localStorage.setItem(`lastBackup-${account.id}`, new Date().toString());
       toast.success('Downloaded');
     }
-  }, [data, loading, name]);
+  }, [data, loading, account]);
 
   return (
     <SingleLine>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ChevronRight } from 'react-feather';
+import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
 import {
   SubCard,
   Separation,
@@ -21,7 +22,6 @@ import { useConfigState } from '../../context/ConfigContext';
 import { textColorMap } from '../../styles/Themes';
 import { Input } from '../../components/input/Input';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
-import { useUpdateFeesMutation } from '../../generated/graphql';
 
 interface FeeCardProps {
   channelInfo: any;

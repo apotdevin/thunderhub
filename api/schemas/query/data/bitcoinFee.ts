@@ -1,5 +1,6 @@
 import { GraphQLBoolean } from 'graphql';
 import fetch from 'node-fetch';
+import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { BitcoinFeeType } from '../../types/QueryType';
@@ -10,7 +11,7 @@ export const getBitcoinFees = {
   args: {
     logger: { type: GraphQLBoolean },
   },
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'bitcoinFee');
 
     try {

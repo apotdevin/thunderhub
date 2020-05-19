@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
+import { useGetBitcoinFeesQuery } from 'src/graphql/queries/__generated__/getBitcoinFees.generated';
 import { useBitcoinDispatch } from '../../context/BitcoinContext';
-import { useGetBitcoinFeesQuery } from '../../generated/graphql';
 import { useConfigState } from '../../context/ConfigContext';
 
 export const BitcoinFees = () => {

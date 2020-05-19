@@ -113,12 +113,57 @@ npm run dev -> npm run dev:compatible
 You can define some environment variables that ThunderHub can start with. To do this create a `.env` file in the root directory with the following parameters:
 
 ```js
+LOG_LEVEL = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly' //Default: 'info'
 THEME = 'dark' | 'light'; // Default: 'dark'
 CURRENCY = 'sat' | 'btc' | 'eur' | 'usd'; // Default: 'sat'
 FETCH_PRICES = true | false // Default: true
 FETCH_FEES = true | false // Default: true
-HODL_KEY='[Key provided by HodlHodl]' //Default: ''
-BASE_PATH='[Base path where you want to have thunderhub running i.e. '/btcpay']' //Default: '/'
+HODL_KEY = '[Key provided by HodlHodl]' //Default: ''
+BASE_PATH = '[Base path where you want to have thunderhub running i.e. '/btcpay']' //Default: '/'
+```
+
+### SSO Account
+
+You can define an account to work with SSO cookie authentication by adding the following parameters in the `.env` file:
+
+```js
+COOKIE_PATH = '/path/to/cookie/file/.cookie'; // i.e. '/data/.cookie'
+SSO_SERVER_URL = 'url and port to node'; // i.e. '127.0.0.1:10009'
+SSO_CERT_PATH = '/path/to/tls/certificate'; // i.e. '\lnd\alice\tls.cert'
+SSO_MACAROON_PATH = '/path/to/macaroon/folder'; //i.e. '\lnd\alice\data\chain\bitcoin\regtest\'
+```
+
+To login to this account you must add the cookie file content to the end of your ThunderHub url. For example:
+
+```
+http://localhost:3000?token=[COOKIE]
+```
+
+Replace `[COOKIE]` with the contents of the `.cookie` file.
+
+### Server Accounts
+
+You can add accounts on the server by adding this parameter to the `.env` file:
+
+```js
+ACCOUNT_CONFIG_PATH = '/path/to/config/file.yaml'; // i.e. '/data/thubConfig.yaml'
+```
+
+You must also add a YAML file at that location with the following format:
+
+```yaml
+masterPassword: 'password' # Default password unless defined in account
+accounts:
+  - name: 'Account 1'
+    serverUrl: 'url:port'
+    macaroonPath: '/path/to/admin.macaroon'
+    certificatePath: '/path/to/tls.cert'
+    password: 'password for account 1'
+  - name: 'Account 2'
+    serverUrl: 'url:port'
+    macaroonPath: '/path/to/admin.macaroon'
+    certificatePath: '/path/to/tls.cert'
+    # password: Leave without password and it will use the master password
 ```
 
 ### Fetching prices and fees

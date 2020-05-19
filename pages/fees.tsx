@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ChevronRight, X } from 'react-feather';
+import { useAccountState } from 'src/context/AccountContext';
+import { useChannelFeesQuery } from 'src/graphql/queries/__generated__/getChannelFees.generated';
+import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
 import {
   Card,
   CardWithTitle,
@@ -13,7 +16,6 @@ import {
   ResponsiveLine,
   NoWrapTitle,
 } from '../src/components/generic/Styled';
-import { useAccount } from '../src/context/AccountContext';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { FeeCard } from '../src/views/fees/FeeCard';
@@ -21,10 +23,6 @@ import { SecureButton } from '../src/components/buttons/secureButton/SecureButto
 import { AdminSwitch } from '../src/components/adminSwitch/AdminSwitch';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { Input } from '../src/components/input/Input';
-import {
-  useChannelFeesQuery,
-  useUpdateFeesMutation,
-} from '../src/generated/graphql';
 
 const FeesView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
@@ -32,7 +30,7 @@ const FeesView = () => {
   const [baseFee, setBaseFee] = useState(0);
   const [feeRate, setFeeRate] = useState(0);
 
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { loading, data } = useChannelFeesQuery({
     skip: !auth,

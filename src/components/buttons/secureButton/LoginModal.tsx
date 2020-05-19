@@ -3,13 +3,16 @@ import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
 import { ChevronRight } from 'react-feather';
 import {
+  useAccountState,
+  useAccountDispatch,
+} from 'src/context/AccountContext';
+import { getAuthFromAccount } from 'src/context/helpers/context';
+import {
   Sub4Title,
   NoWrapTitle,
   SubTitle,
   ResponsiveLine,
 } from '../../generic/Styled';
-import { useAccount } from '../../../context/AccountContext';
-import { saveSessionAuth } from '../../../utils/auth';
 import { ColorButton } from '../colorButton/ColorButton';
 import { Input } from '../../input/Input';
 import { MultiButton, SingleButton } from '../multiButton/MultiButton';
@@ -31,7 +34,9 @@ export const LoginModal = ({
 }: LoginProps) => {
   const [pass, setPass] = useState<string>('');
   const [storeSession, setStoreSession] = useState<boolean>(false);
-  const { host, cert, refreshAccount } = useAccount();
+
+  const { account } = useAccountState();
+  const dispatch = useAccountDispatch();
 
   const handleClick = () => {
     try {
@@ -39,11 +44,16 @@ export const LoginModal = ({
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
 
       if (storeSession) {
-        saveSessionAuth(decrypted);
-        refreshAccount();
+        dispatch({ type: 'addSession', session: decrypted });
       }
-      const auth = { host, macaroon: decrypted, cert };
-      callback({ variables: { ...variables, auth } });
+
+      callback({
+        variables: {
+          ...variables,
+          auth: getAuthFromAccount(account, decrypted),
+        },
+      });
+
       setModalOpen(false);
     } catch (error) {
       toast.error('Wrong Password');

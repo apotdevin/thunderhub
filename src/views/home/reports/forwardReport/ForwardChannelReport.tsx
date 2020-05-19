@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
 import styled from 'styled-components';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetForwardChannelsReportQuery } from 'src/graphql/queries/__generated__/getForwardChannelsReport.generated';
 import { getErrorContent } from '../../../../utils/error';
-import { useAccount } from '../../../../context/AccountContext';
 import {
   DarkSubTitle,
   ColorButton,
@@ -13,7 +14,6 @@ import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { useConfigState } from '../../../../context/ConfigContext';
 import { usePriceState } from '../../../../context/PriceContext';
-import { useGetForwardChannelsReportQuery } from '../../../../generated/graphql';
 import { CardContent } from '.';
 
 const ChannelRow = styled.div`
@@ -68,7 +68,7 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { data, loading } = useGetForwardChannelsReportQuery({
     skip: !auth,

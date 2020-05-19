@@ -6,12 +6,13 @@ import {
   VictoryVoronoiContainer,
   VictoryTooltip,
 } from 'victory';
+import { useAccountState } from 'src/context/AccountContext';
+import { useGetLiquidReportQuery } from 'src/graphql/queries/__generated__/getChannelReport.generated';
 import {
   CardWithTitle,
   SubTitle,
   Card,
 } from '../../../../components/generic/Styled';
-import { useAccount } from '../../../../context/AccountContext';
 import { useConfigState } from '../../../../context/ConfigContext';
 import {
   chartGridColor,
@@ -21,10 +22,9 @@ import {
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
-import { useGetLiquidReportQuery } from '../../../../generated/graphql';
 
 export const LiquidReport = () => {
-  const { auth } = useAccount();
+  const { auth } = useAccountState();
 
   const { theme, currency, displayValues } = useConfigState();
   const priceContext = usePriceState();

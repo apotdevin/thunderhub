@@ -1,14 +1,12 @@
-import { useAccount } from '../../context/AccountContext';
+import { useAccountState, CLIENT_ACCOUNT } from 'src/context/AccountContext';
 
-interface AdminSwitchProps {
-  children: any;
-}
+export const AdminSwitch = ({ children }) => {
+  const { account, session } = useAccountState();
 
-export const AdminSwitch = ({ children }: AdminSwitchProps) => {
-  const { admin, sessionAdmin } = useAccount();
-
-  if (!admin && !sessionAdmin) {
-    return null;
+  if (account?.type === CLIENT_ACCOUNT) {
+    if (!account.admin && !session) {
+      return null;
+    }
   }
 
   return children;

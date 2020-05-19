@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import { GraphQLList } from 'graphql';
 import getConfig from 'next/config';
+import { ContextType } from 'api/types/apiTypes';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import { logger } from '../../../helpers/logger';
 import { appUrls } from '../../../utils/appUrls';
@@ -12,7 +13,7 @@ const { hodlKey } = serverRuntimeConfig;
 export const getCountries = {
   type: new GraphQLList(HodlCountryType),
   args: {},
-  resolve: async (root: any, params: any, context: any) => {
+  resolve: async (_: undefined, params: any, context: ContextType) => {
     await requestLimiter(context.ip, 'getCountries');
 
     const headers = {

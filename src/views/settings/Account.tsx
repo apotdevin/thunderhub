@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
-import { X } from 'react-feather';
+import { X, LogOut } from 'react-feather';
 import { useRouter } from 'next/router';
+import {
+  useAccountState,
+  useAccountDispatch,
+  SSO_ACCOUNT,
+} from 'src/context/AccountContext';
+import { chartColors } from 'src/styles/Themes';
 import {
   CardWithTitle,
   SubTitle,
@@ -10,7 +16,6 @@ import {
   Separation,
 } from '../../components/generic/Styled';
 import { SettingsLine } from '../../../pages/settings';
-import { useAccount } from '../../context/AccountContext';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
   MultiButton,
@@ -25,10 +30,11 @@ export const AccountSettings = () => {
   const [status, setStatus] = useState('none');
 
   const { push } = useRouter();
-  const { id, changeAccount, accounts } = useAccount();
+  const { account, accounts } = useAccountState();
 
   const dispatch = useStatusDispatch();
   const dispatchChat = useChatDispatch();
+  const dispatchAccount = useAccountDispatch();
 
   const [isType, setIsType] = useState('login');
   const [willAdd, setWillAdd] = useState(false);
@@ -74,24 +80,39 @@ export const AccountSettings = () => {
       <SettingsLine>
         <Sub4Title>Change Account</Sub4Title>
         <MultiButton>
-          {accounts.map(({ name: accountName, id: accountId }) => {
-            return (
-              <SingleButton
-                key={accountId}
-                selected={accountId === id}
-                onClick={() => {
-                  if (accountId !== id) {
-                    dispatch({ type: 'disconnected' });
-                    dispatchChat({ type: 'disconnected' });
-                    changeAccount(accountId);
-                    push(appendBasePath('/'));
-                  }
-                }}
-              >
-                {accountName}
-              </SingleButton>
-            );
-          })}
+          {accounts.map(
+            ({ name: accountName, id: accountId, type: accountType }) => {
+              return (
+                <SingleButton
+                  key={accountId}
+                  selected={accountId === account?.id}
+                  onClick={() => {
+                    if (accountId !== account?.id) {
+                      switch (accountType) {
+                        case SSO_ACCOUNT:
+                          dispatchAccount({
+                            type: 'changeAccount',
+                            changeId: accountId,
+                          });
+                          break;
+                        default:
+                          dispatch({ type: 'disconnected' });
+                          dispatchChat({ type: 'disconnected' });
+                          dispatchAccount({
+                            type: 'changeAccount',
+                            changeId: accountId,
+                          });
+                          push(appendBasePath('/'));
+                          break;
+                      }
+                    }
+                  }}
+                >
+                  {accountName}
+                </SingleButton>
+              );
+            }
+          )}
         </MultiButton>
       </SettingsLine>
     );
@@ -103,7 +124,7 @@ export const AccountSettings = () => {
       <Card>
         {renderChangeAccount()}
         <SettingsLine>
-          <Sub4Title>Add Account</Sub4Title>
+          <Sub4Title>Add Browser Account</Sub4Title>
           <ColorButton
             onClick={() => {
               if (willAdd) {
@@ -125,8 +146,22 @@ export const AccountSettings = () => {
               setStatus={setStatus}
               callback={() => setStatus('none')}
             />
+            <Separation />
           </>
         )}
+        <SettingsLine>
+          <Sub4Title>Logout</Sub4Title>
+          <ColorButton
+            onClick={() => {
+              dispatch({ type: 'disconnected' });
+              dispatchChat({ type: 'disconnected' });
+              dispatchAccount({ type: 'logout' });
+              push(appendBasePath('/'));
+            }}
+          >
+            <LogOut color={chartColors.red} size={14} />
+          </ColorButton>
+        </SettingsLine>
       </Card>
     </CardWithTitle>
   );

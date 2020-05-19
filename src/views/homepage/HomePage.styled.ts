@@ -120,3 +120,7 @@ export const ConnectTitle = styled.div`
     change && `color: ${fontColors.white};`}
   padding-bottom: 8px;
 `;
+
+export const LockPadding = styled.span`
+  margin-left: 4px;
+`;
