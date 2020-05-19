@@ -1,4 +1,3 @@
-import path from 'path';
 import { createLogger, format, transports } from 'winston';
 import getConfig from 'next/config';
 
@@ -10,11 +9,7 @@ const level = nodeEnv === 'development' ? 'debug' : logLevel;
 const combinedFormat =
   // nodeEnv === 'development' ?
   format.combine(
-    format.label({
-      label: path.basename(
-        process && process.mainModule ? process.mainModule.filename : ''
-      ),
-    }),
+    format.label({ label: 'THUB' }),
     format.splat(),
     format.colorize(),
     format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),

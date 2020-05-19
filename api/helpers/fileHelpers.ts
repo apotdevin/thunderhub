@@ -7,7 +7,12 @@ import yaml from 'js-yaml';
 import AES from 'crypto-js/aes';
 import { getUUID } from 'src/utils/auth';
 
-export const readFile = (filePath: string, encoding = 'hex'): string | null => {
+type EncodingType = 'hex' | 'utf-8';
+
+export const readFile = (
+  filePath: string,
+  encoding: EncodingType = 'hex'
+): string | null => {
   if (filePath === '') {
     return null;
   }
@@ -65,7 +70,7 @@ export const parseYaml = (filePath: string): AccountConfigType | null => {
 
 export const getAccounts = (filePath: string) => {
   if (filePath === '') {
-    logger.info('No account config file path provided');
+    logger.verbose('No account config file path provided');
     return null;
   }
 

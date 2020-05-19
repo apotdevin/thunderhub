@@ -69,9 +69,8 @@ export const FixedWidth = styled.div`
 `;
 
 export const DangerView = () => {
-  const { account, accounts } = useAccountState();
+  const { accounts } = useAccountState();
 
-  const clientAccount = account?.type === CLIENT_ACCOUNT ? account : null;
   const clientAccounts = accounts.filter(a => a.type === CLIENT_ACCOUNT);
 
   const dispatch = useStatusDispatch();
@@ -124,42 +123,10 @@ export const DangerView = () => {
     return null;
   };
 
-  const renderSwitch = () => {
-    return (
-      <SettingsLine>
-        <Sub4Title>Change Permissions</Sub4Title>
-        <MultiButton>
-          <SingleButton
-            onClick={() =>
-              dispatchAccount({
-                type: 'changePermission',
-                changeId: clientAccount.id,
-                changeToViewOnly: true,
-              })
-            }
-          >
-            View-Only
-          </SingleButton>
-          <SingleButton
-            onClick={() =>
-              dispatchAccount({
-                type: 'changePermission',
-                changeId: clientAccount.id,
-              })
-            }
-          >
-            Admin-Only
-          </SingleButton>
-        </MultiButton>
-      </SettingsLine>
-    );
-  };
-
   return (
     <CardWithTitle>
       <SubTitle>Danger Zone</SubTitle>
       <OutlineCard>
-        {clientAccount?.admin && clientAccount?.viewOnly && renderSwitch()}
         <SettingsLine>
           <Sub4Title>Delete Account:</Sub4Title>
           {renderButton()}

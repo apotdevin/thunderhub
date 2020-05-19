@@ -8,7 +8,9 @@ interface RateConfigProps {
   };
 }
 
-export const RateConfig: RateConfigProps = {};
+export const RateConfig: RateConfigProps = {
+  getMessages: { max: 10, window: '5s' },
+};
 
 const rateLimiter = getGraphQLRateLimiter({
   identifyContext: (ctx: string) => ctx,

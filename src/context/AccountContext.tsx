@@ -90,11 +90,6 @@ type ActionType =
       type: 'removeSession';
     }
   | {
-      type: 'changePermission';
-      changeId: string;
-      changeToViewOnly?: boolean;
-    }
-  | {
       type: 'deleteAll';
     }
   | {
@@ -247,8 +242,9 @@ const stateReducer = (state: State, action: ActionType): State => {
         ...state,
         auth,
         account,
-        activeAccount,
         accounts,
+        activeAccount,
+        hasAccount: 'fetched',
         ...(action.session && { session: action.session }),
       };
     }
@@ -266,35 +262,6 @@ const stateReducer = (state: State, action: ActionType): State => {
         auth: getAuthFromAccount(state.account),
         session: null,
       };
-    case 'changePermission': {
-      const { account } = getAccountById(action.changeId, state.accounts);
-
-      if (!account) return state;
-
-      let newAccount;
-      let session = state.session;
-      if (action.changeToViewOnly) {
-        newAccount = { ...account, admin: null };
-        session = null;
-        sessionStorage.removeItem('session');
-      } else {
-        newAccount = { ...account, viewOnly: null };
-      }
-
-      const savedAccounts = JSON.parse(
-        localStorage.getItem('accounts') || '[]'
-      ).filter(a => a.id !== action.changeId);
-      localStorage.setItem(
-        'accounts',
-        JSON.stringify([...savedAccounts, newAccount])
-      );
-
-      return {
-        ...state,
-        auth: getAuthFromAccount(newAccount, session),
-        session,
-      };
-    }
     case 'deleteAll':
       localStorage.clear();
       sessionStorage.clear();
