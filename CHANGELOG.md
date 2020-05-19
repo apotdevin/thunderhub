@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0](https://github.com/apotdevin/thunderhub/compare/v0.5.6...v0.6.0) (2020-05-19)
+
+
+### Features
+
+* ✨ server authentication ([#38](https://github.com/apotdevin/thunderhub/issues/38)) ([9d73c30](https://github.com/apotdevin/thunderhub/commit/9d73c30fb487bf913d16a3438841277063e0d01d))
+
+
+### Improvements
+
+* 🔧 eslint sort rule ([0394209](https://github.com/apotdevin/thunderhub/commit/0394209b80cac55a264a0339d806d715172c6166))
+* 🔧 improve login process ([2c9be0b](https://github.com/apotdevin/thunderhub/commit/2c9be0b829a3511c7f06b3e34dc5cb4b8f3c2b2a))
+
 ### [0.5.6](https://github.com/apotdevin/thunderhub/compare/v0.5.5...v0.5.6) (2020-05-13)
 
 
