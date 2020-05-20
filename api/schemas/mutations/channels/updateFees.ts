@@ -1,5 +1,10 @@
 import { updateRoutingFees } from 'ln-service';
-import { GraphQLBoolean, GraphQLString, GraphQLInt } from 'graphql';
+import {
+  GraphQLBoolean,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLFloat,
+} from 'graphql';
 import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
@@ -17,7 +22,7 @@ export const updateFees = {
     ...defaultParams,
     transactionId: { type: GraphQLString },
     transactionVout: { type: GraphQLInt },
-    baseFee: { type: GraphQLInt },
+    baseFee: { type: GraphQLFloat },
     feeRate: { type: GraphQLInt },
   },
   resolve: async (_: undefined, params: any, context: ContextType) => {

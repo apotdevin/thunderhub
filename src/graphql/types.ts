@@ -305,7 +305,7 @@ export type ChannelFeeType = {
   __typename?: 'channelFeeType';
   alias?: Maybe<Scalars['String']>;
   color?: Maybe<Scalars['String']>;
-  baseFee?: Maybe<Scalars['Int']>;
+  baseFee?: Maybe<Scalars['Float']>;
   feeRate?: Maybe<Scalars['Int']>;
   transactionId?: Maybe<Scalars['String']>;
   transactionVout?: Maybe<Scalars['Int']>;
@@ -600,7 +600,7 @@ export type MutationUpdateFeesArgs = {
   auth: AuthType;
   transactionId?: Maybe<Scalars['String']>;
   transactionVout?: Maybe<Scalars['Int']>;
-  baseFee?: Maybe<Scalars['Int']>;
+  baseFee?: Maybe<Scalars['Float']>;
   feeRate?: Maybe<Scalars['Int']>;
 };
 
