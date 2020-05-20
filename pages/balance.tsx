@@ -204,16 +204,13 @@ const BalanceView = () => {
         )}
         {incoming && outgoing && amount && (
           <BalanceRoute
-            {...{
-              incoming,
-              outgoing,
-              amount,
-              maxFee,
-              auth,
-              blocked,
-              setBlocked: () => setBlocked(true),
-              callback: () => handleReset('all'),
-            }}
+            incoming={incoming}
+            outgoing={outgoing}
+            amount={amount}
+            maxFee={maxFee}
+            blocked={blocked}
+            setBlocked={() => setBlocked(true)}
+            callback={() => handleReset('all')}
           />
         )}
       </Card>

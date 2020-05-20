@@ -16,8 +16,13 @@ export const getAuthToken = {
     cookie: { type: GraphQLString },
   },
   resolve: async (_: undefined, params: any, context: ContextType) => {
-    const { ip, secret } = context;
+    const { ip, secret, sso } = context;
     await requestLimiter(ip, 'getAuthToken');
+
+    if (!sso.host || !sso.macaroon) {
+      logger.warn('Host and macaroon are required for SSO');
+      return null;
+    }
 
     if (!params.cookie) {
       return null;

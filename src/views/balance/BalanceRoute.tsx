@@ -2,6 +2,7 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { useGetRoutesLazyQuery } from 'src/graphql/queries/__generated__/getRoutes.generated';
 import { usePayViaRouteMutation } from 'src/graphql/mutations/__generated__/payViaRoute.generated';
+import { useAccountState } from 'src/context/AccountContext';
 import {
   SubCard,
   Sub4Title,
@@ -23,7 +24,6 @@ type BalancedRouteProps = {
   outgoing: any;
   amount: number;
   maxFee?: number;
-  auth: {};
   blocked: boolean;
   setBlocked: () => void;
   callback: () => void;
@@ -34,11 +34,12 @@ export const BalanceRoute = ({
   outgoing,
   amount,
   maxFee,
-  auth,
   blocked,
   setBlocked,
   callback,
 }: BalancedRouteProps) => {
+  const { auth } = useAccountState();
+
   const [getRoute, { loading, data, called }] = useGetRoutesLazyQuery({
     fetchPolicy: 'no-cache',
     onError: error => {
