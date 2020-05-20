@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { usePayInvoiceMutation } from 'src/graphql/mutations/__generated__/pay.generated';
 import {
   Sub4Title,
@@ -24,7 +23,6 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const [tokens, setTokens] = useState<number>(0);
   const [modalType, setModalType] = useState('none');
 
-  const { auth } = useAccountState();
   const { minorVersion } = useStatusState();
 
   const canKeysend = minorVersion >= 9;
@@ -76,20 +74,11 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
 
   const renderModal = () => {
     if (modalType === 'request') {
-      return (
-        <RequestModal request={request} auth={auth}>
-          {renderButton()}
-        </RequestModal>
-      );
+      return <RequestModal request={request}>{renderButton()}</RequestModal>;
     }
     if (modalType === 'keysend') {
       return (
-        <KeysendModal
-          tokens={tokens}
-          auth={auth}
-          publicKey={request}
-          setTokens={setTokens}
-        >
+        <KeysendModal tokens={tokens} publicKey={request} setTokens={setTokens}>
           {renderButton()}
         </KeysendModal>
       );

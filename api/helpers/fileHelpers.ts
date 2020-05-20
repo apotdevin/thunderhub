@@ -167,14 +167,16 @@ export const readMacaroons = (macaroonPath: string): string | null => {
     return null;
   }
 
-  const adminExists = fs.existsSync(`${macaroonPath}admin.macaroon`);
+  const adminExists = fs.existsSync(`${macaroonPath}/admin.macaroon`);
 
   if (!adminExists) {
-    logger.error(`No admin.macaroon file found at path: ${macaroonPath}`);
+    logger.error(
+      `No admin.macaroon file found at path: ${macaroonPath}/admin.macaroon`
+    );
     return null;
   } else {
     try {
-      const ssoAdmin = fs.readFileSync(`${macaroonPath}admin.macaroon`, 'hex');
+      const ssoAdmin = fs.readFileSync(`${macaroonPath}/admin.macaroon`, 'hex');
       return ssoAdmin;
     } catch (err) {
       logger.error(
@@ -219,7 +221,7 @@ export const readCookie = (cookieFile: string): string | null => {
   const exists = fs.existsSync(cookieFile);
   if (exists) {
     try {
-      logger.info(`Found cookie at path ${cookieFile}`);
+      logger.verbose(`Found cookie at path ${cookieFile}`);
       const cookie = fs.readFileSync(cookieFile, 'utf-8');
       return cookie;
     } catch (err) {

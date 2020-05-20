@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { useDecodeRequestQuery } from 'src/graphql/queries/__generated__/decodeRequest.generated';
 import { useGetNodeQuery } from 'src/graphql/queries/__generated__/getNode.generated';
+import { useAccountState } from 'src/context/AccountContext';
 import {
   SingleLine,
   SubTitle,
@@ -28,14 +29,10 @@ export const Centered = styled.div`
 
 interface DecodeProps {
   request: string;
-  auth: {};
 }
 
-export const RequestModal: React.FC<DecodeProps> = ({
-  children,
-  request,
-  auth,
-}) => {
+export const RequestModal: React.FC<DecodeProps> = ({ children, request }) => {
+  const { auth } = useAccountState();
   const { data, loading, error } = useDecodeRequestQuery({
     variables: { auth, request },
   });
@@ -77,18 +74,17 @@ export const RequestModal: React.FC<DecodeProps> = ({
 
 interface KeysendProps {
   tokens: number;
-  auth: {};
   publicKey: string;
   setTokens: (amount: number) => void;
 }
 
 export const KeysendModal: React.FC<KeysendProps> = ({
   children,
-  auth,
   publicKey,
   tokens,
   setTokens,
 }) => {
+  const { auth } = useAccountState();
   const { data, loading, error } = useGetNodeQuery({
     variables: { auth, publicKey },
   });
