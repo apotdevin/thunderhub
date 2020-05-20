@@ -7,7 +7,7 @@ export type UpdateFeesMutationVariables = {
   auth: Types.AuthType;
   transactionId?: Types.Maybe<Types.Scalars['String']>;
   transactionVout?: Types.Maybe<Types.Scalars['Int']>;
-  baseFee?: Types.Maybe<Types.Scalars['Int']>;
+  baseFee?: Types.Maybe<Types.Scalars['Float']>;
   feeRate?: Types.Maybe<Types.Scalars['Int']>;
 };
 
@@ -21,7 +21,7 @@ export const UpdateFeesDocument = gql`
     $auth: authType!
     $transactionId: String
     $transactionVout: Int
-    $baseFee: Int
+    $baseFee: Float
     $feeRate: Int
   ) {
     updateFees(
