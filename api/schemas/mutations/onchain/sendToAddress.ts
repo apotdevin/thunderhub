@@ -52,7 +52,7 @@ export const sendToAddress = {
       const send: SendProps = await sendToChainAddress({
         lnd,
         address: params.address,
-        tokens: params.tokens,
+        ...(params.tokens && { tokens: params.tokens }),
         ...props,
         ...sendAll,
       });
@@ -62,10 +62,10 @@ export const sendToAddress = {
         id: send.id,
         isConfirmed: send.is_confirmed,
         isOutgoing: send.is_outgoing,
-        tokens: send.tokens,
+        ...(send.tokens && { tokens: send.tokens }),
       };
     } catch (error) {
-      logger.error('Error creating address: %o', error);
+      logger.error('Error sending to chain address: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

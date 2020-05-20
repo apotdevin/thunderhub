@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight } from 'react-feather';
 import { toast } from 'react-toastify';
-import styled from 'styled-components';
 import { useOpenChannelMutation } from 'src/graphql/mutations/__generated__/openChannel.generated';
-import {
-  Card,
-  SingleLine,
-  Separation,
-  DarkSubTitle,
-  NoWrapTitle,
-  ResponsiveLine,
-} from '../../../../components/generic/Styled';
+import { InputWithDeco } from 'src/components/input/InputWithDeco';
+import { Card, Separation } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
 import { useBitcoinState } from '../../../../context/BitcoinContext';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
@@ -19,14 +12,6 @@ import {
   SingleButton,
   MultiButton,
 } from '../../../../components/buttons/multiButton/MultiButton';
-import { Price } from '../../../../components/price/Price';
-import { mediaWidths } from '../../../../styles/Themes';
-
-const ResponsiveWrap = styled(SingleLine)`
-  @media (${mediaWidths.mobile}) {
-    flex-wrap: wrap;
-  }
-`;
 
 interface OpenChannelProps {
   color: string;
@@ -70,47 +55,39 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
 
   return (
     <Card bottom={'20px'}>
-      <ResponsiveLine>
-        <NoWrapTitle>Node Public Key:</NoWrapTitle>
-        <Input
-          placeholder={'Public Key'}
-          color={color}
-          withMargin={'0 0 0 8px'}
-          mobileMargin={'0'}
-          onChange={e => setPublicKey(e.target.value)}
-        />
-      </ResponsiveLine>
-      <ResponsiveLine>
-        <ResponsiveWrap>
-          <NoWrapTitle>Channel Size:</NoWrapTitle>
-          <NoWrapTitle>
-            <DarkSubTitle>
-              <Price amount={size} />
-            </DarkSubTitle>
-          </NoWrapTitle>
-        </ResponsiveWrap>
-        <Input
-          placeholder={'Sats'}
-          color={color}
-          withMargin={'0 0 0 8px'}
-          mobileMargin={'0'}
-          type={'number'}
-          onChange={e => setSize(Number(e.target.value))}
-        />
-      </ResponsiveLine>
+      <InputWithDeco
+        color={color}
+        title={'Node Public Key'}
+        placeholder={'Public Key'}
+        inputCallback={value => setPublicKey(value)}
+      />
+      <InputWithDeco
+        color={color}
+        title={'Channel Size'}
+        placeholder={'Sats'}
+        amount={size}
+        inputType={'number'}
+        inputCallback={value => setSize(Number(value))}
+      />
       <Separation />
-      <SingleLine>
-        <NoWrapTitle>Private Channel:</NoWrapTitle>
-        <MultiButton margin={'8px 0 8px 16px'}>
-          {renderButton(() => setPrivateChannel(true), 'Yes', privateChannel)}
-          {renderButton(() => setPrivateChannel(false), 'No', !privateChannel)}
+      <InputWithDeco title={'Type'} noInput={true}>
+        <MultiButton>
+          {renderButton(
+            () => setPrivateChannel(true),
+            'Private',
+            privateChannel
+          )}
+          {renderButton(
+            () => setPrivateChannel(false),
+            'Public',
+            !privateChannel
+          )}
         </MultiButton>
-      </SingleLine>
+      </InputWithDeco>
       <Separation />
       {!dontShow && (
-        <SingleLine>
-          <NoWrapTitle>Fee:</NoWrapTitle>
-          <MultiButton margin={'8px 0 8px 16px'}>
+        <InputWithDeco title={'Fee'} noInput={true}>
+          <MultiButton>
             {renderButton(
               () => {
                 setType('none');
@@ -125,18 +102,12 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
               type === 'fee'
             )}
           </MultiButton>
-        </SingleLine>
+        </InputWithDeco>
       )}
-      <SingleLine>
-        <ResponsiveWrap>
-          <NoWrapTitle>Fee Amount:</NoWrapTitle>
-          <DarkSubTitle>
-            <Price amount={fee * 223} />
-          </DarkSubTitle>
-        </ResponsiveWrap>
+      <InputWithDeco title={'Fee Amount'} amount={fee * 223} noInput={true}>
         {type !== 'none' && (
           <Input
-            withMargin={'8px 0 8px 16px'}
+            maxWidth={'500px'}
             placeholder={'Sats/Byte'}
             color={color}
             type={'number'}
@@ -144,7 +115,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
           />
         )}
         {type === 'none' && (
-          <MultiButton margin={'8px 0 8px 16px'}>
+          <MultiButton>
             {renderButton(
               () => setFee(fast),
               `Fastest (${fast} sats)`,
@@ -163,7 +134,7 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
             )}
           </MultiButton>
         )}
-      </SingleLine>
+      </InputWithDeco>
       <Separation />
       <SecureButton
         fullWidth={true}

@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { usePayAddressMutation } from 'src/graphql/mutations/__generated__/sendToAddress.generated';
+import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import {
-  NoWrapTitle,
-  DarkSubTitle,
   Separation,
   SingleLine,
-  ResponsiveLine,
   SubTitle,
 } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
@@ -19,28 +16,11 @@ import {
   SingleButton,
 } from '../../../../components/buttons/multiButton/MultiButton';
 import { Price, getPrice } from '../../../../components/price/Price';
-import { mediaWidths } from '../../../../styles/Themes';
 import { useConfigState } from '../../../../context/ConfigContext';
 import Modal from '../../../../components/modal/ReactModal';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { renderLine } from '../../../../components/generic/helpers';
 import { usePriceState } from '../../../../context/PriceContext';
-
-const ResponsiveWrap = styled(SingleLine)`
-  @media (${mediaWidths.mobile}) {
-    flex-wrap: wrap;
-  }
-`;
-
-const NoWrap = styled.div`
-  margin-left: 8px;
-  white-space: nowrap;
-`;
-
-const Margin = styled.div`
-  margin-left: 8px;
-  margin-right: 24px;
-`;
 
 export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
   const { fast, halfHour, hour, dontShow } = useBitcoinState();
@@ -80,12 +60,17 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
     return `${amount} blocks`;
   };
 
-  const typeAmount =
-    type === 'fee'
-      ? { fee: amount }
-      : type === 'target'
-      ? { target: amount }
-      : {};
+  const typeAmount = () => {
+    switch (type) {
+      case 'none':
+      case 'fee':
+        return { fee: amount };
+      case 'target':
+        return { target: amount };
+      default:
+        return {};
+    }
+  };
 
   const tokenAmount = sendAll ? { sendAll } : { tokens };
 
@@ -101,47 +86,30 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
 
   return (
     <>
-      <ResponsiveLine>
-        <NoWrapTitle>Send to Address:</NoWrapTitle>
-        <Input
-          placeholder={'Address'}
-          withMargin={'0 0 0 24px'}
-          mobileMargin={'0'}
-          onChange={e => setAddress(e.target.value)}
-        />
-      </ResponsiveLine>
+      <InputWithDeco
+        title={'Send to Address'}
+        placeholder={'Address'}
+        inputCallback={value => setAddress(value)}
+      />
       <Separation />
-      <SingleLine>
-        <NoWrapTitle>Send All:</NoWrapTitle>
+      <InputWithDeco title={'Send All'} noInput={true}>
         <MultiButton>
           {renderButton(() => setSendAll(true), 'Yes', sendAll)}
           {renderButton(() => setSendAll(false), 'No', !sendAll)}
         </MultiButton>
-      </SingleLine>
+      </InputWithDeco>
       {!sendAll && (
-        <SingleLine>
-          <ResponsiveWrap>
-            <NoWrapTitle>Amount:</NoWrapTitle>
-            <Margin>
-              <NoWrap>
-                <DarkSubTitle>
-                  <Price amount={tokens} />
-                </DarkSubTitle>
-              </NoWrap>
-            </Margin>
-          </ResponsiveWrap>
-          <Input
-            placeholder={'Sats'}
-            withMargin={'0 0 0 8px'}
-            type={'number'}
-            onChange={e => setTokens(Number(e.target.value))}
-          />
-        </SingleLine>
+        <InputWithDeco
+          title={'Amount'}
+          placeholder={'Sats'}
+          amount={tokens}
+          inputType={'number'}
+          inputCallback={value => setTokens(Number(value))}
+        />
       )}
       <Separation />
-      <SingleLine>
-        <NoWrapTitle>Fee:</NoWrapTitle>
-        <MultiButton margin={'8px 0 8px 16px'}>
+      <InputWithDeco title={'Fee'} noInput={true}>
+        <MultiButton>
           {!dontShow &&
             renderButton(
               () => {
@@ -168,28 +136,25 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
             type === 'target'
           )}
         </MultiButton>
-      </SingleLine>
-      <SingleLine>
-        <ResponsiveWrap>
-          <NoWrapTitle>Fee Amount:</NoWrapTitle>
-          <NoWrap>
-            <DarkSubTitle>{`(~${
-              type === 'target' ? `${amount} blocks` : feeFormat(amount * 223)
-            })`}</DarkSubTitle>
-          </NoWrap>
-        </ResponsiveWrap>
-        {type !== 'none' && (
-          <>
-            <Input
-              placeholder={type === 'target' ? 'Blocks' : 'Sats/Byte'}
-              type={'number'}
-              withMargin={'0 0 0 8px'}
-              onChange={e => setAmount(Number(e.target.value))}
-            />
-          </>
-        )}
-        {type === 'none' && (
-          <MultiButton margin={'8px 0 8px 16px'}>
+      </InputWithDeco>
+      <InputWithDeco
+        title={'Fee Amount'}
+        noInput={true}
+        customAmount={`(~${
+          type === 'target' ? `${amount} blocks` : feeFormat(amount * 223)
+        })`}
+      >
+        {type !== 'none' ? (
+          <Input
+            value={amount > 0 && amount}
+            maxWidth={'500px'}
+            placeholder={type === 'target' ? 'Blocks' : 'Sats/Byte'}
+            type={'number'}
+            withMargin={'0 0 0 8px'}
+            onChange={e => setAmount(Number(e.target.value))}
+          />
+        ) : (
+          <MultiButton>
             {renderButton(
               () => setAmount(fast),
               `Fastest (${fast} sats)`,
@@ -208,7 +173,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
             )}
           </MultiButton>
         )}
-      </SingleLine>
+      </InputWithDeco>
       <Separation />
       <ColorButton
         disabled={!canSend}
@@ -225,7 +190,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
         <SingleLine>
           <SubTitle>Send to Address</SubTitle>
         </SingleLine>
-        {renderLine('Amount:', <Price amount={tokens} />)}
+        {renderLine('Amount:', sendAll ? 'All' : <Price amount={tokens} />)}
         {renderLine('Address:', address)}
         {renderLine(
           'Fee:',
@@ -233,7 +198,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
         )}
         <SecureButton
           callback={payAddress}
-          variables={{ address, ...typeAmount, ...tokenAmount }}
+          variables={{ address, ...typeAmount(), ...tokenAmount }}
           disabled={!canSend}
           withMargin={'16px 0 0'}
           fullWidth={true}
