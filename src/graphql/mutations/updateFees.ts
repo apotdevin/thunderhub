@@ -5,7 +5,7 @@ export const UPDATE_FEES = gql`
     $auth: authType!
     $transactionId: String
     $transactionVout: Int
-    $baseFee: Int
+    $baseFee: Float
     $feeRate: Int
   ) {
     updateFees(

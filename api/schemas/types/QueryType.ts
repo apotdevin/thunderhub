@@ -5,6 +5,7 @@ import {
   GraphQLBoolean,
   GraphQLList,
   GraphQLNonNull,
+  GraphQLFloat,
 } from 'graphql';
 
 export const ChannelBalanceType = new GraphQLObjectType({
@@ -23,7 +24,7 @@ export const ChannelFeeType = new GraphQLObjectType({
     return {
       alias: { type: GraphQLString },
       color: { type: GraphQLString },
-      baseFee: { type: GraphQLInt },
+      baseFee: { type: GraphQLFloat },
       feeRate: { type: GraphQLInt },
       transactionId: { type: GraphQLString },
       transactionVout: { type: GraphQLInt },
