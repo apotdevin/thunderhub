@@ -34,8 +34,8 @@ interface ChannelProps {
   remote_balance: number;
   remote_reserve: number;
   sent: number;
-  time_offline: number;
-  time_online: number;
+  time_offline: any;
+  time_online: any;
   transaction_id: string;
   transaction_vout: number;
   unsettled_balance: number;

@@ -8,6 +8,7 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
+  BigInt: any;
 };
 
 export type Query = {
@@ -246,8 +247,8 @@ export type ChannelType = {
   remote_balance?: Maybe<Scalars['Int']>;
   remote_reserve?: Maybe<Scalars['Int']>;
   sent?: Maybe<Scalars['Int']>;
-  time_offline?: Maybe<Scalars['Int']>;
-  time_online?: Maybe<Scalars['Int']>;
+  time_offline?: Maybe<Scalars['BigInt']>;
+  time_online?: Maybe<Scalars['BigInt']>;
   transaction_id?: Maybe<Scalars['String']>;
   transaction_vout?: Maybe<Scalars['Int']>;
   unsettled_balance?: Maybe<Scalars['Int']>;

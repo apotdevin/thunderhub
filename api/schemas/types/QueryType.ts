@@ -7,6 +7,7 @@ import {
   GraphQLNonNull,
   GraphQLFloat,
 } from 'graphql';
+import { BigInt } from './BigInt';
 
 export const ChannelBalanceType = new GraphQLObjectType({
   name: 'channelBalanceType',
@@ -109,8 +110,8 @@ export const ChannelType = new GraphQLObjectType({
       remote_balance: { type: GraphQLInt },
       remote_reserve: { type: GraphQLInt },
       sent: { type: GraphQLInt },
-      time_offline: { type: GraphQLInt },
-      time_online: { type: GraphQLInt },
+      time_offline: { type: BigInt },
+      time_online: { type: BigInt },
       transaction_id: { type: GraphQLString },
       transaction_vout: { type: GraphQLInt },
       unsettled_balance: { type: GraphQLInt },
