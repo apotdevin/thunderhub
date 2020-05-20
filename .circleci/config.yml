@@ -60,30 +60,26 @@ workflows:
   publish:
     jobs:
       - amd64:
-      # filters:
-      #   branches:
-      #     ignore: /.*/
-      #   tags:
-      #     only: /v(?:(?<major>(?:0|[1-9](?:(?:0|[1-9])+)*))[.](?<minor>(?:0|[1-9](?:(?:0|[1-9])+)*))[.](?<patch>(?:0|[1-9](?:(?:0|[1-9])+)*))(?:-(?:([A-Za-z1-9])*))?)$/
+      filters:
+        branches:
+          only:
+            - /ci/circleci-testing
       - arm32v7:
-          # filters:
-          #   branches:
-          #     ignore: /.*/
-          #   tags:
-          #     only: /v(?:(?<major>(?:0|[1-9](?:(?:0|[1-9])+)*))[.](?<minor>(?:0|[1-9](?:(?:0|[1-9])+)*))[.](?<patch>(?:0|[1-9](?:(?:0|[1-9])+)*))(?:-(?:([A-Za-z1-9])*))?)$/
+          filters:
+            branches:
+              only:
+                - /ci/circleci-testing
       - arm64v8:
-          # filters:
-          #   branches:
-          #     ignore: /.*/
-          #   tags:
-          #     only: /v(?:(?<major>(?:0|[1-9](?:(?:0|[1-9])+)*))[.](?<minor>(?:0|[1-9](?:(?:0|[1-9])+)*))[.](?<patch>(?:0|[1-9](?:(?:0|[1-9])+)*))(?:-(?:([A-Za-z1-9])*))?)$/
+          filters:
+            branches:
+              only:
+                - /ci/circleci-testing
       - multiarch:
           requires:
             - amd64
             - arm32v7
             - arm64v8
-          # filters:
-          #   branches:
-          #     ignore: /.*/
-          #   tags:
-          #     only: /v(?:(?<major>(?:0|[1-9](?:(?:0|[1-9])+)*))[.](?<minor>(?:0|[1-9](?:(?:0|[1-9])+)*))[.](?<patch>(?:0|[1-9](?:(?:0|[1-9])+)*))(?:-(?:([A-Za-z1-9])*))?)$/
+          filters:
+            branches:
+              only:
+                - /ci/circleci-testing
