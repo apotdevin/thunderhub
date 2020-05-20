@@ -60,20 +60,20 @@ workflows:
   publish:
     jobs:
       - amd64:
-      filters:
-        branches:
-          only:
-            - /ci/circleci-testing
+          filters:
+            branches:
+              only:
+                - ci/circleci-testing
       - arm32v7:
           filters:
             branches:
               only:
-                - /ci/circleci-testing
+                - ci/circleci-testing
       - arm64v8:
           filters:
             branches:
               only:
-                - /ci/circleci-testing
+                - ci/circleci-testing
       - multiarch:
           requires:
             - amd64
@@ -82,4 +82,4 @@ workflows:
           filters:
             branches:
               only:
-                - /ci/circleci-testing
+                - ci/circleci-testing
