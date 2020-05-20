@@ -62,10 +62,23 @@ export const getForwards = {
     });
 
     const getNodeAlias = async (id: string, publicKey: string) => {
-      const channelInfo: ChannelsProps = await getChannel({
-        lnd,
-        id,
-      });
+      let channelInfo: ChannelsProps;
+      try {
+        channelInfo = await getChannel({
+          lnd,
+          id,
+        });
+      } catch (error) {
+        if (error[1] == 'FullChannelDetailsNotFound') {
+          return {
+            alias: 'Edge Zombie or not found',
+            color: '#000000',
+          };
+        }
+
+        logger.error('Error getting channel / node information: %o', error);
+        throw new Error(getErrorMsg(error));
+      }
 
       const partnerPublicKey =
         channelInfo.policies[0].public_key !== publicKey
