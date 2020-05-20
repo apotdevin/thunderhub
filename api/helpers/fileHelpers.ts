@@ -191,7 +191,6 @@ export const createDirectory = (dirname: string) => {
     const curDir = path.resolve(parentDir, childDir);
     try {
       if (!fs.existsSync(curDir)) {
-        logger.verbose(`Creating cookie directory at: ${curDir}`);
         fs.mkdirSync(curDir);
       }
     } catch (err) {
@@ -220,6 +219,7 @@ export const readCookie = (cookieFile: string): string | null => {
   const exists = fs.existsSync(cookieFile);
   if (exists) {
     try {
+      logger.info(`Found cookie at path ${cookieFile}`);
       const cookie = fs.readFileSync(cookieFile, 'utf-8');
       return cookie;
     } catch (err) {
@@ -231,6 +231,8 @@ export const readCookie = (cookieFile: string): string | null => {
       const dirname = path.dirname(cookieFile);
       createDirectory(dirname);
       fs.writeFileSync(cookieFile, crypto.randomBytes(64).toString('hex'));
+
+      logger.info(`Cookie created at directory: ${dirname}`);
 
       const cookie = fs.readFileSync(cookieFile, 'utf-8');
       return cookie;

@@ -30,9 +30,8 @@ export const getAuthToken = {
 
     const cookieFile = readCookie(cookiePath);
 
-    refreshCookie(cookiePath);
-
     if (cookieFile === params.cookie) {
+      refreshCookie(cookiePath);
       const token = jwt.sign({ user: SSO_ACCOUNT }, secret);
       return token;
     }
