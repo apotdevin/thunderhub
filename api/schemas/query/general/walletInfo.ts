@@ -1,7 +1,8 @@
 import { getWalletVersion } from 'ln-service';
 import { ContextType } from 'api/types/apiTypes';
+import { to } from 'api/helpers/async';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import { getAuthLnd, to, getCorrectAuth } from '../../../helpers/helpers';
+import { getAuthLnd, getCorrectAuth } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { WalletInfoType } from '../../types/QueryType';
 

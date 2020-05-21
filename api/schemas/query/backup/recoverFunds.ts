@@ -43,8 +43,7 @@ export const recoverFunds = {
       });
       return true;
     } catch (error) {
-      params.logger &&
-        logger.error('Error recovering funds from channels: %o', error);
+      logger.error('Error recovering funds from channels: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

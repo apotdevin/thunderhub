@@ -57,8 +57,7 @@ export const getPendingChainBalance = {
       });
       return pendingValue.pending_chain_balance;
     } catch (error) {
-      params.logger &&
-        logger.error('Error getting pending chain balance: %o', error);
+      logger.error('Error getting pending chain balance: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

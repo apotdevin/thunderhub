@@ -47,8 +47,7 @@ export const getChainTransactions = {
       ).reverse();
       return transactions;
     } catch (error) {
-      params.logger &&
-        logger.error('Error getting chain transactions: %o', error);
+      logger.error('Error getting chain transactions: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

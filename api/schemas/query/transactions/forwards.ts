@@ -1,13 +1,9 @@
 import { GraphQLString } from 'graphql';
-import {
-  getForwards as getLnForwards,
-  getChannel,
-  getNode,
-  getWalletInfo,
-} from 'ln-service';
+import { getForwards as getLnForwards, getWalletInfo } from 'ln-service';
 import { sortBy } from 'underscore';
 import { subHours, subDays, subMonths, subYears } from 'date-fns';
 import { ContextType } from 'api/types/apiTypes';
+import { getNodeFromChannel } from 'api/schemas/helpers/getNodeFromChannel';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
@@ -18,15 +14,6 @@ import {
 import { ForwardCompleteProps } from '../report/ForwardReport.interface';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { GetForwardType } from '../../types/QueryType';
-
-interface NodeProps {
-  alias: string;
-  color: string;
-}
-
-interface ChannelsProps {
-  policies: { public_key: string }[];
-}
 
 export const getForwards = {
   type: GetForwardType,
@@ -61,52 +48,18 @@ export const getForwards = {
       lnd,
     });
 
-    const getNodeAlias = async (id: string, publicKey: string) => {
-      let channelInfo: ChannelsProps;
-      try {
-        channelInfo = await getChannel({
-          lnd,
-          id,
-        });
-      } catch (error) {
-        if (error[1] == 'FullChannelDetailsNotFound') {
-          return {
-            alias: 'Edge Zombie or not found',
-            color: '#000000',
-          };
-        }
-
-        logger.error('Error getting channel / node information: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
-
-      const partnerPublicKey =
-        channelInfo.policies[0].public_key !== publicKey
-          ? channelInfo.policies[0].public_key
-          : channelInfo.policies[1].public_key;
-
-      const nodeInfo: NodeProps = await getNode({
-        lnd,
-        is_omitting_channels: true,
-        public_key: partnerPublicKey,
-      });
-
-      return {
-        alias: nodeInfo.alias,
-        color: nodeInfo.color,
-      };
-    };
-
     const getAlias = (array: any[], publicKey: string) =>
       Promise.all(
         array.map(async forward => {
-          const inNodeAlias = await getNodeAlias(
+          const inNodeAlias = await getNodeFromChannel(
             forward.incoming_channel,
-            publicKey
+            publicKey,
+            lnd
           );
-          const outNodeAlias = await getNodeAlias(
+          const outNodeAlias = await getNodeFromChannel(
             forward.outgoing_channel,
-            publicKey
+            publicKey,
+            lnd
           );
           return {
             incoming_alias: inNodeAlias.alias,
