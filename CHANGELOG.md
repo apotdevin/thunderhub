@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.1](https://github.com/apotdevin/thunderhub/compare/v0.6.4...v0.6.1) (2020-05-21)
+
+
+### Bug Fixes
+
+* 🐛 auth type ([2797e6e](https://github.com/apotdevin/thunderhub/commit/2797e6edf3d16c264736c43dc6a853a784d235cd))
+* 🐛 logging and types ([4c74ed1](https://github.com/apotdevin/thunderhub/commit/4c74ed1536db9e91b9e27cc44c051fbd3b33df1e))
+* catching getChannel callback error ([#46](https://github.com/apotdevin/thunderhub/issues/46)) ([caefd02](https://github.com/apotdevin/thunderhub/commit/caefd02234271bdeac5d2482064c3ae194688b0c))
+* changed baseFee from Int to Float ([#43](https://github.com/apotdevin/thunderhub/issues/43)) ([9a1fb63](https://github.com/apotdevin/thunderhub/commit/9a1fb63641ff505252be9d6f8d4ae7ed1addab91))
+
+
+### Improvements
+
+* 🔧 add example env file ([0fb67c4](https://github.com/apotdevin/thunderhub/commit/0fb67c45b873a92aa4227c68ea90587d158ec64a))
+* 🔧 conditional refresh cookie and logging ([43fedea](https://github.com/apotdevin/thunderhub/commit/43fedeab6eefc592a24098f25c8dfeec966edbbf))
+* 🔧 format seconds ([b23f8c2](https://github.com/apotdevin/thunderhub/commit/b23f8c2299343a1f6c1874d376694fc126f53cbf))
+* 🔧 home input styling and bug fix ([a2bf90a](https://github.com/apotdevin/thunderhub/commit/a2bf90a4b2a5d55d42ae8681887340c1d18087d0))
+* 🔧 parse channel times to seconds ([66a35fe](https://github.com/apotdevin/thunderhub/commit/66a35fed92a1a492cafe1b5f77b2f13dfa655d5d))
+* 🔧 upgrade node and circleci filter changes ([f91f177](https://github.com/apotdevin/thunderhub/commit/f91f177b9d84fe1bfd760553134f3772805660b8))
+
 ## [0.6.0](https://github.com/apotdevin/thunderhub/compare/v0.5.6...v0.6.0) (2020-05-19)
 
 
