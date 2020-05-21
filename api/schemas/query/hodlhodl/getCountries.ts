@@ -32,8 +32,7 @@ export const getCountries = {
       }
       throw new Error('Problem getting HodlHodl countries.');
     } catch (error) {
-      params.logger &&
-        logger.error('Error getting HodlHodl countries: %o', error);
+      logger.error('Error getting HodlHodl countries: %o', error);
       throw new Error('Problem getting HodlHodl countries.');
     }
   },

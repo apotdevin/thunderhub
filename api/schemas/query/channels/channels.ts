@@ -70,8 +70,8 @@ export const getChannels = {
 
             return {
               ...channel,
-              time_offline: channel.time_offline / 1000,
-              time_online: channel.time_online / 1000,
+              time_offline: Math.round((channel.time_online || 0) / 1000),
+              time_online: Math.round((channel.time_online || 0) / 1000),
               partner_node_info: {
                 ...nodeInfo,
               },

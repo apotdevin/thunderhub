@@ -53,7 +53,7 @@ const apolloServer = new ApolloServer({
         jwt.verify(req.cookies.SSOAuth, secret);
         ssoVerified = true;
       } catch (error) {
-        logger.verbose('SSO authentication cookie failed');
+        logger.silly('SSO authentication cookie failed');
       }
     }
 
@@ -75,7 +75,7 @@ const apolloServer = new ApolloServer({
           macaroon: accountMacaroon,
         };
       } catch (error) {
-        logger.verbose('Account authentication cookie failed');
+        logger.silly('Account authentication cookie failed');
       }
     }
 

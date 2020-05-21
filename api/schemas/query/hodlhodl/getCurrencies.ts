@@ -32,8 +32,7 @@ export const getCurrencies = {
       }
       throw new Error('Problem getting HodlHodl currencies.');
     } catch (error) {
-      params.logger &&
-        logger.error('Error getting HodlHodl currencies: %o', error);
+      logger.error('Error getting HodlHodl currencies: %o', error);
       throw new Error('Problem getting HodlHodl currencies.');
     }
   },

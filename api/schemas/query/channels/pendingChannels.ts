@@ -67,8 +67,7 @@ export const getPendingChannels = {
       });
       return channels;
     } catch (error) {
-      params.logger &&
-        logger.error('Error getting pending channels: %o', error);
+      logger.error('Error getting pending channels: %o', error);
       throw new Error(getErrorMsg(error));
     }
   },

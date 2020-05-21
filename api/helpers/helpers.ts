@@ -7,7 +7,6 @@ import {
   CLIENT_ACCOUNT,
 } from 'src/context/AccountContext';
 import { ContextType } from 'api/types/apiTypes';
-import { logger } from './logger';
 
 const { serverRuntimeConfig } = getConfig();
 const { nodeEnv } = serverRuntimeConfig;
@@ -84,15 +83,4 @@ export const getErrorMsg = (error: any[] | string): string => {
   // }
 
   return 'Error';
-};
-
-export const to = promise => {
-  return promise
-    .then(data => {
-      return data;
-    })
-    .catch(err => {
-      logger.error('%o', err);
-      throw new Error(getErrorMsg(err));
-    });
 };
