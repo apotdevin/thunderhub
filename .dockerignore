@@ -7,7 +7,13 @@
 /.next
 /docs
 /.github
-.env
 .vscode
 .storybook
 CHANGELOG.md
+
+# all env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
