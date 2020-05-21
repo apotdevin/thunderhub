@@ -3,7 +3,6 @@ import { ApolloServer } from 'apollo-server-micro';
 import { thunderHubSchema } from 'api/schemas';
 import { getIp } from 'api/helpers/helpers';
 import getConfig from 'next/config';
-import Cors from 'micro-cors';
 import jwt from 'jsonwebtoken';
 import { logger } from 'api/helpers/logger';
 import {
@@ -36,11 +35,6 @@ const ssoCert = readFile(lnCertPath);
 const accountConfig = getAccounts(accountConfigPath);
 
 readCookie(cookiePath);
-
-const cors = Cors({
-  origin: true,
-  allowCredentials: true,
-});
 
 const apolloServer = new ApolloServer({
   schema: thunderHubSchema,
@@ -100,4 +94,4 @@ export const config = {
   },
 };
 
-export default cors(handler);
+export default handler;
