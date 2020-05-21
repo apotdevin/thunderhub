@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import { ArrowDown, ArrowUp, EyeOff } from 'react-feather';
-import { getPercent } from '../../../utils/helpers';
+import { getPercent, formatSeconds } from '../../../utils/helpers';
 import {
   Progress,
   ProgressBar,
@@ -143,8 +143,8 @@ export const ChannelCard = ({
         {renderLine('Is Static Remote Key:', is_static_remote_key)}
         {renderLine('Local Reserve:', localReserve)}
         {renderLine('Remote Reserve:', remoteReserve)}
-        {renderLine('Time Offline:', time_offline)}
-        {renderLine('Time Online:', time_online)}
+        {renderLine('Time Offline:', formatSeconds(time_offline))}
+        {renderLine('Time Online:', formatSeconds(time_online))}
         {renderLine('Transaction Vout:', transaction_vout)}
         {renderLine('Unsettled Balance:', unsettled_balance)}
         <Sub4Title>Partner Node Info</Sub4Title>
