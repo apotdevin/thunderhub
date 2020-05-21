@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.2](https://github.com/apotdevin/thunderhub/compare/v0.6.1...v0.6.2) (2020-05-21)
+
+
+### Bug Fixes
+
+* 🐛 channel time offline ([c380485](https://github.com/apotdevin/thunderhub/commit/c3804851cf84da9a84c32f502e240d16d8a8f76b))
+
+
+### Improvements
+
+* 🔧 remove cors ([bd91df5](https://github.com/apotdevin/thunderhub/commit/bd91df5f009cbcbdd15a135099b8eee9976bf9e2))
+
 ### [0.6.1](https://github.com/apotdevin/thunderhub/compare/v0.6.4...v0.6.1) (2020-05-21)
 
 
