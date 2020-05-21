@@ -15,6 +15,7 @@ export const Channels = () => {
   const { loading, data } = useGetChannelsQuery({
     skip: !auth,
     variables: { auth },
+    errorPolicy: 'all',
     onError: error => toast.error(getErrorContent(error)),
   });
 
