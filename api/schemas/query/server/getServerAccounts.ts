@@ -15,7 +15,9 @@ export const getServerAccounts = {
     let ssoAccount = null;
     if (macaroon && host && ssoVerified) {
       logger.debug(
-        `Macaroon${cert && ', certificate'} and host found for SSO account`
+        `Macaroon${
+          cert ? ', certificate' : ''
+        } and host (${host}) found for SSO.`
       );
       ssoAccount = {
         name: 'SSO Account',
