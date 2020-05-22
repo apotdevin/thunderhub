@@ -2,6 +2,7 @@ import { GraphQLList } from 'graphql';
 import { ContextType } from 'api/types/apiTypes';
 import { ServerAccountType } from 'api/schemas/types/QueryType';
 import { SSO_ACCOUNT } from 'src/context/AccountContext';
+import { logger } from 'api/helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 
 export const getServerAccounts = {
@@ -12,7 +13,10 @@ export const getServerAccounts = {
 
     const { macaroon, cert, host } = sso;
     let ssoAccount = null;
-    if (macaroon && cert && host && ssoVerified) {
+    if (macaroon && host && ssoVerified) {
+      logger.debug(
+        `Macaroon${cert && ', certificate'} and host found for SSO account`
+      );
       ssoAccount = {
         name: 'SSO Account',
         id: SSO_ACCOUNT,
