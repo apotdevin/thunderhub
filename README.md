@@ -9,6 +9,7 @@
 - [Integrations](#integrations)
 - [Features](#features)
 - [Installation](#installation)
+- [Updating](#updating)
 - [Development](#development)
 - [Docker deployment](#docker)
 
@@ -202,11 +203,11 @@ After cloning the repository run `yarn` or `npm install` to get all the necessar
 After all the dependencies have finished installing, you can proceed to build and run the app with the following commands.
 
 ```javascript
-//Yarn
+// Yarn
 yarn build
 yarn start
 
-//NPM
+// NPM
 npm run build
 npm start
 ```
@@ -221,6 +222,26 @@ yarn start -p 4000
 
 // NPM
 npm start -- -p 4000
+```
+
+## Updating
+
+To update ThunderHub to the latest version follow these commands.
+
+_Commands have to be called inside the thunderhub repository folder._
+
+```js
+// Yarn
+git pull
+yarn
+yarn build
+yarn start
+
+// NPM
+git pull
+npm install
+npm run build
+npm run start
 ```
 
 ## Development
