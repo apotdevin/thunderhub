@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
-import { useStatusDispatch, useStatusState } from '../../context/StatusContext';
+import { useStatusDispatch } from '../../context/StatusContext';
 import { appendBasePath } from '../../utils/basePath';
 
 export const StatusCheck = () => {
@@ -11,10 +11,8 @@ export const StatusCheck = () => {
   const { push } = useRouter();
 
   const { account, auth } = useAccountState();
-  const { connected } = useStatusState();
-
   const { data, loading, error, stopPolling } = useGetNodeInfoQuery({
-    skip: !auth || !connected,
+    skip: !auth,
     fetchPolicy: 'network-only',
     variables: { auth },
     pollInterval: 10000,

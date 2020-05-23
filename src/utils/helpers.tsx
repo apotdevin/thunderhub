@@ -35,7 +35,9 @@ export const getValue = ({
   if (currency === 'btc') {
     if (!value) return '₿0.0';
     const amountInBtc = value / 100000000;
-    return `₿${amountInBtc}`;
+    const rounded = Math.round(amountInBtc * 10000) / 10000;
+
+    return `₿${rounded}`;
   }
   if (currency === 'sat') {
     const breakAmount = breakNumber
