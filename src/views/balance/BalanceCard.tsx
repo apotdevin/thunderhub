@@ -62,7 +62,7 @@ export const BalanceCard = ({
   } = channel;
   const { alias } = partner_node_info;
 
-  const balancedness = getPercent(remote_balance, local_balance) / 100;
+  const balancedness = getPercent(local_balance, remote_balance) / 100;
   const formatBalance = numeral(balancedness).format('0,0.00');
 
   const props = withColor ? { color: themeColors.blue3 } : {};
@@ -72,9 +72,12 @@ export const BalanceCard = ({
       <MainInfo onClick={() => callback && callback()}>
         <ResponsiveLine withWrap={true}>
           <ChannelLineSection>
-            {alias && alias !== ''
-              ? `${alias} - ${id}`
-              : `${partner_public_key?.substring(0, 6)} - ${id}`}
+            <div>
+              {alias && alias !== ''
+                ? alias
+                : partner_public_key?.substring(0, 6)}
+            </div>
+            <DarkSubTitle>{id}</DarkSubTitle>
           </ChannelLineSection>
           <ChannelColumnSection>
             <SingleLine>

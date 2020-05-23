@@ -34,10 +34,11 @@ export const ChannelColumnSection = styled.div`
 
 export const ChannelLineSection = styled.div`
   display: flex;
-  align-items: center;
-  max-width: 300px;
+  flex-direction: column;
+  width: 180px;
 
   @media (${mediaWidths.mobile}) {
+    align-items: center;
     max-width: unset;
     justify-content: center;
     width: 100%;

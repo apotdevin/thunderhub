@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetChannelAmountInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import styled from 'styled-components';
+import { Settings } from 'react-feather';
+import { IconCursor } from 'src/views/channels/channels/Channel.style';
+import { ChannelManage } from 'src/views/channels/channels/ChannelManage';
 import { Channels } from '../src/views/channels/channels/Channels';
 import { PendingChannels } from '../src/views/channels/pendingChannels/PendingChannels';
 import { ClosedChannels } from '../src/views/channels/closedChannels/ClosedChannels';
@@ -28,6 +31,7 @@ const ButtonRow = styled.div`
 `;
 
 const ChannelView = () => {
+  const [isOpen, isOpenSet] = useState<boolean>(false);
   const [view, setView] = useState<number>(1);
   const [amounts, setAmounts] = useState({
     active: 0,
@@ -94,8 +98,14 @@ const ChannelView = () => {
           <SmallButton onClick={() => setView(3)}>
             {`Closed (${amounts.closed})`}
           </SmallButton>
+          {view === 1 && (
+            <IconCursor>
+              <Settings size={16} onClick={() => isOpenSet(p => !p)} />
+            </IconCursor>
+          )}
         </ButtonRow>
       </ChannelsCardTitle>
+      {view === 1 && isOpen && <ChannelManage />}
       {getView()}
     </CardWithTitle>
   );

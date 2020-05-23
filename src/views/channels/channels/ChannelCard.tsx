@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import ReactTooltip from 'react-tooltip';
-import styled from 'styled-components';
 import { ArrowDown, ArrowUp, EyeOff } from 'react-feather';
-import { mediaWidths } from 'src/styles/Themes';
 import { ChannelType } from 'src/graphql/types';
 import { getPercent, formatSeconds } from '../../../utils/helpers';
 import {
@@ -18,10 +16,7 @@ import {
   ResponsiveLine,
   DarkSubTitle,
 } from '../../../components/generic/Styled';
-import {
-  useConfigState,
-  useConfigDispatch,
-} from '../../../context/ConfigContext';
+import { useConfigState } from '../../../context/ConfigContext';
 import {
   getStatusDot,
   getTooltipType,
@@ -37,47 +32,14 @@ import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { getPrice } from '../../../components/price/Price';
 import { usePriceState } from '../../../context/PriceContext';
-
-const IconPadding = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 8px;
-
-  @media (${mediaWidths.mobile}) {
-    display: none;
-  }
-`;
-
-const StatsColumn = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-`;
-
-const BarSide = styled.div`
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-
-  @media (${mediaWidths.mobile}) {
-    width: 100%;
-  }
-`;
-
-const NodeTitle = styled.div`
-  font-size: 16px;
-  font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  @media (${mediaWidths.mobile}) {
-    text-align: center;
-    margin-bottom: 8px;
-  }
-`;
+import {
+  ChannelNodeTitle,
+  ChannelBarSide,
+  ChannelIconPadding,
+  ChannelStatsColumn,
+  ChannelSingleLine,
+  ChannelStatsLine,
+} from './Channel.style';
 
 const getSymbol = (status: boolean) => {
   return status ? <ArrowDown size={14} /> : <ArrowUp size={14} />;
@@ -115,8 +77,7 @@ export const ChannelCard = ({
   biggestBaseFee,
   biggestRateFee,
 }: ChannelCardProps) => {
-  const { channelBarType } = useConfigState();
-  const dispatch = useConfigDispatch();
+  const { channelBarType, channelBarStyle } = useConfigState();
   const [modalOpen, setModalOpen] = useState(false);
 
   const { theme, currency, displayValues } = useConfigState();
@@ -180,13 +141,6 @@ export const ChannelCard = ({
     }
   };
 
-  const handleBarClick = () => {
-    dispatch({
-      type: 'change',
-      channelBarType: channelBarType === 'normal' ? 'partner' : 'normal',
-    });
-  };
-
   const renderPartner = () =>
     alias ? (
       <>
@@ -196,8 +150,8 @@ export const ChannelCard = ({
           'Last Update:',
           `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
         )}
-        {renderLine('Base Fee:', `${base_fee} mSats`)}
-        {renderLine('Fee Rate:', `${fee_rate} sats/MSats`)}
+        {renderLine('Base Fee:', `${base_fee} msats`)}
+        {renderLine('Fee Rate:', `${fee_rate} sats/Msats`)}
         {renderLine('CTLV Delta:', cltv_delta)}
       </>
     ) : (
@@ -253,7 +207,7 @@ export const ChannelCard = ({
     switch (channelBarType) {
       case 'partner':
         return (
-          <>
+          <ChannelStatsColumn>
             <ProgressBar
               order={0}
               percent={getBar(Number(partnerNodeCapacity), biggestPartner)}
@@ -264,16 +218,35 @@ export const ChannelCard = ({
             />
             <ProgressBar order={1} percent={getBar(base_fee, biggestBaseFee)} />
             <ProgressBar order={2} percent={getBar(fee_rate, biggestRateFee)} />
-          </>
+          </ChannelStatsColumn>
         );
-      default:
+      case 'details':
         return (
-          <>
+          <ChannelStatsColumn>
             <ProgressBar order={0} percent={getBar(local_balance, biggest)} />
             <ProgressBar order={1} percent={getBar(remote_balance, biggest)} />
             <ProgressBar order={2} percent={getBar(received, biggest)} />
             <ProgressBar order={3} percent={getBar(sent, biggest)} />
-          </>
+          </ChannelStatsColumn>
+        );
+      default:
+        return (
+          <ChannelStatsColumn>
+            <ChannelStatsLine>
+              <ProgressBar
+                order={1}
+                percent={getPercent(local_balance, remote_balance)}
+              />
+              <ProgressBar
+                order={4}
+                percent={getPercent(remote_balance, local_balance)}
+              />
+            </ChannelStatsLine>
+            <ChannelStatsLine>
+              <ProgressBar order={2} percent={getPercent(received, sent)} />
+              <ProgressBar order={4} percent={getPercent(sent, received)} />
+            </ChannelStatsLine>
+          </ChannelStatsColumn>
         );
     }
   };
@@ -285,10 +258,11 @@ export const ChannelCard = ({
           <>
             <div>{`Partner Capacity: ${nodeCapacity}`}</div>
             <div>{`Partner Channels: ${channel_count}`}</div>
-            <div>{`Partner Base Fee: ${base_fee} mSats`}</div>
-            <div>{`Partner Fee Rate: ${fee_rate} sats/MSats`}</div>
+            <div>{`Partner Base Fee: ${base_fee} msats`}</div>
+            <div>{`Partner Fee Rate: ${fee_rate} sats/Msats`}</div>
           </>
         );
+      case 'details':
       default:
         return (
           <>
@@ -301,34 +275,52 @@ export const ChannelCard = ({
     }
   };
 
+  const getSubCardProps = () => {
+    switch (channelBarStyle) {
+      case 'ultracompact':
+        return {
+          withMargin: '0 0 4px 0',
+          padding: index === indexOpen ? '0 0 16px' : '2px 0',
+          noBackground: true,
+        };
+      case 'compact':
+        return {
+          withMargin: '0 0 4px 0',
+          padding: index === indexOpen ? '4px 8px 16px' : '4px 8px',
+        };
+      default:
+        return {};
+    }
+  };
+
   return (
-    <SubCard key={`${index}-${id}`} noCard={true}>
-      <StatusLine>
-        {getStatusDot(is_active, 'active')}
-        {getStatusDot(is_opening, 'opening')}
-        {getStatusDot(is_closing, 'closing')}
-      </StatusLine>
-      <ResponsiveLine>
-        <NodeTitle style={{ flexGrow: 2 }}>
-          <MainInfo onClick={() => handleClick()}>
+    <SubCard key={`${index}-${id}`} noCard={true} {...getSubCardProps()}>
+      <MainInfo onClick={() => handleClick()}>
+        {channelBarStyle === 'normal' && (
+          <StatusLine>
+            {getStatusDot(is_active, 'active')}
+            {getStatusDot(is_opening, 'opening')}
+            {getStatusDot(is_closing, 'closing')}
+          </StatusLine>
+        )}
+        <ResponsiveLine>
+          <ChannelNodeTitle style={{ flexGrow: 2 }}>
             {alias || partner_public_key?.substring(0, 6)}
-            <DarkSubTitle>{formatBalance}</DarkSubTitle>
-          </MainInfo>
-        </NodeTitle>
-        <BarSide>
-          <StatsColumn
-            data-tip
-            data-for={`node_balance_tip_${index}`}
-            onClick={handleBarClick}
-          >
+            {channelBarStyle !== 'ultracompact' && (
+              <ChannelSingleLine>
+                <DarkSubTitle>{formatBalance}</DarkSubTitle>
+                <ChannelIconPadding>
+                  {getPrivate(is_private)}
+                  {getSymbol(is_partner_initiated)}
+                </ChannelIconPadding>
+              </ChannelSingleLine>
+            )}
+          </ChannelNodeTitle>
+          <ChannelBarSide data-tip data-for={`node_balance_tip_${index}`}>
             {renderBars()}
-          </StatsColumn>
-        </BarSide>
-        <IconPadding>
-          {getPrivate(is_private)}
-          {getSymbol(is_partner_initiated)}
-        </IconPadding>
-      </ResponsiveLine>
+          </ChannelBarSide>
+        </ResponsiveLine>
+      </MainInfo>
       {index === indexOpen && renderDetails()}
       <ReactTooltip
         id={`node_balance_tip_${index}`}

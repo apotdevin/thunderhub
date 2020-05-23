@@ -41,7 +41,7 @@ const Wrapper: React.FC = ({ children }) => {
       return <>{children}</>;
     }
     if (hasAccount === 'false') {
-      return <LoadingCard noCard={true} />;
+      return <LoadingCard loadingHeight={'50vh'} noCard={true} />;
     }
     return <GridWrapper>{children}</GridWrapper>;
   };
@@ -100,19 +100,18 @@ const App = ({
 App.getInitialProps = async props => {
   const cookieParam = getUrlParam(props.router?.query?.token);
   const cookies = parseCookies(props.ctx.req);
-  const defaultState = {};
 
   if (!cookies?.config) {
-    return { initialConfig: {}, ...defaultState };
+    return { initialConfig: {} };
   }
   try {
     const config = JSON.parse(cookies.config);
     return {
-      initialConfig: { ...config, ...defaultState },
+      initialConfig: config,
       cookieParam,
     };
   } catch (error) {
-    return { initialConfig: {}, cookieParam, ...defaultState };
+    return { initialConfig: {}, cookieParam };
   }
 };
 
