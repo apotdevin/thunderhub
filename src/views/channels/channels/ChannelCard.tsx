@@ -148,7 +148,7 @@ export const ChannelCard = ({
 
   const {
     alias,
-    capacity: partnerNodeCapacity,
+    capacity: partnerNodeCapacity = 0,
     channel_count,
     updated_at,
     base_fee,
@@ -239,9 +239,7 @@ export const ChannelCard = ({
           <>
             <ProgressBar
               order={0}
-              percent={
-                (Number(partnerNodeCapacity) || 0 / biggestPartner) * 100
-              }
+              percent={(Number(partnerNodeCapacity) / biggestPartner) * 100}
             />
             <ProgressBar
               order={3}
