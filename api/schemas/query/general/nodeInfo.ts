@@ -1,12 +1,8 @@
 import { getWalletInfo, getClosedChannels } from 'ln-service';
 import { ContextType } from 'api/types/apiTypes';
-import { logger } from '../../../helpers/logger';
+import { to } from 'api/helpers/async';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-} from '../../../helpers/helpers';
+import { getAuthLnd, getCorrectAuth } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { NodeInfoType } from '../../types/QueryType';
 
@@ -36,20 +32,21 @@ export const getNodeInfo = {
     const auth = getCorrectAuth(params.auth, context);
     const lnd = getAuthLnd(auth);
 
-    try {
-      const info: NodeInfoProps = await getWalletInfo({
+    const info = await to(
+      getWalletInfo({
         lnd,
-      });
-      const closedChannels: { channels: [] } = await getClosedChannels({
+      })
+    );
+
+    const closedChannels = await to(
+      getClosedChannels({
         lnd,
-      });
-      return {
-        ...info,
-        closed_channels_count: closedChannels.channels.length,
-      };
-    } catch (error) {
-      logger.error('Error getting node info: %o', error);
-      throw new Error(getErrorMsg(error));
-    }
+      })
+    );
+
+    return {
+      ...info,
+      closed_channels_count: closedChannels?.channels?.length || 0,
+    };
   },
 };

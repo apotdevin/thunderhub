@@ -2,9 +2,7 @@ import { createLogger, format, transports } from 'winston';
 import getConfig from 'next/config';
 
 const { serverRuntimeConfig } = getConfig();
-const { logLevel, nodeEnv } = serverRuntimeConfig;
-
-const level = nodeEnv === 'development' ? 'debug' : logLevel;
+const { logLevel } = serverRuntimeConfig;
 
 const combinedFormat =
   // nodeEnv === 'development' ?
@@ -33,7 +31,7 @@ const combinedFormat =
 //   );
 
 export const logger = createLogger({
-  level,
+  level: logLevel,
   format: combinedFormat,
   transports: [new transports.Console()],
 });

@@ -43,6 +43,7 @@ const apolloServer = new ApolloServer({
 
     let ssoVerified = false;
     if (req?.cookies?.SSOAuth) {
+      logger.silly('SSOAuth cookie found in request');
       try {
         jwt.verify(req.cookies.SSOAuth, secret);
         ssoVerified = true;
@@ -53,6 +54,7 @@ const apolloServer = new ApolloServer({
 
     let account = null;
     if (req?.cookies?.AccountAuth) {
+      logger.silly('AccountAuth cookie found in request');
       try {
         const bytes = AES.decrypt(req.cookies.AccountAuth, secret);
         const decrypted = bytes.toString(CryptoJS.enc.Utf8);

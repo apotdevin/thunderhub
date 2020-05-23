@@ -10,6 +10,12 @@ const getMessage = error => {
       return 'Did not find a possible route.';
     case 'SendPaymentFail':
       return 'Failed to send this payments.';
+    case 'AccountNotAuthenticated':
+      return 'This account is not authenticated.';
+    case 'AccountTypeDoesNotExist':
+      return 'This account does not exist.';
+    case 'WrongPasswordForLogin':
+      return 'Wrong password provided.';
     default:
       return error;
   }

@@ -14,6 +14,7 @@ import Cookies from 'js-cookie';
 import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { useGetSessionTokenLazyQuery } from 'src/graphql/queries/__generated__/getSessionToken.generated';
 import { getAuthFromAccount } from 'src/context/helpers/context';
+import { getErrorContent } from 'src/utils/error';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { getAuthObj } from '../../utils/auth';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
@@ -43,8 +44,8 @@ export const SessionLogin = () => {
 
   const [getCanConnect, { data, loading }] = useGetCanConnectLazyQuery({
     fetchPolicy: 'network-only',
-    onError: () => {
-      toast.error('Unable to connect to this node');
+    onError: err => {
+      toast.error(getErrorContent(err));
       dispatch({ type: 'disconnected' });
     },
   });
@@ -54,14 +55,14 @@ export const SessionLogin = () => {
     { data: sData, loading: sLoading },
   ] = useGetSessionTokenLazyQuery({
     fetchPolicy: 'network-only',
-    onError: () => {
-      toast.error('Wrong password');
+    onError: err => {
+      toast.error(getErrorContent(err));
       dispatch({ type: 'disconnected' });
     },
   });
 
   useEffect(() => {
-    if (!sLoading && sData?.getSessionToken) {
+    if (!sLoading && sData && sData.getSessionToken) {
       Cookies.set('AccountAuth', sData.getSessionToken, {
         sameSite: 'strict',
       });
@@ -74,11 +75,21 @@ export const SessionLogin = () => {
   }, [sLoading, sData, push, getCanConnect, account]);
 
   useEffect(() => {
-    if (!loading && data?.getNodeInfo && account.type === SERVER_ACCOUNT) {
+    if (
+      !loading &&
+      data &&
+      data.getNodeInfo &&
+      account.type === SERVER_ACCOUNT
+    ) {
       dispatch({ type: 'connected' });
       push(appendBasePath('/home'));
     }
-    if (!loading && data?.getNodeInfo && account.type === CLIENT_ACCOUNT) {
+    if (
+      !loading &&
+      data &&
+      data.getNodeInfo &&
+      account.type === CLIENT_ACCOUNT
+    ) {
       const bytes = CryptoJS.AES.decrypt(account.admin, pass);
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
 
