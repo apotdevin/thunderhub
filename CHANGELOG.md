@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.5](https://github.com/apotdevin/thunderhub/compare/v0.6.4...v0.6.5) (2020-05-23)
+
+
+### Features
+
+* ✨ channel ui manager ([35cf8db](https://github.com/apotdevin/thunderhub/commit/35cf8db27f5fe6bfb8a6be9b2a5eeb0753ebf248))
+
 ### [0.6.4](https://github.com/apotdevin/thunderhub/compare/v0.6.3...v0.6.4) (2020-05-23)
 
 
