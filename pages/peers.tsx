@@ -28,7 +28,7 @@ const PeersView = () => {
       <AddPeer />
       <CardWithTitle>
         <SubTitle>Peers</SubTitle>
-        <Card>
+        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
           {data.getPeers.map((peer: any, index: number) => (
             <PeersCard
               peer={peer}

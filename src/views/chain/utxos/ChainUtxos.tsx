@@ -28,7 +28,7 @@ export const ChainUtxos = () => {
   return (
     <CardWithTitle>
       <SubTitle>Unspent Utxos</SubTitle>
-      <Card>
+      <Card mobileCardPadding={'0'} mobileNoBackground={true}>
         {data.getUtxos.map((utxo: any, index: number) => (
           <UtxoCard
             utxo={utxo}

@@ -7,11 +7,13 @@ import {
   smallLinkColor,
   unSelectedNavButton,
   textColor,
-  buttonBorderColor,
   chartLinkColor,
   inverseTextColor,
   separationColor,
   mediaWidths,
+  colorButtonBackground,
+  colorButtonBorder,
+  hoverTextColor,
 } from '../../styles/Themes';
 
 export const CardWithTitle = styled.div`
@@ -29,6 +31,7 @@ export interface CardProps {
   bottom?: string;
   cardPadding?: string;
   mobileCardPadding?: string;
+  mobileNoBackground?: boolean;
 }
 
 export const Card = styled.div<CardProps>`
@@ -41,6 +44,13 @@ export const Card = styled.div<CardProps>`
   width: 100%;
 
   @media (${mediaWidths.mobile}) {
+    ${({ mobileNoBackground }) =>
+      mobileNoBackground &&
+      css`
+        background: unset;
+        border: none;
+        box-shadow: none;
+      `}
     ${({ cardPadding, mobileCardPadding }) =>
       mobileCardPadding
         ? css`
@@ -70,6 +80,7 @@ interface SubCardProps {
   color?: string;
   padding?: string;
   withMargin?: string;
+  noCard?: boolean;
 }
 
 export const SubCard = styled.div<SubCardProps>`
@@ -146,27 +157,6 @@ export const ColumnLine = styled.div`
   }
 `;
 
-export const SimpleButton = styled.button<{ enabled?: boolean }>`
-  cursor: pointer;
-  outline: none;
-  padding: 5px;
-  margin: 5px;
-  text-decoration: none;
-  background-color: transparent;
-  color: ${({ enabled = true }) => (enabled ? textColor : unSelectedNavButton)};
-  border: 1px solid ${buttonBorderColor};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  white-space: nowrap;
-`;
-
-export const SimpleInverseButton = styled(SimpleButton)`
-  color: ${({ enabled = true }: { enabled?: boolean }) =>
-    enabled ? inverseTextColor : unSelectedNavButton};
-`;
-
 interface DarkProps {
   fontSize?: string;
   withMargin?: string;
@@ -178,17 +168,24 @@ export const DarkSubTitle = styled.div<DarkProps>`
   margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
 `;
 
-interface ColorProps {
-  color: string;
-  selected?: boolean;
-}
-export const ColorButton = styled(SimpleButton)<ColorProps>`
-  color: ${({ selected }) => (selected ? textColor : chartLinkColor)};
-  border: ${({ selected, color }) => (selected ? `1px solid ${color}` : '')};
+export const SmallButton = styled.button`
+  cursor: pointer;
+  outline: none;
+  padding: 5px;
+  margin: 5px;
+  text-decoration: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  white-space: nowrap;
+  color: ${chartLinkColor};
+  background-color: ${colorButtonBackground};
 
   &:hover {
-    border: 1px solid ${({ color }: ColorProps) => color};
-    color: ${textColor};
+    color: ${hoverTextColor};
+    background-color: ${colorButtonBorder};
   }
 `;
 

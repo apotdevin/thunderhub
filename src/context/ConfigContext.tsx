@@ -17,6 +17,7 @@ type State = {
   hideNonVerified: boolean;
   maxFee: number;
   chatPollingSpeed: number;
+  channelBarType: 'normal' | 'partner';
 };
 
 type ConfigInitProps = {
@@ -36,6 +37,7 @@ type ActionType = {
   hideNonVerified?: boolean;
   maxFee?: number;
   chatPollingSpeed?: number;
+  channelBarType?: 'normal' | 'partner';
 };
 
 type Dispatch = (action: ActionType) => void;
@@ -63,6 +65,7 @@ const initialState: State = {
   hideNonVerified: false,
   maxFee: 20,
   chatPollingSpeed: 1000,
+  channelBarType: 'normal',
 };
 
 const stateReducer = (state: State, action: ActionType): State => {

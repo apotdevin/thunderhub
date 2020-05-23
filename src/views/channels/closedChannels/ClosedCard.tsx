@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { ClosedChannelType } from 'src/graphql/types';
 import { NodeTitle, MainInfo } from '../../../components/generic/CardGeneric';
 import {
   SubCard,
@@ -20,7 +21,7 @@ const Padding = styled.div`
 `;
 
 interface PendingCardProps {
-  channelInfo: any;
+  channelInfo: ClosedChannelType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;

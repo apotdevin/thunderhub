@@ -39,8 +39,10 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
     'import/no-unresolved': 'off',
     'import/order': 2,
+    'no-unused-vars': 2,
     camelcase: 'off',
     '@typescript-eslint/camelcase': 'off',
     'react/prop-types': 'off',

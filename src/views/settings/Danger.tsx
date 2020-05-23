@@ -12,10 +12,9 @@ import {
   CardWithTitle,
   SubTitle,
   SingleLine,
-  SimpleButton,
   Sub4Title,
 } from '../../components/generic/Styled';
-import { textColor, fontColors } from '../../styles/Themes';
+import { fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
   MultiButton,
@@ -38,14 +37,6 @@ const OutlineCard = styled(Card)`
 
 export const SettingsLine = styled(SingleLine)`
   margin: 10px 0;
-`;
-
-export const SettingsButton = styled(SimpleButton)`
-  padding: 10px;
-
-  &:hover {
-    border: 1px solid ${textColor};
-  }
 `;
 
 export const CheckboxText = styled.div`

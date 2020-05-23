@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { ArrowUp, Zap, Anchor, Pocket, ArrowDown, X } from 'react-feather';
+import { Zap, Anchor, Pocket } from 'react-feather';
+import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import {
   Card,
   CardWithTitle,
   SubTitle,
   Separation,
   DarkSubTitle,
-  ColorButton,
   ResponsiveLine,
 } from '../../../components/generic/Styled';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
@@ -35,8 +35,14 @@ const Tile = styled.div`
   }
 `;
 
-const ButtonRow = styled.div`
+const AccountButtonWrapper = styled.div`
   display: flex;
+  flex-direction: column;
+
+  @media (${mediaWidths.mobile}) {
+    flex-direction: row;
+    width: 100%;
+  }
 `;
 
 const sectionColor = '#FFD300';
@@ -118,14 +124,24 @@ export const AccountInfo = () => {
   );
 
   const renderButtons = (send: string, receive: string) => (
-    <>
-      <ColorButton color={sectionColor} onClick={() => setState(send)}>
-        <ArrowUp size={18} />
+    <AccountButtonWrapper>
+      <ColorButton
+        fullWidth={true}
+        withMargin={'0 0 2px'}
+        mobileMargin={'8px 4px 0 0'}
+        onClick={() => setState(send)}
+      >
+        Send
       </ColorButton>
-      <ColorButton color={sectionColor} onClick={() => setState(receive)}>
-        <ArrowDown size={18} />
+      <ColorButton
+        fullWidth={true}
+        withMargin={'2px 0 0'}
+        mobileMargin={'8px 0 0 4px'}
+        onClick={() => setState(receive)}
+      >
+        Receive
       </ColorButton>
-    </>
+    </AccountButtonWrapper>
   );
 
   const renderLnAccount = () => (
@@ -137,14 +153,10 @@ export const AccountInfo = () => {
       </Tile>
       {renderBalances(formatCCB, formatPCB)}
       <AdminSwitch>
-        <ButtonRow>
-          {showLn && showChain && renderButtons('send_ln', 'receive_ln')}
-          {showLn && !showChain && (
-            <ColorButton color={sectionColor} onClick={() => setState('none')}>
-              <X size={18} />
-            </ColorButton>
-          )}
-        </ButtonRow>
+        {showLn && showChain && renderButtons('send_ln', 'receive_ln')}
+        {showLn && !showChain && (
+          <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
+        )}
       </AdminSwitch>
     </ResponsiveLine>
   );
@@ -158,14 +170,10 @@ export const AccountInfo = () => {
       </Tile>
       {renderBalances(formatCB, formatPB)}
       <AdminSwitch>
-        <ButtonRow>
-          {showLn && showChain && renderButtons('send_chain', 'receive_chain')}
-          {!showLn && showChain && (
-            <ColorButton color={sectionColor} onClick={() => setState('none')}>
-              <X size={18} />
-            </ColorButton>
-          )}
-        </ButtonRow>
+        {showLn && showChain && renderButtons('send_chain', 'receive_chain')}
+        {!showLn && showChain && (
+          <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
+        )}
       </AdminSwitch>
     </ResponsiveLine>
   );

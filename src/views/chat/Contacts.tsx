@@ -52,7 +52,7 @@ export const ContactCard = ({
   }, [contact, sender, alias, contactSender, getInfo, setUser, user]);
 
   React.useEffect(() => {
-    if (!loading && data?.getNode) {
+    if (!loading && data && data.getNode) {
       const { alias } = data.getNode;
       const name =
         alias && alias !== '' ? alias : contactSender.substring(0, 6);

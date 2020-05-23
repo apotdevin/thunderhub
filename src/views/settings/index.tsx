@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { SingleLine, SimpleButton } from '../../components/generic/Styled';
-import { textColor } from '../../styles/Themes';
+import { SingleLine } from '../../components/generic/Styled';
 import { InterfaceSettings } from './Interface';
 import { AccountSettings } from './Account';
 import { DangerView } from './Danger';
@@ -15,14 +14,6 @@ export const ButtonRow = styled.div`
 
 export const SettingsLine = styled(SingleLine)`
   margin: 8px 0;
-`;
-
-export const SettingsButton = styled(SimpleButton)`
-  padding: 8px;
-
-  &:hover {
-    border: 1px solid ${textColor};
-  }
 `;
 
 const SettingsView = () => {

@@ -46,7 +46,7 @@ export const Accounts = () => {
   });
 
   React.useEffect(() => {
-    if (!loading && data?.getNodeInfo && newAccount) {
+    if (!loading && data && data.getNodeInfo && newAccount) {
       dispatch({ type: 'changeAccount', changeId: newAccount });
       dispatchStatus({ type: 'connected' });
       push(appendBasePath('/home'));

@@ -61,7 +61,7 @@ export const Header = () => {
             <Link to={connected ? '/home' : '/'} underline={'transparent'}>
               <HeaderTitle withPadding={!connected}>
                 <IconPadding>
-                  <Cpu color={'white'} />
+                  <Cpu color={'white'} size={18} />
                 </IconPadding>
                 ThunderHub
               </HeaderTitle>

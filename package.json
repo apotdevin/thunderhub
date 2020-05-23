@@ -12,7 +12,7 @@
     "start:two": "cross-env NODE_OPTIONS='--insecure-http-parser' next start -p 3001",
     "start:compatible": "next start",
     "start:compatible:two": "next start -p 3001",
-    "lint": "eslint */**/*.{js,ts,tsx} --quiet --fix",
+    "lint": "eslint */**/*.{js,ts,tsx} --fix",
     "prettier": "prettier --write **/*.{ts,tsx,js,css,html}",
     "release": "standard-version",
     "release:push": "standard-version && git push --follow-tags origin master",
