@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
+import { useConfigState } from 'src/context/ConfigContext';
+import { sortBy } from 'underscore';
+import { getPercent } from 'src/utils/helpers';
 import { Card } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { ChannelCard } from './ChannelCard';
 
 export const Channels = () => {
+  const { sortDirection, channelSort } = useConfigState();
   const [indexOpen, setIndexOpen] = useState(0);
 
   const { auth } = useAccountState();
@@ -62,9 +66,26 @@ export const Channels = () => {
     }
   }
 
+  const getChannels = () => {
+    switch (channelSort) {
+      case 'local': {
+        const newArray = sortBy(data.getChannels, 'local_balance');
+        return sortDirection === 'increase' ? newArray : newArray.reverse();
+      }
+      case 'balance': {
+        const newArray = sortBy(data.getChannels, channel =>
+          getPercent(channel.local_balance, channel.remote_balance)
+        );
+        return sortDirection === 'increase' ? newArray : newArray.reverse();
+      }
+      default:
+        return data.getChannels;
+    }
+  };
+
   return (
     <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-      {data.getChannels.map((channel, index: number) => (
+      {getChannels().map((channel, index: number) => (
         <ChannelCard
           channelInfo={channel}
           index={index + 1}
@@ -74,7 +95,7 @@ export const Channels = () => {
           biggest={biggest}
           biggestPartner={biggestPartner}
           mostChannels={mostChannels}
-          biggestBaseFee={biggestBaseFee * 2}
+          biggestBaseFee={biggestBaseFee}
           biggestRateFee={biggestRateFee}
         />
       ))}

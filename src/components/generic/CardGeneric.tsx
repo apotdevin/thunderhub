@@ -27,6 +27,8 @@ export const ProgressBar = styled.div<ProgressBar>`
         return chartColors.green;
       case 3:
         return chartColors.orange;
+      case 4:
+        return progressBackground;
       default:
         return chartColors.purple;
     }

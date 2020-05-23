@@ -84,10 +84,9 @@ const BalanceView = () => {
   };
 
   const renderChannels = (isOutgoing?: boolean) => {
-    const channels = sortBy(data.getChannels, [
-      (channel: any) =>
-        getPercent(channel.remote_balance, channel.local_balance),
-    ]);
+    const channels = sortBy(data.getChannels, channel =>
+      getPercent(channel.remote_balance, channel.local_balance)
+    );
 
     const finalChannels = isOutgoing ? channels : channels.reverse();
 

@@ -5,6 +5,11 @@ import Cookies from 'js-cookie';
 const themeTypes = ['dark', 'light'];
 const currencyTypes = ['sat', 'btc', 'EUR', 'USD'];
 
+export type channelBarStyleTypes = 'normal' | 'compact' | 'ultracompact';
+export type channelBarTypeTypes = 'balance' | 'details' | 'partner';
+export type channelSortTypes = 'none' | 'local' | 'balance';
+export type sortDirectionTypes = 'increase' | 'decrease';
+
 type State = {
   currency: string;
   theme: string;
@@ -17,7 +22,10 @@ type State = {
   hideNonVerified: boolean;
   maxFee: number;
   chatPollingSpeed: number;
-  channelBarType: 'normal' | 'partner';
+  channelBarStyle: channelBarStyleTypes;
+  channelBarType: channelBarTypeTypes;
+  channelSort: channelSortTypes;
+  sortDirection: sortDirectionTypes;
 };
 
 type ConfigInitProps = {
@@ -37,7 +45,10 @@ type ActionType = {
   hideNonVerified?: boolean;
   maxFee?: number;
   chatPollingSpeed?: number;
-  channelBarType?: 'normal' | 'partner';
+  channelBarStyle?: channelBarStyleTypes;
+  channelBarType?: channelBarTypeTypes;
+  channelSort?: channelSortTypes;
+  sortDirection?: sortDirectionTypes;
 };
 
 type Dispatch = (action: ActionType) => void;
@@ -65,7 +76,10 @@ const initialState: State = {
   hideNonVerified: false,
   maxFee: 20,
   chatPollingSpeed: 1000,
-  channelBarType: 'normal',
+  channelBarStyle: 'normal',
+  channelBarType: 'balance',
+  channelSort: 'none',
+  sortDirection: 'decrease',
 };
 
 const stateReducer = (state: State, action: ActionType): State => {

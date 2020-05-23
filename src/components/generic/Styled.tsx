@@ -81,13 +81,18 @@ interface SubCardProps {
   padding?: string;
   withMargin?: string;
   noCard?: boolean;
+  noBackground?: boolean;
 }
 
 export const SubCard = styled.div<SubCardProps>`
   margin: ${({ withMargin }) => (withMargin ? withMargin : '0 0 10px 0')};
   padding: ${({ padding }) => (padding ? padding : '16px')};
-  background: ${subCardColor};
-  border: 1px solid ${cardBorderColor};
+  ${({ noBackground }) =>
+    !noBackground &&
+    css`
+      background: ${subCardColor};
+      border: 1px solid ${cardBorderColor};
+    `}
   border-left: ${({ color }) => (color ? `2px solid ${color}` : '')};
 
   &:hover {
