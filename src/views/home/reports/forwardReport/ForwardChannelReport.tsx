@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetForwardChannelsReportQuery } from 'src/graphql/queries/__generated__/getForwardChannelsReport.generated';
 import { getErrorContent } from '../../../../utils/error';
 import {
   DarkSubTitle,
-  ColorButton,
+  SmallButton,
   SingleLine,
 } from '../../../../components/generic/Styled';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
@@ -28,9 +28,19 @@ const ButtonRow = styled.div`
   margin-bottom: 5px;
 `;
 
-const TriButton = styled(ColorButton)`
+type TriButtonProps = {
+  selected: boolean;
+};
+
+const TriButton = styled(SmallButton)<TriButtonProps>`
   margin: 0;
   border-radius: 0;
+
+  ${({ selected }) =>
+    selected &&
+    css`
+      color: white;
+    `}
 `;
 
 const LeftButton = styled(TriButton)`

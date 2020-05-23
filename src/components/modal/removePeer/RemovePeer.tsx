@@ -27,7 +27,7 @@ export const RemovePeerModal = ({
   peerAlias,
 }: RemovePeerProps) => {
   const [removePeer, { loading }] = useRemovePeerMutation({
-    onCompleted: data => {
+    onCompleted: () => {
       toast.success('Peer Removed');
     },
     onError: error => {

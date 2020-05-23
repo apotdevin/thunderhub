@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetCanConnectInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
+import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import {
@@ -14,7 +15,6 @@ import {
   Card,
   SingleLine,
   DarkSubTitle,
-  ColorButton,
 } from '../../../components/generic/Styled';
 import { mediaWidths } from '../../../styles/Themes';
 
@@ -52,6 +52,14 @@ const TextPadding = styled.span`
   margin-left: 5px;
 `;
 
+const ButtonRow = styled.div`
+  display: flex;
+
+  @media (${mediaWidths.mobile}) {
+    width: 100%;
+  }
+`;
+
 const sectionColor = '#fa541c';
 
 export const ConnectCard = () => {
@@ -84,13 +92,13 @@ export const ConnectCard = () => {
             <DarkSubTitle>Public Key</DarkSubTitle>
             <Key>{public_key}</Key>
           </Tile>
-          <SingleLine>
+          <ButtonRow>
             {onionAddress ? (
               <CopyToClipboard
                 text={onionAddress}
                 onCopy={() => toast.success('Onion Address Copied')}
               >
-                <ColorButton color={sectionColor}>
+                <ColorButton fullWidth={true} withMargin={'0 4px 0 0'}>
                   <Copy size={18} />
                   <TextPadding>Onion</TextPadding>
                 </ColorButton>
@@ -101,12 +109,12 @@ export const ConnectCard = () => {
                 text={normalAddress}
                 onCopy={() => toast.success('Public Address Copied')}
               >
-                <ColorButton color={sectionColor}>
+                <ColorButton fullWidth={true} withMargin={'0 0 0 4px'}>
                   <Copy size={18} />
                 </ColorButton>
               </CopyToClipboard>
             ) : null}
-          </SingleLine>
+          </ButtonRow>
         </Responsive>
       </Card>
     </CardWithTitle>

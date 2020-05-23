@@ -35,7 +35,7 @@ export const ChatInput = ({
   );
 
   React.useEffect(() => {
-    if (!loading && data?.sendMessage >= 0) {
+    if (!loading && data && data.sendMessage >= 0) {
       setMessage('');
       dispatch({
         type: 'newChat',

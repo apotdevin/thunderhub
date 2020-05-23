@@ -6,7 +6,7 @@ import {
   SubTitle,
   Card,
   CardTitle,
-  ColorButton,
+  SmallButton,
 } from '../../../components/generic/Styled';
 import { unSelectedNavButton } from '../../../styles/Themes';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
@@ -87,9 +87,9 @@ export const QuickActions = () => {
       <CardTitle>
         <SubTitle>{getTitle()}</SubTitle>
         {openCard !== 'none' && (
-          <ColorButton onClick={() => setOpenCard('none')} color={sectionColor}>
+          <SmallButton onClick={() => setOpenCard('none')}>
             <X size={18} />
-          </ColorButton>
+          </SmallButton>
         )}
       </CardTitle>
       {renderContent()}

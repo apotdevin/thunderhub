@@ -84,6 +84,9 @@ export const PartnerNodeType = new GraphQLObjectType({
       channel_count: { type: GraphQLInt },
       color: { type: GraphQLString },
       updated_at: { type: GraphQLString },
+      base_fee: { type: GraphQLInt },
+      fee_rate: { type: GraphQLInt },
+      cltv_delta: { type: GraphQLInt },
     };
   },
 });

@@ -7,14 +7,12 @@ import {
   Card,
   CardWithTitle,
   CardTitle,
-  ColorButton,
+  SmallButton,
   SingleLine,
 } from '../src/components/generic/Styled';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ForwardCard } from '../src/views/forwards/ForwardsCard';
-import { textColorMap } from '../src/styles/Themes';
-import { useConfigState } from '../src/context/ConfigContext';
 import { ForwardBox } from '../src/views/home/reports/forwardReport';
 
 const timeMap: { [key: string]: string } = {
@@ -28,7 +26,6 @@ const ForwardsView = () => {
   const [time, setTime] = useState('week');
   const [indexOpen, setIndexOpen] = useState(0);
 
-  const { theme } = useConfigState();
   const { auth } = useAccountState();
 
   const { loading, data } = useGetForwardsQuery({
@@ -42,17 +39,13 @@ const ForwardsView = () => {
   }
 
   const renderButton = (selectedTime: string, title: string) => (
-    <ColorButton
-      color={textColorMap[theme]}
-      onClick={() => setTime(selectedTime)}
-      selected={time === selectedTime}
-    >
-      {title}
-    </ColorButton>
+    <SmallButton onClick={() => setTime(selectedTime)}>{title}</SmallButton>
   );
 
   const renderNoForwards = () => (
-    <p>{`Your node has not forwarded any payments ${timeMap[time]}.`}</p>
+    <Card>
+      <p>{`Your node has not forwarded any payments ${timeMap[time]}.`}</p>
+    </Card>
   );
 
   return (
@@ -68,8 +61,8 @@ const ForwardsView = () => {
             {renderButton('threeMonths', '3M')}
           </SingleLine>
         </CardTitle>
-        <Card>
-          {data.getForwards.forwards.length <= 0 && renderNoForwards()}
+        {data.getForwards.forwards.length <= 0 && renderNoForwards()}
+        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
           {data.getForwards.forwards.map((forward: any, index: number) => (
             <ForwardCard
               forward={forward}

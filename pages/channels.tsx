@@ -1,18 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetChannelAmountInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
+import styled from 'styled-components';
 import { Channels } from '../src/views/channels/channels/Channels';
 import { PendingChannels } from '../src/views/channels/pendingChannels/PendingChannels';
 import { ClosedChannels } from '../src/views/channels/closedChannels/ClosedChannels';
 import {
   CardWithTitle,
   SubTitle,
-  CardTitle,
-  SingleLine,
-  ColorButton,
+  SmallButton,
 } from '../src/components/generic/Styled';
-import { useConfigState } from '../src/context/ConfigContext';
-import { textColorMap } from '../src/styles/Themes';
+import { mediaWidths } from '../src/styles/Themes';
+
+const ChannelsCardTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  @media (${mediaWidths.mobile}) {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+const ButtonRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
 
 const ChannelView = () => {
   const [view, setView] = useState<number>(1);
@@ -22,7 +35,6 @@ const ChannelView = () => {
     closed: 0,
   });
 
-  const { theme } = useConfigState();
   const { auth } = useAccountState();
 
   const { data } = useGetChannelAmountInfoQuery({
@@ -31,7 +43,7 @@ const ChannelView = () => {
   });
 
   useEffect(() => {
-    if (data?.getNodeInfo) {
+    if (data && data.getNodeInfo) {
       const {
         active_channels_count,
         closed_channels_count,
@@ -70,20 +82,20 @@ const ChannelView = () => {
 
   return (
     <CardWithTitle>
-      <CardTitle>
+      <ChannelsCardTitle>
         <SubTitle>{getTitle()}</SubTitle>
-        <SingleLine>
-          <ColorButton color={textColorMap[theme]} onClick={() => setView(1)}>
+        <ButtonRow>
+          <SmallButton onClick={() => setView(1)}>
             {`Open (${amounts.active})`}
-          </ColorButton>
-          <ColorButton color={textColorMap[theme]} onClick={() => setView(2)}>
+          </SmallButton>
+          <SmallButton onClick={() => setView(2)}>
             {`Pending (${amounts.pending})`}
-          </ColorButton>
-          <ColorButton color={textColorMap[theme]} onClick={() => setView(3)}>
+          </SmallButton>
+          <SmallButton onClick={() => setView(3)}>
             {`Closed (${amounts.closed})`}
-          </ColorButton>
-        </SingleLine>
-      </CardTitle>
+          </SmallButton>
+        </ButtonRow>
+      </ChannelsCardTitle>
       {getView()}
     </CardWithTitle>
   );

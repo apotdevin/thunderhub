@@ -91,7 +91,7 @@ export const LiquidReport = () => {
               grid: { stroke: chartGridColor[theme] },
               axis: { stroke: 'transparent' },
             }}
-            tickFormat={a => `${format({ amount: a })}`}
+            tickFormat={a => `${format({ amount: a, breakNumber: true })}`}
           />
           <VictoryBar
             horizontal

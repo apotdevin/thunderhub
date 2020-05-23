@@ -31,6 +31,9 @@ export const GET_CHANNELS = gql`
         channel_count
         color
         updated_at
+        base_fee
+        fee_rate
+        cltv_delta
       }
     }
   }

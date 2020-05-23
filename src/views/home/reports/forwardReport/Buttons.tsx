@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardTitle, ColorButton } from '../../../../components/generic/Styled';
+import { CardTitle, SmallButton } from '../../../../components/generic/Styled';
 
 interface ButtonProps {
   isTime: string;
@@ -44,12 +44,12 @@ ButtonProps) => {
     index: number
   ) => {
     return (
-      <ColorButton
+      <SmallButton
         color={buttonBorder}
         onClick={() => setFn(toggleButtons(array, index))}
       >
         {mapped[index]}
-      </ColorButton>
+      </SmallButton>
     );
   };
 

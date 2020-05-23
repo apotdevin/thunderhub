@@ -23,8 +23,8 @@ export const PendingChannels = () => {
   }
 
   return (
-    <Card>
-      {data.getPendingChannels.map((channel: any, index: number) => (
+    <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+      {data.getPendingChannels.map((channel, index: number) => (
         <PendingCard
           channelInfo={channel}
           key={index}

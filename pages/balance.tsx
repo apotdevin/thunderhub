@@ -161,7 +161,7 @@ const BalanceView = () => {
       <SingleLine>
         <SubTitle>Channel Balancing</SubTitle>
       </SingleLine>
-      <Card>
+      <Card mobileCardPadding={'0'} mobileNoBackground={true}>
         {renderOutgoing()}
         {renderIncoming()}
         <ResponsiveLine>

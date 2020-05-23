@@ -23,8 +23,8 @@ export const ClosedChannels = () => {
   }
 
   return (
-    <Card>
-      {data.getClosedChannels.map((channel: any, index: number) => (
+    <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+      {data.getClosedChannels.map((channel, index: number) => (
         <ClosedCard
           channelInfo={channel}
           key={index}
