@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.4](https://github.com/apotdevin/thunderhub/compare/v0.6.3...v0.6.4) (2020-05-23)
+
+
+### Bug Fixes
+
+* 🐛 channels with unfound nodes ([077e20d](https://github.com/apotdevin/thunderhub/commit/077e20d7dabf05b045d6a85f51c5b2d73cdf30ba))
+
 ### [0.6.3](https://github.com/apotdevin/thunderhub/compare/v0.6.2...v0.6.3) (2020-05-23)
 
 
