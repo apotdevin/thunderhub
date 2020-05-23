@@ -78,7 +78,7 @@ export const getChannels = {
             );
 
           let partnerFees = {};
-          if (!channelError) {
+          if (!channelError && publicKey) {
             const partnerPolicy = channelInfo.policies.filter(
               policy => policy.public_key !== publicKey
             );
@@ -92,7 +92,7 @@ export const getChannels = {
           }
 
           const partner_node_info = {
-            ...(nodeError ? {} : nodeInfo),
+            ...(!nodeError && nodeInfo),
             ...partnerFees,
           };
 
