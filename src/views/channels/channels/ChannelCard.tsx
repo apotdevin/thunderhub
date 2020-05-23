@@ -186,6 +186,9 @@ export const ChannelCard = ({
     return (
       <>
         <Separation />
+        {renderLine('Status:', is_active ? 'Active' : 'Not Active')}
+        {renderLine('Is Opening:', is_opening ? 'True' : 'False')}
+        {renderLine('Is Closing:', is_closing ? 'True' : 'False')}
         {renderLine(
           'Balancedness:',
           getPercent(local_balance, remote_balance) / 100
