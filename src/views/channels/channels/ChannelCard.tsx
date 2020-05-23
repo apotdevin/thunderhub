@@ -187,6 +187,23 @@ export const ChannelCard = ({
     });
   };
 
+  const renderPartner = () =>
+    alias ? (
+      <>
+        {renderLine('Node Capacity:', nodeCapacity)}
+        {renderLine('Channel Count:', channel_count)}
+        {renderLine(
+          'Last Update:',
+          `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
+        )}
+        {renderLine('Base Fee:', `${base_fee} mSats`)}
+        {renderLine('Fee Rate:', `${fee_rate} sats/MSats`)}
+        {renderLine('CTLV Delta:', cltv_delta)}
+      </>
+    ) : (
+      <DarkSubTitle>Partner node not found</DarkSubTitle>
+    );
+
   const renderDetails = () => {
     return (
       <>
@@ -215,15 +232,7 @@ export const ChannelCard = ({
         {renderLine('Transaction Vout:', transaction_vout)}
         {renderLine('Unsettled Balance:', unsettled_balance)}
         <Sub4Title>Partner Node Info</Sub4Title>
-        {renderLine('Node Capacity:', nodeCapacity)}
-        {renderLine('Channel Count:', channel_count)}
-        {renderLine(
-          'Last Update:',
-          `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
-        )}
-        {renderLine('Base Fee:', `${base_fee} mSats`)}
-        {renderLine('Fee Rate:', `${fee_rate} sats/MSats`)}
-        {renderLine('CTLV Delta:', cltv_delta)}
+        {renderPartner()}
         <AdminSwitch>
           <Separation />
           <RightAlign>

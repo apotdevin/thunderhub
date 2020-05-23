@@ -16,6 +16,7 @@ import {
   ResponsiveLine,
   ResponsiveSingle,
   ResponsiveCol,
+  DarkSubTitle,
 } from '../../../components/generic/Styled';
 import { useConfigState } from '../../../context/ConfigContext';
 import {
@@ -89,6 +90,20 @@ export const PendingCard = ({
     }
   };
 
+  const renderPartner = () =>
+    alias ? (
+      <>
+        {renderLine('Node Capacity:', capacity)}
+        {renderLine('Channels:', channel_count)}
+        {renderLine(
+          'Last Update:',
+          `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
+        )}
+      </>
+    ) : (
+      <DarkSubTitle>Partner node not found</DarkSubTitle>
+    );
+
   const renderDetails = () => {
     return (
       <>
@@ -108,12 +123,7 @@ export const PendingCard = ({
         {renderLine('Local Reserve:', local_reserve)}
         {renderLine('Remote Reserve:', remote_reserve)}
         <Sub4Title>Partner Node Info</Sub4Title>
-        {renderLine('Node Capacity:', capacity)}
-        {renderLine('Channels:', channel_count)}
-        {renderLine(
-          'Last Update:',
-          `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
-        )}
+        {renderPartner()}
       </>
     );
   };

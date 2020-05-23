@@ -6,14 +6,10 @@ import {
   getWalletInfo,
 } from 'ln-service';
 import { ContextType } from 'api/types/apiTypes';
-import { toWithError } from 'api/helpers/async';
+import { toWithError, to } from 'api/helpers/async';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-} from '../../../helpers/helpers';
+import { getAuthLnd, getCorrectAuth } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { ChannelType } from '../../types/QueryType';
 
@@ -35,17 +31,12 @@ export const getChannels = {
     walletError &&
       logger.debug('Error getting wallet info in getChannels: %o', walletError);
 
-    const [channelList, channelListError] = await toWithError(
+    const channelList = await to(
       getLnChannels({
         lnd,
         is_active: params.active,
       })
     );
-
-    if (channelListError) {
-      logger.error('Error getting channels: %o', channelListError);
-      throw new Error(getErrorMsg(channelListError));
-    }
 
     const getChannelList = () =>
       Promise.all(
