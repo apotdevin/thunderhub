@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 import {
   progressBackground,
-  progressFirst,
-  progressSecond,
   mediaWidths,
   cardColor,
   cardBorderColor,
+  chartColors,
 } from '../../styles/Themes';
 
 export const Progress = styled.div`
@@ -20,13 +19,18 @@ interface ProgressBar {
 
 export const ProgressBar = styled.div<ProgressBar>`
   height: 10px;
-  background-image: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.3),
-    rgba(0, 0, 0, 0.05)
-  );
-  background-color: ${({ order }) =>
-    order === 2 ? progressFirst : progressSecond};
+  background-color: ${({ order }) => {
+    switch (order) {
+      case 1:
+        return chartColors.lightblue;
+      case 2:
+        return chartColors.green;
+      case 3:
+        return chartColors.orange;
+      default:
+        return chartColors.purple;
+    }
+  }};
   width: ${({ percent }) => `${percent}%`};
 `;
 
@@ -47,8 +51,8 @@ export const NodeTitle = styled.div`
 export const StatusLine = styled.div`
   width: 100%;
   position: relative;
-  right: -8px;
-  top: -8px;
+  right: -12px;
+  top: -12px;
   display: flex;
   justify-content: flex-end;
   margin: 0 0 -8px 0;

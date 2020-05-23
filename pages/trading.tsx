@@ -99,7 +99,7 @@ const TradingView = () => {
       <Card bottom={'16px'}>
         <OfferFilters offerFilters={queryObject} />
       </Card>
-      <Card bottom={'8px'}>
+      <Card bottom={'8px'} mobileCardPadding={'0'} mobileNoBackground={true}>
         {amountOfOffers <= 0 && <DarkSubTitle>No Offers Found</DarkSubTitle>}
         {data.getOffers.map((offer: any, index: number) => (
           <OfferCard

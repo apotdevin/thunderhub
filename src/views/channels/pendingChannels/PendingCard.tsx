@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
+import { PendingChannelType } from 'src/graphql/types';
 import { getPercent } from '../../../utils/helpers';
 import {
   Progress,
@@ -29,32 +30,8 @@ import {
 import { getPrice } from '../../../components/price/Price';
 import { usePriceState } from '../../../context/PriceContext';
 
-interface ChannelProps {
-  close_transaction_id: string;
-  is_active: boolean;
-  is_closing: boolean;
-  is_opening: boolean;
-  local_balance: number;
-  local_reserve: number;
-  partner_public_key: string;
-  received: number;
-  remote_balance: number;
-  remote_reserve: number;
-  sent: number;
-  transaction_fee: number;
-  transaction_id: string;
-  transaction_vout: number;
-  partner_node_info: {
-    alias: string;
-    capacity: string;
-    channelCount: string;
-    color: string;
-    updated_at: string;
-  };
-}
-
 interface PendingCardProps {
-  channelInfo: ChannelProps;
+  channelInfo: PendingChannelType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
@@ -93,7 +70,7 @@ export const PendingCard = ({
   const {
     alias,
     capacity,
-    channelCount,
+    channel_count,
     color: nodeColor,
     updated_at,
   } = partner_node_info;
@@ -132,7 +109,7 @@ export const PendingCard = ({
         {renderLine('Remote Reserve:', remote_reserve)}
         <Sub4Title>Partner Node Info</Sub4Title>
         {renderLine('Node Capacity:', capacity)}
-        {renderLine('Channels:', channelCount)}
+        {renderLine('Channels:', channel_count)}
         {renderLine(
           'Last Update:',
           `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`

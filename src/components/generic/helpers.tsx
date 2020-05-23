@@ -9,11 +9,19 @@ import { X } from 'react-feather';
 import { SmallLink, DarkSubTitle, OverflowText, SingleLine } from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
 
+const shorten = (text: string): string => {
+  const amount = 6;
+  const beginning = text.slice(0, amount);
+  const end = text.slice(text.length - amount);
+
+  return `${beginning}...${end}`;
+};
+
 export const getTransactionLink = (transaction: string) => {
   const link = `https://www.blockchain.com/btc/tx/${transaction}`;
   return (
     <SmallLink href={link} target="_blank">
-      {transaction}
+      {shorten(transaction)}
     </SmallLink>
   );
 };
@@ -22,7 +30,7 @@ export const getNodeLink = (publicKey: string) => {
   const link = `https://1ml.com/node/${publicKey}`;
   return (
     <SmallLink href={link} target="_blank">
-      {publicKey}
+      {shorten(publicKey)}
     </SmallLink>
   );
 };

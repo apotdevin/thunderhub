@@ -42,7 +42,7 @@ export const ChatInit = () => {
   }, [dispatch, getMessages, account]);
 
   React.useEffect(() => {
-    if (!initLoading && !initError && initData?.getMessages) {
+    if (!initLoading && !initError && initData && initData.getMessages) {
       const { messages } = initData.getMessages;
 
       if (messages.length <= 0) {

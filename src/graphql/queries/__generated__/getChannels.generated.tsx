@@ -40,7 +40,14 @@ export type GetChannelsQuery = { __typename?: 'Query' } & {
             partner_node_info?: Types.Maybe<
               { __typename?: 'partnerNodeType' } & Pick<
                 Types.PartnerNodeType,
-                'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
+                | 'alias'
+                | 'capacity'
+                | 'channel_count'
+                | 'color'
+                | 'updated_at'
+                | 'base_fee'
+                | 'fee_rate'
+                | 'cltv_delta'
               >
             >;
           }
@@ -80,6 +87,9 @@ export const GetChannelsDocument = gql`
         channel_count
         color
         updated_at
+        base_fee
+        fee_rate
+        cltv_delta
       }
     }
   }

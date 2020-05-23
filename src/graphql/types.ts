@@ -261,6 +261,9 @@ export type PartnerNodeType = {
   channel_count?: Maybe<Scalars['Int']>;
   color?: Maybe<Scalars['String']>;
   updated_at?: Maybe<Scalars['String']>;
+  base_fee?: Maybe<Scalars['Int']>;
+  fee_rate?: Maybe<Scalars['Int']>;
+  cltv_delta?: Maybe<Scalars['Int']>;
 };
 
 export type ClosedChannelType = {

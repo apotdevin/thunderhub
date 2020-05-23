@@ -25,7 +25,7 @@ export const AuthSSOCheck = ({ cookieParam }: AuthCheckProps) => {
   });
 
   React.useEffect(() => {
-    if (cookieParam && !loading && data?.getAuthToken && !ssoSaved) {
+    if (cookieParam && !loading && data && data.getAuthToken && !ssoSaved) {
       Cookies.set('SSOAuth', data.getAuthToken, {
         sameSite: 'strict',
       });

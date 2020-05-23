@@ -40,7 +40,7 @@ export const ServerAccounts = () => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    if (!loading && data?.getServerAccounts) {
+    if (!loading && data && data.getServerAccounts) {
       const accountsToAdd = data.getServerAccounts.map(a => {
         const type = a?.id === SSO_ACCOUNT ? SSO_ACCOUNT : SERVER_ACCOUNT;
         return {
