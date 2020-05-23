@@ -87,6 +87,11 @@ const getPrivate = (status: boolean) => {
   return status && <EyeOff size={14} />;
 };
 
+const getBar = (top: number, bottom: number) => {
+  const percent = (top / bottom) * 100;
+  return Math.min(percent, 100);
+};
+
 interface ChannelCardProps {
   channelInfo: ChannelType;
   index: number;
@@ -242,29 +247,23 @@ export const ChannelCard = ({
           <>
             <ProgressBar
               order={0}
-              percent={(Number(partnerNodeCapacity) / biggestPartner) * 100}
+              percent={getBar(Number(partnerNodeCapacity), biggestPartner)}
             />
             <ProgressBar
               order={3}
-              percent={(channel_count / mostChannels) * 100}
+              percent={getBar(channel_count, mostChannels)}
             />
-            <ProgressBar
-              order={1}
-              percent={(base_fee / biggestBaseFee) * 100}
-            />
-            <ProgressBar
-              order={2}
-              percent={(fee_rate / biggestRateFee) * 100}
-            />
+            <ProgressBar order={1} percent={getBar(base_fee, biggestBaseFee)} />
+            <ProgressBar order={2} percent={getBar(fee_rate, biggestRateFee)} />
           </>
         );
       default:
         return (
           <>
-            <ProgressBar order={0} percent={(local_balance / biggest) * 100} />
-            <ProgressBar order={1} percent={(remote_balance / biggest) * 100} />
-            <ProgressBar order={2} percent={(received / biggest) * 100} />
-            <ProgressBar order={3} percent={(sent / biggest) * 100} />
+            <ProgressBar order={0} percent={getBar(local_balance, biggest)} />
+            <ProgressBar order={1} percent={getBar(remote_balance, biggest)} />
+            <ProgressBar order={2} percent={getBar(received, biggest)} />
+            <ProgressBar order={3} percent={getBar(sent, biggest)} />
           </>
         );
     }
