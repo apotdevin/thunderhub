@@ -4,13 +4,10 @@ import {
 } from 'ln-service';
 import { GraphQLList } from 'graphql';
 import { ContextType } from 'api/types/apiTypes';
+import { to, toWithError } from 'api/helpers/async';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-} from '../../../helpers/helpers';
+import { getAuthLnd, getCorrectAuth } from '../../../helpers/helpers';
 import { defaultParams } from '../../../helpers/defaultProps';
 import { PendingChannelType } from '../../types/QueryType';
 
@@ -44,31 +41,32 @@ export const getPendingChannels = {
     const auth = getCorrectAuth(params.auth, context);
     const lnd = getAuthLnd(auth);
 
-    try {
-      const pendingChannels: PendingChannelListProps = await getLnPendingChannels(
-        {
-          lnd,
-        }
-      );
+    const pendingChannels: PendingChannelListProps = await to(
+      getLnPendingChannels({ lnd })
+    );
 
-      const channels = pendingChannels.pending_channels.map(async channel => {
-        const nodeInfo = await getNode({
+    const channels = pendingChannels.pending_channels.map(async channel => {
+      const [nodeInfo, nodeError] = await toWithError(
+        getNode({
           lnd,
           is_omitting_channels: true,
           public_key: channel.partner_public_key,
-        });
+        })
+      );
 
-        return {
-          ...channel,
-          partner_node_info: {
-            ...nodeInfo,
-          },
-        };
-      });
-      return channels;
-    } catch (error) {
-      logger.error('Error getting pending channels: %o', error);
-      throw new Error(getErrorMsg(error));
-    }
+      nodeError &&
+        logger.debug(
+          `Error getting node with public key ${channel.partner_public_key}: %o`,
+          nodeError
+        );
+
+      return {
+        ...channel,
+        partner_node_info: {
+          ...(!nodeError && nodeInfo),
+        },
+      };
+    });
+    return channels;
   },
 };
