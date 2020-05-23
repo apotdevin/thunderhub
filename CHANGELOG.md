@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.3](https://github.com/apotdevin/thunderhub/compare/v0.6.2...v0.6.3) (2020-05-23)
+
+
+### Features
+
+* ✨ style changes ([#48](https://github.com/apotdevin/thunderhub/issues/48)) ([c2d2dc8](https://github.com/apotdevin/thunderhub/commit/c2d2dc8e36065633541c4f1454b089735cd25936))
+
+
+### Bug Fixes
+
+* 🐛 get sso without cert ([57e7fb8](https://github.com/apotdevin/thunderhub/commit/57e7fb86beb4baa0f49a3e0e4cf8123017476645))
+* 🐛 logger format ([7d7ef56](https://github.com/apotdevin/thunderhub/commit/7d7ef5697f02c3db331189cec3c8b73eafbb1068))
+
+
+### Improvements
+
+* 🔧 improve logging ([414c20f](https://github.com/apotdevin/thunderhub/commit/414c20f053f12db4ebdb9e4b01dc9100644054b8))
+
 ### [0.6.2](https://github.com/apotdevin/thunderhub/compare/v0.6.1...v0.6.2) (2020-05-21)
 
 
