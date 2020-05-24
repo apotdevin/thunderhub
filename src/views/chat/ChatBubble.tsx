@@ -5,6 +5,7 @@ import { Circle } from 'react-feather';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { useAccountState } from 'src/context/AccountContext';
 import { useSendMessageMutation } from 'src/graphql/mutations/__generated__/sendMessage.generated';
+import { useMutationResultWithReset } from 'src/hooks/UseMutationWithReset';
 import {
   chatBubbleColor,
   chatSentBubbleColor,
@@ -34,9 +35,10 @@ const SendButton = ({ amount }: SendButtonProps) => {
   const dispatch = useChatDispatch();
   const { account } = useAccountState();
 
-  const [sendMessage, { loading, data }] = useSendMessageMutation({
+  const [sendMessage, { loading, data: _data }] = useSendMessageMutation({
     onError: error => toast.error(getErrorContent(error)),
   });
+  const [data, resetMutationResult] = useMutationResultWithReset(_data);
 
   React.useEffect(() => {
     if (!loading && data && data.sendMessage >= 0) {
@@ -54,8 +56,9 @@ const SendButton = ({ amount }: SendButtonProps) => {
         userId: account.id,
         sender,
       });
+      resetMutationResult();
     }
-  }, [loading, data, amount, dispatch, sender, account]);
+  }, [loading, data, amount, dispatch, sender, account, resetMutationResult]);
 
   return (
     <SecureWrapper

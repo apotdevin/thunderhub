@@ -2,6 +2,7 @@ import * as React from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
 import { useSendMessageMutation } from 'src/graphql/mutations/__generated__/sendMessage.generated';
+import { useMutationResultWithReset } from 'src/hooks/UseMutationWithReset';
 import { Input } from '../../components/input/Input';
 import { SingleLine } from '../../components/generic/Styled';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
@@ -26,9 +27,10 @@ export const ChatInput = ({
   const { sender } = useChatState();
   const dispatch = useChatDispatch();
 
-  const [sendMessage, { loading, data }] = useSendMessageMutation({
+  const [sendMessage, { loading, data: _data }] = useSendMessageMutation({
     onError: error => toast.error(getErrorContent(error)),
   });
+  const [data, resetMutationResult] = useMutationResultWithReset(_data);
 
   const [formattedMessage, contentType, tokens, canSend] = handleMessage(
     message
@@ -51,6 +53,7 @@ export const ChatInput = ({
         userId: account.id,
         sender: customSender || sender,
       });
+      resetMutationResult();
     }
   }, [
     loading,
@@ -62,6 +65,7 @@ export const ChatInput = ({
     tokens,
     account,
     dispatch,
+    resetMutationResult,
   ]);
 
   return (
