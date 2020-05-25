@@ -49,6 +49,7 @@ export type CompleteAccount =
     };
 
 type State = {
+  initialized: boolean;
   auth: AuthType | null;
   activeAccount: string | null;
   session: string | null;
@@ -102,6 +103,7 @@ const StateContext = React.createContext<State | undefined>(undefined);
 const DispatchContext = React.createContext<Dispatch | undefined>(undefined);
 
 const initialState: State = {
+  initialized: false,
   auth: null,
   session: null,
   activeAccount: null,
@@ -114,6 +116,9 @@ const initialState: State = {
 const stateReducer = (state: State, action: ActionType): State => {
   switch (action.type) {
     case 'initialize': {
+      if (state.initialized) {
+        return state;
+      }
       const { accountsToAdd, changeId, session } = action;
 
       const { account, id } = getAccountById(changeId, accountsToAdd);
@@ -121,6 +126,7 @@ const stateReducer = (state: State, action: ActionType): State => {
       if (!account)
         return {
           ...state,
+          initialized: true,
           accounts: accountsToAdd,
           activeAccount: changeId,
           session,

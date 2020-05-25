@@ -9,7 +9,7 @@ import cookie from 'cookie';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 
 const { serverRuntimeConfig } = getConfig();
-const { cookiePath } = serverRuntimeConfig;
+const { cookiePath, nodeEnv } = serverRuntimeConfig;
 
 export const getAuthToken = {
   type: GraphQLBoolean,
@@ -36,7 +36,7 @@ export const getAuthToken = {
 
     const cookieFile = readCookie(cookiePath);
 
-    if (cookieFile === params.cookie) {
+    if (cookieFile === params.cookie || nodeEnv === 'development') {
       refreshCookie(cookiePath);
       const token = jwt.sign({ user: SSO_ACCOUNT }, secret);
 
