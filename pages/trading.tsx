@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { useGetOffersQuery } from 'src/graphql/hodlhodl/__generated__/query.generated';
+import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
+import { withApollo } from 'config/client';
 import {
   CardWithTitle,
   SubTitle,
@@ -144,4 +146,10 @@ const TradingView = () => {
   );
 };
 
-export default TradingView;
+const Wrapped = () => (
+  <GridWrapper>
+    <TradingView />
+  </GridWrapper>
+);
+
+export default withApollo(Wrapped);

@@ -8,15 +8,14 @@ import {
 } from 'src/context/AccountContext';
 import { appendBasePath } from 'src/utils/basePath';
 import { useGetAuthTokenQuery } from 'src/graphql/queries/__generated__/getAuthToken.generated';
+import { getUrlParam } from 'src/utils/url';
 
-type AuthCheckProps = {
-  cookieParam: string | null;
-};
-
-export const AuthSSOCheck = ({ cookieParam }: AuthCheckProps) => {
-  const { push } = useRouter();
+export const AuthSSOCheck = () => {
+  const { push, query } = useRouter();
   const { accounts, ssoSaved } = useAccountState();
   const dispatch = useAccountDispatch();
+
+  const cookieParam = getUrlParam(query?.token);
 
   const { data, loading } = useGetAuthTokenQuery({
     skip: !cookieParam,

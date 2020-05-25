@@ -38,7 +38,7 @@ readCookie(cookiePath);
 
 const apolloServer = new ApolloServer({
   schema: thunderHubSchema,
-  context: async ({ req }) => {
+  context: ({ req }) => {
     const ip = getIp(req);
 
     let ssoVerified = false;
@@ -88,12 +88,10 @@ const apolloServer = new ApolloServer({
   },
 });
 
-const handler = apolloServer.createHandler({ path: apiBaseUrl });
-
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
-export default handler;
+export default apolloServer.createHandler({ path: apiBaseUrl });

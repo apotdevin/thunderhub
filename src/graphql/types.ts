@@ -564,6 +564,7 @@ export type ServerAccountType = {
   __typename?: 'serverAccountType';
   name: Scalars['String'];
   id: Scalars['String'];
+  type: Scalars['String'];
   loggedIn: Scalars['Boolean'];
 };
 

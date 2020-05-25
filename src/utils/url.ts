@@ -1,4 +1,6 @@
-export const getUrlParam = (params: string | string[] | undefined): string => {
+export const getUrlParam = (
+  params: string | string[] | undefined
+): string | null => {
   if (!params) {
     return null;
   }

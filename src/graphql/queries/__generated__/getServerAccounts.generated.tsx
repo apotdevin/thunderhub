@@ -11,7 +11,7 @@ export type GetServerAccountsQuery = { __typename?: 'Query' } & {
       Types.Maybe<
         { __typename?: 'serverAccountType' } & Pick<
           Types.ServerAccountType,
-          'name' | 'id' | 'loggedIn'
+          'name' | 'id' | 'loggedIn' | 'type'
         >
       >
     >
@@ -24,6 +24,7 @@ export const GetServerAccountsDocument = gql`
       name
       id
       loggedIn
+      type
     }
   }
 `;

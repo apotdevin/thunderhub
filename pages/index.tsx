@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Spacer } from 'src/components/spacer/Spacer';
+import { withApollo } from 'config/client';
+import { ServerAccounts } from 'src/components/accounts/ServerAccounts';
 import { SessionLogin } from '../src/views/login/SessionLogin';
 import { TopSection } from '../src/views/homepage/Top';
 import { LoginBox } from '../src/views/homepage/LoginBox';
@@ -34,4 +36,11 @@ const ContextApp = () => {
   );
 };
 
-export default ContextApp;
+const Wrapped = () => (
+  <>
+    <ServerAccounts />
+    <ContextApp />
+  </>
+);
+
+export default withApollo(Wrapped);

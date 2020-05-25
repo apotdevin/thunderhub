@@ -3,6 +3,8 @@ import { toast } from 'react-toastify';
 import sortBy from 'lodash.sortby';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
+import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
+import { withApollo } from 'config/client';
 import {
   CardWithTitle,
   Card,
@@ -217,4 +219,10 @@ const BalanceView = () => {
   );
 };
 
-export default BalanceView;
+const Wrapped = () => (
+  <GridWrapper>
+    <BalanceView />
+  </GridWrapper>
+);
+
+export default withApollo(Wrapped);

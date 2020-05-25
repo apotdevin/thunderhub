@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
+import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
+import { withApollo } from 'config/client';
 import {
   CardWithTitle,
   SubTitle,
@@ -44,4 +46,10 @@ const PeersView = () => {
   );
 };
 
-export default PeersView;
+const Wrapped = () => (
+  <GridWrapper>
+    <PeersView />
+  </GridWrapper>
+);
+
+export default withApollo(Wrapped);

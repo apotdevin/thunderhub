@@ -6,6 +6,8 @@ import {
   useGetResumeQuery,
   GetResumeQuery,
 } from 'src/graphql/queries/__generated__/getResume.generated';
+import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
+import { withApollo } from 'config/client';
 import {
   Card,
   CardWithTitle,
@@ -114,4 +116,10 @@ const TransactionsView = () => {
   );
 };
 
-export default TransactionsView;
+const Wrapped = () => (
+  <GridWrapper>
+    <TransactionsView />
+  </GridWrapper>
+);
+
+export default withApollo(Wrapped);

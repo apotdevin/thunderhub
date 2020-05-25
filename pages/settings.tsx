@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
+import { withApollo } from 'config/client';
 import { SingleLine } from '../src/components/generic/Styled';
 import { InterfaceSettings } from '../src/views/settings/Interface';
 import { AccountSettings } from '../src/views/settings/Account';
@@ -32,4 +34,10 @@ const SettingsView = () => {
   );
 };
 
-export default SettingsView;
+const Wrapped = () => (
+  <GridWrapper>
+    <SettingsView />
+  </GridWrapper>
+);
+
+export default withApollo(Wrapped);

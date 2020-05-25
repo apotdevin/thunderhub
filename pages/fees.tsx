@@ -5,6 +5,8 @@ import { useAccountState } from 'src/context/AccountContext';
 import { useChannelFeesQuery } from 'src/graphql/queries/__generated__/getChannelFees.generated';
 import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
+import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
+import { withApollo } from 'config/client';
 import {
   Card,
   CardWithTitle,
@@ -117,4 +119,10 @@ const FeesView = () => {
   );
 };
 
-export default FeesView;
+const Wrapped = () => (
+  <GridWrapper>
+    <FeesView />
+  </GridWrapper>
+);
+
+export default withApollo(Wrapped);

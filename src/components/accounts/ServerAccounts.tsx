@@ -1,9 +1,8 @@
 import * as React from 'react';
 import {
   useAccountDispatch,
-  SERVER_ACCOUNT,
-  SSO_ACCOUNT,
   useAccountState,
+  CompleteAccount,
 } from 'src/context/AccountContext';
 import { addIdAndTypeToAccount } from 'src/context/helpers/context';
 import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/getServerAccounts.generated';
@@ -41,18 +40,9 @@ export const ServerAccounts = () => {
 
   React.useEffect(() => {
     if (!loading && data && data.getServerAccounts) {
-      const accountsToAdd = data.getServerAccounts.map(a => {
-        const type = a?.id === SSO_ACCOUNT ? SSO_ACCOUNT : SERVER_ACCOUNT;
-        return {
-          name: a.name,
-          id: a.id,
-          loggedIn: a.loggedIn,
-          type,
-        };
-      });
       dispatch({
         type: 'addAccounts',
-        accountsToAdd,
+        accountsToAdd: data.getServerAccounts as CompleteAccount[],
       });
     }
   }, [loading, data, dispatch]);
