@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
 import {
   useAccountState,
   useAccountDispatch,
@@ -25,9 +24,6 @@ export const AuthSSOCheck = () => {
 
   React.useEffect(() => {
     if (cookieParam && !loading && data && data.getAuthToken && !ssoSaved) {
-      Cookies.set('SSOAuth', data.getAuthToken, {
-        sameSite: 'strict',
-      });
       dispatch({
         type: 'addAccounts',
         accountsToAdd: [

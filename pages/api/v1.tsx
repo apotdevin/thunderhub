@@ -14,6 +14,7 @@ import {
 import { ContextType } from 'api/types/apiTypes';
 import AES from 'crypto-js/aes';
 import CryptoJS from 'crypto-js';
+import cookie from 'cookie';
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 const { apiBaseUrl, nodeEnv } = publicRuntimeConfig;
@@ -38,14 +39,16 @@ readCookie(cookiePath);
 
 const apolloServer = new ApolloServer({
   schema: thunderHubSchema,
-  context: ({ req }) => {
+  context: ({ req, res }) => {
     const ip = getIp(req);
 
+    const { AccountAuth, SSOAuth } = cookie.parse(req.headers.cookie ?? '');
+
     let ssoVerified = false;
-    if (req?.cookies?.SSOAuth) {
+    if (SSOAuth) {
       logger.silly('SSOAuth cookie found in request');
       try {
-        jwt.verify(req.cookies.SSOAuth, secret);
+        jwt.verify(SSOAuth, secret);
         ssoVerified = true;
       } catch (error) {
         logger.silly('SSO authentication cookie failed');
@@ -53,23 +56,15 @@ const apolloServer = new ApolloServer({
     }
 
     let account = null;
-    if (req?.cookies?.AccountAuth) {
+    if (AccountAuth) {
       logger.silly('AccountAuth cookie found in request');
       try {
-        const bytes = AES.decrypt(req.cookies.AccountAuth, secret);
-        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-        const cookieAccount = jwt.verify(decrypted, secret);
-        const accountId = cookieAccount['id'] || '';
-        const accountMacaroon = cookieAccount['macaroon'] || '';
-        const accountCert = cookieAccount['cert'] || '';
-        const accountHost = cookieAccount['host'] || '';
+        const cookieAccount = jwt.verify(AccountAuth, secret);
+        const id = cookieAccount['id'] || '';
+        const bytes = AES.decrypt(cookieAccount['password'], secret);
+        const password = bytes.toString(CryptoJS.enc.Utf8);
 
-        account = {
-          id: accountId,
-          host: accountHost,
-          cert: accountCert,
-          macaroon: accountMacaroon,
-        };
+        account = { id, password };
       } catch (error) {
         logger.silly('Account authentication cookie failed');
       }
@@ -82,6 +77,7 @@ const apolloServer = new ApolloServer({
       account,
       sso: { macaroon: ssoMacaroon, cert: ssoCert, host: lnServerUrl || null },
       accounts: accountConfig,
+      res,
     };
 
     return context;

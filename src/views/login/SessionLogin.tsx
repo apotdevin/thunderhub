@@ -10,7 +10,6 @@ import {
 } from 'src/context/AccountContext';
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
-import Cookies from 'js-cookie';
 import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { useGetSessionTokenLazyQuery } from 'src/graphql/queries/__generated__/getSessionToken.generated';
 import { getAuthFromAccount } from 'src/context/helpers/context';
@@ -63,9 +62,6 @@ export const SessionLogin = () => {
 
   useEffect(() => {
     if (!sLoading && sData && sData.getSessionToken) {
-      Cookies.set('AccountAuth', sData.getSessionToken, {
-        sameSite: 'strict',
-      });
       getCanConnect({
         variables: {
           auth: getAuthFromAccount(account),

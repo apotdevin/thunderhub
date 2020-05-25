@@ -46,8 +46,8 @@ export type Query = {
   getCountries?: Maybe<Array<Maybe<HodlCountryType>>>;
   getCurrencies?: Maybe<Array<Maybe<HodlCurrencyType>>>;
   getMessages?: Maybe<GetMessagesType>;
-  getAuthToken?: Maybe<Scalars['String']>;
-  getSessionToken?: Maybe<Scalars['String']>;
+  getAuthToken?: Maybe<Scalars['Boolean']>;
+  getSessionToken?: Maybe<Scalars['Boolean']>;
   getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
 };
 

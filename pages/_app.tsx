@@ -4,8 +4,6 @@ import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import Head from 'next/head';
-import { useAccountState } from 'src/context/AccountContext';
-import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { ContextProvider } from '../src/context/ContextProvider';
 import { useConfigState, ConfigProvider } from '../src/context/ConfigContext';
 import { GlobalStyles } from '../src/styles/GlobalStyle';
@@ -20,16 +18,8 @@ toast.configure({ draggable: false, pauseOnFocusLoss: false });
 const Wrapper: React.FC = ({ children }) => {
   const { theme } = useConfigState();
   const { pathname } = useRouter();
-  const { hasAccount } = useAccountState();
 
   const isRoot = pathname === '/';
-
-  const renderContent = () => {
-    if (hasAccount === 'false') {
-      return <LoadingCard loadingHeight={'50vh'} noCard={true} />;
-    }
-    return children;
-  };
 
   return (
     <ThemeProvider theme={{ mode: isRoot ? 'light' : theme }}>
@@ -38,7 +28,7 @@ const Wrapper: React.FC = ({ children }) => {
         <PageWrapper>
           <HeaderBodyWrapper>
             <Header />
-            {renderContent()}
+            {children}
           </HeaderBodyWrapper>
           <Footer />
         </PageWrapper>
