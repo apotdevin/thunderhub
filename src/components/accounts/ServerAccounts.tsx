@@ -9,13 +9,30 @@ import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/get
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
+import { getUrlParam } from 'src/utils/url';
+import { useGetAuthTokenQuery } from 'src/graphql/queries/__generated__/getAuthToken.generated';
 
 export const ServerAccounts = () => {
   const { hasAccount } = useAccountState();
   const dispatch = useAccountDispatch();
-  const { push, pathname } = useRouter();
+  const { push, pathname, query } = useRouter();
 
-  const { data, loading } = useGetServerAccountsQuery();
+  const { data, loading, refetch } = useGetServerAccountsQuery();
+
+  const cookieParam = getUrlParam(query?.token);
+
+  const { data: authData } = useGetAuthTokenQuery({
+    skip: !cookieParam,
+    variables: { cookie: cookieParam },
+    errorPolicy: 'ignore',
+  });
+
+  React.useEffect(() => {
+    if (cookieParam && authData && authData.getAuthToken) {
+      refetch();
+      push(appendBasePath('/'));
+    }
+  }, [push, authData, cookieParam, refetch]);
 
   React.useEffect(() => {
     if (hasAccount === 'error' && pathname !== '/') {
@@ -41,7 +58,7 @@ export const ServerAccounts = () => {
   React.useEffect(() => {
     if (!loading && data && data.getServerAccounts) {
       dispatch({
-        type: 'addAccounts',
+        type: 'addServerAccounts',
         accountsToAdd: data.getServerAccounts as CompleteAccount[],
       });
     }

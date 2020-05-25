@@ -582,6 +582,7 @@ export type Mutation = {
   addPeer?: Maybe<Scalars['Boolean']>;
   removePeer?: Maybe<Scalars['Boolean']>;
   sendMessage?: Maybe<Scalars['Int']>;
+  logout?: Maybe<Scalars['Boolean']>;
 };
 
 export type MutationCloseChannelArgs = {
@@ -662,6 +663,10 @@ export type MutationSendMessageArgs = {
   messageType?: Maybe<Scalars['String']>;
   tokens?: Maybe<Scalars['Int']>;
   maxFee?: Maybe<Scalars['Int']>;
+};
+
+export type MutationLogoutArgs = {
+  type: Scalars['String'];
 };
 
 export type CloseChannelType = {

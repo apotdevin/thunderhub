@@ -27,7 +27,7 @@ const ContentStyle = styled.div`
 `;
 
 export const GridWrapper: React.FC = ({ children }) => {
-  const { hasAccount } = useAccountState();
+  const { hasAccount, auth } = useAccountState();
   const renderContent = () => {
     if (hasAccount === 'false') {
       return <LoadingCard loadingHeight={'50vh'} noCard={true} />;
@@ -40,7 +40,7 @@ export const GridWrapper: React.FC = ({ children }) => {
         <ServerAccounts />
         <BitcoinPrice />
         <BitcoinFees />
-        <StatusCheck />
+        {auth && <StatusCheck />}
         <Navigation />
         <ContentStyle>{renderContent()}</ContentStyle>
       </Container>
