@@ -42,7 +42,7 @@ export const getValue = ({
   if (currency === 'sat') {
     const breakAmount = breakNumber
       ? getValueString(value)
-      : numeral(value).format('0,0');
+      : numeral(value).format('0,0.[000]');
     return `${breakAmount} sats`;
   }
 

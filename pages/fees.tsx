@@ -4,6 +4,7 @@ import { ChevronRight, X } from 'react-feather';
 import { useAccountState } from 'src/context/AccountContext';
 import { useChannelFeesQuery } from 'src/graphql/queries/__generated__/getChannelFees.generated';
 import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
+import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import {
   Card,
   CardWithTitle,
@@ -11,10 +12,7 @@ import {
   SingleLine,
   Sub4Title,
   Separation,
-  DarkSubTitle,
   RightAlign,
-  ResponsiveLine,
-  NoWrapTitle,
 } from '../src/components/generic/Styled';
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
@@ -22,7 +20,6 @@ import { FeeCard } from '../src/views/fees/FeeCard';
 import { SecureButton } from '../src/components/buttons/secureButton/SecureButton';
 import { AdminSwitch } from '../src/components/adminSwitch/AdminSwitch';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
-import { Input } from '../src/components/input/Input';
 
 const FeesView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
@@ -68,26 +65,20 @@ const FeesView = () => {
             {isEdit && (
               <>
                 <Separation />
-                <ResponsiveLine>
-                  <NoWrapTitle>
-                    <DarkSubTitle>{'Base Fee:'}</DarkSubTitle>
-                  </NoWrapTitle>
-                  <Input
-                    placeholder={'Sats'}
-                    type={'number'}
-                    onChange={e => setBaseFee(Number(e.target.value))}
-                  />
-                </ResponsiveLine>
-                <ResponsiveLine>
-                  <NoWrapTitle>
-                    <DarkSubTitle>{'Fee Rate:'}</DarkSubTitle>
-                  </NoWrapTitle>
-                  <Input
-                    placeholder={'Sats/Million'}
-                    type={'number'}
-                    onChange={e => setFeeRate(Number(e.target.value))}
-                  />
-                </ResponsiveLine>
+                <InputWithDeco
+                  title={'BaseFee'}
+                  placeholder={'Sats'}
+                  amount={baseFee}
+                  inputType={'number'}
+                  inputCallback={value => setBaseFee(Number(value))}
+                />
+                <InputWithDeco
+                  title={'Fee Rate'}
+                  placeholder={'MilliSats/Million'}
+                  amount={feeRate / 1000}
+                  inputType={'number'}
+                  inputCallback={value => setFeeRate(Number(value))}
+                />
                 <RightAlign>
                   <SecureButton
                     callback={updateFees}

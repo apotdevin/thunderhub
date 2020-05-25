@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ChevronRight } from 'react-feather';
 import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
+import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import {
   SubCard,
   Separation,
@@ -18,9 +19,6 @@ import {
 } from '../../components/generic/CardGeneric';
 import { getErrorContent } from '../../utils/error';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
-import { useConfigState } from '../../context/ConfigContext';
-import { textColorMap } from '../../styles/Themes';
-import { Input } from '../../components/input/Input';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 
 interface FeeCardProps {
@@ -39,8 +37,6 @@ export const FeeCard = ({
   const [newBaseFee, setBaseFee] = useState(0);
   const [newFeeRate, setFeeRate] = useState(0);
 
-  const { theme } = useConfigState();
-
   const {
     alias,
     color,
@@ -50,6 +46,8 @@ export const FeeCard = ({
     transactionVout,
     public_key,
   } = channelInfo;
+
+  const feeRateSats = feeRate / 1000;
 
   const [updateFees] = useUpdateFeesMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -78,28 +76,20 @@ export const FeeCard = ({
         {renderLine('Transaction Vout:', transactionVout)}
         <Separation />
         <AdminSwitch>
-          <ResponsiveLine>
-            <NoWrapTitle>
-              <DarkSubTitle>{'Base Fee:'}</DarkSubTitle>
-            </NoWrapTitle>
-            <Input
-              placeholder={'Sats'}
-              color={textColorMap[theme]}
-              type={textColorMap[theme]}
-              onChange={e => setBaseFee(Number(e.target.value))}
-            />
-          </ResponsiveLine>
-          <ResponsiveLine>
-            <NoWrapTitle>
-              <DarkSubTitle>{'Fee Rate:'}</DarkSubTitle>
-            </NoWrapTitle>
-            <Input
-              placeholder={'Sats/Million'}
-              color={textColorMap[theme]}
-              type={'number'}
-              onChange={e => setFeeRate(Number(e.target.value))}
-            />
-          </ResponsiveLine>
+          <InputWithDeco
+            title={'BaseFee'}
+            placeholder={'Sats'}
+            amount={newBaseFee}
+            inputType={'number'}
+            inputCallback={value => setBaseFee(Number(value))}
+          />
+          <InputWithDeco
+            title={'Fee Rate'}
+            placeholder={'MilliSats/Million'}
+            amount={newFeeRate / 1000}
+            inputType={'number'}
+            inputCallback={value => setFeeRate(Number(value))}
+          />
           <SecureButton
             callback={updateFees}
             variables={{
@@ -112,7 +102,6 @@ export const FeeCard = ({
                 feeRate: newFeeRate,
               }),
             }}
-            color={textColorMap[theme]}
             disabled={newBaseFee === 0 && newFeeRate === 0}
             fullWidth={true}
             withMargin={'16px 0 0'}
@@ -145,9 +134,9 @@ export const FeeCard = ({
                 <DarkSubTitle>{'Fee Rate:'}</DarkSubTitle>
               </NoWrapTitle>
               <SingleLine>
-                {feeRate}
+                {feeRateSats}
                 <DarkSubTitle>
-                  {feeRate === 1 ? 'sat/million' : 'sats/million'}
+                  {feeRateSats === 1 ? 'sat/million' : 'sats/million'}
                 </DarkSubTitle>
               </SingleLine>
             </SingleLine>
