@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.6](https://github.com/apotdevin/thunderhub/compare/v0.6.5...v0.6.6) (2020-05-25)
+
+
+### Bug Fixes
+
+* 🐛 correct fee unit ([ca9a2cf](https://github.com/apotdevin/thunderhub/commit/ca9a2cfceef83aad855fd1d8b0304a080b9a72ae))
+* 🐛 reset send message mutation ([60ad4b3](https://github.com/apotdevin/thunderhub/commit/60ad4b3bef8b2d672c036c3f69afbbc6b0accce8))
+
 ### [0.6.5](https://github.com/apotdevin/thunderhub/compare/v0.6.4...v0.6.5) (2020-05-23)
 
 
