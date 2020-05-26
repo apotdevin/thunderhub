@@ -8,7 +8,6 @@
 /docs
 /.github
 .vscode
-.storybook
 CHANGELOG.md
 
 # all env files
