@@ -49,10 +49,11 @@ export type CompleteAccount =
     };
 
 type State = {
+  initialized: boolean;
+  finishedFetch: boolean;
   auth: AuthType | null;
   activeAccount: string | null;
   session: string | null;
-  ssoSaved: boolean;
   account: CompleteAccount | null;
   accounts: CompleteAccount[];
   hasAccount: HasAccountType;
@@ -73,9 +74,8 @@ type ActionType =
       type: 'logout';
     }
   | {
-      type: 'addAccounts';
+      type: 'addServerAccounts';
       accountsToAdd: CompleteAccount[];
-      isSSO?: boolean;
     }
   | {
       type: 'addAccountAndSave';
@@ -102,10 +102,11 @@ const StateContext = React.createContext<State | undefined>(undefined);
 const DispatchContext = React.createContext<Dispatch | undefined>(undefined);
 
 const initialState: State = {
+  initialized: false,
+  finishedFetch: false,
   auth: null,
   session: null,
   activeAccount: null,
-  ssoSaved: false,
   account: null,
   accounts: [],
   hasAccount: 'false',
@@ -114,6 +115,9 @@ const initialState: State = {
 const stateReducer = (state: State, action: ActionType): State => {
   switch (action.type) {
     case 'initialize': {
+      if (state.initialized) {
+        return state;
+      }
       const { accountsToAdd, changeId, session } = action;
 
       const { account, id } = getAccountById(changeId, accountsToAdd);
@@ -121,6 +125,7 @@ const stateReducer = (state: State, action: ActionType): State => {
       if (!account)
         return {
           ...state,
+          initialized: true,
           accounts: accountsToAdd,
           activeAccount: changeId,
           session,
@@ -129,6 +134,7 @@ const stateReducer = (state: State, action: ActionType): State => {
       const auth = getAuthFromAccount(account, session);
       return {
         ...state,
+        initialized: true,
         auth,
         account,
         accounts: accountsToAdd,
@@ -159,8 +165,6 @@ const stateReducer = (state: State, action: ActionType): State => {
     case 'logout':
       localStorage.removeItem('active');
       sessionStorage.clear();
-      Cookies.remove('AccountAuth');
-      Cookies.remove('SSOAuth');
       return {
         ...state,
         account: null,
@@ -185,14 +189,17 @@ const stateReducer = (state: State, action: ActionType): State => {
         ...(!id && { activeId: null, session: null, account: null }),
       };
     }
-    case 'addAccounts': {
-      const completeAccounts = [...state.accounts, ...action.accountsToAdd];
+    case 'addServerAccounts': {
+      const clientAccounts = state.accounts.filter(
+        a => a.type === CLIENT_ACCOUNT
+      );
+      const completeAccounts = [...clientAccounts, ...action.accountsToAdd];
 
       if (!state.activeAccount) {
         return {
           ...state,
+          finishedFetch: true,
           accounts: completeAccounts,
-          ...(action.isSSO && { ssoSaved: true }),
         };
       }
 
@@ -201,20 +208,20 @@ const stateReducer = (state: State, action: ActionType): State => {
       if (!account && completeAccounts.length > 0) {
         return {
           ...state,
+          finishedFetch: true,
           accounts: completeAccounts,
           hasAccount: 'error',
-          ...(action.isSSO && { ssoSaved: true }),
         };
       }
 
       const auth = getAuthFromAccount(account, state.session);
       return {
         ...state,
+        finishedFetch: true,
         hasAccount: 'fetched',
         auth,
         account,
         accounts: completeAccounts,
-        ...(action.isSSO && { ssoSaved: true }),
       };
     }
     case 'addAccountAndSave': {
@@ -266,8 +273,6 @@ const stateReducer = (state: State, action: ActionType): State => {
       localStorage.clear();
       sessionStorage.clear();
       Cookies.remove('config');
-      Cookies.remove('AccountAuth');
-      Cookies.remove('SSOAuth');
       return initialState;
     case 'resetFetch':
       return {

@@ -1,10 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import { BitcoinFees } from 'src/components/bitcoinInfo/BitcoinFees';
+import { BitcoinPrice } from 'src/components/bitcoinInfo/BitcoinPrice';
+import { useAccountState } from 'src/context/AccountContext';
 import { mediaWidths } from '../../styles/Themes';
-
 import { Section } from '../section/Section';
 import { Navigation } from '../../layouts/navigation/Navigation';
 import { StatusCheck } from '../statusCheck/StatusCheck';
+import { LoadingCard } from '../loading/LoadingCard';
+import { ServerAccounts } from '../accounts/ServerAccounts';
 
 const Container = styled.div`
   display: grid;
@@ -23,12 +27,22 @@ const ContentStyle = styled.div`
 `;
 
 export const GridWrapper: React.FC = ({ children }) => {
+  const { hasAccount, auth } = useAccountState();
+  const renderContent = () => {
+    if (hasAccount === 'false') {
+      return <LoadingCard loadingHeight={'50vh'} noCard={true} />;
+    }
+    return children;
+  };
   return (
     <Section padding={'16px 0 32px'}>
       <Container>
-        <StatusCheck />
+        <ServerAccounts />
+        <BitcoinPrice />
+        <BitcoinFees />
+        {auth && <StatusCheck />}
         <Navigation />
-        <ContentStyle>{children}</ContentStyle>
+        <ContentStyle>{renderContent()}</ContentStyle>
       </Container>
     </Section>
   );

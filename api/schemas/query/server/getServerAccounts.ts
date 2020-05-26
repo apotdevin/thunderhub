@@ -1,7 +1,7 @@
 import { GraphQLList } from 'graphql';
 import { ContextType } from 'api/types/apiTypes';
 import { ServerAccountType } from 'api/schemas/types/QueryType';
-import { SSO_ACCOUNT } from 'src/context/AccountContext';
+import { SSO_ACCOUNT, SERVER_ACCOUNT } from 'src/context/AccountContext';
 import { logger } from 'api/helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 
@@ -23,6 +23,7 @@ export const getServerAccounts = {
         name: 'SSO Account',
         id: SSO_ACCOUNT,
         loggedIn: true,
+        type: SSO_ACCOUNT,
       };
     }
 
@@ -31,6 +32,7 @@ export const getServerAccounts = {
       accounts?.map(a => ({
         ...a,
         loggedIn: a.id === currentId,
+        type: SERVER_ACCOUNT,
       })) || [];
 
     return ssoAccount ? [...withStatus, ssoAccount] : withStatus;

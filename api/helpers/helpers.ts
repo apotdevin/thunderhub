@@ -7,6 +7,8 @@ import {
   CLIENT_ACCOUNT,
 } from 'src/context/AccountContext';
 import { ContextType } from 'api/types/apiTypes';
+import AES from 'crypto-js/aes';
+import CryptoJS from 'crypto-js';
 import { logger } from './logger';
 
 const { serverRuntimeConfig } = getConfig();
@@ -35,7 +37,7 @@ export const getCorrectAuth = (
   context: ContextType
 ): LndAuthType => {
   if (auth.type === SERVER_ACCOUNT) {
-    const { account } = context;
+    const { account, accounts } = context;
     if (!account) {
       logger.debug('Account not available in request');
       throw new Error('AccountNotAuthenticated');
@@ -47,7 +49,22 @@ export const getCorrectAuth = (
       throw new Error('AccountNotAuthenticated');
     }
 
-    return account;
+    const verifiedAccount = accounts.find(a => a.id === account.id) || null;
+
+    if (!verifiedAccount) {
+      logger.debug('Account not found in config file');
+      throw new Error('AccountNotAuthenticated');
+    }
+
+    let macaroon = null;
+    try {
+      const bytes = AES.decrypt(verifiedAccount.macaroon, account.password);
+      macaroon = bytes.toString(CryptoJS.enc.Utf8);
+    } catch (error) {
+      logger.warn('Account macaroon verification failed');
+    }
+
+    return { host: verifiedAccount.host, macaroon, cert: verifiedAccount.cert };
   }
   if (auth.type === SSO_ACCOUNT) {
     if (!context.ssoVerified) {

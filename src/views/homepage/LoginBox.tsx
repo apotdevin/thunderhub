@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useAccountState } from 'src/context/AccountContext';
-import { Card, Separation } from '../../components/generic/Styled';
+import { ChevronDown, ChevronUp } from 'react-feather';
+import {
+  Card,
+  Separation,
+  SubTitle,
+  SingleLine,
+} from '../../components/generic/Styled';
 import { Section } from '../../components/section/Section';
 import {
   MultiButton,
@@ -39,6 +45,7 @@ const Help = styled.div`
 `;
 
 export const LoginBox = () => {
+  const [isOpen, isOpenSet] = useState(false);
   const [isType, setIsType] = useState('login');
   const [status, setStatus] = useState('none');
   const [help, setHelp] = useState(false);
@@ -140,25 +147,39 @@ export const LoginBox = () => {
     }
   };
 
+  const renderContent = () => (
+    <>
+      {status === 'none' && (
+        <>
+          {renderButtons()}
+          <HelpBox onClick={() => setHelp(prev => !prev)}>
+            {!help && renderHelp()}
+            {help && renderText()}
+          </HelpBox>
+        </>
+      )}
+      <Auth
+        type={isType}
+        status={status}
+        setStatus={setStatus}
+        callback={() => setStatus('none')}
+      />
+    </>
+  );
+
   return (
     <Section withColor={false}>
-      <ConnectTitle change={change}>Connect to your Node</ConnectTitle>
+      {change && (
+        <ConnectTitle change={change}>Connect to your Node</ConnectTitle>
+      )}
       <Card>
-        {status === 'none' && (
-          <>
-            {renderButtons()}
-            <HelpBox onClick={() => setHelp(prev => !prev)}>
-              {!help && renderHelp()}
-              {help && renderText()}
-            </HelpBox>
-          </>
+        {!change && (
+          <SingleLine onClick={() => isOpenSet(o => !o)}>
+            <SubTitle>Add another Node</SubTitle>
+            {isOpen ? <ChevronUp /> : <ChevronDown />}
+          </SingleLine>
         )}
-        <Auth
-          type={isType}
-          status={status}
-          setStatus={setStatus}
-          callback={() => setStatus('none')}
-        />
+        {isOpen || change ? renderContent() : null}
       </Card>
     </Section>
   );

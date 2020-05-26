@@ -1,19 +1,19 @@
-import { GraphQLString } from 'graphql';
+import { GraphQLString, GraphQLBoolean } from 'graphql';
 import jwt from 'jsonwebtoken';
-import CryptoJS from 'crypto-js';
 import { ContextType } from 'api/types/apiTypes';
 import AES from 'crypto-js/aes';
 import { logger } from 'api/helpers/logger';
+import cookie from 'cookie';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 
 export const getSessionToken = {
-  type: GraphQLString,
+  type: GraphQLBoolean,
   args: {
     id: { type: GraphQLString },
     password: { type: GraphQLString },
   },
   resolve: async (_: undefined, params: any, context: ContextType) => {
-    const { ip, secret } = context;
+    const { ip, secret, res } = context;
     await requestLimiter(ip, 'getSessionToken');
 
     const account = context.accounts.find(a => a.id === params.id) || null;
@@ -24,19 +24,23 @@ export const getSessionToken = {
     }
 
     try {
-      const bytes = AES.decrypt(account.macaroon, params.password);
-      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      AES.decrypt(account.macaroon, params.password);
       logger.debug(`Correct password for account ${params.id}`);
       const token = jwt.sign(
         {
           id: params.id,
-          macaroon: decrypted,
-          cert: account.cert,
-          host: account.host,
+          password: AES.encrypt(params.password, secret).toString(),
         },
         secret
       );
-      return AES.encrypt(token, secret).toString();
+      res.setHeader(
+        'Set-Cookie',
+        cookie.serialize('AccountAuth', token, {
+          httpOnly: true,
+          sameSite: true,
+        })
+      );
+      return true;
     } catch (error) {
       throw new Error('WrongPasswordForLogin');
     }

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import { getPrice } from 'src/components/price/Price';
+import { getPrice, Price } from 'src/components/price/Price';
 import { AnimatedNumber } from 'src/components/animated/AnimatedNumber';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
@@ -228,11 +228,13 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
       <Separation lineColor={unSelectedNavButton} />
       <Balance data-tip data-for="balance_tip">
         <Zap size={18} color={channelPending === 0 ? '#FFD300' : '#652EC7'} />
-        <AnimatedNumber amount={channelBalance} />
+        <Price amount={channelBalance} />
+        {/* <AnimatedNumber amount={channelBalance} /> */}
       </Balance>
       <Balance data-tip data-for="chain_balance_tip">
         <Anchor size={18} color={chainPending === 0 ? '#FFD300' : '#652EC7'} />
-        <AnimatedNumber amount={chainBalance} />
+        <Price amount={chainBalance} />
+        {/* <AnimatedNumber amount={chainBalance} /> */}
       </Balance>
       <Balance
         data-tip

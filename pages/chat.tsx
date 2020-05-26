@@ -1,6 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Users } from 'react-feather';
+import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
+import { withApollo } from 'config/client';
+import { ChatInit } from 'src/components/chat/ChatInit';
+import { ChatFetcher } from 'src/components/chat/ChatFetcher';
 import { useChatState } from '../src/context/ChatContext';
 import { separateBySender, getSenders } from '../src/utils/chat';
 import {
@@ -114,4 +118,12 @@ const ChatView = () => {
   );
 };
 
-export default ChatView;
+const Wrapped = () => (
+  <GridWrapper>
+    <ChatInit />
+    <ChatFetcher />
+    <ChatView />
+  </GridWrapper>
+);
+
+export default withApollo(Wrapped);
