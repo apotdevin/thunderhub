@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.8](https://github.com/apotdevin/thunderhub/compare/v0.6.7...v0.6.8) (2020-05-26)
+
+
+### Improvements
+
+* 🔧 remove storybook and update deps ([c838056](https://github.com/apotdevin/thunderhub/commit/c838056551dfcb7cc8c2d0d5cb68e39ab240a904))
+
 ### [0.6.7](https://github.com/apotdevin/thunderhub/compare/v0.6.6...v0.6.7) (2020-05-26)
 
 
