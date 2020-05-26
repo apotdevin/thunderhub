@@ -6,6 +6,7 @@ export const GET_SERVER_ACCOUNTS = gql`
       name
       id
       loggedIn
+      type
     }
   }
 `;

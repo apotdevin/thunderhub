@@ -1,4 +1,6 @@
 import React from 'react';
+import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
+import { withApollo } from 'config/client';
 import { NetworkInfo } from '../src/views/home/networkInfo/NetworkInfo';
 import { AccountInfo } from '../src/views/home/account/AccountInfo';
 import { QuickActions } from '../src/views/home/quickActions/QuickActions';
@@ -23,4 +25,10 @@ const HomeView = () => {
   );
 };
 
-export default HomeView;
+const Wrapped = () => (
+  <GridWrapper>
+    <HomeView />
+  </GridWrapper>
+);
+
+export default withApollo(Wrapped);

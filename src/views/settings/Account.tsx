@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, LogOut } from 'react-feather';
 import { useRouter } from 'next/router';
 import {
@@ -7,6 +7,7 @@ import {
   SSO_ACCOUNT,
 } from 'src/context/AccountContext';
 import { chartColors } from 'src/styles/Themes';
+import { useLogoutMutation } from 'src/graphql/mutations/__generated__/logout.generated';
 import {
   CardWithTitle,
   SubTitle,
@@ -38,6 +39,19 @@ export const AccountSettings = () => {
 
   const [isType, setIsType] = useState('login');
   const [willAdd, setWillAdd] = useState(false);
+
+  const [logout, { data, loading }] = useLogoutMutation({
+    refetchQueries: ['GetServerAccounts'],
+  });
+
+  useEffect(() => {
+    if (data && data.logout) {
+      dispatch({ type: 'disconnected' });
+      dispatchChat({ type: 'disconnected' });
+      dispatchAccount({ type: 'logout' });
+      push(appendBasePath('/'));
+    }
+  }, [data, dispatch, dispatchChat, dispatchAccount, push]);
 
   const renderButtons = () => (
     <SingleLine>
@@ -152,11 +166,10 @@ export const AccountSettings = () => {
         <SettingsLine>
           <Sub4Title>Logout</Sub4Title>
           <ColorButton
+            disabled={loading}
+            loading={loading}
             onClick={() => {
-              dispatch({ type: 'disconnected' });
-              dispatchChat({ type: 'disconnected' });
-              dispatchAccount({ type: 'logout' });
-              push(appendBasePath('/'));
+              logout({ variables: { type: account.type } });
             }}
           >
             <LogOut color={chartColors.red} size={14} />

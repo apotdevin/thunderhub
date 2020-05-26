@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
+import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
+import { withApollo } from 'config/client';
 import {
   SubTitle,
   Card,
@@ -78,4 +80,10 @@ const ForwardsView = () => {
   );
 };
 
-export default ForwardsView;
+const Wrapped = () => (
+  <GridWrapper>
+    <ForwardsView />
+  </GridWrapper>
+);
+
+export default withApollo(Wrapped);

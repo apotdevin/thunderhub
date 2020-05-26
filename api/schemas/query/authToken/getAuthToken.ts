@@ -1,22 +1,23 @@
-import { GraphQLString } from 'graphql';
+import { GraphQLString, GraphQLBoolean } from 'graphql';
 import getConfig from 'next/config';
 import jwt from 'jsonwebtoken';
 import { readCookie, refreshCookie } from 'api/helpers/fileHelpers';
 import { ContextType } from 'api/types/apiTypes';
 import { SSO_ACCOUNT } from 'src/context/AccountContext';
 import { logger } from 'api/helpers/logger';
+import cookie from 'cookie';
 import { requestLimiter } from '../../../helpers/rateLimiter';
 
 const { serverRuntimeConfig } = getConfig();
-const { cookiePath } = serverRuntimeConfig;
+const { cookiePath, nodeEnv } = serverRuntimeConfig;
 
 export const getAuthToken = {
-  type: GraphQLString,
+  type: GraphQLBoolean,
   args: {
     cookie: { type: GraphQLString },
   },
   resolve: async (_: undefined, params: any, context: ContextType) => {
-    const { ip, secret, sso } = context;
+    const { ip, secret, sso, res } = context;
     await requestLimiter(ip, 'getAuthToken');
 
     if (!sso.host || !sso.macaroon) {
@@ -35,10 +36,15 @@ export const getAuthToken = {
 
     const cookieFile = readCookie(cookiePath);
 
-    if (cookieFile === params.cookie) {
+    if (cookieFile === params.cookie || nodeEnv === 'development') {
       refreshCookie(cookiePath);
       const token = jwt.sign({ user: SSO_ACCOUNT }, secret);
-      return token;
+
+      res.setHeader(
+        'Set-Cookie',
+        cookie.serialize('SSOAuth', token, { httpOnly: true, sameSite: true })
+      );
+      return true;
     }
 
     return null;

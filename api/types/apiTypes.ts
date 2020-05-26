@@ -1,3 +1,5 @@
+import { ServerResponse } from 'http';
+
 type SSOType = {
   macaroon: string | null;
   cert: string | null;
@@ -6,7 +8,8 @@ type SSOType = {
 
 type VerifiedAccountType = {
   id: string;
-} & SSOType;
+  password: string;
+};
 
 type AccountType = {
   name: string;
@@ -23,4 +26,5 @@ export type ContextType = {
   account: VerifiedAccountType | null;
   sso: SSOType;
   accounts: AccountType[];
+  res: ServerResponse;
 };

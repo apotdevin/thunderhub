@@ -46,8 +46,8 @@ export type Query = {
   getCountries?: Maybe<Array<Maybe<HodlCountryType>>>;
   getCurrencies?: Maybe<Array<Maybe<HodlCurrencyType>>>;
   getMessages?: Maybe<GetMessagesType>;
-  getAuthToken?: Maybe<Scalars['String']>;
-  getSessionToken?: Maybe<Scalars['String']>;
+  getAuthToken?: Maybe<Scalars['Boolean']>;
+  getSessionToken?: Maybe<Scalars['Boolean']>;
   getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
 };
 
@@ -564,6 +564,7 @@ export type ServerAccountType = {
   __typename?: 'serverAccountType';
   name: Scalars['String'];
   id: Scalars['String'];
+  type: Scalars['String'];
   loggedIn: Scalars['Boolean'];
 };
 
@@ -581,6 +582,7 @@ export type Mutation = {
   addPeer?: Maybe<Scalars['Boolean']>;
   removePeer?: Maybe<Scalars['Boolean']>;
   sendMessage?: Maybe<Scalars['Int']>;
+  logout?: Maybe<Scalars['Boolean']>;
 };
 
 export type MutationCloseChannelArgs = {
@@ -661,6 +663,10 @@ export type MutationSendMessageArgs = {
   messageType?: Maybe<Scalars['String']>;
   tokens?: Maybe<Scalars['Int']>;
   maxFee?: Maybe<Scalars['Int']>;
+};
+
+export type MutationLogoutArgs = {
+  type: Scalars['String'];
 };
 
 export type CloseChannelType = {

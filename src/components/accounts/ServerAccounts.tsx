@@ -1,22 +1,38 @@
 import * as React from 'react';
 import {
   useAccountDispatch,
-  SERVER_ACCOUNT,
-  SSO_ACCOUNT,
   useAccountState,
+  CompleteAccount,
 } from 'src/context/AccountContext';
 import { addIdAndTypeToAccount } from 'src/context/helpers/context';
 import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/getServerAccounts.generated';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
+import { getUrlParam } from 'src/utils/url';
+import { useGetAuthTokenQuery } from 'src/graphql/queries/__generated__/getAuthToken.generated';
 
 export const ServerAccounts = () => {
   const { hasAccount } = useAccountState();
   const dispatch = useAccountDispatch();
-  const { push, pathname } = useRouter();
+  const { push, pathname, query } = useRouter();
 
-  const { data, loading } = useGetServerAccountsQuery();
+  const { data, loading, refetch } = useGetServerAccountsQuery();
+
+  const cookieParam = getUrlParam(query?.token);
+
+  const { data: authData } = useGetAuthTokenQuery({
+    skip: !cookieParam,
+    variables: { cookie: cookieParam },
+    errorPolicy: 'ignore',
+  });
+
+  React.useEffect(() => {
+    if (cookieParam && authData && authData.getAuthToken) {
+      refetch();
+      push(appendBasePath('/'));
+    }
+  }, [push, authData, cookieParam, refetch]);
 
   React.useEffect(() => {
     if (hasAccount === 'error' && pathname !== '/') {
@@ -41,18 +57,9 @@ export const ServerAccounts = () => {
 
   React.useEffect(() => {
     if (!loading && data && data.getServerAccounts) {
-      const accountsToAdd = data.getServerAccounts.map(a => {
-        const type = a?.id === SSO_ACCOUNT ? SSO_ACCOUNT : SERVER_ACCOUNT;
-        return {
-          name: a.name,
-          id: a.id,
-          loggedIn: a.loggedIn,
-          type,
-        };
-      });
       dispatch({
-        type: 'addAccounts',
-        accountsToAdd,
+        type: 'addServerAccounts',
+        accountsToAdd: data.getServerAccounts as CompleteAccount[],
       });
     }
   }, [loading, data, dispatch]);
