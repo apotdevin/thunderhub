@@ -68,7 +68,7 @@ export const getAuthFromAccount = (
   return {
     type: account.type,
     host,
-    macaroon: viewOnly && viewOnly !== '' ? viewOnly : session,
+    macaroon: session || viewOnly,
     cert,
   };
 };
