@@ -39,6 +39,7 @@ type InputWithDecoProps = {
   title: string;
   noInput?: boolean;
   amount?: number;
+  override?: string;
   customAmount?: string;
   color?: string;
   placeholder?: string;
@@ -49,6 +50,7 @@ type InputWithDecoProps = {
 export const InputWithDeco: React.FC<InputWithDecoProps> = ({
   title,
   amount,
+  override,
   customAmount,
   children,
   placeholder,
@@ -65,7 +67,11 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
         <InputTitle>{title}</InputTitle>
         {showAmount && (
           <AmountText>
-            {customAmount ? customAmount : <Price amount={amount} />}
+            {customAmount ? (
+              customAmount
+            ) : (
+              <Price amount={amount} override={override} />
+            )}
           </AmountText>
         )}
       </InputTitleRow>

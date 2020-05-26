@@ -28,12 +28,12 @@ interface FeeCardProps {
   indexOpen: number;
 }
 
-export const FeeCard = ({
+export const FeeCard: React.FC<FeeCardProps> = ({
   channelInfo,
   index,
   setIndexOpen,
   indexOpen,
-}: FeeCardProps) => {
+}) => {
   const [newBaseFee, setBaseFee] = useState(0);
   const [newFeeRate, setFeeRate] = useState(0);
 
@@ -78,15 +78,17 @@ export const FeeCard = ({
         <AdminSwitch>
           <InputWithDeco
             title={'BaseFee'}
-            placeholder={'Sats'}
+            placeholder={'sats'}
             amount={newBaseFee}
+            override={'sat'}
             inputType={'number'}
             inputCallback={value => setBaseFee(Number(value))}
           />
           <InputWithDeco
             title={'Fee Rate'}
-            placeholder={'MilliSats/Million'}
+            placeholder={'msats/million'}
             amount={newFeeRate / 1000}
+            override={'sat'}
             inputType={'number'}
             inputCallback={value => setFeeRate(Number(value))}
           />

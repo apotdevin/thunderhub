@@ -10,7 +10,7 @@ import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { ChannelCard } from './ChannelCard';
 
-export const Channels = () => {
+export const Channels: React.FC = () => {
   const { sortDirection, channelSort } = useConfigState();
   const [indexOpen, setIndexOpen] = useState(0);
 
@@ -35,19 +35,13 @@ export const Channels = () => {
 
   for (let i = 0; i < data.getChannels.length; i++) {
     const channel = data.getChannels[i];
-    const {
-      local_balance,
-      remote_balance,
-      sent,
-      received,
-      partner_node_info = {},
-    } = channel;
+    const { local_balance, remote_balance, partner_node_info = {} } = channel;
 
     const { capacity, channel_count, base_fee, fee_rate } = partner_node_info;
     const partner = Number(capacity) || 0;
     const channels = Number(channel_count) || 0;
 
-    const max = Math.max(local_balance, remote_balance, sent, received);
+    const max = Math.max(local_balance, remote_balance);
 
     if (max > biggest) {
       biggest = max;
@@ -78,6 +72,13 @@ export const Channels = () => {
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
+      case 'feeRate': {
+        const newArray = sortBy(
+          data.getChannels,
+          channel => channel.partner_node_info.fee_rate
+        );
+        return sortDirection === 'increase' ? newArray : newArray.reverse();
+      }
       default:
         return data.getChannels;
     }
@@ -95,8 +96,8 @@ export const Channels = () => {
           biggest={biggest}
           biggestPartner={biggestPartner}
           mostChannels={mostChannels}
-          biggestBaseFee={biggestBaseFee}
-          biggestRateFee={biggestRateFee}
+          biggestBaseFee={Math.max(biggestBaseFee, 100000)}
+          biggestRateFee={Math.max(biggestRateFee, 2000)}
         />
       ))}
     </Card>

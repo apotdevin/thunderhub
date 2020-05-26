@@ -12,10 +12,12 @@ type PriceProps = {
 export const Price = ({
   amount,
   breakNumber = false,
+  override,
 }: {
   amount: number | string;
   breakNumber?: boolean;
-}) => {
+  override?: string;
+}): JSX.Element => {
   const { currency, displayValues } = useConfigState();
   const { prices, dontShow } = usePriceState();
 
@@ -42,12 +44,13 @@ export const Price = ({
     };
   }
 
-  return <>{getValue({ amount, ...priceProps, breakNumber })}</>;
+  return <>{getValue({ amount, ...priceProps, breakNumber, override })}</>;
 };
 
 interface GetPriceProps {
   amount: number | string;
   breakNumber?: boolean;
+  override?: string;
 }
 
 export const getPrice = (
@@ -57,7 +60,7 @@ export const getPrice = (
     dontShow: boolean;
     prices?: { [key: string]: { last: number; symbol: string } };
   }
-) => ({ amount, breakNumber = false }: GetPriceProps): string => {
+) => ({ amount, breakNumber = false, override }: GetPriceProps): string => {
   const { prices, dontShow } = priceContext;
 
   if (!displayValues) {
@@ -83,5 +86,5 @@ export const getPrice = (
     };
   }
 
-  return getValue({ amount, ...priceProps, breakNumber });
+  return getValue({ amount, ...priceProps, breakNumber, override });
 };

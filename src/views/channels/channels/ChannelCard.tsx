@@ -66,7 +66,7 @@ interface ChannelCardProps {
   biggestRateFee: number;
 }
 
-export const ChannelCard = ({
+export const ChannelCard: React.FC<ChannelCardProps> = ({
   channelInfo,
   index,
   setIndexOpen,
@@ -76,7 +76,7 @@ export const ChannelCard = ({
   mostChannels,
   biggestBaseFee,
   biggestRateFee,
-}: ChannelCardProps) => {
+}) => {
   const { channelBarType, channelBarStyle } = useConfigState();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -133,6 +133,9 @@ export const ChannelCard = ({
   const remoteReserve = format({ amount: remote_reserve });
   const nodeCapacity = format({ amount: partnerNodeCapacity });
 
+  const baseFee = format({ amount: base_fee / 1000, override: 'sat' });
+  const feeRate = format({ amount: fee_rate, override: 'sat' });
+
   const handleClick = () => {
     if (indexOpen === index) {
       setIndexOpen(0);
@@ -150,8 +153,8 @@ export const ChannelCard = ({
           'Last Update:',
           `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
         )}
-        {renderLine('Base Fee:', `${base_fee} msats`)}
-        {renderLine('Fee Rate:', `${fee_rate} sats/Msats`)}
+        {renderLine('Base Fee:', baseFee)}
+        {renderLine('Fee Rate:', `${feeRate}/million`)}
         {renderLine('CTLV Delta:', cltv_delta)}
       </>
     ) : (
@@ -205,28 +208,79 @@ export const ChannelCard = ({
 
   const renderBars = () => {
     switch (channelBarType) {
-      case 'partner':
+      case 'fees':
         return (
           <ChannelStatsColumn>
-            <ProgressBar
-              order={0}
-              percent={getBar(Number(partnerNodeCapacity), biggestPartner)}
-            />
-            <ProgressBar
-              order={3}
-              percent={getBar(channel_count, mostChannels)}
-            />
-            <ProgressBar order={1} percent={getBar(base_fee, biggestBaseFee)} />
-            <ProgressBar order={2} percent={getBar(fee_rate, biggestRateFee)} />
+            <ChannelStatsLine>
+              <ProgressBar
+                order={3}
+                percent={getBar(fee_rate, biggestRateFee)}
+              />
+              <ProgressBar
+                order={4}
+                percent={getBar(biggestRateFee - fee_rate, biggestRateFee)}
+              />
+            </ChannelStatsLine>
+            <ChannelStatsLine>
+              <ProgressBar
+                order={1}
+                percent={getBar(base_fee, biggestBaseFee)}
+              />
+              <ProgressBar
+                order={4}
+                percent={getBar(biggestBaseFee - base_fee, biggestBaseFee)}
+              />
+            </ChannelStatsLine>
           </ChannelStatsColumn>
         );
-      case 'details':
+      case 'size':
         return (
           <ChannelStatsColumn>
-            <ProgressBar order={0} percent={getBar(local_balance, biggest)} />
-            <ProgressBar order={1} percent={getBar(remote_balance, biggest)} />
-            <ProgressBar order={2} percent={getBar(received, biggest)} />
-            <ProgressBar order={3} percent={getBar(sent, biggest)} />
+            <ChannelStatsLine>
+              <ProgressBar
+                order={0}
+                percent={getBar(Number(partnerNodeCapacity), biggestPartner)}
+              />
+              <ProgressBar
+                order={4}
+                percent={getBar(
+                  biggestPartner - Number(partnerNodeCapacity),
+                  biggestPartner
+                )}
+              />
+            </ChannelStatsLine>
+            <ChannelStatsLine>
+              <ProgressBar
+                order={6}
+                percent={getBar(channel_count, mostChannels)}
+              />
+              <ProgressBar
+                order={4}
+                percent={getBar(mostChannels - channel_count, mostChannels)}
+              />
+            </ChannelStatsLine>
+          </ChannelStatsColumn>
+        );
+      case 'proportional':
+        return (
+          <ChannelStatsColumn>
+            <ChannelStatsLine>
+              <ProgressBar order={1} percent={getBar(local_balance, biggest)} />
+              <ProgressBar
+                order={4}
+                percent={getBar(biggest - local_balance, biggest)}
+              />
+            </ChannelStatsLine>
+            <ChannelStatsLine>
+              <ProgressBar
+                order={2}
+                percent={getBar(remote_balance, biggest)}
+              />
+              <ProgressBar
+                order={4}
+                percent={getBar(biggest - remote_balance, biggest)}
+              />
+            </ChannelStatsLine>
           </ChannelStatsColumn>
         );
       default:
@@ -253,16 +307,27 @@ export const ChannelCard = ({
 
   const renderBarsInfo = () => {
     switch (channelBarType) {
-      case 'partner':
+      case 'fees':
+        return (
+          <>
+            <div>{`Partner Fee Rate: ${feeRate}/million`}</div>
+            <div>{`Partner Base Fee: ${baseFee}`}</div>
+          </>
+        );
+      case 'size':
         return (
           <>
             <div>{`Partner Capacity: ${nodeCapacity}`}</div>
             <div>{`Partner Channels: ${channel_count}`}</div>
-            <div>{`Partner Base Fee: ${base_fee} msats`}</div>
-            <div>{`Partner Fee Rate: ${fee_rate} sats/Msats`}</div>
           </>
         );
-      case 'details':
+      case 'proportional':
+        return (
+          <>
+            <div>{`Local Balance: ${formatLocal}`}</div>
+            <div>{`Remote Balance: ${formatRemote}`}</div>
+          </>
+        );
       default:
         return (
           <>

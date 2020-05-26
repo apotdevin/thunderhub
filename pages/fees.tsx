@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { ChevronRight, X } from 'react-feather';
+import { ChevronRight, ChevronUp, ChevronDown } from 'react-feather';
 import { useAccountState } from 'src/context/AccountContext';
 import { useChannelFeesQuery } from 'src/graphql/queries/__generated__/getChannelFees.generated';
 import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { withApollo } from 'config/client';
+import styled from 'styled-components';
 import {
   Card,
   CardWithTitle,
@@ -21,7 +22,10 @@ import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { FeeCard } from '../src/views/fees/FeeCard';
 import { SecureButton } from '../src/components/buttons/secureButton/SecureButton';
 import { AdminSwitch } from '../src/components/adminSwitch/AdminSwitch';
-import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
+
+const WithPointer = styled.div`
+  cursor: pointer;
+`;
 
 const FeesView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
@@ -58,26 +62,28 @@ const FeesView = () => {
         <CardWithTitle>
           <SubTitle>Update Channel Fees</SubTitle>
           <Card>
-            <SingleLine>
-              <Sub4Title>Channel Fees</Sub4Title>
-              <ColorButton onClick={() => setIsEdit(prev => !prev)}>
-                {isEdit ? <X size={18} /> : 'Update'}
-              </ColorButton>
-            </SingleLine>
+            <WithPointer>
+              <SingleLine onClick={() => setIsEdit(prev => !prev)}>
+                <Sub4Title>Channel Fees</Sub4Title>
+                {isEdit ? <ChevronUp /> : <ChevronDown />}
+              </SingleLine>
+            </WithPointer>
             {isEdit && (
               <>
                 <Separation />
                 <InputWithDeco
                   title={'BaseFee'}
-                  placeholder={'Sats'}
+                  placeholder={'sats'}
                   amount={baseFee}
+                  override={'sat'}
                   inputType={'number'}
                   inputCallback={value => setBaseFee(Number(value))}
                 />
                 <InputWithDeco
                   title={'Fee Rate'}
-                  placeholder={'MilliSats/Million'}
+                  placeholder={'msats/million'}
                   amount={feeRate / 1000}
+                  override={'sat'}
                   inputType={'number'}
                   inputCallback={value => setFeeRate(Number(value))}
                 />
