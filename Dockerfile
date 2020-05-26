@@ -11,6 +11,7 @@ RUN apk add --update --no-cache \
 
 # Install app dependencies
 COPY package.json .
+COPY package-lock.json .
 RUN npm install --production --silent
 
 # Install dependencies necessary for build and start
