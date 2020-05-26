@@ -6,8 +6,8 @@ const themeTypes = ['dark', 'light'];
 const currencyTypes = ['sat', 'btc', 'EUR', 'USD'];
 
 export type channelBarStyleTypes = 'normal' | 'compact' | 'ultracompact';
-export type channelBarTypeTypes = 'balance' | 'details' | 'partner';
-export type channelSortTypes = 'none' | 'local' | 'balance';
+export type channelBarTypeTypes = 'balance' | 'fees' | 'size' | 'proportional';
+export type channelSortTypes = 'none' | 'local' | 'balance' | 'feeRate';
 export type sortDirectionTypes = 'increase' | 'decrease';
 
 type State = {

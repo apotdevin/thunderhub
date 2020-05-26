@@ -16,6 +16,7 @@ interface GetNumberProps {
   symbol: string;
   currency: string;
   breakNumber?: boolean;
+  override?: string;
 }
 
 export const getValue = ({
@@ -24,7 +25,9 @@ export const getValue = ({
   symbol,
   currency,
   breakNumber,
+  override,
 }: GetNumberProps): string => {
+  const correctCurrency = override || currency;
   let value = 0;
   if (typeof amount === 'string') {
     value = Number(amount);
@@ -32,14 +35,14 @@ export const getValue = ({
     value = amount;
   }
 
-  if (currency === 'btc') {
+  if (correctCurrency === 'btc') {
     if (!value) return '₿0.0';
     const amountInBtc = value / 100000000;
     const rounded = Math.round(amountInBtc * 10000) / 10000;
 
     return `₿${rounded}`;
   }
-  if (currency === 'sat') {
+  if (correctCurrency === 'sat') {
     const breakAmount = breakNumber
       ? getValueString(value)
       : numeral(value).format('0,0.[000]');

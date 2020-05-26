@@ -71,16 +71,22 @@ export const ChannelManage = () => {
             Balance
           </SingleButton>
           <SingleButton
-            selected={channelBarType === 'details'}
-            onClick={() => changeType('details')}
+            selected={channelBarType === 'proportional'}
+            onClick={() => changeType('proportional')}
           >
             Proportional
           </SingleButton>
           <SingleButton
-            selected={channelBarType === 'partner'}
-            onClick={() => changeType('partner')}
+            selected={channelBarType === 'size'}
+            onClick={() => changeType('size')}
           >
-            Partner
+            Partner Size
+          </SingleButton>
+          <SingleButton
+            selected={channelBarType === 'fees'}
+            onClick={() => changeType('fees')}
+          >
+            Partner Fees
           </SingleButton>
         </MultiButton>
       </MarginLine>
@@ -104,6 +110,12 @@ export const ChannelManage = () => {
             onClick={() => changeSort('balance')}
           >
             Balance
+          </SingleButton>
+          <SingleButton
+            selected={channelSort === 'feeRate'}
+            onClick={() => changeSort('feeRate')}
+          >
+            Fee Rate
           </SingleButton>
         </MultiButton>
       </MarginLine>
