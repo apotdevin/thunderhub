@@ -256,18 +256,6 @@ yarn dev
 npm run dev
 ```
 
-#### Storybook
-
-You can also get storybook running for quicker component development.
-
-```js
-//Yarn
-yarn storybook
-
-//NPM
-npm run storybook
-```
-
 ## Docker
 
 ThunderHub also provides docker images for easier deployment. [Docker Hub](https://hub.docker.com/repository/docker/apotdevin/thunderhub)
