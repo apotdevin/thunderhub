@@ -8,6 +8,7 @@ export const BitcoinFees = () => {
   const setInfo = useBitcoinDispatch();
 
   const { loading, data, stopPolling } = useGetBitcoinFeesQuery({
+    ssr: false,
     skip: !fetchFees,
     fetchPolicy: 'network-only',
     onError: () => {

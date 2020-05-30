@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import { GraphQLList } from 'graphql';
 import getConfig from 'next/config';
 import { ContextType } from 'api/types/apiTypes';

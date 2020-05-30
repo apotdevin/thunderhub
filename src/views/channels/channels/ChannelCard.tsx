@@ -154,7 +154,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
           `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
         )}
         {renderLine('Base Fee:', baseFee)}
-        {renderLine('Fee Rate:', `${feeRate}/million`)}
+        {renderLine('Fee Rate:', `${feeRate}/million sats`)}
         {renderLine('CTLV Delta:', cltv_delta)}
       </>
     ) : (
@@ -310,7 +310,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
       case 'fees':
         return (
           <>
-            <div>{`Partner Fee Rate: ${feeRate}/million`}</div>
+            <div>{`Partner Fee Rate: ${feeRate}/million sats`}</div>
             <div>{`Partner Base Fee: ${baseFee}`}</div>
           </>
         );

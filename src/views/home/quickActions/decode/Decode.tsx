@@ -8,7 +8,7 @@ import { ColorButton } from '../../../../components/buttons/colorButton/ColorBut
 import { Input } from '../../../../components/input/Input';
 import { Decoded } from './Decoded';
 
-export const DecodeCard = ({ color }: { color: string }) => {
+export const DecodeCard = () => {
   const [request, setRequest] = useState('');
   const [show, setShow] = useState(false);
 
@@ -21,12 +21,10 @@ export const DecodeCard = ({ color }: { color: string }) => {
             placeholder={'Lightning Invoice'}
             withMargin={'0 0 0 24px'}
             mobileMargin={'0 0 16px'}
-            color={color}
             value={request}
             onChange={e => setRequest(e.target.value)}
           />
           <ColorButton
-            color={color}
             disabled={request === ''}
             withMargin={'0 0 0 16px'}
             mobileMargin={'0'}
