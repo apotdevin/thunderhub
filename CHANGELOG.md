@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.9](https://github.com/apotdevin/thunderhub/compare/v0.6.8...v0.6.9) (2020-05-30)
+
+
+### Bug Fixes
+
+* 🐛 fee unit ([c7cfdfa](https://github.com/apotdevin/thunderhub/commit/c7cfdfacca83bd81f7e2461f7e3a59c2e2daa6c7))
+
+
+### Improvements
+
+* 🔧 more bar types in channel view ([9c657a4](https://github.com/apotdevin/thunderhub/commit/9c657a416af730c502ca62f3f97600b1f4d1c555))
+
 ### [0.6.8](https://github.com/apotdevin/thunderhub/compare/v0.6.7...v0.6.8) (2020-05-26)
 
 
