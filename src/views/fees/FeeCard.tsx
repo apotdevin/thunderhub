@@ -47,8 +47,6 @@ export const FeeCard: React.FC<FeeCardProps> = ({
     public_key,
   } = channelInfo;
 
-  const feeRateSats = feeRate / 1000;
-
   const [updateFees] = useUpdateFeesMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: data => {
@@ -136,9 +134,9 @@ export const FeeCard: React.FC<FeeCardProps> = ({
                 <DarkSubTitle>{'Fee Rate:'}</DarkSubTitle>
               </NoWrapTitle>
               <SingleLine>
-                {feeRateSats}
+                {feeRate}
                 <DarkSubTitle>
-                  {feeRateSats === 1 ? 'sat/million' : 'sats/million'}
+                  {feeRate === 1 ? 'sat/million' : 'sats/million'}
                 </DarkSubTitle>
               </SingleLine>
             </SingleLine>
