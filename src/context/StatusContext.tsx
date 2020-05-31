@@ -6,6 +6,7 @@ type StateStatus = {
 
 type State = {
   alias: string;
+  color: string;
   syncedToChain: boolean;
   version: string;
   mayorVersion: number;
@@ -15,6 +16,10 @@ type State = {
   chainPending: number;
   channelBalance: number;
   channelPending: number;
+  activeChannelCount: number;
+  pendingChannelCount: number;
+  closedChannelCount: number;
+  peersCount: number;
 };
 
 type CompleteState = State & StateStatus;
@@ -32,6 +37,7 @@ const DispatchContext = createContext<Dispatch | undefined>(undefined);
 const initialState = {
   connected: false,
   alias: '',
+  color: '',
   syncedToChain: false,
   version: '',
   mayorVersion: 0,
@@ -41,6 +47,10 @@ const initialState = {
   chainPending: 0,
   channelBalance: 0,
   channelPending: 0,
+  activeChannelCount: 0,
+  pendingChannelCount: 0,
+  closedChannelCount: 0,
+  peersCount: 0,
 };
 
 const stateReducer = (state: State, action: ActionType): CompleteState => {

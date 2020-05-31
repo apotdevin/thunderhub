@@ -1,15 +1,10 @@
 import React from 'react';
 import { Zap, Anchor, Circle } from 'react-feather';
-import { toast } from 'react-toastify';
 import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
-import ScaleLoader from 'react-spinners/ScaleLoader';
 import { getPrice, Price } from 'src/components/price/Price';
 import { AnimatedNumber } from 'src/components/animated/AnimatedNumber';
-import { useAccountState } from 'src/context/AccountContext';
-import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
-import { textColorMap, unSelectedNavButton } from '../../../styles/Themes';
-import { getErrorContent } from '../../../utils/error';
+import { unSelectedNavButton } from '../../../styles/Themes';
 import { getTooltipType } from '../../../components/generic/helpers';
 import {
   Separation,
@@ -69,44 +64,25 @@ interface NodeInfoProps {
 
 export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   const {
+    alias,
+    color,
+    version,
     syncedToChain,
     chainBalance,
     chainPending,
     channelBalance,
     channelPending,
+    activeChannelCount,
+    pendingChannelCount,
+    closedChannelCount,
+    peersCount,
   } = useStatusState();
-
-  const { auth } = useAccountState();
-
-  const { loading, data } = useGetNodeInfoQuery({
-    skip: !auth,
-    variables: { auth },
-    onError: error => toast.error(getErrorContent(error)),
-  });
 
   const { theme, currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
   const tooltipType: any = getTooltipType(theme);
-
-  if (loading || !data || !data.getNodeInfo) {
-    return (
-      <Closed>
-        <ScaleLoader height={10} width={2} color={textColorMap[theme]} />
-      </Closed>
-    );
-  }
-
-  const {
-    color,
-    active_channels_count,
-    closed_channels_count,
-    alias,
-    peers_count,
-    pending_channels_count,
-    version,
-  } = data.getNodeInfo;
 
   const formatCB = format({ amount: chainBalance });
   const formatPB = format({ amount: chainPending });
@@ -126,7 +102,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         </SingleLine>
         <SingleLine>
           <Sub4Title>Channels</Sub4Title>
-          {`${active_channels_count} / ${pending_channels_count} / ${closed_channels_count} / ${peers_count}`}
+          {`${activeChannelCount} / ${pendingChannelCount} / ${closedChannelCount} / ${peersCount}`}
         </SingleLine>
         <SingleLine>
           <Zap
@@ -182,10 +158,10 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
             />
           </div>
           <div data-tip data-for="full_node_tip">
-            <SingleLine>{active_channels_count}</SingleLine>
-            <SingleLine>{pending_channels_count}</SingleLine>
-            <SingleLine>{closed_channels_count}</SingleLine>
-            <SingleLine>{peers_count}</SingleLine>
+            <SingleLine>{activeChannelCount}</SingleLine>
+            <SingleLine>{pendingChannelCount}</SingleLine>
+            <SingleLine>{closedChannelCount}</SingleLine>
+            <SingleLine>{peersCount}</SingleLine>
           </div>
         </Closed>
         <Separation lineColor={unSelectedNavButton} />
@@ -206,10 +182,10 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
           place={'right'}
           type={tooltipType}
         >
-          <div>{`Active Channels: ${active_channels_count}`}</div>
-          <div>{`Pending Channels: ${pending_channels_count}`}</div>
-          <div>{`Closed Channels: ${closed_channels_count}`}</div>
-          <div>{`Peers: ${peers_count}`}</div>
+          <div>{`Active Channels: ${activeChannelCount}`}</div>
+          <div>{`Pending Channels: ${pendingChannelCount}`}</div>
+          <div>{`Closed Channels: ${closedChannelCount}`}</div>
+          <div>{`Peers: ${peersCount}`}</div>
         </ReactTooltip>
       </>
     );
@@ -218,10 +194,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   return (
     <>
       <Title>
-        <Alias
-          bottomColor={color}
-          data-tip={`Version: ${version.split(' ')[0]}`}
-        >
+        <Alias bottomColor={color} data-tip={`Version: ${version}`}>
           {alias}
         </Alias>
       </Title>
@@ -239,7 +212,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
       <Balance
         data-tip
         data-for="node_tip"
-      >{`${active_channels_count} / ${pending_channels_count} / ${closed_channels_count} / ${peers_count}`}</Balance>
+      >{`${activeChannelCount} / ${pendingChannelCount} / ${closedChannelCount} / ${peersCount}`}</Balance>
       <Balance>
         <Info bottomColor={syncedToChain ? '#95de64' : '#ff7875'}>
           {syncedToChain ? 'Synced' : 'Not Synced'}
@@ -271,10 +244,10 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         place={'right'}
         type={tooltipType}
       >
-        <div>{`Active Channels: ${active_channels_count}`}</div>
-        <div>{`Pending Channels: ${pending_channels_count}`}</div>
-        <div>{`Closed Channels: ${closed_channels_count}`}</div>
-        <div>{`Peers: ${peers_count}`}</div>
+        <div>{`Active Channels: ${activeChannelCount}`}</div>
+        <div>{`Pending Channels: ${pendingChannelCount}`}</div>
+        <div>{`Closed Channels: ${closedChannelCount}`}</div>
+        <div>{`Peers: ${peersCount}`}</div>
       </ReactTooltip>
     </>
   );

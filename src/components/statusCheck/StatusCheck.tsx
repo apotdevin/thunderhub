@@ -33,7 +33,16 @@ export const StatusCheck = () => {
         getChannelBalance,
         getNodeInfo,
       } = data;
-      const { alias, is_synced_to_chain, version } = getNodeInfo;
+      const {
+        alias,
+        color,
+        is_synced_to_chain,
+        version,
+        active_channels_count,
+        pending_channels_count,
+        closed_channels_count,
+        peers_count,
+      } = getNodeInfo;
       const { confirmedBalance, pendingBalance } = getChannelBalance;
 
       const versionNumber = version.split(' ');
@@ -42,6 +51,7 @@ export const StatusCheck = () => {
 
       const state = {
         alias,
+        color,
         syncedToChain: is_synced_to_chain,
         version: versionNumber[0],
         mayorVersion: Number(numbers[0]),
@@ -51,6 +61,10 @@ export const StatusCheck = () => {
         chainPending: getPendingChainBalance,
         channelBalance: confirmedBalance,
         channelPending: pendingBalance,
+        activeChannelCount: active_channels_count,
+        pendingChannelCount: pending_channels_count,
+        closedChannelCount: closed_channels_count,
+        peersCount: peers_count,
       };
 
       dispatch({ type: 'connected', state });
