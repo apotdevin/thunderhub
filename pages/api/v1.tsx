@@ -1,17 +1,17 @@
 import crypto from 'crypto';
 import { ApolloServer } from 'apollo-server-micro';
-import { thunderHubSchema } from 'api/schemas';
-import { getIp } from 'api/helpers/helpers';
+import { thunderHubSchema } from 'server/schemas';
+import { getIp } from 'server/helpers/helpers';
 import getConfig from 'next/config';
 import jwt from 'jsonwebtoken';
-import { logger } from 'api/helpers/logger';
+import { logger } from 'server/helpers/logger';
 import {
   readMacaroons,
   readFile,
   readCookie,
   getAccounts,
-} from 'api/helpers/fileHelpers';
-import { ContextType } from 'api/types/apiTypes';
+} from 'server/helpers/fileHelpers';
+import { ContextType } from 'server/types/apiTypes';
 import AES from 'crypto-js/aes';
 import CryptoJS from 'crypto-js';
 import cookie from 'cookie';
