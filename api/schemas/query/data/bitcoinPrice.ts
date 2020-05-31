@@ -1,5 +1,4 @@
 import { GraphQLString, GraphQLBoolean } from 'graphql';
-import fetch from 'node-fetch';
 import { ContextType } from 'api/types/apiTypes';
 import { logger } from '../../../helpers/logger';
 import { requestLimiter } from '../../../helpers/rateLimiter';

@@ -32,6 +32,7 @@ export const NodeCard = ({ account, accountId }: NodeCardProps) => {
   const auth = getAuthObj(host, viewOnly, null, cert);
 
   const { data, loading, error } = useGetNodeInfoQuery({
+    ssr: false,
     skip: !inView || !auth,
     variables: { auth },
     pollInterval: 10000,

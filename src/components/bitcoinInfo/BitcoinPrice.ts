@@ -7,6 +7,7 @@ export const BitcoinPrice = () => {
   const { fetchPrices } = useConfigState();
   const setPrices = usePriceDispatch();
   const { loading, data, stopPolling } = useGetBitcoinPriceQuery({
+    ssr: false,
     skip: !fetchPrices,
     fetchPolicy: 'network-only',
     onError: () => {
