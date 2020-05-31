@@ -81,8 +81,8 @@ const FeesView = () => {
                 />
                 <InputWithDeco
                   title={'Fee Rate'}
-                  placeholder={'msats/million'}
-                  amount={feeRate / 1000}
+                  placeholder={'sats/million sats'}
+                  amount={feeRate}
                   override={'sat'}
                   inputType={'number'}
                   inputCallback={value => setFeeRate(Number(value))}

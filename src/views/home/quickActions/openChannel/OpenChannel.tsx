@@ -14,11 +14,10 @@ import {
 } from '../../../../components/buttons/multiButton/MultiButton';
 
 interface OpenChannelProps {
-  color: string;
   setOpenCard: (card: string) => void;
 }
 
-export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
+export const OpenChannelCard = ({ setOpenCard }: OpenChannelProps) => {
   const { fast, halfHour, hour, dontShow } = useBitcoinState();
   const [size, setSize] = useState(0);
   const [fee, setFee] = useState(0);
@@ -56,13 +55,11 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
   return (
     <Card bottom={'20px'}>
       <InputWithDeco
-        color={color}
         title={'Node Public Key'}
         placeholder={'Public Key'}
         inputCallback={value => setPublicKey(value)}
       />
       <InputWithDeco
-        color={color}
         title={'Channel Size'}
         placeholder={'Sats'}
         amount={size}
@@ -109,7 +106,6 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
           <Input
             maxWidth={'500px'}
             placeholder={'Sats/Byte'}
-            color={color}
             type={'number'}
             onChange={e => setFee(Number(e.target.value))}
           />
@@ -145,7 +141,6 @@ export const OpenChannelCard = ({ color, setOpenCard }: OpenChannelProps) => {
           tokensPerVByte: fee,
           isPrivate: privateChannel,
         }}
-        color={color}
         disabled={!canOpen}
       >
         Open Channel

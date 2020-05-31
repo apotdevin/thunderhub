@@ -22,6 +22,7 @@ export const ChatFetcher = () => {
   const noChatsAvailable = chats.length <= 0 && sentChats.length <= 0;
 
   const { data, loading, error } = useGetMessagesQuery({
+    ssr: false,
     skip: !auth || initialized || noChatsAvailable || !connected,
     pollInterval: chatPollingSpeed,
     fetchPolicy: 'network-only',

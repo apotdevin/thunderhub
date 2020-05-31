@@ -59,7 +59,6 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
   inputType = 'text',
   inputCallback,
 }) => {
-  console.log({ customAmount });
   const showAmount = !!amount || customAmount;
   return (
     <InputLine>

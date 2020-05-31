@@ -12,6 +12,7 @@ export const StatusCheck = () => {
 
   const { account, auth } = useAccountState();
   const { data, loading, error, stopPolling } = useGetNodeInfoQuery({
+    ssr: false,
     skip: !auth,
     fetchPolicy: 'network-only',
     variables: { auth },

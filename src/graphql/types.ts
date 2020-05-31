@@ -49,6 +49,8 @@ export type Query = {
   getAuthToken?: Maybe<Scalars['Boolean']>;
   getSessionToken?: Maybe<Scalars['Boolean']>;
   getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
+  getLnPayInfo?: Maybe<LnPayInfoType>;
+  getLnPay?: Maybe<Scalars['String']>;
 };
 
 export type QueryGetChannelBalanceArgs = {
@@ -211,6 +213,10 @@ export type QueryGetAuthTokenArgs = {
 export type QueryGetSessionTokenArgs = {
   id?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
+};
+
+export type QueryGetLnPayArgs = {
+  amount?: Maybe<Scalars['Int']>;
 };
 
 export type ChannelBalanceType = {
@@ -566,6 +572,12 @@ export type ServerAccountType = {
   id: Scalars['String'];
   type: Scalars['String'];
   loggedIn: Scalars['Boolean'];
+};
+
+export type LnPayInfoType = {
+  __typename?: 'lnPayInfoType';
+  max?: Maybe<Scalars['Int']>;
+  min?: Maybe<Scalars['Int']>;
 };
 
 export type Mutation = {

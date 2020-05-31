@@ -4,18 +4,25 @@ import { X, Layers, GitBranch } from 'react-feather';
 import {
   CardWithTitle,
   SubTitle,
-  Card,
   CardTitle,
   SmallButton,
 } from '../../../components/generic/Styled';
-import { unSelectedNavButton } from '../../../styles/Themes';
+import {
+  unSelectedNavButton,
+  cardColor,
+  cardBorderColor,
+} from '../../../styles/Themes';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { DecodeCard } from './decode/Decode';
 import { OpenChannelCard } from './openChannel/OpenChannel';
+import { SupportCard } from './donate/DonateCard';
+import { SupportBar } from './donate/DonateContent';
 
-const sectionColor = '#69c0ff';
-
-const QuickCard = styled(Card)`
+const QuickCard = styled.div`
+  background: ${cardColor};
+  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: 1px solid ${cardBorderColor};
   height: 100px;
   width: 100px;
   display: flex;
@@ -26,9 +33,10 @@ const QuickCard = styled(Card)`
   padding: 10px;
   margin-right: 10px;
   cursor: pointer;
+  color: #69c0ff;
 
   &:hover {
-    border: 1px solid ${sectionColor};
+    border: 1px solid #69c0ff;
   }
 `;
 
@@ -58,23 +66,24 @@ export const QuickActions = () => {
 
   const renderContent = () => {
     switch (openCard) {
+      case 'support':
+        return <SupportBar />;
       case 'decode':
-        return <DecodeCard color={sectionColor} />;
+        return <DecodeCard />;
       case 'open_channel':
-        return (
-          <OpenChannelCard color={sectionColor} setOpenCard={setOpenCard} />
-        );
+        return <OpenChannelCard setOpenCard={setOpenCard} />;
       default:
         return (
           <QuickRow>
             <AdminSwitch>
+              <SupportCard callback={() => setOpenCard('support')} />
               <QuickCard onClick={() => setOpenCard('open_channel')}>
-                <GitBranch size={24} color={sectionColor} />
+                <GitBranch size={24} />
                 <QuickTitle>Open</QuickTitle>
               </QuickCard>
             </AdminSwitch>
             <QuickCard onClick={() => setOpenCard('decode')}>
-              <Layers size={24} color={sectionColor} />
+              <Layers size={24} />
               <QuickTitle>Decode</QuickTitle>
             </QuickCard>
           </QuickRow>
