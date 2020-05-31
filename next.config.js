@@ -24,7 +24,7 @@ module.exports = withBundleAnalyzer({
     npmVersion: process.env.npm_package_version || '0.0.0',
     defaultTheme: process.env.THEME || 'dark',
     defaultCurrency: process.env.CURRENCY || 'sat',
-    fetchPrices: process.env.FETCH_PRICES === 'true' ? true : false,
-    fetchFees: process.env.FETCH_FEES === 'true' ? true : false,
+    fetchPrices: process.env.FETCH_PRICES === 'false' ? false : true,
+    fetchFees: process.env.FETCH_FEES === 'false' ? false : true,
   },
 });
