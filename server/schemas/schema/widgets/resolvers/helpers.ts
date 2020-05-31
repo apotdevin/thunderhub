@@ -1,9 +1,11 @@
 import { reduce, groupBy } from 'underscore';
 import {
-  InOutListProps,
+  ForwardProps,
+  ReduceObjectProps,
+  ListProps,
   InOutProps,
-} from '../../../schemas/query/flow/getInOut.interface';
-import { ForwardProps, ReduceObjectProps, ListProps } from './interface';
+  InOutListProps,
+} from './interface';
 
 export const reduceForwardArray = (list: ListProps) => {
   const reducedOrder = [];

@@ -192,19 +192,6 @@ export const typeDefs = gql`
     tokens: Int
   }
 
-  type peerType {
-    bytes_received: Int
-    bytes_sent: Int
-    is_inbound: Boolean
-    is_sync_peer: Boolean
-    ping_time: Int
-    public_key: String
-    socket: String
-    tokens_received: Int
-    tokens_sent: Int
-    partner_node_info: nodeType
-  }
-
   type pendingChannelType {
     close_transaction_id: String
     is_active: Boolean

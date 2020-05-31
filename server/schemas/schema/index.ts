@@ -1,5 +1,6 @@
 import merge from 'lodash.merge';
 import { typeDefs as allTypes } from 'server/types';
+import { makeExecutableSchema } from 'apollo-server-micro';
 import { nodeTypes } from './node/types';
 import { nodeResolvers } from './node/resolvers';
 import { authResolvers } from './auth/resolvers';
@@ -64,4 +65,4 @@ const resolvers = merge(
   transactionResolvers
 );
 
-export { typeDefs, resolvers };
+export default makeExecutableSchema({ typeDefs, resolvers });

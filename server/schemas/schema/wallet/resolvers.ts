@@ -6,7 +6,7 @@ import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 
 export const walletResolvers = {
   Query: {
-    walletInfo: async (_: undefined, params: any, context: ContextType) => {
+    getWalletInfo: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getWalletInfo');
 
       const auth = getCorrectAuth(params.auth, context);

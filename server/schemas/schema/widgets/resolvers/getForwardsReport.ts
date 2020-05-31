@@ -17,7 +17,7 @@ import {
 import { reduceForwardArray } from './helpers';
 import { ForwardCompleteProps } from './interface';
 
-export const getForwardsReport = async (
+export const getForwardReport = async (
   _: undefined,
   params: any,
   context: ContextType
