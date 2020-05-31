@@ -47,7 +47,7 @@ export const SyncSettings = () => {
     return null;
   }
 
-  const { viewOnly, admin, host, cert } = account;
+  const { viewOnly, admin, host, cert, name } = account;
 
   const getObject = () => {
     switch (type) {
