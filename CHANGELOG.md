@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.11](https://github.com/apotdevin/thunderhub/compare/v0.6.10...v0.6.11) (2020-05-31)
+
+
+### Bug Fixes
+
+* 🐛 missing var ([b4ed3d7](https://github.com/apotdevin/thunderhub/commit/b4ed3d7334a2d07a889550143e7bfaf45b658548))
+
 ### [0.6.10](https://github.com/apotdevin/thunderhub/compare/v0.6.9...v0.6.10) (2020-05-31)
 
 
