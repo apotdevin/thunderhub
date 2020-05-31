@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.13](https://github.com/apotdevin/thunderhub/compare/v0.6.12...v0.6.13) (2020-05-31)
+
+
+### Bug Fixes
+
+* 🐛 remove header query ([a05d1d7](https://github.com/apotdevin/thunderhub/commit/a05d1d7c831aa0a739e83c480b246dd53e7a5729))
+
 ### [0.6.12](https://github.com/apotdevin/thunderhub/compare/v0.6.11...v0.6.12) (2020-05-31)
 
 
