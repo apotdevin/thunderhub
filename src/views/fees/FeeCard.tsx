@@ -85,7 +85,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
           <InputWithDeco
             title={'Fee Rate'}
             placeholder={'sats/million sats'}
-            amount={newFeeRate}
+            customAmount={newFeeRate > 0 && `${newFeeRate} sats/Msats`}
             override={'sat'}
             inputType={'number'}
             inputCallback={value => setFeeRate(Number(value))}
