@@ -17,4 +17,15 @@ export const chainTypes = gql`
     isOutgoing: Boolean
     tokens: Int
   }
+
+  type getTransactionsType {
+    block_id: String
+    confirmation_count: Int
+    confirmation_height: Int
+    created_at: String
+    fee: Int
+    id: String
+    output_addresses: [String]
+    tokens: Int
+  }
 `;

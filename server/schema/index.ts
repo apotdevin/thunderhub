@@ -1,5 +1,4 @@
 import merge from 'lodash.merge';
-import { typeDefs as allTypes } from 'server/types';
 import { makeExecutableSchema } from 'apollo-server-micro';
 import { nodeTypes } from './node/types';
 import { nodeResolvers } from './node/resolvers';
@@ -28,13 +27,17 @@ import { invoiceResolvers } from './invoice/resolvers';
 import { channelResolvers } from './channel/resolvers';
 import { walletResolvers } from './wallet/resolvers';
 import { transactionResolvers } from './transactions/resolvers';
+import { channelTypes } from './channel/types';
+import { walletTypes } from './wallet/types';
+import { invoiceTypes } from './invoice/types';
+import { networkTypes } from './network/types';
+import { transactionTypes } from './transactions/types';
 
 const typeDefs = [
   generalTypes,
   queryTypes,
   mutationTypes,
   nodeTypes,
-  allTypes,
   accountTypes,
   hodlTypes,
   lnpayTypes,
@@ -44,6 +47,11 @@ const typeDefs = [
   toolsTypes,
   chatTypes,
   widgetTypes,
+  channelTypes,
+  walletTypes,
+  invoiceTypes,
+  networkTypes,
+  transactionTypes,
 ];
 
 const resolvers = merge(

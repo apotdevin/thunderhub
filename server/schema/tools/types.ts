@@ -14,4 +14,12 @@ export const toolsTypes = gql`
     safe_tokens: Int
     tokens: Int
   }
+
+  type DecodeRoutesType {
+    base_fee_mtokens: String
+    channel: String
+    cltv_delta: Int
+    fee_rate: Int
+    public_key: String
+  }
 `;
