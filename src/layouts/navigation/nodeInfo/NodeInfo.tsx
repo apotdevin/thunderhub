@@ -89,6 +89,10 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   const formatCCB = format({ amount: channelBalance });
   const formatPCB = format({ amount: channelPending });
 
+  if (!alias) {
+    return null;
+  }
+
   if (isBurger) {
     return (
       <>
