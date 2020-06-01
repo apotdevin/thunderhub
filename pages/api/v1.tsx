@@ -1,6 +1,5 @@
 import crypto from 'crypto';
 import { ApolloServer } from 'apollo-server-micro';
-import { thunderHubSchema } from 'server/schemas';
 import { getIp } from 'server/helpers/helpers';
 import getConfig from 'next/config';
 import jwt from 'jsonwebtoken';
@@ -15,6 +14,7 @@ import { ContextType } from 'server/types/apiTypes';
 import AES from 'crypto-js/aes';
 import CryptoJS from 'crypto-js';
 import cookie from 'cookie';
+import schema from 'server/schema';
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 const { apiBaseUrl, nodeEnv } = publicRuntimeConfig;
@@ -38,7 +38,7 @@ const accountConfig = getAccounts(accountConfigPath);
 readCookie(cookiePath);
 
 const apolloServer = new ApolloServer({
-  schema: thunderHubSchema,
+  schema,
   context: ({ req, res }) => {
     const ip = getIp(req);
 
