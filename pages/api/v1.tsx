@@ -14,7 +14,7 @@ import { ContextType } from 'server/types/apiTypes';
 import AES from 'crypto-js/aes';
 import CryptoJS from 'crypto-js';
 import cookie from 'cookie';
-import schema from 'server/schemas/schema/index';
+import schema from 'server/schema';
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 const { apiBaseUrl, nodeEnv } = publicRuntimeConfig;

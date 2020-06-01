@@ -5,13 +5,9 @@ import {
 } from 'ln-service';
 import { to } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-} from '../../../helpers/helpers';
-import { ContextType } from '../../../types/apiTypes';
-import { logger } from '../../../helpers/logger';
+import { getAuthLnd, getErrorMsg, getCorrectAuth } from '../../helpers/helpers';
+import { ContextType } from '../../types/apiTypes';
+import { logger } from '../../helpers/logger';
 
 export const nodeResolvers = {
   Query: {

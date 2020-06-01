@@ -1,12 +1,12 @@
 import { updateRoutingFees } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
-import { logger } from '../../../../../helpers/logger';
-import { requestLimiter } from '../../../../../helpers/rateLimiter';
+import { logger } from '../../../../helpers/logger';
+import { requestLimiter } from '../../../../helpers/rateLimiter';
 import {
   getErrorMsg,
   getAuthLnd,
   getCorrectAuth,
-} from '../../../../../helpers/helpers';
+} from '../../../../helpers/helpers';
 
 export const updateFees = async (
   _: undefined,

@@ -1,4 +1,4 @@
-import { getNodeFromChannel } from 'server/schemas/helpers/getNodeFromChannel';
+import { getNodeFromChannel } from 'server/helpers/getNodeFromChannel';
 import {
   getPayments,
   getInvoices,

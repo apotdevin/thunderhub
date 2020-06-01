@@ -2,14 +2,14 @@ import { getForwards as getLnForwards, getWalletInfo } from 'ln-service';
 import { subHours, subDays } from 'date-fns';
 import { sortBy } from 'underscore';
 import { ContextType } from 'server/types/apiTypes';
-import { getNodeFromChannel } from 'server/schemas/helpers/getNodeFromChannel';
+import { getNodeFromChannel } from 'server/helpers/getNodeFromChannel';
 import { logger } from 'server/helpers/logger';
-import { requestLimiter } from '../../../../helpers/rateLimiter';
+import { requestLimiter } from '../../../helpers/rateLimiter';
 import {
   getAuthLnd,
   getErrorMsg,
   getCorrectAuth,
-} from '../../../../helpers/helpers';
+} from '../../../helpers/helpers';
 import { countArray, countRoutes } from './helpers';
 import { ForwardCompleteProps } from './interface';
 

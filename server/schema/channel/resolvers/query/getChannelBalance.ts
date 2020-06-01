@@ -1,12 +1,12 @@
 import { getChannelBalance as getLnChannelBalance } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
-import { logger } from '../../../../../helpers/logger';
-import { requestLimiter } from '../../../../../helpers/rateLimiter';
+import { logger } from '../../../../helpers/logger';
+import { requestLimiter } from '../../../../helpers/rateLimiter';
 import {
   getAuthLnd,
   getErrorMsg,
   getCorrectAuth,
-} from '../../../../../helpers/helpers';
+} from '../../../../helpers/helpers';
 
 interface ChannelBalanceProps {
   channel_balance: number;

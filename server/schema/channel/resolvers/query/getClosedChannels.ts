@@ -1,9 +1,9 @@
 import { getClosedChannels as getLnClosedChannels, getNode } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { to, toWithError } from 'server/helpers/async';
-import { logger } from '../../../../../helpers/logger';
-import { requestLimiter } from '../../../../../helpers/rateLimiter';
-import { getAuthLnd, getCorrectAuth } from '../../../../../helpers/helpers';
+import { logger } from '../../../../helpers/logger';
+import { requestLimiter } from '../../../../helpers/rateLimiter';
+import { getAuthLnd, getCorrectAuth } from '../../../../helpers/helpers';
 
 interface ChannelListProps {
   channels: ChannelProps[];
