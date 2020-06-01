@@ -14,7 +14,7 @@ const { apiUrl: uri } = publicRuntimeConfig;
 function createIsomorphLink(ctx) {
   if (typeof window === 'undefined') {
     const { SchemaLink } = require('apollo-link-schema');
-    const { thunderHubSchema: schema } = require('server/schemas');
+    const schema = require('server/schema');
     return new SchemaLink({ schema, context: ctx });
   } else {
     const { HttpLink } = require('apollo-link-http');
