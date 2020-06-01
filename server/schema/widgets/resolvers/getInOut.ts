@@ -5,13 +5,13 @@ import {
 import { differenceInHours, differenceInCalendarDays } from 'date-fns';
 import { groupBy } from 'underscore';
 import { ContextType } from 'server/types/apiTypes';
-import { logger } from '../../../helpers/logger';
-import { requestLimiter } from '../../../helpers/rateLimiter';
+import { logger } from 'server/helpers/logger';
+import { requestLimiter } from 'server/helpers/rateLimiter';
 import {
   getAuthLnd,
   getErrorMsg,
   getCorrectAuth,
-} from '../../../helpers/helpers';
+} from 'server/helpers/helpers';
 import { reduceInOutArray } from './helpers';
 import { InvoicesProps, PaymentsProps } from './interface';
 

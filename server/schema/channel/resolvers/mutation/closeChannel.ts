@@ -1,12 +1,12 @@
 import { closeChannel as lnCloseChannel } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
-import { logger } from '../../../../helpers/logger';
-import { requestLimiter } from '../../../../helpers/rateLimiter';
+import { logger } from 'server/helpers/logger';
+import { requestLimiter } from 'server/helpers/rateLimiter';
 import {
   getAuthLnd,
   getErrorMsg,
   getCorrectAuth,
-} from '../../../../helpers/helpers';
+} from 'server/helpers/helpers';
 
 export const closeChannel = async (
   _: undefined,

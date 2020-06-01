@@ -6,9 +6,9 @@ import {
 } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { toWithError, to } from 'server/helpers/async';
-import { logger } from '../../../../helpers/logger';
-import { requestLimiter } from '../../../../helpers/rateLimiter';
-import { getAuthLnd, getCorrectAuth } from '../../../../helpers/helpers';
+import { logger } from 'server/helpers/logger';
+import { requestLimiter } from 'server/helpers/rateLimiter';
+import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 
 export const getChannels = async (
   _: undefined,

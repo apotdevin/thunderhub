@@ -4,12 +4,12 @@ import { sortBy } from 'underscore';
 import { ContextType } from 'server/types/apiTypes';
 import { getNodeFromChannel } from 'server/helpers/getNodeFromChannel';
 import { logger } from 'server/helpers/logger';
-import { requestLimiter } from '../../../helpers/rateLimiter';
+import { requestLimiter } from 'server/helpers/rateLimiter';
 import {
   getAuthLnd,
   getErrorMsg,
   getCorrectAuth,
-} from '../../../helpers/helpers';
+} from 'server/helpers/helpers';
 import { countArray, countRoutes } from './helpers';
 import { ForwardCompleteProps } from './interface';
 
