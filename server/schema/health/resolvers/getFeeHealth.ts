@@ -8,6 +8,7 @@ import { getFeeScore, getAverage, getMyFeeScore } from '../helpers';
 
 type ChannelFeesType = {
   id: string;
+  publicKey: string;
   partnerBaseFee: number;
   partnerFeeRate: number;
   myBaseFee: number;
@@ -15,7 +16,7 @@ type ChannelFeesType = {
 };
 
 export default async (_: undefined, params: any, context: ContextType) => {
-  await requestLimiter(context.ip, 'getVolumeHealth');
+  await requestLimiter(context.ip, 'getFeeHealth');
 
   const auth = getCorrectAuth(params.auth, context);
   const lnd = getAuthLnd(auth);
@@ -23,22 +24,21 @@ export default async (_: undefined, params: any, context: ContextType) => {
   const { public_key } = await to(getWalletInfo({ lnd }));
   const { channels } = await to(getChannels({ lnd }));
 
-  const channelList = channels.map(c => c.id);
-
   const getChannelList = () =>
     Promise.all(
-      channelList
+      channels
         .map(async channel => {
+          const { id, partner_public_key: publicKey } = channel;
           const [{ policies }, channelError] = await toWithError(
             getChannel({
               lnd,
-              id: channel,
+              id,
             })
           );
 
           if (channelError) {
             logger.debug(
-              `Error getting channel with id ${channel.id}: %o`,
+              `Error getting channel with id ${id}: %o`,
               channelError
             );
             return;
@@ -64,7 +64,8 @@ export default async (_: undefined, params: any, context: ContextType) => {
           }
 
           return {
-            id: channel,
+            id,
+            publicKey,
             partnerBaseFee,
             partnerFeeRate,
             myBaseFee,
@@ -87,7 +88,12 @@ export default async (_: undefined, params: any, context: ContextType) => {
     );
     const myScore = Math.round(getAverage([myRateScore, myBaseScore]));
 
-    return { id: channel.id, partnerScore, myScore };
+    return {
+      id: channel.id,
+      partnerScore,
+      myScore,
+      partner: { publicKey: channel.publicKey, lnd },
+    };
   });
 
   const score = Math.round(

@@ -1,6 +1,10 @@
 import { gql } from 'apollo-server-micro';
 
 export const nodeTypes = gql`
+  type Node {
+    node: nodeType
+  }
+
   type nodeInfoType {
     chains: [String]
     color: String

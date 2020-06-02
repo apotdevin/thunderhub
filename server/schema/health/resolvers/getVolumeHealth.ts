@@ -34,7 +34,11 @@ export default async (_: undefined, params: any, context: ContextType) => {
 
       if (!info) return;
 
-      return { id: channel.id, volumeNormalized: tokens / age };
+      return {
+        id: channel.id,
+        volumeNormalized: tokens / age,
+        publicKey: channel.partner_public_key,
+      };
     })
     .filter(Boolean);
 
@@ -44,7 +48,11 @@ export default async (_: undefined, params: any, context: ContextType) => {
     const diff = (channel.volumeNormalized - average) / average;
     const score = Math.round((diff + 1) * 100);
 
-    return { id: channel.id, score };
+    return {
+      id: channel.id,
+      score,
+      partner: { publicKey: channel.publicKey, lnd },
+    };
   });
 
   const globalAverage = Math.round(

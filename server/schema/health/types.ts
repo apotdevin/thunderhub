@@ -4,6 +4,7 @@ export const healthTypes = gql`
   type channelHealth {
     id: String
     score: Int
+    partner: Node
   }
 
   type channelsHealth {
@@ -15,6 +16,7 @@ export const healthTypes = gql`
     id: String
     myScore: Int
     partnerScore: Int
+    partner: Node
   }
 
   type channelsFeeHealth {

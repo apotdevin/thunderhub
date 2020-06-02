@@ -55,7 +55,6 @@ export const getFeeScore = (max: number, current: number): number => {
 export const getMyFeeScore = (max: number, current: number, min: number) => {
   if (current < min) {
     const score = Math.round(((min - current) / min) * 100);
-    console.log(min, current, score);
     return 100 - Math.max(0, Math.min(100, score));
   } else {
     const minimum = current - min;
