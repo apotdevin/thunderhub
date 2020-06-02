@@ -63,6 +63,7 @@
     "numeral": "^2.0.6",
     "qrcode.react": "^1.0.0",
     "react": "^16.13.1",
+    "react-circular-progressbar": "^2.0.3",
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
