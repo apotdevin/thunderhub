@@ -25,7 +25,7 @@ export default async (_: undefined, params: any, context: ContextType) => {
 
     const defaultProps = {
       id,
-      monitoredTime: (time_online + time_offline) / 1000,
+      monitoredTime: Math.round((time_online + time_offline) / 1000),
       partner: { publicKey: partner_public_key, lnd },
     };
 

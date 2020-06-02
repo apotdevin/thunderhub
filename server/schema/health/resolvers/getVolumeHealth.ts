@@ -25,18 +25,20 @@ export default async (_: undefined, params: any, context: ContextType) => {
 
   const channelDetails = channels
     .map(channel => {
-      const { tokens } = channelVolume.find(c => c.channel === channel.id);
+      const { tokens } =
+        channelVolume.find(c => c.channel === channel.id) || {};
       const info = getChannelIdInfo(channel.id);
+
+      if (!info) return;
+
       const age = Math.min(
         current_block_height - info.blockHeight,
         monthInBlocks
       );
 
-      if (!info) return;
-
       return {
         id: channel.id,
-        volumeNormalized: tokens / age,
+        volumeNormalized: Math.round(tokens / age) || 0,
         publicKey: channel.partner_public_key,
       };
     })
@@ -45,7 +47,7 @@ export default async (_: undefined, params: any, context: ContextType) => {
   const average = getAverage(channelDetails.map(c => c.volumeNormalized));
 
   const health = channelDetails.map(channel => {
-    const diff = (channel.volumeNormalized - average) / average;
+    const diff = (channel.volumeNormalized - average) / average || -1;
     const score = Math.round((diff + 1) * 100);
 
     return {
