@@ -24,8 +24,8 @@ export type GetPeersQuery = { __typename?: 'Query' } & {
           | 'tokens_sent'
         > & {
             partner_node_info?: Types.Maybe<
-              { __typename?: 'partnerNodeType' } & Pick<
-                Types.PartnerNodeType,
+              { __typename?: 'nodeType' } & Pick<
+                Types.NodeType,
                 'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
               >
             >;
