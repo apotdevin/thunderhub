@@ -7,7 +7,7 @@ import {
   getAuthFromAccount,
 } from './helpers/context';
 
-export type SERVER_ACCOUNT_TYPE = 'sso' | 'server';
+export type SERVER_ACCOUNT_TYPE = 'sso' | 'server' | 'test';
 export type ACCOUNT_TYPE = 'client';
 
 export const CLIENT_ACCOUNT: ACCOUNT_TYPE = 'client';

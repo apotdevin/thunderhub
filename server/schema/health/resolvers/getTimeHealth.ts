@@ -22,15 +22,24 @@ export default async (_: undefined, params: any, context: ContextType) => {
       id,
       partner_public_key,
     } = channel;
+
+    const defaultProps = {
+      id,
+      monitoredTime: (time_online + time_offline) / 1000,
+      partner: { publicKey: partner_public_key, lnd },
+    };
+
     if (time_offline + time_online < halfMonthInMilliSeconds) {
-      return { id, score: 0, partner: { publicKey: partner_public_key, lnd } };
+      return {
+        score: 0,
+        ...defaultProps,
+      };
     }
     const percentOnline = time_online / (time_online + time_offline);
 
     return {
-      id,
       score: Math.round(percentOnline * 100),
-      partner: { publicKey: partner_public_key, lnd },
+      ...defaultProps,
     };
   });
 

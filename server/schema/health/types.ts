@@ -12,6 +12,18 @@ export const healthTypes = gql`
     channels: [channelHealth]
   }
 
+  type channelTimeHealth {
+    id: String
+    score: Int
+    monitoredTime: Int
+    partner: Node
+  }
+
+  type channelsTimeHealth {
+    score: Int
+    channels: [channelTimeHealth]
+  }
+
   type channelFeeHealth {
     id: String
     myScore: Int

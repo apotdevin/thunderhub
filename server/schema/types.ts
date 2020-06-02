@@ -29,7 +29,7 @@ export const generalTypes = gql`
 export const queryTypes = gql`
   type Query {
     getVolumeHealth(auth: authType!): channelsHealth
-    getTimeHealth(auth: authType!): channelsHealth
+    getTimeHealth(auth: authType!): channelsTimeHealth
     getFeeHealth(auth: authType!): channelsFeeHealth
     getChannelBalance(auth: authType!): channelBalanceType
     getChannels(auth: authType!, active: Boolean): [channelType]
