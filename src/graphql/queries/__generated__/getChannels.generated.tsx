@@ -38,17 +38,40 @@ export type GetChannelsQuery = { __typename?: 'Query' } & {
           | 'unsettled_balance'
         > & {
             partner_node_info?: Types.Maybe<
-              { __typename?: 'nodeType' } & Pick<
-                Types.NodeType,
-                | 'alias'
-                | 'capacity'
-                | 'channel_count'
-                | 'color'
-                | 'updated_at'
-                | 'base_fee'
-                | 'fee_rate'
-                | 'cltv_delta'
-              >
+              { __typename?: 'Node' } & {
+                node?: Types.Maybe<
+                  { __typename?: 'nodeType' } & Pick<
+                    Types.NodeType,
+                    | 'alias'
+                    | 'capacity'
+                    | 'channel_count'
+                    | 'color'
+                    | 'updated_at'
+                  >
+                >;
+              }
+            >;
+            partner_fee_info?: Types.Maybe<
+              { __typename?: 'Channel' } & {
+                channel?: Types.Maybe<
+                  { __typename?: 'singleChannelType' } & {
+                    policies: Array<
+                      { __typename?: 'policyType' } & {
+                        node?: Types.Maybe<
+                          { __typename?: 'Node' } & {
+                            node?: Types.Maybe<
+                              { __typename?: 'nodeType' } & Pick<
+                                Types.NodeType,
+                                'base_fee' | 'fee_rate' | 'cltv_delta'
+                              >
+                            >;
+                          }
+                        >;
+                      }
+                    >;
+                  }
+                >;
+              }
             >;
           }
       >
@@ -82,14 +105,26 @@ export const GetChannelsDocument = gql`
       transaction_vout
       unsettled_balance
       partner_node_info {
-        alias
-        capacity
-        channel_count
-        color
-        updated_at
-        base_fee
-        fee_rate
-        cltv_delta
+        node {
+          alias
+          capacity
+          channel_count
+          color
+          updated_at
+        }
+      }
+      partner_fee_info {
+        channel {
+          policies {
+            node {
+              node {
+                base_fee
+                fee_rate
+                cltv_delta
+              }
+            }
+          }
+        }
       }
     }
   }

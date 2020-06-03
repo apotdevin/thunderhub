@@ -645,7 +645,8 @@ export type ChannelType = {
   transaction_id?: Maybe<Scalars['String']>;
   transaction_vout?: Maybe<Scalars['Int']>;
   unsettled_balance?: Maybe<Scalars['Int']>;
-  partner_node_info?: Maybe<NodeType>;
+  partner_node_info?: Maybe<Node>;
+  partner_fee_info?: Maybe<Channel>;
 };
 
 export type CloseChannelType = {
@@ -670,7 +671,7 @@ export type ClosedChannelType = {
   partner_public_key?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
   transaction_vout?: Maybe<Scalars['Int']>;
-  partner_node_info?: Maybe<NodeType>;
+  partner_node_info?: Maybe<Node>;
 };
 
 export type OpenChannelType = {
@@ -695,7 +696,7 @@ export type PendingChannelType = {
   transaction_fee?: Maybe<Scalars['Int']>;
   transaction_id?: Maybe<Scalars['String']>;
   transaction_vout?: Maybe<Scalars['Int']>;
-  partner_node_info?: Maybe<NodeType>;
+  partner_node_info?: Maybe<Node>;
 };
 
 export type WalletInfoType = {
