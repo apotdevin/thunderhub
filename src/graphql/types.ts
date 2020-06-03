@@ -17,18 +17,6 @@ export type AuthType = {
   cert?: Maybe<Scalars['String']>;
 };
 
-export type NodeType = {
-  __typename?: 'nodeType';
-  alias?: Maybe<Scalars['String']>;
-  capacity?: Maybe<Scalars['String']>;
-  channel_count?: Maybe<Scalars['Int']>;
-  color?: Maybe<Scalars['String']>;
-  updated_at?: Maybe<Scalars['String']>;
-  base_fee?: Maybe<Scalars['Int']>;
-  fee_rate?: Maybe<Scalars['Int']>;
-  cltv_delta?: Maybe<Scalars['Int']>;
-};
-
 export type Query = {
   __typename?: 'Query';
   getVolumeHealth?: Maybe<ChannelsHealth>;
@@ -354,6 +342,18 @@ export type MutationLogoutArgs = {
   type: Scalars['String'];
 };
 
+export type NodeType = {
+  __typename?: 'nodeType';
+  alias?: Maybe<Scalars['String']>;
+  capacity?: Maybe<Scalars['String']>;
+  channel_count?: Maybe<Scalars['Int']>;
+  color?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['String']>;
+  base_fee?: Maybe<Scalars['Int']>;
+  fee_rate?: Maybe<Scalars['Int']>;
+  cltv_delta?: Maybe<Scalars['Int']>;
+};
+
 export type Node = {
   __typename?: 'Node';
   node?: Maybe<NodeType>;
@@ -567,6 +567,35 @@ export type InOutType = {
   unConfirmedInvoices?: Maybe<Scalars['Int']>;
 };
 
+export type PolicyType = {
+  __typename?: 'policyType';
+  base_fee_mtokens?: Maybe<Scalars['String']>;
+  cltv_delta?: Maybe<Scalars['Int']>;
+  fee_rate?: Maybe<Scalars['Int']>;
+  is_disabled?: Maybe<Scalars['Boolean']>;
+  max_htlc_mtokens?: Maybe<Scalars['String']>;
+  min_htlc_mtokens?: Maybe<Scalars['String']>;
+  public_key: Scalars['String'];
+  updated_at?: Maybe<Scalars['String']>;
+  my_node?: Maybe<Scalars['Boolean']>;
+  node?: Maybe<Node>;
+};
+
+export type SingleChannelType = {
+  __typename?: 'singleChannelType';
+  capacity: Scalars['Int'];
+  id: Scalars['String'];
+  policies: Array<PolicyType>;
+  transaction_id: Scalars['String'];
+  transaction_vout: Scalars['Int'];
+  updated_at?: Maybe<Scalars['String']>;
+};
+
+export type Channel = {
+  __typename?: 'Channel';
+  channel?: Maybe<SingleChannelType>;
+};
+
 export type ChannelFeeType = {
   __typename?: 'channelFeeType';
   alias?: Maybe<Scalars['String']>;
@@ -767,13 +796,11 @@ export type ForwardType = {
   fee?: Maybe<Scalars['Int']>;
   fee_mtokens?: Maybe<Scalars['String']>;
   incoming_channel?: Maybe<Scalars['String']>;
-  incoming_alias?: Maybe<Scalars['String']>;
-  incoming_color?: Maybe<Scalars['String']>;
   mtokens?: Maybe<Scalars['String']>;
   outgoing_channel?: Maybe<Scalars['String']>;
-  outgoing_alias?: Maybe<Scalars['String']>;
-  outgoing_color?: Maybe<Scalars['String']>;
   tokens?: Maybe<Scalars['Int']>;
+  incoming_channel_info?: Maybe<Channel>;
+  outgoing_channel_info?: Maybe<Channel>;
 };
 
 export type GetResumeType = {

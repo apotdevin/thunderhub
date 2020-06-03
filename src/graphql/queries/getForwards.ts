@@ -8,13 +8,33 @@ export const GET_FORWARDS = gql`
         fee
         fee_mtokens
         incoming_channel
-        incoming_alias
-        incoming_color
         mtokens
         outgoing_channel
-        outgoing_alias
-        outgoing_color
         tokens
+        incoming_channel_info {
+          channel {
+            policies {
+              node {
+                node {
+                  alias
+                  color
+                }
+              }
+            }
+          }
+        }
+        outgoing_channel_info {
+          channel {
+            policies {
+              node {
+                node {
+                  alias
+                  color
+                }
+              }
+            }
+          }
+        }
       }
       token
     }

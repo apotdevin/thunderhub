@@ -11,13 +11,11 @@ export const transactionTypes = gql`
     fee: Int
     fee_mtokens: String
     incoming_channel: String
-    incoming_alias: String
-    incoming_color: String
     mtokens: String
     outgoing_channel: String
-    outgoing_alias: String
-    outgoing_color: String
     tokens: Int
+    incoming_channel_info: Channel
+    outgoing_channel_info: Channel
   }
 
   type getResumeType {

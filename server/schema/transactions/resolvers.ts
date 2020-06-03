@@ -1,4 +1,3 @@
-import { getNodeFromChannel } from 'server/helpers/getNodeFromChannel';
 import {
   getPayments,
   getInvoices,
@@ -16,6 +15,7 @@ import {
   getErrorMsg,
   getCorrectAuth,
 } from 'server/helpers/helpers';
+import { to } from 'server/helpers/async';
 import { ForwardCompleteProps } from '../widgets/resolvers/interface';
 import { PaymentsProps, InvoicesProps, NodeProps } from './interface';
 
@@ -145,54 +145,39 @@ export const transactionResolvers = {
         startDate = subHours(endDate, 24);
       }
 
-      const walletInfo: { public_key: string } = await getWalletInfo({
-        lnd,
-      });
+      const { public_key } = await to(
+        getWalletInfo({
+          lnd,
+        })
+      );
 
-      const getAlias = (array: any[], publicKey: string) =>
-        Promise.all(
-          array.map(async forward => {
-            const inNodeAlias = await getNodeFromChannel(
-              forward.incoming_channel,
-              publicKey,
-              lnd
-            );
-            const outNodeAlias = await getNodeFromChannel(
-              forward.outgoing_channel,
-              publicKey,
-              lnd
-            );
-            return {
-              incoming_alias: inNodeAlias.alias,
-              incoming_color: inNodeAlias.color,
-              outgoing_alias: outNodeAlias.alias,
-              outgoing_color: outNodeAlias.color,
-              ...forward,
-            };
-          })
-        );
-
-      try {
-        const forwardsList: ForwardCompleteProps = await getLnForwards({
+      const forwardsList: ForwardCompleteProps = await to(
+        getLnForwards({
           lnd,
           after: startDate,
           before: endDate,
-        });
+        })
+      );
 
-        const list = await getAlias(
-          forwardsList.forwards,
-          walletInfo.public_key
-        );
+      const list = forwardsList.forwards.map(forward => ({
+        ...forward,
+        incoming_channel_info: {
+          lnd,
+          id: forward.incoming_channel,
+          dontResolveKey: public_key,
+        },
+        outgoing_channel_info: {
+          lnd,
+          id: forward.outgoing_channel,
+          dontResolveKey: public_key,
+        },
+      }));
 
-        const forwards = sortBy(list, 'created_at').reverse();
-        return {
-          token: forwardsList.next,
-          forwards,
-        };
-      } catch (error) {
-        logger.error('Error getting forwards: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
+      const forwards = sortBy(list, 'created_at').reverse();
+      return {
+        token: forwardsList.next,
+        forwards,
+      };
     },
   },
 };
