@@ -11,6 +11,6 @@ export const peerTypes = gql`
     socket: String
     tokens_received: Int
     tokens_sent: Int
-    partner_node_info: nodeType
+    partner_node_info: Node
   }
 `;

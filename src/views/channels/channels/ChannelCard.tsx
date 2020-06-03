@@ -120,7 +120,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
     base_fee,
     fee_rate,
     cltv_delta,
-  } = partner_node_info;
+  } = partner_node_info?.node || {};
 
   const formatBalance = format({ amount: capacity });
   const formatLocal = format({ amount: local_balance });

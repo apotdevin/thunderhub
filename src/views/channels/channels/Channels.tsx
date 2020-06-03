@@ -35,9 +35,19 @@ export const Channels: React.FC = () => {
 
   for (let i = 0; i < data.getChannels.length; i++) {
     const channel = data.getChannels[i];
-    const { local_balance, remote_balance, partner_node_info = {} } = channel;
+    const {
+      local_balance,
+      remote_balance,
+      partner_node_info = {},
+      partner_fee_info = {},
+    } = channel;
 
-    const { capacity, channel_count, base_fee, fee_rate } = partner_node_info;
+    const { capacity, channel_count } = partner_node_info?.node || {};
+    const {
+      base_fee,
+      fee_rate,
+    } = partner_fee_info?.channel?.policies?.[0]?.node.node;
+
     const partner = Number(capacity) || 0;
     const channels = Number(channel_count) || 0;
 
