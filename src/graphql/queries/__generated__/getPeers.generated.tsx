@@ -24,10 +24,18 @@ export type GetPeersQuery = { __typename?: 'Query' } & {
           | 'tokens_sent'
         > & {
             partner_node_info?: Types.Maybe<
-              { __typename?: 'nodeType' } & Pick<
-                Types.NodeType,
-                'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
-              >
+              { __typename?: 'Node' } & {
+                node?: Types.Maybe<
+                  { __typename?: 'nodeType' } & Pick<
+                    Types.NodeType,
+                    | 'alias'
+                    | 'capacity'
+                    | 'channel_count'
+                    | 'color'
+                    | 'updated_at'
+                  >
+                >;
+              }
             >;
           }
       >
@@ -48,11 +56,13 @@ export const GetPeersDocument = gql`
       tokens_received
       tokens_sent
       partner_node_info {
-        alias
-        capacity
-        channel_count
-        color
-        updated_at
+        node {
+          alias
+          capacity
+          channel_count
+          color
+          updated_at
+        }
       }
     }
   }

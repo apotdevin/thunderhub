@@ -482,7 +482,7 @@ export type PeerType = {
   socket?: Maybe<Scalars['String']>;
   tokens_received?: Maybe<Scalars['Int']>;
   tokens_sent?: Maybe<Scalars['Int']>;
-  partner_node_info?: Maybe<NodeType>;
+  partner_node_info?: Maybe<Node>;
 };
 
 export type GetUtxosType = {

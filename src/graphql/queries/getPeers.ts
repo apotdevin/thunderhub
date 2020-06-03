@@ -13,11 +13,13 @@ export const GET_PEERS = gql`
       tokens_received
       tokens_sent
       partner_node_info {
-        alias
-        capacity
-        channel_count
-        color
-        updated_at
+        node {
+          alias
+          capacity
+          channel_count
+          color
+          updated_at
+        }
       }
     }
   }
