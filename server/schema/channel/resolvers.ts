@@ -40,7 +40,7 @@ export const channelResolvers = {
       const [channel, error] = await toWithError(getChannel({ lnd, id }));
 
       if (error) {
-        logger.debug(`Error getting channel with id ${id}: %o, error`);
+        logger.debug(`Error getting channel with id ${id}: %o`, error);
         return null;
       }
 
