@@ -9,6 +9,8 @@ import { getAuthLnd, getErrorMsg, getCorrectAuth } from '../../helpers/helpers';
 import { ContextType } from '../../types/apiTypes';
 import { logger } from '../../helpers/logger';
 
+const errorNode = { alias: 'Partner node not found' };
+
 export const nodeResolvers = {
   Query: {
     getNode: async (_: undefined, params: any, context: ContextType) => {
@@ -59,12 +61,12 @@ export const nodeResolvers = {
 
       if (!lnd) {
         logger.debug('ExpectedLNDToGetNode');
-        return null;
+        return errorNode;
       }
 
       if (!publicKey) {
         logger.debug('ExpectedPublicKeyToGetNode');
-        return null;
+        return errorNode;
       }
 
       const [info, error] = await toWithError(
@@ -77,7 +79,7 @@ export const nodeResolvers = {
 
       if (error) {
         logger.debug(`Error getting node with key: ${publicKey}`);
-        return null;
+        return errorNode;
       }
 
       return info;
