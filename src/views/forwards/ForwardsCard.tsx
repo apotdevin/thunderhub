@@ -1,4 +1,5 @@
 import React from 'react';
+import { ForwardType } from 'src/graphql/types';
 import {
   Separation,
   SubCard,
@@ -15,7 +16,7 @@ import {
 import { Price } from '../../components/price/Price';
 
 interface ForwardCardProps {
-  forward: any;
+  forward: ForwardType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
@@ -32,10 +33,10 @@ export const ForwardCard = ({
     fee,
     fee_mtokens,
     incoming_channel,
-    incoming_alias,
     outgoing_channel,
-    outgoing_alias,
     tokens,
+    incoming_channel_info,
+    outgoing_channel_info,
   } = forward;
 
   const formatAmount = <Price amount={tokens} />;
@@ -67,8 +68,14 @@ export const ForwardCard = ({
         <ResponsiveLine>
           <ResponsiveSingle>
             <ColumnLine>
-              {renderLine('Incoming:', incoming_alias)}
-              {renderLine('Outgoing:', outgoing_alias)}
+              {renderLine(
+                'Incoming:',
+                incoming_channel_info?.channel?.policies?.[0]?.node?.node?.alias
+              )}
+              {renderLine(
+                'Outgoing:',
+                outgoing_channel_info?.channel?.policies?.[0]?.node?.node?.alias
+              )}
             </ColumnLine>
           </ResponsiveSingle>
           <ColumnLine>

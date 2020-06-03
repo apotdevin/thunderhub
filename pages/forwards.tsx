@@ -65,7 +65,7 @@ const ForwardsView = () => {
         </CardTitle>
         {data.getForwards.forwards.length <= 0 && renderNoForwards()}
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          {data.getForwards.forwards.map((forward: any, index: number) => (
+          {data.getForwards.forwards.map((forward, index: number) => (
             <ForwardCard
               forward={forward}
               key={index}
