@@ -72,7 +72,8 @@ export const channelTypes = gql`
     transaction_id: String
     transaction_vout: Int
     unsettled_balance: Int
-    partner_node_info: nodeType
+    partner_node_info: Node
+    partner_fee_info: Channel
   }
 
   type closeChannelType {
@@ -95,7 +96,7 @@ export const channelTypes = gql`
     partner_public_key: String
     transaction_id: String
     transaction_vout: Int
-    partner_node_info: nodeType
+    partner_node_info: Node
   }
 
   type openChannelType {
@@ -118,6 +119,6 @@ export const channelTypes = gql`
     transaction_fee: Int
     transaction_id: String
     transaction_vout: Int
-    partner_node_info: nodeType
+    partner_node_info: Node
   }
 `;

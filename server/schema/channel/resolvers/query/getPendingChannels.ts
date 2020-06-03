@@ -1,10 +1,6 @@
-import {
-  getPendingChannels as getLnPendingChannels,
-  getNode,
-} from 'ln-service';
+import { getPendingChannels as getLnPendingChannels } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
-import { to, toWithError } from 'server/helpers/async';
-import { logger } from 'server/helpers/logger';
+import { to } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 
@@ -39,31 +35,15 @@ export const getPendingChannels = async (
   const auth = getCorrectAuth(params.auth, context);
   const lnd = getAuthLnd(auth);
 
-  const pendingChannels: PendingChannelListProps = await to(
+  const { pending_channels }: PendingChannelListProps = await to(
     getLnPendingChannels({ lnd })
   );
 
-  const channels = pendingChannels.pending_channels.map(async channel => {
-    const [nodeInfo, nodeError] = await toWithError(
-      getNode({
-        lnd,
-        is_omitting_channels: true,
-        public_key: channel.partner_public_key,
-      })
-    );
-
-    nodeError &&
-      logger.debug(
-        `Error getting node with public key ${channel.partner_public_key}: %o`,
-        nodeError
-      );
-
-    return {
-      ...channel,
-      partner_node_info: {
-        ...(!nodeError && nodeInfo),
-      },
-    };
-  });
-  return channels;
+  return pending_channels.map(channel => ({
+    ...channel,
+    partner_node_info: {
+      lnd,
+      publicKey: channel.partner_public_key,
+    },
+  }));
 };
