@@ -28,7 +28,8 @@
     "build:64": "docker build -f arm64v8.Dockerfile -t apotdevin/thunderhub:test-arm64v8 .",
     "build:manifest": "docker manifest create apotdevin/thunderhub:test apotdevin/thunderhub:test-amd64 apotdevin/thunderhub:test-arm32v7 apotdevin/thunderhub:test-arm64v8",
     "upgrade-latest": "npx npm-check -u",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "update": "sh ./scripts/updateToLatest.sh"
   },
   "keywords": [],
   "author": "",
