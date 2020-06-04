@@ -15,7 +15,7 @@ const ProgressRow = styled.div`
 `;
 
 const ProgressCard = styled.div`
-  width: 25%;
+  width: 20%;
 `;
 
 const ScoreTitle = styled.div`

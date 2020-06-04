@@ -1,8 +1,39 @@
 import * as React from 'react';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetFeeHealthQuery } from 'src/graphql/queries/__generated__/getFeeHealth.generated';
-import { Card, SubCard } from 'src/components/generic/Styled';
+import {
+  Card,
+  SubCard,
+  SingleLine,
+  DarkSubTitle,
+} from 'src/components/generic/Styled';
+import { ChannelFeeHealth } from 'src/graphql/types';
 import { useStatsDispatch } from './context';
+import { ScoreColumn, ScoreLine } from './styles';
+
+type FeeStatCardProps = {
+  channel: ChannelFeeHealth;
+};
+
+const FeeStatCard = ({ channel }: FeeStatCardProps) => {
+  return (
+    <SubCard key={channel.id}>
+      <SingleLine>
+        {channel?.partner?.node?.alias}
+        <ScoreColumn>
+          <ScoreLine>
+            <DarkSubTitle>My Score</DarkSubTitle>
+            {channel.myScore}
+          </ScoreLine>
+          <ScoreLine>
+            <DarkSubTitle>Partner Score</DarkSubTitle>
+            {channel.partnerScore}
+          </ScoreLine>
+        </ScoreColumn>
+      </SingleLine>
+    </SubCard>
+  );
+};
 
 export const FeeStats = () => {
   const dispatch = useStatsDispatch();
@@ -28,10 +59,7 @@ export const FeeStats = () => {
   return (
     <Card>
       {data.getFeeHealth.channels.map(channel => (
-        <SubCard key={channel.id}>
-          <div>{channel.myScore}</div>
-          {channel.partnerScore}
-        </SubCard>
+        <FeeStatCard key={channel.id} channel={channel} />
       ))}
     </Card>
   );
