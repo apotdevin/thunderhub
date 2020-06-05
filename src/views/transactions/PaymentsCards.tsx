@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { PaymentType } from 'src/graphql/types';
 import {
   Separation,
   SubCard,
@@ -21,7 +22,7 @@ import {
 import { Price } from '../../components/price/Price';
 
 interface PaymentsCardProps {
-  payment: any;
+  payment: PaymentType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
@@ -38,20 +39,22 @@ export const PaymentsCard = ({
   indexOpen,
 }: PaymentsCardProps) => {
   const {
-    alias,
-    date,
     created_at,
     destination,
+    destination_node,
     fee,
     fee_mtokens,
     hops,
-    is_confirmed,
-    tokens,
     id,
+    is_confirmed,
     is_outgoing,
     mtokens,
     secret,
+    tokens,
+    date,
   } = payment;
+
+  const alias = destination_node?.node?.alias;
 
   const formatAmount = <Price amount={tokens} />;
   const formatFee = <Price amount={fee} />;
@@ -72,12 +75,15 @@ export const PaymentsCard = ({
           'Created:',
           `${getDateDif(created_at)} ago (${getFormatDate(created_at)})`
         )}
-        {renderLine('Destination Node:', getNodeLink(destination))}
+        {renderLine('Destination Node:', getNodeLink(destination, alias))}
         {renderLine('Fee:', formatFee)}
         {renderLine('Fee msats:', `${fee_mtokens} millisats`)}
         {renderLine('Hops:', hops.length)}
-        {hops.map((hop: any, index: number) =>
-          renderLine(`Hop ${index + 1}:`, hop)
+        {hops.map((hop, index: number) =>
+          renderLine(
+            `Hop ${index + 1}:`,
+            getNodeLink(destination, hop.node.alias)
+          )
         )}
         {renderLine('Id:', id)}
         {renderLine('Is Outgoing:', is_outgoing ? 'true' : 'false')}

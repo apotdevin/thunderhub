@@ -1,5 +1,11 @@
 import styled, { css } from 'styled-components';
-import { headerTextColor, themeColors, mediaWidths } from '../../styles/Themes';
+import {
+  headerTextColor,
+  themeColors,
+  mediaWidths,
+  unSelectedNavButton,
+  homeCompatibleColor,
+} from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
 
 export const HeaderStyle = styled.div`
@@ -52,5 +58,33 @@ export const HeaderLine = styled(SingleLine)<{ loggedIn: boolean }>`
         width: 100%;
         flex-direction: column;
       `}
+  }
+`;
+
+export const HeaderButtons = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+interface NavProps {
+  selected: boolean;
+}
+
+export const HeaderNavButton = styled.div<NavProps>`
+  padding: 4px;
+  border-radius: 4px;
+  background: ${({ selected }) => selected && homeCompatibleColor};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-decoration: none;
+  margin: 0 4px;
+  color: ${({ selected }) =>
+    selected ? headerTextColor : unSelectedNavButton};
+
+  &:hover {
+    color: ${headerTextColor};
+    background: ${homeCompatibleColor};
   }
 `;

@@ -13,9 +13,13 @@
 - [Development](#development)
 - [Docker deployment](#docker)
 
+---
+
 ## Introduction
 
 ThunderHub is an **open-source** LND node manager where you can manage and monitor your node on any device or browser. It allows you to take control of the lightning network with a simple and intuitive UX and the most up-to-date tech stack.
+
+---
 
 ### Integrations
 
@@ -24,6 +28,8 @@ ThunderHub is currently integrated into BTCPay for easier deployment. If you alr
 
 **Raspiblitz**
 For Raspiblitz users you can also get ThunderHub running by following this [gist](https://gist.github.com/openoms/8ba963915c786ce01892f2c9fa2707bc)
+
+---
 
 ### Tech Stack
 
@@ -37,6 +43,8 @@ This repository consists of a **NextJS** server that handles both the backend **
 - Apollo-Server
 - GraphQL
 - Ln-Service
+
+---
 
 ## Features
 
@@ -89,6 +97,8 @@ This repository consists of a **NextJS** server that handles both the backend **
 - Loop In and Out to provide liquidity or remove it from your channels.
 - Storefront interface
 
+---
+
 ## **Requirements**
 
 - Yarn/npm installed
@@ -108,6 +118,8 @@ npm run dev -> npm run dev:compatible
 ```
 
 **HodlHodl integration will not work with older versions of Node!**
+
+---
 
 ## Config
 
@@ -190,6 +202,8 @@ location /thub/ {
 }
 ```
 
+---
+
 ## Installation
 
 To run ThunderHub you first need to clone this repository.
@@ -224,25 +238,55 @@ yarn start -p 4000
 npm start -- -p 4000
 ```
 
+---
+
 ## Updating
 
-To update ThunderHub to the latest version follow these commands.
+There are multiple ways to update ThunderHub to it's latest version.
 
 _Commands have to be called inside the thunderhub repository folder._
 
-```js
+**1. Script Shortcut**
+
+```sh
+// Yarn
+yarn update
+
+// NPM
+npm run update
+```
+
+**2. Script**
+
+```sh
+sh ./scripts/updateToLatest.sh
+```
+
+**3. Step by Step**
+
+```sh
 // Yarn
 git pull
 yarn
 yarn build
-yarn start
 
 // NPM
 git pull
 npm install
 npm run build
+```
+
+**Then you can start your server:**
+
+```sh
+// Yarn
+yarn start
+
+// NPM
 npm run start
 ```
+
+---
 
 ## Development
 
@@ -255,6 +299,8 @@ yarn dev
 //NPM
 npm run dev
 ```
+
+---
 
 ## Docker
 

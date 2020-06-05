@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { BitcoinFees } from 'src/components/bitcoinInfo/BitcoinFees';
 import { BitcoinPrice } from 'src/components/bitcoinInfo/BitcoinPrice';
 import { useAccountState } from 'src/context/AccountContext';
@@ -10,11 +10,20 @@ import { StatusCheck } from '../statusCheck/StatusCheck';
 import { LoadingCard } from '../loading/LoadingCard';
 import { ServerAccounts } from '../accounts/ServerAccounts';
 
-const Container = styled.div`
+type GridProps = {
+  noNavigation?: boolean;
+};
+
+const Container = styled.div<GridProps>`
   display: grid;
   grid-template-areas: 'nav content content';
   grid-template-columns: auto 1fr 200px;
-  gap: 16px;
+  
+  ${({ noNavigation }) =>
+    !noNavigation &&
+    css`
+      gap: 16px;
+    `}
 
   @media (${mediaWidths.mobile}) {
     display: flex;
@@ -26,7 +35,10 @@ const ContentStyle = styled.div`
   grid-area: content;
 `;
 
-export const GridWrapper: React.FC = ({ children }) => {
+export const GridWrapper: React.FC<GridProps> = ({
+  children,
+  noNavigation,
+}) => {
   const { hasAccount, auth } = useAccountState();
   const renderContent = () => {
     if (hasAccount === 'false') {
@@ -36,12 +48,12 @@ export const GridWrapper: React.FC = ({ children }) => {
   };
   return (
     <Section padding={'16px 0 32px'}>
-      <Container>
+      <Container noNavigation={noNavigation}>
         <ServerAccounts />
         <BitcoinPrice />
         <BitcoinFees />
         {auth && <StatusCheck />}
-        <Navigation />
+        {!noNavigation && <Navigation />}
         <ContentStyle>{renderContent()}</ContentStyle>
       </Container>
     </Section>

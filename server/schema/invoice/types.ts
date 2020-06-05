@@ -47,7 +47,7 @@ export const invoiceTypes = gql`
     timeout: Int
   }
 
-  type invoiceType {
+  type newInvoiceType {
     chainAddress: String
     createdAt: DateTime
     description: String

@@ -13,6 +13,7 @@ import {
   Users,
   CreditCard,
   MessageCircle,
+  BarChart2,
 } from 'react-feather';
 import { useRouter } from 'next/router';
 import {
@@ -119,10 +120,11 @@ const TRANS = '/transactions';
 const FORWARDS = '/forwards';
 const CHAIN_TRANS = '/chain';
 const TOOLS = '/tools';
-const SETTINGS = '/settings';
 const FEES = '/fees';
+const STATS = '/stats';
 const TRADER = '/trading';
 const CHAT = '/chat';
+const SETTINGS = '/settings';
 
 interface NavigationProps {
   isBurger?: boolean;
@@ -171,9 +173,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
       {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
       {renderNavButton('Tools', TOOLS, Shield, sidebar)}
-      {renderNavButton('P2P Trading', TRADER, CreditCard, sidebar)}
-      {renderNavButton('Chat', CHAT, MessageCircle, sidebar)}
-      {renderNavButton('Settings', SETTINGS, Settings, sidebar)}
+      {renderNavButton('Stats', STATS, BarChart2, sidebar)}
     </ButtonSection>
   );
 
@@ -188,6 +188,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
       {renderBurgerNav('Tools', TOOLS, Shield)}
+      {renderBurgerNav('Stats', STATS, BarChart2)}
       {renderBurgerNav('Trading', TRADER, CreditCard)}
       {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}

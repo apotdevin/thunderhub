@@ -3,11 +3,13 @@ import {
   getWalletInfo,
   getClosedChannels,
 } from 'ln-service';
-import { to } from 'server/helpers/async';
+import { to, toWithError } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { getAuthLnd, getErrorMsg, getCorrectAuth } from '../../helpers/helpers';
 import { ContextType } from '../../types/apiTypes';
 import { logger } from '../../helpers/logger';
+
+const errorNode = { alias: 'Node not found' };
 
 export const nodeResolvers = {
   Query: {
@@ -51,6 +53,36 @@ export const nodeResolvers = {
         ...info,
         closed_channels_count: closedChannels?.channels?.length || 0,
       };
+    },
+  },
+  Node: {
+    node: async parent => {
+      const { lnd, withChannels, publicKey } = parent;
+
+      if (!lnd) {
+        logger.debug('ExpectedLNDToGetNode');
+        return errorNode;
+      }
+
+      if (!publicKey) {
+        logger.debug('ExpectedPublicKeyToGetNode');
+        return errorNode;
+      }
+
+      const [info, error] = await toWithError(
+        getLnNode({
+          lnd,
+          is_omitting_channels: !withChannels,
+          public_key: publicKey,
+        })
+      );
+
+      if (error) {
+        logger.debug(`Error getting node with key: ${publicKey}`);
+        return errorNode;
+      }
+
+      return { ...info, public_key: publicKey };
     },
   },
 };

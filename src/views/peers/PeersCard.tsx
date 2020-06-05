@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ArrowDown, ArrowUp } from 'react-feather';
 import ReactTooltip from 'react-tooltip';
+import { PeerType } from 'src/graphql/types';
 import {
   SubCard,
   Separation,
@@ -43,7 +44,7 @@ const getSymbol = (status: boolean) => {
 };
 
 interface PeerProps {
-  peer: any;
+  peer: PeerType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
@@ -79,13 +80,8 @@ export const PeersCard = ({
   const formatReceived = format({ amount: tokens_received });
   const formatSent = format({ amount: tokens_sent });
 
-  const {
-    alias,
-    capacity,
-    channel_count,
-    color,
-    updated_at,
-  } = partner_node_info;
+  const { alias, capacity, channel_count, color, updated_at } =
+    partner_node_info?.node || {};
 
   const handleClick = () => {
     if (indexOpen === index) {

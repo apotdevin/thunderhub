@@ -1,6 +1,32 @@
 import { gql } from 'apollo-server-micro';
 
 export const channelTypes = gql`
+  type policyType {
+    base_fee_mtokens: String
+    cltv_delta: Int
+    fee_rate: Int
+    is_disabled: Boolean
+    max_htlc_mtokens: String
+    min_htlc_mtokens: String
+    public_key: String!
+    updated_at: String
+    my_node: Boolean
+    node: Node
+  }
+
+  type singleChannelType {
+    capacity: Int!
+    id: String!
+    policies: [policyType!]!
+    transaction_id: String!
+    transaction_vout: Int!
+    updated_at: String
+  }
+
+  type Channel {
+    channel: singleChannelType
+  }
+
   type channelFeeType {
     alias: String
     color: String
@@ -46,7 +72,8 @@ export const channelTypes = gql`
     transaction_id: String
     transaction_vout: Int
     unsettled_balance: Int
-    partner_node_info: nodeType
+    partner_node_info: Node
+    partner_fee_info: Channel
   }
 
   type closeChannelType {
@@ -69,7 +96,7 @@ export const channelTypes = gql`
     partner_public_key: String
     transaction_id: String
     transaction_vout: Int
-    partner_node_info: nodeType
+    partner_node_info: Node
   }
 
   type openChannelType {
@@ -92,6 +119,6 @@ export const channelTypes = gql`
     transaction_fee: Int
     transaction_id: String
     transaction_vout: Int
-    partner_node_info: nodeType
+    partner_node_info: Node
   }
 `;

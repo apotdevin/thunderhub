@@ -22,7 +22,6 @@ import { FlowBox } from '../src/views/home/reports/flow';
 const TransactionsView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
   const [token, setToken] = useState('');
-  const [fetching, setFetching] = useState(false);
 
   const { auth } = useAccountState();
 
@@ -42,7 +41,7 @@ const TransactionsView = () => {
     return <LoadingCard title={'Transactions'} />;
   }
 
-  const resumeList = JSON.parse(data.getResume.resume);
+  const resumeList = data.getResume.resume;
 
   return (
     <>
@@ -75,10 +74,7 @@ const TransactionsView = () => {
           <ColorButton
             fullWidth={true}
             withMargin={'16px 0 0'}
-            loading={fetching}
-            disabled={fetching}
             onClick={() => {
-              setFetching(true);
               fetchMore({
                 variables: { auth, token },
                 updateQuery: (
@@ -89,18 +85,17 @@ const TransactionsView = () => {
                 ) => {
                   if (!result) return prev;
                   const newToken = result.getResume.token || '';
-                  const prevEntries = JSON.parse(prev.getResume.resume);
-                  const newEntries = JSON.parse(result.getResume.resume);
+                  const prevEntries = prev.getResume.resume;
+                  const newEntries = result.getResume.resume;
 
                   const allTransactions = newToken
                     ? [...prevEntries, ...newEntries]
                     : prevEntries;
 
-                  setFetching(false);
                   return {
                     getResume: {
                       token: newToken,
-                      resume: JSON.stringify(allTransactions),
+                      resume: allTransactions,
                       __typename: 'getResumeType',
                     },
                   };

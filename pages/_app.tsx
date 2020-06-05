@@ -12,6 +12,7 @@ import { Footer } from '../src/layouts/footer/Footer';
 import 'react-toastify/dist/ReactToastify.css';
 import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
 import { parseCookies } from '../src/utils/cookies';
+import 'react-circular-progressbar/dist/styles.css';
 
 toast.configure({ draggable: false, pauseOnFocusLoss: false });
 

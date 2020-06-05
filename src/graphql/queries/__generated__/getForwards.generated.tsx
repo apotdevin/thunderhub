@@ -20,14 +20,55 @@ export type GetForwardsQuery = { __typename?: 'Query' } & {
                 | 'fee'
                 | 'fee_mtokens'
                 | 'incoming_channel'
-                | 'incoming_alias'
-                | 'incoming_color'
                 | 'mtokens'
                 | 'outgoing_channel'
-                | 'outgoing_alias'
-                | 'outgoing_color'
                 | 'tokens'
-              >
+              > & {
+                  incoming_channel_info?: Types.Maybe<
+                    { __typename?: 'Channel' } & {
+                      channel?: Types.Maybe<
+                        { __typename?: 'singleChannelType' } & {
+                          policies: Array<
+                            { __typename?: 'policyType' } & {
+                              node?: Types.Maybe<
+                                { __typename?: 'Node' } & {
+                                  node?: Types.Maybe<
+                                    { __typename?: 'nodeType' } & Pick<
+                                      Types.NodeType,
+                                      'alias' | 'color'
+                                    >
+                                  >;
+                                }
+                              >;
+                            }
+                          >;
+                        }
+                      >;
+                    }
+                  >;
+                  outgoing_channel_info?: Types.Maybe<
+                    { __typename?: 'Channel' } & {
+                      channel?: Types.Maybe<
+                        { __typename?: 'singleChannelType' } & {
+                          policies: Array<
+                            { __typename?: 'policyType' } & {
+                              node?: Types.Maybe<
+                                { __typename?: 'Node' } & {
+                                  node?: Types.Maybe<
+                                    { __typename?: 'nodeType' } & Pick<
+                                      Types.NodeType,
+                                      'alias' | 'color'
+                                    >
+                                  >;
+                                }
+                              >;
+                            }
+                          >;
+                        }
+                      >;
+                    }
+                  >;
+                }
             >
           >
         >;
@@ -43,13 +84,33 @@ export const GetForwardsDocument = gql`
         fee
         fee_mtokens
         incoming_channel
-        incoming_alias
-        incoming_color
         mtokens
         outgoing_channel
-        outgoing_alias
-        outgoing_color
         tokens
+        incoming_channel_info {
+          channel {
+            policies {
+              node {
+                node {
+                  alias
+                  color
+                }
+              }
+            }
+          }
+        }
+        outgoing_channel_info {
+          channel {
+            policies {
+              node {
+                node {
+                  alias
+                  color
+                }
+              }
+            }
+          }
+        }
       }
       token
     }

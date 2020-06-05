@@ -36,6 +36,13 @@ export const getCorrectAuth = (
   auth: AuthType,
   context: ContextType
 ): LndAuthType => {
+  if (auth.type === 'test' && nodeEnv === 'development') {
+    return {
+      host: process.env.TEST_HOST,
+      macaroon: process.env.TEST_MACAROON,
+      cert: process.env.TEST_CERT,
+    };
+  }
   if (auth.type === SERVER_ACCOUNT) {
     const { account, accounts } = context;
     if (!account) {

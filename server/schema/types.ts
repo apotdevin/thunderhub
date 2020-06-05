@@ -9,17 +9,6 @@ export const generalTypes = gql`
     cert: String
   }
 
-  type nodeType {
-    alias: String
-    capacity: String
-    channel_count: Int
-    color: String
-    updated_at: String
-    base_fee: Int
-    fee_rate: Int
-    cltv_delta: Int
-  }
-
   # A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
   # date-time format outlined in section 5.6 of the RFC 3339 profile of the ISO
   # 8601 standard for representation of dates and times using the Gregorian calendar.
@@ -28,6 +17,9 @@ export const generalTypes = gql`
 
 export const queryTypes = gql`
   type Query {
+    getVolumeHealth(auth: authType!): channelsHealth
+    getTimeHealth(auth: authType!): channelsTimeHealth
+    getFeeHealth(auth: authType!): channelsFeeHealth
     getChannelBalance(auth: authType!): channelBalanceType
     getChannels(auth: authType!, active: Boolean): [channelType]
     getClosedChannels(auth: authType!, type: String): [closedChannelType]
@@ -87,6 +79,7 @@ export const queryTypes = gql`
     getServerAccounts: [serverAccountType]
     getLnPayInfo: lnPayInfoType
     getLnPay(amount: Int): String
+    getLatestVersion: String
   }
 `;
 
@@ -115,7 +108,7 @@ export const mutationTypes = gql`
     ): Boolean
     parsePayment(auth: authType!, request: String!): parsePaymentType
     pay(auth: authType!, request: String!, tokens: Int): payType
-    createInvoice(auth: authType!, amount: Int!): invoiceType
+    createInvoice(auth: authType!, amount: Int!): newInvoiceType
     payViaRoute(auth: authType!, route: String!): Boolean
     createAddress(auth: authType!, nested: Boolean): String
     sendToAddress(

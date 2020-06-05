@@ -14,6 +14,7 @@ import {
   colorButtonBackground,
   colorButtonBorder,
   hoverTextColor,
+  themeColors,
 } from '../../styles/Themes';
 
 export const CardWithTitle = styled.div`
@@ -236,5 +237,17 @@ export const ResponsiveSingle = styled(SingleLine)`
 
   @media (${mediaWidths.mobile}) {
     width: 100%;
+  }
+`;
+
+export const CopyIcon = styled.span`
+  cursor: pointer;
+  margin-left: 4px;
+  padding: 0 4px;
+  border-radius: 2px;
+
+  &:hover {
+    background-color: ${themeColors.blue2};
+    color: white;
   }
 `;
