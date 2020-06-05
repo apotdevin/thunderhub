@@ -27,7 +27,7 @@ import {
   HeaderNavButton,
 } from './Header.styled';
 
-const HOME = '/';
+const HOME = '/home';
 const TRADER = '/trading';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
