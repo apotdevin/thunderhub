@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/apotdevin/thunderhub/compare/v0.6.13...v0.7.0) (2020-06-05)
+
+
+### Features
+
+* ✨ stats view ([#54](https://github.com/apotdevin/thunderhub/issues/54)) ([009195c](https://github.com/apotdevin/thunderhub/commit/009195c86f8e377a5679f2d4c875f230086c1bc7))
+
+
+### Bug Fixes
+
+* 🐛 fee unit display and node info ([63611d4](https://github.com/apotdevin/thunderhub/commit/63611d415f0ea4c71a865f67d34d4424ed93c641))
+
+
+### Improvements
+
+* 🔧 change fetch default ([20197c2](https://github.com/apotdevin/thunderhub/commit/20197c221b96eaf27379b3794b571021033078db))
+
 ### [0.6.13](https://github.com/apotdevin/thunderhub/compare/v0.6.12...v0.6.13) (2020-05-31)
 
 
