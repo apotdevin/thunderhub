@@ -79,6 +79,7 @@ export const queryTypes = gql`
     getServerAccounts: [serverAccountType]
     getLnPayInfo: lnPayInfoType
     getLnPay(amount: Int): String
+    getLatestVersion: String
   }
 `;
 

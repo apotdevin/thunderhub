@@ -49,6 +49,7 @@ interface LinkProps {
   inheritColor?: boolean;
   fullWidth?: boolean;
   noStyling?: boolean;
+  newTab?: boolean;
 }
 
 const { publicRuntimeConfig } = getConfig();
@@ -63,6 +64,7 @@ export const Link = ({
   inheritColor,
   fullWidth,
   noStyling,
+  newTab,
 }: LinkProps) => {
   const props = { fontColor: color, underline, inheritColor, fullWidth };
 
@@ -72,7 +74,11 @@ export const Link = ({
 
   if (href) {
     return (
-      <CorrectLink href={href} {...props}>
+      <CorrectLink
+        href={href}
+        {...props}
+        {...(newTab && { target: '_blank', rel: 'noreferrer' })}
+      >
         {children}
       </CorrectLink>
     );

@@ -61,6 +61,7 @@ export type Query = {
   getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
   getLnPayInfo?: Maybe<LnPayInfoType>;
   getLnPay?: Maybe<Scalars['String']>;
+  getLatestVersion?: Maybe<Scalars['String']>;
 };
 
 export type QueryGetVolumeHealthArgs = {
