@@ -2,6 +2,9 @@ overwrite: true
 schema: 'http://localhost:3000/api/v1'
 documents: 'src/graphql/**/*.ts'
 generates:
+  src/graphql/fragmentTypes.json:
+    plugins:
+      - fragment-matcher
   src/graphql/types.ts:
     - typescript
   src/graphql/:

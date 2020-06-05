@@ -9,7 +9,7 @@ import { getAuthLnd, getErrorMsg, getCorrectAuth } from '../../helpers/helpers';
 import { ContextType } from '../../types/apiTypes';
 import { logger } from '../../helpers/logger';
 
-const errorNode = { alias: 'Partner node not found' };
+const errorNode = { alias: 'Node not found' };
 
 export const nodeResolvers = {
   Query: {

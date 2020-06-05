@@ -248,7 +248,7 @@ export type Mutation = {
   updateFees?: Maybe<Scalars['Boolean']>;
   parsePayment?: Maybe<ParsePaymentType>;
   pay?: Maybe<PayType>;
-  createInvoice?: Maybe<InvoiceType>;
+  createInvoice?: Maybe<NewInvoiceType>;
   payViaRoute?: Maybe<Scalars['Boolean']>;
   createAddress?: Maybe<Scalars['String']>;
   sendToAddress?: Maybe<SendToType>;
@@ -763,8 +763,8 @@ export type HopsType = {
   timeout?: Maybe<Scalars['Int']>;
 };
 
-export type InvoiceType = {
-  __typename?: 'invoiceType';
+export type NewInvoiceType = {
+  __typename?: 'newInvoiceType';
   chainAddress?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   description?: Maybe<Scalars['String']>;
@@ -805,10 +805,57 @@ export type ForwardType = {
   outgoing_channel_info?: Maybe<Channel>;
 };
 
+export type PaymentType = {
+  __typename?: 'PaymentType';
+  created_at: Scalars['String'];
+  destination: Scalars['String'];
+  destination_node?: Maybe<Node>;
+  fee: Scalars['Int'];
+  fee_mtokens: Scalars['String'];
+  hops?: Maybe<Array<Maybe<Node>>>;
+  id: Scalars['String'];
+  index?: Maybe<Scalars['Int']>;
+  is_confirmed: Scalars['Boolean'];
+  is_outgoing: Scalars['Boolean'];
+  mtokens: Scalars['String'];
+  request?: Maybe<Scalars['String']>;
+  safe_fee: Scalars['Int'];
+  safe_tokens?: Maybe<Scalars['Int']>;
+  secret: Scalars['String'];
+  tokens: Scalars['Int'];
+  type: Scalars['String'];
+  date: Scalars['String'];
+};
+
+export type InvoiceType = {
+  __typename?: 'InvoiceType';
+  chain_address?: Maybe<Scalars['String']>;
+  confirmed_at?: Maybe<Scalars['String']>;
+  created_at: Scalars['String'];
+  description: Scalars['String'];
+  description_hash?: Maybe<Scalars['String']>;
+  expires_at: Scalars['String'];
+  id: Scalars['String'];
+  is_canceled?: Maybe<Scalars['Boolean']>;
+  is_confirmed: Scalars['Boolean'];
+  is_held?: Maybe<Scalars['Boolean']>;
+  is_private: Scalars['Boolean'];
+  is_push?: Maybe<Scalars['Boolean']>;
+  received: Scalars['Int'];
+  received_mtokens: Scalars['String'];
+  request?: Maybe<Scalars['String']>;
+  secret: Scalars['String'];
+  tokens: Scalars['Int'];
+  type: Scalars['String'];
+  date: Scalars['String'];
+};
+
+export type Transaction = InvoiceType | PaymentType;
+
 export type GetResumeType = {
   __typename?: 'getResumeType';
   token?: Maybe<Scalars['String']>;
-  resume?: Maybe<Scalars['String']>;
+  resume?: Maybe<Array<Maybe<Transaction>>>;
 };
 
 export type ChannelHealth = {

@@ -107,7 +107,7 @@ export const mutationTypes = gql`
     ): Boolean
     parsePayment(auth: authType!, request: String!): parsePaymentType
     pay(auth: authType!, request: String!, tokens: Int): payType
-    createInvoice(auth: authType!, amount: Int!): invoiceType
+    createInvoice(auth: authType!, amount: Int!): newInvoiceType
     payViaRoute(auth: authType!, route: String!): Boolean
     createAddress(auth: authType!, nested: Boolean): String
     sendToAddress(

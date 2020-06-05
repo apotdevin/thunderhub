@@ -88,6 +88,7 @@
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
     "@graphql-codegen/cli": "^1.15.0",
+    "@graphql-codegen/fragment-matcher": "^1.15.1",
     "@graphql-codegen/introspection": "^1.15.0",
     "@graphql-codegen/near-operation-file-preset": "^1.15.0",
     "@graphql-codegen/typescript": "^1.15.0",

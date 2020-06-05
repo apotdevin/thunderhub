@@ -1,4 +1,5 @@
 import React from 'react';
+import { InvoiceType } from 'src/graphql/types';
 import {
   Separation,
   SubCard,
@@ -20,7 +21,7 @@ import {
 import { Price } from '../../components/price/Price';
 
 interface InvoiceCardProps {
-  invoice: any;
+  invoice: InvoiceType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
@@ -33,25 +34,20 @@ export const InvoiceCard = ({
   indexOpen,
 }: InvoiceCardProps) => {
   const {
-    date,
+    chain_address,
     confirmed_at,
     created_at,
     description,
-    expires_at,
-    is_confirmed,
-    // received,
-    tokens,
-    chain_address,
     description_hash,
+    expires_at,
     id,
     is_canceled,
+    is_confirmed,
     is_held,
-    is_outgoing,
     is_private,
-    // payments,
-    // received_mtokens,
-    // request,
     secret,
+    tokens,
+    date,
   } = invoice;
 
   const formatAmount = <Price amount={tokens} />;
@@ -86,7 +82,6 @@ export const InvoiceCard = ({
         {renderLine('Description Hash:', description_hash)}
         {renderLine('Is Canceled:', is_canceled)}
         {renderLine('Is Held:', is_held)}
-        {renderLine('Is Outgoing:', is_outgoing)}
         {renderLine('Is Private:', is_private)}
         {renderLine('Secret:', secret)}
       </>

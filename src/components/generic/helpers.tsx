@@ -5,8 +5,16 @@ import {
   differenceInCalendarDays,
   isToday,
 } from 'date-fns';
-import { X } from 'react-feather';
-import { SmallLink, DarkSubTitle, OverflowText, SingleLine } from './Styled';
+import { X, Copy } from 'react-feather';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { toast } from 'react-toastify';
+import {
+  SmallLink,
+  DarkSubTitle,
+  OverflowText,
+  SingleLine,
+  CopyIcon,
+} from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
 
 const shorten = (text: string): string => {
@@ -26,12 +34,22 @@ export const getTransactionLink = (transaction: string) => {
   );
 };
 
-export const getNodeLink = (publicKey: string) => {
+export const getNodeLink = (publicKey: string, alias?: string) => {
+  if (alias && alias === 'Node not found') {
+    return 'Node not found';
+  }
   const link = `https://1ml.com/node/${publicKey}`;
   return (
-    <SmallLink href={link} target="_blank">
-      {shorten(publicKey)}
-    </SmallLink>
+    <>
+      <SmallLink href={link} target="_blank">
+        {alias ? alias : shorten(publicKey)}
+      </SmallLink>
+      <CopyToClipboard text={publicKey} onCopy={() => toast.success('Copied')}>
+        <CopyIcon>
+          <Copy size={12} />
+        </CopyIcon>
+      </CopyToClipboard>
+    </>
   );
 };
 

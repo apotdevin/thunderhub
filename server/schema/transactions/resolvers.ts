@@ -1,23 +1,17 @@
 import {
   getPayments,
   getInvoices,
-  getNode,
   getForwards as getLnForwards,
   getWalletInfo,
 } from 'ln-service';
 import { compareDesc, subHours, subDays, subMonths, subYears } from 'date-fns';
 import { sortBy } from 'underscore';
 import { ContextType } from 'server/types/apiTypes';
-import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-} from 'server/helpers/helpers';
+import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
 import { ForwardCompleteProps } from '../widgets/resolvers/interface';
-import { PaymentsProps, InvoicesProps, NodeProps } from './interface';
+import { PaymentsProps, InvoicesProps } from './interface';
 
 export const transactionResolvers = {
   Query: {
@@ -26,41 +20,6 @@ export const transactionResolvers = {
 
       const auth = getCorrectAuth(params.auth, context);
       const lnd = getAuthLnd(auth);
-
-      let payments;
-      let invoices;
-
-      try {
-        const paymentList: PaymentsProps = await getPayments({
-          lnd,
-        });
-
-        const getMappedPayments = () =>
-          Promise.all(
-            paymentList.payments.map(async payment => {
-              let nodeInfo: NodeProps;
-              try {
-                nodeInfo = await getNode({
-                  lnd,
-                  is_omitting_channels: true,
-                  public_key: payment.destination,
-                });
-              } catch (error) {
-                nodeInfo = { alias: payment.destination?.substring(0, 6) };
-              }
-              return {
-                type: 'payment',
-                alias: nodeInfo.alias,
-                date: payment.created_at,
-                ...payment,
-              };
-            })
-          );
-        payments = await getMappedPayments();
-      } catch (error) {
-        logger.error('Error getting payments: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
 
       const invoiceProps = params.token
         ? { token: params.token }
@@ -71,32 +30,45 @@ export const transactionResolvers = {
       let token = '';
       let withInvoices = true;
 
-      try {
-        const invoiceList: InvoicesProps = await getInvoices({
+      const invoiceList: InvoicesProps = await to(
+        getInvoices({
           lnd,
           ...invoiceProps,
-        });
+        })
+      );
 
-        invoices = invoiceList.invoices.map(invoice => {
-          return {
-            type: 'invoice',
-            date: invoice.confirmed_at || invoice.created_at,
-            ...invoice,
-          };
-        });
+      const invoices = invoiceList.invoices.map(invoice => {
+        return {
+          type: 'invoice',
+          date: invoice.confirmed_at || invoice.created_at,
+          ...invoice,
+          isTypeOf: 'InvoiceType',
+        };
+      });
 
-        if (invoices.length <= 0) {
-          withInvoices = false;
-        } else {
-          const { date } = invoices[invoices.length - 1];
-          firstInvoiceDate = invoices[0].date;
-          lastInvoiceDate = date;
-          token = invoiceList.next;
-        }
-      } catch (error) {
-        logger.error('Error getting invoices: %o', error);
-        throw new Error(getErrorMsg(error));
+      if (invoices.length <= 0) {
+        withInvoices = false;
+      } else {
+        const { date } = invoices[invoices.length - 1];
+        firstInvoiceDate = invoices[0].date;
+        lastInvoiceDate = date;
+        token = invoiceList.next;
       }
+
+      const paymentList: PaymentsProps = await to(
+        getPayments({
+          lnd,
+        })
+      );
+
+      const payments = paymentList.payments.map(payment => ({
+        ...payment,
+        type: 'payment',
+        date: payment.created_at,
+        destination_node: { lnd, publicKey: payment.destination },
+        hops: [...payment.hops.map(hop => ({ lnd, publicKey: hop }))],
+        isTypeOf: 'PaymentType',
+      }));
 
       const filterArray = payment => {
         const last =
@@ -112,14 +84,14 @@ export const transactionResolvers = {
         ? payments.filter(filterArray)
         : payments;
 
-      const resumeArray = sortBy(
+      const resume = sortBy(
         [...invoices, ...filteredPayments],
         'date'
       ).reverse();
 
       return {
         token,
-        resume: JSON.stringify(resumeArray),
+        resume,
       };
     },
     getForwards: async (_: undefined, params: any, context: ContextType) => {
@@ -178,6 +150,11 @@ export const transactionResolvers = {
         token: forwardsList.next,
         forwards,
       };
+    },
+  },
+  Transaction: {
+    __resolveType(parent) {
+      return parent.isTypeOf;
     },
   },
 };

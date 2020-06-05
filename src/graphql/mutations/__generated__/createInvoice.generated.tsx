@@ -10,7 +10,7 @@ export type CreateInvoiceMutationVariables = {
 
 export type CreateInvoiceMutation = { __typename?: 'Mutation' } & {
   createInvoice?: Types.Maybe<
-    { __typename?: 'invoiceType' } & Pick<Types.InvoiceType, 'request'>
+    { __typename?: 'newInvoiceType' } & Pick<Types.NewInvoiceType, 'request'>
   >;
 };
 
