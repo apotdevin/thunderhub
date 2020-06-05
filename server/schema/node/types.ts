@@ -10,6 +10,7 @@ export const nodeTypes = gql`
     base_fee: Int
     fee_rate: Int
     cltv_delta: Int
+    public_key: String
   }
 
   type Node {

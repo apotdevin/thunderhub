@@ -82,7 +82,7 @@ export const nodeResolvers = {
         return errorNode;
       }
 
-      return info;
+      return { ...info, public_key: publicKey };
     },
   },
 };
