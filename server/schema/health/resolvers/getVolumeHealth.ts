@@ -38,6 +38,7 @@ export default async (_: undefined, params: any, context: ContextType) => {
 
       return {
         id: channel.id,
+        volume: tokens,
         volumeNormalized: Math.round(tokens / age) || 0,
         publicKey: channel.partner_public_key,
       };
@@ -53,6 +54,8 @@ export default async (_: undefined, params: any, context: ContextType) => {
     return {
       id: channel.id,
       score,
+      volumeNormalized: channel.volumeNormalized,
+      averageVolumeNormalized: average,
       partner: { publicKey: channel.publicKey, lnd },
     };
   });

@@ -814,6 +814,8 @@ export type ChannelHealth = {
   __typename?: 'channelHealth';
   id?: Maybe<Scalars['String']>;
   score?: Maybe<Scalars['Int']>;
+  volumeNormalized?: Maybe<Scalars['String']>;
+  averageVolumeNormalized?: Maybe<Scalars['String']>;
   partner?: Maybe<Node>;
 };
 
@@ -827,7 +829,10 @@ export type ChannelTimeHealth = {
   __typename?: 'channelTimeHealth';
   id?: Maybe<Scalars['String']>;
   score?: Maybe<Scalars['Int']>;
+  significant?: Maybe<Scalars['Boolean']>;
   monitoredTime?: Maybe<Scalars['Int']>;
+  monitoredUptime?: Maybe<Scalars['Int']>;
+  monitoredDowntime?: Maybe<Scalars['Int']>;
   partner?: Maybe<Node>;
 };
 
@@ -837,11 +842,22 @@ export type ChannelsTimeHealth = {
   channels?: Maybe<Array<Maybe<ChannelTimeHealth>>>;
 };
 
+export type FeeHealth = {
+  __typename?: 'feeHealth';
+  score?: Maybe<Scalars['Int']>;
+  rate?: Maybe<Scalars['Int']>;
+  base?: Maybe<Scalars['String']>;
+  rateScore?: Maybe<Scalars['Int']>;
+  baseScore?: Maybe<Scalars['Int']>;
+  rateOver?: Maybe<Scalars['Boolean']>;
+  baseOver?: Maybe<Scalars['Boolean']>;
+};
+
 export type ChannelFeeHealth = {
   __typename?: 'channelFeeHealth';
   id?: Maybe<Scalars['String']>;
-  myScore?: Maybe<Scalars['Int']>;
-  partnerScore?: Maybe<Scalars['Int']>;
+  partnerSide?: Maybe<FeeHealth>;
+  mySide?: Maybe<FeeHealth>;
   partner?: Maybe<Node>;
 };
 

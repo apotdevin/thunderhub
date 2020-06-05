@@ -18,8 +18,32 @@ export type GetFeeHealthQuery = { __typename?: 'Query' } & {
             Types.Maybe<
               { __typename?: 'channelFeeHealth' } & Pick<
                 Types.ChannelFeeHealth,
-                'id' | 'myScore' | 'partnerScore'
+                'id'
               > & {
+                  partnerSide?: Types.Maybe<
+                    { __typename?: 'feeHealth' } & Pick<
+                      Types.FeeHealth,
+                      | 'score'
+                      | 'rate'
+                      | 'base'
+                      | 'rateScore'
+                      | 'baseScore'
+                      | 'rateOver'
+                      | 'baseOver'
+                    >
+                  >;
+                  mySide?: Types.Maybe<
+                    { __typename?: 'feeHealth' } & Pick<
+                      Types.FeeHealth,
+                      | 'score'
+                      | 'rate'
+                      | 'base'
+                      | 'rateScore'
+                      | 'baseScore'
+                      | 'rateOver'
+                      | 'baseOver'
+                    >
+                  >;
                   partner?: Types.Maybe<
                     { __typename?: 'Node' } & {
                       node?: Types.Maybe<
@@ -44,8 +68,24 @@ export const GetFeeHealthDocument = gql`
       score
       channels {
         id
-        myScore
-        partnerScore
+        partnerSide {
+          score
+          rate
+          base
+          rateScore
+          baseScore
+          rateOver
+          baseOver
+        }
+        mySide {
+          score
+          rate
+          base
+          rateScore
+          baseScore
+          rateOver
+          baseOver
+        }
         partner {
           node {
             alias

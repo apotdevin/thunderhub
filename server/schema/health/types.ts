@@ -4,6 +4,8 @@ export const healthTypes = gql`
   type channelHealth {
     id: String
     score: Int
+    volumeNormalized: String
+    averageVolumeNormalized: String
     partner: Node
   }
 
@@ -15,7 +17,10 @@ export const healthTypes = gql`
   type channelTimeHealth {
     id: String
     score: Int
+    significant: Boolean
     monitoredTime: Int
+    monitoredUptime: Int
+    monitoredDowntime: Int
     partner: Node
   }
 
@@ -24,10 +29,20 @@ export const healthTypes = gql`
     channels: [channelTimeHealth]
   }
 
+  type feeHealth {
+    score: Int
+    rate: Int
+    base: String
+    rateScore: Int
+    baseScore: Int
+    rateOver: Boolean
+    baseOver: Boolean
+  }
+
   type channelFeeHealth {
     id: String
-    myScore: Int
-    partnerScore: Int
+    partnerSide: feeHealth
+    mySide: feeHealth
     partner: Node
   }
 

@@ -18,7 +18,12 @@ export type GetTimeHealthQuery = { __typename?: 'Query' } & {
             Types.Maybe<
               { __typename?: 'channelTimeHealth' } & Pick<
                 Types.ChannelTimeHealth,
-                'id' | 'score' | 'monitoredTime'
+                | 'id'
+                | 'score'
+                | 'significant'
+                | 'monitoredTime'
+                | 'monitoredUptime'
+                | 'monitoredDowntime'
               > & {
                   partner?: Types.Maybe<
                     { __typename?: 'Node' } & {
@@ -45,7 +50,10 @@ export const GetTimeHealthDocument = gql`
       channels {
         id
         score
+        significant
         monitoredTime
+        monitoredUptime
+        monitoredDowntime
         partner {
           node {
             alias

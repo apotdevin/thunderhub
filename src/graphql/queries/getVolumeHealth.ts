@@ -7,6 +7,8 @@ export const GET_VOLUME_HEALTH = gql`
       channels {
         id
         score
+        volumeNormalized
+        averageVolumeNormalized
         partner {
           node {
             alias

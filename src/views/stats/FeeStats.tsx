@@ -2,40 +2,84 @@ import * as React from 'react';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetFeeHealthQuery } from 'src/graphql/queries/__generated__/getFeeHealth.generated';
 import {
-  Card,
   SubCard,
   SingleLine,
   DarkSubTitle,
+  Separation,
 } from 'src/components/generic/Styled';
 import { ChannelFeeHealth } from 'src/graphql/types';
+import { sortBy } from 'underscore';
+import { renderLine } from 'src/components/generic/helpers';
 import { useStatsDispatch } from './context';
-import { ScoreColumn, ScoreLine } from './styles';
+import { ScoreColumn, ScoreLine, Clickable, WarningText } from './styles';
+import { StatWrapper } from './Wrapper';
+import { getIcon, getFeeMessage, getProgressColor } from './helpers';
 
 type FeeStatCardProps = {
   channel: ChannelFeeHealth;
+  index: number;
+  open: boolean;
+  openSet: (index: number) => void;
+  myStats?: boolean;
 };
 
-const FeeStatCard = ({ channel }: FeeStatCardProps) => {
+const FeeStatCard = ({
+  channel,
+  myStats,
+  open,
+  openSet,
+  index,
+}: FeeStatCardProps) => {
+  const renderContent = () => {
+    const stats = myStats ? channel.mySide : channel.partnerSide;
+    const { score } = stats;
+
+    return (
+      <ScoreLine>
+        <DarkSubTitle>Score</DarkSubTitle>
+        {score}
+        {getIcon(score)}
+      </ScoreLine>
+    );
+  };
+
+  const renderDetails = () => {
+    const stats = myStats ? channel.mySide : channel.partnerSide;
+    const { rate, base, rateScore, baseScore, rateOver, baseOver } = stats;
+
+    const message = getFeeMessage(rateScore, rateOver);
+    const baseMessage = getFeeMessage(Number(baseScore), baseOver, true);
+    return (
+      <>
+        <Separation />
+        <WarningText warningColor={getProgressColor(rateScore)}>
+          {message}
+        </WarningText>
+        <WarningText warningColor={getProgressColor(baseScore)}>
+          {baseMessage}
+        </WarningText>
+        {renderLine('Fee Rate (ppm):', rate)}
+        {renderLine('Base Fee (sats):', base)}
+      </>
+    );
+  };
+
   return (
     <SubCard key={channel.id}>
-      <SingleLine>
-        {channel?.partner?.node?.alias}
-        <ScoreColumn>
-          <ScoreLine>
-            <DarkSubTitle>My Score</DarkSubTitle>
-            {channel.myScore}
-          </ScoreLine>
-          <ScoreLine>
-            <DarkSubTitle>Partner Score</DarkSubTitle>
-            {channel.partnerScore}
-          </ScoreLine>
-        </ScoreColumn>
-      </SingleLine>
+      <Clickable onClick={() => openSet(open ? 0 : index)}>
+        <SingleLine>
+          {channel?.partner?.node?.alias}
+          <ScoreColumn>{renderContent()}</ScoreColumn>
+        </SingleLine>
+      </Clickable>
+      {open && renderDetails()}
     </SubCard>
   );
 };
 
 export const FeeStats = () => {
+  const [open, openSet] = React.useState(0);
+  const [openTwo, openTwoSet] = React.useState(0);
   const dispatch = useStatsDispatch();
   const { auth } = useAccountState();
   const { data, loading } = useGetFeeHealthQuery({
@@ -56,11 +100,40 @@ export const FeeStats = () => {
     return null;
   }
 
+  const sortedArray = sortBy(
+    data.getFeeHealth.channels,
+    c => c.partnerSide.score
+  );
+  const sortedArrayMyStats = sortBy(
+    data.getFeeHealth.channels,
+    c => c.mySide.score
+  );
+
   return (
-    <Card>
-      {data.getFeeHealth.channels.map(channel => (
-        <FeeStatCard key={channel.id} channel={channel} />
-      ))}
-    </Card>
+    <>
+      <StatWrapper title={'Fee Stats'}>
+        {sortedArray.map((channel, index) => (
+          <FeeStatCard
+            key={channel.id}
+            channel={channel}
+            open={index + 1 === open}
+            openSet={openSet}
+            index={index + 1}
+          />
+        ))}
+      </StatWrapper>
+      <StatWrapper title={'My Fee Stats'}>
+        {sortedArrayMyStats.map((channel, index) => (
+          <FeeStatCard
+            key={channel.id}
+            channel={channel}
+            myStats={true}
+            open={index + 1 === openTwo}
+            openSet={openTwoSet}
+            index={index + 1}
+          />
+        ))}
+      </StatWrapper>
+    </>
   );
 };

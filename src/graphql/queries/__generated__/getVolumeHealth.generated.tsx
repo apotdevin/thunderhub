@@ -15,7 +15,7 @@ export type GetVolumeHealthQuery = { __typename?: 'Query' } & {
             Types.Maybe<
               { __typename?: 'channelHealth' } & Pick<
                 Types.ChannelHealth,
-                'id' | 'score'
+                'id' | 'score' | 'volumeNormalized' | 'averageVolumeNormalized'
               > & {
                   partner?: Types.Maybe<
                     { __typename?: 'Node' } & {
@@ -42,6 +42,8 @@ export const GetVolumeHealthDocument = gql`
       channels {
         id
         score
+        volumeNormalized
+        averageVolumeNormalized
         partner {
           node {
             alias

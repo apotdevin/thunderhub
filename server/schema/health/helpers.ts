@@ -52,14 +52,21 @@ export const getFeeScore = (max: number, current: number): number => {
   return Math.max(0, Math.min(100, score));
 };
 
-export const getMyFeeScore = (max: number, current: number, min: number) => {
+export const getMyFeeScore = (
+  max: number,
+  current: number,
+  min: number
+): { over: boolean; score: number } => {
+  if (current === min) {
+    return { over: false, score: 100 };
+  }
   if (current < min) {
     const score = Math.round(((min - current) / min) * 100);
-    return 100 - Math.max(0, Math.min(100, score));
-  } else {
-    const minimum = current - min;
-    const maximum = max - min;
-    const score = Math.round(1 - ((maximum - minimum) / maximum) * 100 + 100);
-    return Math.max(100, Math.min(200, score));
+    return { over: false, score: 100 - Math.max(0, Math.min(100, score)) };
   }
+  const minimum = current - min;
+  const maximum = max - min;
+  const score = Math.round(((maximum - minimum) / maximum) * 100);
+
+  return { over: true, score: Math.max(0, Math.min(100, score)) };
 };

@@ -54,10 +54,10 @@ export default async (_: undefined, params: any, context: ContextType) => {
               const policy = policies[i];
 
               if (policy.public_key === public_key) {
-                myBaseFee = policy.base_fee_mtokens;
+                myBaseFee = Number(policy.base_fee_mtokens);
                 myFeeRate = policy.fee_rate;
               } else {
-                partnerBaseFee = policy.base_fee_mtokens;
+                partnerBaseFee = Number(policy.base_fee_mtokens);
                 partnerFeeRate = policy.fee_rate;
               }
             }
@@ -81,25 +81,47 @@ export default async (_: undefined, params: any, context: ContextType) => {
     const partnerRateScore = getFeeScore(2000, channel.partnerFeeRate);
     const partnerBaseScore = getFeeScore(100000, channel.partnerBaseFee);
     const myRateScore = getMyFeeScore(2000, channel.myFeeRate, 200);
-    const myBaseScore = getMyFeeScore(100000, channel.myBaseFee, 10000);
+    const myBaseScore = getMyFeeScore(100000, channel.myBaseFee, 1000);
 
     const partnerScore = Math.round(
       getAverage([partnerBaseScore, partnerRateScore])
     );
-    const myScore = Math.round(getAverage([myRateScore, myBaseScore]));
+    const myScore = Math.round(
+      getAverage([myRateScore.score, myBaseScore.score])
+    );
+
+    const mySide = {
+      score: myScore,
+      rate: channel.myFeeRate,
+      base: Math.round(channel.myBaseFee / 1000),
+      rateScore: myRateScore.score,
+      baseScore: myBaseScore.score,
+      rateOver: myRateScore.over,
+      baseOver: myBaseScore.over,
+    };
+
+    const partnerSide = {
+      score: partnerScore,
+      rate: channel.partnerFeeRate,
+      base: Math.round(channel.partnerBaseFee / 1000),
+      rateScore: partnerRateScore,
+      baseScore: partnerBaseScore,
+      rateOver: true,
+      baseOver: true,
+    };
 
     return {
       id: channel.id,
-      partnerScore,
-      myScore,
+      partnerSide,
+      mySide,
       partner: { publicKey: channel.publicKey, lnd },
     };
   });
 
   const score = Math.round(
     getAverage([
-      ...health.map(c => c.partnerScore),
-      ...health.map(c => c.myScore),
+      ...health.map(c => c.partnerSide.score),
+      ...health.map(c => c.mySide.score),
     ])
   );
 
