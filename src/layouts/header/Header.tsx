@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
-import { Cpu, Menu, X, Circle } from 'react-feather';
+import {
+  Cpu,
+  Menu,
+  X,
+  CreditCard,
+  MessageCircle,
+  Settings,
+  Home,
+} from 'react-feather';
 import { useTransition, animated } from 'react-spring';
+import { useRouter } from 'next/router';
 import { headerColor, headerTextColor } from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
@@ -14,17 +23,33 @@ import {
   HeaderLine,
   HeaderTitle,
   IconPadding,
+  HeaderButtons,
+  HeaderNavButton,
 } from './Header.styled';
 
+const HOME = '/';
+const TRADER = '/trading';
+const CHAT = '/chat';
+const SETTINGS = '/settings';
+
 export const Header = () => {
+  const { pathname } = useRouter();
   const [open, setOpen] = useState(false);
-  const { syncedToChain, connected } = useStatusState();
+  const { connected } = useStatusState();
 
   const transitions = useTransition(open, null, {
     from: { position: 'absolute', opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
   });
+
+  const renderNavButton = (link: string, NavIcon: any) => (
+    <Link to={link} noStyling={true}>
+      <HeaderNavButton selected={pathname === link}>
+        <NavIcon size={18} />
+      </HeaderNavButton>
+    </Link>
+  );
 
   const renderLoggedIn = () => (
     <>
@@ -44,11 +69,12 @@ export const Header = () => {
         </IconWrapper>
       </ViewSwitch>
       <ViewSwitch hideMobile={true}>
-        <Circle
-          size={12}
-          strokeWidth={'0'}
-          color={syncedToChain ? '#95de64' : '#ff7875'}
-        />
+        <HeaderButtons>
+          {renderNavButton(HOME, Home)}
+          {renderNavButton(TRADER, CreditCard)}
+          {renderNavButton(CHAT, MessageCircle)}
+          {renderNavButton(SETTINGS, Settings)}
+        </HeaderButtons>
       </ViewSwitch>
     </>
   );

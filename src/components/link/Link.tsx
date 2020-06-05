@@ -36,6 +36,7 @@ const StyledLink = styled.a`
 `;
 
 const NoStyling = styled.a`
+  cursor: pointer;
   text-decoration: none;
 `;
 
