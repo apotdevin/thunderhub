@@ -28,7 +28,8 @@
     "build:64": "docker build -f arm64v8.Dockerfile -t apotdevin/thunderhub:test-arm64v8 .",
     "build:manifest": "docker manifest create apotdevin/thunderhub:test apotdevin/thunderhub:test-amd64 apotdevin/thunderhub:test-arm32v7 apotdevin/thunderhub:test-arm64v8",
     "upgrade-latest": "npx npm-check -u",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "update": "sh ./scripts/updateToLatest.sh"
   },
   "keywords": [],
   "author": "",
@@ -63,6 +64,7 @@
     "numeral": "^2.0.6",
     "qrcode.react": "^1.0.0",
     "react": "^16.13.1",
+    "react-circular-progressbar": "^2.0.3",
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
@@ -86,6 +88,7 @@
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
     "@graphql-codegen/cli": "^1.15.0",
+    "@graphql-codegen/fragment-matcher": "^1.15.1",
     "@graphql-codegen/introspection": "^1.15.0",
     "@graphql-codegen/near-operation-file-preset": "^1.15.0",
     "@graphql-codegen/typescript": "^1.15.0",

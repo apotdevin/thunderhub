@@ -18,11 +18,13 @@ export const GET_CLOSED_CHANNELS = gql`
       transaction_id
       transaction_vout
       partner_node_info {
-        alias
-        capacity
-        channel_count
-        color
-        updated_at
+        node {
+          alias
+          capacity
+          channel_count
+          color
+          updated_at
+        }
       }
     }
   }

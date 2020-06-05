@@ -3,8 +3,16 @@ import * as React from 'react';
 import Head from 'next/head';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import {
+  InMemoryCache,
+  IntrospectionFragmentMatcher,
+} from 'apollo-cache-inmemory';
 import getConfig from 'next/config';
+import introspectionQueryResultData from 'src/graphql/fragmentTypes.json';
+
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData,
+});
 
 let globalApolloClient = null;
 
@@ -32,7 +40,7 @@ function createIsomorphLink(ctx) {
  */
 function createApolloClient(ctx = {}, initialState = {}) {
   const ssrMode = typeof window === 'undefined';
-  const cache = new InMemoryCache().restore(initialState);
+  const cache = new InMemoryCache({ fragmentMatcher }).restore(initialState);
 
   // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
   return new ApolloClient({

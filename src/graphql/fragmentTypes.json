@@ -1,0 +1,18 @@
+{
+  "__schema": {
+    "types": [
+      {
+        "kind": "UNION",
+        "name": "Transaction",
+        "possibleTypes": [
+          {
+            "name": "InvoiceType"
+          },
+          {
+            "name": "PaymentType"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -58,7 +58,7 @@ export const ClosedCard = ({
     partner_node_info,
   } = channelInfo;
 
-  const { alias, color: nodeColor } = partner_node_info;
+  const { alias, color: nodeColor } = partner_node_info?.node || {};
 
   const formatCapacity = <Price amount={capacity} />;
 

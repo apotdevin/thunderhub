@@ -32,6 +32,9 @@ import { walletTypes } from './wallet/types';
 import { invoiceTypes } from './invoice/types';
 import { networkTypes } from './network/types';
 import { transactionTypes } from './transactions/types';
+import { healthResolvers } from './health/resolvers';
+import { healthTypes } from './health/types';
+import { githubResolvers } from './github/resolvers';
 
 const typeDefs = [
   generalTypes,
@@ -52,6 +55,7 @@ const typeDefs = [
   invoiceTypes,
   networkTypes,
   transactionTypes,
+  healthTypes,
 ];
 
 const resolvers = merge(
@@ -70,7 +74,9 @@ const resolvers = merge(
   invoiceResolvers,
   channelResolvers,
   walletResolvers,
-  transactionResolvers
+  transactionResolvers,
+  healthResolvers,
+  githubResolvers
 );
 
 export default makeExecutableSchema({ typeDefs, resolvers });

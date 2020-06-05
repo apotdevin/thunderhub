@@ -26,14 +26,26 @@ export const GET_CHANNELS = gql`
       transaction_vout
       unsettled_balance
       partner_node_info {
-        alias
-        capacity
-        channel_count
-        color
-        updated_at
-        base_fee
-        fee_rate
-        cltv_delta
+        node {
+          alias
+          capacity
+          channel_count
+          color
+          updated_at
+        }
+      }
+      partner_fee_info {
+        channel {
+          policies {
+            node {
+              node {
+                base_fee
+                fee_rate
+                cltv_delta
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -4,8 +4,10 @@ const lnpay =
     : 'https://thunderhub.io/api/lnpay';
 
 export const appUrls = {
+  lnpay,
   fees: 'https://bitcoinfees.earn.com/api/v1/fees/recommended',
   ticker: 'https://blockchain.info/ticker',
   hodlhodl: 'https://hodlhodl.com/api',
-  lnpay,
+  github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
+  update: 'https://github.com/apotdevin/thunderhub#updating',
 };

@@ -1,4 +1,4 @@
-import { getPeers, getNode, removePeer, addPeer } from 'ln-service';
+import { getPeers, removePeer, addPeer } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
@@ -7,6 +7,7 @@ import {
   getErrorMsg,
   getCorrectAuth,
 } from 'server/helpers/helpers';
+import { to } from 'server/helpers/async';
 
 interface PeerProps {
   bytes_received: number;
@@ -28,39 +29,16 @@ export const peerResolvers = {
       const auth = getCorrectAuth(params.auth, context);
       const lnd = getAuthLnd(auth);
 
-      try {
-        const { peers }: { peers: PeerProps[] } = await getPeers({
+      const { peers }: { peers: PeerProps[] } = await to(
+        getPeers({
           lnd,
-        });
+        })
+      );
 
-        const getPeerList = () =>
-          Promise.all(
-            peers.map(async peer => {
-              try {
-                const nodeInfo = await getNode({
-                  lnd,
-                  is_omitting_channels: true,
-                  public_key: peer.public_key,
-                });
-
-                return {
-                  ...peer,
-                  partner_node_info: {
-                    ...nodeInfo,
-                  },
-                };
-              } catch (error) {
-                return { ...peer, partner_node_info: {} };
-              }
-            })
-          );
-
-        const peerList = await getPeerList();
-        return peerList;
-      } catch (error) {
-        logger.error('Error getting peers: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
+      return peers.map(peer => ({
+        ...peer,
+        partner_node_info: { lnd, publicKey: peer.public_key },
+      }));
     },
   },
   Mutation: {

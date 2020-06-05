@@ -27,7 +27,7 @@ export const lnpayResolvers = {
       const [response, error] = await toWithError(fetch(appUrls.lnpay));
 
       if (error) {
-        logger.debug('Unable to get lnpay: %o', error);
+        logger.debug('Unable to connect to ThunderHub LNPAY');
         throw new Error('NoLnPay');
       }
 
