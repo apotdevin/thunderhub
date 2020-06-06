@@ -9,7 +9,7 @@ docker push $REPO:$VERSION-amd64
 docker build --pull -t $REPO:$VERSION-arm32v7 -f arm32v7.Dockerfile .
 docker push $REPO:$VERSION-arm32v7
 
-docker build --pull -t $REPO:$VERSION-arm32v7 -f arm64v8.Dockerfile .
+docker build --pull -t $REPO:$VERSION-arm64v8 -f arm64v8.Dockerfile .
 docker push $REPO:$VERSION-arm64v8
 
 docker manifest create --amend $REPO:$VERSION $REPO:$VERSION-amd64 $REPO:$VERSION-arm32v7 $REPO:$VERSION-arm64v8
