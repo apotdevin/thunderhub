@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { withApollo } from 'config/client';
-import { VolumeStats } from 'src/views/stats/VolumeStats';
+import { VolumeStats } from 'src/views/stats/FlowStats';
 import { TimeStats } from 'src/views/stats/TimeStats';
 import { FeeStats } from 'src/views/stats/FeeStats';
 import { StatResume } from 'src/views/stats/StatResume';

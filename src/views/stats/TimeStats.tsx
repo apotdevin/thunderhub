@@ -3,10 +3,10 @@ import { useAccountState } from 'src/context/AccountContext';
 import { useGetTimeHealthQuery } from 'src/graphql/queries/__generated__/getTimeHealth.generated';
 import {
   SubCard,
-  SingleLine,
   SubTitle,
   DarkSubTitle,
   Separation,
+  ResponsiveLine,
 } from 'src/components/generic/Styled';
 import { ChannelTimeHealth } from 'src/graphql/types';
 import { sortBy } from 'underscore';
@@ -49,14 +49,14 @@ const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
   return (
     <SubCard key={channel.id}>
       <Clickable onClick={() => openSet(open ? 0 : index)}>
-        <SingleLine>
+        <ResponsiveLine>
           <SubTitle>{channel?.partner?.node?.alias}</SubTitle>
           <ScoreLine>
             <DarkSubTitle>Score</DarkSubTitle>
             {channel.score}
             {getIcon(channel.score, !channel.significant)}
           </ScoreLine>
-        </SingleLine>
+        </ResponsiveLine>
       </Clickable>
       {open && renderContent()}
     </SubCard>
