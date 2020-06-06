@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useGetLnPayLazyQuery } from 'src/graphql/queries/__generated__/getLnPay.generated';
-import { usePayInvoiceMutation } from 'src/graphql/mutations/__generated__/pay.generated';
 import {
   Card,
   SubTitle,
@@ -8,14 +7,10 @@ import {
   Sub4Title,
 } from 'src/components/generic/Styled';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
-import { SecureButton } from 'src/components/buttons/secureButton/SecureButton';
-import { cleanLightningInvoice } from 'src/utils/helpers';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import Modal from 'src/components/modal/ReactModal';
-import { toast } from 'react-toastify';
-import { getErrorContent } from 'src/utils/error';
 import { Emoji } from 'src/components/emoji/Emoji';
-import { RequestModal } from '../../account/pay/Modals';
+import { RequestModal } from '../../account/pay/RequestModal';
 
 export const SupportBar = () => {
   const [modalOpen, modalOpenSet] = React.useState<boolean>(false);
@@ -27,17 +22,6 @@ export const SupportBar = () => {
     { data, loading: invoiceLoading },
   ] = useGetLnPayLazyQuery();
 
-  const [makePayment, { loading: payLoading }] = usePayInvoiceMutation({
-    onError: error => toast.error(getErrorContent(error)),
-    onCompleted: () => {
-      toast.success('Payment Sent');
-      invoiceSet('');
-      amountSet(0);
-      modalOpenSet(false);
-    },
-    refetchQueries: ['GetInOut', 'GetNodeInfo', 'GetBalances'],
-  });
-
   React.useEffect(() => {
     if (data && data.getLnPay) {
       invoiceSet(data.getLnPay);
@@ -45,18 +29,11 @@ export const SupportBar = () => {
     }
   }, [data]);
 
-  const renderButton = () => (
-    <SecureButton
-      callback={makePayment}
-      variables={{ request: cleanLightningInvoice(invoice) }}
-      disabled={!invoice || payLoading}
-      withMargin={'16px 0 0'}
-      loading={payLoading}
-      fullWidth={true}
-    >
-      Send
-    </SecureButton>
-  );
+  const handleReset = () => {
+    modalOpenSet(false);
+    amountSet(0);
+    invoiceSet('');
+  };
 
   return (
     <>
@@ -92,7 +69,7 @@ export const SupportBar = () => {
           amountSet(0);
         }}
       >
-        <RequestModal request={invoice}>{renderButton()}</RequestModal>
+        <RequestModal request={invoice} handleReset={handleReset} />
       </Modal>
     </>
   );

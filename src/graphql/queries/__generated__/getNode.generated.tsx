@@ -10,12 +10,14 @@ export type GetNodeQueryVariables = {
 };
 
 export type GetNodeQuery = { __typename?: 'Query' } & {
-  getNode?: Types.Maybe<
-    { __typename?: 'nodeType' } & Pick<
-      Types.NodeType,
-      'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
-    >
-  >;
+  getNode: { __typename?: 'Node' } & {
+    node?: Types.Maybe<
+      { __typename?: 'nodeType' } & Pick<
+        Types.NodeType,
+        'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
+      >
+    >;
+  };
 };
 
 export const GetNodeDocument = gql`
@@ -29,11 +31,13 @@ export const GetNodeDocument = gql`
       publicKey: $publicKey
       withoutChannels: $withoutChannels
     ) {
-      alias
-      capacity
-      channel_count
-      color
-      updated_at
+      node {
+        alias
+        capacity
+        channel_count
+        color
+        updated_at
+      }
     }
   }
 `;

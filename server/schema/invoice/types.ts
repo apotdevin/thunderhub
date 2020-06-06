@@ -1,28 +1,29 @@
 import { gql } from 'apollo-server-micro';
 
 export const invoiceTypes = gql`
-  type parsePaymentType {
-    chainAddresses: [String]
-    cltvDelta: Int
-    createdAt: DateTime
+  type decodeType {
+    chain_address: String
+    cltv_delta: Int
     description: String
-    descriptionHash: String
+    description_hash: String
     destination: String
-    expiresAt: DateTime
+    expires_at: String
     id: String
-    isExpired: Boolean
-    mTokens: String
-    network: String
-    routes: [PaymentRouteType]
+    mtokens: String
+    payment: String
+    routes: [[RouteType]]
+    safe_tokens: Int
     tokens: Int
+    destination_node: Node!
+    probe_route: ProbeRoute
   }
 
-  type PaymentRouteType {
-    mTokenFee: String
+  type RouteType {
+    base_fee_mtokens: String
     channel: String
-    cltvDelta: Int
-    feeRate: Int
-    publicKey: String
+    cltv_delta: Int
+    fee_rate: Int
+    public_key: String
   }
 
   type payType {
@@ -48,8 +49,8 @@ export const invoiceTypes = gql`
   }
 
   type newInvoiceType {
-    chainAddress: String
-    createdAt: DateTime
+    chain_address: String
+    created_at: DateTime
     description: String
     id: String
     request: String

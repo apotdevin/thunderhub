@@ -33,7 +33,7 @@ export const queryTypes = gql`
       auth: authType!
       publicKey: String!
       withoutChannels: Boolean
-    ): nodeType
+    ): Node!
     decodeRequest(auth: authType!, request: String!): decodeType
     getWalletInfo(auth: authType!): walletInfoType
     getResume(auth: authType!, token: String): getResumeType
@@ -106,10 +106,10 @@ export const mutationTypes = gql`
       baseFee: Float
       feeRate: Int
     ): Boolean
-    parsePayment(auth: authType!, request: String!): parsePaymentType
-    pay(auth: authType!, request: String!, tokens: Int): payType
+    keysend(auth: authType!, destination: String!, tokens: Int!): payType
     createInvoice(auth: authType!, amount: Int!): newInvoiceType
-    payViaRoute(auth: authType!, route: String!): Boolean
+    circularRebalance(auth: authType!, route: String!): Boolean
+    payViaRoute(auth: authType!, route: String!, id: String!): Boolean
     createAddress(auth: authType!, nested: Boolean): String
     sendToAddress(
       auth: authType!

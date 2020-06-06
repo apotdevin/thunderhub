@@ -1,4 +1,8 @@
-import { getRouteToDestination, getWalletInfo } from 'ln-service';
+import {
+  getRouteToDestination,
+  getWalletInfo,
+  probeForRoute,
+} from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
@@ -7,6 +11,7 @@ import {
   getErrorMsg,
   getCorrectAuth,
 } from 'server/helpers/helpers';
+import { toWithError } from 'server/helpers/async';
 
 export const routeResolvers = {
   Query: {
@@ -35,6 +40,46 @@ export const routeResolvers = {
       }
 
       return JSON.stringify(route);
+    },
+  },
+  ProbeRoute: {
+    route: async parent => {
+      const { lnd, destination, tokens } = parent;
+
+      if (!lnd) {
+        logger.debug('ExpectedLNDToProbeForRoute');
+        return null;
+      }
+
+      if (!destination) {
+        logger.debug('ExpectedDestinationToProbeForRoute');
+        return null;
+      }
+
+      const [{ route }, error] = await toWithError(
+        probeForRoute({ lnd, destination, tokens })
+      );
+
+      if (error) {
+        logger.debug(
+          `Error probing route for to destination ${destination} from ${tokens} tokens`
+        );
+        return null;
+      }
+
+      if (!route) {
+        logger.debug(
+          `No route found to destination ${destination} for ${tokens} tokens`
+        );
+        return null;
+      }
+
+      const hopsWithNodes = route.hops.map(h => ({
+        ...h,
+        node: { lnd, publicKey: h.public_key },
+      }));
+
+      return { ...route, hops: hopsWithNodes };
     },
   },
 };

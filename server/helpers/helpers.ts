@@ -104,6 +104,9 @@ export const getAuthLnd = (auth: LndAuthType) => {
   return lnd;
 };
 
+export const getLnd = (auth: AuthType, context: ContextType) =>
+  getAuthLnd(getCorrectAuth(auth, context));
+
 export const getErrorMsg = (error: any[] | string): string => {
   if (typeof error === 'string') {
     return error;

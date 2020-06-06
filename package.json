@@ -19,7 +19,7 @@
     "release:test": "standard-version --dry-run",
     "release:minor": "standard-version --release-as minor && git push --follow-tags origin master",
     "analyze": "cross-env ANALYZE=true next build",
-    "generate": "graphql-codegen --config codegen.yml",
+    "generate": "graphql-codegen --config codegen.yml && yarn lint",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",

@@ -21,19 +21,68 @@ export type DecodeRequestQuery = { __typename?: 'Query' } & {
       | 'id'
       | 'tokens'
     > & {
+        destination_node: { __typename?: 'Node' } & {
+          node?: Types.Maybe<
+            { __typename?: 'nodeType' } & Pick<Types.NodeType, 'alias'>
+          >;
+        };
         routes?: Types.Maybe<
           Array<
             Types.Maybe<
-              { __typename?: 'DecodeRoutesType' } & Pick<
-                Types.DecodeRoutesType,
-                | 'base_fee_mtokens'
-                | 'channel'
-                | 'cltv_delta'
-                | 'fee_rate'
-                | 'public_key'
+              Array<
+                Types.Maybe<
+                  { __typename?: 'RouteType' } & Pick<
+                    Types.RouteType,
+                    | 'base_fee_mtokens'
+                    | 'channel'
+                    | 'cltv_delta'
+                    | 'fee_rate'
+                    | 'public_key'
+                  >
+                >
               >
             >
           >
+        >;
+        probe_route?: Types.Maybe<
+          { __typename?: 'ProbeRoute' } & {
+            route?: Types.Maybe<
+              { __typename?: 'probedRoute' } & Pick<
+                Types.ProbedRoute,
+                | 'confidence'
+                | 'fee'
+                | 'fee_mtokens'
+                | 'mtokens'
+                | 'safe_fee'
+                | 'safe_tokens'
+                | 'timeout'
+                | 'tokens'
+              > & {
+                  hops: Array<
+                    { __typename?: 'probedRouteHop' } & Pick<
+                      Types.ProbedRouteHop,
+                      | 'channel'
+                      | 'channel_capacity'
+                      | 'fee'
+                      | 'fee_mtokens'
+                      | 'forward'
+                      | 'forward_mtokens'
+                      | 'public_key'
+                      | 'timeout'
+                    > & {
+                        node: { __typename?: 'Node' } & {
+                          node?: Types.Maybe<
+                            { __typename?: 'nodeType' } & Pick<
+                              Types.NodeType,
+                              'alias'
+                            >
+                          >;
+                        };
+                      }
+                  >;
+                }
+            >;
+          }
         >;
       }
   >;
@@ -47,6 +96,11 @@ export const DecodeRequestDocument = gql`
       description
       description_hash
       destination
+      destination_node {
+        node {
+          alias
+        }
+      }
       expires_at
       id
       routes {
@@ -57,6 +111,33 @@ export const DecodeRequestDocument = gql`
         public_key
       }
       tokens
+      probe_route {
+        route {
+          confidence
+          fee
+          fee_mtokens
+          hops {
+            channel
+            channel_capacity
+            fee
+            fee_mtokens
+            forward
+            forward_mtokens
+            public_key
+            timeout
+            node {
+              node {
+                alias
+              }
+            }
+          }
+          mtokens
+          safe_fee
+          safe_tokens
+          timeout
+          tokens
+        }
+      }
     }
   }
 `;

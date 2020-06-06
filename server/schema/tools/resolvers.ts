@@ -2,7 +2,6 @@ import {
   verifyBackups as verifyLnBackups,
   recoverFundsFromChannels,
   getBackups,
-  decodePaymentRequest,
   payRequest,
   verifyMessage,
   signMessage,
@@ -86,24 +85,6 @@ export const toolsResolvers = {
         return JSON.stringify(backups);
       } catch (error) {
         logger.error('Error getting backups: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
-    },
-    decodeRequest: async (_: undefined, params: any, context: ContextType) => {
-      await requestLimiter(context.ip, 'decode');
-
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
-
-      try {
-        const decode = await decodePaymentRequest({
-          lnd,
-          request: params.request,
-        });
-
-        return decode;
-      } catch (error) {
-        logger.error('Error paying request: %o', error);
         throw new Error(getErrorMsg(error));
       }
     },
