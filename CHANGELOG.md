@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.1](https://github.com/apotdevin/thunderhub/compare/v0.7.0...v0.7.1) (2020-06-06)
+
+
+### Bug Fixes
+
+* 🐛 partner fees in channel view ([6981b94](https://github.com/apotdevin/thunderhub/commit/6981b9453400b2afdd723c430217a25e47c2fea2))
+
+
+### Improvements
+
+* 🔧 change fee rate units ([33aa158](https://github.com/apotdevin/thunderhub/commit/33aa158f6b7c307f438485517d234c0a5609ea7e))
+* 🔧 stat changes ([dff30e2](https://github.com/apotdevin/thunderhub/commit/dff30e21988697282f8248e3e0f15ce86344740a))
+
 ## [0.7.0](https://github.com/apotdevin/thunderhub/compare/v0.6.13...v0.7.0) (2020-06-05)
 
 
