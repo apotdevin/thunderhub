@@ -16,6 +16,8 @@ const getMessage = error => {
       return 'This account does not exist.';
     case 'WrongPasswordForLogin':
       return 'Wrong password provided.';
+    case 'InsufficientBalanceToAttemptPayment':
+      return 'Insufficient balance for payment.';
     default:
       return error;
   }

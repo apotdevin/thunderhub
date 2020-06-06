@@ -31,7 +31,7 @@ export type Query = {
   getNetworkInfo?: Maybe<NetworkInfoType>;
   getNodeInfo?: Maybe<NodeInfoType>;
   adminCheck?: Maybe<Scalars['Boolean']>;
-  getNode?: Maybe<NodeType>;
+  getNode: Node;
   decodeRequest?: Maybe<DecodeType>;
   getWalletInfo?: Maybe<WalletInfoType>;
   getResume?: Maybe<GetResumeType>;
@@ -247,9 +247,9 @@ export type Mutation = {
   closeChannel?: Maybe<CloseChannelType>;
   openChannel?: Maybe<OpenChannelType>;
   updateFees?: Maybe<Scalars['Boolean']>;
-  parsePayment?: Maybe<ParsePaymentType>;
-  pay?: Maybe<PayType>;
+  keysend?: Maybe<PayType>;
   createInvoice?: Maybe<NewInvoiceType>;
+  circularRebalance?: Maybe<Scalars['Boolean']>;
   payViaRoute?: Maybe<Scalars['Boolean']>;
   createAddress?: Maybe<Scalars['String']>;
   sendToAddress?: Maybe<SendToType>;
@@ -283,15 +283,10 @@ export type MutationUpdateFeesArgs = {
   feeRate?: Maybe<Scalars['Int']>;
 };
 
-export type MutationParsePaymentArgs = {
+export type MutationKeysendArgs = {
   auth: AuthType;
-  request: Scalars['String'];
-};
-
-export type MutationPayArgs = {
-  auth: AuthType;
-  request: Scalars['String'];
-  tokens?: Maybe<Scalars['Int']>;
+  destination: Scalars['String'];
+  tokens: Scalars['Int'];
 };
 
 export type MutationCreateInvoiceArgs = {
@@ -299,9 +294,15 @@ export type MutationCreateInvoiceArgs = {
   amount: Scalars['Int'];
 };
 
+export type MutationCircularRebalanceArgs = {
+  auth: AuthType;
+  route: Scalars['String'];
+};
+
 export type MutationPayViaRouteArgs = {
   auth: AuthType;
   route: Scalars['String'];
+  id: Scalars['String'];
 };
 
 export type MutationCreateAddressArgs = {
@@ -345,7 +346,7 @@ export type MutationLogoutArgs = {
 
 export type NodeType = {
   __typename?: 'nodeType';
-  alias?: Maybe<Scalars['String']>;
+  alias: Scalars['String'];
   capacity?: Maybe<Scalars['String']>;
   channel_count?: Maybe<Scalars['Int']>;
   color?: Maybe<Scalars['String']>;
@@ -514,30 +515,6 @@ export type GetTransactionsType = {
   id?: Maybe<Scalars['String']>;
   output_addresses?: Maybe<Array<Maybe<Scalars['String']>>>;
   tokens?: Maybe<Scalars['Int']>;
-};
-
-export type DecodeType = {
-  __typename?: 'decodeType';
-  chain_address?: Maybe<Scalars['String']>;
-  cltv_delta?: Maybe<Scalars['Int']>;
-  description?: Maybe<Scalars['String']>;
-  description_hash?: Maybe<Scalars['String']>;
-  destination?: Maybe<Scalars['String']>;
-  expires_at?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  mtokens?: Maybe<Scalars['String']>;
-  routes?: Maybe<Array<Maybe<DecodeRoutesType>>>;
-  safe_tokens?: Maybe<Scalars['Int']>;
-  tokens?: Maybe<Scalars['Int']>;
-};
-
-export type DecodeRoutesType = {
-  __typename?: 'DecodeRoutesType';
-  base_fee_mtokens?: Maybe<Scalars['String']>;
-  channel?: Maybe<Scalars['String']>;
-  cltv_delta?: Maybe<Scalars['Int']>;
-  fee_rate?: Maybe<Scalars['Int']>;
-  public_key?: Maybe<Scalars['String']>;
 };
 
 export type GetMessagesType = {
@@ -711,30 +688,31 @@ export type WalletInfoType = {
   is_wtclientrpc_enabled?: Maybe<Scalars['Boolean']>;
 };
 
-export type ParsePaymentType = {
-  __typename?: 'parsePaymentType';
-  chainAddresses?: Maybe<Array<Maybe<Scalars['String']>>>;
-  cltvDelta?: Maybe<Scalars['Int']>;
-  createdAt?: Maybe<Scalars['DateTime']>;
+export type DecodeType = {
+  __typename?: 'decodeType';
+  chain_address?: Maybe<Scalars['String']>;
+  cltv_delta?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
-  descriptionHash?: Maybe<Scalars['String']>;
+  description_hash?: Maybe<Scalars['String']>;
   destination?: Maybe<Scalars['String']>;
-  expiresAt?: Maybe<Scalars['DateTime']>;
+  expires_at?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
-  isExpired?: Maybe<Scalars['Boolean']>;
-  mTokens?: Maybe<Scalars['String']>;
-  network?: Maybe<Scalars['String']>;
-  routes?: Maybe<Array<Maybe<PaymentRouteType>>>;
+  mtokens?: Maybe<Scalars['String']>;
+  payment?: Maybe<Scalars['String']>;
+  routes?: Maybe<Array<Maybe<Array<Maybe<RouteType>>>>>;
+  safe_tokens?: Maybe<Scalars['Int']>;
   tokens?: Maybe<Scalars['Int']>;
+  destination_node: Node;
+  probe_route?: Maybe<ProbeRoute>;
 };
 
-export type PaymentRouteType = {
-  __typename?: 'PaymentRouteType';
-  mTokenFee?: Maybe<Scalars['String']>;
+export type RouteType = {
+  __typename?: 'RouteType';
+  base_fee_mtokens?: Maybe<Scalars['String']>;
   channel?: Maybe<Scalars['String']>;
-  cltvDelta?: Maybe<Scalars['Int']>;
-  feeRate?: Maybe<Scalars['Int']>;
-  publicKey?: Maybe<Scalars['String']>;
+  cltv_delta?: Maybe<Scalars['Int']>;
+  fee_rate?: Maybe<Scalars['Int']>;
+  public_key?: Maybe<Scalars['String']>;
 };
 
 export type PayType = {
@@ -763,8 +741,8 @@ export type HopsType = {
 
 export type NewInvoiceType = {
   __typename?: 'newInvoiceType';
-  chainAddress?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['DateTime']>;
+  chain_address?: Maybe<Scalars['String']>;
+  created_at?: Maybe<Scalars['DateTime']>;
   description?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   request?: Maybe<Scalars['String']>;
@@ -911,4 +889,35 @@ export type ChannelsFeeHealth = {
   __typename?: 'channelsFeeHealth';
   score?: Maybe<Scalars['Int']>;
   channels?: Maybe<Array<Maybe<ChannelFeeHealth>>>;
+};
+
+export type ProbedRouteHop = {
+  __typename?: 'probedRouteHop';
+  channel: Scalars['String'];
+  channel_capacity: Scalars['Int'];
+  fee: Scalars['Int'];
+  fee_mtokens: Scalars['String'];
+  forward: Scalars['Int'];
+  forward_mtokens: Scalars['String'];
+  public_key: Scalars['String'];
+  timeout: Scalars['Int'];
+  node: Node;
+};
+
+export type ProbedRoute = {
+  __typename?: 'probedRoute';
+  confidence: Scalars['Int'];
+  fee: Scalars['Int'];
+  fee_mtokens: Scalars['String'];
+  hops: Array<ProbedRouteHop>;
+  mtokens: Scalars['String'];
+  safe_fee: Scalars['Int'];
+  safe_tokens: Scalars['Int'];
+  timeout: Scalars['Int'];
+  tokens: Scalars['Int'];
+};
+
+export type ProbeRoute = {
+  __typename?: 'ProbeRoute';
+  route?: Maybe<ProbedRoute>;
 };

@@ -1,43 +1,25 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { usePayInvoiceMutation } from 'src/graphql/mutations/__generated__/pay.generated';
 import {
   Sub4Title,
   ResponsiveLine,
   NoWrapTitle,
 } from '../../../../components/generic/Styled';
-import { getErrorContent } from '../../../../utils/error';
-import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
 import Modal from '../../../../components/modal/ReactModal';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { useStatusState } from '../../../../context/StatusContext';
-import {
-  isLightningInvoice,
-  cleanLightningInvoice,
-} from '../../../../utils/helpers';
-import { KeysendModal, RequestModal } from './Modals';
+import { isLightningInvoice } from '../../../../utils/helpers';
+import { RequestModal } from './RequestModal';
+import { KeysendModal } from './KeysendModal';
 
 export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const [request, setRequest] = useState<string>('');
-  const [tokens, setTokens] = useState<number>(0);
   const [modalType, setModalType] = useState('none');
 
   const { minorVersion } = useStatusState();
 
   const canKeysend = minorVersion >= 9;
-
-  const [makePayment, { loading }] = usePayInvoiceMutation({
-    onError: error => toast.error(getErrorContent(error)),
-    onCompleted: () => {
-      toast.success('Payment Sent');
-      setRequest('');
-      setTokens(0);
-      setModalType('none');
-      setOpen();
-    },
-    refetchQueries: ['GetInOut', 'GetNodeInfo', 'GetBalances'],
-  });
 
   const handleClick = () => {
     const isRequest = isLightningInvoice(request);
@@ -53,35 +35,18 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
     }
   };
 
-  const renderButton = () => (
-    <SecureButton
-      callback={makePayment}
-      variables={
-        modalType === 'none'
-          ? { request: cleanLightningInvoice(request) }
-          : { request, tokens }
-      }
-      disabled={
-        modalType === 'request' ? request === '' : request === '' || tokens <= 0
-      }
-      withMargin={'16px 0 0'}
-      loading={loading}
-      fullWidth={true}
-    >
-      Send
-    </SecureButton>
-  );
+  const handleReset = () => {
+    setRequest('');
+    setModalType('none');
+    setOpen();
+  };
 
   const renderModal = () => {
     if (modalType === 'request') {
-      return <RequestModal request={request}>{renderButton()}</RequestModal>;
+      return <RequestModal request={request} handleReset={handleReset} />;
     }
     if (modalType === 'keysend') {
-      return (
-        <KeysendModal tokens={tokens} publicKey={request} setTokens={setTokens}>
-          {renderButton()}
-        </KeysendModal>
-      );
+      return <KeysendModal publicKey={request} handleReset={handleReset} />;
     }
     return null;
   };
@@ -117,7 +82,6 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
         isOpen={modalType !== 'none'}
         closeCallback={() => {
           setModalType('none');
-          setTokens(0);
           setRequest('');
         }}
       >

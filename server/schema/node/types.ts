@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-micro';
 
 export const nodeTypes = gql`
   type nodeType {
-    alias: String
+    alias: String!
     capacity: String
     channel_count: Int
     color: String

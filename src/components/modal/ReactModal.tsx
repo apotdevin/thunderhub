@@ -26,6 +26,8 @@ const generalCSS = css`
     transform: translateY(-100%) translateX(-50%);
     width: 100%;
     min-width: 325px;
+    max-height: 100%;
+    overflow-y: auto;
   }
 `;
 
