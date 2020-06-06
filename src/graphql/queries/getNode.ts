@@ -11,11 +11,13 @@ export const GET_NODE = gql`
       publicKey: $publicKey
       withoutChannels: $withoutChannels
     ) {
-      alias
-      capacity
-      channel_count
-      color
-      updated_at
+      node {
+        alias
+        capacity
+        channel_count
+        color
+        updated_at
+      }
     }
   }
 `;

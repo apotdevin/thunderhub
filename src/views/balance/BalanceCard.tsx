@@ -1,6 +1,7 @@
 import React from 'react';
 import { Circle, ChevronRight, X } from 'react-feather';
 import numeral from 'numeral';
+import { ChannelType } from 'src/graphql/types';
 import {
   SubCard,
   SingleLine,
@@ -21,7 +22,7 @@ import {
 
 type BalanceCardProps = {
   index: number;
-  channel: any;
+  channel: ChannelType;
   withArrow?: boolean;
   withColor?: boolean;
   callback?: () => void;
@@ -60,7 +61,7 @@ export const BalanceCard = ({
     id,
     partner_public_key,
   } = channel;
-  const { alias } = partner_node_info;
+  const { alias } = partner_node_info?.node;
 
   const balancedness = getPercent(local_balance, remote_balance) / 100;
   const formatBalance = numeral(balancedness).format('0,0.00');

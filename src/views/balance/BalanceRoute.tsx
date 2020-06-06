@@ -1,8 +1,8 @@
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useGetRoutesLazyQuery } from 'src/graphql/queries/__generated__/getRoutes.generated';
-import { usePayViaRouteMutation } from 'src/graphql/mutations/__generated__/payViaRoute.generated';
 import { useAccountState } from 'src/context/AccountContext';
+import { useCircularRebalanceMutation } from 'src/graphql/mutations/__generated__/circularRebalance.generated';
 import {
   SubCard,
   Sub4Title,
@@ -51,7 +51,7 @@ export const BalanceRoute = ({
   const canShow = (): boolean =>
     incoming && outgoing && amount && data && data.getRoutes && blocked;
 
-  const [payRoute, { loading: loadingP }] = usePayViaRouteMutation({
+  const [payRoute, { loading: loadingP }] = useCircularRebalanceMutation({
     onError: error => {
       callback();
       toast.error(getErrorContent(error));

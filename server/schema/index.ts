@@ -18,7 +18,6 @@ import { routeResolvers } from './route/resolvers';
 import { chainTypes } from './chain/types';
 import { chainResolvers } from './chain/resolvers';
 import { toolsResolvers } from './tools/resolvers';
-import { toolsTypes } from './tools/types';
 import { chatTypes } from './chat/types';
 import { chatResolvers } from './chat/resolvers';
 import { widgetResolvers } from './widgets/resolvers';
@@ -35,6 +34,7 @@ import { transactionTypes } from './transactions/types';
 import { healthResolvers } from './health/resolvers';
 import { healthTypes } from './health/types';
 import { githubResolvers } from './github/resolvers';
+import { routeTypes } from './route/types';
 
 const typeDefs = [
   generalTypes,
@@ -47,7 +47,6 @@ const typeDefs = [
   bitcoinTypes,
   peerTypes,
   chainTypes,
-  toolsTypes,
   chatTypes,
   widgetTypes,
   channelTypes,
@@ -56,6 +55,7 @@ const typeDefs = [
   networkTypes,
   transactionTypes,
   healthTypes,
+  routeTypes,
 ];
 
 const resolvers = merge(

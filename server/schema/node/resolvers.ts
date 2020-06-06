@@ -5,7 +5,7 @@ import {
 } from 'ln-service';
 import { to, toWithError } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg, getCorrectAuth } from '../../helpers/helpers';
+import { getAuthLnd, getCorrectAuth, getLnd } from '../../helpers/helpers';
 import { ContextType } from '../../types/apiTypes';
 import { logger } from '../../helpers/logger';
 
@@ -16,20 +16,10 @@ export const nodeResolvers = {
     getNode: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'closedChannels');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { auth, withoutChannels = true, publicKey } = params;
+      const lnd = getLnd(auth, context);
 
-      try {
-        const nodeInfo = await getLnNode({
-          lnd,
-          is_omitting_channels: params.withoutChannels ?? true,
-          public_key: params.publicKey,
-        });
-        return nodeInfo;
-      } catch (error) {
-        logger.error('Error getting closed channels: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
+      return { lnd, publicKey, withChannels: !withoutChannels };
     },
     getNodeInfo: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'nodeInfo');

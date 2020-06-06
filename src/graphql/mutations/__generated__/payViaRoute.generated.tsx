@@ -6,6 +6,7 @@ import * as Types from '../../types';
 export type PayViaRouteMutationVariables = {
   auth: Types.AuthType;
   route: Types.Scalars['String'];
+  id: Types.Scalars['String'];
 };
 
 export type PayViaRouteMutation = { __typename?: 'Mutation' } & Pick<
@@ -14,8 +15,8 @@ export type PayViaRouteMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export const PayViaRouteDocument = gql`
-  mutation PayViaRoute($auth: authType!, $route: String!) {
-    payViaRoute(auth: $auth, route: $route)
+  mutation PayViaRoute($auth: authType!, $route: String!, $id: String!) {
+    payViaRoute(auth: $auth, route: $route, id: $id)
   }
 `;
 export type PayViaRouteMutationFn = ApolloReactCommon.MutationFunction<
@@ -38,6 +39,7 @@ export type PayViaRouteMutationFn = ApolloReactCommon.MutationFunction<
  *   variables: {
  *      auth: // value for 'auth'
  *      route: // value for 'route'
+ *      id: // value for 'id'
  *   },
  * });
  */
