@@ -3,15 +3,15 @@ import { useAccountState } from 'src/context/AccountContext';
 import { useGetFeeHealthQuery } from 'src/graphql/queries/__generated__/getFeeHealth.generated';
 import {
   SubCard,
-  SingleLine,
   DarkSubTitle,
   Separation,
+  ResponsiveLine,
 } from 'src/components/generic/Styled';
 import { ChannelFeeHealth } from 'src/graphql/types';
 import { sortBy } from 'underscore';
 import { renderLine } from 'src/components/generic/helpers';
 import { useStatsDispatch } from './context';
-import { ScoreColumn, ScoreLine, Clickable, WarningText } from './styles';
+import { ScoreLine, Clickable, WarningText } from './styles';
 import { StatWrapper } from './Wrapper';
 import { getIcon, getFeeMessage, getProgressColor } from './helpers';
 
@@ -67,10 +67,10 @@ const FeeStatCard = ({
   return (
     <SubCard key={channel.id}>
       <Clickable onClick={() => openSet(open ? 0 : index)}>
-        <SingleLine>
+        <ResponsiveLine>
           {channel?.partner?.node?.alias}
-          <ScoreColumn>{renderContent()}</ScoreColumn>
-        </SingleLine>
+          <ScoreLine>{renderContent()}</ScoreLine>
+        </ResponsiveLine>
       </Clickable>
       {open && renderDetails()}
     </SubCard>

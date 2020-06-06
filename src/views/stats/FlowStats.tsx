@@ -3,10 +3,10 @@ import { useGetVolumeHealthQuery } from 'src/graphql/queries/__generated__/getVo
 import { useAccountState } from 'src/context/AccountContext';
 import {
   SubCard,
-  SingleLine,
   DarkSubTitle,
   SubTitle,
   Separation,
+  ResponsiveLine,
 } from 'src/components/generic/Styled';
 import { sortBy } from 'underscore';
 import { renderLine } from 'src/components/generic/helpers';
@@ -36,9 +36,9 @@ const VolumeStatCard = ({
       <WarningText warningColor={getProgressColor(channel.score)}>
         {message}
       </WarningText>
-      {renderLine('Volume (sats/block):', channel.volumeNormalized)}
+      {renderLine('Flow (sats/block):', channel.volumeNormalized)}
       {renderLine(
-        'Average Volume (sats/block):',
+        'Average Flow (sats/block):',
         channel.averageVolumeNormalized
       )}
     </>
@@ -46,14 +46,14 @@ const VolumeStatCard = ({
   return (
     <SubCard key={channel.id}>
       <Clickable onClick={() => openSet(open ? 0 : index)}>
-        <SingleLine>
+        <ResponsiveLine>
           <SubTitle>{channel?.partner?.node?.alias}</SubTitle>
           <ScoreLine>
             <DarkSubTitle>{'Score'}</DarkSubTitle>
             {channel.score}
             {getIcon(channel.score)}
           </ScoreLine>
-        </SingleLine>
+        </ResponsiveLine>
       </Clickable>
       {open && renderContent()}
     </SubCard>
@@ -85,7 +85,7 @@ export const VolumeStats = () => {
   const sortedArray = sortBy(data.getVolumeHealth.channels, 'score');
 
   return (
-    <StatWrapper title={'Volume Stats'}>
+    <StatWrapper title={'Flow Stats'}>
       {sortedArray.map((channel, index) => (
         <VolumeStatCard
           key={channel.id}

@@ -1,16 +1,16 @@
 import styled from 'styled-components';
 import { DarkSubTitle } from 'src/components/generic/Styled';
-import { chartColors } from 'src/styles/Themes';
-
-export const ScoreColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
+import { chartColors, mediaWidths } from 'src/styles/Themes';
 
 export const ScoreLine = styled.div`
   display: flex;
   justify-content: space-between;
   width: 160px;
+
+  @media (${mediaWidths.mobile}) {
+    margin-top: 8px;
+    width: 100%;
+  }
 `;
 
 type StatHeaderProps = {

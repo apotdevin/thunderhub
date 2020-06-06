@@ -51,7 +51,7 @@ export const StatResume = () => {
               trailColor: 'rgba(0, 0, 0, 0.1)',
             })}
           >
-            <DarkSubTitle>Volume</DarkSubTitle>
+            <DarkSubTitle>Flow</DarkSubTitle>
             <ScoreTitle>{volumeScore}</ScoreTitle>
           </CircularProgressbarWithChildren>
         </ProgressCard>

@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { chartColors } from 'src/styles/Themes';
-import {
-  CheckCircle,
-  AlertCircle,
-  XCircle,
-  AlertTriangle,
-} from 'react-feather';
+import { CheckCircle, AlertCircle, XCircle } from 'react-feather';
 
 export const getProgressColor = (score: number): string => {
   switch (true) {
@@ -27,7 +22,7 @@ export const getIcon = (
   notSignificant?: boolean
 ): JSX.Element => {
   if (notSignificant) {
-    return <AlertTriangle color={chartColors.orange} />;
+    return <AlertCircle color={chartColors.orange} />;
   }
   switch (true) {
     case score > 90:
@@ -35,9 +30,9 @@ export const getIcon = (
     case score > 75:
       return <CheckCircle color={getProgressColor(score)} />;
     case score > 60:
-      return <AlertCircle color={getProgressColor(score)} />;
+      return <CheckCircle color={getProgressColor(score)} />;
     case score > 50:
-      return <AlertCircle color={getProgressColor(score)} />;
+      return <XCircle color={getProgressColor(score)} />;
     default:
       return <XCircle color={getProgressColor(score)} />;
   }
