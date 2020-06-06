@@ -35,6 +35,11 @@ export const getValue = ({
     value = amount;
   }
 
+  if (correctCurrency === 'ppm') {
+    const amount = numeral(value).format('0,0.[000]');
+    return `${amount} ppm`;
+  }
+
   if (correctCurrency === 'btc') {
     if (!value) return '₿0.0';
     const amountInBtc = value / 100000000;
