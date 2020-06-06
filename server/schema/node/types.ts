@@ -7,9 +7,6 @@ export const nodeTypes = gql`
     channel_count: Int
     color: String
     updated_at: String
-    base_fee: Int
-    fee_rate: Int
-    cltv_delta: Int
     public_key: String
   }
 

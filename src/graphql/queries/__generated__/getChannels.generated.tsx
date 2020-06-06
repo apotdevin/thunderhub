@@ -56,18 +56,10 @@ export type GetChannelsQuery = { __typename?: 'Query' } & {
                 channel?: Types.Maybe<
                   { __typename?: 'singleChannelType' } & {
                     policies: Array<
-                      { __typename?: 'policyType' } & {
-                        node?: Types.Maybe<
-                          { __typename?: 'Node' } & {
-                            node?: Types.Maybe<
-                              { __typename?: 'nodeType' } & Pick<
-                                Types.NodeType,
-                                'base_fee' | 'fee_rate' | 'cltv_delta'
-                              >
-                            >;
-                          }
-                        >;
-                      }
+                      { __typename?: 'policyType' } & Pick<
+                        Types.PolicyType,
+                        'base_fee_mtokens' | 'fee_rate' | 'cltv_delta'
+                      >
                     >;
                   }
                 >;
@@ -116,13 +108,9 @@ export const GetChannelsDocument = gql`
       partner_fee_info {
         channel {
           policies {
-            node {
-              node {
-                base_fee
-                fee_rate
-                cltv_delta
-              }
-            }
+            base_fee_mtokens
+            fee_rate
+            cltv_delta
           }
         }
       }

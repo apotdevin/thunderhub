@@ -44,9 +44,9 @@ export const Channels: React.FC = () => {
 
     const { capacity, channel_count } = partner_node_info?.node || {};
     const {
-      base_fee,
+      base_fee_mtokens,
       fee_rate,
-    } = partner_fee_info?.channel?.policies?.[0]?.node.node;
+    } = partner_fee_info?.channel?.policies?.[0];
 
     const partner = Number(capacity) || 0;
     const channels = Number(channel_count) || 0;
@@ -62,8 +62,8 @@ export const Channels: React.FC = () => {
     if (channels > mostChannels) {
       mostChannels = channels;
     }
-    if (base_fee > biggestBaseFee) {
-      biggestBaseFee = base_fee;
+    if (Number(base_fee_mtokens) > biggestBaseFee) {
+      biggestBaseFee = Number(base_fee_mtokens);
     }
     if (fee_rate > biggestRateFee) {
       biggestRateFee = fee_rate;
