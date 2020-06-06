@@ -110,6 +110,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
     transaction_vout,
     unsettled_balance,
     partner_node_info,
+    partner_fee_info,
   } = channelInfo;
 
   const {
@@ -117,10 +118,10 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
     capacity: partnerNodeCapacity = 0,
     channel_count,
     updated_at,
-    base_fee,
-    fee_rate,
-    cltv_delta,
   } = partner_node_info?.node || {};
+
+  const { base_fee_mtokens, fee_rate, cltv_delta } =
+    partner_fee_info?.channel?.policies?.[0] || {};
 
   const formatBalance = format({ amount: capacity });
   const formatLocal = format({ amount: local_balance });
@@ -133,8 +134,11 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   const remoteReserve = format({ amount: remote_reserve });
   const nodeCapacity = format({ amount: partnerNodeCapacity });
 
-  const baseFee = format({ amount: base_fee / 1000, override: 'sat' });
-  const feeRate = format({ amount: fee_rate, override: 'sat' });
+  const baseFee = format({
+    amount: Number(base_fee_mtokens) / 1000,
+    override: 'sat',
+  });
+  const feeRate = format({ amount: fee_rate, override: 'ppm' });
 
   const handleClick = () => {
     if (indexOpen === index) {
@@ -154,7 +158,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
           `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
         )}
         {renderLine('Base Fee:', baseFee)}
-        {renderLine('Fee Rate:', `${feeRate}/million sats`)}
+        {renderLine('Fee Rate:', `${feeRate}`)}
         {renderLine('CTLV Delta:', cltv_delta)}
       </>
     ) : (
@@ -224,11 +228,14 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
             <ChannelStatsLine>
               <ProgressBar
                 order={1}
-                percent={getBar(base_fee, biggestBaseFee)}
+                percent={getBar(Number(base_fee_mtokens), biggestBaseFee)}
               />
               <ProgressBar
                 order={4}
-                percent={getBar(biggestBaseFee - base_fee, biggestBaseFee)}
+                percent={getBar(
+                  biggestBaseFee - Number(base_fee_mtokens),
+                  biggestBaseFee
+                )}
               />
             </ChannelStatsLine>
           </ChannelStatsColumn>
@@ -310,7 +317,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
       case 'fees':
         return (
           <>
-            <div>{`Partner Fee Rate: ${feeRate}/million sats`}</div>
+            <div>{`Partner Fee Rate: ${feeRate}`}</div>
             <div>{`Partner Base Fee: ${baseFee}`}</div>
           </>
         );

@@ -28,6 +28,6 @@ export const getChannels = async (
     time_offline: Math.round((channel.time_offline || 0) / 1000),
     time_online: Math.round((channel.time_online || 0) / 1000),
     partner_node_info: { lnd, publicKey: channel.partner_public_key },
-    partner_fee_info: { lnd, id: channel.id, dontResolve: public_key },
+    partner_fee_info: { lnd, id: channel.id, dontResolveKey: public_key },
   }));
 };
