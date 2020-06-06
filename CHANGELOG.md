@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.2](https://github.com/apotdevin/thunderhub/compare/v0.7.1...v0.7.2) (2020-06-06)
+
+
+### Features
+
+* ✨ probe route ([#63](https://github.com/apotdevin/thunderhub/issues/63)) ([91628db](https://github.com/apotdevin/thunderhub/commit/91628dbc5cc42090a65b9a18dc01a137c202fd9a))
+
+
+### Bug Fixes
+
+* fetch upstream before comparing ([#61](https://github.com/apotdevin/thunderhub/issues/61)) ([358dc37](https://github.com/apotdevin/thunderhub/commit/358dc3760ac1fee6a27f2dab2dc6047c27204539))
+
 ### [0.7.1](https://github.com/apotdevin/thunderhub/compare/v0.7.0...v0.7.1) (2020-06-06)
 
 
