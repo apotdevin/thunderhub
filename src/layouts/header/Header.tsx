@@ -38,6 +38,9 @@ export const Header = () => {
   const [open, setOpen] = useState(false);
   const { connected } = useStatusState();
 
+  const showHomeButton = (): boolean =>
+    pathname === TRADER || pathname === CHAT || pathname === SETTINGS;
+
   const transitions = useTransition(open, null, {
     from: { position: 'absolute', opacity: 0 },
     enter: { opacity: 1 },
@@ -71,7 +74,7 @@ export const Header = () => {
       </ViewSwitch>
       <ViewSwitch hideMobile={true}>
         <HeaderButtons>
-          {renderNavButton(HOME, Home)}
+          {showHomeButton() && renderNavButton(HOME, Home)}
           {renderNavButton(TRADER, CreditCard)}
           {renderNavButton(CHAT, MessageCircle)}
           {renderNavButton(SETTINGS, Settings)}
