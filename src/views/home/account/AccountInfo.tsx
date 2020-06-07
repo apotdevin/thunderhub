@@ -17,7 +17,7 @@ import { mediaWidths } from '../../../styles/Themes';
 import { useStatusState } from '../../../context/StatusContext';
 import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 import { SendOnChainCard } from './sendOnChain/SendOnChain';
-import { PayCard } from './pay/Pay';
+import { PayCard } from './pay/Payment';
 import { CreateInvoiceCard } from './createInvoice/CreateInvoice';
 
 const Tile = styled.div`

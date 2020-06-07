@@ -43,10 +43,8 @@ export const Channels: React.FC = () => {
     } = channel;
 
     const { capacity, channel_count } = partner_node_info?.node || {};
-    const {
-      base_fee_mtokens,
-      fee_rate,
-    } = partner_fee_info?.channel?.policies?.[0];
+    const { base_fee_mtokens, fee_rate } =
+      partner_fee_info?.channel?.policies?.[0] || {};
 
     const partner = Number(capacity) || 0;
     const channels = Number(channel_count) || 0;
