@@ -17,7 +17,7 @@ import {
 } from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
 
-const shorten = (text: string): string => {
+export const shorten = (text: string): string => {
   const amount = 6;
   const beginning = text.slice(0, amount);
   const end = text.slice(text.length - amount);

@@ -36,6 +36,7 @@ import { healthTypes } from './health/types';
 import { githubResolvers } from './github/resolvers';
 import { routeTypes } from './route/types';
 import { generalResolvers } from './resolvers';
+import { macaroonResolvers } from './macaroon/resolvers';
 
 const typeDefs = [
   generalTypes,
@@ -78,7 +79,8 @@ const resolvers = merge(
   walletResolvers,
   transactionResolvers,
   healthResolvers,
-  githubResolvers
+  githubResolvers,
+  macaroonResolvers
 );
 
 export default makeExecutableSchema({ typeDefs, resolvers });
