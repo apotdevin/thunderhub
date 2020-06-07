@@ -185,7 +185,10 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         {renderLine('Channel Id:', id)}
         {renderLine('Commit Fee:', commitFee)}
         {renderLine('Commit Weight:', commitWeight)}
-        {renderLine('Is Static Remote Key:', is_static_remote_key)}
+        {renderLine(
+          'Is Static Remote Key:',
+          is_static_remote_key ? 'True' : 'False'
+        )}
         {renderLine('Local Reserve:', localReserve)}
         {renderLine('Remote Reserve:', remoteReserve)}
         {renderLine('Time Offline:', formatSeconds(time_offline))}

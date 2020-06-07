@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { ChevronRight } from 'react-feather';
 import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
+import { ChannelFeeType } from 'src/graphql/types';
 import {
   SubCard,
   Separation,
@@ -22,7 +23,7 @@ import { SecureButton } from '../../components/buttons/secureButton/SecureButton
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 
 interface FeeCardProps {
-  channelInfo: any;
+  channelInfo: ChannelFeeType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;

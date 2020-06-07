@@ -3,6 +3,7 @@ import { useInView } from 'react-intersection-observer';
 import 'intersection-observer'; // Polyfill
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
+import { AccountType } from 'src/context/AccountContext';
 import { SingleLine, DarkSubTitle, ResponsiveLine } from '../generic/Styled';
 import { themeColors } from '../../styles/Themes';
 import { Price } from '../price/Price';
@@ -16,7 +17,7 @@ export const getStatusDot = (status: boolean) => {
 };
 
 interface NodeCardProps {
-  account: any;
+  account: AccountType;
   accountId: string;
 }
 
@@ -117,12 +118,7 @@ export const NodeCard = ({ account, accountId }: NodeCardProps) => {
           setIsOpen(false);
         }}
       >
-        <NodeInfoModal
-          account={{
-            ...data,
-          }}
-          accountId={accountId}
-        />
+        <NodeInfoModal account={data} accountId={accountId} />
       </Modal>
     </>
   );

@@ -20,7 +20,7 @@ import { MultiButton, SingleButton } from '../multiButton/MultiButton';
 interface LoginProps {
   macaroon: string;
   color?: string;
-  callback: any;
+  callback: (variables: {}) => void;
   variables: {};
   setModalOpen: (value: boolean) => void;
 }

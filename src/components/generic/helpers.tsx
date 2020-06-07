@@ -112,7 +112,7 @@ export const getStatusDot = (status: boolean, type: string) => {
 
 export const renderLine = (
   title: string,
-  content: any,
+  content: number | string | JSX.Element,
   key?: string | number,
   deleteCallback?: () => void
 ) => {

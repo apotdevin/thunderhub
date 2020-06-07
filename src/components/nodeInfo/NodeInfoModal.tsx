@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAccountDispatch } from 'src/context/AccountContext';
+import { GetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import {
   SubTitle,
   SingleLine,
@@ -12,7 +13,7 @@ import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { useStatusDispatch } from '../../context/StatusContext';
 
 interface NodeInfoModalProps {
-  account: any;
+  account: GetNodeInfoQuery;
   accountId: string;
 }
 

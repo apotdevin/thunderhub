@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { HodlOfferPaymentType } from 'src/graphql/types';
 import { themeColors, subCardColor } from '../../styles/Themes';
 
 interface MethodProps {
@@ -9,7 +10,7 @@ interface MethodProps {
 }
 
 interface MethodBoxesProps {
-  methods: MethodProps[] | undefined;
+  methods: HodlOfferPaymentType[] | undefined;
 }
 
 const StyledMethodBoxes = styled.div`

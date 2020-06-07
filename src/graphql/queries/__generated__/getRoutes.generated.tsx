@@ -11,10 +11,35 @@ export type GetRoutesQueryVariables = {
   maxFee?: Types.Maybe<Types.Scalars['Int']>;
 };
 
-export type GetRoutesQuery = { __typename?: 'Query' } & Pick<
-  Types.Query,
-  'getRoutes'
->;
+export type GetRoutesQuery = { __typename?: 'Query' } & {
+  getRoutes?: Types.Maybe<
+    { __typename?: 'GetRouteType' } & Pick<
+      Types.GetRouteType,
+      | 'confidence'
+      | 'fee'
+      | 'fee_mtokens'
+      | 'mtokens'
+      | 'safe_fee'
+      | 'safe_tokens'
+      | 'timeout'
+      | 'tokens'
+    > & {
+        hops: Array<
+          { __typename?: 'RouteHopType' } & Pick<
+            Types.RouteHopType,
+            | 'channel'
+            | 'channel_capacity'
+            | 'fee'
+            | 'fee_mtokens'
+            | 'forward'
+            | 'forward_mtokens'
+            | 'public_key'
+            | 'timeout'
+          >
+        >;
+      }
+  >;
+};
 
 export const GetRoutesDocument = gql`
   query GetRoutes(
@@ -30,7 +55,26 @@ export const GetRoutesDocument = gql`
       incoming: $incoming
       tokens: $tokens
       maxFee: $maxFee
-    )
+    ) {
+      confidence
+      fee
+      fee_mtokens
+      hops {
+        channel
+        channel_capacity
+        fee
+        fee_mtokens
+        forward
+        forward_mtokens
+        public_key
+        timeout
+      }
+      mtokens
+      safe_fee
+      safe_tokens
+      timeout
+      tokens
+    }
   }
 `;
 

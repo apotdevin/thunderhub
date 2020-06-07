@@ -103,7 +103,7 @@ const TradingView = () => {
       </Card>
       <Card bottom={'8px'} mobileCardPadding={'0'} mobileNoBackground={true}>
         {amountOfOffers <= 0 && <DarkSubTitle>No Offers Found</DarkSubTitle>}
-        {data.getOffers.map((offer: any, index: number) => (
+        {data.getOffers.map((offer, index: number) => (
           <OfferCard
             offer={offer}
             index={index + 1}

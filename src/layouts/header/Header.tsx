@@ -7,6 +7,7 @@ import {
   MessageCircle,
   Settings,
   Home,
+  Icon,
 } from 'react-feather';
 import { useTransition, animated } from 'react-spring';
 import { useRouter } from 'next/router';
@@ -43,7 +44,7 @@ export const Header = () => {
     leave: { opacity: 0 },
   });
 
-  const renderNavButton = (link: string, NavIcon: any) => (
+  const renderNavButton = (link: string, NavIcon: Icon) => (
     <Link to={link} noStyling={true}>
       <HeaderNavButton selected={pathname === link}>
         <NavIcon size={18} />

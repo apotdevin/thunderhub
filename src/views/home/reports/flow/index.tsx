@@ -136,9 +136,8 @@ export const FlowBox = () => {
     amount: 0,
   };
 
-  const totalInvoices: any =
-    parsedData.length > 0 ? reduce(parsedData) : emptyArray;
-  const totalPayments: any =
+  const totalInvoices = parsedData.length > 0 ? reduce(parsedData) : emptyArray;
+  const totalPayments =
     parsedData2.length > 0 ? reduce(parsedData2) : emptyArray;
 
   const flowPie = [

@@ -5,7 +5,7 @@ import Modal from '../../modal/ReactModal';
 import { LoginModal } from './LoginModal';
 
 interface SecureButtonProps {
-  callback: any;
+  callback: (variables: {}) => void;
   variables: {};
   color?: string;
 }

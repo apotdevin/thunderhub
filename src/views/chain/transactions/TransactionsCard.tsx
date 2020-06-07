@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { GetTransactionsType } from 'src/graphql/types';
 import {
   Separation,
   SubCard,
@@ -22,7 +23,7 @@ const AddMargin = styled.div`
 `;
 
 interface TransactionsCardProps {
-  transaction: any;
+  transaction: GetTransactionsType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
@@ -69,7 +70,7 @@ export const TransactionsCard = ({
         {renderLine('Confirmation Height: ', confirmation_height)}
         {renderLine('Fee: ', fee)}
         {renderLine('Output Addresses: ', output_addresses.length)}
-        {output_addresses.map((address: any, index: number) =>
+        {output_addresses.map((address, index: number) =>
           renderLine(`${index + 1}`, address, `${index}`)
         )}
       </>

@@ -9,9 +9,8 @@ export const generalTypes = gql`
     cert: String
   }
 
-  # A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
-  # date-time format outlined in section 5.6 of the RFC 3339 profile of the ISO
-  # 8601 standard for representation of dates and times using the Gregorian calendar.
+  scalar Date
+  scalar Time
   scalar DateTime
 `;
 
@@ -57,7 +56,7 @@ export const queryTypes = gql`
       incoming: String!
       tokens: Int!
       maxFee: Int
-    ): String
+    ): GetRouteType
     getPeers(auth: authType!): [peerType]
     signMessage(auth: authType!, message: String!): String
     verifyMessage(auth: authType!, message: String!, signature: String!): String

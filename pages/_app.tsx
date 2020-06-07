@@ -38,7 +38,7 @@ const Wrapper: React.FC = ({ children }) => {
   );
 };
 
-const App = ({ Component, pageProps, initialConfig }: any) => (
+const App = ({ Component, pageProps, initialConfig }) => (
   <>
     <Head>
       <title>ThunderHub - Lightning Node Manager</title>

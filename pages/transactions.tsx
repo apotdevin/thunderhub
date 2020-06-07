@@ -49,8 +49,8 @@ const TransactionsView = () => {
       <CardWithTitle>
         <SubTitle>Transactions</SubTitle>
         <Card bottom={'8px'} mobileCardPadding={'0'} mobileNoBackground={true}>
-          {resumeList.map((entry: any, index: number) => {
-            if (entry.type === 'invoice') {
+          {resumeList.map((entry, index: number) => {
+            if (entry.__typename === 'InvoiceType') {
               return (
                 <InvoiceCard
                   invoice={entry}

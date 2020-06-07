@@ -6,7 +6,7 @@ import { ColorButton, ColorButtonProps } from '../colorButton/ColorButton';
 import { LoginModal } from './LoginModal';
 
 interface SecureButtonProps extends ColorButtonProps {
-  callback: any;
+  callback: (variables: {}) => void;
   disabled: boolean;
   variables: {};
   color?: string;

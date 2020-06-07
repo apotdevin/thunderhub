@@ -29,7 +29,7 @@ export const ChainTransactions = () => {
     <CardWithTitle>
       <SubTitle>Chain Transactions</SubTitle>
       <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-        {data.getChainTransactions.map((transaction: any, index: number) => (
+        {data.getChainTransactions.map((transaction, index: number) => (
           <TransactionsCard
             transaction={transaction}
             key={index}

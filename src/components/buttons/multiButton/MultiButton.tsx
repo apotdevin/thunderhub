@@ -32,18 +32,17 @@ const StyledSingleButton = styled.button<StyledSingleProps>`
 `;
 
 interface SingleButtonProps {
-  children: any;
   selected?: boolean;
   color?: string;
   onClick?: () => void;
 }
 
-export const SingleButton = ({
+export const SingleButton: React.FC<SingleButtonProps> = ({
   children,
   selected,
   color,
   onClick,
-}: SingleButtonProps) => {
+}) => {
   return (
     <StyledSingleButton
       selected={selected}
@@ -74,10 +73,12 @@ const MultiBackground = styled.div<MultiBackProps>`
 `;
 
 interface MultiButtonProps {
-  children: any;
   margin?: string;
 }
 
-export const MultiButton = ({ children, margin }: MultiButtonProps) => {
+export const MultiButton: React.FC<MultiButtonProps> = ({
+  children,
+  margin,
+}) => {
   return <MultiBackground margin={margin}>{children}</MultiBackground>;
 };

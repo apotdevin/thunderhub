@@ -1,5 +1,6 @@
 import React from 'react';
 import numeral from 'numeral';
+import { HodlOfferType } from 'src/graphql/types';
 import {
   SubCard,
   Sub4Title,
@@ -27,7 +28,7 @@ const format = (value: number | string, format = '0,0.00') =>
   numeral(value).format(format);
 
 interface OfferCardProps {
-  offer: any;
+  offer: HodlOfferType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
@@ -116,16 +117,16 @@ export const OfferCard = ({
       {renderLine('Balance:', format(balance))}
       {renderLine('Payment Window (min):', payment_window_minutes)}
       {renderLine('Confirmations:', confirmations)}
-      {renderLine('Fee Rate:', `${format(author_fee_rate * 100)}%`)}
+      {renderLine('Fee Rate:', `${format(Number(author_fee_rate) * 100)}%`)}
       <Separation />
       <Sub4Title>Trader</Sub4Title>
       {renderLine('User:', login)}
       {renderLine('Online:', online_status)}
       {renderLine('Rating:', rating)}
       {renderLine('Amount of Trades:', trades_count)}
-      {renderLine('Verified:', verified)}
+      {renderLine('Verified:', verified ? 'True' : 'False')}
       {renderLine('Verified By:', verified_by)}
-      {renderLine('Strong Hodler:', strong_hodler)}
+      {renderLine('Strong Hodler:', strong_hodler ? 'True' : 'False')}
       {renderLine('Country:', `${traderCountry} (${traderCode})`)}
       {renderLine('Average Payment Time (min):', average_payment_time_minutes)}
       {renderLine('Average Release Time (min):', average_release_time_minutes)}
@@ -172,7 +173,7 @@ export const OfferCard = ({
             {trades_count > 0 && (
               <TradesAmount>{`(${trades_count}) `}</TradesAmount>
             )}
-            <Rating rating={rating} />
+            <Rating rating={Number(rating)} />
           </SingleLine>
         </ResponsiveLine>
         <StyledTitle>{title}</StyledTitle>

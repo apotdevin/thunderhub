@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeSet } from 'styled-theming';
 import { backgroundColor, mediaWidths } from '../../styles/Themes';
@@ -39,20 +39,21 @@ const FixedWidth = styled.div`
   }
 `;
 
-export const Section = ({
+type SectionProps = {
+  fixedWidth?: boolean;
+  withColor?: boolean;
+  color?: string | ThemeSet;
+  textColor?: string | ThemeSet;
+  padding?: string;
+};
+
+export const Section: React.FC<SectionProps> = ({
   fixedWidth = true,
   withColor = true,
   children,
   color,
   textColor,
   padding,
-}: {
-  fixedWidth?: boolean;
-  withColor?: boolean;
-  color?: any;
-  textColor?: any;
-  padding?: string;
-  children: ReactNode;
 }) => {
   const Fixed = fixedWidth ? FixedWidth : React.Fragment;
 

@@ -108,7 +108,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const ChatProvider = ({ children }: any) => {
+const ChatProvider = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (

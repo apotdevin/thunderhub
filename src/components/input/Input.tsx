@@ -83,8 +83,8 @@ interface InputCompProps {
   fullWidth?: boolean;
   mobileFullWidth?: boolean;
   maxWidth?: string;
-  onChange: (e: any) => void;
-  onKeyDown?: (e: any) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export const Input = ({
@@ -110,7 +110,7 @@ export const Input = ({
       backgroundColor={backgroundColor}
       withMargin={withMargin}
       mobileMargin={mobileMargin}
-      onChange={e => onChange(e)}
+      onChange={onChange}
       fullWidth={fullWidth}
       mobileFullWidth={mobileFullWidth}
       maxWidth={maxWidth}

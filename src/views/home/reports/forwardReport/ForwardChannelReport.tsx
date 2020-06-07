@@ -124,13 +124,15 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
   };
 
   const renderRoute = (parsed: {}[]) => {
-    const routes = parsed.map((channel: any, index: number) => (
-      <ChannelRow key={index}>
-        <TableLine>{channel.aliasIn}</TableLine>
-        <TableLine>{channel.aliasOut}</TableLine>
-        <LastTableLine>{getFormatString(channel[isType])}</LastTableLine>
-      </ChannelRow>
-    ));
+    const routes = parsed.map(
+      (channel: { aliasIn: string; aliasOut: string }, index: number) => (
+        <ChannelRow key={index}>
+          <TableLine>{channel.aliasIn}</TableLine>
+          <TableLine>{channel.aliasOut}</TableLine>
+          <LastTableLine>{getFormatString(channel[isType])}</LastTableLine>
+        </ChannelRow>
+      )
+    );
 
     return (
       <>
@@ -145,13 +147,15 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
   };
 
   const renderChannels = (parsed: {}[]) => {
-    const channels = parsed.map((channel: any, index: number) => (
-      <ChannelRow key={index}>
-        <TableLine>{`${channel.alias}`}</TableLine>
-        <DarkSubTitle>{`${channel.name}`}</DarkSubTitle>
-        <LastTableLine>{getFormatString(channel[isType])}</LastTableLine>
-      </ChannelRow>
-    ));
+    const channels = parsed.map(
+      (channel: { alias: string; name: string }, index: number) => (
+        <ChannelRow key={index}>
+          <TableLine>{`${channel.alias}`}</TableLine>
+          <DarkSubTitle>{`${channel.name}`}</DarkSubTitle>
+          <LastTableLine>{getFormatString(channel[isType])}</LastTableLine>
+        </ChannelRow>
+      )
+    );
 
     return (
       <>

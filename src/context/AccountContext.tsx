@@ -36,13 +36,15 @@ export type AuthType =
       id: string;
     };
 
+export type AccountType = {
+  type: ACCOUNT_TYPE;
+  id: string;
+} & AccountProps;
+
 export type CompleteAccount =
-  | ({
-      type: 'client';
-      id: string;
-    } & AccountProps)
+  | AccountType
   | {
-      type: 'sso' | 'server';
+      type: SERVER_ACCOUNT_TYPE;
       id: string;
       name: string;
       loggedIn?: boolean;

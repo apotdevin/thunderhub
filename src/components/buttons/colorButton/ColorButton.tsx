@@ -118,10 +118,9 @@ export interface ColorButtonProps {
   loading?: boolean;
   color?: string;
   disabled?: boolean;
-  children?: any;
   selected?: boolean;
   arrow?: boolean;
-  onClick?: any;
+  onClick?: () => void;
   withMargin?: string;
   mobileMargin?: string;
   withBorder?: boolean;
@@ -130,7 +129,7 @@ export interface ColorButtonProps {
   width?: string;
 }
 
-export const ColorButton = ({
+export const ColorButton: React.FC<ColorButtonProps> = ({
   loading,
   color,
   disabled,
@@ -144,7 +143,7 @@ export const ColorButton = ({
   mobileFullWidth,
   width,
   onClick,
-}: ColorButtonProps) => {
+}) => {
   if (disabled && !loading) {
     return (
       <DisabledButton

@@ -36,7 +36,7 @@ const ErrorLine = styled.div`
   hyphens: auto;
 `;
 
-export const getErrorContent = (error: any): ReactNode => {
+export const getErrorContent = (error): ReactNode => {
   const errors = error.graphQLErrors.map(x => x.message);
 
   const renderMessage = errors.map((errorMsg, i) => {

@@ -16,10 +16,6 @@ const firstAccount = {
 };
 const secondAccount = {
   name: 'Chao',
-  host: 'Host2',
-  admin: 'Admin2',
-  viewOnly: 'ViewOnly2',
-  cert: 'Cert2',
   id: '1234',
   type: SSO_ACCOUNT,
 };
