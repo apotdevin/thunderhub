@@ -66,6 +66,9 @@ RUNTIME=$((ENDAMD-START))
 RUNTIME1=$((ENDARM32-ENDAMD))
 RUNTIME2=$((ENDARM64-ENDARM32))
 
+git checkout master
+git pull
+
 echo
 echo "------------------------------------------"
 echo "DONE"
