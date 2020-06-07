@@ -35,6 +35,7 @@ import { healthResolvers } from './health/resolvers';
 import { healthTypes } from './health/types';
 import { githubResolvers } from './github/resolvers';
 import { routeTypes } from './route/types';
+import { generalResolvers } from './resolvers';
 
 const typeDefs = [
   generalTypes,
@@ -59,6 +60,7 @@ const typeDefs = [
 ];
 
 const resolvers = merge(
+  generalResolvers,
   nodeResolvers,
   authResolvers,
   accountResolvers,

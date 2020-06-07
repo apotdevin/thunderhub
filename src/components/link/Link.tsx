@@ -41,7 +41,6 @@ const NoStyling = styled.a`
 `;
 
 interface LinkProps {
-  children: any;
   href?: string;
   to?: string;
   color?: string | ThemeSet;
@@ -55,7 +54,7 @@ interface LinkProps {
 const { publicRuntimeConfig } = getConfig();
 const { basePath } = publicRuntimeConfig;
 
-export const Link = ({
+export const Link: React.FC<LinkProps> = ({
   children,
   href,
   to,
@@ -65,7 +64,7 @@ export const Link = ({
   fullWidth,
   noStyling,
   newTab,
-}: LinkProps) => {
+}) => {
   const props = { fontColor: color, underline, inheritColor, fullWidth };
 
   if (!href && !to) return null;

@@ -5,6 +5,7 @@ import { useAccountState } from 'src/context/AccountContext';
 import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { withApollo } from 'config/client';
+import { ChannelType } from 'src/graphql/types';
 import {
   CardWithTitle,
   Card,
@@ -29,8 +30,8 @@ const BalanceView = () => {
   const { minorVersion } = useStatusState();
   const { auth } = useAccountState();
 
-  const [outgoing, setOutgoing] = useState<{ id: string } | null>();
-  const [incoming, setIncoming] = useState();
+  const [outgoing, setOutgoing] = useState<ChannelType | null>();
+  const [incoming, setIncoming] = useState<ChannelType | null>();
   const [amount, setAmount] = useState<number>();
 
   const [maxFee, setMaxFee] = useState<number>();
@@ -92,7 +93,7 @@ const BalanceView = () => {
 
     const finalChannels = isOutgoing ? channels : channels.reverse();
 
-    return finalChannels.map((channel: any, index: number) => {
+    return finalChannels.map((channel: ChannelType, index: number) => {
       if (!isOutgoing && outgoing && outgoing.id === channel.id) {
         return null;
       }

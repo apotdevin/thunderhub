@@ -21,7 +21,7 @@ import { appendBasePath } from '../../utils/basePath';
 import { SortOptions } from './OfferConfigs';
 import { FilterModal } from './Modal/FilterModal';
 
-type ActionType = {
+export type FilterActionType = {
   type: 'addFilter' | 'addSort' | 'removeSort' | 'removeFilter' | 'changeLimit';
   state?: QueryProps;
   newItem?: {};
@@ -29,7 +29,7 @@ type ActionType = {
   changeLimit?: number;
 };
 
-const reducer = (state: QueryProps, action: ActionType): QueryProps => {
+const reducer = (state: QueryProps, action: FilterActionType): QueryProps => {
   const { sort, filters } = state;
   switch (action.type) {
     case 'addSort': {

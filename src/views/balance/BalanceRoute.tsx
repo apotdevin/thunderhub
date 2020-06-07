@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useGetRoutesLazyQuery } from 'src/graphql/queries/__generated__/getRoutes.generated';
 import { useAccountState } from 'src/context/AccountContext';
 import { useCircularRebalanceMutation } from 'src/graphql/mutations/__generated__/circularRebalance.generated';
+import { ChannelType } from 'src/graphql/types';
 import {
   SubCard,
   Sub4Title,
@@ -20,8 +21,8 @@ import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 import { HopCard } from './Balance.styled';
 
 type BalancedRouteProps = {
-  incoming: any;
-  outgoing: any;
+  incoming: ChannelType;
+  outgoing: ChannelType;
   amount: number;
   maxFee?: number;
   blocked: boolean;
@@ -63,7 +64,7 @@ export const BalanceRoute = ({
     refetchQueries: ['GetChannels'],
   });
 
-  const renderHop = (hop: any, index: number) => (
+  const renderHop = (hop, index: number) => (
     <HopCard key={index}>
       {renderLine('Channel', hop.channel)}
       {renderLine('Fee', hop.fee)}
@@ -94,7 +95,7 @@ export const BalanceRoute = ({
 
   const renderRoute = () => {
     if (canShow()) {
-      const route = JSON.parse(data.getRoutes);
+      const route = data.getRoutes;
       return (
         <>
           <Sub4Title>Route</Sub4Title>
@@ -108,7 +109,7 @@ export const BalanceRoute = ({
             {renderLine('Confidence', route.confidence)}
             {renderLine('Hops', route.hops.length)}
             <Separation />
-            {route.hops.map((hop: any, index: number) =>
+            {route.hops.map((hop, index: number) =>
               renderLine(`${index + 1}`, renderHop(hop, index), index)
             )}
           </SubCard>
@@ -128,7 +129,7 @@ export const BalanceRoute = ({
           <SecureButton
             callback={payRoute}
             disabled={loadingP}
-            variables={{ route: data.getRoutes }}
+            variables={{ route: JSON.stringify(data.getRoutes) }}
             fullWidth={true}
             arrow={true}
             withMargin={'0 0 0 8px'}

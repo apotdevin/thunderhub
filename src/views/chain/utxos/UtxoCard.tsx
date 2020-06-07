@@ -1,4 +1,5 @@
 import React from 'react';
+import { GetUtxosType } from 'src/graphql/types';
 import { Separation, SubCard } from '../../../components/generic/Styled';
 import { MainInfo } from '../../../components/generic/CardGeneric';
 import { renderLine } from '../../../components/generic/helpers';
@@ -7,7 +8,7 @@ import { useConfigState } from '../../../context/ConfigContext';
 import { usePriceState } from '../../../context/PriceContext';
 
 interface TransactionsCardProps {
-  utxo: any;
+  utxo: GetUtxosType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;

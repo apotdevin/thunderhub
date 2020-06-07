@@ -3,7 +3,7 @@ import { sortBy } from 'underscore';
 import { MessagesType } from 'src/graphql/types';
 import { MessageType } from '../views/chat/Chat.types';
 
-export const separateBySender = (chats: any[]) => {
+export const separateBySender = chats => {
   return groupBy(chats, 'sender');
 };
 

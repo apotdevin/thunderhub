@@ -80,9 +80,9 @@ export const InvoiceCard = ({
         {renderLine('Id:', id)}
         {renderLine('Chain Address:', chain_address)}
         {renderLine('Description Hash:', description_hash)}
-        {renderLine('Is Canceled:', is_canceled)}
-        {renderLine('Is Held:', is_held)}
-        {renderLine('Is Private:', is_private)}
+        {renderLine('Is Canceled:', is_canceled ? 'True' : 'False')}
+        {renderLine('Is Held:', is_held ? 'True' : 'False')}
+        {renderLine('Is Private:', is_private ? 'True' : 'False')}
         {renderLine('Secret:', secret)}
       </>
     );

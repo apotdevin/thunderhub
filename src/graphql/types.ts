@@ -6,6 +6,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
+  Date: any;
+  /** A time string at UTC, such as 10:15:30Z, compliant with the `full-time` format outlined in section 5.6 of the RFC 3339profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
+  Time: any;
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
 };
 
@@ -44,7 +49,7 @@ export type Query = {
   getBackups?: Maybe<Scalars['String']>;
   verifyBackups?: Maybe<Scalars['Boolean']>;
   recoverFunds?: Maybe<Scalars['Boolean']>;
-  getRoutes?: Maybe<Scalars['String']>;
+  getRoutes?: Maybe<GetRouteType>;
   getPeers?: Maybe<Array<Maybe<PeerType>>>;
   signMessage?: Maybe<Scalars['String']>;
   verifyMessage?: Maybe<Scalars['String']>;
@@ -889,6 +894,38 @@ export type ChannelsFeeHealth = {
   __typename?: 'channelsFeeHealth';
   score?: Maybe<Scalars['Int']>;
   channels?: Maybe<Array<Maybe<ChannelFeeHealth>>>;
+};
+
+export type RouteMessageType = {
+  __typename?: 'RouteMessageType';
+  type: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type RouteHopType = {
+  __typename?: 'RouteHopType';
+  channel: Scalars['String'];
+  channel_capacity: Scalars['Int'];
+  fee: Scalars['Int'];
+  fee_mtokens: Scalars['String'];
+  forward: Scalars['Int'];
+  forward_mtokens: Scalars['String'];
+  public_key: Scalars['String'];
+  timeout: Scalars['Int'];
+};
+
+export type GetRouteType = {
+  __typename?: 'GetRouteType';
+  confidence?: Maybe<Scalars['Int']>;
+  fee: Scalars['Int'];
+  fee_mtokens: Scalars['String'];
+  hops: Array<RouteHopType>;
+  messages?: Maybe<Array<Maybe<RouteMessageType>>>;
+  mtokens: Scalars['String'];
+  safe_fee: Scalars['Int'];
+  safe_tokens: Scalars['Int'];
+  timeout: Scalars['Int'];
+  tokens: Scalars['Int'];
 };
 
 export type ProbedRouteHop = {

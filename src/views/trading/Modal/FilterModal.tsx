@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Dispatch } from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { toast } from 'react-toastify';
 import {
@@ -9,14 +9,14 @@ import {
 } from 'src/graphql/hodlhodl/__generated__/query.generated';
 import { SubTitle } from '../../../components/generic/Styled';
 import { SortOptions, NewOptions } from '../OfferConfigs';
-import { FilterType } from '../OfferFilters';
+import { FilterType, FilterActionType } from '../OfferFilters';
 import { themeColors } from '../../../styles/Themes';
 import { OptionsLoading } from '../OfferCard.styled';
 import { FilteredList } from './FilteredList';
 
 interface FilterProps {
   type: string;
-  dispatch: any;
+  dispatch: Dispatch<FilterActionType>;
   final?: {};
   newOptions?: FilterType[];
   setModalType: (type: string) => void;

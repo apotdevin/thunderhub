@@ -14,6 +14,25 @@ export const GET_ROUTES = gql`
       incoming: $incoming
       tokens: $tokens
       maxFee: $maxFee
-    )
+    ) {
+      confidence
+      fee
+      fee_mtokens
+      hops {
+        channel
+        channel_capacity
+        fee
+        fee_mtokens
+        forward
+        forward_mtokens
+        public_key
+        timeout
+      }
+      mtokens
+      safe_fee
+      safe_tokens
+      timeout
+      tokens
+    }
   }
 `;

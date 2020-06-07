@@ -14,6 +14,7 @@ import {
   CreditCard,
   MessageCircle,
   BarChart2,
+  Icon,
 } from 'react-feather';
 import { useRouter } from 'next/router';
 import {
@@ -139,7 +140,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const renderNavButton = (
     title: string,
     link: string,
-    NavIcon: any,
+    NavIcon: Icon,
     open = true
   ) => (
     <Link to={link}>
@@ -150,7 +151,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     </Link>
   );
 
-  const renderBurgerNav = (title: string, link: string, NavIcon: any) => (
+  const renderBurgerNav = (title: string, link: string, NavIcon: Icon) => (
     <Link to={link}>
       <BurgerNav
         selected={pathname === link}

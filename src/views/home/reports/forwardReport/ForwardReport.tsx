@@ -70,9 +70,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
   };
 
   const total = getLabelString(
-    parsedData
-      .map((x: any) => x[isType])
-      .reduce((a: number, c: number) => a + c, 0)
+    parsedData.map(x => x[isType]).reduce((a: number, c: number) => a + c, 0)
   );
 
   const renderContent = () => {

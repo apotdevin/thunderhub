@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sun, Moon, ChevronLeft, ChevronRight } from 'react-feather';
+import { Sun, Moon, ChevronLeft, ChevronRight, Icon } from 'react-feather';
 import styled from 'styled-components';
 import { Separation, SingleLine } from '../../../components/generic/Styled';
 import {
@@ -98,7 +98,7 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
     value: string,
     text: string,
     on = false,
-    Icon?: any
+    SideIcon?: Icon
   ) => (
     <SelectedIcon
       selected={
@@ -116,7 +116,7 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
       }}
     >
       {type === 'currency' && <Symbol>{text}</Symbol>}
-      {type === 'theme' && <Icon size={18} />}
+      {type === 'theme' && <SideIcon size={18} />}
     </SelectedIcon>
   );
 

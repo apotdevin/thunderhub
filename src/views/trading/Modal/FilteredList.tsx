@@ -3,11 +3,12 @@ import { ColorButton } from '../../../components/buttons/colorButton/ColorButton
 import { OfferModalBox } from '../OfferCard.styled';
 import { Input } from '../../../components/input/Input';
 import { Sub4Title } from '../../../components/generic/Styled';
+import { FilterType } from '../OfferFilters';
 
 interface FilteredProps {
   searchable: boolean;
-  options: any;
-  handleClick: any;
+  options: FilterType[];
+  handleClick: (name: string, option?: {}) => () => void;
 }
 
 interface FilteredOptionsProps {
@@ -41,7 +42,7 @@ export const FilteredList = ({
     setOptions(filtered);
   }, [searchTerm, options]);
 
-  const handleChange = (event: any) => {
+  const handleChange = event => {
     setSearchTerm(event.target.value);
   };
 
