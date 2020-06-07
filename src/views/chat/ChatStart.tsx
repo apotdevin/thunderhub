@@ -2,6 +2,7 @@ import * as React from 'react';
 import { X, ChevronRight } from 'react-feather';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
+import { PeerType } from 'src/graphql/types';
 import { Input } from '../../components/input/Input';
 import {
   SubCard,
@@ -20,7 +21,7 @@ import {
 } from './Chat.styled';
 
 interface PeerProps {
-  peer: any;
+  peer: PeerType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
@@ -29,7 +30,7 @@ interface PeerProps {
 const PeerChatCard = ({ peer, index, setIndexOpen, indexOpen }: PeerProps) => {
   const { partner_node_info, public_key } = peer;
 
-  const { alias } = partner_node_info;
+  const alias = partner_node_info?.node?.alias;
 
   const handleClick = () => {
     if (indexOpen === index) {
