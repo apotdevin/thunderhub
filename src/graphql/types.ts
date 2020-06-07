@@ -22,6 +22,26 @@ export type AuthType = {
   cert?: Maybe<Scalars['String']>;
 };
 
+export type PermissionsType = {
+  is_ok_to_adjust_peers?: Maybe<Scalars['Boolean']>;
+  is_ok_to_create_chain_addresses?: Maybe<Scalars['Boolean']>;
+  is_ok_to_create_invoices?: Maybe<Scalars['Boolean']>;
+  is_ok_to_create_macaroons?: Maybe<Scalars['Boolean']>;
+  is_ok_to_derive_keys?: Maybe<Scalars['Boolean']>;
+  is_ok_to_get_chain_transactions?: Maybe<Scalars['Boolean']>;
+  is_ok_to_get_invoices?: Maybe<Scalars['Boolean']>;
+  is_ok_to_get_wallet_info?: Maybe<Scalars['Boolean']>;
+  is_ok_to_get_payments?: Maybe<Scalars['Boolean']>;
+  is_ok_to_get_peers?: Maybe<Scalars['Boolean']>;
+  is_ok_to_pay?: Maybe<Scalars['Boolean']>;
+  is_ok_to_send_to_chain_addresses?: Maybe<Scalars['Boolean']>;
+  is_ok_to_sign_bytes?: Maybe<Scalars['Boolean']>;
+  is_ok_to_sign_messages?: Maybe<Scalars['Boolean']>;
+  is_ok_to_stop_daemon?: Maybe<Scalars['Boolean']>;
+  is_ok_to_verify_bytes_signatures?: Maybe<Scalars['Boolean']>;
+  is_ok_to_verify_messages?: Maybe<Scalars['Boolean']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getVolumeHealth?: Maybe<ChannelsHealth>;
@@ -262,6 +282,7 @@ export type Mutation = {
   removePeer?: Maybe<Scalars['Boolean']>;
   sendMessage?: Maybe<Scalars['Int']>;
   logout?: Maybe<Scalars['Boolean']>;
+  createMacaroon?: Maybe<Scalars['String']>;
 };
 
 export type MutationCloseChannelArgs = {
@@ -347,6 +368,11 @@ export type MutationSendMessageArgs = {
 
 export type MutationLogoutArgs = {
   type: Scalars['String'];
+};
+
+export type MutationCreateMacaroonArgs = {
+  auth: AuthType;
+  permissions: PermissionsType;
 };
 
 export type NodeType = {

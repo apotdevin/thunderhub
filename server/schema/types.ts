@@ -9,6 +9,26 @@ export const generalTypes = gql`
     cert: String
   }
 
+  input permissionsType {
+    is_ok_to_adjust_peers: Boolean
+    is_ok_to_create_chain_addresses: Boolean
+    is_ok_to_create_invoices: Boolean
+    is_ok_to_create_macaroons: Boolean
+    is_ok_to_derive_keys: Boolean
+    is_ok_to_get_chain_transactions: Boolean
+    is_ok_to_get_invoices: Boolean
+    is_ok_to_get_wallet_info: Boolean
+    is_ok_to_get_payments: Boolean
+    is_ok_to_get_peers: Boolean
+    is_ok_to_pay: Boolean
+    is_ok_to_send_to_chain_addresses: Boolean
+    is_ok_to_sign_bytes: Boolean
+    is_ok_to_sign_messages: Boolean
+    is_ok_to_stop_daemon: Boolean
+    is_ok_to_verify_bytes_signatures: Boolean
+    is_ok_to_verify_messages: Boolean
+  }
+
   scalar Date
   scalar Time
   scalar DateTime
@@ -134,5 +154,6 @@ export const mutationTypes = gql`
       maxFee: Int
     ): Int
     logout(type: String!): Boolean
+    createMacaroon(auth: authType!, permissions: permissionsType!): String
   }
 `;
