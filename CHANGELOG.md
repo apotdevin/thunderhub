@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.4](https://github.com/apotdevin/thunderhub/compare/v0.7.3...v0.7.4) (2020-06-07)
+
+
+### Features
+
+* ✨ bake macaroons ([8c9607d](https://github.com/apotdevin/thunderhub/commit/8c9607d1e416e5c6ef057533b1e32349634c9a33))
+
+
+### Improvements
+
+* 🔧 home button optional on header ([db91699](https://github.com/apotdevin/thunderhub/commit/db91699df36ba5b0e732b090a42b8b418d488da4))
+* 🔧 remove anys ([786d88f](https://github.com/apotdevin/thunderhub/commit/786d88f4149b4a793027de28d838b9036aabfdcd))
+
 ### [0.7.3](https://github.com/apotdevin/thunderhub/compare/v0.7.2...v0.7.3) (2020-06-07)
 
 
