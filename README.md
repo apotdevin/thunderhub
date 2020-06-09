@@ -125,21 +125,39 @@ npm run dev -> npm run dev:compatible
 
 You can define some environment variables that ThunderHub can start with. To do this create a `.env` file in the root directory with the following parameters:
 
-```js
+```bash
+# -----------
+# Server Configs
+# -----------
 LOG_LEVEL = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly' //Default: 'info'
-THEME = 'dark' | 'light'; // Default: 'dark'
-CURRENCY = 'sat' | 'btc' | 'eur' | 'usd'; // Default: 'sat'
-FETCH_PRICES = true | false // Default: true
-FETCH_FEES = true | false // Default: true
 HODL_KEY = '[Key provided by HodlHodl]' //Default: ''
 BASE_PATH = '[Base path where you want to have thunderhub running i.e. '/btcpay']' //Default: '/'
+
+# -----------
+# Interface Configs
+# -----------
+THEME = 'dark' | 'light'; // Default: 'dark'
+CURRENCY = 'sat' | 'btc' | 'eur' | 'usd'; // Default: 'sat'
+
+# -----------
+# Privacy Configs
+# -----------
+FETCH_PRICES = true | false // Default: true
+FETCH_FEES = true | false // Default: true
+HODL_HODL = true | false // Default: true
+DISABLE_LINKS = true | false // Default: false
+NO_CLIENT_ACCOUNTS = true | false // Default: false
+NO_VERSION_CHECK = true | false // Default: false
 ```
 
 ### SSO Account
 
 You can define an account to work with SSO cookie authentication by adding the following parameters in the `.env` file:
 
-```js
+```bash
+# -----------
+# SSO Account Configs
+# -----------
 COOKIE_PATH = '/path/to/cookie/file/.cookie'; // i.e. '/data/.cookie'
 SSO_SERVER_URL = 'url and port to node'; // i.e. '127.0.0.1:10009'
 SSO_CERT_PATH = '/path/to/tls/certificate'; // i.e. '\lnd\alice\tls.cert'
@@ -158,7 +176,10 @@ Replace `[COOKIE]` with the contents of the `.cookie` file.
 
 You can add accounts on the server by adding this parameter to the `.env` file:
 
-```js
+```bash
+# -----------
+# Account Configs
+# -----------
 ACCOUNT_CONFIG_PATH = '/path/to/config/file.yaml'; // i.e. '/data/thubConfig.yaml'
 ```
 
@@ -179,11 +200,32 @@ accounts:
     # password: Leave without password and it will use the master password
 ```
 
-### Fetching prices and fees
+### Privacy Configs
 
+**Prices and Fees**
 ThunderHub fetches fiat prices from [Blockchain.com](https://blockchain.info/ticker)'s api and bitcoin on chain fees from [Earn.com](https://bitcoinfees.earn.com/api/v1/fees/recommended)'s api.
 
 If you want to deactivate these requests you can set `FETCH_PRICES=false` and `FETCH_FEES=false` in your `.env` file or manually change them inside the settings view of ThunderHub.
+
+**Links**
+ThunderHub shows you links for quick viewing of nodes by public key on [1ml.com](https://1ml.com/) and for viewing onchain transactions on [Blockchain.com](https://www.blockchain.com/).
+
+If you don't want to show these links, you can set `DISABLE_LINKS=true` in your `.env` file.
+
+**HodlHodl**
+ThunderHub has a HodlHodl integration to view offers from this platform.
+
+If you want to disable this integration, you can set `HODL_HODL=false` in your `.env` file.
+
+**Client Accounts**
+ThunderHub allows you to create accounts on the browser which are also encrypted and stored in the same browser.
+
+If you want to disable this option and only allow accounts that are created on the server, you can set `NO_CLIENT_ACCOUNTS=true` in your `.env` file.
+
+**Version Check**
+ThunderHub gets the latest available version from [Github](https://api.github.com/repos/apotdevin/thunderhub/releases/latest) and shows you a message if you are on an older version.
+
+If you want to disable this option you can set `NO_VERSION_CHECK=true` in your `.env` file.
 
 ### Running on different base path
 

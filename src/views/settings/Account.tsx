@@ -8,6 +8,7 @@ import {
 } from 'src/context/AccountContext';
 import { chartColors } from 'src/styles/Themes';
 import { useLogoutMutation } from 'src/graphql/mutations/__generated__/logout.generated';
+import getConfig from 'next/config';
 import {
   CardWithTitle,
   SubTitle,
@@ -26,6 +27,9 @@ import { useStatusDispatch } from '../../context/StatusContext';
 import { Auth } from '../../components/auth';
 import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
+
+const { publicRuntimeConfig } = getConfig();
+const { noClient } = publicRuntimeConfig;
 
 export const AccountSettings = () => {
   const [status, setStatus] = useState('none');
@@ -126,37 +130,43 @@ export const AccountSettings = () => {
     );
   };
 
+  const renderAddClientAccount = () => (
+    <>
+      <SettingsLine>
+        <Sub4Title>Add Browser Account</Sub4Title>
+        <ColorButton
+          onClick={() => {
+            if (willAdd) {
+              setIsType('login');
+            }
+            setWillAdd(prev => !prev);
+          }}
+        >
+          {willAdd ? <X size={18} /> : 'Add New Account'}
+        </ColorButton>
+      </SettingsLine>
+      {willAdd && (
+        <>
+          <Separation />
+          {status === 'none' && renderButtons()}
+          <Auth
+            type={isType}
+            status={status}
+            setStatus={setStatus}
+            callback={() => setStatus('none')}
+          />
+          <Separation />
+        </>
+      )}
+    </>
+  );
+
   return (
     <CardWithTitle>
       <SubTitle>Account</SubTitle>
       <Card>
         {renderChangeAccount()}
-        <SettingsLine>
-          <Sub4Title>Add Browser Account</Sub4Title>
-          <ColorButton
-            onClick={() => {
-              if (willAdd) {
-                setIsType('login');
-              }
-              setWillAdd(prev => !prev);
-            }}
-          >
-            {willAdd ? <X size={18} /> : 'Add New Account'}
-          </ColorButton>
-        </SettingsLine>
-        {willAdd && (
-          <>
-            <Separation />
-            {status === 'none' && renderButtons()}
-            <Auth
-              type={isType}
-              status={status}
-              setStatus={setStatus}
-              callback={() => setStatus('none')}
-            />
-            <Separation />
-          </>
-        )}
+        {!noClient && renderAddClientAccount()}
         <SettingsLine>
           <Sub4Title>Logout</Sub4Title>
           <ColorButton

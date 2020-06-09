@@ -26,5 +26,9 @@ module.exports = withBundleAnalyzer({
     defaultCurrency: process.env.CURRENCY || 'sat',
     fetchPrices: process.env.FETCH_PRICES === 'false' ? false : true,
     fetchFees: process.env.FETCH_FEES === 'false' ? false : true,
+    hodlhodl: process.env.HODL_HODL === 'false' ? false : true,
+    disableLinks: process.env.DISABLE_LINKS === 'true' ? true : false,
+    noClient: process.env.NO_CLIENT_ACCOUNTS === 'true' ? true : false,
+    noVersionCheck: process.env.NO_VERSION_CHECK === 'true' ? true : false,
   },
 });
