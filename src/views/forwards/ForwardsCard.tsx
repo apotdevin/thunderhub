@@ -70,11 +70,13 @@ export const ForwardCard = ({
             <ColumnLine>
               {renderLine(
                 'Incoming:',
-                incoming_channel_info?.channel?.policies?.[0]?.node?.node?.alias
+                incoming_channel_info?.channel?.partner_node_policies?.node
+                  ?.node?.alias
               )}
               {renderLine(
                 'Outgoing:',
-                outgoing_channel_info?.channel?.policies?.[0]?.node?.node?.alias
+                outgoing_channel_info?.channel?.partner_node_policies?.node
+                  ?.node?.alias
               )}
             </ColumnLine>
           </ResponsiveSingle>

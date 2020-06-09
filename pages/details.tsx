@@ -9,6 +9,7 @@ import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { withApollo } from 'config/client';
 import styled from 'styled-components';
 import { useStatusState } from 'src/context/StatusContext';
+import { ChannelFeeType } from 'src/graphql/types';
 import {
   Card,
   CardWithTitle,
@@ -159,7 +160,7 @@ const FeesView = () => {
       <CardWithTitle>
         <SubTitle>Channel Details</SubTitle>
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          {data.getChannelFees.map((channel, index: number) => (
+          {data.getChannelFees.map((channel: ChannelFeeType, index: number) => (
             <FeeCard
               channel={channel}
               index={index + 1}

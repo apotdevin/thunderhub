@@ -83,15 +83,6 @@ export const LoginBox = () => {
         >
           BTCPayServer
         </SingleButton>
-        <SingleButton
-          selected={isType === 'qrcode'}
-          onClick={() => {
-            setHelp(false);
-            setIsType('qrcode');
-          }}
-        >
-          QR Code
-        </SingleButton>
       </MultiButton>
     </>
   );
