@@ -75,12 +75,6 @@ export const AccountSettings = () => {
         >
           BTCPayServer Info
         </SingleButton>
-        <SingleButton
-          selected={isType === 'qrcode'}
-          onClick={() => setIsType('qrcode')}
-        >
-          QR Code
-        </SingleButton>
       </MultiButton>
     </SingleLine>
   );
