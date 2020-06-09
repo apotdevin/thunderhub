@@ -10,7 +10,17 @@ export const channelTypes = gql`
     min_htlc_mtokens: String
     public_key: String!
     updated_at: String
-    my_node: Boolean
+  }
+
+  type nodePolicyType {
+    base_fee_mtokens: String
+    cltv_delta: Int
+    fee_rate: Int
+    is_disabled: Boolean
+    max_htlc_mtokens: String
+    min_htlc_mtokens: String
+    public_key: String!
+    updated_at: String
     node: Node
   }
 
@@ -21,6 +31,8 @@ export const channelTypes = gql`
     transaction_id: String!
     transaction_vout: Int!
     updated_at: String
+    node_policies: nodePolicyType
+    partner_node_policies: nodePolicyType
   }
 
   type Channel {
@@ -28,13 +40,10 @@ export const channelTypes = gql`
   }
 
   type channelFeeType {
-    alias: String
-    color: String
-    baseFee: Float
-    feeRate: Int
-    transactionId: String
-    transactionVout: Int
-    public_key: String
+    id: String!
+    partner_public_key: String!
+    partner_node_info: Node!
+    channelInfo: Channel
   }
 
   type channelReportType {

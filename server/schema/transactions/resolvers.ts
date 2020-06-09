@@ -136,12 +136,12 @@ export const transactionResolvers = {
         incoming_channel_info: {
           lnd,
           id: forward.incoming_channel,
-          dontResolveKey: public_key,
+          localKey: public_key,
         },
         outgoing_channel_info: {
           lnd,
           id: forward.outgoing_channel,
-          dontResolveKey: public_key,
+          localKey: public_key,
         },
       }));
 

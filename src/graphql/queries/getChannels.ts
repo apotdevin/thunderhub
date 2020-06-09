@@ -36,7 +36,7 @@ export const GET_CHANNELS = gql`
       }
       partner_fee_info {
         channel {
-          policies {
+          partner_node_policies {
             base_fee_mtokens
             fee_rate
             cltv_delta

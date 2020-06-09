@@ -13,7 +13,7 @@ export const GET_FORWARDS = gql`
         tokens
         incoming_channel_info {
           channel {
-            policies {
+            partner_node_policies {
               node {
                 node {
                   alias
@@ -25,7 +25,7 @@ export const GET_FORWARDS = gql`
         }
         outgoing_channel_info {
           channel {
-            policies {
+            partner_node_policies {
               node {
                 node {
                   alias

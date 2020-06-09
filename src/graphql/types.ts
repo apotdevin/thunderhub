@@ -303,10 +303,13 @@ export type MutationOpenChannelArgs = {
 
 export type MutationUpdateFeesArgs = {
   auth: AuthType;
-  transactionId?: Maybe<Scalars['String']>;
-  transactionVout?: Maybe<Scalars['Int']>;
-  baseFee?: Maybe<Scalars['Float']>;
-  feeRate?: Maybe<Scalars['Int']>;
+  transaction_id?: Maybe<Scalars['String']>;
+  transaction_vout?: Maybe<Scalars['Int']>;
+  base_fee_tokens?: Maybe<Scalars['Float']>;
+  fee_rate?: Maybe<Scalars['Int']>;
+  cltv_delta?: Maybe<Scalars['Int']>;
+  max_htlc_mtokens?: Maybe<Scalars['String']>;
+  min_htlc_mtokens?: Maybe<Scalars['String']>;
 };
 
 export type MutationKeysendArgs = {
@@ -584,7 +587,18 @@ export type PolicyType = {
   min_htlc_mtokens?: Maybe<Scalars['String']>;
   public_key: Scalars['String'];
   updated_at?: Maybe<Scalars['String']>;
-  my_node?: Maybe<Scalars['Boolean']>;
+};
+
+export type NodePolicyType = {
+  __typename?: 'nodePolicyType';
+  base_fee_mtokens?: Maybe<Scalars['String']>;
+  cltv_delta?: Maybe<Scalars['Int']>;
+  fee_rate?: Maybe<Scalars['Int']>;
+  is_disabled?: Maybe<Scalars['Boolean']>;
+  max_htlc_mtokens?: Maybe<Scalars['String']>;
+  min_htlc_mtokens?: Maybe<Scalars['String']>;
+  public_key: Scalars['String'];
+  updated_at?: Maybe<Scalars['String']>;
   node?: Maybe<Node>;
 };
 
@@ -596,6 +610,8 @@ export type SingleChannelType = {
   transaction_id: Scalars['String'];
   transaction_vout: Scalars['Int'];
   updated_at?: Maybe<Scalars['String']>;
+  node_policies?: Maybe<NodePolicyType>;
+  partner_node_policies?: Maybe<NodePolicyType>;
 };
 
 export type Channel = {
@@ -605,13 +621,10 @@ export type Channel = {
 
 export type ChannelFeeType = {
   __typename?: 'channelFeeType';
-  alias?: Maybe<Scalars['String']>;
-  color?: Maybe<Scalars['String']>;
-  baseFee?: Maybe<Scalars['Float']>;
-  feeRate?: Maybe<Scalars['Int']>;
-  transactionId?: Maybe<Scalars['String']>;
-  transactionVout?: Maybe<Scalars['Int']>;
-  public_key?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  partner_public_key: Scalars['String'];
+  partner_node_info: Node;
+  channelInfo?: Maybe<Channel>;
 };
 
 export type ChannelReportType = {

@@ -121,7 +121,7 @@ const TRANS = '/transactions';
 const FORWARDS = '/forwards';
 const CHAIN_TRANS = '/chain';
 const TOOLS = '/tools';
-const FEES = '/fees';
+const DETAILS = '/details';
 const STATS = '/stats';
 const TRADER = '/trading';
 const CHAT = '/chat';
@@ -169,7 +169,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Peers', PEERS, Users, sidebar)}
       {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
       {renderNavButton('Balance', BALANCE, Repeat, sidebar)}
-      {renderNavButton('Fees', FEES, Crosshair, sidebar)}
+      {renderNavButton('Details', DETAILS, Crosshair, sidebar)}
       {renderNavButton('Transactions', TRANS, Server, sidebar)}
       {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
       {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
@@ -184,7 +184,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Peers', PEERS, Users)}
       {renderBurgerNav('Channels', CHANNEL, Cpu)}
       {renderBurgerNav('Balance', BALANCE, Repeat)}
-      {renderBurgerNav('Fees', FEES, Crosshair)}
+      {renderBurgerNav('Details', DETAILS, Crosshair)}
       {renderBurgerNav('Transactions', TRANS, Server)}
       {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}

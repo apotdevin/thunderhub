@@ -28,8 +28,8 @@ export type GetForwardsQuery = { __typename?: 'Query' } & {
                     { __typename?: 'Channel' } & {
                       channel?: Types.Maybe<
                         { __typename?: 'singleChannelType' } & {
-                          policies: Array<
-                            { __typename?: 'policyType' } & {
+                          partner_node_policies?: Types.Maybe<
+                            { __typename?: 'nodePolicyType' } & {
                               node?: Types.Maybe<
                                 { __typename?: 'Node' } & {
                                   node?: Types.Maybe<
@@ -50,8 +50,8 @@ export type GetForwardsQuery = { __typename?: 'Query' } & {
                     { __typename?: 'Channel' } & {
                       channel?: Types.Maybe<
                         { __typename?: 'singleChannelType' } & {
-                          policies: Array<
-                            { __typename?: 'policyType' } & {
+                          partner_node_policies?: Types.Maybe<
+                            { __typename?: 'nodePolicyType' } & {
                               node?: Types.Maybe<
                                 { __typename?: 'Node' } & {
                                   node?: Types.Maybe<
@@ -89,7 +89,7 @@ export const GetForwardsDocument = gql`
         tokens
         incoming_channel_info {
           channel {
-            policies {
+            partner_node_policies {
               node {
                 node {
                   alias
@@ -101,7 +101,7 @@ export const GetForwardsDocument = gql`
         }
         outgoing_channel_info {
           channel {
-            policies {
+            partner_node_policies {
               node {
                 node {
                   alias
