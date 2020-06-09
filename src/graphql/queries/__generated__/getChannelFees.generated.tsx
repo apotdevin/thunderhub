@@ -13,14 +13,48 @@ export type ChannelFeesQuery = { __typename?: 'Query' } & {
       Types.Maybe<
         { __typename?: 'channelFeeType' } & Pick<
           Types.ChannelFeeType,
-          | 'alias'
-          | 'color'
-          | 'baseFee'
-          | 'feeRate'
-          | 'transactionId'
-          | 'transactionVout'
-          | 'public_key'
-        >
+          'id' | 'partner_public_key'
+        > & {
+            partner_node_info: { __typename?: 'Node' } & {
+              node?: Types.Maybe<
+                { __typename?: 'nodeType' } & Pick<
+                  Types.NodeType,
+                  'alias' | 'color'
+                >
+              >;
+            };
+            channelInfo?: Types.Maybe<
+              { __typename?: 'Channel' } & {
+                channel?: Types.Maybe<
+                  { __typename?: 'singleChannelType' } & Pick<
+                    Types.SingleChannelType,
+                    'transaction_id' | 'transaction_vout'
+                  > & {
+                      node_policies?: Types.Maybe<
+                        { __typename?: 'nodePolicyType' } & Pick<
+                          Types.NodePolicyType,
+                          | 'base_fee_mtokens'
+                          | 'fee_rate'
+                          | 'cltv_delta'
+                          | 'max_htlc_mtokens'
+                          | 'min_htlc_mtokens'
+                        >
+                      >;
+                      partner_node_policies?: Types.Maybe<
+                        { __typename?: 'nodePolicyType' } & Pick<
+                          Types.NodePolicyType,
+                          | 'base_fee_mtokens'
+                          | 'fee_rate'
+                          | 'cltv_delta'
+                          | 'max_htlc_mtokens'
+                          | 'min_htlc_mtokens'
+                        >
+                      >;
+                    }
+                >;
+              }
+            >;
+          }
       >
     >
   >;
@@ -29,13 +63,34 @@ export type ChannelFeesQuery = { __typename?: 'Query' } & {
 export const ChannelFeesDocument = gql`
   query ChannelFees($auth: authType!) {
     getChannelFees(auth: $auth) {
-      alias
-      color
-      baseFee
-      feeRate
-      transactionId
-      transactionVout
-      public_key
+      id
+      partner_public_key
+      partner_node_info {
+        node {
+          alias
+          color
+        }
+      }
+      channelInfo {
+        channel {
+          transaction_id
+          transaction_vout
+          node_policies {
+            base_fee_mtokens
+            fee_rate
+            cltv_delta
+            max_htlc_mtokens
+            min_htlc_mtokens
+          }
+          partner_node_policies {
+            base_fee_mtokens
+            fee_rate
+            cltv_delta
+            max_htlc_mtokens
+            min_htlc_mtokens
+          }
+        }
+      }
     }
   }
 `;

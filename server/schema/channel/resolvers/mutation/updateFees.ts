@@ -1,12 +1,8 @@
 import { updateRoutingFees } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
-import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import {
-  getErrorMsg,
-  getAuthLnd,
-  getCorrectAuth,
-} from 'server/helpers/helpers';
+import { getLnd } from 'server/helpers/helpers';
+import { to } from 'server/helpers/async';
 
 export const updateFees = async (
   _: undefined,
@@ -15,28 +11,39 @@ export const updateFees = async (
 ) => {
   await requestLimiter(context.ip, 'updateFees');
 
-  const { transactionId, transactionVout, baseFee, feeRate } = params;
+  const {
+    transaction_id,
+    transaction_vout,
+    base_fee_tokens,
+    fee_rate,
+    cltv_delta,
+    max_htlc_mtokens,
+    min_htlc_mtokens,
+  } = params;
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const lnd = getLnd(params.auth, context);
 
-  if (!baseFee && !feeRate) {
-    throw new Error('No Base Fee or Fee Rate to update channels');
+  if (
+    !base_fee_tokens &&
+    !fee_rate &&
+    !cltv_delta &&
+    !max_htlc_mtokens &&
+    !min_htlc_mtokens
+  ) {
+    throw new Error('NoDetailsToUpdateChannel');
   }
 
   const props = {
     lnd,
-    transaction_id: transactionId,
-    transaction_vout: transactionVout,
-    ...(params.baseFee && { base_fee_tokens: params.baseFee }),
-    ...(params.feeRate && { fee_rate: params.feeRate }),
+    transaction_id,
+    transaction_vout,
+    ...(base_fee_tokens && { base_fee_tokens }),
+    ...(fee_rate && { fee_rate }),
+    ...(cltv_delta && { cltv_delta }),
+    ...(max_htlc_mtokens && { max_htlc_mtokens }),
+    ...(min_htlc_mtokens && { min_htlc_mtokens }),
   };
 
-  try {
-    await updateRoutingFees(props);
-    return true;
-  } catch (error) {
-    logger.error('Error updating routing fees: %o', error);
-    throw new Error(getErrorMsg(error));
-  }
+  await to(updateRoutingFees(props));
+  return true;
 };

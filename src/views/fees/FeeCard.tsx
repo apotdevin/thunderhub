@@ -1,55 +1,88 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { ChevronRight } from 'react-feather';
+import { ChevronRight, AlertCircle } from 'react-feather';
 import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { ChannelFeeType } from 'src/graphql/types';
+import { formatSats } from 'src/utils/helpers';
+import { chartColors } from 'src/styles/Themes';
+import { useStatusState } from 'src/context/StatusContext';
 import {
   SubCard,
   Separation,
   SingleLine,
   DarkSubTitle,
   ResponsiveLine,
-  NoWrapTitle,
+  Sub4Title,
 } from '../../components/generic/Styled';
-import { renderLine } from '../../components/generic/helpers';
-import {
-  MainInfo,
-  NodeTitle,
-  ColLine,
-} from '../../components/generic/CardGeneric';
+import { renderLine, getWithCopy } from '../../components/generic/helpers';
+import { MainInfo, NodeTitle } from '../../components/generic/CardGeneric';
 import { getErrorContent } from '../../utils/error';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
+import { WarningText } from '../stats/styles';
+import { FeeCardColumn, FeeCardNoWrap } from './styles';
 
 interface FeeCardProps {
-  channelInfo: ChannelFeeType;
+  channel: ChannelFeeType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
 }
 
 export const FeeCard: React.FC<FeeCardProps> = ({
-  channelInfo,
+  channel,
   index,
   setIndexOpen,
   indexOpen,
 }) => {
-  const [newBaseFee, setBaseFee] = useState(0);
-  const [newFeeRate, setFeeRate] = useState(0);
+  const { minorVersion, revision } = useStatusState();
+  const canMax = (minorVersion === 7 && revision > 1) || minorVersion > 7;
+  const canMin = (minorVersion === 8 && revision > 2) || minorVersion > 8;
 
+  const { partner_public_key, partner_node_info, channelInfo } = channel;
+
+  const { alias, color } = partner_node_info.node;
   const {
-    alias,
-    color,
-    baseFee,
-    feeRate,
-    transactionId,
-    transactionVout,
-    public_key,
-  } = channelInfo;
+    transaction_id,
+    transaction_vout,
+    node_policies,
+    partner_node_policies,
+  } = channelInfo.channel || {};
+  const {
+    base_fee_mtokens,
+    fee_rate,
+    cltv_delta,
+    max_htlc_mtokens,
+    min_htlc_mtokens,
+  } = node_policies || {};
+
+  const base_fee = Number(base_fee_mtokens) / 1000;
+  const max_htlc = Number(max_htlc_mtokens) / 1000;
+  const min_htlc = Number(min_htlc_mtokens) / 1000;
+
+  const [newBaseFee, setBaseFee] = useState(base_fee);
+  const [newFeeRate, setFeeRate] = useState(fee_rate);
+  const [newCLTV, setCLTV] = useState(cltv_delta);
+  const [newMax, setMax] = useState(max_htlc);
+  const [newMin, setMin] = useState(min_htlc);
+
+  const withChanges =
+    newBaseFee !== base_fee ||
+    newFeeRate !== fee_rate ||
+    newCLTV !== cltv_delta ||
+    newMax !== max_htlc ||
+    newMin !== min_htlc;
 
   const [updateFees] = useUpdateFeesMutation({
-    onError: error => toast.error(getErrorContent(error)),
+    onError: error => {
+      setBaseFee(base_fee);
+      setFeeRate(fee_rate);
+      setCLTV(cltv_delta);
+      setMax(max_htlc);
+      setMin(min_htlc);
+      toast.error(getErrorContent(error));
+    },
     onCompleted: data => {
       setIndexOpen(0);
       data.updateFees
@@ -67,16 +100,44 @@ export const FeeCard: React.FC<FeeCardProps> = ({
     }
   };
 
-  const renderDetails = () => {
+  const renderPartnerDetails = () => {
+    const {
+      base_fee_mtokens,
+      fee_rate,
+      cltv_delta,
+      max_htlc_mtokens,
+      min_htlc_mtokens,
+    } = partner_node_policies || {};
+
+    const base_fee = Number(base_fee_mtokens) / 1000;
+    const max_htlc = Number(max_htlc_mtokens) / 1000;
+    const min_htlc = Number(min_htlc_mtokens) / 1000;
+
     return (
       <>
         <Separation />
-        {renderLine('Transaction Id:', transactionId)}
-        {renderLine('Transaction Vout:', transactionVout)}
+        <Sub4Title>Partner Details</Sub4Title>
+        {renderLine('Base Fee (sats)', base_fee)}
+        {renderLine('Fee Rate (ppm)', fee_rate)}
+        {renderLine('CLTV Delta', cltv_delta)}
+        {renderLine('Max HTLC (sats)', formatSats(max_htlc))}
+        {renderLine('Min HTLC (sats)', formatSats(min_htlc))}
+      </>
+    );
+  };
+
+  const renderDetails = () => {
+    return (
+      <>
+        {renderWarningText(cltv_delta)}
+        {renderPartnerDetails()}
+        <Separation />
+        {renderLine('Transaction Id:', getWithCopy(transaction_id))}
+        {renderLine('Transaction Vout:', transaction_vout)}
         <Separation />
         <AdminSwitch>
           <InputWithDeco
-            title={'BaseFee'}
+            title={'Base Fee'}
             placeholder={'sats'}
             amount={newBaseFee}
             override={'sat'}
@@ -85,25 +146,57 @@ export const FeeCard: React.FC<FeeCardProps> = ({
           />
           <InputWithDeco
             title={'Fee Rate'}
-            placeholder={'sats/million sats'}
+            placeholder={'ppm'}
             amount={newFeeRate}
             override={'ppm'}
             inputType={'number'}
             inputCallback={value => setFeeRate(Number(value))}
           />
+          <InputWithDeco
+            title={'CLTV Delta'}
+            placeholder={'cltv delta'}
+            customAmount={newCLTV.toString()}
+            inputType={'number'}
+            inputCallback={value => setCLTV(Number(value))}
+          />
+          {canMax && (
+            <InputWithDeco
+              title={'Max HTLC'}
+              placeholder={'sats'}
+              amount={newMax}
+              override={'sat'}
+              inputType={'number'}
+              inputCallback={value => setMax(Number(value))}
+            />
+          )}
+          {canMin && (
+            <InputWithDeco
+              title={'Min HTLC'}
+              placeholder={'sats'}
+              amount={newMin}
+              override={'sat'}
+              inputType={'number'}
+              inputCallback={value => setMin(Number(value))}
+            />
+          )}
           <SecureButton
             callback={updateFees}
             variables={{
-              transactionId,
-              transactionVout,
+              transaction_id,
+              transaction_vout,
               ...(newBaseFee !== 0 && {
-                baseFee: newBaseFee,
+                base_fee_tokens: newBaseFee,
               }),
               ...(newFeeRate !== 0 && {
-                feeRate: newFeeRate,
+                fee_rate: newFeeRate,
               }),
+              ...(newCLTV !== 0 && { cltv_delta: newCLTV }),
+              ...(newMax !== 0 &&
+                canMax && { max_htlc_mtokens: (newMax * 1000).toString() }),
+              ...(newMin !== 0 &&
+                canMin && { min_htlc_mtokens: (newMin * 1000).toString() }),
             }}
-            disabled={newBaseFee === 0 && newFeeRate === 0}
+            disabled={!withChanges}
             fullWidth={true}
             withMargin={'16px 0 0'}
           >
@@ -115,31 +208,91 @@ export const FeeCard: React.FC<FeeCardProps> = ({
     );
   };
 
+  const renderDetail = (title: string, children: JSX.Element) => (
+    <SingleLine>
+      <FeeCardNoWrap>
+        <DarkSubTitle>{title}</DarkSubTitle>
+      </FeeCardNoWrap>
+      <SingleLine>{children}</SingleLine>
+    </SingleLine>
+  );
+
+  const renderWarningText = (htlc_delta: number) => {
+    if (htlc_delta <= 14) {
+      return (
+        <>
+          <Separation />
+          <WarningText warningColor={chartColors.red}>
+            You should increase the CLTV delta
+          </WarningText>
+        </>
+      );
+    }
+    if (htlc_delta <= 24) {
+      return (
+        <>
+          <Separation />
+          <WarningText>
+            You should consider increasing the CLTV delta
+          </WarningText>
+        </>
+      );
+    }
+    return null;
+  };
+
+  const renderWarning = (htlc_delta: number) => {
+    if (htlc_delta <= 14) {
+      return <AlertCircle size={14} color={chartColors.red} />;
+    }
+    if (htlc_delta <= 24) {
+      return <AlertCircle size={14} color={chartColors.orange} />;
+    }
+    return null;
+  };
+
   return (
     <SubCard color={color} key={index}>
       <MainInfo onClick={() => handleClick()}>
         <ResponsiveLine>
-          <NodeTitle>{alias || public_key?.substring(0, 6)}</NodeTitle>
-          <ColLine>
-            <SingleLine>
-              <NoWrapTitle>
-                <DarkSubTitle>{'Base Fee:'}</DarkSubTitle>
-              </NoWrapTitle>
-              <SingleLine>
-                {baseFee}
-                <DarkSubTitle>{baseFee === 1 ? 'sat' : 'sats'}</DarkSubTitle>
-              </SingleLine>
-            </SingleLine>
-            <SingleLine>
-              <NoWrapTitle>
-                <DarkSubTitle>{'Fee Rate:'}</DarkSubTitle>
-              </NoWrapTitle>
-              <SingleLine>
-                {feeRate}
+          <NodeTitle>{alias || partner_public_key?.substring(0, 6)}</NodeTitle>
+          <FeeCardColumn>
+            {renderDetail(
+              'Base Fee:',
+              <>
+                {base_fee}
+                <DarkSubTitle>{base_fee === 1 ? 'sat' : 'sats'}</DarkSubTitle>
+              </>
+            )}
+            {renderDetail(
+              'Fee Rate:',
+              <>
+                {fee_rate}
                 <DarkSubTitle>ppm</DarkSubTitle>
-              </SingleLine>
-            </SingleLine>
-          </ColLine>
+              </>
+            )}
+            {renderDetail(
+              'CLTV Delta:',
+              <>
+                {cltv_delta}
+                {renderWarning(cltv_delta)}
+              </>
+            )}
+            {renderDetail(
+              'Max HTLC:',
+              <>
+                {formatSats(max_htlc)}
+                <DarkSubTitle>{max_htlc === 1 ? 'sat' : 'sats'}</DarkSubTitle>
+              </>
+            )}
+            {renderDetail(
+              'Min HTLC:',
+              <>
+                {formatSats(min_htlc)}
+                <DarkSubTitle>{min_htlc === 1 ? 'sat' : 'sats'}</DarkSubTitle>
+              </>
+            )}
+          </FeeCardColumn>
         </ResponsiveLine>
       </MainInfo>
       {index === indexOpen && renderDetails()}

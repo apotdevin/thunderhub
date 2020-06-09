@@ -8,6 +8,7 @@ import {
 import { X, Copy } from 'react-feather';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
+import { appUrls } from 'server/utils/appUrls';
 import {
   SmallLink,
   DarkSubTitle,
@@ -26,7 +27,7 @@ export const shorten = (text: string): string => {
 };
 
 export const getTransactionLink = (transaction: string) => {
-  const link = `https://www.blockchain.com/btc/tx/${transaction}`;
+  const link = `${appUrls.blockchain}${transaction}`;
   return (
     <SmallLink href={link} target="_blank">
       {shorten(transaction)}
@@ -34,11 +35,24 @@ export const getTransactionLink = (transaction: string) => {
   );
 };
 
+export const getWithCopy = (text: string) => {
+  return (
+    <>
+      {shorten(text)}
+      <CopyToClipboard text={text} onCopy={() => toast.success('Copied')}>
+        <CopyIcon>
+          <Copy size={12} />
+        </CopyIcon>
+      </CopyToClipboard>
+    </>
+  );
+};
+
 export const getNodeLink = (publicKey: string, alias?: string) => {
   if (alias && alias === 'Node not found') {
     return 'Node not found';
   }
-  const link = `https://1ml.com/node/${publicKey}`;
+  const link = `${appUrls.oneml}${publicKey}`;
   return (
     <>
       <SmallLink href={link} target="_blank">
