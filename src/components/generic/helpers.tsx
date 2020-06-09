@@ -9,6 +9,7 @@ import { X, Copy } from 'react-feather';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { appUrls } from 'server/utils/appUrls';
+import getConfig from 'next/config';
 import {
   SmallLink,
   DarkSubTitle,
@@ -18,6 +19,9 @@ import {
 } from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
 
+const { publicRuntimeConfig } = getConfig();
+const { disableLinks } = publicRuntimeConfig;
+
 export const shorten = (text: string): string => {
   const amount = 6;
   const beginning = text.slice(0, amount);
@@ -26,12 +30,31 @@ export const shorten = (text: string): string => {
   return `${beginning}...${end}`;
 };
 
+export const copyLink = (text: string) => (
+  <CopyToClipboard text={text} onCopy={() => toast.success('Copied')}>
+    <CopyIcon>
+      <Copy size={12} />
+    </CopyIcon>
+  </CopyToClipboard>
+);
+
 export const getTransactionLink = (transaction: string) => {
+  if (disableLinks) {
+    return (
+      <>
+        {shorten(transaction)}
+        {copyLink(transaction)}
+      </>
+    );
+  }
   const link = `${appUrls.blockchain}${transaction}`;
   return (
-    <SmallLink href={link} target="_blank">
-      {shorten(transaction)}
-    </SmallLink>
+    <>
+      <SmallLink href={link} target="_blank">
+        {shorten(transaction)}
+      </SmallLink>
+      {copyLink(transaction)}
+    </>
   );
 };
 
@@ -39,11 +62,7 @@ export const getWithCopy = (text: string) => {
   return (
     <>
       {shorten(text)}
-      <CopyToClipboard text={text} onCopy={() => toast.success('Copied')}>
-        <CopyIcon>
-          <Copy size={12} />
-        </CopyIcon>
-      </CopyToClipboard>
+      {copyLink(text)}
     </>
   );
 };
@@ -53,16 +72,17 @@ export const getNodeLink = (publicKey: string, alias?: string) => {
     return 'Node not found';
   }
   const link = `${appUrls.oneml}${publicKey}`;
+  const text = alias ? alias : shorten(publicKey);
   return (
     <>
-      <SmallLink href={link} target="_blank">
-        {alias ? alias : shorten(publicKey)}
-      </SmallLink>
-      <CopyToClipboard text={publicKey} onCopy={() => toast.success('Copied')}>
-        <CopyIcon>
-          <Copy size={12} />
-        </CopyIcon>
-      </CopyToClipboard>
+      {disableLinks ? (
+        text
+      ) : (
+        <SmallLink href={link} target="_blank">
+          {text}
+        </SmallLink>
+      )}
+      {copyLink(publicKey)}
     </>
   );
 };

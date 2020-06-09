@@ -19,10 +19,16 @@ const VersionBox = styled.div`
 `;
 
 const { publicRuntimeConfig } = getConfig();
-const { npmVersion } = publicRuntimeConfig;
+const { npmVersion, noVersionCheck } = publicRuntimeConfig;
 
 export const Version = () => {
-  const { data, loading, error } = useGetLatestVersionQuery();
+  const { data, loading, error } = useGetLatestVersionQuery({
+    skip: noVersionCheck,
+  });
+
+  if (noVersionCheck) {
+    return null;
+  }
 
   if (error || !data || loading || !data?.getLatestVersion) {
     return null;

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useGetOffersQuery } from 'src/graphql/hodlhodl/__generated__/query.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { withApollo } from 'config/client';
+import getConfig from 'next/config';
 import {
   CardWithTitle,
   SubTitle,
@@ -17,6 +18,9 @@ import { OfferFilters } from '../src/views/trading/OfferFilters';
 import { Link } from '../src/components/link/Link';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { decode } from '../src/utils/helpers';
+
+const { publicRuntimeConfig } = getConfig();
+const { hodlhodl } = publicRuntimeConfig;
 
 export interface QueryProps {
   pagination: {
@@ -69,8 +73,20 @@ const TradingView = () => {
   const [fetching, setFetching] = useState(false);
 
   const { data, loading, fetchMore, error } = useGetOffersQuery({
+    skip: !hodlhodl,
     variables: { filter: JSON.stringify(queryObject) },
   });
+
+  if (!hodlhodl) {
+    return (
+      <CardWithTitle>
+        <SubTitle>P2P Trading</SubTitle>
+        <Card bottom={'16px'}>
+          HodlHodl integration is disabled from the server.
+        </Card>
+      </CardWithTitle>
+    );
+  }
 
   if (error) {
     return (
