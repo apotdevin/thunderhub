@@ -2,7 +2,7 @@ import {
   verifyBackups as verifyLnBackups,
   recoverFundsFromChannels,
   getBackups,
-  payRequest,
+  pay,
   verifyMessage,
   signMessage,
 } from 'ln-service';
@@ -13,7 +13,9 @@ import {
   getAuthLnd,
   getErrorMsg,
   getCorrectAuth,
+  getLnd,
 } from 'server/helpers/helpers';
+import { toWithError } from 'server/helpers/async';
 
 export const toolsResolvers = {
   Query: {
@@ -91,32 +93,31 @@ export const toolsResolvers = {
     adminCheck: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'adminCheck');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const lnd = getLnd(params.auth, context);
 
-      try {
-        await payRequest({
+      const [, error] = await toWithError(
+        pay({
           lnd,
           request: 'admin check',
-        });
-      } catch (error) {
-        if (error.length >= 2) {
-          if (error[2]?.err?.details?.indexOf('permission denied') >= 0) {
-            logger.warn('Admin permission check failed.');
-            throw new Error('PermissionDenied');
-          }
-          if (
-            error[2]?.err?.details?.indexOf('invalid character in string:') >= 0
-          ) {
-            logger.info('Admin permission checked');
-            return true;
-          }
-        }
+        })
+      );
 
-        logger.info('%o', error);
-        const errorMessage = getErrorMsg(error);
-        throw new Error(errorMessage);
+      if (error && error.length >= 2) {
+        if (error[2]?.err?.details?.indexOf('permission denied') >= 0) {
+          logger.warn('Admin permission check failed.');
+          throw new Error('PermissionDenied');
+        }
+        if (
+          error[2]?.err?.details?.indexOf('invalid character in string:') >= 0
+        ) {
+          logger.info('Admin permission checked');
+          return true;
+        }
       }
+
+      logger.info('%o', error);
+      const errorMessage = getErrorMsg(error);
+      throw new Error(errorMessage);
     },
     verifyMessage: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'verifyMessage');
