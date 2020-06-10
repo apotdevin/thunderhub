@@ -10,6 +10,12 @@ import { getChannels } from './resolvers/query/getChannels';
 import { getClosedChannels } from './resolvers/query/getClosedChannels';
 import { getPendingChannels } from './resolvers/query/getPendingChannels';
 
+type ParentType = {
+  lnd: {};
+  id: String;
+  localKey: String;
+};
+
 export const channelResolvers = {
   Query: {
     getChannelBalance,
@@ -24,8 +30,8 @@ export const channelResolvers = {
     updateFees,
   },
   Channel: {
-    channel: async parent => {
-      const { lnd, id, withNodes = true, localKey, dontResolveKey } = parent;
+    channel: async (parent: ParentType) => {
+      const { lnd, id, localKey } = parent;
 
       if (!lnd) {
         logger.debug('ExpectedLNDToGetChannel');
@@ -44,23 +50,24 @@ export const channelResolvers = {
         return null;
       }
 
-      const nodeProps = (publicKey: string) =>
-        withNodes ? { node: { lnd, publicKey } } : {};
+      let node_policies = null;
+      let partner_node_policies = null;
 
-      const policiesWithNodes = channel.policies
-        .map(policy => {
-          if (dontResolveKey && dontResolveKey === policy.public_key) {
-            return null;
-          }
-          return {
+      channel.policies.forEach(policy => {
+        if (localKey && localKey === policy.public_key) {
+          node_policies = {
             ...policy,
-            ...nodeProps(policy.public_key),
-            ...(localKey ? { my_node: policy.public_key === localKey } : {}),
+            node: { lnd, publicKey: policy.public_key },
           };
-        })
-        .filter(Boolean);
+        } else {
+          partner_node_policies = {
+            ...policy,
+            node: { lnd, publicKey: policy.public_key },
+          };
+        }
+      });
 
-      return { ...channel, policies: policiesWithNodes };
+      return { ...channel, node_policies, partner_node_policies };
     },
   },
 };

@@ -102,10 +102,3 @@ export const Card = styled.div<CardProps>`
   margin-bottom: ${({ bottom }) => (bottom ? bottom : '25px')};
   width: 100%;
 `;
-
-export const ColLine = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-basis: 30%;
-  width: 100%;
-`;

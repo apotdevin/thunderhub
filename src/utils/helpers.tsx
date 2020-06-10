@@ -58,6 +58,8 @@ export const getValue = ({
   return `${symbol}${numeral(amountInFiat).format('0,0.00')}`;
 };
 
+export const formatSats = (value: number) => numeral(value).format('0,0.[000]');
+
 export const getPercent = (
   local: number,
   remote: number,

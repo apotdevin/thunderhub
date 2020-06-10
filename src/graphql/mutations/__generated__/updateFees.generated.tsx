@@ -5,10 +5,13 @@ import * as Types from '../../types';
 
 export type UpdateFeesMutationVariables = {
   auth: Types.AuthType;
-  transactionId?: Types.Maybe<Types.Scalars['String']>;
-  transactionVout?: Types.Maybe<Types.Scalars['Int']>;
-  baseFee?: Types.Maybe<Types.Scalars['Float']>;
-  feeRate?: Types.Maybe<Types.Scalars['Int']>;
+  transaction_id?: Types.Maybe<Types.Scalars['String']>;
+  transaction_vout?: Types.Maybe<Types.Scalars['Int']>;
+  base_fee_tokens?: Types.Maybe<Types.Scalars['Float']>;
+  fee_rate?: Types.Maybe<Types.Scalars['Int']>;
+  cltv_delta?: Types.Maybe<Types.Scalars['Int']>;
+  max_htlc_mtokens?: Types.Maybe<Types.Scalars['String']>;
+  min_htlc_mtokens?: Types.Maybe<Types.Scalars['String']>;
 };
 
 export type UpdateFeesMutation = { __typename?: 'Mutation' } & Pick<
@@ -19,17 +22,23 @@ export type UpdateFeesMutation = { __typename?: 'Mutation' } & Pick<
 export const UpdateFeesDocument = gql`
   mutation UpdateFees(
     $auth: authType!
-    $transactionId: String
-    $transactionVout: Int
-    $baseFee: Float
-    $feeRate: Int
+    $transaction_id: String
+    $transaction_vout: Int
+    $base_fee_tokens: Float
+    $fee_rate: Int
+    $cltv_delta: Int
+    $max_htlc_mtokens: String
+    $min_htlc_mtokens: String
   ) {
     updateFees(
       auth: $auth
-      transactionId: $transactionId
-      transactionVout: $transactionVout
-      baseFee: $baseFee
-      feeRate: $feeRate
+      transaction_id: $transaction_id
+      transaction_vout: $transaction_vout
+      base_fee_tokens: $base_fee_tokens
+      fee_rate: $fee_rate
+      cltv_delta: $cltv_delta
+      max_htlc_mtokens: $max_htlc_mtokens
+      min_htlc_mtokens: $min_htlc_mtokens
     )
   }
 `;
@@ -52,10 +61,13 @@ export type UpdateFeesMutationFn = ApolloReactCommon.MutationFunction<
  * const [updateFeesMutation, { data, loading, error }] = useUpdateFeesMutation({
  *   variables: {
  *      auth: // value for 'auth'
- *      transactionId: // value for 'transactionId'
- *      transactionVout: // value for 'transactionVout'
- *      baseFee: // value for 'baseFee'
- *      feeRate: // value for 'feeRate'
+ *      transaction_id: // value for 'transaction_id'
+ *      transaction_vout: // value for 'transaction_vout'
+ *      base_fee_tokens: // value for 'base_fee_tokens'
+ *      fee_rate: // value for 'fee_rate'
+ *      cltv_delta: // value for 'cltv_delta'
+ *      max_htlc_mtokens: // value for 'max_htlc_mtokens'
+ *      min_htlc_mtokens: // value for 'min_htlc_mtokens'
  *   },
  * });
  */
