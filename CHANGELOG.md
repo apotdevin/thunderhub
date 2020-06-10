@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.7](https://github.com/apotdevin/thunderhub/compare/v0.7.6...v0.7.7) (2020-06-10)
+
+
+### Bug Fixes
+
+* 🐛 remove null pointer ([9039868](https://github.com/apotdevin/thunderhub/commit/9039868dc7036d2453ee725b10d5560c9b051582))
+
 ### [0.7.6](https://github.com/apotdevin/thunderhub/compare/v0.7.5...v0.7.6) (2020-06-10)
 
 
