@@ -61,7 +61,7 @@ export const chatResolvers = {
                 message: customRecords.message,
               });
 
-              const [{ signed_by }, error] = await toWithError(
+              const [verified, error] = await toWithError(
                 verifyMessage({
                   lnd,
                   message: messageToVerify,
@@ -72,7 +72,7 @@ export const chatResolvers = {
                 logger.debug(`Error verifying message: ${messageToVerify}`);
               }
 
-              if (signed_by === customRecords.sender && !error) {
+              if (!error && verified?.signed_by === customRecords.sender) {
                 isVerified = true;
               }
             }
