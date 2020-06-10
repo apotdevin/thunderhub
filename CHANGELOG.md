@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.8](https://github.com/apotdevin/thunderhub/compare/v0.7.7...v0.7.8) (2020-06-10)
+
+
+### Features
+
+* ✨ more privacy configs ([c536981](https://github.com/apotdevin/thunderhub/commit/c536981c282918d75de24a7a1ba42232aaca29b4))
+* ✨ value server accounts ([6535f06](https://github.com/apotdevin/thunderhub/commit/6535f06202bc9ac0b41b4f674ab71384d1f38020))
+* details view ([d6f9e51](https://github.com/apotdevin/thunderhub/commit/d6f9e51ed0124ce34edd6e228d962ad313637586))
+
+
+### Bug Fixes
+
+* 🐛 correct partner fees ([e68894c](https://github.com/apotdevin/thunderhub/commit/e68894c8ca35f7b76a8e900ae8ab715c07e4cac0))
+
+
+### Improvements
+
+* 🔧 remove qr login ([47ee9c0](https://github.com/apotdevin/thunderhub/commit/47ee9c01274ca423da946f513375c6075f0af58b))
+
 ### [0.7.7](https://github.com/apotdevin/thunderhub/compare/v0.7.6...v0.7.7) (2020-06-10)
 
 
