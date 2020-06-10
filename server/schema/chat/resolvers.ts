@@ -8,13 +8,14 @@ import {
   verifyMessage,
 } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
-import { to } from 'server/helpers/async';
+import { to, toWithError } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 import {
   createCustomRecords,
   decodeMessage,
 } from 'server/helpers/customRecords';
+import { logger } from 'server/helpers/logger';
 
 export const chatResolvers = {
   Query: {
@@ -60,15 +61,18 @@ export const chatResolvers = {
                 message: customRecords.message,
               });
 
-              const { signed_by } = await to(
+              const [{ signed_by }, error] = await toWithError(
                 verifyMessage({
                   lnd,
                   message: messageToVerify,
                   signature: customRecords.signature,
                 })
               );
+              if (error) {
+                logger.debug(`Error verifying message: ${messageToVerify}`);
+              }
 
-              if (signed_by === customRecords.sender) {
+              if (signed_by === customRecords.sender && !error) {
                 isVerified = true;
               }
             }
