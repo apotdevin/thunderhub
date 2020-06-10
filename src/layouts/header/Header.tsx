@@ -11,6 +11,7 @@ import {
 } from 'react-feather';
 import { useTransition, animated } from 'react-spring';
 import { useRouter } from 'next/router';
+import getConfig from 'next/config';
 import { headerColor, headerTextColor } from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
@@ -32,6 +33,9 @@ const HOME = '/home';
 const TRADER = '/trading';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
+
+const { publicRuntimeConfig } = getConfig();
+const { hodlhodl } = publicRuntimeConfig;
 
 export const Header = () => {
   const { pathname } = useRouter();
@@ -75,7 +79,7 @@ export const Header = () => {
       <ViewSwitch hideMobile={true}>
         <HeaderButtons>
           {showHomeButton() && renderNavButton(HOME, Home)}
-          {renderNavButton(TRADER, CreditCard)}
+          {hodlhodl && renderNavButton(TRADER, CreditCard)}
           {renderNavButton(CHAT, MessageCircle)}
           {renderNavButton(SETTINGS, Settings)}
         </HeaderButtons>

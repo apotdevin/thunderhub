@@ -120,10 +120,13 @@ export const mutationTypes = gql`
     ): openChannelType
     updateFees(
       auth: authType!
-      transactionId: String
-      transactionVout: Int
-      baseFee: Float
-      feeRate: Int
+      transaction_id: String
+      transaction_vout: Int
+      base_fee_tokens: Float
+      fee_rate: Int
+      cltv_delta: Int
+      max_htlc_mtokens: String
+      min_htlc_mtokens: String
     ): Boolean
     keysend(auth: authType!, destination: String!, tokens: Int!): payType
     createInvoice(auth: authType!, amount: Int!): newInvoiceType

@@ -1,12 +1,8 @@
-import { getFeeRates, getChannels, getNode } from 'ln-service';
+import { getChannels, getWalletInfo } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
-import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-} from 'server/helpers/helpers';
+import { getLnd } from 'server/helpers/helpers';
+import { to } from 'server/helpers/async';
 
 interface GetChannelsProps {
   channels: ChannelsProps[];
@@ -17,6 +13,7 @@ interface GetFeeRatesProps {
 }
 
 interface ChannelsProps {
+  id: string;
   partner_public_key: number;
   transaction_id: string;
 }
@@ -40,46 +37,20 @@ export const getChannelFees = async (
 ) => {
   await requestLimiter(context.ip, 'channelFees');
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const lnd = getLnd(params.auth, context);
 
-  try {
-    const channels: GetChannelsProps = await getChannels({ lnd });
+  const { public_key } = await to(getWalletInfo({ lnd }));
+  const { channels }: GetChannelsProps = await to(getChannels({ lnd }));
 
-    const channelFees: GetFeeRatesProps = await getFeeRates({ lnd });
-
-    const getConsolidated = () =>
-      Promise.all(
-        channels.channels.map(async channel => {
-          const nodeInfo: NodeProps = await getNode({
-            lnd,
-            is_omitting_channels: true,
-            public_key: channel.partner_public_key,
-          });
-
-          const fees = channelFees.channels.find(
-            channelFee => channelFee.transaction_id === channel.transaction_id
-          );
-          if (!fees) return;
-          const { base_fee, fee_rate, transaction_id, transaction_vout } = fees;
-
-          return {
-            alias: nodeInfo.alias,
-            color: nodeInfo.color,
-            baseFee: base_fee,
-            feeRate: fee_rate,
-            transactionId: transaction_id,
-            transactionVout: transaction_vout,
-            public_key: channel.partner_public_key,
-          };
-        })
-      );
-
-    const consolidated = await getConsolidated();
-
-    return consolidated;
-  } catch (error) {
-    logger.error('Error getting channel fees: %o', error);
-    throw new Error(getErrorMsg(error));
-  }
+  return channels
+    .map(channel => {
+      const { id, partner_public_key } = channel;
+      return {
+        id,
+        partner_public_key,
+        partner_node_info: { lnd, publicKey: partner_public_key },
+        channelInfo: { lnd, id, localKey: public_key },
+      };
+    })
+    .filter(Boolean);
 };

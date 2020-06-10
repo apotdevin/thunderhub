@@ -70,7 +70,6 @@
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
     "react-intersection-observer": "^8.26.2",
-    "react-qr-reader": "^2.2.1",
     "react-spinners": "^0.8.3",
     "react-spring": "^8.0.27",
     "react-toastify": "^6.0.5",

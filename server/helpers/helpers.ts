@@ -11,8 +11,9 @@ import AES from 'crypto-js/aes';
 import CryptoJS from 'crypto-js';
 import { logger } from './logger';
 
-const { serverRuntimeConfig } = getConfig();
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 const { nodeEnv } = serverRuntimeConfig;
+const { noClient } = publicRuntimeConfig;
 
 type LndAuthType = {
   cert: string;
@@ -81,10 +82,15 @@ export const getCorrectAuth = (
 
     return { ...context.sso };
   }
-  if (auth.type === CLIENT_ACCOUNT) {
+  if (auth.type === CLIENT_ACCOUNT && !noClient) {
     const { host, macaroon, cert } = auth;
     return { host, macaroon, cert };
   }
+  if (auth.type === CLIENT_ACCOUNT && noClient) {
+    logger.info(`Client accounts are disabled from the server.`);
+    throw new Error('AccountTypeDoesNotExist');
+  }
+  logger.info(`No authentication for account type '${auth.type}' found`);
   throw new Error('AccountTypeDoesNotExist');
 };
 

@@ -39,6 +39,8 @@ type AccountType = {
   macaroonPath: string;
   certificatePath: string;
   password: string | null;
+  macaroon: string;
+  certificate: string;
 };
 
 type AccountConfigType = {
@@ -97,13 +99,15 @@ export const getAccounts = (filePath: string) => {
         serverUrl,
         macaroonPath,
         certificatePath,
+        macaroon: macaroonValue,
+        certificate,
         password,
       } = account;
 
       const missingFields: string[] = [];
       if (!name) missingFields.push('name');
       if (!serverUrl) missingFields.push('server url');
-      if (!macaroonPath) missingFields.push('macaroon path');
+      if (!macaroonPath && !macaroonValue) missingFields.push('macaroon');
 
       if (missingFields.length > 0) {
         const text = missingFields.join(', ');
@@ -118,13 +122,17 @@ export const getAccounts = (filePath: string) => {
         return null;
       }
 
-      if (!certificatePath)
+      if (!certificatePath && !certificate)
         logger.warn(
           `No certificate for account ${name}. Make sure you don't need it to connect.`
         );
 
-      const cert = (certificatePath && readFile(certificatePath)) || null;
-      const clearMacaroon = readFile(macaroonPath);
+      const cert = certificate
+        ? certificate
+        : (certificatePath && readFile(certificatePath)) || null;
+      const clearMacaroon = macaroonValue
+        ? macaroonValue
+        : readFile(macaroonPath);
 
       if (certificatePath && !cert)
         logger.warn(

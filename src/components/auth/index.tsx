@@ -24,13 +24,6 @@ const PasswordInput = dynamic(() => import('./views/Password'), {
   },
 });
 
-const QRLogin = dynamic(() => import('./views/QRLogin'), {
-  ssr: false,
-  loading: function Loading() {
-    return <LoadingCard noCard={true} />;
-  },
-});
-
 type AuthProps = {
   type: string;
   status: string;
@@ -55,41 +48,16 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
 
   const [adminChecked, setAdminChecked] = useState(false);
 
-  const quickSave = ({
-    name = 'Unknown',
-    host,
-    admin,
-    viewOnly,
-    cert,
-  }: {
-    name?: string;
-    host?: string;
-    admin?: string;
-    viewOnly?: string;
-    cert?: string;
-  }) => {
-    dispatch({ type: 'disconnected' });
-    dispatchChat({ type: 'disconnected' });
-    dispatchAccount({
-      type: 'addAccountAndSave',
-      accountToAdd: { name, host, admin, viewOnly, cert },
-    });
-
-    push(appendBasePath('/'));
-  };
-
   const handleSet = ({
     host,
     admin,
     viewOnly,
     cert,
-    skipCheck,
   }: {
     host?: string;
     admin?: string;
     viewOnly?: string;
     cert?: string;
-    skipCheck?: boolean;
   }) => {
     const id = getAccountId(
       host ?? '',
@@ -108,8 +76,6 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
       toast.error('A host url is needed to connect.');
     } else if (!admin && !viewOnly) {
       toast.error('View-Only or Admin macaroon are needed to connect.');
-    } else if (skipCheck) {
-      quickSave({ name, cert, admin, viewOnly, host });
     } else {
       host && setHost(host);
       admin && setAdmin(admin);
@@ -164,8 +130,6 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
     switch (type) {
       case 'login':
         return <LoginForm handleSet={handleSet} />;
-      case 'qrcode':
-        return <QRLogin handleSet={handleSet} />;
       case 'connect':
         return <ConnectLoginForm handleSet={handleSet} />;
       default:
