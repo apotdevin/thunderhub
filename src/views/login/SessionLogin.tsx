@@ -14,13 +14,18 @@ import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/get
 import { useGetSessionTokenLazyQuery } from 'src/graphql/queries/__generated__/getSessionToken.generated';
 import { getAuthFromAccount } from 'src/context/helpers/context';
 import { getErrorContent } from 'src/utils/error';
+import { Lock } from 'react-feather';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { getAuthObj } from '../../utils/auth';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../components/input/Input';
 import { Section } from '../../components/section/Section';
 import { Title } from '../../components/typography/Styled';
-import { inverseTextColor, mediaWidths } from '../../styles/Themes';
+import {
+  inverseTextColor,
+  mediaWidths,
+  chartColors,
+} from '../../styles/Themes';
 import { useStatusDispatch } from '../../context/StatusContext';
 import { dontShowSessionLogin } from './helpers';
 
@@ -31,6 +36,10 @@ const StyledTitle = styled(Title)`
   @media (${mediaWidths.mobile}) {
     font-size: 18px;
   }
+`;
+
+const IconPadding = styled.span`
+  margin-left: 4px;
 `;
 
 export const SessionLogin = () => {
@@ -125,7 +134,14 @@ export const SessionLogin = () => {
       }
     }
     if (account.type === SERVER_ACCOUNT) {
-      return `Login to ${account.name} (server account):`;
+      return (
+        <>
+          {`Login to ${account.name}`}
+          <IconPadding>
+            <Lock size={18} color={chartColors.green} />
+          </IconPadding>
+        </>
+      );
     }
     return `Login to ${account.name}`;
   };
