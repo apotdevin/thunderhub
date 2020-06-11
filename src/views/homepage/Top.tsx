@@ -9,8 +9,7 @@ import {
   HomeTitle,
   HomeText,
   FullWidth,
-  SlantedWrapper,
-  SlantedEdge,
+  StyledSection,
 } from './HomePage.styled';
 
 export const TopSection = () => {
@@ -29,7 +28,7 @@ export const TopSection = () => {
   });
 
   return (
-    <>
+    <StyledSection>
       <Section color={headerColor} textColor={inverseTextColor}>
         <Headline>
           <LeftHeadline>
@@ -52,9 +51,6 @@ export const TopSection = () => {
           ))}
         </Headline>
       </Section>
-      <SlantedWrapper>
-        <SlantedEdge />
-      </SlantedWrapper>
-    </>
+    </StyledSection>
   );
 };

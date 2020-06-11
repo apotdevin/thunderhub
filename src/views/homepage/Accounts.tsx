@@ -15,11 +15,16 @@ import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
 import { useStatusDispatch } from 'src/context/StatusContext';
 import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
+import getConfig from 'next/config';
+import { Link } from 'src/components/link/Link';
 import { Section } from '../../components/section/Section';
 import { Card, SingleLine } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { dontShowSessionLogin } from '../login/helpers';
 import { ConnectTitle, LockPadding } from './HomePage.styled';
+
+const { publicRuntimeConfig } = getConfig();
+const { noClient } = publicRuntimeConfig;
 
 const AccountLine = styled.div`
   margin: 8px 0;
@@ -29,6 +34,21 @@ const TypeText = styled.div`
   font-size: 14px;
   margin-right: 8px;
 `;
+
+const renderIntro = () => (
+  <Section withColor={false}>
+    <ConnectTitle change={true}>Hi! Welcome to ThunderHub</ConnectTitle>
+    <Card>
+      {'To start you must create an account on your server. '}
+      <Link
+        newTab={true}
+        href={'https://github.com/apotdevin/thunderhub#server-accounts'}
+      >
+        You can find instructions for this here.
+      </Link>
+    </Card>
+  </Section>
+);
 
 export const Accounts = () => {
   const { push } = useRouter();
@@ -56,11 +76,17 @@ export const Accounts = () => {
   const change = accounts.length > 0 && dontShowSessionLogin(account);
 
   if (accounts.length <= 0) {
+    if (noClient) {
+      return renderIntro();
+    }
     return null;
   }
 
   const filteredAccounts = accounts.filter(a => {
     if (a.type === CLIENT_ACCOUNT) {
+      if (noClient) {
+        return false;
+      }
       if (a.id === activeAccount && !a.viewOnly) {
         return false;
       }
@@ -74,6 +100,9 @@ export const Accounts = () => {
   });
 
   if (filteredAccounts.length < 1) {
+    if (noClient) {
+      return renderIntro();
+    }
     return null;
   }
 
