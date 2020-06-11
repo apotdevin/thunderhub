@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.9](https://github.com/apotdevin/thunderhub/compare/v0.7.8...v0.7.9) (2020-06-11)
+
+
+### Bug Fixes
+
+* 🐛 show all open chats ([79fde11](https://github.com/apotdevin/thunderhub/commit/79fde1120d565490a35709bf586528faa3ced6ba))
+
+
+### Improvements
+
+* 🔧 sso auth improvements ([7d5133a](https://github.com/apotdevin/thunderhub/commit/7d5133a39b54a6a01b522e544ae386360a30b6ca))
+
 ### [0.7.8](https://github.com/apotdevin/thunderhub/compare/v0.7.7...v0.7.8) (2020-06-10)
 
 
