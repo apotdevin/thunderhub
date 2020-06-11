@@ -33,7 +33,10 @@ export const authResolvers = {
 
       const cookieFile = readCookie(cookiePath);
 
-      if (cookieFile === params.cookie || nodeEnv === 'development') {
+      if (
+        cookieFile.trim() === params.cookie.trim() ||
+        nodeEnv === 'development'
+      ) {
         refreshCookie(cookiePath);
         const token = jwt.sign({ user: SSO_ACCOUNT }, secret);
 
@@ -44,6 +47,7 @@ export const authResolvers = {
         return true;
       }
 
+      logger.debug(`Cookie ${params.cookie} different to file ${cookieFile}`);
       return null;
     },
     getSessionToken: async (

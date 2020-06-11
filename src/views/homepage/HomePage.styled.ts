@@ -1,12 +1,12 @@
 import styled, { keyframes } from 'styled-components';
-import { fontColors, mediaWidths, headerColor } from '../../styles/Themes';
+import { fontColors, mediaWidths } from '../../styles/Themes';
 import ThunderHub from '../../assets/ThunderHub.svg';
 
 export const Headline = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 32px 0 120px;
+  padding: 32px 0 100px;
 
   @media (${mediaWidths.mobile}) {
     flex-direction: column;
@@ -83,27 +83,8 @@ export const HomeText = styled.p`
   }
 `;
 
-export const SlantedWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  height: 200px;
-  margin-bottom: -290px;
-  overflow: hidden;
-  z-index: -5;
-`;
-
-export const SlantedEdge = styled.div`
-  content: '';
-  width: 100%;
-  height: 100%;
-  background: ${headerColor};
-  -webkit-transform-origin: 100% 0;
-  -ms-transform-origin: 100% 0;
-  transform-origin: 100% 0;
-  -webkit-transform: skew(84deg);
-  -ms-transform: skew(84deg);
-  transform: skew(88deg);
-  z-index: -5;
+export const StyledSection = styled.div`
+  margin-bottom: -60px;
 `;
 
 export const FullWidth = styled.div`
