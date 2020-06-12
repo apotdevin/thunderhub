@@ -12,7 +12,7 @@ export const serverEnv = {
 export const clientEnv = {
   nodeEnv: process.env.NODE_ENV || 'development',
   npmVersion: process.env.NPM_VERSION || '0.0.0',
-  apiUrl: process.env.API_URL,
+  apiUrl: `${process.env.BASE_PATH || ''}/api/v1`,
   basePath: process.env.BASE_PATH || '',
   defaultTheme: process.env.THEME || 'dark',
   defaultCurrency: process.env.CURRENCY || 'sat',

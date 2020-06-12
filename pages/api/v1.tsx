@@ -25,8 +25,6 @@ const {
   accountConfigPath,
 } = serverEnv;
 
-const { basePath } = clientEnv;
-
 logger.silly('Loaded client variables: %o', clientEnv);
 logger.silly('Loaded server variables: %o', serverEnv);
 
@@ -97,4 +95,4 @@ export const config = {
   },
 };
 
-export default apolloServer.createHandler({ path: `${basePath}/api/v1` });
+export default apolloServer.createHandler({ path: '/api/v1' });

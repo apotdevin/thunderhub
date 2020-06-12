@@ -8,7 +8,6 @@ module.exports = withBundleAnalyzer({
   assetPrefix: process.env.BASE_PATH || '',
   env: {
     NPM_VERSION: process.env.npm_package_version,
-    API_URL: `${process.env.BASE_PATH || ''}/api/v1`,
     BASE_PATH: process.env.BASE_PATH,
     THEME: process.env.THEME,
     CURRENCY: process.env.CURRENCY,
