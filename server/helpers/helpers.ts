@@ -1,5 +1,4 @@
 import { authenticatedLndGrpc } from 'ln-service';
-import getConfig from 'next/config';
 import {
   SSO_ACCOUNT,
   SERVER_ACCOUNT,
@@ -9,11 +8,11 @@ import {
 import { ContextType } from 'server/types/apiTypes';
 import AES from 'crypto-js/aes';
 import CryptoJS from 'crypto-js';
+import { serverEnv, clientEnv } from 'server/utils/appEnv';
 import { logger } from './logger';
 
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
-const { nodeEnv } = serverRuntimeConfig;
-const { noClient } = publicRuntimeConfig;
+const { nodeEnv } = serverEnv;
+const { noClient } = clientEnv;
 
 type LndAuthType = {
   cert: string;

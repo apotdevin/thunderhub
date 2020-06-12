@@ -1,5 +1,5 @@
 import React from 'react';
-import getConfig from 'next/config';
+import { clientEnv } from 'server/utils/appEnv';
 import { Section } from '../../components/section/Section';
 import { Link } from '../../components/link/Link';
 import { Emoji } from '../../components/emoji/Emoji';
@@ -17,8 +17,7 @@ import {
   FooterCenterText,
 } from './Footer.styled';
 
-const { publicRuntimeConfig } = getConfig();
-const { npmVersion } = publicRuntimeConfig;
+const { npmVersion } = clientEnv;
 
 export const Footer = () => {
   return (

@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeSet } from 'styled-theming';
 import RouterLink from 'next/link';
-import getConfig from 'next/config';
+import { clientEnv } from 'server/utils/appEnv';
 import { textColor, linkHighlight } from '../../styles/Themes';
 
 interface StyledProps {
@@ -51,8 +51,7 @@ interface LinkProps {
   newTab?: boolean;
 }
 
-const { publicRuntimeConfig } = getConfig();
-const { basePath } = publicRuntimeConfig;
+const { basePath } = clientEnv;
 
 export const Link: React.FC<LinkProps> = ({
   children,

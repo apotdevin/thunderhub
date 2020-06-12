@@ -1,12 +1,11 @@
-import getConfig from 'next/config';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { logger } from 'server/helpers/logger';
 import { appUrls } from 'server/utils/appUrls';
 import { getHodlParams } from 'server/helpers/hodlHelpers';
+import { serverEnv } from 'server/utils/appEnv';
 
-const { serverRuntimeConfig } = getConfig();
-const { hodlKey } = serverRuntimeConfig;
+const { hodlKey } = serverEnv;
 
 const defaultQuery = {
   filters: {},

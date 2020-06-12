@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import { ApolloServer } from 'apollo-server-micro';
 import { getIp } from 'server/helpers/helpers';
-import getConfig from 'next/config';
 import jwt from 'jsonwebtoken';
 import { logger } from 'server/helpers/logger';
 import {
@@ -15,16 +14,19 @@ import AES from 'crypto-js/aes';
 import CryptoJS from 'crypto-js';
 import cookie from 'cookie';
 import schema from 'server/schema';
+import { serverEnv, clientEnv } from 'server/utils/appEnv';
 
-const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
-const { apiBaseUrl, nodeEnv } = publicRuntimeConfig;
 const {
+  nodeEnv,
   cookiePath,
   macaroonPath,
   lnCertPath,
   lnServerUrl,
   accountConfigPath,
-} = serverRuntimeConfig;
+} = serverEnv;
+
+logger.silly('Loaded client variables: %o', clientEnv);
+logger.silly('Loaded server variables: %o', serverEnv);
 
 const secret =
   nodeEnv === 'development'
@@ -93,4 +95,4 @@ export const config = {
   },
 };
 
-export default apolloServer.createHandler({ path: apiBaseUrl });
+export default apolloServer.createHandler({ path: '/api/v1' });

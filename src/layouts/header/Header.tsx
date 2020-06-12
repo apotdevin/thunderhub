@@ -11,7 +11,7 @@ import {
 } from 'react-feather';
 import { useTransition, animated } from 'react-spring';
 import { useRouter } from 'next/router';
-import getConfig from 'next/config';
+import { clientEnv } from 'server/utils/appEnv';
 import { headerColor, headerTextColor } from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
@@ -34,8 +34,7 @@ const TRADER = '/trading';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
 
-const { publicRuntimeConfig } = getConfig();
-const { hodlhodl } = publicRuntimeConfig;
+const { hodlhodl } = clientEnv;
 
 export const Header = () => {
   const { pathname } = useRouter();

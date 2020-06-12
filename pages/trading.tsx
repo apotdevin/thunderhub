@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useGetOffersQuery } from 'src/graphql/hodlhodl/__generated__/query.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { withApollo } from 'config/client';
-import getConfig from 'next/config';
+import { clientEnv } from 'server/utils/appEnv';
 import {
   CardWithTitle,
   SubTitle,
@@ -19,8 +19,7 @@ import { Link } from '../src/components/link/Link';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { decode } from '../src/utils/helpers';
 
-const { publicRuntimeConfig } = getConfig();
-const { hodlhodl } = publicRuntimeConfig;
+const { hodlhodl } = clientEnv;
 
 export interface QueryProps {
   pagination: {

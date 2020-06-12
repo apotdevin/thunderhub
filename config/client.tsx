@@ -7,8 +7,8 @@ import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
-import getConfig from 'next/config';
 import introspectionQueryResultData from 'src/graphql/fragmentTypes.json';
+import { clientEnv } from 'server/utils/appEnv';
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData,
@@ -16,8 +16,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 
 let globalApolloClient = null;
 
-const { publicRuntimeConfig } = getConfig();
-const { apiUrl: uri } = publicRuntimeConfig;
+const { apiUrl: uri } = clientEnv;
 
 function createIsomorphLink(ctx) {
   if (typeof window === 'undefined') {

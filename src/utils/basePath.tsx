@@ -1,6 +1,5 @@
-import getConfig from 'next/config';
+import { clientEnv } from 'server/utils/appEnv';
 
-const { publicRuntimeConfig } = getConfig();
-const { basePath } = publicRuntimeConfig;
+const { basePath } = clientEnv;
 
 export const appendBasePath = (url: string): string => `${basePath}${url}`;

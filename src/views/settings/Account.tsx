@@ -8,7 +8,7 @@ import {
 } from 'src/context/AccountContext';
 import { chartColors } from 'src/styles/Themes';
 import { useLogoutMutation } from 'src/graphql/mutations/__generated__/logout.generated';
-import getConfig from 'next/config';
+import { clientEnv } from 'server/utils/appEnv';
 import {
   CardWithTitle,
   SubTitle,
@@ -28,8 +28,7 @@ import { Auth } from '../../components/auth';
 import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
 
-const { publicRuntimeConfig } = getConfig();
-const { noClient } = publicRuntimeConfig;
+const { noClient } = clientEnv;
 
 export const AccountSettings = () => {
   const [status, setStatus] = useState('none');

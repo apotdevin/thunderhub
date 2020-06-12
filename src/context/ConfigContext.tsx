@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import getConfig from 'next/config';
 import Cookies from 'js-cookie';
+import { clientEnv } from 'server/utils/appEnv';
 
 const themeTypes = ['dark', 'light'];
 const currencyTypes = ['sat', 'btc', 'EUR', 'USD'];
@@ -56,13 +56,12 @@ type Dispatch = (action: ActionType) => void;
 const StateContext = createContext<State | undefined>(undefined);
 const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
-const { publicRuntimeConfig } = getConfig();
 const {
   defaultTheme: defT,
   defaultCurrency: defC,
   fetchPrices,
   fetchFees,
-} = publicRuntimeConfig;
+} = clientEnv;
 
 const initialState: State = {
   currency: currencyTypes.indexOf(defC) > -1 ? defC : 'sat',

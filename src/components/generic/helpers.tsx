@@ -9,7 +9,7 @@ import { X, Copy } from 'react-feather';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { appUrls } from 'server/utils/appUrls';
-import getConfig from 'next/config';
+import { clientEnv } from 'server/utils/appEnv';
 import {
   SmallLink,
   DarkSubTitle,
@@ -19,8 +19,7 @@ import {
 } from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
 
-const { publicRuntimeConfig } = getConfig();
-const { disableLinks } = publicRuntimeConfig;
+const { disableLinks } = clientEnv;
 
 export const shorten = (text: string): string => {
   const amount = 6;

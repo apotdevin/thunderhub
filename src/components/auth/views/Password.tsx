@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import zxcvbn from 'zxcvbn';
-import getConfig from 'next/config';
+import { clientEnv } from 'server/utils/appEnv';
 import { Sub4Title, SubTitle, DarkSubTitle } from '../../generic/Styled';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import { Input } from '../../input/Input';
@@ -15,8 +15,7 @@ interface PasswordProps {
   loading: boolean;
 }
 
-const { publicRuntimeConfig } = getConfig();
-const { nodeEnv } = publicRuntimeConfig;
+const { nodeEnv } = clientEnv;
 
 const PasswordInput = ({
   isPass = '',

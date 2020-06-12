@@ -1,4 +1,3 @@
-import getConfig from 'next/config';
 import jwt from 'jsonwebtoken';
 import { readCookie, refreshCookie } from 'server/helpers/fileHelpers';
 import { ContextType } from 'server/types/apiTypes';
@@ -7,9 +6,9 @@ import { logger } from 'server/helpers/logger';
 import cookie from 'cookie';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import AES from 'crypto-js/aes';
+import { serverEnv } from 'server/utils/appEnv';
 
-const { serverRuntimeConfig } = getConfig();
-const { cookiePath, nodeEnv } = serverRuntimeConfig;
+const { cookiePath, nodeEnv } = serverEnv;
 
 export const authResolvers = {
   Query: {
