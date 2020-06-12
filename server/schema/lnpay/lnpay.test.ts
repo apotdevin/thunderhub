@@ -6,7 +6,7 @@ import { GET_LN_PAY_INFO } from 'src/graphql/queries/getLnPayInfo';
 
 jest.mock('logger');
 
-describe('LnPay Resovlers', () => {
+describe('LnPay Resolvers', () => {
   beforeEach(() => {
     fetchMock.resetMocks();
   });
@@ -25,7 +25,7 @@ describe('LnPay Resovlers', () => {
       expect(fetchMock).toBeCalledWith(
         'https://thunderhub.io/api/lnpay?amount=100'
       );
-      expect(res?.data?.getLnPay).toEqual('paymentRequest');
+      expect(res).toMatchSnapshot();
     });
     test('failure', async () => {
       fetchMock.mockRejectOnce(new Error('Error'));
@@ -37,7 +37,7 @@ describe('LnPay Resovlers', () => {
       });
 
       expect(res.errors).toStrictEqual([new GraphQLError('NoLnPayInvoice')]);
-      expect(res?.data?.getLnPay).toBeNull();
+      expect(res).toMatchSnapshot();
     });
   });
   describe('getLnPayInfo', () => {
@@ -53,7 +53,7 @@ describe('LnPay Resovlers', () => {
 
       expect(res.errors).toBe(undefined);
       expect(fetchMock).toBeCalledWith('https://thunderhub.io/api/lnpay');
-      expect(res?.data?.getLnPayInfo).toEqual({ max: 1000, min: 1 });
+      expect(res).toMatchSnapshot();
     });
     test('failure', async () => {
       fetchMock.mockRejectOnce(new Error('Error'));
@@ -64,7 +64,7 @@ describe('LnPay Resovlers', () => {
       });
 
       expect(res.errors).toStrictEqual([new GraphQLError('NoLnPay')]);
-      expect(res?.data?.getLnPayInfo).toBeNull();
+      expect(res).toMatchSnapshot();
     });
   });
 });

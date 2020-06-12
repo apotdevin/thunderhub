@@ -37,7 +37,7 @@ export const getCorrectAuth = (
   auth: AuthType,
   context: ContextType
 ): LndAuthType => {
-  if (auth.type === 'test' && nodeEnv === 'development') {
+  if (auth.type === 'test' && nodeEnv !== 'production') {
     return {
       host: process.env.TEST_HOST,
       macaroon: process.env.TEST_MACAROON,
