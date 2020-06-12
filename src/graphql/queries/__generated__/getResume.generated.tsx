@@ -72,7 +72,7 @@ export type GetResumeQuery = { __typename?: 'Query' } & {
                             node?: Types.Maybe<
                               { __typename?: 'nodeType' } & Pick<
                                 Types.NodeType,
-                                'alias'
+                                'alias' | 'public_key'
                               >
                             >;
                           }
@@ -126,6 +126,7 @@ export const GetResumeDocument = gql`
           hops {
             node {
               alias
+              public_key
             }
           }
           id
