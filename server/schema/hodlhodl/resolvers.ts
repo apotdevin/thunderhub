@@ -5,8 +5,8 @@ import { logger } from 'server/helpers/logger';
 import { appUrls } from 'server/utils/appUrls';
 import { getHodlParams } from 'server/helpers/hodlHelpers';
 
-const { serverRuntimeConfig } = getConfig();
-const { hodlKey } = serverRuntimeConfig;
+const { serverRuntimeConfig } = getConfig() || {};
+const { hodlKey } = serverRuntimeConfig || {};
 
 const defaultQuery = {
   filters: {},

@@ -11,9 +11,9 @@ import AES from 'crypto-js/aes';
 import CryptoJS from 'crypto-js';
 import { logger } from './logger';
 
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
-const { nodeEnv } = serverRuntimeConfig;
-const { noClient } = publicRuntimeConfig;
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig() || {};
+const { nodeEnv } = serverRuntimeConfig || {};
+const { noClient } = publicRuntimeConfig || {};
 
 type LndAuthType = {
   cert: string;
