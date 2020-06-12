@@ -68,7 +68,7 @@ export const getWithCopy = (text: string) => {
 };
 
 export const getNodeLink = (publicKey: string, alias?: string) => {
-  if (alias && alias === 'Node not found') {
+  if (!publicKey || (alias && alias === 'Node not found')) {
     return 'Node not found';
   }
   const link = `${appUrls.oneml}${publicKey}`;

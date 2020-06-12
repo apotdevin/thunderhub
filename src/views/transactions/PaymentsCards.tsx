@@ -82,7 +82,7 @@ export const PaymentsCard = ({
         {hops.map((hop, index: number) =>
           renderLine(
             `Hop ${index + 1}:`,
-            getNodeLink(destination, hop.node.alias)
+            getNodeLink(hop.node.public_key, hop.node.alias)
           )
         )}
         {renderLine('Id:', id)}

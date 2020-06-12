@@ -89,7 +89,7 @@ export const Decoded = ({ request, setShow }: DecodedProps) => {
               {renderLine('Forwarded Tokens', hop.forward)}
               {renderLine(
                 `Destination `,
-                getNodeLink(destination, hop.node.node.alias)
+                getNodeLink(hop.public_key, hop.node.node.alias)
               )}
               {renderLine('Channel', hop.channel)}
               {renderLine(

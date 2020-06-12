@@ -39,6 +39,7 @@ export const GET_RESUME = gql`
           hops {
             node {
               alias
+              public_key
             }
           }
           id
