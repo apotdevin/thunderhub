@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.10](https://github.com/apotdevin/thunderhub/compare/v0.7.9...v0.7.10) (2020-06-12)
+
+
+### Bug Fixes
+
+* 🐛 correct hop public key ([64e8f96](https://github.com/apotdevin/thunderhub/commit/64e8f96da449c00f8660e56146a09f0b77a97bdd))
+
 ### [0.7.9](https://github.com/apotdevin/thunderhub/compare/v0.7.8...v0.7.9) (2020-06-11)
 
 
