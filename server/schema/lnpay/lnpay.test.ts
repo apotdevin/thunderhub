@@ -6,11 +6,10 @@ import { GET_LN_PAY_INFO } from 'src/graphql/queries/getLnPayInfo';
 
 jest.mock('logger');
 
-beforeEach(() => {
-  fetchMock.resetMocks();
-});
-
 describe('LnPay Resovlers', () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+  });
   describe('getLnPay', () => {
     test('success', async () => {
       fetchMock.mockResponseOnce(JSON.stringify({ pr: 'paymentRequest' }));
@@ -23,10 +22,13 @@ describe('LnPay Resovlers', () => {
 
       expect(res.errors).toBe(undefined);
 
+      expect(fetchMock).toBeCalledWith(
+        'https://thunderhub.io/api/lnpay?amount=100'
+      );
       expect(res?.data?.getLnPay).toEqual('paymentRequest');
     });
     test('failure', async () => {
-      fetchMock.mockRejectOnce(() => Promise.reject('Error'));
+      fetchMock.mockRejectOnce(new Error('Error'));
       const { query } = testServer();
 
       const res = await query({
@@ -50,11 +52,11 @@ describe('LnPay Resovlers', () => {
       });
 
       expect(res.errors).toBe(undefined);
-
+      expect(fetchMock).toBeCalledWith('https://thunderhub.io/api/lnpay');
       expect(res?.data?.getLnPayInfo).toEqual({ max: 1000, min: 1 });
     });
     test('failure', async () => {
-      fetchMock.mockRejectOnce(() => Promise.reject('Error'));
+      fetchMock.mockRejectOnce(new Error('Error'));
       const { query } = testServer();
 
       const res = await query({
