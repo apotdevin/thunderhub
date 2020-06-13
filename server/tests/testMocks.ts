@@ -1,6 +1,12 @@
 import { ServerResponse } from 'http';
 import { ContextType } from 'server/types/apiTypes';
 
+export const AuthMock = {
+  auth: {
+    type: 'test',
+  },
+};
+
 export const ContextMock: ContextType = {
   ip: '1.2.3.4',
   secret: '123456789',
