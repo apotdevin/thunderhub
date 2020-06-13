@@ -1,27 +1,60 @@
 import testServer from 'server/tests/testServer';
-import { GET_LN_PAY } from 'src/graphql/queries/getLnPay';
 import fetchMock from 'jest-fetch-mock';
 import { GraphQLError } from 'graphql';
-import { GET_LN_PAY_INFO } from 'src/graphql/queries/getLnPayInfo';
+import { GET_BITCOIN_PRICE } from 'src/graphql/queries/getBitcoinPrice';
+import { GET_BITCOIN_FEES } from 'src/graphql/queries/getBitcoinFees';
 
-describe('LnPay Resolvers', () => {
+describe('Bitcoin Resolvers', () => {
   beforeEach(() => {
     fetchMock.resetMocks();
   });
-  describe('getLnPay', () => {
+  describe('getBitcoinPrice', () => {
     test('success', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ pr: 'paymentRequest' }));
+      fetchMock.mockResponseOnce(JSON.stringify({ price: 'price' }));
       const { query } = testServer();
 
       const res = await query({
-        query: GET_LN_PAY,
-        variables: { amount: 100 },
+        query: GET_BITCOIN_PRICE,
+      });
+
+      expect(res.errors).toBe(undefined);
+
+      expect(fetchMock).toBeCalledWith('https://blockchain.info/ticker');
+      expect(res).toMatchSnapshot();
+    });
+    test('failure', async () => {
+      fetchMock.mockRejectOnce(new Error('Error'));
+      const { query } = testServer();
+
+      const res = await query({
+        query: GET_BITCOIN_PRICE,
+      });
+
+      expect(res.errors).toStrictEqual([
+        new GraphQLError('Problem getting Bitcoin price.'),
+      ]);
+      expect(res).toMatchSnapshot();
+    });
+  });
+  describe('getBitcoinFees', () => {
+    test('success', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          fastestFee: 3,
+          halfHourFee: 2,
+          hourFee: 1,
+        })
+      );
+      const { query } = testServer();
+
+      const res = await query({
+        query: GET_BITCOIN_FEES,
       });
 
       expect(res.errors).toBe(undefined);
 
       expect(fetchMock).toBeCalledWith(
-        'https://thunderhub.io/api/lnpay?amount=100'
+        'https://bitcoinfees.earn.com/api/v1/fees/recommended'
       );
       expect(res).toMatchSnapshot();
     });
@@ -30,38 +63,12 @@ describe('LnPay Resolvers', () => {
       const { query } = testServer();
 
       const res = await query({
-        query: GET_LN_PAY,
-        variables: { amount: 100 },
+        query: GET_BITCOIN_FEES,
       });
 
-      expect(res.errors).toStrictEqual([new GraphQLError('NoLnPayInvoice')]);
-      expect(res).toMatchSnapshot();
-    });
-  });
-  describe('getLnPayInfo', () => {
-    test('success', async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify({ maxSendable: 1000, minSendable: 1 })
-      );
-      const { query } = testServer();
-
-      const res = await query({
-        query: GET_LN_PAY_INFO,
-      });
-
-      expect(res.errors).toBe(undefined);
-      expect(fetchMock).toBeCalledWith('https://thunderhub.io/api/lnpay');
-      expect(res).toMatchSnapshot();
-    });
-    test('failure', async () => {
-      fetchMock.mockRejectOnce(new Error('Error'));
-      const { query } = testServer();
-
-      const res = await query({
-        query: GET_LN_PAY_INFO,
-      });
-
-      expect(res.errors).toStrictEqual([new GraphQLError('NoLnPay')]);
+      expect(res.errors).toStrictEqual([
+        new GraphQLError('Problem getting Bitcoin fees.'),
+      ]);
       expect(res).toMatchSnapshot();
     });
   });

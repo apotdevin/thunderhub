@@ -19,4 +19,5 @@ export const logger = createLogger({
   level: logLevel,
   format: combinedFormat,
   transports: [new transports.Console()],
+  silent: process.env.NODE_ENV === 'test' ? true : false,
 });

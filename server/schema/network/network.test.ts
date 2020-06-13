@@ -1,7 +1,6 @@
 import testServer from 'server/tests/testServer';
 import { GET_NETWORK_INFO } from 'src/graphql/queries/getNetworkInfo';
 
-jest.mock('logger');
 jest.mock('ln-service');
 
 describe('Network Resolvers', () => {
