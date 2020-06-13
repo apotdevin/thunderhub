@@ -21,7 +21,7 @@ export const nodeTypes = gql`
     closed_channels_count: Int
     alias: String
     current_block_hash: String
-    current_block_height: Boolean
+    current_block_height: Int
     is_synced_to_chain: Boolean
     is_synced_to_graph: Boolean
     latest_block_at: String

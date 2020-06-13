@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LnPay Resolvers getLnPay failure 1`] = `
+Object {
+  "data": Object {
+    "getLnPay": null,
+  },
+  "errors": Array [
+    [GraphQLError: NoLnPayInvoice],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`LnPay Resolvers getLnPay success 1`] = `
+Object {
+  "data": Object {
+    "getLnPay": "paymentRequest",
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`LnPay Resolvers getLnPayInfo failure 1`] = `
+Object {
+  "data": Object {
+    "getLnPayInfo": null,
+  },
+  "errors": Array [
+    [GraphQLError: NoLnPay],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`LnPay Resolvers getLnPayInfo success 1`] = `
+Object {
+  "data": Object {
+    "getLnPayInfo": Object {
+      "max": 1000,
+      "min": 1,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
