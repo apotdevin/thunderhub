@@ -401,7 +401,7 @@ export type NodeInfoType = {
   closed_channels_count?: Maybe<Scalars['Int']>;
   alias?: Maybe<Scalars['String']>;
   current_block_hash?: Maybe<Scalars['String']>;
-  current_block_height?: Maybe<Scalars['Boolean']>;
+  current_block_height?: Maybe<Scalars['Int']>;
   is_synced_to_chain?: Maybe<Scalars['Boolean']>;
   is_synced_to_graph?: Maybe<Scalars['Boolean']>;
   latest_block_at?: Maybe<Scalars['String']>;

@@ -7,7 +7,7 @@ export const accountResolvers = {
   Query: {
     getServerAccounts: async (
       _: undefined,
-      params: any,
+      __: undefined,
       context: ContextType
     ) => {
       const { ip, accounts, account, sso, ssoVerified } = context;

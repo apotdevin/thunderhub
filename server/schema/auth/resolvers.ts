@@ -8,8 +8,8 @@ import cookie from 'cookie';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import AES from 'crypto-js/aes';
 
-const { serverRuntimeConfig } = getConfig();
-const { cookiePath, nodeEnv } = serverRuntimeConfig;
+const { serverRuntimeConfig } = getConfig() || {};
+const { cookiePath, nodeEnv } = serverRuntimeConfig || {};
 
 export const authResolvers = {
   Query: {
