@@ -1,56 +1,17 @@
-import React, { useState } from 'react';
-import { useTransition, animated, config } from 'react-spring';
-import { headerColor, inverseTextColor } from '../../styles/Themes';
+import React from 'react';
+import { inverseTextColor } from '../../styles/Themes';
 import { Section } from '../../components/section/Section';
-import {
-  Headline,
-  LeftHeadline,
-  StyledImage,
-  HomeTitle,
-  HomeText,
-  FullWidth,
-  StyledSection,
-} from './HomePage.styled';
+import { Headline, HomeTitle, HomeText, FullWidth } from './HomePage.styled';
 
-export const TopSection = () => {
-  const [state] = useState(true);
-
-  const transition = useTransition(state, null, {
-    config: config.slow,
-    from: { transform: 'translate3d(-80px,0,0)', opacity: 0 },
-    enter: { transform: 'translate3d(0,0,0)', opacity: 1 },
-  });
-
-  const transition2 = useTransition(state, null, {
-    config: config.slow,
-    from: { transform: 'translate3d(80px,0,0)', opacity: 0 },
-    enter: { transform: 'translate3d(0,0,0)', opacity: 1 },
-  });
-
-  return (
-    <StyledSection>
-      <Section color={headerColor} textColor={inverseTextColor}>
-        <Headline>
-          <LeftHeadline>
-            {transition.map(({ props, key }) => (
-              <animated.div style={props} key={key}>
-                <HomeTitle>Control the Lightning</HomeTitle>
-                <FullWidth>
-                  <HomeText>
-                    Monitor and manage your node from any browser and any
-                    device.
-                  </HomeText>
-                </FullWidth>
-              </animated.div>
-            ))}
-          </LeftHeadline>
-          {transition2.map(({ props, key }) => (
-            <animated.div style={props} key={key}>
-              <StyledImage />
-            </animated.div>
-          ))}
-        </Headline>
-      </Section>
-    </StyledSection>
-  );
-};
+export const TopSection = () => (
+  <Section color={'transparent'} textColor={inverseTextColor}>
+    <Headline>
+      <HomeTitle>Control the Lightning</HomeTitle>
+      <FullWidth>
+        <HomeText>
+          Monitor and manage your node from any browser and any device.
+        </HomeText>
+      </FullWidth>
+    </Headline>
+  </Section>
+);

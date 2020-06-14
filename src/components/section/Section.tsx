@@ -22,8 +22,8 @@ const FullWidth = styled.div`
       css`
         color: ${textColor};
       `}
-    background-color: ${({ withColor, sectionColor }: FullWidthProps) =>
-      withColor && (sectionColor ? sectionColor : backgroundColor)};
+    background-color: ${({ sectionColor }: FullWidthProps) =>
+      sectionColor ? sectionColor : backgroundColor};
 
     @media (${mediaWidths.mobile}) {
         padding: 16px 0;
@@ -41,7 +41,6 @@ const FixedWidth = styled.div`
 
 type SectionProps = {
   fixedWidth?: boolean;
-  withColor?: boolean;
   color?: string | ThemeSet;
   textColor?: string | ThemeSet;
   padding?: string;
@@ -49,7 +48,6 @@ type SectionProps = {
 
 export const Section: React.FC<SectionProps> = ({
   fixedWidth = true,
-  withColor = true,
   children,
   color,
   textColor,
@@ -58,12 +56,7 @@ export const Section: React.FC<SectionProps> = ({
   const Fixed = fixedWidth ? FixedWidth : React.Fragment;
 
   return (
-    <FullWidth
-      padding={padding}
-      withColor={withColor}
-      sectionColor={color}
-      textColor={textColor}
-    >
+    <FullWidth padding={padding} sectionColor={color} textColor={textColor}>
       <Fixed>{children}</Fixed>
     </FullWidth>
   );

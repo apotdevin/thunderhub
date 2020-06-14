@@ -159,7 +159,7 @@ export const LoginBox = () => {
   );
 
   return (
-    <Section withColor={false}>
+    <Section color={'transparent'}>
       {change && (
         <ConnectTitle change={change}>Connect to your Node</ConnectTitle>
       )}

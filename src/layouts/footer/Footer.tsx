@@ -23,7 +23,7 @@ const { npmVersion } = publicRuntimeConfig;
 export const Footer = () => {
   return (
     <FooterWrapper>
-      <Section withColor={true} color={headerColor}>
+      <Section color={headerColor}>
         <FooterStyle>
           <FooterRow>
             <SideFooter>

@@ -36,7 +36,7 @@ const TypeText = styled.div`
 `;
 
 const renderIntro = () => (
-  <Section withColor={false}>
+  <Section color={'transparent'}>
     <ConnectTitle change={true}>Hi! Welcome to ThunderHub</ConnectTitle>
     <Card>
       {'To start you must create an account on your server. '}
@@ -178,7 +178,7 @@ export const Accounts = () => {
   };
 
   return (
-    <Section withColor={false}>
+    <Section color={'transparent'}>
       <ConnectTitle change={change}>
         {change ? 'Accounts' : 'Other Accounts'}
       </ConnectTitle>
