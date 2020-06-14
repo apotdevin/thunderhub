@@ -1,0 +1,1185 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Query tests "DECODE_REQUEST" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "decodeRequest": Object {
+      "chain_address": "string",
+      "cltv_delta": 1000,
+      "description": "string",
+      "description_hash": "string",
+      "destination": "string",
+      "destination_node": Object {
+        "node": Object {
+          "alias": "Node not found",
+        },
+      },
+      "expires_at": "2011-10-05T14:48:00.000Z",
+      "id": "string",
+      "probe_route": Object {
+        "route": null,
+      },
+      "routes": Array [
+        Array [
+          Object {
+            "base_fee_mtokens": "10000",
+            "channel": "string",
+            "cltv_delta": 1000,
+            "fee_rate": 1000,
+            "public_key": "string",
+          },
+        ],
+      ],
+      "tokens": 1000,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_BACKUPS" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getBackups": "{\\"backup\\":\\"string\\",\\"channels\\":{\\"backup\\":\\"string\\",\\"transaction_id\\":\\"string\\",\\"transaction_vout\\":1}}",
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_CAN_CONNECT" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getNodeInfo": Object {
+      "active_channels_count": 1,
+      "alias": "TestNode",
+      "chains": Array [
+        "abc",
+        "def",
+      ],
+      "closed_channels_count": 3,
+      "color": "color",
+      "is_synced_to_chain": true,
+      "peers_count": 1,
+      "pending_channels_count": 2,
+      "version": "version",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_CHAIN_TRANSACTIONS" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getChainTransactions": Array [
+      Object {
+        "block_id": "string",
+        "confirmation_count": 1000,
+        "confirmation_height": 1000,
+        "created_at": "2011-10-05T14:48:00.000Z",
+        "fee": 1000,
+        "id": "string",
+        "output_addresses": Array [
+          "string",
+          "string",
+        ],
+        "tokens": 1000,
+      },
+      Object {
+        "block_id": "string",
+        "confirmation_count": 1000,
+        "confirmation_height": 1000,
+        "created_at": "2011-10-05T14:48:00.000Z",
+        "fee": 1000,
+        "id": "string",
+        "output_addresses": Array [
+          "string",
+          "string",
+        ],
+        "tokens": 1000,
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_CHANNEL_AMOUNT_INFO" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getNodeInfo": Object {
+      "active_channels_count": 1,
+      "closed_channels_count": 3,
+      "pending_channels_count": 2,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_CHANNEL_FEES" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getChannelFees": Array [
+      Object {
+        "channelInfo": Object {
+          "channel": null,
+        },
+        "id": "string",
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "color": null,
+          },
+        },
+        "partner_public_key": "string",
+      },
+      Object {
+        "channelInfo": Object {
+          "channel": null,
+        },
+        "id": "string",
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "color": null,
+          },
+        },
+        "partner_public_key": "string",
+      },
+      Object {
+        "channelInfo": Object {
+          "channel": null,
+        },
+        "id": "string",
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "color": null,
+          },
+        },
+        "partner_public_key": "string",
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_CHANNELS" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getChannels": Array [
+      Object {
+        "capacity": 1000,
+        "commit_transaction_fee": 1000,
+        "commit_transaction_weight": 1000,
+        "id": "string",
+        "is_active": true,
+        "is_closing": true,
+        "is_opening": true,
+        "is_partner_initiated": true,
+        "is_private": true,
+        "is_static_remote_key": true,
+        "local_balance": 1000,
+        "local_reserve": 1000,
+        "partner_fee_info": Object {
+          "channel": null,
+        },
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "capacity": null,
+            "channel_count": null,
+            "color": null,
+            "updated_at": null,
+          },
+        },
+        "partner_public_key": "string",
+        "received": 1000,
+        "remote_balance": 1000,
+        "remote_reserve": 1000,
+        "sent": 1000,
+        "time_offline": 1,
+        "time_online": 1,
+        "transaction_id": "string",
+        "transaction_vout": 1000,
+        "unsettled_balance": 1000,
+      },
+      Object {
+        "capacity": 1000,
+        "commit_transaction_fee": 1000,
+        "commit_transaction_weight": 1000,
+        "id": "string",
+        "is_active": true,
+        "is_closing": true,
+        "is_opening": true,
+        "is_partner_initiated": true,
+        "is_private": true,
+        "is_static_remote_key": true,
+        "local_balance": 1000,
+        "local_reserve": 1000,
+        "partner_fee_info": Object {
+          "channel": null,
+        },
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "capacity": null,
+            "channel_count": null,
+            "color": null,
+            "updated_at": null,
+          },
+        },
+        "partner_public_key": "string",
+        "received": 1000,
+        "remote_balance": 1000,
+        "remote_reserve": 1000,
+        "sent": 1000,
+        "time_offline": 1,
+        "time_online": 1,
+        "transaction_id": "string",
+        "transaction_vout": 1000,
+        "unsettled_balance": 1000,
+      },
+      Object {
+        "capacity": 1000,
+        "commit_transaction_fee": 1000,
+        "commit_transaction_weight": 1000,
+        "id": "string",
+        "is_active": true,
+        "is_closing": true,
+        "is_opening": true,
+        "is_partner_initiated": true,
+        "is_private": true,
+        "is_static_remote_key": true,
+        "local_balance": 1000,
+        "local_reserve": 1000,
+        "partner_fee_info": Object {
+          "channel": null,
+        },
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "capacity": null,
+            "channel_count": null,
+            "color": null,
+            "updated_at": null,
+          },
+        },
+        "partner_public_key": "string",
+        "received": 1000,
+        "remote_balance": 1000,
+        "remote_reserve": 1000,
+        "sent": 1000,
+        "time_offline": 1,
+        "time_online": 1,
+        "transaction_id": "string",
+        "transaction_vout": 1000,
+        "unsettled_balance": 1000,
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_CLOSED_CHANNELS" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getClosedChannels": Array [
+      Object {
+        "capacity": 10000,
+        "close_confirm_height": 123,
+        "close_transaction_id": "fghijk",
+        "final_local_balance": 123,
+        "final_time_locked_balance": 123,
+        "id": "id",
+        "is_breach_close": false,
+        "is_cooperative_close": true,
+        "is_funding_cancel": false,
+        "is_local_force_close": false,
+        "is_remote_force_close": false,
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "capacity": null,
+            "channel_count": null,
+            "color": null,
+            "updated_at": null,
+          },
+        },
+        "partner_public_key": "abcdef",
+        "transaction_id": "123",
+        "transaction_vout": 1,
+      },
+      Object {
+        "capacity": 10000,
+        "close_confirm_height": 123,
+        "close_transaction_id": "fghijk",
+        "final_local_balance": 123,
+        "final_time_locked_balance": 123,
+        "id": "id",
+        "is_breach_close": false,
+        "is_cooperative_close": true,
+        "is_funding_cancel": false,
+        "is_local_force_close": false,
+        "is_remote_force_close": false,
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "capacity": null,
+            "channel_count": null,
+            "color": null,
+            "updated_at": null,
+          },
+        },
+        "partner_public_key": "abcdef",
+        "transaction_id": "123",
+        "transaction_vout": 1,
+      },
+      Object {
+        "capacity": 10000,
+        "close_confirm_height": 123,
+        "close_transaction_id": "fghijk",
+        "final_local_balance": 123,
+        "final_time_locked_balance": 123,
+        "id": "id",
+        "is_breach_close": false,
+        "is_cooperative_close": true,
+        "is_funding_cancel": false,
+        "is_local_force_close": false,
+        "is_remote_force_close": false,
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "capacity": null,
+            "channel_count": null,
+            "color": null,
+            "updated_at": null,
+          },
+        },
+        "partner_public_key": "abcdef",
+        "transaction_id": "123",
+        "transaction_vout": 1,
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_CONNECT_INFO" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getNodeInfo": Object {
+      "public_key": "key",
+      "uris": Array [
+        "uri",
+        "uri2",
+      ],
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_FEE_HEALTH" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getFeeHealth": Object {
+      "channels": Array [
+        Object {
+          "id": "string",
+          "mySide": Object {
+            "base": "0",
+            "baseOver": false,
+            "baseScore": 0,
+            "rate": 0,
+            "rateOver": false,
+            "rateScore": 0,
+            "score": 0,
+          },
+          "partner": Object {
+            "node": Object {
+              "alias": "Node not found",
+            },
+          },
+          "partnerSide": Object {
+            "base": "2",
+            "baseOver": true,
+            "baseScore": 98,
+            "rate": 1000,
+            "rateOver": true,
+            "rateScore": 50,
+            "score": 74,
+          },
+        },
+        Object {
+          "id": "string",
+          "mySide": Object {
+            "base": "0",
+            "baseOver": false,
+            "baseScore": 0,
+            "rate": 0,
+            "rateOver": false,
+            "rateScore": 0,
+            "score": 0,
+          },
+          "partner": Object {
+            "node": Object {
+              "alias": "Node not found",
+            },
+          },
+          "partnerSide": Object {
+            "base": "2",
+            "baseOver": true,
+            "baseScore": 98,
+            "rate": 1000,
+            "rateOver": true,
+            "rateScore": 50,
+            "score": 74,
+          },
+        },
+        Object {
+          "id": "string",
+          "mySide": Object {
+            "base": "0",
+            "baseOver": false,
+            "baseScore": 0,
+            "rate": 0,
+            "rateOver": false,
+            "rateScore": 0,
+            "score": 0,
+          },
+          "partner": Object {
+            "node": Object {
+              "alias": "Node not found",
+            },
+          },
+          "partnerSide": Object {
+            "base": "2",
+            "baseOver": true,
+            "baseScore": 98,
+            "rate": 1000,
+            "rateOver": true,
+            "rateScore": 50,
+            "score": 74,
+          },
+        },
+      ],
+      "score": 37,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_FORWARD_REPORT" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getForwardReport": "[{\\"period\\":-76174,\\"amount\\":4,\\"fee\\":4000,\\"tokens\\":4000}]",
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_FORWARDS" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getForwards": Object {
+      "forwards": Array [
+        Object {
+          "created_at": "2011-10-05T14:48:00.000Z",
+          "fee": 1000,
+          "fee_mtokens": "string",
+          "incoming_channel": "1",
+          "incoming_channel_info": Object {
+            "channel": null,
+          },
+          "mtokens": "string",
+          "outgoing_channel": "2",
+          "outgoing_channel_info": Object {
+            "channel": null,
+          },
+          "tokens": 1000,
+        },
+        Object {
+          "created_at": "2011-10-05T14:48:00.000Z",
+          "fee": 1000,
+          "fee_mtokens": "string",
+          "incoming_channel": "1",
+          "incoming_channel_info": Object {
+            "channel": null,
+          },
+          "mtokens": "string",
+          "outgoing_channel": "2",
+          "outgoing_channel_info": Object {
+            "channel": null,
+          },
+          "tokens": 1000,
+        },
+        Object {
+          "created_at": "2011-10-05T14:48:00.000Z",
+          "fee": 1000,
+          "fee_mtokens": "string",
+          "incoming_channel": "12",
+          "incoming_channel_info": Object {
+            "channel": null,
+          },
+          "mtokens": "string",
+          "outgoing_channel": "22",
+          "outgoing_channel_info": Object {
+            "channel": null,
+          },
+          "tokens": 1000,
+        },
+        Object {
+          "created_at": "2011-10-05T14:48:00.000Z",
+          "fee": 1000,
+          "fee_mtokens": "string",
+          "incoming_channel": "1",
+          "incoming_channel_info": Object {
+            "channel": null,
+          },
+          "mtokens": "string",
+          "outgoing_channel": "2",
+          "outgoing_channel_info": Object {
+            "channel": null,
+          },
+          "tokens": 1000,
+        },
+      ],
+      "token": "string",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_LIQUID_REPORT" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getChannelReport": Object {
+      "local": 3000,
+      "maxIn": 1000,
+      "maxOut": 1000,
+      "remote": 3000,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_MESSAGES" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getMessages": Object {
+      "messages": Array [],
+      "token": "string",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_NETWORK_INFO" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getNetworkInfo": Object {
+      "averageChannelSize": "1000",
+      "channelCount": 123,
+      "maxChannelSize": 456,
+      "medianChannelSize": 789,
+      "minChannelSize": 100,
+      "nodeCount": 10000,
+      "notRecentlyUpdatedPolicyCount": 10,
+      "totalCapacity": "10000",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_NODE withoutChannels" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getNode": Object {
+      "node": Object {
+        "alias": "Node not found",
+        "capacity": null,
+        "channel_count": null,
+        "color": null,
+        "updated_at": null,
+      },
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_NODE" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getNode": Object {
+      "node": Object {
+        "alias": "Node not found",
+        "capacity": null,
+        "channel_count": null,
+        "color": null,
+        "updated_at": null,
+      },
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_NODE_INFO" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getChainBalance": 1000000,
+    "getChannelBalance": Object {
+      "confirmedBalance": 1000000,
+      "pendingBalance": 50000,
+    },
+    "getNodeInfo": Object {
+      "active_channels_count": 1,
+      "alias": "TestNode",
+      "chains": Array [
+        "abc",
+        "def",
+      ],
+      "closed_channels_count": 3,
+      "color": "color",
+      "is_synced_to_chain": true,
+      "peers_count": 1,
+      "pending_channels_count": 2,
+      "version": "version",
+    },
+    "getPendingChainBalance": 1000000,
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_PEERS" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getPeers": Array [
+      Object {
+        "bytes_received": 1000,
+        "bytes_sent": 1000,
+        "is_inbound": true,
+        "is_sync_peer": true,
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "capacity": null,
+            "channel_count": null,
+            "color": null,
+            "updated_at": null,
+          },
+        },
+        "ping_time": 1000,
+        "public_key": "abc",
+        "socket": "string",
+        "tokens_received": 1000,
+        "tokens_sent": 1000,
+      },
+      Object {
+        "bytes_received": 1000,
+        "bytes_sent": 1000,
+        "is_inbound": true,
+        "is_sync_peer": true,
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "capacity": null,
+            "channel_count": null,
+            "color": null,
+            "updated_at": null,
+          },
+        },
+        "ping_time": 1000,
+        "public_key": "def",
+        "socket": "string",
+        "tokens_received": 1000,
+        "tokens_sent": 1000,
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_PENDING_CHANNELS" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getPendingChannels": Array [
+      Object {
+        "close_transaction_id": "string",
+        "is_active": true,
+        "is_closing": true,
+        "is_opening": true,
+        "local_balance": 1000,
+        "local_reserve": 1000,
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "capacity": null,
+            "channel_count": null,
+            "color": null,
+            "updated_at": null,
+          },
+        },
+        "partner_public_key": "string",
+        "received": 1000,
+        "remote_balance": 1000,
+        "remote_reserve": 1000,
+        "sent": 1000,
+        "transaction_fee": 1000,
+        "transaction_id": "string",
+        "transaction_vout": 1000,
+      },
+      Object {
+        "close_transaction_id": "string",
+        "is_active": true,
+        "is_closing": true,
+        "is_opening": true,
+        "local_balance": 1000,
+        "local_reserve": 1000,
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "capacity": null,
+            "channel_count": null,
+            "color": null,
+            "updated_at": null,
+          },
+        },
+        "partner_public_key": "string",
+        "received": 1000,
+        "remote_balance": 1000,
+        "remote_reserve": 1000,
+        "sent": 1000,
+        "transaction_fee": 1000,
+        "transaction_id": "string",
+        "transaction_vout": 1000,
+      },
+      Object {
+        "close_transaction_id": "string",
+        "is_active": true,
+        "is_closing": true,
+        "is_opening": true,
+        "local_balance": 1000,
+        "local_reserve": 1000,
+        "partner_node_info": Object {
+          "node": Object {
+            "alias": "Node not found",
+            "capacity": null,
+            "channel_count": null,
+            "color": null,
+            "updated_at": null,
+          },
+        },
+        "partner_public_key": "string",
+        "received": 1000,
+        "remote_balance": 1000,
+        "remote_reserve": 1000,
+        "sent": 1000,
+        "transaction_fee": 1000,
+        "transaction_id": "string",
+        "transaction_vout": 1000,
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_RESUME" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getResume": Object {
+      "resume": Array [
+        Object {
+          "chain_address": "string",
+          "confirmed_at": "string",
+          "created_at": "string",
+          "date": "string",
+          "description": "string",
+          "description_hash": "string",
+          "expires_at": "string",
+          "id": "string",
+          "is_canceled": true,
+          "is_confirmed": true,
+          "is_held": true,
+          "is_private": true,
+          "is_push": true,
+          "received": 1000,
+          "received_mtokens": "string",
+          "request": "string",
+          "secret": "string",
+          "tokens": 1000,
+          "type": "invoice",
+        },
+      ],
+      "token": "string",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_SERVER_ACCOUNTS" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getServerAccounts": Array [
+      Object {
+        "id": "accountID",
+        "loggedIn": true,
+        "name": "account",
+        "type": "server",
+      },
+      Object {
+        "id": "sso",
+        "loggedIn": true,
+        "name": "SSO Account",
+        "type": "sso",
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_TIME_HEALTH" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getTimeHealth": Object {
+      "channels": Array [
+        Object {
+          "id": "string",
+          "monitoredDowntime": 1,
+          "monitoredTime": 2,
+          "monitoredUptime": 1,
+          "partner": Object {
+            "node": Object {
+              "alias": "Node not found",
+            },
+          },
+          "score": 50,
+          "significant": false,
+        },
+        Object {
+          "id": "string",
+          "monitoredDowntime": 1,
+          "monitoredTime": 2,
+          "monitoredUptime": 1,
+          "partner": Object {
+            "node": Object {
+              "alias": "Node not found",
+            },
+          },
+          "score": 50,
+          "significant": false,
+        },
+        Object {
+          "id": "string",
+          "monitoredDowntime": 1,
+          "monitoredTime": 2,
+          "monitoredUptime": 1,
+          "partner": Object {
+            "node": Object {
+              "alias": "Node not found",
+            },
+          },
+          "score": 50,
+          "significant": false,
+        },
+      ],
+      "score": 50,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_UTXOS" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getUtxos": Array [
+      Object {
+        "address": "string",
+        "address_format": "string",
+        "confirmation_count": 1000,
+        "output_script": "string",
+        "tokens": 1000,
+        "transaction_id": "string",
+        "transaction_vout": 1000,
+      },
+      Object {
+        "address": "string",
+        "address_format": "string",
+        "confirmation_count": 1000,
+        "output_script": "string",
+        "tokens": 1000,
+        "transaction_id": "string",
+        "transaction_vout": 1000,
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_VOLUME_HEALTH" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getVolumeHealth": Object {
+      "channels": Array [],
+      "score": 0,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "GET_WALLET_INFO" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "getWalletInfo": Object {
+      "build_tags": Array [
+        "string",
+        "string",
+      ],
+      "commit_hash": "string",
+      "is_autopilotrpc_enabled": true,
+      "is_chainrpc_enabled": true,
+      "is_invoicesrpc_enabled": true,
+      "is_signrpc_enabled": true,
+      "is_walletrpc_enabled": true,
+      "is_watchtowerrpc_enabled": true,
+      "is_wtclientrpc_enabled": true,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "RECOVER_FUNDS" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "recoverFunds": true,
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "SIGN_MESSAGE" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "signMessage": "signature",
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "VERIFY_BACKUPS" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "verifyBackups": true,
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Query tests "VERIFY_MESSAGE" matches snapshot 1`] = `
+Object {
+  "data": Object {
+    "verifyMessage": "abc",
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
