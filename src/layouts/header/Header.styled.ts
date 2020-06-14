@@ -10,6 +10,10 @@ import { SingleLine } from '../../components/generic/Styled';
 
 export const HeaderStyle = styled.div`
   padding: 16px 0;
+
+  @media (${mediaWidths.mobile}) {
+    padding: 16px 0 0;
+  }
 `;
 
 export const IconPadding = styled.div`

@@ -147,7 +147,7 @@ export const SessionLogin = () => {
   };
 
   return (
-    <Section withColor={false}>
+    <Section color={'transparent'}>
       <StyledTitle>{getTitle()}</StyledTitle>
       <Card cardPadding={'32px'} mobileCardPadding={'16px'}>
         <SingleLine>

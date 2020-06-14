@@ -4,6 +4,7 @@ import { withApollo } from 'config/client';
 import { ServerAccounts } from 'src/components/accounts/ServerAccounts';
 import { useAccountState } from 'src/context/AccountContext';
 import getConfig from 'next/config';
+import { ThunderStorm } from 'src/views/homepage/HomePage.styled';
 import { SessionLogin } from '../src/views/login/SessionLogin';
 import { TopSection } from '../src/views/homepage/Top';
 import { LoginBox } from '../src/views/homepage/LoginBox';
@@ -19,9 +20,10 @@ const ContextApp = () => {
 
   return (
     <>
+      <ThunderStorm alt={''} src={'/static/thunderstorm.gif'} />
       <TopSection />
       {!finishedFetch && (
-        <Section withColor={false}>
+        <Section color={'transparent'}>
           <LoadingCard loadingHeight={'160px'} />
         </Section>
       )}

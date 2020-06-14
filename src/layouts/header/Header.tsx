@@ -89,7 +89,10 @@ export const Header = () => {
 
   return (
     <>
-      <Section withColor={true} color={headerColor} textColor={headerTextColor}>
+      <Section
+        color={connected ? headerColor : 'transparent'}
+        textColor={headerTextColor}
+      >
         <HeaderStyle>
           <HeaderLine loggedIn={connected}>
             <Link to={connected ? '/home' : '/'} underline={'transparent'}>
