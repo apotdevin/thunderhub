@@ -33,10 +33,7 @@ import { VERIFY_BACKUPS } from '../verifyBackups';
 import { VERIFY_MESSAGE } from '../verifyMessage';
 
 jest.mock('ln-service');
-
-jest.mock('balanceofsatoshis/swaps', () => ({
-  rebalance: jest.fn().mockReturnValue(Promise.resolve({})),
-}));
+jest.mock('balanceofsatoshis/swaps');
 
 type CaseType = [string, { query: any; variables: {} }];
 
