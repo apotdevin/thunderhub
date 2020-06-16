@@ -46,6 +46,7 @@
     "apollo-link-schema": "^1.2.5",
     "apollo-server-micro": "^2.14.2",
     "apollo-utilities": "^1.3.4",
+    "balanceofsatoshis": "^5.39.2",
     "base64url": "^3.0.1",
     "cookie": "^0.4.1",
     "crypto-js": "^4.0.0",
