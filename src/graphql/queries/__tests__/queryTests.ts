@@ -8,7 +8,7 @@ import { GET_LIQUID_REPORT } from '../getChannelReport';
 import { GET_CHANNELS } from '../getChannels';
 import { GET_CLOSED_CHANNELS } from '../getClosedChannels';
 import { GET_FEE_HEALTH } from '../getFeeHealth';
-import { GET_FORWARD_REPORT } from '../getForwardReport';
+// import { GET_FORWARD_REPORT } from '../getForwardReport';
 import { GET_FORWARDS } from '../getForwards';
 import { GET_MESSAGES } from '../getMessages';
 import { GET_NETWORK_INFO } from '../getNetworkInfo';
@@ -34,6 +34,10 @@ import { VERIFY_MESSAGE } from '../verifyMessage';
 
 jest.mock('ln-service');
 
+jest.mock('balanceofsatoshis/swaps', () => ({
+  rebalance: jest.fn().mockReturnValue(Promise.resolve({})),
+}));
+
 type CaseType = [string, { query: any; variables: {} }];
 
 const cases: CaseType[] = [
@@ -55,7 +59,7 @@ const cases: CaseType[] = [
   //   'GET_FORWARD_CHANNELS_REPORT',
   //   { query: GET_FORWARD_CHANNELS_REPORT, variables: AuthMock },
   // ],
-  ['GET_FORWARD_REPORT', { query: GET_FORWARD_REPORT, variables: AuthMock }],
+  // ['GET_FORWARD_REPORT', { query: GET_FORWARD_REPORT, variables: AuthMock }],
   ['GET_FORWARDS', { query: GET_FORWARDS, variables: AuthMock }],
   ['GET_MESSAGES', { query: GET_MESSAGES, variables: AuthMock }],
   ['GET_NETWORK_INFO', { query: GET_NETWORK_INFO, variables: AuthMock }],
