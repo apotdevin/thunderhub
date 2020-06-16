@@ -70,6 +70,7 @@ export const getCorrectAuth = (
       macaroon = bytes.toString(CryptoJS.enc.Utf8);
     } catch (error) {
       logger.warn('Account macaroon verification failed');
+      throw new Error('AccountAuthenticationFailed');
     }
 
     return { host: verifiedAccount.host, macaroon, cert: verifiedAccount.cert };
