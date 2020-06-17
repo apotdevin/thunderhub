@@ -131,7 +131,19 @@ export const mutationTypes = gql`
     keysend(auth: authType!, destination: String!, tokens: Int!): payType
     createInvoice(auth: authType!, amount: Int!): newInvoiceType
     circularRebalance(auth: authType!, route: String!): Boolean
-    bosRebalance(auth: authType!): Boolean
+    bosRebalance(
+      auth: authType!
+      avoid: [String]
+      in_through: String
+      is_avoiding_high_inbound: Boolean
+      max_fee: Int
+      max_fee_rate: Int
+      max_rebalance: Int
+      node: String
+      out_channels: [String]
+      out_through: String
+      target: Int
+    ): bosRebalanceResultType
     payViaRoute(auth: authType!, route: String!, id: String!): Boolean
     createAddress(auth: authType!, nested: Boolean): String
     sendToAddress(

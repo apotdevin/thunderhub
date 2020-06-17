@@ -39,6 +39,7 @@ import { generalResolvers } from './resolvers';
 import { macaroonResolvers } from './macaroon/resolvers';
 import { networkResolvers } from './network/resolvers';
 import { bosResolvers } from './bos/resolvers';
+import { bosTypes } from './bos/types';
 
 const typeDefs = [
   generalTypes,
@@ -60,6 +61,7 @@ const typeDefs = [
   transactionTypes,
   healthTypes,
   routeTypes,
+  bosTypes,
 ];
 
 const resolvers = merge(

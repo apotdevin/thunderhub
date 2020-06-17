@@ -3,24 +3,47 @@ import { getLnd } from 'server/helpers/helpers';
 import { rebalance } from 'balanceofsatoshis/swaps';
 import { to } from 'server/helpers/async';
 import { logger } from 'server/helpers/logger';
+import { AuthType } from 'src/context/AccountContext';
+
+type RebalanceType = {
+  auth: AuthType;
+  avoid?: String[];
+  in_through?: String;
+  is_avoiding_high_inbound?: Boolean;
+  max_fee?: Number;
+  max_fee_rate?: Number;
+  max_rebalance?: Number;
+  node?: String;
+  out_channels?: String[];
+  out_through?: String;
+  target?: Number;
+};
 
 export const bosResolvers = {
   Mutation: {
-    bosRebalance: async (_: undefined, params: any, context: ContextType) => {
-      const lnd = getLnd(params.auth, context);
+    bosRebalance: async (
+      _: undefined,
+      params: RebalanceType,
+      context: ContextType
+    ) => {
+      const { auth, ...extraparams } = params;
+      const lnd = getLnd(auth, context);
 
-      const [response, error] = await to(
+      const response = await to(
         rebalance({
           lnd,
           logger,
-          out_through:
-            '03eab3ddfa5dcbcaf235b0b593f9f4ab1ec42666b2cfe32da09dcc249d424e0c55',
+          ...extraparams,
         })
       );
 
-      console.log({ response, error });
+      const result = {
+        increase: response.rebalance[0],
+        decrease: response.rebalance[1],
+        result: response.rebalance[2],
+      };
 
-      return true;
+      return result;
     },
   },
 };
