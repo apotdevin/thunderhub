@@ -60,6 +60,16 @@ export const getValue = ({
 
 export const formatSats = (value: number) => numeral(value).format('0,0.[000]');
 
+export const btcToSat = (value: number | string): number => {
+  const amount = Number(value);
+
+  if (isNaN(amount)) {
+    return 0;
+  }
+
+  return Math.round(amount * 100000000);
+};
+
 export const getPercent = (
   local: number,
   remote: number,

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { SubCard } from 'src/components/generic/Styled';
 import { mediaWidths } from '../../styles/Themes';
 
 export const HopCard = styled.div`
@@ -44,4 +45,25 @@ export const ChannelLineSection = styled.div`
     width: 100%;
     padding-bottom: 8px;
   }
+`;
+
+export const FullWidthSubCard = styled(SubCard)`
+  width: 100%;
+  align-self: stretch;
+`;
+
+export const WithSpaceSubCard = styled(FullWidthSubCard)`
+  margin-right: 12px;
+
+  @media (${mediaWidths.mobile}) {
+    margin-right: 0;
+  }
+`;
+
+export const RebalanceTitle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16px;
 `;

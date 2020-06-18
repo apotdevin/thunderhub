@@ -174,7 +174,11 @@ export const DarkSubTitle = styled.div<DarkProps>`
   margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
 `;
 
-export const SmallButton = styled.button`
+type SmallButtonProps = {
+  selected?: boolean;
+};
+
+export const SmallButton = styled.button<SmallButtonProps>`
   cursor: pointer;
   outline: none;
   padding: 5px;
@@ -186,8 +190,9 @@ export const SmallButton = styled.button`
   justify-content: center;
   border-radius: 5px;
   white-space: nowrap;
-  color: ${chartLinkColor};
-  background-color: ${colorButtonBackground};
+  color: ${({ selected }) => (selected ? hoverTextColor : chartLinkColor)};
+  background-color: ${({ selected }) =>
+    selected ? colorButtonBorder : colorButtonBackground};
 
   &:hover {
     color: ${hoverTextColor};
