@@ -1,8 +1,32 @@
 import gql from 'graphql-tag';
 
 export const BOS_REBALANCE = gql`
-  mutation BosRebalance($auth: authType!) {
-    bosRebalance(auth: $auth) {
+  mutation BosRebalance(
+    $auth: authType!
+    $avoid: [String]
+    $in_through: String
+    $is_avoiding_high_inbound: Boolean
+    $max_fee: Int
+    $max_fee_rate: Int
+    $max_rebalance: Int
+    $node: String
+    $out_channels: [String]
+    $out_through: String
+    $target: Int
+  ) {
+    bosRebalance(
+      auth: $auth
+      avoid: $avoid
+      in_through: $in_through
+      is_avoiding_high_inbound: $is_avoiding_high_inbound
+      max_fee: $max_fee
+      max_fee_rate: $max_fee_rate
+      max_rebalance: $max_rebalance
+      node: $node
+      out_channels: $out_channels
+      out_through: $out_through
+      target: $target
+    ) {
       increase {
         increased_inbound_on
         liquidity_inbound

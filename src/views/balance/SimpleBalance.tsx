@@ -37,7 +37,7 @@ export const SimpleBalance = () => {
   });
 
   if (loading || !data || !data.getChannels) {
-    return <LoadingCard title={'Channel Balancing'} />;
+    return <LoadingCard noTitle={true} />;
   }
 
   const handleReset = (type: string) => {

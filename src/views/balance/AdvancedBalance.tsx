@@ -3,30 +3,51 @@ import { useBosRebalanceMutation } from 'src/graphql/mutations/__generated__/bos
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
 import { SecureButton } from 'src/components/buttons/secureButton/SecureButton';
-import { Card, Separation } from 'src/components/generic/Styled';
+import { Card, Separation, SingleLine } from 'src/components/generic/Styled';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import {
   MultiButton,
   SingleButton,
 } from 'src/components/buttons/multiButton/MultiButton';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
-
 import Modal from 'src/components/modal/ReactModal';
+import { Plus, Minus } from 'react-feather';
+import { chartColors } from 'src/styles/Themes';
+import { ViewSwitch } from 'src/components/viewSwitch/ViewSwitch';
 import { AdvancedResult } from './AdvancedResult';
+import { ModalNodes } from './Modals/ModalNodes';
+import { ModalChannels } from './Modals/ModalChannels';
+import {
+  RebalanceTag,
+  RebalanceLine,
+  RebalanceWrapLine,
+  RebalanceSubTitle,
+} from './Balance.styled';
+
+export type RebalanceIdType = {
+  alias: string;
+  id: string;
+};
+
+const defaultRebalanceId: RebalanceIdType = {
+  alias: '',
+  id: '',
+};
 
 type StateType = {
-  avoid: string[];
-  in_through: string;
+  avoid: RebalanceIdType[];
+  in_through: RebalanceIdType;
   is_avoiding_high_inbound: boolean;
   max_fee: number;
   max_fee_rate: number;
   max_rebalance: number;
-  out_channels: string[];
-  out_through: string;
+  out_channels: RebalanceIdType[];
+  out_through: RebalanceIdType;
   target: number;
+  node: RebalanceIdType;
 };
 
-type ActionType =
+export type ActionType =
   | {
       type: 'avoidHigh';
       avoid: boolean;
@@ -34,18 +55,50 @@ type ActionType =
   | {
       type: 'maxFee' | 'maxFeeRate' | 'maxRebalance' | 'target';
       amount: number;
+    }
+  | {
+      type: 'withNode';
+      node: RebalanceIdType;
+    }
+  | {
+      type: 'outChannel' | 'inChannel';
+      channel: RebalanceIdType;
+    }
+  | {
+      type: 'avoidNodes';
+      avoid: RebalanceIdType[];
+    }
+  | {
+      type: 'addNode';
+      node: RebalanceIdType;
+    }
+  | {
+      type: 'removeNode';
+      public_key: string;
+    }
+  | {
+      type: 'addChannel';
+      channel: RebalanceIdType;
+    }
+  | {
+      type: 'removeChannel';
+      id: string;
+    }
+  | {
+      type: 'clearFilters';
     };
 
 const initialState: StateType = {
   avoid: [],
-  in_through: '',
+  in_through: defaultRebalanceId,
   is_avoiding_high_inbound: false,
   max_fee: null,
   max_fee_rate: null,
   max_rebalance: null,
   out_channels: [],
-  out_through: '',
+  out_through: defaultRebalanceId,
   target: null,
+  node: defaultRebalanceId,
 };
 
 const reducer = (state: StateType, action: ActionType): StateType => {
@@ -60,10 +113,52 @@ const reducer = (state: StateType, action: ActionType): StateType => {
       return { ...state, max_rebalance: action.amount };
     case 'target':
       return { ...state, target: action.amount };
+    case 'withNode':
+      return { ...state, node: action.node };
+    case 'inChannel':
+      return { ...state, in_through: action.channel };
+    case 'outChannel':
+      return { ...state, out_through: action.channel };
+    case 'avoidNodes':
+      return { ...state, avoid: action.avoid };
+    case 'addNode': {
+      const same = state.avoid.filter(n => n.id === action.node.id);
+      if (same.length <= 0) {
+        return { ...state, avoid: [...state.avoid, action.node] };
+      }
+      return state;
+    }
+    case 'removeNode': {
+      const filtered = state.avoid.filter(n => n.id !== action.public_key);
+      return { ...state, avoid: filtered };
+    }
+    case 'addChannel': {
+      const same = state.out_channels.filter(n => n.id === action.channel.id);
+      if (same.length <= 0) {
+        return {
+          ...state,
+          out_channels: [...state.out_channels, action.channel],
+        };
+      }
+      return state;
+    }
+    case 'removeChannel': {
+      const filtered = state.out_channels.filter(n => n.id !== action.id);
+      return { ...state, out_channels: filtered };
+    }
+    case 'clearFilters':
+      return initialState;
     default:
       return state;
   }
 };
+
+const SettingLine: React.FC<{ title: string }> = ({ children, title }) => (
+  <RebalanceLine>
+    <RebalanceSubTitle>{title}</RebalanceSubTitle>
+    <SingleLine>{children}</SingleLine>
+  </RebalanceLine>
+);
 
 export const AdvancedBalance = () => {
   const [openType, openTypeSet] = React.useState<string>('none');
@@ -86,25 +181,111 @@ export const AdvancedBalance = () => {
     </SingleButton>
   );
 
+  const hasNode = !!state.node.alias;
+  const hasInChannel = !!state.in_through.alias;
+  const hasOutChannel = !!state.out_through.alias;
+  const hasAvoid = state.avoid.length > 0;
+  const hasOutChannels = state.out_channels.length > 0;
+
   const renderDetails = () => (
     <>
       <Separation />
-      <InputWithDeco title={'With Node'} noInput={true}>
-        <ColorButton onClick={() => openTypeSet('addNode')}>Add</ColorButton>
-      </InputWithDeco>
-      <InputWithDeco title={'Avoid Nodes'} noInput={true}>
-        <ColorButton>Add</ColorButton>
-      </InputWithDeco>
-      <InputWithDeco title={'In Through Channel'} noInput={true}>
-        <ColorButton>Add</ColorButton>
-      </InputWithDeco>
-      <InputWithDeco title={'Out Through Channel'} noInput={true}>
-        <ColorButton>Add</ColorButton>
-      </InputWithDeco>
-      <InputWithDeco title={'Out Through Channels'} noInput={true}>
-        <ColorButton>Add</ColorButton>
-      </InputWithDeco>
-      <InputWithDeco title={'Avoid High Inbound'} noInput={true}>
+      <SettingLine title={'With Node'}>
+        {hasNode ? <RebalanceTag>{state.node.alias}</RebalanceTag> : null}
+        <ColorButton
+          color={hasNode ? chartColors.red : undefined}
+          onClick={() =>
+            hasNode
+              ? dispatch({ type: 'withNode', node: defaultRebalanceId })
+              : openTypeSet('addNode')
+          }
+        >
+          {hasNode ? <Minus size={18} /> : <Plus size={18} />}
+        </ColorButton>
+      </SettingLine>
+      <SettingLine title={'Avoid Nodes'}>
+        {hasAvoid && (
+          <>
+            <ViewSwitch hideMobile={true}>
+              <RebalanceWrapLine>
+                {state.avoid.map(a => (
+                  <RebalanceTag key={a.id}>{a.alias}</RebalanceTag>
+                ))}
+              </RebalanceWrapLine>
+            </ViewSwitch>
+            <ViewSwitch>
+              <RebalanceTag>{state.avoid.length}</RebalanceTag>
+            </ViewSwitch>
+          </>
+        )}
+        <ColorButton
+          color={hasAvoid ? chartColors.red : undefined}
+          onClick={() => openTypeSet('avoidNodes')}
+        >
+          {hasAvoid ? <Minus size={18} /> : <Plus size={18} />}
+        </ColorButton>
+      </SettingLine>
+      <SettingLine title={'In Through Channel'}>
+        {hasInChannel ? (
+          <RebalanceTag>{state.in_through.alias}</RebalanceTag>
+        ) : null}
+        <ColorButton
+          color={hasInChannel ? chartColors.red : undefined}
+          onClick={() =>
+            hasInChannel
+              ? dispatch({ type: 'inChannel', channel: defaultRebalanceId })
+              : openTypeSet('inChannel')
+          }
+        >
+          {hasInChannel ? <Minus size={18} /> : <Plus size={18} />}
+        </ColorButton>
+      </SettingLine>
+      {!hasOutChannels && (
+        <SettingLine title={'Out Through Channel'}>
+          {hasOutChannel ? (
+            <RebalanceTag>{state.out_through.alias}</RebalanceTag>
+          ) : null}
+          <ColorButton
+            color={hasOutChannel ? chartColors.red : undefined}
+            onClick={() =>
+              hasOutChannel
+                ? dispatch({
+                    type: 'outChannel',
+                    channel: defaultRebalanceId,
+                  })
+                : openTypeSet('outChannel')
+            }
+          >
+            {hasOutChannel ? <Minus size={18} /> : <Plus size={18} />}
+          </ColorButton>
+        </SettingLine>
+      )}
+      {!hasOutChannel && (
+        <SettingLine title={'Out Through Channels'}>
+          {hasOutChannels && (
+            <>
+              <ViewSwitch hideMobile={true}>
+                <RebalanceWrapLine>
+                  {state.out_channels.map(a => (
+                    <RebalanceTag key={a.id}>{a.alias}</RebalanceTag>
+                  ))}
+                </RebalanceWrapLine>
+              </ViewSwitch>
+              <ViewSwitch>
+                <RebalanceTag>{state.out_channels.length}</RebalanceTag>
+              </ViewSwitch>
+            </>
+          )}
+          <ColorButton
+            color={hasOutChannels ? chartColors.red : undefined}
+            onClick={() => openTypeSet('outChannels')}
+          >
+            {hasOutChannels ? <Minus size={18} /> : <Plus size={18} />}
+          </ColorButton>
+        </SettingLine>
+      )}
+      <RebalanceLine>
+        <RebalanceSubTitle>Avoid High Inbound</RebalanceSubTitle>
         <MultiButton>
           {renderButton(
             () => dispatch({ type: 'avoidHigh', avoid: true }),
@@ -112,12 +293,12 @@ export const AdvancedBalance = () => {
             state.is_avoiding_high_inbound
           )}
           {renderButton(
-            () => dispatch({ type: 'avoidHigh', avoid: true }),
+            () => dispatch({ type: 'avoidHigh', avoid: false }),
             'No',
             !state.is_avoiding_high_inbound
           )}
         </MultiButton>
-      </InputWithDeco>
+      </RebalanceLine>
       <InputWithDeco
         title={'Max Fee'}
         placeholder={'sats'}
@@ -155,31 +336,94 @@ export const AdvancedBalance = () => {
     </>
   );
 
+  const renderModal = () => {
+    switch (openType) {
+      case 'addNode':
+        return (
+          <ModalNodes
+            callback={node => {
+              openTypeSet('none');
+              dispatch({ type: 'withNode', node });
+            }}
+          />
+        );
+      case 'inChannel':
+        return (
+          <ModalChannels
+            ignore={state.out_through.id}
+            callback={channel => {
+              openTypeSet('none');
+              dispatch({ type: 'inChannel', channel });
+            }}
+          />
+        );
+      case 'outChannel':
+        return (
+          <ModalChannels
+            ignore={state.in_through.id}
+            callback={channel => {
+              openTypeSet('none');
+              dispatch({ type: 'outChannel', channel });
+            }}
+          />
+        );
+      case 'avoidNodes':
+        return (
+          <ModalNodes
+            multi={true}
+            dispatch={dispatch}
+            nodes={state.avoid}
+            openSet={() => openTypeSet('none')}
+          />
+        );
+      case 'outChannels':
+        return (
+          <ModalChannels
+            ignore={state.in_through.id}
+            multi={true}
+            dispatch={dispatch}
+            channels={state.out_channels}
+            openSet={() => openTypeSet('none')}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
-      <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-        <InputWithDeco title={'Type'} noInput={true}>
-          <MultiButton>
-            {renderButton(() => isDetailedSet(false), 'Auto', !isDetailed)}
-            {renderButton(() => isDetailedSet(true), 'Detailed', isDetailed)}
-          </MultiButton>
-        </InputWithDeco>
-        {isDetailed && renderDetails()}
-        <Separation />
-        <SecureButton
-          withMargin={'16px 0 0'}
-          callback={rebalance}
-          loading={loading}
-          disabled={loading}
-          variables={state}
-          fullWidth={true}
-        >
-          Rebalance
-        </SecureButton>
-      </Card>
-      {data && data.bosRebalance && (
+      {data && data.bosRebalance ? (
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
           <AdvancedResult rebalanceResult={data.bosRebalance} />
+        </Card>
+      ) : (
+        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+          <InputWithDeco title={'Type'} noInput={true}>
+            <MultiButton>
+              {renderButton(() => isDetailedSet(false), 'Auto', !isDetailed)}
+              {renderButton(() => isDetailedSet(true), 'Detailed', isDetailed)}
+            </MultiButton>
+          </InputWithDeco>
+          {isDetailed && renderDetails()}
+          <Separation />
+          <SecureButton
+            withMargin={'16px 0 0'}
+            callback={rebalance}
+            loading={loading}
+            disabled={loading}
+            variables={{
+              ...state,
+              avoid: state.avoid.map(a => a.id),
+              node: state.node.id,
+              in_through: state.in_through.id,
+              out_through: state.out_through.id,
+              out_channels: state.out_channels.map(c => c.id),
+            }}
+            fullWidth={true}
+          >
+            Rebalance
+          </SecureButton>
         </Card>
       )}
       <Modal
@@ -188,7 +432,7 @@ export const AdvancedBalance = () => {
           openTypeSet('none');
         }}
       >
-        Hello
+        {renderModal()}
       </Modal>
     </>
   );

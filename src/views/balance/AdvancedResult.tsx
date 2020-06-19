@@ -59,7 +59,7 @@ export const AdvancedResult: React.FC<AdvancedResultProps> = ({
 
   return (
     <>
-      <RebalanceTitle>Rebalance Result</RebalanceTitle>
+      <RebalanceTitle>Result</RebalanceTitle>
       <ResponsiveLine>
         <WithSpaceSubCard>
           <RebalanceTitle>

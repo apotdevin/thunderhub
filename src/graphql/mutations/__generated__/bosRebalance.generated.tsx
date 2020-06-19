@@ -5,6 +5,16 @@ import * as Types from '../../types';
 
 export type BosRebalanceMutationVariables = {
   auth: Types.AuthType;
+  avoid?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
+  in_through?: Types.Maybe<Types.Scalars['String']>;
+  is_avoiding_high_inbound?: Types.Maybe<Types.Scalars['Boolean']>;
+  max_fee?: Types.Maybe<Types.Scalars['Int']>;
+  max_fee_rate?: Types.Maybe<Types.Scalars['Int']>;
+  max_rebalance?: Types.Maybe<Types.Scalars['Int']>;
+  node?: Types.Maybe<Types.Scalars['String']>;
+  out_channels?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
+  out_through?: Types.Maybe<Types.Scalars['String']>;
+  target?: Types.Maybe<Types.Scalars['Int']>;
 };
 
 export type BosRebalanceMutation = { __typename?: 'Mutation' } & {
@@ -45,8 +55,32 @@ export type BosRebalanceMutation = { __typename?: 'Mutation' } & {
 };
 
 export const BosRebalanceDocument = gql`
-  mutation BosRebalance($auth: authType!) {
-    bosRebalance(auth: $auth) {
+  mutation BosRebalance(
+    $auth: authType!
+    $avoid: [String]
+    $in_through: String
+    $is_avoiding_high_inbound: Boolean
+    $max_fee: Int
+    $max_fee_rate: Int
+    $max_rebalance: Int
+    $node: String
+    $out_channels: [String]
+    $out_through: String
+    $target: Int
+  ) {
+    bosRebalance(
+      auth: $auth
+      avoid: $avoid
+      in_through: $in_through
+      is_avoiding_high_inbound: $is_avoiding_high_inbound
+      max_fee: $max_fee
+      max_fee_rate: $max_fee_rate
+      max_rebalance: $max_rebalance
+      node: $node
+      out_channels: $out_channels
+      out_through: $out_through
+      target: $target
+    ) {
       increase {
         increased_inbound_on
         liquidity_inbound
@@ -91,6 +125,16 @@ export type BosRebalanceMutationFn = ApolloReactCommon.MutationFunction<
  * const [bosRebalanceMutation, { data, loading, error }] = useBosRebalanceMutation({
  *   variables: {
  *      auth: // value for 'auth'
+ *      avoid: // value for 'avoid'
+ *      in_through: // value for 'in_through'
+ *      is_avoiding_high_inbound: // value for 'is_avoiding_high_inbound'
+ *      max_fee: // value for 'max_fee'
+ *      max_fee_rate: // value for 'max_fee_rate'
+ *      max_rebalance: // value for 'max_rebalance'
+ *      node: // value for 'node'
+ *      out_channels: // value for 'out_channels'
+ *      out_through: // value for 'out_through'
+ *      target: // value for 'target'
  *   },
  * });
  */
