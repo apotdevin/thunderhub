@@ -1,0 +1,14 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.15.0
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-LODASH-567746:
+    - balanceofsatoshis > caporal > lodash:
+        patched: '2020-06-20T10:53:14.207Z'
+    - balanceofsatoshis > inquirer > lodash:
+        patched: '2020-06-20T10:53:14.207Z'
+    - balanceofsatoshis > table > lodash:
+        patched: '2020-06-20T10:53:14.207Z'
+    - balanceofsatoshis > caporal > tabtab > inquirer > lodash:
+        patched: '2020-06-20T10:53:14.207Z'
