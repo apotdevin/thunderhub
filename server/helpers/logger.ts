@@ -9,10 +9,12 @@ const combinedFormat = format.combine(
   format.splat(),
   format.colorize(),
   format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  format.printf(
-    (info: any) =>
-      `${info.timestamp} ${info.level} [${info.label}]: ${info.message}`
-  )
+  format.printf((info: any) => {
+    if (typeof info.message === 'object') {
+      info.message = JSON.stringify(info.message, null, 4);
+    }
+    return `${info.timestamp} ${info.level} [${info.label}]: ${info.message}`;
+  })
 );
 
 export const logger = createLogger({

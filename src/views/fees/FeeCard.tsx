@@ -138,6 +138,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
         <AdminSwitch>
           <InputWithDeco
             title={'Base Fee'}
+            value={newBaseFee}
             placeholder={'sats'}
             amount={newBaseFee}
             override={'sat'}
@@ -154,6 +155,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
           />
           <InputWithDeco
             title={'CLTV Delta'}
+            value={newCLTV}
             placeholder={'cltv delta'}
             customAmount={newCLTV.toString()}
             inputType={'number'}
@@ -162,6 +164,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
           {canMax && (
             <InputWithDeco
               title={'Max HTLC'}
+              value={newMax}
               placeholder={'sats'}
               amount={newMax}
               override={'sat'}
@@ -172,6 +175,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
           {canMin && (
             <InputWithDeco
               title={'Min HTLC'}
+              value={newMin}
               placeholder={'sats'}
               amount={newMin}
               override={'sat'}

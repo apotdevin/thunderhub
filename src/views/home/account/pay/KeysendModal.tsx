@@ -73,6 +73,7 @@ export const KeysendModal: React.FC<KeysendProps> = ({
       <Separation />
       <InputWithDeco
         title={'Sats'}
+        value={tokens}
         amount={tokens}
         inputType={'number'}
         inputCallback={amount => setTokens(Number(amount))}

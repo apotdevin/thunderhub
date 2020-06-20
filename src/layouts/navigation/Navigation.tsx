@@ -116,7 +116,7 @@ const BurgerNav = styled.a<NavProps>`
 const HOME = '/home';
 const PEERS = '/peers';
 const CHANNEL = '/channels';
-const BALANCE = '/balance';
+const REBALANCE = '/rebalance';
 const TRANS = '/transactions';
 const FORWARDS = '/forwards';
 const CHAIN_TRANS = '/chain';
@@ -168,7 +168,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Home', HOME, Home, sidebar)}
       {renderNavButton('Peers', PEERS, Users, sidebar)}
       {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
-      {renderNavButton('Balance', BALANCE, Repeat, sidebar)}
+      {renderNavButton('Rebalance', REBALANCE, Repeat, sidebar)}
       {renderNavButton('Details', DETAILS, Crosshair, sidebar)}
       {renderNavButton('Transactions', TRANS, Server, sidebar)}
       {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
@@ -183,7 +183,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Home', HOME, Home)}
       {renderBurgerNav('Peers', PEERS, Users)}
       {renderBurgerNav('Channels', CHANNEL, Cpu)}
-      {renderBurgerNav('Balance', BALANCE, Repeat)}
+      {renderBurgerNav('Rebalance', REBALANCE, Repeat)}
       {renderBurgerNav('Details', DETAILS, Crosshair)}
       {renderBurgerNav('Transactions', TRANS, Server)}
       {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}

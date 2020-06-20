@@ -48,6 +48,7 @@ export const SupportBar = () => {
         <Separation />
         <InputWithDeco
           title={'Amount'}
+          value={amount}
           amount={amount}
           inputType={'number'}
           inputCallback={value => amountSet(Number(value))}

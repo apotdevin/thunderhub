@@ -275,6 +275,7 @@ export type Mutation = {
   keysend?: Maybe<PayType>;
   createInvoice?: Maybe<NewInvoiceType>;
   circularRebalance?: Maybe<Scalars['Boolean']>;
+  bosRebalance?: Maybe<BosRebalanceResultType>;
   payViaRoute?: Maybe<Scalars['Boolean']>;
   createAddress?: Maybe<Scalars['String']>;
   sendToAddress?: Maybe<SendToType>;
@@ -326,6 +327,20 @@ export type MutationCreateInvoiceArgs = {
 export type MutationCircularRebalanceArgs = {
   auth: AuthType;
   route: Scalars['String'];
+};
+
+export type MutationBosRebalanceArgs = {
+  auth: AuthType;
+  avoid?: Maybe<Array<Maybe<Scalars['String']>>>;
+  in_through?: Maybe<Scalars['String']>;
+  is_avoiding_high_inbound?: Maybe<Scalars['Boolean']>;
+  max_fee?: Maybe<Scalars['Int']>;
+  max_fee_rate?: Maybe<Scalars['Int']>;
+  max_rebalance?: Maybe<Scalars['Int']>;
+  node?: Maybe<Scalars['String']>;
+  out_channels?: Maybe<Array<Maybe<Scalars['String']>>>;
+  out_through?: Maybe<Scalars['String']>;
+  target?: Maybe<Scalars['Int']>;
 };
 
 export type MutationPayViaRouteArgs = {
@@ -996,4 +1011,39 @@ export type ProbedRoute = {
 export type ProbeRoute = {
   __typename?: 'ProbeRoute';
   route?: Maybe<ProbedRoute>;
+};
+
+export type BosIncreaseType = {
+  __typename?: 'bosIncreaseType';
+  increased_inbound_on?: Maybe<Scalars['String']>;
+  liquidity_inbound?: Maybe<Scalars['String']>;
+  liquidity_inbound_opening?: Maybe<Scalars['String']>;
+  liquidity_inbound_pending?: Maybe<Scalars['String']>;
+  liquidity_outbound?: Maybe<Scalars['String']>;
+  liquidity_outbound_opening?: Maybe<Scalars['String']>;
+  liquidity_outbound_pending?: Maybe<Scalars['String']>;
+};
+
+export type BosDecreaseType = {
+  __typename?: 'bosDecreaseType';
+  decreased_inbound_on?: Maybe<Scalars['String']>;
+  liquidity_inbound?: Maybe<Scalars['String']>;
+  liquidity_inbound_opening?: Maybe<Scalars['String']>;
+  liquidity_inbound_pending?: Maybe<Scalars['String']>;
+  liquidity_outbound?: Maybe<Scalars['String']>;
+  liquidity_outbound_opening?: Maybe<Scalars['String']>;
+  liquidity_outbound_pending?: Maybe<Scalars['String']>;
+};
+
+export type BosResultType = {
+  __typename?: 'bosResultType';
+  rebalanced?: Maybe<Scalars['String']>;
+  rebalance_fees_spent?: Maybe<Scalars['String']>;
+};
+
+export type BosRebalanceResultType = {
+  __typename?: 'bosRebalanceResultType';
+  increase?: Maybe<BosIncreaseType>;
+  decrease?: Maybe<BosDecreaseType>;
+  result?: Maybe<BosResultType>;
 };
