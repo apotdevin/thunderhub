@@ -29,6 +29,7 @@ import {
   HeaderNavButton,
 } from './Header.styled';
 
+const MAIN = '/';
 const HOME = '/home';
 const TRADER = '/trading';
 const CHAT = '/chat';
@@ -90,7 +91,7 @@ export const Header = () => {
   return (
     <>
       <Section
-        color={connected ? headerColor : 'transparent'}
+        color={pathname === MAIN ? 'transparent' : headerColor}
         textColor={headerTextColor}
       >
         <HeaderStyle>
