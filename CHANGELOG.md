@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/apotdevin/thunderhub/compare/v0.7.10...v0.8.0) (2020-06-20)
+
+
+### Features
+
+* ✨ advanced rebalance ([#71](https://github.com/apotdevin/thunderhub/issues/71)) ([f1b0fa5](https://github.com/apotdevin/thunderhub/commit/f1b0fa52a0ae2552ba864cf4bf0cba0a5f7d34ea))
+
+
+### Bug Fixes
+
+* 🐛 authentication error throw ([ce17743](https://github.com/apotdevin/thunderhub/commit/ce17743eb8d714b1656b96898d68f5ad9ef5b517))
+
 ### [0.7.10](https://github.com/apotdevin/thunderhub/compare/v0.7.9...v0.7.10) (2020-06-12)
 
 
