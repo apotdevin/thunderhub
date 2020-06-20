@@ -306,8 +306,9 @@ export const AdvancedBalance = () => {
         </MultiButton>
       </RebalanceLine>
       <InputWithDeco
+        inputType={'number'}
         title={'Max Fee'}
-        value={state.max_fee}
+        value={state.max_fee || ''}
         placeholder={'sats'}
         amount={state.max_fee}
         override={'sat'}
@@ -316,8 +317,9 @@ export const AdvancedBalance = () => {
         }
       />
       <InputWithDeco
+        inputType={'number'}
         title={'Max Fee Rate'}
-        value={state.max_fee_rate}
+        value={state.max_fee_rate || ''}
         placeholder={'ppm'}
         amount={state.max_fee_rate}
         override={'ppm'}
@@ -326,8 +328,9 @@ export const AdvancedBalance = () => {
         }
       />
       <InputWithDeco
+        inputType={'number'}
         title={'Max Rebalance'}
-        value={state.max_rebalance}
+        value={state.max_rebalance || ''}
         placeholder={'sats'}
         amount={state.max_rebalance}
         inputCallback={value =>
@@ -335,8 +338,9 @@ export const AdvancedBalance = () => {
         }
       />
       <InputWithDeco
+        inputType={'number'}
         title={'Target Amount'}
-        value={state.target}
+        value={state.target || ''}
         placeholder={'sats to rebalance'}
         amount={state.target}
         inputCallback={value =>

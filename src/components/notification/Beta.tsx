@@ -6,6 +6,7 @@ export const BetaNotification = styled.div`
   text-align: center;
   background-color: ${chartColors.orange};
   border-radius: 4px;
-  color: white;
-  margin-bottom: 8px;
+  color: black;
+  margin-bottom: 16px;
+  padding: 4px 0;
 `;

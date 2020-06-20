@@ -55,7 +55,7 @@ export const ModalChannels: React.FC<ModalChannelsType> = ({
             channels && !!channels.find(n => n.id === channel.id);
           return (
             <SubCard
-              key={channel.alias}
+              key={channel.id}
               color={isSelected ? themeColors.blue2 : undefined}
             >
               <SingleLine>
