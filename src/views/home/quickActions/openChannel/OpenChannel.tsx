@@ -56,11 +56,13 @@ export const OpenChannelCard = ({ setOpenCard }: OpenChannelProps) => {
     <Card bottom={'20px'}>
       <InputWithDeco
         title={'Node Public Key'}
+        value={publicKey}
         placeholder={'Public Key'}
         inputCallback={value => setPublicKey(value)}
       />
       <InputWithDeco
         title={'Channel Size'}
+        value={size}
         placeholder={'Sats'}
         amount={size}
         inputType={'number'}

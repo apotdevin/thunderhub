@@ -88,6 +88,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
     <>
       <InputWithDeco
         title={'Send to Address'}
+        value={address}
         placeholder={'Address'}
         inputCallback={value => setAddress(value)}
       />
@@ -101,6 +102,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
       {!sendAll && (
         <InputWithDeco
           title={'Amount'}
+          value={tokens}
           placeholder={'Sats'}
           amount={tokens}
           inputType={'number'}
@@ -139,6 +141,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
       </InputWithDeco>
       <InputWithDeco
         title={'Fee Amount'}
+        value={amount}
         noInput={true}
         customAmount={`(~${
           type === 'target' ? `${amount} blocks` : feeFormat(amount * 223)

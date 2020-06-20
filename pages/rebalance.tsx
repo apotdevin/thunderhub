@@ -21,7 +21,7 @@ const BalanceView = () => {
     return (
       <CardWithTitle>
         <SingleLine>
-          <SubTitle>Rebalancing</SubTitle>
+          <SubTitle>Rebalance</SubTitle>
         </SingleLine>
         <Card>
           <Text>
@@ -37,7 +37,7 @@ const BalanceView = () => {
   return (
     <CardWithTitle>
       <SingleLine>
-        <SubTitle>Rebalancing</SubTitle>
+        <SubTitle>Rebalance</SubTitle>
         <SingleLine>
           <SmallButton
             onClick={() => advancedTypeSet(false)}

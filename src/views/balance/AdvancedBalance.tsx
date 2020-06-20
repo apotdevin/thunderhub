@@ -14,6 +14,8 @@ import Modal from 'src/components/modal/ReactModal';
 import { Plus, Minus } from 'react-feather';
 import { chartColors } from 'src/styles/Themes';
 import { ViewSwitch } from 'src/components/viewSwitch/ViewSwitch';
+import { useMutationResultWithReset } from 'src/hooks/UseMutationWithReset';
+import { BetaNotification } from 'src/components/notification/Beta';
 import { AdvancedResult } from './AdvancedResult';
 import { ModalNodes } from './Modals/ModalNodes';
 import { ModalChannels } from './Modals/ModalChannels';
@@ -165,11 +167,15 @@ export const AdvancedBalance = () => {
   const [isDetailed, isDetailedSet] = React.useState<boolean>(false);
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
-  const [rebalance, { data, loading }] = useBosRebalanceMutation({
+  const [rebalance, { data: _data, loading }] = useBosRebalanceMutation({
     onError: error => toast.error(getErrorContent(error)),
-    onCompleted: () => toast.success('Balancing finished'),
+    onCompleted: () => {
+      dispatch({ type: 'clearFilters' });
+      toast.success('Balancing finished');
+    },
     refetchQueries: ['GetChannels'],
   });
+  const [data, resetMutationResult] = useMutationResultWithReset(_data);
 
   const renderButton = (
     onClick: () => void,
@@ -301,6 +307,7 @@ export const AdvancedBalance = () => {
       </RebalanceLine>
       <InputWithDeco
         title={'Max Fee'}
+        value={state.max_fee}
         placeholder={'sats'}
         amount={state.max_fee}
         override={'sat'}
@@ -310,6 +317,7 @@ export const AdvancedBalance = () => {
       />
       <InputWithDeco
         title={'Max Fee Rate'}
+        value={state.max_fee_rate}
         placeholder={'ppm'}
         amount={state.max_fee_rate}
         override={'ppm'}
@@ -319,6 +327,7 @@ export const AdvancedBalance = () => {
       />
       <InputWithDeco
         title={'Max Rebalance'}
+        value={state.max_rebalance}
         placeholder={'sats'}
         amount={state.max_rebalance}
         inputCallback={value =>
@@ -327,12 +336,14 @@ export const AdvancedBalance = () => {
       />
       <InputWithDeco
         title={'Target Amount'}
+        value={state.target}
         placeholder={'sats to rebalance'}
         amount={state.target}
         inputCallback={value =>
           dispatch({ type: 'target', amount: Number(value) })
         }
       />
+      <Separation />
     </>
   );
 
@@ -396,9 +407,20 @@ export const AdvancedBalance = () => {
       {data && data.bosRebalance ? (
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
           <AdvancedResult rebalanceResult={data.bosRebalance} />
+          <ColorButton
+            fullWidth={true}
+            onClick={() => {
+              resetMutationResult();
+            }}
+          >
+            Balance Again
+          </ColorButton>
         </Card>
       ) : (
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+          <BetaNotification>
+            In Beta. Please use at your own risk.
+          </BetaNotification>
           <InputWithDeco title={'Type'} noInput={true}>
             <MultiButton>
               {renderButton(() => isDetailedSet(false), 'Auto', !isDetailed)}
@@ -406,24 +428,37 @@ export const AdvancedBalance = () => {
             </MultiButton>
           </InputWithDeco>
           {isDetailed && renderDetails()}
-          <Separation />
-          <SecureButton
-            withMargin={'16px 0 0'}
-            callback={rebalance}
-            loading={loading}
-            disabled={loading}
-            variables={{
-              ...state,
-              avoid: state.avoid.map(a => a.id),
-              node: state.node.id,
-              in_through: state.in_through.id,
-              out_through: state.out_through.id,
-              out_channels: state.out_channels.map(c => c.id),
-            }}
-            fullWidth={true}
-          >
-            Rebalance
-          </SecureButton>
+          <SingleLine>
+            {isDetailed && (
+              <ColorButton
+                color={chartColors.orange2}
+                withMargin={'16px 8px 0 0'}
+                fullWidth={true}
+                onClick={() => {
+                  dispatch({ type: 'clearFilters' });
+                }}
+              >
+                Reset
+              </ColorButton>
+            )}
+            <SecureButton
+              withMargin={'16px 0 0'}
+              callback={rebalance}
+              loading={loading}
+              disabled={loading}
+              variables={{
+                ...state,
+                avoid: state.avoid.map(a => a.id),
+                node: state.node.id,
+                in_through: state.in_through.id,
+                out_through: state.out_through.id,
+                out_channels: state.out_channels.map(c => c.id),
+              }}
+              fullWidth={true}
+            >
+              Rebalance
+            </SecureButton>
+          </SingleLine>
         </Card>
       )}
       <Modal

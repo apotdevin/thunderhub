@@ -86,6 +86,7 @@ const FeesView = () => {
               <Separation />
               <InputWithDeco
                 title={'BaseFee'}
+                value={baseFee}
                 placeholder={'sats'}
                 amount={baseFee}
                 override={'sat'}
@@ -94,6 +95,7 @@ const FeesView = () => {
               />
               <InputWithDeco
                 title={'Fee Rate'}
+                value={feeRate}
                 placeholder={'ppm'}
                 amount={feeRate}
                 override={'ppm'}
@@ -102,6 +104,7 @@ const FeesView = () => {
               />
               <InputWithDeco
                 title={'CLTV Delta'}
+                value={cltv}
                 placeholder={'cltv delta'}
                 customAmount={cltv ? cltv.toString() : ''}
                 inputType={'number'}
@@ -110,6 +113,7 @@ const FeesView = () => {
               {canMax && (
                 <InputWithDeco
                   title={'Max HTLC'}
+                  value={max}
                   placeholder={'sats'}
                   amount={max}
                   override={'sat'}
@@ -120,6 +124,7 @@ const FeesView = () => {
               {canMin && (
                 <InputWithDeco
                   title={'Min HTLC'}
+                  value={min}
                   placeholder={'sats'}
                   amount={min}
                   override={'sat'}

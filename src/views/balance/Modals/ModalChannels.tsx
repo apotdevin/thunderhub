@@ -10,7 +10,7 @@ import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { Plus, Minus } from 'react-feather';
 import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
 import { themeColors, chartColors } from 'src/styles/Themes';
-import { RebalanceIdType } from '../AdvancedBalance';
+import { RebalanceIdType, ActionType } from '../AdvancedBalance';
 
 type ModalChannelsType = {
   multi?: boolean;
