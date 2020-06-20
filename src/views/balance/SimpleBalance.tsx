@@ -3,31 +3,23 @@ import { toast } from 'react-toastify';
 import sortBy from 'lodash.sortby';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
-import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
 import { ChannelType } from 'src/graphql/types';
 import {
-  CardWithTitle,
-  Card,
-  SubTitle,
   Sub4Title,
   ResponsiveLine,
   DarkSubTitle,
   NoWrapTitle,
-  SingleLine,
-} from '../src/components/generic/Styled';
-import { getErrorContent } from '../src/utils/error';
-import { LoadingCard } from '../src/components/loading/LoadingCard';
-import { getPercent } from '../src/utils/helpers';
-import { Input } from '../src/components/input/Input';
-import { BalanceCard } from '../src/views/balance/BalanceCard';
-import { BalanceRoute } from '../src/views/balance/BalanceRoute';
-import { Price } from '../src/components/price/Price';
-import { useStatusState } from '../src/context/StatusContext';
-import { Text } from '../src/components/typography/Styled';
+  Card,
+} from 'src/components/generic/Styled';
+import { getErrorContent } from 'src/utils/error';
+import { LoadingCard } from 'src/components/loading/LoadingCard';
+import { getPercent } from 'src/utils/helpers';
+import { Input } from 'src/components/input/Input';
+import { BalanceCard } from 'src/views/balance/BalanceCard';
+import { BalanceRoute } from 'src/views/balance/BalanceRoute';
+import { Price } from 'src/components/price/Price';
 
-const BalanceView = () => {
-  const { minorVersion } = useStatusState();
+export const SimpleBalance = () => {
   const { auth } = useAccountState();
 
   const [outgoing, setOutgoing] = useState<ChannelType | null>();
@@ -44,25 +36,8 @@ const BalanceView = () => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  if (minorVersion < 9) {
-    return (
-      <CardWithTitle>
-        <SingleLine>
-          <SubTitle>Channel Balancing</SubTitle>
-        </SingleLine>
-        <Card>
-          <Text>
-            Channel balancing is only available for nodes with LND versions
-            0.9.0-beta and up.
-          </Text>
-          <Text>If you want to use this feature please update your node.</Text>
-        </Card>
-      </CardWithTitle>
-    );
-  }
-
   if (loading || !data || !data.getChannels) {
-    return <LoadingCard title={'Channel Balancing'} />;
+    return <LoadingCard noTitle={true} />;
   }
 
   const handleReset = (type: string) => {
@@ -159,71 +134,58 @@ const BalanceView = () => {
   };
 
   return (
-    <CardWithTitle>
-      <SingleLine>
-        <SubTitle>Channel Balancing</SubTitle>
-      </SingleLine>
-      <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-        {renderOutgoing()}
-        {renderIncoming()}
-        <ResponsiveLine>
-          <Sub4Title>Amount</Sub4Title>
-          <DarkSubTitle>
-            <NoWrapTitle>
-              <Price amount={amount ?? 0} />
-            </NoWrapTitle>
-          </DarkSubTitle>
-        </ResponsiveLine>
-        {!blocked && (
-          <Input
-            value={amount}
-            placeholder={'Sats'}
-            type={'number'}
-            onChange={e => {
-              setAmount(Number(e.target.value));
-            }}
-            withMargin={'0 0 8px'}
-          />
-        )}
-        <ResponsiveLine>
-          <Sub4Title>Max Fee</Sub4Title>
-          <DarkSubTitle>
-            <NoWrapTitle>
-              <Price amount={maxFee ?? 0} />
-            </NoWrapTitle>
-          </DarkSubTitle>
-        </ResponsiveLine>
-        {!blocked && (
-          <Input
-            value={maxFee}
-            placeholder={'Sats (Leave empty to search all routes)'}
-            type={'number'}
-            onChange={e => {
-              setMaxFee(Number(e.target.value));
-            }}
-            withMargin={'0 0 24px'}
-          />
-        )}
-        {incoming && outgoing && amount && (
-          <BalanceRoute
-            incoming={incoming}
-            outgoing={outgoing}
-            amount={amount}
-            maxFee={maxFee}
-            blocked={blocked}
-            setBlocked={() => setBlocked(true)}
-            callback={() => handleReset('all')}
-          />
-        )}
-      </Card>
-    </CardWithTitle>
+    <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+      {renderOutgoing()}
+      {renderIncoming()}
+      <ResponsiveLine>
+        <Sub4Title>Amount</Sub4Title>
+        <DarkSubTitle>
+          <NoWrapTitle>
+            <Price amount={amount ?? 0} />
+          </NoWrapTitle>
+        </DarkSubTitle>
+      </ResponsiveLine>
+      {!blocked && (
+        <Input
+          value={amount}
+          placeholder={'Sats'}
+          type={'number'}
+          onChange={e => {
+            setAmount(Number(e.target.value));
+          }}
+          withMargin={'0 0 8px'}
+        />
+      )}
+      <ResponsiveLine>
+        <Sub4Title>Max Fee</Sub4Title>
+        <DarkSubTitle>
+          <NoWrapTitle>
+            <Price amount={maxFee ?? 0} />
+          </NoWrapTitle>
+        </DarkSubTitle>
+      </ResponsiveLine>
+      {!blocked && (
+        <Input
+          value={maxFee}
+          placeholder={'Sats (Leave empty to search all routes)'}
+          type={'number'}
+          onChange={e => {
+            setMaxFee(Number(e.target.value));
+          }}
+          withMargin={'0 0 24px'}
+        />
+      )}
+      {incoming && outgoing && amount && (
+        <BalanceRoute
+          incoming={incoming}
+          outgoing={outgoing}
+          amount={amount}
+          maxFee={maxFee}
+          blocked={blocked}
+          setBlocked={() => setBlocked(true)}
+          callback={() => handleReset('all')}
+        />
+      )}
+    </Card>
   );
 };
-
-const Wrapped = () => (
-  <GridWrapper>
-    <BalanceView />
-  </GridWrapper>
-);
-
-export default withApollo(Wrapped);

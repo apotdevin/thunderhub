@@ -23,6 +23,7 @@ const { publicRuntimeConfig } = getConfig();
 const { disableLinks } = publicRuntimeConfig;
 
 export const shorten = (text: string): string => {
+  if (!text) return '';
   const amount = 6;
   const beginning = text.slice(0, amount);
   const end = text.slice(text.length - amount);

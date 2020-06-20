@@ -104,7 +104,7 @@ export const invoiceResolvers = {
       const { id } = await createInvoice({
         lnd,
         tokens: params.tokens,
-        description: 'Balancing Channel',
+        description: 'Rebalance',
       }).catch((error: any) => {
         logger.error('Error getting invoice: %o', error);
         throw new Error(getErrorMsg(error));

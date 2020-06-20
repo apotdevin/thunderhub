@@ -535,21 +535,6 @@ Object {
 }
 `;
 
-exports[`Query tests "GET_FORWARD_REPORT" matches snapshot 1`] = `
-Object {
-  "data": Object {
-    "getForwardReport": "[{\\"period\\":-76174,\\"amount\\":4,\\"fee\\":4000,\\"tokens\\":4000}]",
-  },
-  "errors": undefined,
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
-    },
-  },
-}
-`;
-
 exports[`Query tests "GET_FORWARDS" matches snapshot 1`] = `
 Object {
   "data": Object {

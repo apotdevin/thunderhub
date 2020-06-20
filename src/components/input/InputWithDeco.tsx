@@ -37,6 +37,7 @@ const InputLine = styled(SingleLine)`
 
 type InputWithDecoProps = {
   title: string;
+  value?: string | number;
   noInput?: boolean;
   amount?: number;
   override?: string;
@@ -49,6 +50,7 @@ type InputWithDecoProps = {
 
 export const InputWithDeco: React.FC<InputWithDecoProps> = ({
   title,
+  value,
   amount,
   override,
   customAmount,
@@ -60,6 +62,7 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
   inputCallback,
 }) => {
   const showAmount = !!amount || customAmount;
+  const props = noInput ? {} : { value };
   return (
     <InputLine>
       <InputTitleRow>
@@ -83,6 +86,7 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
           mobileMargin={'0'}
           type={inputType}
           onChange={e => inputCallback && inputCallback(e.target.value)}
+          {...props}
         />
       )}
       {children}
