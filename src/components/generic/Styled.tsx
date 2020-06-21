@@ -201,6 +201,7 @@ export const SmallButton = styled.button<SmallButtonProps>`
 `;
 
 export const OverflowText = styled.div`
+  text-align: right;
   margin-left: 16px;
 
   -ms-word-break: break-all;
