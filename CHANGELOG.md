@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.1](https://github.com/apotdevin/thunderhub/compare/v0.8.0...v0.8.1) (2020-06-21)
+
+
+### Bug Fixes
+
+* 🐛 handle probe error ([a4a5902](https://github.com/apotdevin/thunderhub/commit/a4a5902dd20096005eb0d9c44ed42af2ed932bf8))
+
 ## [0.8.0](https://github.com/apotdevin/thunderhub/compare/v0.7.10...v0.8.0) (2020-06-20)
 
 
