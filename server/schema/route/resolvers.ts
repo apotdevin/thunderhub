@@ -54,14 +54,7 @@ export const routeResolvers = {
         probeForRoute({ lnd, destination, tokens })
       );
 
-      if (!info) {
-        logger.debug(
-          `Error probing route to destination ${destination} for ${tokens} tokens`
-        );
-        return null;
-      }
-
-      if (error) {
+      if (!info || error) {
         logger.debug(
           `Error probing route to destination ${destination} for ${tokens} tokens`
         );
