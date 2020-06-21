@@ -50,30 +50,37 @@ export const routeResolvers = {
         return null;
       }
 
-      const [{ route }, error] = await toWithError(
+      const [info, error] = await toWithError(
         probeForRoute({ lnd, destination, tokens })
       );
 
-      if (error) {
+      if (!info) {
         logger.debug(
-          `Error probing route for to destination ${destination} from ${tokens} tokens`
+          `Error probing route to destination ${destination} for ${tokens} tokens`
         );
         return null;
       }
 
-      if (!route) {
+      if (error) {
+        logger.debug(
+          `Error probing route to destination ${destination} for ${tokens} tokens`
+        );
+        return null;
+      }
+
+      if (!info.route) {
         logger.debug(
           `No route found to destination ${destination} for ${tokens} tokens`
         );
         return null;
       }
 
-      const hopsWithNodes = route.hops.map(h => ({
+      const hopsWithNodes = info.route.hops.map(h => ({
         ...h,
         node: { lnd, publicKey: h.public_key },
       }));
 
-      return { ...route, hops: hopsWithNodes };
+      return { ...info.route, hops: hopsWithNodes };
     },
   },
 };
