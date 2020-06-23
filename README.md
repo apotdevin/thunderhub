@@ -123,7 +123,9 @@ npm run dev -> npm run dev:compatible
 
 ## Config
 
-You can define some environment variables that ThunderHub can start with. To do this create a `.env` file in the root directory with the following parameters:
+You can define some environment variables that ThunderHub can start with. To do this create a `.env.local` (or use the template `.env`) file in the root directory with the following parameters:
+
+**Important - If you want to use the `.env` template file and don't want it to be replaced after an update please duplicate and rename to `.env.local`**
 
 ```bash
 # -----------
