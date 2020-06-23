@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.2](https://github.com/apotdevin/thunderhub/compare/v0.8.1...v0.8.2) (2020-06-23)
+
+
+### Improvements
+
+* 🔧 add more currencies ([dddf895](https://github.com/apotdevin/thunderhub/commit/dddf895f04b162b0fb5b2185e4765669a1d45c00))
+
 ### [0.8.1](https://github.com/apotdevin/thunderhub/compare/v0.8.0...v0.8.1) (2020-06-21)
 
 
