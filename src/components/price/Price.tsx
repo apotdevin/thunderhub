@@ -19,7 +19,7 @@ export const Price = ({
   override?: string;
 }): JSX.Element => {
   const { currency, displayValues } = useConfigState();
-  const { prices, dontShow } = usePriceState();
+  const { fiat, prices, dontShow } = usePriceState();
 
   if (!displayValues) {
     return <>-</>;
@@ -31,8 +31,8 @@ export const Price = ({
     currency: currency !== 'btc' && currency !== 'sat' ? 'sat' : currency,
   };
 
-  if (prices && !dontShow) {
-    const current: { last: number; symbol: string } = prices[currency] ?? {
+  if (currency === 'fiat' && prices && !dontShow) {
+    const current: { last: number; symbol: string } = prices[fiat] ?? {
       last: 0,
       symbol: '',
     };
@@ -57,11 +57,12 @@ export const getPrice = (
   currency: string,
   displayValues: boolean,
   priceContext: {
+    fiat: string;
     dontShow: boolean;
     prices?: { [key: string]: { last: number; symbol: string } };
   }
 ) => ({ amount, breakNumber = false, override }: GetPriceProps): string => {
-  const { prices, dontShow } = priceContext;
+  const { prices, dontShow, fiat } = priceContext;
 
   if (!displayValues) {
     return '-';
@@ -73,8 +74,8 @@ export const getPrice = (
     currency: currency !== 'btc' && currency !== 'sat' ? 'sat' : currency,
   };
 
-  if (prices && !dontShow) {
-    const current: { last: number; symbol: string } = prices[currency] ?? {
+  if (currency === 'fiat' && prices && !dontShow) {
+    const current: { last: number; symbol: string } = prices[fiat] ?? {
       last: 0,
       symbol: '',
     };

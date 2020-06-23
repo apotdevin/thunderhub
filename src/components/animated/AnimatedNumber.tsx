@@ -20,7 +20,7 @@ export const AnimatedNumber = ({ amount = 0 }: AnimatedProps) => {
     value: amount,
   });
   const { currency, displayValues } = useConfigState();
-  const { prices, dontShow } = usePriceState();
+  const { fiat, prices, dontShow } = usePriceState();
 
   if (!displayValues) {
     return <>-</>;
@@ -32,8 +32,8 @@ export const AnimatedNumber = ({ amount = 0 }: AnimatedProps) => {
     currency: currency !== 'btc' && currency !== 'sat' ? 'sat' : currency,
   };
 
-  if (prices && !dontShow) {
-    const current: { last: number; symbol: string } = prices[currency] ?? {
+  if (currency === 'fiat' && prices && !dontShow) {
+    const current: { last: number; symbol: string } = prices[fiat] ?? {
       last: 0,
       symbol: '',
     };

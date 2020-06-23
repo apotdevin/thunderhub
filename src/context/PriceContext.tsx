@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useEffect } from 'react';
 
 type PriceProps = {
   last: number;
@@ -7,6 +7,7 @@ type PriceProps = {
 
 type State = {
   dontShow: boolean;
+  fiat: string;
   prices?: { [key: string]: PriceProps };
 };
 
@@ -20,6 +21,10 @@ type ActionType =
       state: ChangeState;
     }
   | {
+      type: 'change' | 'initChange';
+      fiat: string;
+    }
+  | {
       type: 'dontShow';
     };
 
@@ -29,6 +34,7 @@ export const StateContext = createContext<State | undefined>(undefined);
 export const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
 const initialState: State = {
+  fiat: 'EUR',
   dontShow: true,
   prices: { EUR: { last: 0, symbol: '€' } },
 };
@@ -38,7 +44,14 @@ const stateReducer = (state: State, action: ActionType): State => {
     case 'dontShow':
       return { ...initialState, dontShow: true };
     case 'fetched':
-      return { ...initialState, ...action.state, dontShow: false };
+      return { ...state, ...action.state, dontShow: false };
+    case 'change': {
+      localStorage.setItem('fiat', action.fiat);
+      return { ...state, fiat: action.fiat };
+    }
+    case 'initChange': {
+      return { ...state, fiat: action.fiat };
+    }
     default:
       return state;
   }
@@ -46,6 +59,11 @@ const stateReducer = (state: State, action: ActionType): State => {
 
 const PriceProvider = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
+
+  useEffect(() => {
+    const fiat = localStorage.getItem('fiat') || 'EUR';
+    dispatch({ type: 'initChange', fiat });
+  }, []);
 
   return (
     <DispatchContext.Provider value={dispatch}>
