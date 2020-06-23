@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.3](https://github.com/apotdevin/thunderhub/compare/v0.8.2...v0.8.3) (2020-06-23)
+
+
+### Docs
+
+* 📚️ env file warning ([dffad10](https://github.com/apotdevin/thunderhub/commit/dffad10bf2a9a9020cee14ed6716477bb0afbd7d))
+
+
+### Improvements
+
+* 🔧 bars on channel view ([7b970e5](https://github.com/apotdevin/thunderhub/commit/7b970e549473f31bfc9c879e0ca6733e60cc02fb))
+* 🔧 improve changelog ([cfbbceb](https://github.com/apotdevin/thunderhub/commit/cfbbceb1563a86bfb441d2b02dce0a51d0d4f138))
+
 ### [0.8.2](https://github.com/apotdevin/thunderhub/compare/v0.8.1...v0.8.2) (2020-06-23)
 
 
