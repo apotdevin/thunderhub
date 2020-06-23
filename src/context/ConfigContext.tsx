@@ -8,7 +8,13 @@ const currencyTypes = ['sat', 'btc', 'fiat'];
 
 export type channelBarStyleTypes = 'normal' | 'compact' | 'ultracompact';
 export type channelBarTypeTypes = 'balance' | 'fees' | 'size' | 'proportional';
-export type channelSortTypes = 'none' | 'local' | 'balance' | 'feeRate';
+export type channelSortTypes =
+  | 'none'
+  | 'local'
+  | 'balance'
+  | 'feeRate'
+  | 'partnerName'
+  | 'size';
 export type sortDirectionTypes = 'increase' | 'decrease';
 
 type State = {

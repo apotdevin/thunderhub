@@ -5,6 +5,7 @@ import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChanne
 import { useConfigState } from 'src/context/ConfigContext';
 import { sortBy } from 'underscore';
 import { getPercent } from 'src/utils/helpers';
+import { ChannelType } from 'src/graphql/types';
 import { Card } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
@@ -75,15 +76,30 @@ export const Channels: React.FC = () => {
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'balance': {
-        const newArray = sortBy(data.getChannels, channel =>
+        const newArray = sortBy(data.getChannels, (channel: ChannelType) =>
           getPercent(channel.local_balance, channel.remote_balance)
+        );
+        return sortDirection === 'increase' ? newArray : newArray.reverse();
+      }
+      case 'partnerName': {
+        const newArray = sortBy(data.getChannels, (channel: ChannelType) =>
+          channel.partner_node_info.node.alias.toLowerCase()
+        );
+        return sortDirection === 'increase' ? newArray : newArray.reverse();
+      }
+      case 'size': {
+        const newArray = sortBy(
+          data.getChannels,
+          (channel: ChannelType) =>
+            channel.remote_balance + channel.local_balance
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'feeRate': {
         const newArray = sortBy(
           data.getChannels,
-          channel => channel.partner_node_info.fee_rate
+          (channel: ChannelType) =>
+            channel.partner_fee_info.channel.partner_node_policies.fee_rate
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }

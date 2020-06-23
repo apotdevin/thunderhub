@@ -11,10 +11,10 @@ import {
   channelSortTypes,
   sortDirectionTypes,
 } from 'src/context/ConfigContext';
-import { Card, SingleLine, Sub4Title } from 'src/components/generic/Styled';
+import { Card, Sub4Title, ResponsiveLine } from 'src/components/generic/Styled';
 import styled from 'styled-components';
 
-const MarginLine = styled(SingleLine)`
+const MarginLine = styled(ResponsiveLine)`
   margin: 8px 0;
 `;
 
@@ -116,6 +116,18 @@ export const ChannelManage = () => {
             onClick={() => changeSort('feeRate')}
           >
             Fee Rate
+          </SingleButton>
+          <SingleButton
+            selected={channelSort === 'partnerName'}
+            onClick={() => changeSort('partnerName')}
+          >
+            Name
+          </SingleButton>
+          <SingleButton
+            selected={channelSort === 'size'}
+            onClick={() => changeSort('size')}
+          >
+            Size
           </SingleButton>
         </MultiButton>
       </MarginLine>

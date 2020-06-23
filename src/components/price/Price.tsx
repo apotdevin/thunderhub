@@ -51,6 +51,7 @@ interface GetPriceProps {
   amount: number | string;
   breakNumber?: boolean;
   override?: string;
+  noUnit?: boolean;
 }
 
 export const getPrice = (
@@ -61,7 +62,12 @@ export const getPrice = (
     dontShow: boolean;
     prices?: { [key: string]: { last: number; symbol: string } };
   }
-) => ({ amount, breakNumber = false, override }: GetPriceProps): string => {
+) => ({
+  amount,
+  breakNumber = false,
+  override,
+  noUnit,
+}: GetPriceProps): string => {
   const { prices, dontShow, fiat } = priceContext;
 
   if (!displayValues) {
@@ -87,5 +93,5 @@ export const getPrice = (
     };
   }
 
-  return getValue({ amount, ...priceProps, breakNumber, override });
+  return getValue({ amount, ...priceProps, breakNumber, override, noUnit });
 };
