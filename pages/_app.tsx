@@ -56,14 +56,14 @@ const App = ({ Component, pageProps, initialConfig }) => (
 App.getInitialProps = async props => {
   const cookies = parseCookies(props.ctx.req);
 
-  if (!cookies?.config) {
-    return { initialConfig: {} };
+  if (!cookies?.theme) {
+    return { initialConfig: 'dark' };
   }
   try {
-    const initialConfig = JSON.parse(cookies.config);
+    const initialConfig = cookies.theme || 'dark';
     return { initialConfig };
   } catch (error) {
-    return { initialConfig: {} };
+    return { initialConfig: 'dark' };
   }
 };
 

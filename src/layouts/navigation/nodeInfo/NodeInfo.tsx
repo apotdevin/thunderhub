@@ -110,6 +110,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         </SingleLine>
         <SingleLine>
           <Zap
+            size={18}
             color={channelPending === 0 ? '#FFD300' : '#652EC7'}
             fill={channelPending === 0 ? '#FFD300' : '#652EC7'}
           />

@@ -19,6 +19,8 @@ const generalCSS = css`
   padding: 20px;
   border-radius: 5px;
   outline: none;
+  max-height: 80%;
+  overflow-y: auto;
 
   @media (${mediaWidths.mobile}) {
     top: 100%;
@@ -27,7 +29,6 @@ const generalCSS = css`
     width: 100%;
     min-width: 325px;
     max-height: 100%;
-    overflow-y: auto;
   }
 `;
 

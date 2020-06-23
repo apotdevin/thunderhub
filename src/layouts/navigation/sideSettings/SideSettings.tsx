@@ -112,7 +112,7 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
             currency:
               sidebar || isBurger ? value : getNextValue(correctArray, value),
           });
-        type === 'theme' && dispatch({ type: 'change', theme: value });
+        type === 'theme' && dispatch({ type: 'themeChange', theme: value });
       }}
     >
       {type === 'currency' && <Symbol>{text}</Symbol>}
@@ -146,8 +146,7 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         <IconRow>
           {renderIcon('currency', 'sat', 'S')}
           {renderIcon('currency', 'btc', '₿')}
-          {!dontShow && renderIcon('currency', 'EUR', '€')}
-          {!dontShow && renderIcon('currency', 'USD', '$')}
+          {!dontShow && renderIcon('currency', 'fiat', 'F')}
         </IconRow>
         <IconRow>
           {renderIcon('theme', 'light', '', false, Sun)}
@@ -163,8 +162,7 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         <IconRow>
           {renderIcon('currency', 'sat', 'S')}
           {renderIcon('currency', 'btc', '₿')}
-          {!dontShow && renderIcon('currency', 'EUR', '€')}
-          {!dontShow && renderIcon('currency', 'USD', '$')}
+          {!dontShow && renderIcon('currency', 'fiat', 'F')}
         </IconRow>
         <IconRow>
           {renderIcon('theme', 'light', '', false, Sun)}

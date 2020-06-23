@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import getConfig from 'next/config';
 import Cookies from 'js-cookie';
+import omit from 'lodash.omit';
 
 const themeTypes = ['dark', 'light'];
-const currencyTypes = ['sat', 'btc', 'EUR', 'USD'];
+const currencyTypes = ['sat', 'btc', 'fiat'];
 
 export type channelBarStyleTypes = 'normal' | 'compact' | 'ultracompact';
 export type channelBarTypeTypes = 'balance' | 'fees' | 'size' | 'proportional';
@@ -29,27 +30,29 @@ type State = {
 };
 
 type ConfigInitProps = {
-  initialConfig: State;
+  initialConfig: string;
 };
 
-type ActionType = {
-  type: 'change';
-  currency?: string;
-  theme?: string;
-  sidebar?: boolean;
-  multiNodeInfo?: boolean;
-  fetchFees?: boolean;
-  fetchPrices?: boolean;
-  displayValues?: boolean;
-  hideFee?: boolean;
-  hideNonVerified?: boolean;
-  maxFee?: number;
-  chatPollingSpeed?: number;
-  channelBarStyle?: channelBarStyleTypes;
-  channelBarType?: channelBarTypeTypes;
-  channelSort?: channelSortTypes;
-  sortDirection?: sortDirectionTypes;
-};
+type ActionType =
+  | {
+      type: 'change' | 'initChange';
+      currency?: string;
+      theme?: string;
+      sidebar?: boolean;
+      multiNodeInfo?: boolean;
+      fetchFees?: boolean;
+      fetchPrices?: boolean;
+      displayValues?: boolean;
+      hideFee?: boolean;
+      hideNonVerified?: boolean;
+      maxFee?: number;
+      chatPollingSpeed?: number;
+      channelBarStyle?: channelBarStyleTypes;
+      channelBarType?: channelBarTypeTypes;
+      channelSort?: channelSortTypes;
+      sortDirection?: sortDirectionTypes;
+    }
+  | { type: 'themeChange'; theme: string };
 
 type Dispatch = (action: ActionType) => void;
 
@@ -85,11 +88,27 @@ const initialState: State = {
 const stateReducer = (state: State, action: ActionType): State => {
   const { type, ...settings } = action;
   switch (type) {
-    case 'change':
+    case 'initChange': {
       return {
         ...state,
         ...settings,
       };
+    }
+    case 'change': {
+      const newState = {
+        ...state,
+        ...settings,
+      };
+      localStorage.setItem('config', JSON.stringify(omit(newState, 'theme')));
+      return newState;
+    }
+    case 'themeChange': {
+      Cookies.set('theme', action.theme, { expires: 365, sameSite: 'strict' });
+      return {
+        ...state,
+        theme: action.theme,
+      };
+    }
     default:
       return state;
   }
@@ -101,12 +120,13 @@ const ConfigProvider: React.FC<ConfigInitProps> = ({
 }) => {
   const [state, dispatch] = useReducer(stateReducer, {
     ...initialState,
-    ...initialConfig,
+    theme: themeTypes.indexOf(initialConfig) > -1 ? initialConfig : 'dark',
   });
 
   useEffect(() => {
-    Cookies.set('config', state, { expires: 365, sameSite: 'strict' });
-  }, [state]);
+    const savedConfig = JSON.parse(localStorage.getItem('config') || '{}');
+    dispatch({ type: 'initChange', ...savedConfig });
+  }, []);
 
   return (
     <DispatchContext.Provider value={dispatch}>
