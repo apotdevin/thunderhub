@@ -2,12 +2,12 @@ import numeral from 'numeral';
 
 const getValueString = (amount: number): string => {
   if (amount >= 100000) {
-    return `${amount / 1000000}m`;
+    return `${numeral(amount / 1000000).format('0,0.[0]')}m`;
   }
   if (amount >= 1000) {
-    return `${amount / 1000}k`;
+    return `${numeral(amount / 1000).format('0,0.[0]')}k`;
   }
-  return `${amount}`;
+  return `${numeral(amount).format('0,0.[0]')}`;
 };
 
 interface GetNumberProps {
@@ -17,6 +17,7 @@ interface GetNumberProps {
   currency: string;
   breakNumber?: boolean;
   override?: string;
+  noUnit?: boolean;
 }
 
 export const getValue = ({
@@ -26,6 +27,7 @@ export const getValue = ({
   currency,
   breakNumber,
   override,
+  noUnit,
 }: GetNumberProps): string => {
   const correctCurrency = override || currency;
   let value = 0;
@@ -37,25 +39,27 @@ export const getValue = ({
 
   if (correctCurrency === 'ppm') {
     const amount = numeral(value).format('0,0.[000]');
-    return `${amount} ppm`;
+    return noUnit ? amount : `${amount} ppm`;
   }
 
   if (correctCurrency === 'btc') {
-    if (!value) return '₿0.0';
+    if (!value) return noUnit ? '0.0' : '₿0.0';
     const amountInBtc = value / 100000000;
     const rounded = Math.round(amountInBtc * 10000) / 10000;
 
-    return `₿${rounded}`;
+    return noUnit ? `${rounded}` : `₿${rounded}`;
   }
   if (correctCurrency === 'sat') {
     const breakAmount = breakNumber
       ? getValueString(value)
       : numeral(value).format('0,0.[000]');
-    return `${breakAmount} sats`;
+    return noUnit ? `${breakAmount}` : `${breakAmount} sats`;
   }
 
   const amountInFiat = (value / 100000000) * price;
-  return `${symbol}${numeral(amountInFiat).format('0,0.00')}`;
+  return noUnit
+    ? `${numeral(amountInFiat).format('0,0.00')}`
+    : `${symbol}${numeral(amountInFiat).format('0,0.00')}`;
 };
 
 export const formatSats = (value: number) => numeral(value).format('0,0.[000]');

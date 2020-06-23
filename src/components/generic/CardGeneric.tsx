@@ -15,10 +15,11 @@ export const Progress = styled.div`
 interface ProgressBar {
   percent: number;
   order?: number;
+  barHeight?: number;
 }
 
 export const ProgressBar = styled.div<ProgressBar>`
-  height: 10px;
+  height: ${({ barHeight }) => (barHeight ? `${barHeight}px` : '10px')};
   background-color: ${({ order }) => {
     switch (order) {
       case 1:

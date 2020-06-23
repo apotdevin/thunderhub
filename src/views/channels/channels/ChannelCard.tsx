@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { ArrowDown, ArrowUp, EyeOff } from 'react-feather';
 import { ChannelType } from 'src/graphql/types';
+import { BalanceBars } from 'src/components/balance';
 import { getPercent, formatSeconds } from '../../../utils/helpers';
 import {
   ProgressBar,
@@ -133,6 +134,17 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   const localReserve = format({ amount: local_reserve });
   const remoteReserve = format({ amount: remote_reserve });
   const nodeCapacity = format({ amount: partnerNodeCapacity });
+
+  const localBalance = format({
+    amount: local_balance,
+    breakNumber: true,
+    noUnit: true,
+  });
+  const remoteBalance = format({
+    amount: remote_balance,
+    breakNumber: true,
+    noUnit: true,
+  });
 
   const baseFee = format({
     amount: Number(base_fee_mtokens) / 1000,
@@ -273,44 +285,21 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         );
       case 'proportional':
         return (
-          <ChannelStatsColumn>
-            <ChannelStatsLine>
-              <ProgressBar order={1} percent={getBar(local_balance, biggest)} />
-              <ProgressBar
-                order={4}
-                percent={getBar(biggest - local_balance, biggest)}
-              />
-            </ChannelStatsLine>
-            <ChannelStatsLine>
-              <ProgressBar
-                order={2}
-                percent={getBar(remote_balance, biggest)}
-              />
-              <ProgressBar
-                order={4}
-                percent={getBar(biggest - remote_balance, biggest)}
-              />
-            </ChannelStatsLine>
-          </ChannelStatsColumn>
+          <BalanceBars
+            local={getBar(local_balance, biggest)}
+            remote={getBar(remote_balance, biggest)}
+            formatLocal={localBalance}
+            formatRemote={remoteBalance}
+          />
         );
       default:
         return (
-          <ChannelStatsColumn>
-            <ChannelStatsLine>
-              <ProgressBar
-                order={1}
-                percent={getPercent(local_balance, remote_balance)}
-              />
-              <ProgressBar
-                order={4}
-                percent={getPercent(remote_balance, local_balance)}
-              />
-            </ChannelStatsLine>
-            <ChannelStatsLine>
-              <ProgressBar order={2} percent={getPercent(received, sent)} />
-              <ProgressBar order={4} percent={getPercent(sent, received)} />
-            </ChannelStatsLine>
-          </ChannelStatsColumn>
+          <BalanceBars
+            local={getPercent(local_balance, remote_balance)}
+            remote={getPercent(remote_balance, local_balance)}
+            formatLocal={localBalance}
+            formatRemote={remoteBalance}
+          />
         );
     }
   };
@@ -343,8 +332,6 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
           <>
             <div>{`Local Balance: ${formatLocal}`}</div>
             <div>{`Remote Balance: ${formatRemote}`}</div>
-            <div>{`Received: ${formatReceived}`}</div>
-            <div>{`Sent: ${formatSent}`}</div>
           </>
         );
     }
