@@ -45,6 +45,7 @@ export type PermissionsType = {
 
 export type Query = {
   __typename?: 'Query';
+  getAccountingReport: Scalars['String'];
   getVolumeHealth?: Maybe<ChannelsHealth>;
   getTimeHealth?: Maybe<ChannelsTimeHealth>;
   getFeeHealth?: Maybe<ChannelsFeeHealth>;
@@ -88,6 +89,10 @@ export type Query = {
   getLnPayInfo?: Maybe<LnPayInfoType>;
   getLnPay?: Maybe<Scalars['String']>;
   getLatestVersion?: Maybe<Scalars['String']>;
+};
+
+export type QueryGetAccountingReportArgs = {
+  auth: AuthType;
 };
 
 export type QueryGetVolumeHealthArgs = {

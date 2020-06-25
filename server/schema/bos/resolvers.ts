@@ -1,9 +1,12 @@
 import { ContextType } from 'server/types/apiTypes';
 import { getLnd } from 'server/helpers/helpers';
-import { rebalance } from 'balanceofsatoshis/swaps';
 import { to } from 'server/helpers/async';
 import { logger } from 'server/helpers/logger';
 import { AuthType } from 'src/context/AccountContext';
+
+import { rebalance } from 'balanceofsatoshis/swaps';
+import { getAccountingReport } from 'balanceofsatoshis/balances';
+import request from '@alexbosworth/request';
 
 type RebalanceType = {
   auth: AuthType;
@@ -19,7 +22,39 @@ type RebalanceType = {
   target?: Number;
 };
 
+type AccountingType = {
+  auth: AuthType;
+  category?: String;
+  currency?: String;
+  fiat?: String;
+  month?: String;
+  year?: String;
+};
+
 export const bosResolvers = {
+  Query: {
+    getAccountingReport: async (
+      _: undefined,
+      params: AccountingType,
+      context: ContextType
+    ) => {
+      const { auth } = params;
+      const lnd = getLnd(auth, context);
+
+      const response = await to(
+        getAccountingReport({
+          lnd,
+          logger,
+          category: 'invoices',
+          request,
+          is_csv: true,
+        })
+      );
+
+      logger.debug({ response });
+      return response;
+    },
+  },
   Mutation: {
     bosRebalance: async (
       _: undefined,

@@ -231,7 +231,7 @@ export const AdvancedBalance = () => {
           {hasAvoid ? <Minus size={18} /> : <Plus size={18} />}
         </ColorButton>
       </SettingLine>
-      <SettingLine title={'In Through Channel'}>
+      <SettingLine title={'Decrease Inbound Of'}>
         {hasInChannel ? (
           <RebalanceTag>{state.in_through.alias}</RebalanceTag>
         ) : null}
@@ -267,7 +267,7 @@ export const AdvancedBalance = () => {
         </SettingLine>
       )}
       {!hasOutChannel && (
-        <SettingLine title={'Out Through Channels'}>
+        <SettingLine title={'Increase Inbound Of'}>
           {hasOutChannels && (
             <>
               <ViewSwitch hideMobile={true}>

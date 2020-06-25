@@ -36,6 +36,7 @@ export const generalTypes = gql`
 
 export const queryTypes = gql`
   type Query {
+    getAccountingReport(auth: authType!): String!
     getVolumeHealth(auth: authType!): channelsHealth
     getTimeHealth(auth: authType!): channelsTimeHealth
     getFeeHealth(auth: authType!): channelsFeeHealth
