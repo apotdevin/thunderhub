@@ -51,7 +51,6 @@ export const bosResolvers = {
         })
       );
 
-      logger.debug({ response });
       return response;
     },
   },
