@@ -5,6 +5,11 @@ import * as Types from '../../types';
 
 export type GetAccountingReportQueryVariables = Types.Exact<{
   auth: Types.AuthType;
+  category?: Types.Maybe<Types.Scalars['String']>;
+  currency?: Types.Maybe<Types.Scalars['String']>;
+  fiat?: Types.Maybe<Types.Scalars['String']>;
+  month?: Types.Maybe<Types.Scalars['String']>;
+  year?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
 export type GetAccountingReportQuery = { __typename?: 'Query' } & Pick<
@@ -13,8 +18,22 @@ export type GetAccountingReportQuery = { __typename?: 'Query' } & Pick<
 >;
 
 export const GetAccountingReportDocument = gql`
-  query GetAccountingReport($auth: authType!) {
-    getAccountingReport(auth: $auth)
+  query GetAccountingReport(
+    $auth: authType!
+    $category: String
+    $currency: String
+    $fiat: String
+    $month: String
+    $year: String
+  ) {
+    getAccountingReport(
+      auth: $auth
+      category: $category
+      currency: $currency
+      fiat: $fiat
+      month: $month
+      year: $year
+    )
   }
 `;
 
@@ -31,6 +50,11 @@ export const GetAccountingReportDocument = gql`
  * const { data, loading, error } = useGetAccountingReportQuery({
  *   variables: {
  *      auth: // value for 'auth'
+ *      category: // value for 'category'
+ *      currency: // value for 'currency'
+ *      fiat: // value for 'fiat'
+ *      month: // value for 'month'
+ *      year: // value for 'year'
  *   },
  * });
  */

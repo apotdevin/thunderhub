@@ -38,16 +38,16 @@ export const bosResolvers = {
       params: AccountingType,
       context: ContextType
     ) => {
-      const { auth } = params;
+      const { auth, ...settings } = params;
       const lnd = getLnd(auth, context);
 
       const response = await to(
         getAccountingReport({
           lnd,
           logger,
-          category: 'invoices',
           request,
           is_csv: true,
+          ...settings,
         })
       );
 

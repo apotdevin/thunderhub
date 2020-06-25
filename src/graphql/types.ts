@@ -93,6 +93,11 @@ export type Query = {
 
 export type QueryGetAccountingReportArgs = {
   auth: AuthType;
+  category?: Maybe<Scalars['String']>;
+  currency?: Maybe<Scalars['String']>;
+  fiat?: Maybe<Scalars['String']>;
+  month?: Maybe<Scalars['String']>;
+  year?: Maybe<Scalars['String']>;
 };
 
 export type QueryGetVolumeHealthArgs = {
