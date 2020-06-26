@@ -133,7 +133,7 @@ You can define some environment variables that ThunderHub can start with. To do 
 # -----------
 LOG_LEVEL = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly' //Default: 'info'
 HODL_KEY = '[Key provided by HodlHodl]' //Default: ''
-BASE_PATH = '[Base path where you want to have thunderhub running i.e. '/btcpay']' //Default: '/'
+BASE_PATH = '[Base path where you want to have thunderhub running i.e. '/btcpay']' //Default: ''
 
 # -----------
 # Interface Configs
@@ -241,8 +241,10 @@ If you want to disable this option you can set `NO_VERSION_CHECK=true` in your `
 Adding a BASE_PATH will run the ThunderHub server on a different base path.
 For example:
 
-- default base path of `/` runs ThunderHub on `http://localhost:3000`
+- by default ThunderHub runs on `http://localhost:3000`
 - base path of `/thub` runs ThunderHub on `http://localhost:3000/thub`
+
+**Notice - If you don't need to run ThunderHub on a different base path don't add this variable in your file**
 
 To run on a base path, ThunderHub needs to be behind a proxy with the following configuration (NGINX example):
 
