@@ -118,7 +118,7 @@ export const Accounting = () => {
       selected={state.year === year}
       onClick={() => !loading && dispatch({ type: 'year', year })}
     >
-      {year ? year : 'None'}
+      {year}
     </SingleButton>
   );
 
@@ -155,7 +155,6 @@ export const Accounting = () => {
       <ToolsResponsiveLine>
         <DarkSubTitle>Year</DarkSubTitle>
         <MultiButton>
-          {yearButton(null)}
           {yearButton(2017)}
           {yearButton(2018)}
           {yearButton(2019)}
