@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.5](https://github.com/apotdevin/thunderhub/compare/v0.8.4...v0.8.5) (2020-06-27)
+
+
+### Features
+
+* ✨ balance from channel view ([830586b](https://github.com/apotdevin/thunderhub/commit/830586b6bd40b58b33d077b058bae5ce0ecde357))
+
+
+### Docs
+
+* 📚️ env file warning ([621564a](https://github.com/apotdevin/thunderhub/commit/621564a3c8b7cd818dff042de8994220b84c4f44))
+
+
+### Improvements
+
+* 🔧 balance sort by amount ([bf8ad5d](https://github.com/apotdevin/thunderhub/commit/bf8ad5d16db5d680ffb83806b6839402090d03f7))
+* 🔧 channel sort by deviation ([76aacd3](https://github.com/apotdevin/thunderhub/commit/76aacd3c52a17effcb2fc782bfb6c340ae371c01))
+
 ### [0.8.4](https://github.com/apotdevin/thunderhub/compare/v0.8.3...v0.8.4) (2020-06-27)
 
 
