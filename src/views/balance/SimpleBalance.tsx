@@ -62,11 +62,28 @@ export const SimpleBalance = () => {
   };
 
   const renderChannels = (isOutgoing?: boolean) => {
-    const channels = sortBy(data.getChannels, channel =>
-      getPercent(channel.remote_balance, channel.local_balance)
-    );
+    const getChannels = (side: boolean) =>
+      sortBy(data.getChannels, channel => {
+        const { remote_balance, local_balance } = channel;
 
-    const finalChannels = isOutgoing ? channels : channels.reverse();
+        const middle = (remote_balance + local_balance) / 2;
+
+        const remoteDifference = Math.abs(remote_balance - middle);
+        const localDifference = Math.abs(local_balance - middle);
+
+        const maxDifference = Math.max(remoteDifference, localDifference);
+
+        const percent = getPercent(local_balance, remote_balance);
+        const balance = side ? percent > 50 : percent < 50;
+
+        if (balance) {
+          return maxDifference * -1;
+        }
+
+        return maxDifference;
+      });
+
+    const finalChannels = getChannels(!isOutgoing).reverse();
 
     return finalChannels.map((channel: ChannelType, index: number) => {
       if (!isOutgoing && outgoing && outgoing.id === channel.id) {
