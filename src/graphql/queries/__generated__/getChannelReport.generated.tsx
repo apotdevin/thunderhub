@@ -3,9 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetLiquidReportQueryVariables = {
+export type GetLiquidReportQueryVariables = Types.Exact<{
   auth: Types.AuthType;
-};
+}>;
 
 export type GetLiquidReportQuery = { __typename?: 'Query' } & {
   getChannelReport?: Types.Maybe<

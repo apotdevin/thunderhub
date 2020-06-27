@@ -3,10 +3,10 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type RemovePeerMutationVariables = {
+export type RemovePeerMutationVariables = Types.Exact<{
   auth: Types.AuthType;
   publicKey: Types.Scalars['String'];
-};
+}>;
 
 export type RemovePeerMutation = { __typename?: 'Mutation' } & Pick<
   Types.Mutation,

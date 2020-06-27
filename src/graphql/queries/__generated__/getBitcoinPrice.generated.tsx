@@ -3,7 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetBitcoinPriceQueryVariables = {};
+export type GetBitcoinPriceQueryVariables = Types.Exact<{
+  [key: string]: never;
+}>;
 
 export type GetBitcoinPriceQuery = { __typename?: 'Query' } & Pick<
   Types.Query,

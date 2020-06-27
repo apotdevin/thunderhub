@@ -3,9 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetPeersQueryVariables = {
+export type GetPeersQueryVariables = Types.Exact<{
   auth: Types.AuthType;
-};
+}>;
 
 export type GetPeersQuery = { __typename?: 'Query' } & {
   getPeers?: Types.Maybe<

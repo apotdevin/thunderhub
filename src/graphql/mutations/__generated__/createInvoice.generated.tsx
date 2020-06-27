@@ -3,10 +3,10 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type CreateInvoiceMutationVariables = {
+export type CreateInvoiceMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
   auth: Types.AuthType;
-};
+}>;
 
 export type CreateInvoiceMutation = { __typename?: 'Mutation' } & {
   createInvoice?: Types.Maybe<

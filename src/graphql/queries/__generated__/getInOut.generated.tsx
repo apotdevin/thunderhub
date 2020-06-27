@@ -3,10 +3,10 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetInOutQueryVariables = {
+export type GetInOutQueryVariables = Types.Exact<{
   auth: Types.AuthType;
   time?: Types.Maybe<Types.Scalars['String']>;
-};
+}>;
 
 export type GetInOutQuery = { __typename?: 'Query' } & {
   getInOut?: Types.Maybe<

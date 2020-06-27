@@ -3,10 +3,10 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetForwardsQueryVariables = {
+export type GetForwardsQueryVariables = Types.Exact<{
   auth: Types.AuthType;
   time?: Types.Maybe<Types.Scalars['String']>;
-};
+}>;
 
 export type GetForwardsQuery = { __typename?: 'Query' } & {
   getForwards?: Types.Maybe<

@@ -3,9 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type LogoutMutationVariables = {
+export type LogoutMutationVariables = Types.Exact<{
   type: Types.Scalars['String'];
-};
+}>;
 
 export type LogoutMutation = { __typename?: 'Mutation' } & Pick<
   Types.Mutation,

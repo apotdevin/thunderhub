@@ -3,7 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetLatestVersionQueryVariables = {};
+export type GetLatestVersionQueryVariables = Types.Exact<{
+  [key: string]: never;
+}>;
 
 export type GetLatestVersionQuery = { __typename?: 'Query' } & Pick<
   Types.Query,

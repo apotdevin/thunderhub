@@ -3,9 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetWalletInfoQueryVariables = {
+export type GetWalletInfoQueryVariables = Types.Exact<{
   auth: Types.AuthType;
-};
+}>;
 
 export type GetWalletInfoQuery = { __typename?: 'Query' } & {
   getWalletInfo?: Types.Maybe<

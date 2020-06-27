@@ -3,9 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetVolumeHealthQueryVariables = {
+export type GetVolumeHealthQueryVariables = Types.Exact<{
   auth: Types.AuthType;
-};
+}>;
 
 export type GetVolumeHealthQuery = { __typename?: 'Query' } & {
   getVolumeHealth?: Types.Maybe<

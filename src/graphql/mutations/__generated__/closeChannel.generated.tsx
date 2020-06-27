@@ -3,13 +3,13 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type CloseChannelMutationVariables = {
+export type CloseChannelMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
   auth: Types.AuthType;
   forceClose?: Types.Maybe<Types.Scalars['Boolean']>;
   target?: Types.Maybe<Types.Scalars['Int']>;
   tokens?: Types.Maybe<Types.Scalars['Int']>;
-};
+}>;
 
 export type CloseChannelMutation = { __typename?: 'Mutation' } & {
   closeChannel?: Types.Maybe<

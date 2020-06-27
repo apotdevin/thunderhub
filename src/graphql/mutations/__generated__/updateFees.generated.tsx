@@ -3,7 +3,7 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type UpdateFeesMutationVariables = {
+export type UpdateFeesMutationVariables = Types.Exact<{
   auth: Types.AuthType;
   transaction_id?: Types.Maybe<Types.Scalars['String']>;
   transaction_vout?: Types.Maybe<Types.Scalars['Int']>;
@@ -12,7 +12,7 @@ export type UpdateFeesMutationVariables = {
   cltv_delta?: Types.Maybe<Types.Scalars['Int']>;
   max_htlc_mtokens?: Types.Maybe<Types.Scalars['String']>;
   min_htlc_mtokens?: Types.Maybe<Types.Scalars['String']>;
-};
+}>;
 
 export type UpdateFeesMutation = { __typename?: 'Mutation' } & Pick<
   Types.Mutation,

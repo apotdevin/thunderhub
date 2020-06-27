@@ -3,10 +3,10 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type CreateMacaroonMutationVariables = {
+export type CreateMacaroonMutationVariables = Types.Exact<{
   auth: Types.AuthType;
   permissions: Types.PermissionsType;
-};
+}>;
 
 export type CreateMacaroonMutation = { __typename?: 'Mutation' } & Pick<
   Types.Mutation,

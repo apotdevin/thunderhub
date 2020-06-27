@@ -3,11 +3,11 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetNodeQueryVariables = {
+export type GetNodeQueryVariables = Types.Exact<{
   auth: Types.AuthType;
   publicKey: Types.Scalars['String'];
   withoutChannels?: Types.Maybe<Types.Scalars['Boolean']>;
-};
+}>;
 
 export type GetNodeQuery = { __typename?: 'Query' } & {
   getNode: { __typename?: 'Node' } & {

@@ -3,10 +3,10 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type DecodeRequestQueryVariables = {
+export type DecodeRequestQueryVariables = Types.Exact<{
   auth: Types.AuthType;
   request: Types.Scalars['String'];
-};
+}>;
 
 export type DecodeRequestQuery = { __typename?: 'Query' } & {
   decodeRequest?: Types.Maybe<
