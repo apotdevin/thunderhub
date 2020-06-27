@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
 import ReactTooltip from 'react-tooltip';
-import { ArrowDown, ArrowUp, EyeOff } from 'react-feather';
+import {
+  ArrowDown,
+  ArrowUp,
+  EyeOff,
+  ChevronsUp,
+  ChevronsDown,
+  X,
+} from 'react-feather';
 import { ChannelType } from 'src/graphql/types';
 import { BalanceBars } from 'src/components/balance';
+import {
+  useRebalanceState,
+  useRebalanceDispatch,
+} from 'src/context/RebalanceContext';
 import { getPercent, formatSeconds } from '../../../utils/helpers';
 import {
   ProgressBar,
@@ -40,6 +51,8 @@ import {
   ChannelStatsColumn,
   ChannelSingleLine,
   ChannelStatsLine,
+  ChannelBalanceRow,
+  ChannelBalanceButton,
 } from './Channel.style';
 
 const getSymbol = (status: boolean) => {
@@ -78,6 +91,9 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   biggestBaseFee,
   biggestRateFee,
 }) => {
+  const dispatch = useRebalanceDispatch();
+  const { inChannel, outChannel } = useRebalanceState();
+
   const { channelBarType, channelBarStyle } = useConfigState();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -113,6 +129,9 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
     partner_node_info,
     partner_fee_info,
   } = channelInfo;
+
+  const isIn = inChannel?.id === id;
+  const isOut = outChannel?.id === id;
 
   const {
     alias,
@@ -340,6 +359,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   const getSubCardProps = () => {
     switch (channelBarStyle) {
       case 'ultracompact':
+      case 'balancing':
         return {
           withMargin: '0 0 4px 0',
           padding: index === indexOpen ? '0 0 16px' : '2px 0',
@@ -357,7 +377,10 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
 
   return (
     <SubCard key={`${index}-${id}`} noCard={true} {...getSubCardProps()}>
-      <MainInfo onClick={() => handleClick()}>
+      <MainInfo
+        disabled={channelBarStyle === 'balancing'}
+        onClick={() => channelBarStyle !== 'balancing' && handleClick()}
+      >
         {channelBarStyle === 'normal' && (
           <StatusLine>
             {getStatusDot(is_active, 'active')}
@@ -368,7 +391,10 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         <ResponsiveLine>
           <ChannelNodeTitle style={{ flexGrow: 2 }}>
             {alias || partner_public_key?.substring(0, 6)}
-            {channelBarStyle !== 'ultracompact' && (
+            {!(
+              channelBarStyle === 'ultracompact' ||
+              channelBarStyle === 'balancing'
+            ) && (
               <ChannelSingleLine>
                 <DarkSubTitle>{formatBalance}</DarkSubTitle>
                 <ChannelIconPadding>
@@ -380,6 +406,32 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
           </ChannelNodeTitle>
           <ChannelBarSide data-tip data-for={`node_balance_tip_${index}`}>
             {renderBars()}
+            {channelBarStyle === 'balancing' && (
+              <ChannelBalanceRow>
+                <ChannelBalanceButton
+                  selected={isOut}
+                  disabled={isIn}
+                  onClick={() =>
+                    isOut
+                      ? dispatch({ type: 'setOut', channel: null })
+                      : dispatch({ type: 'setOut', channel: channelInfo })
+                  }
+                >
+                  {isOut ? <X size={16} /> : <ChevronsUp size={16} />}
+                </ChannelBalanceButton>
+                <ChannelBalanceButton
+                  selected={isIn}
+                  disabled={isOut}
+                  onClick={() =>
+                    isIn
+                      ? dispatch({ type: 'setIn', channel: null })
+                      : dispatch({ type: 'setIn', channel: channelInfo })
+                  }
+                >
+                  {isIn ? <X size={16} /> : <ChevronsDown size={16} />}
+                </ChannelBalanceButton>
+              </ChannelBalanceRow>
+            )}
           </ChannelBarSide>
         </ResponsiveLine>
       </MainInfo>

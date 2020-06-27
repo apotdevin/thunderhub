@@ -76,14 +76,14 @@ export const bosResolvers = {
       const lnd = getLnd(auth, context);
 
       const filteredParams = {
-        ...(avoid.length > 0 && { avoid }),
+        avoid,
+        out_channels,
         ...(in_through && { in_through }),
         ...(is_avoiding_high_inbound && { is_avoiding_high_inbound }),
         ...(max_fee > 0 && { max_fee }),
         ...(max_fee_rate > 0 && { max_fee_rate }),
         ...(max_rebalance > 0 && { max_rebalance }),
         ...(node && { node }),
-        ...(out_channels.length > 0 && { out_channels }),
         ...(out_through && { out_through }),
         ...(target && { target }),
       };

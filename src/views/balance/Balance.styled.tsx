@@ -74,6 +74,13 @@ export const RebalanceTag = styled.div`
   border-radius: 4px;
   margin-right: 8px;
   font-size: 14px;
+
+  @media (${mediaWidths.mobile}) {
+    max-width: 80px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 `;
 
 export const RebalanceLine = styled(SingleLine)`

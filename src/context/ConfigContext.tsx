@@ -6,7 +6,11 @@ import omit from 'lodash.omit';
 const themeTypes = ['dark', 'light'];
 const currencyTypes = ['sat', 'btc', 'fiat'];
 
-export type channelBarStyleTypes = 'normal' | 'compact' | 'ultracompact';
+export type channelBarStyleTypes =
+  | 'normal'
+  | 'compact'
+  | 'ultracompact'
+  | 'balancing';
 export type channelBarTypeTypes = 'balance' | 'fees' | 'size' | 'proportional';
 export type channelSortTypes =
   | 'none'
