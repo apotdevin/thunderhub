@@ -3,11 +3,11 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetMessagesQueryVariables = {
+export type GetMessagesQueryVariables = Types.Exact<{
   auth: Types.AuthType;
   initialize?: Types.Maybe<Types.Scalars['Boolean']>;
   lastMessage?: Types.Maybe<Types.Scalars['String']>;
-};
+}>;
 
 export type GetMessagesQuery = { __typename?: 'Query' } & {
   getMessages?: Types.Maybe<

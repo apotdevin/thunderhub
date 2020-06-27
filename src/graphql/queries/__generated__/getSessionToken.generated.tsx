@@ -3,10 +3,10 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetSessionTokenQueryVariables = {
+export type GetSessionTokenQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
   password: Types.Scalars['String'];
-};
+}>;
 
 export type GetSessionTokenQuery = { __typename?: 'Query' } & Pick<
   Types.Query,

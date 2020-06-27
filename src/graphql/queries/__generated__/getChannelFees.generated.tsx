@@ -3,9 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type ChannelFeesQueryVariables = {
+export type ChannelFeesQueryVariables = Types.Exact<{
   auth: Types.AuthType;
-};
+}>;
 
 export type ChannelFeesQuery = { __typename?: 'Query' } & {
   getChannelFees?: Types.Maybe<

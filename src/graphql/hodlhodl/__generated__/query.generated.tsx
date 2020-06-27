@@ -3,7 +3,7 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetCountriesQueryVariables = {};
+export type GetCountriesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetCountriesQuery = { __typename?: 'Query' } & {
   getCountries?: Types.Maybe<
@@ -18,7 +18,7 @@ export type GetCountriesQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type GetCurrenciesQueryVariables = {};
+export type GetCurrenciesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetCurrenciesQuery = { __typename?: 'Query' } & {
   getCurrencies?: Types.Maybe<
@@ -33,9 +33,9 @@ export type GetCurrenciesQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type GetOffersQueryVariables = {
+export type GetOffersQueryVariables = Types.Exact<{
   filter?: Types.Maybe<Types.Scalars['String']>;
-};
+}>;
 
 export type GetOffersQuery = { __typename?: 'Query' } & {
   getOffers?: Types.Maybe<

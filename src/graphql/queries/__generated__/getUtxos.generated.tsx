@@ -3,9 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetUtxosQueryVariables = {
+export type GetUtxosQueryVariables = Types.Exact<{
   auth: Types.AuthType;
-};
+}>;
 
 export type GetUtxosQuery = { __typename?: 'Query' } & {
   getUtxos?: Types.Maybe<

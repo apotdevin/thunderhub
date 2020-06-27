@@ -3,9 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetCanConnectQueryVariables = {
+export type GetCanConnectQueryVariables = Types.Exact<{
   auth: Types.AuthType;
-};
+}>;
 
 export type GetCanConnectQuery = { __typename?: 'Query' } & {
   getNodeInfo?: Types.Maybe<
@@ -24,9 +24,9 @@ export type GetCanConnectQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type GetNodeInfoQueryVariables = {
+export type GetNodeInfoQueryVariables = Types.Exact<{
   auth: Types.AuthType;
-};
+}>;
 
 export type GetNodeInfoQuery = { __typename?: 'Query' } & Pick<
   Types.Query,
@@ -54,9 +54,9 @@ export type GetNodeInfoQuery = { __typename?: 'Query' } & Pick<
     >;
   };
 
-export type GetChannelAmountInfoQueryVariables = {
+export type GetChannelAmountInfoQueryVariables = Types.Exact<{
   auth: Types.AuthType;
-};
+}>;
 
 export type GetChannelAmountInfoQuery = { __typename?: 'Query' } & {
   getNodeInfo?: Types.Maybe<
@@ -69,9 +69,9 @@ export type GetChannelAmountInfoQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type GetCanConnectInfoQueryVariables = {
+export type GetCanConnectInfoQueryVariables = Types.Exact<{
   auth: Types.AuthType;
-};
+}>;
 
 export type GetCanConnectInfoQuery = { __typename?: 'Query' } & {
   getNodeInfo?: Types.Maybe<

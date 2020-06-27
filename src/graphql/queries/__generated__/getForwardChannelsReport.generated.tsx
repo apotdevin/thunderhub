@@ -3,12 +3,12 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetForwardChannelsReportQueryVariables = {
+export type GetForwardChannelsReportQueryVariables = Types.Exact<{
   time?: Types.Maybe<Types.Scalars['String']>;
   order?: Types.Maybe<Types.Scalars['String']>;
   type?: Types.Maybe<Types.Scalars['String']>;
   auth: Types.AuthType;
-};
+}>;
 
 export type GetForwardChannelsReportQuery = { __typename?: 'Query' } & Pick<
   Types.Query,

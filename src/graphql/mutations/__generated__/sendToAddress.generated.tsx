@@ -3,14 +3,14 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type PayAddressMutationVariables = {
+export type PayAddressMutationVariables = Types.Exact<{
   auth: Types.AuthType;
   address: Types.Scalars['String'];
   tokens?: Types.Maybe<Types.Scalars['Int']>;
   fee?: Types.Maybe<Types.Scalars['Int']>;
   target?: Types.Maybe<Types.Scalars['Int']>;
   sendAll?: Types.Maybe<Types.Scalars['Boolean']>;
-};
+}>;
 
 export type PayAddressMutation = { __typename?: 'Mutation' } & {
   sendToAddress?: Types.Maybe<

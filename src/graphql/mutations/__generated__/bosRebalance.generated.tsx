@@ -3,7 +3,7 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type BosRebalanceMutationVariables = {
+export type BosRebalanceMutationVariables = Types.Exact<{
   auth: Types.AuthType;
   avoid?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
   in_through?: Types.Maybe<Types.Scalars['String']>;
@@ -15,7 +15,7 @@ export type BosRebalanceMutationVariables = {
   out_channels?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
   out_through?: Types.Maybe<Types.Scalars['String']>;
   target?: Types.Maybe<Types.Scalars['Int']>;
-};
+}>;
 
 export type BosRebalanceMutation = { __typename?: 'Mutation' } & {
   bosRebalance?: Types.Maybe<

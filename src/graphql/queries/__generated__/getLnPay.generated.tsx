@@ -3,9 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetLnPayQueryVariables = {
+export type GetLnPayQueryVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
-};
+}>;
 
 export type GetLnPayQuery = { __typename?: 'Query' } & Pick<
   Types.Query,

@@ -3,11 +3,11 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type KeysendMutationVariables = {
+export type KeysendMutationVariables = Types.Exact<{
   destination: Types.Scalars['String'];
   auth: Types.AuthType;
   tokens: Types.Scalars['Int'];
-};
+}>;
 
 export type KeysendMutation = { __typename?: 'Mutation' } & {
   keysend?: Types.Maybe<

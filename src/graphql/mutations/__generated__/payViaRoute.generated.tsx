@@ -3,11 +3,11 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type PayViaRouteMutationVariables = {
+export type PayViaRouteMutationVariables = Types.Exact<{
   auth: Types.AuthType;
   route: Types.Scalars['String'];
   id: Types.Scalars['String'];
-};
+}>;
 
 export type PayViaRouteMutation = { __typename?: 'Mutation' } & Pick<
   Types.Mutation,

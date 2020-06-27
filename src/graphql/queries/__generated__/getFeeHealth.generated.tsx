@@ -3,9 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetFeeHealthQueryVariables = {
+export type GetFeeHealthQueryVariables = Types.Exact<{
   auth: Types.AuthType;
-};
+}>;
 
 export type GetFeeHealthQuery = { __typename?: 'Query' } & {
   getFeeHealth?: Types.Maybe<

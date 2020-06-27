@@ -3,14 +3,14 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type SendMessageMutationVariables = {
+export type SendMessageMutationVariables = Types.Exact<{
   auth: Types.AuthType;
   publicKey: Types.Scalars['String'];
   message: Types.Scalars['String'];
   messageType?: Types.Maybe<Types.Scalars['String']>;
   tokens?: Types.Maybe<Types.Scalars['Int']>;
   maxFee?: Types.Maybe<Types.Scalars['Int']>;
-};
+}>;
 
 export type SendMessageMutation = { __typename?: 'Mutation' } & Pick<
   Types.Mutation,

@@ -3,10 +3,10 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type CircularRebalanceMutationVariables = {
+export type CircularRebalanceMutationVariables = Types.Exact<{
   auth: Types.AuthType;
   route: Types.Scalars['String'];
-};
+}>;
 
 export type CircularRebalanceMutation = { __typename?: 'Mutation' } & Pick<
   Types.Mutation,

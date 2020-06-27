@@ -3,11 +3,11 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type VerifyMessageQueryVariables = {
+export type VerifyMessageQueryVariables = Types.Exact<{
   auth: Types.AuthType;
   message: Types.Scalars['String'];
   signature: Types.Scalars['String'];
-};
+}>;
 
 export type VerifyMessageQuery = { __typename?: 'Query' } & Pick<
   Types.Query,

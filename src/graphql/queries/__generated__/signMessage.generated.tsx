@@ -3,10 +3,10 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type SignMessageQueryVariables = {
+export type SignMessageQueryVariables = Types.Exact<{
   auth: Types.AuthType;
   message: Types.Scalars['String'];
-};
+}>;
 
 export type SignMessageQuery = { __typename?: 'Query' } & Pick<
   Types.Query,

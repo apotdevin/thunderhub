@@ -3,13 +3,13 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetRoutesQueryVariables = {
+export type GetRoutesQueryVariables = Types.Exact<{
   auth: Types.AuthType;
   outgoing: Types.Scalars['String'];
   incoming: Types.Scalars['String'];
   tokens: Types.Scalars['Int'];
   maxFee?: Types.Maybe<Types.Scalars['Int']>;
-};
+}>;
 
 export type GetRoutesQuery = { __typename?: 'Query' } & {
   getRoutes?: Types.Maybe<

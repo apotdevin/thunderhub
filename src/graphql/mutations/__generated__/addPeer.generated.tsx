@@ -3,12 +3,12 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type AddPeerMutationVariables = {
+export type AddPeerMutationVariables = Types.Exact<{
   auth: Types.AuthType;
   publicKey: Types.Scalars['String'];
   socket: Types.Scalars['String'];
   isTemporary?: Types.Maybe<Types.Scalars['Boolean']>;
-};
+}>;
 
 export type AddPeerMutation = { __typename?: 'Mutation' } & Pick<
   Types.Mutation,

@@ -3,7 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetServerAccountsQueryVariables = {};
+export type GetServerAccountsQueryVariables = Types.Exact<{
+  [key: string]: never;
+}>;
 
 export type GetServerAccountsQuery = { __typename?: 'Query' } & {
   getServerAccounts?: Types.Maybe<

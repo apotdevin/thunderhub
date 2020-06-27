@@ -3,9 +3,9 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetCanAdminQueryVariables = {
+export type GetCanAdminQueryVariables = Types.Exact<{
   auth: Types.AuthType;
-};
+}>;
 
 export type GetCanAdminQuery = { __typename?: 'Query' } & Pick<
   Types.Query,

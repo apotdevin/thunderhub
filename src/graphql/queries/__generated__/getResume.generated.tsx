@@ -3,10 +3,10 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type GetResumeQueryVariables = {
+export type GetResumeQueryVariables = Types.Exact<{
   auth: Types.AuthType;
   token?: Types.Maybe<Types.Scalars['String']>;
-};
+}>;
 
 export type GetResumeQuery = { __typename?: 'Query' } & {
   getResume?: Types.Maybe<

@@ -3,10 +3,10 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type VerifyBackupsQueryVariables = {
+export type VerifyBackupsQueryVariables = Types.Exact<{
   auth: Types.AuthType;
   backup: Types.Scalars['String'];
-};
+}>;
 
 export type VerifyBackupsQuery = { __typename?: 'Query' } & Pick<
   Types.Query,

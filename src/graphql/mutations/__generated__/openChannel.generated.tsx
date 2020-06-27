@@ -3,13 +3,13 @@ import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 import * as Types from '../../types';
 
-export type OpenChannelMutationVariables = {
+export type OpenChannelMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
   partnerPublicKey: Types.Scalars['String'];
   auth: Types.AuthType;
   tokensPerVByte?: Types.Maybe<Types.Scalars['Int']>;
   isPrivate?: Types.Maybe<Types.Scalars['Boolean']>;
-};
+}>;
 
 export type OpenChannelMutation = { __typename?: 'Mutation' } & {
   openChannel?: Types.Maybe<
