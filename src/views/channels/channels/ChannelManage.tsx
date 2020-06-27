@@ -112,6 +112,12 @@ export const ChannelManage = () => {
             Balance
           </SingleButton>
           <SingleButton
+            selected={channelSort === 'deviation'}
+            onClick={() => changeSort('deviation')}
+          >
+            Deviation
+          </SingleButton>
+          <SingleButton
             selected={channelSort === 'feeRate'}
             onClick={() => changeSort('feeRate')}
           >
