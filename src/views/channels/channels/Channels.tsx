@@ -81,6 +81,21 @@ export const Channels: React.FC = () => {
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
+      case 'deviation': {
+        const newArray = sortBy(data.getChannels, (channel: ChannelType) => {
+          const { remote_balance, local_balance } = channel;
+
+          const middle = (remote_balance + local_balance) / 2;
+
+          const remoteDifference = Math.abs(remote_balance - middle);
+          const localDifference = Math.abs(local_balance - middle);
+
+          const maxDifference = Math.max(remoteDifference, localDifference);
+
+          return maxDifference;
+        });
+        return sortDirection === 'increase' ? newArray : newArray.reverse();
+      }
       case 'partnerName': {
         const newArray = sortBy(data.getChannels, (channel: ChannelType) =>
           channel.partner_node_info.node.alias.toLowerCase()

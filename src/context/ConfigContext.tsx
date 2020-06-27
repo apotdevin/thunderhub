@@ -12,6 +12,7 @@ export type channelSortTypes =
   | 'none'
   | 'local'
   | 'balance'
+  | 'deviation'
   | 'feeRate'
   | 'partnerName'
   | 'size';
