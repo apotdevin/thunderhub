@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { chartColors } from 'src/styles/Themes';
+import { chartColors, mediaWidths } from 'src/styles/Themes';
 
 export const BetaNotification = styled.div`
   width: 100%;
@@ -9,4 +9,9 @@ export const BetaNotification = styled.div`
   color: black;
   margin-bottom: 16px;
   padding: 4px 0;
+
+  @media (${mediaWidths.mobile}) {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
 `;

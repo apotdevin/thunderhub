@@ -1,5 +1,12 @@
-import styled from 'styled-components';
-import { mediaWidths } from 'src/styles/Themes';
+import styled, { css } from 'styled-components';
+import {
+  mediaWidths,
+  colorButtonBackground,
+  textColor,
+  colorButtonBorder,
+  chartColors,
+  disabledTextColor,
+} from 'src/styles/Themes';
 
 export const ChannelIconPadding = styled.div`
   display: flex;
@@ -21,11 +28,11 @@ export const ChannelStatsLine = styled.div`
 export const ChannelBarSide = styled.div`
   width: 50%;
   display: flex;
-  flex-direction: column;
-  cursor: pointer;
+  align-items: center;
 
   @media (${mediaWidths.mobile}) {
     width: 100%;
+    flex-direction: column;
   }
 `;
 
@@ -52,4 +59,59 @@ export const IconCursor = styled.div`
   align-items: center;
   cursor: pointer;
   margin-left: 8px;
+`;
+
+export const ChannelBalanceRow = styled.div`
+  display: flex;
+
+  @media (${mediaWidths.mobile}) {
+    width: 100%;
+  }
+`;
+
+type BalanceButtonProps = {
+  selected?: boolean;
+  disabled?: boolean;
+};
+
+export const ChannelBalanceButton = styled.button<BalanceButtonProps>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  padding: 6px 8px;
+  border: none;
+  text-decoration: none;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-left: 8px;
+  color: ${({ disabled }) => (disabled ? disabledTextColor : textColor)};
+  ${({ disabled }) =>
+    !disabled &&
+    css`
+      cursor: pointer;
+    `}
+  background-color: ${({ selected }) =>
+    selected ? chartColors.orange : colorButtonBackground};
+
+  @media(${mediaWidths.mobile}) {
+    margin: 8px 8px 16px;
+    width: 100%;
+  }
+
+  :hover {
+    background-color: ${({ selected, disabled }) =>
+      disabled
+        ? colorButtonBackground
+        : selected
+        ? chartColors.orange2
+        : colorButtonBorder};
+  }
+`;
+
+export const ChannelGoToToast = styled.div`
+  width: 100%;
+  text-align: center;
 `;

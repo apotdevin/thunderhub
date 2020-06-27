@@ -59,6 +59,12 @@ export const ChannelManage = () => {
           >
             Ultra-Compact
           </SingleButton>
+          <SingleButton
+            selected={channelBarStyle === 'balancing'}
+            onClick={() => changeStyle('balancing')}
+          >
+            Balancing
+          </SingleButton>
         </MultiButton>
       </MarginLine>
       <MarginLine>

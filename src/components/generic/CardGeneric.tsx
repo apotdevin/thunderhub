@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import {
   progressBackground,
   mediaWidths,
@@ -65,8 +65,16 @@ export const StatusLine = styled.div`
   margin: 0 0 -8px 0;
 `;
 
-export const MainInfo = styled.div`
-  cursor: pointer;
+type MainProps = {
+  disabled?: boolean;
+};
+
+export const MainInfo = styled.div<MainProps>`
+  ${({ disabled }) =>
+    !disabled &&
+    css`
+      cursor: pointer;
+    `}
 `;
 
 export const StatusDot = styled.div`

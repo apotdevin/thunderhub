@@ -18,16 +18,19 @@ import { Input } from 'src/components/input/Input';
 import { BalanceCard } from 'src/views/balance/BalanceCard';
 import { BalanceRoute } from 'src/views/balance/BalanceRoute';
 import { Price } from 'src/components/price/Price';
+import {
+  useRebalanceState,
+  useRebalanceDispatch,
+} from 'src/context/RebalanceContext';
 
 export const SimpleBalance = () => {
   const { auth } = useAccountState();
 
-  const [outgoing, setOutgoing] = useState<ChannelType | null>();
-  const [incoming, setIncoming] = useState<ChannelType | null>();
+  const dispatch = useRebalanceDispatch();
+  const { inChannel: incoming, outChannel: outgoing } = useRebalanceState();
+
   const [amount, setAmount] = useState<number>();
-
   const [maxFee, setMaxFee] = useState<number>();
-
   const [blocked, setBlocked] = useState(false);
 
   const { loading, data } = useGetChannelsQuery({
@@ -43,17 +46,15 @@ export const SimpleBalance = () => {
   const handleReset = (type: string) => {
     switch (type) {
       case 'outgoing':
-        setOutgoing(undefined);
-        setIncoming(undefined);
+        dispatch({ type: 'clear' });
         break;
       case 'incoming':
-        setIncoming(undefined);
+        dispatch({ type: 'setIn', channel: null });
         break;
       case 'all':
+        dispatch({ type: 'clear' });
         setMaxFee(undefined);
         setAmount(undefined);
-        setOutgoing(undefined);
-        setIncoming(undefined);
         setBlocked(false);
         break;
       default:
@@ -91,8 +92,9 @@ export const SimpleBalance = () => {
       }
 
       const callback = isOutgoing
-        ? !outgoing && { callback: () => setOutgoing(channel) }
-        : outgoing && !incoming && { callback: () => setIncoming(channel) };
+        ? !outgoing && { callback: () => dispatch({ type: 'setOut', channel }) }
+        : outgoing &&
+          !incoming && { callback: () => dispatch({ type: 'setIn', channel }) };
 
       return (
         <BalanceCard

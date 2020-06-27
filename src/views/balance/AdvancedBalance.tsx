@@ -16,6 +16,10 @@ import { chartColors } from 'src/styles/Themes';
 import { ViewSwitch } from 'src/components/viewSwitch/ViewSwitch';
 import { useMutationResultWithReset } from 'src/hooks/UseMutationWithReset';
 import { BetaNotification } from 'src/components/notification/Beta';
+import {
+  useRebalanceState,
+  useRebalanceDispatch,
+} from 'src/context/RebalanceContext';
 import { AdvancedResult } from './AdvancedResult';
 import { ModalNodes } from './Modals/ModalNodes';
 import { ModalChannels } from './Modals/ModalChannels';
@@ -165,7 +169,29 @@ const SettingLine: React.FC<{ title: string }> = ({ children, title }) => (
 export const AdvancedBalance = () => {
   const [openType, openTypeSet] = React.useState<string>('none');
   const [isDetailed, isDetailedSet] = React.useState<boolean>(false);
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+
+  const rebalanceDispatch = useRebalanceDispatch();
+  const { inChannel, outChannel } = useRebalanceState();
+
+  const in_through = inChannel
+    ? {
+        alias: inChannel.partner_node_info?.node?.alias,
+        id: inChannel.partner_public_key,
+      }
+    : defaultRebalanceId;
+
+  const out_through = outChannel
+    ? {
+        alias: outChannel.partner_node_info?.node?.alias,
+        id: outChannel.partner_public_key,
+      }
+    : defaultRebalanceId;
+
+  const [state, dispatch] = React.useReducer(reducer, {
+    ...initialState,
+    in_through,
+    out_through,
+  });
 
   const [rebalance, { data: _data, loading }] = useBosRebalanceMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -231,21 +257,6 @@ export const AdvancedBalance = () => {
           {hasAvoid ? <Minus size={18} /> : <Plus size={18} />}
         </ColorButton>
       </SettingLine>
-      <SettingLine title={'Decrease Inbound Of'}>
-        {hasInChannel ? (
-          <RebalanceTag>{state.in_through.alias}</RebalanceTag>
-        ) : null}
-        <ColorButton
-          color={hasInChannel ? chartColors.red : undefined}
-          onClick={() =>
-            hasInChannel
-              ? dispatch({ type: 'inChannel', channel: defaultRebalanceId })
-              : openTypeSet('inChannel')
-          }
-        >
-          {hasInChannel ? <Minus size={18} /> : <Plus size={18} />}
-        </ColorButton>
-      </SettingLine>
       {!hasOutChannels && (
         <SettingLine title={'Increase Inbound Of'}>
           {hasOutChannel ? (
@@ -253,19 +264,40 @@ export const AdvancedBalance = () => {
           ) : null}
           <ColorButton
             color={hasOutChannel ? chartColors.red : undefined}
-            onClick={() =>
-              hasOutChannel
-                ? dispatch({
-                    type: 'outChannel',
-                    channel: defaultRebalanceId,
-                  })
-                : openTypeSet('outChannel')
-            }
+            onClick={() => {
+              if (hasOutChannel) {
+                rebalanceDispatch({ type: 'setOut', channel: null });
+                dispatch({
+                  type: 'outChannel',
+                  channel: defaultRebalanceId,
+                });
+              } else {
+                openTypeSet('outChannel');
+              }
+            }}
           >
             {hasOutChannel ? <Minus size={18} /> : <Plus size={18} />}
           </ColorButton>
         </SettingLine>
       )}
+      <SettingLine title={'Decrease Inbound Of'}>
+        {hasInChannel ? (
+          <RebalanceTag>{state.in_through.alias}</RebalanceTag>
+        ) : null}
+        <ColorButton
+          color={hasInChannel ? chartColors.red : undefined}
+          onClick={() => {
+            if (hasInChannel) {
+              rebalanceDispatch({ type: 'setIn', channel: null });
+              dispatch({ type: 'inChannel', channel: defaultRebalanceId });
+            } else {
+              openTypeSet('inChannel');
+            }
+          }}
+        >
+          {hasInChannel ? <Minus size={18} /> : <Plus size={18} />}
+        </ColorButton>
+      </SettingLine>
       {!hasOutChannel && (
         <SettingLine title={'Out Through Channels'}>
           {hasOutChannels && (

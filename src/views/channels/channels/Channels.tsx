@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
@@ -6,16 +6,45 @@ import { useConfigState } from 'src/context/ConfigContext';
 import { sortBy } from 'underscore';
 import { getPercent } from 'src/utils/helpers';
 import { ChannelType } from 'src/graphql/types';
+import { useRebalanceState } from 'src/context/RebalanceContext';
+import { useRouter } from 'next/router';
+import { appendBasePath } from 'src/utils/basePath';
 import { Card } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { ChannelCard } from './ChannelCard';
+import { ChannelGoToToast } from './Channel.style';
 
 export const Channels: React.FC = () => {
+  const toastId = useRef(null);
+  const { push } = useRouter();
+
   const { sortDirection, channelSort } = useConfigState();
   const [indexOpen, setIndexOpen] = useState(0);
 
   const { auth } = useAccountState();
+
+  const { inChannel, outChannel } = useRebalanceState();
+  const hasIn = !!inChannel;
+  const hasOut = !!outChannel;
+
+  useEffect(() => {
+    if (hasIn && hasOut) {
+      toastId.current = toast.info(
+        <ChannelGoToToast>Click to go to rebalancing</ChannelGoToToast>,
+        {
+          position: 'bottom-right',
+          autoClose: false,
+          closeButton: false,
+          onClick: () => push(appendBasePath('/rebalance')),
+        }
+      );
+    }
+    if (!hasIn || !hasOut) {
+      toast.dismiss(toastId.current);
+    }
+    return () => toast.dismiss();
+  }, [hasIn, hasOut, push]);
 
   const { loading, data } = useGetChannelsQuery({
     skip: !auth,
