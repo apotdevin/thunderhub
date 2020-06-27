@@ -63,7 +63,8 @@ export const BalanceCard = ({
   } = channel;
   const { alias } = partner_node_info?.node;
 
-  const balancedness = getPercent(local_balance, remote_balance) / 100;
+  const balancedness =
+    2 * (getPercent(local_balance, remote_balance) / 100) - 1;
   const formatBalance = numeral(balancedness).format('0,0.00');
 
   const props = withColor ? { color: themeColors.blue3 } : {};

@@ -88,11 +88,11 @@ export const NetworkInfo = () => {
     totalCapacity,
   } = data.getNetworkInfo;
 
-  const capacity = <Price amount={totalCapacity} />;
-  const maxSize = <Price amount={maxChannelSize} />;
-  const averageSize = <Price amount={averageChannelSize} />;
-  const medianSize = <Price amount={medianChannelSize} />;
-  const minSize = <Price amount={minChannelSize} />;
+  const capacity = <Price amount={totalCapacity} breakNumber={true} />;
+  const maxSize = <Price amount={maxChannelSize} breakNumber={true} />;
+  const averageSize = <Price amount={averageChannelSize} breakNumber={true} />;
+  const medianSize = <Price amount={medianChannelSize} breakNumber={true} />;
+  const minSize = <Price amount={minChannelSize} breakNumber={true} />;
 
   return (
     <CardWithTitle>
