@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ResponsiveLine } from 'src/components/generic/Styled';
 
 export const NoWrap = styled.div`
   margin-right: 16px;
@@ -21,4 +22,8 @@ export const Column = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+export const ToolsResponsiveLine = styled(ResponsiveLine)`
+  margin-bottom: 8px;
 `;

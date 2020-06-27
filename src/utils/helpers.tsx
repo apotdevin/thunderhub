@@ -93,12 +93,16 @@ export const getPercent = (
   return Math.round(percent);
 };
 
-export const saveToPc = (jsonData: string, filename: string) => {
+export const saveToPc = (
+  jsonData: string,
+  filename: string,
+  isCsv?: boolean
+) => {
   const fileData = jsonData;
   const blob = new Blob([fileData], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.download = `${filename}.txt`;
+  link.download = isCsv ? `${filename}.csv` : `${filename}.txt`;
   link.href = url;
   link.click();
 };

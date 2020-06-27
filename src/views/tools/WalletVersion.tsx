@@ -7,6 +7,7 @@ import {
   Card,
   Sub4Title,
   Separation,
+  DarkSubTitle,
 } from '../../components/generic/Styled';
 import { useStatusState } from '../../context/StatusContext';
 import { LoadingCard } from '../../components/loading/LoadingCard';
@@ -30,7 +31,10 @@ export const WalletVersion = () => {
     if (minorVersion < 10) {
       return (
         <Card>
-          Update to LND version 0.10.0 or higher to see your wallet build info.
+          <DarkSubTitle>
+            Update to LND version 0.10.0 or higher to see your wallet build
+            info.
+          </DarkSubTitle>
         </Card>
       );
     }

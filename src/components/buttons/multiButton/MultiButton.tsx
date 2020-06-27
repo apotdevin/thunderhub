@@ -21,6 +21,7 @@ const StyledSingleButton = styled.button<StyledSingleProps>`
   background-color: transparent;
   color: ${multiSelectColor};
   flex-grow: 1;
+  transition: background-color 0.5s ease;
 
   ${({ selected, buttonColor }) =>
     selected
