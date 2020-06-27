@@ -247,7 +247,7 @@ export const AdvancedBalance = () => {
         </ColorButton>
       </SettingLine>
       {!hasOutChannels && (
-        <SettingLine title={'Out Through Channel'}>
+        <SettingLine title={'Increase Inbound Of'}>
           {hasOutChannel ? (
             <RebalanceTag>{state.out_through.alias}</RebalanceTag>
           ) : null}
@@ -267,7 +267,7 @@ export const AdvancedBalance = () => {
         </SettingLine>
       )}
       {!hasOutChannel && (
-        <SettingLine title={'Increase Inbound Of'}>
+        <SettingLine title={'Out Through Channels'}>
           {hasOutChannels && (
             <>
               <ViewSwitch hideMobile={true}>
@@ -427,7 +427,14 @@ export const AdvancedBalance = () => {
           </BetaNotification>
           <InputWithDeco title={'Type'} noInput={true}>
             <MultiButton>
-              {renderButton(() => isDetailedSet(false), 'Auto', !isDetailed)}
+              {renderButton(
+                () => {
+                  dispatch({ type: 'clearFilters' });
+                  isDetailedSet(false);
+                },
+                'Auto',
+                !isDetailed
+              )}
               {renderButton(() => isDetailedSet(true), 'Detailed', isDetailed)}
             </MultiButton>
           </InputWithDeco>

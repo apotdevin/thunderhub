@@ -60,14 +60,41 @@ export const bosResolvers = {
       params: RebalanceType,
       context: ContextType
     ) => {
-      const { auth, ...extraparams } = params;
+      const {
+        auth,
+        avoid,
+        in_through,
+        is_avoiding_high_inbound,
+        max_fee,
+        max_fee_rate,
+        max_rebalance,
+        node,
+        out_channels,
+        out_through,
+        target,
+      } = params;
       const lnd = getLnd(auth, context);
+
+      const filteredParams = {
+        ...(avoid.length > 0 && { avoid }),
+        ...(in_through && { in_through }),
+        ...(is_avoiding_high_inbound && { is_avoiding_high_inbound }),
+        ...(max_fee > 0 && { max_fee }),
+        ...(max_fee_rate > 0 && { max_fee_rate }),
+        ...(max_rebalance > 0 && { max_rebalance }),
+        ...(node && { node }),
+        ...(out_channels.length > 0 && { out_channels }),
+        ...(out_through && { out_through }),
+        ...(target && { target }),
+      };
+
+      logger.info('Rebalance Params: %o', filteredParams);
 
       const response = await to(
         rebalance({
           lnd,
           logger,
-          ...extraparams,
+          ...filteredParams,
         })
       );
 
