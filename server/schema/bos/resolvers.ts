@@ -1,9 +1,12 @@
 import { ContextType } from 'server/types/apiTypes';
 import { getLnd } from 'server/helpers/helpers';
-import { rebalance } from 'balanceofsatoshis/swaps';
 import { to } from 'server/helpers/async';
 import { logger } from 'server/helpers/logger';
 import { AuthType } from 'src/context/AccountContext';
+
+import { rebalance } from 'balanceofsatoshis/swaps';
+import { getAccountingReport } from 'balanceofsatoshis/balances';
+import request from '@alexbosworth/request';
 
 type RebalanceType = {
   auth: AuthType;
@@ -19,21 +22,79 @@ type RebalanceType = {
   target?: Number;
 };
 
+type AccountingType = {
+  auth: AuthType;
+  category?: String;
+  currency?: String;
+  fiat?: String;
+  month?: String;
+  year?: String;
+};
+
 export const bosResolvers = {
+  Query: {
+    getAccountingReport: async (
+      _: undefined,
+      params: AccountingType,
+      context: ContextType
+    ) => {
+      const { auth, ...settings } = params;
+      const lnd = getLnd(auth, context);
+
+      const response = await to(
+        getAccountingReport({
+          lnd,
+          logger,
+          request,
+          is_csv: true,
+          ...settings,
+        })
+      );
+
+      return response;
+    },
+  },
   Mutation: {
     bosRebalance: async (
       _: undefined,
       params: RebalanceType,
       context: ContextType
     ) => {
-      const { auth, ...extraparams } = params;
+      const {
+        auth,
+        avoid,
+        in_through,
+        is_avoiding_high_inbound,
+        max_fee,
+        max_fee_rate,
+        max_rebalance,
+        node,
+        out_channels,
+        out_through,
+        target,
+      } = params;
       const lnd = getLnd(auth, context);
+
+      const filteredParams = {
+        ...(avoid.length > 0 && { avoid }),
+        ...(in_through && { in_through }),
+        ...(is_avoiding_high_inbound && { is_avoiding_high_inbound }),
+        ...(max_fee > 0 && { max_fee }),
+        ...(max_fee_rate > 0 && { max_fee_rate }),
+        ...(max_rebalance > 0 && { max_rebalance }),
+        ...(node && { node }),
+        ...(out_channels.length > 0 && { out_channels }),
+        ...(out_through && { out_through }),
+        ...(target && { target }),
+      };
+
+      logger.info('Rebalance Params: %o', filteredParams);
 
       const response = await to(
         rebalance({
           lnd,
           logger,
-          ...extraparams,
+          ...filteredParams,
         })
       );
 
