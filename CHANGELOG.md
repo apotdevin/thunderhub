@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.4](https://github.com/apotdevin/thunderhub/compare/v0.8.3...v0.8.4) (2020-06-27)
+
+
+### Features
+
+* ✨ accounting ([#75](https://github.com/apotdevin/thunderhub/issues/75)) ([9a860ee](https://github.com/apotdevin/thunderhub/commit/9a860ee1412557f477c47ec083b44c16ace3b6cd))
+
+
+### Docs
+
+* 📚️ change default basepath ([ba7f93d](https://github.com/apotdevin/thunderhub/commit/ba7f93d23b1d58c558ada468d83d7f56b0fcdb67))
+
+
+### Improvements
+
+* 🔧 regenerate graphql ([4b9a568](https://github.com/apotdevin/thunderhub/commit/4b9a568e63b37004921fd5736b2ae5120ce16575))
+
 ### [0.8.3](https://github.com/apotdevin/thunderhub/compare/v0.8.2...v0.8.3) (2020-06-23)
 
 
