@@ -83,8 +83,6 @@ export const Accounting = () => {
 
   const [getReport, { data, loading }] = useGetAccountingReportLazyQuery();
 
-  console.log({ data, loading });
-
   React.useEffect(() => {
     if (!loading && data && data.getAccountingReport) {
       saveToPc(
@@ -141,7 +139,7 @@ export const Accounting = () => {
           {reportButton('chain-receives', 'Chain Received')}
           {reportButton('chain-sends', 'Chain Sent')}
           {reportButton('forwards', 'Forwards')}
-          {reportButton('payments', 'Payments')}
+          {/* {reportButton('payments', 'Payments')} */}
           {reportButton('invoices', 'Invoices')}
         </MultiButton>
       </ToolsResponsiveLine>
