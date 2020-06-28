@@ -45,6 +45,7 @@ export type PermissionsType = {
 
 export type Query = {
   __typename?: 'Query';
+  getBaseNodes: Array<Maybe<BaseNodesType>>;
   getAccountingReport: Scalars['String'];
   getVolumeHealth?: Maybe<ChannelsHealth>;
   getTimeHealth?: Maybe<ChannelsTimeHealth>;
@@ -1057,4 +1058,14 @@ export type BosRebalanceResultType = {
   increase?: Maybe<BosIncreaseType>;
   decrease?: Maybe<BosDecreaseType>;
   result?: Maybe<BosResultType>;
+};
+
+export type BaseNodesType = {
+  __typename?: 'baseNodesType';
+  _id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  public_key?: Maybe<Scalars['String']>;
+  socket?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
 };
