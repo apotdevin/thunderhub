@@ -106,7 +106,7 @@ export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
   );
 
   if (loading || !data) {
-    return <LoadingCard noCard={true} />;
+    return <LoadingCard />;
   }
 
   const getIcon = (name: string) => {
