@@ -6,7 +6,5 @@ export const tbaseTypes = gql`
     name: String
     public_key: String
     socket: String
-    image: String
-    type: String
   }
 `;

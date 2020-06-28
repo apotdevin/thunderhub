@@ -18,13 +18,19 @@ export const openChannel = async (
   const auth = getCorrectAuth(params.auth, context);
   const lnd = getAuthLnd(auth);
 
+  const openParams = {
+    is_private: params.isPrivate,
+    local_tokens: params.amount,
+    partner_public_key: params.partnerPublicKey,
+    chain_fee_tokens_per_vbyte: params.tokensPerVByte,
+  };
+
+  logger.debug('Opening channel: %o', openParams);
+
   try {
     const info = await lnOpenChannel({
       lnd,
-      is_private: params.isPrivate,
-      local_tokens: params.amount,
-      partner_public_key: params.partnerPublicKey,
-      chain_fee_tokens_per_vbyte: params.tokensPerVByte,
+      ...openParams,
     });
     return {
       transactionId: info.transaction_id,

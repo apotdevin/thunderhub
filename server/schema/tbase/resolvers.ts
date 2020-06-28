@@ -8,7 +8,7 @@ export const tbaseResolvers = {
     getBaseNodes: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getBaseNodes');
 
-      const query = '{getNodes {_id, name, public_key, socket, image, type}}';
+      const query = '{getNodes {_id, name, public_key, socket}}';
 
       const [response, fetchError] = await toWithError(
         fetch(appUrls.tbase, {
@@ -20,7 +20,8 @@ export const tbaseResolvers = {
         })
       );
       if (fetchError) return [];
-      const { data, errors } = await response.json();
+      const result = await response.json();
+      const { errors, data } = result || {};
       if (errors) return [];
 
       return data?.getNodes || [];

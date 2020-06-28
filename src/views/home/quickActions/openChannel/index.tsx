@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { useGetBaseNodesQuery } from 'src/graphql/queries/__generated__/getBaseNodes.generated';
-import { Card } from 'src/components/generic/Styled';
+import {
+  Card,
+  Separation,
+  SingleLine,
+  DarkSubTitle,
+} from 'src/components/generic/Styled';
 import { animated, useTransition } from 'react-spring';
 import styled from 'styled-components';
 import { themeColors, backgroundColor, mediaWidths } from 'src/styles/Themes';
@@ -17,7 +22,12 @@ import {
   Pocket,
   TrendingUp,
   Box,
+  X,
 } from 'react-feather';
+import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
+import { BaseNodesType } from 'src/graphql/types';
+import { OpenChannelCard } from './OpenChannel';
+import { OpenRecommended } from './OpenRecommended';
 
 const IconStyle = styled.div`
   margin-bottom: 8px;
@@ -62,20 +72,29 @@ const Container = styled.div`
   width: 100%;
 `;
 
-export const BaseNodes = () => {
+interface OpenChannelProps {
+  setOpenCard: (card: string) => void;
+}
+
+const filterNodes = (nodes: BaseNodesType[]) =>
+  nodes.filter(n => n.public_key && n.socket);
+
+export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
+  const [openDetails, setOpenDetails] = React.useState(false);
+  const [partner, setPartner] = React.useState<BaseNodesType>(null);
   const [open, set] = React.useState(false);
   const { data, loading } = useGetBaseNodesQuery();
 
-  console.log(data, loading);
-
   React.useEffect(() => {
     if (!loading && data && data.getBaseNodes) {
-      set(true);
+      if (data.getBaseNodes.length > 0) {
+        set(true);
+      }
     }
   }, [loading, data]);
 
   const transitions = useTransition(
-    open ? data.getBaseNodes : [],
+    open && data?.getBaseNodes ? filterNodes(data.getBaseNodes) : [],
     item => item._id,
     {
       unique: true,
@@ -117,19 +136,49 @@ export const BaseNodes = () => {
     }
   };
 
-  return (
-    <Card>
-      <Container>
-        {transitions.map(
-          ({ item, key, props }) =>
-            item && (
-              <Item key={key} style={props}>
-                <IconStyle>{getIcon(item.name)}</IconStyle>
-                {item.name}
-              </Item>
-            )
-        )}
-      </Container>
-    </Card>
+  const renderDetails = () => (
+    <>
+      <Separation />
+      <OpenChannelCard setOpenCard={setOpenCard} />
+    </>
   );
+
+  const renderContent = () => {
+    if (!partner) {
+      return (
+        <>
+          <Container>
+            {transitions.map(
+              ({ item, key, props }) =>
+                item && (
+                  <Item
+                    key={key}
+                    style={props}
+                    onClick={() => setPartner(item)}
+                  >
+                    <IconStyle>{getIcon(item.name)}</IconStyle>
+                    {item.name}
+                  </Item>
+                )
+            )}
+          </Container>
+          {open && <Separation />}
+          <SingleLine>
+            <DarkSubTitle>Manual</DarkSubTitle>
+            <ColorButton
+              onClick={() => setOpenDetails(s => !s)}
+              arrow={!openDetails}
+            >
+              {openDetails ? <X size={16} /> : 'Open'}
+            </ColorButton>
+          </SingleLine>
+          {openDetails && renderDetails()}
+        </>
+      );
+    } else {
+      return <OpenRecommended partner={partner} setOpenCard={setOpenCard} />;
+    }
+  };
+
+  return <Card>{renderContent()}</Card>;
 };

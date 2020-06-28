@@ -7,8 +7,6 @@ export const GET_BASE_NODES = gql`
       name
       public_key
       socket
-      image
-      type
     }
   }
 `;

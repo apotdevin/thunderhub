@@ -1066,6 +1066,4 @@ export type BaseNodesType = {
   name?: Maybe<Scalars['String']>;
   public_key?: Maybe<Scalars['String']>;
   socket?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
 };

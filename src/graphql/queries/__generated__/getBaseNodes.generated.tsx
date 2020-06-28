@@ -10,7 +10,7 @@ export type GetBaseNodesQuery = { __typename?: 'Query' } & {
     Types.Maybe<
       { __typename?: 'baseNodesType' } & Pick<
         Types.BaseNodesType,
-        '_id' | 'name' | 'public_key' | 'socket' | 'image' | 'type'
+        '_id' | 'name' | 'public_key' | 'socket'
       >
     >
   >;
@@ -23,8 +23,6 @@ export const GetBaseNodesDocument = gql`
       name
       public_key
       socket
-      image
-      type
     }
   }
 `;
