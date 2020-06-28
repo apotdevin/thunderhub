@@ -154,8 +154,6 @@ export function withApollo(PageComponent, { ssr = true } = {}) {
       // Extract query data from the Apollo store
       const apolloState = apolloClient.cache.extract();
 
-      console.log({ apolloState });
-
       return {
         ...pageProps,
         apolloState,

@@ -27,8 +27,6 @@ export const OpenRecommended = ({ partner, setOpenCard }: OpenProps) => {
     return <DarkSubTitle>This node was not found.</DarkSubTitle>;
   }
 
-  console.log({ data, loading });
-
   return (
     <>
       {renderLine('Open with', data.getNode.node?.alias)}
