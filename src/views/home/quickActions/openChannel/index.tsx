@@ -76,9 +76,6 @@ interface OpenChannelProps {
   setOpenCard: (card: string) => void;
 }
 
-const filterNodes = (nodes: BaseNodesType[]) =>
-  nodes.filter(n => n.public_key && n.socket);
-
 export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
   const [openDetails, setOpenDetails] = React.useState(false);
   const [partner, setPartner] = React.useState<BaseNodesType>(null);
@@ -94,7 +91,7 @@ export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
   }, [loading, data]);
 
   const transitions = useTransition(
-    open && data?.getBaseNodes ? filterNodes(data.getBaseNodes) : [],
+    open && data?.getBaseNodes ? data.getBaseNodes : [],
     item => item._id,
     {
       unique: true,
@@ -105,7 +102,7 @@ export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
     }
   );
 
-  if (loading || !data) {
+  if (loading) {
     return <LoadingCard />;
   }
 
