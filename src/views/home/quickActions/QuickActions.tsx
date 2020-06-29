@@ -14,9 +14,9 @@ import {
 } from '../../../styles/Themes';
 import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { DecodeCard } from './decode/Decode';
-import { OpenChannelCard } from './openChannel/OpenChannel';
 import { SupportCard } from './donate/DonateCard';
 import { SupportBar } from './donate/DonateContent';
+import { OpenChannel } from './openChannel';
 
 const QuickCard = styled.div`
   background: ${cardColor};
@@ -71,7 +71,7 @@ export const QuickActions = () => {
       case 'decode':
         return <DecodeCard />;
       case 'open_channel':
-        return <OpenChannelCard setOpenCard={setOpenCard} />;
+        return <OpenChannel setOpenCard={setOpenCard} />;
       default:
         return (
           <QuickRow>
