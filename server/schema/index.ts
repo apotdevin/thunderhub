@@ -40,6 +40,8 @@ import { macaroonResolvers } from './macaroon/resolvers';
 import { networkResolvers } from './network/resolvers';
 import { bosResolvers } from './bos/resolvers';
 import { bosTypes } from './bos/types';
+import { tbaseResolvers } from './tbase/resolvers';
+import { tbaseTypes } from './tbase/types';
 
 const typeDefs = [
   generalTypes,
@@ -62,6 +64,7 @@ const typeDefs = [
   healthTypes,
   routeTypes,
   bosTypes,
+  tbaseTypes,
 ];
 
 const resolvers = merge(
@@ -86,7 +89,8 @@ const resolvers = merge(
   githubResolvers,
   macaroonResolvers,
   networkResolvers,
-  bosResolvers
+  bosResolvers,
+  tbaseResolvers
 );
 
 export default makeExecutableSchema({ typeDefs, resolvers });

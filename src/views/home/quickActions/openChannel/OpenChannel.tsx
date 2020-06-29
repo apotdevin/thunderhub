@@ -3,7 +3,7 @@ import { ChevronRight } from 'react-feather';
 import { toast } from 'react-toastify';
 import { useOpenChannelMutation } from 'src/graphql/mutations/__generated__/openChannel.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
-import { Card, Separation } from '../../../../components/generic/Styled';
+import { Separation } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
 import { useBitcoinState } from '../../../../context/BitcoinContext';
 import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
@@ -14,14 +14,18 @@ import {
 } from '../../../../components/buttons/multiButton/MultiButton';
 
 interface OpenChannelProps {
+  initialPublicKey?: string;
   setOpenCard: (card: string) => void;
 }
 
-export const OpenChannelCard = ({ setOpenCard }: OpenChannelProps) => {
+export const OpenChannelCard = ({
+  setOpenCard,
+  initialPublicKey = '',
+}: OpenChannelProps) => {
   const { fast, halfHour, hour, dontShow } = useBitcoinState();
   const [size, setSize] = useState(0);
   const [fee, setFee] = useState(0);
-  const [publicKey, setPublicKey] = useState('');
+  const [publicKey, setPublicKey] = useState(initialPublicKey);
   const [privateChannel, setPrivateChannel] = useState(false);
   const [type, setType] = useState(dontShow ? 'fee' : 'none');
 
@@ -53,13 +57,15 @@ export const OpenChannelCard = ({ setOpenCard }: OpenChannelProps) => {
   );
 
   return (
-    <Card bottom={'20px'}>
-      <InputWithDeco
-        title={'Node Public Key'}
-        value={publicKey}
-        placeholder={'Public Key'}
-        inputCallback={value => setPublicKey(value)}
-      />
+    <>
+      {!initialPublicKey && (
+        <InputWithDeco
+          title={'Node Public Key'}
+          value={publicKey}
+          placeholder={'Public Key'}
+          inputCallback={value => setPublicKey(value)}
+        />
+      )}
       <InputWithDeco
         title={'Channel Size'}
         value={size}
@@ -96,7 +102,10 @@ export const OpenChannelCard = ({ setOpenCard }: OpenChannelProps) => {
               type === 'none'
             )}
             {renderButton(
-              () => setType('fee'),
+              () => {
+                setFee(0);
+                setType('fee');
+              },
               'Fee (Sats/Byte)',
               type === 'fee'
             )}
@@ -148,6 +157,6 @@ export const OpenChannelCard = ({ setOpenCard }: OpenChannelProps) => {
         Open Channel
         <ChevronRight size={18} />
       </SecureButton>
-    </Card>
+    </>
   );
 };

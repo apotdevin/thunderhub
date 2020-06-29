@@ -83,6 +83,8 @@ export const PeersCard = ({
   const { alias, capacity, channel_count, color, updated_at } =
     partner_node_info?.node || {};
 
+  const formatCapacity = format({ amount: capacity });
+
   const handleClick = () => {
     if (indexOpen === index) {
       setIndexOpen(0);
@@ -105,7 +107,7 @@ export const PeersCard = ({
         {renderLine('Is Sync Peer:', is_sync_peer.toString())}
         {renderLine('Ping Time:', ping_time)}
         <Sub4Title>Partner Node Info</Sub4Title>
-        {renderLine('Node Capacity:', capacity)}
+        {renderLine('Node Capacity:', formatCapacity)}
         {renderLine('Channel Count:', channel_count)}
         {renderLine(
           'Last Update:',
