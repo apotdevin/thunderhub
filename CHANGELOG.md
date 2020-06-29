@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.6](https://github.com/apotdevin/thunderhub/compare/v0.8.5...v0.8.6) (2020-06-29)
+
+
+### Features
+
+* ✨ recommended channels ([#77](https://github.com/apotdevin/thunderhub/issues/77)) ([83031a6](https://github.com/apotdevin/thunderhub/commit/83031a63bd2f0c4e5dd5a20b02dc268609dda048))
+
 ### [0.8.5](https://github.com/apotdevin/thunderhub/compare/v0.8.4...v0.8.5) (2020-06-27)
 
 
