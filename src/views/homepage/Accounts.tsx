@@ -76,7 +76,7 @@ export const Accounts = () => {
   const change = accounts.length > 0 && dontShowSessionLogin(account);
 
   if (accounts.length <= 0) {
-    if (noClient) {
+    if (noClient && !account) {
       return renderIntro();
     }
     return null;
@@ -100,7 +100,7 @@ export const Accounts = () => {
   });
 
   if (filteredAccounts.length < 1) {
-    if (noClient) {
+    if (noClient && !account) {
       return renderIntro();
     }
     return null;
