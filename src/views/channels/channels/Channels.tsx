@@ -104,6 +104,10 @@ export const Channels: React.FC = () => {
         const newArray = sortBy(data.getChannels, 'local_balance');
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
+      case 'age': {
+        const newArray = sortBy(data.getChannels, 'channel_age');
+        return sortDirection === 'increase' ? newArray : newArray.reverse();
+      }
       case 'balance': {
         const newArray = sortBy(data.getChannels, (channel: ChannelType) =>
           getPercent(channel.local_balance, channel.remote_balance)

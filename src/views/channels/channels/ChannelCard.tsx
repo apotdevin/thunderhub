@@ -14,7 +14,7 @@ import {
   useRebalanceState,
   useRebalanceDispatch,
 } from 'src/context/RebalanceContext';
-import { getPercent, formatSeconds } from '../../../utils/helpers';
+import { getPercent, formatSeconds, blockToTime } from '../../../utils/helpers';
 import {
   ProgressBar,
   StatusLine,
@@ -128,6 +128,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
     unsettled_balance,
     partner_node_info,
     partner_fee_info,
+    channel_age,
   } = channelInfo;
 
   const isIn = inChannel?.id === id;
@@ -207,25 +208,32 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
           'Balancedness:',
           getPercent(local_balance, remote_balance) / 100
         )}
+        <Separation />
         {renderLine('Local Balance:', formatLocal)}
         {renderLine('Remote Balance:', formatRemote)}
         {renderLine('Received:', formatReceived)}
         {renderLine('Sent:', formatSent)}
+        {renderLine('Local Reserve:', localReserve)}
+        {renderLine('Remote Reserve:', remoteReserve)}
+        <Separation />
         {renderLine('Node Public Key:', getNodeLink(partner_public_key))}
         {renderLine('Transaction Id:', getTransactionLink(transaction_id))}
+        <Separation />
+        {renderLine('Channel Age:', blockToTime(channel_age))}
+        {renderLine('Channel Block Age:', channel_age)}
         {renderLine('Channel Id:', id)}
         {renderLine('Commit Fee:', commitFee)}
         {renderLine('Commit Weight:', commitWeight)}
+        <Separation />
         {renderLine(
           'Is Static Remote Key:',
           is_static_remote_key ? 'True' : 'False'
         )}
-        {renderLine('Local Reserve:', localReserve)}
-        {renderLine('Remote Reserve:', remoteReserve)}
         {renderLine('Time Offline:', formatSeconds(time_offline))}
         {renderLine('Time Online:', formatSeconds(time_online))}
         {renderLine('Transaction Vout:', transaction_vout)}
         {renderLine('Unsettled Balance:', unsettled_balance)}
+        <Separation />
         <Sub4Title>Partner Node Info</Sub4Title>
         {renderPartner()}
         <AdminSwitch>

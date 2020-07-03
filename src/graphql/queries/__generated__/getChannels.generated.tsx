@@ -36,6 +36,7 @@ export type GetChannelsQuery = { __typename?: 'Query' } & {
           | 'transaction_id'
           | 'transaction_vout'
           | 'unsettled_balance'
+          | 'channel_age'
         > & {
             partner_node_info?: Types.Maybe<
               { __typename?: 'Node' } & {
@@ -96,6 +97,7 @@ export const GetChannelsDocument = gql`
       transaction_id
       transaction_vout
       unsettled_balance
+      channel_age
       partner_node_info {
         node {
           alias

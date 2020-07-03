@@ -74,6 +74,9 @@ export const btcToSat = (value: number | string): number => {
   return Math.round(amount * 100000000);
 };
 
+export const blockToTime = (blocks: number): string =>
+  formatSeconds(blocks * 10 * 60);
+
 export const getPercent = (
   local: number,
   remote: number,
