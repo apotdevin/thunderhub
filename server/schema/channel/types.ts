@@ -51,6 +51,7 @@ export const channelTypes = gql`
     remote: Int
     maxIn: Int
     maxOut: Int
+    commit: Int
   }
 
   type channelBalanceType {

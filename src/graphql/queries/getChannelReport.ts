@@ -7,6 +7,7 @@ export const GET_LIQUID_REPORT = gql`
       remote
       maxIn
       maxOut
+      commit
     }
   }
 `;
