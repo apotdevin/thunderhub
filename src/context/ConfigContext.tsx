@@ -14,6 +14,7 @@ export type channelBarStyleTypes =
 export type channelBarTypeTypes = 'balance' | 'fees' | 'size' | 'proportional';
 export type channelSortTypes =
   | 'none'
+  | 'age'
   | 'local'
   | 'balance'
   | 'deviation'

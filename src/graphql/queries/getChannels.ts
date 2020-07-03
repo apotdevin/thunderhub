@@ -25,6 +25,7 @@ export const GET_CHANNELS = gql`
       transaction_id
       transaction_vout
       unsettled_balance
+      channel_age
       partner_node_info {
         node {
           alias

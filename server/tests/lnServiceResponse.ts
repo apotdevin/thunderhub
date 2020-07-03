@@ -196,7 +196,7 @@ export const getChannelsResponse = {
       commit_transaction_fee: 1000,
       commit_transaction_weight: 1000,
       cooperative_close_address: 'string',
-      id: 'string',
+      id: '100x1x1',
       is_active: true,
       is_closing: true,
       is_opening: true,
@@ -231,7 +231,7 @@ export const getChannelsResponse = {
       commit_transaction_fee: 1000,
       commit_transaction_weight: 1000,
       cooperative_close_address: 'string',
-      id: 'string',
+      id: '100x1x1',
       is_active: true,
       is_closing: true,
       is_opening: true,
@@ -266,7 +266,7 @@ export const getChannelsResponse = {
       commit_transaction_fee: 1000,
       commit_transaction_weight: 1000,
       cooperative_close_address: 'string',
-      id: 'string',
+      id: '100x1x1',
       is_active: true,
       is_closing: true,
       is_opening: true,
@@ -306,7 +306,7 @@ export const getNodeResponse = {
   channels: [
     {
       capacity: 1000,
-      id: 'string',
+      id: '100x1x1',
       policies: [
         {
           base_fee_mtokens: '10000',
@@ -344,7 +344,7 @@ export const getNodeResponse = {
 
 export const getChannelResponse = {
   capacity: 1000,
-  id: 'string',
+  id: '100x1x1',
   policies: [
     {
       base_fee_mtokens: '2000',

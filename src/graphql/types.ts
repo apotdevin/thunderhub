@@ -695,6 +695,7 @@ export type ChannelType = {
   unsettled_balance?: Maybe<Scalars['Int']>;
   partner_node_info?: Maybe<Node>;
   partner_fee_info?: Maybe<Channel>;
+  channel_age?: Maybe<Scalars['Int']>;
 };
 
 export type CloseChannelType = {

@@ -84,6 +84,7 @@ export const channelTypes = gql`
     unsettled_balance: Int
     partner_node_info: Node
     partner_fee_info: Channel
+    channel_age: Int
   }
 
   type closeChannelType {

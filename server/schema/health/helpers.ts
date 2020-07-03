@@ -26,6 +26,12 @@ const reduceTokens = array => {
   return reducedArray;
 };
 
+export const getChannelAge = (id: string, currentHeight: number): number => {
+  const info = getChannelIdInfo(id);
+  if (!info) return 0;
+  return currentHeight - info.blockHeight;
+};
+
 export const getChannelIdInfo = (
   id: string
 ): { blockHeight: number; transaction: number; output: number } | null => {

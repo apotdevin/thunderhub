@@ -106,6 +106,12 @@ export const ChannelManage = () => {
             None
           </SingleButton>
           <SingleButton
+            selected={channelSort === 'age'}
+            onClick={() => changeSort('age')}
+          >
+            Age
+          </SingleButton>
+          <SingleButton
             selected={channelSort === 'local'}
             onClick={() => changeSort('local')}
           >

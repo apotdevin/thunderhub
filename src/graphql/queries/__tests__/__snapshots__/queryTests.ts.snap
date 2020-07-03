@@ -155,7 +155,7 @@ Object {
         "channelInfo": Object {
           "channel": null,
         },
-        "id": "string",
+        "id": "100x1x1",
         "partner_node_info": Object {
           "node": Object {
             "alias": "Node not found",
@@ -168,7 +168,7 @@ Object {
         "channelInfo": Object {
           "channel": null,
         },
-        "id": "string",
+        "id": "100x1x1",
         "partner_node_info": Object {
           "node": Object {
             "alias": "Node not found",
@@ -181,7 +181,7 @@ Object {
         "channelInfo": Object {
           "channel": null,
         },
-        "id": "string",
+        "id": "100x1x1",
         "partner_node_info": Object {
           "node": Object {
             "alias": "Node not found",
@@ -208,9 +208,10 @@ Object {
     "getChannels": Array [
       Object {
         "capacity": 1000,
+        "channel_age": 123356,
         "commit_transaction_fee": 1000,
         "commit_transaction_weight": 1000,
-        "id": "string",
+        "id": "100x1x1",
         "is_active": true,
         "is_closing": true,
         "is_opening": true,
@@ -244,9 +245,10 @@ Object {
       },
       Object {
         "capacity": 1000,
+        "channel_age": 123356,
         "commit_transaction_fee": 1000,
         "commit_transaction_weight": 1000,
-        "id": "string",
+        "id": "100x1x1",
         "is_active": true,
         "is_closing": true,
         "is_opening": true,
@@ -280,9 +282,10 @@ Object {
       },
       Object {
         "capacity": 1000,
+        "channel_age": 123356,
         "commit_transaction_fee": 1000,
         "commit_transaction_weight": 1000,
-        "id": "string",
+        "id": "100x1x1",
         "is_active": true,
         "is_closing": true,
         "is_opening": true,
@@ -444,7 +447,7 @@ Object {
     "getFeeHealth": Object {
       "channels": Array [
         Object {
-          "id": "string",
+          "id": "100x1x1",
           "mySide": Object {
             "base": "0",
             "baseOver": false,
@@ -470,7 +473,7 @@ Object {
           },
         },
         Object {
-          "id": "string",
+          "id": "100x1x1",
           "mySide": Object {
             "base": "0",
             "baseOver": false,
@@ -496,7 +499,7 @@ Object {
           },
         },
         Object {
-          "id": "string",
+          "id": "100x1x1",
           "mySide": Object {
             "base": "0",
             "baseOver": false,
@@ -978,7 +981,7 @@ Object {
     "getTimeHealth": Object {
       "channels": Array [
         Object {
-          "id": "string",
+          "id": "100x1x1",
           "monitoredDowntime": 1,
           "monitoredTime": 2,
           "monitoredUptime": 1,
@@ -991,7 +994,7 @@ Object {
           "significant": false,
         },
         Object {
-          "id": "string",
+          "id": "100x1x1",
           "monitoredDowntime": 1,
           "monitoredTime": 2,
           "monitoredUptime": 1,
@@ -1004,7 +1007,7 @@ Object {
           "significant": false,
         },
         Object {
-          "id": "string",
+          "id": "100x1x1",
           "monitoredDowntime": 1,
           "monitoredTime": 2,
           "monitoredUptime": 1,
@@ -1068,7 +1071,41 @@ exports[`Query tests "GET_VOLUME_HEALTH" matches snapshot 1`] = `
 Object {
   "data": Object {
     "getVolumeHealth": Object {
-      "channels": Array [],
+      "channels": Array [
+        Object {
+          "averageVolumeNormalized": "0",
+          "id": "100x1x1",
+          "partner": Object {
+            "node": Object {
+              "alias": "Node not found",
+            },
+          },
+          "score": 0,
+          "volumeNormalized": "0",
+        },
+        Object {
+          "averageVolumeNormalized": "0",
+          "id": "100x1x1",
+          "partner": Object {
+            "node": Object {
+              "alias": "Node not found",
+            },
+          },
+          "score": 0,
+          "volumeNormalized": "0",
+        },
+        Object {
+          "averageVolumeNormalized": "0",
+          "id": "100x1x1",
+          "partner": Object {
+            "node": Object {
+              "alias": "Node not found",
+            },
+          },
+          "score": 0,
+          "volumeNormalized": "0",
+        },
+      ],
       "score": 0,
     },
   },
