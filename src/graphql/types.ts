@@ -660,6 +660,7 @@ export type ChannelReportType = {
   remote?: Maybe<Scalars['Int']>;
   maxIn?: Maybe<Scalars['Int']>;
   maxOut?: Maybe<Scalars['Int']>;
+  commit?: Maybe<Scalars['Int']>;
 };
 
 export type ChannelBalanceType = {

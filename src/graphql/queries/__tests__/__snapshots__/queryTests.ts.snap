@@ -214,7 +214,7 @@ Object {
         "is_active": true,
         "is_closing": true,
         "is_opening": true,
-        "is_partner_initiated": true,
+        "is_partner_initiated": false,
         "is_private": true,
         "is_static_remote_key": true,
         "local_balance": 1000,
@@ -286,7 +286,7 @@ Object {
         "is_active": true,
         "is_closing": true,
         "is_opening": true,
-        "is_partner_initiated": true,
+        "is_partner_initiated": false,
         "is_private": true,
         "is_static_remote_key": true,
         "local_balance": 1000,
@@ -618,7 +618,8 @@ exports[`Query tests "GET_LIQUID_REPORT" matches snapshot 1`] = `
 Object {
   "data": Object {
     "getChannelReport": Object {
-      "local": 3000,
+      "commit": 2000,
+      "local": 1000,
       "maxIn": 1000,
       "maxOut": 1000,
       "remote": 3000,

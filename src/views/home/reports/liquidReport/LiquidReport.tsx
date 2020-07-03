@@ -43,8 +43,9 @@ export const LiquidReport = () => {
     return null;
   }
 
-  const { local, remote, maxIn, maxOut } = data.getChannelReport;
+  const { local, remote, maxIn, maxOut, commit } = data.getChannelReport;
   const liquidity = [
+    { x: 'Total Commit', y: commit },
     { x: 'Max Outgoing', y: maxOut },
     { x: 'Max Incoming', y: maxIn },
     { x: 'Local Balance', y: local },

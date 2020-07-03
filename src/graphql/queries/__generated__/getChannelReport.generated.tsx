@@ -11,7 +11,7 @@ export type GetLiquidReportQuery = { __typename?: 'Query' } & {
   getChannelReport?: Types.Maybe<
     { __typename?: 'channelReportType' } & Pick<
       Types.ChannelReportType,
-      'local' | 'remote' | 'maxIn' | 'maxOut'
+      'local' | 'remote' | 'maxIn' | 'maxOut' | 'commit'
     >
   >;
 };
@@ -23,6 +23,7 @@ export const GetLiquidReportDocument = gql`
       remote
       maxIn
       maxOut
+      commit
     }
   }
 `;
