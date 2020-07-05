@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.7](https://github.com/apotdevin/thunderhub/compare/v0.8.6...v0.8.7) (2020-07-05)
+
+
+### Bug Fixes
+
+* 🐛 incorrect asset url ([b2aaee3](https://github.com/apotdevin/thunderhub/commit/b2aaee378dac757ccc944d649c9d7c61294b08cd))
+
+
+### Styling
+
+* 🎨 hide intro homepage ([4d93c99](https://github.com/apotdevin/thunderhub/commit/4d93c9951ed6577a77d1a8a92e52873202c93fab))
+
+
+### Improvements
+
+* 🔧 add commit fee ([fdcf6d0](https://github.com/apotdevin/thunderhub/commit/fdcf6d00ff1b43e83d1ebea045f78e3793d10129))
+* 🔧 sort by channel age ([3051fdd](https://github.com/apotdevin/thunderhub/commit/3051fdd5d5c46231d7b1d16b2fe6c007459f00be))
+
 ### [0.8.6](https://github.com/apotdevin/thunderhub/compare/v0.8.5...v0.8.6) (2020-06-29)
 
 
