@@ -5,6 +5,7 @@ import { ServerAccounts } from 'src/components/accounts/ServerAccounts';
 import { useAccountState } from 'src/context/AccountContext';
 import getConfig from 'next/config';
 import { ThunderStorm } from 'src/views/homepage/HomePage.styled';
+import { appendBasePath } from 'src/utils/basePath';
 import { SessionLogin } from '../src/views/login/SessionLogin';
 import { TopSection } from '../src/views/homepage/Top';
 import { LoginBox } from '../src/views/homepage/LoginBox';
@@ -20,7 +21,7 @@ const ContextApp = () => {
 
   return (
     <>
-      <ThunderStorm alt={''} src={'/static/thunderstorm.gif'} />
+      <ThunderStorm alt={''} src={appendBasePath('/static/thunderstorm.gif')} />
       <TopSection />
       {!finishedFetch && (
         <Section color={'transparent'}>
