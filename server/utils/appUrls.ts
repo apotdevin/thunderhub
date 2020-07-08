@@ -13,7 +13,7 @@ export const appUrls = {
   tbase,
   oneml: 'https://1ml.com/node/',
   blockchain: 'https://www.blockchain.com/btc/tx/',
-  fees: 'https://bitcoinfees.earn.com/api/v1/fees/recommended',
+  fees: 'https://mempool.space/api/v1/fees/recommended',
   ticker: 'https://blockchain.info/ticker',
   hodlhodl: 'https://hodlhodl.com/api',
   github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
