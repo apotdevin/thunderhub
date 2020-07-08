@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X } from 'react-feather';
 import { toast } from 'react-toastify';
 import { useAddPeerMutation } from 'src/graphql/mutations/__generated__/addPeer.generated';
+import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import {
   CardWithTitle,
   SubTitle,
@@ -10,21 +11,20 @@ import {
   DarkSubTitle,
   NoWrapTitle,
   Separation,
-  ResponsiveLine,
-  Sub4Title,
 } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
   MultiButton,
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
-import { Input } from '../../components/input/Input';
 import { getErrorContent } from '../../utils/error';
 import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 
 export const AddPeer = () => {
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [temp, setTemp] = useState<boolean>(false);
+  const [separate, setSeparate] = useState<boolean>(false);
+  const [url, setUrl] = useState<string>('');
   const [key, setKey] = useState<string>('');
   const [socket, setSocket] = useState<string>('');
 
@@ -34,6 +34,7 @@ export const AddPeer = () => {
       toast.success('Peer Added');
       setIsAdding(false);
       setTemp(false);
+      setUrl('');
       setKey('');
       setSocket('');
     },
@@ -53,24 +54,50 @@ export const AddPeer = () => {
   const renderAdding = () => (
     <>
       <Separation />
-      <ResponsiveLine>
-        <Sub4Title style={{ whiteSpace: 'nowrap' }}>Peer Public Key:</Sub4Title>
-        <Input
-          placeholder={'Peer Public Key'}
-          withMargin={'0 0 0 24px'}
-          mobileMargin={'0 0 16px'}
-          onChange={e => setKey(e.target.value)}
+      <SingleLine>
+        <NoWrapTitle>Type:</NoWrapTitle>
+        <MultiButton>
+          {renderButton(
+            () => {
+              setKey('');
+              setSocket('');
+              setSeparate(false);
+            },
+            'Joined',
+            !separate
+          )}
+          {renderButton(
+            () => {
+              setUrl('');
+              setSeparate(true);
+            },
+            'Separate',
+            separate
+          )}
+        </MultiButton>
+      </SingleLine>
+      <Separation />
+      {!separate && (
+        <InputWithDeco
+          title={'Url'}
+          inputCallback={value => setUrl(value)}
+          placeholder={'public_key@socket'}
         />
-      </ResponsiveLine>
-      <ResponsiveLine>
-        <Sub4Title style={{ whiteSpace: 'nowrap' }}>Peer Socket:</Sub4Title>
-        <Input
-          placeholder={'Socket'}
-          withMargin={'0 0 0 24px'}
-          mobileMargin={'0 0 16px'}
-          onChange={e => setSocket(e.target.value)}
-        />
-      </ResponsiveLine>
+      )}
+      {separate && (
+        <>
+          <InputWithDeco
+            title={'Public Key'}
+            inputCallback={value => setKey(value)}
+            placeholder={'Public Key'}
+          />
+          <InputWithDeco
+            title={'Socket'}
+            inputCallback={value => setSocket(value)}
+            placeholder={'Socket'}
+          />
+        </>
+      )}
       <SingleLine>
         <NoWrapTitle>Is Temporary:</NoWrapTitle>
         <MultiButton>
@@ -80,8 +107,8 @@ export const AddPeer = () => {
       </SingleLine>
       <SecureButton
         callback={addPeer}
-        variables={{ publicKey: key, socket, isTemporary: temp }}
-        disabled={socket === '' || key === ''}
+        variables={{ url, publicKey: key, socket, isTemporary: temp }}
+        disabled={url === '' && (socket === '' || key === '')}
         withMargin={'16px 0 0'}
         loading={loading}
         arrow={true}

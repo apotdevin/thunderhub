@@ -165,8 +165,9 @@ export const mutationTypes = gql`
     ): sendToType
     addPeer(
       auth: authType!
-      publicKey: String!
-      socket: String!
+      url: String
+      publicKey: String
+      socket: String
       isTemporary: Boolean
     ): Boolean
     removePeer(auth: authType!, publicKey: String!): Boolean

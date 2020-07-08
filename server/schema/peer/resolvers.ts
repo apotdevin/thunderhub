@@ -45,15 +45,37 @@ export const peerResolvers = {
     addPeer: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'addPeer');
 
+      const { url, publicKey, socket, isTemporary } = params;
+
+      if (!url && !publicKey && !socket) {
+        logger.error('Expected public key and socket to connect');
+        throw new Error('ExpectedPublicKeyAndSocketToConnect');
+      }
+
+      let peerSocket = socket || '';
+      let peerPublicKey = publicKey || '';
+
+      if (url) {
+        const parts = url.split('@');
+
+        if (parts.length !== 2) {
+          logger.error(`Wrong url format to connect (${url})`);
+          throw new Error('WrongUrlFormatToConnect');
+        }
+
+        peerPublicKey = parts[0];
+        peerSocket = parts[1];
+      }
+
       const auth = getCorrectAuth(params.auth, context);
       const lnd = getAuthLnd(auth);
 
       try {
         const success: boolean = await addPeer({
           lnd,
-          public_key: params.publicKey,
-          socket: params.socket,
-          is_temporary: params.isTemporary,
+          public_key: peerPublicKey,
+          socket: peerSocket,
+          is_temporary: isTemporary,
         });
         return success;
       } catch (error) {
