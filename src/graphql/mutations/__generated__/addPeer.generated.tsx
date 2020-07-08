@@ -5,8 +5,9 @@ import * as Types from '../../types';
 
 export type AddPeerMutationVariables = Types.Exact<{
   auth: Types.AuthType;
-  publicKey: Types.Scalars['String'];
-  socket: Types.Scalars['String'];
+  url?: Types.Maybe<Types.Scalars['String']>;
+  publicKey?: Types.Maybe<Types.Scalars['String']>;
+  socket?: Types.Maybe<Types.Scalars['String']>;
   isTemporary?: Types.Maybe<Types.Scalars['Boolean']>;
 }>;
 
@@ -18,12 +19,14 @@ export type AddPeerMutation = { __typename?: 'Mutation' } & Pick<
 export const AddPeerDocument = gql`
   mutation AddPeer(
     $auth: authType!
-    $publicKey: String!
-    $socket: String!
+    $url: String
+    $publicKey: String
+    $socket: String
     $isTemporary: Boolean
   ) {
     addPeer(
       auth: $auth
+      url: $url
       publicKey: $publicKey
       socket: $socket
       isTemporary: $isTemporary
@@ -49,6 +52,7 @@ export type AddPeerMutationFn = ApolloReactCommon.MutationFunction<
  * const [addPeerMutation, { data, loading, error }] = useAddPeerMutation({
  *   variables: {
  *      auth: // value for 'auth'
+ *      url: // value for 'url'
  *      publicKey: // value for 'publicKey'
  *      socket: // value for 'socket'
  *      isTemporary: // value for 'isTemporary'

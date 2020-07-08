@@ -168,8 +168,8 @@ export const Channels: React.FC = () => {
           biggest={biggest}
           biggestPartner={biggestPartner}
           mostChannels={mostChannels}
-          biggestBaseFee={Math.max(biggestBaseFee, 100000)}
-          biggestRateFee={Math.max(biggestRateFee, 2000)}
+          biggestBaseFee={Math.max(biggestBaseFee, 5000)}
+          biggestRateFee={Math.max(Math.min(biggestRateFee, 10000), 2000)}
         />
       ))}
     </Card>

@@ -377,8 +377,9 @@ export type MutationSendToAddressArgs = {
 
 export type MutationAddPeerArgs = {
   auth: AuthType;
-  publicKey: Scalars['String'];
-  socket: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
+  publicKey?: Maybe<Scalars['String']>;
+  socket?: Maybe<Scalars['String']>;
   isTemporary?: Maybe<Scalars['Boolean']>;
 };
 

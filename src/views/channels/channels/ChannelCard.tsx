@@ -170,6 +170,8 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
     amount: Number(base_fee_mtokens) / 1000,
     override: 'sat',
   });
+
+  const maxRate = Math.min(fee_rate, 10000);
   const feeRate = format({ amount: fee_rate, override: 'ppm' });
 
   const handleClick = () => {
@@ -259,12 +261,12 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
           <ChannelStatsColumn>
             <ChannelStatsLine>
               <ProgressBar
-                order={3}
-                percent={getBar(fee_rate, biggestRateFee)}
+                order={fee_rate > maxRate ? 7 : 3}
+                percent={getBar(maxRate, biggestRateFee)}
               />
               <ProgressBar
                 order={4}
-                percent={getBar(biggestRateFee - fee_rate, biggestRateFee)}
+                percent={getBar(biggestRateFee - maxRate, biggestRateFee)}
               />
             </ChannelStatsLine>
             <ChannelStatsLine>
