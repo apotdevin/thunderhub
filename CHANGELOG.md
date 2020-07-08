@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.8](https://github.com/apotdevin/thunderhub/compare/v0.8.7...v0.8.8) (2020-07-08)
+
+
+### Improvements
+
+* 🔧 change to mempool api for fees ([704b04c](https://github.com/apotdevin/thunderhub/commit/704b04c54243f80207b971ebb03d0677404202e1))
+* 🔧 url to add peer ([1b45f57](https://github.com/apotdevin/thunderhub/commit/1b45f5718005902a89335f3067971135e79bbb93))
+
 ### [0.8.7](https://github.com/apotdevin/thunderhub/compare/v0.8.6...v0.8.7) (2020-07-05)
 
 
