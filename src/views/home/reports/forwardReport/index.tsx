@@ -59,7 +59,7 @@ export const ForwardBox = () => {
   return (
     <CardWithTitle>
       <CardTitle>
-        <SubTitle>Foward Report</SubTitle>
+        <SubTitle>Forward Report</SubTitle>
         <ButtonRow {...buttonProps} />
       </CardTitle>
       <Card mobileCardPadding={'8px'}>
