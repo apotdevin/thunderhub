@@ -1,15 +1,11 @@
-import { getForwards as getLnForwards, getWalletInfo } from 'ln-service';
+import { getForwards, getWalletInfo } from 'ln-service';
 import { subHours, subDays } from 'date-fns';
 import { sortBy } from 'underscore';
 import { ContextType } from 'server/types/apiTypes';
 import { getNodeFromChannel } from 'server/helpers/getNodeFromChannel';
-import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-} from 'server/helpers/helpers';
+import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
+import { to } from 'server/helpers/async';
 import { countArray, countRoutes } from './helpers';
 import { ForwardCompleteProps } from './interface';
 
@@ -26,10 +22,16 @@ export const getForwardChannelsReport = async (
   let startDate = new Date();
   const endDate = new Date();
 
-  if (params.time === 'month') {
-    startDate = subDays(endDate, 30);
-  } else if (params.time === 'week') {
+  if (params.time === 'week') {
     startDate = subDays(endDate, 7);
+  } else if (params.time === 'month') {
+    startDate = subDays(endDate, 30);
+  } else if (params.time === 'quarter_year') {
+    startDate = subDays(endDate, 90);
+  } else if (params.time === 'half_year') {
+    startDate = subDays(endDate, 180);
+  } else if (params.time === 'year') {
+    startDate = subDays(endDate, 360);
   } else {
     startDate = subHours(endDate, 24);
   }
@@ -74,53 +76,65 @@ export const getForwardChannelsReport = async (
       })
     );
 
-  try {
-    const forwardsList: ForwardCompleteProps = await getLnForwards({
+  const forwardsList: ForwardCompleteProps = await to(
+    getForwards({
       lnd,
       after: startDate,
       before: endDate,
-      limit: 10000,
-    });
+    })
+  );
 
-    const walletInfo: { public_key: string } = await getWalletInfo({
+  const walletInfo: { public_key: string } = await to(
+    getWalletInfo({
       lnd,
+    })
+  );
+
+  let forwards = forwardsList.forwards;
+  let next = forwardsList.next;
+
+  let finishedFetching = false;
+
+  if (!next || !forwards || forwards.length <= 0) {
+    finishedFetching = true;
+  }
+
+  while (!finishedFetching) {
+    if (next) {
+      const moreForwards = await to(getForwards({ lnd, token: next }));
+      forwards = [...forwards, ...moreForwards.forwards];
+      next = moreForwards.next;
+    } else {
+      finishedFetching = true;
+    }
+  }
+
+  if (params.type === 'route') {
+    const mapped = forwards.map(forward => {
+      return {
+        route: `${forward.incoming_channel} - ${forward.outgoing_channel}`,
+        ...forward,
+      };
     });
+    const grouped = countRoutes(mapped);
 
-    if (params.type === 'route') {
-      const mapped = forwardsList.forwards.map(forward => {
-        return {
-          route: `${forward.incoming_channel} - ${forward.outgoing_channel}`,
-          ...forward,
-        };
-      });
-      const grouped = countRoutes(mapped);
+    const routeAlias = await getRouteAlias(grouped, walletInfo.public_key);
 
-      const routeAlias = await getRouteAlias(grouped, walletInfo.public_key);
-
-      const sortedRoute = sortBy(routeAlias, params.order)
-        .reverse()
-        .slice(0, 10);
-      return JSON.stringify(sortedRoute);
-    }
-    if (params.type === 'incoming') {
-      const incomingCount = countArray(forwardsList.forwards, true);
-      const incomingAlias = await getAlias(
-        incomingCount,
-        walletInfo.public_key
-      );
-      const sortedInCount = sortBy(incomingAlias, params.order)
-        .reverse()
-        .slice(0, 10);
-      return JSON.stringify(sortedInCount);
-    }
-    const outgoingCount = countArray(forwardsList.forwards, false);
-    const outgoingAlias = await getAlias(outgoingCount, walletInfo.public_key);
-    const sortedOutCount = sortBy(outgoingAlias, params.order)
+    const sortedRoute = sortBy(routeAlias, params.order).reverse().slice(0, 10);
+    return JSON.stringify(sortedRoute);
+  }
+  if (params.type === 'incoming') {
+    const incomingCount = countArray(forwards, true);
+    const incomingAlias = await getAlias(incomingCount, walletInfo.public_key);
+    const sortedInCount = sortBy(incomingAlias, params.order)
       .reverse()
       .slice(0, 10);
-    return JSON.stringify(sortedOutCount);
-  } catch (error) {
-    logger.error('Error getting forward channel report: %o', error);
-    throw new Error(getErrorMsg(error));
+    return JSON.stringify(sortedInCount);
   }
+  const outgoingCount = countArray(forwards, false);
+  const outgoingAlias = await getAlias(outgoingCount, walletInfo.public_key);
+  const sortedOutCount = sortBy(outgoingAlias, params.order)
+    .reverse()
+    .slice(0, 10);
+  return JSON.stringify(sortedOutCount);
 };

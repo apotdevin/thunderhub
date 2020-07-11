@@ -1,4 +1,4 @@
-import { getForwards as getLnForwards } from 'ln-service';
+import { getForwards } from 'ln-service';
 import { groupBy } from 'underscore';
 import {
   subHours,
@@ -7,13 +7,9 @@ import {
   differenceInCalendarDays,
 } from 'date-fns';
 import { ContextType } from 'server/types/apiTypes';
-import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-} from 'server/helpers/helpers';
+import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
+import { to } from 'server/helpers/async';
 import { reduceForwardArray } from './helpers';
 import { ForwardCompleteProps } from './interface';
 
@@ -31,42 +27,68 @@ export const getForwardReport = async (
   const endDate = new Date();
   let days = 7;
 
-  if (params.time === 'month') {
+  if (params.time === 'week') {
+    startDate = subDays(endDate, 7);
+  } else if (params.time === 'month') {
     startDate = subDays(endDate, 30);
     days = 30;
-  } else if (params.time === 'week') {
-    startDate = subDays(endDate, 7);
+  } else if (params.time === 'quarter_year') {
+    startDate = subDays(endDate, 90);
+    days = 90;
+  } else if (params.time === 'half_year') {
+    startDate = subDays(endDate, 180);
+    days = 180;
+  } else if (params.time === 'year') {
+    startDate = subDays(endDate, 360);
+    days = 360;
   } else {
     startDate = subHours(endDate, 24);
   }
 
-  try {
-    const forwardsList: ForwardCompleteProps = await getLnForwards({
+  const forwardsList: ForwardCompleteProps = await to(
+    getForwards({
       lnd,
       after: startDate,
       before: endDate,
-    });
+    })
+  );
 
-    if (params.time === 'month' || params.time === 'week') {
-      const orderedDay = groupBy(forwardsList.forwards, item => {
-        return (
-          days - differenceInCalendarDays(endDate, new Date(item.created_at))
-        );
-      });
+  let forwards = forwardsList.forwards;
+  let next = forwardsList.next;
 
-      const reducedOrderedDay = reduceForwardArray(orderedDay);
+  let finishedFetching = false;
 
-      return JSON.stringify(reducedOrderedDay);
+  if (!next || !forwards || forwards.length <= 0) {
+    finishedFetching = true;
+  }
+
+  while (!finishedFetching) {
+    if (next) {
+      const moreForwards = await to(getForwards({ lnd, token: next }));
+      forwards = [...forwards, ...moreForwards.forwards];
+      next = moreForwards.next;
+    } else {
+      finishedFetching = true;
     }
-    const orderedHour = groupBy(forwardsList.forwards, item => {
-      return 24 - differenceInHours(endDate, new Date(item.created_at));
-    });
+  }
+
+  if (params.time === 'day') {
+    const orderedHour = groupBy(
+      forwards,
+      item => 24 - differenceInHours(endDate, new Date(item.created_at))
+    );
 
     const reducedOrderedHour = reduceForwardArray(orderedHour);
 
     return JSON.stringify(reducedOrderedHour);
-  } catch (error) {
-    logger.error('Error getting forward report: %o', error);
-    throw new Error(getErrorMsg(error));
   }
+
+  const orderedDay = groupBy(
+    forwards,
+    item => days - differenceInCalendarDays(endDate, new Date(item.created_at))
+  );
+
+  const reducedOrderedDay = reduceForwardArray(orderedDay);
+
+  return JSON.stringify(reducedOrderedDay);
 };
