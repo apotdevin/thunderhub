@@ -31,6 +31,9 @@ const timeMap: { [key: string]: string } = {
   day: 'today',
   week: 'this week',
   month: 'this month',
+  quarter_year: 'these three months',
+  half_year: 'this half year',
+  year: 'this year',
 };
 
 export const ForwardReport = ({ isTime, isType }: Props) => {
@@ -58,6 +61,15 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
   } else if (isTime === 'month') {
     domain = 30;
     barWidth = 5;
+  } else if (isTime === 'quarter_year') {
+    domain = 90;
+    barWidth = 5;
+  } else if (isTime === 'half_year') {
+    domain = 180;
+    barWidth = 5;
+  } else if (isTime === 'year') {
+    domain = 360;
+    barWidth = 5;
   }
 
   const parsedData: {}[] = JSON.parse(data.getForwardReport);
@@ -83,7 +95,6 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
       <>
         <div>
           <VictoryChart
-            domainPadding={50}
             padding={{
               top: 30,
               left: isType === 'tokens' ? 100 : 50,

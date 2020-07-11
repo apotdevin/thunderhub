@@ -1,69 +1,49 @@
 import React from 'react';
-import { CardTitle, SmallButton } from '../../../../components/generic/Styled';
+import {
+  SingleButton,
+  MultiButton,
+} from 'src/components/buttons/multiButton/MultiButton';
+import { ResponsiveSingle } from 'src/components/generic/Styled';
 
 interface ButtonProps {
   isTime: string;
   isType: string;
-  // isGraph?: string;
   setIsTime: (text: string) => void;
   setIsType: (text: string) => void;
-  // setIsGraph?: (text: string) => void;
 }
-
-const availableTimes = ['day', 'week', 'month'];
-const mappedTimes = ['Day', 'Week', 'Month'];
-const availableTypes = ['amount', 'tokens'];
-const mappedTypes = ['Amount', 'Value'];
-// const availableGraphs = ['waterfall', 'bar'];
-// const mappedGraphs = ['Waterfall', 'Bar'];
-const buttonBorder = '#FD5F00';
 
 export const ButtonRow = ({
   isTime,
   setIsTime,
   isType,
   setIsType,
-}: // isGraph = 'bar',
-// setIsGraph,
-ButtonProps) => {
-  const timeIndex = availableTimes.indexOf(isTime);
-  const typeIndex = availableTypes.indexOf(isType);
-  // const graphIndex = availableGraphs.indexOf(isGraph);
+}: ButtonProps) => {
+  const timeButton = (time: string, title: string) => (
+    <SingleButton onClick={() => setIsTime(time)} selected={isTime === time}>
+      {title}
+    </SingleButton>
+  );
 
-  const toggleButtons = (array: string[], index: number) => {
-    if (index === array.length - 1) {
-      return array[0];
-    }
-    return array[index + 1];
-  };
-
-  const buttonToShow = (
-    setFn: (text: string) => void,
-    array: string[],
-    mapped: string[],
-    index: number
-  ) => {
-    return (
-      <SmallButton
-        color={buttonBorder}
-        onClick={() => setFn(toggleButtons(array, index))}
-      >
-        {mapped[index]}
-      </SmallButton>
-    );
-  };
+  const typeButton = (type: string, title: string) => (
+    <SingleButton onClick={() => setIsType(type)} selected={isType === type}>
+      {title}
+    </SingleButton>
+  );
 
   return (
-    <CardTitle>
-      {buttonToShow(setIsTime, availableTimes, mappedTimes, timeIndex)}
-      {buttonToShow(setIsType, availableTypes, mappedTypes, typeIndex)}
-      {/* {setIsGraph &&
-                buttonToShow(
-                    setIsGraph,
-                    availableGraphs,
-                    mappedGraphs,
-                    graphIndex,
-                )} */}
-    </CardTitle>
+    <ResponsiveSingle>
+      <MultiButton>
+        {timeButton('day', '1D')}
+        {timeButton('week', '1W')}
+        {timeButton('month', '1M')}
+        {timeButton('quarter_year', '3M')}
+        {timeButton('half_year', '6M')}
+        {timeButton('year', '1Y')}
+      </MultiButton>
+      <MultiButton>
+        {typeButton('amount', 'Amount')}
+        {typeButton('tokens', 'Tokens')}
+      </MultiButton>
+    </ResponsiveSingle>
   );
 };

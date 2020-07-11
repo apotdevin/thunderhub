@@ -39,7 +39,7 @@ const mappedTypes = ['Amount', 'Fees', 'Value'];
 const buttonBorder = '#6938f1';
 
 export const ForwardBox = () => {
-  const [isTime, setIsTime] = useState<string>('week');
+  const [isTime, setIsTime] = useState<string>('month');
   const [isType, setIsType] = useState<string>('amount');
 
   const props = { isTime, isType, color: buttonBorder };
@@ -60,13 +60,13 @@ export const ForwardBox = () => {
     <CardWithTitle>
       <CardTitle>
         <SubTitle>Forward Report</SubTitle>
-        <ButtonRow {...buttonProps} />
       </CardTitle>
       <Card mobileCardPadding={'8px'}>
         <Row>
           <ForwardReport {...props} />
           <ForwardChannelsReport {...props} />
         </Row>
+        <ButtonRow {...buttonProps} />
       </Card>
     </CardWithTitle>
   );

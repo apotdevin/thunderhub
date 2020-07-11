@@ -13,8 +13,8 @@ import { usePriceState } from '../../../../context/PriceContext';
 interface Props {
   isTime: string;
   isType: string;
-  parsedData: {}[];
-  parsedData2: {}[];
+  parsedData: any[];
+  parsedData2: any[];
 }
 
 export const FlowReport = ({
@@ -34,13 +34,19 @@ export const FlowReport = ({
     barWidth = 15;
   } else if (isTime === 'month') {
     domain = 30;
-    barWidth = 3;
+  } else if (isTime === 'quarter_year') {
+    domain = 90;
+  } else if (isTime === 'half_year') {
+    domain = 180;
+    barWidth = 1;
+  } else if (isTime === 'year') {
+    domain = 360;
+    barWidth = 1;
   }
 
   return (
     <VictoryChart
       height={100}
-      domainPadding={50}
       padding={{
         top: 10,
         left: isType === 'tokens' ? 80 : 50,

@@ -16,7 +16,6 @@ import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { InvoicePie } from './InvoicePie';
 import { FlowPie } from './FlowPie';
 import { FlowReport } from './FlowReport';
-// import { getWaterfall } from './Helpers';
 
 export const ChannelRow = styled.div`
   font-size: 14px;
@@ -64,18 +63,13 @@ export interface PeriodProps {
   tokens: number;
 }
 
-export interface WaterfallProps {
-  period: number;
-  amount: number;
-  tokens: number;
-  amountBefore: number;
-  tokensBefore: number;
-}
-
 const timeMap: { [key: string]: string } = {
   day: 'today',
   week: 'this week',
   month: 'this month',
+  quarter_year: 'these three months',
+  half_year: 'this half year',
+  year: 'this year',
 };
 
 export const FlowBox = () => {
@@ -92,10 +86,8 @@ export const FlowBox = () => {
   const buttonProps = {
     isTime,
     isType,
-    // isGraph,
     setIsTime,
     setIsType,
-    // setIsGraph,
   };
 
   if (!data || loading) {
@@ -105,17 +97,15 @@ export const FlowBox = () => {
   const parsedData: PeriodProps[] = JSON.parse(data.getInOut.invoices);
   const parsedData2: PeriodProps[] = JSON.parse(data.getInOut.payments);
 
-  // const waterfall: WaterfallProps[] = getWaterfall(parsedData, parsedData2);
-
   if (parsedData.length <= 0 && parsedData2.length <= 0) {
     return (
       <CardWithTitle>
         <CardTitle>
           <SubTitle>Invoices and Payments Report</SubTitle>
-          <ButtonRow {...buttonProps} />
         </CardTitle>
         <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
           <p>{`Your node has not received or sent any payments ${timeMap[isTime]}.`}</p>
+          <ButtonRow {...buttonProps} />
         </Card>
       </CardWithTitle>
     );
@@ -164,10 +154,10 @@ export const FlowBox = () => {
       <CardWithTitle>
         <CardTitle>
           <SubTitle>Invoices and Payments Report</SubTitle>
-          <ButtonRow {...buttonProps} />
         </CardTitle>
         <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
           <FlowReport {...props} />
+          <ButtonRow {...buttonProps} />
         </Card>
       </CardWithTitle>
       <Row noWrap={true}>
