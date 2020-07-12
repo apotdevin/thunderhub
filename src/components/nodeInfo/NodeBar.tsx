@@ -9,7 +9,6 @@ import {
 } from 'src/context/AccountContext';
 import { CardWithTitle, SubTitle } from '../generic/Styled';
 import { useConfigState } from '../../context/ConfigContext';
-import { getTooltipType } from '../generic/helpers';
 import {
   ArrowLeft,
   ArrowRight,
@@ -24,10 +23,8 @@ const StyledQuestion = styled(HelpCircle)`
 
 export const NodeBar = () => {
   const { accounts } = useAccountState();
-  const { multiNodeInfo, theme } = useConfigState();
+  const { multiNodeInfo } = useConfigState();
   const slider = React.useRef<HTMLDivElement>(null);
-
-  const tooltipType: any = getTooltipType(theme);
 
   const viewOnlyAccounts = accounts.filter(
     account => account.type === CLIENT_ACCOUNT && account.viewOnly !== ''
@@ -88,12 +85,7 @@ export const NodeBar = () => {
           ))}
         </StyledNodeBar>
       </NodeBarContainer>
-      <ReactTooltip
-        id={'node_info_question'}
-        effect={'solid'}
-        place={'right'}
-        type={tooltipType}
-      >
+      <ReactTooltip id={'node_info_question'} effect={'solid'} place={'right'}>
         Only accounts with a view-only macaroon will appear here.
       </ReactTooltip>
     </CardWithTitle>
