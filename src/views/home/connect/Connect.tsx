@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Radio, Copy } from 'react-feather';
+import { Radio, Copy, X } from 'react-feather';
 import styled from 'styled-components';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetCanConnectInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
+import { renderLine } from 'src/components/generic/helpers';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import {
@@ -15,8 +16,9 @@ import {
   Card,
   SingleLine,
   DarkSubTitle,
+  Separation,
 } from '../../../components/generic/Styled';
-import { mediaWidths } from '../../../styles/Themes';
+import { mediaWidths, themeColors } from '../../../styles/Themes';
 
 const Key = styled.div`
   overflow: hidden;
@@ -60,10 +62,9 @@ const ButtonRow = styled.div`
   }
 `;
 
-const sectionColor = '#fa541c';
-
 export const ConnectCard = () => {
   const { auth } = useAccountState();
+  const [open, openSet] = useState<boolean>(false);
 
   const { loading, data } = useGetCanConnectInfoQuery({
     skip: !auth,
@@ -80,6 +81,14 @@ export const ConnectCard = () => {
   const onionAddress = uris.find((uri: string) => uri.indexOf('onion') >= 0);
   const normalAddress = uris.find((uri: string) => uri.indexOf('onion') < 0);
 
+  let clear: string | null = null;
+  let tor: string | null = null;
+
+  if (normalAddress) {
+    clear = normalAddress.split('@')[1];
+    tor = onionAddress.split('@')[1];
+  }
+
   return (
     <CardWithTitle>
       <CardTitle>
@@ -87,7 +96,7 @@ export const ConnectCard = () => {
       </CardTitle>
       <Card>
         <Responsive>
-          <Radio size={18} color={sectionColor} />
+          <Radio size={18} color={themeColors.blue2} />
           <Tile startTile={true}>
             <DarkSubTitle>Public Key</DarkSubTitle>
             <Key>{public_key}</Key>
@@ -114,8 +123,23 @@ export const ConnectCard = () => {
                 </ColorButton>
               </CopyToClipboard>
             ) : null}
+            <ColorButton
+              fullWidth={true}
+              withMargin={'0 0 0 8px'}
+              onClick={() => openSet(s => !s)}
+            >
+              {open ? <X size={18} /> : 'Details'}
+            </ColorButton>
           </ButtonRow>
         </Responsive>
+        {open && (
+          <>
+            <Separation />
+            {renderLine('Public Key', public_key)}
+            {clear && renderLine('IP', clear)}
+            {tor && renderLine('TOR', tor)}
+          </>
+        )}
       </Card>
     </CardWithTitle>
   );
