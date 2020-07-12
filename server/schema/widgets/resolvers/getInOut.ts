@@ -29,7 +29,7 @@ export const getInOut = async (
   } else if (params.time === 'quarter_year') {
     periods = 90;
   } else if (params.time === 'month') {
-    periods = 150;
+    periods = 30;
   } else if (params.time === 'day') {
     periods = 24;
     difference = (date: string) => differenceInHours(endDate, new Date(date));

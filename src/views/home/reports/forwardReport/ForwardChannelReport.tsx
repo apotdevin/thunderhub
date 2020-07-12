@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetForwardChannelsReportQuery } from 'src/graphql/queries/__generated__/getForwardChannelsReport.generated';
+import {
+  MultiButton,
+  SingleButton,
+} from 'src/components/buttons/multiButton/MultiButton';
 import { getErrorContent } from '../../../../utils/error';
 import {
   DarkSubTitle,
-  SmallButton,
   SingleLine,
 } from '../../../../components/generic/Styled';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
@@ -21,36 +24,6 @@ const ChannelRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
-
-const ButtonRow = styled.div`
-  display: flex;
-  margin-bottom: 5px;
-`;
-
-type TriButtonProps = {
-  selected: boolean;
-};
-
-const TriButton = styled(SmallButton)<TriButtonProps>`
-  margin: 0;
-  border-radius: 0;
-
-  ${({ selected }) =>
-    selected &&
-    css`
-      color: white;
-    `}
-`;
-
-const LeftButton = styled(TriButton)`
-  border-bottom-left-radius: 5px;
-  border-top-left-radius: 5px;
-`;
-
-const RightButton = styled(TriButton)`
-  border-bottom-right-radius: 5px;
-  border-top-right-radius: 5px;
 `;
 
 const TableLine = styled.div`
@@ -68,10 +41,9 @@ const LastTableLine = styled(TableLine)`
 interface Props {
   isTime: string;
   isType: string;
-  color: string;
 }
 
-export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
+export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
   const [type, setType] = useState('route');
 
   const { currency, displayValues } = useConfigState();
@@ -92,28 +64,7 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
 
   const report = data.getForwardChannelsReport;
 
-  const fillArray = (array: {}[]) => {
-    const lengthMissing = 10 - array.length;
-    if (lengthMissing === 10) {
-      return [];
-    }
-    if (lengthMissing > 0) {
-      for (let i = 0; i < lengthMissing; i += 1) {
-        array.push({
-          aliasIn: '-',
-          aliasOut: '-',
-          alias: '-',
-          name: '-',
-          amount: '',
-          fee: '',
-          tokens: '',
-        });
-      }
-    }
-    return array;
-  };
-
-  const parsed = fillArray(JSON.parse(report));
+  const parsed = JSON.parse(report);
 
   const getFormatString = (amount: number | string) => {
     if (typeof amount === 'string') return amount;
@@ -179,29 +130,29 @@ export const ForwardChannelsReport = ({ isTime, isType, color }: Props) => {
   };
 
   const renderButtons = () => (
-    <ButtonRow>
-      <LeftButton
-        color={color}
+    <MultiButton>
+      <SingleButton
+        withPadding={'4px 8px'}
         selected={type === 'incoming'}
         onClick={() => setType('incoming')}
       >
-        <ArrowDown size={18} />
-      </LeftButton>
-      <TriButton
+        <ArrowDown size={14} />
+      </SingleButton>
+      <SingleButton
+        withPadding={'4px 8px'}
         selected={type === 'route'}
         onClick={() => setType('route')}
-        color={color}
       >
-        <GitCommit size={18} />
-      </TriButton>
-      <RightButton
+        <GitCommit size={14} />
+      </SingleButton>
+      <SingleButton
+        withPadding={'4px 8px'}
         selected={type === 'outgoing'}
-        color={color}
         onClick={() => setType('outgoing')}
       >
-        <ArrowUp size={18} />
-      </RightButton>
-    </ButtonRow>
+        <ArrowUp size={14} />
+      </SingleButton>
+    </MultiButton>
   );
 
   const renderTop = (title: string) => (

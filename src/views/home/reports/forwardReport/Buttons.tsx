@@ -8,24 +8,34 @@ import { ResponsiveSingle } from 'src/components/generic/Styled';
 interface ButtonProps {
   isTime: string;
   isType: string;
+  withFee?: boolean;
   setIsTime: (text: string) => void;
   setIsType: (text: string) => void;
 }
 
 export const ButtonRow = ({
+  withFee,
   isTime,
   setIsTime,
   isType,
   setIsType,
 }: ButtonProps) => {
   const timeButton = (time: string, title: string) => (
-    <SingleButton onClick={() => setIsTime(time)} selected={isTime === time}>
+    <SingleButton
+      withPadding={'4px 8px'}
+      onClick={() => setIsTime(time)}
+      selected={isTime === time}
+    >
       {title}
     </SingleButton>
   );
 
   const typeButton = (type: string, title: string) => (
-    <SingleButton onClick={() => setIsType(type)} selected={isType === type}>
+    <SingleButton
+      withPadding={'4px 8px'}
+      onClick={() => setIsType(type)}
+      selected={isType === type}
+    >
       {title}
     </SingleButton>
   );
@@ -43,6 +53,7 @@ export const ButtonRow = ({
       <MultiButton>
         {typeButton('amount', 'Amount')}
         {typeButton('tokens', 'Tokens')}
+        {withFee && typeButton('fee', 'Fees')}
       </MultiButton>
     </ResponsiveSingle>
   );
