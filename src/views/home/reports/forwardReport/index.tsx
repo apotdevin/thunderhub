@@ -5,6 +5,7 @@ import {
   SubTitle,
   Card,
   CardTitle,
+  Separation,
 } from '../../../../components/generic/Styled';
 import { mediaWidths } from '../../../../styles/Themes';
 import { ForwardReport } from './ForwardReport';
@@ -15,46 +16,16 @@ export const CardContent = styled.div`
   height: 100%;
   display: flex;
   flex-flow: column;
-  width: 50%;
   padding: 0 16px;
 
   @media (${mediaWidths.mobile}) {
-    width: 100%;
     padding: 0 8px;
   }
 `;
 
-const Row = styled.div`
-  display: flex;
-
-  @media (${mediaWidths.mobile}) {
-    flex-wrap: wrap;
-  }
-`;
-
-const availableTimes = ['day', 'week', 'month'];
-const mappedTimes = ['Day', 'Week', 'Month'];
-const availableTypes = ['amount', 'fee', 'tokens'];
-const mappedTypes = ['Amount', 'Fees', 'Value'];
-const buttonBorder = '#6938f1';
-
 export const ForwardBox = () => {
   const [isTime, setIsTime] = useState<string>('month');
   const [isType, setIsType] = useState<string>('amount');
-
-  const props = { isTime, isType, color: buttonBorder };
-
-  const buttonProps = {
-    isTime,
-    isType,
-    setIsTime,
-    setIsType,
-    availableTimes,
-    availableTypes,
-    mappedTimes,
-    mappedTypes,
-    buttonBorder,
-  };
 
   return (
     <CardWithTitle>
@@ -62,11 +33,16 @@ export const ForwardBox = () => {
         <SubTitle>Forward Report</SubTitle>
       </CardTitle>
       <Card mobileCardPadding={'8px'}>
-        <Row>
-          <ForwardReport {...props} />
-          <ForwardChannelsReport {...props} />
-        </Row>
-        <ButtonRow {...buttonProps} />
+        <ButtonRow
+          isTime={isTime}
+          isType={isType}
+          setIsTime={setIsTime}
+          setIsType={setIsType}
+          withFee={true}
+        />
+        <ForwardReport isTime={isTime} isType={isType} />
+        <Separation />
+        <ForwardChannelsReport isTime={isTime} isType={isType} />
       </Card>
     </CardWithTitle>
   );

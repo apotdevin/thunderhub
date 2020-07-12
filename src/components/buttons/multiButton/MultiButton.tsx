@@ -9,6 +9,7 @@ import {
 interface StyledSingleProps {
   selected?: boolean;
   buttonColor?: string;
+  withPadding?: string;
 }
 
 const StyledSingleButton = styled.button<StyledSingleProps>`
@@ -17,7 +18,7 @@ const StyledSingleButton = styled.button<StyledSingleProps>`
   outline: none;
   border: none;
   text-decoration: none;
-  padding: 8px 16px;
+  padding: ${({ withPadding }) => (withPadding ? withPadding : '8px 16px')};
   background-color: transparent;
   color: ${multiSelectColor};
   flex-grow: 1;
@@ -35,6 +36,7 @@ const StyledSingleButton = styled.button<StyledSingleProps>`
 interface SingleButtonProps {
   selected?: boolean;
   color?: string;
+  withPadding?: string;
   onClick?: () => void;
 }
 
@@ -42,12 +44,14 @@ export const SingleButton: React.FC<SingleButtonProps> = ({
   children,
   selected,
   color,
+  withPadding,
   onClick,
 }) => {
   return (
     <StyledSingleButton
       selected={selected}
       buttonColor={color}
+      withPadding={withPadding}
       onClick={() => {
         onClick && onClick();
       }}

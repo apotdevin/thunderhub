@@ -5,17 +5,18 @@ import {
   VictoryChart,
   VictoryAxis,
   VictoryVoronoiContainer,
+  VictoryTooltip,
 } from 'victory';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetForwardReportQuery } from 'src/graphql/queries/__generated__/getForwardReport.generated';
+import { renderLine } from 'src/components/generic/helpers';
 import {
   chartAxisColor,
   chartBarColor,
   chartGridColor,
 } from '../../../../styles/Themes';
 import { useConfigState } from '../../../../context/ConfigContext';
-import { Sub4Title } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
@@ -54,22 +55,20 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
   }
 
   let domain = 24;
-  let barWidth = 10;
+  let barWidth = 3;
   if (isTime === 'week') {
     domain = 7;
     barWidth = 15;
   } else if (isTime === 'month') {
     domain = 30;
-    barWidth = 5;
   } else if (isTime === 'quarter_year') {
     domain = 90;
-    barWidth = 5;
   } else if (isTime === 'half_year') {
     domain = 180;
-    barWidth = 5;
+    barWidth = 1;
   } else if (isTime === 'year') {
     domain = 360;
-    barWidth = 5;
+    barWidth = 1;
   }
 
   const parsedData: {}[] = JSON.parse(data.getForwardReport);
@@ -93,58 +92,59 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
     }
     return (
       <>
-        <div>
-          <VictoryChart
-            padding={{
-              top: 30,
-              left: isType === 'tokens' ? 100 : 50,
-              right: 50,
-              bottom: 20,
+        <VictoryChart
+          height={110}
+          padding={{
+            top: 20,
+            left: isType === 'tokens' ? 80 : 50,
+            right: 50,
+            bottom: 10,
+          }}
+          containerComponent={
+            <VictoryVoronoiContainer
+              voronoiDimension="x"
+              labels={({ datum }) => `${getLabelString(datum[isType])}`}
+              labelComponent={<VictoryTooltip orientation={'bottom'} />}
+            />
+          }
+        >
+          <VictoryAxis
+            domain={[0, domain]}
+            tickFormat={() => ''}
+            style={{
+              axis: { stroke: chartGridColor[theme] },
             }}
-            containerComponent={
-              <VictoryVoronoiContainer
-                voronoiDimension="x"
-                labels={({ datum }) => `${getLabelString(datum[isType])}`}
-              />
+          />
+          <VictoryAxis
+            dependentAxis
+            style={{
+              tickLabels: {
+                fill: chartAxisColor[theme],
+                fontSize: 8,
+              },
+              grid: { stroke: chartGridColor[theme] },
+              axis: { stroke: 'transparent' },
+            }}
+            tickFormat={a =>
+              isType === 'tokens' ? format({ amount: a, breakNumber: true }) : a
             }
-          >
-            <VictoryAxis
-              domain={[0, domain]}
-              tickFormat={() => ''}
-              style={{
-                axis: { stroke: chartGridColor[theme] },
-              }}
-            />
-            <VictoryAxis
-              dependentAxis
-              style={{
-                tickLabels: {
-                  fill: chartAxisColor[theme],
-                  fontSize: 18,
-                },
-                grid: { stroke: chartGridColor[theme] },
-                axis: { stroke: 'transparent' },
-              }}
-              tickFormat={a =>
-                isType === 'tokens'
-                  ? format({ amount: a, breakNumber: true })
-                  : a
-              }
-            />
-            <VictoryBar
-              data={parsedData}
-              x="period"
-              y={isType}
-              style={{
-                data: {
-                  fill: chartBarColor[theme],
-                  width: barWidth,
-                },
-              }}
-            />
-          </VictoryChart>
-        </div>
-        <Sub4Title>{`Total: ${total}`}</Sub4Title>
+          />
+          <VictoryBar
+            data={parsedData}
+            x="period"
+            y={isType}
+            style={{
+              data: {
+                fill: chartBarColor[theme],
+                width: barWidth,
+              },
+              labels: {
+                fontSize: 8,
+              },
+            }}
+          />
+        </VictoryChart>
+        {renderLine('Total', total)}
       </>
     );
   };

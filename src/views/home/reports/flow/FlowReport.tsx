@@ -28,7 +28,7 @@ export const FlowReport = ({
   const format = getPrice(currency, displayValues, priceContext);
 
   let domain = 24;
-  let barWidth = 3;
+  let barWidth = 1;
   if (isTime === 'week') {
     domain = 7;
     barWidth = 15;
@@ -38,10 +38,8 @@ export const FlowReport = ({
     domain = 90;
   } else if (isTime === 'half_year') {
     domain = 180;
-    barWidth = 1;
   } else if (isTime === 'year') {
     domain = 360;
-    barWidth = 1;
   }
 
   return (
