@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.9](https://github.com/apotdevin/thunderhub/compare/v0.8.8...v0.8.9) (2020-07-12)
+
+
+### Styling
+
+* 🎨 fix typo ([2bd0fdc](https://github.com/apotdevin/thunderhub/commit/2bd0fdc69b530a19cf877797b6d713a5f633d291))
+
+
+### Improvements
+
+* 🔧 bump deps ([f8c4e53](https://github.com/apotdevin/thunderhub/commit/f8c4e533883fd63be0447b68ea89e4a5ebb7979e))
+* 🔧 renable payment report ([6a6faf4](https://github.com/apotdevin/thunderhub/commit/6a6faf4f7266124145f44e93d02a9ecdbaa4fd8b))
+* 🔧 reset repo before update ([eee103a](https://github.com/apotdevin/thunderhub/commit/eee103a4f87b60907ecec72e316be96dbba82741))
+
+
+### Refactoring
+
+* ♻️ connect widget ([6be165c](https://github.com/apotdevin/thunderhub/commit/6be165c79cf6ab1e9a4455b0158e860f3d809960))
+* ♻️ forward report ([5dd94af](https://github.com/apotdevin/thunderhub/commit/5dd94af06aad2b8cd13e04884bf4d47fb55978c2))
+* ♻️ forward report ([77b597d](https://github.com/apotdevin/thunderhub/commit/77b597dd7ad2cbd5e7163bdd01ec6f54b75b7346))
+* ♻️ tooltip ([3a52b00](https://github.com/apotdevin/thunderhub/commit/3a52b00e89f22226512ed59fe40b824548fe2e0a))
+* ♻️ transaction report ([1c6c9db](https://github.com/apotdevin/thunderhub/commit/1c6c9dbedf95c33f25c2bdbdbe3015afb9ebb4fb))
+
 ### [0.8.8](https://github.com/apotdevin/thunderhub/compare/v0.8.7...v0.8.8) (2020-07-08)
 
 
