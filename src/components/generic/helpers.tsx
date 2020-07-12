@@ -127,10 +127,6 @@ export const getIsDifferentDay = (current: string, next: string): boolean => {
   return difference > 0 ? true : false;
 };
 
-export const getTooltipType = (theme: string): string => {
-  return theme === 'dark' ? 'light' : 'dark';
-};
-
 export const getStatusDot = (status: boolean, type: string) => {
   if (type === 'active') {
     return status ? (

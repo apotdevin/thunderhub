@@ -4,8 +4,8 @@ import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import { getPrice, Price } from 'src/components/price/Price';
 import { AnimatedNumber } from 'src/components/animated/AnimatedNumber';
+import { renderLine } from 'src/components/generic/helpers';
 import { unSelectedNavButton } from '../../../styles/Themes';
-import { getTooltipType } from '../../../components/generic/helpers';
 import {
   Separation,
   SingleLine,
@@ -78,11 +78,9 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     peersCount,
   } = useStatusState();
 
-  const { theme, currency, displayValues } = useConfigState();
+  const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
-
-  const tooltipType: any = getTooltipType(theme);
 
   const formatCB = format({ amount: chainBalance });
   const formatPB = format({ amount: chainPending });
@@ -170,27 +168,17 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
           </div>
         </Closed>
         <Separation lineColor={unSelectedNavButton} />
-        <ReactTooltip
-          id={'full_balance_tip'}
-          effect={'solid'}
-          place={'right'}
-          type={tooltipType}
-        >
-          <div>{`Channel Balance: ${formatCCB}`}</div>
-          <div>{`Pending Channel Balance: ${formatPCB}`}</div>
-          <div>{`Chain Balance: ${formatCB}`}</div>
-          <div>{`Pending Chain Balance: ${formatPB}`}</div>
+        <ReactTooltip id={'full_balance_tip'} effect={'solid'} place={'right'}>
+          {renderLine('Channel Balance', formatCCB)}
+          {renderLine('Pending Channel Balance', formatPCB)}
+          {renderLine('Chain Balance', formatCB)}
+          {renderLine('Pending Chain Balance', formatPB)}
         </ReactTooltip>
-        <ReactTooltip
-          id={'full_node_tip'}
-          effect={'solid'}
-          place={'right'}
-          type={tooltipType}
-        >
-          <div>{`Active Channels: ${activeChannelCount}`}</div>
-          <div>{`Pending Channels: ${pendingChannelCount}`}</div>
-          <div>{`Closed Channels: ${closedChannelCount}`}</div>
-          <div>{`Peers: ${peersCount}`}</div>
+        <ReactTooltip id={'full_node_tip'} effect={'solid'} place={'right'}>
+          {renderLine('Active Channels', activeChannelCount)}
+          {renderLine('Pending Channels', pendingChannelCount)}
+          {renderLine('Closed Channels', closedChannelCount)}
+          {renderLine('Peers', peersCount)}
         </ReactTooltip>
       </>
     );
@@ -224,31 +212,16 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         </Info>
       </Balance>
       <Separation lineColor={unSelectedNavButton} />
-      <ReactTooltip effect={'solid'} place={'right'} type={tooltipType} />
-      <ReactTooltip
-        id={'balance_tip'}
-        effect={'solid'}
-        place={'right'}
-        type={tooltipType}
-      >
+      <ReactTooltip effect={'solid'} place={'right'} />
+      <ReactTooltip id={'balance_tip'} effect={'solid'} place={'right'}>
         <div>{`Channel Balance: ${formatCCB}`}</div>
         <div>{`Pending Channel Balance: ${formatPCB}`}</div>
       </ReactTooltip>
-      <ReactTooltip
-        id={'chain_balance_tip'}
-        effect={'solid'}
-        place={'right'}
-        type={tooltipType}
-      >
+      <ReactTooltip id={'chain_balance_tip'} effect={'solid'} place={'right'}>
         <div>{`Chain Balance: ${formatCB}`}</div>
         <div>{`Pending Chain Balance: ${formatPB}`}</div>
       </ReactTooltip>
-      <ReactTooltip
-        id={'node_tip'}
-        effect={'solid'}
-        place={'right'}
-        type={tooltipType}
-      >
+      <ReactTooltip id={'node_tip'} effect={'solid'} place={'right'}>
         <div>{`Active Channels: ${activeChannelCount}`}</div>
         <div>{`Pending Channels: ${pendingChannelCount}`}</div>
         <div>{`Closed Channels: ${closedChannelCount}`}</div>

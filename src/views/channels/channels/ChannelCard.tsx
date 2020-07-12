@@ -31,7 +31,6 @@ import {
 import { useConfigState } from '../../../context/ConfigContext';
 import {
   getStatusDot,
-  getTooltipType,
   getFormatDate,
   getDateDif,
   renderLine,
@@ -97,11 +96,9 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   const { channelBarType, channelBarStyle } = useConfigState();
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { theme, currency, displayValues } = useConfigState();
+  const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
-
-  const tooltipType: any = getTooltipType(theme);
 
   const {
     capacity,
@@ -338,29 +335,29 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
       case 'fees':
         return (
           <>
-            <div>{`Partner Fee Rate: ${feeRate}`}</div>
-            <div>{`Partner Base Fee: ${baseFee}`}</div>
+            {renderLine('Partner Fee Rate', feeRate)}
+            {renderLine('Partner Base Fee', baseFee)}
           </>
         );
       case 'size':
         return (
           <>
-            <div>{`Partner Capacity: ${nodeCapacity}`}</div>
-            <div>{`Partner Channels: ${channel_count}`}</div>
+            {renderLine('Partner Capacity', nodeCapacity)}
+            {renderLine('Partner Channels', channel_count)}
           </>
         );
       case 'proportional':
         return (
           <>
-            <div>{`Local Balance: ${formatLocal}`}</div>
-            <div>{`Remote Balance: ${formatRemote}`}</div>
+            {renderLine('Local Balance', formatLocal)}
+            {renderLine('Remote Balance', formatRemote)}
           </>
         );
       default:
         return (
           <>
-            <div>{`Local Balance: ${formatLocal}`}</div>
-            <div>{`Remote Balance: ${formatRemote}`}</div>
+            {renderLine('Local Balance', formatLocal)}
+            {renderLine('Remote Balance', formatRemote)}
           </>
         );
     }
@@ -392,7 +389,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         onClick={() => channelBarStyle !== 'balancing' && handleClick()}
       >
         {channelBarStyle === 'normal' && (
-          <StatusLine>
+          <StatusLine data-tip data-for={`node_status_tip_${index}`}>
             {getStatusDot(is_active, 'active')}
             {getStatusDot(is_opening, 'opening')}
             {getStatusDot(is_closing, 'closing')}
@@ -447,10 +444,18 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
       </MainInfo>
       {index === indexOpen && renderDetails()}
       <ReactTooltip
+        id={`node_status_tip_${index}`}
+        effect={'solid'}
+        place={'bottom'}
+      >
+        {renderLine('Status:', is_active ? 'Active' : 'Not Active')}
+        {renderLine('Is Opening:', is_opening ? 'True' : 'False')}
+        {renderLine('Is Closing:', is_closing ? 'True' : 'False')}
+      </ReactTooltip>
+      <ReactTooltip
         id={`node_balance_tip_${index}`}
         effect={'solid'}
         place={'bottom'}
-        type={tooltipType}
       >
         {renderBarsInfo()}
       </ReactTooltip>

@@ -21,7 +21,6 @@ import {
 import { useConfigState } from '../../../context/ConfigContext';
 import {
   getStatusDot,
-  getTooltipType,
   getTransactionLink,
   renderLine,
   getDateDif,
@@ -44,11 +43,9 @@ export const PendingCard = ({
   setIndexOpen,
   indexOpen,
 }: PendingCardProps) => {
-  const { theme, currency, displayValues } = useConfigState();
+  const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
-
-  const tooltipType: any = getTooltipType(theme);
 
   const {
     close_transaction_id,
@@ -153,19 +150,17 @@ export const PendingCard = ({
         id={`node_balance_tip_${index}`}
         effect={'solid'}
         place={'bottom'}
-        type={tooltipType}
       >
-        <div>{`Local Balance: ${formatLocal}`}</div>
-        <div>{`Remote Balance: ${formatRemote}`}</div>
+        {renderLine('Local Balance', formatLocal)}
+        {renderLine('Remote Balance', formatRemote)}
       </ReactTooltip>
       <ReactTooltip
         id={`node_activity_tip_${index}`}
         effect={'solid'}
         place={'bottom'}
-        type={tooltipType}
       >
-        <div>{`received: ${formatReceived}`}</div>
-        <div>{`Sent: ${formatSent}`}</div>
+        {renderLine('Received', formatReceived)}
+        {renderLine('Sent', formatSent)}
       </ReactTooltip>
     </SubCard>
   );

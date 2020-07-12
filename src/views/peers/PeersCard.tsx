@@ -16,7 +16,6 @@ import {
   renderLine,
   getDateDif,
   getFormatDate,
-  getTooltipType,
   getNodeLink,
 } from '../../components/generic/helpers';
 import {
@@ -58,11 +57,10 @@ export const PeersCard = ({
 }: PeerProps) => {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { theme, currency, displayValues } = useConfigState();
+  const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
 
   const format = getPrice(currency, displayValues, priceContext);
-  const tooltipType: any = getTooltipType(theme);
 
   const {
     bytes_received,
@@ -157,19 +155,17 @@ export const PeersCard = ({
         id={`node_balance_tip_${index}`}
         effect={'solid'}
         place={'bottom'}
-        type={tooltipType}
       >
-        <div>{`bytes Received: ${bytes_received}`}</div>
-        <div>{`bytes Sent: ${bytes_sent}`}</div>
+        {renderLine('bytes Received', bytes_received)}
+        {renderLine('bytes Sent', bytes_sent)}
       </ReactTooltip>
       <ReactTooltip
         id={`node_activity_tip_${index}`}
         effect={'solid'}
         place={'bottom'}
-        type={tooltipType}
       >
-        <div>{`Tokens Received: ${formatReceived}`}</div>
-        <div>{`Tokens Sent: ${formatSent}`}</div>
+        {renderLine('Tokens Received', formatReceived)}
+        {renderLine('Tokens Sent', formatSent)}
       </ReactTooltip>
       <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
         <RemovePeerModal
