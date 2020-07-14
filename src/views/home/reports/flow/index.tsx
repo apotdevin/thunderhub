@@ -94,8 +94,12 @@ export const FlowBox = () => {
     return <LoadingCard title={'Invoices and Payments Report'} />;
   }
 
-  const parsedData: PeriodProps[] = JSON.parse(data.getInOut.invoices);
-  const parsedData2: PeriodProps[] = JSON.parse(data.getInOut.payments);
+  const parsedData: PeriodProps[] = JSON.parse(
+    data?.getInOut?.invoices || '[]'
+  );
+  const parsedData2: PeriodProps[] = JSON.parse(
+    data?.getInOut?.payments || '[]'
+  );
 
   if (parsedData.length <= 0 && parsedData2.length <= 0) {
     return (

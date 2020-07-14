@@ -39,11 +39,10 @@ export const LiquidReport = () => {
     return <LoadingCard title={'Liquidity Report'} />;
   }
 
-  if (!data || !data.getChannelReport) {
-    return null;
-  }
+  if (!data?.getChannelReport) return null;
 
   const { local, remote, maxIn, maxOut, commit } = data.getChannelReport;
+
   const liquidity = [
     { x: 'Total Commit', y: commit },
     { x: 'Max Outgoing', y: maxOut },
