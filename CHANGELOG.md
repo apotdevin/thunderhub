@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.10](https://github.com/apotdevin/thunderhub/compare/v0.8.9...v0.8.10) (2020-07-14)
+
+
+### Bug Fixes
+
+* 🐛 null checks ([d4e01f5](https://github.com/apotdevin/thunderhub/commit/d4e01f5cf0d86f2f65000dcae6185c0f5418b758))
+
+
+### Improvements
+
+* 🔧 qr code chain address ([9044c37](https://github.com/apotdevin/thunderhub/commit/9044c37e2bee621bc09e314dedc07813bf81d3a6))
+* add FUNDING.yml ([#86](https://github.com/apotdevin/thunderhub/issues/86)) ([5bdb299](https://github.com/apotdevin/thunderhub/commit/5bdb299d85bd4e8e619ee245e4eef992147c1722))
+
 ### [0.8.9](https://github.com/apotdevin/thunderhub/compare/v0.8.8...v0.8.9) (2020-07-12)
 
 
