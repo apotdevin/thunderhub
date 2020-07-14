@@ -71,7 +71,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
     barWidth = 1;
   }
 
-  const parsedData: {}[] = JSON.parse(data.getForwardReport);
+  const parsedData: {}[] = JSON.parse(data.getForwardReport || '[]');
 
   const getLabelString = (value: number) => {
     if (isType === 'amount') {

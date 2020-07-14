@@ -62,9 +62,7 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
     return <LoadingCard noCard={true} title={'Forward Report'} />;
   }
 
-  const report = data.getForwardChannelsReport;
-
-  const parsed = JSON.parse(report);
+  const parsed = JSON.parse(data.getForwardChannelsReport || '[]');
 
   const getFormatString = (amount: number | string) => {
     if (typeof amount === 'string') return amount;

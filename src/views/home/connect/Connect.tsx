@@ -86,6 +86,8 @@ export const ConnectCard = () => {
 
   if (normalAddress) {
     clear = normalAddress.split('@')[1];
+  }
+  if (onionAddress) {
     tor = onionAddress.split('@')[1];
   }
 
