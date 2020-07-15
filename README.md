@@ -209,6 +209,16 @@ accounts:
 
 Notice you can specify either `macaroonPath` and `certificatePath` or `macaroon` and `certificate`.
 
+#### Security
+
+On the first start of the server, the `masterPassword` and all account `password` fields will be **hashed** and the file will be overwritten with these new values to avoid having cleartext passwords on the server.
+
+##### Changing passwords
+
+If you want to change any password in the yaml file you have to overwrite **ALL** `password` fields and the `masterPassword` to their **cleartext** versions and remove the `hashed: true` line.
+
+This way ThunderHub knows it has to hash the passwords again on the next server start.
+
 ### Privacy Configs
 
 **Prices and Fees**
