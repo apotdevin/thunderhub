@@ -1,6 +1,10 @@
 import getConfig from 'next/config';
 import jwt from 'jsonwebtoken';
-import { readCookie, refreshCookie } from 'server/helpers/fileHelpers';
+import {
+  readCookie,
+  refreshCookie,
+  PRE_PASS_STRING,
+} from 'server/helpers/fileHelpers';
 import { ContextType } from 'server/types/apiTypes';
 import { SSO_ACCOUNT, SERVER_ACCOUNT } from 'src/context/AccountContext';
 import { logger } from 'server/helpers/logger';
@@ -65,7 +69,9 @@ export const authResolvers = {
         return null;
       }
 
-      const isPassword = bcrypt.compareSync(params.password, account.password);
+      const cleanPassword = account.password.replace(PRE_PASS_STRING, '');
+
+      const isPassword = bcrypt.compareSync(params.password, cleanPassword);
 
       if (!isPassword) {
         throw new Error('WrongPasswordForLogin');

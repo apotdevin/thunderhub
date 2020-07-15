@@ -9,6 +9,8 @@ import bcrypt from 'bcryptjs';
 
 type EncodingType = 'hex' | 'utf-8';
 
+export const PRE_PASS_STRING = 'thunderhub-';
+
 export const readFile = (
   filePath: string,
   encoding: EncodingType = 'hex'
@@ -80,7 +82,7 @@ export const saveHashedYaml = (
   logger.info('Saving new yaml file with hashed passwords');
 
   try {
-    const yamlString = yaml.safeDump({ hashed: true, ...config });
+    const yamlString = yaml.safeDump(config);
     fs.writeFileSync(filePath, yamlString);
     logger.info('Succesfully saved');
   } catch (error) {
@@ -98,16 +100,37 @@ export const hashPasswords = (
   // Return early when passwords are already hashed
   if (isHashed) return config;
 
+  let hasChanged = false;
+
   const cloned = { ...config };
 
-  cloned.masterPassword = bcrypt.hashSync(config.masterPassword, 12);
+  let hashedMasterPassword = config.masterPassword;
+
+  if (hashedMasterPassword.indexOf(PRE_PASS_STRING) < 0) {
+    hasChanged = true;
+    hashedMasterPassword = `${PRE_PASS_STRING}${bcrypt.hashSync(
+      config.masterPassword,
+      12
+    )}`;
+  }
+
+  cloned.masterPassword = hashedMasterPassword;
 
   const hashedAccounts: AccountType[] = [];
 
   for (let i = 0; i < config.accounts.length; i++) {
     const account: AccountType = config.accounts[i];
     if (account.password) {
-      const hashedPassword = bcrypt.hashSync(account.password, 12);
+      let hashedPassword = account.password;
+
+      if (hashedPassword.indexOf(PRE_PASS_STRING) < 0) {
+        hasChanged = true;
+        hashedPassword = `${PRE_PASS_STRING}${bcrypt.hashSync(
+          account.password,
+          12
+        )}`;
+      }
+
       hashedAccounts.push({ ...account, password: hashedPassword });
     } else {
       hashedAccounts.push(account);
@@ -116,7 +139,7 @@ export const hashPasswords = (
 
   cloned.accounts = hashedAccounts;
 
-  saveHashedYaml(cloned, filePath);
+  hasChanged && saveHashedYaml(cloned, filePath);
 
   return cloned;
 };
