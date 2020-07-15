@@ -6,7 +6,7 @@ import { SSO_ACCOUNT, SERVER_ACCOUNT } from 'src/context/AccountContext';
 import { logger } from 'server/helpers/logger';
 import cookie from 'cookie';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import AES from 'crypto-js/aes';
+import bcrypt from 'bcryptjs';
 
 const { serverRuntimeConfig } = getConfig() || {};
 const { cookiePath, nodeEnv } = serverRuntimeConfig || {};
@@ -65,27 +65,27 @@ export const authResolvers = {
         return null;
       }
 
-      try {
-        AES.decrypt(account.macaroon, params.password);
-        logger.debug(`Correct password for account ${params.id}`);
-        const token = jwt.sign(
-          {
-            id: params.id,
-            password: AES.encrypt(params.password, secret).toString(),
-          },
-          secret
-        );
-        res.setHeader(
-          'Set-Cookie',
-          cookie.serialize('AccountAuth', token, {
-            httpOnly: true,
-            sameSite: true,
-          })
-        );
-        return true;
-      } catch (error) {
+      const isPassword = bcrypt.compareSync(params.password, account.password);
+
+      if (!isPassword) {
         throw new Error('WrongPasswordForLogin');
       }
+
+      logger.debug(`Correct password for account ${params.id}`);
+      const token = jwt.sign(
+        {
+          id: params.id,
+        },
+        secret
+      );
+      res.setHeader(
+        'Set-Cookie',
+        cookie.serialize('AccountAuth', token, {
+          httpOnly: true,
+          sameSite: true,
+        })
+      );
+      return true;
     },
   },
   Mutation: {

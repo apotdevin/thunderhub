@@ -11,10 +11,7 @@ export const ContextMock: ContextType = {
   ip: '1.2.3.4',
   secret: '123456789',
   ssoVerified: true,
-  account: {
-    id: 'accountID',
-    password: 'password',
-  },
+  account: 'accountID',
   sso: {
     macaroon: 'macaroon',
     cert: 'cert',
@@ -27,6 +24,7 @@ export const ContextMock: ContextType = {
       host: 'host',
       macaroon: 'macaroon',
       cert: 'cert',
+      password: 'password',
     },
   ],
   res: {} as ServerResponse,
@@ -36,10 +34,7 @@ export const ContextMockNoAccounts: ContextType = {
   ip: '1.2.3.4',
   secret: '123456789',
   ssoVerified: true,
-  account: {
-    id: 'accountID',
-    password: 'password',
-  },
+  account: 'accountID',
   sso: {
     macaroon: 'macaroon',
     cert: 'cert',
@@ -53,10 +48,7 @@ export const ContextMockNoSSO: ContextType = {
   ip: '1.2.3.4',
   secret: '123456789',
   ssoVerified: true,
-  account: {
-    id: 'accountID',
-    password: 'password',
-  },
+  account: 'accountID',
   sso: {
     macaroon: null,
     cert: null,
@@ -69,6 +61,7 @@ export const ContextMockNoSSO: ContextType = {
       host: 'host',
       macaroon: 'macaroon',
       cert: 'cert',
+      password: 'password',
     },
   ],
   res: {} as ServerResponse,

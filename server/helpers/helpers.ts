@@ -7,8 +7,6 @@ import {
   CLIENT_ACCOUNT,
 } from 'src/context/AccountContext';
 import { ContextType } from 'server/types/apiTypes';
-import AES from 'crypto-js/aes';
-import CryptoJS from 'crypto-js';
 import { logger } from './logger';
 
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig() || {};
@@ -50,30 +48,21 @@ export const getCorrectAuth = (
       logger.debug('Account not available in request');
       throw new Error('AccountNotAuthenticated');
     }
-    if (account.id !== auth.id) {
+    if (account !== auth.id) {
       logger.debug(
-        `Account (${account.id}) in cookie different to requested account (${auth.id})`
+        `Account (${account}) in cookie different to requested account (${auth.id})`
       );
       throw new Error('AccountNotAuthenticated');
     }
 
-    const verifiedAccount = accounts.find(a => a.id === account.id) || null;
+    const verifiedAccount = accounts.find(a => a.id === account) || null;
 
     if (!verifiedAccount) {
       logger.debug('Account not found in config file');
       throw new Error('AccountNotAuthenticated');
     }
 
-    let macaroon = null;
-    try {
-      const bytes = AES.decrypt(verifiedAccount.macaroon, account.password);
-      macaroon = bytes.toString(CryptoJS.enc.Utf8);
-    } catch (error) {
-      logger.warn('Account macaroon verification failed');
-      throw new Error('AccountAuthenticationFailed');
-    }
-
-    return { host: verifiedAccount.host, macaroon, cert: verifiedAccount.cert };
+    return verifiedAccount;
   }
   if (auth.type === SSO_ACCOUNT) {
     if (!context.ssoVerified) {

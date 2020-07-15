@@ -29,11 +29,10 @@ export const accountResolvers = {
         };
       }
 
-      const currentId = account?.id;
       const withStatus =
         accounts?.map(a => ({
           ...a,
-          loggedIn: a.id === currentId,
+          loggedIn: a.id === account,
           type: SERVER_ACCOUNT,
         })) || [];
 
