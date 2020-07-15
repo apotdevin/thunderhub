@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.11](https://github.com/apotdevin/thunderhub/compare/v0.8.10...v0.8.11) (2020-07-15)
+
+
+### Features
+
+* ✨ hash config passwords ([bf76e0b](https://github.com/apotdevin/thunderhub/commit/bf76e0baa0adf293ccfcc8939948b4bf9fc9808d))
+
 ### [0.8.10](https://github.com/apotdevin/thunderhub/compare/v0.8.9...v0.8.10) (2020-07-14)
 
 
