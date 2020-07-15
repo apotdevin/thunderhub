@@ -11,8 +11,6 @@ import {
   getAccounts,
 } from 'server/helpers/fileHelpers';
 import { ContextType } from 'server/types/apiTypes';
-import AES from 'crypto-js/aes';
-import CryptoJS from 'crypto-js';
 import cookie from 'cookie';
 import schema from 'server/schema';
 
@@ -63,11 +61,7 @@ const apolloServer = new ApolloServer({
       logger.silly('AccountAuth cookie found in request');
       try {
         const cookieAccount = jwt.verify(AccountAuth, secret);
-        const id = cookieAccount['id'] || '';
-        const bytes = AES.decrypt(cookieAccount['password'], secret);
-        const password = bytes.toString(CryptoJS.enc.Utf8);
-
-        account = { id, password };
+        account = cookieAccount['id'] || '';
       } catch (error) {
         logger.silly('Account authentication cookie failed');
       }

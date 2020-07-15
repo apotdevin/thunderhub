@@ -4,8 +4,8 @@ import path from 'path';
 import os from 'os';
 import { logger } from 'server/helpers/logger';
 import yaml from 'js-yaml';
-import AES from 'crypto-js/aes';
 import { getUUID } from 'src/utils/auth';
+import bcrypt from 'bcryptjs';
 
 type EncodingType = 'hex' | 'utf-8';
 
@@ -44,6 +44,7 @@ type AccountType = {
 };
 
 type AccountConfigType = {
+  hashed: boolean | null;
   masterPassword: string | null;
   accounts: AccountType[];
 };
@@ -70,6 +71,56 @@ export const parseYaml = (filePath: string): AccountConfigType | null => {
   }
 };
 
+export const saveHashedYaml = (
+  config: AccountConfigType,
+  filePath: string
+): void => {
+  if (filePath === '' || !config) return;
+
+  logger.info('Saving new yaml file with hashed passwords');
+
+  try {
+    const yamlString = yaml.safeDump({ hashed: true, ...config });
+    fs.writeFileSync(filePath, yamlString);
+    logger.info('Succesfully saved');
+  } catch (error) {
+    logger.error(
+      'Error saving yaml file with hashed passwords. Passwords are still in cleartext on your server.'
+    );
+  }
+};
+
+export const hashPasswords = (
+  isHashed: boolean,
+  config: AccountConfigType,
+  filePath: string
+): AccountConfigType => {
+  // Return early when passwords are already hashed
+  if (isHashed) return config;
+
+  const cloned = { ...config };
+
+  cloned.masterPassword = bcrypt.hashSync(config.masterPassword, 12);
+
+  const hashedAccounts: AccountType[] = [];
+
+  for (let i = 0; i < config.accounts.length; i++) {
+    const account: AccountType = config.accounts[i];
+    if (account.password) {
+      const hashedPassword = bcrypt.hashSync(account.password, 12);
+      hashedAccounts.push({ ...account, password: hashedPassword });
+    } else {
+      hashedAccounts.push(account);
+    }
+  }
+
+  cloned.accounts = hashedAccounts;
+
+  saveHashedYaml(cloned, filePath);
+
+  return cloned;
+};
+
 export const getAccounts = (filePath: string) => {
   if (filePath === '') {
     logger.verbose('No account config file path provided');
@@ -83,12 +134,18 @@ export const getAccounts = (filePath: string) => {
     return null;
   }
 
-  const { masterPassword, accounts } = accountConfig;
+  const { hashed, accounts: preAccounts } = accountConfig;
 
-  if (!accounts || accounts.length <= 0) {
+  if (!preAccounts || preAccounts.length <= 0) {
     logger.warn(`Account config found at path ${filePath} but had no accounts`);
     return null;
   }
+
+  const { masterPassword, accounts } = hashPasswords(
+    hashed,
+    accountConfig,
+    filePath
+  );
 
   const readAccounts = [];
 
@@ -130,26 +187,19 @@ export const getAccounts = (filePath: string) => {
       const cert = certificate
         ? certificate
         : (certificatePath && readFile(certificatePath)) || null;
-      const clearMacaroon = macaroonValue
-        ? macaroonValue
-        : readFile(macaroonPath);
+      const macaroon = macaroonValue ? macaroonValue : readFile(macaroonPath);
 
       if (certificatePath && !cert)
         logger.warn(
           `No certificate for account ${name}. Make sure you don't need it to connect.`
         );
 
-      if (!clearMacaroon) {
+      if (!macaroon) {
         logger.error(`No macarron found for account ${name}.`);
         return null;
       }
 
-      const macaroon = AES.encrypt(
-        clearMacaroon,
-        password || masterPassword
-      ).toString();
-
-      const id = getUUID(`${name}${serverUrl}${clearMacaroon}${cert}`);
+      const id = getUUID(`${name}${serverUrl}${macaroon}${cert}`);
 
       readAccounts.push(name);
 
@@ -159,6 +209,7 @@ export const getAccounts = (filePath: string) => {
         host: serverUrl,
         macaroon,
         cert,
+        password: password || masterPassword,
       };
     })
     .filter(Boolean);
