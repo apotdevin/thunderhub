@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.12](https://github.com/apotdevin/thunderhub/compare/v0.8.11...v0.8.12) (2020-07-15)
+
+
+### Bug Fixes
+
+* 🐛 hash password change ([26cd42b](https://github.com/apotdevin/thunderhub/commit/26cd42bf7864d207b87320d4319ccd7b8684a065))
+
+
+### Docs
+
+* 📚️ update readme ([688d552](https://github.com/apotdevin/thunderhub/commit/688d5528470503a9e0f556bfd3d16af8e7b9b4d2))
+
 ### [0.8.11](https://github.com/apotdevin/thunderhub/compare/v0.8.10...v0.8.11) (2020-07-15)
 
 
