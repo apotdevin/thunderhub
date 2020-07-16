@@ -14,7 +14,6 @@ module.exports = withBundleAnalyzer({
     lnServerUrl: process.env.SSO_SERVER_URL || '',
     lnCertPath: process.env.SSO_CERT_PATH || '',
     macaroonPath: process.env.SSO_MACAROON_PATH || '',
-    network: process.env.BITCOIN_NETWORK || '',
     accountConfigPath: process.env.ACCOUNT_CONFIG_PATH || '',
   },
   publicRuntimeConfig: {

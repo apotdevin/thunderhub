@@ -8,6 +8,36 @@ import { getUUID } from 'src/utils/auth';
 import bcrypt from 'bcryptjs';
 
 type EncodingType = 'hex' | 'utf-8';
+type BitcoinNetwork = 'mainnet' | 'regtest' | 'testnet';
+
+type AccountType = {
+  name?: string;
+  serverUrl?: string;
+  lndDir?: string;
+  network?: BitcoinNetwork;
+  macaroonPath?: string;
+  certificatePath?: string;
+  password?: string;
+  macaroon?: string;
+  certificate?: string;
+};
+type ParsedAccount = {
+  name: string;
+  id: string;
+  host: string;
+  macaroon: string;
+  cert: string;
+  password: string;
+};
+type AccountConfigType = {
+  hashed: boolean | null;
+  masterPassword: string | null;
+  defaultNetwork: string | null;
+  accounts: AccountType[];
+};
+
+const isValidNetwork = (network: string): network is BitcoinNetwork =>
+  network === 'mainnet' || network === 'regtest' || network === 'testnet';
 
 export const PRE_PASS_STRING = 'thunderhub-';
 
@@ -35,26 +65,6 @@ export const readFile = (
   }
 };
 
-export type BitcoinNetwork = 'mainnet' | 'regtest' | 'testnet' | 'testnet';
-
-type AccountType = {
-  name?: string;
-  serverUrl?: string;
-  lndDir?: string;
-  network?: BitcoinNetwork;
-  macaroonPath?: string;
-  certificatePath?: string;
-  password?: string;
-  macaroon?: string;
-  certificate?: string;
-};
-
-export type AccountConfigType = {
-  hashed: boolean | null;
-  masterPassword: string | null;
-  accounts: AccountType[];
-};
-
 export const parseYaml = (filePath: string): AccountConfigType | null => {
   if (filePath === '') {
     return null;
@@ -77,10 +87,7 @@ export const parseYaml = (filePath: string): AccountConfigType | null => {
   }
 };
 
-export const saveHashedYaml = (
-  config: AccountConfigType,
-  filePath: string
-): void => {
+const saveHashedYaml = (config: AccountConfigType, filePath: string): void => {
   if (filePath === '' || !config) return;
 
   logger.info('Saving new yaml file with hashed passwords');
@@ -96,7 +103,7 @@ export const saveHashedYaml = (
   }
 };
 
-export const hashPasswords = (
+const hashPasswords = (
   isHashed: boolean,
   config: AccountConfigType,
   filePath: string
@@ -170,7 +177,7 @@ const getCertificate = ({
 
 const getMacaroon = (
   { macaroon, macaroonPath, network, lndDir }: AccountType,
-  fallbackNetwork: BitcoinNetwork
+  defaultNetwork: BitcoinNetwork
 ): string => {
   if (macaroon) {
     return macaroon;
@@ -190,16 +197,13 @@ const getMacaroon = (
       'data',
       'chain',
       'bitcoin',
-      network ?? fallbackNetwork,
+      network || defaultNetwork,
       'admin.macaroon'
     )
   );
 };
 
-export const getAccounts = (
-  filePath: string,
-  fallbackNetwork: BitcoinNetwork
-) => {
+export const getAccounts = (filePath: string) => {
   if (filePath === '') {
     logger.verbose('No account config file path provided');
     return null;
@@ -210,26 +214,14 @@ export const getAccounts = (
     logger.info(`No account config file found at path ${filePath}`);
     return null;
   }
-  return getAccountsFromYaml(accountConfig, filePath, fallbackNetwork);
+  return getAccountsFromYaml(accountConfig, filePath);
 };
-
-interface ParsedAccount {
-  name: string;
-  id: string;
-  host: string;
-  macaroon: string;
-  cert: string;
-  password: string;
-}
-
-const isValidNetwork = (network: string): network is BitcoinNetwork =>
-  network === 'mainnet' || network === 'regtest' || network === 'testnet';
 
 export const getParsedAccount = (
   account: AccountType,
   index: number,
   masterPassword: string,
-  fallbackNetwork: BitcoinNetwork
+  defaultNetwork: BitcoinNetwork
 ): ParsedAccount | null => {
   const {
     name,
@@ -273,7 +265,7 @@ export const getParsedAccount = (
     );
   }
 
-  const macaroon = getMacaroon(account, fallbackNetwork || 'mainnet');
+  const macaroon = getMacaroon(account, defaultNetwork);
   if (!macaroon) {
     logger.error(
       `Account ${name} has neither lnd directory, macaroon nor macaroon path specified.`
@@ -295,8 +287,7 @@ export const getParsedAccount = (
 
 export const getAccountsFromYaml = (
   config: AccountConfigType,
-  filePath: string,
-  fallbackNetwork: BitcoinNetwork
+  filePath: string
 ) => {
   const { hashed, accounts: preAccounts } = config;
 
@@ -305,11 +296,19 @@ export const getAccountsFromYaml = (
     return null;
   }
 
-  const { masterPassword, accounts } = hashPasswords(hashed, config, filePath);
+  const { defaultNetwork, masterPassword, accounts } = hashPasswords(
+    hashed,
+    config,
+    filePath
+  );
+
+  const network: BitcoinNetwork = isValidNetwork(defaultNetwork)
+    ? defaultNetwork
+    : 'mainnet';
 
   const parsedAccounts = accounts
     .map((account, index) =>
-      getParsedAccount(account, index, masterPassword, fallbackNetwork)
+      getParsedAccount(account, index, masterPassword, network)
     )
     .filter(Boolean);
 

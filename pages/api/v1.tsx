@@ -9,7 +9,6 @@ import {
   readFile,
   readCookie,
   getAccounts,
-  BitcoinNetwork,
 } from 'server/helpers/fileHelpers';
 import { ContextType } from 'server/types/apiTypes';
 import cookie from 'cookie';
@@ -22,18 +21,9 @@ const {
   macaroonPath,
   lnCertPath,
   lnServerUrl,
-  network,
   accountConfigPath,
 } = serverRuntimeConfig;
 
-let fallbackNetwork: BitcoinNetwork | undefined;
-if (network) {
-  if (network === 'mainnet' || network === 'testnet' || network === 'regtest') {
-    fallbackNetwork = network;
-  } else {
-    logger.warn('Got bad network through BITCOIN_NETWORK env var: ' + network);
-  }
-}
 const secret =
   nodeEnv === 'development'
     ? '123456789'
@@ -41,10 +31,7 @@ const secret =
 
 const ssoMacaroon = readMacaroons(macaroonPath);
 const ssoCert = readFile(lnCertPath);
-const accountConfig = getAccounts(
-  accountConfigPath,
-  fallbackNetwork ?? 'mainnet'
-);
+const accountConfig = getAccounts(accountConfigPath);
 
 readCookie(cookiePath);
 

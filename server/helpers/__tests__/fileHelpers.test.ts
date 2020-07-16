@@ -1,6 +1,7 @@
-import { getParsedAccount } from './fileHelpers';
-
 import { existsSync, readFileSync } from 'fs';
+import path from 'path';
+import { getParsedAccount } from '../fileHelpers';
+
 const mockedExistsSync: jest.Mock = existsSync as any;
 const mockedReadFileSync: jest.Mock = readFileSync as any;
 
@@ -60,7 +61,7 @@ describe('getParsedAccount', () => {
         return 'cert';
       }
 
-      if ((file as string).includes('regtest/admin.macaroon')) {
+      if ((file as string).includes(path.join('regtest', 'admin.macaroon'))) {
         return 'macaroon';
       }
       return 'something else ';
@@ -83,7 +84,7 @@ describe('getParsedAccount', () => {
         return 'cert';
       }
 
-      if ((file as string).includes('testnet/admin.macaroon')) {
+      if ((file as string).includes(path.join('testnet', 'admin.macaroon'))) {
         return 'macaroon';
       }
       return 'something else ';
