@@ -127,14 +127,13 @@ You can define some environment variables that ThunderHub can start with. To do 
 
 **Important - If you want to use the `.env` template file and don't want it to be replaced after an update please duplicate and rename to `.env.local`**
 
-```ini
+```bash
 # -----------
 # Server Configs
 # -----------
 LOG_LEVEL = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly' # Default: 'info'
-HODL_KEY = '[Key provided by HodlHodl]' //Default: ''
+HODL_KEY = '[Key provided by HodlHodl]' # Default: ''
 BASE_PATH = '[Base path where you want to have thunderhub running i.e. '/btcpay']' # Default: ''
-BITCOIN_NETWORK='mainnet' # mainnet, testnet, regtest. default: mainnet
 
 # -----------
 # Interface Configs
@@ -161,10 +160,10 @@ You can define an account to work with SSO cookie authentication by adding the f
 # -----------
 # SSO Account Configs
 # -----------
-COOKIE_PATH = '/path/to/cookie/file/.cookie'; // i.e. '/data/.cookie'
-SSO_SERVER_URL = 'url and port to node'; // i.e. '127.0.0.1:10009'
-SSO_CERT_PATH = '/path/to/tls/certificate'; // i.e. '\lnd\alice\tls.cert'
-SSO_MACAROON_PATH = '/path/to/macaroon/folder'; //i.e. '\lnd\alice\data\chain\bitcoin\regtest\'
+COOKIE_PATH = '/path/to/cookie/file/.cookie'; # i.e. '/data/.cookie'
+SSO_SERVER_URL = 'url and port to node'; # i.e. '127.0.0.1:10009'
+SSO_CERT_PATH = '/path/to/tls/certificate'; # i.e. '\lnd\alice\tls.cert'
+SSO_MACAROON_PATH = '/path/to/macaroon/folder'; # i.e. '\lnd\alice\data\chain\bitcoin\regtest\'
 ```
 
 To login to this account you must add the cookie file content to the end of your ThunderHub url. For example:
@@ -183,7 +182,7 @@ You can add accounts on the server by adding this parameter to the `.env` file:
 # -----------
 # Account Configs
 # -----------
-ACCOUNT_CONFIG_PATH = '/path/to/config/file.yaml'; // i.e. '/data/thubConfig.yaml'
+ACCOUNT_CONFIG_PATH = '/path/to/config/file.yaml'; # i.e. '/data/thubConfig.yaml'
 ```
 
 You must also add a YAML file at that location with the following format:
@@ -193,7 +192,6 @@ masterPassword: 'password' # Default password unless defined in account
 accounts:
   - name: 'Account 1'
     serverUrl: 'url:port'
-    network: 'testnet' # mainnet, testnet, regtest. defaults to mainnet
     macaroonPath: '/path/to/admin.macaroon'
     certificatePath: '/path/to/tls.cert'
     password: 'password for account 1'
@@ -207,21 +205,36 @@ accounts:
     macaroon: '0201056...' # HEX or Base64 encoded macaroon
     certificate: '0202045c...' # HEX or Base64 encoded certificate
     password: 'password for account 3'
-  - name: 'Account4'
-    serverUrl: 'url:port'
-    # based what bitcoin network (defaults to mainnet) we are on, use
-    # the default path to the certificate and macaroon
-    lndDir: '/path/to/lnd'
 ```
 
 Notice you can specify either `macaroonPath` and `certificatePath` or `macaroon` and `certificate`.
 
-You don't need to specify any macaroon or certificate details if you provide `lndDir`.
-If this is set, we infer the path to the certificate and macaroon file based on the
-network we're on. If you don't set a network we default to mainnet.
+#### Account with LND directory
 
-If you specify both the root level environment variable `BITCOIN_NETWORK` and a network
-for an individual account, the network given for the individual account takes precedence.
+You can also specify the main LND directory and ThunderHub will look for the certificate and the macaroon in the default folders (based on the network).
+
+Default folders (assuming LND is at path `/lnd`):
+
+- Certificate: `/lnd/tls.cert`
+- Macaroon: `/lnd/data/chain/bitcoin/[mainnet | testnet | regtest]/admin.macaroon`
+
+The YAML file for this example would be:
+
+```yaml
+masterPassword: 'password' # Default password unless defined in account
+defaultNetwork: 'testnet' # Default network unless defined in account
+accounts:
+  - name: 'Account1'
+    serverUrl: 'url:port'
+    # network: Leave without network and it will use the default network
+    lndDir: '/path/to/lnd'
+  - name: 'Account2'
+    serverUrl: 'url:port'
+    network: 'mainnet'
+    lndDir: '/path/to/lnd'
+```
+
+If you don't specify `defaultNetwork` then `mainnet` is used as the default.
 
 #### Security
 
