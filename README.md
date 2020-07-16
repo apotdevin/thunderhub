@@ -127,29 +127,30 @@ You can define some environment variables that ThunderHub can start with. To do 
 
 **Important - If you want to use the `.env` template file and don't want it to be replaced after an update please duplicate and rename to `.env.local`**
 
-```bash
+```ini
 # -----------
 # Server Configs
 # -----------
-LOG_LEVEL = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly' //Default: 'info'
+LOG_LEVEL = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly' # Default: 'info'
 HODL_KEY = '[Key provided by HodlHodl]' //Default: ''
-BASE_PATH = '[Base path where you want to have thunderhub running i.e. '/btcpay']' //Default: ''
+BASE_PATH = '[Base path where you want to have thunderhub running i.e. '/btcpay']' # Default: ''
+BITCOIN_NETWORK='mainnet' # mainnet, testnet, regtest. default: mainnet
 
 # -----------
 # Interface Configs
 # -----------
-THEME = 'dark' | 'light' // Default: 'dark'
-CURRENCY = 'sat' | 'btc' | 'fiat' // Default: 'sat'
+THEME = 'dark' | 'light' # Default: 'dark'
+CURRENCY = 'sat' | 'btc' | 'fiat' # Default: 'sat'
 
 # -----------
 # Privacy Configs
 # -----------
-FETCH_PRICES = true | false // Default: true
-FETCH_FEES = true | false // Default: true
-HODL_HODL = true | false // Default: true
-DISABLE_LINKS = true | false // Default: false
-NO_CLIENT_ACCOUNTS = true | false // Default: false
-NO_VERSION_CHECK = true | false // Default: false
+FETCH_PRICES = true | false # Default: true
+FETCH_FEES = true | false # Default: true
+HODL_HODL = true | false # Default: true
+DISABLE_LINKS = true | false # Default: false
+NO_CLIENT_ACCOUNTS = true | false # Default: false
+NO_VERSION_CHECK = true | false # Default: false
 ```
 
 ### SSO Account
@@ -192,6 +193,7 @@ masterPassword: 'password' # Default password unless defined in account
 accounts:
   - name: 'Account 1'
     serverUrl: 'url:port'
+    network: 'testnet' # mainnet, testnet, regtest. defaults to mainnet
     macaroonPath: '/path/to/admin.macaroon'
     certificatePath: '/path/to/tls.cert'
     password: 'password for account 1'
@@ -205,9 +207,21 @@ accounts:
     macaroon: '0201056...' # HEX or Base64 encoded macaroon
     certificate: '0202045c...' # HEX or Base64 encoded certificate
     password: 'password for account 3'
+  - name: 'Account4'
+    serverUrl: 'url:port'
+    # based what bitcoin network (defaults to mainnet) we are on, use
+    # the default path to the certificate and macaroon
+    lndDir: '/path/to/lnd'
 ```
 
 Notice you can specify either `macaroonPath` and `certificatePath` or `macaroon` and `certificate`.
+
+You don't need to specify any macaroon or certificate details if you provide `lndDir`.
+If this is set, we infer the path to the certificate and macaroon file based on the
+network we're on. If you don't set a network we default to mainnet.
+
+If you specify both the root level environment variable `BITCOIN_NETWORK` and a network
+for an individual account, the network given for the individual account takes precedence.
 
 #### Security
 
