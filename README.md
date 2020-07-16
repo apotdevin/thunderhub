@@ -131,25 +131,25 @@ You can define some environment variables that ThunderHub can start with. To do 
 # -----------
 # Server Configs
 # -----------
-LOG_LEVEL = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly' //Default: 'info'
-HODL_KEY = '[Key provided by HodlHodl]' //Default: ''
-BASE_PATH = '[Base path where you want to have thunderhub running i.e. '/btcpay']' //Default: ''
+LOG_LEVEL = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly' # Default: 'info'
+HODL_KEY = '[Key provided by HodlHodl]' # Default: ''
+BASE_PATH = '[Base path where you want to have thunderhub running i.e. '/btcpay']' # Default: ''
 
 # -----------
 # Interface Configs
 # -----------
-THEME = 'dark' | 'light' // Default: 'dark'
-CURRENCY = 'sat' | 'btc' | 'fiat' // Default: 'sat'
+THEME = 'dark' | 'light' # Default: 'dark'
+CURRENCY = 'sat' | 'btc' | 'fiat' # Default: 'sat'
 
 # -----------
 # Privacy Configs
 # -----------
-FETCH_PRICES = true | false // Default: true
-FETCH_FEES = true | false // Default: true
-HODL_HODL = true | false // Default: true
-DISABLE_LINKS = true | false // Default: false
-NO_CLIENT_ACCOUNTS = true | false // Default: false
-NO_VERSION_CHECK = true | false // Default: false
+FETCH_PRICES = true | false # Default: true
+FETCH_FEES = true | false # Default: true
+HODL_HODL = true | false # Default: true
+DISABLE_LINKS = true | false # Default: false
+NO_CLIENT_ACCOUNTS = true | false # Default: false
+NO_VERSION_CHECK = true | false # Default: false
 ```
 
 ### SSO Account
@@ -160,10 +160,10 @@ You can define an account to work with SSO cookie authentication by adding the f
 # -----------
 # SSO Account Configs
 # -----------
-COOKIE_PATH = '/path/to/cookie/file/.cookie'; // i.e. '/data/.cookie'
-SSO_SERVER_URL = 'url and port to node'; // i.e. '127.0.0.1:10009'
-SSO_CERT_PATH = '/path/to/tls/certificate'; // i.e. '\lnd\alice\tls.cert'
-SSO_MACAROON_PATH = '/path/to/macaroon/folder'; //i.e. '\lnd\alice\data\chain\bitcoin\regtest\'
+COOKIE_PATH = '/path/to/cookie/file/.cookie'; # i.e. '/data/.cookie'
+SSO_SERVER_URL = 'url and port to node'; # i.e. '127.0.0.1:10009'
+SSO_CERT_PATH = '/path/to/tls/certificate'; # i.e. '\lnd\alice\tls.cert'
+SSO_MACAROON_PATH = '/path/to/macaroon/folder'; # i.e. '\lnd\alice\data\chain\bitcoin\regtest\'
 ```
 
 To login to this account you must add the cookie file content to the end of your ThunderHub url. For example:
@@ -182,7 +182,7 @@ You can add accounts on the server by adding this parameter to the `.env` file:
 # -----------
 # Account Configs
 # -----------
-ACCOUNT_CONFIG_PATH = '/path/to/config/file.yaml'; // i.e. '/data/thubConfig.yaml'
+ACCOUNT_CONFIG_PATH = '/path/to/config/file.yaml'; # i.e. '/data/thubConfig.yaml'
 ```
 
 You must also add a YAML file at that location with the following format:
@@ -208,6 +208,33 @@ accounts:
 ```
 
 Notice you can specify either `macaroonPath` and `certificatePath` or `macaroon` and `certificate`.
+
+#### Account with LND directory
+
+You can also specify the main LND directory and ThunderHub will look for the certificate and the macaroon in the default folders (based on the network).
+
+Default folders (assuming LND is at path `/lnd`):
+
+- Certificate: `/lnd/tls.cert`
+- Macaroon: `/lnd/data/chain/bitcoin/[mainnet | testnet | regtest]/admin.macaroon`
+
+The YAML file for this example would be:
+
+```yaml
+masterPassword: 'password' # Default password unless defined in account
+defaultNetwork: 'testnet' # Default network unless defined in account
+accounts:
+  - name: 'Account1'
+    serverUrl: 'url:port'
+    # network: Leave without network and it will use the default network
+    lndDir: '/path/to/lnd'
+  - name: 'Account2'
+    serverUrl: 'url:port'
+    network: 'mainnet'
+    lndDir: '/path/to/lnd'
+```
+
+If you don't specify `defaultNetwork` then `mainnet` is used as the default.
 
 #### Security
 
