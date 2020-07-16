@@ -17,7 +17,7 @@ describe('getParsedAccount', () => {
       macaroon: 'RAW MACAROON',
     };
 
-    const account = getParsedAccount(raw, 0, masterPassword);
+    const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
     expect(account).toBeNull();
   });
 
@@ -31,7 +31,7 @@ describe('getParsedAccount', () => {
       network: 'foo' as any,
     };
 
-    const account = getParsedAccount(raw, 0, masterPassword);
+    const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
     expect(account).toBeNull();
   });
 
@@ -43,11 +43,11 @@ describe('getParsedAccount', () => {
       macaroon: 'RAW MACAROON',
     };
 
-    const account = getParsedAccount(raw, 0, masterPassword);
+    const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
     expect(account).toBeNull();
   });
 
-  it('defaults to mainnet bitcoin network', () => {
+  it('defaults to given bitcoin network', () => {
     const raw = {
       name: 'NAME',
       serverUrl: 'server.url',
@@ -60,12 +60,12 @@ describe('getParsedAccount', () => {
         return 'cert';
       }
 
-      if ((file as string).includes('mainnet/admin.macaroon')) {
+      if ((file as string).includes('regtest/admin.macaroon')) {
         return 'macaroon';
       }
       return 'something else ';
     });
-    const account = getParsedAccount(raw, 0, masterPassword);
+    const account = getParsedAccount(raw, 0, masterPassword, 'regtest');
     expect(account.macaroon).toContain('macaroon');
   });
 
@@ -88,7 +88,7 @@ describe('getParsedAccount', () => {
       }
       return 'something else ';
     });
-    const account = getParsedAccount(raw, 0, masterPassword);
+    const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
     expect(account.macaroon).toContain('macaroon');
   });
 
@@ -103,7 +103,7 @@ describe('getParsedAccount', () => {
         macaroonPath: 'MACAROON PATH',
       };
 
-      const account = getParsedAccount(raw, 0, masterPassword);
+      const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
       expect(account.macaroon).toBe('RAW MACAROON');
     });
     it('falls back to macaroon path after that', () => {
@@ -124,7 +124,7 @@ describe('getParsedAccount', () => {
           return 'nay';
         }
       });
-      const account = getParsedAccount(raw, 0, masterPassword);
+      const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
       expect(account.macaroon).toBe('yay');
     });
 
@@ -146,7 +146,7 @@ describe('getParsedAccount', () => {
           return 'nay';
         }
       });
-      const account = getParsedAccount(raw, 0, masterPassword);
+      const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
       expect(account.macaroon).toBe('yay');
     });
   });
@@ -162,7 +162,7 @@ describe('getParsedAccount', () => {
         macaroon: 'RAW MACAROON',
       };
 
-      const account = getParsedAccount(raw, 0, masterPassword);
+      const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
       expect(account.cert).toBe('RAW CERT');
     });
 
@@ -182,7 +182,7 @@ describe('getParsedAccount', () => {
           return 'nay';
         }
       });
-      const account = getParsedAccount(raw, 0, masterPassword);
+      const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
       expect(account.cert).toBe('yay');
     });
 
@@ -201,7 +201,7 @@ describe('getParsedAccount', () => {
           return 'nay';
         }
       });
-      const account = getParsedAccount(raw, 0, masterPassword);
+      const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
       expect(account.cert).toBe('yay');
     });
   });

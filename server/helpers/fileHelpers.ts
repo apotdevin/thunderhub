@@ -35,7 +35,7 @@ export const readFile = (
   }
 };
 
-type BitcoinNetwork = 'mainnet' | 'regtest' | 'testnet' | 'testnet';
+export type BitcoinNetwork = 'mainnet' | 'regtest' | 'testnet' | 'testnet';
 
 type AccountType = {
   name?: string;
@@ -168,12 +168,10 @@ const getCertificate = ({
   return null;
 };
 
-const getMacaroon = ({
-  macaroon,
-  macaroonPath,
-  network,
-  lndDir,
-}: AccountType): string => {
+const getMacaroon = (
+  { macaroon, macaroonPath, network, lndDir }: AccountType,
+  fallbackNetwork: BitcoinNetwork
+): string => {
   if (macaroon) {
     return macaroon;
   }
@@ -192,13 +190,16 @@ const getMacaroon = ({
       'data',
       'chain',
       'bitcoin',
-      network ?? 'mainnet',
+      network ?? fallbackNetwork,
       'admin.macaroon'
     )
   );
 };
 
-export const getAccounts = (filePath: string) => {
+export const getAccounts = (
+  filePath: string,
+  fallbackNetwork: BitcoinNetwork
+) => {
   if (filePath === '') {
     logger.verbose('No account config file path provided');
     return null;
@@ -209,7 +210,7 @@ export const getAccounts = (filePath: string) => {
     logger.info(`No account config file found at path ${filePath}`);
     return null;
   }
-  return getAccountsFromYaml(accountConfig, filePath);
+  return getAccountsFromYaml(accountConfig, filePath, fallbackNetwork);
 };
 
 interface ParsedAccount {
@@ -221,10 +222,14 @@ interface ParsedAccount {
   password: string;
 }
 
+const isValidNetwork = (network: string): network is BitcoinNetwork =>
+  network === 'mainnet' || network === 'regtest' || network === 'testnet';
+
 export const getParsedAccount = (
   account: AccountType,
   index: number,
-  masterPassword: string
+  masterPassword: string,
+  fallbackNetwork: BitcoinNetwork
 ): ParsedAccount | null => {
   const {
     name,
@@ -249,12 +254,7 @@ export const getParsedAccount = (
     return null;
   }
 
-  if (
-    network &&
-    network !== 'mainnet' &&
-    network !== 'regtest' &&
-    network !== 'testnet'
-  ) {
+  if (network && !isValidNetwork(network)) {
     logger.error(`Account ${name} has invalid network: ${network}`);
     return null;
   }
@@ -273,7 +273,7 @@ export const getParsedAccount = (
     );
   }
 
-  const macaroon = getMacaroon(account);
+  const macaroon = getMacaroon(account, fallbackNetwork || 'mainnet');
   if (!macaroon) {
     logger.error(
       `Account ${name} has neither lnd directory, macaroon nor macaroon path specified.`
@@ -295,7 +295,8 @@ export const getParsedAccount = (
 
 export const getAccountsFromYaml = (
   config: AccountConfigType,
-  filePath: string
+  filePath: string,
+  fallbackNetwork: BitcoinNetwork
 ) => {
   const { hashed, accounts: preAccounts } = config;
 
@@ -307,7 +308,9 @@ export const getAccountsFromYaml = (
   const { masterPassword, accounts } = hashPasswords(hashed, config, filePath);
 
   const parsedAccounts = accounts
-    .map((account, index) => getParsedAccount(account, index, masterPassword))
+    .map((account, index) =>
+      getParsedAccount(account, index, masterPassword, fallbackNetwork)
+    )
     .filter(Boolean);
 
   logger.info(
