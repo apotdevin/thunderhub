@@ -35,17 +35,21 @@ export const readFile = (
   }
 };
 
+type BitcoinNetwork = 'mainnet' | 'regtest' | 'testnet' | 'testnet';
+
 type AccountType = {
-  name: string;
-  serverUrl: string;
-  macaroonPath: string;
-  certificatePath: string;
-  password: string | null;
-  macaroon: string;
-  certificate: string;
+  name?: string;
+  serverUrl?: string;
+  lndDir?: string;
+  network?: BitcoinNetwork;
+  macaroonPath?: string;
+  certificatePath?: string;
+  password?: string;
+  macaroon?: string;
+  certificate?: string;
 };
 
-type AccountConfigType = {
+export type AccountConfigType = {
   hashed: boolean | null;
   masterPassword: string | null;
   accounts: AccountType[];
@@ -144,6 +148,56 @@ export const hashPasswords = (
   return cloned;
 };
 
+const getCertificate = ({
+  certificate,
+  certificatePath,
+  lndDir,
+}: AccountType): string | null => {
+  if (certificate) {
+    return certificate;
+  }
+
+  if (certificatePath) {
+    return readFile(certificatePath);
+  }
+
+  if (lndDir) {
+    return readFile(path.join(lndDir, 'tls.cert'));
+  }
+
+  return null;
+};
+
+const getMacaroon = ({
+  macaroon,
+  macaroonPath,
+  network,
+  lndDir,
+}: AccountType): string => {
+  if (macaroon) {
+    return macaroon;
+  }
+
+  if (macaroonPath) {
+    return readFile(macaroonPath);
+  }
+
+  if (!lndDir) {
+    return null;
+  }
+
+  return readFile(
+    path.join(
+      lndDir,
+      'data',
+      'chain',
+      'bitcoin',
+      network ?? 'mainnet',
+      'admin.macaroon'
+    )
+  );
+};
+
 export const getAccounts = (filePath: string) => {
   if (filePath === '') {
     logger.verbose('No account config file path provided');
@@ -151,94 +205,116 @@ export const getAccounts = (filePath: string) => {
   }
 
   const accountConfig = parseYaml(filePath);
-
   if (!accountConfig) {
     logger.info(`No account config file found at path ${filePath}`);
     return null;
   }
+  return getAccountsFromYaml(accountConfig, filePath);
+};
 
-  const { hashed, accounts: preAccounts } = accountConfig;
+interface ParsedAccount {
+  name: string;
+  id: string;
+  host: string;
+  macaroon: string;
+  cert: string;
+  password: string;
+}
+
+export const getParsedAccount = (
+  account: AccountType,
+  index: number,
+  masterPassword: string
+): ParsedAccount | null => {
+  const {
+    name,
+    serverUrl,
+    network,
+    lndDir,
+    macaroonPath,
+    macaroon: macaroonValue,
+    password,
+  } = account;
+
+  const missingFields: string[] = [];
+  if (!name) missingFields.push('name');
+  if (!serverUrl) missingFields.push('server url');
+  if (!lndDir && !macaroonPath && !macaroonValue) {
+    missingFields.push('macaroon');
+  }
+
+  if (missingFields.length > 0) {
+    const text = missingFields.join(', ');
+    logger.error(`Account in index ${index} is missing the fields ${text}`);
+    return null;
+  }
+
+  if (
+    network &&
+    network !== 'mainnet' &&
+    network !== 'regtest' &&
+    network !== 'testnet'
+  ) {
+    logger.error(`Account ${name} has invalid network: ${network}`);
+    return null;
+  }
+
+  if (!password && !masterPassword) {
+    logger.error(
+      `You must set a password for account ${name} or set a master password`
+    );
+    return null;
+  }
+
+  const cert = getCertificate(account);
+  if (!cert) {
+    logger.warn(
+      `No certificate for account ${name}. Make sure you don't need it to connect.`
+    );
+  }
+
+  const macaroon = getMacaroon(account);
+  if (!macaroon) {
+    logger.error(
+      `Account ${name} has neither lnd directory, macaroon nor macaroon path specified.`
+    );
+    return null;
+  }
+
+  const id = getUUID(`${name}${serverUrl}${macaroon}${cert}`);
+
+  return {
+    name,
+    id,
+    host: serverUrl,
+    macaroon,
+    cert,
+    password: password || masterPassword,
+  };
+};
+
+export const getAccountsFromYaml = (
+  config: AccountConfigType,
+  filePath: string
+) => {
+  const { hashed, accounts: preAccounts } = config;
 
   if (!preAccounts || preAccounts.length <= 0) {
     logger.warn(`Account config found at path ${filePath} but had no accounts`);
     return null;
   }
 
-  const { masterPassword, accounts } = hashPasswords(
-    hashed,
-    accountConfig,
-    filePath
-  );
-
-  const readAccounts = [];
+  const { masterPassword, accounts } = hashPasswords(hashed, config, filePath);
 
   const parsedAccounts = accounts
-    .map((account, index) => {
-      const {
-        name,
-        serverUrl,
-        macaroonPath,
-        certificatePath,
-        macaroon: macaroonValue,
-        certificate,
-        password,
-      } = account;
-
-      const missingFields: string[] = [];
-      if (!name) missingFields.push('name');
-      if (!serverUrl) missingFields.push('server url');
-      if (!macaroonPath && !macaroonValue) missingFields.push('macaroon');
-
-      if (missingFields.length > 0) {
-        const text = missingFields.join(', ');
-        logger.error(`Account in index ${index} is missing the fields ${text}`);
-        return null;
-      }
-
-      if (!password && !masterPassword) {
-        logger.error(
-          `You must set a password for account ${name} or set a master password`
-        );
-        return null;
-      }
-
-      if (!certificatePath && !certificate)
-        logger.warn(
-          `No certificate for account ${name}. Make sure you don't need it to connect.`
-        );
-
-      const cert = certificate
-        ? certificate
-        : (certificatePath && readFile(certificatePath)) || null;
-      const macaroon = macaroonValue ? macaroonValue : readFile(macaroonPath);
-
-      if (certificatePath && !cert)
-        logger.warn(
-          `No certificate for account ${name}. Make sure you don't need it to connect.`
-        );
-
-      if (!macaroon) {
-        logger.error(`No macarron found for account ${name}.`);
-        return null;
-      }
-
-      const id = getUUID(`${name}${serverUrl}${macaroon}${cert}`);
-
-      readAccounts.push(name);
-
-      return {
-        name,
-        id,
-        host: serverUrl,
-        macaroon,
-        cert,
-        password: password || masterPassword,
-      };
-    })
+    .map((account, index) => getParsedAccount(account, index, masterPassword))
     .filter(Boolean);
 
-  const allAccounts = readAccounts.join(', ');
-  logger.info(`Server accounts that will be available: ${allAccounts}`);
+  logger.info(
+    `Server accounts that will be available: ${parsedAccounts
+      .map(({ name }) => name)
+      .join(', ')}`
+  );
 
   return parsedAccounts;
 };
