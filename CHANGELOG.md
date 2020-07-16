@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.13](https://github.com/apotdevin/thunderhub/compare/v0.8.12...v0.8.13) (2020-07-16)
+
+
+### Docs
+
+* 📚️ update README ([27b5e83](https://github.com/apotdevin/thunderhub/commit/27b5e832b479afd3b2e7c4556c54b5f39a36e390))
+
+
+### Improvements
+
+* add lnd dir option to config ([#92](https://github.com/apotdevin/thunderhub/issues/92)) ([#93](https://github.com/apotdevin/thunderhub/issues/93)) ([56e6b96](https://github.com/apotdevin/thunderhub/commit/56e6b964c9a9cc7617e5a15b6c2c79a9d951d7ea))
+
 ### [0.8.12](https://github.com/apotdevin/thunderhub/compare/v0.8.11...v0.8.12) (2020-07-15)
 
 
