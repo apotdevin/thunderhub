@@ -222,7 +222,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
   );
 
   const renderWarningText = (htlc_delta: number) => {
-    if (htlc_delta <= 14) {
+    if (htlc_delta <= 18) {
       return (
         <>
           <Separation />
@@ -232,7 +232,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
         </>
       );
     }
-    if (htlc_delta <= 24) {
+    if (htlc_delta <= 34) {
       return (
         <>
           <Separation />
