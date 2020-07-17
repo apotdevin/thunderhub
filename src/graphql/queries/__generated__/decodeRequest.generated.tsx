@@ -22,9 +22,7 @@ export type DecodeRequestQuery = { __typename?: 'Query' } & {
       | 'tokens'
     > & {
         destination_node: { __typename?: 'Node' } & {
-          node?: Types.Maybe<
-            { __typename?: 'nodeType' } & Pick<Types.NodeType, 'alias'>
-          >;
+          node: { __typename?: 'nodeType' } & Pick<Types.NodeType, 'alias'>;
         };
         routes?: Types.Maybe<
           Array<
@@ -71,11 +69,9 @@ export type DecodeRequestQuery = { __typename?: 'Query' } & {
                       | 'timeout'
                     > & {
                         node: { __typename?: 'Node' } & {
-                          node?: Types.Maybe<
-                            { __typename?: 'nodeType' } & Pick<
-                              Types.NodeType,
-                              'alias'
-                            >
+                          node: { __typename?: 'nodeType' } & Pick<
+                            Types.NodeType,
+                            'alias'
                           >;
                         };
                       }

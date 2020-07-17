@@ -418,7 +418,7 @@ export type NodeType = {
 
 export type Node = {
   __typename?: 'Node';
-  node?: Maybe<NodeType>;
+  node: NodeType;
 };
 
 export type NodeInfoType = {
@@ -862,7 +862,7 @@ export type PaymentType = {
   destination_node?: Maybe<Node>;
   fee: Scalars['Int'];
   fee_mtokens: Scalars['String'];
-  hops?: Maybe<Array<Maybe<Node>>>;
+  hops: Array<Node>;
   id: Scalars['String'];
   index?: Maybe<Scalars['Int']>;
   is_confirmed: Scalars['Boolean'];

@@ -11,7 +11,7 @@ export const nodeTypes = gql`
   }
 
   type Node {
-    node: nodeType
+    node: nodeType!
   }
 
   type nodeInfoType {

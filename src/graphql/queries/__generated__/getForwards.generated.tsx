@@ -32,11 +32,9 @@ export type GetForwardsQuery = { __typename?: 'Query' } & {
                             { __typename?: 'nodePolicyType' } & {
                               node?: Types.Maybe<
                                 { __typename?: 'Node' } & {
-                                  node?: Types.Maybe<
-                                    { __typename?: 'nodeType' } & Pick<
-                                      Types.NodeType,
-                                      'alias' | 'color'
-                                    >
+                                  node: { __typename?: 'nodeType' } & Pick<
+                                    Types.NodeType,
+                                    'alias' | 'color'
                                   >;
                                 }
                               >;
@@ -54,11 +52,9 @@ export type GetForwardsQuery = { __typename?: 'Query' } & {
                             { __typename?: 'nodePolicyType' } & {
                               node?: Types.Maybe<
                                 { __typename?: 'Node' } & {
-                                  node?: Types.Maybe<
-                                    { __typename?: 'nodeType' } & Pick<
-                                      Types.NodeType,
-                                      'alias' | 'color'
-                                    >
+                                  node: { __typename?: 'nodeType' } & Pick<
+                                    Types.NodeType,
+                                    'alias' | 'color'
                                   >;
                                 }
                               >;
