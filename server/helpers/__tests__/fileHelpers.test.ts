@@ -1,6 +1,10 @@
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
-import { getParsedAccount } from '../fileHelpers';
+import {
+  getParsedAccount,
+  hashPasswords,
+  getAccountsFromYaml,
+} from '../fileHelpers';
 
 const mockedExistsSync: jest.Mock = existsSync as any;
 const mockedReadFileSync: jest.Mock = readFileSync as any;
@@ -205,5 +209,91 @@ describe('getParsedAccount', () => {
       const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
       expect(account.cert).toBe('yay');
     });
+  });
+});
+
+describe('hashPasswords', () => {
+  it('does not throw on missing master password', () => {
+    const config = {
+      hashed: false,
+      masterPassword: null,
+      defaultNetwork: null,
+      accounts: [],
+    };
+    expect(hashPasswords(false, config, 'file-path')).toEqual({
+      accounts: [],
+      defaultNetwork: null,
+      hashed: false,
+      masterPassword: null,
+    });
+  });
+});
+
+describe('getAccountsFromYaml', () => {
+  it('needs either account password or master password', () => {
+    const conf = {
+      hashed: false,
+      masterPassword: 'masterPassword',
+      defaultNetwork: null,
+      accounts: [
+        {
+          name: 'first account',
+          serverUrl: 'server.url',
+          password: 'accountPassword',
+          certificate: 'cert',
+          macaroon: 'macaroon',
+        },
+      ],
+    };
+
+    // no password and no account password
+    expect(
+      getAccountsFromYaml(
+        {
+          ...conf,
+          masterPassword: null,
+          accounts: [
+            {
+              ...conf.accounts[0],
+              password: null,
+            },
+          ],
+        },
+        'file-path'
+      )
+    ).toHaveLength(0);
+
+    // just master password
+    expect(
+      getAccountsFromYaml(
+        {
+          ...conf,
+          accounts: [
+            {
+              ...conf.accounts[0],
+              password: null,
+            },
+          ],
+        },
+        'file-path'
+      )
+    ).toHaveLength(1);
+
+    // just account password
+    expect(
+      getAccountsFromYaml(
+        {
+          ...conf,
+          masterPassword: null,
+          accounts: [
+            {
+              ...conf.accounts[0],
+              password: 'accountPassword',
+            },
+          ],
+        },
+        'file-path'
+      )
+    ).toHaveLength(1);
   });
 });
