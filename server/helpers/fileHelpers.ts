@@ -103,7 +103,7 @@ const saveHashedYaml = (config: AccountConfigType, filePath: string): void => {
   }
 };
 
-const hashPasswords = (
+export const hashPasswords = (
   isHashed: boolean,
   config: AccountConfigType,
   filePath: string
@@ -117,7 +117,7 @@ const hashPasswords = (
 
   let hashedMasterPassword = config.masterPassword;
 
-  if (hashedMasterPassword.indexOf(PRE_PASS_STRING) < 0) {
+  if (hashedMasterPassword?.indexOf(PRE_PASS_STRING) < 0) {
     hasChanged = true;
     hashedMasterPassword = `${PRE_PASS_STRING}${bcrypt.hashSync(
       config.masterPassword,
