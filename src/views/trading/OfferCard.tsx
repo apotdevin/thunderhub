@@ -24,8 +24,8 @@ import {
   StyledDescription,
 } from './OfferCard.styled';
 
-const format = (value: number | string, format = '0,0.00') =>
-  numeral(value).format(format);
+const format = (value: number | string | null | undefined, format = '0,0.00') =>
+  value ? numeral(value).format(format) : null;
 
 interface OfferCardProps {
   offer: HodlOfferType;

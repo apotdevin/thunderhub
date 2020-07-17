@@ -26,10 +26,12 @@ export const OpenRecommended = ({ partner, setOpenCard }: OpenProps) => {
   const { auth } = useAccountState();
 
   const { data, loading } = useGetNodeQuery({
+    skip: !auth,
     variables: { auth, publicKey: partner.public_key },
   });
 
   const { data: peerData, loading: peerLoading } = useGetPeersQuery({
+    skip: !auth,
     variables: { auth },
   });
 

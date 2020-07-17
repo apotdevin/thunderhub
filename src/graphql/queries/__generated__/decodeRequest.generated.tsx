@@ -24,19 +24,17 @@ export type DecodeRequestQuery = { __typename?: 'Query' } & {
         destination_node: { __typename?: 'Node' } & {
           node: { __typename?: 'nodeType' } & Pick<Types.NodeType, 'alias'>;
         };
-        routes?: Types.Maybe<
-          Array<
-            Types.Maybe<
-              Array<
-                Types.Maybe<
-                  { __typename?: 'RouteType' } & Pick<
-                    Types.RouteType,
-                    | 'base_fee_mtokens'
-                    | 'channel'
-                    | 'cltv_delta'
-                    | 'fee_rate'
-                    | 'public_key'
-                  >
+        routes: Array<
+          Types.Maybe<
+            Array<
+              Types.Maybe<
+                { __typename?: 'RouteType' } & Pick<
+                  Types.RouteType,
+                  | 'base_fee_mtokens'
+                  | 'channel'
+                  | 'cltv_delta'
+                  | 'fee_rate'
+                  | 'public_key'
                 >
               >
             >

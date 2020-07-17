@@ -549,22 +549,22 @@ export type PeerType = {
 
 export type GetUtxosType = {
   __typename?: 'getUtxosType';
-  address?: Maybe<Scalars['String']>;
-  address_format?: Maybe<Scalars['String']>;
-  confirmation_count?: Maybe<Scalars['Int']>;
-  output_script?: Maybe<Scalars['String']>;
-  tokens?: Maybe<Scalars['Int']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  transaction_vout?: Maybe<Scalars['Int']>;
+  address: Scalars['String'];
+  address_format: Scalars['String'];
+  confirmation_count: Scalars['Int'];
+  output_script: Scalars['String'];
+  tokens: Scalars['Int'];
+  transaction_id: Scalars['String'];
+  transaction_vout: Scalars['Int'];
 };
 
 export type SendToType = {
   __typename?: 'sendToType';
-  confirmationCount?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  isConfirmed?: Maybe<Scalars['Boolean']>;
-  isOutgoing?: Maybe<Scalars['Boolean']>;
-  tokens?: Maybe<Scalars['Int']>;
+  confirmationCount: Scalars['String'];
+  id: Scalars['String'];
+  isConfirmed: Scalars['Boolean'];
+  isOutgoing: Scalars['Boolean'];
+  tokens: Scalars['Int'];
 };
 
 export type GetTransactionsType = {
@@ -572,11 +572,11 @@ export type GetTransactionsType = {
   block_id?: Maybe<Scalars['String']>;
   confirmation_count?: Maybe<Scalars['Int']>;
   confirmation_height?: Maybe<Scalars['Int']>;
-  created_at?: Maybe<Scalars['String']>;
+  created_at: Scalars['String'];
   fee?: Maybe<Scalars['Int']>;
-  id?: Maybe<Scalars['String']>;
-  output_addresses?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tokens?: Maybe<Scalars['Int']>;
+  id: Scalars['String'];
+  output_addresses: Array<Maybe<Scalars['String']>>;
+  tokens: Scalars['Int'];
 };
 
 export type GetMessagesType = {
@@ -672,31 +672,31 @@ export type ChannelBalanceType = {
 
 export type ChannelType = {
   __typename?: 'channelType';
-  capacity?: Maybe<Scalars['Int']>;
-  commit_transaction_fee?: Maybe<Scalars['Int']>;
-  commit_transaction_weight?: Maybe<Scalars['Int']>;
-  id?: Maybe<Scalars['String']>;
-  is_active?: Maybe<Scalars['Boolean']>;
-  is_closing?: Maybe<Scalars['Boolean']>;
-  is_opening?: Maybe<Scalars['Boolean']>;
-  is_partner_initiated?: Maybe<Scalars['Boolean']>;
-  is_private?: Maybe<Scalars['Boolean']>;
+  capacity: Scalars['Int'];
+  commit_transaction_fee: Scalars['Int'];
+  commit_transaction_weight: Scalars['Int'];
+  id: Scalars['String'];
+  is_active: Scalars['Boolean'];
+  is_closing: Scalars['Boolean'];
+  is_opening: Scalars['Boolean'];
+  is_partner_initiated: Scalars['Boolean'];
+  is_private: Scalars['Boolean'];
   is_static_remote_key?: Maybe<Scalars['Boolean']>;
-  local_balance?: Maybe<Scalars['Int']>;
-  local_reserve?: Maybe<Scalars['Int']>;
-  partner_public_key?: Maybe<Scalars['String']>;
-  received?: Maybe<Scalars['Int']>;
-  remote_balance?: Maybe<Scalars['Int']>;
-  remote_reserve?: Maybe<Scalars['Int']>;
-  sent?: Maybe<Scalars['Int']>;
+  local_balance: Scalars['Int'];
+  local_reserve: Scalars['Int'];
+  partner_public_key: Scalars['String'];
+  received: Scalars['Int'];
+  remote_balance: Scalars['Int'];
+  remote_reserve: Scalars['Int'];
+  sent: Scalars['Int'];
   time_offline?: Maybe<Scalars['Int']>;
   time_online?: Maybe<Scalars['Int']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  transaction_vout?: Maybe<Scalars['Int']>;
-  unsettled_balance?: Maybe<Scalars['Int']>;
-  partner_node_info?: Maybe<Node>;
+  transaction_id: Scalars['String'];
+  transaction_vout: Scalars['Int'];
+  unsettled_balance: Scalars['Int'];
+  partner_node_info: Node;
   partner_fee_info?: Maybe<Channel>;
-  channel_age?: Maybe<Scalars['Int']>;
+  channel_age: Scalars['Int'];
 };
 
 export type CloseChannelType = {
@@ -707,21 +707,21 @@ export type CloseChannelType = {
 
 export type ClosedChannelType = {
   __typename?: 'closedChannelType';
-  capacity?: Maybe<Scalars['Int']>;
+  capacity: Scalars['Int'];
   close_confirm_height?: Maybe<Scalars['Int']>;
   close_transaction_id?: Maybe<Scalars['String']>;
-  final_local_balance?: Maybe<Scalars['Int']>;
-  final_time_locked_balance?: Maybe<Scalars['Int']>;
+  final_local_balance: Scalars['Int'];
+  final_time_locked_balance: Scalars['Int'];
   id?: Maybe<Scalars['String']>;
-  is_breach_close?: Maybe<Scalars['Boolean']>;
-  is_cooperative_close?: Maybe<Scalars['Boolean']>;
-  is_funding_cancel?: Maybe<Scalars['Boolean']>;
-  is_local_force_close?: Maybe<Scalars['Boolean']>;
-  is_remote_force_close?: Maybe<Scalars['Boolean']>;
-  partner_public_key?: Maybe<Scalars['String']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  transaction_vout?: Maybe<Scalars['Int']>;
-  partner_node_info?: Maybe<Node>;
+  is_breach_close: Scalars['Boolean'];
+  is_cooperative_close: Scalars['Boolean'];
+  is_funding_cancel: Scalars['Boolean'];
+  is_local_force_close: Scalars['Boolean'];
+  is_remote_force_close: Scalars['Boolean'];
+  partner_public_key: Scalars['String'];
+  transaction_id: Scalars['String'];
+  transaction_vout: Scalars['Int'];
+  partner_node_info: Node;
 };
 
 export type OpenChannelType = {
@@ -733,49 +733,49 @@ export type OpenChannelType = {
 export type PendingChannelType = {
   __typename?: 'pendingChannelType';
   close_transaction_id?: Maybe<Scalars['String']>;
-  is_active?: Maybe<Scalars['Boolean']>;
-  is_closing?: Maybe<Scalars['Boolean']>;
-  is_opening?: Maybe<Scalars['Boolean']>;
-  local_balance?: Maybe<Scalars['Int']>;
-  local_reserve?: Maybe<Scalars['Int']>;
-  partner_public_key?: Maybe<Scalars['String']>;
-  received?: Maybe<Scalars['Int']>;
-  remote_balance?: Maybe<Scalars['Int']>;
-  remote_reserve?: Maybe<Scalars['Int']>;
-  sent?: Maybe<Scalars['Int']>;
+  is_active: Scalars['Boolean'];
+  is_closing: Scalars['Boolean'];
+  is_opening: Scalars['Boolean'];
+  local_balance: Scalars['Int'];
+  local_reserve: Scalars['Int'];
+  partner_public_key: Scalars['String'];
+  received: Scalars['Int'];
+  remote_balance: Scalars['Int'];
+  remote_reserve: Scalars['Int'];
+  sent: Scalars['Int'];
   transaction_fee?: Maybe<Scalars['Int']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  transaction_vout?: Maybe<Scalars['Int']>;
-  partner_node_info?: Maybe<Node>;
+  transaction_id: Scalars['String'];
+  transaction_vout: Scalars['Int'];
+  partner_node_info: Node;
 };
 
 export type WalletInfoType = {
   __typename?: 'walletInfoType';
-  build_tags?: Maybe<Array<Maybe<Scalars['String']>>>;
-  commit_hash?: Maybe<Scalars['String']>;
-  is_autopilotrpc_enabled?: Maybe<Scalars['Boolean']>;
-  is_chainrpc_enabled?: Maybe<Scalars['Boolean']>;
-  is_invoicesrpc_enabled?: Maybe<Scalars['Boolean']>;
-  is_signrpc_enabled?: Maybe<Scalars['Boolean']>;
-  is_walletrpc_enabled?: Maybe<Scalars['Boolean']>;
-  is_watchtowerrpc_enabled?: Maybe<Scalars['Boolean']>;
-  is_wtclientrpc_enabled?: Maybe<Scalars['Boolean']>;
+  build_tags: Array<Scalars['String']>;
+  commit_hash: Scalars['String'];
+  is_autopilotrpc_enabled: Scalars['Boolean'];
+  is_chainrpc_enabled: Scalars['Boolean'];
+  is_invoicesrpc_enabled: Scalars['Boolean'];
+  is_signrpc_enabled: Scalars['Boolean'];
+  is_walletrpc_enabled: Scalars['Boolean'];
+  is_watchtowerrpc_enabled: Scalars['Boolean'];
+  is_wtclientrpc_enabled: Scalars['Boolean'];
 };
 
 export type DecodeType = {
   __typename?: 'decodeType';
-  chain_address?: Maybe<Scalars['String']>;
+  chain_address: Scalars['String'];
   cltv_delta?: Maybe<Scalars['Int']>;
-  description?: Maybe<Scalars['String']>;
-  description_hash?: Maybe<Scalars['String']>;
-  destination?: Maybe<Scalars['String']>;
-  expires_at?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  mtokens?: Maybe<Scalars['String']>;
+  description: Scalars['String'];
+  description_hash: Scalars['String'];
+  destination: Scalars['String'];
+  expires_at: Scalars['String'];
+  id: Scalars['String'];
+  mtokens: Scalars['String'];
   payment?: Maybe<Scalars['String']>;
-  routes?: Maybe<Array<Maybe<Array<Maybe<RouteType>>>>>;
-  safe_tokens?: Maybe<Scalars['Int']>;
-  tokens?: Maybe<Scalars['Int']>;
+  routes: Array<Maybe<Array<Maybe<RouteType>>>>;
+  safe_tokens: Scalars['Int'];
+  tokens: Scalars['Int'];
   destination_node: Node;
   probe_route?: Maybe<ProbeRoute>;
 };
@@ -786,7 +786,7 @@ export type RouteType = {
   channel?: Maybe<Scalars['String']>;
   cltv_delta?: Maybe<Scalars['Int']>;
   fee_rate?: Maybe<Scalars['Int']>;
-  public_key?: Maybe<Scalars['String']>;
+  public_key: Scalars['String'];
 };
 
 export type PayType = {

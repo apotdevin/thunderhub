@@ -68,7 +68,10 @@ export const getWithCopy = (text: string) => {
   );
 };
 
-export const getNodeLink = (publicKey: string, alias?: string) => {
+export const getNodeLink = (
+  publicKey: string | undefined | null,
+  alias: string | undefined | null
+) => {
   if (!publicKey || (alias && alias === 'Node not found')) {
     return 'Node not found';
   }
@@ -143,7 +146,7 @@ export const getStatusDot = (status: boolean, type: string) => {
 
 export const renderLine = (
   title: string,
-  content: number | string | JSX.Element,
+  content: number | string | JSX.Element | undefined | null,
   key?: string | number,
   deleteCallback?: () => void
 ) => {

@@ -14,7 +14,7 @@ import {
 } from '../../../../components/buttons/multiButton/MultiButton';
 
 interface OpenChannelProps {
-  initialPublicKey?: string;
+  initialPublicKey: string | undefined | null;
   setOpenCard: (card: string) => void;
 }
 
