@@ -112,7 +112,7 @@ export const ClosedCard = ({
   };
 
   return (
-    <SubCard color={nodeColor} key={index}>
+    <SubCard subColor={nodeColor} key={index}>
       <MainInfo onClick={() => handleClick()}>
         <ResponsiveLine>
           <NodeTitle>{alias || partner_public_key?.substring(0, 6)}</NodeTitle>

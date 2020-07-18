@@ -14,14 +14,14 @@ export const Price = ({
   breakNumber = false,
   override,
 }: {
-  amount: number | string;
+  amount: number | string | null | undefined;
   breakNumber?: boolean;
   override?: string;
 }): JSX.Element => {
   const { currency, displayValues } = useConfigState();
   const { fiat, prices, dontShow } = usePriceState();
 
-  if (!displayValues) {
+  if (!displayValues || !amount) {
     return <>-</>;
   }
 

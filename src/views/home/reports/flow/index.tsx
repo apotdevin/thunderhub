@@ -142,8 +142,8 @@ export const FlowBox = () => {
   ];
 
   const invoicePie = [
-    { x: 'Confirmed', y: data.getInOut.confirmedInvoices },
-    { x: 'Unconfirmed', y: data.getInOut.unConfirmedInvoices },
+    { x: 'Confirmed', y: data.getInOut?.confirmedInvoices || 0 },
+    { x: 'Unconfirmed', y: data.getInOut?.unConfirmedInvoices || 0 },
   ];
 
   const props = {

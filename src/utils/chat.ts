@@ -35,7 +35,8 @@ export const getSubMessage = (
   message: string,
   tokens: number,
   isSent: boolean
-) => {
+): string => {
+  if (!contentType) return '';
   switch (contentType) {
     case 'payment':
       if (isSent) {

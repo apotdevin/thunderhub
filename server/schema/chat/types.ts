@@ -3,7 +3,7 @@ import { gql } from 'apollo-server-micro';
 export const chatTypes = gql`
   type getMessagesType {
     token: String
-    messages: [messagesType]
+    messages: [messagesType]!
   }
 
   type messagesType {

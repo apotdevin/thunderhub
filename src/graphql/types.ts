@@ -423,21 +423,21 @@ export type Node = {
 
 export type NodeInfoType = {
   __typename?: 'nodeInfoType';
-  chains?: Maybe<Array<Maybe<Scalars['String']>>>;
-  color?: Maybe<Scalars['String']>;
-  active_channels_count?: Maybe<Scalars['Int']>;
-  closed_channels_count?: Maybe<Scalars['Int']>;
-  alias?: Maybe<Scalars['String']>;
-  current_block_hash?: Maybe<Scalars['String']>;
-  current_block_height?: Maybe<Scalars['Int']>;
-  is_synced_to_chain?: Maybe<Scalars['Boolean']>;
-  is_synced_to_graph?: Maybe<Scalars['Boolean']>;
-  latest_block_at?: Maybe<Scalars['String']>;
-  peers_count?: Maybe<Scalars['Int']>;
-  pending_channels_count?: Maybe<Scalars['Int']>;
-  public_key?: Maybe<Scalars['String']>;
-  uris?: Maybe<Array<Maybe<Scalars['String']>>>;
-  version?: Maybe<Scalars['String']>;
+  chains: Array<Scalars['String']>;
+  color: Scalars['String'];
+  active_channels_count: Scalars['Int'];
+  closed_channels_count: Scalars['Int'];
+  alias: Scalars['String'];
+  current_block_hash: Scalars['String'];
+  current_block_height: Scalars['Int'];
+  is_synced_to_chain: Scalars['Boolean'];
+  is_synced_to_graph: Scalars['Boolean'];
+  latest_block_at: Scalars['String'];
+  peers_count: Scalars['Int'];
+  pending_channels_count: Scalars['Int'];
+  public_key: Scalars['String'];
+  uris: Array<Scalars['String']>;
+  version: Scalars['String'];
 };
 
 export type ServerAccountType = {
@@ -535,16 +535,16 @@ export type BitcoinFeeType = {
 
 export type PeerType = {
   __typename?: 'peerType';
-  bytes_received?: Maybe<Scalars['Int']>;
-  bytes_sent?: Maybe<Scalars['Int']>;
-  is_inbound?: Maybe<Scalars['Boolean']>;
+  bytes_received: Scalars['Int'];
+  bytes_sent: Scalars['Int'];
+  is_inbound: Scalars['Boolean'];
   is_sync_peer?: Maybe<Scalars['Boolean']>;
-  ping_time?: Maybe<Scalars['Int']>;
-  public_key?: Maybe<Scalars['String']>;
-  socket?: Maybe<Scalars['String']>;
-  tokens_received?: Maybe<Scalars['Int']>;
-  tokens_sent?: Maybe<Scalars['Int']>;
-  partner_node_info?: Maybe<Node>;
+  ping_time: Scalars['Int'];
+  public_key: Scalars['String'];
+  socket: Scalars['String'];
+  tokens_received: Scalars['Int'];
+  tokens_sent: Scalars['Int'];
+  partner_node_info: Node;
 };
 
 export type GetUtxosType = {
@@ -582,7 +582,7 @@ export type GetTransactionsType = {
 export type GetMessagesType = {
   __typename?: 'getMessagesType';
   token?: Maybe<Scalars['String']>;
-  messages?: Maybe<Array<Maybe<MessagesType>>>;
+  messages: Array<Maybe<MessagesType>>;
 };
 
 export type MessagesType = {
@@ -666,8 +666,8 @@ export type ChannelReportType = {
 
 export type ChannelBalanceType = {
   __typename?: 'channelBalanceType';
-  confirmedBalance?: Maybe<Scalars['Int']>;
-  pendingBalance?: Maybe<Scalars['Int']>;
+  confirmedBalance: Scalars['Int'];
+  pendingBalance: Scalars['Int'];
 };
 
 export type ChannelType = {
@@ -1067,6 +1067,6 @@ export type BaseNodesType = {
   __typename?: 'baseNodesType';
   _id?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
-  public_key?: Maybe<Scalars['String']>;
-  socket?: Maybe<Scalars['String']>;
+  public_key: Scalars['String'];
+  socket: Scalars['String'];
 };

@@ -16,7 +16,7 @@ import { ChannelCard } from './ChannelCard';
 import { ChannelGoToToast } from './Channel.style';
 
 export const Channels: React.FC = () => {
-  const toastId = useRef(null);
+  const toastId = useRef<any>(null);
   const { push } = useRouter();
 
   const { sortDirection, channelSort } = useConfigState();
@@ -43,7 +43,9 @@ export const Channels: React.FC = () => {
     if (!hasIn || !hasOut) {
       toast.dismiss(toastId.current);
     }
-    return () => toast.dismiss();
+    return () => {
+      toast.dismiss();
+    };
   }, [hasIn, hasOut, push]);
 
   const { loading, data } = useGetChannelsQuery({
@@ -68,9 +70,9 @@ export const Channels: React.FC = () => {
     const {
       local_balance,
       remote_balance,
-      partner_node_info = {},
+      partner_node_info,
       partner_fee_info = {},
-    } = channel;
+    } = channel || {};
 
     const { capacity, channel_count } = partner_node_info?.node || {};
     const { base_fee_mtokens, fee_rate } =
@@ -79,7 +81,7 @@ export const Channels: React.FC = () => {
     const partner = Number(capacity) || 0;
     const channels = Number(channel_count) || 0;
 
-    const max = Math.max(local_balance, remote_balance);
+    const max = Math.max(local_balance || 0, remote_balance || 0);
 
     if (max > biggest) {
       biggest = max;
@@ -93,7 +95,7 @@ export const Channels: React.FC = () => {
     if (Number(base_fee_mtokens) > biggestBaseFee) {
       biggestBaseFee = Number(base_fee_mtokens);
     }
-    if (fee_rate > biggestRateFee) {
+    if (fee_rate && fee_rate > biggestRateFee) {
       biggestRateFee = fee_rate;
     }
   }
@@ -147,7 +149,7 @@ export const Channels: React.FC = () => {
         const newArray = sortBy(
           data.getChannels,
           (channel: ChannelType) =>
-            channel.partner_fee_info.channel.partner_node_policies.fee_rate
+            channel?.partner_fee_info?.channel?.partner_node_policies?.fee_rate
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }

@@ -47,19 +47,21 @@ const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
     </>
   );
   return (
-    <SubCard key={channel.id}>
-      <Clickable onClick={() => openSet(open ? 0 : index)}>
-        <ResponsiveLine>
-          <SubTitle>{channel?.partner?.node?.alias}</SubTitle>
-          <ScoreLine>
-            <DarkSubTitle>Score</DarkSubTitle>
-            {channel.score}
-            {getIcon(channel.score, !channel.significant)}
-          </ScoreLine>
-        </ResponsiveLine>
-      </Clickable>
-      {open && renderContent()}
-    </SubCard>
+    <React.Fragment key={channel.id || ''}>
+      <SubCard>
+        <Clickable onClick={() => openSet(open ? 0 : index)}>
+          <ResponsiveLine>
+            <SubTitle>{channel?.partner?.node?.alias}</SubTitle>
+            <ScoreLine>
+              <DarkSubTitle>Score</DarkSubTitle>
+              {channel.score}
+              {getIcon(channel.score, !channel.significant)}
+            </ScoreLine>
+          </ResponsiveLine>
+        </Clickable>
+        {open && renderContent()}
+      </SubCard>
+    </React.Fragment>
   );
 };
 

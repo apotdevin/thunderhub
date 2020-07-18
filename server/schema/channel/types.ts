@@ -55,8 +55,8 @@ export const channelTypes = gql`
   }
 
   type channelBalanceType {
-    confirmedBalance: Int
-    pendingBalance: Int
+    confirmedBalance: Int!
+    pendingBalance: Int!
   }
 
   type channelType {

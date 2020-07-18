@@ -99,7 +99,7 @@ export const BalanceRoute = ({
       return (
         <>
           <Sub4Title>Route</Sub4Title>
-          <SubCard color={themeColors.blue3}>
+          <SubCard subColor={themeColors.blue3}>
             {renderLine('Total Tokens', <Price amount={route.tokens} />)}
             {renderLine(
               'Fee %',

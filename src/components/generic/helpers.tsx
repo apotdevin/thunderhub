@@ -59,7 +59,8 @@ export const getTransactionLink = (transaction: string) => {
   );
 };
 
-export const getWithCopy = (text: string) => {
+export const getWithCopy = (text: string | null | undefined) => {
+  if (!text) return null;
   return (
     <>
       {shorten(text)}
@@ -70,7 +71,7 @@ export const getWithCopy = (text: string) => {
 
 export const getNodeLink = (
   publicKey: string | undefined | null,
-  alias: string | undefined | null
+  alias?: string | undefined | null
 ) => {
   if (!publicKey || (alias && alias === 'Node not found')) {
     return 'Node not found';
@@ -91,15 +92,23 @@ export const getNodeLink = (
   );
 };
 
-export const getDateDif = (date: string) => {
+export const getDateDif = (date: string | null | undefined): string | null => {
+  if (!date) return null;
   return formatDistanceToNowStrict(new Date(date));
 };
 
-export const getFormatDate = (date: string) => {
+export const getFormatDate = (
+  date: string | null | undefined
+): string | null => {
+  if (!date) return null;
   return format(new Date(date), 'dd/MM/yyyy - HH:mm:ss');
 };
 
-export const getMessageDate = (date: string, formatType?: string): string => {
+export const getMessageDate = (
+  date: string | null | undefined,
+  formatType?: string
+): string => {
+  if (!date) return '';
   let distance = formatDistanceToNowStrict(new Date(date));
 
   if (distance.indexOf('minute') >= 0 || distance.indexOf('second') >= 0) {
@@ -149,7 +158,7 @@ export const renderLine = (
   content: number | string | JSX.Element | undefined | null,
   key?: string | number,
   deleteCallback?: () => void
-) => {
+): JSX.Element | null => {
   if (!content) return null;
   return (
     <DetailLine key={key}>

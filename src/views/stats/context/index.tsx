@@ -7,9 +7,9 @@ type State = {
 };
 
 type ChangeState = {
-  volumeScore?: number;
-  timeScore?: number;
-  feeScore?: number;
+  volumeScore?: number | undefined | null;
+  timeScore?: number | undefined | null;
+  feeScore?: number | undefined | null;
 };
 
 type ActionType = {

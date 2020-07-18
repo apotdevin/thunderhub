@@ -11,7 +11,7 @@ const getValueString = (amount: number): string => {
 };
 
 interface GetNumberProps {
-  amount: string | number;
+  amount: string | number | null | undefined;
   price: number;
   symbol: string;
   currency: string;
@@ -29,6 +29,7 @@ export const getValue = ({
   override,
   noUnit,
 }: GetNumberProps): string => {
+  if (!amount) return '';
   const correctCurrency = override || currency;
   let value = 0;
   if (typeof amount === 'string') {
@@ -64,7 +65,8 @@ export const getValue = ({
 
 export const formatSats = (value: number) => numeral(value).format('0,0.[000]');
 
-export const btcToSat = (value: number | string): number => {
+export const btcToSat = (value: number | string | null | undefined): number => {
+  if (!value) return 0;
   const amount = Number(value);
 
   if (isNaN(amount)) {
@@ -130,7 +132,9 @@ export const cleanLightningInvoice = (invoice: string) => {
   return invoice.replace('LIGHTNING:', '').replace('lightning:', '');
 };
 
-export const formatSeconds = (seconds: number): string | null => {
+export const formatSeconds = (
+  seconds: number | null | undefined
+): string | null => {
   if (!seconds || seconds === 0) {
     return null;
   }

@@ -88,7 +88,7 @@ export const chatResolvers = {
         );
 
       const filtered = await getFiltered();
-      const final = filtered.filter(message => !!message);
+      const final = filtered.filter(Boolean) || [];
 
       return { token: invoiceList.next, messages: final };
     },

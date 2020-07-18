@@ -62,7 +62,7 @@ export const OfferCard = ({
     trader,
   } = offer;
 
-  const { author_fee_rate } = fee;
+  const { author_fee_rate } = fee || {};
 
   const {
     login,
@@ -78,7 +78,7 @@ export const OfferCard = ({
     average_payment_time_minutes,
     average_release_time_minutes,
     days_since_last_trade,
-  } = trader;
+  } = trader || {};
 
   const handleClick = () => {
     if (indexOpen === index) {
@@ -145,15 +145,17 @@ export const OfferCard = ({
             View Offer
           </ColorButton>
         </Link>
-        <Link href={url} underline={'transparent'} fullWidth={true}>
-          <ColorButton
-            withBorder={true}
-            withMargin={'16px 0 0 8px'}
-            fullWidth={true}
-          >
-            View trader
-          </ColorButton>
-        </Link>
+        {url && (
+          <Link href={url} underline={'transparent'} fullWidth={true}>
+            <ColorButton
+              withBorder={true}
+              withMargin={'16px 0 0 8px'}
+              fullWidth={true}
+            >
+              View trader
+            </ColorButton>
+          </Link>
+        )}
       </SingleLine>
     </>
   );
@@ -161,7 +163,9 @@ export const OfferCard = ({
   return (
     <SubCard withMargin={'16px 0 24px'} key={`${index}-${id}`}>
       <MainInfo onClick={() => handleClick()}>
-        <MethodBoxes methods={payment_method_instructions} />
+        {payment_method_instructions?.length && (
+          <MethodBoxes methods={payment_method_instructions} />
+        )}
         <ResponsiveLine>
           <SubTitle>
             {side !== 'buy' ? asset_code : currency_code}
@@ -170,7 +174,7 @@ export const OfferCard = ({
           </SubTitle>
           <SingleLine>
             <StyledLogin>{login}</StyledLogin>
-            {trades_count > 0 && (
+            {(trades_count || 0) > 0 && (
               <TradesAmount>{`(${trades_count}) `}</TradesAmount>
             )}
             <Rating rating={Number(rating)} />

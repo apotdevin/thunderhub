@@ -38,7 +38,7 @@ const TypeText = styled.div`
 
 const renderIntro = () => (
   <Section color={'transparent'}>
-    <ConnectTitle change={true}>Hi! Welcome to ThunderHub</ConnectTitle>
+    <ConnectTitle changeColor={true}>Hi! Welcome to ThunderHub</ConnectTitle>
     <Card>
       {'To start you must create an account on your server. '}
       <Link
@@ -54,7 +54,7 @@ const renderIntro = () => (
 export const Accounts = () => {
   const { push } = useRouter();
   const dispatchStatus = useStatusDispatch();
-  const [newAccount, setNewAccount] = React.useState<string>();
+  const [newAccount, setNewAccount] = React.useState<string>('');
 
   const { accounts, activeAccount, account } = useAccountState();
   const dispatch = useAccountDispatch();
@@ -74,7 +74,8 @@ export const Accounts = () => {
     }
   }, [data, loading, newAccount, dispatch, push, dispatchStatus]);
 
-  const change = accounts.length > 0 && dontShowSessionLogin(account);
+  const change =
+    accounts.length > 0 && account && dontShowSessionLogin(account);
 
   if (accounts.length <= 0) {
     if (noClient && !account) {
@@ -114,7 +115,7 @@ export const Accounts = () => {
     if (admin && !viewOnly) {
       return '(Admin Only)';
     }
-    return null;
+    return '';
   };
 
   const getTitle = (account: CompleteAccount) => {
@@ -161,7 +162,9 @@ export const Accounts = () => {
     if (viewOnly) {
       setNewAccount(id);
       getCanConnect({
-        variables: { auth: getAuthObj(host, viewOnly, null, cert) },
+        variables: {
+          auth: getAuthObj(host, viewOnly, undefined, cert),
+        },
       });
     } else if (type === SSO_ACCOUNT) {
       setNewAccount(id);
@@ -180,7 +183,7 @@ export const Accounts = () => {
 
   return (
     <Section color={'transparent'}>
-      <ConnectTitle change={change}>
+      <ConnectTitle changeColor={change}>
         {change ? 'Accounts' : 'Other Accounts'}
       </ConnectTitle>
       <Card>

@@ -45,13 +45,13 @@ export const ChatInit = () => {
     if (!initLoading && !initError && initData && initData.getMessages) {
       const { messages } = initData.getMessages;
 
-      if (messages.length <= 0) {
+      if (!messages?.length) {
         dispatch({ type: 'initialized' });
         return;
       }
 
-      const lastChat = messages[0].id || '';
-      const sender = messages[0].sender || '';
+      const lastChat = messages[0]?.id || '';
+      const sender = messages[0]?.sender || '';
 
       dispatch({
         type: 'initialized',
