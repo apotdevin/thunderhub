@@ -13,6 +13,8 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
 import { parseCookies } from '../src/utils/cookies';
 import 'react-circular-progressbar/dist/styles.css';
+import { NextPage } from 'next';
+import App, { AppProps } from 'next/app';
 
 const Wrapper: React.FC = ({ children }) => {
   const { theme } = useConfigState();
@@ -36,7 +38,8 @@ const Wrapper: React.FC = ({ children }) => {
   );
 };
 
-const App = ({ Component, pageProps, initialConfig }) => (
+/** Not sure what to do here */
+const App: NextPage<AppProps> = ({ Component, pageProps, initialConfig }) => (
   <>
     <Head>
       <title>ThunderHub - Lightning Node Manager</title>
@@ -52,8 +55,9 @@ const App = ({ Component, pageProps, initialConfig }) => (
   </>
 );
 
-App.getInitialProps = async props => {
-  const cookies = parseCookies(props.ctx.req);
+/** Not sure what to do here */
+App.getInitialProps = async ({ req }): Promise<AppProps> => {
+  const cookies = parseCookies(req);
 
   if (!cookies?.theme) {
     return { initialConfig: 'dark' };

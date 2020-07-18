@@ -16,6 +16,7 @@ import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { InvoicePie } from './InvoicePie';
 import { FlowPie } from './FlowPie';
 import { FlowReport } from './FlowReport';
+import { ReportType, ReportDuration } from '../forwardReport/ForwardReport';
 
 export const ChannelRow = styled.div`
   font-size: 14px;
@@ -73,8 +74,8 @@ const timeMap: { [key: string]: string } = {
 };
 
 export const FlowBox = () => {
-  const [isTime, setIsTime] = useState<string>('month');
-  const [isType, setIsType] = useState<string>('amount');
+  const [isTime, setIsTime] = useState<ReportDuration>('month');
+  const [isType, setIsType] = useState<ReportType>('amount');
 
   const { auth } = useAccountState();
   const { data, loading } = useGetInOutQuery({
@@ -115,7 +116,7 @@ export const FlowBox = () => {
     );
   }
 
-  const reduce = (array: PeriodProps[]) =>
+  const reduce = (array: PeriodProps[]): PeriodProps =>
     array.reduce((p, c) => {
       return {
         tokens: p.tokens + c.tokens,
@@ -124,17 +125,18 @@ export const FlowBox = () => {
       };
     });
 
-  const emptyArray = {
+  const emptyData = {
     tokens: 0,
     period: 0,
     amount: 0,
-  };
+  } as const;
 
-  const totalInvoices = parsedData.length > 0 ? reduce(parsedData) : emptyArray;
+  const totalInvoices = parsedData.length > 0 ? reduce(parsedData) : emptyData;
   const totalPayments =
-    parsedData2.length > 0 ? reduce(parsedData2) : emptyArray;
+    parsedData2.length > 0 ? reduce(parsedData2) : emptyData;
 
   const flowPie = [
+    // Not sure if I've typed things incorrectly here or there's a bug
     { x: 'Invoice', y: totalInvoices[isType] },
     { x: 'Payments', y: totalPayments[isType] },
   ];

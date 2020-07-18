@@ -126,7 +126,7 @@ export const isLightningInvoice = (invoice: string): boolean => {
   return isValidLightningInvoice;
 };
 
-export const cleanLightningInvoice = invoice => {
+export const cleanLightningInvoice = (invoice: string) => {
   return invoice.replace('LIGHTNING:', '').replace('lightning:', '');
 };
 

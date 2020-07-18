@@ -8,7 +8,7 @@ import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 import { useConfigState } from '../../context/ConfigContext';
 
-export const ChatFetcher = () => {
+export const ChatFetcher: React.FC = () => {
   const newChatToastId = 'newChatToastId';
 
   const { chatPollingSpeed } = useConfigState();

@@ -2,12 +2,15 @@ import groupBy from 'lodash.groupby';
 import { sortBy } from 'underscore';
 import { MessagesType } from 'src/graphql/types';
 import { MessageType } from '../views/chat/Chat.types';
+import { ChatProps } from 'src/context/ChatContext';
 
-export const separateBySender = chats => {
+export const separateBySender = (chats: ChatProps[]) => {
   return groupBy(chats, 'sender');
 };
 
-export const getSenders = (bySender: {}): MessagesType[] => {
+export const getSenders = (
+  bySender: ReturnType<typeof separateBySender>
+): MessagesType[] => {
   const senders: MessagesType[] = [];
   for (const key in bySender) {
     if (Object.prototype.hasOwnProperty.call(bySender, key)) {

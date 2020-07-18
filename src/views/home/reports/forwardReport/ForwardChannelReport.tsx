@@ -18,6 +18,7 @@ import { getPrice } from '../../../../components/price/Price';
 import { useConfigState } from '../../../../context/ConfigContext';
 import { usePriceState } from '../../../../context/PriceContext';
 import { CardContent } from '.';
+import { ReportType, ReportDuration } from './ForwardReport';
 
 const ChannelRow = styled.div`
   font-size: 14px;
@@ -39,12 +40,12 @@ const LastTableLine = styled(TableLine)`
 `;
 
 interface Props {
-  isTime: string;
-  isType: string;
+  isTime: ReportDuration;
+  isType: ReportType;
 }
 
 export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
-  const [type, setType] = useState('route');
+  const [type, setType] = useState<'route' | 'incoming' | 'outgoing'>('route');
 
   const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
@@ -62,6 +63,7 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
     return <LoadingCard noCard={true} title={'Forward Report'} />;
   }
 
+  // JSON.parse is really bad... Absolutely no type safety at all
   const parsed = JSON.parse(data.getForwardChannelsReport || '[]');
 
   const getFormatString = (amount: number | string) => {
@@ -74,7 +76,7 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
 
   const renderRoute = (parsed: {}[]) => {
     const routes = parsed.map(
-      (channel: { aliasIn: string; aliasOut: string }, index: number) => (
+      (channel: { aliasIn: string; aliasOut: string }, index) => (
         <ChannelRow key={index}>
           <TableLine>{channel.aliasIn}</TableLine>
           <TableLine>{channel.aliasOut}</TableLine>
@@ -97,7 +99,7 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
 
   const renderChannels = (parsed: {}[]) => {
     const channels = parsed.map(
-      (channel: { alias: string; name: string }, index: number) => (
+      (channel: { alias: string; name: string }, index) => (
         <ChannelRow key={index}>
           <TableLine>{`${channel.alias}`}</TableLine>
           <DarkSubTitle>{`${channel.name}`}</DarkSubTitle>
@@ -118,7 +120,7 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
     );
   };
 
-  const renderContent = (parsed: {}[]) => {
+  const renderContent = parsed => {
     switch (type) {
       case 'route':
         return renderRoute(parsed);

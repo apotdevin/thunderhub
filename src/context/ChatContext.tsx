@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react';
 
-type ChatProps = {
+export type ChatProps = {
   date?: string;
   contentType?: string;
   alias?: string;
@@ -10,17 +10,10 @@ type ChatProps = {
   tokens?: number;
 };
 
-type SentChatProps = {
-  date?: string;
-  contentType?: string;
-  alias?: string;
-  message?: string;
-  id?: string;
-  sender?: string;
+interface SentChatProps extends ChatProps {
   isSent?: boolean;
   feePaid?: number;
-  tokens?: number;
-};
+}
 
 type State = {
   initialized: boolean;
@@ -108,7 +101,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const ChatProvider = ({ children }) => {
+const ChatProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (
