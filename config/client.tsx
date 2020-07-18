@@ -6,22 +6,26 @@ import { ApolloClient } from 'apollo-client';
 import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
+  NormalizedCacheObject,
 } from 'apollo-cache-inmemory';
 import getConfig from 'next/config';
 import introspectionQueryResultData from 'src/graphql/fragmentTypes.json';
+import { SchemaLink } from 'apollo-link-schema';
+import { NextPage } from 'next';
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData,
 });
 
-let globalApolloClient = null;
+let globalApolloClient: ReturnType<typeof createApolloClient> | null = null;
 
 const { publicRuntimeConfig } = getConfig();
 const { apiUrl: uri } = publicRuntimeConfig;
 
-function createIsomorphLink(ctx) {
+type Context = SchemaLink.ResolverContextFunction | Record<string, any>;
+
+function createIsomorphLink(ctx: Context) {
   if (typeof window === 'undefined') {
-    const { SchemaLink } = require('apollo-link-schema');
     const schema = require('server/schema');
     return new SchemaLink({ schema, context: ctx });
   } else {
@@ -36,9 +40,8 @@ function createIsomorphLink(ctx) {
 
 /**
  * Creates and configures the ApolloClient
- * @param  {Object} [initialState={}]
  */
-function createApolloClient(ctx = {}, initialState = {}) {
+function createApolloClient(ctx: Context, initialState: NormalizedCacheObject) {
   const ssrMode = typeof window === 'undefined';
   const cache = new InMemoryCache({ fragmentMatcher }).restore(initialState);
 
@@ -53,9 +56,8 @@ function createApolloClient(ctx = {}, initialState = {}) {
 /**
  * Always creates a new apollo client on the server
  * Creates or reuses apollo client in the browser.
- * @param  {Object} initialState
  */
-function initApolloClient(ctx, initialState?) {
+function initApolloClient(ctx: Context, initialState?: NormalizedCacheObject) {
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
   if (typeof window === 'undefined') {
@@ -70,16 +72,29 @@ function initApolloClient(ctx, initialState?) {
   return globalApolloClient;
 }
 
+interface WithApolloProps {
+  apolloClient?: ApolloClient<NormalizedCacheObject>;
+  apolloState?: NormalizedCacheObject;
+}
+
+interface WithApolloOptions {
+  ssr?: boolean;
+}
+
 /**
  * Creates and provides the apolloContext
  * to a next.js PageTree. Use it by wrapping
  * your PageComponent via HOC pattern.
- * @param {Function|Class} PageComponent
- * @param {Object} [config]
- * @param {Boolean} [config.ssr=true]
  */
-export function withApollo(PageComponent, { ssr = true } = {}) {
-  const WithApollo = ({ apolloClient, apolloState, ...pageProps }) => {
+export function withApollo(
+  PageComponent: NextPage,
+  { ssr }: WithApolloOptions = { ssr: true }
+) {
+  const WithApollo: NextPage<WithApolloProps> = ({
+    apolloClient,
+    apolloState,
+    ...pageProps
+  }) => {
     const client = apolloClient || initApolloClient(undefined, apolloState);
     return (
       <ApolloProvider client={client}>
@@ -101,15 +116,16 @@ export function withApollo(PageComponent, { ssr = true } = {}) {
   }
 
   if (ssr || PageComponent.getInitialProps) {
-    WithApollo.getInitialProps = async ctx => {
+    WithApollo.getInitialProps = async (ctx): Promise<WithApolloProps> => {
       const { AppTree } = ctx;
 
       // Initialize ApolloClient, add it to the ctx object so
       // we can use it in `PageComponent.getInitialProp`.
-      const apolloClient = (ctx.apolloClient = initApolloClient({
+      const apolloClient = initApolloClient({
         res: ctx.res,
         req: ctx.req,
-      }));
+      });
+      (ctx as any).apolloClient = apolloClient;
 
       // Run wrapped getInitialProps methods
       let pageProps = {};
@@ -122,7 +138,7 @@ export function withApollo(PageComponent, { ssr = true } = {}) {
         // When redirecting, the response is finished.
         // No point in continuing to render
         if (ctx.res && ctx.res.finished) {
-          return pageProps;
+          return pageProps as WithApolloProps;
         }
 
         // Only if ssr is enabled

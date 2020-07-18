@@ -19,7 +19,7 @@ import { chartColors } from '../../styles/Themes';
 import { encode } from '../../utils/helpers';
 import { appendBasePath } from '../../utils/basePath';
 import { SortOptions } from './OfferConfigs';
-import { FilterModal } from './Modal/FilterModal';
+import { FilterModal, ModalType } from './Modal/FilterModal';
 
 export type FilterActionType = {
   type: 'addFilter' | 'addSort' | 'removeSort' | 'removeFilter' | 'changeLimit';
@@ -82,7 +82,7 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
 
   const [filterState, dispatch] = useReducer(reducer, offerFilters);
 
-  const [modalType, setModalType] = useState<string>('none');
+  const [modalType, setModalType] = useState<ModalType>('none');
   const [willApply, setWillApply] = useState<boolean>(false);
 
   const renderButton = (
@@ -109,16 +109,10 @@ export const OfferFilters = ({ offerFilters }: FilterProps) => {
 
   const renderAppliedFilters = () => {
     const currentFilters = filterState.filters;
-    const activeFilters = [];
-    for (const key in currentFilters) {
-      if (Object.prototype.hasOwnProperty.call(currentFilters, key)) {
-        const element = currentFilters[key];
-        activeFilters.push(
-          renderLine(key, element, `${key}-${element}`, () => handleRemove(key))
-        );
-      }
-    }
-    return <>{activeFilters.map(filter => filter)}</>;
+    const activeFilters = Object.entries(currentFilters).map(([key, element]) =>
+      renderLine(key, element, `${key}-${element}`, () => handleRemove(key))
+    );
+    return <>{activeFilters}</>;
   };
 
   const renderLimitOptions = () => {

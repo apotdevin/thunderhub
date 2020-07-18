@@ -37,12 +37,9 @@ export const reduceInOutArray = (list: InOutListProps) => {
   for (const key in list) {
     if (Object.prototype.hasOwnProperty.call(list, key)) {
       const element: InOutProps[] = list[key];
-      const reducedArray: InOutProps = reduce(
-        element,
-        (a: ReduceObjectProps, b: ReduceObjectProps) => ({
-          tokens: a.tokens + b.tokens,
-        })
-      );
+      const reducedArray: InOutProps = reduce(element, (a, b) => ({
+        tokens: a.tokens + b.tokens,
+      }));
       reducedOrder.push({
         period: Number(key),
         amount: element.length,

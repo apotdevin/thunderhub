@@ -27,6 +27,7 @@ export interface QueryProps {
     limit: number;
     offset: number;
   };
+  // TODO: this is not correct
   filters: {};
   sort: {
     by: string;
@@ -39,6 +40,7 @@ const defaultQuery: QueryProps = {
     limit: 25,
     offset: 0,
   },
+  // TODO: this is not correct
   filters: {},
   sort: {
     by: '',

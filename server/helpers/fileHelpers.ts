@@ -78,7 +78,8 @@ export const parseYaml = (filePath: string): AccountConfigType | null => {
 
   try {
     const yamlObject = yaml.safeLoad(yamlConfig);
-    return yamlObject;
+    // TODO: validate this, before returning?
+    return yamlObject as AccountConfigType;
   } catch (err) {
     logger.error(
       'Something went wrong while parsing the YAML config file: \n' + err

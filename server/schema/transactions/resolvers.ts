@@ -70,7 +70,7 @@ export const transactionResolvers = {
         isTypeOf: 'PaymentType',
       }));
 
-      const filterArray = payment => {
+      const filterArray = (payment: typeof payments[number]) => {
         const last =
           compareDesc(new Date(lastInvoiceDate), new Date(payment.date)) === 1;
         const first = params.token

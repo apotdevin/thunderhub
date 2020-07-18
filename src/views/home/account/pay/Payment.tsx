@@ -12,10 +12,11 @@ import { useStatusState } from '../../../../context/StatusContext';
 import { isLightningInvoice } from '../../../../utils/helpers';
 import { RequestModal } from './RequestModal';
 import { KeysendModal } from './KeysendModal';
+import { ModalType } from 'src/views/trading/Modal/FilterModal';
 
 export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const [request, setRequest] = useState<string>('');
-  const [modalType, setModalType] = useState('none');
+  const [modalType, setModalType] = useState<ModalType>('none');
 
   const { minorVersion } = useStatusState();
 

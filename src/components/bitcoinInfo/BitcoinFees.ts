@@ -3,7 +3,7 @@ import { useGetBitcoinFeesQuery } from 'src/graphql/queries/__generated__/getBit
 import { useBitcoinDispatch } from '../../context/BitcoinContext';
 import { useConfigState } from '../../context/ConfigContext';
 
-export const BitcoinFees = () => {
+export const BitcoinFees: React.FC = () => {
   const { fetchFees } = useConfigState();
   const setInfo = useBitcoinDispatch();
 

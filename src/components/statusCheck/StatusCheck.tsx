@@ -6,7 +6,7 @@ import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeIn
 import { useStatusDispatch } from '../../context/StatusContext';
 import { appendBasePath } from '../../utils/basePath';
 
-export const StatusCheck = () => {
+export const StatusCheck: React.FC = () => {
   const dispatch = useStatusDispatch();
   const { push } = useRouter();
 

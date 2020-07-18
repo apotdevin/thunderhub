@@ -4,23 +4,24 @@ import {
   MultiButton,
 } from 'src/components/buttons/multiButton/MultiButton';
 import { ResponsiveSingle } from 'src/components/generic/Styled';
+import { ReportType, ReportDuration } from './ForwardReport';
 
 interface ButtonProps {
-  isTime: string;
-  isType: string;
+  isTime: ReportDuration;
+  isType: ReportType;
   withFee?: boolean;
-  setIsTime: (text: string) => void;
-  setIsType: (text: string) => void;
+  setIsTime: (text: ReportDuration) => void;
+  setIsType: (text: ReportType) => void;
 }
 
-export const ButtonRow = ({
+export const ButtonRow: React.FC<ButtonProps> = ({
   withFee,
   isTime,
   setIsTime,
   isType,
   setIsType,
-}: ButtonProps) => {
-  const timeButton = (time: string, title: string) => (
+}) => {
+  const timeButton = (time: ReportDuration, title: string) => (
     <SingleButton
       withPadding={'4px 8px'}
       onClick={() => setIsTime(time)}
@@ -30,7 +31,7 @@ export const ButtonRow = ({
     </SingleButton>
   );
 
-  const typeButton = (type: string, title: string) => (
+  const typeButton = (type: ReportType, title: string) => (
     <SingleButton
       withPadding={'4px 8px'}
       onClick={() => setIsType(type)}
