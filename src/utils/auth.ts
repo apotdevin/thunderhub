@@ -49,14 +49,22 @@ export const getBase64CertfromDerFormat = (base64: string) => {
   return pemText;
 };
 
-const emptyObject = {
+interface ConfigLnd {
+  cert?: string;
+  admin?: string;
+  viewOnly?: string;
+  host?: string;
+  name?: string;
+}
+
+const emptyObject: ConfigLnd = {
   cert: undefined,
   admin: undefined,
   viewOnly: undefined,
   host: undefined,
 };
 
-export const getConfigLnd = (json: string) => {
+export const getConfigLnd = (json: string): ConfigLnd => {
   const parsedJson = JSON.parse(json);
 
   const config = parsedJson.configurations;
@@ -79,7 +87,7 @@ export const getConfigLnd = (json: string) => {
   return emptyObject;
 };
 
-export const getQRConfig = (json: string) => {
+export const getQRConfig = (json: string): ConfigLnd => {
   const config = JSON.parse(json);
 
   if (config) {

@@ -23,9 +23,18 @@ import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
 import { CardContent } from '.';
 
+export type ReportDuration =
+  | 'day'
+  | 'week'
+  | 'month'
+  | 'quarter_year'
+  | 'half_year'
+  | 'year';
+export type ReportType = 'fee' | 'tokens' | 'amount';
+
 interface Props {
-  isTime: string;
-  isType: string;
+  isTime: ReportDuration;
+  isType: ReportType;
 }
 
 const timeMap: { [key: string]: string } = {
@@ -71,7 +80,10 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
     barWidth = 1;
   }
 
-  const parsedData: {}[] = JSON.parse(data.getForwardReport || '[]');
+  // Should find a way to avoid JSON.parse
+  const parsedData: Array<{ [key in ReportType]: number }> = JSON.parse(
+    data.getForwardReport || '[]'
+  );
 
   const getLabelString = (value: number) => {
     if (isType === 'amount') {
@@ -81,7 +93,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
   };
 
   const total = getLabelString(
-    parsedData.map(x => x[isType]).reduce((a: number, c: number) => a + c, 0)
+    parsedData.map(x => x[isType]).reduce((a, c) => a + c, 0)
   );
 
   const renderContent = () => {

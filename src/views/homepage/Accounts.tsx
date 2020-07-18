@@ -10,6 +10,7 @@ import {
   useAccountDispatch,
   SSO_ACCOUNT,
   SERVER_ACCOUNT,
+  CompleteAccount,
 } from 'src/context/AccountContext';
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
@@ -53,7 +54,7 @@ const renderIntro = () => (
 export const Accounts = () => {
   const { push } = useRouter();
   const dispatchStatus = useStatusDispatch();
-  const [newAccount, setNewAccount] = React.useState();
+  const [newAccount, setNewAccount] = React.useState<string>();
 
   const { accounts, activeAccount, account } = useAccountState();
   const dispatch = useAccountDispatch();
@@ -116,7 +117,7 @@ export const Accounts = () => {
     return null;
   };
 
-  const getTitle = account => {
+  const getTitle = (account: CompleteAccount) => {
     const { type, name, loggedIn } = account;
     if (type !== CLIENT_ACCOUNT) {
       const props = {
@@ -135,7 +136,7 @@ export const Accounts = () => {
     return name;
   };
 
-  const getButtonTitle = (account): string => {
+  const getButtonTitle = (account: CompleteAccount): string => {
     if (account.viewOnly || account.type === SSO_ACCOUNT) {
       return 'Connect';
     }
@@ -145,7 +146,7 @@ export const Accounts = () => {
     return 'Login';
   };
 
-  const getArrow = (account): boolean => {
+  const getArrow = (account: CompleteAccount): boolean => {
     if (account.viewOnly || account.type === SSO_ACCOUNT) {
       return false;
     }
@@ -155,7 +156,7 @@ export const Accounts = () => {
     return true;
   };
 
-  const handleClick = account => () => {
+  const handleClick = (account: CompleteAccount) => () => {
     const { id, viewOnly, cert, host, type, loggedIn } = account;
     if (viewOnly) {
       setNewAccount(id);

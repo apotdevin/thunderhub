@@ -24,7 +24,7 @@ type Dispatch = (action: ActionType) => void;
 export const StateContext = createContext<State | undefined>(undefined);
 export const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
-const initialState = {
+const initialState: State = {
   inChannel: null,
   outChannel: null,
 };
@@ -42,7 +42,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const RebalanceProvider = ({ children }) => {
+const RebalanceProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (

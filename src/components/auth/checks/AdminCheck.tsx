@@ -13,7 +13,12 @@ type AdminProps = {
   setChecked: (state: boolean) => void;
 };
 
-export const AdminCheck = ({ host, admin, cert, setChecked }: AdminProps) => {
+export const AdminCheck: React.FC<AdminProps> = ({
+  host,
+  admin,
+  cert,
+  setChecked,
+}) => {
   const { data, loading } = useGetCanAdminQuery({
     fetchPolicy: 'network-only',
     skip: !admin,

@@ -64,7 +64,7 @@ const stateReducer = (state: State, action: ActionType): CompleteState => {
   }
 };
 
-const StatusProvider = ({ children }) => {
+const StatusProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (

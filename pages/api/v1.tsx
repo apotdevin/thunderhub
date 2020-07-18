@@ -56,12 +56,16 @@ const apolloServer = new ApolloServer({
       }
     }
 
-    let account = null;
+    let account: string;
     if (AccountAuth) {
       logger.silly('AccountAuth cookie found in request');
       try {
         const cookieAccount = jwt.verify(AccountAuth, secret);
-        account = cookieAccount['id'] || '';
+        if (typeof cookieAccount === 'object') {
+          account = (cookieAccount as { id?: string })['id'] ?? '';
+        } else {
+          account = cookieAccount;
+        }
       } catch (error) {
         logger.silly('Account authentication cookie failed');
       }
