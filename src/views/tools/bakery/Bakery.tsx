@@ -55,7 +55,7 @@ export const Bakery = () => {
 
   let hasATrue = false;
   Object.entries(permissions);
-  for (const [_, value] of Object.entries(permissions)) {
+  for (const [, value] of Object.entries(permissions)) {
     if (value) {
       hasATrue = true;
     }

@@ -39,7 +39,8 @@ export const copyLink = (text: string) => (
   </CopyToClipboard>
 );
 
-export const getTransactionLink = (transaction: string) => {
+export const getTransactionLink = (transaction: string | null | undefined) => {
+  if (!transaction) return null;
   if (disableLinks) {
     return (
       <>

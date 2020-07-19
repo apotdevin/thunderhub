@@ -76,7 +76,11 @@ export const chatResolvers = {
                 logger.debug(`Error verifying message: ${messageToVerify}`);
               }
 
-              if (!error && verified?.signed_by === customRecords.sender) {
+              if (
+                !error &&
+                (verified as { signed_by: string })?.signed_by ===
+                  customRecords.sender
+              ) {
                 isVerified = true;
               }
             }

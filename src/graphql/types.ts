@@ -587,9 +587,9 @@ export type GetMessagesType = {
 
 export type MessagesType = {
   __typename?: 'messagesType';
-  date?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  verified?: Maybe<Scalars['Boolean']>;
+  date: Scalars['String'];
+  id: Scalars['String'];
+  verified: Scalars['Boolean'];
   contentType?: Maybe<Scalars['String']>;
   sender?: Maybe<Scalars['String']>;
   alias?: Maybe<Scalars['String']>;

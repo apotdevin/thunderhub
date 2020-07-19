@@ -7,9 +7,9 @@ export const chatTypes = gql`
   }
 
   type messagesType {
-    date: String
-    id: String
-    verified: Boolean
+    date: String!
+    id: String!
+    verified: Boolean!
     contentType: String
     sender: String
     alias: String
