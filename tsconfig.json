@@ -19,7 +19,7 @@
     "noImplicitThis": true,
     "alwaysStrict": false,
     "strictBindCallApply": false,
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     "strictFunctionTypes": false,
     "strictPropertyInitialization": false
   },

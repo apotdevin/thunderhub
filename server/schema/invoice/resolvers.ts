@@ -16,6 +16,7 @@ import {
   getLnd,
 } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
+import { DecodedType } from 'server/types/ln-service.types';
 
 const KEYSEND_TYPE = '5482373484';
 
@@ -26,7 +27,7 @@ export const invoiceResolvers = {
 
       const lnd = getLnd(params.auth, context);
 
-      const decoded = await to(
+      const decoded: DecodedType = await to(
         decodePaymentRequest({
           lnd,
           request: params.request,

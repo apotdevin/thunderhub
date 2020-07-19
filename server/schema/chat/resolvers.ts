@@ -16,6 +16,10 @@ import {
   decodeMessage,
 } from 'server/helpers/customRecords';
 import { logger } from 'server/helpers/logger';
+import {
+  GetInvoicesType,
+  GetWalletInfoType,
+} from 'server/types/ln-service.types';
 
 export const chatResolvers = {
   Query: {
@@ -25,7 +29,7 @@ export const chatResolvers = {
       const auth = getCorrectAuth(params.auth, context);
       const lnd = getAuthLnd(auth);
 
-      const invoiceList = await to(
+      const invoiceList = await to<GetInvoicesType>(
         getInvoices({
           lnd,
           limit: params.initialize ? 100 : 5,
@@ -126,7 +130,7 @@ export const chatResolvers = {
         messageToSend = `${params.tokens},${params.message}`;
       }
 
-      const nodeInfo = await to(
+      const nodeInfo = await to<GetWalletInfoType>(
         getWalletInfo({
           lnd,
         })

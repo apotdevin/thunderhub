@@ -14,6 +14,7 @@ interface FilteredProps {
 export interface FilteredOptionsProps {
   name: string;
   title: string;
+  options?: FilterType[];
 }
 
 export const FilteredList = ({

@@ -11,6 +11,8 @@ import {
   SSO_ACCOUNT,
   SERVER_ACCOUNT,
   CompleteAccount,
+  ServerAccountType,
+  AccountType,
 } from 'src/context/AccountContext';
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
@@ -119,8 +121,9 @@ export const Accounts = () => {
   };
 
   const getTitle = (account: CompleteAccount) => {
-    const { type, name, loggedIn } = account;
+    const { type, name } = account;
     if (type !== CLIENT_ACCOUNT) {
+      const { loggedIn } = account as ServerAccountType;
       const props = {
         color: chartColors.green,
         size: 14,
@@ -138,7 +141,10 @@ export const Accounts = () => {
   };
 
   const getButtonTitle = (account: CompleteAccount): string => {
-    if (account.viewOnly || account.type === SSO_ACCOUNT) {
+    if (account.type === CLIENT_ACCOUNT && account.viewOnly) {
+      return 'Connect';
+    }
+    if (account.type === SSO_ACCOUNT) {
       return 'Connect';
     }
     if (account.type === SERVER_ACCOUNT && account.loggedIn) {
@@ -148,7 +154,10 @@ export const Accounts = () => {
   };
 
   const getArrow = (account: CompleteAccount): boolean => {
-    if (account.viewOnly || account.type === SSO_ACCOUNT) {
+    if (account.type === CLIENT_ACCOUNT && account.viewOnly) {
+      return false;
+    }
+    if (account.type === SSO_ACCOUNT) {
       return false;
     }
     if (account.type === SERVER_ACCOUNT && account.loggedIn) {
@@ -158,8 +167,9 @@ export const Accounts = () => {
   };
 
   const handleClick = (account: CompleteAccount) => () => {
-    const { id, viewOnly, cert, host, type, loggedIn } = account;
-    if (viewOnly) {
+    const { id, type } = account;
+    if (type === CLIENT_ACCOUNT && (account as AccountType).viewOnly) {
+      const { viewOnly, cert, host } = account as AccountType;
       setNewAccount(id);
       getCanConnect({
         variables: {
@@ -171,7 +181,10 @@ export const Accounts = () => {
       getCanConnect({
         variables: { auth: { type: SSO_ACCOUNT, id } },
       });
-    } else if (type === SERVER_ACCOUNT && loggedIn) {
+    } else if (
+      type === SERVER_ACCOUNT &&
+      (account as ServerAccountType).loggedIn
+    ) {
       setNewAccount(id);
       getCanConnect({
         variables: { auth: { type: SERVER_ACCOUNT, id } },

@@ -6,6 +6,7 @@ import { getNodeFromChannel } from 'server/helpers/getNodeFromChannel';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
+import { GetForwardsType } from 'server/types/ln-service.types';
 import { countArray, countRoutes } from './helpers';
 import { ForwardCompleteProps } from './interface';
 
@@ -101,7 +102,9 @@ export const getForwardChannelsReport = async (
 
   while (!finishedFetching) {
     if (next) {
-      const moreForwards = await to(getForwards({ lnd, token: next }));
+      const moreForwards = await to<GetForwardsType>(
+        getForwards({ lnd, token: next })
+      );
       forwards = [...forwards, ...moreForwards.forwards];
       next = moreForwards.next;
     } else {
