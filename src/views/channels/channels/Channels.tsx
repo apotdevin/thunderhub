@@ -55,7 +55,7 @@ export const Channels: React.FC = () => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  if (loading || !data || !data.getChannels) {
+  if (loading || !data?.getChannels) {
     return <LoadingCard noTitle={true} />;
   }
 
@@ -100,24 +100,25 @@ export const Channels: React.FC = () => {
     }
   }
 
-  const getChannels = () => {
+  const getChannels = (): ChannelType[] => {
+    const channels: ChannelType[] = data?.getChannels as ChannelType[];
     switch (channelSort) {
       case 'local': {
-        const newArray = sortBy(data.getChannels, 'local_balance');
+        const newArray = sortBy(channels, 'local_balance');
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'age': {
-        const newArray = sortBy(data.getChannels, 'channel_age');
+        const newArray = sortBy(channels, 'channel_age');
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'balance': {
-        const newArray = sortBy(data.getChannels, channel =>
+        const newArray = sortBy(channels, channel =>
           getPercent(channel.local_balance, channel.remote_balance)
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'deviation': {
-        const newArray = sortBy(data.getChannels, channel => {
+        const newArray = sortBy(channels, channel => {
           const { remote_balance, local_balance } = channel;
 
           const middle = (remote_balance + local_balance) / 2;
@@ -132,28 +133,28 @@ export const Channels: React.FC = () => {
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'partnerName': {
-        const newArray = sortBy(data.getChannels, channel =>
+        const newArray = sortBy(channels, channel =>
           channel.partner_node_info.node.alias.toLowerCase()
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'size': {
         const newArray = sortBy(
-          data.getChannels,
+          channels,
           channel => channel.remote_balance + channel.local_balance
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'feeRate': {
         const newArray = sortBy(
-          data.getChannels,
+          channels,
           channel =>
             channel?.partner_fee_info?.channel?.partner_node_policies?.fee_rate
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       default:
-        return data.getChannels;
+        return channels;
     }
   };
 

@@ -51,7 +51,7 @@ export type Query = {
   getTimeHealth?: Maybe<ChannelsTimeHealth>;
   getFeeHealth?: Maybe<ChannelsFeeHealth>;
   getChannelBalance?: Maybe<ChannelBalanceType>;
-  getChannels?: Maybe<Array<Maybe<ChannelType>>>;
+  getChannels: Array<Maybe<ChannelType>>;
   getClosedChannels?: Maybe<Array<Maybe<ClosedChannelType>>>;
   getPendingChannels?: Maybe<Array<Maybe<PendingChannelType>>>;
   getChannelFees?: Maybe<Array<Maybe<ChannelFeeType>>>;
