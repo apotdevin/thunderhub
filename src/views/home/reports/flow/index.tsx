@@ -10,13 +10,13 @@ import {
   CardTitle,
   Sub4Title,
 } from '../../../../components/generic/Styled';
-import { ButtonRow } from '../forwardReport/Buttons';
+import { FlowButtonRow } from '../forwardReport/Buttons';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
+import { ReportDuration, FlowReportType } from '../forwardReport/ForwardReport';
 import { InvoicePie } from './InvoicePie';
 import { FlowPie } from './FlowPie';
 import { FlowReport } from './FlowReport';
-import { ReportType, ReportDuration } from '../forwardReport/ForwardReport';
 
 export const ChannelRow = styled.div`
   font-size: 14px;
@@ -75,7 +75,7 @@ const timeMap: { [key: string]: string } = {
 
 export const FlowBox = () => {
   const [isTime, setIsTime] = useState<ReportDuration>('month');
-  const [isType, setIsType] = useState<ReportType>('amount');
+  const [isType, setIsType] = useState<FlowReportType>('amount');
 
   const { auth } = useAccountState();
   const { data, loading } = useGetInOutQuery({
@@ -110,7 +110,7 @@ export const FlowBox = () => {
         </CardTitle>
         <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
           <p>{`Your node has not received or sent any payments ${timeMap[isTime]}.`}</p>
-          <ButtonRow {...buttonProps} />
+          <FlowButtonRow {...buttonProps} />
         </Card>
       </CardWithTitle>
     );
@@ -136,14 +136,13 @@ export const FlowBox = () => {
     parsedData2.length > 0 ? reduce(parsedData2) : emptyData;
 
   const flowPie = [
-    // Not sure if I've typed things incorrectly here or there's a bug
     { x: 'Invoice', y: totalInvoices[isType] },
     { x: 'Payments', y: totalPayments[isType] },
   ];
 
   const invoicePie = [
-    { x: 'Confirmed', y: data.getInOut.confirmedInvoices },
-    { x: 'Unconfirmed', y: data.getInOut.unConfirmedInvoices },
+    { x: 'Confirmed', y: data.getInOut?.confirmedInvoices || 0 },
+    { x: 'Unconfirmed', y: data.getInOut?.unConfirmedInvoices || 0 },
   ];
 
   const props = {
@@ -163,7 +162,7 @@ export const FlowBox = () => {
         </CardTitle>
         <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
           <FlowReport {...props} />
-          <ButtonRow {...buttonProps} />
+          <FlowButtonRow {...buttonProps} />
         </Card>
       </CardWithTitle>
       <Row noWrap={true}>

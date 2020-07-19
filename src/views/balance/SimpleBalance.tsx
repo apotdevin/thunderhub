@@ -86,20 +86,31 @@ export const SimpleBalance = () => {
 
     const finalChannels = getChannels(!isOutgoing).reverse();
 
-    return finalChannels.map((channel: ChannelType, index: number) => {
+    return finalChannels.map((channel, index) => {
       if (!isOutgoing && outgoing && outgoing.id === channel.id) {
         return null;
       }
 
       const callback = isOutgoing
-        ? !outgoing && { callback: () => dispatch({ type: 'setOut', channel }) }
+        ? !outgoing && {
+            callback: () =>
+              dispatch({
+                type: 'setOut',
+                channel: channel as ChannelType,
+              }),
+          }
         : outgoing &&
-          !incoming && { callback: () => dispatch({ type: 'setIn', channel }) };
+          !incoming && {
+            callback: () =>
+              dispatch({ type: 'setIn', channel: channel as ChannelType }),
+          };
 
       return (
         <BalanceCard
           key={`${index}-${channel.id}`}
-          {...{ index, channel, withArrow: true }}
+          index={index}
+          channel={channel as ChannelType}
+          withArrow={true}
           {...callback}
         />
       );

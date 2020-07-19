@@ -13,7 +13,11 @@ import {
 } from '../../styles/Themes';
 import { getErrorContent } from '../../utils/error';
 import { SecureWrapper } from '../../components/buttons/secureButton/SecureWrapper';
-import { useChatState, useChatDispatch } from '../../context/ChatContext';
+import {
+  useChatState,
+  useChatDispatch,
+  SentChatProps,
+} from '../../context/ChatContext';
 import { useConfigState } from '../../context/ConfigContext';
 import { usePriceState } from '../../context/PriceContext';
 import { getPrice } from '../../components/price/Price';
@@ -23,7 +27,6 @@ import {
   StatusChatDot,
   ChatSendButton,
 } from './Chat.styled';
-import { MessageType } from './Chat.types';
 
 interface SendButtonProps {
   amount: number;
@@ -41,10 +44,12 @@ const SendButton = ({ amount }: SendButtonProps) => {
   const [data, resetMutationResult] = useMutationResultWithReset(_data);
 
   React.useEffect(() => {
-    if (!loading && data && data.sendMessage >= 0) {
+    if (!loading && data && data.sendMessage && data.sendMessage >= 0) {
       dispatch({
         type: 'newChat',
         newChat: {
+          id: '',
+          verified: true,
           date: new Date().toISOString(),
           message: 'payment',
           sender,
@@ -53,7 +58,7 @@ const SendButton = ({ amount }: SendButtonProps) => {
           contentType: 'payment',
           tokens: amount,
         },
-        userId: account.id,
+        userId: account?.id || '',
         sender,
       });
       resetMutationResult();
@@ -80,7 +85,7 @@ const SendButton = ({ amount }: SendButtonProps) => {
 };
 
 interface ChatBubbleProps {
-  message: MessageType;
+  message: SentChatProps;
 }
 
 export const ChatBubble = ({ message }: ChatBubbleProps) => {
@@ -90,14 +95,14 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
 
   const {
     contentType,
-    message: chatMessage,
+    message: chatMessage = '',
     isSent,
     verified,
-    tokens,
+    tokens = 0,
   } = message;
 
   let color: ThemeSet | string = chatBubbleColor;
-  let textMessage = chatMessage;
+  let textMessage = chatMessage || '';
   let dotColor = '';
   let showButton = false;
   let amount = 0;
@@ -128,7 +133,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
       }
     } else if (contentType === 'paymentrequest') {
       showButton = true;
-      const messageSplit = chatMessage.split(',');
+      const messageSplit = chatMessage?.split(',') || '';
       amount = verified
         ? Number(messageSplit[0])
         : Math.abs(Number(messageSplit[0]) / 1000); // This is only for Juggernaut compatibility.

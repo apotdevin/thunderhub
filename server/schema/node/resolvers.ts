@@ -5,11 +5,22 @@ import {
 } from 'ln-service';
 import { to, toWithError } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
+import {
+  ClosedChannelsType,
+  LndObject,
+  GetWalletInfoType,
+} from 'server/types/ln-service.types';
 import { getAuthLnd, getCorrectAuth, getLnd } from '../../helpers/helpers';
 import { ContextType } from '../../types/apiTypes';
 import { logger } from '../../helpers/logger';
 
 const errorNode = { alias: 'Node not found' };
+
+type NodeParent = {
+  lnd: LndObject;
+  publicKey: string;
+  withChannels?: boolean;
+};
 
 export const nodeResolvers = {
   Query: {
@@ -27,13 +38,13 @@ export const nodeResolvers = {
       const auth = getCorrectAuth(params.auth, context);
       const lnd = getAuthLnd(auth);
 
-      const info = await to(
+      const info = await to<GetWalletInfoType>(
         getWalletInfo({
           lnd,
         })
       );
 
-      const closedChannels = await to(
+      const closedChannels: ClosedChannelsType = await to(
         getClosedChannels({
           lnd,
         })
@@ -46,7 +57,7 @@ export const nodeResolvers = {
     },
   },
   Node: {
-    node: async parent => {
+    node: async (parent: NodeParent) => {
       const { lnd, withChannels, publicKey } = parent;
 
       if (!lnd) {

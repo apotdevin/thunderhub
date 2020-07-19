@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { ModalType } from 'src/views/trading/Modal/FilterModal';
 import {
   Sub4Title,
   ResponsiveLine,
@@ -12,7 +13,6 @@ import { useStatusState } from '../../../../context/StatusContext';
 import { isLightningInvoice } from '../../../../utils/helpers';
 import { RequestModal } from './RequestModal';
 import { KeysendModal } from './KeysendModal';
-import { ModalType } from 'src/views/trading/Modal/FilterModal';
 
 export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const [request, setRequest] = useState<string>('');

@@ -31,6 +31,7 @@ export type ReportDuration =
   | 'half_year'
   | 'year';
 export type ReportType = 'fee' | 'tokens' | 'amount';
+export type FlowReportType = 'tokens' | 'amount';
 
 interface Props {
   isTime: ReportDuration;

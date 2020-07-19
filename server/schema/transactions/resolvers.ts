@@ -10,8 +10,16 @@ import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
+import {
+  GetInvoicesType,
+  GetPaymentsType,
+  InvoiceType,
+  PaymentType,
+} from 'server/types/ln-service.types';
 import { ForwardCompleteProps } from '../widgets/resolvers/interface';
-import { PaymentsProps, InvoicesProps } from './interface';
+
+type TransactionType = InvoiceType | PaymentType;
+type TransactionWithType = { isTypeOf: string } & TransactionType;
 
 export const transactionResolvers = {
   Query: {
@@ -30,7 +38,7 @@ export const transactionResolvers = {
       let token = '';
       let withInvoices = true;
 
-      const invoiceList: InvoicesProps = await to(
+      const invoiceList = await to<GetInvoicesType>(
         getInvoices({
           lnd,
           ...invoiceProps,
@@ -55,7 +63,7 @@ export const transactionResolvers = {
         token = invoiceList.next;
       }
 
-      const paymentList: PaymentsProps = await to(
+      const paymentList = await to<GetPaymentsType>(
         getPayments({
           lnd,
         })
@@ -153,7 +161,7 @@ export const transactionResolvers = {
     },
   },
   Transaction: {
-    __resolveType(parent) {
+    __resolveType(parent: TransactionWithType) {
       return parent.isTypeOf;
     },
   },

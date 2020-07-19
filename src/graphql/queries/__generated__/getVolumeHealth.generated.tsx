@@ -19,11 +19,9 @@ export type GetVolumeHealthQuery = { __typename?: 'Query' } & {
               > & {
                   partner?: Types.Maybe<
                     { __typename?: 'Node' } & {
-                      node?: Types.Maybe<
-                        { __typename?: 'nodeType' } & Pick<
-                          Types.NodeType,
-                          'alias'
-                        >
+                      node: { __typename?: 'nodeType' } & Pick<
+                        Types.NodeType,
+                        'alias'
                       >;
                     }
                   >;

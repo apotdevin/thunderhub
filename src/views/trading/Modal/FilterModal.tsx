@@ -18,7 +18,7 @@ export type ModalType = 'keysend' | 'request' | 'none' | 'new' | 'sort';
 interface FilterProps {
   type: string;
   dispatch: Dispatch<FilterActionType>;
-  final?: { title: string; name: string; searchable: boolean };
+  final?: { title: string; name: string; searchable?: boolean };
   newOptions?: FilterType[];
   setModalType: (type: ModalType) => void;
 }

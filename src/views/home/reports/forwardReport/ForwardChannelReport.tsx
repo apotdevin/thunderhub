@@ -17,8 +17,8 @@ import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { useConfigState } from '../../../../context/ConfigContext';
 import { usePriceState } from '../../../../context/PriceContext';
-import { CardContent } from '.';
 import { ReportType, ReportDuration } from './ForwardReport';
+import { CardContent } from '.';
 
 const ChannelRow = styled.div`
   font-size: 14px;
@@ -39,10 +39,26 @@ const LastTableLine = styled(TableLine)`
   text-align: right;
 `;
 
-interface Props {
+type Props = {
   isTime: ReportDuration;
   isType: ReportType;
-}
+};
+
+type ParsedRouteType = {
+  aliasIn: string;
+  aliasOut: string;
+  fee: number;
+  tokens: number;
+  amount: number;
+};
+
+type ParsedChannelType = {
+  alias: string;
+  name: string;
+  fee: number;
+  tokens: number;
+  amount: number;
+};
 
 export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
   const [type, setType] = useState<'route' | 'incoming' | 'outgoing'>('route');
@@ -63,8 +79,10 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
     return <LoadingCard noCard={true} title={'Forward Report'} />;
   }
 
-  // JSON.parse is really bad... Absolutely no type safety at all
-  const parsed = JSON.parse(data.getForwardChannelsReport || '[]');
+  // TODO: JSON.parse is really bad... Absolutely no type safety at all
+  const parsed: (ParsedChannelType | ParsedRouteType)[] = JSON.parse(
+    data.getForwardChannelsReport || '[]'
+  );
 
   const getFormatString = (amount: number | string) => {
     if (typeof amount === 'string') return amount;
@@ -74,16 +92,14 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
     return amount;
   };
 
-  const renderRoute = (parsed: {}[]) => {
-    const routes = parsed.map(
-      (channel: { aliasIn: string; aliasOut: string }, index) => (
-        <ChannelRow key={index}>
-          <TableLine>{channel.aliasIn}</TableLine>
-          <TableLine>{channel.aliasOut}</TableLine>
-          <LastTableLine>{getFormatString(channel[isType])}</LastTableLine>
-        </ChannelRow>
-      )
-    );
+  const renderRoute = (parsed: ParsedRouteType[]) => {
+    const routes = parsed.map((channel: ParsedRouteType, index) => (
+      <ChannelRow key={index}>
+        <TableLine>{channel.aliasIn}</TableLine>
+        <TableLine>{channel.aliasOut}</TableLine>
+        <LastTableLine>{getFormatString(channel[isType])}</LastTableLine>
+      </ChannelRow>
+    ));
 
     return (
       <>
@@ -97,16 +113,14 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
     );
   };
 
-  const renderChannels = (parsed: {}[]) => {
-    const channels = parsed.map(
-      (channel: { alias: string; name: string }, index) => (
-        <ChannelRow key={index}>
-          <TableLine>{`${channel.alias}`}</TableLine>
-          <DarkSubTitle>{`${channel.name}`}</DarkSubTitle>
-          <LastTableLine>{getFormatString(channel[isType])}</LastTableLine>
-        </ChannelRow>
-      )
-    );
+  const renderChannels = (parsed: ParsedChannelType[]) => {
+    const channels = parsed.map((channel: ParsedChannelType, index) => (
+      <ChannelRow key={index}>
+        <TableLine>{`${channel.alias}`}</TableLine>
+        <DarkSubTitle>{`${channel.name}`}</DarkSubTitle>
+        <LastTableLine>{getFormatString(channel[isType])}</LastTableLine>
+      </ChannelRow>
+    ));
 
     return (
       <>
@@ -120,12 +134,12 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
     );
   };
 
-  const renderContent = parsed => {
+  const renderContent = (parsed: (ParsedChannelType | ParsedRouteType)[]) => {
     switch (type) {
       case 'route':
-        return renderRoute(parsed);
+        return renderRoute(parsed as ParsedRouteType[]);
       default:
-        return renderChannels(parsed);
+        return renderChannels(parsed as ParsedChannelType[]);
     }
   };
 

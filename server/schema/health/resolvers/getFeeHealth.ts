@@ -4,6 +4,7 @@ import { requestLimiter } from 'server/helpers/rateLimiter';
 import { to, toWithError } from 'server/helpers/async';
 import { logger } from 'server/helpers/logger';
 import { ContextType } from 'server/types/apiTypes';
+import { GetChannelsType } from 'server/types/ln-service.types';
 import { getFeeScore, getAverage, getMyFeeScore } from '../helpers';
 
 type ChannelFeesType = {
@@ -22,7 +23,7 @@ export default async (_: undefined, params: any, context: ContextType) => {
   const lnd = getAuthLnd(auth);
 
   const { public_key } = await to(getWalletInfo({ lnd }));
-  const { channels } = await to(getChannels({ lnd }));
+  const { channels } = await to<GetChannelsType>(getChannels({ lnd }));
 
   const getChannelList = () =>
     Promise.all(

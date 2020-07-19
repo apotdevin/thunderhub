@@ -23,20 +23,12 @@ export type GetPeersQuery = { __typename?: 'Query' } & {
           | 'tokens_received'
           | 'tokens_sent'
         > & {
-            partner_node_info?: Types.Maybe<
-              { __typename?: 'Node' } & {
-                node?: Types.Maybe<
-                  { __typename?: 'nodeType' } & Pick<
-                    Types.NodeType,
-                    | 'alias'
-                    | 'capacity'
-                    | 'channel_count'
-                    | 'color'
-                    | 'updated_at'
-                  >
-                >;
-              }
-            >;
+            partner_node_info: { __typename?: 'Node' } & {
+              node: { __typename?: 'nodeType' } & Pick<
+                Types.NodeType,
+                'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
+              >;
+            };
           }
       >
     >

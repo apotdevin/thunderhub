@@ -16,14 +16,6 @@ export const SERVER_ACCOUNT: SERVER_ACCOUNT_TYPE = 'server';
 
 type HasAccountType = 'fetched' | 'false' | 'error';
 
-export type AccountProps = {
-  name: string;
-  host: string;
-  admin: string;
-  viewOnly: string;
-  cert: string;
-};
-
 export type AuthType =
   | {
       type: ACCOUNT_TYPE;
@@ -36,24 +28,34 @@ export type AuthType =
       id: string;
     };
 
+export type AccountProps = {
+  name: string;
+  host: string;
+  admin: string;
+  viewOnly: string;
+  cert: string;
+};
+
 export type AccountType = {
   type: ACCOUNT_TYPE;
   id: string;
 } & AccountProps;
 
-export type CompleteAccount =
-  | AccountType
-  | {
-      type: SERVER_ACCOUNT_TYPE;
-      id: string;
-      name: string;
-      loggedIn?: boolean;
-    };
+export type ServerAccountType = {
+  type: SERVER_ACCOUNT_TYPE;
+  id: string;
+  name: string;
+  loggedIn?: boolean;
+};
+
+export type CompleteAccount = AccountType | ServerAccountType;
+
+export const defaultAuth = { type: SERVER_ACCOUNT, id: '' };
 
 type State = {
   initialized: boolean;
   finishedFetch: boolean;
-  auth: AuthType | null;
+  auth: AuthType;
   activeAccount: string | null;
   session: string | null;
   account: CompleteAccount | null;
@@ -106,7 +108,7 @@ const DispatchContext = React.createContext<Dispatch | undefined>(undefined);
 const initialState: State = {
   initialized: false,
   finishedFetch: false,
-  auth: null,
+  auth: defaultAuth,
   session: null,
   activeAccount: null,
   account: null,
@@ -171,11 +173,11 @@ const stateReducer = (state: State, action: ActionType): State => {
         ...state,
         account: null,
         activeAccount: null,
-        auth: null,
+        auth: defaultAuth,
         session: null,
       };
     case 'deleteAccount': {
-      if (!state.accounts || state?.accounts?.length <= 0) {
+      if (!state.accounts || state?.accounts?.length <= 0 || !state.account) {
         return state;
       }
       const { accounts, id } = deleteAccountById(

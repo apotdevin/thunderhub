@@ -4,6 +4,10 @@ import { getCorrectAuth, getAuthLnd } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
 import { subMonths } from 'date-fns';
 import { ContextType } from 'server/types/apiTypes';
+import {
+  GetChannelsType,
+  GetForwardsType,
+} from 'server/types/ln-service.types';
 import { getChannelVolume, getChannelIdInfo, getAverage } from '../helpers';
 
 const monthInBlocks = 4380;
@@ -18,8 +22,10 @@ export default async (_: undefined, params: any, context: ContextType) => {
   const after = subMonths(new Date(), 1).toISOString();
 
   const { current_block_height } = await to(getWalletInfo({ lnd }));
-  const { channels } = await to(getChannels({ lnd }));
-  const { forwards } = await to(getForwards({ lnd, after, before }));
+  const { channels } = await to<GetChannelsType>(getChannels({ lnd }));
+  const { forwards } = await to<GetForwardsType>(
+    getForwards({ lnd, after, before })
+  );
 
   const channelVolume = getChannelVolume(forwards);
 

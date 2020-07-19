@@ -1,23 +1,14 @@
 import React, { createContext, useContext, useReducer } from 'react';
+import { MessagesType } from 'src/graphql/types';
 
-export type ChatProps = {
-  date?: string;
-  contentType?: string;
-  alias?: string;
-  message?: string;
-  id?: string;
-  sender?: string;
-  tokens?: number;
-};
-
-interface SentChatProps extends ChatProps {
+export interface SentChatProps extends MessagesType {
   isSent?: boolean;
   feePaid?: number;
 }
 
 type State = {
   initialized: boolean;
-  chats: ChatProps[];
+  chats: MessagesType[];
   sentChats: SentChatProps[];
   lastChat: string;
   sender: string;
@@ -26,14 +17,14 @@ type State = {
 type ActionType =
   | {
       type: 'initialized';
-      chats?: ChatProps[];
+      chats?: MessagesType[];
       lastChat?: string;
       sender?: string;
       sentChats?: SentChatProps[];
     }
   | {
       type: 'additional';
-      chats: ChatProps[];
+      chats: MessagesType[];
       lastChat: string;
     }
   | {

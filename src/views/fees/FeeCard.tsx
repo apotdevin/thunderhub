@@ -48,7 +48,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
     transaction_vout,
     node_policies,
     partner_node_policies,
-  } = channelInfo.channel || {};
+  } = channelInfo?.channel || {};
   const {
     base_fee_mtokens,
     fee_rate,
@@ -221,7 +221,8 @@ export const FeeCard: React.FC<FeeCardProps> = ({
     </SingleLine>
   );
 
-  const renderWarningText = (htlc_delta: number) => {
+  const renderWarningText = (htlc_delta: number | null | undefined) => {
+    if (!htlc_delta) return null;
     if (htlc_delta <= 18) {
       return (
         <>
@@ -245,7 +246,8 @@ export const FeeCard: React.FC<FeeCardProps> = ({
     return null;
   };
 
-  const renderWarning = (htlc_delta: number) => {
+  const renderWarning = (htlc_delta: number | null | undefined) => {
+    if (!htlc_delta) return null;
     if (htlc_delta <= 14) {
       return <AlertCircle size={14} color={chartColors.red} />;
     }
@@ -256,7 +258,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
   };
 
   return (
-    <SubCard color={color} key={index}>
+    <SubCard subColor={color} key={index}>
       <MainInfo onClick={() => handleClick()}>
         <ResponsiveLine>
           <NodeTitle>{alias || partner_public_key?.substring(0, 6)}</NodeTitle>

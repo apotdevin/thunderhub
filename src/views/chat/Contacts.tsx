@@ -25,13 +25,13 @@ export const ContactCard = ({
   setShow: (active: boolean) => void;
 }) => {
   const {
-    alias,
-    sender: contactSender,
-    message,
-    contentType,
-    tokens,
-    isSent,
-    date,
+    alias = '',
+    sender: contactSender = '',
+    message = '',
+    contentType = '',
+    tokens = 0,
+    isSent = false,
+    date = '',
   } = contact;
   const { sender } = useChatState();
   const dispatch = useChatDispatch();
@@ -69,7 +69,7 @@ export const ContactCard = ({
         dispatch({
           type: 'changeActive',
           sender: contactSender,
-          userId: account.id,
+          userId: account?.id || '',
         });
         setUser(nodeName);
         setShow(false);

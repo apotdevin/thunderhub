@@ -15,20 +15,18 @@ export type GetMessagesQuery = { __typename?: 'Query' } & {
       Types.GetMessagesType,
       'token'
     > & {
-        messages?: Types.Maybe<
-          Array<
-            Types.Maybe<
-              { __typename?: 'messagesType' } & Pick<
-                Types.MessagesType,
-                | 'date'
-                | 'contentType'
-                | 'alias'
-                | 'message'
-                | 'id'
-                | 'sender'
-                | 'verified'
-                | 'tokens'
-              >
+        messages: Array<
+          Types.Maybe<
+            { __typename?: 'messagesType' } & Pick<
+              Types.MessagesType,
+              | 'date'
+              | 'contentType'
+              | 'alias'
+              | 'message'
+              | 'id'
+              | 'sender'
+              | 'verified'
+              | 'tokens'
             >
           >
         >;

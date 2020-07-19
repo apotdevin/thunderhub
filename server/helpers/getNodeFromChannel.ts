@@ -1,6 +1,7 @@
 import { getNode, getChannel } from 'ln-service';
 import { logger } from 'server/helpers/logger';
 import { toWithError } from 'server/helpers/async';
+import { LndObject } from 'server/types/ln-service.types';
 
 const errorNode = {
   alias: 'Partner node not found',
@@ -10,7 +11,7 @@ const errorNode = {
 export const getNodeFromChannel = async (
   id: string,
   publicKey: string,
-  lnd
+  lnd: LndObject
 ) => {
   const [channelInfo, channelError] = await toWithError(
     getChannel({

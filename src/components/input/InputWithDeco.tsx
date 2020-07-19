@@ -39,7 +39,7 @@ type InputWithDecoProps = {
   title: string;
   value?: string | number;
   noInput?: boolean;
-  amount?: number;
+  amount?: number | null;
   override?: string;
   customAmount?: string;
   color?: string;
@@ -64,7 +64,7 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
   const showAmount = !!amount || customAmount;
   let correctValue = value;
 
-  if (inputType === 'number') {
+  if (inputType === 'number' && value) {
     correctValue = value > 0 ? value : undefined;
   }
 

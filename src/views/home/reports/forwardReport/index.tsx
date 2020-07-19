@@ -38,7 +38,6 @@ export const ForwardBox = () => {
           isType={isType}
           setIsTime={setIsTime}
           setIsType={setIsType}
-          withFee={true}
         />
         <ForwardReport isTime={isTime} isType={isType} />
         <Separation />

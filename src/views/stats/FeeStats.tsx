@@ -32,7 +32,7 @@ const FeeStatCard = ({
 }: FeeStatCardProps) => {
   const renderContent = () => {
     const stats = myStats ? channel.mySide : channel.partnerSide;
-    const { score } = stats;
+    const { score } = stats || {};
 
     return (
       <ScoreLine>
@@ -45,7 +45,8 @@ const FeeStatCard = ({
 
   const renderDetails = () => {
     const stats = myStats ? channel.mySide : channel.partnerSide;
-    const { rate, base, rateScore, baseScore, rateOver, baseOver } = stats;
+    const { rate, base, rateScore, baseScore, rateOver, baseOver } =
+      stats || {};
 
     const message = getFeeMessage(rateScore, rateOver);
     const baseMessage = getFeeMessage(Number(baseScore), baseOver, true);
@@ -65,15 +66,17 @@ const FeeStatCard = ({
   };
 
   return (
-    <SubCard key={channel.id}>
-      <Clickable onClick={() => openSet(open ? 0 : index)}>
-        <ResponsiveLine>
-          {channel?.partner?.node?.alias}
-          <ScoreLine>{renderContent()}</ScoreLine>
-        </ResponsiveLine>
-      </Clickable>
-      {open && renderDetails()}
-    </SubCard>
+    <React.Fragment key={channel.id || ''}>
+      <SubCard>
+        <Clickable onClick={() => openSet(open ? 0 : index)}>
+          <ResponsiveLine>
+            {channel?.partner?.node?.alias}
+            <ScoreLine>{renderContent()}</ScoreLine>
+          </ResponsiveLine>
+        </Clickable>
+        {open && renderDetails()}
+      </SubCard>
+    </React.Fragment>
   );
 };
 

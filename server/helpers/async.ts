@@ -1,6 +1,5 @@
 import { getErrorMsg } from './helpers';
 import { logger } from './logger';
-import { UnionTypeDefinitionNode } from 'graphql';
 
 export const to = async <T>(promise: Promise<T>) => {
   return promise
@@ -11,7 +10,7 @@ export const to = async <T>(promise: Promise<T>) => {
     });
 };
 
-/**
+/*
  * This is hard/impossible to type correctly. What we are describing
  * here is a set of two states: either we have a result and no error,
  * _or_ we have no result and an error. Unfortunately TypeScript is

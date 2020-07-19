@@ -16,3 +16,7 @@ declare module '*.gif';
  * from those files?
  */
 declare module 'ln-service';
+declare module '@alexbosworth/request';
+declare module 'balanceofsatoshis/request';
+declare module 'balanceofsatoshis/swaps';
+declare module 'balanceofsatoshis/balances';

@@ -5,7 +5,7 @@ import { useGetMessagesLazyQuery } from 'src/graphql/queries/__generated__/getMe
 import { useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 
-export const ChatInit = () => {
+export const ChatInit: React.FC = () => {
   const { auth, account } = useAccountState();
   const dispatch = useChatDispatch();
 
@@ -45,13 +45,13 @@ export const ChatInit = () => {
     if (!initLoading && !initError && initData && initData.getMessages) {
       const { messages } = initData.getMessages;
 
-      if (messages.length <= 0) {
+      if (!messages?.length) {
         dispatch({ type: 'initialized' });
         return;
       }
 
-      const lastChat = messages[0].id || '';
-      const sender = messages[0].sender || '';
+      const lastChat = messages[0]?.id || '';
+      const sender = messages[0]?.sender || '';
 
       dispatch({
         type: 'initialized',
