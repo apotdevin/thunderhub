@@ -79,14 +79,12 @@ const TransactionsView = () => {
                 variables: { auth, token },
                 updateQuery: (
                   prev,
-                  {
-                    fetchMoreResult: result,
-                  }: { fetchMoreResult: GetResumeQuery }
-                ) => {
-                  if (!result) return prev;
-                  const newToken = result.getResume.token || '';
+                  { fetchMoreResult }: { fetchMoreResult?: GetResumeQuery }
+                ): GetResumeQuery => {
+                  if (!fetchMoreResult) return prev;
+                  const newToken = fetchMoreResult.getResume.token || '';
                   const prevEntries = prev.getResume.resume;
-                  const newEntries = result.getResume.resume;
+                  const newEntries = fetchMoreResult.getResume.resume;
 
                   const allTransactions = newToken
                     ? [...prevEntries, ...newEntries]

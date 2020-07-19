@@ -17,10 +17,10 @@
     "baseUrl": ".",
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "alwaysStrict": false,
-    "strictBindCallApply": false,
+    "alwaysStrict": true,
+    "strictBindCallApply": true,
     "strictNullChecks": false,
-    "strictFunctionTypes": false,
+    "strictFunctionTypes": true,
     "strictPropertyInitialization": false
   },
   "exclude": ["node_modules", ".next"],

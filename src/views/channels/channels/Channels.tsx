@@ -111,13 +111,13 @@ export const Channels: React.FC = () => {
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'balance': {
-        const newArray = sortBy(data.getChannels, (channel: ChannelType) =>
+        const newArray = sortBy(data.getChannels, channel =>
           getPercent(channel.local_balance, channel.remote_balance)
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'deviation': {
-        const newArray = sortBy(data.getChannels, (channel: ChannelType) => {
+        const newArray = sortBy(data.getChannels, channel => {
           const { remote_balance, local_balance } = channel;
 
           const middle = (remote_balance + local_balance) / 2;
@@ -132,7 +132,7 @@ export const Channels: React.FC = () => {
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'partnerName': {
-        const newArray = sortBy(data.getChannels, (channel: ChannelType) =>
+        const newArray = sortBy(data.getChannels, channel =>
           channel.partner_node_info.node.alias.toLowerCase()
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
@@ -140,15 +140,14 @@ export const Channels: React.FC = () => {
       case 'size': {
         const newArray = sortBy(
           data.getChannels,
-          (channel: ChannelType) =>
-            channel.remote_balance + channel.local_balance
+          channel => channel.remote_balance + channel.local_balance
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'feeRate': {
         const newArray = sortBy(
           data.getChannels,
-          (channel: ChannelType) =>
+          channel =>
             channel?.partner_fee_info?.channel?.partner_node_policies?.fee_rate
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
@@ -160,9 +159,9 @@ export const Channels: React.FC = () => {
 
   return (
     <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-      {getChannels().map((channel: ChannelType, index: number) => (
+      {getChannels().map((channel, index) => (
         <ChannelCard
-          channelInfo={channel}
+          channelInfo={channel as ChannelType}
           index={index + 1}
           setIndexOpen={setIndexOpen}
           indexOpen={indexOpen}

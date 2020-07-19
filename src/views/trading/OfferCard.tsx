@@ -91,10 +91,8 @@ export const OfferCard = ({
   const renderPayments = (): string => {
     if (payment_method_instructions) {
       const methods = payment_method_instructions.map(
-        (method: {
-          payment_method_name: string;
-          payment_method_type: string;
-        }) => `${method.payment_method_name} (${method.payment_method_type})`
+        method =>
+          `${method.payment_method_name} (${method.payment_method_type})`
       );
 
       return methods.join(', ');
