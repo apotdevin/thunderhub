@@ -41,7 +41,10 @@ function createIsomorphLink(ctx: Context) {
 /**
  * Creates and configures the ApolloClient
  */
-function createApolloClient(ctx: Context, initialState: NormalizedCacheObject) {
+function createApolloClient(
+  ctx: Context = {},
+  initialState: NormalizedCacheObject = {}
+) {
   const ssrMode = typeof window === 'undefined';
   const cache = new InMemoryCache({ fragmentMatcher }).restore(initialState);
 
@@ -57,7 +60,7 @@ function createApolloClient(ctx: Context, initialState: NormalizedCacheObject) {
  * Always creates a new apollo client on the server
  * Creates or reuses apollo client in the browser.
  */
-function initApolloClient(ctx: Context, initialState?: NormalizedCacheObject) {
+function initApolloClient(ctx?: Context, initialState?: NormalizedCacheObject) {
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
   if (typeof window === 'undefined') {

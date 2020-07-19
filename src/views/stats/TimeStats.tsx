@@ -83,7 +83,7 @@ export const TimeStats = () => {
     }
   }, [data, dispatch]);
 
-  if (loading || !data || !data.getTimeHealth) {
+  if (loading || !data?.getTimeHealth?.channels?.length) {
     return null;
   }
 
@@ -93,8 +93,8 @@ export const TimeStats = () => {
     <StatWrapper title={'Time Stats'}>
       {sortedArray.map((channel, index) => (
         <TimeStatCard
-          key={channel.id}
-          channel={channel}
+          key={channel?.id || ''}
+          channel={channel as ChannelTimeHealth}
           open={index + 1 === open}
           openSet={openSet}
           index={index + 1}

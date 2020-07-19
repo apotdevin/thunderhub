@@ -20,7 +20,7 @@ import { RebalanceIdType, ActionType } from '../AdvancedBalance';
 type ModalNodesType = {
   multi?: boolean;
   nodes?: RebalanceIdType[];
-  dispatch?: (action: ActionType) => void;
+  dispatch: (action: ActionType) => void;
   openSet?: () => void;
   callback?: (node: RebalanceIdType) => void;
 };
@@ -68,8 +68,8 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
   }
 
   const peers = data.getPeers.map(p => ({
-    alias: p.partner_node_info.node.alias,
-    id: p.public_key,
+    alias: p?.partner_node_info.node.alias || '',
+    id: p?.public_key || '',
   }));
   const allNodes: RebalanceIdType[] = [
     ...nodes.filter(n => peers.findIndex(p => p.id === n.id) === -1),

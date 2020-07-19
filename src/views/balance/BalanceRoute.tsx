@@ -50,7 +50,7 @@ export const BalanceRoute = ({
   });
 
   const canShow = (): boolean =>
-    incoming && outgoing && amount && data && data.getRoutes && blocked;
+    !!(incoming && outgoing && amount && data?.getRoutes && blocked);
 
   const [payRoute, { loading: loadingP }] = useCircularRebalanceMutation({
     onError: error => {
@@ -94,7 +94,7 @@ export const BalanceRoute = ({
   );
 
   const renderRoute = () => {
-    if (canShow()) {
+    if (canShow() && data?.getRoutes) {
       const route = data.getRoutes;
       return (
         <>
@@ -120,7 +120,7 @@ export const BalanceRoute = ({
   };
 
   const renderButton = () => {
-    if (canShow()) {
+    if (canShow() && data?.getRoutes) {
       return (
         <SingleLine>
           <ColorButton color={chartColors.orange2} onClick={callback}>

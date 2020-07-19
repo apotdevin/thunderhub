@@ -53,6 +53,10 @@ export type GetWalletInfoType = {
   public_key: string;
 };
 
+export type UtxoType = {};
+
+export type ChainTransaction = {};
+
 export type ProbeForRouteType = { route?: { hops: [{ public_key: string }] } };
 
 export type GetChannelType = { policies: { public_key: string }[] };
@@ -64,3 +68,11 @@ export type GetForwardsType = { forwards: ForwardType[]; next?: string };
 export type GetInvoicesType = { invoices: InvoiceType[]; next?: string };
 
 export type GetPaymentsType = { payments: PaymentType[]; next?: string };
+
+export type GetChainBalanceType = { chain_balance: number };
+
+export type GetPendingChainBalanceType = { pending_chain_balance: number };
+
+export type GetChainTransactionsType = { transactions: ChainTransaction[] };
+
+export type GetUtxosType = { utxos: UtxoType[] };

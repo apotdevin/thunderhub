@@ -4,7 +4,7 @@ type StateStatus = {
   connected: boolean;
 };
 
-type State = {
+export type StatusState = {
   alias: string;
   color: string;
   syncedToChain: boolean;
@@ -22,11 +22,11 @@ type State = {
   peersCount: number;
 };
 
-type CompleteState = State & StateStatus;
+type CompleteState = StatusState & StateStatus;
 
 type ActionType = {
   type: 'connected' | 'disconnected';
-  state?: State;
+  state?: StatusState;
 };
 
 type Dispatch = (action: ActionType) => void;
@@ -53,10 +53,13 @@ const initialState = {
   peersCount: 0,
 };
 
-const stateReducer = (state: State, action: ActionType): CompleteState => {
+const stateReducer = (
+  state: StatusState,
+  action: ActionType
+): CompleteState => {
   switch (action.type) {
     case 'connected':
-      return { ...action.state, connected: true } || initialState;
+      return { ...state, ...action.state, connected: true } || initialState;
     case 'disconnected':
       return initialState;
     default:

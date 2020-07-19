@@ -99,17 +99,17 @@ export const FeeStats = () => {
     }
   }, [data, dispatch]);
 
-  if (loading || !data || !data.getFeeHealth) {
+  if (loading || !data?.getFeeHealth?.channels?.length) {
     return null;
   }
 
   const sortedArray = sortBy(
     data.getFeeHealth.channels,
-    c => c.partnerSide.score
+    c => c?.partnerSide?.score
   );
   const sortedArrayMyStats = sortBy(
     data.getFeeHealth.channels,
-    c => c.mySide.score
+    c => c?.mySide?.score
   );
 
   return (
@@ -117,8 +117,8 @@ export const FeeStats = () => {
       <StatWrapper title={'Fee Stats'}>
         {sortedArray.map((channel, index) => (
           <FeeStatCard
-            key={channel.id}
-            channel={channel}
+            key={channel?.id || ''}
+            channel={channel as ChannelFeeHealth}
             open={index + 1 === open}
             openSet={openSet}
             index={index + 1}
@@ -128,8 +128,8 @@ export const FeeStats = () => {
       <StatWrapper title={'My Fee Stats'}>
         {sortedArrayMyStats.map((channel, index) => (
           <FeeStatCard
-            key={channel.id}
-            channel={channel}
+            key={channel?.id || ''}
+            channel={channel as ChannelFeeHealth}
             myStats={true}
             open={index + 1 === openTwo}
             openSet={openTwoSet}

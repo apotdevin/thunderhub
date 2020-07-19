@@ -6,7 +6,7 @@ type SSOType = {
   host: string | null;
 };
 
-type AccountType = {
+export type AccountType = {
   name: string;
   id: string;
   host: string;

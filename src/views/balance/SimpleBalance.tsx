@@ -65,7 +65,7 @@ export const SimpleBalance = () => {
   const renderChannels = (isOutgoing?: boolean) => {
     const getChannels = (side: boolean) =>
       sortBy(data.getChannels, channel => {
-        const { remote_balance, local_balance } = channel;
+        const { remote_balance, local_balance } = channel as ChannelType;
 
         const middle = (remote_balance + local_balance) / 2;
 
@@ -87,7 +87,7 @@ export const SimpleBalance = () => {
     const finalChannels = getChannels(!isOutgoing).reverse();
 
     return finalChannels.map((channel, index) => {
-      if (!isOutgoing && outgoing && outgoing.id === channel.id) {
+      if (!isOutgoing && outgoing && channel && outgoing.id === channel.id) {
         return null;
       }
 
@@ -107,7 +107,7 @@ export const SimpleBalance = () => {
 
       return (
         <BalanceCard
-          key={`${index}-${channel.id}`}
+          key={`${index}-${channel?.id || ''}`}
           index={index}
           channel={channel as ChannelType}
           withArrow={true}

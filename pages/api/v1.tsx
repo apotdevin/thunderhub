@@ -56,7 +56,7 @@ const apolloServer = new ApolloServer({
       }
     }
 
-    let account: string;
+    let account = '';
     if (AccountAuth) {
       logger.silly('AccountAuth cookie found in request');
       try {

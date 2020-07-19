@@ -3,7 +3,8 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
-import { useStatusDispatch } from '../../context/StatusContext';
+import { NodeInfoType, ChannelBalanceType } from 'src/graphql/types';
+import { useStatusDispatch, StatusState } from '../../context/StatusContext';
 import { appendBasePath } from '../../utils/basePath';
 
 export const StatusCheck: React.FC = () => {
@@ -21,7 +22,7 @@ export const StatusCheck: React.FC = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error(`Unable to connect to ${account.name}`);
+      account && toast.error(`Unable to connect to ${account.name}`);
       stopPolling();
       dispatch({ type: 'disconnected' });
       push(appendBasePath('/'));
@@ -33,6 +34,7 @@ export const StatusCheck: React.FC = () => {
         getChannelBalance,
         getNodeInfo,
       } = data;
+
       const {
         alias,
         color,
@@ -42,14 +44,17 @@ export const StatusCheck: React.FC = () => {
         pending_channels_count,
         closed_channels_count,
         peers_count,
-      } = getNodeInfo;
-      const { confirmedBalance, pendingBalance } = getChannelBalance;
+      } = getNodeInfo as NodeInfoType;
+      const {
+        confirmedBalance,
+        pendingBalance,
+      } = getChannelBalance as ChannelBalanceType;
 
       const versionNumber = version.split(' ');
       const onlyVersion = versionNumber[0].split('-');
       const numbers = onlyVersion[0].split('.');
 
-      const state = {
+      const state: StatusState = {
         alias,
         color,
         syncedToChain: is_synced_to_chain,
@@ -57,8 +62,8 @@ export const StatusCheck: React.FC = () => {
         mayorVersion: Number(numbers[0]),
         minorVersion: Number(numbers[1]),
         revision: Number(numbers[2]),
-        chainBalance: getChainBalance,
-        chainPending: getPendingChainBalance,
+        chainBalance: getChainBalance || 0,
+        chainPending: getPendingChainBalance || 0,
         channelBalance: confirmedBalance,
         channelPending: pendingBalance,
         activeChannelCount: active_channels_count,
