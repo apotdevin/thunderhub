@@ -36,6 +36,8 @@ export type PaymentType = {
   created_at: string;
   is_confirmed: boolean;
   tokens: number;
+  destination: string;
+  hops: string[];
 };
 
 export type ForwardType = {
@@ -43,6 +45,7 @@ export type ForwardType = {
   incoming_channel: string;
   outgoing_channel: string;
   created_at: string;
+  fee: number;
 };
 
 export type GetWalletInfoType = {
@@ -51,6 +54,8 @@ export type GetWalletInfoType = {
 };
 
 export type ProbeForRouteType = { route?: { hops: [{ public_key: string }] } };
+
+export type GetChannelType = { policies: { public_key: string }[] };
 
 export type GetChannelsType = { channels: ChannelType[] };
 

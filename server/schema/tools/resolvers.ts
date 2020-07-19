@@ -16,6 +16,7 @@ import {
   getLnd,
 } from 'server/helpers/helpers';
 import { toWithError } from 'server/helpers/async';
+import { ChannelType } from 'server/types/ln-service.types';
 
 export const toolsResolvers = {
   Query: {
@@ -25,7 +26,7 @@ export const toolsResolvers = {
       const auth = getCorrectAuth(params.auth, context);
       const lnd = getAuthLnd(auth);
 
-      let backupObj = { backup: '', channels: [] };
+      let backupObj = { backup: '', channels: [] as ChannelType[] };
       try {
         backupObj = JSON.parse(params.backup);
       } catch (error) {

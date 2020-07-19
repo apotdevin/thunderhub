@@ -5,7 +5,7 @@ import { useGetMessagesLazyQuery } from 'src/graphql/queries/__generated__/getMe
 import { useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 
-export const ChatInit = () => {
+export const ChatInit: React.FC = () => {
   const { auth, account } = useAccountState();
   const dispatch = useChatDispatch();
 

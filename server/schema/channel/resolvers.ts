@@ -1,6 +1,7 @@
 import { logger } from 'server/helpers/logger';
 import { toWithError } from 'server/helpers/async';
 import { getChannel } from 'ln-service';
+import { GetChannelType } from 'server/types/ln-service.types';
 import { openChannel } from './resolvers/mutation/openChannel';
 import { closeChannel } from './resolvers/mutation/closeChannel';
 import { updateFees } from './resolvers/mutation/updateFees';
@@ -53,7 +54,7 @@ export const channelResolvers = {
       let node_policies = null;
       let partner_node_policies = null;
 
-      channel.policies.forEach(policy => {
+      (channel as GetChannelType).policies.forEach(policy => {
         if (localKey && localKey === policy.public_key) {
           node_policies = {
             ...policy,

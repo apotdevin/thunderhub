@@ -24,7 +24,12 @@ export const tbaseResolvers = {
       const { errors, data } = result || {};
       if (errors) return [];
 
-      return data?.getNodes?.filter(n => n.public_key && n.socket) || [];
+      return (
+        data?.getNodes?.filter(
+          (n: { public_key: string; socket: string }) =>
+            n.public_key && n.socket
+        ) || []
+      );
     },
   },
 };

@@ -4,6 +4,7 @@ import { to } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 import { getChannelAge } from 'server/schema/health/helpers';
+import { GetChannelsType } from 'server/types/ln-service.types';
 
 export const getChannels = async (
   _: undefined,
@@ -17,7 +18,7 @@ export const getChannels = async (
 
   const { public_key, current_block_height } = await to(getWalletInfo({ lnd }));
 
-  const { channels } = await to(
+  const { channels } = await to<GetChannelsType>(
     getLnChannels({
       lnd,
       is_active: params.active,

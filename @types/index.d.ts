@@ -18,3 +18,5 @@ declare module '*.gif';
 declare module 'ln-service';
 declare module '@alexbosworth/request';
 declare module 'balanceofsatoshis/request';
+declare module 'balanceofsatoshis/swaps';
+declare module 'balanceofsatoshis/balances';

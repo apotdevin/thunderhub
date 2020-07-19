@@ -160,7 +160,7 @@ export const Channels: React.FC = () => {
 
   return (
     <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-      {getChannels().map((channel, index: number) => (
+      {getChannels().map((channel: ChannelType, index: number) => (
         <ChannelCard
           channelInfo={channel}
           index={index + 1}

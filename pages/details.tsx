@@ -165,7 +165,7 @@ const FeesView = () => {
       <CardWithTitle>
         <SubTitle>Channel Details</SubTitle>
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          {data.getChannelFees.map((channel, index) => (
+          {data.getChannelFees.map((channel: ChannelFeeType, index) => (
             <FeeCard
               channel={channel}
               index={index + 1}
