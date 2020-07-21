@@ -1,10 +1,5 @@
 import { ForwardType } from 'server/types/ln-service.types';
 
-export interface ForwardCompleteProps {
-  forwards: ForwardType[];
-  next: string;
-}
-
 export interface ListProps {
   [key: string]: ForwardType[];
 }

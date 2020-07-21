@@ -6,9 +6,11 @@ import { getNodeFromChannel } from 'server/helpers/getNodeFromChannel';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
-import { GetForwardsType } from 'server/types/ln-service.types';
+import {
+  GetForwardsType,
+  GetWalletInfoType,
+} from 'server/types/ln-service.types';
 import { countArray, countRoutes } from './helpers';
-import { ForwardCompleteProps } from './interface';
 
 export const getForwardChannelsReport = async (
   _: undefined,
@@ -77,7 +79,7 @@ export const getForwardChannelsReport = async (
       })
     );
 
-  const forwardsList: ForwardCompleteProps = await to(
+  const forwardsList = await to<GetForwardsType>(
     getForwards({
       lnd,
       after: startDate,
@@ -85,14 +87,14 @@ export const getForwardChannelsReport = async (
     })
   );
 
-  const walletInfo: { public_key: string } = await to(
+  const walletInfo = await to<GetWalletInfoType>(
     getWalletInfo({
       lnd,
     })
   );
 
   let forwards = forwardsList.forwards;
-  let next: string = forwardsList.next;
+  let next = forwardsList.next;
 
   let finishedFetching = false;
 
@@ -108,6 +110,8 @@ export const getForwardChannelsReport = async (
       forwards = [...forwards, ...moreForwards.forwards];
       if (moreForwards.next) {
         next = moreForwards.next;
+      } else {
+        finishedFetching = true;
       }
     } else {
       finishedFetching = true;
