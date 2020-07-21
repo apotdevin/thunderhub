@@ -15,8 +15,8 @@ import {
   GetPaymentsType,
   InvoiceType,
   PaymentType,
+  GetForwardsType,
 } from 'server/types/ln-service.types';
-import { ForwardCompleteProps } from '../widgets/resolvers/interface';
 
 type TransactionType = InvoiceType | PaymentType;
 type TransactionWithType = { isTypeOf: string } & TransactionType;
@@ -131,7 +131,7 @@ export const transactionResolvers = {
         })
       );
 
-      const forwardsList: ForwardCompleteProps = await to(
+      const forwardsList = await to<GetForwardsType>(
         getLnForwards({
           lnd,
           after: startDate,

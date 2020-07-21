@@ -175,7 +175,8 @@ export const chatResolvers = {
           messages: customRecords,
         })
       );
-      return safe_fee;
+      // +1 is needed so that a fee of 0 doesnt evaluate to false
+      return safe_fee + 1;
     },
   },
 };
