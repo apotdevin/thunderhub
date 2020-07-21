@@ -54,12 +54,10 @@ export const Bakery = () => {
   );
 
   let hasATrue = false;
-  for (const key in permissions) {
-    if (Object.prototype.hasOwnProperty.call(permissions, key)) {
-      const value = permissions[key];
-      if (value) {
-        hasATrue = true;
-      }
+  Object.entries(permissions);
+  for (const [, value] of Object.entries(permissions)) {
+    if (value) {
+      hasATrue = true;
     }
   }
 
@@ -84,7 +82,7 @@ export const Bakery = () => {
     resetMutationResult();
   };
 
-  const renderLine = (title: string, value: string) => (
+  const renderLine = (title: string, value: keyof PermissionsType) => (
     <ResponsiveLine>
       {permissions[value] ? (
         <Sub4Title>{title}</Sub4Title>

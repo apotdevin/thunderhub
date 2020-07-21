@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetUtxosQuery } from 'src/graphql/queries/__generated__/getUtxos.generated';
+import { GetUtxosType } from 'src/graphql/types';
 import {
   SubTitle,
   Card,
@@ -31,7 +32,7 @@ export const ChainUtxos = () => {
       <Card mobileCardPadding={'0'} mobileNoBackground={true}>
         {data.getUtxos.map((utxo, index: number) => (
           <UtxoCard
-            utxo={utxo}
+            utxo={utxo as GetUtxosType}
             key={index}
             index={index + 1}
             setIndexOpen={setIndexOpen}

@@ -13,9 +13,9 @@ export const accountResolvers = {
       const { ip, accounts, account, sso, ssoVerified } = context;
       await requestLimiter(ip, 'getServerAccounts');
 
-      const { macaroon, cert, host } = sso;
       let ssoAccount = null;
-      if (macaroon && host && ssoVerified) {
+      if (ssoVerified && sso) {
+        const { cert, host } = sso;
         logger.debug(
           `Macaroon${
             cert ? ', certificate' : ''

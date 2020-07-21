@@ -4,10 +4,16 @@ import {
   AccountProps,
   CLIENT_ACCOUNT,
   AuthType,
+  defaultAuth,
 } from '../AccountContext';
 
-export const getAccountById = (id: string, accounts: CompleteAccount[]) => {
-  const correctAccount: CompleteAccount | null = accounts.find(
+export const getAccountById = (
+  id: string | null,
+  accounts: CompleteAccount[]
+) => {
+  if (!id) return { account: null, id: null };
+
+  const correctAccount: CompleteAccount | null | undefined = accounts.find(
     a => a.id === id
   );
 
@@ -48,10 +54,10 @@ export const addIdAndTypeToAccount = (
 };
 
 export const getAuthFromAccount = (
-  account: CompleteAccount,
-  session?: string
+  account: CompleteAccount | undefined | null,
+  session?: string | null
 ): AuthType => {
-  if (!account) return null;
+  if (!account) return defaultAuth;
   if (account.type !== CLIENT_ACCOUNT) {
     return {
       type: account.type,
@@ -60,10 +66,10 @@ export const getAuthFromAccount = (
   }
   const { host, viewOnly, cert } = account;
   if (!host) {
-    return null;
+    return defaultAuth;
   }
   if (!viewOnly && !session) {
-    return null;
+    return defaultAuth;
   }
   return {
     type: account.type,

@@ -3,6 +3,7 @@ import {
   useAccountDispatch,
   useAccountState,
   CompleteAccount,
+  AccountProps,
 } from 'src/context/AccountContext';
 import { addIdAndTypeToAccount } from 'src/context/helpers/context';
 import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/getServerAccounts.generated';
@@ -12,7 +13,7 @@ import { appendBasePath } from 'src/utils/basePath';
 import { getUrlParam } from 'src/utils/url';
 import { useGetAuthTokenQuery } from 'src/graphql/queries/__generated__/getAuthToken.generated';
 
-export const ServerAccounts = () => {
+export const ServerAccounts: React.FC = () => {
   const { hasAccount } = useAccountState();
   const dispatch = useAccountDispatch();
   const { push, pathname, query } = useRouter();
@@ -46,7 +47,9 @@ export const ServerAccounts = () => {
     const session = sessionStorage.getItem('session') || null;
     const changeId = localStorage.getItem('active') || null;
     const savedAccounts = JSON.parse(localStorage.getItem('accounts') || '[]');
-    const accountsToAdd = savedAccounts.map(a => addIdAndTypeToAccount(a));
+    const accountsToAdd = savedAccounts.map((a: AccountProps) =>
+      addIdAndTypeToAccount(a)
+    );
     dispatch({
       type: 'initialize',
       accountsToAdd,

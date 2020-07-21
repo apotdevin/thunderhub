@@ -24,7 +24,7 @@ export const transactionTypes = gql`
     destination_node: Node
     fee: Int!
     fee_mtokens: String!
-    hops: [Node]
+    hops: [Node!]!
     id: String!
     index: Int
     is_confirmed: Boolean!

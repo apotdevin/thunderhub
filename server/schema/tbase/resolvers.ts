@@ -19,12 +19,17 @@ export const tbaseResolvers = {
           body: JSON.stringify({ query }),
         })
       );
-      if (fetchError) return [];
+      if (fetchError || !response) return [];
       const result = await response.json();
       const { errors, data } = result || {};
       if (errors) return [];
 
-      return data?.getNodes?.filter(n => n.public_key && n.socket) || [];
+      return (
+        data?.getNodes?.filter(
+          (n: { public_key: string; socket: string }) =>
+            n.public_key && n.socket
+        ) || []
+      );
     },
   },
 };

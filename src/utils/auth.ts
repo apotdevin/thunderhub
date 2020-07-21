@@ -1,6 +1,7 @@
 import base64url from 'base64url';
 import { v5 as uuidv5 } from 'uuid';
-import { CLIENT_ACCOUNT } from '../context/AccountContext';
+import { AuthType } from 'src/graphql/types';
+import { CLIENT_ACCOUNT, defaultAuth } from '../context/AccountContext';
 
 const THUNDERHUB_NAMESPACE = '00000000-0000-0000-0000-000000000000';
 
@@ -49,14 +50,22 @@ export const getBase64CertfromDerFormat = (base64: string) => {
   return pemText;
 };
 
-const emptyObject = {
+interface ConfigLnd {
+  cert?: string;
+  admin?: string;
+  viewOnly?: string;
+  host?: string;
+  name?: string;
+}
+
+const emptyObject: ConfigLnd = {
   cert: undefined,
   admin: undefined,
   viewOnly: undefined,
   host: undefined,
 };
 
-export const getConfigLnd = (json: string) => {
+export const getConfigLnd = (json: string): ConfigLnd => {
   const parsedJson = JSON.parse(json);
 
   const config = parsedJson.configurations;
@@ -79,7 +88,7 @@ export const getConfigLnd = (json: string) => {
   return emptyObject;
 };
 
-export const getQRConfig = (json: string) => {
+export const getQRConfig = (json: string): ConfigLnd => {
   const config = JSON.parse(json);
 
   if (config) {
@@ -102,12 +111,12 @@ export const getAuthObj = (
   viewOnly: string | undefined,
   admin: string | undefined,
   cert: string | undefined
-) => {
+): AuthType => {
   if (!host) {
-    return null;
+    return defaultAuth;
   }
   if (!viewOnly && !admin) {
-    return null;
+    return defaultAuth;
   }
 
   return {

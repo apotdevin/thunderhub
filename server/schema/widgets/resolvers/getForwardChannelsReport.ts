@@ -6,8 +6,11 @@ import { getNodeFromChannel } from 'server/helpers/getNodeFromChannel';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
+import {
+  GetForwardsType,
+  GetWalletInfoType,
+} from 'server/types/ln-service.types';
 import { countArray, countRoutes } from './helpers';
-import { ForwardCompleteProps } from './interface';
 
 export const getForwardChannelsReport = async (
   _: undefined,
@@ -76,7 +79,7 @@ export const getForwardChannelsReport = async (
       })
     );
 
-  const forwardsList: ForwardCompleteProps = await to(
+  const forwardsList = await to<GetForwardsType>(
     getForwards({
       lnd,
       after: startDate,
@@ -84,7 +87,7 @@ export const getForwardChannelsReport = async (
     })
   );
 
-  const walletInfo: { public_key: string } = await to(
+  const walletInfo = await to<GetWalletInfoType>(
     getWalletInfo({
       lnd,
     })
@@ -101,9 +104,15 @@ export const getForwardChannelsReport = async (
 
   while (!finishedFetching) {
     if (next) {
-      const moreForwards = await to(getForwards({ lnd, token: next }));
+      const moreForwards = await to<GetForwardsType>(
+        getForwards({ lnd, token: next })
+      );
       forwards = [...forwards, ...moreForwards.forwards];
-      next = moreForwards.next;
+      if (moreForwards.next) {
+        next = moreForwards.next;
+      } else {
+        finishedFetching = true;
+      }
     } else {
       finishedFetching = true;
     }

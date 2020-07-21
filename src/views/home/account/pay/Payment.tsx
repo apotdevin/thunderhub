@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { ModalType } from 'src/views/trading/Modal/FilterModal';
 import {
   Sub4Title,
   ResponsiveLine,
@@ -15,7 +16,7 @@ import { KeysendModal } from './KeysendModal';
 
 export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const [request, setRequest] = useState<string>('');
-  const [modalType, setModalType] = useState('none');
+  const [modalType, setModalType] = useState<ModalType>('none');
 
   const { minorVersion } = useStatusState();
 

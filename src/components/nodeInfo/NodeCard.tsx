@@ -30,7 +30,7 @@ export const NodeCard = ({ account, accountId }: NodeCardProps) => {
     triggerOnce: true,
   });
 
-  const auth = getAuthObj(host, viewOnly, null, cert);
+  const auth = getAuthObj(host, viewOnly, undefined, cert);
 
   const { data, loading, error } = useGetNodeInfoQuery({
     ssr: false,
@@ -64,7 +64,13 @@ export const NodeCard = ({ account, accountId }: NodeCardProps) => {
         </>
       );
     }
-    if (loading || !data || !data.getNodeInfo || !data.getChannelBalance) {
+    if (
+      loading ||
+      !data?.getNodeInfo ||
+      !data?.getChannelBalance ||
+      !data?.getChainBalance ||
+      !data?.getPendingChainBalance
+    ) {
       return <ScaleLoader height={20} color={themeColors.blue3} />;
     }
 

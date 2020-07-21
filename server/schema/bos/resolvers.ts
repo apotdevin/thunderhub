@@ -7,6 +7,7 @@ import { AuthType } from 'src/context/AccountContext';
 import { rebalance } from 'balanceofsatoshis/swaps';
 import { getAccountingReport } from 'balanceofsatoshis/balances';
 import request from '@alexbosworth/request';
+import { RebalanceResponseType } from 'server/types/balanceofsatoshis.types';
 
 type RebalanceType = {
   auth: AuthType;
@@ -80,9 +81,9 @@ export const bosResolvers = {
         out_channels,
         ...(in_through && { in_through }),
         ...(is_avoiding_high_inbound && { is_avoiding_high_inbound }),
-        ...(max_fee > 0 && { max_fee }),
-        ...(max_fee_rate > 0 && { max_fee_rate }),
-        ...(max_rebalance > 0 && { max_rebalance }),
+        ...(max_fee && max_fee > 0 && { max_fee }),
+        ...(max_fee_rate && max_fee_rate > 0 && { max_fee_rate }),
+        ...(max_rebalance && max_rebalance > 0 && { max_rebalance }),
         ...(node && { node }),
         ...(out_through && { out_through }),
         ...(target && { target }),
@@ -90,7 +91,7 @@ export const bosResolvers = {
 
       logger.info('Rebalance Params: %o', filteredParams);
 
-      const response = await to(
+      const response = await to<RebalanceResponseType>(
         rebalance({
           lnd,
           logger,

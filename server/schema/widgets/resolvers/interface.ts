@@ -1,20 +1,7 @@
-export interface ForwardProps {
-  created_at: string;
-  fee: number;
-  fee_mtokens: string;
-  incoming_channel: string;
-  mtokens: string;
-  outgoing_channel: string;
-  tokens: number;
-}
-
-export interface ForwardCompleteProps {
-  forwards: ForwardProps[];
-  next: string;
-}
+import { ForwardType } from 'server/types/ln-service.types';
 
 export interface ListProps {
-  [key: string]: ForwardProps[];
+  [key: string]: ForwardType[];
 }
 
 export interface ReduceObjectProps {

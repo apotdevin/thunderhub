@@ -45,8 +45,8 @@ export const FullWidth = styled.div`
 export const ConnectTitle = styled.div`
   width: 100%;
   font-size: 18px;
-  ${({ change }: { change?: boolean }) =>
-    change && `color: ${fontColors.white};`}
+  ${({ changeColor }: { changeColor?: boolean | null }) =>
+    changeColor && `color: ${fontColors.white};`}
   padding-bottom: 8px;
 `;
 

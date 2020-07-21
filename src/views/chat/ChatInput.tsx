@@ -37,16 +37,18 @@ export const ChatInput = ({
   );
 
   React.useEffect(() => {
-    if (!loading && data && data.sendMessage >= 0) {
+    if (!loading && account && data?.sendMessage) {
       setMessage('');
       dispatch({
         type: 'newChat',
         newChat: {
+          id: '',
+          verified: true,
           date: new Date().toISOString(),
           message: formattedMessage,
           sender: customSender || sender,
           isSent: true,
-          feePaid: data.sendMessage,
+          feePaid: data.sendMessage - 1,
           contentType,
           tokens,
         },

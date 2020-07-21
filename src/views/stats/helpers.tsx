@@ -2,7 +2,8 @@ import * as React from 'react';
 import { chartColors } from 'src/styles/Themes';
 import { CheckCircle, AlertCircle, XCircle } from 'react-feather';
 
-export const getProgressColor = (score: number): string => {
+export const getProgressColor = (score: number | null | undefined): string => {
+  if (!score) return chartColors.red;
   switch (true) {
     case score > 90:
       return chartColors.green;
@@ -18,9 +19,12 @@ export const getProgressColor = (score: number): string => {
 };
 
 export const getIcon = (
-  score: number,
+  score: number | null | undefined,
   notSignificant?: boolean
 ): JSX.Element => {
+  if (!score) {
+    return <XCircle color={getProgressColor(score)} />;
+  }
   if (notSignificant) {
     return <AlertCircle color={chartColors.orange} />;
   }
@@ -39,10 +43,11 @@ export const getIcon = (
 };
 
 export const getFeeMessage = (
-  score: number,
-  isOver: boolean,
+  score: number | null | undefined,
+  isOver: boolean | null | undefined,
   isBase?: boolean
 ): string => {
+  if (!score) return '';
   let message = '';
   const ending = isBase ? 'base fees' : 'ppm fees';
   switch (true) {
@@ -74,7 +79,8 @@ export const getFeeMessage = (
   return `${message} ${ending}`;
 };
 
-export const getTimeMessage = (score: number): string => {
+export const getTimeMessage = (score: number | undefined | null): string => {
+  if (!score) return '';
   let message = '';
   switch (true) {
     case score > 90:
@@ -96,7 +102,8 @@ export const getTimeMessage = (score: number): string => {
   return message;
 };
 
-export const getVolumeMessage = (score: number): string => {
+export const getVolumeMessage = (score: number | undefined | null): string => {
+  if (!score) return '';
   let message = '';
   switch (true) {
     case score > 100:

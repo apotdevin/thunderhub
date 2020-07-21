@@ -16,6 +16,10 @@ import {
   decodeMessage,
 } from 'server/helpers/customRecords';
 import { logger } from 'server/helpers/logger';
+import {
+  GetInvoicesType,
+  GetWalletInfoType,
+} from 'server/types/ln-service.types';
 
 export const chatResolvers = {
   Query: {
@@ -25,7 +29,7 @@ export const chatResolvers = {
       const auth = getCorrectAuth(params.auth, context);
       const lnd = getAuthLnd(auth);
 
-      const invoiceList = await to(
+      const invoiceList = await to<GetInvoicesType>(
         getInvoices({
           lnd,
           limit: params.initialize ? 100 : 5,
@@ -72,7 +76,11 @@ export const chatResolvers = {
                 logger.debug(`Error verifying message: ${messageToVerify}`);
               }
 
-              if (!error && verified?.signed_by === customRecords.sender) {
+              if (
+                !error &&
+                (verified as { signed_by: string })?.signed_by ===
+                  customRecords.sender
+              ) {
                 isVerified = true;
               }
             }
@@ -88,7 +96,7 @@ export const chatResolvers = {
         );
 
       const filtered = await getFiltered();
-      const final = filtered.filter(message => !!message);
+      const final = filtered.filter(Boolean) || [];
 
       return { token: invoiceList.next, messages: final };
     },
@@ -126,7 +134,7 @@ export const chatResolvers = {
         messageToSend = `${params.tokens},${params.message}`;
       }
 
-      const nodeInfo = await to(
+      const nodeInfo = await to<GetWalletInfoType>(
         getWalletInfo({
           lnd,
         })
@@ -167,7 +175,8 @@ export const chatResolvers = {
           messages: customRecords,
         })
       );
-      return safe_fee;
+      // +1 is needed so that a fee of 0 doesnt evaluate to false
+      return safe_fee + 1;
     },
   },
 };

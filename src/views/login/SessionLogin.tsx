@@ -71,11 +71,12 @@ export const SessionLogin = () => {
 
   useEffect(() => {
     if (!sLoading && sData && sData.getSessionToken) {
-      getCanConnect({
-        variables: {
-          auth: getAuthFromAccount(account),
-        },
-      });
+      account &&
+        getCanConnect({
+          variables: {
+            auth: getAuthFromAccount(account),
+          },
+        });
     }
   }, [sLoading, sData, push, getCanConnect, account]);
 
@@ -84,7 +85,7 @@ export const SessionLogin = () => {
       !loading &&
       data &&
       data.getNodeInfo &&
-      account.type === SERVER_ACCOUNT
+      account?.type === SERVER_ACCOUNT
     ) {
       dispatch({ type: 'connected' });
       push(appendBasePath('/home'));
@@ -93,7 +94,7 @@ export const SessionLogin = () => {
       !loading &&
       data &&
       data.getNodeInfo &&
-      account.type === CLIENT_ACCOUNT
+      account?.type === CLIENT_ACCOUNT
     ) {
       const bytes = CryptoJS.AES.decrypt(account.admin, pass);
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
@@ -104,30 +105,41 @@ export const SessionLogin = () => {
     }
   }, [data, loading, dispatch, pass, account, dispatchAccount, push]);
 
-  if (dontShowSessionLogin(account)) {
+  if (account && dontShowSessionLogin(account)) {
     return null;
   }
 
   const handleClick = () => {
-    if (account.type === CLIENT_ACCOUNT) {
+    if (account?.type === CLIENT_ACCOUNT) {
       try {
         const bytes = CryptoJS.AES.decrypt(account.admin, pass);
         const decrypted = bytes.toString(CryptoJS.enc.Utf8);
 
-        getCanConnect({
-          variables: {
-            auth: getAuthObj(account.host, decrypted, null, account.cert),
-          },
-        });
+        const auth = getAuthObj(
+          account.host,
+          decrypted,
+          undefined,
+          account.cert
+        );
+
+        auth &&
+          getCanConnect({
+            variables: {
+              auth,
+            },
+          });
       } catch (error) {
         toast.error('Wrong Password');
       }
     } else {
-      getSessionToken({ variables: { id: account.id, password: pass } });
+      getSessionToken({ variables: { id: account?.id || '', password: pass } });
     }
   };
 
   const getTitle = () => {
+    if (!account) {
+      return null;
+    }
     if (account.type === CLIENT_ACCOUNT) {
       if (!account.viewOnly) {
         return `Login to ${account.name} (admin-only):`;

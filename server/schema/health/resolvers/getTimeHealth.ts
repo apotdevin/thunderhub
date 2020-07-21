@@ -3,6 +3,7 @@ import { getCorrectAuth, getAuthLnd } from 'server/helpers/helpers';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { to } from 'server/helpers/async';
 import { ContextType } from 'server/types/apiTypes';
+import { GetChannelsType } from 'server/types/ln-service.types';
 import { getAverage } from '../helpers';
 
 const halfMonthInMilliSeconds = 1296000000;
@@ -13,7 +14,7 @@ export default async (_: undefined, params: any, context: ContextType) => {
   const auth = getCorrectAuth(params.auth, context);
   const lnd = getAuthLnd(auth);
 
-  const { channels } = await to(getChannels({ lnd }));
+  const { channels } = await to<GetChannelsType>(getChannels({ lnd }));
 
   const health = channels.map(channel => {
     const {

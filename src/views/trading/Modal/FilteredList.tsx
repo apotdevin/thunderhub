@@ -8,12 +8,13 @@ import { FilterType } from '../OfferFilters';
 interface FilteredProps {
   searchable: boolean;
   options: FilterType[];
-  handleClick: (name: string, option?: {}) => () => void;
+  handleClick: (name: string, option: FilteredOptionsProps) => () => void;
 }
 
-interface FilteredOptionsProps {
+export interface FilteredOptionsProps {
   name: string;
   title: string;
+  options?: FilterType[];
 }
 
 export const FilteredList = ({
@@ -42,7 +43,7 @@ export const FilteredList = ({
     setOptions(filtered);
   }, [searchTerm, options]);
 
-  const handleChange = event => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
@@ -58,18 +59,16 @@ export const FilteredList = ({
       )}
       <OfferModalBox>
         {filteredOptions.length > 0 ? (
-          filteredOptions.map(
-            (option: { name: string; title: string }, index: number) => (
-              <ColorButton
-                key={`${index}-${option.name}`}
-                fullWidth={true}
-                withMargin={'0 0 2px 0'}
-                onClick={handleClick(option.name, option)}
-              >
-                {option.title}
-              </ColorButton>
-            )
-          )
+          filteredOptions.map((option, index) => (
+            <ColorButton
+              key={`${index}-${option.name}`}
+              fullWidth={true}
+              withMargin={'0 0 2px 0'}
+              onClick={handleClick(option.name, option)}
+            >
+              {option.title}
+            </ColorButton>
+          ))
         ) : (
           <Sub4Title>No results</Sub4Title>
         )}

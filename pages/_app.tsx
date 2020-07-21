@@ -4,6 +4,8 @@ import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { StyledToastContainer } from 'src/components/toastContainer/ToastContainer';
+import { NextPage } from 'next';
+import { AppProps } from 'next/app';
 import { ContextProvider } from '../src/context/ContextProvider';
 import { useConfigState, ConfigProvider } from '../src/context/ConfigContext';
 import { GlobalStyles } from '../src/styles/GlobalStyle';
@@ -36,7 +38,14 @@ const Wrapper: React.FC = ({ children }) => {
   );
 };
 
-const App = ({ Component, pageProps, initialConfig }) => (
+type InitialProps = { initialConfig: string };
+type MyAppProps = InitialProps & AppProps;
+
+const App: NextPage<MyAppProps, InitialProps> = ({
+  Component,
+  pageProps,
+  initialConfig,
+}) => (
   <>
     <Head>
       <title>ThunderHub - Lightning Node Manager</title>
@@ -52,8 +61,13 @@ const App = ({ Component, pageProps, initialConfig }) => (
   </>
 );
 
-App.getInitialProps = async props => {
-  const cookies = parseCookies(props.ctx.req);
+/*
+ * Props should be NextPageContext but something wierd
+ * happens and the context object received is not this
+ * type.
+ */
+App.getInitialProps = async ({ ctx }: any) => {
+  const cookies = parseCookies(ctx?.req);
 
   if (!cookies?.theme) {
     return { initialConfig: 'dark' };
