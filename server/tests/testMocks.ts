@@ -49,11 +49,7 @@ export const ContextMockNoSSO: ContextType = {
   secret: '123456789',
   ssoVerified: true,
   account: 'accountID',
-  sso: {
-    macaroon: null,
-    cert: null,
-    host: null,
-  },
+  sso: null,
   accounts: [
     {
       name: 'account',

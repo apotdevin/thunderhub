@@ -68,7 +68,11 @@ export const channelResolvers = {
         }
       });
 
-      return { ...channel, node_policies, partner_node_policies };
+      return {
+        ...(channel as GetChannelType),
+        node_policies,
+        partner_node_policies,
+      };
     },
   },
 };

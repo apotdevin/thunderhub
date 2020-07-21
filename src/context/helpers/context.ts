@@ -7,7 +7,12 @@ import {
   defaultAuth,
 } from '../AccountContext';
 
-export const getAccountById = (id: string, accounts: CompleteAccount[]) => {
+export const getAccountById = (
+  id: string | null,
+  accounts: CompleteAccount[]
+) => {
+  if (!id) return { account: null, id: null };
+
   const correctAccount: CompleteAccount | null | undefined = accounts.find(
     a => a.id === id
   );

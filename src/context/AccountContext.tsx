@@ -66,9 +66,9 @@ type State = {
 type ActionType =
   | {
       type: 'initialize';
-      changeId: string;
+      changeId: string | null;
       accountsToAdd: CompleteAccount[];
-      session: string;
+      session: string | null;
     }
   | {
       type: 'changeAccount' | 'deleteAccount';

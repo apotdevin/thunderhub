@@ -60,7 +60,7 @@ export const transactionResolvers = {
         const { date } = invoices[invoices.length - 1];
         firstInvoiceDate = invoices[0].date;
         lastInvoiceDate = date;
-        token = invoiceList.next;
+        token = invoiceList.next || '';
       }
 
       const paymentList = await to<GetPaymentsType>(

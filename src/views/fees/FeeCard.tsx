@@ -157,7 +157,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
             title={'CLTV Delta'}
             value={newCLTV}
             placeholder={'cltv delta'}
-            customAmount={newCLTV.toString()}
+            customAmount={newCLTV?.toString() || ''}
             inputType={'number'}
             inputCallback={value => setCLTV(Number(value))}
           />

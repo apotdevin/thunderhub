@@ -14,7 +14,7 @@ const { nodeEnv } = serverRuntimeConfig || {};
 const { noClient } = publicRuntimeConfig || {};
 
 type LndAuthType = {
-  cert: string;
+  cert: string | null;
   macaroon: string;
   host: string;
 };
@@ -37,9 +37,9 @@ export const getCorrectAuth = (
 ): LndAuthType => {
   if (auth.type === 'test' && nodeEnv !== 'production') {
     return {
-      host: process.env.TEST_HOST,
-      macaroon: process.env.TEST_MACAROON,
-      cert: process.env.TEST_CERT,
+      host: process.env.TEST_HOST || '',
+      macaroon: process.env.TEST_MACAROON || '',
+      cert: process.env.TEST_CERT || '',
     };
   }
   if (auth.type === SERVER_ACCOUNT) {
@@ -65,7 +65,7 @@ export const getCorrectAuth = (
     return verifiedAccount;
   }
   if (auth.type === SSO_ACCOUNT) {
-    if (!context.ssoVerified) {
+    if (!context.ssoVerified || !context.sso) {
       logger.debug('SSO Account is not verified');
       throw new Error('AccountNotAuthenticated');
     }

@@ -37,7 +37,7 @@ const InputLine = styled(SingleLine)`
 
 type InputWithDecoProps = {
   title: string;
-  value?: string | number;
+  value?: string | number | null;
   noInput?: boolean;
   amount?: number | null;
   override?: string;

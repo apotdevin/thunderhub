@@ -22,7 +22,7 @@ export const AdminCheck: React.FC<AdminProps> = ({
   const { data, loading } = useGetCanAdminQuery({
     fetchPolicy: 'network-only',
     skip: !admin,
-    variables: { auth: getAuthObj(host, null, admin, cert) },
+    variables: { auth: getAuthObj(host, undefined, admin, cert) },
     onError: () => {
       setChecked(false);
     },

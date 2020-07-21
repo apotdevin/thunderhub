@@ -53,13 +53,21 @@ export type GetWalletInfoType = {
   public_key: string;
 };
 
+export type GetNodeType = { alias: string; color: string };
+
 export type UtxoType = {};
 
 export type ChainTransaction = {};
 
 export type ProbeForRouteType = { route?: { hops: [{ public_key: string }] } };
 
-export type GetChannelType = { policies: { public_key: string }[] };
+export type GetChannelType = {
+  policies: {
+    public_key: string;
+    base_fee_mtokens: string;
+    fee_rate: number;
+  }[];
+};
 
 export type GetChannelsType = { channels: ChannelType[] };
 

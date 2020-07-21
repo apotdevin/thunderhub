@@ -20,6 +20,10 @@ export const SecureWrapper: React.FC<SecureButtonProps> = ({
 
   const { account, session } = useAccountState();
 
+  if (!account) {
+    return null;
+  }
+
   if (account.type === CLIENT_ACCOUNT && !account.admin && !session) {
     return null;
   }

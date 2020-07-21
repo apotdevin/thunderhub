@@ -1,14 +1,11 @@
-import {
-  getNode as getLnNode,
-  getWalletInfo,
-  getClosedChannels,
-} from 'ln-service';
+import { getNode, getWalletInfo, getClosedChannels } from 'ln-service';
 import { to, toWithError } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import {
   ClosedChannelsType,
   LndObject,
   GetWalletInfoType,
+  GetNodeType,
 } from 'server/types/ln-service.types';
 import { getAuthLnd, getCorrectAuth, getLnd } from '../../helpers/helpers';
 import { ContextType } from '../../types/apiTypes';
@@ -71,19 +68,19 @@ export const nodeResolvers = {
       }
 
       const [info, error] = await toWithError(
-        getLnNode({
+        getNode({
           lnd,
           is_omitting_channels: !withChannels,
           public_key: publicKey,
         })
       );
 
-      if (error) {
+      if (error || !info) {
         logger.debug(`Error getting node with key: ${publicKey}`);
         return errorNode;
       }
 
-      return { ...info, public_key: publicKey };
+      return { ...(info as GetNodeType), public_key: publicKey };
     },
   },
 };

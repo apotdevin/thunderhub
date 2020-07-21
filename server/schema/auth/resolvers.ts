@@ -21,6 +21,11 @@ export const authResolvers = {
       const { ip, secret, sso, res } = context;
       await requestLimiter(ip, 'getAuthToken');
 
+      if (!sso) {
+        logger.warn('No SSO account available');
+        return null;
+      }
+
       if (!sso.host || !sso.macaroon) {
         logger.warn('Host and macaroon are required for SSO');
         return null;
@@ -38,7 +43,7 @@ export const authResolvers = {
       const cookieFile = readCookie(cookiePath);
 
       if (
-        cookieFile.trim() === params.cookie.trim() ||
+        (cookieFile && cookieFile.trim() === params.cookie.trim()) ||
         nodeEnv === 'development'
       ) {
         refreshCookie(cookiePath);

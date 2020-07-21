@@ -20,7 +20,7 @@ import { RebalanceIdType, ActionType } from '../AdvancedBalance';
 type ModalNodesType = {
   multi?: boolean;
   nodes?: RebalanceIdType[];
-  dispatch: (action: ActionType) => void;
+  dispatch?: (action: ActionType) => void;
   openSet?: () => void;
   callback?: (node: RebalanceIdType) => void;
 };
@@ -48,13 +48,14 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
 
   React.useEffect(() => {
     if (nodeData && nodeData.getNode.node.channel_count) {
-      dispatch({
-        type: 'addNode',
-        node: {
-          alias: nodeData.getNode.node.alias,
-          id: newNode,
-        },
-      });
+      dispatch &&
+        dispatch({
+          type: 'addNode',
+          node: {
+            alias: nodeData.getNode.node.alias,
+            id: newNode,
+          },
+        });
       newNodeSet('');
       resetMutationResult();
     } else if (nodeData && !nodeData.getNode.node.channel_count) {
@@ -95,18 +96,20 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
                 onClick={() => {
                   if (multi) {
                     if (isSelected) {
-                      dispatch({
-                        type: 'removeNode',
-                        public_key: peer.id,
-                      });
+                      dispatch &&
+                        dispatch({
+                          type: 'removeNode',
+                          public_key: peer.id,
+                        });
                     } else {
-                      dispatch({
-                        type: 'addNode',
-                        node: {
-                          alias: peer.alias,
-                          id: peer.id,
-                        },
-                      });
+                      dispatch &&
+                        dispatch({
+                          type: 'addNode',
+                          node: {
+                            alias: peer.alias,
+                            id: peer.id,
+                          },
+                        });
                     }
                   } else {
                     callback &&

@@ -75,12 +75,13 @@ export const routeResolvers = {
         return null;
       }
 
-      const hopsWithNodes = (info as ProbeForRouteType).route.hops.map(h => ({
-        ...h,
-        node: { lnd, publicKey: h.public_key },
-      }));
+      const hopsWithNodes =
+        (info as ProbeForRouteType).route?.hops.map(h => ({
+          ...h,
+          node: { lnd, publicKey: h.public_key },
+        })) || [];
 
-      return { ...info.route, hops: hopsWithNodes };
+      return { ...(info as ProbeForRouteType).route, hops: hopsWithNodes };
     },
   },
 };

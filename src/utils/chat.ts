@@ -17,9 +17,7 @@ export const getSenders = (
 
       if (sorted.length > 0) {
         const chat = sorted[0];
-        const { sender } = chat;
-
-        if (sender) {
+        if (chat?.sender) {
           senders.push(chat);
         }
       }
@@ -29,12 +27,13 @@ export const getSenders = (
 };
 
 export const getSubMessage = (
-  contentType: string,
-  message: string,
-  tokens: number,
+  contentType: string | null,
+  message: string | null,
+  tokens: number | null,
   isSent: boolean
 ): string => {
   if (!contentType) return '';
+  if (!message && !tokens) return '';
   switch (contentType) {
     case 'payment':
       if (isSent) {
@@ -47,6 +46,7 @@ export const getSubMessage = (
       }
       return `Requested ${tokens} sats from you`;
     default:
-      return message;
+      if (message) return message;
+      return '';
   }
 };

@@ -1,9 +1,9 @@
 import { ServerResponse } from 'http';
 
-type SSOType = {
-  macaroon: string | null;
+export type SSOType = {
+  macaroon: string;
   cert: string | null;
-  host: string | null;
+  host: string;
 };
 
 export type AccountType = {
@@ -20,7 +20,7 @@ export type ContextType = {
   secret: string;
   ssoVerified: boolean;
   account: string | null;
-  sso: SSOType;
+  sso: SSOType | null;
   accounts: AccountType[];
   res: ServerResponse;
 };

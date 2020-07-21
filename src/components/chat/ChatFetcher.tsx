@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetMessagesQuery } from 'src/graphql/queries/__generated__/getMessages.generated';
 import { useStatusState } from 'src/context/StatusContext';
+import { MessagesType } from 'src/graphql/types';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 import { useConfigState } from '../../context/ConfigContext';
@@ -39,9 +40,7 @@ export const ChatFetcher: React.FC = () => {
         for (let i = 0; i < messages.length; i += 1) {
           if (index < 0) {
             const element = messages[i];
-            const { id } = element;
-
-            if (id === lastChat) {
+            if (element?.id === lastChat) {
               index = i;
             }
           }
@@ -61,8 +60,15 @@ export const ChatFetcher: React.FC = () => {
       }
 
       const newMessages = messages.slice(0, index);
-      const last = newMessages[0]?.id;
-      dispatch({ type: 'additional', chats: newMessages, lastChat: last });
+
+      if (newMessages?.length) {
+        const last = newMessages[0]?.id || '';
+        dispatch({
+          type: 'additional',
+          chats: (newMessages as MessagesType[]) || [],
+          lastChat: last,
+        });
+      }
     }
   }, [data, loading, error, dispatch, lastChat, pathname]);
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import numeral from 'numeral';
-import { HodlOfferType } from 'src/graphql/types';
+import { HodlOfferType, HodlOfferPaymentType } from 'src/graphql/types';
 import {
   SubCard,
   Sub4Title,
@@ -90,9 +90,10 @@ export const OfferCard = ({
 
   const renderPayments = (): string => {
     if (payment_method_instructions) {
-      const methods = payment_method_instructions.map(
-        method =>
-          `${method.payment_method_name} (${method.payment_method_type})`
+      const methods = payment_method_instructions.map(method =>
+        method
+          ? `${method.payment_method_name} (${method.payment_method_type})`
+          : ''
       );
 
       return methods.join(', ');
@@ -161,9 +162,9 @@ export const OfferCard = ({
   return (
     <SubCard withMargin={'16px 0 24px'} key={`${index}-${id}`}>
       <MainInfo onClick={() => handleClick()}>
-        {payment_method_instructions?.length && (
-          <MethodBoxes methods={payment_method_instructions} />
-        )}
+        <MethodBoxes
+          methods={payment_method_instructions as HodlOfferPaymentType[]}
+        />
         <ResponsiveLine>
           <SubTitle>
             {side !== 'buy' ? asset_code : currency_code}

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetMessagesLazyQuery } from 'src/graphql/queries/__generated__/getMessages.generated';
+import { MessagesType } from 'src/graphql/types';
 import { useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 
@@ -55,7 +56,7 @@ export const ChatInit: React.FC = () => {
 
       dispatch({
         type: 'initialized',
-        chats: messages,
+        chats: messages as MessagesType[],
         lastChat,
         sender,
       });

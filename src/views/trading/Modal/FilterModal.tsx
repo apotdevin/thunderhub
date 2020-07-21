@@ -7,6 +7,7 @@ import {
   GetCountriesQuery,
   GetCurrenciesQuery,
 } from 'src/graphql/hodlhodl/__generated__/query.generated';
+import { HodlCountryType, HodlCurrencyType } from 'src/graphql/types';
 import { SubTitle } from '../../../components/generic/Styled';
 import { SortOptions, NewOptions } from '../OfferConfigs';
 import { FilterType, FilterActionType } from '../OfferFilters';
@@ -77,23 +78,23 @@ export const FilterModal = ({
 
   useEffect(() => {
     if (!loading && data && (data as GetCountriesQuery).getCountries) {
-      const countryOptions = (data as GetCountriesQuery).getCountries.map(
-        country => {
-          const { code, name, native_name } = country;
-          return { name: code, title: `${name} (${native_name})` };
-        }
-      );
+      const countryOptions =
+        (data as GetCountriesQuery).getCountries?.map(country => {
+          const { code, name, native_name } = country as HodlCountryType;
+          return { name: code || '', title: `${name} (${native_name})` };
+        }) || [];
 
       setOptions(countryOptions);
     }
     if (!loading && data && (data as GetCurrenciesQuery).getCurrencies) {
-      const filtered = (data as GetCurrenciesQuery).getCurrencies.filter(
-        currency => currency.type === 'fiat'
-      );
+      const filtered =
+        (data as GetCurrenciesQuery).getCurrencies?.filter(
+          currency => currency?.type === 'fiat'
+        ) || [];
 
       const currencyOptions = filtered.map(currency => {
-        const { code, name } = currency;
-        return { name: code, title: name };
+        const { code, name } = currency as HodlCurrencyType;
+        return { name: code || '', title: name || '' };
       });
 
       setOptions(currencyOptions);

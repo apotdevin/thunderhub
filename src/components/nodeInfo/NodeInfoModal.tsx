@@ -14,7 +14,7 @@ import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { useStatusDispatch } from '../../context/StatusContext';
 
 interface NodeInfoModalProps {
-  account: GetNodeInfoQuery;
+  account: GetNodeInfoQuery | null | undefined;
   accountId: string;
 }
 
@@ -22,6 +22,10 @@ export const NodeInfoModal = ({ account, accountId }: NodeInfoModalProps) => {
   const dispatch = useStatusDispatch();
 
   const dispatchAccount = useAccountDispatch();
+
+  if (!account) {
+    return null;
+  }
 
   const {
     active_channels_count,

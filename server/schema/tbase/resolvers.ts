@@ -19,7 +19,7 @@ export const tbaseResolvers = {
           body: JSON.stringify({ query }),
         })
       );
-      if (fetchError) return [];
+      if (fetchError || !response) return [];
       const result = await response.json();
       const { errors, data } = result || {};
       if (errors) return [];

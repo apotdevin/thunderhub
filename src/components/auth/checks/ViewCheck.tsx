@@ -53,7 +53,7 @@ export const ViewCheck = ({
     if (loading) {
       return <ScaleLoader height={20} color={themeColors.blue3} />;
     }
-    if (data?.getNodeInfo.alias) {
+    if (data?.getNodeInfo?.alias) {
       return <Check size={18} />;
     }
     return <X size={18} />;

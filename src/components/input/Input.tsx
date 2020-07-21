@@ -74,7 +74,7 @@ export const StyledInput = styled.input<InputProps>`
 
 interface InputCompProps {
   type?: string;
-  value?: number | string;
+  value?: number | string | null;
   placeholder?: string;
   color?: string;
   backgroundColor?: ThemeSet | string;
@@ -105,7 +105,7 @@ export const Input = ({
     <StyledInput
       type={type}
       placeholder={placeholder}
-      value={value}
+      value={value || ''}
       color={color}
       backgroundColor={backgroundColor}
       withMargin={withMargin}

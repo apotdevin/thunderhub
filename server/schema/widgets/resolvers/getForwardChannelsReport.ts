@@ -92,7 +92,7 @@ export const getForwardChannelsReport = async (
   );
 
   let forwards = forwardsList.forwards;
-  let next = forwardsList.next;
+  let next: string = forwardsList.next;
 
   let finishedFetching = false;
 
@@ -106,7 +106,9 @@ export const getForwardChannelsReport = async (
         getForwards({ lnd, token: next })
       );
       forwards = [...forwards, ...moreForwards.forwards];
-      next = moreForwards.next;
+      if (moreForwards.next) {
+        next = moreForwards.next;
+      }
     } else {
       finishedFetching = true;
     }

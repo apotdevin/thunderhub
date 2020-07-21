@@ -7,6 +7,7 @@ import { useAccountState } from 'src/context/AccountContext';
 import { useGetCanConnectInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { renderLine } from 'src/components/generic/helpers';
+import { NodeInfoType } from 'src/graphql/types';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import {
@@ -76,7 +77,7 @@ export const ConnectCard = () => {
     return <LoadingCard title={'Connect'} />;
   }
 
-  const { public_key, uris } = data.getNodeInfo;
+  const { public_key, uris } = data.getNodeInfo as NodeInfoType;
 
   const onionAddress = uris.find((uri: string) => uri.indexOf('onion') >= 0);
   const normalAddress = uris.find((uri: string) => uri.indexOf('onion') < 0);

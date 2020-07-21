@@ -13,7 +13,7 @@ export const lnpayResolvers = {
         fetch(`${appUrls.lnpay}?amount=${params.amount}`)
       );
 
-      if (error) {
+      if (error || !response) {
         logger.debug('Unable to get lnpay invoice: %o', error);
         throw new Error('NoLnPayInvoice');
       }
@@ -26,7 +26,7 @@ export const lnpayResolvers = {
 
       const [response, error] = await toWithError(fetch(appUrls.lnpay));
 
-      if (error) {
+      if (error || !response) {
         logger.debug('Unable to connect to ThunderHub LNPAY');
         throw new Error('NoLnPay');
       }

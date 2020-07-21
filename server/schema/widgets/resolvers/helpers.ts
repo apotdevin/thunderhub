@@ -19,7 +19,8 @@ export const reduceForwardArray = (list: ListProps) => {
             fee: a.fee + b.fee,
             tokens: a.tokens + b.tokens,
           };
-        }
+        },
+        { fee: 0, tokens: 0 }
       );
       reducedOrder.push({
         period: Number(key),
@@ -37,9 +38,13 @@ export const reduceInOutArray = (list: InOutListProps) => {
   for (const key in list) {
     if (Object.prototype.hasOwnProperty.call(list, key)) {
       const element: InOutProps[] = list[key];
-      const reducedArray: InOutProps = reduce(element, (a, b) => ({
-        tokens: a.tokens + b.tokens,
-      }));
+      const reducedArray: InOutProps = reduce(
+        element,
+        (a, b) => ({
+          tokens: a.tokens + b.tokens,
+        }),
+        { tokens: 0 }
+      );
       reducedOrder.push({
         period: Number(key),
         amount: element.length,

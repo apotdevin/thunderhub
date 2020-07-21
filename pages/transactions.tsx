@@ -49,7 +49,10 @@ const TransactionsView = () => {
       <CardWithTitle>
         <SubTitle>Transactions</SubTitle>
         <Card bottom={'8px'} mobileCardPadding={'0'} mobileNoBackground={true}>
-          {resumeList.map((entry, index: number) => {
+          {resumeList?.map((entry, index: number) => {
+            if (!entry) {
+              return null;
+            }
             if (entry.__typename === 'InvoiceType') {
               return (
                 <InvoiceCard
@@ -61,15 +64,18 @@ const TransactionsView = () => {
                 />
               );
             }
-            return (
-              <PaymentsCard
-                payment={entry}
-                key={index}
-                index={index + 1}
-                setIndexOpen={setIndexOpen}
-                indexOpen={indexOpen}
-              />
-            );
+            if (entry.__typename === 'PaymentType') {
+              return (
+                <PaymentsCard
+                  payment={entry}
+                  key={index}
+                  index={index + 1}
+                  setIndexOpen={setIndexOpen}
+                  indexOpen={indexOpen}
+                />
+              );
+            }
+            return null;
           })}
           <ColorButton
             fullWidth={true}
@@ -81,9 +87,11 @@ const TransactionsView = () => {
                   prev,
                   { fetchMoreResult }: { fetchMoreResult?: GetResumeQuery }
                 ): GetResumeQuery => {
-                  if (!fetchMoreResult) return prev;
+                  if (!fetchMoreResult?.getResume) return prev;
                   const newToken = fetchMoreResult.getResume.token || '';
-                  const prevEntries = prev.getResume.resume;
+                  const prevEntries = prev?.getResume
+                    ? prev.getResume.resume
+                    : [];
                   const newEntries = fetchMoreResult.getResume.resume;
 
                   const allTransactions = newToken

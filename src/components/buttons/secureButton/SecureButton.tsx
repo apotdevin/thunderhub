@@ -27,7 +27,16 @@ export const SecureButton: React.FC<SecureButtonProps> = ({
 
   const { session, account } = useAccountState();
 
-  if (account.type === CLIENT_ACCOUNT && !account.admin && !session) {
+  if (!account) {
+    return null;
+  }
+
+  if (
+    account &&
+    account.type === CLIENT_ACCOUNT &&
+    !account.admin &&
+    !session
+  ) {
     return null;
   }
 

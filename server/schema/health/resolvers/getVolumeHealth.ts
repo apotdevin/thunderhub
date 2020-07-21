@@ -27,12 +27,15 @@ export default async (_: undefined, params: any, context: ContextType) => {
     getForwards({ lnd, after, before })
   );
 
-  const channelVolume = getChannelVolume(forwards);
+  const channelVolume: { channel: string; tokens: number }[] = getChannelVolume(
+    forwards
+  );
 
   const channelDetails = channels
     .map(channel => {
-      const { tokens } =
-        channelVolume.find(c => c.channel === channel.id) || {};
+      const { tokens } = channelVolume.find(c => c.channel === channel.id) || {
+        tokens: 0,
+      };
       const info = getChannelIdInfo(channel.id);
 
       if (!info) return;
@@ -51,23 +54,26 @@ export default async (_: undefined, params: any, context: ContextType) => {
     })
     .filter(Boolean);
 
-  const average = getAverage(channelDetails.map(c => c.volumeNormalized));
+  const average = getAverage(channelDetails.map(c => c?.volumeNormalized || 0));
 
-  const health = channelDetails.map(channel => {
-    const diff = (channel.volumeNormalized - average) / average || -1;
-    const score = Math.round((diff + 1) * 100);
+  const health = channelDetails
+    .map(channel => {
+      if (!channel) return null;
+      const diff = (channel.volumeNormalized - average) / average || -1;
+      const score = Math.round((diff + 1) * 100);
 
-    return {
-      id: channel.id,
-      score,
-      volumeNormalized: channel.volumeNormalized,
-      averageVolumeNormalized: average,
-      partner: { publicKey: channel.publicKey, lnd },
-    };
-  });
+      return {
+        id: channel.id,
+        score,
+        volumeNormalized: channel.volumeNormalized,
+        averageVolumeNormalized: average,
+        partner: { publicKey: channel.publicKey, lnd },
+      };
+    })
+    .filter(Boolean);
 
   const globalAverage = Math.round(
-    getAverage(health.map(c => Math.min(c.score, 100)))
+    getAverage(health.map(c => Math.min(c?.score || 0, 100)))
   );
 
   return { score: globalAverage, channels: health };
