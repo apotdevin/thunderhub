@@ -63,14 +63,17 @@ export const InterfaceSettings = () => {
   };
 
   const renderFiat = () => {
-    const cards = [];
+    const cards: JSX.Element[] = [];
     for (const key in prices) {
       if (Object.prototype.hasOwnProperty.call(prices, key)) {
         const element = prices[key];
         if (!element || !element.last || !element.symbol) return;
         const isCurrent = fiat === key;
         cards.push(
-          <SubCard color={isCurrent ? themeColors.blue2 : undefined} key={key}>
+          <SubCard
+            subColor={isCurrent ? themeColors.blue2 : undefined}
+            key={key}
+          >
             <SingleLine>
               {key}
               <DarkSubTitle>{`${element.symbol} ${numeral(element.last).format(

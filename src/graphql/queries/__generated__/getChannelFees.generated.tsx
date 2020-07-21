@@ -16,11 +16,9 @@ export type ChannelFeesQuery = { __typename?: 'Query' } & {
           'id' | 'partner_public_key'
         > & {
             partner_node_info: { __typename?: 'Node' } & {
-              node?: Types.Maybe<
-                { __typename?: 'nodeType' } & Pick<
-                  Types.NodeType,
-                  'alias' | 'color'
-                >
+              node: { __typename?: 'nodeType' } & Pick<
+                Types.NodeType,
+                'alias' | 'color'
               >;
             };
             channelInfo?: Types.Maybe<

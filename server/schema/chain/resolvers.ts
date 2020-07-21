@@ -1,6 +1,6 @@
 import {
-  getChainBalance as getBalance,
-  getPendingChainBalance as getPending,
+  getChainBalance,
+  getPendingChainBalance,
   getChainTransactions,
   getUtxos,
   sendToChainAddress,
@@ -15,6 +15,14 @@ import {
   getCorrectAuth,
 } from 'server/helpers/helpers';
 import { sortBy } from 'underscore';
+import { to } from 'server/helpers/async';
+import {
+  GetChainBalanceType,
+  GetPendingChainBalanceType,
+  GetChainTransactionsType,
+  GetUtxosType,
+  SendToChainAddressType,
+} from 'server/types/ln-service.types';
 
 interface ChainBalanceProps {
   chain_balance: number;
@@ -36,15 +44,12 @@ export const chainResolvers = {
       const auth = getCorrectAuth(params.auth, context);
       const lnd = getAuthLnd(auth);
 
-      try {
-        const value: ChainBalanceProps = await getBalance({
+      const value: ChainBalanceProps = await to<GetChainBalanceType>(
+        getChainBalance({
           lnd,
-        });
-        return value.chain_balance;
-      } catch (error) {
-        logger.error('Error getting chain balance: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
+        })
+      );
+      return value.chain_balance;
     },
     getPendingChainBalance: async (
       _: undefined,
@@ -56,15 +61,14 @@ export const chainResolvers = {
       const auth = getCorrectAuth(params.auth, context);
       const lnd = getAuthLnd(auth);
 
-      try {
-        const pendingValue: PendingChainBalanceProps = await getPending({
+      const pendingValue: PendingChainBalanceProps = await to<
+        GetPendingChainBalanceType
+      >(
+        getPendingChainBalance({
           lnd,
-        });
-        return pendingValue.pending_chain_balance;
-      } catch (error) {
-        logger.error('Error getting pending chain balance: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
+        })
+      );
+      return pendingValue.pending_chain_balance;
     },
     getChainTransactions: async (
       _: undefined,
@@ -76,20 +80,17 @@ export const chainResolvers = {
       const auth = getCorrectAuth(params.auth, context);
       const lnd = getAuthLnd(auth);
 
-      try {
-        const transactionList = await getChainTransactions({
+      const transactionList = await to<GetChainTransactionsType>(
+        getChainTransactions({
           lnd,
-        });
+        })
+      );
 
-        const transactions = sortBy(
-          transactionList.transactions,
-          'created_at'
-        ).reverse();
-        return transactions;
-      } catch (error) {
-        logger.error('Error getting chain transactions: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
+      const transactions = sortBy(
+        transactionList.transactions,
+        'created_at'
+      ).reverse();
+      return transactions;
     },
     getUtxos: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getUtxos');
@@ -97,14 +98,9 @@ export const chainResolvers = {
       const auth = getCorrectAuth(params.auth, context);
       const lnd = getAuthLnd(auth);
 
-      try {
-        const { utxos } = await getUtxos({ lnd });
+      const info = await to<GetUtxosType>(getUtxos({ lnd }));
 
-        return utxos;
-      } catch (error) {
-        logger.error('Error getting utxos: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
+      return info?.utxos;
     },
   },
   Mutation: {
@@ -143,26 +139,23 @@ export const chainResolvers = {
 
       const sendAll = params.sendAll ? { is_send_all: true } : {};
 
-      try {
-        const send = await sendToChainAddress({
+      const send = await to<SendToChainAddressType>(
+        sendToChainAddress({
           lnd,
           address: params.address,
           ...(params.tokens && { tokens: params.tokens }),
           ...props,
           ...sendAll,
-        });
+        })
+      );
 
-        return {
-          confirmationCount: send.confirmation_count,
-          id: send.id,
-          isConfirmed: send.is_confirmed,
-          isOutgoing: send.is_outgoing,
-          ...(send.tokens && { tokens: send.tokens }),
-        };
-      } catch (error) {
-        logger.error('Error sending to chain address: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
+      return {
+        confirmationCount: send.confirmation_count,
+        id: send.id,
+        isConfirmed: send.is_confirmed,
+        isOutgoing: send.is_outgoing,
+        ...(send.tokens && { tokens: send.tokens }),
+      };
     },
   },
 };

@@ -22,23 +22,19 @@ export type DecodeRequestQuery = { __typename?: 'Query' } & {
       | 'tokens'
     > & {
         destination_node: { __typename?: 'Node' } & {
-          node?: Types.Maybe<
-            { __typename?: 'nodeType' } & Pick<Types.NodeType, 'alias'>
-          >;
+          node: { __typename?: 'nodeType' } & Pick<Types.NodeType, 'alias'>;
         };
-        routes?: Types.Maybe<
-          Array<
-            Types.Maybe<
-              Array<
-                Types.Maybe<
-                  { __typename?: 'RouteType' } & Pick<
-                    Types.RouteType,
-                    | 'base_fee_mtokens'
-                    | 'channel'
-                    | 'cltv_delta'
-                    | 'fee_rate'
-                    | 'public_key'
-                  >
+        routes: Array<
+          Types.Maybe<
+            Array<
+              Types.Maybe<
+                { __typename?: 'RouteType' } & Pick<
+                  Types.RouteType,
+                  | 'base_fee_mtokens'
+                  | 'channel'
+                  | 'cltv_delta'
+                  | 'fee_rate'
+                  | 'public_key'
                 >
               >
             >
@@ -71,11 +67,9 @@ export type DecodeRequestQuery = { __typename?: 'Query' } & {
                       | 'timeout'
                     > & {
                         node: { __typename?: 'Node' } & {
-                          node?: Types.Maybe<
-                            { __typename?: 'nodeType' } & Pick<
-                              Types.NodeType,
-                              'alias'
-                            >
+                          node: { __typename?: 'nodeType' } & Pick<
+                            Types.NodeType,
+                            'alias'
                           >;
                         };
                       }

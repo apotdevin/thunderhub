@@ -89,11 +89,11 @@ export const ChatStart = ({ noTitle }: { noTitle?: boolean }) => {
           <SubTitle>Chat with a current peer</SubTitle>
           {data.getPeers.map((peer, index) => (
             <PeerChatCard
-              peer={peer}
+              peer={peer as PeerType}
               index={index + 1}
               setIndexOpen={setIndexOpen}
               indexOpen={indexOpen}
-              key={`${index}-${peer.public_key}`}
+              key={`${index}-${peer?.public_key}`}
             />
           ))}
         </>

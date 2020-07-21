@@ -6,14 +6,18 @@ import { appUrls } from 'server/utils/appUrls';
 
 export const lnpayResolvers = {
   Query: {
-    getLnPay: async (_: undefined, params: any, context: ContextType) => {
+    getLnPay: async (
+      _: undefined,
+      params: { amount: number },
+      context: ContextType
+    ) => {
       await requestLimiter(context.ip, 'getLnPay');
 
       const [response, error] = await toWithError(
         fetch(`${appUrls.lnpay}?amount=${params.amount}`)
       );
 
-      if (error) {
+      if (error || !response) {
         logger.debug('Unable to get lnpay invoice: %o', error);
         throw new Error('NoLnPayInvoice');
       }
@@ -26,7 +30,7 @@ export const lnpayResolvers = {
 
       const [response, error] = await toWithError(fetch(appUrls.lnpay));
 
-      if (error) {
+      if (error || !response) {
         logger.debug('Unable to connect to ThunderHub LNPAY');
         throw new Error('NoLnPay');
       }

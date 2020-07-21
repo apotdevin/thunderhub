@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { sortBy } from 'underscore';
+import { MessagesType } from 'src/graphql/types';
+import { SentChatProps } from 'src/context/ChatContext';
 import {
   getMessageDate,
   getIsDifferentDay,
   getDayChange,
 } from '../../components/generic/helpers';
 import { useConfigState } from '../../context/ConfigContext';
-import { MessageType } from './Chat.types';
 import { ChatInput } from './ChatInput';
 import {
   ChatStyledLine,
@@ -25,7 +26,7 @@ export const MessageCard = ({
   message,
   key,
 }: {
-  message: MessageType;
+  message: SentChatProps;
   key?: string;
 }) => {
   const { hideFee, hideNonVerified } = useConfigState();
@@ -37,10 +38,10 @@ export const MessageCard = ({
   if (hideNonVerified && !verified && !isSent) return null;
 
   return (
-    <ChatStyledLine key={key} rightAlign={isSent}>
+    <ChatStyledLine key={key} rightAlign={isSent || false}>
       <ChatBubble message={message} />
       <ChatFeeDateColumn>
-        {!hideFee && isSent && feePaid > 0 ? (
+        {!hideFee && isSent && feePaid && feePaid > 0 ? (
           <ChatFeePaid>{`${feePaid} sats`}</ChatFeePaid>
         ) : null}
         <ChatStyledDark withMargin={'8px'}>
@@ -52,7 +53,7 @@ export const MessageCard = ({
 };
 
 interface ChatBoxProps {
-  messages: MessageType[];
+  messages: MessagesType[];
   alias: string;
 }
 

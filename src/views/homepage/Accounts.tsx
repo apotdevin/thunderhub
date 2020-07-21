@@ -10,6 +10,9 @@ import {
   useAccountDispatch,
   SSO_ACCOUNT,
   SERVER_ACCOUNT,
+  CompleteAccount,
+  ServerAccountType,
+  AccountType,
 } from 'src/context/AccountContext';
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
@@ -37,7 +40,7 @@ const TypeText = styled.div`
 
 const renderIntro = () => (
   <Section color={'transparent'}>
-    <ConnectTitle change={true}>Hi! Welcome to ThunderHub</ConnectTitle>
+    <ConnectTitle changeColor={true}>Hi! Welcome to ThunderHub</ConnectTitle>
     <Card>
       {'To start you must create an account on your server. '}
       <Link
@@ -53,7 +56,7 @@ const renderIntro = () => (
 export const Accounts = () => {
   const { push } = useRouter();
   const dispatchStatus = useStatusDispatch();
-  const [newAccount, setNewAccount] = React.useState();
+  const [newAccount, setNewAccount] = React.useState<string>('');
 
   const { accounts, activeAccount, account } = useAccountState();
   const dispatch = useAccountDispatch();
@@ -73,7 +76,8 @@ export const Accounts = () => {
     }
   }, [data, loading, newAccount, dispatch, push, dispatchStatus]);
 
-  const change = accounts.length > 0 && dontShowSessionLogin(account);
+  const change =
+    accounts.length > 0 && account && dontShowSessionLogin(account);
 
   if (accounts.length <= 0) {
     if (noClient && !account) {
@@ -113,12 +117,13 @@ export const Accounts = () => {
     if (admin && !viewOnly) {
       return '(Admin Only)';
     }
-    return null;
+    return '';
   };
 
-  const getTitle = account => {
-    const { type, name, loggedIn } = account;
+  const getTitle = (account: CompleteAccount) => {
+    const { type, name } = account;
     if (type !== CLIENT_ACCOUNT) {
+      const { loggedIn } = account as ServerAccountType;
       const props = {
         color: chartColors.green,
         size: 14,
@@ -135,8 +140,11 @@ export const Accounts = () => {
     return name;
   };
 
-  const getButtonTitle = (account): string => {
-    if (account.viewOnly || account.type === SSO_ACCOUNT) {
+  const getButtonTitle = (account: CompleteAccount): string => {
+    if (account.type === CLIENT_ACCOUNT && account.viewOnly) {
+      return 'Connect';
+    }
+    if (account.type === SSO_ACCOUNT) {
       return 'Connect';
     }
     if (account.type === SERVER_ACCOUNT && account.loggedIn) {
@@ -145,8 +153,11 @@ export const Accounts = () => {
     return 'Login';
   };
 
-  const getArrow = (account): boolean => {
-    if (account.viewOnly || account.type === SSO_ACCOUNT) {
+  const getArrow = (account: CompleteAccount): boolean => {
+    if (account.type === CLIENT_ACCOUNT && account.viewOnly) {
+      return false;
+    }
+    if (account.type === SSO_ACCOUNT) {
       return false;
     }
     if (account.type === SERVER_ACCOUNT && account.loggedIn) {
@@ -155,19 +166,25 @@ export const Accounts = () => {
     return true;
   };
 
-  const handleClick = account => () => {
-    const { id, viewOnly, cert, host, type, loggedIn } = account;
-    if (viewOnly) {
+  const handleClick = (account: CompleteAccount) => () => {
+    const { id, type } = account;
+    if (type === CLIENT_ACCOUNT && (account as AccountType).viewOnly) {
+      const { viewOnly, cert, host } = account as AccountType;
       setNewAccount(id);
       getCanConnect({
-        variables: { auth: getAuthObj(host, viewOnly, null, cert) },
+        variables: {
+          auth: getAuthObj(host, viewOnly, undefined, cert),
+        },
       });
     } else if (type === SSO_ACCOUNT) {
       setNewAccount(id);
       getCanConnect({
         variables: { auth: { type: SSO_ACCOUNT, id } },
       });
-    } else if (type === SERVER_ACCOUNT && loggedIn) {
+    } else if (
+      type === SERVER_ACCOUNT &&
+      (account as ServerAccountType).loggedIn
+    ) {
       setNewAccount(id);
       getCanConnect({
         variables: { auth: { type: SERVER_ACCOUNT, id } },
@@ -179,7 +196,7 @@ export const Accounts = () => {
 
   return (
     <Section color={'transparent'}>
-      <ConnectTitle change={change}>
+      <ConnectTitle changeColor={change}>
         {change ? 'Accounts' : 'Other Accounts'}
       </ConnectTitle>
       <Card>

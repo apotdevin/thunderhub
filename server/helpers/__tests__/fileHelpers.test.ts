@@ -71,7 +71,7 @@ describe('getParsedAccount', () => {
       return 'something else ';
     });
     const account = getParsedAccount(raw, 0, masterPassword, 'regtest');
-    expect(account.macaroon).toContain('macaroon');
+    expect(account?.macaroon).toContain('macaroon');
   });
 
   it('picks up other networks', () => {
@@ -94,7 +94,7 @@ describe('getParsedAccount', () => {
       return 'something else ';
     });
     const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
-    expect(account.macaroon).toContain('macaroon');
+    expect(account?.macaroon).toContain('macaroon');
   });
 
   describe('macaroon handling', () => {
@@ -109,7 +109,7 @@ describe('getParsedAccount', () => {
       };
 
       const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
-      expect(account.macaroon).toBe('RAW MACAROON');
+      expect(account?.macaroon).toBe('RAW MACAROON');
     });
     it('falls back to macaroon path after that', () => {
       const raw = {
@@ -130,7 +130,7 @@ describe('getParsedAccount', () => {
         }
       });
       const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
-      expect(account.macaroon).toBe('yay');
+      expect(account?.macaroon).toBe('yay');
     });
 
     it('falls back to lnd dir finally', () => {
@@ -152,7 +152,7 @@ describe('getParsedAccount', () => {
         }
       });
       const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
-      expect(account.macaroon).toBe('yay');
+      expect(account?.macaroon).toBe('yay');
     });
   });
 
@@ -168,7 +168,7 @@ describe('getParsedAccount', () => {
       };
 
       const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
-      expect(account.cert).toBe('RAW CERT');
+      expect(account?.cert).toBe('RAW CERT');
     });
 
     it('falls back to certificate path after that', () => {
@@ -188,7 +188,7 @@ describe('getParsedAccount', () => {
         }
       });
       const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
-      expect(account.cert).toBe('yay');
+      expect(account?.cert).toBe('yay');
     });
 
     it('falls back to lnd dir finally', () => {
@@ -207,7 +207,7 @@ describe('getParsedAccount', () => {
         }
       });
       const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
-      expect(account.cert).toBe('yay');
+      expect(account?.cert).toBe('yay');
     });
   });
 });

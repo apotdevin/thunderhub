@@ -10,8 +10,16 @@ import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
-import { ForwardCompleteProps } from '../widgets/resolvers/interface';
-import { PaymentsProps, InvoicesProps } from './interface';
+import {
+  GetInvoicesType,
+  GetPaymentsType,
+  InvoiceType,
+  PaymentType,
+  GetForwardsType,
+} from 'server/types/ln-service.types';
+
+type TransactionType = InvoiceType | PaymentType;
+type TransactionWithType = { isTypeOf: string } & TransactionType;
 
 export const transactionResolvers = {
   Query: {
@@ -30,7 +38,7 @@ export const transactionResolvers = {
       let token = '';
       let withInvoices = true;
 
-      const invoiceList: InvoicesProps = await to(
+      const invoiceList = await to<GetInvoicesType>(
         getInvoices({
           lnd,
           ...invoiceProps,
@@ -52,10 +60,10 @@ export const transactionResolvers = {
         const { date } = invoices[invoices.length - 1];
         firstInvoiceDate = invoices[0].date;
         lastInvoiceDate = date;
-        token = invoiceList.next;
+        token = invoiceList.next || '';
       }
 
-      const paymentList: PaymentsProps = await to(
+      const paymentList = await to<GetPaymentsType>(
         getPayments({
           lnd,
         })
@@ -70,7 +78,7 @@ export const transactionResolvers = {
         isTypeOf: 'PaymentType',
       }));
 
-      const filterArray = payment => {
+      const filterArray = (payment: typeof payments[number]) => {
         const last =
           compareDesc(new Date(lastInvoiceDate), new Date(payment.date)) === 1;
         const first = params.token
@@ -123,7 +131,7 @@ export const transactionResolvers = {
         })
       );
 
-      const forwardsList: ForwardCompleteProps = await to(
+      const forwardsList = await to<GetForwardsType>(
         getLnForwards({
           lnd,
           after: startDate,
@@ -153,7 +161,7 @@ export const transactionResolvers = {
     },
   },
   Transaction: {
-    __resolveType(parent) {
+    __resolveType(parent: TransactionWithType) {
       return parent.isTypeOf;
     },
   },

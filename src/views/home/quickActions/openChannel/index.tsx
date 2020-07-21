@@ -78,7 +78,7 @@ interface OpenChannelProps {
 
 export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
   const [openDetails, setOpenDetails] = React.useState(false);
-  const [partner, setPartner] = React.useState<BaseNodesType>(null);
+  const [partner, setPartner] = React.useState<BaseNodesType | null>(null);
   const [open, set] = React.useState(false);
   const { data, loading } = useGetBaseNodesQuery();
 
@@ -92,7 +92,7 @@ export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
 
   const transitions = useTransition(
     open && data?.getBaseNodes ? data.getBaseNodes : [],
-    item => item._id,
+    item => item?._id || '1',
     {
       unique: true,
       trail: 400 / (data?.getBaseNodes?.length || 1),
@@ -153,7 +153,7 @@ export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
                     style={props}
                     onClick={() => setPartner(item)}
                   >
-                    <IconStyle>{getIcon(item.name)}</IconStyle>
+                    <IconStyle>{getIcon(item?.name || '')}</IconStyle>
                     {item.name}
                   </Item>
                 )

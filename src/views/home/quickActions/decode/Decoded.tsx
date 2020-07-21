@@ -32,6 +32,7 @@ export const Decoded = ({ request, setShow }: DecodedProps) => {
   const format = getPrice(currency, displayValues, priceContext);
 
   const { data, loading } = useDecodeRequestQuery({
+    skip: !auth,
     fetchPolicy: 'network-only',
     variables: { auth, request },
     onError: error => {

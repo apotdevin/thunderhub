@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetPendingChannelsQuery } from 'src/graphql/queries/__generated__/getPendingChannels.generated';
+import { PendingChannelType } from 'src/graphql/types';
 import { Card } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
@@ -26,7 +27,7 @@ export const PendingChannels = () => {
     <Card mobileCardPadding={'0'} mobileNoBackground={true}>
       {data.getPendingChannels.map((channel, index: number) => (
         <PendingCard
-          channelInfo={channel}
+          channelInfo={channel as PendingChannelType}
           key={index}
           index={index + 1}
           setIndexOpen={setIndexOpen}

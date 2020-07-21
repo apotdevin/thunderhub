@@ -11,4 +11,6 @@ export const getUrlParam = (
   if (typeOfQuery === 'object') {
     return params[0];
   }
+
+  return null;
 };

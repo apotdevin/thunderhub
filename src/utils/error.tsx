@@ -1,7 +1,8 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
+import { ApolloError } from 'apollo-client';
 
-const getMessage = error => {
+const getMessage = (error: string) => {
   switch (error) {
     case 'PaymentRejectedByDestination':
       return 'This node does not accept keysend payments.';
@@ -36,7 +37,7 @@ const ErrorLine = styled.div`
   hyphens: auto;
 `;
 
-export const getErrorContent = (error): ReactNode => {
+export const getErrorContent = (error: ApolloError): ReactNode => {
   const errors = error.graphQLErrors.map(x => x.message);
 
   const renderMessage = errors.map((errorMsg, i) => {

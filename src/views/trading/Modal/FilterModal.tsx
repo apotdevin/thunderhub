@@ -7,19 +7,21 @@ import {
   GetCountriesQuery,
   GetCurrenciesQuery,
 } from 'src/graphql/hodlhodl/__generated__/query.generated';
+import { HodlCountryType, HodlCurrencyType } from 'src/graphql/types';
 import { SubTitle } from '../../../components/generic/Styled';
 import { SortOptions, NewOptions } from '../OfferConfigs';
 import { FilterType, FilterActionType } from '../OfferFilters';
 import { themeColors } from '../../../styles/Themes';
 import { OptionsLoading } from '../OfferCard.styled';
-import { FilteredList } from './FilteredList';
+import { FilteredList, FilteredOptionsProps } from './FilteredList';
 
+export type ModalType = 'keysend' | 'request' | 'none' | 'new' | 'sort';
 interface FilterProps {
   type: string;
   dispatch: Dispatch<FilterActionType>;
-  final?: {};
+  final?: { title: string; name: string; searchable?: boolean };
   newOptions?: FilterType[];
-  setModalType: (type: string) => void;
+  setModalType: (type: ModalType) => void;
 }
 
 interface CountryType {
@@ -43,13 +45,13 @@ export const FilterModal = ({
   newOptions,
   setModalType,
 }: FilterProps) => {
-  const searchable: boolean = final?.['searchable'] || false;
+  const searchable: boolean = final?.searchable ?? false;
   const skipable: boolean = type !== 'Country' && type !== 'Currency';
 
-  const [selected, setSelected] = useState<{} | undefined>();
+  const [selected, setSelected] = useState<FilteredOptionsProps>();
 
   const [options, setOptions] = useState(newOptions ?? []);
-  const [title, setTitle] = useState(final?.['title'] || '');
+  const [title, setTitle] = useState(final?.title ?? '');
 
   const useQuery =
     type === 'Country' ? useGetCountriesQuery : useGetCurrenciesQuery;
@@ -76,34 +78,34 @@ export const FilterModal = ({
 
   useEffect(() => {
     if (!loading && data && (data as GetCountriesQuery).getCountries) {
-      const countryOptions = (data as GetCountriesQuery).getCountries.map(
-        (country: CountryType) => {
-          const { code, name, native_name } = country;
-          return { name: code, title: `${name} (${native_name})` };
-        }
-      );
+      const countryOptions =
+        (data as GetCountriesQuery).getCountries?.map(country => {
+          const { code, name, native_name } = country as HodlCountryType;
+          return { name: code || '', title: `${name} (${native_name})` };
+        }) || [];
 
       setOptions(countryOptions);
     }
     if (!loading && data && (data as GetCurrenciesQuery).getCurrencies) {
-      const filtered = (data as GetCurrenciesQuery).getCurrencies.filter(
-        (currency: CurrencyType) => currency.type === 'fiat'
-      );
+      const filtered =
+        (data as GetCurrenciesQuery).getCurrencies?.filter(
+          currency => currency?.type === 'fiat'
+        ) || [];
 
-      const currencyOptions = filtered.map((currency: CurrencyType) => {
-        const { code, name } = currency;
-        return { name: code, title: name };
+      const currencyOptions = filtered.map(currency => {
+        const { code, name } = currency as HodlCurrencyType;
+        return { name: code || '', title: name || '' };
       });
 
       setOptions(currencyOptions);
     }
   }, [data, loading]);
 
-  const handleClick = (name: string, option?: {}) => () => {
+  const handleClick = (name: string, option: FilteredOptionsProps) => () => {
     if (final) {
       dispatch({
         type: 'addFilter',
-        newItem: { [final['name']]: name },
+        newItem: { [final.name]: name },
       });
       setModalType('none');
     }
@@ -135,15 +137,13 @@ export const FilterModal = ({
 
   if (selected) {
     return (
-      <>
-        <FilterModal
-          type={selected['title']}
-          dispatch={dispatch}
-          final={selected}
-          newOptions={selected['options']}
-          setModalType={setModalType}
-        />
-      </>
+      <FilterModal
+        type={selected.title}
+        dispatch={dispatch}
+        final={selected}
+        newOptions={selected.options}
+        setModalType={setModalType}
+      />
     );
   }
 

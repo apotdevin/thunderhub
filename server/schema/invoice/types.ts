@@ -4,16 +4,16 @@ export const invoiceTypes = gql`
   type decodeType {
     chain_address: String
     cltv_delta: Int
-    description: String
+    description: String!
     description_hash: String
-    destination: String
-    expires_at: String
-    id: String
-    mtokens: String
+    destination: String!
+    expires_at: String!
+    id: String!
+    mtokens: String!
     payment: String
-    routes: [[RouteType]]
-    safe_tokens: Int
-    tokens: Int
+    routes: [[RouteType]]!
+    safe_tokens: Int!
+    tokens: Int!
     destination_node: Node!
     probe_route: ProbeRoute
   }
@@ -23,7 +23,7 @@ export const invoiceTypes = gql`
     channel: String
     cltv_delta: Int
     fee_rate: Int
-    public_key: String
+    public_key: String!
   }
 
   type payType {

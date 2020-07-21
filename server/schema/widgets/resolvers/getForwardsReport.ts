@@ -10,8 +10,8 @@ import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
+import { GetForwardsType } from 'server/types/ln-service.types';
 import { reduceForwardArray } from './helpers';
-import { ForwardCompleteProps } from './interface';
 
 export const getForwardReport = async (
   _: undefined,
@@ -45,7 +45,7 @@ export const getForwardReport = async (
     startDate = subHours(endDate, 24);
   }
 
-  const forwardsList: ForwardCompleteProps = await to(
+  const forwardsList = await to<GetForwardsType>(
     getForwards({
       lnd,
       after: startDate,
@@ -64,7 +64,9 @@ export const getForwardReport = async (
 
   while (!finishedFetching) {
     if (next) {
-      const moreForwards = await to(getForwards({ lnd, token: next }));
+      const moreForwards = await to<GetForwardsType>(
+        getForwards({ lnd, token: next })
+      );
       forwards = [...forwards, ...moreForwards.forwards];
       next = moreForwards.next;
     } else {

@@ -3,7 +3,7 @@ import { useGetBitcoinFeesQuery } from 'src/graphql/queries/__generated__/getBit
 import { useBitcoinDispatch } from '../../context/BitcoinContext';
 import { useConfigState } from '../../context/ConfigContext';
 
-export const BitcoinFees = () => {
+export const BitcoinFees: React.FC = () => {
   const { fetchFees } = useConfigState();
   const setInfo = useBitcoinDispatch();
 
@@ -27,7 +27,10 @@ export const BitcoinFees = () => {
   useEffect(() => {
     if (!loading && data && data.getBitcoinFees && fetchFees) {
       const { fast, halfHour, hour } = data.getBitcoinFees;
-      setInfo({ type: 'fetched', state: { fast, halfHour, hour } });
+      setInfo({
+        type: 'fetched',
+        state: { fast: fast || 0, halfHour: halfHour || 0, hour: hour || 0 },
+      });
     }
   }, [data, loading, setInfo, fetchFees]);
 

@@ -16,7 +16,7 @@ import { ChannelCard } from './ChannelCard';
 import { ChannelGoToToast } from './Channel.style';
 
 export const Channels: React.FC = () => {
-  const toastId = useRef(null);
+  const toastId = useRef<any>(null);
   const { push } = useRouter();
 
   const { sortDirection, channelSort } = useConfigState();
@@ -43,7 +43,9 @@ export const Channels: React.FC = () => {
     if (!hasIn || !hasOut) {
       toast.dismiss(toastId.current);
     }
-    return () => toast.dismiss();
+    return () => {
+      toast.dismiss();
+    };
   }, [hasIn, hasOut, push]);
 
   const { loading, data } = useGetChannelsQuery({
@@ -53,7 +55,7 @@ export const Channels: React.FC = () => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  if (loading || !data || !data.getChannels) {
+  if (loading || !data?.getChannels) {
     return <LoadingCard noTitle={true} />;
   }
 
@@ -68,9 +70,9 @@ export const Channels: React.FC = () => {
     const {
       local_balance,
       remote_balance,
-      partner_node_info = {},
+      partner_node_info,
       partner_fee_info = {},
-    } = channel;
+    } = channel || {};
 
     const { capacity, channel_count } = partner_node_info?.node || {};
     const { base_fee_mtokens, fee_rate } =
@@ -79,7 +81,7 @@ export const Channels: React.FC = () => {
     const partner = Number(capacity) || 0;
     const channels = Number(channel_count) || 0;
 
-    const max = Math.max(local_balance, remote_balance);
+    const max = Math.max(local_balance || 0, remote_balance || 0);
 
     if (max > biggest) {
       biggest = max;
@@ -93,29 +95,30 @@ export const Channels: React.FC = () => {
     if (Number(base_fee_mtokens) > biggestBaseFee) {
       biggestBaseFee = Number(base_fee_mtokens);
     }
-    if (fee_rate > biggestRateFee) {
+    if (fee_rate && fee_rate > biggestRateFee) {
       biggestRateFee = fee_rate;
     }
   }
 
-  const getChannels = () => {
+  const getChannels = (): ChannelType[] => {
+    const channels: ChannelType[] = data?.getChannels as ChannelType[];
     switch (channelSort) {
       case 'local': {
-        const newArray = sortBy(data.getChannels, 'local_balance');
+        const newArray = sortBy(channels, 'local_balance');
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'age': {
-        const newArray = sortBy(data.getChannels, 'channel_age');
+        const newArray = sortBy(channels, 'channel_age');
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'balance': {
-        const newArray = sortBy(data.getChannels, (channel: ChannelType) =>
+        const newArray = sortBy(channels, channel =>
           getPercent(channel.local_balance, channel.remote_balance)
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'deviation': {
-        const newArray = sortBy(data.getChannels, (channel: ChannelType) => {
+        const newArray = sortBy(channels, channel => {
           const { remote_balance, local_balance } = channel;
 
           const middle = (remote_balance + local_balance) / 2;
@@ -130,37 +133,36 @@ export const Channels: React.FC = () => {
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'partnerName': {
-        const newArray = sortBy(data.getChannels, (channel: ChannelType) =>
+        const newArray = sortBy(channels, channel =>
           channel.partner_node_info.node.alias.toLowerCase()
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'size': {
         const newArray = sortBy(
-          data.getChannels,
-          (channel: ChannelType) =>
-            channel.remote_balance + channel.local_balance
+          channels,
+          channel => channel.remote_balance + channel.local_balance
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       case 'feeRate': {
         const newArray = sortBy(
-          data.getChannels,
-          (channel: ChannelType) =>
-            channel.partner_fee_info.channel.partner_node_policies.fee_rate
+          channels,
+          channel =>
+            channel?.partner_fee_info?.channel?.partner_node_policies?.fee_rate
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }
       default:
-        return data.getChannels;
+        return channels;
     }
   };
 
   return (
     <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-      {getChannels().map((channel, index: number) => (
+      {getChannels().map((channel, index) => (
         <ChannelCard
-          channelInfo={channel}
+          channelInfo={channel as ChannelType}
           index={index + 1}
           setIndexOpen={setIndexOpen}
           indexOpen={indexOpen}

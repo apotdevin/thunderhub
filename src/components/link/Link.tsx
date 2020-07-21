@@ -83,14 +83,18 @@ export const Link: React.FC<LinkProps> = ({
     );
   }
 
-  const linkProps = {
-    href: to,
-    ...(basePath !== '' ? { as: `${basePath}${to}` } : {}),
-  };
+  if (to) {
+    const linkProps = {
+      href: to,
+      ...(basePath !== '' ? { as: `${basePath}${to}` } : {}),
+    };
 
-  return (
-    <RouterLink {...linkProps}>
-      <CorrectLink {...props}>{children}</CorrectLink>
-    </RouterLink>
-  );
+    return (
+      <RouterLink {...linkProps}>
+        <CorrectLink {...props}>{children}</CorrectLink>
+      </RouterLink>
+    );
+  }
+
+  return null;
 };

@@ -57,6 +57,10 @@ export const AccountSettings = () => {
     }
   }, [data, dispatch, dispatchChat, dispatchAccount, push]);
 
+  if (!account) {
+    return null;
+  }
+
   const renderButtons = () => (
     <SingleLine>
       <Sub4Title>Connection Type:</Sub4Title>
@@ -97,9 +101,9 @@ export const AccountSettings = () => {
               return (
                 <SingleButton
                   key={accountId}
-                  selected={accountId === account?.id}
+                  selected={accountId === account.id}
                   onClick={() => {
-                    if (accountId !== account?.id) {
+                    if (accountId !== account.id) {
                       switch (accountType) {
                         case SSO_ACCOUNT:
                           dispatchAccount({

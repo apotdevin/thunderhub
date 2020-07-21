@@ -1,6 +1,7 @@
+import React from 'react';
 import { useAccountState, CLIENT_ACCOUNT } from 'src/context/AccountContext';
 
-export const AdminSwitch = ({ children }) => {
+export const AdminSwitch: React.FC = ({ children }) => {
   const { account, session } = useAccountState();
 
   if (account?.type === CLIENT_ACCOUNT) {
@@ -9,5 +10,5 @@ export const AdminSwitch = ({ children }) => {
     }
   }
 
-  return children;
+  return <>{children}</>;
 };

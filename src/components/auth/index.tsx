@@ -105,11 +105,11 @@ export const Auth = ({ type, status, callback, setStatus }: AuthProps) => {
       dispatchAccount({
         type: 'addAccountAndSave',
         accountToAdd: {
-          name,
+          name: name || '',
           host,
-          admin: encryptedAdmin,
-          viewOnly: correctViewOnly,
-          cert,
+          admin: encryptedAdmin || '',
+          viewOnly: correctViewOnly || '',
+          cert: cert || '',
         },
         ...(!correctViewOnly && { session: admin }),
       });

@@ -10,9 +10,10 @@ import {
   CardTitle,
   Sub4Title,
 } from '../../../../components/generic/Styled';
-import { ButtonRow } from '../forwardReport/Buttons';
+import { FlowButtonRow } from '../forwardReport/Buttons';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
+import { ReportDuration, FlowReportType } from '../forwardReport/ForwardReport';
 import { InvoicePie } from './InvoicePie';
 import { FlowPie } from './FlowPie';
 import { FlowReport } from './FlowReport';
@@ -73,8 +74,8 @@ const timeMap: { [key: string]: string } = {
 };
 
 export const FlowBox = () => {
-  const [isTime, setIsTime] = useState<string>('month');
-  const [isType, setIsType] = useState<string>('amount');
+  const [isTime, setIsTime] = useState<ReportDuration>('month');
+  const [isType, setIsType] = useState<FlowReportType>('amount');
 
   const { auth } = useAccountState();
   const { data, loading } = useGetInOutQuery({
@@ -109,13 +110,13 @@ export const FlowBox = () => {
         </CardTitle>
         <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
           <p>{`Your node has not received or sent any payments ${timeMap[isTime]}.`}</p>
-          <ButtonRow {...buttonProps} />
+          <FlowButtonRow {...buttonProps} />
         </Card>
       </CardWithTitle>
     );
   }
 
-  const reduce = (array: PeriodProps[]) =>
+  const reduce = (array: PeriodProps[]): PeriodProps =>
     array.reduce((p, c) => {
       return {
         tokens: p.tokens + c.tokens,
@@ -124,15 +125,15 @@ export const FlowBox = () => {
       };
     });
 
-  const emptyArray = {
+  const emptyData = {
     tokens: 0,
     period: 0,
     amount: 0,
-  };
+  } as const;
 
-  const totalInvoices = parsedData.length > 0 ? reduce(parsedData) : emptyArray;
+  const totalInvoices = parsedData.length > 0 ? reduce(parsedData) : emptyData;
   const totalPayments =
-    parsedData2.length > 0 ? reduce(parsedData2) : emptyArray;
+    parsedData2.length > 0 ? reduce(parsedData2) : emptyData;
 
   const flowPie = [
     { x: 'Invoice', y: totalInvoices[isType] },
@@ -140,8 +141,8 @@ export const FlowBox = () => {
   ];
 
   const invoicePie = [
-    { x: 'Confirmed', y: data.getInOut.confirmedInvoices },
-    { x: 'Unconfirmed', y: data.getInOut.unConfirmedInvoices },
+    { x: 'Confirmed', y: data.getInOut?.confirmedInvoices || 0 },
+    { x: 'Unconfirmed', y: data.getInOut?.unConfirmedInvoices || 0 },
   ];
 
   const props = {
@@ -161,7 +162,7 @@ export const FlowBox = () => {
         </CardTitle>
         <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
           <FlowReport {...props} />
-          <ButtonRow {...buttonProps} />
+          <FlowButtonRow {...buttonProps} />
         </Card>
       </CardWithTitle>
       <Row noWrap={true}>
