@@ -43,7 +43,7 @@ type FormatProps = {
 type HopProps = {
   hop: ProbedRouteHop;
   index: number;
-  format: (FormatProps) => string;
+  format: (props: FormatProps) => string;
 };
 
 const HopCard = ({ hop, index, format }: HopProps) => {

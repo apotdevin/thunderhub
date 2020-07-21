@@ -10,7 +10,7 @@ import {
   readCookie,
   getAccounts,
 } from 'server/helpers/fileHelpers';
-import { ContextType } from 'server/types/apiTypes';
+import { ContextType, SSOType } from 'server/types/apiTypes';
 import cookie from 'cookie';
 import schema from 'server/schema';
 
@@ -32,6 +32,16 @@ const secret =
 const ssoMacaroon = readMacaroons(macaroonPath);
 const ssoCert = readFile(lnCertPath);
 const accountConfig = getAccounts(accountConfigPath);
+
+let ssoAccount: SSOType | null = null;
+
+if (ssoMacaroon && lnServerUrl) {
+  ssoAccount = {
+    macaroon: ssoMacaroon,
+    host: lnServerUrl,
+    cert: ssoCert,
+  };
+}
 
 readCookie(cookiePath);
 
@@ -56,12 +66,16 @@ const apolloServer = new ApolloServer({
       }
     }
 
-    let account = null;
+    let account = '';
     if (AccountAuth) {
       logger.silly('AccountAuth cookie found in request');
       try {
         const cookieAccount = jwt.verify(AccountAuth, secret);
-        account = cookieAccount['id'] || '';
+        if (typeof cookieAccount === 'object') {
+          account = (cookieAccount as { id?: string })['id'] ?? '';
+        } else {
+          account = cookieAccount;
+        }
       } catch (error) {
         logger.silly('Account authentication cookie failed');
       }
@@ -72,7 +86,7 @@ const apolloServer = new ApolloServer({
       secret,
       ssoVerified,
       account,
-      sso: { macaroon: ssoMacaroon, cert: ssoCert, host: lnServerUrl || null },
+      sso: ssoVerified ? ssoAccount : null,
       accounts: accountConfig,
       res,
     };

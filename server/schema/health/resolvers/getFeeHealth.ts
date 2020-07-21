@@ -4,6 +4,7 @@ import { requestLimiter } from 'server/helpers/rateLimiter';
 import { to, toWithError } from 'server/helpers/async';
 import { logger } from 'server/helpers/logger';
 import { ContextType } from 'server/types/apiTypes';
+import { GetChannelsType, GetChannelType } from 'server/types/ln-service.types';
 import { getFeeScore, getAverage, getMyFeeScore } from '../helpers';
 
 type ChannelFeesType = {
@@ -22,27 +23,29 @@ export default async (_: undefined, params: any, context: ContextType) => {
   const lnd = getAuthLnd(auth);
 
   const { public_key } = await to(getWalletInfo({ lnd }));
-  const { channels } = await to(getChannels({ lnd }));
+  const { channels } = await to<GetChannelsType>(getChannels({ lnd }));
 
   const getChannelList = () =>
     Promise.all(
       channels
         .map(async channel => {
           const { id, partner_public_key: publicKey } = channel;
-          const [{ policies }, channelError] = await toWithError(
+          const [channelInfo, channelError] = await toWithError(
             getChannel({
               lnd,
               id,
             })
           );
 
-          if (channelError) {
+          if (channelError || !channelInfo) {
             logger.debug(
               `Error getting channel with id ${id}: %o`,
               channelError
             );
-            return;
+            return null;
           }
+
+          const policies = (channelInfo as GetChannelType).policies;
 
           let partnerBaseFee = 0;
           let partnerFeeRate = 0;
@@ -77,7 +80,7 @@ export default async (_: undefined, params: any, context: ContextType) => {
 
   const list = await getChannelList();
 
-  const health = list.map((channel: ChannelFeesType) => {
+  const health = (list as ChannelFeesType[]).map((channel: ChannelFeesType) => {
     const partnerRateScore = getFeeScore(2000, channel.partnerFeeRate);
     const partnerBaseScore = getFeeScore(100000, channel.partnerBaseFee);
     const myRateScore = getMyFeeScore(2000, channel.myFeeRate, 200);

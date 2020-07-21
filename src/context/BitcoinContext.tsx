@@ -45,7 +45,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const BitcoinInfoProvider = ({ children }) => {
+const BitcoinInfoProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (

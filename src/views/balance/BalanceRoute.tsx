@@ -50,7 +50,7 @@ export const BalanceRoute = ({
   });
 
   const canShow = (): boolean =>
-    incoming && outgoing && amount && data && data.getRoutes && blocked;
+    !!(incoming && outgoing && amount && data?.getRoutes && blocked);
 
   const [payRoute, { loading: loadingP }] = useCircularRebalanceMutation({
     onError: error => {
@@ -64,7 +64,7 @@ export const BalanceRoute = ({
     refetchQueries: ['GetChannels'],
   });
 
-  const renderHop = (hop, index: number) => (
+  const renderHop = (hop: { channel: string; fee: number }, index: number) => (
     <HopCard key={index}>
       {renderLine('Channel', hop.channel)}
       {renderLine('Fee', hop.fee)}
@@ -94,12 +94,12 @@ export const BalanceRoute = ({
   );
 
   const renderRoute = () => {
-    if (canShow()) {
+    if (canShow() && data?.getRoutes) {
       const route = data.getRoutes;
       return (
         <>
           <Sub4Title>Route</Sub4Title>
-          <SubCard color={themeColors.blue3}>
+          <SubCard subColor={themeColors.blue3}>
             {renderLine('Total Tokens', <Price amount={route.tokens} />)}
             {renderLine(
               'Fee %',
@@ -109,7 +109,7 @@ export const BalanceRoute = ({
             {renderLine('Confidence', route.confidence)}
             {renderLine('Hops', route.hops.length)}
             <Separation />
-            {route.hops.map((hop, index: number) =>
+            {route.hops.map((hop, index) =>
               renderLine(`${index + 1}`, renderHop(hop, index), index)
             )}
           </SubCard>
@@ -120,7 +120,7 @@ export const BalanceRoute = ({
   };
 
   const renderButton = () => {
-    if (canShow()) {
+    if (canShow() && data?.getRoutes) {
       return (
         <SingleLine>
           <ColorButton color={chartColors.orange2} onClick={callback}>

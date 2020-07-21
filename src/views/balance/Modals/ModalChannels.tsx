@@ -41,9 +41,9 @@ export const ModalChannels: React.FC<ModalChannelsType> = ({
   }
 
   const allChannels = data.getChannels.map(p => ({
-    alias: p.partner_node_info.node.alias,
-    id: p.id,
-    publicKey: p.partner_public_key,
+    alias: p?.partner_node_info.node.alias || '',
+    id: p?.id || '',
+    publicKey: p?.partner_public_key || '',
   }));
 
   return (
@@ -68,18 +68,20 @@ export const ModalChannels: React.FC<ModalChannelsType> = ({
                   onClick={() => {
                     if (multi) {
                       if (isSelected) {
-                        dispatch({
-                          type: 'removeChannel',
-                          id: channel.id,
-                        });
-                      } else {
-                        dispatch({
-                          type: 'addChannel',
-                          channel: {
-                            alias: channel.alias,
+                        dispatch &&
+                          dispatch({
+                            type: 'removeChannel',
                             id: channel.id,
-                          },
-                        });
+                          });
+                      } else {
+                        dispatch &&
+                          dispatch({
+                            type: 'addChannel',
+                            channel: {
+                              alias: channel.alias,
+                              id: channel.id,
+                            },
+                          });
                       }
                     } else {
                       callback &&

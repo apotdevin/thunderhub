@@ -5,6 +5,7 @@ import { useGetOffersQuery } from 'src/graphql/hodlhodl/__generated__/query.gene
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { withApollo } from 'config/client';
 import getConfig from 'next/config';
+import { HodlOfferType } from 'src/graphql/types';
 import {
   CardWithTitle,
   SubTitle,
@@ -27,7 +28,7 @@ export interface QueryProps {
     limit: number;
     offset: number;
   };
-  filters: {};
+  filters: { [key: string]: string };
   sort: {
     by: string;
     direction: string;
@@ -119,13 +120,13 @@ const TradingView = () => {
       </Card>
       <Card bottom={'8px'} mobileCardPadding={'0'} mobileNoBackground={true}>
         {amountOfOffers <= 0 && <DarkSubTitle>No Offers Found</DarkSubTitle>}
-        {data.getOffers.map((offer, index: number) => (
+        {data.getOffers.map((offer, index) => (
           <OfferCard
-            offer={offer}
+            offer={offer as HodlOfferType}
             index={index + 1}
             setIndexOpen={setIndexOpen}
             indexOpen={indexOpen}
-            key={`${index}-${offer.id}`}
+            key={`${index}-${offer?.id}`}
           />
         ))}
       </Card>

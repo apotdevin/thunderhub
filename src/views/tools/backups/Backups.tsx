@@ -23,7 +23,7 @@ export const BackupsView = () => {
   useEffect(() => {
     if (account) {
       const date = localStorage.getItem(`lastBackup-${account.id}`);
-      setLastDate(date);
+      date && setLastDate(date);
     }
   }, [account]);
 

@@ -49,7 +49,7 @@ export const queryTypes = gql`
     getTimeHealth(auth: authType!): channelsTimeHealth
     getFeeHealth(auth: authType!): channelsFeeHealth
     getChannelBalance(auth: authType!): channelBalanceType
-    getChannels(auth: authType!, active: Boolean): [channelType]
+    getChannels(auth: authType!, active: Boolean): [channelType]!
     getClosedChannels(auth: authType!, type: String): [closedChannelType]
     getPendingChannels(auth: authType!): [pendingChannelType]
     getChannelFees(auth: authType!): [channelFeeType]

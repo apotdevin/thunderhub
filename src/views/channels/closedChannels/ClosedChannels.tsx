@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccountState } from 'src/context/AccountContext';
 import { useGetClosedChannelsQuery } from 'src/graphql/queries/__generated__/getClosedChannels.generated';
+import { ClosedChannelType } from 'src/graphql/types';
 import { Card } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
@@ -24,9 +25,9 @@ export const ClosedChannels = () => {
 
   return (
     <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-      {data.getClosedChannels.map((channel, index: number) => (
+      {data.getClosedChannels.map((channel, index) => (
         <ClosedCard
-          channelInfo={channel}
+          channelInfo={channel as ClosedChannelType}
           key={index}
           index={index + 1}
           setIndexOpen={setIndexOpen}

@@ -8,7 +8,7 @@ import {
   Separation,
 } from '../../../../components/generic/Styled';
 import { mediaWidths } from '../../../../styles/Themes';
-import { ForwardReport } from './ForwardReport';
+import { ForwardReport, ReportDuration, ReportType } from './ForwardReport';
 import { ForwardChannelsReport } from './ForwardChannelReport';
 import { ButtonRow } from './Buttons';
 
@@ -24,8 +24,8 @@ export const CardContent = styled.div`
 `;
 
 export const ForwardBox = () => {
-  const [isTime, setIsTime] = useState<string>('month');
-  const [isType, setIsType] = useState<string>('amount');
+  const [isTime, setIsTime] = useState<ReportDuration>('month');
+  const [isType, setIsType] = useState<ReportType>('amount');
 
   return (
     <CardWithTitle>
@@ -38,7 +38,6 @@ export const ForwardBox = () => {
           isType={isType}
           setIsTime={setIsTime}
           setIsType={setIsType}
-          withFee={true}
         />
         <ForwardReport isTime={isTime} isType={isType} />
         <Separation />

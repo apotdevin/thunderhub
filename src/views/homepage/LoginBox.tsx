@@ -161,7 +161,7 @@ export const LoginBox = () => {
   return (
     <Section color={'transparent'}>
       {change && (
-        <ConnectTitle change={change}>Connect to your Node</ConnectTitle>
+        <ConnectTitle changeColor={change}>Connect to your Node</ConnectTitle>
       )}
       <Card>
         {!change && (

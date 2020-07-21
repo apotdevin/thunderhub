@@ -25,17 +25,24 @@ export const AdvancedResult: React.FC<AdvancedResultProps> = ({
 }) => {
   const { increase, decrease, result } = rebalanceResult;
 
+  if (!increase || !decrease || !result) {
+    return null;
+  }
+
   const renderHalf = (
-    inliq: string,
-    inopen: string,
-    inpen: string,
-    outliq: string,
-    outopen: string,
-    outpen: string
+    inliq: string | null | undefined,
+    inopen: string | null | undefined,
+    inpen: string | null | undefined,
+    outliq: string | null | undefined,
+    outopen: string | null | undefined,
+    outpen: string | null | undefined
   ) => (
     <>
       <Separation />
-      {renderLine('Inbound Liquidity', <Price amount={btcToSat(inliq)} />)}
+      {renderLine(
+        'Inbound Liquidity',
+        inliq && <Price amount={btcToSat(inliq)} />
+      )}
       {renderLine(
         'Opening Inbound Liquidity',
         inopen && <Price amount={btcToSat(inopen)} />

@@ -47,19 +47,21 @@ const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
     </>
   );
   return (
-    <SubCard key={channel.id}>
-      <Clickable onClick={() => openSet(open ? 0 : index)}>
-        <ResponsiveLine>
-          <SubTitle>{channel?.partner?.node?.alias}</SubTitle>
-          <ScoreLine>
-            <DarkSubTitle>Score</DarkSubTitle>
-            {channel.score}
-            {getIcon(channel.score, !channel.significant)}
-          </ScoreLine>
-        </ResponsiveLine>
-      </Clickable>
-      {open && renderContent()}
-    </SubCard>
+    <React.Fragment key={channel.id || ''}>
+      <SubCard>
+        <Clickable onClick={() => openSet(open ? 0 : index)}>
+          <ResponsiveLine>
+            <SubTitle>{channel?.partner?.node?.alias}</SubTitle>
+            <ScoreLine>
+              <DarkSubTitle>Score</DarkSubTitle>
+              {channel.score}
+              {getIcon(channel.score, !channel.significant)}
+            </ScoreLine>
+          </ResponsiveLine>
+        </Clickable>
+        {open && renderContent()}
+      </SubCard>
+    </React.Fragment>
   );
 };
 
@@ -81,7 +83,7 @@ export const TimeStats = () => {
     }
   }, [data, dispatch]);
 
-  if (loading || !data || !data.getTimeHealth) {
+  if (loading || !data?.getTimeHealth?.channels?.length) {
     return null;
   }
 
@@ -91,8 +93,8 @@ export const TimeStats = () => {
     <StatWrapper title={'Time Stats'}>
       {sortedArray.map((channel, index) => (
         <TimeStatCard
-          key={channel.id}
-          channel={channel}
+          key={channel?.id || ''}
+          channel={channel as ChannelTimeHealth}
           open={index + 1 === open}
           openSet={openSet}
           index={index + 1}

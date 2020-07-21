@@ -72,7 +72,7 @@ export const PeersCard = ({
     socket,
     tokens_received,
     tokens_sent,
-    partner_node_info = {},
+    partner_node_info,
   } = peer;
 
   const formatReceived = format({ amount: tokens_received });
@@ -102,15 +102,16 @@ export const PeersCard = ({
         {renderLine('Public Key:', getNodeLink(public_key))}
         {renderLine('Socket:', socket)}
         {renderLine('Is Inbound:', is_inbound.toString())}
-        {renderLine('Is Sync Peer:', is_sync_peer.toString())}
+        {renderLine('Is Sync Peer:', is_sync_peer?.toString())}
         {renderLine('Ping Time:', ping_time)}
         <Sub4Title>Partner Node Info</Sub4Title>
         {renderLine('Node Capacity:', formatCapacity)}
         {renderLine('Channel Count:', channel_count)}
-        {renderLine(
-          'Last Update:',
-          `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
-        )}
+        {updated_at &&
+          renderLine(
+            'Last Update:',
+            `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
+          )}
         <AdminSwitch>
           <Separation />
           <RightAlign>
@@ -128,7 +129,7 @@ export const PeersCard = ({
   };
 
   return (
-    <SubCard key={`${index}-${public_key}`} color={color}>
+    <SubCard key={`${index}-${public_key}`} subColor={color}>
       <MainInfo onClick={() => handleClick()}>
         <ResponsiveLine>
           <NodeTitle style={{ flexGrow: 2 }}>

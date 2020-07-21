@@ -57,27 +57,19 @@ export type GetResumeQuery = { __typename?: 'Query' } & {
                 > & {
                     destination_node?: Types.Maybe<
                       { __typename?: 'Node' } & {
-                        node?: Types.Maybe<
-                          { __typename?: 'nodeType' } & Pick<
-                            Types.NodeType,
-                            'alias'
-                          >
+                        node: { __typename?: 'nodeType' } & Pick<
+                          Types.NodeType,
+                          'alias'
                         >;
                       }
                     >;
-                    hops?: Types.Maybe<
-                      Array<
-                        Types.Maybe<
-                          { __typename?: 'Node' } & {
-                            node?: Types.Maybe<
-                              { __typename?: 'nodeType' } & Pick<
-                                Types.NodeType,
-                                'alias' | 'public_key'
-                              >
-                            >;
-                          }
-                        >
-                      >
+                    hops: Array<
+                      { __typename?: 'Node' } & {
+                        node: { __typename?: 'nodeType' } & Pick<
+                          Types.NodeType,
+                          'alias' | 'public_key'
+                        >;
+                      }
                     >;
                   })
             >

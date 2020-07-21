@@ -149,7 +149,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
       >
         {type !== 'none' ? (
           <Input
-            value={amount > 0 && amount}
+            value={amount && amount > 0 ? amount : undefined}
             maxWidth={'500px'}
             placeholder={type === 'target' ? 'Blocks' : 'Sats/Byte'}
             type={'number'}

@@ -168,7 +168,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
     override: 'sat',
   });
 
-  const maxRate = Math.min(fee_rate, 10000);
+  const maxRate = Math.min(fee_rate || 0, 10000);
   const feeRate = format({ amount: fee_rate, override: 'ppm' });
 
   const handleClick = () => {
@@ -257,10 +257,12 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         return (
           <ChannelStatsColumn>
             <ChannelStatsLine>
-              <ProgressBar
-                order={fee_rate > maxRate ? 7 : 3}
-                percent={getBar(maxRate, biggestRateFee)}
-              />
+              {fee_rate && (
+                <ProgressBar
+                  order={fee_rate > maxRate ? 7 : 3}
+                  percent={getBar(maxRate, biggestRateFee)}
+                />
+              )}
               <ProgressBar
                 order={4}
                 percent={getBar(biggestRateFee - maxRate, biggestRateFee)}
@@ -297,16 +299,18 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
                 )}
               />
             </ChannelStatsLine>
-            <ChannelStatsLine>
-              <ProgressBar
-                order={6}
-                percent={getBar(channel_count, mostChannels)}
-              />
-              <ProgressBar
-                order={4}
-                percent={getBar(mostChannels - channel_count, mostChannels)}
-              />
-            </ChannelStatsLine>
+            {channel_count && (
+              <ChannelStatsLine>
+                <ProgressBar
+                  order={6}
+                  percent={getBar(channel_count, mostChannels)}
+                />
+                <ProgressBar
+                  order={4}
+                  percent={getBar(mostChannels - channel_count, mostChannels)}
+                />
+              </ChannelStatsLine>
+            )}
           </ChannelStatsColumn>
         );
       case 'proportional':

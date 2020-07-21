@@ -26,17 +26,19 @@ export const OpenRecommended = ({ partner, setOpenCard }: OpenProps) => {
   const { auth } = useAccountState();
 
   const { data, loading } = useGetNodeQuery({
-    variables: { auth, publicKey: partner.public_key },
+    skip: !auth,
+    variables: { auth, publicKey: partner.public_key || '' },
   });
 
   const { data: peerData, loading: peerLoading } = useGetPeersQuery({
+    skip: !auth,
     variables: { auth },
   });
 
   React.useEffect(() => {
     if (!peerLoading && peerData && peerData.getPeers) {
       const isPeer =
-        peerData.getPeers.map(p => p.public_key).indexOf(partner.public_key) >=
+        peerData.getPeers.map(p => p?.public_key).indexOf(partner.public_key) >=
         0;
 
       if (isPeer) {

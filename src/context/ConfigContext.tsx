@@ -115,11 +115,17 @@ const stateReducer = (state: State, action: ActionType): State => {
       return newState;
     }
     case 'themeChange': {
-      Cookies.set('theme', action.theme, { expires: 365, sameSite: 'strict' });
-      return {
-        ...state,
-        theme: action.theme,
-      };
+      if (settings.theme) {
+        Cookies.set('theme', settings.theme, {
+          expires: 365,
+          sameSite: 'strict',
+        });
+        return {
+          ...state,
+          theme: settings.theme,
+        };
+      }
+      return state;
     }
     default:
       return state;

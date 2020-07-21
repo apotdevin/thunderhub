@@ -33,7 +33,7 @@ const ChatView = () => {
   const { minorVersion } = useStatusState();
   const { chats, sender, sentChats, initialized } = useChatState();
   const bySender = separateBySender([...chats, ...sentChats]);
-  const senders = getSenders(bySender);
+  const senders = getSenders(bySender) || [];
 
   const [user, setUser] = React.useState('');
   const [showContacts, setShowContacts] = React.useState(false);

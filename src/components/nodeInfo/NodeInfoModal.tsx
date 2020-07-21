@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAccountDispatch } from 'src/context/AccountContext';
 import { GetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
+import { NodeInfoType, ChannelBalanceType } from 'src/graphql/types';
 import {
   SubTitle,
   SingleLine,
@@ -13,7 +14,7 @@ import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { useStatusDispatch } from '../../context/StatusContext';
 
 interface NodeInfoModalProps {
-  account: GetNodeInfoQuery;
+  account: GetNodeInfoQuery | null | undefined;
   accountId: string;
 }
 
@@ -21,6 +22,10 @@ export const NodeInfoModal = ({ account, accountId }: NodeInfoModalProps) => {
   const dispatch = useStatusDispatch();
 
   const dispatchAccount = useAccountDispatch();
+
+  if (!account) {
+    return null;
+  }
 
   const {
     active_channels_count,
@@ -30,9 +35,12 @@ export const NodeInfoModal = ({ account, accountId }: NodeInfoModalProps) => {
     is_synced_to_chain,
     peers_count,
     version,
-  } = account.getNodeInfo;
+  } = account.getNodeInfo as NodeInfoType;
 
-  const { confirmedBalance, pendingBalance } = account.getChannelBalance;
+  const {
+    confirmedBalance,
+    pendingBalance,
+  } = account.getChannelBalance as ChannelBalanceType;
 
   const chainBalance = account.getChainBalance;
   const pendingChainBalance = account.getPendingChainBalance;

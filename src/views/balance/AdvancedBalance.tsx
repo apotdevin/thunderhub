@@ -98,12 +98,12 @@ const initialState: StateType = {
   avoid: [],
   in_through: defaultRebalanceId,
   is_avoiding_high_inbound: false,
-  max_fee: null,
-  max_fee_rate: null,
-  max_rebalance: null,
+  max_fee: 0,
+  max_fee_rate: 0,
+  max_rebalance: 0,
   out_channels: [],
   out_through: defaultRebalanceId,
-  target: null,
+  target: 0,
   node: defaultRebalanceId,
 };
 

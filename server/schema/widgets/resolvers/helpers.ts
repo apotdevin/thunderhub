@@ -1,6 +1,6 @@
 import { reduce, groupBy } from 'underscore';
+import { ForwardType } from 'server/types/ln-service.types';
 import {
-  ForwardProps,
   ReduceObjectProps,
   ListProps,
   InOutProps,
@@ -11,7 +11,7 @@ export const reduceForwardArray = (list: ListProps) => {
   const reducedOrder = [];
   for (const key in list) {
     if (Object.prototype.hasOwnProperty.call(list, key)) {
-      const element: ForwardProps[] = list[key];
+      const element: ForwardType[] = list[key];
       const reducedArray: ReduceObjectProps = reduce(
         element,
         (a: ReduceObjectProps, b: ReduceObjectProps) => {
@@ -19,7 +19,8 @@ export const reduceForwardArray = (list: ListProps) => {
             fee: a.fee + b.fee,
             tokens: a.tokens + b.tokens,
           };
-        }
+        },
+        { fee: 0, tokens: 0 }
       );
       reducedOrder.push({
         period: Number(key),
@@ -39,9 +40,10 @@ export const reduceInOutArray = (list: InOutListProps) => {
       const element: InOutProps[] = list[key];
       const reducedArray: InOutProps = reduce(
         element,
-        (a: ReduceObjectProps, b: ReduceObjectProps) => ({
+        (a, b) => ({
           tokens: a.tokens + b.tokens,
-        })
+        }),
+        { tokens: 0 }
       );
       reducedOrder.push({
         period: Number(key),
@@ -53,7 +55,7 @@ export const reduceInOutArray = (list: InOutListProps) => {
   return reducedOrder;
 };
 
-export const countArray = (list: ForwardProps[], type: boolean) => {
+export const countArray = (list: ForwardType[], type: boolean) => {
   const inOrOut = type ? 'incoming_channel' : 'outgoing_channel';
   const grouped = groupBy(list, inOrOut);
 
@@ -82,7 +84,7 @@ export const countArray = (list: ForwardProps[], type: boolean) => {
   return channelInfo;
 };
 
-export const countRoutes = (list: ForwardProps[]) => {
+export const countRoutes = (list: ForwardType[]) => {
   const grouped = groupBy(list, 'route');
 
   const channelInfo = [];

@@ -116,7 +116,7 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
       }}
     >
       {type === 'currency' && <Symbol>{text}</Symbol>}
-      {type === 'theme' && <SideIcon size={18} />}
+      {type === 'theme' && SideIcon && <SideIcon size={18} />}
     </SelectedIcon>
   );
 

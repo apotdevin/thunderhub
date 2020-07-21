@@ -9,65 +9,55 @@ export type GetChannelsQueryVariables = Types.Exact<{
 }>;
 
 export type GetChannelsQuery = { __typename?: 'Query' } & {
-  getChannels?: Types.Maybe<
-    Array<
-      Types.Maybe<
-        { __typename?: 'channelType' } & Pick<
-          Types.ChannelType,
-          | 'capacity'
-          | 'commit_transaction_fee'
-          | 'commit_transaction_weight'
-          | 'id'
-          | 'is_active'
-          | 'is_closing'
-          | 'is_opening'
-          | 'is_partner_initiated'
-          | 'is_private'
-          | 'is_static_remote_key'
-          | 'local_balance'
-          | 'local_reserve'
-          | 'partner_public_key'
-          | 'received'
-          | 'remote_balance'
-          | 'remote_reserve'
-          | 'sent'
-          | 'time_offline'
-          | 'time_online'
-          | 'transaction_id'
-          | 'transaction_vout'
-          | 'unsettled_balance'
-          | 'channel_age'
-        > & {
-            partner_node_info?: Types.Maybe<
-              { __typename?: 'Node' } & {
-                node?: Types.Maybe<
-                  { __typename?: 'nodeType' } & Pick<
-                    Types.NodeType,
-                    | 'alias'
-                    | 'capacity'
-                    | 'channel_count'
-                    | 'color'
-                    | 'updated_at'
-                  >
-                >;
-              }
+  getChannels: Array<
+    Types.Maybe<
+      { __typename?: 'channelType' } & Pick<
+        Types.ChannelType,
+        | 'capacity'
+        | 'commit_transaction_fee'
+        | 'commit_transaction_weight'
+        | 'id'
+        | 'is_active'
+        | 'is_closing'
+        | 'is_opening'
+        | 'is_partner_initiated'
+        | 'is_private'
+        | 'is_static_remote_key'
+        | 'local_balance'
+        | 'local_reserve'
+        | 'partner_public_key'
+        | 'received'
+        | 'remote_balance'
+        | 'remote_reserve'
+        | 'sent'
+        | 'time_offline'
+        | 'time_online'
+        | 'transaction_id'
+        | 'transaction_vout'
+        | 'unsettled_balance'
+        | 'channel_age'
+      > & {
+          partner_node_info: { __typename?: 'Node' } & {
+            node: { __typename?: 'nodeType' } & Pick<
+              Types.NodeType,
+              'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
             >;
-            partner_fee_info?: Types.Maybe<
-              { __typename?: 'Channel' } & {
-                channel?: Types.Maybe<
-                  { __typename?: 'singleChannelType' } & {
-                    partner_node_policies?: Types.Maybe<
-                      { __typename?: 'nodePolicyType' } & Pick<
-                        Types.NodePolicyType,
-                        'base_fee_mtokens' | 'fee_rate' | 'cltv_delta'
-                      >
-                    >;
-                  }
-                >;
-              }
-            >;
-          }
-      >
+          };
+          partner_fee_info?: Types.Maybe<
+            { __typename?: 'Channel' } & {
+              channel?: Types.Maybe<
+                { __typename?: 'singleChannelType' } & {
+                  partner_node_policies?: Types.Maybe<
+                    { __typename?: 'nodePolicyType' } & Pick<
+                      Types.NodePolicyType,
+                      'base_fee_mtokens' | 'fee_rate' | 'cltv_delta'
+                    >
+                  >;
+                }
+              >;
+            }
+          >;
+        }
     >
   >;
 };

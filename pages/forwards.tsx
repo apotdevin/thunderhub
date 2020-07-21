@@ -4,6 +4,7 @@ import { useAccountState } from 'src/context/AccountContext';
 import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { withApollo } from 'config/client';
+import { ForwardType } from 'src/graphql/types';
 import {
   SubTitle,
   Card,
@@ -63,11 +64,13 @@ const ForwardsView = () => {
             {renderButton('threeMonths', '3M')}
           </SingleLine>
         </CardTitle>
-        {data.getForwards.forwards.length <= 0 && renderNoForwards()}
+        {data?.getForwards?.forwards &&
+          data.getForwards.forwards.length <= 0 &&
+          renderNoForwards()}
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          {data.getForwards.forwards.map((forward, index: number) => (
+          {data?.getForwards?.forwards?.map((forward, index) => (
             <ForwardCard
-              forward={forward}
+              forward={forward as ForwardType}
               key={index}
               index={index + 1}
               setIndexOpen={setIndexOpen}

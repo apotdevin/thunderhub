@@ -10,7 +10,7 @@ interface MethodProps {
 }
 
 interface MethodBoxesProps {
-  methods: HodlOfferPaymentType[] | undefined;
+  methods?: HodlOfferPaymentType[] | null;
 }
 
 const StyledMethodBoxes = styled.div`
@@ -37,7 +37,7 @@ const StyledMethod = styled.div`
 `;
 
 export const MethodBoxes = ({ methods }: MethodBoxesProps) => {
-  if (!methods) return null;
+  if (!methods?.length) return null;
 
   return (
     <StyledMethodBoxes>

@@ -1,6 +1,6 @@
 import React from 'react';
 import numeral from 'numeral';
-import { HodlOfferType } from 'src/graphql/types';
+import { HodlOfferType, HodlOfferPaymentType } from 'src/graphql/types';
 import {
   SubCard,
   Sub4Title,
@@ -24,8 +24,8 @@ import {
   StyledDescription,
 } from './OfferCard.styled';
 
-const format = (value: number | string, format = '0,0.00') =>
-  numeral(value).format(format);
+const format = (value: number | string | null | undefined, format = '0,0.00') =>
+  value ? numeral(value).format(format) : null;
 
 interface OfferCardProps {
   offer: HodlOfferType;
@@ -62,7 +62,7 @@ export const OfferCard = ({
     trader,
   } = offer;
 
-  const { author_fee_rate } = fee;
+  const { author_fee_rate } = fee || {};
 
   const {
     login,
@@ -78,7 +78,7 @@ export const OfferCard = ({
     average_payment_time_minutes,
     average_release_time_minutes,
     days_since_last_trade,
-  } = trader;
+  } = trader || {};
 
   const handleClick = () => {
     if (indexOpen === index) {
@@ -90,11 +90,10 @@ export const OfferCard = ({
 
   const renderPayments = (): string => {
     if (payment_method_instructions) {
-      const methods = payment_method_instructions.map(
-        (method: {
-          payment_method_name: string;
-          payment_method_type: string;
-        }) => `${method.payment_method_name} (${method.payment_method_type})`
+      const methods = payment_method_instructions.map(method =>
+        method
+          ? `${method.payment_method_name} (${method.payment_method_type})`
+          : ''
       );
 
       return methods.join(', ');
@@ -145,15 +144,17 @@ export const OfferCard = ({
             View Offer
           </ColorButton>
         </Link>
-        <Link href={url} underline={'transparent'} fullWidth={true}>
-          <ColorButton
-            withBorder={true}
-            withMargin={'16px 0 0 8px'}
-            fullWidth={true}
-          >
-            View trader
-          </ColorButton>
-        </Link>
+        {url && (
+          <Link href={url} underline={'transparent'} fullWidth={true}>
+            <ColorButton
+              withBorder={true}
+              withMargin={'16px 0 0 8px'}
+              fullWidth={true}
+            >
+              View trader
+            </ColorButton>
+          </Link>
+        )}
       </SingleLine>
     </>
   );
@@ -161,7 +162,9 @@ export const OfferCard = ({
   return (
     <SubCard withMargin={'16px 0 24px'} key={`${index}-${id}`}>
       <MainInfo onClick={() => handleClick()}>
-        <MethodBoxes methods={payment_method_instructions} />
+        <MethodBoxes
+          methods={payment_method_instructions as HodlOfferPaymentType[]}
+        />
         <ResponsiveLine>
           <SubTitle>
             {side !== 'buy' ? asset_code : currency_code}
@@ -170,7 +173,7 @@ export const OfferCard = ({
           </SubTitle>
           <SingleLine>
             <StyledLogin>{login}</StyledLogin>
-            {trades_count > 0 && (
+            {(trades_count || 0) > 0 && (
               <TradesAmount>{`(${trades_count}) `}</TradesAmount>
             )}
             <Rating rating={Number(rating)} />

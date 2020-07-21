@@ -186,7 +186,7 @@ export const Accounting = () => {
               auth,
               // fiat: state.fiat,
               category: state.type,
-              year: state.year.toString(),
+              ...(state.year && { year: state.year.toString() }),
               ...(state.month && { month: state.month.toString() }),
             },
           })

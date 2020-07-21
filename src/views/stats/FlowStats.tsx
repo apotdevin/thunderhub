@@ -44,19 +44,21 @@ const VolumeStatCard = ({
     </>
   );
   return (
-    <SubCard key={channel.id}>
-      <Clickable onClick={() => openSet(open ? 0 : index)}>
-        <ResponsiveLine>
-          <SubTitle>{channel?.partner?.node?.alias}</SubTitle>
-          <ScoreLine>
-            <DarkSubTitle>{'Score'}</DarkSubTitle>
-            {channel.score}
-            {getIcon(channel.score)}
-          </ScoreLine>
-        </ResponsiveLine>
-      </Clickable>
-      {open && renderContent()}
-    </SubCard>
+    <React.Fragment key={channel.id || ''}>
+      <SubCard>
+        <Clickable onClick={() => openSet(open ? 0 : index)}>
+          <ResponsiveLine>
+            <SubTitle>{channel?.partner?.node?.alias}</SubTitle>
+            <ScoreLine>
+              <DarkSubTitle>{'Score'}</DarkSubTitle>
+              {channel.score}
+              {getIcon(channel.score)}
+            </ScoreLine>
+          </ResponsiveLine>
+        </Clickable>
+        {open && renderContent()}
+      </SubCard>
+    </React.Fragment>
   );
 };
 
@@ -78,7 +80,7 @@ export const VolumeStats = () => {
     }
   }, [data, dispatch]);
 
-  if (loading || !data || !data.getVolumeHealth) {
+  if (loading || !data?.getVolumeHealth?.channels?.length) {
     return null;
   }
 
@@ -88,8 +90,8 @@ export const VolumeStats = () => {
     <StatWrapper title={'Flow Stats'}>
       {sortedArray.map((channel, index) => (
         <VolumeStatCard
-          key={channel.id}
-          channel={channel}
+          key={channel?.id || ''}
+          channel={channel as ChannelHealth}
           open={index + 1 === open}
           openSet={openSet}
           index={index + 1}
