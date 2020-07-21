@@ -44,7 +44,7 @@ const SendButton = ({ amount }: SendButtonProps) => {
   const [data, resetMutationResult] = useMutationResultWithReset(_data);
 
   React.useEffect(() => {
-    if (!loading && data && data.sendMessage && data.sendMessage >= 0) {
+    if (!loading && data && data?.sendMessage) {
       dispatch({
         type: 'newChat',
         newChat: {
@@ -54,7 +54,7 @@ const SendButton = ({ amount }: SendButtonProps) => {
           message: 'payment',
           sender,
           isSent: true,
-          feePaid: data.sendMessage,
+          feePaid: data.sendMessage - 1,
           contentType: 'payment',
           tokens: amount,
         },
