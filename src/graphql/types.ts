@@ -564,7 +564,7 @@ export type SendToType = {
   id: Scalars['String'];
   isConfirmed: Scalars['Boolean'];
   isOutgoing: Scalars['Boolean'];
-  tokens: Scalars['Int'];
+  tokens?: Maybe<Scalars['Int']>;
 };
 
 export type GetTransactionsType = {
@@ -764,10 +764,10 @@ export type WalletInfoType = {
 
 export type DecodeType = {
   __typename?: 'decodeType';
-  chain_address: Scalars['String'];
+  chain_address?: Maybe<Scalars['String']>;
   cltv_delta?: Maybe<Scalars['Int']>;
   description: Scalars['String'];
-  description_hash: Scalars['String'];
+  description_hash?: Maybe<Scalars['String']>;
   destination: Scalars['String'];
   expires_at: Scalars['String'];
   id: Scalars['String'];

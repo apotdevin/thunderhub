@@ -15,7 +15,7 @@ export const chainTypes = gql`
     id: String!
     isConfirmed: Boolean!
     isOutgoing: Boolean!
-    tokens: Int!
+    tokens: Int
   }
 
   type getTransactionsType {

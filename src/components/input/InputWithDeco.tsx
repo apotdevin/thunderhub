@@ -62,13 +62,14 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
   inputCallback,
 }) => {
   const showAmount = !!amount || customAmount;
-  let correctValue = value;
+  let correctValue = value ? value : '';
 
   if (inputType === 'number' && value) {
-    correctValue = value > 0 ? value : undefined;
+    correctValue = value && value > 0 ? value : '';
   }
 
   const props = noInput ? {} : { value: correctValue };
+
   return (
     <InputLine>
       <InputTitleRow>

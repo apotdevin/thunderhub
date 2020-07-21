@@ -21,6 +21,7 @@ import {
   GetPendingChainBalanceType,
   GetChainTransactionsType,
   GetUtxosType,
+  SendToChainAddressType,
 } from 'server/types/ln-service.types';
 
 interface ChainBalanceProps {
@@ -138,26 +139,23 @@ export const chainResolvers = {
 
       const sendAll = params.sendAll ? { is_send_all: true } : {};
 
-      try {
-        const send = await sendToChainAddress({
+      const send = await to<SendToChainAddressType>(
+        sendToChainAddress({
           lnd,
           address: params.address,
           ...(params.tokens && { tokens: params.tokens }),
           ...props,
           ...sendAll,
-        });
+        })
+      );
 
-        return {
-          confirmationCount: send.confirmation_count,
-          id: send.id,
-          isConfirmed: send.is_confirmed,
-          isOutgoing: send.is_outgoing,
-          ...(send.tokens && { tokens: send.tokens }),
-        };
-      } catch (error) {
-        logger.error('Error sending to chain address: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
+      return {
+        confirmationCount: send.confirmation_count,
+        id: send.id,
+        isConfirmed: send.is_confirmed,
+        isOutgoing: send.is_outgoing,
+        ...(send.tokens && { tokens: send.tokens }),
+      };
     },
   },
 };

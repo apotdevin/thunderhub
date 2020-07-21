@@ -84,3 +84,11 @@ export type GetPendingChainBalanceType = { pending_chain_balance: number };
 export type GetChainTransactionsType = { transactions: ChainTransaction[] };
 
 export type GetUtxosType = { utxos: UtxoType[] };
+
+export type SendToChainAddressType = {
+  id: string;
+  confirmation_count: number;
+  is_confirmed: boolean;
+  is_outgoing: boolean;
+  tokens: number | null;
+};

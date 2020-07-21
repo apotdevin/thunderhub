@@ -27,7 +27,7 @@ export const invoiceResolvers = {
 
       const lnd = getLnd(params.auth, context);
 
-      const decoded: DecodedType = await to(
+      const decoded = await to<DecodedType>(
         decodePaymentRequest({
           lnd,
           request: params.request,

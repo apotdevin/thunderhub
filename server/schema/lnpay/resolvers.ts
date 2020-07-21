@@ -6,7 +6,11 @@ import { appUrls } from 'server/utils/appUrls';
 
 export const lnpayResolvers = {
   Query: {
-    getLnPay: async (_: undefined, params: any, context: ContextType) => {
+    getLnPay: async (
+      _: undefined,
+      params: { amount: number },
+      context: ContextType
+    ) => {
       await requestLimiter(context.ip, 'getLnPay');
 
       const [response, error] = await toWithError(

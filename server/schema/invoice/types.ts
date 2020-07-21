@@ -2,10 +2,10 @@ import { gql } from 'apollo-server-micro';
 
 export const invoiceTypes = gql`
   type decodeType {
-    chain_address: String!
+    chain_address: String
     cltv_delta: Int
     description: String!
-    description_hash: String!
+    description_hash: String
     destination: String!
     expires_at: String!
     id: String!
