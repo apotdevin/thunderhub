@@ -21,7 +21,7 @@ export const updateFees = async (
     min_htlc_mtokens,
   } = params;
 
-  const lnd = getLnd(params.auth, context);
+  const { lnd } = context;
 
   if (
     !base_fee_tokens &&

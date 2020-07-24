@@ -13,6 +13,8 @@ import {
 import { ContextType, SSOType } from 'server/types/apiTypes';
 import cookie from 'cookie';
 import schema from 'server/schema';
+import { LndObject } from 'server/types/ln-service.types';
+import { getAuthLnd } from 'server/helpers/auth';
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 const { apiBaseUrl, nodeEnv } = publicRuntimeConfig;
@@ -33,12 +35,12 @@ const ssoMacaroon = readMacaroons(macaroonPath);
 const ssoCert = readFile(lnCertPath);
 const accountConfig = getAccounts(accountConfigPath);
 
-let ssoAccount: SSOType | null = null;
+let sso: SSOType | null = null;
 
 if (ssoMacaroon && lnServerUrl) {
-  ssoAccount = {
+  sso = {
     macaroon: ssoMacaroon,
-    host: lnServerUrl,
+    socket: lnServerUrl,
     cert: ssoCert,
   };
 }
@@ -50,43 +52,29 @@ const apolloServer = new ApolloServer({
   context: ({ req, res }) => {
     const ip = getIp(req);
 
-    const { AccountAuth, SSOAuth } = cookie.parse(req.headers.cookie ?? '');
+    const { Auth } = cookie.parse(req.headers.cookie ?? '');
 
-    let ssoVerified = false;
-    if (SSOAuth) {
-      logger.silly('SSOAuth cookie found in request');
-      if (nodeEnv === 'development') {
-        ssoVerified = true;
-      }
-      try {
-        jwt.verify(SSOAuth, secret);
-        ssoVerified = true;
-      } catch (error) {
-        logger.silly('SSO authentication cookie failed');
-      }
-    }
+    let lnd: LndObject | null = null;
+    let id: string | null = null;
 
-    let account = '';
-    if (AccountAuth) {
-      logger.silly('AccountAuth cookie found in request');
+    if (Auth) {
       try {
-        const cookieAccount = jwt.verify(AccountAuth, secret);
-        if (typeof cookieAccount === 'object') {
-          account = (cookieAccount as { id?: string })['id'] ?? '';
-        } else {
-          account = cookieAccount;
+        const data = jwt.verify(Auth, secret) as { id: string };
+        if (data && data.id) {
+          lnd = getAuthLnd(data.id, sso, accountConfig);
+          id = data.id;
         }
       } catch (error) {
-        logger.silly('Account authentication cookie failed');
+        logger.silly('Authentication cookie failed');
       }
     }
 
     const context: ContextType = {
       ip,
+      lnd,
       secret,
-      ssoVerified,
-      account,
-      sso: ssoVerified ? ssoAccount : null,
+      id,
+      sso,
       accounts: accountConfig,
       res,
     };

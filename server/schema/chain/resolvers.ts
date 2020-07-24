@@ -9,11 +9,7 @@ import {
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-} from 'server/helpers/helpers';
+import { getAuthLnd, getErrorMsg } from 'server/helpers/helpers';
 import { sortBy } from 'underscore';
 import { to } from 'server/helpers/async';
 import {
@@ -41,8 +37,7 @@ export const chainResolvers = {
     ) => {
       await requestLimiter(context.ip, 'chainBalance');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       const value: ChainBalanceProps = await to<GetChainBalanceType>(
         getChainBalance({
@@ -58,8 +53,7 @@ export const chainResolvers = {
     ) => {
       await requestLimiter(context.ip, 'pendingChainBalance');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       const pendingValue: PendingChainBalanceProps = await to<
         GetPendingChainBalanceType
@@ -77,8 +71,7 @@ export const chainResolvers = {
     ) => {
       await requestLimiter(context.ip, 'chainTransactions');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       const transactionList = await to<GetChainTransactionsType>(
         getChainTransactions({
@@ -95,8 +88,7 @@ export const chainResolvers = {
     getUtxos: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getUtxos');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       const info = await to<GetUtxosType>(getUtxos({ lnd }));
 
@@ -107,8 +99,7 @@ export const chainResolvers = {
     createAddress: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getAddress');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       const format = params.nested ? 'np2wpkh' : 'p2wpkh';
 
@@ -128,8 +119,7 @@ export const chainResolvers = {
     sendToAddress: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'sendToAddress');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       const props = params.fee
         ? { fee_tokens_per_vbyte: params.fee }

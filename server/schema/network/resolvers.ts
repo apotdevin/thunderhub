@@ -20,7 +20,7 @@ export const networkResolvers = {
     getNetworkInfo: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'networkInfo');
 
-      const lnd = getLnd(params.auth, context);
+      const { lnd } = context;
 
       const info: NetworkInfoProps = await to(getNetworkInfo({ lnd }));
 

@@ -10,16 +10,18 @@ export const accountResolvers = {
       __: undefined,
       context: ContextType
     ) => {
-      const { ip, accounts, account, sso, ssoVerified } = context;
+      const { ip, accounts, id, sso } = context;
       await requestLimiter(ip, 'getServerAccounts');
 
+      logger.debug('IDDDDDD %o', { id, SSO_ACCOUNT });
+
       let ssoAccount = null;
-      if (ssoVerified && sso) {
-        const { cert, host } = sso;
+      if (id === SSO_ACCOUNT && sso) {
+        const { cert, socket } = sso;
         logger.debug(
           `Macaroon${
             cert ? ', certificate' : ''
-          } and host (${host}) found for SSO.`
+          } and host (${socket}) found for SSO.`
         );
         ssoAccount = {
           name: 'SSO Account',
@@ -32,11 +34,11 @@ export const accountResolvers = {
       const withStatus =
         accounts?.map(a => ({
           ...a,
-          loggedIn: a.id === account,
+          loggedIn: a.id === id,
           type: SERVER_ACCOUNT,
         })) || [];
 
-      return ssoAccount ? [...withStatus, ssoAccount] : withStatus;
+      return ssoAccount ? [ssoAccount, ...withStatus] : withStatus;
     },
   },
 };

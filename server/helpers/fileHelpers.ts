@@ -25,7 +25,7 @@ type AccountType = {
 type ParsedAccount = {
   name: string;
   id: string;
-  host: string;
+  socket: string;
   macaroon: string;
   cert: string;
   password: string;
@@ -283,7 +283,7 @@ export const getParsedAccount = (
   return {
     name: name || '',
     id,
-    host: serverUrl || '',
+    socket: serverUrl || '',
     macaroon,
     cert: cert || '',
     password: password || masterPassword || '',

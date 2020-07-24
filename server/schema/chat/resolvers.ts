@@ -10,7 +10,7 @@ import {
 import { ContextType } from 'server/types/apiTypes';
 import { to, toWithError } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
+
 import {
   createCustomRecords,
   decodeMessage,
@@ -26,8 +26,7 @@ export const chatResolvers = {
     getMessages: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getMessages');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       const invoiceList = await to<GetInvoicesType>(
         getInvoices({
@@ -105,8 +104,7 @@ export const chatResolvers = {
     sendMessage: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'sendMessage');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       if (params.maxFee) {
         const tokens = Math.max(params.tokens || 100, 100);

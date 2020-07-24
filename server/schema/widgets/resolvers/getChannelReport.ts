@@ -12,7 +12,7 @@ export const getChannelReport = async (
 ) => {
   await requestLimiter(context.ip, 'channelReport');
 
-  const lnd = getLnd(params.auth, context);
+  const { lnd } = context;
 
   const info = await to<GetChannelsType>(getChannels({ lnd }));
 

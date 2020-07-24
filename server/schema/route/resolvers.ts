@@ -21,7 +21,7 @@ export const routeResolvers = {
     getRoutes: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getRoutes');
 
-      const lnd = getLnd(params.auth, context);
+      const { lnd } = context;
 
       const { public_key } = await getWalletInfo({ lnd });
 

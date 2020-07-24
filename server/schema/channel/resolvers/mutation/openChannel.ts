@@ -2,11 +2,7 @@ import { openChannel as lnOpenChannel } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-} from 'server/helpers/helpers';
+import { getAuthLnd, getErrorMsg } from 'server/helpers/helpers';
 
 export const openChannel = async (
   _: undefined,
@@ -15,8 +11,7 @@ export const openChannel = async (
 ) => {
   await requestLimiter(context.ip, 'openChannel');
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const { lnd } = context;
 
   const openParams = {
     is_private: params.isPrivate,

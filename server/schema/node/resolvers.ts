@@ -7,7 +7,6 @@ import {
   GetWalletInfoType,
   GetNodeType,
 } from 'server/types/ln-service.types';
-import { getAuthLnd, getCorrectAuth, getLnd } from '../../helpers/helpers';
 import { ContextType } from '../../types/apiTypes';
 import { logger } from '../../helpers/logger';
 
@@ -24,16 +23,15 @@ export const nodeResolvers = {
     getNode: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'closedChannels');
 
-      const { auth, withoutChannels = true, publicKey } = params;
-      const lnd = getLnd(auth, context);
+      const { withoutChannels = true, publicKey } = params;
+      const { lnd } = context;
 
       return { lnd, publicKey, withChannels: !withoutChannels };
     },
     getNodeInfo: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'nodeInfo');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       const info = await to<GetWalletInfoType>(
         getWalletInfo({

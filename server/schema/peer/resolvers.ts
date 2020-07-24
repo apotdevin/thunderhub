@@ -2,11 +2,7 @@ import { getPeers, removePeer, addPeer } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-} from 'server/helpers/helpers';
+import { getErrorMsg } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
 
 interface PeerProps {
@@ -26,8 +22,7 @@ export const peerResolvers = {
     getPeers: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getPeers');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       const { peers }: { peers: PeerProps[] } = await to(
         getPeers({
@@ -67,8 +62,7 @@ export const peerResolvers = {
         peerSocket = parts[1];
       }
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       try {
         const success: boolean = await addPeer({
@@ -86,8 +80,7 @@ export const peerResolvers = {
     removePeer: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'removePeer');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       try {
         const success: boolean = await removePeer({

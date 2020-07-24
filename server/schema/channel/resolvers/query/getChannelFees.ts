@@ -37,7 +37,7 @@ export const getChannelFees = async (
 ) => {
   await requestLimiter(context.ip, 'channelFees');
 
-  const lnd = getLnd(params.auth, context);
+  const { lnd } = context;
 
   const { public_key } = await to(getWalletInfo({ lnd }));
   const { channels }: GetChannelsProps = await to(getChannels({ lnd }));

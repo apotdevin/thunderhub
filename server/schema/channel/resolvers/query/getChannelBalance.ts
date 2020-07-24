@@ -1,7 +1,7 @@
 import { getChannelBalance as getLnChannelBalance } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
+
 import { to } from 'server/helpers/async';
 
 interface ChannelBalanceProps {
@@ -16,8 +16,7 @@ export const getChannelBalance = async (
 ) => {
   await requestLimiter(context.ip, 'channelBalance');
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const { lnd } = context;
 
   const channelBalance: ChannelBalanceProps = await to(
     getLnChannelBalance({

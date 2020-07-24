@@ -1,5 +1,4 @@
 import { ContextType } from 'server/types/apiTypes';
-import { getLnd } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
 import { logger } from 'server/helpers/logger';
 import { AuthType } from 'src/context/AccountContext';
@@ -39,8 +38,7 @@ export const bosResolvers = {
       params: AccountingType,
       context: ContextType
     ) => {
-      const { auth, ...settings } = params;
-      const lnd = getLnd(auth, context);
+      const { lnd } = context;
 
       const response = await to(
         getAccountingReport({
@@ -48,7 +46,7 @@ export const bosResolvers = {
           logger,
           request,
           is_csv: true,
-          ...settings,
+          ...params,
         })
       );
 
@@ -62,7 +60,6 @@ export const bosResolvers = {
       context: ContextType
     ) => {
       const {
-        auth,
         avoid,
         in_through,
         is_avoiding_high_inbound,
@@ -74,7 +71,7 @@ export const bosResolvers = {
         out_through,
         target,
       } = params;
-      const lnd = getLnd(auth, context);
+      const { lnd } = context;
 
       const filteredParams = {
         avoid,

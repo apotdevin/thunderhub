@@ -27,7 +27,6 @@ export type PermissionsType = {
 };
 
 type ParamsType = {
-  auth: AuthType;
   permissions: PermissionsType;
 };
 
@@ -40,9 +39,8 @@ export const macaroonResolvers = {
     ) => {
       await requestLimiter(context.ip, 'createMacaroon');
 
-      const { auth, permissions } = params;
-
-      const lnd = getLnd(auth, context);
+      const { permissions } = params;
+      const { lnd } = context;
 
       const { macaroon, permissions: permissionList } = await to(
         grantAccess({ lnd, ...permissions })
