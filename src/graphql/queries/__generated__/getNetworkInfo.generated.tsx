@@ -1,10 +1,11 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetNetworkInfoQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetNetworkInfoQuery = { __typename?: 'Query' } & {
@@ -24,8 +25,8 @@ export type GetNetworkInfoQuery = { __typename?: 'Query' } & {
 };
 
 export const GetNetworkInfoDocument = gql`
-  query GetNetworkInfo($auth: authType!) {
-    getNetworkInfo(auth: $auth) {
+  query GetNetworkInfo {
+    getNetworkInfo {
       averageChannelSize
       channelCount
       maxChannelSize
@@ -50,7 +51,6 @@ export const GetNetworkInfoDocument = gql`
  * @example
  * const { data, loading, error } = useGetNetworkInfoQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

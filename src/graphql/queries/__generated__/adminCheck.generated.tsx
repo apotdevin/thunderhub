@@ -1,11 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
-export type GetCanAdminQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetCanAdminQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetCanAdminQuery = { __typename?: 'Query' } & Pick<
   Types.Query,
@@ -13,8 +12,8 @@ export type GetCanAdminQuery = { __typename?: 'Query' } & Pick<
 >;
 
 export const GetCanAdminDocument = gql`
-  query GetCanAdmin($auth: authType!) {
-    adminCheck(auth: $auth)
+  query GetCanAdmin {
+    adminCheck
   }
 `;
 
@@ -30,7 +29,6 @@ export const GetCanAdminDocument = gql`
  * @example
  * const { data, loading, error } = useGetCanAdminQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type UpdateFeesMutationVariables = Types.Exact<{
-  auth: Types.AuthType;
   transaction_id?: Types.Maybe<Types.Scalars['String']>;
   transaction_vout?: Types.Maybe<Types.Scalars['Int']>;
   base_fee_tokens?: Types.Maybe<Types.Scalars['Float']>;
@@ -21,7 +21,6 @@ export type UpdateFeesMutation = { __typename?: 'Mutation' } & Pick<
 
 export const UpdateFeesDocument = gql`
   mutation UpdateFees(
-    $auth: authType!
     $transaction_id: String
     $transaction_vout: Int
     $base_fee_tokens: Float
@@ -31,7 +30,6 @@ export const UpdateFeesDocument = gql`
     $min_htlc_mtokens: String
   ) {
     updateFees(
-      auth: $auth
       transaction_id: $transaction_id
       transaction_vout: $transaction_vout
       base_fee_tokens: $base_fee_tokens
@@ -60,7 +58,6 @@ export type UpdateFeesMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [updateFeesMutation, { data, loading, error }] = useUpdateFeesMutation({
  *   variables: {
- *      auth: // value for 'auth'
  *      transaction_id: // value for 'transaction_id'
  *      transaction_vout: // value for 'transaction_vout'
  *      base_fee_tokens: // value for 'base_fee_tokens'

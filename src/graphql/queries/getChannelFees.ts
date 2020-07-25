@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const CHANNEL_FEES = gql`
-  query ChannelFees($auth: authType!) {
-    getChannelFees(auth: $auth) {
+  query ChannelFees {
+    getChannelFees {
       id
       partner_public_key
       partner_node_info {

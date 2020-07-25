@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type PayAddressMutationVariables = Types.Exact<{
-  auth: Types.AuthType;
   address: Types.Scalars['String'];
   tokens?: Types.Maybe<Types.Scalars['Int']>;
   fee?: Types.Maybe<Types.Scalars['Int']>;
@@ -23,7 +23,6 @@ export type PayAddressMutation = { __typename?: 'Mutation' } & {
 
 export const PayAddressDocument = gql`
   mutation PayAddress(
-    $auth: authType!
     $address: String!
     $tokens: Int
     $fee: Int
@@ -31,7 +30,6 @@ export const PayAddressDocument = gql`
     $sendAll: Boolean
   ) {
     sendToAddress(
-      auth: $auth
       address: $address
       tokens: $tokens
       fee: $fee
@@ -64,7 +62,6 @@ export type PayAddressMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [payAddressMutation, { data, loading, error }] = usePayAddressMutation({
  *   variables: {
- *      auth: // value for 'auth'
  *      address: // value for 'address'
  *      tokens: // value for 'tokens'
  *      fee: // value for 'fee'

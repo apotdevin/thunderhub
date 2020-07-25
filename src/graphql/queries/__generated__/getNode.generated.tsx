@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetNodeQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   publicKey: Types.Scalars['String'];
   withoutChannels?: Types.Maybe<Types.Scalars['Boolean']>;
 }>;
@@ -19,16 +19,8 @@ export type GetNodeQuery = { __typename?: 'Query' } & {
 };
 
 export const GetNodeDocument = gql`
-  query GetNode(
-    $auth: authType!
-    $publicKey: String!
-    $withoutChannels: Boolean
-  ) {
-    getNode(
-      auth: $auth
-      publicKey: $publicKey
-      withoutChannels: $withoutChannels
-    ) {
+  query GetNode($publicKey: String!, $withoutChannels: Boolean) {
+    getNode(publicKey: $publicKey, withoutChannels: $withoutChannels) {
       node {
         alias
         capacity
@@ -52,7 +44,6 @@ export const GetNodeDocument = gql`
  * @example
  * const { data, loading, error } = useGetNodeQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      publicKey: // value for 'publicKey'
  *      withoutChannels: // value for 'withoutChannels'
  *   },

@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_CHANNELS = gql`
-  query GetChannels($auth: authType!, $active: Boolean) {
-    getChannels(auth: $auth, active: $active) {
+  query GetChannels($active: Boolean) {
+    getChannels(active: $active) {
       capacity
       commit_transaction_fee
       commit_transaction_weight

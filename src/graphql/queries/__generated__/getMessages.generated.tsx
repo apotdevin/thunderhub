@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetMessagesQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   initialize?: Types.Maybe<Types.Scalars['Boolean']>;
   lastMessage?: Types.Maybe<Types.Scalars['String']>;
 }>;
@@ -35,16 +35,8 @@ export type GetMessagesQuery = { __typename?: 'Query' } & {
 };
 
 export const GetMessagesDocument = gql`
-  query GetMessages(
-    $auth: authType!
-    $initialize: Boolean
-    $lastMessage: String
-  ) {
-    getMessages(
-      auth: $auth
-      initialize: $initialize
-      lastMessage: $lastMessage
-    ) {
+  query GetMessages($initialize: Boolean, $lastMessage: String) {
+    getMessages(initialize: $initialize, lastMessage: $lastMessage) {
       token
       messages {
         date
@@ -72,7 +64,6 @@ export const GetMessagesDocument = gql`
  * @example
  * const { data, loading, error } = useGetMessagesQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      initialize: // value for 'initialize'
  *      lastMessage: // value for 'lastMessage'
  *   },

@@ -2,7 +2,6 @@ import gql from 'graphql-tag';
 
 export const BOS_REBALANCE = gql`
   mutation BosRebalance(
-    $auth: authType!
     $avoid: [String]
     $in_through: String
     $is_avoiding_high_inbound: Boolean
@@ -15,7 +14,6 @@ export const BOS_REBALANCE = gql`
     $target: Int
   ) {
     bosRebalance(
-      auth: $auth
       avoid: $avoid
       in_through: $in_through
       is_avoiding_high_inbound: $is_avoiding_high_inbound

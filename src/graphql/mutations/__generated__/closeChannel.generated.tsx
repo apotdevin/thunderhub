@@ -1,11 +1,11 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type CloseChannelMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
-  auth: Types.AuthType;
   forceClose?: Types.Maybe<Types.Scalars['Boolean']>;
   target?: Types.Maybe<Types.Scalars['Int']>;
   tokens?: Types.Maybe<Types.Scalars['Int']>;
@@ -23,7 +23,6 @@ export type CloseChannelMutation = { __typename?: 'Mutation' } & {
 export const CloseChannelDocument = gql`
   mutation CloseChannel(
     $id: String!
-    $auth: authType!
     $forceClose: Boolean
     $target: Int
     $tokens: Int
@@ -33,7 +32,6 @@ export const CloseChannelDocument = gql`
       forceClose: $forceClose
       targetConfirmations: $target
       tokensPerVByte: $tokens
-      auth: $auth
     ) {
       transactionId
       transactionOutputIndex
@@ -59,7 +57,6 @@ export type CloseChannelMutationFn = ApolloReactCommon.MutationFunction<
  * const [closeChannelMutation, { data, loading, error }] = useCloseChannelMutation({
  *   variables: {
  *      id: // value for 'id'
- *      auth: // value for 'auth'
  *      forceClose: // value for 'forceClose'
  *      target: // value for 'target'
  *      tokens: // value for 'tokens'

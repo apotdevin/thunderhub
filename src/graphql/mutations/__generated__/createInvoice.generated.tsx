@@ -1,11 +1,11 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type CreateInvoiceMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
-  auth: Types.AuthType;
 }>;
 
 export type CreateInvoiceMutation = { __typename?: 'Mutation' } & {
@@ -15,8 +15,8 @@ export type CreateInvoiceMutation = { __typename?: 'Mutation' } & {
 };
 
 export const CreateInvoiceDocument = gql`
-  mutation CreateInvoice($amount: Int!, $auth: authType!) {
-    createInvoice(amount: $amount, auth: $auth) {
+  mutation CreateInvoice($amount: Int!) {
+    createInvoice(amount: $amount) {
       request
     }
   }
@@ -40,7 +40,6 @@ export type CreateInvoiceMutationFn = ApolloReactCommon.MutationFunction<
  * const [createInvoiceMutation, { data, loading, error }] = useCreateInvoiceMutation({
  *   variables: {
  *      amount: // value for 'amount'
- *      auth: // value for 'auth'
  *   },
  * });
  */

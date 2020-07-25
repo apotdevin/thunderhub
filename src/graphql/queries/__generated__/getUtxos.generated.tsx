@@ -1,11 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
-export type GetUtxosQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetUtxosQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetUtxosQuery = { __typename?: 'Query' } & {
   getUtxos?: Types.Maybe<
@@ -27,8 +26,8 @@ export type GetUtxosQuery = { __typename?: 'Query' } & {
 };
 
 export const GetUtxosDocument = gql`
-  query GetUtxos($auth: authType!) {
-    getUtxos(auth: $auth) {
+  query GetUtxos {
+    getUtxos {
       address
       address_format
       confirmation_count
@@ -52,7 +51,6 @@ export const GetUtxosDocument = gql`
  * @example
  * const { data, loading, error } = useGetUtxosQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

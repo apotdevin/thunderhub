@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_UTXOS = gql`
-  query GetUtxos($auth: authType!) {
-    getUtxos(auth: $auth) {
+  query GetUtxos {
+    getUtxos {
       address
       address_format
       confirmation_count

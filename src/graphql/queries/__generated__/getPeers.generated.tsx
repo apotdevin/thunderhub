@@ -1,11 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
-export type GetPeersQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetPeersQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetPeersQuery = { __typename?: 'Query' } & {
   getPeers?: Types.Maybe<
@@ -36,8 +35,8 @@ export type GetPeersQuery = { __typename?: 'Query' } & {
 };
 
 export const GetPeersDocument = gql`
-  query GetPeers($auth: authType!) {
-    getPeers(auth: $auth) {
+  query GetPeers {
+    getPeers {
       bytes_received
       bytes_sent
       is_inbound
@@ -72,7 +71,6 @@ export const GetPeersDocument = gql`
  * @example
  * const { data, loading, error } = useGetPeersQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

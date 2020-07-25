@@ -1,11 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
-export type GetBackupsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetBackupsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetBackupsQuery = { __typename?: 'Query' } & Pick<
   Types.Query,
@@ -13,8 +12,8 @@ export type GetBackupsQuery = { __typename?: 'Query' } & Pick<
 >;
 
 export const GetBackupsDocument = gql`
-  query GetBackups($auth: authType!) {
-    getBackups(auth: $auth)
+  query GetBackups {
+    getBackups
   }
 `;
 
@@ -30,7 +29,6 @@ export const GetBackupsDocument = gql`
  * @example
  * const { data, loading, error } = useGetBackupsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

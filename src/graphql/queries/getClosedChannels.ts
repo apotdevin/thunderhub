@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_CLOSED_CHANNELS = gql`
-  query GetClosedChannels($auth: authType!) {
-    getClosedChannels(auth: $auth) {
+  query GetClosedChannels {
+    getClosedChannels {
       capacity
       close_confirm_height
       close_transaction_id

@@ -1,11 +1,11 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type KeysendMutationVariables = Types.Exact<{
   destination: Types.Scalars['String'];
-  auth: Types.AuthType;
   tokens: Types.Scalars['Int'];
 }>;
 
@@ -16,8 +16,8 @@ export type KeysendMutation = { __typename?: 'Mutation' } & {
 };
 
 export const KeysendDocument = gql`
-  mutation Keysend($destination: String!, $auth: authType!, $tokens: Int!) {
-    keysend(destination: $destination, auth: $auth, tokens: $tokens) {
+  mutation Keysend($destination: String!, $tokens: Int!) {
+    keysend(destination: $destination, tokens: $tokens) {
       is_confirmed
     }
   }
@@ -41,7 +41,6 @@ export type KeysendMutationFn = ApolloReactCommon.MutationFunction<
  * const [keysendMutation, { data, loading, error }] = useKeysendMutation({
  *   variables: {
  *      destination: // value for 'destination'
- *      auth: // value for 'auth'
  *      tokens: // value for 'tokens'
  *   },
  * });

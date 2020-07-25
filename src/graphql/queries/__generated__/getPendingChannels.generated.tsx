@@ -1,10 +1,11 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetPendingChannelsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetPendingChannelsQuery = { __typename?: 'Query' } & {
@@ -41,8 +42,8 @@ export type GetPendingChannelsQuery = { __typename?: 'Query' } & {
 };
 
 export const GetPendingChannelsDocument = gql`
-  query GetPendingChannels($auth: authType!) {
-    getPendingChannels(auth: $auth) {
+  query GetPendingChannels {
+    getPendingChannels {
       close_transaction_id
       is_active
       is_closing
@@ -82,7 +83,6 @@ export const GetPendingChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetPendingChannelsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

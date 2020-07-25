@@ -1,11 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
-export type ChannelFeesQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type ChannelFeesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type ChannelFeesQuery = { __typename?: 'Query' } & {
   getChannelFees?: Types.Maybe<
@@ -59,8 +58,8 @@ export type ChannelFeesQuery = { __typename?: 'Query' } & {
 };
 
 export const ChannelFeesDocument = gql`
-  query ChannelFees($auth: authType!) {
-    getChannelFees(auth: $auth) {
+  query ChannelFees {
+    getChannelFees {
       id
       partner_public_key
       partner_node_info {
@@ -105,7 +104,6 @@ export const ChannelFeesDocument = gql`
  * @example
  * const { data, loading, error } = useChannelFeesQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

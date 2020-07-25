@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetForwardsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   time?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
@@ -73,8 +73,8 @@ export type GetForwardsQuery = { __typename?: 'Query' } & {
 };
 
 export const GetForwardsDocument = gql`
-  query GetForwards($auth: authType!, $time: String) {
-    getForwards(auth: $auth, time: $time) {
+  query GetForwards($time: String) {
+    getForwards(time: $time) {
       forwards {
         created_at
         fee
@@ -125,7 +125,6 @@ export const GetForwardsDocument = gql`
  * @example
  * const { data, loading, error } = useGetForwardsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      time: // value for 'time'
  *   },
  * });

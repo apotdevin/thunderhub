@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type DecodeRequestQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   request: Types.Scalars['String'];
 }>;
 
@@ -83,8 +83,8 @@ export type DecodeRequestQuery = { __typename?: 'Query' } & {
 };
 
 export const DecodeRequestDocument = gql`
-  query DecodeRequest($auth: authType!, $request: String!) {
-    decodeRequest(auth: $auth, request: $request) {
+  query DecodeRequest($request: String!) {
+    decodeRequest(request: $request) {
       chain_address
       cltv_delta
       description
@@ -148,7 +148,6 @@ export const DecodeRequestDocument = gql`
  * @example
  * const { data, loading, error } = useDecodeRequestQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      request: // value for 'request'
  *   },
  * });

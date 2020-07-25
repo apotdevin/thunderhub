@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetResumeQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   token?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
@@ -80,8 +80,8 @@ export type GetResumeQuery = { __typename?: 'Query' } & {
 };
 
 export const GetResumeDocument = gql`
-  query GetResume($auth: authType!, $token: String) {
-    getResume(auth: $auth, token: $token) {
+  query GetResume($token: String) {
+    getResume(token: $token) {
       token
       resume {
         ... on InvoiceType {
@@ -151,7 +151,6 @@ export const GetResumeDocument = gql`
  * @example
  * const { data, loading, error } = useGetResumeQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      token: // value for 'token'
  *   },
  * });

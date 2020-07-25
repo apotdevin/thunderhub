@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type RemovePeerMutationVariables = Types.Exact<{
-  auth: Types.AuthType;
   publicKey: Types.Scalars['String'];
 }>;
 
@@ -14,8 +14,8 @@ export type RemovePeerMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export const RemovePeerDocument = gql`
-  mutation RemovePeer($auth: authType!, $publicKey: String!) {
-    removePeer(auth: $auth, publicKey: $publicKey)
+  mutation RemovePeer($publicKey: String!) {
+    removePeer(publicKey: $publicKey)
   }
 `;
 export type RemovePeerMutationFn = ApolloReactCommon.MutationFunction<
@@ -36,7 +36,6 @@ export type RemovePeerMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [removePeerMutation, { data, loading, error }] = useRemovePeerMutation({
  *   variables: {
- *      auth: // value for 'auth'
  *      publicKey: // value for 'publicKey'
  *   },
  * });

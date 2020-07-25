@@ -7,8 +7,8 @@ jest.mock('ln-service');
 describe('Chain Resolvers', () => {
   test('getChainBalance', async () => {
     const getChainBalance = gql`
-      query($auth: authType!) {
-        getChainBalance(auth: $auth)
+      query {
+        getChainBalance
       }
     `;
     const { query } = testServer();
@@ -21,8 +21,8 @@ describe('Chain Resolvers', () => {
   });
   test('getPendingChainBalance', async () => {
     const getPendingChainBalance = gql`
-      query($auth: authType!) {
-        getPendingChainBalance(auth: $auth)
+      query {
+        getPendingChainBalance
       }
     `;
     const { query } = testServer();

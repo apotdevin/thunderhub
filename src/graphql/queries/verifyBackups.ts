@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const VERIFY_BACKUPS = gql`
-  query VerifyBackups($auth: authType!, $backup: String!) {
-    verifyBackups(auth: $auth, backup: $backup)
+  query VerifyBackups($backup: String!) {
+    verifyBackups(backup: $backup)
   }
 `;

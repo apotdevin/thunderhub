@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetInOutQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   time?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
@@ -18,8 +18,8 @@ export type GetInOutQuery = { __typename?: 'Query' } & {
 };
 
 export const GetInOutDocument = gql`
-  query GetInOut($auth: authType!, $time: String) {
-    getInOut(auth: $auth, time: $time) {
+  query GetInOut($time: String) {
+    getInOut(time: $time) {
       invoices
       payments
       confirmedInvoices
@@ -40,7 +40,6 @@ export const GetInOutDocument = gql`
  * @example
  * const { data, loading, error } = useGetInOutQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      time: // value for 'time'
  *   },
  * });

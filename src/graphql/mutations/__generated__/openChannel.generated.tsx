@@ -1,12 +1,12 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type OpenChannelMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
   partnerPublicKey: Types.Scalars['String'];
-  auth: Types.AuthType;
   tokensPerVByte?: Types.Maybe<Types.Scalars['Int']>;
   isPrivate?: Types.Maybe<Types.Scalars['Boolean']>;
 }>;
@@ -24,14 +24,12 @@ export const OpenChannelDocument = gql`
   mutation OpenChannel(
     $amount: Int!
     $partnerPublicKey: String!
-    $auth: authType!
     $tokensPerVByte: Int
     $isPrivate: Boolean
   ) {
     openChannel(
       amount: $amount
       partnerPublicKey: $partnerPublicKey
-      auth: $auth
       tokensPerVByte: $tokensPerVByte
       isPrivate: $isPrivate
     ) {
@@ -60,7 +58,6 @@ export type OpenChannelMutationFn = ApolloReactCommon.MutationFunction<
  *   variables: {
  *      amount: // value for 'amount'
  *      partnerPublicKey: // value for 'partnerPublicKey'
- *      auth: // value for 'auth'
  *      tokensPerVByte: // value for 'tokensPerVByte'
  *      isPrivate: // value for 'isPrivate'
  *   },

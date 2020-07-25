@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type CreateMacaroonMutationVariables = Types.Exact<{
-  auth: Types.AuthType;
   permissions: Types.PermissionsType;
 }>;
 
@@ -14,8 +14,8 @@ export type CreateMacaroonMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export const CreateMacaroonDocument = gql`
-  mutation CreateMacaroon($auth: authType!, $permissions: permissionsType!) {
-    createMacaroon(auth: $auth, permissions: $permissions)
+  mutation CreateMacaroon($permissions: permissionsType!) {
+    createMacaroon(permissions: $permissions)
   }
 `;
 export type CreateMacaroonMutationFn = ApolloReactCommon.MutationFunction<
@@ -36,7 +36,6 @@ export type CreateMacaroonMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [createMacaroonMutation, { data, loading, error }] = useCreateMacaroonMutation({
  *   variables: {
- *      auth: // value for 'auth'
  *      permissions: // value for 'permissions'
  *   },
  * });

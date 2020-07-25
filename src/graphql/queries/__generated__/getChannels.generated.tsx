@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetChannelsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   active?: Types.Maybe<Types.Scalars['Boolean']>;
 }>;
 
@@ -63,8 +63,8 @@ export type GetChannelsQuery = { __typename?: 'Query' } & {
 };
 
 export const GetChannelsDocument = gql`
-  query GetChannels($auth: authType!, $active: Boolean) {
-    getChannels(auth: $auth, active: $active) {
+  query GetChannels($active: Boolean) {
+    getChannels(active: $active) {
       capacity
       commit_transaction_fee
       commit_transaction_weight
@@ -122,7 +122,6 @@ export const GetChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      active: // value for 'active'
  *   },
  * });

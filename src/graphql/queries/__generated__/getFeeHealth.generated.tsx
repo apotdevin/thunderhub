@@ -1,11 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
-export type GetFeeHealthQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetFeeHealthQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetFeeHealthQuery = { __typename?: 'Query' } & {
   getFeeHealth?: Types.Maybe<
@@ -61,8 +60,8 @@ export type GetFeeHealthQuery = { __typename?: 'Query' } & {
 };
 
 export const GetFeeHealthDocument = gql`
-  query GetFeeHealth($auth: authType!) {
-    getFeeHealth(auth: $auth) {
+  query GetFeeHealth {
+    getFeeHealth {
       score
       channels {
         id
@@ -106,7 +105,6 @@ export const GetFeeHealthDocument = gql`
  * @example
  * const { data, loading, error } = useGetFeeHealthQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

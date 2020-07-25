@@ -1,10 +1,11 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetChainTransactionsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetChainTransactionsQuery = { __typename?: 'Query' } & {
@@ -28,8 +29,8 @@ export type GetChainTransactionsQuery = { __typename?: 'Query' } & {
 };
 
 export const GetChainTransactionsDocument = gql`
-  query GetChainTransactions($auth: authType!) {
-    getChainTransactions(auth: $auth) {
+  query GetChainTransactions {
+    getChainTransactions {
       block_id
       confirmation_count
       confirmation_height
@@ -54,7 +55,6 @@ export const GetChainTransactionsDocument = gql`
  * @example
  * const { data, loading, error } = useGetChainTransactionsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

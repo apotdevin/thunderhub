@@ -1,11 +1,11 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetForwardReportQueryVariables = Types.Exact<{
   time?: Types.Maybe<Types.Scalars['String']>;
-  auth: Types.AuthType;
 }>;
 
 export type GetForwardReportQuery = { __typename?: 'Query' } & Pick<
@@ -14,8 +14,8 @@ export type GetForwardReportQuery = { __typename?: 'Query' } & Pick<
 >;
 
 export const GetForwardReportDocument = gql`
-  query GetForwardReport($time: String, $auth: authType!) {
-    getForwardReport(time: $time, auth: $auth)
+  query GetForwardReport($time: String) {
+    getForwardReport(time: $time)
   }
 `;
 
@@ -32,7 +32,6 @@ export const GetForwardReportDocument = gql`
  * const { data, loading, error } = useGetForwardReportQuery({
  *   variables: {
  *      time: // value for 'time'
- *      auth: // value for 'auth'
  *   },
  * });
  */

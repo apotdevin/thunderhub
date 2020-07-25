@@ -1,7 +1,8 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type LogoutMutationVariables = Types.Exact<{
   type: Types.Scalars['String'];

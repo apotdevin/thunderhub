@@ -1,13 +1,13 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetForwardChannelsReportQueryVariables = Types.Exact<{
   time?: Types.Maybe<Types.Scalars['String']>;
   order?: Types.Maybe<Types.Scalars['String']>;
   type?: Types.Maybe<Types.Scalars['String']>;
-  auth: Types.AuthType;
 }>;
 
 export type GetForwardChannelsReportQuery = { __typename?: 'Query' } & Pick<
@@ -16,18 +16,8 @@ export type GetForwardChannelsReportQuery = { __typename?: 'Query' } & Pick<
 >;
 
 export const GetForwardChannelsReportDocument = gql`
-  query GetForwardChannelsReport(
-    $time: String
-    $order: String
-    $type: String
-    $auth: authType!
-  ) {
-    getForwardChannelsReport(
-      time: $time
-      order: $order
-      auth: $auth
-      type: $type
-    )
+  query GetForwardChannelsReport($time: String, $order: String, $type: String) {
+    getForwardChannelsReport(time: $time, order: $order, type: $type)
   }
 `;
 
@@ -46,7 +36,6 @@ export const GetForwardChannelsReportDocument = gql`
  *      time: // value for 'time'
  *      order: // value for 'order'
  *      type: // value for 'type'
- *      auth: // value for 'auth'
  *   },
  * });
  */

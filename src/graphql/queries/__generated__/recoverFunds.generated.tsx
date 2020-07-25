@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type RecoverFundsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   backup: Types.Scalars['String'];
 }>;
 
@@ -14,8 +14,8 @@ export type RecoverFundsQuery = { __typename?: 'Query' } & Pick<
 >;
 
 export const RecoverFundsDocument = gql`
-  query RecoverFunds($auth: authType!, $backup: String!) {
-    recoverFunds(auth: $auth, backup: $backup)
+  query RecoverFunds($backup: String!) {
+    recoverFunds(backup: $backup)
   }
 `;
 
@@ -31,7 +31,6 @@ export const RecoverFundsDocument = gql`
  * @example
  * const { data, loading, error } = useRecoverFundsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      backup: // value for 'backup'
  *   },
  * });

@@ -1,11 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
-export type GetTimeHealthQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetTimeHealthQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetTimeHealthQuery = { __typename?: 'Query' } & {
   getTimeHealth?: Types.Maybe<
@@ -42,8 +41,8 @@ export type GetTimeHealthQuery = { __typename?: 'Query' } & {
 };
 
 export const GetTimeHealthDocument = gql`
-  query GetTimeHealth($auth: authType!) {
-    getTimeHealth(auth: $auth) {
+  query GetTimeHealth {
+    getTimeHealth {
       score
       channels {
         id
@@ -74,7 +73,6 @@ export const GetTimeHealthDocument = gql`
  * @example
  * const { data, loading, error } = useGetTimeHealthQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

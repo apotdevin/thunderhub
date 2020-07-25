@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type CircularRebalanceMutationVariables = Types.Exact<{
-  auth: Types.AuthType;
   route: Types.Scalars['String'];
 }>;
 
@@ -14,8 +14,8 @@ export type CircularRebalanceMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export const CircularRebalanceDocument = gql`
-  mutation CircularRebalance($auth: authType!, $route: String!) {
-    circularRebalance(auth: $auth, route: $route)
+  mutation CircularRebalance($route: String!) {
+    circularRebalance(route: $route)
   }
 `;
 export type CircularRebalanceMutationFn = ApolloReactCommon.MutationFunction<
@@ -36,7 +36,6 @@ export type CircularRebalanceMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [circularRebalanceMutation, { data, loading, error }] = useCircularRebalanceMutation({
  *   variables: {
- *      auth: // value for 'auth'
  *      route: // value for 'route'
  *   },
  * });

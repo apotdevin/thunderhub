@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type SignMessageQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   message: Types.Scalars['String'];
 }>;
 
@@ -14,8 +14,8 @@ export type SignMessageQuery = { __typename?: 'Query' } & Pick<
 >;
 
 export const SignMessageDocument = gql`
-  query SignMessage($auth: authType!, $message: String!) {
-    signMessage(auth: $auth, message: $message)
+  query SignMessage($message: String!) {
+    signMessage(message: $message)
   }
 `;
 
@@ -31,7 +31,6 @@ export const SignMessageDocument = gql`
  * @example
  * const { data, loading, error } = useSignMessageQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      message: // value for 'message'
  *   },
  * });

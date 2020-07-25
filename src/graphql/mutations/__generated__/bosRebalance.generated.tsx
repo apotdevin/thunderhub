@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type BosRebalanceMutationVariables = Types.Exact<{
-  auth: Types.AuthType;
   avoid?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
   in_through?: Types.Maybe<Types.Scalars['String']>;
   is_avoiding_high_inbound?: Types.Maybe<Types.Scalars['Boolean']>;
@@ -56,7 +56,6 @@ export type BosRebalanceMutation = { __typename?: 'Mutation' } & {
 
 export const BosRebalanceDocument = gql`
   mutation BosRebalance(
-    $auth: authType!
     $avoid: [String]
     $in_through: String
     $is_avoiding_high_inbound: Boolean
@@ -69,7 +68,6 @@ export const BosRebalanceDocument = gql`
     $target: Int
   ) {
     bosRebalance(
-      auth: $auth
       avoid: $avoid
       in_through: $in_through
       is_avoiding_high_inbound: $is_avoiding_high_inbound
@@ -124,7 +122,6 @@ export type BosRebalanceMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [bosRebalanceMutation, { data, loading, error }] = useBosRebalanceMutation({
  *   variables: {
- *      auth: // value for 'auth'
  *      avoid: // value for 'avoid'
  *      in_through: // value for 'in_through'
  *      is_avoiding_high_inbound: // value for 'is_avoiding_high_inbound'

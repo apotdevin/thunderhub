@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_PENDING_CHANNELS = gql`
-  query GetPendingChannels($auth: authType!) {
-    getPendingChannels(auth: $auth) {
+  query GetPendingChannels {
+    getPendingChannels {
       close_transaction_id
       is_active
       is_closing

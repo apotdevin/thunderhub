@@ -1,11 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
-export type GetCanConnectQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetCanConnectQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetCanConnectQuery = { __typename?: 'Query' } & {
   getNodeInfo?: Types.Maybe<
@@ -24,9 +23,7 @@ export type GetCanConnectQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type GetNodeInfoQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetNodeInfoQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetNodeInfoQuery = { __typename?: 'Query' } & Pick<
   Types.Query,
@@ -55,7 +52,7 @@ export type GetNodeInfoQuery = { __typename?: 'Query' } & Pick<
   };
 
 export type GetChannelAmountInfoQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetChannelAmountInfoQuery = { __typename?: 'Query' } & {
@@ -70,7 +67,7 @@ export type GetChannelAmountInfoQuery = { __typename?: 'Query' } & {
 };
 
 export type GetCanConnectInfoQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetCanConnectInfoQuery = { __typename?: 'Query' } & {
@@ -83,8 +80,8 @@ export type GetCanConnectInfoQuery = { __typename?: 'Query' } & {
 };
 
 export const GetCanConnectDocument = gql`
-  query GetCanConnect($auth: authType!) {
-    getNodeInfo(auth: $auth) {
+  query GetCanConnect {
+    getNodeInfo {
       chains
       color
       active_channels_count
@@ -110,7 +107,6 @@ export const GetCanConnectDocument = gql`
  * @example
  * const { data, loading, error } = useGetCanConnectQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
@@ -147,8 +143,8 @@ export type GetCanConnectQueryResult = ApolloReactCommon.QueryResult<
   GetCanConnectQueryVariables
 >;
 export const GetNodeInfoDocument = gql`
-  query GetNodeInfo($auth: authType!) {
-    getNodeInfo(auth: $auth) {
+  query GetNodeInfo {
+    getNodeInfo {
       chains
       color
       active_channels_count
@@ -159,9 +155,9 @@ export const GetNodeInfoDocument = gql`
       pending_channels_count
       version
     }
-    getChainBalance(auth: $auth)
-    getPendingChainBalance(auth: $auth)
-    getChannelBalance(auth: $auth) {
+    getChainBalance
+    getPendingChainBalance
+    getChannelBalance {
       confirmedBalance
       pendingBalance
     }
@@ -180,7 +176,6 @@ export const GetNodeInfoDocument = gql`
  * @example
  * const { data, loading, error } = useGetNodeInfoQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
@@ -215,8 +210,8 @@ export type GetNodeInfoQueryResult = ApolloReactCommon.QueryResult<
   GetNodeInfoQueryVariables
 >;
 export const GetChannelAmountInfoDocument = gql`
-  query GetChannelAmountInfo($auth: authType!) {
-    getNodeInfo(auth: $auth) {
+  query GetChannelAmountInfo {
+    getNodeInfo {
       active_channels_count
       closed_channels_count
       pending_channels_count
@@ -236,7 +231,6 @@ export const GetChannelAmountInfoDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelAmountInfoQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
@@ -273,8 +267,8 @@ export type GetChannelAmountInfoQueryResult = ApolloReactCommon.QueryResult<
   GetChannelAmountInfoQueryVariables
 >;
 export const GetCanConnectInfoDocument = gql`
-  query GetCanConnectInfo($auth: authType!) {
-    getNodeInfo(auth: $auth) {
+  query GetCanConnectInfo {
+    getNodeInfo {
       public_key
       uris
     }
@@ -293,7 +287,6 @@ export const GetCanConnectInfoDocument = gql`
  * @example
  * const { data, loading, error } = useGetCanConnectInfoQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

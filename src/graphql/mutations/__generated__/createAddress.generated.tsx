@@ -1,11 +1,11 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type CreateAddressMutationVariables = Types.Exact<{
   nested?: Types.Maybe<Types.Scalars['Boolean']>;
-  auth: Types.AuthType;
 }>;
 
 export type CreateAddressMutation = { __typename?: 'Mutation' } & Pick<
@@ -14,8 +14,8 @@ export type CreateAddressMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export const CreateAddressDocument = gql`
-  mutation CreateAddress($nested: Boolean, $auth: authType!) {
-    createAddress(nested: $nested, auth: $auth)
+  mutation CreateAddress($nested: Boolean) {
+    createAddress(nested: $nested)
   }
 `;
 export type CreateAddressMutationFn = ApolloReactCommon.MutationFunction<
@@ -37,7 +37,6 @@ export type CreateAddressMutationFn = ApolloReactCommon.MutationFunction<
  * const [createAddressMutation, { data, loading, error }] = useCreateAddressMutation({
  *   variables: {
  *      nested: // value for 'nested'
- *      auth: // value for 'auth'
  *   },
  * });
  */

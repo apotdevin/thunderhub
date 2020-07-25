@@ -1,10 +1,11 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetClosedChannelsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetClosedChannelsQuery = { __typename?: 'Query' } & {
@@ -41,8 +42,8 @@ export type GetClosedChannelsQuery = { __typename?: 'Query' } & {
 };
 
 export const GetClosedChannelsDocument = gql`
-  query GetClosedChannels($auth: authType!) {
-    getClosedChannels(auth: $auth) {
+  query GetClosedChannels {
+    getClosedChannels {
       capacity
       close_confirm_height
       close_transaction_id
@@ -82,7 +83,6 @@ export const GetClosedChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetClosedChannelsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

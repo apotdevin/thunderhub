@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_NETWORK_INFO = gql`
-  query GetNetworkInfo($auth: authType!) {
-    getNetworkInfo(auth: $auth) {
+  query GetNetworkInfo {
+    getNetworkInfo {
       averageChannelSize
       channelCount
       maxChannelSize

@@ -1,10 +1,10 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetRoutesQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   outgoing: Types.Scalars['String'];
   incoming: Types.Scalars['String'];
   tokens: Types.Scalars['Int'];
@@ -43,14 +43,12 @@ export type GetRoutesQuery = { __typename?: 'Query' } & {
 
 export const GetRoutesDocument = gql`
   query GetRoutes(
-    $auth: authType!
     $outgoing: String!
     $incoming: String!
     $tokens: Int!
     $maxFee: Int
   ) {
     getRoutes(
-      auth: $auth
       outgoing: $outgoing
       incoming: $incoming
       tokens: $tokens
@@ -90,7 +88,6 @@ export const GetRoutesDocument = gql`
  * @example
  * const { data, loading, error } = useGetRoutesQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      outgoing: // value for 'outgoing'
  *      incoming: // value for 'incoming'
  *      tokens: // value for 'tokens'

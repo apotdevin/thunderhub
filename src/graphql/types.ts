@@ -15,14 +15,6 @@ export type Scalars = {
   DateTime: any;
 };
 
-export type AuthType = {
-  type: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  host?: Maybe<Scalars['String']>;
-  macaroon?: Maybe<Scalars['String']>;
-  cert?: Maybe<Scalars['String']>;
-};
-
 export type PermissionsType = {
   is_ok_to_adjust_peers?: Maybe<Scalars['Boolean']>;
   is_ok_to_create_chain_addresses?: Maybe<Scalars['Boolean']>;
@@ -93,7 +85,6 @@ export type Query = {
 };
 
 export type QueryGetAccountingReportArgs = {
-  auth: AuthType;
   category?: Maybe<Scalars['String']>;
   currency?: Maybe<Scalars['String']>;
   fiat?: Maybe<Scalars['String']>;
@@ -101,78 +92,28 @@ export type QueryGetAccountingReportArgs = {
   year?: Maybe<Scalars['String']>;
 };
 
-export type QueryGetVolumeHealthArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetTimeHealthArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetFeeHealthArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetChannelBalanceArgs = {
-  auth: AuthType;
-};
-
 export type QueryGetChannelsArgs = {
-  auth: AuthType;
   active?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGetClosedChannelsArgs = {
-  auth: AuthType;
   type?: Maybe<Scalars['String']>;
 };
 
-export type QueryGetPendingChannelsArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetChannelFeesArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetChannelReportArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetNetworkInfoArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetNodeInfoArgs = {
-  auth: AuthType;
-};
-
-export type QueryAdminCheckArgs = {
-  auth: AuthType;
-};
-
 export type QueryGetNodeArgs = {
-  auth: AuthType;
   publicKey: Scalars['String'];
   withoutChannels?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryDecodeRequestArgs = {
-  auth: AuthType;
   request: Scalars['String'];
 };
 
-export type QueryGetWalletInfoArgs = {
-  auth: AuthType;
-};
-
 export type QueryGetResumeArgs = {
-  auth: AuthType;
   token?: Maybe<Scalars['String']>;
 };
 
 export type QueryGetForwardsArgs = {
-  auth: AuthType;
   time?: Maybe<Scalars['String']>;
 };
 
@@ -186,73 +127,41 @@ export type QueryGetBitcoinFeesArgs = {
 };
 
 export type QueryGetForwardReportArgs = {
-  auth: AuthType;
   time?: Maybe<Scalars['String']>;
 };
 
 export type QueryGetForwardChannelsReportArgs = {
-  auth: AuthType;
   time?: Maybe<Scalars['String']>;
   order?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
 };
 
 export type QueryGetInOutArgs = {
-  auth: AuthType;
   time?: Maybe<Scalars['String']>;
 };
 
-export type QueryGetBackupsArgs = {
-  auth: AuthType;
-};
-
 export type QueryVerifyBackupsArgs = {
-  auth: AuthType;
   backup: Scalars['String'];
 };
 
 export type QueryRecoverFundsArgs = {
-  auth: AuthType;
   backup: Scalars['String'];
 };
 
 export type QueryGetRoutesArgs = {
-  auth: AuthType;
   outgoing: Scalars['String'];
   incoming: Scalars['String'];
   tokens: Scalars['Int'];
   maxFee?: Maybe<Scalars['Int']>;
 };
 
-export type QueryGetPeersArgs = {
-  auth: AuthType;
-};
-
 export type QuerySignMessageArgs = {
-  auth: AuthType;
   message: Scalars['String'];
 };
 
 export type QueryVerifyMessageArgs = {
-  auth: AuthType;
   message: Scalars['String'];
   signature: Scalars['String'];
-};
-
-export type QueryGetChainBalanceArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetPendingChainBalanceArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetChainTransactionsArgs = {
-  auth: AuthType;
-};
-
-export type QueryGetUtxosArgs = {
-  auth: AuthType;
 };
 
 export type QueryGetOffersArgs = {
@@ -260,7 +169,6 @@ export type QueryGetOffersArgs = {
 };
 
 export type QueryGetMessagesArgs = {
-  auth: AuthType;
   token?: Maybe<Scalars['String']>;
   initialize?: Maybe<Scalars['Boolean']>;
   lastMessage?: Maybe<Scalars['String']>;
@@ -299,7 +207,6 @@ export type Mutation = {
 };
 
 export type MutationCloseChannelArgs = {
-  auth: AuthType;
   id: Scalars['String'];
   forceClose?: Maybe<Scalars['Boolean']>;
   targetConfirmations?: Maybe<Scalars['Int']>;
@@ -307,7 +214,6 @@ export type MutationCloseChannelArgs = {
 };
 
 export type MutationOpenChannelArgs = {
-  auth: AuthType;
   amount: Scalars['Int'];
   partnerPublicKey: Scalars['String'];
   tokensPerVByte?: Maybe<Scalars['Int']>;
@@ -315,7 +221,6 @@ export type MutationOpenChannelArgs = {
 };
 
 export type MutationUpdateFeesArgs = {
-  auth: AuthType;
   transaction_id?: Maybe<Scalars['String']>;
   transaction_vout?: Maybe<Scalars['Int']>;
   base_fee_tokens?: Maybe<Scalars['Float']>;
@@ -326,23 +231,19 @@ export type MutationUpdateFeesArgs = {
 };
 
 export type MutationKeysendArgs = {
-  auth: AuthType;
   destination: Scalars['String'];
   tokens: Scalars['Int'];
 };
 
 export type MutationCreateInvoiceArgs = {
-  auth: AuthType;
   amount: Scalars['Int'];
 };
 
 export type MutationCircularRebalanceArgs = {
-  auth: AuthType;
   route: Scalars['String'];
 };
 
 export type MutationBosRebalanceArgs = {
-  auth: AuthType;
   avoid?: Maybe<Array<Maybe<Scalars['String']>>>;
   in_through?: Maybe<Scalars['String']>;
   is_avoiding_high_inbound?: Maybe<Scalars['Boolean']>;
@@ -356,18 +257,15 @@ export type MutationBosRebalanceArgs = {
 };
 
 export type MutationPayViaRouteArgs = {
-  auth: AuthType;
   route: Scalars['String'];
   id: Scalars['String'];
 };
 
 export type MutationCreateAddressArgs = {
-  auth: AuthType;
   nested?: Maybe<Scalars['Boolean']>;
 };
 
 export type MutationSendToAddressArgs = {
-  auth: AuthType;
   address: Scalars['String'];
   tokens?: Maybe<Scalars['Int']>;
   fee?: Maybe<Scalars['Int']>;
@@ -376,7 +274,6 @@ export type MutationSendToAddressArgs = {
 };
 
 export type MutationAddPeerArgs = {
-  auth: AuthType;
   url?: Maybe<Scalars['String']>;
   publicKey?: Maybe<Scalars['String']>;
   socket?: Maybe<Scalars['String']>;
@@ -384,12 +281,10 @@ export type MutationAddPeerArgs = {
 };
 
 export type MutationRemovePeerArgs = {
-  auth: AuthType;
   publicKey: Scalars['String'];
 };
 
 export type MutationSendMessageArgs = {
-  auth: AuthType;
   publicKey: Scalars['String'];
   message: Scalars['String'];
   messageType?: Maybe<Scalars['String']>;
@@ -402,7 +297,6 @@ export type MutationLogoutArgs = {
 };
 
 export type MutationCreateMacaroonArgs = {
-  auth: AuthType;
   permissions: PermissionsType;
 };
 

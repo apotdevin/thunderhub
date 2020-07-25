@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_PEERS = gql`
-  query GetPeers($auth: authType!) {
-    getPeers(auth: $auth) {
+  query GetPeers {
+    getPeers {
       bytes_received
       bytes_sent
       is_inbound

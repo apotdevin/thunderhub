@@ -1,10 +1,11 @@
+import * as Types from '../../types';
+
 import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import * as Types from '../../types';
 
 export type GetVolumeHealthQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetVolumeHealthQuery = { __typename?: 'Query' } & {
@@ -34,8 +35,8 @@ export type GetVolumeHealthQuery = { __typename?: 'Query' } & {
 };
 
 export const GetVolumeHealthDocument = gql`
-  query GetVolumeHealth($auth: authType!) {
-    getVolumeHealth(auth: $auth) {
+  query GetVolumeHealth {
+    getVolumeHealth {
       score
       channels {
         id
@@ -64,7 +65,6 @@ export const GetVolumeHealthDocument = gql`
  * @example
  * const { data, loading, error } = useGetVolumeHealthQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */

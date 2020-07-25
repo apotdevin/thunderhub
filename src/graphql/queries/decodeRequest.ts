@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const DECODE_REQUEST = gql`
-  query DecodeRequest($auth: authType!, $request: String!) {
-    decodeRequest(auth: $auth, request: $request) {
+  query DecodeRequest($request: String!) {
+    decodeRequest(request: $request) {
       chain_address
       cltv_delta
       description

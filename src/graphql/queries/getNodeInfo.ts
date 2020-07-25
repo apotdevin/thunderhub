@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_CAN_CONNECT = gql`
-  query GetCanConnect($auth: authType!) {
-    getNodeInfo(auth: $auth) {
+  query GetCanConnect {
+    getNodeInfo {
       chains
       color
       active_channels_count
@@ -17,8 +17,8 @@ export const GET_CAN_CONNECT = gql`
 `;
 
 export const GET_NODE_INFO = gql`
-  query GetNodeInfo($auth: authType!) {
-    getNodeInfo(auth: $auth) {
+  query GetNodeInfo {
+    getNodeInfo {
       chains
       color
       active_channels_count
@@ -29,9 +29,9 @@ export const GET_NODE_INFO = gql`
       pending_channels_count
       version
     }
-    getChainBalance(auth: $auth)
-    getPendingChainBalance(auth: $auth)
-    getChannelBalance(auth: $auth) {
+    getChainBalance
+    getPendingChainBalance
+    getChannelBalance {
       confirmedBalance
       pendingBalance
     }
@@ -39,8 +39,8 @@ export const GET_NODE_INFO = gql`
 `;
 
 export const GET_CHANNEL_AMOUNT_INFO = gql`
-  query GetChannelAmountInfo($auth: authType!) {
-    getNodeInfo(auth: $auth) {
+  query GetChannelAmountInfo {
+    getNodeInfo {
       active_channels_count
       closed_channels_count
       pending_channels_count
@@ -49,8 +49,8 @@ export const GET_CHANNEL_AMOUNT_INFO = gql`
 `;
 
 export const GET_CONNECT_INFO = gql`
-  query GetCanConnectInfo($auth: authType!) {
-    getNodeInfo(auth: $auth) {
+  query GetCanConnectInfo {
+    getNodeInfo {
       public_key
       uris
     }
