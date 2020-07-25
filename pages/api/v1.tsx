@@ -15,6 +15,7 @@ import cookie from 'cookie';
 import schema from 'server/schema';
 import { LndObject } from 'server/types/ln-service.types';
 import { getAuthLnd } from 'server/helpers/auth';
+import { appConstants } from 'server/utils/appConstants';
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 const { apiBaseUrl, nodeEnv } = publicRuntimeConfig;
@@ -52,14 +53,15 @@ const apolloServer = new ApolloServer({
   context: ({ req, res }) => {
     const ip = getIp(req);
 
-    const { Auth } = cookie.parse(req.headers.cookie ?? '');
+    const cookies = cookie.parse(req.headers.cookie ?? '') || {};
+    const auth = cookies[appConstants.cookieName];
 
     let lnd: LndObject | null = null;
     let id: string | null = null;
 
-    if (Auth) {
+    if (auth) {
       try {
-        const data = jwt.verify(Auth, secret) as { id: string };
+        const data = jwt.verify(auth, secret) as { id: string };
         if (data && data.id) {
           lnd = getAuthLnd(data.id, sso, accountConfig);
           id = data.id;

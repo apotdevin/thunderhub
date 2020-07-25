@@ -11,6 +11,7 @@ import { logger } from 'server/helpers/logger';
 import cookie from 'cookie';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import bcrypt from 'bcryptjs';
+import { appConstants } from 'server/utils/appConstants';
 
 const { serverRuntimeConfig } = getConfig() || {};
 const { cookiePath, nodeEnv } = serverRuntimeConfig || {};
@@ -51,7 +52,10 @@ export const authResolvers = {
 
         res.setHeader(
           'Set-Cookie',
-          cookie.serialize('Auth', token, { httpOnly: true, sameSite: true })
+          cookie.serialize(appConstants.cookieName, token, {
+            httpOnly: true,
+            sameSite: true,
+          })
         );
         return true;
       }
@@ -86,7 +90,7 @@ export const authResolvers = {
       const token = jwt.sign({ id: params.id }, secret);
       res.setHeader(
         'Set-Cookie',
-        cookie.serialize('Auth', token, {
+        cookie.serialize(appConstants.cookieName, token, {
           httpOnly: true,
           sameSite: true,
         })
@@ -99,7 +103,10 @@ export const authResolvers = {
       const { ip, res } = context;
       await requestLimiter(ip, 'logout');
 
-      res.setHeader('Set-Cookie', cookie.serialize('Auth', '', { maxAge: 1 }));
+      res.setHeader(
+        'Set-Cookie',
+        cookie.serialize(appConstants.cookieName, '', { maxAge: 1 })
+      );
       return true;
     },
   },
