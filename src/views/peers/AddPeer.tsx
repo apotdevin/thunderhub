@@ -18,7 +18,6 @@ import {
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
 import { getErrorContent } from '../../utils/error';
-import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 
 export const AddPeer = () => {
   const [isAdding, setIsAdding] = useState<boolean>(false);
@@ -105,9 +104,12 @@ export const AddPeer = () => {
           {renderButton(() => setTemp(false), 'No', !temp)}
         </MultiButton>
       </SingleLine>
-      <SecureButton
-        callback={addPeer}
-        variables={{ url, publicKey: key, socket, isTemporary: temp }}
+      <ColorButton
+        onClick={() =>
+          addPeer({
+            variables: { url, publicKey: key, socket, isTemporary: temp },
+          })
+        }
         disabled={url === '' && (socket === '' || key === '')}
         withMargin={'16px 0 0'}
         loading={loading}
@@ -115,7 +117,7 @@ export const AddPeer = () => {
         fullWidth={true}
       >
         Add
-      </SecureButton>
+      </ColorButton>
     </>
   );
 

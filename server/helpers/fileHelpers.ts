@@ -4,9 +4,9 @@ import path from 'path';
 import os from 'os';
 import { logger } from 'server/helpers/logger';
 import yaml from 'js-yaml';
-import { getUUID } from 'src/utils/auth';
 import bcrypt from 'bcryptjs';
 import { AccountType as ContextAccountType } from 'server/types/apiTypes';
+import { getUUID } from './auth';
 
 type EncodingType = 'hex' | 'utf-8';
 type BitcoinNetwork = 'mainnet' | 'regtest' | 'testnet';

@@ -39,7 +39,6 @@ import {
 } from '../../../components/generic/helpers';
 import Modal from '../../../components/modal/ReactModal';
 import { CloseChannel } from '../../../components/modal/closeChannel/CloseChannel';
-import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { getPrice } from '../../../components/price/Price';
 import { usePriceState } from '../../../context/PriceContext';
@@ -235,18 +234,16 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         <Separation />
         <Sub4Title>Partner Node Info</Sub4Title>
         {renderPartner()}
-        <AdminSwitch>
-          <Separation />
-          <RightAlign>
-            <ColorButton
-              withBorder={true}
-              arrow={true}
-              onClick={() => setModalOpen(true)}
-            >
-              Close Channel
-            </ColorButton>
-          </RightAlign>
-        </AdminSwitch>
+        <Separation />
+        <RightAlign>
+          <ColorButton
+            withBorder={true}
+            arrow={true}
+            onClick={() => setModalOpen(true)}
+          >
+            Close Channel
+          </ColorButton>
+        </RightAlign>
       </>
     );
   };

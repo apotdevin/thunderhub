@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { InvoiceCard } from 'src/views/transactions/InvoiceCard';
 import {
   useGetResumeQuery,
@@ -23,11 +22,8 @@ const TransactionsView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
   const [token, setToken] = useState('');
 
-  const { auth } = useAccountState();
-
   const { loading, data, fetchMore } = useGetResumeQuery({
-    skip: !auth,
-    variables: { auth, token: '' },
+    variables: { token: '' },
     onError: error => toast.error(getErrorContent(error)),
   });
 
@@ -82,7 +78,7 @@ const TransactionsView = () => {
             withMargin={'16px 0 0'}
             onClick={() => {
               fetchMore({
-                variables: { auth, token },
+                variables: { token },
                 updateQuery: (
                   prev,
                   { fetchMoreResult }: { fetchMoreResult?: GetResumeQuery }

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useAccountState } from 'src/context/AccountContext';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import {
   SubCard,
@@ -29,12 +28,7 @@ export const ModalChannels: React.FC<ModalChannelsType> = ({
   dispatch,
   callback,
 }) => {
-  const { auth } = useAccountState();
-
-  const { loading, data } = useGetChannelsQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+  const { loading, data } = useGetChannelsQuery();
 
   if (loading || !data || !data.getChannels) {
     return <LoadingCard noCard={true} />;

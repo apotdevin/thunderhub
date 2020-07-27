@@ -6,7 +6,6 @@ import QRCode from 'qrcode.react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCreateInvoiceMutation } from 'src/graphql/mutations/__generated__/createInvoice.generated';
 import { getErrorContent } from '../../../../utils/error';
-import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import {
   NoWrapTitle,
@@ -93,9 +92,8 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
         type={'number'}
         onChange={e => setAmount(Number(e.target.value))}
       />
-      <SecureButton
-        callback={createInvoice}
-        variables={{ amount }}
+      <ColorButton
+        onClick={() => createInvoice({ variables: { amount } })}
         disabled={amount === 0}
         withMargin={'0 0 0 16px'}
         mobileMargin={'0'}
@@ -104,7 +102,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
         mobileFullWidth={true}
       >
         Create Invoice
-      </SecureButton>
+      </ColorButton>
     </ResponsiveLine>
   );
 

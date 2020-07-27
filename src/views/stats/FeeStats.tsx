@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetFeeHealthQuery } from 'src/graphql/queries/__generated__/getFeeHealth.generated';
 import {
   SubCard,
@@ -84,11 +83,8 @@ export const FeeStats = () => {
   const [open, openSet] = React.useState(0);
   const [openTwo, openTwoSet] = React.useState(0);
   const dispatch = useStatsDispatch();
-  const { auth } = useAccountState();
-  const { data, loading } = useGetFeeHealthQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+
+  const { data, loading } = useGetFeeHealthQuery();
 
   React.useEffect(() => {
     if (data && data.getFeeHealth) {

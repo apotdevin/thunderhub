@@ -1,12 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { AlertCircle } from 'react-feather';
-import { useRouter } from 'next/router';
-import {
-  useAccountState,
-  useAccountDispatch,
-  CLIENT_ACCOUNT,
-} from 'src/context/AccountContext';
+// import { useRouter } from 'next/router';
 import {
   Card,
   CardWithTitle,
@@ -16,13 +11,13 @@ import {
 } from '../../components/generic/Styled';
 import { fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
-import { useStatusDispatch } from '../../context/StatusContext';
-import { appendBasePath } from '../../utils/basePath';
-import { useChatDispatch } from '../../context/ChatContext';
+// import {
+//   MultiButton,
+//   SingleButton,
+// } from '../../components/buttons/multiButton/MultiButton';
+// import { useStatusDispatch } from '../../context/StatusContext';
+// import { appendBasePath } from '../../utils/basePath';
+// import { useChatDispatch } from '../../context/ChatContext';
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -60,68 +55,23 @@ export const FixedWidth = styled.div`
 `;
 
 export const DangerView = () => {
-  const { accounts } = useAccountState();
+  // const dispatch = useStatusDispatch();
+  // const chatDispatch = useChatDispatch();
 
-  const clientAccounts = accounts.filter(a => a.type === CLIENT_ACCOUNT);
-
-  const dispatch = useStatusDispatch();
-  const chatDispatch = useChatDispatch();
-  const dispatchAccount = useAccountDispatch();
-
-  const { push } = useRouter();
-
-  if (clientAccounts.length <= 0) {
-    return null;
-  }
+  // const { push } = useRouter();
 
   const handleDeleteAll = () => {
-    dispatch({ type: 'disconnected' });
-    chatDispatch({ type: 'disconnected' });
-    dispatchAccount({ type: 'deleteAll' });
-    push(appendBasePath('/'));
-  };
-
-  const renderButton = () => {
-    if (clientAccounts.length > 1) {
-      return (
-        <MultiButton>
-          {clientAccounts.map(({ name: accountName, id: accountId }) => {
-            return (
-              <SingleButton
-                key={accountId}
-                color={'red'}
-                onClick={() => {
-                  dispatchAccount({
-                    type: 'deleteAccount',
-                    changeId: accountId,
-                  });
-                }}
-              >
-                {accountName}
-              </SingleButton>
-            );
-          })}
-        </MultiButton>
-      );
-    }
-    if (clientAccounts.length === 1) {
-      return (
-        <ColorButton color={'red'} onClick={handleDeleteAll}>
-          {clientAccounts[0].name}
-        </ColorButton>
-      );
-    }
-    return null;
+    // TODO: Delete correct local storage
+    // dispatch({ type: 'disconnected' });
+    // chatDispatch({ type: 'disconnected' });
+    // dispatchAccount({ type: 'deleteAll' });
+    // push(appendBasePath('/'));
   };
 
   return (
     <CardWithTitle>
       <SubTitle>Danger Zone</SubTitle>
       <OutlineCard>
-        <SettingsLine>
-          <Sub4Title>Delete Account:</Sub4Title>
-          {renderButton()}
-        </SettingsLine>
         <SettingsLine>
           <Sub4Title>Delete all Accounts and Settings:</Sub4Title>
           <ButtonRow>

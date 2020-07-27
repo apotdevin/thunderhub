@@ -6,7 +6,6 @@ import {
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getLnd } from 'server/helpers/helpers';
 import { toWithError, to } from 'server/helpers/async';
 import { LndObject, ProbeForRouteType } from 'server/types/ln-service.types';
 

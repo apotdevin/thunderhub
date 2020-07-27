@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
 import styled from 'styled-components';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetForwardChannelsReportQuery } from 'src/graphql/queries/__generated__/getForwardChannelsReport.generated';
 import {
   MultiButton,
@@ -67,11 +66,8 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  const { auth } = useAccountState();
-
   const { data, loading } = useGetForwardChannelsReportQuery({
-    skip: !auth,
-    variables: { time: isTime, order: isType, auth, type },
+    variables: { time: isTime, order: isType, type },
     onError: error => toast.error(getErrorContent(error)),
   });
 

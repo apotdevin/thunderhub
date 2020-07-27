@@ -1,7 +1,7 @@
 import { authenticatedLndGrpc } from 'ln-service';
-import { SSO_ACCOUNT } from 'src/context/AccountContext';
 import { SSOType, AccountType } from 'server/types/apiTypes';
 import { LndObject } from 'server/types/ln-service.types';
+import { v5 as uuidv5 } from 'uuid';
 import { logger } from './logger';
 
 type LndAuthType = {
@@ -9,6 +9,11 @@ type LndAuthType = {
   macaroon: string;
   socket: string;
 };
+
+const THUNDERHUB_NAMESPACE = '00000000-0000-0000-0000-000000000000';
+
+export const getUUID = (text: string): string =>
+  uuidv5(text, THUNDERHUB_NAMESPACE);
 
 export const getAuthLnd = (
   id: string,
@@ -30,12 +35,12 @@ export const getAuthLnd = (
     };
   }
 
-  if (id === SSO_ACCOUNT && !sso) {
+  if (id === 'sso' && !sso) {
     logger.debug('SSO Account is not verified');
     throw new Error('AccountNotAuthenticated');
   }
 
-  if (id === SSO_ACCOUNT && sso) {
+  if (id === 'sso' && sso) {
     authDetails = sso;
   }
 

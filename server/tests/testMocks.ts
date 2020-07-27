@@ -8,20 +8,20 @@ export const AuthMock = {
 };
 
 export const ContextMock: ContextType = {
+  lnd: {},
+  id: 'test',
   ip: '1.2.3.4',
   secret: '123456789',
-  ssoVerified: true,
-  account: 'accountID',
   sso: {
     macaroon: 'macaroon',
     cert: 'cert',
-    host: 'host',
+    socket: 'host',
   },
   accounts: [
     {
       name: 'account',
       id: 'accountID',
-      host: 'host',
+      socket: 'host',
       macaroon: 'macaroon',
       cert: 'cert',
       password: 'password',
@@ -31,30 +31,30 @@ export const ContextMock: ContextType = {
 };
 
 export const ContextMockNoAccounts: ContextType = {
+  lnd: {},
+  id: 'test',
   ip: '1.2.3.4',
   secret: '123456789',
-  ssoVerified: true,
-  account: 'accountID',
   sso: {
     macaroon: 'macaroon',
     cert: 'cert',
-    host: 'host',
+    socket: 'host',
   },
   accounts: [],
   res: {} as ServerResponse,
 };
 
 export const ContextMockNoSSO: ContextType = {
+  lnd: {},
+  id: 'test',
   ip: '1.2.3.4',
   secret: '123456789',
-  ssoVerified: true,
-  account: 'accountID',
   sso: null,
   accounts: [
     {
       name: 'account',
       id: 'accountID',
-      host: 'host',
+      socket: 'host',
       macaroon: 'macaroon',
       cert: 'cert',
       password: 'password',

@@ -1,9 +1,7 @@
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getLnd } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
 import { grantAccess } from 'ln-service';
-import { AuthType } from 'src/context/AccountContext';
 import { logger } from 'server/helpers/logger';
 
 export type PermissionsType = {

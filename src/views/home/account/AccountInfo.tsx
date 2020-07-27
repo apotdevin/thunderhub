@@ -11,7 +11,6 @@ import {
   ResponsiveLine,
 } from '../../../components/generic/Styled';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
-import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { Price } from '../../../components/price/Price';
 import { mediaWidths } from '../../../styles/Themes';
 import { useStatusState } from '../../../context/StatusContext';
@@ -152,12 +151,10 @@ export const AccountInfo = () => {
         <div>Lightning</div>
       </Tile>
       {renderBalances(formatCCB, formatPCB)}
-      <AdminSwitch>
-        {showLn && showChain && renderButtons('send_ln', 'receive_ln')}
-        {showLn && !showChain && (
-          <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
-        )}
-      </AdminSwitch>
+      {showLn && showChain && renderButtons('send_ln', 'receive_ln')}
+      {showLn && !showChain && (
+        <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
+      )}
     </ResponsiveLine>
   );
 
@@ -169,12 +166,10 @@ export const AccountInfo = () => {
         <div>Bitcoin</div>
       </Tile>
       {renderBalances(formatCB, formatPB)}
-      <AdminSwitch>
-        {showLn && showChain && renderButtons('send_chain', 'receive_chain')}
-        {!showLn && showChain && (
-          <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
-        )}
-      </AdminSwitch>
+      {showLn && showChain && renderButtons('send_chain', 'receive_chain')}
+      {!showLn && showChain && (
+        <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
+      )}
     </ResponsiveLine>
   );
 

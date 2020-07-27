@@ -1,5 +1,4 @@
 import { ContextType } from 'server/types/apiTypes';
-import { SSO_ACCOUNT, SERVER_ACCOUNT } from 'src/context/AccountContext';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 
@@ -13,10 +12,8 @@ export const accountResolvers = {
       const { ip, accounts, id, sso } = context;
       await requestLimiter(ip, 'getServerAccounts');
 
-      logger.debug('IDDDDDD %o', { id, SSO_ACCOUNT });
-
       let ssoAccount = null;
-      if (id === SSO_ACCOUNT && sso) {
+      if (id === 'sso' && sso) {
         const { cert, socket } = sso;
         logger.debug(
           `Macaroon${
@@ -25,9 +22,9 @@ export const accountResolvers = {
         );
         ssoAccount = {
           name: 'SSO Account',
-          id: SSO_ACCOUNT,
+          id: 'sso',
           loggedIn: true,
-          type: SSO_ACCOUNT,
+          type: 'sso',
         };
       }
 
@@ -35,7 +32,7 @@ export const accountResolvers = {
         accounts?.map(a => ({
           ...a,
           loggedIn: a.id === id,
-          type: SERVER_ACCOUNT,
+          type: 'server',
         })) || [];
 
       return ssoAccount ? [ssoAccount, ...withStatus] : withStatus;

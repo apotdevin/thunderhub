@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import sortBy from 'lodash.sortby';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
 import { ChannelType } from 'src/graphql/types';
 import {
@@ -24,8 +23,6 @@ import {
 } from 'src/context/RebalanceContext';
 
 export const SimpleBalance = () => {
-  const { auth } = useAccountState();
-
   const dispatch = useRebalanceDispatch();
   const { inChannel: incoming, outChannel: outgoing } = useRebalanceState();
 
@@ -34,8 +31,7 @@ export const SimpleBalance = () => {
   const [blocked, setBlocked] = useState(false);
 
   const { loading, data } = useGetChannelsQuery({
-    skip: !auth,
-    variables: { auth, active: true },
+    variables: { active: true },
     onError: error => toast.error(getErrorContent(error)),
   });
 

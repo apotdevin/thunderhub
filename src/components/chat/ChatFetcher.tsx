@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetMessagesQuery } from 'src/graphql/queries/__generated__/getMessages.generated';
 import { useStatusState } from 'src/context/StatusContext';
 import { MessagesType } from 'src/graphql/types';
@@ -15,7 +14,6 @@ export const ChatFetcher: React.FC = () => {
   const { chatPollingSpeed } = useConfigState();
 
   const { connected } = useStatusState();
-  const { auth } = useAccountState();
   const { pathname } = useRouter();
   const { lastChat, chats, sentChats, initialized } = useChatState();
   const dispatch = useChatDispatch();
@@ -24,10 +22,10 @@ export const ChatFetcher: React.FC = () => {
 
   const { data, loading, error } = useGetMessagesQuery({
     ssr: false,
-    skip: !auth || initialized || noChatsAvailable || !connected,
+    skip: initialized || noChatsAvailable || !connected,
     pollInterval: chatPollingSpeed,
     fetchPolicy: 'network-only',
-    variables: { auth, initialize: !noChatsAvailable },
+    variables: { initialize: !noChatsAvailable },
     onError: error => toast.error(getErrorContent(error)),
   });
 

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { X, ChevronRight } from 'react-feather';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
 import { PeerType } from 'src/graphql/types';
 import { Input } from '../../components/input/Input';
@@ -75,11 +74,8 @@ export const ChatStart = ({ noTitle }: { noTitle?: boolean }) => {
   const [indexOpen, setIndexOpen] = React.useState(0);
   const [willSend, setWillSend] = React.useState(false);
   const [publicKey, setPublicKey] = React.useState('');
-  const { auth } = useAccountState();
-  const { loading, data } = useGetPeersQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+
+  const { loading, data } = useGetPeersQuery();
 
   const renderPeers = () => {
     if (!loading && data?.getPeers) {

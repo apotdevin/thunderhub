@@ -9,14 +9,12 @@ import { FlowBox } from '../src/views/home/reports/flow';
 import { ForwardBox } from '../src/views/home/reports/forwardReport';
 import { LiquidReport } from '../src/views/home/reports/liquidReport/LiquidReport';
 import { ConnectCard } from '../src/views/home/connect/Connect';
-import { NodeBar } from '../src/components/nodeInfo/NodeBar';
 
 const HomeView = () => {
   return (
     <>
       <Version />
       <AccountInfo />
-      <NodeBar />
       <ConnectCard />
       <QuickActions />
       <FlowBox />

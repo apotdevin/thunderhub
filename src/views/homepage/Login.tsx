@@ -1,22 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import {
-  useAccountState,
-  useAccountDispatch,
-  CLIENT_ACCOUNT,
-  SERVER_ACCOUNT,
-} from 'src/context/AccountContext';
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
 import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { useGetSessionTokenLazyQuery } from 'src/graphql/queries/__generated__/getSessionToken.generated';
-import { getAuthFromAccount } from 'src/context/helpers/context';
 import { getErrorContent } from 'src/utils/error';
 import { Lock } from 'react-feather';
+import { ServerAccountType } from 'src/graphql/types';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
-import { getAuthObj } from '../../utils/auth';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../components/input/Input';
 import { Section } from '../../components/section/Section';
@@ -27,7 +19,6 @@ import {
   chartColors,
 } from '../../styles/Themes';
 import { useStatusDispatch } from '../../context/StatusContext';
-import { dontShowSessionLogin } from './helpers';
 
 const StyledTitle = styled(Title)`
   font-size: 24px;
@@ -42,10 +33,12 @@ const IconPadding = styled.span`
   margin-left: 4px;
 `;
 
-export const SessionLogin = () => {
+type LoginProps = {
+  account: ServerAccountType;
+};
+
+export const Login = ({ account }: LoginProps) => {
   const { push } = useRouter();
-  const { account } = useAccountState();
-  const dispatchAccount = useAccountDispatch();
 
   const [pass, setPass] = useState('');
   const dispatch = useStatusDispatch();
@@ -71,96 +64,27 @@ export const SessionLogin = () => {
 
   useEffect(() => {
     if (!sLoading && sData && sData.getSessionToken) {
-      account &&
-        getCanConnect({
-          variables: {
-            auth: getAuthFromAccount(account),
-          },
-        });
+      account && getCanConnect();
     }
   }, [sLoading, sData, push, getCanConnect, account]);
 
   useEffect(() => {
-    if (
-      !loading &&
-      data &&
-      data.getNodeInfo &&
-      account?.type === SERVER_ACCOUNT
-    ) {
+    if (!loading && data && data.getNodeInfo) {
       dispatch({ type: 'connected' });
       push(appendBasePath('/home'));
     }
-    if (
-      !loading &&
-      data &&
-      data.getNodeInfo &&
-      account?.type === CLIENT_ACCOUNT
-    ) {
-      const bytes = CryptoJS.AES.decrypt(account.admin, pass);
-      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+  }, [data, loading, dispatch, pass, account, push]);
 
-      dispatchAccount({ type: 'addSession', session: decrypted });
-      dispatch({ type: 'connected' });
-      push(appendBasePath('/home'));
-    }
-  }, [data, loading, dispatch, pass, account, dispatchAccount, push]);
-
-  if (account && dontShowSessionLogin(account)) {
-    return null;
-  }
-
-  const handleClick = () => {
-    if (account?.type === CLIENT_ACCOUNT) {
-      try {
-        const bytes = CryptoJS.AES.decrypt(account.admin, pass);
-        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-
-        const auth = getAuthObj(
-          account.host,
-          decrypted,
-          undefined,
-          account.cert
-        );
-
-        auth &&
-          getCanConnect({
-            variables: {
-              auth,
-            },
-          });
-      } catch (error) {
-        toast.error('Wrong Password');
-      }
-    } else {
-      getSessionToken({ variables: { id: account?.id || '', password: pass } });
-    }
-  };
-
-  const getTitle = () => {
-    if (!account) {
-      return null;
-    }
-    if (account.type === CLIENT_ACCOUNT) {
-      if (!account.viewOnly) {
-        return `Login to ${account.name} (admin-only):`;
-      }
-    }
-    if (account.type === SERVER_ACCOUNT) {
-      return (
-        <>
-          {`Login to ${account.name}`}
-          <IconPadding>
-            <Lock size={18} color={chartColors.green} />
-          </IconPadding>
-        </>
-      );
-    }
-    return `Login to ${account.name}`;
-  };
+  if (!account) return null;
 
   return (
     <Section color={'transparent'}>
-      <StyledTitle>{getTitle()}</StyledTitle>
+      <StyledTitle>
+        {`Login to ${account.name}`}
+        <IconPadding>
+          <Lock size={18} color={chartColors.green} />
+        </IconPadding>
+      </StyledTitle>
       <Card cardPadding={'32px'} mobileCardPadding={'16px'}>
         <SingleLine>
           <Sub4Title>Password:</Sub4Title>
@@ -172,7 +96,11 @@ export const SessionLogin = () => {
         </SingleLine>
         <ColorButton
           disabled={pass === '' || loading}
-          onClick={handleClick}
+          onClick={() =>
+            getSessionToken({
+              variables: { id: account.id, password: pass },
+            })
+          }
           withMargin={'16px 0 0'}
           fullWidth={true}
           loading={loading || sLoading}

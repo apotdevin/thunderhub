@@ -1,7 +1,6 @@
 import { updateRoutingFees } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getLnd } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
 
 export const updateFees = async (

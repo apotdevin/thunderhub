@@ -2,7 +2,7 @@ import { openChannel as lnOpenChannel } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getAuthLnd, getErrorMsg } from 'server/helpers/helpers';
+import { getErrorMsg } from 'server/helpers/helpers';
 
 export const openChannel = async (
   _: undefined,

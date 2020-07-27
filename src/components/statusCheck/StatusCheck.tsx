@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { NodeInfoType, ChannelBalanceType } from 'src/graphql/types';
 import { useStatusDispatch, StatusState } from '../../context/StatusContext';
@@ -11,18 +10,16 @@ export const StatusCheck: React.FC = () => {
   const dispatch = useStatusDispatch();
   const { push } = useRouter();
 
-  const { account, auth } = useAccountState();
   const { data, loading, error, stopPolling } = useGetNodeInfoQuery({
     ssr: false,
-    skip: !auth,
     fetchPolicy: 'network-only',
-    variables: { auth },
+
     pollInterval: 10000,
   });
 
   useEffect(() => {
     if (error) {
-      account && toast.error(`Unable to connect to ${account.name}`);
+      toast.error(`Unable to connect to node`);
       stopPolling();
       dispatch({ type: 'disconnected' });
       push(appendBasePath('/'));
@@ -74,7 +71,7 @@ export const StatusCheck: React.FC = () => {
 
       dispatch({ type: 'connected', state });
     }
-  }, [data, dispatch, error, loading, push, account, stopPolling]);
+  }, [data, dispatch, error, loading, push, stopPolling]);
 
   return null;
 };

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useAccountState } from 'src/context/AccountContext';
 import {
   CardWithTitle,
   CardTitle,
@@ -10,7 +9,6 @@ import {
   ResponsiveLine,
   DarkSubTitle,
 } from '../../../components/generic/Styled';
-import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { getDateDif, getFormatDate } from '../../../components/generic/helpers';
 import { DownloadBackups } from './DownloadBackups';
 import { VerifyBackups } from './VerifyBackups';
@@ -18,7 +16,9 @@ import { RecoverFunds } from './RecoverFunds';
 
 export const BackupsView = () => {
   const [lastDate, setLastDate] = useState('');
-  const { account } = useAccountState();
+
+  // TODO: Get correct account
+  const account = { id: 'testing' };
 
   useEffect(() => {
     if (account) {
@@ -47,9 +47,7 @@ export const BackupsView = () => {
         <Separation />
         <DownloadBackups />
         <VerifyBackups />
-        <AdminSwitch>
-          <RecoverFunds />
-        </AdminSwitch>
+        <RecoverFunds />
       </Card>
     </CardWithTitle>
   );

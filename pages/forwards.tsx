@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { withApollo } from 'config/client';
@@ -29,11 +28,8 @@ const ForwardsView = () => {
   const [time, setTime] = useState('week');
   const [indexOpen, setIndexOpen] = useState(0);
 
-  const { auth } = useAccountState();
-
   const { loading, data } = useGetForwardsQuery({
-    skip: !auth,
-    variables: { auth, time },
+    variables: { time },
     onError: error => toast.error(getErrorContent(error)),
   });
 

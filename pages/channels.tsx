@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetChannelAmountInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import styled from 'styled-components';
 import { Settings } from 'react-feather';
@@ -41,12 +40,7 @@ const ChannelView = () => {
     closed: 0,
   });
 
-  const { auth } = useAccountState();
-
-  const { data } = useGetChannelAmountInfoQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+  const { data } = useGetChannelAmountInfoQuery();
 
   useEffect(() => {
     if (data && data.getNodeInfo) {

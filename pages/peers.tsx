@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { withApollo } from 'config/client';
@@ -15,12 +14,8 @@ import { AddPeer } from '../src/views/peers/AddPeer';
 
 const PeersView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
-  const { auth } = useAccountState();
 
-  const { loading, data } = useGetPeersQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+  const { loading, data } = useGetPeersQuery();
 
   if (loading || !data?.getPeers) {
     return <LoadingCard title={'Peers'} />;

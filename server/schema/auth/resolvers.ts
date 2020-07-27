@@ -6,7 +6,6 @@ import {
   PRE_PASS_STRING,
 } from 'server/helpers/fileHelpers';
 import { ContextType } from 'server/types/apiTypes';
-import { SSO_ACCOUNT } from 'src/context/AccountContext';
 import { logger } from 'server/helpers/logger';
 import cookie from 'cookie';
 import { requestLimiter } from 'server/helpers/rateLimiter';
@@ -48,7 +47,7 @@ export const authResolvers = {
         nodeEnv === 'development'
       ) {
         refreshCookie(cookiePath);
-        const token = jwt.sign({ id: SSO_ACCOUNT }, secret);
+        const token = jwt.sign({ id: 'sso' }, secret);
 
         res.setHeader(
           'Set-Cookie',

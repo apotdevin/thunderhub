@@ -6,7 +6,6 @@ import { SingleLine } from '../src/components/generic/Styled';
 import { InterfaceSettings } from '../src/views/settings/Interface';
 import { AccountSettings } from '../src/views/settings/Account';
 import { DangerView } from '../src/views/settings/Danger';
-import { CurrentSettings } from '../src/views/settings/Current';
 import { ChatSettings } from '../src/views/settings/Chat';
 import { PrivacySettings } from '../src/views/settings/Privacy';
 
@@ -25,7 +24,6 @@ const SettingsView = () => {
       <InterfaceSettings />
       <PrivacySettings />
       <ChatSettings />
-      <CurrentSettings />
       <AccountSettings />
       <DangerView />
     </>
