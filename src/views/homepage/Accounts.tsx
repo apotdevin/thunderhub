@@ -15,6 +15,7 @@ import { Section } from '../../components/section/Section';
 import { Card, SingleLine } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { ConnectTitle, LockPadding } from './HomePage.styled';
+import { Login } from './Login';
 
 const AccountLine = styled.div`
   margin: 8px 0;
@@ -38,7 +39,9 @@ const renderIntro = () => (
 export const Accounts = () => {
   const { push } = useRouter();
   const dispatchStatus = useStatusDispatch();
-  const [newAccount, setNewAccount] = React.useState<string>('');
+  const [newAccount, setNewAccount] = React.useState<ServerAccountType | null>(
+    null
+  );
 
   const {
     data: accountData,
@@ -53,11 +56,11 @@ export const Accounts = () => {
   });
 
   React.useEffect(() => {
-    if (!loading && data && data.getNodeInfo && newAccount) {
+    if (!loading && data && data.getNodeInfo) {
       dispatchStatus({ type: 'connected' });
       push(appendBasePath('/home'));
     }
-  }, [data, loading, newAccount, push, dispatchStatus]);
+  }, [data, loading, push, dispatchStatus]);
 
   if (loadingData) {
     return <LoadingCard />;
@@ -99,41 +102,43 @@ export const Accounts = () => {
   };
 
   const handleClick = (account: ServerAccountType) => () => {
-    const { id, type } = account;
-    if (type === 'sso') {
+    if (account.type === 'sso') {
       getCanConnect();
-    } else if (type === 'server' && account.loggedIn) {
+    } else if (account.type === 'server' && account.loggedIn) {
       getCanConnect();
     } else {
-      setNewAccount(id);
+      setNewAccount(account);
     }
   };
 
   return (
-    <Section color={'transparent'}>
-      {/* <ConnectTitle changeColor={change}>
-        {change ? 'Accounts' : 'Other Accounts'}
-      </ConnectTitle> */}
-      <Card>
-        {accountData?.getServerAccounts?.map((account, index) => {
-          if (!account) return null;
-          return (
-            <AccountLine key={`${account.id}-${index}`}>
-              <SingleLine>
-                {getTitle(account)}
-                <ColorButton
-                  onClick={handleClick(account)}
-                  arrow={getArrow(account)}
-                  loading={newAccount === account.id && loading}
-                  disabled={loading}
-                >
-                  {getButtonTitle(account)}
-                </ColorButton>
-              </SingleLine>
-            </AccountLine>
-          );
-        })}
-      </Card>
-    </Section>
+    <>
+      {newAccount && <Login account={newAccount} />}
+      <Section color={'transparent'}>
+        <ConnectTitle changeColor={!newAccount}>
+          {!newAccount ? 'Accounts' : 'Other Accounts'}
+        </ConnectTitle>
+        <Card>
+          {accountData?.getServerAccounts?.map((account, index) => {
+            if (!account) return null;
+            return (
+              <AccountLine key={`${account.id}-${index}`}>
+                <SingleLine>
+                  {getTitle(account)}
+                  <ColorButton
+                    onClick={handleClick(account)}
+                    arrow={getArrow(account)}
+                    loading={newAccount?.id === account.id && loading}
+                    disabled={newAccount?.id === account.id || loading}
+                  >
+                    {getButtonTitle(account)}
+                  </ColorButton>
+                </SingleLine>
+              </AccountLine>
+            );
+          })}
+        </Card>
+      </Section>
+    </>
   );
 };

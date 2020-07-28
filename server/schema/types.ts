@@ -85,6 +85,7 @@ export const queryTypes = gql`
     getAuthToken(cookie: String): Boolean
     getSessionToken(id: String, password: String): Boolean
     getServerAccounts: [serverAccountType]
+    getAccount: serverAccountType
     getLnPayInfo: lnPayInfoType
     getLnPay(amount: Int): String
     getLatestVersion: String

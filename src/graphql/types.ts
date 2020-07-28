@@ -79,6 +79,7 @@ export type Query = {
   getAuthToken?: Maybe<Scalars['Boolean']>;
   getSessionToken?: Maybe<Scalars['Boolean']>;
   getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
+  getAccount?: Maybe<ServerAccountType>;
   getLnPayInfo?: Maybe<LnPayInfoType>;
   getLnPay?: Maybe<Scalars['String']>;
   getLatestVersion?: Maybe<Scalars['String']>;
