@@ -6,7 +6,9 @@ import { TimeStats } from 'src/views/stats/TimeStats';
 import { FeeStats } from 'src/views/stats/FeeStats';
 import { StatResume } from 'src/views/stats/StatResume';
 import { StatsProvider } from 'src/views/stats/context';
+import { NextPageContext } from 'next';
 import { SingleLine } from '../src/components/generic/Styled';
+import { cookieProps } from '../src/utils/cookies';
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -37,3 +39,7 @@ const Wrapped = () => (
 );
 
 export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return cookieProps(context);
+}

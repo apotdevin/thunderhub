@@ -4,7 +4,6 @@ import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { StyledToastContainer } from 'src/components/toastContainer/ToastContainer';
-import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from 'config/client';
@@ -15,7 +14,6 @@ import { Header } from '../src/layouts/header/Header';
 import { Footer } from '../src/layouts/footer/Footer';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
-import { parseCookies } from '../src/utils/cookies';
 import 'react-circular-progressbar/dist/styles.css';
 
 const Wrapper: React.FC = ({ children }) => {
@@ -40,21 +38,14 @@ const Wrapper: React.FC = ({ children }) => {
   );
 };
 
-type InitialProps = { initialConfig: string };
-type MyAppProps = InitialProps & AppProps;
-
-const App: NextPage<MyAppProps, InitialProps> = ({
-  Component,
-  pageProps,
-  initialConfig,
-}) => {
-  const apolloClient = useApollo(pageProps?.initialApolloState);
+export default function App({ Component, pageProps }: AppProps) {
+  const apolloClient = useApollo(pageProps.initialApolloState);
   return (
     <ApolloProvider client={apolloClient}>
       <Head>
         <title>ThunderHub - Lightning Node Manager</title>
       </Head>
-      <ConfigProvider initialConfig={initialConfig}>
+      <ConfigProvider initialConfig={pageProps.initialConfig}>
         <ContextProvider>
           <Wrapper>
             <Component {...pageProps} />
@@ -64,25 +55,4 @@ const App: NextPage<MyAppProps, InitialProps> = ({
       <StyledToastContainer />
     </ApolloProvider>
   );
-};
-
-/*
- * Props should be NextPageContext but something wierd
- * happens and the context object received is not this
- * type.
- */
-App.getInitialProps = async ({ ctx }: any) => {
-  const cookies = parseCookies(ctx?.req);
-
-  if (!cookies?.theme) {
-    return { initialConfig: 'dark' };
-  }
-  try {
-    const initialConfig = cookies.theme || 'dark';
-    return { initialConfig };
-  } catch (error) {
-    return { initialConfig: 'dark' };
-  }
-};
-
-export default App;
+}

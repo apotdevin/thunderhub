@@ -10,7 +10,9 @@ import {
 } from 'src/components/generic/Styled';
 import { Text } from 'src/components/typography/Styled';
 import { AdvancedBalance } from 'src/views/balance/AdvancedBalance';
+import { NextPageContext } from 'next';
 import { useStatusState } from '../src/context/StatusContext';
+import { cookieProps } from '../src/utils/cookies';
 
 const BalanceView = () => {
   const { minorVersion } = useStatusState();
@@ -64,3 +66,7 @@ const Wrapped = () => (
 );
 
 export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return cookieProps(context);
+}

@@ -7,6 +7,7 @@ import {
 } from 'src/graphql/queries/__generated__/getResume.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 
+import { NextPageContext } from 'next';
 import {
   Card,
   CardWithTitle,
@@ -17,6 +18,7 @@ import { PaymentsCard } from '../src/views/transactions/PaymentsCards';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { FlowBox } from '../src/views/home/reports/flow';
+import { cookieProps } from '../src/utils/cookies';
 
 const TransactionsView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
@@ -120,3 +122,7 @@ const Wrapped = () => (
 );
 
 export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return cookieProps(context);
+}

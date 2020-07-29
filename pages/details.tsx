@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { useStatusState } from 'src/context/StatusContext';
 import { ChannelFeeType } from 'src/graphql/types';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
+import { NextPageContext } from 'next';
 import {
   Card,
   CardWithTitle,
@@ -21,6 +22,7 @@ import {
 import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { FeeCard } from '../src/views/fees/FeeCard';
+import { cookieProps } from '../src/utils/cookies';
 
 const WithPointer = styled.div`
   cursor: pointer;
@@ -186,3 +188,7 @@ const Wrapped = () => (
 );
 
 export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return cookieProps(context);
+}

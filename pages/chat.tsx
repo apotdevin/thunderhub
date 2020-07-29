@@ -4,6 +4,7 @@ import { Users } from 'react-feather';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { ChatInit } from 'src/components/chat/ChatInit';
 import { ChatFetcher } from 'src/components/chat/ChatFetcher';
+import { NextPageContext } from 'next';
 import { useChatState } from '../src/context/ChatContext';
 import { separateBySender, getSenders } from '../src/utils/chat';
 import {
@@ -21,6 +22,7 @@ import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ChatCard } from '../src/views/chat/Chat.styled';
 import { ViewSwitch } from '../src/components/viewSwitch/ViewSwitch';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
+import { cookieProps } from '../src/utils/cookies';
 
 const ChatLayout = styled.div`
   display: flex;
@@ -126,3 +128,7 @@ const Wrapped = () => (
 );
 
 export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return cookieProps(context);
+}

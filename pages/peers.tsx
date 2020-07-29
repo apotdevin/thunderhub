@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { PeerType } from 'src/graphql/types';
+import { NextPageContext } from 'next';
 import {
   CardWithTitle,
   SubTitle,
@@ -10,6 +11,7 @@ import {
 import { PeersCard } from '../src/views/peers/PeersCard';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { AddPeer } from '../src/views/peers/AddPeer';
+import { cookieProps } from '../src/utils/cookies';
 
 const PeersView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
@@ -48,3 +50,7 @@ const Wrapped = () => (
 );
 
 export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return cookieProps(context);
+}

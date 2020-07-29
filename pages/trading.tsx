@@ -5,6 +5,7 @@ import { useGetOffersQuery } from 'src/graphql/hodlhodl/__generated__/query.gene
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import getConfig from 'next/config';
 import { HodlOfferType } from 'src/graphql/types';
+import { NextPageContext } from 'next';
 import {
   CardWithTitle,
   SubTitle,
@@ -18,6 +19,7 @@ import { OfferFilters } from '../src/views/trading/OfferFilters';
 import { Link } from '../src/components/link/Link';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { decode } from '../src/utils/helpers';
+import { cookieProps } from '../src/utils/cookies';
 
 const { publicRuntimeConfig } = getConfig();
 const { hodlhodl } = publicRuntimeConfig;
@@ -169,3 +171,7 @@ const Wrapped = () => (
 );
 
 export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return cookieProps(context);
+}
