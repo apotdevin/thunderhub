@@ -55,8 +55,6 @@ export const getAuthLnd = (
     authDetails = verifiedAccount;
   }
 
-  logger.silly('Auth details: %o', authDetails);
-
   const { lnd } = authenticatedLndGrpc(authDetails);
   return lnd;
 };
