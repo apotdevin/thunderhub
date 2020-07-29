@@ -10,7 +10,6 @@ import {
   DarkSubTitle,
   ResponsiveLine,
 } from '../../../components/generic/Styled';
-import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { Price } from '../../../components/price/Price';
 import { mediaWidths } from '../../../styles/Themes';
 import { useStatusState } from '../../../context/StatusContext';
@@ -50,21 +49,11 @@ export const AccountInfo = () => {
   const [state, setState] = useState<string>('none');
 
   const {
-    connected,
     chainBalance,
     chainPending,
     channelBalance,
     channelPending,
   } = useStatusState();
-
-  if (!connected) {
-    return (
-      <>
-        <LoadingCard title={'Resume'} />
-        <LoadingCard title={'Your Accounts'} />
-      </>
-    );
-  }
 
   const formatCB = <Price amount={chainBalance} />;
   const formatPB = <Price amount={chainPending} />;

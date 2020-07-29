@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { AlertCircle } from 'react-feather';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
+import { useLogoutMutation } from 'src/graphql/mutations/__generated__/logout.generated';
 import {
   Card,
   CardWithTitle,
@@ -11,13 +12,9 @@ import {
 } from '../../components/generic/Styled';
 import { fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-// import {
-//   MultiButton,
-//   SingleButton,
-// } from '../../components/buttons/multiButton/MultiButton';
-// import { useStatusDispatch } from '../../context/StatusContext';
-// import { appendBasePath } from '../../utils/basePath';
-// import { useChatDispatch } from '../../context/ChatContext';
+import { useStatusDispatch } from '../../context/StatusContext';
+import { appendBasePath } from '../../utils/basePath';
+import { useChatDispatch } from '../../context/ChatContext';
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -55,17 +52,23 @@ export const FixedWidth = styled.div`
 `;
 
 export const DangerView = () => {
-  // const dispatch = useStatusDispatch();
-  // const chatDispatch = useChatDispatch();
+  const dispatch = useStatusDispatch();
+  const chatDispatch = useChatDispatch();
 
-  // const { push } = useRouter();
+  const { push } = useRouter();
+
+  const [logout] = useLogoutMutation({
+    onCompleted: () => push(appendBasePath('/')),
+  });
 
   const handleDeleteAll = () => {
-    // TODO: Delete correct local storage
-    // dispatch({ type: 'disconnected' });
-    // chatDispatch({ type: 'disconnected' });
-    // dispatchAccount({ type: 'deleteAll' });
-    // push(appendBasePath('/'));
+    dispatch({ type: 'disconnected' });
+    chatDispatch({ type: 'disconnected' });
+
+    localStorage.clear();
+    sessionStorage.clear();
+
+    logout();
   };
 
   return (
@@ -73,7 +76,7 @@ export const DangerView = () => {
       <SubTitle>Danger Zone</SubTitle>
       <OutlineCard>
         <SettingsLine>
-          <Sub4Title>Delete all Accounts and Settings:</Sub4Title>
+          <Sub4Title>Delete all accounts, chats and settings:</Sub4Title>
           <ButtonRow>
             <ColorButton color={'red'} onClick={handleDeleteAll}>
               Delete All
