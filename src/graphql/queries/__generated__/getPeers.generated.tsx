@@ -1,8 +1,12 @@
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type GetPeersQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -75,23 +79,17 @@ export const GetPeersDocument = gql`
  * });
  */
 export function useGetPeersQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetPeersQuery,
-    GetPeersQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetPeersQuery, GetPeersQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetPeersQuery, GetPeersQueryVariables>(
+  return useQuery<GetPeersQuery, GetPeersQueryVariables>(
     GetPeersDocument,
     baseOptions
   );
 }
 export function useGetPeersLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetPeersQuery,
-    GetPeersQueryVariables
-  >
+  baseOptions?: LazyQueryHookOptions<GetPeersQuery, GetPeersQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<GetPeersQuery, GetPeersQueryVariables>(
+  return useLazyQuery<GetPeersQuery, GetPeersQueryVariables>(
     GetPeersDocument,
     baseOptions
   );
@@ -100,7 +98,7 @@ export type GetPeersQueryHookResult = ReturnType<typeof useGetPeersQuery>;
 export type GetPeersLazyQueryHookResult = ReturnType<
   typeof useGetPeersLazyQuery
 >;
-export type GetPeersQueryResult = ApolloReactCommon.QueryResult<
+export type GetPeersQueryResult = QueryResult<
   GetPeersQuery,
   GetPeersQueryVariables
 >;

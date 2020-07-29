@@ -1,8 +1,12 @@
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type UpdateFeesMutationVariables = Types.Exact<{
   transaction_id?: Types.Maybe<Types.Scalars['String']>;
@@ -40,7 +44,7 @@ export const UpdateFeesDocument = gql`
     )
   }
 `;
-export type UpdateFeesMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdateFeesMutationFn = MutationFunction<
   UpdateFeesMutation,
   UpdateFeesMutationVariables
 >;
@@ -69,23 +73,21 @@ export type UpdateFeesMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateFeesMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     UpdateFeesMutation,
     UpdateFeesMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    UpdateFeesMutation,
-    UpdateFeesMutationVariables
-  >(UpdateFeesDocument, baseOptions);
+  return useMutation<UpdateFeesMutation, UpdateFeesMutationVariables>(
+    UpdateFeesDocument,
+    baseOptions
+  );
 }
 export type UpdateFeesMutationHookResult = ReturnType<
   typeof useUpdateFeesMutation
 >;
-export type UpdateFeesMutationResult = ApolloReactCommon.MutationResult<
-  UpdateFeesMutation
->;
-export type UpdateFeesMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateFeesMutationResult = MutationResult<UpdateFeesMutation>;
+export type UpdateFeesMutationOptions = BaseMutationOptions<
   UpdateFeesMutation,
   UpdateFeesMutationVariables
 >;

@@ -1,8 +1,12 @@
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type GetAccountingReportQueryVariables = Types.Exact<{
   category?: Types.Maybe<Types.Scalars['String']>;
@@ -56,23 +60,23 @@ export const GetAccountingReportDocument = gql`
  * });
  */
 export function useGetAccountingReportQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: QueryHookOptions<
     GetAccountingReportQuery,
     GetAccountingReportQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetAccountingReportQuery,
-    GetAccountingReportQueryVariables
-  >(GetAccountingReportDocument, baseOptions);
+  return useQuery<GetAccountingReportQuery, GetAccountingReportQueryVariables>(
+    GetAccountingReportDocument,
+    baseOptions
+  );
 }
 export function useGetAccountingReportLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetAccountingReportQuery,
     GetAccountingReportQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return useLazyQuery<
     GetAccountingReportQuery,
     GetAccountingReportQueryVariables
   >(GetAccountingReportDocument, baseOptions);
@@ -83,7 +87,7 @@ export type GetAccountingReportQueryHookResult = ReturnType<
 export type GetAccountingReportLazyQueryHookResult = ReturnType<
   typeof useGetAccountingReportLazyQuery
 >;
-export type GetAccountingReportQueryResult = ApolloReactCommon.QueryResult<
+export type GetAccountingReportQueryResult = QueryResult<
   GetAccountingReportQuery,
   GetAccountingReportQueryVariables
 >;

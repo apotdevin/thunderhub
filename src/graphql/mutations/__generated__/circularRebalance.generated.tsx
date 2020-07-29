@@ -1,8 +1,12 @@
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type CircularRebalanceMutationVariables = Types.Exact<{
   route: Types.Scalars['String'];
@@ -18,7 +22,7 @@ export const CircularRebalanceDocument = gql`
     circularRebalance(route: $route)
   }
 `;
-export type CircularRebalanceMutationFn = ApolloReactCommon.MutationFunction<
+export type CircularRebalanceMutationFn = MutationFunction<
   CircularRebalanceMutation,
   CircularRebalanceMutationVariables
 >;
@@ -41,12 +45,12 @@ export type CircularRebalanceMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCircularRebalanceMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     CircularRebalanceMutation,
     CircularRebalanceMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return useMutation<
     CircularRebalanceMutation,
     CircularRebalanceMutationVariables
   >(CircularRebalanceDocument, baseOptions);
@@ -54,10 +58,10 @@ export function useCircularRebalanceMutation(
 export type CircularRebalanceMutationHookResult = ReturnType<
   typeof useCircularRebalanceMutation
 >;
-export type CircularRebalanceMutationResult = ApolloReactCommon.MutationResult<
+export type CircularRebalanceMutationResult = MutationResult<
   CircularRebalanceMutation
 >;
-export type CircularRebalanceMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CircularRebalanceMutationOptions = BaseMutationOptions<
   CircularRebalanceMutation,
   CircularRebalanceMutationVariables
 >;

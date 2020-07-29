@@ -1,8 +1,12 @@
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type CreateInvoiceMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
@@ -21,7 +25,7 @@ export const CreateInvoiceDocument = gql`
     }
   }
 `;
-export type CreateInvoiceMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateInvoiceMutationFn = MutationFunction<
   CreateInvoiceMutation,
   CreateInvoiceMutationVariables
 >;
@@ -44,23 +48,21 @@ export type CreateInvoiceMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateInvoiceMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     CreateInvoiceMutation,
     CreateInvoiceMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    CreateInvoiceMutation,
-    CreateInvoiceMutationVariables
-  >(CreateInvoiceDocument, baseOptions);
+  return useMutation<CreateInvoiceMutation, CreateInvoiceMutationVariables>(
+    CreateInvoiceDocument,
+    baseOptions
+  );
 }
 export type CreateInvoiceMutationHookResult = ReturnType<
   typeof useCreateInvoiceMutation
 >;
-export type CreateInvoiceMutationResult = ApolloReactCommon.MutationResult<
-  CreateInvoiceMutation
->;
-export type CreateInvoiceMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateInvoiceMutationResult = MutationResult<CreateInvoiceMutation>;
+export type CreateInvoiceMutationOptions = BaseMutationOptions<
   CreateInvoiceMutation,
   CreateInvoiceMutationVariables
 >;

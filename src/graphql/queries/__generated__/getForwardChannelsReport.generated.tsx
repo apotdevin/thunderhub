@@ -1,8 +1,12 @@
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type GetForwardChannelsReportQueryVariables = Types.Exact<{
   time?: Types.Maybe<Types.Scalars['String']>;
@@ -40,23 +44,23 @@ export const GetForwardChannelsReportDocument = gql`
  * });
  */
 export function useGetForwardChannelsReportQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: QueryHookOptions<
     GetForwardChannelsReportQuery,
     GetForwardChannelsReportQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return useQuery<
     GetForwardChannelsReportQuery,
     GetForwardChannelsReportQueryVariables
   >(GetForwardChannelsReportDocument, baseOptions);
 }
 export function useGetForwardChannelsReportLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetForwardChannelsReportQuery,
     GetForwardChannelsReportQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return useLazyQuery<
     GetForwardChannelsReportQuery,
     GetForwardChannelsReportQueryVariables
   >(GetForwardChannelsReportDocument, baseOptions);
@@ -67,7 +71,7 @@ export type GetForwardChannelsReportQueryHookResult = ReturnType<
 export type GetForwardChannelsReportLazyQueryHookResult = ReturnType<
   typeof useGetForwardChannelsReportLazyQuery
 >;
-export type GetForwardChannelsReportQueryResult = ApolloReactCommon.QueryResult<
+export type GetForwardChannelsReportQueryResult = QueryResult<
   GetForwardChannelsReportQuery,
   GetForwardChannelsReportQueryVariables
 >;

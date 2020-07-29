@@ -1,8 +1,12 @@
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type PayViaRouteMutationVariables = Types.Exact<{
   route: Types.Scalars['String'];
@@ -19,7 +23,7 @@ export const PayViaRouteDocument = gql`
     payViaRoute(route: $route, id: $id)
   }
 `;
-export type PayViaRouteMutationFn = ApolloReactCommon.MutationFunction<
+export type PayViaRouteMutationFn = MutationFunction<
   PayViaRouteMutation,
   PayViaRouteMutationVariables
 >;
@@ -43,23 +47,21 @@ export type PayViaRouteMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function usePayViaRouteMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     PayViaRouteMutation,
     PayViaRouteMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    PayViaRouteMutation,
-    PayViaRouteMutationVariables
-  >(PayViaRouteDocument, baseOptions);
+  return useMutation<PayViaRouteMutation, PayViaRouteMutationVariables>(
+    PayViaRouteDocument,
+    baseOptions
+  );
 }
 export type PayViaRouteMutationHookResult = ReturnType<
   typeof usePayViaRouteMutation
 >;
-export type PayViaRouteMutationResult = ApolloReactCommon.MutationResult<
-  PayViaRouteMutation
->;
-export type PayViaRouteMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type PayViaRouteMutationResult = MutationResult<PayViaRouteMutation>;
+export type PayViaRouteMutationOptions = BaseMutationOptions<
   PayViaRouteMutation,
   PayViaRouteMutationVariables
 >;

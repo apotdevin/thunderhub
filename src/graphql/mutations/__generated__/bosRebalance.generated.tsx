@@ -1,8 +1,12 @@
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type BosRebalanceMutationVariables = Types.Exact<{
   avoid?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
@@ -104,7 +108,7 @@ export const BosRebalanceDocument = gql`
     }
   }
 `;
-export type BosRebalanceMutationFn = ApolloReactCommon.MutationFunction<
+export type BosRebalanceMutationFn = MutationFunction<
   BosRebalanceMutation,
   BosRebalanceMutationVariables
 >;
@@ -136,23 +140,21 @@ export type BosRebalanceMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useBosRebalanceMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     BosRebalanceMutation,
     BosRebalanceMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    BosRebalanceMutation,
-    BosRebalanceMutationVariables
-  >(BosRebalanceDocument, baseOptions);
+  return useMutation<BosRebalanceMutation, BosRebalanceMutationVariables>(
+    BosRebalanceDocument,
+    baseOptions
+  );
 }
 export type BosRebalanceMutationHookResult = ReturnType<
   typeof useBosRebalanceMutation
 >;
-export type BosRebalanceMutationResult = ApolloReactCommon.MutationResult<
-  BosRebalanceMutation
->;
-export type BosRebalanceMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type BosRebalanceMutationResult = MutationResult<BosRebalanceMutation>;
+export type BosRebalanceMutationOptions = BaseMutationOptions<
   BosRebalanceMutation,
   BosRebalanceMutationVariables
 >;

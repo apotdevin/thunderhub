@@ -1,8 +1,12 @@
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type CloseChannelMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -38,7 +42,7 @@ export const CloseChannelDocument = gql`
     }
   }
 `;
-export type CloseChannelMutationFn = ApolloReactCommon.MutationFunction<
+export type CloseChannelMutationFn = MutationFunction<
   CloseChannelMutation,
   CloseChannelMutationVariables
 >;
@@ -64,23 +68,21 @@ export type CloseChannelMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCloseChannelMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     CloseChannelMutation,
     CloseChannelMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    CloseChannelMutation,
-    CloseChannelMutationVariables
-  >(CloseChannelDocument, baseOptions);
+  return useMutation<CloseChannelMutation, CloseChannelMutationVariables>(
+    CloseChannelDocument,
+    baseOptions
+  );
 }
 export type CloseChannelMutationHookResult = ReturnType<
   typeof useCloseChannelMutation
 >;
-export type CloseChannelMutationResult = ApolloReactCommon.MutationResult<
-  CloseChannelMutation
->;
-export type CloseChannelMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CloseChannelMutationResult = MutationResult<CloseChannelMutation>;
+export type CloseChannelMutationOptions = BaseMutationOptions<
   CloseChannelMutation,
   CloseChannelMutationVariables
 >;

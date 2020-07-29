@@ -1,8 +1,12 @@
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type KeysendMutationVariables = Types.Exact<{
   destination: Types.Scalars['String'];
@@ -22,7 +26,7 @@ export const KeysendDocument = gql`
     }
   }
 `;
-export type KeysendMutationFn = ApolloReactCommon.MutationFunction<
+export type KeysendMutationFn = MutationFunction<
   KeysendMutation,
   KeysendMutationVariables
 >;
@@ -46,21 +50,16 @@ export type KeysendMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useKeysendMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    KeysendMutation,
-    KeysendMutationVariables
-  >
+  baseOptions?: MutationHookOptions<KeysendMutation, KeysendMutationVariables>
 ) {
-  return ApolloReactHooks.useMutation<
-    KeysendMutation,
-    KeysendMutationVariables
-  >(KeysendDocument, baseOptions);
+  return useMutation<KeysendMutation, KeysendMutationVariables>(
+    KeysendDocument,
+    baseOptions
+  );
 }
 export type KeysendMutationHookResult = ReturnType<typeof useKeysendMutation>;
-export type KeysendMutationResult = ApolloReactCommon.MutationResult<
-  KeysendMutation
->;
-export type KeysendMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type KeysendMutationResult = MutationResult<KeysendMutation>;
+export type KeysendMutationOptions = BaseMutationOptions<
   KeysendMutation,
   KeysendMutationVariables
 >;

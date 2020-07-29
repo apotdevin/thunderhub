@@ -1,8 +1,12 @@
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type GetAccountQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -42,32 +46,26 @@ export const GetAccountDocument = gql`
  * });
  */
 export function useGetAccountQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetAccountQuery,
-    GetAccountQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetAccountQuery, GetAccountQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetAccountQuery, GetAccountQueryVariables>(
+  return useQuery<GetAccountQuery, GetAccountQueryVariables>(
     GetAccountDocument,
     baseOptions
   );
 }
 export function useGetAccountLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetAccountQuery,
-    GetAccountQueryVariables
-  >
+  baseOptions?: LazyQueryHookOptions<GetAccountQuery, GetAccountQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetAccountQuery,
-    GetAccountQueryVariables
-  >(GetAccountDocument, baseOptions);
+  return useLazyQuery<GetAccountQuery, GetAccountQueryVariables>(
+    GetAccountDocument,
+    baseOptions
+  );
 }
 export type GetAccountQueryHookResult = ReturnType<typeof useGetAccountQuery>;
 export type GetAccountLazyQueryHookResult = ReturnType<
   typeof useGetAccountLazyQuery
 >;
-export type GetAccountQueryResult = ApolloReactCommon.QueryResult<
+export type GetAccountQueryResult = QueryResult<
   GetAccountQuery,
   GetAccountQueryVariables
 >;

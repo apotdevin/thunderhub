@@ -1,8 +1,12 @@
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type ChannelFeesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -108,32 +112,29 @@ export const ChannelFeesDocument = gql`
  * });
  */
 export function useChannelFeesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    ChannelFeesQuery,
-    ChannelFeesQueryVariables
-  >
+  baseOptions?: QueryHookOptions<ChannelFeesQuery, ChannelFeesQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<ChannelFeesQuery, ChannelFeesQueryVariables>(
+  return useQuery<ChannelFeesQuery, ChannelFeesQueryVariables>(
     ChannelFeesDocument,
     baseOptions
   );
 }
 export function useChannelFeesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     ChannelFeesQuery,
     ChannelFeesQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    ChannelFeesQuery,
-    ChannelFeesQueryVariables
-  >(ChannelFeesDocument, baseOptions);
+  return useLazyQuery<ChannelFeesQuery, ChannelFeesQueryVariables>(
+    ChannelFeesDocument,
+    baseOptions
+  );
 }
 export type ChannelFeesQueryHookResult = ReturnType<typeof useChannelFeesQuery>;
 export type ChannelFeesLazyQueryHookResult = ReturnType<
   typeof useChannelFeesLazyQuery
 >;
-export type ChannelFeesQueryResult = ApolloReactCommon.QueryResult<
+export type ChannelFeesQueryResult = QueryResult<
   ChannelFeesQuery,
   ChannelFeesQueryVariables
 >;

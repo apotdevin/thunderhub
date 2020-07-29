@@ -5,7 +5,6 @@ import { Settings } from 'react-feather';
 import { IconCursor } from 'src/views/channels/channels/Channel.style';
 import { ChannelManage } from 'src/views/channels/channels/ChannelManage';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
 import { Channels } from '../src/views/channels/channels/Channels';
 import { PendingChannels } from '../src/views/channels/pendingChannels/PendingChannels';
 import { ClosedChannels } from '../src/views/channels/closedChannels/ClosedChannels';
@@ -113,4 +112,4 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;

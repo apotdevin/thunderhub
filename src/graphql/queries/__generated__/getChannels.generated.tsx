@@ -1,8 +1,12 @@
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type GetChannelsQueryVariables = Types.Exact<{
   active?: Types.Maybe<Types.Scalars['Boolean']>;
@@ -127,32 +131,29 @@ export const GetChannelsDocument = gql`
  * });
  */
 export function useGetChannelsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetChannelsQuery,
-    GetChannelsQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetChannelsQuery, GetChannelsQueryVariables>(
+  return useQuery<GetChannelsQuery, GetChannelsQueryVariables>(
     GetChannelsDocument,
     baseOptions
   );
 }
 export function useGetChannelsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetChannelsQuery,
     GetChannelsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetChannelsQuery,
-    GetChannelsQueryVariables
-  >(GetChannelsDocument, baseOptions);
+  return useLazyQuery<GetChannelsQuery, GetChannelsQueryVariables>(
+    GetChannelsDocument,
+    baseOptions
+  );
 }
 export type GetChannelsQueryHookResult = ReturnType<typeof useGetChannelsQuery>;
 export type GetChannelsLazyQueryHookResult = ReturnType<
   typeof useGetChannelsLazyQuery
 >;
-export type GetChannelsQueryResult = ApolloReactCommon.QueryResult<
+export type GetChannelsQueryResult = QueryResult<
   GetChannelsQuery,
   GetChannelsQueryVariables
 >;

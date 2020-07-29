@@ -2,7 +2,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Users } from 'react-feather';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
 import { ChatInit } from 'src/components/chat/ChatInit';
 import { ChatFetcher } from 'src/components/chat/ChatFetcher';
 import { useChatState } from '../src/context/ChatContext';
@@ -126,4 +125,4 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;

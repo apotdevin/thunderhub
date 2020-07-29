@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Spacer } from 'src/components/spacer/Spacer';
-import { withApollo } from 'config/client';
 import { ServerAccounts } from 'src/components/accounts/ServerAccounts';
 import { ThunderStorm } from 'src/views/homepage/HomePage.styled';
 import { appendBasePath } from 'src/utils/basePath';
@@ -23,4 +22,4 @@ const Wrapped = () => (
   </>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;

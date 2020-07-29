@@ -1,8 +1,12 @@
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type GetMessagesQueryVariables = Types.Exact<{
   initialize?: Types.Maybe<Types.Scalars['Boolean']>;
@@ -70,32 +74,29 @@ export const GetMessagesDocument = gql`
  * });
  */
 export function useGetMessagesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetMessagesQuery,
-    GetMessagesQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetMessagesQuery, GetMessagesQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetMessagesQuery, GetMessagesQueryVariables>(
+  return useQuery<GetMessagesQuery, GetMessagesQueryVariables>(
     GetMessagesDocument,
     baseOptions
   );
 }
 export function useGetMessagesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetMessagesQuery,
     GetMessagesQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetMessagesQuery,
-    GetMessagesQueryVariables
-  >(GetMessagesDocument, baseOptions);
+  return useLazyQuery<GetMessagesQuery, GetMessagesQueryVariables>(
+    GetMessagesDocument,
+    baseOptions
+  );
 }
 export type GetMessagesQueryHookResult = ReturnType<typeof useGetMessagesQuery>;
 export type GetMessagesLazyQueryHookResult = ReturnType<
   typeof useGetMessagesLazyQuery
 >;
-export type GetMessagesQueryResult = ApolloReactCommon.QueryResult<
+export type GetMessagesQueryResult = QueryResult<
   GetMessagesQuery,
   GetMessagesQueryVariables
 >;

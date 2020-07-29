@@ -5,7 +5,6 @@ import { useChannelFeesQuery } from 'src/graphql/queries/__generated__/getChanne
 import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
 import styled from 'styled-components';
 import { useStatusState } from 'src/context/StatusContext';
 import { ChannelFeeType } from 'src/graphql/types';
@@ -186,4 +185,4 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;

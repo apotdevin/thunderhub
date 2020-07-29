@@ -1,8 +1,12 @@
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type CreateMacaroonMutationVariables = Types.Exact<{
   permissions: Types.PermissionsType;
@@ -18,7 +22,7 @@ export const CreateMacaroonDocument = gql`
     createMacaroon(permissions: $permissions)
   }
 `;
-export type CreateMacaroonMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateMacaroonMutationFn = MutationFunction<
   CreateMacaroonMutation,
   CreateMacaroonMutationVariables
 >;
@@ -41,23 +45,23 @@ export type CreateMacaroonMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateMacaroonMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     CreateMacaroonMutation,
     CreateMacaroonMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    CreateMacaroonMutation,
-    CreateMacaroonMutationVariables
-  >(CreateMacaroonDocument, baseOptions);
+  return useMutation<CreateMacaroonMutation, CreateMacaroonMutationVariables>(
+    CreateMacaroonDocument,
+    baseOptions
+  );
 }
 export type CreateMacaroonMutationHookResult = ReturnType<
   typeof useCreateMacaroonMutation
 >;
-export type CreateMacaroonMutationResult = ApolloReactCommon.MutationResult<
+export type CreateMacaroonMutationResult = MutationResult<
   CreateMacaroonMutation
 >;
-export type CreateMacaroonMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateMacaroonMutationOptions = BaseMutationOptions<
   CreateMacaroonMutation,
   CreateMacaroonMutationVariables
 >;

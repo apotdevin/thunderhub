@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
 import { PeerType } from 'src/graphql/types';
 import {
   CardWithTitle,
@@ -48,4 +47,4 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;

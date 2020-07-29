@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
 import { SimpleBalance } from 'src/views/balance/SimpleBalance';
 import {
   CardWithTitle,
@@ -64,4 +63,4 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;

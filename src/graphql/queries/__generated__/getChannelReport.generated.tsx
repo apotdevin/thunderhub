@@ -1,8 +1,12 @@
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type GetLiquidReportQueryVariables = Types.Exact<{
   [key: string]: never;
@@ -45,26 +49,26 @@ export const GetLiquidReportDocument = gql`
  * });
  */
 export function useGetLiquidReportQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: QueryHookOptions<
     GetLiquidReportQuery,
     GetLiquidReportQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetLiquidReportQuery,
-    GetLiquidReportQueryVariables
-  >(GetLiquidReportDocument, baseOptions);
+  return useQuery<GetLiquidReportQuery, GetLiquidReportQueryVariables>(
+    GetLiquidReportDocument,
+    baseOptions
+  );
 }
 export function useGetLiquidReportLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetLiquidReportQuery,
     GetLiquidReportQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetLiquidReportQuery,
-    GetLiquidReportQueryVariables
-  >(GetLiquidReportDocument, baseOptions);
+  return useLazyQuery<GetLiquidReportQuery, GetLiquidReportQueryVariables>(
+    GetLiquidReportDocument,
+    baseOptions
+  );
 }
 export type GetLiquidReportQueryHookResult = ReturnType<
   typeof useGetLiquidReportQuery
@@ -72,7 +76,7 @@ export type GetLiquidReportQueryHookResult = ReturnType<
 export type GetLiquidReportLazyQueryHookResult = ReturnType<
   typeof useGetLiquidReportLazyQuery
 >;
-export type GetLiquidReportQueryResult = ApolloReactCommon.QueryResult<
+export type GetLiquidReportQueryResult = QueryResult<
   GetLiquidReportQuery,
   GetLiquidReportQueryVariables
 >;

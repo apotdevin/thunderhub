@@ -1,8 +1,12 @@
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type GetInOutQueryVariables = Types.Exact<{
   time?: Types.Maybe<Types.Scalars['String']>;
@@ -45,23 +49,17 @@ export const GetInOutDocument = gql`
  * });
  */
 export function useGetInOutQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetInOutQuery,
-    GetInOutQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetInOutQuery, GetInOutQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetInOutQuery, GetInOutQueryVariables>(
+  return useQuery<GetInOutQuery, GetInOutQueryVariables>(
     GetInOutDocument,
     baseOptions
   );
 }
 export function useGetInOutLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetInOutQuery,
-    GetInOutQueryVariables
-  >
+  baseOptions?: LazyQueryHookOptions<GetInOutQuery, GetInOutQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<GetInOutQuery, GetInOutQueryVariables>(
+  return useLazyQuery<GetInOutQuery, GetInOutQueryVariables>(
     GetInOutDocument,
     baseOptions
   );
@@ -70,7 +68,7 @@ export type GetInOutQueryHookResult = ReturnType<typeof useGetInOutQuery>;
 export type GetInOutLazyQueryHookResult = ReturnType<
   typeof useGetInOutLazyQuery
 >;
-export type GetInOutQueryResult = ApolloReactCommon.QueryResult<
+export type GetInOutQueryResult = QueryResult<
   GetInOutQuery,
   GetInOutQueryVariables
 >;

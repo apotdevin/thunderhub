@@ -1,8 +1,12 @@
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type OpenChannelMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
@@ -38,7 +42,7 @@ export const OpenChannelDocument = gql`
     }
   }
 `;
-export type OpenChannelMutationFn = ApolloReactCommon.MutationFunction<
+export type OpenChannelMutationFn = MutationFunction<
   OpenChannelMutation,
   OpenChannelMutationVariables
 >;
@@ -64,23 +68,21 @@ export type OpenChannelMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useOpenChannelMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     OpenChannelMutation,
     OpenChannelMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    OpenChannelMutation,
-    OpenChannelMutationVariables
-  >(OpenChannelDocument, baseOptions);
+  return useMutation<OpenChannelMutation, OpenChannelMutationVariables>(
+    OpenChannelDocument,
+    baseOptions
+  );
 }
 export type OpenChannelMutationHookResult = ReturnType<
   typeof useOpenChannelMutation
 >;
-export type OpenChannelMutationResult = ApolloReactCommon.MutationResult<
-  OpenChannelMutation
->;
-export type OpenChannelMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type OpenChannelMutationResult = MutationResult<OpenChannelMutation>;
+export type OpenChannelMutationOptions = BaseMutationOptions<
   OpenChannelMutation,
   OpenChannelMutationVariables
 >;

@@ -1,8 +1,12 @@
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type AddPeerMutationVariables = Types.Exact<{
   url?: Types.Maybe<Types.Scalars['String']>;
@@ -31,7 +35,7 @@ export const AddPeerDocument = gql`
     )
   }
 `;
-export type AddPeerMutationFn = ApolloReactCommon.MutationFunction<
+export type AddPeerMutationFn = MutationFunction<
   AddPeerMutation,
   AddPeerMutationVariables
 >;
@@ -57,21 +61,16 @@ export type AddPeerMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useAddPeerMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    AddPeerMutation,
-    AddPeerMutationVariables
-  >
+  baseOptions?: MutationHookOptions<AddPeerMutation, AddPeerMutationVariables>
 ) {
-  return ApolloReactHooks.useMutation<
-    AddPeerMutation,
-    AddPeerMutationVariables
-  >(AddPeerDocument, baseOptions);
+  return useMutation<AddPeerMutation, AddPeerMutationVariables>(
+    AddPeerDocument,
+    baseOptions
+  );
 }
 export type AddPeerMutationHookResult = ReturnType<typeof useAddPeerMutation>;
-export type AddPeerMutationResult = ApolloReactCommon.MutationResult<
-  AddPeerMutation
->;
-export type AddPeerMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type AddPeerMutationResult = MutationResult<AddPeerMutation>;
+export type AddPeerMutationOptions = BaseMutationOptions<
   AddPeerMutation,
   AddPeerMutationVariables
 >;

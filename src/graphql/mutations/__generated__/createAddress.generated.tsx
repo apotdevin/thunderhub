@@ -1,8 +1,12 @@
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type CreateAddressMutationVariables = Types.Exact<{
   nested?: Types.Maybe<Types.Scalars['Boolean']>;
@@ -18,7 +22,7 @@ export const CreateAddressDocument = gql`
     createAddress(nested: $nested)
   }
 `;
-export type CreateAddressMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateAddressMutationFn = MutationFunction<
   CreateAddressMutation,
   CreateAddressMutationVariables
 >;
@@ -41,23 +45,21 @@ export type CreateAddressMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateAddressMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     CreateAddressMutation,
     CreateAddressMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    CreateAddressMutation,
-    CreateAddressMutationVariables
-  >(CreateAddressDocument, baseOptions);
+  return useMutation<CreateAddressMutation, CreateAddressMutationVariables>(
+    CreateAddressDocument,
+    baseOptions
+  );
 }
 export type CreateAddressMutationHookResult = ReturnType<
   typeof useCreateAddressMutation
 >;
-export type CreateAddressMutationResult = ApolloReactCommon.MutationResult<
-  CreateAddressMutation
->;
-export type CreateAddressMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateAddressMutationResult = MutationResult<CreateAddressMutation>;
+export type CreateAddressMutationOptions = BaseMutationOptions<
   CreateAddressMutation,
   CreateAddressMutationVariables
 >;

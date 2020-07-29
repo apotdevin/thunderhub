@@ -1,8 +1,12 @@
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type RecoverFundsQueryVariables = Types.Exact<{
   backup: Types.Scalars['String'];
@@ -36,26 +40,23 @@ export const RecoverFundsDocument = gql`
  * });
  */
 export function useRecoverFundsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    RecoverFundsQuery,
-    RecoverFundsQueryVariables
-  >
+  baseOptions?: QueryHookOptions<RecoverFundsQuery, RecoverFundsQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<
-    RecoverFundsQuery,
-    RecoverFundsQueryVariables
-  >(RecoverFundsDocument, baseOptions);
+  return useQuery<RecoverFundsQuery, RecoverFundsQueryVariables>(
+    RecoverFundsDocument,
+    baseOptions
+  );
 }
 export function useRecoverFundsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     RecoverFundsQuery,
     RecoverFundsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    RecoverFundsQuery,
-    RecoverFundsQueryVariables
-  >(RecoverFundsDocument, baseOptions);
+  return useLazyQuery<RecoverFundsQuery, RecoverFundsQueryVariables>(
+    RecoverFundsDocument,
+    baseOptions
+  );
 }
 export type RecoverFundsQueryHookResult = ReturnType<
   typeof useRecoverFundsQuery
@@ -63,7 +64,7 @@ export type RecoverFundsQueryHookResult = ReturnType<
 export type RecoverFundsLazyQueryHookResult = ReturnType<
   typeof useRecoverFundsLazyQuery
 >;
-export type RecoverFundsQueryResult = ApolloReactCommon.QueryResult<
+export type RecoverFundsQueryResult = QueryResult<
   RecoverFundsQuery,
   RecoverFundsQueryVariables
 >;

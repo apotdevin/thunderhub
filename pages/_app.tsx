@@ -6,6 +6,8 @@ import Head from 'next/head';
 import { StyledToastContainer } from 'src/components/toastContainer/ToastContainer';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
+import { ApolloProvider } from '@apollo/client';
+import { useApollo } from 'config/client';
 import { ContextProvider } from '../src/context/ContextProvider';
 import { useConfigState, ConfigProvider } from '../src/context/ConfigContext';
 import { GlobalStyles } from '../src/styles/GlobalStyle';
@@ -45,21 +47,24 @@ const App: NextPage<MyAppProps, InitialProps> = ({
   Component,
   pageProps,
   initialConfig,
-}) => (
-  <>
-    <Head>
-      <title>ThunderHub - Lightning Node Manager</title>
-    </Head>
-    <ConfigProvider initialConfig={initialConfig}>
-      <ContextProvider>
-        <Wrapper>
-          <Component {...pageProps} />
-        </Wrapper>
-      </ContextProvider>
-    </ConfigProvider>
-    <StyledToastContainer />
-  </>
-);
+}) => {
+  const apolloClient = useApollo(pageProps?.initialApolloState);
+  return (
+    <ApolloProvider client={apolloClient}>
+      <Head>
+        <title>ThunderHub - Lightning Node Manager</title>
+      </Head>
+      <ConfigProvider initialConfig={initialConfig}>
+        <ContextProvider>
+          <Wrapper>
+            <Component {...pageProps} />
+          </Wrapper>
+        </ContextProvider>
+      </ConfigProvider>
+      <StyledToastContainer />
+    </ApolloProvider>
+  );
+};
 
 /*
  * Props should be NextPageContext but something wierd

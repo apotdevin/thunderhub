@@ -1,8 +1,12 @@
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type SignMessageQueryVariables = Types.Exact<{
   message: Types.Scalars['String'];
@@ -36,32 +40,29 @@ export const SignMessageDocument = gql`
  * });
  */
 export function useSignMessageQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    SignMessageQuery,
-    SignMessageQueryVariables
-  >
+  baseOptions?: QueryHookOptions<SignMessageQuery, SignMessageQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<SignMessageQuery, SignMessageQueryVariables>(
+  return useQuery<SignMessageQuery, SignMessageQueryVariables>(
     SignMessageDocument,
     baseOptions
   );
 }
 export function useSignMessageLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     SignMessageQuery,
     SignMessageQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    SignMessageQuery,
-    SignMessageQueryVariables
-  >(SignMessageDocument, baseOptions);
+  return useLazyQuery<SignMessageQuery, SignMessageQueryVariables>(
+    SignMessageDocument,
+    baseOptions
+  );
 }
 export type SignMessageQueryHookResult = ReturnType<typeof useSignMessageQuery>;
 export type SignMessageLazyQueryHookResult = ReturnType<
   typeof useSignMessageLazyQuery
 >;
-export type SignMessageQueryResult = ApolloReactCommon.QueryResult<
+export type SignMessageQueryResult = QueryResult<
   SignMessageQuery,
   SignMessageQueryVariables
 >;

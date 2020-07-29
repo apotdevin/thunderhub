@@ -1,8 +1,12 @@
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type RemovePeerMutationVariables = Types.Exact<{
   publicKey: Types.Scalars['String'];
@@ -18,7 +22,7 @@ export const RemovePeerDocument = gql`
     removePeer(publicKey: $publicKey)
   }
 `;
-export type RemovePeerMutationFn = ApolloReactCommon.MutationFunction<
+export type RemovePeerMutationFn = MutationFunction<
   RemovePeerMutation,
   RemovePeerMutationVariables
 >;
@@ -41,23 +45,21 @@ export type RemovePeerMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useRemovePeerMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     RemovePeerMutation,
     RemovePeerMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    RemovePeerMutation,
-    RemovePeerMutationVariables
-  >(RemovePeerDocument, baseOptions);
+  return useMutation<RemovePeerMutation, RemovePeerMutationVariables>(
+    RemovePeerDocument,
+    baseOptions
+  );
 }
 export type RemovePeerMutationHookResult = ReturnType<
   typeof useRemovePeerMutation
 >;
-export type RemovePeerMutationResult = ApolloReactCommon.MutationResult<
-  RemovePeerMutation
->;
-export type RemovePeerMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type RemovePeerMutationResult = MutationResult<RemovePeerMutation>;
+export type RemovePeerMutationOptions = BaseMutationOptions<
   RemovePeerMutation,
   RemovePeerMutationVariables
 >;

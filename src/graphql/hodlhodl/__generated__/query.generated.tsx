@@ -1,8 +1,12 @@
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
-
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
 
 export type GetCountriesQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -133,26 +137,23 @@ export const GetCountriesDocument = gql`
  * });
  */
 export function useGetCountriesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetCountriesQuery,
-    GetCountriesQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetCountriesQuery, GetCountriesQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<
-    GetCountriesQuery,
-    GetCountriesQueryVariables
-  >(GetCountriesDocument, baseOptions);
+  return useQuery<GetCountriesQuery, GetCountriesQueryVariables>(
+    GetCountriesDocument,
+    baseOptions
+  );
 }
 export function useGetCountriesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetCountriesQuery,
     GetCountriesQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetCountriesQuery,
-    GetCountriesQueryVariables
-  >(GetCountriesDocument, baseOptions);
+  return useLazyQuery<GetCountriesQuery, GetCountriesQueryVariables>(
+    GetCountriesDocument,
+    baseOptions
+  );
 }
 export type GetCountriesQueryHookResult = ReturnType<
   typeof useGetCountriesQuery
@@ -160,7 +161,7 @@ export type GetCountriesQueryHookResult = ReturnType<
 export type GetCountriesLazyQueryHookResult = ReturnType<
   typeof useGetCountriesLazyQuery
 >;
-export type GetCountriesQueryResult = ApolloReactCommon.QueryResult<
+export type GetCountriesQueryResult = QueryResult<
   GetCountriesQuery,
   GetCountriesQueryVariables
 >;
@@ -190,26 +191,26 @@ export const GetCurrenciesDocument = gql`
  * });
  */
 export function useGetCurrenciesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: QueryHookOptions<
     GetCurrenciesQuery,
     GetCurrenciesQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetCurrenciesQuery,
-    GetCurrenciesQueryVariables
-  >(GetCurrenciesDocument, baseOptions);
+  return useQuery<GetCurrenciesQuery, GetCurrenciesQueryVariables>(
+    GetCurrenciesDocument,
+    baseOptions
+  );
 }
 export function useGetCurrenciesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetCurrenciesQuery,
     GetCurrenciesQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetCurrenciesQuery,
-    GetCurrenciesQueryVariables
-  >(GetCurrenciesDocument, baseOptions);
+  return useLazyQuery<GetCurrenciesQuery, GetCurrenciesQueryVariables>(
+    GetCurrenciesDocument,
+    baseOptions
+  );
 }
 export type GetCurrenciesQueryHookResult = ReturnType<
   typeof useGetCurrenciesQuery
@@ -217,7 +218,7 @@ export type GetCurrenciesQueryHookResult = ReturnType<
 export type GetCurrenciesLazyQueryHookResult = ReturnType<
   typeof useGetCurrenciesLazyQuery
 >;
-export type GetCurrenciesQueryResult = ApolloReactCommon.QueryResult<
+export type GetCurrenciesQueryResult = QueryResult<
   GetCurrenciesQuery,
   GetCurrenciesQueryVariables
 >;
@@ -286,23 +287,17 @@ export const GetOffersDocument = gql`
  * });
  */
 export function useGetOffersQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetOffersQuery,
-    GetOffersQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetOffersQuery, GetOffersQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetOffersQuery, GetOffersQueryVariables>(
+  return useQuery<GetOffersQuery, GetOffersQueryVariables>(
     GetOffersDocument,
     baseOptions
   );
 }
 export function useGetOffersLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetOffersQuery,
-    GetOffersQueryVariables
-  >
+  baseOptions?: LazyQueryHookOptions<GetOffersQuery, GetOffersQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<GetOffersQuery, GetOffersQueryVariables>(
+  return useLazyQuery<GetOffersQuery, GetOffersQueryVariables>(
     GetOffersDocument,
     baseOptions
   );
@@ -311,7 +306,7 @@ export type GetOffersQueryHookResult = ReturnType<typeof useGetOffersQuery>;
 export type GetOffersLazyQueryHookResult = ReturnType<
   typeof useGetOffersLazyQuery
 >;
-export type GetOffersQueryResult = ApolloReactCommon.QueryResult<
+export type GetOffersQueryResult = QueryResult<
   GetOffersQuery,
   GetOffersQueryVariables
 >;

@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { useGetOffersQuery } from 'src/graphql/hodlhodl/__generated__/query.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
 import getConfig from 'next/config';
 import { HodlOfferType } from 'src/graphql/types';
 import {
@@ -169,4 +168,4 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;

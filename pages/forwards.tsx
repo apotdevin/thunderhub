@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
 import { ForwardType } from 'src/graphql/types';
 import {
   SubTitle,
@@ -85,4 +84,4 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;
