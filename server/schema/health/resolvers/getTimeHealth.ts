@@ -7,7 +7,7 @@ import { getAverage } from '../helpers';
 
 const halfMonthInMilliSeconds = 1296000000;
 
-export default async (_: undefined, params: any, context: ContextType) => {
+export default async (_: undefined, __: any, context: ContextType) => {
   await requestLimiter(context.ip, 'getTimeHealth');
 
   const { lnd } = context;

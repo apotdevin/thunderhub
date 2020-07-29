@@ -18,7 +18,7 @@ type AccountType = {
   network?: BitcoinNetwork;
   macaroonPath?: string;
   certificatePath?: string;
-  password?: string;
+  password?: string | null;
   macaroon?: string;
   certificate?: string;
 };
@@ -117,7 +117,7 @@ export const hashPasswords = (
 
   const cloned = { ...config };
 
-  let hashedMasterPassword = config?.masterPassword || '';
+  let hashedMasterPassword = config?.masterPassword;
 
   if (
     hashedMasterPassword &&

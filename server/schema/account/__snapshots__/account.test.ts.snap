@@ -6,15 +6,9 @@ Object {
     "getServerAccounts": Array [
       Object {
         "id": "accountID",
-        "loggedIn": true,
+        "loggedIn": false,
         "name": "account",
         "type": "server",
-      },
-      Object {
-        "id": "sso",
-        "loggedIn": true,
-        "name": "SSO Account",
-        "type": "sso",
       },
     ],
   },
@@ -34,7 +28,7 @@ Object {
     "getServerAccounts": Array [
       Object {
         "id": "accountID",
-        "loggedIn": true,
+        "loggedIn": false,
         "name": "account",
         "type": "server",
       },
@@ -56,7 +50,7 @@ Object {
     "getServerAccounts": Array [
       Object {
         "id": "accountID",
-        "loggedIn": true,
+        "loggedIn": false,
         "name": "account",
         "type": "server",
       },
