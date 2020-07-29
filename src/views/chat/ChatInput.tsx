@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useSendMessageMutation } from 'src/graphql/mutations/__generated__/sendMessage.generated';
 import { useMutationResultWithReset } from 'src/hooks/UseMutationWithReset';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
+import { useAccount } from 'src/hooks/UseAccount';
 import { Input } from '../../components/input/Input';
 import { SingleLine } from '../../components/generic/Styled';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
@@ -25,8 +26,7 @@ export const ChatInput = ({
   const { sender } = useChatState();
   const dispatch = useChatDispatch();
 
-  // TODO: Get correct account
-  const account = { id: 'testing' };
+  const account = useAccount();
 
   const [sendMessage, { loading, data: _data }] = useSendMessageMutation({
     onError: error => toast.error(getErrorContent(error)),

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useGetBackupsLazyQuery } from 'src/graphql/queries/__generated__/getBackups.generated';
+import { useAccount } from 'src/hooks/UseAccount';
 import { DarkSubTitle, SingleLine } from '../../../components/generic/Styled';
 import { saveToPc } from '../../../utils/helpers';
 import { getErrorContent } from '../../../utils/error';
@@ -11,8 +12,7 @@ export const DownloadBackups = () => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  // TODO: Get correct account;
-  const account = { id: 'testing', name: 'testing' };
+  const account = useAccount();
 
   useEffect(() => {
     if (account && !loading && data && data.getBackups) {

@@ -3,6 +3,7 @@ import { LogOut } from 'react-feather';
 import { useRouter } from 'next/router';
 import { chartColors } from 'src/styles/Themes';
 import { useLogoutMutation } from 'src/graphql/mutations/__generated__/logout.generated';
+import { useAccounts, useAccount } from 'src/hooks/UseAccount';
 import {
   CardWithTitle,
   SubTitle,
@@ -29,9 +30,8 @@ export const AccountSettings = () => {
     refetchQueries: ['GetServerAccounts'],
   });
 
-  // TODO: Get accounts from server
-  const accounts = [{ name: 'test', id: 'testing', type: 'testing' }];
-  const account = { name: 'test', id: 'testing', type: 'testing' };
+  const accounts = useAccounts();
+  const account = useAccount();
 
   useEffect(() => {
     if (data && data.logout) {
@@ -60,26 +60,11 @@ export const AccountSettings = () => {
                 key={accountId}
                 selected={accountId === account.id}
                 onClick={() => {
-                  // TODO: Do correct click handling
-                  // if (accountId !== account.id) {
-                  //   switch (accountType) {
-                  //     case 'sso':
-                  //       dispatchAccount({
-                  //         type: 'changeAccount',
-                  //         changeId: accountId,
-                  //       });
-                  //       break;
-                  //     default:
-                  //       dispatch({ type: 'disconnected' });
-                  //       dispatchChat({ type: 'disconnected' });
-                  //       dispatchAccount({
-                  //         type: 'changeAccount',
-                  //         changeId: accountId,
-                  //       });
-                  //       push(appendBasePath('/'));
-                  //       break;
-                  //   }
-                  // }
+                  if (accountId !== account.id) {
+                    dispatch({ type: 'disconnected' });
+                    dispatchChat({ type: 'disconnected' });
+                    push(appendBasePath('/'));
+                  }
                 }}
               >
                 {accountName}

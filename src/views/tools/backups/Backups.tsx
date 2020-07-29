@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAccount } from 'src/hooks/UseAccount';
 import {
   CardWithTitle,
   CardTitle,
@@ -17,8 +18,7 @@ import { RecoverFunds } from './RecoverFunds';
 export const BackupsView = () => {
   const [lastDate, setLastDate] = useState('');
 
-  // TODO: Get correct account
-  const account = { id: 'testing' };
+  const account = useAccount();
 
   useEffect(() => {
     if (account) {

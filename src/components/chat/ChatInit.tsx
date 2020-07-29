@@ -2,6 +2,7 @@ import * as React from 'react';
 import { toast } from 'react-toastify';
 import { useGetMessagesLazyQuery } from 'src/graphql/queries/__generated__/getMessages.generated';
 import { MessagesType } from 'src/graphql/types';
+import { useAccount } from 'src/hooks/UseAccount';
 import { useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 
@@ -16,8 +17,7 @@ export const ChatInit: React.FC = () => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  // TODO: get current account from the server
-  const account = { id: 'testing' };
+  const account = useAccount();
 
   React.useEffect(() => {
     if (account) {

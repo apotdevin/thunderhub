@@ -63,7 +63,11 @@ export const Accounts = () => {
   }, [data, loading, push, dispatchStatus]);
 
   if (loadingData) {
-    return <LoadingCard />;
+    return (
+      <Section color={'transparent'}>
+        <LoadingCard />
+      </Section>
+    );
   }
 
   if (!accountData?.getServerAccounts?.length) {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useGetNodeLazyQuery } from 'src/graphql/queries/__generated__/getNode.generated';
+import { useAccount } from 'src/hooks/UseAccount';
 import {
   useChatDispatch,
   useChatState,
@@ -39,8 +40,7 @@ export const ContactCard = ({
   const dispatch = useChatDispatch();
   const [nodeName, setNodeName] = React.useState(alias || '');
 
-  // TODO: Get correct account
-  const account = { id: 'testing' };
+  const account = useAccount();
 
   const [getInfo, { data, loading }] = useGetNodeLazyQuery({
     variables: { publicKey: contactSender || '' },
