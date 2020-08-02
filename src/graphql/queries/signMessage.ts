@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const SIGN_MESSAGE = gql`
   query SignMessage($message: String!) {

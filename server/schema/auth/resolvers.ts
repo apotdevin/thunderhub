@@ -54,6 +54,7 @@ export const authResolvers = {
           cookie.serialize(appConstants.cookieName, token, {
             httpOnly: true,
             sameSite: true,
+            path: '/',
           })
         );
         return true;
@@ -92,6 +93,7 @@ export const authResolvers = {
         cookie.serialize(appConstants.cookieName, token, {
           httpOnly: true,
           sameSite: true,
+          path: '/',
         })
       );
       return true;

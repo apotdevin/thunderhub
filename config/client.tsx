@@ -1,4 +1,5 @@
 /* eslint @typescript-eslint/no-var-requires: 0 */
+import { IncomingMessage, ServerResponse } from 'http';
 import { useMemo } from 'react';
 import {
   ApolloClient,
@@ -12,11 +13,15 @@ const { apiUrl: uri } = publicRuntimeConfig;
 
 let apolloClient: ReturnType<typeof createApolloClient> | null = null;
 
-function createIsomorphLink() {
+function createIsomorphLink(req?: IncomingMessage, res?: ServerResponse) {
   if (typeof window === 'undefined') {
     const { SchemaLink } = require('@apollo/client/link/schema');
     const { schema } = require('server/schema');
-    return new SchemaLink({ schema });
+    const { getContext } = require('server/schema/context');
+    return new SchemaLink({
+      schema,
+      context: req && res ? getContext(req, res) : {},
+    });
   } else {
     const { HttpLink } = require('@apollo/client/link/http');
     return new HttpLink({
@@ -26,10 +31,11 @@ function createIsomorphLink() {
   }
 }
 
-function createApolloClient() {
+function createApolloClient(req?: IncomingMessage, res?: ServerResponse) {
   return new ApolloClient({
+    credentials: 'same-origin',
     ssrMode: typeof window === 'undefined',
-    link: createIsomorphLink(),
+    link: createIsomorphLink(req, res),
     cache: new InMemoryCache({
       possibleTypes: { Transaction: ['InvoiceType', 'PaymentType'] },
     }),
@@ -37,9 +43,11 @@ function createApolloClient() {
 }
 
 export function initializeApollo(
-  initialState: NormalizedCacheObject | null = null
+  initialState: NormalizedCacheObject | null = null,
+  req?: IncomingMessage,
+  res?: ServerResponse
 ) {
-  const _apolloClient = apolloClient ?? createApolloClient();
+  const _apolloClient = apolloClient ?? createApolloClient(req, res);
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // get hydrated here

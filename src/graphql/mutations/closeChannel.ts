@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const CLOSE_CHANNEL = gql`
   mutation CloseChannel(

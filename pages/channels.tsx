@@ -6,6 +6,8 @@ import { IconCursor } from 'src/views/channels/channels/Channel.style';
 import { ChannelManage } from 'src/views/channels/channels/ChannelManage';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { NextPageContext } from 'next';
+import { initializeApollo } from 'config/client';
+import { GET_CHANNELS } from 'src/graphql/queries/getChannels';
 import { Channels } from '../src/views/channels/channels/Channels';
 import { PendingChannels } from '../src/views/channels/pendingChannels/PendingChannels';
 import { ClosedChannels } from '../src/views/channels/closedChannels/ClosedChannels';
@@ -117,5 +119,17 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return cookieProps(context);
+  const { props } = cookieProps(context);
+  const apolloClient = initializeApollo(undefined, context.req, context.res);
+
+  await apolloClient.query({
+    query: GET_CHANNELS,
+  });
+
+  return {
+    props: {
+      initialApolloState: apolloClient.cache.extract(),
+      ...props,
+    },
+  };
 }

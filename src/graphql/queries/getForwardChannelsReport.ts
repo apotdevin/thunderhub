@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const GET_FORWARD_CHANNELS_REPORT = gql`
   query GetForwardChannelsReport($time: String, $order: String, $type: String) {

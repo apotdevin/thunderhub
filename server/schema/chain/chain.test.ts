@@ -1,6 +1,5 @@
-import { AuthMock } from 'server/tests/testMocks';
 import testServer from 'server/tests/testServer';
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 jest.mock('ln-service');
 
@@ -14,7 +13,6 @@ describe('Chain Resolvers', () => {
     const { query } = testServer();
     const res = await query({
       query: getChainBalance,
-      variables: AuthMock,
     });
     expect(res.errors).toBe(undefined);
     expect(res).toMatchSnapshot();
@@ -28,7 +26,6 @@ describe('Chain Resolvers', () => {
     const { query } = testServer();
     const res = await query({
       query: getPendingChainBalance,
-      variables: AuthMock,
     });
     expect(res.errors).toBe(undefined);
     expect(res).toMatchSnapshot();
