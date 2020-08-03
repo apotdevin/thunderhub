@@ -10,6 +10,7 @@ import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { GET_RESUME } from 'src/graphql/queries/getResume';
+import { GET_IN_OUT } from 'src/graphql/queries/getInOut';
 import {
   Card,
   CardWithTitle,
@@ -125,5 +126,8 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context, [GET_RESUME]);
+  return await getProps(context, [
+    GET_RESUME,
+    { document: GET_IN_OUT, variables: { time: 'month' } },
+  ]);
 }

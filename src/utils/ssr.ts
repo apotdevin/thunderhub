@@ -13,18 +13,39 @@ const themeProp = (context: NextPageContext): string => {
   return 'dark';
 };
 
+type QueryProps = {
+  document: DocumentNode;
+  variables: {};
+};
+
+const isNotDocumentNode = (
+  toBeDetermined: DocumentNode | QueryProps
+): toBeDetermined is QueryProps => {
+  if ((toBeDetermined as QueryProps).document) {
+    return true;
+  }
+  return false;
+};
+
 export const getProps = async (
   context: NextPageContext,
-  queries?: DocumentNode[]
+  queries?: (DocumentNode | QueryProps)[]
 ) => {
   const theme = themeProp(context);
   const apolloClient = initializeApollo(undefined, context.req, context.res);
 
   if (queries?.length) {
     for (const query of queries) {
-      await apolloClient.query({
-        query,
-      });
+      if (isNotDocumentNode(query)) {
+        await apolloClient.query({
+          query: query.document,
+          variables: query.variables,
+        });
+      } else {
+        await apolloClient.query({
+          query,
+        });
+      }
     }
   } else {
     return {
