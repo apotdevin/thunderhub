@@ -72,9 +72,6 @@ export type Query = {
   getPendingChainBalance?: Maybe<Scalars['Int']>;
   getChainTransactions?: Maybe<Array<Maybe<GetTransactionsType>>>;
   getUtxos?: Maybe<Array<Maybe<GetUtxosType>>>;
-  getOffers?: Maybe<Array<Maybe<HodlOfferType>>>;
-  getCountries?: Maybe<Array<Maybe<HodlCountryType>>>;
-  getCurrencies?: Maybe<Array<Maybe<HodlCurrencyType>>>;
   getMessages?: Maybe<GetMessagesType>;
   getAuthToken?: Maybe<Scalars['Boolean']>;
   getSessionToken?: Maybe<Scalars['Boolean']>;
@@ -341,78 +338,6 @@ export type ServerAccountType = {
   id: Scalars['String'];
   type: Scalars['String'];
   loggedIn: Scalars['Boolean'];
-};
-
-export type HodlCountryType = {
-  __typename?: 'hodlCountryType';
-  code?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  native_name?: Maybe<Scalars['String']>;
-  currency_code?: Maybe<Scalars['String']>;
-  currency_name?: Maybe<Scalars['String']>;
-};
-
-export type HodlCurrencyType = {
-  __typename?: 'hodlCurrencyType';
-  code?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-export type HodlOfferFeeType = {
-  __typename?: 'hodlOfferFeeType';
-  author_fee_rate?: Maybe<Scalars['String']>;
-};
-
-export type HodlOfferPaymentType = {
-  __typename?: 'hodlOfferPaymentType';
-  id?: Maybe<Scalars['String']>;
-  version?: Maybe<Scalars['String']>;
-  payment_method_id?: Maybe<Scalars['String']>;
-  payment_method_type?: Maybe<Scalars['String']>;
-  payment_method_name?: Maybe<Scalars['String']>;
-};
-
-export type HodlOfferTraderType = {
-  __typename?: 'hodlOfferTraderType';
-  login?: Maybe<Scalars['String']>;
-  online_status?: Maybe<Scalars['String']>;
-  rating?: Maybe<Scalars['String']>;
-  trades_count?: Maybe<Scalars['Int']>;
-  url?: Maybe<Scalars['String']>;
-  verified?: Maybe<Scalars['Boolean']>;
-  verified_by?: Maybe<Scalars['String']>;
-  strong_hodler?: Maybe<Scalars['Boolean']>;
-  country?: Maybe<Scalars['String']>;
-  country_code?: Maybe<Scalars['String']>;
-  average_payment_time_minutes?: Maybe<Scalars['Int']>;
-  average_release_time_minutes?: Maybe<Scalars['Int']>;
-  days_since_last_trade?: Maybe<Scalars['Int']>;
-};
-
-export type HodlOfferType = {
-  __typename?: 'hodlOfferType';
-  id?: Maybe<Scalars['String']>;
-  version?: Maybe<Scalars['String']>;
-  asset_code?: Maybe<Scalars['String']>;
-  searchable?: Maybe<Scalars['Boolean']>;
-  country?: Maybe<Scalars['String']>;
-  country_code?: Maybe<Scalars['String']>;
-  working_now?: Maybe<Scalars['Boolean']>;
-  side?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  currency_code?: Maybe<Scalars['String']>;
-  price?: Maybe<Scalars['String']>;
-  min_amount?: Maybe<Scalars['String']>;
-  max_amount?: Maybe<Scalars['String']>;
-  first_trade_limit?: Maybe<Scalars['String']>;
-  fee?: Maybe<HodlOfferFeeType>;
-  balance?: Maybe<Scalars['String']>;
-  payment_window_minutes?: Maybe<Scalars['Int']>;
-  confirmations?: Maybe<Scalars['Int']>;
-  payment_method_instructions?: Maybe<Array<Maybe<HodlOfferPaymentType>>>;
-  trader?: Maybe<HodlOfferTraderType>;
 };
 
 export type LnPayInfoType = {
