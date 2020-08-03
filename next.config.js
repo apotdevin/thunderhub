@@ -9,7 +9,6 @@ module.exports = withBundleAnalyzer({
   serverRuntimeConfig: {
     nodeEnv: process.env.NODE_ENV || 'development',
     logLevel: process.env.LOG_LEVEL || 'info',
-    hodlKey: process.env.HODL_KEY || '',
     cookiePath: process.env.COOKIE_PATH || '',
     lnServerUrl: process.env.SSO_SERVER_URL || '',
     lnCertPath: process.env.SSO_CERT_PATH || '',
@@ -26,7 +25,6 @@ module.exports = withBundleAnalyzer({
     defaultCurrency: process.env.CURRENCY || 'sat',
     fetchPrices: process.env.FETCH_PRICES === 'false' ? false : true,
     fetchFees: process.env.FETCH_FEES === 'false' ? false : true,
-    hodlhodl: process.env.HODL_HODL === 'false' ? false : true,
     disableLinks: process.env.DISABLE_LINKS === 'true' ? true : false,
     noVersionCheck: process.env.NO_VERSION_CHECK === 'true' ? true : false,
   },

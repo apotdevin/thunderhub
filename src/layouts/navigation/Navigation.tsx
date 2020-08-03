@@ -11,7 +11,6 @@ import {
   Link as LinkIcon,
   Repeat,
   Users,
-  CreditCard,
   MessageCircle,
   BarChart2,
   Icon,
@@ -122,7 +121,6 @@ const CHAIN_TRANS = '/chain';
 const TOOLS = '/tools';
 const DETAILS = '/details';
 const STATS = '/stats';
-const TRADER = '/trading';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
 
@@ -190,7 +188,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Stats', STATS, BarChart2)}
-      {renderBurgerNav('Trading', TRADER, CreditCard)}
       {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}
     </BurgerRow>

@@ -6,12 +6,9 @@
   "scripts": {
     "bs": "yarn build && yarn start",
     "dev": "next",
-    "dev:compatible": "next",
     "build": "next build",
     "start": "next start",
     "start:two": "next start -p 3001",
-    "start:compatible": "next start",
-    "start:compatible:two": "next start -p 3001",
     "start:cookie": "sh ./scripts/initCookie.sh",
     "lint": "eslint . --ext ts --ext tsx --ext js",
     "format": "prettier --write \"**/*.{js,ts,tsx}\"",
@@ -19,7 +16,7 @@
     "release:push": "standard-version --sign && git push --follow-tags origin master",
     "release:test": "standard-version --sign --dry-run",
     "release:minor": "standard-version --sign --release-as minor && git push --follow-tags origin master",
-    "analyze": "cross-env ANALYZE=true next build",
+    "analyze": "npx cross-env ANALYZE=true next build",
     "generate": "graphql-codegen --config codegen.yml && yarn format",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -38,6 +35,8 @@
   "license": "MIT",
   "dependencies": {
     "@apollo/client": "^3.1.1",
+    "@next/bundle-analyzer": "^9.4.4",
+    "@types/react": "^16.9.43",
     "apollo-server-micro": "^2.15.1",
     "balanceofsatoshis": "^5.40.2",
     "bcryptjs": "^2.4.3",
@@ -71,6 +70,7 @@
     "styled-components": "^5.1.1",
     "styled-react-modal": "^2.0.1",
     "styled-theming": "^2.2.0",
+    "typescript": "^3.9.6",
     "underscore": "^1.10.2",
     "uuid": "^8.2.0",
     "victory": "^35.0.3",
@@ -88,7 +88,6 @@
     "@graphql-codegen/typescript-operations": "^1.17.0",
     "@graphql-codegen/typescript-react-apollo": "^1.17.0",
     "@graphql-codegen/typescript-resolvers": "^1.17.0",
-    "@next/bundle-analyzer": "^9.4.4",
     "@testing-library/jest-dom": "^5.11.0",
     "@testing-library/react": "^10.4.5",
     "@types/bcryptjs": "^2.4.2",
@@ -104,7 +103,6 @@
     "@types/node": "^14.0.22",
     "@types/numeral": "0.0.28",
     "@types/qrcode.react": "^1.0.1",
-    "@types/react": "^16.9.43",
     "@types/react-copy-to-clipboard": "^4.3.0",
     "@types/styled-components": "^5.1.1",
     "@types/styled-react-modal": "^1.2.0",
@@ -120,7 +118,6 @@
     "babel-plugin-inline-react-svg": "^1.1.1",
     "babel-plugin-styled-components": "^1.10.7",
     "babel-preset-react-app": "^9.1.2",
-    "cross-env": "^7.0.2",
     "devmoji": "^2.1.9",
     "eslint": "^7.4.0",
     "eslint-config-prettier": "^6.11.0",
@@ -135,8 +132,7 @@
     "jest-fetch-mock": "^3.0.3",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
-    "standard-version": "^8.0.2",
-    "typescript": "^3.9.6"
+    "standard-version": "^8.0.2"
   },
   "husky": {
     "hooks": {
