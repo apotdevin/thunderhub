@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetInOutQuery } from 'src/graphql/queries/__generated__/getInOut.generated';
 import {
   CardWithTitle,
@@ -77,10 +76,8 @@ export const FlowBox = () => {
   const [isTime, setIsTime] = useState<ReportDuration>('month');
   const [isType, setIsType] = useState<FlowReportType>('amount');
 
-  const { auth } = useAccountState();
   const { data, loading } = useGetInOutQuery({
-    skip: !auth,
-    variables: { time: isTime, auth },
+    variables: { time: isTime },
     onError: error => toast.error(getErrorContent(error)),
   });
 

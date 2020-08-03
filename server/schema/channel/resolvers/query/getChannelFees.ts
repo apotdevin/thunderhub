@@ -1,7 +1,6 @@
 import { getChannels, getWalletInfo } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getLnd } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
 
 interface GetChannelsProps {
@@ -37,7 +36,7 @@ export const getChannelFees = async (
 ) => {
   await requestLimiter(context.ip, 'channelFees');
 
-  const lnd = getLnd(params.auth, context);
+  const { lnd } = context;
 
   const { public_key } = await to(getWalletInfo({ lnd }));
   const { channels }: GetChannelsProps = await to(getChannels({ lnd }));

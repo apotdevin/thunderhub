@@ -4,9 +4,9 @@ import path from 'path';
 import os from 'os';
 import { logger } from 'server/helpers/logger';
 import yaml from 'js-yaml';
-import { getUUID } from 'src/utils/auth';
 import bcrypt from 'bcryptjs';
 import { AccountType as ContextAccountType } from 'server/types/apiTypes';
+import { getUUID } from './auth';
 
 type EncodingType = 'hex' | 'utf-8';
 type BitcoinNetwork = 'mainnet' | 'regtest' | 'testnet';
@@ -18,14 +18,14 @@ type AccountType = {
   network?: BitcoinNetwork;
   macaroonPath?: string;
   certificatePath?: string;
-  password?: string;
+  password?: string | null;
   macaroon?: string;
   certificate?: string;
 };
 type ParsedAccount = {
   name: string;
   id: string;
-  host: string;
+  socket: string;
   macaroon: string;
   cert: string;
   password: string;
@@ -117,7 +117,7 @@ export const hashPasswords = (
 
   const cloned = { ...config };
 
-  let hashedMasterPassword = config?.masterPassword || '';
+  let hashedMasterPassword = config?.masterPassword;
 
   if (
     hashedMasterPassword &&
@@ -283,7 +283,7 @@ export const getParsedAccount = (
   return {
     name: name || '',
     id,
-    host: serverUrl || '',
+    socket: serverUrl || '',
     macaroon,
     cert: cert || '',
     password: password || masterPassword || '',

@@ -8,7 +8,6 @@ import {
   VictoryTooltip,
 } from 'victory';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetForwardReportQuery } from 'src/graphql/queries/__generated__/getForwardReport.generated';
 import { renderLine } from 'src/components/generic/helpers';
 import {
@@ -52,11 +51,8 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  const { auth } = useAccountState();
-
   const { data, loading } = useGetForwardReportQuery({
-    skip: !auth,
-    variables: { time: isTime, auth },
+    variables: { time: isTime },
     onError: error => toast.error(getErrorContent(error)),
   });
 

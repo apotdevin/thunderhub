@@ -28,7 +28,6 @@ import { getPercent } from '../../utils/helpers';
 import { useConfigState } from '../../context/ConfigContext';
 import { usePriceState } from '../../context/PriceContext';
 import { getPrice } from '../../components/price/Price';
-import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import Modal from '../../components/modal/ReactModal';
 import { RemovePeerModal } from '../../components/modal/removePeer/RemovePeer';
@@ -112,18 +111,16 @@ export const PeersCard = ({
             'Last Update:',
             `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
           )}
-        <AdminSwitch>
-          <Separation />
-          <RightAlign>
-            <ColorButton
-              withBorder={true}
-              arrow={true}
-              onClick={() => setModalOpen(true)}
-            >
-              Remove Peer
-            </ColorButton>
-          </RightAlign>
-        </AdminSwitch>
+        <Separation />
+        <RightAlign>
+          <ColorButton
+            withBorder={true}
+            arrow={true}
+            onClick={() => setModalOpen(true)}
+          >
+            Remove Peer
+          </ColorButton>
+        </RightAlign>
       </>
     );
   };

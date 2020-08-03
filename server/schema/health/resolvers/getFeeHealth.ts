@@ -1,5 +1,4 @@
 import { getChannels, getChannel, getWalletInfo } from 'ln-service';
-import { getCorrectAuth, getAuthLnd } from 'server/helpers/helpers';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { to, toWithError } from 'server/helpers/async';
 import { logger } from 'server/helpers/logger';
@@ -19,8 +18,7 @@ type ChannelFeesType = {
 export default async (_: undefined, params: any, context: ContextType) => {
   await requestLimiter(context.ip, 'getFeeHealth');
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const { lnd } = context;
 
   const { public_key } = await to(getWalletInfo({ lnd }));
   const { channels } = await to<GetChannelsType>(getChannels({ lnd }));

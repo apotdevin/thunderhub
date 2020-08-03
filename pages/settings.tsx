@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
+import { NextPageContext } from 'next';
+import { getProps } from 'src/utils/ssr';
 import { SingleLine } from '../src/components/generic/Styled';
 import { InterfaceSettings } from '../src/views/settings/Interface';
 import { AccountSettings } from '../src/views/settings/Account';
 import { DangerView } from '../src/views/settings/Danger';
-import { CurrentSettings } from '../src/views/settings/Current';
 import { ChatSettings } from '../src/views/settings/Chat';
 import { PrivacySettings } from '../src/views/settings/Privacy';
 
@@ -25,7 +25,6 @@ const SettingsView = () => {
       <InterfaceSettings />
       <PrivacySettings />
       <ChatSettings />
-      <CurrentSettings />
       <AccountSettings />
       <DangerView />
     </>
@@ -38,4 +37,8 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return await getProps(context);
+}

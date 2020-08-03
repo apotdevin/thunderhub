@@ -18,7 +18,6 @@ import { PermissionsType } from 'server/schema/macaroon/resolvers';
 import { useCreateMacaroonMutation } from 'src/graphql/mutations/__generated__/createMacaroon.generated';
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
-import { SecureButton } from 'src/components/buttons/secureButton/SecureButton';
 import { useMutationResultWithReset } from 'src/hooks/UseMutationWithReset';
 import Modal from 'src/components/modal/ReactModal';
 import { shorten } from 'src/components/generic/helpers';
@@ -127,16 +126,15 @@ export const Bakery = () => {
       {renderLine('Stop Daemon', 'is_ok_to_stop_daemon')}
       {renderLine('Verify bytes signature', 'is_ok_to_verify_bytes_signatures')}
       {renderLine('Verify messages', 'is_ok_to_verify_messages')}
-      <SecureButton
+      <ColorButton
         fullWidth={true}
         withMargin={'16px 0 0'}
-        callback={bake}
-        variables={{ permissions }}
+        onClick={() => bake({ variables: { permissions } })}
         disabled={loading || !hasATrue}
         loading={loading}
       >
         Bake new macaroon
-      </SecureButton>
+      </ColorButton>
     </>
   );
 

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
-import { ApolloError } from 'apollo-client';
+import { ApolloError } from '@apollo/client';
 
 const getMessage = (error: string) => {
   switch (error) {

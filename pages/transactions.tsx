@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { InvoiceCard } from 'src/views/transactions/InvoiceCard';
 import {
   useGetResumeQuery,
   GetResumeQuery,
 } from 'src/graphql/queries/__generated__/getResume.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
+
+import { NextPageContext } from 'next';
+import { getProps } from 'src/utils/ssr';
+import { GET_RESUME } from 'src/graphql/queries/getResume';
+import { GET_IN_OUT } from 'src/graphql/queries/getInOut';
 import {
   Card,
   CardWithTitle,
@@ -23,11 +26,8 @@ const TransactionsView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
   const [token, setToken] = useState('');
 
-  const { auth } = useAccountState();
-
   const { loading, data, fetchMore } = useGetResumeQuery({
-    skip: !auth,
-    variables: { auth, token: '' },
+    variables: { token: '' },
     onError: error => toast.error(getErrorContent(error)),
   });
 
@@ -82,7 +82,7 @@ const TransactionsView = () => {
             withMargin={'16px 0 0'}
             onClick={() => {
               fetchMore({
-                variables: { auth, token },
+                variables: { token },
                 updateQuery: (
                   prev,
                   { fetchMoreResult }: { fetchMoreResult?: GetResumeQuery }
@@ -123,4 +123,11 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return await getProps(context, [
+    GET_RESUME,
+    { document: GET_IN_OUT, variables: { time: 'month' } },
+  ]);
+}

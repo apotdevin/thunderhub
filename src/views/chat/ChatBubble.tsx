@@ -3,16 +3,15 @@ import { ThemeSet } from 'styled-theming';
 import { toast } from 'react-toastify';
 import { Circle } from 'react-feather';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import { useAccountState } from 'src/context/AccountContext';
 import { useSendMessageMutation } from 'src/graphql/mutations/__generated__/sendMessage.generated';
 import { useMutationResultWithReset } from 'src/hooks/UseMutationWithReset';
+import { useAccount } from 'src/hooks/UseAccount';
 import {
   chatBubbleColor,
   chatSentBubbleColor,
   chartColors,
 } from '../../styles/Themes';
 import { getErrorContent } from '../../utils/error';
-import { SecureWrapper } from '../../components/buttons/secureButton/SecureWrapper';
 import {
   useChatState,
   useChatDispatch,
@@ -36,7 +35,8 @@ const SendButton = ({ amount }: SendButtonProps) => {
   const { maxFee } = useConfigState();
   const { sender } = useChatState();
   const dispatch = useChatDispatch();
-  const { account } = useAccountState();
+
+  const account = useAccount();
 
   const [sendMessage, { loading, data: _data }] = useSendMessageMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -66,21 +66,21 @@ const SendButton = ({ amount }: SendButtonProps) => {
   }, [loading, data, amount, dispatch, sender, account, resetMutationResult]);
 
   return (
-    <SecureWrapper
-      color={'red'}
-      callback={sendMessage}
-      variables={{
-        message: 'payment',
-        messageType: 'payment',
-        publicKey: sender,
-        tokens: amount,
-        maxFee,
-      }}
+    <ChatSendButton
+      onClick={() =>
+        sendMessage({
+          variables: {
+            message: 'payment',
+            messageType: 'payment',
+            publicKey: sender,
+            tokens: amount,
+            maxFee,
+          },
+        })
+      }
     >
-      <ChatSendButton>
-        {loading ? <ScaleLoader height={8} color={'white'} width={2} /> : 'Pay'}
-      </ChatSendButton>
-    </SecureWrapper>
+      {loading ? <ScaleLoader height={8} color={'white'} width={2} /> : 'Pay'}
+    </ChatSendButton>
   );
 };
 

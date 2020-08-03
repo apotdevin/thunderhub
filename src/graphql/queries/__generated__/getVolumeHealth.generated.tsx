@@ -1,10 +1,15 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
 
 export type GetVolumeHealthQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetVolumeHealthQuery = { __typename?: 'Query' } & {
@@ -34,8 +39,8 @@ export type GetVolumeHealthQuery = { __typename?: 'Query' } & {
 };
 
 export const GetVolumeHealthDocument = gql`
-  query GetVolumeHealth($auth: authType!) {
-    getVolumeHealth(auth: $auth) {
+  query GetVolumeHealth {
+    getVolumeHealth {
       score
       channels {
         id
@@ -64,31 +69,30 @@ export const GetVolumeHealthDocument = gql`
  * @example
  * const { data, loading, error } = useGetVolumeHealthQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetVolumeHealthQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: QueryHookOptions<
     GetVolumeHealthQuery,
     GetVolumeHealthQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetVolumeHealthQuery,
-    GetVolumeHealthQueryVariables
-  >(GetVolumeHealthDocument, baseOptions);
+  return useQuery<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>(
+    GetVolumeHealthDocument,
+    baseOptions
+  );
 }
 export function useGetVolumeHealthLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetVolumeHealthQuery,
     GetVolumeHealthQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetVolumeHealthQuery,
-    GetVolumeHealthQueryVariables
-  >(GetVolumeHealthDocument, baseOptions);
+  return useLazyQuery<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>(
+    GetVolumeHealthDocument,
+    baseOptions
+  );
 }
 export type GetVolumeHealthQueryHookResult = ReturnType<
   typeof useGetVolumeHealthQuery
@@ -96,7 +100,7 @@ export type GetVolumeHealthQueryHookResult = ReturnType<
 export type GetVolumeHealthLazyQueryHookResult = ReturnType<
   typeof useGetVolumeHealthLazyQuery
 >;
-export type GetVolumeHealthQueryResult = ApolloReactCommon.QueryResult<
+export type GetVolumeHealthQueryResult = QueryResult<
   GetVolumeHealthQuery,
   GetVolumeHealthQueryVariables
 >;

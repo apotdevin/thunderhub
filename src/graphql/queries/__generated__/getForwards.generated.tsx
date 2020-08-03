@@ -1,10 +1,14 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
 
 export type GetForwardsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   time?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
@@ -73,8 +77,8 @@ export type GetForwardsQuery = { __typename?: 'Query' } & {
 };
 
 export const GetForwardsDocument = gql`
-  query GetForwards($auth: authType!, $time: String) {
-    getForwards(auth: $auth, time: $time) {
+  query GetForwards($time: String) {
+    getForwards(time: $time) {
       forwards {
         created_at
         fee
@@ -125,38 +129,34 @@ export const GetForwardsDocument = gql`
  * @example
  * const { data, loading, error } = useGetForwardsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      time: // value for 'time'
  *   },
  * });
  */
 export function useGetForwardsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetForwardsQuery,
-    GetForwardsQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetForwardsQuery, GetForwardsQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetForwardsQuery, GetForwardsQueryVariables>(
+  return useQuery<GetForwardsQuery, GetForwardsQueryVariables>(
     GetForwardsDocument,
     baseOptions
   );
 }
 export function useGetForwardsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetForwardsQuery,
     GetForwardsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetForwardsQuery,
-    GetForwardsQueryVariables
-  >(GetForwardsDocument, baseOptions);
+  return useLazyQuery<GetForwardsQuery, GetForwardsQueryVariables>(
+    GetForwardsDocument,
+    baseOptions
+  );
 }
 export type GetForwardsQueryHookResult = ReturnType<typeof useGetForwardsQuery>;
 export type GetForwardsLazyQueryHookResult = ReturnType<
   typeof useGetForwardsLazyQuery
 >;
-export type GetForwardsQueryResult = ApolloReactCommon.QueryResult<
+export type GetForwardsQueryResult = QueryResult<
   GetForwardsQuery,
   GetForwardsQueryVariables
 >;

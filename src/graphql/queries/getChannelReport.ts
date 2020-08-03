@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const GET_LIQUID_REPORT = gql`
-  query GetLiquidReport($auth: authType!) {
-    getChannelReport(auth: $auth) {
+  query GetLiquidReport {
+    getChannelReport {
       local
       remote
       maxIn

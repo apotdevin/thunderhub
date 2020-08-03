@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { useDecodeRequestQuery } from 'src/graphql/queries/__generated__/decodeRequest.generated';
-import { useAccountState } from 'src/context/AccountContext';
 import { XCircle, ChevronDown, ChevronUp } from 'react-feather';
 import { useConfigState } from 'src/context/ConfigContext';
 import { usePriceState } from 'src/context/PriceContext';
@@ -9,8 +8,8 @@ import { Clickable } from 'src/views/stats/styles';
 import { usePayViaRouteMutation } from 'src/graphql/mutations/__generated__/payViaRoute.generated';
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
-import { SecureButton } from 'src/components/buttons/secureButton/SecureButton';
 import { ProbedRouteHop } from 'src/graphql/types';
+import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import {
   SingleLine,
   SubTitle,
@@ -86,11 +85,9 @@ export const RequestModal: React.FC<DecodeProps> = ({
   request,
   handleReset,
 }) => {
-  const { auth } = useAccountState();
-
   const { data, loading, error } = useDecodeRequestQuery({
     fetchPolicy: 'network-only',
-    variables: { auth, request },
+    variables: { request },
   });
 
   const [makePayment, { loading: payLoading }] = usePayViaRouteMutation({
@@ -178,16 +175,17 @@ export const RequestModal: React.FC<DecodeProps> = ({
         format({ amount: foundRoute.safe_fee, override: 'sat' })
       )}
       {renderRoute()}
-      <SecureButton
-        callback={makePayment}
-        variables={{ route: JSON.stringify(foundRoute), id }}
+      <ColorButton
+        onClick={() =>
+          makePayment({ variables: { route: JSON.stringify(foundRoute), id } })
+        }
         disabled={payLoading || loading}
         withMargin={'16px 0 0'}
         loading={payLoading}
         fullWidth={true}
       >
         Send
-      </SecureButton>
+      </ColorButton>
     </>
   );
 };

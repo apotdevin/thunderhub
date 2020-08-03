@@ -7,6 +7,7 @@ import { ChannelFeeType } from 'src/graphql/types';
 import { formatSats } from 'src/utils/helpers';
 import { chartColors } from 'src/styles/Themes';
 import { useStatusState } from 'src/context/StatusContext';
+import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import {
   SubCard,
   Separation,
@@ -18,8 +19,6 @@ import {
 import { renderLine, getWithCopy } from '../../components/generic/helpers';
 import { MainInfo, NodeTitle } from '../../components/generic/CardGeneric';
 import { getErrorContent } from '../../utils/error';
-import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
-import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 import { WarningText } from '../stats/styles';
 import { FeeCardColumn, FeeCardNoWrap } from './styles';
 
@@ -135,79 +134,81 @@ export const FeeCard: React.FC<FeeCardProps> = ({
         {renderLine('Transaction Id:', getWithCopy(transaction_id))}
         {renderLine('Transaction Vout:', transaction_vout)}
         <Separation />
-        <AdminSwitch>
+
+        <InputWithDeco
+          title={'Base Fee'}
+          value={newBaseFee}
+          placeholder={'sats'}
+          amount={newBaseFee}
+          override={'sat'}
+          inputType={'number'}
+          inputCallback={value => setBaseFee(Number(value))}
+        />
+        <InputWithDeco
+          title={'Fee Rate'}
+          placeholder={'ppm'}
+          amount={newFeeRate}
+          override={'ppm'}
+          inputType={'number'}
+          inputCallback={value => setFeeRate(Number(value))}
+        />
+        <InputWithDeco
+          title={'CLTV Delta'}
+          value={newCLTV}
+          placeholder={'cltv delta'}
+          customAmount={newCLTV?.toString() || ''}
+          inputType={'number'}
+          inputCallback={value => setCLTV(Number(value))}
+        />
+        {canMax && (
           <InputWithDeco
-            title={'Base Fee'}
-            value={newBaseFee}
+            title={'Max HTLC'}
+            value={newMax}
             placeholder={'sats'}
-            amount={newBaseFee}
+            amount={newMax}
             override={'sat'}
             inputType={'number'}
-            inputCallback={value => setBaseFee(Number(value))}
+            inputCallback={value => setMax(Number(value))}
           />
+        )}
+        {canMin && (
           <InputWithDeco
-            title={'Fee Rate'}
-            placeholder={'ppm'}
-            amount={newFeeRate}
-            override={'ppm'}
+            title={'Min HTLC'}
+            value={newMin}
+            placeholder={'sats'}
+            amount={newMin}
+            override={'sat'}
             inputType={'number'}
-            inputCallback={value => setFeeRate(Number(value))}
+            inputCallback={value => setMin(Number(value))}
           />
-          <InputWithDeco
-            title={'CLTV Delta'}
-            value={newCLTV}
-            placeholder={'cltv delta'}
-            customAmount={newCLTV?.toString() || ''}
-            inputType={'number'}
-            inputCallback={value => setCLTV(Number(value))}
-          />
-          {canMax && (
-            <InputWithDeco
-              title={'Max HTLC'}
-              value={newMax}
-              placeholder={'sats'}
-              amount={newMax}
-              override={'sat'}
-              inputType={'number'}
-              inputCallback={value => setMax(Number(value))}
-            />
-          )}
-          {canMin && (
-            <InputWithDeco
-              title={'Min HTLC'}
-              value={newMin}
-              placeholder={'sats'}
-              amount={newMin}
-              override={'sat'}
-              inputType={'number'}
-              inputCallback={value => setMin(Number(value))}
-            />
-          )}
-          <SecureButton
-            callback={updateFees}
-            variables={{
-              transaction_id,
-              transaction_vout,
-              ...(newBaseFee !== 0 && {
-                base_fee_tokens: newBaseFee,
-              }),
-              ...(newFeeRate !== 0 && {
-                fee_rate: newFeeRate,
-              }),
-              ...(newCLTV !== 0 && { cltv_delta: newCLTV }),
-              ...(newMax !== 0 &&
-                canMax && { max_htlc_mtokens: (newMax * 1000).toString() }),
-              ...(newMin !== 0 &&
-                canMin && { min_htlc_mtokens: (newMin * 1000).toString() }),
-            }}
-            disabled={!withChanges}
-            fullWidth={true}
-            withMargin={'16px 0 0'}
-          >
-            Update Fees
-            <ChevronRight size={18} />
-          </SecureButton>
-        </AdminSwitch>
+        )}
+        <ColorButton
+          onClick={() =>
+            updateFees({
+              variables: {
+                transaction_id,
+                transaction_vout,
+                ...(newBaseFee !== 0 && {
+                  base_fee_tokens: newBaseFee,
+                }),
+                ...(newFeeRate !== 0 && {
+                  fee_rate: newFeeRate,
+                }),
+                ...(newCLTV !== 0 && { cltv_delta: newCLTV }),
+                ...(newMax !== 0 &&
+                  canMax && { max_htlc_mtokens: (newMax * 1000).toString() }),
+                ...(newMin !== 0 &&
+                  canMin && { min_htlc_mtokens: (newMin * 1000).toString() }),
+              },
+            })
+          }
+          disabled={!withChanges}
+          fullWidth={true}
+          withMargin={'16px 0 0'}
+        >
+          Update Fees
+          <ChevronRight size={18} />
+        </ColorButton>
       </>
     );
   };

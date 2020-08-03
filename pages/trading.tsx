@@ -3,9 +3,10 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { useGetOffersQuery } from 'src/graphql/hodlhodl/__generated__/query.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
 import getConfig from 'next/config';
 import { HodlOfferType } from 'src/graphql/types';
+import { NextPageContext } from 'next';
+import { getProps } from 'src/utils/ssr';
 import {
   CardWithTitle,
   SubTitle,
@@ -169,4 +170,8 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return await getProps(context);
+}

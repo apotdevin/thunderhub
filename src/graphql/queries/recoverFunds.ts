@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const RECOVER_FUNDS = gql`
-  query RecoverFunds($auth: authType!, $backup: String!) {
-    recoverFunds(auth: $auth, backup: $backup)
+  query RecoverFunds($backup: String!) {
+    recoverFunds(backup: $backup)
   }
 `;

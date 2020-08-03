@@ -16,7 +16,6 @@ import { headerColor, headerTextColor } from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
 import { Section } from '../../components/section/Section';
-import { useStatusState } from '../../context/StatusContext';
 import { Link } from '../../components/link/Link';
 import { ViewSwitch } from '../../components/viewSwitch/ViewSwitch';
 import {
@@ -41,7 +40,8 @@ const { hodlhodl } = publicRuntimeConfig;
 export const Header = () => {
   const { pathname } = useRouter();
   const [open, setOpen] = useState(false);
-  const { connected } = useStatusState();
+
+  const isRoot = pathname === '/';
 
   const showHomeButton = (): boolean =>
     pathname === TRADER || pathname === CHAT || pathname === SETTINGS;
@@ -95,16 +95,16 @@ export const Header = () => {
         textColor={headerTextColor}
       >
         <HeaderStyle>
-          <HeaderLine loggedIn={connected}>
-            <Link to={connected ? '/home' : '/'} underline={'transparent'}>
-              <HeaderTitle withPadding={!connected}>
+          <HeaderLine loggedIn={!isRoot}>
+            <Link to={!isRoot ? '/home' : '/'} underline={'transparent'}>
+              <HeaderTitle withPadding={isRoot}>
                 <IconPadding>
                   <Cpu color={'white'} size={18} />
                 </IconPadding>
                 ThunderHub
               </HeaderTitle>
             </Link>
-            <SingleLine>{connected && renderLoggedIn()}</SingleLine>
+            <SingleLine>{!isRoot && renderLoggedIn()}</SingleLine>
           </HeaderLine>
         </HeaderStyle>
       </Section>

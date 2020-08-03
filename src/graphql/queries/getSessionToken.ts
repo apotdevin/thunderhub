@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const GET_SESSION_TOKEN = gql`
   query GetSessionToken($id: String!, $password: String!) {

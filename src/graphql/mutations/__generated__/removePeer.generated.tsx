@@ -1,10 +1,14 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
 
 export type RemovePeerMutationVariables = Types.Exact<{
-  auth: Types.AuthType;
   publicKey: Types.Scalars['String'];
 }>;
 
@@ -14,11 +18,11 @@ export type RemovePeerMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export const RemovePeerDocument = gql`
-  mutation RemovePeer($auth: authType!, $publicKey: String!) {
-    removePeer(auth: $auth, publicKey: $publicKey)
+  mutation RemovePeer($publicKey: String!) {
+    removePeer(publicKey: $publicKey)
   }
 `;
-export type RemovePeerMutationFn = ApolloReactCommon.MutationFunction<
+export type RemovePeerMutationFn = MutationFunction<
   RemovePeerMutation,
   RemovePeerMutationVariables
 >;
@@ -36,29 +40,26 @@ export type RemovePeerMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [removePeerMutation, { data, loading, error }] = useRemovePeerMutation({
  *   variables: {
- *      auth: // value for 'auth'
  *      publicKey: // value for 'publicKey'
  *   },
  * });
  */
 export function useRemovePeerMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     RemovePeerMutation,
     RemovePeerMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    RemovePeerMutation,
-    RemovePeerMutationVariables
-  >(RemovePeerDocument, baseOptions);
+  return useMutation<RemovePeerMutation, RemovePeerMutationVariables>(
+    RemovePeerDocument,
+    baseOptions
+  );
 }
 export type RemovePeerMutationHookResult = ReturnType<
   typeof useRemovePeerMutation
 >;
-export type RemovePeerMutationResult = ApolloReactCommon.MutationResult<
-  RemovePeerMutation
->;
-export type RemovePeerMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type RemovePeerMutationResult = MutationResult<RemovePeerMutation>;
+export type RemovePeerMutationOptions = BaseMutationOptions<
   RemovePeerMutation,
   RemovePeerMutationVariables
 >;

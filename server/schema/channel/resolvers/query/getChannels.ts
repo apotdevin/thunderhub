@@ -2,7 +2,7 @@ import { getChannels as getLnChannels, getWalletInfo } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { to } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
+
 import { getChannelAge } from 'server/schema/health/helpers';
 import { GetChannelsType } from 'server/types/ln-service.types';
 
@@ -13,8 +13,7 @@ export const getChannels = async (
 ) => {
   await requestLimiter(context.ip, 'channels');
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const { lnd } = context;
 
   const { public_key, current_block_height } = await to(getWalletInfo({ lnd }));
 

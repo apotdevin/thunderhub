@@ -1,10 +1,14 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
 
 export type AddPeerMutationVariables = Types.Exact<{
-  auth: Types.AuthType;
   url?: Types.Maybe<Types.Scalars['String']>;
   publicKey?: Types.Maybe<Types.Scalars['String']>;
   socket?: Types.Maybe<Types.Scalars['String']>;
@@ -18,14 +22,12 @@ export type AddPeerMutation = { __typename?: 'Mutation' } & Pick<
 
 export const AddPeerDocument = gql`
   mutation AddPeer(
-    $auth: authType!
     $url: String
     $publicKey: String
     $socket: String
     $isTemporary: Boolean
   ) {
     addPeer(
-      auth: $auth
       url: $url
       publicKey: $publicKey
       socket: $socket
@@ -33,7 +35,7 @@ export const AddPeerDocument = gql`
     )
   }
 `;
-export type AddPeerMutationFn = ApolloReactCommon.MutationFunction<
+export type AddPeerMutationFn = MutationFunction<
   AddPeerMutation,
   AddPeerMutationVariables
 >;
@@ -51,7 +53,6 @@ export type AddPeerMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [addPeerMutation, { data, loading, error }] = useAddPeerMutation({
  *   variables: {
- *      auth: // value for 'auth'
  *      url: // value for 'url'
  *      publicKey: // value for 'publicKey'
  *      socket: // value for 'socket'
@@ -60,21 +61,16 @@ export type AddPeerMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useAddPeerMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    AddPeerMutation,
-    AddPeerMutationVariables
-  >
+  baseOptions?: MutationHookOptions<AddPeerMutation, AddPeerMutationVariables>
 ) {
-  return ApolloReactHooks.useMutation<
-    AddPeerMutation,
-    AddPeerMutationVariables
-  >(AddPeerDocument, baseOptions);
+  return useMutation<AddPeerMutation, AddPeerMutationVariables>(
+    AddPeerDocument,
+    baseOptions
+  );
 }
 export type AddPeerMutationHookResult = ReturnType<typeof useAddPeerMutation>;
-export type AddPeerMutationResult = ApolloReactCommon.MutationResult<
-  AddPeerMutation
->;
-export type AddPeerMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type AddPeerMutationResult = MutationResult<AddPeerMutation>;
+export type AddPeerMutationOptions = BaseMutationOptions<
   AddPeerMutation,
   AddPeerMutationVariables
 >;

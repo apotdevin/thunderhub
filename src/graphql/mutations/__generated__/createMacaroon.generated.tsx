@@ -1,10 +1,14 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
 
 export type CreateMacaroonMutationVariables = Types.Exact<{
-  auth: Types.AuthType;
   permissions: Types.PermissionsType;
 }>;
 
@@ -14,11 +18,11 @@ export type CreateMacaroonMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export const CreateMacaroonDocument = gql`
-  mutation CreateMacaroon($auth: authType!, $permissions: permissionsType!) {
-    createMacaroon(auth: $auth, permissions: $permissions)
+  mutation CreateMacaroon($permissions: permissionsType!) {
+    createMacaroon(permissions: $permissions)
   }
 `;
-export type CreateMacaroonMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateMacaroonMutationFn = MutationFunction<
   CreateMacaroonMutation,
   CreateMacaroonMutationVariables
 >;
@@ -36,29 +40,28 @@ export type CreateMacaroonMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [createMacaroonMutation, { data, loading, error }] = useCreateMacaroonMutation({
  *   variables: {
- *      auth: // value for 'auth'
  *      permissions: // value for 'permissions'
  *   },
  * });
  */
 export function useCreateMacaroonMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     CreateMacaroonMutation,
     CreateMacaroonMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    CreateMacaroonMutation,
-    CreateMacaroonMutationVariables
-  >(CreateMacaroonDocument, baseOptions);
+  return useMutation<CreateMacaroonMutation, CreateMacaroonMutationVariables>(
+    CreateMacaroonDocument,
+    baseOptions
+  );
 }
 export type CreateMacaroonMutationHookResult = ReturnType<
   typeof useCreateMacaroonMutation
 >;
-export type CreateMacaroonMutationResult = ApolloReactCommon.MutationResult<
+export type CreateMacaroonMutationResult = MutationResult<
   CreateMacaroonMutation
 >;
-export type CreateMacaroonMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateMacaroonMutationOptions = BaseMutationOptions<
   CreateMacaroonMutation,
   CreateMacaroonMutationVariables
 >;

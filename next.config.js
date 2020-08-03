@@ -28,7 +28,6 @@ module.exports = withBundleAnalyzer({
     fetchFees: process.env.FETCH_FEES === 'false' ? false : true,
     hodlhodl: process.env.HODL_HODL === 'false' ? false : true,
     disableLinks: process.env.DISABLE_LINKS === 'true' ? true : false,
-    noClient: process.env.NO_CLIENT_ACCOUNTS === 'true' ? true : false,
     noVersionCheck: process.env.NO_VERSION_CHECK === 'true' ? true : false,
   },
 });

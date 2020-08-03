@@ -1,10 +1,14 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
 
 export type GetMessagesQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   initialize?: Types.Maybe<Types.Scalars['Boolean']>;
   lastMessage?: Types.Maybe<Types.Scalars['String']>;
 }>;
@@ -35,16 +39,8 @@ export type GetMessagesQuery = { __typename?: 'Query' } & {
 };
 
 export const GetMessagesDocument = gql`
-  query GetMessages(
-    $auth: authType!
-    $initialize: Boolean
-    $lastMessage: String
-  ) {
-    getMessages(
-      auth: $auth
-      initialize: $initialize
-      lastMessage: $lastMessage
-    ) {
+  query GetMessages($initialize: Boolean, $lastMessage: String) {
+    getMessages(initialize: $initialize, lastMessage: $lastMessage) {
       token
       messages {
         date
@@ -72,39 +68,35 @@ export const GetMessagesDocument = gql`
  * @example
  * const { data, loading, error } = useGetMessagesQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      initialize: // value for 'initialize'
  *      lastMessage: // value for 'lastMessage'
  *   },
  * });
  */
 export function useGetMessagesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetMessagesQuery,
-    GetMessagesQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetMessagesQuery, GetMessagesQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetMessagesQuery, GetMessagesQueryVariables>(
+  return useQuery<GetMessagesQuery, GetMessagesQueryVariables>(
     GetMessagesDocument,
     baseOptions
   );
 }
 export function useGetMessagesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetMessagesQuery,
     GetMessagesQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetMessagesQuery,
-    GetMessagesQueryVariables
-  >(GetMessagesDocument, baseOptions);
+  return useLazyQuery<GetMessagesQuery, GetMessagesQueryVariables>(
+    GetMessagesDocument,
+    baseOptions
+  );
 }
 export type GetMessagesQueryHookResult = ReturnType<typeof useGetMessagesQuery>;
 export type GetMessagesLazyQueryHookResult = ReturnType<
   typeof useGetMessagesLazyQuery
 >;
-export type GetMessagesQueryResult = ApolloReactCommon.QueryResult<
+export type GetMessagesQueryResult = QueryResult<
   GetMessagesQuery,
   GetMessagesQueryVariables
 >;

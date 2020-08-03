@@ -1,6 +1,5 @@
 import { getForwards, getChannels, getWalletInfo } from 'ln-service';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getCorrectAuth, getAuthLnd } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
 import { subMonths } from 'date-fns';
 import { ContextType } from 'server/types/apiTypes';
@@ -15,8 +14,7 @@ const monthInBlocks = 4380;
 export default async (_: undefined, params: any, context: ContextType) => {
   await requestLimiter(context.ip, 'getVolumeHealth');
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const { lnd } = context;
 
   const before = new Date().toISOString();
   const after = subMonths(new Date(), 1).toISOString();

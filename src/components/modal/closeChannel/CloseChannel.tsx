@@ -10,7 +10,6 @@ import {
   Sub4Title,
 } from '../../generic/Styled';
 import { getErrorContent } from '../../../utils/error';
-import { SecureButton } from '../../buttons/secureButton/SecureButton';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import {
   MultiButton,
@@ -48,7 +47,7 @@ export const CloseChannel = ({
   const [amount, setAmount] = useState<number>(0);
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
 
-  const [closeChannel] = useCloseChannelMutation({
+  const [closeChannel, { loading }] = useCloseChannelMutation({
     onCompleted: data => {
       if (data.closeChannel) {
         toast.success('Channel Closed');
@@ -79,23 +78,27 @@ export const CloseChannel = ({
     <WarningCard>
       <AlertTriangle size={32} color={'red'} />
       <SubTitle>Are you sure you want to close the channel?</SubTitle>
-      <SecureButton
-        callback={closeChannel}
-        variables={{
-          id: channelId,
-          forceClose: isForce,
-          ...(isType !== 'none'
-            ? isType === 'fee'
-              ? { tokens: amount }
-              : { target: amount }
-            : {}),
-        }}
-        color={'red'}
-        disabled={false}
+      <ColorButton
+        disabled={loading}
+        loading={loading}
         withMargin={'4px'}
+        color={'red'}
+        onClick={() =>
+          closeChannel({
+            variables: {
+              id: channelId,
+              forceClose: isForce,
+              ...(isType !== 'none'
+                ? isType === 'fee'
+                  ? { tokens: amount }
+                  : { target: amount }
+                : {}),
+            },
+          })
+        }
       >
         {`Close Channel [ ${channelName}/${channelId} ]`}
-      </SecureButton>
+      </ColorButton>
       <ColorButton withMargin={'4px'} onClick={handleOnlyClose}>
         Cancel
       </ColorButton>

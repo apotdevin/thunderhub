@@ -4,7 +4,7 @@ import { sortBy } from 'underscore';
 import { ContextType } from 'server/types/apiTypes';
 import { getNodeFromChannel } from 'server/helpers/getNodeFromChannel';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
+
 import { to } from 'server/helpers/async';
 import {
   GetForwardsType,
@@ -19,8 +19,7 @@ export const getForwardChannelsReport = async (
 ) => {
   await requestLimiter(context.ip, 'forwardChannels');
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const { lnd } = context;
 
   let startDate = new Date();
   const endDate = new Date();
