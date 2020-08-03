@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Zap, Anchor, Pocket } from 'react-feather';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import {
   Card,
   CardWithTitle,
@@ -12,7 +13,6 @@ import {
 } from '../../../components/generic/Styled';
 import { Price } from '../../../components/price/Price';
 import { mediaWidths } from '../../../styles/Themes';
-import { useStatusState } from '../../../context/StatusContext';
 import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 import { SendOnChainCard } from './sendOnChain/SendOnChain';
 import { PayCard } from './pay/Payment';
@@ -53,7 +53,7 @@ export const AccountInfo = () => {
     chainPending,
     channelBalance,
     channelPending,
-  } = useStatusState();
+  } = useNodeInfo();
 
   const formatCB = <Price amount={chainBalance} />;
   const formatPB = <Price amount={chainPending} />;

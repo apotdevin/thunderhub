@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { getPrice, Price } from 'src/components/price/Price';
 import { AnimatedNumber } from 'src/components/animated/AnimatedNumber';
 import { renderLine } from 'src/components/generic/helpers';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { unSelectedNavButton } from '../../../styles/Themes';
 import {
   Separation,
@@ -13,7 +14,6 @@ import {
   Sub4Title,
 } from '../../../components/generic/Styled';
 import { useConfigState } from '../../../context/ConfigContext';
-import { useStatusState } from '../../../context/StatusContext';
 import { usePriceState } from '../../../context/PriceContext';
 
 const Closed = styled.div`
@@ -76,7 +76,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     pendingChannelCount,
     closedChannelCount,
     peersCount,
-  } = useStatusState();
+  } = useNodeInfo();
 
   const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();

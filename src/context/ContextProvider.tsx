@@ -1,18 +1,12 @@
 import React from 'react';
-import { BitcoinInfoProvider } from './BitcoinContext';
-import { StatusProvider } from './StatusContext';
 import { PriceProvider } from './PriceContext';
 import { ChatProvider } from './ChatContext';
 import { RebalanceProvider } from './RebalanceContext';
 
 export const ContextProvider: React.FC = ({ children }) => (
-  <BitcoinInfoProvider>
-    <PriceProvider>
-      <ChatProvider>
-        <StatusProvider>
-          <RebalanceProvider>{children}</RebalanceProvider>
-        </StatusProvider>
-      </ChatProvider>
-    </PriceProvider>
-  </BitcoinInfoProvider>
+  <PriceProvider>
+    <ChatProvider>
+      <RebalanceProvider>{children}</RebalanceProvider>
+    </ChatProvider>
+  </PriceProvider>
 );

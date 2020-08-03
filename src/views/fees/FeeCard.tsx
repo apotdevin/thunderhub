@@ -6,8 +6,8 @@ import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { ChannelFeeType } from 'src/graphql/types';
 import { formatSats } from 'src/utils/helpers';
 import { chartColors } from 'src/styles/Themes';
-import { useStatusState } from 'src/context/StatusContext';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import {
   SubCard,
   Separation,
@@ -35,7 +35,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
   setIndexOpen,
   indexOpen,
 }) => {
-  const { minorVersion, revision } = useStatusState();
+  const { minorVersion, revision } = useNodeInfo();
   const canMax = (minorVersion === 7 && revision > 1) || minorVersion > 7;
   const canMin = (minorVersion === 8 && revision > 2) || minorVersion > 8;
 

@@ -7,6 +7,7 @@ import { ChatFetcher } from 'src/components/chat/ChatFetcher';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { GET_MESSAGES } from 'src/graphql/queries/getMessages';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { useChatState } from '../src/context/ChatContext';
 import { separateBySender, getSenders } from '../src/utils/chat';
 import {
@@ -18,7 +19,6 @@ import {
 import { Contacts } from '../src/views/chat/Contacts';
 import { ChatBox } from '../src/views/chat/ChatBox';
 import { ChatStart } from '../src/views/chat/ChatStart';
-import { useStatusState } from '../src/context/StatusContext';
 import { Text } from '../src/components/typography/Styled';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ChatCard } from '../src/views/chat/Chat.styled';
@@ -32,7 +32,7 @@ const ChatLayout = styled.div`
 `;
 
 const ChatView = () => {
-  const { minorVersion } = useStatusState();
+  const { minorVersion } = useNodeInfo();
   const { chats, sender, sentChats, initialized } = useChatState();
   const bySender = separateBySender([...chats, ...sentChats]);
   const senders = getSenders(bySender) || [];

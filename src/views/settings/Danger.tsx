@@ -12,7 +12,6 @@ import {
 } from '../../components/generic/Styled';
 import { fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { useStatusDispatch } from '../../context/StatusContext';
 import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
 
@@ -52,7 +51,6 @@ export const FixedWidth = styled.div`
 `;
 
 export const DangerView = () => {
-  const dispatch = useStatusDispatch();
   const chatDispatch = useChatDispatch();
 
   const { push } = useRouter();
@@ -62,9 +60,7 @@ export const DangerView = () => {
   });
 
   const handleDeleteAll = () => {
-    dispatch({ type: 'disconnected' });
     chatDispatch({ type: 'disconnected' });
-
     localStorage.clear();
     sessionStorage.clear();
 

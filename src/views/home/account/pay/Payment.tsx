@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import {
   Sub4Title,
   ResponsiveLine,
@@ -8,7 +9,6 @@ import {
 import { Input } from '../../../../components/input/Input';
 import Modal from '../../../../components/modal/ReactModal';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { useStatusState } from '../../../../context/StatusContext';
 import { isLightningInvoice } from '../../../../utils/helpers';
 import { RequestModal } from './RequestModal';
 import { KeysendModal } from './KeysendModal';
@@ -19,7 +19,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const [request, setRequest] = useState<string>('');
   const [modalType, setModalType] = useState<ModalType>('none');
 
-  const { minorVersion } = useStatusState();
+  const { minorVersion } = useNodeInfo();
 
   const canKeysend = minorVersion >= 9;
 

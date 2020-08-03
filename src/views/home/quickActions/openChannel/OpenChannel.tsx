@@ -4,9 +4,10 @@ import { toast } from 'react-toastify';
 import { useOpenChannelMutation } from 'src/graphql/mutations/__generated__/openChannel.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
+import { useBitcoinFees } from 'src/hooks/UseBitcoinFees';
+import { useConfigState } from 'src/context/ConfigContext';
 import { Separation } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
-import { useBitcoinState } from '../../../../context/BitcoinContext';
 import { Input } from '../../../../components/input/Input';
 import {
   SingleButton,
@@ -22,12 +23,13 @@ export const OpenChannelCard = ({
   setOpenCard,
   initialPublicKey = '',
 }: OpenChannelProps) => {
-  const { fast, halfHour, hour, dontShow } = useBitcoinState();
+  const { fetchFees } = useConfigState();
+  const { fast, halfHour, hour, dontShow } = useBitcoinFees();
   const [size, setSize] = useState(0);
   const [fee, setFee] = useState(0);
   const [publicKey, setPublicKey] = useState(initialPublicKey);
   const [privateChannel, setPrivateChannel] = useState(false);
-  const [type, setType] = useState(dontShow ? 'fee' : 'none');
+  const [type, setType] = useState(dontShow || !fetchFees ? 'fee' : 'none');
 
   const [openChannel] = useOpenChannelMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -90,7 +92,7 @@ export const OpenChannelCard = ({
         </MultiButton>
       </InputWithDeco>
       <Separation />
-      {!dontShow && (
+      {fetchFees && !dontShow && (
         <InputWithDeco title={'Fee'} noInput={true}>
           <MultiButton>
             {renderButton(

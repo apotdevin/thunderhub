@@ -5,7 +5,6 @@ import { Lock, Unlock } from 'react-feather';
 import { chartColors } from 'src/styles/Themes';
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
-import { useStatusDispatch } from 'src/context/StatusContext';
 import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { Link } from 'src/components/link/Link';
 import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/getServerAccounts.generated';
@@ -38,7 +37,6 @@ const renderIntro = () => (
 
 export const Accounts = () => {
   const { push } = useRouter();
-  const dispatchStatus = useStatusDispatch();
   const [newAccount, setNewAccount] = React.useState<ServerAccountType | null>(
     null
   );
@@ -57,10 +55,9 @@ export const Accounts = () => {
 
   React.useEffect(() => {
     if (!loading && data && data.getNodeInfo) {
-      dispatchStatus({ type: 'connected' });
       push(appendBasePath('/home'));
     }
-  }, [data, loading, push, dispatchStatus]);
+  }, [data, loading, push]);
 
   if (loadingData) {
     return (

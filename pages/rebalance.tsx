@@ -13,10 +13,10 @@ import { AdvancedBalance } from 'src/views/balance/AdvancedBalance';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { GET_CHANNELS } from 'src/graphql/queries/getChannels';
-import { useStatusState } from '../src/context/StatusContext';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 
 const BalanceView = () => {
-  const { minorVersion } = useStatusState();
+  const { minorVersion } = useNodeInfo();
   const [advancedType, advancedTypeSet] = useState(false);
 
   if (minorVersion < 9) {
