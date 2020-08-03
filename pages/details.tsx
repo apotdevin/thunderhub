@@ -6,12 +6,12 @@ import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updat
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import styled from 'styled-components';
-import { useStatusState } from 'src/context/StatusContext';
 import { ChannelFeeType } from 'src/graphql/types';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { CHANNEL_FEES } from 'src/graphql/queries/getChannelFees';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import {
   Card,
   CardWithTitle,
@@ -30,7 +30,7 @@ const WithPointer = styled.div`
 `;
 
 const FeesView = () => {
-  const { minorVersion, revision } = useStatusState();
+  const { minorVersion, revision } = useNodeInfo();
   const canMax = (minorVersion === 7 && revision > 1) || minorVersion > 7;
   const canMin = (minorVersion === 8 && revision > 2) || minorVersion > 8;
 

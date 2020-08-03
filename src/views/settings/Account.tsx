@@ -16,14 +16,12 @@ import {
   MultiButton,
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
-import { useStatusDispatch } from '../../context/StatusContext';
 import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
 
 export const AccountSettings = () => {
   const { push } = useRouter();
 
-  const dispatch = useStatusDispatch();
   const dispatchChat = useChatDispatch();
 
   const [logout, { data, loading }] = useLogoutMutation({
@@ -35,11 +33,10 @@ export const AccountSettings = () => {
 
   useEffect(() => {
     if (data && data.logout) {
-      dispatch({ type: 'disconnected' });
       dispatchChat({ type: 'disconnected' });
       push(appendBasePath('/'));
     }
-  }, [data, dispatch, dispatchChat, push]);
+  }, [data, dispatchChat, push]);
 
   if (!account) {
     return null;
@@ -61,7 +58,6 @@ export const AccountSettings = () => {
                 selected={accountId === account.id}
                 onClick={() => {
                   if (accountId !== account.id) {
-                    dispatch({ type: 'disconnected' });
                     dispatchChat({ type: 'disconnected' });
                     push(appendBasePath('/'));
                   }

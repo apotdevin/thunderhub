@@ -18,7 +18,6 @@ import {
   mediaWidths,
   chartColors,
 } from '../../styles/Themes';
-import { useStatusDispatch } from '../../context/StatusContext';
 
 const StyledTitle = styled(Title)`
   font-size: 24px;
@@ -41,13 +40,11 @@ export const Login = ({ account }: LoginProps) => {
   const { push } = useRouter();
 
   const [pass, setPass] = useState('');
-  const dispatch = useStatusDispatch();
 
   const [getCanConnect, { data, loading }] = useGetCanConnectLazyQuery({
     fetchPolicy: 'network-only',
     onError: err => {
       toast.error(getErrorContent(err));
-      dispatch({ type: 'disconnected' });
     },
   });
 
@@ -58,7 +55,6 @@ export const Login = ({ account }: LoginProps) => {
     fetchPolicy: 'network-only',
     onError: err => {
       toast.error(getErrorContent(err));
-      dispatch({ type: 'disconnected' });
     },
   });
 
@@ -70,10 +66,9 @@ export const Login = ({ account }: LoginProps) => {
 
   useEffect(() => {
     if (!loading && data && data.getNodeInfo) {
-      dispatch({ type: 'connected' });
       push(appendBasePath('/home'));
     }
-  }, [data, loading, dispatch, pass, account, push]);
+  }, [data, loading, pass, account, push]);
 
   if (!account) return null;
 

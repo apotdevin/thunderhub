@@ -105,7 +105,7 @@ const ChatProvider: React.FC = ({ children }) => {
 const useChatState = () => {
   const context = useContext(StateContext);
   if (context === undefined) {
-    throw new Error('useStatusState must be used within a StatusProvider');
+    throw new Error('useChatState must be used within a ChatProvider');
   }
   return context;
 };
@@ -113,7 +113,7 @@ const useChatState = () => {
 const useChatDispatch = () => {
   const context = useContext(DispatchContext);
   if (context === undefined) {
-    throw new Error('useStatusDispatch must be used within a StatusProvider');
+    throw new Error('useChatDispatch must be used within a ChatProvider');
   }
   return context;
 };
