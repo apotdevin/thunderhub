@@ -1,12 +1,16 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
 
 export type OpenChannelMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
   partnerPublicKey: Types.Scalars['String'];
-  auth: Types.AuthType;
   tokensPerVByte?: Types.Maybe<Types.Scalars['Int']>;
   isPrivate?: Types.Maybe<Types.Scalars['Boolean']>;
 }>;
@@ -24,14 +28,12 @@ export const OpenChannelDocument = gql`
   mutation OpenChannel(
     $amount: Int!
     $partnerPublicKey: String!
-    $auth: authType!
     $tokensPerVByte: Int
     $isPrivate: Boolean
   ) {
     openChannel(
       amount: $amount
       partnerPublicKey: $partnerPublicKey
-      auth: $auth
       tokensPerVByte: $tokensPerVByte
       isPrivate: $isPrivate
     ) {
@@ -40,7 +42,7 @@ export const OpenChannelDocument = gql`
     }
   }
 `;
-export type OpenChannelMutationFn = ApolloReactCommon.MutationFunction<
+export type OpenChannelMutationFn = MutationFunction<
   OpenChannelMutation,
   OpenChannelMutationVariables
 >;
@@ -60,30 +62,27 @@ export type OpenChannelMutationFn = ApolloReactCommon.MutationFunction<
  *   variables: {
  *      amount: // value for 'amount'
  *      partnerPublicKey: // value for 'partnerPublicKey'
- *      auth: // value for 'auth'
  *      tokensPerVByte: // value for 'tokensPerVByte'
  *      isPrivate: // value for 'isPrivate'
  *   },
  * });
  */
 export function useOpenChannelMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     OpenChannelMutation,
     OpenChannelMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    OpenChannelMutation,
-    OpenChannelMutationVariables
-  >(OpenChannelDocument, baseOptions);
+  return useMutation<OpenChannelMutation, OpenChannelMutationVariables>(
+    OpenChannelDocument,
+    baseOptions
+  );
 }
 export type OpenChannelMutationHookResult = ReturnType<
   typeof useOpenChannelMutation
 >;
-export type OpenChannelMutationResult = ApolloReactCommon.MutationResult<
-  OpenChannelMutation
->;
-export type OpenChannelMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type OpenChannelMutationResult = MutationResult<OpenChannelMutation>;
+export type OpenChannelMutationOptions = BaseMutationOptions<
   OpenChannelMutation,
   OpenChannelMutationVariables
 >;

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
-import { useAccountState } from 'src/context/AccountContext';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import {
   SubCard,
@@ -33,12 +32,7 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
   openSet,
 }) => {
   const [newNode, newNodeSet] = React.useState<string>('');
-  const { auth } = useAccountState();
-
-  const { loading, data } = useGetPeersQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+  const { loading, data } = useGetPeersQuery();
 
   const [
     getNode,
@@ -139,9 +133,7 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
               <ColorButton
                 disabled={newNode === ''}
                 loading={nodeLoading}
-                onClick={() =>
-                  getNode({ variables: { auth, publicKey: newNode } })
-                }
+                onClick={() => getNode({ variables: { publicKey: newNode } })}
               >
                 <Plus size={18} />
               </ColorButton>

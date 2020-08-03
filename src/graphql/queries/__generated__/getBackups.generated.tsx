@@ -1,11 +1,14 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
 
-export type GetBackupsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetBackupsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetBackupsQuery = { __typename?: 'Query' } & Pick<
   Types.Query,
@@ -13,8 +16,8 @@ export type GetBackupsQuery = { __typename?: 'Query' } & Pick<
 >;
 
 export const GetBackupsDocument = gql`
-  query GetBackups($auth: authType!) {
-    getBackups(auth: $auth)
+  query GetBackups {
+    getBackups
   }
 `;
 
@@ -30,37 +33,30 @@ export const GetBackupsDocument = gql`
  * @example
  * const { data, loading, error } = useGetBackupsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetBackupsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetBackupsQuery,
-    GetBackupsQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetBackupsQuery, GetBackupsQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetBackupsQuery, GetBackupsQueryVariables>(
+  return useQuery<GetBackupsQuery, GetBackupsQueryVariables>(
     GetBackupsDocument,
     baseOptions
   );
 }
 export function useGetBackupsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetBackupsQuery,
-    GetBackupsQueryVariables
-  >
+  baseOptions?: LazyQueryHookOptions<GetBackupsQuery, GetBackupsQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetBackupsQuery,
-    GetBackupsQueryVariables
-  >(GetBackupsDocument, baseOptions);
+  return useLazyQuery<GetBackupsQuery, GetBackupsQueryVariables>(
+    GetBackupsDocument,
+    baseOptions
+  );
 }
 export type GetBackupsQueryHookResult = ReturnType<typeof useGetBackupsQuery>;
 export type GetBackupsLazyQueryHookResult = ReturnType<
   typeof useGetBackupsLazyQuery
 >;
-export type GetBackupsQueryResult = ApolloReactCommon.QueryResult<
+export type GetBackupsQueryResult = QueryResult<
   GetBackupsQuery,
   GetBackupsQueryVariables
 >;

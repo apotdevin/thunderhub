@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetWalletInfoQuery } from 'src/graphql/queries/__generated__/getWalletInfo.generated';
 import {
   CardWithTitle,
@@ -15,10 +14,8 @@ import { renderLine } from '../../components/generic/helpers';
 
 export const WalletVersion = () => {
   const { minorVersion } = useStatusState();
-  const { auth } = useAccountState();
   const { data, loading, error } = useGetWalletInfoQuery({
     skip: minorVersion < 10,
-    variables: { auth },
   });
 
   const getStatus = (status: boolean) => (status ? 'Enabled' : 'Disabled');

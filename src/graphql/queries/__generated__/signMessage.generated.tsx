@@ -1,10 +1,14 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
 
 export type SignMessageQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   message: Types.Scalars['String'];
 }>;
 
@@ -14,8 +18,8 @@ export type SignMessageQuery = { __typename?: 'Query' } & Pick<
 >;
 
 export const SignMessageDocument = gql`
-  query SignMessage($auth: authType!, $message: String!) {
-    signMessage(auth: $auth, message: $message)
+  query SignMessage($message: String!) {
+    signMessage(message: $message)
   }
 `;
 
@@ -31,38 +35,34 @@ export const SignMessageDocument = gql`
  * @example
  * const { data, loading, error } = useSignMessageQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      message: // value for 'message'
  *   },
  * });
  */
 export function useSignMessageQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    SignMessageQuery,
-    SignMessageQueryVariables
-  >
+  baseOptions?: QueryHookOptions<SignMessageQuery, SignMessageQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<SignMessageQuery, SignMessageQueryVariables>(
+  return useQuery<SignMessageQuery, SignMessageQueryVariables>(
     SignMessageDocument,
     baseOptions
   );
 }
 export function useSignMessageLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     SignMessageQuery,
     SignMessageQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    SignMessageQuery,
-    SignMessageQueryVariables
-  >(SignMessageDocument, baseOptions);
+  return useLazyQuery<SignMessageQuery, SignMessageQueryVariables>(
+    SignMessageDocument,
+    baseOptions
+  );
 }
 export type SignMessageQueryHookResult = ReturnType<typeof useSignMessageQuery>;
 export type SignMessageLazyQueryHookResult = ReturnType<
   typeof useSignMessageLazyQuery
 >;
-export type SignMessageQueryResult = ApolloReactCommon.QueryResult<
+export type SignMessageQueryResult = QueryResult<
   SignMessageQuery,
   SignMessageQueryVariables
 >;

@@ -342,6 +342,39 @@ export const getNodeResponse = {
   updated_at: '2011-10-05T14:48:00.000Z',
 };
 
+export const probeForRouteResponse = {
+  route: {
+    confidence: 1000,
+    fee: 1000,
+    fee_mtokens: 'string',
+    hops: [
+      {
+        channel: 'string',
+        channel_capacity: 1000,
+        fee: 1000,
+        fee_mtokens: 'string',
+        forward: 1000,
+        forward_mtokens: 'string',
+        public_key: 'string',
+        timeout: 1000,
+      },
+    ],
+    messages: [
+      {
+        type: 'string',
+        value: 'string',
+      },
+    ],
+    mtokens: 'string',
+    payment: 'string',
+    safe_fee: 1000,
+    safe_tokens: 1000,
+    timeout: 1000,
+    tokens: 1000,
+    total_mtokens: 'string',
+  },
+};
+
 export const getChannelResponse = {
   capacity: 1000,
   id: '100x1x1',

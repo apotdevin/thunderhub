@@ -15,7 +15,7 @@ const errorNode = {
 export const getNodeFromChannel = async (
   id: string,
   publicKey: string,
-  lnd: LndObject
+  lnd: LndObject | null
 ) => {
   const [channelInfo, channelError] = await toWithError(
     getChannel({

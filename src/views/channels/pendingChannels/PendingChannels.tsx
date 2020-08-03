@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetPendingChannelsQuery } from 'src/graphql/queries/__generated__/getPendingChannels.generated';
 import { PendingChannelType } from 'src/graphql/types';
 import { Card } from '../../../components/generic/Styled';
@@ -11,11 +10,7 @@ import { PendingCard } from './PendingCard';
 export const PendingChannels = () => {
   const [indexOpen, setIndexOpen] = useState(0);
 
-  const { auth } = useAccountState();
-
   const { loading, data } = useGetPendingChannelsQuery({
-    skip: !auth,
-    variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });
 

@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import { Radio, Copy, X } from 'react-feather';
 import styled from 'styled-components';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetCanConnectInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { renderLine } from 'src/components/generic/helpers';
@@ -64,12 +63,9 @@ const ButtonRow = styled.div`
 `;
 
 export const ConnectCard = () => {
-  const { auth } = useAccountState();
   const [open, openSet] = useState<boolean>(false);
 
   const { loading, data } = useGetCanConnectInfoQuery({
-    skip: !auth,
-    variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });
 

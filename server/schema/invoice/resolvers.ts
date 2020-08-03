@@ -9,12 +9,7 @@ import {
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-  getLnd,
-} from 'server/helpers/helpers';
+import { getErrorMsg } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
 import { DecodedType } from 'server/types/ln-service.types';
 
@@ -25,7 +20,7 @@ export const invoiceResolvers = {
     decodeRequest: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'decode');
 
-      const lnd = getLnd(params.auth, context);
+      const { lnd } = context;
 
       const decoded = await to<DecodedType>(
         decodePaymentRequest({
@@ -49,8 +44,7 @@ export const invoiceResolvers = {
     createInvoice: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'createInvoice');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       return await to(
         createInvoiceRequest({
@@ -62,8 +56,8 @@ export const invoiceResolvers = {
     keysend: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'keysend');
 
-      const { auth, destination, tokens } = params;
-      const lnd = getLnd(auth, context);
+      const { destination, tokens } = params;
+      const { lnd } = context;
 
       const preimage = randomBytes(32);
       const secret = preimage.toString('hex');
@@ -91,8 +85,7 @@ export const invoiceResolvers = {
     ) => {
       await requestLimiter(context.ip, 'circularRebalance');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       let route;
       try {
@@ -121,8 +114,8 @@ export const invoiceResolvers = {
     payViaRoute: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'payViaRoute');
 
-      const { auth, route: routeJSON, id } = params;
-      const lnd = getLnd(auth, context);
+      const { route: routeJSON, id } = params;
+      const { lnd } = context;
 
       let route;
       try {

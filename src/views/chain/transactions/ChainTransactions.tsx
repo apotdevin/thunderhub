@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetChainTransactionsQuery } from 'src/graphql/queries/__generated__/getChainTransactions.generated';
 import { GetTransactionsType } from 'src/graphql/types';
 import {
@@ -14,11 +13,8 @@ import { TransactionsCard } from './TransactionsCard';
 
 export const ChainTransactions = () => {
   const [indexOpen, setIndexOpen] = useState(0);
-  const { auth } = useAccountState();
 
   const { loading, data } = useGetChainTransactionsQuery({
-    skip: !auth,
-    variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });
 

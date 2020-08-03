@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAccountState, CLIENT_ACCOUNT } from 'src/context/AccountContext';
+
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import Modal from 'src/components/modal/ReactModal';
 import numeral from 'numeral';
@@ -24,15 +24,9 @@ import { usePriceState, usePriceDispatch } from '../../context/PriceContext';
 export const InterfaceSettings = () => {
   const [changeFiat, changeFiatSet] = useState(false);
   const { fiat, prices, dontShow } = usePriceState();
-  const { theme, currency, multiNodeInfo } = useConfigState();
+  const { theme, currency } = useConfigState();
   const dispatch = useConfigDispatch();
   const priceDispatch = usePriceDispatch();
-
-  const { accounts } = useAccountState();
-
-  const viewOnlyAccounts = accounts.filter(
-    account => account.type === CLIENT_ACCOUNT && account.viewOnly !== ''
-  );
 
   const renderButton = (
     title: string,
@@ -46,11 +40,6 @@ export const InterfaceSettings = () => {
         localStorage.setItem(type, value);
         type === 'theme' && dispatch({ type: 'themeChange', theme: value });
         type === 'currency' && dispatch({ type: 'change', currency: value });
-        type === 'nodeInfo' &&
-          dispatch({
-            type: 'change',
-            multiNodeInfo: value === 'true' ? true : false,
-          });
       }}
     >
       {title}
@@ -107,15 +96,6 @@ export const InterfaceSettings = () => {
               {renderButton('Dark', 'dark', 'theme', theme)}
             </MultiButton>
           </SettingsLine>
-          {viewOnlyAccounts.length > 1 && (
-            <SettingsLine>
-              <Sub4Title>Show all accounts on homepage</Sub4Title>
-              <MultiButton>
-                {renderButton('Yes', 'true', 'nodeInfo', `${multiNodeInfo}`)}
-                {renderButton('No', 'false', 'nodeInfo', `${multiNodeInfo}`)}
-              </MultiButton>
-            </SettingsLine>
-          )}
           <SettingsLine>
             <Sub4Title>Currency</Sub4Title>
             <MultiButton margin={'0 0 0 16px'}>

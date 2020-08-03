@@ -10,7 +10,6 @@ import {
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
-import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import {
   MultiButton,
@@ -115,9 +114,8 @@ export const ReceiveOnChainCard = () => {
               </SingleButton>
             </MultiButton>
           </ButtonRow>
-          <SecureButton
-            callback={createAddress}
-            variables={{ nested }}
+          <ColorButton
+            onClick={() => createAddress({ variables: { nested } })}
             disabled={received}
             withMargin={'0 0 0 16px'}
             mobileMargin={'16px 0 0'}
@@ -126,7 +124,7 @@ export const ReceiveOnChainCard = () => {
             mobileFullWidth={true}
           >
             Create Address
-          </SecureButton>
+          </ColorButton>
         </ResponsiveLine>
       )}
     </>

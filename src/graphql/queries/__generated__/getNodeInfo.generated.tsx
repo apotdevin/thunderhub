@@ -1,11 +1,14 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
 
-export type GetCanConnectQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetCanConnectQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetCanConnectQuery = { __typename?: 'Query' } & {
   getNodeInfo?: Types.Maybe<
@@ -24,9 +27,7 @@ export type GetCanConnectQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type GetNodeInfoQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetNodeInfoQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetNodeInfoQuery = { __typename?: 'Query' } & Pick<
   Types.Query,
@@ -55,7 +56,7 @@ export type GetNodeInfoQuery = { __typename?: 'Query' } & Pick<
   };
 
 export type GetChannelAmountInfoQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetChannelAmountInfoQuery = { __typename?: 'Query' } & {
@@ -70,7 +71,7 @@ export type GetChannelAmountInfoQuery = { __typename?: 'Query' } & {
 };
 
 export type GetCanConnectInfoQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetCanConnectInfoQuery = { __typename?: 'Query' } & {
@@ -83,8 +84,8 @@ export type GetCanConnectInfoQuery = { __typename?: 'Query' } & {
 };
 
 export const GetCanConnectDocument = gql`
-  query GetCanConnect($auth: authType!) {
-    getNodeInfo(auth: $auth) {
+  query GetCanConnect {
+    getNodeInfo {
       chains
       color
       active_channels_count
@@ -110,31 +111,30 @@ export const GetCanConnectDocument = gql`
  * @example
  * const { data, loading, error } = useGetCanConnectQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetCanConnectQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: QueryHookOptions<
     GetCanConnectQuery,
     GetCanConnectQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetCanConnectQuery,
-    GetCanConnectQueryVariables
-  >(GetCanConnectDocument, baseOptions);
+  return useQuery<GetCanConnectQuery, GetCanConnectQueryVariables>(
+    GetCanConnectDocument,
+    baseOptions
+  );
 }
 export function useGetCanConnectLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetCanConnectQuery,
     GetCanConnectQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetCanConnectQuery,
-    GetCanConnectQueryVariables
-  >(GetCanConnectDocument, baseOptions);
+  return useLazyQuery<GetCanConnectQuery, GetCanConnectQueryVariables>(
+    GetCanConnectDocument,
+    baseOptions
+  );
 }
 export type GetCanConnectQueryHookResult = ReturnType<
   typeof useGetCanConnectQuery
@@ -142,13 +142,13 @@ export type GetCanConnectQueryHookResult = ReturnType<
 export type GetCanConnectLazyQueryHookResult = ReturnType<
   typeof useGetCanConnectLazyQuery
 >;
-export type GetCanConnectQueryResult = ApolloReactCommon.QueryResult<
+export type GetCanConnectQueryResult = QueryResult<
   GetCanConnectQuery,
   GetCanConnectQueryVariables
 >;
 export const GetNodeInfoDocument = gql`
-  query GetNodeInfo($auth: authType!) {
-    getNodeInfo(auth: $auth) {
+  query GetNodeInfo {
+    getNodeInfo {
       chains
       color
       active_channels_count
@@ -159,9 +159,9 @@ export const GetNodeInfoDocument = gql`
       pending_channels_count
       version
     }
-    getChainBalance(auth: $auth)
-    getPendingChainBalance(auth: $auth)
-    getChannelBalance(auth: $auth) {
+    getChainBalance
+    getPendingChainBalance
+    getChannelBalance {
       confirmedBalance
       pendingBalance
     }
@@ -180,43 +180,39 @@ export const GetNodeInfoDocument = gql`
  * @example
  * const { data, loading, error } = useGetNodeInfoQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetNodeInfoQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetNodeInfoQuery,
-    GetNodeInfoQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetNodeInfoQuery, GetNodeInfoQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetNodeInfoQuery, GetNodeInfoQueryVariables>(
+  return useQuery<GetNodeInfoQuery, GetNodeInfoQueryVariables>(
     GetNodeInfoDocument,
     baseOptions
   );
 }
 export function useGetNodeInfoLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetNodeInfoQuery,
     GetNodeInfoQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetNodeInfoQuery,
-    GetNodeInfoQueryVariables
-  >(GetNodeInfoDocument, baseOptions);
+  return useLazyQuery<GetNodeInfoQuery, GetNodeInfoQueryVariables>(
+    GetNodeInfoDocument,
+    baseOptions
+  );
 }
 export type GetNodeInfoQueryHookResult = ReturnType<typeof useGetNodeInfoQuery>;
 export type GetNodeInfoLazyQueryHookResult = ReturnType<
   typeof useGetNodeInfoLazyQuery
 >;
-export type GetNodeInfoQueryResult = ApolloReactCommon.QueryResult<
+export type GetNodeInfoQueryResult = QueryResult<
   GetNodeInfoQuery,
   GetNodeInfoQueryVariables
 >;
 export const GetChannelAmountInfoDocument = gql`
-  query GetChannelAmountInfo($auth: authType!) {
-    getNodeInfo(auth: $auth) {
+  query GetChannelAmountInfo {
+    getNodeInfo {
       active_channels_count
       closed_channels_count
       pending_channels_count
@@ -236,28 +232,27 @@ export const GetChannelAmountInfoDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelAmountInfoQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetChannelAmountInfoQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: QueryHookOptions<
     GetChannelAmountInfoQuery,
     GetChannelAmountInfoQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return useQuery<
     GetChannelAmountInfoQuery,
     GetChannelAmountInfoQueryVariables
   >(GetChannelAmountInfoDocument, baseOptions);
 }
 export function useGetChannelAmountInfoLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetChannelAmountInfoQuery,
     GetChannelAmountInfoQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return useLazyQuery<
     GetChannelAmountInfoQuery,
     GetChannelAmountInfoQueryVariables
   >(GetChannelAmountInfoDocument, baseOptions);
@@ -268,13 +263,13 @@ export type GetChannelAmountInfoQueryHookResult = ReturnType<
 export type GetChannelAmountInfoLazyQueryHookResult = ReturnType<
   typeof useGetChannelAmountInfoLazyQuery
 >;
-export type GetChannelAmountInfoQueryResult = ApolloReactCommon.QueryResult<
+export type GetChannelAmountInfoQueryResult = QueryResult<
   GetChannelAmountInfoQuery,
   GetChannelAmountInfoQueryVariables
 >;
 export const GetCanConnectInfoDocument = gql`
-  query GetCanConnectInfo($auth: authType!) {
-    getNodeInfo(auth: $auth) {
+  query GetCanConnectInfo {
+    getNodeInfo {
       public_key
       uris
     }
@@ -293,31 +288,30 @@ export const GetCanConnectInfoDocument = gql`
  * @example
  * const { data, loading, error } = useGetCanConnectInfoQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetCanConnectInfoQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: QueryHookOptions<
     GetCanConnectInfoQuery,
     GetCanConnectInfoQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetCanConnectInfoQuery,
-    GetCanConnectInfoQueryVariables
-  >(GetCanConnectInfoDocument, baseOptions);
+  return useQuery<GetCanConnectInfoQuery, GetCanConnectInfoQueryVariables>(
+    GetCanConnectInfoDocument,
+    baseOptions
+  );
 }
 export function useGetCanConnectInfoLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetCanConnectInfoQuery,
     GetCanConnectInfoQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetCanConnectInfoQuery,
-    GetCanConnectInfoQueryVariables
-  >(GetCanConnectInfoDocument, baseOptions);
+  return useLazyQuery<GetCanConnectInfoQuery, GetCanConnectInfoQueryVariables>(
+    GetCanConnectInfoDocument,
+    baseOptions
+  );
 }
 export type GetCanConnectInfoQueryHookResult = ReturnType<
   typeof useGetCanConnectInfoQuery
@@ -325,7 +319,7 @@ export type GetCanConnectInfoQueryHookResult = ReturnType<
 export type GetCanConnectInfoLazyQueryHookResult = ReturnType<
   typeof useGetCanConnectInfoLazyQuery
 >;
-export type GetCanConnectInfoQueryResult = ApolloReactCommon.QueryResult<
+export type GetCanConnectInfoQueryResult = QueryResult<
   GetCanConnectInfoQuery,
   GetCanConnectInfoQueryVariables
 >;

@@ -1,7 +1,6 @@
 import { getChannels } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getLnd } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
 import { GetChannelsType } from 'server/types/ln-service.types';
 
@@ -12,7 +11,7 @@ export const getChannelReport = async (
 ) => {
   await requestLimiter(context.ip, 'channelReport');
 
-  const lnd = getLnd(params.auth, context);
+  const { lnd } = context;
 
   const info = await to<GetChannelsType>(getChannels({ lnd }));
 

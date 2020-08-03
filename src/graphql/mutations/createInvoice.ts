@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const CREATE_INVOICE = gql`
-  mutation CreateInvoice($amount: Int!, $auth: authType!) {
-    createInvoice(amount: $amount, auth: $auth) {
+  mutation CreateInvoice($amount: Int!) {
+    createInvoice(amount: $amount) {
       request
     }
   }

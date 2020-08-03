@@ -1,11 +1,15 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
 
 export type CloseChannelMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
-  auth: Types.AuthType;
   forceClose?: Types.Maybe<Types.Scalars['Boolean']>;
   target?: Types.Maybe<Types.Scalars['Int']>;
   tokens?: Types.Maybe<Types.Scalars['Int']>;
@@ -23,7 +27,6 @@ export type CloseChannelMutation = { __typename?: 'Mutation' } & {
 export const CloseChannelDocument = gql`
   mutation CloseChannel(
     $id: String!
-    $auth: authType!
     $forceClose: Boolean
     $target: Int
     $tokens: Int
@@ -33,14 +36,13 @@ export const CloseChannelDocument = gql`
       forceClose: $forceClose
       targetConfirmations: $target
       tokensPerVByte: $tokens
-      auth: $auth
     ) {
       transactionId
       transactionOutputIndex
     }
   }
 `;
-export type CloseChannelMutationFn = ApolloReactCommon.MutationFunction<
+export type CloseChannelMutationFn = MutationFunction<
   CloseChannelMutation,
   CloseChannelMutationVariables
 >;
@@ -59,7 +61,6 @@ export type CloseChannelMutationFn = ApolloReactCommon.MutationFunction<
  * const [closeChannelMutation, { data, loading, error }] = useCloseChannelMutation({
  *   variables: {
  *      id: // value for 'id'
- *      auth: // value for 'auth'
  *      forceClose: // value for 'forceClose'
  *      target: // value for 'target'
  *      tokens: // value for 'tokens'
@@ -67,23 +68,21 @@ export type CloseChannelMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCloseChannelMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: MutationHookOptions<
     CloseChannelMutation,
     CloseChannelMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    CloseChannelMutation,
-    CloseChannelMutationVariables
-  >(CloseChannelDocument, baseOptions);
+  return useMutation<CloseChannelMutation, CloseChannelMutationVariables>(
+    CloseChannelDocument,
+    baseOptions
+  );
 }
 export type CloseChannelMutationHookResult = ReturnType<
   typeof useCloseChannelMutation
 >;
-export type CloseChannelMutationResult = ApolloReactCommon.MutationResult<
-  CloseChannelMutation
->;
-export type CloseChannelMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CloseChannelMutationResult = MutationResult<CloseChannelMutation>;
+export type CloseChannelMutationOptions = BaseMutationOptions<
   CloseChannelMutation,
   CloseChannelMutationVariables
 >;

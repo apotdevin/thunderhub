@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const GET_BACKUPS = gql`
-  query GetBackups($auth: authType!) {
-    getBackups(auth: $auth)
+  query GetBackups {
+    getBackups
   }
 `;

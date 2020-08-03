@@ -9,12 +9,7 @@ import {
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-  getLnd,
-} from 'server/helpers/helpers';
+import { getErrorMsg } from 'server/helpers/helpers';
 import { toWithError } from 'server/helpers/async';
 import { ChannelType } from 'server/types/ln-service.types';
 
@@ -23,8 +18,7 @@ export const toolsResolvers = {
     verifyBackups: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'verifyBackups');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       let backupObj = { backup: '', channels: [] as ChannelType[] };
       try {
@@ -51,8 +45,7 @@ export const toolsResolvers = {
     recoverFunds: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'recoverFunds');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       let backupObj = { backup: '' };
       try {
@@ -78,8 +71,7 @@ export const toolsResolvers = {
     getBackups: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getBackups');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       try {
         const backups = await getBackups({
@@ -94,7 +86,7 @@ export const toolsResolvers = {
     adminCheck: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'adminCheck');
 
-      const lnd = getLnd(params.auth, context);
+      const { lnd } = context;
 
       const [, error] = await toWithError(
         pay({
@@ -123,8 +115,7 @@ export const toolsResolvers = {
     verifyMessage: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'verifyMessage');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       try {
         const message: { signed_by: string } = await verifyMessage({
@@ -142,8 +133,7 @@ export const toolsResolvers = {
     signMessage: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'signMessage');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       try {
         const message: { signature: string } = await signMessage({

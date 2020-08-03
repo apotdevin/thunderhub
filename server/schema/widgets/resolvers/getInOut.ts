@@ -3,7 +3,7 @@ import { differenceInHours, differenceInCalendarDays } from 'date-fns';
 import { groupBy } from 'underscore';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
+
 import { to } from 'server/helpers/async';
 import {
   GetInvoicesType,
@@ -18,8 +18,7 @@ export const getInOut = async (
 ) => {
   await requestLimiter(context.ip, 'getInOut');
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const { lnd } = context;
 
   const endDate = new Date();
   let periods = 7;

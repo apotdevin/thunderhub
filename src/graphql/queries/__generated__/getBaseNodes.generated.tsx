@@ -1,6 +1,11 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
 
 export type GetBaseNodesQueryVariables = Types.Exact<{ [key: string]: never }>;
@@ -43,26 +48,23 @@ export const GetBaseNodesDocument = gql`
  * });
  */
 export function useGetBaseNodesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetBaseNodesQuery,
-    GetBaseNodesQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetBaseNodesQuery, GetBaseNodesQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<
-    GetBaseNodesQuery,
-    GetBaseNodesQueryVariables
-  >(GetBaseNodesDocument, baseOptions);
+  return useQuery<GetBaseNodesQuery, GetBaseNodesQueryVariables>(
+    GetBaseNodesDocument,
+    baseOptions
+  );
 }
 export function useGetBaseNodesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetBaseNodesQuery,
     GetBaseNodesQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetBaseNodesQuery,
-    GetBaseNodesQueryVariables
-  >(GetBaseNodesDocument, baseOptions);
+  return useLazyQuery<GetBaseNodesQuery, GetBaseNodesQueryVariables>(
+    GetBaseNodesDocument,
+    baseOptions
+  );
 }
 export type GetBaseNodesQueryHookResult = ReturnType<
   typeof useGetBaseNodesQuery
@@ -70,7 +72,7 @@ export type GetBaseNodesQueryHookResult = ReturnType<
 export type GetBaseNodesLazyQueryHookResult = ReturnType<
   typeof useGetBaseNodesLazyQuery
 >;
-export type GetBaseNodesQueryResult = ApolloReactCommon.QueryResult<
+export type GetBaseNodesQueryResult = QueryResult<
   GetBaseNodesQuery,
   GetBaseNodesQueryVariables
 >;
