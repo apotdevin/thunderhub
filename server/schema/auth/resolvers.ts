@@ -6,11 +6,11 @@ import {
   PRE_PASS_STRING,
 } from 'server/helpers/fileHelpers';
 import { ContextType } from 'server/types/apiTypes';
-import { SSO_ACCOUNT, SERVER_ACCOUNT } from 'src/context/AccountContext';
 import { logger } from 'server/helpers/logger';
 import cookie from 'cookie';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import bcrypt from 'bcryptjs';
+import { appConstants } from 'server/utils/appConstants';
 
 const { serverRuntimeConfig } = getConfig() || {};
 const { cookiePath, nodeEnv } = serverRuntimeConfig || {};
@@ -26,7 +26,7 @@ export const authResolvers = {
         return null;
       }
 
-      if (!sso.host || !sso.macaroon) {
+      if (!sso.socket || !sso.macaroon) {
         logger.warn('Host and macaroon are required for SSO');
         return null;
       }
@@ -47,11 +47,15 @@ export const authResolvers = {
         nodeEnv === 'development'
       ) {
         refreshCookie(cookiePath);
-        const token = jwt.sign({ user: SSO_ACCOUNT }, secret);
+        const token = jwt.sign({ id: 'sso' }, secret);
 
         res.setHeader(
           'Set-Cookie',
-          cookie.serialize('SSOAuth', token, { httpOnly: true, sameSite: true })
+          cookie.serialize(appConstants.cookieName, token, {
+            httpOnly: true,
+            sameSite: true,
+            path: '/',
+          })
         );
         return true;
       }
@@ -83,17 +87,13 @@ export const authResolvers = {
       }
 
       logger.debug(`Correct password for account ${params.id}`);
-      const token = jwt.sign(
-        {
-          id: params.id,
-        },
-        secret
-      );
+      const token = jwt.sign({ id: params.id }, secret);
       res.setHeader(
         'Set-Cookie',
-        cookie.serialize('AccountAuth', token, {
+        cookie.serialize(appConstants.cookieName, token, {
           httpOnly: true,
           sameSite: true,
+          path: '/',
         })
       );
       return true;
@@ -104,20 +104,10 @@ export const authResolvers = {
       const { ip, res } = context;
       await requestLimiter(ip, 'logout');
 
-      if (params.type === SSO_ACCOUNT) {
-        res.setHeader(
-          'Set-Cookie',
-          cookie.serialize('SSOAuth', '', { maxAge: 1 })
-        );
-        return true;
-      }
-      if (params.type === SERVER_ACCOUNT) {
-        res.setHeader(
-          'Set-Cookie',
-          cookie.serialize('AccountAuth', '', { maxAge: 1 })
-        );
-        return true;
-      }
+      res.setHeader(
+        'Set-Cookie',
+        cookie.serialize(appConstants.cookieName, '', { maxAge: 1 })
+      );
       return true;
     },
   },

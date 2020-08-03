@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useGetVolumeHealthQuery } from 'src/graphql/queries/__generated__/getVolumeHealth.generated';
-import { useAccountState } from 'src/context/AccountContext';
 import {
   SubCard,
   DarkSubTitle,
@@ -65,11 +64,7 @@ const VolumeStatCard = ({
 export const VolumeStats = () => {
   const [open, openSet] = React.useState(0);
   const dispatch = useStatsDispatch();
-  const { auth } = useAccountState();
-  const { data, loading } = useGetVolumeHealthQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+  const { data, loading } = useGetVolumeHealthQuery();
 
   React.useEffect(() => {
     if (data && data.getVolumeHealth) {

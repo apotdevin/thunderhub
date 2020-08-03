@@ -1,21 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { X, LogOut } from 'react-feather';
+import React, { useEffect } from 'react';
+import { LogOut } from 'react-feather';
 import { useRouter } from 'next/router';
-import {
-  useAccountState,
-  useAccountDispatch,
-  SSO_ACCOUNT,
-} from 'src/context/AccountContext';
 import { chartColors } from 'src/styles/Themes';
 import { useLogoutMutation } from 'src/graphql/mutations/__generated__/logout.generated';
-import getConfig from 'next/config';
+import { useAccounts, useAccount } from 'src/hooks/UseAccount';
 import {
   CardWithTitle,
   SubTitle,
   Card,
-  SingleLine,
   Sub4Title,
-  Separation,
 } from '../../components/generic/Styled';
 import { SettingsLine } from '../../../pages/settings';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
@@ -24,68 +17,33 @@ import {
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
 import { useStatusDispatch } from '../../context/StatusContext';
-import { Auth } from '../../components/auth';
 import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
 
-const { publicRuntimeConfig } = getConfig();
-const { noClient } = publicRuntimeConfig;
-
 export const AccountSettings = () => {
-  const [status, setStatus] = useState('none');
-
   const { push } = useRouter();
-  const { account, accounts } = useAccountState();
 
   const dispatch = useStatusDispatch();
   const dispatchChat = useChatDispatch();
-  const dispatchAccount = useAccountDispatch();
-
-  const [isType, setIsType] = useState('login');
-  const [willAdd, setWillAdd] = useState(false);
 
   const [logout, { data, loading }] = useLogoutMutation({
     refetchQueries: ['GetServerAccounts'],
   });
 
+  const accounts = useAccounts();
+  const account = useAccount();
+
   useEffect(() => {
     if (data && data.logout) {
       dispatch({ type: 'disconnected' });
       dispatchChat({ type: 'disconnected' });
-      dispatchAccount({ type: 'logout' });
       push(appendBasePath('/'));
     }
-  }, [data, dispatch, dispatchChat, dispatchAccount, push]);
+  }, [data, dispatch, dispatchChat, push]);
 
   if (!account) {
     return null;
   }
-
-  const renderButtons = () => (
-    <SingleLine>
-      <Sub4Title>Connection Type:</Sub4Title>
-      <MultiButton margin={'0 0 16px'}>
-        <SingleButton
-          selected={isType === 'login'}
-          onClick={() => setIsType('login')}
-        >
-          Connection Details
-        </SingleButton>
-        <SingleButton
-          selected={isType === 'connect'}
-          onClick={() => setIsType('connect')}
-        >
-          LndConnect Url
-        </SingleButton>
-        <SingleButton
-          selected={isType === 'btcpay'}
-          onClick={() => setIsType('btcpay')}
-        >
-          BTCPayServer Info
-        </SingleButton>
-      </MultiButton>
-    </SingleLine>
-  );
 
   const renderChangeAccount = () => {
     if (accounts.length <= 1) {
@@ -96,81 +54,33 @@ export const AccountSettings = () => {
       <SettingsLine>
         <Sub4Title>Change Account</Sub4Title>
         <MultiButton>
-          {accounts.map(
-            ({ name: accountName, id: accountId, type: accountType }) => {
-              return (
-                <SingleButton
-                  key={accountId}
-                  selected={accountId === account.id}
-                  onClick={() => {
-                    if (accountId !== account.id) {
-                      switch (accountType) {
-                        case SSO_ACCOUNT:
-                          dispatchAccount({
-                            type: 'changeAccount',
-                            changeId: accountId,
-                          });
-                          break;
-                        default:
-                          dispatch({ type: 'disconnected' });
-                          dispatchChat({ type: 'disconnected' });
-                          dispatchAccount({
-                            type: 'changeAccount',
-                            changeId: accountId,
-                          });
-                          push(appendBasePath('/'));
-                          break;
-                      }
-                    }
-                  }}
-                >
-                  {accountName}
-                </SingleButton>
-              );
-            }
-          )}
+          {accounts.map(({ name: accountName, id: accountId }) => {
+            return (
+              <SingleButton
+                key={accountId}
+                selected={accountId === account.id}
+                onClick={() => {
+                  if (accountId !== account.id) {
+                    dispatch({ type: 'disconnected' });
+                    dispatchChat({ type: 'disconnected' });
+                    push(appendBasePath('/'));
+                  }
+                }}
+              >
+                {accountName}
+              </SingleButton>
+            );
+          })}
         </MultiButton>
       </SettingsLine>
     );
   };
-
-  const renderAddClientAccount = () => (
-    <>
-      <SettingsLine>
-        <Sub4Title>Add Browser Account</Sub4Title>
-        <ColorButton
-          onClick={() => {
-            if (willAdd) {
-              setIsType('login');
-            }
-            setWillAdd(prev => !prev);
-          }}
-        >
-          {willAdd ? <X size={18} /> : 'Add New Account'}
-        </ColorButton>
-      </SettingsLine>
-      {willAdd && (
-        <>
-          <Separation />
-          {status === 'none' && renderButtons()}
-          <Auth
-            type={isType}
-            status={status}
-            setStatus={setStatus}
-            callback={() => setStatus('none')}
-          />
-          <Separation />
-        </>
-      )}
-    </>
-  );
 
   return (
     <CardWithTitle>
       <SubTitle>Account</SubTitle>
       <Card>
         {renderChangeAccount()}
-        {!noClient && renderAddClientAccount()}
         <SettingsLine>
           <Sub4Title>Logout</Sub4Title>
           <ColorButton

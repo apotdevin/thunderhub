@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const GET_FORWARDS = gql`
-  query GetForwards($auth: authType!, $time: String) {
-    getForwards(auth: $auth, time: $time) {
+  query GetForwards($time: String) {
+    getForwards(time: $time) {
       forwards {
         created_at
         fee

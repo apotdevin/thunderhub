@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
 import { useConfigState } from 'src/context/ConfigContext';
 import { sortBy } from 'underscore';
@@ -21,8 +20,6 @@ export const Channels: React.FC = () => {
 
   const { sortDirection, channelSort } = useConfigState();
   const [indexOpen, setIndexOpen] = useState(0);
-
-  const { auth } = useAccountState();
 
   const { inChannel, outChannel } = useRebalanceState();
   const hasIn = !!inChannel;
@@ -49,8 +46,6 @@ export const Channels: React.FC = () => {
   }, [hasIn, hasOut, push]);
 
   const { loading, data } = useGetChannelsQuery({
-    skip: !auth,
-    variables: { auth },
     errorPolicy: 'all',
     onError: error => toast.error(getErrorContent(error)),
   });

@@ -1,5 +1,5 @@
 import merge from 'lodash.merge';
-import { makeExecutableSchema } from 'apollo-server-micro';
+import { makeExecutableSchema } from 'graphql-tools';
 import { nodeTypes } from './node/types';
 import { nodeResolvers } from './node/resolvers';
 import { authResolvers } from './auth/resolvers';
@@ -93,4 +93,4 @@ const resolvers = merge(
   tbaseResolvers
 );
 
-export default makeExecutableSchema({ typeDefs, resolvers });
+export const schema = makeExecutableSchema({ typeDefs, resolvers });

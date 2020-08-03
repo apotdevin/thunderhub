@@ -9,7 +9,6 @@ import {
 } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
 import { useBitcoinState } from '../../../../context/BitcoinContext';
-import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
 import {
   MultiButton,
@@ -199,9 +198,12 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
           'Fee:',
           type === 'target' ? `${amount} Blocks` : `${amount} Sats/Byte`
         )}
-        <SecureButton
-          callback={payAddress}
-          variables={{ address, ...typeAmount(), ...tokenAmount }}
+        <ColorButton
+          onClick={() =>
+            payAddress({
+              variables: { address, ...typeAmount(), ...tokenAmount },
+            })
+          }
           disabled={!canSend}
           withMargin={'16px 0 0'}
           fullWidth={true}
@@ -209,7 +211,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
           loading={loading}
         >
           Send To Address
-        </SecureButton>
+        </ColorButton>
       </Modal>
     </>
   );

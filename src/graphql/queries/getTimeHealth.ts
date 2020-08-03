@@ -1,8 +1,8 @@
 import { gql } from 'apollo-server-micro';
 
 export const GET_TIME_HEALTH = gql`
-  query GetTimeHealth($auth: authType!) {
-    getTimeHealth(auth: $auth) {
+  query GetTimeHealth {
+    getTimeHealth {
       score
       channels {
         id

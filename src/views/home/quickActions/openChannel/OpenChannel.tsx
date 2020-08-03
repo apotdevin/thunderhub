@@ -3,10 +3,10 @@ import { ChevronRight } from 'react-feather';
 import { toast } from 'react-toastify';
 import { useOpenChannelMutation } from 'src/graphql/mutations/__generated__/openChannel.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
+import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { Separation } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
 import { useBitcoinState } from '../../../../context/BitcoinContext';
-import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
 import {
   SingleButton,
@@ -143,20 +143,23 @@ export const OpenChannelCard = ({
         )}
       </InputWithDeco>
       <Separation />
-      <SecureButton
+      <ColorButton
         fullWidth={true}
-        callback={openChannel}
-        variables={{
-          amount: size,
-          partnerPublicKey: publicKey,
-          tokensPerVByte: fee,
-          isPrivate: privateChannel,
-        }}
+        onClick={() =>
+          openChannel({
+            variables: {
+              amount: size,
+              partnerPublicKey: publicKey || '',
+              tokensPerVByte: fee,
+              isPrivate: privateChannel,
+            },
+          })
+        }
         disabled={!canOpen}
       >
         Open Channel
         <ChevronRight size={18} />
-      </SecureButton>
+      </ColorButton>
     </>
   );
 };

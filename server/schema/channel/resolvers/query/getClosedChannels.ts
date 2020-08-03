@@ -2,7 +2,6 @@ import { getClosedChannels as getLnClosedChannels } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { to } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 
 interface ChannelListProps {
   channels: ChannelProps[];
@@ -32,8 +31,7 @@ export const getClosedChannels = async (
 ) => {
   await requestLimiter(context.ip, 'closedChannels');
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const { lnd } = context;
 
   const { channels }: ChannelListProps = await to(getLnClosedChannels({ lnd }));
 

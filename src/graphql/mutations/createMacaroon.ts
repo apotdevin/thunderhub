@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const CREATE_MACAROON = gql`
-  mutation CreateMacaroon($auth: authType!, $permissions: permissionsType!) {
-    createMacaroon(auth: $auth, permissions: $permissions)
+  mutation CreateMacaroon($permissions: permissionsType!) {
+    createMacaroon(permissions: $permissions)
   }
 `;

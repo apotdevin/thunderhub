@@ -1,6 +1,11 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
 
 export type GetServerAccountsQueryVariables = Types.Exact<{
@@ -47,26 +52,26 @@ export const GetServerAccountsDocument = gql`
  * });
  */
 export function useGetServerAccountsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: QueryHookOptions<
     GetServerAccountsQuery,
     GetServerAccountsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetServerAccountsQuery,
-    GetServerAccountsQueryVariables
-  >(GetServerAccountsDocument, baseOptions);
+  return useQuery<GetServerAccountsQuery, GetServerAccountsQueryVariables>(
+    GetServerAccountsDocument,
+    baseOptions
+  );
 }
 export function useGetServerAccountsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetServerAccountsQuery,
     GetServerAccountsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetServerAccountsQuery,
-    GetServerAccountsQueryVariables
-  >(GetServerAccountsDocument, baseOptions);
+  return useLazyQuery<GetServerAccountsQuery, GetServerAccountsQueryVariables>(
+    GetServerAccountsDocument,
+    baseOptions
+  );
 }
 export type GetServerAccountsQueryHookResult = ReturnType<
   typeof useGetServerAccountsQuery
@@ -74,7 +79,7 @@ export type GetServerAccountsQueryHookResult = ReturnType<
 export type GetServerAccountsLazyQueryHookResult = ReturnType<
   typeof useGetServerAccountsLazyQuery
 >;
-export type GetServerAccountsQueryResult = ApolloReactCommon.QueryResult<
+export type GetServerAccountsQueryResult = QueryResult<
   GetServerAccountsQuery,
   GetServerAccountsQueryVariables
 >;

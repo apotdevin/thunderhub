@@ -11,13 +11,39 @@ Object {
       "destination": "string",
       "destination_node": Object {
         "node": Object {
-          "alias": "Node not found",
+          "alias": "string",
         },
       },
       "expires_at": "2011-10-05T14:48:00.000Z",
       "id": "string",
       "probe_route": Object {
-        "route": null,
+        "route": Object {
+          "confidence": 1000,
+          "fee": 1000,
+          "fee_mtokens": "string",
+          "hops": Array [
+            Object {
+              "channel": "string",
+              "channel_capacity": 1000,
+              "fee": 1000,
+              "fee_mtokens": "string",
+              "forward": 1000,
+              "forward_mtokens": "string",
+              "node": Object {
+                "node": Object {
+                  "alias": "string",
+                },
+              },
+              "public_key": "string",
+              "timeout": 1000,
+            },
+          ],
+          "mtokens": "string",
+          "safe_fee": 1000,
+          "safe_tokens": 1000,
+          "timeout": 1000,
+          "tokens": 1000,
+        },
       },
       "routes": Array [
         Array [
@@ -153,39 +179,72 @@ Object {
     "getChannelFees": Array [
       Object {
         "channelInfo": Object {
-          "channel": null,
+          "channel": Object {
+            "node_policies": null,
+            "partner_node_policies": Object {
+              "base_fee_mtokens": "2000",
+              "cltv_delta": 1000,
+              "fee_rate": 1000,
+              "max_htlc_mtokens": "10000",
+              "min_htlc_mtokens": "10000",
+            },
+            "transaction_id": "string",
+            "transaction_vout": 1000,
+          },
         },
         "id": "100x1x1",
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "color": null,
+            "alias": "string",
+            "color": "string",
           },
         },
         "partner_public_key": "string",
       },
       Object {
         "channelInfo": Object {
-          "channel": null,
+          "channel": Object {
+            "node_policies": null,
+            "partner_node_policies": Object {
+              "base_fee_mtokens": "2000",
+              "cltv_delta": 1000,
+              "fee_rate": 1000,
+              "max_htlc_mtokens": "10000",
+              "min_htlc_mtokens": "10000",
+            },
+            "transaction_id": "string",
+            "transaction_vout": 1000,
+          },
         },
         "id": "100x1x1",
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "color": null,
+            "alias": "string",
+            "color": "string",
           },
         },
         "partner_public_key": "string",
       },
       Object {
         "channelInfo": Object {
-          "channel": null,
+          "channel": Object {
+            "node_policies": null,
+            "partner_node_policies": Object {
+              "base_fee_mtokens": "2000",
+              "cltv_delta": 1000,
+              "fee_rate": 1000,
+              "max_htlc_mtokens": "10000",
+              "min_htlc_mtokens": "10000",
+            },
+            "transaction_id": "string",
+            "transaction_vout": 1000,
+          },
         },
         "id": "100x1x1",
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "color": null,
+            "alias": "string",
+            "color": "string",
           },
         },
         "partner_public_key": "string",
@@ -221,15 +280,21 @@ Object {
         "local_balance": 1000,
         "local_reserve": 1000,
         "partner_fee_info": Object {
-          "channel": null,
+          "channel": Object {
+            "partner_node_policies": Object {
+              "base_fee_mtokens": "2000",
+              "cltv_delta": 1000,
+              "fee_rate": 1000,
+            },
+          },
         },
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "capacity": null,
-            "channel_count": null,
-            "color": null,
-            "updated_at": null,
+            "alias": "string",
+            "capacity": "1000",
+            "channel_count": 1000,
+            "color": "string",
+            "updated_at": "2011-10-05T14:48:00.000Z",
           },
         },
         "partner_public_key": "string",
@@ -258,15 +323,21 @@ Object {
         "local_balance": 1000,
         "local_reserve": 1000,
         "partner_fee_info": Object {
-          "channel": null,
+          "channel": Object {
+            "partner_node_policies": Object {
+              "base_fee_mtokens": "2000",
+              "cltv_delta": 1000,
+              "fee_rate": 1000,
+            },
+          },
         },
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "capacity": null,
-            "channel_count": null,
-            "color": null,
-            "updated_at": null,
+            "alias": "string",
+            "capacity": "1000",
+            "channel_count": 1000,
+            "color": "string",
+            "updated_at": "2011-10-05T14:48:00.000Z",
           },
         },
         "partner_public_key": "string",
@@ -295,15 +366,21 @@ Object {
         "local_balance": 1000,
         "local_reserve": 1000,
         "partner_fee_info": Object {
-          "channel": null,
+          "channel": Object {
+            "partner_node_policies": Object {
+              "base_fee_mtokens": "2000",
+              "cltv_delta": 1000,
+              "fee_rate": 1000,
+            },
+          },
         },
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "capacity": null,
-            "channel_count": null,
-            "color": null,
-            "updated_at": null,
+            "alias": "string",
+            "capacity": "1000",
+            "channel_count": 1000,
+            "color": "string",
+            "updated_at": "2011-10-05T14:48:00.000Z",
           },
         },
         "partner_public_key": "string",
@@ -347,11 +424,11 @@ Object {
         "is_remote_force_close": false,
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "capacity": null,
-            "channel_count": null,
-            "color": null,
-            "updated_at": null,
+            "alias": "string",
+            "capacity": "1000",
+            "channel_count": 1000,
+            "color": "string",
+            "updated_at": "2011-10-05T14:48:00.000Z",
           },
         },
         "partner_public_key": "abcdef",
@@ -372,11 +449,11 @@ Object {
         "is_remote_force_close": false,
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "capacity": null,
-            "channel_count": null,
-            "color": null,
-            "updated_at": null,
+            "alias": "string",
+            "capacity": "1000",
+            "channel_count": 1000,
+            "color": "string",
+            "updated_at": "2011-10-05T14:48:00.000Z",
           },
         },
         "partner_public_key": "abcdef",
@@ -397,11 +474,11 @@ Object {
         "is_remote_force_close": false,
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "capacity": null,
-            "channel_count": null,
-            "color": null,
-            "updated_at": null,
+            "alias": "string",
+            "capacity": "1000",
+            "channel_count": 1000,
+            "color": "string",
+            "updated_at": "2011-10-05T14:48:00.000Z",
           },
         },
         "partner_public_key": "abcdef",
@@ -459,7 +536,7 @@ Object {
           },
           "partner": Object {
             "node": Object {
-              "alias": "Node not found",
+              "alias": "string",
             },
           },
           "partnerSide": Object {
@@ -485,7 +562,7 @@ Object {
           },
           "partner": Object {
             "node": Object {
-              "alias": "Node not found",
+              "alias": "string",
             },
           },
           "partnerSide": Object {
@@ -511,7 +588,7 @@ Object {
           },
           "partner": Object {
             "node": Object {
-              "alias": "Node not found",
+              "alias": "string",
             },
           },
           "partnerSide": Object {
@@ -549,12 +626,30 @@ Object {
           "fee_mtokens": "string",
           "incoming_channel": "1",
           "incoming_channel_info": Object {
-            "channel": null,
+            "channel": Object {
+              "partner_node_policies": Object {
+                "node": Object {
+                  "node": Object {
+                    "alias": "string",
+                    "color": "string",
+                  },
+                },
+              },
+            },
           },
           "mtokens": "string",
           "outgoing_channel": "2",
           "outgoing_channel_info": Object {
-            "channel": null,
+            "channel": Object {
+              "partner_node_policies": Object {
+                "node": Object {
+                  "node": Object {
+                    "alias": "string",
+                    "color": "string",
+                  },
+                },
+              },
+            },
           },
           "tokens": 1000,
         },
@@ -564,12 +659,30 @@ Object {
           "fee_mtokens": "string",
           "incoming_channel": "1",
           "incoming_channel_info": Object {
-            "channel": null,
+            "channel": Object {
+              "partner_node_policies": Object {
+                "node": Object {
+                  "node": Object {
+                    "alias": "string",
+                    "color": "string",
+                  },
+                },
+              },
+            },
           },
           "mtokens": "string",
           "outgoing_channel": "2",
           "outgoing_channel_info": Object {
-            "channel": null,
+            "channel": Object {
+              "partner_node_policies": Object {
+                "node": Object {
+                  "node": Object {
+                    "alias": "string",
+                    "color": "string",
+                  },
+                },
+              },
+            },
           },
           "tokens": 1000,
         },
@@ -579,12 +692,30 @@ Object {
           "fee_mtokens": "string",
           "incoming_channel": "12",
           "incoming_channel_info": Object {
-            "channel": null,
+            "channel": Object {
+              "partner_node_policies": Object {
+                "node": Object {
+                  "node": Object {
+                    "alias": "string",
+                    "color": "string",
+                  },
+                },
+              },
+            },
           },
           "mtokens": "string",
           "outgoing_channel": "22",
           "outgoing_channel_info": Object {
-            "channel": null,
+            "channel": Object {
+              "partner_node_policies": Object {
+                "node": Object {
+                  "node": Object {
+                    "alias": "string",
+                    "color": "string",
+                  },
+                },
+              },
+            },
           },
           "tokens": 1000,
         },
@@ -594,12 +725,30 @@ Object {
           "fee_mtokens": "string",
           "incoming_channel": "1",
           "incoming_channel_info": Object {
-            "channel": null,
+            "channel": Object {
+              "partner_node_policies": Object {
+                "node": Object {
+                  "node": Object {
+                    "alias": "string",
+                    "color": "string",
+                  },
+                },
+              },
+            },
           },
           "mtokens": "string",
           "outgoing_channel": "2",
           "outgoing_channel_info": Object {
-            "channel": null,
+            "channel": Object {
+              "partner_node_policies": Object {
+                "node": Object {
+                  "node": Object {
+                    "alias": "string",
+                    "color": "string",
+                  },
+                },
+              },
+            },
           },
           "tokens": 1000,
         },
@@ -685,11 +834,11 @@ Object {
   "data": Object {
     "getNode": Object {
       "node": Object {
-        "alias": "Node not found",
-        "capacity": null,
-        "channel_count": null,
-        "color": null,
-        "updated_at": null,
+        "alias": "string",
+        "capacity": "1000",
+        "channel_count": 1000,
+        "color": "string",
+        "updated_at": "2011-10-05T14:48:00.000Z",
       },
     },
   },
@@ -708,11 +857,11 @@ Object {
   "data": Object {
     "getNode": Object {
       "node": Object {
-        "alias": "Node not found",
-        "capacity": null,
-        "channel_count": null,
-        "color": null,
-        "updated_at": null,
+        "alias": "string",
+        "capacity": "1000",
+        "channel_count": 1000,
+        "color": "string",
+        "updated_at": "2011-10-05T14:48:00.000Z",
       },
     },
   },
@@ -771,11 +920,11 @@ Object {
         "is_sync_peer": true,
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "capacity": null,
-            "channel_count": null,
-            "color": null,
-            "updated_at": null,
+            "alias": "string",
+            "capacity": "1000",
+            "channel_count": 1000,
+            "color": "string",
+            "updated_at": "2011-10-05T14:48:00.000Z",
           },
         },
         "ping_time": 1000,
@@ -791,11 +940,11 @@ Object {
         "is_sync_peer": true,
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "capacity": null,
-            "channel_count": null,
-            "color": null,
-            "updated_at": null,
+            "alias": "string",
+            "capacity": "1000",
+            "channel_count": 1000,
+            "color": "string",
+            "updated_at": "2011-10-05T14:48:00.000Z",
           },
         },
         "ping_time": 1000,
@@ -829,11 +978,11 @@ Object {
         "local_reserve": 1000,
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "capacity": null,
-            "channel_count": null,
-            "color": null,
-            "updated_at": null,
+            "alias": "string",
+            "capacity": "1000",
+            "channel_count": 1000,
+            "color": "string",
+            "updated_at": "2011-10-05T14:48:00.000Z",
           },
         },
         "partner_public_key": "string",
@@ -854,11 +1003,11 @@ Object {
         "local_reserve": 1000,
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "capacity": null,
-            "channel_count": null,
-            "color": null,
-            "updated_at": null,
+            "alias": "string",
+            "capacity": "1000",
+            "channel_count": 1000,
+            "color": "string",
+            "updated_at": "2011-10-05T14:48:00.000Z",
           },
         },
         "partner_public_key": "string",
@@ -879,11 +1028,11 @@ Object {
         "local_reserve": 1000,
         "partner_node_info": Object {
           "node": Object {
-            "alias": "Node not found",
-            "capacity": null,
-            "channel_count": null,
-            "color": null,
-            "updated_at": null,
+            "alias": "string",
+            "capacity": "1000",
+            "channel_count": 1000,
+            "color": "string",
+            "updated_at": "2011-10-05T14:48:00.000Z",
           },
         },
         "partner_public_key": "string",
@@ -953,15 +1102,9 @@ Object {
     "getServerAccounts": Array [
       Object {
         "id": "accountID",
-        "loggedIn": true,
+        "loggedIn": false,
         "name": "account",
         "type": "server",
-      },
-      Object {
-        "id": "sso",
-        "loggedIn": true,
-        "name": "SSO Account",
-        "type": "sso",
       },
     ],
   },
@@ -987,7 +1130,7 @@ Object {
           "monitoredUptime": 1,
           "partner": Object {
             "node": Object {
-              "alias": "Node not found",
+              "alias": "string",
             },
           },
           "score": 50,
@@ -1000,7 +1143,7 @@ Object {
           "monitoredUptime": 1,
           "partner": Object {
             "node": Object {
-              "alias": "Node not found",
+              "alias": "string",
             },
           },
           "score": 50,
@@ -1013,7 +1156,7 @@ Object {
           "monitoredUptime": 1,
           "partner": Object {
             "node": Object {
-              "alias": "Node not found",
+              "alias": "string",
             },
           },
           "score": 50,
@@ -1077,7 +1220,7 @@ Object {
           "id": "100x1x1",
           "partner": Object {
             "node": Object {
-              "alias": "Node not found",
+              "alias": "string",
             },
           },
           "score": 0,
@@ -1088,7 +1231,7 @@ Object {
           "id": "100x1x1",
           "partner": Object {
             "node": Object {
-              "alias": "Node not found",
+              "alias": "string",
             },
           },
           "score": 0,
@@ -1099,7 +1242,7 @@ Object {
           "id": "100x1x1",
           "partner": Object {
             "node": Object {
-              "alias": "Node not found",
+              "alias": "string",
             },
           },
           "score": 0,

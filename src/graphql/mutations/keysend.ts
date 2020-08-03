@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const KEY_SEND = gql`
-  mutation Keysend($destination: String!, $auth: authType!, $tokens: Int!) {
-    keysend(destination: $destination, auth: $auth, tokens: $tokens) {
+  mutation Keysend($destination: String!, $tokens: Int!) {
+    keysend(destination: $destination, tokens: $tokens) {
       is_confirmed
     }
   }

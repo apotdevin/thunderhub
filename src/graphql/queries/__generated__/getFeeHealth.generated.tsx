@@ -1,11 +1,14 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
 
-export type GetFeeHealthQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetFeeHealthQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetFeeHealthQuery = { __typename?: 'Query' } & {
   getFeeHealth?: Types.Maybe<
@@ -61,8 +64,8 @@ export type GetFeeHealthQuery = { __typename?: 'Query' } & {
 };
 
 export const GetFeeHealthDocument = gql`
-  query GetFeeHealth($auth: authType!) {
-    getFeeHealth(auth: $auth) {
+  query GetFeeHealth {
+    getFeeHealth {
       score
       channels {
         id
@@ -106,31 +109,27 @@ export const GetFeeHealthDocument = gql`
  * @example
  * const { data, loading, error } = useGetFeeHealthQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetFeeHealthQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetFeeHealthQuery,
-    GetFeeHealthQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetFeeHealthQuery, GetFeeHealthQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<
-    GetFeeHealthQuery,
-    GetFeeHealthQueryVariables
-  >(GetFeeHealthDocument, baseOptions);
+  return useQuery<GetFeeHealthQuery, GetFeeHealthQueryVariables>(
+    GetFeeHealthDocument,
+    baseOptions
+  );
 }
 export function useGetFeeHealthLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetFeeHealthQuery,
     GetFeeHealthQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetFeeHealthQuery,
-    GetFeeHealthQueryVariables
-  >(GetFeeHealthDocument, baseOptions);
+  return useLazyQuery<GetFeeHealthQuery, GetFeeHealthQueryVariables>(
+    GetFeeHealthDocument,
+    baseOptions
+  );
 }
 export type GetFeeHealthQueryHookResult = ReturnType<
   typeof useGetFeeHealthQuery
@@ -138,7 +137,7 @@ export type GetFeeHealthQueryHookResult = ReturnType<
 export type GetFeeHealthLazyQueryHookResult = ReturnType<
   typeof useGetFeeHealthLazyQuery
 >;
-export type GetFeeHealthQueryResult = ApolloReactCommon.QueryResult<
+export type GetFeeHealthQueryResult = QueryResult<
   GetFeeHealthQuery,
   GetFeeHealthQueryVariables
 >;

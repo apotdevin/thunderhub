@@ -2,9 +2,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Users } from 'react-feather';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
 import { ChatInit } from 'src/components/chat/ChatInit';
 import { ChatFetcher } from 'src/components/chat/ChatFetcher';
+import { NextPageContext } from 'next';
+import { getProps } from 'src/utils/ssr';
+import { GET_MESSAGES } from 'src/graphql/queries/getMessages';
 import { useChatState } from '../src/context/ChatContext';
 import { separateBySender, getSenders } from '../src/utils/chat';
 import {
@@ -126,4 +128,8 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return await getProps(context, [GET_MESSAGES]);
+}

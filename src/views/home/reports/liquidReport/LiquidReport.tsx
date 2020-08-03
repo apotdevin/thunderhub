@@ -6,7 +6,6 @@ import {
   VictoryVoronoiContainer,
   VictoryTooltip,
 } from 'victory';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetLiquidReportQuery } from 'src/graphql/queries/__generated__/getChannelReport.generated';
 import {
   CardWithTitle,
@@ -24,16 +23,11 @@ import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
 
 export const LiquidReport = () => {
-  const { auth } = useAccountState();
-
   const { theme, currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  const { data, loading } = useGetLiquidReportQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+  const { data, loading } = useGetLiquidReportQuery();
 
   if (loading) {
     return <LoadingCard title={'Liquidity Report'} />;

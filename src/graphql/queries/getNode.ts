@@ -1,16 +1,8 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const GET_NODE = gql`
-  query GetNode(
-    $auth: authType!
-    $publicKey: String!
-    $withoutChannels: Boolean
-  ) {
-    getNode(
-      auth: $auth
-      publicKey: $publicKey
-      withoutChannels: $withoutChannels
-    ) {
+  query GetNode($publicKey: String!, $withoutChannels: Boolean) {
+    getNode(publicKey: $publicKey, withoutChannels: $withoutChannels) {
       node {
         alias
         capacity

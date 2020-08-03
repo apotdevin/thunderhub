@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetTimeHealthQuery } from 'src/graphql/queries/__generated__/getTimeHealth.generated';
 import {
   SubCard,
@@ -68,11 +67,7 @@ const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
 export const TimeStats = () => {
   const [open, openSet] = React.useState(0);
   const dispatch = useStatsDispatch();
-  const { auth } = useAccountState();
-  const { data, loading } = useGetTimeHealthQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+  const { data, loading } = useGetTimeHealthQuery();
 
   React.useEffect(() => {
     if (data && data.getTimeHealth) {

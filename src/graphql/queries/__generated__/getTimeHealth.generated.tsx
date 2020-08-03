@@ -1,11 +1,14 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
 
-export type GetTimeHealthQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetTimeHealthQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetTimeHealthQuery = { __typename?: 'Query' } & {
   getTimeHealth?: Types.Maybe<
@@ -42,8 +45,8 @@ export type GetTimeHealthQuery = { __typename?: 'Query' } & {
 };
 
 export const GetTimeHealthDocument = gql`
-  query GetTimeHealth($auth: authType!) {
-    getTimeHealth(auth: $auth) {
+  query GetTimeHealth {
+    getTimeHealth {
       score
       channels {
         id
@@ -74,31 +77,30 @@ export const GetTimeHealthDocument = gql`
  * @example
  * const { data, loading, error } = useGetTimeHealthQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetTimeHealthQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: QueryHookOptions<
     GetTimeHealthQuery,
     GetTimeHealthQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetTimeHealthQuery,
-    GetTimeHealthQueryVariables
-  >(GetTimeHealthDocument, baseOptions);
+  return useQuery<GetTimeHealthQuery, GetTimeHealthQueryVariables>(
+    GetTimeHealthDocument,
+    baseOptions
+  );
 }
 export function useGetTimeHealthLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: LazyQueryHookOptions<
     GetTimeHealthQuery,
     GetTimeHealthQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetTimeHealthQuery,
-    GetTimeHealthQueryVariables
-  >(GetTimeHealthDocument, baseOptions);
+  return useLazyQuery<GetTimeHealthQuery, GetTimeHealthQueryVariables>(
+    GetTimeHealthDocument,
+    baseOptions
+  );
 }
 export type GetTimeHealthQueryHookResult = ReturnType<
   typeof useGetTimeHealthQuery
@@ -106,7 +108,7 @@ export type GetTimeHealthQueryHookResult = ReturnType<
 export type GetTimeHealthLazyQueryHookResult = ReturnType<
   typeof useGetTimeHealthLazyQuery
 >;
-export type GetTimeHealthQueryResult = ApolloReactCommon.QueryResult<
+export type GetTimeHealthQueryResult = QueryResult<
   GetTimeHealthQuery,
   GetTimeHealthQueryVariables
 >;

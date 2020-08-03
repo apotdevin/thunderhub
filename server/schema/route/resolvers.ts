@@ -6,7 +6,6 @@ import {
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getLnd } from 'server/helpers/helpers';
 import { toWithError, to } from 'server/helpers/async';
 import { LndObject, ProbeForRouteType } from 'server/types/ln-service.types';
 
@@ -21,7 +20,7 @@ export const routeResolvers = {
     getRoutes: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getRoutes');
 
-      const lnd = getLnd(params.auth, context);
+      const { lnd } = context;
 
       const { public_key } = await getWalletInfo({ lnd });
 

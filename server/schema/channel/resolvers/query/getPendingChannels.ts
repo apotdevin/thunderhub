@@ -2,7 +2,6 @@ import { getPendingChannels as getLnPendingChannels } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { to } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
 
 interface PendingChannelListProps {
   pending_channels: PendingChannelProps[];
@@ -32,8 +31,7 @@ export const getPendingChannels = async (
 ) => {
   await requestLimiter(context.ip, 'pendingChannels');
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const { lnd } = context;
 
   const { pending_channels }: PendingChannelListProps = await to(
     getLnPendingChannels({ lnd })

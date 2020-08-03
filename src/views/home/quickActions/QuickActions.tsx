@@ -12,7 +12,6 @@ import {
   cardColor,
   cardBorderColor,
 } from '../../../styles/Themes';
-import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { DecodeCard } from './decode/Decode';
 import { SupportCard } from './donate/DonateCard';
 import { SupportBar } from './donate/DonateContent';
@@ -75,13 +74,11 @@ export const QuickActions = () => {
       default:
         return (
           <QuickRow>
-            <AdminSwitch>
-              <SupportCard callback={() => setOpenCard('support')} />
-              <QuickCard onClick={() => setOpenCard('open_channel')}>
-                <GitBranch size={24} />
-                <QuickTitle>Open</QuickTitle>
-              </QuickCard>
-            </AdminSwitch>
+            <SupportCard callback={() => setOpenCard('support')} />
+            <QuickCard onClick={() => setOpenCard('open_channel')}>
+              <GitBranch size={24} />
+              <QuickTitle>Open</QuickTitle>
+            </QuickCard>
             <QuickCard onClick={() => setOpenCard('decode')}>
               <Layers size={24} />
               <QuickTitle>Decode</QuickTitle>

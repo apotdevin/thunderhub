@@ -27,7 +27,6 @@ type State = {
   currency: string;
   theme: string;
   sidebar: boolean;
-  multiNodeInfo: boolean;
   fetchFees: boolean;
   fetchPrices: boolean;
   displayValues: boolean;
@@ -51,7 +50,6 @@ type ActionType =
       currency?: string;
       theme?: string;
       sidebar?: boolean;
-      multiNodeInfo?: boolean;
       fetchFees?: boolean;
       fetchPrices?: boolean;
       displayValues?: boolean;
@@ -83,7 +81,6 @@ const initialState: State = {
   currency: currencyTypes.indexOf(defC) > -1 ? defC : 'sat',
   theme: themeTypes.indexOf(defT) > -1 ? defT : 'dark',
   sidebar: true,
-  multiNodeInfo: false,
   fetchFees,
   fetchPrices,
   displayValues: true,

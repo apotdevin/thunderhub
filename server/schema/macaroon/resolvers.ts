@@ -1,9 +1,7 @@
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getLnd } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
 import { grantAccess } from 'ln-service';
-import { AuthType } from 'src/context/AccountContext';
 import { logger } from 'server/helpers/logger';
 
 export type PermissionsType = {
@@ -27,7 +25,6 @@ export type PermissionsType = {
 };
 
 type ParamsType = {
-  auth: AuthType;
   permissions: PermissionsType;
 };
 
@@ -40,9 +37,8 @@ export const macaroonResolvers = {
     ) => {
       await requestLimiter(context.ip, 'createMacaroon');
 
-      const { auth, permissions } = params;
-
-      const lnd = getLnd(auth, context);
+      const { permissions } = params;
+      const { lnd } = context;
 
       const { macaroon, permissions: permissionList } = await to(
         grantAccess({ lnd, ...permissions })

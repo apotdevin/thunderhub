@@ -1,11 +1,14 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  QueryHookOptions,
+  useQuery,
+  useLazyQuery,
+  QueryResult,
+  LazyQueryHookOptions,
+} from '@apollo/client';
 import * as Types from '../../types';
 
-export type GetUtxosQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+export type GetUtxosQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetUtxosQuery = { __typename?: 'Query' } & {
   getUtxos?: Types.Maybe<
@@ -27,8 +30,8 @@ export type GetUtxosQuery = { __typename?: 'Query' } & {
 };
 
 export const GetUtxosDocument = gql`
-  query GetUtxos($auth: authType!) {
-    getUtxos(auth: $auth) {
+  query GetUtxos {
+    getUtxos {
       address
       address_format
       confirmation_count
@@ -52,28 +55,21 @@ export const GetUtxosDocument = gql`
  * @example
  * const { data, loading, error } = useGetUtxosQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetUtxosQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetUtxosQuery,
-    GetUtxosQueryVariables
-  >
+  baseOptions?: QueryHookOptions<GetUtxosQuery, GetUtxosQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetUtxosQuery, GetUtxosQueryVariables>(
+  return useQuery<GetUtxosQuery, GetUtxosQueryVariables>(
     GetUtxosDocument,
     baseOptions
   );
 }
 export function useGetUtxosLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetUtxosQuery,
-    GetUtxosQueryVariables
-  >
+  baseOptions?: LazyQueryHookOptions<GetUtxosQuery, GetUtxosQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<GetUtxosQuery, GetUtxosQueryVariables>(
+  return useLazyQuery<GetUtxosQuery, GetUtxosQueryVariables>(
     GetUtxosDocument,
     baseOptions
   );
@@ -82,7 +78,7 @@ export type GetUtxosQueryHookResult = ReturnType<typeof useGetUtxosQuery>;
 export type GetUtxosLazyQueryHookResult = ReturnType<
   typeof useGetUtxosLazyQuery
 >;
-export type GetUtxosQueryResult = ApolloReactCommon.QueryResult<
+export type GetUtxosQueryResult = QueryResult<
   GetUtxosQuery,
   GetUtxosQueryVariables
 >;

@@ -1,11 +1,15 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import {
+  gql,
+  MutationFunction,
+  useMutation,
+  MutationHookOptions,
+  BaseMutationOptions,
+  MutationResult,
+} from '@apollo/client';
 import * as Types from '../../types';
 
 export type KeysendMutationVariables = Types.Exact<{
   destination: Types.Scalars['String'];
-  auth: Types.AuthType;
   tokens: Types.Scalars['Int'];
 }>;
 
@@ -16,13 +20,13 @@ export type KeysendMutation = { __typename?: 'Mutation' } & {
 };
 
 export const KeysendDocument = gql`
-  mutation Keysend($destination: String!, $auth: authType!, $tokens: Int!) {
-    keysend(destination: $destination, auth: $auth, tokens: $tokens) {
+  mutation Keysend($destination: String!, $tokens: Int!) {
+    keysend(destination: $destination, tokens: $tokens) {
       is_confirmed
     }
   }
 `;
-export type KeysendMutationFn = ApolloReactCommon.MutationFunction<
+export type KeysendMutationFn = MutationFunction<
   KeysendMutation,
   KeysendMutationVariables
 >;
@@ -41,27 +45,21 @@ export type KeysendMutationFn = ApolloReactCommon.MutationFunction<
  * const [keysendMutation, { data, loading, error }] = useKeysendMutation({
  *   variables: {
  *      destination: // value for 'destination'
- *      auth: // value for 'auth'
  *      tokens: // value for 'tokens'
  *   },
  * });
  */
 export function useKeysendMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    KeysendMutation,
-    KeysendMutationVariables
-  >
+  baseOptions?: MutationHookOptions<KeysendMutation, KeysendMutationVariables>
 ) {
-  return ApolloReactHooks.useMutation<
-    KeysendMutation,
-    KeysendMutationVariables
-  >(KeysendDocument, baseOptions);
+  return useMutation<KeysendMutation, KeysendMutationVariables>(
+    KeysendDocument,
+    baseOptions
+  );
 }
 export type KeysendMutationHookResult = ReturnType<typeof useKeysendMutation>;
-export type KeysendMutationResult = ApolloReactCommon.MutationResult<
-  KeysendMutation
->;
-export type KeysendMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type KeysendMutationResult = MutationResult<KeysendMutation>;
+export type KeysendMutationOptions = BaseMutationOptions<
   KeysendMutation,
   KeysendMutationVariables
 >;

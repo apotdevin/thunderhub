@@ -27,7 +27,6 @@ import {
 } from '../../styles/Themes';
 import { useConfigState } from '../../context/ConfigContext';
 import { Link } from '../../components/link/Link';
-import { useStatusState } from '../../context/StatusContext';
 import { SideSettings } from './sideSettings/SideSettings';
 import { NodeInfo } from './nodeInfo/NodeInfo';
 
@@ -135,7 +134,8 @@ interface NavigationProps {
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const { pathname } = useRouter();
   const { sidebar } = useConfigState();
-  const { connected } = useStatusState();
+
+  const isRoot = pathname === '/';
 
   const renderNavButton = (
     title: string,
@@ -204,7 +204,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     <NavigationStyle isOpen={sidebar}>
       <StickyCard>
         <LinkView>
-          {connected && <NodeInfo isOpen={sidebar} />}
+          {!isRoot && <NodeInfo isOpen={sidebar} />}
           {renderLinks()}
           <SideSettings />
         </LinkView>

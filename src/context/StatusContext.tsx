@@ -1,9 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react';
 
-type StateStatus = {
-  connected: boolean;
-};
-
 export type StatusState = {
   alias: string;
   color: string;
@@ -22,20 +18,19 @@ export type StatusState = {
   peersCount: number;
 };
 
-type CompleteState = StatusState & StateStatus;
-
-type ActionType = {
-  type: 'connected' | 'disconnected';
-  state?: StatusState;
-};
+type ActionType =
+  | {
+      type: 'connected';
+      state?: StatusState;
+    }
+  | { type: 'disconnected' };
 
 type Dispatch = (action: ActionType) => void;
 
-const StateContext = createContext<CompleteState | undefined>(undefined);
+const StateContext = createContext<StatusState | undefined>(undefined);
 const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
-const initialState = {
-  connected: false,
+const initialState: StatusState = {
   alias: '',
   color: '',
   syncedToChain: false,
@@ -53,15 +48,11 @@ const initialState = {
   peersCount: 0,
 };
 
-const stateReducer = (
-  state: StatusState,
-  action: ActionType
-): CompleteState => {
+const stateReducer = (state: StatusState, action: ActionType): StatusState => {
   switch (action.type) {
     case 'connected':
-      return { ...state, ...action.state, connected: true } || initialState;
+      return { ...state, ...action.state } || initialState;
     case 'disconnected':
-      return initialState;
     default:
       return initialState;
   }

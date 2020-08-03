@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetClosedChannelsQuery } from 'src/graphql/queries/__generated__/getClosedChannels.generated';
 import { ClosedChannelType } from 'src/graphql/types';
 import { Card } from '../../../components/generic/Styled';
@@ -11,11 +10,7 @@ import { ClosedCard } from './ClosedCard';
 export const ClosedChannels = () => {
   const [indexOpen, setIndexOpen] = useState(0);
 
-  const { auth } = useAccountState();
-
   const { loading, data } = useGetClosedChannelsQuery({
-    skip: !auth,
-    variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });
 
