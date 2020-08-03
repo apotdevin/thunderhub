@@ -3,7 +3,6 @@ import {
   Cpu,
   Menu,
   X,
-  CreditCard,
   MessageCircle,
   Settings,
   Home,
@@ -11,7 +10,6 @@ import {
 } from 'react-feather';
 import { useTransition, animated } from 'react-spring';
 import { useRouter } from 'next/router';
-import getConfig from 'next/config';
 import { headerColor, headerTextColor } from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
@@ -30,12 +28,8 @@ import {
 
 const MAIN = '/';
 const HOME = '/home';
-const TRADER = '/trading';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
-
-const { publicRuntimeConfig } = getConfig();
-const { hodlhodl } = publicRuntimeConfig;
 
 export const Header = () => {
   const { pathname } = useRouter();
@@ -44,7 +38,7 @@ export const Header = () => {
   const isRoot = pathname === '/';
 
   const showHomeButton = (): boolean =>
-    pathname === TRADER || pathname === CHAT || pathname === SETTINGS;
+    pathname === CHAT || pathname === SETTINGS;
 
   const transitions = useTransition(open, null, {
     from: { position: 'absolute', opacity: 0 },
@@ -80,7 +74,6 @@ export const Header = () => {
       <ViewSwitch hideMobile={true}>
         <HeaderButtons>
           {showHomeButton() && renderNavButton(HOME, Home)}
-          {hodlhodl && renderNavButton(TRADER, CreditCard)}
           {renderNavButton(CHAT, MessageCircle)}
           {renderNavButton(SETTINGS, Settings)}
         </HeaderButtons>

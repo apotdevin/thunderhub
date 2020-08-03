@@ -14,9 +14,6 @@ COPY package.json .
 COPY package-lock.json .
 RUN npm install --production --silent
 
-# Install dependencies necessary for build and start
-RUN npm install -D cross-env typescript @types/react @next/bundle-analyzer
-
 # ---------------
 # Build App
 # ---------------

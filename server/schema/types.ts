@@ -74,9 +74,6 @@ export const queryTypes = gql`
     getPendingChainBalance: Int
     getChainTransactions: [getTransactionsType]
     getUtxos: [getUtxosType]
-    getOffers(filter: String): [hodlOfferType]
-    getCountries: [hodlCountryType]
-    getCurrencies: [hodlCurrencyType]
     getMessages(
       token: String
       initialize: Boolean
