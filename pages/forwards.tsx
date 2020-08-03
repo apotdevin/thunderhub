@@ -4,6 +4,8 @@ import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwar
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { ForwardType } from 'src/graphql/types';
 import { NextPageContext } from 'next';
+import { getProps } from 'src/utils/ssr';
+import { GET_FORWARDS } from 'src/graphql/queries/getForwards';
 import {
   SubTitle,
   Card,
@@ -16,7 +18,6 @@ import { getErrorContent } from '../src/utils/error';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ForwardCard } from '../src/views/forwards/ForwardsCard';
 import { ForwardBox } from '../src/views/home/reports/forwardReport';
-import { cookieProps } from '../src/utils/cookies';
 
 const timeMap: { [key: string]: string } = {
   day: 'today',
@@ -89,5 +90,5 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return cookieProps(context);
+  return await getProps(context, [GET_FORWARDS]);
 }

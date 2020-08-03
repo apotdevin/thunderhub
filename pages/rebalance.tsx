@@ -11,8 +11,9 @@ import {
 import { Text } from 'src/components/typography/Styled';
 import { AdvancedBalance } from 'src/views/balance/AdvancedBalance';
 import { NextPageContext } from 'next';
+import { getProps } from 'src/utils/ssr';
+import { GET_CHANNELS } from 'src/graphql/queries/getChannels';
 import { useStatusState } from '../src/context/StatusContext';
-import { cookieProps } from '../src/utils/cookies';
 
 const BalanceView = () => {
   const { minorVersion } = useStatusState();
@@ -68,5 +69,5 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return cookieProps(context);
+  return await getProps(context, [GET_CHANNELS]);
 }
