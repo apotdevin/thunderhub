@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlertTriangle } from 'react-feather';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
@@ -51,12 +51,7 @@ export const CloseChannel = ({
   const [amount, setAmount] = useState<number>(0);
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
 
-  const [closeChannel, { loading }] = useCloseChannelMutation({
-    onCompleted: data => {
-      if (data.closeChannel) {
-        toast.success('Channel Closed');
-      }
-    },
+  const [closeChannel, { loading, data }] = useCloseChannelMutation({
     onError: error => toast.error(getErrorContent(error)),
     refetchQueries: [
       'GetChannels',
@@ -65,6 +60,13 @@ export const CloseChannel = ({
       'GetChannelAmountInfo',
     ],
   });
+
+  useEffect(() => {
+    if (data && data.closeChannel) {
+      toast.success('Channel Closed');
+      setModalOpen(false);
+    }
+  }, [data, setModalOpen]);
 
   const handleOnlyClose = () => setModalOpen(false);
 
@@ -83,9 +85,10 @@ export const CloseChannel = ({
       <AlertTriangle size={32} color={'red'} />
       <SubTitle>Are you sure you want to close the channel?</SubTitle>
       <ColorButton
+        fullWidth={true}
         disabled={loading}
         loading={loading}
-        withMargin={'4px'}
+        withMargin={'16px 4px 4px'}
         color={'red'}
         onClick={() =>
           closeChannel({
@@ -103,7 +106,12 @@ export const CloseChannel = ({
       >
         {`Close Channel [ ${channelName}/${channelId} ]`}
       </ColorButton>
-      <ColorButton withMargin={'4px'} onClick={handleOnlyClose}>
+      <ColorButton
+        fullWidth={true}
+        disabled={loading}
+        withMargin={'4px'}
+        onClick={handleOnlyClose}
+      >
         Cancel
       </ColorButton>
     </WarningCard>
