@@ -8,6 +8,7 @@ export type OpenChannelMutationVariables = Types.Exact<{
   partnerPublicKey: Types.Scalars['String'];
   tokensPerVByte?: Types.Maybe<Types.Scalars['Int']>;
   isPrivate?: Types.Maybe<Types.Scalars['Boolean']>;
+  pushTokens?: Types.Maybe<Types.Scalars['Int']>;
 }>;
 
 export type OpenChannelMutation = { __typename?: 'Mutation' } & {
@@ -25,12 +26,14 @@ export const OpenChannelDocument = gql`
     $partnerPublicKey: String!
     $tokensPerVByte: Int
     $isPrivate: Boolean
+    $pushTokens: Int
   ) {
     openChannel(
       amount: $amount
       partnerPublicKey: $partnerPublicKey
       tokensPerVByte: $tokensPerVByte
       isPrivate: $isPrivate
+      pushTokens: $pushTokens
     ) {
       transactionId
       transactionOutputIndex
@@ -59,6 +62,7 @@ export type OpenChannelMutationFn = Apollo.MutationFunction<
  *      partnerPublicKey: // value for 'partnerPublicKey'
  *      tokensPerVByte: // value for 'tokensPerVByte'
  *      isPrivate: // value for 'isPrivate'
+ *      pushTokens: // value for 'pushTokens'
  *   },
  * });
  */

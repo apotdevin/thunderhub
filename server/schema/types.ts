@@ -102,6 +102,7 @@ export const mutationTypes = gql`
       partnerPublicKey: String!
       tokensPerVByte: Int
       isPrivate: Boolean
+      pushTokens: Int
     ): openChannelType
     updateFees(
       transaction_id: String

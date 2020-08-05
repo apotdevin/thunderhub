@@ -26,6 +26,10 @@ export const OpenChannelCard = ({
   const { fetchFees } = useConfigState();
   const { fast, halfHour, hour, dontShow } = useBitcoinFees();
   const [size, setSize] = useState(0);
+
+  const [pushType, setPushType] = useState('none');
+  const [pushTokens, setPushTokens] = useState(0);
+
   const [fee, setFee] = useState(0);
   const [publicKey, setPublicKey] = useState(initialPublicKey);
   const [privateChannel, setPrivateChannel] = useState(false);
@@ -41,6 +45,13 @@ export const OpenChannelCard = ({
   });
 
   const canOpen = publicKey !== '' && size > 0 && fee > 0;
+
+  const pushAmount =
+    pushType === 'none'
+      ? 0
+      : pushType === 'half'
+      ? size / 2
+      : Math.min(pushTokens, size * 0.9);
 
   useEffect(() => {
     if (type === 'none' && fee === 0) {
@@ -76,6 +87,28 @@ export const OpenChannelCard = ({
         inputType={'number'}
         inputCallback={value => setSize(Number(value))}
       />
+      <Separation />
+      <InputWithDeco title={'Push Tokens to Partner'} noInput={true}>
+        <MultiButton>
+          {renderButton(() => setPushType('none'), 'None', pushType === 'none')}
+          {renderButton(() => setPushType('half'), 'Half', pushType === 'half')}
+          {renderButton(
+            () => setPushType('custom'),
+            'Custom',
+            pushType === 'custom'
+          )}
+        </MultiButton>
+      </InputWithDeco>
+      {pushType === 'custom' && (
+        <InputWithDeco
+          title={'Amount'}
+          value={Math.min(pushTokens, size * 0.9)}
+          placeholder={`Sats (Max: ${size * 0.9} sats)`}
+          amount={Math.min(pushTokens, size * 0.9)}
+          inputType={'number'}
+          inputCallback={value => setPushTokens(Number(value))}
+        />
+      )}
       <Separation />
       <InputWithDeco title={'Type'} noInput={true}>
         <MultiButton>
@@ -154,6 +187,7 @@ export const OpenChannelCard = ({
               partnerPublicKey: publicKey || '',
               tokensPerVByte: fee,
               isPrivate: privateChannel,
+              pushTokens: pushAmount,
             },
           })
         }
