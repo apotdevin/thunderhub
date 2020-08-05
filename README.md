@@ -131,7 +131,6 @@ CURRENCY = 'sat' | 'btc' | 'fiat' # Default: 'sat'
 FETCH_PRICES = true | false # Default: true
 FETCH_FEES = true | false # Default: true
 DISABLE_LINKS = true | false # Default: false
-NO_CLIENT_ACCOUNTS = true | false # Default: false
 NO_VERSION_CHECK = true | false # Default: false
 ```
 
@@ -234,11 +233,6 @@ If you want to deactivate these requests you can set `FETCH_PRICES=false` and `F
 ThunderHub shows you links for quick viewing of nodes by public key on [1ml.com](https://1ml.com/) and for viewing onchain transactions on [Blockchain.com](https://www.blockchain.com/).
 
 If you don't want to show these links, you can set `DISABLE_LINKS=true` in your `.env` file.
-
-**Client Accounts**
-ThunderHub allows you to create accounts on the browser which are also encrypted and stored in the same browser.
-
-If you want to disable this option and only allow accounts that are created on the server, you can set `NO_CLIENT_ACCOUNTS=true` in your `.env` file.
 
 **Version Check**
 ThunderHub gets the latest available version from [Github](https://api.github.com/repos/apotdevin/thunderhub/releases/latest) and shows you a message if you are on an older version.
