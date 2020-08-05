@@ -31,14 +31,44 @@ const ChatLayout = styled.div`
     withHeight && 'height: 600px'}
 `;
 
+type State = {
+  user: string;
+  showContacts: boolean;
+};
+
+type Action =
+  | {
+      type: 'setUserAndHide' | 'setUser';
+      user: string;
+    }
+  | { type: 'toggleShow' };
+
+const initialState: State = { user: '', showContacts: false };
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'setUser':
+      return { ...state, user: action.user };
+    case 'setUserAndHide':
+      return { user: action.user, showContacts: false };
+    case 'toggleShow':
+      return { ...state, showContacts: !state.showContacts };
+    default:
+      return state;
+  }
+};
+
 const ChatView = () => {
   const { minorVersion } = useNodeInfo();
   const { chats, sender, sentChats, initialized } = useChatState();
   const bySender = separateBySender([...chats, ...sentChats]);
   const senders = getSenders(bySender) || [];
 
-  const [user, setUser] = React.useState('');
-  const [showContacts, setShowContacts] = React.useState(false);
+  const [state, dispatch] = React.useReducer(reducer, initialState);
+  const { user, showContacts } = state;
+
+  const setUser = (user: string) => dispatch({ type: 'setUserAndHide', user });
+  const setName = (user: string) => dispatch({ type: 'setUser', user });
 
   if (!initialized) {
     return <LoadingCard title={'Chats'} />;
@@ -68,7 +98,7 @@ const ChatView = () => {
           contacts={senders}
           user={user}
           setUser={setUser}
-          setShow={setShowContacts}
+          setName={setName}
         />
       );
     }
@@ -78,11 +108,11 @@ const ChatView = () => {
           contacts={senders}
           user={user}
           setUser={setUser}
-          setShow={setShowContacts}
+          setName={setName}
           hide={true}
         />
         {user === 'New Chat' ? (
-          <ChatStart noTitle={true} />
+          <ChatStart noTitle={true} callback={() => setUser('')} />
         ) : (
           <ChatBox messages={bySender[sender]} alias={user} />
         )}
@@ -101,7 +131,7 @@ const ChatView = () => {
           </ViewSwitch>
           <ViewSwitch>
             <SingleLine>
-              <ColorButton onClick={() => setShowContacts(prev => !prev)}>
+              <ColorButton onClick={() => dispatch({ type: 'toggleShow' })}>
                 <Users size={18} />
               </ColorButton>
               <SubTitle>{user}</SubTitle>
@@ -111,7 +141,7 @@ const ChatView = () => {
       )}
       <ChatCard mobileCardPadding={'0'}>
         {chats.length <= 0 && sentChats.length <= 0 ? (
-          <ChatStart />
+          <ChatStart callback={() => setUser('')} />
         ) : (
           renderChats()
         )}
