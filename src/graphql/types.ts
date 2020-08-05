@@ -214,6 +214,7 @@ export type MutationOpenChannelArgs = {
   partnerPublicKey: Scalars['String'];
   tokensPerVByte?: Maybe<Scalars['Int']>;
   isPrivate?: Maybe<Scalars['Boolean']>;
+  pushTokens?: Maybe<Scalars['Int']>;
 };
 
 export type MutationUpdateFeesArgs = {
