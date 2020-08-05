@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import { Lock, Unlock } from 'react-feather';
 import { chartColors } from 'src/styles/Themes';
 import { useRouter } from 'next/router';
-import { appendBasePath } from 'src/utils/basePath';
 import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { Link } from 'src/components/link/Link';
 import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/getServerAccounts.generated';
@@ -55,7 +54,7 @@ export const Accounts = () => {
 
   React.useEffect(() => {
     if (!loading && data && data.getNodeInfo) {
-      push(appendBasePath('/home'));
+      push('/home');
     }
   }, [data, loading, push]);
 

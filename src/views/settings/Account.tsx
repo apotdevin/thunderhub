@@ -16,7 +16,6 @@ import {
   MultiButton,
   SingleButton,
 } from '../../components/buttons/multiButton/MultiButton';
-import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
 
 export const AccountSettings = () => {
@@ -34,7 +33,7 @@ export const AccountSettings = () => {
   useEffect(() => {
     if (data && data.logout) {
       dispatchChat({ type: 'disconnected' });
-      push(appendBasePath('/'));
+      push('/');
     }
   }, [data, dispatchChat, push]);
 
@@ -59,7 +58,7 @@ export const AccountSettings = () => {
                 onClick={() => {
                   if (accountId !== account.id) {
                     dispatchChat({ type: 'disconnected' });
-                    push(appendBasePath('/'));
+                    push('/');
                   }
                 }}
               >

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
-import { appendBasePath } from 'src/utils/basePath';
 import { getUrlParam } from 'src/utils/url';
 import { useGetAuthTokenQuery } from 'src/graphql/queries/__generated__/getAuthToken.generated';
 
@@ -17,7 +16,7 @@ export const ServerAccounts: React.FC = () => {
 
   React.useEffect(() => {
     if (cookieParam && authData && authData.getAuthToken) {
-      push(appendBasePath('/'));
+      push('/');
     }
   }, [push, authData, cookieParam]);
 
