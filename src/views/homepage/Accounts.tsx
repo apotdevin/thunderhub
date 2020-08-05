@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import { Lock, Unlock } from 'react-feather';
+import { Lock, Unlock, ChevronDown, ChevronUp } from 'react-feather';
 import { chartColors } from 'src/styles/Themes';
 import { useRouter } from 'next/router';
 import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
@@ -10,7 +10,13 @@ import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/get
 import { ServerAccountType } from 'src/graphql/types';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { Section } from '../../components/section/Section';
-import { Card, SingleLine } from '../../components/generic/Styled';
+import {
+  Card,
+  SingleLine,
+  DarkSubTitle,
+  Sub4Title,
+  Separation,
+} from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { ConnectTitle, LockPadding } from './HomePage.styled';
 import { Login } from './Login';
@@ -19,20 +25,51 @@ const AccountLine = styled.div`
   margin: 8px 0;
 `;
 
-const renderIntro = () => (
-  <Section color={'transparent'}>
-    <ConnectTitle changeColor={true}>Hi! Welcome to ThunderHub</ConnectTitle>
-    <Card>
-      {'To start you must create an account on your server. '}
-      <Link
-        newTab={true}
-        href={'https://github.com/apotdevin/thunderhub#server-accounts'}
-      >
-        You can find instructions for this here.
-      </Link>
-    </Card>
-  </Section>
-);
+const DetailsLine = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  cursor: pointer;
+`;
+
+const RenderIntro = () => {
+  const [detailsOpen, setDetailsOpen] = React.useState(false);
+  return (
+    <Section color={'transparent'}>
+      <ConnectTitle changeColor={true}>Hi! Welcome to ThunderHub</ConnectTitle>
+      <Card>
+        {'To start you must create an account on your server. '}
+        <Link
+          newTab={true}
+          href={'https://github.com/apotdevin/thunderhub#server-accounts'}
+        >
+          You can find instructions for this here.
+        </Link>
+      </Card>
+      <Card>
+        <DetailsLine onClick={() => setDetailsOpen(p => !p)}>
+          <DarkSubTitle>{'Did you already create accounts?'}</DarkSubTitle>
+          {detailsOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        </DetailsLine>
+        {detailsOpen && (
+          <>
+            <Separation />
+            <Sub4Title>
+              The accounts might be missing information that is needed for them
+              to be available. Please check your logs to see if there is
+              anything missing.
+            </Sub4Title>
+            <Sub4Title>
+              On server start you will see a log message of the accounts that
+              will be available.
+            </Sub4Title>
+          </>
+        )}
+      </Card>
+    </Section>
+  );
+};
 
 export const Accounts = () => {
   const { push } = useRouter();
@@ -67,7 +104,7 @@ export const Accounts = () => {
   }
 
   if (!accountData?.getServerAccounts?.length) {
-    return renderIntro();
+    return <RenderIntro />;
   }
 
   const getTitle = (account: ServerAccountType) => {
