@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.14](https://github.com/apotdevin/thunderhub/compare/v0.8.13...v0.8.14) (2020-08-05)
+
+
+### Bug Fixes
+
+* 🐛 release-drafter ([1452669](https://github.com/apotdevin/thunderhub/commit/14526696e80b8a2fe297466856a13781596cd1bb))
+
+
+### Improvements
+
+* 🔧 change min htlc warnings ([c05f02a](https://github.com/apotdevin/thunderhub/commit/c05f02ac9cb80b1d157508a694a70dc576758de7))
+
+
+### CI
+
+* 👷 add release-drafter ([59a3983](https://github.com/apotdevin/thunderhub/commit/59a3983abbb60cc627512a4b7f60187d10fa2758))
+
+
+### Docs
+
+* 📚️ sign release ([dfc4227](https://github.com/apotdevin/thunderhub/commit/dfc42279e630b11bd56c163e13c86816a33c061c))
+
 ### [0.8.13](https://github.com/apotdevin/thunderhub/compare/v0.8.12...v0.8.13) (2020-07-16)
 
 
