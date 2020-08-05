@@ -37,8 +37,11 @@ const WrapRequest = styled.div`
 `;
 
 const QRWrapper = styled.div`
-  width: 200px;
+  width: 280px;
+  height: 280px;
   margin: 16px;
+  background: white;
+  padding: 16px;
 `;
 
 const Column = styled.div`
@@ -76,7 +79,7 @@ export const ReceiveOnChainCard = () => {
       {data && data.createAddress ? (
         <Responsive>
           <QRWrapper>
-            <QRCode value={data.createAddress} renderAs={'svg'} size={200} />
+            <QRCode value={data.createAddress} renderAs={'svg'} size={248} />
           </QRWrapper>
           <Column>
             <WrapRequest>{data.createAddress}</WrapRequest>
