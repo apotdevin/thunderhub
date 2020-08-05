@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetNetworkInfoQueryVariables = Types.Exact<{
   [key: string]: never;
@@ -59,23 +54,23 @@ export const GetNetworkInfoDocument = gql`
  * });
  */
 export function useGetNetworkInfoQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetNetworkInfoQuery,
     GetNetworkInfoQueryVariables
   >
 ) {
-  return useQuery<GetNetworkInfoQuery, GetNetworkInfoQueryVariables>(
+  return Apollo.useQuery<GetNetworkInfoQuery, GetNetworkInfoQueryVariables>(
     GetNetworkInfoDocument,
     baseOptions
   );
 }
 export function useGetNetworkInfoLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetNetworkInfoQuery,
     GetNetworkInfoQueryVariables
   >
 ) {
-  return useLazyQuery<GetNetworkInfoQuery, GetNetworkInfoQueryVariables>(
+  return Apollo.useLazyQuery<GetNetworkInfoQuery, GetNetworkInfoQueryVariables>(
     GetNetworkInfoDocument,
     baseOptions
   );
@@ -86,7 +81,7 @@ export type GetNetworkInfoQueryHookResult = ReturnType<
 export type GetNetworkInfoLazyQueryHookResult = ReturnType<
   typeof useGetNetworkInfoLazyQuery
 >;
-export type GetNetworkInfoQueryResult = QueryResult<
+export type GetNetworkInfoQueryResult = Apollo.QueryResult<
   GetNetworkInfoQuery,
   GetNetworkInfoQueryVariables
 >;

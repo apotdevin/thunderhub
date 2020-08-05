@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type DecodeRequestQueryVariables = Types.Exact<{
   request: Types.Scalars['String'];
@@ -157,23 +152,23 @@ export const DecodeRequestDocument = gql`
  * });
  */
 export function useDecodeRequestQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     DecodeRequestQuery,
     DecodeRequestQueryVariables
   >
 ) {
-  return useQuery<DecodeRequestQuery, DecodeRequestQueryVariables>(
+  return Apollo.useQuery<DecodeRequestQuery, DecodeRequestQueryVariables>(
     DecodeRequestDocument,
     baseOptions
   );
 }
 export function useDecodeRequestLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     DecodeRequestQuery,
     DecodeRequestQueryVariables
   >
 ) {
-  return useLazyQuery<DecodeRequestQuery, DecodeRequestQueryVariables>(
+  return Apollo.useLazyQuery<DecodeRequestQuery, DecodeRequestQueryVariables>(
     DecodeRequestDocument,
     baseOptions
   );
@@ -184,7 +179,7 @@ export type DecodeRequestQueryHookResult = ReturnType<
 export type DecodeRequestLazyQueryHookResult = ReturnType<
   typeof useDecodeRequestLazyQuery
 >;
-export type DecodeRequestQueryResult = QueryResult<
+export type DecodeRequestQueryResult = Apollo.QueryResult<
   DecodeRequestQuery,
   DecodeRequestQueryVariables
 >;

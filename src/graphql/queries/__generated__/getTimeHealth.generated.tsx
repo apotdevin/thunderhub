@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetTimeHealthQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -81,23 +76,23 @@ export const GetTimeHealthDocument = gql`
  * });
  */
 export function useGetTimeHealthQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetTimeHealthQuery,
     GetTimeHealthQueryVariables
   >
 ) {
-  return useQuery<GetTimeHealthQuery, GetTimeHealthQueryVariables>(
+  return Apollo.useQuery<GetTimeHealthQuery, GetTimeHealthQueryVariables>(
     GetTimeHealthDocument,
     baseOptions
   );
 }
 export function useGetTimeHealthLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetTimeHealthQuery,
     GetTimeHealthQueryVariables
   >
 ) {
-  return useLazyQuery<GetTimeHealthQuery, GetTimeHealthQueryVariables>(
+  return Apollo.useLazyQuery<GetTimeHealthQuery, GetTimeHealthQueryVariables>(
     GetTimeHealthDocument,
     baseOptions
   );
@@ -108,7 +103,7 @@ export type GetTimeHealthQueryHookResult = ReturnType<
 export type GetTimeHealthLazyQueryHookResult = ReturnType<
   typeof useGetTimeHealthLazyQuery
 >;
-export type GetTimeHealthQueryResult = QueryResult<
+export type GetTimeHealthQueryResult = Apollo.QueryResult<
   GetTimeHealthQuery,
   GetTimeHealthQueryVariables
 >;

@@ -1,12 +1,7 @@
-import {
-  gql,
-  MutationFunction,
-  useMutation,
-  MutationHookOptions,
-  BaseMutationOptions,
-  MutationResult,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type PayAddressMutationVariables = Types.Exact<{
   address: Types.Scalars['String'];
@@ -48,7 +43,7 @@ export const PayAddressDocument = gql`
     }
   }
 `;
-export type PayAddressMutationFn = MutationFunction<
+export type PayAddressMutationFn = Apollo.MutationFunction<
   PayAddressMutation,
   PayAddressMutationVariables
 >;
@@ -75,12 +70,12 @@ export type PayAddressMutationFn = MutationFunction<
  * });
  */
 export function usePayAddressMutation(
-  baseOptions?: MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     PayAddressMutation,
     PayAddressMutationVariables
   >
 ) {
-  return useMutation<PayAddressMutation, PayAddressMutationVariables>(
+  return Apollo.useMutation<PayAddressMutation, PayAddressMutationVariables>(
     PayAddressDocument,
     baseOptions
   );
@@ -88,8 +83,10 @@ export function usePayAddressMutation(
 export type PayAddressMutationHookResult = ReturnType<
   typeof usePayAddressMutation
 >;
-export type PayAddressMutationResult = MutationResult<PayAddressMutation>;
-export type PayAddressMutationOptions = BaseMutationOptions<
+export type PayAddressMutationResult = Apollo.MutationResult<
+  PayAddressMutation
+>;
+export type PayAddressMutationOptions = Apollo.BaseMutationOptions<
   PayAddressMutation,
   PayAddressMutationVariables
 >;

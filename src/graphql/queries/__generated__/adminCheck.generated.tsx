@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetCanAdminQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -37,20 +32,23 @@ export const GetCanAdminDocument = gql`
  * });
  */
 export function useGetCanAdminQuery(
-  baseOptions?: QueryHookOptions<GetCanAdminQuery, GetCanAdminQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<
+    GetCanAdminQuery,
+    GetCanAdminQueryVariables
+  >
 ) {
-  return useQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(
+  return Apollo.useQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(
     GetCanAdminDocument,
     baseOptions
   );
 }
 export function useGetCanAdminLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetCanAdminQuery,
     GetCanAdminQueryVariables
   >
 ) {
-  return useLazyQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(
+  return Apollo.useLazyQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(
     GetCanAdminDocument,
     baseOptions
   );
@@ -59,7 +57,7 @@ export type GetCanAdminQueryHookResult = ReturnType<typeof useGetCanAdminQuery>;
 export type GetCanAdminLazyQueryHookResult = ReturnType<
   typeof useGetCanAdminLazyQuery
 >;
-export type GetCanAdminQueryResult = QueryResult<
+export type GetCanAdminQueryResult = Apollo.QueryResult<
   GetCanAdminQuery,
   GetCanAdminQueryVariables
 >;

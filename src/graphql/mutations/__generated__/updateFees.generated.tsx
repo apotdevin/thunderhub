@@ -1,12 +1,7 @@
-import {
-  gql,
-  MutationFunction,
-  useMutation,
-  MutationHookOptions,
-  BaseMutationOptions,
-  MutationResult,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type UpdateFeesMutationVariables = Types.Exact<{
   transaction_id?: Types.Maybe<Types.Scalars['String']>;
@@ -44,7 +39,7 @@ export const UpdateFeesDocument = gql`
     )
   }
 `;
-export type UpdateFeesMutationFn = MutationFunction<
+export type UpdateFeesMutationFn = Apollo.MutationFunction<
   UpdateFeesMutation,
   UpdateFeesMutationVariables
 >;
@@ -73,12 +68,12 @@ export type UpdateFeesMutationFn = MutationFunction<
  * });
  */
 export function useUpdateFeesMutation(
-  baseOptions?: MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     UpdateFeesMutation,
     UpdateFeesMutationVariables
   >
 ) {
-  return useMutation<UpdateFeesMutation, UpdateFeesMutationVariables>(
+  return Apollo.useMutation<UpdateFeesMutation, UpdateFeesMutationVariables>(
     UpdateFeesDocument,
     baseOptions
   );
@@ -86,8 +81,10 @@ export function useUpdateFeesMutation(
 export type UpdateFeesMutationHookResult = ReturnType<
   typeof useUpdateFeesMutation
 >;
-export type UpdateFeesMutationResult = MutationResult<UpdateFeesMutation>;
-export type UpdateFeesMutationOptions = BaseMutationOptions<
+export type UpdateFeesMutationResult = Apollo.MutationResult<
+  UpdateFeesMutation
+>;
+export type UpdateFeesMutationOptions = Apollo.BaseMutationOptions<
   UpdateFeesMutation,
   UpdateFeesMutationVariables
 >;

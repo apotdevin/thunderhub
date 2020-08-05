@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetCanConnectQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -115,23 +110,23 @@ export const GetCanConnectDocument = gql`
  * });
  */
 export function useGetCanConnectQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetCanConnectQuery,
     GetCanConnectQueryVariables
   >
 ) {
-  return useQuery<GetCanConnectQuery, GetCanConnectQueryVariables>(
+  return Apollo.useQuery<GetCanConnectQuery, GetCanConnectQueryVariables>(
     GetCanConnectDocument,
     baseOptions
   );
 }
 export function useGetCanConnectLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetCanConnectQuery,
     GetCanConnectQueryVariables
   >
 ) {
-  return useLazyQuery<GetCanConnectQuery, GetCanConnectQueryVariables>(
+  return Apollo.useLazyQuery<GetCanConnectQuery, GetCanConnectQueryVariables>(
     GetCanConnectDocument,
     baseOptions
   );
@@ -142,7 +137,7 @@ export type GetCanConnectQueryHookResult = ReturnType<
 export type GetCanConnectLazyQueryHookResult = ReturnType<
   typeof useGetCanConnectLazyQuery
 >;
-export type GetCanConnectQueryResult = QueryResult<
+export type GetCanConnectQueryResult = Apollo.QueryResult<
   GetCanConnectQuery,
   GetCanConnectQueryVariables
 >;
@@ -184,20 +179,23 @@ export const GetNodeInfoDocument = gql`
  * });
  */
 export function useGetNodeInfoQuery(
-  baseOptions?: QueryHookOptions<GetNodeInfoQuery, GetNodeInfoQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<
+    GetNodeInfoQuery,
+    GetNodeInfoQueryVariables
+  >
 ) {
-  return useQuery<GetNodeInfoQuery, GetNodeInfoQueryVariables>(
+  return Apollo.useQuery<GetNodeInfoQuery, GetNodeInfoQueryVariables>(
     GetNodeInfoDocument,
     baseOptions
   );
 }
 export function useGetNodeInfoLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetNodeInfoQuery,
     GetNodeInfoQueryVariables
   >
 ) {
-  return useLazyQuery<GetNodeInfoQuery, GetNodeInfoQueryVariables>(
+  return Apollo.useLazyQuery<GetNodeInfoQuery, GetNodeInfoQueryVariables>(
     GetNodeInfoDocument,
     baseOptions
   );
@@ -206,7 +204,7 @@ export type GetNodeInfoQueryHookResult = ReturnType<typeof useGetNodeInfoQuery>;
 export type GetNodeInfoLazyQueryHookResult = ReturnType<
   typeof useGetNodeInfoLazyQuery
 >;
-export type GetNodeInfoQueryResult = QueryResult<
+export type GetNodeInfoQueryResult = Apollo.QueryResult<
   GetNodeInfoQuery,
   GetNodeInfoQueryVariables
 >;
@@ -236,23 +234,23 @@ export const GetChannelAmountInfoDocument = gql`
  * });
  */
 export function useGetChannelAmountInfoQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetChannelAmountInfoQuery,
     GetChannelAmountInfoQueryVariables
   >
 ) {
-  return useQuery<
+  return Apollo.useQuery<
     GetChannelAmountInfoQuery,
     GetChannelAmountInfoQueryVariables
   >(GetChannelAmountInfoDocument, baseOptions);
 }
 export function useGetChannelAmountInfoLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetChannelAmountInfoQuery,
     GetChannelAmountInfoQueryVariables
   >
 ) {
-  return useLazyQuery<
+  return Apollo.useLazyQuery<
     GetChannelAmountInfoQuery,
     GetChannelAmountInfoQueryVariables
   >(GetChannelAmountInfoDocument, baseOptions);
@@ -263,7 +261,7 @@ export type GetChannelAmountInfoQueryHookResult = ReturnType<
 export type GetChannelAmountInfoLazyQueryHookResult = ReturnType<
   typeof useGetChannelAmountInfoLazyQuery
 >;
-export type GetChannelAmountInfoQueryResult = QueryResult<
+export type GetChannelAmountInfoQueryResult = Apollo.QueryResult<
   GetChannelAmountInfoQuery,
   GetChannelAmountInfoQueryVariables
 >;
@@ -292,26 +290,26 @@ export const GetCanConnectInfoDocument = gql`
  * });
  */
 export function useGetCanConnectInfoQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetCanConnectInfoQuery,
     GetCanConnectInfoQueryVariables
   >
 ) {
-  return useQuery<GetCanConnectInfoQuery, GetCanConnectInfoQueryVariables>(
-    GetCanConnectInfoDocument,
-    baseOptions
-  );
+  return Apollo.useQuery<
+    GetCanConnectInfoQuery,
+    GetCanConnectInfoQueryVariables
+  >(GetCanConnectInfoDocument, baseOptions);
 }
 export function useGetCanConnectInfoLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetCanConnectInfoQuery,
     GetCanConnectInfoQueryVariables
   >
 ) {
-  return useLazyQuery<GetCanConnectInfoQuery, GetCanConnectInfoQueryVariables>(
-    GetCanConnectInfoDocument,
-    baseOptions
-  );
+  return Apollo.useLazyQuery<
+    GetCanConnectInfoQuery,
+    GetCanConnectInfoQueryVariables
+  >(GetCanConnectInfoDocument, baseOptions);
 }
 export type GetCanConnectInfoQueryHookResult = ReturnType<
   typeof useGetCanConnectInfoQuery
@@ -319,7 +317,7 @@ export type GetCanConnectInfoQueryHookResult = ReturnType<
 export type GetCanConnectInfoLazyQueryHookResult = ReturnType<
   typeof useGetCanConnectInfoLazyQuery
 >;
-export type GetCanConnectInfoQueryResult = QueryResult<
+export type GetCanConnectInfoQueryResult = Apollo.QueryResult<
   GetCanConnectInfoQuery,
   GetCanConnectInfoQueryVariables
 >;

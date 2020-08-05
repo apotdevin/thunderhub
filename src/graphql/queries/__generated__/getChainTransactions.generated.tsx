@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetChainTransactionsQueryVariables = Types.Exact<{
   [key: string]: never;
@@ -63,23 +58,23 @@ export const GetChainTransactionsDocument = gql`
  * });
  */
 export function useGetChainTransactionsQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetChainTransactionsQuery,
     GetChainTransactionsQueryVariables
   >
 ) {
-  return useQuery<
+  return Apollo.useQuery<
     GetChainTransactionsQuery,
     GetChainTransactionsQueryVariables
   >(GetChainTransactionsDocument, baseOptions);
 }
 export function useGetChainTransactionsLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetChainTransactionsQuery,
     GetChainTransactionsQueryVariables
   >
 ) {
-  return useLazyQuery<
+  return Apollo.useLazyQuery<
     GetChainTransactionsQuery,
     GetChainTransactionsQueryVariables
   >(GetChainTransactionsDocument, baseOptions);
@@ -90,7 +85,7 @@ export type GetChainTransactionsQueryHookResult = ReturnType<
 export type GetChainTransactionsLazyQueryHookResult = ReturnType<
   typeof useGetChainTransactionsLazyQuery
 >;
-export type GetChainTransactionsQueryResult = QueryResult<
+export type GetChainTransactionsQueryResult = Apollo.QueryResult<
   GetChainTransactionsQuery,
   GetChainTransactionsQueryVariables
 >;

@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetServerAccountsQueryVariables = Types.Exact<{
   [key: string]: never;
@@ -52,26 +47,26 @@ export const GetServerAccountsDocument = gql`
  * });
  */
 export function useGetServerAccountsQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetServerAccountsQuery,
     GetServerAccountsQueryVariables
   >
 ) {
-  return useQuery<GetServerAccountsQuery, GetServerAccountsQueryVariables>(
-    GetServerAccountsDocument,
-    baseOptions
-  );
+  return Apollo.useQuery<
+    GetServerAccountsQuery,
+    GetServerAccountsQueryVariables
+  >(GetServerAccountsDocument, baseOptions);
 }
 export function useGetServerAccountsLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetServerAccountsQuery,
     GetServerAccountsQueryVariables
   >
 ) {
-  return useLazyQuery<GetServerAccountsQuery, GetServerAccountsQueryVariables>(
-    GetServerAccountsDocument,
-    baseOptions
-  );
+  return Apollo.useLazyQuery<
+    GetServerAccountsQuery,
+    GetServerAccountsQueryVariables
+  >(GetServerAccountsDocument, baseOptions);
 }
 export type GetServerAccountsQueryHookResult = ReturnType<
   typeof useGetServerAccountsQuery
@@ -79,7 +74,7 @@ export type GetServerAccountsQueryHookResult = ReturnType<
 export type GetServerAccountsLazyQueryHookResult = ReturnType<
   typeof useGetServerAccountsLazyQuery
 >;
-export type GetServerAccountsQueryResult = QueryResult<
+export type GetServerAccountsQueryResult = Apollo.QueryResult<
   GetServerAccountsQuery,
   GetServerAccountsQueryVariables
 >;

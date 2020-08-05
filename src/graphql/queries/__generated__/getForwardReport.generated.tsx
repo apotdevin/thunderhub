@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetForwardReportQueryVariables = Types.Exact<{
   time?: Types.Maybe<Types.Scalars['String']>;
@@ -40,26 +35,26 @@ export const GetForwardReportDocument = gql`
  * });
  */
 export function useGetForwardReportQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetForwardReportQuery,
     GetForwardReportQueryVariables
   >
 ) {
-  return useQuery<GetForwardReportQuery, GetForwardReportQueryVariables>(
+  return Apollo.useQuery<GetForwardReportQuery, GetForwardReportQueryVariables>(
     GetForwardReportDocument,
     baseOptions
   );
 }
 export function useGetForwardReportLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetForwardReportQuery,
     GetForwardReportQueryVariables
   >
 ) {
-  return useLazyQuery<GetForwardReportQuery, GetForwardReportQueryVariables>(
-    GetForwardReportDocument,
-    baseOptions
-  );
+  return Apollo.useLazyQuery<
+    GetForwardReportQuery,
+    GetForwardReportQueryVariables
+  >(GetForwardReportDocument, baseOptions);
 }
 export type GetForwardReportQueryHookResult = ReturnType<
   typeof useGetForwardReportQuery
@@ -67,7 +62,7 @@ export type GetForwardReportQueryHookResult = ReturnType<
 export type GetForwardReportLazyQueryHookResult = ReturnType<
   typeof useGetForwardReportLazyQuery
 >;
-export type GetForwardReportQueryResult = QueryResult<
+export type GetForwardReportQueryResult = Apollo.QueryResult<
   GetForwardReportQuery,
   GetForwardReportQueryVariables
 >;
