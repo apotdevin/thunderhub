@@ -132,7 +132,7 @@
     "jest-fetch-mock": "^3.0.3",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
-    "standard-version": "^8.0.1",
+    "standard-version": "^8.0.2",
     "typescript": "^3.9.6"
   },
   "husky": {
