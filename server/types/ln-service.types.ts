@@ -22,6 +22,16 @@ export type ClosedChannelsType = {
   channels: [];
 };
 
+export type CloseChannelType = {
+  transaction_id: string;
+  transaction_vout: number;
+};
+
+export type OpenChannelType = {
+  transaction_id: string;
+  transaction_vout: number;
+};
+
 export type InvoiceType = {
   id: string;
   created_at: string;
