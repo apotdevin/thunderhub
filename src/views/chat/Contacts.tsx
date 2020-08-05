@@ -20,12 +20,12 @@ export const ContactCard = ({
   contact,
   user,
   setUser,
-  setShow,
+  setName,
 }: {
   contact: SentChatProps;
   user: string;
-  setUser: (active: string) => void;
-  setShow: (active: boolean) => void;
+  setUser: (name: string) => void;
+  setName: (name: string) => void;
 }) => {
   const {
     alias = '',
@@ -47,30 +47,27 @@ export const ContactCard = ({
   });
 
   React.useEffect(() => {
-    if (
-      alias &&
-      contactSender &&
-      contactSender.indexOf(sender) >= 0 &&
-      user !== 'New Chat'
-    ) {
-      setUser(alias);
-    }
     if (!alias) {
       getInfo();
     }
-  }, [contact, sender, alias, contactSender, getInfo, setUser, user]);
+
+    if (alias && contactSender && contactSender.indexOf(sender) >= 0 && !user) {
+      setName(alias);
+    }
+  }, [alias, getInfo, contactSender, setName, sender, user]);
 
   React.useEffect(() => {
-    if (!loading && data && data.getNode) {
-      const alias = data.getNode?.node?.alias;
-      const name =
-        alias && alias !== '' ? alias : (contactSender || '-').substring(0, 6);
-      setNodeName(name);
-      if (contactSender && contactSender.indexOf(sender) >= 0) {
-        setUser(name);
-      }
+    if (loading || !data?.getNode) return;
+
+    const alias = data.getNode?.node?.alias;
+    const name =
+      alias && alias !== '' ? alias : (contactSender || '-').substring(0, 6);
+    setNodeName(name);
+
+    if (!user && contactSender && contactSender.indexOf(sender) >= 0) {
+      setName(name);
     }
-  }, [data, loading, sender, contactSender, setUser]);
+  }, [data, loading, contactSender, sender, setName, user]);
 
   return (
     <ChatSubCard
@@ -82,7 +79,6 @@ export const ContactCard = ({
             userId: account?.id || '',
           });
         setUser(nodeName);
-        setShow(false);
       }}
     >
       <SingleLine>
@@ -100,15 +96,15 @@ interface ContactsProps {
   user: string;
   hide?: boolean;
   contacts: SentChatProps[];
-  setUser: (active: string) => void;
-  setShow: (active: boolean) => void;
+  setUser: (name: string) => void;
+  setName: (name: string) => void;
 }
 
 export const Contacts = ({
   contacts,
   user,
   setUser,
-  setShow,
+  setName,
   hide,
 }: ContactsProps) => {
   return (
@@ -121,18 +117,13 @@ export const Contacts = ({
                 contact={contact}
                 setUser={setUser}
                 user={user}
-                setShow={setShow}
+                setName={setName}
               />
             </React.Fragment>
           );
         }
       })}
-      <ChatSubCard
-        onClick={() => {
-          setUser('New Chat');
-          setShow(false);
-        }}
-      >
+      <ChatSubCard onClick={() => setUser('New Chat')}>
         <div style={{ fontSize: '14px' }}>New Chat</div>
       </ChatSubCard>
     </ChatContactColumn>

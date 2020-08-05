@@ -15,10 +15,12 @@ export const ChatInput = ({
   alias,
   sender: customSender,
   withMargin,
+  callback,
 }: {
   alias: string;
   sender?: string;
   withMargin?: string;
+  callback?: () => void;
 }) => {
   const [message, setMessage] = React.useState('');
 
@@ -57,6 +59,7 @@ export const ChatInput = ({
         sender: customSender || sender,
       });
       resetMutationResult();
+      callback && callback();
     }
   }, [
     loading,
@@ -69,6 +72,8 @@ export const ChatInput = ({
     account,
     dispatch,
     resetMutationResult,
+    callback,
+    alias,
   ]);
 
   return (

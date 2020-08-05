@@ -22,11 +22,18 @@ import {
 interface PeerProps {
   peer: PeerType;
   index: number;
-  setIndexOpen: (index: number) => void;
   indexOpen: number;
+  setIndexOpen: (index: number) => void;
+  callback?: () => void;
 }
 
-const PeerChatCard = ({ peer, index, setIndexOpen, indexOpen }: PeerProps) => {
+const PeerChatCard = ({
+  peer,
+  index,
+  setIndexOpen,
+  indexOpen,
+  callback,
+}: PeerProps) => {
   const { partner_node_info, public_key } = peer;
 
   const alias = partner_node_info?.node?.alias;
@@ -43,7 +50,7 @@ const PeerChatCard = ({ peer, index, setIndexOpen, indexOpen }: PeerProps) => {
     return (
       <>
         <Separation />
-        <ChatInput alias={alias} sender={public_key} />
+        <ChatInput alias={alias} sender={public_key} callback={callback} />
       </>
     );
   };
@@ -70,7 +77,13 @@ const PeerChatCard = ({ peer, index, setIndexOpen, indexOpen }: PeerProps) => {
   );
 };
 
-export const ChatStart = ({ noTitle }: { noTitle?: boolean }) => {
+export const ChatStart = ({
+  noTitle,
+  callback,
+}: {
+  noTitle?: boolean;
+  callback: () => void;
+}) => {
   const [indexOpen, setIndexOpen] = React.useState(0);
   const [willSend, setWillSend] = React.useState(false);
   const [publicKey, setPublicKey] = React.useState('');
@@ -89,6 +102,7 @@ export const ChatStart = ({ noTitle }: { noTitle?: boolean }) => {
               index={index + 1}
               setIndexOpen={setIndexOpen}
               indexOpen={indexOpen}
+              callback={callback}
               key={`${index}-${peer?.public_key}`}
             />
           ))}
@@ -105,7 +119,7 @@ export const ChatStart = ({ noTitle }: { noTitle?: boolean }) => {
           <X size={18} />
         </ColorButton>
       </SingleLine>
-      <ChatInput alias={''} sender={publicKey} />
+      <ChatInput alias={''} sender={publicKey} callback={callback} />
     </SubCard>
   );
 
