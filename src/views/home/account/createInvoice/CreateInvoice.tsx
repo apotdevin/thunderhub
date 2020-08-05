@@ -34,8 +34,11 @@ const WrapRequest = styled.div`
 `;
 
 const QRWrapper = styled.div`
-  width: 200px;
+  width: 280px;
+  height: 280px;
   margin: 16px;
+  background: white;
+  padding: 16px;
 `;
 
 const Column = styled.div`
@@ -64,7 +67,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
   const renderQr = () => (
     <Responsive>
       <QRWrapper>
-        <QRCode value={`lightning:${request}`} renderAs={'svg'} size={200} />
+        <QRCode value={`lightning:${request}`} renderAs={'svg'} size={248} />
       </QRWrapper>
       <Column>
         <WrapRequest>{request}</WrapRequest>
