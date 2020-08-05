@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetPendingChannelsQueryVariables = Types.Exact<{
   [key: string]: never;
@@ -91,23 +86,23 @@ export const GetPendingChannelsDocument = gql`
  * });
  */
 export function useGetPendingChannelsQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetPendingChannelsQuery,
     GetPendingChannelsQueryVariables
   >
 ) {
-  return useQuery<GetPendingChannelsQuery, GetPendingChannelsQueryVariables>(
-    GetPendingChannelsDocument,
-    baseOptions
-  );
+  return Apollo.useQuery<
+    GetPendingChannelsQuery,
+    GetPendingChannelsQueryVariables
+  >(GetPendingChannelsDocument, baseOptions);
 }
 export function useGetPendingChannelsLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetPendingChannelsQuery,
     GetPendingChannelsQueryVariables
   >
 ) {
-  return useLazyQuery<
+  return Apollo.useLazyQuery<
     GetPendingChannelsQuery,
     GetPendingChannelsQueryVariables
   >(GetPendingChannelsDocument, baseOptions);
@@ -118,7 +113,7 @@ export type GetPendingChannelsQueryHookResult = ReturnType<
 export type GetPendingChannelsLazyQueryHookResult = ReturnType<
   typeof useGetPendingChannelsLazyQuery
 >;
-export type GetPendingChannelsQueryResult = QueryResult<
+export type GetPendingChannelsQueryResult = Apollo.QueryResult<
   GetPendingChannelsQuery,
   GetPendingChannelsQueryVariables
 >;

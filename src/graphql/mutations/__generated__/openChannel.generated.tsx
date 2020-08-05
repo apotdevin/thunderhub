@@ -1,12 +1,7 @@
-import {
-  gql,
-  MutationFunction,
-  useMutation,
-  MutationHookOptions,
-  BaseMutationOptions,
-  MutationResult,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type OpenChannelMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
@@ -42,7 +37,7 @@ export const OpenChannelDocument = gql`
     }
   }
 `;
-export type OpenChannelMutationFn = MutationFunction<
+export type OpenChannelMutationFn = Apollo.MutationFunction<
   OpenChannelMutation,
   OpenChannelMutationVariables
 >;
@@ -68,12 +63,12 @@ export type OpenChannelMutationFn = MutationFunction<
  * });
  */
 export function useOpenChannelMutation(
-  baseOptions?: MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     OpenChannelMutation,
     OpenChannelMutationVariables
   >
 ) {
-  return useMutation<OpenChannelMutation, OpenChannelMutationVariables>(
+  return Apollo.useMutation<OpenChannelMutation, OpenChannelMutationVariables>(
     OpenChannelDocument,
     baseOptions
   );
@@ -81,8 +76,10 @@ export function useOpenChannelMutation(
 export type OpenChannelMutationHookResult = ReturnType<
   typeof useOpenChannelMutation
 >;
-export type OpenChannelMutationResult = MutationResult<OpenChannelMutation>;
-export type OpenChannelMutationOptions = BaseMutationOptions<
+export type OpenChannelMutationResult = Apollo.MutationResult<
+  OpenChannelMutation
+>;
+export type OpenChannelMutationOptions = Apollo.BaseMutationOptions<
   OpenChannelMutation,
   OpenChannelMutationVariables
 >;

@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type VerifyBackupsQueryVariables = Types.Exact<{
   backup: Types.Scalars['String'];
@@ -40,23 +35,23 @@ export const VerifyBackupsDocument = gql`
  * });
  */
 export function useVerifyBackupsQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     VerifyBackupsQuery,
     VerifyBackupsQueryVariables
   >
 ) {
-  return useQuery<VerifyBackupsQuery, VerifyBackupsQueryVariables>(
+  return Apollo.useQuery<VerifyBackupsQuery, VerifyBackupsQueryVariables>(
     VerifyBackupsDocument,
     baseOptions
   );
 }
 export function useVerifyBackupsLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     VerifyBackupsQuery,
     VerifyBackupsQueryVariables
   >
 ) {
-  return useLazyQuery<VerifyBackupsQuery, VerifyBackupsQueryVariables>(
+  return Apollo.useLazyQuery<VerifyBackupsQuery, VerifyBackupsQueryVariables>(
     VerifyBackupsDocument,
     baseOptions
   );
@@ -67,7 +62,7 @@ export type VerifyBackupsQueryHookResult = ReturnType<
 export type VerifyBackupsLazyQueryHookResult = ReturnType<
   typeof useVerifyBackupsLazyQuery
 >;
-export type VerifyBackupsQueryResult = QueryResult<
+export type VerifyBackupsQueryResult = Apollo.QueryResult<
   VerifyBackupsQuery,
   VerifyBackupsQueryVariables
 >;

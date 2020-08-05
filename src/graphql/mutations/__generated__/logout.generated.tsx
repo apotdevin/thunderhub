@@ -1,12 +1,7 @@
-import {
-  gql,
-  MutationFunction,
-  useMutation,
-  MutationHookOptions,
-  BaseMutationOptions,
-  MutationResult,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type LogoutMutationVariables = Types.Exact<{
   type: Types.Scalars['String'];
@@ -22,7 +17,7 @@ export const LogoutDocument = gql`
     logout(type: $type)
   }
 `;
-export type LogoutMutationFn = MutationFunction<
+export type LogoutMutationFn = Apollo.MutationFunction<
   LogoutMutation,
   LogoutMutationVariables
 >;
@@ -45,16 +40,19 @@ export type LogoutMutationFn = MutationFunction<
  * });
  */
 export function useLogoutMutation(
-  baseOptions?: MutationHookOptions<LogoutMutation, LogoutMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<
+    LogoutMutation,
+    LogoutMutationVariables
+  >
 ) {
-  return useMutation<LogoutMutation, LogoutMutationVariables>(
+  return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(
     LogoutDocument,
     baseOptions
   );
 }
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
-export type LogoutMutationResult = MutationResult<LogoutMutation>;
-export type LogoutMutationOptions = BaseMutationOptions<
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<
   LogoutMutation,
   LogoutMutationVariables
 >;

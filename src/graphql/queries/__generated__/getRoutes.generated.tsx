@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetRoutesQueryVariables = Types.Exact<{
   outgoing: Types.Scalars['String'];
@@ -100,17 +95,20 @@ export const GetRoutesDocument = gql`
  * });
  */
 export function useGetRoutesQuery(
-  baseOptions?: QueryHookOptions<GetRoutesQuery, GetRoutesQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<GetRoutesQuery, GetRoutesQueryVariables>
 ) {
-  return useQuery<GetRoutesQuery, GetRoutesQueryVariables>(
+  return Apollo.useQuery<GetRoutesQuery, GetRoutesQueryVariables>(
     GetRoutesDocument,
     baseOptions
   );
 }
 export function useGetRoutesLazyQuery(
-  baseOptions?: LazyQueryHookOptions<GetRoutesQuery, GetRoutesQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetRoutesQuery,
+    GetRoutesQueryVariables
+  >
 ) {
-  return useLazyQuery<GetRoutesQuery, GetRoutesQueryVariables>(
+  return Apollo.useLazyQuery<GetRoutesQuery, GetRoutesQueryVariables>(
     GetRoutesDocument,
     baseOptions
   );
@@ -119,7 +117,7 @@ export type GetRoutesQueryHookResult = ReturnType<typeof useGetRoutesQuery>;
 export type GetRoutesLazyQueryHookResult = ReturnType<
   typeof useGetRoutesLazyQuery
 >;
-export type GetRoutesQueryResult = QueryResult<
+export type GetRoutesQueryResult = Apollo.QueryResult<
   GetRoutesQuery,
   GetRoutesQueryVariables
 >;

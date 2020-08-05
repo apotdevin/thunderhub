@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetUtxosQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -59,17 +54,20 @@ export const GetUtxosDocument = gql`
  * });
  */
 export function useGetUtxosQuery(
-  baseOptions?: QueryHookOptions<GetUtxosQuery, GetUtxosQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<GetUtxosQuery, GetUtxosQueryVariables>
 ) {
-  return useQuery<GetUtxosQuery, GetUtxosQueryVariables>(
+  return Apollo.useQuery<GetUtxosQuery, GetUtxosQueryVariables>(
     GetUtxosDocument,
     baseOptions
   );
 }
 export function useGetUtxosLazyQuery(
-  baseOptions?: LazyQueryHookOptions<GetUtxosQuery, GetUtxosQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetUtxosQuery,
+    GetUtxosQueryVariables
+  >
 ) {
-  return useLazyQuery<GetUtxosQuery, GetUtxosQueryVariables>(
+  return Apollo.useLazyQuery<GetUtxosQuery, GetUtxosQueryVariables>(
     GetUtxosDocument,
     baseOptions
   );
@@ -78,7 +76,7 @@ export type GetUtxosQueryHookResult = ReturnType<typeof useGetUtxosQuery>;
 export type GetUtxosLazyQueryHookResult = ReturnType<
   typeof useGetUtxosLazyQuery
 >;
-export type GetUtxosQueryResult = QueryResult<
+export type GetUtxosQueryResult = Apollo.QueryResult<
   GetUtxosQuery,
   GetUtxosQueryVariables
 >;

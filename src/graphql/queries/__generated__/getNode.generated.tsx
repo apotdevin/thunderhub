@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetNodeQueryVariables = Types.Exact<{
   publicKey: Types.Scalars['String'];
@@ -54,24 +49,24 @@ export const GetNodeDocument = gql`
  * });
  */
 export function useGetNodeQuery(
-  baseOptions?: QueryHookOptions<GetNodeQuery, GetNodeQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<GetNodeQuery, GetNodeQueryVariables>
 ) {
-  return useQuery<GetNodeQuery, GetNodeQueryVariables>(
+  return Apollo.useQuery<GetNodeQuery, GetNodeQueryVariables>(
     GetNodeDocument,
     baseOptions
   );
 }
 export function useGetNodeLazyQuery(
-  baseOptions?: LazyQueryHookOptions<GetNodeQuery, GetNodeQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<GetNodeQuery, GetNodeQueryVariables>
 ) {
-  return useLazyQuery<GetNodeQuery, GetNodeQueryVariables>(
+  return Apollo.useLazyQuery<GetNodeQuery, GetNodeQueryVariables>(
     GetNodeDocument,
     baseOptions
   );
 }
 export type GetNodeQueryHookResult = ReturnType<typeof useGetNodeQuery>;
 export type GetNodeLazyQueryHookResult = ReturnType<typeof useGetNodeLazyQuery>;
-export type GetNodeQueryResult = QueryResult<
+export type GetNodeQueryResult = Apollo.QueryResult<
   GetNodeQuery,
   GetNodeQueryVariables
 >;

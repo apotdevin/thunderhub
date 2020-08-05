@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type VerifyMessageQueryVariables = Types.Exact<{
   message: Types.Scalars['String'];
@@ -42,23 +37,23 @@ export const VerifyMessageDocument = gql`
  * });
  */
 export function useVerifyMessageQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     VerifyMessageQuery,
     VerifyMessageQueryVariables
   >
 ) {
-  return useQuery<VerifyMessageQuery, VerifyMessageQueryVariables>(
+  return Apollo.useQuery<VerifyMessageQuery, VerifyMessageQueryVariables>(
     VerifyMessageDocument,
     baseOptions
   );
 }
 export function useVerifyMessageLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     VerifyMessageQuery,
     VerifyMessageQueryVariables
   >
 ) {
-  return useLazyQuery<VerifyMessageQuery, VerifyMessageQueryVariables>(
+  return Apollo.useLazyQuery<VerifyMessageQuery, VerifyMessageQueryVariables>(
     VerifyMessageDocument,
     baseOptions
   );
@@ -69,7 +64,7 @@ export type VerifyMessageQueryHookResult = ReturnType<
 export type VerifyMessageLazyQueryHookResult = ReturnType<
   typeof useVerifyMessageLazyQuery
 >;
-export type VerifyMessageQueryResult = QueryResult<
+export type VerifyMessageQueryResult = Apollo.QueryResult<
   VerifyMessageQuery,
   VerifyMessageQueryVariables
 >;

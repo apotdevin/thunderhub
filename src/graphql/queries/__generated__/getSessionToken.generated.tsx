@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetSessionTokenQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -42,26 +37,26 @@ export const GetSessionTokenDocument = gql`
  * });
  */
 export function useGetSessionTokenQuery(
-  baseOptions?: QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetSessionTokenQuery,
     GetSessionTokenQueryVariables
   >
 ) {
-  return useQuery<GetSessionTokenQuery, GetSessionTokenQueryVariables>(
+  return Apollo.useQuery<GetSessionTokenQuery, GetSessionTokenQueryVariables>(
     GetSessionTokenDocument,
     baseOptions
   );
 }
 export function useGetSessionTokenLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetSessionTokenQuery,
     GetSessionTokenQueryVariables
   >
 ) {
-  return useLazyQuery<GetSessionTokenQuery, GetSessionTokenQueryVariables>(
-    GetSessionTokenDocument,
-    baseOptions
-  );
+  return Apollo.useLazyQuery<
+    GetSessionTokenQuery,
+    GetSessionTokenQueryVariables
+  >(GetSessionTokenDocument, baseOptions);
 }
 export type GetSessionTokenQueryHookResult = ReturnType<
   typeof useGetSessionTokenQuery
@@ -69,7 +64,7 @@ export type GetSessionTokenQueryHookResult = ReturnType<
 export type GetSessionTokenLazyQueryHookResult = ReturnType<
   typeof useGetSessionTokenLazyQuery
 >;
-export type GetSessionTokenQueryResult = QueryResult<
+export type GetSessionTokenQueryResult = Apollo.QueryResult<
   GetSessionTokenQuery,
   GetSessionTokenQueryVariables
 >;

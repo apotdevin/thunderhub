@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetLnPayInfoQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -41,20 +36,23 @@ export const GetLnPayInfoDocument = gql`
  * });
  */
 export function useGetLnPayInfoQuery(
-  baseOptions?: QueryHookOptions<GetLnPayInfoQuery, GetLnPayInfoQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<
+    GetLnPayInfoQuery,
+    GetLnPayInfoQueryVariables
+  >
 ) {
-  return useQuery<GetLnPayInfoQuery, GetLnPayInfoQueryVariables>(
+  return Apollo.useQuery<GetLnPayInfoQuery, GetLnPayInfoQueryVariables>(
     GetLnPayInfoDocument,
     baseOptions
   );
 }
 export function useGetLnPayInfoLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetLnPayInfoQuery,
     GetLnPayInfoQueryVariables
   >
 ) {
-  return useLazyQuery<GetLnPayInfoQuery, GetLnPayInfoQueryVariables>(
+  return Apollo.useLazyQuery<GetLnPayInfoQuery, GetLnPayInfoQueryVariables>(
     GetLnPayInfoDocument,
     baseOptions
   );
@@ -65,7 +63,7 @@ export type GetLnPayInfoQueryHookResult = ReturnType<
 export type GetLnPayInfoLazyQueryHookResult = ReturnType<
   typeof useGetLnPayInfoLazyQuery
 >;
-export type GetLnPayInfoQueryResult = QueryResult<
+export type GetLnPayInfoQueryResult = Apollo.QueryResult<
   GetLnPayInfoQuery,
   GetLnPayInfoQueryVariables
 >;

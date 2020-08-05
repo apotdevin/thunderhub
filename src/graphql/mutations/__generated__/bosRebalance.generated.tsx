@@ -1,12 +1,7 @@
-import {
-  gql,
-  MutationFunction,
-  useMutation,
-  MutationHookOptions,
-  BaseMutationOptions,
-  MutationResult,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type BosRebalanceMutationVariables = Types.Exact<{
   avoid?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
@@ -108,7 +103,7 @@ export const BosRebalanceDocument = gql`
     }
   }
 `;
-export type BosRebalanceMutationFn = MutationFunction<
+export type BosRebalanceMutationFn = Apollo.MutationFunction<
   BosRebalanceMutation,
   BosRebalanceMutationVariables
 >;
@@ -140,21 +135,23 @@ export type BosRebalanceMutationFn = MutationFunction<
  * });
  */
 export function useBosRebalanceMutation(
-  baseOptions?: MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     BosRebalanceMutation,
     BosRebalanceMutationVariables
   >
 ) {
-  return useMutation<BosRebalanceMutation, BosRebalanceMutationVariables>(
-    BosRebalanceDocument,
-    baseOptions
-  );
+  return Apollo.useMutation<
+    BosRebalanceMutation,
+    BosRebalanceMutationVariables
+  >(BosRebalanceDocument, baseOptions);
 }
 export type BosRebalanceMutationHookResult = ReturnType<
   typeof useBosRebalanceMutation
 >;
-export type BosRebalanceMutationResult = MutationResult<BosRebalanceMutation>;
-export type BosRebalanceMutationOptions = BaseMutationOptions<
+export type BosRebalanceMutationResult = Apollo.MutationResult<
+  BosRebalanceMutation
+>;
+export type BosRebalanceMutationOptions = Apollo.BaseMutationOptions<
   BosRebalanceMutation,
   BosRebalanceMutationVariables
 >;

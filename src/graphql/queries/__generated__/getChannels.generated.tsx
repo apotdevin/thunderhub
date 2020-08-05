@@ -1,12 +1,7 @@
-import {
-  gql,
-  QueryHookOptions,
-  useQuery,
-  useLazyQuery,
-  QueryResult,
-  LazyQueryHookOptions,
-} from '@apollo/client';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetChannelsQueryVariables = Types.Exact<{
   active?: Types.Maybe<Types.Scalars['Boolean']>;
@@ -131,20 +126,23 @@ export const GetChannelsDocument = gql`
  * });
  */
 export function useGetChannelsQuery(
-  baseOptions?: QueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<
+    GetChannelsQuery,
+    GetChannelsQueryVariables
+  >
 ) {
-  return useQuery<GetChannelsQuery, GetChannelsQueryVariables>(
+  return Apollo.useQuery<GetChannelsQuery, GetChannelsQueryVariables>(
     GetChannelsDocument,
     baseOptions
   );
 }
 export function useGetChannelsLazyQuery(
-  baseOptions?: LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetChannelsQuery,
     GetChannelsQueryVariables
   >
 ) {
-  return useLazyQuery<GetChannelsQuery, GetChannelsQueryVariables>(
+  return Apollo.useLazyQuery<GetChannelsQuery, GetChannelsQueryVariables>(
     GetChannelsDocument,
     baseOptions
   );
@@ -153,7 +151,7 @@ export type GetChannelsQueryHookResult = ReturnType<typeof useGetChannelsQuery>;
 export type GetChannelsLazyQueryHookResult = ReturnType<
   typeof useGetChannelsLazyQuery
 >;
-export type GetChannelsQueryResult = QueryResult<
+export type GetChannelsQueryResult = Apollo.QueryResult<
   GetChannelsQuery,
   GetChannelsQueryVariables
 >;
