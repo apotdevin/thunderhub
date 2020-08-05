@@ -75,7 +75,7 @@ export type Query = {
   getChainTransactions?: Maybe<Array<Maybe<GetTransactionsType>>>;
   getUtxos?: Maybe<Array<Maybe<GetUtxosType>>>;
   getMessages?: Maybe<GetMessagesType>;
-  getAuthToken?: Maybe<Scalars['Boolean']>;
+  getAuthToken: Scalars['Boolean'];
   getSessionToken?: Maybe<Scalars['Boolean']>;
   getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
   getAccount?: Maybe<ServerAccountType>;

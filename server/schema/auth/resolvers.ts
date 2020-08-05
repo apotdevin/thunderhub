@@ -17,27 +17,31 @@ const { cookiePath, nodeEnv } = serverRuntimeConfig || {};
 
 export const authResolvers = {
   Query: {
-    getAuthToken: async (_: undefined, params: any, context: ContextType) => {
+    getAuthToken: async (
+      _: undefined,
+      params: any,
+      context: ContextType
+    ): Promise<boolean> => {
       const { ip, secret, sso, res } = context;
       await requestLimiter(ip, 'getAuthToken');
 
       if (!sso) {
         logger.warn('No SSO account available');
-        return null;
+        return false;
       }
 
       if (!sso.socket || !sso.macaroon) {
         logger.warn('Host and macaroon are required for SSO');
-        return null;
+        return false;
       }
 
       if (!params.cookie) {
-        return null;
+        return false;
       }
 
       if (cookiePath === '') {
         logger.warn('SSO auth not available since no cookie path was provided');
-        return null;
+        return false;
       }
 
       const cookieFile = readCookie(cookiePath);
@@ -61,7 +65,7 @@ export const authResolvers = {
       }
 
       logger.debug(`Cookie ${params.cookie} different to file ${cookieFile}`);
-      return null;
+      return false;
     },
     getSessionToken: async (
       _: undefined,
