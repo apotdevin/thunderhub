@@ -79,6 +79,7 @@ export const AddPeer = () => {
       {!separate && (
         <InputWithDeco
           title={'Url'}
+          value={url}
           inputCallback={value => setUrl(value)}
           placeholder={'public_key@socket'}
         />
@@ -87,11 +88,13 @@ export const AddPeer = () => {
         <>
           <InputWithDeco
             title={'Public Key'}
+            value={key}
             inputCallback={value => setKey(value)}
             placeholder={'Public Key'}
           />
           <InputWithDeco
             title={'Socket'}
+            value={socket}
             inputCallback={value => setSocket(value)}
             placeholder={'Socket'}
           />
