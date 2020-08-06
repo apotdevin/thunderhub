@@ -1,12 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { useGetNodeQuery } from 'src/graphql/queries/__generated__/getNode.generated';
-import { useAccountState } from 'src/context/AccountContext';
 import { useKeysendMutation } from 'src/graphql/mutations/__generated__/keysend.generated';
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
-import { SecureButton } from 'src/components/buttons/secureButton/SecureButton';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
+import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import {
   SingleLine,
   SubTitle,
@@ -33,10 +32,9 @@ export const KeysendModal: React.FC<KeysendProps> = ({
   handleReset,
 }) => {
   const [tokens, setTokens] = React.useState(0);
-  const { auth } = useAccountState();
 
   const { data, loading, error } = useGetNodeQuery({
-    variables: { auth, publicKey },
+    variables: { publicKey },
   });
 
   const [keysend, { loading: keysendLoading }] = useKeysendMutation({
@@ -81,16 +79,17 @@ export const KeysendModal: React.FC<KeysendProps> = ({
       <DarkSubTitle withMargin={'16px 0'}>
         Remember keysend is an experimental feature. Use at your own risk.
       </DarkSubTitle>
-      <SecureButton
-        callback={keysend}
-        variables={{ destination: publicKey, tokens }}
+      <ColorButton
+        onClick={() =>
+          keysend({ variables: { destination: publicKey, tokens } })
+        }
+        loading={keysendLoading}
         disabled={loading || keysendLoading}
         withMargin={'16px 0 0'}
-        loading={keysendLoading}
         fullWidth={true}
       >
         Send
-      </SecureButton>
+      </ColorButton>
     </>
   );
 };

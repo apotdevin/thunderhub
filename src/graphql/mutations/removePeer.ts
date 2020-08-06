@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const REMOVE_PEER = gql`
-  mutation RemovePeer($auth: authType!, $publicKey: String!) {
-    removePeer(auth: $auth, publicKey: $publicKey)
+  mutation RemovePeer($publicKey: String!) {
+    removePeer(publicKey: $publicKey)
   }
 `;

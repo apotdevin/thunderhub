@@ -1,11 +1,10 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type CreateInvoiceMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
-  auth: Types.AuthType;
 }>;
 
 export type CreateInvoiceMutation = { __typename?: 'Mutation' } & {
@@ -15,13 +14,13 @@ export type CreateInvoiceMutation = { __typename?: 'Mutation' } & {
 };
 
 export const CreateInvoiceDocument = gql`
-  mutation CreateInvoice($amount: Int!, $auth: authType!) {
-    createInvoice(amount: $amount, auth: $auth) {
+  mutation CreateInvoice($amount: Int!) {
+    createInvoice(amount: $amount) {
       request
     }
   }
 `;
-export type CreateInvoiceMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateInvoiceMutationFn = Apollo.MutationFunction<
   CreateInvoiceMutation,
   CreateInvoiceMutationVariables
 >;
@@ -40,17 +39,16 @@ export type CreateInvoiceMutationFn = ApolloReactCommon.MutationFunction<
  * const [createInvoiceMutation, { data, loading, error }] = useCreateInvoiceMutation({
  *   variables: {
  *      amount: // value for 'amount'
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useCreateInvoiceMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     CreateInvoiceMutation,
     CreateInvoiceMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     CreateInvoiceMutation,
     CreateInvoiceMutationVariables
   >(CreateInvoiceDocument, baseOptions);
@@ -58,10 +56,10 @@ export function useCreateInvoiceMutation(
 export type CreateInvoiceMutationHookResult = ReturnType<
   typeof useCreateInvoiceMutation
 >;
-export type CreateInvoiceMutationResult = ApolloReactCommon.MutationResult<
+export type CreateInvoiceMutationResult = Apollo.MutationResult<
   CreateInvoiceMutation
 >;
-export type CreateInvoiceMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateInvoiceMutationOptions = Apollo.BaseMutationOptions<
   CreateInvoiceMutation,
   CreateInvoiceMutationVariables
 >;

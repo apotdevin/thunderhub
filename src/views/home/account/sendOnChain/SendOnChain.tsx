@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { usePayAddressMutation } from 'src/graphql/mutations/__generated__/sendToAddress.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
+import { useBitcoinFees } from 'src/hooks/UseBitcoinFees';
 import {
   Separation,
   SingleLine,
   SubTitle,
 } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
-import { useBitcoinState } from '../../../../context/BitcoinContext';
-import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
 import {
   MultiButton,
@@ -23,8 +22,8 @@ import { renderLine } from '../../../../components/generic/helpers';
 import { usePriceState } from '../../../../context/PriceContext';
 
 export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
-  const { fast, halfHour, hour, dontShow } = useBitcoinState();
-  const { currency, displayValues } = useConfigState();
+  const { fast, halfHour, hour, dontShow } = useBitcoinFees();
+  const { currency, displayValues, fetchFees } = useConfigState();
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
@@ -32,7 +31,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
 
   const [address, setAddress] = useState('');
   const [tokens, setTokens] = useState(0);
-  const [type, setType] = useState(dontShow ? 'fee' : 'none');
+  const [type, setType] = useState(dontShow || !fetchFees ? 'fee' : 'none');
   const [amount, setAmount] = useState(0);
   const [sendAll, setSendAll] = useState(false);
 
@@ -112,7 +111,8 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
       <Separation />
       <InputWithDeco title={'Fee'} noInput={true}>
         <MultiButton>
-          {!dontShow &&
+          {fetchFees &&
+            !dontShow &&
             renderButton(
               () => {
                 setType('none');
@@ -149,7 +149,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
       >
         {type !== 'none' ? (
           <Input
-            value={amount > 0 && amount}
+            value={amount && amount > 0 ? amount : undefined}
             maxWidth={'500px'}
             placeholder={type === 'target' ? 'Blocks' : 'Sats/Byte'}
             type={'number'}
@@ -199,9 +199,12 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
           'Fee:',
           type === 'target' ? `${amount} Blocks` : `${amount} Sats/Byte`
         )}
-        <SecureButton
-          callback={payAddress}
-          variables={{ address, ...typeAmount(), ...tokenAmount }}
+        <ColorButton
+          onClick={() =>
+            payAddress({
+              variables: { address, ...typeAmount(), ...tokenAmount },
+            })
+          }
           disabled={!canSend}
           withMargin={'16px 0 0'}
           fullWidth={true}
@@ -209,7 +212,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
           loading={loading}
         >
           Send To Address
-        </SecureButton>
+        </ColorButton>
       </Modal>
     </>
   );

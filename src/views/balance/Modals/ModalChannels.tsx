@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useAccountState } from 'src/context/AccountContext';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import {
   SubCard,
@@ -29,21 +28,16 @@ export const ModalChannels: React.FC<ModalChannelsType> = ({
   dispatch,
   callback,
 }) => {
-  const { auth } = useAccountState();
-
-  const { loading, data } = useGetChannelsQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+  const { loading, data } = useGetChannelsQuery();
 
   if (loading || !data || !data.getChannels) {
     return <LoadingCard noCard={true} />;
   }
 
   const allChannels = data.getChannels.map(p => ({
-    alias: p.partner_node_info.node.alias,
-    id: p.id,
-    publicKey: p.partner_public_key,
+    alias: p?.partner_node_info.node.alias || '',
+    id: p?.id || '',
+    publicKey: p?.partner_public_key || '',
   }));
 
   return (
@@ -68,18 +62,20 @@ export const ModalChannels: React.FC<ModalChannelsType> = ({
                   onClick={() => {
                     if (multi) {
                       if (isSelected) {
-                        dispatch({
-                          type: 'removeChannel',
-                          id: channel.id,
-                        });
-                      } else {
-                        dispatch({
-                          type: 'addChannel',
-                          channel: {
-                            alias: channel.alias,
+                        dispatch &&
+                          dispatch({
+                            type: 'removeChannel',
                             id: channel.id,
-                          },
-                        });
+                          });
+                      } else {
+                        dispatch &&
+                          dispatch({
+                            type: 'addChannel',
+                            channel: {
+                              alias: channel.alias,
+                              id: channel.id,
+                            },
+                          });
                       }
                     } else {
                       callback &&

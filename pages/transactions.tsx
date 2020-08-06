@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { InvoiceCard } from 'src/views/transactions/InvoiceCard';
 import {
   useGetResumeQuery,
   GetResumeQuery,
 } from 'src/graphql/queries/__generated__/getResume.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
+
+import { NextPageContext } from 'next';
+import { getProps } from 'src/utils/ssr';
+import { GET_RESUME } from 'src/graphql/queries/getResume';
+import { GET_IN_OUT } from 'src/graphql/queries/getInOut';
 import {
   Card,
   CardWithTitle,
@@ -23,11 +26,8 @@ const TransactionsView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
   const [token, setToken] = useState('');
 
-  const { auth } = useAccountState();
-
   const { loading, data, fetchMore } = useGetResumeQuery({
-    skip: !auth,
-    variables: { auth, token: '' },
+    variables: { token: '' },
     onError: error => toast.error(getErrorContent(error)),
   });
 
@@ -49,7 +49,10 @@ const TransactionsView = () => {
       <CardWithTitle>
         <SubTitle>Transactions</SubTitle>
         <Card bottom={'8px'} mobileCardPadding={'0'} mobileNoBackground={true}>
-          {resumeList.map((entry, index: number) => {
+          {resumeList?.map((entry, index: number) => {
+            if (!entry) {
+              return null;
+            }
             if (entry.__typename === 'InvoiceType') {
               return (
                 <InvoiceCard
@@ -61,32 +64,35 @@ const TransactionsView = () => {
                 />
               );
             }
-            return (
-              <PaymentsCard
-                payment={entry}
-                key={index}
-                index={index + 1}
-                setIndexOpen={setIndexOpen}
-                indexOpen={indexOpen}
-              />
-            );
+            if (entry.__typename === 'PaymentType') {
+              return (
+                <PaymentsCard
+                  payment={entry}
+                  key={index}
+                  index={index + 1}
+                  setIndexOpen={setIndexOpen}
+                  indexOpen={indexOpen}
+                />
+              );
+            }
+            return null;
           })}
           <ColorButton
             fullWidth={true}
             withMargin={'16px 0 0'}
             onClick={() => {
               fetchMore({
-                variables: { auth, token },
+                variables: { token },
                 updateQuery: (
                   prev,
-                  {
-                    fetchMoreResult: result,
-                  }: { fetchMoreResult: GetResumeQuery }
-                ) => {
-                  if (!result) return prev;
-                  const newToken = result.getResume.token || '';
-                  const prevEntries = prev.getResume.resume;
-                  const newEntries = result.getResume.resume;
+                  { fetchMoreResult }: { fetchMoreResult?: GetResumeQuery }
+                ): GetResumeQuery => {
+                  if (!fetchMoreResult?.getResume) return prev;
+                  const newToken = fetchMoreResult.getResume.token || '';
+                  const prevEntries = prev?.getResume
+                    ? prev.getResume.resume
+                    : [];
+                  const newEntries = fetchMoreResult.getResume.resume;
 
                   const allTransactions = newToken
                     ? [...prevEntries, ...newEntries]
@@ -117,4 +123,11 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return await getProps(context, [
+    GET_RESUME,
+    { document: GET_IN_OUT, variables: { time: 'month' } },
+  ]);
+}

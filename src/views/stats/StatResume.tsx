@@ -45,7 +45,7 @@ export const StatResume = () => {
       <ProgressRow>
         <ProgressCard>
           <CircularProgressbarWithChildren
-            value={volumeScore}
+            value={volumeScore || 0}
             styles={buildStyles({
               pathColor: getProgressColor(volumeScore),
               trailColor: 'rgba(0, 0, 0, 0.1)',
@@ -57,7 +57,7 @@ export const StatResume = () => {
         </ProgressCard>
         <ProgressCard>
           <CircularProgressbarWithChildren
-            value={timeScore}
+            value={timeScore || 0}
             styles={buildStyles({
               pathColor: getProgressColor(timeScore),
               trailColor: 'rgba(0, 0, 0, 0.1)',
@@ -69,7 +69,7 @@ export const StatResume = () => {
         </ProgressCard>
         <ProgressCard>
           <CircularProgressbarWithChildren
-            value={feeScore}
+            value={feeScore || 0}
             styles={buildStyles({
               pathColor: getProgressColor(feeScore),
               trailColor: 'rgba(0, 0, 0, 0.1)',

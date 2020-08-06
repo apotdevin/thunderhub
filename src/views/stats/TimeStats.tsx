@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetTimeHealthQuery } from 'src/graphql/queries/__generated__/getTimeHealth.generated';
 import {
   SubCard,
@@ -47,30 +46,28 @@ const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
     </>
   );
   return (
-    <SubCard key={channel.id}>
-      <Clickable onClick={() => openSet(open ? 0 : index)}>
-        <ResponsiveLine>
-          <SubTitle>{channel?.partner?.node?.alias}</SubTitle>
-          <ScoreLine>
-            <DarkSubTitle>Score</DarkSubTitle>
-            {channel.score}
-            {getIcon(channel.score, !channel.significant)}
-          </ScoreLine>
-        </ResponsiveLine>
-      </Clickable>
-      {open && renderContent()}
-    </SubCard>
+    <React.Fragment key={channel.id || ''}>
+      <SubCard>
+        <Clickable onClick={() => openSet(open ? 0 : index)}>
+          <ResponsiveLine>
+            <SubTitle>{channel?.partner?.node?.alias}</SubTitle>
+            <ScoreLine>
+              <DarkSubTitle>Score</DarkSubTitle>
+              {channel.score}
+              {getIcon(channel.score, !channel.significant)}
+            </ScoreLine>
+          </ResponsiveLine>
+        </Clickable>
+        {open && renderContent()}
+      </SubCard>
+    </React.Fragment>
   );
 };
 
 export const TimeStats = () => {
   const [open, openSet] = React.useState(0);
   const dispatch = useStatsDispatch();
-  const { auth } = useAccountState();
-  const { data, loading } = useGetTimeHealthQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+  const { data, loading } = useGetTimeHealthQuery();
 
   React.useEffect(() => {
     if (data && data.getTimeHealth) {
@@ -81,7 +78,7 @@ export const TimeStats = () => {
     }
   }, [data, dispatch]);
 
-  if (loading || !data || !data.getTimeHealth) {
+  if (loading || !data?.getTimeHealth?.channels?.length) {
     return null;
   }
 
@@ -91,8 +88,8 @@ export const TimeStats = () => {
     <StatWrapper title={'Time Stats'}>
       {sortedArray.map((channel, index) => (
         <TimeStatCard
-          key={channel.id}
-          channel={channel}
+          key={channel?.id || ''}
+          channel={channel as ChannelTimeHealth}
           open={index + 1 === open}
           openSet={openSet}
           index={index + 1}

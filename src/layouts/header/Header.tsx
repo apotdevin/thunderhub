@@ -3,7 +3,6 @@ import {
   Cpu,
   Menu,
   X,
-  CreditCard,
   MessageCircle,
   Settings,
   Home,
@@ -11,12 +10,10 @@ import {
 } from 'react-feather';
 import { useTransition, animated } from 'react-spring';
 import { useRouter } from 'next/router';
-import getConfig from 'next/config';
 import { headerColor, headerTextColor } from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
 import { Section } from '../../components/section/Section';
-import { useStatusState } from '../../context/StatusContext';
 import { Link } from '../../components/link/Link';
 import { ViewSwitch } from '../../components/viewSwitch/ViewSwitch';
 import {
@@ -31,20 +28,17 @@ import {
 
 const MAIN = '/';
 const HOME = '/home';
-const TRADER = '/trading';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
-
-const { publicRuntimeConfig } = getConfig();
-const { hodlhodl } = publicRuntimeConfig;
 
 export const Header = () => {
   const { pathname } = useRouter();
   const [open, setOpen] = useState(false);
-  const { connected } = useStatusState();
+
+  const isRoot = pathname === '/';
 
   const showHomeButton = (): boolean =>
-    pathname === TRADER || pathname === CHAT || pathname === SETTINGS;
+    pathname === CHAT || pathname === SETTINGS;
 
   const transitions = useTransition(open, null, {
     from: { position: 'absolute', opacity: 0 },
@@ -80,7 +74,6 @@ export const Header = () => {
       <ViewSwitch hideMobile={true}>
         <HeaderButtons>
           {showHomeButton() && renderNavButton(HOME, Home)}
-          {hodlhodl && renderNavButton(TRADER, CreditCard)}
           {renderNavButton(CHAT, MessageCircle)}
           {renderNavButton(SETTINGS, Settings)}
         </HeaderButtons>
@@ -95,16 +88,16 @@ export const Header = () => {
         textColor={headerTextColor}
       >
         <HeaderStyle>
-          <HeaderLine loggedIn={connected}>
-            <Link to={connected ? '/home' : '/'} underline={'transparent'}>
-              <HeaderTitle withPadding={!connected}>
+          <HeaderLine loggedIn={!isRoot}>
+            <Link to={!isRoot ? '/home' : '/'} underline={'transparent'}>
+              <HeaderTitle withPadding={isRoot}>
                 <IconPadding>
                   <Cpu color={'white'} size={18} />
                 </IconPadding>
                 ThunderHub
               </HeaderTitle>
             </Link>
-            <SingleLine>{connected && renderLoggedIn()}</SingleLine>
+            <SingleLine>{!isRoot && renderLoggedIn()}</SingleLine>
           </HeaderLine>
         </HeaderStyle>
       </Section>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAccountState } from 'src/context/AccountContext';
+import { useAccount } from 'src/hooks/UseAccount';
 import {
   CardWithTitle,
   CardTitle,
@@ -10,7 +10,6 @@ import {
   ResponsiveLine,
   DarkSubTitle,
 } from '../../../components/generic/Styled';
-import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { getDateDif, getFormatDate } from '../../../components/generic/helpers';
 import { DownloadBackups } from './DownloadBackups';
 import { VerifyBackups } from './VerifyBackups';
@@ -18,12 +17,13 @@ import { RecoverFunds } from './RecoverFunds';
 
 export const BackupsView = () => {
   const [lastDate, setLastDate] = useState('');
-  const { account } = useAccountState();
+
+  const account = useAccount();
 
   useEffect(() => {
     if (account) {
       const date = localStorage.getItem(`lastBackup-${account.id}`);
-      setLastDate(date);
+      date && setLastDate(date);
     }
   }, [account]);
 
@@ -47,9 +47,7 @@ export const BackupsView = () => {
         <Separation />
         <DownloadBackups />
         <VerifyBackups />
-        <AdminSwitch>
-          <RecoverFunds />
-        </AdminSwitch>
+        <RecoverFunds />
       </Card>
     </CardWithTitle>
   );

@@ -1,10 +1,10 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type GetChainTransactionsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetChainTransactionsQuery = { __typename?: 'Query' } & {
@@ -28,8 +28,8 @@ export type GetChainTransactionsQuery = { __typename?: 'Query' } & {
 };
 
 export const GetChainTransactionsDocument = gql`
-  query GetChainTransactions($auth: authType!) {
-    getChainTransactions(auth: $auth) {
+  query GetChainTransactions {
+    getChainTransactions {
       block_id
       confirmation_count
       confirmation_height
@@ -54,28 +54,27 @@ export const GetChainTransactionsDocument = gql`
  * @example
  * const { data, loading, error } = useGetChainTransactionsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetChainTransactionsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetChainTransactionsQuery,
     GetChainTransactionsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetChainTransactionsQuery,
     GetChainTransactionsQueryVariables
   >(GetChainTransactionsDocument, baseOptions);
 }
 export function useGetChainTransactionsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetChainTransactionsQuery,
     GetChainTransactionsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetChainTransactionsQuery,
     GetChainTransactionsQueryVariables
   >(GetChainTransactionsDocument, baseOptions);
@@ -86,7 +85,7 @@ export type GetChainTransactionsQueryHookResult = ReturnType<
 export type GetChainTransactionsLazyQueryHookResult = ReturnType<
   typeof useGetChainTransactionsLazyQuery
 >;
-export type GetChainTransactionsQueryResult = ApolloReactCommon.QueryResult<
+export type GetChainTransactionsQueryResult = Apollo.QueryResult<
   GetChainTransactionsQuery,
   GetChainTransactionsQueryVariables
 >;

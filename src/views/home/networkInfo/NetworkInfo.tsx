@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Globe, Cpu } from 'react-feather';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetNetworkInfoQuery } from 'src/graphql/queries/__generated__/getNetworkInfo.generated';
 import {
   Card,
@@ -62,12 +61,7 @@ const Padding = styled.span`
 `;
 
 export const NetworkInfo = () => {
-  const { auth } = useAccountState();
-
-  const { loading, data, error } = useGetNetworkInfoQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+  const { loading, data, error } = useGetNetworkInfoQuery();
 
   if (error) {
     return null;

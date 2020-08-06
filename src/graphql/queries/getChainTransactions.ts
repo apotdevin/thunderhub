@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const GET_CHAIN_TRANSACTIONS = gql`
-  query GetChainTransactions($auth: authType!) {
-    getChainTransactions(auth: $auth) {
+  query GetChainTransactions {
+    getChainTransactions {
       block_id
       confirmation_count
       confirmation_height

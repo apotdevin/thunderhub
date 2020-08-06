@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Zap, Anchor, Pocket } from 'react-feather';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import {
   Card,
   CardWithTitle,
@@ -10,11 +11,8 @@ import {
   DarkSubTitle,
   ResponsiveLine,
 } from '../../../components/generic/Styled';
-import { LoadingCard } from '../../../components/loading/LoadingCard';
-import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { Price } from '../../../components/price/Price';
 import { mediaWidths } from '../../../styles/Themes';
-import { useStatusState } from '../../../context/StatusContext';
 import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 import { SendOnChainCard } from './sendOnChain/SendOnChain';
 import { PayCard } from './pay/Payment';
@@ -51,21 +49,11 @@ export const AccountInfo = () => {
   const [state, setState] = useState<string>('none');
 
   const {
-    connected,
     chainBalance,
     chainPending,
     channelBalance,
     channelPending,
-  } = useStatusState();
-
-  if (!connected) {
-    return (
-      <>
-        <LoadingCard title={'Resume'} />
-        <LoadingCard title={'Your Accounts'} />
-      </>
-    );
-  }
+  } = useNodeInfo();
 
   const formatCB = <Price amount={chainBalance} />;
   const formatPB = <Price amount={chainPending} />;
@@ -152,12 +140,10 @@ export const AccountInfo = () => {
         <div>Lightning</div>
       </Tile>
       {renderBalances(formatCCB, formatPCB)}
-      <AdminSwitch>
-        {showLn && showChain && renderButtons('send_ln', 'receive_ln')}
-        {showLn && !showChain && (
-          <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
-        )}
-      </AdminSwitch>
+      {showLn && showChain && renderButtons('send_ln', 'receive_ln')}
+      {showLn && !showChain && (
+        <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
+      )}
     </ResponsiveLine>
   );
 
@@ -169,12 +155,10 @@ export const AccountInfo = () => {
         <div>Bitcoin</div>
       </Tile>
       {renderBalances(formatCB, formatPB)}
-      <AdminSwitch>
-        {showLn && showChain && renderButtons('send_chain', 'receive_chain')}
-        {!showLn && showChain && (
-          <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
-        )}
-      </AdminSwitch>
+      {showLn && showChain && renderButtons('send_chain', 'receive_chain')}
+      {!showLn && showChain && (
+        <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
+      )}
     </ResponsiveLine>
   );
 

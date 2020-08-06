@@ -121,7 +121,7 @@ export const PendingCard = ({
   };
 
   return (
-    <SubCard color={nodeColor} key={index}>
+    <SubCard subColor={nodeColor} key={index}>
       <MainInfo onClick={() => handleClick()}>
         <StatusLine>
           {getStatusDot(is_active, 'active')}

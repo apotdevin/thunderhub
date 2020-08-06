@@ -3,17 +3,20 @@ import { ThemeSet } from 'styled-theming';
 import { toast } from 'react-toastify';
 import { Circle } from 'react-feather';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import { useAccountState } from 'src/context/AccountContext';
 import { useSendMessageMutation } from 'src/graphql/mutations/__generated__/sendMessage.generated';
 import { useMutationResultWithReset } from 'src/hooks/UseMutationWithReset';
+import { useAccount } from 'src/hooks/UseAccount';
 import {
   chatBubbleColor,
   chatSentBubbleColor,
   chartColors,
 } from '../../styles/Themes';
 import { getErrorContent } from '../../utils/error';
-import { SecureWrapper } from '../../components/buttons/secureButton/SecureWrapper';
-import { useChatState, useChatDispatch } from '../../context/ChatContext';
+import {
+  useChatState,
+  useChatDispatch,
+  SentChatProps,
+} from '../../context/ChatContext';
 import { useConfigState } from '../../context/ConfigContext';
 import { usePriceState } from '../../context/PriceContext';
 import { getPrice } from '../../components/price/Price';
@@ -23,7 +26,6 @@ import {
   StatusChatDot,
   ChatSendButton,
 } from './Chat.styled';
-import { MessageType } from './Chat.types';
 
 interface SendButtonProps {
   amount: number;
@@ -33,7 +35,8 @@ const SendButton = ({ amount }: SendButtonProps) => {
   const { maxFee } = useConfigState();
   const { sender } = useChatState();
   const dispatch = useChatDispatch();
-  const { account } = useAccountState();
+
+  const account = useAccount();
 
   const [sendMessage, { loading, data: _data }] = useSendMessageMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -41,19 +44,21 @@ const SendButton = ({ amount }: SendButtonProps) => {
   const [data, resetMutationResult] = useMutationResultWithReset(_data);
 
   React.useEffect(() => {
-    if (!loading && data && data.sendMessage >= 0) {
+    if (!loading && data && data?.sendMessage) {
       dispatch({
         type: 'newChat',
         newChat: {
+          id: '',
+          verified: true,
           date: new Date().toISOString(),
           message: 'payment',
           sender,
           isSent: true,
-          feePaid: data.sendMessage,
+          feePaid: data.sendMessage - 1,
           contentType: 'payment',
           tokens: amount,
         },
-        userId: account.id,
+        userId: account?.id || '',
         sender,
       });
       resetMutationResult();
@@ -61,26 +66,26 @@ const SendButton = ({ amount }: SendButtonProps) => {
   }, [loading, data, amount, dispatch, sender, account, resetMutationResult]);
 
   return (
-    <SecureWrapper
-      color={'red'}
-      callback={sendMessage}
-      variables={{
-        message: 'payment',
-        messageType: 'payment',
-        publicKey: sender,
-        tokens: amount,
-        maxFee,
-      }}
+    <ChatSendButton
+      onClick={() =>
+        sendMessage({
+          variables: {
+            message: 'payment',
+            messageType: 'payment',
+            publicKey: sender,
+            tokens: amount,
+            maxFee,
+          },
+        })
+      }
     >
-      <ChatSendButton>
-        {loading ? <ScaleLoader height={8} color={'white'} width={2} /> : 'Pay'}
-      </ChatSendButton>
-    </SecureWrapper>
+      {loading ? <ScaleLoader height={8} color={'white'} width={2} /> : 'Pay'}
+    </ChatSendButton>
   );
 };
 
 interface ChatBubbleProps {
-  message: MessageType;
+  message: SentChatProps;
 }
 
 export const ChatBubble = ({ message }: ChatBubbleProps) => {
@@ -90,14 +95,14 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
 
   const {
     contentType,
-    message: chatMessage,
+    message: chatMessage = '',
     isSent,
     verified,
-    tokens,
+    tokens = 0,
   } = message;
 
   let color: ThemeSet | string = chatBubbleColor;
-  let textMessage = chatMessage;
+  let textMessage = chatMessage || '';
   let dotColor = '';
   let showButton = false;
   let amount = 0;
@@ -128,7 +133,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
       }
     } else if (contentType === 'paymentrequest') {
       showButton = true;
-      const messageSplit = chatMessage.split(',');
+      const messageSplit = chatMessage?.split(',') || '';
       amount = verified
         ? Number(messageSplit[0])
         : Math.abs(Number(messageSplit[0]) / 1000); // This is only for Juggernaut compatibility.

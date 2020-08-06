@@ -6,15 +6,21 @@ import {
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getLnd } from 'server/helpers/helpers';
 import { toWithError, to } from 'server/helpers/async';
+import { LndObject, ProbeForRouteType } from 'server/types/ln-service.types';
+
+type RouteParent = {
+  lnd: LndObject;
+  destination: string;
+  tokens: number;
+};
 
 export const routeResolvers = {
   Query: {
     getRoutes: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getRoutes');
 
-      const lnd = getLnd(params.auth, context);
+      const { lnd } = context;
 
       const { public_key } = await getWalletInfo({ lnd });
 
@@ -37,7 +43,7 @@ export const routeResolvers = {
     },
   },
   ProbeRoute: {
-    route: async parent => {
+    route: async (parent: RouteParent) => {
       const { lnd, destination, tokens } = parent;
 
       if (!lnd) {
@@ -61,19 +67,20 @@ export const routeResolvers = {
         return null;
       }
 
-      if (!info.route) {
+      if (!(info as ProbeForRouteType).route) {
         logger.debug(
           `No route found to destination ${destination} for ${tokens} tokens`
         );
         return null;
       }
 
-      const hopsWithNodes = info.route.hops.map(h => ({
-        ...h,
-        node: { lnd, publicKey: h.public_key },
-      }));
+      const hopsWithNodes =
+        (info as ProbeForRouteType).route?.hops.map(h => ({
+          ...h,
+          node: { lnd, publicKey: h.public_key },
+        })) || [];
 
-      return { ...info.route, hops: hopsWithNodes };
+      return { ...(info as ProbeForRouteType).route, hops: hopsWithNodes };
     },
   },
 };

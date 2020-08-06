@@ -39,7 +39,6 @@ import {
 } from '../../../components/generic/helpers';
 import Modal from '../../../components/modal/ReactModal';
 import { CloseChannel } from '../../../components/modal/closeChannel/CloseChannel';
-import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { getPrice } from '../../../components/price/Price';
 import { usePriceState } from '../../../context/PriceContext';
@@ -168,7 +167,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
     override: 'sat',
   });
 
-  const maxRate = Math.min(fee_rate, 10000);
+  const maxRate = Math.min(fee_rate || 0, 10000);
   const feeRate = format({ amount: fee_rate, override: 'ppm' });
 
   const handleClick = () => {
@@ -235,18 +234,16 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         <Separation />
         <Sub4Title>Partner Node Info</Sub4Title>
         {renderPartner()}
-        <AdminSwitch>
-          <Separation />
-          <RightAlign>
-            <ColorButton
-              withBorder={true}
-              arrow={true}
-              onClick={() => setModalOpen(true)}
-            >
-              Close Channel
-            </ColorButton>
-          </RightAlign>
-        </AdminSwitch>
+        <Separation />
+        <RightAlign>
+          <ColorButton
+            withBorder={true}
+            arrow={true}
+            onClick={() => setModalOpen(true)}
+          >
+            Close Channel
+          </ColorButton>
+        </RightAlign>
       </>
     );
   };
@@ -257,10 +254,12 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         return (
           <ChannelStatsColumn>
             <ChannelStatsLine>
-              <ProgressBar
-                order={fee_rate > maxRate ? 7 : 3}
-                percent={getBar(maxRate, biggestRateFee)}
-              />
+              {fee_rate && (
+                <ProgressBar
+                  order={fee_rate > maxRate ? 7 : 3}
+                  percent={getBar(maxRate, biggestRateFee)}
+                />
+              )}
               <ProgressBar
                 order={4}
                 percent={getBar(biggestRateFee - maxRate, biggestRateFee)}
@@ -297,16 +296,18 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
                 )}
               />
             </ChannelStatsLine>
-            <ChannelStatsLine>
-              <ProgressBar
-                order={6}
-                percent={getBar(channel_count, mostChannels)}
-              />
-              <ProgressBar
-                order={4}
-                percent={getBar(mostChannels - channel_count, mostChannels)}
-              />
-            </ChannelStatsLine>
+            {channel_count && (
+              <ChannelStatsLine>
+                <ProgressBar
+                  order={6}
+                  percent={getBar(channel_count, mostChannels)}
+                />
+                <ProgressBar
+                  order={4}
+                  percent={getBar(mostChannels - channel_count, mostChannels)}
+                />
+              </ChannelStatsLine>
+            )}
           </ChannelStatsColumn>
         );
       case 'proportional':

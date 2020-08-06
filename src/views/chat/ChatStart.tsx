@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { X, ChevronRight } from 'react-feather';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
 import { PeerType } from 'src/graphql/types';
 import { Input } from '../../components/input/Input';
@@ -23,11 +22,18 @@ import {
 interface PeerProps {
   peer: PeerType;
   index: number;
-  setIndexOpen: (index: number) => void;
   indexOpen: number;
+  setIndexOpen: (index: number) => void;
+  callback?: () => void;
 }
 
-const PeerChatCard = ({ peer, index, setIndexOpen, indexOpen }: PeerProps) => {
+const PeerChatCard = ({
+  peer,
+  index,
+  setIndexOpen,
+  indexOpen,
+  callback,
+}: PeerProps) => {
   const { partner_node_info, public_key } = peer;
 
   const alias = partner_node_info?.node?.alias;
@@ -44,7 +50,7 @@ const PeerChatCard = ({ peer, index, setIndexOpen, indexOpen }: PeerProps) => {
     return (
       <>
         <Separation />
-        <ChatInput alias={alias} sender={public_key} />
+        <ChatInput alias={alias} sender={public_key} callback={callback} />
       </>
     );
   };
@@ -71,15 +77,18 @@ const PeerChatCard = ({ peer, index, setIndexOpen, indexOpen }: PeerProps) => {
   );
 };
 
-export const ChatStart = ({ noTitle }: { noTitle?: boolean }) => {
+export const ChatStart = ({
+  noTitle,
+  callback,
+}: {
+  noTitle?: boolean;
+  callback: () => void;
+}) => {
   const [indexOpen, setIndexOpen] = React.useState(0);
   const [willSend, setWillSend] = React.useState(false);
   const [publicKey, setPublicKey] = React.useState('');
-  const { auth } = useAccountState();
-  const { loading, data } = useGetPeersQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+
+  const { loading, data } = useGetPeersQuery();
 
   const renderPeers = () => {
     if (!loading && data?.getPeers) {
@@ -89,11 +98,12 @@ export const ChatStart = ({ noTitle }: { noTitle?: boolean }) => {
           <SubTitle>Chat with a current peer</SubTitle>
           {data.getPeers.map((peer, index) => (
             <PeerChatCard
-              peer={peer}
+              peer={peer as PeerType}
               index={index + 1}
               setIndexOpen={setIndexOpen}
               indexOpen={indexOpen}
-              key={`${index}-${peer.public_key}`}
+              callback={callback}
+              key={`${index}-${peer?.public_key}`}
             />
           ))}
         </>
@@ -109,7 +119,7 @@ export const ChatStart = ({ noTitle }: { noTitle?: boolean }) => {
           <X size={18} />
         </ColorButton>
       </SingleLine>
-      <ChatInput alias={''} sender={publicKey} />
+      <ChatInput alias={''} sender={publicKey} callback={callback} />
     </SubCard>
   );
 

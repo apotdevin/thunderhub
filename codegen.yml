@@ -17,6 +17,7 @@ generates:
       withComponent: false
       withHOC: false
       withHooks: true
+      reactApolloVersion: 3
     plugins:
       - 'typescript-operations'
       - 'typescript-react-apollo'

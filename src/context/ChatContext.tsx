@@ -1,30 +1,14 @@
 import React, { createContext, useContext, useReducer } from 'react';
+import { MessagesType } from 'src/graphql/types';
 
-type ChatProps = {
-  date?: string;
-  contentType?: string;
-  alias?: string;
-  message?: string;
-  id?: string;
-  sender?: string;
-  tokens?: number;
-};
-
-type SentChatProps = {
-  date?: string;
-  contentType?: string;
-  alias?: string;
-  message?: string;
-  id?: string;
-  sender?: string;
+export interface SentChatProps extends MessagesType {
   isSent?: boolean;
   feePaid?: number;
-  tokens?: number;
-};
+}
 
 type State = {
   initialized: boolean;
-  chats: ChatProps[];
+  chats: MessagesType[];
   sentChats: SentChatProps[];
   lastChat: string;
   sender: string;
@@ -33,14 +17,14 @@ type State = {
 type ActionType =
   | {
       type: 'initialized';
-      chats?: ChatProps[];
+      chats?: MessagesType[];
       lastChat?: string;
       sender?: string;
       sentChats?: SentChatProps[];
     }
   | {
       type: 'additional';
-      chats: ChatProps[];
+      chats: MessagesType[];
       lastChat: string;
     }
   | {
@@ -108,7 +92,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const ChatProvider = ({ children }) => {
+const ChatProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (
@@ -121,7 +105,7 @@ const ChatProvider = ({ children }) => {
 const useChatState = () => {
   const context = useContext(StateContext);
   if (context === undefined) {
-    throw new Error('useStatusState must be used within a StatusProvider');
+    throw new Error('useChatState must be used within a ChatProvider');
   }
   return context;
 };
@@ -129,7 +113,7 @@ const useChatState = () => {
 const useChatDispatch = () => {
   const context = useContext(DispatchContext);
   if (context === undefined) {
-    throw new Error('useStatusDispatch must be used within a StatusProvider');
+    throw new Error('useChatDispatch must be used within a ChatProvider');
   }
   return context;
 };

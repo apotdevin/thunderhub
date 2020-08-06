@@ -11,10 +11,10 @@ type PriceProps = {
 };
 
 type AnimatedProps = {
-  amount: number;
+  amount?: number;
 };
 
-export const AnimatedNumber = ({ amount = 0 }: AnimatedProps) => {
+export const AnimatedNumber: React.FC<AnimatedProps> = ({ amount = 0 }) => {
   const { value } = useSpring({
     from: { value: 0 },
     value: amount,

@@ -1,24 +1,23 @@
 import groupBy from 'lodash.groupby';
 import { sortBy } from 'underscore';
 import { MessagesType } from 'src/graphql/types';
-import { MessageType } from '../views/chat/Chat.types';
 
-export const separateBySender = chats => {
+export const separateBySender = (chats: MessagesType[]) => {
   return groupBy(chats, 'sender');
 };
 
-export const getSenders = (bySender: {}): MessagesType[] => {
+export const getSenders = (
+  bySender: ReturnType<typeof separateBySender>
+): MessagesType[] => {
   const senders: MessagesType[] = [];
   for (const key in bySender) {
     if (Object.prototype.hasOwnProperty.call(bySender, key)) {
       const messages = bySender[key];
-      const sorted: MessageType[] = sortBy(messages, 'date').reverse();
+      const sorted: MessagesType[] = sortBy(messages, 'date').reverse();
 
       if (sorted.length > 0) {
         const chat = sorted[0];
-        const { sender } = chat;
-
-        if (sender) {
+        if (chat?.sender) {
           senders.push(chat);
         }
       }
@@ -28,11 +27,13 @@ export const getSenders = (bySender: {}): MessagesType[] => {
 };
 
 export const getSubMessage = (
-  contentType: string,
-  message: string,
-  tokens: number,
+  contentType: string | null,
+  message: string | null,
+  tokens: number | null,
   isSent: boolean
-) => {
+): string => {
+  if (!contentType) return '';
+  if (!message && !tokens) return '';
   switch (contentType) {
     case 'payment':
       if (isSent) {
@@ -45,6 +46,7 @@ export const getSubMessage = (
       }
       return `Requested ${tokens} sats from you`;
     default:
-      return message;
+      if (message) return message;
+      return '';
   }
 };

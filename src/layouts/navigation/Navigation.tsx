@@ -11,7 +11,6 @@ import {
   Link as LinkIcon,
   Repeat,
   Users,
-  CreditCard,
   MessageCircle,
   BarChart2,
   Icon,
@@ -27,7 +26,6 @@ import {
 } from '../../styles/Themes';
 import { useConfigState } from '../../context/ConfigContext';
 import { Link } from '../../components/link/Link';
-import { useStatusState } from '../../context/StatusContext';
 import { SideSettings } from './sideSettings/SideSettings';
 import { NodeInfo } from './nodeInfo/NodeInfo';
 
@@ -123,7 +121,6 @@ const CHAIN_TRANS = '/chain';
 const TOOLS = '/tools';
 const DETAILS = '/details';
 const STATS = '/stats';
-const TRADER = '/trading';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
 
@@ -135,7 +132,8 @@ interface NavigationProps {
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const { pathname } = useRouter();
   const { sidebar } = useConfigState();
-  const { connected } = useStatusState();
+
+  const isRoot = pathname === '/';
 
   const renderNavButton = (
     title: string,
@@ -190,7 +188,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Stats', STATS, BarChart2)}
-      {renderBurgerNav('Trading', TRADER, CreditCard)}
       {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}
     </BurgerRow>
@@ -204,7 +201,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     <NavigationStyle isOpen={sidebar}>
       <StickyCard>
         <LinkView>
-          {connected && <NodeInfo isOpen={sidebar} />}
+          {!isRoot && <NodeInfo isOpen={sidebar} />}
           {renderLinks()}
           <SideSettings />
         </LinkView>

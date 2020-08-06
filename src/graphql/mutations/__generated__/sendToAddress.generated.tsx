@@ -1,10 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type PayAddressMutationVariables = Types.Exact<{
-  auth: Types.AuthType;
   address: Types.Scalars['String'];
   tokens?: Types.Maybe<Types.Scalars['Int']>;
   fee?: Types.Maybe<Types.Scalars['Int']>;
@@ -23,7 +22,6 @@ export type PayAddressMutation = { __typename?: 'Mutation' } & {
 
 export const PayAddressDocument = gql`
   mutation PayAddress(
-    $auth: authType!
     $address: String!
     $tokens: Int
     $fee: Int
@@ -31,7 +29,6 @@ export const PayAddressDocument = gql`
     $sendAll: Boolean
   ) {
     sendToAddress(
-      auth: $auth
       address: $address
       tokens: $tokens
       fee: $fee
@@ -46,7 +43,7 @@ export const PayAddressDocument = gql`
     }
   }
 `;
-export type PayAddressMutationFn = ApolloReactCommon.MutationFunction<
+export type PayAddressMutationFn = Apollo.MutationFunction<
   PayAddressMutation,
   PayAddressMutationVariables
 >;
@@ -64,7 +61,6 @@ export type PayAddressMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [payAddressMutation, { data, loading, error }] = usePayAddressMutation({
  *   variables: {
- *      auth: // value for 'auth'
  *      address: // value for 'address'
  *      tokens: // value for 'tokens'
  *      fee: // value for 'fee'
@@ -74,23 +70,23 @@ export type PayAddressMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function usePayAddressMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     PayAddressMutation,
     PayAddressMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    PayAddressMutation,
-    PayAddressMutationVariables
-  >(PayAddressDocument, baseOptions);
+  return Apollo.useMutation<PayAddressMutation, PayAddressMutationVariables>(
+    PayAddressDocument,
+    baseOptions
+  );
 }
 export type PayAddressMutationHookResult = ReturnType<
   typeof usePayAddressMutation
 >;
-export type PayAddressMutationResult = ApolloReactCommon.MutationResult<
+export type PayAddressMutationResult = Apollo.MutationResult<
   PayAddressMutation
 >;
-export type PayAddressMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type PayAddressMutationOptions = Apollo.BaseMutationOptions<
   PayAddressMutation,
   PayAddressMutationVariables
 >;

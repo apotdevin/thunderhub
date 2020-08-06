@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetLatestVersionQueryVariables = Types.Exact<{
   [key: string]: never;
@@ -34,23 +34,23 @@ export const GetLatestVersionDocument = gql`
  * });
  */
 export function useGetLatestVersionQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetLatestVersionQuery,
     GetLatestVersionQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetLatestVersionQuery,
-    GetLatestVersionQueryVariables
-  >(GetLatestVersionDocument, baseOptions);
+  return Apollo.useQuery<GetLatestVersionQuery, GetLatestVersionQueryVariables>(
+    GetLatestVersionDocument,
+    baseOptions
+  );
 }
 export function useGetLatestVersionLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetLatestVersionQuery,
     GetLatestVersionQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetLatestVersionQuery,
     GetLatestVersionQueryVariables
   >(GetLatestVersionDocument, baseOptions);
@@ -61,7 +61,7 @@ export type GetLatestVersionQueryHookResult = ReturnType<
 export type GetLatestVersionLazyQueryHookResult = ReturnType<
   typeof useGetLatestVersionLazyQuery
 >;
-export type GetLatestVersionQueryResult = ApolloReactCommon.QueryResult<
+export type GetLatestVersionQueryResult = Apollo.QueryResult<
   GetLatestVersionQuery,
   GetLatestVersionQueryVariables
 >;

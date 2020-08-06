@@ -15,7 +15,6 @@ export const appUrls = {
   blockchain: 'https://www.blockchain.com/btc/tx/',
   fees: 'https://mempool.space/api/v1/fees/recommended',
   ticker: 'https://blockchain.info/ticker',
-  hodlhodl: 'https://hodlhodl.com/api',
   github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
   update: 'https://github.com/apotdevin/thunderhub#updating',
 };

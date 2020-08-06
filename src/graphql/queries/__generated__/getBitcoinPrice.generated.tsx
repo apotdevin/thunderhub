@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetBitcoinPriceQueryVariables = Types.Exact<{
   [key: string]: never;
@@ -34,23 +34,23 @@ export const GetBitcoinPriceDocument = gql`
  * });
  */
 export function useGetBitcoinPriceQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetBitcoinPriceQuery,
     GetBitcoinPriceQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetBitcoinPriceQuery,
-    GetBitcoinPriceQueryVariables
-  >(GetBitcoinPriceDocument, baseOptions);
+  return Apollo.useQuery<GetBitcoinPriceQuery, GetBitcoinPriceQueryVariables>(
+    GetBitcoinPriceDocument,
+    baseOptions
+  );
 }
 export function useGetBitcoinPriceLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetBitcoinPriceQuery,
     GetBitcoinPriceQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetBitcoinPriceQuery,
     GetBitcoinPriceQueryVariables
   >(GetBitcoinPriceDocument, baseOptions);
@@ -61,7 +61,7 @@ export type GetBitcoinPriceQueryHookResult = ReturnType<
 export type GetBitcoinPriceLazyQueryHookResult = ReturnType<
   typeof useGetBitcoinPriceLazyQuery
 >;
-export type GetBitcoinPriceQueryResult = ApolloReactCommon.QueryResult<
+export type GetBitcoinPriceQueryResult = Apollo.QueryResult<
   GetBitcoinPriceQuery,
   GetBitcoinPriceQueryVariables
 >;

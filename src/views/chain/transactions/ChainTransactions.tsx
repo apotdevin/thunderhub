@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetChainTransactionsQuery } from 'src/graphql/queries/__generated__/getChainTransactions.generated';
+import { GetTransactionsType } from 'src/graphql/types';
 import {
   SubTitle,
   Card,
@@ -13,15 +13,12 @@ import { TransactionsCard } from './TransactionsCard';
 
 export const ChainTransactions = () => {
   const [indexOpen, setIndexOpen] = useState(0);
-  const { auth } = useAccountState();
 
   const { loading, data } = useGetChainTransactionsQuery({
-    skip: !auth,
-    variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  if (loading || !data || !data.getChainTransactions) {
+  if (loading || !data || !data?.getChainTransactions) {
     return <LoadingCard title={'Chain Transactions'} />;
   }
 
@@ -29,9 +26,9 @@ export const ChainTransactions = () => {
     <CardWithTitle>
       <SubTitle>Chain Transactions</SubTitle>
       <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-        {data.getChainTransactions.map((transaction, index: number) => (
+        {data.getChainTransactions.map((transaction, index) => (
           <TransactionsCard
-            transaction={transaction}
+            transaction={transaction as GetTransactionsType}
             key={index}
             index={index + 1}
             setIndexOpen={setIndexOpen}

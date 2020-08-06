@@ -28,7 +28,6 @@ import { getPercent } from '../../utils/helpers';
 import { useConfigState } from '../../context/ConfigContext';
 import { usePriceState } from '../../context/PriceContext';
 import { getPrice } from '../../components/price/Price';
-import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import Modal from '../../components/modal/ReactModal';
 import { RemovePeerModal } from '../../components/modal/removePeer/RemovePeer';
@@ -72,7 +71,7 @@ export const PeersCard = ({
     socket,
     tokens_received,
     tokens_sent,
-    partner_node_info = {},
+    partner_node_info,
   } = peer;
 
   const formatReceived = format({ amount: tokens_received });
@@ -102,33 +101,32 @@ export const PeersCard = ({
         {renderLine('Public Key:', getNodeLink(public_key))}
         {renderLine('Socket:', socket)}
         {renderLine('Is Inbound:', is_inbound.toString())}
-        {renderLine('Is Sync Peer:', is_sync_peer.toString())}
+        {renderLine('Is Sync Peer:', is_sync_peer?.toString())}
         {renderLine('Ping Time:', ping_time)}
         <Sub4Title>Partner Node Info</Sub4Title>
         {renderLine('Node Capacity:', formatCapacity)}
         {renderLine('Channel Count:', channel_count)}
-        {renderLine(
-          'Last Update:',
-          `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
-        )}
-        <AdminSwitch>
-          <Separation />
-          <RightAlign>
-            <ColorButton
-              withBorder={true}
-              arrow={true}
-              onClick={() => setModalOpen(true)}
-            >
-              Remove Peer
-            </ColorButton>
-          </RightAlign>
-        </AdminSwitch>
+        {updated_at &&
+          renderLine(
+            'Last Update:',
+            `${getDateDif(updated_at)} ago (${getFormatDate(updated_at)})`
+          )}
+        <Separation />
+        <RightAlign>
+          <ColorButton
+            withBorder={true}
+            arrow={true}
+            onClick={() => setModalOpen(true)}
+          >
+            Remove Peer
+          </ColorButton>
+        </RightAlign>
       </>
     );
   };
 
   return (
-    <SubCard key={`${index}-${public_key}`} color={color}>
+    <SubCard key={`${index}-${public_key}`} subColor={color}>
       <MainInfo onClick={() => handleClick()}>
         <ResponsiveLine>
           <NodeTitle style={{ flexGrow: 2 }}>

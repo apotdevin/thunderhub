@@ -8,7 +8,6 @@ import {
   Separation,
 } from 'src/components/generic/Styled';
 import { useGetAccountingReportLazyQuery } from 'src/graphql/queries/__generated__/getAccountingReport.generated';
-import { useAccountState } from 'src/context/AccountContext';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import {
   MultiButton,
@@ -77,7 +76,6 @@ const reducer = (state: StateType, action: ActionType): StateType => {
 };
 
 export const Accounting = () => {
-  const { auth } = useAccountState();
   const [showDetails, setShowDetails] = React.useState(false);
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
@@ -183,10 +181,9 @@ export const Accounting = () => {
         onClick={() =>
           getReport({
             variables: {
-              auth,
               // fiat: state.fiat,
               category: state.type,
-              year: state.year.toString(),
+              ...(state.year && { year: state.year.toString() }),
               ...(state.month && { month: state.month.toString() }),
             },
           })

@@ -1,8 +1,7 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const GET_ACCOUNTING_REPORT = gql`
   query GetAccountingReport(
-    $auth: authType!
     $category: String
     $currency: String
     $fiat: String
@@ -10,7 +9,6 @@ export const GET_ACCOUNTING_REPORT = gql`
     $year: String
   ) {
     getAccountingReport(
-      auth: $auth
       category: $category
       currency: $currency
       fiat: $fiat

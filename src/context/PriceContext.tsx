@@ -57,7 +57,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const PriceProvider = ({ children }) => {
+const PriceProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   useEffect(() => {

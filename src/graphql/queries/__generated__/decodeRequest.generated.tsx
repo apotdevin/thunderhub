@@ -1,10 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type DecodeRequestQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   request: Types.Scalars['String'];
 }>;
 
@@ -22,23 +21,19 @@ export type DecodeRequestQuery = { __typename?: 'Query' } & {
       | 'tokens'
     > & {
         destination_node: { __typename?: 'Node' } & {
-          node?: Types.Maybe<
-            { __typename?: 'nodeType' } & Pick<Types.NodeType, 'alias'>
-          >;
+          node: { __typename?: 'nodeType' } & Pick<Types.NodeType, 'alias'>;
         };
-        routes?: Types.Maybe<
-          Array<
-            Types.Maybe<
-              Array<
-                Types.Maybe<
-                  { __typename?: 'RouteType' } & Pick<
-                    Types.RouteType,
-                    | 'base_fee_mtokens'
-                    | 'channel'
-                    | 'cltv_delta'
-                    | 'fee_rate'
-                    | 'public_key'
-                  >
+        routes: Array<
+          Types.Maybe<
+            Array<
+              Types.Maybe<
+                { __typename?: 'RouteType' } & Pick<
+                  Types.RouteType,
+                  | 'base_fee_mtokens'
+                  | 'channel'
+                  | 'cltv_delta'
+                  | 'fee_rate'
+                  | 'public_key'
                 >
               >
             >
@@ -71,11 +66,9 @@ export type DecodeRequestQuery = { __typename?: 'Query' } & {
                       | 'timeout'
                     > & {
                         node: { __typename?: 'Node' } & {
-                          node?: Types.Maybe<
-                            { __typename?: 'nodeType' } & Pick<
-                              Types.NodeType,
-                              'alias'
-                            >
+                          node: { __typename?: 'nodeType' } & Pick<
+                            Types.NodeType,
+                            'alias'
                           >;
                         };
                       }
@@ -89,8 +82,8 @@ export type DecodeRequestQuery = { __typename?: 'Query' } & {
 };
 
 export const DecodeRequestDocument = gql`
-  query DecodeRequest($auth: authType!, $request: String!) {
-    decodeRequest(auth: $auth, request: $request) {
+  query DecodeRequest($request: String!) {
+    decodeRequest(request: $request) {
       chain_address
       cltv_delta
       description
@@ -154,32 +147,31 @@ export const DecodeRequestDocument = gql`
  * @example
  * const { data, loading, error } = useDecodeRequestQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      request: // value for 'request'
  *   },
  * });
  */
 export function useDecodeRequestQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     DecodeRequestQuery,
     DecodeRequestQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    DecodeRequestQuery,
-    DecodeRequestQueryVariables
-  >(DecodeRequestDocument, baseOptions);
+  return Apollo.useQuery<DecodeRequestQuery, DecodeRequestQueryVariables>(
+    DecodeRequestDocument,
+    baseOptions
+  );
 }
 export function useDecodeRequestLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     DecodeRequestQuery,
     DecodeRequestQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    DecodeRequestQuery,
-    DecodeRequestQueryVariables
-  >(DecodeRequestDocument, baseOptions);
+  return Apollo.useLazyQuery<DecodeRequestQuery, DecodeRequestQueryVariables>(
+    DecodeRequestDocument,
+    baseOptions
+  );
 }
 export type DecodeRequestQueryHookResult = ReturnType<
   typeof useDecodeRequestQuery
@@ -187,7 +179,7 @@ export type DecodeRequestQueryHookResult = ReturnType<
 export type DecodeRequestLazyQueryHookResult = ReturnType<
   typeof useDecodeRequestLazyQuery
 >;
-export type DecodeRequestQueryResult = ApolloReactCommon.QueryResult<
+export type DecodeRequestQueryResult = Apollo.QueryResult<
   DecodeRequestQuery,
   DecodeRequestQueryVariables
 >;

@@ -1,12 +1,9 @@
 import { closeChannel as lnCloseChannel } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
-import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import {
-  getAuthLnd,
-  getErrorMsg,
-  getCorrectAuth,
-} from 'server/helpers/helpers';
+import { to } from 'server/helpers/async';
+import { CloseChannelType } from 'server/types/ln-service.types';
+import { logger } from 'server/helpers/logger';
 
 export const closeChannel = async (
   _: undefined,
@@ -15,23 +12,28 @@ export const closeChannel = async (
 ) => {
   await requestLimiter(context.ip, 'closeChannel');
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const { lnd } = context;
 
-  try {
-    const info = await lnCloseChannel({
+  const closeParams = {
+    id: params.id,
+    target_confirmations: params.targetConfirmations,
+    tokens_per_vbyte: params.tokensPerVByte,
+    is_force_close: params.forceClose,
+  };
+
+  logger.info('Closing channel with params: %o', closeParams);
+
+  const info = await to<CloseChannelType>(
+    lnCloseChannel({
       lnd,
-      id: params.id,
-      target_confirmations: params.targetConfirmations,
-      tokens_per_vbyte: params.tokensPerVByte,
-      is_force_close: params.forceClose,
-    });
-    return {
-      transactionId: info.transaction_id,
-      transactionOutputIndex: info.transaction_vout,
-    };
-  } catch (error) {
-    logger.error('Error closing channel: %o', error);
-    throw new Error(getErrorMsg(error));
-  }
+      ...closeParams,
+    })
+  );
+
+  logger.info('Channel closed: %o', params.id);
+
+  return {
+    transactionId: info.transaction_id,
+    transactionOutputIndex: info.transaction_vout,
+  };
 };

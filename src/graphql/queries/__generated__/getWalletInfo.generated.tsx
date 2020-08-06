@@ -1,11 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
-export type GetWalletInfoQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+const gql = Apollo.gql;
+
+export type GetWalletInfoQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetWalletInfoQuery = { __typename?: 'Query' } & {
   getWalletInfo?: Types.Maybe<
@@ -25,8 +23,8 @@ export type GetWalletInfoQuery = { __typename?: 'Query' } & {
 };
 
 export const GetWalletInfoDocument = gql`
-  query GetWalletInfo($auth: authType!) {
-    getWalletInfo(auth: $auth) {
+  query GetWalletInfo {
+    getWalletInfo {
       build_tags
       commit_hash
       is_autopilotrpc_enabled
@@ -52,31 +50,30 @@ export const GetWalletInfoDocument = gql`
  * @example
  * const { data, loading, error } = useGetWalletInfoQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetWalletInfoQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetWalletInfoQuery,
     GetWalletInfoQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetWalletInfoQuery,
-    GetWalletInfoQueryVariables
-  >(GetWalletInfoDocument, baseOptions);
+  return Apollo.useQuery<GetWalletInfoQuery, GetWalletInfoQueryVariables>(
+    GetWalletInfoDocument,
+    baseOptions
+  );
 }
 export function useGetWalletInfoLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetWalletInfoQuery,
     GetWalletInfoQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetWalletInfoQuery,
-    GetWalletInfoQueryVariables
-  >(GetWalletInfoDocument, baseOptions);
+  return Apollo.useLazyQuery<GetWalletInfoQuery, GetWalletInfoQueryVariables>(
+    GetWalletInfoDocument,
+    baseOptions
+  );
 }
 export type GetWalletInfoQueryHookResult = ReturnType<
   typeof useGetWalletInfoQuery
@@ -84,7 +81,7 @@ export type GetWalletInfoQueryHookResult = ReturnType<
 export type GetWalletInfoLazyQueryHookResult = ReturnType<
   typeof useGetWalletInfoLazyQuery
 >;
-export type GetWalletInfoQueryResult = ApolloReactCommon.QueryResult<
+export type GetWalletInfoQueryResult = Apollo.QueryResult<
   GetWalletInfoQuery,
   GetWalletInfoQueryVariables
 >;

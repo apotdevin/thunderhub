@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { X, Copy } from 'react-feather';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { useAccountState } from 'src/context/AccountContext';
 import { useVerifyMessageLazyQuery } from 'src/graphql/queries/__generated__/verifyMessage.generated';
 import { Input } from '../../../components/input/Input';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
@@ -21,8 +20,6 @@ export const VerifyMessage = () => {
   const [signature, setSignature] = useState<string>('');
   const [isPasting, setIsPasting] = useState<boolean>(false);
   const [signedBy, setSignedBy] = useState<string>('');
-
-  const { auth } = useAccountState();
 
   const [signMessage, { data, loading }] = useVerifyMessageLazyQuery({
     onError: error => toast.error(getErrorContent(error)),
@@ -59,7 +56,7 @@ export const VerifyMessage = () => {
         withMargin={'8px 0 4px'}
         disabled={message === '' || signature === ''}
         loading={loading}
-        onClick={() => signMessage({ variables: { auth, message, signature } })}
+        onClick={() => signMessage({ variables: { message, signature } })}
       >
         Verify
       </ColorButton>

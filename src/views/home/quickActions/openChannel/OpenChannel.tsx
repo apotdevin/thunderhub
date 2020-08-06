@@ -3,10 +3,11 @@ import { ChevronRight } from 'react-feather';
 import { toast } from 'react-toastify';
 import { useOpenChannelMutation } from 'src/graphql/mutations/__generated__/openChannel.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
+import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
+import { useBitcoinFees } from 'src/hooks/UseBitcoinFees';
+import { useConfigState } from 'src/context/ConfigContext';
 import { Separation } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
-import { useBitcoinState } from '../../../../context/BitcoinContext';
-import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { Input } from '../../../../components/input/Input';
 import {
   SingleButton,
@@ -14,7 +15,7 @@ import {
 } from '../../../../components/buttons/multiButton/MultiButton';
 
 interface OpenChannelProps {
-  initialPublicKey?: string;
+  initialPublicKey?: string | undefined | null;
   setOpenCard: (card: string) => void;
 }
 
@@ -22,12 +23,17 @@ export const OpenChannelCard = ({
   setOpenCard,
   initialPublicKey = '',
 }: OpenChannelProps) => {
-  const { fast, halfHour, hour, dontShow } = useBitcoinState();
+  const { fetchFees } = useConfigState();
+  const { fast, halfHour, hour, dontShow } = useBitcoinFees();
   const [size, setSize] = useState(0);
+
+  const [pushType, setPushType] = useState('none');
+  const [pushTokens, setPushTokens] = useState(0);
+
   const [fee, setFee] = useState(0);
   const [publicKey, setPublicKey] = useState(initialPublicKey);
   const [privateChannel, setPrivateChannel] = useState(false);
-  const [type, setType] = useState(dontShow ? 'fee' : 'none');
+  const [type, setType] = useState(dontShow || !fetchFees ? 'fee' : 'none');
 
   const [openChannel] = useOpenChannelMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -39,6 +45,13 @@ export const OpenChannelCard = ({
   });
 
   const canOpen = publicKey !== '' && size > 0 && fee > 0;
+
+  const pushAmount =
+    pushType === 'none'
+      ? 0
+      : pushType === 'half'
+      ? size / 2
+      : Math.min(pushTokens, size * 0.9);
 
   useEffect(() => {
     if (type === 'none' && fee === 0) {
@@ -75,6 +88,28 @@ export const OpenChannelCard = ({
         inputCallback={value => setSize(Number(value))}
       />
       <Separation />
+      <InputWithDeco title={'Push Tokens to Partner'} noInput={true}>
+        <MultiButton>
+          {renderButton(() => setPushType('none'), 'None', pushType === 'none')}
+          {renderButton(() => setPushType('half'), 'Half', pushType === 'half')}
+          {renderButton(
+            () => setPushType('custom'),
+            'Custom',
+            pushType === 'custom'
+          )}
+        </MultiButton>
+      </InputWithDeco>
+      {pushType === 'custom' && (
+        <InputWithDeco
+          title={'Amount'}
+          value={Math.min(pushTokens, size * 0.9)}
+          placeholder={`Sats (Max: ${size * 0.9} sats)`}
+          amount={Math.min(pushTokens, size * 0.9)}
+          inputType={'number'}
+          inputCallback={value => setPushTokens(Number(value))}
+        />
+      )}
+      <Separation />
       <InputWithDeco title={'Type'} noInput={true}>
         <MultiButton>
           {renderButton(
@@ -90,7 +125,7 @@ export const OpenChannelCard = ({
         </MultiButton>
       </InputWithDeco>
       <Separation />
-      {!dontShow && (
+      {fetchFees && !dontShow && (
         <InputWithDeco title={'Fee'} noInput={true}>
           <MultiButton>
             {renderButton(
@@ -143,20 +178,24 @@ export const OpenChannelCard = ({
         )}
       </InputWithDeco>
       <Separation />
-      <SecureButton
+      <ColorButton
         fullWidth={true}
-        callback={openChannel}
-        variables={{
-          amount: size,
-          partnerPublicKey: publicKey,
-          tokensPerVByte: fee,
-          isPrivate: privateChannel,
-        }}
+        onClick={() =>
+          openChannel({
+            variables: {
+              amount: size,
+              partnerPublicKey: publicKey || '',
+              tokensPerVByte: fee,
+              isPrivate: privateChannel,
+              pushTokens: pushAmount,
+            },
+          })
+        }
         disabled={!canOpen}
       >
         Open Channel
         <ChevronRight size={18} />
-      </SecureButton>
+      </ColorButton>
     </>
   );
 };

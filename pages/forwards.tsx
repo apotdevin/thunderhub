@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
+import { ForwardType } from 'src/graphql/types';
+import { NextPageContext } from 'next';
+import { getProps } from 'src/utils/ssr';
+import { GET_FORWARDS } from 'src/graphql/queries/getForwards';
 import {
   SubTitle,
   Card,
@@ -28,11 +30,8 @@ const ForwardsView = () => {
   const [time, setTime] = useState('week');
   const [indexOpen, setIndexOpen] = useState(0);
 
-  const { auth } = useAccountState();
-
   const { loading, data } = useGetForwardsQuery({
-    skip: !auth,
-    variables: { auth, time },
+    variables: { time },
     onError: error => toast.error(getErrorContent(error)),
   });
 
@@ -63,11 +62,13 @@ const ForwardsView = () => {
             {renderButton('threeMonths', '3M')}
           </SingleLine>
         </CardTitle>
-        {data.getForwards.forwards.length <= 0 && renderNoForwards()}
+        {data?.getForwards?.forwards &&
+          data.getForwards.forwards.length <= 0 &&
+          renderNoForwards()}
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          {data.getForwards.forwards.map((forward, index: number) => (
+          {data?.getForwards?.forwards?.map((forward, index) => (
             <ForwardCard
-              forward={forward}
+              forward={forward as ForwardType}
               key={index}
               index={index + 1}
               setIndexOpen={setIndexOpen}
@@ -86,4 +87,8 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return await getProps(context, [GET_FORWARDS]);
+}

@@ -1,10 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type GetForwardsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   time?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
@@ -32,11 +31,9 @@ export type GetForwardsQuery = { __typename?: 'Query' } & {
                             { __typename?: 'nodePolicyType' } & {
                               node?: Types.Maybe<
                                 { __typename?: 'Node' } & {
-                                  node?: Types.Maybe<
-                                    { __typename?: 'nodeType' } & Pick<
-                                      Types.NodeType,
-                                      'alias' | 'color'
-                                    >
+                                  node: { __typename?: 'nodeType' } & Pick<
+                                    Types.NodeType,
+                                    'alias' | 'color'
                                   >;
                                 }
                               >;
@@ -54,11 +51,9 @@ export type GetForwardsQuery = { __typename?: 'Query' } & {
                             { __typename?: 'nodePolicyType' } & {
                               node?: Types.Maybe<
                                 { __typename?: 'Node' } & {
-                                  node?: Types.Maybe<
-                                    { __typename?: 'nodeType' } & Pick<
-                                      Types.NodeType,
-                                      'alias' | 'color'
-                                    >
+                                  node: { __typename?: 'nodeType' } & Pick<
+                                    Types.NodeType,
+                                    'alias' | 'color'
                                   >;
                                 }
                               >;
@@ -77,8 +72,8 @@ export type GetForwardsQuery = { __typename?: 'Query' } & {
 };
 
 export const GetForwardsDocument = gql`
-  query GetForwards($auth: authType!, $time: String) {
-    getForwards(auth: $auth, time: $time) {
+  query GetForwards($time: String) {
+    getForwards(time: $time) {
       forwards {
         created_at
         fee
@@ -129,38 +124,37 @@ export const GetForwardsDocument = gql`
  * @example
  * const { data, loading, error } = useGetForwardsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      time: // value for 'time'
  *   },
  * });
  */
 export function useGetForwardsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetForwardsQuery,
     GetForwardsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<GetForwardsQuery, GetForwardsQueryVariables>(
+  return Apollo.useQuery<GetForwardsQuery, GetForwardsQueryVariables>(
     GetForwardsDocument,
     baseOptions
   );
 }
 export function useGetForwardsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetForwardsQuery,
     GetForwardsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetForwardsQuery,
-    GetForwardsQueryVariables
-  >(GetForwardsDocument, baseOptions);
+  return Apollo.useLazyQuery<GetForwardsQuery, GetForwardsQueryVariables>(
+    GetForwardsDocument,
+    baseOptions
+  );
 }
 export type GetForwardsQueryHookResult = ReturnType<typeof useGetForwardsQuery>;
 export type GetForwardsLazyQueryHookResult = ReturnType<
   typeof useGetForwardsLazyQuery
 >;
-export type GetForwardsQueryResult = ApolloReactCommon.QueryResult<
+export type GetForwardsQueryResult = Apollo.QueryResult<
   GetForwardsQuery,
   GetForwardsQueryVariables
 >;

@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { useRemovePeerMutation } from 'src/graphql/mutations/__generated__/removePeer.generated';
 import { SubTitle } from '../../generic/Styled';
 import { getErrorContent } from '../../../utils/error';
-import { SecureButton } from '../../buttons/secureButton/SecureButton';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
 
 interface RemovePeerProps {
@@ -42,17 +41,17 @@ export const RemovePeerModal = ({
     <WarningCard>
       <AlertTriangle size={32} color={'red'} />
       <SubTitle>Are you sure you want to remove this peer?</SubTitle>
-      <SecureButton
-        callback={removePeer}
-        variables={{
-          publicKey,
+      <ColorButton
+        onClick={() => {
+          removePeer({ variables: { publicKey } });
         }}
         color={'red'}
         disabled={loading}
+        loading={loading}
         withMargin={'4px'}
       >
         {`Remove Peer [${peerAlias || publicKey?.substring(0, 6)}]`}
-      </SecureButton>
+      </ColorButton>
       <ColorButton withMargin={'4px'} onClick={handleOnlyClose}>
         Cancel
       </ColorButton>

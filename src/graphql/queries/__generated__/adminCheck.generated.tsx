@@ -1,11 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
-export type GetCanAdminQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+const gql = Apollo.gql;
+
+export type GetCanAdminQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetCanAdminQuery = { __typename?: 'Query' } & Pick<
   Types.Query,
@@ -13,8 +11,8 @@ export type GetCanAdminQuery = { __typename?: 'Query' } & Pick<
 >;
 
 export const GetCanAdminDocument = gql`
-  query GetCanAdmin($auth: authType!) {
-    adminCheck(auth: $auth)
+  query GetCanAdmin {
+    adminCheck
   }
 `;
 
@@ -30,37 +28,36 @@ export const GetCanAdminDocument = gql`
  * @example
  * const { data, loading, error } = useGetCanAdminQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetCanAdminQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetCanAdminQuery,
     GetCanAdminQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(
+  return Apollo.useQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(
     GetCanAdminDocument,
     baseOptions
   );
 }
 export function useGetCanAdminLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetCanAdminQuery,
     GetCanAdminQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetCanAdminQuery,
-    GetCanAdminQueryVariables
-  >(GetCanAdminDocument, baseOptions);
+  return Apollo.useLazyQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(
+    GetCanAdminDocument,
+    baseOptions
+  );
 }
 export type GetCanAdminQueryHookResult = ReturnType<typeof useGetCanAdminQuery>;
 export type GetCanAdminLazyQueryHookResult = ReturnType<
   typeof useGetCanAdminLazyQuery
 >;
-export type GetCanAdminQueryResult = ApolloReactCommon.QueryResult<
+export type GetCanAdminQueryResult = Apollo.QueryResult<
   GetCanAdminQuery,
   GetCanAdminQueryVariables
 >;

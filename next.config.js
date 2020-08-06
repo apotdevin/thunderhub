@@ -6,10 +6,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 module.exports = withBundleAnalyzer({
   poweredByHeader: false,
   assetPrefix: process.env.BASE_PATH || '',
+  basePath: process.env.BASE_PATH || '',
   serverRuntimeConfig: {
     nodeEnv: process.env.NODE_ENV || 'development',
     logLevel: process.env.LOG_LEVEL || 'info',
-    hodlKey: process.env.HODL_KEY || '',
     cookiePath: process.env.COOKIE_PATH || '',
     lnServerUrl: process.env.SSO_SERVER_URL || '',
     lnCertPath: process.env.SSO_CERT_PATH || '',
@@ -20,15 +20,12 @@ module.exports = withBundleAnalyzer({
     nodeEnv: process.env.NODE_ENV || 'development',
     apiUrl: `${process.env.BASE_PATH || ''}/api/v1`,
     apiBaseUrl: `${process.env.API_BASE_URL || ''}/api/v1`,
-    basePath: process.env.BASE_PATH || '',
     npmVersion: process.env.npm_package_version || '0.0.0',
     defaultTheme: process.env.THEME || 'dark',
     defaultCurrency: process.env.CURRENCY || 'sat',
     fetchPrices: process.env.FETCH_PRICES === 'false' ? false : true,
     fetchFees: process.env.FETCH_FEES === 'false' ? false : true,
-    hodlhodl: process.env.HODL_HODL === 'false' ? false : true,
     disableLinks: process.env.DISABLE_LINKS === 'true' ? true : false,
-    noClient: process.env.NO_CLIENT_ACCOUNTS === 'true' ? true : false,
     noVersionCheck: process.env.NO_VERSION_CHECK === 'true' ? true : false,
   },
 });

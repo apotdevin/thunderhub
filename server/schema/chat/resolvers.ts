@@ -10,22 +10,25 @@ import {
 import { ContextType } from 'server/types/apiTypes';
 import { to, toWithError } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
+
 import {
   createCustomRecords,
   decodeMessage,
 } from 'server/helpers/customRecords';
 import { logger } from 'server/helpers/logger';
+import {
+  GetInvoicesType,
+  GetWalletInfoType,
+} from 'server/types/ln-service.types';
 
 export const chatResolvers = {
   Query: {
     getMessages: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getMessages');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
-      const invoiceList = await to(
+      const invoiceList = await to<GetInvoicesType>(
         getInvoices({
           lnd,
           limit: params.initialize ? 100 : 5,
@@ -72,7 +75,11 @@ export const chatResolvers = {
                 logger.debug(`Error verifying message: ${messageToVerify}`);
               }
 
-              if (!error && verified?.signed_by === customRecords.sender) {
+              if (
+                !error &&
+                (verified as { signed_by: string })?.signed_by ===
+                  customRecords.sender
+              ) {
                 isVerified = true;
               }
             }
@@ -88,7 +95,7 @@ export const chatResolvers = {
         );
 
       const filtered = await getFiltered();
-      const final = filtered.filter(message => !!message);
+      const final = filtered.filter(Boolean) || [];
 
       return { token: invoiceList.next, messages: final };
     },
@@ -97,8 +104,7 @@ export const chatResolvers = {
     sendMessage: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'sendMessage');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
       if (params.maxFee) {
         const tokens = Math.max(params.tokens || 100, 100);
@@ -126,7 +132,7 @@ export const chatResolvers = {
         messageToSend = `${params.tokens},${params.message}`;
       }
 
-      const nodeInfo = await to(
+      const nodeInfo = await to<GetWalletInfoType>(
         getWalletInfo({
           lnd,
         })
@@ -167,7 +173,8 @@ export const chatResolvers = {
           messages: customRecords,
         })
       );
-      return safe_fee;
+      // +1 is needed so that a fee of 0 doesnt evaluate to false
+      return safe_fee + 1;
     },
   },
 };

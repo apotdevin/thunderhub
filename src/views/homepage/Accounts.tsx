@@ -1,62 +1,86 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import { getAuthObj } from 'src/utils/auth';
-import { Lock, Unlock } from 'react-feather';
+import { Lock, Unlock, ChevronDown, ChevronUp } from 'react-feather';
 import { chartColors } from 'src/styles/Themes';
-import {
-  useAccountState,
-  CLIENT_ACCOUNT,
-  useAccountDispatch,
-  SSO_ACCOUNT,
-  SERVER_ACCOUNT,
-} from 'src/context/AccountContext';
 import { useRouter } from 'next/router';
-import { appendBasePath } from 'src/utils/basePath';
-import { useStatusDispatch } from 'src/context/StatusContext';
 import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
-import getConfig from 'next/config';
 import { Link } from 'src/components/link/Link';
+import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/getServerAccounts.generated';
+import { ServerAccountType } from 'src/graphql/types';
+import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { Section } from '../../components/section/Section';
-import { Card, SingleLine } from '../../components/generic/Styled';
+import {
+  Card,
+  SingleLine,
+  DarkSubTitle,
+  Sub4Title,
+  Separation,
+} from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { dontShowSessionLogin } from '../login/helpers';
 import { ConnectTitle, LockPadding } from './HomePage.styled';
-
-const { publicRuntimeConfig } = getConfig();
-const { noClient } = publicRuntimeConfig;
+import { Login } from './Login';
 
 const AccountLine = styled.div`
   margin: 8px 0;
 `;
 
-const TypeText = styled.div`
-  font-size: 14px;
-  margin-right: 8px;
+const DetailsLine = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  cursor: pointer;
 `;
 
-const renderIntro = () => (
-  <Section color={'transparent'}>
-    <ConnectTitle change={true}>Hi! Welcome to ThunderHub</ConnectTitle>
-    <Card>
-      {'To start you must create an account on your server. '}
-      <Link
-        newTab={true}
-        href={'https://github.com/apotdevin/thunderhub#server-accounts'}
-      >
-        You can find instructions for this here.
-      </Link>
-    </Card>
-  </Section>
-);
+const RenderIntro = () => {
+  const [detailsOpen, setDetailsOpen] = React.useState(false);
+  return (
+    <Section color={'transparent'}>
+      <ConnectTitle changeColor={true}>Hi! Welcome to ThunderHub</ConnectTitle>
+      <Card>
+        {'To start you must create an account on your server. '}
+        <Link
+          newTab={true}
+          href={'https://github.com/apotdevin/thunderhub#server-accounts'}
+        >
+          You can find instructions for this here.
+        </Link>
+      </Card>
+      <Card>
+        <DetailsLine onClick={() => setDetailsOpen(p => !p)}>
+          <DarkSubTitle>{'Did you already create accounts?'}</DarkSubTitle>
+          {detailsOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        </DetailsLine>
+        {detailsOpen && (
+          <>
+            <Separation />
+            <Sub4Title>
+              The accounts might be missing information that is needed for them
+              to be available. Please check your logs to see if there is
+              anything missing.
+            </Sub4Title>
+            <Sub4Title>
+              On server start you will see a log message of the accounts that
+              will be available.
+            </Sub4Title>
+          </>
+        )}
+      </Card>
+    </Section>
+  );
+};
 
 export const Accounts = () => {
   const { push } = useRouter();
-  const dispatchStatus = useStatusDispatch();
-  const [newAccount, setNewAccount] = React.useState();
+  const [newAccount, setNewAccount] = React.useState<ServerAccountType | null>(
+    null
+  );
 
-  const { accounts, activeAccount, account } = useAccountState();
-  const dispatch = useAccountDispatch();
+  const {
+    data: accountData,
+    loading: loadingData,
+  } = useGetServerAccountsQuery();
 
   const [getCanConnect, { data, loading }] = useGetCanConnectLazyQuery({
     fetchPolicy: 'network-only',
@@ -66,148 +90,92 @@ export const Accounts = () => {
   });
 
   React.useEffect(() => {
-    if (!loading && data && data.getNodeInfo && newAccount) {
-      dispatch({ type: 'changeAccount', changeId: newAccount });
-      dispatchStatus({ type: 'connected' });
-      push(appendBasePath('/home'));
+    if (!loading && data && data.getNodeInfo) {
+      push('/home');
     }
-  }, [data, loading, newAccount, dispatch, push, dispatchStatus]);
+  }, [data, loading, push]);
 
-  const change = accounts.length > 0 && dontShowSessionLogin(account);
-
-  if (accounts.length <= 0) {
-    if (noClient && !account) {
-      return renderIntro();
-    }
-    return null;
+  if (loadingData) {
+    return (
+      <Section color={'transparent'}>
+        <LoadingCard />
+      </Section>
+    );
   }
 
-  const filteredAccounts = accounts.filter(a => {
-    if (a.type === CLIENT_ACCOUNT) {
-      if (noClient) {
-        return false;
-      }
-      if (a.id === activeAccount && !a.viewOnly) {
-        return false;
-      }
-    }
-    if (a.type === SERVER_ACCOUNT) {
-      if (a.id === activeAccount && !a.loggedIn) {
-        return false;
-      }
-    }
-    return true;
-  });
-
-  if (filteredAccounts.length < 1) {
-    if (noClient && !account) {
-      return renderIntro();
-    }
-    return null;
+  if (!accountData?.getServerAccounts?.length) {
+    return <RenderIntro />;
   }
 
-  const isType = (admin: string, viewOnly: string): string => {
-    if (!admin && viewOnly) {
-      return '(View Only)';
-    }
-    if (admin && !viewOnly) {
-      return '(Admin Only)';
-    }
-    return null;
-  };
-
-  const getTitle = account => {
+  const getTitle = (account: ServerAccountType) => {
     const { type, name, loggedIn } = account;
-    if (type !== CLIENT_ACCOUNT) {
-      const props = {
-        color: chartColors.green,
-        size: 14,
-      };
-      return (
-        <div>
-          {type === SSO_ACCOUNT ? 'SSO Account' : name}
-          <LockPadding>
-            {loggedIn ? <Unlock {...props} /> : <Lock {...props} />}
-          </LockPadding>
-        </div>
-      );
-    }
-    return name;
+
+    const props = {
+      color: chartColors.green,
+      size: 14,
+    };
+    return (
+      <div>
+        {type === 'sso' ? 'SSO Account' : name}
+        <LockPadding>
+          {loggedIn ? <Unlock {...props} /> : <Lock {...props} />}
+        </LockPadding>
+      </div>
+    );
   };
 
-  const getButtonTitle = (account): string => {
-    if (account.viewOnly || account.type === SSO_ACCOUNT) {
-      return 'Connect';
-    }
-    if (account.type === SERVER_ACCOUNT && account.loggedIn) {
+  const getButtonTitle = (account: ServerAccountType): string => {
+    if (account.loggedIn) {
       return 'Connect';
     }
     return 'Login';
   };
 
-  const getArrow = (account): boolean => {
-    if (account.viewOnly || account.type === SSO_ACCOUNT) {
-      return false;
-    }
-    if (account.type === SERVER_ACCOUNT && account.loggedIn) {
+  const getArrow = (account: ServerAccountType): boolean => {
+    if (account.loggedIn) {
       return false;
     }
     return true;
   };
 
-  const handleClick = account => () => {
-    const { id, viewOnly, cert, host, type, loggedIn } = account;
-    if (viewOnly) {
-      setNewAccount(id);
-      getCanConnect({
-        variables: { auth: getAuthObj(host, viewOnly, null, cert) },
-      });
-    } else if (type === SSO_ACCOUNT) {
-      setNewAccount(id);
-      getCanConnect({
-        variables: { auth: { type: SSO_ACCOUNT, id } },
-      });
-    } else if (type === SERVER_ACCOUNT && loggedIn) {
-      setNewAccount(id);
-      getCanConnect({
-        variables: { auth: { type: SERVER_ACCOUNT, id } },
-      });
+  const handleClick = (account: ServerAccountType) => () => {
+    if (account.type === 'sso') {
+      getCanConnect();
+    } else if (account.type === 'server' && account.loggedIn) {
+      getCanConnect();
     } else {
-      dispatch({ type: 'changeAccount', changeId: id });
+      setNewAccount(account);
     }
   };
 
   return (
-    <Section color={'transparent'}>
-      <ConnectTitle change={change}>
-        {change ? 'Accounts' : 'Other Accounts'}
-      </ConnectTitle>
-      <Card>
-        {filteredAccounts.map((account, index) => {
-          return (
-            <AccountLine key={`${account.id}-${index}`}>
-              <SingleLine>
-                {getTitle(account)}
+    <>
+      {newAccount && <Login account={newAccount} />}
+      <Section color={'transparent'}>
+        <ConnectTitle changeColor={!newAccount}>
+          {!newAccount ? 'Accounts' : 'Other Accounts'}
+        </ConnectTitle>
+        <Card>
+          {accountData?.getServerAccounts?.map((account, index) => {
+            if (!account) return null;
+            return (
+              <AccountLine key={`${account.id}-${index}`}>
                 <SingleLine>
-                  {account.type === CLIENT_ACCOUNT && (
-                    <TypeText>
-                      {isType(account.admin, account.viewOnly)}
-                    </TypeText>
-                  )}
+                  {getTitle(account)}
                   <ColorButton
                     onClick={handleClick(account)}
                     arrow={getArrow(account)}
-                    loading={newAccount === account.id && loading}
-                    disabled={loading}
+                    loading={newAccount?.id === account.id && loading}
+                    disabled={newAccount?.id === account.id || loading}
                   >
                     {getButtonTitle(account)}
                   </ColorButton>
                 </SingleLine>
-              </SingleLine>
-            </AccountLine>
-          );
-        })}
-      </Card>
-    </Section>
+              </AccountLine>
+            );
+          })}
+        </Card>
+      </Section>
+    </>
   );
 };

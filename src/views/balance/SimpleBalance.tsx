@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import sortBy from 'lodash.sortby';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
 import { ChannelType } from 'src/graphql/types';
 import {
@@ -24,8 +23,6 @@ import {
 } from 'src/context/RebalanceContext';
 
 export const SimpleBalance = () => {
-  const { auth } = useAccountState();
-
   const dispatch = useRebalanceDispatch();
   const { inChannel: incoming, outChannel: outgoing } = useRebalanceState();
 
@@ -34,8 +31,7 @@ export const SimpleBalance = () => {
   const [blocked, setBlocked] = useState(false);
 
   const { loading, data } = useGetChannelsQuery({
-    skip: !auth,
-    variables: { auth, active: true },
+    variables: { active: true },
     onError: error => toast.error(getErrorContent(error)),
   });
 
@@ -65,7 +61,7 @@ export const SimpleBalance = () => {
   const renderChannels = (isOutgoing?: boolean) => {
     const getChannels = (side: boolean) =>
       sortBy(data.getChannels, channel => {
-        const { remote_balance, local_balance } = channel;
+        const { remote_balance, local_balance } = channel as ChannelType;
 
         const middle = (remote_balance + local_balance) / 2;
 
@@ -86,20 +82,31 @@ export const SimpleBalance = () => {
 
     const finalChannels = getChannels(!isOutgoing).reverse();
 
-    return finalChannels.map((channel: ChannelType, index: number) => {
-      if (!isOutgoing && outgoing && outgoing.id === channel.id) {
+    return finalChannels.map((channel, index) => {
+      if (!isOutgoing && outgoing && channel && outgoing.id === channel.id) {
         return null;
       }
 
       const callback = isOutgoing
-        ? !outgoing && { callback: () => dispatch({ type: 'setOut', channel }) }
+        ? !outgoing && {
+            callback: () =>
+              dispatch({
+                type: 'setOut',
+                channel: channel as ChannelType,
+              }),
+          }
         : outgoing &&
-          !incoming && { callback: () => dispatch({ type: 'setIn', channel }) };
+          !incoming && {
+            callback: () =>
+              dispatch({ type: 'setIn', channel: channel as ChannelType }),
+          };
 
       return (
         <BalanceCard
-          key={`${index}-${channel.id}`}
-          {...{ index, channel, withArrow: true }}
+          key={`${index}-${channel?.id || ''}`}
+          index={index}
+          channel={channel as ChannelType}
+          withArrow={true}
           {...callback}
         />
       );

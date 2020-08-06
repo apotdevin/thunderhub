@@ -1,10 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type SignMessageQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   message: Types.Scalars['String'];
 }>;
 
@@ -14,8 +13,8 @@ export type SignMessageQuery = { __typename?: 'Query' } & Pick<
 >;
 
 export const SignMessageDocument = gql`
-  query SignMessage($auth: authType!, $message: String!) {
-    signMessage(auth: $auth, message: $message)
+  query SignMessage($message: String!) {
+    signMessage(message: $message)
   }
 `;
 
@@ -31,38 +30,37 @@ export const SignMessageDocument = gql`
  * @example
  * const { data, loading, error } = useSignMessageQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      message: // value for 'message'
  *   },
  * });
  */
 export function useSignMessageQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     SignMessageQuery,
     SignMessageQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<SignMessageQuery, SignMessageQueryVariables>(
+  return Apollo.useQuery<SignMessageQuery, SignMessageQueryVariables>(
     SignMessageDocument,
     baseOptions
   );
 }
 export function useSignMessageLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     SignMessageQuery,
     SignMessageQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    SignMessageQuery,
-    SignMessageQueryVariables
-  >(SignMessageDocument, baseOptions);
+  return Apollo.useLazyQuery<SignMessageQuery, SignMessageQueryVariables>(
+    SignMessageDocument,
+    baseOptions
+  );
 }
 export type SignMessageQueryHookResult = ReturnType<typeof useSignMessageQuery>;
 export type SignMessageLazyQueryHookResult = ReturnType<
   typeof useSignMessageLazyQuery
 >;
-export type SignMessageQueryResult = ApolloReactCommon.QueryResult<
+export type SignMessageQueryResult = Apollo.QueryResult<
   SignMessageQuery,
   SignMessageQueryVariables
 >;

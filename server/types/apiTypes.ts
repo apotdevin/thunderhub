@@ -1,15 +1,16 @@
 import { ServerResponse } from 'http';
+import { LndObject } from './ln-service.types';
 
-type SSOType = {
-  macaroon: string | null;
+export type SSOType = {
+  macaroon: string;
   cert: string | null;
-  host: string | null;
+  socket: string;
 };
 
-type AccountType = {
+export type AccountType = {
   name: string;
   id: string;
-  host: string;
+  socket: string;
   macaroon: string;
   cert: string | null;
   password: string;
@@ -17,10 +18,10 @@ type AccountType = {
 
 export type ContextType = {
   ip: string;
+  lnd: LndObject | null;
   secret: string;
-  ssoVerified: boolean;
-  account: string | null;
-  sso: SSOType;
+  id: string | null;
+  sso: SSOType | null;
   accounts: AccountType[];
   res: ServerResponse;
 };

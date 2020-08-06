@@ -68,10 +68,15 @@ export const createCustomRecords = ({
   ];
 };
 
+type DecodeMessageType = {
+  type: string;
+  value: string;
+};
+
 export const decodeMessage = ({
   type,
   value,
-}): { [key: string]: string } | {} => {
+}: DecodeMessageType): { [key: string]: string } | {} => {
   switch (type) {
     case MESSAGE_TYPE:
       return { message: bufferHexToUtf(value) };

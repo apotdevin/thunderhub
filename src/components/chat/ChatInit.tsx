@@ -1,21 +1,23 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetMessagesLazyQuery } from 'src/graphql/queries/__generated__/getMessages.generated';
+import { MessagesType } from 'src/graphql/types';
+import { useAccount } from 'src/hooks/UseAccount';
 import { useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 
-export const ChatInit = () => {
-  const { auth, account } = useAccountState();
+export const ChatInit: React.FC = () => {
   const dispatch = useChatDispatch();
 
   const [
     getMessages,
     { data: initData, loading: initLoading, error: initError },
   ] = useGetMessagesLazyQuery({
-    variables: { auth, initialize: true },
+    variables: { initialize: true },
     onError: error => toast.error(getErrorContent(error)),
   });
+
+  const account = useAccount();
 
   React.useEffect(() => {
     if (account) {
@@ -45,17 +47,17 @@ export const ChatInit = () => {
     if (!initLoading && !initError && initData && initData.getMessages) {
       const { messages } = initData.getMessages;
 
-      if (messages.length <= 0) {
+      if (!messages?.length) {
         dispatch({ type: 'initialized' });
         return;
       }
 
-      const lastChat = messages[0].id || '';
-      const sender = messages[0].sender || '';
+      const lastChat = messages[0]?.id || '';
+      const sender = messages[0]?.sender || '';
 
       dispatch({
         type: 'initialized',
-        chats: messages,
+        chats: messages as MessagesType[],
         lastChat,
         sender,
       });
