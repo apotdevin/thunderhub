@@ -28,7 +28,9 @@
     "build:all": "sh ./scripts/buildAllImages.sh",
     "upgrade-latest": "npx npm-check -u",
     "tsc": "tsc",
-    "update": "sh ./scripts/updateToLatest.sh"
+    "update": "sh ./scripts/updateToLatest.sh",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "keywords": [],
   "author": "",
@@ -74,7 +76,8 @@
     "underscore": "^1.10.2",
     "uuid": "^8.3.0",
     "victory": "^35.0.8",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "snyk": "^1.369.3"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
@@ -147,5 +150,6 @@
       "jest --bail --findRelatedTests",
       "eslint --fix"
     ]
-  }
+  },
+  "snyk": true
 }
