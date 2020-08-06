@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.9.0](https://github.com/apotdevin/thunderhub/compare/v0.8.14...v0.9.0) (2020-08-06)
+
+
+### Bug Fixes
+
+* 🐛 new chat on mobile ([c0053ae](https://github.com/apotdevin/thunderhub/commit/c0053ae642ea5c6a0a86577ae1998780e330c7b7))
+
+
+### Docs
+
+* 📚️ cleanup readme ([c48b074](https://github.com/apotdevin/thunderhub/commit/c48b074f9c577441abba205f193544fcba114dba))
+
+
+### Refactoring
+
+* ♻️ close channel modal ([151f931](https://github.com/apotdevin/thunderhub/commit/151f931bdfbb8f382713abe2ac5692a00742cec4))
+* ♻️ node info context ([f60495e](https://github.com/apotdevin/thunderhub/commit/f60495edaa10bdd2cb8f5c8fad53e95f32670e26))
+
+
+### Improvements
+
+* 🔧 enable strict tsconfig ([#96](https://github.com/apotdevin/thunderhub/issues/96)) ([bc4415c](https://github.com/apotdevin/thunderhub/commit/bc4415cde7058edaab94a2c41606dba54dd9e4e3)), closes [#97](https://github.com/apotdevin/thunderhub/issues/97) [#100](https://github.com/apotdevin/thunderhub/issues/100)
+* 🔧 more logging ([87f27d3](https://github.com/apotdevin/thunderhub/commit/87f27d39bd8bb1e9cd44f02b306c9043cada9830))
+* 🔧 open channel push tokens ([db3b0d3](https://github.com/apotdevin/thunderhub/commit/db3b0d39b5cc83243744f39a5e7e967ebcc39883))
+* 🔧 qrcode white padding ([82c052d](https://github.com/apotdevin/thunderhub/commit/82c052d0df7788e1bfbe35442d5eb27cd7280c16))
+* 🔧 regenerate graphql ([d5b3486](https://github.com/apotdevin/thunderhub/commit/d5b3486d3b6c4055a19ad6c8f34d30c77dbf1f45))
+* 🔧 remove client ([#111](https://github.com/apotdevin/thunderhub/issues/111)) ([581185e](https://github.com/apotdevin/thunderhub/commit/581185e6b033329baaa7d4585d4bcb0fa93e6c3a))
+* 🔧 remove hodlhodl ([#113](https://github.com/apotdevin/thunderhub/issues/113)) ([c8a9869](https://github.com/apotdevin/thunderhub/commit/c8a9869062ea44b70bb796d1fcdab250de285e17))
+* 🔧 sso and login help ([2de92be](https://github.com/apotdevin/thunderhub/commit/2de92be07461a57dab775bf384b1e9ddb001934e))
+* 🔧 update deps ([97b12dd](https://github.com/apotdevin/thunderhub/commit/97b12dd5dfd44d5bd2fbe19a16c4816a6fb66326))
+* 🔧 update standard version ([34d4586](https://github.com/apotdevin/thunderhub/commit/34d4586a41cfc772c83e4c2e23a4b4046048dea8))
+* 🔧update deps ([e456944](https://github.com/apotdevin/thunderhub/commit/e456944f8a67c5c24361d9650105b06c7e1e1f1a))
+
 ### [0.8.14](https://github.com/apotdevin/thunderhub/compare/v0.8.13...v0.8.14) (2020-08-05)
 
 
