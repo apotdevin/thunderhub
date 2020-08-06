@@ -1,6 +1,15 @@
 import { groupBy } from 'underscore';
+import { ForwardType } from 'server/types/ln-service.types';
 
-export const getChannelVolume = forwards => {
+type GroupedObject = {
+  [key: string]: ForwardType[];
+};
+
+type TotalGroupedObject = {
+  [key: string]: { tokens: number }[];
+};
+
+export const getChannelVolume = (forwards: ForwardType[]) => {
   const orderedIncoming = groupBy(forwards, f => f.incoming_channel);
   const orderedOutgoing = groupBy(forwards, f => f.outgoing_channel);
 
@@ -14,7 +23,7 @@ export const getChannelVolume = forwards => {
   return reduceTokens(together);
 };
 
-const reduceTokens = array => {
+const reduceTokens = (array: GroupedObject | TotalGroupedObject) => {
   const reducedArray = [];
   for (const key in array) {
     if (Object.prototype.hasOwnProperty.call(array, key)) {

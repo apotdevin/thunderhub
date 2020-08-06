@@ -1,10 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type GetResumeQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   token?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
@@ -57,27 +56,19 @@ export type GetResumeQuery = { __typename?: 'Query' } & {
                 > & {
                     destination_node?: Types.Maybe<
                       { __typename?: 'Node' } & {
-                        node?: Types.Maybe<
-                          { __typename?: 'nodeType' } & Pick<
-                            Types.NodeType,
-                            'alias'
-                          >
+                        node: { __typename?: 'nodeType' } & Pick<
+                          Types.NodeType,
+                          'alias'
                         >;
                       }
                     >;
-                    hops?: Types.Maybe<
-                      Array<
-                        Types.Maybe<
-                          { __typename?: 'Node' } & {
-                            node?: Types.Maybe<
-                              { __typename?: 'nodeType' } & Pick<
-                                Types.NodeType,
-                                'alias' | 'public_key'
-                              >
-                            >;
-                          }
-                        >
-                      >
+                    hops: Array<
+                      { __typename?: 'Node' } & {
+                        node: { __typename?: 'nodeType' } & Pick<
+                          Types.NodeType,
+                          'alias' | 'public_key'
+                        >;
+                      }
                     >;
                   })
             >
@@ -88,8 +79,8 @@ export type GetResumeQuery = { __typename?: 'Query' } & {
 };
 
 export const GetResumeDocument = gql`
-  query GetResume($auth: authType!, $token: String) {
-    getResume(auth: $auth, token: $token) {
+  query GetResume($token: String) {
+    getResume(token: $token) {
       token
       resume {
         ... on InvoiceType {
@@ -159,29 +150,25 @@ export const GetResumeDocument = gql`
  * @example
  * const { data, loading, error } = useGetResumeQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      token: // value for 'token'
  *   },
  * });
  */
 export function useGetResumeQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetResumeQuery,
-    GetResumeQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<GetResumeQuery, GetResumeQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetResumeQuery, GetResumeQueryVariables>(
+  return Apollo.useQuery<GetResumeQuery, GetResumeQueryVariables>(
     GetResumeDocument,
     baseOptions
   );
 }
 export function useGetResumeLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetResumeQuery,
     GetResumeQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<GetResumeQuery, GetResumeQueryVariables>(
+  return Apollo.useLazyQuery<GetResumeQuery, GetResumeQueryVariables>(
     GetResumeDocument,
     baseOptions
   );
@@ -190,7 +177,7 @@ export type GetResumeQueryHookResult = ReturnType<typeof useGetResumeQuery>;
 export type GetResumeLazyQueryHookResult = ReturnType<
   typeof useGetResumeLazyQuery
 >;
-export type GetResumeQueryResult = ApolloReactCommon.QueryResult<
+export type GetResumeQueryResult = Apollo.QueryResult<
   GetResumeQuery,
   GetResumeQueryVariables
 >;

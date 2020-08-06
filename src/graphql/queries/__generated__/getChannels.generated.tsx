@@ -1,80 +1,69 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type GetChannelsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   active?: Types.Maybe<Types.Scalars['Boolean']>;
 }>;
 
 export type GetChannelsQuery = { __typename?: 'Query' } & {
-  getChannels?: Types.Maybe<
-    Array<
-      Types.Maybe<
-        { __typename?: 'channelType' } & Pick<
-          Types.ChannelType,
-          | 'capacity'
-          | 'commit_transaction_fee'
-          | 'commit_transaction_weight'
-          | 'id'
-          | 'is_active'
-          | 'is_closing'
-          | 'is_opening'
-          | 'is_partner_initiated'
-          | 'is_private'
-          | 'is_static_remote_key'
-          | 'local_balance'
-          | 'local_reserve'
-          | 'partner_public_key'
-          | 'received'
-          | 'remote_balance'
-          | 'remote_reserve'
-          | 'sent'
-          | 'time_offline'
-          | 'time_online'
-          | 'transaction_id'
-          | 'transaction_vout'
-          | 'unsettled_balance'
-          | 'channel_age'
-        > & {
-            partner_node_info?: Types.Maybe<
-              { __typename?: 'Node' } & {
-                node?: Types.Maybe<
-                  { __typename?: 'nodeType' } & Pick<
-                    Types.NodeType,
-                    | 'alias'
-                    | 'capacity'
-                    | 'channel_count'
-                    | 'color'
-                    | 'updated_at'
-                  >
-                >;
-              }
+  getChannels: Array<
+    Types.Maybe<
+      { __typename?: 'channelType' } & Pick<
+        Types.ChannelType,
+        | 'capacity'
+        | 'commit_transaction_fee'
+        | 'commit_transaction_weight'
+        | 'id'
+        | 'is_active'
+        | 'is_closing'
+        | 'is_opening'
+        | 'is_partner_initiated'
+        | 'is_private'
+        | 'is_static_remote_key'
+        | 'local_balance'
+        | 'local_reserve'
+        | 'partner_public_key'
+        | 'received'
+        | 'remote_balance'
+        | 'remote_reserve'
+        | 'sent'
+        | 'time_offline'
+        | 'time_online'
+        | 'transaction_id'
+        | 'transaction_vout'
+        | 'unsettled_balance'
+        | 'channel_age'
+      > & {
+          partner_node_info: { __typename?: 'Node' } & {
+            node: { __typename?: 'nodeType' } & Pick<
+              Types.NodeType,
+              'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
             >;
-            partner_fee_info?: Types.Maybe<
-              { __typename?: 'Channel' } & {
-                channel?: Types.Maybe<
-                  { __typename?: 'singleChannelType' } & {
-                    partner_node_policies?: Types.Maybe<
-                      { __typename?: 'nodePolicyType' } & Pick<
-                        Types.NodePolicyType,
-                        'base_fee_mtokens' | 'fee_rate' | 'cltv_delta'
-                      >
-                    >;
-                  }
-                >;
-              }
-            >;
-          }
-      >
+          };
+          partner_fee_info?: Types.Maybe<
+            { __typename?: 'Channel' } & {
+              channel?: Types.Maybe<
+                { __typename?: 'singleChannelType' } & {
+                  partner_node_policies?: Types.Maybe<
+                    { __typename?: 'nodePolicyType' } & Pick<
+                      Types.NodePolicyType,
+                      'base_fee_mtokens' | 'fee_rate' | 'cltv_delta'
+                    >
+                  >;
+                }
+              >;
+            }
+          >;
+        }
     >
   >;
 };
 
 export const GetChannelsDocument = gql`
-  query GetChannels($auth: authType!, $active: Boolean) {
-    getChannels(auth: $auth, active: $active) {
+  query GetChannels($active: Boolean) {
+    getChannels(active: $active) {
       capacity
       commit_transaction_fee
       commit_transaction_weight
@@ -132,38 +121,37 @@ export const GetChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      active: // value for 'active'
  *   },
  * });
  */
 export function useGetChannelsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetChannelsQuery,
     GetChannelsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<GetChannelsQuery, GetChannelsQueryVariables>(
+  return Apollo.useQuery<GetChannelsQuery, GetChannelsQueryVariables>(
     GetChannelsDocument,
     baseOptions
   );
 }
 export function useGetChannelsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetChannelsQuery,
     GetChannelsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetChannelsQuery,
-    GetChannelsQueryVariables
-  >(GetChannelsDocument, baseOptions);
+  return Apollo.useLazyQuery<GetChannelsQuery, GetChannelsQueryVariables>(
+    GetChannelsDocument,
+    baseOptions
+  );
 }
 export type GetChannelsQueryHookResult = ReturnType<typeof useGetChannelsQuery>;
 export type GetChannelsLazyQueryHookResult = ReturnType<
   typeof useGetChannelsLazyQuery
 >;
-export type GetChannelsQueryResult = ApolloReactCommon.QueryResult<
+export type GetChannelsQueryResult = Apollo.QueryResult<
   GetChannelsQuery,
   GetChannelsQueryVariables
 >;

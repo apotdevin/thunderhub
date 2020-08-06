@@ -2,9 +2,12 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Users } from 'react-feather';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
 import { ChatInit } from 'src/components/chat/ChatInit';
 import { ChatFetcher } from 'src/components/chat/ChatFetcher';
+import { NextPageContext } from 'next';
+import { getProps } from 'src/utils/ssr';
+import { GET_MESSAGES } from 'src/graphql/queries/getMessages';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { useChatState } from '../src/context/ChatContext';
 import { separateBySender, getSenders } from '../src/utils/chat';
 import {
@@ -16,7 +19,6 @@ import {
 import { Contacts } from '../src/views/chat/Contacts';
 import { ChatBox } from '../src/views/chat/ChatBox';
 import { ChatStart } from '../src/views/chat/ChatStart';
-import { useStatusState } from '../src/context/StatusContext';
 import { Text } from '../src/components/typography/Styled';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ChatCard } from '../src/views/chat/Chat.styled';
@@ -29,14 +31,44 @@ const ChatLayout = styled.div`
     withHeight && 'height: 600px'}
 `;
 
+type State = {
+  user: string;
+  showContacts: boolean;
+};
+
+type Action =
+  | {
+      type: 'setUserAndHide' | 'setUser';
+      user: string;
+    }
+  | { type: 'toggleShow' };
+
+const initialState: State = { user: '', showContacts: false };
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'setUser':
+      return { ...state, user: action.user };
+    case 'setUserAndHide':
+      return { user: action.user, showContacts: false };
+    case 'toggleShow':
+      return { ...state, showContacts: !state.showContacts };
+    default:
+      return state;
+  }
+};
+
 const ChatView = () => {
-  const { minorVersion } = useStatusState();
+  const { minorVersion } = useNodeInfo();
   const { chats, sender, sentChats, initialized } = useChatState();
   const bySender = separateBySender([...chats, ...sentChats]);
-  const senders = getSenders(bySender);
+  const senders = getSenders(bySender) || [];
 
-  const [user, setUser] = React.useState('');
-  const [showContacts, setShowContacts] = React.useState(false);
+  const [state, dispatch] = React.useReducer(reducer, initialState);
+  const { user, showContacts } = state;
+
+  const setUser = (user: string) => dispatch({ type: 'setUserAndHide', user });
+  const setName = (user: string) => dispatch({ type: 'setUser', user });
 
   if (!initialized) {
     return <LoadingCard title={'Chats'} />;
@@ -66,7 +98,7 @@ const ChatView = () => {
           contacts={senders}
           user={user}
           setUser={setUser}
-          setShow={setShowContacts}
+          setName={setName}
         />
       );
     }
@@ -76,11 +108,11 @@ const ChatView = () => {
           contacts={senders}
           user={user}
           setUser={setUser}
-          setShow={setShowContacts}
+          setName={setName}
           hide={true}
         />
         {user === 'New Chat' ? (
-          <ChatStart noTitle={true} />
+          <ChatStart noTitle={true} callback={() => setUser('')} />
         ) : (
           <ChatBox messages={bySender[sender]} alias={user} />
         )}
@@ -99,7 +131,7 @@ const ChatView = () => {
           </ViewSwitch>
           <ViewSwitch>
             <SingleLine>
-              <ColorButton onClick={() => setShowContacts(prev => !prev)}>
+              <ColorButton onClick={() => dispatch({ type: 'toggleShow' })}>
                 <Users size={18} />
               </ColorButton>
               <SubTitle>{user}</SubTitle>
@@ -109,7 +141,7 @@ const ChatView = () => {
       )}
       <ChatCard mobileCardPadding={'0'}>
         {chats.length <= 0 && sentChats.length <= 0 ? (
-          <ChatStart />
+          <ChatStart callback={() => setUser('')} />
         ) : (
           renderChats()
         )}
@@ -126,4 +158,8 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return await getProps(context, [GET_MESSAGES]);
+}

@@ -4,7 +4,6 @@ import { X } from 'react-feather';
 import { useRecoverFundsLazyQuery } from 'src/graphql/queries/__generated__/recoverFunds.generated';
 import { getErrorContent } from '../../../utils/error';
 import { SingleLine, DarkSubTitle } from '../../../components/generic/Styled';
-import { SecureButton } from '../../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../../components/input/Input';
 import { NoWrap } from '../Tools.styled';
@@ -31,16 +30,15 @@ export const RecoverFunds = () => {
         </NoWrap>
         <Input onChange={e => setBackupString(e.target.value)} />
       </SingleLine>
-      <SecureButton
+      <ColorButton
         fullWidth={true}
         withMargin={'8px 0 4px'}
-        callback={recoverFunds}
-        variables={{ backup: backupString }}
+        onClick={() => recoverFunds({ variables: { backup: backupString } })}
         disabled={backupString === ''}
         loading={loading}
       >
         Recover
-      </SecureButton>
+      </ColorButton>
     </>
   );
 

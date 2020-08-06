@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
-import { useAccountState } from 'src/context/AccountContext';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import {
   SubCard,
@@ -33,12 +32,7 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
   openSet,
 }) => {
   const [newNode, newNodeSet] = React.useState<string>('');
-  const { auth } = useAccountState();
-
-  const { loading, data } = useGetPeersQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+  const { loading, data } = useGetPeersQuery();
 
   const [
     getNode,
@@ -48,13 +42,14 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
 
   React.useEffect(() => {
     if (nodeData && nodeData.getNode.node.channel_count) {
-      dispatch({
-        type: 'addNode',
-        node: {
-          alias: nodeData.getNode.node.alias,
-          id: newNode,
-        },
-      });
+      dispatch &&
+        dispatch({
+          type: 'addNode',
+          node: {
+            alias: nodeData.getNode.node.alias,
+            id: newNode,
+          },
+        });
       newNodeSet('');
       resetMutationResult();
     } else if (nodeData && !nodeData.getNode.node.channel_count) {
@@ -68,8 +63,8 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
   }
 
   const peers = data.getPeers.map(p => ({
-    alias: p.partner_node_info.node.alias,
-    id: p.public_key,
+    alias: p?.partner_node_info.node.alias || '',
+    id: p?.public_key || '',
   }));
   const allNodes: RebalanceIdType[] = [
     ...nodes.filter(n => peers.findIndex(p => p.id === n.id) === -1),
@@ -95,18 +90,20 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
                 onClick={() => {
                   if (multi) {
                     if (isSelected) {
-                      dispatch({
-                        type: 'removeNode',
-                        public_key: peer.id,
-                      });
+                      dispatch &&
+                        dispatch({
+                          type: 'removeNode',
+                          public_key: peer.id,
+                        });
                     } else {
-                      dispatch({
-                        type: 'addNode',
-                        node: {
-                          alias: peer.alias,
-                          id: peer.id,
-                        },
-                      });
+                      dispatch &&
+                        dispatch({
+                          type: 'addNode',
+                          node: {
+                            alias: peer.alias,
+                            id: peer.id,
+                          },
+                        });
                     }
                   } else {
                     callback &&
@@ -136,9 +133,7 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
               <ColorButton
                 disabled={newNode === ''}
                 loading={nodeLoading}
-                onClick={() =>
-                  getNode({ variables: { auth, publicKey: newNode } })
-                }
+                onClick={() => getNode({ variables: { publicKey: newNode } })}
               >
                 <Plus size={18} />
               </ColorButton>

@@ -3,8 +3,12 @@ import { differenceInHours, differenceInCalendarDays } from 'date-fns';
 import { groupBy } from 'underscore';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getAuthLnd, getCorrectAuth } from 'server/helpers/helpers';
+
 import { to } from 'server/helpers/async';
+import {
+  GetInvoicesType,
+  GetPaymentsType,
+} from 'server/types/ln-service.types';
 import { reduceInOutArray } from './helpers';
 
 export const getInOut = async (
@@ -14,8 +18,7 @@ export const getInOut = async (
 ) => {
   await requestLimiter(context.ip, 'getInOut');
 
-  const auth = getCorrectAuth(params.auth, context);
-  const lnd = getAuthLnd(auth);
+  const { lnd } = context;
 
   const endDate = new Date();
   let periods = 7;
@@ -35,8 +38,10 @@ export const getInOut = async (
     difference = (date: string) => differenceInHours(endDate, new Date(date));
   }
 
-  const invoiceList = await to(getInvoices({ lnd, limit: 50 }));
-  const paymentList = await to(getPayments({ lnd }));
+  const invoiceList = await to<GetInvoicesType>(
+    getInvoices({ lnd, limit: 50 })
+  );
+  const paymentList = await to<GetPaymentsType>(getPayments({ lnd }));
 
   let invoiceArray = invoiceList.invoices;
   let next = invoiceList.next;
@@ -51,7 +56,9 @@ export const getInOut = async (
     const dif = difference(lastInvoice.created_at);
 
     if (next && dif < periods) {
-      const newInvoices = await to(getInvoices({ lnd, token: next }));
+      const newInvoices = await to<GetInvoicesType>(
+        getInvoices({ lnd, token: next })
+      );
       invoiceArray = [...invoiceArray, ...newInvoices.invoices];
       next = newInvoices.next;
     } else {

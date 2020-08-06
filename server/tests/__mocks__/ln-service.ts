@@ -2,6 +2,14 @@ import * as res from '../lnServiceResponse';
 
 export const authenticatedLndGrpc = jest.fn().mockReturnValue({});
 
+export const probeForRoute = jest
+  .fn()
+  .mockReturnValue(Promise.resolve(res.probeForRouteResponse));
+
+export const getNode = jest
+  .fn()
+  .mockReturnValue(Promise.resolve(res.getNodeResponse));
+
 export const getNetworkInfo = jest
   .fn()
   .mockReturnValue(Promise.resolve(res.getNetworkInfoResponse));

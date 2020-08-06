@@ -10,6 +10,7 @@ interface RateConfigProps {
 
 export const RateConfig: RateConfigProps = {
   getMessages: { max: 10, window: '5s' },
+  nodeInfo: { max: 10, window: '5s' },
 };
 
 const rateLimiter = getGraphQLRateLimiter({

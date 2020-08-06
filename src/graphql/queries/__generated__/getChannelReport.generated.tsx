@@ -1,10 +1,10 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type GetLiquidReportQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetLiquidReportQuery = { __typename?: 'Query' } & {
@@ -17,8 +17,8 @@ export type GetLiquidReportQuery = { __typename?: 'Query' } & {
 };
 
 export const GetLiquidReportDocument = gql`
-  query GetLiquidReport($auth: authType!) {
-    getChannelReport(auth: $auth) {
+  query GetLiquidReport {
+    getChannelReport {
       local
       remote
       maxIn
@@ -40,28 +40,27 @@ export const GetLiquidReportDocument = gql`
  * @example
  * const { data, loading, error } = useGetLiquidReportQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetLiquidReportQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetLiquidReportQuery,
     GetLiquidReportQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetLiquidReportQuery,
-    GetLiquidReportQueryVariables
-  >(GetLiquidReportDocument, baseOptions);
+  return Apollo.useQuery<GetLiquidReportQuery, GetLiquidReportQueryVariables>(
+    GetLiquidReportDocument,
+    baseOptions
+  );
 }
 export function useGetLiquidReportLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetLiquidReportQuery,
     GetLiquidReportQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetLiquidReportQuery,
     GetLiquidReportQueryVariables
   >(GetLiquidReportDocument, baseOptions);
@@ -72,7 +71,7 @@ export type GetLiquidReportQueryHookResult = ReturnType<
 export type GetLiquidReportLazyQueryHookResult = ReturnType<
   typeof useGetLiquidReportLazyQuery
 >;
-export type GetLiquidReportQueryResult = ApolloReactCommon.QueryResult<
+export type GetLiquidReportQueryResult = Apollo.QueryResult<
   GetLiquidReportQuery,
   GetLiquidReportQueryVariables
 >;

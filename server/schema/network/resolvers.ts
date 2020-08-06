@@ -1,7 +1,6 @@
 import { getNetworkInfo } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getLnd } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
 
 interface NetworkInfoProps {
@@ -20,7 +19,7 @@ export const networkResolvers = {
     getNetworkInfo: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'networkInfo');
 
-      const lnd = getLnd(params.auth, context);
+      const { lnd } = context;
 
       const info: NetworkInfoProps = await to(getNetworkInfo({ lnd }));
 

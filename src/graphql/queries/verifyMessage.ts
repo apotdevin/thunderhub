@@ -1,11 +1,7 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const VERIFY_MESSAGE = gql`
-  query VerifyMessage(
-    $auth: authType!
-    $message: String!
-    $signature: String!
-  ) {
-    verifyMessage(auth: $auth, message: $message, signature: $signature)
+  query VerifyMessage($message: String!, $signature: String!) {
+    verifyMessage(message: $message, signature: $signature)
   }
 `;

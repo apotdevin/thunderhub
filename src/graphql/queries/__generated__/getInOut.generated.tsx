@@ -1,10 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type GetInOutQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   time?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
@@ -18,8 +17,8 @@ export type GetInOutQuery = { __typename?: 'Query' } & {
 };
 
 export const GetInOutDocument = gql`
-  query GetInOut($auth: authType!, $time: String) {
-    getInOut(auth: $auth, time: $time) {
+  query GetInOut($time: String) {
+    getInOut(time: $time) {
       invoices
       payments
       confirmedInvoices
@@ -40,29 +39,25 @@ export const GetInOutDocument = gql`
  * @example
  * const { data, loading, error } = useGetInOutQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      time: // value for 'time'
  *   },
  * });
  */
 export function useGetInOutQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetInOutQuery,
-    GetInOutQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<GetInOutQuery, GetInOutQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetInOutQuery, GetInOutQueryVariables>(
+  return Apollo.useQuery<GetInOutQuery, GetInOutQueryVariables>(
     GetInOutDocument,
     baseOptions
   );
 }
 export function useGetInOutLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetInOutQuery,
     GetInOutQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<GetInOutQuery, GetInOutQueryVariables>(
+  return Apollo.useLazyQuery<GetInOutQuery, GetInOutQueryVariables>(
     GetInOutDocument,
     baseOptions
   );
@@ -71,7 +66,7 @@ export type GetInOutQueryHookResult = ReturnType<typeof useGetInOutQuery>;
 export type GetInOutLazyQueryHookResult = ReturnType<
   typeof useGetInOutLazyQuery
 >;
-export type GetInOutQueryResult = ApolloReactCommon.QueryResult<
+export type GetInOutQueryResult = Apollo.QueryResult<
   GetInOutQuery,
   GetInOutQueryVariables
 >;

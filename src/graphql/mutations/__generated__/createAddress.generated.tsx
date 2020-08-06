@@ -1,11 +1,10 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type CreateAddressMutationVariables = Types.Exact<{
   nested?: Types.Maybe<Types.Scalars['Boolean']>;
-  auth: Types.AuthType;
 }>;
 
 export type CreateAddressMutation = { __typename?: 'Mutation' } & Pick<
@@ -14,11 +13,11 @@ export type CreateAddressMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export const CreateAddressDocument = gql`
-  mutation CreateAddress($nested: Boolean, $auth: authType!) {
-    createAddress(nested: $nested, auth: $auth)
+  mutation CreateAddress($nested: Boolean) {
+    createAddress(nested: $nested)
   }
 `;
-export type CreateAddressMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateAddressMutationFn = Apollo.MutationFunction<
   CreateAddressMutation,
   CreateAddressMutationVariables
 >;
@@ -37,17 +36,16 @@ export type CreateAddressMutationFn = ApolloReactCommon.MutationFunction<
  * const [createAddressMutation, { data, loading, error }] = useCreateAddressMutation({
  *   variables: {
  *      nested: // value for 'nested'
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useCreateAddressMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     CreateAddressMutation,
     CreateAddressMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     CreateAddressMutation,
     CreateAddressMutationVariables
   >(CreateAddressDocument, baseOptions);
@@ -55,10 +53,10 @@ export function useCreateAddressMutation(
 export type CreateAddressMutationHookResult = ReturnType<
   typeof useCreateAddressMutation
 >;
-export type CreateAddressMutationResult = ApolloReactCommon.MutationResult<
+export type CreateAddressMutationResult = Apollo.MutationResult<
   CreateAddressMutation
 >;
-export type CreateAddressMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateAddressMutationOptions = Apollo.BaseMutationOptions<
   CreateAddressMutation,
   CreateAddressMutationVariables
 >;

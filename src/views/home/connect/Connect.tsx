@@ -3,10 +3,10 @@ import { toast } from 'react-toastify';
 import { Radio, Copy, X } from 'react-feather';
 import styled from 'styled-components';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetCanConnectInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { renderLine } from 'src/components/generic/helpers';
+import { NodeInfoType } from 'src/graphql/types';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import {
@@ -63,12 +63,9 @@ const ButtonRow = styled.div`
 `;
 
 export const ConnectCard = () => {
-  const { auth } = useAccountState();
   const [open, openSet] = useState<boolean>(false);
 
   const { loading, data } = useGetCanConnectInfoQuery({
-    skip: !auth,
-    variables: { auth },
     onError: error => toast.error(getErrorContent(error)),
   });
 
@@ -76,7 +73,7 @@ export const ConnectCard = () => {
     return <LoadingCard title={'Connect'} />;
   }
 
-  const { public_key, uris } = data.getNodeInfo;
+  const { public_key, uris } = data.getNodeInfo as NodeInfoType;
 
   const onionAddress = uris.find((uri: string) => uri.indexOf('onion') >= 0);
   const normalAddress = uris.find((uri: string) => uri.indexOf('onion') < 0);

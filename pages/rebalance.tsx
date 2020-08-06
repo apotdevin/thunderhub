@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
 import { SimpleBalance } from 'src/views/balance/SimpleBalance';
 import {
   CardWithTitle,
@@ -11,10 +10,13 @@ import {
 } from 'src/components/generic/Styled';
 import { Text } from 'src/components/typography/Styled';
 import { AdvancedBalance } from 'src/views/balance/AdvancedBalance';
-import { useStatusState } from '../src/context/StatusContext';
+import { NextPageContext } from 'next';
+import { getProps } from 'src/utils/ssr';
+import { GET_CHANNELS } from 'src/graphql/queries/getChannels';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 
 const BalanceView = () => {
-  const { minorVersion } = useStatusState();
+  const { minorVersion } = useNodeInfo();
   const [advancedType, advancedTypeSet] = useState(false);
 
   if (minorVersion < 9) {
@@ -64,4 +66,8 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return await getProps(context, [GET_CHANNELS]);
+}

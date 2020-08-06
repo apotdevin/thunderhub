@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useDecodeRequestQuery } from 'src/graphql/queries/__generated__/decodeRequest.generated';
 import {
   Separation,
@@ -25,15 +24,13 @@ interface DecodedProps {
 }
 
 export const Decoded = ({ request, setShow }: DecodedProps) => {
-  const { auth } = useAccountState();
-
   const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
   const { data, loading } = useDecodeRequestQuery({
     fetchPolicy: 'network-only',
-    variables: { auth, request },
+    variables: { request },
     onError: error => {
       setShow(false);
       toast.error(getErrorContent(error));

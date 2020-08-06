@@ -1,39 +1,45 @@
-import {
-  getNode as getLnNode,
-  getWalletInfo,
-  getClosedChannels,
-} from 'ln-service';
+import { getNode, getWalletInfo, getClosedChannels } from 'ln-service';
 import { to, toWithError } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getAuthLnd, getCorrectAuth, getLnd } from '../../helpers/helpers';
+import {
+  ClosedChannelsType,
+  LndObject,
+  GetWalletInfoType,
+  GetNodeType,
+} from 'server/types/ln-service.types';
 import { ContextType } from '../../types/apiTypes';
 import { logger } from '../../helpers/logger';
 
 const errorNode = { alias: 'Node not found' };
+
+type NodeParent = {
+  lnd: LndObject;
+  publicKey: string;
+  withChannels?: boolean;
+};
 
 export const nodeResolvers = {
   Query: {
     getNode: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'closedChannels');
 
-      const { auth, withoutChannels = true, publicKey } = params;
-      const lnd = getLnd(auth, context);
+      const { withoutChannels = true, publicKey } = params;
+      const { lnd } = context;
 
       return { lnd, publicKey, withChannels: !withoutChannels };
     },
     getNodeInfo: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'nodeInfo');
 
-      const auth = getCorrectAuth(params.auth, context);
-      const lnd = getAuthLnd(auth);
+      const { lnd } = context;
 
-      const info = await to(
+      const info = await to<GetWalletInfoType>(
         getWalletInfo({
           lnd,
         })
       );
 
-      const closedChannels = await to(
+      const closedChannels: ClosedChannelsType = await to(
         getClosedChannels({
           lnd,
         })
@@ -46,7 +52,7 @@ export const nodeResolvers = {
     },
   },
   Node: {
-    node: async parent => {
+    node: async (parent: NodeParent) => {
       const { lnd, withChannels, publicKey } = parent;
 
       if (!lnd) {
@@ -60,19 +66,19 @@ export const nodeResolvers = {
       }
 
       const [info, error] = await toWithError(
-        getLnNode({
+        getNode({
           lnd,
           is_omitting_channels: !withChannels,
           public_key: publicKey,
         })
       );
 
-      if (error) {
+      if (error || !info) {
         logger.debug(`Error getting node with key: ${publicKey}`);
         return errorNode;
       }
 
-      return { ...info, public_key: publicKey };
+      return { ...(info as GetNodeType), public_key: publicKey };
     },
   },
 };

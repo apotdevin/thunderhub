@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetBitcoinFeesQueryVariables = Types.Exact<{
   [key: string]: never;
@@ -42,26 +42,26 @@ export const GetBitcoinFeesDocument = gql`
  * });
  */
 export function useGetBitcoinFeesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetBitcoinFeesQuery,
     GetBitcoinFeesQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetBitcoinFeesQuery,
-    GetBitcoinFeesQueryVariables
-  >(GetBitcoinFeesDocument, baseOptions);
+  return Apollo.useQuery<GetBitcoinFeesQuery, GetBitcoinFeesQueryVariables>(
+    GetBitcoinFeesDocument,
+    baseOptions
+  );
 }
 export function useGetBitcoinFeesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetBitcoinFeesQuery,
     GetBitcoinFeesQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetBitcoinFeesQuery,
-    GetBitcoinFeesQueryVariables
-  >(GetBitcoinFeesDocument, baseOptions);
+  return Apollo.useLazyQuery<GetBitcoinFeesQuery, GetBitcoinFeesQueryVariables>(
+    GetBitcoinFeesDocument,
+    baseOptions
+  );
 }
 export type GetBitcoinFeesQueryHookResult = ReturnType<
   typeof useGetBitcoinFeesQuery
@@ -69,7 +69,7 @@ export type GetBitcoinFeesQueryHookResult = ReturnType<
 export type GetBitcoinFeesLazyQueryHookResult = ReturnType<
   typeof useGetBitcoinFeesLazyQuery
 >;
-export type GetBitcoinFeesQueryResult = ApolloReactCommon.QueryResult<
+export type GetBitcoinFeesQueryResult = Apollo.QueryResult<
   GetBitcoinFeesQuery,
   GetBitcoinFeesQueryVariables
 >;

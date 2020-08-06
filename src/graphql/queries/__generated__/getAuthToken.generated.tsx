@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetAuthTokenQueryVariables = Types.Exact<{
   cookie?: Types.Maybe<Types.Scalars['String']>;
@@ -35,26 +35,26 @@ export const GetAuthTokenDocument = gql`
  * });
  */
 export function useGetAuthTokenQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetAuthTokenQuery,
     GetAuthTokenQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetAuthTokenQuery,
-    GetAuthTokenQueryVariables
-  >(GetAuthTokenDocument, baseOptions);
+  return Apollo.useQuery<GetAuthTokenQuery, GetAuthTokenQueryVariables>(
+    GetAuthTokenDocument,
+    baseOptions
+  );
 }
 export function useGetAuthTokenLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetAuthTokenQuery,
     GetAuthTokenQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetAuthTokenQuery,
-    GetAuthTokenQueryVariables
-  >(GetAuthTokenDocument, baseOptions);
+  return Apollo.useLazyQuery<GetAuthTokenQuery, GetAuthTokenQueryVariables>(
+    GetAuthTokenDocument,
+    baseOptions
+  );
 }
 export type GetAuthTokenQueryHookResult = ReturnType<
   typeof useGetAuthTokenQuery
@@ -62,7 +62,7 @@ export type GetAuthTokenQueryHookResult = ReturnType<
 export type GetAuthTokenLazyQueryHookResult = ReturnType<
   typeof useGetAuthTokenLazyQuery
 >;
-export type GetAuthTokenQueryResult = ApolloReactCommon.QueryResult<
+export type GetAuthTokenQueryResult = Apollo.QueryResult<
   GetAuthTokenQuery,
   GetAuthTokenQueryVariables
 >;

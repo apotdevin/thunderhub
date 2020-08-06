@@ -78,7 +78,7 @@ export const Separation = styled.div<SeparationProps>`
 `;
 
 interface SubCardProps {
-  color?: string;
+  subColor?: string | null;
   padding?: string;
   withMargin?: string;
   noCard?: boolean;

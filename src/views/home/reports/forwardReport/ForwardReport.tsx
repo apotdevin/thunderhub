@@ -8,7 +8,6 @@ import {
   VictoryTooltip,
 } from 'victory';
 import { toast } from 'react-toastify';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetForwardReportQuery } from 'src/graphql/queries/__generated__/getForwardReport.generated';
 import { renderLine } from 'src/components/generic/helpers';
 import {
@@ -23,9 +22,19 @@ import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
 import { CardContent } from '.';
 
+export type ReportDuration =
+  | 'day'
+  | 'week'
+  | 'month'
+  | 'quarter_year'
+  | 'half_year'
+  | 'year';
+export type ReportType = 'fee' | 'tokens' | 'amount';
+export type FlowReportType = 'tokens' | 'amount';
+
 interface Props {
-  isTime: string;
-  isType: string;
+  isTime: ReportDuration;
+  isType: ReportType;
 }
 
 const timeMap: { [key: string]: string } = {
@@ -42,11 +51,8 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  const { auth } = useAccountState();
-
   const { data, loading } = useGetForwardReportQuery({
-    skip: !auth,
-    variables: { time: isTime, auth },
+    variables: { time: isTime },
     onError: error => toast.error(getErrorContent(error)),
   });
 
@@ -71,7 +77,10 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
     barWidth = 1;
   }
 
-  const parsedData: {}[] = JSON.parse(data.getForwardReport || '[]');
+  // Should find a way to avoid JSON.parse
+  const parsedData: Array<{ [key in ReportType]: number }> = JSON.parse(
+    data.getForwardReport || '[]'
+  );
 
   const getLabelString = (value: number) => {
     if (isType === 'amount') {
@@ -81,7 +90,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
   };
 
   const total = getLabelString(
-    parsedData.map(x => x[isType]).reduce((a: number, c: number) => a + c, 0)
+    parsedData.map(x => x[isType]).reduce((a, c) => a + c, 0)
   );
 
   const renderContent = () => {

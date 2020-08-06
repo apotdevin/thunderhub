@@ -7,9 +7,9 @@ type State = {
 };
 
 type ChangeState = {
-  volumeScore?: number;
-  timeScore?: number;
-  feeScore?: number;
+  volumeScore?: number | undefined | null;
+  timeScore?: number | undefined | null;
+  feeScore?: number | undefined | null;
 };
 
 type ActionType = {
@@ -37,7 +37,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const StatsProvider = ({ children }) => {
+const StatsProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (

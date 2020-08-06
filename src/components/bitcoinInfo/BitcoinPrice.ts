@@ -3,7 +3,7 @@ import { useGetBitcoinPriceQuery } from 'src/graphql/queries/__generated__/getBi
 import { usePriceDispatch } from '../../context/PriceContext';
 import { useConfigState } from '../../context/ConfigContext';
 
-export const BitcoinPrice = () => {
+export const BitcoinPrice: React.FC = () => {
   const { fetchPrices } = useConfigState();
   const setPrices = usePriceDispatch();
   const { loading, data, stopPolling } = useGetBitcoinPriceQuery({

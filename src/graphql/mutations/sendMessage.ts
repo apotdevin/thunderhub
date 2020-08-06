@@ -1,8 +1,7 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const SEND_MESSAGE = gql`
   mutation SendMessage(
-    $auth: authType!
     $publicKey: String!
     $message: String!
     $messageType: String
@@ -10,7 +9,6 @@ export const SEND_MESSAGE = gql`
     $maxFee: Int
   ) {
     sendMessage(
-      auth: $auth
       publicKey: $publicKey
       message: $message
       messageType: $messageType

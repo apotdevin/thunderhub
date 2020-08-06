@@ -15,7 +15,7 @@ export const githubResolvers = {
 
       const [response, error] = await toWithError(fetch(appUrls.github));
 
-      if (error) {
+      if (error || !response) {
         logger.debug('Unable to get latest github version');
         throw new Error('NoGithubVersion');
       }

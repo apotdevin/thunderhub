@@ -1,16 +1,8 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const GET_MESSAGES = gql`
-  query GetMessages(
-    $auth: authType!
-    $initialize: Boolean
-    $lastMessage: String
-  ) {
-    getMessages(
-      auth: $auth
-      initialize: $initialize
-      lastMessage: $lastMessage
-    ) {
+  query GetMessages($initialize: Boolean, $lastMessage: String) {
+    getMessages(initialize: $initialize, lastMessage: $lastMessage) {
       token
       messages {
         date

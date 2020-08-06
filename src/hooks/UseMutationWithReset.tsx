@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 export const useMutationResultWithReset = <T extends {}>(
-  data: T | undefined
-): [T | undefined, () => void] => {
+  data: T | undefined | null
+): [T | undefined | null, () => void] => {
   const current = React.useRef(data);
   const latest = React.useRef(data);
   const [, setState] = React.useState(0);

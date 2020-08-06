@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { BaseNodesType } from 'src/graphql/types';
 import { useGetNodeQuery } from 'src/graphql/queries/__generated__/getNode.generated';
-import { useAccountState } from 'src/context/AccountContext';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import {
   DarkSubTitle,
@@ -11,9 +10,9 @@ import {
 import { renderLine, getNodeLink } from 'src/components/generic/helpers';
 import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
 import { useAddPeerMutation } from 'src/graphql/mutations/__generated__/addPeer.generated';
-import { SecureButton } from 'src/components/buttons/secureButton/SecureButton';
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
+import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { OpenChannelCard } from './OpenChannel';
 
 type OpenProps = {
@@ -23,20 +22,17 @@ type OpenProps = {
 
 export const OpenRecommended = ({ partner, setOpenCard }: OpenProps) => {
   const [alreadyConnected, setConnected] = React.useState(false);
-  const { auth } = useAccountState();
 
   const { data, loading } = useGetNodeQuery({
-    variables: { auth, publicKey: partner.public_key },
+    variables: { publicKey: partner.public_key || '' },
   });
 
-  const { data: peerData, loading: peerLoading } = useGetPeersQuery({
-    variables: { auth },
-  });
+  const { data: peerData, loading: peerLoading } = useGetPeersQuery();
 
   React.useEffect(() => {
     if (!peerLoading && peerData && peerData.getPeers) {
       const isPeer =
-        peerData.getPeers.map(p => p.public_key).indexOf(partner.public_key) >=
+        peerData.getPeers.map(p => p?.public_key).indexOf(partner.public_key) >=
         0;
 
       if (isPeer) {
@@ -66,16 +62,22 @@ export const OpenRecommended = ({ partner, setOpenCard }: OpenProps) => {
         {renderLine('Node Public Key', getNodeLink(partner.public_key))}
         <Separation />
         <Sub4Title>You need to connect first to this node.</Sub4Title>
-        <SecureButton
+        <ColorButton
           withMargin={'16px 0 0'}
-          callback={addPeer}
+          onClick={() =>
+            addPeer({
+              variables: {
+                publicKey: partner.public_key,
+                socket: partner.socket,
+              },
+            })
+          }
           loading={addLoading}
           disabled={addLoading}
-          variables={{ publicKey: partner.public_key, socket: partner.socket }}
           fullWidth={true}
         >
           Connect
-        </SecureButton>
+        </ColorButton>
       </>
     );
   }

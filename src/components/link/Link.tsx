@@ -2,7 +2,6 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeSet } from 'styled-theming';
 import RouterLink from 'next/link';
-import getConfig from 'next/config';
 import { textColor, linkHighlight } from '../../styles/Themes';
 
 interface StyledProps {
@@ -51,9 +50,6 @@ interface LinkProps {
   newTab?: boolean;
 }
 
-const { publicRuntimeConfig } = getConfig();
-const { basePath } = publicRuntimeConfig;
-
 export const Link: React.FC<LinkProps> = ({
   children,
   href,
@@ -83,14 +79,15 @@ export const Link: React.FC<LinkProps> = ({
     );
   }
 
-  const linkProps = {
-    href: to,
-    ...(basePath !== '' ? { as: `${basePath}${to}` } : {}),
-  };
+  if (to) {
+    const linkProps = { href: to };
 
-  return (
-    <RouterLink {...linkProps}>
-      <CorrectLink {...props}>{children}</CorrectLink>
-    </RouterLink>
-  );
+    return (
+      <RouterLink {...linkProps}>
+        <CorrectLink {...props}>{children}</CorrectLink>
+      </RouterLink>
+    );
+  }
+
+  return null;
 };

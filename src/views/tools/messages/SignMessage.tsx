@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { X, Copy } from 'react-feather';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { useAccountState } from 'src/context/AccountContext';
 import { useSignMessageLazyQuery } from 'src/graphql/queries/__generated__/signMessage.generated';
 import { Input } from '../../../components/input/Input';
-import { SecureButton } from '../../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import {
   SingleLine,
@@ -13,7 +11,6 @@ import {
   Separation,
 } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
-import { AdminSwitch } from '../../../components/adminSwitch/AdminSwitch';
 import { Column, WrapRequest } from '../Tools.styled';
 import { NoWrap } from './Messages';
 
@@ -21,8 +18,6 @@ export const SignMessage = () => {
   const [message, setMessage] = useState<string>('');
   const [isPasting, setIsPasting] = useState<boolean>(false);
   const [signed, setSigned] = useState<string>('');
-
-  const { auth } = useAccountState();
 
   const [signMessage, { data, loading }] = useSignMessageLazyQuery({
     onError: error => toast.error(getErrorContent(error)),
@@ -45,16 +40,15 @@ export const SignMessage = () => {
           onChange={e => setMessage(e.target.value)}
         />
       </SingleLine>
-      <SecureButton
-        callback={signMessage}
-        variables={{ auth, message }}
+      <ColorButton
+        onClick={() => signMessage({ variables: { message } })}
         fullWidth={true}
         withMargin={'8px 0 4px'}
         disabled={message === ''}
         loading={loading}
       >
         Sign
-      </SecureButton>
+      </ColorButton>
       <Separation />
     </>
   );
@@ -75,7 +69,7 @@ export const SignMessage = () => {
   );
 
   return (
-    <AdminSwitch>
+    <>
       <SingleLine>
         <DarkSubTitle>Sign Message</DarkSubTitle>
         <ColorButton
@@ -89,6 +83,6 @@ export const SignMessage = () => {
       </SingleLine>
       {isPasting && renderInput()}
       {signed !== '' && isPasting && renderMessage()}
-    </AdminSwitch>
+    </>
   );
 };

@@ -1,10 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type CircularRebalanceMutationVariables = Types.Exact<{
-  auth: Types.AuthType;
   route: Types.Scalars['String'];
 }>;
 
@@ -14,11 +13,11 @@ export type CircularRebalanceMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export const CircularRebalanceDocument = gql`
-  mutation CircularRebalance($auth: authType!, $route: String!) {
-    circularRebalance(auth: $auth, route: $route)
+  mutation CircularRebalance($route: String!) {
+    circularRebalance(route: $route)
   }
 `;
-export type CircularRebalanceMutationFn = ApolloReactCommon.MutationFunction<
+export type CircularRebalanceMutationFn = Apollo.MutationFunction<
   CircularRebalanceMutation,
   CircularRebalanceMutationVariables
 >;
@@ -36,18 +35,17 @@ export type CircularRebalanceMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [circularRebalanceMutation, { data, loading, error }] = useCircularRebalanceMutation({
  *   variables: {
- *      auth: // value for 'auth'
  *      route: // value for 'route'
  *   },
  * });
  */
 export function useCircularRebalanceMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     CircularRebalanceMutation,
     CircularRebalanceMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     CircularRebalanceMutation,
     CircularRebalanceMutationVariables
   >(CircularRebalanceDocument, baseOptions);
@@ -55,10 +53,10 @@ export function useCircularRebalanceMutation(
 export type CircularRebalanceMutationHookResult = ReturnType<
   typeof useCircularRebalanceMutation
 >;
-export type CircularRebalanceMutationResult = ApolloReactCommon.MutationResult<
+export type CircularRebalanceMutationResult = Apollo.MutationResult<
   CircularRebalanceMutation
 >;
-export type CircularRebalanceMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CircularRebalanceMutationOptions = Apollo.BaseMutationOptions<
   CircularRebalanceMutation,
   CircularRebalanceMutationVariables
 >;

@@ -11,7 +11,6 @@ describe('Account Resolvers', () => {
 
       const res = await query({
         query: GET_SERVER_ACCOUNTS,
-        variables: { auth: { type: 'test' } },
       });
 
       expect(res.errors).toBe(undefined);
@@ -22,7 +21,6 @@ describe('Account Resolvers', () => {
 
       const res = await query({
         query: GET_SERVER_ACCOUNTS,
-        variables: { auth: { type: 'test' } },
       });
 
       expect(res.errors).toBe(undefined);
@@ -33,7 +31,6 @@ describe('Account Resolvers', () => {
 
       const res = await query({
         query: GET_SERVER_ACCOUNTS,
-        variables: { auth: { type: 'test' } },
       });
 
       expect(res.errors).toBe(undefined);

@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const GET_WALLET_INFO = gql`
-  query GetWalletInfo($auth: authType!) {
-    getWalletInfo(auth: $auth) {
+  query GetWalletInfo {
+    getWalletInfo {
       build_tags
       commit_hash
       is_autopilotrpc_enabled

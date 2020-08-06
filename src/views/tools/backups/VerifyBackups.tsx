@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { X } from 'react-feather';
-import { useAccountState } from 'src/context/AccountContext';
 import { useVerifyBackupsLazyQuery } from 'src/graphql/queries/__generated__/verifyBackups.generated';
 import { getErrorContent } from '../../../utils/error';
 import {
@@ -16,8 +15,6 @@ import { NoWrap } from '../Tools.styled';
 export const VerifyBackups = () => {
   const [backupString, setBackupString] = useState<string>('');
   const [isPasting, setIsPasting] = useState<boolean>(false);
-
-  const { auth } = useAccountState();
 
   const [verifyBackup, { data, loading }] = useVerifyBackupsLazyQuery({
     onError: error => toast.error(getErrorContent(error)),
@@ -50,7 +47,7 @@ export const VerifyBackups = () => {
         loading={loading}
         onClick={() =>
           verifyBackup({
-            variables: { auth, backup: backupString },
+            variables: { backup: backupString },
           })
         }
       >

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlertTriangle } from 'react-feather';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { useCloseChannelMutation } from 'src/graphql/mutations/__generated__/closeChannel.generated';
+import { useBitcoinFees } from 'src/hooks/UseBitcoinFees';
+import { useConfigState } from 'src/context/ConfigContext';
 import {
   Separation,
   SingleLine,
@@ -10,14 +12,12 @@ import {
   Sub4Title,
 } from '../../generic/Styled';
 import { getErrorContent } from '../../../utils/error';
-import { SecureButton } from '../../buttons/secureButton/SecureButton';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
 import {
   MultiButton,
   SingleButton,
 } from '../../buttons/multiButton/MultiButton';
 import { Input } from '../../input/Input';
-import { useBitcoinState } from '../../../context/BitcoinContext';
 
 interface CloseChannelProps {
   setModalOpen: (status: boolean) => void;
@@ -41,19 +41,17 @@ export const CloseChannel = ({
   channelId,
   channelName,
 }: CloseChannelProps) => {
-  const { fast, halfHour, hour, dontShow } = useBitcoinState();
+  const { fetchFees } = useConfigState();
+  const { fast, halfHour, hour, dontShow } = useBitcoinFees();
 
   const [isForce, setIsForce] = useState<boolean>(false);
-  const [isType, setIsType] = useState<string>(dontShow ? 'fee' : 'none');
+  const [isType, setIsType] = useState<string>(
+    !fetchFees || dontShow ? 'fee' : 'none'
+  );
   const [amount, setAmount] = useState<number>(0);
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
 
-  const [closeChannel] = useCloseChannelMutation({
-    onCompleted: data => {
-      if (data.closeChannel) {
-        toast.success('Channel Closed');
-      }
-    },
+  const [closeChannel, { loading, data }] = useCloseChannelMutation({
     onError: error => toast.error(getErrorContent(error)),
     refetchQueries: [
       'GetChannels',
@@ -62,6 +60,13 @@ export const CloseChannel = ({
       'GetChannelAmountInfo',
     ],
   });
+
+  useEffect(() => {
+    if (data && data.closeChannel) {
+      toast.success('Channel Closed');
+      setModalOpen(false);
+    }
+  }, [data, setModalOpen]);
 
   const handleOnlyClose = () => setModalOpen(false);
 
@@ -79,24 +84,34 @@ export const CloseChannel = ({
     <WarningCard>
       <AlertTriangle size={32} color={'red'} />
       <SubTitle>Are you sure you want to close the channel?</SubTitle>
-      <SecureButton
-        callback={closeChannel}
-        variables={{
-          id: channelId,
-          forceClose: isForce,
-          ...(isType !== 'none'
-            ? isType === 'fee'
-              ? { tokens: amount }
-              : { target: amount }
-            : {}),
-        }}
+      <ColorButton
+        fullWidth={true}
+        disabled={loading}
+        loading={loading}
+        withMargin={'16px 4px 4px'}
         color={'red'}
-        disabled={false}
-        withMargin={'4px'}
+        onClick={() =>
+          closeChannel({
+            variables: {
+              id: channelId,
+              forceClose: isForce,
+              ...(isType !== 'none'
+                ? isType === 'fee'
+                  ? { tokens: amount }
+                  : { target: amount }
+                : {}),
+            },
+          })
+        }
       >
         {`Close Channel [ ${channelName}/${channelId} ]`}
-      </SecureButton>
-      <ColorButton withMargin={'4px'} onClick={handleOnlyClose}>
+      </ColorButton>
+      <ColorButton
+        fullWidth={true}
+        disabled={loading}
+        withMargin={'4px'}
+        onClick={handleOnlyClose}
+      >
         Cancel
       </ColorButton>
     </WarningCard>
@@ -113,7 +128,8 @@ export const CloseChannel = ({
         <Sub4Title>Fee:</Sub4Title>
       </SingleLine>
       <MultiButton>
-        {!dontShow &&
+        {fetchFees &&
+          !dontShow &&
           renderButton(() => setIsType('none'), 'Auto', isType === 'none')}
         {renderButton(() => setIsType('fee'), 'Fee', isType === 'fee')}
         {renderButton(() => setIsType('target'), 'Target', isType === 'target')}

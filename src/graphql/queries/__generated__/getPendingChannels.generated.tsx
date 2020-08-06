@@ -1,10 +1,10 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type GetPendingChannelsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetPendingChannelsQuery = { __typename?: 'Query' } & {
@@ -28,20 +28,12 @@ export type GetPendingChannelsQuery = { __typename?: 'Query' } & {
           | 'transaction_id'
           | 'transaction_vout'
         > & {
-            partner_node_info?: Types.Maybe<
-              { __typename?: 'Node' } & {
-                node?: Types.Maybe<
-                  { __typename?: 'nodeType' } & Pick<
-                    Types.NodeType,
-                    | 'alias'
-                    | 'capacity'
-                    | 'channel_count'
-                    | 'color'
-                    | 'updated_at'
-                  >
-                >;
-              }
-            >;
+            partner_node_info: { __typename?: 'Node' } & {
+              node: { __typename?: 'nodeType' } & Pick<
+                Types.NodeType,
+                'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
+              >;
+            };
           }
       >
     >
@@ -49,8 +41,8 @@ export type GetPendingChannelsQuery = { __typename?: 'Query' } & {
 };
 
 export const GetPendingChannelsDocument = gql`
-  query GetPendingChannels($auth: authType!) {
-    getPendingChannels(auth: $auth) {
+  query GetPendingChannels {
+    getPendingChannels {
       close_transaction_id
       is_active
       is_closing
@@ -90,28 +82,27 @@ export const GetPendingChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetPendingChannelsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetPendingChannelsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetPendingChannelsQuery,
     GetPendingChannelsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetPendingChannelsQuery,
     GetPendingChannelsQueryVariables
   >(GetPendingChannelsDocument, baseOptions);
 }
 export function useGetPendingChannelsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetPendingChannelsQuery,
     GetPendingChannelsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetPendingChannelsQuery,
     GetPendingChannelsQueryVariables
   >(GetPendingChannelsDocument, baseOptions);
@@ -122,7 +113,7 @@ export type GetPendingChannelsQueryHookResult = ReturnType<
 export type GetPendingChannelsLazyQueryHookResult = ReturnType<
   typeof useGetPendingChannelsLazyQuery
 >;
-export type GetPendingChannelsQueryResult = ApolloReactCommon.QueryResult<
+export type GetPendingChannelsQueryResult = Apollo.QueryResult<
   GetPendingChannelsQuery,
   GetPendingChannelsQueryVariables
 >;

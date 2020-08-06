@@ -10,7 +10,6 @@ import {
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
-import { SecureButton } from '../../../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import {
   MultiButton,
@@ -38,8 +37,11 @@ const WrapRequest = styled.div`
 `;
 
 const QRWrapper = styled.div`
-  width: 200px;
+  width: 280px;
+  height: 280px;
   margin: 16px;
+  background: white;
+  padding: 16px;
 `;
 
 const Column = styled.div`
@@ -77,7 +79,7 @@ export const ReceiveOnChainCard = () => {
       {data && data.createAddress ? (
         <Responsive>
           <QRWrapper>
-            <QRCode value={data.createAddress} renderAs={'svg'} size={200} />
+            <QRCode value={data.createAddress} renderAs={'svg'} size={248} />
           </QRWrapper>
           <Column>
             <WrapRequest>{data.createAddress}</WrapRequest>
@@ -115,9 +117,8 @@ export const ReceiveOnChainCard = () => {
               </SingleButton>
             </MultiButton>
           </ButtonRow>
-          <SecureButton
-            callback={createAddress}
-            variables={{ nested }}
+          <ColorButton
+            onClick={() => createAddress({ variables: { nested } })}
             disabled={received}
             withMargin={'0 0 0 16px'}
             mobileMargin={'16px 0 0'}
@@ -126,7 +127,7 @@ export const ReceiveOnChainCard = () => {
             mobileFullWidth={true}
           >
             Create Address
-          </SecureButton>
+          </ColorButton>
         </ResponsiveLine>
       )}
     </>

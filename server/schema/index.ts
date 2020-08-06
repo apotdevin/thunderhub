@@ -1,13 +1,11 @@
 import merge from 'lodash.merge';
-import { makeExecutableSchema } from 'apollo-server-micro';
+import { makeExecutableSchema } from 'graphql-tools';
 import { nodeTypes } from './node/types';
 import { nodeResolvers } from './node/resolvers';
 import { authResolvers } from './auth/resolvers';
 import { generalTypes, queryTypes, mutationTypes } from './types';
 import { accountResolvers } from './account/resolvers';
 import { accountTypes } from './account/types';
-import { hodlTypes } from './hodlhodl/types';
-import { hodlResolvers } from './hodlhodl/resolvers';
 import { lnpayResolvers } from './lnpay/resolvers';
 import { lnpayTypes } from './lnpay/types';
 import { bitcoinResolvers } from './bitcoin/resolvers';
@@ -49,7 +47,6 @@ const typeDefs = [
   mutationTypes,
   nodeTypes,
   accountTypes,
-  hodlTypes,
   lnpayTypes,
   bitcoinTypes,
   peerTypes,
@@ -72,7 +69,6 @@ const resolvers = merge(
   nodeResolvers,
   authResolvers,
   accountResolvers,
-  hodlResolvers,
   lnpayResolvers,
   bitcoinResolvers,
   peerResolvers,
@@ -93,4 +89,4 @@ const resolvers = merge(
   tbaseResolvers
 );
 
-export default makeExecutableSchema({ typeDefs, resolvers });
+export const schema = makeExecutableSchema({ typeDefs, resolvers });

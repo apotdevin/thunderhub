@@ -1,11 +1,14 @@
 import * as React from 'react';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetNodeLazyQuery } from 'src/graphql/queries/__generated__/getNode.generated';
-import { useChatDispatch, useChatState } from '../../context/ChatContext';
+import { useAccount } from 'src/hooks/UseAccount';
+import {
+  useChatDispatch,
+  useChatState,
+  SentChatProps,
+} from '../../context/ChatContext';
 import { SingleLine } from '../../components/generic/Styled';
 import { getMessageDate } from '../../components/generic/helpers';
 import { getSubMessage } from '../../utils/chat';
-import { MessageType } from './Chat.types';
 import {
   ChatContactColumn,
   ChatSubCard,
@@ -17,64 +20,66 @@ export const ContactCard = ({
   contact,
   user,
   setUser,
-  setShow,
+  setName,
 }: {
-  contact: MessageType;
+  contact: SentChatProps;
   user: string;
-  setUser: (active: string) => void;
-  setShow: (active: boolean) => void;
+  setUser: (name: string) => void;
+  setName: (name: string) => void;
 }) => {
   const {
-    alias,
-    sender: contactSender,
-    message,
-    contentType,
-    tokens,
-    isSent,
-    date,
+    alias = '',
+    sender: contactSender = '',
+    message = '',
+    contentType = '',
+    tokens = 0,
+    isSent = false,
+    date = '',
   } = contact;
   const { sender } = useChatState();
   const dispatch = useChatDispatch();
   const [nodeName, setNodeName] = React.useState(alias || '');
 
-  const { auth, account } = useAccountState();
+  const account = useAccount();
+
   const [getInfo, { data, loading }] = useGetNodeLazyQuery({
-    variables: { auth, publicKey: contactSender },
+    variables: { publicKey: contactSender || '' },
   });
 
   React.useEffect(() => {
-    if (alias && contactSender.indexOf(sender) >= 0 && user !== 'New Chat') {
-      setUser(alias);
-    }
     if (!alias) {
       getInfo();
     }
-  }, [contact, sender, alias, contactSender, getInfo, setUser, user]);
+
+    if (alias && contactSender && contactSender.indexOf(sender) >= 0 && !user) {
+      setName(alias);
+    }
+  }, [alias, getInfo, contactSender, setName, sender, user]);
 
   React.useEffect(() => {
-    if (!loading && data && data.getNode) {
-      const alias = data.getNode?.node?.alias;
-      const name =
-        alias && alias !== '' ? alias : contactSender.substring(0, 6);
-      setNodeName(name);
-      if (contactSender.indexOf(sender) >= 0) {
-        setUser(name);
-      }
+    if (loading || !data?.getNode) return;
+
+    const alias = data.getNode?.node?.alias;
+    const name =
+      alias && alias !== '' ? alias : (contactSender || '-').substring(0, 6);
+    setNodeName(name);
+
+    if (!user && contactSender && contactSender.indexOf(sender) >= 0) {
+      setName(name);
     }
-  }, [data, loading, sender, contactSender, setUser]);
+  }, [data, loading, contactSender, sender, setName, user]);
 
   return (
     <ChatSubCard
       onClick={() => {
-        dispatch({
-          type: 'changeActive',
-          sender: contactSender,
-          userId: account.id,
-        });
+        contactSender &&
+          dispatch({
+            type: 'changeActive',
+            sender: contactSender,
+            userId: account?.id || '',
+          });
         setUser(nodeName);
-        setShow(false);
       }}
-      key={contactSender}
     >
       <SingleLine>
         {nodeName}
@@ -90,40 +95,35 @@ export const ContactCard = ({
 interface ContactsProps {
   user: string;
   hide?: boolean;
-  contacts: MessageType[];
-  setUser: (active: string) => void;
-  setShow: (active: boolean) => void;
+  contacts: SentChatProps[];
+  setUser: (name: string) => void;
+  setName: (name: string) => void;
 }
 
 export const Contacts = ({
   contacts,
   user,
   setUser,
-  setShow,
+  setName,
   hide,
 }: ContactsProps) => {
   return (
     <ChatContactColumn hide={hide}>
-      {contacts.map(contact => {
+      {contacts.map((contact, index) => {
         if (contact) {
           return (
-            <React.Fragment key={contact.sender}>
+            <React.Fragment key={contact.sender || index}>
               <ContactCard
                 contact={contact}
                 setUser={setUser}
                 user={user}
-                setShow={setShow}
+                setName={setName}
               />
             </React.Fragment>
           );
         }
       })}
-      <ChatSubCard
-        onClick={() => {
-          setUser('New Chat');
-          setShow(false);
-        }}
-      >
+      <ChatSubCard onClick={() => setUser('New Chat')}>
         <div style={{ fontSize: '14px' }}>New Chat</div>
       </ChatSubCard>
     </ChatContactColumn>

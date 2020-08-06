@@ -1,11 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
-export type GetBackupsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+const gql = Apollo.gql;
+
+export type GetBackupsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetBackupsQuery = { __typename?: 'Query' } & Pick<
   Types.Query,
@@ -13,8 +11,8 @@ export type GetBackupsQuery = { __typename?: 'Query' } & Pick<
 >;
 
 export const GetBackupsDocument = gql`
-  query GetBackups($auth: authType!) {
-    getBackups(auth: $auth)
+  query GetBackups {
+    getBackups
   }
 `;
 
@@ -30,37 +28,36 @@ export const GetBackupsDocument = gql`
  * @example
  * const { data, loading, error } = useGetBackupsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetBackupsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetBackupsQuery,
     GetBackupsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<GetBackupsQuery, GetBackupsQueryVariables>(
+  return Apollo.useQuery<GetBackupsQuery, GetBackupsQueryVariables>(
     GetBackupsDocument,
     baseOptions
   );
 }
 export function useGetBackupsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetBackupsQuery,
     GetBackupsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetBackupsQuery,
-    GetBackupsQueryVariables
-  >(GetBackupsDocument, baseOptions);
+  return Apollo.useLazyQuery<GetBackupsQuery, GetBackupsQueryVariables>(
+    GetBackupsDocument,
+    baseOptions
+  );
 }
 export type GetBackupsQueryHookResult = ReturnType<typeof useGetBackupsQuery>;
 export type GetBackupsLazyQueryHookResult = ReturnType<
   typeof useGetBackupsLazyQuery
 >;
-export type GetBackupsQueryResult = ApolloReactCommon.QueryResult<
+export type GetBackupsQueryResult = Apollo.QueryResult<
   GetBackupsQuery,
   GetBackupsQueryVariables
 >;

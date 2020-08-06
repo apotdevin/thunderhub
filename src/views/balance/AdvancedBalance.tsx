@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useBosRebalanceMutation } from 'src/graphql/mutations/__generated__/bosRebalance.generated';
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
-import { SecureButton } from 'src/components/buttons/secureButton/SecureButton';
 import { Card, Separation, SingleLine } from 'src/components/generic/Styled';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import {
@@ -98,12 +97,12 @@ const initialState: StateType = {
   avoid: [],
   in_through: defaultRebalanceId,
   is_avoiding_high_inbound: false,
-  max_fee: null,
-  max_fee_rate: null,
-  max_rebalance: null,
+  max_fee: 0,
+  max_fee_rate: 0,
+  max_rebalance: 0,
   out_channels: [],
   out_through: defaultRebalanceId,
-  target: null,
+  target: 0,
   node: defaultRebalanceId,
 };
 
@@ -484,23 +483,26 @@ export const AdvancedBalance = () => {
                 Reset
               </ColorButton>
             )}
-            <SecureButton
+            <ColorButton
               withMargin={'16px 0 0'}
-              callback={rebalance}
               loading={loading}
               disabled={loading}
-              variables={{
-                ...state,
-                avoid: state.avoid.map(a => a.id),
-                node: state.node.id,
-                in_through: state.in_through.id,
-                out_through: state.out_through.id,
-                out_channels: state.out_channels.map(c => c.id),
-              }}
               fullWidth={true}
+              onClick={() => {
+                rebalance({
+                  variables: {
+                    ...state,
+                    avoid: state.avoid.map(a => a.id),
+                    node: state.node.id,
+                    in_through: state.in_through.id,
+                    out_through: state.out_through.id,
+                    out_channels: state.out_channels.map(c => c.id),
+                  },
+                });
+              }}
             >
               Rebalance
-            </SecureButton>
+            </ColorButton>
           </SingleLine>
         </Card>
       )}

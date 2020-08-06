@@ -1,8 +1,7 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const UPDATE_FEES = gql`
   mutation UpdateFees(
-    $auth: authType!
     $transaction_id: String
     $transaction_vout: Int
     $base_fee_tokens: Float
@@ -12,7 +11,6 @@ export const UPDATE_FEES = gql`
     $min_htlc_mtokens: String
   ) {
     updateFees(
-      auth: $auth
       transaction_id: $transaction_id
       transaction_vout: $transaction_vout
       base_fee_tokens: $base_fee_tokens

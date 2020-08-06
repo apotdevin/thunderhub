@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
+
+const gql = Apollo.gql;
 
 export type GetSessionTokenQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
@@ -37,23 +37,23 @@ export const GetSessionTokenDocument = gql`
  * });
  */
 export function useGetSessionTokenQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetSessionTokenQuery,
     GetSessionTokenQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
-    GetSessionTokenQuery,
-    GetSessionTokenQueryVariables
-  >(GetSessionTokenDocument, baseOptions);
+  return Apollo.useQuery<GetSessionTokenQuery, GetSessionTokenQueryVariables>(
+    GetSessionTokenDocument,
+    baseOptions
+  );
 }
 export function useGetSessionTokenLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetSessionTokenQuery,
     GetSessionTokenQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetSessionTokenQuery,
     GetSessionTokenQueryVariables
   >(GetSessionTokenDocument, baseOptions);
@@ -64,7 +64,7 @@ export type GetSessionTokenQueryHookResult = ReturnType<
 export type GetSessionTokenLazyQueryHookResult = ReturnType<
   typeof useGetSessionTokenLazyQuery
 >;
-export type GetSessionTokenQueryResult = ApolloReactCommon.QueryResult<
+export type GetSessionTokenQueryResult = Apollo.QueryResult<
   GetSessionTokenQuery,
   GetSessionTokenQueryVariables
 >;

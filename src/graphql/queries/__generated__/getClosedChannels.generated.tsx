@@ -1,10 +1,10 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type GetClosedChannelsQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
+  [key: string]: never;
 }>;
 
 export type GetClosedChannelsQuery = { __typename?: 'Query' } & {
@@ -28,20 +28,12 @@ export type GetClosedChannelsQuery = { __typename?: 'Query' } & {
           | 'transaction_id'
           | 'transaction_vout'
         > & {
-            partner_node_info?: Types.Maybe<
-              { __typename?: 'Node' } & {
-                node?: Types.Maybe<
-                  { __typename?: 'nodeType' } & Pick<
-                    Types.NodeType,
-                    | 'alias'
-                    | 'capacity'
-                    | 'channel_count'
-                    | 'color'
-                    | 'updated_at'
-                  >
-                >;
-              }
-            >;
+            partner_node_info: { __typename?: 'Node' } & {
+              node: { __typename?: 'nodeType' } & Pick<
+                Types.NodeType,
+                'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
+              >;
+            };
           }
       >
     >
@@ -49,8 +41,8 @@ export type GetClosedChannelsQuery = { __typename?: 'Query' } & {
 };
 
 export const GetClosedChannelsDocument = gql`
-  query GetClosedChannels($auth: authType!) {
-    getClosedChannels(auth: $auth) {
+  query GetClosedChannels {
+    getClosedChannels {
       capacity
       close_confirm_height
       close_transaction_id
@@ -90,28 +82,27 @@ export const GetClosedChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetClosedChannelsQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetClosedChannelsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetClosedChannelsQuery,
     GetClosedChannelsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetClosedChannelsQuery,
     GetClosedChannelsQueryVariables
   >(GetClosedChannelsDocument, baseOptions);
 }
 export function useGetClosedChannelsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetClosedChannelsQuery,
     GetClosedChannelsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetClosedChannelsQuery,
     GetClosedChannelsQueryVariables
   >(GetClosedChannelsDocument, baseOptions);
@@ -122,7 +113,7 @@ export type GetClosedChannelsQueryHookResult = ReturnType<
 export type GetClosedChannelsLazyQueryHookResult = ReturnType<
   typeof useGetClosedChannelsLazyQuery
 >;
-export type GetClosedChannelsQueryResult = ApolloReactCommon.QueryResult<
+export type GetClosedChannelsQueryResult = Apollo.QueryResult<
   GetClosedChannelsQuery,
   GetClosedChannelsQueryVariables
 >;

@@ -1,10 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type GetRoutesQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   outgoing: Types.Scalars['String'];
   incoming: Types.Scalars['String'];
   tokens: Types.Scalars['Int'];
@@ -43,14 +42,12 @@ export type GetRoutesQuery = { __typename?: 'Query' } & {
 
 export const GetRoutesDocument = gql`
   query GetRoutes(
-    $auth: authType!
     $outgoing: String!
     $incoming: String!
     $tokens: Int!
     $maxFee: Int
   ) {
     getRoutes(
-      auth: $auth
       outgoing: $outgoing
       incoming: $incoming
       tokens: $tokens
@@ -90,7 +87,6 @@ export const GetRoutesDocument = gql`
  * @example
  * const { data, loading, error } = useGetRoutesQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      outgoing: // value for 'outgoing'
  *      incoming: // value for 'incoming'
  *      tokens: // value for 'tokens'
@@ -99,23 +95,20 @@ export const GetRoutesDocument = gql`
  * });
  */
 export function useGetRoutesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetRoutesQuery,
-    GetRoutesQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<GetRoutesQuery, GetRoutesQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetRoutesQuery, GetRoutesQueryVariables>(
+  return Apollo.useQuery<GetRoutesQuery, GetRoutesQueryVariables>(
     GetRoutesDocument,
     baseOptions
   );
 }
 export function useGetRoutesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetRoutesQuery,
     GetRoutesQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<GetRoutesQuery, GetRoutesQueryVariables>(
+  return Apollo.useLazyQuery<GetRoutesQuery, GetRoutesQueryVariables>(
     GetRoutesDocument,
     baseOptions
   );
@@ -124,7 +117,7 @@ export type GetRoutesQueryHookResult = ReturnType<typeof useGetRoutesQuery>;
 export type GetRoutesLazyQueryHookResult = ReturnType<
   typeof useGetRoutesLazyQuery
 >;
-export type GetRoutesQueryResult = ApolloReactCommon.QueryResult<
+export type GetRoutesQueryResult = Apollo.QueryResult<
   GetRoutesQuery,
   GetRoutesQueryVariables
 >;

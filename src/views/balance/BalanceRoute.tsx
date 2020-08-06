@@ -1,7 +1,6 @@
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useGetRoutesLazyQuery } from 'src/graphql/queries/__generated__/getRoutes.generated';
-import { useAccountState } from 'src/context/AccountContext';
 import { useCircularRebalanceMutation } from 'src/graphql/mutations/__generated__/circularRebalance.generated';
 import { ChannelType } from 'src/graphql/types';
 import {
@@ -13,11 +12,9 @@ import {
 import { getErrorContent } from '../../utils/error';
 import { themeColors, chartColors } from '../../styles/Themes';
 import { renderLine } from '../../components/generic/helpers';
-import { SecureButton } from '../../components/buttons/secureButton/SecureButton';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Price } from '../../components/price/Price';
 import { getPercent } from '../../utils/helpers';
-import { AdminSwitch } from '../../components/adminSwitch/AdminSwitch';
 import { HopCard } from './Balance.styled';
 
 type BalancedRouteProps = {
@@ -39,8 +36,6 @@ export const BalanceRoute = ({
   setBlocked,
   callback,
 }: BalancedRouteProps) => {
-  const { auth } = useAccountState();
-
   const [getRoute, { loading, data, called }] = useGetRoutesLazyQuery({
     fetchPolicy: 'no-cache',
     onError: error => {
@@ -50,7 +45,7 @@ export const BalanceRoute = ({
   });
 
   const canShow = (): boolean =>
-    incoming && outgoing && amount && data && data.getRoutes && blocked;
+    !!(incoming && outgoing && amount && data?.getRoutes && blocked);
 
   const [payRoute, { loading: loadingP }] = useCircularRebalanceMutation({
     onError: error => {
@@ -64,7 +59,7 @@ export const BalanceRoute = ({
     refetchQueries: ['GetChannels'],
   });
 
-  const renderHop = (hop, index: number) => (
+  const renderHop = (hop: { channel: string; fee: number }, index: number) => (
     <HopCard key={index}>
       {renderLine('Channel', hop.channel)}
       {renderLine('Fee', hop.fee)}
@@ -80,7 +75,6 @@ export const BalanceRoute = ({
         setBlocked();
         getRoute({
           variables: {
-            auth,
             outgoing: outgoing.id,
             incoming: incoming.partner_public_key,
             tokens: amount,
@@ -94,12 +88,12 @@ export const BalanceRoute = ({
   );
 
   const renderRoute = () => {
-    if (canShow()) {
+    if (canShow() && data?.getRoutes) {
       const route = data.getRoutes;
       return (
         <>
           <Sub4Title>Route</Sub4Title>
-          <SubCard color={themeColors.blue3}>
+          <SubCard subColor={themeColors.blue3}>
             {renderLine('Total Tokens', <Price amount={route.tokens} />)}
             {renderLine(
               'Fee %',
@@ -109,7 +103,7 @@ export const BalanceRoute = ({
             {renderLine('Confidence', route.confidence)}
             {renderLine('Hops', route.hops.length)}
             <Separation />
-            {route.hops.map((hop, index: number) =>
+            {route.hops.map((hop, index) =>
               renderLine(`${index + 1}`, renderHop(hop, index), index)
             )}
           </SubCard>
@@ -120,22 +114,26 @@ export const BalanceRoute = ({
   };
 
   const renderButton = () => {
-    if (canShow()) {
+    if (canShow() && data?.getRoutes) {
       return (
         <SingleLine>
           <ColorButton color={chartColors.orange2} onClick={callback}>
             Reset
           </ColorButton>
-          <SecureButton
-            callback={payRoute}
+          <ColorButton
+            onClick={() => {
+              payRoute({
+                variables: { route: JSON.stringify(data.getRoutes) },
+              });
+            }}
+            loading={loadingP}
             disabled={loadingP}
-            variables={{ route: JSON.stringify(data.getRoutes) }}
             fullWidth={true}
             arrow={true}
             withMargin={'0 0 0 8px'}
           >
             Balance Channel
-          </SecureButton>
+          </ColorButton>
         </SingleLine>
       );
     }
@@ -146,7 +144,7 @@ export const BalanceRoute = ({
     <>
       {renderGetRoute()}
       {renderRoute()}
-      <AdminSwitch>{renderButton()}</AdminSwitch>
+      {renderButton()}
     </>
   );
 };

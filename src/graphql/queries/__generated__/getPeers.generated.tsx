@@ -1,11 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
-export type GetPeersQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
-}>;
+const gql = Apollo.gql;
+
+export type GetPeersQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetPeersQuery = { __typename?: 'Query' } & {
   getPeers?: Types.Maybe<
@@ -23,20 +21,12 @@ export type GetPeersQuery = { __typename?: 'Query' } & {
           | 'tokens_received'
           | 'tokens_sent'
         > & {
-            partner_node_info?: Types.Maybe<
-              { __typename?: 'Node' } & {
-                node?: Types.Maybe<
-                  { __typename?: 'nodeType' } & Pick<
-                    Types.NodeType,
-                    | 'alias'
-                    | 'capacity'
-                    | 'channel_count'
-                    | 'color'
-                    | 'updated_at'
-                  >
-                >;
-              }
-            >;
+            partner_node_info: { __typename?: 'Node' } & {
+              node: { __typename?: 'nodeType' } & Pick<
+                Types.NodeType,
+                'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
+              >;
+            };
           }
       >
     >
@@ -44,8 +34,8 @@ export type GetPeersQuery = { __typename?: 'Query' } & {
 };
 
 export const GetPeersDocument = gql`
-  query GetPeers($auth: authType!) {
-    getPeers(auth: $auth) {
+  query GetPeers {
+    getPeers {
       bytes_received
       bytes_sent
       is_inbound
@@ -80,28 +70,24 @@ export const GetPeersDocument = gql`
  * @example
  * const { data, loading, error } = useGetPeersQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *   },
  * });
  */
 export function useGetPeersQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetPeersQuery,
-    GetPeersQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<GetPeersQuery, GetPeersQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetPeersQuery, GetPeersQueryVariables>(
+  return Apollo.useQuery<GetPeersQuery, GetPeersQueryVariables>(
     GetPeersDocument,
     baseOptions
   );
 }
 export function useGetPeersLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetPeersQuery,
     GetPeersQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<GetPeersQuery, GetPeersQueryVariables>(
+  return Apollo.useLazyQuery<GetPeersQuery, GetPeersQueryVariables>(
     GetPeersDocument,
     baseOptions
   );
@@ -110,7 +96,7 @@ export type GetPeersQueryHookResult = ReturnType<typeof useGetPeersQuery>;
 export type GetPeersLazyQueryHookResult = ReturnType<
   typeof useGetPeersLazyQuery
 >;
-export type GetPeersQueryResult = ApolloReactCommon.QueryResult<
+export type GetPeersQueryResult = Apollo.QueryResult<
   GetPeersQuery,
   GetPeersQueryVariables
 >;

@@ -1,20 +1,19 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetMessagesQuery } from 'src/graphql/queries/__generated__/getMessages.generated';
-import { useStatusState } from 'src/context/StatusContext';
+import { MessagesType } from 'src/graphql/types';
+import { useAccount } from 'src/hooks/UseAccount';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 import { useConfigState } from '../../context/ConfigContext';
 
-export const ChatFetcher = () => {
+export const ChatFetcher: React.FC = () => {
   const newChatToastId = 'newChatToastId';
 
   const { chatPollingSpeed } = useConfigState();
 
-  const { connected } = useStatusState();
-  const { auth } = useAccountState();
+  const account = useAccount();
   const { pathname } = useRouter();
   const { lastChat, chats, sentChats, initialized } = useChatState();
   const dispatch = useChatDispatch();
@@ -23,10 +22,10 @@ export const ChatFetcher = () => {
 
   const { data, loading, error } = useGetMessagesQuery({
     ssr: false,
-    skip: !auth || initialized || noChatsAvailable || !connected,
+    skip: initialized || noChatsAvailable || !account,
     pollInterval: chatPollingSpeed,
     fetchPolicy: 'network-only',
-    variables: { auth, initialize: !noChatsAvailable },
+    variables: { initialize: !noChatsAvailable },
     onError: error => toast.error(getErrorContent(error)),
   });
 
@@ -39,9 +38,7 @@ export const ChatFetcher = () => {
         for (let i = 0; i < messages.length; i += 1) {
           if (index < 0) {
             const element = messages[i];
-            const { id } = element;
-
-            if (id === lastChat) {
+            if (element?.id === lastChat) {
               index = i;
             }
           }
@@ -61,8 +58,15 @@ export const ChatFetcher = () => {
       }
 
       const newMessages = messages.slice(0, index);
-      const last = newMessages[0]?.id;
-      dispatch({ type: 'additional', chats: newMessages, lastChat: last });
+
+      if (newMessages?.length) {
+        const last = newMessages[0]?.id || '';
+        dispatch({
+          type: 'additional',
+          chats: (newMessages as MessagesType[]) || [],
+          lastChat: last,
+        });
+      }
     }
   }, [data, loading, error, dispatch, lastChat, pathname]);
 

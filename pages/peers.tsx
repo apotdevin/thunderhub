@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { useAccountState } from 'src/context/AccountContext';
 import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { withApollo } from 'config/client';
+import { PeerType } from 'src/graphql/types';
+import { NextPageContext } from 'next';
+import { getProps } from 'src/utils/ssr';
+import { GET_PEERS } from 'src/graphql/queries/getPeers';
 import {
   CardWithTitle,
   SubTitle,
@@ -14,14 +16,10 @@ import { AddPeer } from '../src/views/peers/AddPeer';
 
 const PeersView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
-  const { auth } = useAccountState();
 
-  const { loading, data } = useGetPeersQuery({
-    skip: !auth,
-    variables: { auth },
-  });
+  const { loading, data } = useGetPeersQuery();
 
-  if (loading || !data || !data.getPeers) {
+  if (loading || !data?.getPeers) {
     return <LoadingCard title={'Peers'} />;
   }
 
@@ -33,11 +31,11 @@ const PeersView = () => {
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
           {data.getPeers.map((peer, index: number) => (
             <PeersCard
-              peer={peer}
+              peer={peer as PeerType}
               index={index + 1}
               setIndexOpen={setIndexOpen}
               indexOpen={indexOpen}
-              key={`${index}-${peer.public_key}`}
+              key={`${index}-${peer?.public_key}`}
             />
           ))}
         </Card>
@@ -52,4 +50,8 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default withApollo(Wrapped);
+export default Wrapped;
+
+export async function getServerSideProps(context: NextPageContext) {
+  return await getProps(context, [GET_PEERS]);
+}

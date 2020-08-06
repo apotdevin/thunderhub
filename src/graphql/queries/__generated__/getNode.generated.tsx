@@ -1,36 +1,25 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as Apollo from '@apollo/client';
 import * as Types from '../../types';
 
+const gql = Apollo.gql;
+
 export type GetNodeQueryVariables = Types.Exact<{
-  auth: Types.AuthType;
   publicKey: Types.Scalars['String'];
   withoutChannels?: Types.Maybe<Types.Scalars['Boolean']>;
 }>;
 
 export type GetNodeQuery = { __typename?: 'Query' } & {
   getNode: { __typename?: 'Node' } & {
-    node?: Types.Maybe<
-      { __typename?: 'nodeType' } & Pick<
-        Types.NodeType,
-        'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
-      >
+    node: { __typename?: 'nodeType' } & Pick<
+      Types.NodeType,
+      'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
     >;
   };
 };
 
 export const GetNodeDocument = gql`
-  query GetNode(
-    $auth: authType!
-    $publicKey: String!
-    $withoutChannels: Boolean
-  ) {
-    getNode(
-      auth: $auth
-      publicKey: $publicKey
-      withoutChannels: $withoutChannels
-    ) {
+  query GetNode($publicKey: String!, $withoutChannels: Boolean) {
+    getNode(publicKey: $publicKey, withoutChannels: $withoutChannels) {
       node {
         alias
         capacity
@@ -54,37 +43,30 @@ export const GetNodeDocument = gql`
  * @example
  * const { data, loading, error } = useGetNodeQuery({
  *   variables: {
- *      auth: // value for 'auth'
  *      publicKey: // value for 'publicKey'
  *      withoutChannels: // value for 'withoutChannels'
  *   },
  * });
  */
 export function useGetNodeQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetNodeQuery,
-    GetNodeQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<GetNodeQuery, GetNodeQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<GetNodeQuery, GetNodeQueryVariables>(
+  return Apollo.useQuery<GetNodeQuery, GetNodeQueryVariables>(
     GetNodeDocument,
     baseOptions
   );
 }
 export function useGetNodeLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetNodeQuery,
-    GetNodeQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<GetNodeQuery, GetNodeQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<GetNodeQuery, GetNodeQueryVariables>(
+  return Apollo.useLazyQuery<GetNodeQuery, GetNodeQueryVariables>(
     GetNodeDocument,
     baseOptions
   );
 }
 export type GetNodeQueryHookResult = ReturnType<typeof useGetNodeQuery>;
 export type GetNodeLazyQueryHookResult = ReturnType<typeof useGetNodeLazyQuery>;
-export type GetNodeQueryResult = ApolloReactCommon.QueryResult<
+export type GetNodeQueryResult = Apollo.QueryResult<
   GetNodeQuery,
   GetNodeQueryVariables
 >;
