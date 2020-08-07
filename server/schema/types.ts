@@ -30,6 +30,7 @@ export const queryTypes = gql`
   type Query {
     getBaseCanConnect: String!
     getBaseNodes: [baseNodesType]!
+    getBasePoints: [basePointsType]!
     getAccountingReport(
       category: String
       currency: String

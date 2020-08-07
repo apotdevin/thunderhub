@@ -14,6 +14,7 @@ import {
   MessageCircle,
   BarChart2,
   Icon,
+  Heart,
 } from 'react-feather';
 import { useRouter } from 'next/router';
 import {
@@ -121,6 +122,7 @@ const CHAIN_TRANS = '/chain';
 const TOOLS = '/tools';
 const DETAILS = '/details';
 const STATS = '/stats';
+const DONATIONS = '/leaderboard';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
 
@@ -188,6 +190,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Stats', STATS, BarChart2)}
+      {renderBurgerNav('Donations', DONATIONS, Heart)}
       {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}
     </BurgerRow>

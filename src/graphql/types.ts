@@ -41,6 +41,7 @@ export type Query = {
   __typename?: 'Query';
   getBaseCanConnect: Scalars['String'];
   getBaseNodes: Array<Maybe<BaseNodesType>>;
+  getBasePoints: Array<Maybe<BasePointsType>>;
   getAccountingReport: Scalars['String'];
   getVolumeHealth?: Maybe<ChannelsHealth>;
   getTimeHealth?: Maybe<ChannelsTimeHealth>;
@@ -890,6 +891,12 @@ export type BaseNodesType = {
   name?: Maybe<Scalars['String']>;
   public_key: Scalars['String'];
   socket: Scalars['String'];
+};
+
+export type BasePointsType = {
+  __typename?: 'basePointsType';
+  alias: Scalars['String'];
+  amount: Scalars['Int'];
 };
 
 export type BaseInvoiceType = {

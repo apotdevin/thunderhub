@@ -7,6 +7,7 @@ import {
   Settings,
   Home,
   Icon,
+  Heart,
 } from 'react-feather';
 import { useTransition, animated } from 'react-spring';
 import { useRouter } from 'next/router';
@@ -29,6 +30,7 @@ import {
 const MAIN = '/';
 const HOME = '/home';
 const CHAT = '/chat';
+const DONATIONS = '/leaderboard';
 const SETTINGS = '/settings';
 
 export const Header = () => {
@@ -38,7 +40,7 @@ export const Header = () => {
   const isRoot = pathname === '/';
 
   const showHomeButton = (): boolean =>
-    pathname === CHAT || pathname === SETTINGS;
+    pathname === DONATIONS || pathname === CHAT || pathname === SETTINGS;
 
   const transitions = useTransition(open, null, {
     from: { position: 'absolute', opacity: 0 },
@@ -74,6 +76,7 @@ export const Header = () => {
       <ViewSwitch hideMobile={true}>
         <HeaderButtons>
           {showHomeButton() && renderNavButton(HOME, Home)}
+          {renderNavButton(DONATIONS, Heart)}
           {renderNavButton(CHAT, MessageCircle)}
           {renderNavButton(SETTINGS, Settings)}
         </HeaderButtons>

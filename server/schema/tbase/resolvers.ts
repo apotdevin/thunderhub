@@ -21,6 +21,15 @@ const getBaseNodesQuery = gql`
   }
 `;
 
+const getBasePointsQuery = gql`
+  {
+    getPoints {
+      alias
+      amount
+    }
+  }
+`;
+
 const createBaseInvoiceQuery = gql`
   mutation CreateInvoice($amount: Int!) {
     createInvoice(amount: $amount) {
@@ -58,7 +67,7 @@ export const tbaseResolvers = {
 
       return true;
     },
-    getBaseNodes: async (_: undefined, params: any, context: ContextType) => {
+    getBaseNodes: async (_: undefined, __: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getBaseNodes');
 
       const [data, error] = await toWithError(
@@ -70,6 +79,17 @@ export const tbaseResolvers = {
       return data.getNodes.filter(
         (n: { public_key: string; socket: string }) => n.public_key && n.socket
       );
+    },
+    getBasePoints: async (_: undefined, __: any, context: ContextType) => {
+      await requestLimiter(context.ip, 'getBasePoints');
+
+      const [data, error] = await toWithError(
+        request(appUrls.tbase, getBasePointsQuery)
+      );
+
+      if (error || !data?.getPoints) return [];
+
+      return data.getPoints;
     },
   },
   Mutation: {

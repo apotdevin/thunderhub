@@ -8,6 +8,11 @@ export const tbaseTypes = gql`
     socket: String!
   }
 
+  type basePointsType {
+    alias: String!
+    amount: Int!
+  }
+
   type baseInvoiceType {
     id: String!
     request: String!
