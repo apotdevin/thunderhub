@@ -73,7 +73,7 @@ export type GetCanConnectInfoQuery = { __typename?: 'Query' } & {
   getNodeInfo?: Types.Maybe<
     { __typename?: 'nodeInfoType' } & Pick<
       Types.NodeInfoType,
-      'public_key' | 'uris'
+      'alias' | 'public_key' | 'uris'
     >
   >;
 };
@@ -268,6 +268,7 @@ export type GetChannelAmountInfoQueryResult = Apollo.QueryResult<
 export const GetCanConnectInfoDocument = gql`
   query GetCanConnectInfo {
     getNodeInfo {
+      alias
       public_key
       uris
     }

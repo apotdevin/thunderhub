@@ -39,6 +39,7 @@ export type PermissionsType = {
 
 export type Query = {
   __typename?: 'Query';
+  getBaseCanConnect: Scalars['String'];
   getBaseNodes: Array<Maybe<BaseNodesType>>;
   getAccountingReport: Scalars['String'];
   getVolumeHealth?: Maybe<ChannelsHealth>;
@@ -79,8 +80,6 @@ export type Query = {
   getSessionToken?: Maybe<Scalars['Boolean']>;
   getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
   getAccount?: Maybe<ServerAccountType>;
-  getLnPayInfo?: Maybe<LnPayInfoType>;
-  getLnPay?: Maybe<Scalars['String']>;
   getLatestVersion?: Maybe<Scalars['String']>;
 };
 
@@ -179,12 +178,10 @@ export type QueryGetSessionTokenArgs = {
   password?: Maybe<Scalars['String']>;
 };
 
-export type QueryGetLnPayArgs = {
-  amount?: Maybe<Scalars['Int']>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
+  createBaseInvoice?: Maybe<BaseInvoiceType>;
+  createThunderPoints: Scalars['Boolean'];
   closeChannel?: Maybe<CloseChannelType>;
   openChannel?: Maybe<OpenChannelType>;
   updateFees?: Maybe<Scalars['Boolean']>;
@@ -200,6 +197,17 @@ export type Mutation = {
   sendMessage?: Maybe<Scalars['Int']>;
   logout?: Maybe<Scalars['Boolean']>;
   createMacaroon?: Maybe<Scalars['String']>;
+};
+
+export type MutationCreateBaseInvoiceArgs = {
+  amount: Scalars['Int'];
+};
+
+export type MutationCreateThunderPointsArgs = {
+  id: Scalars['String'];
+  alias: Scalars['String'];
+  uris: Array<Scalars['String']>;
+  public_key: Scalars['String'];
 };
 
 export type MutationCloseChannelArgs = {
@@ -337,12 +345,6 @@ export type ServerAccountType = {
   id: Scalars['String'];
   type: Scalars['String'];
   loggedIn: Scalars['Boolean'];
-};
-
-export type LnPayInfoType = {
-  __typename?: 'lnPayInfoType';
-  max?: Maybe<Scalars['Int']>;
-  min?: Maybe<Scalars['Int']>;
 };
 
 export type BitcoinFeeType = {
@@ -888,4 +890,10 @@ export type BaseNodesType = {
   name?: Maybe<Scalars['String']>;
   public_key: Scalars['String'];
   socket: Scalars['String'];
+};
+
+export type BaseInvoiceType = {
+  __typename?: 'baseInvoiceType';
+  id: Scalars['String'];
+  request: Scalars['String'];
 };

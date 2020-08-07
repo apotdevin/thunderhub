@@ -51,6 +51,7 @@ export const GET_CHANNEL_AMOUNT_INFO = gql`
 export const GET_CONNECT_INFO = gql`
   query GetCanConnectInfo {
     getNodeInfo {
+      alias
       public_key
       uris
     }

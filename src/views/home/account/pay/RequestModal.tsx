@@ -86,6 +86,7 @@ export const RequestModal: React.FC<DecodeProps> = ({
   handleReset,
 }) => {
   const { data, loading, error } = useDecodeRequestQuery({
+    skip: !request,
     fetchPolicy: 'network-only',
     variables: { request },
   });

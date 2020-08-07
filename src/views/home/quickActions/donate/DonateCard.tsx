@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useGetLnPayInfoQuery } from 'src/graphql/queries/__generated__/getLnPayInfo.generated';
 import { Heart } from 'react-feather';
 import styled from 'styled-components';
 import {
@@ -8,6 +7,7 @@ import {
   cardBorderColor,
   unSelectedNavButton,
 } from 'src/styles/Themes';
+import { useGetBaseCanConnectQuery } from 'src/graphql/queries/__generated__/getBaseCanConnect.generated';
 
 const QuickTitle = styled.div`
   font-size: 14px;
@@ -47,9 +47,9 @@ type SupportCardProps = {
 };
 
 export const SupportCard = ({ callback }: SupportCardProps) => {
-  const { loading, error } = useGetLnPayInfoQuery();
+  const { loading, error, data } = useGetBaseCanConnectQuery();
 
-  if (loading || error) {
+  if (loading || error || !data?.getBaseCanConnect) {
     return null;
   }
 

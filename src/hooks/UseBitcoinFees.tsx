@@ -19,7 +19,7 @@ export const useBitcoinFees = (): State => {
   const [bitcoinFees, setBitcoinFees] = useState<State>(initialState);
 
   const { loading, data, error } = useGetBitcoinFeesQuery({
-    fetchPolicy: 'cache-only',
+    fetchPolicy: 'cache-first',
   });
 
   useEffect(() => {
