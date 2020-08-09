@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.1](https://github.com/apotdevin/thunderhub/compare/v0.9.0...v0.9.1) (2020-08-09)
+
+
+### Bug Fixes
+
+* 🐛 docker files ([e274e3d](https://github.com/apotdevin/thunderhub/commit/e274e3d57bdd286f2eaede7617eefe1b9c189823))
+* 🐛 input add peer ([56998d0](https://github.com/apotdevin/thunderhub/commit/56998d0c90d967d5f6d647b01134d8125696f40f))
+
+
+### Reverts
+
+* Revert "chore: 🔧 update deps" ([46d6ac7](https://github.com/apotdevin/thunderhub/commit/46d6ac74f69d3cd2fd51ab70ac85e69747ef4da3))
+
+
+### Improvements
+
+* 🔧 update deps ([74d12f4](https://github.com/apotdevin/thunderhub/commit/74d12f4daa85a4b620aaa2435fb60c903ec90568))
+
+
+### Docs
+
+* 📚️ update readme ([7019720](https://github.com/apotdevin/thunderhub/commit/70197209e0db26f1cd6fb7d27bbda036bf38cb66))
+
 ## [0.9.0](https://github.com/apotdevin/thunderhub/compare/v0.8.14...v0.9.0) (2020-08-06)
 
 
