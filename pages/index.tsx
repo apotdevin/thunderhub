@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Spacer } from 'src/components/spacer/Spacer';
 import { ServerAccounts } from 'src/components/accounts/ServerAccounts';
 import { ThunderStorm } from 'src/views/homepage/HomePage.styled';
+import { appendBasePath } from 'src/utils/basePath';
 import { NextPageContext } from 'next';
 import { GET_SERVER_ACCOUNTS } from 'src/graphql/queries/getServerAccounts';
 import { getProps } from 'src/utils/ssr';
@@ -10,7 +11,7 @@ import { Accounts } from '../src/views/homepage/Accounts';
 
 const ContextApp = () => (
   <>
-    <ThunderStorm alt={''} src={'/static/thunderstorm.gif'} />
+    <ThunderStorm alt={''} src={appendBasePath('/static/thunderstorm.gif')} />
     <TopSection />
     <Accounts />
     <Spacer />
