@@ -28,7 +28,7 @@ export const generalTypes = gql`
 
 export const queryTypes = gql`
   type Query {
-    getBaseCanConnect: String!
+    getBaseCanConnect: Boolean!
     getBaseNodes: [baseNodesType]!
     getBasePoints: [basePointsType]!
     getAccountingReport(

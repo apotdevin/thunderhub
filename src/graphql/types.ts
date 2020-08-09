@@ -39,7 +39,7 @@ export type PermissionsType = {
 
 export type Query = {
   __typename?: 'Query';
-  getBaseCanConnect: Scalars['String'];
+  getBaseCanConnect: Scalars['Boolean'];
   getBaseNodes: Array<Maybe<BaseNodesType>>;
   getBasePoints: Array<Maybe<BasePointsType>>;
   getAccountingReport: Scalars['String'];

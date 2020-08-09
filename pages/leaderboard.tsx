@@ -4,7 +4,7 @@ import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { GET_BASE_POINTS } from 'src/graphql/queries/getBasePoints';
 import { useGetBasePointsQuery } from 'src/graphql/queries/__generated__/getBasePoints.generated';
-import { renderLine } from 'src/components/generic/helpers';
+import { NodeCard } from 'src/views/leaderboard/NodeCard';
 import {
   CardWithTitle,
   SubTitle,
@@ -25,7 +25,7 @@ const LeaderboardView = () => {
       <Card mobileCardPadding={'0'} mobileNoBackground={true}>
         {data.getBasePoints.map((node, index: number) => (
           <React.Fragment key={index}>
-            {renderLine(node?.alias || 'Unknown', node?.amount)}
+            <NodeCard node={node} index={index + 1} />
           </React.Fragment>
         ))}
       </Card>
