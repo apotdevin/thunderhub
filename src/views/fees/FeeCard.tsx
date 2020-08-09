@@ -146,6 +146,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
         />
         <InputWithDeco
           title={'Fee Rate'}
+          value={newFeeRate}
           placeholder={'ppm'}
           amount={newFeeRate}
           override={'ppm'}
@@ -206,7 +207,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
           fullWidth={true}
           withMargin={'16px 0 0'}
         >
-          Update Fees
+          Update Channel Details
           <ChevronRight size={18} />
         </ColorButton>
       </>
