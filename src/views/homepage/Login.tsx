@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import { appendBasePath } from 'src/utils/basePath';
 import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { useGetSessionTokenLazyQuery } from 'src/graphql/queries/__generated__/getSessionToken.generated';
 import { getErrorContent } from 'src/utils/error';
@@ -65,7 +66,7 @@ export const Login = ({ account }: LoginProps) => {
 
   useEffect(() => {
     if (!loading && data && data.getNodeInfo) {
-      push('/home');
+      push(appendBasePath('/home'));
     }
   }, [data, loading, pass, account, push]);
 

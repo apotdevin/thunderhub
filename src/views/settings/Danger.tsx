@@ -12,6 +12,7 @@ import {
 } from '../../components/generic/Styled';
 import { fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
 
 export const ButtonRow = styled.div`
@@ -55,7 +56,7 @@ export const DangerView = () => {
   const { push } = useRouter();
 
   const [logout] = useLogoutMutation({
-    onCompleted: () => push('/'),
+    onCompleted: () => push(appendBasePath('/')),
   });
 
   const handleDeleteAll = () => {
