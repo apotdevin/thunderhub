@@ -28,7 +28,9 @@ export const generalTypes = gql`
 
 export const queryTypes = gql`
   type Query {
+    getBaseCanConnect: Boolean!
     getBaseNodes: [baseNodesType]!
+    getBasePoints: [basePointsType]!
     getAccountingReport(
       category: String
       currency: String
@@ -83,14 +85,19 @@ export const queryTypes = gql`
     getSessionToken(id: String, password: String): Boolean
     getServerAccounts: [serverAccountType]
     getAccount: serverAccountType
-    getLnPayInfo: lnPayInfoType
-    getLnPay(amount: Int): String
     getLatestVersion: String
   }
 `;
 
 export const mutationTypes = gql`
   type Mutation {
+    createBaseInvoice(amount: Int!): baseInvoiceType
+    createThunderPoints(
+      id: String!
+      alias: String!
+      uris: [String!]!
+      public_key: String!
+    ): Boolean!
     closeChannel(
       id: String!
       forceClose: Boolean

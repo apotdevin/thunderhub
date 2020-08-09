@@ -39,11 +39,6 @@ export default class MyDocument extends Document {
       <Html>
         <Head>
           <meta
-            name="viewport"
-            content="initial-scale=1.0, width=device-width"
-            key="viewport"
-          />
-          <meta
             name="description"
             content="Manage and monitor your lightning network node right inside your browser"
             key="description"
