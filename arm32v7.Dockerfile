@@ -12,7 +12,14 @@ RUN apk add --update --no-cache \
 # Install app dependencies
 COPY package.json .
 COPY package-lock.json .
-RUN npm install --production --silent
+RUN npm install --silent
+
+# Build the NextJS application
+COPY . .
+RUN npm run build
+
+# Remove non production necessary modules
+RUN npm prune --production
 
 # ---------------
 # Build App
@@ -21,12 +28,12 @@ FROM arm32v7/node:12.16-alpine
 
 WORKDIR /app
 
-# Copy dependencies from build stage
+# Copy dependencies and build from build stage
 COPY --from=build node_modules node_modules
+COPY --from=build .next .next
 
 # Bundle app source
 COPY . .
-RUN npm run build
 EXPOSE 3000
 
 CMD [ "npm", "start" ]
