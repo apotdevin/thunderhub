@@ -16,13 +16,14 @@ import { LoadingCard } from '../src/components/loading/LoadingCard';
 const LeaderboardView = () => {
   const { loading, data } = useGetBasePointsQuery();
 
-  if (loading || !data?.getBasePoints) {
-    return <LoadingCard title={'Donation Leaderboard'} />;
-  }
-
-  return (
-    <>
-      <SupportBar />
+  const renderBoard = () => {
+    if (loading || !data?.getBasePoints) {
+      return <LoadingCard title={'Supporters'} />;
+    }
+    if (!data.getBasePoints.length) {
+      return null;
+    }
+    return (
       <CardWithTitle>
         <SubTitle>Supporters</SubTitle>
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
@@ -33,6 +34,13 @@ const LeaderboardView = () => {
           ))}
         </Card>
       </CardWithTitle>
+    );
+  };
+
+  return (
+    <>
+      <SupportBar />
+      {renderBoard()}
     </>
   );
 };
