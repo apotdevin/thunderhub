@@ -7,4 +7,14 @@ export const tbaseTypes = gql`
     public_key: String!
     socket: String!
   }
+
+  type basePointsType {
+    alias: String!
+    amount: Int!
+  }
+
+  type baseInvoiceType {
+    id: String!
+    request: String!
+  }
 `;

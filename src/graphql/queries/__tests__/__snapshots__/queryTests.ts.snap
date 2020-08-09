@@ -501,6 +501,7 @@ exports[`Query tests "GET_CONNECT_INFO" matches snapshot 1`] = `
 Object {
   "data": Object {
     "getNodeInfo": Object {
+      "alias": "TestNode",
       "public_key": "key",
       "uris": Array [
         "uri",

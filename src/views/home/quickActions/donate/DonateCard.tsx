@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useGetLnPayInfoQuery } from 'src/graphql/queries/__generated__/getLnPayInfo.generated';
 import { Heart } from 'react-feather';
 import styled from 'styled-components';
 import {
@@ -8,6 +7,7 @@ import {
   cardBorderColor,
   unSelectedNavButton,
 } from 'src/styles/Themes';
+import { useBaseConnect } from 'src/hooks/UseBaseConnect';
 
 const QuickTitle = styled.div`
   font-size: 14px;
@@ -47,11 +47,9 @@ type SupportCardProps = {
 };
 
 export const SupportCard = ({ callback }: SupportCardProps) => {
-  const { loading, error } = useGetLnPayInfoQuery();
+  const connected = useBaseConnect();
 
-  if (loading || error) {
-    return null;
-  }
+  if (!connected) return null;
 
   return (
     <QuickCard onClick={callback}>
