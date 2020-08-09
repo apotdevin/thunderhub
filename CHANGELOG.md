@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.2](https://github.com/apotdevin/thunderhub/compare/v0.9.1...v0.9.2) (2020-08-09)
+
+
+### Features
+
+* ✨ add leaderboard ([#119](https://github.com/apotdevin/thunderhub/issues/119)) ([f985e51](https://github.com/apotdevin/thunderhub/commit/f985e51b98e8bb8e48bb21a720f8ee574d5ac356))
+
+
+### Bug Fixes
+
+* 🐛 ppm input value ([13fd79e](https://github.com/apotdevin/thunderhub/commit/13fd79e25ade25fc2add5f4b51dc882ca76c7f67))
+
 ### [0.9.1](https://github.com/apotdevin/thunderhub/compare/v0.9.0...v0.9.1) (2020-08-09)
 
 
