@@ -24,6 +24,10 @@ else
     echo "Building application..."
     npm run build
 
+    # remove useless deps
+    echo "Removing unneccesary modules..."
+    npm prune --production
+
     TAG=$(git tag | sort -V | tail -1)
     echo "Updated to version" $TAG
 fi

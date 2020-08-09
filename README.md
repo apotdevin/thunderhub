@@ -294,6 +294,8 @@ yarn start -p 4000
 npm start -- -p 4000
 ```
 
+For **PRODUCTION**, if you want to reduce the space taken up by ThunderHub you can run `npm prune --production` after the build is completed.
+
 ---
 
 ## Updating
