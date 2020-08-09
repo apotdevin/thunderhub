@@ -1,0 +1,22 @@
+version: '3'
+services:
+  thunderhub:
+    image: apotdevin/thunderhub:test-amd64
+    restart: unless-stopped
+    stop_signal: SIGKILL
+    environment:
+      # BASE_PATH: '/thub'
+      # COOKIE_PATH: '/data/.cookie'
+      # SSO_SERVER_URL: 'lnd_bitcoin:10009'
+      # SSO_MACAROON_PATH: '/etc/lnd'
+      # SSO_CERT_PATH: '/etc/lnd/tls.cert'
+      # NO_CLIENT_ACCOUNTS: 'true'
+      ACCOUNT_CONFIG_PATH: '/data/thubConfig.yaml'
+      LOG_LEVEL: debug
+    volumes:
+      - D:/data:/data
+    ports:
+      - '3000:3000'
+    expose:
+      - '3000'
+    command: ['npm', 'run', 'start']
