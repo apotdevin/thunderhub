@@ -7,7 +7,7 @@ import {
   cardBorderColor,
   unSelectedNavButton,
 } from 'src/styles/Themes';
-import { useGetBaseCanConnectQuery } from 'src/graphql/queries/__generated__/getBaseCanConnect.generated';
+import { useBaseConnect } from 'src/hooks/UseBaseConnect';
 
 const QuickTitle = styled.div`
   font-size: 14px;
@@ -47,11 +47,9 @@ type SupportCardProps = {
 };
 
 export const SupportCard = ({ callback }: SupportCardProps) => {
-  const { loading, error, data } = useGetBaseCanConnectQuery();
+  const connected = useBaseConnect();
 
-  if (loading || error || !data?.getBaseCanConnect) {
-    return null;
-  }
+  if (!connected) return null;
 
   return (
     <QuickCard onClick={callback}>

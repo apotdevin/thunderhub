@@ -7,11 +7,13 @@ import { themeColors } from 'src/styles/Themes';
 type LeaderCardProps = {
   color?: string;
   borderColor?: string;
+  borderWidth?: string;
 };
 
 const LeaderCard = styled.div<LeaderCardProps>`
   padding: 8px;
-  border: 2px solid ${({ borderColor }) => borderColor || 'gold'};
+  border: ${({ borderWidth }) => borderWidth || '2px'} solid
+    ${({ borderColor }) => borderColor || 'gold'};
   background-color: ${({ color }) => color || 'gold'};
   margin: 8px 0;
   border-radius: 8px;
@@ -23,6 +25,10 @@ const LeaderCard = styled.div<LeaderCardProps>`
 const Line = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const NumberPadding = styled.div`
+  margin-right: 8px;
 `;
 
 const getBorderColor = (index: number) => {
@@ -41,13 +47,21 @@ const getBorderColor = (index: number) => {
 const getColor = (index: number) => {
   switch (index) {
     case 1:
-      return '#D4AF37';
     case 2:
-      return '#CD7F32';
     case 3:
-      return '#C0C0C0';
     default:
       return 'transparent';
+  }
+};
+
+const getWidth = (index: number): string => {
+  switch (index) {
+    case 1:
+    case 2:
+    case 3:
+      return '2px';
+    default:
+      return '1px';
   }
 };
 
@@ -59,10 +73,17 @@ type NodeCardType = {
 export const NodeCard = ({ node, index }: NodeCardType) => {
   if (!node) return null;
   return (
-    <LeaderCard color={getColor(index)} borderColor={getBorderColor(index)}>
-      <div>{node.alias}</div>
+    <LeaderCard
+      color={getColor(index)}
+      borderColor={getBorderColor(index)}
+      borderWidth={getWidth(index)}
+    >
       <Line>
-        <DarkSubTitle>Points:</DarkSubTitle>
+        <NumberPadding>{`${index}.`}</NumberPadding>
+        {node.alias}
+      </Line>
+      <Line>
+        <DarkSubTitle withMargin={'0 8px 0 0'}>Points:</DarkSubTitle>
         {node.amount}
       </Line>
     </LeaderCard>

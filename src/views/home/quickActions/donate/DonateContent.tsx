@@ -19,6 +19,7 @@ import { mediaWidths } from 'src/styles/Themes';
 import { useGetCanConnectInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { useCreateThunderPointsMutation } from 'src/graphql/mutations/__generated__/createThunderPoints.generated';
 import { toast } from 'react-toastify';
+import { useBaseConnect } from 'src/hooks/UseBaseConnect';
 import { RequestModal } from '../../account/pay/RequestModal';
 
 const StyledText = styled.div`
@@ -37,6 +38,8 @@ export const SupportBar = () => {
   const [invoice, invoiceSet] = React.useState<string>('');
   const [id, idSet] = React.useState<string>('');
 
+  const connected = useBaseConnect();
+
   const [withPoints, setWithPoints] = React.useState<boolean>(false);
 
   const [getInvoice, { data, loading }] = useCreateBaseInvoiceMutation();
@@ -44,10 +47,8 @@ export const SupportBar = () => {
   const [
     createPoints,
     { data: pointsData, called, loading: pointsLoading },
-  ] = useCreateThunderPointsMutation();
+  ] = useCreateThunderPointsMutation({ refetchQueries: ['GetBasePoints'] });
   const { data: info } = useGetCanConnectInfoQuery();
-
-  console.log(info);
 
   React.useEffect(() => {
     if (data?.createBaseInvoice) {
@@ -67,6 +68,8 @@ export const SupportBar = () => {
       }
     }
   }, [pointsData, pointsLoading, called]);
+
+  if (!connected) return null;
 
   const handleReset = () => {
     modalOpenSet(false);

@@ -11,6 +11,7 @@ import {
 } from 'react-feather';
 import { useTransition, animated } from 'react-spring';
 import { useRouter } from 'next/router';
+import { useBaseConnect } from 'src/hooks/UseBaseConnect';
 import { headerColor, headerTextColor } from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
@@ -36,6 +37,8 @@ const SETTINGS = '/settings';
 export const Header = () => {
   const { pathname } = useRouter();
   const [open, setOpen] = useState(false);
+
+  const connected = useBaseConnect();
 
   const isRoot = pathname === '/';
 
@@ -76,7 +79,7 @@ export const Header = () => {
       <ViewSwitch hideMobile={true}>
         <HeaderButtons>
           {showHomeButton() && renderNavButton(HOME, Home)}
-          {renderNavButton(DONATIONS, Heart)}
+          {connected && renderNavButton(DONATIONS, Heart)}
           {renderNavButton(CHAT, MessageCircle)}
           {renderNavButton(SETTINGS, Settings)}
         </HeaderButtons>

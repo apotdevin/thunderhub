@@ -5,6 +5,7 @@ import { getProps } from 'src/utils/ssr';
 import { GET_BASE_POINTS } from 'src/graphql/queries/getBasePoints';
 import { useGetBasePointsQuery } from 'src/graphql/queries/__generated__/getBasePoints.generated';
 import { NodeCard } from 'src/views/leaderboard/NodeCard';
+import { SupportBar } from 'src/views/home/quickActions/donate/DonateContent';
 import {
   CardWithTitle,
   SubTitle,
@@ -20,16 +21,19 @@ const LeaderboardView = () => {
   }
 
   return (
-    <CardWithTitle>
-      <SubTitle>Leaderboard</SubTitle>
-      <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-        {data.getBasePoints.map((node, index: number) => (
-          <React.Fragment key={index}>
-            <NodeCard node={node} index={index + 1} />
-          </React.Fragment>
-        ))}
-      </Card>
-    </CardWithTitle>
+    <>
+      <SupportBar />
+      <CardWithTitle>
+        <SubTitle>Supporters</SubTitle>
+        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+          {data.getBasePoints.map((node, index: number) => (
+            <React.Fragment key={index}>
+              <NodeCard node={node} index={index + 1} />
+            </React.Fragment>
+          ))}
+        </Card>
+      </CardWithTitle>
+    </>
   );
 };
 

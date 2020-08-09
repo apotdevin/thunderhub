@@ -17,6 +17,7 @@ import {
   Heart,
 } from 'react-feather';
 import { useRouter } from 'next/router';
+import { useBaseConnect } from 'src/hooks/UseBaseConnect';
 import {
   unSelectedNavButton,
   navBackgroundColor,
@@ -135,6 +136,8 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const { pathname } = useRouter();
   const { sidebar } = useConfigState();
 
+  const connected = useBaseConnect();
+
   const isRoot = pathname === '/';
 
   const renderNavButton = (
@@ -190,7 +193,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Stats', STATS, BarChart2)}
-      {renderBurgerNav('Donations', DONATIONS, Heart)}
+      {connected && renderBurgerNav('Donations', DONATIONS, Heart)}
       {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}
     </BurgerRow>
