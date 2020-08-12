@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.3](https://github.com/apotdevin/thunderhub/compare/v0.9.2...v0.9.3) (2020-08-12)
+
+
+### Bug Fixes
+
+* 🐛 assets with base path ([e1bced2](https://github.com/apotdevin/thunderhub/commit/e1bced2c7b86184a37f519ad81dbebe6fbae64e6))
+
 ### [0.9.2](https://github.com/apotdevin/thunderhub/compare/v0.9.1...v0.9.2) (2020-08-09)
 
 
