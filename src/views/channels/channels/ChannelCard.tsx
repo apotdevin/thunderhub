@@ -14,6 +14,7 @@ import {
   useRebalanceState,
   useRebalanceDispatch,
 } from 'src/context/RebalanceContext';
+import { ChangeDetails } from 'src/components/modal/changeDetails/ChangeDetails';
 import {
   getPercent,
   formatSeconds,
@@ -29,7 +30,6 @@ import {
   SubCard,
   Separation,
   Sub4Title,
-  RightAlign,
   ResponsiveLine,
   DarkSubTitle,
 } from '../../../components/generic/Styled';
@@ -98,7 +98,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   const { inChannel, outChannel } = useRebalanceState();
 
   const { channelBarType, channelBarStyle } = useConfigState();
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState<string>('none');
 
   const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
@@ -187,6 +187,8 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
 
   const maxRate = Math.min(fee_rate || 0, 10000);
   const feeRate = format({ amount: fee_rate, override: 'ppm' });
+
+  const maxNodeRate = Math.min(node_rate || 0, 10000);
   const nodeFeeRate = format({ amount: node_rate, override: 'ppm' });
 
   const max_htlc = Number(max_htlc_mtokens) / 1000;
@@ -234,6 +236,14 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         {renderLine('CTLV Delta:', node_cltv)}
         {renderLine('Max HTLC (sats)', formatSats(max_htlc))}
         {renderLine('Min HTLC (sats)', formatSats(min_htlc))}
+        <ColorButton
+          fullWidth={true}
+          withBorder={true}
+          arrow={true}
+          onClick={() => setModalOpen('details')}
+        >
+          Update Details
+        </ColorButton>
         <Separation />
         {renderLine('Local Balance:', formatLocal)}
         {renderLine('Remote Balance:', formatRemote)}
@@ -263,15 +273,14 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         <Sub4Title>Partner Node Info</Sub4Title>
         {renderPartner()}
         <Separation />
-        <RightAlign>
-          <ColorButton
-            withBorder={true}
-            arrow={true}
-            onClick={() => setModalOpen(true)}
-          >
-            Close Channel
-          </ColorButton>
-        </RightAlign>
+        <ColorButton
+          fullWidth={true}
+          withBorder={true}
+          arrow={true}
+          onClick={() => setModalOpen('close')}
+        >
+          Close Channel
+        </ColorButton>
       </>
     );
   };
@@ -281,31 +290,16 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
       case 'fees':
         return (
           <ChannelStatsColumn>
-            <ChannelStatsLine>
-              {fee_rate && (
-                <ProgressBar
-                  order={fee_rate > maxRate ? 7 : 3}
-                  percent={getBar(maxRate, biggestRateFee)}
-                />
-              )}
-              <ProgressBar
-                order={4}
-                percent={getBar(biggestRateFee - maxRate, biggestRateFee)}
-              />
-            </ChannelStatsLine>
-            <ChannelStatsLine>
-              <ProgressBar
-                order={1}
-                percent={getBar(Number(base_fee_mtokens), biggestBaseFee)}
-              />
-              <ProgressBar
-                order={4}
-                percent={getBar(
-                  biggestBaseFee - Number(base_fee_mtokens),
-                  biggestBaseFee
-                )}
-              />
-            </ChannelStatsLine>
+            <BalanceBars
+              local={getBar(maxNodeRate, biggestRateFee)}
+              remote={getBar(maxRate, biggestRateFee)}
+              height={10}
+            />
+            <BalanceBars
+              local={getBar(Number(node_base), biggestBaseFee)}
+              remote={getBar(Number(base_fee_mtokens), biggestBaseFee)}
+              height={10}
+            />
           </ChannelStatsColumn>
         );
       case 'size':
@@ -364,7 +358,10 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
       case 'fees':
         return (
           <>
+            {renderLine('Fee Rate', nodeFeeRate)}
             {renderLine('Partner Fee Rate', feeRate)}
+            <Separation />
+            {renderLine('Base Fee', nodeBaseFee)}
             {renderLine('Partner Base Fee', baseFee)}
           </>
         );
@@ -488,12 +485,28 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
       >
         {renderBarsInfo()}
       </ReactTooltip>
-      <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
-        <CloseChannel
-          setModalOpen={setModalOpen}
-          channelId={id}
-          channelName={alias}
-        />
+      <Modal
+        isOpen={modalOpen !== 'none'}
+        closeCallback={() => setModalOpen('none')}
+      >
+        {modalOpen === 'close' ? (
+          <CloseChannel
+            callback={() => setModalOpen('none')}
+            channelId={id}
+            channelName={alias}
+          />
+        ) : (
+          <ChangeDetails
+            callback={() => setModalOpen('none')}
+            transaction_id={transaction_id}
+            transaction_vout={transaction_vout}
+            base_fee_mtokens={node_base}
+            max_htlc_mtokens={max_htlc_mtokens}
+            min_htlc_mtokens={min_htlc_mtokens}
+            fee_rate={node_rate}
+            cltv_delta={node_cltv}
+          />
+        )}
       </Modal>
     </SubCard>
   );

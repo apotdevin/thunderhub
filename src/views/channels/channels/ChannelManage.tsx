@@ -92,7 +92,7 @@ export const ChannelManage = () => {
             selected={channelBarType === 'fees'}
             onClick={() => changeType('fees')}
           >
-            Partner Fees
+            Fees
           </SingleButton>
         </MultiButton>
       </MarginLine>

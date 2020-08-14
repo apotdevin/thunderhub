@@ -30,6 +30,7 @@ type BalanceProps = {
   remote: number;
   formatLocal?: string;
   formatRemote?: string;
+  height?: number;
 };
 
 export const BalanceBars = ({
@@ -37,6 +38,7 @@ export const BalanceBars = ({
   remote,
   formatLocal,
   formatRemote,
+  height = 20,
 }: BalanceProps) => {
   const localOpposite = 100 - local;
   const remoteOpposite = 100 - remote;
@@ -57,10 +59,10 @@ export const BalanceBars = ({
       <BalanceLine>
         {hasLocal && <Value>{formatLocal}</Value>}
         {hasRemote && <RightValue>{formatRemote}</RightValue>}
-        <ProgressBar barHeight={20} order={4} percent={localOpposite} />
-        <ProgressBar barHeight={20} order={1} percent={local} />
-        <ProgressBar barHeight={20} order={2} percent={remote} />
-        <ProgressBar barHeight={20} order={4} percent={remoteOpposite} />
+        <ProgressBar barHeight={height} order={4} percent={localOpposite} />
+        <ProgressBar barHeight={height} order={1} percent={local} />
+        <ProgressBar barHeight={height} order={2} percent={remote} />
+        <ProgressBar barHeight={height} order={4} percent={remoteOpposite} />
       </BalanceLine>
     </>
   );
