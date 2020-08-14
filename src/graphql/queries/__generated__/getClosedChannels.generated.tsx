@@ -28,6 +28,7 @@ export type GetClosedChannelsQuery = { __typename?: 'Query' } & {
           | 'partner_public_key'
           | 'transaction_id'
           | 'transaction_vout'
+          | 'channel_age'
         > & {
             partner_node_info: { __typename?: 'Node' } & {
               node: { __typename?: 'nodeType' } & Pick<
@@ -67,6 +68,7 @@ export const GetClosedChannelsDocument = gql`
           updated_at
         }
       }
+      channel_age
     }
   }
 `;

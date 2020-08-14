@@ -1,7 +1,11 @@
-import { getClosedChannels as getLnClosedChannels } from 'ln-service';
+import {
+  getClosedChannels as getLnClosedChannels,
+  getWalletInfo,
+} from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { to } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
+import { getChannelAge } from 'server/schema/health/helpers';
 
 interface ChannelListProps {
   channels: ChannelProps[];
@@ -26,13 +30,14 @@ interface ChannelProps {
 
 export const getClosedChannels = async (
   _: undefined,
-  params: any,
+  __: any,
   context: ContextType
 ) => {
   await requestLimiter(context.ip, 'closedChannels');
 
   const { lnd } = context;
 
+  const { current_block_height } = await to(getWalletInfo({ lnd }));
   const { channels }: ChannelListProps = await to(getLnClosedChannels({ lnd }));
 
   return channels.map(channel => ({
@@ -41,5 +46,6 @@ export const getClosedChannels = async (
       lnd,
       publicKey: channel.partner_public_key,
     },
+    channel_age: getChannelAge(channel.id, current_block_height),
   }));
 };

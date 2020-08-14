@@ -108,6 +108,7 @@ export const channelTypes = gql`
     transaction_id: String!
     transaction_vout: Int!
     partner_node_info: Node!
+    channel_age: Int!
   }
 
   type openChannelType {

@@ -26,6 +26,7 @@ export const GET_CLOSED_CHANNELS = gql`
           updated_at
         }
       }
+      channel_age
     }
   }
 `;

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ClosedChannelType } from 'src/graphql/types';
+import { blockToTime } from 'src/utils/helpers';
 import { NodeTitle, MainInfo } from '../../../components/generic/CardGeneric';
 import {
   SubCard,
@@ -56,6 +57,7 @@ export const ClosedCard = ({
     transaction_id,
     transaction_vout,
     partner_node_info,
+    channel_age,
   } = channelInfo;
 
   const { alias, color: nodeColor } = partner_node_info?.node || {};
@@ -98,12 +100,17 @@ export const ClosedCard = ({
         <Separation />
         {renderLine('Channel Id:', id)}
         {renderLine('Node Public Key:', getNodeLink(partner_public_key))}
-        {renderLine('Transaction Id:', getTransactionLink(transaction_id))}
-        {renderLine('Transaction Vout:', transaction_vout)}
+        <Separation />
         {renderLine(
           'Close Transaction Id:',
           getTransactionLink(close_transaction_id)
         )}
+        {renderLine('Transaction Id:', getTransactionLink(transaction_id))}
+        {renderLine('Transaction Vout:', transaction_vout)}
+        <Separation />
+        {renderLine('Channel Age:', blockToTime(channel_age))}
+        {renderLine('Channel Block Age:', channel_age)}
+        <Separation />
         {renderLine('Close Confirm Height:', close_confirm_height)}
         {renderLine('Final Local Balance:', final_local_balance)}
         {renderLine('Final Time Lock Balance:', final_time_locked_balance)}

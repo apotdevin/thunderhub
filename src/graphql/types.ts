@@ -545,6 +545,7 @@ export type ClosedChannelType = {
   transaction_id: Scalars['String'];
   transaction_vout: Scalars['Int'];
   partner_node_info: Node;
+  channel_age: Scalars['Int'];
 };
 
 export type OpenChannelType = {
