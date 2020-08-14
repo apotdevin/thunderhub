@@ -6,7 +6,10 @@ generates:
     plugins:
       - fragment-matcher
   src/graphql/types.ts:
-    - typescript
+    plugins:
+      - typescript
+      - add:
+          content: '/* eslint-disable */'
   src/graphql/:
     preset: near-operation-file
     presetConfig:
@@ -21,3 +24,5 @@ generates:
     plugins:
       - 'typescript-operations'
       - 'typescript-react-apollo'
+      - add:
+          content: '/* eslint-disable */'
