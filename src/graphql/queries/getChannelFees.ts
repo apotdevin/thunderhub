@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const CHANNEL_FEES = gql`
   query ChannelFees {
-    getChannelFees {
+    getChannels {
       id
       partner_public_key
       partner_node_info {
@@ -11,7 +11,7 @@ export const CHANNEL_FEES = gql`
           color
         }
       }
-      channelInfo {
+      partner_fee_info {
         channel {
           transaction_id
           transaction_vout

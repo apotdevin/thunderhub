@@ -9,16 +9,16 @@ export type ChannelFeesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 export type ChannelFeesQuery = (
   { __typename?: 'Query' }
-  & { getChannelFees?: Types.Maybe<Array<Types.Maybe<(
-    { __typename?: 'channelFeeType' }
-    & Pick<Types.ChannelFeeType, 'id' | 'partner_public_key'>
+  & { getChannels: Array<Types.Maybe<(
+    { __typename?: 'channelType' }
+    & Pick<Types.ChannelType, 'id' | 'partner_public_key'>
     & { partner_node_info: (
       { __typename?: 'Node' }
       & { node: (
         { __typename?: 'nodeType' }
         & Pick<Types.NodeType, 'alias' | 'color'>
       ) }
-    ), channelInfo?: Types.Maybe<(
+    ), partner_fee_info?: Types.Maybe<(
       { __typename?: 'Channel' }
       & { channel?: Types.Maybe<(
         { __typename?: 'singleChannelType' }
@@ -32,13 +32,13 @@ export type ChannelFeesQuery = (
         )> }
       )> }
     )> }
-  )>>> }
+  )>> }
 );
 
 
 export const ChannelFeesDocument = gql`
     query ChannelFees {
-  getChannelFees {
+  getChannels {
     id
     partner_public_key
     partner_node_info {
@@ -47,7 +47,7 @@ export const ChannelFeesDocument = gql`
         color
       }
     }
-    channelInfo {
+    partner_fee_info {
       channel {
         transaction_id
         transaction_vout

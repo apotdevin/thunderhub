@@ -6,7 +6,7 @@ import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updat
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import styled from 'styled-components';
-import { ChannelFeeType } from 'src/graphql/types';
+import { ChannelType } from 'src/graphql/types';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
@@ -63,7 +63,7 @@ const FeesView = () => {
     refetchQueries: ['ChannelFees'],
   });
 
-  if (loading || !data || !data.getChannelFees) {
+  if (loading || !data || !data.getChannels) {
     return <LoadingCard title={'Details'} />;
   }
 
@@ -167,9 +167,9 @@ const FeesView = () => {
       <CardWithTitle>
         <SubTitle>Channel Details</SubTitle>
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          {data.getChannelFees.map((channel, index) => (
+          {data.getChannels.map((channel, index) => (
             <FeeCard
-              channel={channel as ChannelFeeType}
+              channel={channel as ChannelType}
               index={index + 1}
               setIndexOpen={setIndexOpen}
               indexOpen={indexOpen}

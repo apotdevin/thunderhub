@@ -14,7 +14,12 @@ import {
   useRebalanceState,
   useRebalanceDispatch,
 } from 'src/context/RebalanceContext';
-import { getPercent, formatSeconds, blockToTime } from '../../../utils/helpers';
+import {
+  getPercent,
+  formatSeconds,
+  blockToTime,
+  formatSats,
+} from '../../../utils/helpers';
 import {
   ProgressBar,
   StatusLine,
@@ -140,6 +145,14 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   const { base_fee_mtokens, fee_rate, cltv_delta } =
     partner_fee_info?.channel?.partner_node_policies || {};
 
+  const {
+    base_fee_mtokens: node_base,
+    fee_rate: node_rate,
+    cltv_delta: node_cltv,
+    max_htlc_mtokens,
+    min_htlc_mtokens,
+  } = partner_fee_info?.channel?.node_policies || {};
+
   const formatBalance = format({ amount: capacity });
   const formatLocal = format({ amount: local_balance });
   const formatRemote = format({ amount: remote_balance });
@@ -167,8 +180,17 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
     override: 'sat',
   });
 
+  const nodeBaseFee = format({
+    amount: Number(node_base) / 1000,
+    override: 'sat',
+  });
+
   const maxRate = Math.min(fee_rate || 0, 10000);
   const feeRate = format({ amount: fee_rate, override: 'ppm' });
+  const nodeFeeRate = format({ amount: node_rate, override: 'ppm' });
+
+  const max_htlc = Number(max_htlc_mtokens) / 1000;
+  const min_htlc = Number(min_htlc_mtokens) / 1000;
 
   const handleClick = () => {
     if (indexOpen === index) {
@@ -206,6 +228,12 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
           'Balancedness:',
           getPercent(local_balance, remote_balance) / 100
         )}
+        <Separation />
+        {renderLine('Base Fee:', nodeBaseFee)}
+        {renderLine('Fee Rate:', `${nodeFeeRate}`)}
+        {renderLine('CTLV Delta:', node_cltv)}
+        {renderLine('Max HTLC (sats)', formatSats(max_htlc))}
+        {renderLine('Min HTLC (sats)', formatSats(min_htlc))}
         <Separation />
         {renderLine('Local Balance:', formatLocal)}
         {renderLine('Remote Balance:', formatRemote)}
