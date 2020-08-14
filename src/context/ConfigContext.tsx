@@ -22,6 +22,7 @@ export type channelSortTypes =
   | 'partnerName'
   | 'size';
 export type sortDirectionTypes = 'increase' | 'decrease';
+export type subBarType = 'fees' | 'none';
 
 type State = {
   currency: string;
@@ -38,6 +39,7 @@ type State = {
   channelBarType: channelBarTypeTypes;
   channelSort: channelSortTypes;
   sortDirection: sortDirectionTypes;
+  subBar: subBarType;
 };
 
 type ConfigInitProps = {
@@ -61,6 +63,7 @@ type ActionType =
       channelBarType?: channelBarTypeTypes;
       channelSort?: channelSortTypes;
       sortDirection?: sortDirectionTypes;
+      subBar?: subBarType;
     }
   | { type: 'themeChange'; theme: string };
 
@@ -92,6 +95,7 @@ const initialState: State = {
   channelBarType: 'balance',
   channelSort: 'none',
   sortDirection: 'decrease',
+  subBar: 'none',
 };
 
 const stateReducer = (state: State, action: ActionType): State => {

@@ -36,6 +36,8 @@ export const ProgressBar = styled.div<ProgressBar>`
         return chartColors.darkyellow;
       case 7:
         return chartColors.red;
+      case 8:
+        return 'transparent';
       default:
         return chartColors.purple;
     }

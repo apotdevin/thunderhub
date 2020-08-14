@@ -10,6 +10,7 @@ import {
   channelBarTypeTypes,
   channelSortTypes,
   sortDirectionTypes,
+  subBarType,
 } from 'src/context/ConfigContext';
 import { Card, Sub4Title, ResponsiveLine } from 'src/components/generic/Styled';
 import styled from 'styled-components';
@@ -24,6 +25,7 @@ export const ChannelManage = () => {
     channelBarStyle,
     channelSort,
     sortDirection,
+    subBar,
   } = useConfigState();
   const dispatch = useConfigDispatch();
 
@@ -31,6 +33,8 @@ export const ChannelManage = () => {
     dispatch({ type: 'change', channelBarStyle: style });
   const changeType = (type: channelBarTypeTypes) =>
     dispatch({ type: 'change', channelBarType: type });
+  const changeSub = (type: subBarType) =>
+    dispatch({ type: 'change', subBar: type });
   const changeSort = (type: channelSortTypes) =>
     dispatch({ type: 'change', channelSort: type });
   const changeDirection = (type: sortDirectionTypes) =>
@@ -96,6 +100,25 @@ export const ChannelManage = () => {
           </SingleButton>
         </MultiButton>
       </MarginLine>
+      {(channelBarType === 'proportional' || channelBarType === 'balance') && (
+        <MarginLine>
+          <Sub4Title>Sub Bar</Sub4Title>
+          <MultiButton>
+            <SingleButton
+              selected={subBar === 'fees'}
+              onClick={() => changeSub('fees')}
+            >
+              Fee Rate
+            </SingleButton>
+            <SingleButton
+              selected={subBar === 'none'}
+              onClick={() => changeSub('none')}
+            >
+              None
+            </SingleButton>
+          </MultiButton>
+        </MarginLine>
+      )}
       <MarginLine>
         <Sub4Title>Sort</Sub4Title>
         <MultiButton>

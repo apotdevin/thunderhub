@@ -9,7 +9,7 @@ import {
   X,
 } from 'react-feather';
 import { ChannelType } from 'src/graphql/types';
-import { BalanceBars } from 'src/components/balance';
+import { BalanceBars, SingleBar } from 'src/components/balance';
 import {
   useRebalanceState,
   useRebalanceDispatch,
@@ -97,7 +97,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   const dispatch = useRebalanceDispatch();
   const { inChannel, outChannel } = useRebalanceState();
 
-  const { channelBarType, channelBarStyle } = useConfigState();
+  const { channelBarType, channelBarStyle, subBar } = useConfigState();
   const [modalOpen, setModalOpen] = useState<string>('none');
 
   const { currency, displayValues } = useConfigState();
@@ -334,21 +334,31 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         );
       case 'proportional':
         return (
-          <BalanceBars
-            local={getBar(local_balance, biggest)}
-            remote={getBar(remote_balance, biggest)}
-            formatLocal={localBalance}
-            formatRemote={remoteBalance}
-          />
+          <ChannelStatsColumn>
+            {subBar === 'fees' && (
+              <SingleBar value={getBar(maxRate, 2000)} height={4} />
+            )}
+            <BalanceBars
+              local={getBar(local_balance, biggest)}
+              remote={getBar(remote_balance, biggest)}
+              formatLocal={localBalance}
+              formatRemote={remoteBalance}
+            />
+          </ChannelStatsColumn>
         );
       default:
         return (
-          <BalanceBars
-            local={getPercent(local_balance, remote_balance)}
-            remote={getPercent(remote_balance, local_balance)}
-            formatLocal={localBalance}
-            formatRemote={remoteBalance}
-          />
+          <ChannelStatsColumn>
+            {subBar === 'fees' && (
+              <SingleBar value={getBar(maxRate, 2000)} height={4} />
+            )}
+            <BalanceBars
+              local={getPercent(local_balance, remote_balance)}
+              remote={getPercent(remote_balance, local_balance)}
+              formatLocal={localBalance}
+              formatRemote={remoteBalance}
+            />
+          </ChannelStatsColumn>
         );
     }
   };
