@@ -21,7 +21,7 @@ type NodeParent = {
 export const nodeResolvers = {
   Query: {
     getNode: async (_: undefined, params: any, context: ContextType) => {
-      await requestLimiter(context.ip, 'closedChannels');
+      await requestLimiter(context.ip, 'getNode');
 
       const { withoutChannels = true, publicKey } = params;
       const { lnd } = context;
