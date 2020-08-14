@@ -4,54 +4,47 @@ import * as Types from '../../types';
 import * as Apollo from '@apollo/client';
 const gql = Apollo.gql;
 
-export type GetVolumeHealthQueryVariables = Types.Exact<{
-  [key: string]: never;
-}>;
+export type GetVolumeHealthQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
-export type GetVolumeHealthQuery = { __typename?: 'Query' } & {
-  getVolumeHealth?: Types.Maybe<
-    { __typename?: 'channelsHealth' } & Pick<Types.ChannelsHealth, 'score'> & {
-        channels?: Types.Maybe<
-          Array<
-            Types.Maybe<
-              { __typename?: 'channelHealth' } & Pick<
-                Types.ChannelHealth,
-                'id' | 'score' | 'volumeNormalized' | 'averageVolumeNormalized'
-              > & {
-                  partner?: Types.Maybe<
-                    { __typename?: 'Node' } & {
-                      node: { __typename?: 'nodeType' } & Pick<
-                        Types.NodeType,
-                        'alias'
-                      >;
-                    }
-                  >;
-                }
-            >
-          >
-        >;
-      }
-  >;
-};
+
+export type GetVolumeHealthQuery = (
+  { __typename?: 'Query' }
+  & { getVolumeHealth?: Types.Maybe<(
+    { __typename?: 'channelsHealth' }
+    & Pick<Types.ChannelsHealth, 'score'>
+    & { channels?: Types.Maybe<Array<Types.Maybe<(
+      { __typename?: 'channelHealth' }
+      & Pick<Types.ChannelHealth, 'id' | 'score' | 'volumeNormalized' | 'averageVolumeNormalized'>
+      & { partner?: Types.Maybe<(
+        { __typename?: 'Node' }
+        & { node: (
+          { __typename?: 'nodeType' }
+          & Pick<Types.NodeType, 'alias'>
+        ) }
+      )> }
+    )>>> }
+  )> }
+);
+
 
 export const GetVolumeHealthDocument = gql`
-  query GetVolumeHealth {
-    getVolumeHealth {
+    query GetVolumeHealth {
+  getVolumeHealth {
+    score
+    channels {
+      id
       score
-      channels {
-        id
-        score
-        volumeNormalized
-        averageVolumeNormalized
-        partner {
-          node {
-            alias
-          }
+      volumeNormalized
+      averageVolumeNormalized
+      partner {
+        node {
+          alias
         }
       }
     }
   }
-`;
+}
+    `;
 
 /**
  * __useGetVolumeHealthQuery__
@@ -68,35 +61,12 @@ export const GetVolumeHealthDocument = gql`
  *   },
  * });
  */
-export function useGetVolumeHealthQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetVolumeHealthQuery,
-    GetVolumeHealthQueryVariables
-  >
-) {
-  return Apollo.useQuery<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>(
-    GetVolumeHealthDocument,
-    baseOptions
-  );
-}
-export function useGetVolumeHealthLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetVolumeHealthQuery,
-    GetVolumeHealthQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    GetVolumeHealthQuery,
-    GetVolumeHealthQueryVariables
-  >(GetVolumeHealthDocument, baseOptions);
-}
-export type GetVolumeHealthQueryHookResult = ReturnType<
-  typeof useGetVolumeHealthQuery
->;
-export type GetVolumeHealthLazyQueryHookResult = ReturnType<
-  typeof useGetVolumeHealthLazyQuery
->;
-export type GetVolumeHealthQueryResult = Apollo.QueryResult<
-  GetVolumeHealthQuery,
-  GetVolumeHealthQueryVariables
->;
+export function useGetVolumeHealthQuery(baseOptions?: Apollo.QueryHookOptions<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>) {
+        return Apollo.useQuery<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>(GetVolumeHealthDocument, baseOptions);
+      }
+export function useGetVolumeHealthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>) {
+          return Apollo.useLazyQuery<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>(GetVolumeHealthDocument, baseOptions);
+        }
+export type GetVolumeHealthQueryHookResult = ReturnType<typeof useGetVolumeHealthQuery>;
+export type GetVolumeHealthLazyQueryHookResult = ReturnType<typeof useGetVolumeHealthLazyQuery>;
+export type GetVolumeHealthQueryResult = Apollo.QueryResult<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>;

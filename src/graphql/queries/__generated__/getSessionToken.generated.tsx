@@ -9,16 +9,18 @@ export type GetSessionTokenQueryVariables = Types.Exact<{
   password: Types.Scalars['String'];
 }>;
 
-export type GetSessionTokenQuery = { __typename?: 'Query' } & Pick<
-  Types.Query,
-  'getSessionToken'
->;
+
+export type GetSessionTokenQuery = (
+  { __typename?: 'Query' }
+  & Pick<Types.Query, 'getSessionToken'>
+);
+
 
 export const GetSessionTokenDocument = gql`
-  query GetSessionToken($id: String!, $password: String!) {
-    getSessionToken(id: $id, password: $password)
-  }
-`;
+    query GetSessionToken($id: String!, $password: String!) {
+  getSessionToken(id: $id, password: $password)
+}
+    `;
 
 /**
  * __useGetSessionTokenQuery__
@@ -37,35 +39,12 @@ export const GetSessionTokenDocument = gql`
  *   },
  * });
  */
-export function useGetSessionTokenQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetSessionTokenQuery,
-    GetSessionTokenQueryVariables
-  >
-) {
-  return Apollo.useQuery<GetSessionTokenQuery, GetSessionTokenQueryVariables>(
-    GetSessionTokenDocument,
-    baseOptions
-  );
-}
-export function useGetSessionTokenLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetSessionTokenQuery,
-    GetSessionTokenQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    GetSessionTokenQuery,
-    GetSessionTokenQueryVariables
-  >(GetSessionTokenDocument, baseOptions);
-}
-export type GetSessionTokenQueryHookResult = ReturnType<
-  typeof useGetSessionTokenQuery
->;
-export type GetSessionTokenLazyQueryHookResult = ReturnType<
-  typeof useGetSessionTokenLazyQuery
->;
-export type GetSessionTokenQueryResult = Apollo.QueryResult<
-  GetSessionTokenQuery,
-  GetSessionTokenQueryVariables
->;
+export function useGetSessionTokenQuery(baseOptions?: Apollo.QueryHookOptions<GetSessionTokenQuery, GetSessionTokenQueryVariables>) {
+        return Apollo.useQuery<GetSessionTokenQuery, GetSessionTokenQueryVariables>(GetSessionTokenDocument, baseOptions);
+      }
+export function useGetSessionTokenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSessionTokenQuery, GetSessionTokenQueryVariables>) {
+          return Apollo.useLazyQuery<GetSessionTokenQuery, GetSessionTokenQueryVariables>(GetSessionTokenDocument, baseOptions);
+        }
+export type GetSessionTokenQueryHookResult = ReturnType<typeof useGetSessionTokenQuery>;
+export type GetSessionTokenLazyQueryHookResult = ReturnType<typeof useGetSessionTokenLazyQuery>;
+export type GetSessionTokenQueryResult = Apollo.QueryResult<GetSessionTokenQuery, GetSessionTokenQueryVariables>;

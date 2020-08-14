@@ -14,36 +14,19 @@ export type UpdateFeesMutationVariables = Types.Exact<{
   min_htlc_mtokens?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
-export type UpdateFeesMutation = { __typename?: 'Mutation' } & Pick<
-  Types.Mutation,
-  'updateFees'
->;
+
+export type UpdateFeesMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Types.Mutation, 'updateFees'>
+);
+
 
 export const UpdateFeesDocument = gql`
-  mutation UpdateFees(
-    $transaction_id: String
-    $transaction_vout: Int
-    $base_fee_tokens: Float
-    $fee_rate: Int
-    $cltv_delta: Int
-    $max_htlc_mtokens: String
-    $min_htlc_mtokens: String
-  ) {
-    updateFees(
-      transaction_id: $transaction_id
-      transaction_vout: $transaction_vout
-      base_fee_tokens: $base_fee_tokens
-      fee_rate: $fee_rate
-      cltv_delta: $cltv_delta
-      max_htlc_mtokens: $max_htlc_mtokens
-      min_htlc_mtokens: $min_htlc_mtokens
-    )
-  }
-`;
-export type UpdateFeesMutationFn = Apollo.MutationFunction<
-  UpdateFeesMutation,
-  UpdateFeesMutationVariables
->;
+    mutation UpdateFees($transaction_id: String, $transaction_vout: Int, $base_fee_tokens: Float, $fee_rate: Int, $cltv_delta: Int, $max_htlc_mtokens: String, $min_htlc_mtokens: String) {
+  updateFees(transaction_id: $transaction_id, transaction_vout: $transaction_vout, base_fee_tokens: $base_fee_tokens, fee_rate: $fee_rate, cltv_delta: $cltv_delta, max_htlc_mtokens: $max_htlc_mtokens, min_htlc_mtokens: $min_htlc_mtokens)
+}
+    `;
+export type UpdateFeesMutationFn = Apollo.MutationFunction<UpdateFeesMutation, UpdateFeesMutationVariables>;
 
 /**
  * __useUpdateFeesMutation__
@@ -68,24 +51,9 @@ export type UpdateFeesMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useUpdateFeesMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateFeesMutation,
-    UpdateFeesMutationVariables
-  >
-) {
-  return Apollo.useMutation<UpdateFeesMutation, UpdateFeesMutationVariables>(
-    UpdateFeesDocument,
-    baseOptions
-  );
-}
-export type UpdateFeesMutationHookResult = ReturnType<
-  typeof useUpdateFeesMutation
->;
-export type UpdateFeesMutationResult = Apollo.MutationResult<
-  UpdateFeesMutation
->;
-export type UpdateFeesMutationOptions = Apollo.BaseMutationOptions<
-  UpdateFeesMutation,
-  UpdateFeesMutationVariables
->;
+export function useUpdateFeesMutation(baseOptions?: Apollo.MutationHookOptions<UpdateFeesMutation, UpdateFeesMutationVariables>) {
+        return Apollo.useMutation<UpdateFeesMutation, UpdateFeesMutationVariables>(UpdateFeesDocument, baseOptions);
+      }
+export type UpdateFeesMutationHookResult = ReturnType<typeof useUpdateFeesMutation>;
+export type UpdateFeesMutationResult = Apollo.MutationResult<UpdateFeesMutation>;
+export type UpdateFeesMutationOptions = Apollo.BaseMutationOptions<UpdateFeesMutation, UpdateFeesMutationVariables>;

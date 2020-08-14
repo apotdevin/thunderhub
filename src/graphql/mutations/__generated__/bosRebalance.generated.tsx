@@ -17,97 +17,54 @@ export type BosRebalanceMutationVariables = Types.Exact<{
   target?: Types.Maybe<Types.Scalars['Int']>;
 }>;
 
-export type BosRebalanceMutation = { __typename?: 'Mutation' } & {
-  bosRebalance?: Types.Maybe<
-    { __typename?: 'bosRebalanceResultType' } & {
-      increase?: Types.Maybe<
-        { __typename?: 'bosIncreaseType' } & Pick<
-          Types.BosIncreaseType,
-          | 'increased_inbound_on'
-          | 'liquidity_inbound'
-          | 'liquidity_inbound_opening'
-          | 'liquidity_inbound_pending'
-          | 'liquidity_outbound'
-          | 'liquidity_outbound_opening'
-          | 'liquidity_outbound_pending'
-        >
-      >;
-      decrease?: Types.Maybe<
-        { __typename?: 'bosDecreaseType' } & Pick<
-          Types.BosDecreaseType,
-          | 'decreased_inbound_on'
-          | 'liquidity_inbound'
-          | 'liquidity_inbound_opening'
-          | 'liquidity_inbound_pending'
-          | 'liquidity_outbound'
-          | 'liquidity_outbound_opening'
-          | 'liquidity_outbound_pending'
-        >
-      >;
-      result?: Types.Maybe<
-        { __typename?: 'bosResultType' } & Pick<
-          Types.BosResultType,
-          'rebalanced' | 'rebalance_fees_spent'
-        >
-      >;
-    }
-  >;
-};
+
+export type BosRebalanceMutation = (
+  { __typename?: 'Mutation' }
+  & { bosRebalance?: Types.Maybe<(
+    { __typename?: 'bosRebalanceResultType' }
+    & { increase?: Types.Maybe<(
+      { __typename?: 'bosIncreaseType' }
+      & Pick<Types.BosIncreaseType, 'increased_inbound_on' | 'liquidity_inbound' | 'liquidity_inbound_opening' | 'liquidity_inbound_pending' | 'liquidity_outbound' | 'liquidity_outbound_opening' | 'liquidity_outbound_pending'>
+    )>, decrease?: Types.Maybe<(
+      { __typename?: 'bosDecreaseType' }
+      & Pick<Types.BosDecreaseType, 'decreased_inbound_on' | 'liquidity_inbound' | 'liquidity_inbound_opening' | 'liquidity_inbound_pending' | 'liquidity_outbound' | 'liquidity_outbound_opening' | 'liquidity_outbound_pending'>
+    )>, result?: Types.Maybe<(
+      { __typename?: 'bosResultType' }
+      & Pick<Types.BosResultType, 'rebalanced' | 'rebalance_fees_spent'>
+    )> }
+  )> }
+);
+
 
 export const BosRebalanceDocument = gql`
-  mutation BosRebalance(
-    $avoid: [String]
-    $in_through: String
-    $is_avoiding_high_inbound: Boolean
-    $max_fee: Int
-    $max_fee_rate: Int
-    $max_rebalance: Int
-    $node: String
-    $out_channels: [String]
-    $out_through: String
-    $target: Int
-  ) {
-    bosRebalance(
-      avoid: $avoid
-      in_through: $in_through
-      is_avoiding_high_inbound: $is_avoiding_high_inbound
-      max_fee: $max_fee
-      max_fee_rate: $max_fee_rate
-      max_rebalance: $max_rebalance
-      node: $node
-      out_channels: $out_channels
-      out_through: $out_through
-      target: $target
-    ) {
-      increase {
-        increased_inbound_on
-        liquidity_inbound
-        liquidity_inbound_opening
-        liquidity_inbound_pending
-        liquidity_outbound
-        liquidity_outbound_opening
-        liquidity_outbound_pending
-      }
-      decrease {
-        decreased_inbound_on
-        liquidity_inbound
-        liquidity_inbound_opening
-        liquidity_inbound_pending
-        liquidity_outbound
-        liquidity_outbound_opening
-        liquidity_outbound_pending
-      }
-      result {
-        rebalanced
-        rebalance_fees_spent
-      }
+    mutation BosRebalance($avoid: [String], $in_through: String, $is_avoiding_high_inbound: Boolean, $max_fee: Int, $max_fee_rate: Int, $max_rebalance: Int, $node: String, $out_channels: [String], $out_through: String, $target: Int) {
+  bosRebalance(avoid: $avoid, in_through: $in_through, is_avoiding_high_inbound: $is_avoiding_high_inbound, max_fee: $max_fee, max_fee_rate: $max_fee_rate, max_rebalance: $max_rebalance, node: $node, out_channels: $out_channels, out_through: $out_through, target: $target) {
+    increase {
+      increased_inbound_on
+      liquidity_inbound
+      liquidity_inbound_opening
+      liquidity_inbound_pending
+      liquidity_outbound
+      liquidity_outbound_opening
+      liquidity_outbound_pending
+    }
+    decrease {
+      decreased_inbound_on
+      liquidity_inbound
+      liquidity_inbound_opening
+      liquidity_inbound_pending
+      liquidity_outbound
+      liquidity_outbound_opening
+      liquidity_outbound_pending
+    }
+    result {
+      rebalanced
+      rebalance_fees_spent
     }
   }
-`;
-export type BosRebalanceMutationFn = Apollo.MutationFunction<
-  BosRebalanceMutation,
-  BosRebalanceMutationVariables
->;
+}
+    `;
+export type BosRebalanceMutationFn = Apollo.MutationFunction<BosRebalanceMutation, BosRebalanceMutationVariables>;
 
 /**
  * __useBosRebalanceMutation__
@@ -135,24 +92,9 @@ export type BosRebalanceMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useBosRebalanceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    BosRebalanceMutation,
-    BosRebalanceMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    BosRebalanceMutation,
-    BosRebalanceMutationVariables
-  >(BosRebalanceDocument, baseOptions);
-}
-export type BosRebalanceMutationHookResult = ReturnType<
-  typeof useBosRebalanceMutation
->;
-export type BosRebalanceMutationResult = Apollo.MutationResult<
-  BosRebalanceMutation
->;
-export type BosRebalanceMutationOptions = Apollo.BaseMutationOptions<
-  BosRebalanceMutation,
-  BosRebalanceMutationVariables
->;
+export function useBosRebalanceMutation(baseOptions?: Apollo.MutationHookOptions<BosRebalanceMutation, BosRebalanceMutationVariables>) {
+        return Apollo.useMutation<BosRebalanceMutation, BosRebalanceMutationVariables>(BosRebalanceDocument, baseOptions);
+      }
+export type BosRebalanceMutationHookResult = ReturnType<typeof useBosRebalanceMutation>;
+export type BosRebalanceMutationResult = Apollo.MutationResult<BosRebalanceMutation>;
+export type BosRebalanceMutationOptions = Apollo.BaseMutationOptions<BosRebalanceMutation, BosRebalanceMutationVariables>;

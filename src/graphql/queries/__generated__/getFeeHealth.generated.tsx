@@ -4,94 +4,68 @@ import * as Types from '../../types';
 import * as Apollo from '@apollo/client';
 const gql = Apollo.gql;
 
-export type GetFeeHealthQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type GetFeeHealthQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
-export type GetFeeHealthQuery = { __typename?: 'Query' } & {
-  getFeeHealth?: Types.Maybe<
-    { __typename?: 'channelsFeeHealth' } & Pick<
-      Types.ChannelsFeeHealth,
-      'score'
-    > & {
-        channels?: Types.Maybe<
-          Array<
-            Types.Maybe<
-              { __typename?: 'channelFeeHealth' } & Pick<
-                Types.ChannelFeeHealth,
-                'id'
-              > & {
-                  partnerSide?: Types.Maybe<
-                    { __typename?: 'feeHealth' } & Pick<
-                      Types.FeeHealth,
-                      | 'score'
-                      | 'rate'
-                      | 'base'
-                      | 'rateScore'
-                      | 'baseScore'
-                      | 'rateOver'
-                      | 'baseOver'
-                    >
-                  >;
-                  mySide?: Types.Maybe<
-                    { __typename?: 'feeHealth' } & Pick<
-                      Types.FeeHealth,
-                      | 'score'
-                      | 'rate'
-                      | 'base'
-                      | 'rateScore'
-                      | 'baseScore'
-                      | 'rateOver'
-                      | 'baseOver'
-                    >
-                  >;
-                  partner?: Types.Maybe<
-                    { __typename?: 'Node' } & {
-                      node: { __typename?: 'nodeType' } & Pick<
-                        Types.NodeType,
-                        'alias'
-                      >;
-                    }
-                  >;
-                }
-            >
-          >
-        >;
-      }
-  >;
-};
+
+export type GetFeeHealthQuery = (
+  { __typename?: 'Query' }
+  & { getFeeHealth?: Types.Maybe<(
+    { __typename?: 'channelsFeeHealth' }
+    & Pick<Types.ChannelsFeeHealth, 'score'>
+    & { channels?: Types.Maybe<Array<Types.Maybe<(
+      { __typename?: 'channelFeeHealth' }
+      & Pick<Types.ChannelFeeHealth, 'id'>
+      & { partnerSide?: Types.Maybe<(
+        { __typename?: 'feeHealth' }
+        & Pick<Types.FeeHealth, 'score' | 'rate' | 'base' | 'rateScore' | 'baseScore' | 'rateOver' | 'baseOver'>
+      )>, mySide?: Types.Maybe<(
+        { __typename?: 'feeHealth' }
+        & Pick<Types.FeeHealth, 'score' | 'rate' | 'base' | 'rateScore' | 'baseScore' | 'rateOver' | 'baseOver'>
+      )>, partner?: Types.Maybe<(
+        { __typename?: 'Node' }
+        & { node: (
+          { __typename?: 'nodeType' }
+          & Pick<Types.NodeType, 'alias'>
+        ) }
+      )> }
+    )>>> }
+  )> }
+);
+
 
 export const GetFeeHealthDocument = gql`
-  query GetFeeHealth {
-    getFeeHealth {
-      score
-      channels {
-        id
-        partnerSide {
-          score
-          rate
-          base
-          rateScore
-          baseScore
-          rateOver
-          baseOver
-        }
-        mySide {
-          score
-          rate
-          base
-          rateScore
-          baseScore
-          rateOver
-          baseOver
-        }
-        partner {
-          node {
-            alias
-          }
+    query GetFeeHealth {
+  getFeeHealth {
+    score
+    channels {
+      id
+      partnerSide {
+        score
+        rate
+        base
+        rateScore
+        baseScore
+        rateOver
+        baseOver
+      }
+      mySide {
+        score
+        rate
+        base
+        rateScore
+        baseScore
+        rateOver
+        baseOver
+      }
+      partner {
+        node {
+          alias
         }
       }
     }
   }
-`;
+}
+    `;
 
 /**
  * __useGetFeeHealthQuery__
@@ -108,35 +82,12 @@ export const GetFeeHealthDocument = gql`
  *   },
  * });
  */
-export function useGetFeeHealthQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetFeeHealthQuery,
-    GetFeeHealthQueryVariables
-  >
-) {
-  return Apollo.useQuery<GetFeeHealthQuery, GetFeeHealthQueryVariables>(
-    GetFeeHealthDocument,
-    baseOptions
-  );
-}
-export function useGetFeeHealthLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetFeeHealthQuery,
-    GetFeeHealthQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<GetFeeHealthQuery, GetFeeHealthQueryVariables>(
-    GetFeeHealthDocument,
-    baseOptions
-  );
-}
-export type GetFeeHealthQueryHookResult = ReturnType<
-  typeof useGetFeeHealthQuery
->;
-export type GetFeeHealthLazyQueryHookResult = ReturnType<
-  typeof useGetFeeHealthLazyQuery
->;
-export type GetFeeHealthQueryResult = Apollo.QueryResult<
-  GetFeeHealthQuery,
-  GetFeeHealthQueryVariables
->;
+export function useGetFeeHealthQuery(baseOptions?: Apollo.QueryHookOptions<GetFeeHealthQuery, GetFeeHealthQueryVariables>) {
+        return Apollo.useQuery<GetFeeHealthQuery, GetFeeHealthQueryVariables>(GetFeeHealthDocument, baseOptions);
+      }
+export function useGetFeeHealthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFeeHealthQuery, GetFeeHealthQueryVariables>) {
+          return Apollo.useLazyQuery<GetFeeHealthQuery, GetFeeHealthQueryVariables>(GetFeeHealthDocument, baseOptions);
+        }
+export type GetFeeHealthQueryHookResult = ReturnType<typeof useGetFeeHealthQuery>;
+export type GetFeeHealthLazyQueryHookResult = ReturnType<typeof useGetFeeHealthLazyQuery>;
+export type GetFeeHealthQueryResult = Apollo.QueryResult<GetFeeHealthQuery, GetFeeHealthQueryVariables>;

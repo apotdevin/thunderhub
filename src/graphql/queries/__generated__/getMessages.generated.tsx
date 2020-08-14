@@ -9,48 +9,37 @@ export type GetMessagesQueryVariables = Types.Exact<{
   lastMessage?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
-export type GetMessagesQuery = { __typename?: 'Query' } & {
-  getMessages?: Types.Maybe<
-    { __typename?: 'getMessagesType' } & Pick<
-      Types.GetMessagesType,
-      'token'
-    > & {
-        messages: Array<
-          Types.Maybe<
-            { __typename?: 'messagesType' } & Pick<
-              Types.MessagesType,
-              | 'date'
-              | 'contentType'
-              | 'alias'
-              | 'message'
-              | 'id'
-              | 'sender'
-              | 'verified'
-              | 'tokens'
-            >
-          >
-        >;
-      }
-  >;
-};
+
+export type GetMessagesQuery = (
+  { __typename?: 'Query' }
+  & { getMessages?: Types.Maybe<(
+    { __typename?: 'getMessagesType' }
+    & Pick<Types.GetMessagesType, 'token'>
+    & { messages: Array<Types.Maybe<(
+      { __typename?: 'messagesType' }
+      & Pick<Types.MessagesType, 'date' | 'contentType' | 'alias' | 'message' | 'id' | 'sender' | 'verified' | 'tokens'>
+    )>> }
+  )> }
+);
+
 
 export const GetMessagesDocument = gql`
-  query GetMessages($initialize: Boolean, $lastMessage: String) {
-    getMessages(initialize: $initialize, lastMessage: $lastMessage) {
-      token
-      messages {
-        date
-        contentType
-        alias
-        message
-        id
-        sender
-        verified
-        tokens
-      }
+    query GetMessages($initialize: Boolean, $lastMessage: String) {
+  getMessages(initialize: $initialize, lastMessage: $lastMessage) {
+    token
+    messages {
+      date
+      contentType
+      alias
+      message
+      id
+      sender
+      verified
+      tokens
     }
   }
-`;
+}
+    `;
 
 /**
  * __useGetMessagesQuery__
@@ -69,33 +58,12 @@ export const GetMessagesDocument = gql`
  *   },
  * });
  */
-export function useGetMessagesQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetMessagesQuery,
-    GetMessagesQueryVariables
-  >
-) {
-  return Apollo.useQuery<GetMessagesQuery, GetMessagesQueryVariables>(
-    GetMessagesDocument,
-    baseOptions
-  );
-}
-export function useGetMessagesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetMessagesQuery,
-    GetMessagesQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<GetMessagesQuery, GetMessagesQueryVariables>(
-    GetMessagesDocument,
-    baseOptions
-  );
-}
+export function useGetMessagesQuery(baseOptions?: Apollo.QueryHookOptions<GetMessagesQuery, GetMessagesQueryVariables>) {
+        return Apollo.useQuery<GetMessagesQuery, GetMessagesQueryVariables>(GetMessagesDocument, baseOptions);
+      }
+export function useGetMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMessagesQuery, GetMessagesQueryVariables>) {
+          return Apollo.useLazyQuery<GetMessagesQuery, GetMessagesQueryVariables>(GetMessagesDocument, baseOptions);
+        }
 export type GetMessagesQueryHookResult = ReturnType<typeof useGetMessagesQuery>;
-export type GetMessagesLazyQueryHookResult = ReturnType<
-  typeof useGetMessagesLazyQuery
->;
-export type GetMessagesQueryResult = Apollo.QueryResult<
-  GetMessagesQuery,
-  GetMessagesQueryVariables
->;
+export type GetMessagesLazyQueryHookResult = ReturnType<typeof useGetMessagesLazyQuery>;
+export type GetMessagesQueryResult = Apollo.QueryResult<GetMessagesQuery, GetMessagesQueryVariables>;

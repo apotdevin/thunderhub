@@ -9,16 +9,18 @@ export type VerifyMessageQueryVariables = Types.Exact<{
   signature: Types.Scalars['String'];
 }>;
 
-export type VerifyMessageQuery = { __typename?: 'Query' } & Pick<
-  Types.Query,
-  'verifyMessage'
->;
+
+export type VerifyMessageQuery = (
+  { __typename?: 'Query' }
+  & Pick<Types.Query, 'verifyMessage'>
+);
+
 
 export const VerifyMessageDocument = gql`
-  query VerifyMessage($message: String!, $signature: String!) {
-    verifyMessage(message: $message, signature: $signature)
-  }
-`;
+    query VerifyMessage($message: String!, $signature: String!) {
+  verifyMessage(message: $message, signature: $signature)
+}
+    `;
 
 /**
  * __useVerifyMessageQuery__
@@ -37,35 +39,12 @@ export const VerifyMessageDocument = gql`
  *   },
  * });
  */
-export function useVerifyMessageQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    VerifyMessageQuery,
-    VerifyMessageQueryVariables
-  >
-) {
-  return Apollo.useQuery<VerifyMessageQuery, VerifyMessageQueryVariables>(
-    VerifyMessageDocument,
-    baseOptions
-  );
-}
-export function useVerifyMessageLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    VerifyMessageQuery,
-    VerifyMessageQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<VerifyMessageQuery, VerifyMessageQueryVariables>(
-    VerifyMessageDocument,
-    baseOptions
-  );
-}
-export type VerifyMessageQueryHookResult = ReturnType<
-  typeof useVerifyMessageQuery
->;
-export type VerifyMessageLazyQueryHookResult = ReturnType<
-  typeof useVerifyMessageLazyQuery
->;
-export type VerifyMessageQueryResult = Apollo.QueryResult<
-  VerifyMessageQuery,
-  VerifyMessageQueryVariables
->;
+export function useVerifyMessageQuery(baseOptions?: Apollo.QueryHookOptions<VerifyMessageQuery, VerifyMessageQueryVariables>) {
+        return Apollo.useQuery<VerifyMessageQuery, VerifyMessageQueryVariables>(VerifyMessageDocument, baseOptions);
+      }
+export function useVerifyMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VerifyMessageQuery, VerifyMessageQueryVariables>) {
+          return Apollo.useLazyQuery<VerifyMessageQuery, VerifyMessageQueryVariables>(VerifyMessageDocument, baseOptions);
+        }
+export type VerifyMessageQueryHookResult = ReturnType<typeof useVerifyMessageQuery>;
+export type VerifyMessageLazyQueryHookResult = ReturnType<typeof useVerifyMessageLazyQuery>;
+export type VerifyMessageQueryResult = Apollo.QueryResult<VerifyMessageQuery, VerifyMessageQueryVariables>;
