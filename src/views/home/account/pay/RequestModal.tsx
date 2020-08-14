@@ -185,7 +185,7 @@ export const RequestModal: React.FC<DecodeProps> = ({
         loading={payLoading}
         fullWidth={true}
       >
-        Send
+        Pay
       </ColorButton>
     </>
   );

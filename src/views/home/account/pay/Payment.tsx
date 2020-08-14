@@ -76,8 +76,9 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
           mobileMargin={'0'}
           mobileFullWidth={true}
           onClick={() => handleClick()}
+          arrow={true}
         >
-          Send Sats
+          Decode
         </ColorButton>
       </ResponsiveLine>
       <Modal
