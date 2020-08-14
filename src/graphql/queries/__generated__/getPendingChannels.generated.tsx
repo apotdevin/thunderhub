@@ -4,72 +4,54 @@ import * as Types from '../../types';
 import * as Apollo from '@apollo/client';
 const gql = Apollo.gql;
 
-export type GetPendingChannelsQueryVariables = Types.Exact<{
-  [key: string]: never;
-}>;
+export type GetPendingChannelsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
-export type GetPendingChannelsQuery = { __typename?: 'Query' } & {
-  getPendingChannels?: Types.Maybe<
-    Array<
-      Types.Maybe<
-        { __typename?: 'pendingChannelType' } & Pick<
-          Types.PendingChannelType,
-          | 'close_transaction_id'
-          | 'is_active'
-          | 'is_closing'
-          | 'is_opening'
-          | 'local_balance'
-          | 'local_reserve'
-          | 'partner_public_key'
-          | 'received'
-          | 'remote_balance'
-          | 'remote_reserve'
-          | 'sent'
-          | 'transaction_fee'
-          | 'transaction_id'
-          | 'transaction_vout'
-        > & {
-            partner_node_info: { __typename?: 'Node' } & {
-              node: { __typename?: 'nodeType' } & Pick<
-                Types.NodeType,
-                'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
-              >;
-            };
-          }
-      >
-    >
-  >;
-};
+
+export type GetPendingChannelsQuery = (
+  { __typename?: 'Query' }
+  & { getPendingChannels?: Types.Maybe<Array<Types.Maybe<(
+    { __typename?: 'pendingChannelType' }
+    & Pick<Types.PendingChannelType, 'close_transaction_id' | 'is_active' | 'is_closing' | 'is_opening' | 'local_balance' | 'local_reserve' | 'partner_public_key' | 'received' | 'remote_balance' | 'remote_reserve' | 'sent' | 'transaction_fee' | 'transaction_id' | 'transaction_vout'>
+    & { partner_node_info: (
+      { __typename?: 'Node' }
+      & { node: (
+        { __typename?: 'nodeType' }
+        & Pick<Types.NodeType, 'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'>
+      ) }
+    ) }
+  )>>> }
+);
+
 
 export const GetPendingChannelsDocument = gql`
-  query GetPendingChannels {
-    getPendingChannels {
-      close_transaction_id
-      is_active
-      is_closing
-      is_opening
-      local_balance
-      local_reserve
-      partner_public_key
-      received
-      remote_balance
-      remote_reserve
-      sent
-      transaction_fee
-      transaction_id
-      transaction_vout
-      partner_node_info {
-        node {
-          alias
-          capacity
-          channel_count
-          color
-          updated_at
-        }
+    query GetPendingChannels {
+  getPendingChannels {
+    close_transaction_id
+    is_active
+    is_closing
+    is_opening
+    local_balance
+    local_reserve
+    partner_public_key
+    received
+    remote_balance
+    remote_reserve
+    sent
+    transaction_fee
+    transaction_id
+    transaction_vout
+    partner_node_info {
+      node {
+        alias
+        capacity
+        channel_count
+        color
+        updated_at
       }
     }
   }
-`;
+}
+    `;
 
 /**
  * __useGetPendingChannelsQuery__
@@ -86,35 +68,12 @@ export const GetPendingChannelsDocument = gql`
  *   },
  * });
  */
-export function useGetPendingChannelsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetPendingChannelsQuery,
-    GetPendingChannelsQueryVariables
-  >
-) {
-  return Apollo.useQuery<
-    GetPendingChannelsQuery,
-    GetPendingChannelsQueryVariables
-  >(GetPendingChannelsDocument, baseOptions);
-}
-export function useGetPendingChannelsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetPendingChannelsQuery,
-    GetPendingChannelsQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    GetPendingChannelsQuery,
-    GetPendingChannelsQueryVariables
-  >(GetPendingChannelsDocument, baseOptions);
-}
-export type GetPendingChannelsQueryHookResult = ReturnType<
-  typeof useGetPendingChannelsQuery
->;
-export type GetPendingChannelsLazyQueryHookResult = ReturnType<
-  typeof useGetPendingChannelsLazyQuery
->;
-export type GetPendingChannelsQueryResult = Apollo.QueryResult<
-  GetPendingChannelsQuery,
-  GetPendingChannelsQueryVariables
->;
+export function useGetPendingChannelsQuery(baseOptions?: Apollo.QueryHookOptions<GetPendingChannelsQuery, GetPendingChannelsQueryVariables>) {
+        return Apollo.useQuery<GetPendingChannelsQuery, GetPendingChannelsQueryVariables>(GetPendingChannelsDocument, baseOptions);
+      }
+export function useGetPendingChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPendingChannelsQuery, GetPendingChannelsQueryVariables>) {
+          return Apollo.useLazyQuery<GetPendingChannelsQuery, GetPendingChannelsQueryVariables>(GetPendingChannelsDocument, baseOptions);
+        }
+export type GetPendingChannelsQueryHookResult = ReturnType<typeof useGetPendingChannelsQuery>;
+export type GetPendingChannelsLazyQueryHookResult = ReturnType<typeof useGetPendingChannelsLazyQuery>;
+export type GetPendingChannelsQueryResult = Apollo.QueryResult<GetPendingChannelsQuery, GetPendingChannelsQueryVariables>;

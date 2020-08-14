@@ -12,39 +12,25 @@ export type OpenChannelMutationVariables = Types.Exact<{
   pushTokens?: Types.Maybe<Types.Scalars['Int']>;
 }>;
 
-export type OpenChannelMutation = { __typename?: 'Mutation' } & {
-  openChannel?: Types.Maybe<
-    { __typename?: 'openChannelType' } & Pick<
-      Types.OpenChannelType,
-      'transactionId' | 'transactionOutputIndex'
-    >
-  >;
-};
+
+export type OpenChannelMutation = (
+  { __typename?: 'Mutation' }
+  & { openChannel?: Types.Maybe<(
+    { __typename?: 'openChannelType' }
+    & Pick<Types.OpenChannelType, 'transactionId' | 'transactionOutputIndex'>
+  )> }
+);
+
 
 export const OpenChannelDocument = gql`
-  mutation OpenChannel(
-    $amount: Int!
-    $partnerPublicKey: String!
-    $tokensPerVByte: Int
-    $isPrivate: Boolean
-    $pushTokens: Int
-  ) {
-    openChannel(
-      amount: $amount
-      partnerPublicKey: $partnerPublicKey
-      tokensPerVByte: $tokensPerVByte
-      isPrivate: $isPrivate
-      pushTokens: $pushTokens
-    ) {
-      transactionId
-      transactionOutputIndex
-    }
+    mutation OpenChannel($amount: Int!, $partnerPublicKey: String!, $tokensPerVByte: Int, $isPrivate: Boolean, $pushTokens: Int) {
+  openChannel(amount: $amount, partnerPublicKey: $partnerPublicKey, tokensPerVByte: $tokensPerVByte, isPrivate: $isPrivate, pushTokens: $pushTokens) {
+    transactionId
+    transactionOutputIndex
   }
-`;
-export type OpenChannelMutationFn = Apollo.MutationFunction<
-  OpenChannelMutation,
-  OpenChannelMutationVariables
->;
+}
+    `;
+export type OpenChannelMutationFn = Apollo.MutationFunction<OpenChannelMutation, OpenChannelMutationVariables>;
 
 /**
  * __useOpenChannelMutation__
@@ -67,24 +53,9 @@ export type OpenChannelMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useOpenChannelMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    OpenChannelMutation,
-    OpenChannelMutationVariables
-  >
-) {
-  return Apollo.useMutation<OpenChannelMutation, OpenChannelMutationVariables>(
-    OpenChannelDocument,
-    baseOptions
-  );
-}
-export type OpenChannelMutationHookResult = ReturnType<
-  typeof useOpenChannelMutation
->;
-export type OpenChannelMutationResult = Apollo.MutationResult<
-  OpenChannelMutation
->;
-export type OpenChannelMutationOptions = Apollo.BaseMutationOptions<
-  OpenChannelMutation,
-  OpenChannelMutationVariables
->;
+export function useOpenChannelMutation(baseOptions?: Apollo.MutationHookOptions<OpenChannelMutation, OpenChannelMutationVariables>) {
+        return Apollo.useMutation<OpenChannelMutation, OpenChannelMutationVariables>(OpenChannelDocument, baseOptions);
+      }
+export type OpenChannelMutationHookResult = ReturnType<typeof useOpenChannelMutation>;
+export type OpenChannelMutationResult = Apollo.MutationResult<OpenChannelMutation>;
+export type OpenChannelMutationOptions = Apollo.BaseMutationOptions<OpenChannelMutation, OpenChannelMutationVariables>;

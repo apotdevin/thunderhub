@@ -8,16 +8,18 @@ export type GetAuthTokenQueryVariables = Types.Exact<{
   cookie?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
-export type GetAuthTokenQuery = { __typename?: 'Query' } & Pick<
-  Types.Query,
-  'getAuthToken'
->;
+
+export type GetAuthTokenQuery = (
+  { __typename?: 'Query' }
+  & Pick<Types.Query, 'getAuthToken'>
+);
+
 
 export const GetAuthTokenDocument = gql`
-  query GetAuthToken($cookie: String) {
-    getAuthToken(cookie: $cookie)
-  }
-`;
+    query GetAuthToken($cookie: String) {
+  getAuthToken(cookie: $cookie)
+}
+    `;
 
 /**
  * __useGetAuthTokenQuery__
@@ -35,35 +37,12 @@ export const GetAuthTokenDocument = gql`
  *   },
  * });
  */
-export function useGetAuthTokenQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetAuthTokenQuery,
-    GetAuthTokenQueryVariables
-  >
-) {
-  return Apollo.useQuery<GetAuthTokenQuery, GetAuthTokenQueryVariables>(
-    GetAuthTokenDocument,
-    baseOptions
-  );
-}
-export function useGetAuthTokenLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAuthTokenQuery,
-    GetAuthTokenQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<GetAuthTokenQuery, GetAuthTokenQueryVariables>(
-    GetAuthTokenDocument,
-    baseOptions
-  );
-}
-export type GetAuthTokenQueryHookResult = ReturnType<
-  typeof useGetAuthTokenQuery
->;
-export type GetAuthTokenLazyQueryHookResult = ReturnType<
-  typeof useGetAuthTokenLazyQuery
->;
-export type GetAuthTokenQueryResult = Apollo.QueryResult<
-  GetAuthTokenQuery,
-  GetAuthTokenQueryVariables
->;
+export function useGetAuthTokenQuery(baseOptions?: Apollo.QueryHookOptions<GetAuthTokenQuery, GetAuthTokenQueryVariables>) {
+        return Apollo.useQuery<GetAuthTokenQuery, GetAuthTokenQueryVariables>(GetAuthTokenDocument, baseOptions);
+      }
+export function useGetAuthTokenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAuthTokenQuery, GetAuthTokenQueryVariables>) {
+          return Apollo.useLazyQuery<GetAuthTokenQuery, GetAuthTokenQueryVariables>(GetAuthTokenDocument, baseOptions);
+        }
+export type GetAuthTokenQueryHookResult = ReturnType<typeof useGetAuthTokenQuery>;
+export type GetAuthTokenLazyQueryHookResult = ReturnType<typeof useGetAuthTokenLazyQuery>;
+export type GetAuthTokenQueryResult = Apollo.QueryResult<GetAuthTokenQuery, GetAuthTokenQueryVariables>;

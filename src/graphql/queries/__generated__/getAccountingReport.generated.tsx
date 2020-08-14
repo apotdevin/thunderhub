@@ -12,28 +12,18 @@ export type GetAccountingReportQueryVariables = Types.Exact<{
   year?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
-export type GetAccountingReportQuery = { __typename?: 'Query' } & Pick<
-  Types.Query,
-  'getAccountingReport'
->;
+
+export type GetAccountingReportQuery = (
+  { __typename?: 'Query' }
+  & Pick<Types.Query, 'getAccountingReport'>
+);
+
 
 export const GetAccountingReportDocument = gql`
-  query GetAccountingReport(
-    $category: String
-    $currency: String
-    $fiat: String
-    $month: String
-    $year: String
-  ) {
-    getAccountingReport(
-      category: $category
-      currency: $currency
-      fiat: $fiat
-      month: $month
-      year: $year
-    )
-  }
-`;
+    query GetAccountingReport($category: String, $currency: String, $fiat: String, $month: String, $year: String) {
+  getAccountingReport(category: $category, currency: $currency, fiat: $fiat, month: $month, year: $year)
+}
+    `;
 
 /**
  * __useGetAccountingReportQuery__
@@ -55,35 +45,12 @@ export const GetAccountingReportDocument = gql`
  *   },
  * });
  */
-export function useGetAccountingReportQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetAccountingReportQuery,
-    GetAccountingReportQueryVariables
-  >
-) {
-  return Apollo.useQuery<
-    GetAccountingReportQuery,
-    GetAccountingReportQueryVariables
-  >(GetAccountingReportDocument, baseOptions);
-}
-export function useGetAccountingReportLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAccountingReportQuery,
-    GetAccountingReportQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    GetAccountingReportQuery,
-    GetAccountingReportQueryVariables
-  >(GetAccountingReportDocument, baseOptions);
-}
-export type GetAccountingReportQueryHookResult = ReturnType<
-  typeof useGetAccountingReportQuery
->;
-export type GetAccountingReportLazyQueryHookResult = ReturnType<
-  typeof useGetAccountingReportLazyQuery
->;
-export type GetAccountingReportQueryResult = Apollo.QueryResult<
-  GetAccountingReportQuery,
-  GetAccountingReportQueryVariables
->;
+export function useGetAccountingReportQuery(baseOptions?: Apollo.QueryHookOptions<GetAccountingReportQuery, GetAccountingReportQueryVariables>) {
+        return Apollo.useQuery<GetAccountingReportQuery, GetAccountingReportQueryVariables>(GetAccountingReportDocument, baseOptions);
+      }
+export function useGetAccountingReportLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAccountingReportQuery, GetAccountingReportQueryVariables>) {
+          return Apollo.useLazyQuery<GetAccountingReportQuery, GetAccountingReportQueryVariables>(GetAccountingReportDocument, baseOptions);
+        }
+export type GetAccountingReportQueryHookResult = ReturnType<typeof useGetAccountingReportQuery>;
+export type GetAccountingReportLazyQueryHookResult = ReturnType<typeof useGetAccountingReportLazyQuery>;
+export type GetAccountingReportQueryResult = Apollo.QueryResult<GetAccountingReportQuery, GetAccountingReportQueryVariables>;

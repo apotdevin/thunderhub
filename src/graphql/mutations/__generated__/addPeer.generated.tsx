@@ -11,30 +11,19 @@ export type AddPeerMutationVariables = Types.Exact<{
   isTemporary?: Types.Maybe<Types.Scalars['Boolean']>;
 }>;
 
-export type AddPeerMutation = { __typename?: 'Mutation' } & Pick<
-  Types.Mutation,
-  'addPeer'
->;
+
+export type AddPeerMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Types.Mutation, 'addPeer'>
+);
+
 
 export const AddPeerDocument = gql`
-  mutation AddPeer(
-    $url: String
-    $publicKey: String
-    $socket: String
-    $isTemporary: Boolean
-  ) {
-    addPeer(
-      url: $url
-      publicKey: $publicKey
-      socket: $socket
-      isTemporary: $isTemporary
-    )
-  }
-`;
-export type AddPeerMutationFn = Apollo.MutationFunction<
-  AddPeerMutation,
-  AddPeerMutationVariables
->;
+    mutation AddPeer($url: String, $publicKey: String, $socket: String, $isTemporary: Boolean) {
+  addPeer(url: $url, publicKey: $publicKey, socket: $socket, isTemporary: $isTemporary)
+}
+    `;
+export type AddPeerMutationFn = Apollo.MutationFunction<AddPeerMutation, AddPeerMutationVariables>;
 
 /**
  * __useAddPeerMutation__
@@ -56,20 +45,9 @@ export type AddPeerMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useAddPeerMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    AddPeerMutation,
-    AddPeerMutationVariables
-  >
-) {
-  return Apollo.useMutation<AddPeerMutation, AddPeerMutationVariables>(
-    AddPeerDocument,
-    baseOptions
-  );
-}
+export function useAddPeerMutation(baseOptions?: Apollo.MutationHookOptions<AddPeerMutation, AddPeerMutationVariables>) {
+        return Apollo.useMutation<AddPeerMutation, AddPeerMutationVariables>(AddPeerDocument, baseOptions);
+      }
 export type AddPeerMutationHookResult = ReturnType<typeof useAddPeerMutation>;
 export type AddPeerMutationResult = Apollo.MutationResult<AddPeerMutation>;
-export type AddPeerMutationOptions = Apollo.BaseMutationOptions<
-  AddPeerMutation,
-  AddPeerMutationVariables
->;
+export type AddPeerMutationOptions = Apollo.BaseMutationOptions<AddPeerMutation, AddPeerMutationVariables>;

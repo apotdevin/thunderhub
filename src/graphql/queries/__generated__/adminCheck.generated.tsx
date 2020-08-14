@@ -4,18 +4,20 @@ import * as Types from '../../types';
 import * as Apollo from '@apollo/client';
 const gql = Apollo.gql;
 
-export type GetCanAdminQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type GetCanAdminQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
-export type GetCanAdminQuery = { __typename?: 'Query' } & Pick<
-  Types.Query,
-  'adminCheck'
->;
+
+export type GetCanAdminQuery = (
+  { __typename?: 'Query' }
+  & Pick<Types.Query, 'adminCheck'>
+);
+
 
 export const GetCanAdminDocument = gql`
-  query GetCanAdmin {
-    adminCheck
-  }
-`;
+    query GetCanAdmin {
+  adminCheck
+}
+    `;
 
 /**
  * __useGetCanAdminQuery__
@@ -32,33 +34,12 @@ export const GetCanAdminDocument = gql`
  *   },
  * });
  */
-export function useGetCanAdminQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetCanAdminQuery,
-    GetCanAdminQueryVariables
-  >
-) {
-  return Apollo.useQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(
-    GetCanAdminDocument,
-    baseOptions
-  );
-}
-export function useGetCanAdminLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCanAdminQuery,
-    GetCanAdminQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(
-    GetCanAdminDocument,
-    baseOptions
-  );
-}
+export function useGetCanAdminQuery(baseOptions?: Apollo.QueryHookOptions<GetCanAdminQuery, GetCanAdminQueryVariables>) {
+        return Apollo.useQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(GetCanAdminDocument, baseOptions);
+      }
+export function useGetCanAdminLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCanAdminQuery, GetCanAdminQueryVariables>) {
+          return Apollo.useLazyQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(GetCanAdminDocument, baseOptions);
+        }
 export type GetCanAdminQueryHookResult = ReturnType<typeof useGetCanAdminQuery>;
-export type GetCanAdminLazyQueryHookResult = ReturnType<
-  typeof useGetCanAdminLazyQuery
->;
-export type GetCanAdminQueryResult = Apollo.QueryResult<
-  GetCanAdminQuery,
-  GetCanAdminQueryVariables
->;
+export type GetCanAdminLazyQueryHookResult = ReturnType<typeof useGetCanAdminLazyQuery>;
+export type GetCanAdminQueryResult = Apollo.QueryResult<GetCanAdminQuery, GetCanAdminQueryVariables>;

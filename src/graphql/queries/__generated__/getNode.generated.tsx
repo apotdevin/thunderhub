@@ -9,28 +9,32 @@ export type GetNodeQueryVariables = Types.Exact<{
   withoutChannels?: Types.Maybe<Types.Scalars['Boolean']>;
 }>;
 
-export type GetNodeQuery = { __typename?: 'Query' } & {
-  getNode: { __typename?: 'Node' } & {
-    node: { __typename?: 'nodeType' } & Pick<
-      Types.NodeType,
-      'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
-    >;
-  };
-};
+
+export type GetNodeQuery = (
+  { __typename?: 'Query' }
+  & { getNode: (
+    { __typename?: 'Node' }
+    & { node: (
+      { __typename?: 'nodeType' }
+      & Pick<Types.NodeType, 'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'>
+    ) }
+  ) }
+);
+
 
 export const GetNodeDocument = gql`
-  query GetNode($publicKey: String!, $withoutChannels: Boolean) {
-    getNode(publicKey: $publicKey, withoutChannels: $withoutChannels) {
-      node {
-        alias
-        capacity
-        channel_count
-        color
-        updated_at
-      }
+    query GetNode($publicKey: String!, $withoutChannels: Boolean) {
+  getNode(publicKey: $publicKey, withoutChannels: $withoutChannels) {
+    node {
+      alias
+      capacity
+      channel_count
+      color
+      updated_at
     }
   }
-`;
+}
+    `;
 
 /**
  * __useGetNodeQuery__
@@ -49,25 +53,12 @@ export const GetNodeDocument = gql`
  *   },
  * });
  */
-export function useGetNodeQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetNodeQuery, GetNodeQueryVariables>
-) {
-  return Apollo.useQuery<GetNodeQuery, GetNodeQueryVariables>(
-    GetNodeDocument,
-    baseOptions
-  );
-}
-export function useGetNodeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetNodeQuery, GetNodeQueryVariables>
-) {
-  return Apollo.useLazyQuery<GetNodeQuery, GetNodeQueryVariables>(
-    GetNodeDocument,
-    baseOptions
-  );
-}
+export function useGetNodeQuery(baseOptions?: Apollo.QueryHookOptions<GetNodeQuery, GetNodeQueryVariables>) {
+        return Apollo.useQuery<GetNodeQuery, GetNodeQueryVariables>(GetNodeDocument, baseOptions);
+      }
+export function useGetNodeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNodeQuery, GetNodeQueryVariables>) {
+          return Apollo.useLazyQuery<GetNodeQuery, GetNodeQueryVariables>(GetNodeDocument, baseOptions);
+        }
 export type GetNodeQueryHookResult = ReturnType<typeof useGetNodeQuery>;
 export type GetNodeLazyQueryHookResult = ReturnType<typeof useGetNodeLazyQuery>;
-export type GetNodeQueryResult = Apollo.QueryResult<
-  GetNodeQuery,
-  GetNodeQueryVariables
->;
+export type GetNodeQueryResult = Apollo.QueryResult<GetNodeQuery, GetNodeQueryVariables>;
