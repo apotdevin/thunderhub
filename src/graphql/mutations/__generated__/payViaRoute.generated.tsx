@@ -9,20 +9,19 @@ export type PayViaRouteMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
 
-export type PayViaRouteMutation = { __typename?: 'Mutation' } & Pick<
-  Types.Mutation,
-  'payViaRoute'
->;
+
+export type PayViaRouteMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Types.Mutation, 'payViaRoute'>
+);
+
 
 export const PayViaRouteDocument = gql`
-  mutation PayViaRoute($route: String!, $id: String!) {
-    payViaRoute(route: $route, id: $id)
-  }
-`;
-export type PayViaRouteMutationFn = Apollo.MutationFunction<
-  PayViaRouteMutation,
-  PayViaRouteMutationVariables
->;
+    mutation PayViaRoute($route: String!, $id: String!) {
+  payViaRoute(route: $route, id: $id)
+}
+    `;
+export type PayViaRouteMutationFn = Apollo.MutationFunction<PayViaRouteMutation, PayViaRouteMutationVariables>;
 
 /**
  * __usePayViaRouteMutation__
@@ -42,24 +41,9 @@ export type PayViaRouteMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function usePayViaRouteMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    PayViaRouteMutation,
-    PayViaRouteMutationVariables
-  >
-) {
-  return Apollo.useMutation<PayViaRouteMutation, PayViaRouteMutationVariables>(
-    PayViaRouteDocument,
-    baseOptions
-  );
-}
-export type PayViaRouteMutationHookResult = ReturnType<
-  typeof usePayViaRouteMutation
->;
-export type PayViaRouteMutationResult = Apollo.MutationResult<
-  PayViaRouteMutation
->;
-export type PayViaRouteMutationOptions = Apollo.BaseMutationOptions<
-  PayViaRouteMutation,
-  PayViaRouteMutationVariables
->;
+export function usePayViaRouteMutation(baseOptions?: Apollo.MutationHookOptions<PayViaRouteMutation, PayViaRouteMutationVariables>) {
+        return Apollo.useMutation<PayViaRouteMutation, PayViaRouteMutationVariables>(PayViaRouteDocument, baseOptions);
+      }
+export type PayViaRouteMutationHookResult = ReturnType<typeof usePayViaRouteMutation>;
+export type PayViaRouteMutationResult = Apollo.MutationResult<PayViaRouteMutation>;
+export type PayViaRouteMutationOptions = Apollo.BaseMutationOptions<PayViaRouteMutation, PayViaRouteMutationVariables>;

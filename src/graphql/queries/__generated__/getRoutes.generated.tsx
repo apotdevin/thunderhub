@@ -11,70 +11,44 @@ export type GetRoutesQueryVariables = Types.Exact<{
   maxFee?: Types.Maybe<Types.Scalars['Int']>;
 }>;
 
-export type GetRoutesQuery = { __typename?: 'Query' } & {
-  getRoutes?: Types.Maybe<
-    { __typename?: 'GetRouteType' } & Pick<
-      Types.GetRouteType,
-      | 'confidence'
-      | 'fee'
-      | 'fee_mtokens'
-      | 'mtokens'
-      | 'safe_fee'
-      | 'safe_tokens'
-      | 'timeout'
-      | 'tokens'
-    > & {
-        hops: Array<
-          { __typename?: 'RouteHopType' } & Pick<
-            Types.RouteHopType,
-            | 'channel'
-            | 'channel_capacity'
-            | 'fee'
-            | 'fee_mtokens'
-            | 'forward'
-            | 'forward_mtokens'
-            | 'public_key'
-            | 'timeout'
-          >
-        >;
-      }
-  >;
-};
+
+export type GetRoutesQuery = (
+  { __typename?: 'Query' }
+  & { getRoutes?: Types.Maybe<(
+    { __typename?: 'GetRouteType' }
+    & Pick<Types.GetRouteType, 'confidence' | 'fee' | 'fee_mtokens' | 'mtokens' | 'safe_fee' | 'safe_tokens' | 'timeout' | 'tokens'>
+    & { hops: Array<(
+      { __typename?: 'RouteHopType' }
+      & Pick<Types.RouteHopType, 'channel' | 'channel_capacity' | 'fee' | 'fee_mtokens' | 'forward' | 'forward_mtokens' | 'public_key' | 'timeout'>
+    )> }
+  )> }
+);
+
 
 export const GetRoutesDocument = gql`
-  query GetRoutes(
-    $outgoing: String!
-    $incoming: String!
-    $tokens: Int!
-    $maxFee: Int
-  ) {
-    getRoutes(
-      outgoing: $outgoing
-      incoming: $incoming
-      tokens: $tokens
-      maxFee: $maxFee
-    ) {
-      confidence
+    query GetRoutes($outgoing: String!, $incoming: String!, $tokens: Int!, $maxFee: Int) {
+  getRoutes(outgoing: $outgoing, incoming: $incoming, tokens: $tokens, maxFee: $maxFee) {
+    confidence
+    fee
+    fee_mtokens
+    hops {
+      channel
+      channel_capacity
       fee
       fee_mtokens
-      hops {
-        channel
-        channel_capacity
-        fee
-        fee_mtokens
-        forward
-        forward_mtokens
-        public_key
-        timeout
-      }
-      mtokens
-      safe_fee
-      safe_tokens
+      forward
+      forward_mtokens
+      public_key
       timeout
-      tokens
     }
+    mtokens
+    safe_fee
+    safe_tokens
+    timeout
+    tokens
   }
-`;
+}
+    `;
 
 /**
  * __useGetRoutesQuery__
@@ -95,30 +69,12 @@ export const GetRoutesDocument = gql`
  *   },
  * });
  */
-export function useGetRoutesQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetRoutesQuery, GetRoutesQueryVariables>
-) {
-  return Apollo.useQuery<GetRoutesQuery, GetRoutesQueryVariables>(
-    GetRoutesDocument,
-    baseOptions
-  );
-}
-export function useGetRoutesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetRoutesQuery,
-    GetRoutesQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<GetRoutesQuery, GetRoutesQueryVariables>(
-    GetRoutesDocument,
-    baseOptions
-  );
-}
+export function useGetRoutesQuery(baseOptions?: Apollo.QueryHookOptions<GetRoutesQuery, GetRoutesQueryVariables>) {
+        return Apollo.useQuery<GetRoutesQuery, GetRoutesQueryVariables>(GetRoutesDocument, baseOptions);
+      }
+export function useGetRoutesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRoutesQuery, GetRoutesQueryVariables>) {
+          return Apollo.useLazyQuery<GetRoutesQuery, GetRoutesQueryVariables>(GetRoutesDocument, baseOptions);
+        }
 export type GetRoutesQueryHookResult = ReturnType<typeof useGetRoutesQuery>;
-export type GetRoutesLazyQueryHookResult = ReturnType<
-  typeof useGetRoutesLazyQuery
->;
-export type GetRoutesQueryResult = Apollo.QueryResult<
-  GetRoutesQuery,
-  GetRoutesQueryVariables
->;
+export type GetRoutesLazyQueryHookResult = ReturnType<typeof useGetRoutesLazyQuery>;
+export type GetRoutesQueryResult = Apollo.QueryResult<GetRoutesQuery, GetRoutesQueryVariables>;

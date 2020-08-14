@@ -8,133 +8,96 @@ export type DecodeRequestQueryVariables = Types.Exact<{
   request: Types.Scalars['String'];
 }>;
 
-export type DecodeRequestQuery = { __typename?: 'Query' } & {
-  decodeRequest?: Types.Maybe<
-    { __typename?: 'decodeType' } & Pick<
-      Types.DecodeType,
-      | 'chain_address'
-      | 'cltv_delta'
-      | 'description'
-      | 'description_hash'
-      | 'destination'
-      | 'expires_at'
-      | 'id'
-      | 'tokens'
-    > & {
-        destination_node: { __typename?: 'Node' } & {
-          node: { __typename?: 'nodeType' } & Pick<Types.NodeType, 'alias'>;
-        };
-        routes: Array<
-          Types.Maybe<
-            Array<
-              Types.Maybe<
-                { __typename?: 'RouteType' } & Pick<
-                  Types.RouteType,
-                  | 'base_fee_mtokens'
-                  | 'channel'
-                  | 'cltv_delta'
-                  | 'fee_rate'
-                  | 'public_key'
-                >
-              >
-            >
-          >
-        >;
-        probe_route?: Types.Maybe<
-          { __typename?: 'ProbeRoute' } & {
-            route?: Types.Maybe<
-              { __typename?: 'probedRoute' } & Pick<
-                Types.ProbedRoute,
-                | 'confidence'
-                | 'fee'
-                | 'fee_mtokens'
-                | 'mtokens'
-                | 'safe_fee'
-                | 'safe_tokens'
-                | 'timeout'
-                | 'tokens'
-              > & {
-                  hops: Array<
-                    { __typename?: 'probedRouteHop' } & Pick<
-                      Types.ProbedRouteHop,
-                      | 'channel'
-                      | 'channel_capacity'
-                      | 'fee'
-                      | 'fee_mtokens'
-                      | 'forward'
-                      | 'forward_mtokens'
-                      | 'public_key'
-                      | 'timeout'
-                    > & {
-                        node: { __typename?: 'Node' } & {
-                          node: { __typename?: 'nodeType' } & Pick<
-                            Types.NodeType,
-                            'alias'
-                          >;
-                        };
-                      }
-                  >;
-                }
-            >;
-          }
-        >;
-      }
-  >;
-};
+
+export type DecodeRequestQuery = (
+  { __typename?: 'Query' }
+  & { decodeRequest?: Types.Maybe<(
+    { __typename?: 'decodeType' }
+    & Pick<Types.DecodeType, 'chain_address' | 'cltv_delta' | 'description' | 'description_hash' | 'destination' | 'expires_at' | 'id' | 'tokens'>
+    & { destination_node: (
+      { __typename?: 'Node' }
+      & { node: (
+        { __typename?: 'nodeType' }
+        & Pick<Types.NodeType, 'alias'>
+      ) }
+    ), routes: Array<Types.Maybe<Array<Types.Maybe<(
+      { __typename?: 'RouteType' }
+      & Pick<Types.RouteType, 'base_fee_mtokens' | 'channel' | 'cltv_delta' | 'fee_rate' | 'public_key'>
+    )>>>>, probe_route?: Types.Maybe<(
+      { __typename?: 'ProbeRoute' }
+      & { route?: Types.Maybe<(
+        { __typename?: 'probedRoute' }
+        & Pick<Types.ProbedRoute, 'confidence' | 'fee' | 'fee_mtokens' | 'mtokens' | 'safe_fee' | 'safe_tokens' | 'timeout' | 'tokens'>
+        & { hops: Array<(
+          { __typename?: 'probedRouteHop' }
+          & Pick<Types.ProbedRouteHop, 'channel' | 'channel_capacity' | 'fee' | 'fee_mtokens' | 'forward' | 'forward_mtokens' | 'public_key' | 'timeout'>
+          & { node: (
+            { __typename?: 'Node' }
+            & { node: (
+              { __typename?: 'nodeType' }
+              & Pick<Types.NodeType, 'alias'>
+            ) }
+          ) }
+        )> }
+      )> }
+    )> }
+  )> }
+);
+
 
 export const DecodeRequestDocument = gql`
-  query DecodeRequest($request: String!) {
-    decodeRequest(request: $request) {
-      chain_address
+    query DecodeRequest($request: String!) {
+  decodeRequest(request: $request) {
+    chain_address
+    cltv_delta
+    description
+    description_hash
+    destination
+    destination_node {
+      node {
+        alias
+      }
+    }
+    expires_at
+    id
+    routes {
+      base_fee_mtokens
+      channel
       cltv_delta
-      description
-      description_hash
-      destination
-      destination_node {
-        node {
-          alias
-        }
-      }
-      expires_at
-      id
-      routes {
-        base_fee_mtokens
-        channel
-        cltv_delta
-        fee_rate
-        public_key
-      }
-      tokens
-      probe_route {
-        route {
-          confidence
+      fee_rate
+      public_key
+    }
+    tokens
+    probe_route {
+      route {
+        confidence
+        fee
+        fee_mtokens
+        hops {
+          channel
+          channel_capacity
           fee
           fee_mtokens
-          hops {
-            channel
-            channel_capacity
-            fee
-            fee_mtokens
-            forward
-            forward_mtokens
-            public_key
-            timeout
+          forward
+          forward_mtokens
+          public_key
+          timeout
+          node {
             node {
-              node {
-                alias
-              }
+              alias
             }
           }
-          mtokens
-          safe_fee
-          safe_tokens
-          timeout
-          tokens
         }
+        mtokens
+        safe_fee
+        safe_tokens
+        timeout
+        tokens
       }
     }
   }
-`;
+}
+    `;
 
 /**
  * __useDecodeRequestQuery__
@@ -152,35 +115,12 @@ export const DecodeRequestDocument = gql`
  *   },
  * });
  */
-export function useDecodeRequestQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    DecodeRequestQuery,
-    DecodeRequestQueryVariables
-  >
-) {
-  return Apollo.useQuery<DecodeRequestQuery, DecodeRequestQueryVariables>(
-    DecodeRequestDocument,
-    baseOptions
-  );
-}
-export function useDecodeRequestLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    DecodeRequestQuery,
-    DecodeRequestQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<DecodeRequestQuery, DecodeRequestQueryVariables>(
-    DecodeRequestDocument,
-    baseOptions
-  );
-}
-export type DecodeRequestQueryHookResult = ReturnType<
-  typeof useDecodeRequestQuery
->;
-export type DecodeRequestLazyQueryHookResult = ReturnType<
-  typeof useDecodeRequestLazyQuery
->;
-export type DecodeRequestQueryResult = Apollo.QueryResult<
-  DecodeRequestQuery,
-  DecodeRequestQueryVariables
->;
+export function useDecodeRequestQuery(baseOptions?: Apollo.QueryHookOptions<DecodeRequestQuery, DecodeRequestQueryVariables>) {
+        return Apollo.useQuery<DecodeRequestQuery, DecodeRequestQueryVariables>(DecodeRequestDocument, baseOptions);
+      }
+export function useDecodeRequestLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DecodeRequestQuery, DecodeRequestQueryVariables>) {
+          return Apollo.useLazyQuery<DecodeRequestQuery, DecodeRequestQueryVariables>(DecodeRequestDocument, baseOptions);
+        }
+export type DecodeRequestQueryHookResult = ReturnType<typeof useDecodeRequestQuery>;
+export type DecodeRequestLazyQueryHookResult = ReturnType<typeof useDecodeRequestLazyQuery>;
+export type DecodeRequestQueryResult = Apollo.QueryResult<DecodeRequestQuery, DecodeRequestQueryVariables>;

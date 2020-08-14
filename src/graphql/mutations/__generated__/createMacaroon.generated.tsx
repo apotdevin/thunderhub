@@ -8,20 +8,19 @@ export type CreateMacaroonMutationVariables = Types.Exact<{
   permissions: Types.PermissionsType;
 }>;
 
-export type CreateMacaroonMutation = { __typename?: 'Mutation' } & Pick<
-  Types.Mutation,
-  'createMacaroon'
->;
+
+export type CreateMacaroonMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Types.Mutation, 'createMacaroon'>
+);
+
 
 export const CreateMacaroonDocument = gql`
-  mutation CreateMacaroon($permissions: permissionsType!) {
-    createMacaroon(permissions: $permissions)
-  }
-`;
-export type CreateMacaroonMutationFn = Apollo.MutationFunction<
-  CreateMacaroonMutation,
-  CreateMacaroonMutationVariables
->;
+    mutation CreateMacaroon($permissions: permissionsType!) {
+  createMacaroon(permissions: $permissions)
+}
+    `;
+export type CreateMacaroonMutationFn = Apollo.MutationFunction<CreateMacaroonMutation, CreateMacaroonMutationVariables>;
 
 /**
  * __useCreateMacaroonMutation__
@@ -40,24 +39,9 @@ export type CreateMacaroonMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCreateMacaroonMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateMacaroonMutation,
-    CreateMacaroonMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    CreateMacaroonMutation,
-    CreateMacaroonMutationVariables
-  >(CreateMacaroonDocument, baseOptions);
-}
-export type CreateMacaroonMutationHookResult = ReturnType<
-  typeof useCreateMacaroonMutation
->;
-export type CreateMacaroonMutationResult = Apollo.MutationResult<
-  CreateMacaroonMutation
->;
-export type CreateMacaroonMutationOptions = Apollo.BaseMutationOptions<
-  CreateMacaroonMutation,
-  CreateMacaroonMutationVariables
->;
+export function useCreateMacaroonMutation(baseOptions?: Apollo.MutationHookOptions<CreateMacaroonMutation, CreateMacaroonMutationVariables>) {
+        return Apollo.useMutation<CreateMacaroonMutation, CreateMacaroonMutationVariables>(CreateMacaroonDocument, baseOptions);
+      }
+export type CreateMacaroonMutationHookResult = ReturnType<typeof useCreateMacaroonMutation>;
+export type CreateMacaroonMutationResult = Apollo.MutationResult<CreateMacaroonMutation>;
+export type CreateMacaroonMutationOptions = Apollo.BaseMutationOptions<CreateMacaroonMutation, CreateMacaroonMutationVariables>;

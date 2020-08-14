@@ -8,16 +8,18 @@ export type VerifyBackupsQueryVariables = Types.Exact<{
   backup: Types.Scalars['String'];
 }>;
 
-export type VerifyBackupsQuery = { __typename?: 'Query' } & Pick<
-  Types.Query,
-  'verifyBackups'
->;
+
+export type VerifyBackupsQuery = (
+  { __typename?: 'Query' }
+  & Pick<Types.Query, 'verifyBackups'>
+);
+
 
 export const VerifyBackupsDocument = gql`
-  query VerifyBackups($backup: String!) {
-    verifyBackups(backup: $backup)
-  }
-`;
+    query VerifyBackups($backup: String!) {
+  verifyBackups(backup: $backup)
+}
+    `;
 
 /**
  * __useVerifyBackupsQuery__
@@ -35,35 +37,12 @@ export const VerifyBackupsDocument = gql`
  *   },
  * });
  */
-export function useVerifyBackupsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    VerifyBackupsQuery,
-    VerifyBackupsQueryVariables
-  >
-) {
-  return Apollo.useQuery<VerifyBackupsQuery, VerifyBackupsQueryVariables>(
-    VerifyBackupsDocument,
-    baseOptions
-  );
-}
-export function useVerifyBackupsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    VerifyBackupsQuery,
-    VerifyBackupsQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<VerifyBackupsQuery, VerifyBackupsQueryVariables>(
-    VerifyBackupsDocument,
-    baseOptions
-  );
-}
-export type VerifyBackupsQueryHookResult = ReturnType<
-  typeof useVerifyBackupsQuery
->;
-export type VerifyBackupsLazyQueryHookResult = ReturnType<
-  typeof useVerifyBackupsLazyQuery
->;
-export type VerifyBackupsQueryResult = Apollo.QueryResult<
-  VerifyBackupsQuery,
-  VerifyBackupsQueryVariables
->;
+export function useVerifyBackupsQuery(baseOptions?: Apollo.QueryHookOptions<VerifyBackupsQuery, VerifyBackupsQueryVariables>) {
+        return Apollo.useQuery<VerifyBackupsQuery, VerifyBackupsQueryVariables>(VerifyBackupsDocument, baseOptions);
+      }
+export function useVerifyBackupsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VerifyBackupsQuery, VerifyBackupsQueryVariables>) {
+          return Apollo.useLazyQuery<VerifyBackupsQuery, VerifyBackupsQueryVariables>(VerifyBackupsDocument, baseOptions);
+        }
+export type VerifyBackupsQueryHookResult = ReturnType<typeof useVerifyBackupsQuery>;
+export type VerifyBackupsLazyQueryHookResult = ReturnType<typeof useVerifyBackupsLazyQuery>;
+export type VerifyBackupsQueryResult = Apollo.QueryResult<VerifyBackupsQuery, VerifyBackupsQueryVariables>;

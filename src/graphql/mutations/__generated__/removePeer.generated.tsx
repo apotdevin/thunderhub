@@ -8,20 +8,19 @@ export type RemovePeerMutationVariables = Types.Exact<{
   publicKey: Types.Scalars['String'];
 }>;
 
-export type RemovePeerMutation = { __typename?: 'Mutation' } & Pick<
-  Types.Mutation,
-  'removePeer'
->;
+
+export type RemovePeerMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Types.Mutation, 'removePeer'>
+);
+
 
 export const RemovePeerDocument = gql`
-  mutation RemovePeer($publicKey: String!) {
-    removePeer(publicKey: $publicKey)
-  }
-`;
-export type RemovePeerMutationFn = Apollo.MutationFunction<
-  RemovePeerMutation,
-  RemovePeerMutationVariables
->;
+    mutation RemovePeer($publicKey: String!) {
+  removePeer(publicKey: $publicKey)
+}
+    `;
+export type RemovePeerMutationFn = Apollo.MutationFunction<RemovePeerMutation, RemovePeerMutationVariables>;
 
 /**
  * __useRemovePeerMutation__
@@ -40,24 +39,9 @@ export type RemovePeerMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useRemovePeerMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    RemovePeerMutation,
-    RemovePeerMutationVariables
-  >
-) {
-  return Apollo.useMutation<RemovePeerMutation, RemovePeerMutationVariables>(
-    RemovePeerDocument,
-    baseOptions
-  );
-}
-export type RemovePeerMutationHookResult = ReturnType<
-  typeof useRemovePeerMutation
->;
-export type RemovePeerMutationResult = Apollo.MutationResult<
-  RemovePeerMutation
->;
-export type RemovePeerMutationOptions = Apollo.BaseMutationOptions<
-  RemovePeerMutation,
-  RemovePeerMutationVariables
->;
+export function useRemovePeerMutation(baseOptions?: Apollo.MutationHookOptions<RemovePeerMutation, RemovePeerMutationVariables>) {
+        return Apollo.useMutation<RemovePeerMutation, RemovePeerMutationVariables>(RemovePeerDocument, baseOptions);
+      }
+export type RemovePeerMutationHookResult = ReturnType<typeof useRemovePeerMutation>;
+export type RemovePeerMutationResult = Apollo.MutationResult<RemovePeerMutation>;
+export type RemovePeerMutationOptions = Apollo.BaseMutationOptions<RemovePeerMutation, RemovePeerMutationVariables>;

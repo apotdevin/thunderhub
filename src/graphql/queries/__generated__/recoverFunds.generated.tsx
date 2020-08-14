@@ -8,16 +8,18 @@ export type RecoverFundsQueryVariables = Types.Exact<{
   backup: Types.Scalars['String'];
 }>;
 
-export type RecoverFundsQuery = { __typename?: 'Query' } & Pick<
-  Types.Query,
-  'recoverFunds'
->;
+
+export type RecoverFundsQuery = (
+  { __typename?: 'Query' }
+  & Pick<Types.Query, 'recoverFunds'>
+);
+
 
 export const RecoverFundsDocument = gql`
-  query RecoverFunds($backup: String!) {
-    recoverFunds(backup: $backup)
-  }
-`;
+    query RecoverFunds($backup: String!) {
+  recoverFunds(backup: $backup)
+}
+    `;
 
 /**
  * __useRecoverFundsQuery__
@@ -35,35 +37,12 @@ export const RecoverFundsDocument = gql`
  *   },
  * });
  */
-export function useRecoverFundsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    RecoverFundsQuery,
-    RecoverFundsQueryVariables
-  >
-) {
-  return Apollo.useQuery<RecoverFundsQuery, RecoverFundsQueryVariables>(
-    RecoverFundsDocument,
-    baseOptions
-  );
-}
-export function useRecoverFundsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    RecoverFundsQuery,
-    RecoverFundsQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<RecoverFundsQuery, RecoverFundsQueryVariables>(
-    RecoverFundsDocument,
-    baseOptions
-  );
-}
-export type RecoverFundsQueryHookResult = ReturnType<
-  typeof useRecoverFundsQuery
->;
-export type RecoverFundsLazyQueryHookResult = ReturnType<
-  typeof useRecoverFundsLazyQuery
->;
-export type RecoverFundsQueryResult = Apollo.QueryResult<
-  RecoverFundsQuery,
-  RecoverFundsQueryVariables
->;
+export function useRecoverFundsQuery(baseOptions?: Apollo.QueryHookOptions<RecoverFundsQuery, RecoverFundsQueryVariables>) {
+        return Apollo.useQuery<RecoverFundsQuery, RecoverFundsQueryVariables>(RecoverFundsDocument, baseOptions);
+      }
+export function useRecoverFundsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecoverFundsQuery, RecoverFundsQueryVariables>) {
+          return Apollo.useLazyQuery<RecoverFundsQuery, RecoverFundsQueryVariables>(RecoverFundsDocument, baseOptions);
+        }
+export type RecoverFundsQueryHookResult = ReturnType<typeof useRecoverFundsQuery>;
+export type RecoverFundsLazyQueryHookResult = ReturnType<typeof useRecoverFundsLazyQuery>;
+export type RecoverFundsQueryResult = Apollo.QueryResult<RecoverFundsQuery, RecoverFundsQueryVariables>;

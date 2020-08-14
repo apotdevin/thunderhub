@@ -10,16 +10,18 @@ export type GetForwardChannelsReportQueryVariables = Types.Exact<{
   type?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
-export type GetForwardChannelsReportQuery = { __typename?: 'Query' } & Pick<
-  Types.Query,
-  'getForwardChannelsReport'
->;
+
+export type GetForwardChannelsReportQuery = (
+  { __typename?: 'Query' }
+  & Pick<Types.Query, 'getForwardChannelsReport'>
+);
+
 
 export const GetForwardChannelsReportDocument = gql`
-  query GetForwardChannelsReport($time: String, $order: String, $type: String) {
-    getForwardChannelsReport(time: $time, order: $order, type: $type)
-  }
-`;
+    query GetForwardChannelsReport($time: String, $order: String, $type: String) {
+  getForwardChannelsReport(time: $time, order: $order, type: $type)
+}
+    `;
 
 /**
  * __useGetForwardChannelsReportQuery__
@@ -39,35 +41,12 @@ export const GetForwardChannelsReportDocument = gql`
  *   },
  * });
  */
-export function useGetForwardChannelsReportQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetForwardChannelsReportQuery,
-    GetForwardChannelsReportQueryVariables
-  >
-) {
-  return Apollo.useQuery<
-    GetForwardChannelsReportQuery,
-    GetForwardChannelsReportQueryVariables
-  >(GetForwardChannelsReportDocument, baseOptions);
-}
-export function useGetForwardChannelsReportLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetForwardChannelsReportQuery,
-    GetForwardChannelsReportQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<
-    GetForwardChannelsReportQuery,
-    GetForwardChannelsReportQueryVariables
-  >(GetForwardChannelsReportDocument, baseOptions);
-}
-export type GetForwardChannelsReportQueryHookResult = ReturnType<
-  typeof useGetForwardChannelsReportQuery
->;
-export type GetForwardChannelsReportLazyQueryHookResult = ReturnType<
-  typeof useGetForwardChannelsReportLazyQuery
->;
-export type GetForwardChannelsReportQueryResult = Apollo.QueryResult<
-  GetForwardChannelsReportQuery,
-  GetForwardChannelsReportQueryVariables
->;
+export function useGetForwardChannelsReportQuery(baseOptions?: Apollo.QueryHookOptions<GetForwardChannelsReportQuery, GetForwardChannelsReportQueryVariables>) {
+        return Apollo.useQuery<GetForwardChannelsReportQuery, GetForwardChannelsReportQueryVariables>(GetForwardChannelsReportDocument, baseOptions);
+      }
+export function useGetForwardChannelsReportLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetForwardChannelsReportQuery, GetForwardChannelsReportQueryVariables>) {
+          return Apollo.useLazyQuery<GetForwardChannelsReportQuery, GetForwardChannelsReportQueryVariables>(GetForwardChannelsReportDocument, baseOptions);
+        }
+export type GetForwardChannelsReportQueryHookResult = ReturnType<typeof useGetForwardChannelsReportQuery>;
+export type GetForwardChannelsReportLazyQueryHookResult = ReturnType<typeof useGetForwardChannelsReportLazyQuery>;
+export type GetForwardChannelsReportQueryResult = Apollo.QueryResult<GetForwardChannelsReportQuery, GetForwardChannelsReportQueryVariables>;

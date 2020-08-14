@@ -4,60 +4,49 @@ import * as Types from '../../types';
 import * as Apollo from '@apollo/client';
 const gql = Apollo.gql;
 
-export type GetPeersQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type GetPeersQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
-export type GetPeersQuery = { __typename?: 'Query' } & {
-  getPeers?: Types.Maybe<
-    Array<
-      Types.Maybe<
-        { __typename?: 'peerType' } & Pick<
-          Types.PeerType,
-          | 'bytes_received'
-          | 'bytes_sent'
-          | 'is_inbound'
-          | 'is_sync_peer'
-          | 'ping_time'
-          | 'public_key'
-          | 'socket'
-          | 'tokens_received'
-          | 'tokens_sent'
-        > & {
-            partner_node_info: { __typename?: 'Node' } & {
-              node: { __typename?: 'nodeType' } & Pick<
-                Types.NodeType,
-                'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'
-              >;
-            };
-          }
-      >
-    >
-  >;
-};
+
+export type GetPeersQuery = (
+  { __typename?: 'Query' }
+  & { getPeers?: Types.Maybe<Array<Types.Maybe<(
+    { __typename?: 'peerType' }
+    & Pick<Types.PeerType, 'bytes_received' | 'bytes_sent' | 'is_inbound' | 'is_sync_peer' | 'ping_time' | 'public_key' | 'socket' | 'tokens_received' | 'tokens_sent'>
+    & { partner_node_info: (
+      { __typename?: 'Node' }
+      & { node: (
+        { __typename?: 'nodeType' }
+        & Pick<Types.NodeType, 'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'>
+      ) }
+    ) }
+  )>>> }
+);
+
 
 export const GetPeersDocument = gql`
-  query GetPeers {
-    getPeers {
-      bytes_received
-      bytes_sent
-      is_inbound
-      is_sync_peer
-      ping_time
-      public_key
-      socket
-      tokens_received
-      tokens_sent
-      partner_node_info {
-        node {
-          alias
-          capacity
-          channel_count
-          color
-          updated_at
-        }
+    query GetPeers {
+  getPeers {
+    bytes_received
+    bytes_sent
+    is_inbound
+    is_sync_peer
+    ping_time
+    public_key
+    socket
+    tokens_received
+    tokens_sent
+    partner_node_info {
+      node {
+        alias
+        capacity
+        channel_count
+        color
+        updated_at
       }
     }
   }
-`;
+}
+    `;
 
 /**
  * __useGetPeersQuery__
@@ -74,30 +63,12 @@ export const GetPeersDocument = gql`
  *   },
  * });
  */
-export function useGetPeersQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetPeersQuery, GetPeersQueryVariables>
-) {
-  return Apollo.useQuery<GetPeersQuery, GetPeersQueryVariables>(
-    GetPeersDocument,
-    baseOptions
-  );
-}
-export function useGetPeersLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetPeersQuery,
-    GetPeersQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<GetPeersQuery, GetPeersQueryVariables>(
-    GetPeersDocument,
-    baseOptions
-  );
-}
+export function useGetPeersQuery(baseOptions?: Apollo.QueryHookOptions<GetPeersQuery, GetPeersQueryVariables>) {
+        return Apollo.useQuery<GetPeersQuery, GetPeersQueryVariables>(GetPeersDocument, baseOptions);
+      }
+export function useGetPeersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPeersQuery, GetPeersQueryVariables>) {
+          return Apollo.useLazyQuery<GetPeersQuery, GetPeersQueryVariables>(GetPeersDocument, baseOptions);
+        }
 export type GetPeersQueryHookResult = ReturnType<typeof useGetPeersQuery>;
-export type GetPeersLazyQueryHookResult = ReturnType<
-  typeof useGetPeersLazyQuery
->;
-export type GetPeersQueryResult = Apollo.QueryResult<
-  GetPeersQuery,
-  GetPeersQueryVariables
->;
+export type GetPeersLazyQueryHookResult = ReturnType<typeof useGetPeersLazyQuery>;
+export type GetPeersQueryResult = Apollo.QueryResult<GetPeersQuery, GetPeersQueryVariables>;

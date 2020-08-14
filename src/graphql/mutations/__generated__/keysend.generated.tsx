@@ -9,23 +9,24 @@ export type KeysendMutationVariables = Types.Exact<{
   tokens: Types.Scalars['Int'];
 }>;
 
-export type KeysendMutation = { __typename?: 'Mutation' } & {
-  keysend?: Types.Maybe<
-    { __typename?: 'payType' } & Pick<Types.PayType, 'is_confirmed'>
-  >;
-};
+
+export type KeysendMutation = (
+  { __typename?: 'Mutation' }
+  & { keysend?: Types.Maybe<(
+    { __typename?: 'payType' }
+    & Pick<Types.PayType, 'is_confirmed'>
+  )> }
+);
+
 
 export const KeysendDocument = gql`
-  mutation Keysend($destination: String!, $tokens: Int!) {
-    keysend(destination: $destination, tokens: $tokens) {
-      is_confirmed
-    }
+    mutation Keysend($destination: String!, $tokens: Int!) {
+  keysend(destination: $destination, tokens: $tokens) {
+    is_confirmed
   }
-`;
-export type KeysendMutationFn = Apollo.MutationFunction<
-  KeysendMutation,
-  KeysendMutationVariables
->;
+}
+    `;
+export type KeysendMutationFn = Apollo.MutationFunction<KeysendMutation, KeysendMutationVariables>;
 
 /**
  * __useKeysendMutation__
@@ -45,20 +46,9 @@ export type KeysendMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useKeysendMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    KeysendMutation,
-    KeysendMutationVariables
-  >
-) {
-  return Apollo.useMutation<KeysendMutation, KeysendMutationVariables>(
-    KeysendDocument,
-    baseOptions
-  );
-}
+export function useKeysendMutation(baseOptions?: Apollo.MutationHookOptions<KeysendMutation, KeysendMutationVariables>) {
+        return Apollo.useMutation<KeysendMutation, KeysendMutationVariables>(KeysendDocument, baseOptions);
+      }
 export type KeysendMutationHookResult = ReturnType<typeof useKeysendMutation>;
 export type KeysendMutationResult = Apollo.MutationResult<KeysendMutation>;
-export type KeysendMutationOptions = Apollo.BaseMutationOptions<
-  KeysendMutation,
-  KeysendMutationVariables
->;
+export type KeysendMutationOptions = Apollo.BaseMutationOptions<KeysendMutation, KeysendMutationVariables>;

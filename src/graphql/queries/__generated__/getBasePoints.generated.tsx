@@ -4,27 +4,26 @@ import * as Types from '../../types';
 import * as Apollo from '@apollo/client';
 const gql = Apollo.gql;
 
-export type GetBasePointsQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type GetBasePointsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
-export type GetBasePointsQuery = { __typename?: 'Query' } & {
-  getBasePoints: Array<
-    Types.Maybe<
-      { __typename?: 'basePointsType' } & Pick<
-        Types.BasePointsType,
-        'alias' | 'amount'
-      >
-    >
-  >;
-};
+
+export type GetBasePointsQuery = (
+  { __typename?: 'Query' }
+  & { getBasePoints: Array<Types.Maybe<(
+    { __typename?: 'basePointsType' }
+    & Pick<Types.BasePointsType, 'alias' | 'amount'>
+  )>> }
+);
+
 
 export const GetBasePointsDocument = gql`
-  query GetBasePoints {
-    getBasePoints {
-      alias
-      amount
-    }
+    query GetBasePoints {
+  getBasePoints {
+    alias
+    amount
   }
-`;
+}
+    `;
 
 /**
  * __useGetBasePointsQuery__
@@ -41,35 +40,12 @@ export const GetBasePointsDocument = gql`
  *   },
  * });
  */
-export function useGetBasePointsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetBasePointsQuery,
-    GetBasePointsQueryVariables
-  >
-) {
-  return Apollo.useQuery<GetBasePointsQuery, GetBasePointsQueryVariables>(
-    GetBasePointsDocument,
-    baseOptions
-  );
-}
-export function useGetBasePointsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetBasePointsQuery,
-    GetBasePointsQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<GetBasePointsQuery, GetBasePointsQueryVariables>(
-    GetBasePointsDocument,
-    baseOptions
-  );
-}
-export type GetBasePointsQueryHookResult = ReturnType<
-  typeof useGetBasePointsQuery
->;
-export type GetBasePointsLazyQueryHookResult = ReturnType<
-  typeof useGetBasePointsLazyQuery
->;
-export type GetBasePointsQueryResult = Apollo.QueryResult<
-  GetBasePointsQuery,
-  GetBasePointsQueryVariables
->;
+export function useGetBasePointsQuery(baseOptions?: Apollo.QueryHookOptions<GetBasePointsQuery, GetBasePointsQueryVariables>) {
+        return Apollo.useQuery<GetBasePointsQuery, GetBasePointsQueryVariables>(GetBasePointsDocument, baseOptions);
+      }
+export function useGetBasePointsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBasePointsQuery, GetBasePointsQueryVariables>) {
+          return Apollo.useLazyQuery<GetBasePointsQuery, GetBasePointsQueryVariables>(GetBasePointsDocument, baseOptions);
+        }
+export type GetBasePointsQueryHookResult = ReturnType<typeof useGetBasePointsQuery>;
+export type GetBasePointsLazyQueryHookResult = ReturnType<typeof useGetBasePointsLazyQuery>;
+export type GetBasePointsQueryResult = Apollo.QueryResult<GetBasePointsQuery, GetBasePointsQueryVariables>;

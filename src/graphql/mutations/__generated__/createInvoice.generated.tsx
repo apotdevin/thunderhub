@@ -8,23 +8,24 @@ export type CreateInvoiceMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
 }>;
 
-export type CreateInvoiceMutation = { __typename?: 'Mutation' } & {
-  createInvoice?: Types.Maybe<
-    { __typename?: 'newInvoiceType' } & Pick<Types.NewInvoiceType, 'request'>
-  >;
-};
+
+export type CreateInvoiceMutation = (
+  { __typename?: 'Mutation' }
+  & { createInvoice?: Types.Maybe<(
+    { __typename?: 'newInvoiceType' }
+    & Pick<Types.NewInvoiceType, 'request'>
+  )> }
+);
+
 
 export const CreateInvoiceDocument = gql`
-  mutation CreateInvoice($amount: Int!) {
-    createInvoice(amount: $amount) {
-      request
-    }
+    mutation CreateInvoice($amount: Int!) {
+  createInvoice(amount: $amount) {
+    request
   }
-`;
-export type CreateInvoiceMutationFn = Apollo.MutationFunction<
-  CreateInvoiceMutation,
-  CreateInvoiceMutationVariables
->;
+}
+    `;
+export type CreateInvoiceMutationFn = Apollo.MutationFunction<CreateInvoiceMutation, CreateInvoiceMutationVariables>;
 
 /**
  * __useCreateInvoiceMutation__
@@ -43,24 +44,9 @@ export type CreateInvoiceMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCreateInvoiceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateInvoiceMutation,
-    CreateInvoiceMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    CreateInvoiceMutation,
-    CreateInvoiceMutationVariables
-  >(CreateInvoiceDocument, baseOptions);
-}
-export type CreateInvoiceMutationHookResult = ReturnType<
-  typeof useCreateInvoiceMutation
->;
-export type CreateInvoiceMutationResult = Apollo.MutationResult<
-  CreateInvoiceMutation
->;
-export type CreateInvoiceMutationOptions = Apollo.BaseMutationOptions<
-  CreateInvoiceMutation,
-  CreateInvoiceMutationVariables
->;
+export function useCreateInvoiceMutation(baseOptions?: Apollo.MutationHookOptions<CreateInvoiceMutation, CreateInvoiceMutationVariables>) {
+        return Apollo.useMutation<CreateInvoiceMutation, CreateInvoiceMutationVariables>(CreateInvoiceDocument, baseOptions);
+      }
+export type CreateInvoiceMutationHookResult = ReturnType<typeof useCreateInvoiceMutation>;
+export type CreateInvoiceMutationResult = Apollo.MutationResult<CreateInvoiceMutation>;
+export type CreateInvoiceMutationOptions = Apollo.BaseMutationOptions<CreateInvoiceMutation, CreateInvoiceMutationVariables>;

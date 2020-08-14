@@ -8,25 +8,26 @@ export type GetInOutQueryVariables = Types.Exact<{
   time?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
-export type GetInOutQuery = { __typename?: 'Query' } & {
-  getInOut?: Types.Maybe<
-    { __typename?: 'InOutType' } & Pick<
-      Types.InOutType,
-      'invoices' | 'payments' | 'confirmedInvoices' | 'unConfirmedInvoices'
-    >
-  >;
-};
+
+export type GetInOutQuery = (
+  { __typename?: 'Query' }
+  & { getInOut?: Types.Maybe<(
+    { __typename?: 'InOutType' }
+    & Pick<Types.InOutType, 'invoices' | 'payments' | 'confirmedInvoices' | 'unConfirmedInvoices'>
+  )> }
+);
+
 
 export const GetInOutDocument = gql`
-  query GetInOut($time: String) {
-    getInOut(time: $time) {
-      invoices
-      payments
-      confirmedInvoices
-      unConfirmedInvoices
-    }
+    query GetInOut($time: String) {
+  getInOut(time: $time) {
+    invoices
+    payments
+    confirmedInvoices
+    unConfirmedInvoices
   }
-`;
+}
+    `;
 
 /**
  * __useGetInOutQuery__
@@ -44,30 +45,12 @@ export const GetInOutDocument = gql`
  *   },
  * });
  */
-export function useGetInOutQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetInOutQuery, GetInOutQueryVariables>
-) {
-  return Apollo.useQuery<GetInOutQuery, GetInOutQueryVariables>(
-    GetInOutDocument,
-    baseOptions
-  );
-}
-export function useGetInOutLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetInOutQuery,
-    GetInOutQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<GetInOutQuery, GetInOutQueryVariables>(
-    GetInOutDocument,
-    baseOptions
-  );
-}
+export function useGetInOutQuery(baseOptions?: Apollo.QueryHookOptions<GetInOutQuery, GetInOutQueryVariables>) {
+        return Apollo.useQuery<GetInOutQuery, GetInOutQueryVariables>(GetInOutDocument, baseOptions);
+      }
+export function useGetInOutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInOutQuery, GetInOutQueryVariables>) {
+          return Apollo.useLazyQuery<GetInOutQuery, GetInOutQueryVariables>(GetInOutDocument, baseOptions);
+        }
 export type GetInOutQueryHookResult = ReturnType<typeof useGetInOutQuery>;
-export type GetInOutLazyQueryHookResult = ReturnType<
-  typeof useGetInOutLazyQuery
->;
-export type GetInOutQueryResult = Apollo.QueryResult<
-  GetInOutQuery,
-  GetInOutQueryVariables
->;
+export type GetInOutLazyQueryHookResult = ReturnType<typeof useGetInOutLazyQuery>;
+export type GetInOutQueryResult = Apollo.QueryResult<GetInOutQuery, GetInOutQueryVariables>;

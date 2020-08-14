@@ -4,27 +4,28 @@ import * as Types from '../../types';
 import * as Apollo from '@apollo/client';
 const gql = Apollo.gql;
 
-export type GetAccountQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type GetAccountQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
-export type GetAccountQuery = { __typename?: 'Query' } & {
-  getAccount?: Types.Maybe<
-    { __typename?: 'serverAccountType' } & Pick<
-      Types.ServerAccountType,
-      'name' | 'id' | 'loggedIn' | 'type'
-    >
-  >;
-};
+
+export type GetAccountQuery = (
+  { __typename?: 'Query' }
+  & { getAccount?: Types.Maybe<(
+    { __typename?: 'serverAccountType' }
+    & Pick<Types.ServerAccountType, 'name' | 'id' | 'loggedIn' | 'type'>
+  )> }
+);
+
 
 export const GetAccountDocument = gql`
-  query GetAccount {
-    getAccount {
-      name
-      id
-      loggedIn
-      type
-    }
+    query GetAccount {
+  getAccount {
+    name
+    id
+    loggedIn
+    type
   }
-`;
+}
+    `;
 
 /**
  * __useGetAccountQuery__
@@ -41,33 +42,12 @@ export const GetAccountDocument = gql`
  *   },
  * });
  */
-export function useGetAccountQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetAccountQuery,
-    GetAccountQueryVariables
-  >
-) {
-  return Apollo.useQuery<GetAccountQuery, GetAccountQueryVariables>(
-    GetAccountDocument,
-    baseOptions
-  );
-}
-export function useGetAccountLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAccountQuery,
-    GetAccountQueryVariables
-  >
-) {
-  return Apollo.useLazyQuery<GetAccountQuery, GetAccountQueryVariables>(
-    GetAccountDocument,
-    baseOptions
-  );
-}
+export function useGetAccountQuery(baseOptions?: Apollo.QueryHookOptions<GetAccountQuery, GetAccountQueryVariables>) {
+        return Apollo.useQuery<GetAccountQuery, GetAccountQueryVariables>(GetAccountDocument, baseOptions);
+      }
+export function useGetAccountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAccountQuery, GetAccountQueryVariables>) {
+          return Apollo.useLazyQuery<GetAccountQuery, GetAccountQueryVariables>(GetAccountDocument, baseOptions);
+        }
 export type GetAccountQueryHookResult = ReturnType<typeof useGetAccountQuery>;
-export type GetAccountLazyQueryHookResult = ReturnType<
-  typeof useGetAccountLazyQuery
->;
-export type GetAccountQueryResult = Apollo.QueryResult<
-  GetAccountQuery,
-  GetAccountQueryVariables
->;
+export type GetAccountLazyQueryHookResult = ReturnType<typeof useGetAccountLazyQuery>;
+export type GetAccountQueryResult = Apollo.QueryResult<GetAccountQuery, GetAccountQueryVariables>;

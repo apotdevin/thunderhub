@@ -8,20 +8,19 @@ export type CircularRebalanceMutationVariables = Types.Exact<{
   route: Types.Scalars['String'];
 }>;
 
-export type CircularRebalanceMutation = { __typename?: 'Mutation' } & Pick<
-  Types.Mutation,
-  'circularRebalance'
->;
+
+export type CircularRebalanceMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Types.Mutation, 'circularRebalance'>
+);
+
 
 export const CircularRebalanceDocument = gql`
-  mutation CircularRebalance($route: String!) {
-    circularRebalance(route: $route)
-  }
-`;
-export type CircularRebalanceMutationFn = Apollo.MutationFunction<
-  CircularRebalanceMutation,
-  CircularRebalanceMutationVariables
->;
+    mutation CircularRebalance($route: String!) {
+  circularRebalance(route: $route)
+}
+    `;
+export type CircularRebalanceMutationFn = Apollo.MutationFunction<CircularRebalanceMutation, CircularRebalanceMutationVariables>;
 
 /**
  * __useCircularRebalanceMutation__
@@ -40,24 +39,9 @@ export type CircularRebalanceMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCircularRebalanceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CircularRebalanceMutation,
-    CircularRebalanceMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    CircularRebalanceMutation,
-    CircularRebalanceMutationVariables
-  >(CircularRebalanceDocument, baseOptions);
-}
-export type CircularRebalanceMutationHookResult = ReturnType<
-  typeof useCircularRebalanceMutation
->;
-export type CircularRebalanceMutationResult = Apollo.MutationResult<
-  CircularRebalanceMutation
->;
-export type CircularRebalanceMutationOptions = Apollo.BaseMutationOptions<
-  CircularRebalanceMutation,
-  CircularRebalanceMutationVariables
->;
+export function useCircularRebalanceMutation(baseOptions?: Apollo.MutationHookOptions<CircularRebalanceMutation, CircularRebalanceMutationVariables>) {
+        return Apollo.useMutation<CircularRebalanceMutation, CircularRebalanceMutationVariables>(CircularRebalanceDocument, baseOptions);
+      }
+export type CircularRebalanceMutationHookResult = ReturnType<typeof useCircularRebalanceMutation>;
+export type CircularRebalanceMutationResult = Apollo.MutationResult<CircularRebalanceMutation>;
+export type CircularRebalanceMutationOptions = Apollo.BaseMutationOptions<CircularRebalanceMutation, CircularRebalanceMutationVariables>;
