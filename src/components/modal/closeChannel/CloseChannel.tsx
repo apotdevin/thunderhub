@@ -20,7 +20,7 @@ import {
 import { Input } from '../../input/Input';
 
 interface CloseChannelProps {
-  setModalOpen: (status: boolean) => void;
+  callback: () => void;
   channelId: string;
   channelName: string;
 }
@@ -37,7 +37,7 @@ const CenterLine = styled(SingleLine)`
 `;
 
 export const CloseChannel = ({
-  setModalOpen,
+  callback,
   channelId,
   channelName,
 }: CloseChannelProps) => {
@@ -64,11 +64,11 @@ export const CloseChannel = ({
   useEffect(() => {
     if (data && data.closeChannel) {
       toast.success('Channel Closed');
-      setModalOpen(false);
+      callback();
     }
-  }, [data, setModalOpen]);
+  }, [data, callback]);
 
-  const handleOnlyClose = () => setModalOpen(false);
+  const handleOnlyClose = () => callback();
 
   const renderButton = (
     onClick: () => void,

@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
-import { ChevronRight, AlertCircle } from 'react-feather';
-import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
-import { InputWithDeco } from 'src/components/input/InputWithDeco';
+import { AlertCircle } from 'react-feather';
 import { ChannelType } from 'src/graphql/types';
 import { formatSats } from 'src/utils/helpers';
 import { chartColors } from 'src/styles/Themes';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
-import { useNodeInfo } from 'src/hooks/UseNodeInfo';
+import { ChangeDetails } from 'src/components/modal/changeDetails/ChangeDetails';
+import Modal from 'src/components/modal/ReactModal';
 import {
   SubCard,
   Separation,
@@ -18,7 +16,6 @@ import {
 } from '../../components/generic/Styled';
 import { renderLine, getWithCopy } from '../../components/generic/helpers';
 import { MainInfo, NodeTitle } from '../../components/generic/CardGeneric';
-import { getErrorContent } from '../../utils/error';
 import { WarningText } from '../stats/styles';
 import { FeeCardColumn, FeeCardNoWrap } from './styles';
 
@@ -35,9 +32,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
   setIndexOpen,
   indexOpen,
 }) => {
-  const { minorVersion, revision } = useNodeInfo();
-  const canMax = (minorVersion === 7 && revision > 1) || minorVersion > 7;
-  const canMin = (minorVersion === 8 && revision > 2) || minorVersion > 8;
+  const [modalOpen, setModalOpen] = useState(false);
 
   const { partner_public_key, partner_node_info, partner_fee_info } = channel;
 
@@ -59,37 +54,6 @@ export const FeeCard: React.FC<FeeCardProps> = ({
   const base_fee = Number(base_fee_mtokens) / 1000;
   const max_htlc = Number(max_htlc_mtokens) / 1000;
   const min_htlc = Number(min_htlc_mtokens) / 1000;
-
-  const [newBaseFee, setBaseFee] = useState(base_fee);
-  const [newFeeRate, setFeeRate] = useState(fee_rate);
-  const [newCLTV, setCLTV] = useState(cltv_delta);
-  const [newMax, setMax] = useState(max_htlc);
-  const [newMin, setMin] = useState(min_htlc);
-
-  const withChanges =
-    newBaseFee !== base_fee ||
-    newFeeRate !== fee_rate ||
-    newCLTV !== cltv_delta ||
-    newMax !== max_htlc ||
-    newMin !== min_htlc;
-
-  const [updateFees] = useUpdateFeesMutation({
-    onError: error => {
-      setBaseFee(base_fee);
-      setFeeRate(fee_rate);
-      setCLTV(cltv_delta);
-      setMax(max_htlc);
-      setMin(min_htlc);
-      toast.error(getErrorContent(error));
-    },
-    onCompleted: data => {
-      setIndexOpen(0);
-      data.updateFees
-        ? toast.success('Channel fees updated')
-        : toast.error('Error updating channel fees');
-    },
-    refetchQueries: ['ChannelFees'],
-  });
 
   const handleClick = () => {
     if (indexOpen === index) {
@@ -129,87 +93,19 @@ export const FeeCard: React.FC<FeeCardProps> = ({
     return (
       <>
         {renderWarningText(cltv_delta)}
+        <ColorButton
+          withBorder={true}
+          onClick={() => setModalOpen(true)}
+          fullWidth={true}
+          withMargin={'16px 0 0'}
+          arrow={true}
+        >
+          Update Details
+        </ColorButton>
         {renderPartnerDetails()}
         <Separation />
         {renderLine('Transaction Id:', getWithCopy(transaction_id))}
         {renderLine('Transaction Vout:', transaction_vout)}
-        <Separation />
-
-        <InputWithDeco
-          title={'Base Fee'}
-          value={newBaseFee}
-          placeholder={'sats'}
-          amount={newBaseFee}
-          override={'sat'}
-          inputType={'number'}
-          inputCallback={value => setBaseFee(Number(value))}
-        />
-        <InputWithDeco
-          title={'Fee Rate'}
-          value={newFeeRate}
-          placeholder={'ppm'}
-          amount={newFeeRate}
-          override={'ppm'}
-          inputType={'number'}
-          inputCallback={value => setFeeRate(Number(value))}
-        />
-        <InputWithDeco
-          title={'CLTV Delta'}
-          value={newCLTV}
-          placeholder={'cltv delta'}
-          customAmount={newCLTV?.toString() || ''}
-          inputType={'number'}
-          inputCallback={value => setCLTV(Number(value))}
-        />
-        {canMax && (
-          <InputWithDeco
-            title={'Max HTLC'}
-            value={newMax}
-            placeholder={'sats'}
-            amount={newMax}
-            override={'sat'}
-            inputType={'number'}
-            inputCallback={value => setMax(Number(value))}
-          />
-        )}
-        {canMin && (
-          <InputWithDeco
-            title={'Min HTLC'}
-            value={newMin}
-            placeholder={'sats'}
-            amount={newMin}
-            override={'sat'}
-            inputType={'number'}
-            inputCallback={value => setMin(Number(value))}
-          />
-        )}
-        <ColorButton
-          onClick={() =>
-            updateFees({
-              variables: {
-                transaction_id,
-                transaction_vout,
-                ...(newBaseFee !== 0 && {
-                  base_fee_tokens: newBaseFee,
-                }),
-                ...(newFeeRate !== 0 && {
-                  fee_rate: newFeeRate,
-                }),
-                ...(newCLTV !== 0 && { cltv_delta: newCLTV }),
-                ...(newMax !== 0 &&
-                  canMax && { max_htlc_mtokens: (newMax * 1000).toString() }),
-                ...(newMin !== 0 &&
-                  canMin && { min_htlc_mtokens: (newMin * 1000).toString() }),
-              },
-            })
-          }
-          disabled={!withChanges}
-          fullWidth={true}
-          withMargin={'16px 0 0'}
-        >
-          Update Channel Details
-          <ChevronRight size={18} />
-        </ColorButton>
       </>
     );
   };
@@ -304,6 +200,18 @@ export const FeeCard: React.FC<FeeCardProps> = ({
         </ResponsiveLine>
       </MainInfo>
       {index === indexOpen && renderDetails()}
+      <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
+        <ChangeDetails
+          callback={() => setModalOpen(false)}
+          transaction_id={transaction_id}
+          transaction_vout={transaction_vout}
+          base_fee_mtokens={base_fee_mtokens}
+          max_htlc_mtokens={max_htlc_mtokens}
+          min_htlc_mtokens={min_htlc_mtokens}
+          fee_rate={fee_rate}
+          cltv_delta={cltv_delta}
+        />
+      </Modal>
     </SubCard>
   );
 };
