@@ -1,3 +1,5 @@
 /.next
 /.node_modules
+
 **/*.generated.tsx
+src/graphql/types.ts

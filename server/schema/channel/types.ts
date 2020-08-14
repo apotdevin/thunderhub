@@ -39,13 +39,6 @@ export const channelTypes = gql`
     channel: singleChannelType
   }
 
-  type channelFeeType {
-    id: String!
-    partner_public_key: String!
-    partner_node_info: Node!
-    channelInfo: Channel
-  }
-
   type channelReportType {
     local: Int
     remote: Int

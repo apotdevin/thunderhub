@@ -176,9 +176,10 @@ Object {
 exports[`Query tests "GET_CHANNEL_FEES" matches snapshot 1`] = `
 Object {
   "data": Object {
-    "getChannelFees": Array [
+    "getChannels": Array [
       Object {
-        "channelInfo": Object {
+        "id": "100x1x1",
+        "partner_fee_info": Object {
           "channel": Object {
             "node_policies": null,
             "partner_node_policies": Object {
@@ -192,7 +193,6 @@ Object {
             "transaction_vout": 1000,
           },
         },
-        "id": "100x1x1",
         "partner_node_info": Object {
           "node": Object {
             "alias": "string",
@@ -202,7 +202,8 @@ Object {
         "partner_public_key": "string",
       },
       Object {
-        "channelInfo": Object {
+        "id": "100x1x1",
+        "partner_fee_info": Object {
           "channel": Object {
             "node_policies": null,
             "partner_node_policies": Object {
@@ -216,7 +217,6 @@ Object {
             "transaction_vout": 1000,
           },
         },
-        "id": "100x1x1",
         "partner_node_info": Object {
           "node": Object {
             "alias": "string",
@@ -226,7 +226,8 @@ Object {
         "partner_public_key": "string",
       },
       Object {
-        "channelInfo": Object {
+        "id": "100x1x1",
+        "partner_fee_info": Object {
           "channel": Object {
             "node_policies": null,
             "partner_node_policies": Object {
@@ -240,7 +241,6 @@ Object {
             "transaction_vout": 1000,
           },
         },
-        "id": "100x1x1",
         "partner_node_info": Object {
           "node": Object {
             "alias": "string",
@@ -281,6 +281,7 @@ Object {
         "local_reserve": 1000,
         "partner_fee_info": Object {
           "channel": Object {
+            "node_policies": null,
             "partner_node_policies": Object {
               "base_fee_mtokens": "2000",
               "cltv_delta": 1000,
@@ -324,6 +325,7 @@ Object {
         "local_reserve": 1000,
         "partner_fee_info": Object {
           "channel": Object {
+            "node_policies": null,
             "partner_node_policies": Object {
               "base_fee_mtokens": "2000",
               "cltv_delta": 1000,
@@ -367,6 +369,7 @@ Object {
         "local_reserve": 1000,
         "partner_fee_info": Object {
           "channel": Object {
+            "node_policies": null,
             "partner_node_policies": Object {
               "base_fee_mtokens": "2000",
               "cltv_delta": 1000,

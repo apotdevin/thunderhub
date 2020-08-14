@@ -45,7 +45,6 @@ export const queryTypes = gql`
     getChannels(active: Boolean): [channelType]!
     getClosedChannels(type: String): [closedChannelType]
     getPendingChannels: [pendingChannelType]
-    getChannelFees: [channelFeeType]
     getChannelReport: channelReportType
     getNetworkInfo: networkInfoType
     getNodeInfo: nodeInfoType

@@ -1,8 +1,6 @@
 /* eslint-disable */
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -38,6 +36,9 @@ export type PermissionsType = {
   is_ok_to_verify_messages?: Maybe<Scalars['Boolean']>;
 };
 
+
+
+
 export type Query = {
   __typename?: 'Query';
   getBaseCanConnect: Scalars['Boolean'];
@@ -51,7 +52,6 @@ export type Query = {
   getChannels: Array<Maybe<ChannelType>>;
   getClosedChannels?: Maybe<Array<Maybe<ClosedChannelType>>>;
   getPendingChannels?: Maybe<Array<Maybe<PendingChannelType>>>;
-  getChannelFees?: Maybe<Array<Maybe<ChannelFeeType>>>;
   getChannelReport?: Maybe<ChannelReportType>;
   getNetworkInfo?: Maybe<NetworkInfoType>;
   getNodeInfo?: Maybe<NodeInfoType>;
@@ -85,6 +85,7 @@ export type Query = {
   getLatestVersion?: Maybe<Scalars['String']>;
 };
 
+
 export type QueryGetAccountingReportArgs = {
   category?: Maybe<Scalars['String']>;
   currency?: Maybe<Scalars['String']>;
@@ -93,43 +94,53 @@ export type QueryGetAccountingReportArgs = {
   year?: Maybe<Scalars['String']>;
 };
 
+
 export type QueryGetChannelsArgs = {
   active?: Maybe<Scalars['Boolean']>;
 };
 
+
 export type QueryGetClosedChannelsArgs = {
   type?: Maybe<Scalars['String']>;
 };
+
 
 export type QueryGetNodeArgs = {
   publicKey: Scalars['String'];
   withoutChannels?: Maybe<Scalars['Boolean']>;
 };
 
+
 export type QueryDecodeRequestArgs = {
   request: Scalars['String'];
 };
+
 
 export type QueryGetResumeArgs = {
   token?: Maybe<Scalars['String']>;
 };
 
+
 export type QueryGetForwardsArgs = {
   time?: Maybe<Scalars['String']>;
 };
+
 
 export type QueryGetBitcoinPriceArgs = {
   logger?: Maybe<Scalars['Boolean']>;
   currency?: Maybe<Scalars['String']>;
 };
 
+
 export type QueryGetBitcoinFeesArgs = {
   logger?: Maybe<Scalars['Boolean']>;
 };
 
+
 export type QueryGetForwardReportArgs = {
   time?: Maybe<Scalars['String']>;
 };
+
 
 export type QueryGetForwardChannelsReportArgs = {
   time?: Maybe<Scalars['String']>;
@@ -137,17 +148,21 @@ export type QueryGetForwardChannelsReportArgs = {
   type?: Maybe<Scalars['String']>;
 };
 
+
 export type QueryGetInOutArgs = {
   time?: Maybe<Scalars['String']>;
 };
+
 
 export type QueryVerifyBackupsArgs = {
   backup: Scalars['String'];
 };
 
+
 export type QueryRecoverFundsArgs = {
   backup: Scalars['String'];
 };
+
 
 export type QueryGetRoutesArgs = {
   outgoing: Scalars['String'];
@@ -156,14 +171,17 @@ export type QueryGetRoutesArgs = {
   maxFee?: Maybe<Scalars['Int']>;
 };
 
+
 export type QuerySignMessageArgs = {
   message: Scalars['String'];
 };
+
 
 export type QueryVerifyMessageArgs = {
   message: Scalars['String'];
   signature: Scalars['String'];
 };
+
 
 export type QueryGetMessagesArgs = {
   token?: Maybe<Scalars['String']>;
@@ -171,9 +189,11 @@ export type QueryGetMessagesArgs = {
   lastMessage?: Maybe<Scalars['String']>;
 };
 
+
 export type QueryGetAuthTokenArgs = {
   cookie?: Maybe<Scalars['String']>;
 };
+
 
 export type QueryGetSessionTokenArgs = {
   id?: Maybe<Scalars['String']>;
@@ -201,9 +221,11 @@ export type Mutation = {
   createMacaroon?: Maybe<Scalars['String']>;
 };
 
+
 export type MutationCreateBaseInvoiceArgs = {
   amount: Scalars['Int'];
 };
+
 
 export type MutationCreateThunderPointsArgs = {
   id: Scalars['String'];
@@ -212,12 +234,14 @@ export type MutationCreateThunderPointsArgs = {
   public_key: Scalars['String'];
 };
 
+
 export type MutationCloseChannelArgs = {
   id: Scalars['String'];
   forceClose?: Maybe<Scalars['Boolean']>;
   targetConfirmations?: Maybe<Scalars['Int']>;
   tokensPerVByte?: Maybe<Scalars['Int']>;
 };
+
 
 export type MutationOpenChannelArgs = {
   amount: Scalars['Int'];
@@ -226,6 +250,7 @@ export type MutationOpenChannelArgs = {
   isPrivate?: Maybe<Scalars['Boolean']>;
   pushTokens?: Maybe<Scalars['Int']>;
 };
+
 
 export type MutationUpdateFeesArgs = {
   transaction_id?: Maybe<Scalars['String']>;
@@ -237,18 +262,22 @@ export type MutationUpdateFeesArgs = {
   min_htlc_mtokens?: Maybe<Scalars['String']>;
 };
 
+
 export type MutationKeysendArgs = {
   destination: Scalars['String'];
   tokens: Scalars['Int'];
 };
 
+
 export type MutationCreateInvoiceArgs = {
   amount: Scalars['Int'];
 };
 
+
 export type MutationCircularRebalanceArgs = {
   route: Scalars['String'];
 };
+
 
 export type MutationBosRebalanceArgs = {
   avoid?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -263,14 +292,17 @@ export type MutationBosRebalanceArgs = {
   target?: Maybe<Scalars['Int']>;
 };
 
+
 export type MutationPayViaRouteArgs = {
   route: Scalars['String'];
   id: Scalars['String'];
 };
 
+
 export type MutationCreateAddressArgs = {
   nested?: Maybe<Scalars['Boolean']>;
 };
+
 
 export type MutationSendToAddressArgs = {
   address: Scalars['String'];
@@ -280,6 +312,7 @@ export type MutationSendToAddressArgs = {
   sendAll?: Maybe<Scalars['Boolean']>;
 };
 
+
 export type MutationAddPeerArgs = {
   url?: Maybe<Scalars['String']>;
   publicKey?: Maybe<Scalars['String']>;
@@ -287,9 +320,11 @@ export type MutationAddPeerArgs = {
   isTemporary?: Maybe<Scalars['Boolean']>;
 };
 
+
 export type MutationRemovePeerArgs = {
   publicKey: Scalars['String'];
 };
+
 
 export type MutationSendMessageArgs = {
   publicKey: Scalars['String'];
@@ -299,9 +334,11 @@ export type MutationSendMessageArgs = {
   maxFee?: Maybe<Scalars['Int']>;
 };
 
+
 export type MutationLogoutArgs = {
   type: Scalars['String'];
 };
+
 
 export type MutationCreateMacaroonArgs = {
   permissions: PermissionsType;
@@ -468,14 +505,6 @@ export type SingleChannelType = {
 export type Channel = {
   __typename?: 'Channel';
   channel?: Maybe<SingleChannelType>;
-};
-
-export type ChannelFeeType = {
-  __typename?: 'channelFeeType';
-  id: Scalars['String'];
-  partner_public_key: Scalars['String'];
-  partner_node_info: Node;
-  channelInfo?: Maybe<Channel>;
 };
 
 export type ChannelReportType = {
@@ -906,3 +935,4 @@ export type BaseInvoiceType = {
   id: Scalars['String'];
   request: Scalars['String'];
 };
+

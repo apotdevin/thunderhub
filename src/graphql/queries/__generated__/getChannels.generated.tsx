@@ -24,7 +24,10 @@ export type GetChannelsQuery = (
       { __typename?: 'Channel' }
       & { channel?: Types.Maybe<(
         { __typename?: 'singleChannelType' }
-        & { partner_node_policies?: Types.Maybe<(
+        & { node_policies?: Types.Maybe<(
+          { __typename?: 'nodePolicyType' }
+          & Pick<Types.NodePolicyType, 'base_fee_mtokens' | 'fee_rate' | 'cltv_delta' | 'max_htlc_mtokens' | 'min_htlc_mtokens'>
+        )>, partner_node_policies?: Types.Maybe<(
           { __typename?: 'nodePolicyType' }
           & Pick<Types.NodePolicyType, 'base_fee_mtokens' | 'fee_rate' | 'cltv_delta'>
         )> }
@@ -71,6 +74,13 @@ export const GetChannelsDocument = gql`
     }
     partner_fee_info {
       channel {
+        node_policies {
+          base_fee_mtokens
+          fee_rate
+          cltv_delta
+          max_htlc_mtokens
+          min_htlc_mtokens
+        }
         partner_node_policies {
           base_fee_mtokens
           fee_rate

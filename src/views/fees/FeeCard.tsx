@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { ChevronRight, AlertCircle } from 'react-feather';
 import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
-import { ChannelFeeType } from 'src/graphql/types';
+import { ChannelType } from 'src/graphql/types';
 import { formatSats } from 'src/utils/helpers';
 import { chartColors } from 'src/styles/Themes';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
@@ -23,7 +23,7 @@ import { WarningText } from '../stats/styles';
 import { FeeCardColumn, FeeCardNoWrap } from './styles';
 
 interface FeeCardProps {
-  channel: ChannelFeeType;
+  channel: ChannelType;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
@@ -39,7 +39,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
   const canMax = (minorVersion === 7 && revision > 1) || minorVersion > 7;
   const canMin = (minorVersion === 8 && revision > 2) || minorVersion > 8;
 
-  const { partner_public_key, partner_node_info, channelInfo } = channel;
+  const { partner_public_key, partner_node_info, partner_fee_info } = channel;
 
   const { alias, color } = partner_node_info.node;
   const {
@@ -47,7 +47,7 @@ export const FeeCard: React.FC<FeeCardProps> = ({
     transaction_vout,
     node_policies,
     partner_node_policies,
-  } = channelInfo?.channel || {};
+  } = partner_fee_info?.channel || {};
   const {
     base_fee_mtokens,
     fee_rate,
