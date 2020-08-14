@@ -8,6 +8,10 @@ const BalanceLine = styled.div`
   position: relative;
 `;
 
+const SingleLine = styled(BalanceLine)`
+  margin-bottom: 4px;
+`;
+
 const ValueBox = styled.div`
   position: absolute;
   font-size: 14px;
@@ -55,15 +59,45 @@ export const BalanceBars = ({
     formatRemote !== '0.00';
 
   return (
-    <>
-      <BalanceLine>
-        {hasLocal && <Value>{formatLocal}</Value>}
-        {hasRemote && <RightValue>{formatRemote}</RightValue>}
-        <ProgressBar barHeight={height} order={4} percent={localOpposite} />
-        <ProgressBar barHeight={height} order={1} percent={local} />
-        <ProgressBar barHeight={height} order={2} percent={remote} />
-        <ProgressBar barHeight={height} order={4} percent={remoteOpposite} />
-      </BalanceLine>
-    </>
+    <BalanceLine>
+      {hasLocal && <Value>{formatLocal}</Value>}
+      {hasRemote && <RightValue>{formatRemote}</RightValue>}
+      <ProgressBar barHeight={height} order={4} percent={localOpposite} />
+      <ProgressBar barHeight={height} order={1} percent={local} />
+      <ProgressBar barHeight={height} order={2} percent={remote} />
+      <ProgressBar barHeight={height} order={4} percent={remoteOpposite} />
+    </BalanceLine>
+  );
+};
+
+type SingleBarType = {
+  value: number;
+  height?: number;
+};
+
+export const SingleBar = ({ value, height }: SingleBarType) => {
+  const opposite = 100 - value;
+  let color = 2;
+
+  switch (true) {
+    case value > 80:
+      color = 7;
+      break;
+    case value > 50:
+      color = 5;
+      break;
+    case value > 25:
+      color = 3;
+      break;
+    case value > 10:
+      color = 6;
+      break;
+  }
+
+  return (
+    <SingleLine>
+      <ProgressBar barHeight={height} order={color} percent={value} />
+      <ProgressBar barHeight={height} order={8} percent={opposite} />
+    </SingleLine>
   );
 };
