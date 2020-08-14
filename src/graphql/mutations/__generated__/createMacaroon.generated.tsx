@@ -1,6 +1,7 @@
-import * as Apollo from '@apollo/client';
+/* eslint-disable */
 import * as Types from '../../types';
 
+import * as Apollo from '@apollo/client';
 const gql = Apollo.gql;
 
 export type CreateMacaroonMutationVariables = Types.Exact<{
