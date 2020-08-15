@@ -1,195 +1,305 @@
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
-import { ChevronRight, ChevronUp, ChevronDown } from 'react-feather';
-import { useChannelFeesQuery } from 'src/graphql/queries/__generated__/getChannelFees.generated';
-import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
-import { InputWithDeco } from 'src/components/input/InputWithDeco';
+import React, { useMemo, useRef, useEffect, useState } from 'react';
+import { useTable, useSortBy, useRowSelect } from 'react-table';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import styled from 'styled-components';
-import { ChannelType } from 'src/graphql/types';
-import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
-import { CHANNEL_FEES } from 'src/graphql/queries/getChannelFees';
-import { useNodeInfo } from 'src/hooks/UseNodeInfo';
-import {
-  Card,
-  CardWithTitle,
-  SubTitle,
-  SingleLine,
-  Sub4Title,
-  Separation,
-  RightAlign,
-} from '../src/components/generic/Styled';
-import { getErrorContent } from '../src/utils/error';
-import { LoadingCard } from '../src/components/loading/LoadingCard';
-import { FeeCard } from '../src/views/fees/FeeCard';
+import { useChannelFeesQuery } from 'src/graphql/queries/__generated__/getChannelFees.generated';
+import { getErrorContent } from 'src/utils/error';
+import { toast } from 'react-toastify';
+import { Card, CardWithTitle, SubTitle } from 'src/components/generic/Styled';
+import styled from 'styled-components';
+import { LoadingCard } from 'src/components/loading/LoadingCard';
+import { separationColor, mediaWidths } from 'src/styles/Themes';
+import { GET_CHANNELS } from 'src/graphql/queries/getChannels';
+import { Upload, X } from 'react-feather';
+import { saveToPc } from 'src/utils/helpers';
+import { DetailsUpload } from 'src/components/details/detailsUpload';
 
-const WithPointer = styled.div`
-  cursor: pointer;
+const ToastStyle = styled.div`
+  width: 100%;
+  text-align: center;
 `;
 
-const FeesView = () => {
-  const { minorVersion, revision } = useNodeInfo();
-  const canMax = (minorVersion === 7 && revision > 1) || minorVersion > 7;
-  const canMin = (minorVersion === 8 && revision > 2) || minorVersion > 8;
+export const IconCursor = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 8px;
+`;
 
-  const [indexOpen, setIndexOpen] = useState(0);
-  const [isEdit, setIsEdit] = useState(false);
+const CardTitleRow = styled.div`
+  display: flex;
+  justify-content: space-between;
 
-  const [baseFee, setBaseFee] = useState(0);
-  const [feeRate, setFeeRate] = useState(0);
-  const [cltv, setCLTV] = useState(0);
-  const [max, setMax] = useState(0);
-  const [min, setMin] = useState(0);
+  @media (${mediaWidths.mobile}) {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+const IndeterminateCheckbox = React.forwardRef<
+  HTMLButtonElement,
+  { indeterminate: any }
+>(({ indeterminate, ...rest }, ref) => {
+  const defaultRef = React.useRef();
+  const resolvedRef: any = ref || defaultRef;
+
+  React.useEffect(() => {
+    resolvedRef.current.indeterminate = indeterminate;
+  }, [resolvedRef, indeterminate]);
+
+  return (
+    <>
+      <input type="checkbox" ref={resolvedRef} {...rest} />
+    </>
+  );
+});
+
+IndeterminateCheckbox.displayName = 'IndeterminateCheckbox';
+
+const Styles = styled.div`
+  padding: 8px;
+  overflow-x: auto;
+  table {
+    border-spacing: 0;
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+    th,
+    td {
+      font-size: 14px;
+      text-align: center;
+      margin: 0;
+      padding: 4px;
+      border-right: 1px solid ${separationColor};
+      :last-child {
+        border-right: 0;
+      }
+    }
+  }
+`;
+
+const Detail = () => {
+  const [willUpload, setWillUpload] = useState<boolean>(false);
+  const toastId = useRef<any>(null);
 
   const { loading, data } = useChannelFeesQuery({
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  const [updateFees] = useUpdateFeesMutation({
-    onError: error => toast.error(getErrorContent(error)),
-    onCompleted: data => {
-      setBaseFee(0);
-      setFeeRate(0);
-      setCLTV(0);
-      setMax(0);
-      setMin(0);
-      setIsEdit(false);
-      data.updateFees
-        ? toast.success('Channel Details Updated')
-        : toast.error('Error updating fees');
-    },
-    refetchQueries: ['ChannelFees'],
+  const table = useMemo(() => {
+    if (loading || !data?.getChannels?.length) return [];
+
+    const newTable: any =
+      data.getChannels.map(channel => {
+        const policies =
+          channel?.partner_fee_info?.channel?.node_policies || {};
+        return {
+          id: channel?.id,
+          alias: channel?.partner_node_info.node.alias,
+          transaction_id: channel?.transaction_id,
+          transaction_vout: channel?.transaction_vout,
+          ...policies,
+          base_fee_mtokens: Number(policies.base_fee_mtokens) / 1000,
+          max_htlc_mtokens: Number(policies.max_htlc_mtokens) / 1000,
+          min_htlc_mtokens: Number(policies.min_htlc_mtokens) / 1000,
+        };
+      }) || [];
+    return newTable;
+  }, [loading, data]);
+
+  const columns: any = React.useMemo(
+    () => [
+      {
+        Header: 'Name',
+        accessor: 'alias',
+      },
+      {
+        Header: 'Fee Rate',
+        accessor: 'fee_rate',
+      },
+      {
+        Header: 'Base Fee',
+        accessor: 'base_fee_mtokens',
+      },
+      {
+        Header: 'CLTV Delta',
+        accessor: 'cltv_delta',
+      },
+      {
+        Header: 'Max HTLC',
+        accessor: 'max_htlc_mtokens',
+      },
+      {
+        Header: 'Min HTLC',
+        accessor: 'min_htlc_mtokens',
+      },
+    ],
+    []
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state: { selectedRowIds },
+  } = useTable({ columns, data: table }, useSortBy, useRowSelect, hooks => {
+    hooks.visibleColumns.push(columns => {
+      const Header = ({ getToggleAllRowsSelectedProps }: any) => (
+        <div>
+          <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+        </div>
+      );
+
+      const Cell = ({ row }: any) => (
+        <div>
+          <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+        </div>
+      );
+
+      const extra = {
+        id: 'selection',
+        Header,
+        Cell,
+      };
+
+      return [...columns, extra];
+    });
   });
 
-  if (loading || !data || !data.getChannels) {
-    return <LoadingCard title={'Details'} />;
+  const ids = Object.keys(selectedRowIds);
+  // const selectedChannels = ids.map((id: string) => table[Number(id)]);
+
+  // console.log({ ids, selectedChannels, table });
+
+  useEffect(() => {
+    if (!toast.isActive(toastId.current) && ids.length) {
+      toastId.current = toast.info(
+        <ToastStyle>
+          {`Download Channel Details`}
+          <div>{`(${ids.length} Channels)`}</div>
+        </ToastStyle>,
+        {
+          position: 'bottom-right',
+          autoClose: false,
+          closeButton: false,
+          closeOnClick: false,
+          onClick: () =>
+            saveToPc(
+              JSON.stringify(ids.map((id: string) => table[Number(id)])),
+              'channelDetails',
+              false,
+              true
+            ),
+        }
+      );
+    }
+    if (toast.isActive(toastId.current) && ids.length) {
+      toast.update(toastId.current, {
+        render: (
+          <ToastStyle>
+            {`Download Channel Details`}
+            <div>{`(${ids.length} Channels)`}</div>
+          </ToastStyle>
+        ),
+        onClick: () =>
+          saveToPc(
+            JSON.stringify(ids.map((id: string) => table[Number(id)])),
+            'channelDetails',
+            false,
+            true
+          ),
+      });
+    }
+    if (!ids.length) {
+      toast.dismiss(toastId.current);
+    }
+  }, [ids, table]);
+
+  useEffect(() => {
+    return () => {
+      toast.dismiss();
+    };
+  }, []);
+
+  if (loading || !data?.getChannels?.length) {
+    return <LoadingCard title={'Channel Details'} />;
   }
 
   return (
-    <>
-      <Card>
-        <WithPointer>
-          <SingleLine onClick={() => setIsEdit(prev => !prev)}>
-            <Sub4Title>Update All Channel Details</Sub4Title>
-            {isEdit ? <ChevronUp /> : <ChevronDown />}
-          </SingleLine>
-        </WithPointer>
-        {isEdit && (
-          <>
-            <Separation />
-            <InputWithDeco
-              title={'BaseFee'}
-              value={baseFee}
-              placeholder={'sats'}
-              amount={baseFee}
-              override={'sat'}
-              inputType={'number'}
-              inputCallback={value => setBaseFee(Number(value))}
-            />
-            <InputWithDeco
-              title={'Fee Rate'}
-              value={feeRate}
-              placeholder={'ppm'}
-              amount={feeRate}
-              override={'ppm'}
-              inputType={'number'}
-              inputCallback={value => setFeeRate(Number(value))}
-            />
-            <InputWithDeco
-              title={'CLTV Delta'}
-              value={cltv}
-              placeholder={'cltv delta'}
-              customAmount={cltv ? cltv.toString() : ''}
-              inputType={'number'}
-              inputCallback={value => setCLTV(Number(value))}
-            />
-            {canMax && (
-              <InputWithDeco
-                title={'Max HTLC'}
-                value={max}
-                placeholder={'sats'}
-                amount={max}
-                override={'sat'}
-                inputType={'number'}
-                inputCallback={value => setMax(Number(value))}
-              />
-            )}
-            {canMin && (
-              <InputWithDeco
-                title={'Min HTLC'}
-                value={min}
-                placeholder={'sats'}
-                amount={min}
-                override={'sat'}
-                inputType={'number'}
-                inputCallback={value => setMin(Number(value))}
-              />
-            )}
-            <RightAlign>
-              <ColorButton
-                onClick={() =>
-                  updateFees({
-                    variables: {
-                      ...(baseFee !== 0 && { base_fee_tokens: baseFee }),
-                      ...(feeRate !== 0 && { fee_rate: feeRate }),
-                      ...(cltv !== 0 && { cltv_delta: cltv }),
-                      ...(max !== 0 &&
-                        canMax && {
-                          max_htlc_mtokens: (max * 1000).toString(),
-                        }),
-                      ...(min !== 0 &&
-                        canMin && {
-                          min_htlc_mtokens: (min * 1000).toString(),
-                        }),
-                    },
-                  })
-                }
-                disabled={
-                  baseFee === 0 &&
-                  feeRate === 0 &&
-                  cltv === 0 &&
-                  max === 0 &&
-                  min === 0
-                }
-                fullWidth={true}
-                withMargin={'16px 0 0'}
-              >
-                Update Fees
-                <ChevronRight size={18} />
-              </ColorButton>
-            </RightAlign>
-          </>
-        )}
-      </Card>
-
-      <CardWithTitle>
+    <CardWithTitle>
+      <CardTitleRow>
         <SubTitle>Channel Details</SubTitle>
-        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          {data.getChannels.map((channel, index) => (
-            <FeeCard
-              channel={channel as ChannelType}
-              index={index + 1}
-              setIndexOpen={setIndexOpen}
-              indexOpen={indexOpen}
-              key={index}
-            />
-          ))}
+        <IconCursor onClick={() => setWillUpload(p => !p)}>
+          {willUpload ? <X size={16} /> : <Upload size={16} />}
+        </IconCursor>
+      </CardTitleRow>
+      {willUpload && (
+        <Card>
+          <DetailsUpload />
         </Card>
-      </CardWithTitle>
-    </>
+      )}
+      <Card cardPadding={'0'}>
+        <Styles>
+          <table {...getTableProps()} style={{ width: '100%' }}>
+            <thead>
+              {headerGroups.map((headerGroup, index) => (
+                <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+                  {headerGroup.headers.map((column: any, index) => (
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                      key={index}
+                    >
+                      {column.render('Header')}
+                      <span>
+                        {column.isSorted
+                          ? column.isSortedDesc
+                            ? '⬇'
+                            : '⬆'
+                          : ''}
+                      </span>
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {rows.map((row, index) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()} key={index}>
+                    {row.cells.map((cell, index) => {
+                      return (
+                        <td {...cell.getCellProps()} key={index}>
+                          {cell.render('Cell')}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </Styles>
+      </Card>
+    </CardWithTitle>
   );
 };
 
 const Wrapped = () => (
   <GridWrapper>
-    <FeesView />
+    <Detail />
   </GridWrapper>
 );
 
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context, [CHANNEL_FEES]);
+  return await getProps(context, [GET_CHANNELS]);
 }

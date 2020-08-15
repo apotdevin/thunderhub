@@ -101,13 +101,18 @@ export const getPercent = (
 export const saveToPc = (
   jsonData: string,
   filename: string,
-  isCsv?: boolean
+  isCsv?: boolean,
+  isJson?: boolean
 ) => {
   const fileData = jsonData;
   const blob = new Blob([fileData], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.download = isCsv ? `${filename}.csv` : `${filename}.txt`;
+  link.download = isCsv
+    ? `${filename}.csv`
+    : isJson
+    ? `${filename}.json`
+    : `${filename}.txt`;
   link.href = url;
   link.click();
 };

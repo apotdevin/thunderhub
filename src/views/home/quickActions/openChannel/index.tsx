@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useGetBaseNodesQuery } from 'src/graphql/queries/__generated__/getBaseNodes.generated';
 import {
-  Card,
   Separation,
   SingleLine,
   DarkSubTitle,
@@ -103,7 +102,7 @@ export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
   );
 
   if (loading) {
-    return <LoadingCard />;
+    return <LoadingCard noCard={true} />;
   }
 
   const getIcon = (name: string) => {
@@ -177,5 +176,5 @@ export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
     }
   };
 
-  return <Card>{renderContent()}</Card>;
+  return renderContent();
 };
