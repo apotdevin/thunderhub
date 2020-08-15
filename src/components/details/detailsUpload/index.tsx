@@ -11,23 +11,27 @@ import {
 } from 'src/components/generic/Styled';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import styled from 'styled-components';
+import { useUpdateMultipleFeesMutation } from 'src/graphql/mutations/__generated__/updateMultipleFees.generated';
 
 const LightSubTitle = styled.div`
   font-size: 14px;
   margin: 2px 0;
 `;
 
-export const DetailsUpload = () => {
+type DetailsUploadType = { callback?: () => void };
+
+export const DetailsUpload = ({ callback }: DetailsUploadType) => {
   const [setFile, { data, loading, error }] = useFileReader();
 
   const { data: channelData, loading: loadingChannels } = useGetChannelsQuery();
-
-  useEffect(() => {
-    if (loading || !data) return;
-    toast.success('Details File Succesfully Uploaded', {
-      pauseOnFocusLoss: false,
-    });
-  }, [loading, data]);
+  const [upload, { loading: loadingUpdate }] = useUpdateMultipleFeesMutation({
+    onError: () => toast.error('Error Updating Channels'),
+    onCompleted: () => {
+      toast.success('Channels Updated');
+      callback && callback();
+    },
+    refetchQueries: ['ChannelFees', 'GetChannels'],
+  });
 
   useEffect(() => {
     if (error) {
@@ -111,7 +115,27 @@ export const DetailsUpload = () => {
         </React.Fragment>
       ))}
       <Separation />
-      <ColorButton fullWidth={true} onClick={() => console.log(finalChannels)}>
+      <ColorButton
+        loading={loadingUpdate}
+        disabled={loadingUpdate}
+        fullWidth={true}
+        onClick={() => {
+          const channels = finalChannels
+            .filter(c => c.approved)
+            .map(channel => ({
+              alias: channel.alias,
+              id: channel.id,
+              transaction_id: channel.transaction_id,
+              transaction_vout: Number(channel.transaction_vout),
+              base_fee_tokens: Number(channel.base_fee_mtokens),
+              fee_rate: Number(channel.fee_rate),
+              cltv_delta: Number(channel.cltv_delta),
+              max_htlc_mtokens: `${channel.max_htlc_mtokens * 1000}`,
+              min_htlc_mtokens: `${channel.min_htlc_mtokens * 1000}`,
+            }));
+          upload({ variables: { channels } });
+        }}
+      >
         Change These Channels
       </ColorButton>
     </>

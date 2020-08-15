@@ -242,7 +242,7 @@ const Detail = () => {
       </CardTitleRow>
       {willUpload && (
         <Card>
-          <DetailsUpload />
+          <DetailsUpload callback={() => setWillUpload(false)} />
         </Card>
       )}
       <Card cardPadding={'0'}>

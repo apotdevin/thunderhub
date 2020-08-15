@@ -1,6 +1,18 @@
 import { gql } from 'apollo-server-micro';
 
 export const channelTypes = gql`
+  input channelDetailInput {
+    alias: String
+    id: String
+    transaction_id: String
+    transaction_vout: Int
+    base_fee_tokens: Float
+    fee_rate: Int
+    cltv_delta: Int
+    max_htlc_mtokens: String
+    min_htlc_mtokens: String
+  }
+
   type policyType {
     base_fee_mtokens: String
     cltv_delta: Int
