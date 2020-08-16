@@ -9,11 +9,12 @@ import { toast } from 'react-toastify';
 import { Card, CardWithTitle, SubTitle } from 'src/components/generic/Styled';
 import styled from 'styled-components';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
-import { separationColor, mediaWidths } from 'src/styles/Themes';
+import { separationColor } from 'src/styles/Themes';
 import { GET_CHANNELS } from 'src/graphql/queries/getChannels';
-import { Upload, X } from 'react-feather';
+import { Upload, X, Info } from 'react-feather';
 import { saveToPc } from 'src/utils/helpers';
 import { DetailsUpload } from 'src/components/details/detailsUpload';
+import ReactTooltip from 'react-tooltip';
 
 const ToastStyle = styled.div`
   width: 100%;
@@ -24,17 +25,15 @@ export const IconCursor = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  margin-left: 8px;
+`;
+
+export const IconPadding = styled.div`
+  padding-left: 4px;
 `;
 
 const CardTitleRow = styled.div`
   display: flex;
   justify-content: space-between;
-
-  @media (${mediaWidths.mobile}) {
-    flex-direction: column;
-    align-items: center;
-  }
 `;
 
 const IndeterminateCheckbox = React.forwardRef<
@@ -94,7 +93,7 @@ const Detail = () => {
   const table = useMemo(() => {
     if (loading || !data?.getChannels?.length) return [];
 
-    const newTable: any =
+    return (
       data.getChannels.map(channel => {
         const policies =
           channel?.partner_fee_info?.channel?.node_policies || {};
@@ -103,13 +102,14 @@ const Detail = () => {
           alias: channel?.partner_node_info.node.alias,
           transaction_id: channel?.transaction_id,
           transaction_vout: channel?.transaction_vout,
-          ...policies,
-          base_fee_mtokens: Number(policies.base_fee_mtokens) / 1000,
-          max_htlc_mtokens: Number(policies.max_htlc_mtokens) / 1000,
-          min_htlc_mtokens: Number(policies.min_htlc_mtokens) / 1000,
+          fee_rate: policies.fee_rate,
+          cltv_delta: policies.cltv_delta,
+          base_fee_tokens: Number(policies.base_fee_mtokens) / 1000,
+          max_htlc_tokens: Number(policies.max_htlc_mtokens) / 1000,
+          min_htlc_tokens: Number(policies.min_htlc_mtokens) / 1000,
         };
-      }) || [];
-    return newTable;
+      }) || []
+    );
   }, [loading, data]);
 
   const columns: any = React.useMemo(
@@ -119,24 +119,24 @@ const Detail = () => {
         accessor: 'alias',
       },
       {
-        Header: 'Fee Rate',
+        Header: 'Fee Rate (ppm)',
         accessor: 'fee_rate',
       },
       {
-        Header: 'Base Fee',
-        accessor: 'base_fee_mtokens',
+        Header: 'Base Fee (sat)',
+        accessor: 'base_fee_tokens',
       },
       {
         Header: 'CLTV Delta',
         accessor: 'cltv_delta',
       },
       {
-        Header: 'Max HTLC',
-        accessor: 'max_htlc_mtokens',
+        Header: 'Max HTLC (sat)',
+        accessor: 'max_htlc_tokens',
       },
       {
-        Header: 'Min HTLC',
-        accessor: 'min_htlc_mtokens',
+        Header: 'Min HTLC (sat)',
+        accessor: 'min_htlc_tokens',
       },
     ],
     []
@@ -174,15 +174,12 @@ const Detail = () => {
   });
 
   const ids = Object.keys(selectedRowIds);
-  // const selectedChannels = ids.map((id: string) => table[Number(id)]);
-
-  // console.log({ ids, selectedChannels, table });
 
   useEffect(() => {
     if (!toast.isActive(toastId.current) && ids.length) {
       toastId.current = toast.info(
         <ToastStyle>
-          {`Download Channel Details`}
+          {`Download Details`}
           <div>{`(${ids.length} Channels)`}</div>
         </ToastStyle>,
         {
@@ -204,7 +201,7 @@ const Detail = () => {
       toast.update(toastId.current, {
         render: (
           <ToastStyle>
-            {`Download Channel Details`}
+            {`Download Details`}
             <div>{`(${ids.length} Channels)`}</div>
           </ToastStyle>
         ),
@@ -235,7 +232,14 @@ const Detail = () => {
   return (
     <CardWithTitle>
       <CardTitleRow>
-        <SubTitle>Channel Details</SubTitle>
+        <SubTitle>
+          <IconCursor>
+            Channel Details
+            <IconPadding>
+              <Info size={16} data-tip data-for={'channel_details_info'} />
+            </IconPadding>
+          </IconCursor>
+        </SubTitle>
         <IconCursor onClick={() => setWillUpload(p => !p)}>
           {willUpload ? <X size={16} /> : <Upload size={16} />}
         </IconCursor>
@@ -288,6 +292,14 @@ const Detail = () => {
           </table>
         </Styles>
       </Card>
+      <ReactTooltip
+        id={'channel_details_info'}
+        effect={'solid'}
+        place={'right'}
+      >
+        <div>Select channels that you want to download details from.</div>
+        This file can later be used to update these same channels.
+      </ReactTooltip>
     </CardWithTitle>
   );
 };

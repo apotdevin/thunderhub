@@ -24,14 +24,20 @@ export const DetailsUpload = ({ callback }: DetailsUploadType) => {
   const [setFile, { data, loading, error }] = useFileReader();
 
   const { data: channelData, loading: loadingChannels } = useGetChannelsQuery();
-  const [upload, { loading: loadingUpdate }] = useUpdateMultipleFeesMutation({
+  const [
+    upload,
+    { data: dataUpdate, loading: loadingUpdate },
+  ] = useUpdateMultipleFeesMutation({
     onError: () => toast.error('Error Updating Channels'),
-    onCompleted: () => {
-      toast.success('Channels Updated');
-      callback && callback();
-    },
     refetchQueries: ['ChannelFees', 'GetChannels'],
   });
+
+  useEffect(() => {
+    if (dataUpdate?.updateMultipleFees) {
+      toast.success('Channels Updated');
+      callback && callback();
+    }
+  }, [dataUpdate, callback]);
 
   useEffect(() => {
     if (error) {
@@ -127,11 +133,11 @@ export const DetailsUpload = ({ callback }: DetailsUploadType) => {
               id: channel.id,
               transaction_id: channel.transaction_id,
               transaction_vout: Number(channel.transaction_vout),
-              base_fee_tokens: Number(channel.base_fee_mtokens),
+              base_fee_tokens: Number(channel.base_fee_tokens),
               fee_rate: Number(channel.fee_rate),
               cltv_delta: Number(channel.cltv_delta),
-              max_htlc_mtokens: `${channel.max_htlc_mtokens * 1000}`,
-              min_htlc_mtokens: `${channel.min_htlc_mtokens * 1000}`,
+              max_htlc_mtokens: `${Number(channel.max_htlc_tokens) * 1000}`,
+              min_htlc_mtokens: `${Number(channel.min_htlc_tokens) * 1000}`,
             }));
           upload({ variables: { channels } });
         }}
