@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.4](https://github.com/apotdevin/thunderhub/compare/v0.9.3...v0.9.4) (2020-08-16)
+
+
+### Bug Fixes
+
+* 🐛 getnode request limiter ([5b68684](https://github.com/apotdevin/thunderhub/commit/5b6868401527b29523306fc291108bf4024f9cf3))
+* 🐛 ignore generated files ([bdf09c2](https://github.com/apotdevin/thunderhub/commit/bdf09c2967fb9a718b47ea59e70aa1ba6fae155d))
+
+
+### Styling
+
+* 🎨 change titles ([319e299](https://github.com/apotdevin/thunderhub/commit/319e2993dd08d22c3c016209aad05caf0395c1ab))
+
+
+### Refactoring
+
+* ♻️ channel fees query ([3c2e24f](https://github.com/apotdevin/thunderhub/commit/3c2e24f815b17338ac5211b0847aae33df0f08b5))
+
+
+### Improvements
+
+* 🔧 add block time to closed channel ([d03ab06](https://github.com/apotdevin/thunderhub/commit/d03ab06cbd0aafd58d5f10c0723bed8272c182fc))
+* 🔧 add details to channels ([5518c51](https://github.com/apotdevin/thunderhub/commit/5518c518661e5004dae694089656a05c7455dceb))
+* 🔧 add sub bar to channel ([6038895](https://github.com/apotdevin/thunderhub/commit/60388950cef555394302ef70add604dc9844286c))
+* 🔧 disable eslint from generator ([4834c20](https://github.com/apotdevin/thunderhub/commit/4834c209d301c376f4045e880dbbd572b3a4b5b7))
+* 🔧 fix eslint ([#125](https://github.com/apotdevin/thunderhub/issues/125)) ([0fc0aed](https://github.com/apotdevin/thunderhub/commit/0fc0aed9db9653975eab939b6bdc2008b779323f))
+* 🔧 mempool space for tx ([43a20cd](https://github.com/apotdevin/thunderhub/commit/43a20cdb9372137cc09f33d9cc968679db2c803d))
+* 🔧 release changes ([4fd0f90](https://github.com/apotdevin/thunderhub/commit/4fd0f904a68cd03f4902fee95519fc3d75cf6e92))
+
 ### [0.9.3](https://github.com/apotdevin/thunderhub/compare/v0.9.2...v0.9.3) (2020-08-12)
 
 
