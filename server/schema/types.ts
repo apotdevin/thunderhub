@@ -119,6 +119,7 @@ export const mutationTypes = gql`
       max_htlc_mtokens: String
       min_htlc_mtokens: String
     ): Boolean
+    updateMultipleFees(channels: [channelDetailInput!]!): Boolean
     keysend(destination: String!, tokens: Int!): payType
     createInvoice(amount: Int!): newInvoiceType
     circularRebalance(route: String!): Boolean

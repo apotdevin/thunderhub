@@ -6,6 +6,7 @@ import {
   SubTitle,
   CardTitle,
   SmallButton,
+  Card,
 } from '../../../components/generic/Styled';
 import {
   unSelectedNavButton,
@@ -70,7 +71,11 @@ export const QuickActions = () => {
       case 'decode':
         return <DecodeCard />;
       case 'open_channel':
-        return <OpenChannel setOpenCard={setOpenCard} />;
+        return (
+          <Card>
+            <OpenChannel setOpenCard={setOpenCard} />
+          </Card>
+        );
       default:
         return (
           <QuickRow>
