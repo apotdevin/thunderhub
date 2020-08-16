@@ -11,33 +11,21 @@ import {
 } from 'src/components/generic/Styled';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import styled from 'styled-components';
-import { useUpdateMultipleFeesMutation } from 'src/graphql/mutations/__generated__/updateMultipleFees.generated';
 
 const LightSubTitle = styled.div`
   font-size: 14px;
   margin: 2px 0;
 `;
 
-type DetailsUploadType = { callback?: () => void };
+type DetailsUploadType = {
+  upload: (channels: any[]) => void;
+  loading: boolean;
+};
 
-export const DetailsUpload = ({ callback }: DetailsUploadType) => {
+export const DetailsUpload = ({ upload }: DetailsUploadType) => {
   const [setFile, { data, loading, error }] = useFileReader();
 
   const { data: channelData, loading: loadingChannels } = useGetChannelsQuery();
-  const [
-    upload,
-    { data: dataUpdate, loading: loadingUpdate },
-  ] = useUpdateMultipleFeesMutation({
-    onError: () => toast.error('Error Updating Channels'),
-    refetchQueries: ['ChannelFees', 'GetChannels'],
-  });
-
-  useEffect(() => {
-    if (dataUpdate?.updateMultipleFees) {
-      toast.success('Channels Updated');
-      callback && callback();
-    }
-  }, [dataUpdate, callback]);
 
   useEffect(() => {
     if (error) {
@@ -102,6 +90,8 @@ export const DetailsUpload = ({ callback }: DetailsUploadType) => {
     })
     .filter(Boolean);
 
+  const approvedChannels = finalChannels.filter(c => c.approved);
+
   return (
     <>
       {finalChannels.map(channel => (
@@ -122,27 +112,25 @@ export const DetailsUpload = ({ callback }: DetailsUploadType) => {
       ))}
       <Separation />
       <ColorButton
-        loading={loadingUpdate}
-        disabled={loadingUpdate}
+        loading={loading}
+        disabled={loading || !approvedChannels.length}
         fullWidth={true}
         onClick={() => {
-          const channels = finalChannels
-            .filter(c => c.approved)
-            .map(channel => ({
-              alias: channel.alias,
-              id: channel.id,
-              transaction_id: channel.transaction_id,
-              transaction_vout: Number(channel.transaction_vout),
-              base_fee_tokens: Number(channel.base_fee_tokens),
-              fee_rate: Number(channel.fee_rate),
-              cltv_delta: Number(channel.cltv_delta),
-              max_htlc_mtokens: `${Number(channel.max_htlc_tokens) * 1000}`,
-              min_htlc_mtokens: `${Number(channel.min_htlc_tokens) * 1000}`,
-            }));
-          upload({ variables: { channels } });
+          const channels = approvedChannels.map(channel => ({
+            alias: channel.alias,
+            id: channel.id,
+            transaction_id: channel.transaction_id,
+            transaction_vout: Number(channel.transaction_vout),
+            base_fee_tokens: Number(channel.base_fee_tokens),
+            fee_rate: Number(channel.fee_rate),
+            cltv_delta: Number(channel.cltv_delta),
+            max_htlc_mtokens: `${Number(channel.max_htlc_tokens) * 1000}`,
+            min_htlc_mtokens: `${Number(channel.min_htlc_tokens) * 1000}`,
+          }));
+          upload(channels);
         }}
       >
-        Change These Channels
+        Update Channels
       </ColorButton>
     </>
   );
