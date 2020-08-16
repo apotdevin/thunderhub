@@ -207,6 +207,7 @@ export type Mutation = {
   closeChannel?: Maybe<CloseChannelType>;
   openChannel?: Maybe<OpenChannelType>;
   updateFees?: Maybe<Scalars['Boolean']>;
+  updateMultipleFees?: Maybe<Scalars['Boolean']>;
   keysend?: Maybe<PayType>;
   createInvoice?: Maybe<NewInvoiceType>;
   circularRebalance?: Maybe<Scalars['Boolean']>;
@@ -260,6 +261,11 @@ export type MutationUpdateFeesArgs = {
   cltv_delta?: Maybe<Scalars['Int']>;
   max_htlc_mtokens?: Maybe<Scalars['String']>;
   min_htlc_mtokens?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateMultipleFeesArgs = {
+  channels: Array<ChannelDetailInput>;
 };
 
 
@@ -463,6 +469,18 @@ export type InOutType = {
   payments?: Maybe<Scalars['String']>;
   confirmedInvoices?: Maybe<Scalars['Int']>;
   unConfirmedInvoices?: Maybe<Scalars['Int']>;
+};
+
+export type ChannelDetailInput = {
+  alias?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  transaction_id?: Maybe<Scalars['String']>;
+  transaction_vout?: Maybe<Scalars['Int']>;
+  base_fee_tokens?: Maybe<Scalars['Float']>;
+  fee_rate?: Maybe<Scalars['Int']>;
+  cltv_delta?: Maybe<Scalars['Int']>;
+  max_htlc_mtokens?: Maybe<Scalars['String']>;
+  min_htlc_mtokens?: Maybe<Scalars['String']>;
 };
 
 export type PolicyType = {

@@ -42,6 +42,7 @@ export const useNodeInfo = (): StatusState => {
   const [nodeInfo, setNodeInfo] = useState<StatusState>(initialState);
   const { data, loading, error } = useGetNodeInfoQuery({
     fetchPolicy: 'cache-first',
+    ssr: false,
   });
 
   useEffect(() => {

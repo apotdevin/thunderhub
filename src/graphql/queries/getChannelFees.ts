@@ -4,6 +4,8 @@ export const CHANNEL_FEES = gql`
   query ChannelFees {
     getChannels {
       id
+      transaction_id
+      transaction_vout
       partner_public_key
       partner_node_info {
         node {
@@ -13,8 +15,6 @@ export const CHANNEL_FEES = gql`
       }
       partner_fee_info {
         channel {
-          transaction_id
-          transaction_vout
           node_policies {
             base_fee_mtokens
             fee_rate

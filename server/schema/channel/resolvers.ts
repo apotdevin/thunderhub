@@ -5,6 +5,7 @@ import { GetChannelType } from 'server/types/ln-service.types';
 import { openChannel } from './resolvers/mutation/openChannel';
 import { closeChannel } from './resolvers/mutation/closeChannel';
 import { updateFees } from './resolvers/mutation/updateFees';
+import { updateMultipleFees } from './resolvers/mutation/updateMultipleFees';
 import { getChannelBalance } from './resolvers/query/getChannelBalance';
 import { getChannels } from './resolvers/query/getChannels';
 import { getClosedChannels } from './resolvers/query/getClosedChannels';
@@ -27,6 +28,7 @@ export const channelResolvers = {
     openChannel,
     closeChannel,
     updateFees,
+    updateMultipleFees,
   },
   Channel: {
     channel: async (parent: ParentType) => {

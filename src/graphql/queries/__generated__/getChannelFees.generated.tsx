@@ -11,7 +11,7 @@ export type ChannelFeesQuery = (
   { __typename?: 'Query' }
   & { getChannels: Array<Types.Maybe<(
     { __typename?: 'channelType' }
-    & Pick<Types.ChannelType, 'id' | 'partner_public_key'>
+    & Pick<Types.ChannelType, 'id' | 'transaction_id' | 'transaction_vout' | 'partner_public_key'>
     & { partner_node_info: (
       { __typename?: 'Node' }
       & { node: (
@@ -22,7 +22,6 @@ export type ChannelFeesQuery = (
       { __typename?: 'Channel' }
       & { channel?: Types.Maybe<(
         { __typename?: 'singleChannelType' }
-        & Pick<Types.SingleChannelType, 'transaction_id' | 'transaction_vout'>
         & { node_policies?: Types.Maybe<(
           { __typename?: 'nodePolicyType' }
           & Pick<Types.NodePolicyType, 'base_fee_mtokens' | 'fee_rate' | 'cltv_delta' | 'max_htlc_mtokens' | 'min_htlc_mtokens'>
@@ -40,6 +39,8 @@ export const ChannelFeesDocument = gql`
     query ChannelFees {
   getChannels {
     id
+    transaction_id
+    transaction_vout
     partner_public_key
     partner_node_info {
       node {
@@ -49,8 +50,6 @@ export const ChannelFeesDocument = gql`
     }
     partner_fee_info {
       channel {
-        transaction_id
-        transaction_vout
         node_policies {
           base_fee_mtokens
           fee_rate
