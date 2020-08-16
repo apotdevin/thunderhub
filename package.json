@@ -12,10 +12,9 @@
     "start:cookie": "sh ./scripts/initCookie.sh",
     "lint": "eslint . --ext ts --ext tsx --ext js",
     "format": "prettier --write \"**/*.{js,ts,tsx}\"",
-    "release": "standard-version --sign",
-    "release:push": "standard-version --sign && git push --follow-tags origin master",
-    "release:test": "standard-version --sign --dry-run",
-    "release:minor": "standard-version --sign --release-as minor && git push --follow-tags origin master",
+    "release": "standard-version",
+    "release:test": "standard-version --dry-run",
+    "release:minor": "standard-version --release-as minor",
     "analyze": "npx cross-env ANALYZE=true next build",
     "generate": "graphql-codegen --config codegen.yml",
     "test": "jest",
@@ -151,5 +150,11 @@
       "jest --bail --findRelatedTests",
       "eslint --fix"
     ]
+  },
+  "standard-version": {
+    "skip": {
+      "commit": true,
+      "tag": true
+    }
   }
 }
