@@ -8,13 +8,13 @@ import { toast } from 'react-toastify';
 import { Card, CardWithTitle, SubTitle } from 'src/components/generic/Styled';
 import styled from 'styled-components';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
-import { GET_CHANNELS } from 'src/graphql/queries/getChannels';
 import { Upload, X, Info } from 'react-feather';
 import { DetailsUpload } from 'src/components/details/detailsUpload';
 import ReactTooltip from 'react-tooltip';
 import { DetailsTable } from 'src/views/details/DetailsTable';
 import { ChannelType } from 'src/graphql/types';
 import { useUpdateMultipleFeesMutation } from 'src/graphql/mutations/__generated__/updateMultipleFees.generated';
+import { CHANNEL_FEES } from 'src/graphql/queries/getChannelFees';
 
 export const IconCursor = styled.div`
   display: flex;
@@ -98,5 +98,5 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context, [GET_CHANNELS]);
+  return await getProps(context, [CHANNEL_FEES]);
 }
