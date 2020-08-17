@@ -1,9 +1,8 @@
 /* eslint-disable */
 import * as Types from '../../types';
 
+import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const gql = Apollo.gql;
-
 export type UpdateFeesMutationVariables = Types.Exact<{
   transaction_id?: Types.Maybe<Types.Scalars['String']>;
   transaction_vout?: Types.Maybe<Types.Scalars['Int']>;

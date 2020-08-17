@@ -46,7 +46,6 @@ type StateType = {
   max_fee: number;
   max_fee_rate: number;
   max_rebalance: number;
-  out_channels: RebalanceIdType[];
   out_through: RebalanceIdType;
   target: number;
   node: RebalanceIdType;
@@ -82,14 +81,6 @@ export type ActionType =
       public_key: string;
     }
   | {
-      type: 'addChannel';
-      channel: RebalanceIdType;
-    }
-  | {
-      type: 'removeChannel';
-      id: string;
-    }
-  | {
       type: 'clearFilters';
     };
 
@@ -100,7 +91,6 @@ const initialState: StateType = {
   max_fee: 0,
   max_fee_rate: 0,
   max_rebalance: 0,
-  out_channels: [],
   out_through: defaultRebalanceId,
   target: 0,
   node: defaultRebalanceId,
@@ -136,20 +126,6 @@ const reducer = (state: StateType, action: ActionType): StateType => {
     case 'removeNode': {
       const filtered = state.avoid.filter(n => n.id !== action.public_key);
       return { ...state, avoid: filtered };
-    }
-    case 'addChannel': {
-      const same = state.out_channels.filter(n => n.id === action.channel.id);
-      if (same.length <= 0) {
-        return {
-          ...state,
-          out_channels: [...state.out_channels, action.channel],
-        };
-      }
-      return state;
-    }
-    case 'removeChannel': {
-      const filtered = state.out_channels.filter(n => n.id !== action.id);
-      return { ...state, out_channels: filtered };
     }
     case 'clearFilters':
       return initialState;
@@ -216,7 +192,6 @@ export const AdvancedBalance = () => {
   const hasInChannel = !!state.in_through.alias;
   const hasOutChannel = !!state.out_through.alias;
   const hasAvoid = state.avoid.length > 0;
-  const hasOutChannels = state.out_channels.length > 0;
 
   const renderDetails = () => (
     <>
@@ -256,29 +231,27 @@ export const AdvancedBalance = () => {
           {hasAvoid ? <Minus size={18} /> : <Plus size={18} />}
         </ColorButton>
       </SettingLine>
-      {!hasOutChannels && (
-        <SettingLine title={'Increase Inbound Of'}>
-          {hasOutChannel ? (
-            <RebalanceTag>{state.out_through.alias}</RebalanceTag>
-          ) : null}
-          <ColorButton
-            color={hasOutChannel ? chartColors.red : undefined}
-            onClick={() => {
-              if (hasOutChannel) {
-                rebalanceDispatch({ type: 'setOut', channel: null });
-                dispatch({
-                  type: 'outChannel',
-                  channel: defaultRebalanceId,
-                });
-              } else {
-                openTypeSet('outChannel');
-              }
-            }}
-          >
-            {hasOutChannel ? <Minus size={18} /> : <Plus size={18} />}
-          </ColorButton>
-        </SettingLine>
-      )}
+      <SettingLine title={'Increase Inbound Of'}>
+        {hasOutChannel ? (
+          <RebalanceTag>{state.out_through.alias}</RebalanceTag>
+        ) : null}
+        <ColorButton
+          color={hasOutChannel ? chartColors.red : undefined}
+          onClick={() => {
+            if (hasOutChannel) {
+              rebalanceDispatch({ type: 'setOut', channel: null });
+              dispatch({
+                type: 'outChannel',
+                channel: defaultRebalanceId,
+              });
+            } else {
+              openTypeSet('outChannel');
+            }
+          }}
+        >
+          {hasOutChannel ? <Minus size={18} /> : <Plus size={18} />}
+        </ColorButton>
+      </SettingLine>
       <SettingLine title={'Decrease Inbound Of'}>
         {hasInChannel ? (
           <RebalanceTag>{state.in_through.alias}</RebalanceTag>
@@ -297,30 +270,6 @@ export const AdvancedBalance = () => {
           {hasInChannel ? <Minus size={18} /> : <Plus size={18} />}
         </ColorButton>
       </SettingLine>
-      {!hasOutChannel && (
-        <SettingLine title={'Out Through Channels'}>
-          {hasOutChannels && (
-            <>
-              <ViewSwitch hideMobile={true}>
-                <RebalanceWrapLine>
-                  {state.out_channels.map(a => (
-                    <RebalanceTag key={a.id}>{a.alias}</RebalanceTag>
-                  ))}
-                </RebalanceWrapLine>
-              </ViewSwitch>
-              <ViewSwitch>
-                <RebalanceTag>{state.out_channels.length}</RebalanceTag>
-              </ViewSwitch>
-            </>
-          )}
-          <ColorButton
-            color={hasOutChannels ? chartColors.red : undefined}
-            onClick={() => openTypeSet('outChannels')}
-          >
-            {hasOutChannels ? <Minus size={18} /> : <Plus size={18} />}
-          </ColorButton>
-        </SettingLine>
-      )}
       <RebalanceLine>
         <RebalanceSubTitle>Avoid High Inbound</RebalanceSubTitle>
         <MultiButton>
@@ -422,16 +371,6 @@ export const AdvancedBalance = () => {
             openSet={() => openTypeSet('none')}
           />
         );
-      case 'outChannels':
-        return (
-          <ModalChannels
-            ignore={state.in_through.id}
-            multi={true}
-            dispatch={dispatch}
-            channels={state.out_channels}
-            openSet={() => openTypeSet('none')}
-          />
-        );
       default:
         return null;
     }
@@ -496,7 +435,6 @@ export const AdvancedBalance = () => {
                     node: state.node.id,
                     in_through: state.in_through.id,
                     out_through: state.out_through.id,
-                    out_channels: state.out_channels.map(c => c.id),
                   },
                 });
               }}

@@ -1,9 +1,8 @@
 /* eslint-disable */
 import * as Types from '../../types';
 
+import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const gql = Apollo.gql;
-
 export type BosRebalanceMutationVariables = Types.Exact<{
   avoid?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
   in_through?: Types.Maybe<Types.Scalars['String']>;
@@ -12,7 +11,6 @@ export type BosRebalanceMutationVariables = Types.Exact<{
   max_fee_rate?: Types.Maybe<Types.Scalars['Int']>;
   max_rebalance?: Types.Maybe<Types.Scalars['Int']>;
   node?: Types.Maybe<Types.Scalars['String']>;
-  out_channels?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
   out_through?: Types.Maybe<Types.Scalars['String']>;
   target?: Types.Maybe<Types.Scalars['Int']>;
 }>;
@@ -37,8 +35,8 @@ export type BosRebalanceMutation = (
 
 
 export const BosRebalanceDocument = gql`
-    mutation BosRebalance($avoid: [String], $in_through: String, $is_avoiding_high_inbound: Boolean, $max_fee: Int, $max_fee_rate: Int, $max_rebalance: Int, $node: String, $out_channels: [String], $out_through: String, $target: Int) {
-  bosRebalance(avoid: $avoid, in_through: $in_through, is_avoiding_high_inbound: $is_avoiding_high_inbound, max_fee: $max_fee, max_fee_rate: $max_fee_rate, max_rebalance: $max_rebalance, node: $node, out_channels: $out_channels, out_through: $out_through, target: $target) {
+    mutation BosRebalance($avoid: [String], $in_through: String, $is_avoiding_high_inbound: Boolean, $max_fee: Int, $max_fee_rate: Int, $max_rebalance: Int, $node: String, $out_through: String, $target: Int) {
+  bosRebalance(avoid: $avoid, in_through: $in_through, is_avoiding_high_inbound: $is_avoiding_high_inbound, max_fee: $max_fee, max_fee_rate: $max_fee_rate, max_rebalance: $max_rebalance, node: $node, out_through: $out_through, target: $target) {
     increase {
       increased_inbound_on
       liquidity_inbound
@@ -86,7 +84,6 @@ export type BosRebalanceMutationFn = Apollo.MutationFunction<BosRebalanceMutatio
  *      max_fee_rate: // value for 'max_fee_rate'
  *      max_rebalance: // value for 'max_rebalance'
  *      node: // value for 'node'
- *      out_channels: // value for 'out_channels'
  *      out_through: // value for 'out_through'
  *      target: // value for 'target'
  *   },

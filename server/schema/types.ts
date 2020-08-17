@@ -131,7 +131,6 @@ export const mutationTypes = gql`
       max_fee_rate: Int
       max_rebalance: Int
       node: String
-      out_channels: [String]
       out_through: String
       target: Int
     ): bosRebalanceResultType
