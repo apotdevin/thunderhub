@@ -72,10 +72,10 @@ export const DangerView = () => {
       <SubTitle>Danger Zone</SubTitle>
       <OutlineCard>
         <SettingsLine>
-          <Sub4Title>Delete all accounts, chats and settings:</Sub4Title>
+          <Sub4Title>Delete chats and settings:</Sub4Title>
           <ButtonRow>
             <ColorButton color={'red'} onClick={handleDeleteAll}>
-              Delete All
+              Delete
             </ColorButton>
           </ButtonRow>
         </SettingsLine>
@@ -84,8 +84,8 @@ export const DangerView = () => {
             <AlertCircle size={18} color={fontColors.grey7} />
           </FixedWidth>
           <CheckboxText>
-            This does not affect in any way your node, only the ThunderHub
-            accounts saved in this browser.
+            This does not affect in any way your node, only the information
+            saved in this browser.
           </CheckboxText>
         </StyledContainer>
       </OutlineCard>
