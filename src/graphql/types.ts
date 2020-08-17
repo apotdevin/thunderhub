@@ -293,7 +293,6 @@ export type MutationBosRebalanceArgs = {
   max_fee_rate?: Maybe<Scalars['Int']>;
   max_rebalance?: Maybe<Scalars['Int']>;
   node?: Maybe<Scalars['String']>;
-  out_channels?: Maybe<Array<Maybe<Scalars['String']>>>;
   out_through?: Maybe<Scalars['String']>;
   target?: Maybe<Scalars['Int']>;
 };
@@ -953,4 +952,3 @@ export type BaseInvoiceType = {
   id: Scalars['String'];
   request: Scalars['String'];
 };
-

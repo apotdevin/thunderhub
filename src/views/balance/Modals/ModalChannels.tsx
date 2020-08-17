@@ -9,23 +9,17 @@ import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { Plus, Minus } from 'react-feather';
 import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
 import { themeColors, chartColors } from 'src/styles/Themes';
-import { RebalanceIdType, ActionType } from '../AdvancedBalance';
+import { RebalanceIdType } from '../AdvancedBalance';
 
 type ModalChannelsType = {
-  multi?: boolean;
   channels?: RebalanceIdType[];
   ignore?: string;
-  openSet?: () => void;
-  dispatch?: (action: ActionType) => void;
   callback?: (channel: RebalanceIdType) => void;
 };
 
 export const ModalChannels: React.FC<ModalChannelsType> = ({
-  multi,
   channels,
   ignore,
-  openSet,
-  dispatch,
   callback,
 }) => {
   const { loading, data } = useGetChannelsQuery();
@@ -60,30 +54,11 @@ export const ModalChannels: React.FC<ModalChannelsType> = ({
                 <ColorButton
                   color={isSelected ? chartColors.red : undefined}
                   onClick={() => {
-                    if (multi) {
-                      if (isSelected) {
-                        dispatch &&
-                          dispatch({
-                            type: 'removeChannel',
-                            id: channel.id,
-                          });
-                      } else {
-                        dispatch &&
-                          dispatch({
-                            type: 'addChannel',
-                            channel: {
-                              alias: channel.alias,
-                              id: channel.id,
-                            },
-                          });
-                      }
-                    } else {
-                      callback &&
-                        callback({
-                          alias: channel.alias,
-                          id: channel.publicKey,
-                        });
-                    }
+                    callback &&
+                      callback({
+                        alias: channel.alias,
+                        id: channel.publicKey,
+                      });
                   }}
                 >
                   {isSelected ? <Minus size={18} /> : <Plus size={18} />}
@@ -92,11 +67,6 @@ export const ModalChannels: React.FC<ModalChannelsType> = ({
             </SubCard>
           );
         })}
-      {multi && (
-        <ColorButton onClick={openSet} fullWidth={true} withMargin={'16px 0 0'}>
-          Done
-        </ColorButton>
-      )}
     </>
   );
 };

@@ -63,7 +63,6 @@ export const bosResolvers = {
         max_fee_rate,
         max_rebalance,
         node,
-        out_channels,
         out_through,
         target,
       } = params;
@@ -71,7 +70,6 @@ export const bosResolvers = {
 
       const filteredParams = {
         avoid,
-        out_channels,
         ...(in_through && { in_through }),
         ...(is_avoiding_high_inbound && { is_avoiding_high_inbound }),
         ...(max_fee && max_fee > 0 && { max_fee }),
