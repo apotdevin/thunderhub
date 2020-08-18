@@ -12,11 +12,9 @@ type PeerSelectProps = {
 export const PeerSelect = ({ callback }: PeerSelectProps) => {
   const { data, loading } = useGetPeersQuery();
 
-  if (loading || !data?.getPeers?.length) {
-    return null;
-  }
+  const peers = data?.getPeers || [];
 
-  const options = data.getPeers
+  const options = peers
     .map(peer => {
       if (!peer?.public_key) {
         return null;
@@ -40,11 +38,16 @@ export const PeerSelect = ({ callback }: PeerSelectProps) => {
     .filter(Boolean) as ValueProp[];
 
   const handleChange = (value: ValueProp) => {
-    const peer = data.getPeers?.find(p => p?.public_key === value.value);
+    const peer = peers.find(p => p?.public_key === value.value);
     peer && callback(peer);
   };
 
   return (
-    <SelectWithDeco title={'Node'} options={options} callback={handleChange} />
+    <SelectWithDeco
+      loading={loading}
+      title={'Node'}
+      options={options}
+      callback={handleChange}
+    />
   );
 };
