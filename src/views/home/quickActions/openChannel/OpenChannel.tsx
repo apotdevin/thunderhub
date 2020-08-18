@@ -6,7 +6,7 @@ import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { useBitcoinFees } from 'src/hooks/UseBitcoinFees';
 import { useConfigState } from 'src/context/ConfigContext';
-import { SelectWithDeco } from 'src/components/select/SelectWithDeco';
+import { PeerSelect } from 'src/components/select/specific/PeerSelect';
 import { Separation } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
 import { Input } from '../../../../components/input';
@@ -31,6 +31,7 @@ export const OpenChannelCard = ({
   const [pushType, setPushType] = useState('none');
   const [pushTokens, setPushTokens] = useState(0);
 
+  const [isNewPeer, setIsNewPeer] = useState<boolean>(false);
   const [fee, setFee] = useState(0);
   const [publicKey, setPublicKey] = useState(initialPublicKey);
   const [privateChannel, setPrivateChannel] = useState(false);
@@ -70,20 +71,18 @@ export const OpenChannelCard = ({
     </SingleButton>
   );
 
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-  ];
-
   return (
     <>
-      <SelectWithDeco
-        title={'With Node'}
-        options={options}
-        callback={value => console.log(value)}
-      />
-      {!initialPublicKey && (
+      <InputWithDeco title={'Is New Peer'} noInput={true}>
+        <MultiButton>
+          {renderButton(() => setIsNewPeer(true), 'Yes', isNewPeer)}
+          {renderButton(() => setIsNewPeer(false), 'No', !isNewPeer)}
+        </MultiButton>
+      </InputWithDeco>
+      {!initialPublicKey && !isNewPeer && (
+        <PeerSelect callback={peer => setPublicKey(peer.public_key)} />
+      )}
+      {!initialPublicKey && isNewPeer && (
         <InputWithDeco
           title={'New Node'}
           value={publicKey}
@@ -91,6 +90,7 @@ export const OpenChannelCard = ({
           inputCallback={value => setPublicKey(value)}
         />
       )}
+      <Separation />
       <InputWithDeco
         title={'Channel Size'}
         value={size}
@@ -99,7 +99,6 @@ export const OpenChannelCard = ({
         inputType={'number'}
         inputCallback={value => setSize(Number(value))}
       />
-      <Separation />
       <InputWithDeco title={'Push Tokens to Partner'} noInput={true}>
         <MultiButton>
           {renderButton(() => setPushType('none'), 'None', pushType === 'none')}
