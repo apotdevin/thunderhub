@@ -17,7 +17,7 @@ import {
   MultiButton,
   SingleButton,
 } from '../../buttons/multiButton/MultiButton';
-import { Input } from '../../input/Input';
+import { Input } from '../../input';
 
 interface CloseChannelProps {
   callback: () => void;

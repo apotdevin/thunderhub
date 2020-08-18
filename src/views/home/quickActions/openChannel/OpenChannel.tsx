@@ -6,9 +6,10 @@ import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { useBitcoinFees } from 'src/hooks/UseBitcoinFees';
 import { useConfigState } from 'src/context/ConfigContext';
+import { SelectWithDeco } from 'src/components/select/SelectWithDeco';
 import { Separation } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
-import { Input } from '../../../../components/input/Input';
+import { Input } from '../../../../components/input';
 import {
   SingleButton,
   MultiButton,
@@ -69,13 +70,24 @@ export const OpenChannelCard = ({
     </SingleButton>
   );
 
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' },
+  ];
+
   return (
     <>
+      <SelectWithDeco
+        title={'With Node'}
+        options={options}
+        callback={value => console.log(value)}
+      />
       {!initialPublicKey && (
         <InputWithDeco
-          title={'Node Public Key'}
+          title={'New Node'}
           value={publicKey}
-          placeholder={'Public Key'}
+          placeholder={'PublicKey@Socket'}
           inputCallback={value => setPublicKey(value)}
         />
       )}

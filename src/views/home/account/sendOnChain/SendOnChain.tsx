@@ -9,7 +9,7 @@ import {
   SubTitle,
 } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
-import { Input } from '../../../../components/input/Input';
+import { Input } from '../../../../components/input';
 import {
   MultiButton,
   SingleButton,
