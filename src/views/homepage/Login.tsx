@@ -10,7 +10,7 @@ import { Lock } from 'react-feather';
 import { ServerAccountType } from 'src/graphql/types';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { Input } from '../../components/input/Input';
+import { Input } from '../../components/input';
 import { Section } from '../../components/section/Section';
 import { Title } from '../../components/typography/Styled';
 import {

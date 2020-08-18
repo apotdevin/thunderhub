@@ -11,7 +11,7 @@ import {
   NoWrapTitle,
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
-import { Input } from '../../../../components/input/Input';
+import { Input } from '../../../../components/input';
 import { mediaWidths } from '../../../../styles/Themes';
 
 const Responsive = styled.div`

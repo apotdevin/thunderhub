@@ -2,7 +2,7 @@ import * as React from 'react';
 import { X, ChevronRight } from 'react-feather';
 import { useGetPeersQuery } from 'src/graphql/queries/__generated__/getPeers.generated';
 import { PeerType } from 'src/graphql/types';
-import { Input } from '../../components/input/Input';
+import { Input } from '../../components/input';
 import {
   SubCard,
   ResponsiveSingle,

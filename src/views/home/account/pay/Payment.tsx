@@ -6,7 +6,7 @@ import {
   ResponsiveLine,
   NoWrapTitle,
 } from '../../../../components/generic/Styled';
-import { Input } from '../../../../components/input/Input';
+import { Input } from '../../../../components/input';
 import Modal from '../../../../components/modal/ReactModal';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { isLightningInvoice } from '../../../../utils/helpers';

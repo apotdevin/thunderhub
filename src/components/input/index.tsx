@@ -20,8 +20,9 @@ interface InputProps {
 }
 
 export const StyledInput = styled.input<InputProps>`
+    font-size: 14px;
     padding: 5px;
-    height: 30px;
+    height: 38px;
     margin: 8px 0;
     border: 1px solid ${inputBorderColor};
     background: none;

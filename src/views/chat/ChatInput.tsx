@@ -4,7 +4,7 @@ import { useSendMessageMutation } from 'src/graphql/mutations/__generated__/send
 import { useMutationResultWithReset } from 'src/hooks/UseMutationWithReset';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { useAccount } from 'src/hooks/UseAccount';
-import { Input } from '../../components/input/Input';
+import { Input } from '../../components/input';
 import { SingleLine } from '../../components/generic/Styled';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';

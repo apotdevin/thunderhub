@@ -1,4 +1,4 @@
-import { openChannel as lnOpenChannel } from 'ln-service';
+import { openChannel as lnOpenChannel, addPeer } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
@@ -29,10 +29,18 @@ export const openChannel = async (
     pushTokens = 0,
   } = params;
 
+  let public_key = partnerPublicKey;
+
+  if (partnerPublicKey.indexOf('@') >= 0) {
+    const parts = partnerPublicKey.split('@');
+    public_key = parts[0];
+    await to(addPeer({ lnd, socket: parts[1], public_key }));
+  }
+
   const openParams = {
     is_private: isPrivate,
     local_tokens: amount,
-    partner_public_key: partnerPublicKey,
+    partner_public_key: public_key,
     chain_fee_tokens_per_vbyte: tokensPerVByte,
     give_tokens: Math.min(pushTokens, amount),
   };

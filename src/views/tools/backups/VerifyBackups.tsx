@@ -9,7 +9,7 @@ import {
   Separation,
 } from '../../../components/generic/Styled';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { Input } from '../../../components/input/Input';
+import { Input } from '../../../components/input';
 import { NoWrap } from '../Tools.styled';
 
 export const VerifyBackups = () => {
