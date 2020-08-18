@@ -5,7 +5,7 @@ import { useRecoverFundsLazyQuery } from 'src/graphql/queries/__generated__/reco
 import { getErrorContent } from '../../../utils/error';
 import { SingleLine, DarkSubTitle } from '../../../components/generic/Styled';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { Input } from '../../../components/input/Input';
+import { Input } from '../../../components/input';
 import { NoWrap } from '../Tools.styled';
 
 export const RecoverFunds = () => {

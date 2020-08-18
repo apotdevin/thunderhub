@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { unSelectedNavButton, mediaWidths } from 'src/styles/Themes';
 import { SingleLine } from '../generic/Styled';
 import { Price } from '../price/Price';
-import { Input } from './Input';
+import { Input } from '.';
 
 const NoWrapText = styled.div`
   white-space: nowrap;

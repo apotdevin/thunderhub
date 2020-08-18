@@ -9,7 +9,7 @@ import {
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { Plus, Minus } from 'react-feather';
 import { shorten } from 'src/components/generic/helpers';
-import { Input } from 'src/components/input/Input';
+import { Input } from 'src/components/input';
 import { useGetNodeLazyQuery } from 'src/graphql/queries/__generated__/getNode.generated';
 import { useMutationResultWithReset } from 'src/hooks/UseMutationWithReset';
 import { toast } from 'react-toastify';

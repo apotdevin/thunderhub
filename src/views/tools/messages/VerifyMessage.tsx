@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { X, Copy } from 'react-feather';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useVerifyMessageLazyQuery } from 'src/graphql/queries/__generated__/verifyMessage.generated';
-import { Input } from '../../../components/input/Input';
+import { Input } from '../../../components/input';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import {
   SingleLine,
