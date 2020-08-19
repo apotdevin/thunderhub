@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNodeInfo } from 'src/hooks/UseNodeInfo';
+import { InputWithDeco } from 'src/components/input/InputWithDeco';
+import {
+  MultiButton,
+  SingleButton,
+} from 'src/components/buttons/multiButton/MultiButton';
 import {
   Sub4Title,
   ResponsiveLine,
@@ -10,14 +15,13 @@ import { Input } from '../../../../components/input';
 import Modal from '../../../../components/modal/ReactModal';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { isLightningInvoice } from '../../../../utils/helpers';
-import { RequestModal } from './RequestModal';
 import { KeysendModal } from './KeysendModal';
-
-type ModalType = 'keysend' | 'request' | 'none';
+import { Pay } from './Pay';
 
 export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const [request, setRequest] = useState<string>('');
-  const [modalType, setModalType] = useState<ModalType>('none');
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [isKeysend, setIsKeysend] = useState<boolean>(false);
 
   const { minorVersion } = useNodeInfo();
 
@@ -26,69 +30,80 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const handleClick = () => {
     const isRequest = isLightningInvoice(request);
 
-    if (!isRequest && canKeysend) {
-      setModalType('keysend');
+    if (!isRequest) {
+      setModalOpen(true);
     } else {
-      if (!isRequest) {
-        toast.error('Invalid Invoice');
-        return;
-      }
-      setModalType('request');
+      toast.warn('Please Input a Public Key');
     }
   };
 
   const handleReset = () => {
     setRequest('');
-    setModalType('none');
+    setModalOpen(false);
     setOpen();
   };
 
-  const renderModal = () => {
-    if (modalType === 'request') {
-      return <RequestModal request={request} handleReset={handleReset} />;
+  const renderContent = () => {
+    switch (true) {
+      case isKeysend:
+        return (
+          <ResponsiveLine>
+            <NoWrapTitle>
+              <Sub4Title as={'div'}>Public Key</Sub4Title>
+            </NoWrapTitle>
+            <Input
+              value={request}
+              placeholder={'Public Key'}
+              withMargin={'0 0 0 24px'}
+              mobileMargin={'0 0 16px'}
+              onChange={e => setRequest(e.target.value)}
+            />
+            <ColorButton
+              disabled={request === ''}
+              withMargin={'0 0 0 16px'}
+              mobileMargin={'0'}
+              mobileFullWidth={true}
+              onClick={() => handleClick()}
+              arrow={true}
+            >
+              Decode
+            </ColorButton>
+          </ResponsiveLine>
+        );
+      default:
+        return <Pay />;
     }
-    if (modalType === 'keysend') {
-      return <KeysendModal publicKey={request} handleReset={handleReset} />;
-    }
-    return null;
   };
 
   return (
     <>
-      <ResponsiveLine>
-        <NoWrapTitle>
-          <Sub4Title as={'div'}>
-            {canKeysend ? 'Invoice or Public Key:' : 'Invoice:'}
-          </Sub4Title>
-        </NoWrapTitle>
-        <Input
-          value={request}
-          placeholder={
-            canKeysend ? 'Lightning Invoice or Public Key' : 'Invoice'
-          }
-          withMargin={'0 0 0 24px'}
-          mobileMargin={'0 0 16px'}
-          onChange={e => setRequest(e.target.value)}
-        />
-        <ColorButton
-          disabled={request === ''}
-          withMargin={'0 0 0 16px'}
-          mobileMargin={'0'}
-          mobileFullWidth={true}
-          onClick={() => handleClick()}
-          arrow={true}
-        >
-          Decode
-        </ColorButton>
-      </ResponsiveLine>
+      {canKeysend && (
+        <InputWithDeco title={'Is Keysend'} noInput={true}>
+          <MultiButton>
+            <SingleButton
+              selected={isKeysend}
+              onClick={() => setIsKeysend(true)}
+            >
+              Yes
+            </SingleButton>
+            <SingleButton
+              selected={!isKeysend}
+              onClick={() => setIsKeysend(false)}
+            >
+              No
+            </SingleButton>
+          </MultiButton>
+        </InputWithDeco>
+      )}
+      {renderContent()}
       <Modal
-        isOpen={modalType !== 'none'}
+        isOpen={modalOpen}
         closeCallback={() => {
-          setModalType('none');
+          setModalOpen(false);
           setRequest('');
         }}
       >
-        {renderModal()}
+        <KeysendModal publicKey={request} handleReset={handleReset} />
       </Modal>
     </>
   );

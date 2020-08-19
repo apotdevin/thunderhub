@@ -1,10 +1,20 @@
 import { ContextType } from 'server/types/apiTypes';
-import { to } from 'server/helpers/async';
+import { to, toWithError } from 'server/helpers/async';
 import { logger } from 'server/helpers/logger';
 import { rebalance } from 'balanceofsatoshis/swaps';
+import { pay } from 'balanceofsatoshis/network';
 import { getAccountingReport } from 'balanceofsatoshis/balances';
 import request from '@alexbosworth/request';
 import { RebalanceResponseType } from 'server/types/balanceofsatoshis.types';
+import { getErrorMsg } from 'server/helpers/helpers';
+
+type PayType = {
+  max_fee: Number;
+  max_paths: Number;
+  request: String;
+  message?: String;
+  out?: String[];
+};
 
 type RebalanceType = {
   avoid?: String[];
@@ -50,6 +60,36 @@ export const bosResolvers = {
     },
   },
   Mutation: {
+    bosPay: async (_: undefined, params: PayType, context: ContextType) => {
+      const { lnd } = context;
+      const { max_fee, max_paths, message, out, request } = params;
+
+      const props = {
+        max_fee,
+        max_paths,
+        ...(message && { message }),
+        out: out || [],
+      };
+
+      logger.debug('Paying invoice with params: %o', props);
+
+      const [response, error] = await toWithError(
+        pay({
+          lnd,
+          logger,
+          ...props,
+          request,
+        })
+      );
+
+      if (error) {
+        logger.error('Error paying invoice: %o', error);
+        throw new Error(getErrorMsg(error));
+      }
+
+      logger.debug('Paid invoice: %o', response);
+      return true;
+    },
     bosRebalance: async (
       _: undefined,
       params: RebalanceType,

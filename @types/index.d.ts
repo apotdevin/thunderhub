@@ -20,3 +20,4 @@ declare module '@alexbosworth/request';
 declare module 'balanceofsatoshis/request';
 declare module 'balanceofsatoshis/swaps';
 declare module 'balanceofsatoshis/balances';
+declare module 'balanceofsatoshis/network';
