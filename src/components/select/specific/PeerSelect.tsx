@@ -6,10 +6,12 @@ import { SelectWithDeco } from '../SelectWithDeco';
 import { ValueProp } from '..';
 
 type PeerSelectProps = {
-  callback: (peer: PeerType) => void;
+  title: string;
+  isMulti?: boolean;
+  callback: (peer: PeerType[]) => void;
 };
 
-export const PeerSelect = ({ callback }: PeerSelectProps) => {
+export const PeerSelect = ({ title, isMulti, callback }: PeerSelectProps) => {
   const { data, loading } = useGetPeersQuery();
 
   const peers = data?.getPeers || [];
@@ -37,15 +39,25 @@ export const PeerSelect = ({ callback }: PeerSelectProps) => {
     })
     .filter(Boolean) as ValueProp[];
 
-  const handleChange = (value: ValueProp) => {
-    const peer = peers.find(p => p?.public_key === value.value);
-    peer && callback(peer);
+  const handleChange = (value: ValueProp[]) => {
+    const finalPeers = value
+      .map(v => {
+        const peer = peers.find(p => p?.public_key === v.value);
+        return peer ? peer : null;
+      })
+      .filter(Boolean);
+    if (finalPeers.length) {
+      callback(finalPeers as PeerType[]);
+    } else {
+      callback([]);
+    }
   };
 
   return (
     <SelectWithDeco
+      isMulti={isMulti}
       loading={loading}
-      title={'Node'}
+      title={title}
       options={options}
       callback={handleChange}
     />

@@ -19,6 +19,8 @@ const getMessage = (error: string) => {
       return 'Wrong password provided.';
     case 'InsufficientBalanceToAttemptPayment':
       return 'Insufficient balance for payment.';
+    case 'CannotPayThroughMultipleOutPeersOnSinglePath':
+      return 'Error paying invoice. Try using more paths.';
     default:
       return error;
   }

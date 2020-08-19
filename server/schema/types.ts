@@ -123,6 +123,13 @@ export const mutationTypes = gql`
     keysend(destination: String!, tokens: Int!): payType
     createInvoice(amount: Int!): newInvoiceType
     circularRebalance(route: String!): Boolean
+    bosPay(
+      max_fee: Int!
+      max_paths: Int!
+      message: String
+      out: [String]
+      request: String!
+    ): Boolean
     bosRebalance(
       avoid: [String]
       in_through: String

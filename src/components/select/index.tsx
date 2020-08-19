@@ -59,17 +59,31 @@ export type ValueProp = {
 
 type SelectProps = {
   options: ValueProp[];
+  isMulti?: boolean;
   maxWidth?: string;
-  callback: (value: ValueProp) => void;
+  callback: (value: ValueProp[]) => void;
 };
 
-export const Select = ({ options, maxWidth, callback }: SelectProps) => {
+export const Select = ({
+  isMulti,
+  options,
+  maxWidth,
+  callback,
+}: SelectProps) => {
+  const handleChange = (value: ValueProp | ValueProp[]) => {
+    if (Array.isArray(value)) {
+      callback(value);
+    } else {
+      callback([value]);
+    }
+  };
   return (
     <StyledWrapper maxWidth={maxWidth} fullWidth={true}>
       <StyledSelect
+        isMulti={isMulti}
         classNamePrefix={'Select'}
         options={options}
-        onChange={callback}
+        onChange={handleChange}
       />
     </StyledWrapper>
   );

@@ -33,9 +33,10 @@ const InputLine = styled(SingleLine)`
 type InputWithDecoProps = {
   title: string;
   options: ValueProp[];
+  isMulti?: boolean;
   noInput?: boolean;
   loading?: boolean;
-  callback: (value: ValueProp) => void;
+  callback: (value: ValueProp[]) => void;
 };
 
 export const SelectWithDeco: React.FC<InputWithDecoProps> = ({
@@ -43,6 +44,7 @@ export const SelectWithDeco: React.FC<InputWithDecoProps> = ({
   title,
   noInput,
   options,
+  isMulti,
   loading,
   callback,
 }) => {
@@ -52,7 +54,12 @@ export const SelectWithDeco: React.FC<InputWithDecoProps> = ({
         return <ScaleLoader height={20} color={themeColors.blue3} />;
       case !noInput:
         return (
-          <Select maxWidth={'500px'} options={options} callback={callback} />
+          <Select
+            isMulti={isMulti}
+            maxWidth={'500px'}
+            options={options}
+            callback={callback}
+          />
         );
       default:
         return null;

@@ -80,7 +80,10 @@ export const OpenChannelCard = ({
         </MultiButton>
       </InputWithDeco>
       {!initialPublicKey && !isNewPeer && (
-        <PeerSelect callback={peer => setPublicKey(peer.public_key)} />
+        <PeerSelect
+          title={'Node'}
+          callback={peer => setPublicKey(peer[0].public_key)}
+        />
       )}
       {!initialPublicKey && isNewPeer && (
         <InputWithDeco

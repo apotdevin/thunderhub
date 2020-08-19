@@ -38,7 +38,7 @@
     "@types/react": "^16.9.46",
     "@types/react-select": "^3.0.19",
     "apollo-server-micro": "^2.16.1",
-    "balanceofsatoshis": "^5.40.2",
+    "balanceofsatoshis": "^5.44.0",
     "bcryptjs": "^2.4.3",
     "cookie": "^0.4.1",
     "date-fns": "^2.15.0",

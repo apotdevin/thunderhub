@@ -211,6 +211,7 @@ export type Mutation = {
   keysend?: Maybe<PayType>;
   createInvoice?: Maybe<NewInvoiceType>;
   circularRebalance?: Maybe<Scalars['Boolean']>;
+  bosPay?: Maybe<Scalars['Boolean']>;
   bosRebalance?: Maybe<BosRebalanceResultType>;
   payViaRoute?: Maybe<Scalars['Boolean']>;
   createAddress?: Maybe<Scalars['String']>;
@@ -282,6 +283,15 @@ export type MutationCreateInvoiceArgs = {
 
 export type MutationCircularRebalanceArgs = {
   route: Scalars['String'];
+};
+
+
+export type MutationBosPayArgs = {
+  max_fee: Scalars['Int'];
+  max_paths: Scalars['Int'];
+  message?: Maybe<Scalars['String']>;
+  out?: Maybe<Array<Maybe<Scalars['String']>>>;
+  request: Scalars['String'];
 };
 
 
