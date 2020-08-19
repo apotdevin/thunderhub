@@ -54,7 +54,7 @@ export const Pay = () => {
       <Separation />
       <ColorButton
         loading={loading}
-        disabled={loading}
+        disabled={loading || !request}
         withMargin={'16px 0 0 0'}
         fullWidth={true}
         onClick={() =>
