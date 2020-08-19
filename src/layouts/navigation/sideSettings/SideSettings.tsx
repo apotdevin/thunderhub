@@ -1,5 +1,12 @@
 import React from 'react';
-import { Sun, Moon, ChevronLeft, ChevronRight, Icon } from 'react-feather';
+import {
+  Sun,
+  Moon,
+  ChevronLeft,
+  ChevronRight,
+  Icon,
+  Star,
+} from 'react-feather';
 import styled from 'styled-components';
 import { Separation, SingleLine } from '../../../components/generic/Styled';
 import {
@@ -54,7 +61,7 @@ const BurgerPadding = styled(SingleLine)`
 const currencyArray = ['sat', 'btc', 'EUR', 'USD'];
 const currencyNoFiatArray = ['sat', 'btc'];
 
-const themeArray = ['light', 'dark'];
+const themeArray = ['light', 'dark', 'night'];
 
 const currencyMap: { [key: string]: string } = {
   sat: 'S',
@@ -151,6 +158,7 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         <IconRow>
           {renderIcon('theme', 'light', '', false, Sun)}
           {renderIcon('theme', 'dark', '', false, Moon)}
+          {renderIcon('theme', 'night', '', false, Star)}
         </IconRow>
       </>
     );
@@ -167,6 +175,7 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         <IconRow>
           {renderIcon('theme', 'light', '', false, Sun)}
           {renderIcon('theme', 'dark', '', false, Moon)}
+          {renderIcon('theme', 'night', '', false, Star)}
         </IconRow>
       </BurgerPadding>
     );

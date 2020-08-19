@@ -3,7 +3,7 @@ import getConfig from 'next/config';
 import Cookies from 'js-cookie';
 import omit from 'lodash.omit';
 
-const themeTypes = ['dark', 'light'];
+const themeTypes = ['dark', 'light', 'night'];
 const currencyTypes = ['sat', 'btc', 'fiat'];
 
 export type channelBarStyleTypes =
