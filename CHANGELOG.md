@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.5](https://github.com/apotdevin/thunderhub/compare/v0.9.4...v0.9.5) (2020-08-19)
+
+
+### Bug Fixes
+
+* 🐛 disable button ([a840b80](https://github.com/apotdevin/thunderhub/commit/a840b803fbe0279229d30cb7aa836f085ac2e849))
+
+
+### Improvements
+
+* 🔧 add bos pay ([dbcb4ef](https://github.com/apotdevin/thunderhub/commit/dbcb4ef57ce867eb65029ae0f0b7d88befcd6133))
+* 🔧 bos rebalance changes ([fceecaf](https://github.com/apotdevin/thunderhub/commit/fceecafefa4991fbd70ef1055461e4c3801eaf37))
+* 🔧 select-component ([#127](https://github.com/apotdevin/thunderhub/issues/127)) ([0f5d1db](https://github.com/apotdevin/thunderhub/commit/0f5d1db852b7c5cc5c8fb8f37d47c0ad26cf2346))
+* 🔧 settings changes ([39c7f7a](https://github.com/apotdevin/thunderhub/commit/39c7f7adc66b7c9a8aa3d09f81c749268b03b12e))
+* 🔧 update deps ([46b2361](https://github.com/apotdevin/thunderhub/commit/46b2361b182a30adae10ff8366416b1e7b64eef9))
+
 ### [0.9.4](https://github.com/apotdevin/thunderhub/compare/v0.9.3...v0.9.4) (2020-08-16)
 
 
