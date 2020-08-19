@@ -14,7 +14,6 @@ import { Plus, Minus } from 'react-feather';
 import { chartColors } from 'src/styles/Themes';
 import { ViewSwitch } from 'src/components/viewSwitch/ViewSwitch';
 import { useMutationResultWithReset } from 'src/hooks/UseMutationWithReset';
-import { BetaNotification } from 'src/components/notification/Beta';
 import {
   useRebalanceState,
   useRebalanceDispatch,
@@ -392,9 +391,6 @@ export const AdvancedBalance = () => {
         </Card>
       ) : (
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          <BetaNotification>
-            In Beta. Please use at your own risk.
-          </BetaNotification>
           <InputWithDeco title={'Type'} noInput={true}>
             <MultiButton>
               {renderButton(

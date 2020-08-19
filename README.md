@@ -122,7 +122,7 @@ BASE_PATH = '[Base path where you want to have thunderhub running i.e. '/btcpay'
 # -----------
 # Interface Configs
 # -----------
-THEME = 'dark' | 'light' # Default: 'dark'
+THEME = 'dark' | 'light' | 'night' # Default: 'dark'
 CURRENCY = 'sat' | 'btc' | 'fiat' # Default: 'sat'
 
 # -----------

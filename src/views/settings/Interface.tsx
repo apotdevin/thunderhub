@@ -94,6 +94,7 @@ export const InterfaceSettings = () => {
             <MultiButton>
               {renderButton('Light', 'light', 'theme', theme)}
               {renderButton('Dark', 'dark', 'theme', theme)}
+              {renderButton('Night', 'night', 'theme', theme)}
             </MultiButton>
           </SettingsLine>
           <SettingsLine>

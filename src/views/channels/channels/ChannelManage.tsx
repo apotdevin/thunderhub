@@ -69,6 +69,7 @@ export const ChannelManage = () => {
     <SingleLine>
       <Sub4Title>Change Channel Details</Sub4Title>
       <ColorButton
+        withMargin={'8px 0 0'}
         arrow={openWindow !== 'details'}
         onClick={() =>
           setOpenWindow(prev => (prev === 'none' ? 'details' : 'none'))
