@@ -78,7 +78,13 @@ export const inverseTextColor = theme('mode', {
 export const burgerColor = theme('mode', {
   light: themeColors.white,
   dark: themeColors.blue6,
-  night: themeColors.blue6,
+  night: 'black',
+});
+
+export const burgerRowColor = theme('mode', {
+  light: themeColors.grey2,
+  dark: themeColors.blue4,
+  night: '#0a0a0a',
 });
 
 export const linkHighlight = theme('mode', {
