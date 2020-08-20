@@ -23,9 +23,9 @@ const generalCSS = css`
   overflow-y: auto;
 
   @media (${mediaWidths.mobile}) {
-    top: 100%;
+    /* top: 100%; */
     border-radius: 0px;
-    transform: translateY(-100%) translateX(-50%);
+    /* transform: translateY(-100%) translateX(-50%); */
     width: 100%;
     min-width: 325px;
     max-height: 100%;
