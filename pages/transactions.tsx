@@ -11,10 +11,13 @@ import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { GET_RESUME } from 'src/graphql/queries/getResume';
 import { GET_IN_OUT } from 'src/graphql/queries/getInOut';
+import { RefreshCw } from 'react-feather';
+import styled, { css } from 'styled-components';
 import {
   Card,
   CardWithTitle,
   SubTitle,
+  SingleLine,
 } from '../src/components/generic/Styled';
 import { getErrorContent } from '../src/utils/error';
 import { PaymentsCard } from '../src/views/transactions/PaymentsCards';
@@ -22,11 +25,39 @@ import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { FlowBox } from '../src/views/home/reports/flow';
 
+type RotationProps = {
+  withRotation: boolean;
+};
+
+const Rotation = styled.div<RotationProps>`
+  ${({ withRotation }) =>
+    withRotation &&
+    css`
+      animation: rotation 2s infinite linear;
+    `}
+
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }
+`;
+
 const TransactionsView = () => {
+  const [isPolling, setIsPolling] = useState(false);
   const [indexOpen, setIndexOpen] = useState(0);
   const [token, setToken] = useState('');
 
-  const { loading, data, fetchMore } = useGetResumeQuery({
+  const {
+    loading,
+    data,
+    fetchMore,
+    startPolling,
+    stopPolling,
+  } = useGetResumeQuery({
     variables: { token: '' },
     onError: error => toast.error(getErrorContent(error)),
   });
@@ -36,6 +67,10 @@ const TransactionsView = () => {
       setToken(data.getResume.token);
     }
   }, [data, loading]);
+
+  useEffect(() => {
+    return () => stopPolling();
+  }, [stopPolling]);
 
   if (loading || !data || !data.getResume) {
     return <LoadingCard title={'Transactions'} />;
@@ -47,7 +82,25 @@ const TransactionsView = () => {
     <>
       <FlowBox />
       <CardWithTitle>
-        <SubTitle>Transactions</SubTitle>
+        <SingleLine>
+          <SubTitle>Transactions</SubTitle>
+          <ColorButton
+            withMargin={'0 0 8px'}
+            onClick={() => {
+              if (isPolling) {
+                setIsPolling(false);
+                stopPolling();
+              } else {
+                setIsPolling(true);
+                startPolling(1000);
+              }
+            }}
+          >
+            <Rotation withRotation={isPolling}>
+              <RefreshCw size={18} />
+            </Rotation>
+          </ColorButton>
+        </SingleLine>
         <Card bottom={'8px'} mobileCardPadding={'0'} mobileNoBackground={true}>
           {resumeList?.map((entry, index: number) => {
             if (!entry) {
