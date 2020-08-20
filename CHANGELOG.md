@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.6](https://github.com/apotdevin/thunderhub/compare/v0.9.5...v0.9.6) (2020-08-20)
+
+
+### Bug Fixes
+
+* 🐛 center modal ([2a3b66b](https://github.com/apotdevin/thunderhub/commit/2a3b66b7ccf62b68e910504f611b703e33c126ae))
+* 🐛 menu color ([9de0c31](https://github.com/apotdevin/thunderhub/commit/9de0c31316ce4189ca6830255a90f386af93a471))
+
+
+### Improvements
+
+* 🔧 bump dependencies ([7b50147](https://github.com/apotdevin/thunderhub/commit/7b5014770f1eba8ed869ba9a67c5c3c438aaf033))
+* 🔧 style ([d29c8da](https://github.com/apotdevin/thunderhub/commit/d29c8da866663adeb62bfa45d20c302e9221089c))
+* 🔧 transaction polling ([fa56089](https://github.com/apotdevin/thunderhub/commit/fa56089a506836cc18257f55a9476ae11d2eed0e))
+
 ### [0.9.5](https://github.com/apotdevin/thunderhub/compare/v0.9.4...v0.9.5) (2020-08-19)
 
 
