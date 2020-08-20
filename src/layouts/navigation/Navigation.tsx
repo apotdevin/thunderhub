@@ -23,8 +23,8 @@ import {
   navBackgroundColor,
   navTextColor,
   subCardColor,
-  cardBorderColor,
   mediaWidths,
+  burgerRowColor,
 } from '../../styles/Themes';
 import { useConfigState } from '../../context/ConfigContext';
 import { Link } from '../../components/link/Link';
@@ -95,7 +95,7 @@ const BurgerRow = styled.div`
   justify-content: flex-start;
   align-items: center;
   overflow: scroll;
-  background: ${cardBorderColor};
+  background: ${burgerRowColor};
   margin: 0 -16px;
   padding: 16px;
 `;
