@@ -1,4 +1,3 @@
-import { IncomingMessage, ServerResponse } from 'http';
 import { getIp } from 'server/helpers/helpers';
 import jwt from 'jsonwebtoken';
 import { logger } from 'server/helpers/logger';
@@ -14,6 +13,7 @@ import { LndObject } from 'server/types/ln-service.types';
 import { getAuthLnd } from 'server/helpers/auth';
 import { appConstants } from 'server/utils/appConstants';
 import { secret } from 'pages/api/v1';
+import { ResolverContext } from 'config/client';
 
 const { serverRuntimeConfig } = getConfig();
 const {
@@ -37,7 +37,11 @@ if (ssoMacaroon && lnServerUrl) {
   };
 }
 
-export const getContext = (req: IncomingMessage, res: ServerResponse) => {
+export const getContext = (context: ResolverContext) => {
+  const { req, res } = context;
+
+  if (!req || !res) return {};
+
   const ip = getIp(req);
 
   const cookies = cookie.parse(req.headers.cookie ?? '') || {};
@@ -58,7 +62,7 @@ export const getContext = (req: IncomingMessage, res: ServerResponse) => {
     }
   }
 
-  const context: ContextType = {
+  const resolverContext: ContextType = {
     ip,
     lnd,
     secret,
@@ -68,5 +72,5 @@ export const getContext = (req: IncomingMessage, res: ServerResponse) => {
     res,
   };
 
-  return context;
+  return resolverContext;
 };

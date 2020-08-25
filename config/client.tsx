@@ -11,16 +11,21 @@ import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 const { apiUrl: uri } = publicRuntimeConfig;
 
-let apolloClient: ReturnType<typeof createApolloClient> | null = null;
+let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
-function createIsomorphLink(req?: IncomingMessage, res?: ServerResponse) {
+export type ResolverContext = {
+  req?: IncomingMessage;
+  res?: ServerResponse;
+};
+
+function createIsomorphLink(context: ResolverContext = {}) {
   if (typeof window === 'undefined') {
     const { SchemaLink } = require('@apollo/client/link/schema');
     const { schema } = require('server/schema');
     const { getContext } = require('server/schema/context');
     return new SchemaLink({
       schema,
-      context: req && res ? getContext(req, res) : {},
+      context: getContext(context),
     });
   } else {
     const { HttpLink } = require('@apollo/client/link/http');
@@ -31,32 +36,34 @@ function createIsomorphLink(req?: IncomingMessage, res?: ServerResponse) {
   }
 }
 
-function createApolloClient(req?: IncomingMessage, res?: ServerResponse) {
+function createApolloClient(context?: ResolverContext) {
   return new ApolloClient({
     credentials: 'same-origin',
     ssrMode: typeof window === 'undefined',
-    link: createIsomorphLink(req, res),
+    link: createIsomorphLink(context),
     cache: new InMemoryCache({
       possibleTypes: { Transaction: ['InvoiceType', 'PaymentType'] },
     }),
+    defaultOptions: {
+      query: {
+        fetchPolicy: 'cache-first',
+        // errorPolicy: 'all',
+      },
+    },
   });
 }
 
 export function initializeApollo(
   initialState: NormalizedCacheObject | null = null,
-  req?: IncomingMessage,
-  res?: ServerResponse
+  context?: ResolverContext
 ) {
-  const _apolloClient = apolloClient ?? createApolloClient(req, res);
+  const _apolloClient = apolloClient ?? createApolloClient(context);
 
-  // If your page has Next.js data fetching methods that use Apollo Client, the initial state
-  // get hydrated here
   if (initialState) {
-    _apolloClient.cache.restore(initialState);
+    const existingCache = _apolloClient.extract();
+    _apolloClient.cache.restore({ ...existingCache, ...initialState });
   }
-  // For SSG and SSR always create a new Apollo Client
   if (typeof window === 'undefined') return _apolloClient;
-  // Create the Apollo Client once in the client
   if (!apolloClient) apolloClient = _apolloClient;
 
   return _apolloClient;

@@ -66,6 +66,7 @@ export const ConnectCard = () => {
   const [open, openSet] = useState<boolean>(false);
 
   const { loading, data } = useGetCanConnectInfoQuery({
+    ssr: false,
     onError: error => toast.error(getErrorContent(error)),
   });
 
@@ -73,7 +74,7 @@ export const ConnectCard = () => {
     return <LoadingCard title={'Connect'} />;
   }
 
-  const { public_key, uris } = data.getNodeInfo as NodeInfoType;
+  const { public_key, uris } = (data.getNodeInfo as NodeInfoType) || {};
 
   const onionAddress = uris.find((uri: string) => uri.indexOf('onion') >= 0);
   const normalAddress = uris.find((uri: string) => uri.indexOf('onion') < 0);

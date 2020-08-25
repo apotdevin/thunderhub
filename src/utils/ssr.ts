@@ -3,14 +3,25 @@ import { initializeApollo } from 'config/client';
 import { parseCookies } from 'src/utils/cookies';
 import { DocumentNode } from 'graphql';
 
-const themeProp = (context: NextPageContext): string => {
-  if (!context?.req) return 'dark';
+const cookieProps = (
+  context: NextPageContext,
+  noAuth?: boolean
+): { theme: string; authenticated: boolean } => {
+  if (!context?.req) return { theme: 'dark', authenticated: false };
+
   const cookies = parseCookies(context.req);
 
-  if (cookies?.theme) {
-    return cookies.theme;
+  if (!cookies['Thub-Auth'] && !noAuth) {
+    context.res?.writeHead(302, { Location: '/' });
+    context.res?.end();
+
+    return { theme: 'dark', authenticated: false };
   }
-  return 'dark';
+
+  if (cookies?.theme) {
+    return { theme: cookies.theme, authenticated: true };
+  }
+  return { theme: 'dark', authenticated: true };
 };
 
 type QueryProps = {
@@ -29,12 +40,14 @@ const isNotDocumentNode = (
 
 export const getProps = async (
   context: NextPageContext,
-  queries?: (DocumentNode | QueryProps)[]
+  queries?: (DocumentNode | QueryProps)[],
+  noAuth?: boolean
 ) => {
-  const theme = themeProp(context);
-  const apolloClient = initializeApollo(undefined, context.req, context.res);
+  const { theme, authenticated } = cookieProps(context, noAuth);
 
-  if (queries?.length) {
+  const apolloClient = initializeApollo(undefined, context);
+
+  if (queries?.length && authenticated) {
     for (const query of queries) {
       if (isNotDocumentNode(query)) {
         await apolloClient.query({
@@ -48,11 +61,7 @@ export const getProps = async (
       }
     }
   } else {
-    return {
-      props: {
-        initialConfig: theme,
-      },
-    };
+    return { props: { initialConfig: theme } };
   }
 
   return {

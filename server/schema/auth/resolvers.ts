@@ -104,13 +104,18 @@ export const authResolvers = {
     },
   },
   Mutation: {
-    logout: async (_: undefined, params: any, context: ContextType) => {
+    logout: async (_: undefined, __: any, context: ContextType) => {
       const { ip, res } = context;
       await requestLimiter(ip, 'logout');
 
       res.setHeader(
         'Set-Cookie',
-        cookie.serialize(appConstants.cookieName, '', { maxAge: 1 })
+        cookie.serialize(appConstants.cookieName, '', {
+          maxAge: -1,
+          httpOnly: true,
+          sameSite: true,
+          path: '/',
+        })
       );
       return true;
     },

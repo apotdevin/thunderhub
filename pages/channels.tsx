@@ -8,6 +8,7 @@ import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { NextPageContext } from 'next';
 import { GET_CHANNELS } from 'src/graphql/queries/getChannels';
 import { getProps } from 'src/utils/ssr';
+import { GET_NODE_INFO } from 'src/graphql/queries/getNodeInfo';
 import { Channels } from '../src/views/channels/channels/Channels';
 import { PendingChannels } from '../src/views/channels/pendingChannels/PendingChannels';
 import { ClosedChannels } from '../src/views/channels/closedChannels/ClosedChannels';
@@ -42,7 +43,7 @@ const ChannelView = () => {
     closed: 0,
   });
 
-  const { data } = useGetChannelAmountInfoQuery();
+  const { data } = useGetChannelAmountInfoQuery({ ssr: false });
 
   useEffect(() => {
     if (data && data.getNodeInfo) {
@@ -118,5 +119,5 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context, [GET_CHANNELS]);
+  return await getProps(context, [GET_CHANNELS, GET_NODE_INFO]);
 }

@@ -14,6 +14,7 @@ import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { GET_CHANNELS } from 'src/graphql/queries/getChannels';
 import { useNodeInfo } from 'src/hooks/UseNodeInfo';
+import { GET_NODE_INFO } from 'src/graphql/queries/getNodeInfo';
 
 const BalanceView = () => {
   const { minorVersion } = useNodeInfo();
@@ -69,5 +70,5 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context, [GET_CHANNELS]);
+  return await getProps(context, [GET_CHANNELS, GET_NODE_INFO]);
 }

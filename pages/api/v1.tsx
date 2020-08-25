@@ -18,7 +18,7 @@ readCookie(cookiePath);
 
 const apolloServer = new ApolloServer({
   schema,
-  context: ({ req, res }) => getContext(req, res),
+  context: ctx => getContext(ctx),
 });
 
 export const config = {

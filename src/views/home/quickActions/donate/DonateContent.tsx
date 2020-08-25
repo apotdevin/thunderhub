@@ -48,7 +48,7 @@ export const SupportBar = () => {
     createPoints,
     { data: pointsData, called, loading: pointsLoading },
   ] = useCreateThunderPointsMutation({ refetchQueries: ['GetBasePoints'] });
-  const { data: info } = useGetCanConnectInfoQuery();
+  const { data: info } = useGetCanConnectInfoQuery({ ssr: false });
 
   React.useEffect(() => {
     if (data?.createBaseInvoice) {

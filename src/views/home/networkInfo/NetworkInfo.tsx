@@ -61,7 +61,7 @@ const Padding = styled.span`
 `;
 
 export const NetworkInfo = () => {
-  const { loading, data, error } = useGetNetworkInfoQuery();
+  const { loading, data, error } = useGetNetworkInfoQuery({ ssr: false });
 
   if (error) {
     return null;

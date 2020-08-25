@@ -5,7 +5,6 @@ import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { SingleLine } from '../src/components/generic/Styled';
 import { InterfaceSettings } from '../src/views/settings/Interface';
-import { AccountSettings } from '../src/views/settings/Account';
 import { DangerView } from '../src/views/settings/Danger';
 import { ChatSettings } from '../src/views/settings/Chat';
 import { PrivacySettings } from '../src/views/settings/Privacy';
@@ -25,7 +24,6 @@ const SettingsView = () => {
       <InterfaceSettings />
       <PrivacySettings />
       <ChatSettings />
-      <AccountSettings />
       <DangerView />
     </>
   );

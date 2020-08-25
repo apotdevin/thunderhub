@@ -28,5 +28,5 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context, [GET_SERVER_ACCOUNTS]);
+  return await getProps(context, [GET_SERVER_ACCOUNTS], true);
 }

@@ -6,7 +6,7 @@ import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/get
 export const useAccount = (): ServerAccountType | null => {
   const [account, setAccount] = useState<ServerAccountType | null>(null);
 
-  const { data, loading } = useGetAccountQuery();
+  const { data, loading } = useGetAccountQuery({ ssr: false });
 
   useEffect(() => {
     if (!loading && data?.getAccount) {
@@ -20,7 +20,7 @@ export const useAccount = (): ServerAccountType | null => {
 export const useAccounts = (): ServerAccountType[] => {
   const [accounts, setAccounts] = useState<ServerAccountType[]>([]);
 
-  const { data, loading } = useGetServerAccountsQuery();
+  const { data, loading } = useGetServerAccountsQuery({ ssr: false });
 
   useEffect(() => {
     if (loading || !data?.getServerAccounts?.length) return;

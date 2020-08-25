@@ -3,9 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-export type LogoutMutationVariables = Types.Exact<{
-  type: Types.Scalars['String'];
-}>;
+export type LogoutMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = (
@@ -15,8 +13,8 @@ export type LogoutMutation = (
 
 
 export const LogoutDocument = gql`
-    mutation Logout($type: String!) {
-  logout(type: $type)
+    mutation Logout {
+  logout
 }
     `;
 export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
@@ -34,7 +32,6 @@ export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMut
  * @example
  * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
  *   variables: {
- *      type: // value for 'type'
  *   },
  * });
  */
