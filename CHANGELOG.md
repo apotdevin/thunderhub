@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.7](https://github.com/apotdevin/thunderhub/compare/v0.9.6...v0.9.7) (2020-08-25)
+
+
+### Bug Fixes
+
+* 🐛 query ssr and login redirect ([51eeef5](https://github.com/apotdevin/thunderhub/commit/51eeef595ee930dbd6230dee24ef23cb6667c39c))
+
+
+### Improvements
+
+* 🔧 update dependencies ([b11f85d](https://github.com/apotdevin/thunderhub/commit/b11f85d58a025c7d2597faf188f9e005ab743f77))
+
 ### [0.9.6](https://github.com/apotdevin/thunderhub/compare/v0.9.5...v0.9.6) (2020-08-20)
 
 
