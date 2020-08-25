@@ -15,6 +15,7 @@ import { DetailsTable } from 'src/views/details/DetailsTable';
 import { ChannelType } from 'src/graphql/types';
 import { useUpdateMultipleFeesMutation } from 'src/graphql/mutations/__generated__/updateMultipleFees.generated';
 import { CHANNEL_FEES } from 'src/graphql/queries/getChannelFees';
+import { GET_NODE_INFO } from 'src/graphql/queries/getNodeInfo';
 
 export const IconCursor = styled.div`
   display: flex;
@@ -98,5 +99,5 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context, [CHANNEL_FEES]);
+  return await getProps(context, [CHANNEL_FEES, GET_NODE_INFO]);
 }

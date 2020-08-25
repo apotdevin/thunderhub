@@ -11,6 +11,7 @@ import { getProps } from 'src/utils/ssr';
 import { GET_FEE_HEALTH } from 'src/graphql/queries/getFeeHealth';
 import { GET_VOLUME_HEALTH } from 'src/graphql/queries/getVolumeHealth';
 import { GET_TIME_HEALTH } from 'src/graphql/queries/getTimeHealth';
+import { GET_NODE_INFO } from 'src/graphql/queries/getNodeInfo';
 import { SingleLine } from '../src/components/generic/Styled';
 
 export const ButtonRow = styled.div`
@@ -48,5 +49,6 @@ export async function getServerSideProps(context: NextPageContext) {
     GET_FEE_HEALTH,
     GET_VOLUME_HEALTH,
     GET_TIME_HEALTH,
+    GET_NODE_INFO,
   ]);
 }

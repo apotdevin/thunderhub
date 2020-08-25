@@ -2,10 +2,10 @@ import React from 'react';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
-import { GET_BASE_POINTS } from 'src/graphql/queries/getBasePoints';
 import { useGetBasePointsQuery } from 'src/graphql/queries/__generated__/getBasePoints.generated';
 import { NodeCard } from 'src/views/leaderboard/NodeCard';
 import { SupportBar } from 'src/views/home/quickActions/donate/DonateContent';
+import { GET_NODE_INFO } from 'src/graphql/queries/getNodeInfo';
 import {
   CardWithTitle,
   SubTitle,
@@ -14,7 +14,7 @@ import {
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 
 const LeaderboardView = () => {
-  const { loading, data } = useGetBasePointsQuery();
+  const { loading, data } = useGetBasePointsQuery({ ssr: false });
 
   const renderBoard = () => {
     if (loading || !data?.getBasePoints) {
@@ -54,5 +54,5 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context, [GET_BASE_POINTS]);
+  return await getProps(context, [GET_NODE_INFO]);
 }

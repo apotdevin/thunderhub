@@ -15,6 +15,7 @@ import { renderLine } from '../../components/generic/helpers';
 export const WalletVersion = () => {
   const { minorVersion } = useNodeInfo();
   const { data, loading, error } = useGetWalletInfoQuery({
+    ssr: false,
     skip: minorVersion < 10,
   });
 

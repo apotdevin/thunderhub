@@ -77,6 +77,7 @@ export const FlowBox = () => {
   const [isType, setIsType] = useState<FlowReportType>('amount');
 
   const { data, loading } = useGetInOutQuery({
+    ssr: false,
     variables: { time: isTime },
     onError: error => toast.error(getErrorContent(error)),
   });

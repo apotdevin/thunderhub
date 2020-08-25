@@ -52,6 +52,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
   const format = getPrice(currency, displayValues, priceContext);
 
   const { data, loading } = useGetForwardReportQuery({
+    ssr: false,
     variables: { time: isTime },
     onError: error => toast.error(getErrorContent(error)),
   });

@@ -350,11 +350,6 @@ export type MutationSendMessageArgs = {
 };
 
 
-export type MutationLogoutArgs = {
-  type: Scalars['String'];
-};
-
-
 export type MutationCreateMacaroonArgs = {
   permissions: PermissionsType;
 };

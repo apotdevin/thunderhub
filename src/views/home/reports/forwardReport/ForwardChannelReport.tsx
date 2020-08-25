@@ -67,6 +67,7 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
   const format = getPrice(currency, displayValues, priceContext);
 
   const { data, loading } = useGetForwardChannelsReportQuery({
+    ssr: false,
     variables: { time: isTime, order: isType, type },
     onError: error => toast.error(getErrorContent(error)),
   });

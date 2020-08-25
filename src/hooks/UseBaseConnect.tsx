@@ -4,7 +4,7 @@ import { useGetBaseCanConnectQuery } from 'src/graphql/queries/__generated__/get
 export const useBaseConnect = () => {
   const [canConnect, setCanConnect] = useState<boolean>(false);
 
-  const { loading, error, data } = useGetBaseCanConnectQuery();
+  const { loading, error, data } = useGetBaseCanConnectQuery({ ssr: false });
 
   useEffect(() => {
     if (loading || !data?.getBaseCanConnect || error) return;

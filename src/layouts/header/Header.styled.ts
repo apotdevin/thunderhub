@@ -71,7 +71,7 @@ export const HeaderButtons = styled.div`
 `;
 
 interface NavProps {
-  selected: boolean;
+  selected?: boolean;
 }
 
 export const HeaderNavButton = styled.div<NavProps>`

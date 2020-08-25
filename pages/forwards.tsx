@@ -31,6 +31,7 @@ const ForwardsView = () => {
   const [indexOpen, setIndexOpen] = useState(0);
 
   const { loading, data } = useGetForwardsQuery({
+    ssr: false,
     variables: { time },
     onError: error => toast.error(getErrorContent(error)),
   });

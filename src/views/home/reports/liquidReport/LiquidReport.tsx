@@ -27,7 +27,7 @@ export const LiquidReport = () => {
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  const { data, loading } = useGetLiquidReportQuery();
+  const { data, loading } = useGetLiquidReportQuery({ ssr: false });
 
   if (loading) {
     return <LoadingCard title={'Liquidity Report'} />;
