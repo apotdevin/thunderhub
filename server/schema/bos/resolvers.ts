@@ -109,6 +109,7 @@ export const bosResolvers = {
       const { lnd } = context;
 
       const filteredParams = {
+        out_channels: [],
         avoid,
         ...(in_through && { in_through }),
         ...(is_avoiding_high_inbound && { is_avoiding_high_inbound }),
