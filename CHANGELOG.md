@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.8](https://github.com/apotdevin/thunderhub/compare/v0.9.7...v0.9.8) (2020-08-27)
+
+
+### Bug Fixes
+
+* 🐛 bos rebalance ([9d45273](https://github.com/apotdevin/thunderhub/commit/9d45273c5c877aac2762ce2185ea2db9986ec6a7))
+
+
+### Improvements
+
+* 🔧 login enter ([5988231](https://github.com/apotdevin/thunderhub/commit/5988231bcf526499af731cae461499f89eeb56a3))
+
 ### [0.9.7](https://github.com/apotdevin/thunderhub/compare/v0.9.6...v0.9.7) (2020-08-25)
 
 
