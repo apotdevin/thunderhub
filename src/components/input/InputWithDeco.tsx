@@ -46,6 +46,7 @@ type InputWithDecoProps = {
   placeholder?: string;
   inputType?: string;
   inputCallback?: (value: string) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 };
 
 export const InputWithDeco: React.FC<InputWithDecoProps> = ({
@@ -60,6 +61,7 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
   noInput,
   inputType = 'text',
   inputCallback,
+  onKeyDown,
 }) => {
   const showAmount = !!amount || customAmount;
   let correctValue = value ? value : '';
@@ -68,6 +70,7 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
     correctValue = value && value > 0 ? value : '';
   }
 
+  const onKeyDownProp = onKeyDown ? { onKeyDown } : {};
   const props = noInput ? {} : { value: correctValue };
 
   return (
@@ -93,6 +96,7 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
           mobileMargin={'0'}
           type={inputType}
           onChange={e => inputCallback && inputCallback(e.target.value)}
+          {...onKeyDownProp}
           {...props}
         />
       )}

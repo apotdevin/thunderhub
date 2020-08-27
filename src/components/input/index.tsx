@@ -20,25 +20,25 @@ interface InputProps {
 }
 
 export const StyledInput = styled.input<InputProps>`
-    font-size: 14px;
-    padding: 5px;
-    height: 38px;
-    margin: 8px 0;
-    border: 1px solid ${inputBorderColor};
-    background: none;
-    border-radius: 5px;
-    color: ${textColor};
-    background-color: ${({ backgroundColor }) =>
-      backgroundColor || inputBackgroundColor};
-    ${({ maxWidth }) =>
-      maxWidth &&
-      css`
-        max-width: ${maxWidth};
-      `}
-    width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
-    margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
+  font-size: 14px;
+  padding: 5px;
+  height: 38px;
+  margin: 8px 0;
+  border: 1px solid ${inputBorderColor};
+  background: none;
+  border-radius: 5px;
+  color: ${textColor};
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor || inputBackgroundColor};
+  ${({ maxWidth }) =>
+    maxWidth &&
+    css`
+      max-width: ${maxWidth};
+    `}
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
+  margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
 
-    @media (${mediaWidths.mobile}) {
+  @media (${mediaWidths.mobile}) {
     ${({ withMargin, mobileMargin }) =>
       mobileMargin
         ? css`
@@ -61,16 +61,14 @@ export const StyledInput = styled.input<InputProps>`
         : ''};
   }
 
-    &:hover {
-        border: 1px solid
-            ${({ color }) => (color ? color : colorButtonBorder)};
-    }
+  &:hover {
+    border: 1px solid ${({ color }) => (color ? color : colorButtonBorder)};
+  }
 
-    &:focus {
-        outline: none;
-        border: 1px solid
-            ${({ color }) => (color ? color : colorButtonBorder)};
-    }
+  &:focus {
+    outline: none;
+    border: 1px solid ${({ color }) => (color ? color : colorButtonBorder)};
+  }
 `;
 
 interface InputCompProps {
