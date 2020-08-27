@@ -87,6 +87,13 @@ export const Login = ({ account }: LoginProps) => {
             type={'password'}
             withMargin={'0 0 0 16px'}
             onChange={e => setPass(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                getSessionToken({
+                  variables: { id: account.id, password: pass },
+                });
+              }
+            }}
           />
         </SingleLine>
         <ColorButton
