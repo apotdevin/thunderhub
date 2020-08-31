@@ -122,7 +122,11 @@ export const mutationTypes = gql`
     ): Boolean
     updateMultipleFees(channels: [channelDetailInput!]!): Boolean
     keysend(destination: String!, tokens: Int!): payType
-    createInvoice(amount: Int!, description: String): newInvoiceType
+    createInvoice(
+      amount: Int!
+      description: String
+      secondsUntil: Int
+    ): newInvoiceType
     circularRebalance(route: String!): Boolean
     bosPay(
       max_fee: Int!

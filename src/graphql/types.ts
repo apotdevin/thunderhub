@@ -285,6 +285,7 @@ export type MutationKeysendArgs = {
 export type MutationCreateInvoiceArgs = {
   amount: Scalars['Int'];
   description?: Maybe<Scalars['String']>;
+  secondsUntil?: Maybe<Scalars['Int']>;
 };
 
 

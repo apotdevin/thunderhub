@@ -8,6 +8,7 @@ import { useCreateInvoiceMutation } from 'src/graphql/mutations/__generated__/cr
 import { Title } from 'src/layouts/footer/Footer.styled';
 import { Link } from 'src/components/link/Link';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
+import { formatSeconds } from 'src/utils/helpers';
 import { getErrorContent } from '../../../../utils/error';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { mediaWidths, chartColors } from '../../../../styles/Themes';
@@ -58,6 +59,7 @@ const Column = styled.div`
 
 export const CreateInvoiceCard = ({ color }: { color: string }) => {
   const [amount, setAmount] = useState(0);
+  const [seconds, setSeconds] = useState(0);
   const [description, setDescription] = useState('');
 
   const [request, setRequest] = useState('');
@@ -126,7 +128,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
       <InputWithDeco
         title={'Amount to receive'}
         value={amount}
-        placeholder={'Sats'}
+        placeholder={'sats'}
         amount={amount}
         inputType={'number'}
         inputCallback={value => setAmount(Number(value))}
@@ -135,12 +137,24 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
       <InputWithDeco
         title={'Description'}
         value={description}
-        placeholder={'Description'}
+        placeholder={'description'}
         inputCallback={value => setDescription(value)}
         color={color}
       />
+      <InputWithDeco
+        title={'Expires in'}
+        value={seconds}
+        placeholder={'seconds until expiration'}
+        inputCallback={value => setSeconds(Number(value))}
+        customAmount={formatSeconds(seconds) || ''}
+        color={color}
+      />
       <ColorButton
-        onClick={() => createInvoice({ variables: { amount, description } })}
+        onClick={() =>
+          createInvoice({
+            variables: { amount, description, secondsUntil: seconds },
+          })
+        }
         disabled={amount === 0}
         withMargin={'16px 0 0'}
         arrow={true}
