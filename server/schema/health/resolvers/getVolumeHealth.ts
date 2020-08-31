@@ -7,7 +7,6 @@ import {
   GetChannelsType,
   GetForwardsType,
 } from 'server/types/ln-service.types';
-import { logger } from 'server/helpers/logger';
 import { getChannelVolume, getChannelIdInfo, getAverage } from '../helpers';
 
 const monthInBlocks = 4380;
@@ -44,21 +43,12 @@ export default async (_: undefined, params: any, context: ContextType) => {
         monthInBlocks
       );
 
-      const params = {
+      return {
         id: channel.id,
         volume: tokens,
         volumeNormalized: Math.round(tokens / age) || 0,
         publicKey: channel.partner_public_key,
       };
-
-      Object.entries(params).forEach(entry => {
-        const [key, value] = entry;
-        if (isNaN(value as number)) {
-          logger.debug(`${key} is NAN (getVolumeHealth)`);
-        }
-      });
-
-      return params;
     })
     .filter(Boolean);
 
@@ -70,22 +60,13 @@ export default async (_: undefined, params: any, context: ContextType) => {
       const diff = (channel.volumeNormalized - average) / average || -1;
       const score = Math.round((diff + 1) * 100);
 
-      const params = {
+      return {
         id: channel.id,
         score,
         volumeNormalized: channel.volumeNormalized,
         averageVolumeNormalized: average,
         partner: { publicKey: channel.publicKey, lnd },
       };
-
-      Object.entries(params).forEach(entry => {
-        const [key, value] = entry;
-        if (isNaN(value as number)) {
-          logger.debug(`${key} is NAN (getVolumeHealth)`);
-        }
-      });
-
-      return params;
     })
     .filter(Boolean);
 

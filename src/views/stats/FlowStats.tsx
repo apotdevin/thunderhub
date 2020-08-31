@@ -64,7 +64,7 @@ const VolumeStatCard = ({
 export const VolumeStats = () => {
   const [open, openSet] = React.useState(0);
   const dispatch = useStatsDispatch();
-  const { data, loading } = useGetVolumeHealthQuery({ ssr: false });
+  const { data, loading } = useGetVolumeHealthQuery();
 
   React.useEffect(() => {
     if (data && data.getVolumeHealth) {
