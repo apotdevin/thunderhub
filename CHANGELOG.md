@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.10](https://github.com/apotdevin/thunderhub/compare/v0.9.9...v0.9.10) (2020-08-31)
+
+
+### Bug Fixes
+
+* 🐛 fee health default value ([426a3b8](https://github.com/apotdevin/thunderhub/commit/426a3b84fceddc558ff92cdc31d7b8e0de4e4dba))
+
+
+### Reverts
+
+* Revert "chore: 🔧 debugging" ([af6d6ac](https://github.com/apotdevin/thunderhub/commit/af6d6ac11ce481f68834edfd4926cefee852aa20))
+
+
+### Improvements
+
+* 🔧 description for create invoice ([1750b71](https://github.com/apotdevin/thunderhub/commit/1750b71340b814684d29b2cbbabc9f3878ee4808))
+* 🔧 expires at for invoice ([e0e6c3b](https://github.com/apotdevin/thunderhub/commit/e0e6c3b45d3f89094625d8c6e8e2a5cb0d455e5a))
+* 🔧 invoice status ([6972b25](https://github.com/apotdevin/thunderhub/commit/6972b25529422ae51d11fe952249b8457ee8c304))
+
 ### [0.9.9](https://github.com/apotdevin/thunderhub/compare/v0.9.8...v0.9.9) (2020-08-31)
 
 
