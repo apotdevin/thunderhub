@@ -67,7 +67,7 @@ const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
 export const TimeStats = () => {
   const [open, openSet] = React.useState(0);
   const dispatch = useStatsDispatch();
-  const { data, loading } = useGetTimeHealthQuery();
+  const { data, loading } = useGetTimeHealthQuery({ ssr: false });
 
   React.useEffect(() => {
     if (data && data.getTimeHealth) {

@@ -84,7 +84,7 @@ export const FeeStats = () => {
   const [openTwo, openTwoSet] = React.useState(0);
   const dispatch = useStatsDispatch();
 
-  const { data, loading } = useGetFeeHealthQuery();
+  const { data, loading } = useGetFeeHealthQuery({ ssr: false });
 
   React.useEffect(() => {
     if (data && data.getFeeHealth) {
