@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const CREATE_INVOICE = gql`
-  mutation CreateInvoice($amount: Int!) {
-    createInvoice(amount: $amount) {
+  mutation CreateInvoice($amount: Int!, $description: String) {
+    createInvoice(amount: $amount, description: $description) {
       request
       id
     }
