@@ -5,6 +5,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type CreateInvoiceMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
+  description?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
 
@@ -18,8 +19,8 @@ export type CreateInvoiceMutation = (
 
 
 export const CreateInvoiceDocument = gql`
-    mutation CreateInvoice($amount: Int!) {
-  createInvoice(amount: $amount) {
+    mutation CreateInvoice($amount: Int!, $description: String) {
+  createInvoice(amount: $amount, description: $description) {
     request
     id
   }
@@ -41,6 +42,7 @@ export type CreateInvoiceMutationFn = Apollo.MutationFunction<CreateInvoiceMutat
  * const [createInvoiceMutation, { data, loading, error }] = useCreateInvoiceMutation({
  *   variables: {
  *      amount: // value for 'amount'
+ *      description: // value for 'description'
  *   },
  * });
  */

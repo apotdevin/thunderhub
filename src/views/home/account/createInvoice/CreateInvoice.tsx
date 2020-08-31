@@ -7,13 +7,9 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCreateInvoiceMutation } from 'src/graphql/mutations/__generated__/createInvoice.generated';
 import { Title } from 'src/layouts/footer/Footer.styled';
 import { Link } from 'src/components/link/Link';
+import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { getErrorContent } from '../../../../utils/error';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import {
-  NoWrapTitle,
-  ResponsiveLine,
-} from '../../../../components/generic/Styled';
-import { Input } from '../../../../components/input';
 import { mediaWidths, chartColors } from '../../../../styles/Themes';
 import { InvoiceStatus } from './InvoiceStatus';
 import { Timer } from './Timer';
@@ -62,6 +58,8 @@ const Column = styled.div`
 
 export const CreateInvoiceCard = ({ color }: { color: string }) => {
   const [amount, setAmount] = useState(0);
+  const [description, setDescription] = useState('');
+
   const [request, setRequest] = useState('');
   const [id, setId] = useState('');
 
@@ -124,28 +122,34 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
   );
 
   const renderContent = () => (
-    <ResponsiveLine>
-      <NoWrapTitle>Amount to receive:</NoWrapTitle>
-      <Input
+    <>
+      <InputWithDeco
+        title={'Amount to receive'}
+        value={amount}
         placeholder={'Sats'}
-        withMargin={'0 0 0 16px'}
-        mobileMargin={'0 0 16px'}
+        amount={amount}
+        inputType={'number'}
+        inputCallback={value => setAmount(Number(value))}
         color={color}
-        type={'number'}
-        onChange={e => setAmount(Number(e.target.value))}
+      />
+      <InputWithDeco
+        title={'Description'}
+        value={description}
+        placeholder={'Description'}
+        inputCallback={value => setDescription(value)}
+        color={color}
       />
       <ColorButton
-        onClick={() => createInvoice({ variables: { amount } })}
+        onClick={() => createInvoice({ variables: { amount, description } })}
         disabled={amount === 0}
-        withMargin={'0 0 0 16px'}
-        mobileMargin={'0'}
+        withMargin={'16px 0 0'}
         arrow={true}
         loading={loading}
-        mobileFullWidth={true}
+        fullWidth={true}
       >
         Create Invoice
       </ColorButton>
-    </ResponsiveLine>
+    </>
   );
 
   return request !== '' ? renderQr() : renderContent();

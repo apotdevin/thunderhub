@@ -73,15 +73,21 @@ export const invoiceResolvers = {
     },
   },
   Mutation: {
-    createInvoice: async (_: undefined, params: any, context: ContextType) => {
+    createInvoice: async (
+      _: undefined,
+      params: { amount: number; description: string },
+      context: ContextType
+    ) => {
       await requestLimiter(context.ip, 'createInvoice');
 
+      const { amount, description } = params;
       const { lnd } = context;
 
       return await to(
         createInvoiceRequest({
           lnd,
-          tokens: params.amount,
+          ...(description && { description }),
+          tokens: amount,
         })
       );
     },
