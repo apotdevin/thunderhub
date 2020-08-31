@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Copy } from 'react-feather';
+import { Copy, CheckCircle } from 'react-feather';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import QRCode from 'qrcode.react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCreateInvoiceMutation } from 'src/graphql/mutations/__generated__/createInvoice.generated';
+import { Title } from 'src/layouts/footer/Footer.styled';
+import { Link } from 'src/components/link/Link';
 import { getErrorContent } from '../../../../utils/error';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import {
@@ -12,7 +14,9 @@ import {
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
 import { Input } from '../../../../components/input';
-import { mediaWidths } from '../../../../styles/Themes';
+import { mediaWidths, chartColors } from '../../../../styles/Themes';
+import { InvoiceStatus } from './InvoiceStatus';
+import { Timer } from './Timer';
 
 const Responsive = styled.div`
   display: flex;
@@ -22,6 +26,12 @@ const Responsive = styled.div`
   @media (${mediaWidths.mobile}) {
     flex-direction: column;
   }
+`;
+
+const Center = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const WrapRequest = styled.div`
@@ -53,35 +63,64 @@ const Column = styled.div`
 export const CreateInvoiceCard = ({ color }: { color: string }) => {
   const [amount, setAmount] = useState(0);
   const [request, setRequest] = useState('');
+  const [id, setId] = useState('');
+
+  const [invoiceStatus, setInvoiceStatus] = useState('none');
 
   const [createInvoice, { data, loading }] = useCreateInvoiceMutation({
     onError: error => toast.error(getErrorContent(error)),
   });
 
   useEffect(() => {
-    if (!loading && data && data.createInvoice && data.createInvoice.request) {
+    if (!loading && data && data.createInvoice) {
       setRequest(data.createInvoice.request);
+      setId(data.createInvoice.id);
     }
   }, [data, loading]);
 
+  if (invoiceStatus === 'paid') {
+    return (
+      <Center>
+        <CheckCircle stroke={chartColors.green} size={32} />
+        <Title>Paid</Title>
+      </Center>
+    );
+  }
+
+  if (invoiceStatus === 'not_paid' || invoiceStatus === 'timeout') {
+    return (
+      <Center>
+        <Title>
+          Check the status of this invoice in the
+          <Link to={'/transactions'}> Transactions </Link>
+          view
+        </Title>
+      </Center>
+    );
+  }
+
   const renderQr = () => (
-    <Responsive>
-      <QRWrapper>
-        <QRCode value={`lightning:${request}`} renderAs={'svg'} size={248} />
-      </QRWrapper>
-      <Column>
-        <WrapRequest>{request}</WrapRequest>
-        <CopyToClipboard
-          text={request}
-          onCopy={() => toast.success('Request Copied')}
-        >
-          <ColorButton>
-            <Copy size={18} />
-            Copy
-          </ColorButton>
-        </CopyToClipboard>
-      </Column>
-    </Responsive>
+    <>
+      <Timer initialMinute={1} initialSeconds={30} />
+      <Responsive>
+        <InvoiceStatus id={id} callback={status => setInvoiceStatus(status)} />
+        <QRWrapper>
+          <QRCode value={`lightning:${request}`} renderAs={'svg'} size={248} />
+        </QRWrapper>
+        <Column>
+          <WrapRequest>{request}</WrapRequest>
+          <CopyToClipboard
+            text={request}
+            onCopy={() => toast.success('Request Copied')}
+          >
+            <ColorButton>
+              <Copy size={18} />
+              Copy
+            </ColorButton>
+          </CopyToClipboard>
+        </Column>
+      </Responsive>
+    </>
   );
 
   const renderContent = () => (

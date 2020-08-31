@@ -28,6 +28,7 @@ export const generalTypes = gql`
 
 export const queryTypes = gql`
   type Query {
+    getInvoiceStatusChange(id: String!): String
     getBaseCanConnect: Boolean!
     getBaseNodes: [baseNodesType]!
     getBasePoints: [basePointsType]!
