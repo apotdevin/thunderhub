@@ -1,10 +1,12 @@
 import { randomBytes, createHash } from 'crypto';
+import { once } from 'events';
 import {
   payViaRoutes,
   createInvoice,
   decodePaymentRequest,
   payViaPaymentDetails,
   createInvoice as createInvoiceRequest,
+  subscribeToInvoice,
 } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
@@ -17,6 +19,36 @@ const KEYSEND_TYPE = '5482373484';
 
 export const invoiceResolvers = {
   Query: {
+    getInvoiceStatusChange: async (
+      _: undefined,
+      params: { id: string },
+      context: ContextType
+    ) => {
+      await requestLimiter(context.ip, 'getInvoiceStatusChange');
+
+      const { id } = params;
+      const { lnd } = context;
+
+      const sub = subscribeToInvoice({ id, lnd });
+
+      await once(sub, 'invoice_updated');
+
+      return Promise.race([
+        once(sub, 'invoice_updated'),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('timeout')), 90000)
+        ),
+      ])
+        .then((res: any) => {
+          if (res?.[0] && res[0].is_confirmed) {
+            return 'paid';
+          }
+          return 'not_paid';
+        })
+        .catch(e => {
+          if (e) return 'timeout';
+        });
+    },
     decodeRequest: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'decode');
 

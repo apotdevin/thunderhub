@@ -12,7 +12,7 @@ export type CreateInvoiceMutation = (
   { __typename?: 'Mutation' }
   & { createInvoice?: Types.Maybe<(
     { __typename?: 'newInvoiceType' }
-    & Pick<Types.NewInvoiceType, 'request'>
+    & Pick<Types.NewInvoiceType, 'request' | 'id'>
   )> }
 );
 
@@ -21,6 +21,7 @@ export const CreateInvoiceDocument = gql`
     mutation CreateInvoice($amount: Int!) {
   createInvoice(amount: $amount) {
     request
+    id
   }
 }
     `;

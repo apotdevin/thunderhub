@@ -41,6 +41,7 @@ export type PermissionsType = {
 
 export type Query = {
   __typename?: 'Query';
+  getInvoiceStatusChange?: Maybe<Scalars['String']>;
   getBaseCanConnect: Scalars['Boolean'];
   getBaseNodes: Array<Maybe<BaseNodesType>>;
   getBasePoints: Array<Maybe<BasePointsType>>;
@@ -83,6 +84,11 @@ export type Query = {
   getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
   getAccount?: Maybe<ServerAccountType>;
   getLatestVersion?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetInvoiceStatusChangeArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -691,11 +697,11 @@ export type HopsType = {
 export type NewInvoiceType = {
   __typename?: 'newInvoiceType';
   chain_address?: Maybe<Scalars['String']>;
-  created_at?: Maybe<Scalars['DateTime']>;
-  description?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  request?: Maybe<Scalars['String']>;
-  secret?: Maybe<Scalars['String']>;
+  created_at: Scalars['DateTime'];
+  description: Scalars['String'];
+  id: Scalars['String'];
+  request: Scalars['String'];
+  secret: Scalars['String'];
   tokens?: Maybe<Scalars['Int']>;
 };
 

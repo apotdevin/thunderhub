@@ -50,11 +50,11 @@ export const invoiceTypes = gql`
 
   type newInvoiceType {
     chain_address: String
-    created_at: DateTime
-    description: String
-    id: String
-    request: String
-    secret: String
+    created_at: DateTime!
+    description: String!
+    id: String!
+    request: String!
+    secret: String!
     tokens: Int
   }
 `;
