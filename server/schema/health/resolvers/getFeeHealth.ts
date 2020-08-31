@@ -55,11 +55,11 @@ export default async (_: undefined, params: any, context: ContextType) => {
               const policy = policies[i];
 
               if (policy.public_key === public_key) {
-                myBaseFee = Number(policy.base_fee_mtokens);
-                myFeeRate = policy.fee_rate;
+                myBaseFee = Number(policy.base_fee_mtokens) || 0;
+                myFeeRate = policy.fee_rate || 0;
               } else {
-                partnerBaseFee = Number(policy.base_fee_mtokens);
-                partnerFeeRate = policy.fee_rate;
+                partnerBaseFee = Number(policy.base_fee_mtokens) || 0;
+                partnerFeeRate = policy.fee_rate || 0;
               }
             }
           }
