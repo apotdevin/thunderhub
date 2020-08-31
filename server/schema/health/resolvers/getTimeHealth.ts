@@ -3,7 +3,6 @@ import { requestLimiter } from 'server/helpers/rateLimiter';
 import { to } from 'server/helpers/async';
 import { ContextType } from 'server/types/apiTypes';
 import { GetChannelsType } from 'server/types/ln-service.types';
-import { logger } from 'server/helpers/logger';
 import { getAverage } from '../helpers';
 
 const halfMonthInMilliSeconds = 1296000000;
@@ -35,17 +34,6 @@ export default async (_: undefined, __: any, context: ContextType) => {
     };
 
     const percentOnline = time_online / (time_online + time_offline);
-
-    if (isNaN(percentOnline)) {
-      logger.debug('percentOnline is NAN');
-    }
-
-    Object.entries(defaultProps).forEach(entry => {
-      const [key, value] = entry;
-      if (isNaN(value as number)) {
-        logger.debug(`${key} is NAN (getTimeHealth)`);
-      }
-    });
 
     return {
       score: Math.round(percentOnline * 100),

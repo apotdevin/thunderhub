@@ -101,13 +101,6 @@ export default async (_: undefined, params: any, context: ContextType) => {
       baseOver: myBaseScore.over,
     };
 
-    Object.entries(mySide).forEach(entry => {
-      const [key, value] = entry;
-      if (isNaN(value as number)) {
-        logger.debug(`${key} is NAN (getFeeHealth)`);
-      }
-    });
-
     const partnerSide = {
       score: partnerScore,
       rate: channel.partnerFeeRate,
@@ -117,13 +110,6 @@ export default async (_: undefined, params: any, context: ContextType) => {
       rateOver: true,
       baseOver: true,
     };
-
-    Object.entries(partnerSide).forEach(entry => {
-      const [key, value] = entry;
-      if (isNaN(value as number)) {
-        logger.debug(`${key} is NAN (getFeeHealth)`);
-      }
-    });
 
     return {
       id: channel.id,
