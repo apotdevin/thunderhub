@@ -32,11 +32,13 @@ export const updateFees = async (
     throw new Error('NoDetailsToUpdateChannel');
   }
 
+  const base_fee_mtokens = Math.trunc((base_fee_tokens ?? 0).toFixed(3) * 1000);
+
   const props = {
     lnd,
     transaction_id,
     transaction_vout,
-    ...(base_fee_tokens && { base_fee_tokens }),
+    ...(base_fee_tokens && { base_fee_mtokens }),
     ...(fee_rate && { fee_rate }),
     ...(cltv_delta && { cltv_delta }),
     ...(max_htlc_mtokens && { max_htlc_mtokens }),
