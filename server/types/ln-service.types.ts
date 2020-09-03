@@ -79,6 +79,8 @@ export type GetChannelType = {
   }[];
 };
 
+export type GetClosedChannelsType = { channels: ChannelType[] };
+
 export type GetChannelsType = { channels: ChannelType[] };
 
 export type GetForwardsType = { forwards: ForwardType[]; next?: string };

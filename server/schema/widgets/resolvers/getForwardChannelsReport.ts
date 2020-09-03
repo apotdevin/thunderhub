@@ -1,14 +1,14 @@
-import { getForwards, getWalletInfo } from 'ln-service';
+import { getForwards, getWalletInfo, getClosedChannels } from 'ln-service';
 import { subHours, subDays } from 'date-fns';
 import { sortBy } from 'underscore';
 import { ContextType } from 'server/types/apiTypes';
 import { getNodeFromChannel } from 'server/helpers/getNodeFromChannel';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-
 import { to } from 'server/helpers/async';
 import {
   GetForwardsType,
   GetWalletInfoType,
+  GetClosedChannelsType,
 } from 'server/types/ln-service.types';
 import { countArray, countRoutes } from './helpers';
 
@@ -38,18 +38,26 @@ export const getForwardChannelsReport = async (
     startDate = subHours(endDate, 24);
   }
 
+  const closedChannels = await to<GetClosedChannelsType>(
+    getClosedChannels({
+      lnd,
+    })
+  );
+
   const getRouteAlias = (array: any[], publicKey: string) =>
     Promise.all(
       array.map(async channel => {
         const nodeAliasIn = await getNodeFromChannel(
           channel.in,
           publicKey,
-          lnd
+          lnd,
+          closedChannels?.channels.find(c => c.id === channel.in)
         );
         const nodeAliasOut = await getNodeFromChannel(
           channel.out,
           publicKey,
-          lnd
+          lnd,
+          closedChannels?.channels.find(c => c.id === channel.out)
         );
 
         return {
@@ -68,7 +76,8 @@ export const getForwardChannelsReport = async (
         const nodeAlias = await getNodeFromChannel(
           channel.name,
           publicKey,
-          lnd
+          lnd,
+          closedChannels?.channels.find(c => c.id === channel.name)
         );
         return {
           alias: nodeAlias.alias,

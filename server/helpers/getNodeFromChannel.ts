@@ -5,6 +5,7 @@ import {
   LndObject,
   GetChannelType,
   GetNodeType,
+  ChannelType,
 } from 'server/types/ln-service.types';
 
 const errorNode = {
@@ -15,24 +16,31 @@ const errorNode = {
 export const getNodeFromChannel = async (
   id: string,
   publicKey: string,
-  lnd: LndObject | null
+  lnd: LndObject | null,
+  closedChannel?: ChannelType
 ) => {
-  const [channelInfo, channelError] = await toWithError(
-    getChannel({
-      lnd,
-      id,
-    })
-  );
+  let partnerPublicKey: string;
 
-  if (channelError || !channelInfo) {
-    logger.verbose(`Error getting channel with id ${id}: %o`, channelError);
-    return errorNode;
+  if (closedChannel?.partner_public_key) {
+    partnerPublicKey = closedChannel.partner_public_key;
+  } else {
+    const [channelInfo, channelError] = await toWithError(
+      getChannel({
+        lnd,
+        id,
+      })
+    );
+
+    if (channelError || !channelInfo) {
+      logger.verbose(`Error getting channel with id ${id}: %o`, channelError);
+      return errorNode;
+    }
+
+    partnerPublicKey =
+      (channelInfo as GetChannelType).policies[0].public_key !== publicKey
+        ? (channelInfo as GetChannelType).policies[0].public_key
+        : (channelInfo as GetChannelType).policies[1].public_key;
   }
-
-  const partnerPublicKey =
-    (channelInfo as GetChannelType).policies[0].public_key !== publicKey
-      ? (channelInfo as GetChannelType).policies[0].public_key
-      : (channelInfo as GetChannelType).policies[1].public_key;
 
   const [nodeInfo, nodeError] = await toWithError(
     getNode({
