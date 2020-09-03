@@ -3,9 +3,19 @@ import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { to } from 'server/helpers/async';
 
+type ParamsType = {
+  transaction_id: string;
+  transaction_vout: number;
+  base_fee_tokens: number;
+  fee_rate: number;
+  cltv_delta: number;
+  max_htlc_mtokens: string;
+  min_htlc_mtokens: string;
+};
+
 export const updateFees = async (
   _: undefined,
-  params: any,
+  params: ParamsType,
   context: ContextType
 ) => {
   await requestLimiter(context.ip, 'updateFees');
@@ -32,7 +42,7 @@ export const updateFees = async (
     throw new Error('NoDetailsToUpdateChannel');
   }
 
-  const base_fee_mtokens = Math.trunc((base_fee_tokens ?? 0).toFixed(3) * 1000);
+  const base_fee_mtokens = Math.trunc((base_fee_tokens ?? 0) * 1000);
 
   const props = {
     lnd,
