@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.11](https://github.com/apotdevin/thunderhub/compare/v0.9.10...v0.9.11) (2020-09-12)
+
+
+### Bug Fixes
+
+* 🐛 forward report channels ([7dddb9a](https://github.com/apotdevin/thunderhub/commit/7dddb9a3d2bbf5c82d0412952ad85cc3c9014a6c))
+* 🐛 rebalance dot color ([ba3f47e](https://github.com/apotdevin/thunderhub/commit/ba3f47e5da2c6314da7f86801569af6b6e6228fd))
+* mtokens basefee ([#138](https://github.com/apotdevin/thunderhub/issues/138)) ([2f2da04](https://github.com/apotdevin/thunderhub/commit/2f2da04bb737f1b07196b707864129a7a083f5f5)), closes [#136](https://github.com/apotdevin/thunderhub/issues/136) [#137](https://github.com/apotdevin/thunderhub/issues/137)
+
+
+### Improvements
+
+* 🔧 add channel id to forward ([aeeeb5a](https://github.com/apotdevin/thunderhub/commit/aeeeb5a7fb45a5676cf0aaffc4ba3d3712342dd7))
+* 🔧 more enter handlers ([567f817](https://github.com/apotdevin/thunderhub/commit/567f817f08e435ab225f5cba967e867c798ce119))
+
 ### [0.9.10](https://github.com/apotdevin/thunderhub/compare/v0.9.9...v0.9.10) (2020-08-31)
 
 
