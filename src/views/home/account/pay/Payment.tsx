@@ -28,6 +28,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const canKeysend = minorVersion >= 9;
 
   const handleClick = () => {
+    if (request === '') return;
     const isRequest = isLightningInvoice(request);
 
     if (!isRequest) {
@@ -57,6 +58,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
               withMargin={'0 0 0 24px'}
               mobileMargin={'0 0 16px'}
               onChange={e => setRequest(e.target.value)}
+              onEnter={() => handleClick()}
             />
             <ColorButton
               disabled={request === ''}
