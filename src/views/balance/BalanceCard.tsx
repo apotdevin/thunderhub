@@ -30,16 +30,16 @@ type BalanceCardProps = {
 };
 
 const getColor = (balance: number) => {
-  const difference = Math.abs(balance * 100 - 50);
+  const difference = Math.abs(balance * 100);
 
   switch (true) {
     case difference <= 5:
       return chartColors.green;
     case difference <= 10:
       return chartColors.darkyellow;
-    case difference <= 15:
-      return chartColors.orange;
     case difference <= 20:
+      return chartColors.orange;
+    case difference <= 30:
       return chartColors.orange2;
     default:
       return chartColors.red;
