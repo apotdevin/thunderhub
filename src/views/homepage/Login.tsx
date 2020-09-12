@@ -72,6 +72,13 @@ export const Login = ({ account }: LoginProps) => {
 
   if (!account) return null;
 
+  const handleEnter = () => {
+    if (pass === '' || loading) return;
+    getSessionToken({
+      variables: { id: account.id, password: pass },
+    });
+  };
+
   return (
     <Section color={'transparent'}>
       <StyledTitle>
@@ -87,22 +94,12 @@ export const Login = ({ account }: LoginProps) => {
             type={'password'}
             withMargin={'0 0 0 16px'}
             onChange={e => setPass(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                getSessionToken({
-                  variables: { id: account.id, password: pass },
-                });
-              }
-            }}
+            onEnter={() => handleEnter()}
           />
         </SingleLine>
         <ColorButton
           disabled={pass === '' || loading}
-          onClick={() =>
-            getSessionToken({
-              variables: { id: account.id, password: pass },
-            })
-          }
+          onClick={() => handleEnter()}
           withMargin={'16px 0 0'}
           fullWidth={true}
           loading={loading || sLoading}

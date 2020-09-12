@@ -123,6 +123,13 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
     </>
   );
 
+  const handleEnter = () => {
+    if (amount === 0) return;
+    createInvoice({
+      variables: { amount, description, secondsUntil: seconds },
+    });
+  };
+
   const renderContent = () => (
     <>
       <InputWithDeco
@@ -133,6 +140,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
         inputType={'number'}
         inputCallback={value => setAmount(Number(value))}
         color={color}
+        onEnter={() => handleEnter()}
       />
       <InputWithDeco
         title={'Description'}
@@ -140,6 +148,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
         placeholder={'description'}
         inputCallback={value => setDescription(value)}
         color={color}
+        onEnter={() => handleEnter()}
       />
       <InputWithDeco
         title={'Expires in'}
@@ -148,13 +157,10 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
         inputCallback={value => setSeconds(Number(value))}
         customAmount={formatSeconds(seconds) || ''}
         color={color}
+        onEnter={() => handleEnter()}
       />
       <ColorButton
-        onClick={() =>
-          createInvoice({
-            variables: { amount, description, secondsUntil: seconds },
-          })
-        }
+        onClick={() => handleEnter()}
         disabled={amount === 0}
         withMargin={'16px 0 0'}
         arrow={true}

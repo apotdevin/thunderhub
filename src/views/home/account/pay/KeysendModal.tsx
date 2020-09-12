@@ -62,6 +62,11 @@ export const KeysendModal: React.FC<KeysendProps> = ({
 
   const { alias } = data.getNode.node;
 
+  const handleEnter = () => {
+    if (loading || keysendLoading) return;
+    keysend({ variables: { destination: publicKey, tokens } });
+  };
+
   return (
     <>
       <SingleLine>
@@ -75,14 +80,13 @@ export const KeysendModal: React.FC<KeysendProps> = ({
         amount={tokens}
         inputType={'number'}
         inputCallback={amount => setTokens(Number(amount))}
+        onEnter={() => handleEnter()}
       />
       <DarkSubTitle withMargin={'16px 0'}>
         Remember keysend is an experimental feature. Use at your own risk.
       </DarkSubTitle>
       <ColorButton
-        onClick={() =>
-          keysend({ variables: { destination: publicKey, tokens } })
-        }
+        onClick={() => handleEnter()}
         loading={keysendLoading}
         disabled={loading || keysendLoading}
         withMargin={'16px 0 0'}

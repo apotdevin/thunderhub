@@ -21,6 +21,18 @@ export const Pay = () => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
+  const handleEnter = () => {
+    if (loading || !request) return;
+    pay({
+      variables: {
+        max_fee: fee,
+        max_paths: paths,
+        request,
+        ...(peers?.length && { out: peers }),
+      },
+    });
+  };
+
   return (
     <>
       <InputWithDeco
@@ -28,6 +40,7 @@ export const Pay = () => {
         value={request}
         placeholder={'Invoice'}
         inputCallback={value => setRequest(value)}
+        onEnter={() => handleEnter()}
       />
       <Separation />
       <InputWithDeco
@@ -37,6 +50,7 @@ export const Pay = () => {
         placeholder={'sats'}
         inputType={'number'}
         inputCallback={value => setFee(Math.max(1, Number(value)))}
+        onEnter={() => handleEnter()}
       />
       <InputWithDeco
         title={'Max Paths'}
@@ -44,6 +58,7 @@ export const Pay = () => {
         placeholder={'paths'}
         inputType={'number'}
         inputCallback={value => setPaths(Math.max(1, Number(value)))}
+        onEnter={() => handleEnter()}
       />
       <Separation />
       <ChannelSelect
@@ -57,16 +72,7 @@ export const Pay = () => {
         disabled={loading || !request}
         withMargin={'16px 0 0 0'}
         fullWidth={true}
-        onClick={() =>
-          pay({
-            variables: {
-              max_fee: fee,
-              max_paths: paths,
-              request,
-              ...(peers?.length && { out: peers }),
-            },
-          })
-        }
+        onClick={() => handleEnter()}
       >
         Pay
       </ColorButton>

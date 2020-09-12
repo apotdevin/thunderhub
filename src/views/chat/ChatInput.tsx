@@ -76,6 +76,19 @@ export const ChatInput = ({
     alias,
   ]);
 
+  const handleClick = () => {
+    if (loading || message === '' || !canSend) return;
+    sendMessage({
+      variables: {
+        message: formattedMessage,
+        messageType: contentType,
+        publicKey: customSender || sender,
+        ...(tokens > 0 && { tokens }),
+        maxFee,
+      },
+    });
+  };
+
   return (
     <SingleLine>
       <Input
@@ -83,22 +96,13 @@ export const ChatInput = ({
         placeholder={`message ${alias}`}
         withMargin={withMargin}
         onChange={e => setMessage(e.target.value)}
+        onEnter={() => handleClick()}
       />
       <ColorButton
         loading={loading}
         disabled={loading || message === '' || !canSend}
         withMargin={'0 0 0 8px'}
-        onClick={() => {
-          sendMessage({
-            variables: {
-              message: formattedMessage,
-              messageType: contentType,
-              publicKey: customSender || sender,
-              ...(tokens > 0 && { tokens }),
-              maxFee,
-            },
-          });
-        }}
+        onClick={() => handleClick()}
       >
         Send
       </ColorButton>
