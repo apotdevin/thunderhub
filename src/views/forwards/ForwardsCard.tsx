@@ -42,6 +42,14 @@ export const ForwardCard = ({
   const formatAmount = <Price amount={tokens} />;
   const formatFee = <Price amount={fee} />;
 
+  const incoming_name =
+    incoming_channel_info?.channel?.partner_node_policies?.node?.node?.alias ||
+    incoming_channel;
+
+  const outgoing_name =
+    outgoing_channel_info?.channel?.partner_node_policies?.node?.node?.alias ||
+    outgoing_channel;
+
   const handleClick = () => {
     if (indexOpen === index) {
       setIndexOpen(0);
@@ -68,16 +76,8 @@ export const ForwardCard = ({
         <ResponsiveLine>
           <ResponsiveSingle>
             <ColumnLine>
-              {renderLine(
-                'Incoming:',
-                incoming_channel_info?.channel?.partner_node_policies?.node
-                  ?.node?.alias
-              )}
-              {renderLine(
-                'Outgoing:',
-                outgoing_channel_info?.channel?.partner_node_policies?.node
-                  ?.node?.alias
-              )}
+              {renderLine('Incoming:', incoming_name)}
+              {renderLine('Outgoing:', outgoing_name)}
             </ColumnLine>
           </ResponsiveSingle>
           <ColumnLine>
