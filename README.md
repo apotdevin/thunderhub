@@ -77,25 +77,19 @@ This repository consists of a **NextJS** server that handles both the backend **
 ### Visual
 
 - Responsive UI for any device. Mobile, Tablet or Desktop.
-- Light and Dark mode.
+- Light, Dark and Night mode.
 - Check values in Bitcoin, Satoshis or Fiat.
 
 ### Accounts
 
-- Many ways to connect to your node: **HEX/Base64 strings**, **LNDConnect Url**, **BTCPayServer Info** or **QR codes**.
-- Have view-only and/or admin accounts.
-- Manage however many accounts your browser storage can hold.
-- Quickly sync your accounts between devices. No need to copy/paste macaroons and certificates.
+- Connect to your node with **HEX/Base64 strings** or by passing the **file locations** of the macaroons and certificate.
+- Manage however many nodes you want.
+- Use a master password or individual passwords for each account.
+- Passwords are hashed to avoid having them in cleartext form.
 
 ### Deployment
 
 - Docker images for easier deployment
-
-### Future Features
-
-- Channel health/recommendations view
-- Loop In and Out to provide liquidity or remove it from your channels.
-- Storefront interface
 
 ---
 
