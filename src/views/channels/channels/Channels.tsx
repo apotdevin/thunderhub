@@ -14,11 +14,13 @@ import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { ChannelCard } from './ChannelCard';
 import { ChannelGoToToast } from './Channel.style';
 
+export const WUMBO_MIN_SIZE = 16000000;
+
 export const Channels: React.FC = () => {
   const toastId = useRef<any>(null);
   const { push } = useRouter();
 
-  const { sortDirection, channelSort } = useConfigState();
+  const { sortDirection, channelSort, maxSatValue } = useConfigState();
   const [indexOpen, setIndexOpen] = useState(0);
 
   const { inChannel, outChannel } = useRebalanceState();
@@ -79,7 +81,11 @@ export const Channels: React.FC = () => {
     const partner = Number(capacity) || 0;
     const channels = Number(channel_count) || 0;
 
-    const max = Math.max(local_balance || 0, remote_balance || 0);
+    let max = Math.max(local_balance || 0, remote_balance || 0);
+
+    if (maxSatValue !== 'auto') {
+      max = Math.min(max, maxSatValue);
+    }
 
     if (max > biggest) {
       biggest = max;

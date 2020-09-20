@@ -23,6 +23,7 @@ export type channelSortTypes =
   | 'size';
 export type sortDirectionTypes = 'increase' | 'decrease';
 export type subBarType = 'fees' | 'none';
+export type maxSatValueType = 'auto' | 1000000 | 5000000 | 10000000 | 16000000;
 
 type State = {
   currency: string;
@@ -40,6 +41,7 @@ type State = {
   channelSort: channelSortTypes;
   sortDirection: sortDirectionTypes;
   subBar: subBarType;
+  maxSatValue: maxSatValueType;
 };
 
 type ConfigInitProps = {
@@ -64,6 +66,7 @@ type ActionType =
       channelSort?: channelSortTypes;
       sortDirection?: sortDirectionTypes;
       subBar?: subBarType;
+      maxSatValue?: maxSatValueType;
     }
   | { type: 'themeChange'; theme: string };
 
@@ -96,6 +99,7 @@ const initialState: State = {
   channelSort: 'none',
   sortDirection: 'decrease',
   subBar: 'none',
+  maxSatValue: 'auto',
 };
 
 const stateReducer = (state: State, action: ActionType): State => {

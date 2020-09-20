@@ -11,6 +11,7 @@ import {
   channelSortTypes,
   sortDirectionTypes,
   subBarType,
+  maxSatValueType,
 } from 'src/context/ConfigContext';
 import {
   Card,
@@ -37,6 +38,7 @@ export const ChannelManage = () => {
     channelSort,
     sortDirection,
     subBar,
+    maxSatValue,
   } = useConfigState();
   const dispatch = useConfigDispatch();
 
@@ -50,6 +52,8 @@ export const ChannelManage = () => {
     dispatch({ type: 'change', channelSort: type });
   const changeDirection = (type: sortDirectionTypes) =>
     dispatch({ type: 'change', sortDirection: type });
+  const changeMaxValue = (type: maxSatValueType) =>
+    dispatch({ type: 'change', maxSatValue: type });
 
   const renderOpenButton = () => (
     <SingleLine>
@@ -162,6 +166,43 @@ export const ChannelManage = () => {
                 </SingleButton>
               </MultiButton>
             </MarginLine>
+            {channelBarType === 'proportional' && (
+              <MarginLine>
+                <Sub4Title>Max Sat Value</Sub4Title>
+                <MultiButton>
+                  <SingleButton
+                    selected={maxSatValue === 16000000}
+                    onClick={() => changeMaxValue(16000000)}
+                  >
+                    Wumbo (16m)
+                  </SingleButton>
+                  <SingleButton
+                    selected={maxSatValue === 10000000}
+                    onClick={() => changeMaxValue(10000000)}
+                  >
+                    10m
+                  </SingleButton>
+                  <SingleButton
+                    selected={maxSatValue === 5000000}
+                    onClick={() => changeMaxValue(5000000)}
+                  >
+                    5m
+                  </SingleButton>
+                  <SingleButton
+                    selected={maxSatValue === 1000000}
+                    onClick={() => changeMaxValue(1000000)}
+                  >
+                    1m
+                  </SingleButton>
+                  <SingleButton
+                    selected={maxSatValue === 'auto'}
+                    onClick={() => changeMaxValue('auto')}
+                  >
+                    Auto
+                  </SingleButton>
+                </MultiButton>
+              </MarginLine>
+            )}
             {(channelBarType === 'proportional' ||
               channelBarType === 'balance') && (
               <MarginLine>
@@ -260,181 +301,4 @@ export const ChannelManage = () => {
   };
 
   return <Card>{renderContent()}</Card>;
-
-  return (
-    <>
-      <Card>
-        <SingleLine>
-          <Sub4Title>Open Channel</Sub4Title>
-          <ColorButton
-            arrow={openWindow === 'open'}
-            onClick={() => setOpenWindow('none')}
-          >
-            {openWindow === 'open' ? <X size={16} /> : 'Open'}
-          </ColorButton>
-        </SingleLine>
-        {openWindow === 'open' ? (
-          <>
-            <Separation />
-            <OpenChannel setOpenCard={() => setOpenWindow('none')} />
-          </>
-        ) : (
-          <>
-            <DetailsChange />
-            <Separation />
-            <MarginLine>
-              <Sub4Title>Card Type</Sub4Title>
-              <MultiButton>
-                <SingleButton
-                  selected={channelBarStyle === 'normal'}
-                  onClick={() => changeStyle('normal')}
-                >
-                  Normal
-                </SingleButton>
-                <SingleButton
-                  selected={channelBarStyle === 'compact'}
-                  onClick={() => changeStyle('compact')}
-                >
-                  Compact
-                </SingleButton>
-                <SingleButton
-                  selected={channelBarStyle === 'ultracompact'}
-                  onClick={() => changeStyle('ultracompact')}
-                >
-                  Ultra-Compact
-                </SingleButton>
-                <SingleButton
-                  selected={channelBarStyle === 'balancing'}
-                  onClick={() => changeStyle('balancing')}
-                >
-                  Balancing
-                </SingleButton>
-              </MultiButton>
-            </MarginLine>
-            <MarginLine>
-              <Sub4Title>Bar Types</Sub4Title>
-              <MultiButton>
-                <SingleButton
-                  selected={channelBarType === 'balance'}
-                  onClick={() => changeType('balance')}
-                >
-                  Balance
-                </SingleButton>
-                <SingleButton
-                  selected={channelBarType === 'proportional'}
-                  onClick={() => changeType('proportional')}
-                >
-                  Proportional
-                </SingleButton>
-                <SingleButton
-                  selected={channelBarType === 'size'}
-                  onClick={() => changeType('size')}
-                >
-                  Partner Size
-                </SingleButton>
-                <SingleButton
-                  selected={channelBarType === 'fees'}
-                  onClick={() => changeType('fees')}
-                >
-                  Fees
-                </SingleButton>
-              </MultiButton>
-            </MarginLine>
-            {(channelBarType === 'proportional' ||
-              channelBarType === 'balance') && (
-              <MarginLine>
-                <Sub4Title>Sub Bar</Sub4Title>
-                <MultiButton>
-                  <SingleButton
-                    selected={subBar === 'fees'}
-                    onClick={() => changeSub('fees')}
-                  >
-                    Fee Rate
-                  </SingleButton>
-                  <SingleButton
-                    selected={subBar === 'none'}
-                    onClick={() => changeSub('none')}
-                  >
-                    None
-                  </SingleButton>
-                </MultiButton>
-              </MarginLine>
-            )}
-            <MarginLine>
-              <Sub4Title>Sort</Sub4Title>
-              <MultiButton>
-                <SingleButton
-                  selected={channelSort === 'none'}
-                  onClick={() => changeSort('none')}
-                >
-                  None
-                </SingleButton>
-                <SingleButton
-                  selected={channelSort === 'age'}
-                  onClick={() => changeSort('age')}
-                >
-                  Age
-                </SingleButton>
-                <SingleButton
-                  selected={channelSort === 'local'}
-                  onClick={() => changeSort('local')}
-                >
-                  Local
-                </SingleButton>
-                <SingleButton
-                  selected={channelSort === 'balance'}
-                  onClick={() => changeSort('balance')}
-                >
-                  Balance
-                </SingleButton>
-                <SingleButton
-                  selected={channelSort === 'deviation'}
-                  onClick={() => changeSort('deviation')}
-                >
-                  Deviation
-                </SingleButton>
-                <SingleButton
-                  selected={channelSort === 'feeRate'}
-                  onClick={() => changeSort('feeRate')}
-                >
-                  Fee Rate
-                </SingleButton>
-                <SingleButton
-                  selected={channelSort === 'partnerName'}
-                  onClick={() => changeSort('partnerName')}
-                >
-                  Name
-                </SingleButton>
-                <SingleButton
-                  selected={channelSort === 'size'}
-                  onClick={() => changeSort('size')}
-                >
-                  Size
-                </SingleButton>
-              </MultiButton>
-            </MarginLine>
-            {channelSort !== 'none' && (
-              <MarginLine>
-                <Sub4Title>Direction</Sub4Title>
-                <MultiButton>
-                  <SingleButton
-                    selected={sortDirection === 'increase'}
-                    onClick={() => changeDirection('increase')}
-                  >
-                    Increasing
-                  </SingleButton>
-                  <SingleButton
-                    selected={sortDirection === 'decrease'}
-                    onClick={() => changeDirection('decrease')}
-                  >
-                    Decreasing
-                  </SingleButton>
-                </MultiButton>
-              </MarginLine>
-            )}
-          </>
-        )}
-      </Card>
-    </>
-  );
 };

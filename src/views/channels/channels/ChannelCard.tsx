@@ -56,7 +56,9 @@ import {
   ChannelStatsLine,
   ChannelBalanceRow,
   ChannelBalanceButton,
+  WumboTag,
 } from './Channel.style';
+import { WUMBO_MIN_SIZE } from './Channels';
 
 const getSymbol = (status: boolean) => {
   return status ? <ArrowDown size={14} /> : <ArrowUp size={14} />;
@@ -219,9 +221,23 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
       <DarkSubTitle>Partner node not found</DarkSubTitle>
     );
 
+  const renderWumboInfo = () => {
+    if (local_balance + remote_balance >= WUMBO_MIN_SIZE) {
+      return (
+        <>
+          <Separation />
+          <WumboTag>This channel is Wumbo!</WumboTag>
+        </>
+      );
+    }
+
+    return null;
+  };
+
   const renderDetails = () => {
     return (
       <>
+        {renderWumboInfo()}
         <Separation />
         {renderLine('Status:', is_active ? 'Active' : 'Not Active')}
         {renderLine('Is Opening:', is_opening ? 'True' : 'False')}
@@ -343,6 +359,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
               remote={getBar(remote_balance, biggest)}
               formatLocal={localBalance}
               formatRemote={remoteBalance}
+              withBorderColor={local_balance + remote_balance >= WUMBO_MIN_SIZE}
             />
           </ChannelStatsColumn>
         );

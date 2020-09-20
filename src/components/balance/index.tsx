@@ -1,11 +1,21 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { ProgressBar } from '../generic/CardGeneric';
 
-const BalanceLine = styled.div`
+type BalanceLineProps = {
+  withBorderColor?: boolean;
+};
+
+const BalanceLine = styled.div<BalanceLineProps>`
   width: 100%;
   display: flex;
   position: relative;
+
+  ${({ withBorderColor }) =>
+    withBorderColor &&
+    css`
+      border: 1px solid gold;
+    `}
 `;
 
 const SingleLine = styled(BalanceLine)`
@@ -35,6 +45,7 @@ type BalanceProps = {
   formatLocal?: string;
   formatRemote?: string;
   height?: number;
+  withBorderColor?: boolean;
 };
 
 export const BalanceBars = ({
@@ -43,6 +54,7 @@ export const BalanceBars = ({
   formatLocal,
   formatRemote,
   height = 20,
+  withBorderColor = false,
 }: BalanceProps) => {
   const localOpposite = 100 - local;
   const remoteOpposite = 100 - remote;
@@ -59,7 +71,7 @@ export const BalanceBars = ({
     formatRemote !== '0.00';
 
   return (
-    <BalanceLine>
+    <BalanceLine withBorderColor={withBorderColor}>
       {hasLocal && <Value>{formatLocal}</Value>}
       {hasRemote && <RightValue>{formatRemote}</RightValue>}
       <ProgressBar barHeight={height} order={4} percent={localOpposite} />

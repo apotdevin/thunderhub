@@ -96,7 +96,7 @@ export const ChannelBalanceButton = styled.button<BalanceButtonProps>`
   background-color: ${({ selected }) =>
     selected ? chartColors.orange : colorButtonBackground};
 
-  @media(${mediaWidths.mobile}) {
+  @media (${mediaWidths.mobile}) {
     margin: 8px 8px 16px;
     width: 100%;
   }
@@ -114,4 +114,12 @@ export const ChannelBalanceButton = styled.button<BalanceButtonProps>`
 export const ChannelGoToToast = styled.div`
   width: 100%;
   text-align: center;
+`;
+
+export const WumboTag = styled.div`
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid gold;
+  text-align: center;
+  padding: 2px 0;
 `;

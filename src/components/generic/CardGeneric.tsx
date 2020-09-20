@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { ThemeSet } from 'styled-theming';
 import {
   progressBackground,
   mediaWidths,
@@ -18,31 +19,47 @@ interface ProgressBar {
   barHeight?: number;
 }
 
-export const ProgressBar = styled.div<ProgressBar>`
-  height: ${({ barHeight }) => (barHeight ? `${barHeight}px` : '10px')};
-  background-color: ${({ order }) => {
+export const ProgressBar = styled.div.attrs(
+  ({ order, percent, barHeight }: ProgressBar) => {
+    let color: string | ThemeSet = chartColors.purple;
     switch (order) {
       case 1:
-        return chartColors.lightblue;
+        color = chartColors.lightblue;
+        break;
       case 2:
-        return chartColors.green;
+        color = chartColors.green;
+        break;
       case 3:
-        return chartColors.orange;
+        color = chartColors.orange;
+        break;
       case 4:
-        return progressBackground;
+        color = progressBackground;
+        break;
       case 5:
-        return chartColors.orange2;
+        color = chartColors.orange2;
+        break;
       case 6:
-        return chartColors.darkyellow;
+        color = chartColors.darkyellow;
+        break;
       case 7:
-        return chartColors.red;
+        color = chartColors.red;
+        break;
       case 8:
-        return 'transparent';
-      default:
-        return chartColors.purple;
+        color = 'transparent';
+        break;
     }
-  }};
-  width: ${({ percent }) => `${percent}%`};
+
+    return {
+      backgroundColor: color,
+      barHeight: barHeight ? `${barHeight}px` : '10px',
+      style: {
+        width: `${percent}%`,
+      },
+    };
+  }
+)`
+  background-color: ${({ backgroundColor }) => backgroundColor};
+  height: ${({ barHeight }) => barHeight};
 `;
 
 export const NodeTitle = styled.div`
