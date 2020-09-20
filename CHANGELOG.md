@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.12](https://github.com/apotdevin/thunderhub/compare/v0.9.11...v0.9.12) (2020-09-20)
+
+
+### Bug Fixes
+
+* 🐛 npm audit ([5661c55](https://github.com/apotdevin/thunderhub/commit/5661c5513fd69f5212d81c79ecc17cc8cb255ce4))
+* 🐛 npm audit ([d975949](https://github.com/apotdevin/thunderhub/commit/d9759494aa82ad84608d21b482c961f28ddf3354))
+
+
+### Docs
+
+* 📚️ update README ([c7b774b](https://github.com/apotdevin/thunderhub/commit/c7b774b6d198c135495f03ac7edca87560ae8e81))
+
+
+### Refactoring
+
+* ♻️ home account info ([0a4ebda](https://github.com/apotdevin/thunderhub/commit/0a4ebdac6de28afbdcb0b90bdc56dfb9832c393f))
+
+
+### Improvements
+
+* 🔧 account balance total ([eb5215e](https://github.com/apotdevin/thunderhub/commit/eb5215ea5094fff642cc35702c63abb9da5bf3b0))
+* 🔧 proportional max value ([a62794f](https://github.com/apotdevin/thunderhub/commit/a62794f346352ae67f74a213c16adb2522a3403b))
+* 🔧 update deps ([4abd9be](https://github.com/apotdevin/thunderhub/commit/4abd9be99dfa5eda6c9910fe5695b78c71bfc8c5))
+* 🔧 update deps ([208ca8d](https://github.com/apotdevin/thunderhub/commit/208ca8dab8d4c978a6a0cad24c9870466c17e282))
+* **release:** 🚀 0.9.11 ([f31c0b8](https://github.com/apotdevin/thunderhub/commit/f31c0b8dc123289af242e3d7f1b4004a8ab43874))
+
 ### [0.9.11](https://github.com/apotdevin/thunderhub/compare/v0.9.10...v0.9.11) (2020-09-12)
 
 
