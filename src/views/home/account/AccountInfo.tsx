@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Zap, Anchor, Pocket } from 'react-feather';
+import { Zap, Anchor, Pocket, HelpCircle } from 'react-feather';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import ReactTooltip from 'react-tooltip';
@@ -57,21 +57,6 @@ export const AccountInfo = () => {
     channelPending,
   } = useNodeInfo();
 
-  const formatTotalCB = <Price amount={chainBalance + chainPending} />;
-  const formatCB = <Price amount={chainBalance} />;
-  const formatPB = <Price amount={chainPending} />;
-  const formatTotalCCB = <Price amount={channelBalance + channelPending} />;
-  const formatCCB = <Price amount={channelBalance} />;
-  const formatPCB = <Price amount={channelPending} />;
-
-  const totalB = (
-    <Price
-      amount={chainBalance + channelBalance + chainPending + channelPending}
-    />
-  );
-  const totalCurrentB = <Price amount={chainBalance + channelBalance} />;
-  const totalPB = <Price amount={chainPending + channelPending} />;
-
   const renderContent = () => {
     switch (state) {
       case 'send_ln':
@@ -107,26 +92,27 @@ export const AccountInfo = () => {
   const showChain =
     state === 'send_chain' || state === 'receive_chain' || state === 'none';
 
-  const renderBalances = (
-    total: JSX.Element,
-    current: JSX.Element,
-    pending: JSX.Element,
-    key: string
-  ) => (
+  const renderBalances = (current: number, pending: number, key: string) => (
     <>
       <Tile>
         <DarkSubTitle>Pending Balance</DarkSubTitle>
-        <div>{pending}</div>
+        <div>
+          <Price amount={pending} />
+        </div>
       </Tile>
       <Tile data-tip data-for={key}>
-        <DarkSubTitle>Total Balance</DarkSubTitle>
-        <div>{total}</div>
+        <DarkSubTitle>
+          Total Balance{pending > 0 && <HelpCircle size={12} />}
+        </DarkSubTitle>
+        <div>
+          <Price amount={current + pending} />
+        </div>
       </Tile>
       <ReactTooltip id={key} effect={'solid'} place={'bottom'}>
-        {renderLine('Total', total)}
+        {renderLine('Total', <Price amount={current + pending} />)}
         <Separation withMargin={'8px 0'} />
-        {renderLine('Current', current)}
-        {renderLine('Pending', pending)}
+        {renderLine('Current', <Price amount={current} />)}
+        {renderLine('Pending', <Price amount={pending} />)}
       </ReactTooltip>
     </>
   );
@@ -159,7 +145,7 @@ export const AccountInfo = () => {
         <DarkSubTitle>Account</DarkSubTitle>
         <div>Lightning</div>
       </Tile>
-      {renderBalances(formatTotalCCB, formatCCB, formatPCB, 'lightning')}
+      {renderBalances(channelBalance, channelPending, 'lightning')}
       {showLn && showChain && renderButtons('send_ln', 'receive_ln')}
       {showLn && !showChain && (
         <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
@@ -174,7 +160,7 @@ export const AccountInfo = () => {
         <DarkSubTitle>Account</DarkSubTitle>
         <div>Bitcoin</div>
       </Tile>
-      {renderBalances(formatTotalCB, formatCB, formatPB, 'onchain')}
+      {renderBalances(chainBalance, chainPending, 'onchain')}
       {showLn && showChain && renderButtons('send_chain', 'receive_chain')}
       {!showLn && showChain && (
         <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
@@ -200,7 +186,11 @@ export const AccountInfo = () => {
               <DarkSubTitle>Account</DarkSubTitle>
               <div>Total</div>
             </Tile>
-            {renderBalances(totalB, totalCurrentB, totalPB, 'balance')}
+            {renderBalances(
+              chainBalance + channelBalance,
+              chainPending + channelPending,
+              'balance'
+            )}
           </ResponsiveLine>
         </Card>
       </CardWithTitle>
