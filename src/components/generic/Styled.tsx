@@ -68,13 +68,14 @@ export const Card = styled.div<CardProps>`
 interface SeparationProps {
   height?: number;
   lineColor?: string | ThemeSet;
+  withMargin?: string;
 }
 
 export const Separation = styled.div<SeparationProps>`
   height: ${({ height }) => (height ? height : '1')}px;
   background-color: ${({ lineColor }) => lineColor ?? separationColor};
   width: 100%;
-  margin: 16px 0;
+  margin: ${({ withMargin }) => withMargin || '16px 0'};
 `;
 
 interface SubCardProps {
