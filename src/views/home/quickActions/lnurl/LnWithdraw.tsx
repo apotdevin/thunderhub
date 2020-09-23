@@ -14,6 +14,7 @@ import { Link } from 'src/components/link/Link';
 import { Timer } from '../../account/createInvoice/Timer';
 
 const Center = styled.div`
+  margin: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -76,7 +77,8 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
       return (
         <Center>
           <DarkSubTitle>
-            Failed to check status of the withdrawal. Please the status in the
+            Failed to check status of the withdrawal. Please check the status in
+            the
             <Link to={'/transactions'}> Transactions </Link>
             view
           </DarkSubTitle>
