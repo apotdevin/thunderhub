@@ -21,6 +21,27 @@ export const getChannelReport = async (
 
   const { channels } = info;
 
+  const pending = channels.reduce(
+    (prev, current) => {
+      const { pending_payments } = current;
+
+      const total = pending_payments.length;
+      const outgoing = pending_payments.filter(p => p.is_outgoing).length;
+      const incoming = total - outgoing;
+
+      return {
+        totalPendingHtlc: prev.totalPendingHtlc + total,
+        outgoingPendingHtlc: prev.outgoingPendingHtlc + outgoing,
+        incomingPendingHtlc: prev.incomingPendingHtlc + incoming,
+      };
+    },
+    {
+      totalPendingHtlc: 0,
+      outgoingPendingHtlc: 0,
+      incomingPendingHtlc: 0,
+    }
+  );
+
   const commit = channels
     .filter(c => !c.is_partner_initiated)
     .map(c => c.commit_transaction_fee)
@@ -45,5 +66,6 @@ export const getChannelReport = async (
     maxIn,
     maxOut,
     commit,
+    ...pending,
   };
 };

@@ -7,4 +7,15 @@ export const widgetTypes = gql`
     confirmedInvoices: Int
     unConfirmedInvoices: Int
   }
+
+  type channelReportType {
+    local: Int
+    remote: Int
+    maxIn: Int
+    maxOut: Int
+    commit: Int
+    totalPendingHtlc: Int
+    outgoingPendingHtlc: Int
+    incomingPendingHtlc: Int
+  }
 `;

@@ -802,10 +802,13 @@ Object {
   "data": Object {
     "getChannelReport": Object {
       "commit": 2000,
+      "incomingPendingHtlc": 0,
       "local": 1000,
       "maxIn": 1000,
       "maxOut": 1000,
+      "outgoingPendingHtlc": 3,
       "remote": 3000,
+      "totalPendingHtlc": 3,
     },
   },
   "errors": undefined,
