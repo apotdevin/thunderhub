@@ -14,7 +14,7 @@ import {
 
 type LnUrlPayResponseType = {
   pr?: string;
-  successAction?: {};
+  successAction?: { tag: string };
   status?: string;
   reason?: string;
 };
@@ -140,15 +140,23 @@ export const lnUrlResolvers = {
           throw new Error(lnServiceResponse.reason || 'LnServiceError');
         }
       } catch (error) {
-        logger.error('Error withdrawing from LnUrl service: %o', error);
+        logger.error('Error paying to LnUrl service: %o', error);
         throw new Error('ProblemPayingLnUrlService');
       }
 
-      logger.debug('LnUrlWithdraw response: %o', lnServiceResponse);
+      logger.debug('LnUrlPay response: %o', lnServiceResponse);
 
       if (!lnServiceResponse.pr) {
         logger.error('No invoice in response from LnUrlService');
         throw new Error('ProblemPayingLnUrlService');
+      }
+
+      if (lnServiceResponse.successAction) {
+        const { tag } = lnServiceResponse.successAction;
+        if (tag !== 'url' && tag !== 'message' && tag !== 'aes') {
+          logger.error('LnUrlService provided an invalid tag: %o', tag);
+          throw new Error('InvalidTagFromLnUrlService');
+        }
       }
 
       const decoded = await to<DecodedType>(
