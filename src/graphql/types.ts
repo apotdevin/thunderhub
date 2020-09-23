@@ -513,6 +513,18 @@ export type InOutType = {
   unConfirmedInvoices?: Maybe<Scalars['Int']>;
 };
 
+export type ChannelReportType = {
+  __typename?: 'channelReportType';
+  local?: Maybe<Scalars['Int']>;
+  remote?: Maybe<Scalars['Int']>;
+  maxIn?: Maybe<Scalars['Int']>;
+  maxOut?: Maybe<Scalars['Int']>;
+  commit?: Maybe<Scalars['Int']>;
+  totalPendingHtlc?: Maybe<Scalars['Int']>;
+  outgoingPendingHtlc?: Maybe<Scalars['Int']>;
+  incomingPendingHtlc?: Maybe<Scalars['Int']>;
+};
+
 export type ChannelDetailInput = {
   alias?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
@@ -565,15 +577,6 @@ export type SingleChannelType = {
 export type Channel = {
   __typename?: 'Channel';
   channel?: Maybe<SingleChannelType>;
-};
-
-export type ChannelReportType = {
-  __typename?: 'channelReportType';
-  local?: Maybe<Scalars['Int']>;
-  remote?: Maybe<Scalars['Int']>;
-  maxIn?: Maybe<Scalars['Int']>;
-  maxOut?: Maybe<Scalars['Int']>;
-  commit?: Maybe<Scalars['Int']>;
 };
 
 export type ChannelBalanceType = {

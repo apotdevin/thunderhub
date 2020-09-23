@@ -51,14 +51,6 @@ export const channelTypes = gql`
     channel: singleChannelType
   }
 
-  type channelReportType {
-    local: Int
-    remote: Int
-    maxIn: Int
-    maxOut: Int
-    commit: Int
-  }
-
   type channelBalanceType {
     confirmedBalance: Int!
     pendingBalance: Int!
