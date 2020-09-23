@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { X, Layers, GitBranch } from 'react-feather';
+import { X, Layers, GitBranch, Command } from 'react-feather';
 import {
   CardWithTitle,
   SubTitle,
@@ -94,7 +94,7 @@ export const QuickActions = () => {
               <QuickTitle>Decode</QuickTitle>
             </QuickCard>
             <QuickCard onClick={() => setOpenCard('ln_url')}>
-              <Layers size={24} />
+              <Command size={24} />
               <QuickTitle>LNURL</QuickTitle>
             </QuickCard>
           </QuickRow>
