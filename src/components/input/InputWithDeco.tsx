@@ -36,6 +36,7 @@ const InputLine = styled(SingleLine)`
 `;
 
 type InputWithDecoProps = {
+  inputMaxWidth?: string;
   title: string;
   value?: string | number | null;
   noInput?: boolean;
@@ -60,6 +61,7 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
   placeholder,
   color,
   noInput,
+  inputMaxWidth,
   inputType = 'text',
   inputCallback,
   onKeyDown,
@@ -91,7 +93,7 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
       </InputTitleRow>
       {!noInput && (
         <Input
-          maxWidth={'500px'}
+          maxWidth={inputMaxWidth || '500px'}
           placeholder={placeholder}
           color={color}
           withMargin={'0 0 0 8px'}

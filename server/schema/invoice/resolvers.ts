@@ -13,7 +13,7 @@ import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { getErrorMsg } from 'server/helpers/helpers';
 import { to } from 'server/helpers/async';
-import { DecodedType } from 'server/types/ln-service.types';
+import { CreateInvoiceType, DecodedType } from 'server/types/ln-service.types';
 
 const KEYSEND_TYPE = '5482373484';
 
@@ -90,7 +90,7 @@ export const invoiceResolvers = {
         return date.toISOString();
       };
 
-      return await to(
+      return await to<CreateInvoiceType>(
         createInvoiceRequest({
           lnd,
           ...(description && { description }),
