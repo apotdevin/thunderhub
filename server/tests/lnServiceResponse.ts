@@ -759,3 +759,7 @@ export const verifyBackupsResponse = {
 export const verifyMessageResponse = {
   signed_by: 'abc',
 };
+
+export const getPublicKeyResponse = {
+  public_key: 'public_key',
+};

@@ -99,3 +99,7 @@ export const verifyBackups = jest
 export const verifyMessage = jest
   .fn()
   .mockReturnValue(Promise.resolve(res.verifyMessageResponse));
+
+export const getPublicKey = jest
+  .fn()
+  .mockReturnValue(Promise.resolve(res.getPublicKeyResponse));
