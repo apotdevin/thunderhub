@@ -67,7 +67,7 @@ export const LnPay: FC<LnPayProps> = ({ request }) => {
         </>
       );
     }
-    if (tag === 'message') {
+    if (tag === 'aes') {
       return (
         <>
           <Title>Success</Title>
