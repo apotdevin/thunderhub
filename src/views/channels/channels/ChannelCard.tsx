@@ -9,7 +9,7 @@ import {
   X,
 } from 'react-feather';
 import { ChannelType } from 'src/graphql/types';
-import { BalanceBars, SingleBar } from 'src/components/balance';
+import { BalanceBars, SingleBar, SumBar } from 'src/components/balance';
 import {
   useRebalanceState,
   useRebalanceDispatch,
@@ -32,6 +32,7 @@ import {
   Sub4Title,
   ResponsiveLine,
   DarkSubTitle,
+  SubTitle,
 } from '../../../components/generic/Styled';
 import { useConfigState } from '../../../context/ConfigContext';
 import {
@@ -59,6 +60,8 @@ import {
   WumboTag,
 } from './Channel.style';
 import { WUMBO_MIN_SIZE } from './Channels';
+
+const MAX_HTLCS = 483;
 
 const getSymbol = (status: boolean) => {
   return status ? <ArrowDown size={14} /> : <ArrowUp size={14} />;
@@ -132,7 +135,17 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
     partner_node_info,
     partner_fee_info,
     channel_age,
+    pending_resume,
   } = channelInfo;
+
+  const {
+    total_amount,
+    total_tokens,
+    incoming_tokens,
+    incoming_amount = 200,
+    outgoing_tokens,
+    outgoing_amount = 150,
+  } = pending_resume;
 
   const isIn = inChannel?.id === id;
   const isOut = outChannel?.id === id;
@@ -271,6 +284,15 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         {renderLine('Node Public Key:', getNodeLink(partner_public_key))}
         {renderLine('Transaction Id:', getTransactionLink(transaction_id))}
         <Separation />
+        <Sub4Title>Pending HTLCS</Sub4Title>
+        {!total_amount && renderLine('Total Amount', 'None')}
+        {renderLine('Total Amount', total_amount)}
+        {renderLine('Total Tokens', total_tokens)}
+        {renderLine('Incoming Tokens', incoming_tokens)}
+        {renderLine('Outgoing Tokens', outgoing_tokens)}
+        {renderLine('Incoming Amount', incoming_amount)}
+        {renderLine('Outgoing Amount', outgoing_amount)}
+        <Separation />
         {renderLine('Channel Age:', blockToTime(channel_age))}
         {renderLine('Channel Block Age:', channel_age)}
         {renderLine('Channel Id:', id)}
@@ -363,6 +385,20 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
             />
           </ChannelStatsColumn>
         );
+      case 'htlcs':
+        return (
+          <ChannelStatsColumn>
+            {subBar === 'fees' && (
+              <SingleBar value={getBar(maxRate, 2000)} height={4} />
+            )}
+            <SumBar
+              values={[
+                getPercent(incoming_amount, MAX_HTLCS - incoming_amount),
+                getPercent(outgoing_amount, MAX_HTLCS - outgoing_amount),
+              ]}
+            />
+          </ChannelStatsColumn>
+        );
       default:
         return (
           <ChannelStatsColumn>
@@ -404,6 +440,21 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
           <>
             {renderLine('Local Balance', formatLocal)}
             {renderLine('Remote Balance', formatRemote)}
+          </>
+        );
+      case 'htlcs':
+        return (
+          <>
+            <SubTitle>Pending HTLCS</SubTitle>
+            {renderLine('Total', `${total_amount}/${MAX_HTLCS}`)}
+            {renderLine(
+              'Incoming',
+              `${incoming_amount}/${MAX_HTLCS - outgoing_amount}`
+            )}
+            {renderLine(
+              'Outgoing',
+              `${outgoing_amount}/${MAX_HTLCS - incoming_amount}`
+            )}
           </>
         );
       default:

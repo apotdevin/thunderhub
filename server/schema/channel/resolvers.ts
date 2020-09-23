@@ -1,7 +1,7 @@
 import { logger } from 'server/helpers/logger';
 import { toWithError } from 'server/helpers/async';
 import { getChannel } from 'ln-service';
-import { GetChannelType } from 'server/types/ln-service.types';
+import { ChannelType, GetChannelType } from 'server/types/ln-service.types';
 import { openChannel } from './resolvers/mutation/openChannel';
 import { closeChannel } from './resolvers/mutation/closeChannel';
 import { updateFees } from './resolvers/mutation/updateFees';
@@ -72,6 +72,42 @@ export const channelResolvers = {
         ...(channel as GetChannelType),
         node_policies,
         partner_node_policies,
+      };
+    },
+  },
+  channelType: {
+    pending_resume({ pending_payments }: ChannelType) {
+      const total = pending_payments.reduce(
+        (prev, current) => {
+          const { is_outgoing, tokens } = current;
+
+          return {
+            incoming_tokens: is_outgoing
+              ? prev.incoming_tokens
+              : prev.incoming_tokens + tokens,
+            outgoing_tokens: is_outgoing
+              ? prev.outgoing_tokens + tokens
+              : prev.outgoing_tokens,
+            incoming_amount: is_outgoing
+              ? prev.incoming_amount
+              : prev.incoming_amount + 1,
+            outgoing_amount: is_outgoing
+              ? prev.incoming_amount + 1
+              : prev.incoming_amount,
+          };
+        },
+        {
+          incoming_tokens: 0,
+          outgoing_tokens: 0,
+          incoming_amount: 0,
+          outgoing_amount: 0,
+        }
+      );
+
+      return {
+        ...total,
+        total_tokens: total.incoming_tokens + total.outgoing_tokens,
+        total_amount: total.incoming_amount + total.outgoing_amount,
       };
     },
   },

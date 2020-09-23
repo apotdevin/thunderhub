@@ -51,17 +51,25 @@ export const channelTypes = gql`
     channel: singleChannelType
   }
 
-  type channelReportType {
-    local: Int
-    remote: Int
-    maxIn: Int
-    maxOut: Int
-    commit: Int
-  }
-
   type channelBalanceType {
     confirmedBalance: Int!
     pendingBalance: Int!
+  }
+
+  type pendingPaymentType {
+    id: String!
+    is_outgoing: Boolean!
+    timeout: Int!
+    tokens: Int!
+  }
+
+  type pendingResumeType {
+    incoming_tokens: Int!
+    outgoing_tokens: Int!
+    incoming_amount: Int!
+    outgoing_amount: Int!
+    total_tokens: Int!
+    total_amount: Int!
   }
 
   type channelType {
@@ -90,6 +98,8 @@ export const channelTypes = gql`
     partner_node_info: Node!
     partner_fee_info: Channel
     channel_age: Int!
+    pending_payments: [pendingPaymentType]!
+    pending_resume: pendingResumeType!
   }
 
   type closeChannelType {

@@ -8,6 +8,9 @@ export const GET_LIQUID_REPORT = gql`
       maxIn
       maxOut
       commit
+      totalPendingHtlc
+      outgoingPendingHtlc
+      incomingPendingHtlc
     }
   }
 `;

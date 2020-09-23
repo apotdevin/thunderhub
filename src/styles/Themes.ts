@@ -316,15 +316,6 @@ export const chartBarColor: { [key: string]: string } = {
 };
 
 // ---------------------------------------
-// Liquidity Report Bar Colors
-// ---------------------------------------
-export const liquidityBarColor: { [key: string]: string } = {
-  light: chartColors.green,
-  dark: chartColors.green,
-  night: chartColors.green,
-};
-
-// ---------------------------------------
 // Flow Report Bar Colors
 // ---------------------------------------
 export const flowBarColor: { [key: string]: string } = {

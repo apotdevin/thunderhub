@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Fragment } from 'react';
 import styled, { css } from 'styled-components';
 import { ProgressBar } from '../generic/CardGeneric';
 
@@ -110,6 +110,28 @@ export const SingleBar = ({ value, height }: SingleBarType) => {
     <SingleLine>
       <ProgressBar barHeight={height} order={color} percent={value} />
       <ProgressBar barHeight={height} order={8} percent={opposite} />
+    </SingleLine>
+  );
+};
+
+type SumBarProps = {
+  values: number[];
+  height?: number;
+};
+
+export const SumBar = ({ values, height = 20 }: SumBarProps) => {
+  const total = values.reduce((prev, current) => prev + current, 0);
+
+  const missing = Math.max(100, total) - total;
+
+  return (
+    <SingleLine>
+      {values.map((value, index) => (
+        <Fragment key={index}>
+          <ProgressBar barHeight={height} order={index % 4} percent={value} />
+        </Fragment>
+      ))}
+      <ProgressBar barHeight={height} order={4} percent={missing} />
     </SingleLine>
   );
 };
