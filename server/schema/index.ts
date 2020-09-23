@@ -38,6 +38,8 @@ import { bosResolvers } from './bos/resolvers';
 import { bosTypes } from './bos/types';
 import { tbaseResolvers } from './tbase/resolvers';
 import { tbaseTypes } from './tbase/types';
+import { lnUrlResolvers } from './lnurl/resolvers';
+import { lnUrlTypes } from './lnurl/types';
 
 const typeDefs = [
   generalTypes,
@@ -59,6 +61,7 @@ const typeDefs = [
   routeTypes,
   bosTypes,
   tbaseTypes,
+  lnUrlTypes,
 ];
 
 const resolvers = merge(
@@ -82,7 +85,8 @@ const resolvers = merge(
   macaroonResolvers,
   networkResolvers,
   bosResolvers,
-  tbaseResolvers
+  tbaseResolvers,
+  lnUrlResolvers
 );
 
 export const schema = makeExecutableSchema({ typeDefs, resolvers });

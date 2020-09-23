@@ -1,5 +1,27 @@
 export type LndObject = {};
 
+export type PayInvoiceType = {
+  fee: number;
+  fee_mtokens: string;
+  hops: [
+    {
+      channel: string;
+      channel_capacity: number;
+      fee_mtokens: string;
+      forward_mtokens: string;
+      timeout: number;
+    }
+  ];
+  id: string;
+  is_confirmed: boolean;
+  is_outgoing: boolean;
+  mtokens: string;
+  secret: string;
+  safe_fee: number;
+  safe_tokens: number;
+  tokens: number;
+};
+
 export type ChannelType = {
   id: string;
   tokens: number;
@@ -18,8 +40,23 @@ export type DecodedType = {
   tokens: number;
 };
 
+export type GetPublicKeyType = {
+  public_key: string;
+};
+
 export type ClosedChannelsType = {
   channels: [];
+};
+
+export type CreateInvoiceType = {
+  chain_address?: string;
+  created_at: string;
+  description: string;
+  id: string;
+  mtokens?: string;
+  request: string;
+  secret: string;
+  tokens?: number;
 };
 
 export type CloseChannelType = {

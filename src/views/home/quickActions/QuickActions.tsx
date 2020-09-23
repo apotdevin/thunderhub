@@ -17,6 +17,7 @@ import { DecodeCard } from './decode/Decode';
 import { SupportCard } from './donate/DonateCard';
 import { SupportBar } from './donate/DonateContent';
 import { OpenChannel } from './openChannel';
+import { LnUrlCard } from './lnurl';
 
 const QuickCard = styled.div`
   background: ${cardColor};
@@ -59,6 +60,8 @@ export const QuickActions = () => {
         return 'Decode a Lightning Request';
       case 'open_channel':
         return 'Open a Channel';
+      case 'ln_url':
+        return 'Use lnurl';
       default:
         return 'Quick Actions';
     }
@@ -70,6 +73,8 @@ export const QuickActions = () => {
         return <SupportBar />;
       case 'decode':
         return <DecodeCard />;
+      case 'ln_url':
+        return <LnUrlCard />;
       case 'open_channel':
         return (
           <Card>
@@ -87,6 +92,10 @@ export const QuickActions = () => {
             <QuickCard onClick={() => setOpenCard('decode')}>
               <Layers size={24} />
               <QuickTitle>Decode</QuickTitle>
+            </QuickCard>
+            <QuickCard onClick={() => setOpenCard('ln_url')}>
+              <Layers size={24} />
+              <QuickTitle>LNURL</QuickTitle>
             </QuickCard>
           </QuickRow>
         );

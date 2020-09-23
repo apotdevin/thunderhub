@@ -91,6 +91,15 @@ export const queryTypes = gql`
 
 export const mutationTypes = gql`
   type Mutation {
+    lnUrlPay(callback: String!, amount: Int!, comment: String): PaySuccess!
+    lnUrlWithdraw(
+      callback: String!
+      amount: Int!
+      k1: String!
+      description: String
+    ): String!
+    fetchLnUrl(url: String!): LnUrlRequest
+    lnUrl(type: String!, url: String!): String!
     createBaseInvoice(amount: Int!): baseInvoiceType
     createThunderPoints(
       id: String!
