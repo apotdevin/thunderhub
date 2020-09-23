@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.13](https://github.com/apotdevin/thunderhub/compare/v0.9.11...v0.9.13) (2020-09-23)
+
+
+### Bug Fixes
+
+* 🐛 aes action ([c221c5c](https://github.com/apotdevin/thunderhub/commit/c221c5cc1cb774dec7640d145c331932856b88dc))
+* 🐛 check lnurl tag ([01f0db8](https://github.com/apotdevin/thunderhub/commit/01f0db845660b69aa518d5d49488303ccf009d57))
+* 🐛 typo ([34a1958](https://github.com/apotdevin/thunderhub/commit/34a1958fddffc16daeca8e7cecee3f4a7c0516ee))
+
+
+### Improvements
+
+* 🔧 add error handling ([8a2ac67](https://github.com/apotdevin/thunderhub/commit/8a2ac677c3128a8164ffa0eb50328b750b697391))
+* 🔧 ln-url ([3ffc0fa](https://github.com/apotdevin/thunderhub/commit/3ffc0fac34d26b09276e29ca9f881351dd6ccfdd))
+* **release:** 🚀 0.9.12 ([02cb697](https://github.com/apotdevin/thunderhub/commit/02cb697932949a53d7bf112e746248fdd1bbbc8c))
+
+
+### Docs
+
+* 📚️ update README ([b9199a4](https://github.com/apotdevin/thunderhub/commit/b9199a4c376251e32870661e1720465197fde5b2))
+
 ### [0.9.12](https://github.com/apotdevin/thunderhub/compare/v0.9.11...v0.9.12) (2020-09-20)
 
 
