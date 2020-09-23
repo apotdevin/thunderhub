@@ -12,6 +12,18 @@
             "name": "PaymentType"
           }
         ]
+      },
+      {
+        "kind": "UNION",
+        "name": "LnUrlRequest",
+        "possibleTypes": [
+          {
+            "name": "WithdrawRequest"
+          },
+          {
+            "name": "PayRequest"
+          }
+        ]
       }
     ]
   }

@@ -208,6 +208,10 @@ export type QueryGetSessionTokenArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  lnUrlPay: PaySuccess;
+  lnUrlWithdraw: Scalars['String'];
+  fetchLnUrl?: Maybe<LnUrlRequest>;
+  lnUrl: Scalars['String'];
   createBaseInvoice?: Maybe<BaseInvoiceType>;
   createThunderPoints: Scalars['Boolean'];
   closeChannel?: Maybe<CloseChannelType>;
@@ -227,6 +231,32 @@ export type Mutation = {
   sendMessage?: Maybe<Scalars['Int']>;
   logout?: Maybe<Scalars['Boolean']>;
   createMacaroon?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationLnUrlPayArgs = {
+  callback: Scalars['String'];
+  amount: Scalars['Int'];
+  comment?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationLnUrlWithdrawArgs = {
+  callback: Scalars['String'];
+  amount: Scalars['Int'];
+  k1: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationFetchLnUrlArgs = {
+  url: Scalars['String'];
+};
+
+
+export type MutationLnUrlArgs = {
+  type: Scalars['String'];
+  url: Scalars['String'];
 };
 
 
@@ -964,4 +994,36 @@ export type BaseInvoiceType = {
   __typename?: 'baseInvoiceType';
   id: Scalars['String'];
   request: Scalars['String'];
+};
+
+export type WithdrawRequest = {
+  __typename?: 'WithdrawRequest';
+  callback?: Maybe<Scalars['String']>;
+  k1?: Maybe<Scalars['String']>;
+  maxWithdrawable?: Maybe<Scalars['String']>;
+  defaultDescription?: Maybe<Scalars['String']>;
+  minWithdrawable?: Maybe<Scalars['String']>;
+  tag?: Maybe<Scalars['String']>;
+};
+
+export type PayRequest = {
+  __typename?: 'PayRequest';
+  callback?: Maybe<Scalars['String']>;
+  maxSendable?: Maybe<Scalars['String']>;
+  minSendable?: Maybe<Scalars['String']>;
+  metadata?: Maybe<Scalars['String']>;
+  commentAllowed?: Maybe<Scalars['Int']>;
+  tag?: Maybe<Scalars['String']>;
+};
+
+export type LnUrlRequest = WithdrawRequest | PayRequest;
+
+export type PaySuccess = {
+  __typename?: 'PaySuccess';
+  tag?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  ciphertext?: Maybe<Scalars['String']>;
+  iv?: Maybe<Scalars['String']>;
 };
