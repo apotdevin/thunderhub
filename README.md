@@ -65,6 +65,7 @@ This repository consists of a **NextJS** server that handles both the backend **
 
 ### Management
 
+- LNURL integration: ln-pay and ln-withdraw are available. Ln-auth soon.
 - Send and Receive Lightning payments.
 - Send and Receive Bitcoin payments.
 - Decode lightning payment requests.
