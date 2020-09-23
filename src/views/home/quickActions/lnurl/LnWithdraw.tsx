@@ -11,6 +11,8 @@ import { useGetInvoiceStatusChangeLazyQuery } from 'src/graphql/queries/__genera
 import { chartColors } from 'src/styles/Themes';
 import { CheckCircle } from 'react-feather';
 import { Link } from 'src/components/link/Link';
+import { getErrorContent } from 'src/utils/error';
+import { toast } from 'react-toastify';
 import { Timer } from '../../account/createInvoice/Timer';
 
 const Center = styled.div`
@@ -49,11 +51,15 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
     defaultDescription || ''
   );
 
-  const [withdraw, { data, loading }] = useWithdrawLnUrlMutation();
+  const [withdraw, { data, loading }] = useWithdrawLnUrlMutation({
+    onError: error => toast.error(getErrorContent(error)),
+  });
   const [
     checkStatus,
     { data: statusData, loading: statusLoading, error },
-  ] = useGetInvoiceStatusChangeLazyQuery();
+  ] = useGetInvoiceStatusChangeLazyQuery({
+    onError: error => toast.error(getErrorContent(error)),
+  });
 
   useEffect(() => {
     if (!loading && data?.lnUrlWithdraw) {

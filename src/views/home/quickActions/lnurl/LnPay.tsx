@@ -8,6 +8,8 @@ import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { usePayLnUrlMutation } from 'src/graphql/mutations/__generated__/lnUrl.generated';
 import { Link } from 'src/components/link/Link';
+import { toast } from 'react-toastify';
+import { getErrorContent } from 'src/utils/error';
 
 const ModalText = styled.div`
   width: 100%;
@@ -34,7 +36,9 @@ export const LnPay: FC<LnPayProps> = ({ request }) => {
   const [amount, setAmount] = useState<number>(min);
   const [comment, setComment] = useState<string>('');
 
-  const [payLnUrl, { data, loading }] = usePayLnUrlMutation();
+  const [payLnUrl, { data, loading }] = usePayLnUrlMutation({
+    onError: error => toast.error(getErrorContent(error)),
+  });
 
   if (!callback) {
     return <ModalText>Missing information from LN Service</ModalText>;

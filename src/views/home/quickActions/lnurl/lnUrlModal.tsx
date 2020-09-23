@@ -1,9 +1,11 @@
 import { FC, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { Separation } from 'src/components/generic/Styled';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { Title } from 'src/components/typography/Styled';
 import { useFetchLnUrlMutation } from 'src/graphql/mutations/__generated__/lnUrl.generated';
+import { getErrorContent } from 'src/utils/error';
 import styled from 'styled-components';
 import { LnPay } from './LnPay';
 import { LnWithdraw } from './LnWithdraw';
@@ -21,7 +23,9 @@ type lnUrlProps = {
 export const LnUrlModal: FC<lnUrlProps> = ({ url, type }) => {
   const fullUrl = new URL(url);
 
-  const [fetchLnUrl, { data, loading }] = useFetchLnUrlMutation();
+  const [fetchLnUrl, { data, loading }] = useFetchLnUrlMutation({
+    onError: error => toast.error(getErrorContent(error)),
+  });
 
   useEffect(() => {
     if (!type) {
