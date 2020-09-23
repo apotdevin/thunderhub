@@ -26,6 +26,14 @@ export const GET_CHANNELS = gql`
       transaction_vout
       unsettled_balance
       channel_age
+      pending_resume {
+        incoming_tokens
+        outgoing_tokens
+        incoming_amount
+        outgoing_amount
+        total_tokens
+        total_amount
+      }
       partner_node_info {
         node {
           alias

@@ -33,6 +33,9 @@ export type ChannelType = {
   partner_public_key: string;
   time_offline?: number;
   time_online?: number;
+  pending_payments: [
+    { id: string; is_outgoing: boolean; timeout: number; tokens: number }
+  ];
 };
 
 export type DecodedType = {

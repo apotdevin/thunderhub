@@ -164,6 +164,12 @@ export const ChannelManage = () => {
                 >
                   Fees
                 </SingleButton>
+                <SingleButton
+                  selected={channelBarType === 'htlcs'}
+                  onClick={() => changeType('htlcs')}
+                >
+                  HTLC
+                </SingleButton>
               </MultiButton>
             </MarginLine>
             {channelBarType === 'proportional' && (
