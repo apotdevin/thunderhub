@@ -513,6 +513,18 @@ export type InOutType = {
   unConfirmedInvoices?: Maybe<Scalars['Int']>;
 };
 
+export type ChannelReportType = {
+  __typename?: 'channelReportType';
+  local?: Maybe<Scalars['Int']>;
+  remote?: Maybe<Scalars['Int']>;
+  maxIn?: Maybe<Scalars['Int']>;
+  maxOut?: Maybe<Scalars['Int']>;
+  commit?: Maybe<Scalars['Int']>;
+  totalPendingHtlc?: Maybe<Scalars['Int']>;
+  outgoingPendingHtlc?: Maybe<Scalars['Int']>;
+  incomingPendingHtlc?: Maybe<Scalars['Int']>;
+};
+
 export type ChannelDetailInput = {
   alias?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
@@ -567,19 +579,28 @@ export type Channel = {
   channel?: Maybe<SingleChannelType>;
 };
 
-export type ChannelReportType = {
-  __typename?: 'channelReportType';
-  local?: Maybe<Scalars['Int']>;
-  remote?: Maybe<Scalars['Int']>;
-  maxIn?: Maybe<Scalars['Int']>;
-  maxOut?: Maybe<Scalars['Int']>;
-  commit?: Maybe<Scalars['Int']>;
-};
-
 export type ChannelBalanceType = {
   __typename?: 'channelBalanceType';
   confirmedBalance: Scalars['Int'];
   pendingBalance: Scalars['Int'];
+};
+
+export type PendingPaymentType = {
+  __typename?: 'pendingPaymentType';
+  id: Scalars['String'];
+  is_outgoing: Scalars['Boolean'];
+  timeout: Scalars['Int'];
+  tokens: Scalars['Int'];
+};
+
+export type PendingResumeType = {
+  __typename?: 'pendingResumeType';
+  incoming_tokens: Scalars['Int'];
+  outgoing_tokens: Scalars['Int'];
+  incoming_amount: Scalars['Int'];
+  outgoing_amount: Scalars['Int'];
+  total_tokens: Scalars['Int'];
+  total_amount: Scalars['Int'];
 };
 
 export type ChannelType = {
@@ -609,6 +630,8 @@ export type ChannelType = {
   partner_node_info: Node;
   partner_fee_info?: Maybe<Channel>;
   channel_age: Scalars['Int'];
+  pending_payments: Array<Maybe<PendingPaymentType>>;
+  pending_resume: PendingResumeType;
 };
 
 export type CloseChannelType = {

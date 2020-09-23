@@ -11,7 +11,12 @@ export type channelBarStyleTypes =
   | 'compact'
   | 'ultracompact'
   | 'balancing';
-export type channelBarTypeTypes = 'balance' | 'fees' | 'size' | 'proportional';
+export type channelBarTypeTypes =
+  | 'balance'
+  | 'fees'
+  | 'size'
+  | 'proportional'
+  | 'htlcs';
 export type channelSortTypes =
   | 'none'
   | 'age'

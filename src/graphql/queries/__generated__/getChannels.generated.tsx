@@ -13,7 +13,10 @@ export type GetChannelsQuery = (
   & { getChannels: Array<Types.Maybe<(
     { __typename?: 'channelType' }
     & Pick<Types.ChannelType, 'capacity' | 'commit_transaction_fee' | 'commit_transaction_weight' | 'id' | 'is_active' | 'is_closing' | 'is_opening' | 'is_partner_initiated' | 'is_private' | 'is_static_remote_key' | 'local_balance' | 'local_reserve' | 'partner_public_key' | 'received' | 'remote_balance' | 'remote_reserve' | 'sent' | 'time_offline' | 'time_online' | 'transaction_id' | 'transaction_vout' | 'unsettled_balance' | 'channel_age'>
-    & { partner_node_info: (
+    & { pending_resume: (
+      { __typename?: 'pendingResumeType' }
+      & Pick<Types.PendingResumeType, 'incoming_tokens' | 'outgoing_tokens' | 'incoming_amount' | 'outgoing_amount' | 'total_tokens' | 'total_amount'>
+    ), partner_node_info: (
       { __typename?: 'Node' }
       & { node: (
         { __typename?: 'nodeType' }
@@ -62,6 +65,14 @@ export const GetChannelsDocument = gql`
     transaction_vout
     unsettled_balance
     channel_age
+    pending_resume {
+      incoming_tokens
+      outgoing_tokens
+      incoming_amount
+      outgoing_amount
+      total_tokens
+      total_amount
+    }
     partner_node_info {
       node {
         alias
