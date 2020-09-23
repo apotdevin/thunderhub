@@ -582,6 +582,24 @@ export type ChannelBalanceType = {
   pendingBalance: Scalars['Int'];
 };
 
+export type PendingPaymentType = {
+  __typename?: 'pendingPaymentType';
+  id: Scalars['String'];
+  is_outgoing: Scalars['Boolean'];
+  timeout: Scalars['Int'];
+  tokens: Scalars['Int'];
+};
+
+export type PendingResumeType = {
+  __typename?: 'pendingResumeType';
+  incoming_tokens: Scalars['Int'];
+  outgoing_tokens: Scalars['Int'];
+  incoming_amount: Scalars['Int'];
+  outgoing_amount: Scalars['Int'];
+  total_tokens: Scalars['Int'];
+  total_amount: Scalars['Int'];
+};
+
 export type ChannelType = {
   __typename?: 'channelType';
   capacity: Scalars['Int'];
@@ -609,6 +627,8 @@ export type ChannelType = {
   partner_node_info: Node;
   partner_fee_info?: Maybe<Channel>;
   channel_age: Scalars['Int'];
+  pending_payments: Array<Maybe<PendingPaymentType>>;
+  pending_resume: PendingResumeType;
 };
 
 export type CloseChannelType = {
