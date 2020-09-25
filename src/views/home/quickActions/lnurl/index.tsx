@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { Card } from 'src/components/generic/Styled';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import Modal from 'src/components/modal/ReactModal';
+import { useAuthLnUrlMutation } from 'src/graphql/mutations/__generated__/lnUrl.generated';
+import { getErrorContent } from 'src/utils/error';
 import { decodeLnUrl } from 'src/utils/url';
 import { LnUrlModal } from './lnUrlModal';
 
@@ -12,6 +14,24 @@ export const LnUrlCard = () => {
   const [url, setUrl] = useState<string>('');
   const [type, setType] = useState<string>('');
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  const [auth, { data, loading }] = useAuthLnUrlMutation({
+    onError: error => toast.error(getErrorContent(error)),
+  });
+
+  useEffect(() => {
+    if (loading || !data?.lnUrlAuth) return;
+
+    const { status, message } = data.lnUrlAuth;
+    if (status === 'ERROR') {
+      toast.error(message);
+    } else {
+      toast.success(message);
+      setLnUrl('');
+      setUrl('');
+      setType('');
+    }
+  }, [data, loading]);
 
   const handleDecode = () => {
     if (!lnurl) {
@@ -31,7 +51,7 @@ export const LnUrlCard = () => {
         setModalOpen(true);
       }
       if (tag === 'login') {
-        toast.warning('LnAuth is not available yet');
+        auth({ variables: { url: urlString } });
       }
     } catch (error) {
       toast.error('Problem decoding LNURL');
@@ -43,7 +63,7 @@ export const LnUrlCard = () => {
       <Card>
         <InputWithDeco
           value={lnurl}
-          placeholder={'LnPay or LnWithdraw URL'}
+          placeholder={'LnPay / LnWithdraw / LnAuth'}
           title={'LNURL'}
           inputCallback={value => setLnUrl(value)}
           onEnter={() => handleDecode()}
@@ -51,7 +71,7 @@ export const LnUrlCard = () => {
         <ColorButton
           arrow={true}
           fullWidth={true}
-          disabled={!lnurl}
+          disabled={!lnurl || loading}
           withMargin={'16px 0 0'}
           onClick={() => handleDecode()}
         >
