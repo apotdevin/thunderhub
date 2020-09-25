@@ -23,6 +23,15 @@ export const FETCH_LN_URL = gql`
   }
 `;
 
+export const AUTH_LN_URL = gql`
+  mutation AuthLnUrl($url: String!) {
+    lnUrlAuth(url: $url) {
+      status
+      message
+    }
+  }
+`;
+
 export const PAY_LN_URL = gql`
   mutation PayLnUrl($callback: String!, $amount: Int!, $comment: String) {
     lnUrlPay(callback: $callback, amount: $amount, comment: $comment) {

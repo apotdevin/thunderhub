@@ -21,6 +21,11 @@ export const lnUrlTypes = gql`
 
   union LnUrlRequest = WithdrawRequest | PayRequest
 
+  type AuthResponse {
+    status: String!
+    message: String!
+  }
+
   type PaySuccess {
     tag: String
     description: String
