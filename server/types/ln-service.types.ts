@@ -103,6 +103,10 @@ export type GetWalletInfoType = {
   public_key: string;
 };
 
+export type DiffieHellmanComputeSecretType = {
+  secret: string;
+};
+
 export type GetNodeType = { alias: string; color: string };
 
 export type UtxoType = {};

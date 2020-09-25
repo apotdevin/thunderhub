@@ -208,10 +208,10 @@ export type QueryGetSessionTokenArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  lnUrlAuth: AuthResponse;
   lnUrlPay: PaySuccess;
   lnUrlWithdraw: Scalars['String'];
   fetchLnUrl?: Maybe<LnUrlRequest>;
-  lnUrl: Scalars['String'];
   createBaseInvoice?: Maybe<BaseInvoiceType>;
   createThunderPoints: Scalars['Boolean'];
   closeChannel?: Maybe<CloseChannelType>;
@@ -234,6 +234,11 @@ export type Mutation = {
 };
 
 
+export type MutationLnUrlAuthArgs = {
+  url: Scalars['String'];
+};
+
+
 export type MutationLnUrlPayArgs = {
   callback: Scalars['String'];
   amount: Scalars['Int'];
@@ -250,12 +255,6 @@ export type MutationLnUrlWithdrawArgs = {
 
 
 export type MutationFetchLnUrlArgs = {
-  url: Scalars['String'];
-};
-
-
-export type MutationLnUrlArgs = {
-  type: Scalars['String'];
   url: Scalars['String'];
 };
 
@@ -1040,6 +1039,12 @@ export type PayRequest = {
 };
 
 export type LnUrlRequest = WithdrawRequest | PayRequest;
+
+export type AuthResponse = {
+  __typename?: 'AuthResponse';
+  status: Scalars['String'];
+  message: Scalars['String'];
+};
 
 export type PaySuccess = {
   __typename?: 'PaySuccess';

@@ -19,6 +19,19 @@ export type FetchLnUrlMutation = (
   )> }
 );
 
+export type AuthLnUrlMutationVariables = Types.Exact<{
+  url: Types.Scalars['String'];
+}>;
+
+
+export type AuthLnUrlMutation = (
+  { __typename?: 'Mutation' }
+  & { lnUrlAuth: (
+    { __typename?: 'AuthResponse' }
+    & Pick<Types.AuthResponse, 'status' | 'message'>
+  ) }
+);
+
 export type PayLnUrlMutationVariables = Types.Exact<{
   callback: Types.Scalars['String'];
   amount: Types.Scalars['Int'];
@@ -95,6 +108,39 @@ export function useFetchLnUrlMutation(baseOptions?: Apollo.MutationHookOptions<F
 export type FetchLnUrlMutationHookResult = ReturnType<typeof useFetchLnUrlMutation>;
 export type FetchLnUrlMutationResult = Apollo.MutationResult<FetchLnUrlMutation>;
 export type FetchLnUrlMutationOptions = Apollo.BaseMutationOptions<FetchLnUrlMutation, FetchLnUrlMutationVariables>;
+export const AuthLnUrlDocument = gql`
+    mutation AuthLnUrl($url: String!) {
+  lnUrlAuth(url: $url) {
+    status
+    message
+  }
+}
+    `;
+export type AuthLnUrlMutationFn = Apollo.MutationFunction<AuthLnUrlMutation, AuthLnUrlMutationVariables>;
+
+/**
+ * __useAuthLnUrlMutation__
+ *
+ * To run a mutation, you first call `useAuthLnUrlMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAuthLnUrlMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [authLnUrlMutation, { data, loading, error }] = useAuthLnUrlMutation({
+ *   variables: {
+ *      url: // value for 'url'
+ *   },
+ * });
+ */
+export function useAuthLnUrlMutation(baseOptions?: Apollo.MutationHookOptions<AuthLnUrlMutation, AuthLnUrlMutationVariables>) {
+        return Apollo.useMutation<AuthLnUrlMutation, AuthLnUrlMutationVariables>(AuthLnUrlDocument, baseOptions);
+      }
+export type AuthLnUrlMutationHookResult = ReturnType<typeof useAuthLnUrlMutation>;
+export type AuthLnUrlMutationResult = Apollo.MutationResult<AuthLnUrlMutation>;
+export type AuthLnUrlMutationOptions = Apollo.BaseMutationOptions<AuthLnUrlMutation, AuthLnUrlMutationVariables>;
 export const PayLnUrlDocument = gql`
     mutation PayLnUrl($callback: String!, $amount: Int!, $comment: String) {
   lnUrlPay(callback: $callback, amount: $amount, comment: $comment) {
