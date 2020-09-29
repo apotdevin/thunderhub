@@ -42,6 +42,7 @@ export const WalletVersion = () => {
     }
 
     const {
+      build_tags,
       is_autopilotrpc_enabled,
       is_chainrpc_enabled,
       is_invoicesrpc_enabled,
@@ -55,6 +56,7 @@ export const WalletVersion = () => {
     return (
       <Card>
         {renderLine('Commit hash:', commit_hash)}
+        {renderLine('Build Tags:', build_tags.join(', '))}
         <Separation />
         <Sub4Title>
           <b>RPC</b>
