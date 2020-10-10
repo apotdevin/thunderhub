@@ -126,6 +126,7 @@ CURRENCY = 'sat' | 'btc' | 'fiat' # Default: 'sat'
 FETCH_PRICES = true | false # Default: true
 FETCH_FEES = true | false # Default: true
 DISABLE_LINKS = true | false # Default: false
+DISABLE_LNMARKETS = true | false # Default: false
 NO_VERSION_CHECK = true | false # Default: false
 ```
 
@@ -223,6 +224,9 @@ On the first start of the server, the `masterPassword` and all account `password
 ThunderHub fetches fiat prices from [Blockchain.com](https://blockchain.info/ticker)'s api and bitcoin on chain fees from [Earn.com](https://bitcoinfees.earn.com/api/v1/fees/recommended)'s api.
 
 If you want to deactivate these requests you can set `FETCH_PRICES=false` and `FETCH_FEES=false` in your `.env` file or manually change them inside the settings view of ThunderHub.
+
+**LnMarkets**
+ThunderHub can connect to the LnMarkets API. You can disable this option by setting `DISABLE_LNMARKETS=true` in your `.env` file.
 
 **Links**
 ThunderHub shows you links for quick viewing of nodes by public key on [1ml.com](https://1ml.com/) and for viewing onchain transactions on [Blockchain.com](https://www.blockchain.com/).

@@ -46,6 +46,7 @@ export const getContext = (context: ResolverContext) => {
 
   const cookies = cookie.parse(req.headers.cookie ?? '') || {};
   const auth = cookies[appConstants.cookieName];
+  const lnMarketsAuth = cookies[appConstants.lnMarketsAuth];
 
   let lnd: LndObject | null = null;
   let id: string | null = null;
@@ -70,6 +71,7 @@ export const getContext = (context: ResolverContext) => {
     sso,
     accounts: accountConfig,
     res,
+    lnMarketsAuth,
   };
 
   return resolverContext;

@@ -6,6 +6,7 @@ import {
   cardColor,
   cardBorderColor,
   unSelectedNavButton,
+  mediaWidths,
 } from 'src/styles/Themes';
 import { useBaseConnect } from 'src/hooks/UseBaseConnect';
 
@@ -31,6 +32,12 @@ const QuickCard = styled.div`
   margin-right: 10px;
   cursor: pointer;
   color: #69c0ff;
+
+  @media (${mediaWidths.mobile}) {
+    padding: 4px;
+    height: 80px;
+    width: 80px;
+  }
 
   &:hover {
     background-color: ${chartColors.green};

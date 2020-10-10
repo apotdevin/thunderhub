@@ -26,6 +26,7 @@ module.exports = withBundleAnalyzer({
     fetchPrices: process.env.FETCH_PRICES === 'false' ? false : true,
     fetchFees: process.env.FETCH_FEES === 'false' ? false : true,
     disableLinks: process.env.DISABLE_LINKS === 'true' ? true : false,
+    disableLnMarkets: process.env.DISABLE_LNMARKETS === 'true' ? true : false,
     noVersionCheck: process.env.NO_VERSION_CHECK === 'true' ? true : false,
   },
 });

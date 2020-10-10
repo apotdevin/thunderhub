@@ -10,6 +10,8 @@ import * as bip39 from 'bip39';
 import * as bip32 from 'bip32';
 import * as secp256k1 from 'secp256k1';
 import { BIP32Interface } from 'bip32';
+import { appUrls } from 'server/utils/appUrls';
+import { decodeLnUrl } from 'src/utils/url';
 import { to } from './async';
 import { logger } from './logger';
 
@@ -84,4 +86,61 @@ export const lnAuthUrlGenerator = async (
 
   // Build and return final url with signature and public key
   return `${url}&sig=${encodedSignature}&key=${linkingKey}`;
+};
+
+export const getLnMarketsAuth = async (
+  lnd: LndObject | null,
+  cookie?: string | null
+): Promise<{
+  newCookie: boolean;
+  cookieString?: string;
+  json?: { status: string; reason: string; token: string };
+}> => {
+  if (cookie) {
+    return { newCookie: false, cookieString: cookie };
+  }
+
+  if (!lnd) {
+    logger.error('Error getting authenticated LND instance in lnUrlAuth');
+    throw new Error('ProblemAuthenticatingWithLnUrlService');
+  }
+
+  let lnUrl = '';
+
+  // Get a new lnUrl from LnMarkets
+  try {
+    const response = await fetch(`${appUrls.lnMarkets}/lnurl/a/c`);
+    const json = await response.json();
+
+    logger.debug('Get lnUrl from LnMarkets response: %o', json);
+    lnUrl = json?.lnurl;
+    if (!lnUrl) throw new Error();
+  } catch (error) {
+    logger.error(
+      `Error getting lnAuth url from ${appUrls.lnMarkets}. Error: %o`,
+      error
+    );
+    throw new Error('ProblemAuthenticatingWithLnMarkets');
+  }
+
+  // Decode the LnUrl and authenticate with it
+  const decoded = decodeLnUrl(lnUrl);
+  const finalUrl = await lnAuthUrlGenerator(decoded, lnd);
+
+  // Try to authenticate with lnMarkets
+  try {
+    const response = await fetch(`${finalUrl}&jwt=true&expiry=3600`);
+    const json = await response.json();
+
+    logger.debug('LnUrlAuth response: %o', json);
+
+    if (!json?.token) {
+      throw new Error('No token in response');
+    }
+
+    return { newCookie: true, cookieString: json.token, json };
+  } catch (error) {
+    logger.error('Error authenticating with LnUrl service: %o', error);
+    throw new Error('ProblemAuthenticatingWithLnUrlService');
+  }
 };

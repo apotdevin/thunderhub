@@ -41,6 +41,9 @@ export type PermissionsType = {
 
 export type Query = {
   __typename?: 'Query';
+  getLnMarketsStatus: Scalars['String'];
+  getLnMarketsUrl: Scalars['String'];
+  getLnMarketsUserInfo?: Maybe<LnMarketsUserInfo>;
   getInvoiceStatusChange?: Maybe<Scalars['String']>;
   getBaseCanConnect: Scalars['Boolean'];
   getBaseNodes: Array<Maybe<BaseNodesType>>;
@@ -202,6 +205,10 @@ export type QueryGetSessionTokenArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  lnMarketsDeposit: Scalars['Boolean'];
+  lnMarketsWithdraw: Scalars['Boolean'];
+  lnMarketsLogin: AuthResponse;
+  lnMarketsLogout: Scalars['Boolean'];
   lnUrlAuth: AuthResponse;
   lnUrlPay: PaySuccess;
   lnUrlWithdraw: Scalars['String'];
@@ -223,8 +230,18 @@ export type Mutation = {
   addPeer?: Maybe<Scalars['Boolean']>;
   removePeer?: Maybe<Scalars['Boolean']>;
   sendMessage?: Maybe<Scalars['Int']>;
-  logout?: Maybe<Scalars['Boolean']>;
+  logout: Scalars['Boolean'];
   createMacaroon?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationLnMarketsDepositArgs = {
+  amount: Scalars['Int'];
+};
+
+
+export type MutationLnMarketsWithdrawArgs = {
+  amount: Scalars['Int'];
 };
 
 
@@ -1053,4 +1070,14 @@ export type PaySuccess = {
   message?: Maybe<Scalars['String']>;
   ciphertext?: Maybe<Scalars['String']>;
   iv?: Maybe<Scalars['String']>;
+};
+
+export type LnMarketsUserInfo = {
+  __typename?: 'LnMarketsUserInfo';
+  uid?: Maybe<Scalars['String']>;
+  balance?: Maybe<Scalars['String']>;
+  account_type?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  linkingpublickey?: Maybe<Scalars['String']>;
+  last_ip?: Maybe<Scalars['String']>;
 };
