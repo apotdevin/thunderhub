@@ -8,11 +8,13 @@ import {
   Home,
   Icon,
   Heart,
+  Activity,
 } from 'react-feather';
 import { useTransition, animated } from 'react-spring';
 import { useRouter } from 'next/router';
 import { useBaseConnect } from 'src/hooks/UseBaseConnect';
 import { LogoutButton } from 'src/components/logoutButton';
+import { useConfigState } from 'src/context/ConfigContext';
 import { headerColor, headerTextColor } from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
@@ -34,17 +36,18 @@ const HOME = '/home';
 const CHAT = '/chat';
 const DONATIONS = '/leaderboard';
 const SETTINGS = '/settings';
+const LN_MARKETS = '/lnmarkets';
 
 export const Header = () => {
   const { pathname } = useRouter();
   const [open, setOpen] = useState(false);
 
+  const { lnMarketsAuth } = useConfigState();
   const connected = useBaseConnect();
 
   const isRoot = pathname === '/';
 
-  const showHomeButton = (): boolean =>
-    pathname === DONATIONS || pathname === CHAT || pathname === SETTINGS;
+  const showHomeButton = (): boolean => pathname !== MAIN && pathname !== HOME;
 
   const transitions = useTransition(open, null, {
     from: { position: 'absolute', opacity: 0 },
@@ -81,6 +84,7 @@ export const Header = () => {
         <HeaderButtons>
           {showHomeButton() && renderNavButton(HOME, Home)}
           {connected && renderNavButton(DONATIONS, Heart)}
+          {lnMarketsAuth && renderNavButton(LN_MARKETS, Activity)}
           {renderNavButton(CHAT, MessageCircle)}
           {renderNavButton(SETTINGS, Settings)}
           <LogoutButton />

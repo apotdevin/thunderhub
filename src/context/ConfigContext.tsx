@@ -33,6 +33,7 @@ export type maxSatValueType = 'auto' | 1000000 | 5000000 | 10000000 | 16000000;
 type State = {
   currency: string;
   theme: string;
+  lnMarketsAuth: boolean;
   sidebar: boolean;
   fetchFees: boolean;
   fetchPrices: boolean;
@@ -50,7 +51,7 @@ type State = {
 };
 
 type ConfigInitProps = {
-  initialConfig: string;
+  initialConfig: { theme: string };
 };
 
 type ActionType =
@@ -58,6 +59,7 @@ type ActionType =
       type: 'change' | 'initChange';
       currency?: string;
       theme?: string;
+      lnMarketsAuth?: boolean;
       sidebar?: boolean;
       fetchFees?: boolean;
       fetchPrices?: boolean;
@@ -91,6 +93,7 @@ const {
 const initialState: State = {
   currency: currencyTypes.indexOf(defC) > -1 ? defC : 'sat',
   theme: themeTypes.indexOf(defT) > -1 ? defT : 'dark',
+  lnMarketsAuth: false,
   sidebar: true,
   fetchFees,
   fetchPrices,
@@ -121,7 +124,10 @@ const stateReducer = (state: State, action: ActionType): State => {
         ...state,
         ...settings,
       };
-      localStorage.setItem('config', JSON.stringify(omit(newState, 'theme')));
+      localStorage.setItem(
+        'config',
+        JSON.stringify(omit(newState, 'theme', 'lnMarketsAuth'))
+      );
       return newState;
     }
     case 'themeChange': {
@@ -144,11 +150,14 @@ const stateReducer = (state: State, action: ActionType): State => {
 
 const ConfigProvider: React.FC<ConfigInitProps> = ({
   children,
-  initialConfig,
+  initialConfig = { theme: 'dark' },
 }) => {
   const [state, dispatch] = useReducer(stateReducer, {
     ...initialState,
-    theme: themeTypes.indexOf(initialConfig) > -1 ? initialConfig : 'dark',
+    theme:
+      themeTypes.indexOf(initialConfig.theme) > -1
+        ? initialConfig.theme
+        : 'dark',
   });
 
   useEffect(() => {
