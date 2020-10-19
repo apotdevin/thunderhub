@@ -125,16 +125,38 @@ export const CloseChannel = ({
       </SingleLine>
       <Separation />
       <SingleLine>
-        <Sub4Title>Fee:</Sub4Title>
+        <Sub4Title>Force Close Channel:</Sub4Title>
       </SingleLine>
       <MultiButton>
-        {fetchFees &&
-          !dontShow &&
-          renderButton(() => setIsType('none'), 'Auto', isType === 'none')}
-        {renderButton(() => setIsType('fee'), 'Fee', isType === 'fee')}
-        {renderButton(() => setIsType('target'), 'Target', isType === 'target')}
+        {renderButton(
+          () => {
+            setAmount(0);
+            setIsForce(true);
+          },
+          'Yes',
+          isForce
+        )}
+        {renderButton(() => setIsForce(false), 'No', !isForce)}
       </MultiButton>
-      {isType === 'none' && (
+      {!isForce && (
+        <>
+          <SingleLine>
+            <Sub4Title>Fee:</Sub4Title>
+          </SingleLine>
+          <MultiButton>
+            {fetchFees &&
+              !dontShow &&
+              renderButton(() => setIsType('none'), 'Auto', isType === 'none')}
+            {renderButton(() => setIsType('fee'), 'Fee', isType === 'fee')}
+            {renderButton(
+              () => setIsType('target'),
+              'Target',
+              isType === 'target'
+            )}
+          </MultiButton>
+        </>
+      )}
+      {isType === 'none' && !isForce && (
         <>
           <SingleLine>
             <Sub4Title>Fee Amount:</Sub4Title>
@@ -159,7 +181,7 @@ export const CloseChannel = ({
           </MultiButton>
         </>
       )}
-      {isType !== 'none' && (
+      {isType !== 'none' && !isForce && (
         <>
           <SingleLine>
             <Sub4Title>
@@ -168,6 +190,7 @@ export const CloseChannel = ({
           </SingleLine>
           <SingleLine>
             <Input
+              value={amount || undefined}
               placeholder={isType === 'target' ? 'Blocks' : 'Sats/Byte'}
               type={'number'}
               onChange={e => setAmount(Number(e.target.value))}
@@ -175,13 +198,6 @@ export const CloseChannel = ({
           </SingleLine>
         </>
       )}
-      <SingleLine>
-        <Sub4Title>Force Close Channel:</Sub4Title>
-      </SingleLine>
-      <MultiButton>
-        {renderButton(() => setIsForce(true), 'Yes', isForce)}
-        {renderButton(() => setIsForce(false), 'No', !isForce)}
-      </MultiButton>
       <Separation />
       <CenterLine>
         <ColorButton
@@ -192,6 +208,7 @@ export const CloseChannel = ({
           Cancel
         </ColorButton>
         <ColorButton
+          disabled={!amount && !isForce}
           arrow={true}
           withMargin={'4px'}
           withBorder={true}
