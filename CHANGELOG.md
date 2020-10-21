@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.16](https://github.com/apotdevin/thunderhub/compare/v0.9.15...v0.9.16) (2020-10-21)
+
+
+### Bug Fixes
+
+* 🐛 missed version bump ([f6a9211](https://github.com/apotdevin/thunderhub/commit/f6a92111acdefe5c969f5d5fb9a6237366e216dd))
+
+
+### Refactoring
+
+* ♻️ close channel modal ([ed58344](https://github.com/apotdevin/thunderhub/commit/ed583441d3f96672c7909c71c754e9e3052ec225))
+* ♻️ lnauth ([c226bce](https://github.com/apotdevin/thunderhub/commit/c226bcee55664026efcfe5fc8755f6d5728ce788))
+
+
+### Improvements
+
+* 🔧 add build tags ([ce37bc9](https://github.com/apotdevin/thunderhub/commit/ce37bc94c04ccba4b963c9759a414e3d207d123e))
+* 🔧 update deps ([bf22a7f](https://github.com/apotdevin/thunderhub/commit/bf22a7f189fa84f149508042b2132e7598cd3e79))
+* 🔧 update deps ([40cfcb7](https://github.com/apotdevin/thunderhub/commit/40cfcb7c538d907c3ab0cd99648661512e34867c))
+
 ### [0.9.14](https://github.com/apotdevin/thunderhub/compare/v0.9.13...v0.9.14) (2020-09-23)
 
 
