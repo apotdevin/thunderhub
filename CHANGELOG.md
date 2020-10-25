@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.17](https://github.com/apotdevin/thunderhub/compare/v0.9.16...v0.9.17) (2020-10-25)
+
+
+### Bug Fixes
+
+* 🐛 downgrade balanceofsatoshis ([6cb76d5](https://github.com/apotdevin/thunderhub/commit/6cb76d56ee182e8dfa81e917efed74951c61a983))
+
 ### [0.9.16](https://github.com/apotdevin/thunderhub/compare/v0.9.15...v0.9.16) (2020-10-21)
 
 
