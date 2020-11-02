@@ -3,39 +3,18 @@ import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { SimpleBalance } from 'src/views/balance/SimpleBalance';
 import {
   CardWithTitle,
-  Card,
   SubTitle,
   SingleLine,
   SmallButton,
 } from 'src/components/generic/Styled';
-import { Text } from 'src/components/typography/Styled';
 import { AdvancedBalance } from 'src/views/balance/AdvancedBalance';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { GET_CHANNELS } from 'src/graphql/queries/getChannels';
-import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { GET_NODE_INFO } from 'src/graphql/queries/getNodeInfo';
 
 const BalanceView = () => {
-  const { minorVersion } = useNodeInfo();
   const [advancedType, advancedTypeSet] = useState(false);
-
-  if (minorVersion < 9) {
-    return (
-      <CardWithTitle>
-        <SingleLine>
-          <SubTitle>Rebalance</SubTitle>
-        </SingleLine>
-        <Card>
-          <Text>
-            Channel balancing is only available for nodes with LND versions
-            0.9.0-beta and up.
-          </Text>
-          <Text>If you want to use this feature please update your node.</Text>
-        </Card>
-      </CardWithTitle>
-    );
-  }
 
   return (
     <CardWithTitle>

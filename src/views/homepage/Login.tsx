@@ -8,6 +8,8 @@ import { useGetSessionTokenLazyQuery } from 'src/graphql/queries/__generated__/g
 import { getErrorContent } from 'src/utils/error';
 import { Lock } from 'react-feather';
 import { ServerAccountType } from 'src/graphql/types';
+import { getVersion } from 'src/utils/version';
+import { useLogoutMutation } from 'src/graphql/mutations/__generated__/logout.generated';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../components/input';
@@ -48,6 +50,8 @@ export const Login = ({ account }: LoginProps) => {
     },
   });
 
+  const [logout] = useLogoutMutation();
+
   const [
     getSessionToken,
     { data: sData, loading: sLoading },
@@ -65,10 +69,17 @@ export const Login = ({ account }: LoginProps) => {
   }, [sLoading, sData, push, getCanConnect, account]);
 
   useEffect(() => {
-    if (!loading && data && data.getNodeInfo) {
+    if (loading || !data?.getNodeInfo?.version) return;
+    const { mayor, minor } = getVersion(data.getNodeInfo.version);
+    if (mayor <= 0 && minor < 11) {
+      toast.error(
+        'ThunderHub supports LND version 0.11.0 and higher. Please update your node, you are in risk of losing funds.'
+      );
+      logout();
+    } else {
       push(appendBasePath('/home'));
     }
-  }, [data, loading, pass, account, push]);
+  }, [data, loading, pass, account, push, logout]);
 
   if (!account) return null;
 

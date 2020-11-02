@@ -7,19 +7,16 @@ import { ChatFetcher } from 'src/components/chat/ChatFetcher';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { GET_MESSAGES } from 'src/graphql/queries/getMessages';
-import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { useChatState } from '../src/context/ChatContext';
 import { separateBySender, getSenders } from '../src/utils/chat';
 import {
   CardWithTitle,
   SubTitle,
-  Card,
   SingleLine,
 } from '../src/components/generic/Styled';
 import { Contacts } from '../src/views/chat/Contacts';
 import { ChatBox } from '../src/views/chat/ChatBox';
 import { ChatStart } from '../src/views/chat/ChatStart';
-import { Text } from '../src/components/typography/Styled';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ChatCard } from '../src/views/chat/Chat.styled';
 import { ViewSwitch } from '../src/components/viewSwitch/ViewSwitch';
@@ -59,7 +56,6 @@ const reducer = (state: State, action: Action): State => {
 };
 
 const ChatView = () => {
-  const { minorVersion } = useNodeInfo();
   const { chats, sender, sentChats, initialized } = useChatState();
   const bySender = separateBySender([...chats, ...sentChats]);
   const senders = getSenders(bySender) || [];
@@ -72,23 +68,6 @@ const ChatView = () => {
 
   if (!initialized) {
     return <LoadingCard title={'Chats'} />;
-  }
-
-  if (minorVersion < 9 && initialized) {
-    return (
-      <CardWithTitle>
-        <SingleLine>
-          <SubTitle>Chat</SubTitle>
-        </SingleLine>
-        <Card>
-          <Text>
-            Chatting with other nodes is only available for nodes with LND
-            versions 0.9.0-beta and up.
-          </Text>
-          <Text>If you want to use this feature please update your node.</Text>
-        </Card>
-      </CardWithTitle>
-    );
   }
 
   const renderChats = () => {
