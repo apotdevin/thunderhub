@@ -35,9 +35,9 @@ export const OpenChannelCard = ({
   const [fee, setFee] = useState(0);
   const [publicKey, setPublicKey] = useState(initialPublicKey);
   const [privateChannel, setPrivateChannel] = useState(false);
-  const [type, setType] = useState(dontShow || !fetchFees ? 'fee' : 'none');
+  const [type, setType] = useState('fee');
 
-  const [openChannel] = useOpenChannelMutation({
+  const [openChannel, { loading }] = useOpenChannelMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: () => {
       toast.success('Channel Opened');
@@ -193,7 +193,9 @@ export const OpenChannelCard = ({
       </InputWithDeco>
       <Separation />
       <ColorButton
+        loading={loading}
         fullWidth={true}
+        disabled={!canOpen || loading}
         onClick={() =>
           openChannel({
             variables: {
@@ -205,7 +207,6 @@ export const OpenChannelCard = ({
             },
           })
         }
-        disabled={!canOpen}
       >
         Open Channel
         <ChevronRight size={18} />

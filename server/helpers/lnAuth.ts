@@ -9,7 +9,6 @@ import { enc } from 'crypto-js';
 import * as bip39 from 'bip39';
 import * as bip32 from 'bip32';
 import * as secp256k1 from 'secp256k1';
-import { BIP32Interface } from 'bip32';
 import { appUrls } from 'server/utils/appUrls';
 import { decodeLnUrl } from 'src/utils/url';
 import { to } from './async';
@@ -60,7 +59,7 @@ export const lnAuthUrlGenerator = async (
   const base58 = bip39.mnemonicToSeedSync(secretKey);
 
   // Derive private seed from previous private seed and path
-  const node: BIP32Interface = bip32.fromSeed(base58);
+  const node: bip32.BIP32Interface = bip32.fromSeed(base58);
   const derived = node.derivePath(
     `m/138/${indexes[0]}/${indexes[1]}/${indexes[2]}/${indexes[3]}`
   );

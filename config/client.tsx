@@ -7,6 +7,7 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client';
 import getConfig from 'next/config';
+import possibleTypes from 'src/graphql/fragmentTypes.json';
 
 const { publicRuntimeConfig } = getConfig();
 const { apiUrl: uri } = publicRuntimeConfig;
@@ -41,9 +42,7 @@ function createApolloClient(context?: ResolverContext) {
     credentials: 'same-origin',
     ssrMode: typeof window === 'undefined',
     link: createIsomorphLink(context),
-    cache: new InMemoryCache({
-      possibleTypes: { Transaction: ['InvoiceType', 'PaymentType'] },
-    }),
+    cache: new InMemoryCache(possibleTypes),
     defaultOptions: {
       query: {
         fetchPolicy: 'cache-first',

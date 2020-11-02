@@ -39,6 +39,27 @@ export const copyLink = (text: string) => (
   </CopyToClipboard>
 );
 
+export const getAddressLink = (transaction: string | null | undefined) => {
+  if (!transaction) return null;
+  if (disableLinks) {
+    return (
+      <>
+        {shorten(transaction)}
+        {copyLink(transaction)}
+      </>
+    );
+  }
+  const link = `${appUrls.blockchainAddress}${transaction}`;
+  return (
+    <>
+      <SmallLink href={link} target="_blank">
+        {shorten(transaction)}
+      </SmallLink>
+      {copyLink(transaction)}
+    </>
+  );
+};
+
 export const getTransactionLink = (transaction: string | null | undefined) => {
   if (!transaction) return null;
   if (disableLinks) {

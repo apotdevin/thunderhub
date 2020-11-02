@@ -18,16 +18,22 @@ const QRCodeReader = dynamic(() => import('src/components/qrReader'), {
   },
 });
 
-export const Pay = () => {
+type PayProps = {
+  predefinedRequest?: string;
+  payCallback?: () => void;
+};
+
+export const Pay = ({ predefinedRequest, payCallback }: PayProps) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const [request, setRequest] = useState<string>('');
+  const [request, setRequest] = useState<string>(predefinedRequest || '');
   const [peers, setPeers] = useState<string[]>([]);
   const [fee, setFee] = useState<number>(1);
   const [paths, setPaths] = useState<number>(1);
 
   const [pay, { loading }] = useBosPayMutation({
     onCompleted: () => {
+      payCallback && payCallback();
       toast.success('Payment Sent');
       setRequest('');
     },
@@ -48,23 +54,27 @@ export const Pay = () => {
 
   return (
     <>
-      <SingleLine>
-        <InputWithDeco
-          title={'Request'}
-          value={request}
-          placeholder={'Invoice'}
-          inputCallback={value => setRequest(value)}
-          onEnter={() => handleEnter()}
-          inputMaxWidth={'440px'}
-        />
-        <ColorButton
-          withMargin={'0 0 0 8px'}
-          onClick={() => setModalOpen(true)}
-        >
-          <Camera size={18} />
-        </ColorButton>
-      </SingleLine>
-      <Separation />
+      {!predefinedRequest && (
+        <>
+          <SingleLine>
+            <InputWithDeco
+              title={'Request'}
+              value={request}
+              placeholder={'Invoice'}
+              inputCallback={value => setRequest(value)}
+              onEnter={() => handleEnter()}
+              inputMaxWidth={'440px'}
+            />
+            <ColorButton
+              withMargin={'0 0 0 8px'}
+              onClick={() => setModalOpen(true)}
+            >
+              <Camera size={18} />
+            </ColorButton>
+          </SingleLine>
+          <Separation />
+        </>
+      )}
       <InputWithDeco
         title={'Max Fee'}
         value={fee}
