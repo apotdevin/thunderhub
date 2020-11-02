@@ -73,10 +73,14 @@ const RenderIntro = () => {
 };
 
 export const Accounts = () => {
-  const { push } = useRouter();
+  const { push, prefetch } = useRouter();
   const [newAccount, setNewAccount] = React.useState<ServerAccountType | null>(
     null
   );
+
+  React.useEffect(() => {
+    prefetch(appendBasePath('/home'));
+  }, [prefetch]);
 
   const {
     data: accountData,
