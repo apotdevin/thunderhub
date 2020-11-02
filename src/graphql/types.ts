@@ -41,6 +41,8 @@ export type PermissionsType = {
 
 export type Query = {
   __typename?: 'Query';
+  getBoltzSwapStatus: Array<Maybe<BoltzSwap>>;
+  getBoltzInfo: BoltzInfoType;
   getLnMarketsStatus: Scalars['String'];
   getLnMarketsUrl: Scalars['String'];
   getLnMarketsUserInfo?: Maybe<LnMarketsUserInfo>;
@@ -86,6 +88,11 @@ export type Query = {
   getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
   getAccount?: Maybe<ServerAccountType>;
   getLatestVersion?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetBoltzSwapStatusArgs = {
+  ids: Array<Maybe<Scalars['String']>>;
 };
 
 
@@ -205,6 +212,8 @@ export type QueryGetSessionTokenArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  claimBoltzTransaction: Scalars['String'];
+  createBoltzReverseSwap: CreateBoltzReverseSwapType;
   lnMarketsDeposit: Scalars['Boolean'];
   lnMarketsWithdraw: Scalars['Boolean'];
   lnMarketsLogin: AuthResponse;
@@ -232,6 +241,22 @@ export type Mutation = {
   sendMessage?: Maybe<Scalars['Int']>;
   logout: Scalars['Boolean'];
   createMacaroon?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationClaimBoltzTransactionArgs = {
+  redeem: Scalars['String'];
+  transaction: Scalars['String'];
+  preimage: Scalars['String'];
+  privateKey: Scalars['String'];
+  destination: Scalars['String'];
+  fee: Scalars['Int'];
+};
+
+
+export type MutationCreateBoltzReverseSwapArgs = {
+  amount: Scalars['Int'];
+  address?: Maybe<Scalars['String']>;
 };
 
 
@@ -1080,4 +1105,47 @@ export type LnMarketsUserInfo = {
   username?: Maybe<Scalars['String']>;
   linkingpublickey?: Maybe<Scalars['String']>;
   last_ip?: Maybe<Scalars['String']>;
+};
+
+export type BoltzInfoType = {
+  __typename?: 'BoltzInfoType';
+  max: Scalars['Int'];
+  min: Scalars['Int'];
+  feePercent: Scalars['Float'];
+};
+
+export type BoltzSwapTransaction = {
+  __typename?: 'BoltzSwapTransaction';
+  id?: Maybe<Scalars['String']>;
+  hex?: Maybe<Scalars['String']>;
+  eta?: Maybe<Scalars['Int']>;
+};
+
+export type BoltzSwapStatus = {
+  __typename?: 'BoltzSwapStatus';
+  status: Scalars['String'];
+  transaction?: Maybe<BoltzSwapTransaction>;
+};
+
+export type BoltzSwap = {
+  __typename?: 'BoltzSwap';
+  id?: Maybe<Scalars['String']>;
+  boltz?: Maybe<BoltzSwapStatus>;
+};
+
+export type CreateBoltzReverseSwapType = {
+  __typename?: 'CreateBoltzReverseSwapType';
+  id: Scalars['String'];
+  invoice: Scalars['String'];
+  redeemScript: Scalars['String'];
+  onchainAmount: Scalars['Int'];
+  timeoutBlockHeight: Scalars['Int'];
+  lockupAddress: Scalars['String'];
+  minerFeeInvoice?: Maybe<Scalars['String']>;
+  decodedInvoice?: Maybe<DecodeType>;
+  receivingAddress: Scalars['String'];
+  preimage?: Maybe<Scalars['String']>;
+  preimageHash?: Maybe<Scalars['String']>;
+  privateKey?: Maybe<Scalars['String']>;
+  publicKey?: Maybe<Scalars['String']>;
 };

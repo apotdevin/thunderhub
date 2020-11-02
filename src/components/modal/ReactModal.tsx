@@ -21,6 +21,7 @@ const generalCSS = css`
   outline: none;
   max-height: 80%;
   overflow-y: auto;
+  border: 1px solid ${themeColors.grey8};
 
   @media (${mediaWidths.mobile}) {
     /* top: 100%; */
