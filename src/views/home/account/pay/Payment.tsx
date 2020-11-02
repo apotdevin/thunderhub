@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import {
   MultiButton,
@@ -22,10 +21,6 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
   const [request, setRequest] = useState<string>('');
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [isKeysend, setIsKeysend] = useState<boolean>(false);
-
-  const { minorVersion } = useNodeInfo();
-
-  const canKeysend = minorVersion >= 9;
 
   const handleClick = () => {
     if (request === '') return;
@@ -79,24 +74,19 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
 
   return (
     <>
-      {canKeysend && (
-        <InputWithDeco title={'Is Keysend'} noInput={true}>
-          <MultiButton>
-            <SingleButton
-              selected={isKeysend}
-              onClick={() => setIsKeysend(true)}
-            >
-              Yes
-            </SingleButton>
-            <SingleButton
-              selected={!isKeysend}
-              onClick={() => setIsKeysend(false)}
-            >
-              No
-            </SingleButton>
-          </MultiButton>
-        </InputWithDeco>
-      )}
+      <InputWithDeco title={'Is Keysend'} noInput={true}>
+        <MultiButton>
+          <SingleButton selected={isKeysend} onClick={() => setIsKeysend(true)}>
+            Yes
+          </SingleButton>
+          <SingleButton
+            selected={!isKeysend}
+            onClick={() => setIsKeysend(false)}
+          >
+            No
+          </SingleButton>
+        </MultiButton>
+      </InputWithDeco>
       {renderContent()}
       <Modal
         isOpen={modalOpen}

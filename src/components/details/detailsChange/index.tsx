@@ -4,7 +4,6 @@ import { ChevronRight } from 'react-feather';
 import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
-import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { getErrorContent } from 'src/utils/error';
 import { RightAlign } from '../../generic/Styled';
 
@@ -13,10 +12,6 @@ type DetailsChangeProps = {
 };
 
 export const DetailsChange = ({ callback }: DetailsChangeProps) => {
-  const { minorVersion, revision } = useNodeInfo();
-  const canMax = (minorVersion === 7 && revision > 1) || minorVersion > 7;
-  const canMin = (minorVersion === 8 && revision > 2) || minorVersion > 8;
-
   const [baseFee, setBaseFee] = useState(0);
   const [feeRate, setFeeRate] = useState(0);
   const [cltv, setCLTV] = useState(0);
@@ -67,28 +62,25 @@ export const DetailsChange = ({ callback }: DetailsChangeProps) => {
         inputType={'number'}
         inputCallback={value => setCLTV(Number(value))}
       />
-      {canMax && (
-        <InputWithDeco
-          title={'Max HTLC'}
-          value={max}
-          placeholder={'sats'}
-          amount={max}
-          override={'sat'}
-          inputType={'number'}
-          inputCallback={value => setMax(Number(value))}
-        />
-      )}
-      {canMin && (
-        <InputWithDeco
-          title={'Min HTLC'}
-          value={min}
-          placeholder={'sats'}
-          amount={min}
-          override={'sat'}
-          inputType={'number'}
-          inputCallback={value => setMin(Number(value))}
-        />
-      )}
+      <InputWithDeco
+        title={'Max HTLC'}
+        value={max}
+        placeholder={'sats'}
+        amount={max}
+        override={'sat'}
+        inputType={'number'}
+        inputCallback={value => setMax(Number(value))}
+      />
+      <InputWithDeco
+        title={'Min HTLC'}
+        value={min}
+        placeholder={'sats'}
+        amount={min}
+        override={'sat'}
+        inputType={'number'}
+        inputCallback={value => setMin(Number(value))}
+      />
+
       <RightAlign>
         <ColorButton
           onClick={() =>
@@ -97,14 +89,12 @@ export const DetailsChange = ({ callback }: DetailsChangeProps) => {
                 ...(baseFee !== 0 && { base_fee_tokens: baseFee }),
                 ...(feeRate !== 0 && { fee_rate: feeRate }),
                 ...(cltv !== 0 && { cltv_delta: cltv }),
-                ...(max !== 0 &&
-                  canMax && {
-                    max_htlc_mtokens: (max * 1000).toString(),
-                  }),
-                ...(min !== 0 &&
-                  canMin && {
-                    min_htlc_mtokens: (min * 1000).toString(),
-                  }),
+                ...(max !== 0 && {
+                  max_htlc_mtokens: (max * 1000).toString(),
+                }),
+                ...(min !== 0 && {
+                  min_htlc_mtokens: (min * 1000).toString(),
+                }),
               },
             })
           }

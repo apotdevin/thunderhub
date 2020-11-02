@@ -1,22 +1,18 @@
 import * as React from 'react';
 import { useGetWalletInfoQuery } from 'src/graphql/queries/__generated__/getWalletInfo.generated';
-import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import {
   CardWithTitle,
   SubTitle,
   Card,
   Sub4Title,
   Separation,
-  DarkSubTitle,
 } from '../../components/generic/Styled';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { renderLine } from '../../components/generic/helpers';
 
 export const WalletVersion = () => {
-  const { minorVersion } = useNodeInfo();
   const { data, loading, error } = useGetWalletInfoQuery({
     ssr: false,
-    skip: minorVersion < 10,
   });
 
   const getStatus = (status: boolean) => (status ? 'Enabled' : 'Disabled');
@@ -26,17 +22,6 @@ export const WalletVersion = () => {
   }
 
   const renderContent = () => {
-    if (minorVersion < 10) {
-      return (
-        <Card>
-          <DarkSubTitle>
-            Update to LND version 0.10.0 or higher to see your wallet build
-            info.
-          </DarkSubTitle>
-        </Card>
-      );
-    }
-
     if (loading || !data?.getWalletInfo) {
       return <LoadingCard />;
     }

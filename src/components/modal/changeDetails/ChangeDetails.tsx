@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
 import { getErrorContent } from 'src/utils/error';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
-import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 
 type ChangeDetailsType = {
@@ -27,10 +26,6 @@ export const ChangeDetails = ({
   fee_rate,
   cltv_delta,
 }: ChangeDetailsType) => {
-  const { minorVersion, revision } = useNodeInfo();
-  const canMax = (minorVersion === 7 && revision > 1) || minorVersion > 7;
-  const canMin = (minorVersion === 8 && revision > 2) || minorVersion > 8;
-
   const base_fee = Number(base_fee_mtokens) / 1000;
   const max_htlc = Number(max_htlc_mtokens) / 1000;
   const min_htlc = Number(min_htlc_mtokens) / 1000;
@@ -89,28 +84,24 @@ export const ChangeDetails = ({
         inputType={'number'}
         inputCallback={value => setCLTV(Number(value))}
       />
-      {canMax && (
-        <InputWithDeco
-          title={'Max HTLC'}
-          value={newMax}
-          placeholder={'sats'}
-          amount={newMax}
-          override={'sat'}
-          inputType={'number'}
-          inputCallback={value => setMax(Number(value))}
-        />
-      )}
-      {canMin && (
-        <InputWithDeco
-          title={'Min HTLC'}
-          value={newMin}
-          placeholder={'sats'}
-          amount={newMin}
-          override={'sat'}
-          inputType={'number'}
-          inputCallback={value => setMin(Number(value))}
-        />
-      )}
+      <InputWithDeco
+        title={'Max HTLC'}
+        value={newMax}
+        placeholder={'sats'}
+        amount={newMax}
+        override={'sat'}
+        inputType={'number'}
+        inputCallback={value => setMax(Number(value))}
+      />
+      <InputWithDeco
+        title={'Min HTLC'}
+        value={newMin}
+        placeholder={'sats'}
+        amount={newMin}
+        override={'sat'}
+        inputType={'number'}
+        inputCallback={value => setMin(Number(value))}
+      />
       <ColorButton
         onClick={() =>
           updateFees({
@@ -124,10 +115,12 @@ export const ChangeDetails = ({
                 fee_rate: newFeeRate,
               }),
               ...(newCLTV !== 0 && { cltv_delta: newCLTV }),
-              ...(newMax !== 0 &&
-                canMax && { max_htlc_mtokens: (newMax * 1000).toString() }),
-              ...(newMin !== 0 &&
-                canMin && { min_htlc_mtokens: (newMin * 1000).toString() }),
+              ...(newMax !== 0 && {
+                max_htlc_mtokens: (newMax * 1000).toString(),
+              }),
+              ...(newMin !== 0 && {
+                min_htlc_mtokens: (newMin * 1000).toString(),
+              }),
             },
           })
         }
