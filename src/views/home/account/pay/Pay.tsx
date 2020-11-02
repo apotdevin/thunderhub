@@ -2,12 +2,25 @@ import React, { useState } from 'react';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { useBosPayMutation } from 'src/graphql/mutations/__generated__/bosPay.generated';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
-import { Separation } from 'src/components/generic/Styled';
+import { Separation, SingleLine } from 'src/components/generic/Styled';
 import { toast } from 'react-toastify';
 import { ChannelSelect } from 'src/components/select/specific/ChannelSelect';
 import { getErrorContent } from 'src/utils/error';
+import Modal from 'src/components/modal/ReactModal';
+import dynamic from 'next/dynamic';
+import { LoadingCard } from 'src/components/loading/LoadingCard';
+import { Camera } from 'react-feather';
+
+const QRCodeReader = dynamic(() => import('src/components/qrReader'), {
+  ssr: false,
+  loading: function Loading() {
+    return <LoadingCard noCard={true} />;
+  },
+});
 
 export const Pay = () => {
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
   const [request, setRequest] = useState<string>('');
   const [peers, setPeers] = useState<string[]>([]);
   const [fee, setFee] = useState<number>(1);
@@ -35,13 +48,22 @@ export const Pay = () => {
 
   return (
     <>
-      <InputWithDeco
-        title={'Request'}
-        value={request}
-        placeholder={'Invoice'}
-        inputCallback={value => setRequest(value)}
-        onEnter={() => handleEnter()}
-      />
+      <SingleLine>
+        <InputWithDeco
+          title={'Request'}
+          value={request}
+          placeholder={'Invoice'}
+          inputCallback={value => setRequest(value)}
+          onEnter={() => handleEnter()}
+          inputMaxWidth={'440px'}
+        />
+        <ColorButton
+          withMargin={'0 0 0 8px'}
+          onClick={() => setModalOpen(true)}
+        >
+          <Camera size={18} />
+        </ColorButton>
+      </SingleLine>
       <Separation />
       <InputWithDeco
         title={'Max Fee'}
@@ -76,6 +98,25 @@ export const Pay = () => {
       >
         Pay
       </ColorButton>
+      <Modal
+        isOpen={modalOpen}
+        closeCallback={() => {
+          setModalOpen(false);
+        }}
+      >
+        <QRCodeReader
+          onScan={value => {
+            setRequest(value);
+            setModalOpen(false);
+          }}
+          onError={() => {
+            toast.error(
+              'Error loading QR Reader. Check your browser permissions'
+            );
+            setModalOpen(false);
+          }}
+        />
+      </Modal>
     </>
   );
 };
