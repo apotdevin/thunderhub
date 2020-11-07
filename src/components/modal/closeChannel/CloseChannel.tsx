@@ -86,7 +86,7 @@ export const CloseChannel = ({
       <SubTitle>Are you sure you want to close the channel?</SubTitle>
       <ColorButton
         fullWidth={true}
-        disabled={loading}
+        disabled={loading || !amount}
         loading={loading}
         withMargin={'16px 4px 4px'}
         color={'red'}
@@ -95,11 +95,9 @@ export const CloseChannel = ({
             variables: {
               id: channelId,
               forceClose: isForce,
-              ...(isType !== 'none'
-                ? isType === 'fee'
-                  ? { tokens: amount }
-                  : { target: amount }
-                : {}),
+              ...(isType === 'target'
+                ? { target: amount }
+                : { tokens: amount }),
             },
           })
         }
@@ -146,10 +144,27 @@ export const CloseChannel = ({
           <MultiButton>
             {fetchFees &&
               !dontShow &&
-              renderButton(() => setIsType('none'), 'Auto', isType === 'none')}
-            {renderButton(() => setIsType('fee'), 'Fee', isType === 'fee')}
+              renderButton(
+                () => {
+                  setAmount(0);
+                  setIsType('none');
+                },
+                'Auto',
+                isType === 'none'
+              )}
             {renderButton(
-              () => setIsType('target'),
+              () => {
+                setAmount(0);
+                setIsType('fee');
+              },
+              'Fee',
+              isType === 'fee'
+            )}
+            {renderButton(
+              () => {
+                setAmount(0);
+                setIsType('target');
+              },
               'Target',
               isType === 'target'
             )}
