@@ -46,9 +46,7 @@ export const CloseChannel = ({
   const { fast, halfHour, hour, dontShow } = useBitcoinFees();
 
   const [isForce, setIsForce] = useState<boolean>(false);
-  const [isType, setIsType] = useState<string>(
-    !fetchFees || dontShow ? 'fee' : 'none'
-  );
+  const [isType, setIsType] = useState<string>('fee');
   const [amount, setAmount] = useState<number>(0);
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
 
