@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useCloseChannelMutation } from 'src/graphql/mutations/__generated__/closeChannel.generated';
 import { useBitcoinFees } from 'src/hooks/UseBitcoinFees';
 import { useConfigState } from 'src/context/ConfigContext';
+import { renderLine } from 'src/components/generic/helpers';
 import {
   Separation,
   SingleLine,
@@ -84,6 +85,13 @@ export const CloseChannel = ({
     <WarningCard>
       <AlertTriangle size={32} color={'red'} />
       <SubTitle>Are you sure you want to close the channel?</SubTitle>
+      <Separation />
+      {renderLine(
+        'Type',
+        isType === 'none' ? 'Auto' : isType === 'fee' ? 'Fee' : 'Target'
+      )}
+      {renderLine(isType !== 'target' ? 'Fee (sats/vbyte)' : 'Blocks', amount)}
+      <Separation />
       <ColorButton
         fullWidth={true}
         disabled={loading || !amount}
