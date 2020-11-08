@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.1](https://github.com/apotdevin/thunderhub/compare/v0.10.0...v0.10.1) (2020-11-08)
+
+
+### Improvements
+
+* 🔧 update deps ([65cf6fc](https://github.com/apotdevin/thunderhub/commit/65cf6fc74983b2b1c306edf90da2523905d2e5b5))
+* 🔧 update node in docker images ([5fae679](https://github.com/apotdevin/thunderhub/commit/5fae6795d783d856ed368fc314a76d097c725c89))
+
 ## [0.10.0](https://github.com/apotdevin/thunderhub/compare/v0.9.17...v0.10.0) (2020-11-08)
 
 
