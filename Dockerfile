@@ -1,7 +1,7 @@
 # ---------------
 # Install Dependencies
 # ---------------
-FROM node:12.16-alpine as build
+FROM node:14.15-alpine as build
 
 # Install dependencies neccesary for node-gyp on node alpine
 RUN apk add --update --no-cache \
