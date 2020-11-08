@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.0](https://github.com/apotdevin/thunderhub/compare/v0.9.17...v0.10.0) (2020-11-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* 💥 🔧 drop support for lnd below 0.11.0
+
+### Bug Fixes
+
+* 🐛 close channel params ([8bc1cbc](https://github.com/apotdevin/thunderhub/commit/8bc1cbc5916ad72c3086242b6e53f99704014a69))
+
+
+### Improvements
+
+* 💥 🔧 drop support for lnd below 0.11.0 ([02f84a7](https://github.com/apotdevin/thunderhub/commit/02f84a71afb7ef6eb5fbcccbf525cf89062fa586))
+* 🔧 add qr reader ([16c6b4e](https://github.com/apotdevin/thunderhub/commit/16c6b4e88e90c0e3db9420dd12e4ab32ece73191))
+* 🔧 prefetch home ([531950c](https://github.com/apotdevin/thunderhub/commit/531950c4085f8022cc8afb435e95e5ad8f6aa3f5))
+* 🔧 show channel close fee ([e7062cf](https://github.com/apotdevin/thunderhub/commit/e7062cff9ef1b1d6a11b017a93c5393d25b17028))
+* 🔧 start with custom fee ([c1468ca](https://github.com/apotdevin/thunderhub/commit/c1468cae950845c91783343fc7629d8fdba59c62))
+* 🔧 update bos dep ([bd9e224](https://github.com/apotdevin/thunderhub/commit/bd9e224c28542b76187d05b32937e1739e860b03))
+* 🔧 update deps ([f963663](https://github.com/apotdevin/thunderhub/commit/f96366388c4924f28a7b09d9918fdd1f82f0e2f2))
+* 🔧 update deps ([fa68205](https://github.com/apotdevin/thunderhub/commit/fa68205d12d04b8703d9d818646d2c7f8c697bd3))
+
 ### [0.9.17](https://github.com/apotdevin/thunderhub/compare/v0.9.16...v0.9.17) (2020-10-25)
 
 
