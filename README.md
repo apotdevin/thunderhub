@@ -96,8 +96,8 @@ This repository consists of a **NextJS** server that handles both the backend **
 
 ## **Requirements**
 
-- Yarn/npm installed
-- Node installed (Version 10 or higher)
+- NPM installed
+- Node installed (Version 14.15 or higher)
 
 ---
 
