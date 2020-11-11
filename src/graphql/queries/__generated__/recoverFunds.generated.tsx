@@ -36,7 +36,7 @@ export const RecoverFundsDocument = gql`
  *   },
  * });
  */
-export function useRecoverFundsQuery(baseOptions?: Apollo.QueryHookOptions<RecoverFundsQuery, RecoverFundsQueryVariables>) {
+export function useRecoverFundsQuery(baseOptions: Apollo.QueryHookOptions<RecoverFundsQuery, RecoverFundsQueryVariables>) {
         return Apollo.useQuery<RecoverFundsQuery, RecoverFundsQueryVariables>(RecoverFundsDocument, baseOptions);
       }
 export function useRecoverFundsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecoverFundsQuery, RecoverFundsQueryVariables>) {

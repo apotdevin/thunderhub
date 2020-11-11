@@ -36,7 +36,7 @@ export const SignMessageDocument = gql`
  *   },
  * });
  */
-export function useSignMessageQuery(baseOptions?: Apollo.QueryHookOptions<SignMessageQuery, SignMessageQueryVariables>) {
+export function useSignMessageQuery(baseOptions: Apollo.QueryHookOptions<SignMessageQuery, SignMessageQueryVariables>) {
         return Apollo.useQuery<SignMessageQuery, SignMessageQueryVariables>(SignMessageDocument, baseOptions);
       }
 export function useSignMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SignMessageQuery, SignMessageQueryVariables>) {

@@ -20,7 +20,13 @@ export type GetAccountingReportQuery = (
 
 export const GetAccountingReportDocument = gql`
     query GetAccountingReport($category: String, $currency: String, $fiat: String, $month: String, $year: String) {
-  getAccountingReport(category: $category, currency: $currency, fiat: $fiat, month: $month, year: $year)
+  getAccountingReport(
+    category: $category
+    currency: $currency
+    fiat: $fiat
+    month: $month
+    year: $year
+  )
 }
     `;
 

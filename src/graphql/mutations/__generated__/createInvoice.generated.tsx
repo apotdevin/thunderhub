@@ -21,7 +21,11 @@ export type CreateInvoiceMutation = (
 
 export const CreateInvoiceDocument = gql`
     mutation CreateInvoice($amount: Int!, $description: String, $secondsUntil: Int) {
-  createInvoice(amount: $amount, description: $description, secondsUntil: $secondsUntil) {
+  createInvoice(
+    amount: $amount
+    description: $description
+    secondsUntil: $secondsUntil
+  ) {
     request
     id
   }

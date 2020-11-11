@@ -52,7 +52,7 @@ export const GetNodeDocument = gql`
  *   },
  * });
  */
-export function useGetNodeQuery(baseOptions?: Apollo.QueryHookOptions<GetNodeQuery, GetNodeQueryVariables>) {
+export function useGetNodeQuery(baseOptions: Apollo.QueryHookOptions<GetNodeQuery, GetNodeQueryVariables>) {
         return Apollo.useQuery<GetNodeQuery, GetNodeQueryVariables>(GetNodeDocument, baseOptions);
       }
 export function useGetNodeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNodeQuery, GetNodeQueryVariables>) {

@@ -182,7 +182,12 @@ export type PayLnUrlMutationResult = Apollo.MutationResult<PayLnUrlMutation>;
 export type PayLnUrlMutationOptions = Apollo.BaseMutationOptions<PayLnUrlMutation, PayLnUrlMutationVariables>;
 export const WithdrawLnUrlDocument = gql`
     mutation WithdrawLnUrl($callback: String!, $amount: Int!, $k1: String!, $description: String) {
-  lnUrlWithdraw(callback: $callback, amount: $amount, k1: $k1, description: $description)
+  lnUrlWithdraw(
+    callback: $callback
+    amount: $amount
+    k1: $k1
+    description: $description
+  )
 }
     `;
 export type WithdrawLnUrlMutationFn = Apollo.MutationFunction<WithdrawLnUrlMutation, WithdrawLnUrlMutationVariables>;

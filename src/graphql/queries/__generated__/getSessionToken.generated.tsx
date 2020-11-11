@@ -38,7 +38,7 @@ export const GetSessionTokenDocument = gql`
  *   },
  * });
  */
-export function useGetSessionTokenQuery(baseOptions?: Apollo.QueryHookOptions<GetSessionTokenQuery, GetSessionTokenQueryVariables>) {
+export function useGetSessionTokenQuery(baseOptions: Apollo.QueryHookOptions<GetSessionTokenQuery, GetSessionTokenQueryVariables>) {
         return Apollo.useQuery<GetSessionTokenQuery, GetSessionTokenQueryVariables>(GetSessionTokenDocument, baseOptions);
       }
 export function useGetSessionTokenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSessionTokenQuery, GetSessionTokenQueryVariables>) {

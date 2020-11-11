@@ -114,7 +114,7 @@ export const DecodeRequestDocument = gql`
  *   },
  * });
  */
-export function useDecodeRequestQuery(baseOptions?: Apollo.QueryHookOptions<DecodeRequestQuery, DecodeRequestQueryVariables>) {
+export function useDecodeRequestQuery(baseOptions: Apollo.QueryHookOptions<DecodeRequestQuery, DecodeRequestQueryVariables>) {
         return Apollo.useQuery<DecodeRequestQuery, DecodeRequestQueryVariables>(DecodeRequestDocument, baseOptions);
       }
 export function useDecodeRequestLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DecodeRequestQuery, DecodeRequestQueryVariables>) {

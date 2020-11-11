@@ -22,7 +22,12 @@ export type CloseChannelMutation = (
 
 export const CloseChannelDocument = gql`
     mutation CloseChannel($id: String!, $forceClose: Boolean, $target: Int, $tokens: Int) {
-  closeChannel(id: $id, forceClose: $forceClose, targetConfirmations: $target, tokensPerVByte: $tokens) {
+  closeChannel(
+    id: $id
+    forceClose: $forceClose
+    targetConfirmations: $target
+    tokensPerVByte: $tokens
+  ) {
     transactionId
     transactionOutputIndex
   }
