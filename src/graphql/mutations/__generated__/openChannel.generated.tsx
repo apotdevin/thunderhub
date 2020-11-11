@@ -23,7 +23,13 @@ export type OpenChannelMutation = (
 
 export const OpenChannelDocument = gql`
     mutation OpenChannel($amount: Int!, $partnerPublicKey: String!, $tokensPerVByte: Int, $isPrivate: Boolean, $pushTokens: Int) {
-  openChannel(amount: $amount, partnerPublicKey: $partnerPublicKey, tokensPerVByte: $tokensPerVByte, isPrivate: $isPrivate, pushTokens: $pushTokens) {
+  openChannel(
+    amount: $amount
+    partnerPublicKey: $partnerPublicKey
+    tokensPerVByte: $tokensPerVByte
+    isPrivate: $isPrivate
+    pushTokens: $pushTokens
+  ) {
     transactionId
     transactionOutputIndex
   }

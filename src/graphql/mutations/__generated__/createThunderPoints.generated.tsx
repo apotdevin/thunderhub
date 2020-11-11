@@ -19,7 +19,12 @@ export type CreateThunderPointsMutation = (
 
 export const CreateThunderPointsDocument = gql`
     mutation CreateThunderPoints($id: String!, $alias: String!, $uris: [String!]!, $public_key: String!) {
-  createThunderPoints(id: $id, alias: $alias, uris: $uris, public_key: $public_key)
+  createThunderPoints(
+    id: $id
+    alias: $alias
+    uris: $uris
+    public_key: $public_key
+  )
 }
     `;
 export type CreateThunderPointsMutationFn = Apollo.MutationFunction<CreateThunderPointsMutation, CreateThunderPointsMutationVariables>;

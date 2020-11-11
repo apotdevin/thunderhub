@@ -26,7 +26,12 @@ export type GetRoutesQuery = (
 
 export const GetRoutesDocument = gql`
     query GetRoutes($outgoing: String!, $incoming: String!, $tokens: Int!, $maxFee: Int) {
-  getRoutes(outgoing: $outgoing, incoming: $incoming, tokens: $tokens, maxFee: $maxFee) {
+  getRoutes(
+    outgoing: $outgoing
+    incoming: $incoming
+    tokens: $tokens
+    maxFee: $maxFee
+  ) {
     confidence
     fee
     fee_mtokens
@@ -68,7 +73,7 @@ export const GetRoutesDocument = gql`
  *   },
  * });
  */
-export function useGetRoutesQuery(baseOptions?: Apollo.QueryHookOptions<GetRoutesQuery, GetRoutesQueryVariables>) {
+export function useGetRoutesQuery(baseOptions: Apollo.QueryHookOptions<GetRoutesQuery, GetRoutesQueryVariables>) {
         return Apollo.useQuery<GetRoutesQuery, GetRoutesQueryVariables>(GetRoutesDocument, baseOptions);
       }
 export function useGetRoutesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRoutesQuery, GetRoutesQueryVariables>) {

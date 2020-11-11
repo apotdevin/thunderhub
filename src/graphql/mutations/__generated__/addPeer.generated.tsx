@@ -19,7 +19,12 @@ export type AddPeerMutation = (
 
 export const AddPeerDocument = gql`
     mutation AddPeer($url: String, $publicKey: String, $socket: String, $isTemporary: Boolean) {
-  addPeer(url: $url, publicKey: $publicKey, socket: $socket, isTemporary: $isTemporary)
+  addPeer(
+    url: $url
+    publicKey: $publicKey
+    socket: $socket
+    isTemporary: $isTemporary
+  )
 }
     `;
 export type AddPeerMutationFn = Apollo.MutationFunction<AddPeerMutation, AddPeerMutationVariables>;

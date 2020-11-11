@@ -36,7 +36,7 @@ export const VerifyBackupsDocument = gql`
  *   },
  * });
  */
-export function useVerifyBackupsQuery(baseOptions?: Apollo.QueryHookOptions<VerifyBackupsQuery, VerifyBackupsQueryVariables>) {
+export function useVerifyBackupsQuery(baseOptions: Apollo.QueryHookOptions<VerifyBackupsQuery, VerifyBackupsQueryVariables>) {
         return Apollo.useQuery<VerifyBackupsQuery, VerifyBackupsQueryVariables>(VerifyBackupsDocument, baseOptions);
       }
 export function useVerifyBackupsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VerifyBackupsQuery, VerifyBackupsQueryVariables>) {

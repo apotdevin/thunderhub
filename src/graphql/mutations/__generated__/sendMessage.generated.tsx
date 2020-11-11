@@ -20,7 +20,13 @@ export type SendMessageMutation = (
 
 export const SendMessageDocument = gql`
     mutation SendMessage($publicKey: String!, $message: String!, $messageType: String, $tokens: Int, $maxFee: Int) {
-  sendMessage(publicKey: $publicKey, message: $message, messageType: $messageType, tokens: $tokens, maxFee: $maxFee)
+  sendMessage(
+    publicKey: $publicKey
+    message: $message
+    messageType: $messageType
+    tokens: $tokens
+    maxFee: $maxFee
+  )
 }
     `;
 export type SendMessageMutationFn = Apollo.MutationFunction<SendMessageMutation, SendMessageMutationVariables>;

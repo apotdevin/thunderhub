@@ -38,7 +38,7 @@ export const VerifyMessageDocument = gql`
  *   },
  * });
  */
-export function useVerifyMessageQuery(baseOptions?: Apollo.QueryHookOptions<VerifyMessageQuery, VerifyMessageQueryVariables>) {
+export function useVerifyMessageQuery(baseOptions: Apollo.QueryHookOptions<VerifyMessageQuery, VerifyMessageQueryVariables>) {
         return Apollo.useQuery<VerifyMessageQuery, VerifyMessageQueryVariables>(VerifyMessageDocument, baseOptions);
       }
 export function useVerifyMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VerifyMessageQuery, VerifyMessageQueryVariables>) {

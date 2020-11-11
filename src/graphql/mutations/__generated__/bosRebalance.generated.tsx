@@ -36,7 +36,17 @@ export type BosRebalanceMutation = (
 
 export const BosRebalanceDocument = gql`
     mutation BosRebalance($avoid: [String], $in_through: String, $is_avoiding_high_inbound: Boolean, $max_fee: Int, $max_fee_rate: Int, $max_rebalance: Int, $node: String, $out_through: String, $target: Int) {
-  bosRebalance(avoid: $avoid, in_through: $in_through, is_avoiding_high_inbound: $is_avoiding_high_inbound, max_fee: $max_fee, max_fee_rate: $max_fee_rate, max_rebalance: $max_rebalance, node: $node, out_through: $out_through, target: $target) {
+  bosRebalance(
+    avoid: $avoid
+    in_through: $in_through
+    is_avoiding_high_inbound: $is_avoiding_high_inbound
+    max_fee: $max_fee
+    max_fee_rate: $max_fee_rate
+    max_rebalance: $max_rebalance
+    node: $node
+    out_through: $out_through
+    target: $target
+  ) {
     increase {
       increased_inbound_on
       liquidity_inbound

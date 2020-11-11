@@ -20,7 +20,13 @@ export type BosPayMutation = (
 
 export const BosPayDocument = gql`
     mutation BosPay($max_fee: Int!, $max_paths: Int!, $message: String, $out: [String], $request: String!) {
-  bosPay(max_fee: $max_fee, max_paths: $max_paths, message: $message, out: $out, request: $request)
+  bosPay(
+    max_fee: $max_fee
+    max_paths: $max_paths
+    message: $message
+    out: $out
+    request: $request
+  )
 }
     `;
 export type BosPayMutationFn = Apollo.MutationFunction<BosPayMutation, BosPayMutationVariables>;

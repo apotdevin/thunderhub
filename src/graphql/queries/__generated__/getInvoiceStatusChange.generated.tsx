@@ -36,7 +36,7 @@ export const GetInvoiceStatusChangeDocument = gql`
  *   },
  * });
  */
-export function useGetInvoiceStatusChangeQuery(baseOptions?: Apollo.QueryHookOptions<GetInvoiceStatusChangeQuery, GetInvoiceStatusChangeQueryVariables>) {
+export function useGetInvoiceStatusChangeQuery(baseOptions: Apollo.QueryHookOptions<GetInvoiceStatusChangeQuery, GetInvoiceStatusChangeQueryVariables>) {
         return Apollo.useQuery<GetInvoiceStatusChangeQuery, GetInvoiceStatusChangeQueryVariables>(GetInvoiceStatusChangeDocument, baseOptions);
       }
 export function useGetInvoiceStatusChangeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInvoiceStatusChangeQuery, GetInvoiceStatusChangeQueryVariables>) {
