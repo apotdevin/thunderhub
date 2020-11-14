@@ -1,14 +1,3 @@
-import { ForwardType } from 'server/types/ln-service.types';
-
-export interface ListProps {
-  [key: string]: ForwardType[];
-}
-
-export interface ReduceObjectProps {
-  fee: number;
-  tokens: number;
-}
-
 export interface FinalProps {
   fee: number;
   tokens: number;

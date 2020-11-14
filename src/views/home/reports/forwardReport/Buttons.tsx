@@ -9,6 +9,7 @@ import { ReportType, ReportDuration, FlowReportType } from './ForwardReport';
 interface ButtonProps {
   isTime: ReportDuration;
   isType: ReportType;
+  setDays: (days: number) => void;
   setIsTime: (text: ReportDuration) => void;
   setIsType: (text: ReportType) => void;
 }
@@ -16,13 +17,17 @@ interface ButtonProps {
 export const ButtonRow: React.FC<ButtonProps> = ({
   isTime,
   setIsTime,
+  setDays,
   isType,
   setIsType,
 }) => {
-  const timeButton = (time: ReportDuration, title: string) => (
+  const timeButton = (time: ReportDuration, title: string, days: number) => (
     <SingleButton
       withPadding={'4px 8px'}
-      onClick={() => setIsTime(time)}
+      onClick={() => {
+        setIsTime(time);
+        setDays(days);
+      }}
       selected={isTime === time}
     >
       {title}
@@ -42,12 +47,12 @@ export const ButtonRow: React.FC<ButtonProps> = ({
   return (
     <ResponsiveSingle>
       <MultiButton>
-        {timeButton('day', '1D')}
-        {timeButton('week', '1W')}
-        {timeButton('month', '1M')}
-        {timeButton('quarter_year', '3M')}
-        {timeButton('half_year', '6M')}
-        {timeButton('year', '1Y')}
+        {timeButton('day', '1D', 1)}
+        {timeButton('week', '1W', 7)}
+        {timeButton('month', '1M', 30)}
+        {timeButton('quarter_year', '3M', 90)}
+        {timeButton('half_year', '6M', 180)}
+        {timeButton('year', '1Y', 360)}
       </MultiButton>
       <MultiButton>
         {typeButton('amount', 'Amount')}

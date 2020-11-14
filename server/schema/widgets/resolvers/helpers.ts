@@ -1,37 +1,6 @@
 import { reduce, groupBy } from 'underscore';
 import { ForwardType } from 'server/types/ln-service.types';
-import {
-  ReduceObjectProps,
-  ListProps,
-  InOutProps,
-  InOutListProps,
-} from './interface';
-
-export const reduceForwardArray = (list: ListProps) => {
-  const reducedOrder = [];
-  for (const key in list) {
-    if (Object.prototype.hasOwnProperty.call(list, key)) {
-      const element: ForwardType[] = list[key];
-      const reducedArray: ReduceObjectProps = reduce(
-        element,
-        (a: ReduceObjectProps, b: ReduceObjectProps) => {
-          return {
-            fee: a.fee + b.fee,
-            tokens: a.tokens + b.tokens,
-          };
-        },
-        { fee: 0, tokens: 0 }
-      );
-      reducedOrder.push({
-        period: Number(key),
-        amount: element.length,
-        ...reducedArray,
-      });
-    }
-  }
-
-  return reducedOrder;
-};
+import { InOutProps, InOutListProps } from './interface';
 
 export const reduceInOutArray = (list: InOutListProps) => {
   const reducedOrder = [];

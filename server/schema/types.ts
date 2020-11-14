@@ -57,7 +57,6 @@ export const queryTypes = gql`
     getForwardsPastDays(days: Int!): [Forward]!
     getBitcoinPrice(logger: Boolean, currency: String): String
     getBitcoinFees(logger: Boolean): bitcoinFeeType
-    getForwardReport(time: String): String
     getForwardChannelsReport(time: String, order: String, type: String): String
     getInOut(time: String): InOutType
     getBackups: String
