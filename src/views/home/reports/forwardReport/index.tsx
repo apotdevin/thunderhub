@@ -25,6 +25,7 @@ export const CardContent = styled.div`
 
 export const ForwardBox = () => {
   const [isTime, setIsTime] = useState<ReportDuration>('month');
+  const [days, setDays] = useState<number>(30);
   const [isType, setIsType] = useState<ReportType>('amount');
 
   return (
@@ -36,10 +37,11 @@ export const ForwardBox = () => {
         <ButtonRow
           isTime={isTime}
           isType={isType}
+          setDays={setDays}
           setIsTime={setIsTime}
           setIsType={setIsType}
         />
-        <ForwardReport isTime={isTime} isType={isType} />
+        <ForwardReport days={days} isType={isType} />
         <Separation />
         <ForwardChannelsReport isTime={isTime} isType={isType} />
       </Card>

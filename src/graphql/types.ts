@@ -61,11 +61,9 @@ export type Query = {
   decodeRequest?: Maybe<DecodeType>;
   getWalletInfo?: Maybe<WalletInfoType>;
   getResume?: Maybe<GetResumeType>;
-  getForwards?: Maybe<GetForwardType>;
   getForwardsPastDays: Array<Maybe<Forward>>;
   getBitcoinPrice?: Maybe<Scalars['String']>;
   getBitcoinFees?: Maybe<BitcoinFeeType>;
-  getForwardReport?: Maybe<Scalars['String']>;
   getForwardChannelsReport?: Maybe<Scalars['String']>;
   getInOut?: Maybe<InOutType>;
   getBackups?: Maybe<Scalars['String']>;
@@ -128,11 +126,6 @@ export type QueryGetResumeArgs = {
 };
 
 
-export type QueryGetForwardsArgs = {
-  time?: Maybe<Scalars['String']>;
-};
-
-
 export type QueryGetForwardsPastDaysArgs = {
   days: Scalars['Int'];
 };
@@ -146,11 +139,6 @@ export type QueryGetBitcoinPriceArgs = {
 
 export type QueryGetBitcoinFeesArgs = {
   logger?: Maybe<Scalars['Boolean']>;
-};
-
-
-export type QueryGetForwardReportArgs = {
-  time?: Maybe<Scalars['String']>;
 };
 
 
@@ -777,21 +765,15 @@ export type NetworkInfoType = {
   totalCapacity?: Maybe<Scalars['String']>;
 };
 
-export type GetForwardType = {
-  __typename?: 'getForwardType';
-  token?: Maybe<Scalars['String']>;
-  forwards?: Maybe<Array<Maybe<ForwardType>>>;
-};
-
 export type Forward = {
   __typename?: 'Forward';
-  created_at?: Maybe<Scalars['String']>;
-  fee?: Maybe<Scalars['Int']>;
-  fee_mtokens?: Maybe<Scalars['String']>;
-  incoming_channel?: Maybe<Scalars['String']>;
-  mtokens?: Maybe<Scalars['String']>;
-  outgoing_channel?: Maybe<Scalars['String']>;
-  tokens?: Maybe<Scalars['Int']>;
+  created_at: Scalars['String'];
+  fee: Scalars['Int'];
+  fee_mtokens: Scalars['String'];
+  incoming_channel: Scalars['String'];
+  mtokens: Scalars['String'];
+  outgoing_channel: Scalars['String'];
+  tokens: Scalars['Int'];
   incoming_node?: Maybe<ForwardNodeType>;
   outgoing_node?: Maybe<ForwardNodeType>;
 };
@@ -805,19 +787,6 @@ export type ForwardNodeType = {
   updated_at?: Maybe<Scalars['String']>;
   channel_id?: Maybe<Scalars['String']>;
   public_key?: Maybe<Scalars['String']>;
-};
-
-export type ForwardType = {
-  __typename?: 'forwardType';
-  created_at?: Maybe<Scalars['String']>;
-  fee?: Maybe<Scalars['Int']>;
-  fee_mtokens?: Maybe<Scalars['String']>;
-  incoming_channel?: Maybe<Scalars['String']>;
-  mtokens?: Maybe<Scalars['String']>;
-  outgoing_channel?: Maybe<Scalars['String']>;
-  tokens?: Maybe<Scalars['Int']>;
-  incoming_channel_info?: Maybe<Channel>;
-  outgoing_channel_info?: Maybe<Channel>;
 };
 
 export type PaymentType = {

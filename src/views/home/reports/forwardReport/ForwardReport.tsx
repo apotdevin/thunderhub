@@ -8,8 +8,9 @@ import {
   VictoryTooltip,
 } from 'victory';
 import { toast } from 'react-toastify';
-import { useGetForwardReportQuery } from 'src/graphql/queries/__generated__/getForwardReport.generated';
 import { renderLine } from 'src/components/generic/helpers';
+import { useGetForwardsPastDaysQuery } from 'src/graphql/queries/__generated__/getForwardsPastDays.generated';
+import { Forward } from 'src/graphql/types';
 import {
   chartAxisColor,
   chartBarColor,
@@ -20,6 +21,7 @@ import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
+import { orderAndReducedArray } from './helpers';
 import { CardContent } from '.';
 
 export type ReportDuration =
@@ -33,27 +35,18 @@ export type ReportType = 'fee' | 'tokens' | 'amount';
 export type FlowReportType = 'tokens' | 'amount';
 
 interface Props {
-  isTime: ReportDuration;
+  days: number;
   isType: ReportType;
 }
 
-const timeMap: { [key: string]: string } = {
-  day: 'today',
-  week: 'this week',
-  month: 'this month',
-  quarter_year: 'these three months',
-  half_year: 'this half year',
-  year: 'this year',
-};
-
-export const ForwardReport = ({ isTime, isType }: Props) => {
+export const ForwardReport = ({ days, isType }: Props) => {
   const { theme, currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  const { data, loading } = useGetForwardReportQuery({
+  const { data, loading } = useGetForwardsPastDaysQuery({
     ssr: false,
-    variables: { time: isTime },
+    variables: { days },
     onError: error => toast.error(getErrorContent(error)),
   });
 
@@ -63,25 +56,20 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
 
   let domain = 24;
   let barWidth = 3;
-  if (isTime === 'week') {
+  if (days === 7) {
     domain = 7;
     barWidth = 15;
-  } else if (isTime === 'month') {
+  } else if (days === 30) {
     domain = 30;
-  } else if (isTime === 'quarter_year') {
+  } else if (days === 90) {
     domain = 90;
-  } else if (isTime === 'half_year') {
+  } else if (days === 180) {
     domain = 180;
     barWidth = 1;
-  } else if (isTime === 'year') {
+  } else if (days === 360) {
     domain = 360;
     barWidth = 1;
   }
-
-  // Should find a way to avoid JSON.parse
-  const parsedData: Array<{ [key in ReportType]: number }> = JSON.parse(
-    data.getForwardReport || '[]'
-  );
 
   const getLabelString = (value: number) => {
     if (isType === 'amount') {
@@ -90,14 +78,21 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
     return format({ amount: value });
   };
 
+  const reduced = orderAndReducedArray(
+    days,
+    data.getForwardsPastDays as Forward[]
+  );
+
   const total = getLabelString(
-    parsedData.map(x => x[isType]).reduce((a, c) => a + c, 0)
+    reduced.map(x => x[isType]).reduce((a, c) => a + c, 0)
   );
 
   const renderContent = () => {
-    if (parsedData.length <= 0) {
+    if (data.getForwardsPastDays.length <= 0) {
       return (
-        <p>{`Your node has not forwarded any payments ${timeMap[isTime]}.`}</p>
+        <p>{`Your node has not forwarded any payments in the past ${days} ${
+          days > 1 ? 'days' : 'day'
+        }.`}</p>
       );
     }
     return (
@@ -140,7 +135,7 @@ export const ForwardReport = ({ isTime, isType }: Props) => {
             }
           />
           <VictoryBar
-            data={parsedData}
+            data={reduced}
             x="period"
             y={isType}
             style={{
