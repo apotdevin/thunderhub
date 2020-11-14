@@ -7,8 +7,7 @@ import { GET_LIQUID_REPORT } from '../getChannelReport';
 import { GET_CHANNELS } from '../getChannels';
 import { GET_CLOSED_CHANNELS } from '../getClosedChannels';
 import { GET_FEE_HEALTH } from '../getFeeHealth';
-// import { GET_FORWARD_REPORT } from '../getForwardReport';
-import { GET_FORWARDS } from '../getForwards';
+// import { GET_FORWARDS_PAST_DAYS } from '../getForwardsPastDays';
 import { GET_MESSAGES } from '../getMessages';
 import { GET_NETWORK_INFO } from '../getNetworkInfo';
 import { GET_NODE } from '../getNode';
@@ -50,7 +49,10 @@ const cases: CaseType[] = [
   //   { query: GET_FORWARD_CHANNELS_REPORT },
   // ],
   // ['GET_FORWARD_REPORT', { query: GET_FORWARD_REPORT }],
-  ['GET_FORWARDS', { query: GET_FORWARDS }],
+  // [
+  //   'GET_FORWARDS_PAST_DAYS',
+  //   { query: GET_FORWARDS_PAST_DAYS, variables: { days: 30 } },
+  // ],
   ['GET_MESSAGES', { query: GET_MESSAGES }],
   ['GET_NETWORK_INFO', { query: GET_NETWORK_INFO }],
   ['GET_NODE', { query: GET_NODE, variables: { publicKey: 'abc' } }],

@@ -1,12 +1,7 @@
 import { gql } from 'apollo-server-micro';
 
 export const transactionTypes = gql`
-  type getForwardType {
-    token: String
-    forwards: [forwardType]
-  }
-
-  type forwardType {
+  type Forward {
     created_at: String
     fee: Int
     fee_mtokens: String
@@ -14,8 +9,18 @@ export const transactionTypes = gql`
     mtokens: String
     outgoing_channel: String
     tokens: Int
-    incoming_channel_info: Channel
-    outgoing_channel_info: Channel
+    incoming_node: ForwardNodeType
+    outgoing_node: ForwardNodeType
+  }
+
+  type ForwardNodeType {
+    alias: String
+    capacity: String
+    channel_count: Int
+    color: String
+    updated_at: String
+    channel_id: String
+    public_key: String
   }
 
   type PaymentType {
