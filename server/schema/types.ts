@@ -54,7 +54,7 @@ export const queryTypes = gql`
     decodeRequest(request: String!): decodeType
     getWalletInfo: walletInfoType
     getResume(token: String): getResumeType
-    getForwards(time: String): getForwardType
+    getForwardsPastDays(days: Int!): [Forward]!
     getBitcoinPrice(logger: Boolean, currency: String): String
     getBitcoinFees(logger: Boolean): bitcoinFeeType
     getForwardReport(time: String): String
