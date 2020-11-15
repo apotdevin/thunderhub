@@ -1,5 +1,6 @@
 import { differenceInCalendarDays, differenceInHours, subDays } from 'date-fns';
 import groupBy from 'lodash.groupby';
+import sortBy from 'lodash.sortby';
 import { Forward } from 'src/graphql/types';
 
 type ListProps = {
@@ -57,4 +58,95 @@ export const orderAndReducedArray = (time: number, forwardArray: Forward[]) => {
   const reducedOrderedDay = reduceForwardArray(orderedDay);
 
   return reducedOrderedDay;
+};
+
+const countRoutes = (list: Forward[]) => {
+  const grouped = groupBy(list, 'route');
+
+  const channelInfo = [];
+  for (const key in grouped) {
+    if (Object.prototype.hasOwnProperty.call(grouped, key)) {
+      const element = grouped[key];
+
+      const fee = element
+        .map(forward => forward.fee)
+        .reduce((p: number, c: number) => p + c);
+
+      const tokens = element
+        .map(forward => forward.tokens)
+        .reduce((p: number, c: number) => p + c);
+
+      channelInfo.push({
+        aliasIn: element[0].incoming_node?.alias || 'Unknown',
+        aliasOut: element[0].outgoing_node?.alias || 'Unknown',
+        route: key,
+        amount: element.length,
+        fee,
+        tokens,
+      });
+    }
+  }
+
+  return channelInfo;
+};
+
+const countArray = (list: Forward[], type: boolean) => {
+  const inOrOut = type ? 'incoming_channel' : 'outgoing_channel';
+  const grouped = groupBy(list, inOrOut);
+
+  const channelInfo = [];
+  for (const key in grouped) {
+    if (Object.prototype.hasOwnProperty.call(grouped, key)) {
+      const element = grouped[key];
+
+      const fee = element
+        .map(forward => forward.fee)
+        .reduce((p: number, c: number) => p + c);
+
+      const tokens = element
+        .map(forward => forward.tokens)
+        .reduce((p: number, c: number) => p + c);
+
+      const alias = type
+        ? element[0].incoming_node?.alias || 'Unknown'
+        : element[0].outgoing_node?.alias || 'Unknown';
+
+      channelInfo.push({
+        alias,
+        name: key,
+        amount: element.length,
+        fee,
+        tokens,
+      });
+    }
+  }
+
+  return channelInfo;
+};
+
+export const orderForwardChannels = (
+  type: string,
+  order: string,
+  forwardArray: Forward[]
+) => {
+  if (type === 'route') {
+    const mapped = forwardArray.map(forward => {
+      return {
+        route: `${forward.incoming_channel} - ${forward.outgoing_channel}`,
+        ...forward,
+      };
+    });
+    const grouped = countRoutes(mapped);
+
+    const sortedRoute = sortBy(grouped, order).reverse().slice(0, 10);
+    return sortedRoute;
+  }
+  if (type === 'incoming') {
+    const incomingCount = countArray(forwardArray, true);
+    const sortedInCount = sortBy(incomingCount, order).reverse().slice(0, 10);
+    return sortedInCount;
+  }
+  const outgoingCount = countArray(forwardArray, false);
+  const sortedOutCount = sortBy(outgoingCount, order).reverse().slice(0, 10);
+  return sortedOutCount;
 };

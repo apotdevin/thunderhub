@@ -7,28 +7,23 @@ import { ResponsiveSingle } from 'src/components/generic/Styled';
 import { ReportType, ReportDuration, FlowReportType } from './ForwardReport';
 
 interface ButtonProps {
-  isTime: ReportDuration;
-  isType: ReportType;
+  days: number;
+  order: ReportType;
   setDays: (days: number) => void;
-  setIsTime: (text: ReportDuration) => void;
-  setIsType: (text: ReportType) => void;
+  setOrder: (text: ReportType) => void;
 }
 
 export const ButtonRow: React.FC<ButtonProps> = ({
-  isTime,
-  setIsTime,
+  days,
   setDays,
-  isType,
-  setIsType,
+  order,
+  setOrder,
 }) => {
-  const timeButton = (time: ReportDuration, title: string, days: number) => (
+  const timeButton = (title: string, buttonDays: number) => (
     <SingleButton
       withPadding={'4px 8px'}
-      onClick={() => {
-        setIsTime(time);
-        setDays(days);
-      }}
-      selected={isTime === time}
+      onClick={() => setDays(buttonDays)}
+      selected={days === buttonDays}
     >
       {title}
     </SingleButton>
@@ -37,8 +32,8 @@ export const ButtonRow: React.FC<ButtonProps> = ({
   const typeButton = (type: ReportType, title: string) => (
     <SingleButton
       withPadding={'4px 8px'}
-      onClick={() => setIsType(type)}
-      selected={isType === type}
+      onClick={() => setOrder(type)}
+      selected={order === type}
     >
       {title}
     </SingleButton>
@@ -47,12 +42,12 @@ export const ButtonRow: React.FC<ButtonProps> = ({
   return (
     <ResponsiveSingle>
       <MultiButton>
-        {timeButton('day', '1D', 1)}
-        {timeButton('week', '1W', 7)}
-        {timeButton('month', '1M', 30)}
-        {timeButton('quarter_year', '3M', 90)}
-        {timeButton('half_year', '6M', 180)}
-        {timeButton('year', '1Y', 360)}
+        {timeButton('1D', 1)}
+        {timeButton('1W', 7)}
+        {timeButton('1M', 30)}
+        {timeButton('3M', 90)}
+        {timeButton('6M', 180)}
+        {timeButton('1Y', 360)}
       </MultiButton>
       <MultiButton>
         {typeButton('amount', 'Amount')}

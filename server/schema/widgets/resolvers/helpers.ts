@@ -1,5 +1,3 @@
-import { reduce, groupBy } from 'underscore';
-import { ForwardType } from 'server/types/ln-service.types';
 import { InOutProps, InOutListProps } from './interface';
 
 export const reduceInOutArray = (list: InOutListProps) => {
@@ -7,8 +5,7 @@ export const reduceInOutArray = (list: InOutListProps) => {
   for (const key in list) {
     if (Object.prototype.hasOwnProperty.call(list, key)) {
       const element: InOutProps[] = list[key];
-      const reducedArray: InOutProps = reduce(
-        element,
+      const reducedArray: InOutProps = element.reduce(
         (a, b) => ({
           tokens: a.tokens + b.tokens,
         }),
@@ -22,63 +19,4 @@ export const reduceInOutArray = (list: InOutListProps) => {
     }
   }
   return reducedOrder;
-};
-
-export const countArray = (list: ForwardType[], type: boolean) => {
-  const inOrOut = type ? 'incoming_channel' : 'outgoing_channel';
-  const grouped = groupBy(list, inOrOut);
-
-  const channelInfo = [];
-  for (const key in grouped) {
-    if (Object.prototype.hasOwnProperty.call(grouped, key)) {
-      const element = grouped[key];
-
-      const fee = element
-        .map(forward => forward.fee)
-        .reduce((p: number, c: number) => p + c);
-
-      const tokens = element
-        .map(forward => forward.tokens)
-        .reduce((p: number, c: number) => p + c);
-
-      channelInfo.push({
-        name: key,
-        amount: element.length,
-        fee,
-        tokens,
-      });
-    }
-  }
-
-  return channelInfo;
-};
-
-export const countRoutes = (list: ForwardType[]) => {
-  const grouped = groupBy(list, 'route');
-
-  const channelInfo = [];
-  for (const key in grouped) {
-    if (Object.prototype.hasOwnProperty.call(grouped, key)) {
-      const element = grouped[key];
-
-      const fee = element
-        .map(forward => forward.fee)
-        .reduce((p: number, c: number) => p + c);
-
-      const tokens = element
-        .map(forward => forward.tokens)
-        .reduce((p: number, c: number) => p + c);
-
-      channelInfo.push({
-        route: key,
-        in: element[0].incoming_channel,
-        out: element[0].outgoing_channel,
-        amount: element.length,
-        fee,
-        tokens,
-      });
-    }
-  }
-
-  return channelInfo;
 };

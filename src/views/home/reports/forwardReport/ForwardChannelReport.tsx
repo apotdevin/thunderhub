@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
 import styled from 'styled-components';
-import { useGetForwardChannelsReportQuery } from 'src/graphql/queries/__generated__/getForwardChannelsReport.generated';
 import {
   MultiButton,
   SingleButton,
 } from 'src/components/buttons/multiButton/MultiButton';
+import { useGetForwardsPastDaysQuery } from 'src/graphql/queries/__generated__/getForwardsPastDays.generated';
+import { Forward } from 'src/graphql/types';
 import { getErrorContent } from '../../../../utils/error';
 import {
   DarkSubTitle,
@@ -16,7 +17,8 @@ import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { getPrice } from '../../../../components/price/Price';
 import { useConfigState } from '../../../../context/ConfigContext';
 import { usePriceState } from '../../../../context/PriceContext';
-import { ReportType, ReportDuration } from './ForwardReport';
+import { ReportType } from './ForwardReport';
+import { orderForwardChannels } from './helpers';
 import { CardContent } from '.';
 
 const ChannelRow = styled.div`
@@ -39,11 +41,12 @@ const LastTableLine = styled(TableLine)`
 `;
 
 type Props = {
-  isTime: ReportDuration;
-  isType: ReportType;
+  days: number;
+  order: ReportType;
 };
 
 type ParsedRouteType = {
+  route: string;
   aliasIn: string;
   aliasOut: string;
   fee: number;
@@ -59,16 +62,16 @@ type ParsedChannelType = {
   amount: number;
 };
 
-export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
+export const ForwardChannelsReport = ({ days, order }: Props) => {
   const [type, setType] = useState<'route' | 'incoming' | 'outgoing'>('route');
 
   const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  const { data, loading } = useGetForwardChannelsReportQuery({
+  const { data, loading } = useGetForwardsPastDaysQuery({
     ssr: false,
-    variables: { time: isTime, order: isType, type },
+    variables: { days },
     onError: error => toast.error(getErrorContent(error)),
   });
 
@@ -76,14 +79,15 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
     return <LoadingCard noCard={true} title={'Forward Report'} />;
   }
 
-  // TODO: JSON.parse is really bad... Absolutely no type safety at all
-  const parsed: (ParsedChannelType | ParsedRouteType)[] = JSON.parse(
-    data.getForwardChannelsReport || '[]'
+  const forwardArray = orderForwardChannels(
+    type,
+    order,
+    data.getForwardsPastDays as Forward[]
   );
 
   const getFormatString = (amount: number | string) => {
     if (typeof amount === 'string') return amount;
-    if (isType !== 'amount') {
+    if (order !== 'amount') {
       return format({ amount });
     }
     return amount;
@@ -94,7 +98,7 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
       <ChannelRow key={index}>
         <TableLine>{channel.aliasIn}</TableLine>
         <TableLine>{channel.aliasOut}</TableLine>
-        <LastTableLine>{getFormatString(channel[isType])}</LastTableLine>
+        <LastTableLine>{getFormatString(channel[order])}</LastTableLine>
       </ChannelRow>
     ));
 
@@ -115,7 +119,7 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
       <ChannelRow key={index}>
         <TableLine>{`${channel.alias}`}</TableLine>
         <DarkSubTitle>{`${channel.name}`}</DarkSubTitle>
-        <LastTableLine>{getFormatString(channel[isType])}</LastTableLine>
+        <LastTableLine>{getFormatString(channel[order])}</LastTableLine>
       </ChannelRow>
     ));
 
@@ -184,14 +188,14 @@ export const ForwardChannelsReport = ({ isTime, isType }: Props) => {
     }
   };
 
-  if (parsed.length <= 0) {
+  if (forwardArray.length <= 0) {
     return null;
   }
 
   return (
     <CardContent>
       {renderTitle()}
-      {renderContent(parsed)}
+      {renderContent(forwardArray)}
     </CardContent>
   );
 };
