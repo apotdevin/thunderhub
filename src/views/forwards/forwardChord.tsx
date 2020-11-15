@@ -12,12 +12,20 @@ import {
 import styled from 'styled-components';
 import { renderLine } from 'src/components/generic/helpers';
 import { DarkSubTitle } from 'src/components/generic/Styled';
+import { mediaWidths } from 'src/styles/Themes';
+import { usePriceState } from 'src/context/PriceContext';
+import { getPrice } from 'src/components/price/Price';
+import { useConfigState } from 'src/context/ConfigContext';
 import { ReportType } from '../home/reports/forwardReport/ForwardReport';
 import { getChordMatrix } from './helpers';
 
 const Wrapper = styled.div`
   height: 800px;
   width: 100%;
+
+  @media (${mediaWidths.mobile}) {
+    height: 300px;
+  }
 `;
 
 const Center = styled.div`
@@ -60,6 +68,10 @@ export const ForwardChord = ({
     onError: error => toast.error(getErrorContent(error)),
   });
 
+  const { currency, displayValues } = useConfigState();
+  const priceContext = usePriceState();
+  const format = getPrice(currency, displayValues, priceContext);
+
   if (loading || !data?.getForwardsPastDays?.length) {
     return null;
   }
@@ -88,7 +100,10 @@ export const ForwardChord = ({
       return (
         <>
           {renderLine('Node', uniqueNodes[selected.group.index])}
-          {renderLine(getTitle(order), selected.group.value)}
+          {renderLine(
+            getTitle(order),
+            format({ amount: selected.group.value, noUnit: order === 'amount' })
+          )}
         </>
       );
     }
@@ -101,7 +116,13 @@ export const ForwardChord = ({
               uniqueNodes[selected.chord.target.index]
             }`
           )}
-          {renderLine(getTitle(order), selected.chord.source.value)}
+          {renderLine(
+            getTitle(order),
+            format({
+              amount: selected.chord.source.value,
+              noUnit: order === 'amount',
+            })
+          )}
         </>
       );
     }
