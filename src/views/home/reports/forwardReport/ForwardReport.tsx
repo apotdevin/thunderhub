@@ -36,10 +36,10 @@ export type FlowReportType = 'tokens' | 'amount';
 
 interface Props {
   days: number;
-  isType: ReportType;
+  order: ReportType;
 }
 
-export const ForwardReport = ({ days, isType }: Props) => {
+export const ForwardReport = ({ days, order }: Props) => {
   const { theme, currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
@@ -72,7 +72,7 @@ export const ForwardReport = ({ days, isType }: Props) => {
   }
 
   const getLabelString = (value: number) => {
-    if (isType === 'amount') {
+    if (order === 'amount') {
       return numeral(value).format('0,0');
     }
     return format({ amount: value });
@@ -84,7 +84,7 @@ export const ForwardReport = ({ days, isType }: Props) => {
   );
 
   const total = getLabelString(
-    reduced.map(x => x[isType]).reduce((a, c) => a + c, 0)
+    reduced.map(x => x[order]).reduce((a, c) => a + c, 0)
   );
 
   const renderContent = () => {
@@ -101,14 +101,14 @@ export const ForwardReport = ({ days, isType }: Props) => {
           height={110}
           padding={{
             top: 20,
-            left: isType === 'tokens' ? 80 : 50,
+            left: order === 'tokens' ? 80 : 50,
             right: 50,
             bottom: 10,
           }}
           containerComponent={
             <VictoryVoronoiContainer
               voronoiDimension="x"
-              labels={({ datum }) => `${getLabelString(datum[isType])}`}
+              labels={({ datum }) => `${getLabelString(datum[order])}`}
               labelComponent={<VictoryTooltip orientation={'bottom'} />}
             />
           }
@@ -131,13 +131,13 @@ export const ForwardReport = ({ days, isType }: Props) => {
               axis: { stroke: 'transparent' },
             }}
             tickFormat={a =>
-              isType === 'tokens' ? format({ amount: a, breakNumber: true }) : a
+              order === 'tokens' ? format({ amount: a, breakNumber: true }) : a
             }
           />
           <VictoryBar
             data={reduced}
             x="period"
-            y={isType}
+            y={order}
             style={{
               data: {
                 fill: chartBarColor[theme],
