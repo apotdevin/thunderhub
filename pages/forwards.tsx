@@ -1,88 +1,81 @@
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
-import { Forward } from 'src/graphql/types';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
-import { useGetForwardsPastDaysQuery } from 'src/graphql/queries/__generated__/getForwardsPastDays.generated';
 import {
   MultiButton,
   SingleButton,
 } from 'src/components/buttons/multiButton/MultiButton';
+import { ForwardsList } from 'src/views/forwards/index';
+import {
+  ForwardProvider,
+  useForwardDispatch,
+  useForwardState,
+} from 'src/views/forwards/context';
+import {
+  ForwardReport,
+  ReportType,
+} from 'src/views/home/reports/forwardReport/ForwardReport';
+import { ForwardChannelsReport } from 'src/views/home/reports/forwardReport/ForwardChannelReport';
 import {
   SubTitle,
   Card,
   CardWithTitle,
   CardTitle,
+  Separation,
+  SingleLine,
 } from '../src/components/generic/Styled';
-import { getErrorContent } from '../src/utils/error';
-import { LoadingCard } from '../src/components/loading/LoadingCard';
-import { ForwardCard } from '../src/views/forwards/ForwardsCard';
-import { ForwardBox } from '../src/views/home/reports/forwardReport';
 
 const ForwardsView = () => {
-  const [time, setTime] = useState<number>(30);
-  const [indexOpen, setIndexOpen] = useState(0);
-
-  const { loading, data } = useGetForwardsPastDaysQuery({
-    variables: { days: time },
-    onError: error => toast.error(getErrorContent(error)),
-  });
-
-  if (loading || !data || !data.getForwardsPastDays) {
-    return (
-      <>
-        <ForwardBox />
-        <LoadingCard title={'Forwards'} />
-      </>
-    );
-  }
+  const { days, infoType } = useForwardState();
+  const dispatch = useForwardDispatch();
 
   const renderButton = (selectedTime: number, title: string) => (
     <SingleButton
-      selected={selectedTime === time}
-      onClick={() => setTime(selectedTime)}
+      selected={selectedTime === days}
+      onClick={() => dispatch({ type: 'day', days: selectedTime })}
     >
       {title}
     </SingleButton>
   );
 
-  const renderNoForwards = () => (
-    <Card>
-      <p>{`Your node has not forwarded any payments in the past ${time} ${
-        time > 1 ? 'days' : 'day'
-      }.`}</p>
-    </Card>
+  const renderTypeButton = (type: ReportType, title: string) => (
+    <SingleButton
+      selected={infoType === type}
+      onClick={() => dispatch({ type: 'infoType', infoType: type })}
+    >
+      {title}
+    </SingleButton>
   );
 
   return (
     <>
-      <ForwardBox />
       <CardWithTitle>
         <CardTitle>
           <SubTitle>Forwards</SubTitle>
-          <MultiButton margin={'0 0 8px'}>
+        </CardTitle>
+        <SingleLine>
+          <MultiButton margin={'8px 0'}>
             {renderButton(1, 'D')}
             {renderButton(7, '1W')}
             {renderButton(30, '1M')}
             {renderButton(90, '3M')}
+            {renderButton(180, '6M')}
+            {renderButton(360, '1Y')}
           </MultiButton>
-        </CardTitle>
-        {data?.getForwardsPastDays?.length ? (
-          <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-            {data?.getForwardsPastDays?.map((forward, index) => (
-              <ForwardCard
-                forward={forward as Forward}
-                key={index}
-                index={index + 1}
-                setIndexOpen={setIndexOpen}
-                indexOpen={indexOpen}
-              />
-            ))}
-          </Card>
-        ) : (
-          renderNoForwards()
-        )}
+          <MultiButton margin={'8px 0'}>
+            {renderTypeButton('amount', 'Amount')}
+            {renderTypeButton('tokens', 'Tokens')}
+            {renderTypeButton('fee', 'Fees')}
+          </MultiButton>
+        </SingleLine>
+        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+          <ForwardReport days={days} order={infoType} />
+          <Separation />
+          <ForwardChannelsReport days={days} order={infoType} />
+        </Card>
+        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+          <ForwardsList days={days} />
+        </Card>
       </CardWithTitle>
     </>
   );
@@ -90,7 +83,9 @@ const ForwardsView = () => {
 
 const Wrapped = () => (
   <GridWrapper>
-    <ForwardsView />
+    <ForwardProvider>
+      <ForwardsView />
+    </ForwardProvider>
   </GridWrapper>
 );
 
