@@ -16,6 +16,9 @@ import {
   ReportType,
 } from 'src/views/home/reports/forwardReport/ForwardReport';
 import { ForwardChannelsReport } from 'src/views/home/reports/forwardReport/ForwardChannelReport';
+import { useState } from 'react';
+import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
+import { BarChart2, List } from 'react-feather';
 import {
   SubTitle,
   Card,
@@ -26,6 +29,7 @@ import {
 } from '../src/components/generic/Styled';
 
 const ForwardsView = () => {
+  const [isTable, setIsTable] = useState<boolean>(false);
   const { days, infoType } = useForwardState();
   const dispatch = useForwardDispatch();
 
@@ -52,6 +56,18 @@ const ForwardsView = () => {
       <CardWithTitle>
         <CardTitle>
           <SubTitle>Forwards</SubTitle>
+          <SingleLine>
+            <ColorButton
+              withMargin={'0 4px 0 0'}
+              selected={!isTable}
+              onClick={() => setIsTable(false)}
+            >
+              <BarChart2 size={18} />
+            </ColorButton>
+            <ColorButton selected={isTable} onClick={() => setIsTable(true)}>
+              <List size={18} />
+            </ColorButton>
+          </SingleLine>
         </CardTitle>
         <SingleLine>
           <MultiButton margin={'8px 0'}>
@@ -62,19 +78,25 @@ const ForwardsView = () => {
             {renderButton(180, '6M')}
             {renderButton(360, '1Y')}
           </MultiButton>
-          <MultiButton margin={'8px 0'}>
-            {renderTypeButton('amount', 'Amount')}
-            {renderTypeButton('tokens', 'Tokens')}
-            {renderTypeButton('fee', 'Fees')}
-          </MultiButton>
+          {!isTable && (
+            <MultiButton margin={'8px 0'}>
+              {renderTypeButton('amount', 'Amount')}
+              {renderTypeButton('tokens', 'Tokens')}
+              {renderTypeButton('fee', 'Fees')}
+            </MultiButton>
+          )}
         </SingleLine>
+
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          <ForwardReport days={days} order={infoType} />
-          <Separation />
-          <ForwardChannelsReport days={days} order={infoType} />
-        </Card>
-        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          <ForwardsList days={days} />
+          {isTable ? (
+            <ForwardsList days={days} />
+          ) : (
+            <>
+              <ForwardReport days={days} order={infoType} />
+              <Separation />
+              <ForwardChannelsReport days={days} order={infoType} />
+            </>
+          )}
         </Card>
       </CardWithTitle>
     </>
