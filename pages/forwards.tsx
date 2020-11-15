@@ -19,6 +19,7 @@ import { ForwardChannelsReport } from 'src/views/home/reports/forwardReport/Forw
 import { useState } from 'react';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { BarChart2, List } from 'react-feather';
+import { ForwardChord } from 'src/views/forwards/forwardChord';
 import {
   SubTitle,
   Card,
@@ -26,6 +27,7 @@ import {
   CardTitle,
   Separation,
   SingleLine,
+  ResponsiveLine,
 } from '../src/components/generic/Styled';
 
 const ForwardsView = () => {
@@ -69,7 +71,7 @@ const ForwardsView = () => {
             </ColorButton>
           </SingleLine>
         </CardTitle>
-        <SingleLine>
+        <ResponsiveLine>
           <MultiButton margin={'8px 0'}>
             {renderButton(1, 'D')}
             {renderButton(7, '1W')}
@@ -85,19 +87,25 @@ const ForwardsView = () => {
               {renderTypeButton('fee', 'Fees')}
             </MultiButton>
           )}
-        </SingleLine>
+        </ResponsiveLine>
 
-        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          {isTable ? (
+        {isTable ? (
+          <Card mobileCardPadding={'0'} mobileNoBackground={true}>
             <ForwardsList days={days} />
-          ) : (
-            <>
+          </Card>
+        ) : (
+          <>
+            <Card mobileCardPadding={'0'} mobileNoBackground={true}>
               <ForwardReport days={days} order={infoType} />
               <Separation />
               <ForwardChannelsReport days={days} order={infoType} />
-            </>
-          )}
-        </Card>
+            </Card>
+            <SubTitle>Chord Graph</SubTitle>
+            <Card>
+              <ForwardChord days={days} order={infoType} />
+            </Card>
+          </>
+        )}
       </CardWithTitle>
     </>
   );

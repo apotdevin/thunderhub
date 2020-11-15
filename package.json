@@ -35,6 +35,11 @@
   "dependencies": {
     "@apollo/client": "^3.2.5",
     "@next/bundle-analyzer": "^10.0.1",
+    "@visx/chord": "^1.0.0",
+    "@visx/group": "^1.0.0",
+    "@visx/responsive": "^1.1.0",
+    "@visx/scale": "^1.1.0",
+    "@visx/shape": "^1.1.0",
     "apollo-server-micro": "^2.19.0",
     "balanceofsatoshis": "^7.3.2",
     "bcryptjs": "^2.4.3",
