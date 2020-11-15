@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.2](https://github.com/apotdevin/thunderhub/compare/v0.10.1...v0.10.2) (2020-11-15)
+
+
+### Docs
+
+* 📚️ node requirement ([6dbe481](https://github.com/apotdevin/thunderhub/commit/6dbe481835dca580b1b5f111b6d5105d1707c37c))
+
+
+### Refactoring
+
+* ♻️ forward channels ([05fd6b2](https://github.com/apotdevin/thunderhub/commit/05fd6b2573155131270a0e1a8596cde64dcc376e))
+* ♻️ forward chart ([72860f3](https://github.com/apotdevin/thunderhub/commit/72860f334e5ddc9cfed20acbdc2c1f2e69ff3431))
+* ♻️ forward charts ([eb99622](https://github.com/apotdevin/thunderhub/commit/eb99622136b09ba8b117492be3f6f85a23e81965))
+* ♻️ forward query ([3e91519](https://github.com/apotdevin/thunderhub/commit/3e915192df0899852b18951edd7e62e5a24cc601))
+
+
+### Improvements
+
+* 🔧 add chord graph ([97ba42b](https://github.com/apotdevin/thunderhub/commit/97ba42beb97c66645a3afff68ec2a2743255d74f))
+* 🔧 add forward table ([52d5c52](https://github.com/apotdevin/thunderhub/commit/52d5c524042f92af89078d5aff2c79c062d8cfe1))
+* 🔧 cleanup forward view ([a183cc5](https://github.com/apotdevin/thunderhub/commit/a183cc5ab9af3373f05e7bf05e2646922c0d423e))
+* 🔧 update deps ([272d0f2](https://github.com/apotdevin/thunderhub/commit/272d0f26cd9c98437edd09a0818e90c49ae2080e))
+
 ### [0.10.1](https://github.com/apotdevin/thunderhub/compare/v0.10.0...v0.10.1) (2020-11-08)
 
 
