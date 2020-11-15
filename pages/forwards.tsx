@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { BarChart2, List } from 'react-feather';
 import { ForwardChord } from 'src/views/forwards/forwardChord';
+import { ForwardTable } from 'src/views/forwards/ForwardTable';
 import {
   SubTitle,
   Card,
@@ -99,6 +100,10 @@ const ForwardsView = () => {
               <ForwardReport days={days} order={infoType} />
               <Separation />
               <ForwardChannelsReport days={days} order={infoType} />
+            </Card>
+            <SubTitle>Grouped by Peer</SubTitle>
+            <Card>
+              <ForwardTable days={days} order={infoType} />
             </Card>
             <SubTitle>Chord Graph</SubTitle>
             <Card>
