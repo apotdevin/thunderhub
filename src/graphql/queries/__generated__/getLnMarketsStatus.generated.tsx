@@ -1,0 +1,44 @@
+/* eslint-disable */
+import * as Types from '../../types';
+
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
+export type GetLnMarketsStatusQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type GetLnMarketsStatusQuery = (
+  { __typename?: 'Query' }
+  & Pick<Types.Query, 'getLnMarketsStatus'>
+);
+
+
+export const GetLnMarketsStatusDocument = gql`
+    query GetLnMarketsStatus {
+  getLnMarketsStatus
+}
+    `;
+
+/**
+ * __useGetLnMarketsStatusQuery__
+ *
+ * To run a query within a React component, call `useGetLnMarketsStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLnMarketsStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLnMarketsStatusQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLnMarketsStatusQuery(baseOptions?: Apollo.QueryHookOptions<GetLnMarketsStatusQuery, GetLnMarketsStatusQueryVariables>) {
+        return Apollo.useQuery<GetLnMarketsStatusQuery, GetLnMarketsStatusQueryVariables>(GetLnMarketsStatusDocument, baseOptions);
+      }
+export function useGetLnMarketsStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLnMarketsStatusQuery, GetLnMarketsStatusQueryVariables>) {
+          return Apollo.useLazyQuery<GetLnMarketsStatusQuery, GetLnMarketsStatusQueryVariables>(GetLnMarketsStatusDocument, baseOptions);
+        }
+export type GetLnMarketsStatusQueryHookResult = ReturnType<typeof useGetLnMarketsStatusQuery>;
+export type GetLnMarketsStatusLazyQueryHookResult = ReturnType<typeof useGetLnMarketsStatusLazyQuery>;
+export type GetLnMarketsStatusQueryResult = Apollo.QueryResult<GetLnMarketsStatusQuery, GetLnMarketsStatusQueryVariables>;

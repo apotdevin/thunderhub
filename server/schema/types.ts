@@ -28,6 +28,9 @@ export const generalTypes = gql`
 
 export const queryTypes = gql`
   type Query {
+    getLnMarketsStatus: String!
+    getLnMarketsUrl: String!
+    getLnMarketsUserInfo: LnMarketsUserInfo
     getInvoiceStatusChange(id: String!): String
     getBaseCanConnect: Boolean!
     getBaseNodes: [baseNodesType]!
@@ -90,6 +93,10 @@ export const queryTypes = gql`
 
 export const mutationTypes = gql`
   type Mutation {
+    lnMarketsDeposit(amount: Int!): Boolean!
+    lnMarketsWithdraw(amount: Int!): Boolean!
+    lnMarketsLogin: AuthResponse!
+    lnMarketsLogout: Boolean!
     lnUrlAuth(url: String!): AuthResponse!
     lnUrlPay(callback: String!, amount: Int!, comment: String): PaySuccess!
     lnUrlWithdraw(
@@ -177,7 +184,7 @@ export const mutationTypes = gql`
       tokens: Int
       maxFee: Int
     ): Int
-    logout: Boolean
+    logout: Boolean!
     createMacaroon(permissions: permissionsType!): String
   }
 `;

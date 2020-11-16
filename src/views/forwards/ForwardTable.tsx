@@ -51,8 +51,6 @@ export const ForwardTable: FC<{ days: number; order: ReportType }> = ({
     data.getForwardsPastDays as Forward[]
   );
 
-  console.log({ final, maxIn, maxOut });
-
   const columns = [
     { Header: 'Alias', accessor: 'alias' },
     { Header: 'Incoming', accessor: 'incoming' },

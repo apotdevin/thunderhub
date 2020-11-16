@@ -24,4 +24,5 @@ export type ContextType = {
   sso: SSOType | null;
   accounts: AccountType[];
   res: ServerResponse;
+  lnMarketsAuth: string | null;
 };

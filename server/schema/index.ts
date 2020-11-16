@@ -40,6 +40,8 @@ import { tbaseResolvers } from './tbase/resolvers';
 import { tbaseTypes } from './tbase/types';
 import { lnUrlResolvers } from './lnurl/resolvers';
 import { lnUrlTypes } from './lnurl/types';
+import { lnMarketsResolvers } from './lnmarkets/resolvers';
+import { lnMarketsTypes } from './lnmarkets/types';
 
 const typeDefs = [
   generalTypes,
@@ -62,6 +64,7 @@ const typeDefs = [
   bosTypes,
   tbaseTypes,
   lnUrlTypes,
+  lnMarketsTypes,
 ];
 
 const resolvers = merge(
@@ -86,7 +89,8 @@ const resolvers = merge(
   networkResolvers,
   bosResolvers,
   tbaseResolvers,
-  lnUrlResolvers
+  lnUrlResolvers,
+  lnMarketsResolvers
 );
 
 export const schema = makeExecutableSchema({ typeDefs, resolvers });
