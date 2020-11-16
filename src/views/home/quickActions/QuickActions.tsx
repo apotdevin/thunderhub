@@ -12,14 +12,16 @@ import {
   unSelectedNavButton,
   cardColor,
   cardBorderColor,
+  mediaWidths,
 } from '../../../styles/Themes';
 import { DecodeCard } from './decode/Decode';
 import { SupportCard } from './donate/DonateCard';
 import { SupportBar } from './donate/DonateContent';
 import { OpenChannel } from './openChannel';
 import { LnUrlCard } from './lnurl';
+import { LnMarketsCard } from './lnmarkets';
 
-const QuickCard = styled.div`
+export const QuickCard = styled.div`
   background: ${cardColor};
   box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
@@ -36,19 +38,27 @@ const QuickCard = styled.div`
   cursor: pointer;
   color: #69c0ff;
 
+  @media (${mediaWidths.mobile}) {
+    padding: 4px;
+    height: 80px;
+    width: 80px;
+  }
+
   &:hover {
     border: 1px solid #69c0ff;
   }
 `;
 
-const QuickTitle = styled.div`
+export const QuickTitle = styled.div`
   font-size: 14px;
   color: ${unSelectedNavButton};
   margin-top: 10px;
+  text-align: center;
 `;
 
 const QuickRow = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `;
 
 export const QuickActions = () => {
@@ -97,6 +107,7 @@ export const QuickActions = () => {
               <Command size={24} />
               <QuickTitle>LNURL</QuickTitle>
             </QuickCard>
+            <LnMarketsCard />
           </QuickRow>
         );
     }

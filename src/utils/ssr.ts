@@ -2,6 +2,7 @@ import { NextPageContext } from 'next';
 import { initializeApollo } from 'config/client';
 import { parseCookies } from 'src/utils/cookies';
 import { DocumentNode } from 'graphql';
+import { appConstants } from 'server/utils/appConstants';
 
 const cookieProps = (
   context: NextPageContext,
@@ -11,7 +12,7 @@ const cookieProps = (
 
   const cookies = parseCookies(context.req);
 
-  if (!cookies['Thub-Auth'] && !noAuth) {
+  if (!cookies[appConstants.cookieName] && !noAuth) {
     context.res?.writeHead(302, { Location: '/' });
     context.res?.end();
 
@@ -61,13 +62,13 @@ export const getProps = async (
       }
     }
   } else {
-    return { props: { initialConfig: theme } };
+    return { props: { initialConfig: { theme } } };
   }
 
   return {
     props: {
       initialApolloState: apolloClient.cache.extract(),
-      initialConfig: theme,
+      initialConfig: { theme },
     },
   };
 };

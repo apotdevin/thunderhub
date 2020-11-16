@@ -48,3 +48,9 @@ export const getErrorContent = (error: ApolloError): ReactNode => {
 
   return <ErrorBox>{renderMessage}</ErrorBox>;
 };
+
+export const getErrorText = (error: ApolloError): ReactNode => {
+  const errors = error.graphQLErrors.map(x => x.message);
+
+  return getMessage(errors[0]);
+};
