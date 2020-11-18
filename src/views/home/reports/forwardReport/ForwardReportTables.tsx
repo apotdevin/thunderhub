@@ -37,7 +37,7 @@ export const RouteTable: FC<RouteTableProps> = ({ order, forwardArray }) => {
       case 'tokens':
         return 'Tokens (sats)';
       default:
-        return 'Amount';
+        return 'Count';
     }
   };
 
@@ -72,7 +72,7 @@ export const ChannelTable: FC<ChannelTableProps> = ({
       case 'tokens':
         return 'Tokens (sats)';
       default:
-        return 'Amount';
+        return 'Count';
     }
   };
 

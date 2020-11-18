@@ -50,7 +50,7 @@ export const ButtonRow: React.FC<ButtonProps> = ({
         {timeButton('1Y', 360)}
       </MultiButton>
       <MultiButton>
-        {typeButton('amount', 'Amount')}
+        {typeButton('amount', 'Count')}
         {typeButton('tokens', 'Tokens')}
         {typeButton('fee', 'Fees')}
       </MultiButton>
@@ -102,7 +102,7 @@ export const FlowButtonRow: React.FC<FlowButtonProps> = ({
         {timeButton('year', '1Y')}
       </MultiButton>
       <MultiButton>
-        {typeButton('amount', 'Amount')}
+        {typeButton('amount', 'Count')}
         {typeButton('tokens', 'Tokens')}
       </MultiButton>
     </ResponsiveSingle>

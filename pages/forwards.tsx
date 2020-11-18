@@ -83,7 +83,7 @@ const ForwardsView = () => {
           </MultiButton>
           {!isTable && (
             <MultiButton margin={'8px 0'}>
-              {renderTypeButton('amount', 'Amount')}
+              {renderTypeButton('amount', 'Count')}
               {renderTypeButton('tokens', 'Tokens')}
               {renderTypeButton('fee', 'Fees')}
             </MultiButton>
