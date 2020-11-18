@@ -5,7 +5,7 @@ import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { UserInfo } from 'src/views/lnmarkets/UserInfo';
 import { Title } from 'src/components/typography/Styled';
-// import { GoToLnMarkets } from 'src/views/lnmarkets/GoToLnMarkets';
+import { GoToLnMarkets } from 'src/views/lnmarkets/GoToLnMarkets';
 import { DepositWithdraw } from 'src/views/lnmarkets/DepositWithdraw';
 import { useGetLnMarketsStatusQuery } from 'src/graphql/queries/__generated__/getLnMarketsStatus.generated';
 import {
@@ -73,7 +73,7 @@ const LnMarketsView = () => {
       <>
         <UserInfo />
         <DepositWithdraw />
-        {/* <GoToLnMarkets /> */}
+        <GoToLnMarkets />
         <ColorButton
           loading={logoutLoading}
           disabled={logoutLoading}
