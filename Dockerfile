@@ -24,7 +24,7 @@ RUN npm prune --production
 # ---------------
 # Build App
 # ---------------
-FROM node:12.16-alpine
+FROM node:14.15-alpine
 
 WORKDIR /app
 
