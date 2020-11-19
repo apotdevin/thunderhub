@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.4](https://github.com/apotdevin/thunderhub/compare/v0.10.3...v0.10.4) (2020-11-19)
+
+
+### Bug Fixes
+
+* 🐛 docker node versions ([519b27f](https://github.com/apotdevin/thunderhub/commit/519b27f7e4cdc9f76ec5eca57a4a4bd25f403466))
+
 ### [0.10.3](https://github.com/apotdevin/thunderhub/compare/v0.10.2...v0.10.3) (2020-11-19)
 
 
