@@ -141,6 +141,8 @@ export type GetChainTransactionsType = { transactions: ChainTransaction[] };
 
 export type GetUtxosType = { utxos: UtxoType[] };
 
+export type CreateChainAddressType = { address: string };
+
 export type SendToChainAddressType = {
   id: string;
   confirmation_count: number;

@@ -42,6 +42,8 @@ import { lnUrlResolvers } from './lnurl/resolvers';
 import { lnUrlTypes } from './lnurl/types';
 import { lnMarketsResolvers } from './lnmarkets/resolvers';
 import { lnMarketsTypes } from './lnmarkets/types';
+import { boltzResolvers } from './boltz/resolvers';
+import { boltzTypes } from './boltz/types';
 
 const typeDefs = [
   generalTypes,
@@ -65,6 +67,7 @@ const typeDefs = [
   tbaseTypes,
   lnUrlTypes,
   lnMarketsTypes,
+  boltzTypes,
 ];
 
 const resolvers = merge(
@@ -90,7 +93,8 @@ const resolvers = merge(
   bosResolvers,
   tbaseResolvers,
   lnUrlResolvers,
-  lnMarketsResolvers
+  lnMarketsResolvers,
+  boltzResolvers
 );
 
 export const schema = makeExecutableSchema({ typeDefs, resolvers });
