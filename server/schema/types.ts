@@ -28,6 +28,8 @@ export const generalTypes = gql`
 
 export const queryTypes = gql`
   type Query {
+    getBoltzSwapStatus(ids: [String]!): [BoltzSwap]!
+    getBoltzInfo: BoltzInfoType!
     getLnMarketsStatus: String!
     getLnMarketsUrl: String!
     getLnMarketsUserInfo: LnMarketsUserInfo
@@ -93,6 +95,18 @@ export const queryTypes = gql`
 
 export const mutationTypes = gql`
   type Mutation {
+    claimBoltzTransaction(
+      redeem: String!
+      transaction: String!
+      preimage: String!
+      privateKey: String!
+      destination: String!
+      fee: Int!
+    ): String!
+    createBoltzReverseSwap(
+      amount: Int!
+      address: String
+    ): CreateBoltzReverseSwapType!
     lnMarketsDeposit(amount: Int!): Boolean!
     lnMarketsWithdraw(amount: Int!): Boolean!
     lnMarketsLogin: AuthResponse!

@@ -265,6 +265,21 @@ export const inputBorderColor = theme('mode', {
 });
 
 // ---------------------------------------
+// SLIDER COLORS
+// ---------------------------------------
+export const sliderBackgroundColor = theme('mode', {
+  light: themeColors.grey3,
+  dark: themeColors.grey8,
+  night: themeColors.grey8,
+});
+
+export const sliderThumbColor = theme('mode', {
+  light: themeColors.grey8,
+  dark: 'white',
+  night: 'white',
+});
+
+// ---------------------------------------
 // ICON COLORS
 // ---------------------------------------
 export const iconButtonHover = theme('mode', {

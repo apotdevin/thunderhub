@@ -87,6 +87,9 @@ export const authResolvers = {
       const isPassword = bcrypt.compareSync(params.password, cleanPassword);
 
       if (!isPassword) {
+        logger.error(
+          `Authentication failed from ip: ${ip} - Invalid Password!`
+        );
         throw new Error('WrongPasswordForLogin');
       }
 
