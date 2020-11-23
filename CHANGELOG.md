@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.5](https://github.com/apotdevin/thunderhub/compare/v0.10.4...v0.10.5) (2020-11-23)
+
+
+### Bug Fixes
+
+* 🐛 force close channel ([6478308](https://github.com/apotdevin/thunderhub/commit/6478308ad408da1a5f9f4b4b2fef03006f26a82e))
+* 🐛 lnpay amounts ([c61296b](https://github.com/apotdevin/thunderhub/commit/c61296b82fb41987ef6b7518de0142f09768218a))
+
 ### [0.10.4](https://github.com/apotdevin/thunderhub/compare/v0.10.3...v0.10.4) (2020-11-19)
 
 
