@@ -6,11 +6,13 @@ import { useCloseChannelMutation } from 'src/graphql/mutations/__generated__/clo
 import { useBitcoinFees } from 'src/hooks/UseBitcoinFees';
 import { useConfigState } from 'src/context/ConfigContext';
 import { renderLine } from 'src/components/generic/helpers';
+import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import {
   Separation,
   SingleLine,
   SubTitle,
   Sub4Title,
+  DarkSubTitle,
 } from '../../generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { ColorButton } from '../../buttons/colorButton/ColorButton';
@@ -18,7 +20,6 @@ import {
   MultiButton,
   SingleButton,
 } from '../../buttons/multiButton/MultiButton';
-import { Input } from '../../input';
 
 interface CloseChannelProps {
   callback: () => void;
@@ -47,7 +48,7 @@ export const CloseChannel = ({
 
   const [isForce, setIsForce] = useState<boolean>(false);
   const [isType, setIsType] = useState<string>('fee');
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<number | undefined>();
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
 
   const [closeChannel, { loading, data }] = useCloseChannelMutation({
@@ -84,29 +85,43 @@ export const CloseChannel = ({
       <AlertTriangle size={32} color={'red'} />
       <SubTitle>Are you sure you want to close the channel?</SubTitle>
       <Separation />
-      {renderLine(
-        'Type',
-        isType === 'none' ? 'Auto' : isType === 'fee' ? 'Fee' : 'Target'
+      {!isForce ? (
+        <>
+          {renderLine(
+            'Type',
+            isType === 'none' ? 'Auto' : isType === 'fee' ? 'Fee' : 'Target'
+          )}
+          {renderLine(
+            isType !== 'target' ? 'Fee (sats/vbyte)' : 'Blocks',
+            amount
+          )}
+        </>
+      ) : (
+        <DarkSubTitle>This is a force close</DarkSubTitle>
       )}
-      {renderLine(isType !== 'target' ? 'Fee (sats/vbyte)' : 'Blocks', amount)}
       <Separation />
       <ColorButton
         fullWidth={true}
-        disabled={loading || !amount}
+        disabled={(loading || !amount) && !isForce}
         loading={loading}
         withMargin={'16px 4px 4px'}
         color={'red'}
-        onClick={() =>
+        onClick={() => {
+          let details: { target: number } | { tokens: number } | {} =
+            isType === 'target' ? { target: amount } : { tokens: amount };
+
+          if (isForce) {
+            details = {};
+          }
+
           closeChannel({
             variables: {
               id: channelId,
               forceClose: isForce,
-              ...(isType === 'target'
-                ? { target: amount }
-                : { tokens: amount }),
+              ...details,
             },
-          })
-        }
+          });
+        }}
       >
         {`Close Channel [ ${channelName}/${channelId} ]`}
       </ColorButton>
@@ -134,7 +149,7 @@ export const CloseChannel = ({
       <MultiButton>
         {renderButton(
           () => {
-            setAmount(0);
+            setAmount(undefined);
             setIsForce(true);
           },
           'Yes',
@@ -152,7 +167,7 @@ export const CloseChannel = ({
               !dontShow &&
               renderButton(
                 () => {
-                  setAmount(0);
+                  setAmount(undefined);
                   setIsType('none');
                 },
                 'Auto',
@@ -160,7 +175,7 @@ export const CloseChannel = ({
               )}
             {renderButton(
               () => {
-                setAmount(0);
+                setAmount(undefined);
                 setIsType('fee');
               },
               'Fee',
@@ -168,7 +183,7 @@ export const CloseChannel = ({
             )}
             {renderButton(
               () => {
-                setAmount(0);
+                setAmount(undefined);
                 setIsType('target');
               },
               'Target',
@@ -203,21 +218,13 @@ export const CloseChannel = ({
         </>
       )}
       {isType !== 'none' && !isForce && (
-        <>
-          <SingleLine>
-            <Sub4Title>
-              {isType === 'target' ? 'Target Blocks:' : 'Fee (Sats/Byte)'}
-            </Sub4Title>
-          </SingleLine>
-          <SingleLine>
-            <Input
-              value={amount || undefined}
-              placeholder={isType === 'target' ? 'Blocks' : 'Sats/Byte'}
-              type={'number'}
-              onChange={e => setAmount(Number(e.target.value))}
-            />
-          </SingleLine>
-        </>
+        <InputWithDeco
+          title={isType === 'target' ? 'Target Blocks:' : 'Fee (Sats/Byte)'}
+          placeholder={isType === 'target' ? 'Blocks' : 'Sats/Byte'}
+          value={amount}
+          inputType={'number'}
+          inputCallback={e => setAmount(Number(e))}
+        />
       )}
       <Separation />
       <CenterLine>
