@@ -112,25 +112,23 @@ export const LnPay: FC<LnPayProps> = ({ request }) => {
           amount={amount}
           value={amount}
           inputType={'number'}
-          inputCallback={value => {
-            if (min && max) {
-              setAmount(Math.min(max, Math.max(min, Number(value))));
-            } else if (min && !max) {
-              setAmount(Math.max(min, Number(value)));
-            } else if (!min && max) {
-              setAmount(Math.min(max, Number(value)));
-            } else {
-              setAmount(Number(value));
-            }
-          }}
+          inputCallback={value => setAmount(Number(value))}
         />
       )}
       <ColorButton
         loading={loading}
-        disabled={loading}
+        disabled={loading || !amount}
         fullWidth={true}
         withMargin={'16px 0 0'}
-        onClick={() => payLnUrl({ variables: { callback, amount, comment } })}
+        onClick={() => {
+          if (min && amount < min) {
+            toast.warning('Amount is below the minimum');
+          } else if (max && amount > max) {
+            toast.warning('Amount is above the maximum');
+          } else {
+            payLnUrl({ variables: { callback, amount, comment } });
+          }
+        }}
       >
         {`Pay (${amount} sats)`}
       </ColorButton>

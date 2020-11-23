@@ -138,29 +138,25 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
             amount={amount}
             value={amount}
             inputType={'number'}
-            inputCallback={value => {
-              if (min && max) {
-                setAmount(Math.min(max, Math.max(min, Number(value))));
-              } else if (min && !max) {
-                setAmount(Math.max(min, Number(value)));
-              } else if (!min && max) {
-                setAmount(Math.min(max, Number(value)));
-              } else {
-                setAmount(Number(value));
-              }
-            }}
+            inputCallback={value => setAmount(Number(value))}
           />
         )}
         <ColorButton
           loading={loading || statusLoading}
-          disabled={loading || !k1 || statusLoading}
+          disabled={loading || !k1 || statusLoading || !amount}
           fullWidth={true}
           withMargin={'16px 0 0'}
-          onClick={() =>
-            withdraw({
-              variables: { callback, amount, k1: k1 || '', description },
-            })
-          }
+          onClick={() => {
+            if (min && amount < min) {
+              toast.warning('Amount is below the minimum');
+            } else if (max && amount > max) {
+              toast.warning('Amount is above the maximum');
+            } else {
+              withdraw({
+                variables: { callback, amount, k1: k1 || '', description },
+              });
+            }
+          }}
         >
           {`Withdraw (${amount} sats)`}
         </ColorButton>
