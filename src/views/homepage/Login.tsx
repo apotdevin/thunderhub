@@ -3,13 +3,11 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
-import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { useGetSessionTokenLazyQuery } from 'src/graphql/queries/__generated__/getSessionToken.generated';
 import { getErrorContent } from 'src/utils/error';
 import { Lock } from 'react-feather';
 import { ServerAccountType } from 'src/graphql/types';
 import { getVersion } from 'src/utils/version';
-import { useLogoutMutation } from 'src/graphql/mutations/__generated__/logout.generated';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../components/input';
@@ -43,19 +41,7 @@ export const Login = ({ account }: LoginProps) => {
 
   const [pass, setPass] = useState('');
 
-  const [getCanConnect, { data, loading }] = useGetCanConnectLazyQuery({
-    fetchPolicy: 'network-only',
-    onError: err => {
-      toast.error(getErrorContent(err));
-    },
-  });
-
-  const [logout] = useLogoutMutation();
-
-  const [
-    getSessionToken,
-    { data: sData, loading: sLoading },
-  ] = useGetSessionTokenLazyQuery({
+  const [getSessionToken, { data, loading }] = useGetSessionTokenLazyQuery({
     fetchPolicy: 'network-only',
     onError: err => {
       toast.error(getErrorContent(err));
@@ -63,23 +49,16 @@ export const Login = ({ account }: LoginProps) => {
   });
 
   useEffect(() => {
-    if (!sLoading && sData && sData.getSessionToken) {
-      account && getCanConnect();
-    }
-  }, [sLoading, sData, push, getCanConnect, account]);
-
-  useEffect(() => {
-    if (loading || !data?.getNodeInfo?.version) return;
-    const { mayor, minor } = getVersion(data.getNodeInfo.version);
+    if (loading || !data?.getSessionToken) return;
+    const { mayor, minor } = getVersion(data.getSessionToken);
     if (mayor <= 0 && minor < 11) {
       toast.error(
         'ThunderHub supports LND version 0.11.0 and higher. Please update your node, you are in risk of losing funds.'
       );
-      logout();
     } else {
       push(appendBasePath('/home'));
     }
-  }, [data, loading, pass, account, push, logout]);
+  }, [data, loading, push]);
 
   if (!account) return null;
 
@@ -113,7 +92,7 @@ export const Login = ({ account }: LoginProps) => {
           onClick={() => handleEnter()}
           withMargin={'16px 0 0'}
           fullWidth={true}
-          loading={loading || sLoading}
+          loading={loading}
         >
           Connect
         </ColorButton>

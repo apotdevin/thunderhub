@@ -1,6 +1,11 @@
 import { createHash, randomBytes } from 'crypto';
 import * as bip39 from 'bip39';
 import * as bip32 from 'bip32';
+import AES from 'crypto-js/aes';
+import Utf8 from 'crypto-js/enc-utf8';
+import bcrypt from 'bcryptjs';
+import { PRE_PASS_STRING } from './fileHelpers';
+import { logger } from './logger';
 
 export const getPreimageAndHash = () => {
   const preimage = randomBytes(32);
@@ -25,4 +30,24 @@ export const getPrivateAndPublicKey = () => {
   const publicKey = derived.publicKey.toString('hex');
 
   return { privateKey, publicKey };
+};
+
+export const decodeMacaroon = (macaroon: string, password: string) => {
+  try {
+    return AES.decrypt(macaroon, password).toString(Utf8);
+  } catch (err) {
+    logger.error(`Error decoding macaroon with password: ${password}`);
+    throw new Error('WrongPasswordForLogin');
+  }
+};
+
+export const hashPassword = (password: string): string =>
+  `${PRE_PASS_STRING}${bcrypt.hashSync(password, 12)}`;
+
+export const isCorrectPassword = (
+  password: string,
+  correctPassword: string
+): boolean => {
+  const cleanPassword = correctPassword.replace(PRE_PASS_STRING, '');
+  return bcrypt.compareSync(password, cleanPassword);
 };

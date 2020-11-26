@@ -4,14 +4,13 @@ import path from 'path';
 import os from 'os';
 import { logger } from 'server/helpers/logger';
 import yaml from 'js-yaml';
-import bcrypt from 'bcryptjs';
-import { AccountType as ContextAccountType } from 'server/types/apiTypes';
 import { getUUID } from './auth';
+import { hashPassword } from './crypto';
 
 type EncodingType = 'hex' | 'utf-8';
 type BitcoinNetwork = 'mainnet' | 'regtest' | 'testnet';
 
-type AccountType = {
+export type AccountType = {
   name?: string;
   serverUrl?: string;
   lndDir?: string;
@@ -21,15 +20,27 @@ type AccountType = {
   password?: string | null;
   macaroon?: string;
   certificate?: string;
+  encrypted?: boolean;
 };
-type ParsedAccount = {
+
+export type ParsedAccount = {
   name: string;
   id: string;
   socket: string;
   macaroon: string;
   cert: string;
   password: string;
-};
+} & EncryptedAccount;
+
+type EncryptedAccount =
+  | {
+      encrypted: true;
+      encryptedMacaroon: string;
+    }
+  | {
+      encrypted: false;
+    };
+
 type AccountConfigType = {
   hashed: boolean | null;
   masterPassword: string | null;
@@ -124,10 +135,7 @@ export const hashPasswords = (
     hashedMasterPassword.indexOf(PRE_PASS_STRING) < 0
   ) {
     hasChanged = true;
-    hashedMasterPassword = `${PRE_PASS_STRING}${bcrypt.hashSync(
-      hashedMasterPassword,
-      12
-    )}`;
+    hashedMasterPassword = hashPassword(hashedMasterPassword);
   }
 
   cloned.masterPassword = hashedMasterPassword;
@@ -141,10 +149,7 @@ export const hashPasswords = (
 
       if (hashedPassword.indexOf(PRE_PASS_STRING) < 0) {
         hasChanged = true;
-        hashedPassword = `${PRE_PASS_STRING}${bcrypt.hashSync(
-          account.password,
-          12
-        )}`;
+        hashedPassword = hashPassword(account.password);
       }
 
       hashedAccounts.push({ ...account, password: hashedPassword });
@@ -181,7 +186,7 @@ const getCertificate = ({
 };
 
 const getMacaroon = (
-  { macaroon, macaroonPath, network, lndDir }: AccountType,
+  { macaroon, macaroonPath, network, lndDir, encrypted }: AccountType,
   defaultNetwork: BitcoinNetwork
 ): string | null => {
   if (macaroon) {
@@ -189,7 +194,7 @@ const getMacaroon = (
   }
 
   if (macaroonPath) {
-    return readFile(macaroonPath);
+    return readFile(macaroonPath, encrypted ? 'utf-8' : 'hex');
   }
 
   if (!lndDir) {
@@ -208,7 +213,7 @@ const getMacaroon = (
   );
 };
 
-export const getAccounts = (filePath: string): ContextAccountType[] => {
+export const getAccounts = (filePath: string): ParsedAccount[] => {
   if (filePath === '') {
     logger.verbose('No account config file path provided');
     return [];
@@ -219,7 +224,7 @@ export const getAccounts = (filePath: string): ContextAccountType[] => {
     logger.info(`No account config file found at path ${filePath}`);
     return [];
   }
-  return getAccountsFromYaml(accountConfig, filePath) as ContextAccountType[];
+  return getAccountsFromYaml(accountConfig, filePath);
 };
 
 export const getParsedAccount = (
@@ -236,6 +241,7 @@ export const getParsedAccount = (
     macaroonPath,
     macaroon: macaroonValue,
     password,
+    encrypted,
   } = account;
 
   const missingFields: string[] = [];
@@ -280,6 +286,17 @@ export const getParsedAccount = (
 
   const id = getUUID(`${name}${serverUrl}${macaroon}${cert}`);
 
+  let encryptedProps: EncryptedAccount = {
+    encrypted: false,
+  };
+
+  if (encrypted) {
+    encryptedProps = {
+      encrypted: true,
+      encryptedMacaroon: macaroon,
+    };
+  }
+
   return {
     name: name || '',
     id,
@@ -287,18 +304,19 @@ export const getParsedAccount = (
     macaroon,
     cert: cert || '',
     password: password || masterPassword || '',
+    ...encryptedProps,
   };
 };
 
 export const getAccountsFromYaml = (
   config: AccountConfigType,
   filePath: string
-) => {
+): ParsedAccount[] => {
   const { hashed, accounts: preAccounts } = config;
 
   if (!preAccounts || preAccounts.length <= 0) {
     logger.warn(`Account config found at path ${filePath} but had no accounts`);
-    return null;
+    return [];
   }
 
   const { defaultNetwork, masterPassword, accounts } = hashPasswords(
@@ -323,7 +341,7 @@ export const getAccountsFromYaml = (
       .join(', ')}`
   );
 
-  return parsedAccounts;
+  return parsedAccounts as ParsedAccount[];
 };
 
 export const readMacaroons = (macaroonPath: string): string | null => {

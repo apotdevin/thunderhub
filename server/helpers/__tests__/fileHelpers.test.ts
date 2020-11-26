@@ -4,6 +4,7 @@ import {
   getParsedAccount,
   hashPasswords,
   getAccountsFromYaml,
+  AccountType,
 } from '../fileHelpers';
 
 const mockedExistsSync: jest.Mock = existsSync as any;
@@ -209,6 +210,36 @@ describe('getParsedAccount', () => {
       const account = getParsedAccount(raw, 0, masterPassword, 'mainnet');
       expect(account?.cert).toBe('yay');
     });
+  });
+});
+
+describe('encrypted accounts', () => {
+  it('returns correct props when encrypted', () => {
+    const raw: AccountType = {
+      name: 'NAME',
+      certificate: 'RAW CERT',
+      serverUrl: 'server.url',
+      macaroon: 'RAW MACAROON',
+      encrypted: true,
+    };
+
+    const account = getParsedAccount(raw, 0, 'master password', 'mainnet');
+    expect(account?.encrypted).toBeTruthy();
+    expect(account?.macaroon).toBe(raw.macaroon);
+    expect((account as any)?.encryptedMacaroon).toBe(raw.macaroon);
+  });
+  it('returns correct props when not encrypted', () => {
+    const raw = {
+      lndDir: 'LND DIR',
+      name: 'NAME',
+      certificate: 'RAW CERT',
+      serverUrl: 'server.url',
+      macaroon: 'RAW MACAROON',
+    };
+
+    const account = getParsedAccount(raw, 0, 'master password', 'mainnet');
+    expect(account?.encrypted).toBeFalsy();
+    expect(account).not.toHaveProperty('encryptedMacaroon');
   });
 });
 
