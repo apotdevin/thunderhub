@@ -82,7 +82,7 @@ export const Accounts = () => {
   const [logout] = useLogoutMutation({ refetchQueries: ['GetServerAccounts'] });
 
   React.useEffect(() => {
-    prefetch(appendBasePath('/home'));
+    prefetch(appendBasePath('/'));
   }, [prefetch]);
 
   const {
@@ -100,7 +100,7 @@ export const Accounts = () => {
 
   React.useEffect(() => {
     if (!loading && data && data.getNodeInfo) {
-      push(appendBasePath('/home'));
+      push(appendBasePath('/'));
     }
   }, [data, loading, push]);
 

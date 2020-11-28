@@ -31,8 +31,9 @@ import {
   HeaderNavButton,
 } from './Header.styled';
 
-const MAIN = '/';
-const HOME = '/home';
+const SSO = '/sso';
+const MAIN = '/login';
+const HOME = '/';
 const CHAT = '/chat';
 const DONATIONS = '/leaderboard';
 const SETTINGS = '/settings';
@@ -45,9 +46,9 @@ export const Header = () => {
   const { lnMarketsAuth } = useConfigState();
   const connected = useBaseConnect();
 
-  const isRoot = pathname === '/';
+  const isRoot = pathname === MAIN || pathname === SSO;
 
-  const showHomeButton = (): boolean => pathname !== MAIN && pathname !== HOME;
+  const showHomeButton = (): boolean => !isRoot && pathname !== HOME;
 
   const transitions = useTransition(open, null, {
     from: { position: 'absolute', opacity: 0 },
@@ -101,7 +102,7 @@ export const Header = () => {
       >
         <HeaderStyle>
           <HeaderLine loggedIn={!isRoot}>
-            <Link to={!isRoot ? '/home' : '/'} underline={'transparent'}>
+            <Link to={!isRoot ? '/' : '/login'} underline={'transparent'}>
               <HeaderTitle withPadding={isRoot}>
                 <IconPadding>
                   <Cpu color={'white'} size={18} />

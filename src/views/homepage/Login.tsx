@@ -56,7 +56,7 @@ export const Login = ({ account }: LoginProps) => {
         'ThunderHub supports LND version 0.11.0 and higher. Please update your node, you are in risk of losing funds.'
       );
     } else {
-      push(appendBasePath('/home'));
+      push(appendBasePath('/'));
     }
   }, [data, loading, push]);
 

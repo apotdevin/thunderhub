@@ -20,7 +20,7 @@ const Wrapper: React.FC = ({ children }) => {
   const { theme } = useConfigState();
   const { pathname } = useRouter();
 
-  const isRoot = pathname === '/';
+  const isRoot = pathname === '/login' || pathname === '/sso';
 
   return (
     <ThemeProvider theme={{ mode: isRoot ? 'light' : theme }}>

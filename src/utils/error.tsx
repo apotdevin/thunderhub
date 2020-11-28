@@ -42,11 +42,17 @@ const ErrorLine = styled.div`
 export const getErrorContent = (error: ApolloError): ReactNode => {
   const errors = error.graphQLErrors.map(x => x.message);
 
-  const renderMessage = errors.map((errorMsg, i) => {
-    return <ErrorLine key={i}>{getMessage(errorMsg)}</ErrorLine>;
-  });
+  if (!errors.length) {
+    return <ErrorBox>{JSON.stringify(error)}</ErrorBox>;
+  }
 
-  return <ErrorBox>{renderMessage}</ErrorBox>;
+  return (
+    <ErrorBox>
+      {errors.map((errorMsg, i) => {
+        return <ErrorLine key={i}>{getMessage(errorMsg)}</ErrorLine>;
+      })}
+    </ErrorBox>
+  );
 };
 
 export const getErrorText = (error: ApolloError): ReactNode => {

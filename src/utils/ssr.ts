@@ -3,6 +3,7 @@ import { initializeApollo } from 'config/client';
 import { parseCookies } from 'src/utils/cookies';
 import { DocumentNode } from 'graphql';
 import { appConstants } from 'server/utils/appConstants';
+import { GET_AUTH_TOKEN } from 'src/graphql/queries/getAuthToken';
 
 const cookieProps = (
   context: NextPageContext,
@@ -13,7 +14,7 @@ const cookieProps = (
   const cookies = parseCookies(context.req);
 
   if (!cookies[appConstants.cookieName] && !noAuth) {
-    context.res?.writeHead(302, { Location: '/' });
+    context.res?.writeHead(302, { Location: '/login' });
     context.res?.end();
 
     return { theme: 'dark', authenticated: false };
@@ -41,24 +42,37 @@ const isNotDocumentNode = (
 
 export const getProps = async (
   context: NextPageContext,
-  queries?: (DocumentNode | QueryProps)[],
+  queries: (DocumentNode | QueryProps)[] = [],
   noAuth?: boolean
 ) => {
+  const finalQueries = [...queries];
+
+  if (context?.query?.token) {
+    finalQueries.push({
+      document: GET_AUTH_TOKEN,
+      variables: { cookie: context.query.token },
+    });
+  }
+
   const { theme, authenticated } = cookieProps(context, noAuth);
 
   const apolloClient = initializeApollo(undefined, context);
 
-  if (queries?.length && authenticated) {
-    for (const query of queries) {
-      if (isNotDocumentNode(query)) {
-        await apolloClient.query({
-          query: query.document,
-          variables: query.variables,
-        });
-      } else {
-        await apolloClient.query({
-          query,
-        });
+  if (finalQueries?.length && authenticated) {
+    for (const query of finalQueries) {
+      try {
+        if (isNotDocumentNode(query)) {
+          await apolloClient.query({
+            query: query.document,
+            variables: query.variables,
+          });
+        } else {
+          await apolloClient.query({
+            query,
+          });
+        }
+      } catch (error) {
+        // Ignore SSR query errors
       }
     }
   } else {
