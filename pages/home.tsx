@@ -3,7 +3,6 @@ import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { Version } from 'src/components/version/Version';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
-import { GET_NODE_INFO } from 'src/graphql/queries/getNodeInfo';
 import { NetworkInfo } from '../src/views/home/networkInfo/NetworkInfo';
 import { AccountInfo } from '../src/views/home/account/AccountInfo';
 import { QuickActions } from '../src/views/home/quickActions/QuickActions';
@@ -36,5 +35,5 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context, [GET_NODE_INFO]);
+  return await getProps(context);
 }
