@@ -86,7 +86,7 @@ export const queryTypes = gql`
       lastMessage: String
     ): getMessagesType
     getAuthToken(cookie: String): Boolean!
-    getSessionToken(id: String, password: String): Boolean
+    getSessionToken(id: String, password: String): String!
     getServerAccounts: [serverAccountType]
     getAccount: serverAccountType
     getLatestVersion: String

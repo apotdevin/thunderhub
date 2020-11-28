@@ -214,6 +214,38 @@ accounts:
 
 If you don't specify `defaultNetwork` then `mainnet` is used as the default.
 
+#### Encrypted Macaroons
+
+You can use AES encrypted macaroons and have ThunderHub decrypt them and store them in memory. This allows you to have encrypted macaroons on your server and avoid having them in cleartext.
+
+Macaroons should be AES encrypted. This is an example for Javascript:
+
+```js
+const encrypted = CryptoJS.AES.encrypt(
+  'Hex or Base64 encoded Macaroon',
+  'Secret Passphrase'
+).toString();
+```
+
+You can use the `macaroonPath` field and let ThunderHub look for the file or directly use the `macaroon` field and paste your encrypted macaroon.
+
+You must let ThunderHub know that the macaroon is encrypted by adding an `encrypted` field to your account like such:
+
+```yaml
+masterPassword: 'password'
+accounts:
+  - name: 'Account 1'
+    serverUrl: 'url:port'
+    macaroonPath: '/path/to/encrypted.admin.macaroon'
+    encrypted: true # This field is necessary
+  - name: 'Account 2'
+    serverUrl: 'url:port'
+    macaroon: 'EnCrYpTeD-MaCaRoOn'
+    encrypted: true # This field is necessary
+```
+
+To login you must use the same secret passphrase that you used to encrypt the macaroon.
+
 #### Security
 
 On the first start of the server, the `masterPassword` and all account `password` fields will be **hashed** and the file will be overwritten with these new values to avoid having cleartext passwords on the server.
