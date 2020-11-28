@@ -33,7 +33,7 @@ export const LogoutButton = () => {
     if (data && data.logout) {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
-      push(appendBasePath('/'));
+      push(appendBasePath('/login'));
     }
   }, [data, dispatchChat, push, client]);
 

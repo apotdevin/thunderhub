@@ -17,7 +17,7 @@ export const StatusCheck: React.FC = () => {
     if (error) {
       toast.error(`Unable to connect to node`);
       stopPolling();
-      push(appendBasePath('/'));
+      push(appendBasePath('/login'));
     }
   }, [error, push, stopPolling]);
 

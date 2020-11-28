@@ -2,29 +2,40 @@ import * as React from 'react';
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
 import { getUrlParam } from 'src/utils/url';
-import { useGetAuthTokenQuery } from 'src/graphql/queries/__generated__/getAuthToken.generated';
+import { useGetAuthTokenLazyQuery } from 'src/graphql/queries/__generated__/getAuthToken.generated';
 import { toast } from 'react-toastify';
+import { getErrorContent } from 'src/utils/error';
 
 export const ServerAccounts: React.FC = () => {
   const { push, query } = useRouter();
 
   const cookieParam = getUrlParam(query?.token);
 
-  const { data: authData } = useGetAuthTokenQuery({
-    skip: !cookieParam,
+  const [getToken, { data }] = useGetAuthTokenLazyQuery({
     variables: { cookie: cookieParam },
-    errorPolicy: 'ignore',
+    onError: error => {
+      toast.error(getErrorContent(error));
+      push(appendBasePath('/login'));
+    },
   });
 
   React.useEffect(() => {
-    if (!cookieParam || !authData) return;
-    if (authData.getAuthToken) {
+    if (cookieParam) {
+      getToken();
+    } else {
+      push(appendBasePath('/login'));
+    }
+  }, [cookieParam, push, getToken]);
+
+  React.useEffect(() => {
+    if (!cookieParam || !data) return;
+    if (data.getAuthToken) {
       push(appendBasePath('/'));
     }
-    if (!authData.getAuthToken) {
+    if (!data.getAuthToken) {
       toast.warning('Unable to SSO. Check your logs.');
     }
-  }, [push, authData, cookieParam]);
+  }, [push, data, cookieParam]);
 
   return null;
 };

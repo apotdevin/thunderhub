@@ -56,7 +56,7 @@ export const DangerView = () => {
   const { push } = useRouter();
 
   const [logout] = useLogoutMutation({
-    onCompleted: () => push(appendBasePath('/')),
+    onCompleted: () => push(appendBasePath('/login')),
   });
 
   const handleDeleteAll = () => {

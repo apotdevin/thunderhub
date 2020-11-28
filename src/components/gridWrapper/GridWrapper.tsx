@@ -6,7 +6,6 @@ import { mediaWidths } from '../../styles/Themes';
 import { Section } from '../section/Section';
 import { Navigation } from '../../layouts/navigation/Navigation';
 import { StatusCheck } from '../statusCheck/StatusCheck';
-import { ServerAccounts } from '../accounts/ServerAccounts';
 
 type GridProps = {
   noNavigation?: boolean;
@@ -16,7 +15,7 @@ const Container = styled.div<GridProps>`
   display: grid;
   grid-template-areas: 'nav content content';
   grid-template-columns: auto 1fr 200px;
-  
+
   ${({ noNavigation }) =>
     !noNavigation &&
     css`
@@ -39,7 +38,6 @@ export const GridWrapper: React.FC<GridProps> = ({
 }) => (
   <Section padding={'16px 0 32px'}>
     <Container noNavigation={noNavigation}>
-      <ServerAccounts />
       <BitcoinPrice />
       <BitcoinFees />
       <StatusCheck />

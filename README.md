@@ -147,7 +147,7 @@ SSO_MACAROON_PATH = '/path/to/macaroon/folder'; # i.e. '\lnd\alice\data\chain\bi
 To login to this account you must add the cookie file content to the end of your ThunderHub url. For example:
 
 ```
-http://localhost:3000?token=[COOKIE]
+http://localhost:3000/sso?token=[COOKIE]
 ```
 
 Replace `[COOKIE]` with the contents of the `.cookie` file.

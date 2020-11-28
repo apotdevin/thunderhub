@@ -114,7 +114,7 @@ const BurgerNav = styled.a<NavProps>`
   color: ${({ selected }) => (selected ? navTextColor : unSelectedNavButton)};
 `;
 
-const HOME = '/home';
+const HOME = '/';
 const PEERS = '/peers';
 const CHANNEL = '/channels';
 const REBALANCE = '/rebalance';
@@ -140,7 +140,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
 
   const connected = useBaseConnect();
 
-  const isRoot = pathname === '/';
+  const isRoot = pathname === '/login' || pathname === '/sso';
 
   const renderNavButton = (
     title: string,

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { readCookie, refreshCookie } from 'server/helpers/fileHelpers';
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
-import cookie from 'cookie';
+import cookieLib from 'cookie';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { appConstants } from 'server/utils/appConstants';
 import { GetWalletInfoType } from 'server/types/ln-service.types';
@@ -18,10 +18,9 @@ export const authResolvers = {
   Query: {
     getAuthToken: async (
       _: undefined,
-      params: any,
-      context: ContextType
+      { cookie }: { cookie: string },
+      { ip, secret, sso, res }: ContextType
     ): Promise<boolean> => {
-      const { ip, secret, sso, res } = context;
       await requestLimiter(ip, 'getAuthToken');
 
       if (!sso) {
@@ -34,7 +33,7 @@ export const authResolvers = {
         return false;
       }
 
-      if (!params.cookie) {
+      if (!cookie) {
         return false;
       }
 
@@ -46,15 +45,28 @@ export const authResolvers = {
       const cookieFile = readCookie(cookiePath);
 
       if (
-        (cookieFile && cookieFile.trim() === params.cookie.trim()) ||
+        (cookieFile && cookieFile.trim() === cookie.trim()) ||
         nodeEnv === 'development'
       ) {
         refreshCookie(cookiePath);
+
+        const { lnd } = authenticatedLndGrpc(sso);
+        const [, error] = await toWithError<GetWalletInfoType>(
+          getWalletInfo({
+            lnd,
+          })
+        );
+
+        if (error) {
+          logger.error('Unable to connect to this node');
+          throw new Error('UnableToConnectToThisNode');
+        }
+
         const token = jwt.sign({ id: 'sso' }, secret);
 
         res.setHeader(
           'Set-Cookie',
-          cookie.serialize(appConstants.cookieName, token, {
+          cookieLib.serialize(appConstants.cookieName, token, {
             httpOnly: true,
             sameSite: true,
             path: '/',
@@ -63,7 +75,7 @@ export const authResolvers = {
         return true;
       }
 
-      logger.debug(`Cookie ${params.cookie} different to file ${cookieFile}`);
+      logger.debug(`Cookie ${cookie} different to file ${cookieFile}`);
       return false;
     },
     getSessionToken: async (
@@ -122,7 +134,7 @@ export const authResolvers = {
       const token = jwt.sign({ id }, secret);
       res.setHeader(
         'Set-Cookie',
-        cookie.serialize(appConstants.cookieName, token, {
+        cookieLib.serialize(appConstants.cookieName, token, {
           httpOnly: true,
           sameSite: true,
           path: '/',
@@ -142,7 +154,7 @@ export const authResolvers = {
 
       res.setHeader(
         'Set-Cookie',
-        cookie.serialize(appConstants.cookieName, '', {
+        cookieLib.serialize(appConstants.cookieName, '', {
           maxAge: -1,
           httpOnly: true,
           sameSite: true,

@@ -1,32 +1,39 @@
-import * as React from 'react';
-import { Spacer } from 'src/components/spacer/Spacer';
-import { ServerAccounts } from 'src/components/accounts/ServerAccounts';
-import { ThunderStorm } from 'src/views/homepage/HomePage.styled';
-import { appendBasePath } from 'src/utils/basePath';
+import React from 'react';
+import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
+import { Version } from 'src/components/version/Version';
 import { NextPageContext } from 'next';
-import { GET_SERVER_ACCOUNTS } from 'src/graphql/queries/getServerAccounts';
 import { getProps } from 'src/utils/ssr';
-import { TopSection } from '../src/views/homepage/Top';
-import { Accounts } from '../src/views/homepage/Accounts';
+import { NetworkInfo } from '../src/views/home/networkInfo/NetworkInfo';
+import { AccountInfo } from '../src/views/home/account/AccountInfo';
+import { QuickActions } from '../src/views/home/quickActions/QuickActions';
+import { FlowBox } from '../src/views/home/reports/flow';
+import { ForwardBox } from '../src/views/home/reports/forwardReport';
+import { LiquidReport } from '../src/views/home/reports/liquidReport/LiquidReport';
+import { ConnectCard } from '../src/views/home/connect/Connect';
 
-const ContextApp = () => (
-  <>
-    <ThunderStorm alt={''} src={appendBasePath('/static/thunderstorm.gif')} />
-    <TopSection />
-    <Accounts />
-    <Spacer />
-  </>
-);
+const HomeView = () => {
+  return (
+    <>
+      <Version />
+      <AccountInfo />
+      <ConnectCard />
+      <QuickActions />
+      <FlowBox />
+      <LiquidReport />
+      <ForwardBox />
+      <NetworkInfo />
+    </>
+  );
+};
 
 const Wrapped = () => (
-  <>
-    <ServerAccounts />
-    <ContextApp />
-  </>
+  <GridWrapper>
+    <HomeView />
+  </GridWrapper>
 );
 
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context, [GET_SERVER_ACCOUNTS], true);
+  return await getProps(context);
 }
