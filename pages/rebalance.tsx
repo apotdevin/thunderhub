@@ -10,8 +10,6 @@ import {
 import { AdvancedBalance } from 'src/views/balance/AdvancedBalance';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
-import { GET_CHANNELS } from 'src/graphql/queries/getChannels';
-import { GET_NODE_INFO } from 'src/graphql/queries/getNodeInfo';
 
 const BalanceView = () => {
   const [advancedType, advancedTypeSet] = useState(false);
@@ -49,5 +47,5 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context, [GET_CHANNELS, GET_NODE_INFO]);
+  return await getProps(context);
 }

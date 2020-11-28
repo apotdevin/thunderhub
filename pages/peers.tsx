@@ -4,8 +4,6 @@ import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { PeerType } from 'src/graphql/types';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
-import { GET_PEERS } from 'src/graphql/queries/getPeers';
-import { GET_NODE_INFO } from 'src/graphql/queries/getNodeInfo';
 import {
   CardWithTitle,
   SubTitle,
@@ -54,5 +52,5 @@ const Wrapped = () => (
 export default Wrapped;
 
 export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context, [GET_PEERS, GET_NODE_INFO]);
+  return await getProps(context);
 }
