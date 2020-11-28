@@ -1,7 +1,8 @@
 import { authenticatedLndGrpc } from 'ln-service';
-import { SSOType, AccountType } from 'server/types/apiTypes';
+import { SSOType } from 'server/types/apiTypes';
 import { LndObject } from 'server/types/ln-service.types';
 import { v5 as uuidv5 } from 'uuid';
+import { ParsedAccount } from './fileHelpers';
 import { logger } from './logger';
 
 type LndAuthType = {
@@ -18,7 +19,7 @@ export const getUUID = (text: string): string =>
 export const getAuthLnd = (
   id: string,
   sso: SSOType | null,
-  accounts: AccountType[]
+  accounts: ParsedAccount[]
 ): LndObject | null => {
   if (!id) {
     logger.silly('Account not authenticated');

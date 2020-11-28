@@ -10,6 +10,7 @@ import { Link } from 'src/components/link/Link';
 import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/getServerAccounts.generated';
 import { ServerAccountType } from 'src/graphql/types';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
+import { useLogoutMutation } from 'src/graphql/mutations/__generated__/logout.generated';
 import { Section } from '../../components/section/Section';
 import {
   Card,
@@ -78,6 +79,8 @@ export const Accounts = () => {
     null
   );
 
+  const [logout] = useLogoutMutation({ refetchQueries: ['GetServerAccounts'] });
+
   React.useEffect(() => {
     prefetch(appendBasePath('/home'));
   }, [prefetch]);
@@ -91,6 +94,7 @@ export const Accounts = () => {
     fetchPolicy: 'network-only',
     onError: () => {
       toast.error('Unable to connect to this node');
+      logout();
     },
   });
 

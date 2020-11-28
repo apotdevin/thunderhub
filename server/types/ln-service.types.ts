@@ -101,6 +101,7 @@ export type ForwardType = {
 export type GetWalletInfoType = {
   alias: string;
   public_key: string;
+  version: string;
 };
 
 export type DiffieHellmanComputeSecretType = {
