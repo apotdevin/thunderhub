@@ -9,13 +9,15 @@ import { logger } from './logger';
 
 export const getPreimageAndHash = () => {
   const preimage = randomBytes(32);
-  const preimageHash = createHash('sha256')
-    .update(preimage)
-    .digest()
-    .toString('hex');
+  const preimageHash = getSHA256Hash(preimage);
 
   return { preimage, hash: preimageHash };
 };
+
+export const getSHA256Hash = (
+  str: string | Buffer,
+  encoding: 'hex' | 'base64' = 'hex'
+) => createHash('sha256').update(str).digest().toString(encoding);
 
 export const getPrivateAndPublicKey = () => {
   const secretKey = bip39.generateMnemonic();

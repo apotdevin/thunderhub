@@ -2,8 +2,10 @@ import { authenticatedLndGrpc } from 'ln-service';
 import { SSOType } from 'server/types/apiTypes';
 import { LndObject } from 'server/types/ln-service.types';
 import { v5 as uuidv5 } from 'uuid';
+import { getSHA256Hash } from './crypto';
 import { ParsedAccount } from './fileHelpers';
 import { logger } from './logger';
+import { SavedLnd } from './savedLnd';
 
 type LndAuthType = {
   cert: string | null;
@@ -13,6 +15,8 @@ type LndAuthType = {
 
 const THUNDERHUB_NAMESPACE = '00000000-0000-0000-0000-000000000000';
 
+export const saved = new SavedLnd();
+
 export const getUUID = (text: string): string =>
   uuidv5(text, THUNDERHUB_NAMESPACE);
 
@@ -21,6 +25,13 @@ export const getAuthLnd = (
   sso: SSOType | null,
   accounts: ParsedAccount[]
 ): LndObject | null => {
+  const hash = getSHA256Hash(JSON.stringify({ id, sso, accounts }));
+
+  if (saved.isSame(hash)) {
+    logger.silly('Using recycled LND Object');
+    return saved.lnd;
+  }
+
   if (!id) {
     logger.silly('Account not authenticated');
     return null;
@@ -56,6 +67,10 @@ export const getAuthLnd = (
     authDetails = verifiedAccount;
   }
 
+  logger.debug('Creating a new LND object');
   const { lnd } = authenticatedLndGrpc(authDetails);
+
+  saved.save(hash, lnd);
+
   return lnd;
 };
