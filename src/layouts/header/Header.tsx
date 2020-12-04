@@ -10,7 +10,6 @@ import {
   Heart,
   Activity,
 } from 'react-feather';
-import { useTransition, animated } from 'react-spring';
 import { useRouter } from 'next/router';
 import { useBaseConnect } from 'src/hooks/UseBaseConnect';
 import { LogoutButton } from 'src/components/logoutButton';
@@ -50,12 +49,6 @@ export const Header = () => {
 
   const showHomeButton = (): boolean => !isRoot && pathname !== HOME;
 
-  const transitions = useTransition(open, null, {
-    from: { position: 'absolute', opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-  });
-
   const renderNavButton = (link: string, NavIcon: Icon) => (
     <Link to={link} noStyling={true}>
       <HeaderNavButton selected={pathname === link}>
@@ -68,17 +61,7 @@ export const Header = () => {
     <>
       <ViewSwitch>
         <IconWrapper onClick={() => setOpen(prev => !prev)}>
-          {transitions.map(({ item, key, props }) =>
-            item ? (
-              <animated.div key={key} style={props}>
-                <X size={24} />
-              </animated.div>
-            ) : (
-              <animated.div key={key} style={props}>
-                <Menu size={24} />
-              </animated.div>
-            )
-          )}
+          {open ? <X size={24} /> : <Menu size={24} />}
         </IconWrapper>
       </ViewSwitch>
       <ViewSwitch hideMobile={true}>
