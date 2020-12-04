@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.11.0](https://github.com/apotdevin/thunderhub/compare/v0.10.5...v0.11.0) (2020-12-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* 💥 ♻️ login and sso auth
+
+### Bug Fixes
+
+* 🐛 invisible header icon ([f7d6e46](https://github.com/apotdevin/thunderhub/commit/f7d6e4663d36707384871b4520e9436b42575583))
+* 🐛 reuse lnd connection ([f2eff6c](https://github.com/apotdevin/thunderhub/commit/f2eff6c2e7f8ee6b18b2b69a972474427e80a4d4))
+
+
+### Refactoring
+
+* 💥 ♻️ login and sso auth ([ad480e1](https://github.com/apotdevin/thunderhub/commit/ad480e1740e5ccf05beadbbe2523c298308b4b6b))
+
+
+### Improvements
+
+* 🔧 change queries to mutations ([18911fd](https://github.com/apotdevin/thunderhub/commit/18911fd9f598dc15bd0670bcd4ff5d36962b0d64))
+* 🔧 encrypted macaroon ([#173](https://github.com/apotdevin/thunderhub/issues/173)) ([e957b3c](https://github.com/apotdevin/thunderhub/commit/e957b3c5523dea2b4bfc4c24e134275495d2579d))
+* 🔧 remove ssr queries ([a7f222f](https://github.com/apotdevin/thunderhub/commit/a7f222f57056b4dd1bf45aea33887a70ffb5c6fb))
+
 ### [0.10.5](https://github.com/apotdevin/thunderhub/compare/v0.10.4...v0.10.5) (2020-11-23)
 
 
