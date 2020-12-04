@@ -83,8 +83,6 @@ export type Query = {
   getChainTransactions?: Maybe<Array<Maybe<GetTransactionsType>>>;
   getUtxos?: Maybe<Array<Maybe<GetUtxosType>>>;
   getMessages?: Maybe<GetMessagesType>;
-  getAuthToken: Scalars['Boolean'];
-  getSessionToken: Scalars['String'];
   getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
   getAccount?: Maybe<ServerAccountType>;
   getLatestVersion?: Maybe<Scalars['String']>;
@@ -199,19 +197,10 @@ export type QueryGetMessagesArgs = {
   lastMessage?: Maybe<Scalars['String']>;
 };
 
-
-export type QueryGetAuthTokenArgs = {
-  cookie?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryGetSessionTokenArgs = {
-  id?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
+  getAuthToken: Scalars['Boolean'];
+  getSessionToken: Scalars['String'];
   claimBoltzTransaction: Scalars['String'];
   createBoltzReverseSwap: CreateBoltzReverseSwapType;
   lnMarketsDeposit: Scalars['Boolean'];
@@ -241,6 +230,17 @@ export type Mutation = {
   sendMessage?: Maybe<Scalars['Int']>;
   logout: Scalars['Boolean'];
   createMacaroon?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationGetAuthTokenArgs = {
+  cookie?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationGetSessionTokenArgs = {
+  id?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
 };
 
 

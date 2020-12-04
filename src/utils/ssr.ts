@@ -3,7 +3,7 @@ import { initializeApollo } from 'config/client';
 import { parseCookies } from 'src/utils/cookies';
 import { DocumentNode } from 'graphql';
 import { appConstants } from 'server/utils/appConstants';
-import { GET_AUTH_TOKEN } from 'src/graphql/queries/getAuthToken';
+import { GET_AUTH_TOKEN } from 'src/graphql/mutations/getAuthToken';
 
 const cookieProps = (
   context: NextPageContext,

@@ -11,20 +11,18 @@ import { ForwardBox } from '../src/views/home/reports/forwardReport';
 import { LiquidReport } from '../src/views/home/reports/liquidReport/LiquidReport';
 import { ConnectCard } from '../src/views/home/connect/Connect';
 
-const HomeView = () => {
-  return (
-    <>
-      <Version />
-      <AccountInfo />
-      <ConnectCard />
-      <QuickActions />
-      <FlowBox />
-      <LiquidReport />
-      <ForwardBox />
-      <NetworkInfo />
-    </>
-  );
-};
+const HomeView = () => (
+  <>
+    <Version />
+    <AccountInfo />
+    <ConnectCard />
+    <QuickActions />
+    <FlowBox />
+    <LiquidReport />
+    <ForwardBox />
+    <NetworkInfo />
+  </>
+);
 
 const Wrapped = () => (
   <GridWrapper>

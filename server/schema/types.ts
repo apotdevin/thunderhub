@@ -85,8 +85,6 @@ export const queryTypes = gql`
       initialize: Boolean
       lastMessage: String
     ): getMessagesType
-    getAuthToken(cookie: String): Boolean!
-    getSessionToken(id: String, password: String): String!
     getServerAccounts: [serverAccountType]
     getAccount: serverAccountType
     getLatestVersion: String
@@ -95,6 +93,8 @@ export const queryTypes = gql`
 
 export const mutationTypes = gql`
   type Mutation {
+    getAuthToken(cookie: String): Boolean!
+    getSessionToken(id: String, password: String): String!
     claimBoltzTransaction(
       redeem: String!
       transaction: String!

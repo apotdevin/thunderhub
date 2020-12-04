@@ -3,11 +3,11 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
-import { useGetSessionTokenLazyQuery } from 'src/graphql/queries/__generated__/getSessionToken.generated';
 import { getErrorContent } from 'src/utils/error';
 import { Lock } from 'react-feather';
 import { ServerAccountType } from 'src/graphql/types';
 import { getVersion } from 'src/utils/version';
+import { useGetSessionTokenMutation } from 'src/graphql/mutations/__generated__/getSessionToken.generated';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../components/input';
@@ -41,8 +41,8 @@ export const Login = ({ account }: LoginProps) => {
 
   const [pass, setPass] = useState('');
 
-  const [getSessionToken, { data, loading }] = useGetSessionTokenLazyQuery({
-    fetchPolicy: 'network-only',
+  const [getSessionToken, { data, loading }] = useGetSessionTokenMutation({
+    refetchQueries: ['GetNodeInfo'],
     onError: err => {
       toast.error(getErrorContent(err));
     },

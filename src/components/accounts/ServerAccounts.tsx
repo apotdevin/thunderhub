@@ -2,17 +2,18 @@ import * as React from 'react';
 import { useRouter } from 'next/router';
 import { appendBasePath } from 'src/utils/basePath';
 import { getUrlParam } from 'src/utils/url';
-import { useGetAuthTokenLazyQuery } from 'src/graphql/queries/__generated__/getAuthToken.generated';
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
+import { useGetAuthTokenMutation } from 'src/graphql/mutations/__generated__/getAuthToken.generated';
 
 export const ServerAccounts: React.FC = () => {
   const { push, query } = useRouter();
 
   const cookieParam = getUrlParam(query?.token);
 
-  const [getToken, { data }] = useGetAuthTokenLazyQuery({
+  const [getToken, { data }] = useGetAuthTokenMutation({
     variables: { cookie: cookieParam },
+    refetchQueries: ['GetNodeInfo'],
     onError: error => {
       toast.error(getErrorContent(error));
       push(appendBasePath('/login'));
