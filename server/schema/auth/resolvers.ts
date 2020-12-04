@@ -15,7 +15,7 @@ const { serverRuntimeConfig } = getConfig() || {};
 const { cookiePath, nodeEnv } = serverRuntimeConfig || {};
 
 export const authResolvers = {
-  Query: {
+  Mutation: {
     getAuthToken: async (
       _: undefined,
       { cookie }: { cookie: string },
@@ -142,8 +142,6 @@ export const authResolvers = {
       );
       return info?.version || '';
     },
-  },
-  Mutation: {
     logout: async (
       _: undefined,
       __: any,
