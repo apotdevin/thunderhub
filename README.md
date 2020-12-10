@@ -401,3 +401,27 @@ To get ThunderHub running with docker follow these steps:
 2. `docker run --rm -it -p 3000:3000/tcp apotdevin/thunderhub:v0.5.5`
 
 You can now go to `localhost:3000` to see your running instance of ThunderHub
+
+## SSL Certificates
+
+Thunderhub has the ability to automatically provision SSL certificates for itself via [ZeroSSL](https://zerossl.com). In order to use this, you must configure the `SSL Config` section of the [`.env`](.env) file. To options are as follows:
+
+- `PUBLIC_URL` is the publicly reachable URL that Thunderhub would be servered from.
+
+- `SSL_PORT` is the port the Certificate Validation server will run on. This _must_ either be running on port `80` or you must proxy this port to port `80` with something like Nginx.
+
+- `SSL_SAVE` specifies whether you want Thunderhub to save the generate SSL private key and certificate to disk or not.
+
+You must also specify your ZeroSSL API key either in the [`.env`](.env) file or export it as an environment variable:
+
+```
+$ export ZEROSSL_API_KEY="a1b2c3d4e5f6g7h8i9"
+```
+
+Once you have Thunderhub configured you can start the secure server with:
+
+```
+$ npm run start:secure
+```
+
+This will request a certificate from ZeroSSL for the given `PUBLIC_URL` and serve the HTTP challenge via the Certificate Validation server. Once the certificate is verified and issued, Thunderhub downloads the certificate and shuts down the Certificate Validation server. Then it will bring up the Thunerhub web server and use the newly provisioned SSL certificates.
