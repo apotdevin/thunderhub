@@ -21,11 +21,7 @@ import {
   blockToTime,
   formatSats,
 } from '../../../utils/helpers';
-import {
-  ProgressBar,
-  StatusLine,
-  MainInfo,
-} from '../../../components/generic/CardGeneric';
+import { ProgressBar, MainInfo } from '../../../components/generic/CardGeneric';
 import {
   SubCard,
   Separation,
@@ -36,7 +32,6 @@ import {
 } from '../../../components/generic/Styled';
 import { useConfigState } from '../../../context/ConfigContext';
 import {
-  getStatusDot,
   getFormatDate,
   getDateDif,
   renderLine,
@@ -58,8 +53,10 @@ import {
   ChannelBalanceRow,
   ChannelBalanceButton,
   WumboTag,
+  ChannelAlias,
 } from './Channel.style';
 import { WUMBO_MIN_SIZE } from './Channels';
+import { getTitleColor } from './helpers';
 
 const MAX_HTLCS = 483;
 
@@ -79,7 +76,7 @@ const getBar = (top: number, bottom: number) => {
 interface ChannelCardProps {
   channelInfo: ChannelType;
   index: number;
-  setIndexOpen: (index: number) => void;
+  setIndexOpen: (indexNumber: number) => void;
   indexOpen: number;
   biggest: number;
   biggestPartner: number;
@@ -492,16 +489,17 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         disabled={channelBarStyle === 'balancing'}
         onClick={() => channelBarStyle !== 'balancing' && handleClick()}
       >
-        {channelBarStyle === 'normal' && (
-          <StatusLine data-tip data-for={`node_status_tip_${index}`}>
-            {getStatusDot(is_active, 'active')}
-            {getStatusDot(is_opening, 'opening')}
-            {getStatusDot(is_closing, 'closing')}
-          </StatusLine>
-        )}
         <ResponsiveLine>
-          <ChannelNodeTitle style={{ flexGrow: 2 }}>
-            {alias || partner_public_key?.substring(0, 6)}
+          <ChannelNodeTitle
+            style={{ flexGrow: 2 }}
+            data-tip
+            data-for={`node_status_tip_${index}`}
+          >
+            <ChannelAlias
+              textColor={getTitleColor(is_active, is_opening, is_closing)}
+            >
+              {alias || partner_public_key?.substring(0, 6)}
+            </ChannelAlias>
             {!(
               channelBarStyle === 'ultracompact' ||
               channelBarStyle === 'balancing'
@@ -553,8 +551,8 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         place={'bottom'}
       >
         {renderLine('Status:', is_active ? 'Active' : 'Not Active')}
-        {renderLine('Is Opening:', is_opening ? 'True' : 'False')}
-        {renderLine('Is Closing:', is_closing ? 'True' : 'False')}
+        {is_opening && renderLine('Is Opening:', 'True')}
+        {is_closing && renderLine('Is Closing:', 'True')}
       </ReactTooltip>
       <ReactTooltip
         id={`node_balance_tip_${index}`}
