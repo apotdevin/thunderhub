@@ -141,10 +141,8 @@ const TransactionsView = () => {
                 ): GetResumeQuery => {
                   if (!fetchMoreResult?.getResume) return prev;
                   const newToken = fetchMoreResult.getResume.token || '';
-                  const prevEntries = prev?.getResume
-                    ? prev.getResume.resume
-                    : [];
-                  const newEntries = fetchMoreResult.getResume.resume;
+                  const prevEntries = prev?.getResume?.resume || [];
+                  const newEntries = fetchMoreResult?.getResume?.resume || [];
 
                   const allTransactions = newToken
                     ? [...prevEntries, ...newEntries]
