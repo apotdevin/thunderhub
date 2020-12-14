@@ -11,7 +11,7 @@ import { getChannelVolume, getChannelIdInfo, getAverage } from '../helpers';
 
 const monthInBlocks = 4380;
 
-export default async (_: undefined, params: any, context: ContextType) => {
+export default async (_: undefined, __: undefined, context: ContextType) => {
   await requestLimiter(context.ip, 'getVolumeHealth');
 
   const { lnd } = context;

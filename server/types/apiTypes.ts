@@ -17,4 +17,5 @@ export type ContextType = {
   accounts: ParsedAccount[];
   res: ServerResponse;
   lnMarketsAuth: string | null;
+  tokenAuth: string | null;
 };

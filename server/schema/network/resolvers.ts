@@ -16,7 +16,11 @@ interface NetworkInfoProps {
 
 export const networkResolvers = {
   Query: {
-    getNetworkInfo: async (_: undefined, params: any, context: ContextType) => {
+    getNetworkInfo: async (
+      _: undefined,
+      __: undefined,
+      context: ContextType
+    ) => {
       await requestLimiter(context.ip, 'networkInfo');
 
       const { lnd } = context;

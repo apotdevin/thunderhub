@@ -16,6 +16,7 @@ import {
   Icon,
   Heart,
   Shuffle,
+  Aperture,
 } from 'react-feather';
 import { useRouter } from 'next/router';
 import { useBaseConnect } from 'src/hooks/UseBaseConnect';
@@ -128,6 +129,7 @@ const DONATIONS = '/leaderboard';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
 const SWAP = '/swap';
+const SCORES = '/scores';
 
 interface NavigationProps {
   isBurger?: boolean;
@@ -181,6 +183,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Tools', TOOLS, Shield, sidebar)}
       {renderNavButton('Swap', SWAP, Shuffle, sidebar)}
       {renderNavButton('Stats', STATS, BarChart2, sidebar)}
+      {connected && renderNavButton('Scores', SCORES, Aperture)}
     </ButtonSection>
   );
 
@@ -197,6 +200,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Swap', SWAP, Shuffle)}
       {renderBurgerNav('Stats', STATS, BarChart2)}
+      {connected && renderBurgerNav('Scores', SCORES, Aperture)}
       {connected && renderBurgerNav('Donations', DONATIONS, Heart)}
       {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}

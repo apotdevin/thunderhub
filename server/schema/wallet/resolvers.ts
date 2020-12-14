@@ -5,7 +5,11 @@ import { requestLimiter } from 'server/helpers/rateLimiter';
 
 export const walletResolvers = {
   Query: {
-    getWalletInfo: async (_: undefined, params: any, context: ContextType) => {
+    getWalletInfo: async (
+      _: undefined,
+      __: undefined,
+      context: ContextType
+    ) => {
       await requestLimiter(context.ip, 'getWalletInfo');
 
       const { lnd } = context;

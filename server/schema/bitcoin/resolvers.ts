@@ -22,7 +22,11 @@ export const bitcoinResolvers = {
         throw new Error('Problem getting Bitcoin price.');
       }
     },
-    getBitcoinFees: async (_: undefined, params: any, context: ContextType) => {
+    getBitcoinFees: async (
+      _: undefined,
+      __: undefined,
+      context: ContextType
+    ) => {
       await requestLimiter(context.ip, 'bitcoinFee');
 
       try {

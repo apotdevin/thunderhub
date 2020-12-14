@@ -68,7 +68,7 @@ export const toolsResolvers = {
         throw new Error(getErrorMsg(error));
       }
     },
-    getBackups: async (_: undefined, params: any, context: ContextType) => {
+    getBackups: async (_: undefined, __: undefined, context: ContextType) => {
       await requestLimiter(context.ip, 'getBackups');
 
       const { lnd } = context;
@@ -83,7 +83,7 @@ export const toolsResolvers = {
         throw new Error(getErrorMsg(error));
       }
     },
-    adminCheck: async (_: undefined, params: any, context: ContextType) => {
+    adminCheck: async (_: undefined, __: undefined, context: ContextType) => {
       await requestLimiter(context.ip, 'adminCheck');
 
       const { lnd } = context;
