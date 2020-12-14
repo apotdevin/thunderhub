@@ -32,7 +32,7 @@ export const chainResolvers = {
   Query: {
     getChainBalance: async (
       _: undefined,
-      params: any,
+      __: undefined,
       context: ContextType
     ) => {
       await requestLimiter(context.ip, 'chainBalance');
@@ -48,16 +48,14 @@ export const chainResolvers = {
     },
     getPendingChainBalance: async (
       _: undefined,
-      params: any,
+      __: undefined,
       context: ContextType
     ) => {
       await requestLimiter(context.ip, 'pendingChainBalance');
 
       const { lnd } = context;
 
-      const pendingValue: PendingChainBalanceProps = await to<
-        GetPendingChainBalanceType
-      >(
+      const pendingValue: PendingChainBalanceProps = await to<GetPendingChainBalanceType>(
         getPendingChainBalance({
           lnd,
         })
@@ -66,7 +64,7 @@ export const chainResolvers = {
     },
     getChainTransactions: async (
       _: undefined,
-      params: any,
+      __: undefined,
       context: ContextType
     ) => {
       await requestLimiter(context.ip, 'chainTransactions');
@@ -85,7 +83,7 @@ export const chainResolvers = {
       ).reverse();
       return transactions;
     },
-    getUtxos: async (_: undefined, params: any, context: ContextType) => {
+    getUtxos: async (_: undefined, __: undefined, context: ContextType) => {
       await requestLimiter(context.ip, 'getUtxos');
 
       const { lnd } = context;

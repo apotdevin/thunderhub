@@ -6,7 +6,7 @@ import { GetChannelsType } from 'server/types/ln-service.types';
 
 export const getChannelReport = async (
   _: undefined,
-  params: any,
+  __: undefined,
   context: ContextType
 ) => {
   await requestLimiter(context.ip, 'channelReport');

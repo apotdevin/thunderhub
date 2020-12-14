@@ -26,7 +26,7 @@ interface PendingChannelProps {
 
 export const getPendingChannels = async (
   _: undefined,
-  params: any,
+  __: undefined,
   context: ContextType
 ) => {
   await requestLimiter(context.ip, 'pendingChannels');

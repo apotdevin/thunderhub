@@ -19,7 +19,7 @@ interface PeerProps {
 
 export const peerResolvers = {
   Query: {
-    getPeers: async (_: undefined, params: any, context: ContextType) => {
+    getPeers: async (_: undefined, __: undefined, context: ContextType) => {
       await requestLimiter(context.ip, 'getPeers');
 
       const { lnd } = context;

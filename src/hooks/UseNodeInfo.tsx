@@ -19,6 +19,7 @@ type StatusState = {
   pendingChannelCount: number;
   closedChannelCount: number;
   peersCount: number;
+  publicKey: string;
 };
 
 const initialState = {
@@ -37,6 +38,7 @@ const initialState = {
   pendingChannelCount: 0,
   closedChannelCount: 0,
   peersCount: 0,
+  publicKey: '',
 };
 
 export const useNodeInfo = (): StatusState => {
@@ -64,6 +66,7 @@ export const useNodeInfo = (): StatusState => {
       pending_channels_count,
       closed_channels_count,
       peers_count,
+      public_key,
     } = getNodeInfo as NodeInfoType;
     const {
       confirmedBalance,
@@ -88,6 +91,7 @@ export const useNodeInfo = (): StatusState => {
       pendingChannelCount: pending_channels_count,
       closedChannelCount: closed_channels_count,
       peersCount: peers_count,
+      publicKey: public_key,
     });
   }, [data, error, loading]);
 

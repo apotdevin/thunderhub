@@ -15,7 +15,7 @@ type ChannelFeesType = {
   myFeeRate: number;
 };
 
-export default async (_: undefined, params: any, context: ContextType) => {
+export default async (_: undefined, __: undefined, context: ContextType) => {
   await requestLimiter(context.ip, 'getFeeHealth');
 
   const { lnd } = context;
