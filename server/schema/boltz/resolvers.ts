@@ -109,7 +109,12 @@ export const boltzResolvers = {
       const info = detectSwap(redeemScript, lockupTransaction);
 
       if (!info?.vout || !info.type) {
-        logger.error('Can not get vout or type from Boltz');
+        logger.error('Cannot get vout or type from Boltz');
+        logger.debug('Swap info: %o', {
+          redeemScript,
+          lockupTransaction,
+          info,
+        });
         throw new Error('ErrorCreatingClaimTransaction');
       }
 
