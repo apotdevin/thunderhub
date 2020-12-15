@@ -2,7 +2,11 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
+import getConfig from 'next/config';
 import { appendBasePath } from '../../utils/basePath';
+
+const { publicRuntimeConfig } = getConfig();
+const { logoutUrl } = publicRuntimeConfig;
 
 export const StatusCheck: React.FC = () => {
   const { push } = useRouter();
@@ -17,7 +21,7 @@ export const StatusCheck: React.FC = () => {
     if (error) {
       toast.error(`Unable to connect to node`);
       stopPolling();
-      push(appendBasePath('/login'));
+      push(logoutUrl || appendBasePath('/login'));
     }
   }, [error, push, stopPolling]);
 

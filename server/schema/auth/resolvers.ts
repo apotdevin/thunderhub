@@ -12,7 +12,7 @@ import { toWithError } from 'server/helpers/async';
 import { decodeMacaroon, isCorrectPassword } from 'server/helpers/crypto';
 
 const { serverRuntimeConfig } = getConfig() || {};
-const { cookiePath, nodeEnv } = serverRuntimeConfig || {};
+const { cookiePath, nodeEnv, dangerousNoSSOAuth } = serverRuntimeConfig || {};
 
 export const authResolvers = {
   Mutation: {
@@ -33,22 +33,32 @@ export const authResolvers = {
         return false;
       }
 
-      if (!cookie) {
-        return false;
-      }
+      if (dangerousNoSSOAuth) {
+        logger.warn(
+          'SSO authentication is disabled. Make sure this is what you want.'
+        );
+      } else {
+        // No cookie or cookiePath needed when SSO authentication is turned off
+        if (!cookie) {
+          return false;
+        }
 
-      if (cookiePath === '') {
-        logger.warn('SSO auth not available since no cookie path was provided');
-        return false;
+        if (cookiePath === '') {
+          logger.warn(
+            'SSO auth not available since no cookie path was provided'
+          );
+          return false;
+        }
       }
 
       const cookieFile = readCookie(cookiePath);
 
       if (
         (cookieFile && cookieFile.trim() === cookie.trim()) ||
-        nodeEnv === 'development'
+        nodeEnv === 'development' ||
+        dangerousNoSSOAuth
       ) {
-        refreshCookie(cookiePath);
+        cookiePath && refreshCookie(cookiePath);
 
         const { lnd } = authenticatedLndGrpc(sso);
         const [, error] = await toWithError<GetWalletInfoType>(

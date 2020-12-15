@@ -14,6 +14,8 @@ module.exports = withBundleAnalyzer({
     lnCertPath: process.env.SSO_CERT_PATH || '',
     macaroonPath: process.env.SSO_MACAROON_PATH || '',
     accountConfigPath: process.env.ACCOUNT_CONFIG_PATH || '',
+    dangerousNoSSOAuth:
+      process.env.DANGEROUS_NO_SSO_AUTH === 'true' ? true : false,
   },
   publicRuntimeConfig: {
     nodeEnv: process.env.NODE_ENV || 'development',
@@ -28,5 +30,6 @@ module.exports = withBundleAnalyzer({
     disableLinks: process.env.DISABLE_LINKS === 'true' ? true : false,
     disableLnMarkets: process.env.DISABLE_LNMARKETS === 'true' ? true : false,
     noVersionCheck: process.env.NO_VERSION_CHECK === 'true' ? true : false,
+    logoutUrl: process.env.LOGOUT_URL || '',
   },
 });

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { AlertCircle } from 'react-feather';
 import { useRouter } from 'next/router';
 import { useLogoutMutation } from 'src/graphql/mutations/__generated__/logout.generated';
+import getConfig from 'next/config';
 import {
   Card,
   CardWithTitle,
@@ -14,6 +15,9 @@ import { fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
+
+const { publicRuntimeConfig } = getConfig();
+const { logoutUrl } = publicRuntimeConfig;
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -56,7 +60,7 @@ export const DangerView = () => {
   const { push } = useRouter();
 
   const [logout] = useLogoutMutation({
-    onCompleted: () => push(appendBasePath('/login')),
+    onCompleted: () => push(logoutUrl || appendBasePath('/login')),
   });
 
   const handleDeleteAll = () => {
