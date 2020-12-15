@@ -8,22 +8,25 @@ import { GET_AUTH_TOKEN } from 'src/graphql/mutations/getAuthToken';
 const cookieProps = (
   context: NextPageContext,
   noAuth?: boolean
-): { theme: string; authenticated: boolean } => {
-  if (!context?.req) return { theme: 'dark', authenticated: false };
+): { theme: string; authenticated: boolean; hasToken: boolean } => {
+  if (!context?.req)
+    return { theme: 'dark', authenticated: false, hasToken: false };
 
   const cookies = parseCookies(context.req);
+
+  const hasToken = !!cookies[appConstants.tokenCookieName];
 
   if (!cookies[appConstants.cookieName] && !noAuth) {
     context.res?.writeHead(302, { Location: '/login' });
     context.res?.end();
 
-    return { theme: 'dark', authenticated: false };
+    return { theme: 'dark', authenticated: false, hasToken };
   }
 
   if (cookies?.theme) {
-    return { theme: cookies.theme, authenticated: true };
+    return { theme: cookies.theme, authenticated: true, hasToken };
   }
-  return { theme: 'dark', authenticated: true };
+  return { theme: 'dark', authenticated: true, hasToken };
 };
 
 type QueryProps = {
@@ -54,7 +57,7 @@ export const getProps = async (
     });
   }
 
-  const { theme, authenticated } = cookieProps(context, noAuth);
+  const { theme, authenticated, hasToken } = cookieProps(context, noAuth);
 
   const apolloClient = initializeApollo(undefined, context);
 
@@ -76,13 +79,14 @@ export const getProps = async (
       }
     }
   } else {
-    return { props: { initialConfig: { theme } } };
+    return { props: { initialConfig: { theme }, hasToken } };
   }
 
   return {
     props: {
       initialApolloState: apolloClient.cache.extract(),
       initialConfig: { theme },
+      hasToken,
     },
   };
 };

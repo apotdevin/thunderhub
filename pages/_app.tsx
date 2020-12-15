@@ -7,6 +7,7 @@ import { StyledToastContainer } from 'src/components/toastContainer/ToastContain
 import { AppProps } from 'next/app';
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from 'config/client';
+import { BaseProvider } from 'src/context/BaseContext';
 import { ContextProvider } from '../src/context/ContextProvider';
 import { useConfigState, ConfigProvider } from '../src/context/ConfigContext';
 import { GlobalStyles } from '../src/styles/GlobalStyle';
@@ -46,11 +47,13 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>ThunderHub - Lightning Node Manager</title>
       </Head>
       <ConfigProvider initialConfig={pageProps.initialConfig}>
-        <ContextProvider>
-          <Wrapper>
-            <Component {...pageProps} />
-          </Wrapper>
-        </ContextProvider>
+        <BaseProvider initialHasToken={pageProps.hasToken}>
+          <ContextProvider>
+            <Wrapper>
+              <Component {...pageProps} />
+            </Wrapper>
+          </ContextProvider>
+        </BaseProvider>
       </ConfigProvider>
       <StyledToastContainer />
     </ApolloProvider>

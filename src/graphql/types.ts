@@ -1,6 +1,8 @@
 /* eslint-disable */
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -41,6 +43,9 @@ export type PermissionsType = {
 
 export type Query = {
   __typename?: 'Query';
+  getBosNodeScores: Array<Maybe<BosScore>>;
+  getBosScores: BosScoreResponse;
+  getBaseInfo: BaseInfo;
   getBoltzSwapStatus: Array<Maybe<BoltzSwap>>;
   getBoltzInfo: BoltzInfoType;
   getLnMarketsStatus: Scalars['String'];
@@ -86,6 +91,11 @@ export type Query = {
   getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
   getAccount?: Maybe<ServerAccountType>;
   getLatestVersion?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetBosNodeScoresArgs = {
+  publicKey: Scalars['String'];
 };
 
 
@@ -211,6 +221,9 @@ export type Mutation = {
   lnUrlPay: PaySuccess;
   lnUrlWithdraw: Scalars['String'];
   fetchLnUrl?: Maybe<LnUrlRequest>;
+  createBaseTokenInvoice?: Maybe<BaseInvoiceType>;
+  createBaseToken: Scalars['Boolean'];
+  deleteBaseToken: Scalars['Boolean'];
   createBaseInvoice?: Maybe<BaseInvoiceType>;
   createThunderPoints: Scalars['Boolean'];
   closeChannel?: Maybe<CloseChannelType>;
@@ -292,6 +305,11 @@ export type MutationLnUrlWithdrawArgs = {
 
 export type MutationFetchLnUrlArgs = {
   url: Scalars['String'];
+};
+
+
+export type MutationCreateBaseTokenArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -1057,6 +1075,28 @@ export type BaseInvoiceType = {
   __typename?: 'baseInvoiceType';
   id: Scalars['String'];
   request: Scalars['String'];
+};
+
+export type BosScore = {
+  __typename?: 'BosScore';
+  alias: Scalars['String'];
+  public_key: Scalars['String'];
+  score: Scalars['Int'];
+  updated: Scalars['String'];
+  position: Scalars['Int'];
+};
+
+export type BosScoreResponse = {
+  __typename?: 'BosScoreResponse';
+  updated: Scalars['String'];
+  scores: Array<BosScore>;
+};
+
+export type BaseInfo = {
+  __typename?: 'BaseInfo';
+  lastBosUpdate: Scalars['String'];
+  apiTokenSatPrice: Scalars['Int'];
+  apiTokenOriginalSatPrice: Scalars['Int'];
 };
 
 export type WithdrawRequest = {
