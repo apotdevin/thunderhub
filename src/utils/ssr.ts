@@ -4,6 +4,10 @@ import { parseCookies } from 'src/utils/cookies';
 import { DocumentNode } from 'graphql';
 import { appConstants } from 'server/utils/appConstants';
 import { GET_AUTH_TOKEN } from 'src/graphql/mutations/getAuthToken';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
+const { logoutUrl } = publicRuntimeConfig;
 
 const cookieProps = (
   context: NextPageContext,
@@ -17,7 +21,7 @@ const cookieProps = (
   const hasToken = !!cookies[appConstants.tokenCookieName];
 
   if (!cookies[appConstants.cookieName] && !noAuth) {
-    context.res?.writeHead(302, { Location: '/login' });
+    context.res?.writeHead(302, { Location: logoutUrl || '/login' });
     context.res?.end();
 
     return { theme: 'dark', authenticated: false, hasToken };

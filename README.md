@@ -138,10 +138,11 @@ You can define an account to work with SSO cookie authentication by adding the f
 # -----------
 # SSO Account Configs
 # -----------
-COOKIE_PATH = '/path/to/cookie/file/.cookie'; # i.e. '/data/.cookie'
-SSO_SERVER_URL = 'url and port to node'; # i.e. '127.0.0.1:10009'
-SSO_CERT_PATH = '/path/to/tls/certificate'; # i.e. '\lnd\alice\tls.cert'
-SSO_MACAROON_PATH = '/path/to/macaroon/folder'; # i.e. '\lnd\alice\data\chain\bitcoin\regtest\'
+COOKIE_PATH = '/path/to/cookie/file/.cookie' # i.e. '/data/.cookie'
+SSO_SERVER_URL = 'url and port to node' # i.e. '127.0.0.1:10009'
+SSO_CERT_PATH = '/path/to/tls/certificate' # i.e. '\lnd\alice\tls.cert'
+SSO_MACAROON_PATH = '/path/to/macaroon/folder' # i.e. '\lnd\alice\data\chain\bitcoin\regtest\'
+LOGOUT_URL = 'http://LogoutToThisUrl.com' # If not set it will logout to "/login"
 ```
 
 To login to this account you must add the cookie file content to the end of your ThunderHub url. For example:
@@ -151,6 +152,30 @@ http://localhost:3000/sso?token=[COOKIE]
 ```
 
 Replace `[COOKIE]` with the contents of the `.cookie` file.
+
+### SSO Account without authentication
+
+You can DANGEROUSLY remove SSO authentication. This is useful for example if you plan on running ThunderHub **only** on your local network or through TOR.
+
+**DO NOT enable this option if your ThunderHub instance is available on the internet or your funds will probably be lost.**
+
+The configuration for a non authenticated SSO account would look like this:
+
+```bash
+# -----------
+# SSO Account Configs
+# -----------
+SSO_SERVER_URL = 'url and port to node'; # i.e. '127.0.0.1:10009'
+SSO_CERT_PATH = '/path/to/tls/certificate'; # i.e. '\lnd\alice\tls.cert'
+SSO_MACAROON_PATH = '/path/to/macaroon/folder'; # i.e. '\lnd\alice\data\chain\bitcoin\regtest\'
+DANGEROUS_NO_SSO_AUTH = 'true' # Default: false
+```
+
+To login to this account go to the following url:
+
+```
+http://localhost:3000/sso?token=1
+```
 
 ### Server Accounts
 
