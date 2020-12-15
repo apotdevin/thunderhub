@@ -28,6 +28,9 @@ export const generalTypes = gql`
 
 export const queryTypes = gql`
   type Query {
+    getBosNodeScores(publicKey: String!): [BosScore]!
+    getBosScores: BosScoreResponse!
+    getBaseInfo: BaseInfo!
     getBoltzSwapStatus(ids: [String]!): [BoltzSwap]!
     getBoltzInfo: BoltzInfoType!
     getLnMarketsStatus: String!
@@ -120,6 +123,9 @@ export const mutationTypes = gql`
       description: String
     ): String!
     fetchLnUrl(url: String!): LnUrlRequest
+    createBaseTokenInvoice: baseInvoiceType
+    createBaseToken(id: String!): Boolean!
+    deleteBaseToken: Boolean!
     createBaseInvoice(amount: Int!): baseInvoiceType
     createThunderPoints(
       id: String!

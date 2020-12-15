@@ -8,7 +8,7 @@ export const githubResolvers = {
   Query: {
     getLatestVersion: async (
       _: undefined,
-      params: any,
+      __: undefined,
       context: ContextType
     ) => {
       await requestLimiter(context.ip, 'getLnPay');

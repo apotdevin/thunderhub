@@ -11,7 +11,7 @@ interface ChannelBalanceProps {
 
 export const getChannelBalance = async (
   _: undefined,
-  params: any,
+  __: undefined,
   context: ContextType
 ) => {
   await requestLimiter(context.ip, 'channelBalance');
