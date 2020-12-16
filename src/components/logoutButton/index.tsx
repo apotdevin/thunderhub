@@ -8,7 +8,6 @@ import styled from 'styled-components';
 import { themeColors } from 'src/styles/Themes';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import getConfig from 'next/config';
-import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
 
 const { publicRuntimeConfig } = getConfig();
@@ -38,7 +37,7 @@ export const LogoutButton = () => {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
 
-      push(logoutUrl || appendBasePath('/login'));
+      logoutUrl ? (window.location.href = logoutUrl) : push('/login');
     }
   }, [data, dispatchChat, push, client]);
 

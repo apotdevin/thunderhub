@@ -4,7 +4,6 @@ import { getNodeLink, renderLine } from 'src/components/generic/helpers';
 import { Link } from 'src/components/link/Link';
 import { BosScore } from 'src/graphql/types';
 import { themeColors } from 'src/styles/Themes';
-import { appendBasePath } from 'src/utils/basePath';
 import styled from 'styled-components';
 
 type ScoreCardProps = {
@@ -72,7 +71,7 @@ export const ScoreCard: FC<ScoreCardProps> = ({ score }) => {
 
   const handleClick = () => {
     if (score.public_key) {
-      push(appendBasePath(`/scores/${score.public_key}`));
+      push(`/scores/${score.public_key}`);
     }
   };
 

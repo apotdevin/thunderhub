@@ -1,18 +1,33 @@
 # ---------------
 # Install Dependencies
 # ---------------
-FROM arm64v8/node:14.15-alpine as build
+FROM arm64v8/node:14.15-alpine as deps
+
+WORKDIR /app
 
 # Install dependencies neccesary for node-gyp on node alpine
 RUN apk add --update --no-cache \
+    libc6-compat \
     python \
     make \
     g++
 
+
 # Install app dependencies
-COPY package.json .
-COPY package-lock.json .
-RUN npm install --silent
+COPY package.json package-lock.json ./
+RUN npm install
+
+# ---------------
+# Build App
+# ---------------
+FROM deps as build
+
+WORKDIR /app
+
+# Set env variables
+ARG BASE_PATH=""
+ENV BASE_PATH=${BASE_PATH}
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the NextJS application
 COPY . .
@@ -22,18 +37,24 @@ RUN npm run build
 RUN npm prune --production
 
 # ---------------
-# Build App
+# Release App
 # ---------------
 FROM arm64v8/node:14.15-alpine
 
 WORKDIR /app
 
-# Copy dependencies and build from build stage
-COPY --from=build node_modules node_modules
-COPY --from=build .next .next
+# Set env variables
+ARG BASE_PATH=""
+ENV BASE_PATH=${BASE_PATH}
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Bundle app source
-COPY . .
-EXPOSE 3000
+COPY --from=build /app/package.json /app/package-lock.json /app/next.config.js ./
+COPY --from=build /app/public ./public
+COPY --from=build /app/node_modules/ ./node_modules 
+COPY --from=build /app/.next/ ./.next
+
+COPY ./scripts/initCookie.sh ./scripts/initCookie.sh
+
+EXPOSE 3000 
 
 CMD [ "npm", "start" ]

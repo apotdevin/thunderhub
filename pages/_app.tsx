@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { useRouter } from 'next/router';
@@ -40,14 +39,17 @@ const Wrapper: React.FC = ({ children }) => {
 };
 
 export default function App({ Component, pageProps }: AppProps) {
-  const apolloClient = useApollo(pageProps.initialApolloState);
+  const { initialApolloState, initialConfig, hasToken } = pageProps;
+
+  const apolloClient = useApollo(initialApolloState);
+
   return (
     <ApolloProvider client={apolloClient}>
       <Head>
         <title>ThunderHub - Lightning Node Manager</title>
       </Head>
-      <ConfigProvider initialConfig={pageProps.initialConfig}>
-        <BaseProvider initialHasToken={pageProps.hasToken}>
+      <ConfigProvider initialConfig={initialConfig}>
+        <BaseProvider initialHasToken={hasToken}>
           <ContextProvider>
             <Wrapper>
               <Component {...pageProps} />
