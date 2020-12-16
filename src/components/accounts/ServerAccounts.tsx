@@ -38,6 +38,7 @@ export const ServerAccounts: React.FC = () => {
     }
     if (!data.getAuthToken) {
       toast.warning('Unable to SSO. Check your logs.');
+      logoutUrl ? (window.location.href = logoutUrl) : push('/login');
     }
   }, [push, data, cookieParam]);
 

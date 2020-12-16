@@ -51,6 +51,10 @@ export const authResolvers = {
         }
       }
 
+      if (nodeEnv === 'development') {
+        logger.warn('SSO authentication is disabled in development.');
+      }
+
       const cookieFile = readCookie(cookiePath);
 
       if (
