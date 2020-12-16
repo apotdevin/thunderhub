@@ -49,6 +49,10 @@ export const ChannelNodeTitle = styled.div`
   }
 `;
 
+export const ChannelAlias = styled.div<{ textColor?: string }>`
+  ${({ textColor }) => textColor && `color: ${textColor}`}
+`;
+
 export const ChannelSingleLine = styled.div`
   display: flex;
   align-items: center;

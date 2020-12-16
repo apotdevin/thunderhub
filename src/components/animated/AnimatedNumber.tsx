@@ -47,7 +47,9 @@ export const AnimatedNumber: React.FC<AnimatedProps> = ({ amount = 0 }) => {
 
   return (
     <animated.div>
-      {value.interpolate(amount => getValue({ amount, ...priceProps }))}
+      {value.interpolate(amount =>
+        getValue({ amount: amount as number, ...priceProps })
+      )}
     </animated.div>
   );
 };

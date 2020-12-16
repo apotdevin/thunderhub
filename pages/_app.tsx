@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { useRouter } from 'next/router';
@@ -7,6 +6,7 @@ import { StyledToastContainer } from 'src/components/toastContainer/ToastContain
 import { AppProps } from 'next/app';
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from 'config/client';
+import { BaseProvider } from 'src/context/BaseContext';
 import { ContextProvider } from '../src/context/ContextProvider';
 import { useConfigState, ConfigProvider } from '../src/context/ConfigContext';
 import { GlobalStyles } from '../src/styles/GlobalStyle';
@@ -39,18 +39,23 @@ const Wrapper: React.FC = ({ children }) => {
 };
 
 export default function App({ Component, pageProps }: AppProps) {
-  const apolloClient = useApollo(pageProps.initialApolloState);
+  const { initialApolloState, initialConfig, hasToken } = pageProps;
+
+  const apolloClient = useApollo(initialApolloState);
+
   return (
     <ApolloProvider client={apolloClient}>
       <Head>
         <title>ThunderHub - Lightning Node Manager</title>
       </Head>
-      <ConfigProvider initialConfig={pageProps.initialConfig}>
-        <ContextProvider>
-          <Wrapper>
-            <Component {...pageProps} />
-          </Wrapper>
-        </ContextProvider>
+      <ConfigProvider initialConfig={initialConfig}>
+        <BaseProvider initialHasToken={hasToken}>
+          <ContextProvider>
+            <Wrapper>
+              <Component {...pageProps} />
+            </Wrapper>
+          </ContextProvider>
+        </BaseProvider>
       </ConfigProvider>
       <StyledToastContainer />
     </ApolloProvider>

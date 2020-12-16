@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
-import { appendBasePath } from 'src/utils/basePath';
 import { getUrlParam } from 'src/utils/url';
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
+import getConfig from 'next/config';
 import { useGetAuthTokenMutation } from 'src/graphql/mutations/__generated__/getAuthToken.generated';
+
+const { publicRuntimeConfig } = getConfig();
+const { logoutUrl } = publicRuntimeConfig;
 
 export const ServerAccounts: React.FC = () => {
   const { push, query } = useRouter();
@@ -16,7 +19,7 @@ export const ServerAccounts: React.FC = () => {
     refetchQueries: ['GetNodeInfo'],
     onError: error => {
       toast.error(getErrorContent(error));
-      push(appendBasePath('/login'));
+      logoutUrl ? (window.location.href = logoutUrl) : push('/login');
     },
   });
 
@@ -24,14 +27,14 @@ export const ServerAccounts: React.FC = () => {
     if (cookieParam) {
       getToken();
     } else {
-      push(appendBasePath('/login'));
+      logoutUrl ? (window.location.href = logoutUrl) : push('/login');
     }
   }, [cookieParam, push, getToken]);
 
   React.useEffect(() => {
     if (!cookieParam || !data) return;
     if (data.getAuthToken) {
-      push(appendBasePath('/'));
+      push('/');
     }
     if (!data.getAuthToken) {
       toast.warning('Unable to SSO. Check your logs.');

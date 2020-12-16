@@ -112,7 +112,6 @@ You can define some environment variables that ThunderHub can start with. To do 
 # Server Configs
 # -----------
 LOG_LEVEL = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly' # Default: 'info'
-BASE_PATH = '[Base path where you want to have thunderhub running i.e. '/btcpay']' # Default: ''
 
 # -----------
 # Interface Configs
@@ -138,10 +137,11 @@ You can define an account to work with SSO cookie authentication by adding the f
 # -----------
 # SSO Account Configs
 # -----------
-COOKIE_PATH = '/path/to/cookie/file/.cookie'; # i.e. '/data/.cookie'
-SSO_SERVER_URL = 'url and port to node'; # i.e. '127.0.0.1:10009'
-SSO_CERT_PATH = '/path/to/tls/certificate'; # i.e. '\lnd\alice\tls.cert'
-SSO_MACAROON_PATH = '/path/to/macaroon/folder'; # i.e. '\lnd\alice\data\chain\bitcoin\regtest\'
+COOKIE_PATH = '/path/to/cookie/file/.cookie' # i.e. '/data/.cookie'
+SSO_SERVER_URL = 'url and port to node' # i.e. '127.0.0.1:10009'
+SSO_CERT_PATH = '/path/to/tls/certificate' # i.e. '\lnd\alice\tls.cert'
+SSO_MACAROON_PATH = '/path/to/macaroon/folder' # i.e. '\lnd\alice\data\chain\bitcoin\regtest\'
+LOGOUT_URL = 'http://LogoutToThisUrl.com' # If not set it will logout to "/login"
 ```
 
 To login to this account you must add the cookie file content to the end of your ThunderHub url. For example:
@@ -151,6 +151,30 @@ http://localhost:3000/sso?token=[COOKIE]
 ```
 
 Replace `[COOKIE]` with the contents of the `.cookie` file.
+
+### SSO Account without authentication
+
+You can DANGEROUSLY remove SSO authentication. This is useful for example if you plan on running ThunderHub **only** on your local network or through TOR.
+
+**DO NOT enable this option if your ThunderHub instance is available on the internet or your funds will probably be lost.**
+
+The configuration for a non authenticated SSO account would look like this:
+
+```bash
+# -----------
+# SSO Account Configs
+# -----------
+SSO_SERVER_URL = 'url and port to node'; # i.e. '127.0.0.1:10009'
+SSO_CERT_PATH = '/path/to/tls/certificate'; # i.e. '\lnd\alice\tls.cert'
+SSO_MACAROON_PATH = '/path/to/macaroon/folder'; # i.e. '\lnd\alice\data\chain\bitcoin\regtest\'
+DANGEROUS_NO_SSO_AUTH = 'true' # Default: false
+```
+
+To login to this account go to the following url:
+
+```
+http://localhost:3000/sso?token=1
+```
 
 ### Server Accounts
 
@@ -273,19 +297,38 @@ If you want to disable this option you can set `NO_VERSION_CHECK=true` in your `
 ### Running on different base path
 
 Adding a BASE_PATH will run the ThunderHub server on a different base path.
+
+```bash
+# -----------
+# Server Configs
+# -----------
+BASE_PATH = '[Base path where you want to have thunderhub running i.e. '/btcpay']' # Default: ''
+```
+
 For example:
 
 - by default ThunderHub runs on `http://localhost:3000`
 - base path of `/thub` runs ThunderHub on `http://localhost:3000/thub`
 
-**Notice - If you don't need to run ThunderHub on a different base path don't add this variable in your file**
+**You need to add this environment variable BEFORE building the application**
 
-To run on a base path, ThunderHub needs to be behind a proxy with the following configuration (NGINX example):
+There is a prebuilt [Docker](https://hub.docker.com/repository/docker/apotdevin/thunderhub) image with a preset `BASE_PATH=/thub` in case you need it and prefer not building your own Docker image.
+
+```bash
+# Normal docker image
+docker pull apotdevin/thunderhub:v0.11.1
+
+# Preset basePath docker image
+docker pull apotdevin/thunderhub:base-v0.11.1
+```
+
+To build your own docker image with the `basePath` of your choice you can use `docker build --build-arg BASE_PATH='/thub' -t myOwnDockerImage .`
+
+You can run ThunderHub behind a proxy with the following configuration (NGINX example):
 
 ```nginx
-location /thub/ {
-  rewrite ^/thub(.*)$ $1 break;
-  proxy_pass http://localhost:3000/;
+location /thub {
+  proxy_pass http://localhost:3000/thub;
 }
 ```
 
@@ -397,7 +440,7 @@ ThunderHub also provides docker images for easier deployment. [Docker Hub](https
 
 To get ThunderHub running with docker follow these steps:
 
-1. `docker pull apotdevin/thunderhub:v0.5.5` (Or the latest version you find)
+1. `docker pull apotdevin/thunderhub:v0.11.1` (Or the latest version you find)
 2. `docker run --rm -it -p 3000:3000/tcp apotdevin/thunderhub:v0.5.5`
 
 You can now go to `localhost:3000` to see your running instance of ThunderHub

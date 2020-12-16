@@ -5,7 +5,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 module.exports = withBundleAnalyzer({
   poweredByHeader: false,
-  assetPrefix: process.env.BASE_PATH || '',
+  basePath: process.env.BASE_PATH || '',
   serverRuntimeConfig: {
     nodeEnv: process.env.NODE_ENV || 'development',
     logLevel: process.env.LOG_LEVEL || 'info',
@@ -17,6 +17,8 @@ module.exports = withBundleAnalyzer({
     publicUrl: process.env.PUBLIC_URL || '',
     sslPort: process.env.SSL_PORT || '',
     sslSave: process.env.SSL_SAVE || '',
+    dangerousNoSSOAuth:
+      process.env.DANGEROUS_NO_SSO_AUTH === 'true' ? true : false,
   },
   publicRuntimeConfig: {
     nodeEnv: process.env.NODE_ENV || 'development',
@@ -31,5 +33,6 @@ module.exports = withBundleAnalyzer({
     disableLinks: process.env.DISABLE_LINKS === 'true' ? true : false,
     disableLnMarkets: process.env.DISABLE_LNMARKETS === 'true' ? true : false,
     noVersionCheck: process.env.NO_VERSION_CHECK === 'true' ? true : false,
+    logoutUrl: process.env.LOGOUT_URL || '',
   },
 });

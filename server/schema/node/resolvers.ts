@@ -28,7 +28,7 @@ export const nodeResolvers = {
 
       return { lnd, publicKey, withChannels: !withoutChannels };
     },
-    getNodeInfo: async (_: undefined, params: any, context: ContextType) => {
+    getNodeInfo: async (_: undefined, __: undefined, context: ContextType) => {
       await requestLimiter(context.ip, 'nodeInfo');
 
       const { lnd } = context;

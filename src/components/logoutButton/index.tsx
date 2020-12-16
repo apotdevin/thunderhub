@@ -7,8 +7,11 @@ import { HeaderNavButton } from 'src/layouts/header/Header.styled';
 import styled from 'styled-components';
 import { themeColors } from 'src/styles/Themes';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import { appendBasePath } from '../../utils/basePath';
+import getConfig from 'next/config';
 import { useChatDispatch } from '../../context/ChatContext';
+
+const { publicRuntimeConfig } = getConfig();
+const { logoutUrl } = publicRuntimeConfig;
 
 const Logout = styled.button`
   cursor: pointer;
@@ -33,7 +36,8 @@ export const LogoutButton = () => {
     if (data && data.logout) {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
-      push(appendBasePath('/login'));
+
+      logoutUrl ? (window.location.href = logoutUrl) : push('/login');
     }
   }, [data, dispatchChat, push, client]);
 
