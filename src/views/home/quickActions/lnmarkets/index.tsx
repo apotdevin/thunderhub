@@ -6,7 +6,6 @@ import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { useConfigDispatch, useConfigState } from 'src/context/ConfigContext';
 import { useLnMarketsLoginMutation } from 'src/graphql/mutations/__generated__/lnMarkets.generated';
 import { useGetLnMarketsStatusQuery } from 'src/graphql/queries/__generated__/getLnMarketsStatus.generated';
-import { appendBasePath } from 'src/utils/basePath';
 import { getErrorContent } from 'src/utils/error';
 import getConfig from 'next/config';
 import { QuickCard, QuickTitle } from '../QuickActions';
@@ -36,7 +35,7 @@ export const LnMarketsCard = () => {
   useEffect(() => {
     if (data?.lnMarketsLogin?.status === 'OK') {
       dispatch({ type: 'change', lnMarketsAuth: true });
-      push(appendBasePath('/lnmarkets'));
+      push('/lnmarkets');
     }
   }, [data, push, dispatch]);
 
@@ -54,7 +53,7 @@ export const LnMarketsCard = () => {
 
   if (lnMarketsAuth) {
     return (
-      <QuickCard onClick={() => push(appendBasePath('/lnmarkets'))}>
+      <QuickCard onClick={() => push('/lnmarkets')}>
         <Activity size={24} />
         <QuickTitle>LnMarkets</QuickTitle>
       </QuickCard>
