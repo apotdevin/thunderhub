@@ -10,6 +10,7 @@
     "start": "next start",
     "start:two": "next start -p 3001",
     "start:cookie": "sh ./scripts/initCookie.sh",
+    "start:secure": "node server/utils/secure-server.js",
     "lint": "eslint . --ext ts --ext tsx --ext js",
     "format": "prettier --write \"**/*.{js,ts,tsx}\"",
     "release": "standard-version",
@@ -183,3 +184,4 @@
     }
   }
 }
+
