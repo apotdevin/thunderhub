@@ -18,6 +18,7 @@ import { getPrice } from 'src/components/price/Price';
 import { usePriceState } from 'src/context/PriceContext';
 import { useConfigState } from 'src/context/ConfigContext';
 import { BuyButton } from 'src/views/token/BuyButton';
+import { RecoverToken } from './RecoverToken';
 
 const S = {
   Row: styled.div`
@@ -120,32 +121,35 @@ export const TokenCard: FC<TokenCardProps> = ({ paidCallback }) => {
   const discount = `-${percent}%`;
 
   return (
-    <CardWithTitle>
-      <S.Title>ThunderBase Token</S.Title>
-      <Card>
-        <S.Row>
-          {hasDiscount && <S.Discount>{discount}</S.Discount>}
-          <S.IconWrapper>
-            <LifeBuoy size={64} color={themeColors.blue2} />
-          </S.IconWrapper>
-          <S.Text>
-            This token gives you access to the full ThunderBase API.
-            <DarkSubTitle>
-              Features: Historical BOS score data, more to come...
-            </DarkSubTitle>
-          </S.Text>
-          <S.PriceBox>
-            {hasDiscount && (
-              <S.Strike>{`${formatOriginalPrice}/month`}</S.Strike>
-            )}
-            <S.Price>{`${formatPrice}/month`}</S.Price>
-            <DarkSubTitle>{`${formatDayPrice}/day`}</DarkSubTitle>
-          </S.PriceBox>
-        </S.Row>
-        <BuyButton
-          paidCallback={paidCallback}
-        >{`Buy a 1 month token for ${formatPrice}`}</BuyButton>
-      </Card>
-    </CardWithTitle>
+    <>
+      <CardWithTitle>
+        <S.Title>ThunderBase Token</S.Title>
+        <Card>
+          <S.Row>
+            {hasDiscount && <S.Discount>{discount}</S.Discount>}
+            <S.IconWrapper>
+              <LifeBuoy size={64} color={themeColors.blue2} />
+            </S.IconWrapper>
+            <S.Text>
+              This token gives you access to the full ThunderBase API.
+              <DarkSubTitle>
+                Features: Historical BOS score data, more to come...
+              </DarkSubTitle>
+            </S.Text>
+            <S.PriceBox>
+              {hasDiscount && (
+                <S.Strike>{`${formatOriginalPrice}/month`}</S.Strike>
+              )}
+              <S.Price>{`${formatPrice}/month`}</S.Price>
+              <DarkSubTitle>{`${formatDayPrice}/day`}</DarkSubTitle>
+            </S.PriceBox>
+          </S.Row>
+          <BuyButton
+            paidCallback={paidCallback}
+          >{`Buy a 1 month token for ${formatPrice}`}</BuyButton>
+        </Card>
+      </CardWithTitle>
+      <RecoverToken />
+    </>
   );
 };
