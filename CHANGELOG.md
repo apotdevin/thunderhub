@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.12.0](https://github.com/apotdevin/thunderhub/compare/v0.11.0...v0.12.0) (2020-12-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* 💥 ♻️ basepath (#187)
+
+### Features
+
+* **server:** ✨ Add support for SSL Certificate provisioning via ZeroSSL ([#186](https://github.com/apotdevin/thunderhub/issues/186)) ([deca83c](https://github.com/apotdevin/thunderhub/commit/deca83c6453543e957cf2f2d0754949d37470d04))
+
+
+### Bug Fixes
+
+* 🐛 env vars ([e59aa2e](https://github.com/apotdevin/thunderhub/commit/e59aa2e11a43baf97bc78e50b5f7a81a9ae2cd1d))
+
+
+### Refactoring
+
+* 💥 ♻️ basepath ([#187](https://github.com/apotdevin/thunderhub/issues/187)) ([49cde99](https://github.com/apotdevin/thunderhub/commit/49cde99d69b780dc6a8883570b65d47226e81f6f))
+
+
+### Improvements
+
+* 🔧 add extra boltz logging ([d1fec2b](https://github.com/apotdevin/thunderhub/commit/d1fec2b92d8d780bb9c8149347ebc54156211ddc))
+* 🔧 add no auth and logout url ([1dcea16](https://github.com/apotdevin/thunderhub/commit/1dcea164d52cf85dee69437cab650f71fbe98c72))
+* 🔧 add push warning ([fc22eba](https://github.com/apotdevin/thunderhub/commit/fc22ebaa8ee794a533fd6e0393e39101a3291d14))
+* 🔧 add score query ([7fa7cfc](https://github.com/apotdevin/thunderhub/commit/7fa7cfc3c27fd25e749ab885d99d7bd9786e8854))
+* 🔧 add score query ([#185](https://github.com/apotdevin/thunderhub/issues/185)) ([4c39f79](https://github.com/apotdevin/thunderhub/commit/4c39f79cb3f77b5f26c2b95859a083e5d161dbb6))
+* 🔧 bump dependencies ([c756432](https://github.com/apotdevin/thunderhub/commit/c756432dc3432d1200ebc03108b7a475e0b7ca61))
+* 🔧 channel alias color ([0e09873](https://github.com/apotdevin/thunderhub/commit/0e09873dd10412bbcb45ef7a17a5225ea319044e))
+* 🔧 dependency update ([eede62b](https://github.com/apotdevin/thunderhub/commit/eede62b2f26bd11f47778820b2a8bdbd52ca57f4))
+* 🔧 extra sso logging and redirect ([92f2f13](https://github.com/apotdevin/thunderhub/commit/92f2f13ea7bb010a5ba339a776a98a3f46b5c5b6))
+* 🔧 ssl cleanup ([#188](https://github.com/apotdevin/thunderhub/issues/188)) ([fc98d9d](https://github.com/apotdevin/thunderhub/commit/fc98d9ddca811bc52bbc98b2380de8128f788142))
+
 ## [0.11.0](https://github.com/apotdevin/thunderhub/compare/v0.10.5...v0.11.0) (2020-12-04)
 
 
