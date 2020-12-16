@@ -13,7 +13,6 @@ import {
 } from '../../components/generic/Styled';
 import { fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { appendBasePath } from '../../utils/basePath';
 import { useChatDispatch } from '../../context/ChatContext';
 
 const { publicRuntimeConfig } = getConfig();
@@ -60,7 +59,8 @@ export const DangerView = () => {
   const { push } = useRouter();
 
   const [logout] = useLogoutMutation({
-    onCompleted: () => push(logoutUrl || appendBasePath('/login')),
+    onCompleted: () =>
+      logoutUrl ? (window.location.href = logoutUrl) : push('/login'),
   });
 
   const handleDeleteAll = () => {

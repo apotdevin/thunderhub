@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { appendBasePath } from 'src/utils/basePath';
 import { getErrorContent } from 'src/utils/error';
 import { Lock } from 'react-feather';
 import { ServerAccountType } from 'src/graphql/types';
@@ -56,7 +55,7 @@ export const Login = ({ account }: LoginProps) => {
         'ThunderHub supports LND version 0.11.0 and higher. Please update your node, you are in risk of losing funds.'
       );
     } else {
-      push(appendBasePath('/'));
+      push('/');
     }
   }, [data, loading, push]);
 

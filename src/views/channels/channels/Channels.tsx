@@ -7,7 +7,6 @@ import { getPercent } from 'src/utils/helpers';
 import { ChannelType } from 'src/graphql/types';
 import { useRebalanceState } from 'src/context/RebalanceContext';
 import { useRouter } from 'next/router';
-import { appendBasePath } from 'src/utils/basePath';
 import { Card } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
@@ -35,7 +34,7 @@ export const Channels: React.FC = () => {
           position: 'bottom-right',
           autoClose: false,
           closeButton: false,
-          onClick: () => push(appendBasePath('/rebalance')),
+          onClick: () => push('/rebalance'),
         }
       );
     }

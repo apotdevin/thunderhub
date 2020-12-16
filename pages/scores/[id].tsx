@@ -5,7 +5,6 @@ import { NodeInfo } from 'src/views/scores/NodeInfo';
 import { useRouter } from 'next/router';
 import { useBaseDispatch, useBaseState } from 'src/context/BaseContext';
 import { useEffect, useState } from 'react';
-import { appendBasePath } from 'src/utils/basePath';
 import { NodeScores } from 'src/views/scores/NodeScores';
 import { Graph } from 'src/views/scores/NodeGraph';
 import { useDeleteBaseTokenMutation } from 'src/graphql/mutations/__generated__/deleteBaseToken.generated';
@@ -22,14 +21,14 @@ const NodeScoreView = () => {
 
   useEffect(() => {
     if (!hasToken) {
-      push(appendBasePath('/token'));
+      push('/token');
     }
   }, [hasToken, push]);
 
   const handleAuthError = () => {
     dispatch({ type: 'change', hasToken: false });
     deleteToken();
-    push(appendBasePath('/token'));
+    push('/token');
   };
 
   return (

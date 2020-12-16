@@ -6,7 +6,6 @@ import { Card, CardWithTitle, SubTitle } from 'src/components/generic/Styled';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { useBaseDispatch } from 'src/context/BaseContext';
 import { useCreateBaseTokenMutation } from 'src/graphql/mutations/__generated__/createBaseToken.generated';
-import { appendBasePath } from 'src/utils/basePath';
 import { getErrorContent } from 'src/utils/error';
 
 export const RecoverToken = () => {
@@ -22,7 +21,7 @@ export const RecoverToken = () => {
     if (loading || !data?.createBaseToken) return;
     dispatch({ type: 'change', hasToken: true });
     toast.success('Succesfully recovered token');
-    push(appendBasePath('/scores'));
+    push('/scores');
   }, [loading, data, dispatch, push]);
 
   return (
