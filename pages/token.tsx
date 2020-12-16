@@ -6,7 +6,6 @@ import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { PaidCard } from 'src/views/token/PaidCard';
 import { useBaseState } from 'src/context/BaseContext';
 import { Card } from 'src/components/generic/Styled';
-import { RecoverToken } from 'src/views/token/RecoverToken';
 
 const TokenView = () => {
   const { hasToken } = useBaseState();
@@ -20,12 +19,7 @@ const TokenView = () => {
     return <Card>You already have a token!</Card>;
   }
 
-  return (
-    <>
-      <TokenCard paidCallback={id => setId(id)} />
-      <RecoverToken />
-    </>
-  );
+  return <TokenCard paidCallback={id => setId(id)} />;
 };
 
 const Wrapped = () => (

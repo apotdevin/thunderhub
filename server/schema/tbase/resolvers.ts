@@ -116,7 +116,7 @@ export const tbaseResolvers = {
       );
 
       if (error || !data?.getInfo) {
-        logger.error('Error getting info: %o', { error });
+        logger.error('Error getting thunderbase info');
         throw new GraphQLError('ErrorGettingInfo');
       }
 
@@ -157,7 +157,7 @@ export const tbaseResolvers = {
       );
 
       if (error) {
-        logger.error('Error getting BOS scores: %o', { error });
+        logger.error(`Error getting BOS scores for node ${publicKey}`);
         throw new GraphQLError('ErrorGettingBosScores');
       }
 
@@ -171,7 +171,7 @@ export const tbaseResolvers = {
       );
 
       if (error || !data?.getBosScores) {
-        logger.error('Error getting BOS scores: %o', { error });
+        logger.error('Error getting BOS scores');
         throw new GraphQLError('ErrorGettingBosScores');
       }
 
@@ -233,7 +233,7 @@ export const tbaseResolvers = {
       );
 
       if (error || !data?.createBaseToken) {
-        logger.debug('Error getting thunderbase token: %o', { error });
+        logger.debug('Error getting thunderbase token');
         throw new Error('ErrorGettingToken');
       }
 
@@ -283,7 +283,7 @@ export const tbaseResolvers = {
       );
 
       if (error || !data?.createTokenInvoice) {
-        logger.error('Error getting invoice for token: %o', error);
+        logger.error('Error getting invoice for token');
         throw new Error('ErrorGettingInvoice');
       }
       return data.createTokenInvoice;
