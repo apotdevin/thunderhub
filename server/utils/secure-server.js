@@ -1,9 +1,9 @@
-/* eslint-disable */
+/* eslint @typescript-eslint/no-var-requires: 0 */
 const { createServer: createSecureServer } = require('https');
 const { createServer } = require('http');
 const { parse } = require('url');
-const next = require('next');
 const { existsSync, readFileSync, writeFile, mkdirSync } = require('fs');
+const next = require('next');
 const express = require('express');
 const qs = require('qs');
 const forge = require('node-forge');
