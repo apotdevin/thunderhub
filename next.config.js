@@ -14,6 +14,9 @@ module.exports = withBundleAnalyzer({
     lnCertPath: process.env.SSO_CERT_PATH || '',
     macaroonPath: process.env.SSO_MACAROON_PATH || '',
     accountConfigPath: process.env.ACCOUNT_CONFIG_PATH || '',
+    publicUrl: process.env.PUBLIC_URL || '',
+    sslPort: process.env.SSL_PORT || '',
+    sslSave: process.env.SSL_SAVE || '',
     dangerousNoSSOAuth:
       process.env.DANGEROUS_NO_SSO_AUTH === 'true' ? true : false,
   },
