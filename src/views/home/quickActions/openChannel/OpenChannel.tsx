@@ -7,6 +7,7 @@ import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { useBitcoinFees } from 'src/hooks/UseBitcoinFees';
 import { useConfigState } from 'src/context/ConfigContext';
 import { PeerSelect } from 'src/components/select/specific/PeerSelect';
+import { WarningText } from 'src/views/stats/styles';
 import { Separation } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
 import { Input } from '../../../../components/input';
@@ -64,9 +65,10 @@ export const OpenChannelCard = ({
   const renderButton = (
     onClick: () => void,
     text: string,
-    selected: boolean
+    selected: boolean,
+    buttonColor?: string
   ) => (
-    <SingleButton selected={selected} onClick={onClick}>
+    <SingleButton selected={selected} onClick={onClick} color={buttonColor}>
       {text}
     </SingleButton>
   );
@@ -105,11 +107,17 @@ export const OpenChannelCard = ({
       <InputWithDeco title={'Push Tokens to Partner'} noInput={true}>
         <MultiButton>
           {renderButton(() => setPushType('none'), 'None', pushType === 'none')}
-          {renderButton(() => setPushType('half'), 'Half', pushType === 'half')}
+          {renderButton(
+            () => setPushType('half'),
+            'Half',
+            pushType === 'half',
+            'red'
+          )}
           {renderButton(
             () => setPushType('custom'),
             'Custom',
-            pushType === 'custom'
+            pushType === 'custom',
+            'red'
           )}
         </MultiButton>
       </InputWithDeco>
@@ -122,6 +130,9 @@ export const OpenChannelCard = ({
           inputType={'number'}
           inputCallback={value => setPushTokens(Number(value))}
         />
+      )}
+      {pushType !== 'none' && (
+        <WarningText>You will lose these pushed tokens.</WarningText>
       )}
       <Separation />
       <InputWithDeco title={'Type'} noInput={true}>
