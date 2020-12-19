@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Test and Build
 
 on:
   push:
@@ -10,17 +10,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [14.x]
-
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm test
-      - run: npm tsc
-      - run: npm run build
+          node-version: '14'
+      - name: Install deps
+        run: npm ci
+      - name: Test and build
+        run: |
+          npm test
+          npm tsc
+          npm run build
