@@ -23,5 +23,5 @@ jobs:
       - name: Test and build
         run: |
           npm test
-          npm tsc
+          npm run tsc
           npm run build
