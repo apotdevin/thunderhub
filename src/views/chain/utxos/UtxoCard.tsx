@@ -2,7 +2,10 @@ import React from 'react';
 import { GetUtxosType } from 'src/graphql/types';
 import { Separation, SubCard } from '../../../components/generic/Styled';
 import { MainInfo } from '../../../components/generic/CardGeneric';
-import { renderLine } from '../../../components/generic/helpers';
+import {
+  getTransactionLink,
+  renderLine,
+} from '../../../components/generic/helpers';
 import { getPrice } from '../../../components/price/Price';
 import { useConfigState } from '../../../context/ConfigContext';
 import { usePriceState } from '../../../context/PriceContext';
@@ -51,7 +54,7 @@ export const UtxoCard = ({
         {renderLine('Address Format:', address_format)}
         {renderLine('Confirmations: ', confirmation_count)}
         {renderLine('Output Script: ', output_script)}
-        {renderLine('Transaction Id: ', transaction_id)}
+        {renderLine('Transaction Id: ', getTransactionLink(transaction_id))}
         {renderLine('Transaction Vout: ', transaction_vout)}
       </>
     );

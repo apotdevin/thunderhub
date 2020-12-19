@@ -12,6 +12,7 @@ import { MainInfo } from '../../../components/generic/CardGeneric';
 import {
   getDateDif,
   getFormatDate,
+  getTransactionLink,
   renderLine,
 } from '../../../components/generic/helpers';
 import { getPrice } from '../../../components/price/Price';
@@ -64,7 +65,7 @@ export const TransactionsCard = ({
     return (
       <>
         <Separation />
-        {renderLine('Transaction Id: ', id)}
+        {renderLine('Transaction Id: ', getTransactionLink(id))}
         {renderLine('Block Id: ', block_id)}
         {renderLine('Confirmations: ', confirmation_count)}
         {renderLine('Confirmation Height: ', confirmation_height)}
