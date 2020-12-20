@@ -1,5 +1,7 @@
 # **ThunderHub - Lightning Node Manager**
 
+![Test and Build](https://github.com/apotdevin/thunderhub/workflows/Test%20and%20Build/badge.svg?branch=master)
+
 ![Home Screenshot](/docs/Home.png)
 [![license](https://img.shields.io/github/license/DAVFoundation/captain-n3m0.svg?style=flat-square)](https://github.com/DAVFoundation/captain-n3m0/blob/master/LICENSE)
 
