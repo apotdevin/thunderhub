@@ -2,6 +2,7 @@ import { updateRoutingFees } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { to } from 'server/helpers/async';
+import { logger } from 'server/helpers/logger';
 
 type ParamsType = {
   transaction_id: string;
@@ -15,12 +16,7 @@ type ParamsType = {
 
 export const updateFees = async (
   _: undefined,
-  params: ParamsType,
-  context: ContextType
-) => {
-  await requestLimiter(context.ip, 'updateFees');
-
-  const {
+  {
     transaction_id,
     transaction_vout,
     base_fee_tokens,
@@ -28,13 +24,19 @@ export const updateFees = async (
     cltv_delta,
     max_htlc_mtokens,
     min_htlc_mtokens,
-  } = params;
+  }: ParamsType,
+  context: ContextType
+) => {
+  await requestLimiter(context.ip, 'updateFees');
 
   const { lnd } = context;
 
+  const hasBaseFee = base_fee_tokens >= 0;
+  const hasFee = fee_rate >= 0;
+
   if (
-    !base_fee_tokens &&
-    !fee_rate &&
+    !hasBaseFee &&
+    !hasFee &&
     !cltv_delta &&
     !max_htlc_mtokens &&
     !min_htlc_mtokens
@@ -42,19 +44,23 @@ export const updateFees = async (
     throw new Error('NoDetailsToUpdateChannel');
   }
 
-  const base_fee_mtokens = Math.trunc((base_fee_tokens ?? 0) * 1000);
+  const baseFee =
+    base_fee_tokens === 0
+      ? { base_fee_tokens: 0 }
+      : { base_fee_mtokens: Math.trunc((base_fee_tokens || 0) * 1000) };
 
   const props = {
-    lnd,
     transaction_id,
     transaction_vout,
-    ...(base_fee_tokens && { base_fee_mtokens }),
-    ...(fee_rate && { fee_rate }),
+    ...(hasBaseFee && baseFee),
+    ...(hasFee && { fee_rate }),
     ...(cltv_delta && { cltv_delta }),
     ...(max_htlc_mtokens && { max_htlc_mtokens }),
     ...(min_htlc_mtokens && { min_htlc_mtokens }),
   };
 
-  await to(updateRoutingFees(props));
+  logger.debug('Updating channel details with props: %o', props);
+
+  await to(updateRoutingFees({ lnd, ...props }));
   return true;
 };
