@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.1](https://github.com/apotdevin/thunderhub/compare/v0.12.0...v0.12.1) (2020-12-20)
+
+
+### CI
+
+* 👷 add nextjs cache ([6312cfb](https://github.com/apotdevin/thunderhub/commit/6312cfbd9f5878bd9b034db8f99f83322237adf4))
+* 👷 change branch ([5967b60](https://github.com/apotdevin/thunderhub/commit/5967b60930364783d304d9e0dd2fafe5f273233f))
+* 👷 fix test workflow ([0ec651d](https://github.com/apotdevin/thunderhub/commit/0ec651d7b067ffdc351b364468570654fd888d27))
+
+
+### Docs
+
+* 📚️ add ci badge ([f27facd](https://github.com/apotdevin/thunderhub/commit/f27facd688f24e059c04865407292b562bb1431b))
+
+
+### Improvements
+
+* 🔧 add ci action ([#191](https://github.com/apotdevin/thunderhub/issues/191)) ([9bf28a0](https://github.com/apotdevin/thunderhub/commit/9bf28a07d6c34bbfc0b9839ac773e1e1f0c05eee))
+* 🔧 add transaction link ([#192](https://github.com/apotdevin/thunderhub/issues/192)) ([a41a07f](https://github.com/apotdevin/thunderhub/commit/a41a07fe0ee1434a222be37b231bcc8097d33284))
+* 🔧 allow zero fee changes ([#193](https://github.com/apotdevin/thunderhub/issues/193)) ([bd3b2d3](https://github.com/apotdevin/thunderhub/commit/bd3b2d304370ef2f823366921dde3cd0159b1740))
+* 🔧 env vars in yaml config ([#194](https://github.com/apotdevin/thunderhub/issues/194)) ([a98b10c](https://github.com/apotdevin/thunderhub/commit/a98b10c3b76eae621f4b405a39a0e533b8b95cfd))
+* 🔧 update dependencies ([1f5a577](https://github.com/apotdevin/thunderhub/commit/1f5a577235f32bbed0ab5ee61e12be1813f7e4da))
+
 ## [0.12.0](https://github.com/apotdevin/thunderhub/compare/v0.11.0...v0.12.0) (2020-12-16)
 
 
