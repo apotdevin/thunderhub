@@ -6,6 +6,7 @@ import { logger } from 'server/helpers/logger';
 import yaml from 'js-yaml';
 import { getUUID } from './auth';
 import { hashPassword } from './crypto';
+import { resolveEnvVarsInAccount } from './env';
 
 type EncodingType = 'hex' | 'utf-8';
 type BitcoinNetwork = 'mainnet' | 'regtest' | 'testnet';
@@ -21,6 +22,19 @@ export type AccountType = {
   macaroon?: string;
   certificate?: string;
   encrypted?: boolean;
+};
+
+export type UnresolvedAccountType = {
+  name?: string;
+  serverUrl?: string;
+  lndDir?: string;
+  network?: BitcoinNetwork;
+  macaroonPath?: string;
+  certificatePath?: string;
+  password?: string | null;
+  macaroon?: string;
+  certificate?: string;
+  encrypted?: boolean | string;
 };
 
 export type ParsedAccount = {
@@ -228,11 +242,13 @@ export const getAccounts = (filePath: string): ParsedAccount[] => {
 };
 
 export const getParsedAccount = (
-  account: AccountType,
+  account: UnresolvedAccountType,
   index: number,
   masterPassword: string | null,
   defaultNetwork: BitcoinNetwork
 ): ParsedAccount | null => {
+  const resolvedAccount = resolveEnvVarsInAccount(account);
+
   const {
     name,
     serverUrl,
@@ -242,7 +258,7 @@ export const getParsedAccount = (
     macaroon: macaroonValue,
     password,
     encrypted,
-  } = account;
+  } = resolvedAccount;
 
   const missingFields: string[] = [];
   if (!name) missingFields.push('name');
@@ -269,14 +285,14 @@ export const getParsedAccount = (
     return null;
   }
 
-  const cert = getCertificate(account);
+  const cert = getCertificate(resolvedAccount);
   if (!cert) {
     logger.warn(
       `No certificate for account ${name}. Make sure you don't need it to connect.`
     );
   }
 
-  const macaroon = getMacaroon(account, defaultNetwork);
+  const macaroon = getMacaroon(resolvedAccount, defaultNetwork);
   if (!macaroon) {
     logger.error(
       `Account ${name} has neither lnd directory, macaroon nor macaroon path specified.`

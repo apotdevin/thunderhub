@@ -213,6 +213,22 @@ accounts:
 
 Notice you can specify either `macaroonPath` and `certificatePath` or `macaroon` and `certificate`.
 
+#### Account with environment variables
+
+It's possible to set different parts of the accounts based on environment variables.
+
+You can use the following environment variables: `YML_ENV_1`, `YML_ENV_2`, `YML_ENV_3`, `YML_ENV_4` and fill your accounts in the following way:
+
+```yaml
+accounts:
+  - name: '{YML_ENV_1}'
+    serverUrl: '{YML_ENV_2}'
+    macaroon: 'macaroonforthisaccount'
+    certificate: '{YML_ENV_4}'
+```
+
+ThunderHub will take care of replacing the fields with the correct environment variables. The `{YML_ENV_[1-4]}` can only be used for fields inside the accounts. So for example using it for the `masterPassword` will not work.
+
 #### Account with LND directory
 
 You can also specify the main LND directory and ThunderHub will look for the certificate and the macaroon in the default folders (based on the network).

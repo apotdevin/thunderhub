@@ -3,22 +3,42 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
+const ymlEnv = {
+  YML_ENV_1: process.env.YML_ENV_1 || '',
+  YML_ENV_2: process.env.YML_ENV_2 || '',
+  YML_ENV_3: process.env.YML_ENV_3 || '',
+  YML_ENV_4: process.env.YML_ENV_4 || '',
+};
+
+const ssoEnv = {
+  cookiePath: process.env.COOKIE_PATH || '',
+  lnServerUrl: process.env.SSO_SERVER_URL || '',
+  lnCertPath: process.env.SSO_CERT_PATH || '',
+  macaroonPath: process.env.SSO_MACAROON_PATH || '',
+  dangerousNoSSOAuth:
+    process.env.DANGEROUS_NO_SSO_AUTH === 'true' ? true : false,
+};
+
+const sslEnv = {
+  publicUrl: process.env.PUBLIC_URL || '',
+  sslPort: process.env.SSL_PORT || '',
+  sslSave: process.env.SSL_SAVE || '',
+};
+
+const accountConfig = {
+  accountConfigPath: process.env.ACCOUNT_CONFIG_PATH || '',
+};
+
 module.exports = withBundleAnalyzer({
   poweredByHeader: false,
   basePath: process.env.BASE_PATH || '',
   serverRuntimeConfig: {
     nodeEnv: process.env.NODE_ENV || 'development',
     logLevel: process.env.LOG_LEVEL || 'info',
-    cookiePath: process.env.COOKIE_PATH || '',
-    lnServerUrl: process.env.SSO_SERVER_URL || '',
-    lnCertPath: process.env.SSO_CERT_PATH || '',
-    macaroonPath: process.env.SSO_MACAROON_PATH || '',
-    accountConfigPath: process.env.ACCOUNT_CONFIG_PATH || '',
-    publicUrl: process.env.PUBLIC_URL || '',
-    sslPort: process.env.SSL_PORT || '',
-    sslSave: process.env.SSL_SAVE || '',
-    dangerousNoSSOAuth:
-      process.env.DANGEROUS_NO_SSO_AUTH === 'true' ? true : false,
+    ...ssoEnv,
+    ...accountConfig,
+    ...sslEnv,
+    ...ymlEnv,
   },
   publicRuntimeConfig: {
     nodeEnv: process.env.NODE_ENV || 'development',
