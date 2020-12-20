@@ -4,6 +4,7 @@ import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updat
 import { getErrorContent } from 'src/utils/error';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
+import { Input } from 'src/components/input';
 
 type ChangeDetailsType = {
   callback: () => void;
@@ -43,6 +44,9 @@ export const ChangeDetails = ({
     newMax !== max_htlc ||
     newMin !== min_htlc;
 
+  const feeRatePercent =
+    Math.round(((newFeeRate || 0) / 1000000) * 100000) / 1000;
+
   const [updateFees] = useUpdateFeesMutation({
     onError: error => {
       toast.error(getErrorContent(error));
@@ -60,22 +64,34 @@ export const ChangeDetails = ({
     <>
       <InputWithDeco
         title={'Base Fee'}
-        value={newBaseFee}
-        placeholder={'sats'}
-        amount={newBaseFee}
-        override={'sat'}
-        inputType={'number'}
-        inputCallback={value => setBaseFee(Number(value))}
-      />
+        customAmount={`${newBaseFee} sats`}
+        noInput={true}
+      >
+        <Input
+          maxWidth={'160px'}
+          placeholder={'sats'}
+          withMargin={'0 0 0 8px'}
+          mobileMargin={'0'}
+          type={'number'}
+          onChange={e => setBaseFee(Number(e.target.value))}
+          value={newBaseFee || undefined}
+        />
+      </InputWithDeco>
       <InputWithDeco
         title={'Fee Rate'}
-        value={newFeeRate}
-        placeholder={'ppm'}
-        amount={newFeeRate}
-        override={'ppm'}
-        inputType={'number'}
-        inputCallback={value => setFeeRate(Number(value))}
-      />
+        customAmount={`${feeRatePercent}%`}
+        noInput={true}
+      >
+        <Input
+          maxWidth={'160px'}
+          placeholder={'ppm'}
+          withMargin={'0 0 0 8px'}
+          mobileMargin={'0'}
+          type={'number'}
+          onChange={e => setFeeRate(Number(e.target.value))}
+          value={newFeeRate || undefined}
+        />
+      </InputWithDeco>
       <InputWithDeco
         title={'CLTV Delta'}
         value={newCLTV}
@@ -83,6 +99,7 @@ export const ChangeDetails = ({
         customAmount={newCLTV?.toString() || ''}
         inputType={'number'}
         inputCallback={value => setCLTV(Number(value))}
+        inputMaxWidth={'160px'}
       />
       <InputWithDeco
         title={'Max HTLC'}
@@ -92,6 +109,7 @@ export const ChangeDetails = ({
         override={'sat'}
         inputType={'number'}
         inputCallback={value => setMax(Number(value))}
+        inputMaxWidth={'160px'}
       />
       <InputWithDeco
         title={'Min HTLC'}
@@ -101,6 +119,7 @@ export const ChangeDetails = ({
         override={'sat'}
         inputType={'number'}
         inputCallback={value => setMin(Number(value))}
+        inputMaxWidth={'160px'}
       />
       <ColorButton
         onClick={() =>
@@ -108,10 +127,10 @@ export const ChangeDetails = ({
             variables: {
               transaction_id,
               transaction_vout,
-              ...(newBaseFee !== 0 && {
+              ...((newBaseFee ?? -1) >= 0 && {
                 base_fee_tokens: newBaseFee,
               }),
-              ...(newFeeRate !== 0 && {
+              ...((newFeeRate ?? -1) >= 0 && {
                 fee_rate: newFeeRate,
               }),
               ...(newCLTV !== 0 && { cltv_delta: newCLTV }),
