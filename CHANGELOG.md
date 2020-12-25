@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.2](https://github.com/apotdevin/thunderhub/compare/v0.12.1...v0.12.2) (2020-12-25)
+
+
+### Bug Fixes
+
+* 🐛 boltz swap ([#196](https://github.com/apotdevin/thunderhub/issues/196)) ([f1c9e4c](https://github.com/apotdevin/thunderhub/commit/f1c9e4cf4143ff502d6e524fa8bc83e47447a24e))
+
+
+### Improvements
+
+* 🔧 enable tor proxy config ([#197](https://github.com/apotdevin/thunderhub/issues/197)) ([5bcfed1](https://github.com/apotdevin/thunderhub/commit/5bcfed1b248c060a10bc0461e9cd0b81fe5bf779))
+
+
+### Refactoring
+
+* ♻️ boltz resolvers ([#198](https://github.com/apotdevin/thunderhub/issues/198)) ([8b6cd40](https://github.com/apotdevin/thunderhub/commit/8b6cd40c74521b5213dbc8ecd0d57adb596598d1))
+
 ### [0.12.1](https://github.com/apotdevin/thunderhub/compare/v0.12.0...v0.12.1) (2020-12-20)
 
 
