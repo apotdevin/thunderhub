@@ -108,7 +108,7 @@ export const boltzResolvers = {
 
       const info = detectSwap(redeemScript, lockupTransaction);
 
-      if (!info?.vout || !info.type) {
+      if ((info?.vout ?? -1) < 0 || (info?.type ?? -1) < 0) {
         logger.error('Cannot get vout or type from Boltz');
         logger.debug('Swap info: %o', {
           redeemScript,
@@ -134,7 +134,7 @@ export const boltzResolvers = {
       );
 
       const finalTransaction = constructClaimTransaction(
-        utxos,
+        utxos as any,
         destinationScript,
         fee
       );
