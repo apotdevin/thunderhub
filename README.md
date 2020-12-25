@@ -114,6 +114,7 @@ You can define some environment variables that ThunderHub can start with. To do 
 # Server Configs
 # -----------
 LOG_LEVEL = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly' # Default: 'info'
+TOR_PROXY_SERVER='socks://127.0.0.1:9050' # Default: ''
 
 # -----------
 # Interface Configs
@@ -129,6 +130,16 @@ FETCH_FEES = true | false # Default: true
 DISABLE_LINKS = true | false # Default: false
 DISABLE_LNMARKETS = true | false # Default: false
 NO_VERSION_CHECK = true | false # Default: false
+```
+
+### TOR Requests
+
+ThunderHub connects to different external services for example to fetch BOS scores, BTC/fiat prices and BTC blockchain fees. Normally they are done through clearnet but you can configure a TOR proxy server so that they are all proxied through TOR.
+
+You need to add the following parameter into your `.env` file with your TOR endpoint:
+
+```bash
+TOR_PROXY_SERVER='socks://your.tor.endpoint' # i.e. 'socks://127.0.0.1:9050'
 ```
 
 ### SSO Account

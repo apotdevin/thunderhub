@@ -10,6 +10,7 @@ import {
   PayInvoiceType,
 } from 'server/types/ln-service.types';
 import { lnAuthUrlGenerator } from 'server/helpers/lnAuth';
+import { fetchWithProxy } from 'server/utils/fetch';
 
 type LnUrlPayResponseType = {
   pr?: string;
@@ -74,7 +75,7 @@ export const lnUrlResolvers = {
       const finalUrl = await lnAuthUrlGenerator(url, lnd);
 
       try {
-        const response = await fetch(finalUrl);
+        const response = await fetchWithProxy(finalUrl);
         const json = await response.json();
 
         logger.debug('LnUrlAuth response: %o', json);
@@ -97,7 +98,7 @@ export const lnUrlResolvers = {
       await requestLimiter(context.ip, 'fetchLnUrl');
 
       try {
-        const response = await fetch(url);
+        const response = await fetchWithProxy(url);
         const json = await response.json();
 
         if (json.status === 'ERROR') {
@@ -136,7 +137,7 @@ export const lnUrlResolvers = {
       };
 
       try {
-        const response = await fetch(finalUrl);
+        const response = await fetchWithProxy(finalUrl);
         lnServiceResponse = await response.json();
 
         if (lnServiceResponse.status === 'ERROR') {
@@ -215,7 +216,7 @@ export const lnUrlResolvers = {
       const finalUrl = `${callback}?k1=${k1}&pr=${info.request}`;
 
       try {
-        const response = await fetch(finalUrl);
+        const response = await fetchWithProxy(finalUrl);
         const json = await response.json();
 
         logger.debug('LnUrlWithdraw response: %o', json);
