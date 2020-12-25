@@ -11,6 +11,7 @@ import * as bip32 from 'bip32';
 import * as secp256k1 from 'secp256k1';
 import { appUrls } from 'server/utils/appUrls';
 import { decodeLnUrl } from 'src/utils/url';
+import { fetchWithProxy } from 'server/utils/fetch';
 import { to } from './async';
 import { logger } from './logger';
 
@@ -108,7 +109,7 @@ export const getLnMarketsAuth = async (
 
   // Get a new lnUrl from LnMarkets
   try {
-    const response = await fetch(`${appUrls.lnMarkets}/lnurl/a/c`);
+    const response = await fetchWithProxy(`${appUrls.lnMarkets}/lnurl/a/c`);
     const json = await response.json();
 
     logger.debug('Get lnUrl from LnMarkets response: %o', json);
@@ -128,7 +129,7 @@ export const getLnMarketsAuth = async (
 
   // Try to authenticate with lnMarkets
   try {
-    const response = await fetch(`${finalUrl}&jwt=true&expiry=3600`);
+    const response = await fetchWithProxy(`${finalUrl}&jwt=true&expiry=3600`);
     const json = await response.json();
 
     logger.debug('LnUrlAuth response: %o', json);

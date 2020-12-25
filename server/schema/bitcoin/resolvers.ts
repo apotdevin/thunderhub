@@ -2,6 +2,7 @@ import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { appUrls } from 'server/utils/appUrls';
+import { fetchWithProxy } from 'server/utils/fetch';
 
 export const bitcoinResolvers = {
   Query: {
@@ -13,7 +14,7 @@ export const bitcoinResolvers = {
       await requestLimiter(context.ip, 'bitcoinPrice');
 
       try {
-        const response = await fetch(appUrls.ticker);
+        const response = await fetchWithProxy(appUrls.ticker);
         const json = await response.json();
 
         return JSON.stringify(json);
@@ -30,7 +31,7 @@ export const bitcoinResolvers = {
       await requestLimiter(context.ip, 'bitcoinFee');
 
       try {
-        const response = await fetch(appUrls.fees);
+        const response = await fetchWithProxy(appUrls.fees);
         const json = await response.json();
 
         if (json) {

@@ -1,10 +1,11 @@
 import { logger } from 'server/helpers/logger';
 import { appUrls } from 'server/utils/appUrls';
+import { fetchWithProxy } from 'server/utils/fetch';
 
 export const BoltzApi = {
   getPairs: async () => {
     try {
-      const response = await fetch(`${appUrls.boltz}/getpairs`);
+      const response = await fetchWithProxy(`${appUrls.boltz}/getpairs`);
       return await response.json();
     } catch (error) {
       logger.error('Error getting pairs from Boltz: %o', error);
@@ -13,7 +14,9 @@ export const BoltzApi = {
   },
   getFeeEstimations: async () => {
     try {
-      const response = await fetch(`${appUrls.boltz}/getfeeestimation`);
+      const response = await fetchWithProxy(
+        `${appUrls.boltz}/getfeeestimation`
+      );
       return await response.json();
     } catch (error) {
       logger.error('Error getting fee estimations from Boltz: %o', error);
@@ -23,7 +26,7 @@ export const BoltzApi = {
   getSwapStatus: async (id: string) => {
     try {
       const body = { id };
-      const response = await fetch(`${appUrls.boltz}/swapstatus`, {
+      const response = await fetchWithProxy(`${appUrls.boltz}/swapstatus`, {
         method: 'POST',
         body: JSON.stringify(body),
         headers: { 'Content-Type': 'application/json' },
@@ -48,7 +51,7 @@ export const BoltzApi = {
         preimageHash,
         claimPublicKey,
       };
-      const response = await fetch(`${appUrls.boltz}/createswap`, {
+      const response = await fetchWithProxy(`${appUrls.boltz}/createswap`, {
         method: 'POST',
         body: JSON.stringify(body),
         headers: { 'Content-Type': 'application/json' },
@@ -65,11 +68,14 @@ export const BoltzApi = {
         currency: 'BTC',
         transactionHex,
       };
-      const response = await fetch(`${appUrls.boltz}/broadcasttransaction`, {
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await fetchWithProxy(
+        `${appUrls.boltz}/broadcasttransaction`,
+        {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
       return await response.json();
     } catch (error) {
       logger.error('Error broadcasting transaction from Boltz: %o', error);
