@@ -1,20 +1,19 @@
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { toWithError } from 'server/helpers/async';
 import { appUrls } from 'server/utils/appUrls';
-import { request, gql } from 'graphql-request';
 import { logger } from 'server/helpers/logger';
 import { GraphQLError } from 'graphql';
 import { appConstants } from 'server/utils/appConstants';
 import cookieLib from 'cookie';
+import { graphqlFetchWithProxy } from 'server/utils/fetch';
 
-const getBaseCanConnectQuery = gql`
+const getBaseCanConnectQuery = `
   {
     hello
   }
 `;
 
-const getBaseInfoQuery = gql`
+const getBaseInfoQuery = `
   {
     getInfo {
       lastBosUpdate
@@ -24,7 +23,7 @@ const getBaseInfoQuery = gql`
   }
 `;
 
-const getBaseNodesQuery = gql`
+const getBaseNodesQuery = `
   {
     getNodes {
       _id
@@ -35,7 +34,7 @@ const getBaseNodesQuery = gql`
   }
 `;
 
-const getBasePointsQuery = gql`
+const getBasePointsQuery = `
   {
     getPoints {
       alias
@@ -44,7 +43,7 @@ const getBasePointsQuery = gql`
   }
 `;
 
-const createBaseInvoiceQuery = gql`
+const createBaseInvoiceQuery = `
   mutation CreateInvoice($amount: Int!) {
     createInvoice(amount: $amount) {
       request
@@ -53,7 +52,7 @@ const createBaseInvoiceQuery = gql`
   }
 `;
 
-const createBaseTokenInvoiceQuery = gql`
+const createBaseTokenInvoiceQuery = `
   mutation CreateTokenInvoice($days: Int) {
     createTokenInvoice(days: $days) {
       request
@@ -62,7 +61,7 @@ const createBaseTokenInvoiceQuery = gql`
   }
 `;
 
-const createThunderPointsQuery = gql`
+const createThunderPointsQuery = `
   mutation CreatePoints(
     $id: String!
     $alias: String!
@@ -73,13 +72,13 @@ const createThunderPointsQuery = gql`
   }
 `;
 
-const createBaseTokenQuery = gql`
+const createBaseTokenQuery = `
   mutation CreateBaseToken($id: String!) {
     createBaseToken(id: $id)
   }
 `;
 
-const getBosScoresQuery = gql`
+const getBosScoresQuery = `
   {
     getBosScores {
       updated
@@ -94,7 +93,7 @@ const getBosScoresQuery = gql`
   }
 `;
 
-const getBosNodeScoresQuery = gql`
+const getBosNodeScoresQuery = `
   query GetNodeScores($publicKey: String!, $token: String!) {
     getNodeScores(publicKey: $publicKey, token: $token) {
       alias
@@ -111,8 +110,9 @@ export const tbaseResolvers = {
     getBaseInfo: async (_: undefined, __: undefined, context: ContextType) => {
       await requestLimiter(context.ip, 'getBaseInfo');
 
-      const [data, error] = await toWithError(
-        request(appUrls.tbase, getBaseInfoQuery)
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.tbase,
+        getBaseInfoQuery
       );
 
       if (error || !data?.getInfo) {
@@ -129,8 +129,9 @@ export const tbaseResolvers = {
     ): Promise<boolean> => {
       await requestLimiter(context.ip, 'getBaseCanConnect');
 
-      const [data, error] = await toWithError(
-        request(appUrls.tbase, getBaseCanConnectQuery)
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.tbase,
+        getBaseCanConnectQuery
       );
 
       if (error || !data?.hello) return false;
@@ -149,11 +150,13 @@ export const tbaseResolvers = {
 
       await requestLimiter(ip, 'getBosNodeScores');
 
-      const [data, error] = await toWithError(
-        request(appUrls.tbase, getBosNodeScoresQuery, {
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.tbase,
+        getBosNodeScoresQuery,
+        {
           publicKey,
           token: tokenAuth,
-        })
+        }
       );
 
       if (error) {
@@ -166,12 +169,14 @@ export const tbaseResolvers = {
     getBosScores: async (_: undefined, __: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getBosScores');
 
-      const [data, error] = await toWithError(
-        request(appUrls.tbase, getBosScoresQuery)
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.tbase,
+        getBosScoresQuery
       );
 
       if (error || !data?.getBosScores) {
         logger.error('Error getting BOS scores');
+        logger.error(error);
         throw new GraphQLError('ErrorGettingBosScores');
       }
 
@@ -180,8 +185,9 @@ export const tbaseResolvers = {
     getBaseNodes: async (_: undefined, __: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getBaseNodes');
 
-      const [data, error] = await toWithError(
-        request(appUrls.tbase, getBaseNodesQuery)
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.tbase,
+        getBaseNodesQuery
       );
 
       if (error || !data?.getNodes) return [];
@@ -193,8 +199,9 @@ export const tbaseResolvers = {
     getBasePoints: async (_: undefined, __: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getBasePoints');
 
-      const [data, error] = await toWithError(
-        request(appUrls.tbase, getBasePointsQuery)
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.tbase,
+        getBasePointsQuery
       );
 
       if (error || !data?.getPoints) return [];
@@ -212,8 +219,10 @@ export const tbaseResolvers = {
 
       if (!params?.amount) return '';
 
-      const [data, error] = await toWithError(
-        request(appUrls.tbase, createBaseInvoiceQuery, params)
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.tbase,
+        createBaseInvoiceQuery,
+        params
       );
 
       if (error) return null;
@@ -228,8 +237,10 @@ export const tbaseResolvers = {
     ) => {
       await requestLimiter(ip, 'createBaseInvoice');
 
-      const [data, error] = await toWithError(
-        request(appUrls.tbase, createBaseTokenQuery, { id })
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.tbase,
+        createBaseTokenQuery,
+        { id }
       );
 
       if (error || !data?.createBaseToken) {
@@ -278,8 +289,9 @@ export const tbaseResolvers = {
     ) => {
       await requestLimiter(context.ip, 'createBaseTokenInvoice');
 
-      const [data, error] = await toWithError(
-        request(appUrls.tbase, createBaseTokenInvoiceQuery)
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.tbase,
+        createBaseTokenInvoiceQuery
       );
 
       if (error || !data?.createTokenInvoice) {
@@ -295,11 +307,13 @@ export const tbaseResolvers = {
     ): Promise<boolean> => {
       await requestLimiter(context.ip, 'createThunderPoints');
 
-      const [info, error] = await toWithError(
-        request(appUrls.tbase, createThunderPointsQuery, params)
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.tbase,
+        createThunderPointsQuery,
+        params
       );
 
-      if (error || !info?.createPoints) return false;
+      if (error || !data?.createPoints) return false;
 
       return true;
     },

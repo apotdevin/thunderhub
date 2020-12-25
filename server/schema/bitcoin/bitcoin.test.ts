@@ -19,7 +19,10 @@ describe('Bitcoin Resolvers', () => {
 
       expect(res.errors).toBe(undefined);
 
-      expect(fetchMock).toBeCalledWith('https://blockchain.info/ticker');
+      expect(fetchMock).toBeCalledWith(
+        'https://blockchain.info/ticker',
+        undefined
+      );
       expect(res).toMatchSnapshot();
     });
     test('failure', async () => {
@@ -54,7 +57,8 @@ describe('Bitcoin Resolvers', () => {
       expect(res.errors).toBe(undefined);
 
       expect(fetchMock).toBeCalledWith(
-        'https://mempool.space/api/v1/fees/recommended'
+        'https://mempool.space/api/v1/fees/recommended',
+        undefined
       );
       expect(res).toMatchSnapshot();
     });

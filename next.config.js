@@ -35,6 +35,7 @@ module.exports = withBundleAnalyzer({
   serverRuntimeConfig: {
     nodeEnv: process.env.NODE_ENV || 'development',
     logLevel: process.env.LOG_LEVEL || 'info',
+    torProxy: process.env.TOR_PROXY_SERVER || '',
     ...ssoEnv,
     ...accountConfig,
     ...sslEnv,
