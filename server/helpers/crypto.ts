@@ -1,6 +1,4 @@
 import { createHash, randomBytes } from 'crypto';
-import * as bip39 from 'bip39';
-import * as bip32 from 'bip32';
 import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
 import bcrypt from 'bcryptjs';
@@ -18,21 +16,6 @@ export const getSHA256Hash = (
   str: string | Buffer,
   encoding: 'hex' | 'base64' = 'hex'
 ) => createHash('sha256').update(str).digest().toString(encoding);
-
-export const getPrivateAndPublicKey = () => {
-  const secretKey = bip39.generateMnemonic();
-  const base58 = bip39.mnemonicToSeedSync(secretKey);
-
-  // Derive private seed
-  const node: bip32.BIP32Interface = bip32.fromSeed(base58);
-  const derived = node.derivePath(`m/0/0`);
-
-  // Get private and public key from derived private seed
-  const privateKey = derived.privateKey?.toString('hex');
-  const publicKey = derived.publicKey.toString('hex');
-
-  return { privateKey, publicKey };
-};
 
 export const decodeMacaroon = (macaroon: string, password: string) => {
   try {

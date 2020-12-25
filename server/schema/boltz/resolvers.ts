@@ -9,14 +9,38 @@ import {
   CreateChainAddressType,
   DecodedType,
 } from 'server/types/ln-service.types';
-import {
-  getPreimageAndHash,
-  getPrivateAndPublicKey,
-} from 'server/helpers/crypto';
-import { address, ECPair, networks, Transaction } from 'bitcoinjs-lib';
+import { getPreimageAndHash } from 'server/helpers/crypto';
+import { address, ECPair, Network, networks, Transaction } from 'bitcoinjs-lib';
+import { GraphQLError } from 'graphql';
 
 const getHexBuffer = (input: string) => {
   return Buffer.from(input, 'hex');
+};
+
+const getHexString = (input?: Buffer): string => {
+  if (!input) return '';
+  return input.toString('hex');
+};
+
+const validateAddress = (
+  btcAddress: string,
+  network: Network = networks.bitcoin
+): boolean => {
+  try {
+    address.toOutputScript(btcAddress, network);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+export const generateKeys = (network: Network = networks.bitcoin) => {
+  const keys = ECPair.makeRandom({ network });
+
+  return {
+    publicKey: getHexString(keys.publicKey),
+    privateKey: getHexString(keys.privateKey),
+  };
 };
 
 type BoltzInfoType = {
@@ -103,12 +127,17 @@ export const boltzResolvers = {
     ) => {
       await requestLimiter(ip, 'claimBoltzTransaction');
 
+      if (!validateAddress(destination)) {
+        logger.error(`Invalid bitcoin address: ${destination}`);
+        throw new GraphQLError('InvalidBitcoinAddress');
+      }
+
       const redeemScript = getHexBuffer(redeem);
       const lockupTransaction = Transaction.fromHex(transaction);
 
       const info = detectSwap(redeemScript, lockupTransaction);
 
-      if ((info?.vout ?? -1) < 0 || (info?.type ?? -1) < 0) {
+      if (info?.vout === undefined || info?.type === undefined) {
         logger.error('Cannot get vout or type from Boltz');
         logger.debug('Swap info: %o', {
           redeemScript,
@@ -134,7 +163,7 @@ export const boltzResolvers = {
       );
 
       const finalTransaction = constructClaimTransaction(
-        utxos as any,
+        utxos,
         destinationScript,
         fee
       );
@@ -161,10 +190,15 @@ export const boltzResolvers = {
     ) => {
       await requestLimiter(context.ip, 'createReverseSwap');
 
+      if (address && !validateAddress(address)) {
+        logger.error(`Invalid bitcoin address: ${address}`);
+        throw new GraphQLError('InvalidBitcoinAddress');
+      }
+
       const { lnd } = context;
 
       const { preimage, hash } = getPreimageAndHash();
-      const { privateKey, publicKey } = getPrivateAndPublicKey();
+      const { privateKey, publicKey } = generateKeys();
 
       let btcAddress = address;
 
