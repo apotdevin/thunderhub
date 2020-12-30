@@ -180,15 +180,13 @@ Object {
       Object {
         "id": "100x1x1",
         "partner_fee_info": Object {
-          "channel": Object {
-            "node_policies": null,
-            "partner_node_policies": Object {
-              "base_fee_mtokens": "2000",
-              "cltv_delta": 1000,
-              "fee_rate": 1000,
-              "max_htlc_mtokens": "10000",
-              "min_htlc_mtokens": "10000",
-            },
+          "node_policies": null,
+          "partner_node_policies": Object {
+            "base_fee_mtokens": "2000",
+            "cltv_delta": 1000,
+            "fee_rate": 1000,
+            "max_htlc_mtokens": "10000",
+            "min_htlc_mtokens": "10000",
           },
         },
         "partner_node_info": Object {
@@ -204,15 +202,13 @@ Object {
       Object {
         "id": "100x1x1",
         "partner_fee_info": Object {
-          "channel": Object {
-            "node_policies": null,
-            "partner_node_policies": Object {
-              "base_fee_mtokens": "2000",
-              "cltv_delta": 1000,
-              "fee_rate": 1000,
-              "max_htlc_mtokens": "10000",
-              "min_htlc_mtokens": "10000",
-            },
+          "node_policies": null,
+          "partner_node_policies": Object {
+            "base_fee_mtokens": "2000",
+            "cltv_delta": 1000,
+            "fee_rate": 1000,
+            "max_htlc_mtokens": "10000",
+            "min_htlc_mtokens": "10000",
           },
         },
         "partner_node_info": Object {
@@ -228,15 +224,13 @@ Object {
       Object {
         "id": "100x1x1",
         "partner_fee_info": Object {
-          "channel": Object {
-            "node_policies": null,
-            "partner_node_policies": Object {
-              "base_fee_mtokens": "2000",
-              "cltv_delta": 1000,
-              "fee_rate": 1000,
-              "max_htlc_mtokens": "10000",
-              "min_htlc_mtokens": "10000",
-            },
+          "node_policies": null,
+          "partner_node_policies": Object {
+            "base_fee_mtokens": "2000",
+            "cltv_delta": 1000,
+            "fee_rate": 1000,
+            "max_htlc_mtokens": "10000",
+            "min_htlc_mtokens": "10000",
           },
         },
         "partner_node_info": Object {
@@ -280,13 +274,11 @@ Object {
         "local_balance": 1000,
         "local_reserve": 1000,
         "partner_fee_info": Object {
-          "channel": Object {
-            "node_policies": null,
-            "partner_node_policies": Object {
-              "base_fee_mtokens": "2000",
-              "cltv_delta": 1000,
-              "fee_rate": 1000,
-            },
+          "node_policies": null,
+          "partner_node_policies": Object {
+            "base_fee_mtokens": "2000",
+            "cltv_delta": 1000,
+            "fee_rate": 1000,
           },
         },
         "partner_node_info": Object {
@@ -332,13 +324,11 @@ Object {
         "local_balance": 1000,
         "local_reserve": 1000,
         "partner_fee_info": Object {
-          "channel": Object {
-            "node_policies": null,
-            "partner_node_policies": Object {
-              "base_fee_mtokens": "2000",
-              "cltv_delta": 1000,
-              "fee_rate": 1000,
-            },
+          "node_policies": null,
+          "partner_node_policies": Object {
+            "base_fee_mtokens": "2000",
+            "cltv_delta": 1000,
+            "fee_rate": 1000,
           },
         },
         "partner_node_info": Object {
@@ -384,13 +374,11 @@ Object {
         "local_balance": 1000,
         "local_reserve": 1000,
         "partner_fee_info": Object {
-          "channel": Object {
-            "node_policies": null,
-            "partner_node_policies": Object {
-              "base_fee_mtokens": "2000",
-              "cltv_delta": 1000,
-              "fee_rate": 1000,
-            },
+          "node_policies": null,
+          "partner_node_policies": Object {
+            "base_fee_mtokens": "2000",
+            "cltv_delta": 1000,
+            "fee_rate": 1000,
           },
         },
         "partner_node_info": Object {

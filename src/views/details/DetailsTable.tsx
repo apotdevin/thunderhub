@@ -67,7 +67,7 @@ export const DetailsTable = ({ channels }: DetailsTableType) => {
 
     return (
       channels.map(channel => {
-        const policies = channel?.partner_fee_info?.channel?.node_policies;
+        const policies = channel?.partner_fee_info?.node_policies;
         let finalPolicies = {};
         if (policies) {
           finalPolicies = {

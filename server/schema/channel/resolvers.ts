@@ -12,9 +12,11 @@ import { getClosedChannels } from './resolvers/query/getClosedChannels';
 import { getPendingChannels } from './resolvers/query/getPendingChannels';
 
 type ParentType = {
-  lnd: {};
-  id: String;
-  localKey: String;
+  id: string;
+  partner_fee_info: {
+    lnd: {};
+    localKey: String;
+  };
 };
 
 export const channelResolvers = {
@@ -30,10 +32,11 @@ export const channelResolvers = {
     updateFees,
     updateMultipleFees,
   },
-  Channel: {
-    channel: async (parent: ParentType) => {
-      const { lnd, id, localKey } = parent;
-
+  channelType: {
+    partner_fee_info: async ({
+      id,
+      partner_fee_info: { lnd, localKey },
+    }: ParentType) => {
       if (!lnd) {
         logger.debug('ExpectedLNDToGetChannel');
         return null;
@@ -44,7 +47,9 @@ export const channelResolvers = {
         return null;
       }
 
-      const [channel, error] = await toWithError(getChannel({ lnd, id }));
+      const [channel, error] = await toWithError<GetChannelType>(
+        getChannel({ lnd, id })
+      );
 
       if (error) {
         logger.debug(`Error getting channel with id ${id}: %o`, error);
@@ -54,19 +59,21 @@ export const channelResolvers = {
       let node_policies = null;
       let partner_node_policies = null;
 
-      (channel as GetChannelType).policies.forEach(policy => {
-        if (localKey && localKey === policy.public_key) {
-          node_policies = {
-            ...policy,
-            node: { lnd, publicKey: policy.public_key },
-          };
-        } else {
-          partner_node_policies = {
-            ...policy,
-            node: { lnd, publicKey: policy.public_key },
-          };
-        }
-      });
+      if (channel) {
+        channel.policies.forEach(policy => {
+          if (localKey && localKey === policy.public_key) {
+            node_policies = {
+              ...policy,
+              node: { lnd, publicKey: policy.public_key },
+            };
+          } else {
+            partner_node_policies = {
+              ...policy,
+              node: { lnd, publicKey: policy.public_key },
+            };
+          }
+        });
+      }
 
       return {
         ...(channel as GetChannelType),
@@ -74,8 +81,6 @@ export const channelResolvers = {
         partner_node_policies,
       };
     },
-  },
-  channelType: {
     pending_resume({ pending_payments }: ChannelType) {
       const total = pending_payments.reduce(
         (prev, current) => {

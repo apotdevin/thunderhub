@@ -23,16 +23,13 @@ export type GetChannelsQuery = (
         & Pick<Types.NodeType, 'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'>
       ) }
     ), partner_fee_info?: Types.Maybe<(
-      { __typename?: 'Channel' }
-      & { channel?: Types.Maybe<(
-        { __typename?: 'singleChannelType' }
-        & { node_policies?: Types.Maybe<(
-          { __typename?: 'nodePolicyType' }
-          & Pick<Types.NodePolicyType, 'base_fee_mtokens' | 'fee_rate' | 'cltv_delta' | 'max_htlc_mtokens' | 'min_htlc_mtokens'>
-        )>, partner_node_policies?: Types.Maybe<(
-          { __typename?: 'nodePolicyType' }
-          & Pick<Types.NodePolicyType, 'base_fee_mtokens' | 'fee_rate' | 'cltv_delta'>
-        )> }
+      { __typename?: 'singleChannelType' }
+      & { node_policies?: Types.Maybe<(
+        { __typename?: 'nodePolicyType' }
+        & Pick<Types.NodePolicyType, 'base_fee_mtokens' | 'fee_rate' | 'cltv_delta' | 'max_htlc_mtokens' | 'min_htlc_mtokens'>
+      )>, partner_node_policies?: Types.Maybe<(
+        { __typename?: 'nodePolicyType' }
+        & Pick<Types.NodePolicyType, 'base_fee_mtokens' | 'fee_rate' | 'cltv_delta'>
       )> }
     )> }
   )>> }
@@ -83,19 +80,17 @@ export const GetChannelsDocument = gql`
       }
     }
     partner_fee_info {
-      channel {
-        node_policies {
-          base_fee_mtokens
-          fee_rate
-          cltv_delta
-          max_htlc_mtokens
-          min_htlc_mtokens
-        }
-        partner_node_policies {
-          base_fee_mtokens
-          fee_rate
-          cltv_delta
-        }
+      node_policies {
+        base_fee_mtokens
+        fee_rate
+        cltv_delta
+        max_htlc_mtokens
+        min_htlc_mtokens
+      }
+      partner_node_policies {
+        base_fee_mtokens
+        fee_rate
+        cltv_delta
       }
     }
   }
