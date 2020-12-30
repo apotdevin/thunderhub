@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Zap, Anchor, Pocket, HelpCircle } from 'react-feather';
+import { Zap, Anchor, Pocket, HelpCircle, X } from 'react-feather';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import ReactTooltip from 'react-tooltip';
@@ -148,7 +148,9 @@ export const AccountInfo = () => {
       {renderBalances(channelBalance, channelPending, 'lightning')}
       {showLn && showChain && renderButtons('send_ln', 'receive_ln')}
       {showLn && !showChain && (
-        <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
+        <ColorButton onClick={() => setState('none')}>
+          <X size={18} />
+        </ColorButton>
       )}
     </ResponsiveLine>
   );
@@ -163,7 +165,9 @@ export const AccountInfo = () => {
       {renderBalances(chainBalance, chainPending, 'onchain')}
       {showLn && showChain && renderButtons('send_chain', 'receive_chain')}
       {!showLn && showChain && (
-        <ColorButton onClick={() => setState('none')}>Cancel</ColorButton>
+        <ColorButton onClick={() => setState('none')}>
+          <X size={18} />
+        </ColorButton>
       )}
     </ResponsiveLine>
   );
