@@ -72,10 +72,10 @@ export const Channels: React.FC = () => {
 
     const { capacity, channel_count } = partner_node_info?.node || {};
     const { base_fee_mtokens, fee_rate } =
-      partner_fee_info?.channel?.partner_node_policies || {};
+      partner_fee_info?.partner_node_policies || {};
 
     const { base_fee_mtokens: nodeBase, fee_rate: nodeRate } =
-      partner_fee_info?.channel?.node_policies || {};
+      partner_fee_info?.node_policies || {};
 
     const partner = Number(capacity) || 0;
     const channels = Number(channel_count) || 0;
@@ -157,8 +157,7 @@ export const Channels: React.FC = () => {
       case 'feeRate': {
         const newArray = sortBy(
           channels,
-          channel =>
-            channel?.partner_fee_info?.channel?.partner_node_policies?.fee_rate
+          channel => channel?.partner_fee_info?.partner_node_policies?.fee_rate
         );
         return sortDirection === 'increase' ? newArray : newArray.reverse();
       }

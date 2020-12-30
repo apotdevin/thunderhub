@@ -47,10 +47,6 @@ export const channelTypes = gql`
     partner_node_policies: nodePolicyType
   }
 
-  type Channel {
-    channel: singleChannelType
-  }
-
   type channelBalanceType {
     confirmedBalance: Int!
     pendingBalance: Int!
@@ -96,7 +92,7 @@ export const channelTypes = gql`
     transaction_vout: Int!
     unsettled_balance: Int!
     partner_node_info: Node!
-    partner_fee_info: Channel
+    partner_fee_info: singleChannelType
     channel_age: Int!
     pending_payments: [pendingPaymentType]!
     pending_resume: pendingResumeType!

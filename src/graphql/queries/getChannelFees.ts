@@ -14,21 +14,19 @@ export const CHANNEL_FEES = gql`
         }
       }
       partner_fee_info {
-        channel {
-          node_policies {
-            base_fee_mtokens
-            fee_rate
-            cltv_delta
-            max_htlc_mtokens
-            min_htlc_mtokens
-          }
-          partner_node_policies {
-            base_fee_mtokens
-            fee_rate
-            cltv_delta
-            max_htlc_mtokens
-            min_htlc_mtokens
-          }
+        node_policies {
+          base_fee_mtokens
+          fee_rate
+          cltv_delta
+          max_htlc_mtokens
+          min_htlc_mtokens
+        }
+        partner_node_policies {
+          base_fee_mtokens
+          fee_rate
+          cltv_delta
+          max_htlc_mtokens
+          min_htlc_mtokens
         }
       }
     }

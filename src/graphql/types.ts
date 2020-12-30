@@ -627,11 +627,6 @@ export type SingleChannelType = {
   partner_node_policies?: Maybe<NodePolicyType>;
 };
 
-export type Channel = {
-  __typename?: 'Channel';
-  channel?: Maybe<SingleChannelType>;
-};
-
 export type ChannelBalanceType = {
   __typename?: 'channelBalanceType';
   confirmedBalance: Scalars['Int'];
@@ -681,7 +676,7 @@ export type ChannelType = {
   transaction_vout: Scalars['Int'];
   unsettled_balance: Scalars['Int'];
   partner_node_info: Node;
-  partner_fee_info?: Maybe<Channel>;
+  partner_fee_info?: Maybe<SingleChannelType>;
   channel_age: Scalars['Int'];
   pending_payments: Array<Maybe<PendingPaymentType>>;
   pending_resume: PendingResumeType;

@@ -155,7 +155,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   } = partner_node_info?.node || {};
 
   const { base_fee_mtokens, fee_rate, cltv_delta } =
-    partner_fee_info?.channel?.partner_node_policies || {};
+    partner_fee_info?.partner_node_policies || {};
 
   const {
     base_fee_mtokens: node_base,
@@ -163,7 +163,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
     cltv_delta: node_cltv,
     max_htlc_mtokens,
     min_htlc_mtokens,
-  } = partner_fee_info?.channel?.node_policies || {};
+  } = partner_fee_info?.node_policies || {};
 
   const formatBalance = format({ amount: capacity });
   const formatLocal = format({ amount: local_balance });
