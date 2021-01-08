@@ -31,6 +31,9 @@ export type GetChannelsQuery = (
         { __typename?: 'nodePolicyType' }
         & Pick<Types.NodePolicyType, 'base_fee_mtokens' | 'fee_rate' | 'cltv_delta'>
       )> }
+    )>, bosScore?: Types.Maybe<(
+      { __typename?: 'BosScore' }
+      & Pick<Types.BosScore, 'alias' | 'public_key' | 'score' | 'updated' | 'position'>
     )> }
   )>> }
 );
@@ -92,6 +95,13 @@ export const GetChannelsDocument = gql`
         fee_rate
         cltv_delta
       }
+    }
+    bosScore {
+      alias
+      public_key
+      score
+      updated
+      position
     }
   }
 }

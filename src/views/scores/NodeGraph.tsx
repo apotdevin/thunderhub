@@ -50,6 +50,10 @@ export const Graph = () => {
     }))
     .reverse();
 
+  if (!final.length) {
+    return null;
+  }
+
   return (
     <Wrapper>
       <ParentSize>

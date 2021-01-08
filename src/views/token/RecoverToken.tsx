@@ -15,6 +15,7 @@ export const RecoverToken = () => {
   const dispatch = useBaseDispatch();
   const [getToken, { data, loading }] = useCreateBaseTokenMutation({
     onError: err => toast.error(getErrorContent(err)),
+    refetchQueries: ['GetChannels'],
   });
 
   useEffect(() => {

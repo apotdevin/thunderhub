@@ -54,6 +54,8 @@ interface GetPriceProps {
   noUnit?: boolean;
 }
 
+export type FormatFnType = (options: GetPriceProps) => string;
+
 export const getPrice = (
   currency: string,
   displayValues: boolean,

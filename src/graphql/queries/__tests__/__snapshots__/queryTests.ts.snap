@@ -260,6 +260,7 @@ Object {
   "data": Object {
     "getChannels": Array [
       Object {
+        "bosScore": null,
         "capacity": 1000,
         "channel_age": 123356,
         "commit_transaction_fee": 1000,
@@ -310,6 +311,7 @@ Object {
         "unsettled_balance": 1000,
       },
       Object {
+        "bosScore": null,
         "capacity": 1000,
         "channel_age": 123356,
         "commit_transaction_fee": 1000,
@@ -360,6 +362,7 @@ Object {
         "unsettled_balance": 1000,
       },
       Object {
+        "bosScore": null,
         "capacity": 1000,
         "channel_age": 123356,
         "commit_transaction_fee": 1000,
