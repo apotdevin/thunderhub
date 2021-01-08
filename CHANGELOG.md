@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.3](https://github.com/apotdevin/thunderhub/compare/v0.12.2...v0.12.3) (2021-01-08)
+
+
+### Refactoring
+
+* ♻️ getChannels query ([9a5a210](https://github.com/apotdevin/thunderhub/commit/9a5a21032fb0aebbd907d248a174c6d056a2d03c))
+
+
+### Improvements
+
+* 🔧 add bos score to channels ([#207](https://github.com/apotdevin/thunderhub/issues/207)) ([e438f85](https://github.com/apotdevin/thunderhub/commit/e438f85ddf04d4b697cb6405891c5d9953454580))
+* 🔧 revert nextjs version bump ([343f0e7](https://github.com/apotdevin/thunderhub/commit/343f0e79fd0d616bad30408f6b9fc84de9194914))
+* 🔧 update dependencies ([0be677a](https://github.com/apotdevin/thunderhub/commit/0be677a4464e68499268c3049c5e5610da6bab11))
+
 ### [0.12.2](https://github.com/apotdevin/thunderhub/compare/v0.12.1...v0.12.2) (2020-12-25)
 
 
