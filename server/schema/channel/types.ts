@@ -96,6 +96,7 @@ export const channelTypes = gql`
     channel_age: Int!
     pending_payments: [pendingPaymentType]!
     pending_resume: pendingResumeType!
+    bosScore: BosScore
   }
 
   type closeChannelType {

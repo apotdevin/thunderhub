@@ -27,6 +27,7 @@ export const PaidCard: FC<{ id: string }> = ({ id }) => {
   const [getToken, { data, loading }] = useCreateBaseTokenMutation({
     onError: err => toast.error(getErrorContent(err)),
     variables: { id },
+    refetchQueries: ['GetChannels'],
   });
 
   useEffect(() => {

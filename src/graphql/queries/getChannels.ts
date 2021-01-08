@@ -57,6 +57,13 @@ export const GET_CHANNELS = gql`
           cltv_delta
         }
       }
+      bosScore {
+        alias
+        public_key
+        score
+        updated
+        position
+      }
     }
   }
 `;
