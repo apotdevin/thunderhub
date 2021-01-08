@@ -105,6 +105,18 @@ const getBosNodeScoresQuery = `
   }
 `;
 
+const getLastNodeScoreQuery = `
+  query GetLastNodeScore($publicKey: String!, $token: String!) {
+    getLastNodeScore(publicKey: $publicKey, token: $token) {
+      alias
+      public_key
+      score
+      updated
+      position
+    }
+  }
+`;
+
 export const tbaseResolvers = {
   Query: {
     getBaseInfo: async (_: undefined, __: undefined, context: ContextType) => {
@@ -316,6 +328,44 @@ export const tbaseResolvers = {
       if (error || !data?.createPoints) return false;
 
       return true;
+    },
+  },
+  channelType: {
+    bosScore: async (
+      {
+        partner_public_key,
+      }: {
+        partner_public_key: string;
+      },
+      _: undefined,
+      { tokenAuth }: ContextType
+    ) => {
+      if (!tokenAuth) {
+        return null;
+      }
+
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.tbase,
+        getLastNodeScoreQuery,
+        {
+          publicKey: partner_public_key,
+          token: tokenAuth,
+        }
+      );
+
+      if (error) {
+        return null;
+      }
+
+      return (
+        data?.getLastNodeScore || {
+          alias: '',
+          public_key: partner_public_key,
+          score: 0,
+          updated: '',
+          position: 0,
+        }
+      );
     },
   },
 };

@@ -22,7 +22,7 @@ const tooltipStyles = {
 };
 
 const getDate = (d: DataType) => new Date(d.date);
-const getValue = (d: DataType) => d.value;
+const getValue = (d: DataType) => d?.value || 0;
 const bisectDate = bisector<DataType, Date>(d => new Date(d.date)).left;
 
 type DataType = {

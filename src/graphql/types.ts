@@ -680,6 +680,7 @@ export type ChannelType = {
   channel_age: Scalars['Int'];
   pending_payments: Array<Maybe<PendingPaymentType>>;
   pending_resume: PendingResumeType;
+  bosScore?: Maybe<BosScore>;
 };
 
 export type CloseChannelType = {
