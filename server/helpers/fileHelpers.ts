@@ -103,7 +103,7 @@ export const parseYaml = (filePath: string): AccountConfigType | null => {
   }
 
   try {
-    const yamlObject = yaml.safeLoad(yamlConfig);
+    const yamlObject = yaml.load(yamlConfig);
     // TODO: validate this, before returning?
     return yamlObject as AccountConfigType;
   } catch (err) {
@@ -120,7 +120,7 @@ const saveHashedYaml = (config: AccountConfigType, filePath: string): void => {
   logger.info('Saving new yaml file with hashed passwords');
 
   try {
-    const yamlString = yaml.safeDump(config);
+    const yamlString = yaml.dump(config);
     fs.writeFileSync(filePath, yamlString);
     logger.info('Succesfully saved');
   } catch (error) {
