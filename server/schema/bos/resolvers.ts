@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { ContextType } from 'server/types/apiTypes';
 import { to, toWithError } from 'server/helpers/async';
 import { logger } from 'server/helpers/logger';
@@ -127,6 +128,7 @@ export const bosResolvers = {
         rebalance({
           lnd,
           logger,
+          fs: { getFile: fs.readFile },
           ...filteredParams,
         })
       );
