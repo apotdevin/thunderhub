@@ -4,11 +4,13 @@ import {
   getFormatDate,
   renderLine,
 } from 'src/components/generic/helpers';
-import { DarkSubTitle } from 'src/components/generic/Styled';
+import { DarkSubTitle, Separation } from 'src/components/generic/Styled';
 import { Link } from 'src/components/link/Link';
 import { BosScore } from 'src/graphql/types';
 import { chartColors } from 'src/styles/Themes';
 import styled from 'styled-components';
+import numeral from 'numeral';
+import { useBaseConnect } from 'src/hooks/UseBaseConnect';
 
 const S = {
   missingToken: styled.div`
@@ -27,9 +29,14 @@ const S = {
 };
 
 export const ChannelBosScore: FC<{ score?: BosScore | null }> = ({ score }) => {
+  const connected = useBaseConnect();
+
+  if (!connected) return null;
+
   if (!score) {
     return (
       <>
+        <Separation />
         BOS Score
         <Link to={'/token'} noStyling={true}>
           <S.missingToken>
@@ -42,14 +49,18 @@ export const ChannelBosScore: FC<{ score?: BosScore | null }> = ({ score }) => {
 
   if (!score.alias) {
     return (
-      <DarkSubTitle>This node has not appeared in the BOS list</DarkSubTitle>
+      <>
+        <Separation />
+        <DarkSubTitle>This node has not appeared in the BOS list</DarkSubTitle>
+      </>
     );
   }
 
   return (
     <>
+      <Separation />
       BOS Score
-      {renderLine('Score', score.score)}
+      {renderLine('Score', numeral(score.score).format('0,0'))}
       {renderLine('Position', score.position)}
       {renderLine('Last Time on List', `${getDateDif(score.updated)} ago`)}
       {renderLine('Last Time Date', getFormatDate(score.updated))}

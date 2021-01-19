@@ -12,6 +12,7 @@ import { useBaseState } from 'src/context/BaseContext';
 import { useGetBosNodeScoresQuery } from 'src/graphql/queries/__generated__/getBosNodeScores.generated';
 import { Table } from 'src/components/table';
 import { getFormatDate } from 'src/components/generic/helpers';
+import numeral from 'numeral';
 
 type NodeScoresProps = {
   callback: () => void;
@@ -57,6 +58,7 @@ export const NodeScores: FC<NodeScoresProps> = ({
   const finalData = data?.getBosNodeScores || [];
   const tableData = finalData.map(s => ({
     ...s,
+    score: numeral(s?.score || 0).format('0,0'),
     date: getFormatDate(s?.updated),
   }));
 

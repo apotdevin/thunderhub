@@ -22,6 +22,7 @@ import { chartColors } from 'src/styles/Themes';
 import { Link } from 'src/components/link/Link';
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
+import numeral from 'numeral';
 
 const S = {
   Icon: styled.div`
@@ -64,6 +65,7 @@ const Wrapped = () => {
 
   const tableData = scores.map((s, index) => ({
     ...s,
+    score: numeral(s.score).format('0,0'),
     index: index + 1,
     key: getNodeLink(s?.public_key),
     chart: (
