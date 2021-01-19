@@ -39,7 +39,7 @@ export const transactionTypes = gql`
     safe_fee: Int!
     safe_tokens: Int
     secret: String!
-    tokens: Int!
+    tokens: String!
     type: String!
     date: String!
   }
@@ -61,7 +61,7 @@ export const transactionTypes = gql`
     received_mtokens: String!
     request: String
     secret: String!
-    tokens: Int!
+    tokens: String!
     type: String!
     date: String!
   }
