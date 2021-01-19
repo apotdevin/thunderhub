@@ -157,7 +157,6 @@ export const ChannelDetails: FC<ChannelDetailsProps> = ({
         'Balancedness:',
         getPercent(local_balance, remote_balance) / 100
       )}
-      <Separation />
       <ChannelBosScore score={bosScore} />
       <Separation />
       {renderLine('Base Fee:', nodeBaseFee)}

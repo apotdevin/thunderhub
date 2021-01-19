@@ -13,6 +13,7 @@ import { localPoint } from '@visx/event';
 import { max, extent, bisector } from 'd3-array';
 import { chartColors, themeColors } from 'src/styles/Themes';
 import format from 'date-fns/format';
+import numeral from 'numeral';
 
 const tooltipStyles = {
   ...defaultStyles,
@@ -180,7 +181,7 @@ export const AreaGraph = withTooltip<AreaProps, DataType>(
               left={tooltipLeft + 12}
               style={tooltipStyles}
             >
-              {`${tooltipText}${getValue(tooltipData)}`}
+              {`${tooltipText}${numeral(getValue(tooltipData)).format('0,0')}`}
             </TooltipWithBounds>
             <Tooltip
               top={innerHeight + margin.top - 14}
