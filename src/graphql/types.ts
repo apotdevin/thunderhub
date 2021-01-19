@@ -862,7 +862,7 @@ export type PaymentType = {
   safe_fee: Scalars['Int'];
   safe_tokens?: Maybe<Scalars['Int']>;
   secret: Scalars['String'];
-  tokens: Scalars['Int'];
+  tokens: Scalars['String'];
   type: Scalars['String'];
   date: Scalars['String'];
 };
@@ -885,7 +885,7 @@ export type InvoiceType = {
   received_mtokens: Scalars['String'];
   request?: Maybe<Scalars['String']>;
   secret: Scalars['String'];
-  tokens: Scalars['Int'];
+  tokens: Scalars['String'];
   type: Scalars['String'];
   date: Scalars['String'];
 };

@@ -953,7 +953,7 @@ Object {
           "received_mtokens": "string",
           "request": "string",
           "secret": "string",
-          "tokens": 1000,
+          "tokens": "1000",
           "type": "invoice",
         },
       ],
