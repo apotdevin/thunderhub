@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.5](https://github.com/apotdevin/thunderhub/compare/v0.12.4...v0.12.5) (2021-01-20)
+
+
+### Bug Fixes
+
+* 🐛 max int error ([d10b212](https://github.com/apotdevin/thunderhub/commit/d10b2120b59888366bbffde6f41682307254af38))
+* 🐛 missing rebalance param ([3c8fb65](https://github.com/apotdevin/thunderhub/commit/3c8fb65975a8e1f65099c1177a500c90426503b4))
+* 🐛 npm vulnerabilities ([118ac98](https://github.com/apotdevin/thunderhub/commit/118ac98916240e53e5b432b90eaa6003d05ee0e0))
+
+
+### Styling
+
+* 🎨 number formating ([83dc6a1](https://github.com/apotdevin/thunderhub/commit/83dc6a110226b509181beedf9346a6b13bcfadec))
+
+
+### Improvements
+
+* 🔧 update dependencies ([180614b](https://github.com/apotdevin/thunderhub/commit/180614be4f237e2f532dbcd1a020c33a17bc2faa))
+
 ### [0.12.4](https://github.com/apotdevin/thunderhub/compare/v0.12.3...v0.12.4) (2021-01-09)
 
 
