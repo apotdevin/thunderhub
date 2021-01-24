@@ -27,7 +27,7 @@ type RebalanceType = {
   node?: String;
   out_channels?: String[];
   out_through?: String;
-  target?: Number;
+  out_inbound?: Number;
 };
 
 type AccountingType = {
@@ -93,10 +93,7 @@ export const bosResolvers = {
     },
     bosRebalance: async (
       _: undefined,
-      params: RebalanceType,
-      context: ContextType
-    ) => {
-      const {
+      {
         avoid,
         in_through,
         is_avoiding_high_inbound,
@@ -105,10 +102,10 @@ export const bosResolvers = {
         max_rebalance,
         node,
         out_through,
-        target,
-      } = params;
-      const { lnd } = context;
-
+        out_inbound,
+      }: RebalanceType,
+      { lnd }: ContextType
+    ) => {
       const filteredParams = {
         out_channels: [],
         avoid,
@@ -116,10 +113,12 @@ export const bosResolvers = {
         ...(is_avoiding_high_inbound && { is_avoiding_high_inbound }),
         ...(max_fee && max_fee > 0 && { max_fee }),
         ...(max_fee_rate && max_fee_rate > 0 && { max_fee_rate }),
-        ...(max_rebalance && max_rebalance > 0 && { max_rebalance }),
+        ...(max_rebalance &&
+          max_rebalance > 0 && { max_rebalance: `${max_rebalance}` }),
         ...(node && { node }),
         ...(out_through && { out_through }),
-        ...(target && { target }),
+        ...(out_inbound &&
+          out_inbound > 0 && { out_inbound: `${out_inbound}` }),
       };
 
       logger.info('Rebalance Params: %o', filteredParams);
