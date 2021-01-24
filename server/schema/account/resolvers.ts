@@ -2,6 +2,7 @@ import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { saved } from 'server/helpers/auth';
+import { AccountType } from './types';
 
 export const accountResolvers = {
   Query: {
@@ -35,37 +36,43 @@ export const accountResolvers = {
     getServerAccounts: async (
       _: undefined,
       __: undefined,
-      context: ContextType
+      { ip, accounts, id, sso, hasSSOauth }: ContextType
     ) => {
-      const { ip, accounts, id, sso } = context;
       await requestLimiter(ip, 'getServerAccounts');
 
       saved.reset();
 
-      let ssoAccount = null;
-      if (id === 'sso' && sso) {
+      const mappedAccounts =
+        accounts?.map(a => ({
+          ...a,
+          loggedIn: hasSSOauth && a.sso ? true : a.id === id,
+          type: a.sso ? 'sso' : 'server',
+        })) || [];
+
+      const ssoAccounts = mappedAccounts.filter(a => a.sso);
+      const normalAccounts = mappedAccounts.filter(a => !a.sso);
+
+      let allAccounts: AccountType[] = normalAccounts;
+
+      if (hasSSOauth && sso) {
         const { cert, socket } = sso;
         logger.debug(
           `Macaroon${
             cert ? ', certificate' : ''
           } and host (${socket}) found for SSO.`
         );
-        ssoAccount = {
+
+        const ssoAccount: AccountType = {
           name: 'SSO Account',
           id: 'sso',
           loggedIn: true,
           type: 'sso',
         };
+
+        allAccounts = [...allAccounts, ssoAccount, ...ssoAccounts];
       }
 
-      const withStatus =
-        accounts?.map(a => ({
-          ...a,
-          loggedIn: a.id === id,
-          type: 'server',
-        })) || [];
-
-      return ssoAccount ? [ssoAccount, ...withStatus] : withStatus;
+      return allAccounts;
     },
   },
 };

@@ -55,5 +55,6 @@ module.exports = withBundleAnalyzer({
     disableLnMarkets: process.env.DISABLE_LNMARKETS === 'true' ? true : false,
     noVersionCheck: process.env.NO_VERSION_CHECK === 'true' ? true : false,
     logoutUrl: process.env.LOGOUT_URL || '',
+    withAccountSwitch: process.env.MULTI_SSO === 'true' ? true : false,
   },
 });

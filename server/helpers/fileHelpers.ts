@@ -22,6 +22,7 @@ export type AccountType = {
   macaroon?: string;
   certificate?: string;
   encrypted?: boolean;
+  sso?: boolean;
 };
 
 export type UnresolvedAccountType = {
@@ -44,6 +45,7 @@ export type ParsedAccount = {
   macaroon: string;
   cert: string;
   password: string;
+  sso: boolean;
 } & EncryptedAccount;
 
 type EncryptedAccount =
@@ -258,6 +260,7 @@ export const getParsedAccount = (
     macaroon: macaroonValue,
     password,
     encrypted,
+    sso = false,
   } = resolvedAccount;
 
   const missingFields: string[] = [];
@@ -320,6 +323,7 @@ export const getParsedAccount = (
     macaroon,
     cert: cert || '',
     password: password || masterPassword || '',
+    sso,
     ...encryptedProps,
   };
 };

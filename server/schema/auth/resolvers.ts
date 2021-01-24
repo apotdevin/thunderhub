@@ -1,7 +1,11 @@
 import getConfig from 'next/config';
 import jwt from 'jsonwebtoken';
-import { readCookie, refreshCookie } from 'server/helpers/fileHelpers';
-import { ContextType } from 'server/types/apiTypes';
+import {
+  ParsedAccount,
+  readCookie,
+  refreshCookie,
+} from 'server/helpers/fileHelpers';
+import { ContextType, SSOType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import cookieLib from 'cookie';
 import { requestLimiter } from 'server/helpers/rateLimiter';
@@ -16,6 +20,54 @@ const { cookiePath, nodeEnv, dangerousNoSSOAuth } = serverRuntimeConfig || {};
 
 export const authResolvers = {
   Mutation: {
+    getMultiSSOToken: async (
+      _: undefined,
+      { id }: { id: string },
+      { ip, hasSSOauth, res, secret, accounts, sso }: ContextType
+    ): Promise<boolean> => {
+      await requestLimiter(ip, 'getMultiSSOToken');
+
+      if (!hasSSOauth) {
+        logger.warn('No SSO authentication');
+        throw new Error('UnableToConnectToThisNode');
+      }
+
+      let account: ParsedAccount | SSOType | null =
+        accounts.filter(a => a.sso).find(a => a.id === id) || null;
+
+      if (id === 'sso') {
+        account = sso;
+      }
+
+      if (!account) {
+        logger.debug(`Account ${id} not found`);
+        throw new Error('UnableToConnectToThisNode');
+      }
+
+      const { lnd } = authenticatedLndGrpc(account);
+      const [, error] = await toWithError<GetWalletInfoType>(
+        getWalletInfo({
+          lnd,
+        })
+      );
+
+      if (error) {
+        logger.error('Unable to connect to this node');
+        throw new Error('UnableToConnectToThisNode');
+      }
+
+      const token = jwt.sign({ id, type: 'sso' }, secret);
+
+      res.setHeader(
+        'Set-Cookie',
+        cookieLib.serialize(appConstants.cookieName, token, {
+          httpOnly: true,
+          sameSite: true,
+          path: '/',
+        })
+      );
+      return true;
+    },
     getAuthToken: async (
       _: undefined,
       { cookie }: { cookie: string },
@@ -76,7 +128,7 @@ export const authResolvers = {
           throw new Error('UnableToConnectToThisNode');
         }
 
-        const token = jwt.sign({ id: 'sso' }, secret);
+        const token = jwt.sign({ id: 'sso', type: 'sso' }, secret);
 
         res.setHeader(
           'Set-Cookie',
@@ -145,7 +197,7 @@ export const authResolvers = {
         throw new Error('UnableToConnectToThisNode');
       }
 
-      const token = jwt.sign({ id }, secret);
+      const token = jwt.sign({ id, type: 'server' }, secret);
       res.setHeader(
         'Set-Cookie',
         cookieLib.serialize(appConstants.cookieName, token, {

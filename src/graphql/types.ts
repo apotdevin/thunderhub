@@ -209,6 +209,7 @@ export type QueryGetMessagesArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  getMultiSSOToken: Scalars['Boolean'];
   getAuthToken: Scalars['Boolean'];
   getSessionToken: Scalars['String'];
   claimBoltzTransaction: Scalars['String'];
@@ -243,6 +244,11 @@ export type Mutation = {
   sendMessage?: Maybe<Scalars['Int']>;
   logout: Scalars['Boolean'];
   createMacaroon?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationGetMultiSsoTokenArgs = {
+  id: Scalars['String'];
 };
 
 

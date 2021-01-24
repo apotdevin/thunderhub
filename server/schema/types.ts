@@ -96,6 +96,7 @@ export const queryTypes = gql`
 
 export const mutationTypes = gql`
   type Mutation {
+    getMultiSSOToken(id: String!): Boolean!
     getAuthToken(cookie: String): Boolean!
     getSessionToken(id: String, password: String): String!
     claimBoltzTransaction(

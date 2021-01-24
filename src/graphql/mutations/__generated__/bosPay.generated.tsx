@@ -7,7 +7,7 @@ export type BosPayMutationVariables = Types.Exact<{
   max_fee: Types.Scalars['Int'];
   max_paths: Types.Scalars['Int'];
   message?: Types.Maybe<Types.Scalars['String']>;
-  out?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
+  out?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>> | Types.Maybe<Types.Scalars['String']>>;
   request: Types.Scalars['String'];
 }>;
 

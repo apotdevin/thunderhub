@@ -37,6 +37,8 @@ if (ssoMacaroon && lnServerUrl) {
   };
 }
 
+type JWTCookie = { id: string; type: string };
+
 export const getContext = (context: ResolverContext) => {
   const { req, res } = context;
 
@@ -51,13 +53,15 @@ export const getContext = (context: ResolverContext) => {
 
   let lnd: LndObject | null = null;
   let id: string | null = null;
+  let hasSSOauth = false;
 
   if (auth) {
     try {
-      const data = jwt.verify(auth, secret) as { id: string };
-      if (data && data.id) {
+      const data = jwt.verify(auth, secret) as JWTCookie;
+      if (data) {
         lnd = getAuthLnd(data.id, sso, accountConfig);
         id = data.id;
+        hasSSOauth = data.type === 'sso';
       }
     } catch (error) {
       logger.silly('Authentication cookie failed');
@@ -69,6 +73,7 @@ export const getContext = (context: ResolverContext) => {
     lnd,
     secret,
     id,
+    hasSSOauth,
     sso,
     accounts: accountConfig,
     res,

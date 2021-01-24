@@ -165,6 +165,26 @@ http://localhost:3000/sso?token=[COOKIE]
 
 Replace `[COOKIE]` with the contents of the `.cookie` file.
 
+### Multiple SSO Accounts
+
+If you want to have more than one account that can be accesed with SSO you will need to follow [these steps](#server-accounts) to create a config file and additionaly add the `sso: true` field to any account that you want to access with the same SSO auth cookie.
+
+You can also set `MULTI_SSO=true` in your `.env` file so that you can switch between SSO accounts easily. Once enabled you will have a logo in the header to go to the account selection screen.
+
+**Notes**
+
+1. You still need to setup a default SSO account as explained [here](#sso-account)
+2. Accounts with `sso: true` will not use the master password or password set in the config file.
+3. The same cookie file will give you access to all SSO accounts
+
+After setting this field go to the following url:
+
+```
+http://localhost:3000/sso?multi=true&token=[COOKIE]
+```
+
+You will first be authenticated and then redirected to the account selection screen where you can choose which node to connect to.
+
 ### SSO Account without authentication
 
 You can DANGEROUSLY remove SSO authentication. This is useful for example if you plan on running ThunderHub **only** on your local network or through TOR.

@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import { useBaseConnect } from 'src/hooks/UseBaseConnect';
 import { LogoutButton } from 'src/components/logoutButton';
 import { useConfigState } from 'src/context/ConfigContext';
+import { ChangeUserButton } from 'src/components/changeUserButton';
 import { headerColor, headerTextColor } from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
@@ -71,6 +72,7 @@ export const Header = () => {
           {lnMarketsAuth && renderNavButton(LN_MARKETS, Activity)}
           {renderNavButton(CHAT, MessageCircle)}
           {renderNavButton(SETTINGS, Settings)}
+          <ChangeUserButton />
           <LogoutButton />
         </HeaderButtons>
       </ViewSwitch>
