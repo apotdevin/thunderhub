@@ -12,7 +12,7 @@ export type BosRebalanceMutationVariables = Types.Exact<{
   max_rebalance?: Types.Maybe<Types.Scalars['Int']>;
   node?: Types.Maybe<Types.Scalars['String']>;
   out_through?: Types.Maybe<Types.Scalars['String']>;
-  target?: Types.Maybe<Types.Scalars['Int']>;
+  out_inbound?: Types.Maybe<Types.Scalars['Int']>;
 }>;
 
 
@@ -35,7 +35,7 @@ export type BosRebalanceMutation = (
 
 
 export const BosRebalanceDocument = gql`
-    mutation BosRebalance($avoid: [String], $in_through: String, $is_avoiding_high_inbound: Boolean, $max_fee: Int, $max_fee_rate: Int, $max_rebalance: Int, $node: String, $out_through: String, $target: Int) {
+    mutation BosRebalance($avoid: [String], $in_through: String, $is_avoiding_high_inbound: Boolean, $max_fee: Int, $max_fee_rate: Int, $max_rebalance: Int, $node: String, $out_through: String, $out_inbound: Int) {
   bosRebalance(
     avoid: $avoid
     in_through: $in_through
@@ -45,7 +45,7 @@ export const BosRebalanceDocument = gql`
     max_rebalance: $max_rebalance
     node: $node
     out_through: $out_through
-    target: $target
+    out_inbound: $out_inbound
   ) {
     increase {
       increased_inbound_on
@@ -95,7 +95,7 @@ export type BosRebalanceMutationFn = Apollo.MutationFunction<BosRebalanceMutatio
  *      max_rebalance: // value for 'max_rebalance'
  *      node: // value for 'node'
  *      out_through: // value for 'out_through'
- *      target: // value for 'target'
+ *      out_inbound: // value for 'out_inbound'
  *   },
  * });
  */

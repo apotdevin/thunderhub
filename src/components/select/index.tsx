@@ -19,7 +19,7 @@ const StyledWrapper = styled.div<WrapperProps>`
     css`
       max-width: ${maxWidth};
     `}
-    width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
 `;
 
 const StyledSelect = styled(ReactSelect)`
@@ -84,6 +84,42 @@ export const Select = ({
         classNamePrefix={'Select'}
         options={options}
         onChange={handleChange}
+      />
+    </StyledWrapper>
+  );
+};
+
+type SelectWithValueProps = {
+  options: ValueProp[];
+  value: ValueProp | undefined;
+  isMulti?: boolean;
+  maxWidth?: string;
+  callback: (value: ValueProp[]) => void;
+};
+
+export const SelectWithValue = ({
+  isMulti,
+  options,
+  maxWidth,
+  callback,
+  value,
+}: SelectWithValueProps) => {
+  const handleChange = (value: ValueProp | ValueProp[]) => {
+    if (Array.isArray(value)) {
+      callback(value);
+    } else {
+      callback([value]);
+    }
+  };
+  return (
+    <StyledWrapper maxWidth={maxWidth} fullWidth={true}>
+      <StyledSelect
+        isMulti={isMulti}
+        classNamePrefix={'Select'}
+        options={options}
+        onChange={handleChange}
+        value={value || null}
+        isClearable={true}
       />
     </StyledWrapper>
   );
