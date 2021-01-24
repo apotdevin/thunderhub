@@ -752,7 +752,7 @@ Object {
 exports[`Query tests "GET_NODE_INFO" matches snapshot 1`] = `
 Object {
   "data": Object {
-    "getChainBalance": 1000000,
+    "getChainBalance": "1000000",
     "getChannelBalance": Object {
       "confirmedBalance": 1000000,
       "pendingBalance": 50000,
@@ -771,7 +771,7 @@ Object {
       "pending_channels_count": 2,
       "version": "version",
     },
-    "getPendingChainBalance": 1000000,
+    "getPendingChainBalance": "1000000",
   },
   "errors": undefined,
   "extensions": undefined,

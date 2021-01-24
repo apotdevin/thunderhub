@@ -6,7 +6,7 @@ import * as Apollo from '@apollo/client';
 export type CreateThunderPointsMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
   alias: Types.Scalars['String'];
-  uris: Array<Types.Scalars['String']>;
+  uris: Array<Types.Scalars['String']> | Types.Scalars['String'];
   public_key: Types.Scalars['String'];
 }>;
 

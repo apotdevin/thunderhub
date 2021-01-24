@@ -4,7 +4,7 @@ import * as Types from '../../types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type UpdateMultipleFeesMutationVariables = Types.Exact<{
-  channels: Array<Types.ChannelDetailInput>;
+  channels: Array<Types.ChannelDetailInput> | Types.ChannelDetailInput;
 }>;
 
 
