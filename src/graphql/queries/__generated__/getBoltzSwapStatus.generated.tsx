@@ -4,7 +4,7 @@ import * as Types from '../../types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type GetBoltzSwapStatusQueryVariables = Types.Exact<{
-  ids: Array<Types.Maybe<Types.Scalars['String']>>;
+  ids: Array<Types.Maybe<Types.Scalars['String']>> | Types.Maybe<Types.Scalars['String']>;
 }>;
 
 

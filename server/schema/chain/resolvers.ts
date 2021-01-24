@@ -44,7 +44,7 @@ export const chainResolvers = {
           lnd,
         })
       );
-      return value.chain_balance;
+      return value.chain_balance || 0;
     },
     getPendingChainBalance: async (
       _: undefined,
@@ -60,7 +60,7 @@ export const chainResolvers = {
           lnd,
         })
       );
-      return pendingValue.pending_chain_balance;
+      return pendingValue.pending_chain_balance || 0;
     },
     getChainTransactions: async (
       _: undefined,

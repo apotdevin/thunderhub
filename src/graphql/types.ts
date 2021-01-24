@@ -83,8 +83,8 @@ export type Query = {
   getPeers?: Maybe<Array<Maybe<PeerType>>>;
   signMessage?: Maybe<Scalars['String']>;
   verifyMessage?: Maybe<Scalars['String']>;
-  getChainBalance?: Maybe<Scalars['Int']>;
-  getPendingChainBalance?: Maybe<Scalars['Int']>;
+  getChainBalance: Scalars['String'];
+  getPendingChainBalance: Scalars['String'];
   getChainTransactions?: Maybe<Array<Maybe<GetTransactionsType>>>;
   getUtxos?: Maybe<Array<Maybe<GetUtxosType>>>;
   getMessages?: Maybe<GetMessagesType>;

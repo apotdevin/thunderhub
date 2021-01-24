@@ -79,8 +79,8 @@ export const queryTypes = gql`
     getPeers: [peerType]
     signMessage(message: String!): String
     verifyMessage(message: String!, signature: String!): String
-    getChainBalance: Int
-    getPendingChainBalance: Int
+    getChainBalance: String!
+    getPendingChainBalance: String!
     getChainTransactions: [getTransactionsType]
     getUtxos: [getUtxosType]
     getMessages(

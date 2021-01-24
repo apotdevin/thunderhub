@@ -4,7 +4,7 @@ import * as Types from '../../types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type BosRebalanceMutationVariables = Types.Exact<{
-  avoid?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>>>;
+  avoid?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>> | Types.Maybe<Types.Scalars['String']>>;
   in_through?: Types.Maybe<Types.Scalars['String']>;
   is_avoiding_high_inbound?: Types.Maybe<Types.Scalars['Boolean']>;
   max_fee?: Types.Maybe<Types.Scalars['Int']>;
