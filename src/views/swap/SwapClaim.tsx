@@ -18,6 +18,7 @@ import { useBitcoinFees } from 'src/hooks/UseBitcoinFees';
 import { chartColors } from 'src/styles/Themes';
 import { getErrorContent } from 'src/utils/error';
 import styled from 'styled-components';
+import { WarningText } from '../stats/styles';
 import { useSwapsDispatch, useSwapsState } from './SwapContext';
 import { MEMPOOL } from './SwapStatus';
 
@@ -159,6 +160,14 @@ export const SwapClaim = () => {
           </MultiButton>
         )}
       </InputWithDeco>
+      <WarningText>
+        {
+          'If you set a low fee the swap will take more time if the mempool is congested.'
+        }
+      </WarningText>
+      <WarningText>
+        {' You can see fee estimates by selecting the "Auto" option above.'}
+      </WarningText>
       <ColorButton
         loading={loading}
         disabled={loading || !fee || fee <= 0}
