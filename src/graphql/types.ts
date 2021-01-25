@@ -395,7 +395,7 @@ export type MutationBosRebalanceArgs = {
   max_rebalance?: Maybe<Scalars['Int']>;
   node?: Maybe<Scalars['String']>;
   out_through?: Maybe<Scalars['String']>;
-  target?: Maybe<Scalars['Int']>;
+  out_inbound?: Maybe<Scalars['Int']>;
 };
 
 
