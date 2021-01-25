@@ -179,7 +179,7 @@ export const mutationTypes = gql`
       max_rebalance: Int
       node: String
       out_through: String
-      target: Int
+      out_inbound: Int
     ): bosRebalanceResultType
     payViaRoute(route: String!, id: String!): Boolean
     createAddress(nested: Boolean): String

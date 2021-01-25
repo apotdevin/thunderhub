@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useReducer, useState } from 'react';
 import { useBosRebalanceMutation } from 'src/graphql/mutations/__generated__/bosRebalance.generated';
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
@@ -18,15 +18,16 @@ import {
   useRebalanceState,
   useRebalanceDispatch,
 } from 'src/context/RebalanceContext';
+import { Text } from 'src/components/typography/Styled';
 import { AdvancedResult } from './AdvancedResult';
 import { ModalNodes } from './Modals/ModalNodes';
-import { ModalChannels } from './Modals/ModalChannels';
 import {
   RebalanceTag,
   RebalanceLine,
   RebalanceWrapLine,
   RebalanceSubTitle,
 } from './Balance.styled';
+import { PeerSelection } from './PeerSelection';
 
 export type RebalanceIdType = {
   alias: string;
@@ -46,7 +47,7 @@ type StateType = {
   max_fee_rate: number;
   max_rebalance: number;
   out_through: RebalanceIdType;
-  target: number;
+  out_inbound: number;
   node: RebalanceIdType;
 };
 
@@ -56,7 +57,7 @@ export type ActionType =
       avoid: boolean;
     }
   | {
-      type: 'maxFee' | 'maxFeeRate' | 'maxRebalance' | 'target';
+      type: 'maxFee' | 'maxFeeRate' | 'maxRebalance' | 'out_inbound';
       amount: number;
     }
   | {
@@ -87,11 +88,11 @@ const initialState: StateType = {
   avoid: [],
   in_through: defaultRebalanceId,
   is_avoiding_high_inbound: false,
-  max_fee: 0,
-  max_fee_rate: 0,
+  max_fee: 10,
+  max_fee_rate: 100,
   max_rebalance: 0,
   out_through: defaultRebalanceId,
-  target: 0,
+  out_inbound: 0,
   node: defaultRebalanceId,
 };
 
@@ -105,8 +106,8 @@ const reducer = (state: StateType, action: ActionType): StateType => {
       return { ...state, max_fee_rate: action.amount };
     case 'maxRebalance':
       return { ...state, max_rebalance: action.amount };
-    case 'target':
-      return { ...state, target: action.amount };
+    case 'out_inbound':
+      return { ...state, out_inbound: action.amount };
     case 'withNode':
       return { ...state, node: action.node };
     case 'inChannel':
@@ -141,8 +142,9 @@ const SettingLine: React.FC<{ title: string }> = ({ children, title }) => (
 );
 
 export const AdvancedBalance = () => {
-  const [openType, openTypeSet] = React.useState<string>('none');
-  const [isDetailed, isDetailedSet] = React.useState<boolean>(false);
+  const [openType, openTypeSet] = useState<string>('none');
+  const [isRate, setIsRate] = useState<boolean>(false);
+  const [isTarget, setIsTarget] = useState<boolean>(false);
 
   const rebalanceDispatch = useRebalanceDispatch();
   const { inChannel, outChannel } = useRebalanceState();
@@ -161,7 +163,7 @@ export const AdvancedBalance = () => {
       }
     : defaultRebalanceId;
 
-  const [state, dispatch] = React.useReducer(reducer, {
+  const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     in_through,
     out_through,
@@ -177,37 +179,115 @@ export const AdvancedBalance = () => {
   });
   const [data, resetMutationResult] = useMutationResultWithReset(_data);
 
-  const renderButton = (
-    onClick: () => void,
-    text: string,
-    selected: boolean
-  ) => (
-    <SingleButton selected={selected} onClick={onClick}>
-      {text}
-    </SingleButton>
-  );
-
-  const hasNode = !!state.node.alias;
   const hasInChannel = !!state.in_through.alias;
   const hasOutChannel = !!state.out_through.alias;
   const hasAvoid = state.avoid.length > 0;
 
   const renderDetails = () => (
     <>
-      <Separation />
-      <SettingLine title={'With Node'}>
-        {hasNode ? <RebalanceTag>{state.node.alias}</RebalanceTag> : null}
-        <ColorButton
-          color={hasNode ? chartColors.red : undefined}
-          onClick={() =>
-            hasNode
-              ? dispatch({ type: 'withNode', node: defaultRebalanceId })
-              : openTypeSet('addNode')
+      <Text>1. Select the peers that will be rebalanced.</Text>
+      <PeerSelection
+        inThroughId={state.in_through.id}
+        outThroughId={state.out_through.id}
+        inCallback={c => {
+          if (!c.length) {
+            rebalanceDispatch({ type: 'setIn', channel: null });
+            dispatch({ type: 'inChannel', channel: defaultRebalanceId });
+          } else {
+            const channel = c.map(o => ({
+              alias: o.partner_node_info.node.alias,
+              id: o.partner_public_key,
+            }))[0];
+            dispatch({ type: 'inChannel', channel });
           }
-        >
-          {hasNode ? <Minus size={18} /> : <Plus size={18} />}
-        </ColorButton>
-      </SettingLine>
+        }}
+        outCallback={c => {
+          if (!c.length) {
+            rebalanceDispatch({ type: 'setOut', channel: null });
+            dispatch({ type: 'outChannel', channel: defaultRebalanceId });
+          } else {
+            const channel = c.map(o => ({
+              alias: o.partner_node_info.node.alias,
+              id: o.partner_public_key,
+            }))[0];
+            dispatch({ type: 'outChannel', channel });
+          }
+        }}
+      />
+      <Separation />
+      <Text>2. Select the fee to look out for.</Text>
+      <InputWithDeco title={'Max Fee Type'} noInput={true}>
+        <MultiButton>
+          <SingleButton selected={!isRate} onClick={() => setIsRate(false)}>
+            Amount
+          </SingleButton>
+          <SingleButton selected={isRate} onClick={() => setIsRate(true)}>
+            Rate
+          </SingleButton>
+        </MultiButton>
+      </InputWithDeco>
+      {isRate ? (
+        <InputWithDeco
+          inputType={'number'}
+          title={'Max Fee Rate'}
+          value={state.max_fee_rate || ''}
+          placeholder={'ppm'}
+          amount={state.max_fee_rate}
+          override={'ppm'}
+          inputCallback={value =>
+            dispatch({ type: 'maxFeeRate', amount: Number(value) })
+          }
+        />
+      ) : (
+        <InputWithDeco
+          inputType={'number'}
+          title={'Max Fee'}
+          value={state.max_fee || ''}
+          placeholder={'sats'}
+          amount={state.max_fee}
+          override={'sat'}
+          inputCallback={value =>
+            dispatch({ type: 'maxFee', amount: Number(value) })
+          }
+        />
+      )}
+      <Separation />
+      <Text>3. Select the amount you want to rebalance.</Text>
+      <InputWithDeco title={'Amount Type'} noInput={true}>
+        <MultiButton>
+          <SingleButton selected={!isTarget} onClick={() => setIsTarget(false)}>
+            Fixed
+          </SingleButton>
+          <SingleButton selected={isTarget} onClick={() => setIsTarget(true)}>
+            Target
+          </SingleButton>
+        </MultiButton>
+      </InputWithDeco>
+      {isTarget ? (
+        <InputWithDeco
+          inputType={'number'}
+          title={'Target Amount'}
+          value={state.out_inbound || ''}
+          placeholder={'sats to rebalance'}
+          amount={state.out_inbound}
+          inputCallback={value =>
+            dispatch({ type: 'out_inbound', amount: Number(value) })
+          }
+        />
+      ) : (
+        <InputWithDeco
+          inputType={'number'}
+          title={'Max Rebalance'}
+          value={state.max_rebalance || ''}
+          placeholder={'sats'}
+          amount={state.max_rebalance}
+          inputCallback={value =>
+            dispatch({ type: 'maxRebalance', amount: Number(value) })
+          }
+        />
+      )}
+      <Separation />
+      <Text>{'4. Select nodes that you want to avoid. (Optional)'}</Text>
       <SettingLine title={'Avoid Nodes'}>
         {hasAvoid && (
           <>
@@ -230,150 +310,9 @@ export const AdvancedBalance = () => {
           {hasAvoid ? <Minus size={18} /> : <Plus size={18} />}
         </ColorButton>
       </SettingLine>
-      <SettingLine title={'Increase Inbound Of'}>
-        {hasOutChannel ? (
-          <RebalanceTag>{state.out_through.alias}</RebalanceTag>
-        ) : null}
-        <ColorButton
-          color={hasOutChannel ? chartColors.red : undefined}
-          onClick={() => {
-            if (hasOutChannel) {
-              rebalanceDispatch({ type: 'setOut', channel: null });
-              dispatch({
-                type: 'outChannel',
-                channel: defaultRebalanceId,
-              });
-            } else {
-              openTypeSet('outChannel');
-            }
-          }}
-        >
-          {hasOutChannel ? <Minus size={18} /> : <Plus size={18} />}
-        </ColorButton>
-      </SettingLine>
-      <SettingLine title={'Decrease Inbound Of'}>
-        {hasInChannel ? (
-          <RebalanceTag>{state.in_through.alias}</RebalanceTag>
-        ) : null}
-        <ColorButton
-          color={hasInChannel ? chartColors.red : undefined}
-          onClick={() => {
-            if (hasInChannel) {
-              rebalanceDispatch({ type: 'setIn', channel: null });
-              dispatch({ type: 'inChannel', channel: defaultRebalanceId });
-            } else {
-              openTypeSet('inChannel');
-            }
-          }}
-        >
-          {hasInChannel ? <Minus size={18} /> : <Plus size={18} />}
-        </ColorButton>
-      </SettingLine>
-      <RebalanceLine>
-        <RebalanceSubTitle>Avoid High Inbound</RebalanceSubTitle>
-        <MultiButton>
-          {renderButton(
-            () => dispatch({ type: 'avoidHigh', avoid: true }),
-            'Yes',
-            state.is_avoiding_high_inbound
-          )}
-          {renderButton(
-            () => dispatch({ type: 'avoidHigh', avoid: false }),
-            'No',
-            !state.is_avoiding_high_inbound
-          )}
-        </MultiButton>
-      </RebalanceLine>
-      <InputWithDeco
-        inputType={'number'}
-        title={'Max Fee'}
-        value={state.max_fee || ''}
-        placeholder={'sats'}
-        amount={state.max_fee}
-        override={'sat'}
-        inputCallback={value =>
-          dispatch({ type: 'maxFee', amount: Number(value) })
-        }
-      />
-      <InputWithDeco
-        inputType={'number'}
-        title={'Max Fee Rate'}
-        value={state.max_fee_rate || ''}
-        placeholder={'ppm'}
-        amount={state.max_fee_rate}
-        override={'ppm'}
-        inputCallback={value =>
-          dispatch({ type: 'maxFeeRate', amount: Number(value) })
-        }
-      />
-      <InputWithDeco
-        inputType={'number'}
-        title={'Max Rebalance'}
-        value={state.max_rebalance || ''}
-        placeholder={'sats'}
-        amount={state.max_rebalance}
-        inputCallback={value =>
-          dispatch({ type: 'maxRebalance', amount: Number(value) })
-        }
-      />
-      <InputWithDeco
-        inputType={'number'}
-        title={'Target Amount'}
-        value={state.target || ''}
-        placeholder={'sats to rebalance'}
-        amount={state.target}
-        inputCallback={value =>
-          dispatch({ type: 'target', amount: Number(value) })
-        }
-      />
       <Separation />
     </>
   );
-
-  const renderModal = () => {
-    switch (openType) {
-      case 'addNode':
-        return (
-          <ModalNodes
-            callback={node => {
-              openTypeSet('none');
-              dispatch({ type: 'withNode', node });
-            }}
-          />
-        );
-      case 'inChannel':
-        return (
-          <ModalChannels
-            ignore={state.out_through.id}
-            callback={channel => {
-              openTypeSet('none');
-              dispatch({ type: 'inChannel', channel });
-            }}
-          />
-        );
-      case 'outChannel':
-        return (
-          <ModalChannels
-            ignore={state.in_through.id}
-            callback={channel => {
-              openTypeSet('none');
-              dispatch({ type: 'outChannel', channel });
-            }}
-          />
-        );
-      case 'avoidNodes':
-        return (
-          <ModalNodes
-            multi={true}
-            dispatch={dispatch}
-            nodes={state.avoid}
-            openSet={() => openTypeSet('none')}
-          />
-        );
-      default:
-        return null;
-    }
-  };
 
   return (
     <>
@@ -391,44 +330,33 @@ export const AdvancedBalance = () => {
         </Card>
       ) : (
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          <InputWithDeco title={'Type'} noInput={true}>
-            <MultiButton>
-              {renderButton(
-                () => {
-                  dispatch({ type: 'clearFilters' });
-                  isDetailedSet(false);
-                },
-                'Auto',
-                !isDetailed
-              )}
-              {renderButton(() => isDetailedSet(true), 'Detailed', isDetailed)}
-            </MultiButton>
-          </InputWithDeco>
-          {isDetailed && renderDetails()}
+          {renderDetails()}
           <SingleLine>
-            {isDetailed && (
-              <ColorButton
-                color={chartColors.orange2}
-                withMargin={'16px 8px 0 0'}
-                fullWidth={true}
-                onClick={() => {
-                  dispatch({ type: 'clearFilters' });
-                }}
-              >
-                Reset
-              </ColorButton>
-            )}
+            <ColorButton
+              color={chartColors.orange2}
+              withMargin={'16px 8px 0 0'}
+              fullWidth={true}
+              onClick={() => {
+                dispatch({ type: 'clearFilters' });
+              }}
+            >
+              Reset
+            </ColorButton>
             <ColorButton
               withMargin={'16px 0 0'}
               loading={loading}
-              disabled={loading}
+              disabled={loading || !hasInChannel || !hasOutChannel}
               fullWidth={true}
               onClick={() => {
                 rebalance({
                   variables: {
-                    ...state,
+                    ...(isTarget
+                      ? { out_inbound: state.out_inbound }
+                      : { max_rebalance: state.max_rebalance }),
+                    ...(isRate
+                      ? { max_fee_rate: state.max_fee_rate }
+                      : { max_fee: state.max_fee }),
                     avoid: state.avoid.map(a => a.id),
-                    node: state.node.id,
                     in_through: state.in_through.id,
                     out_through: state.out_through.id,
                   },
@@ -446,7 +374,12 @@ export const AdvancedBalance = () => {
           openTypeSet('none');
         }}
       >
-        {renderModal()}
+        <ModalNodes
+          multi={true}
+          dispatch={dispatch}
+          nodes={state.avoid}
+          openSet={() => openTypeSet('none')}
+        />
       </Modal>
     </>
   );

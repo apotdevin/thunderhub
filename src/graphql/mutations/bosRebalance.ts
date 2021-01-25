@@ -10,7 +10,7 @@ export const BOS_REBALANCE = gql`
     $max_rebalance: Int
     $node: String
     $out_through: String
-    $target: Int
+    $out_inbound: Int
   ) {
     bosRebalance(
       avoid: $avoid
@@ -21,7 +21,7 @@ export const BOS_REBALANCE = gql`
       max_rebalance: $max_rebalance
       node: $node
       out_through: $out_through
-      target: $target
+      out_inbound: $out_inbound
     ) {
       increase {
         increased_inbound_on
