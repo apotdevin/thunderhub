@@ -28,6 +28,7 @@ export const GET_NODE_INFO = gql`
       peers_count
       pending_channels_count
       version
+      public_key
     }
     getChainBalance
     getPendingChainBalance
