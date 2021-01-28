@@ -1,6 +1,5 @@
 import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { useState, useEffect } from 'react';
-import { NodeInfoType, ChannelBalanceType } from 'src/graphql/types';
 import { getVersion } from 'src/utils/version';
 
 type StatusState = {
@@ -49,7 +48,8 @@ export const useNodeInfo = (): StatusState => {
   });
 
   useEffect(() => {
-    if (!data || loading || error) return;
+    if (!data?.getNodeInfo || loading || error) return;
+
     const {
       getChainBalance,
       getPendingChainBalance,
@@ -67,11 +67,10 @@ export const useNodeInfo = (): StatusState => {
       closed_channels_count,
       peers_count,
       public_key,
-    } = getNodeInfo as NodeInfoType;
-    const {
-      confirmedBalance,
-      pendingBalance,
-    } = getChannelBalance as ChannelBalanceType;
+    } = getNodeInfo;
+
+    const { confirmedBalance = 0, pendingBalance = 0 } =
+      getChannelBalance || {};
 
     const { mayor, minor, revision, versionWithPatch } = getVersion(version);
 

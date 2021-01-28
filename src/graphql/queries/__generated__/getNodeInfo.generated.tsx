@@ -22,7 +22,7 @@ export type GetNodeInfoQuery = (
   & Pick<Types.Query, 'getChainBalance' | 'getPendingChainBalance'>
   & { getNodeInfo?: Types.Maybe<(
     { __typename?: 'nodeInfoType' }
-    & Pick<Types.NodeInfoType, 'chains' | 'color' | 'active_channels_count' | 'closed_channels_count' | 'alias' | 'is_synced_to_chain' | 'peers_count' | 'pending_channels_count' | 'version'>
+    & Pick<Types.NodeInfoType, 'chains' | 'color' | 'active_channels_count' | 'closed_channels_count' | 'alias' | 'is_synced_to_chain' | 'peers_count' | 'pending_channels_count' | 'version' | 'public_key'>
   )>, getChannelBalance?: Types.Maybe<(
     { __typename?: 'channelBalanceType' }
     & Pick<Types.ChannelBalanceType, 'confirmedBalance' | 'pendingBalance'>
@@ -104,6 +104,7 @@ export const GetNodeInfoDocument = gql`
     peers_count
     pending_channels_count
     version
+    public_key
   }
   getChainBalance
   getPendingChainBalance

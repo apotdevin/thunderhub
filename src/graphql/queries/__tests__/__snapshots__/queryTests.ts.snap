@@ -769,6 +769,7 @@ Object {
       "is_synced_to_chain": true,
       "peers_count": 1,
       "pending_channels_count": 2,
+      "public_key": "key",
       "version": "version",
     },
     "getPendingChainBalance": "1000000",
