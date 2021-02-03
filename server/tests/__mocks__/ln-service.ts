@@ -103,3 +103,7 @@ export const verifyMessage = jest
 export const getPublicKey = jest
   .fn()
   .mockReturnValue(Promise.resolve(res.getPublicKeyResponse));
+
+export const createInvoice = jest
+  .fn()
+  .mockReturnValue(Promise.resolve(res.createInvoiceResponse));

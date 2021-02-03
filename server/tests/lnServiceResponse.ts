@@ -763,3 +763,10 @@ export const verifyMessageResponse = {
 export const getPublicKeyResponse = {
   public_key: 'public_key',
 };
+
+export const createInvoiceResponse = {
+  request: 'boltEncodedRequest',
+  created_at: '',
+  id: 'requestId',
+  secret: 'secretString',
+};
