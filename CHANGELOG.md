@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.7](https://github.com/apotdevin/thunderhub/compare/v0.12.6...v0.12.7) (2021-02-03)
+
+
+### Bug Fixes
+
+* 🐛 bos node score ([e7cba59](https://github.com/apotdevin/thunderhub/commit/e7cba59d365cafe288726274fde09ff6f29db3e3))
+* 🐛 callback with query string ([476db5d](https://github.com/apotdevin/thunderhub/commit/476db5d7551755581ada5521ebffaa81a003c548))
+
 ### [0.12.6](https://github.com/apotdevin/thunderhub/compare/v0.12.5...v0.12.6) (2021-01-25)
 
 
