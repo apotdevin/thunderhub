@@ -72,7 +72,7 @@ export const authResolvers = {
         );
 
         if (error) {
-          logger.error('Unable to connect to this node');
+          logger.error('Unable to connect to this node: %o', error);
           throw new Error('UnableToConnectToThisNode');
         }
 
@@ -141,7 +141,7 @@ export const authResolvers = {
       );
 
       if (error) {
-        logger.error('Unable to connect to this node');
+        logger.error('Unable to connect to this node: %o', error);
         throw new Error('UnableToConnectToThisNode');
       }
 
