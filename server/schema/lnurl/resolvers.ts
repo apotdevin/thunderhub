@@ -213,7 +213,10 @@ export const lnUrlResolvers = {
         createInvoice({ lnd, tokens: amount, description })
       );
 
-      const finalUrl = `${callback}?k1=${k1}&pr=${info.request}`;
+      // If the callback url already has an initial query '?' identifier we don't need to add it again.
+      const initialIdentifier = callback.indexOf('?') != -1 ? '&' : '?';
+
+      const finalUrl = `${callback}${initialIdentifier}k1=${k1}&pr=${info.request}`;
 
       try {
         const response = await fetchWithProxy(finalUrl);
