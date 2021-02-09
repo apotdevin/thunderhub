@@ -127,7 +127,10 @@ export const lnUrlResolvers = {
 
       const random8byteNonce = randomBytes(8).toString('hex');
 
-      const finalUrl = `${callback}?amount=${
+      // If the callback url already has an initial query '?' identifier we don't need to add it again.
+      const initialIdentifier = callback.indexOf('?') != -1 ? '&' : '?';
+
+      const finalUrl = `${callback}${initialIdentifier}amount=${
         amount * 1000
       }&nonce=${random8byteNonce}&comment=${comment}`;
 
