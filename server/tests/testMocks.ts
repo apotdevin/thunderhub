@@ -10,6 +10,7 @@ export const ContextMock: ContextType = {
     macaroon: 'macaroon',
     cert: 'cert',
     socket: 'host',
+    currentCookie: 'secret',
   },
   accounts: [
     {
@@ -36,6 +37,7 @@ export const ContextMockNoAccounts: ContextType = {
     macaroon: 'macaroon',
     cert: 'cert',
     socket: 'host',
+    currentCookie: 'secret',
   },
   accounts: [],
   res: {} as ServerResponse,

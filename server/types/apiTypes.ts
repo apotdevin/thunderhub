@@ -6,6 +6,7 @@ export type SSOType = {
   macaroon: string;
   cert: string | null;
   socket: string;
+  currentCookie: string | null;
 };
 
 export type ContextType = {

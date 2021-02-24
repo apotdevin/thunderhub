@@ -5,6 +5,7 @@ import {
   readMacaroons,
   readFile,
   getAccounts,
+  readCookie,
 } from 'server/helpers/fileHelpers';
 import getConfig from 'next/config';
 import { ContextType, SSOType } from 'server/types/apiTypes';
@@ -21,6 +22,7 @@ const {
   lnCertPath,
   lnServerUrl,
   accountConfigPath,
+  cookiePath,
 } = serverRuntimeConfig;
 
 const ssoMacaroon = readMacaroons(macaroonPath);
@@ -34,6 +36,7 @@ if (ssoMacaroon && lnServerUrl) {
     macaroon: ssoMacaroon,
     socket: lnServerUrl,
     cert: ssoCert,
+    currentCookie: readCookie(cookiePath),
   };
 }
 

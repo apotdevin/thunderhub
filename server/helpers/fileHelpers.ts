@@ -417,37 +417,39 @@ export const readCookie = (cookieFile: string): string | null => {
     return null;
   }
 
-  const exists = fs.existsSync(cookieFile);
-  if (exists) {
-    try {
-      logger.verbose(`Found cookie at path ${cookieFile}`);
-      const cookie = fs.readFileSync(cookieFile, 'utf-8');
-      return cookie;
-    } catch (err) {
-      logger.error('Something went wrong while reading cookie: \n' + err);
-      throw new Error(err);
+  try {
+    logger.verbose(`Reading cookie from file ${cookieFile}`);
+    const cookie = fs.readFileSync(cookieFile, 'utf-8').trim();
+    if (cookie.length < 128) {
+      logger.error(`The cookie in ${cookieFile} is too short! (${cookie.length} chars, must be at least 128)`);
+      return null;
     }
-  } else {
-    try {
+    return cookie;
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      logger.info(`No cookie at ${cookieFile}, creating...`);
       const dirname = path.dirname(cookieFile);
       createDirectory(dirname);
-      fs.writeFileSync(cookieFile, crypto.randomBytes(64).toString('hex'));
+      let cookie = refreshCookie(cookieFile);
 
-      logger.info(`Cookie created at directory: ${dirname}`);
+      logger.info(`Cookie created in directory: ${dirname}`);
 
-      const cookie = fs.readFileSync(cookieFile, 'utf-8');
       return cookie;
-    } catch (err) {
-      logger.error('Something went wrong while reading the cookie: \n' + err);
+    } else {
+      logger.error('Something went wrong while reading cookie: \n' + err);
       throw new Error(err);
     }
   }
 };
 
-export const refreshCookie = (cookieFile: string) => {
+export const refreshCookie = (cookieFile: string): string => {
   try {
     logger.verbose('Refreshing cookie for next authentication');
-    fs.writeFileSync(cookieFile, crypto.randomBytes(64).toString('hex'));
+    let newCookie = crypto.randomBytes(64).toString('hex');
+    let tmpFileName = cookieFile + ".tmp";
+    fs.writeFileSync(tmpFileName, newCookie);
+    fs.renameSync(tmpFileName, cookieFile);
+    return newCookie;
   } catch (err) {
     logger.error('Something went wrong while refreshing cookie: \n' + err);
     throw new Error(err);
