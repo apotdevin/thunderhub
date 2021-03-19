@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.8](https://github.com/apotdevin/thunderhub/compare/v0.12.7...v0.12.8) (2021-03-19)
+
+
+### Bug Fixes
+
+* 🐛 lnpay callback url ([dad0789](https://github.com/apotdevin/thunderhub/commit/dad078984b9985be5f72fe29b66aa47cf6ff718a))
+* rebalance fees ([fde1092](https://github.com/apotdevin/thunderhub/commit/fde1092e7a716d5820f24677ed3613187b87fe50))
+
+
+### Improvements
+
+* 🔧 additional logging ([e7b07a5](https://github.com/apotdevin/thunderhub/commit/e7b07a5e4c3e5f3aa310f32a23b25c3b8f04d6c4))
+* add 2021 for reports ([46e15a4](https://github.com/apotdevin/thunderhub/commit/46e15a4b12193efe43390f357be211470d053732))
+* update dependencies ([d33a654](https://github.com/apotdevin/thunderhub/commit/d33a6543fc3ae06608fe3efc876fd70daa393657))
+
 ### [0.12.7](https://github.com/apotdevin/thunderhub/compare/v0.12.6...v0.12.7) (2021-02-03)
 
 
