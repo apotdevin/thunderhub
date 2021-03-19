@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.9](https://github.com/apotdevin/thunderhub/compare/v0.12.8...v0.12.9) (2021-03-19)
+
+
+### Improvements
+
+* add logout button to mobile ([4a681c1](https://github.com/apotdevin/thunderhub/commit/4a681c18191763329fce70643112ba3ab3cdb9e7))
+
 ### [0.12.8](https://github.com/apotdevin/thunderhub/compare/v0.12.7...v0.12.8) (2021-03-19)
 
 
