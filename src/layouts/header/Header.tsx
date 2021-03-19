@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Cpu,
   Menu,
@@ -48,6 +48,11 @@ export const Header = () => {
   const isRoot = pathname === MAIN || pathname === SSO;
 
   const showHomeButton = (): boolean => !isRoot && pathname !== HOME;
+
+  useEffect(() => {
+    if (!isRoot || !open) return;
+    setOpen(false);
+  }, [isRoot]);
 
   const renderNavButton = (link: string, NavIcon: Icon) => (
     <Link to={link} noStyling={true}>
