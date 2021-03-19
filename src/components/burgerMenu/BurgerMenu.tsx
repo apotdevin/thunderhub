@@ -4,6 +4,8 @@ import { burgerColor } from '../../styles/Themes';
 import { NodeInfo } from '../../layouts/navigation/nodeInfo/NodeInfo';
 import { SideSettings } from '../../layouts/navigation/sideSettings/SideSettings';
 import { Navigation } from '../../layouts/navigation/Navigation';
+import { LogoutWrapper } from '../logoutButton';
+import { ColorButton } from '../buttons/colorButton/ColorButton';
 
 type StyledProps = {
   open: boolean;
@@ -31,6 +33,11 @@ export const BurgerMenu = ({ open, setOpen }: BurgerProps) => {
       <NodeInfo isBurger={true} />
       <SideSettings isBurger={true} />
       <Navigation isBurger={true} setOpen={setOpen} />
+      <LogoutWrapper>
+        <ColorButton fullWidth={true} withMargin={'16px 0'}>
+          Logout
+        </ColorButton>
+      </LogoutWrapper>
     </StyledBurger>
   );
 };
