@@ -143,7 +143,6 @@ const SettingLine: React.FC<{ title: string }> = ({ children, title }) => (
 
 export const AdvancedBalance = () => {
   const [openType, openTypeSet] = useState<string>('none');
-  const [isRate, setIsRate] = useState<boolean>(false);
   const [isTarget, setIsTarget] = useState<boolean>(false);
 
   const rebalanceDispatch = useRebalanceDispatch();
@@ -183,6 +182,14 @@ export const AdvancedBalance = () => {
   const hasOutChannel = !!state.out_through.alias;
   const hasAvoid = state.avoid.length > 0;
 
+  const isDisabled =
+    loading ||
+    !hasInChannel ||
+    !hasOutChannel ||
+    state.max_fee <= 0 ||
+    state.max_fee_rate <= 0 ||
+    (state.max_rebalance <= 0 && state.out_inbound <= 0);
+
   const renderDetails = () => (
     <>
       <Text>1. Select the peers that will be rebalanced.</Text>
@@ -216,41 +223,28 @@ export const AdvancedBalance = () => {
       />
       <Separation />
       <Text>2. Select the fee to look out for.</Text>
-      <InputWithDeco title={'Max Fee Type'} noInput={true}>
-        <MultiButton>
-          <SingleButton selected={!isRate} onClick={() => setIsRate(false)}>
-            Amount
-          </SingleButton>
-          <SingleButton selected={isRate} onClick={() => setIsRate(true)}>
-            Rate
-          </SingleButton>
-        </MultiButton>
-      </InputWithDeco>
-      {isRate ? (
-        <InputWithDeco
-          inputType={'number'}
-          title={'Max Fee Rate'}
-          value={state.max_fee_rate || ''}
-          placeholder={'ppm'}
-          amount={state.max_fee_rate}
-          override={'ppm'}
-          inputCallback={value =>
-            dispatch({ type: 'maxFeeRate', amount: Number(value) })
-          }
-        />
-      ) : (
-        <InputWithDeco
-          inputType={'number'}
-          title={'Max Fee'}
-          value={state.max_fee || ''}
-          placeholder={'sats'}
-          amount={state.max_fee}
-          override={'sat'}
-          inputCallback={value =>
-            dispatch({ type: 'maxFee', amount: Number(value) })
-          }
-        />
-      )}
+      <InputWithDeco
+        inputType={'number'}
+        title={'Max Fee'}
+        value={state.max_fee || ''}
+        placeholder={'sats'}
+        amount={state.max_fee}
+        override={'sat'}
+        inputCallback={value =>
+          dispatch({ type: 'maxFee', amount: Number(value) })
+        }
+      />
+      <InputWithDeco
+        inputType={'number'}
+        title={'Max Fee Rate'}
+        value={state.max_fee_rate || ''}
+        placeholder={'ppm'}
+        amount={state.max_fee_rate}
+        override={'ppm'}
+        inputCallback={value =>
+          dispatch({ type: 'maxFeeRate', amount: Number(value) })
+        }
+      />
       <Separation />
       <Text>3. Select the amount you want to rebalance.</Text>
       <InputWithDeco title={'Amount Type'} noInput={true}>
@@ -345,7 +339,7 @@ export const AdvancedBalance = () => {
             <ColorButton
               withMargin={'16px 0 0'}
               loading={loading}
-              disabled={loading || !hasInChannel || !hasOutChannel}
+              disabled={isDisabled}
               fullWidth={true}
               onClick={() => {
                 rebalance({
@@ -353,9 +347,8 @@ export const AdvancedBalance = () => {
                     ...(isTarget
                       ? { out_inbound: state.out_inbound }
                       : { max_rebalance: state.max_rebalance }),
-                    ...(isRate
-                      ? { max_fee_rate: state.max_fee_rate }
-                      : { max_fee: state.max_fee }),
+                    max_fee_rate: state.max_fee_rate,
+                    max_fee: state.max_fee,
                     avoid: state.avoid.map(a => a.id),
                     in_through: state.in_through.id,
                     out_through: state.out_through.id,
