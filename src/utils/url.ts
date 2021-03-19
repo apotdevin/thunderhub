@@ -1,4 +1,4 @@
-import bech32 from 'bech32';
+import { bech32 } from 'bech32';
 
 export const getUrlParam = (
   params: string | string[] | undefined
