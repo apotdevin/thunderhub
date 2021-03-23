@@ -96,3 +96,19 @@ export const decodeMessage = ({
       return {};
   }
 };
+
+export const decodeMessages = (messages: { [id: string]: string }[]) => {
+  let customRecords: { [key: string]: string } = {};
+  messages.forEach(message => {
+    const { type, value } = message;
+
+    const obj = decodeMessage({ type, value });
+    customRecords = { ...customRecords, ...obj };
+  });
+
+  if (Object.keys(customRecords).length <= 0) {
+    return;
+  }
+
+  return customRecords;
+};

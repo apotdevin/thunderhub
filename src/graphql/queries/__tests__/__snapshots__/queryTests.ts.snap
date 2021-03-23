@@ -950,6 +950,7 @@ Object {
           "is_held": true,
           "is_private": true,
           "is_push": true,
+          "messages": Array [],
           "received": 1000,
           "received_mtokens": "string",
           "request": "string",

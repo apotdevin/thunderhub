@@ -10,6 +10,7 @@ import {
   InvoiceType,
   PaymentType,
 } from 'server/types/ln-service.types';
+import { decodeMessages } from 'server/helpers/customRecords';
 
 type TransactionType = InvoiceType | PaymentType;
 type TransactionWithType = { isTypeOf: string } & TransactionType;
@@ -84,8 +85,15 @@ export const transactionResolvers = {
         ? payments.filter(filterArray)
         : payments;
 
+      const invoicesWithMessages = invoices.map(i => ({
+        ...i,
+        messages: i.payments
+          .map(p => decodeMessages(p.messages))
+          .filter(Boolean),
+      }));
+
       const resume = sortBy(
-        [...invoices, ...filteredPayments],
+        [...invoicesWithMessages, ...filteredPayments],
         'date'
       ).reverse();
 
