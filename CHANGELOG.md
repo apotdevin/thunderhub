@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.12](https://github.com/apotdevin/thunderhub/compare/v0.12.11...v0.12.12) (2021-03-23)
+
+
+### Improvements
+
+* add mempool minimum ([0beb2f4](https://github.com/apotdevin/thunderhub/commit/0beb2f4667c2e6335d7bf95ce4146cf837d4f80b))
+
 ### [0.12.11](https://github.com/apotdevin/thunderhub/compare/v0.12.10...v0.12.11) (2021-03-23)
 
 
