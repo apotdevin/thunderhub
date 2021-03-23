@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useGetForwardsPastDaysQuery } from 'src/graphql/queries/__generated__/getForwardsPastDays.generated';
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
 import { Forward } from 'src/graphql/types';
@@ -18,6 +17,8 @@ import { getPrice } from 'src/components/price/Price';
 import { useConfigState } from 'src/context/ConfigContext';
 import { ReportType } from '../home/reports/forwardReport/ForwardReport';
 import { getChordMatrix } from './helpers';
+import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
+import { ChannelAlias } from '../home/reports/forwardReport/ChannelAlias';
 
 const Wrapper = styled.div`
   height: 800px;
@@ -62,7 +63,7 @@ export const ForwardChord = ({
     setSelected(null);
   }, [order]);
 
-  const { data, loading } = useGetForwardsPastDaysQuery({
+  const { data, loading } = useGetForwardsQuery({
     ssr: false,
     variables: { days },
     onError: error => toast.error(getErrorContent(error)),
@@ -72,13 +73,13 @@ export const ForwardChord = ({
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  if (loading || !data?.getForwardsPastDays?.length) {
+  if (loading || !data?.getForwards?.length) {
     return null;
   }
 
   const { matrix, uniqueNodes } = getChordMatrix(
     order,
-    data.getForwardsPastDays as Forward[]
+    data.getForwards as Forward[]
   );
 
   const handleGroupClick = (group: SingleGroupProps) => {
@@ -99,7 +100,11 @@ export const ForwardChord = ({
     if (selected.type === 'group') {
       return (
         <>
-          {renderLine('Node', uniqueNodes[selected.group.index])}
+          {renderLine(
+            'With',
+            <ChannelAlias id={uniqueNodes[selected.group.index]} />
+          )}
+          {renderLine('Channel Id', uniqueNodes[selected.group.index])}
           {renderLine(
             getTitle(order),
             format({ amount: selected.group.value, noUnit: order === 'amount' })
@@ -111,7 +116,15 @@ export const ForwardChord = ({
       return (
         <>
           {renderLine(
-            'Flow between',
+            'Between',
+            <>
+              <ChannelAlias id={uniqueNodes[selected.chord.source.index]} />
+              {` - `}
+              <ChannelAlias id={uniqueNodes[selected.chord.target.index]} />
+            </>
+          )}
+          {renderLine(
+            'Channel Ids',
             `${uniqueNodes[selected.chord.source.index]} - ${
               uniqueNodes[selected.chord.target.index]
             }`

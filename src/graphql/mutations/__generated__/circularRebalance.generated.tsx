@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type CircularRebalanceMutationVariables = Types.Exact<{
   route: Types.Scalars['String'];
 }>;
@@ -39,7 +40,8 @@ export type CircularRebalanceMutationFn = Apollo.MutationFunction<CircularRebala
  * });
  */
 export function useCircularRebalanceMutation(baseOptions?: Apollo.MutationHookOptions<CircularRebalanceMutation, CircularRebalanceMutationVariables>) {
-        return Apollo.useMutation<CircularRebalanceMutation, CircularRebalanceMutationVariables>(CircularRebalanceDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CircularRebalanceMutation, CircularRebalanceMutationVariables>(CircularRebalanceDocument, options);
       }
 export type CircularRebalanceMutationHookResult = ReturnType<typeof useCircularRebalanceMutation>;
 export type CircularRebalanceMutationResult = Apollo.MutationResult<CircularRebalanceMutation>;

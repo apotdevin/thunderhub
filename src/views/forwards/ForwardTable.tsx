@@ -6,9 +6,10 @@ import { getPrice } from 'src/components/price/Price';
 import { Table } from 'src/components/table';
 import { useConfigState } from 'src/context/ConfigContext';
 import { usePriceState } from 'src/context/PriceContext';
-import { useGetForwardsPastDaysQuery } from 'src/graphql/queries/__generated__/getForwardsPastDays.generated';
+import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
 import { Forward } from 'src/graphql/types';
 import { getErrorContent } from 'src/utils/error';
+import { ChannelAlias } from '../home/reports/forwardReport/ChannelAlias';
 import { ReportType } from '../home/reports/forwardReport/ForwardReport';
 import { sortByNode } from './helpers';
 
@@ -32,7 +33,7 @@ export const ForwardTable: FC<{ days: number; order: ReportType }> = ({
   days,
   order,
 }) => {
-  const { data, loading } = useGetForwardsPastDaysQuery({
+  const { data, loading } = useGetForwardsQuery({
     ssr: false,
     variables: { days },
     onError: error => toast.error(getErrorContent(error)),
@@ -42,17 +43,18 @@ export const ForwardTable: FC<{ days: number; order: ReportType }> = ({
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  if (loading || !data?.getForwardsPastDays?.length) {
+  if (loading || !data?.getForwards?.length) {
     return null;
   }
 
   const { final, maxIn, maxOut } = sortByNode(
     order,
-    data.getForwardsPastDays as Forward[]
+    data.getForwards as Forward[]
   );
 
   const columns = [
     { Header: 'Alias', accessor: 'alias' },
+    { Header: 'Channel', accessor: 'channel' },
     { Header: 'Incoming', accessor: 'incoming' },
     { Header: 'Outgoing', accessor: 'outgoing' },
     { Header: 'Incoming', accessor: 'incomingBar' },
@@ -61,6 +63,7 @@ export const ForwardTable: FC<{ days: number; order: ReportType }> = ({
 
   const tableData = final.map(f => ({
     ...f,
+    alias: <ChannelAlias id={f.channel} />,
     incoming: format({ amount: f.incoming, noUnit: order === 'amount' }),
     outgoing: format({ amount: f.outgoing, noUnit: order === 'amount' }),
     incomingBar: <SingleBar value={getBar(f.incoming, maxIn)} height={16} />,

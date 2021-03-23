@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetInvoiceStatusChangeQueryVariables = Types.Exact<{
   id: Types.Scalars['String'];
 }>;
@@ -37,10 +38,12 @@ export const GetInvoiceStatusChangeDocument = gql`
  * });
  */
 export function useGetInvoiceStatusChangeQuery(baseOptions: Apollo.QueryHookOptions<GetInvoiceStatusChangeQuery, GetInvoiceStatusChangeQueryVariables>) {
-        return Apollo.useQuery<GetInvoiceStatusChangeQuery, GetInvoiceStatusChangeQueryVariables>(GetInvoiceStatusChangeDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInvoiceStatusChangeQuery, GetInvoiceStatusChangeQueryVariables>(GetInvoiceStatusChangeDocument, options);
       }
 export function useGetInvoiceStatusChangeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInvoiceStatusChangeQuery, GetInvoiceStatusChangeQueryVariables>) {
-          return Apollo.useLazyQuery<GetInvoiceStatusChangeQuery, GetInvoiceStatusChangeQueryVariables>(GetInvoiceStatusChangeDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInvoiceStatusChangeQuery, GetInvoiceStatusChangeQueryVariables>(GetInvoiceStatusChangeDocument, options);
         }
 export type GetInvoiceStatusChangeQueryHookResult = ReturnType<typeof useGetInvoiceStatusChangeQuery>;
 export type GetInvoiceStatusChangeLazyQueryHookResult = ReturnType<typeof useGetInvoiceStatusChangeLazyQuery>;

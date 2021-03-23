@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type OpenChannelMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
   partnerPublicKey: Types.Scalars['String'];
@@ -59,7 +60,8 @@ export type OpenChannelMutationFn = Apollo.MutationFunction<OpenChannelMutation,
  * });
  */
 export function useOpenChannelMutation(baseOptions?: Apollo.MutationHookOptions<OpenChannelMutation, OpenChannelMutationVariables>) {
-        return Apollo.useMutation<OpenChannelMutation, OpenChannelMutationVariables>(OpenChannelDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<OpenChannelMutation, OpenChannelMutationVariables>(OpenChannelDocument, options);
       }
 export type OpenChannelMutationHookResult = ReturnType<typeof useOpenChannelMutation>;
 export type OpenChannelMutationResult = Apollo.MutationResult<OpenChannelMutation>;

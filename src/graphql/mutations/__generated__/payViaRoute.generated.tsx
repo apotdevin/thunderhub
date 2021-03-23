@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type PayViaRouteMutationVariables = Types.Exact<{
   route: Types.Scalars['String'];
   id: Types.Scalars['String'];
@@ -41,7 +42,8 @@ export type PayViaRouteMutationFn = Apollo.MutationFunction<PayViaRouteMutation,
  * });
  */
 export function usePayViaRouteMutation(baseOptions?: Apollo.MutationHookOptions<PayViaRouteMutation, PayViaRouteMutationVariables>) {
-        return Apollo.useMutation<PayViaRouteMutation, PayViaRouteMutationVariables>(PayViaRouteDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PayViaRouteMutation, PayViaRouteMutationVariables>(PayViaRouteDocument, options);
       }
 export type PayViaRouteMutationHookResult = ReturnType<typeof usePayViaRouteMutation>;
 export type PayViaRouteMutationResult = Apollo.MutationResult<PayViaRouteMutation>;

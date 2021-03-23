@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type SignMessageQueryVariables = Types.Exact<{
   message: Types.Scalars['String'];
 }>;
@@ -37,10 +38,12 @@ export const SignMessageDocument = gql`
  * });
  */
 export function useSignMessageQuery(baseOptions: Apollo.QueryHookOptions<SignMessageQuery, SignMessageQueryVariables>) {
-        return Apollo.useQuery<SignMessageQuery, SignMessageQueryVariables>(SignMessageDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SignMessageQuery, SignMessageQueryVariables>(SignMessageDocument, options);
       }
 export function useSignMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SignMessageQuery, SignMessageQueryVariables>) {
-          return Apollo.useLazyQuery<SignMessageQuery, SignMessageQueryVariables>(SignMessageDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SignMessageQuery, SignMessageQueryVariables>(SignMessageDocument, options);
         }
 export type SignMessageQueryHookResult = ReturnType<typeof useSignMessageQuery>;
 export type SignMessageLazyQueryHookResult = ReturnType<typeof useSignMessageLazyQuery>;

@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type CreateBoltzReverseSwapMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
   address?: Types.Maybe<Types.Scalars['String']>;
@@ -81,7 +82,8 @@ export type CreateBoltzReverseSwapMutationFn = Apollo.MutationFunction<CreateBol
  * });
  */
 export function useCreateBoltzReverseSwapMutation(baseOptions?: Apollo.MutationHookOptions<CreateBoltzReverseSwapMutation, CreateBoltzReverseSwapMutationVariables>) {
-        return Apollo.useMutation<CreateBoltzReverseSwapMutation, CreateBoltzReverseSwapMutationVariables>(CreateBoltzReverseSwapDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBoltzReverseSwapMutation, CreateBoltzReverseSwapMutationVariables>(CreateBoltzReverseSwapDocument, options);
       }
 export type CreateBoltzReverseSwapMutationHookResult = ReturnType<typeof useCreateBoltzReverseSwapMutation>;
 export type CreateBoltzReverseSwapMutationResult = Apollo.MutationResult<CreateBoltzReverseSwapMutation>;

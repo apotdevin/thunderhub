@@ -1,18 +1,19 @@
 import { FC } from 'react';
 import { Table } from 'src/components/table';
+import { ChannelAlias } from './ChannelAlias';
 import { ReportType } from './ForwardReport';
 
-type RouteType = {
+export type RouteType = {
   route: string;
-  aliasIn: string;
-  aliasOut: string;
+  incoming_channel: string;
+  outgoing_channel: string;
   fee: number;
   tokens: number;
   amount: number;
 };
 
-type ChannelType = {
-  alias: string;
+export type ChannelType = {
+  channelId: string;
   name: string;
   fee: number;
   tokens: number;
@@ -58,7 +59,13 @@ export const RouteTable: FC<RouteTableProps> = ({ order, forwardArray }) => {
     { Header: getTitle(), accessor: getAccesor() },
   ];
 
-  return <Table tableData={forwardArray} tableColumns={columns} />;
+  const tableData = forwardArray.map(f => ({
+    ...f,
+    aliasIn: <ChannelAlias id={f.incoming_channel} />,
+    aliasOut: <ChannelAlias id={f.outgoing_channel} />,
+  }));
+
+  return <Table tableData={tableData} tableColumns={columns} />;
 };
 
 export const ChannelTable: FC<ChannelTableProps> = ({
@@ -93,5 +100,10 @@ export const ChannelTable: FC<ChannelTableProps> = ({
     { Header: getTitle(), accessor: getAccesor() },
   ];
 
-  return <Table tableData={forwardArray} tableColumns={columns} />;
+  const tableData = forwardArray.map(f => ({
+    ...f,
+    alias: <ChannelAlias id={f.channelId} />,
+  }));
+
+  return <Table tableData={tableData} tableColumns={columns} />;
 };

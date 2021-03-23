@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetBaseCanConnectQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -34,10 +35,12 @@ export const GetBaseCanConnectDocument = gql`
  * });
  */
 export function useGetBaseCanConnectQuery(baseOptions?: Apollo.QueryHookOptions<GetBaseCanConnectQuery, GetBaseCanConnectQueryVariables>) {
-        return Apollo.useQuery<GetBaseCanConnectQuery, GetBaseCanConnectQueryVariables>(GetBaseCanConnectDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBaseCanConnectQuery, GetBaseCanConnectQueryVariables>(GetBaseCanConnectDocument, options);
       }
 export function useGetBaseCanConnectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBaseCanConnectQuery, GetBaseCanConnectQueryVariables>) {
-          return Apollo.useLazyQuery<GetBaseCanConnectQuery, GetBaseCanConnectQueryVariables>(GetBaseCanConnectDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBaseCanConnectQuery, GetBaseCanConnectQueryVariables>(GetBaseCanConnectDocument, options);
         }
 export type GetBaseCanConnectQueryHookResult = ReturnType<typeof useGetBaseCanConnectQuery>;
 export type GetBaseCanConnectLazyQueryHookResult = ReturnType<typeof useGetBaseCanConnectLazyQuery>;

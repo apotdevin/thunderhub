@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type CloseChannelMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
   forceClose?: Types.Maybe<Types.Scalars['Boolean']>;
@@ -56,7 +57,8 @@ export type CloseChannelMutationFn = Apollo.MutationFunction<CloseChannelMutatio
  * });
  */
 export function useCloseChannelMutation(baseOptions?: Apollo.MutationHookOptions<CloseChannelMutation, CloseChannelMutationVariables>) {
-        return Apollo.useMutation<CloseChannelMutation, CloseChannelMutationVariables>(CloseChannelDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CloseChannelMutation, CloseChannelMutationVariables>(CloseChannelDocument, options);
       }
 export type CloseChannelMutationHookResult = ReturnType<typeof useCloseChannelMutation>;
 export type CloseChannelMutationResult = Apollo.MutationResult<CloseChannelMutation>;

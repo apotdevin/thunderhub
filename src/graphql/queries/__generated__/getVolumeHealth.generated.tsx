@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetVolumeHealthQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -61,10 +62,12 @@ export const GetVolumeHealthDocument = gql`
  * });
  */
 export function useGetVolumeHealthQuery(baseOptions?: Apollo.QueryHookOptions<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>) {
-        return Apollo.useQuery<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>(GetVolumeHealthDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>(GetVolumeHealthDocument, options);
       }
 export function useGetVolumeHealthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>) {
-          return Apollo.useLazyQuery<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>(GetVolumeHealthDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetVolumeHealthQuery, GetVolumeHealthQueryVariables>(GetVolumeHealthDocument, options);
         }
 export type GetVolumeHealthQueryHookResult = ReturnType<typeof useGetVolumeHealthQuery>;
 export type GetVolumeHealthLazyQueryHookResult = ReturnType<typeof useGetVolumeHealthLazyQuery>;

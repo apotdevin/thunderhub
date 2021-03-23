@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetLnMarketsUserInfoQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -44,10 +45,12 @@ export const GetLnMarketsUserInfoDocument = gql`
  * });
  */
 export function useGetLnMarketsUserInfoQuery(baseOptions?: Apollo.QueryHookOptions<GetLnMarketsUserInfoQuery, GetLnMarketsUserInfoQueryVariables>) {
-        return Apollo.useQuery<GetLnMarketsUserInfoQuery, GetLnMarketsUserInfoQueryVariables>(GetLnMarketsUserInfoDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLnMarketsUserInfoQuery, GetLnMarketsUserInfoQueryVariables>(GetLnMarketsUserInfoDocument, options);
       }
 export function useGetLnMarketsUserInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLnMarketsUserInfoQuery, GetLnMarketsUserInfoQueryVariables>) {
-          return Apollo.useLazyQuery<GetLnMarketsUserInfoQuery, GetLnMarketsUserInfoQueryVariables>(GetLnMarketsUserInfoDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLnMarketsUserInfoQuery, GetLnMarketsUserInfoQueryVariables>(GetLnMarketsUserInfoDocument, options);
         }
 export type GetLnMarketsUserInfoQueryHookResult = ReturnType<typeof useGetLnMarketsUserInfoQuery>;
 export type GetLnMarketsUserInfoLazyQueryHookResult = ReturnType<typeof useGetLnMarketsUserInfoLazyQuery>;

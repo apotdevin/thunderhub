@@ -60,6 +60,7 @@ export type Query = {
   getTimeHealth?: Maybe<ChannelsTimeHealth>;
   getFeeHealth?: Maybe<ChannelsFeeHealth>;
   getChannelBalance?: Maybe<ChannelBalanceType>;
+  getChannel: SingleChannelType;
   getChannels: Array<Maybe<ChannelType>>;
   getClosedChannels?: Maybe<Array<Maybe<ClosedChannelType>>>;
   getPendingChannels?: Maybe<Array<Maybe<PendingChannelType>>>;
@@ -71,7 +72,7 @@ export type Query = {
   decodeRequest?: Maybe<DecodeType>;
   getWalletInfo?: Maybe<WalletInfoType>;
   getResume?: Maybe<GetResumeType>;
-  getForwardsPastDays: Array<Maybe<Forward>>;
+  getForwards: Array<Maybe<Forward>>;
   getBitcoinPrice?: Maybe<Scalars['String']>;
   getBitcoinFees?: Maybe<BitcoinFeeType>;
   getForwardChannelsReport?: Maybe<Scalars['String']>;
@@ -118,6 +119,12 @@ export type QueryGetAccountingReportArgs = {
 };
 
 
+export type QueryGetChannelArgs = {
+  id: Scalars['String'];
+  pubkey?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryGetChannelsArgs = {
   active?: Maybe<Scalars['Boolean']>;
 };
@@ -144,7 +151,7 @@ export type QueryGetResumeArgs = {
 };
 
 
-export type QueryGetForwardsPastDaysArgs = {
+export type QueryGetForwardsArgs = {
   days: Scalars['Int'];
 };
 
@@ -830,8 +837,6 @@ export type Forward = {
   mtokens: Scalars['String'];
   outgoing_channel: Scalars['String'];
   tokens: Scalars['Int'];
-  incoming_node?: Maybe<ForwardNodeType>;
-  outgoing_node?: Maybe<ForwardNodeType>;
 };
 
 export type ForwardNodeType = {

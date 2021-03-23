@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetResumeQueryVariables = Types.Exact<{
   token?: Types.Maybe<Types.Scalars['String']>;
 }>;
@@ -114,10 +115,12 @@ export const GetResumeDocument = gql`
  * });
  */
 export function useGetResumeQuery(baseOptions?: Apollo.QueryHookOptions<GetResumeQuery, GetResumeQueryVariables>) {
-        return Apollo.useQuery<GetResumeQuery, GetResumeQueryVariables>(GetResumeDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetResumeQuery, GetResumeQueryVariables>(GetResumeDocument, options);
       }
 export function useGetResumeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetResumeQuery, GetResumeQueryVariables>) {
-          return Apollo.useLazyQuery<GetResumeQuery, GetResumeQueryVariables>(GetResumeDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetResumeQuery, GetResumeQueryVariables>(GetResumeDocument, options);
         }
 export type GetResumeQueryHookResult = ReturnType<typeof useGetResumeQuery>;
 export type GetResumeLazyQueryHookResult = ReturnType<typeof useGetResumeLazyQuery>;

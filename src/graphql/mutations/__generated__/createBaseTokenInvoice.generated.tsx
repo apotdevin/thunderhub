@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type CreateBaseTokenInvoiceMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -42,7 +43,8 @@ export type CreateBaseTokenInvoiceMutationFn = Apollo.MutationFunction<CreateBas
  * });
  */
 export function useCreateBaseTokenInvoiceMutation(baseOptions?: Apollo.MutationHookOptions<CreateBaseTokenInvoiceMutation, CreateBaseTokenInvoiceMutationVariables>) {
-        return Apollo.useMutation<CreateBaseTokenInvoiceMutation, CreateBaseTokenInvoiceMutationVariables>(CreateBaseTokenInvoiceDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBaseTokenInvoiceMutation, CreateBaseTokenInvoiceMutationVariables>(CreateBaseTokenInvoiceDocument, options);
       }
 export type CreateBaseTokenInvoiceMutationHookResult = ReturnType<typeof useCreateBaseTokenInvoiceMutation>;
 export type CreateBaseTokenInvoiceMutationResult = Apollo.MutationResult<CreateBaseTokenInvoiceMutation>;

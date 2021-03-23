@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type LnMarketsLoginMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -70,7 +71,8 @@ export type LnMarketsLoginMutationFn = Apollo.MutationFunction<LnMarketsLoginMut
  * });
  */
 export function useLnMarketsLoginMutation(baseOptions?: Apollo.MutationHookOptions<LnMarketsLoginMutation, LnMarketsLoginMutationVariables>) {
-        return Apollo.useMutation<LnMarketsLoginMutation, LnMarketsLoginMutationVariables>(LnMarketsLoginDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LnMarketsLoginMutation, LnMarketsLoginMutationVariables>(LnMarketsLoginDocument, options);
       }
 export type LnMarketsLoginMutationHookResult = ReturnType<typeof useLnMarketsLoginMutation>;
 export type LnMarketsLoginMutationResult = Apollo.MutationResult<LnMarketsLoginMutation>;
@@ -100,7 +102,8 @@ export type LnMarketsWithdrawMutationFn = Apollo.MutationFunction<LnMarketsWithd
  * });
  */
 export function useLnMarketsWithdrawMutation(baseOptions?: Apollo.MutationHookOptions<LnMarketsWithdrawMutation, LnMarketsWithdrawMutationVariables>) {
-        return Apollo.useMutation<LnMarketsWithdrawMutation, LnMarketsWithdrawMutationVariables>(LnMarketsWithdrawDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LnMarketsWithdrawMutation, LnMarketsWithdrawMutationVariables>(LnMarketsWithdrawDocument, options);
       }
 export type LnMarketsWithdrawMutationHookResult = ReturnType<typeof useLnMarketsWithdrawMutation>;
 export type LnMarketsWithdrawMutationResult = Apollo.MutationResult<LnMarketsWithdrawMutation>;
@@ -130,7 +133,8 @@ export type LnMarketsDepositMutationFn = Apollo.MutationFunction<LnMarketsDeposi
  * });
  */
 export function useLnMarketsDepositMutation(baseOptions?: Apollo.MutationHookOptions<LnMarketsDepositMutation, LnMarketsDepositMutationVariables>) {
-        return Apollo.useMutation<LnMarketsDepositMutation, LnMarketsDepositMutationVariables>(LnMarketsDepositDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LnMarketsDepositMutation, LnMarketsDepositMutationVariables>(LnMarketsDepositDocument, options);
       }
 export type LnMarketsDepositMutationHookResult = ReturnType<typeof useLnMarketsDepositMutation>;
 export type LnMarketsDepositMutationResult = Apollo.MutationResult<LnMarketsDepositMutation>;
@@ -159,7 +163,8 @@ export type LnMarketsLogoutMutationFn = Apollo.MutationFunction<LnMarketsLogoutM
  * });
  */
 export function useLnMarketsLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LnMarketsLogoutMutation, LnMarketsLogoutMutationVariables>) {
-        return Apollo.useMutation<LnMarketsLogoutMutation, LnMarketsLogoutMutationVariables>(LnMarketsLogoutDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LnMarketsLogoutMutation, LnMarketsLogoutMutationVariables>(LnMarketsLogoutDocument, options);
       }
 export type LnMarketsLogoutMutationHookResult = ReturnType<typeof useLnMarketsLogoutMutation>;
 export type LnMarketsLogoutMutationResult = Apollo.MutationResult<LnMarketsLogoutMutation>;
