@@ -10,6 +10,7 @@ import { FlowBox } from '../src/views/home/reports/flow';
 import { ForwardBox } from '../src/views/home/reports/forwardReport';
 import { LiquidReport } from '../src/views/home/reports/liquidReport/LiquidReport';
 import { ConnectCard } from '../src/views/home/connect/Connect';
+import { MempoolReport } from 'src/views/home/reports/mempool';
 
 const HomeView = () => (
   <>
@@ -20,6 +21,7 @@ const HomeView = () => (
     <FlowBox />
     <LiquidReport />
     <ForwardBox />
+    <MempoolReport />
     <NetworkInfo />
   </>
 );

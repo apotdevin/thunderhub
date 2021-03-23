@@ -11,7 +11,7 @@ export type GetBitcoinFeesQuery = (
   { __typename?: 'Query' }
   & { getBitcoinFees?: Types.Maybe<(
     { __typename?: 'bitcoinFeeType' }
-    & Pick<Types.BitcoinFeeType, 'fast' | 'halfHour' | 'hour'>
+    & Pick<Types.BitcoinFeeType, 'fast' | 'halfHour' | 'hour' | 'minimum'>
   )> }
 );
 
@@ -22,6 +22,7 @@ export const GetBitcoinFeesDocument = gql`
     fast
     halfHour
     hour
+    minimum
   }
 }
     `;

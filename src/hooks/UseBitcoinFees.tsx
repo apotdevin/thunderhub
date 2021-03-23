@@ -6,6 +6,7 @@ type State = {
   fast: number;
   halfHour: number;
   hour: number;
+  minimum: number;
 };
 
 const initialState: State = {
@@ -13,6 +14,7 @@ const initialState: State = {
   fast: 0,
   halfHour: 0,
   hour: 0,
+  minimum: 0,
 };
 
 export const useBitcoinFees = (): State => {
@@ -30,12 +32,13 @@ export const useBitcoinFees = (): State => {
 
   useEffect(() => {
     if (!loading && data && data.getBitcoinFees) {
-      const { fast, halfHour, hour } = data.getBitcoinFees;
+      const { fast, halfHour, hour, minimum } = data.getBitcoinFees;
       setBitcoinFees({
         fast: fast || 0,
         halfHour: halfHour || 0,
         hour: hour || 0,
         dontShow: false,
+        minimum: minimum || 0,
       });
     }
   }, [data, loading]);

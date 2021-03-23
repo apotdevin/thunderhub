@@ -6,6 +6,7 @@ export const GET_BITCOIN_FEES = gql`
       fast
       halfHour
       hour
+      minimum
     }
   }
 `;
