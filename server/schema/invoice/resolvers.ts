@@ -1,5 +1,4 @@
 import { randomBytes, createHash } from 'crypto';
-import { once } from 'events';
 import {
   payViaRoutes,
   createInvoice,
@@ -31,16 +30,20 @@ export const invoiceResolvers = {
 
       const sub = subscribeToInvoice({ id, lnd });
 
-      await once(sub, 'invoice_updated');
-
       return Promise.race([
-        once(sub, 'invoice_updated'),
+        new Promise(resolve => {
+          sub.on('invoice_updated', (data: any) => {
+            if (data.is_confirmed) {
+              resolve(true);
+            }
+          });
+        }),
         new Promise((_, reject) =>
           setTimeout(() => reject(new Error('timeout')), 90000)
         ),
       ])
         .then((res: any) => {
-          if (res?.[0] && res[0].is_confirmed) {
+          if (res) {
             return 'paid';
           }
           return 'not_paid';
