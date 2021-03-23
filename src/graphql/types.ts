@@ -850,6 +850,11 @@ export type ForwardNodeType = {
   public_key?: Maybe<Scalars['String']>;
 };
 
+export type MessageType = {
+  __typename?: 'MessageType';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type PaymentType = {
   __typename?: 'PaymentType';
   created_at: Scalars['String'];
@@ -893,6 +898,7 @@ export type InvoiceType = {
   tokens: Scalars['String'];
   type: Scalars['String'];
   date: Scalars['String'];
+  messages: Array<Maybe<MessageType>>;
 };
 
 export type Transaction = InvoiceType | PaymentType;

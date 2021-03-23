@@ -25,6 +25,9 @@ export const GET_RESUME = gql`
           tokens
           type
           date
+          messages {
+            message
+          }
         }
         ... on PaymentType {
           created_at

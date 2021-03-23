@@ -17,6 +17,10 @@ export type GetResumeQuery = (
     & { resume?: Types.Maybe<Array<Types.Maybe<(
       { __typename?: 'InvoiceType' }
       & Pick<Types.InvoiceType, 'chain_address' | 'confirmed_at' | 'created_at' | 'description' | 'description_hash' | 'expires_at' | 'id' | 'is_canceled' | 'is_confirmed' | 'is_held' | 'is_private' | 'is_push' | 'received' | 'received_mtokens' | 'request' | 'secret' | 'tokens' | 'type' | 'date'>
+      & { messages: Array<Types.Maybe<(
+        { __typename?: 'MessageType' }
+        & Pick<Types.MessageType, 'message'>
+      )>> }
     ) | (
       { __typename?: 'PaymentType' }
       & Pick<Types.PaymentType, 'created_at' | 'destination' | 'fee' | 'fee_mtokens' | 'id' | 'index' | 'is_confirmed' | 'is_outgoing' | 'mtokens' | 'request' | 'safe_fee' | 'safe_tokens' | 'secret' | 'tokens' | 'type' | 'date'>
@@ -63,6 +67,9 @@ export const GetResumeDocument = gql`
         tokens
         type
         date
+        messages {
+          message
+        }
       }
       ... on PaymentType {
         created_at
