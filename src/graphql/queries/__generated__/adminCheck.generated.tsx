@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetCanAdminQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -34,10 +35,12 @@ export const GetCanAdminDocument = gql`
  * });
  */
 export function useGetCanAdminQuery(baseOptions?: Apollo.QueryHookOptions<GetCanAdminQuery, GetCanAdminQueryVariables>) {
-        return Apollo.useQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(GetCanAdminDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(GetCanAdminDocument, options);
       }
 export function useGetCanAdminLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCanAdminQuery, GetCanAdminQueryVariables>) {
-          return Apollo.useLazyQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(GetCanAdminDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCanAdminQuery, GetCanAdminQueryVariables>(GetCanAdminDocument, options);
         }
 export type GetCanAdminQueryHookResult = ReturnType<typeof useGetCanAdminQuery>;
 export type GetCanAdminLazyQueryHookResult = ReturnType<typeof useGetCanAdminLazyQuery>;

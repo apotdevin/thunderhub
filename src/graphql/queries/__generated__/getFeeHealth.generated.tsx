@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetFeeHealthQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -82,10 +83,12 @@ export const GetFeeHealthDocument = gql`
  * });
  */
 export function useGetFeeHealthQuery(baseOptions?: Apollo.QueryHookOptions<GetFeeHealthQuery, GetFeeHealthQueryVariables>) {
-        return Apollo.useQuery<GetFeeHealthQuery, GetFeeHealthQueryVariables>(GetFeeHealthDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetFeeHealthQuery, GetFeeHealthQueryVariables>(GetFeeHealthDocument, options);
       }
 export function useGetFeeHealthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFeeHealthQuery, GetFeeHealthQueryVariables>) {
-          return Apollo.useLazyQuery<GetFeeHealthQuery, GetFeeHealthQueryVariables>(GetFeeHealthDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetFeeHealthQuery, GetFeeHealthQueryVariables>(GetFeeHealthDocument, options);
         }
 export type GetFeeHealthQueryHookResult = ReturnType<typeof useGetFeeHealthQuery>;
 export type GetFeeHealthLazyQueryHookResult = ReturnType<typeof useGetFeeHealthLazyQuery>;

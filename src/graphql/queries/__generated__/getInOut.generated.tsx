@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetInOutQueryVariables = Types.Exact<{
   time?: Types.Maybe<Types.Scalars['String']>;
 }>;
@@ -45,10 +46,12 @@ export const GetInOutDocument = gql`
  * });
  */
 export function useGetInOutQuery(baseOptions?: Apollo.QueryHookOptions<GetInOutQuery, GetInOutQueryVariables>) {
-        return Apollo.useQuery<GetInOutQuery, GetInOutQueryVariables>(GetInOutDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInOutQuery, GetInOutQueryVariables>(GetInOutDocument, options);
       }
 export function useGetInOutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInOutQuery, GetInOutQueryVariables>) {
-          return Apollo.useLazyQuery<GetInOutQuery, GetInOutQueryVariables>(GetInOutDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInOutQuery, GetInOutQueryVariables>(GetInOutDocument, options);
         }
 export type GetInOutQueryHookResult = ReturnType<typeof useGetInOutQuery>;
 export type GetInOutLazyQueryHookResult = ReturnType<typeof useGetInOutLazyQuery>;

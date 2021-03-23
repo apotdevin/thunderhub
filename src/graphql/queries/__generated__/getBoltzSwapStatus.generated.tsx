@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetBoltzSwapStatusQueryVariables = Types.Exact<{
   ids: Array<Types.Maybe<Types.Scalars['String']>> | Types.Maybe<Types.Scalars['String']>;
 }>;
@@ -58,10 +59,12 @@ export const GetBoltzSwapStatusDocument = gql`
  * });
  */
 export function useGetBoltzSwapStatusQuery(baseOptions: Apollo.QueryHookOptions<GetBoltzSwapStatusQuery, GetBoltzSwapStatusQueryVariables>) {
-        return Apollo.useQuery<GetBoltzSwapStatusQuery, GetBoltzSwapStatusQueryVariables>(GetBoltzSwapStatusDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBoltzSwapStatusQuery, GetBoltzSwapStatusQueryVariables>(GetBoltzSwapStatusDocument, options);
       }
 export function useGetBoltzSwapStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBoltzSwapStatusQuery, GetBoltzSwapStatusQueryVariables>) {
-          return Apollo.useLazyQuery<GetBoltzSwapStatusQuery, GetBoltzSwapStatusQueryVariables>(GetBoltzSwapStatusDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBoltzSwapStatusQuery, GetBoltzSwapStatusQueryVariables>(GetBoltzSwapStatusDocument, options);
         }
 export type GetBoltzSwapStatusQueryHookResult = ReturnType<typeof useGetBoltzSwapStatusQuery>;
 export type GetBoltzSwapStatusLazyQueryHookResult = ReturnType<typeof useGetBoltzSwapStatusLazyQuery>;

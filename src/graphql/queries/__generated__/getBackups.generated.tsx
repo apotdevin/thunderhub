@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetBackupsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -34,10 +35,12 @@ export const GetBackupsDocument = gql`
  * });
  */
 export function useGetBackupsQuery(baseOptions?: Apollo.QueryHookOptions<GetBackupsQuery, GetBackupsQueryVariables>) {
-        return Apollo.useQuery<GetBackupsQuery, GetBackupsQueryVariables>(GetBackupsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBackupsQuery, GetBackupsQueryVariables>(GetBackupsDocument, options);
       }
 export function useGetBackupsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBackupsQuery, GetBackupsQueryVariables>) {
-          return Apollo.useLazyQuery<GetBackupsQuery, GetBackupsQueryVariables>(GetBackupsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBackupsQuery, GetBackupsQueryVariables>(GetBackupsDocument, options);
         }
 export type GetBackupsQueryHookResult = ReturnType<typeof useGetBackupsQuery>;
 export type GetBackupsLazyQueryHookResult = ReturnType<typeof useGetBackupsLazyQuery>;

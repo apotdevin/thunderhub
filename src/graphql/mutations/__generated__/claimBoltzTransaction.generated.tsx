@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type ClaimBoltzTransactionMutationVariables = Types.Exact<{
   redeem: Types.Scalars['String'];
   transaction: Types.Scalars['String'];
@@ -56,7 +57,8 @@ export type ClaimBoltzTransactionMutationFn = Apollo.MutationFunction<ClaimBoltz
  * });
  */
 export function useClaimBoltzTransactionMutation(baseOptions?: Apollo.MutationHookOptions<ClaimBoltzTransactionMutation, ClaimBoltzTransactionMutationVariables>) {
-        return Apollo.useMutation<ClaimBoltzTransactionMutation, ClaimBoltzTransactionMutationVariables>(ClaimBoltzTransactionDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ClaimBoltzTransactionMutation, ClaimBoltzTransactionMutationVariables>(ClaimBoltzTransactionDocument, options);
       }
 export type ClaimBoltzTransactionMutationHookResult = ReturnType<typeof useClaimBoltzTransactionMutation>;
 export type ClaimBoltzTransactionMutationResult = Apollo.MutationResult<ClaimBoltzTransactionMutation>;

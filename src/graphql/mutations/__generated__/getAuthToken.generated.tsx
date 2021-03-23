@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetAuthTokenMutationVariables = Types.Exact<{
   cookie?: Types.Maybe<Types.Scalars['String']>;
 }>;
@@ -39,7 +40,8 @@ export type GetAuthTokenMutationFn = Apollo.MutationFunction<GetAuthTokenMutatio
  * });
  */
 export function useGetAuthTokenMutation(baseOptions?: Apollo.MutationHookOptions<GetAuthTokenMutation, GetAuthTokenMutationVariables>) {
-        return Apollo.useMutation<GetAuthTokenMutation, GetAuthTokenMutationVariables>(GetAuthTokenDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GetAuthTokenMutation, GetAuthTokenMutationVariables>(GetAuthTokenDocument, options);
       }
 export type GetAuthTokenMutationHookResult = ReturnType<typeof useGetAuthTokenMutation>;
 export type GetAuthTokenMutationResult = Apollo.MutationResult<GetAuthTokenMutation>;

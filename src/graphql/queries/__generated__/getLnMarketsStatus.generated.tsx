@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetLnMarketsStatusQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -34,10 +35,12 @@ export const GetLnMarketsStatusDocument = gql`
  * });
  */
 export function useGetLnMarketsStatusQuery(baseOptions?: Apollo.QueryHookOptions<GetLnMarketsStatusQuery, GetLnMarketsStatusQueryVariables>) {
-        return Apollo.useQuery<GetLnMarketsStatusQuery, GetLnMarketsStatusQueryVariables>(GetLnMarketsStatusDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLnMarketsStatusQuery, GetLnMarketsStatusQueryVariables>(GetLnMarketsStatusDocument, options);
       }
 export function useGetLnMarketsStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLnMarketsStatusQuery, GetLnMarketsStatusQueryVariables>) {
-          return Apollo.useLazyQuery<GetLnMarketsStatusQuery, GetLnMarketsStatusQueryVariables>(GetLnMarketsStatusDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLnMarketsStatusQuery, GetLnMarketsStatusQueryVariables>(GetLnMarketsStatusDocument, options);
         }
 export type GetLnMarketsStatusQueryHookResult = ReturnType<typeof useGetLnMarketsStatusQuery>;
 export type GetLnMarketsStatusLazyQueryHookResult = ReturnType<typeof useGetLnMarketsStatusLazyQuery>;

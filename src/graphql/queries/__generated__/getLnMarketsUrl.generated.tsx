@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetLnMarketsUrlQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -34,10 +35,12 @@ export const GetLnMarketsUrlDocument = gql`
  * });
  */
 export function useGetLnMarketsUrlQuery(baseOptions?: Apollo.QueryHookOptions<GetLnMarketsUrlQuery, GetLnMarketsUrlQueryVariables>) {
-        return Apollo.useQuery<GetLnMarketsUrlQuery, GetLnMarketsUrlQueryVariables>(GetLnMarketsUrlDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLnMarketsUrlQuery, GetLnMarketsUrlQueryVariables>(GetLnMarketsUrlDocument, options);
       }
 export function useGetLnMarketsUrlLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLnMarketsUrlQuery, GetLnMarketsUrlQueryVariables>) {
-          return Apollo.useLazyQuery<GetLnMarketsUrlQuery, GetLnMarketsUrlQueryVariables>(GetLnMarketsUrlDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLnMarketsUrlQuery, GetLnMarketsUrlQueryVariables>(GetLnMarketsUrlDocument, options);
         }
 export type GetLnMarketsUrlQueryHookResult = ReturnType<typeof useGetLnMarketsUrlQuery>;
 export type GetLnMarketsUrlLazyQueryHookResult = ReturnType<typeof useGetLnMarketsUrlLazyQuery>;

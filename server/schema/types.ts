@@ -51,6 +51,7 @@ export const queryTypes = gql`
     getTimeHealth: channelsTimeHealth
     getFeeHealth: channelsFeeHealth
     getChannelBalance: channelBalanceType
+    getChannel(id: String!, pubkey: String): singleChannelType!
     getChannels(active: Boolean): [channelType]!
     getClosedChannels(type: String): [closedChannelType]
     getPendingChannels: [pendingChannelType]
@@ -62,7 +63,7 @@ export const queryTypes = gql`
     decodeRequest(request: String!): decodeType
     getWalletInfo: walletInfoType
     getResume(token: String): getResumeType
-    getForwardsPastDays(days: Int!): [Forward]!
+    getForwards(days: Int!): [Forward]!
     getBitcoinPrice(logger: Boolean, currency: String): String
     getBitcoinFees(logger: Boolean): bitcoinFeeType
     getForwardChannelsReport(time: String, order: String, type: String): String

@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetBitcoinPriceQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -34,10 +35,12 @@ export const GetBitcoinPriceDocument = gql`
  * });
  */
 export function useGetBitcoinPriceQuery(baseOptions?: Apollo.QueryHookOptions<GetBitcoinPriceQuery, GetBitcoinPriceQueryVariables>) {
-        return Apollo.useQuery<GetBitcoinPriceQuery, GetBitcoinPriceQueryVariables>(GetBitcoinPriceDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBitcoinPriceQuery, GetBitcoinPriceQueryVariables>(GetBitcoinPriceDocument, options);
       }
 export function useGetBitcoinPriceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBitcoinPriceQuery, GetBitcoinPriceQueryVariables>) {
-          return Apollo.useLazyQuery<GetBitcoinPriceQuery, GetBitcoinPriceQueryVariables>(GetBitcoinPriceDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBitcoinPriceQuery, GetBitcoinPriceQueryVariables>(GetBitcoinPriceDocument, options);
         }
 export type GetBitcoinPriceQueryHookResult = ReturnType<typeof useGetBitcoinPriceQuery>;
 export type GetBitcoinPriceLazyQueryHookResult = ReturnType<typeof useGetBitcoinPriceLazyQuery>;

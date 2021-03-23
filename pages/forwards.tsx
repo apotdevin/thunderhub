@@ -101,7 +101,7 @@ const ForwardsView = () => {
               <Separation />
               <ForwardChannelsReport days={days} order={infoType} />
             </Card>
-            <SubTitle>Grouped by Peer</SubTitle>
+            <SubTitle>Grouped by Channel</SubTitle>
             <Card>
               <ForwardTable days={days} order={infoType} />
             </Card>

@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type CreateMacaroonMutationVariables = Types.Exact<{
   permissions: Types.PermissionsType;
 }>;
@@ -39,7 +40,8 @@ export type CreateMacaroonMutationFn = Apollo.MutationFunction<CreateMacaroonMut
  * });
  */
 export function useCreateMacaroonMutation(baseOptions?: Apollo.MutationHookOptions<CreateMacaroonMutation, CreateMacaroonMutationVariables>) {
-        return Apollo.useMutation<CreateMacaroonMutation, CreateMacaroonMutationVariables>(CreateMacaroonDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMacaroonMutation, CreateMacaroonMutationVariables>(CreateMacaroonDocument, options);
       }
 export type CreateMacaroonMutationHookResult = ReturnType<typeof useCreateMacaroonMutation>;
 export type CreateMacaroonMutationResult = Apollo.MutationResult<CreateMacaroonMutation>;

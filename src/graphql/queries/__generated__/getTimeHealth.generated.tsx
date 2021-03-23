@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetTimeHealthQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -63,10 +64,12 @@ export const GetTimeHealthDocument = gql`
  * });
  */
 export function useGetTimeHealthQuery(baseOptions?: Apollo.QueryHookOptions<GetTimeHealthQuery, GetTimeHealthQueryVariables>) {
-        return Apollo.useQuery<GetTimeHealthQuery, GetTimeHealthQueryVariables>(GetTimeHealthDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTimeHealthQuery, GetTimeHealthQueryVariables>(GetTimeHealthDocument, options);
       }
 export function useGetTimeHealthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTimeHealthQuery, GetTimeHealthQueryVariables>) {
-          return Apollo.useLazyQuery<GetTimeHealthQuery, GetTimeHealthQueryVariables>(GetTimeHealthDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTimeHealthQuery, GetTimeHealthQueryVariables>(GetTimeHealthDocument, options);
         }
 export type GetTimeHealthQueryHookResult = ReturnType<typeof useGetTimeHealthQuery>;
 export type GetTimeHealthLazyQueryHookResult = ReturnType<typeof useGetTimeHealthLazyQuery>;
