@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.10](https://github.com/apotdevin/thunderhub/compare/v0.12.9...v0.12.10) (2021-03-23)
+
+
+### Refactoring
+
+* forwards query ([449f8bc](https://github.com/apotdevin/thunderhub/commit/449f8bce8f2911892ca4190af2aa98e4dbe31b8f))
+
 ### [0.12.9](https://github.com/apotdevin/thunderhub/compare/v0.12.8...v0.12.9) (2021-03-19)
 
 
