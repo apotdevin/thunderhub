@@ -1,11 +1,5 @@
-import {
-  getPayments,
-  getInvoices,
-  getForwards as getLnForwards,
-  getWalletInfo,
-  getClosedChannels,
-} from 'ln-service';
-import { compareDesc, subDays } from 'date-fns';
+import { getPayments, getInvoices } from 'ln-service';
+import { compareDesc } from 'date-fns';
 import { sortBy } from 'underscore';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
@@ -15,12 +9,7 @@ import {
   GetPaymentsType,
   InvoiceType,
   PaymentType,
-  GetForwardsType,
-  GetWalletInfoType,
-  GetClosedChannelsType,
 } from 'server/types/ln-service.types';
-import { logger } from 'server/helpers/logger';
-import { getNodeFromChannel } from './helpers';
 
 type TransactionType = InvoiceType | PaymentType;
 type TransactionWithType = { isTypeOf: string } & TransactionType;
@@ -105,89 +94,10 @@ export const transactionResolvers = {
         resume,
       };
     },
-
-    getForwardsPastDays: async (
-      _: undefined,
-      { days }: { days: number },
-      context: ContextType
-    ) => {
-      await requestLimiter(context.ip, 'getForwardsPastDays');
-
-      const { lnd } = context;
-
-      const today = new Date();
-      const startDate = subDays(today, days);
-
-      const walletInfo = await to<GetWalletInfoType>(getWalletInfo({ lnd }));
-
-      const closedChannels = await to<GetClosedChannelsType>(
-        getClosedChannels({ lnd })
-      );
-
-      const forwardsList = await to<GetForwardsType>(
-        getLnForwards({
-          lnd,
-          after: startDate,
-          before: today,
-        })
-      );
-
-      let forwards = forwardsList.forwards;
-      let next = forwardsList.next;
-
-      let finishedFetching = false;
-
-      if (!next || !forwards || forwards.length <= 0) {
-        finishedFetching = true;
-      }
-
-      while (!finishedFetching) {
-        if (next) {
-          const moreForwards = await to<GetForwardsType>(
-            getLnForwards({ lnd, token: next })
-          );
-          forwards = [...forwards, ...moreForwards.forwards];
-          next = moreForwards.next;
-        } else {
-          finishedFetching = true;
-        }
-      }
-
-      const final = forwards.map(f => ({
-        ...f,
-        lnd,
-        public_key: walletInfo.public_key,
-        closed_channels: closedChannels.channels || [],
-      }));
-
-      logger.debug(
-        `Got a total of ${final.length} forwards for the past ${days} days`
-      );
-
-      return sortBy(final, 'created_at').reverse();
-    },
   },
   Transaction: {
     __resolveType(parent: TransactionWithType) {
       return parent.isTypeOf;
-    },
-  },
-  Forward: {
-    incoming_node(parent: any) {
-      return getNodeFromChannel(
-        parent.lnd,
-        parent.incoming_channel,
-        parent.public_key,
-        parent.closed_channels
-      );
-    },
-    outgoing_node(parent: any) {
-      return getNodeFromChannel(
-        parent.lnd,
-        parent.outgoing_channel,
-        parent.public_key,
-        parent.closed_channels
-      );
     },
   },
 };

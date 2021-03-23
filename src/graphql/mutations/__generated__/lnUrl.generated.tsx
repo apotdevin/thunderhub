@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type FetchLnUrlMutationVariables = Types.Exact<{
   url: Types.Scalars['String'];
 }>;
@@ -103,7 +104,8 @@ export type FetchLnUrlMutationFn = Apollo.MutationFunction<FetchLnUrlMutation, F
  * });
  */
 export function useFetchLnUrlMutation(baseOptions?: Apollo.MutationHookOptions<FetchLnUrlMutation, FetchLnUrlMutationVariables>) {
-        return Apollo.useMutation<FetchLnUrlMutation, FetchLnUrlMutationVariables>(FetchLnUrlDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<FetchLnUrlMutation, FetchLnUrlMutationVariables>(FetchLnUrlDocument, options);
       }
 export type FetchLnUrlMutationHookResult = ReturnType<typeof useFetchLnUrlMutation>;
 export type FetchLnUrlMutationResult = Apollo.MutationResult<FetchLnUrlMutation>;
@@ -136,7 +138,8 @@ export type AuthLnUrlMutationFn = Apollo.MutationFunction<AuthLnUrlMutation, Aut
  * });
  */
 export function useAuthLnUrlMutation(baseOptions?: Apollo.MutationHookOptions<AuthLnUrlMutation, AuthLnUrlMutationVariables>) {
-        return Apollo.useMutation<AuthLnUrlMutation, AuthLnUrlMutationVariables>(AuthLnUrlDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AuthLnUrlMutation, AuthLnUrlMutationVariables>(AuthLnUrlDocument, options);
       }
 export type AuthLnUrlMutationHookResult = ReturnType<typeof useAuthLnUrlMutation>;
 export type AuthLnUrlMutationResult = Apollo.MutationResult<AuthLnUrlMutation>;
@@ -175,7 +178,8 @@ export type PayLnUrlMutationFn = Apollo.MutationFunction<PayLnUrlMutation, PayLn
  * });
  */
 export function usePayLnUrlMutation(baseOptions?: Apollo.MutationHookOptions<PayLnUrlMutation, PayLnUrlMutationVariables>) {
-        return Apollo.useMutation<PayLnUrlMutation, PayLnUrlMutationVariables>(PayLnUrlDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PayLnUrlMutation, PayLnUrlMutationVariables>(PayLnUrlDocument, options);
       }
 export type PayLnUrlMutationHookResult = ReturnType<typeof usePayLnUrlMutation>;
 export type PayLnUrlMutationResult = Apollo.MutationResult<PayLnUrlMutation>;
@@ -213,7 +217,8 @@ export type WithdrawLnUrlMutationFn = Apollo.MutationFunction<WithdrawLnUrlMutat
  * });
  */
 export function useWithdrawLnUrlMutation(baseOptions?: Apollo.MutationHookOptions<WithdrawLnUrlMutation, WithdrawLnUrlMutationVariables>) {
-        return Apollo.useMutation<WithdrawLnUrlMutation, WithdrawLnUrlMutationVariables>(WithdrawLnUrlDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<WithdrawLnUrlMutation, WithdrawLnUrlMutationVariables>(WithdrawLnUrlDocument, options);
       }
 export type WithdrawLnUrlMutationHookResult = ReturnType<typeof useWithdrawLnUrlMutation>;
 export type WithdrawLnUrlMutationResult = Apollo.MutationResult<WithdrawLnUrlMutation>;

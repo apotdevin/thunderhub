@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetChainTransactionsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -46,10 +47,12 @@ export const GetChainTransactionsDocument = gql`
  * });
  */
 export function useGetChainTransactionsQuery(baseOptions?: Apollo.QueryHookOptions<GetChainTransactionsQuery, GetChainTransactionsQueryVariables>) {
-        return Apollo.useQuery<GetChainTransactionsQuery, GetChainTransactionsQueryVariables>(GetChainTransactionsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetChainTransactionsQuery, GetChainTransactionsQueryVariables>(GetChainTransactionsDocument, options);
       }
 export function useGetChainTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChainTransactionsQuery, GetChainTransactionsQueryVariables>) {
-          return Apollo.useLazyQuery<GetChainTransactionsQuery, GetChainTransactionsQueryVariables>(GetChainTransactionsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetChainTransactionsQuery, GetChainTransactionsQueryVariables>(GetChainTransactionsDocument, options);
         }
 export type GetChainTransactionsQueryHookResult = ReturnType<typeof useGetChainTransactionsQuery>;
 export type GetChainTransactionsLazyQueryHookResult = ReturnType<typeof useGetChainTransactionsLazyQuery>;

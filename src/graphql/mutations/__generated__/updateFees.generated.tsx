@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type UpdateFeesMutationVariables = Types.Exact<{
   transaction_id?: Types.Maybe<Types.Scalars['String']>;
   transaction_vout?: Types.Maybe<Types.Scalars['Int']>;
@@ -59,7 +60,8 @@ export type UpdateFeesMutationFn = Apollo.MutationFunction<UpdateFeesMutation, U
  * });
  */
 export function useUpdateFeesMutation(baseOptions?: Apollo.MutationHookOptions<UpdateFeesMutation, UpdateFeesMutationVariables>) {
-        return Apollo.useMutation<UpdateFeesMutation, UpdateFeesMutationVariables>(UpdateFeesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateFeesMutation, UpdateFeesMutationVariables>(UpdateFeesDocument, options);
       }
 export type UpdateFeesMutationHookResult = ReturnType<typeof useUpdateFeesMutation>;
 export type UpdateFeesMutationResult = Apollo.MutationResult<UpdateFeesMutation>;

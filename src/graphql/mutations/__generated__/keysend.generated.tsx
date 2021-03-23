@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type KeysendMutationVariables = Types.Exact<{
   destination: Types.Scalars['String'];
   tokens: Types.Scalars['Int'];
@@ -46,7 +47,8 @@ export type KeysendMutationFn = Apollo.MutationFunction<KeysendMutation, Keysend
  * });
  */
 export function useKeysendMutation(baseOptions?: Apollo.MutationHookOptions<KeysendMutation, KeysendMutationVariables>) {
-        return Apollo.useMutation<KeysendMutation, KeysendMutationVariables>(KeysendDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<KeysendMutation, KeysendMutationVariables>(KeysendDocument, options);
       }
 export type KeysendMutationHookResult = ReturnType<typeof useKeysendMutation>;
 export type KeysendMutationResult = Apollo.MutationResult<KeysendMutation>;

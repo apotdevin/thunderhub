@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetWalletInfoQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -47,10 +48,12 @@ export const GetWalletInfoDocument = gql`
  * });
  */
 export function useGetWalletInfoQuery(baseOptions?: Apollo.QueryHookOptions<GetWalletInfoQuery, GetWalletInfoQueryVariables>) {
-        return Apollo.useQuery<GetWalletInfoQuery, GetWalletInfoQueryVariables>(GetWalletInfoDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetWalletInfoQuery, GetWalletInfoQueryVariables>(GetWalletInfoDocument, options);
       }
 export function useGetWalletInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWalletInfoQuery, GetWalletInfoQueryVariables>) {
-          return Apollo.useLazyQuery<GetWalletInfoQuery, GetWalletInfoQueryVariables>(GetWalletInfoDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetWalletInfoQuery, GetWalletInfoQueryVariables>(GetWalletInfoDocument, options);
         }
 export type GetWalletInfoQueryHookResult = ReturnType<typeof useGetWalletInfoQuery>;
 export type GetWalletInfoLazyQueryHookResult = ReturnType<typeof useGetWalletInfoLazyQuery>;

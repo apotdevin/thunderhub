@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type BosRebalanceMutationVariables = Types.Exact<{
   avoid?: Types.Maybe<Array<Types.Maybe<Types.Scalars['String']>> | Types.Maybe<Types.Scalars['String']>>;
   in_through?: Types.Maybe<Types.Scalars['String']>;
@@ -100,7 +101,8 @@ export type BosRebalanceMutationFn = Apollo.MutationFunction<BosRebalanceMutatio
  * });
  */
 export function useBosRebalanceMutation(baseOptions?: Apollo.MutationHookOptions<BosRebalanceMutation, BosRebalanceMutationVariables>) {
-        return Apollo.useMutation<BosRebalanceMutation, BosRebalanceMutationVariables>(BosRebalanceDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BosRebalanceMutation, BosRebalanceMutationVariables>(BosRebalanceDocument, options);
       }
 export type BosRebalanceMutationHookResult = ReturnType<typeof useBosRebalanceMutation>;
 export type BosRebalanceMutationResult = Apollo.MutationResult<BosRebalanceMutation>;

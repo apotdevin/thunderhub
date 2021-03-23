@@ -9,7 +9,6 @@ import {
 } from 'victory';
 import { toast } from 'react-toastify';
 import { renderLine } from 'src/components/generic/helpers';
-import { useGetForwardsPastDaysQuery } from 'src/graphql/queries/__generated__/getForwardsPastDays.generated';
 import { Forward } from 'src/graphql/types';
 import {
   chartAxisColor,
@@ -23,6 +22,7 @@ import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
 import { orderAndReducedArray } from './helpers';
 import { CardContent } from '.';
+import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
 
 export type ReportDuration =
   | 'day'
@@ -44,7 +44,7 @@ export const ForwardReport = ({ days, order }: Props) => {
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
 
-  const { data, loading } = useGetForwardsPastDaysQuery({
+  const { data, loading } = useGetForwardsQuery({
     ssr: false,
     variables: { days },
     onError: error => toast.error(getErrorContent(error)),
@@ -78,17 +78,14 @@ export const ForwardReport = ({ days, order }: Props) => {
     return format({ amount: value });
   };
 
-  const reduced = orderAndReducedArray(
-    days,
-    data.getForwardsPastDays as Forward[]
-  );
+  const reduced = orderAndReducedArray(days, data.getForwards as Forward[]);
 
   const total = getLabelString(
     reduced.map(x => x[order]).reduce((a, c) => a + c, 0)
   );
 
   const renderContent = () => {
-    if (data.getForwardsPastDays.length <= 0) {
+    if (data.getForwards.length <= 0) {
       return (
         <p>{`Your node has not forwarded any payments in the past ${days} ${
           days > 1 ? 'days' : 'day'

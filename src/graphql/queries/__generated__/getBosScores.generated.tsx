@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetBosScoresQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -50,10 +51,12 @@ export const GetBosScoresDocument = gql`
  * });
  */
 export function useGetBosScoresQuery(baseOptions?: Apollo.QueryHookOptions<GetBosScoresQuery, GetBosScoresQueryVariables>) {
-        return Apollo.useQuery<GetBosScoresQuery, GetBosScoresQueryVariables>(GetBosScoresDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBosScoresQuery, GetBosScoresQueryVariables>(GetBosScoresDocument, options);
       }
 export function useGetBosScoresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBosScoresQuery, GetBosScoresQueryVariables>) {
-          return Apollo.useLazyQuery<GetBosScoresQuery, GetBosScoresQueryVariables>(GetBosScoresDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBosScoresQuery, GetBosScoresQueryVariables>(GetBosScoresDocument, options);
         }
 export type GetBosScoresQueryHookResult = ReturnType<typeof useGetBosScoresQuery>;
 export type GetBosScoresLazyQueryHookResult = ReturnType<typeof useGetBosScoresLazyQuery>;

@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type RemovePeerMutationVariables = Types.Exact<{
   publicKey: Types.Scalars['String'];
 }>;
@@ -39,7 +40,8 @@ export type RemovePeerMutationFn = Apollo.MutationFunction<RemovePeerMutation, R
  * });
  */
 export function useRemovePeerMutation(baseOptions?: Apollo.MutationHookOptions<RemovePeerMutation, RemovePeerMutationVariables>) {
-        return Apollo.useMutation<RemovePeerMutation, RemovePeerMutationVariables>(RemovePeerDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemovePeerMutation, RemovePeerMutationVariables>(RemovePeerDocument, options);
       }
 export type RemovePeerMutationHookResult = ReturnType<typeof useRemovePeerMutation>;
 export type RemovePeerMutationResult = Apollo.MutationResult<RemovePeerMutation>;

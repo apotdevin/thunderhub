@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetUtxosQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -45,10 +46,12 @@ export const GetUtxosDocument = gql`
  * });
  */
 export function useGetUtxosQuery(baseOptions?: Apollo.QueryHookOptions<GetUtxosQuery, GetUtxosQueryVariables>) {
-        return Apollo.useQuery<GetUtxosQuery, GetUtxosQueryVariables>(GetUtxosDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUtxosQuery, GetUtxosQueryVariables>(GetUtxosDocument, options);
       }
 export function useGetUtxosLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUtxosQuery, GetUtxosQueryVariables>) {
-          return Apollo.useLazyQuery<GetUtxosQuery, GetUtxosQueryVariables>(GetUtxosDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUtxosQuery, GetUtxosQueryVariables>(GetUtxosDocument, options);
         }
 export type GetUtxosQueryHookResult = ReturnType<typeof useGetUtxosQuery>;
 export type GetUtxosLazyQueryHookResult = ReturnType<typeof useGetUtxosLazyQuery>;

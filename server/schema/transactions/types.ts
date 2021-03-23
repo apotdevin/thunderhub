@@ -9,8 +9,6 @@ export const transactionTypes = gql`
     mtokens: String!
     outgoing_channel: String!
     tokens: Int!
-    incoming_node: ForwardNodeType
-    outgoing_node: ForwardNodeType
   }
 
   type ForwardNodeType {

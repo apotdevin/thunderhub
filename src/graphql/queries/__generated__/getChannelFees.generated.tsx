@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type ChannelFeesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -80,10 +81,12 @@ export const ChannelFeesDocument = gql`
  * });
  */
 export function useChannelFeesQuery(baseOptions?: Apollo.QueryHookOptions<ChannelFeesQuery, ChannelFeesQueryVariables>) {
-        return Apollo.useQuery<ChannelFeesQuery, ChannelFeesQueryVariables>(ChannelFeesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ChannelFeesQuery, ChannelFeesQueryVariables>(ChannelFeesDocument, options);
       }
 export function useChannelFeesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChannelFeesQuery, ChannelFeesQueryVariables>) {
-          return Apollo.useLazyQuery<ChannelFeesQuery, ChannelFeesQueryVariables>(ChannelFeesDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ChannelFeesQuery, ChannelFeesQueryVariables>(ChannelFeesDocument, options);
         }
 export type ChannelFeesQueryHookResult = ReturnType<typeof useChannelFeesQuery>;
 export type ChannelFeesLazyQueryHookResult = ReturnType<typeof useChannelFeesLazyQuery>;

@@ -14,6 +14,7 @@ export const RateConfig: RateConfigProps = {
   chainBalance: { max: 10, window: '5s' },
   pendingChainBalance: { max: 10, window: '5s' },
   channelBalance: { max: 10, window: '5s' },
+  getChannel: { max: 1000, window: '5s' },
 };
 
 const rateLimiter = getGraphQLRateLimiter({

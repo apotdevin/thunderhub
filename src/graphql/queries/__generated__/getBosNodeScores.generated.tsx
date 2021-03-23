@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetBosNodeScoresQueryVariables = Types.Exact<{
   publicKey: Types.Scalars['String'];
 }>;
@@ -46,10 +47,12 @@ export const GetBosNodeScoresDocument = gql`
  * });
  */
 export function useGetBosNodeScoresQuery(baseOptions: Apollo.QueryHookOptions<GetBosNodeScoresQuery, GetBosNodeScoresQueryVariables>) {
-        return Apollo.useQuery<GetBosNodeScoresQuery, GetBosNodeScoresQueryVariables>(GetBosNodeScoresDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBosNodeScoresQuery, GetBosNodeScoresQueryVariables>(GetBosNodeScoresDocument, options);
       }
 export function useGetBosNodeScoresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBosNodeScoresQuery, GetBosNodeScoresQueryVariables>) {
-          return Apollo.useLazyQuery<GetBosNodeScoresQuery, GetBosNodeScoresQueryVariables>(GetBosNodeScoresDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBosNodeScoresQuery, GetBosNodeScoresQueryVariables>(GetBosNodeScoresDocument, options);
         }
 export type GetBosNodeScoresQueryHookResult = ReturnType<typeof useGetBosNodeScoresQuery>;
 export type GetBosNodeScoresLazyQueryHookResult = ReturnType<typeof useGetBosNodeScoresLazyQuery>;

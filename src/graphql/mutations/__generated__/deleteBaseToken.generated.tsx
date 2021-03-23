@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type DeleteBaseTokenMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -36,7 +37,8 @@ export type DeleteBaseTokenMutationFn = Apollo.MutationFunction<DeleteBaseTokenM
  * });
  */
 export function useDeleteBaseTokenMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBaseTokenMutation, DeleteBaseTokenMutationVariables>) {
-        return Apollo.useMutation<DeleteBaseTokenMutation, DeleteBaseTokenMutationVariables>(DeleteBaseTokenDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBaseTokenMutation, DeleteBaseTokenMutationVariables>(DeleteBaseTokenDocument, options);
       }
 export type DeleteBaseTokenMutationHookResult = ReturnType<typeof useDeleteBaseTokenMutation>;
 export type DeleteBaseTokenMutationResult = Apollo.MutationResult<DeleteBaseTokenMutation>;

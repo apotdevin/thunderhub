@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type BosPayMutationVariables = Types.Exact<{
   max_fee: Types.Scalars['Int'];
   max_paths: Types.Scalars['Int'];
@@ -53,7 +54,8 @@ export type BosPayMutationFn = Apollo.MutationFunction<BosPayMutation, BosPayMut
  * });
  */
 export function useBosPayMutation(baseOptions?: Apollo.MutationHookOptions<BosPayMutation, BosPayMutationVariables>) {
-        return Apollo.useMutation<BosPayMutation, BosPayMutationVariables>(BosPayDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BosPayMutation, BosPayMutationVariables>(BosPayDocument, options);
       }
 export type BosPayMutationHookResult = ReturnType<typeof useBosPayMutation>;
 export type BosPayMutationResult = Apollo.MutationResult<BosPayMutation>;

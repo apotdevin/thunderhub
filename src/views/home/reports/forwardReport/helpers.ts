@@ -1,6 +1,7 @@
 import { differenceInCalendarDays, differenceInHours, subDays } from 'date-fns';
 import groupBy from 'lodash.groupby';
 import sortBy from 'lodash.sortby';
+import { GetClosedChannelsQuery } from 'src/graphql/queries/__generated__/getClosedChannels.generated';
 import { Forward } from 'src/graphql/types';
 
 type ListProps = {
@@ -77,8 +78,8 @@ const countRoutes = (list: Forward[]) => {
         .reduce((p: number, c: number) => p + c);
 
       channelInfo.push({
-        aliasIn: element[0].incoming_node?.alias || 'Unknown',
-        aliasOut: element[0].outgoing_node?.alias || 'Unknown',
+        incoming_channel: element[0].incoming_channel,
+        outgoing_channel: element[0].outgoing_channel,
         route: key,
         amount: element.length,
         fee,
@@ -107,12 +108,12 @@ const countArray = (list: Forward[], type: boolean) => {
         .map(forward => forward.tokens)
         .reduce((p: number, c: number) => p + c);
 
-      const alias = type
-        ? element[0].incoming_node?.alias || 'Unknown'
-        : element[0].outgoing_node?.alias || 'Unknown';
+      const channelId = type
+        ? element[0].incoming_channel
+        : element[0].outgoing_channel;
 
       channelInfo.push({
-        alias,
+        channelId,
         name: key,
         amount: element.length,
         fee,
@@ -149,4 +150,19 @@ export const orderForwardChannels = (
   const outgoingCount = countArray(forwardArray, false);
   const sortedOutCount = sortBy(outgoingCount, order).reverse().slice(0, 10);
   return sortedOutCount;
+};
+
+export const getAliasFromClosedChannels = (
+  channelId: string,
+  channels: GetClosedChannelsQuery['getClosedChannels']
+): { alias: string; closed: boolean } => {
+  if (!channels) return { alias: 'Unknown', closed: false };
+
+  const channel = channels.find(c => c?.id === channelId);
+
+  if (channel?.partner_node_info.node.alias) {
+    return { alias: channel.partner_node_info.node.alias, closed: true };
+  }
+
+  return { alias: 'Unknown', closed: false };
 };

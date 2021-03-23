@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetLiquidReportQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -46,10 +47,12 @@ export const GetLiquidReportDocument = gql`
  * });
  */
 export function useGetLiquidReportQuery(baseOptions?: Apollo.QueryHookOptions<GetLiquidReportQuery, GetLiquidReportQueryVariables>) {
-        return Apollo.useQuery<GetLiquidReportQuery, GetLiquidReportQueryVariables>(GetLiquidReportDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLiquidReportQuery, GetLiquidReportQueryVariables>(GetLiquidReportDocument, options);
       }
 export function useGetLiquidReportLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLiquidReportQuery, GetLiquidReportQueryVariables>) {
-          return Apollo.useLazyQuery<GetLiquidReportQuery, GetLiquidReportQueryVariables>(GetLiquidReportDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLiquidReportQuery, GetLiquidReportQueryVariables>(GetLiquidReportDocument, options);
         }
 export type GetLiquidReportQueryHookResult = ReturnType<typeof useGetLiquidReportQuery>;
 export type GetLiquidReportLazyQueryHookResult = ReturnType<typeof useGetLiquidReportLazyQuery>;
