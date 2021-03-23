@@ -35,11 +35,12 @@ export const bitcoinResolvers = {
         const json = await response.json();
 
         if (json) {
-          const { fastestFee, halfHourFee, hourFee } = json;
+          const { fastestFee, halfHourFee, hourFee, minimumFee } = json;
           return {
             fast: fastestFee,
             halfHour: halfHourFee,
             hour: hourFee,
+            minimum: minimumFee,
           };
         }
         throw new Error('Problem getting Bitcoin fees.');

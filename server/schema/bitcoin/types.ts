@@ -5,5 +5,6 @@ export const bitcoinTypes = gql`
     fast: Int
     halfHour: Int
     hour: Int
+    minimum: Int
   }
 `;

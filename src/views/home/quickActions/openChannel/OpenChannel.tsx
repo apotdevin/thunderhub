@@ -15,6 +15,7 @@ import {
   SingleButton,
   MultiButton,
 } from '../../../../components/buttons/multiButton/MultiButton';
+import { renderLine } from 'src/components/generic/helpers';
 
 interface OpenChannelProps {
   initialPublicKey?: string | undefined | null;
@@ -26,7 +27,7 @@ export const OpenChannelCard = ({
   initialPublicKey = '',
 }: OpenChannelProps) => {
   const { fetchFees } = useConfigState();
-  const { fast, halfHour, hour, dontShow } = useBitcoinFees();
+  const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
   const [size, setSize] = useState(0);
 
   const [pushType, setPushType] = useState('none');
@@ -202,6 +203,7 @@ export const OpenChannelCard = ({
           </MultiButton>
         )}
       </InputWithDeco>
+      {!dontShow && renderLine('Minimum', `${minimum} sat/vByte`)}
       <Separation />
       <ColorButton
         loading={loading}

@@ -90,6 +90,7 @@ type TableProps = {
   fontSize?: string;
   filterPlaceholder?: string;
   notSortable?: boolean;
+  alignCenter?: boolean;
 };
 
 export const Table: React.FC<TableProps> = ({
@@ -99,6 +100,7 @@ export const Table: React.FC<TableProps> = ({
   fontSize,
   filterPlaceholder,
   notSortable,
+  alignCenter,
 }) => {
   const data = useMemo(() => tableData, [tableData]);
   const columns = useMemo(() => tableColumns, [tableColumns]);
@@ -131,7 +133,11 @@ export const Table: React.FC<TableProps> = ({
           filterPlaceholder={filterPlaceholder}
         />
       )}
-      <Styles withBorder={withBorder} fontSize={fontSize}>
+      <Styles
+        withBorder={withBorder}
+        fontSize={fontSize}
+        alignCenter={alignCenter}
+      >
         <table {...getTableProps()} style={{ width: '100%' }}>
           <thead>
             {headerGroups.map((headerGroup, index) => (

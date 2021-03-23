@@ -34,7 +34,7 @@ const QRCodeReader = dynamic(() => import('src/components/qrReader'), {
 export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
   const [scannerOpen, setScannerOpen] = useState<boolean>(false);
 
-  const { fast, halfHour, hour, dontShow } = useBitcoinFees();
+  const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
   const { currency, displayValues, fetchFees } = useConfigState();
   const priceContext = usePriceState();
   const format = getPrice(currency, displayValues, priceContext);
@@ -198,6 +198,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
           </MultiButton>
         )}
       </InputWithDeco>
+      {!dontShow && renderLine('Minimum', `${minimum} sat/vByte`)}
       <Separation />
       <ColorButton
         disabled={!canSend}

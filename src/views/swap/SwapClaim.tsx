@@ -5,6 +5,7 @@ import {
   MultiButton,
   SingleButton,
 } from 'src/components/buttons/multiButton/MultiButton';
+import { renderLine } from 'src/components/generic/helpers';
 import {
   DarkSubTitle,
   Separation,
@@ -35,7 +36,7 @@ const S = {
 
 export const SwapClaim = () => {
   const { fetchFees } = useConfigState();
-  const { fast, halfHour, hour, dontShow } = useBitcoinFees();
+  const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
 
   const [fee, setFee] = useState<number>(0);
   const [type, setType] = useState('fee');
@@ -160,6 +161,7 @@ export const SwapClaim = () => {
           </MultiButton>
         )}
       </InputWithDeco>
+      {!dontShow && renderLine('Minimum', `${minimum} sat/vByte`)}
       <WarningText>
         {
           'If you set a low fee the swap will take more time if the mempool is congested.'

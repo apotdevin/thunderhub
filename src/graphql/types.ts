@@ -499,6 +499,7 @@ export type BitcoinFeeType = {
   fast?: Maybe<Scalars['Int']>;
   halfHour?: Maybe<Scalars['Int']>;
   hour?: Maybe<Scalars['Int']>;
+  minimum?: Maybe<Scalars['Int']>;
 };
 
 export type PeerType = {

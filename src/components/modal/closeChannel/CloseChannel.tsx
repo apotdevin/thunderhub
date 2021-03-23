@@ -20,12 +20,18 @@ import {
   MultiButton,
   SingleButton,
 } from '../../buttons/multiButton/MultiButton';
+import { chartColors } from 'src/styles/Themes';
 
 interface CloseChannelProps {
   callback: () => void;
   channelId: string;
   channelName: string;
 }
+
+const Warning = styled.div`
+  font-size: 14px;
+  color: ${chartColors.orange};
+`;
 
 const WarningCard = styled.div`
   display: flex;
@@ -44,7 +50,7 @@ export const CloseChannel = ({
   channelName,
 }: CloseChannelProps) => {
   const { fetchFees } = useConfigState();
-  const { fast, halfHour, hour, dontShow } = useBitcoinFees();
+  const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
 
   const [isForce, setIsForce] = useState<boolean>(false);
   const [isType, setIsType] = useState<string>('fee');
@@ -161,6 +167,7 @@ export const CloseChannel = ({
         <>
           <SingleLine>
             <Sub4Title>Fee:</Sub4Title>
+            {!dontShow && <Warning>{`Minimum: ${minimum} sats/vByte`}</Warning>}
           </SingleLine>
           <MultiButton>
             {fetchFees &&
