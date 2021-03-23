@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type AddPeerMutationVariables = Types.Exact<{
   url?: Types.Maybe<Types.Scalars['String']>;
   publicKey?: Types.Maybe<Types.Scalars['String']>;
@@ -50,7 +51,8 @@ export type AddPeerMutationFn = Apollo.MutationFunction<AddPeerMutation, AddPeer
  * });
  */
 export function useAddPeerMutation(baseOptions?: Apollo.MutationHookOptions<AddPeerMutation, AddPeerMutationVariables>) {
-        return Apollo.useMutation<AddPeerMutation, AddPeerMutationVariables>(AddPeerDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddPeerMutation, AddPeerMutationVariables>(AddPeerDocument, options);
       }
 export type AddPeerMutationHookResult = ReturnType<typeof useAddPeerMutation>;
 export type AddPeerMutationResult = Apollo.MutationResult<AddPeerMutation>;

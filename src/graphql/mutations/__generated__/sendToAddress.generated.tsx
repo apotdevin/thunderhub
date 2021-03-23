@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type PayAddressMutationVariables = Types.Exact<{
   address: Types.Scalars['String'];
   tokens?: Types.Maybe<Types.Scalars['Int']>;
@@ -62,7 +63,8 @@ export type PayAddressMutationFn = Apollo.MutationFunction<PayAddressMutation, P
  * });
  */
 export function usePayAddressMutation(baseOptions?: Apollo.MutationHookOptions<PayAddressMutation, PayAddressMutationVariables>) {
-        return Apollo.useMutation<PayAddressMutation, PayAddressMutationVariables>(PayAddressDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PayAddressMutation, PayAddressMutationVariables>(PayAddressDocument, options);
       }
 export type PayAddressMutationHookResult = ReturnType<typeof usePayAddressMutation>;
 export type PayAddressMutationResult = Apollo.MutationResult<PayAddressMutation>;

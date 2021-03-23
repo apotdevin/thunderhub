@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetBoltzInfoQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -41,10 +42,12 @@ export const GetBoltzInfoDocument = gql`
  * });
  */
 export function useGetBoltzInfoQuery(baseOptions?: Apollo.QueryHookOptions<GetBoltzInfoQuery, GetBoltzInfoQueryVariables>) {
-        return Apollo.useQuery<GetBoltzInfoQuery, GetBoltzInfoQueryVariables>(GetBoltzInfoDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBoltzInfoQuery, GetBoltzInfoQueryVariables>(GetBoltzInfoDocument, options);
       }
 export function useGetBoltzInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBoltzInfoQuery, GetBoltzInfoQueryVariables>) {
-          return Apollo.useLazyQuery<GetBoltzInfoQuery, GetBoltzInfoQueryVariables>(GetBoltzInfoDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBoltzInfoQuery, GetBoltzInfoQueryVariables>(GetBoltzInfoDocument, options);
         }
 export type GetBoltzInfoQueryHookResult = ReturnType<typeof useGetBoltzInfoQuery>;
 export type GetBoltzInfoLazyQueryHookResult = ReturnType<typeof useGetBoltzInfoLazyQuery>;

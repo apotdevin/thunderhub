@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetPeersQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -63,10 +64,12 @@ export const GetPeersDocument = gql`
  * });
  */
 export function useGetPeersQuery(baseOptions?: Apollo.QueryHookOptions<GetPeersQuery, GetPeersQueryVariables>) {
-        return Apollo.useQuery<GetPeersQuery, GetPeersQueryVariables>(GetPeersDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPeersQuery, GetPeersQueryVariables>(GetPeersDocument, options);
       }
 export function useGetPeersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPeersQuery, GetPeersQueryVariables>) {
-          return Apollo.useLazyQuery<GetPeersQuery, GetPeersQueryVariables>(GetPeersDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPeersQuery, GetPeersQueryVariables>(GetPeersDocument, options);
         }
 export type GetPeersQueryHookResult = ReturnType<typeof useGetPeersQuery>;
 export type GetPeersLazyQueryHookResult = ReturnType<typeof useGetPeersLazyQuery>;

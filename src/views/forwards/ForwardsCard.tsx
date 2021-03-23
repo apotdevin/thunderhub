@@ -14,6 +14,7 @@ import {
   renderLine,
 } from '../../components/generic/helpers';
 import { Price } from '../../components/price/Price';
+import { ChannelAlias } from '../home/reports/forwardReport/ChannelAlias';
 
 interface ForwardCardProps {
   forward: Forward;
@@ -35,15 +36,13 @@ export const ForwardCard = ({
     incoming_channel,
     outgoing_channel,
     tokens,
-    incoming_node,
-    outgoing_node,
   } = forward;
 
   const formatAmount = <Price amount={tokens} />;
   const formatFee = <Price amount={fee} />;
 
-  const incoming_name = incoming_node?.alias || incoming_channel;
-  const outgoing_name = outgoing_node?.alias || outgoing_channel;
+  const incoming_name = <ChannelAlias id={incoming_channel} />;
+  const outgoing_name = <ChannelAlias id={outgoing_channel} />;
 
   const handleClick = () => {
     if (indexOpen === index) {

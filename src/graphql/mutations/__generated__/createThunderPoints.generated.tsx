@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type CreateThunderPointsMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
   alias: Types.Scalars['String'];
@@ -50,7 +51,8 @@ export type CreateThunderPointsMutationFn = Apollo.MutationFunction<CreateThunde
  * });
  */
 export function useCreateThunderPointsMutation(baseOptions?: Apollo.MutationHookOptions<CreateThunderPointsMutation, CreateThunderPointsMutationVariables>) {
-        return Apollo.useMutation<CreateThunderPointsMutation, CreateThunderPointsMutationVariables>(CreateThunderPointsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateThunderPointsMutation, CreateThunderPointsMutationVariables>(CreateThunderPointsDocument, options);
       }
 export type CreateThunderPointsMutationHookResult = ReturnType<typeof useCreateThunderPointsMutation>;
 export type CreateThunderPointsMutationResult = Apollo.MutationResult<CreateThunderPointsMutation>;

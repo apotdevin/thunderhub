@@ -13,14 +13,14 @@ export const getChordMatrix = (order: ReportType, forwardArray: Forward[]) => {
     }
 
     return {
-      aliasIn: f.incoming_node?.alias || 'Unknown',
-      aliasOut: f.outgoing_node?.alias || 'Unknown',
+      incoming_channel: f.incoming_channel,
+      outgoing_channel: f.outgoing_channel,
       value,
     };
   });
 
-  const incomingNodes = cleaned.map(f => f.aliasIn);
-  const outgoingNodes = cleaned.map(f => f.aliasOut);
+  const incomingNodes = cleaned.map(f => f.incoming_channel);
+  const outgoingNodes = cleaned.map(f => f.outgoing_channel);
 
   const uniqueNodes = [...new Set(incomingNodes), ...new Set(outgoingNodes)];
   const nodeLength = uniqueNodes.length;
@@ -32,8 +32,8 @@ export const getChordMatrix = (order: ReportType, forwardArray: Forward[]) => {
   }
 
   cleaned.forEach(f => {
-    const inIndex = uniqueNodes.indexOf(f.aliasIn);
-    const outIndex = uniqueNodes.indexOf(f.aliasOut);
+    const inIndex = uniqueNodes.indexOf(f.incoming_channel);
+    const outIndex = uniqueNodes.indexOf(f.outgoing_channel);
 
     const previousValue = matrix[inIndex][outIndex];
     const previousOutValue = matrix[outIndex][inIndex];
@@ -56,14 +56,14 @@ export const sortByNode = (order: ReportType, forwardArray: Forward[]) => {
     }
 
     return {
-      aliasIn: f.incoming_node?.alias || 'Unknown',
-      aliasOut: f.outgoing_node?.alias || 'Unknown',
+      incoming_channel: f.incoming_channel,
+      outgoing_channel: f.outgoing_channel,
       value,
     };
   });
 
-  const incomingNodes = cleaned.map(f => f.aliasIn);
-  const outgoingNodes = cleaned.map(f => f.aliasOut);
+  const incomingNodes = cleaned.map(f => f.incoming_channel);
+  const outgoingNodes = cleaned.map(f => f.outgoing_channel);
 
   const uniqueNodes = [...new Set(incomingNodes), ...new Set(outgoingNodes)];
   const nodeLength = uniqueNodes.length;
@@ -72,8 +72,8 @@ export const sortByNode = (order: ReportType, forwardArray: Forward[]) => {
   const outgoing = new Array(nodeLength).fill(0);
 
   cleaned.forEach(f => {
-    const inIndex = uniqueNodes.indexOf(f.aliasIn);
-    const outIndex = uniqueNodes.indexOf(f.aliasOut);
+    const inIndex = uniqueNodes.indexOf(f.incoming_channel);
+    const outIndex = uniqueNodes.indexOf(f.outgoing_channel);
 
     const currentIncoming = incoming[inIndex];
     const currentOutgoing = outgoing[outIndex];
@@ -93,7 +93,7 @@ export const sortByNode = (order: ReportType, forwardArray: Forward[]) => {
     maxOut = Math.max(maxOut, outgoingValue);
 
     return {
-      alias: n,
+      channel: n,
       incoming: incomingValue,
       outgoing: outgoingValue,
     };

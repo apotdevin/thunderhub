@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetBaseNodesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -42,10 +43,12 @@ export const GetBaseNodesDocument = gql`
  * });
  */
 export function useGetBaseNodesQuery(baseOptions?: Apollo.QueryHookOptions<GetBaseNodesQuery, GetBaseNodesQueryVariables>) {
-        return Apollo.useQuery<GetBaseNodesQuery, GetBaseNodesQueryVariables>(GetBaseNodesDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBaseNodesQuery, GetBaseNodesQueryVariables>(GetBaseNodesDocument, options);
       }
 export function useGetBaseNodesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBaseNodesQuery, GetBaseNodesQueryVariables>) {
-          return Apollo.useLazyQuery<GetBaseNodesQuery, GetBaseNodesQueryVariables>(GetBaseNodesDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBaseNodesQuery, GetBaseNodesQueryVariables>(GetBaseNodesDocument, options);
         }
 export type GetBaseNodesQueryHookResult = ReturnType<typeof useGetBaseNodesQuery>;
 export type GetBaseNodesLazyQueryHookResult = ReturnType<typeof useGetBaseNodesLazyQuery>;

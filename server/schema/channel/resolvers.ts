@@ -1,6 +1,6 @@
 import { logger } from 'server/helpers/logger';
 import { toWithError } from 'server/helpers/async';
-import { getChannel } from 'ln-service';
+import { getChannel as getLnChannel } from 'ln-service';
 import { ChannelType, GetChannelType } from 'server/types/ln-service.types';
 import { openChannel } from './resolvers/mutation/openChannel';
 import { closeChannel } from './resolvers/mutation/closeChannel';
@@ -10,6 +10,7 @@ import { getChannelBalance } from './resolvers/query/getChannelBalance';
 import { getChannels } from './resolvers/query/getChannels';
 import { getClosedChannels } from './resolvers/query/getClosedChannels';
 import { getPendingChannels } from './resolvers/query/getPendingChannels';
+import { getChannel } from './resolvers/query/getChannel';
 
 type ParentType = {
   id: string;
@@ -21,6 +22,7 @@ type ParentType = {
 
 export const channelResolvers = {
   Query: {
+    getChannel,
     getChannelBalance,
     getChannels,
     getClosedChannels,
@@ -48,7 +50,7 @@ export const channelResolvers = {
       }
 
       const [channel, error] = await toWithError<GetChannelType>(
-        getChannel({ lnd, id })
+        getLnChannel({ lnd, id })
       );
 
       if (error) {

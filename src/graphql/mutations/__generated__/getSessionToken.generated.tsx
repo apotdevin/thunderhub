@@ -3,6 +3,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+const defaultOptions =  {}
 export type GetSessionTokenMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
   password: Types.Scalars['String'];
@@ -41,7 +42,8 @@ export type GetSessionTokenMutationFn = Apollo.MutationFunction<GetSessionTokenM
  * });
  */
 export function useGetSessionTokenMutation(baseOptions?: Apollo.MutationHookOptions<GetSessionTokenMutation, GetSessionTokenMutationVariables>) {
-        return Apollo.useMutation<GetSessionTokenMutation, GetSessionTokenMutationVariables>(GetSessionTokenDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GetSessionTokenMutation, GetSessionTokenMutationVariables>(GetSessionTokenDocument, options);
       }
 export type GetSessionTokenMutationHookResult = ReturnType<typeof useGetSessionTokenMutation>;
 export type GetSessionTokenMutationResult = Apollo.MutationResult<GetSessionTokenMutation>;
