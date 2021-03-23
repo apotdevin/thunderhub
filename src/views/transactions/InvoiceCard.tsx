@@ -19,6 +19,15 @@ import {
   renderLine,
 } from '../../components/generic/helpers';
 import { Price } from '../../components/price/Price';
+import { MessageCircle } from 'react-feather';
+import styled from 'styled-components';
+import { themeColors } from 'src/styles/Themes';
+
+const S = {
+  icon: styled.span`
+    margin-left: 4px;
+  `,
+};
 
 interface InvoiceCardProps {
   invoice: InvoiceType;
@@ -48,7 +57,11 @@ export const InvoiceCard = ({
     secret,
     tokens,
     date,
+    messages,
   } = invoice;
+
+  const texts = messages.map(m => m?.message).filter(Boolean);
+  const hasMessages = !!texts.length;
 
   const formatAmount = <Price amount={tokens} />;
 
@@ -60,10 +73,18 @@ export const InvoiceCard = ({
     }
   };
 
+  const renderMessages = () => (
+    <>
+      {texts.map(t => renderLine('Message', t))}
+      <Separation />
+    </>
+  );
+
   const renderDetails = () => {
     return (
       <>
         <Separation />
+        {hasMessages && renderMessages()}
         {is_confirmed &&
           renderLine(
             'Confirmed:',
@@ -94,7 +115,14 @@ export const InvoiceCard = ({
       <MainInfo onClick={() => handleClick()}>
         <StatusLine>{getStatusDot(is_confirmed, 'active')}</StatusLine>
         <ResponsiveLine>
-          <NodeTitle>{description ? description : 'Invoice'}</NodeTitle>
+          <NodeTitle>
+            {description ? description : 'Invoice'}
+            {hasMessages && (
+              <S.icon>
+                <MessageCircle size={16} stroke={themeColors.blue2} />
+              </S.icon>
+            )}
+          </NodeTitle>
           <DarkSubTitle>{`(${getDateDif(date)} ago)`}</DarkSubTitle>
           <SingleLine>{formatAmount}</SingleLine>
         </ResponsiveLine>

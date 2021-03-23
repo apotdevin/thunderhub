@@ -21,6 +21,10 @@ export const transactionTypes = gql`
     public_key: String
   }
 
+  type MessageType {
+    message: String
+  }
+
   type PaymentType {
     created_at: String!
     destination: String!
@@ -62,6 +66,7 @@ export const transactionTypes = gql`
     tokens: String!
     type: String!
     date: String!
+    messages: [MessageType]!
   }
 
   union Transaction = InvoiceType | PaymentType
