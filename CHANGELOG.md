@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.11](https://github.com/apotdevin/thunderhub/compare/v0.12.10...v0.12.11) (2021-03-23)
+
+
+### Bug Fixes
+
+* invoice status change ([cced708](https://github.com/apotdevin/thunderhub/commit/cced7085e3207f30d51df57d2cde8113ee190da1))
+
+
+### Improvements
+
+* show invoice messages ([cee5a4a](https://github.com/apotdevin/thunderhub/commit/cee5a4acbbf95bf718b33db70045dfcbd9f8ebe7))
+
 ### [0.12.10](https://github.com/apotdevin/thunderhub/compare/v0.12.9...v0.12.10) (2021-03-23)
 
 
