@@ -24,6 +24,7 @@ Object {
       "fast": 3,
       "halfHour": 2,
       "hour": 1,
+      "minimum": 5,
     },
   },
   "errors": undefined,

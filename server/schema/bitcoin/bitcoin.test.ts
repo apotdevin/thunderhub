@@ -46,6 +46,7 @@ describe('Bitcoin Resolvers', () => {
           fastestFee: 3,
           halfHourFee: 2,
           hourFee: 1,
+          minimumFee: 5,
         })
       );
       const { query } = testServer();
