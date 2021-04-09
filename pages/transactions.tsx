@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { InvoiceCard } from 'src/views/transactions/InvoiceCard';
-import {
-  useGetResumeQuery,
-  GetResumeQuery,
-} from 'src/graphql/queries/__generated__/getResume.generated';
+import { useGetResumeQuery } from 'src/graphql/queries/__generated__/getResume.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 
 import { NextPageContext } from 'next';
@@ -47,35 +44,45 @@ const Rotation = styled.div<RotationProps>`
 const TransactionsView = () => {
   const [isPolling, setIsPolling] = useState(false);
   const [indexOpen, setIndexOpen] = useState(0);
-  const [token, setToken] = useState('');
+
+  const [offset, setOffset] = useState(0);
 
   const {
-    loading,
     data,
     fetchMore,
     startPolling,
     stopPolling,
+    networkStatus,
   } = useGetResumeQuery({
     ssr: false,
-    variables: { token: '' },
+    variables: { offset: 0 },
+    notifyOnNetworkStatusChange: true,
     onError: error => toast.error(getErrorContent(error)),
   });
 
+  const isLoading = networkStatus === 1;
+  const isRefetching = networkStatus === 3;
+
+  const loadingOrRefetching = isLoading || isRefetching;
+
   useEffect(() => {
-    if (!loading && data && data.getResume && data.getResume.token) {
-      setToken(data.getResume.token);
+    if (!isLoading && data?.getResume?.offset) {
+      setOffset(data.getResume.offset);
     }
-  }, [data, loading]);
+  }, [data, isLoading]);
 
   useEffect(() => {
     return () => stopPolling();
   }, [stopPolling]);
 
-  if (loading || !data || !data.getResume) {
+  if (isLoading || !data || !data.getResume) {
     return <LoadingCard title={'Transactions'} />;
   }
 
   const resumeList = data.getResume.resume;
+
+  const handleClick = (limit: number) =>
+    fetchMore({ variables: { offset, limit } });
 
   return (
     <>
@@ -130,36 +137,31 @@ const TransactionsView = () => {
             return null;
           })}
           <ColorButton
+            loading={loadingOrRefetching}
+            disabled={loadingOrRefetching}
             fullWidth={true}
             withMargin={'16px 0 0'}
-            onClick={() => {
-              fetchMore({
-                variables: { token },
-                updateQuery: (
-                  prev,
-                  { fetchMoreResult }: { fetchMoreResult?: GetResumeQuery }
-                ): GetResumeQuery => {
-                  if (!fetchMoreResult?.getResume) return prev;
-                  const newToken = fetchMoreResult.getResume.token || '';
-                  const prevEntries = prev?.getResume?.resume || [];
-                  const newEntries = fetchMoreResult?.getResume?.resume || [];
-
-                  const allTransactions = newToken
-                    ? [...prevEntries, ...newEntries]
-                    : prevEntries;
-
-                  return {
-                    getResume: {
-                      token: newToken,
-                      resume: allTransactions,
-                      __typename: 'getResumeType',
-                    },
-                  };
-                },
-              });
-            }}
+            onClick={() => handleClick(1)}
           >
-            Show More
+            Get 1 More Day
+          </ColorButton>
+          <ColorButton
+            loading={loadingOrRefetching}
+            disabled={loadingOrRefetching}
+            fullWidth={true}
+            withMargin={'16px 0 0'}
+            onClick={() => handleClick(7)}
+          >
+            Get 1 More Week
+          </ColorButton>
+          <ColorButton
+            loading={loadingOrRefetching}
+            disabled={loadingOrRefetching}
+            fullWidth={true}
+            withMargin={'16px 0 0'}
+            onClick={() => handleClick(30)}
+          >
+            Get 1 More Month
           </ColorButton>
         </Card>
       </CardWithTitle>
