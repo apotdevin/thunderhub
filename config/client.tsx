@@ -42,7 +42,36 @@ function createApolloClient(context?: ResolverContext) {
     credentials: 'same-origin',
     ssrMode: typeof window === 'undefined',
     link: createIsomorphLink(context),
-    cache: new InMemoryCache(possibleTypes),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            getResume: {
+              keyArgs: [],
+              merge(existing, incoming, { args }) {
+                if (!existing) {
+                  return incoming;
+                }
+
+                const { offset } = args || {};
+
+                const merged = existing?.resume ? existing.resume.slice(0) : [];
+                for (let i = 0; i < incoming.resume.length; ++i) {
+                  merged[offset + i] = incoming.resume[i];
+                }
+
+                return {
+                  ...existing,
+                  offset: incoming.offset,
+                  resume: merged,
+                };
+              },
+            },
+          },
+        },
+      },
+      ...possibleTypes,
+    }),
     defaultOptions: {
       query: {
         fetchPolicy: 'cache-first',
