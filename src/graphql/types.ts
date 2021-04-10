@@ -879,6 +879,12 @@ export type PaymentType = {
   date: Scalars['String'];
 };
 
+export type InvoicePayment = {
+  __typename?: 'InvoicePayment';
+  in_channel: Scalars['String'];
+  messages?: Maybe<MessageType>;
+};
+
 export type InvoiceType = {
   __typename?: 'InvoiceType';
   chain_address?: Maybe<Scalars['String']>;
@@ -900,7 +906,7 @@ export type InvoiceType = {
   tokens: Scalars['String'];
   type: Scalars['String'];
   date: Scalars['String'];
-  messages: Array<Maybe<MessageType>>;
+  payments: Array<Maybe<InvoicePayment>>;
 };
 
 export type Transaction = InvoiceType | PaymentType;
