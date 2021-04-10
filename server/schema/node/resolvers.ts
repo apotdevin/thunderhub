@@ -1,4 +1,9 @@
-import { getNode, getWalletInfo, getClosedChannels } from 'ln-service';
+import {
+  getNode,
+  getWalletInfo,
+  getClosedChannels,
+  getPendingChannels,
+} from 'ln-service';
 import { to, toWithError } from 'server/helpers/async';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import {
@@ -6,6 +11,7 @@ import {
   LndObject,
   GetWalletInfoType,
   GetNodeType,
+  GetPendingChannelsType,
 } from 'server/types/ln-service.types';
 import { ContextType } from '../../types/apiTypes';
 import { logger } from '../../helpers/logger';
@@ -45,12 +51,20 @@ export const nodeResolvers = {
         })
       );
 
+      const { pending_channels } = await to<GetPendingChannelsType>(
+        getPendingChannels({ lnd })
+      );
+
+      const pending_channels_count = pending_channels.length;
+
       return {
         ...info,
+        pending_channels_count,
         closed_channels_count: closedChannels?.channels?.length || 0,
       };
     },
   },
+
   Node: {
     node: async (parent: NodeParent) => {
       const { lnd, withChannels, publicKey } = parent;
