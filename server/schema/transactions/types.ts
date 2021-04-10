@@ -46,6 +46,11 @@ export const transactionTypes = gql`
     date: String!
   }
 
+  type InvoicePayment {
+    in_channel: String!
+    messages: MessageType
+  }
+
   type InvoiceType {
     chain_address: String
     confirmed_at: String
@@ -66,7 +71,7 @@ export const transactionTypes = gql`
     tokens: String!
     type: String!
     date: String!
-    messages: [MessageType]!
+    payments: [InvoicePayment]!
   }
 
   union Transaction = InvoiceType | PaymentType

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { InvoiceType } from 'src/graphql/types';
 import {
   Separation,
@@ -22,6 +22,9 @@ import { Price } from '../../components/price/Price';
 import { MessageCircle } from 'react-feather';
 import styled from 'styled-components';
 import { themeColors } from 'src/styles/Themes';
+import { useGetChannelQuery } from 'src/graphql/queries/__generated__/getChannel.generated';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
+import { LoadingCard } from 'src/components/loading/LoadingCard';
 
 const S = {
   icon: styled.span`
@@ -35,6 +38,27 @@ interface InvoiceCardProps {
   setIndexOpen: (index: number) => void;
   indexOpen: number;
 }
+
+const ChannelAlias: FC<{ id: string }> = ({ id }) => {
+  const { publicKey } = useNodeInfo();
+
+  const { data, loading, error } = useGetChannelQuery({
+    variables: { id, pubkey: publicKey },
+  });
+
+  if (loading) {
+    return <>{renderLine('Peer', <LoadingCard noCard={true} />)}</>;
+  }
+
+  if (error) {
+    return <>{renderLine('Peer', 'Unknown')}</>;
+  }
+
+  const alias =
+    data?.getChannel.partner_node_policies?.node?.node.alias || 'Unknown';
+
+  return <>{renderLine('Peer', alias)}</>;
+};
 
 export const InvoiceCard = ({
   invoice,
@@ -57,10 +81,13 @@ export const InvoiceCard = ({
     secret,
     tokens,
     date,
-    messages,
+    payments,
   } = invoice;
 
-  const texts = messages.map(m => m?.message).filter(Boolean);
+  const inChannels = payments.map(p => p?.in_channel).filter(Boolean);
+  const hasChannels = !!inChannels.length;
+
+  const texts = payments.map(p => p?.messages?.message).filter(Boolean);
   const hasMessages = !!texts.length;
 
   const formatAmount = <Price amount={tokens} />;
@@ -80,11 +107,24 @@ export const InvoiceCard = ({
     </>
   );
 
+  const renderInChannels = () => (
+    <>
+      {inChannels.map(t => (
+        <>
+          {renderLine('In Through', t)}
+          {t && <ChannelAlias id={t} />}
+        </>
+      ))}
+      <Separation />
+    </>
+  );
+
   const renderDetails = () => {
     return (
       <>
         <Separation />
         {hasMessages && renderMessages()}
+        {hasChannels && renderInChannels()}
         {is_confirmed &&
           renderLine(
             'Confirmed:',
