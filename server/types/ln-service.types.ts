@@ -151,3 +151,22 @@ export type SendToChainAddressType = {
   is_outgoing: boolean;
   tokens: number | null;
 };
+
+export type PendingChannelType = {
+  close_transaction_id: string;
+  is_active: boolean;
+  is_closing: boolean;
+  is_opening: boolean;
+  local_balance: number;
+  local_reserve: number;
+  partner_public_key: string;
+  received: number;
+  remote_balance: number;
+  remote_reserve: number;
+  sent: number;
+  transaction_fee: number;
+  transaction_id: string;
+  transaction_vout: number;
+};
+
+export type GetPendingChannelsType = { pending_channels: PendingChannelType[] };

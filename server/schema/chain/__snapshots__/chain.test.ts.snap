@@ -18,7 +18,7 @@ Object {
 exports[`Chain Resolvers getPendingChainBalance 1`] = `
 Object {
   "data": Object {
-    "getPendingChainBalance": "1000000",
+    "getPendingChainBalance": "1003000",
   },
   "errors": undefined,
   "extensions": undefined,
