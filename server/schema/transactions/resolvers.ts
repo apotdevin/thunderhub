@@ -1,68 +1,40 @@
-import { getPayments, getInvoices } from 'ln-service';
-import { compareDesc } from 'date-fns';
+import { subDays } from 'date-fns';
 import { sortBy } from 'underscore';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { to } from 'server/helpers/async';
-import {
-  GetInvoicesType,
-  GetPaymentsType,
-  InvoiceType,
-  PaymentType,
-} from 'server/types/ln-service.types';
+import { InvoiceType, PaymentType } from 'server/types/ln-service.types';
 import { decodeMessages } from 'server/helpers/customRecords';
+import { getInvoicesBetweenDates, getPaymentsBetweenDates } from './helpers';
 
 type TransactionType = InvoiceType | PaymentType;
 type TransactionWithType = { isTypeOf: string } & TransactionType;
 
 export const transactionResolvers = {
   Query: {
-    getResume: async (_: undefined, params: any, context: ContextType) => {
+    getResume: async (
+      _: undefined,
+      { offset, limit }: { offset?: number; limit?: number },
+      context: ContextType
+    ) => {
       await requestLimiter(context.ip, 'payments');
 
       const { lnd } = context;
 
-      const invoiceProps = params.token
-        ? { token: params.token }
-        : { limit: 25 };
+      const start = offset || 0;
+      const end = (offset || 0) + (limit || 7);
 
-      let lastInvoiceDate = '';
-      let firstInvoiceDate = '';
-      let token = '';
-      let withInvoices = true;
+      const today = new Date();
+      const startDate = subDays(today, start).toISOString();
+      const endDate = subDays(today, end).toISOString();
 
-      const invoiceList = await to<GetInvoicesType>(
-        getInvoices({
-          lnd,
-          ...invoiceProps,
-        })
-      );
-
-      const invoices = invoiceList.invoices.map(invoice => {
-        return {
-          type: 'invoice',
-          date: invoice.confirmed_at || invoice.created_at,
-          ...invoice,
-          isTypeOf: 'InvoiceType',
-        };
+      const payments = await getPaymentsBetweenDates({
+        lnd,
+        from: startDate,
+        until: endDate,
+        batch: 25,
       });
 
-      if (invoices.length <= 0) {
-        withInvoices = false;
-      } else {
-        const { date } = invoices[invoices.length - 1];
-        firstInvoiceDate = invoices[0].date;
-        lastInvoiceDate = date;
-        token = invoiceList.next || '';
-      }
-
-      const paymentList = await to<GetPaymentsType>(
-        getPayments({
-          lnd,
-        })
-      );
-
-      const payments = paymentList.payments.map(payment => ({
+      const mappedPayments = payments.map(payment => ({
         ...payment,
         type: 'payment',
         date: payment.created_at,
@@ -71,34 +43,32 @@ export const transactionResolvers = {
         isTypeOf: 'PaymentType',
       }));
 
-      const filterArray = (payment: typeof payments[number]) => {
-        const last =
-          compareDesc(new Date(lastInvoiceDate), new Date(payment.date)) === 1;
-        const first = params.token
-          ? compareDesc(new Date(payment.date), new Date(firstInvoiceDate)) ===
-            1
-          : true;
-        return last && first;
-      };
+      const invoices = await getInvoicesBetweenDates({
+        lnd,
+        from: startDate,
+        until: endDate,
+        batch: 25,
+      });
 
-      const filteredPayments = withInvoices
-        ? payments.filter(filterArray)
-        : payments;
-
-      const invoicesWithMessages = invoices.map(i => ({
-        ...i,
-        messages: i.payments
-          .map(p => decodeMessages(p.messages))
-          .filter(Boolean),
-      }));
+      const mappedInvoices = invoices.map(invoice => {
+        return {
+          type: 'invoice',
+          date: invoice.confirmed_at || invoice.created_at,
+          ...invoice,
+          isTypeOf: 'InvoiceType',
+          messages: invoice.payments
+            .map(p => decodeMessages(p.messages))
+            .filter(Boolean),
+        };
+      });
 
       const resume = sortBy(
-        [...invoicesWithMessages, ...filteredPayments],
+        [...mappedInvoices, ...mappedPayments],
         'date'
       ).reverse();
 
       return {
-        token,
+        offset: end,
         resume,
       };
     },

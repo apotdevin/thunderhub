@@ -19,7 +19,7 @@ import {
 } from '../getNodeInfo';
 import { GET_PEERS } from '../getPeers';
 import { GET_PENDING_CHANNELS } from '../getPendingChannels';
-import { GET_RESUME } from '../getResume';
+// import { GET_RESUME } from '../getResume';
 import { GET_SERVER_ACCOUNTS } from '../getServerAccounts';
 import { GET_TIME_HEALTH } from '../getTimeHealth';
 import { GET_UTXOS } from '../getUtxos';
@@ -69,7 +69,7 @@ const cases: CaseType[] = [
   ['GET_CONNECT_INFO', { query: GET_CONNECT_INFO }],
   ['GET_PEERS', { query: GET_PEERS }],
   ['GET_PENDING_CHANNELS', { query: GET_PENDING_CHANNELS }],
-  ['GET_RESUME', { query: GET_RESUME }],
+  // ['GET_RESUME', { query: GET_RESUME }],
   ['GET_SERVER_ACCOUNTS', { query: GET_SERVER_ACCOUNTS }],
   ['GET_TIME_HEALTH', { query: GET_TIME_HEALTH }],
   ['GET_UTXOS', { query: GET_UTXOS }],

@@ -931,47 +931,6 @@ Object {
 }
 `;
 
-exports[`Query tests "GET_RESUME" matches snapshot 1`] = `
-Object {
-  "data": Object {
-    "getResume": Object {
-      "resume": Array [
-        Object {
-          "chain_address": "string",
-          "confirmed_at": "string",
-          "created_at": "string",
-          "date": "string",
-          "description": "string",
-          "description_hash": "string",
-          "expires_at": "string",
-          "id": "string",
-          "is_canceled": true,
-          "is_confirmed": true,
-          "is_held": true,
-          "is_private": true,
-          "is_push": true,
-          "messages": Array [],
-          "received": 1000,
-          "received_mtokens": "string",
-          "request": "string",
-          "secret": "string",
-          "tokens": "1000",
-          "type": "invoice",
-        },
-      ],
-      "token": "string",
-    },
-  },
-  "errors": undefined,
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
-    },
-  },
-}
-`;
-
 exports[`Query tests "GET_SERVER_ACCOUNTS" matches snapshot 1`] = `
 Object {
   "data": Object {

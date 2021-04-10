@@ -147,7 +147,8 @@ export type QueryDecodeRequestArgs = {
 
 
 export type QueryGetResumeArgs = {
-  token?: Maybe<Scalars['String']>;
+  offset?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
 };
 
 
@@ -906,7 +907,7 @@ export type Transaction = InvoiceType | PaymentType;
 
 export type GetResumeType = {
   __typename?: 'getResumeType';
-  token?: Maybe<Scalars['String']>;
+  offset?: Maybe<Scalars['Int']>;
   resume?: Maybe<Array<Maybe<Transaction>>>;
 };
 
