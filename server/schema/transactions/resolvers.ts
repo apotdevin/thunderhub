@@ -50,17 +50,16 @@ export const transactionResolvers = {
         batch: 25,
       });
 
-      const mappedInvoices = invoices.map(invoice => {
-        return {
-          type: 'invoice',
-          date: invoice.confirmed_at || invoice.created_at,
-          ...invoice,
-          isTypeOf: 'InvoiceType',
-          messages: invoice.payments
-            .map(p => decodeMessages(p.messages))
-            .filter(Boolean),
-        };
-      });
+      const mappedInvoices = invoices.map(invoice => ({
+        type: 'invoice',
+        date: invoice.confirmed_at || invoice.created_at,
+        ...invoice,
+        isTypeOf: 'InvoiceType',
+        payments: invoice.payments.map(p => ({
+          ...p,
+          messages: decodeMessages(p.messages),
+        })),
+      }));
 
       const resume = sortBy(
         [...mappedInvoices, ...mappedPayments],

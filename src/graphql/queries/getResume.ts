@@ -25,8 +25,11 @@ export const GET_RESUME = gql`
           tokens
           type
           date
-          messages {
-            message
+          payments {
+            in_channel
+            messages {
+              message
+            }
           }
         }
         ... on PaymentType {
