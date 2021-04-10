@@ -1,9 +1,9 @@
 import { gql } from '@apollo/client';
 
 export const GET_RESUME = gql`
-  query GetResume($token: String) {
-    getResume(token: $token) {
-      token
+  query GetResume($offset: Int, $limit: Int) {
+    getResume(offset: $offset, limit: $limit) {
+      offset
       resume {
         ... on InvoiceType {
           chain_address

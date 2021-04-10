@@ -5,7 +5,8 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions =  {}
 export type GetResumeQueryVariables = Types.Exact<{
-  token?: Types.Maybe<Types.Scalars['String']>;
+  offset?: Types.Maybe<Types.Scalars['Int']>;
+  limit?: Types.Maybe<Types.Scalars['Int']>;
 }>;
 
 
@@ -13,7 +14,7 @@ export type GetResumeQuery = (
   { __typename?: 'Query' }
   & { getResume?: Types.Maybe<(
     { __typename?: 'getResumeType' }
-    & Pick<Types.GetResumeType, 'token'>
+    & Pick<Types.GetResumeType, 'offset'>
     & { resume?: Types.Maybe<Array<Types.Maybe<(
       { __typename?: 'InvoiceType' }
       & Pick<Types.InvoiceType, 'chain_address' | 'confirmed_at' | 'created_at' | 'description' | 'description_hash' | 'expires_at' | 'id' | 'is_canceled' | 'is_confirmed' | 'is_held' | 'is_private' | 'is_push' | 'received' | 'received_mtokens' | 'request' | 'secret' | 'tokens' | 'type' | 'date'>
@@ -43,9 +44,9 @@ export type GetResumeQuery = (
 
 
 export const GetResumeDocument = gql`
-    query GetResume($token: String) {
-  getResume(token: $token) {
-    token
+    query GetResume($offset: Int, $limit: Int) {
+  getResume(offset: $offset, limit: $limit) {
+    offset
     resume {
       ... on InvoiceType {
         chain_address
@@ -117,7 +118,8 @@ export const GetResumeDocument = gql`
  * @example
  * const { data, loading, error } = useGetResumeQuery({
  *   variables: {
- *      token: // value for 'token'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
  *   },
  * });
  */

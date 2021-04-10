@@ -72,7 +72,7 @@ export const transactionTypes = gql`
   union Transaction = InvoiceType | PaymentType
 
   type getResumeType {
-    token: String
+    offset: Int
     resume: [Transaction]
   }
 `;
