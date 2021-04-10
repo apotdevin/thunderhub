@@ -5,6 +5,7 @@ import {
   getUtxos,
   sendToChainAddress,
   createChainAddress,
+  getPendingChannels,
 } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
@@ -18,6 +19,7 @@ import {
   GetChainTransactionsType,
   GetUtxosType,
   SendToChainAddressType,
+  GetPendingChannelsType,
 } from 'server/types/ln-service.types';
 
 interface ChainBalanceProps {
@@ -60,8 +62,19 @@ export const chainResolvers = {
           lnd,
         })
       );
-      return pendingValue.pending_chain_balance || 0;
+
+      const { pending_channels } = await to<GetPendingChannelsType>(
+        getPendingChannels({ lnd })
+      );
+
+      const closing =
+        pending_channels
+          .filter(p => p.is_closing)
+          .reduce((p, c) => p + c.local_balance, 0) || 0;
+
+      return pendingValue.pending_chain_balance + closing || 0;
     },
+
     getChainTransactions: async (
       _: undefined,
       __: undefined,
