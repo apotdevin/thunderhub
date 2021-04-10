@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.13](https://github.com/apotdevin/thunderhub/compare/v0.12.12...v0.12.13) (2021-04-10)
+
+
+### Bug Fixes
+
+* payment pagination ([53739fa](https://github.com/apotdevin/thunderhub/commit/53739fad5799b44fea2702e8ed710512764d61e6))
+* pending channels and balance ([f980e3c](https://github.com/apotdevin/thunderhub/commit/f980e3c25628a08f0eedae45c4ec9063e42ebd0f))
+
+
+### Improvements
+
+* show invoice channel ([33b7c18](https://github.com/apotdevin/thunderhub/commit/33b7c1887f5fa0e3fe7e7a164d1dc1d967f60e2f))
+
 ### [0.12.12](https://github.com/apotdevin/thunderhub/compare/v0.12.11...v0.12.12) (2021-03-23)
 
 
