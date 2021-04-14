@@ -20,6 +20,7 @@ import {
   unSelectedNavButton,
 } from '../../../styles/Themes';
 import { usePriceState } from '../../../context/PriceContext';
+import { SatoshiSymbol } from 'src/components/satoshi/Satoshi';
 
 const SelectedIcon = styled.div<{ selected: boolean }>`
   display: flex;
@@ -106,26 +107,39 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
     text: string,
     on = false,
     SideIcon?: Icon
-  ) => (
-    <SelectedIcon
-      selected={
-        (type === 'currency' ? currency === value : theme === value) || on
+  ) => {
+    const renderText = () => {
+      if (type === 'currency') {
+        if (text === 'S') {
+          return <SatoshiSymbol />;
+        }
+        return <Symbol>{text}</Symbol>;
       }
-      onClick={() => {
-        localStorage.setItem(type, value);
-        type === 'currency' &&
-          dispatch({
-            type: 'change',
-            currency:
-              sidebar || isBurger ? value : getNextValue(correctArray, value),
-          });
-        type === 'theme' && dispatch({ type: 'themeChange', theme: value });
-      }}
-    >
-      {type === 'currency' && <Symbol>{text}</Symbol>}
-      {type === 'theme' && SideIcon && <SideIcon size={18} />}
-    </SelectedIcon>
-  );
+      if (type === 'theme' && SideIcon) {
+        return <SideIcon size={18} />;
+      }
+      return '';
+    };
+    return (
+      <SelectedIcon
+        selected={
+          (type === 'currency' ? currency === value : theme === value) || on
+        }
+        onClick={() => {
+          localStorage.setItem(type, value);
+          type === 'currency' &&
+            dispatch({
+              type: 'change',
+              currency:
+                sidebar || isBurger ? value : getNextValue(correctArray, value),
+            });
+          type === 'theme' && dispatch({ type: 'themeChange', theme: value });
+        }}
+      >
+        {renderText()}
+      </SelectedIcon>
+    );
+  };
 
   const renderContent = () => {
     if (!sidebar) {

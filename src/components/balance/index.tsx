@@ -42,8 +42,8 @@ const RightValue = styled(ValueBox)`
 type BalanceProps = {
   local: number;
   remote: number;
-  formatLocal?: string;
-  formatRemote?: string;
+  formatLocal?: JSX.Element | string;
+  formatRemote?: JSX.Element | string;
   height?: number;
   withBorderColor?: boolean;
 };

@@ -79,7 +79,9 @@ export const LiquidReport = () => {
             containerComponent={
               <VictoryVoronoiContainer
                 voronoiDimension="x"
-                labels={({ datum }) => `${format({ amount: datum.y })}`}
+                labels={({ datum }) =>
+                  `${format({ amount: datum.y, noUnit: true })}`
+                }
                 labelComponent={<VictoryTooltip orientation={'left'} />}
               />
             }
@@ -103,7 +105,9 @@ export const LiquidReport = () => {
                 grid: { stroke: chartGridColor[theme] },
                 axis: { stroke: 'transparent' },
               }}
-              tickFormat={a => `${format({ amount: a, breakNumber: true })}`}
+              tickFormat={a =>
+                `${format({ amount: a, breakNumber: true, noUnit: true })}`
+              }
             />
             <VictoryBar
               horizontal

@@ -64,7 +64,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
     }
   }, [type, amount, fast]);
 
-  const feeFormat = (amount: number) => {
+  const feeFormat = (amount: number): JSX.Element | string => {
     if (type === 'fee' || type === 'none') {
       return format({ amount });
     }
@@ -164,9 +164,17 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
         title={'Fee Amount'}
         value={amount}
         noInput={true}
-        customAmount={`(~${
-          type === 'target' ? `${amount} blocks` : feeFormat(amount * 223)
-        })`}
+        customAmount={
+          type === 'target' ? (
+            `(~${amount} blocks)`
+          ) : (
+            <>
+              {'(~'}
+              {feeFormat(amount * 223)}
+              {')'}
+            </>
+          )
+        }
       >
         {type !== 'none' ? (
           <Input

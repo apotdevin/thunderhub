@@ -138,15 +138,25 @@ export const TokenCard: FC<TokenCardProps> = ({ paidCallback }) => {
             </S.Text>
             <S.PriceBox>
               {hasDiscount && (
-                <S.Strike>{`${formatOriginalPrice}/month`}</S.Strike>
+                <S.Strike>
+                  {formatOriginalPrice}
+                  {'/month'}
+                </S.Strike>
               )}
-              <S.Price>{`${formatPrice}/month`}</S.Price>
-              <DarkSubTitle>{`${formatDayPrice}/day`}</DarkSubTitle>
+              <S.Price>
+                {formatPrice}
+                {'/month'}
+              </S.Price>
+              <DarkSubTitle>
+                {formatDayPrice}
+                {'/day'}
+              </DarkSubTitle>
             </S.PriceBox>
           </S.Row>
-          <BuyButton
-            paidCallback={paidCallback}
-          >{`Buy a 1 month token for ${formatPrice}`}</BuyButton>
+          <BuyButton paidCallback={paidCallback}>
+            {'Buy a 1 month token for '}
+            {formatPrice}
+          </BuyButton>
         </Card>
       </CardWithTitle>
       <RecoverToken />
