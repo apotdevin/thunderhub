@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.14](https://github.com/apotdevin/thunderhub/compare/v0.12.13...v0.12.14) (2021-04-14)
+
+
+### Improvements
+
+* add sat symbol ([77c7462](https://github.com/apotdevin/thunderhub/commit/77c7462430cf24988329d64f85e6c3d6c6d75807))
+
 ### [0.12.13](https://github.com/apotdevin/thunderhub/compare/v0.12.12...v0.12.13) (2021-04-10)
 
 
