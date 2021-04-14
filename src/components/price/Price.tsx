@@ -44,7 +44,9 @@ export const Price = ({
     };
   }
 
-  return <>{getValue({ amount, ...priceProps, breakNumber, override })}</>;
+  return (
+    <span>{getValue({ amount, ...priceProps, breakNumber, override })}</span>
+  );
 };
 
 interface GetPriceProps {
@@ -54,7 +56,7 @@ interface GetPriceProps {
   noUnit?: boolean;
 }
 
-export type FormatFnType = (options: GetPriceProps) => string;
+export type FormatFnType = (options: GetPriceProps) => JSX.Element | string;
 
 export const getPrice = (
   currency: string,
@@ -69,7 +71,7 @@ export const getPrice = (
   breakNumber = false,
   override,
   noUnit,
-}: GetPriceProps): string => {
+}: GetPriceProps): JSX.Element | string => {
   if (!amount) return '-';
   const { prices, dontShow, fiat } = priceContext;
 

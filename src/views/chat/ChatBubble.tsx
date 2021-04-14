@@ -102,7 +102,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
   } = message;
 
   let color: ThemeSet | string = chatBubbleColor;
-  let textMessage = chatMessage || '';
+  let textMessage: JSX.Element | string = chatMessage || '';
   let dotColor = '';
   let showButton = false;
   let amount = 0;
@@ -112,24 +112,60 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
     if (contentType === 'payment') {
       dotColor = chartColors.red;
       if (chatMessage === 'payment') {
-        textMessage = `You sent ${format({ amount: tokens })}`;
+        textMessage = (
+          <>
+            {'You sent '}
+            {format({ amount: tokens })}
+          </>
+        );
       } else {
-        textMessage = `${chatMessage} (${format({ amount: tokens })})`;
+        textMessage = (
+          <>
+            {chatMessage}
+            {'('}
+            {format({ amount: tokens })}
+            {')'}
+          </>
+        );
       }
     } else if (contentType === 'paymentrequest') {
       if (chatMessage === 'paymentrequest') {
-        textMessage = `You requested ${format({ amount: tokens })}`;
+        textMessage = (
+          <>
+            {'You requested '}
+            {format({ amount: tokens })}
+          </>
+        );
       } else {
-        textMessage = `${chatMessage} (${format({ amount: tokens })})`;
+        textMessage = (
+          <>
+            {chatMessage}
+            {'('}
+            {format({ amount: tokens })}
+            {')'}
+          </>
+        );
       }
     }
   } else {
     if (contentType === 'payment') {
       dotColor = chartColors.green;
       if (chatMessage === 'payment' || !chatMessage) {
-        textMessage = `You received ${format({ amount: tokens })}`;
+        textMessage = (
+          <>
+            {'You received '}
+            {format({ amount: tokens })}
+          </>
+        );
       } else {
-        textMessage = `${chatMessage} (${format({ amount: tokens })})`;
+        textMessage = (
+          <>
+            {chatMessage}
+            {'('}
+            {format({ amount: tokens })}
+            {')'}
+          </>
+        );
       }
     } else if (contentType === 'paymentrequest') {
       showButton = true;
@@ -140,9 +176,21 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
       const finalMessage = [...messageSplit];
       finalMessage.shift();
       if (messageSplit[1] === 'paymentrequest' || !messageSplit[1]) {
-        textMessage = `${format({ amount })} requested from you`;
+        textMessage = (
+          <>
+            {format({ amount: tokens })}
+            {' requested from you'}
+          </>
+        );
       } else {
-        textMessage = `${finalMessage.join(' ')} (${format({ amount })})`;
+        textMessage = (
+          <>
+            {finalMessage.join(' ')}
+            {'('}
+            {format({ amount: tokens })}
+            {')'}
+          </>
+        );
       }
     }
   }

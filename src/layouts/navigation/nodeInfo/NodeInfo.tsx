@@ -113,7 +113,11 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
             fill={channelPending === 0 ? '#FFD300' : '#652EC7'}
           />
           {channelPending > 0 ? (
-            `${formatCCB} / ${formatPCB}`
+            <>
+              {formatCCB}
+              {' / '}
+              {formatPCB}
+            </>
           ) : (
             <AnimatedNumber amount={channelBalance} />
           )}
@@ -124,7 +128,11 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
             color={chainPending === 0 ? '#FFD300' : '#652EC7'}
           />
           {chainPending > 0 ? (
-            `${formatCB} / ${formatPB}`
+            <>
+              {formatCB}
+              {' / '}
+              {formatPB}
+            </>
           ) : (
             <AnimatedNumber amount={chainBalance} />
           )}
@@ -214,12 +222,24 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
       <Separation lineColor={unSelectedNavButton} />
       <ReactTooltip effect={'solid'} place={'right'} />
       <ReactTooltip id={'balance_tip'} effect={'solid'} place={'right'}>
-        <div>{`Channel Balance: ${formatCCB}`}</div>
-        <div>{`Pending Channel Balance: ${formatPCB}`}</div>
+        <div>
+          {'Channel Balance: '}
+          {formatCCB}
+        </div>
+        <div>
+          {'Pending Channel Balance: '}
+          {formatPCB}
+        </div>
       </ReactTooltip>
       <ReactTooltip id={'chain_balance_tip'} effect={'solid'} place={'right'}>
-        <div>{`Chain Balance: ${formatCB}`}</div>
-        <div>{`Pending Chain Balance: ${formatPB}`}</div>
+        <div>
+          {'Chain Balance: '}
+          {formatCB}
+        </div>
+        <div>
+          {'Pending Chain Balance: '}
+          {formatPB}
+        </div>
       </ReactTooltip>
       <ReactTooltip id={'node_tip'} effect={'solid'} place={'right'}>
         <div>{`Active Channels: ${activeChannelCount}`}</div>

@@ -75,7 +75,7 @@ export const ForwardReport = ({ days, order }: Props) => {
     if (order === 'amount') {
       return numeral(value).format('0,0');
     }
-    return format({ amount: value });
+    return format({ amount: value, noUnit: true });
   };
 
   const reduced = orderAndReducedArray(days, data.getForwards as Forward[]);
@@ -128,7 +128,9 @@ export const ForwardReport = ({ days, order }: Props) => {
               axis: { stroke: 'transparent' },
             }}
             tickFormat={a =>
-              order === 'tokens' ? format({ amount: a, breakNumber: true }) : a
+              order === 'tokens'
+                ? format({ amount: a, breakNumber: true, noUnit: true })
+                : a
             }
           />
           <VictoryBar

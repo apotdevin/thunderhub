@@ -70,7 +70,9 @@ export const FlowReport = ({
           axis: { stroke: 'transparent' },
         }}
         tickFormat={a =>
-          isType === 'tokens' ? format({ amount: a, breakNumber: true }) : a
+          isType === 'tokens'
+            ? format({ amount: a, breakNumber: true, noUnit: true })
+            : a
         }
       />
       <VictoryGroup offset={barWidth}>

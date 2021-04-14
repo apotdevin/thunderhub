@@ -1,4 +1,5 @@
 import numeral from 'numeral';
+import { SatoshiSymbol } from 'src/components/satoshi/Satoshi';
 
 const getValueString = (amount: number): string => {
   if (amount >= 100000) {
@@ -28,7 +29,7 @@ export const getValue = ({
   breakNumber,
   override,
   noUnit,
-}: GetNumberProps): string => {
+}: GetNumberProps): JSX.Element | string => {
   if (!amount) return '';
   const correctCurrency = override || currency;
   let value = 0;
@@ -54,7 +55,14 @@ export const getValue = ({
     const breakAmount = breakNumber
       ? getValueString(value)
       : numeral(value).format('0,0.[000]');
-    return noUnit ? `${breakAmount}` : `${breakAmount} sats`;
+    return noUnit ? (
+      `${breakAmount}`
+    ) : (
+      <>
+        {breakAmount}
+        <SatoshiSymbol />
+      </>
+    );
   }
 
   const amountInFiat = (value / 100000000) * price;

@@ -82,9 +82,10 @@ export const TransactionsCard = ({
     <SubCard key={index}>
       <MainInfo onClick={() => handleClick()}>
         <ResponsiveLine withWrap={true}>
-          <SingleLine>{`${
-            fee !== null ? 'Sent' : 'Received'
-          }:  ${formatAmount}`}</SingleLine>
+          <SingleLine>
+            {`${fee !== null ? 'Sent' : 'Received'}:  `}
+            {formatAmount}
+          </SingleLine>
           <ResponsiveLine>
             <AddMargin>
               <DarkSubTitle>{`(${getDateDif(created_at)} ago)`}</DarkSubTitle>
