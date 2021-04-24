@@ -62,7 +62,7 @@ export const queryTypes = gql`
     getNode(publicKey: String!, withoutChannels: Boolean): Node!
     decodeRequest(request: String!): decodeType
     getWalletInfo: walletInfoType
-    getResume(offset: Int, limit: Int): getResumeType
+    getResume(offset: Int, limit: Int): getResumeType!
     getForwards(days: Int!): [Forward]!
     getBitcoinPrice(logger: Boolean, currency: String): String
     getBitcoinFees(logger: Boolean): bitcoinFeeType

@@ -78,6 +78,6 @@ export const transactionTypes = gql`
 
   type getResumeType {
     offset: Int
-    resume: [Transaction]
+    resume: [Transaction]!
   }
 `;
