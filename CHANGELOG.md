@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.15](https://github.com/apotdevin/thunderhub/compare/v0.12.14...v0.12.15) (2021-04-24)
+
+
+### Bug Fixes
+
+* map keys ([9425ca4](https://github.com/apotdevin/thunderhub/commit/9425ca406bde4b5a1b05ff4210652a215add2385))
+
+
+### Styling
+
+* sat symbol move ([4bdc469](https://github.com/apotdevin/thunderhub/commit/4bdc46945100de922ec268b15fabef4e5822e9cd))
+
+
+### Improvements
+
+* bump dependencies ([83f9a7f](https://github.com/apotdevin/thunderhub/commit/83f9a7f24ba54a9e1bbfc3fe809ffdda4dfa1e84))
+* half life notice ([90d810b](https://github.com/apotdevin/thunderhub/commit/90d810b6e6bfb7c22f0fa02d17bb73da4c8da3b6))
+* transaction filters ([7e721e8](https://github.com/apotdevin/thunderhub/commit/7e721e8439a5dcaf8f8053d91494e5fa295f8cf6))
+
 ### [0.12.14](https://github.com/apotdevin/thunderhub/compare/v0.12.13...v0.12.14) (2021-04-14)
 
 
