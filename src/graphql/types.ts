@@ -71,7 +71,7 @@ export type Query = {
   getNode: Node;
   decodeRequest?: Maybe<DecodeType>;
   getWalletInfo?: Maybe<WalletInfoType>;
-  getResume?: Maybe<GetResumeType>;
+  getResume: GetResumeType;
   getForwards: Array<Maybe<Forward>>;
   getBitcoinPrice?: Maybe<Scalars['String']>;
   getBitcoinFees?: Maybe<BitcoinFeeType>;
@@ -914,7 +914,7 @@ export type Transaction = InvoiceType | PaymentType;
 export type GetResumeType = {
   __typename?: 'getResumeType';
   offset?: Maybe<Scalars['Int']>;
-  resume?: Maybe<Array<Maybe<Transaction>>>;
+  resume: Array<Maybe<Transaction>>;
 };
 
 export type ChannelHealth = {
