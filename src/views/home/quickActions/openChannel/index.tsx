@@ -91,9 +91,7 @@ export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
 
   const transitions = useTransition(
     open && data?.getBaseNodes ? data.getBaseNodes : [],
-    item => item?._id || '1',
     {
-      unique: true,
       trail: 400 / (data?.getBaseNodes?.length || 1),
       from: { opacity: 0, transform: 'scale(0)' },
       enter: { opacity: 1, transform: 'scale(1)' },
@@ -144,14 +142,10 @@ export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
       return (
         <>
           <Container>
-            {transitions.map(
-              ({ item, key, props }) =>
+            {transitions(
+              (style, item) =>
                 item && (
-                  <Item
-                    key={key}
-                    style={props}
-                    onClick={() => setPartner(item)}
-                  >
+                  <Item style={style} onClick={() => setPartner(item)}>
                     <IconStyle>{getIcon(item?.name || '')}</IconStyle>
                     {item.name}
                   </Item>
