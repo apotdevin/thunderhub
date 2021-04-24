@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { PaymentType } from 'src/graphql/types';
 import {
@@ -79,12 +79,14 @@ export const PaymentsCard = ({
         {renderLine('Fee:', formatFee)}
         {renderLine('Fee msats:', `${fee_mtokens} millisats`)}
         {renderLine('Hops:', hops.length)}
-        {hops.map((hop, index: number) =>
-          renderLine(
-            `Hop ${index + 1}:`,
-            getNodeLink(hop.node.public_key, hop.node.alias)
-          )
-        )}
+        {hops.map((hop, index: number) => (
+          <Fragment key={`${index}-${hop.node.alias}}`}>
+            {renderLine(
+              `Hop ${index + 1}:`,
+              getNodeLink(hop.node.public_key, hop.node.alias)
+            )}
+          </Fragment>
+        ))}
         {renderLine('Id:', id)}
         {renderLine('Is Outgoing:', is_outgoing ? 'true' : 'false')}
         {renderLine('Secret:', secret)}

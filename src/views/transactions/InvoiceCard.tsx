@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import { InvoiceType } from 'src/graphql/types';
 import {
   Separation,
@@ -102,18 +102,20 @@ export const InvoiceCard = ({
 
   const renderMessages = () => (
     <>
-      {texts.map(t => renderLine('Message', t))}
+      {texts.map((t, index) => (
+        <Fragment key={`${index}-${t}`}>{renderLine('Message', t)}</Fragment>
+      ))}
       <Separation />
     </>
   );
 
   const renderInChannels = () => (
     <>
-      {inChannels.map(t => (
-        <>
+      {inChannels.map((t, index) => (
+        <Fragment key={`${index}-${t}`}>
           {renderLine('In Through', t)}
           {t && <ChannelAlias id={t} />}
-        </>
+        </Fragment>
       ))}
       <Separation />
     </>
