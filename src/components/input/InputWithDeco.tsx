@@ -47,6 +47,7 @@ type InputWithDecoProps = {
   placeholder?: string;
   inputType?: string;
   inputCallback?: (value: string) => void;
+  blurCallback?: (value: string) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onEnter?: () => void;
 };
@@ -64,6 +65,7 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
   inputMaxWidth,
   inputType = 'text',
   inputCallback,
+  blurCallback,
   onKeyDown,
   onEnter,
 }) => {
@@ -100,6 +102,7 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
           mobileMargin={'0'}
           type={inputType}
           onChange={e => inputCallback && inputCallback(e.target.value)}
+          onBlur={e => blurCallback && blurCallback(e.target.value)}
           {...onKeyDownProp}
           {...props}
         />

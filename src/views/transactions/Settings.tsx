@@ -1,0 +1,67 @@
+import {
+  MultiButton,
+  SingleButton,
+} from 'src/components/buttons/multiButton/MultiButton';
+import { SingleLine } from 'src/components/generic/Styled';
+import { useLocalStorage } from 'src/hooks/UseLocalStorage';
+import styled from 'styled-components';
+
+const NoWrapText = styled.div`
+  white-space: nowrap;
+  font-size: 14px;
+`;
+
+const InputTitle = styled(NoWrapText)``;
+
+export const defaultSettings = {
+  rebalance: false,
+  confirmed: true,
+};
+
+export const TransactionSettings = () => {
+  const [settings, setSettings] = useLocalStorage(
+    'transactionSettings',
+    defaultSettings
+  );
+
+  const { rebalance, confirmed } = settings;
+
+  return (
+    <>
+      <SingleLine>
+        <InputTitle>Confirmed</InputTitle>
+        <MultiButton>
+          <SingleButton
+            selected={confirmed}
+            onClick={() => setSettings({ ...settings, confirmed: true })}
+          >
+            Yes
+          </SingleButton>
+          <SingleButton
+            selected={!confirmed}
+            onClick={() => setSettings({ ...settings, confirmed: false })}
+          >
+            No
+          </SingleButton>
+        </MultiButton>
+      </SingleLine>
+      <SingleLine>
+        <InputTitle>Circular Payment</InputTitle>
+        <MultiButton margin={'8px 0'}>
+          <SingleButton
+            selected={rebalance}
+            onClick={() => setSettings({ ...settings, rebalance: true })}
+          >
+            Yes
+          </SingleButton>
+          <SingleButton
+            selected={!rebalance}
+            onClick={() => setSettings({ ...settings, rebalance: false })}
+          >
+            No
+          </SingleButton>
+        </MultiButton>
+      </SingleLine>
+    </>
+  );
+};

@@ -12,10 +12,10 @@ export type GetResumeQueryVariables = Types.Exact<{
 
 export type GetResumeQuery = (
   { __typename?: 'Query' }
-  & { getResume?: Types.Maybe<(
+  & { getResume: (
     { __typename?: 'getResumeType' }
     & Pick<Types.GetResumeType, 'offset'>
-    & { resume?: Types.Maybe<Array<Types.Maybe<(
+    & { resume: Array<Types.Maybe<(
       { __typename?: 'InvoiceType' }
       & Pick<Types.InvoiceType, 'chain_address' | 'confirmed_at' | 'created_at' | 'description' | 'description_hash' | 'expires_at' | 'id' | 'is_canceled' | 'is_confirmed' | 'is_held' | 'is_private' | 'is_push' | 'received' | 'received_mtokens' | 'request' | 'secret' | 'tokens' | 'type' | 'date'>
       & { payments: Array<Types.Maybe<(
@@ -42,8 +42,8 @@ export type GetResumeQuery = (
           & Pick<Types.NodeType, 'alias' | 'public_key'>
         ) }
       )> }
-    )>>> }
-  )> }
+    )>> }
+  ) }
 );
 
 
