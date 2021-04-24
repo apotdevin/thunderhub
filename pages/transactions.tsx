@@ -1,28 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { InvoiceCard } from 'src/views/transactions/InvoiceCard';
-import { useGetResumeQuery } from 'src/graphql/queries/__generated__/getResume.generated';
+import {
+  GetResumeQuery,
+  useGetResumeQuery,
+} from 'src/graphql/queries/__generated__/getResume.generated';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
-import { RefreshCw } from 'react-feather';
+import { RefreshCw, Settings } from 'react-feather';
 import styled, { css } from 'styled-components';
 import {
   Card,
   CardWithTitle,
   SubTitle,
   SingleLine,
+  DarkSubTitle,
 } from '../src/components/generic/Styled';
 import { getErrorContent } from '../src/utils/error';
 import { PaymentsCard } from '../src/views/transactions/PaymentsCards';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { FlowBox } from '../src/views/home/reports/flow';
+import { useLocalStorage } from 'src/hooks/UseLocalStorage';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
+import {
+  defaultSettings,
+  TransactionSettings,
+} from 'src/views/transactions/Settings';
+import { subDays, format } from 'date-fns';
 
 type RotationProps = {
   withRotation: boolean;
 };
+
+type ResumeTransactions = GetResumeQuery['getResume']['resume'];
 
 const Rotation = styled.div<RotationProps>`
   ${({ withRotation }) =>
@@ -45,7 +58,13 @@ const TransactionsView = () => {
   const [isPolling, setIsPolling] = useState(false);
   const [indexOpen, setIndexOpen] = useState(0);
 
+  const [open, setOpen] = useState<boolean>(false);
+
   const [offset, setOffset] = useState(0);
+
+  const { publicKey } = useNodeInfo();
+
+  const [settings] = useLocalStorage('transactionSettings', defaultSettings);
 
   const {
     data,
@@ -79,7 +98,42 @@ const TransactionsView = () => {
     return <LoadingCard title={'Transactions'} />;
   }
 
-  const resumeList = data.getResume.resume;
+  const beforeDate = subDays(new Date(), offset);
+
+  const selfInvoices: string[] = data.getResume.resume.reduce((p, c) => {
+    if (!c) return p;
+    if (c.__typename === 'PaymentType') {
+      if (c.destination === publicKey) {
+        return [...p, c.id];
+      }
+    }
+    return p;
+  }, [] as string[]);
+
+  const resumeList = data.getResume.resume?.reduce((p, c) => {
+    const { rebalance, confirmed } = settings;
+
+    if (!c) return p;
+
+    if (rebalance) {
+      if (c.__typename === 'PaymentType') {
+        if (c.destination === publicKey) {
+          return p;
+        }
+      }
+      if (selfInvoices.includes(c.id)) {
+        return p;
+      }
+    }
+
+    if (confirmed) {
+      if (!c.is_confirmed) {
+        return p;
+      }
+    }
+
+    return [...p, c];
+  }, [] as ResumeTransactions);
 
   const handleClick = (limit: number) =>
     fetchMore({ variables: { offset, limit } });
@@ -89,24 +143,44 @@ const TransactionsView = () => {
       <FlowBox />
       <CardWithTitle>
         <SingleLine>
-          <SubTitle>Transactions</SubTitle>
-          <ColorButton
-            withMargin={'0 0 8px'}
-            onClick={() => {
-              if (isPolling) {
-                setIsPolling(false);
-                stopPolling();
-              } else {
-                setIsPolling(true);
-                startPolling(1000);
-              }
-            }}
-          >
-            <Rotation withRotation={isPolling}>
-              <RefreshCw size={18} />
-            </Rotation>
-          </ColorButton>
+          <SubTitle>
+            Transactions
+            <DarkSubTitle fontSize={'12px'}>
+              {`${format(beforeDate, 'dd/MM/yy')} - Today`}
+            </DarkSubTitle>
+          </SubTitle>
+          <SingleLine>
+            <ColorButton
+              withMargin={'0 0 8px 8px'}
+              onClick={() => {
+                setOpen(p => !p);
+              }}
+            >
+              <Settings size={18} />
+            </ColorButton>
+            <ColorButton
+              withMargin={'0 0 8px'}
+              onClick={() => {
+                if (isPolling) {
+                  setIsPolling(false);
+                  stopPolling();
+                } else {
+                  setIsPolling(true);
+                  startPolling(1000);
+                }
+              }}
+            >
+              <Rotation withRotation={isPolling}>
+                <RefreshCw size={18} />
+              </Rotation>
+            </ColorButton>
+          </SingleLine>
         </SingleLine>
+        {open && (
+          <Card>
+            <TransactionSettings />
+          </Card>
+        )}
         <Card bottom={'8px'} mobileCardPadding={'0'} mobileNoBackground={true}>
           {resumeList?.map((entry, index: number) => {
             if (!entry) {

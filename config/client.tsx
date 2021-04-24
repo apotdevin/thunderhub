@@ -48,22 +48,18 @@ function createApolloClient(context?: ResolverContext) {
           fields: {
             getResume: {
               keyArgs: [],
-              merge(existing, incoming, { args }) {
-                if (!existing) {
-                  return incoming;
-                }
+              merge(existing, incoming) {
+                if (!existing) return incoming;
 
-                const { offset } = args || {};
-
-                const merged = existing?.resume ? existing.resume.slice(0) : [];
-                for (let i = 0; i < incoming.resume.length; ++i) {
-                  merged[offset + i] = incoming.resume[i];
-                }
+                const current = existing?.resume ? [...existing.resume] : [];
+                const newIncoming = incoming?.resume
+                  ? [...incoming.resume]
+                  : [];
 
                 return {
                   ...existing,
                   offset: incoming.offset,
-                  resume: merged,
+                  resume: [...current, ...newIncoming],
                 };
               },
             },
