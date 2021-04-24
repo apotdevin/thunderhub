@@ -60,7 +60,7 @@ export const getValue = ({
     ) : (
       <>
         {breakAmount}
-        <SatoshiSymbol />
+        <SatoshiSymbol transform={'translate(0,2)'} />
       </>
     );
   }
