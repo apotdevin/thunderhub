@@ -15,7 +15,7 @@ import {
   MultiButton,
 } from 'src/components/buttons/multiButton/MultiButton';
 import styled from 'styled-components';
-import { mediaWidths } from 'src/styles/Themes';
+import { chartColors, mediaWidths } from 'src/styles/Themes';
 import { useGetCanConnectInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { useCreateThunderPointsMutation } from 'src/graphql/mutations/__generated__/createThunderPoints.generated';
 import { toast } from 'react-toastify';
@@ -30,6 +30,10 @@ const StyledText = styled.div`
   @media (${mediaWidths.mobile}) {
     margin: 16px 0 0;
   }
+`;
+
+const Warning = styled(StyledText)`
+  color: ${chartColors.orange};
 `;
 
 export const SupportBar = () => {
@@ -122,12 +126,20 @@ export const SupportBar = () => {
           </MultiButton>
         </InputWithDeco>
         {withPoints && (
-          <StyledText>
-            This means your node will appear in the ThunderHub donation
-            leaderboard. If you want to remain anonymous, do not enable this
-            option. Your node alias and public key will be stored if you enable
-            it.
-          </StyledText>
+          <>
+            <StyledText>
+              This means your node will appear in the ThunderHub donation
+              leaderboard. If you want to remain anonymous, do not enable this
+              option. Your node alias and public key will be stored if you
+              enable it.
+            </StyledText>
+            <Warning>
+              Due to the increasing price of Bitcoin, to incentivize development
+              and to give everyone an opportunity to be in the top of the
+              leaderboard, points have a half life of 6 months. This means that
+              every 6 months they are halved.
+            </Warning>
+          </>
         )}
         <Separation />
         <ColorButton
