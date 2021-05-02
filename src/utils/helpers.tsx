@@ -1,5 +1,11 @@
 import numeral from 'numeral';
 import { SatoshiSymbol } from 'src/components/satoshi/Satoshi';
+import { unSelectedNavButton } from 'src/styles/Themes';
+import styled from 'styled-components';
+
+const DarkUnit = styled.span`
+  color: ${unSelectedNavButton};
+`;
 
 const getValueString = (amount: number): string => {
   if (amount >= 100000) {
@@ -19,6 +25,7 @@ interface GetNumberProps {
   breakNumber?: boolean;
   override?: string;
   noUnit?: boolean;
+  useSatWord?: boolean;
 }
 
 export const getValue = ({
@@ -29,6 +36,7 @@ export const getValue = ({
   breakNumber,
   override,
   noUnit,
+  useSatWord,
 }: GetNumberProps): JSX.Element | string => {
   if (!amount) return '';
   const correctCurrency = override || currency;
@@ -55,12 +63,27 @@ export const getValue = ({
     const breakAmount = breakNumber
       ? getValueString(value)
       : numeral(value).format('0,0.[000]');
-    return noUnit ? (
-      `${breakAmount}`
-    ) : (
+
+    if (noUnit) {
+      return `${breakAmount}`;
+    }
+
+    if (useSatWord) {
+      return (
+        <>
+          {breakAmount}
+          <DarkUnit as={'span'}>sats</DarkUnit>
+        </>
+      );
+    }
+
+    return (
       <>
         {breakAmount}
-        <SatoshiSymbol transform={'translate(0,2)'} />
+        <SatoshiSymbol
+          color={'rgba(255,255,255,0.7)'}
+          transform={'translate(0,2)'}
+        />
       </>
     );
   }

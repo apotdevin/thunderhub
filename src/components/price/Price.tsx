@@ -18,7 +18,7 @@ export const Price = ({
   breakNumber?: boolean;
   override?: string;
 }): JSX.Element => {
-  const { currency, displayValues } = useConfigState();
+  const { currency, displayValues, useSatWord } = useConfigState();
   const { fiat, prices, dontShow } = usePriceState();
 
   if (!displayValues || !amount) {
@@ -45,7 +45,9 @@ export const Price = ({
   }
 
   return (
-    <span>{getValue({ amount, ...priceProps, breakNumber, override })}</span>
+    <span>
+      {getValue({ amount, ...priceProps, breakNumber, override, useSatWord })}
+    </span>
   );
 };
 

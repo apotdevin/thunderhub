@@ -24,7 +24,7 @@ import { usePriceState, usePriceDispatch } from '../../context/PriceContext';
 export const InterfaceSettings = () => {
   const [changeFiat, changeFiatSet] = useState(false);
   const { fiat, prices, dontShow } = usePriceState();
-  const { theme, currency } = useConfigState();
+  const { theme, currency, useSatWord } = useConfigState();
   const dispatch = useConfigDispatch();
   const priceDispatch = usePriceDispatch();
 
@@ -40,6 +40,7 @@ export const InterfaceSettings = () => {
         localStorage.setItem(type, value);
         type === 'theme' && dispatch({ type: 'themeChange', theme: value });
         type === 'currency' && dispatch({ type: 'change', currency: value });
+        type === 'symbol' && dispatch({ type: 'change', useSatWord: !!value });
       }}
     >
       {title}
@@ -105,6 +106,15 @@ export const InterfaceSettings = () => {
               {!dontShow && renderButton('Fiat', 'fiat', 'currency', currency)}
             </MultiButton>
           </SettingsLine>
+          {currency === 'sat' && (
+            <SettingsLine>
+              <Sub4Title>Sat Word Unit</Sub4Title>
+              <MultiButton margin={'0 0 0 16px'}>
+                {renderButton('Yes', 'yes', 'symbol', useSatWord ? 'yes' : '')}
+                {renderButton('No', '', 'symbol', useSatWord ? 'yes' : '')}
+              </MultiButton>
+            </SettingsLine>
+          )}
           {currency === 'fiat' && !dontShow && (
             <SettingsLine>
               <SingleLine>
