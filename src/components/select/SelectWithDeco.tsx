@@ -36,6 +36,7 @@ type InputWithDecoProps = {
   isMulti?: boolean;
   noInput?: boolean;
   loading?: boolean;
+  maxWidth?: string;
   callback: (value: ValueProp[]) => void;
 };
 
@@ -46,6 +47,7 @@ export const SelectWithDeco: React.FC<InputWithDecoProps> = ({
   options,
   isMulti,
   loading,
+  maxWidth,
   callback,
 }) => {
   const renderContent = () => {
@@ -56,7 +58,7 @@ export const SelectWithDeco: React.FC<InputWithDecoProps> = ({
         return (
           <Select
             isMulti={isMulti}
-            maxWidth={'500px'}
+            maxWidth={maxWidth || '500px'}
             options={options}
             callback={callback}
           />

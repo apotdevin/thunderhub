@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import Modal from 'src/components/modal/ReactModal';
 import { useCreateBaseTokenInvoiceMutation } from 'src/graphql/mutations/__generated__/createBaseTokenInvoice.generated';
 import { getErrorContent } from 'src/utils/error';
-import { RequestModal } from 'src/views/home/account/pay/RequestModal';
+import { Pay } from 'src/views/home/account/pay/Pay';
 import { chartColors } from 'src/styles/Themes';
 import { FC, useEffect, useState } from 'react';
 
@@ -48,7 +48,7 @@ export const BuyButton: FC<{ paidCallback: (id: string) => void }> = ({
         {children}
       </ColorButton>
       <Modal isOpen={modalOpen} closeCallback={handleReset}>
-        <RequestModal request={invoice} handleReset={handlePaidReset} />
+        <Pay predefinedRequest={invoice} payCallback={handlePaidReset} />
       </Modal>
     </>
   );
