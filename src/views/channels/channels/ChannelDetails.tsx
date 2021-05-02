@@ -64,12 +64,12 @@ export const ChannelDetails: FC<ChannelDetailsProps> = ({
   const [modalOpen, setModalOpen] = useState<string>('none');
 
   const {
-    total_amount,
     total_tokens,
-    incoming_tokens,
+    total_amount,
     incoming_amount = 200,
-    outgoing_tokens,
+    incoming_tokens,
     outgoing_amount = 150,
+    outgoing_tokens,
   } = pending_resume;
 
   const {
