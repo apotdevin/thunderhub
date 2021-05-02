@@ -80,10 +80,7 @@ export const getValue = ({
     return (
       <>
         {breakAmount}
-        <SatoshiSymbol
-          color={'rgba(255,255,255,0.7)'}
-          transform={'translate(0,2)'}
-        />
+        <SatoshiSymbol color={'grey'} transform={'translate(0,2)'} />
       </>
     );
   }
