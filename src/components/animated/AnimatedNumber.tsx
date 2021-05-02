@@ -19,7 +19,7 @@ export const AnimatedNumber: React.FC<AnimatedProps> = ({ amount = 0 }) => {
     from: { value: 0 },
     value: amount,
   });
-  const { currency, displayValues } = useConfigState();
+  const { currency, displayValues, useSatWord } = useConfigState();
   const { fiat, prices, dontShow } = usePriceState();
 
   if (!displayValues) {
@@ -48,7 +48,7 @@ export const AnimatedNumber: React.FC<AnimatedProps> = ({ amount = 0 }) => {
   return (
     <animated.div>
       {value.interpolate(amount =>
-        getValue({ amount: amount as number, ...priceProps })
+        getValue({ useSatWord, amount: amount as number, ...priceProps })
       )}
     </animated.div>
   );
