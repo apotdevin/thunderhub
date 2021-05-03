@@ -20,7 +20,7 @@ import { useGetCanConnectInfoQuery } from 'src/graphql/queries/__generated__/get
 import { useCreateThunderPointsMutation } from 'src/graphql/mutations/__generated__/createThunderPoints.generated';
 import { toast } from 'react-toastify';
 import { useBaseConnect } from 'src/hooks/UseBaseConnect';
-import { RequestModal } from '../../account/pay/RequestModal';
+import { Pay } from '../../account/pay/Pay';
 
 const StyledText = styled.div`
   text-align: center;
@@ -153,7 +153,7 @@ export const SupportBar = () => {
         </ColorButton>
       </Card>
       <Modal isOpen={modalOpen} closeCallback={handleReset}>
-        <RequestModal request={invoice} handleReset={handlePaidReset} />
+        <Pay predefinedRequest={invoice} payCallback={handlePaidReset} />
       </Modal>
     </>
   );

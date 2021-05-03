@@ -8,12 +8,14 @@ import { ValueProp } from '..';
 type ChannelSelectProps = {
   title: string;
   isMulti?: boolean;
+  maxWidth?: string;
   callback: (peer: ChannelType[]) => void;
 };
 
 export const ChannelSelect = ({
   title,
   isMulti,
+  maxWidth,
   callback,
 }: ChannelSelectProps) => {
   const { data, loading } = useGetChannelsQuery();
@@ -64,6 +66,7 @@ export const ChannelSelect = ({
       title={title}
       options={options}
       callback={handleChange}
+      maxWidth={maxWidth}
     />
   );
 };

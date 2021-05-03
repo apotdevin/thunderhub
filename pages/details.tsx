@@ -43,8 +43,21 @@ const Detail = () => {
     refetchQueries: ['ChannelFees', 'GetChannels'],
   });
 
-  if (loading || !data?.getChannels?.length) {
+  if (loading) {
     return <LoadingCard title={'Channel Details'} />;
+  }
+
+  if (!data?.getChannels?.length) {
+    return (
+      <CardWithTitle>
+        <CardTitleRow>
+          <SubTitle>
+            <IconCursor>Channel Details</IconCursor>
+          </SubTitle>
+        </CardTitleRow>
+        <Card>No channels opened</Card>
+      </CardWithTitle>
+    );
   }
 
   return (

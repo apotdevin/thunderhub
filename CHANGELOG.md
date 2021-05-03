@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.16](https://github.com/apotdevin/thunderhub/compare/v0.12.15...v0.12.16) (2021-05-02)
+
+
+### Bug Fixes
+
+* loading when no channels ([1519986](https://github.com/apotdevin/thunderhub/commit/1519986d387981568886c158cf9d69b6680d233a))
+* unit color ([e9f3190](https://github.com/apotdevin/thunderhub/commit/e9f3190830e7ffd22bf973f75ea3eaa3e782b57a))
+
+
+### Refactoring
+
+* payment modal ([7db0dec](https://github.com/apotdevin/thunderhub/commit/7db0decd19a548e541f5f063f07d2d93a55db352))
+
+
+### Improvements
+
+* unit toggle ([62d8db5](https://github.com/apotdevin/thunderhub/commit/62d8db5456e67aa3433946f8f4fa2335a944d5b6))
+
 ### [0.12.15](https://github.com/apotdevin/thunderhub/compare/v0.12.14...v0.12.15) (2021-04-24)
 
 

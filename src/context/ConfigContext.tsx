@@ -42,6 +42,7 @@ type State = {
   hideNonVerified: boolean;
   maxFee: number;
   chatPollingSpeed: number;
+  useSatWord: boolean;
   channelBarStyle: channelBarStyleTypes;
   channelBarType: channelBarTypeTypes;
   channelSort: channelSortTypes;
@@ -68,6 +69,7 @@ type ActionType =
       hideNonVerified?: boolean;
       maxFee?: number;
       chatPollingSpeed?: number;
+      useSatWord?: boolean;
       channelBarStyle?: channelBarStyleTypes;
       channelBarType?: channelBarTypeTypes;
       channelSort?: channelSortTypes;
@@ -108,6 +110,7 @@ const initialState: State = {
   sortDirection: 'decrease',
   subBar: 'none',
   maxSatValue: 'auto',
+  useSatWord: false,
 };
 
 const stateReducer = (state: State, action: ActionType): State => {
