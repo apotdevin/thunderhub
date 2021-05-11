@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.17](https://github.com/apotdevin/thunderhub/compare/v0.12.16...v0.12.17) (2021-05-11)
+
+
+### Improvements
+
+* change explorer url ([545ba8c](https://github.com/apotdevin/thunderhub/commit/545ba8c7617e2a339a360af2bdda9dc87d0b2a3d))
+
 ### [0.12.16](https://github.com/apotdevin/thunderhub/compare/v0.12.15...v0.12.16) (2021-05-02)
 
 
