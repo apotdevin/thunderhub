@@ -5,7 +5,7 @@ const tbase =
 
 export const appUrls = {
   tbase,
-  oneml: 'https://1ml.com/node/',
+  oneml: 'https://amboss.space/node/',
   blockchain: 'https://mempool.space/tx/',
   blockchainAddress: 'https://mempool.space/address/',
   fees: 'https://mempool.space/api/v1/fees/recommended',
