@@ -16,15 +16,11 @@ export const getIp = (req: any) => {
 };
 
 export const getErrorMsg = (error: any[] | string): string => {
-  if (typeof error === 'string') {
-    return error;
-  }
-  if (error.length >= 2) {
-    return error[1];
-  }
-  // if (error.length > 2) {
-  //   return error[2].err?.message || 'Error';
-  // }
+  console.log(error);
+  if (!error) return 'Unknown Error';
+  if (typeof error === 'string') return error;
+  if (error[2]?.err?.details) return error[2]?.err?.details;
+  if (error[1]) return error[1];
 
-  return 'Error';
+  return 'Unkown Error';
 };

@@ -55,7 +55,10 @@ export const UtxoCard = ({
         {renderLine('Confirmations: ', confirmation_count)}
         {renderLine('Output Script: ', output_script)}
         {renderLine('Transaction Id: ', getTransactionLink(transaction_id))}
-        {renderLine('Transaction Vout: ', transaction_vout)}
+        {renderLine(
+          'Transaction Vout: ',
+          transaction_vout >= 0 ? `${transaction_vout}` : '-'
+        )}
       </>
     );
   };
