@@ -8,9 +8,7 @@ import {
   getPendingChannels,
 } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
-import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { getErrorMsg } from 'server/helpers/helpers';
 import { sortBy } from 'underscore';
 import { to } from 'server/helpers/async';
 import {
@@ -114,18 +112,15 @@ export const chainResolvers = {
 
       const format = params.nested ? 'np2wpkh' : 'p2wpkh';
 
-      try {
-        const address = await createChainAddress({
+      const address = await to<{ address: string }>(
+        createChainAddress({
           lnd,
           is_unused: true,
           format,
-        });
+        })
+      );
 
-        return address.address;
-      } catch (error) {
-        logger.error('Error creating address: %o', error);
-        throw new Error(getErrorMsg(error));
-      }
+      return address.address;
     },
     sendToAddress: async (_: undefined, params: any, context: ContextType) => {
       await requestLimiter(context.ip, 'sendToAddress');
