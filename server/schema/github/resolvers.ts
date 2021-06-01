@@ -14,7 +14,7 @@ export const githubResolvers = {
     ) => {
       await requestLimiter(context.ip, 'getLnPay');
 
-      const [response, error] = await toWithError(
+      const [response, error] = await toWithError<any>(
         fetchWithProxy(appUrls.github)
       );
 
