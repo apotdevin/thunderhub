@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.18](https://github.com/apotdevin/thunderhub/compare/v0.12.17...v0.12.18) (2021-06-02)
+
+
+### Improvements
+
+* bump deps ([eb0783c](https://github.com/apotdevin/thunderhub/commit/eb0783c5efb2b7cf539369d511e2f4601fca496b))
+* improve channel view ([ac6055e](https://github.com/apotdevin/thunderhub/commit/ac6055e8d892230d604c5fb54056097954c9eea0))
+* improve error message ([6a8da2e](https://github.com/apotdevin/thunderhub/commit/6a8da2e6fe29b73d6363b2027845ca22031d8a39))
+* update lock file ([4a63123](https://github.com/apotdevin/thunderhub/commit/4a631238b04596f1b7f4d4a2128be7ab5f422690))
+
+
+### Styling
+
+* open channel card ([f197af0](https://github.com/apotdevin/thunderhub/commit/f197af0d730a6cf8cac8a9fd3c1726dc461a9d8b))
+
 ### [0.12.17](https://github.com/apotdevin/thunderhub/compare/v0.12.16...v0.12.17) (2021-05-11)
 
 
