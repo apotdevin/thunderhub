@@ -26,12 +26,10 @@ export const ChannelStatsLine = styled.div`
 `;
 
 export const ChannelBarSide = styled.div`
-  width: 50%;
   display: flex;
   align-items: center;
 
   @media (${mediaWidths.mobile}) {
-    width: 100%;
     flex-direction: column;
   }
 `;
@@ -126,4 +124,14 @@ export const WumboTag = styled.div`
   border: 1px solid gold;
   text-align: center;
   padding: 2px 0;
+`;
+
+export const LineGrid = styled.div<{ template?: string }>`
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: ${({ template }) => template || '1fr 3fr'};
+
+  @media (${mediaWidths.mobile}) {
+    grid-template-columns: 1fr;
+  }
 `;

@@ -15,13 +15,9 @@ import {
 } from 'src/context/RebalanceContext';
 import differenceInDays from 'date-fns/differenceInDays';
 import { MainInfo } from '../../../components/generic/CardGeneric';
-import {
-  SubCard,
-  ResponsiveLine,
-  DarkSubTitle,
-} from '../../../components/generic/Styled';
+import { SubCard, DarkSubTitle } from '../../../components/generic/Styled';
 import { useConfigState } from '../../../context/ConfigContext';
-import { renderLine } from '../../../components/generic/helpers';
+import { addEllipsis, renderLine } from '../../../components/generic/helpers';
 import { getPrice } from '../../../components/price/Price';
 import { usePriceState } from '../../../context/PriceContext';
 import {
@@ -32,8 +28,9 @@ import {
   ChannelBalanceRow,
   ChannelBalanceButton,
   ChannelAlias,
+  LineGrid,
 } from './Channel.style';
-import { getTitleColor } from './helpers';
+import { getColumnTemplate, getTitleColor } from './helpers';
 import { ChannelDetails } from './ChannelDetails';
 import { ChannelBars } from './ChannelBars';
 import { ChannelBarsInfo } from './ChannelBarsInfo';
@@ -72,7 +69,12 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   const dispatch = useRebalanceDispatch();
   const { inChannel, outChannel } = useRebalanceState();
 
-  const { channelBarStyle } = useConfigState();
+  const { channelBarStyle, extraColumns } = useConfigState();
+
+  const showIncoming = extraColumns === 'incoming' || extraColumns === 'both';
+  const showOutgoing = extraColumns === 'outgoing' || extraColumns === 'both';
+
+  const template = getColumnTemplate(extraColumns);
 
   const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
@@ -88,8 +90,13 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
     is_private,
     partner_public_key,
     partner_node_info,
+    partner_fee_info,
     bosScore,
   } = channelInfo;
+
+  const fee_rate = partner_fee_info?.partner_node_policies?.fee_rate;
+
+  const node_rate = partner_fee_info?.node_policies?.fee_rate;
 
   const barDetails = {
     biggestRateFee,
@@ -147,7 +154,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
         disabled={channelBarStyle === 'balancing'}
         onClick={() => channelBarStyle !== 'balancing' && handleClick()}
       >
-        <ResponsiveLine>
+        <LineGrid template={template}>
           <ChannelNodeTitle
             style={{ flexGrow: 2 }}
             data-tip
@@ -161,7 +168,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
                 isBosNode
               )}
             >
-              {alias || partner_public_key?.substring(0, 6)}
+              {addEllipsis(alias || partner_public_key)}
             </ChannelAlias>
             {!(
               channelBarStyle === 'ultracompact' ||
@@ -176,6 +183,11 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
               </ChannelSingleLine>
             )}
           </ChannelNodeTitle>
+          {showOutgoing ? (
+            <ChannelSingleLine>
+              <DarkSubTitle>{`${node_rate || '-'} ppm`}</DarkSubTitle>
+            </ChannelSingleLine>
+          ) : null}
           <ChannelBarSide data-tip data-for={`node_balance_tip_${index}`}>
             <ChannelBars
               info={channelInfo}
@@ -209,7 +221,12 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
               </ChannelBalanceRow>
             )}
           </ChannelBarSide>
-        </ResponsiveLine>
+          {showIncoming ? (
+            <ChannelSingleLine>
+              <DarkSubTitle>{`${fee_rate || '-'} ppm`}</DarkSubTitle>
+            </ChannelSingleLine>
+          ) : null}
+        </LineGrid>
       </MainInfo>
       {index === indexOpen && (
         <ChannelDetails info={channelInfo} format={format} />
