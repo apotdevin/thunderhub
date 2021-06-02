@@ -27,7 +27,7 @@ export type channelSortTypes =
   | 'partnerName'
   | 'size';
 export type sortDirectionTypes = 'increase' | 'decrease';
-export type subBarType = 'fees' | 'none';
+export type extraColumnsType = 'outgoing' | 'incoming' | 'both' | 'none';
 export type maxSatValueType = 'auto' | 1000000 | 5000000 | 10000000 | 16000000;
 
 type State = {
@@ -47,7 +47,7 @@ type State = {
   channelBarType: channelBarTypeTypes;
   channelSort: channelSortTypes;
   sortDirection: sortDirectionTypes;
-  subBar: subBarType;
+  extraColumns: extraColumnsType;
   maxSatValue: maxSatValueType;
 };
 
@@ -74,7 +74,7 @@ type ActionType =
       channelBarType?: channelBarTypeTypes;
       channelSort?: channelSortTypes;
       sortDirection?: sortDirectionTypes;
-      subBar?: subBarType;
+      extraColumns?: extraColumnsType;
       maxSatValue?: maxSatValueType;
     }
   | { type: 'themeChange'; theme: string };
@@ -108,7 +108,7 @@ const initialState: State = {
   channelBarType: 'balance',
   channelSort: 'none',
   sortDirection: 'decrease',
-  subBar: 'none',
+  extraColumns: 'none',
   maxSatValue: 'auto',
   useSatWord: false,
 };

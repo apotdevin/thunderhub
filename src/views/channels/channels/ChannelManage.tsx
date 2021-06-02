@@ -10,7 +10,7 @@ import {
   channelBarTypeTypes,
   channelSortTypes,
   sortDirectionTypes,
-  subBarType,
+  extraColumnsType,
   maxSatValueType,
 } from 'src/context/ConfigContext';
 import {
@@ -37,7 +37,7 @@ export const ChannelManage = () => {
     channelBarStyle,
     channelSort,
     sortDirection,
-    subBar,
+    extraColumns,
     maxSatValue,
   } = useConfigState();
   const dispatch = useConfigDispatch();
@@ -46,8 +46,8 @@ export const ChannelManage = () => {
     dispatch({ type: 'change', channelBarStyle: style });
   const changeType = (type: channelBarTypeTypes) =>
     dispatch({ type: 'change', channelBarType: type });
-  const changeSub = (type: subBarType) =>
-    dispatch({ type: 'change', subBar: type });
+  const changeSub = (type: extraColumnsType) =>
+    dispatch({ type: 'change', extraColumns: type });
   const changeSort = (type: channelSortTypes) =>
     dispatch({ type: 'change', channelSort: type });
   const changeDirection = (type: sortDirectionTypes) =>
@@ -212,16 +212,28 @@ export const ChannelManage = () => {
             {(channelBarType === 'proportional' ||
               channelBarType === 'balance') && (
               <MarginLine>
-                <Sub4Title>Sub Bar</Sub4Title>
+                <Sub4Title>Fee Rate</Sub4Title>
                 <MultiButton>
                   <SingleButton
-                    selected={subBar === 'fees'}
-                    onClick={() => changeSub('fees')}
+                    selected={extraColumns === 'outgoing'}
+                    onClick={() => changeSub('outgoing')}
                   >
-                    Fee Rate
+                    Outgoing
                   </SingleButton>
                   <SingleButton
-                    selected={subBar === 'none'}
+                    selected={extraColumns === 'incoming'}
+                    onClick={() => changeSub('incoming')}
+                  >
+                    Incoming
+                  </SingleButton>
+                  <SingleButton
+                    selected={extraColumns === 'both'}
+                    onClick={() => changeSub('both')}
+                  >
+                    Both
+                  </SingleButton>
+                  <SingleButton
+                    selected={extraColumns === 'none'}
                     onClick={() => changeSub('none')}
                   >
                     None

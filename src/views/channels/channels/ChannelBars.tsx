@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { BalanceBars, SingleBar, SumBar } from 'src/components/balance';
+import { BalanceBars, SumBar } from 'src/components/balance';
 import { ProgressBar } from 'src/components/generic/CardGeneric';
 import { FormatFnType } from 'src/components/price/Price';
 import { useConfigState } from 'src/context/ConfigContext';
@@ -57,7 +57,7 @@ export const ChannelBars: FC<ChannelBarsProps> = ({
   const { base_fee_mtokens: node_base, fee_rate: node_rate } =
     partner_fee_info?.node_policies || {};
 
-  const { channelBarType, subBar } = useConfigState();
+  const { channelBarType } = useConfigState();
 
   const maxRate = Math.min(fee_rate || 0, 10000);
   const maxNodeRate = Math.min(node_rate || 0, 10000);
@@ -122,9 +122,6 @@ export const ChannelBars: FC<ChannelBarsProps> = ({
     case 'proportional':
       return (
         <ChannelStatsColumn>
-          {subBar === 'fees' && (
-            <SingleBar value={getBar(maxRate, 2000)} height={4} />
-          )}
           <BalanceBars
             local={getBar(local_balance, biggest)}
             remote={getBar(remote_balance, biggest)}
@@ -137,9 +134,6 @@ export const ChannelBars: FC<ChannelBarsProps> = ({
     case 'htlcs':
       return (
         <ChannelStatsColumn>
-          {subBar === 'fees' && (
-            <SingleBar value={getBar(maxRate, 2000)} height={4} />
-          )}
           <SumBar
             values={[
               getPercent(incoming_amount, MAX_HTLCS - incoming_amount),
@@ -151,9 +145,6 @@ export const ChannelBars: FC<ChannelBarsProps> = ({
     default:
       return (
         <ChannelStatsColumn>
-          {subBar === 'fees' && (
-            <SingleBar value={getBar(maxRate, 2000)} height={4} />
-          )}
           <BalanceBars
             local={getPercent(local_balance, remote_balance)}
             remote={getPercent(remote_balance, local_balance)}

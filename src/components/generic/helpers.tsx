@@ -31,6 +31,23 @@ export const shorten = (text: string): string => {
   return `${beginning}...${end}`;
 };
 
+export const addEllipsis = (
+  text: string | null | undefined,
+  length: number = 14
+): string => {
+  if (!text) return '';
+
+  const textLength = text.length;
+
+  if (textLength <= length) {
+    return text;
+  }
+
+  const beginning = text.slice(0, length);
+
+  return `${beginning}...`;
+};
+
 export const copyLink = (text: string) => (
   <CopyToClipboard text={text} onCopy={() => toast.success('Copied')}>
     <CopyIcon>
