@@ -4,7 +4,7 @@ import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import { getPrice, Price } from 'src/components/price/Price';
 import { AnimatedNumber } from 'src/components/animated/AnimatedNumber';
-import { renderLine } from 'src/components/generic/helpers';
+import { addEllipsis, renderLine } from 'src/components/generic/helpers';
 import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { unSelectedNavButton } from '../../../styles/Themes';
 import {
@@ -87,15 +87,13 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   const formatCCB = format({ amount: channelBalance });
   const formatPCB = format({ amount: channelPending });
 
-  if (!alias) {
-    return null;
-  }
+  if (!alias) return null;
 
   if (isBurger) {
     return (
       <>
         <SingleLine>
-          <SubTitle>{alias}</SubTitle>
+          <SubTitle>{addEllipsis(alias)}</SubTitle>
           <Circle
             size={18}
             strokeWidth={'0'}
@@ -196,7 +194,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     <>
       <Title>
         <Alias bottomColor={color} data-tip={`Version: ${version}`}>
-          {alias}
+          {addEllipsis(alias)}
         </Alias>
       </Title>
       <Separation lineColor={unSelectedNavButton} />
