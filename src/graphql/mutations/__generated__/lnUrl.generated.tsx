@@ -17,6 +17,9 @@ export type FetchLnUrlMutation = (
   ) | (
     { __typename?: 'PayRequest' }
     & Pick<Types.PayRequest, 'callback' | 'maxSendable' | 'minSendable' | 'metadata' | 'commentAllowed' | 'tag'>
+  ) | (
+    { __typename?: 'ChannelRequest' }
+    & Pick<Types.ChannelRequest, 'tag' | 'k1' | 'callback' | 'uri'>
   )> }
 );
 
@@ -61,6 +64,18 @@ export type WithdrawLnUrlMutation = (
   & Pick<Types.Mutation, 'lnUrlWithdraw'>
 );
 
+export type ChannelLnUrlMutationVariables = Types.Exact<{
+  callback: Types.Scalars['String'];
+  k1: Types.Scalars['String'];
+  uri: Types.Scalars['String'];
+}>;
+
+
+export type ChannelLnUrlMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Types.Mutation, 'lnUrlChannel'>
+);
+
 
 export const FetchLnUrlDocument = gql`
     mutation FetchLnUrl($url: String!) {
@@ -80,6 +95,12 @@ export const FetchLnUrlDocument = gql`
       metadata
       commentAllowed
       tag
+    }
+    ... on ChannelRequest {
+      tag
+      k1
+      callback
+      uri
     }
   }
 }
@@ -223,3 +244,36 @@ export function useWithdrawLnUrlMutation(baseOptions?: Apollo.MutationHookOption
 export type WithdrawLnUrlMutationHookResult = ReturnType<typeof useWithdrawLnUrlMutation>;
 export type WithdrawLnUrlMutationResult = Apollo.MutationResult<WithdrawLnUrlMutation>;
 export type WithdrawLnUrlMutationOptions = Apollo.BaseMutationOptions<WithdrawLnUrlMutation, WithdrawLnUrlMutationVariables>;
+export const ChannelLnUrlDocument = gql`
+    mutation ChannelLnUrl($callback: String!, $k1: String!, $uri: String!) {
+  lnUrlChannel(callback: $callback, k1: $k1, uri: $uri)
+}
+    `;
+export type ChannelLnUrlMutationFn = Apollo.MutationFunction<ChannelLnUrlMutation, ChannelLnUrlMutationVariables>;
+
+/**
+ * __useChannelLnUrlMutation__
+ *
+ * To run a mutation, you first call `useChannelLnUrlMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChannelLnUrlMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [channelLnUrlMutation, { data, loading, error }] = useChannelLnUrlMutation({
+ *   variables: {
+ *      callback: // value for 'callback'
+ *      k1: // value for 'k1'
+ *      uri: // value for 'uri'
+ *   },
+ * });
+ */
+export function useChannelLnUrlMutation(baseOptions?: Apollo.MutationHookOptions<ChannelLnUrlMutation, ChannelLnUrlMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChannelLnUrlMutation, ChannelLnUrlMutationVariables>(ChannelLnUrlDocument, options);
+      }
+export type ChannelLnUrlMutationHookResult = ReturnType<typeof useChannelLnUrlMutation>;
+export type ChannelLnUrlMutationResult = Apollo.MutationResult<ChannelLnUrlMutation>;
+export type ChannelLnUrlMutationOptions = Apollo.BaseMutationOptions<ChannelLnUrlMutation, ChannelLnUrlMutationVariables>;

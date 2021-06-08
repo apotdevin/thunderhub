@@ -117,6 +117,7 @@ export const mutationTypes = gql`
     lnMarketsLogout: Boolean!
     lnUrlAuth(url: String!): AuthResponse!
     lnUrlPay(callback: String!, amount: Int!, comment: String): PaySuccess!
+    lnUrlChannel(callback: String!, k1: String!, uri: String!): String!
     lnUrlWithdraw(
       callback: String!
       amount: Int!
