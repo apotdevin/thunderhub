@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.19](https://github.com/apotdevin/thunderhub/compare/v0.12.18...v0.12.19) (2021-06-08)
+
+
+### Improvements
+
+* lnurl channel ([396074f](https://github.com/apotdevin/thunderhub/commit/396074fb7a696538167fd799fa3839f6181273a3))
+
 ### [0.12.18](https://github.com/apotdevin/thunderhub/compare/v0.12.17...v0.12.18) (2021-06-02)
 
 
