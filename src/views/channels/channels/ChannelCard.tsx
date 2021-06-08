@@ -17,7 +17,7 @@ import differenceInDays from 'date-fns/differenceInDays';
 import { MainInfo } from '../../../components/generic/CardGeneric';
 import { SubCard, DarkSubTitle } from '../../../components/generic/Styled';
 import { useConfigState } from '../../../context/ConfigContext';
-import { addEllipsis, renderLine } from '../../../components/generic/helpers';
+import { renderLine } from '../../../components/generic/helpers';
 import { getPrice } from '../../../components/price/Price';
 import { usePriceState } from '../../../context/PriceContext';
 import {
@@ -168,20 +168,20 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
                 isBosNode
               )}
             >
-              {addEllipsis(alias || partner_public_key)}
+              {alias || partner_public_key?.substring(0, 6)}
             </ChannelAlias>
             {!(
               channelBarStyle === 'ultracompact' ||
               channelBarStyle === 'balancing'
             ) && (
-              <ChannelSingleLine>
-                <DarkSubTitle>{formatBalance}</DarkSubTitle>
-                <ChannelIconPadding>
-                  {getPrivate(is_private)}
-                  {getSymbol(is_partner_initiated)}
-                </ChannelIconPadding>
-              </ChannelSingleLine>
-            )}
+                <ChannelSingleLine>
+                  <DarkSubTitle>{formatBalance}</DarkSubTitle>
+                  <ChannelIconPadding>
+                    {getPrivate(is_private)}
+                    {getSymbol(is_partner_initiated)}
+                  </ChannelIconPadding>
+                </ChannelSingleLine>
+              )}
           </ChannelNodeTitle>
           {showOutgoing ? (
             <ChannelSingleLine>
