@@ -72,6 +72,14 @@ export type BosScoreResponse = {
   scores: Array<BosScore>;
 };
 
+export type ChannelRequest = {
+  __typename?: 'ChannelRequest';
+  tag?: Maybe<Scalars['String']>;
+  k1?: Maybe<Scalars['String']>;
+  callback?: Maybe<Scalars['String']>;
+  uri?: Maybe<Scalars['String']>;
+};
+
 export type CreateBoltzReverseSwapType = {
   __typename?: 'CreateBoltzReverseSwapType';
   id: Scalars['String'];
@@ -175,7 +183,7 @@ export type LnMarketsUserInfo = {
   last_ip?: Maybe<Scalars['String']>;
 };
 
-export type LnUrlRequest = WithdrawRequest | PayRequest;
+export type LnUrlRequest = WithdrawRequest | PayRequest | ChannelRequest;
 
 export type MessageType = {
   __typename?: 'MessageType';
@@ -194,6 +202,7 @@ export type Mutation = {
   lnMarketsLogout: Scalars['Boolean'];
   lnUrlAuth: AuthResponse;
   lnUrlPay: PaySuccess;
+  lnUrlChannel: Scalars['String'];
   lnUrlWithdraw: Scalars['String'];
   fetchLnUrl?: Maybe<LnUrlRequest>;
   createBaseTokenInvoice?: Maybe<BaseInvoiceType>;
@@ -267,6 +276,13 @@ export type MutationLnUrlPayArgs = {
   callback: Scalars['String'];
   amount: Scalars['Int'];
   comment?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationLnUrlChannelArgs = {
+  callback: Scalars['String'];
+  k1: Scalars['String'];
+  uri: Scalars['String'];
 };
 
 

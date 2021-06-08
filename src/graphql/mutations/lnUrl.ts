@@ -19,6 +19,12 @@ export const FETCH_LN_URL = gql`
         commentAllowed
         tag
       }
+      ... on ChannelRequest {
+        tag
+        k1
+        callback
+        uri
+      }
     }
   }
 `;
@@ -58,5 +64,11 @@ export const WITHDRAW_LN_URL = gql`
       k1: $k1
       description: $description
     )
+  }
+`;
+
+export const CHANNEL_LN_URL = gql`
+  mutation ChannelLnUrl($callback: String!, $k1: String!, $uri: String!) {
+    lnUrlChannel(callback: $callback, k1: $k1, uri: $uri)
   }
 `;

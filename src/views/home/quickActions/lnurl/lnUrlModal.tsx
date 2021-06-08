@@ -7,6 +7,7 @@ import { Title } from 'src/components/typography/Styled';
 import { useFetchLnUrlMutation } from 'src/graphql/mutations/__generated__/lnUrl.generated';
 import { getErrorContent } from 'src/utils/error';
 import styled from 'styled-components';
+import { LnChannel } from './LnChannel';
 import { LnPay } from './LnPay';
 import { LnWithdraw } from './LnWithdraw';
 
@@ -47,6 +48,10 @@ export const LnUrlModal: FC<lnUrlProps> = ({ url, type }) => {
 
   if (data?.fetchLnUrl?.__typename === 'WithdrawRequest') {
     return <LnWithdraw request={data.fetchLnUrl} />;
+  }
+
+  if (data?.fetchLnUrl?.__typename === 'ChannelRequest') {
+    return <LnChannel request={data.fetchLnUrl} />;
   }
 
   return (

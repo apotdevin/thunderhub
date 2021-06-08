@@ -3,10 +3,17 @@ import { to } from 'server/helpers/async';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { ContextType } from 'server/types/apiTypes';
-import { createInvoice, decodePaymentRequest, pay } from 'ln-service';
+import {
+  createInvoice,
+  decodePaymentRequest,
+  pay,
+  addPeer,
+  getWalletInfo,
+} from 'ln-service';
 import {
   CreateInvoiceType,
   DecodedType,
+  GetWalletInfoType,
   PayInvoiceType,
 } from 'server/types/ln-service.types';
 import { lnAuthUrlGenerator } from 'server/helpers/lnAuth';
@@ -28,6 +35,7 @@ type FetchLnUrlParams = {
   url: string;
 };
 
+type LnUrlChannelType = { callback: string; k1: string; uri: string };
 type LnUrlPayType = { callback: string; amount: number; comment: string };
 type LnUrlWithdrawType = {
   callback: string;
@@ -238,6 +246,49 @@ export const lnUrlResolvers = {
         throw new Error('ProblemWithdrawingFromLnUrlService');
       }
     },
+    lnUrlChannel: async (
+      _: undefined,
+      { callback, k1, uri }: LnUrlChannelType,
+      context: ContextType
+    ) => {
+      await requestLimiter(context.ip, 'lnUrlChannel');
+      const { lnd } = context;
+
+      logger.debug('LnUrlChannel initiated with params: %o', {
+        callback,
+        uri,
+        k1,
+      });
+
+      const split = uri.split('@');
+
+      await to(addPeer({ lnd, socket: split[1], public_key: split[0] }));
+
+      const info = await to<GetWalletInfoType>(getWalletInfo({ lnd }));
+
+      // If the callback url already has an initial query '?' identifier we don't need to add it again.
+      const initialIdentifier = callback.indexOf('?') != -1 ? '&' : '?';
+
+      const finalUrl = `${callback}${initialIdentifier}k1=${k1}&remoteid=${info.public_key}&private=0`;
+
+      try {
+        const response = await fetchWithProxy(finalUrl);
+        const json = await response.json();
+
+        logger.debug('LnUrlChannel response: %o', json);
+
+        if (json.status === 'ERROR') {
+          throw new Error(json.reason || 'LnServiceError');
+        }
+
+        return 'Successfully requested a channel open';
+      } catch (error) {
+        logger.error('Error requesting channel from LnUrl service: %o', error);
+        throw new Error(
+          `Error requesting channel from LnUrl service: ${error}`
+        );
+      }
+    },
   },
   LnUrlRequest: {
     __resolveType(parent: RequestWithType) {
@@ -246,6 +297,9 @@ export const lnUrlResolvers = {
       }
       if (parent.tag === 'withdrawRequest') {
         return 'WithdrawRequest';
+      }
+      if (parent.tag === 'channelRequest') {
+        return 'ChannelRequest';
       }
       return 'Unknown';
     },

@@ -19,7 +19,14 @@ export const lnUrlTypes = gql`
     tag: String
   }
 
-  union LnUrlRequest = WithdrawRequest | PayRequest
+  type ChannelRequest {
+    tag: String
+    k1: String
+    callback: String
+    uri: String
+  }
+
+  union LnUrlRequest = WithdrawRequest | PayRequest | ChannelRequest
 
   type AuthResponse {
     status: String!

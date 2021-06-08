@@ -63,7 +63,7 @@ export const LnUrlCard = () => {
       <Card>
         <InputWithDeco
           value={lnurl}
-          placeholder={'LnPay / LnWithdraw / LnAuth'}
+          placeholder={'LnPay / LnWithdraw / LnChannel / LnAuth'}
           title={'LNURL'}
           inputCallback={value => setLnUrl(value)}
           onEnter={() => handleDecode()}
