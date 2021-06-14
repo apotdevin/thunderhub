@@ -4,8 +4,9 @@ FILE=$1
 
 echo "Creating cookie file for SSO authentication at" $FILE
 
-mkdir -p "${FILE%/*}" 
-echo "86AOqw7OfLeBKn0VlOuH5V0E51Qxy9BoXQ8qMDql901mc5GuXvdVRogWrZkuH2nRel5FA9H2Ie4rTLDO" >  "$FILE"
+mkdir -p "`dirname "$FILE"`" 
+head -c 64 /dev/urandom | xxd -p -c 128 >  "$FILE.tmp"
+mv "$FILE.tmp" "$FILE"
 
 echo "Cookie file created."
 echo "Starting ThunderHub server..."

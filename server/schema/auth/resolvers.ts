@@ -1,6 +1,7 @@
+import crypto from 'crypto';
 import getConfig from 'next/config';
 import jwt from 'jsonwebtoken';
-import { readCookie, refreshCookie } from 'server/helpers/fileHelpers';
+import { refreshCookie } from 'server/helpers/fileHelpers';
 import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import cookieLib from 'cookie';
@@ -55,14 +56,24 @@ export const authResolvers = {
         logger.warn('SSO authentication is disabled in development.');
       }
 
-      const cookieFile = readCookie(cookiePath);
+      if (!sso.currentCookie) {
+          logger.warn(
+            'SSO cookie was not refreshed previously, attempting to refresh again but auth will fail anyway'
+          );
+          sso.currentCookie = refreshCookie(cookiePath);
+          return false;
+      }
 
       if (
-        (cookieFile && cookieFile.trim() === cookie.trim()) ||
+        (sso.currentCookie && crypto.timingSafeEqual(Buffer.from(sso.currentCookie.trim(), 'utf8'), Buffer.from(cookie.trim(), 'utf8'))) ||
         nodeEnv === 'development' ||
         dangerousNoSSOAuth
       ) {
-        cookiePath && refreshCookie(cookiePath);
+        if (cookiePath) {
+	  // we need to set it to null first to avoid it staying the same in case refreshCookie throws
+	  sso.currentCookie = null;
+          sso.currentCookie = refreshCookie(cookiePath);
+	}
 
         const { lnd } = authenticatedLndGrpc(sso);
         const [, error] = await toWithError<GetWalletInfoType>(
@@ -89,7 +100,7 @@ export const authResolvers = {
         return true;
       }
 
-      logger.debug(`Cookie ${cookie} different to file ${cookieFile}`);
+      logger.debug(`Cookie ${cookie} different to file ${sso.currentCookie}`);
       return false;
     },
     getSessionToken: async (
