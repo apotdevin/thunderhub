@@ -50,12 +50,8 @@ const sectionColor = '#FFD300';
 export const AccountInfo = () => {
   const [state, setState] = useState<string>('none');
 
-  const {
-    chainBalance,
-    chainPending,
-    channelBalance,
-    channelPending,
-  } = useNodeInfo();
+  const { chainBalance, chainPending, channelBalance, channelPending } =
+    useNodeInfo();
 
   const renderContent = () => {
     switch (state) {

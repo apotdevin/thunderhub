@@ -7,7 +7,6 @@ import { getPercent } from 'src/utils/helpers';
 import { ChannelType } from 'src/graphql/types';
 import { useRebalanceState } from 'src/context/RebalanceContext';
 import { useRouter } from 'next/router';
-import { Card } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { ChannelCard } from './ChannelCard';
@@ -167,7 +166,7 @@ export const Channels: React.FC = () => {
   };
 
   return (
-    <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+    <>
       {getChannels().map((channel, index) => (
         <ChannelCard
           channelInfo={channel as ChannelType}
@@ -182,6 +181,6 @@ export const Channels: React.FC = () => {
           biggestRateFee={Math.max(Math.min(biggestRateFee, 10000), 2000)}
         />
       ))}
-    </Card>
+    </>
   );
 };

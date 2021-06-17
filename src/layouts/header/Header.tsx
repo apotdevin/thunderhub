@@ -43,7 +43,7 @@ export const Header = () => {
   const [open, setOpen] = useState(false);
 
   const { lnMarketsAuth } = useConfigState();
-  const connected = useBaseConnect();
+  const { connected } = useBaseConnect();
 
   const isRoot = pathname === MAIN || pathname === SSO;
 

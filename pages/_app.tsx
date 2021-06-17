@@ -12,8 +12,11 @@ import { useConfigState, ConfigProvider } from '../src/context/ConfigContext';
 import { GlobalStyles } from '../src/styles/GlobalStyle';
 import { Header } from '../src/layouts/header/Header';
 import { Footer } from '../src/layouts/footer/Footer';
-import 'react-toastify/dist/ReactToastify.min.css';
 import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
+
+import 'react-toastify/dist/ReactToastify.min.css';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 import 'react-circular-progressbar/dist/styles.css';
 
 const Wrapper: React.FC = ({ children }) => {

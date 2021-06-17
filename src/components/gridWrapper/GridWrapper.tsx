@@ -46,3 +46,12 @@ export const GridWrapper: React.FC<GridProps> = ({
     </Container>
   </Section>
 );
+
+export const SimpleWrapper: React.FC<GridProps> = ({ children }) => (
+  <Section fixedWidth={false} padding={'16px'}>
+    <BitcoinPrice />
+    <BitcoinFees />
+    <StatusCheck />
+    {children}
+  </Section>
+);

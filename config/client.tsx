@@ -43,35 +43,11 @@ function createApolloClient(context?: ResolverContext) {
     ssrMode: typeof window === 'undefined',
     link: createIsomorphLink(context),
     cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            getResume: {
-              keyArgs: [],
-              merge(existing, incoming) {
-                if (!existing) return incoming;
-
-                const current = existing?.resume ? [...existing.resume] : [];
-                const newIncoming = incoming?.resume
-                  ? [...incoming.resume]
-                  : [];
-
-                return {
-                  ...existing,
-                  offset: incoming.offset,
-                  resume: [...current, ...newIncoming],
-                };
-              },
-            },
-          },
-        },
-      },
       ...possibleTypes,
     }),
     defaultOptions: {
       query: {
         fetchPolicy: 'cache-first',
-        // errorPolicy: 'all',
       },
     },
   });

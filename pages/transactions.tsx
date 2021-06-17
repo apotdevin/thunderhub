@@ -61,20 +61,15 @@ const TransactionsView = () => {
   const [open, setOpen] = useState<boolean>(false);
 
   const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(7);
 
   const { publicKey } = useNodeInfo();
 
   const [settings] = useLocalStorage('transactionSettings', defaultSettings);
 
-  const {
-    data,
-    fetchMore,
-    startPolling,
-    stopPolling,
-    networkStatus,
-  } = useGetResumeQuery({
+  const { data, startPolling, stopPolling, networkStatus } = useGetResumeQuery({
     ssr: false,
-    variables: { offset: 0 },
+    variables: { offset: 0, limit },
     notifyOnNetworkStatusChange: true,
     onError: error => toast.error(getErrorContent(error)),
   });
@@ -85,9 +80,8 @@ const TransactionsView = () => {
   const loadingOrRefetching = isLoading || isRefetching;
 
   useEffect(() => {
-    if (!isLoading && data?.getResume?.offset) {
-      setOffset(data.getResume.offset);
-    }
+    if (isLoading || !data?.getResume?.offset) return;
+    setOffset(data.getResume.offset);
   }, [data, isLoading]);
 
   useEffect(() => {
@@ -95,7 +89,12 @@ const TransactionsView = () => {
   }, [stopPolling]);
 
   if (isLoading || !data || !data.getResume) {
-    return <LoadingCard title={'Transactions'} />;
+    return (
+      <>
+        <FlowBox />
+        <LoadingCard title={'Transactions'} />
+      </>
+    );
   }
 
   const beforeDate = subDays(new Date(), offset);
@@ -135,8 +134,7 @@ const TransactionsView = () => {
     return [...p, c];
   }, [] as ResumeTransactions);
 
-  const handleClick = (limit: number) =>
-    fetchMore({ variables: { offset, limit } });
+  const handleClick = (limit: number) => setLimit(offset + limit);
 
   return (
     <>
