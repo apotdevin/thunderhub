@@ -8,7 +8,6 @@ import {
   unSelectedNavButton,
   mediaWidths,
 } from 'src/styles/Themes';
-import { useBaseConnect } from 'src/hooks/UseBaseConnect';
 
 const QuickTitle = styled.div`
   font-size: 14px;
@@ -54,10 +53,6 @@ type SupportCardProps = {
 };
 
 export const SupportCard = ({ callback }: SupportCardProps) => {
-  const connected = useBaseConnect();
-
-  if (!connected) return null;
-
   return (
     <QuickCard onClick={callback}>
       <Heart size={24} />

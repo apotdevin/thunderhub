@@ -5,7 +5,7 @@ import {
   SubTitle,
   Card,
 } from '../../../components/generic/Styled';
-import { SignMessage } from './SignMessage';
+import { SignMessageCard } from './SignMessage';
 import { VerifyMessage } from './VerifyMessage';
 
 export const NoWrap = styled.div`
@@ -19,7 +19,7 @@ export const MessagesView = () => {
       <SubTitle>Messages</SubTitle>
       <Card>
         <VerifyMessage />
-        <SignMessage />
+        <SignMessageCard />
       </Card>
     </CardWithTitle>
   );
