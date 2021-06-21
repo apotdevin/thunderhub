@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
+import { DashboardSettings } from 'src/views/settings/Dashboard';
 import { SingleLine } from '../../src/components/generic/Styled';
 import { InterfaceSettings } from '../../src/views/settings/Interface';
 import { DangerView } from '../../src/views/settings/Danger';
 import { ChatSettings } from '../../src/views/settings/Chat';
 import { PrivacySettings } from '../../src/views/settings/Privacy';
-import { DashboardSettings } from 'src/views/settings/Dashboard';
 
 export const ButtonRow = styled.div`
   width: auto;

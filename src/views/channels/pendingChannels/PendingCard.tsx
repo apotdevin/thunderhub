@@ -65,8 +65,13 @@ export const PendingCard = ({
     partner_node_info,
   } = channelInfo;
 
-  const { alias, capacity, channel_count, color: nodeColor, updated_at } =
-    partner_node_info?.node || {};
+  const {
+    alias,
+    capacity,
+    channel_count,
+    color: nodeColor,
+    updated_at,
+  } = partner_node_info?.node || {};
 
   const formatBalance = format({ amount: local_balance + remote_balance });
   const formatLocal = format({ amount: local_balance });

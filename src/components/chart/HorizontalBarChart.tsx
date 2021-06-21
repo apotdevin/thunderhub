@@ -7,8 +7,8 @@ import { chartColors } from 'src/styles/Themes';
 import { ThemeContext } from 'styled-components';
 import { useContext } from 'react';
 import { TooltipWithBounds, defaultStyles, useTooltip } from '@visx/tooltip';
-import { Price } from '../price/Price';
 import { localPoint } from '@visx/event';
+import { Price } from '../price/Price';
 
 type BarGroupProps = {
   width: number;

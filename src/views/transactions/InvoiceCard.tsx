@@ -1,5 +1,23 @@
 import React, { FC, Fragment } from 'react';
 import { InvoiceType } from 'src/graphql/types';
+import { MessageCircle } from 'react-feather';
+import styled from 'styled-components';
+import { themeColors } from 'src/styles/Themes';
+import { useGetChannelQuery } from 'src/graphql/queries/__generated__/getChannel.generated';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
+import { LoadingCard } from 'src/components/loading/LoadingCard';
+import { Price } from '../../components/price/Price';
+import {
+  getStatusDot,
+  getDateDif,
+  getFormatDate,
+  renderLine,
+} from '../../components/generic/helpers';
+import {
+  StatusLine,
+  NodeTitle,
+  MainInfo,
+} from '../../components/generic/CardGeneric';
 import {
   Separation,
   SubCard,
@@ -7,24 +25,6 @@ import {
   ResponsiveLine,
   DarkSubTitle,
 } from '../../components/generic/Styled';
-import {
-  StatusLine,
-  NodeTitle,
-  MainInfo,
-} from '../../components/generic/CardGeneric';
-import {
-  getStatusDot,
-  getDateDif,
-  getFormatDate,
-  renderLine,
-} from '../../components/generic/helpers';
-import { Price } from '../../components/price/Price';
-import { MessageCircle } from 'react-feather';
-import styled from 'styled-components';
-import { themeColors } from 'src/styles/Themes';
-import { useGetChannelQuery } from 'src/graphql/queries/__generated__/getChannel.generated';
-import { useNodeInfo } from 'src/hooks/UseNodeInfo';
-import { LoadingCard } from 'src/components/loading/LoadingCard';
 
 const S = {
   icon: styled.span`
