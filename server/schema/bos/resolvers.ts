@@ -20,7 +20,6 @@ type PayType = {
 type RebalanceType = {
   avoid?: String[];
   in_through?: String;
-  is_avoiding_high_inbound?: Boolean;
   max_fee?: Number;
   max_fee_rate?: Number;
   max_rebalance?: Number;
@@ -96,7 +95,6 @@ export const bosResolvers = {
       {
         avoid,
         in_through,
-        is_avoiding_high_inbound,
         max_fee,
         max_fee_rate,
         max_rebalance,
@@ -110,7 +108,6 @@ export const bosResolvers = {
         out_channels: [],
         avoid,
         ...(in_through && { in_through }),
-        ...(is_avoiding_high_inbound && { is_avoiding_high_inbound }),
         ...(max_fee && max_fee > 0 && { max_fee }),
         ...(max_fee_rate && max_fee_rate > 0 && { max_fee_rate }),
         ...(max_rebalance &&

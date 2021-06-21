@@ -15,10 +15,10 @@ import { mediaWidths } from 'src/styles/Themes';
 import { usePriceState } from 'src/context/PriceContext';
 import { getPrice } from 'src/components/price/Price';
 import { useConfigState } from 'src/context/ConfigContext';
-import { ReportType } from '../home/reports/forwardReport/ForwardReport';
-import { getChordMatrix } from './helpers';
 import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
+import { ReportType } from '../home/reports/forwardReport/ForwardReport';
 import { ChannelAlias } from '../home/reports/forwardReport/ChannelAlias';
+import { getChordMatrix } from './helpers';
 
 const Wrapper = styled.div`
   height: 800px;

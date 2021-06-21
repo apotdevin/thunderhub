@@ -8,6 +8,7 @@ import {
   Star,
 } from 'react-feather';
 import styled from 'styled-components';
+import { SatoshiSymbol } from 'src/components/satoshi/Satoshi';
 import { Separation, SingleLine } from '../../../components/generic/Styled';
 import {
   useConfigState,
@@ -20,7 +21,6 @@ import {
   unSelectedNavButton,
 } from '../../../styles/Themes';
 import { usePriceState } from '../../../context/PriceContext';
-import { SatoshiSymbol } from 'src/components/satoshi/Satoshi';
 
 const SelectedIcon = styled.div<{ selected: boolean }>`
   display: flex;

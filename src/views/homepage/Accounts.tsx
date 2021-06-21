@@ -84,10 +84,8 @@ export const Accounts = () => {
     prefetch('/');
   }, [prefetch]);
 
-  const {
-    data: accountData,
-    loading: loadingData,
-  } = useGetServerAccountsQuery();
+  const { data: accountData, loading: loadingData } =
+    useGetServerAccountsQuery();
 
   const [getCanConnect, { data, loading }] = useGetCanConnectLazyQuery({
     fetchPolicy: 'network-only',

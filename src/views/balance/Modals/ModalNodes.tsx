@@ -34,10 +34,8 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
   const [newNode, newNodeSet] = React.useState<string>('');
   const { loading, data } = useGetPeersQuery();
 
-  const [
-    getNode,
-    { data: _data, loading: nodeLoading },
-  ] = useGetNodeLazyQuery();
+  const [getNode, { data: _data, loading: nodeLoading }] =
+    useGetNodeLazyQuery();
   const [nodeData, resetMutationResult] = useMutationResultWithReset(_data);
 
   React.useEffect(() => {

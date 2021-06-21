@@ -33,7 +33,7 @@ export const shorten = (text: string): string => {
 
 export const addEllipsis = (
   text: string | null | undefined,
-  length: number = 14
+  length = 14
 ): string => {
   if (!text) return '';
 

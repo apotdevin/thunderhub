@@ -42,7 +42,6 @@ const defaultRebalanceId: RebalanceIdType = {
 type StateType = {
   avoid: RebalanceIdType[];
   in_through: RebalanceIdType;
-  is_avoiding_high_inbound: boolean;
   max_fee: number;
   max_fee_rate: number;
   max_rebalance: number;
@@ -52,10 +51,6 @@ type StateType = {
 };
 
 export type ActionType =
-  | {
-      type: 'avoidHigh';
-      avoid: boolean;
-    }
   | {
       type: 'maxFee' | 'maxFeeRate' | 'maxRebalance' | 'out_inbound';
       amount: number;
@@ -87,7 +82,6 @@ export type ActionType =
 const initialState: StateType = {
   avoid: [],
   in_through: defaultRebalanceId,
-  is_avoiding_high_inbound: false,
   max_fee: 10,
   max_fee_rate: 100,
   max_rebalance: 0,
@@ -98,8 +92,6 @@ const initialState: StateType = {
 
 const reducer = (state: StateType, action: ActionType): StateType => {
   switch (action.type) {
-    case 'avoidHigh':
-      return { ...state, is_avoiding_high_inbound: action.avoid };
     case 'maxFee':
       return { ...state, max_fee: action.amount };
     case 'maxFeeRate':

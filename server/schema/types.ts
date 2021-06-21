@@ -175,7 +175,6 @@ export const mutationTypes = gql`
     bosRebalance(
       avoid: [String]
       in_through: String
-      is_avoiding_high_inbound: Boolean
       max_fee: Int
       max_fee_rate: Int
       max_rebalance: Int
