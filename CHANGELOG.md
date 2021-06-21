@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.20](https://github.com/apotdevin/thunderhub/compare/v0.12.19...v0.12.20) (2021-06-21)
+
+
+### Improvements
+
+* bump deps ([acb96ff](https://github.com/apotdevin/thunderhub/commit/acb96ff3dfaf9e42e61e9d410239e953b76c4165))
+* dash and settings ([d5ba08c](https://github.com/apotdevin/thunderhub/commit/d5ba08cf67746fa87ecd5250f38f0185f4731561))
+
 ### [0.12.19](https://github.com/apotdevin/thunderhub/compare/v0.12.18...v0.12.19) (2021-06-08)
 
 
