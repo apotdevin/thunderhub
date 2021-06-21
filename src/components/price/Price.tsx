@@ -60,45 +60,47 @@ interface GetPriceProps {
 
 export type FormatFnType = (options: GetPriceProps) => JSX.Element | string;
 
-export const getPrice = (
-  currency: string,
-  displayValues: boolean,
-  priceContext: {
-    fiat: string;
-    dontShow: boolean;
-    prices?: { [key: string]: { last: number; symbol: string } };
-  }
-) => ({
-  amount,
-  breakNumber = false,
-  override,
-  noUnit,
-}: GetPriceProps): JSX.Element | string => {
-  if (!amount) return '-';
-  const { prices, dontShow, fiat } = priceContext;
+export const getPrice =
+  (
+    currency: string,
+    displayValues: boolean,
+    priceContext: {
+      fiat: string;
+      dontShow: boolean;
+      prices?: { [key: string]: { last: number; symbol: string } };
+    }
+  ) =>
+  ({
+    amount,
+    breakNumber = false,
+    override,
+    noUnit,
+  }: GetPriceProps): JSX.Element | string => {
+    if (!amount) return '-';
+    const { prices, dontShow, fiat } = priceContext;
 
-  if (!displayValues) {
-    return '-';
-  }
+    if (!displayValues) {
+      return '-';
+    }
 
-  let priceProps: PriceProps = {
-    price: 0,
-    symbol: '',
-    currency: currency !== 'btc' && currency !== 'sat' ? 'sat' : currency,
-  };
-
-  if (currency === 'fiat' && prices && !dontShow) {
-    const current: { last: number; symbol: string } = prices[fiat] ?? {
-      last: 0,
+    let priceProps: PriceProps = {
+      price: 0,
       symbol: '',
+      currency: currency !== 'btc' && currency !== 'sat' ? 'sat' : currency,
     };
 
-    priceProps = {
-      price: current.last,
-      symbol: current.symbol,
-      currency,
-    };
-  }
+    if (currency === 'fiat' && prices && !dontShow) {
+      const current: { last: number; symbol: string } = prices[fiat] ?? {
+        last: 0,
+        symbol: '',
+      };
 
-  return getValue({ amount, ...priceProps, breakNumber, override, noUnit });
-};
+      priceProps = {
+        price: current.last,
+        symbol: current.symbol,
+        currency,
+      };
+    }
+
+    return getValue({ amount, ...priceProps, breakNumber, override, noUnit });
+  };

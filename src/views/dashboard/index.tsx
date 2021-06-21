@@ -5,13 +5,13 @@ import { useLocalStorage } from 'src/hooks/UseLocalStorage';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { useRef } from 'react';
 import useElementSize from 'src/hooks/UseElementSize';
-import { getWidgets } from './widgets/helpers';
 import { Card, SubTitle } from 'src/components/generic/Styled';
 import { textColor } from 'src/styles/Themes';
 import { Link } from 'src/components/link/Link';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { useDashDispatch, useDashState } from 'src/context/DashContext';
 import Modal from 'src/components/modal/ReactModal';
+import { getWidgets } from './widgets/helpers';
 import { DashboardModal } from './modal';
 
 const S = {

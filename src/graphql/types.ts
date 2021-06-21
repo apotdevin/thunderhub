@@ -380,7 +380,6 @@ export type MutationBosPayArgs = {
 export type MutationBosRebalanceArgs = {
   avoid?: Maybe<Array<Maybe<Scalars['String']>>>;
   in_through?: Maybe<Scalars['String']>;
-  is_avoiding_high_inbound?: Maybe<Scalars['Boolean']>;
   max_fee?: Maybe<Scalars['Int']>;
   max_fee_rate?: Maybe<Scalars['Int']>;
   max_rebalance?: Maybe<Scalars['Int']>;

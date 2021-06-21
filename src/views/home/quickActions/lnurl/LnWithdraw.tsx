@@ -32,13 +32,8 @@ type LnWithdrawProps = {
 };
 
 export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
-  const {
-    minWithdrawable,
-    maxWithdrawable,
-    callback,
-    defaultDescription,
-    k1,
-  } = request;
+  const { minWithdrawable, maxWithdrawable, callback, defaultDescription, k1 } =
+    request;
 
   const min = Number(minWithdrawable) / 1000 || 0;
   const max = Number(maxWithdrawable) / 1000 || 0;
@@ -54,12 +49,10 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
   const [withdraw, { data, loading }] = useWithdrawLnUrlMutation({
     onError: error => toast.error(getErrorContent(error)),
   });
-  const [
-    checkStatus,
-    { data: statusData, loading: statusLoading, error },
-  ] = useGetInvoiceStatusChangeLazyQuery({
-    onError: error => toast.error(getErrorContent(error)),
-  });
+  const [checkStatus, { data: statusData, loading: statusLoading, error }] =
+    useGetInvoiceStatusChangeLazyQuery({
+      onError: error => toast.error(getErrorContent(error)),
+    });
 
   useEffect(() => {
     if (!loading && data?.lnUrlWithdraw) {

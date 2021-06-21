@@ -49,12 +49,10 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
 
   const dispatch = useSwapsDispatch();
 
-  const [
-    getQuote,
-    { data: _data, loading },
-  ] = useCreateBoltzReverseSwapMutation({
-    onError: error => toast.error(getErrorContent(error)),
-  });
+  const [getQuote, { data: _data, loading }] =
+    useCreateBoltzReverseSwapMutation({
+      onError: error => toast.error(getErrorContent(error)),
+    });
   const [data, resetMutation] = useMutationResultWithReset(_data);
 
   useEffect(() => {

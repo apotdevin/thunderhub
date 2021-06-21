@@ -11,6 +11,13 @@ import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { RefreshCw, Settings } from 'react-feather';
 import styled, { css } from 'styled-components';
+import { useLocalStorage } from 'src/hooks/UseLocalStorage';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
+import {
+  defaultSettings,
+  TransactionSettings,
+} from 'src/views/transactions/Settings';
+import { subDays, format } from 'date-fns';
 import {
   Card,
   CardWithTitle,
@@ -23,13 +30,6 @@ import { PaymentsCard } from '../src/views/transactions/PaymentsCards';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 import { FlowBox } from '../src/views/home/reports/flow';
-import { useLocalStorage } from 'src/hooks/UseLocalStorage';
-import { useNodeInfo } from 'src/hooks/UseNodeInfo';
-import {
-  defaultSettings,
-  TransactionSettings,
-} from 'src/views/transactions/Settings';
-import { subDays, format } from 'date-fns';
 
 type RotationProps = {
   withRotation: boolean;

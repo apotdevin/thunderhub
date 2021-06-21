@@ -16,12 +16,8 @@ import { secret } from 'pages/api/v1';
 import { ResolverContext } from 'config/client';
 
 const { serverRuntimeConfig } = getConfig();
-const {
-  macaroonPath,
-  lnCertPath,
-  lnServerUrl,
-  accountConfigPath,
-} = serverRuntimeConfig;
+const { macaroonPath, lnCertPath, lnServerUrl, accountConfigPath } =
+  serverRuntimeConfig;
 
 const ssoMacaroon = readMacaroons(macaroonPath);
 const ssoCert = readFile(lnCertPath);

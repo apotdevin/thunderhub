@@ -8,6 +8,7 @@ import { useBitcoinFees } from 'src/hooks/UseBitcoinFees';
 import { useConfigState } from 'src/context/ConfigContext';
 import { PeerSelect } from 'src/components/select/specific/PeerSelect';
 import { WarningText } from 'src/views/stats/styles';
+import styled from 'styled-components';
 import {
   DarkSubTitle,
   Separation,
@@ -20,7 +21,6 @@ import {
   SingleButton,
   MultiButton,
 } from '../../../../components/buttons/multiButton/MultiButton';
-import styled from 'styled-components';
 
 interface OpenChannelProps {
   initialPublicKey?: string | undefined | null;

@@ -4,10 +4,10 @@ import { useGetChannelQuery } from 'src/graphql/queries/__generated__/getChannel
 import { useGetClosedChannelsQuery } from 'src/graphql/queries/__generated__/getClosedChannels.generated';
 import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { themeColors } from 'src/styles/Themes';
-import { getAliasFromClosedChannels } from './helpers';
 import ReactTooltip from 'react-tooltip';
 import { Info } from 'react-feather';
 import styled from 'styled-components';
+import { getAliasFromClosedChannels } from './helpers';
 
 const S = {
   icon: styled.span`

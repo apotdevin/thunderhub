@@ -34,8 +34,8 @@ module.exports = {
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:jest/recommended',
-    'prettier/@typescript-eslint',
     'plugin:prettier/recommended',
+    'prettier',
   ],
   rules: {
     'react/react-in-jsx-scope': 'off',

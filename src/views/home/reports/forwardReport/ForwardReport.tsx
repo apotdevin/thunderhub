@@ -10,6 +10,7 @@ import {
 import { toast } from 'react-toastify';
 import { renderLine } from 'src/components/generic/helpers';
 import { Forward } from 'src/graphql/types';
+import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
 import {
   chartAxisColor,
   chartBarColor,
@@ -22,7 +23,6 @@ import { getPrice } from '../../../../components/price/Price';
 import { usePriceState } from '../../../../context/PriceContext';
 import { orderAndReducedArray } from './helpers';
 import { CardContent } from '.';
-import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
 
 export type ReportDuration =
   | 'day'

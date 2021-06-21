@@ -25,9 +25,8 @@ export default async (_: undefined, __: undefined, context: ContextType) => {
     getForwards({ lnd, after, before })
   );
 
-  const channelVolume: { channel: string; tokens: number }[] = getChannelVolume(
-    forwards
-  );
+  const channelVolume: { channel: string; tokens: number }[] =
+    getChannelVolume(forwards);
 
   const channelDetails = channels
     .map(channel => {

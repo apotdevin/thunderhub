@@ -35,9 +35,8 @@ export const ChatInput = ({
   });
   const [data, resetMutationResult] = useMutationResultWithReset(_data);
 
-  const [formattedMessage, contentType, tokens, canSend] = handleMessage(
-    message
-  );
+  const [formattedMessage, contentType, tokens, canSend] =
+    handleMessage(message);
 
   React.useEffect(() => {
     if (!loading && account && data?.sendMessage) {

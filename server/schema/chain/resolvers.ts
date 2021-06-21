@@ -55,11 +55,12 @@ export const chainResolvers = {
 
       const { lnd } = context;
 
-      const pendingValue: PendingChainBalanceProps = await to<GetPendingChainBalanceType>(
-        getPendingChainBalance({
-          lnd,
-        })
-      );
+      const pendingValue: PendingChainBalanceProps =
+        await to<GetPendingChainBalanceType>(
+          getPendingChainBalance({
+            lnd,
+          })
+        );
 
       const { pending_channels } = await to<GetPendingChannelsType>(
         getPendingChannels({ lnd })
