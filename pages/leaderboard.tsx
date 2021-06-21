@@ -38,7 +38,9 @@ const LeaderboardView = () => {
 
   return (
     <>
-      <SupportBar />
+      <Card>
+        <SupportBar />
+      </Card>
       {renderBoard()}
     </>
   );

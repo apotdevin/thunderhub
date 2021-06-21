@@ -17,6 +17,7 @@ import {
   Heart,
   Shuffle,
   Aperture,
+  Grid,
 } from 'react-feather';
 import { useRouter } from 'next/router';
 import { useBaseConnect } from 'src/hooks/UseBaseConnect';
@@ -116,6 +117,7 @@ const BurgerNav = styled.a<NavProps>`
 `;
 
 const HOME = '/';
+const DASHBOARD = '/dashboard';
 const PEERS = '/peers';
 const CHANNEL = '/channels';
 const REBALANCE = '/rebalance';
@@ -140,7 +142,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const { pathname } = useRouter();
   const { sidebar } = useConfigState();
 
-  const connected = useBaseConnect();
+  const { connected } = useBaseConnect();
 
   const isRoot = pathname === '/login' || pathname === '/sso';
 
@@ -173,6 +175,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const renderLinks = () => (
     <ButtonSection isOpen={sidebar}>
       {renderNavButton('Home', HOME, Home, sidebar)}
+      {renderNavButton('Dashboard', DASHBOARD, Grid, sidebar)}
       {renderNavButton('Peers', PEERS, Users, sidebar)}
       {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
       {renderNavButton('Rebalance', REBALANCE, Repeat, sidebar)}
@@ -183,13 +186,14 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Tools', TOOLS, Shield, sidebar)}
       {renderNavButton('Swap', SWAP, Shuffle, sidebar)}
       {renderNavButton('Stats', STATS, BarChart2, sidebar)}
-      {connected && renderNavButton('Scores', SCORES, Aperture)}
+      {connected && renderNavButton('Scores', SCORES, Aperture, sidebar)}
     </ButtonSection>
   );
 
   const renderBurger = () => (
     <BurgerRow>
       {renderBurgerNav('Home', HOME, Home)}
+      {renderBurgerNav('Dashboard', DASHBOARD, Grid)}
       {renderBurgerNav('Peers', PEERS, Users)}
       {renderBurgerNav('Channels', CHANNEL, Cpu)}
       {renderBurgerNav('Rebalance', REBALANCE, Repeat)}

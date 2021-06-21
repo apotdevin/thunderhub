@@ -52,9 +52,43 @@ const StyledSelect = styled(ReactSelect)`
   }
 `;
 
+const StyledSmallSelect = styled(ReactSelect)`
+  & .Select__control {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    font-size: 12px;
+
+    & .Select__control--is-focused {
+      border: 1px solid ${themeColors.blue2};
+    }
+
+    & .Select__single-value {
+      color: ${textColor};
+    }
+
+    & .Select__dropdown-indicator {
+      padding: 0 0 0 4px;
+    }
+  }
+
+  & .Select__menu {
+    font-size: 14px;
+    color: black;
+
+    & .Select__option {
+      cursor: pointer;
+    }
+
+    & .Select__option--is-selected {
+      background-color: ${themeColors.blue2};
+    }
+  }
+`;
+
 export type ValueProp = {
-  value: string;
-  label: string;
+  value: string | number;
+  label: string | number;
 };
 
 type SelectProps = {
@@ -94,6 +128,7 @@ type SelectWithValueProps = {
   value: ValueProp | undefined;
   isMulti?: boolean;
   maxWidth?: string;
+  isClearable?: boolean;
   callback: (value: ValueProp[]) => void;
 };
 
@@ -103,6 +138,7 @@ export const SelectWithValue = ({
   maxWidth,
   callback,
   value,
+  isClearable = true,
 }: SelectWithValueProps) => {
   const handleChange = (value: ValueProp | ValueProp[]) => {
     if (Array.isArray(value)) {
@@ -119,7 +155,36 @@ export const SelectWithValue = ({
         options={options}
         onChange={handleChange}
         value={value || null}
-        isClearable={true}
+        isClearable={isClearable}
+      />
+    </StyledWrapper>
+  );
+};
+
+export const SmallSelectWithValue = ({
+  isMulti,
+  options,
+  maxWidth,
+  callback,
+  value,
+  isClearable = true,
+}: SelectWithValueProps) => {
+  const handleChange = (value: ValueProp | ValueProp[]) => {
+    if (Array.isArray(value)) {
+      callback(value);
+    } else {
+      callback([value]);
+    }
+  };
+  return (
+    <StyledWrapper maxWidth={maxWidth} fullWidth={true}>
+      <StyledSmallSelect
+        isMulti={isMulti}
+        classNamePrefix={'Select'}
+        options={options}
+        onChange={handleChange}
+        value={value || null}
+        isClearable={isClearable}
       />
     </StyledWrapper>
   );

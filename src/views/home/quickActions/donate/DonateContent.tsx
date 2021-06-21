@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  Card,
-  SubTitle,
-  Separation,
-  Sub4Title,
-} from 'src/components/generic/Styled';
+import { SubTitle, Separation, Sub4Title } from 'src/components/generic/Styled';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import Modal from 'src/components/modal/ReactModal';
@@ -42,16 +37,14 @@ export const SupportBar = () => {
   const [invoice, invoiceSet] = React.useState<string>('');
   const [id, idSet] = React.useState<string>('');
 
-  const connected = useBaseConnect();
+  const { connected } = useBaseConnect();
 
   const [withPoints, setWithPoints] = React.useState<boolean>(false);
 
   const [getInvoice, { data, loading }] = useCreateBaseInvoiceMutation();
 
-  const [
-    createPoints,
-    { data: pointsData, called, loading: pointsLoading },
-  ] = useCreateThunderPointsMutation({ refetchQueries: ['GetBasePoints'] });
+  const [createPoints, { data: pointsData, called, loading: pointsLoading }] =
+    useCreateThunderPointsMutation({ refetchQueries: ['GetBasePoints'] });
   const { data: info } = useGetCanConnectInfoQuery({ ssr: false });
 
   React.useEffect(() => {
@@ -73,7 +66,16 @@ export const SupportBar = () => {
     }
   }, [pointsData, pointsLoading, called]);
 
-  if (!connected) return null;
+  if (!connected)
+    return (
+      <div style={{ textAlign: 'center' }}>
+        <SubTitle>Unable to connect to donation server.</SubTitle>
+        <Sub4Title>
+          Please check back later.Thanks for wanting to donate
+          <Emoji symbol={'❤️'} label={'heart'} />
+        </Sub4Title>
+      </div>
+    );
 
   const handleReset = () => {
     modalOpenSet(false);
@@ -102,56 +104,54 @@ export const SupportBar = () => {
 
   return (
     <>
-      <Card>
-        <div style={{ textAlign: 'center' }}>
-          <SubTitle>This project is completely free and open-source.</SubTitle>
-          <Sub4Title>
-            If you have enjoyed it, please consider supporting ThunderHub with
-            some sats <Emoji symbol={'❤️'} label={'heart'} />
-          </Sub4Title>
-        </div>
-        <Separation />
-        <InputWithDeco
-          title={'Amount'}
-          value={amount}
-          amount={amount}
-          inputType={'number'}
-          inputCallback={value => amountSet(Number(value))}
-        />
-        <Separation />
-        <InputWithDeco title={'With Points'} noInput={true}>
-          <MultiButton>
-            {renderButton(() => setWithPoints(true), 'Yes', withPoints)}
-            {renderButton(() => setWithPoints(false), 'No', !withPoints)}
-          </MultiButton>
-        </InputWithDeco>
-        {withPoints && (
-          <>
-            <StyledText>
-              This means your node will appear in the ThunderHub donation
-              leaderboard. If you want to remain anonymous, do not enable this
-              option. Your node alias and public key will be stored if you
-              enable it.
-            </StyledText>
-            <Warning>
-              Due to the increasing price of Bitcoin, to incentivize development
-              and to give everyone an opportunity to be in the top of the
-              leaderboard, points have a half life of 6 months. This means that
-              every 6 months they are halved.
-            </Warning>
-          </>
-        )}
-        <Separation />
-        <ColorButton
-          onClick={() => getInvoice({ variables: { amount } })}
-          loading={loading}
-          disabled={amount <= 0 || loading}
-          fullWidth={true}
-          withMargin={'8px 0 0 0'}
-        >
-          Send
-        </ColorButton>
-      </Card>
+      <div style={{ textAlign: 'center' }}>
+        <SubTitle>This project is completely free and open-source.</SubTitle>
+        <Sub4Title>
+          If you have enjoyed it, please consider supporting ThunderHub with
+          some sats <Emoji symbol={'❤️'} label={'heart'} />
+        </Sub4Title>
+      </div>
+      <Separation />
+      <InputWithDeco
+        title={'Amount'}
+        value={amount}
+        amount={amount}
+        inputType={'number'}
+        inputCallback={value => amountSet(Number(value))}
+      />
+      <Separation />
+      <InputWithDeco title={'With Points'} noInput={true}>
+        <MultiButton>
+          {renderButton(() => setWithPoints(true), 'Yes', withPoints)}
+          {renderButton(() => setWithPoints(false), 'No', !withPoints)}
+        </MultiButton>
+      </InputWithDeco>
+      {withPoints && (
+        <>
+          <StyledText>
+            This means your node will appear in the ThunderHub donation
+            leaderboard. If you want to remain anonymous, do not enable this
+            option. Your node alias and public key will be stored if you enable
+            it.
+          </StyledText>
+          <Warning>
+            Due to the increasing price of Bitcoin, to incentivize development
+            and to give everyone an opportunity to be in the top of the
+            leaderboard, points have a half life of 6 months. This means that
+            every 6 months they are halved.
+          </Warning>
+        </>
+      )}
+      <Separation />
+      <ColorButton
+        onClick={() => getInvoice({ variables: { amount } })}
+        loading={loading}
+        disabled={amount <= 0 || loading}
+        fullWidth={true}
+        withMargin={'8px 0 0 0'}
+      >
+        Send
+      </ColorButton>
       <Modal isOpen={modalOpen} closeCallback={handleReset}>
         <Pay predefinedRequest={invoice} payCallback={handlePaidReset} />
       </Modal>

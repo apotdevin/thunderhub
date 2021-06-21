@@ -16,7 +16,6 @@ import { NoWrap } from './Messages';
 
 export const SignMessage = () => {
   const [message, setMessage] = useState<string>('');
-  const [isPasting, setIsPasting] = useState<boolean>(false);
   const [signed, setSigned] = useState<string>('');
 
   const [signMessage, { data, loading }] = useSignMessageLazyQuery({
@@ -49,24 +48,37 @@ export const SignMessage = () => {
       >
         Sign
       </ColorButton>
-      <Separation />
     </>
   );
 
   const renderMessage = () => (
-    <Column>
-      <WrapRequest>{signed}</WrapRequest>
-      <CopyToClipboard
-        text={signed}
-        onCopy={() => toast.success('Signature Copied')}
-      >
-        <ColorButton>
-          <Copy size={18} />
-          Copy
-        </ColorButton>
-      </CopyToClipboard>
-    </Column>
+    <>
+      <Separation />
+      <Column>
+        <WrapRequest>{signed}</WrapRequest>
+        <CopyToClipboard
+          text={signed}
+          onCopy={() => toast.success('Signature Copied')}
+        >
+          <ColorButton>
+            <Copy size={18} />
+            Copy
+          </ColorButton>
+        </CopyToClipboard>
+      </Column>
+    </>
   );
+
+  return (
+    <>
+      {renderInput()}
+      {signed !== '' && renderMessage()}
+    </>
+  );
+};
+
+export const SignMessageCard = () => {
+  const [isPasting, setIsPasting] = useState<boolean>(false);
 
   return (
     <>
@@ -74,15 +86,13 @@ export const SignMessage = () => {
         <DarkSubTitle>Sign Message</DarkSubTitle>
         <ColorButton
           withMargin={'4px 0'}
-          disabled={loading}
           arrow={!isPasting}
           onClick={() => setIsPasting(prev => !prev)}
         >
           {isPasting ? <X size={18} /> : 'Sign'}
         </ColorButton>
       </SingleLine>
-      {isPasting && renderInput()}
-      {signed !== '' && isPasting && renderMessage()}
+      {isPasting && <SignMessage />}
     </>
   );
 };

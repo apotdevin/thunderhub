@@ -32,7 +32,7 @@ const FullWidth = styled.div`
 
 const FixedWidth = styled.div`
   max-width: 1000px;
-  margin: 0 auto 0 auto;
+  margin: 0 auto 0;
 
   @media (max-width: 1035px) {
     padding: 0 16px;
