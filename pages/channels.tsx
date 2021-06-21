@@ -14,6 +14,7 @@ import {
   CardWithTitle,
   SubTitle,
   SmallButton,
+  Card,
 } from '../src/components/generic/Styled';
 import { mediaWidths } from '../src/styles/Themes';
 
@@ -66,7 +67,11 @@ const ChannelView = () => {
       case 3:
         return <ClosedChannels />;
       default:
-        return <Channels />;
+        return (
+          <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+            <Channels />
+          </Card>
+        );
     }
   };
 

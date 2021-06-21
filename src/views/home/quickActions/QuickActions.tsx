@@ -80,7 +80,11 @@ export const QuickActions = () => {
   const renderContent = () => {
     switch (openCard) {
       case 'support':
-        return <SupportBar />;
+        return (
+          <Card>
+            <SupportBar />
+          </Card>
+        );
       case 'decode':
         return <DecodeCard />;
       case 'ln_url':

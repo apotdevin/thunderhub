@@ -29,7 +29,7 @@ const S = {
 };
 
 export const ChannelBosScore: FC<{ score?: BosScore | null }> = ({ score }) => {
-  const connected = useBaseConnect();
+  const { connected } = useBaseConnect();
 
   if (!connected) return null;
 
