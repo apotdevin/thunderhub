@@ -23,12 +23,12 @@ export const getTitleColor = (
 export const getColumnTemplate = (extraColumns: extraColumnsType) => {
   switch (extraColumns) {
     case 'incoming':
-      return '1fr 2fr 80px';
+      return '2fr 2fr 80px';
     case 'outgoing':
-      return '1fr 80px 2fr';
+      return '2fr 80px 2fr';
     case 'both':
-      return '1fr 80px 2fr 80px';
+      return '2fr 80px 2fr 80px';
     default:
-      return undefined;
+      return '2fr 2fr';
   }
 };
