@@ -48,9 +48,8 @@ export const Bakery = () => {
   const [isOpen, isOpenSet] = React.useState<boolean>(false);
   const [newMacaroon, newMacaroonSet] = React.useState<string>('');
 
-  const [permissions, permissionSet] = React.useState<PermissionsType>(
-    InitPermissions
-  );
+  const [permissions, permissionSet] =
+    React.useState<PermissionsType>(InitPermissions);
 
   let hasATrue = false;
   Object.entries(permissions);

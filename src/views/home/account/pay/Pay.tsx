@@ -1,7 +1,6 @@
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
-import { SingleLine, Separation } from '../../../../components/generic/Styled';
 import { useEffect, useState } from 'react';
 import { useBosPayMutation } from 'src/graphql/mutations/__generated__/bosPay.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
@@ -13,6 +12,7 @@ import { Camera } from 'react-feather';
 import Modal from 'src/components/modal/ReactModal';
 import dynamic from 'next/dynamic';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
+import { SingleLine, Separation } from '../../../../components/generic/Styled';
 
 const QRCodeReader = dynamic(() => import('src/components/qrReader'), {
   ssr: false,

@@ -7,6 +7,7 @@ import {
 } from 'src/components/buttons/multiButton/MultiButton';
 import { Forward } from 'src/graphql/types';
 import styled from 'styled-components';
+import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
 import { getErrorContent } from '../../../../utils/error';
 import { SingleLine, SubTitle } from '../../../../components/generic/Styled';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
@@ -19,7 +20,6 @@ import {
   ChannelType,
 } from './ForwardReportTables';
 import { CardContent } from '.';
-import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
 
 type Props = {
   days: number;

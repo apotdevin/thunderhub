@@ -7,6 +7,7 @@ import { useBitcoinFees } from 'src/hooks/UseBitcoinFees';
 import { useConfigState } from 'src/context/ConfigContext';
 import { renderLine } from 'src/components/generic/helpers';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
+import { chartColors } from 'src/styles/Themes';
 import {
   Separation,
   SingleLine,
@@ -20,7 +21,6 @@ import {
   MultiButton,
   SingleButton,
 } from '../../buttons/multiButton/MultiButton';
-import { chartColors } from 'src/styles/Themes';
 
 interface CloseChannelProps {
   callback: () => void;

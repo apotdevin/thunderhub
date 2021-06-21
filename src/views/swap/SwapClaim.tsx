@@ -49,12 +49,10 @@ export const SwapClaim = () => {
   } = useSwapsState();
   const dispatch = useSwapsDispatch();
 
-  const [
-    claimTransaction,
-    { data, loading },
-  ] = useClaimBoltzTransactionMutation({
-    onError: error => toast.error(getErrorContent(error)),
-  });
+  const [claimTransaction, { data, loading }] =
+    useClaimBoltzTransactionMutation({
+      onError: error => toast.error(getErrorContent(error)),
+    });
 
   useEffect(() => {
     if (!data?.claimBoltzTransaction || typeof claim !== 'number') return;

@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
 import { BarChart } from 'src/components/chart/BarChart';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { SmallSelectWithValue } from 'src/components/select';
