@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { PaymentType } from 'src/graphql/types';
+import { mediaWidths } from 'src/styles/Themes';
 import {
   Separation,
   SubCard,
@@ -36,6 +37,10 @@ const S = {
     width: 100%;
     display: grid;
     grid-template-columns: 3fr 2fr 1fr;
+
+    @media (${mediaWidths.mobile}) {
+      grid-template-columns: 1fr;
+    }
   `,
 };
 

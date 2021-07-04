@@ -4,6 +4,7 @@ import { SmallSelectWithValue } from 'src/components/select';
 import { useGetResumeQuery } from 'src/graphql/queries/__generated__/getResume.generated';
 import { renderLine } from 'src/components/generic/helpers';
 import { Price } from 'src/components/price/Price';
+import { mediaWidths } from 'src/styles/Themes';
 import {
   CardWithTitle,
   SubTitle,
@@ -26,7 +27,7 @@ const S = {
     grid-gap: 8px;
     grid-template-columns: 1fr 1fr;
 
-    @media (max-width: 770px) {
+    @media (${mediaWidths.mobile}) {
       grid-template-columns: 1fr;
     }
   `,
@@ -62,7 +63,7 @@ export const FlowBox = () => {
   const transactions = data?.getResume.resume || [];
 
   if (!data || loading) {
-    return <LoadingCard title={'Invoices and Payments Report'} />;
+    return <LoadingCard title={'Transactions'} />;
   }
 
   const reduced = transactions.reduce(
@@ -106,7 +107,7 @@ export const FlowBox = () => {
     return (
       <CardTitle>
         <S.row>
-          <SubTitle>Invoices and Payments Report</SubTitle>
+          <SubTitle>Transactions</SubTitle>
           <SmallSelectWithValue
             callback={e => setDays((e[0] || options[1]) as any)}
             options={options}
