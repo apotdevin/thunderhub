@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
-import { toast } from 'react-toastify';
-import { useGetInOutQuery } from 'src/graphql/queries/__generated__/getInOut.generated';
+import styled from 'styled-components';
+import { SmallSelectWithValue } from 'src/components/select';
+import { useGetResumeQuery } from 'src/graphql/queries/__generated__/getResume.generated';
+import { renderLine } from 'src/components/generic/helpers';
+import { Price } from 'src/components/price/Price';
 import {
   CardWithTitle,
   SubTitle,
@@ -9,53 +11,26 @@ import {
   CardTitle,
   Sub4Title,
 } from '../../../../components/generic/Styled';
-import { FlowButtonRow } from '../forwardReport/Buttons';
-import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { ReportDuration, FlowReportType } from '../forwardReport/ForwardReport';
-import { InvoicePie } from './InvoicePie';
-import { FlowPie } from './FlowPie';
-import { FlowReport } from './FlowReport';
+import { TransactionsGraph } from './TransactionGraph';
 
-export const ChannelRow = styled.div`
-  font-size: 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-export const Row = styled.div`
-  display: flex;
-
-  @media (max-width: 770px) {
-    ${({ noWrap }: { noWrap?: boolean }) =>
-      !noWrap &&
-      css`
-        flex-wrap: wrap;
-      `};
-  }
-`;
-
-export const PieRow = styled(Row)`
-  justify-content: space-between;
-`;
-
-export const Col = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  min-width: 200px;
-
-  @media (max-width: 770px) {
-    min-width: unset;
+const S = {
+  row: styled.div`
     width: 100%;
-    padding-bottom: 16px;
-  }
-`;
+    display: grid;
+    grid-template-columns: 1fr 60px 90px;
+  `,
+  grid: styled.div`
+    width: 100%;
+    display: grid;
+    grid-gap: 8px;
+    grid-template-columns: 1fr 1fr;
 
-const HalfCardWithTitle = styled(CardWithTitle)`
-  width: 50%;
-`;
+    @media (max-width: 770px) {
+      grid-template-columns: 1fr;
+    }
+  `,
+};
 
 export interface PeriodProps {
   period: number;
@@ -63,125 +38,134 @@ export interface PeriodProps {
   tokens: number;
 }
 
-const timeMap: { [key: string]: string } = {
-  day: 'today',
-  week: 'this week',
-  month: 'this month',
-  quarter_year: 'these three months',
-  half_year: 'this half year',
-  year: 'this year',
-};
+const options = [
+  { label: '1D', value: 1 },
+  { label: '7D', value: 7 },
+  { label: '1M', value: 30 },
+  { label: '2M', value: 60 },
+];
+
+const typeOptions = [
+  { label: 'Amount', value: 'amount' },
+  { label: 'Tokens', value: 'tokens' },
+];
 
 export const FlowBox = () => {
-  const [isTime, setIsTime] = useState<ReportDuration>('month');
-  const [isType, setIsType] = useState<FlowReportType>('amount');
+  const [days, setDays] = useState(options[2]);
+  const [type, setType] = useState(typeOptions[0]);
 
-  const { data, loading } = useGetInOutQuery({
-    ssr: false,
-    variables: { time: isTime },
-    onError: error => toast.error(getErrorContent(error)),
+  const { data, loading } = useGetResumeQuery({
+    variables: { limit: days.value },
+    errorPolicy: 'ignore',
   });
 
-  const buttonProps = {
-    isTime,
-    isType,
-    setIsTime,
-    setIsType,
-  };
+  const transactions = data?.getResume.resume || [];
 
   if (!data || loading) {
     return <LoadingCard title={'Invoices and Payments Report'} />;
   }
 
-  const parsedData: PeriodProps[] = JSON.parse(
-    data?.getInOut?.invoices || '[]'
-  );
-  const parsedData2: PeriodProps[] = JSON.parse(
-    data?.getInOut?.payments || '[]'
+  const reduced = transactions.reduce(
+    (p, c) => {
+      if (!c) return p;
+      if (c.__typename === 'InvoiceType') {
+        if (c.is_confirmed) {
+          return {
+            ...p,
+            invoices: p.invoices + 1,
+            invoiceAmount: p.invoiceAmount + c.received,
+            confirmed: p.confirmed + 1,
+          };
+        }
+        return {
+          ...p,
+          invoices: p.invoices + 1,
+          unconfirmed: p.unconfirmed + 1,
+        };
+      }
+      if (c.__typename === 'PaymentType') {
+        return {
+          ...p,
+          payments: p.payments + 1,
+          paymentAmount: p.paymentAmount + (Number(c.tokens) || 0),
+        };
+      }
+      return p;
+    },
+    {
+      invoices: 0,
+      invoiceAmount: 0,
+      payments: 0,
+      paymentAmount: 0,
+      confirmed: 0,
+      unconfirmed: 0,
+    }
   );
 
-  if (parsedData.length <= 0 && parsedData2.length <= 0) {
+  const Header = () => {
     return (
-      <CardWithTitle>
-        <CardTitle>
+      <CardTitle>
+        <S.row>
           <SubTitle>Invoices and Payments Report</SubTitle>
-        </CardTitle>
-        <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
-          <p>{`Your node has not received or sent any payments ${timeMap[isTime]}.`}</p>
-          <FlowButtonRow {...buttonProps} />
-        </Card>
-      </CardWithTitle>
+          <SmallSelectWithValue
+            callback={e => setDays((e[0] || options[1]) as any)}
+            options={options}
+            value={days}
+            isClearable={false}
+            maxWidth={'60px'}
+          />
+          <SmallSelectWithValue
+            callback={e => setType((e[0] || typeOptions[1]) as any)}
+            options={typeOptions}
+            value={type}
+            isClearable={false}
+            maxWidth={'90px'}
+          />
+        </S.row>
+      </CardTitle>
     );
-  }
-
-  const reduce = (array: PeriodProps[]): PeriodProps =>
-    array.reduce((p, c) => {
-      return {
-        tokens: p.tokens + c.tokens,
-        period: 0,
-        amount: p.amount + c.amount,
-      };
-    });
-
-  const emptyData = {
-    tokens: 0,
-    period: 0,
-    amount: 0,
-  } as const;
-
-  const totalInvoices = parsedData.length > 0 ? reduce(parsedData) : emptyData;
-  const totalPayments =
-    parsedData2.length > 0 ? reduce(parsedData2) : emptyData;
-
-  const flowPie = [
-    { x: 'Invoice', y: totalInvoices[isType] },
-    { x: 'Payments', y: totalPayments[isType] },
-  ];
-
-  const invoicePie = [
-    { x: 'Confirmed', y: data.getInOut?.confirmedInvoices || 0 },
-    { x: 'Unconfirmed', y: data.getInOut?.unConfirmedInvoices || 0 },
-  ];
-
-  const props = {
-    isTime,
-    isType,
-    parsedData,
-    parsedData2,
   };
-  const pieProps = { invoicePie };
-  const flowProps = { flowPie, isType };
 
   return (
     <>
       <CardWithTitle>
-        <CardTitle>
-          <SubTitle>Invoices and Payments Report</SubTitle>
-        </CardTitle>
+        <Header />
         <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
-          <FlowReport {...props} />
-          <FlowButtonRow {...buttonProps} />
+          <TransactionsGraph days={days.value} type={type.value} />
         </Card>
       </CardWithTitle>
-      <Row noWrap={true}>
-        <HalfCardWithTitle>
-          <CardTitle>
+      {transactions.length ? (
+        <S.grid>
+          <CardWithTitle>
             <Sub4Title>Total</Sub4Title>
-          </CardTitle>
-          <Card mobileCardPadding={'8px'}>
-            <FlowPie {...flowProps} />
-          </Card>
-        </HalfCardWithTitle>
-        <div style={{ width: '20px' }} />
-        <HalfCardWithTitle>
-          <CardTitle>
+            <Card>
+              {renderLine(
+                'Invoices',
+                type.value === 'amount' ? (
+                  <Price amount={reduced.invoiceAmount} />
+                ) : (
+                  reduced.invoices
+                )
+              )}
+              {renderLine(
+                'Payments',
+                type.value === 'amount' ? (
+                  <Price amount={reduced.paymentAmount} />
+                ) : (
+                  reduced.payments
+                )
+              )}
+            </Card>
+          </CardWithTitle>
+          <CardWithTitle>
             <Sub4Title>Invoices</Sub4Title>
-          </CardTitle>
-          <Card mobileCardPadding={'8px'}>
-            <InvoicePie {...pieProps} />
-          </Card>
-        </HalfCardWithTitle>
-      </Row>
+            <Card>
+              {renderLine('Confirmed', reduced.confirmed)}
+              {renderLine('Unconfirmed', reduced.unconfirmed)}
+            </Card>
+          </CardWithTitle>
+        </S.grid>
+      ) : null}
     </>
   );
 };

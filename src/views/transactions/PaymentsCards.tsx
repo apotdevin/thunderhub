@@ -5,7 +5,6 @@ import {
   Separation,
   SubCard,
   DarkSubTitle,
-  ResponsiveLine,
 } from '../../components/generic/Styled';
 import {
   StatusLine,
@@ -31,6 +30,14 @@ interface PaymentsCardProps {
 const RedValue = styled.div`
   color: red;
 `;
+
+const S = {
+  grid: styled.div`
+    width: 100%;
+    display: grid;
+    grid-template-columns: 3fr 2fr 1fr;
+  `,
+};
 
 export const PaymentsCard = ({
   payment,
@@ -99,11 +106,11 @@ export const PaymentsCard = ({
     <SubCard key={index}>
       <MainInfo onClick={() => handleClick()}>
         <StatusLine>{getStatusDot(is_confirmed, 'active')}</StatusLine>
-        <ResponsiveLine>
+        <S.grid>
           <NodeTitle>{`Payment to: ${alias}`}</NodeTitle>
           <DarkSubTitle>{`(${getDateDif(date)} ago)`}</DarkSubTitle>
           <RedValue>{formatAmount}</RedValue>
-        </ResponsiveLine>
+        </S.grid>
       </MainInfo>
       {index === indexOpen && renderDetails()}
     </SubCard>

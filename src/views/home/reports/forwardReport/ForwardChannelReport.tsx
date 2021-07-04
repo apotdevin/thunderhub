@@ -11,7 +11,6 @@ import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwar
 import { getErrorContent } from '../../../../utils/error';
 import { SingleLine, SubTitle } from '../../../../components/generic/Styled';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { ReportType } from './ForwardReport';
 import { orderForwardChannels } from './helpers';
 import {
   ChannelTable,
@@ -23,7 +22,7 @@ import { CardContent } from '.';
 
 type Props = {
   days: number;
-  order: ReportType;
+  order: string;
 };
 
 const Spacing = styled.div`

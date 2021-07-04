@@ -43,7 +43,7 @@ export const KeysendModal: React.FC<KeysendProps> = ({
       toast.success('Payment Sent');
       handleReset();
     },
-    refetchQueries: ['GetInOut', 'GetNodeInfo', 'GetBalances'],
+    refetchQueries: ['GetNodeInfo', 'GetBalances'],
   });
 
   if (error) {

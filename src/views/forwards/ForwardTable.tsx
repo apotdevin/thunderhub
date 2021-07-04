@@ -10,7 +10,6 @@ import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwar
 import { Forward } from 'src/graphql/types';
 import { getErrorContent } from 'src/utils/error';
 import { ChannelAlias } from '../home/reports/forwardReport/ChannelAlias';
-import { ReportType } from '../home/reports/forwardReport/ForwardReport';
 import { sortByNode } from './helpers';
 
 const getBar = (top: number, bottom: number) => {
@@ -29,7 +28,7 @@ const SingleBar = ({ value, height }: { value: number; height: number }) => {
   );
 };
 
-export const ForwardTable: FC<{ days: number; order: ReportType }> = ({
+export const ForwardTable: FC<{ days: number; order: string }> = ({
   days,
   order,
 }) => {

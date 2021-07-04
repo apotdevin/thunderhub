@@ -67,7 +67,6 @@ export const queryTypes = gql`
     getBitcoinPrice(logger: Boolean, currency: String): String
     getBitcoinFees(logger: Boolean): bitcoinFeeType
     getForwardChannelsReport(time: String, order: String, type: String): String
-    getInOut(time: String): InOutType
     getBackups: String
     verifyBackups(backup: String!): Boolean
     recoverFunds(backup: String!): Boolean

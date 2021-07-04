@@ -16,7 +16,6 @@ import { usePriceState } from 'src/context/PriceContext';
 import { getPrice } from 'src/components/price/Price';
 import { useConfigState } from 'src/context/ConfigContext';
 import { useGetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
-import { ReportType } from '../home/reports/forwardReport/ForwardReport';
 import { ChannelAlias } from '../home/reports/forwardReport/ChannelAlias';
 import { getChordMatrix } from './helpers';
 
@@ -39,7 +38,7 @@ type SelectedProps =
   | { type: 'chord'; chord: SingleChordProps }
   | null;
 
-const getTitle = (order: ReportType) => {
+const getTitle = (order: string) => {
   switch (order) {
     case 'fee':
       return 'Total Fees (sats)';
@@ -55,7 +54,7 @@ export const ForwardChord = ({
   order,
 }: {
   days: number;
-  order: ReportType;
+  order: string;
 }) => {
   const [selected, setSelected] = useState<SelectedProps>();
 
