@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.21](https://github.com/apotdevin/thunderhub/compare/v0.12.20...v0.12.21) (2021-07-04)
+
+
+### Bug Fixes
+
+* add dep ([bd8deda](https://github.com/apotdevin/thunderhub/commit/bd8deda5dc77f8ba2e98e76f9871903094da7f3e))
+
+
+### Styling
+
+* some grid styling ([b7b1f08](https://github.com/apotdevin/thunderhub/commit/b7b1f0829f8c02ee7e81c23909dc6e5ea71c8ddf))
+
+
+### Improvements
+
+* bump deps ([8e5f161](https://github.com/apotdevin/thunderhub/commit/8e5f161f986624c8fa599806b0f574e2d169a637))
+* cleanup charts ([6c0c84c](https://github.com/apotdevin/thunderhub/commit/6c0c84c9608d99d8028b72b889beca899ad8d3a4))
+* cleanup deps ([8a77e14](https://github.com/apotdevin/thunderhub/commit/8a77e14f13bafd33c1a9b63bc480083a55e2a5e2))
+* cleanup some deps ([020fd1e](https://github.com/apotdevin/thunderhub/commit/020fd1ef20460a3ae5039606cfe75c391f8a4a3e))
+* fixed spacing between heart and lightning emoji. ([#292](https://github.com/apotdevin/thunderhub/issues/292)) ([79e5ef1](https://github.com/apotdevin/thunderhub/commit/79e5ef1da0f1ac4773040f3cb9411c77fbb0a4a1))
+* node channel balance ([14a2b6e](https://github.com/apotdevin/thunderhub/commit/14a2b6efe00ac5cc00dbb1148e1866707cd25802))
+
 ### [0.12.20](https://github.com/apotdevin/thunderhub/compare/v0.12.19...v0.12.20) (2021-06-21)
 
 
