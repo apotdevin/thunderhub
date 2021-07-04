@@ -8,7 +8,7 @@ import {
   ResponsiveLine,
 } from 'src/components/generic/Styled';
 import { ChannelTimeHealth } from 'src/graphql/types';
-import { sortBy } from 'underscore';
+import { sortBy } from 'lodash';
 import { renderLine } from 'src/components/generic/helpers';
 import { formatSeconds } from 'src/utils/helpers';
 import { useStatsDispatch } from './context';

@@ -1,4 +1,4 @@
-import merge from 'lodash.merge';
+import { merge } from 'lodash';
 import { makeExecutableSchema } from 'graphql-tools';
 import { nodeTypes } from './node/types';
 import { nodeResolvers } from './node/resolvers';

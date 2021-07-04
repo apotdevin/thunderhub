@@ -7,7 +7,7 @@ import {
   ResponsiveLine,
 } from 'src/components/generic/Styled';
 import { ChannelFeeHealth } from 'src/graphql/types';
-import { sortBy } from 'underscore';
+import { sortBy } from 'lodash';
 import { renderLine } from 'src/components/generic/helpers';
 import { useStatsDispatch } from './context';
 import { ScoreLine, Clickable, WarningText } from './styles';

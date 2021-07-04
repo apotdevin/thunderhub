@@ -9,7 +9,7 @@ import {
 } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
-import { sortBy } from 'underscore';
+import { sortBy } from 'lodash';
 import { to } from 'server/helpers/async';
 import {
   GetChainBalanceType,

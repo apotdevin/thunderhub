@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { sortBy } from 'underscore';
+import { sortBy } from 'lodash';
 import { MessagesType } from 'src/graphql/types';
 import { SentChatProps } from 'src/context/ChatContext';
 import {

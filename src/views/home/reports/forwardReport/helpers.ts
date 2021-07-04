@@ -1,6 +1,5 @@
 import { differenceInCalendarDays, differenceInHours, subDays } from 'date-fns';
-import groupBy from 'lodash.groupby';
-import sortBy from 'lodash.sortby';
+import { sortBy, groupBy } from 'lodash';
 import { GetClosedChannelsQuery } from 'src/graphql/queries/__generated__/getClosedChannels.generated';
 import { Forward } from 'src/graphql/types';
 

@@ -4,8 +4,7 @@ import { ChannelType } from 'src/graphql/types';
 import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
 import { ValueProp } from 'src/components/select';
 import { SelectWithDecoAndValue } from 'src/components/select/SelectWithDeco';
-import sortBy from 'lodash.sortby';
-import groupBy from 'lodash.groupby';
+import { sortBy, groupBy } from 'lodash';
 import { ChannelInfo } from './ChannelInfo';
 
 type ChannelSelectProps = {

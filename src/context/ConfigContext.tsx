@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import getConfig from 'next/config';
 import Cookies from 'js-cookie';
-import omit from 'lodash.omit';
+import { omit } from 'lodash';
 
 const themeTypes = ['dark', 'light', 'night'];
 const currencyTypes = ['sat', 'btc', 'fiat'];

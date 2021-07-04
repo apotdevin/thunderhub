@@ -8,7 +8,7 @@ import { useGetBosNodeScoresQuery } from 'src/graphql/queries/__generated__/getB
 import { chartColors, mediaWidths, themeColors } from 'src/styles/Themes';
 import { getErrorContent } from 'src/utils/error';
 import styled from 'styled-components';
-import { isArray } from 'underscore';
+import { isArray } from 'lodash';
 import { AreaGraph } from './AreaGraph';
 
 const Wrapper = styled.div`
