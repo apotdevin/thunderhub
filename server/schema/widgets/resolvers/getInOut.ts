@@ -1,6 +1,6 @@
 import { getInvoices, getPayments } from 'ln-service';
 import { differenceInHours, differenceInCalendarDays } from 'date-fns';
-import { groupBy } from 'underscore';
+import { groupBy } from 'lodash';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 

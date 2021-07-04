@@ -1,4 +1,4 @@
-import { groupBy } from 'underscore';
+import { groupBy } from 'lodash';
 import { ForwardType } from 'server/types/ln-service.types';
 
 type GroupedObject = {

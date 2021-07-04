@@ -1,5 +1,5 @@
 import { subDays } from 'date-fns';
-import { sortBy } from 'underscore';
+import { sortBy } from 'lodash';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { InvoiceType, PaymentType } from 'server/types/ln-service.types';

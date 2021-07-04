@@ -3,7 +3,6 @@ import { Zap, Anchor, Circle } from 'react-feather';
 import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import { getPrice, Price } from 'src/components/price/Price';
-import { AnimatedNumber } from 'src/components/animated/AnimatedNumber';
 import { addEllipsis, renderLine } from 'src/components/generic/helpers';
 import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { unSelectedNavButton } from '../../../styles/Themes';
@@ -117,7 +116,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
               {formatPCB}
             </>
           ) : (
-            <AnimatedNumber amount={channelBalance} />
+            <Price amount={channelBalance} />
           )}
         </SingleLine>
         <SingleLine>
@@ -132,7 +131,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
               {formatPB}
             </>
           ) : (
-            <AnimatedNumber amount={chainBalance} />
+            <Price amount={chainBalance} />
           )}
         </SingleLine>
       </>

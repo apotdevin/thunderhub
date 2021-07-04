@@ -7,7 +7,7 @@ import {
   Separation,
   ResponsiveLine,
 } from 'src/components/generic/Styled';
-import { sortBy } from 'underscore';
+import { sortBy } from 'lodash';
 import { renderLine } from 'src/components/generic/helpers';
 import { ChannelHealth } from 'src/graphql/types';
 import { useStatsDispatch } from './context';

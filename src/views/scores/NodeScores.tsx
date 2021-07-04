@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { isArray } from 'underscore';
+import { isArray } from 'lodash';
 import {
   Card,
   CardWithTitle,

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { useGetChannelsQuery } from 'src/graphql/queries/__generated__/getChannels.generated';
 import { useConfigState } from 'src/context/ConfigContext';
-import { sortBy } from 'underscore';
+import { sortBy } from 'lodash';
 import { getPercent } from 'src/utils/helpers';
 import { ChannelType } from 'src/graphql/types';
 import { useRebalanceState } from 'src/context/RebalanceContext';

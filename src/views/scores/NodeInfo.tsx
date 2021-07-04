@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { useGetNodeQuery } from 'src/graphql/queries/__generated__/getNode.generated';
-import { isArray } from 'underscore';
+import { isArray } from 'lodash';
 import {
   Card,
   CardWithTitle,

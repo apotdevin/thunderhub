@@ -1,4 +1,4 @@
-import sortBy from 'lodash.sortby';
+import { sortBy } from 'lodash';
 import { Forward } from 'src/graphql/types';
 import { ReportType } from '../home/reports/forwardReport/ForwardReport';
 

@@ -4,7 +4,7 @@ import {
   subDays,
   subHours,
 } from 'date-fns';
-import groupBy from 'lodash.groupby';
+import { groupBy } from 'lodash';
 import { GetForwardsQuery } from 'src/graphql/queries/__generated__/getForwards.generated';
 import { Transaction } from 'src/graphql/types';
 import { defaultGrid } from 'src/utils/gridConstants';
