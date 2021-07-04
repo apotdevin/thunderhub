@@ -1,8 +1,3 @@
-/* eslint @typescript-eslint/no-var-requires: 0 */
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
-
 const ymlEnv = {
   YML_ENV_1: process.env.YML_ENV_1 || '',
   YML_ENV_2: process.env.YML_ENV_2 || '',
@@ -29,7 +24,7 @@ const accountConfig = {
   accountConfigPath: process.env.ACCOUNT_CONFIG_PATH || '',
 };
 
-module.exports = withBundleAnalyzer({
+module.exports = {
   poweredByHeader: false,
   basePath: process.env.BASE_PATH || '',
   serverRuntimeConfig: {
@@ -56,4 +51,4 @@ module.exports = withBundleAnalyzer({
     noVersionCheck: process.env.NO_VERSION_CHECK === 'true' ? true : false,
     logoutUrl: process.env.LOGOUT_URL || '',
   },
-});
+};
