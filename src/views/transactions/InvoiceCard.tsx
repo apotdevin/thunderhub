@@ -2,7 +2,7 @@ import React, { FC, Fragment } from 'react';
 import { InvoiceType } from 'src/graphql/types';
 import { MessageCircle } from 'react-feather';
 import styled from 'styled-components';
-import { themeColors } from 'src/styles/Themes';
+import { mediaWidths, themeColors } from 'src/styles/Themes';
 import { useGetChannelQuery } from 'src/graphql/queries/__generated__/getChannel.generated';
 import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
@@ -32,6 +32,10 @@ const S = {
     width: 100%;
     display: grid;
     grid-template-columns: 3fr 2fr 1fr;
+
+    @media (${mediaWidths.mobile}) {
+      grid-template-columns: 1fr;
+    }
   `,
 };
 

@@ -51,7 +51,7 @@ export const Channels: React.FC = () => {
   });
 
   if (loading || !data?.getChannels) {
-    return <LoadingCard noTitle={true} />;
+    return <LoadingCard noCard={true} />;
   }
 
   let biggest = 0;

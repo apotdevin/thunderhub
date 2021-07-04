@@ -168,7 +168,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
                 isBosNode
               )}
             >
-              {addEllipsis(alias || partner_public_key)}
+              {addEllipsis(alias || partner_public_key, 30)}
             </ChannelAlias>
             {!(
               channelBarStyle === 'ultracompact' ||

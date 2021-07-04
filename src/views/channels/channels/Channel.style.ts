@@ -129,7 +129,7 @@ export const WumboTag = styled.div`
 export const LineGrid = styled.div<{ template?: string }>`
   display: grid;
   grid-gap: 16px;
-  grid-template-columns: ${({ template }) => template || '1fr 3fr'};
+  grid-template-columns: ${({ template }) => template || '2fr 3fr'};
 
   @media (${mediaWidths.mobile}) {
     grid-template-columns: 1fr;
