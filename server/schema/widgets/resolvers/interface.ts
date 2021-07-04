@@ -17,14 +17,6 @@ export interface ChannelCounts {
   count: number;
 }
 
-export interface InOutProps {
-  tokens: number;
-}
-
-export interface InOutListProps {
-  [key: string]: InOutProps[];
-}
-
 export interface PaymentProps {
   created_at: string;
   is_confirmed: boolean;

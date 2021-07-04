@@ -44,7 +44,7 @@ export const LiquidityGraph = () => {
     return (
       <S.wrapper>
         <S.title>Liquidity</S.title>
-        <S.contentWrapper>No invoices for this period.</S.contentWrapper>
+        <S.contentWrapper>Unable to get liquidity data.</S.contentWrapper>
       </S.wrapper>
     );
   }

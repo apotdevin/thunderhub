@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { Table } from 'src/components/table';
 import { ChannelAlias } from './ChannelAlias';
-import { ReportType } from './ForwardReport';
 
 export type RouteType = {
   route: string;
@@ -21,12 +20,12 @@ export type ChannelType = {
 };
 
 type RouteTableProps = {
-  order: ReportType;
+  order: string;
   forwardArray: RouteType[];
 };
 
 type ChannelTableProps = {
-  order: ReportType;
+  order: string;
   forwardArray: ChannelType[];
 };
 

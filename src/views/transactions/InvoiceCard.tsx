@@ -21,14 +21,17 @@ import {
 import {
   Separation,
   SubCard,
-  SingleLine,
-  ResponsiveLine,
   DarkSubTitle,
 } from '../../components/generic/Styled';
 
 const S = {
   icon: styled.span`
     margin-left: 4px;
+  `,
+  grid: styled.div`
+    width: 100%;
+    display: grid;
+    grid-template-columns: 3fr 2fr 1fr;
   `,
 };
 
@@ -89,8 +92,6 @@ export const InvoiceCard = ({
 
   const texts = payments.map(p => p?.messages?.message).filter(Boolean);
   const hasMessages = !!texts.length;
-
-  const formatAmount = <Price amount={tokens} />;
 
   const handleClick = () => {
     if (indexOpen === index) {
@@ -156,7 +157,7 @@ export const InvoiceCard = ({
     <SubCard key={index}>
       <MainInfo onClick={() => handleClick()}>
         <StatusLine>{getStatusDot(is_confirmed, 'active')}</StatusLine>
-        <ResponsiveLine>
+        <S.grid>
           <NodeTitle>
             {description ? description : 'Invoice'}
             {hasMessages && (
@@ -166,8 +167,8 @@ export const InvoiceCard = ({
             )}
           </NodeTitle>
           <DarkSubTitle>{`(${getDateDif(date)} ago)`}</DarkSubTitle>
-          <SingleLine>{formatAmount}</SingleLine>
-        </ResponsiveLine>
+          <Price amount={tokens} />
+        </S.grid>
       </MainInfo>
       {index === indexOpen && renderDetails()}
     </SubCard>

@@ -4,12 +4,12 @@ import { Version } from 'src/components/version/Version';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { MempoolReport } from 'src/views/home/reports/mempool';
+import { LiquidityGraph } from 'src/views/home/reports/liquidReport/LiquidityGraph';
 import { NetworkInfo } from '../src/views/home/networkInfo/NetworkInfo';
 import { AccountInfo } from '../src/views/home/account/AccountInfo';
 import { QuickActions } from '../src/views/home/quickActions/QuickActions';
 import { FlowBox } from '../src/views/home/reports/flow';
 import { ForwardBox } from '../src/views/home/reports/forwardReport';
-import { LiquidReport } from '../src/views/home/reports/liquidReport/LiquidReport';
 import { ConnectCard } from '../src/views/home/connect/Connect';
 
 const HomeView = () => (
@@ -19,7 +19,7 @@ const HomeView = () => (
     <ConnectCard />
     <QuickActions />
     <FlowBox />
-    <LiquidReport />
+    <LiquidityGraph />
     <ForwardBox />
     <MempoolReport />
     <NetworkInfo />

@@ -135,14 +135,6 @@ export type GetRouteType = {
   tokens: Scalars['Int'];
 };
 
-export type InOutType = {
-  __typename?: 'InOutType';
-  invoices?: Maybe<Scalars['String']>;
-  payments?: Maybe<Scalars['String']>;
-  confirmedInvoices?: Maybe<Scalars['Int']>;
-  unConfirmedInvoices?: Maybe<Scalars['Int']>;
-};
-
 export type InvoicePayment = {
   __typename?: 'InvoicePayment';
   in_channel: Scalars['String'];
@@ -522,7 +514,6 @@ export type Query = {
   getBitcoinPrice?: Maybe<Scalars['String']>;
   getBitcoinFees?: Maybe<BitcoinFeeType>;
   getForwardChannelsReport?: Maybe<Scalars['String']>;
-  getInOut?: Maybe<InOutType>;
   getBackups?: Maybe<Scalars['String']>;
   verifyBackups?: Maybe<Scalars['Boolean']>;
   recoverFunds?: Maybe<Scalars['Boolean']>;
@@ -618,11 +609,6 @@ export type QueryGetForwardChannelsReportArgs = {
   time?: Maybe<Scalars['String']>;
   order?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryGetInOutArgs = {
-  time?: Maybe<Scalars['String']>;
 };
 
 

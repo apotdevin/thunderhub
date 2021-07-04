@@ -1,8 +1,7 @@
 import { sortBy } from 'lodash';
 import { Forward } from 'src/graphql/types';
-import { ReportType } from '../home/reports/forwardReport/ForwardReport';
 
-export const getChordMatrix = (order: ReportType, forwardArray: Forward[]) => {
+export const getChordMatrix = (order: string, forwardArray: Forward[]) => {
   const cleaned = forwardArray.map(f => {
     let value = 1;
 
@@ -45,7 +44,7 @@ export const getChordMatrix = (order: ReportType, forwardArray: Forward[]) => {
   return { uniqueNodes, matrix };
 };
 
-export const sortByNode = (order: ReportType, forwardArray: Forward[]) => {
+export const sortByNode = (order: string, forwardArray: Forward[]) => {
   const cleaned = forwardArray.map(f => {
     let value = 1;
 
