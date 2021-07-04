@@ -49,7 +49,7 @@ export const Footer = () => {
             </RightFooter>
           </FooterRow>
           <FooterCenterText>
-            Made in Munich with <Emoji symbol={'🧡'} label={'heart'} /> and{' '}
+            Made in Munich with <Emoji symbol={'🧡 '} label={'heart'} /> and{' '}
             <Emoji symbol={'⚡'} label={'lightning'} />.
           </FooterCenterText>
         </FooterStyle>
