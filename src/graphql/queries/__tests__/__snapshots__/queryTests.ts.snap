@@ -754,7 +754,7 @@ Object {
   "data": Object {
     "getChainBalance": "1000000",
     "getChannelBalance": Object {
-      "confirmedBalance": 1000000,
+      "confirmedBalance": 1000,
       "pendingBalance": 50000,
     },
     "getNodeInfo": Object {
