@@ -205,6 +205,6 @@ export const mutationTypes = gql`
       maxFee: Int
     ): Int
     logout: Boolean!
-    createMacaroon(permissions: permissionsType!): String
+    createMacaroon(permissions: permissionsType!): CreateMacaroon!
   }
 `;
