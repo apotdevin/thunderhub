@@ -45,6 +45,7 @@ import { lnMarketsTypes } from './lnmarkets/types';
 import { boltzResolvers } from './boltz/resolvers';
 import { boltzTypes } from './boltz/types';
 import { forwardsResolver } from './forwards/resolvers';
+import { macaroonTypes } from './macaroon/types';
 
 const typeDefs = [
   generalTypes,
@@ -69,6 +70,7 @@ const typeDefs = [
   lnUrlTypes,
   lnMarketsTypes,
   boltzTypes,
+  macaroonTypes,
 ];
 
 const resolvers = merge(

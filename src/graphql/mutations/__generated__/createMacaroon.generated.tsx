@@ -11,13 +11,19 @@ export type CreateMacaroonMutationVariables = Types.Exact<{
 
 export type CreateMacaroonMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'createMacaroon'>
+  & { createMacaroon: (
+    { __typename?: 'CreateMacaroon' }
+    & Pick<Types.CreateMacaroon, 'base' | 'hex'>
+  ) }
 );
 
 
 export const CreateMacaroonDocument = gql`
     mutation CreateMacaroon($permissions: permissionsType!) {
-  createMacaroon(permissions: $permissions)
+  createMacaroon(permissions: $permissions) {
+    base
+    hex
+  }
 }
     `;
 export type CreateMacaroonMutationFn = Apollo.MutationFunction<CreateMacaroonMutation, CreateMacaroonMutationVariables>;

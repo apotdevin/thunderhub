@@ -49,7 +49,9 @@ export const macaroonResolvers = {
         permissionList.join(', ')
       );
 
-      return macaroon;
+      const hex = Buffer.from(macaroon, 'base64').toString('hex');
+
+      return { base: macaroon, hex };
     },
   },
 };

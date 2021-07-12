@@ -46,7 +46,7 @@ const InitPermissions = {
 
 export const Bakery = () => {
   const [isOpen, isOpenSet] = React.useState<boolean>(false);
-  const [newMacaroon, newMacaroonSet] = React.useState<string>('');
+  const [newMacaroon, newMacaroonSet] = React.useState<boolean>(false);
 
   const [permissions, permissionSet] =
     React.useState<PermissionsType>(InitPermissions);
@@ -60,24 +60,57 @@ export const Bakery = () => {
   }
 
   const [bake, { loading, data: _data }] = useCreateMacaroonMutation({
+    onCompleted: () => newMacaroonSet(true),
     onError: error => toast.error(getErrorContent(error)),
   });
 
   const [data, resetMutationResult] = useMutationResultWithReset(_data);
 
-  React.useEffect(() => {
-    if (data && data.createMacaroon) {
-      newMacaroonSet(data.createMacaroon as string);
-    }
-  }, [data]);
-
   const resetPermissions = () => permissionSet(InitPermissions);
 
   const closeCallback = () => {
-    newMacaroonSet('');
+    newMacaroonSet(false);
     isOpenSet(false);
     resetPermissions();
     resetMutationResult();
+  };
+
+  const renderModal = () => {
+    if (!data?.createMacaroon) return null;
+    const { base, hex } = data.createMacaroon;
+    return (
+      <>
+        <SubTitle>New Macaroon</SubTitle>
+        <Separation />
+        <SubTitle>Base64 Encoded</SubTitle>
+        <SingleLine>
+          <Sub4Title>{shorten(base)}</Sub4Title>
+          <CopyToClipboard
+            text={base}
+            onCopy={() => toast.success('Macaroon Copied')}
+          >
+            <ColorButton>
+              <Copy size={18} />
+              Copy
+            </ColorButton>
+          </CopyToClipboard>
+        </SingleLine>
+        <Separation />
+        <SubTitle>Hex Encoded</SubTitle>
+        <SingleLine>
+          <Sub4Title>{shorten(hex)}</Sub4Title>
+          <CopyToClipboard
+            text={hex}
+            onCopy={() => toast.success('Macaroon Copied')}
+          >
+            <ColorButton>
+              <Copy size={18} />
+              Copy
+            </ColorButton>
+          </CopyToClipboard>
+        </SingleLine>
+      </>
+    );
   };
 
   const renderLine = (title: string, value: keyof PermissionsType) => (
@@ -152,20 +185,7 @@ export const Bakery = () => {
         </Card>
       </CardWithTitle>
       <Modal isOpen={!!newMacaroon} closeCallback={closeCallback}>
-        <SubTitle>New Macaroon</SubTitle>
-        <Separation />
-        <SingleLine>
-          <Sub4Title>{shorten(newMacaroon)}</Sub4Title>
-          <CopyToClipboard
-            text={newMacaroon}
-            onCopy={() => toast.success('Macaroon Copied')}
-          >
-            <ColorButton>
-              <Copy size={18} />
-              Copy
-            </ColorButton>
-          </CopyToClipboard>
-        </SingleLine>
+        {renderModal()}
       </Modal>
     </>
   );

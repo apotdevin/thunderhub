@@ -97,6 +97,12 @@ export type CreateBoltzReverseSwapType = {
   publicKey?: Maybe<Scalars['String']>;
 };
 
+export type CreateMacaroon = {
+  __typename?: 'CreateMacaroon';
+  base: Scalars['String'];
+  hex: Scalars['String'];
+};
+
 
 
 export type Forward = {
@@ -218,7 +224,7 @@ export type Mutation = {
   removePeer?: Maybe<Scalars['Boolean']>;
   sendMessage?: Maybe<Scalars['Int']>;
   logout: Scalars['Boolean'];
-  createMacaroon?: Maybe<Scalars['String']>;
+  createMacaroon: CreateMacaroon;
 };
 
 
