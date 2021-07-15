@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ChevronRight } from 'react-feather';
 import { useUpdateFeesMutation } from 'src/graphql/mutations/__generated__/updateFees.generated';
+import { Input } from 'src/components/input';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { getErrorContent } from 'src/utils/error';
@@ -17,7 +18,7 @@ export const DetailsChange = ({ callback }: DetailsChangeProps) => {
   const [cltv, setCLTV] = useState(0);
   const [max, setMax] = useState(0);
   const [min, setMin] = useState(0);
-
+  const [baseFeeDirty, setBaseFeeDirty] = useState(false);
   const [updateFees] = useUpdateFeesMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: data => {
@@ -38,13 +39,22 @@ export const DetailsChange = ({ callback }: DetailsChangeProps) => {
     <>
       <InputWithDeco
         title={'BaseFee'}
-        value={baseFee}
-        placeholder={'sats'}
-        amount={baseFee}
-        override={'sat'}
-        inputType={'number'}
-        inputCallback={value => setBaseFee(Number(value))}
-      />
+        customAmount={baseFeeDirty ? `${baseFee} sats` : ''}
+        noInput={true}
+      >
+        <Input
+          placeholder={'sats'}
+          maxWidth={`500px`}
+          withMargin={'0 0 0 8px'}
+          mobileMargin={'0'}
+          type={'number'}
+          onChange={e => {
+            setBaseFeeDirty(true);
+            setBaseFee(Number(e.target.value));
+          }}
+          value={baseFee || undefined}
+        />
+      </InputWithDeco>
       <InputWithDeco
         title={'Fee Rate'}
         value={feeRate}
@@ -86,7 +96,8 @@ export const DetailsChange = ({ callback }: DetailsChangeProps) => {
           onClick={() =>
             updateFees({
               variables: {
-                ...(baseFee !== 0 && { base_fee_tokens: baseFee }),
+                ...(baseFee >= 0 &&
+                  baseFeeDirty && { base_fee_tokens: baseFee }),
                 ...(feeRate !== 0 && { fee_rate: feeRate }),
                 ...(cltv !== 0 && { cltv_delta: cltv }),
                 ...(max !== 0 && {
@@ -99,11 +110,7 @@ export const DetailsChange = ({ callback }: DetailsChangeProps) => {
             })
           }
           disabled={
-            baseFee === 0 &&
-            feeRate === 0 &&
-            cltv === 0 &&
-            max === 0 &&
-            min === 0
+            baseFee < 0 && feeRate === 0 && cltv === 0 && max === 0 && min === 0
           }
           fullWidth={true}
           withMargin={'16px 0 0'}
