@@ -86,7 +86,9 @@ const Chart = ({
 
   const axisColor = themeContext.mode === 'light' ? 'black' : 'white';
 
-  const keys = Object.keys(data[0]).filter(d => d !== 'date');
+  const keys = Object.keys(data[0] || {}).filter(d => d !== 'date');
+
+  if (!keys.length) return null;
 
   let tooltipTimeout: number;
 
