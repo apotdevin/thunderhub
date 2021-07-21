@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.22](https://github.com/apotdevin/thunderhub/compare/v0.12.21...v0.12.22) (2021-07-21)
+
+
+### Bug Fixes
+
+* undefined error ([6087e01](https://github.com/apotdevin/thunderhub/commit/6087e018eadd4503e6aec972b54f3f2f512a9610))
+* updating all channels with a base fee of 0 now works [[#299](https://github.com/apotdevin/thunderhub/issues/299)] ([5c4221e](https://github.com/apotdevin/thunderhub/commit/5c4221e455b116bf27347351200b23f772cb16df))
+
+
+### Improvements
+
+* hex encoded create macaroon ([e858cdd](https://github.com/apotdevin/thunderhub/commit/e858cdd8205a97aada9712b231f363ecd08fc22d))
+
 ### [0.12.21](https://github.com/apotdevin/thunderhub/compare/v0.12.20...v0.12.21) (2021-07-04)
 
 
