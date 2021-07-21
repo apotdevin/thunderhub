@@ -223,6 +223,7 @@ accounts:
 ```
 
 Notice you can specify either `macaroonPath` and `certificatePath` or `macaroon` and `certificate`.
+Note that the `port` in `serverUrl` should be the RPC port that LND is listening on.
 
 #### Account with environment variables
 
