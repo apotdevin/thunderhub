@@ -162,6 +162,7 @@ export const mutationTypes = gql`
       amount: Int!
       description: String
       secondsUntil: Int
+      includePrivate: Boolean
     ): newInvoiceType
     circularRebalance(route: String!): Boolean
     bosPay(
