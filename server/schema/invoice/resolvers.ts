@@ -78,12 +78,21 @@ export const invoiceResolvers = {
   Mutation: {
     createInvoice: async (
       _: undefined,
-      params: { amount: number; description?: string; secondsUntil?: number },
+      {
+        amount,
+        description,
+        secondsUntil,
+        includePrivate,
+      }: {
+        amount: number;
+        description?: string;
+        secondsUntil?: number;
+        includePrivate?: boolean;
+      },
       context: ContextType
     ) => {
       await requestLimiter(context.ip, 'createInvoice');
 
-      const { amount, description, secondsUntil } = params;
       const { lnd } = context;
 
       const getDate = (secondsUntil: number) => {
@@ -93,12 +102,19 @@ export const invoiceResolvers = {
         return date.toISOString();
       };
 
+      const invoiceParams = {
+        tokens: amount,
+        ...(description && { description }),
+        ...(!!secondsUntil && { expires_at: getDate(secondsUntil) }),
+        ...(includePrivate && { is_including_private_channels: true }),
+      };
+
+      logger.info('Creating invoice with params: %o', invoiceParams);
+
       return await to<CreateInvoiceType>(
         createInvoiceRequest({
           lnd,
-          ...(description && { description }),
-          ...(!!secondsUntil && { expires_at: getDate(secondsUntil) }),
-          tokens: amount,
+          ...invoiceParams,
         })
       );
     },
