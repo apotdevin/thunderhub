@@ -13,6 +13,7 @@ export const ServerAccounts: React.FC = () => {
   const { push, query } = useRouter();
 
   const cookieParam = getUrlParam(query?.token);
+  const multiParam = getUrlParam(query?.multi);
 
   const [getToken, { data }] = useGetAuthTokenMutation({
     variables: { cookie: cookieParam },
@@ -34,13 +35,17 @@ export const ServerAccounts: React.FC = () => {
   React.useEffect(() => {
     if (!cookieParam || !data) return;
     if (data.getAuthToken) {
-      push('/');
+      if (multiParam) {
+        push('/login');
+      } else {
+        push('/');
+      }
     }
     if (!data.getAuthToken) {
       toast.warning('Unable to SSO. Check your logs.');
       logoutUrl ? (window.location.href = logoutUrl) : push('/login');
     }
-  }, [push, data, cookieParam]);
+  }, [push, data, cookieParam, multiParam]);
 
   return null;
 };

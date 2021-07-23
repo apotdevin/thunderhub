@@ -11,6 +11,7 @@ export const ContextMock: ContextType = {
     cert: 'cert',
     socket: 'host',
   },
+  hasSSOauth: false,
   accounts: [
     {
       name: 'account',
@@ -20,6 +21,7 @@ export const ContextMock: ContextType = {
       cert: 'cert',
       password: 'password',
       encrypted: false,
+      sso: false,
     },
   ],
   res: {} as ServerResponse,
@@ -37,6 +39,7 @@ export const ContextMockNoAccounts: ContextType = {
     cert: 'cert',
     socket: 'host',
   },
+  hasSSOauth: false,
   accounts: [],
   res: {} as ServerResponse,
   lnMarketsAuth: 'lnMarketAuth',
@@ -49,6 +52,7 @@ export const ContextMockNoSSO: ContextType = {
   ip: '1.2.3.4',
   secret: '123456789',
   sso: null,
+  hasSSOauth: false,
   accounts: [
     {
       name: 'account',
@@ -58,6 +62,7 @@ export const ContextMockNoSSO: ContextType = {
       cert: 'cert',
       password: 'password',
       encrypted: false,
+      sso: false,
     },
   ],
   res: {} as ServerResponse,

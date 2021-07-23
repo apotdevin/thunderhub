@@ -14,6 +14,7 @@ export type ContextType = {
   secret: string;
   id: string | null;
   sso: SSOType | null;
+  hasSSOauth: boolean;
   accounts: ParsedAccount[];
   res: ServerResponse;
   lnMarketsAuth: string | null;

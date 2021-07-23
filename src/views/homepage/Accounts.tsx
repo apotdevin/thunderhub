@@ -10,6 +10,7 @@ import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/get
 import { ServerAccountType } from 'src/graphql/types';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { useLogoutMutation } from 'src/graphql/mutations/__generated__/logout.generated';
+import { useGetMultiSsoTokenMutation } from 'src/graphql/mutations/__generated__/getMultiSSOToken.generated';
 import { Section } from '../../components/section/Section';
 import {
   Card,
@@ -87,6 +88,13 @@ export const Accounts = () => {
   const { data: accountData, loading: loadingData } =
     useGetServerAccountsQuery();
 
+  const [getMultiToken] = useGetMultiSsoTokenMutation({
+    onCompleted: () => push('/'),
+    onError: () => {
+      toast.error('Unable to connect to this node');
+    },
+  });
+
   const [getCanConnect, { data, loading }] = useGetCanConnectLazyQuery({
     fetchPolicy: 'network-only',
     onError: () => {
@@ -114,7 +122,7 @@ export const Accounts = () => {
   }
 
   const getTitle = (account: ServerAccountType) => {
-    const { type, name, loggedIn } = account;
+    const { name, loggedIn } = account;
 
     const props = {
       color: chartColors.green,
@@ -122,7 +130,7 @@ export const Accounts = () => {
     };
     return (
       <div>
-        {type === 'sso' ? 'SSO Account' : name}
+        {name}
         <LockPadding>
           {loggedIn ? <Unlock {...props} /> : <Lock {...props} />}
         </LockPadding>
@@ -146,7 +154,7 @@ export const Accounts = () => {
 
   const handleClick = (account: ServerAccountType) => () => {
     if (account.type === 'sso') {
-      getCanConnect();
+      getMultiToken({ variables: { id: account.id } });
     } else if (account.type === 'server' && account.loggedIn) {
       getCanConnect();
     } else {
