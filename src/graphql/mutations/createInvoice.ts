@@ -5,11 +5,13 @@ export const CREATE_INVOICE = gql`
     $amount: Int!
     $description: String
     $secondsUntil: Int
+    $includePrivate: Boolean
   ) {
     createInvoice(
       amount: $amount
       description: $description
       secondsUntil: $secondsUntil
+      includePrivate: $includePrivate
     ) {
       request
       id

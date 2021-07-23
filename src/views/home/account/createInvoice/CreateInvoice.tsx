@@ -9,6 +9,10 @@ import { Title } from 'src/layouts/footer/Footer.styled';
 import { Link } from 'src/components/link/Link';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { formatSeconds } from 'src/utils/helpers';
+import {
+  MultiButton,
+  SingleButton,
+} from 'src/components/buttons/multiButton/MultiButton';
 import { getErrorContent } from '../../../../utils/error';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { mediaWidths, chartColors } from '../../../../styles/Themes';
@@ -61,6 +65,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
   const [amount, setAmount] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [description, setDescription] = useState('');
+  const [includePrivate, setIncludePrivate] = useState(false);
 
   const [request, setRequest] = useState('');
   const [id, setId] = useState('');
@@ -126,7 +131,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
   const handleEnter = () => {
     if (amount === 0) return;
     createInvoice({
-      variables: { amount, description, secondsUntil: seconds },
+      variables: { amount, description, secondsUntil: seconds, includePrivate },
     });
   };
 
@@ -159,6 +164,22 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
         color={color}
         onEnter={() => handleEnter()}
       />
+      <InputWithDeco title={'Include Private Channels'} noInput={true}>
+        <MultiButton>
+          <SingleButton
+            onClick={() => setIncludePrivate(true)}
+            selected={includePrivate}
+          >
+            Yes
+          </SingleButton>
+          <SingleButton
+            onClick={() => setIncludePrivate(false)}
+            selected={!includePrivate}
+          >
+            No
+          </SingleButton>
+        </MultiButton>
+      </InputWithDeco>
       <ColorButton
         onClick={() => handleEnter()}
         disabled={amount === 0}
