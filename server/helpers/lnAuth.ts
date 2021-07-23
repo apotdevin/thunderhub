@@ -109,7 +109,9 @@ export const getLnMarketsAuth = async (
 
   // Get a new lnUrl from LnMarkets
   try {
-    const response = await fetchWithProxy(`${appUrls.lnMarkets}/lnurl/a/c`);
+    const response = await fetchWithProxy(`${appUrls.lnMarkets}/lnurl/auth`, {
+      method: 'post',
+    });
     const json = await response.json();
 
     logger.debug('Get lnUrl from LnMarkets response: %o', json);
