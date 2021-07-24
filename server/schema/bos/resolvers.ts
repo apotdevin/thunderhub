@@ -69,6 +69,7 @@ export const bosResolvers = {
         max_paths,
         ...(message && { message }),
         out: out || [],
+        avoid: [],
       };
 
       logger.debug('Paying invoice with params: %o', props);
