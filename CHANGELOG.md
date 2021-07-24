@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.23](https://github.com/apotdevin/thunderhub/compare/v0.12.22...v0.12.23) (2021-07-24)
+
+
+### Bug Fixes
+
+* **server:** updated ln markets to v1 api ([#305](https://github.com/apotdevin/thunderhub/issues/305)) ([ecb0e1c](https://github.com/apotdevin/thunderhub/commit/ecb0e1cf499d3276a332d5cf212a3cefd23905e8))
+
+
+### Improvements
+
+* forward resume ([#306](https://github.com/apotdevin/thunderhub/issues/306)) ([edc9042](https://github.com/apotdevin/thunderhub/commit/edc9042475211dd6a6702bbdc8151a47ce6cc398))
+* toggle private hints ([#304](https://github.com/apotdevin/thunderhub/issues/304)) ([5a212db](https://github.com/apotdevin/thunderhub/commit/5a212db898aeb2a6c38c13dc2af2a4266bb7f0b4))
+* update deps ([#307](https://github.com/apotdevin/thunderhub/issues/307)) ([ce74f60](https://github.com/apotdevin/thunderhub/commit/ce74f60d834d59fd1b9dfd412f5470c8da36e372))
+
 ### [0.12.22](https://github.com/apotdevin/thunderhub/compare/v0.12.21...v0.12.22) (2021-07-21)
 
 
