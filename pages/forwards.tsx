@@ -10,6 +10,7 @@ import { options, typeOptions } from 'src/views/home/reports/forwardReport';
 import { ForwardsGraph } from 'src/views/home/reports/forwardReport/ForwardsGraph';
 import styled from 'styled-components';
 import { SelectWithValue } from 'src/components/select';
+import { ForwardResume } from 'src/views/home/reports/forwardReport/ForwardResume';
 import {
   SubTitle,
   Card,
@@ -75,6 +76,8 @@ const ForwardsView = () => {
           <>
             <Card mobileCardPadding={'0'} mobileNoBackground={true}>
               <ForwardsGraph days={days} type={type} />
+              <Separation />
+              <ForwardResume type={type} />
               <Separation />
               <ForwardChannelsReport days={days.value} order={type.value} />
             </Card>
