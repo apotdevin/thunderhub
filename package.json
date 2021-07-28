@@ -36,7 +36,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@apollo/client": "^3.3.21",
+    "@apollo/client": "^3.4.0",
     "@emotion/babel-plugin": "^11.3.0",
     "@visx/axis": "^1.17.1",
     "@visx/chord": "^1.17.1",
