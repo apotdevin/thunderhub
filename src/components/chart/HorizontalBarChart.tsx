@@ -98,7 +98,7 @@ const Chart = ({
 
   return (
     <div style={{ position: 'relative' }}>
-      <svg width={width} height={height}>
+      <svg width={width} height={height - 10}>
         <Group top={margin.top} left={margin.left}>
           <BarGroupHorizontal
             data={data}
