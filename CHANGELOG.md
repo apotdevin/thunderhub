@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.24](https://github.com/apotdevin/thunderhub/compare/v0.12.23...v0.12.24) (2021-07-30)
+
+
+### Bug Fixes
+
+* graph margin ([#310](https://github.com/apotdevin/thunderhub/issues/310)) ([d3d49a1](https://github.com/apotdevin/thunderhub/commit/d3d49a18b8fe1a02e8c8b313e7403e176df0c14c))
+
+
+### Improvements
+
+* update dependencies ([#309](https://github.com/apotdevin/thunderhub/issues/309)) ([5bd02a7](https://github.com/apotdevin/thunderhub/commit/5bd02a734dcb160242bb6785c7a40ba0a0c45473))
+
 ### [0.12.23](https://github.com/apotdevin/thunderhub/compare/v0.12.22...v0.12.23) (2021-07-24)
 
 
