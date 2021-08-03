@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useGetBackupsLazyQuery } from 'src/graphql/queries/__generated__/getBackups.generated';
-import { useAccount } from 'src/hooks/UseAccount';
+import { format } from 'date-fns';
+import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { DarkSubTitle, SingleLine } from '../../../components/generic/Styled';
 import { saveToPc } from '../../../utils/helpers';
 import { getErrorContent } from '../../../utils/error';
@@ -12,15 +13,16 @@ export const DownloadBackups = () => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  const account = useAccount();
+  const { publicKey } = useNodeInfo();
 
   useEffect(() => {
-    if (account && !loading && data && data.getBackups) {
-      saveToPc(data.getBackups, `ChannelBackup-${account.name}-${account.id}`);
-      localStorage.setItem(`lastBackup-${account.id}`, new Date().toString());
-      toast.success('Downloaded');
-    }
-  }, [data, loading, account]);
+    if (loading || !data?.getBackups) return;
+
+    const date = format(new Date(), 'ddMMyyyyhhmmss');
+    saveToPc(data.getBackups, `ChannelBackup-${publicKey}-${date}`);
+    localStorage.setItem(`lastBackup-${publicKey}`, new Date().toString());
+    toast.success('Downloaded');
+  }, [data, loading, publicKey]);
 
   return (
     <SingleLine>
