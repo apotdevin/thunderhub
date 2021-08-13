@@ -382,6 +382,7 @@ export type MutationBosRebalanceArgs = {
   max_fee?: Maybe<Scalars['Int']>;
   max_fee_rate?: Maybe<Scalars['Int']>;
   max_rebalance?: Maybe<Scalars['Int']>;
+  timeout_minutes?: Maybe<Scalars['Int']>;
   node?: Maybe<Scalars['String']>;
   out_through?: Maybe<Scalars['String']>;
   out_inbound?: Maybe<Scalars['Int']>;

@@ -10,6 +10,7 @@ export type BosRebalanceMutationVariables = Types.Exact<{
   max_fee?: Types.Maybe<Types.Scalars['Int']>;
   max_fee_rate?: Types.Maybe<Types.Scalars['Int']>;
   max_rebalance?: Types.Maybe<Types.Scalars['Int']>;
+  timeout_minutes?: Types.Maybe<Types.Scalars['Int']>;
   node?: Types.Maybe<Types.Scalars['String']>;
   out_through?: Types.Maybe<Types.Scalars['String']>;
   out_inbound?: Types.Maybe<Types.Scalars['Int']>;
@@ -35,13 +36,14 @@ export type BosRebalanceMutation = (
 
 
 export const BosRebalanceDocument = gql`
-    mutation BosRebalance($avoid: [String], $in_through: String, $max_fee: Int, $max_fee_rate: Int, $max_rebalance: Int, $node: String, $out_through: String, $out_inbound: Int) {
+    mutation BosRebalance($avoid: [String], $in_through: String, $max_fee: Int, $max_fee_rate: Int, $max_rebalance: Int, $timeout_minutes: Int, $node: String, $out_through: String, $out_inbound: Int) {
   bosRebalance(
     avoid: $avoid
     in_through: $in_through
     max_fee: $max_fee
     max_fee_rate: $max_fee_rate
     max_rebalance: $max_rebalance
+    timeout_minutes: $timeout_minutes
     node: $node
     out_through: $out_through
     out_inbound: $out_inbound
@@ -91,6 +93,7 @@ export type BosRebalanceMutationFn = Apollo.MutationFunction<BosRebalanceMutatio
  *      max_fee: // value for 'max_fee'
  *      max_fee_rate: // value for 'max_fee_rate'
  *      max_rebalance: // value for 'max_rebalance'
+ *      timeout_minutes: // value for 'timeout_minutes'
  *      node: // value for 'node'
  *      out_through: // value for 'out_through'
  *      out_inbound: // value for 'out_inbound'

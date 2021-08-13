@@ -23,6 +23,7 @@ type RebalanceType = {
   max_fee?: Number;
   max_fee_rate?: Number;
   max_rebalance?: Number;
+  timeout_minutes?: Number;
   node?: String;
   out_channels?: String[];
   out_through?: String;
@@ -99,6 +100,7 @@ export const bosResolvers = {
         max_fee,
         max_fee_rate,
         max_rebalance,
+        timeout_minutes,
         node,
         out_through,
         out_inbound,
@@ -111,6 +113,7 @@ export const bosResolvers = {
         ...(in_through && { in_through }),
         ...(max_fee && max_fee > 0 && { max_fee }),
         ...(max_fee_rate && max_fee_rate > 0 && { max_fee_rate }),
+        ...(timeout_minutes && timeout_minutes > 0 && { timeout_minutes }),
         ...(max_rebalance &&
           max_rebalance > 0 && { max_rebalance: `${max_rebalance}` }),
         ...(node && { node }),
