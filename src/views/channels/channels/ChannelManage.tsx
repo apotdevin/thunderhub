@@ -177,8 +177,8 @@ export const ChannelManage = () => {
                 <Sub4Title>Max Sat Value</Sub4Title>
                 <MultiButton>
                   <SingleButton
-                    selected={maxSatValue === 16000000}
-                    onClick={() => changeMaxValue(16000000)}
+                    selected={maxSatValue === 16777215}
+                    onClick={() => changeMaxValue(16777215)}
                   >
                     Wumbo (16m)
                   </SingleButton>

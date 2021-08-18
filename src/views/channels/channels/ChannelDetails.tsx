@@ -134,7 +134,7 @@ export const ChannelDetails: FC<ChannelDetailsProps> = ({
     );
 
   const renderWumboInfo = () => {
-    if (local_balance + remote_balance >= WUMBO_MIN_SIZE) {
+    if (local_balance + remote_balance > WUMBO_MIN_SIZE) {
       return (
         <>
           <Separation />
