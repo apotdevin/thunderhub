@@ -127,7 +127,7 @@ export const ChannelBars: FC<ChannelBarsProps> = ({
             remote={getBar(remote_balance, biggest)}
             formatLocal={localBalance}
             formatRemote={remoteBalance}
-            withBorderColor={local_balance + remote_balance >= WUMBO_MIN_SIZE}
+            withBorderColor={local_balance + remote_balance > WUMBO_MIN_SIZE}
           />
         </ChannelStatsColumn>
       );

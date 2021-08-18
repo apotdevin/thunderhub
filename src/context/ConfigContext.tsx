@@ -28,7 +28,7 @@ export type channelSortTypes =
   | 'size';
 export type sortDirectionTypes = 'increase' | 'decrease';
 export type extraColumnsType = 'outgoing' | 'incoming' | 'both' | 'none';
-export type maxSatValueType = 'auto' | 1000000 | 5000000 | 10000000 | 16000000;
+export type maxSatValueType = 'auto' | 1000000 | 5000000 | 10000000 | 16777215;
 
 type State = {
   currency: string;
