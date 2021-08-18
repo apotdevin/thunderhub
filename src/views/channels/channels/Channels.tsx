@@ -12,7 +12,7 @@ import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { ChannelCard } from './ChannelCard';
 import { ChannelGoToToast } from './Channel.style';
 
-export const WUMBO_MIN_SIZE = 16000000;
+export const WUMBO_MIN_SIZE = 16777215;
 
 export const Channels: React.FC = () => {
   const toastId = useRef<any>(null);
