@@ -225,6 +225,13 @@ accounts:
 Notice you can specify either `macaroonPath` and `certificatePath` or `macaroon` and `certificate`.
 Note that the `port` in `serverUrl` should be the gRPC port that LND is listening on.
 
+If you want to access lnd remotely, the setting below should be added to `lnd.conf`.
+```
+tlsextraip=<externally-reachable-ip-address> # option 1) when accessing by IP
+tlsextradomain=<externally-reachable-domain-name> # option 2) when accessing by domain
+rpclisten=0.0.0.0:10009
+```
+
 #### Account with environment variables
 
 It's possible to set different parts of the accounts based on environment variables.
