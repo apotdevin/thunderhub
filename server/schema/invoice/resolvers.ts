@@ -155,7 +155,7 @@ export const invoiceResolvers = {
       let route;
       try {
         route = JSON.parse(params.route);
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Corrupt route json: %o', error);
         throw new Error('Corrupt Route JSON');
       }
@@ -185,7 +185,7 @@ export const invoiceResolvers = {
       let route;
       try {
         route = JSON.parse(routeJSON);
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Corrupt route json: %o', error);
         throw new Error('Corrupt Route JSON');
       }

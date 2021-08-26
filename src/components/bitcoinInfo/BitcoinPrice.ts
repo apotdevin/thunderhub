@@ -28,7 +28,7 @@ export const BitcoinPrice: React.FC = () => {
       try {
         const prices = JSON.parse(data.getBitcoinPrice);
         setPrices({ type: 'fetched', state: { prices } });
-      } catch (error) {
+      } catch (error: any) {
         setPrices({ type: 'dontShow' });
         stopPolling();
       }

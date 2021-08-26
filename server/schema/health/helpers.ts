@@ -27,7 +27,7 @@ const reduceTokens = (array: GroupedObject | TotalGroupedObject) => {
   const reducedArray = [];
   for (const key in array) {
     if (Object.prototype.hasOwnProperty.call(array, key)) {
-      const channel = array[key];
+      const channel: { tokens: number }[] = array[key];
       const reduced = channel.reduce((a, b) => a + b.tokens, 0);
       reducedArray.push({ channel: key, tokens: reduced });
     }

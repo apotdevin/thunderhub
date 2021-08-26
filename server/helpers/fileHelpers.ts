@@ -84,8 +84,8 @@ export const readFile = (
     try {
       const file = fs.readFileSync(filePath, encoding);
       return file;
-    } catch (err) {
-      logger.error('Something went wrong while reading the file: \n' + err);
+    } catch (error: any) {
+      logger.error('Something went wrong while reading the file: \n' + error);
       return null;
     }
   }
@@ -106,9 +106,9 @@ export const parseYaml = (filePath: string): AccountConfigType | null => {
     const yamlObject = yaml.load(yamlConfig);
     // TODO: validate this, before returning?
     return yamlObject as AccountConfigType;
-  } catch (err) {
+  } catch (error: any) {
     logger.error(
-      'Something went wrong while parsing the YAML config file: \n' + err
+      'Something went wrong while parsing the YAML config file: \n' + error
     );
     return null;
   }
@@ -123,7 +123,7 @@ const saveHashedYaml = (config: AccountConfigType, filePath: string): void => {
     const yamlString = yaml.dump(config);
     fs.writeFileSync(filePath, yamlString);
     logger.info('Succesfully saved');
-  } catch (error) {
+  } catch (error: any) {
     logger.error(
       'Error saving yaml file with hashed passwords. Passwords are still in cleartext on your server.'
     );
@@ -377,9 +377,9 @@ export const readMacaroons = (macaroonPath: string): string | null => {
     try {
       const ssoAdmin = fs.readFileSync(`${macaroonPath}/admin.macaroon`, 'hex');
       return ssoAdmin;
-    } catch (err) {
+    } catch (error: any) {
       logger.error(
-        'Something went wrong while reading the admin.macaroon: \n' + err
+        'Something went wrong while reading the admin.macaroon: \n' + error
       );
       return null;
     }
@@ -394,16 +394,16 @@ export const createDirectory = (dirname: string) => {
       if (!fs.existsSync(curDir)) {
         fs.mkdirSync(curDir);
       }
-    } catch (err) {
-      if (err.code !== 'EEXIST') {
-        if (err.code === 'ENOENT') {
+    } catch (error: any) {
+      if (error.code !== 'EEXIST') {
+        if (error.code === 'ENOENT') {
           throw new Error(
             `ENOENT: No such file or directory, mkdir '${dirname}'. Ensure that path separator is '${
               os.platform() === 'win32' ? '\\\\' : '/'
             }'`
           );
         } else {
-          throw err;
+          throw error;
         }
       }
     }
@@ -423,9 +423,9 @@ export const readCookie = (cookieFile: string): string | null => {
       logger.verbose(`Found cookie at path ${cookieFile}`);
       const cookie = fs.readFileSync(cookieFile, 'utf-8');
       return cookie;
-    } catch (err) {
-      logger.error('Something went wrong while reading cookie: \n' + err);
-      throw new Error(err);
+    } catch (error: any) {
+      logger.error('Something went wrong while reading cookie: \n' + error);
+      throw new Error(error);
     }
   } else {
     try {
@@ -437,9 +437,9 @@ export const readCookie = (cookieFile: string): string | null => {
 
       const cookie = fs.readFileSync(cookieFile, 'utf-8');
       return cookie;
-    } catch (err) {
-      logger.error('Something went wrong while reading the cookie: \n' + err);
-      throw new Error(err);
+    } catch (error: any) {
+      logger.error('Something went wrong while reading the cookie: \n' + error);
+      throw new Error(error);
     }
   }
 };
@@ -448,8 +448,8 @@ export const refreshCookie = (cookieFile: string) => {
   try {
     logger.verbose('Refreshing cookie for next authentication');
     fs.writeFileSync(cookieFile, crypto.randomBytes(64).toString('hex'));
-  } catch (err) {
-    logger.error('Something went wrong while refreshing cookie: \n' + err);
-    throw new Error(err);
+  } catch (error: any) {
+    logger.error('Something went wrong while refreshing cookie: \n' + error);
+    throw new Error(error);
   }
 };

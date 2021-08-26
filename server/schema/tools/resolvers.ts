@@ -23,7 +23,7 @@ export const toolsResolvers = {
       let backupObj = { backup: '', channels: [] as ChannelType[] };
       try {
         backupObj = JSON.parse(params.backup);
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Corrupt backup file: %o', error);
         throw new Error('Corrupt backup file');
       }
@@ -37,7 +37,7 @@ export const toolsResolvers = {
           channels,
         });
         return is_valid;
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error verifying backups: %o', error);
         throw new Error(getErrorMsg(error));
       }
@@ -50,7 +50,7 @@ export const toolsResolvers = {
       let backupObj = { backup: '' };
       try {
         backupObj = JSON.parse(params.backup);
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Corrupt backup file: %o', error);
         throw new Error('Corrupt backup file');
       }
@@ -63,7 +63,7 @@ export const toolsResolvers = {
           backup,
         });
         return true;
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error recovering funds from channels: %o', error);
         throw new Error(getErrorMsg(error));
       }
@@ -78,7 +78,7 @@ export const toolsResolvers = {
           lnd,
         });
         return JSON.stringify(backups);
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error getting backups: %o', error);
         throw new Error(getErrorMsg(error));
       }
@@ -125,7 +125,7 @@ export const toolsResolvers = {
         });
 
         return message.signed_by;
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error verifying message: %o', error);
         throw new Error(getErrorMsg(error));
       }
@@ -142,7 +142,7 @@ export const toolsResolvers = {
         });
 
         return message.signature;
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error signing message: %o', error);
         throw new Error(getErrorMsg(error));
       }
