@@ -53,7 +53,7 @@ export const LnUrlCard = () => {
       if (tag === 'login') {
         auth({ variables: { url: urlString } });
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error('Problem decoding LNURL');
     }
   };

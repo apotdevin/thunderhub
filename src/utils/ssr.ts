@@ -78,7 +78,7 @@ export const getProps = async (
             query,
           });
         }
-      } catch (error) {
+      } catch (error: any) {
         // Ignore SSR query errors
       }
     }

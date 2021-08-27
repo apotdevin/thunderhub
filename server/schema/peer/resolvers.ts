@@ -72,7 +72,7 @@ export const peerResolvers = {
           is_temporary: isTemporary,
         });
         return success;
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error adding peer: %o', error);
         throw new Error(getErrorMsg(error));
       }
@@ -88,7 +88,7 @@ export const peerResolvers = {
           public_key: params.publicKey,
         });
         return success;
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error removing peer: %o', error);
         throw new Error(getErrorMsg(error));
       }

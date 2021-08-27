@@ -5,7 +5,7 @@ import { logger } from 'server/helpers/logger';
 import { rebalance } from 'balanceofsatoshis/swaps';
 import { pay } from 'balanceofsatoshis/network';
 import { getAccountingReport } from 'balanceofsatoshis/balances';
-import request from '@alexbosworth/request';
+import { fetchRequest } from 'balanceofsatoshis/commands';
 import { RebalanceResponseType } from 'server/types/balanceofsatoshis.types';
 import { getErrorMsg } from 'server/helpers/helpers';
 
@@ -50,7 +50,7 @@ export const bosResolvers = {
         getAccountingReport({
           lnd,
           logger,
-          request,
+          request: fetchRequest,
           is_csv: true,
           ...params,
         })
