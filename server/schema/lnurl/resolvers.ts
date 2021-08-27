@@ -93,7 +93,7 @@ export const lnUrlResolvers = {
         }
 
         return { ...json, message: json.event || 'LnServiceSuccess' };
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error authenticating with LnUrl service: %o', error);
         throw new Error('ProblemAuthenticatingWithLnUrlService');
       }
@@ -114,7 +114,7 @@ export const lnUrlResolvers = {
         }
 
         return json;
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error fetching from LnUrl service: %o', error);
         throw new Error('ProblemFetchingFromLnUrlService');
       }
@@ -154,7 +154,7 @@ export const lnUrlResolvers = {
         if (lnServiceResponse.status === 'ERROR') {
           throw new Error(lnServiceResponse.reason || 'LnServiceError');
         }
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error paying to LnUrl service: %o', error);
         throw new Error('ProblemPayingLnUrlService');
       }
@@ -241,7 +241,7 @@ export const lnUrlResolvers = {
 
         // Return invoice id to check status
         return info.id;
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error withdrawing from LnUrl service: %o', error);
         throw new Error('ProblemWithdrawingFromLnUrlService');
       }
@@ -282,7 +282,7 @@ export const lnUrlResolvers = {
         }
 
         return 'Successfully requested a channel open';
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error requesting channel from LnUrl service: %o', error);
         throw new Error(
           `Error requesting channel from LnUrl service: ${error}`

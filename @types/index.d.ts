@@ -21,3 +21,4 @@ declare module 'balanceofsatoshis/request';
 declare module 'balanceofsatoshis/swaps';
 declare module 'balanceofsatoshis/balances';
 declare module 'balanceofsatoshis/network';
+declare module 'balanceofsatoshis/commands';

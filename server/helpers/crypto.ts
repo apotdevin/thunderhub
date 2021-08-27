@@ -20,7 +20,7 @@ export const getSHA256Hash = (
 export const decodeMacaroon = (macaroon: string, password: string) => {
   try {
     return AES.decrypt(macaroon, password).toString(Utf8);
-  } catch (err) {
+  } catch (error: any) {
     logger.error(`Error decoding macaroon with password: ${password}`);
     throw new Error('WrongPasswordForLogin');
   }

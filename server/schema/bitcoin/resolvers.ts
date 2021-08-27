@@ -18,7 +18,7 @@ export const bitcoinResolvers = {
         const json = await response.json();
 
         return JSON.stringify(json);
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error getting bitcoin price: %o', error);
         throw new Error('Problem getting Bitcoin price.');
       }
@@ -44,7 +44,7 @@ export const bitcoinResolvers = {
           };
         }
         throw new Error('Problem getting Bitcoin fees.');
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error getting bitcoin fees: %o', error);
         throw new Error('Problem getting Bitcoin fees.');
       }

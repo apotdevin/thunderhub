@@ -117,7 +117,7 @@ export const getLnMarketsAuth = async (
     logger.debug('Get lnUrl from LnMarkets response: %o', json);
     lnUrl = json?.lnurl;
     if (!lnUrl) throw new Error();
-  } catch (error) {
+  } catch (error: any) {
     logger.error(
       `Error getting lnAuth url from ${appUrls.lnMarkets}. Error: %o`,
       error
@@ -141,7 +141,7 @@ export const getLnMarketsAuth = async (
     }
 
     return { newCookie: true, cookieString: json.token, json };
-  } catch (error) {
+  } catch (error: any) {
     logger.error('Error authenticating with LnUrl service: %o', error);
     throw new Error('ProblemAuthenticatingWithLnUrlService');
   }

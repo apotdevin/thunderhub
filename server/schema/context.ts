@@ -55,7 +55,7 @@ export const getContext = (context: ResolverContext) => {
         lnd = getAuthLnd(data.id, sso, accountConfig);
         id = data.id;
       }
-    } catch (error) {
+    } catch (error: any) {
       logger.silly('Authentication cookie failed');
     }
   }

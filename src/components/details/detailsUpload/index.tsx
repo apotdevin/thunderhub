@@ -63,7 +63,7 @@ export const DetailsUpload = ({ upload }: DetailsUploadType) => {
 
   try {
     channels = JSON.parse(data);
-  } catch (error) {
+  } catch (error: any) {
     toast.error('Error Parsing File');
   }
 
