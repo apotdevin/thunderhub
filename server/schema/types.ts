@@ -178,6 +178,7 @@ export const mutationTypes = gql`
       max_fee: Int
       max_fee_rate: Int
       max_rebalance: Int
+      timeout_minutes: Int
       node: String
       out_through: String
       out_inbound: Int
