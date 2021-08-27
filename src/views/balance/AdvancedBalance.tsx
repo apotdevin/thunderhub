@@ -45,6 +45,7 @@ type StateType = {
   max_fee: number;
   max_fee_rate: number;
   max_rebalance: number;
+  timeout_minutes: number;
   out_through: RebalanceIdType;
   out_inbound: number;
   node: RebalanceIdType;
@@ -52,7 +53,12 @@ type StateType = {
 
 export type ActionType =
   | {
-      type: 'maxFee' | 'maxFeeRate' | 'maxRebalance' | 'out_inbound';
+      type:
+        | 'maxFee'
+        | 'maxFeeRate'
+        | 'maxRebalance'
+        | 'timeoutMinutes'
+        | 'out_inbound';
       amount: number;
     }
   | {
@@ -85,6 +91,7 @@ const initialState: StateType = {
   max_fee: 10,
   max_fee_rate: 100,
   max_rebalance: 0,
+  timeout_minutes: 0,
   out_through: defaultRebalanceId,
   out_inbound: 0,
   node: defaultRebalanceId,
@@ -98,6 +105,8 @@ const reducer = (state: StateType, action: ActionType): StateType => {
       return { ...state, max_fee_rate: action.amount };
     case 'maxRebalance':
       return { ...state, max_rebalance: action.amount };
+    case 'timeoutMinutes':
+      return { ...state, timeout_minutes: action.amount };
     case 'out_inbound':
       return { ...state, out_inbound: action.amount };
     case 'withNode':
@@ -297,6 +306,21 @@ export const AdvancedBalance = () => {
         </ColorButton>
       </SettingLine>
       <Separation />
+      <Text>{'5. Set a timeout for the rebalance attempt. (Optional)'}</Text>
+      <InputWithDeco
+        inputType={'number'}
+        title={'Max time'}
+        value={state.timeout_minutes || ''}
+        override={'m'}
+        placeholder={'timeout'}
+        customAmount={
+          state.timeout_minutes ? <span>{state.timeout_minutes}m</span> : ''
+        }
+        inputCallback={value =>
+          dispatch({ type: 'timeoutMinutes', amount: Number(value) })
+        }
+      />
+      <Separation />
     </>
   );
 
@@ -341,6 +365,7 @@ export const AdvancedBalance = () => {
                       : { max_rebalance: state.max_rebalance }),
                     max_fee_rate: state.max_fee_rate,
                     max_fee: state.max_fee,
+                    timeout_minutes: state.timeout_minutes,
                     avoid: state.avoid.map(a => a.id),
                     in_through: state.in_through.id,
                     out_through: state.out_through.id,

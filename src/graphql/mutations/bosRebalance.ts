@@ -7,6 +7,7 @@ export const BOS_REBALANCE = gql`
     $max_fee: Int
     $max_fee_rate: Int
     $max_rebalance: Int
+    $timeout_minutes: Int
     $node: String
     $out_through: String
     $out_inbound: Int
@@ -17,6 +18,7 @@ export const BOS_REBALANCE = gql`
       max_fee: $max_fee
       max_fee_rate: $max_fee_rate
       max_rebalance: $max_rebalance
+      timeout_minutes: $timeout_minutes
       node: $node
       out_through: $out_through
       out_inbound: $out_inbound
