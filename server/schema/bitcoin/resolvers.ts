@@ -32,7 +32,7 @@ export const bitcoinResolvers = {
 
       try {
         const response = await fetchWithProxy(appUrls.fees);
-        const json = await response.json();
+        const json = (await response.json()) as any;
 
         if (json) {
           const { fastestFee, halfHourFee, hourFee, minimumFee } = json;

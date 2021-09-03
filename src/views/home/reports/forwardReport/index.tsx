@@ -41,8 +41,8 @@ export const options = [
 ];
 
 export const typeOptions = [
-  { label: 'Amount', value: 'amount' },
-  { label: 'Tokens', value: 'tokens' },
+  { label: 'Count', value: 'amount' },
+  { label: 'Amount', value: 'tokens' },
   { label: 'Fees', value: 'fee' },
 ];
 

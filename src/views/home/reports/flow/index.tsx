@@ -47,8 +47,8 @@ const options = [
 ];
 
 const typeOptions = [
-  { label: 'Amount', value: 'amount' },
-  { label: 'Tokens', value: 'tokens' },
+  { label: 'Count', value: 'amount' },
+  { label: 'Amount', value: 'tokens' },
 ];
 
 export const FlowBox = () => {
@@ -142,7 +142,7 @@ export const FlowBox = () => {
             <Card>
               {renderLine(
                 'Invoices',
-                type.value === 'amount' ? (
+                type.value === 'tokens' ? (
                   <Price amount={reduced.invoiceAmount} />
                 ) : (
                   reduced.invoices
@@ -150,7 +150,7 @@ export const FlowBox = () => {
               )}
               {renderLine(
                 'Payments',
-                type.value === 'amount' ? (
+                type.value === 'tokens' ? (
                   <Price amount={reduced.paymentAmount} />
                 ) : (
                   reduced.payments

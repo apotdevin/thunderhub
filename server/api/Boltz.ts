@@ -6,7 +6,7 @@ export const BoltzApi = {
   getPairs: async () => {
     try {
       const response = await fetchWithProxy(`${appUrls.boltz}/getpairs`);
-      return await response.json();
+      return (await response.json()) as any;
     } catch (error: any) {
       logger.error('Error getting pairs from Boltz: %o', error);
       throw new Error('ErrorGettingBoltzPairs');
@@ -17,7 +17,7 @@ export const BoltzApi = {
       const response = await fetchWithProxy(
         `${appUrls.boltz}/getfeeestimation`
       );
-      return await response.json();
+      return (await response.json()) as any;
     } catch (error: any) {
       logger.error('Error getting fee estimations from Boltz: %o', error);
       throw new Error(error);
@@ -31,7 +31,7 @@ export const BoltzApi = {
         body: JSON.stringify(body),
         headers: { 'Content-Type': 'application/json' },
       });
-      return await response.json();
+      return (await response.json()) as any;
     } catch (error: any) {
       logger.error('Error getting fee estimations from Boltz: %o', error);
       throw new Error(error);
@@ -56,7 +56,7 @@ export const BoltzApi = {
         body: JSON.stringify(body),
         headers: { 'Content-Type': 'application/json' },
       });
-      return await response.json();
+      return (await response.json()) as any;
     } catch (error: any) {
       logger.error('Error getting fee estimations from Boltz: %o', error);
       throw new Error(error);
@@ -76,7 +76,7 @@ export const BoltzApi = {
           headers: { 'Content-Type': 'application/json' },
         }
       );
-      return await response.json();
+      return (await response.json()) as any;
     } catch (error: any) {
       logger.error('Error broadcasting transaction from Boltz: %o', error);
       throw new Error(error);

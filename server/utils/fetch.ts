@@ -32,7 +32,7 @@ export const graphqlFetchWithProxy = async (
     headers: { Accept: 'application/json' },
     body: JSON.stringify({ query, variables }),
   })
-    .then(res => res.json())
+    .then(res => res.json() as any)
     .then(data => data)
     .catch(error => {
       logger.error('Error doing graphql fetch: %o', error);

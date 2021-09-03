@@ -84,7 +84,7 @@ export const lnUrlResolvers = {
 
       try {
         const response = await fetchWithProxy(finalUrl);
-        const json = await response.json();
+        const json = (await response.json()) as any;
 
         logger.debug('LnUrlAuth response: %o', json);
 
@@ -107,7 +107,7 @@ export const lnUrlResolvers = {
 
       try {
         const response = await fetchWithProxy(url);
-        const json = await response.json();
+        const json = (await response.json()) as any;
 
         if (json.status === 'ERROR') {
           throw new Error(json.reason || 'LnServiceError');
@@ -149,7 +149,7 @@ export const lnUrlResolvers = {
 
       try {
         const response = await fetchWithProxy(finalUrl);
-        lnServiceResponse = await response.json();
+        lnServiceResponse = (await response.json()) as any;
 
         if (lnServiceResponse.status === 'ERROR') {
           throw new Error(lnServiceResponse.reason || 'LnServiceError');
@@ -231,7 +231,7 @@ export const lnUrlResolvers = {
 
       try {
         const response = await fetchWithProxy(finalUrl);
-        const json = await response.json();
+        const json = (await response.json()) as any;
 
         logger.debug('LnUrlWithdraw response: %o', json);
 
@@ -273,7 +273,7 @@ export const lnUrlResolvers = {
 
       try {
         const response = await fetchWithProxy(finalUrl);
-        const json = await response.json();
+        const json = (await response.json()) as any;
 
         logger.debug('LnUrlChannel response: %o', json);
 

@@ -94,8 +94,8 @@ export const PeersCard = ({
     return (
       <>
         <Separation />
-        {renderLine('Tokens Received:', formatReceived)}
-        {renderLine('Tokens Sent:', formatSent)}
+        {renderLine('Amount Received:', formatReceived)}
+        {renderLine('Amount Sent:', formatSent)}
         {renderLine('bytes Received:', bytes_received)}
         {renderLine('bytes Sent:', bytes_sent)}
         {renderLine('Public Key:', getNodeLink(public_key))}
@@ -162,8 +162,8 @@ export const PeersCard = ({
         effect={'solid'}
         place={'bottom'}
       >
-        {renderLine('Tokens Received', formatReceived)}
-        {renderLine('Tokens Sent', formatSent)}
+        {renderLine('Amount Received', formatReceived)}
+        {renderLine('Amount Sent', formatSent)}
       </ReactTooltip>
       <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
         <RemovePeerModal
