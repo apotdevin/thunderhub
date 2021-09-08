@@ -13,10 +13,7 @@ export type GetAccountingReportQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetAccountingReportQuery = (
-  { __typename?: 'Query' }
-  & Pick<Types.Query, 'getAccountingReport'>
-);
+export type GetAccountingReportQuery = { __typename?: 'Query', getAccountingReport: string };
 
 
 export const GetAccountingReportDocument = gql`

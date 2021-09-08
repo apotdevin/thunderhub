@@ -7,13 +7,7 @@ const defaultOptions =  {}
 export type GetBoltzInfoQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetBoltzInfoQuery = (
-  { __typename?: 'Query' }
-  & { getBoltzInfo: (
-    { __typename?: 'BoltzInfoType' }
-    & Pick<Types.BoltzInfoType, 'max' | 'min' | 'feePercent'>
-  ) }
-);
+export type GetBoltzInfoQuery = { __typename?: 'Query', getBoltzInfo: { __typename?: 'BoltzInfoType', max: number, min: number, feePercent: number } };
 
 
 export const GetBoltzInfoDocument = gql`

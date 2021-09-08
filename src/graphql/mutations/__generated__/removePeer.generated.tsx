@@ -9,10 +9,7 @@ export type RemovePeerMutationVariables = Types.Exact<{
 }>;
 
 
-export type RemovePeerMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'removePeer'>
-);
+export type RemovePeerMutation = { __typename?: 'Mutation', removePeer?: Types.Maybe<boolean> };
 
 
 export const RemovePeerDocument = gql`

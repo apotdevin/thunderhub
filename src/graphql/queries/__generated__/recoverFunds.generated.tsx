@@ -9,10 +9,7 @@ export type RecoverFundsQueryVariables = Types.Exact<{
 }>;
 
 
-export type RecoverFundsQuery = (
-  { __typename?: 'Query' }
-  & Pick<Types.Query, 'recoverFunds'>
-);
+export type RecoverFundsQuery = { __typename?: 'Query', recoverFunds?: Types.Maybe<boolean> };
 
 
 export const RecoverFundsDocument = gql`

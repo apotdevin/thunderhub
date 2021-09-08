@@ -7,20 +7,7 @@ const defaultOptions =  {}
 export type GetPeersQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetPeersQuery = (
-  { __typename?: 'Query' }
-  & { getPeers?: Types.Maybe<Array<Types.Maybe<(
-    { __typename?: 'peerType' }
-    & Pick<Types.PeerType, 'bytes_received' | 'bytes_sent' | 'is_inbound' | 'is_sync_peer' | 'ping_time' | 'public_key' | 'socket' | 'tokens_received' | 'tokens_sent'>
-    & { partner_node_info: (
-      { __typename?: 'Node' }
-      & { node: (
-        { __typename?: 'nodeType' }
-        & Pick<Types.NodeType, 'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'>
-      ) }
-    ) }
-  )>>> }
-);
+export type GetPeersQuery = { __typename?: 'Query', getPeers?: Types.Maybe<Array<Types.Maybe<{ __typename?: 'peerType', bytes_received: number, bytes_sent: number, is_inbound: boolean, is_sync_peer?: Types.Maybe<boolean>, ping_time: number, public_key: string, socket: string, tokens_received: number, tokens_sent: number, partner_node_info: { __typename?: 'Node', node: { __typename?: 'nodeType', alias: string, capacity?: Types.Maybe<string>, channel_count?: Types.Maybe<number>, color?: Types.Maybe<string>, updated_at?: Types.Maybe<string> } } }>>> };
 
 
 export const GetPeersDocument = gql`

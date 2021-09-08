@@ -12,10 +12,7 @@ export type AddPeerMutationVariables = Types.Exact<{
 }>;
 
 
-export type AddPeerMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'addPeer'>
-);
+export type AddPeerMutation = { __typename?: 'Mutation', addPeer?: Types.Maybe<boolean> };
 
 
 export const AddPeerDocument = gql`

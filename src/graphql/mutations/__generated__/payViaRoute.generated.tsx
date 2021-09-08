@@ -10,10 +10,7 @@ export type PayViaRouteMutationVariables = Types.Exact<{
 }>;
 
 
-export type PayViaRouteMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'payViaRoute'>
-);
+export type PayViaRouteMutation = { __typename?: 'Mutation', payViaRoute?: Types.Maybe<boolean> };
 
 
 export const PayViaRouteDocument = gql`

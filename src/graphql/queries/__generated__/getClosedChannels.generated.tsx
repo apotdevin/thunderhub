@@ -7,20 +7,7 @@ const defaultOptions =  {}
 export type GetClosedChannelsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetClosedChannelsQuery = (
-  { __typename?: 'Query' }
-  & { getClosedChannels?: Types.Maybe<Array<Types.Maybe<(
-    { __typename?: 'closedChannelType' }
-    & Pick<Types.ClosedChannelType, 'capacity' | 'close_confirm_height' | 'close_transaction_id' | 'final_local_balance' | 'final_time_locked_balance' | 'id' | 'is_breach_close' | 'is_cooperative_close' | 'is_funding_cancel' | 'is_local_force_close' | 'is_remote_force_close' | 'partner_public_key' | 'transaction_id' | 'transaction_vout' | 'channel_age'>
-    & { partner_node_info: (
-      { __typename?: 'Node' }
-      & { node: (
-        { __typename?: 'nodeType' }
-        & Pick<Types.NodeType, 'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'>
-      ) }
-    ) }
-  )>>> }
-);
+export type GetClosedChannelsQuery = { __typename?: 'Query', getClosedChannels?: Types.Maybe<Array<Types.Maybe<{ __typename?: 'closedChannelType', capacity: number, close_confirm_height?: Types.Maybe<number>, close_transaction_id?: Types.Maybe<string>, final_local_balance: number, final_time_locked_balance: number, id?: Types.Maybe<string>, is_breach_close: boolean, is_cooperative_close: boolean, is_funding_cancel: boolean, is_local_force_close: boolean, is_remote_force_close: boolean, partner_public_key: string, transaction_id: string, transaction_vout: number, channel_age: number, partner_node_info: { __typename?: 'Node', node: { __typename?: 'nodeType', alias: string, capacity?: Types.Maybe<string>, channel_count?: Types.Maybe<number>, color?: Types.Maybe<string>, updated_at?: Types.Maybe<string> } } }>>> };
 
 
 export const GetClosedChannelsDocument = gql`

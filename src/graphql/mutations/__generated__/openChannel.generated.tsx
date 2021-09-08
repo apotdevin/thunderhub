@@ -13,13 +13,7 @@ export type OpenChannelMutationVariables = Types.Exact<{
 }>;
 
 
-export type OpenChannelMutation = (
-  { __typename?: 'Mutation' }
-  & { openChannel?: Types.Maybe<(
-    { __typename?: 'openChannelType' }
-    & Pick<Types.OpenChannelType, 'transactionId' | 'transactionOutputIndex'>
-  )> }
-);
+export type OpenChannelMutation = { __typename?: 'Mutation', openChannel?: Types.Maybe<{ __typename?: 'openChannelType', transactionId?: Types.Maybe<string>, transactionOutputIndex?: Types.Maybe<string> }> };
 
 
 export const OpenChannelDocument = gql`

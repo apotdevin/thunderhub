@@ -7,10 +7,7 @@ const defaultOptions =  {}
 export type GetBackupsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetBackupsQuery = (
-  { __typename?: 'Query' }
-  & Pick<Types.Query, 'getBackups'>
-);
+export type GetBackupsQuery = { __typename?: 'Query', getBackups?: Types.Maybe<string> };
 
 
 export const GetBackupsDocument = gql`

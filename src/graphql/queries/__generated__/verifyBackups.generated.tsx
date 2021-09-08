@@ -9,10 +9,7 @@ export type VerifyBackupsQueryVariables = Types.Exact<{
 }>;
 
 
-export type VerifyBackupsQuery = (
-  { __typename?: 'Query' }
-  & Pick<Types.Query, 'verifyBackups'>
-);
+export type VerifyBackupsQuery = { __typename?: 'Query', verifyBackups?: Types.Maybe<boolean> };
 
 
 export const VerifyBackupsDocument = gql`

@@ -14,10 +14,7 @@ export type ClaimBoltzTransactionMutationVariables = Types.Exact<{
 }>;
 
 
-export type ClaimBoltzTransactionMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'claimBoltzTransaction'>
-);
+export type ClaimBoltzTransactionMutation = { __typename?: 'Mutation', claimBoltzTransaction: string };
 
 
 export const ClaimBoltzTransactionDocument = gql`

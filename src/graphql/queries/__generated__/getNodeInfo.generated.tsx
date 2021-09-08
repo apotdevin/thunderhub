@@ -7,50 +7,22 @@ const defaultOptions =  {}
 export type GetCanConnectQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetCanConnectQuery = (
-  { __typename?: 'Query' }
-  & { getNodeInfo?: Types.Maybe<(
-    { __typename?: 'nodeInfoType' }
-    & Pick<Types.NodeInfoType, 'chains' | 'color' | 'active_channels_count' | 'closed_channels_count' | 'alias' | 'is_synced_to_chain' | 'peers_count' | 'pending_channels_count' | 'version'>
-  )> }
-);
+export type GetCanConnectQuery = { __typename?: 'Query', getNodeInfo?: Types.Maybe<{ __typename?: 'nodeInfoType', chains: Array<string>, color: string, active_channels_count: number, closed_channels_count: number, alias: string, is_synced_to_chain: boolean, peers_count: number, pending_channels_count: number, version: string }> };
 
 export type GetNodeInfoQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetNodeInfoQuery = (
-  { __typename?: 'Query' }
-  & Pick<Types.Query, 'getChainBalance' | 'getPendingChainBalance'>
-  & { getNodeInfo?: Types.Maybe<(
-    { __typename?: 'nodeInfoType' }
-    & Pick<Types.NodeInfoType, 'chains' | 'color' | 'active_channels_count' | 'closed_channels_count' | 'alias' | 'is_synced_to_chain' | 'peers_count' | 'pending_channels_count' | 'version' | 'public_key'>
-  )>, getChannelBalance?: Types.Maybe<(
-    { __typename?: 'channelBalanceType' }
-    & Pick<Types.ChannelBalanceType, 'confirmedBalance' | 'pendingBalance'>
-  )> }
-);
+export type GetNodeInfoQuery = { __typename?: 'Query', getChainBalance: string, getPendingChainBalance: string, getNodeInfo?: Types.Maybe<{ __typename?: 'nodeInfoType', chains: Array<string>, color: string, active_channels_count: number, closed_channels_count: number, alias: string, is_synced_to_chain: boolean, peers_count: number, pending_channels_count: number, version: string, public_key: string }>, getChannelBalance?: Types.Maybe<{ __typename?: 'channelBalanceType', confirmedBalance: number, pendingBalance: number }> };
 
 export type GetChannelAmountInfoQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetChannelAmountInfoQuery = (
-  { __typename?: 'Query' }
-  & { getNodeInfo?: Types.Maybe<(
-    { __typename?: 'nodeInfoType' }
-    & Pick<Types.NodeInfoType, 'active_channels_count' | 'closed_channels_count' | 'pending_channels_count'>
-  )> }
-);
+export type GetChannelAmountInfoQuery = { __typename?: 'Query', getNodeInfo?: Types.Maybe<{ __typename?: 'nodeInfoType', active_channels_count: number, closed_channels_count: number, pending_channels_count: number }> };
 
 export type GetCanConnectInfoQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetCanConnectInfoQuery = (
-  { __typename?: 'Query' }
-  & { getNodeInfo?: Types.Maybe<(
-    { __typename?: 'nodeInfoType' }
-    & Pick<Types.NodeInfoType, 'alias' | 'public_key' | 'uris'>
-  )> }
-);
+export type GetCanConnectInfoQuery = { __typename?: 'Query', getNodeInfo?: Types.Maybe<{ __typename?: 'nodeInfoType', alias: string, public_key: string, uris: Array<string> }> };
 
 
 export const GetCanConnectDocument = gql`

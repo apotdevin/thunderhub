@@ -9,32 +9,14 @@ export type FetchLnUrlMutationVariables = Types.Exact<{
 }>;
 
 
-export type FetchLnUrlMutation = (
-  { __typename?: 'Mutation' }
-  & { fetchLnUrl?: Types.Maybe<(
-    { __typename?: 'WithdrawRequest' }
-    & Pick<Types.WithdrawRequest, 'callback' | 'k1' | 'maxWithdrawable' | 'defaultDescription' | 'minWithdrawable' | 'tag'>
-  ) | (
-    { __typename?: 'PayRequest' }
-    & Pick<Types.PayRequest, 'callback' | 'maxSendable' | 'minSendable' | 'metadata' | 'commentAllowed' | 'tag'>
-  ) | (
-    { __typename?: 'ChannelRequest' }
-    & Pick<Types.ChannelRequest, 'tag' | 'k1' | 'callback' | 'uri'>
-  )> }
-);
+export type FetchLnUrlMutation = { __typename?: 'Mutation', fetchLnUrl?: Types.Maybe<{ __typename?: 'ChannelRequest', tag?: Types.Maybe<string>, k1?: Types.Maybe<string>, callback?: Types.Maybe<string>, uri?: Types.Maybe<string> } | { __typename?: 'PayRequest', callback?: Types.Maybe<string>, maxSendable?: Types.Maybe<string>, minSendable?: Types.Maybe<string>, metadata?: Types.Maybe<string>, commentAllowed?: Types.Maybe<number>, tag?: Types.Maybe<string> } | { __typename?: 'WithdrawRequest', callback?: Types.Maybe<string>, k1?: Types.Maybe<string>, maxWithdrawable?: Types.Maybe<string>, defaultDescription?: Types.Maybe<string>, minWithdrawable?: Types.Maybe<string>, tag?: Types.Maybe<string> }> };
 
 export type AuthLnUrlMutationVariables = Types.Exact<{
   url: Types.Scalars['String'];
 }>;
 
 
-export type AuthLnUrlMutation = (
-  { __typename?: 'Mutation' }
-  & { lnUrlAuth: (
-    { __typename?: 'AuthResponse' }
-    & Pick<Types.AuthResponse, 'status' | 'message'>
-  ) }
-);
+export type AuthLnUrlMutation = { __typename?: 'Mutation', lnUrlAuth: { __typename?: 'AuthResponse', status: string, message: string } };
 
 export type PayLnUrlMutationVariables = Types.Exact<{
   callback: Types.Scalars['String'];
@@ -43,13 +25,7 @@ export type PayLnUrlMutationVariables = Types.Exact<{
 }>;
 
 
-export type PayLnUrlMutation = (
-  { __typename?: 'Mutation' }
-  & { lnUrlPay: (
-    { __typename?: 'PaySuccess' }
-    & Pick<Types.PaySuccess, 'tag' | 'description' | 'url' | 'message' | 'ciphertext' | 'iv'>
-  ) }
-);
+export type PayLnUrlMutation = { __typename?: 'Mutation', lnUrlPay: { __typename?: 'PaySuccess', tag?: Types.Maybe<string>, description?: Types.Maybe<string>, url?: Types.Maybe<string>, message?: Types.Maybe<string>, ciphertext?: Types.Maybe<string>, iv?: Types.Maybe<string> } };
 
 export type WithdrawLnUrlMutationVariables = Types.Exact<{
   callback: Types.Scalars['String'];
@@ -59,10 +35,7 @@ export type WithdrawLnUrlMutationVariables = Types.Exact<{
 }>;
 
 
-export type WithdrawLnUrlMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'lnUrlWithdraw'>
-);
+export type WithdrawLnUrlMutation = { __typename?: 'Mutation', lnUrlWithdraw: string };
 
 export type ChannelLnUrlMutationVariables = Types.Exact<{
   callback: Types.Scalars['String'];
@@ -71,10 +44,7 @@ export type ChannelLnUrlMutationVariables = Types.Exact<{
 }>;
 
 
-export type ChannelLnUrlMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'lnUrlChannel'>
-);
+export type ChannelLnUrlMutation = { __typename?: 'Mutation', lnUrlChannel: string };
 
 
 export const FetchLnUrlDocument = gql`

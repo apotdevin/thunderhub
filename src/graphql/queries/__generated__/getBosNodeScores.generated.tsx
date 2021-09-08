@@ -9,13 +9,7 @@ export type GetBosNodeScoresQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetBosNodeScoresQuery = (
-  { __typename?: 'Query' }
-  & { getBosNodeScores: Array<Types.Maybe<(
-    { __typename?: 'BosScore' }
-    & Pick<Types.BosScore, 'alias' | 'public_key' | 'score' | 'updated' | 'position'>
-  )>> }
-);
+export type GetBosNodeScoresQuery = { __typename?: 'Query', getBosNodeScores: Array<Types.Maybe<{ __typename?: 'BosScore', alias: string, public_key: string, score: number, updated: string, position: number }>> };
 
 
 export const GetBosNodeScoresDocument = gql`

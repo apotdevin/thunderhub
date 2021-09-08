@@ -12,13 +12,7 @@ export type CloseChannelMutationVariables = Types.Exact<{
 }>;
 
 
-export type CloseChannelMutation = (
-  { __typename?: 'Mutation' }
-  & { closeChannel?: Types.Maybe<(
-    { __typename?: 'closeChannelType' }
-    & Pick<Types.CloseChannelType, 'transactionId' | 'transactionOutputIndex'>
-  )> }
-);
+export type CloseChannelMutation = { __typename?: 'Mutation', closeChannel?: Types.Maybe<{ __typename?: 'closeChannelType', transactionId?: Types.Maybe<string>, transactionOutputIndex?: Types.Maybe<string> }> };
 
 
 export const CloseChannelDocument = gql`

@@ -13,13 +13,7 @@ export type PayAddressMutationVariables = Types.Exact<{
 }>;
 
 
-export type PayAddressMutation = (
-  { __typename?: 'Mutation' }
-  & { sendToAddress?: Types.Maybe<(
-    { __typename?: 'sendToType' }
-    & Pick<Types.SendToType, 'confirmationCount' | 'id' | 'isConfirmed' | 'isOutgoing' | 'tokens'>
-  )> }
-);
+export type PayAddressMutation = { __typename?: 'Mutation', sendToAddress?: Types.Maybe<{ __typename?: 'sendToType', confirmationCount: string, id: string, isConfirmed: boolean, isOutgoing: boolean, tokens?: Types.Maybe<number> }> };
 
 
 export const PayAddressDocument = gql`

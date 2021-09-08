@@ -10,24 +10,7 @@ export type CreateBoltzReverseSwapMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateBoltzReverseSwapMutation = (
-  { __typename?: 'Mutation' }
-  & { createBoltzReverseSwap: (
-    { __typename?: 'CreateBoltzReverseSwapType' }
-    & Pick<Types.CreateBoltzReverseSwapType, 'id' | 'invoice' | 'redeemScript' | 'onchainAmount' | 'timeoutBlockHeight' | 'lockupAddress' | 'minerFeeInvoice' | 'receivingAddress' | 'preimage' | 'preimageHash' | 'privateKey' | 'publicKey'>
-    & { decodedInvoice?: Types.Maybe<(
-      { __typename?: 'decodeType' }
-      & Pick<Types.DecodeType, 'description' | 'destination' | 'expires_at' | 'id' | 'safe_tokens' | 'tokens'>
-      & { destination_node: (
-        { __typename?: 'Node' }
-        & { node: (
-          { __typename?: 'nodeType' }
-          & Pick<Types.NodeType, 'alias'>
-        ) }
-      ) }
-    )> }
-  ) }
-);
+export type CreateBoltzReverseSwapMutation = { __typename?: 'Mutation', createBoltzReverseSwap: { __typename?: 'CreateBoltzReverseSwapType', id: string, invoice: string, redeemScript: string, onchainAmount: number, timeoutBlockHeight: number, lockupAddress: string, minerFeeInvoice?: Types.Maybe<string>, receivingAddress: string, preimage?: Types.Maybe<string>, preimageHash?: Types.Maybe<string>, privateKey?: Types.Maybe<string>, publicKey?: Types.Maybe<string>, decodedInvoice?: Types.Maybe<{ __typename?: 'decodeType', description: string, destination: string, expires_at: string, id: string, safe_tokens: number, tokens: number, destination_node: { __typename?: 'Node', node: { __typename?: 'nodeType', alias: string } } }> } };
 
 
 export const CreateBoltzReverseSwapDocument = gql`
