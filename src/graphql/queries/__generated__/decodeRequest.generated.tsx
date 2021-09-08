@@ -9,40 +9,7 @@ export type DecodeRequestQueryVariables = Types.Exact<{
 }>;
 
 
-export type DecodeRequestQuery = (
-  { __typename?: 'Query' }
-  & { decodeRequest?: Types.Maybe<(
-    { __typename?: 'decodeType' }
-    & Pick<Types.DecodeType, 'chain_address' | 'cltv_delta' | 'description' | 'description_hash' | 'destination' | 'expires_at' | 'id' | 'tokens'>
-    & { destination_node: (
-      { __typename?: 'Node' }
-      & { node: (
-        { __typename?: 'nodeType' }
-        & Pick<Types.NodeType, 'alias'>
-      ) }
-    ), routes: Array<Types.Maybe<Array<Types.Maybe<(
-      { __typename?: 'RouteType' }
-      & Pick<Types.RouteType, 'base_fee_mtokens' | 'channel' | 'cltv_delta' | 'fee_rate' | 'public_key'>
-    )>>>>, probe_route?: Types.Maybe<(
-      { __typename?: 'ProbeRoute' }
-      & { route?: Types.Maybe<(
-        { __typename?: 'probedRoute' }
-        & Pick<Types.ProbedRoute, 'confidence' | 'fee' | 'fee_mtokens' | 'mtokens' | 'safe_fee' | 'safe_tokens' | 'timeout' | 'tokens'>
-        & { hops: Array<(
-          { __typename?: 'probedRouteHop' }
-          & Pick<Types.ProbedRouteHop, 'channel' | 'channel_capacity' | 'fee' | 'fee_mtokens' | 'forward' | 'forward_mtokens' | 'public_key' | 'timeout'>
-          & { node: (
-            { __typename?: 'Node' }
-            & { node: (
-              { __typename?: 'nodeType' }
-              & Pick<Types.NodeType, 'alias'>
-            ) }
-          ) }
-        )> }
-      )> }
-    )> }
-  )> }
-);
+export type DecodeRequestQuery = { __typename?: 'Query', decodeRequest?: Types.Maybe<{ __typename?: 'decodeType', chain_address?: Types.Maybe<string>, cltv_delta?: Types.Maybe<number>, description: string, description_hash?: Types.Maybe<string>, destination: string, expires_at: string, id: string, tokens: number, destination_node: { __typename?: 'Node', node: { __typename?: 'nodeType', alias: string } }, routes: Array<Types.Maybe<Array<Types.Maybe<{ __typename?: 'RouteType', base_fee_mtokens?: Types.Maybe<string>, channel?: Types.Maybe<string>, cltv_delta?: Types.Maybe<number>, fee_rate?: Types.Maybe<number>, public_key: string }>>>>, probe_route?: Types.Maybe<{ __typename?: 'ProbeRoute', route?: Types.Maybe<{ __typename?: 'probedRoute', confidence: number, fee: number, fee_mtokens: string, mtokens: string, safe_fee: number, safe_tokens: number, timeout: number, tokens: number, hops: Array<{ __typename?: 'probedRouteHop', channel: string, channel_capacity: number, fee: number, fee_mtokens: string, forward: number, forward_mtokens: string, public_key: string, timeout: number, node: { __typename?: 'Node', node: { __typename?: 'nodeType', alias: string } } }> }> }> }> };
 
 
 export const DecodeRequestDocument = gql`

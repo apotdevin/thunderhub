@@ -7,13 +7,7 @@ const defaultOptions =  {}
 export type CreateBaseTokenInvoiceMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type CreateBaseTokenInvoiceMutation = (
-  { __typename?: 'Mutation' }
-  & { createBaseTokenInvoice?: Types.Maybe<(
-    { __typename?: 'baseInvoiceType' }
-    & Pick<Types.BaseInvoiceType, 'request' | 'id'>
-  )> }
-);
+export type CreateBaseTokenInvoiceMutation = { __typename?: 'Mutation', createBaseTokenInvoice?: Types.Maybe<{ __typename?: 'baseInvoiceType', request: string, id: string }> };
 
 
 export const CreateBaseTokenInvoiceDocument = gql`

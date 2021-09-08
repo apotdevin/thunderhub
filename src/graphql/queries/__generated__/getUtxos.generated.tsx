@@ -7,13 +7,7 @@ const defaultOptions =  {}
 export type GetUtxosQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetUtxosQuery = (
-  { __typename?: 'Query' }
-  & { getUtxos?: Types.Maybe<Array<Types.Maybe<(
-    { __typename?: 'getUtxosType' }
-    & Pick<Types.GetUtxosType, 'address' | 'address_format' | 'confirmation_count' | 'output_script' | 'tokens' | 'transaction_id' | 'transaction_vout'>
-  )>>> }
-);
+export type GetUtxosQuery = { __typename?: 'Query', getUtxos?: Types.Maybe<Array<Types.Maybe<{ __typename?: 'getUtxosType', address: string, address_format: string, confirmation_count: number, output_script: string, tokens: number, transaction_id: string, transaction_vout: number }>>> };
 
 
 export const GetUtxosDocument = gql`

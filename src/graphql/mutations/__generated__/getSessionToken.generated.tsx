@@ -10,10 +10,7 @@ export type GetSessionTokenMutationVariables = Types.Exact<{
 }>;
 
 
-export type GetSessionTokenMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'getSessionToken'>
-);
+export type GetSessionTokenMutation = { __typename?: 'Mutation', getSessionToken: string };
 
 
 export const GetSessionTokenDocument = gql`

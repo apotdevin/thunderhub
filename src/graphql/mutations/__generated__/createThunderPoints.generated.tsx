@@ -12,10 +12,7 @@ export type CreateThunderPointsMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateThunderPointsMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'createThunderPoints'>
-);
+export type CreateThunderPointsMutation = { __typename?: 'Mutation', createThunderPoints: boolean };
 
 
 export const CreateThunderPointsDocument = gql`

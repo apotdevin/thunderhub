@@ -7,30 +7,7 @@ const defaultOptions =  {}
 export type GetFeeHealthQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetFeeHealthQuery = (
-  { __typename?: 'Query' }
-  & { getFeeHealth?: Types.Maybe<(
-    { __typename?: 'channelsFeeHealth' }
-    & Pick<Types.ChannelsFeeHealth, 'score'>
-    & { channels?: Types.Maybe<Array<Types.Maybe<(
-      { __typename?: 'channelFeeHealth' }
-      & Pick<Types.ChannelFeeHealth, 'id'>
-      & { partnerSide?: Types.Maybe<(
-        { __typename?: 'feeHealth' }
-        & Pick<Types.FeeHealth, 'score' | 'rate' | 'base' | 'rateScore' | 'baseScore' | 'rateOver' | 'baseOver'>
-      )>, mySide?: Types.Maybe<(
-        { __typename?: 'feeHealth' }
-        & Pick<Types.FeeHealth, 'score' | 'rate' | 'base' | 'rateScore' | 'baseScore' | 'rateOver' | 'baseOver'>
-      )>, partner?: Types.Maybe<(
-        { __typename?: 'Node' }
-        & { node: (
-          { __typename?: 'nodeType' }
-          & Pick<Types.NodeType, 'alias'>
-        ) }
-      )> }
-    )>>> }
-  )> }
-);
+export type GetFeeHealthQuery = { __typename?: 'Query', getFeeHealth?: Types.Maybe<{ __typename?: 'channelsFeeHealth', score?: Types.Maybe<number>, channels?: Types.Maybe<Array<Types.Maybe<{ __typename?: 'channelFeeHealth', id?: Types.Maybe<string>, partnerSide?: Types.Maybe<{ __typename?: 'feeHealth', score?: Types.Maybe<number>, rate?: Types.Maybe<number>, base?: Types.Maybe<string>, rateScore?: Types.Maybe<number>, baseScore?: Types.Maybe<number>, rateOver?: Types.Maybe<boolean>, baseOver?: Types.Maybe<boolean> }>, mySide?: Types.Maybe<{ __typename?: 'feeHealth', score?: Types.Maybe<number>, rate?: Types.Maybe<number>, base?: Types.Maybe<string>, rateScore?: Types.Maybe<number>, baseScore?: Types.Maybe<number>, rateOver?: Types.Maybe<boolean>, baseOver?: Types.Maybe<boolean> }>, partner?: Types.Maybe<{ __typename?: 'Node', node: { __typename?: 'nodeType', alias: string } }> }>>> }> };
 
 
 export const GetFeeHealthDocument = gql`

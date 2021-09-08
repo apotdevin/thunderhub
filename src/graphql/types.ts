@@ -20,28 +20,28 @@ export type Scalars = {
 
 export type AuthResponse = {
   __typename?: 'AuthResponse';
-  status: Scalars['String'];
   message: Scalars['String'];
+  status: Scalars['String'];
 };
 
 export type BaseInfo = {
   __typename?: 'BaseInfo';
-  lastBosUpdate: Scalars['String'];
-  apiTokenSatPrice: Scalars['Int'];
   apiTokenOriginalSatPrice: Scalars['Int'];
+  apiTokenSatPrice: Scalars['Int'];
+  lastBosUpdate: Scalars['String'];
 };
 
 export type BoltzInfoType = {
   __typename?: 'BoltzInfoType';
+  feePercent: Scalars['Float'];
   max: Scalars['Int'];
   min: Scalars['Int'];
-  feePercent: Scalars['Float'];
 };
 
 export type BoltzSwap = {
   __typename?: 'BoltzSwap';
-  id?: Maybe<Scalars['String']>;
   boltz?: Maybe<BoltzSwapStatus>;
+  id?: Maybe<Scalars['String']>;
 };
 
 export type BoltzSwapStatus = {
@@ -52,49 +52,49 @@ export type BoltzSwapStatus = {
 
 export type BoltzSwapTransaction = {
   __typename?: 'BoltzSwapTransaction';
-  id?: Maybe<Scalars['String']>;
-  hex?: Maybe<Scalars['String']>;
   eta?: Maybe<Scalars['Int']>;
+  hex?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
 };
 
 export type BosScore = {
   __typename?: 'BosScore';
   alias: Scalars['String'];
+  position: Scalars['Int'];
   public_key: Scalars['String'];
   score: Scalars['Int'];
   updated: Scalars['String'];
-  position: Scalars['Int'];
 };
 
 export type BosScoreResponse = {
   __typename?: 'BosScoreResponse';
-  updated: Scalars['String'];
   scores: Array<BosScore>;
+  updated: Scalars['String'];
 };
 
 export type ChannelRequest = {
   __typename?: 'ChannelRequest';
-  tag?: Maybe<Scalars['String']>;
-  k1?: Maybe<Scalars['String']>;
   callback?: Maybe<Scalars['String']>;
+  k1?: Maybe<Scalars['String']>;
+  tag?: Maybe<Scalars['String']>;
   uri?: Maybe<Scalars['String']>;
 };
 
 export type CreateBoltzReverseSwapType = {
   __typename?: 'CreateBoltzReverseSwapType';
+  decodedInvoice?: Maybe<DecodeType>;
   id: Scalars['String'];
   invoice: Scalars['String'];
-  redeemScript: Scalars['String'];
-  onchainAmount: Scalars['Int'];
-  timeoutBlockHeight: Scalars['Int'];
   lockupAddress: Scalars['String'];
   minerFeeInvoice?: Maybe<Scalars['String']>;
-  decodedInvoice?: Maybe<DecodeType>;
-  receivingAddress: Scalars['String'];
+  onchainAmount: Scalars['Int'];
   preimage?: Maybe<Scalars['String']>;
   preimageHash?: Maybe<Scalars['String']>;
   privateKey?: Maybe<Scalars['String']>;
   publicKey?: Maybe<Scalars['String']>;
+  receivingAddress: Scalars['String'];
+  redeemScript: Scalars['String'];
+  timeoutBlockHeight: Scalars['Int'];
 };
 
 export type CreateMacaroon = {
@@ -102,8 +102,6 @@ export type CreateMacaroon = {
   base: Scalars['String'];
   hex: Scalars['String'];
 };
-
-
 
 export type Forward = {
   __typename?: 'Forward';
@@ -121,10 +119,10 @@ export type ForwardNodeType = {
   alias?: Maybe<Scalars['String']>;
   capacity?: Maybe<Scalars['String']>;
   channel_count?: Maybe<Scalars['Int']>;
-  color?: Maybe<Scalars['String']>;
-  updated_at?: Maybe<Scalars['String']>;
   channel_id?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['String']>;
   public_key?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['String']>;
 };
 
 export type GetRouteType = {
@@ -152,6 +150,7 @@ export type InvoiceType = {
   chain_address?: Maybe<Scalars['String']>;
   confirmed_at?: Maybe<Scalars['String']>;
   created_at: Scalars['String'];
+  date: Scalars['String'];
   description: Scalars['String'];
   description_hash?: Maybe<Scalars['String']>;
   expires_at: Scalars['String'];
@@ -161,27 +160,26 @@ export type InvoiceType = {
   is_held?: Maybe<Scalars['Boolean']>;
   is_private: Scalars['Boolean'];
   is_push?: Maybe<Scalars['Boolean']>;
+  payments: Array<Maybe<InvoicePayment>>;
   received: Scalars['Int'];
   received_mtokens: Scalars['String'];
   request?: Maybe<Scalars['String']>;
   secret: Scalars['String'];
   tokens: Scalars['String'];
   type: Scalars['String'];
-  date: Scalars['String'];
-  payments: Array<Maybe<InvoicePayment>>;
 };
 
 export type LnMarketsUserInfo = {
   __typename?: 'LnMarketsUserInfo';
-  uid?: Maybe<Scalars['String']>;
-  balance?: Maybe<Scalars['String']>;
   account_type?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  linkingpublickey?: Maybe<Scalars['String']>;
+  balance?: Maybe<Scalars['String']>;
   last_ip?: Maybe<Scalars['String']>;
+  linkingpublickey?: Maybe<Scalars['String']>;
+  uid?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
 };
 
-export type LnUrlRequest = WithdrawRequest | PayRequest | ChannelRequest;
+export type LnUrlRequest = ChannelRequest | PayRequest | WithdrawRequest;
 
 export type MessageType = {
   __typename?: 'MessageType';
@@ -190,180 +188,49 @@ export type MessageType = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  getAuthToken: Scalars['Boolean'];
-  getSessionToken: Scalars['String'];
-  claimBoltzTransaction: Scalars['String'];
-  createBoltzReverseSwap: CreateBoltzReverseSwapType;
-  lnMarketsDeposit: Scalars['Boolean'];
-  lnMarketsWithdraw: Scalars['Boolean'];
-  lnMarketsLogin: AuthResponse;
-  lnMarketsLogout: Scalars['Boolean'];
-  lnUrlAuth: AuthResponse;
-  lnUrlPay: PaySuccess;
-  lnUrlChannel: Scalars['String'];
-  lnUrlWithdraw: Scalars['String'];
-  fetchLnUrl?: Maybe<LnUrlRequest>;
-  createBaseTokenInvoice?: Maybe<BaseInvoiceType>;
-  createBaseToken: Scalars['Boolean'];
-  deleteBaseToken: Scalars['Boolean'];
-  createBaseInvoice?: Maybe<BaseInvoiceType>;
-  createThunderPoints: Scalars['Boolean'];
-  closeChannel?: Maybe<CloseChannelType>;
-  openChannel?: Maybe<OpenChannelType>;
-  updateFees?: Maybe<Scalars['Boolean']>;
-  updateMultipleFees?: Maybe<Scalars['Boolean']>;
-  keysend?: Maybe<PayType>;
-  createInvoice?: Maybe<NewInvoiceType>;
-  circularRebalance?: Maybe<Scalars['Boolean']>;
+  addPeer?: Maybe<Scalars['Boolean']>;
   bosPay?: Maybe<Scalars['Boolean']>;
   bosRebalance?: Maybe<BosRebalanceResultType>;
-  payViaRoute?: Maybe<Scalars['Boolean']>;
+  circularRebalance?: Maybe<Scalars['Boolean']>;
+  claimBoltzTransaction: Scalars['String'];
+  closeChannel?: Maybe<CloseChannelType>;
   createAddress?: Maybe<Scalars['String']>;
-  sendToAddress?: Maybe<SendToType>;
-  addPeer?: Maybe<Scalars['Boolean']>;
+  createBaseInvoice?: Maybe<BaseInvoiceType>;
+  createBaseToken: Scalars['Boolean'];
+  createBaseTokenInvoice?: Maybe<BaseInvoiceType>;
+  createBoltzReverseSwap: CreateBoltzReverseSwapType;
+  createInvoice?: Maybe<NewInvoiceType>;
+  createMacaroon: CreateMacaroon;
+  createThunderPoints: Scalars['Boolean'];
+  deleteBaseToken: Scalars['Boolean'];
+  fetchLnUrl?: Maybe<LnUrlRequest>;
+  getAuthToken: Scalars['Boolean'];
+  getSessionToken: Scalars['String'];
+  keysend?: Maybe<PayType>;
+  lnMarketsDeposit: Scalars['Boolean'];
+  lnMarketsLogin: AuthResponse;
+  lnMarketsLogout: Scalars['Boolean'];
+  lnMarketsWithdraw: Scalars['Boolean'];
+  lnUrlAuth: AuthResponse;
+  lnUrlChannel: Scalars['String'];
+  lnUrlPay: PaySuccess;
+  lnUrlWithdraw: Scalars['String'];
+  logout: Scalars['Boolean'];
+  openChannel?: Maybe<OpenChannelType>;
+  payViaRoute?: Maybe<Scalars['Boolean']>;
   removePeer?: Maybe<Scalars['Boolean']>;
   sendMessage?: Maybe<Scalars['Int']>;
-  logout: Scalars['Boolean'];
-  createMacaroon: CreateMacaroon;
+  sendToAddress?: Maybe<SendToType>;
+  updateFees?: Maybe<Scalars['Boolean']>;
+  updateMultipleFees?: Maybe<Scalars['Boolean']>;
 };
 
 
-export type MutationGetAuthTokenArgs = {
-  cookie?: Maybe<Scalars['String']>;
-};
-
-
-export type MutationGetSessionTokenArgs = {
-  id?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
-};
-
-
-export type MutationClaimBoltzTransactionArgs = {
-  redeem: Scalars['String'];
-  transaction: Scalars['String'];
-  preimage: Scalars['String'];
-  privateKey: Scalars['String'];
-  destination: Scalars['String'];
-  fee: Scalars['Int'];
-};
-
-
-export type MutationCreateBoltzReverseSwapArgs = {
-  amount: Scalars['Int'];
-  address?: Maybe<Scalars['String']>;
-};
-
-
-export type MutationLnMarketsDepositArgs = {
-  amount: Scalars['Int'];
-};
-
-
-export type MutationLnMarketsWithdrawArgs = {
-  amount: Scalars['Int'];
-};
-
-
-export type MutationLnUrlAuthArgs = {
-  url: Scalars['String'];
-};
-
-
-export type MutationLnUrlPayArgs = {
-  callback: Scalars['String'];
-  amount: Scalars['Int'];
-  comment?: Maybe<Scalars['String']>;
-};
-
-
-export type MutationLnUrlChannelArgs = {
-  callback: Scalars['String'];
-  k1: Scalars['String'];
-  uri: Scalars['String'];
-};
-
-
-export type MutationLnUrlWithdrawArgs = {
-  callback: Scalars['String'];
-  amount: Scalars['Int'];
-  k1: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-};
-
-
-export type MutationFetchLnUrlArgs = {
-  url: Scalars['String'];
-};
-
-
-export type MutationCreateBaseTokenArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationCreateBaseInvoiceArgs = {
-  amount: Scalars['Int'];
-};
-
-
-export type MutationCreateThunderPointsArgs = {
-  id: Scalars['String'];
-  alias: Scalars['String'];
-  uris: Array<Scalars['String']>;
-  public_key: Scalars['String'];
-};
-
-
-export type MutationCloseChannelArgs = {
-  id: Scalars['String'];
-  forceClose?: Maybe<Scalars['Boolean']>;
-  targetConfirmations?: Maybe<Scalars['Int']>;
-  tokensPerVByte?: Maybe<Scalars['Int']>;
-};
-
-
-export type MutationOpenChannelArgs = {
-  amount: Scalars['Int'];
-  partnerPublicKey: Scalars['String'];
-  tokensPerVByte?: Maybe<Scalars['Int']>;
-  isPrivate?: Maybe<Scalars['Boolean']>;
-  pushTokens?: Maybe<Scalars['Int']>;
-};
-
-
-export type MutationUpdateFeesArgs = {
-  transaction_id?: Maybe<Scalars['String']>;
-  transaction_vout?: Maybe<Scalars['Int']>;
-  base_fee_tokens?: Maybe<Scalars['Float']>;
-  fee_rate?: Maybe<Scalars['Int']>;
-  cltv_delta?: Maybe<Scalars['Int']>;
-  max_htlc_mtokens?: Maybe<Scalars['String']>;
-  min_htlc_mtokens?: Maybe<Scalars['String']>;
-};
-
-
-export type MutationUpdateMultipleFeesArgs = {
-  channels: Array<ChannelDetailInput>;
-};
-
-
-export type MutationKeysendArgs = {
-  destination: Scalars['String'];
-  tokens: Scalars['Int'];
-};
-
-
-export type MutationCreateInvoiceArgs = {
-  amount: Scalars['Int'];
-  description?: Maybe<Scalars['String']>;
-  secondsUntil?: Maybe<Scalars['Int']>;
-  includePrivate?: Maybe<Scalars['Boolean']>;
-};
-
-
-export type MutationCircularRebalanceArgs = {
-  route: Scalars['String'];
+export type MutationAddPeerArgs = {
+  isTemporary?: Maybe<Scalars['Boolean']>;
+  publicKey?: Maybe<Scalars['String']>;
+  socket?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
 };
 
 
@@ -382,16 +249,33 @@ export type MutationBosRebalanceArgs = {
   max_fee?: Maybe<Scalars['Int']>;
   max_fee_rate?: Maybe<Scalars['Int']>;
   max_rebalance?: Maybe<Scalars['Int']>;
-  timeout_minutes?: Maybe<Scalars['Int']>;
   node?: Maybe<Scalars['String']>;
-  out_through?: Maybe<Scalars['String']>;
   out_inbound?: Maybe<Scalars['Int']>;
+  out_through?: Maybe<Scalars['String']>;
+  timeout_minutes?: Maybe<Scalars['Int']>;
 };
 
 
-export type MutationPayViaRouteArgs = {
+export type MutationCircularRebalanceArgs = {
   route: Scalars['String'];
+};
+
+
+export type MutationClaimBoltzTransactionArgs = {
+  destination: Scalars['String'];
+  fee: Scalars['Int'];
+  preimage: Scalars['String'];
+  privateKey: Scalars['String'];
+  redeem: Scalars['String'];
+  transaction: Scalars['String'];
+};
+
+
+export type MutationCloseChannelArgs = {
+  forceClose?: Maybe<Scalars['Boolean']>;
   id: Scalars['String'];
+  targetConfirmations?: Maybe<Scalars['Int']>;
+  tokensPerVByte?: Maybe<Scalars['Int']>;
 };
 
 
@@ -400,20 +284,114 @@ export type MutationCreateAddressArgs = {
 };
 
 
-export type MutationSendToAddressArgs = {
-  address: Scalars['String'];
-  tokens?: Maybe<Scalars['Int']>;
-  fee?: Maybe<Scalars['Int']>;
-  target?: Maybe<Scalars['Int']>;
-  sendAll?: Maybe<Scalars['Boolean']>;
+export type MutationCreateBaseInvoiceArgs = {
+  amount: Scalars['Int'];
 };
 
 
-export type MutationAddPeerArgs = {
-  url?: Maybe<Scalars['String']>;
-  publicKey?: Maybe<Scalars['String']>;
-  socket?: Maybe<Scalars['String']>;
-  isTemporary?: Maybe<Scalars['Boolean']>;
+export type MutationCreateBaseTokenArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationCreateBoltzReverseSwapArgs = {
+  address?: Maybe<Scalars['String']>;
+  amount: Scalars['Int'];
+};
+
+
+export type MutationCreateInvoiceArgs = {
+  amount: Scalars['Int'];
+  description?: Maybe<Scalars['String']>;
+  includePrivate?: Maybe<Scalars['Boolean']>;
+  secondsUntil?: Maybe<Scalars['Int']>;
+};
+
+
+export type MutationCreateMacaroonArgs = {
+  permissions: PermissionsType;
+};
+
+
+export type MutationCreateThunderPointsArgs = {
+  alias: Scalars['String'];
+  id: Scalars['String'];
+  public_key: Scalars['String'];
+  uris: Array<Scalars['String']>;
+};
+
+
+export type MutationFetchLnUrlArgs = {
+  url: Scalars['String'];
+};
+
+
+export type MutationGetAuthTokenArgs = {
+  cookie?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationGetSessionTokenArgs = {
+  id?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationKeysendArgs = {
+  destination: Scalars['String'];
+  tokens: Scalars['Int'];
+};
+
+
+export type MutationLnMarketsDepositArgs = {
+  amount: Scalars['Int'];
+};
+
+
+export type MutationLnMarketsWithdrawArgs = {
+  amount: Scalars['Int'];
+};
+
+
+export type MutationLnUrlAuthArgs = {
+  url: Scalars['String'];
+};
+
+
+export type MutationLnUrlChannelArgs = {
+  callback: Scalars['String'];
+  k1: Scalars['String'];
+  uri: Scalars['String'];
+};
+
+
+export type MutationLnUrlPayArgs = {
+  amount: Scalars['Int'];
+  callback: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationLnUrlWithdrawArgs = {
+  amount: Scalars['Int'];
+  callback: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  k1: Scalars['String'];
+};
+
+
+export type MutationOpenChannelArgs = {
+  amount: Scalars['Int'];
+  isPrivate?: Maybe<Scalars['Boolean']>;
+  partnerPublicKey: Scalars['String'];
+  pushTokens?: Maybe<Scalars['Int']>;
+  tokensPerVByte?: Maybe<Scalars['Int']>;
+};
+
+
+export type MutationPayViaRouteArgs = {
+  id: Scalars['String'];
+  route: Scalars['String'];
 };
 
 
@@ -423,16 +401,36 @@ export type MutationRemovePeerArgs = {
 
 
 export type MutationSendMessageArgs = {
-  publicKey: Scalars['String'];
+  maxFee?: Maybe<Scalars['Int']>;
   message: Scalars['String'];
   messageType?: Maybe<Scalars['String']>;
+  publicKey: Scalars['String'];
   tokens?: Maybe<Scalars['Int']>;
-  maxFee?: Maybe<Scalars['Int']>;
 };
 
 
-export type MutationCreateMacaroonArgs = {
-  permissions: PermissionsType;
+export type MutationSendToAddressArgs = {
+  address: Scalars['String'];
+  fee?: Maybe<Scalars['Int']>;
+  sendAll?: Maybe<Scalars['Boolean']>;
+  target?: Maybe<Scalars['Int']>;
+  tokens?: Maybe<Scalars['Int']>;
+};
+
+
+export type MutationUpdateFeesArgs = {
+  base_fee_tokens?: Maybe<Scalars['Float']>;
+  cltv_delta?: Maybe<Scalars['Int']>;
+  fee_rate?: Maybe<Scalars['Int']>;
+  max_htlc_mtokens?: Maybe<Scalars['String']>;
+  min_htlc_mtokens?: Maybe<Scalars['String']>;
+  transaction_id?: Maybe<Scalars['String']>;
+  transaction_vout?: Maybe<Scalars['Int']>;
+};
+
+
+export type MutationUpdateMultipleFeesArgs = {
+  channels: Array<ChannelDetailInput>;
 };
 
 export type Node = {
@@ -443,26 +441,27 @@ export type Node = {
 export type PayRequest = {
   __typename?: 'PayRequest';
   callback?: Maybe<Scalars['String']>;
-  maxSendable?: Maybe<Scalars['String']>;
-  minSendable?: Maybe<Scalars['String']>;
-  metadata?: Maybe<Scalars['String']>;
   commentAllowed?: Maybe<Scalars['Int']>;
+  maxSendable?: Maybe<Scalars['String']>;
+  metadata?: Maybe<Scalars['String']>;
+  minSendable?: Maybe<Scalars['String']>;
   tag?: Maybe<Scalars['String']>;
 };
 
 export type PaySuccess = {
   __typename?: 'PaySuccess';
-  tag?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
   ciphertext?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   iv?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  tag?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
 };
 
 export type PaymentType = {
   __typename?: 'PaymentType';
   created_at: Scalars['String'];
+  date: Scalars['String'];
   destination: Scalars['String'];
   destination_node?: Maybe<Node>;
   fee: Scalars['Int'];
@@ -479,7 +478,6 @@ export type PaymentType = {
   secret: Scalars['String'];
   tokens: Scalars['String'];
   type: Scalars['String'];
-  date: Scalars['String'];
 };
 
 export type ProbeRoute = {
@@ -489,69 +487,59 @@ export type ProbeRoute = {
 
 export type Query = {
   __typename?: 'Query';
+  adminCheck?: Maybe<Scalars['Boolean']>;
+  decodeRequest?: Maybe<DecodeType>;
+  getAccount?: Maybe<ServerAccountType>;
+  getAccountingReport: Scalars['String'];
+  getBackups?: Maybe<Scalars['String']>;
+  getBaseCanConnect: Scalars['Boolean'];
+  getBaseInfo: BaseInfo;
+  getBaseNodes: Array<Maybe<BaseNodesType>>;
+  getBasePoints: Array<Maybe<BasePointsType>>;
+  getBitcoinFees?: Maybe<BitcoinFeeType>;
+  getBitcoinPrice?: Maybe<Scalars['String']>;
+  getBoltzInfo: BoltzInfoType;
+  getBoltzSwapStatus: Array<Maybe<BoltzSwap>>;
   getBosNodeScores: Array<Maybe<BosScore>>;
   getBosScores: BosScoreResponse;
-  getBaseInfo: BaseInfo;
-  getBoltzSwapStatus: Array<Maybe<BoltzSwap>>;
-  getBoltzInfo: BoltzInfoType;
+  getChainBalance: Scalars['String'];
+  getChainTransactions?: Maybe<Array<Maybe<GetTransactionsType>>>;
+  getChannel: SingleChannelType;
+  getChannelBalance?: Maybe<ChannelBalanceType>;
+  getChannelReport?: Maybe<ChannelReportType>;
+  getChannels: Array<Maybe<ChannelType>>;
+  getClosedChannels?: Maybe<Array<Maybe<ClosedChannelType>>>;
+  getFeeHealth?: Maybe<ChannelsFeeHealth>;
+  getForwardChannelsReport?: Maybe<Scalars['String']>;
+  getForwards: Array<Maybe<Forward>>;
+  getInvoiceStatusChange?: Maybe<Scalars['String']>;
+  getLatestVersion?: Maybe<Scalars['String']>;
   getLnMarketsStatus: Scalars['String'];
   getLnMarketsUrl: Scalars['String'];
   getLnMarketsUserInfo?: Maybe<LnMarketsUserInfo>;
-  getInvoiceStatusChange?: Maybe<Scalars['String']>;
-  getBaseCanConnect: Scalars['Boolean'];
-  getBaseNodes: Array<Maybe<BaseNodesType>>;
-  getBasePoints: Array<Maybe<BasePointsType>>;
-  getAccountingReport: Scalars['String'];
-  getVolumeHealth?: Maybe<ChannelsHealth>;
-  getTimeHealth?: Maybe<ChannelsTimeHealth>;
-  getFeeHealth?: Maybe<ChannelsFeeHealth>;
-  getChannelBalance?: Maybe<ChannelBalanceType>;
-  getChannel: SingleChannelType;
-  getChannels: Array<Maybe<ChannelType>>;
-  getClosedChannels?: Maybe<Array<Maybe<ClosedChannelType>>>;
-  getPendingChannels?: Maybe<Array<Maybe<PendingChannelType>>>;
-  getChannelReport?: Maybe<ChannelReportType>;
-  getNetworkInfo?: Maybe<NetworkInfoType>;
-  getNodeInfo?: Maybe<NodeInfoType>;
-  adminCheck?: Maybe<Scalars['Boolean']>;
-  getNode: Node;
-  decodeRequest?: Maybe<DecodeType>;
-  getWalletInfo?: Maybe<WalletInfoType>;
-  getResume: GetResumeType;
-  getForwards: Array<Maybe<Forward>>;
-  getBitcoinPrice?: Maybe<Scalars['String']>;
-  getBitcoinFees?: Maybe<BitcoinFeeType>;
-  getForwardChannelsReport?: Maybe<Scalars['String']>;
-  getBackups?: Maybe<Scalars['String']>;
-  verifyBackups?: Maybe<Scalars['Boolean']>;
-  recoverFunds?: Maybe<Scalars['Boolean']>;
-  getRoutes?: Maybe<GetRouteType>;
-  getPeers?: Maybe<Array<Maybe<PeerType>>>;
-  signMessage?: Maybe<Scalars['String']>;
-  verifyMessage?: Maybe<Scalars['String']>;
-  getChainBalance: Scalars['String'];
-  getPendingChainBalance: Scalars['String'];
-  getChainTransactions?: Maybe<Array<Maybe<GetTransactionsType>>>;
-  getUtxos?: Maybe<Array<Maybe<GetUtxosType>>>;
   getMessages?: Maybe<GetMessagesType>;
+  getNetworkInfo?: Maybe<NetworkInfoType>;
+  getNode: Node;
+  getNodeInfo?: Maybe<NodeInfoType>;
+  getPeers?: Maybe<Array<Maybe<PeerType>>>;
+  getPendingChainBalance: Scalars['String'];
+  getPendingChannels?: Maybe<Array<Maybe<PendingChannelType>>>;
+  getResume: GetResumeType;
+  getRoutes?: Maybe<GetRouteType>;
   getServerAccounts?: Maybe<Array<Maybe<ServerAccountType>>>;
-  getAccount?: Maybe<ServerAccountType>;
-  getLatestVersion?: Maybe<Scalars['String']>;
+  getTimeHealth?: Maybe<ChannelsTimeHealth>;
+  getUtxos?: Maybe<Array<Maybe<GetUtxosType>>>;
+  getVolumeHealth?: Maybe<ChannelsHealth>;
+  getWalletInfo?: Maybe<WalletInfoType>;
+  recoverFunds?: Maybe<Scalars['Boolean']>;
+  signMessage?: Maybe<Scalars['String']>;
+  verifyBackups?: Maybe<Scalars['Boolean']>;
+  verifyMessage?: Maybe<Scalars['String']>;
 };
 
 
-export type QueryGetBosNodeScoresArgs = {
-  publicKey: Scalars['String'];
-};
-
-
-export type QueryGetBoltzSwapStatusArgs = {
-  ids: Array<Maybe<Scalars['String']>>;
-};
-
-
-export type QueryGetInvoiceStatusChangeArgs = {
-  id: Scalars['String'];
+export type QueryDecodeRequestArgs = {
+  request: Scalars['String'];
 };
 
 
@@ -561,6 +549,27 @@ export type QueryGetAccountingReportArgs = {
   fiat?: Maybe<Scalars['String']>;
   month?: Maybe<Scalars['String']>;
   year?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetBitcoinFeesArgs = {
+  logger?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type QueryGetBitcoinPriceArgs = {
+  currency?: Maybe<Scalars['String']>;
+  logger?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type QueryGetBoltzSwapStatusArgs = {
+  ids: Array<Maybe<Scalars['String']>>;
+};
+
+
+export type QueryGetBosNodeScoresArgs = {
+  publicKey: Scalars['String'];
 };
 
 
@@ -580,20 +589,10 @@ export type QueryGetClosedChannelsArgs = {
 };
 
 
-export type QueryGetNodeArgs = {
-  publicKey: Scalars['String'];
-  withoutChannels?: Maybe<Scalars['Boolean']>;
-};
-
-
-export type QueryDecodeRequestArgs = {
-  request: Scalars['String'];
-};
-
-
-export type QueryGetResumeArgs = {
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+export type QueryGetForwardChannelsReportArgs = {
+  order?: Maybe<Scalars['String']>;
+  time?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
 };
 
 
@@ -602,26 +601,35 @@ export type QueryGetForwardsArgs = {
 };
 
 
-export type QueryGetBitcoinPriceArgs = {
-  logger?: Maybe<Scalars['Boolean']>;
-  currency?: Maybe<Scalars['String']>;
+export type QueryGetInvoiceStatusChangeArgs = {
+  id: Scalars['String'];
 };
 
 
-export type QueryGetBitcoinFeesArgs = {
-  logger?: Maybe<Scalars['Boolean']>;
+export type QueryGetMessagesArgs = {
+  initialize?: Maybe<Scalars['Boolean']>;
+  lastMessage?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
 };
 
 
-export type QueryGetForwardChannelsReportArgs = {
-  time?: Maybe<Scalars['String']>;
-  order?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
+export type QueryGetNodeArgs = {
+  publicKey: Scalars['String'];
+  withoutChannels?: Maybe<Scalars['Boolean']>;
 };
 
 
-export type QueryVerifyBackupsArgs = {
-  backup: Scalars['String'];
+export type QueryGetResumeArgs = {
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryGetRoutesArgs = {
+  incoming: Scalars['String'];
+  maxFee?: Maybe<Scalars['Int']>;
+  outgoing: Scalars['String'];
+  tokens: Scalars['Int'];
 };
 
 
@@ -630,29 +638,19 @@ export type QueryRecoverFundsArgs = {
 };
 
 
-export type QueryGetRoutesArgs = {
-  outgoing: Scalars['String'];
-  incoming: Scalars['String'];
-  tokens: Scalars['Int'];
-  maxFee?: Maybe<Scalars['Int']>;
+export type QuerySignMessageArgs = {
+  message: Scalars['String'];
 };
 
 
-export type QuerySignMessageArgs = {
-  message: Scalars['String'];
+export type QueryVerifyBackupsArgs = {
+  backup: Scalars['String'];
 };
 
 
 export type QueryVerifyMessageArgs = {
   message: Scalars['String'];
   signature: Scalars['String'];
-};
-
-
-export type QueryGetMessagesArgs = {
-  token?: Maybe<Scalars['String']>;
-  initialize?: Maybe<Scalars['Boolean']>;
-  lastMessage?: Maybe<Scalars['String']>;
 };
 
 export type RouteHopType = {
@@ -682,15 +680,14 @@ export type RouteType = {
   public_key: Scalars['String'];
 };
 
-
 export type Transaction = InvoiceType | PaymentType;
 
 export type WithdrawRequest = {
   __typename?: 'WithdrawRequest';
   callback?: Maybe<Scalars['String']>;
+  defaultDescription?: Maybe<Scalars['String']>;
   k1?: Maybe<Scalars['String']>;
   maxWithdrawable?: Maybe<Scalars['String']>;
-  defaultDescription?: Maybe<Scalars['String']>;
   minWithdrawable?: Maybe<Scalars['String']>;
   tag?: Maybe<Scalars['String']>;
 };
@@ -747,15 +744,15 @@ export type BosIncreaseType = {
 
 export type BosRebalanceResultType = {
   __typename?: 'bosRebalanceResultType';
-  increase?: Maybe<BosIncreaseType>;
   decrease?: Maybe<BosDecreaseType>;
+  increase?: Maybe<BosIncreaseType>;
   result?: Maybe<BosResultType>;
 };
 
 export type BosResultType = {
   __typename?: 'bosResultType';
-  rebalanced?: Maybe<Scalars['String']>;
   rebalance_fees_spent?: Maybe<Scalars['String']>;
+  rebalanced?: Maybe<Scalars['String']>;
 };
 
 export type ChannelBalanceType = {
@@ -766,59 +763,61 @@ export type ChannelBalanceType = {
 
 export type ChannelDetailInput = {
   alias?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  transaction_vout?: Maybe<Scalars['Int']>;
   base_fee_tokens?: Maybe<Scalars['Float']>;
-  fee_rate?: Maybe<Scalars['Int']>;
   cltv_delta?: Maybe<Scalars['Int']>;
+  fee_rate?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['String']>;
   max_htlc_mtokens?: Maybe<Scalars['String']>;
   min_htlc_mtokens?: Maybe<Scalars['String']>;
+  transaction_id?: Maybe<Scalars['String']>;
+  transaction_vout?: Maybe<Scalars['Int']>;
 };
 
 export type ChannelFeeHealth = {
   __typename?: 'channelFeeHealth';
   id?: Maybe<Scalars['String']>;
-  partnerSide?: Maybe<FeeHealth>;
   mySide?: Maybe<FeeHealth>;
   partner?: Maybe<Node>;
+  partnerSide?: Maybe<FeeHealth>;
 };
 
 export type ChannelHealth = {
   __typename?: 'channelHealth';
+  averageVolumeNormalized?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
+  partner?: Maybe<Node>;
   score?: Maybe<Scalars['Int']>;
   volumeNormalized?: Maybe<Scalars['String']>;
-  averageVolumeNormalized?: Maybe<Scalars['String']>;
-  partner?: Maybe<Node>;
 };
 
 export type ChannelReportType = {
   __typename?: 'channelReportType';
+  commit?: Maybe<Scalars['Int']>;
+  incomingPendingHtlc?: Maybe<Scalars['Int']>;
   local?: Maybe<Scalars['Int']>;
-  remote?: Maybe<Scalars['Int']>;
   maxIn?: Maybe<Scalars['Int']>;
   maxOut?: Maybe<Scalars['Int']>;
-  commit?: Maybe<Scalars['Int']>;
-  totalPendingHtlc?: Maybe<Scalars['Int']>;
   outgoingPendingHtlc?: Maybe<Scalars['Int']>;
-  incomingPendingHtlc?: Maybe<Scalars['Int']>;
+  remote?: Maybe<Scalars['Int']>;
+  totalPendingHtlc?: Maybe<Scalars['Int']>;
 };
 
 export type ChannelTimeHealth = {
   __typename?: 'channelTimeHealth';
   id?: Maybe<Scalars['String']>;
-  score?: Maybe<Scalars['Int']>;
-  significant?: Maybe<Scalars['Boolean']>;
+  monitoredDowntime?: Maybe<Scalars['Int']>;
   monitoredTime?: Maybe<Scalars['Int']>;
   monitoredUptime?: Maybe<Scalars['Int']>;
-  monitoredDowntime?: Maybe<Scalars['Int']>;
   partner?: Maybe<Node>;
+  score?: Maybe<Scalars['Int']>;
+  significant?: Maybe<Scalars['Boolean']>;
 };
 
 export type ChannelType = {
   __typename?: 'channelType';
+  bosScore?: Maybe<BosScore>;
   capacity: Scalars['Int'];
+  channel_age: Scalars['Int'];
   commit_transaction_fee: Scalars['Int'];
   commit_transaction_weight: Scalars['Int'];
   id: Scalars['String'];
@@ -830,7 +829,11 @@ export type ChannelType = {
   is_static_remote_key?: Maybe<Scalars['Boolean']>;
   local_balance: Scalars['Int'];
   local_reserve: Scalars['Int'];
+  partner_fee_info?: Maybe<SingleChannelType>;
+  partner_node_info: Node;
   partner_public_key: Scalars['String'];
+  pending_payments: Array<Maybe<PendingPaymentType>>;
+  pending_resume: PendingResumeType;
   received: Scalars['Int'];
   remote_balance: Scalars['Int'];
   remote_reserve: Scalars['Int'];
@@ -840,30 +843,24 @@ export type ChannelType = {
   transaction_id: Scalars['String'];
   transaction_vout: Scalars['Int'];
   unsettled_balance: Scalars['Int'];
-  partner_node_info: Node;
-  partner_fee_info?: Maybe<SingleChannelType>;
-  channel_age: Scalars['Int'];
-  pending_payments: Array<Maybe<PendingPaymentType>>;
-  pending_resume: PendingResumeType;
-  bosScore?: Maybe<BosScore>;
 };
 
 export type ChannelsFeeHealth = {
   __typename?: 'channelsFeeHealth';
-  score?: Maybe<Scalars['Int']>;
   channels?: Maybe<Array<Maybe<ChannelFeeHealth>>>;
+  score?: Maybe<Scalars['Int']>;
 };
 
 export type ChannelsHealth = {
   __typename?: 'channelsHealth';
-  score?: Maybe<Scalars['Int']>;
   channels?: Maybe<Array<Maybe<ChannelHealth>>>;
+  score?: Maybe<Scalars['Int']>;
 };
 
 export type ChannelsTimeHealth = {
   __typename?: 'channelsTimeHealth';
-  score?: Maybe<Scalars['Int']>;
   channels?: Maybe<Array<Maybe<ChannelTimeHealth>>>;
+  score?: Maybe<Scalars['Int']>;
 };
 
 export type CloseChannelType = {
@@ -875,6 +872,7 @@ export type CloseChannelType = {
 export type ClosedChannelType = {
   __typename?: 'closedChannelType';
   capacity: Scalars['Int'];
+  channel_age: Scalars['Int'];
   close_confirm_height?: Maybe<Scalars['Int']>;
   close_transaction_id?: Maybe<Scalars['String']>;
   final_local_balance: Scalars['Int'];
@@ -885,11 +883,10 @@ export type ClosedChannelType = {
   is_funding_cancel: Scalars['Boolean'];
   is_local_force_close: Scalars['Boolean'];
   is_remote_force_close: Scalars['Boolean'];
+  partner_node_info: Node;
   partner_public_key: Scalars['String'];
   transaction_id: Scalars['String'];
   transaction_vout: Scalars['Int'];
-  partner_node_info: Node;
-  channel_age: Scalars['Int'];
 };
 
 export type DecodeType = {
@@ -899,32 +896,32 @@ export type DecodeType = {
   description: Scalars['String'];
   description_hash?: Maybe<Scalars['String']>;
   destination: Scalars['String'];
+  destination_node: Node;
   expires_at: Scalars['String'];
   id: Scalars['String'];
   mtokens: Scalars['String'];
   payment?: Maybe<Scalars['String']>;
+  probe_route?: Maybe<ProbeRoute>;
   routes: Array<Maybe<Array<Maybe<RouteType>>>>;
   safe_tokens: Scalars['Int'];
   tokens: Scalars['Int'];
-  destination_node: Node;
-  probe_route?: Maybe<ProbeRoute>;
 };
 
 export type FeeHealth = {
   __typename?: 'feeHealth';
-  score?: Maybe<Scalars['Int']>;
-  rate?: Maybe<Scalars['Int']>;
   base?: Maybe<Scalars['String']>;
-  rateScore?: Maybe<Scalars['Int']>;
-  baseScore?: Maybe<Scalars['Int']>;
-  rateOver?: Maybe<Scalars['Boolean']>;
   baseOver?: Maybe<Scalars['Boolean']>;
+  baseScore?: Maybe<Scalars['Int']>;
+  rate?: Maybe<Scalars['Int']>;
+  rateOver?: Maybe<Scalars['Boolean']>;
+  rateScore?: Maybe<Scalars['Int']>;
+  score?: Maybe<Scalars['Int']>;
 };
 
 export type GetMessagesType = {
   __typename?: 'getMessagesType';
-  token?: Maybe<Scalars['String']>;
   messages: Array<Maybe<MessagesType>>;
+  token?: Maybe<Scalars['String']>;
 };
 
 export type GetResumeType = {
@@ -967,14 +964,14 @@ export type HopsType = {
 
 export type MessagesType = {
   __typename?: 'messagesType';
+  alias?: Maybe<Scalars['String']>;
+  contentType?: Maybe<Scalars['String']>;
   date: Scalars['String'];
   id: Scalars['String'];
-  verified: Scalars['Boolean'];
-  contentType?: Maybe<Scalars['String']>;
-  sender?: Maybe<Scalars['String']>;
-  alias?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
+  sender?: Maybe<Scalars['String']>;
   tokens?: Maybe<Scalars['Int']>;
+  verified: Scalars['Boolean'];
 };
 
 export type NetworkInfoType = {
@@ -1002,11 +999,11 @@ export type NewInvoiceType = {
 
 export type NodeInfoType = {
   __typename?: 'nodeInfoType';
-  chains: Array<Scalars['String']>;
-  color: Scalars['String'];
   active_channels_count: Scalars['Int'];
-  closed_channels_count: Scalars['Int'];
   alias: Scalars['String'];
+  chains: Array<Scalars['String']>;
+  closed_channels_count: Scalars['Int'];
+  color: Scalars['String'];
   current_block_hash: Scalars['String'];
   current_block_height: Scalars['Int'];
   is_synced_to_chain: Scalars['Boolean'];
@@ -1027,9 +1024,9 @@ export type NodePolicyType = {
   is_disabled?: Maybe<Scalars['Boolean']>;
   max_htlc_mtokens?: Maybe<Scalars['String']>;
   min_htlc_mtokens?: Maybe<Scalars['String']>;
+  node?: Maybe<Node>;
   public_key: Scalars['String'];
   updated_at?: Maybe<Scalars['String']>;
-  node?: Maybe<Node>;
 };
 
 export type NodeType = {
@@ -1038,8 +1035,8 @@ export type NodeType = {
   capacity?: Maybe<Scalars['String']>;
   channel_count?: Maybe<Scalars['Int']>;
   color?: Maybe<Scalars['String']>;
-  updated_at?: Maybe<Scalars['String']>;
   public_key?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['String']>;
 };
 
 export type OpenChannelType = {
@@ -1057,9 +1054,9 @@ export type PayType = {
   is_confirmed?: Maybe<Scalars['Boolean']>;
   is_outgoing?: Maybe<Scalars['Boolean']>;
   mtokens?: Maybe<Scalars['String']>;
-  secret?: Maybe<Scalars['String']>;
   safe_fee?: Maybe<Scalars['Int']>;
   safe_tokens?: Maybe<Scalars['Int']>;
+  secret?: Maybe<Scalars['String']>;
   tokens?: Maybe<Scalars['Int']>;
 };
 
@@ -1069,12 +1066,12 @@ export type PeerType = {
   bytes_sent: Scalars['Int'];
   is_inbound: Scalars['Boolean'];
   is_sync_peer?: Maybe<Scalars['Boolean']>;
+  partner_node_info: Node;
   ping_time: Scalars['Int'];
   public_key: Scalars['String'];
   socket: Scalars['String'];
   tokens_received: Scalars['Int'];
   tokens_sent: Scalars['Int'];
-  partner_node_info: Node;
 };
 
 export type PendingChannelType = {
@@ -1085,6 +1082,7 @@ export type PendingChannelType = {
   is_opening: Scalars['Boolean'];
   local_balance: Scalars['Int'];
   local_reserve: Scalars['Int'];
+  partner_node_info: Node;
   partner_public_key: Scalars['String'];
   received: Scalars['Int'];
   remote_balance: Scalars['Int'];
@@ -1093,7 +1091,6 @@ export type PendingChannelType = {
   transaction_fee?: Maybe<Scalars['Int']>;
   transaction_id: Scalars['String'];
   transaction_vout: Scalars['Int'];
-  partner_node_info: Node;
 };
 
 export type PendingPaymentType = {
@@ -1106,12 +1103,12 @@ export type PendingPaymentType = {
 
 export type PendingResumeType = {
   __typename?: 'pendingResumeType';
-  incoming_tokens: Scalars['Int'];
-  outgoing_tokens: Scalars['Int'];
   incoming_amount: Scalars['Int'];
+  incoming_tokens: Scalars['Int'];
   outgoing_amount: Scalars['Int'];
-  total_tokens: Scalars['Int'];
+  outgoing_tokens: Scalars['Int'];
   total_amount: Scalars['Int'];
+  total_tokens: Scalars['Int'];
 };
 
 export type PermissionsType = {
@@ -1122,9 +1119,9 @@ export type PermissionsType = {
   is_ok_to_derive_keys?: Maybe<Scalars['Boolean']>;
   is_ok_to_get_chain_transactions?: Maybe<Scalars['Boolean']>;
   is_ok_to_get_invoices?: Maybe<Scalars['Boolean']>;
-  is_ok_to_get_wallet_info?: Maybe<Scalars['Boolean']>;
   is_ok_to_get_payments?: Maybe<Scalars['Boolean']>;
   is_ok_to_get_peers?: Maybe<Scalars['Boolean']>;
+  is_ok_to_get_wallet_info?: Maybe<Scalars['Boolean']>;
   is_ok_to_pay?: Maybe<Scalars['Boolean']>;
   is_ok_to_send_to_chain_addresses?: Maybe<Scalars['Boolean']>;
   is_ok_to_sign_bytes?: Maybe<Scalars['Boolean']>;
@@ -1167,9 +1164,9 @@ export type ProbedRouteHop = {
   fee_mtokens: Scalars['String'];
   forward: Scalars['Int'];
   forward_mtokens: Scalars['String'];
+  node: Node;
   public_key: Scalars['String'];
   timeout: Scalars['Int'];
-  node: Node;
 };
 
 export type SendToType = {
@@ -1183,22 +1180,22 @@ export type SendToType = {
 
 export type ServerAccountType = {
   __typename?: 'serverAccountType';
-  name: Scalars['String'];
   id: Scalars['String'];
-  type: Scalars['String'];
   loggedIn: Scalars['Boolean'];
+  name: Scalars['String'];
+  type: Scalars['String'];
 };
 
 export type SingleChannelType = {
   __typename?: 'singleChannelType';
   capacity: Scalars['Int'];
   id: Scalars['String'];
+  node_policies?: Maybe<NodePolicyType>;
+  partner_node_policies?: Maybe<NodePolicyType>;
   policies: Array<PolicyType>;
   transaction_id: Scalars['String'];
   transaction_vout: Scalars['Int'];
   updated_at?: Maybe<Scalars['String']>;
-  node_policies?: Maybe<NodePolicyType>;
-  partner_node_policies?: Maybe<NodePolicyType>;
 };
 
 export type WalletInfoType = {

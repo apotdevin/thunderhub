@@ -9,10 +9,7 @@ export type UpdateMultipleFeesMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateMultipleFeesMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'updateMultipleFees'>
-);
+export type UpdateMultipleFeesMutation = { __typename?: 'Mutation', updateMultipleFees?: Types.Maybe<boolean> };
 
 
 export const UpdateMultipleFeesDocument = gql`

@@ -7,10 +7,7 @@ const defaultOptions =  {}
 export type GetLnMarketsStatusQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetLnMarketsStatusQuery = (
-  { __typename?: 'Query' }
-  & Pick<Types.Query, 'getLnMarketsStatus'>
-);
+export type GetLnMarketsStatusQuery = { __typename?: 'Query', getLnMarketsStatus: string };
 
 
 export const GetLnMarketsStatusDocument = gql`

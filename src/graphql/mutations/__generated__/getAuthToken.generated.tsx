@@ -9,10 +9,7 @@ export type GetAuthTokenMutationVariables = Types.Exact<{
 }>;
 
 
-export type GetAuthTokenMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'getAuthToken'>
-);
+export type GetAuthTokenMutation = { __typename?: 'Mutation', getAuthToken: boolean };
 
 
 export const GetAuthTokenDocument = gql`

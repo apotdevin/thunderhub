@@ -10,41 +10,7 @@ export type GetResumeQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetResumeQuery = (
-  { __typename?: 'Query' }
-  & { getResume: (
-    { __typename?: 'getResumeType' }
-    & Pick<Types.GetResumeType, 'offset'>
-    & { resume: Array<Types.Maybe<(
-      { __typename?: 'InvoiceType' }
-      & Pick<Types.InvoiceType, 'chain_address' | 'confirmed_at' | 'created_at' | 'description' | 'description_hash' | 'expires_at' | 'id' | 'is_canceled' | 'is_confirmed' | 'is_held' | 'is_private' | 'is_push' | 'received' | 'received_mtokens' | 'request' | 'secret' | 'tokens' | 'type' | 'date'>
-      & { payments: Array<Types.Maybe<(
-        { __typename?: 'InvoicePayment' }
-        & Pick<Types.InvoicePayment, 'in_channel'>
-        & { messages?: Types.Maybe<(
-          { __typename?: 'MessageType' }
-          & Pick<Types.MessageType, 'message'>
-        )> }
-      )>> }
-    ) | (
-      { __typename?: 'PaymentType' }
-      & Pick<Types.PaymentType, 'created_at' | 'destination' | 'fee' | 'fee_mtokens' | 'id' | 'index' | 'is_confirmed' | 'is_outgoing' | 'mtokens' | 'request' | 'safe_fee' | 'safe_tokens' | 'secret' | 'tokens' | 'type' | 'date'>
-      & { destination_node?: Types.Maybe<(
-        { __typename?: 'Node' }
-        & { node: (
-          { __typename?: 'nodeType' }
-          & Pick<Types.NodeType, 'alias'>
-        ) }
-      )>, hops: Array<(
-        { __typename?: 'Node' }
-        & { node: (
-          { __typename?: 'nodeType' }
-          & Pick<Types.NodeType, 'alias' | 'public_key'>
-        ) }
-      )> }
-    )>> }
-  ) }
-);
+export type GetResumeQuery = { __typename?: 'Query', getResume: { __typename?: 'getResumeType', offset?: Types.Maybe<number>, resume: Array<Types.Maybe<{ __typename?: 'InvoiceType', chain_address?: Types.Maybe<string>, confirmed_at?: Types.Maybe<string>, created_at: string, description: string, description_hash?: Types.Maybe<string>, expires_at: string, id: string, is_canceled?: Types.Maybe<boolean>, is_confirmed: boolean, is_held?: Types.Maybe<boolean>, is_private: boolean, is_push?: Types.Maybe<boolean>, received: number, received_mtokens: string, request?: Types.Maybe<string>, secret: string, tokens: string, type: string, date: string, payments: Array<Types.Maybe<{ __typename?: 'InvoicePayment', in_channel: string, messages?: Types.Maybe<{ __typename?: 'MessageType', message?: Types.Maybe<string> }> }>> } | { __typename?: 'PaymentType', created_at: string, destination: string, fee: number, fee_mtokens: string, id: string, index?: Types.Maybe<number>, is_confirmed: boolean, is_outgoing: boolean, mtokens: string, request?: Types.Maybe<string>, safe_fee: number, safe_tokens?: Types.Maybe<number>, secret: string, tokens: string, type: string, date: string, destination_node?: Types.Maybe<{ __typename?: 'Node', node: { __typename?: 'nodeType', alias: string } }>, hops: Array<{ __typename?: 'Node', node: { __typename?: 'nodeType', alias: string, public_key?: Types.Maybe<string> } }> }>> } };
 
 
 export const GetResumeDocument = gql`

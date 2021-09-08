@@ -7,13 +7,7 @@ const defaultOptions =  {}
 export type GetBaseInfoQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetBaseInfoQuery = (
-  { __typename?: 'Query' }
-  & { getBaseInfo: (
-    { __typename?: 'BaseInfo' }
-    & Pick<Types.BaseInfo, 'lastBosUpdate' | 'apiTokenSatPrice' | 'apiTokenOriginalSatPrice'>
-  ) }
-);
+export type GetBaseInfoQuery = { __typename?: 'Query', getBaseInfo: { __typename?: 'BaseInfo', lastBosUpdate: string, apiTokenSatPrice: number, apiTokenOriginalSatPrice: number } };
 
 
 export const GetBaseInfoDocument = gql`

@@ -9,13 +9,7 @@ export type CreateMacaroonMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateMacaroonMutation = (
-  { __typename?: 'Mutation' }
-  & { createMacaroon: (
-    { __typename?: 'CreateMacaroon' }
-    & Pick<Types.CreateMacaroon, 'base' | 'hex'>
-  ) }
-);
+export type CreateMacaroonMutation = { __typename?: 'Mutation', createMacaroon: { __typename?: 'CreateMacaroon', base: string, hex: string } };
 
 
 export const CreateMacaroonDocument = gql`

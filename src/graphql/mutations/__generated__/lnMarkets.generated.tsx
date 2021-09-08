@@ -7,41 +7,26 @@ const defaultOptions =  {}
 export type LnMarketsLoginMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type LnMarketsLoginMutation = (
-  { __typename?: 'Mutation' }
-  & { lnMarketsLogin: (
-    { __typename?: 'AuthResponse' }
-    & Pick<Types.AuthResponse, 'status' | 'message'>
-  ) }
-);
+export type LnMarketsLoginMutation = { __typename?: 'Mutation', lnMarketsLogin: { __typename?: 'AuthResponse', status: string, message: string } };
 
 export type LnMarketsWithdrawMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
 }>;
 
 
-export type LnMarketsWithdrawMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'lnMarketsWithdraw'>
-);
+export type LnMarketsWithdrawMutation = { __typename?: 'Mutation', lnMarketsWithdraw: boolean };
 
 export type LnMarketsDepositMutationVariables = Types.Exact<{
   amount: Types.Scalars['Int'];
 }>;
 
 
-export type LnMarketsDepositMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'lnMarketsDeposit'>
-);
+export type LnMarketsDepositMutation = { __typename?: 'Mutation', lnMarketsDeposit: boolean };
 
 export type LnMarketsLogoutMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type LnMarketsLogoutMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'lnMarketsLogout'>
-);
+export type LnMarketsLogoutMutation = { __typename?: 'Mutation', lnMarketsLogout: boolean };
 
 
 export const LnMarketsLoginDocument = gql`
