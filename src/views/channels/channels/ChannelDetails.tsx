@@ -127,7 +127,7 @@ export const ChannelDetails: FC<ChannelDetailsProps> = ({
         )}
         {renderLine('Base Fee:', baseFee)}
         {renderLine('Fee Rate:', `${feeRate}`)}
-        {renderLine('CTLV Delta:', cltv_delta)}
+        {renderLine('CLTV Delta:', cltv_delta)}
       </>
     ) : (
       <DarkSubTitle>Partner node not found</DarkSubTitle>
@@ -161,7 +161,7 @@ export const ChannelDetails: FC<ChannelDetailsProps> = ({
       <Separation />
       {renderLine('Base Fee:', nodeBaseFee)}
       {renderLine('Fee Rate:', `${nodeFeeRate}`)}
-      {renderLine('CTLV Delta:', node_cltv)}
+      {renderLine('CLTV Delta:', node_cltv)}
       {renderLine('Max HTLC (sats)', formatSats(max_htlc))}
       {renderLine('Min HTLC (sats)', formatSats(min_htlc))}
       <ColorButton
