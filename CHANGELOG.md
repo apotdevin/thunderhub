@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.25](https://github.com/apotdevin/thunderhub/compare/v0.12.24...v0.12.25) (2021-09-08)
+
+
+### Features
+
+* add timeout_minutes to bos rebalance ([#316](https://github.com/apotdevin/thunderhub/issues/316)) ([f7cb1a1](https://github.com/apotdevin/thunderhub/commit/f7cb1a1b76ad736545cac9a60e61341a0da9f8ac))
+
+
+### Docs
+
+* move readme ([543c611](https://github.com/apotdevin/thunderhub/commit/543c61179c0d4669f14f3a422153dcdbc0e7c921))
+
+
+### Improvements
+
+* bump dependencies ([#325](https://github.com/apotdevin/thunderhub/issues/325)) ([5ee6b95](https://github.com/apotdevin/thunderhub/commit/5ee6b95c876fd93df29819d2c572f7b06305d621))
+* bump deps ([464b059](https://github.com/apotdevin/thunderhub/commit/464b0595bdde0b1eaa6e22efdd830054a68fa615))
+* change download file name ([042dd12](https://github.com/apotdevin/thunderhub/commit/042dd12e09f0797ce95f17b5e30a1b5c59842d2c))
+* update dependencies ([#333](https://github.com/apotdevin/thunderhub/issues/333)) ([8b2650f](https://github.com/apotdevin/thunderhub/commit/8b2650ffbfb0e8787a15a2a032f4f1e01cc832d2))
+* update min wumbo size ([6227291](https://github.com/apotdevin/thunderhub/commit/62272915504ec20a137f26e07de4f7fb78a76002))
+
 ### [0.12.24](https://github.com/apotdevin/thunderhub/compare/v0.12.23...v0.12.24) (2021-07-30)
 
 
