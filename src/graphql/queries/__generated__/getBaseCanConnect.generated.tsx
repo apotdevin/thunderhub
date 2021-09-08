@@ -7,10 +7,7 @@ const defaultOptions =  {}
 export type GetBaseCanConnectQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetBaseCanConnectQuery = (
-  { __typename?: 'Query' }
-  & Pick<Types.Query, 'getBaseCanConnect'>
-);
+export type GetBaseCanConnectQuery = { __typename?: 'Query', getBaseCanConnect: boolean };
 
 
 export const GetBaseCanConnectDocument = gql`

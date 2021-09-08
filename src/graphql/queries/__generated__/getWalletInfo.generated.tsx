@@ -7,13 +7,7 @@ const defaultOptions =  {}
 export type GetWalletInfoQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetWalletInfoQuery = (
-  { __typename?: 'Query' }
-  & { getWalletInfo?: Types.Maybe<(
-    { __typename?: 'walletInfoType' }
-    & Pick<Types.WalletInfoType, 'build_tags' | 'commit_hash' | 'is_autopilotrpc_enabled' | 'is_chainrpc_enabled' | 'is_invoicesrpc_enabled' | 'is_signrpc_enabled' | 'is_walletrpc_enabled' | 'is_watchtowerrpc_enabled' | 'is_wtclientrpc_enabled'>
-  )> }
-);
+export type GetWalletInfoQuery = { __typename?: 'Query', getWalletInfo?: Types.Maybe<{ __typename?: 'walletInfoType', build_tags: Array<string>, commit_hash: string, is_autopilotrpc_enabled: boolean, is_chainrpc_enabled: boolean, is_invoicesrpc_enabled: boolean, is_signrpc_enabled: boolean, is_walletrpc_enabled: boolean, is_watchtowerrpc_enabled: boolean, is_wtclientrpc_enabled: boolean }> };
 
 
 export const GetWalletInfoDocument = gql`

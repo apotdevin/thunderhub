@@ -7,10 +7,7 @@ const defaultOptions =  {}
 export type GetBitcoinPriceQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetBitcoinPriceQuery = (
-  { __typename?: 'Query' }
-  & Pick<Types.Query, 'getBitcoinPrice'>
-);
+export type GetBitcoinPriceQuery = { __typename?: 'Query', getBitcoinPrice?: Types.Maybe<string> };
 
 
 export const GetBitcoinPriceDocument = gql`

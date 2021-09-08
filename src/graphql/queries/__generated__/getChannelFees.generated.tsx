@@ -7,29 +7,7 @@ const defaultOptions =  {}
 export type ChannelFeesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type ChannelFeesQuery = (
-  { __typename?: 'Query' }
-  & { getChannels: Array<Types.Maybe<(
-    { __typename?: 'channelType' }
-    & Pick<Types.ChannelType, 'id' | 'transaction_id' | 'transaction_vout' | 'partner_public_key'>
-    & { partner_node_info: (
-      { __typename?: 'Node' }
-      & { node: (
-        { __typename?: 'nodeType' }
-        & Pick<Types.NodeType, 'alias' | 'color'>
-      ) }
-    ), partner_fee_info?: Types.Maybe<(
-      { __typename?: 'singleChannelType' }
-      & { node_policies?: Types.Maybe<(
-        { __typename?: 'nodePolicyType' }
-        & Pick<Types.NodePolicyType, 'base_fee_mtokens' | 'fee_rate' | 'cltv_delta' | 'max_htlc_mtokens' | 'min_htlc_mtokens'>
-      )>, partner_node_policies?: Types.Maybe<(
-        { __typename?: 'nodePolicyType' }
-        & Pick<Types.NodePolicyType, 'base_fee_mtokens' | 'fee_rate' | 'cltv_delta' | 'max_htlc_mtokens' | 'min_htlc_mtokens'>
-      )> }
-    )> }
-  )>> }
-);
+export type ChannelFeesQuery = { __typename?: 'Query', getChannels: Array<Types.Maybe<{ __typename?: 'channelType', id: string, transaction_id: string, transaction_vout: number, partner_public_key: string, partner_node_info: { __typename?: 'Node', node: { __typename?: 'nodeType', alias: string, color?: Types.Maybe<string> } }, partner_fee_info?: Types.Maybe<{ __typename?: 'singleChannelType', node_policies?: Types.Maybe<{ __typename?: 'nodePolicyType', base_fee_mtokens?: Types.Maybe<string>, fee_rate?: Types.Maybe<number>, cltv_delta?: Types.Maybe<number>, max_htlc_mtokens?: Types.Maybe<string>, min_htlc_mtokens?: Types.Maybe<string> }>, partner_node_policies?: Types.Maybe<{ __typename?: 'nodePolicyType', base_fee_mtokens?: Types.Maybe<string>, fee_rate?: Types.Maybe<number>, cltv_delta?: Types.Maybe<number>, max_htlc_mtokens?: Types.Maybe<string>, min_htlc_mtokens?: Types.Maybe<string> }> }> }>> };
 
 
 export const ChannelFeesDocument = gql`

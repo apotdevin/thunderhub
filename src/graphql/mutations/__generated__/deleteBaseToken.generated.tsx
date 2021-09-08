@@ -7,10 +7,7 @@ const defaultOptions =  {}
 export type DeleteBaseTokenMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type DeleteBaseTokenMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'deleteBaseToken'>
-);
+export type DeleteBaseTokenMutation = { __typename?: 'Mutation', deleteBaseToken: boolean };
 
 
 export const DeleteBaseTokenDocument = gql`

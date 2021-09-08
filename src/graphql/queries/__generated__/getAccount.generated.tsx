@@ -7,13 +7,7 @@ const defaultOptions =  {}
 export type GetAccountQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetAccountQuery = (
-  { __typename?: 'Query' }
-  & { getAccount?: Types.Maybe<(
-    { __typename?: 'serverAccountType' }
-    & Pick<Types.ServerAccountType, 'name' | 'id' | 'loggedIn' | 'type'>
-  )> }
-);
+export type GetAccountQuery = { __typename?: 'Query', getAccount?: Types.Maybe<{ __typename?: 'serverAccountType', name: string, id: string, loggedIn: boolean, type: string }> };
 
 
 export const GetAccountDocument = gql`

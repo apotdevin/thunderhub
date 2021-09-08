@@ -10,17 +10,7 @@ export type GetMessagesQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetMessagesQuery = (
-  { __typename?: 'Query' }
-  & { getMessages?: Types.Maybe<(
-    { __typename?: 'getMessagesType' }
-    & Pick<Types.GetMessagesType, 'token'>
-    & { messages: Array<Types.Maybe<(
-      { __typename?: 'messagesType' }
-      & Pick<Types.MessagesType, 'date' | 'contentType' | 'alias' | 'message' | 'id' | 'sender' | 'verified' | 'tokens'>
-    )>> }
-  )> }
-);
+export type GetMessagesQuery = { __typename?: 'Query', getMessages?: Types.Maybe<{ __typename?: 'getMessagesType', token?: Types.Maybe<string>, messages: Array<Types.Maybe<{ __typename?: 'messagesType', date: string, contentType?: Types.Maybe<string>, alias?: Types.Maybe<string>, message?: Types.Maybe<string>, id: string, sender?: Types.Maybe<string>, verified: boolean, tokens?: Types.Maybe<number> }>> }> };
 
 
 export const GetMessagesDocument = gql`

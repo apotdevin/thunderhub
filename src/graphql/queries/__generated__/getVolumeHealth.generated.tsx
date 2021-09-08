@@ -7,24 +7,7 @@ const defaultOptions =  {}
 export type GetVolumeHealthQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetVolumeHealthQuery = (
-  { __typename?: 'Query' }
-  & { getVolumeHealth?: Types.Maybe<(
-    { __typename?: 'channelsHealth' }
-    & Pick<Types.ChannelsHealth, 'score'>
-    & { channels?: Types.Maybe<Array<Types.Maybe<(
-      { __typename?: 'channelHealth' }
-      & Pick<Types.ChannelHealth, 'id' | 'score' | 'volumeNormalized' | 'averageVolumeNormalized'>
-      & { partner?: Types.Maybe<(
-        { __typename?: 'Node' }
-        & { node: (
-          { __typename?: 'nodeType' }
-          & Pick<Types.NodeType, 'alias'>
-        ) }
-      )> }
-    )>>> }
-  )> }
-);
+export type GetVolumeHealthQuery = { __typename?: 'Query', getVolumeHealth?: Types.Maybe<{ __typename?: 'channelsHealth', score?: Types.Maybe<number>, channels?: Types.Maybe<Array<Types.Maybe<{ __typename?: 'channelHealth', id?: Types.Maybe<string>, score?: Types.Maybe<number>, volumeNormalized?: Types.Maybe<string>, averageVolumeNormalized?: Types.Maybe<string>, partner?: Types.Maybe<{ __typename?: 'Node', node: { __typename?: 'nodeType', alias: string } }> }>>> }> };
 
 
 export const GetVolumeHealthDocument = gql`

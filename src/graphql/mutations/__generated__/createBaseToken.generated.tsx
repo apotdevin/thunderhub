@@ -9,10 +9,7 @@ export type CreateBaseTokenMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateBaseTokenMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Types.Mutation, 'createBaseToken'>
-);
+export type CreateBaseTokenMutation = { __typename?: 'Mutation', createBaseToken: boolean };
 
 
 export const CreateBaseTokenDocument = gql`

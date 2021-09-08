@@ -7,13 +7,7 @@ const defaultOptions =  {}
 export type GetChainTransactionsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetChainTransactionsQuery = (
-  { __typename?: 'Query' }
-  & { getChainTransactions?: Types.Maybe<Array<Types.Maybe<(
-    { __typename?: 'getTransactionsType' }
-    & Pick<Types.GetTransactionsType, 'block_id' | 'confirmation_count' | 'confirmation_height' | 'created_at' | 'fee' | 'id' | 'output_addresses' | 'tokens'>
-  )>>> }
-);
+export type GetChainTransactionsQuery = { __typename?: 'Query', getChainTransactions?: Types.Maybe<Array<Types.Maybe<{ __typename?: 'getTransactionsType', block_id?: Types.Maybe<string>, confirmation_count?: Types.Maybe<number>, confirmation_height?: Types.Maybe<number>, created_at: string, fee?: Types.Maybe<number>, id: string, output_addresses: Array<Types.Maybe<string>>, tokens: number }>>> };
 
 
 export const GetChainTransactionsDocument = gql`

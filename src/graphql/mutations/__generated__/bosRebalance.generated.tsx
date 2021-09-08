@@ -17,22 +17,7 @@ export type BosRebalanceMutationVariables = Types.Exact<{
 }>;
 
 
-export type BosRebalanceMutation = (
-  { __typename?: 'Mutation' }
-  & { bosRebalance?: Types.Maybe<(
-    { __typename?: 'bosRebalanceResultType' }
-    & { increase?: Types.Maybe<(
-      { __typename?: 'bosIncreaseType' }
-      & Pick<Types.BosIncreaseType, 'increased_inbound_on' | 'liquidity_inbound' | 'liquidity_inbound_opening' | 'liquidity_inbound_pending' | 'liquidity_outbound' | 'liquidity_outbound_opening' | 'liquidity_outbound_pending'>
-    )>, decrease?: Types.Maybe<(
-      { __typename?: 'bosDecreaseType' }
-      & Pick<Types.BosDecreaseType, 'decreased_inbound_on' | 'liquidity_inbound' | 'liquidity_inbound_opening' | 'liquidity_inbound_pending' | 'liquidity_outbound' | 'liquidity_outbound_opening' | 'liquidity_outbound_pending'>
-    )>, result?: Types.Maybe<(
-      { __typename?: 'bosResultType' }
-      & Pick<Types.BosResultType, 'rebalanced' | 'rebalance_fees_spent'>
-    )> }
-  )> }
-);
+export type BosRebalanceMutation = { __typename?: 'Mutation', bosRebalance?: Types.Maybe<{ __typename?: 'bosRebalanceResultType', increase?: Types.Maybe<{ __typename?: 'bosIncreaseType', increased_inbound_on?: Types.Maybe<string>, liquidity_inbound?: Types.Maybe<string>, liquidity_inbound_opening?: Types.Maybe<string>, liquidity_inbound_pending?: Types.Maybe<string>, liquidity_outbound?: Types.Maybe<string>, liquidity_outbound_opening?: Types.Maybe<string>, liquidity_outbound_pending?: Types.Maybe<string> }>, decrease?: Types.Maybe<{ __typename?: 'bosDecreaseType', decreased_inbound_on?: Types.Maybe<string>, liquidity_inbound?: Types.Maybe<string>, liquidity_inbound_opening?: Types.Maybe<string>, liquidity_inbound_pending?: Types.Maybe<string>, liquidity_outbound?: Types.Maybe<string>, liquidity_outbound_opening?: Types.Maybe<string>, liquidity_outbound_pending?: Types.Maybe<string> }>, result?: Types.Maybe<{ __typename?: 'bosResultType', rebalanced?: Types.Maybe<string>, rebalance_fees_spent?: Types.Maybe<string> }> }> };
 
 
 export const BosRebalanceDocument = gql`

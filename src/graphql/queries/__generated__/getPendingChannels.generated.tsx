@@ -7,20 +7,7 @@ const defaultOptions =  {}
 export type GetPendingChannelsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetPendingChannelsQuery = (
-  { __typename?: 'Query' }
-  & { getPendingChannels?: Types.Maybe<Array<Types.Maybe<(
-    { __typename?: 'pendingChannelType' }
-    & Pick<Types.PendingChannelType, 'close_transaction_id' | 'is_active' | 'is_closing' | 'is_opening' | 'local_balance' | 'local_reserve' | 'partner_public_key' | 'received' | 'remote_balance' | 'remote_reserve' | 'sent' | 'transaction_fee' | 'transaction_id' | 'transaction_vout'>
-    & { partner_node_info: (
-      { __typename?: 'Node' }
-      & { node: (
-        { __typename?: 'nodeType' }
-        & Pick<Types.NodeType, 'alias' | 'capacity' | 'channel_count' | 'color' | 'updated_at'>
-      ) }
-    ) }
-  )>>> }
-);
+export type GetPendingChannelsQuery = { __typename?: 'Query', getPendingChannels?: Types.Maybe<Array<Types.Maybe<{ __typename?: 'pendingChannelType', close_transaction_id?: Types.Maybe<string>, is_active: boolean, is_closing: boolean, is_opening: boolean, local_balance: number, local_reserve: number, partner_public_key: string, received: number, remote_balance: number, remote_reserve: number, sent: number, transaction_fee?: Types.Maybe<number>, transaction_id: string, transaction_vout: number, partner_node_info: { __typename?: 'Node', node: { __typename?: 'nodeType', alias: string, capacity?: Types.Maybe<string>, channel_count?: Types.Maybe<number>, color?: Types.Maybe<string>, updated_at?: Types.Maybe<string> } } }>>> };
 
 
 export const GetPendingChannelsDocument = gql`
