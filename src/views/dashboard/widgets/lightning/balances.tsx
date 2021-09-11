@@ -29,8 +29,8 @@ const S = {
 export const TotalBalance = () => {
   const { onchain, lightning } = useNodeBalances();
 
-  const total = new Big(onchain.confirmed).add(lightning.confirmed).toNumber();
-  const pending = new Big(onchain.pending).add(lightning.pending).toNumber();
+  const total = new Big(onchain.confirmed).add(lightning.confirmed).toString();
+  const pending = new Big(onchain.pending).add(lightning.pending).toString();
 
   return (
     <S.wrapper>
@@ -38,7 +38,7 @@ export const TotalBalance = () => {
       <S.total>
         <Price amount={total} />
       </S.total>
-      {pending > 0 ? (
+      {Number(pending) > 0 ? (
         <S.pending>
           <Price amount={pending} />
         </S.pending>
