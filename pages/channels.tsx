@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useGetChannelAmountInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import styled from 'styled-components';
 import { Settings } from 'react-feather';
 import { IconCursor } from 'src/views/channels/channels/Channel.style';
@@ -7,6 +6,7 @@ import { ChannelManage } from 'src/views/channels/channels/ChannelManage';
 import { GridWrapper } from 'src/components/gridWrapper/GridWrapper';
 import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
+import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { Channels } from '../src/views/channels/channels/Channels';
 import { PendingChannels } from '../src/views/channels/pendingChannels/PendingChannels';
 import { ClosedChannels } from '../src/views/channels/closedChannels/ClosedChannels';
@@ -42,7 +42,7 @@ const ChannelView = () => {
     closed: 0,
   });
 
-  const { data } = useGetChannelAmountInfoQuery({ ssr: false });
+  const { data } = useGetNodeInfoQuery();
 
   useEffect(() => {
     if (data && data.getNodeInfo) {

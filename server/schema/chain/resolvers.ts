@@ -1,79 +1,21 @@
 import {
-  getChainBalance,
-  getPendingChainBalance,
   getChainTransactions,
   getUtxos,
   sendToChainAddress,
   createChainAddress,
-  getPendingChannels,
 } from 'ln-service';
 import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { sortBy } from 'lodash';
 import { to } from 'server/helpers/async';
 import {
-  GetChainBalanceType,
-  GetPendingChainBalanceType,
   GetChainTransactionsType,
   GetUtxosType,
   SendToChainAddressType,
-  GetPendingChannelsType,
 } from 'server/types/ln-service.types';
-
-interface ChainBalanceProps {
-  chain_balance: number;
-}
-
-interface PendingChainBalanceProps {
-  pending_chain_balance: number;
-}
 
 export const chainResolvers = {
   Query: {
-    getChainBalance: async (
-      _: undefined,
-      __: undefined,
-      context: ContextType
-    ) => {
-      await requestLimiter(context.ip, 'chainBalance');
-
-      const { lnd } = context;
-
-      const value: ChainBalanceProps = await to<GetChainBalanceType>(
-        getChainBalance({
-          lnd,
-        })
-      );
-      return value.chain_balance || 0;
-    },
-    getPendingChainBalance: async (
-      _: undefined,
-      __: undefined,
-      context: ContextType
-    ) => {
-      await requestLimiter(context.ip, 'pendingChainBalance');
-
-      const { lnd } = context;
-
-      const pendingValue: PendingChainBalanceProps =
-        await to<GetPendingChainBalanceType>(
-          getPendingChainBalance({
-            lnd,
-          })
-        );
-
-      const { pending_channels } = await to<GetPendingChannelsType>(
-        getPendingChannels({ lnd })
-      );
-
-      const closing =
-        pending_channels
-          .filter(p => p.is_closing)
-          .reduce((p, c) => p + c.local_balance, 0) || 0;
-
-      return pendingValue.pending_chain_balance + closing || 0;
-    },
-
     getChainTransactions: async (
       _: undefined,
       __: undefined,

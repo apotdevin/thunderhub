@@ -84,34 +84,6 @@ Object {
 }
 `;
 
-exports[`Query tests "GET_CAN_CONNECT" matches snapshot 1`] = `
-Object {
-  "data": Object {
-    "getNodeInfo": Object {
-      "active_channels_count": 1,
-      "alias": "TestNode",
-      "chains": Array [
-        "abc",
-        "def",
-      ],
-      "closed_channels_count": 3,
-      "color": "color",
-      "is_synced_to_chain": true,
-      "peers_count": 1,
-      "pending_channels_count": 3,
-      "version": "version",
-    },
-  },
-  "errors": undefined,
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
-    },
-  },
-}
-`;
-
 exports[`Query tests "GET_CHAIN_TRANSACTIONS" matches snapshot 1`] = `
 Object {
   "data": Object {
@@ -143,25 +115,6 @@ Object {
         "tokens": 1000,
       },
     ],
-  },
-  "errors": undefined,
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
-    },
-  },
-}
-`;
-
-exports[`Query tests "GET_CHANNEL_AMOUNT_INFO" matches snapshot 1`] = `
-Object {
-  "data": Object {
-    "getNodeInfo": Object {
-      "active_channels_count": 1,
-      "closed_channels_count": 3,
-      "pending_channels_count": 3,
-    },
   },
   "errors": undefined,
   "extensions": undefined,
@@ -518,28 +471,6 @@ Object {
 }
 `;
 
-exports[`Query tests "GET_CONNECT_INFO" matches snapshot 1`] = `
-Object {
-  "data": Object {
-    "getNodeInfo": Object {
-      "alias": "TestNode",
-      "public_key": "key",
-      "uris": Array [
-        "uri",
-        "uri2",
-      ],
-    },
-  },
-  "errors": undefined,
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
-    },
-  },
-}
-`;
-
 exports[`Query tests "GET_FEE_HEALTH" matches snapshot 1`] = `
 Object {
   "data": Object {
@@ -752,11 +683,6 @@ Object {
 exports[`Query tests "GET_NODE_INFO" matches snapshot 1`] = `
 Object {
   "data": Object {
-    "getChainBalance": "1000000",
-    "getChannelBalance": Object {
-      "confirmedBalance": 1000,
-      "pendingBalance": 50000,
-    },
     "getNodeInfo": Object {
       "active_channels_count": 1,
       "alias": "TestNode",
@@ -770,9 +696,12 @@ Object {
       "peers_count": 1,
       "pending_channels_count": 3,
       "public_key": "key",
+      "uris": Array [
+        "uri",
+        "uri2",
+      ],
       "version": "version",
     },
-    "getPendingChainBalance": "1003000",
   },
   "errors": undefined,
   "extensions": undefined,

@@ -1,5 +1,4 @@
 import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
-import { useState, useEffect } from 'react';
 import { getVersion } from 'src/utils/version';
 
 type StatusState = {
@@ -10,10 +9,6 @@ type StatusState = {
   mayorVersion: number;
   minorVersion: number;
   revision: number;
-  chainBalance: number;
-  chainPending: number;
-  channelBalance: number;
-  channelPending: number;
   activeChannelCount: number;
   pendingChannelCount: number;
   closedChannelCount: number;
@@ -21,7 +16,7 @@ type StatusState = {
   publicKey: string;
 };
 
-const initialState = {
+const initialState: StatusState = {
   alias: '',
   color: '',
   syncedToChain: false,
@@ -29,10 +24,6 @@ const initialState = {
   mayorVersion: 0,
   minorVersion: 0,
   revision: 0,
-  chainBalance: 0,
-  chainPending: 0,
-  channelBalance: 0,
-  channelPending: 0,
   activeChannelCount: 0,
   pendingChannelCount: 0,
   closedChannelCount: 0,
@@ -41,58 +32,38 @@ const initialState = {
 };
 
 export const useNodeInfo = (): StatusState => {
-  const [nodeInfo, setNodeInfo] = useState<StatusState>(initialState);
-  const { data, loading, error } = useGetNodeInfoQuery({
-    fetchPolicy: 'cache-first',
-    ssr: false,
-  });
+  const { data, loading, error } = useGetNodeInfoQuery();
 
-  useEffect(() => {
-    if (!data?.getNodeInfo || loading || error) return;
+  if (!data?.getNodeInfo || loading || error) {
+    return initialState;
+  }
 
-    const {
-      getChainBalance,
-      getPendingChainBalance,
-      getChannelBalance,
-      getNodeInfo,
-    } = data;
+  const {
+    alias,
+    color,
+    is_synced_to_chain,
+    version,
+    active_channels_count,
+    pending_channels_count,
+    closed_channels_count,
+    peers_count,
+    public_key,
+  } = data.getNodeInfo;
 
-    const {
-      alias,
-      color,
-      is_synced_to_chain,
-      version,
-      active_channels_count,
-      pending_channels_count,
-      closed_channels_count,
-      peers_count,
-      public_key,
-    } = getNodeInfo;
+  const { mayor, minor, revision, versionWithPatch } = getVersion(version);
 
-    const { confirmedBalance = 0, pendingBalance = 0 } =
-      getChannelBalance || {};
-
-    const { mayor, minor, revision, versionWithPatch } = getVersion(version);
-
-    setNodeInfo({
-      alias,
-      color,
-      syncedToChain: is_synced_to_chain,
-      version: versionWithPatch,
-      mayorVersion: mayor,
-      minorVersion: minor,
-      revision: revision,
-      chainBalance: Number(getChainBalance) || 0,
-      chainPending: Number(getPendingChainBalance) || 0,
-      channelBalance: confirmedBalance,
-      channelPending: pendingBalance,
-      activeChannelCount: active_channels_count,
-      pendingChannelCount: pending_channels_count,
-      closedChannelCount: closed_channels_count,
-      peersCount: peers_count,
-      publicKey: public_key,
-    });
-  }, [data, error, loading]);
-
-  return nodeInfo;
+  return {
+    alias,
+    color,
+    syncedToChain: is_synced_to_chain,
+    version: versionWithPatch,
+    mayorVersion: mayor,
+    minorVersion: minor,
+    revision: revision,
+    activeChannelCount: active_channels_count,
+    pendingChannelCount: pending_channels_count,
+    closedChannelCount: closed_channels_count,
+    peersCount: peers_count,
+    publicKey: public_key,
+  };
 };

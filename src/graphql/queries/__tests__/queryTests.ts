@@ -11,12 +11,7 @@ import { GET_FEE_HEALTH } from '../getFeeHealth';
 import { GET_MESSAGES } from '../getMessages';
 import { GET_NETWORK_INFO } from '../getNetworkInfo';
 import { GET_NODE } from '../getNode';
-import {
-  GET_NODE_INFO,
-  GET_CAN_CONNECT,
-  GET_CHANNEL_AMOUNT_INFO,
-  GET_CONNECT_INFO,
-} from '../getNodeInfo';
+import { GET_NODE_INFO } from '../getNodeInfo';
 import { GET_PEERS } from '../getPeers';
 import { GET_PENDING_CHANNELS } from '../getPendingChannels';
 // import { GET_RESUME } from '../getResume';
@@ -63,10 +58,7 @@ const cases: CaseType[] = [
       variables: { publicKey: 'abc', withoutChannels: false },
     },
   ],
-  ['GET_CAN_CONNECT', { query: GET_CAN_CONNECT }],
   ['GET_NODE_INFO', { query: GET_NODE_INFO }],
-  ['GET_CHANNEL_AMOUNT_INFO', { query: GET_CHANNEL_AMOUNT_INFO }],
-  ['GET_CONNECT_INFO', { query: GET_CONNECT_INFO }],
   ['GET_PEERS', { query: GET_PEERS }],
   ['GET_PENDING_CHANNELS', { query: GET_PENDING_CHANNELS }],
   // ['GET_RESUME', { query: GET_RESUME }],

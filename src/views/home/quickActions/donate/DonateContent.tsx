@@ -11,7 +11,7 @@ import {
 } from 'src/components/buttons/multiButton/MultiButton';
 import styled from 'styled-components';
 import { chartColors, mediaWidths } from 'src/styles/Themes';
-import { useGetCanConnectInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
+import { useGetNodeInfoQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { useCreateThunderPointsMutation } from 'src/graphql/mutations/__generated__/createThunderPoints.generated';
 import { toast } from 'react-toastify';
 import { useBaseConnect } from 'src/hooks/UseBaseConnect';
@@ -45,7 +45,7 @@ export const SupportBar = () => {
 
   const [createPoints, { data: pointsData, called, loading: pointsLoading }] =
     useCreateThunderPointsMutation({ refetchQueries: ['GetBasePoints'] });
-  const { data: info } = useGetCanConnectInfoQuery({ ssr: false });
+  const { data: info } = useGetNodeInfoQuery({ ssr: false });
 
   React.useEffect(() => {
     if (data?.createBaseInvoice) {

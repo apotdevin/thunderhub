@@ -47,11 +47,6 @@ export const channelTypes = gql`
     partner_node_policies: nodePolicyType
   }
 
-  type channelBalanceType {
-    confirmedBalance: Int!
-    pendingBalance: Int!
-  }
-
   type pendingPaymentType {
     id: String!
     is_outgoing: Boolean!
