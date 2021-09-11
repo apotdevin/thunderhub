@@ -31,4 +31,22 @@ export const nodeTypes = gql`
     uris: [String!]!
     version: String!
   }
+
+  type BalancesType {
+    onchain: OnChainBalanceType!
+    lightning: LightningBalanceType!
+  }
+
+  type OnChainBalanceType {
+    confirmed: String!
+    pending: String!
+    closing: String!
+  }
+
+  type LightningBalanceType {
+    confirmed: String!
+    active: String!
+    commit: String!
+    pending: String!
+  }
 `;

@@ -1,18 +1,13 @@
-import { useState, useEffect } from 'react';
 import { useGetBaseCanConnectQuery } from 'src/graphql/queries/__generated__/getBaseCanConnect.generated';
 
 export const useBaseConnect = () => {
-  const [connected, setCanConnect] = useState<boolean>(false);
-
   const { loading, error, data } = useGetBaseCanConnectQuery({
     ssr: false,
     fetchPolicy: 'cache-first',
   });
 
-  useEffect(() => {
-    if (loading || !data?.getBaseCanConnect || error) return;
-    setCanConnect(true);
-  }, [loading, data, error]);
+  if (loading || !data?.getBaseCanConnect || error)
+    return { connected: false, loading };
 
-  return { connected, loading };
+  return { connected: true, loading };
 };

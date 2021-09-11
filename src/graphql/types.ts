@@ -24,6 +24,12 @@ export type AuthResponse = {
   status: Scalars['String'];
 };
 
+export type BalancesType = {
+  __typename?: 'BalancesType';
+  lightning: LightningBalanceType;
+  onchain: OnChainBalanceType;
+};
+
 export type BaseInfo = {
   __typename?: 'BaseInfo';
   apiTokenOriginalSatPrice: Scalars['Int'];
@@ -167,6 +173,14 @@ export type InvoiceType = {
   secret: Scalars['String'];
   tokens: Scalars['String'];
   type: Scalars['String'];
+};
+
+export type LightningBalanceType = {
+  __typename?: 'LightningBalanceType';
+  active: Scalars['String'];
+  commit: Scalars['String'];
+  confirmed: Scalars['String'];
+  pending: Scalars['String'];
 };
 
 export type LnMarketsUserInfo = {
@@ -447,6 +461,13 @@ export type Node = {
   node: NodeType;
 };
 
+export type OnChainBalanceType = {
+  __typename?: 'OnChainBalanceType';
+  closing: Scalars['String'];
+  confirmed: Scalars['String'];
+  pending: Scalars['String'];
+};
+
 export type PayRequest = {
   __typename?: 'PayRequest';
   callback?: Maybe<Scalars['String']>;
@@ -511,10 +532,8 @@ export type Query = {
   getBoltzSwapStatus: Array<Maybe<BoltzSwap>>;
   getBosNodeScores: Array<Maybe<BosScore>>;
   getBosScores: BosScoreResponse;
-  getChainBalance: Scalars['String'];
   getChainTransactions?: Maybe<Array<Maybe<GetTransactionsType>>>;
   getChannel: SingleChannelType;
-  getChannelBalance?: Maybe<ChannelBalanceType>;
   getChannelReport?: Maybe<ChannelReportType>;
   getChannels: Array<Maybe<ChannelType>>;
   getClosedChannels?: Maybe<Array<Maybe<ClosedChannelType>>>;
@@ -529,9 +548,9 @@ export type Query = {
   getMessages?: Maybe<GetMessagesType>;
   getNetworkInfo?: Maybe<NetworkInfoType>;
   getNode: Node;
+  getNodeBalances: BalancesType;
   getNodeInfo?: Maybe<NodeInfoType>;
   getPeers?: Maybe<Array<Maybe<PeerType>>>;
-  getPendingChainBalance: Scalars['String'];
   getPendingChannels?: Maybe<Array<Maybe<PendingChannelType>>>;
   getResume: GetResumeType;
   getRoutes?: Maybe<GetRouteType>;
@@ -762,12 +781,6 @@ export type BosResultType = {
   __typename?: 'bosResultType';
   rebalance_fees_spent?: Maybe<Scalars['String']>;
   rebalanced?: Maybe<Scalars['String']>;
-};
-
-export type ChannelBalanceType = {
-  __typename?: 'channelBalanceType';
-  confirmedBalance: Scalars['Int'];
-  pendingBalance: Scalars['Int'];
 };
 
 export type ChannelDetailInput = {

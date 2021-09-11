@@ -1,7 +1,8 @@
 import { Price } from 'src/components/price/Price';
-import { useNodeInfo } from 'src/hooks/UseNodeInfo';
+import { useNodeBalances } from 'src/hooks/UseNodeBalances';
 import { unSelectedNavButton } from 'src/styles/Themes';
 import styled from 'styled-components';
+import Big from 'big.js';
 
 const S = {
   wrapper: styled.div`
@@ -26,11 +27,10 @@ const S = {
 };
 
 export const TotalBalance = () => {
-  const { chainBalance, chainPending, channelBalance, channelPending } =
-    useNodeInfo();
+  const { onchain, lightning } = useNodeBalances();
 
-  const total = chainBalance + channelBalance;
-  const pending = chainPending + channelPending;
+  const total = new Big(onchain.confirmed).add(lightning.confirmed).toNumber();
+  const pending = new Big(onchain.pending).add(lightning.pending).toNumber();
 
   return (
     <S.wrapper>
@@ -48,17 +48,17 @@ export const TotalBalance = () => {
 };
 
 export const ChannelBalance = () => {
-  const { channelBalance, channelPending } = useNodeInfo();
+  const { lightning } = useNodeBalances();
 
   return (
     <S.wrapper>
       <S.pending>Channel Balance</S.pending>
       <S.smallTotal>
-        <Price amount={channelBalance} />
+        <Price amount={lightning.confirmed} />
       </S.smallTotal>
-      {channelPending > 0 ? (
+      {Number(lightning.pending) > 0 ? (
         <S.pending>
-          <Price amount={channelPending} />
+          <Price amount={lightning.pending} />
         </S.pending>
       ) : null}
     </S.wrapper>
@@ -66,17 +66,17 @@ export const ChannelBalance = () => {
 };
 
 export const ChainBalance = () => {
-  const { chainBalance, chainPending } = useNodeInfo();
+  const { onchain } = useNodeBalances();
 
   return (
     <S.wrapper>
       <S.pending>Chain Balance</S.pending>
       <S.smallTotal>
-        <Price amount={chainBalance} />
+        <Price amount={onchain.confirmed} />
       </S.smallTotal>
-      {chainPending > 0 ? (
+      {Number(onchain.pending) > 0 ? (
         <S.pending>
-          <Price amount={chainPending} />
+          <Price amount={onchain.pending} />
         </S.pending>
       ) : null}
     </S.wrapper>

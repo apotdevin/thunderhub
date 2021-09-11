@@ -4,12 +4,12 @@ import { toast } from 'react-toastify';
 import { Lock, Unlock, ChevronDown, ChevronUp } from 'react-feather';
 import { chartColors } from 'src/styles/Themes';
 import { useRouter } from 'next/router';
-import { useGetCanConnectLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { Link } from 'src/components/link/Link';
 import { useGetServerAccountsQuery } from 'src/graphql/queries/__generated__/getServerAccounts.generated';
 import { ServerAccountType } from 'src/graphql/types';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { useLogoutMutation } from 'src/graphql/mutations/__generated__/logout.generated';
+import { useGetNodeInfoLazyQuery } from 'src/graphql/queries/__generated__/getNodeInfo.generated';
 import { Section } from '../../components/section/Section';
 import {
   Card,
@@ -87,7 +87,7 @@ export const Accounts = () => {
   const { data: accountData, loading: loadingData } =
     useGetServerAccountsQuery();
 
-  const [getCanConnect, { data, loading }] = useGetCanConnectLazyQuery({
+  const [getCanConnect, { data, loading }] = useGetNodeInfoLazyQuery({
     fetchPolicy: 'network-only',
     onError: () => {
       toast.error('Unable to connect to this node');

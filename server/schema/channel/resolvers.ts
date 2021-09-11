@@ -6,7 +6,6 @@ import { openChannel } from './resolvers/mutation/openChannel';
 import { closeChannel } from './resolvers/mutation/closeChannel';
 import { updateFees } from './resolvers/mutation/updateFees';
 import { updateMultipleFees } from './resolvers/mutation/updateMultipleFees';
-import { getChannelBalance } from './resolvers/query/getChannelBalance';
 import { getChannels } from './resolvers/query/getChannels';
 import { getClosedChannels } from './resolvers/query/getClosedChannels';
 import { getPendingChannels } from './resolvers/query/getPendingChannels';
@@ -23,7 +22,6 @@ type ParentType = {
 export const channelResolvers = {
   Query: {
     getChannel,
-    getChannelBalance,
     getChannels,
     getClosedChannels,
     getPendingChannels,

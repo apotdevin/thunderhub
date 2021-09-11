@@ -28,6 +28,7 @@ export const generalTypes = gql`
 
 export const queryTypes = gql`
   type Query {
+    getNodeBalances: BalancesType!
     getBosNodeScores(publicKey: String!): [BosScore]!
     getBosScores: BosScoreResponse!
     getBaseInfo: BaseInfo!
@@ -50,7 +51,6 @@ export const queryTypes = gql`
     getVolumeHealth: channelsHealth
     getTimeHealth: channelsTimeHealth
     getFeeHealth: channelsFeeHealth
-    getChannelBalance: channelBalanceType
     getChannel(id: String!, pubkey: String): singleChannelType!
     getChannels(active: Boolean): [channelType]!
     getClosedChannels(type: String): [closedChannelType]
@@ -79,8 +79,6 @@ export const queryTypes = gql`
     getPeers: [peerType]
     signMessage(message: String!): String
     verifyMessage(message: String!, signature: String!): String
-    getChainBalance: String!
-    getPendingChainBalance: String!
     getChainTransactions: [getTransactionsType]
     getUtxos: [getUtxosType]
     getMessages(

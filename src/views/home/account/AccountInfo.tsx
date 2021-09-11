@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Zap, Anchor, Pocket, HelpCircle, X } from 'react-feather';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
-import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import ReactTooltip from 'react-tooltip';
 import { renderLine } from 'src/components/generic/helpers';
+import { useNodeBalances } from 'src/hooks/UseNodeBalances';
 import {
   Card,
   CardWithTitle,
@@ -50,8 +50,12 @@ const sectionColor = '#FFD300';
 export const AccountInfo = () => {
   const [state, setState] = useState<string>('none');
 
-  const { chainBalance, chainPending, channelBalance, channelPending } =
-    useNodeInfo();
+  const { onchain, lightning } = useNodeBalances();
+
+  const chainBalance = Number(onchain.confirmed);
+  const chainPending = Number(onchain.pending);
+  const channelBalance = Number(lightning.confirmed);
+  const channelPending = Number(lightning.pending);
 
   const renderContent = () => {
     switch (state) {
