@@ -165,6 +165,12 @@ export const mutationTypes = gql`
       includePrivate: Boolean
     ): newInvoiceType
     circularRebalance(route: String!): Boolean
+    pay(
+      max_fee: Int!
+      max_paths: Int!
+      out: [String]
+      request: String!
+    ): Boolean
     bosPay(
       max_fee: Int!
       max_paths: Int!

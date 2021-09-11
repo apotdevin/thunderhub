@@ -1,5 +1,6 @@
 import { randomBytes, createHash } from 'crypto';
 import {
+  pay,
   payViaRoutes,
   createInvoice,
   decodePaymentRequest,
@@ -11,10 +12,17 @@ import { ContextType } from 'server/types/apiTypes';
 import { logger } from 'server/helpers/logger';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { getErrorMsg } from 'server/helpers/helpers';
-import { to } from 'server/helpers/async';
+import { to, toWithError } from 'server/helpers/async';
 import { CreateInvoiceType, DecodedType } from 'server/types/ln-service.types';
 
 const KEYSEND_TYPE = '5482373484';
+
+type PayType = {
+  max_fee: Number;
+  max_paths: Number;
+  request: String;
+  out?: String[];
+};
 
 export const invoiceResolvers = {
   Query: {
@@ -174,6 +182,32 @@ export const invoiceResolvers = {
         throw new Error(getErrorMsg(error));
       });
 
+      return true;
+    },
+
+    pay: async (
+      _: undefined,
+      { max_fee, max_paths, out, request }: PayType,
+      context: ContextType
+    ) => {
+      const { lnd } = context;
+      const props = {
+        request,
+        max_fee,
+        max_paths,
+        outgoing_channels: out || [],
+      };
+
+      logger.debug('Paying invoice with params: %o', props);
+
+      const [response, error] = await toWithError(pay({ lnd, ...props }));
+
+      if (error) {
+        logger.error('Error paying invoice: %o', error);
+        throw new Error(getErrorMsg(error));
+      }
+
+      logger.debug('Paid invoice: %o', response);
       return true;
     },
     payViaRoute: async (_: undefined, params: any, context: ContextType) => {
