@@ -1,12 +1,12 @@
 import { useGetNodeBalancesQuery } from 'src/graphql/queries/__generated__/getNodeBalances.generated';
 
 const initialState = {
-  onchain: { confirmed: '-', pending: '-', closing: '' },
+  onchain: { confirmed: '0', pending: '0', closing: '0' },
   lightning: {
-    confirmed: '-',
-    active: '-',
-    commit: '-',
-    pending: '-',
+    confirmed: '0',
+    active: '0',
+    commit: '0',
+    pending: '0',
   },
 };
 
