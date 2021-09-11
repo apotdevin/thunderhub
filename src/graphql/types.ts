@@ -217,6 +217,7 @@ export type Mutation = {
   lnUrlWithdraw: Scalars['String'];
   logout: Scalars['Boolean'];
   openChannel?: Maybe<OpenChannelType>;
+  pay?: Maybe<Scalars['Boolean']>;
   payViaRoute?: Maybe<Scalars['Boolean']>;
   removePeer?: Maybe<Scalars['Boolean']>;
   sendMessage?: Maybe<Scalars['Int']>;
@@ -386,6 +387,14 @@ export type MutationOpenChannelArgs = {
   partnerPublicKey: Scalars['String'];
   pushTokens?: Maybe<Scalars['Int']>;
   tokensPerVByte?: Maybe<Scalars['Int']>;
+};
+
+
+export type MutationPayArgs = {
+  max_fee: Scalars['Int'];
+  max_paths: Scalars['Int'];
+  out?: Maybe<Array<Maybe<Scalars['String']>>>;
+  request: Scalars['String'];
 };
 
 

@@ -2,7 +2,6 @@ import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { useEffect, useState } from 'react';
-import { useBosPayMutation } from 'src/graphql/mutations/__generated__/bosPay.generated';
 import { InputWithDeco } from 'src/components/input/InputWithDeco';
 import { ChannelSelect } from 'src/components/select/specific/ChannelSelect';
 import { useDecodeRequestLazyQuery } from 'src/graphql/queries/__generated__/decodeRequest.generated';
@@ -12,6 +11,7 @@ import { Camera } from 'react-feather';
 import Modal from 'src/components/modal/ReactModal';
 import dynamic from 'next/dynamic';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
+import { usePayMutation } from 'src/graphql/mutations/__generated__/pay.generated';
 import { SingleLine, Separation } from '../../../../components/generic/Styled';
 
 const QRCodeReader = dynamic(() => import('src/components/qrReader'), {
@@ -39,7 +39,7 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
     onError: () => toast.error('Error decoding invoice'),
   });
 
-  const [pay, { loading }] = useBosPayMutation({
+  const [pay, { loading }] = usePayMutation({
     onCompleted: () => {
       payCallback && payCallback();
       toast.success('Payment Sent');
