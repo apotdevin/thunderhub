@@ -67,6 +67,7 @@ export const AmbossCard = () => {
 
   const [getToken, { data, loading: tokenLoading }] =
     useGetAmbossLoginTokenLazyQuery({
+      fetchPolicy: 'network-only',
       onError: () => toast.error('Error getting auth token'),
     });
 
