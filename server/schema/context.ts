@@ -44,6 +44,7 @@ export const getContext = (context: ResolverContext) => {
   const auth = cookies[appConstants.cookieName];
   const lnMarketsAuth = cookies[appConstants.lnMarketsAuth];
   const tokenAuth = cookies[appConstants.tokenCookieName];
+  const ambossAuth = cookies[appConstants.ambossCookieName];
 
   let lnd: LndObject | null = null;
   let id: string | null = null;
@@ -70,6 +71,7 @@ export const getContext = (context: ResolverContext) => {
     res,
     lnMarketsAuth,
     tokenAuth,
+    ambossAuth,
   };
 
   return resolverContext;

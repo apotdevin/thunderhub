@@ -28,6 +28,8 @@ export const generalTypes = gql`
 
 export const queryTypes = gql`
   type Query {
+    getAmbossLoginToken: String!
+    getAmbossUser: AmbossUserType
     getNodeBalances: BalancesType!
     getBosNodeScores(publicKey: String!): [BosScore]!
     getBosScores: BosScoreResponse!
@@ -94,6 +96,7 @@ export const queryTypes = gql`
 
 export const mutationTypes = gql`
   type Mutation {
+    loginAmboss: Boolean
     getAuthToken(cookie: String): Boolean!
     getSessionToken(id: String, password: String): String!
     claimBoltzTransaction(

@@ -20,6 +20,7 @@ import { SupportBar } from './donate/DonateContent';
 import { OpenChannel } from './openChannel';
 import { LnUrlCard } from './lnurl';
 import { LnMarketsCard } from './lnmarkets';
+import { AmbossCard } from './amboss/AmbossCard';
 
 export const QuickCard = styled.div`
   background: ${cardColor};
@@ -50,7 +51,7 @@ export const QuickCard = styled.div`
 `;
 
 export const QuickTitle = styled.div`
-  font-size: 14px;
+  font-size: 12px;
   color: ${unSelectedNavButton};
   margin-top: 10px;
   text-align: center;
@@ -99,6 +100,7 @@ export const QuickActions = () => {
         return (
           <QuickRow>
             <SupportCard callback={() => setOpenCard('support')} />
+            <AmbossCard />
             <QuickCard onClick={() => setOpenCard('open_channel')}>
               <GitBranch size={24} />
               <QuickTitle>Open</QuickTitle>

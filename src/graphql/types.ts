@@ -18,6 +18,18 @@ export type Scalars = {
   Time: any;
 };
 
+export type AmbossSubscriptionType = {
+  __typename?: 'AmbossSubscriptionType';
+  end_date: Scalars['String'];
+  subscribed: Scalars['Boolean'];
+  upgradable: Scalars['Boolean'];
+};
+
+export type AmbossUserType = {
+  __typename?: 'AmbossUserType';
+  subscription?: Maybe<AmbossSubscriptionType>;
+};
+
 export type AuthResponse = {
   __typename?: 'AuthResponse';
   message: Scalars['String'];
@@ -229,6 +241,7 @@ export type Mutation = {
   lnUrlChannel: Scalars['String'];
   lnUrlPay: PaySuccess;
   lnUrlWithdraw: Scalars['String'];
+  loginAmboss?: Maybe<Scalars['Boolean']>;
   logout: Scalars['Boolean'];
   openChannel?: Maybe<OpenChannelType>;
   pay?: Maybe<Scalars['Boolean']>;
@@ -521,6 +534,8 @@ export type Query = {
   decodeRequest?: Maybe<DecodeType>;
   getAccount?: Maybe<ServerAccountType>;
   getAccountingReport: Scalars['String'];
+  getAmbossLoginToken: Scalars['String'];
+  getAmbossUser?: Maybe<AmbossUserType>;
   getBackups?: Maybe<Scalars['String']>;
   getBaseCanConnect: Scalars['Boolean'];
   getBaseInfo: BaseInfo;

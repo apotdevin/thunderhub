@@ -25,6 +25,7 @@ export const ContextMock: ContextType = {
   res: {} as ServerResponse,
   lnMarketsAuth: 'lnMarketAuth',
   tokenAuth: 'tokenAuth',
+  ambossAuth: 'ambossAuth',
 };
 
 export const ContextMockNoAccounts: ContextType = {
@@ -41,6 +42,7 @@ export const ContextMockNoAccounts: ContextType = {
   res: {} as ServerResponse,
   lnMarketsAuth: 'lnMarketAuth',
   tokenAuth: 'tokenAuth',
+  ambossAuth: 'ambossAuth',
 };
 
 export const ContextMockNoSSO: ContextType = {
@@ -63,4 +65,5 @@ export const ContextMockNoSSO: ContextType = {
   res: {} as ServerResponse,
   lnMarketsAuth: 'lnMarketAuth',
   tokenAuth: 'tokenAuth',
+  ambossAuth: 'ambossAuth',
 };
