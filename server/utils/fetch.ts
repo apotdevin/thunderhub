@@ -39,7 +39,6 @@ export const graphqlFetchWithProxy = async (
   })
     .then(res => res.json() as any)
     .then(result => {
-      logger.silly(result);
       const { data, errors } = result;
       return {
         data,
