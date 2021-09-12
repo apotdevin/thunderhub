@@ -18,4 +18,5 @@ export type ContextType = {
   res: ServerResponse;
   lnMarketsAuth: string | null;
   tokenAuth: string | null;
+  ambossAuth: string | null;
 };

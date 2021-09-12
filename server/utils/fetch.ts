@@ -22,18 +22,30 @@ export const fetchWithProxy = (url: string, options?: {}) => {
 export const graphqlFetchWithProxy = async (
   url: string,
   query: string,
-  variables?: { [key: string]: string | number | string[] }
+  variables?: { [key: string]: string | number | string[] | boolean },
+  headers?: { [key: string]: string | number | string[] | boolean }
 ): Promise<{
   data: any;
   error: undefined | GraphQLError;
 }> => {
   return fetchWithProxy(url, {
     method: 'post',
-    headers: { Accept: 'application/json' },
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      ...(headers || {}),
+    },
     body: JSON.stringify({ query, variables }),
   })
     .then(res => res.json() as any)
-    .then(data => data)
+    .then(result => {
+      logger.silly(result);
+      const { data, errors } = result;
+      return {
+        data,
+        error: errors?.[0]?.message,
+      };
+    })
     .catch(error => {
       logger.error('Error doing graphql fetch: %o', error);
       return { data: undefined, error };

@@ -10,7 +10,7 @@ import {
 } from 'src/styles/Themes';
 
 const QuickTitle = styled.div`
-  font-size: 14px;
+  font-size: 12px;
   color: ${unSelectedNavButton};
   margin-top: 10px;
 `;

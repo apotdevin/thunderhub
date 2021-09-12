@@ -15,4 +15,5 @@ export const appUrls = {
   lnMarkets: 'https://api.lnmarkets.com/v1',
   lnMarketsExchange: 'https://lnmarkets.com',
   boltz: 'https://boltz.exchange/api',
+  amboss: 'https://api.amboss.space/graphql',
 };
