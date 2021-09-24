@@ -164,15 +164,33 @@ export const authResolvers = {
       const { ip, res } = context;
       await requestLimiter(ip, 'logout');
 
-      res.setHeader(
-        'Set-Cookie',
+      res.setHeader('Set-Cookie', [
         cookieLib.serialize(appConstants.cookieName, '', {
           maxAge: -1,
           httpOnly: true,
           sameSite: true,
           path: '/',
-        })
-      );
+        }),
+        cookieLib.serialize(appConstants.ambossCookieName, '', {
+          maxAge: -1,
+          httpOnly: true,
+          sameSite: true,
+          path: '/',
+        }),
+        cookieLib.serialize(appConstants.lnMarketsAuth, '', {
+          maxAge: -1,
+          httpOnly: true,
+          sameSite: true,
+          path: '/',
+        }),
+        cookieLib.serialize(appConstants.tokenCookieName, '', {
+          maxAge: -1,
+          httpOnly: true,
+          sameSite: true,
+          path: '/',
+        }),
+      ]);
+
       return true;
     },
   },

@@ -3,8 +3,14 @@ const tbase =
     ? 'http://localhost:3010/dev/v1'
     : 'https://api.thunderbase.io/v1';
 
+const amboss =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5000/graphql'
+    : 'https://api.amboss.space/graphql';
+
 export const appUrls = {
   tbase,
+  amboss,
   oneml: 'https://amboss.space/node/',
   blockchain: 'https://mempool.space/tx/',
   blockchainAddress: 'https://mempool.space/address/',
@@ -15,5 +21,4 @@ export const appUrls = {
   lnMarkets: 'https://api.lnmarkets.com/v1',
   lnMarketsExchange: 'https://lnmarkets.com',
   boltz: 'https://boltz.exchange/api',
-  amboss: 'https://api.amboss.space/graphql',
 };

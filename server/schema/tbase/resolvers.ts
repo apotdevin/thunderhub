@@ -2,7 +2,6 @@ import { ContextType } from 'server/types/apiTypes';
 import { requestLimiter } from 'server/helpers/rateLimiter';
 import { appUrls } from 'server/utils/appUrls';
 import { logger } from 'server/helpers/logger';
-import { GraphQLError } from 'graphql';
 import { appConstants } from 'server/utils/appConstants';
 import cookieLib from 'cookie';
 import { graphqlFetchWithProxy } from 'server/utils/fetch';
@@ -10,16 +9,6 @@ import { graphqlFetchWithProxy } from 'server/utils/fetch';
 const getBaseCanConnectQuery = `
   {
     hello
-  }
-`;
-
-const getBaseInfoQuery = `
-  {
-    getInfo {
-      lastBosUpdate
-      apiTokenSatPrice
-      apiTokenOriginalSatPrice
-    }
   }
 `;
 
@@ -78,62 +67,8 @@ const createBaseTokenQuery = `
   }
 `;
 
-const getBosScoresQuery = `
-  {
-    getBosScores {
-      updated
-      scores {
-        alias
-        public_key
-        score
-        updated
-        position
-      }
-    }
-  }
-`;
-
-const getBosNodeScoresQuery = `
-  query GetNodeScores($publicKey: String!, $token: String!) {
-    getNodeScores(publicKey: $publicKey, token: $token) {
-      alias
-      public_key
-      score
-      updated
-      position
-    }
-  }
-`;
-
-const getLastNodeScoreQuery = `
-  query GetLastNodeScore($publicKey: String!, $token: String!) {
-    getLastNodeScore(publicKey: $publicKey, token: $token) {
-      alias
-      public_key
-      score
-      updated
-      position
-    }
-  }
-`;
-
 export const tbaseResolvers = {
   Query: {
-    getBaseInfo: async (_: undefined, __: undefined, context: ContextType) => {
-      await requestLimiter(context.ip, 'getBaseInfo');
-
-      const { data, error } = await graphqlFetchWithProxy(
-        appUrls.tbase,
-        getBaseInfoQuery
-      );
-
-      if (error || !data?.getInfo) {
-        logger.error('Error getting thunderbase info');
-        throw new GraphQLError('ErrorGettingInfo');
-      }
-
-      return data.getInfo;
-    },
     getBaseCanConnect: async (
       _: undefined,
       __: undefined,
@@ -149,50 +84,6 @@ export const tbaseResolvers = {
       if (error || !data?.hello) return false;
 
       return true;
-    },
-    getBosNodeScores: async (
-      _: undefined,
-      { publicKey }: { publicKey: string },
-      { ip, tokenAuth }: ContextType
-    ) => {
-      if (!tokenAuth) {
-        logger.error('No ThunderBase auth token available');
-        throw new GraphQLError('NotAuthenticated');
-      }
-
-      await requestLimiter(ip, 'getBosNodeScores');
-
-      const { data, error } = await graphqlFetchWithProxy(
-        appUrls.tbase,
-        getBosNodeScoresQuery,
-        {
-          publicKey,
-          token: tokenAuth,
-        }
-      );
-
-      if (error) {
-        logger.error(`Error getting BOS scores for node ${publicKey}`);
-        throw new GraphQLError('ErrorGettingBosScores');
-      }
-
-      return data?.getNodeScores || [];
-    },
-    getBosScores: async (_: undefined, __: any, context: ContextType) => {
-      await requestLimiter(context.ip, 'getBosScores');
-
-      const { data, error } = await graphqlFetchWithProxy(
-        appUrls.tbase,
-        getBosScoresQuery
-      );
-
-      if (error || !data?.getBosScores) {
-        logger.error('Error getting BOS scores');
-        logger.error(error);
-        throw new GraphQLError('ErrorGettingBosScores');
-      }
-
-      return data.getBosScores;
     },
     getBaseNodes: async (_: undefined, __: any, context: ContextType) => {
       await requestLimiter(context.ip, 'getBaseNodes');
@@ -328,44 +219,6 @@ export const tbaseResolvers = {
       if (error || !data?.createPoints) return false;
 
       return true;
-    },
-  },
-  channelType: {
-    bosScore: async (
-      {
-        partner_public_key,
-      }: {
-        partner_public_key: string;
-      },
-      _: undefined,
-      { tokenAuth }: ContextType
-    ) => {
-      if (!tokenAuth) {
-        return null;
-      }
-
-      const { data, error } = await graphqlFetchWithProxy(
-        appUrls.tbase,
-        getLastNodeScoreQuery,
-        {
-          publicKey: partner_public_key,
-          token: tokenAuth,
-        }
-      );
-
-      if (error) {
-        return null;
-      }
-
-      return (
-        data?.getLastNodeScore || {
-          alias: '',
-          public_key: partner_public_key,
-          score: 0,
-          updated: '',
-          position: 0,
-        }
-      );
     },
   },
 };

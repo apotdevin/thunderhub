@@ -114,12 +114,14 @@ export const bosResolvers = {
         ...(max_fee && max_fee > 0 && { max_fee }),
         ...(max_fee_rate && max_fee_rate > 0 && { max_fee_rate }),
         ...(timeout_minutes && timeout_minutes > 0 && { timeout_minutes }),
-        ...(max_rebalance &&
-          max_rebalance > 0 && { max_rebalance: `${max_rebalance}` }),
+        ...(max_rebalance && max_rebalance > 0
+          ? { max_rebalance: `${max_rebalance}` }
+          : {}),
         ...(node && { node }),
         ...(out_through && { out_through }),
-        ...(out_inbound &&
-          out_inbound > 0 && { out_inbound: `${out_inbound}` }),
+        ...(out_inbound && out_inbound > 0
+          ? { out_inbound: `${out_inbound}` }
+          : {}),
       };
 
       logger.info('Rebalance Params: %o', filteredParams);

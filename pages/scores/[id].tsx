@@ -3,46 +3,26 @@ import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { NodeInfo } from 'src/views/scores/NodeInfo';
 import { useRouter } from 'next/router';
-import { useBaseDispatch, useBaseState } from 'src/context/BaseContext';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { NodeScores } from 'src/views/scores/NodeScores';
 import { Graph } from 'src/views/scores/NodeGraph';
-import { useDeleteBaseTokenMutation } from 'src/graphql/mutations/__generated__/deleteBaseToken.generated';
+import { useAmbossUser } from 'src/hooks/UseAmbossUser';
 
 const NodeScoreView = () => {
-  const [loading, setLoading] = useState<boolean>(true);
-
+  const { user, loading } = useAmbossUser();
   const { push } = useRouter();
 
-  const { hasToken } = useBaseState();
-  const dispatch = useBaseDispatch();
-
-  const [deleteToken] = useDeleteBaseTokenMutation();
-
   useEffect(() => {
-    if (!hasToken) {
-      push('/token');
-    }
-  }, [hasToken, push]);
-
-  const handleAuthError = () => {
-    dispatch({ type: 'change', hasToken: false });
-    deleteToken();
+    if (loading) return;
+    if (user?.subscribed) return;
     push('/token');
-  };
+  }, [user, push, loading]);
 
   return (
     <>
-      {!loading && (
-        <>
-          <Graph />
-          <NodeInfo />
-        </>
-      )}
-      <NodeScores
-        callback={() => setLoading(false)}
-        errorCallback={handleAuthError}
-      />
+      <Graph />
+      <NodeInfo />
+      <NodeScores />
     </>
   );
 };
