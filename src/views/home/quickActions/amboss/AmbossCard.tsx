@@ -57,12 +57,12 @@ const QuickCard = styled.button`
 `;
 
 export const AmbossCard = () => {
-  const subscription = useAmbossUser();
+  const { user } = useAmbossUser();
 
   const [login, { loading }] = useLoginAmbossMutation({
     onCompleted: () => toast.success('Logged in'),
     onError: () => toast.error('Error logging in'),
-    refetchQueries: ['GetAmbossUser'],
+    refetchQueries: ['GetAmbossUser', 'GetChannels'],
   });
 
   const [getToken, { data, loading: tokenLoading }] =
@@ -80,7 +80,7 @@ export const AmbossCard = () => {
     (window as any).open(url, '_blank').focus();
   }, [data, tokenLoading]);
 
-  if (!subscription) {
+  if (!user) {
     return (
       <QuickCard
         onClick={() => {

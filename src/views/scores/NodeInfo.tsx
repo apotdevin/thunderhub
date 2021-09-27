@@ -15,25 +15,26 @@ import {
   renderLine,
 } from 'src/components/generic/helpers';
 import { Price } from 'src/components/price/Price';
-import { useBaseState } from 'src/context/BaseContext';
+
 import { toast } from 'react-toastify';
 import { getErrorContent } from 'src/utils/error';
+import { useAmbossUser } from 'src/hooks/UseAmbossUser';
 
 export const NodeInfo = () => {
-  const { hasToken } = useBaseState();
+  const { user } = useAmbossUser();
   const { query } = useRouter();
   const { id } = query;
 
   const publicKey = (isArray(id) ? id[0] : id) || '';
 
   const { data, loading } = useGetNodeQuery({
-    skip: !hasToken,
+    skip: !user?.subscribed || !publicKey,
     variables: { publicKey },
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  if (!hasToken) {
-    return <LoadingCard noTitle={true} />;
+  if (!user?.subscribed) {
+    return null;
   }
 
   if (loading) {

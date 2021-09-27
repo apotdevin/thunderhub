@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, SVGAttributes, useEffect, useState } from 'react';
 import {
   Cpu,
   Menu,
@@ -6,7 +6,6 @@ import {
   MessageCircle,
   Settings,
   Home,
-  Icon,
   Heart,
   Activity,
 } from 'react-feather';
@@ -30,6 +29,13 @@ import {
   HeaderNavButton,
 } from './Header.styled';
 
+type IconProps = SVGAttributes<SVGElement> & {
+  color?: string;
+  size?: string | number;
+};
+
+export type Icon = FC<IconProps>;
+
 const SSO = '/sso';
 const MAIN = '/login';
 const HOME = '/';
@@ -52,7 +58,7 @@ export const Header = () => {
   useEffect(() => {
     if (!isRoot || !open) return;
     setOpen(false);
-  }, [isRoot]);
+  }, [isRoot, open]);
 
   const renderNavButton = (link: string, NavIcon: Icon) => (
     <Link to={link} noStyling={true}>

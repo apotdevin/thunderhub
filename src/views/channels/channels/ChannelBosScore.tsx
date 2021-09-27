@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import {
   getDateDif,
   getFormatDate,
@@ -7,47 +7,82 @@ import {
 import { DarkSubTitle, Separation } from 'src/components/generic/Styled';
 import { Link } from 'src/components/link/Link';
 import { BosScore } from 'src/graphql/types';
-import { chartColors } from 'src/styles/Themes';
-import styled from 'styled-components';
 import numeral from 'numeral';
-import { useBaseConnect } from 'src/hooks/UseBaseConnect';
-
-const S = {
-  missingToken: styled.div`
-    width: 100%;
-    border: 1px solid ${chartColors.darkyellow};
-    padding: 8px;
-    border-radius: 4px;
-    margin: 8px 0 0;
-    font-size: 14px;
-    text-align: center;
-
-    :hover {
-      background-color: ${chartColors.darkyellow};
-    }
-  `,
-};
+import { useAmbossUser } from 'src/hooks/UseAmbossUser';
+import { useLoginAmbossMutation } from 'src/graphql/mutations/__generated__/loginAmboss.generated';
+import { toast } from 'react-toastify';
+import { useGetAmbossLoginTokenLazyQuery } from 'src/graphql/queries/__generated__/getAmbossLoginToken.generated';
+import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 
 export const ChannelBosScore: FC<{ score?: BosScore | null }> = ({ score }) => {
-  const { connected } = useBaseConnect();
+  const { user } = useAmbossUser();
 
-  if (!connected) return null;
+  const [login, { loading }] = useLoginAmbossMutation({
+    onCompleted: () => toast.success('Logged in'),
+    onError: () => toast.error('Error logging in'),
+    refetchQueries: ['GetAmbossUser', 'GetChannels'],
+  });
 
-  if (!score) {
+  const [getToken, { data, loading: tokenLoading }] =
+    useGetAmbossLoginTokenLazyQuery({
+      fetchPolicy: 'network-only',
+      onError: () => toast.error('Error getting auth token'),
+    });
+
+  useEffect(() => {
+    if (!data?.getAmbossLoginToken || tokenLoading) {
+      return;
+    }
+    if (!window?.open) return;
+    const url = `https://amboss.space/token?key=${data.getAmbossLoginToken}&redirect=L293bmVyL3VwZ3JhZGU=`;
+    (window as any).open(url, '_blank').focus();
+  }, [data, tokenLoading]);
+
+  if (!user) {
     return (
       <>
         <Separation />
         BOS Score
-        <Link to={'/token'} noStyling={true}>
-          <S.missingToken>
-            Get a token to view this nodes latest BOS score and historical info.
-          </S.missingToken>
-        </Link>
+        <DarkSubTitle withMargin={'16px 0'}>
+          Login to Amboss and get a subscription to see this nodes historical
+          BOS score information
+        </DarkSubTitle>
+        <ColorButton
+          loading={loading}
+          disabled={loading}
+          onClick={() => login()}
+          fullWidth={true}
+          withMargin={'16px 0 0'}
+        >
+          Login
+        </ColorButton>
       </>
     );
   }
 
-  if (!score.alias) {
+  if (!user.subscribed) {
+    return (
+      <>
+        <Separation />
+        BOS Score
+        <DarkSubTitle withMargin={'16px 0'}>
+          To see historical BOS information and more benefits you need an Amboss
+          Subscription.
+        </DarkSubTitle>
+        <ColorButton
+          loading={tokenLoading}
+          disabled={tokenLoading}
+          onClick={() => getToken()}
+          fullWidth={true}
+          withMargin={'16px 0 0'}
+        >
+          See Subscription Info
+        </ColorButton>
+      </>
+    );
+  }
+
+  if (!score) {
     return (
       <>
         <Separation />

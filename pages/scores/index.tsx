@@ -48,8 +48,8 @@ const Wrapped = () => {
     );
   }
 
-  const scores = data?.getBosScores?.scores.filter(Boolean) || [];
-  const date = data?.getBosScores?.updated || '';
+  const scores = data?.getBosScores || [];
+  const date = scores[0]?.updated || '';
 
   const thisNode =
     scores.find(score => score?.public_key === publicKey) || null;

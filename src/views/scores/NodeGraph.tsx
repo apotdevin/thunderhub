@@ -3,12 +3,12 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
-import { useBaseState } from 'src/context/BaseContext';
-import { useGetBosNodeScoresQuery } from 'src/graphql/queries/__generated__/getBosNodeScores.generated';
 import { chartColors, mediaWidths, themeColors } from 'src/styles/Themes';
 import { getErrorContent } from 'src/utils/error';
 import styled from 'styled-components';
 import { isArray } from 'lodash';
+import { useGetNodeBosHistoryQuery } from 'src/graphql/queries/__generated__/getNodeBosHistory.generated';
+import { useAmbossUser } from '../../hooks/UseAmbossUser';
 import { AreaGraph } from './AreaGraph';
 
 const Wrapper = styled.div`
@@ -23,17 +23,17 @@ const Wrapper = styled.div`
 
 export const Graph = () => {
   const [isPos, setIsPos] = useState<boolean>(false);
-  const { hasToken } = useBaseState();
+  const { user } = useAmbossUser();
   const { query } = useRouter();
   const { id } = query;
 
   const toggle = () => setIsPos(p => !p);
 
-  const publicKey = (isArray(id) ? id[0] : id) || '';
+  const pubkey = (isArray(id) ? id[0] : id) || '';
 
-  const { data, loading } = useGetBosNodeScoresQuery({
-    skip: !hasToken,
-    variables: { publicKey },
+  const { data, loading } = useGetNodeBosHistoryQuery({
+    skip: !user?.subscribed || !pubkey,
+    variables: { pubkey },
     fetchPolicy: 'cache-first',
     onError: error => toast.error(getErrorContent(error)),
   });
@@ -42,13 +42,11 @@ export const Graph = () => {
     return <LoadingCard noCard={true} />;
   }
 
-  const scores = data?.getBosNodeScores || [];
-  const final = scores
-    .map(s => ({
-      date: s?.updated || '',
-      value: (isPos ? s?.position : s?.score) || 0,
-    }))
-    .reverse();
+  const scores = data?.getNodeBosHistory.scores || [];
+  const final = scores.map(s => ({
+    date: s?.updated || '',
+    value: (isPos ? s?.position : s?.score) || 0,
+  }));
 
   if (!final.length) {
     return null;
