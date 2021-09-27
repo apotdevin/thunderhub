@@ -31,8 +31,8 @@ export const queryTypes = gql`
     getAmbossLoginToken: String!
     getAmbossUser: AmbossUserType
     getNodeBalances: BalancesType!
-    getBosNodeScores(publicKey: String!): [BosScore]!
-    getBosScores: BosScoreResponse!
+    getNodeBosHistory(pubkey: String!): NodeBosHistory!
+    getBosScores: [BosScore!]!
     getBaseInfo: BaseInfo!
     getBoltzSwapStatus(ids: [String]!): [BoltzSwap]!
     getBoltzInfo: BoltzInfoType!

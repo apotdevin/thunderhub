@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, SVGAttributes } from 'react';
 import styled, { css } from 'styled-components';
 import {
   Home,
@@ -13,7 +13,6 @@ import {
   Users,
   MessageCircle,
   BarChart2,
-  Icon,
   Heart,
   Shuffle,
   Aperture,
@@ -33,6 +32,14 @@ import { useConfigState } from '../../context/ConfigContext';
 import { Link } from '../../components/link/Link';
 import { SideSettings } from './sideSettings/SideSettings';
 import { NodeInfo } from './nodeInfo/NodeInfo';
+
+// Icon import from react-feather is not working
+// TODO: recheck if the type is available
+type IconProps = SVGAttributes<SVGElement> & {
+  color?: string;
+  size?: string | number;
+};
+type Icon = FC<IconProps>;
 
 const NavigationStyle = styled.div<{ isOpen: boolean }>`
   grid-area: nav;
@@ -186,7 +193,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Tools', TOOLS, Shield, sidebar)}
       {renderNavButton('Swap', SWAP, Shuffle, sidebar)}
       {renderNavButton('Stats', STATS, BarChart2, sidebar)}
-      {connected && renderNavButton('Scores', SCORES, Aperture, sidebar)}
+      {renderNavButton('Scores', SCORES, Aperture, sidebar)}
     </ButtonSection>
   );
 
@@ -204,7 +211,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Swap', SWAP, Shuffle)}
       {renderBurgerNav('Stats', STATS, BarChart2)}
-      {connected && renderBurgerNav('Scores', SCORES, Aperture)}
+      {renderBurgerNav('Scores', SCORES, Aperture)}
       {connected && renderBurgerNav('Donations', DONATIONS, Heart)}
       {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}

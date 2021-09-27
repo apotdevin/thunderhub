@@ -4,8 +4,8 @@ export const useAmbossUser = () => {
   const { data, loading } = useGetAmbossUserQuery();
 
   if (loading || !data?.getAmbossUser) {
-    return null;
+    return { user: null, loading };
   }
 
-  return data.getAmbossUser.subscription;
+  return { user: data.getAmbossUser.subscription, loading };
 };

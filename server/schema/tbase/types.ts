@@ -18,19 +18,6 @@ export const tbaseTypes = gql`
     request: String!
   }
 
-  type BosScore {
-    alias: String!
-    public_key: String!
-    score: Int!
-    updated: String!
-    position: Int!
-  }
-
-  type BosScoreResponse {
-    updated: String!
-    scores: [BosScore!]!
-  }
-
   type BaseInfo {
     lastBosUpdate: String!
     apiTokenSatPrice: Int!

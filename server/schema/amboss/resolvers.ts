@@ -7,54 +7,107 @@ import { toWithError } from 'server/helpers/async';
 import cookieLib from 'cookie';
 import { appConstants } from 'server/utils/appConstants';
 import { logger } from 'server/helpers/logger';
+import { gql } from 'graphql-tag';
+import { print } from 'graphql';
 
 const ONE_MONTH_SECONDS = 60 * 60 * 24 * 30;
 
-const getUserQuery = `
-    query GetUser {
-        getUser {
-            subscription {
-                end_date
-                subscribed
-                upgradable
-            }
+const getUserQuery = gql`
+  query GetUser {
+    getUser {
+      subscription {
+        end_date
+        subscribed
+        upgradable
+      }
+    }
+  }
+`;
+
+const getLoginTokenQuery = gql`
+  query GetLoginToken($seconds: Float) {
+    getLoginToken(seconds: $seconds)
+  }
+`;
+
+const getSignInfoQuery = gql`
+  query GetSignInfo {
+    getSignInfo {
+      expiry
+      identifier
+      message
+    }
+  }
+`;
+
+const loginMutation = gql`
+  mutation Login(
+    $identifier: String!
+    $signature: String!
+    $seconds: Float
+    $details: String
+    $token: Boolean
+  ) {
+    login(
+      identifier: $identifier
+      signature: $signature
+      seconds: $seconds
+      details: $details
+      token: $token
+    )
+  }
+`;
+
+const getNodeBosHistoryQuery = gql`
+  query GetNodeBosHistory($pubkey: String!) {
+    getNodeBosHistory(pubkey: $pubkey) {
+      info {
+        count
+        first {
+          position
+          score
+          updated
         }
-    }
-`;
-
-const getLoginTokenQuery = `
-    query GetLoginToken(
-      $seconds: Float
-    ) {
-        getLoginToken(seconds: $seconds)
-    }
-`;
-
-const getSignInfoQuery = `
-    query GetSignInfo {
-        getSignInfo {
-            expiry
-            identifier
-            message
+        last {
+          position
+          score
+          updated
         }
+      }
+      scores {
+        position
+        score
+        updated
+      }
     }
+  }
 `;
 
-const loginMutation = `
-    mutation Login(
-        $identifier: String!
-        $signature: String!
-        $seconds: Float
-        $details: String
-        $token: Boolean
-    ) {
-        login(
-        identifier: $identifier
-        signature: $signature
-        seconds: $seconds
-        details: $details
-        token: $token
-        )
+const getLastNodeScoreQuery = gql`
+  query GetNodeBosHistory($pubkey: String!) {
+    getNodeBosHistory(pubkey: $pubkey) {
+      info {
+        last {
+          alias
+          public_key
+          position
+          score
+          updated
+        }
+      }
+    }
+  }
+`;
+
+const getBosScoresQuery = gql`
+  query GetBosScores {
+    getBosScores {
+      position
+      score
+      updated
+      alias
+      public_key
+    }
   }
 `;
 
@@ -69,7 +122,7 @@ export const ambossResolvers = {
 
       const { data, error } = await graphqlFetchWithProxy(
         appUrls.amboss,
-        getUserQuery,
+        print(getUserQuery),
         undefined,
         {
           authorization: ambossAuth ? `Bearer ${ambossAuth}` : '',
@@ -91,7 +144,7 @@ export const ambossResolvers = {
 
       const { data, error } = await graphqlFetchWithProxy(
         appUrls.amboss,
-        getLoginTokenQuery,
+        print(getLoginTokenQuery),
         { seconds: ONE_MONTH_SECONDS },
         {
           authorization: ambossAuth ? `Bearer ${ambossAuth}` : '',
@@ -104,6 +157,48 @@ export const ambossResolvers = {
 
       return data.getLoginToken;
     },
+    getNodeBosHistory: async (
+      _: undefined,
+      { pubkey }: { pubkey: string },
+      { ip, ambossAuth }: ContextType
+    ) => {
+      await requestLimiter(ip, 'getNodeBosHistory');
+
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.amboss,
+        print(getNodeBosHistoryQuery),
+        { pubkey },
+        {
+          authorization: ambossAuth ? `Bearer ${ambossAuth}` : '',
+        }
+      );
+
+      if (!data?.getNodeBosHistory || error) {
+        if (error) {
+          logger.error(error);
+        }
+        throw new Error('Error getting BOS scores for this node');
+      }
+
+      return data.getNodeBosHistory;
+    },
+    getBosScores: async (_: undefined, __: undefined, { ip }: ContextType) => {
+      await requestLimiter(ip, 'getBosScores');
+
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.amboss,
+        print(getBosScoresQuery)
+      );
+
+      if (!data?.getBosScores || error) {
+        if (error) {
+          logger.error(error);
+        }
+        throw new Error('Error getting BOS scores');
+      }
+
+      return data.getBosScores;
+    },
   },
   Mutation: {
     loginAmboss: async (
@@ -115,10 +210,13 @@ export const ambossResolvers = {
 
       const { data, error } = await graphqlFetchWithProxy(
         appUrls.amboss,
-        getSignInfoQuery
+        print(getSignInfoQuery)
       );
 
       if (!data?.getSignInfo || error) {
+        if (error) {
+          logger.error(error);
+        }
         throw new Error('Error getting login information from Amboss');
       }
 
@@ -130,6 +228,9 @@ export const ambossResolvers = {
       );
 
       if (!message?.signature || signError) {
+        if (signError) {
+          logger.error(signError);
+        }
         throw new Error('Error signing message to login');
       }
 
@@ -145,9 +246,16 @@ export const ambossResolvers = {
       };
 
       const { data: loginData, error: loginError } =
-        await graphqlFetchWithProxy(appUrls.amboss, loginMutation, params);
+        await graphqlFetchWithProxy(
+          appUrls.amboss,
+          print(loginMutation),
+          params
+        );
 
       if (!loginData.login || loginError) {
+        if (loginError) {
+          logger.silly(`Error logging into Amboss: ${loginError}`);
+        }
         throw new Error('Error logging into Amboss');
       }
 
@@ -164,6 +272,39 @@ export const ambossResolvers = {
       );
 
       return true;
+    },
+  },
+  channelType: {
+    bosScore: async (
+      {
+        partner_public_key,
+      }: {
+        partner_public_key: string;
+      },
+      _: undefined,
+      { ambossAuth }: ContextType
+    ) => {
+      if (!ambossAuth) {
+        return null;
+      }
+
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.amboss,
+        print(getLastNodeScoreQuery),
+        {
+          pubkey: partner_public_key,
+        },
+        {
+          authorization: ambossAuth ? `Bearer ${ambossAuth}` : '',
+        }
+      );
+
+      if (error) {
+        logger.silly(`Error getting bos score for node: ${error}`);
+        return null;
+      }
+
+      return data?.getNodeBosHistory?.info?.last || null;
     },
   },
 };

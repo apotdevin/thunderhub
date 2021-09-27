@@ -7,20 +7,17 @@ const defaultOptions =  {}
 export type GetBosScoresQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetBosScoresQuery = { __typename?: 'Query', getBosScores: { __typename?: 'BosScoreResponse', updated: string, scores: Array<{ __typename?: 'BosScore', alias: string, public_key: string, score: number, updated: string, position: number }> } };
+export type GetBosScoresQuery = { __typename?: 'Query', getBosScores: Array<{ __typename?: 'BosScore', alias: string, public_key: string, score: number, updated: string, position: number }> };
 
 
 export const GetBosScoresDocument = gql`
     query GetBosScores {
   getBosScores {
+    alias
+    public_key
+    score
     updated
-    scores {
-      alias
-      public_key
-      score
-      updated
-      position
-    }
+    position
   }
 }
     `;

@@ -78,16 +78,17 @@ export type BoltzSwapTransaction = {
 export type BosScore = {
   __typename?: 'BosScore';
   alias: Scalars['String'];
-  position: Scalars['Int'];
+  position: Scalars['Float'];
   public_key: Scalars['String'];
-  score: Scalars['Int'];
+  score: Scalars['Float'];
   updated: Scalars['String'];
 };
 
-export type BosScoreResponse = {
-  __typename?: 'BosScoreResponse';
-  scores: Array<BosScore>;
-  updated: Scalars['String'];
+export type BosScoreInfo = {
+  __typename?: 'BosScoreInfo';
+  count: Scalars['Float'];
+  first?: Maybe<BosScore>;
+  last?: Maybe<BosScore>;
 };
 
 export type ChannelRequest = {
@@ -474,6 +475,12 @@ export type Node = {
   node: NodeType;
 };
 
+export type NodeBosHistory = {
+  __typename?: 'NodeBosHistory';
+  info: BosScoreInfo;
+  scores: Array<BosScore>;
+};
+
 export type OnChainBalanceType = {
   __typename?: 'OnChainBalanceType';
   closing: Scalars['String'];
@@ -545,8 +552,7 @@ export type Query = {
   getBitcoinPrice?: Maybe<Scalars['String']>;
   getBoltzInfo: BoltzInfoType;
   getBoltzSwapStatus: Array<Maybe<BoltzSwap>>;
-  getBosNodeScores: Array<Maybe<BosScore>>;
-  getBosScores: BosScoreResponse;
+  getBosScores: Array<BosScore>;
   getChainTransactions?: Maybe<Array<Maybe<GetTransactionsType>>>;
   getChannel: SingleChannelType;
   getChannelReport?: Maybe<ChannelReportType>;
@@ -564,6 +570,7 @@ export type Query = {
   getNetworkInfo?: Maybe<NetworkInfoType>;
   getNode: Node;
   getNodeBalances: BalancesType;
+  getNodeBosHistory: NodeBosHistory;
   getNodeInfo?: Maybe<NodeInfoType>;
   getPeers?: Maybe<Array<Maybe<PeerType>>>;
   getPendingChannels?: Maybe<Array<Maybe<PendingChannelType>>>;
@@ -611,11 +618,6 @@ export type QueryGetBoltzSwapStatusArgs = {
 };
 
 
-export type QueryGetBosNodeScoresArgs = {
-  publicKey: Scalars['String'];
-};
-
-
 export type QueryGetChannelArgs = {
   id: Scalars['String'];
   pubkey?: Maybe<Scalars['String']>;
@@ -659,6 +661,11 @@ export type QueryGetMessagesArgs = {
 export type QueryGetNodeArgs = {
   publicKey: Scalars['String'];
   withoutChannels?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type QueryGetNodeBosHistoryArgs = {
+  pubkey: Scalars['String'];
 };
 
 
