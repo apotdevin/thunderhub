@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.26](https://github.com/apotdevin/thunderhub/compare/v0.12.25...v0.12.26) (2021-09-28)
+
+
+### Features
+
+* amboss integration ([#341](https://github.com/apotdevin/thunderhub/issues/341)) ([094afad](https://github.com/apotdevin/thunderhub/commit/094afadad4cc2d13a1a103e7cd980c3dc81f0567))
+
+
+### Bug Fixes
+
+* query fetch policy ([da8507a](https://github.com/apotdevin/thunderhub/commit/da8507a85bcdd3f521bfbd2e35a6e57c4c78be03))
+
+
+### Refactoring
+
+* node balances ([4f8b20e](https://github.com/apotdevin/thunderhub/commit/4f8b20e1f0fd10b766bb172e5be2df434aead2bf))
+
+
+### Improvements
+
+* account balances changes ([#344](https://github.com/apotdevin/thunderhub/issues/344)) ([b74ad8a](https://github.com/apotdevin/thunderhub/commit/b74ad8ab6dd8b8bbefb21649c46bdf8e925f7cc9))
+* amboss login ([bd6aa99](https://github.com/apotdevin/thunderhub/commit/bd6aa992b81e10369082ed0a9420c7e69fe4a252))
+* bump deps ([#343](https://github.com/apotdevin/thunderhub/issues/343)) ([02e2a14](https://github.com/apotdevin/thunderhub/commit/02e2a14d0c7d97601951fbc3b28b74a510e3568b))
+* change pay fn ([b1f150e](https://github.com/apotdevin/thunderhub/commit/b1f150e6e49a8def862d16de35b031547b91da01))
+* change total balance card ([3c051fc](https://github.com/apotdevin/thunderhub/commit/3c051fc81184e56cd713317a4405507e34133d2e))
+* remove log ([4ffde12](https://github.com/apotdevin/thunderhub/commit/4ffde127ae6799b1bb16f19c860b0b05ac4669fb))
+* update dependencies ([82b1b22](https://github.com/apotdevin/thunderhub/commit/82b1b220e90f71ad18dbeb35f17e00ff1906a10f))
+
 ### [0.12.25](https://github.com/apotdevin/thunderhub/compare/v0.12.24...v0.12.25) (2021-09-08)
 
 

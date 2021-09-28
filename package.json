@@ -1,6 +1,6 @@
 {
   "name": "thunderhub",
-  "version": "0.12.25",
+  "version": "0.12.26",
   "description": "",
   "main": "index.js",
   "scripts": {
