@@ -12,7 +12,7 @@ import { useLoginAmbossMutation } from 'src/graphql/mutations/__generated__/logi
 import { toast } from 'react-toastify';
 import { ColorButton } from 'src/components/buttons/colorButton/ColorButton';
 import { useGetAmbossLoginTokenLazyQuery } from 'src/graphql/queries/__generated__/getAmbossLoginToken.generated';
-import ambossLogo from '../src/views/token/AmbossLogo.png';
+import { appendBasePath } from 'src/utils/basePath';
 
 const S = {
   center: styled.div`
@@ -121,7 +121,12 @@ const TokenView = () => {
   return (
     <Card>
       <S.center>
-        <Image src={ambossLogo} width={320} height={42} alt={'Amboss Logo'} />
+        <Image
+          src={appendBasePath('/assets/amboss_logo.png')}
+          width={320}
+          height={42}
+          alt={'Amboss Logo'}
+        />
       </S.center>
       <S.text>
         In collaboration with
