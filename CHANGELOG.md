@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.27](https://github.com/apotdevin/thunderhub/compare/v0.12.26...v0.12.27) (2021-09-28)
+
+
+### Improvements
+
+* boltz key ([bc09166](https://github.com/apotdevin/thunderhub/commit/bc091661cebd1c1f96e6be772a3e3e2e4c481b33))
+* custom mempool url ([dbf2da3](https://github.com/apotdevin/thunderhub/commit/dbf2da3d0dcc89b802d2eb5f2c33d3d27b507161))
+
 ### [0.12.26](https://github.com/apotdevin/thunderhub/compare/v0.12.25...v0.12.26) (2021-09-28)
 
 
