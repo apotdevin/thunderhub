@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.28](https://github.com/apotdevin/thunderhub/compare/v0.12.27...v0.12.28) (2021-09-28)
+
+
+### Bug Fixes
+
+* image url ([f6620a2](https://github.com/apotdevin/thunderhub/commit/f6620a2373faf1d3adce28c3631ff0c36cffcd29))
+
 ### [0.12.27](https://github.com/apotdevin/thunderhub/compare/v0.12.26...v0.12.27) (2021-09-28)
 
 
