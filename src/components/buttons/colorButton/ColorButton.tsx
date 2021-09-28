@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { ChevronRight } from 'react-feather';
 import ScaleLoader from 'react-spinners/ScaleLoader';
+import { ThemeSet } from 'styled-theming';
 import {
   textColor,
   colorButtonBackground,
@@ -72,11 +73,13 @@ interface BorderProps {
   borderColor?: string;
   selected?: boolean;
   withBorder?: boolean;
+  backgroundColor?: string | ThemeSet;
 }
 
 const BorderButton = styled(GeneralButton)<BorderProps>`
   ${({ selected }) => selected && 'font-weight: 800'};
-  background-color: ${colorButtonBackground};
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor || colorButtonBackground};
   color: ${textColor};
   border: 1px solid
     ${({ borderColor, selected, withBorder }) =>
@@ -127,6 +130,7 @@ export interface ColorButtonProps {
   fullWidth?: boolean;
   mobileFullWidth?: boolean;
   width?: string;
+  backgroundColor?: string | ThemeSet;
 }
 
 export const ColorButton: React.FC<ColorButtonProps> = ({
@@ -143,6 +147,7 @@ export const ColorButton: React.FC<ColorButtonProps> = ({
   mobileFullWidth,
   width,
   onClick,
+  backgroundColor,
 }) => {
   if (disabled && !loading) {
     return (
@@ -184,6 +189,7 @@ export const ColorButton: React.FC<ColorButtonProps> = ({
       fullWidth={fullWidth}
       mobileFullWidth={mobileFullWidth}
       buttonWidth={width}
+      backgroundColor={backgroundColor}
     >
       {children}
       {arrow && renderArrow()}

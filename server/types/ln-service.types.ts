@@ -157,6 +157,7 @@ export type PendingChannelType = {
   is_active: boolean;
   is_closing: boolean;
   is_opening: boolean;
+  is_timelocked: boolean;
   local_balance: number;
   local_reserve: number;
   partner_public_key: string;
@@ -167,6 +168,8 @@ export type PendingChannelType = {
   transaction_fee: number;
   transaction_id: string;
   transaction_vout: number;
+  timelock_blocks?: number;
+  timelock_expiration?: number;
 };
 
 export type GetPendingChannelsType = { pending_channels: PendingChannelType[] };

@@ -150,7 +150,7 @@ export const nodeResolvers = {
 
       const closing =
         pending_channels
-          .filter(p => p.is_closing)
+          .filter(p => p.is_timelocked)
           .reduce((p, c) => p + c.local_balance, 0) || 0;
 
       return closing || 0;

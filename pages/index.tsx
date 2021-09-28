@@ -5,6 +5,7 @@ import { NextPageContext } from 'next';
 import { getProps } from 'src/utils/ssr';
 import { MempoolReport } from 'src/views/home/reports/mempool';
 import { LiquidityGraph } from 'src/views/home/reports/liquidReport/LiquidityGraph';
+import { AccountButtons } from 'src/views/home/account/AccountButtons';
 import { NetworkInfo } from '../src/views/home/networkInfo/NetworkInfo';
 import { AccountInfo } from '../src/views/home/account/AccountInfo';
 import { QuickActions } from '../src/views/home/quickActions/QuickActions';
@@ -16,6 +17,7 @@ const HomeView = () => (
   <>
     <Version />
     <AccountInfo />
+    <AccountButtons />
     <ConnectCard />
     <QuickActions />
     <FlowBox />

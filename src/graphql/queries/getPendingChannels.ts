@@ -7,8 +7,11 @@ export const GET_PENDING_CHANNELS = gql`
       is_active
       is_closing
       is_opening
+      is_timelocked
       local_balance
       local_reserve
+      timelock_blocks
+      timelock_expiration
       partner_public_key
       received
       remote_balance
