@@ -47,6 +47,7 @@ export const BoltzApi = {
         type: 'reversesubmarine',
         pairId: 'BTC/BTC',
         orderSide: 'buy',
+        referralId: 'thunderhub',
         invoiceAmount,
         preimageHash,
         claimPublicKey,
