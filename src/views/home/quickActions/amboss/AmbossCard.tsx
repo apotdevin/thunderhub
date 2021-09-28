@@ -11,7 +11,7 @@ import {
 } from 'src/styles/Themes';
 import styled from 'styled-components';
 import Image from 'next/image';
-import ambossLogo from './AmbossLogo.png';
+import { appendBasePath } from 'src/utils/basePath';
 
 const QuickTitle = styled.div`
   font-size: 12px;
@@ -89,7 +89,12 @@ export const AmbossCard = () => {
         }}
         disabled={loading}
       >
-        <Image src={ambossLogo} width={32} height={32} alt={'Amboss Logo'} />
+        <Image
+          src={appendBasePath('/assets/amboss_icon.png')}
+          width={32}
+          height={32}
+          alt={'Amboss Logo'}
+        />
         <QuickTitle>{loading ? 'Loading...' : 'Login'}</QuickTitle>
       </QuickCard>
     );
@@ -103,7 +108,12 @@ export const AmbossCard = () => {
       }}
       disabled={tokenLoading}
     >
-      <Image src={ambossLogo} width={32} height={32} alt={'Amboss Logo'} />
+      <Image
+        src={appendBasePath('/assets/amboss_icon.png')}
+        width={32}
+        height={32}
+        alt={'Amboss Logo'}
+      />
       <QuickTitle>{tokenLoading ? 'Loading...' : 'Go To'}</QuickTitle>
     </QuickCard>
   );
