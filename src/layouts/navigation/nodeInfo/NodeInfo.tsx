@@ -6,6 +6,7 @@ import { getPrice, Price } from 'src/components/price/Price';
 import { addEllipsis, renderLine } from 'src/components/generic/helpers';
 import { useNodeInfo } from 'src/hooks/UseNodeInfo';
 import { useNodeBalances } from 'src/hooks/UseNodeBalances';
+import Big from 'big.js';
 import { unSelectedNavButton } from '../../../styles/Themes';
 import {
   Separation,
@@ -85,6 +86,14 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   const formatCCB = format({ amount: lightning.confirmed });
   const formatPCB = format({ amount: lightning.pending });
 
+  const totalChain = new Big(onchain.confirmed).add(onchain.pending).toString();
+  const totalLightning = new Big(lightning.confirmed)
+    .add(lightning.pending)
+    .toString();
+
+  const chainPending = Number(onchain.pending) + Number(onchain.closing);
+  const channelPending = Number(lightning.pending);
+
   if (!alias) return null;
 
   if (isBurger) {
@@ -105,33 +114,17 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         <SingleLine>
           <Zap
             size={18}
-            color={Number(lightning.pending) === 0 ? '#FFD300' : '#652EC7'}
-            fill={Number(lightning.pending) === 0 ? '#FFD300' : '#652EC7'}
+            color={channelPending === 0 ? '#FFD300' : '#652EC7'}
+            fill={channelPending === 0 ? '#FFD300' : '#652EC7'}
           />
-          {Number(lightning.pending) > 0 ? (
-            <>
-              {formatCCB}
-              {' / '}
-              {formatPCB}
-            </>
-          ) : (
-            <Price amount={lightning.confirmed} />
-          )}
+          <Price amount={totalLightning} />
         </SingleLine>
         <SingleLine>
           <Anchor
             size={18}
-            color={Number(onchain.pending) === 0 ? '#FFD300' : '#652EC7'}
+            color={chainPending === 0 ? '#FFD300' : '#652EC7'}
           />
-          {Number(onchain.pending) > 0 ? (
-            <>
-              {formatCB}
-              {' / '}
-              {formatPB}
-            </>
-          ) : (
-            <Price amount={onchain.confirmed} />
-          )}
+          <Price amount={totalChain} />
         </SingleLine>
       </>
     );
@@ -147,7 +140,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
               strokeWidth={'0'}
               fill={syncedToChain ? '#95de64' : '#ff7875'}
             />
-            {(Number(lightning.pending) > 0 || Number(onchain.pending) > 0) && (
+            {(channelPending > 0 || chainPending > 0) && (
               <div>
                 <Circle size={18} fill={'#652EC7'} strokeWidth={'0'} />
               </div>
@@ -155,13 +148,13 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
             <Margin>
               <Zap
                 size={18}
-                fill={Number(lightning.pending) === 0 ? '#FFD300' : '#652EC7'}
-                color={Number(lightning.pending) === 0 ? '#FFD300' : '#652EC7'}
+                fill={channelPending === 0 ? '#FFD300' : '#652EC7'}
+                color={channelPending === 0 ? '#FFD300' : '#652EC7'}
               />
             </Margin>
             <Anchor
               size={18}
-              color={Number(onchain.pending) === 0 ? '#FFD300' : '#652EC7'}
+              color={chainPending === 0 ? '#FFD300' : '#652EC7'}
             />
           </div>
           <div data-tip data-for="full_node_tip">
@@ -197,20 +190,12 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
       </Title>
       <Separation lineColor={unSelectedNavButton} />
       <Balance data-tip data-for="balance_tip">
-        <Zap
-          size={18}
-          color={Number(lightning.pending) === 0 ? '#FFD300' : '#652EC7'}
-        />
-        <Price amount={lightning.confirmed} />
-        {/* <AnimatedNumber amount={channelBalance} /> */}
+        <Zap size={18} color={channelPending === 0 ? '#FFD300' : '#652EC7'} />
+        <Price amount={totalLightning} />
       </Balance>
       <Balance data-tip data-for="chain_balance_tip">
-        <Anchor
-          size={18}
-          color={Number(onchain.pending) === 0 ? '#FFD300' : '#652EC7'}
-        />
-        <Price amount={onchain.confirmed} />
-        {/* <AnimatedNumber amount={chainBalance} /> */}
+        <Anchor size={18} color={chainPending === 0 ? '#FFD300' : '#652EC7'} />
+        <Price amount={totalChain} />
       </Balance>
       <Balance
         data-tip

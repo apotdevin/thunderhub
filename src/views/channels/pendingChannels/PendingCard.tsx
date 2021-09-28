@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import { PendingChannelType } from 'src/graphql/types';
-import { getPercent } from '../../../utils/helpers';
+import { blockToTime, getPercent } from '../../../utils/helpers';
 import {
   Progress,
   ProgressBar,
@@ -63,6 +63,9 @@ export const PendingCard = ({
     transaction_id,
     transaction_vout,
     partner_node_info,
+    is_timelocked,
+    timelock_blocks,
+    timelock_expiration,
   } = channelInfo;
 
   const {
@@ -101,10 +104,31 @@ export const PendingCard = ({
       <DarkSubTitle>Partner node not found</DarkSubTitle>
     );
 
+  const renderTimelock = () => {
+    if (!is_timelocked) return null;
+    return (
+      <>
+        {renderLine(
+          'Total locked time',
+          `${blockToTime(
+            timelock_expiration || 0
+          )} (${timelock_expiration} blocks)`
+        )}
+        {renderLine(
+          'Pending locked time',
+          `${blockToTime(timelock_blocks || 0)} (${timelock_blocks} blocks)`
+        )}
+        <Separation />
+      </>
+    );
+  };
+
   const renderDetails = () => {
     return (
       <>
         <Separation />
+        {renderLine('Force Closed', is_timelocked ? 'Yes' : 'No')}
+        {renderTimelock()}
         {renderLine('State:', is_active ? 'Active' : 'Inactive')}
         {renderLine('Status:', is_opening ? 'Opening' : 'Closing')}
         {renderLine('Local Balance:', local_balance)}

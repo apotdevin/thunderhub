@@ -178,7 +178,7 @@ export const chatSentBubbleColor = theme('mode', {
 // BUTTON COLORS
 // ---------------------------------------
 export const colorButtonBackground = theme('mode', {
-  light: themeColors.grey,
+  light: themeColors.grey2,
   dark: themeColors.blue7,
   night: '#0a0a0a',
 });

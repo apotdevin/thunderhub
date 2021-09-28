@@ -1124,6 +1124,7 @@ export type PendingChannelType = {
   is_active: Scalars['Boolean'];
   is_closing: Scalars['Boolean'];
   is_opening: Scalars['Boolean'];
+  is_timelocked: Scalars['Boolean'];
   local_balance: Scalars['Int'];
   local_reserve: Scalars['Int'];
   partner_node_info: Node;
@@ -1132,6 +1133,8 @@ export type PendingChannelType = {
   remote_balance: Scalars['Int'];
   remote_reserve: Scalars['Int'];
   sent: Scalars['Int'];
+  timelock_blocks?: Maybe<Scalars['Int']>;
+  timelock_expiration?: Maybe<Scalars['Int']>;
   transaction_fee?: Maybe<Scalars['Int']>;
   transaction_id: Scalars['String'];
   transaction_vout: Scalars['Int'];
