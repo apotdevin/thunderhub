@@ -1,3 +1,8 @@
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig() || {};
+const { mempoolUrl } = publicRuntimeConfig || {};
+
 const tbase =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3010/dev/v1'
@@ -12,9 +17,9 @@ export const appUrls = {
   tbase,
   amboss,
   oneml: 'https://amboss.space/node/',
-  blockchain: 'https://mempool.space/tx/',
-  blockchainAddress: 'https://mempool.space/address/',
-  fees: 'https://mempool.space/api/v1/fees/recommended',
+  blockchain: `${mempoolUrl}/tx/`,
+  blockchainAddress: `${mempoolUrl}/address/`,
+  fees: `${mempoolUrl}/api/v1/fees/recommended`,
   ticker: 'https://blockchain.info/ticker',
   github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
   update: 'https://github.com/apotdevin/thunderhub#updating',

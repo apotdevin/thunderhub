@@ -58,7 +58,7 @@ describe('Bitcoin Resolvers', () => {
       expect(res.errors).toBe(undefined);
 
       expect(fetchMock).toBeCalledWith(
-        'https://mempool.space/api/v1/fees/recommended',
+        'undefined/api/v1/fees/recommended',
         undefined
       );
       expect(res).toMatchSnapshot();

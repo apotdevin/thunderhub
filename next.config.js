@@ -24,6 +24,10 @@ const accountConfig = {
   accountConfigPath: process.env.ACCOUNT_CONFIG_PATH || '',
 };
 
+const urls = {
+  mempoolUrl: process.env.MEMPOOL_URL || 'https://mempool.space',
+};
+
 module.exports = {
   poweredByHeader: false,
   basePath: process.env.BASE_PATH || '',
@@ -37,6 +41,7 @@ module.exports = {
     ...ymlEnv,
   },
   publicRuntimeConfig: {
+    ...urls,
     nodeEnv: process.env.NODE_ENV || 'development',
     apiUrl: `${process.env.BASE_PATH || ''}/api/v1`,
     apiBaseUrl: `${process.env.API_BASE_URL || ''}/api/v1`,
