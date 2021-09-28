@@ -1,12 +1,5 @@
-import React from 'react';
-import {
-  Sun,
-  Moon,
-  ChevronLeft,
-  ChevronRight,
-  Icon,
-  Star,
-} from 'react-feather';
+import React, { FC, SVGAttributes } from 'react';
+import { Sun, Moon, ChevronLeft, ChevronRight, Star } from 'react-feather';
 import styled from 'styled-components';
 import { SatoshiSymbol } from 'src/components/satoshi/Satoshi';
 import { Separation, SingleLine } from '../../../components/generic/Styled';
@@ -21,6 +14,14 @@ import {
   unSelectedNavButton,
 } from '../../../styles/Themes';
 import { usePriceState } from '../../../context/PriceContext';
+
+// Icon import from react-feather is not working
+// TODO: recheck if the type is available
+type IconProps = SVGAttributes<SVGElement> & {
+  color?: string;
+  size?: string | number;
+};
+type Icon = FC<IconProps>;
 
 const SelectedIcon = styled.div<{ selected: boolean }>`
   display: flex;
@@ -59,7 +60,7 @@ const BurgerPadding = styled(SingleLine)`
   margin: 16px 0;
 `;
 
-const currencyArray = ['sat', 'btc', 'EUR', 'USD'];
+const currencyArray = ['sat', 'btc', 'fiat'];
 const currencyNoFiatArray = ['sat', 'btc'];
 
 const themeArray = ['light', 'dark', 'night'];
@@ -67,8 +68,7 @@ const themeArray = ['light', 'dark', 'night'];
 const currencyMap: { [key: string]: string } = {
   sat: 'S',
   btc: '₿',
-  EUR: '€',
-  USD: '$',
+  fiat: 'F',
 };
 const currencyNoFiatMap: { [key: string]: string } = {
   sat: 'S',

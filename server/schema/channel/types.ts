@@ -128,6 +128,7 @@ export const channelTypes = gql`
     is_active: Boolean!
     is_closing: Boolean!
     is_opening: Boolean!
+    is_timelocked: Boolean!
     local_balance: Int!
     local_reserve: Int!
     partner_public_key: String!
@@ -139,5 +140,7 @@ export const channelTypes = gql`
     transaction_id: String!
     transaction_vout: Int!
     partner_node_info: Node!
+    timelock_blocks: Int
+    timelock_expiration: Int
   }
 `;
