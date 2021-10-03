@@ -188,6 +188,12 @@ export type InvoiceType = {
   type: Scalars['String'];
 };
 
+export type LightningAddress = {
+  __typename?: 'LightningAddress';
+  lightning_address: Scalars['String'];
+  pubkey: Scalars['String'];
+};
+
 export type LightningBalanceType = {
   __typename?: 'LightningBalanceType';
   active: Scalars['String'];
@@ -563,6 +569,8 @@ export type Query = {
   getForwards: Array<Maybe<Forward>>;
   getInvoiceStatusChange?: Maybe<Scalars['String']>;
   getLatestVersion?: Maybe<Scalars['String']>;
+  getLightningAddressInfo: PayRequest;
+  getLightningAddresses: Array<LightningAddress>;
   getLnMarketsStatus: Scalars['String'];
   getLnMarketsUrl: Scalars['String'];
   getLnMarketsUserInfo?: Maybe<LnMarketsUserInfo>;
@@ -648,6 +656,11 @@ export type QueryGetForwardsArgs = {
 
 export type QueryGetInvoiceStatusChangeArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryGetLightningAddressInfoArgs = {
+  address: Scalars['String'];
 };
 
 
