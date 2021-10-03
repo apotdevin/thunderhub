@@ -66,6 +66,41 @@ type RequestType = PayRequestType | WithdrawRequestType;
 type RequestWithType = { isTypeOf: string } & RequestType;
 
 export const lnUrlResolvers = {
+  Query: {
+    getLightningAddressInfo: async (
+      _: undefined,
+      { address }: { address: string },
+      { ip }: ContextType
+    ) => {
+      await requestLimiter(ip, 'getLightningAddressInfo');
+
+      const split = address.split('@');
+
+      if (split.length !== 2) {
+        throw new Error('Invalid lightning address');
+      }
+
+      try {
+        const response = await fetchWithProxy(
+          `https://${split[1]}/.well-known/lnurlp/${split[0]}`
+        );
+        const result = await response.json();
+
+        let valid = true;
+        if (!result.callback) valid = false;
+        if (!result.maxSendable) valid = false;
+        if (!result.minSendable) valid = false;
+
+        if (!valid) {
+          throw new Error('Invalid lightning address');
+        }
+
+        return result;
+      } catch (error) {
+        throw new Error('Invalid lightning address');
+      }
+    },
+  },
   Mutation: {
     lnUrlAuth: async (
       _: undefined,
