@@ -111,6 +111,15 @@ const getBosScoresQuery = gql`
   }
 `;
 
+const getLightningAddresses = gql`
+  query GetLightningAddresses {
+    getLightningAddresses {
+      pubkey
+      lightning_address
+    }
+  }
+`;
+
 export const ambossResolvers = {
   Query: {
     getAmbossUser: async (
@@ -198,6 +207,27 @@ export const ambossResolvers = {
       }
 
       return data.getBosScores;
+    },
+    getLightningAddresses: async (
+      _: undefined,
+      __: undefined,
+      { ip }: ContextType
+    ) => {
+      await requestLimiter(ip, 'getLightningAddresses');
+
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.amboss,
+        print(getLightningAddresses)
+      );
+
+      if (!data?.getLightningAddresses || error) {
+        if (error) {
+          logger.error(error);
+        }
+        throw new Error('Error getting Lightning Addresses from Amboss');
+      }
+
+      return data.getLightningAddresses;
     },
   },
   Mutation: {

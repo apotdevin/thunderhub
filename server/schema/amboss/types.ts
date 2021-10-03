@@ -29,4 +29,9 @@ export const ambossTypes = gql`
     info: BosScoreInfo!
     scores: [BosScore!]!
   }
+
+  type LightningAddress {
+    pubkey: String!
+    lightning_address: String!
+  }
 `;
