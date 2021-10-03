@@ -4,6 +4,7 @@ import { unSelectedNavButton } from 'src/styles/Themes';
 import styled from 'styled-components';
 
 const DarkUnit = styled.span`
+  font-size: 12px;
   color: ${unSelectedNavButton};
 `;
 
@@ -57,7 +58,14 @@ export const getValue = ({
     const amountInBtc = value / 100000000;
     const rounded = Math.round(amountInBtc * 10000) / 10000;
 
-    return noUnit ? `${rounded}` : `₿${rounded}`;
+    return noUnit ? (
+      `${rounded}`
+    ) : (
+      <>
+        <DarkUnit>₿</DarkUnit>
+        {rounded}
+      </>
+    );
   }
   if (correctCurrency === 'sat') {
     const breakAmount = breakNumber
@@ -86,9 +94,14 @@ export const getValue = ({
   }
 
   const amountInFiat = (value / 100000000) * price;
-  return noUnit
-    ? `${numeral(amountInFiat).format('0,0.00')}`
-    : `${symbol}${numeral(amountInFiat).format('0,0.00')}`;
+  return noUnit ? (
+    numeral(amountInFiat).format('0,0.00')
+  ) : (
+    <>
+      {numeral(amountInFiat).format('0,0.00')}
+      <DarkUnit>{symbol}</DarkUnit>
+    </>
+  );
 };
 
 export const formatSats = (value: number) => numeral(value).format('0,0.[000]');
