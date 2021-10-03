@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.29](https://github.com/apotdevin/thunderhub/compare/v0.12.28...v0.12.29) (2021-10-03)
+
+
+### Improvements
+
+* lightning address ([#345](https://github.com/apotdevin/thunderhub/issues/345)) ([1afae70](https://github.com/apotdevin/thunderhub/commit/1afae70edb6b6eeec77a88863c4ee70ba0534a0c))
+
+
+### Styling
+
+* units ([ba42ee0](https://github.com/apotdevin/thunderhub/commit/ba42ee0c4ae442cd95c245c58f4e6310387b62b9))
+
 ### [0.12.28](https://github.com/apotdevin/thunderhub/compare/v0.12.27...v0.12.28) (2021-09-28)
 
 
