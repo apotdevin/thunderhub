@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.30](https://github.com/apotdevin/thunderhub/compare/v0.12.29...v0.12.30) (2021-10-04)
+
+
+### Improvements
+
+* social info ([#346](https://github.com/apotdevin/thunderhub/issues/346)) ([23e6323](https://github.com/apotdevin/thunderhub/commit/23e632314a20c47f75fbfef7d1457d976556ebf4))
+
 ### [0.12.29](https://github.com/apotdevin/thunderhub/compare/v0.12.28...v0.12.29) (2021-10-03)
 
 
