@@ -26,6 +26,7 @@ import { FormatFnType } from 'src/components/price/Price';
 import { ChannelBosScore } from './ChannelBosScore';
 import { WUMBO_MIN_SIZE } from './Channels';
 import { WumboTag } from './Channel.style';
+import { NodePeerSocials } from './NodePeerSocials';
 
 type ChannelDetailsProps = {
   info: ChannelType;
@@ -206,6 +207,9 @@ export const ChannelDetails: FC<ChannelDetailsProps> = ({
       {renderLine('Time Online:', formatSeconds(time_online))}
       {renderLine('Transaction Vout:', transaction_vout)}
       {renderLine('Unsettled Balance:', unsettled_balance)}
+      <Separation />
+      <Sub4Title>Partner Social Info</Sub4Title>
+      <NodePeerSocials pubkey={partner_public_key} />
       <Separation />
       <Sub4Title>Partner Node Info</Sub4Title>
       {renderPartner()}

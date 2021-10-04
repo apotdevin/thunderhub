@@ -34,4 +34,21 @@ export const ambossTypes = gql`
     pubkey: String!
     lightning_address: String!
   }
+
+  type NodeSocialInfo {
+    private: Boolean
+    telegram: String
+    twitter: String
+    twitter_verified: Boolean
+    website: String
+    email: String
+  }
+
+  type NodeSocial {
+    info: NodeSocialInfo
+  }
+
+  type LightningNodeSocialInfo {
+    socials: NodeSocial
+  }
 `;
