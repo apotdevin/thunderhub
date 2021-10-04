@@ -120,6 +120,23 @@ const getLightningAddresses = gql`
   }
 `;
 
+const getNodeSocialInfo = gql`
+  query GetNodeSocialInfo($pubkey: String!) {
+    getNode(pubkey: $pubkey) {
+      socials {
+        info {
+          private
+          telegram
+          twitter
+          twitter_verified
+          website
+          email
+        }
+      }
+    }
+  }
+`;
+
 export const ambossResolvers = {
   Query: {
     getAmbossUser: async (
@@ -228,6 +245,31 @@ export const ambossResolvers = {
       }
 
       return data.getLightningAddresses;
+    },
+    getNodeSocialInfo: async (
+      _: undefined,
+      { pubkey }: { pubkey: string },
+      { ip, ambossAuth }: ContextType
+    ) => {
+      await requestLimiter(ip, 'getNodeSocialInfo');
+
+      const { data, error } = await graphqlFetchWithProxy(
+        appUrls.amboss,
+        print(getNodeSocialInfo),
+        { pubkey },
+        {
+          authorization: ambossAuth ? `Bearer ${ambossAuth}` : '',
+        }
+      );
+
+      if (!data?.getNode || error) {
+        if (error) {
+          logger.error(error);
+        }
+        throw new Error('Error getting node information from Amboss');
+      }
+
+      return data.getNode;
     },
   },
   Mutation: {
