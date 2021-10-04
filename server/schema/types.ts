@@ -28,6 +28,7 @@ export const generalTypes = gql`
 
 export const queryTypes = gql`
   type Query {
+    getNodeSocialInfo(pubkey: String!): LightningNodeSocialInfo!
     getLightningAddressInfo(address: String!): PayRequest!
     getLightningAddresses: [LightningAddress!]!
     getAmbossLoginToken: String!

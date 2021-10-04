@@ -202,6 +202,11 @@ export type LightningBalanceType = {
   pending: Scalars['String'];
 };
 
+export type LightningNodeSocialInfo = {
+  __typename?: 'LightningNodeSocialInfo';
+  socials?: Maybe<NodeSocial>;
+};
+
 export type LnMarketsUserInfo = {
   __typename?: 'LnMarketsUserInfo';
   account_type?: Maybe<Scalars['String']>;
@@ -487,6 +492,21 @@ export type NodeBosHistory = {
   scores: Array<BosScore>;
 };
 
+export type NodeSocial = {
+  __typename?: 'NodeSocial';
+  info?: Maybe<NodeSocialInfo>;
+};
+
+export type NodeSocialInfo = {
+  __typename?: 'NodeSocialInfo';
+  email?: Maybe<Scalars['String']>;
+  private?: Maybe<Scalars['Boolean']>;
+  telegram?: Maybe<Scalars['String']>;
+  twitter?: Maybe<Scalars['String']>;
+  twitter_verified?: Maybe<Scalars['Boolean']>;
+  website?: Maybe<Scalars['String']>;
+};
+
 export type OnChainBalanceType = {
   __typename?: 'OnChainBalanceType';
   closing: Scalars['String'];
@@ -580,6 +600,7 @@ export type Query = {
   getNodeBalances: BalancesType;
   getNodeBosHistory: NodeBosHistory;
   getNodeInfo?: Maybe<NodeInfoType>;
+  getNodeSocialInfo: LightningNodeSocialInfo;
   getPeers?: Maybe<Array<Maybe<PeerType>>>;
   getPendingChannels?: Maybe<Array<Maybe<PendingChannelType>>>;
   getResume: GetResumeType;
@@ -678,6 +699,11 @@ export type QueryGetNodeArgs = {
 
 
 export type QueryGetNodeBosHistoryArgs = {
+  pubkey: Scalars['String'];
+};
+
+
+export type QueryGetNodeSocialInfoArgs = {
   pubkey: Scalars['String'];
 };
 
