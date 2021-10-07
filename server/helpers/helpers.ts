@@ -1,4 +1,5 @@
 import getConfig from 'next/config';
+import { logger } from './logger';
 
 const { serverRuntimeConfig } = getConfig() || {};
 const { nodeEnv } = serverRuntimeConfig || {};
@@ -16,11 +17,23 @@ export const getIp = (req: any) => {
 };
 
 export const getErrorMsg = (error: any[] | string): string => {
-  console.log(error);
   if (!error) return 'Unknown Error';
   if (typeof error === 'string') return error;
-  if (error[2]?.err?.details) return error[2]?.err?.details;
-  if (error[1]) return error[1];
 
+  if (error[2]) {
+    const errorTitle = error[1] || '';
+    const errorObject = error[2]?.err;
+
+    let errorString = '';
+    if (typeof errorObject === 'string') {
+      errorString = `${errorTitle}. ${errorObject}`;
+    } else {
+      errorString = `${errorTitle}. ${errorObject?.details || ''}`;
+    }
+
+    return errorString;
+  }
+
+  logger.error(error);
   return 'Unkown Error';
 };
