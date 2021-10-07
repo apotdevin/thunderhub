@@ -43,7 +43,7 @@ const RenderIntro = () => {
         {'To start you must create an account on your server. '}
         <Link
           newTab={true}
-          href={'https://github.com/apotdevin/thunderhub#server-accounts'}
+          href={'https://docs.thunderhub.io/setup/#server-accounts'}
         >
           You can find instructions for this here.
         </Link>
