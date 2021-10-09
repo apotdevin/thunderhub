@@ -9,6 +9,8 @@ import {
   GetNodeType,
   GetPaymentsType,
   LndObject,
+  PaymentType,
+  InvoiceType,
 } from 'server/types/ln-service.types';
 
 export const getNodeFromChannel = async (
@@ -133,7 +135,7 @@ export const getPaymentsBetweenDates = async ({
     return paymentList.payments.filter(filterArray);
   }
 
-  let completePayments = paymentList.payments;
+  let completePayments = [] as PaymentType[];
   let nextToken = paymentList.next;
 
   let finished = false;
@@ -214,7 +216,7 @@ export const getInvoicesBetweenDates = async ({
     return invoiceList.invoices.filter(filterArray);
   }
 
-  let completeInvoices = invoiceList.invoices;
+  let completeInvoices = [] as InvoiceType[];
   let nextToken = invoiceList.next;
 
   let finished = false;
