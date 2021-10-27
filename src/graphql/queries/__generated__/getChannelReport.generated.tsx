@@ -7,7 +7,7 @@ const defaultOptions =  {}
 export type GetLiquidReportQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetLiquidReportQuery = { __typename?: 'Query', getChannelReport?: Types.Maybe<{ __typename?: 'channelReportType', local?: Types.Maybe<number>, remote?: Types.Maybe<number>, maxIn?: Types.Maybe<number>, maxOut?: Types.Maybe<number>, commit?: Types.Maybe<number>, totalPendingHtlc?: Types.Maybe<number>, outgoingPendingHtlc?: Types.Maybe<number>, incomingPendingHtlc?: Types.Maybe<number> }> };
+export type GetLiquidReportQuery = { __typename?: 'Query', getChannelReport?: { __typename?: 'channelReportType', local?: number | null | undefined, remote?: number | null | undefined, maxIn?: number | null | undefined, maxOut?: number | null | undefined, commit?: number | null | undefined, totalPendingHtlc?: number | null | undefined, outgoingPendingHtlc?: number | null | undefined, incomingPendingHtlc?: number | null | undefined } | null | undefined };
 
 
 export const GetLiquidReportDocument = gql`

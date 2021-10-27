@@ -7,7 +7,7 @@ const defaultOptions =  {}
 export type GetNodeInfoQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetNodeInfoQuery = { __typename?: 'Query', getNodeInfo?: Types.Maybe<{ __typename?: 'nodeInfoType', alias: string, public_key: string, uris: Array<string>, chains: Array<string>, color: string, is_synced_to_chain: boolean, peers_count: number, version: string, active_channels_count: number, closed_channels_count: number, pending_channels_count: number }> };
+export type GetNodeInfoQuery = { __typename?: 'Query', getNodeInfo?: { __typename?: 'nodeInfoType', alias: string, public_key: string, uris: Array<string>, chains: Array<string>, color: string, is_synced_to_chain: boolean, peers_count: number, version: string, active_channels_count: number, closed_channels_count: number, pending_channels_count: number } | null | undefined };
 
 
 export const GetNodeInfoDocument = gql`

@@ -104,7 +104,7 @@ export const Select = ({
   maxWidth,
   callback,
 }: SelectProps) => {
-  const handleChange = (value: ValueProp | ValueProp[]) => {
+  const handleChange: any = (value: ValueProp | ValueProp[]) => {
     if (Array.isArray(value)) {
       callback(value);
     } else {
@@ -140,7 +140,7 @@ export const SelectWithValue = ({
   value,
   isClearable = true,
 }: SelectWithValueProps) => {
-  const handleChange = (value: ValueProp | ValueProp[]) => {
+  const handleChange: any = (value: ValueProp | ValueProp[]) => {
     if (Array.isArray(value)) {
       callback(value);
     } else {
@@ -169,7 +169,7 @@ export const SmallSelectWithValue = ({
   value,
   isClearable = true,
 }: SelectWithValueProps) => {
-  const handleChange = (value: ValueProp | ValueProp[]) => {
+  const handleChange: any = (value: ValueProp | ValueProp[]) => {
     if (Array.isArray(value)) {
       callback(value);
     } else {

@@ -7,7 +7,7 @@ const defaultOptions =  {}
 export type LoginAmbossMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type LoginAmbossMutation = { __typename?: 'Mutation', loginAmboss?: Types.Maybe<boolean> };
+export type LoginAmbossMutation = { __typename?: 'Mutation', loginAmboss?: boolean | null | undefined };
 
 
 export const LoginAmbossDocument = gql`

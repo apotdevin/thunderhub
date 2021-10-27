@@ -9,7 +9,7 @@ export type CreateAddressMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateAddressMutation = { __typename?: 'Mutation', createAddress?: Types.Maybe<string> };
+export type CreateAddressMutation = { __typename?: 'Mutation', createAddress?: string | null | undefined };
 
 
 export const CreateAddressDocument = gql`

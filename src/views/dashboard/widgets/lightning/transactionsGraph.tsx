@@ -4,7 +4,7 @@ import { BarChart } from 'src/components/chart/BarChart';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { SmallSelectWithValue } from 'src/components/select';
 import { useGetResumeQuery } from 'src/graphql/queries/__generated__/getResume.generated';
-import { InvoiceType, PaymentType } from 'src/graphql/types';
+import { PaymentType } from 'src/graphql/types';
 import { chartColors } from 'src/styles/Themes';
 import styled from 'styled-components';
 import { getByTime } from '../helpers';
@@ -61,10 +61,9 @@ export const TransactionsGraph = () => {
     errorPolicy: 'ignore',
   });
 
-  const resume = data?.getResume.resume || [];
-
   const { invoicesByDate, paymentsByDate } = useMemo(() => {
-    const invoices: InvoiceType[] = [];
+    const resume = data?.getResume.resume || [];
+    const invoices: any[] = [];
     const payments: PaymentType[] = [];
 
     resume.forEach(t => {
@@ -83,7 +82,7 @@ export const TransactionsGraph = () => {
     const paymentsByDate = getByTime(payments, days.value);
 
     return { invoicesByDate, paymentsByDate };
-  }, [resume]);
+  }, [data?.getResume.resume, days.value]);
 
   const Header = () => (
     <S.row>
@@ -116,7 +115,7 @@ export const TransactionsGraph = () => {
     );
   }
 
-  if (!resume.length) {
+  if (!data?.getResume.resume.length) {
     return (
       <S.wrapper>
         <Header />

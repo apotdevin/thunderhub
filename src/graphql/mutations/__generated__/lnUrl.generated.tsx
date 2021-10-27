@@ -9,7 +9,7 @@ export type FetchLnUrlMutationVariables = Types.Exact<{
 }>;
 
 
-export type FetchLnUrlMutation = { __typename?: 'Mutation', fetchLnUrl?: Types.Maybe<{ __typename?: 'ChannelRequest', tag?: Types.Maybe<string>, k1?: Types.Maybe<string>, callback?: Types.Maybe<string>, uri?: Types.Maybe<string> } | { __typename?: 'PayRequest', callback?: Types.Maybe<string>, maxSendable?: Types.Maybe<string>, minSendable?: Types.Maybe<string>, metadata?: Types.Maybe<string>, commentAllowed?: Types.Maybe<number>, tag?: Types.Maybe<string> } | { __typename?: 'WithdrawRequest', callback?: Types.Maybe<string>, k1?: Types.Maybe<string>, maxWithdrawable?: Types.Maybe<string>, defaultDescription?: Types.Maybe<string>, minWithdrawable?: Types.Maybe<string>, tag?: Types.Maybe<string> }> };
+export type FetchLnUrlMutation = { __typename?: 'Mutation', fetchLnUrl?: { __typename?: 'ChannelRequest', tag?: string | null | undefined, k1?: string | null | undefined, callback?: string | null | undefined, uri?: string | null | undefined } | { __typename?: 'PayRequest', callback?: string | null | undefined, maxSendable?: string | null | undefined, minSendable?: string | null | undefined, metadata?: string | null | undefined, commentAllowed?: number | null | undefined, tag?: string | null | undefined } | { __typename?: 'WithdrawRequest', callback?: string | null | undefined, k1?: string | null | undefined, maxWithdrawable?: string | null | undefined, defaultDescription?: string | null | undefined, minWithdrawable?: string | null | undefined, tag?: string | null | undefined } | null | undefined };
 
 export type AuthLnUrlMutationVariables = Types.Exact<{
   url: Types.Scalars['String'];
@@ -25,7 +25,7 @@ export type PayLnUrlMutationVariables = Types.Exact<{
 }>;
 
 
-export type PayLnUrlMutation = { __typename?: 'Mutation', lnUrlPay: { __typename?: 'PaySuccess', tag?: Types.Maybe<string>, description?: Types.Maybe<string>, url?: Types.Maybe<string>, message?: Types.Maybe<string>, ciphertext?: Types.Maybe<string>, iv?: Types.Maybe<string> } };
+export type PayLnUrlMutation = { __typename?: 'Mutation', lnUrlPay: { __typename?: 'PaySuccess', tag?: string | null | undefined, description?: string | null | undefined, url?: string | null | undefined, message?: string | null | undefined, ciphertext?: string | null | undefined, iv?: string | null | undefined } };
 
 export type WithdrawLnUrlMutationVariables = Types.Exact<{
   callback: Types.Scalars['String'];

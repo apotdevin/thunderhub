@@ -10,7 +10,7 @@ export type GetChannelQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetChannelQuery = { __typename?: 'Query', getChannel: { __typename?: 'singleChannelType', partner_node_policies?: Types.Maybe<{ __typename?: 'nodePolicyType', node?: Types.Maybe<{ __typename?: 'Node', node: { __typename?: 'nodeType', alias: string } }> }> } };
+export type GetChannelQuery = { __typename?: 'Query', getChannel: { __typename?: 'singleChannelType', partner_node_policies?: { __typename?: 'nodePolicyType', node?: { __typename?: 'Node', node: { __typename?: 'nodeType', alias: string } } | null | undefined } | null | undefined } };
 
 
 export const GetChannelDocument = gql`

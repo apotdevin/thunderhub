@@ -10,7 +10,7 @@ export type GetNodeQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetNodeQuery = { __typename?: 'Query', getNode: { __typename?: 'Node', node: { __typename?: 'nodeType', alias: string, capacity?: Types.Maybe<string>, channel_count?: Types.Maybe<number>, color?: Types.Maybe<string>, updated_at?: Types.Maybe<string> } } };
+export type GetNodeQuery = { __typename?: 'Query', getNode: { __typename?: 'Node', node: { __typename?: 'nodeType', alias: string, capacity?: string | null | undefined, channel_count?: number | null | undefined, color?: string | null | undefined, updated_at?: string | null | undefined } } };
 
 
 export const GetNodeDocument = gql`
