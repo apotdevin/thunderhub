@@ -11,6 +11,10 @@ import {
   LndObject,
 } from 'server/types/ln-service.types';
 
+// Limit the amount of transactions that are fetched
+const FETCH_LIMIT = 50000;
+const BATCH_SIZE = 250;
+
 export const getNodeFromChannel = async (
   lnd: {},
   channelId: string,
@@ -94,17 +98,15 @@ export const getPaymentsBetweenDates = async ({
   lnd,
   from,
   until,
-  batch = 25,
 }: {
   lnd: LndObject | null;
   from?: string;
   until?: string;
-  batch?: number;
 }) => {
   const paymentList = await to<GetPaymentsType>(
     getPayments({
       lnd,
-      limit: batch,
+      limit: BATCH_SIZE,
     })
   );
 
@@ -129,7 +131,7 @@ export const getPaymentsBetweenDates = async ({
     return last && first;
   };
 
-  if (isOutOf) {
+  if (isOutOf || paymentList.payments.length < BATCH_SIZE) {
     return paymentList.payments.filter(filterArray);
   }
 
@@ -139,6 +141,11 @@ export const getPaymentsBetweenDates = async ({
   let finished = false;
 
   while (!finished) {
+    if (completePayments.length >= FETCH_LIMIT) {
+      finished = true;
+      break;
+    }
+
     const newPayments = await to<GetPaymentsType>(
       getPayments({
         lnd,
@@ -175,17 +182,15 @@ export const getInvoicesBetweenDates = async ({
   lnd,
   from,
   until,
-  batch = 25,
 }: {
   lnd: LndObject | null;
   from?: string;
   until?: string;
-  batch?: number;
 }) => {
   const invoiceList = await to<GetInvoicesType>(
     getInvoices({
       lnd,
-      limit: batch,
+      limit: BATCH_SIZE,
     })
   );
 
@@ -210,7 +215,7 @@ export const getInvoicesBetweenDates = async ({
     return last && first;
   };
 
-  if (isOutOf) {
+  if (isOutOf || invoiceList.invoices.length < BATCH_SIZE) {
     return invoiceList.invoices.filter(filterArray);
   }
 
@@ -220,6 +225,11 @@ export const getInvoicesBetweenDates = async ({
   let finished = false;
 
   while (!finished) {
+    if (completeInvoices.length >= FETCH_LIMIT) {
+      finished = true;
+      break;
+    }
+
     const newInvoices = await to<GetInvoicesType>(
       getInvoices({
         lnd,
