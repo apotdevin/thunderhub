@@ -31,7 +31,6 @@ export const transactionResolvers = {
         lnd,
         from: startDate,
         until: endDate,
-        batch: 25,
       });
 
       const mappedPayments = payments.map(payment => ({
@@ -47,7 +46,6 @@ export const transactionResolvers = {
         lnd,
         from: startDate,
         until: endDate,
-        batch: 25,
       });
 
       const mappedInvoices = invoices.map(invoice => ({
