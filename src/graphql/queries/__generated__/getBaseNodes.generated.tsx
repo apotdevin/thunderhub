@@ -7,7 +7,7 @@ const defaultOptions =  {}
 export type GetBaseNodesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetBaseNodesQuery = { __typename?: 'Query', getBaseNodes: Array<Types.Maybe<{ __typename?: 'baseNodesType', _id?: Types.Maybe<string>, name?: Types.Maybe<string>, public_key: string, socket: string }>> };
+export type GetBaseNodesQuery = { __typename?: 'Query', getBaseNodes: Array<{ __typename?: 'baseNodesType', _id?: string | null | undefined, name?: string | null | undefined, public_key: string, socket: string } | null | undefined> };
 
 
 export const GetBaseNodesDocument = gql`

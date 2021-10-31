@@ -66,7 +66,7 @@ const getWidth = (index: number): string => {
 };
 
 type NodeCardType = {
-  node: BasePointsType | null;
+  node: BasePointsType | null | undefined;
   index: number;
 };
 

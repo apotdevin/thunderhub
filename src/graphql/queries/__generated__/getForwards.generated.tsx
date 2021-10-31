@@ -9,7 +9,7 @@ export type GetForwardsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetForwardsQuery = { __typename?: 'Query', getForwards: Array<Types.Maybe<{ __typename?: 'Forward', created_at: string, fee: number, fee_mtokens: string, incoming_channel: string, mtokens: string, outgoing_channel: string, tokens: number }>> };
+export type GetForwardsQuery = { __typename?: 'Query', getForwards: Array<{ __typename?: 'Forward', created_at: string, fee: number, fee_mtokens: string, incoming_channel: string, mtokens: string, outgoing_channel: string, tokens: number } | null | undefined> };
 
 
 export const GetForwardsDocument = gql`

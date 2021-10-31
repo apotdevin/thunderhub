@@ -9,7 +9,7 @@ export type GetNodeSocialInfoQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetNodeSocialInfoQuery = { __typename?: 'Query', getNodeSocialInfo: { __typename?: 'LightningNodeSocialInfo', socials?: Types.Maybe<{ __typename?: 'NodeSocial', info?: Types.Maybe<{ __typename?: 'NodeSocialInfo', private?: Types.Maybe<boolean>, telegram?: Types.Maybe<string>, twitter?: Types.Maybe<string>, twitter_verified?: Types.Maybe<boolean>, website?: Types.Maybe<string>, email?: Types.Maybe<string> }> }> } };
+export type GetNodeSocialInfoQuery = { __typename?: 'Query', getNodeSocialInfo: { __typename?: 'LightningNodeSocialInfo', socials?: { __typename?: 'NodeSocial', info?: { __typename?: 'NodeSocialInfo', private?: boolean | null | undefined, telegram?: string | null | undefined, twitter?: string | null | undefined, twitter_verified?: boolean | null | undefined, website?: string | null | undefined, email?: string | null | undefined } | null | undefined } | null | undefined } };
 
 
 export const GetNodeSocialInfoDocument = gql`

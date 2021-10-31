@@ -9,7 +9,7 @@ export type CircularRebalanceMutationVariables = Types.Exact<{
 }>;
 
 
-export type CircularRebalanceMutation = { __typename?: 'Mutation', circularRebalance?: Types.Maybe<boolean> };
+export type CircularRebalanceMutation = { __typename?: 'Mutation', circularRebalance?: boolean | null | undefined };
 
 
 export const CircularRebalanceDocument = gql`

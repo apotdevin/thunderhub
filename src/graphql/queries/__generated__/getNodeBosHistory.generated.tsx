@@ -9,7 +9,7 @@ export type GetNodeBosHistoryQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetNodeBosHistoryQuery = { __typename?: 'Query', getNodeBosHistory: { __typename?: 'NodeBosHistory', info: { __typename?: 'BosScoreInfo', count: number, first?: Types.Maybe<{ __typename?: 'BosScore', position: number, score: number, updated: string }>, last?: Types.Maybe<{ __typename?: 'BosScore', position: number, score: number, updated: string }> }, scores: Array<{ __typename?: 'BosScore', position: number, score: number, updated: string }> } };
+export type GetNodeBosHistoryQuery = { __typename?: 'Query', getNodeBosHistory: { __typename?: 'NodeBosHistory', info: { __typename?: 'BosScoreInfo', count: number, first?: { __typename?: 'BosScore', position: number, score: number, updated: string } | null | undefined, last?: { __typename?: 'BosScore', position: number, score: number, updated: string } | null | undefined }, scores: Array<{ __typename?: 'BosScore', position: number, score: number, updated: string }> } };
 
 
 export const GetNodeBosHistoryDocument = gql`

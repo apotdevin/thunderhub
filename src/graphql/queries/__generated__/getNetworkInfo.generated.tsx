@@ -7,7 +7,7 @@ const defaultOptions =  {}
 export type GetNetworkInfoQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetNetworkInfoQuery = { __typename?: 'Query', getNetworkInfo?: Types.Maybe<{ __typename?: 'networkInfoType', averageChannelSize?: Types.Maybe<string>, channelCount?: Types.Maybe<number>, maxChannelSize?: Types.Maybe<number>, medianChannelSize?: Types.Maybe<number>, minChannelSize?: Types.Maybe<number>, nodeCount?: Types.Maybe<number>, notRecentlyUpdatedPolicyCount?: Types.Maybe<number>, totalCapacity?: Types.Maybe<string> }> };
+export type GetNetworkInfoQuery = { __typename?: 'Query', getNetworkInfo?: { __typename?: 'networkInfoType', averageChannelSize?: string | null | undefined, channelCount?: number | null | undefined, maxChannelSize?: number | null | undefined, medianChannelSize?: number | null | undefined, minChannelSize?: number | null | undefined, nodeCount?: number | null | undefined, notRecentlyUpdatedPolicyCount?: number | null | undefined, totalCapacity?: string | null | undefined } | null | undefined };
 
 
 export const GetNetworkInfoDocument = gql`

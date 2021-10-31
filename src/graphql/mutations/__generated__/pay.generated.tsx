@@ -12,7 +12,7 @@ export type PayMutationVariables = Types.Exact<{
 }>;
 
 
-export type PayMutation = { __typename?: 'Mutation', pay?: Types.Maybe<boolean> };
+export type PayMutation = { __typename?: 'Mutation', pay?: boolean | null | undefined };
 
 
 export const PayDocument = gql`
