@@ -7,7 +7,7 @@ const defaultOptions =  {}
 export type GetTimeHealthQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetTimeHealthQuery = { __typename?: 'Query', getTimeHealth?: Types.Maybe<{ __typename?: 'channelsTimeHealth', score?: Types.Maybe<number>, channels?: Types.Maybe<Array<Types.Maybe<{ __typename?: 'channelTimeHealth', id?: Types.Maybe<string>, score?: Types.Maybe<number>, significant?: Types.Maybe<boolean>, monitoredTime?: Types.Maybe<number>, monitoredUptime?: Types.Maybe<number>, monitoredDowntime?: Types.Maybe<number>, partner?: Types.Maybe<{ __typename?: 'Node', node: { __typename?: 'nodeType', alias: string } }> }>>> }> };
+export type GetTimeHealthQuery = { __typename?: 'Query', getTimeHealth?: { __typename?: 'channelsTimeHealth', score?: number | null | undefined, channels?: Array<{ __typename?: 'channelTimeHealth', id?: string | null | undefined, score?: number | null | undefined, significant?: boolean | null | undefined, monitoredTime?: number | null | undefined, monitoredUptime?: number | null | undefined, monitoredDowntime?: number | null | undefined, partner?: { __typename?: 'Node', node: { __typename?: 'nodeType', alias: string } } | null | undefined } | null | undefined> | null | undefined } | null | undefined };
 
 
 export const GetTimeHealthDocument = gql`

@@ -7,7 +7,7 @@ const defaultOptions =  {}
 export type GetUtxosQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetUtxosQuery = { __typename?: 'Query', getUtxos?: Types.Maybe<Array<Types.Maybe<{ __typename?: 'getUtxosType', address: string, address_format: string, confirmation_count: number, output_script: string, tokens: number, transaction_id: string, transaction_vout: number }>>> };
+export type GetUtxosQuery = { __typename?: 'Query', getUtxos?: Array<{ __typename?: 'getUtxosType', address: string, address_format: string, confirmation_count: number, output_script: string, tokens: number, transaction_id: string, transaction_vout: number } | null | undefined> | null | undefined };
 
 
 export const GetUtxosDocument = gql`

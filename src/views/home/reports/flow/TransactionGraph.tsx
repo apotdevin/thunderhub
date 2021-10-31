@@ -2,7 +2,7 @@ import { FC, useMemo } from 'react';
 import { BarChart } from 'src/components/chart/BarChart';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { useGetResumeQuery } from 'src/graphql/queries/__generated__/getResume.generated';
-import { InvoiceType, PaymentType } from 'src/graphql/types';
+import { PaymentType } from 'src/graphql/types';
 import { chartColors } from 'src/styles/Themes';
 import { getByTime } from 'src/views/dashboard/widgets/helpers';
 import styled from 'styled-components';
@@ -54,7 +54,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
 
   const { invoicesByDate, paymentsByDate } = useMemo(() => {
     const resume = data?.getResume.resume || [];
-    const invoices: InvoiceType[] = [];
+    const invoices: any[] = [];
     const payments: PaymentType[] = [];
 
     resume.forEach(t => {

@@ -13,7 +13,7 @@ export type BosPayMutationVariables = Types.Exact<{
 }>;
 
 
-export type BosPayMutation = { __typename?: 'Mutation', bosPay?: Types.Maybe<boolean> };
+export type BosPayMutation = { __typename?: 'Mutation', bosPay?: boolean | null | undefined };
 
 
 export const BosPayDocument = gql`

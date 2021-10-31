@@ -187,7 +187,7 @@ const TransactionsView = () => {
             if (entry.__typename === 'InvoiceType') {
               return (
                 <InvoiceCard
-                  invoice={entry}
+                  invoice={entry as any}
                   key={index}
                   index={index + 1}
                   setIndexOpen={setIndexOpen}

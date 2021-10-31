@@ -7,7 +7,7 @@ const defaultOptions =  {}
 export type GetBasePointsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetBasePointsQuery = { __typename?: 'Query', getBasePoints: Array<Types.Maybe<{ __typename?: 'basePointsType', alias: string, amount: number }>> };
+export type GetBasePointsQuery = { __typename?: 'Query', getBasePoints: Array<{ __typename?: 'basePointsType', alias: string, amount: number } | null | undefined> };
 
 
 export const GetBasePointsDocument = gql`

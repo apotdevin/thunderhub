@@ -12,7 +12,7 @@ export type GetRoutesQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetRoutesQuery = { __typename?: 'Query', getRoutes?: Types.Maybe<{ __typename?: 'GetRouteType', confidence?: Types.Maybe<number>, fee: number, fee_mtokens: string, mtokens: string, safe_fee: number, safe_tokens: number, timeout: number, tokens: number, hops: Array<{ __typename?: 'RouteHopType', channel: string, channel_capacity: number, fee: number, fee_mtokens: string, forward: number, forward_mtokens: string, public_key: string, timeout: number }> }> };
+export type GetRoutesQuery = { __typename?: 'Query', getRoutes?: { __typename?: 'GetRouteType', confidence?: number | null | undefined, fee: number, fee_mtokens: string, mtokens: string, safe_fee: number, safe_tokens: number, timeout: number, tokens: number, hops: Array<{ __typename?: 'RouteHopType', channel: string, channel_capacity: number, fee: number, fee_mtokens: string, forward: number, forward_mtokens: string, public_key: string, timeout: number }> } | null | undefined };
 
 
 export const GetRoutesDocument = gql`

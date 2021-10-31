@@ -13,7 +13,7 @@ export type SendMessageMutationVariables = Types.Exact<{
 }>;
 
 
-export type SendMessageMutation = { __typename?: 'Mutation', sendMessage?: Types.Maybe<number> };
+export type SendMessageMutation = { __typename?: 'Mutation', sendMessage?: number | null | undefined };
 
 
 export const SendMessageDocument = gql`

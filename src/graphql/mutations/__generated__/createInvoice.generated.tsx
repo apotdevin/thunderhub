@@ -12,7 +12,7 @@ export type CreateInvoiceMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateInvoiceMutation = { __typename?: 'Mutation', createInvoice?: Types.Maybe<{ __typename?: 'newInvoiceType', request: string, id: string }> };
+export type CreateInvoiceMutation = { __typename?: 'Mutation', createInvoice?: { __typename?: 'newInvoiceType', request: string, id: string } | null | undefined };
 
 
 export const CreateInvoiceDocument = gql`

@@ -9,7 +9,7 @@ export type GetLightningAddressInfoQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetLightningAddressInfoQuery = { __typename?: 'Query', getLightningAddressInfo: { __typename?: 'PayRequest', callback?: Types.Maybe<string>, maxSendable?: Types.Maybe<string>, minSendable?: Types.Maybe<string>, metadata?: Types.Maybe<string>, commentAllowed?: Types.Maybe<number>, tag?: Types.Maybe<string> } };
+export type GetLightningAddressInfoQuery = { __typename?: 'Query', getLightningAddressInfo: { __typename?: 'PayRequest', callback?: string | null | undefined, maxSendable?: string | null | undefined, minSendable?: string | null | undefined, metadata?: string | null | undefined, commentAllowed?: number | null | undefined, tag?: string | null | undefined } };
 
 
 export const GetLightningAddressInfoDocument = gql`

@@ -7,7 +7,7 @@ const defaultOptions =  {}
 export type GetCanAdminQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetCanAdminQuery = { __typename?: 'Query', adminCheck?: Types.Maybe<boolean> };
+export type GetCanAdminQuery = { __typename?: 'Query', adminCheck?: boolean | null | undefined };
 
 
 export const GetCanAdminDocument = gql`

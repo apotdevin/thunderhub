@@ -9,7 +9,7 @@ export type GetInvoiceStatusChangeQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetInvoiceStatusChangeQuery = { __typename?: 'Query', getInvoiceStatusChange?: Types.Maybe<string> };
+export type GetInvoiceStatusChangeQuery = { __typename?: 'Query', getInvoiceStatusChange?: string | null | undefined };
 
 
 export const GetInvoiceStatusChangeDocument = gql`

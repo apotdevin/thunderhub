@@ -3,10 +3,7 @@ import { useMemo, useState } from 'react';
 import { BarChart } from 'src/components/chart/BarChart';
 import { LoadingCard } from 'src/components/loading/LoadingCard';
 import { SmallSelectWithValue } from 'src/components/select';
-import {
-  GetResumeQuery,
-  useGetResumeQuery,
-} from 'src/graphql/queries/__generated__/getResume.generated';
+import { useGetResumeQuery } from 'src/graphql/queries/__generated__/getResume.generated';
 import { InvoiceType } from 'src/graphql/types';
 import { chartColors } from 'src/styles/Themes';
 import styled from 'styled-components';
@@ -64,11 +61,9 @@ export const InvoicesGraph = () => {
     errorPolicy: 'ignore',
   });
 
-  const resume: GetResumeQuery['getResume']['resume'] =
-    data?.getResume.resume || [];
-
   const invoicesByDate = useMemo(() => {
-    const invoices = resume.reduce((p, c) => {
+    const resume = data?.getResume.resume || [];
+    const invoices = resume.reduce((p: any, c) => {
       if (!c) return p;
       if (c.__typename === 'InvoiceType') {
         if (!c.is_confirmed) return p;
@@ -78,7 +73,7 @@ export const InvoicesGraph = () => {
     }, [] as InvoiceType[]);
 
     return getByTime(invoices, days.value);
-  }, [resume]);
+  }, [data?.getResume.resume, days.value]);
 
   const Header = () => (
     <S.row>
@@ -111,7 +106,7 @@ export const InvoicesGraph = () => {
     );
   }
 
-  if (!resume.length) {
+  if (!data?.getResume.resume.length) {
     return (
       <S.wrapper>
         <Header />

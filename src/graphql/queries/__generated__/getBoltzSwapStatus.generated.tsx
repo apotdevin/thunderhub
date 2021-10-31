@@ -9,7 +9,7 @@ export type GetBoltzSwapStatusQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetBoltzSwapStatusQuery = { __typename?: 'Query', getBoltzSwapStatus: Array<Types.Maybe<{ __typename?: 'BoltzSwap', id?: Types.Maybe<string>, boltz?: Types.Maybe<{ __typename?: 'BoltzSwapStatus', status: string, transaction?: Types.Maybe<{ __typename?: 'BoltzSwapTransaction', id?: Types.Maybe<string>, hex?: Types.Maybe<string>, eta?: Types.Maybe<number> }> }> }>> };
+export type GetBoltzSwapStatusQuery = { __typename?: 'Query', getBoltzSwapStatus: Array<{ __typename?: 'BoltzSwap', id?: string | null | undefined, boltz?: { __typename?: 'BoltzSwapStatus', status: string, transaction?: { __typename?: 'BoltzSwapTransaction', id?: string | null | undefined, hex?: string | null | undefined, eta?: number | null | undefined } | null | undefined } | null | undefined } | null | undefined> };
 
 
 export const GetBoltzSwapStatusDocument = gql`

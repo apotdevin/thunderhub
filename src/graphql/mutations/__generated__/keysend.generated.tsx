@@ -10,7 +10,7 @@ export type KeysendMutationVariables = Types.Exact<{
 }>;
 
 
-export type KeysendMutation = { __typename?: 'Mutation', keysend?: Types.Maybe<{ __typename?: 'payType', is_confirmed?: Types.Maybe<boolean> }> };
+export type KeysendMutation = { __typename?: 'Mutation', keysend?: { __typename?: 'payType', is_confirmed?: boolean | null | undefined } | null | undefined };
 
 
 export const KeysendDocument = gql`
