@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { ServerAccounts } from '../src/components/accounts/ServerAccounts';
+import { useCheckAuthToken } from '../src/hooks/UseCheckAuthToken';
 import { NextPageContext } from 'next';
 import { getProps } from '../src/utils/ssr';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 
-const Wrapped = () => (
-  <>
-    <ServerAccounts />
-    <LoadingCard noCard={true} loadingHeight={'80vh'} />
-  </>
-);
+const Wrapped = () => {
+  useCheckAuthToken();
+
+  return <LoadingCard noCard={true} loadingHeight={'80vh'} />;
+};
 
 export default Wrapped;
 

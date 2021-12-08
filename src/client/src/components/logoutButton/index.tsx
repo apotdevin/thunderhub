@@ -1,6 +1,5 @@
 import React, { FC, useEffect } from 'react';
 import { LogOut } from 'react-feather';
-import { useRouter } from 'next/router';
 import { useLogoutMutation } from '../../../src/graphql/mutations/__generated__/logout.generated';
 import { useApolloClient } from '@apollo/client';
 import { HeaderNavButton } from '../../../src/layouts/header/Header.styled';
@@ -27,7 +26,6 @@ const LogoutWrapperStyled = styled(Logout)`
 `;
 
 export const LogoutWrapper: FC = ({ children }) => {
-  const { push } = useRouter();
   const client = useApolloClient();
 
   const dispatchChat = useChatDispatch();
@@ -41,9 +39,9 @@ export const LogoutWrapper: FC = ({ children }) => {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
 
-      logoutUrl ? (window.location.href = logoutUrl) : push('/login');
+      window.location.href = logoutUrl || '/login';
     }
-  }, [data, dispatchChat, push, client]);
+  }, [data, dispatchChat, client]);
 
   if (loading) {
     return (
@@ -61,7 +59,6 @@ export const LogoutWrapper: FC = ({ children }) => {
 };
 
 export const LogoutButton = () => {
-  const { push } = useRouter();
   const client = useApolloClient();
 
   const dispatchChat = useChatDispatch();
@@ -75,9 +72,9 @@ export const LogoutButton = () => {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
 
-      logoutUrl ? (window.location.href = logoutUrl) : push('/login');
+      window.location.href = logoutUrl || '/login';
     }
-  }, [data, dispatchChat, push, client]);
+  }, [data, dispatchChat, client]);
 
   if (loading) {
     return (

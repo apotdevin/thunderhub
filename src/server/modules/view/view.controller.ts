@@ -12,8 +12,25 @@ const NEXT_ROUTES = [
   'favicon.ico',
   // Routes
   '',
+  'scores*',
+  'settings*',
+  'chain',
+  'channels',
+  'chat',
+  'dashboard',
+  'details',
+  'forwards',
+  'leaderboard',
+  'lnmarkets',
   'login',
   'peers',
+  'rebalance',
+  'sso',
+  'stats',
+  'swap',
+  'token',
+  'tools',
+  'transactions',
 ];
 
 @Public()

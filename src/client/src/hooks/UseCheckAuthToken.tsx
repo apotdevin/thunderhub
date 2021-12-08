@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
-import { getUrlParam } from '../../../src/utils/url';
+import { getUrlParam } from '../utils/url';
 import { toast } from 'react-toastify';
-import { getErrorContent } from '../../../src/utils/error';
+import { getErrorContent } from '../utils/error';
 import getConfig from 'next/config';
-import { useGetAuthTokenMutation } from '../../../src/graphql/mutations/__generated__/getAuthToken.generated';
+import { useGetAuthTokenMutation } from '../graphql/mutations/__generated__/getAuthToken.generated';
 
 const { publicRuntimeConfig } = getConfig();
 const { logoutUrl } = publicRuntimeConfig;
 
-export const ServerAccounts: React.FC = () => {
-  const { push, query } = useRouter();
+export const useCheckAuthToken = () => {
+  const { query } = useRouter();
 
   const cookieParam = getUrlParam(query?.token);
 
@@ -19,7 +19,7 @@ export const ServerAccounts: React.FC = () => {
     refetchQueries: ['GetNodeInfo'],
     onError: error => {
       toast.error(getErrorContent(error));
-      logoutUrl ? (window.location.href = logoutUrl) : push('/login');
+      window.location.href = logoutUrl || 'login';
     },
   });
 
@@ -27,20 +27,18 @@ export const ServerAccounts: React.FC = () => {
     if (cookieParam) {
       getToken();
     } else {
-      logoutUrl ? (window.location.href = logoutUrl) : push('/login');
+      window.location.href = logoutUrl || 'login';
     }
-  }, [cookieParam, push, getToken]);
+  }, [cookieParam, getToken]);
 
   React.useEffect(() => {
     if (!cookieParam || !data) return;
     if (data.getAuthToken) {
-      push('/');
+      window.location.href = '/';
     }
     if (!data.getAuthToken) {
       toast.warning('Unable to SSO. Check your logs.');
-      logoutUrl ? (window.location.href = logoutUrl) : push('/login');
+      window.location.href = logoutUrl || 'login';
     }
-  }, [push, data, cookieParam]);
-
-  return null;
+  }, [data, cookieParam]);
 };

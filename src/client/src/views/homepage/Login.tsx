@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
 import { getErrorContent } from '../../utils/error';
 import { Lock } from 'react-feather';
-import { ServerAccountType } from '../../graphql/types';
+import { ServerAccount } from '../../graphql/types';
 import { getVersion } from '../../utils/version';
 import { useGetSessionTokenMutation } from '../../graphql/mutations/__generated__/getSessionToken.generated';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
@@ -32,12 +31,10 @@ const IconPadding = styled.span`
 `;
 
 type LoginProps = {
-  account: ServerAccountType;
+  account: ServerAccount;
 };
 
 export const Login = ({ account }: LoginProps) => {
-  const { push } = useRouter();
-
   const [pass, setPass] = useState('');
 
   const [getSessionToken, { data, loading }] = useGetSessionTokenMutation({
@@ -55,9 +52,9 @@ export const Login = ({ account }: LoginProps) => {
         'ThunderHub supports LND version 0.11.0 and higher. Please update your node, you are in risk of losing funds.'
       );
     } else {
-      push('/');
+      window.location.href = '/';
     }
-  }, [data, loading, push]);
+  }, [data, loading]);
 
   if (!account) return null;
 
