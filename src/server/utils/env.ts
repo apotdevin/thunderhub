@@ -1,21 +1,12 @@
-import getConfig from 'next/config';
+import { YamlEnvs } from '../config/configuration';
 import {
   AccountType,
   UnresolvedAccountType,
 } from '../modules/files/files.types';
 
-const { serverRuntimeConfig } = getConfig() || { serverRuntimeConfig: {} };
-const { YML_ENV_1, YML_ENV_2, YML_ENV_3, YML_ENV_4 } = serverRuntimeConfig;
-
-const env: { [key: string]: string } = {
-  YML_ENV_1,
-  YML_ENV_2,
-  YML_ENV_3,
-  YML_ENV_4,
-};
-
 export const resolveEnvVarsInAccount = (
-  account: UnresolvedAccountType
+  account: UnresolvedAccountType,
+  yamlEnvs: YamlEnvs
 ): AccountType => {
   const regex = /(?<=\{)(.*?)(?=\})/;
 
@@ -26,7 +17,7 @@ export const resolveEnvVarsInAccount = (
       }
 
       const match: string | boolean =
-        env[v.toString().match(regex)?.[0] || ''] || v;
+        yamlEnvs[v.toString().match(regex)?.[0] || ''] || v;
 
       if (match === 'true') {
         return [k, true];

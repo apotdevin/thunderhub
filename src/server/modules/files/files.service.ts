@@ -210,7 +210,9 @@ export class FilesService {
     masterPassword: string | null,
     defaultNetwork: BitcoinNetwork
   ): ParsedAccount | null {
-    const resolvedAccount = resolveEnvVarsInAccount(account);
+    const yamlEnvs = this.configService.get('yamlEnvs');
+
+    const resolvedAccount = resolveEnvVarsInAccount(account, yamlEnvs);
 
     const {
       name,
