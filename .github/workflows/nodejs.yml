@@ -27,6 +27,5 @@ jobs:
         run: npm ci
       - name: Test and build
         run: |
-          npm test
           npm run tsc
           npm run build
