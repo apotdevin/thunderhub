@@ -6,7 +6,6 @@ import { chartColors } from '../../styles/Themes';
 import { useRouter } from 'next/router';
 import { Link } from '../../components/link/Link';
 import { useGetServerAccountsQuery } from '../../graphql/queries/__generated__/getServerAccounts.generated';
-import { ServerAccountType } from '../../graphql/types';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.generated';
 import { useGetNodeInfoLazyQuery } from '../../graphql/queries/__generated__/getNodeInfo.generated';
@@ -21,6 +20,7 @@ import {
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { ConnectTitle, LockPadding } from './HomePage.styled';
 import { Login } from './Login';
+import { ServerAccount } from '../../graphql/types';
 
 const AccountLine = styled.div`
   margin: 8px 0;
@@ -74,7 +74,7 @@ const RenderIntro = () => {
 
 export const Accounts = () => {
   const { push, prefetch } = useRouter();
-  const [newAccount, setNewAccount] = React.useState<ServerAccountType | null>(
+  const [newAccount, setNewAccount] = React.useState<ServerAccount | null>(
     null
   );
 
@@ -113,7 +113,7 @@ export const Accounts = () => {
     return <RenderIntro />;
   }
 
-  const getTitle = (account: ServerAccountType) => {
+  const getTitle = (account: ServerAccount) => {
     const { type, name, loggedIn } = account;
 
     const props = {
@@ -130,21 +130,21 @@ export const Accounts = () => {
     );
   };
 
-  const getButtonTitle = (account: ServerAccountType): string => {
+  const getButtonTitle = (account: ServerAccount): string => {
     if (account.loggedIn) {
       return 'Connect';
     }
     return 'Login';
   };
 
-  const getArrow = (account: ServerAccountType): boolean => {
+  const getArrow = (account: ServerAccount): boolean => {
     if (account.loggedIn) {
       return false;
     }
     return true;
   };
 
-  const handleClick = (account: ServerAccountType) => () => {
+  const handleClick = (account: ServerAccount) => () => {
     if (account.type === 'sso') {
       getCanConnect();
     } else if (account.type === 'server' && account.loggedIn) {

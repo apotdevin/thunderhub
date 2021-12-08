@@ -44,6 +44,7 @@ export type JwtObjectType = {
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
+      envFilePath: ['.env.local', '.env'],
     }),
     GraphQLModule.forRootAsync({
       inject: [ConfigService],

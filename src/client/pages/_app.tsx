@@ -40,7 +40,7 @@ const NotAuthenticated: React.FC = () => {
   useEffect(() => {
     const timeout = setTimeout(
       () => push(logoutUrl || `${basePath}/login`),
-      5000
+      3000
     );
 
     return () => {

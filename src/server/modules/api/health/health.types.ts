@@ -12,86 +12,86 @@ export type ChannelFeesType = {
 
 @ObjectType()
 export class ChannelHealth {
-  @Field()
+  @Field({ nullable: true })
   id: string;
-  @Field()
+  @Field({ nullable: true })
   score: number;
-  @Field()
+  @Field({ nullable: true })
   volumeNormalized: string;
-  @Field()
+  @Field({ nullable: true })
   averageVolumeNormalized: string;
-  @Field(() => Node)
+  @Field(() => Node, { nullable: true })
   partner: Node;
 }
 
 @ObjectType()
 export class ChannelsHealth {
-  @Field()
+  @Field({ nullable: true })
   score: number;
-  @Field(() => ChannelHealth)
+  @Field(() => [ChannelHealth], { nullable: true })
   channels: ChannelHealth[];
 }
 
 @ObjectType()
 export class ChannelTimeHealth {
-  @Field()
+  @Field({ nullable: true })
   id: string;
-  @Field()
+  @Field({ nullable: true })
   score: number;
-  @Field()
+  @Field({ nullable: true })
   significant: boolean;
-  @Field()
+  @Field({ nullable: true })
   monitoredTime: number;
-  @Field()
+  @Field({ nullable: true })
   monitoredUptime: number;
-  @Field()
+  @Field({ nullable: true })
   monitoredDowntime: number;
-  @Field(() => Node)
+  @Field(() => Node, { nullable: true })
   partner: Node;
 }
 
 @ObjectType()
 export class ChannelsTimeHealth {
-  @Field()
+  @Field({ nullable: true })
   score: number;
-  @Field(() => ChannelTimeHealth)
+  @Field(() => [ChannelTimeHealth], { nullable: true })
   channels: ChannelTimeHealth[];
 }
 
 @ObjectType()
 export class FeeHealth {
-  @Field()
+  @Field({ nullable: true })
   score: number;
-  @Field()
+  @Field({ nullable: true })
   rate: number;
-  @Field()
+  @Field({ nullable: true })
   base: string;
-  @Field()
+  @Field({ nullable: true })
   rateScore: number;
-  @Field()
+  @Field({ nullable: true })
   baseScore: number;
-  @Field()
+  @Field({ nullable: true })
   rateOver: boolean;
-  @Field()
+  @Field({ nullable: true })
   baseOver: boolean;
 }
 
 @ObjectType()
 export class ChannelFeeHealth {
-  @Field()
+  @Field({ nullable: true })
   id: string;
-  @Field(() => FeeHealth)
+  @Field(() => FeeHealth, { nullable: true })
   partnerSide: FeeHealth;
-  @Field(() => FeeHealth)
+  @Field(() => FeeHealth, { nullable: true })
   mySide: FeeHealth;
-  @Field(() => Node)
+  @Field(() => Node, { nullable: true })
   partner: Node;
 }
 
 @ObjectType()
 export class ChannelsFeeHealth {
-  @Field()
+  @Field({ nullable: true })
   score: number;
-  @Field(() => ChannelFeeHealth)
+  @Field(() => [ChannelFeeHealth], { nullable: true })
   channels: ChannelFeeHealth[];
 }

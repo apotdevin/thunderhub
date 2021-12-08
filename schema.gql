@@ -168,18 +168,18 @@ type Channel {
 }
 
 type ChannelFeeHealth {
-  id: String!
-  mySide: FeeHealth!
-  partner: Node!
-  partnerSide: FeeHealth!
+  id: String
+  mySide: FeeHealth
+  partner: Node
+  partnerSide: FeeHealth
 }
 
 type ChannelHealth {
-  averageVolumeNormalized: String!
-  id: String!
-  partner: Node!
-  score: Float!
-  volumeNormalized: String!
+  averageVolumeNormalized: String
+  id: String
+  partner: Node
+  score: Float
+  volumeNormalized: String
 }
 
 type ChannelReport {
@@ -201,28 +201,28 @@ type ChannelRequest {
 }
 
 type ChannelTimeHealth {
-  id: String!
-  monitoredDowntime: Float!
-  monitoredTime: Float!
-  monitoredUptime: Float!
-  partner: Node!
-  score: Float!
-  significant: Boolean!
+  id: String
+  monitoredDowntime: Float
+  monitoredTime: Float
+  monitoredUptime: Float
+  partner: Node
+  score: Float
+  significant: Boolean
 }
 
 type ChannelsFeeHealth {
-  channels: ChannelFeeHealth!
-  score: Float!
+  channels: [ChannelFeeHealth!]
+  score: Float
 }
 
 type ChannelsHealth {
-  channels: ChannelHealth!
-  score: Float!
+  channels: [ChannelHealth!]
+  score: Float
 }
 
 type ChannelsTimeHealth {
-  channels: ChannelTimeHealth!
-  score: Float!
+  channels: [ChannelTimeHealth!]
+  score: Float
 }
 
 type ClosedChannel {
@@ -293,13 +293,13 @@ type DecodeInvoice {
 }
 
 type FeeHealth {
-  base: String!
-  baseOver: Boolean!
-  baseScore: Float!
-  rate: Float!
-  rateOver: Boolean!
-  rateScore: Float!
-  score: Float!
+  base: String
+  baseOver: Boolean
+  baseScore: Float
+  rate: Float
+  rateOver: Boolean
+  rateScore: Float
+  score: Float
 }
 
 type Forward {
