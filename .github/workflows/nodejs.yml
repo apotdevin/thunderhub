@@ -1,4 +1,4 @@
-name: Test and Build
+name: Build
 
 on:
   push:
@@ -25,7 +25,6 @@ jobs:
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
       - name: Install deps
         run: npm ci
-      - name: Test and build
+      - name: Build
         run: |
-          npm run tsc
           npm run build
