@@ -1,16 +1,18 @@
 overwrite: true
-schema: 'http://localhost:3000/api/v1'
-documents: 'src/graphql/**/*.ts'
+schema: 'http://localhost:3000/graphql'
+documents: 'src/client/src/graphql/**/*.ts'
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+    - eslint --fix
 generates:
-  src/graphql/fragmentTypes.json:
+  src/client/src/graphql/fragmentTypes.json:
     plugins:
       - fragment-matcher
-  src/graphql/types.ts:
+  src/client/src/graphql/types.ts:
     plugins:
       - typescript
-      - add:
-          content: '/* eslint-disable */'
-  src/graphql/:
+  src/client/src/graphql/:
     preset: near-operation-file
     presetConfig:
       baseTypesPath: types.ts
@@ -24,5 +26,3 @@ generates:
     plugins:
       - 'typescript-operations'
       - 'typescript-react-apollo'
-      - add:
-          content: '/* eslint-disable */'

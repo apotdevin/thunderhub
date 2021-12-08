@@ -1,0 +1,772 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AmbossSubscription {
+  end_date: String!
+  subscribed: Boolean!
+  upgradable: Boolean!
+}
+
+type AmbossUser {
+  subscription: AmbossSubscription
+}
+
+type AuthResponse {
+  message: String!
+  status: String!
+}
+
+type Balances {
+  lightning: LightningBalance!
+  onchain: OnChainBalance!
+}
+
+type BaseInvoice {
+  id: String!
+  request: String!
+}
+
+type BaseNode {
+  _id: String
+  name: String
+  public_key: String!
+  socket: String!
+}
+
+type BasePoints {
+  alias: String!
+  amount: Float!
+}
+
+type BitcoinFee {
+  fast: Float!
+  halfHour: Float!
+  hour: Float!
+  minimum: Float!
+}
+
+type BoltzInfoType {
+  feePercent: Float!
+  max: Float!
+  min: Float!
+}
+
+type BoltzSwap {
+  boltz: BoltzSwapStatus
+  id: String
+}
+
+type BoltzSwapStatus {
+  status: String!
+  transaction: BoltzSwapTransaction
+}
+
+type BoltzSwapTransaction {
+  eta: Float
+  hex: String
+  id: String
+}
+
+type BosDecrease {
+  decreased_inbound_on: String!
+  liquidity_inbound: String!
+  liquidity_inbound_opening: String!
+  liquidity_inbound_pending: String!
+  liquidity_outbound: String!
+  liquidity_outbound_opening: String!
+  liquidity_outbound_pending: String!
+}
+
+type BosIncrease {
+  increased_inbound_on: String!
+  liquidity_inbound: String!
+  liquidity_inbound_opening: String!
+  liquidity_inbound_pending: String!
+  liquidity_outbound: String!
+  liquidity_outbound_opening: String!
+  liquidity_outbound_pending: String!
+}
+
+type BosRebalanceResult {
+  decrease: BosDecrease
+  increase: BosIncrease
+  result: BosResult
+}
+
+type BosResult {
+  rebalance_fees_spent: String!
+  rebalanced: String!
+}
+
+type BosScore {
+  alias: String!
+  position: Float!
+  public_key: String!
+  score: Float!
+  updated: String!
+}
+
+type BosScoreInfo {
+  count: Float!
+  first: BosScore
+  last: BosScore
+}
+
+type ChainAddressSend {
+  confirmationCount: Float!
+  id: String!
+  isConfirmed: Boolean!
+  isOutgoing: Boolean!
+  tokens: Float
+}
+
+type ChainTransaction {
+  block_id: String
+  confirmation_count: Float
+  confirmation_height: Float
+  created_at: String!
+  description: String
+  fee: Float
+  id: String!
+  is_confirmed: Boolean!
+  is_outgoing: Boolean!
+  output_addresses: [String!]!
+  tokens: Float!
+  transaction: String
+}
+
+type Channel {
+  bosScore: BosScore
+  capacity: Float!
+  channel_age: Float!
+  commit_transaction_fee: Float!
+  commit_transaction_weight: Float!
+  id: String!
+  is_active: Boolean!
+  is_closing: Boolean!
+  is_opening: Boolean!
+  is_partner_initiated: Boolean!
+  is_private: Boolean!
+  is_static_remote_key: Boolean
+  local_balance: Float!
+  local_reserve: Float!
+  partner_fee_info: SingleChannel!
+  partner_node_info: Node!
+  partner_public_key: String!
+  pending_payments: [PendingPayment!]!
+  pending_resume: PendingResume!
+  received: Float!
+  remote_balance: Float!
+  remote_reserve: Float!
+  sent: Float!
+  time_offline: Float
+  time_online: Float
+  transaction_id: String!
+  transaction_vout: Float!
+  unsettled_balance: Float!
+}
+
+type ChannelFeeHealth {
+  id: String!
+  mySide: FeeHealth!
+  partner: Node!
+  partnerSide: FeeHealth!
+}
+
+type ChannelHealth {
+  averageVolumeNormalized: String!
+  id: String!
+  partner: Node!
+  score: Float!
+  volumeNormalized: String!
+}
+
+type ChannelReport {
+  commit: Float!
+  incomingPendingHtlc: Float!
+  local: Float!
+  maxIn: Float!
+  maxOut: Float!
+  outgoingPendingHtlc: Float!
+  remote: Float!
+  totalPendingHtlc: Float!
+}
+
+type ChannelRequest {
+  callback: String
+  k1: String
+  tag: String
+  uri: String
+}
+
+type ChannelTimeHealth {
+  id: String!
+  monitoredDowntime: Float!
+  monitoredTime: Float!
+  monitoredUptime: Float!
+  partner: Node!
+  score: Float!
+  significant: Boolean!
+}
+
+type ChannelsFeeHealth {
+  channels: ChannelFeeHealth!
+  score: Float!
+}
+
+type ChannelsHealth {
+  channels: ChannelHealth!
+  score: Float!
+}
+
+type ChannelsTimeHealth {
+  channels: ChannelTimeHealth!
+  score: Float!
+}
+
+type ClosedChannel {
+  capacity: Float!
+  channel_age: Float!
+  close_confirm_height: Float
+  close_transaction_id: String
+  final_local_balance: Float!
+  final_time_locked_balance: Float!
+  id: String
+  is_breach_close: Boolean!
+  is_cooperative_close: Boolean!
+  is_funding_cancel: Boolean!
+  is_local_force_close: Boolean!
+  is_remote_force_close: Boolean!
+  partner_node_info: Node!
+  partner_public_key: String!
+  transaction_id: String!
+  transaction_vout: Float!
+}
+
+type CreateBoltzReverseSwapType {
+  decodedInvoice: DecodeInvoice
+  id: String!
+  invoice: String!
+  lockupAddress: String!
+  minerFeeInvoice: String
+  onchainAmount: Float!
+  preimage: String
+  preimageHash: String
+  privateKey: String
+  publicKey: String
+  receivingAddress: String!
+  redeemScript: String!
+  timeoutBlockHeight: Float!
+}
+
+type CreateInvoice {
+  chain_address: String
+  created_at: String!
+  description: String!
+  id: String!
+  mtokens: String
+  request: String!
+  secret: String!
+  tokens: Float
+}
+
+type CreateMacaroon {
+  base: String!
+  hex: String!
+}
+
+type DecodeInvoice {
+  chain_address: String
+  cltv_delta: Float
+  description: String!
+  description_hash: String
+  destination: String!
+  destination_node: Node
+  expires_at: String!
+  id: String!
+  mtokens: String!
+  payment: String
+  routes: [[Route!]!]!
+  safe_tokens: Float!
+  tokens: Float!
+}
+
+type FeeHealth {
+  base: String!
+  baseOver: Boolean!
+  baseScore: Float!
+  rate: Float!
+  rateOver: Boolean!
+  rateScore: Float!
+  score: Float!
+}
+
+type Forward {
+  created_at: String!
+  fee: Float!
+  fee_mtokens: String!
+  incoming_channel: String!
+  mtokens: String!
+  outgoing_channel: String!
+  tokens: Float!
+}
+
+type GetMessages {
+  messages: [Message!]!
+  token: String
+}
+
+type GetResumeType {
+  offset: Float!
+  resume: [Transaction!]!
+}
+
+type Hops {
+  channel: String!
+  channel_capacity: Float!
+  fee_mtokens: String!
+  forward_mtokens: String!
+  timeout: Float!
+}
+
+type InvoicePayment {
+  in_channel: String!
+  messages: MessageType
+}
+
+type InvoiceType {
+  chain_address: String
+  confirmed_at: String
+  created_at: String
+  date: String!
+  description: String!
+  description_hash: String
+  expires_at: String!
+  id: String!
+  is_canceled: Boolean
+  is_confirmed: Boolean!
+  is_held: Boolean
+  is_private: Boolean!
+  is_push: Boolean
+  payments: [InvoicePayment!]!
+  received: Float
+  received_mtokens: String!
+  request: String
+  secret: String!
+  tokens: String!
+  type: String!
+}
+
+type LightningAddress {
+  lightning_address: String!
+  pubkey: String!
+}
+
+type LightningBalance {
+  active: String!
+  commit: String!
+  confirmed: String!
+  pending: String!
+}
+
+type LightningNodeSocialInfo {
+  socials: NodeSocial
+}
+
+type LnMarketsUserInfo {
+  account_type: String
+  balance: String
+  last_ip: String
+  linkingpublickey: String
+  uid: String
+  username: String
+}
+
+union LnUrlRequest = ChannelRequest | PayRequest | WithdrawRequest
+
+type Message {
+  alias: String
+  contentType: String
+  date: String!
+  id: String!
+  message: String
+  sender: String
+  tokens: Float
+  verified: Boolean!
+}
+
+type MessageType {
+  message: String
+}
+
+type Mutation {
+  addPeer(isTemporary: Boolean, publicKey: String, socket: String, url: String): Boolean!
+  bosRebalance(avoid: [String!], in_through: String, max_fee: Float, max_fee_rate: Float, max_rebalance: Float, node: String, out_inbound: Float, out_through: String, timeout_minutes: Float): BosRebalanceResult!
+  claimBoltzTransaction(destination: String!, fee: Float!, preimage: String!, privateKey: String!, redeem: String!, transaction: String!): String!
+  closeChannel(forceClose: Boolean, id: String!, targetConfirmations: Float, tokensPerVByte: Float): OpenOrCloseChannel!
+  createAddress: String!
+  createBaseInvoice(amount: Float!): BaseInvoice!
+  createBoltzReverseSwap(address: String, amount: Float!): CreateBoltzReverseSwapType!
+  createInvoice(amount: Float!, description: String, includePrivate: Boolean, secondsUntil: Float): CreateInvoice!
+  createMacaroon(permissions: NetworkInfoInput!): CreateMacaroon!
+  createThunderPoints(alias: String!, id: String!, public_key: String!, uris: [String!]!): Boolean!
+  fetchLnUrl(url: String!): LnUrlRequest!
+  getAuthToken(cookie: String): Boolean!
+  getSessionToken(id: String!, password: String!): String!
+  keysend(destination: String, tokens: Float!): PayInvoice!
+  lnMarketsDeposit(amount: Float!): Boolean!
+  lnMarketsLogin: AuthResponse!
+  lnMarketsLogout: Boolean!
+  lnMarketsWithdraw(amount: Float!): Boolean!
+  lnUrlAuth(url: String!): AuthResponse!
+  lnUrlChannel(callback: String!, k1: String!, uri: String!): String!
+  lnUrlPay(amount: Float!, callback: String!, comment: String): PaySuccess!
+  lnUrlWithdraw(amount: Float!, callback: String!, description: String, k1: String!): String!
+  loginAmboss: Boolean!
+  logout: Boolean!
+  openChannel(amount: Float!, isPrivate: Boolean, partnerPublicKey: String!, pushTokens: Float = 0, tokensPerVByte: Float): OpenOrCloseChannel!
+  pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
+  removePeer(publicKey: String): Boolean!
+  sendMessage(maxFee: Float, message: String!, messageType: String, publicKey: String!, tokens: Float): Float!
+  sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
+  updateFees(base_fee_tokens: Float, cltv_delta: Float, fee_rate: Float, max_htlc_mtokens: String, min_htlc_mtokens: String, transaction_id: String, transaction_vout: Float): Boolean!
+  updateMultipleFees(channels: [UpdateRoutingFeesParams!]!): Boolean!
+}
+
+type NetworkInfo {
+  averageChannelSize: Float!
+  channelCount: Float!
+  maxChannelSize: Float!
+  medianChannelSize: Float!
+  minChannelSize: Float!
+  nodeCount: Float!
+  notRecentlyUpdatedPolicyCount: Float!
+  totalCapacity: Float!
+}
+
+input NetworkInfoInput {
+  is_ok_to_adjust_peers: Boolean!
+  is_ok_to_create_chain_addresses: Boolean!
+  is_ok_to_create_invoices: Boolean!
+  is_ok_to_create_macaroons: Boolean!
+  is_ok_to_derive_keys: Boolean!
+  is_ok_to_get_chain_transactions: Boolean!
+  is_ok_to_get_invoices: Boolean!
+  is_ok_to_get_payments: Boolean!
+  is_ok_to_get_peers: Boolean!
+  is_ok_to_get_wallet_info: Boolean!
+  is_ok_to_pay: Boolean!
+  is_ok_to_send_to_chain_addresses: Boolean!
+  is_ok_to_sign_bytes: Boolean!
+  is_ok_to_sign_messages: Boolean!
+  is_ok_to_stop_daemon: Boolean!
+  is_ok_to_verify_bytes_signatures: Boolean!
+  is_ok_to_verify_messages: Boolean!
+}
+
+type Node {
+  node: NodeType!
+}
+
+type NodeBosHistory {
+  info: BosScoreInfo!
+  scores: [BosScore!]!
+}
+
+type NodeInfo {
+  active_channels_count: Float!
+  alias: String!
+  chains: [String!]!
+  closed_channels_count: Float!
+  color: String!
+  current_block_hash: String!
+  current_block_height: Float!
+  is_synced_to_chain: Boolean!
+  is_synced_to_graph: Boolean!
+  latest_block_at: String!
+  peers_count: Float!
+  pending_channels_count: Float!
+  public_key: String!
+  uris: [String!]!
+  version: String!
+}
+
+type NodePolicy {
+  base_fee_mtokens: String
+  cltv_delta: Float
+  fee_rate: Float
+  is_disabled: Boolean
+  max_htlc_mtokens: String
+  min_htlc_mtokens: String
+  node: Node
+  updated_at: String
+}
+
+type NodeSocial {
+  info: NodeSocialInfo
+}
+
+type NodeSocialInfo {
+  email: String
+  private: Boolean
+  telegram: String
+  twitter: String
+  twitter_verified: Boolean
+  website: String
+}
+
+type NodeType {
+  alias: String!
+  capacity: String
+  channel_count: Float
+  color: String
+  public_key: String
+  updated_at: String
+}
+
+type OnChainBalance {
+  closing: String!
+  confirmed: String!
+  pending: String!
+}
+
+type OpenOrCloseChannel {
+  transactionId: String!
+  transactionOutputIndex: String!
+}
+
+type PayInvoice {
+  fee: Float!
+  fee_mtokens: String!
+  hops: [Hops!]!
+  id: String!
+  is_confirmed: Boolean!
+  is_outgoing: Boolean!
+  mtokens: String!
+  safe_fee: Float!
+  safe_tokens: Float!
+  secret: String!
+  tokens: Float!
+}
+
+type PayRequest {
+  callback: String
+  commentAllowed: Float
+  maxSendable: String
+  metadata: String
+  minSendable: String
+  tag: String
+}
+
+type PaySuccess {
+  ciphertext: String
+  description: String
+  iv: String
+  message: String
+  tag: String
+  url: String
+}
+
+type PaymentType {
+  created_at: String
+  date: String!
+  destination: String!
+  destination_node: Node!
+  fee: Float!
+  fee_mtokens: String!
+  hops: [Node!]!
+  id: String!
+  index: Float
+  is_confirmed: Boolean!
+  is_outgoing: Boolean!
+  mtokens: String!
+  request: String
+  safe_fee: Float!
+  safe_tokens: Float
+  secret: String!
+  tokens: String!
+  type: String!
+}
+
+type Peer {
+  bytes_received: Float!
+  bytes_sent: Float!
+  is_inbound: Boolean!
+  is_sync_peer: Boolean
+  partner_node_info: Node!
+  ping_time: Float!
+  public_key: String!
+  socket: String!
+  tokens_received: Float!
+  tokens_sent: Float!
+}
+
+type PendingChannel {
+  close_transaction_id: String
+  is_active: Boolean!
+  is_closing: Boolean!
+  is_opening: Boolean!
+  is_timelocked: Boolean!
+  local_balance: Float!
+  local_reserve: Float!
+  partner_node_info: Node!
+  partner_public_key: String!
+  received: Float!
+  remote_balance: Float!
+  remote_reserve: Float!
+  sent: Float!
+  timelock_blocks: Float
+  timelock_expiration: Float
+  transaction_fee: Float
+  transaction_id: String!
+  transaction_vout: Float!
+}
+
+type PendingPayment {
+  id: String!
+  is_outgoing: Boolean!
+  timeout: Float!
+  tokens: Float!
+}
+
+type PendingResume {
+  incoming_amount: Float!
+  incoming_tokens: Float!
+  outgoing_amount: Float!
+  outgoing_tokens: Float!
+  total_amount: Float!
+  total_tokens: Float!
+}
+
+type Policy {
+  base_fee_mtokens: String
+  cltv_delta: Float
+  fee_rate: Float
+  is_disabled: Boolean
+  max_htlc_mtokens: String
+  min_htlc_mtokens: String
+  public_key: String!
+  updated_at: String
+}
+
+type Query {
+  decodeRequest(request: String!): DecodeInvoice!
+  getAccount: ServerAccount!
+  getAccountingReport(category: String, currency: String, fiat: String, month: String, year: String): String!
+  getAmbossLoginToken: String!
+  getAmbossUser: AmbossUser
+  getBackups: String!
+  getBaseCanConnect: Boolean!
+  getBaseNodes: [BaseNode!]!
+  getBasePoints: [BasePoints!]!
+  getBitcoinFees: BitcoinFee!
+  getBitcoinPrice: String!
+  getBoltzInfo: BoltzInfoType!
+  getBoltzSwapStatus(ids: [String!]!): [BoltzSwap!]!
+  getBosScores: [BosScore!]!
+  getChainTransactions: [ChainTransaction!]!
+  getChannel(id: String!, pubkey: String): SingleChannel!
+  getChannelReport: ChannelReport!
+  getChannels(active: Boolean): [Channel!]!
+  getClosedChannels: [ClosedChannel!]!
+  getFeeHealth: ChannelsFeeHealth!
+  getForwards(days: Float!): [Forward!]!
+  getHello: String!
+  getInvoiceStatusChange(id: String!): String!
+  getLatestVersion: String!
+  getLightningAddressInfo(address: String!): PayRequest!
+  getLightningAddresses: [LightningAddress!]!
+  getLnMarketsStatus: String!
+  getLnMarketsUrl: String!
+  getLnMarketsUserInfo: LnMarketsUserInfo!
+  getMessages(initialize: Boolean): GetMessages!
+  getNetworkInfo: NetworkInfo!
+  getNode(publicKey: String!, withoutChannels: Boolean): Node!
+  getNodeBalances: Balances!
+  getNodeBosHistory(pubkey: String!): NodeBosHistory!
+  getNodeInfo: NodeInfo!
+  getNodeSocialInfo(pubkey: String!): LightningNodeSocialInfo!
+  getPeers: [Peer!]!
+  getPendingChannels: [PendingChannel!]!
+  getResume(limit: Float, offset: Float): GetResumeType!
+  getServerAccounts: [ServerAccount!]!
+  getTimeHealth: ChannelsTimeHealth!
+  getUtxos: [Utxo!]!
+  getVolumeHealth: ChannelsHealth!
+  getWalletInfo: Wallet!
+  recoverFunds(backup: String!): Boolean!
+  signMessage(message: String!): String!
+  verifyBackups(backup: String!): Boolean!
+  verifyMessage(message: String!, signature: String!): String!
+}
+
+type Route {
+  base_fee_mtokens: String
+  channel: String
+  cltv_delta: Float
+  fee_rate: Float
+  public_key: String!
+}
+
+type ServerAccount {
+  id: String!
+  loggedIn: Boolean!
+  name: String!
+  type: String!
+}
+
+type SingleChannel {
+  capacity: Float!
+  id: String!
+  node_policies: NodePolicy
+  partner_node_policies: NodePolicy
+  policies: [Policy!]!
+  transaction_id: String!
+  transaction_vout: Float!
+  updated_at: String
+}
+
+union Transaction = InvoiceType | PaymentType
+
+input UpdateRoutingFeesParams {
+  base_fee_mtokens: String
+  base_fee_tokens: Float
+  cltv_delta: Float
+  fee_rate: Float
+  max_htlc_mtokens: String
+  min_htlc_mtokens: String
+  transaction_id: String
+  transaction_vout: Float
+}
+
+type Utxo {
+  address: String!
+  address_format: String!
+  confirmation_count: Float!
+  output_script: String!
+  tokens: Float!
+  transaction_id: String!
+  transaction_vout: Float!
+}
+
+type Wallet {
+  build_tags: [String!]!
+  commit_hash: String!
+  is_autopilotrpc_enabled: Boolean!
+  is_chainrpc_enabled: Boolean!
+  is_invoicesrpc_enabled: Boolean!
+  is_signrpc_enabled: Boolean!
+  is_walletrpc_enabled: Boolean!
+  is_watchtowerrpc_enabled: Boolean!
+  is_wtclientrpc_enabled: Boolean!
+}
+
+type WithdrawRequest {
+  callback: String
+  defaultDescription: String
+  k1: String
+  maxWithdrawable: String
+  minWithdrawable: String
+  tag: String
+}
