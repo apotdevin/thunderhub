@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FilesService } from '../files/files.service';
 import { authenticatedLndGrpc } from 'ln-service';
@@ -7,16 +7,18 @@ import { Logger } from 'winston';
 import { EnrichedAccount } from './accounts.types';
 
 @Injectable()
-export class AccountsService {
+export class AccountsService implements OnModuleInit {
   accounts: { [key: string]: EnrichedAccount } = {};
 
   constructor(
     private configService: ConfigService,
     private filesService: FilesService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
-  ) {
+  ) {}
+
+  async onModuleInit(): Promise<void> {
     // Initialize cookie file if cookie path is provided
-    filesService.readCookie();
+    this.filesService.readCookie();
 
     const macaroonPath = this.configService.get('sso.macaroonPath');
     const certPath = this.configService.get('sso.certPath');
@@ -67,5 +69,17 @@ export class AccountsService {
 
   getAllAccounts() {
     return this.accounts;
+  }
+
+  updateAccountMacaroon(id: string, macaroon: string): void {
+    if (this.accounts?.[id]) {
+      const { socket, cert } = this.accounts[id];
+      const { lnd } = authenticatedLndGrpc({ socket, cert, macaroon });
+
+      this.accounts[id].macaroon = macaroon;
+      this.accounts[id].lnd = lnd;
+    } else {
+      this.logger.error(`Account not found to update macaroon`, { id });
+    }
   }
 }

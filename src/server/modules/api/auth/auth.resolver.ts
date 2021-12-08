@@ -119,18 +119,19 @@ export class AuthResolver {
     const isProduction = this.configService.get('isProduction');
 
     if (account.encrypted) {
+      // In development NestJS rebuilds the files so this only works in production env.
       if (!isProduction) {
-        this.logger.error(
-          'Encrypted accounts only work in a production environment'
-        );
-        throw new Error('UnableToLogin');
+        const message =
+          'Encrypted accounts only work in a production environment';
+
+        this.logger.error(message);
+        throw new Error(message);
       }
 
       const macaroon = decodeMacaroon(account.encryptedMacaroon, password);
 
       // Store decrypted macaroon in memory.
-      // In development NextJS rebuilds the files so this only works in production env.
-      account.macaroon = macaroon;
+      this.accountsService.updateAccountMacaroon(id, macaroon);
 
       this.logger.debug(`Decrypted the macaroon for account ${id}`);
     } else {

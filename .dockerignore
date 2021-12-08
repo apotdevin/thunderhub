@@ -5,6 +5,7 @@
 !README*.md
 /node_modules
 /.next
+/dist
 /docs
 /.github
 .vscode

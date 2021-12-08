@@ -16,6 +16,13 @@ type Urls = {
   mempool: string;
 };
 
+export type YamlEnvs = {
+  YML_ENV_1: string;
+  YML_ENV_2: string;
+  YML_ENV_3: string;
+  YML_ENV_4: string;
+};
+
 type ConfigType = {
   isProduction: boolean;
   playground: boolean;
@@ -27,6 +34,7 @@ type ConfigType = {
   sso: SSOConfig;
   throttler: Throttler;
   urls: Urls;
+  yamlEnvs: YamlEnvs;
 };
 
 export default (): ConfigType => {
@@ -57,6 +65,13 @@ export default (): ConfigType => {
     limit: Number(process.env.THROTTLE_LIMIT) || 10,
   };
 
+  const yamlEnvs = {
+    YML_ENV_1: process.env.YML_ENV_1 || '',
+    YML_ENV_2: process.env.YML_ENV_2 || '',
+    YML_ENV_3: process.env.YML_ENV_3 || '',
+    YML_ENV_4: process.env.YML_ENV_4 || '',
+  };
+
   const config: ConfigType = {
     isProduction,
     playground: !isProduction,
@@ -68,6 +83,7 @@ export default (): ConfigType => {
     sso,
     urls,
     jwtSecret,
+    yamlEnvs,
   };
 
   if (!isProduction) {
