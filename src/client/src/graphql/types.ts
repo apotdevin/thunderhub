@@ -206,19 +206,19 @@ export type Channel = {
 
 export type ChannelFeeHealth = {
   __typename?: 'ChannelFeeHealth';
-  id: Scalars['String'];
-  mySide: FeeHealth;
-  partner: Node;
-  partnerSide: FeeHealth;
+  id?: Maybe<Scalars['String']>;
+  mySide?: Maybe<FeeHealth>;
+  partner?: Maybe<Node>;
+  partnerSide?: Maybe<FeeHealth>;
 };
 
 export type ChannelHealth = {
   __typename?: 'ChannelHealth';
-  averageVolumeNormalized: Scalars['String'];
-  id: Scalars['String'];
-  partner: Node;
-  score: Scalars['Float'];
-  volumeNormalized: Scalars['String'];
+  averageVolumeNormalized?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  partner?: Maybe<Node>;
+  score?: Maybe<Scalars['Float']>;
+  volumeNormalized?: Maybe<Scalars['String']>;
 };
 
 export type ChannelReport = {
@@ -243,31 +243,31 @@ export type ChannelRequest = {
 
 export type ChannelTimeHealth = {
   __typename?: 'ChannelTimeHealth';
-  id: Scalars['String'];
-  monitoredDowntime: Scalars['Float'];
-  monitoredTime: Scalars['Float'];
-  monitoredUptime: Scalars['Float'];
-  partner: Node;
-  score: Scalars['Float'];
-  significant: Scalars['Boolean'];
+  id?: Maybe<Scalars['String']>;
+  monitoredDowntime?: Maybe<Scalars['Float']>;
+  monitoredTime?: Maybe<Scalars['Float']>;
+  monitoredUptime?: Maybe<Scalars['Float']>;
+  partner?: Maybe<Node>;
+  score?: Maybe<Scalars['Float']>;
+  significant?: Maybe<Scalars['Boolean']>;
 };
 
 export type ChannelsFeeHealth = {
   __typename?: 'ChannelsFeeHealth';
-  channels: ChannelFeeHealth;
-  score: Scalars['Float'];
+  channels?: Maybe<Array<ChannelFeeHealth>>;
+  score?: Maybe<Scalars['Float']>;
 };
 
 export type ChannelsHealth = {
   __typename?: 'ChannelsHealth';
-  channels: ChannelHealth;
-  score: Scalars['Float'];
+  channels?: Maybe<Array<ChannelHealth>>;
+  score?: Maybe<Scalars['Float']>;
 };
 
 export type ChannelsTimeHealth = {
   __typename?: 'ChannelsTimeHealth';
-  channels: ChannelTimeHealth;
-  score: Scalars['Float'];
+  channels?: Maybe<Array<ChannelTimeHealth>>;
+  score?: Maybe<Scalars['Float']>;
 };
 
 export type ClosedChannel = {
@@ -344,13 +344,13 @@ export type DecodeInvoice = {
 
 export type FeeHealth = {
   __typename?: 'FeeHealth';
-  base: Scalars['String'];
-  baseOver: Scalars['Boolean'];
-  baseScore: Scalars['Float'];
-  rate: Scalars['Float'];
-  rateOver: Scalars['Boolean'];
-  rateScore: Scalars['Float'];
-  score: Scalars['Float'];
+  base?: Maybe<Scalars['String']>;
+  baseOver?: Maybe<Scalars['Boolean']>;
+  baseScore?: Maybe<Scalars['Float']>;
+  rate?: Maybe<Scalars['Float']>;
+  rateOver?: Maybe<Scalars['Boolean']>;
+  rateScore?: Maybe<Scalars['Float']>;
+  score?: Maybe<Scalars['Float']>;
 };
 
 export type Forward = {
@@ -395,7 +395,7 @@ export type InvoiceType = {
   __typename?: 'InvoiceType';
   chain_address?: Maybe<Scalars['String']>;
   confirmed_at?: Maybe<Scalars['String']>;
-  created_at?: Maybe<Scalars['String']>;
+  created_at: Scalars['String'];
   date: Scalars['String'];
   description: Scalars['String'];
   description_hash?: Maybe<Scalars['String']>;
@@ -407,7 +407,7 @@ export type InvoiceType = {
   is_private: Scalars['Boolean'];
   is_push?: Maybe<Scalars['Boolean']>;
   payments: Array<InvoicePayment>;
-  received?: Maybe<Scalars['Float']>;
+  received: Scalars['Float'];
   received_mtokens: Scalars['String'];
   request?: Maybe<Scalars['String']>;
   secret: Scalars['String'];
@@ -807,7 +807,7 @@ export type PaySuccess = {
 
 export type PaymentType = {
   __typename?: 'PaymentType';
-  created_at?: Maybe<Scalars['String']>;
+  created_at: Scalars['String'];
   date: Scalars['String'];
   destination: Scalars['String'];
   destination_node: Node;

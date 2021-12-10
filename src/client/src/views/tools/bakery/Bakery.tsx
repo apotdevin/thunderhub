@@ -14,7 +14,6 @@ import {
   SingleButton,
   MultiButton,
 } from '../../../components/buttons/multiButton/MultiButton';
-import { PermissionsType } from '../../../../server/schema/macaroon/resolvers';
 import { useCreateMacaroonMutation } from '../../../graphql/mutations/__generated__/createMacaroon.generated';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../utils/error';
@@ -23,6 +22,7 @@ import Modal from '../../../components/modal/ReactModal';
 import { shorten } from '../../../components/generic/helpers';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Copy } from 'react-feather';
+import { NetworkInfoInput } from '../../../graphql/types';
 
 const InitPermissions = {
   is_ok_to_adjust_peers: false,
@@ -49,7 +49,7 @@ export const Bakery = () => {
   const [newMacaroon, newMacaroonSet] = React.useState<boolean>(false);
 
   const [permissions, permissionSet] =
-    React.useState<PermissionsType>(InitPermissions);
+    React.useState<NetworkInfoInput>(InitPermissions);
 
   let hasATrue = false;
   Object.entries(permissions);
@@ -113,7 +113,7 @@ export const Bakery = () => {
     );
   };
 
-  const renderLine = (title: string, value: keyof PermissionsType) => (
+  const renderLine = (title: string, value: keyof NetworkInfoInput) => (
     <ResponsiveLine>
       {permissions[value] ? (
         <Sub4Title>{title}</Sub4Title>

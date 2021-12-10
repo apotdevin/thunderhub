@@ -5,16 +5,8 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCreateAddressMutation } from '../../../../graphql/mutations/__generated__/createAddress.generated';
 import QRCode from 'qrcode.react';
 import { Copy } from 'react-feather';
-import {
-  NoWrapTitle,
-  ResponsiveLine,
-} from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../../../components/buttons/multiButton/MultiButton';
 import { mediaWidths } from '../../../../styles/Themes';
 
 const Responsive = styled.div`
@@ -53,17 +45,7 @@ const Column = styled.div`
   align-items: center;
 `;
 
-const ButtonRow = styled.div`
-  width: auto;
-  display: flex;
-`;
-
-const TitleWithSpacing = styled(NoWrapTitle)`
-  margin-right: 10px;
-`;
-
 export const ReceiveOnChainCard = () => {
-  const [nested, setNested] = useState(false);
   const [received, setReceived] = useState(false);
 
   const [createAddress, { data, loading }] = useCreateAddressMutation({
@@ -95,40 +77,17 @@ export const ReceiveOnChainCard = () => {
           </Column>
         </Responsive>
       ) : (
-        <ResponsiveLine>
-          <ButtonRow>
-            <TitleWithSpacing>Type of Address:</TitleWithSpacing>
-            <MultiButton>
-              <SingleButton
-                selected={!nested}
-                onClick={() => {
-                  setNested(false);
-                }}
-              >
-                P2WPKH
-              </SingleButton>
-              <SingleButton
-                selected={nested}
-                onClick={() => {
-                  setNested(true);
-                }}
-              >
-                NP2WPKH
-              </SingleButton>
-            </MultiButton>
-          </ButtonRow>
-          <ColorButton
-            onClick={() => createAddress({ variables: { nested } })}
-            disabled={received}
-            withMargin={'0 0 0 16px'}
-            mobileMargin={'16px 0 0'}
-            arrow={true}
-            loading={loading}
-            mobileFullWidth={true}
-          >
-            Create Address
-          </ColorButton>
-        </ResponsiveLine>
+        <ColorButton
+          onClick={() => createAddress()}
+          disabled={received}
+          withMargin={'0 0 0 16px'}
+          mobileMargin={'16px 0 0'}
+          arrow={true}
+          loading={loading}
+          mobileFullWidth={true}
+        >
+          Create Address
+        </ColorButton>
       )}
     </>
   );

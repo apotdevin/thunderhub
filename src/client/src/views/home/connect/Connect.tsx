@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { renderLine } from '../../../components/generic/helpers';
-import { NodeInfoType } from '../../../graphql/types';
 import { useGetNodeInfoQuery } from '../../../graphql/queries/__generated__/getNodeInfo.generated';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
@@ -74,7 +73,7 @@ export const ConnectCard = () => {
     return <LoadingCard title={'Connect'} />;
   }
 
-  const { public_key, uris } = (data.getNodeInfo as NodeInfoType) || {};
+  const { public_key, uris } = data.getNodeInfo || {};
 
   const onionAddress = uris.find((uri: string) => uri.indexOf('onion') >= 0);
   const normalAddress = uris.find((uri: string) => uri.indexOf('onion') < 0);

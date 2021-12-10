@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-micro';
+import { gql } from '@apollo/client';
 
 export const GET_FEE_HEALTH = gql`
   query GetFeeHealth {

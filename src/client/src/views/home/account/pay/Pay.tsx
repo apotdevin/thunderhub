@@ -75,7 +75,7 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
 
     const { description, tokens, destination_node } = data.decodeRequest;
 
-    const { alias } = destination_node.node;
+    const { alias } = destination_node?.node || { alias: 'Unknown' };
 
     return (
       <>

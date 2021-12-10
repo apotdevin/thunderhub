@@ -1,19 +1,19 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { ChannelType } from '../../src/graphql/types';
+import { Channel } from '../../src/graphql/types';
 
 type State = {
-  inChannel: ChannelType | null;
-  outChannel: ChannelType | null;
+  inChannel: Channel | null;
+  outChannel: Channel | null;
 };
 
 type ActionType =
   | {
       type: 'setIn';
-      channel: ChannelType | null;
+      channel: Channel | null;
     }
   | {
       type: 'setOut';
-      channel: ChannelType | null;
+      channel: Channel | null;
     }
   | {
       type: 'clear';

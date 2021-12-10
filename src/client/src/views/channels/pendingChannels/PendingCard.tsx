@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
-import { PendingChannelType } from '../../../graphql/types';
+import { PendingChannel } from '../../../graphql/types';
 import { blockToTime, getPercent } from '../../../utils/helpers';
 import {
   Progress,
@@ -31,7 +31,7 @@ import { getPrice } from '../../../components/price/Price';
 import { usePriceState } from '../../../context/PriceContext';
 
 interface PendingCardProps {
-  channelInfo: PendingChannelType;
+  channelInfo: PendingChannel;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;

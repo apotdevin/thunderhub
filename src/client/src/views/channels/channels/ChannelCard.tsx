@@ -8,7 +8,7 @@ import {
   ChevronsDown,
   X,
 } from 'react-feather';
-import { ChannelType } from '../../../graphql/types';
+import { Channel } from '../../../graphql/types';
 import {
   useRebalanceState,
   useRebalanceDispatch,
@@ -44,7 +44,7 @@ const getPrivate = (status: boolean) => {
 };
 
 interface ChannelCardProps {
-  channelInfo: ChannelType;
+  channelInfo: Channel;
   index: number;
   setIndexOpen: (indexNumber: number) => void;
   indexOpen: number;

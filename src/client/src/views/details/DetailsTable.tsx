@@ -2,9 +2,9 @@ import React, { useMemo, useRef, useEffect } from 'react';
 import { useTable, useSortBy, useRowSelect } from 'react-table';
 import { separationColor } from '../../styles/Themes';
 import { saveToPc } from '../../utils/helpers';
-import { ChannelType } from '../../graphql/types';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
+import { ChannelFeesQuery } from '../../graphql/queries/__generated__/getChannelFees.generated';
 
 const ToastStyle = styled.div`
   width: 100%;
@@ -57,7 +57,9 @@ const IndeterminateCheckbox = React.forwardRef<
 
 IndeterminateCheckbox.displayName = 'IndeterminateCheckbox';
 
-type DetailsTableType = { channels: ChannelType[] };
+type DetailsTableType = {
+  channels: ChannelFeesQuery['getChannels'];
+};
 
 export const DetailsTable = ({ channels }: DetailsTableType) => {
   const toastId = useRef<any>(null);

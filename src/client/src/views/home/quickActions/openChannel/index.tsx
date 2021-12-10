@@ -27,7 +27,7 @@ import {
   X,
 } from 'react-feather';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { BaseNodesType } from '../../../../graphql/types';
+import { BaseNode } from '../../../../graphql/types';
 import { OpenChannelCard } from './OpenChannel';
 import { OpenRecommended } from './OpenRecommended';
 
@@ -80,7 +80,7 @@ interface OpenChannelProps {
 
 export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
   const [openDetails, setOpenDetails] = React.useState(false);
-  const [partner, setPartner] = React.useState<BaseNodesType | null>(null);
+  const [partner, setPartner] = React.useState<BaseNode | null>(null);
   const [open, set] = React.useState(false);
   const { data, loading } = useGetBaseNodesQuery();
 

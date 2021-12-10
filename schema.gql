@@ -338,7 +338,7 @@ type InvoicePayment {
 type InvoiceType {
   chain_address: String
   confirmed_at: String
-  created_at: String
+  created_at: String!
   date: String!
   description: String!
   description_hash: String
@@ -350,7 +350,7 @@ type InvoiceType {
   is_private: Boolean!
   is_push: Boolean
   payments: [InvoicePayment!]!
-  received: Float
+  received: Float!
   received_mtokens: String!
   request: String
   secret: String!
@@ -569,7 +569,7 @@ type PaySuccess {
 }
 
 type PaymentType {
-  created_at: String
+  created_at: String!
   date: String!
   destination: String!
   destination_node: Node!

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { GetTransactionsType } from '../../../graphql/types';
+import { ChainTransaction } from '../../../graphql/types';
 import {
   Separation,
   SubCard,
@@ -24,7 +24,7 @@ const AddMargin = styled.div`
 `;
 
 interface TransactionsCardProps {
-  transaction: GetTransactionsType;
+  transaction: Omit<ChainTransaction, 'is_confirmed' | 'is_outgoing'>;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;

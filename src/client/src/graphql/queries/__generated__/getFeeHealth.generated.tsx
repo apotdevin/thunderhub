@@ -9,35 +9,47 @@ export type GetFeeHealthQuery = {
   __typename?: 'Query';
   getFeeHealth: {
     __typename?: 'ChannelsFeeHealth';
-    score: number;
-    channels: {
-      __typename?: 'ChannelFeeHealth';
-      id: string;
-      partnerSide: {
-        __typename?: 'FeeHealth';
-        score: number;
-        rate: number;
-        base: string;
-        rateScore: number;
-        baseScore: number;
-        rateOver: boolean;
-        baseOver: boolean;
-      };
-      mySide: {
-        __typename?: 'FeeHealth';
-        score: number;
-        rate: number;
-        base: string;
-        rateScore: number;
-        baseScore: number;
-        rateOver: boolean;
-        baseOver: boolean;
-      };
-      partner: {
-        __typename?: 'Node';
-        node: { __typename?: 'NodeType'; alias: string };
-      };
-    };
+    score?: number | null | undefined;
+    channels?:
+      | Array<{
+          __typename?: 'ChannelFeeHealth';
+          id?: string | null | undefined;
+          partnerSide?:
+            | {
+                __typename?: 'FeeHealth';
+                score?: number | null | undefined;
+                rate?: number | null | undefined;
+                base?: string | null | undefined;
+                rateScore?: number | null | undefined;
+                baseScore?: number | null | undefined;
+                rateOver?: boolean | null | undefined;
+                baseOver?: boolean | null | undefined;
+              }
+            | null
+            | undefined;
+          mySide?:
+            | {
+                __typename?: 'FeeHealth';
+                score?: number | null | undefined;
+                rate?: number | null | undefined;
+                base?: string | null | undefined;
+                rateScore?: number | null | undefined;
+                baseScore?: number | null | undefined;
+                rateOver?: boolean | null | undefined;
+                baseOver?: boolean | null | undefined;
+              }
+            | null
+            | undefined;
+          partner?:
+            | {
+                __typename?: 'Node';
+                node: { __typename?: 'NodeType'; alias: string };
+              }
+            | null
+            | undefined;
+        }>
+      | null
+      | undefined;
   };
 };
 

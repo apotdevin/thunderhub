@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BaseNodesType } from '../../../../graphql/types';
+import { BaseNode } from '../../../../graphql/types';
 import { useGetNodeQuery } from '../../../../graphql/queries/__generated__/getNode.generated';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import {
@@ -19,7 +19,7 @@ import { ColorButton } from '../../../../components/buttons/colorButton/ColorBut
 import { OpenChannelCard } from './OpenChannel';
 
 type OpenProps = {
-  partner: BaseNodesType;
+  partner: BaseNode;
   setOpenCard: (card: string) => void;
 };
 
