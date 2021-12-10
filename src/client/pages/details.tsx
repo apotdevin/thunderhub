@@ -16,7 +16,6 @@ import { Upload, X, Info } from 'react-feather';
 import { DetailsUpload } from '../src/components/details/detailsUpload';
 import ReactTooltip from 'react-tooltip';
 import { DetailsTable } from '../src/views/details/DetailsTable';
-import { ChannelType } from '../src/graphql/types';
 import { useUpdateMultipleFeesMutation } from '../src/graphql/mutations/__generated__/updateMultipleFees.generated';
 
 export const IconCursor = styled.div`
@@ -91,7 +90,7 @@ const Detail = () => {
         </Card>
       )}
       <Card cardPadding={'0'}>
-        <DetailsTable channels={data.getChannels as ChannelType[]} />
+        <DetailsTable channels={data.getChannels} />
       </Card>
       <ReactTooltip
         id={'channel_details_info'}

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useGetPeersQuery } from '../src/graphql/queries/__generated__/getPeers.generated';
 import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
-import { PeerType } from '../src/graphql/types';
 import { NextPageContext } from 'next';
 import { getProps } from '../src/utils/ssr';
 import {
@@ -30,7 +29,7 @@ const PeersView = () => {
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
           {data.getPeers.map((peer, index: number) => (
             <PeersCard
-              peer={peer as PeerType}
+              peer={peer}
               index={index + 1}
               setIndexOpen={setIndexOpen}
               indexOpen={indexOpen}

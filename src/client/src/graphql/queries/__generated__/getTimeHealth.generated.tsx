@@ -9,20 +9,26 @@ export type GetTimeHealthQuery = {
   __typename?: 'Query';
   getTimeHealth: {
     __typename?: 'ChannelsTimeHealth';
-    score: number;
-    channels: {
-      __typename?: 'ChannelTimeHealth';
-      id: string;
-      score: number;
-      significant: boolean;
-      monitoredTime: number;
-      monitoredUptime: number;
-      monitoredDowntime: number;
-      partner: {
-        __typename?: 'Node';
-        node: { __typename?: 'NodeType'; alias: string };
-      };
-    };
+    score?: number | null | undefined;
+    channels?:
+      | Array<{
+          __typename?: 'ChannelTimeHealth';
+          id?: string | null | undefined;
+          score?: number | null | undefined;
+          significant?: boolean | null | undefined;
+          monitoredTime?: number | null | undefined;
+          monitoredUptime?: number | null | undefined;
+          monitoredDowntime?: number | null | undefined;
+          partner?:
+            | {
+                __typename?: 'Node';
+                node: { __typename?: 'NodeType'; alias: string };
+              }
+            | null
+            | undefined;
+        }>
+      | null
+      | undefined;
   };
 };
 

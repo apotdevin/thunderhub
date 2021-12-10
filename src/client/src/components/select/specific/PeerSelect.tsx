@@ -1,14 +1,14 @@
 import React from 'react';
 import { useGetPeersQuery } from '../../../../src/graphql/queries/__generated__/getPeers.generated';
 import { shorten } from '../../../../src/components/generic/helpers';
-import { PeerType } from '../../../../src/graphql/types';
+import { Peer } from '../../../../src/graphql/types';
 import { SelectWithDeco } from '../SelectWithDeco';
 import { ValueProp } from '..';
 
 type PeerSelectProps = {
   title: string;
   isMulti?: boolean;
-  callback: (peer: PeerType[]) => void;
+  callback: (peer: Peer[]) => void;
 };
 
 export const PeerSelect = ({ title, isMulti, callback }: PeerSelectProps) => {
@@ -47,7 +47,7 @@ export const PeerSelect = ({ title, isMulti, callback }: PeerSelectProps) => {
       })
       .filter(Boolean);
     if (finalPeers.length) {
-      callback(finalPeers as PeerType[]);
+      callback(finalPeers as Peer[]);
     } else {
       callback([]);
     }

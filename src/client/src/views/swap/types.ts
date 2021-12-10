@@ -1,8 +1,7 @@
 import {
   BoltzSwapStatus,
   CreateBoltzReverseSwapType,
-  DecodeType,
-  NodeType,
+  DecodeInvoice,
 } from '../../graphql/types';
 
 export type CreateBoltzReverseSwap = Pick<
@@ -18,21 +17,16 @@ export type CreateBoltzReverseSwap = Pick<
   | 'preimage'
   | 'privateKey'
 > & {
-  decodedInvoice?:
-    | (Pick<
-        DecodeType,
-        | 'description'
-        | 'destination'
-        | 'expires_at'
-        | 'id'
-        | 'safe_tokens'
-        | 'tokens'
-      > & {
-        destination_node: {
-          node: Pick<NodeType, 'alias'>;
-        };
-      })
-    | null;
+  decodedInvoice?: Pick<
+    DecodeInvoice,
+    | 'description'
+    | 'destination'
+    | 'expires_at'
+    | 'id'
+    | 'safe_tokens'
+    | 'tokens'
+    | 'destination_node'
+  > | null;
 } & { claimTransaction?: string };
 
 export type EnrichedSwap = {

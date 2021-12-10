@@ -1,5 +1,5 @@
 import React from 'react';
-import { BasePointsType } from '../../graphql/types';
+import { BasePoints } from '../../graphql/types';
 import styled from 'styled-components';
 import { DarkSubTitle } from '../../components/generic/Styled';
 import { themeColors } from '../../styles/Themes';
@@ -66,7 +66,7 @@ const getWidth = (index: number): string => {
 };
 
 type NodeCardType = {
-  node: BasePointsType | null | undefined;
+  node: BasePoints | null | undefined;
   index: number;
 };
 

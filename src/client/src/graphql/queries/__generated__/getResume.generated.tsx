@@ -18,7 +18,7 @@ export type GetResumeQuery = {
           __typename?: 'InvoiceType';
           chain_address?: string | null | undefined;
           confirmed_at?: string | null | undefined;
-          created_at?: string | null | undefined;
+          created_at: string;
           description: string;
           description_hash?: string | null | undefined;
           expires_at: string;
@@ -28,7 +28,7 @@ export type GetResumeQuery = {
           is_held?: boolean | null | undefined;
           is_private: boolean;
           is_push?: boolean | null | undefined;
-          received?: number | null | undefined;
+          received: number;
           received_mtokens: string;
           request?: string | null | undefined;
           secret: string;
@@ -49,7 +49,7 @@ export type GetResumeQuery = {
         }
       | {
           __typename?: 'PaymentType';
-          created_at?: string | null | undefined;
+          created_at: string;
           destination: string;
           fee: number;
           fee_mtokens: string;

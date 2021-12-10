@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { sortBy } from 'lodash';
-import { MessagesType } from '../../graphql/types';
+import { Message } from '../../graphql/types';
 import { SentChatProps } from '../../context/ChatContext';
 import {
   getMessageDate,
@@ -53,7 +53,7 @@ export const MessageCard = ({
 };
 
 interface ChatBoxProps {
-  messages: MessagesType[];
+  messages: Message[];
   alias: string;
 }
 

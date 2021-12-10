@@ -1,6 +1,6 @@
 import React from 'react';
 import { shorten } from '../../components/generic/helpers';
-import { ChannelType } from '../../graphql/types';
+import { Channel } from '../../graphql/types';
 import { useGetChannelsQuery } from '../../graphql/queries/__generated__/getChannels.generated';
 import { ValueProp } from '../../components/select';
 import { SelectWithDecoAndValue } from '../../components/select/SelectWithDeco';
@@ -10,8 +10,8 @@ import { ChannelInfo } from './ChannelInfo';
 type ChannelSelectProps = {
   inThroughId: string;
   outThroughId: string;
-  inCallback: (peer: ChannelType[]) => void;
-  outCallback: (peer: ChannelType[]) => void;
+  inCallback: (peer: Channel[]) => void;
+  outCallback: (peer: Channel[]) => void;
 };
 
 type OptionsItem = ValueProp & {
@@ -141,9 +141,9 @@ export const PeerSelection = ({
       .filter(Boolean);
     if (finalPeers.length) {
       if (incoming) {
-        inCallback(finalPeers as ChannelType[]);
+        inCallback(finalPeers as Channel[]);
       } else {
-        outCallback(finalPeers as ChannelType[]);
+        outCallback(finalPeers as Channel[]);
       }
     } else {
       if (incoming) {

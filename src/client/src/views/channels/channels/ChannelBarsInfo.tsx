@@ -3,12 +3,12 @@ import { renderLine } from '../../../components/generic/helpers';
 import { Separation, SubTitle } from '../../../components/generic/Styled';
 import { FormatFnType } from '../../../components/price/Price';
 import { useConfigState } from '../../../context/ConfigContext';
-import { ChannelType } from '../../../graphql/types';
+import { Channel } from '../../../graphql/types';
 
 const MAX_HTLCS = 483;
 
 type ChannelBarsInfoProps = {
-  info: ChannelType;
+  info: Channel;
   format: FormatFnType;
 };
 

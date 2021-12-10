@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BosRebalanceResultType } from '../../graphql/types';
+import { BosRebalanceResult } from '../../graphql/types';
 import {
   SubCard,
   Separation,
@@ -17,7 +17,7 @@ import {
 } from './Balance.styled';
 
 type AdvancedResultProps = {
-  rebalanceResult: BosRebalanceResultType;
+  rebalanceResult: BosRebalanceResult;
 };
 
 export const AdvancedResult: React.FC<AdvancedResultProps> = ({

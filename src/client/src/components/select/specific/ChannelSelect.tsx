@@ -1,6 +1,6 @@
 import React from 'react';
 import { shorten } from '../../../../src/components/generic/helpers';
-import { ChannelType } from '../../../../src/graphql/types';
+import { Channel } from '../../../../src/graphql/types';
 import { useGetChannelsQuery } from '../../../../src/graphql/queries/__generated__/getChannels.generated';
 import { SelectWithDeco } from '../SelectWithDeco';
 import { ValueProp } from '..';
@@ -9,7 +9,7 @@ type ChannelSelectProps = {
   title: string;
   isMulti?: boolean;
   maxWidth?: string;
-  callback: (peer: ChannelType[]) => void;
+  callback: (peer: Channel[]) => void;
 };
 
 export const ChannelSelect = ({
@@ -53,7 +53,7 @@ export const ChannelSelect = ({
       })
       .filter(Boolean);
     if (finalPeers.length) {
-      callback(finalPeers as ChannelType[]);
+      callback(finalPeers as Channel[]);
     } else {
       callback([]);
     }

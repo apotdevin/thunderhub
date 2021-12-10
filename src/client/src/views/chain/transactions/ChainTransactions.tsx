@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useGetChainTransactionsQuery } from '../../../graphql/queries/__generated__/getChainTransactions.generated';
-import { GetTransactionsType } from '../../../graphql/types';
 import {
   SubTitle,
   Card,
@@ -28,7 +27,7 @@ export const ChainTransactions = () => {
       <Card mobileCardPadding={'0'} mobileNoBackground={true}>
         {data.getChainTransactions.map((transaction, index) => (
           <TransactionsCard
-            transaction={transaction as GetTransactionsType}
+            transaction={transaction}
             key={index}
             index={index + 1}
             setIndexOpen={setIndexOpen}

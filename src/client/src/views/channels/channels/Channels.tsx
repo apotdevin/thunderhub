@@ -4,7 +4,7 @@ import { useGetChannelsQuery } from '../../../graphql/queries/__generated__/getC
 import { useConfigState } from '../../../context/ConfigContext';
 import { sortBy } from 'lodash';
 import { getPercent } from '../../../utils/helpers';
-import { ChannelType } from '../../../graphql/types';
+import { Channel } from '../../../graphql/types';
 import { useRebalanceState } from '../../../context/RebalanceContext';
 import { useRouter } from 'next/router';
 import { getErrorContent } from '../../../utils/error';
@@ -108,8 +108,8 @@ export const Channels: React.FC = () => {
     }
   }
 
-  const getChannels = (): ChannelType[] => {
-    const channels: ChannelType[] = data?.getChannels as ChannelType[];
+  const getChannels = (): Channel[] => {
+    const channels: Channel[] = data?.getChannels as Channel[];
     switch (channelSort) {
       case 'local': {
         const newArray = sortBy(channels, 'local_balance');
@@ -169,7 +169,7 @@ export const Channels: React.FC = () => {
     <>
       {getChannels().map((channel, index) => (
         <ChannelCard
-          channelInfo={channel as ChannelType}
+          channelInfo={channel as Channel}
           index={index + 1}
           setIndexOpen={setIndexOpen}
           indexOpen={indexOpen}

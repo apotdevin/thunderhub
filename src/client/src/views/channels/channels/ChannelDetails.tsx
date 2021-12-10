@@ -15,7 +15,7 @@ import {
 import { ChangeDetails } from '../../../components/modal/changeDetails/ChangeDetails';
 import { CloseChannel } from '../../../components/modal/closeChannel/CloseChannel';
 import Modal from '../../../components/modal/ReactModal';
-import { ChannelType } from '../../../graphql/types';
+import { Channel } from '../../../graphql/types';
 import {
   blockToTime,
   formatSats,
@@ -29,7 +29,7 @@ import { WumboTag } from './Channel.style';
 import { NodePeerSocials } from './NodePeerSocials';
 
 type ChannelDetailsProps = {
-  info: ChannelType;
+  info: Channel;
   format: FormatFnType;
 };
 

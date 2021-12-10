@@ -1,18 +1,18 @@
 import { sortBy, groupBy } from 'lodash';
-import { MessagesType } from '../graphql/types';
+import { Message } from '../graphql/types';
 
-export const separateBySender = (chats: MessagesType[]) => {
+export const separateBySender = (chats: Message[]) => {
   return groupBy(chats, 'sender');
 };
 
 export const getSenders = (
   bySender: ReturnType<typeof separateBySender>
-): MessagesType[] => {
-  const senders: MessagesType[] = [];
+): Message[] => {
+  const senders: Message[] = [];
   for (const key in bySender) {
     if (Object.prototype.hasOwnProperty.call(bySender, key)) {
       const messages = bySender[key];
-      const sorted: MessagesType[] = sortBy(messages, 'date').reverse();
+      const sorted: Message[] = sortBy(messages, 'date').reverse();
 
       if (sorted.length > 0) {
         const chat = sorted[0];

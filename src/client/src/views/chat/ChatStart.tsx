@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { X, ChevronRight } from 'react-feather';
 import { useGetPeersQuery } from '../../graphql/queries/__generated__/getPeers.generated';
-import { PeerType } from '../../graphql/types';
+import { Peer } from '../../graphql/types';
 import { Input } from '../../components/input';
 import {
   SubCard,
@@ -20,7 +20,7 @@ import {
 } from './Chat.styled';
 
 interface PeerProps {
-  peer: PeerType;
+  peer: Peer;
   index: number;
   indexOpen: number;
   setIndexOpen: (index: number) => void;
@@ -98,7 +98,7 @@ export const ChatStart = ({
           <SubTitle>Chat with a current peer</SubTitle>
           {data.getPeers.map((peer, index) => (
             <PeerChatCard
-              peer={peer as PeerType}
+              peer={peer}
               index={index + 1}
               setIndexOpen={setIndexOpen}
               indexOpen={indexOpen}

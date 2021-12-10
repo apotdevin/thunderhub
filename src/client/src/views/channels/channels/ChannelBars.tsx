@@ -3,7 +3,7 @@ import { BalanceBars, SumBar } from '../../../components/balance';
 import { ProgressBar } from '../../../components/generic/CardGeneric';
 import { FormatFnType } from '../../../components/price/Price';
 import { useConfigState } from '../../../context/ConfigContext';
-import { ChannelType } from '../../../graphql/types';
+import { Channel } from '../../../graphql/types';
 import { getPercent } from '../../../utils/helpers';
 import { ChannelStatsColumn, ChannelStatsLine } from './Channel.style';
 import { WUMBO_MIN_SIZE } from './Channels';
@@ -16,7 +16,7 @@ const getBar = (top: number, bottom: number) => {
 };
 
 type ChannelBarsProps = {
-  info: ChannelType;
+  info: Channel;
   format: FormatFnType;
   details: {
     biggestRateFee: number;

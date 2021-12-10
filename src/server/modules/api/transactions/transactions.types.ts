@@ -21,7 +21,7 @@ export class InvoiceType {
   chain_address: string;
   @Field({ nullable: true })
   confirmed_at: string;
-  @Field({ nullable: true })
+  @Field()
   created_at: string;
   @Field()
   description: string;
@@ -41,7 +41,7 @@ export class InvoiceType {
   is_private: boolean;
   @Field({ nullable: true })
   is_push: boolean;
-  @Field({ nullable: true })
+  @Field()
   received: number;
   @Field()
   received_mtokens: string;
@@ -61,7 +61,7 @@ export class InvoiceType {
 
 @ObjectType()
 export class PaymentType {
-  @Field({ nullable: true })
+  @Field()
   created_at: string;
   @Field()
   destination: string;

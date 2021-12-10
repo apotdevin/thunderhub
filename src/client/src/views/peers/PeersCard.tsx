@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ArrowDown, ArrowUp } from 'react-feather';
 import ReactTooltip from 'react-tooltip';
-import { PeerType } from '../../graphql/types';
+import { Peer } from '../../graphql/types';
 import {
   SubCard,
   Separation,
@@ -42,7 +42,7 @@ const getSymbol = (status: boolean) => {
 };
 
 interface PeerProps {
-  peer: PeerType;
+  peer: Peer;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
