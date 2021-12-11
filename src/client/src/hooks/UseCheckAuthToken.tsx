@@ -7,7 +7,7 @@ import getConfig from 'next/config';
 import { useGetAuthTokenMutation } from '../graphql/mutations/__generated__/getAuthToken.generated';
 
 const { publicRuntimeConfig } = getConfig();
-const { logoutUrl } = publicRuntimeConfig;
+const { logoutUrl, basePath } = publicRuntimeConfig;
 
 export const useCheckAuthToken = () => {
   const { query } = useRouter();
@@ -19,7 +19,7 @@ export const useCheckAuthToken = () => {
     refetchQueries: ['GetNodeInfo'],
     onError: error => {
       toast.error(getErrorContent(error));
-      window.location.href = logoutUrl || 'login';
+      window.location.href = logoutUrl || `${basePath}/login`;
     },
   });
 
@@ -27,18 +27,18 @@ export const useCheckAuthToken = () => {
     if (cookieParam) {
       getToken();
     } else {
-      window.location.href = logoutUrl || 'login';
+      window.location.href = logoutUrl || `${basePath}/login`;
     }
   }, [cookieParam, getToken]);
 
   React.useEffect(() => {
     if (!cookieParam || !data) return;
     if (data.getAuthToken) {
-      window.location.href = '/';
+      window.location.href = `${basePath}/`;
     }
     if (!data.getAuthToken) {
       toast.warning('Unable to SSO. Check your logs.');
-      window.location.href = logoutUrl || 'login';
+      window.location.href = logoutUrl || `${basePath}/login`;
     }
   }, [data, cookieParam]);
 };

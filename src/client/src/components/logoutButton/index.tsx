@@ -10,7 +10,7 @@ import getConfig from 'next/config';
 import { useChatDispatch } from '../../context/ChatContext';
 
 const { publicRuntimeConfig } = getConfig();
-const { logoutUrl } = publicRuntimeConfig;
+const { logoutUrl, basePath } = publicRuntimeConfig;
 
 const Logout = styled.button`
   cursor: pointer;
@@ -39,7 +39,7 @@ export const LogoutWrapper: FC = ({ children }) => {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
 
-      window.location.href = logoutUrl || '/login';
+      window.location.href = logoutUrl || `${basePath}/login`;
     }
   }, [data, dispatchChat, client]);
 
@@ -72,7 +72,7 @@ export const LogoutButton = () => {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
 
-      window.location.href = logoutUrl || '/login';
+      window.location.href = logoutUrl || `${basePath}/login`;
     }
   }, [data, dispatchChat, client]);
 

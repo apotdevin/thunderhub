@@ -24,6 +24,7 @@ export type YamlEnvs = {
 };
 
 type ConfigType = {
+  basePath: string;
   isProduction: boolean;
   playground: boolean;
   logLevel: string;
@@ -74,6 +75,7 @@ export default (): ConfigType => {
 
   const config: ConfigType = {
     isProduction,
+    basePath: process.env.BASE_PATH || '',
     playground: !isProduction,
     logLevel: process.env.LOG_LEVEL,
     cookiePath: process.env.COOKIE_PATH || '',
