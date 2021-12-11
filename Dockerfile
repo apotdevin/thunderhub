@@ -27,9 +27,11 @@ WORKDIR /app
 # Set env variables
 ARG BASE_PATH=""
 ENV BASE_PATH=${BASE_PATH}
+ARG NODE_ENV="production"
+ENV NODE_ENV=${NODE_ENV}
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build the NextJS application
+# Build the NestJS and NextJS application
 COPY . .
 RUN npm run build
 
@@ -46,15 +48,21 @@ WORKDIR /app
 # Set env variables
 ARG BASE_PATH=""
 ENV BASE_PATH=${BASE_PATH}
+ARG NODE_ENV="production"
+ENV NODE_ENV=${NODE_ENV}
 ENV NEXT_TELEMETRY_DISABLED=1
 
-COPY --from=build /app/package.json /app/package-lock.json /app/next.config.js ./
-COPY --from=build /app/public ./public
+COPY --from=build /app/package.json /app/package-lock.json ./
 COPY --from=build /app/node_modules/ ./node_modules 
+
+# Copy NextJS files
+COPY --from=build /app/src/client/public ./src/client/public
+COPY --from=build /app/src/client/next.config.js ./src/client/
 COPY --from=build /app/.next/ ./.next
 
-COPY ./scripts/initCookie.sh ./scripts/initCookie.sh
+# Copy NestJS files
+COPY --from=build /app/dist/ ./dist
 
-EXPOSE 3000 
+EXPOSE 3000
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "start:prod" ]
