@@ -6,8 +6,11 @@ import { Logger } from 'winston';
 import { enc } from 'crypto-js';
 import hmacSHA256 from 'crypto-js/hmac-sha256';
 import bip39 from 'bip39';
-import bip32 from 'bip32';
+import BIP32Factory, { BIP32Interface } from 'bip32';
 import secp256k1 from 'secp256k1';
+import * as ecc from 'tiny-secp256k1';
+
+const bip32 = BIP32Factory(ecc);
 
 const fromHexString = (hexString: string) =>
   new Uint8Array(
@@ -55,7 +58,7 @@ export class LnUrlService {
     const base58 = bip39.mnemonicToSeedSync(secretKey);
 
     // Derive private seed from previous private seed and path
-    const node: bip32.BIP32Interface = bip32.fromSeed(base58);
+    const node: BIP32Interface = bip32.fromSeed(base58);
     const derived = node.derivePath(
       `m/138/${indexes[0]}/${indexes[1]}/${indexes[2]}/${indexes[3]}`
     );

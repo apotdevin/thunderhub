@@ -3,13 +3,16 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { NodeService } from '../../node/node.service';
 import hmacSHA256 from 'crypto-js/hmac-sha256';
-import * as bip39 from 'bip39';
-import * as bip32 from 'bip32';
-import * as secp256k1 from 'secp256k1';
+import bip39 from 'bip39';
+import BIP32Factory, { BIP32Interface } from 'bip32';
+import secp256k1 from 'secp256k1';
+import * as ecc from 'tiny-secp256k1';
 import { enc } from 'crypto-js';
 import { appUrls } from 'src/server/utils/appUrls';
 import { FetchService } from '../../fetch/fetch.service';
-import { decode, fromWords } from 'bech32';
+import { bech32 } from 'bech32';
+
+const bip32 = BIP32Factory(ecc);
 
 const fromHexString = (hexString: string) =>
   new Uint8Array(
@@ -21,8 +24,8 @@ const toHexString = (bytes: Uint8Array) =>
 
 const decodeLnUrl = (url: string): string => {
   const cleanUrl = url.toLowerCase().replace('lightning:', '');
-  const { words } = decode(cleanUrl, 500);
-  const bytes = fromWords(words);
+  const { words } = bech32.decode(cleanUrl, 500);
+  const bytes = bech32.fromWords(words);
   return new String(Buffer.from(bytes)).toString();
 };
 
@@ -130,7 +133,7 @@ export class LnMarketsService {
     const base58 = bip39.mnemonicToSeedSync(secretKey);
 
     // Derive private seed from previous private seed and path
-    const node: bip32.BIP32Interface = bip32.fromSeed(base58);
+    const node: BIP32Interface = bip32.fromSeed(base58);
     const derived = node.derivePath(
       `m/138/${indexes[0]}/${indexes[1]}/${indexes[2]}/${indexes[3]}`
     );
