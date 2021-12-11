@@ -25,6 +25,6 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
-    '@next/next/no-html-link-for-pages': ['error', '/src/client/pages/'],
+    // '@next/next/no-html-link-for-pages': ['error', '/src/client/pages/'],
   },
 };

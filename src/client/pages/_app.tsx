@@ -22,7 +22,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { useEffect } from 'react';
 
 const { publicRuntimeConfig } = getConfig();
-const { logoutUrl, basePath } = publicRuntimeConfig;
+const { logoutUrl } = publicRuntimeConfig;
 
 const S = {
   center: styled.div`
@@ -38,10 +38,7 @@ const NotAuthenticated: React.FC = () => {
   const { push } = useRouter();
 
   useEffect(() => {
-    const timeout = setTimeout(
-      () => push(logoutUrl || `${basePath}/login`),
-      3000
-    );
+    const timeout = setTimeout(() => push(logoutUrl || '/login'), 3000);
 
     return () => {
       clearTimeout(timeout);

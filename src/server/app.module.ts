@@ -57,6 +57,7 @@ export type JwtObjectType = {
           origin: true,
           credentials: true,
         },
+        path: `${config.get('basePath')}/graphql`,
         context: ({ req, res }): ContextType => {
           const cookies = cookie.parse(req.headers.cookie ?? '') || {};
 

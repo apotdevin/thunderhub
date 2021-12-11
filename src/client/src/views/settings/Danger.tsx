@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { AlertCircle } from 'react-feather';
-import { useRouter } from 'next/router';
 import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.generated';
 import getConfig from 'next/config';
 import {
@@ -16,7 +15,7 @@ import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { useChatDispatch } from '../../context/ChatContext';
 
 const { publicRuntimeConfig } = getConfig();
-const { logoutUrl } = publicRuntimeConfig;
+const { logoutUrl, basePath } = publicRuntimeConfig;
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -56,11 +55,10 @@ export const FixedWidth = styled.div`
 export const DangerView = () => {
   const chatDispatch = useChatDispatch();
 
-  const { push } = useRouter();
-
   const [logout] = useLogoutMutation({
-    onCompleted: () =>
-      logoutUrl ? (window.location.href = logoutUrl) : push('/login'),
+    onCompleted: () => {
+      window.location.href = logoutUrl || `${basePath}/login`;
+    },
   });
 
   const handleDeleteAll = () => {

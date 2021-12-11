@@ -16,6 +16,10 @@ import {
   mediaWidths,
   chartColors,
 } from '../../styles/Themes';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
+const { basePath } = publicRuntimeConfig;
 
 const StyledTitle = styled(Title)`
   font-size: 24px;
@@ -52,7 +56,7 @@ export const Login = ({ account }: LoginProps) => {
         'ThunderHub supports LND version 0.11.0 and higher. Please update your node, you are in risk of losing funds.'
       );
     } else {
-      window.location.href = '/';
+      window.location.href = `${basePath}/`;
     }
   }, [data, loading]);
 
