@@ -1,4 +1,4 @@
-import { decode, fromWords } from 'bech32';
+import { bech32 } from 'bech32';
 
 export const getUrlParam = (
   params: string | string[] | undefined
@@ -19,7 +19,7 @@ export const getUrlParam = (
 
 export const decodeLnUrl = (url: string): string => {
   const cleanUrl = url.toLowerCase().replace('lightning:', '');
-  const { words } = decode(cleanUrl, 500);
-  const bytes = fromWords(words);
+  const { words } = bech32.decode(cleanUrl, 500);
+  const bytes = bech32.fromWords(words);
   return new String(Buffer.from(bytes)).toString();
 };

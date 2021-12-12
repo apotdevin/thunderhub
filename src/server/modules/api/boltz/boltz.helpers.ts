@@ -1,4 +1,5 @@
-import { address, ECPair, Network, networks } from 'bitcoinjs-lib';
+import { address, Network, networks } from 'bitcoinjs-lib';
+import { ECPair } from 'ecpair';
 
 export const getHexBuffer = (input: string) => {
   return Buffer.from(input, 'hex');

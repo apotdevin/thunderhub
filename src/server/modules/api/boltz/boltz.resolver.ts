@@ -14,7 +14,7 @@ import { BoltzService } from './boltz.service';
 import { constructClaimTransaction, detectSwap } from 'boltz-core';
 import { generateKeys, getHexBuffer, validateAddress } from './boltz.helpers';
 import { GraphQLError } from 'graphql';
-import { address, ECPair, networks, Transaction } from 'bitcoinjs-lib';
+import { address, networks, Transaction } from 'bitcoinjs-lib';
 import {
   BoltzInfoType,
   BoltzSwap,
@@ -24,6 +24,7 @@ import { getPreimageAndHash } from 'src/server/utils/crypto';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { toWithError } from 'src/server/utils/async';
+import { ECPair } from 'ecpair';
 
 @Resolver(BoltzSwap)
 export class BoltzSwapResolver {
