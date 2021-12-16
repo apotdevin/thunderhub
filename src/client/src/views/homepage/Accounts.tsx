@@ -5,7 +5,10 @@ import { Lock, Unlock, ChevronDown, ChevronUp } from 'react-feather';
 import { chartColors } from '../../styles/Themes';
 import { useRouter } from 'next/router';
 import { Link } from '../../components/link/Link';
-import { useGetServerAccountsQuery } from '../../graphql/queries/__generated__/getServerAccounts.generated';
+import {
+  GetServerAccountsQuery,
+  useGetServerAccountsQuery,
+} from '../../graphql/queries/__generated__/getServerAccounts.generated';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.generated';
 import { useGetNodeInfoLazyQuery } from '../../graphql/queries/__generated__/getNodeInfo.generated';
@@ -20,7 +23,8 @@ import {
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { ConnectTitle, LockPadding } from './HomePage.styled';
 import { Login } from './Login';
-import { ServerAccount } from '../../graphql/types';
+
+type ServerAccount = GetServerAccountsQuery['getServerAccounts'][0];
 
 const AccountLine = styled.div`
   margin: 8px 0;

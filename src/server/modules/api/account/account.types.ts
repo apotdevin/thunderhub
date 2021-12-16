@@ -10,4 +10,6 @@ export class ServerAccount {
   loggedIn: boolean;
   @Field()
   type: string;
+  @Field()
+  twofaEnabled: boolean;
 }

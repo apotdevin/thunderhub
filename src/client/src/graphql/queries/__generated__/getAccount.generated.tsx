@@ -13,6 +13,7 @@ export type GetAccountQuery = {
     id: string;
     loggedIn: boolean;
     type: string;
+    twofaEnabled: boolean;
   };
 };
 
@@ -23,6 +24,7 @@ export const GetAccountDocument = gql`
       id
       loggedIn
       type
+      twofaEnabled
     }
   }
 `;

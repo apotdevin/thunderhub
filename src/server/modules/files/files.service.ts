@@ -80,18 +80,35 @@ export class FilesService {
   saveHashedYaml = (config: AccountConfigType, filePath: string): void => {
     if (filePath === '' || !config) return;
 
-    this.logger.info('Saving new yaml file with hashed passwords');
+    this.logger.info('Saving new yaml file');
 
     try {
       const yamlString = yaml.dump(config);
       fs.writeFileSync(filePath, yamlString);
       this.logger.info('Succesfully saved');
     } catch (error: any) {
-      this.logger.error(
-        'Error saving yaml file with hashed passwords. Passwords are still in cleartext on your server.'
-      );
+      this.logger.error('Error saving yaml file.');
     }
   };
+
+  updateTwofaSecret(filePath: string, index: number, secret: string): void {
+    if (filePath === '') {
+      this.logger.verbose('No account config file path provided');
+      throw new Error('Unable to save 2FA secret for account');
+    }
+
+    const accountConfig = this.parseYaml(filePath);
+    if (!accountConfig) {
+      this.logger.info(`No account config file found at path ${filePath}`);
+      throw new Error('Unable to save 2FA secret for account');
+    }
+
+    const configCopy = { ...accountConfig };
+
+    configCopy.accounts[index].twofaSecret = secret;
+
+    this.saveHashedYaml(configCopy, filePath);
+  }
 
   hashPasswords(
     isHashed: boolean,
@@ -223,6 +240,7 @@ export class FilesService {
       macaroon: macaroonValue,
       password,
       encrypted,
+      twofaSecret,
     } = resolvedAccount;
 
     const missingFields: string[] = [];
@@ -268,7 +286,7 @@ export class FilesService {
     }
 
     const hash = getSHA256Hash(
-      JSON.stringify({ name, serverUrl, macaroon, cert })
+      JSON.stringify({ name, serverUrl, macaroon, cert, index })
     );
 
     const encryptedProps = encrypted
@@ -276,12 +294,14 @@ export class FilesService {
       : { encrypted: false, encryptedMacaroon: '' };
 
     return {
+      index,
       name: name || '',
       socket: serverUrl || '',
       hash,
       macaroon,
       cert: cert || '',
       password: password || masterPassword || '',
+      twofaSecret: twofaSecret || '',
       ...encryptedProps,
     };
   }
@@ -305,13 +325,22 @@ export class FilesService {
       filePath
     );
 
+    const masterPasswordOverride = this.configService.get<string>(
+      'masterPasswordOverride'
+    );
+    const hashedOverride = masterPasswordOverride
+      ? hashPassword(masterPasswordOverride)
+      : '';
+
+    const finalMasterPassword = hashedOverride || masterPassword;
+
     const network: BitcoinNetwork = isValidNetwork(defaultNetwork)
       ? defaultNetwork
       : 'mainnet';
 
     const parsedAccounts = accounts
       .map((account, index) =>
-        this.getParsedAccount(account, index, masterPassword, network)
+        this.getParsedAccount(account, index, finalMasterPassword, network)
       )
       .filter(Boolean);
 

@@ -9,6 +9,7 @@ import { InterfaceSettings } from '../../src/views/settings/Interface';
 import { DangerView } from '../../src/views/settings/Danger';
 import { ChatSettings } from '../../src/views/settings/Chat';
 import { PrivacySettings } from '../../src/views/settings/Privacy';
+import { Security } from '../../src/views/settings/Security';
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -23,6 +24,7 @@ const SettingsView = () => {
   return (
     <>
       <InterfaceSettings />
+      <Security />
       <DashboardSettings />
       <PrivacySettings />
       <ChatSettings />

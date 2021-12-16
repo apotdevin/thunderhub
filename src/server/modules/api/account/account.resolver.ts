@@ -7,6 +7,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { Inject } from '@nestjs/common';
 import { UserId } from '../../security/security.types';
+import { Throttle } from '@nestjs/throttler';
 
 @Resolver()
 export class AccountResolver {
@@ -16,7 +17,7 @@ export class AccountResolver {
   ) {}
 
   @Query(() => ServerAccount)
-  async getAccount(@CurrentUser() user: UserId) {
+  async getAccount(@CurrentUser() user: UserId): Promise<ServerAccount> {
     const currentAccount = this.accountsService.getAccount(user.id);
 
     if (!currentAccount) {
@@ -30,6 +31,7 @@ export class AccountResolver {
         id: 'sso',
         loggedIn: true,
         type: 'sso',
+        twofaEnabled: false,
       };
     }
 
@@ -38,16 +40,20 @@ export class AccountResolver {
       id: user.id,
       loggedIn: true,
       type: 'server',
+      twofaEnabled: !!currentAccount.twofaSecret,
     };
   }
 
   @Public()
+  @Throttle(4, 10)
   @Query(() => [ServerAccount])
-  async getServerAccounts(@Context() { authToken }: ContextType) {
+  async getServerAccounts(
+    @Context() { authToken }: ContextType
+  ): Promise<ServerAccount[]> {
     const currentAccount = this.accountsService.getAccount(authToken?.sub);
     const accounts = this.accountsService.getAllAccounts();
 
-    const mapped = [];
+    const mapped: ServerAccount[] = [];
 
     for (const key in accounts) {
       if (Object.prototype.hasOwnProperty.call(accounts, key)) {
@@ -60,6 +66,7 @@ export class AccountResolver {
             id: hash,
             loggedIn: currentAccount?.hash === key,
             type: key === 'sso' ? 'sso' : 'server',
+            twofaEnabled: false,
           });
         }
       }

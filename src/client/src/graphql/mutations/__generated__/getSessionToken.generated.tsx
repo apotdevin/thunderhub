@@ -6,6 +6,7 @@ const defaultOptions = {};
 export type GetSessionTokenMutationVariables = Types.Exact<{
   id: Types.Scalars['String'];
   password: Types.Scalars['String'];
+  token?: Types.InputMaybe<Types.Scalars['String']>;
 }>;
 
 export type GetSessionTokenMutation = {
@@ -14,8 +15,8 @@ export type GetSessionTokenMutation = {
 };
 
 export const GetSessionTokenDocument = gql`
-  mutation GetSessionToken($id: String!, $password: String!) {
-    getSessionToken(id: $id, password: $password)
+  mutation GetSessionToken($id: String!, $password: String!, $token: String) {
+    getSessionToken(id: $id, password: $password, token: $token)
   }
 `;
 export type GetSessionTokenMutationFn = Apollo.MutationFunction<
@@ -38,6 +39,7 @@ export type GetSessionTokenMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      id: // value for 'id'
  *      password: // value for 'password'
+ *      token: // value for 'token'
  *   },
  * });
  */

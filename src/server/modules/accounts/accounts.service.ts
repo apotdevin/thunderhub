@@ -36,6 +36,7 @@ export class AccountsService implements OnModuleInit {
       }
 
       const sso = {
+        index: 999,
         name: 'SSO Account',
         id: '',
         password: '',
@@ -44,6 +45,7 @@ export class AccountsService implements OnModuleInit {
         macaroon: ssoMacaroon,
         socket: ssoUrl,
         cert: ssoCert,
+        twofaSecret: '',
       };
       const { lnd } = authenticatedLndGrpc(sso);
 
@@ -80,6 +82,15 @@ export class AccountsService implements OnModuleInit {
       this.accounts[id].lnd = lnd;
     } else {
       this.logger.error(`Account not found to update macaroon`, { id });
+    }
+  }
+
+  updateAccountSecret(id: string, secret: string): void {
+    if (this.accounts?.[id]) {
+      this.accounts[id].twofaSecret = secret;
+    } else {
+      this.logger.error(`Account not found to update 2FA secret`, { id });
+      throw new Error('Error updating 2FA for account.');
     }
   }
 }

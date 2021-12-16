@@ -1,3 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const path = require('path');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const dotenv = require('dotenv');
+
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+
 const urls = {
   mempoolUrl: process.env.MEMPOOL_URL || 'https://mempool.space',
 };
@@ -9,6 +17,7 @@ module.exports = {
   basePath: process.env.BASE_PATH || '',
   publicRuntimeConfig: {
     ...urls,
+    disable2FA: process.env.DISABLE_TWOFA === 'true',
     apiUrl: `${process.env.BASE_PATH || ''}/graphql`,
     basePath: process.env.BASE_PATH || '',
     npmVersion: process.env.npm_package_version || '0.0.0',
@@ -16,9 +25,9 @@ module.exports = {
     defaultCurrency: process.env.CURRENCY || 'sat',
     fetchPrices: process.env.FETCH_PRICES === 'false' ? false : true,
     fetchFees: process.env.FETCH_FEES === 'false' ? false : true,
-    disableLinks: process.env.DISABLE_LINKS === 'true' ? true : false,
-    disableLnMarkets: process.env.DISABLE_LNMARKETS === 'true' ? true : false,
-    noVersionCheck: process.env.NO_VERSION_CHECK === 'true' ? true : false,
+    disableLinks: process.env.DISABLE_LINKS === 'true',
+    disableLnMarkets: process.env.DISABLE_LNMARKETS === 'true',
+    noVersionCheck: process.env.NO_VERSION_CHECK === 'true',
     logoutUrl: process.env.LOGOUT_URL || '',
   },
 };
