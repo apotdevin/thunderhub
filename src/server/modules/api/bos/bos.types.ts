@@ -8,15 +8,15 @@ class BosIncrease {
   increased_inbound_on: string;
   @Field()
   liquidity_inbound: string;
-  @Field()
+  @Field({ nullable: true })
   liquidity_inbound_opening: string;
-  @Field()
+  @Field({ nullable: true })
   liquidity_inbound_pending: string;
   @Field()
   liquidity_outbound: string;
-  @Field()
+  @Field({ nullable: true })
   liquidity_outbound_opening: string;
-  @Field()
+  @Field({ nullable: true })
   liquidity_outbound_pending: string;
 }
 
@@ -26,15 +26,15 @@ class BosDecrease {
   decreased_inbound_on: string;
   @Field()
   liquidity_inbound: string;
-  @Field()
+  @Field({ nullable: true })
   liquidity_inbound_opening: string;
-  @Field()
+  @Field({ nullable: true })
   liquidity_inbound_pending: string;
   @Field()
   liquidity_outbound: string;
-  @Field()
+  @Field({ nullable: true })
   liquidity_outbound_opening: string;
-  @Field()
+  @Field({ nullable: true })
   liquidity_outbound_pending: string;
 }
 
