@@ -492,10 +492,12 @@ export type Mutation = {
   openChannel: OpenOrCloseChannel;
   pay: Scalars['Boolean'];
   removePeer: Scalars['Boolean'];
+  removeTwofaSecret: Scalars['Boolean'];
   sendMessage: Scalars['Float'];
   sendToAddress: ChainAddressSend;
   updateFees: Scalars['Boolean'];
   updateMultipleFees: Scalars['Boolean'];
+  updateTwofaSecret: Scalars['Boolean'];
 };
 
 export type MutationAddPeerArgs = {
@@ -571,6 +573,7 @@ export type MutationGetAuthTokenArgs = {
 export type MutationGetSessionTokenArgs = {
   id: Scalars['String'];
   password: Scalars['String'];
+  token?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationKeysendArgs = {
@@ -628,6 +631,10 @@ export type MutationRemovePeerArgs = {
   publicKey?: InputMaybe<Scalars['String']>;
 };
 
+export type MutationRemoveTwofaSecretArgs = {
+  token: Scalars['String'];
+};
+
 export type MutationSendMessageArgs = {
   maxFee?: InputMaybe<Scalars['Float']>;
   message: Scalars['String'];
@@ -656,6 +663,11 @@ export type MutationUpdateFeesArgs = {
 
 export type MutationUpdateMultipleFeesArgs = {
   channels: Array<UpdateRoutingFeesParams>;
+};
+
+export type MutationUpdateTwofaSecretArgs = {
+  secret: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type NetworkInfo = {
@@ -936,6 +948,7 @@ export type Query = {
   getResume: GetResumeType;
   getServerAccounts: Array<ServerAccount>;
   getTimeHealth: ChannelsTimeHealth;
+  getTwofaSecret: TwofaResult;
   getUtxos: Array<Utxo>;
   getVolumeHealth: ChannelsHealth;
   getWalletInfo: Wallet;
@@ -1035,6 +1048,7 @@ export type ServerAccount = {
   id: Scalars['String'];
   loggedIn: Scalars['Boolean'];
   name: Scalars['String'];
+  twofaEnabled: Scalars['Boolean'];
   type: Scalars['String'];
 };
 
@@ -1051,6 +1065,12 @@ export type SingleChannel = {
 };
 
 export type Transaction = InvoiceType | PaymentType;
+
+export type TwofaResult = {
+  __typename?: 'TwofaResult';
+  secret: Scalars['String'];
+  url: Scalars['String'];
+};
 
 export type UpdateRoutingFeesParams = {
   base_fee_mtokens?: InputMaybe<Scalars['String']>;

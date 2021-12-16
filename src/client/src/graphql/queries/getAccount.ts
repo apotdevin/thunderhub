@@ -7,6 +7,7 @@ export const GET_ACCOUNT = gql`
       id
       loggedIn
       type
+      twofaEnabled
     }
   }
 `;

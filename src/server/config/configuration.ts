@@ -36,6 +36,8 @@ type ConfigType = {
   throttler: Throttler;
   urls: Urls;
   yamlEnvs: YamlEnvs;
+  masterPasswordOverride: string;
+  disable2FA: boolean;
 };
 
 export default (): ConfigType => {
@@ -57,8 +59,7 @@ export default (): ConfigType => {
     serverUrl: process.env.SSO_SERVER_URL || '',
     certPath: process.env.SSO_CERT_PATH || '',
     macaroonPath: process.env.SSO_MACAROON_PATH || '',
-    dangerousNoSSOAuth:
-      process.env.DANGEROUS_NO_SSO_AUTH === 'true' ? true : false,
+    dangerousNoSSOAuth: process.env.DANGEROUS_NO_SSO_AUTH === 'true',
   };
 
   const throttler = {
@@ -75,6 +76,8 @@ export default (): ConfigType => {
 
   const config: ConfigType = {
     isProduction,
+    masterPasswordOverride: process.env.MASTER_PASSWORD_OVERRIDE || '',
+    disable2FA: process.env.DISABLE_TWOFA === 'true',
     basePath: process.env.BASE_PATH || '',
     playground: !isProduction,
     logLevel: process.env.LOG_LEVEL,

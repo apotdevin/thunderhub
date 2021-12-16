@@ -413,7 +413,7 @@ type Mutation {
   createThunderPoints(alias: String!, id: String!, public_key: String!, uris: [String!]!): Boolean!
   fetchLnUrl(url: String!): LnUrlRequest!
   getAuthToken(cookie: String): Boolean!
-  getSessionToken(id: String!, password: String!): String!
+  getSessionToken(id: String!, password: String!, token: String): String!
   keysend(destination: String, tokens: Float!): PayInvoice!
   lnMarketsDeposit(amount: Float!): Boolean!
   lnMarketsLogin: AuthResponse!
@@ -428,10 +428,12 @@ type Mutation {
   openChannel(amount: Float!, isPrivate: Boolean, partnerPublicKey: String!, pushTokens: Float = 0, tokensPerVByte: Float): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
   removePeer(publicKey: String): Boolean!
+  removeTwofaSecret(token: String!): Boolean!
   sendMessage(maxFee: Float, message: String!, messageType: String, publicKey: String!, tokens: Float): Float!
   sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
   updateFees(base_fee_tokens: Float, cltv_delta: Float, fee_rate: Float, max_htlc_mtokens: String, min_htlc_mtokens: String, transaction_id: String, transaction_vout: Float): Boolean!
   updateMultipleFees(channels: [UpdateRoutingFeesParams!]!): Boolean!
+  updateTwofaSecret(secret: String!, token: String!): Boolean!
 }
 
 type NetworkInfo {
@@ -692,6 +694,7 @@ type Query {
   getResume(limit: Float, offset: Float): GetResumeType!
   getServerAccounts: [ServerAccount!]!
   getTimeHealth: ChannelsTimeHealth!
+  getTwofaSecret: TwofaResult!
   getUtxos: [Utxo!]!
   getVolumeHealth: ChannelsHealth!
   getWalletInfo: Wallet!
@@ -713,6 +716,7 @@ type ServerAccount {
   id: String!
   loggedIn: Boolean!
   name: String!
+  twofaEnabled: Boolean!
   type: String!
 }
 
@@ -728,6 +732,11 @@ type SingleChannel {
 }
 
 union Transaction = InvoiceType | PaymentType
+
+type TwofaResult {
+  secret: String!
+  url: String!
+}
 
 input UpdateRoutingFeesParams {
   base_fee_mtokens: String

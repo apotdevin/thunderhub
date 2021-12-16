@@ -12,6 +12,7 @@ export type AccountType = {
   macaroon?: string;
   certificate?: string;
   encrypted?: boolean;
+  twofaSecret?: string | null;
 };
 
 export type UnresolvedAccountType = {
@@ -28,6 +29,7 @@ export type UnresolvedAccountType = {
 };
 
 export type ParsedAccount = {
+  index: number;
   name: string;
   hash: string;
   socket: string;
@@ -36,6 +38,7 @@ export type ParsedAccount = {
   password: string;
   encrypted: boolean;
   encryptedMacaroon: string;
+  twofaSecret: string;
 };
 
 export type AccountConfigType = {

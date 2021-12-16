@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { getErrorContent } from '../../utils/error';
 import { Lock } from 'react-feather';
-import { ServerAccount } from '../../graphql/types';
 import { getVersion } from '../../utils/version';
 import { useGetSessionTokenMutation } from '../../graphql/mutations/__generated__/getSessionToken.generated';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
@@ -17,9 +16,12 @@ import {
   chartColors,
 } from '../../styles/Themes';
 import getConfig from 'next/config';
+import { GetServerAccountsQuery } from '../../graphql/queries/__generated__/getServerAccounts.generated';
 
 const { publicRuntimeConfig } = getConfig();
-const { basePath } = publicRuntimeConfig;
+const { basePath, disable2FA } = publicRuntimeConfig;
+
+type ServerAccount = GetServerAccountsQuery['getServerAccounts'][0];
 
 const StyledTitle = styled(Title)`
   font-size: 24px;
@@ -40,6 +42,7 @@ type LoginProps = {
 
 export const Login = ({ account }: LoginProps) => {
   const [pass, setPass] = useState('');
+  const [token, setToken] = useState('');
 
   const [getSessionToken, { data, loading }] = useGetSessionTokenMutation({
     refetchQueries: ['GetNodeInfo'],
@@ -65,7 +68,7 @@ export const Login = ({ account }: LoginProps) => {
   const handleEnter = () => {
     if (pass === '' || loading) return;
     getSessionToken({
-      variables: { id: account.id, password: pass },
+      variables: { id: account.id, password: pass, token },
     });
   };
 
@@ -79,14 +82,26 @@ export const Login = ({ account }: LoginProps) => {
       </StyledTitle>
       <Card cardPadding={'32px'} mobileCardPadding={'16px'}>
         <SingleLine>
-          <Sub4Title>Password:</Sub4Title>
+          <Sub4Title>Password</Sub4Title>
           <Input
+            maxWidth="800px"
             type={'password'}
-            withMargin={'0 0 0 16px'}
+            withMargin={'0 0 8px 16px'}
             onChange={e => setPass(e.target.value)}
             onEnter={() => handleEnter()}
           />
         </SingleLine>
+        {disable2FA ? null : (
+          <SingleLine>
+            <Sub4Title>{'2FA (if enabled)'}</Sub4Title>
+            <Input
+              maxWidth="800px"
+              withMargin={'0 0 0 16px'}
+              onChange={e => setToken(e.target.value)}
+              onEnter={() => handleEnter()}
+            />
+          </SingleLine>
+        )}
         <ColorButton
           disabled={pass === '' || loading}
           onClick={() => handleEnter()}
