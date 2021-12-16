@@ -71,21 +71,21 @@ type BoltzSwapTransaction {
 type BosDecrease {
   decreased_inbound_on: String!
   liquidity_inbound: String!
-  liquidity_inbound_opening: String!
-  liquidity_inbound_pending: String!
+  liquidity_inbound_opening: String
+  liquidity_inbound_pending: String
   liquidity_outbound: String!
-  liquidity_outbound_opening: String!
-  liquidity_outbound_pending: String!
+  liquidity_outbound_opening: String
+  liquidity_outbound_pending: String
 }
 
 type BosIncrease {
   increased_inbound_on: String!
   liquidity_inbound: String!
-  liquidity_inbound_opening: String!
-  liquidity_inbound_pending: String!
+  liquidity_inbound_opening: String
+  liquidity_inbound_pending: String
   liquidity_outbound: String!
-  liquidity_outbound_opening: String!
-  liquidity_outbound_pending: String!
+  liquidity_outbound_opening: String
+  liquidity_outbound_pending: String
 }
 
 type BosRebalanceResult {

@@ -26,11 +26,11 @@ export type BosRebalanceMutation = {
           __typename?: 'BosIncrease';
           increased_inbound_on: string;
           liquidity_inbound: string;
-          liquidity_inbound_opening: string;
-          liquidity_inbound_pending: string;
+          liquidity_inbound_opening?: string | null | undefined;
+          liquidity_inbound_pending?: string | null | undefined;
           liquidity_outbound: string;
-          liquidity_outbound_opening: string;
-          liquidity_outbound_pending: string;
+          liquidity_outbound_opening?: string | null | undefined;
+          liquidity_outbound_pending?: string | null | undefined;
         }
       | null
       | undefined;
@@ -39,11 +39,11 @@ export type BosRebalanceMutation = {
           __typename?: 'BosDecrease';
           decreased_inbound_on: string;
           liquidity_inbound: string;
-          liquidity_inbound_opening: string;
-          liquidity_inbound_pending: string;
+          liquidity_inbound_opening?: string | null | undefined;
+          liquidity_inbound_pending?: string | null | undefined;
           liquidity_outbound: string;
-          liquidity_outbound_opening: string;
-          liquidity_outbound_pending: string;
+          liquidity_outbound_opening?: string | null | undefined;
+          liquidity_outbound_pending?: string | null | undefined;
         }
       | null
       | undefined;

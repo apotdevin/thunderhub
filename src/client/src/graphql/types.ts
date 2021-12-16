@@ -100,22 +100,22 @@ export type BosDecrease = {
   __typename?: 'BosDecrease';
   decreased_inbound_on: Scalars['String'];
   liquidity_inbound: Scalars['String'];
-  liquidity_inbound_opening: Scalars['String'];
-  liquidity_inbound_pending: Scalars['String'];
+  liquidity_inbound_opening?: Maybe<Scalars['String']>;
+  liquidity_inbound_pending?: Maybe<Scalars['String']>;
   liquidity_outbound: Scalars['String'];
-  liquidity_outbound_opening: Scalars['String'];
-  liquidity_outbound_pending: Scalars['String'];
+  liquidity_outbound_opening?: Maybe<Scalars['String']>;
+  liquidity_outbound_pending?: Maybe<Scalars['String']>;
 };
 
 export type BosIncrease = {
   __typename?: 'BosIncrease';
   increased_inbound_on: Scalars['String'];
   liquidity_inbound: Scalars['String'];
-  liquidity_inbound_opening: Scalars['String'];
-  liquidity_inbound_pending: Scalars['String'];
+  liquidity_inbound_opening?: Maybe<Scalars['String']>;
+  liquidity_inbound_pending?: Maybe<Scalars['String']>;
   liquidity_outbound: Scalars['String'];
-  liquidity_outbound_opening: Scalars['String'];
-  liquidity_outbound_pending: Scalars['String'];
+  liquidity_outbound_opening?: Maybe<Scalars['String']>;
+  liquidity_outbound_pending?: Maybe<Scalars['String']>;
 };
 
 export type BosRebalanceResult = {
