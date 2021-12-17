@@ -12,6 +12,10 @@ import { QuickActions } from '../src/views/home/quickActions/QuickActions';
 import { FlowBox } from '../src/views/home/reports/flow';
 import { ForwardBox } from '../src/views/home/reports/forwardReport';
 import { ConnectCard } from '../src/views/home/connect/Connect';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
+const { disableTransactionsHomepage } = publicRuntimeConfig;
 
 const HomeView = () => (
   <>
@@ -20,7 +24,7 @@ const HomeView = () => (
     <AccountButtons />
     <ConnectCard />
     <QuickActions />
-    <FlowBox />
+    {disableTransactionsHomepage ? null : <FlowBox />}
     <LiquidityGraph />
     <ForwardBox />
     <MempoolReport />
