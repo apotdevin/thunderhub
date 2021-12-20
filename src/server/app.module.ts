@@ -11,10 +11,12 @@ import { ApiModule } from './modules/api/api.module';
 import { getAuthToken } from './utils/request';
 import { FetchModule } from './modules/fetch/fetch.module';
 import { appConstants } from './utils/appConstants';
+import { transports, format } from 'winston';
 import configuration from './config/configuration';
-import winston from 'winston';
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
+
+const { combine, timestamp, prettyPrint, json } = format;
 
 export type ContextType = {
   req: any;
@@ -95,7 +97,10 @@ export type JwtObjectType = {
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         level: config.get('logLevel'),
-        transports: [new winston.transports.Console()],
+        transports: [new transports.Console()],
+        format: config.get('logJson')
+          ? combine(timestamp(), json())
+          : combine(timestamp(), prettyPrint()),
       }),
     }),
   ],
