@@ -26,6 +26,7 @@ export type YamlEnvs = {
 type ConfigType = {
   basePath: string;
   isProduction: boolean;
+  logJson: boolean;
   playground: boolean;
   logLevel: string;
   jwtSecret: string;
@@ -76,6 +77,7 @@ export default (): ConfigType => {
 
   const config: ConfigType = {
     isProduction,
+    logJson: process.env.LOG_JSON === 'true',
     masterPasswordOverride: process.env.MASTER_PASSWORD_OVERRIDE || '',
     disable2FA: process.env.DISABLE_TWOFA === 'true',
     basePath: process.env.BASE_PATH || '',
