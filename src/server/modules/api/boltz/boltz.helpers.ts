@@ -1,5 +1,8 @@
 import { address, Network, networks } from 'bitcoinjs-lib';
-import { ECPair } from 'ecpair';
+import { ECPairFactory, ECPairAPI } from 'ecpair';
+import * as ecc from 'tiny-secp256k1';
+
+const ECPair: ECPairAPI = ECPairFactory(ecc);
 
 export const getHexBuffer = (input: string) => {
   return Buffer.from(input, 'hex');
