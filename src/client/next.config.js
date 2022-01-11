@@ -6,17 +6,13 @@ const dotenv = require('dotenv');
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
-const urls = {
-  mempoolUrl: process.env.MEMPOOL_URL || 'https://mempool.space',
-};
-
 module.exports = {
   reactStrictMode: true,
   distDir: '../../.next',
   poweredByHeader: false,
   basePath: process.env.BASE_PATH || '',
   publicRuntimeConfig: {
-    ...urls,
+    mempoolUrl: process.env.MEMPOOL_URL || 'https://mempool.space',
     disable2FA: process.env.DISABLE_TWOFA === 'true',
     apiUrl: `${process.env.BASE_PATH || ''}/graphql`,
     basePath: process.env.BASE_PATH || '',
