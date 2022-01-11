@@ -24,7 +24,10 @@ import { getPreimageAndHash } from 'src/server/utils/crypto';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { toWithError } from 'src/server/utils/async';
-import { ECPair } from 'ecpair';
+import { ECPairAPI, ECPairFactory } from 'ecpair';
+import * as ecc from 'tiny-secp256k1';
+
+const ECPair: ECPairAPI = ECPairFactory(ecc);
 
 @Resolver(BoltzSwap)
 export class BoltzSwapResolver {
