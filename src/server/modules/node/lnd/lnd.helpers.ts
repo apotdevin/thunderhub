@@ -25,5 +25,5 @@ export const getErrorMsg = (error: any[] | string): string => {
   }
 
   console.log('Unknown Error:', error);
-  return 'Unkown Error';
+  return 'Unknown Error';
 };
