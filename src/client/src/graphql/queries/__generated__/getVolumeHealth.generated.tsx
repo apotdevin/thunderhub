@@ -2,7 +2,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type GetVolumeHealthQueryVariables = Types.Exact<{
   [key: string]: never;
 }>;
@@ -22,7 +22,10 @@ export type GetVolumeHealthQuery = {
           partner?:
             | {
                 __typename?: 'Node';
-                node: { __typename?: 'NodeType'; alias: string };
+                node?:
+                  | { __typename?: 'NodeType'; alias: string }
+                  | null
+                  | undefined;
               }
             | null
             | undefined;

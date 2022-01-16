@@ -32,23 +32,30 @@ const ContentStyle = styled.div`
   grid-area: content;
 `;
 
-export const GridWrapper: React.FC<GridProps> = ({
+export const GridWrapper: React.FC<GridProps & { centerContent?: boolean }> = ({
   children,
+  centerContent = true,
   noNavigation,
 }) => (
-  <Section padding={'16px 0 32px'}>
+  <Section padding={'16px 16px 32px'}>
     <Container noNavigation={noNavigation}>
       <BitcoinPrice />
       <BitcoinFees />
       <StatusCheck />
       {!noNavigation && <Navigation />}
-      <ContentStyle>{children}</ContentStyle>
+      <ContentStyle>
+        {centerContent ? (
+          <Section fixedWidth={true}>{children}</Section>
+        ) : (
+          children
+        )}
+      </ContentStyle>
     </Container>
   </Section>
 );
 
 export const SimpleWrapper: React.FC<GridProps> = ({ children }) => (
-  <Section fixedWidth={false} padding={'16px'}>
+  <Section padding={'16px'}>
     <BitcoinPrice />
     <BitcoinFees />
     <StatusCheck />

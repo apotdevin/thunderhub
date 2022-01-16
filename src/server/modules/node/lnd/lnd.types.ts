@@ -146,7 +146,45 @@ export type GetChannelType = {
   }[];
 };
 
-export type GetClosedChannelsType = { channels: ChannelType[] };
+export type GetHeightType = {
+  current_block_hash: string;
+  current_block_height: number;
+};
+
+export type ClosedPayment = {
+  is_outgoing: string;
+  is_paid: string;
+  is_pending: string;
+  is_refunded: string;
+  spent_by?: string;
+  tokens: number;
+  transaction_id: string;
+  transaction_vout: number;
+};
+
+export type ClosedChannelType = {
+  capacity: number;
+  close_balance_spent_by?: string;
+  close_balance_vout?: number;
+  close_payments: ClosedPayment[];
+  close_confirm_height?: number;
+  close_transaction_id?: string;
+  final_local_balance: number;
+  final_time_locked_balance: number;
+  id?: string;
+  is_breach_close: string;
+  is_cooperative_close: string;
+  is_funding_cancel: string;
+  is_local_force_close: string;
+  is_partner_closed?: string;
+  is_partner_initiated?: string;
+  is_remote_force_close: string;
+  partner_public_key: string;
+  transaction_id: string;
+  transaction_vout: number;
+};
+
+export type GetClosedChannelsType = { channels: ClosedChannelType[] };
 
 export type GetChannelsType = { channels: ChannelType[] };
 

@@ -4,7 +4,6 @@ import { MessageCircle } from 'react-feather';
 import styled from 'styled-components';
 import { mediaWidths, themeColors } from '../../styles/Themes';
 import { useGetChannelQuery } from '../../graphql/queries/__generated__/getChannel.generated';
-import { useNodeInfo } from '../../hooks/UseNodeInfo';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { Price } from '../../components/price/Price';
 import {
@@ -47,10 +46,8 @@ interface InvoiceCardProps {
 }
 
 const ChannelAlias: FC<{ id: string }> = ({ id }) => {
-  const { publicKey } = useNodeInfo();
-
   const { data, loading, error } = useGetChannelQuery({
-    variables: { id, pubkey: publicKey },
+    variables: { id },
   });
 
   if (loading) {
@@ -62,7 +59,7 @@ const ChannelAlias: FC<{ id: string }> = ({ id }) => {
   }
 
   const alias =
-    data?.getChannel.partner_node_policies?.node?.node.alias || 'Unknown';
+    data?.getChannel.partner_node_policies?.node?.node?.alias || 'Unknown';
 
   return <>{renderLine('Peer', alias)}</>;
 };

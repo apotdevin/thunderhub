@@ -24,8 +24,8 @@ export const PeerSelect = ({ title, isMulti, callback }: PeerSelectProps) => {
       let label = shorten(peer.public_key);
 
       if (
-        peer.partner_node_info.node.alias &&
-        peer.partner_node_info.node.alias !== 'Node not found'
+        peer.partner_node_info.node?.alias &&
+        peer.partner_node_info.node?.alias !== 'Node not found'
       ) {
         label = `${peer.partner_node_info.node.alias} (${shorten(
           peer.public_key

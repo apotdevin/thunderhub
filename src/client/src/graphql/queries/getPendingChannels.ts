@@ -23,10 +23,6 @@ export const GET_PENDING_CHANNELS = gql`
       partner_node_info {
         node {
           alias
-          capacity
-          channel_count
-          color
-          updated_at
         }
       }
     }

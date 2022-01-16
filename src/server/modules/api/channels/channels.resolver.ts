@@ -117,22 +117,16 @@ export class ChannelsResolver {
   ) {}
 
   @Query(() => SingleChannel)
-  async getChannel(
-    @CurrentUser() user: UserId,
-    @Args('pubkey', { nullable: true }) pubkey: string,
-    @Args('id') id: string
-  ) {
-    const channel = await this.nodeService.getChannel(user.id, id);
+  async getChannel(@CurrentUser() user: UserId, @Args('id') id: string) {
+    const { public_key } = await this.nodeService.getWalletInfo(user.id);
 
-    if (!pubkey) {
-      return channel;
-    }
+    const channel = await this.nodeService.getChannel(user.id, id);
 
     let node_policies = null;
     let partner_node_policies = null;
 
     channel.policies.forEach(policy => {
-      if (pubkey && pubkey === policy.public_key) {
+      if (public_key && public_key === policy.public_key) {
         node_policies = {
           ...policy,
           node: { publicKey: policy.public_key },
@@ -166,9 +160,9 @@ export class ChannelsResolver {
       ...channel,
       time_offline: Math.round((channel.time_offline || 0) / 1000),
       time_online: Math.round((channel.time_online || 0) / 1000),
-      partner_node_info: { publicKey: channel.partner_public_key },
       partner_fee_info: { localKey: public_key },
       channel_age: getChannelAge(channel.id, current_block_height),
+      partner_node_info: { publicKey: channel.partner_public_key },
     }));
   }
 
@@ -180,10 +174,13 @@ export class ChannelsResolver {
 
     return channels.map(channel => ({
       ...channel,
-      partner_node_info: {
-        publicKey: channel.partner_public_key,
-      },
-      channel_age: getChannelAge(channel.id, current_block_height),
+      partner_node_info: { publicKey: channel.partner_public_key },
+      channel_age: channel.close_confirm_height
+        ? getChannelAge(channel.id, channel.close_confirm_height)
+        : null,
+      closed_for_blocks: channel.close_confirm_height
+        ? current_block_height - channel.close_confirm_height
+        : null,
     }));
   }
 
@@ -193,9 +190,7 @@ export class ChannelsResolver {
 
     return pending_channels.map(channel => ({
       ...channel,
-      partner_node_info: {
-        publicKey: channel.partner_public_key,
-      },
+      partner_node_info: { publicKey: channel.partner_public_key },
     }));
   }
 

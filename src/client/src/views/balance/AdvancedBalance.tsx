@@ -85,6 +85,8 @@ export type ActionType =
       type: 'clearFilters';
     };
 
+type Reducer<S, A> = (prevState: S, action: A) => S;
+
 const initialState: StateType = {
   avoid: [],
   in_through: defaultRebalanceId,
@@ -151,23 +153,26 @@ export const AdvancedBalance = () => {
 
   const in_through = inChannel
     ? {
-        alias: inChannel.partner_node_info?.node?.alias,
+        alias: inChannel.partner_node_info?.node?.alias || 'Unknown',
         id: inChannel.partner_public_key,
       }
     : defaultRebalanceId;
 
   const out_through = outChannel
     ? {
-        alias: outChannel.partner_node_info?.node?.alias,
+        alias: outChannel.partner_node_info?.node?.alias || 'Unknown',
         id: outChannel.partner_public_key,
       }
     : defaultRebalanceId;
 
-  const [state, dispatch] = useReducer(reducer, {
-    ...initialState,
-    in_through,
-    out_through,
-  });
+  const [state, dispatch] = useReducer<Reducer<StateType, ActionType>>(
+    reducer,
+    {
+      ...initialState,
+      in_through,
+      out_through,
+    }
+  );
 
   const [rebalance, { data: _data, loading }] = useBosRebalanceMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -203,7 +208,7 @@ export const AdvancedBalance = () => {
             dispatch({ type: 'inChannel', channel: defaultRebalanceId });
           } else {
             const channel = c.map(o => ({
-              alias: o.partner_node_info.node.alias,
+              alias: o.partner_node_info.node?.alias || 'Unknown',
               id: o.partner_public_key,
             }))[0];
             dispatch({ type: 'inChannel', channel });
@@ -215,7 +220,7 @@ export const AdvancedBalance = () => {
             dispatch({ type: 'outChannel', channel: defaultRebalanceId });
           } else {
             const channel = c.map(o => ({
-              alias: o.partner_node_info.node.alias,
+              alias: o.partner_node_info.node?.alias || 'Unknown',
               id: o.partner_public_key,
             }))[0];
             dispatch({ type: 'outChannel', channel });

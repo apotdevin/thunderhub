@@ -38,6 +38,7 @@ export const GET_RESUME = gql`
           destination_node {
             node {
               alias
+              public_key
             }
           }
           fee

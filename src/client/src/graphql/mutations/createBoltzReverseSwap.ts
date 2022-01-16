@@ -25,6 +25,7 @@ export const GET_BOLTZ_INFO = gql`
         destination_node {
           node {
             alias
+            public_key
           }
         }
       }

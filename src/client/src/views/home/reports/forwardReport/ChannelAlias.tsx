@@ -2,7 +2,6 @@ import { FC } from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { useGetChannelQuery } from '../../../../graphql/queries/__generated__/getChannel.generated';
 import { useGetClosedChannelsQuery } from '../../../../graphql/queries/__generated__/getClosedChannels.generated';
-import { useNodeInfo } from '../../../../hooks/UseNodeInfo';
 import { themeColors } from '../../../../styles/Themes';
 import ReactTooltip from 'react-tooltip';
 import { Info } from 'react-feather';
@@ -16,20 +15,18 @@ const S = {
 };
 
 export const ChannelAlias: FC<{ id: string }> = ({ id }) => {
-  const { publicKey } = useNodeInfo();
-
   const { data: closedChannelData } = useGetClosedChannelsQuery({
-    skip: !id || !publicKey,
+    skip: !id,
     errorPolicy: 'ignore',
   });
 
   const { data, loading } = useGetChannelQuery({
-    skip: !id || !publicKey,
+    skip: !id,
     errorPolicy: 'ignore',
-    variables: { id, pubkey: publicKey },
+    variables: { id },
   });
 
-  if (!id || !publicKey) {
+  if (!id) {
     return <>Unknown</>;
   }
 
@@ -37,7 +34,7 @@ export const ChannelAlias: FC<{ id: string }> = ({ id }) => {
     return <ScaleLoader height={8} color={themeColors.blue3} />;
   }
 
-  if (data?.getChannel.partner_node_policies?.node?.node.alias) {
+  if (data?.getChannel.partner_node_policies?.node?.node?.alias) {
     return <>{data.getChannel.partner_node_policies.node.node.alias}</>;
   }
 

@@ -16,6 +16,7 @@ export const GET_CHANNELS = gql`
       local_balance
       local_reserve
       partner_public_key
+      past_states
       received
       remote_balance
       remote_reserve
@@ -37,10 +38,6 @@ export const GET_CHANNELS = gql`
       partner_node_info {
         node {
           alias
-          capacity
-          channel_count
-          color
-          updated_at
         }
       }
       partner_fee_info {
@@ -55,14 +52,9 @@ export const GET_CHANNELS = gql`
           base_fee_mtokens
           fee_rate
           cltv_delta
+          max_htlc_mtokens
+          min_htlc_mtokens
         }
-      }
-      bosScore {
-        alias
-        public_key
-        score
-        updated
-        position
       }
     }
   }

@@ -2,7 +2,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type GetTimeHealthQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetTimeHealthQuery = {
@@ -22,7 +22,10 @@ export type GetTimeHealthQuery = {
           partner?:
             | {
                 __typename?: 'Node';
-                node: { __typename?: 'NodeType'; alias: string };
+                node?:
+                  | { __typename?: 'NodeType'; alias: string }
+                  | null
+                  | undefined;
               }
             | null
             | undefined;

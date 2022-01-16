@@ -54,7 +54,7 @@ export const OpenRecommended = ({ partner, setOpenCard }: OpenProps) => {
     return <LoadingCard noCard={true} />;
   }
 
-  if (!data?.getNode?.node?.capacity) {
+  if (!data?.getNode?.node?.alias) {
     return <DarkSubTitle>This node was not found.</DarkSubTitle>;
   }
 

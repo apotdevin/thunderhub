@@ -47,7 +47,7 @@ type SectionProps = {
 };
 
 export const Section: React.FC<SectionProps> = ({
-  fixedWidth = true,
+  fixedWidth = false,
   children,
   color,
   textColor,

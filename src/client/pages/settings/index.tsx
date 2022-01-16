@@ -34,7 +34,7 @@ const SettingsView = () => {
 };
 
 const Wrapped = () => (
-  <GridWrapper noNavigation={true}>
+  <GridWrapper>
     <SettingsView />
   </GridWrapper>
 );

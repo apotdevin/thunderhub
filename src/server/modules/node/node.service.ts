@@ -37,6 +37,12 @@ export class NodeService {
     return this.lndService.getWalletVersion(account);
   }
 
+  async getHeight(id: string) {
+    const account = this.accountsService.getAccount(id);
+    if (!account) throw new Error('Node account not found');
+    return this.lndService.getHeight(account);
+  }
+
   async getClosedChannels(id: string) {
     const account = this.accountsService.getAccount(id);
     if (!account) throw new Error('Node account not found');

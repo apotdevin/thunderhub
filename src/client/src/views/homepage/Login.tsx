@@ -73,7 +73,7 @@ export const Login = ({ account }: LoginProps) => {
   };
 
   return (
-    <Section color={'transparent'}>
+    <Section fixedWidth={true} color={'transparent'}>
       <StyledTitle>
         {`Login to ${account.name}`}
         <IconPadding>

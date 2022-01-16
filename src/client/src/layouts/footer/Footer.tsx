@@ -16,14 +16,21 @@ import {
   FooterRow,
   FooterCenterText,
 } from './Footer.styled';
+import { useRouter } from 'next/router';
 
 const { publicRuntimeConfig } = getConfig();
 const { npmVersion } = publicRuntimeConfig;
 
 export const Footer = () => {
+  const { pathname } = useRouter();
+
   return (
     <FooterWrapper>
-      <Section color={headerColor}>
+      <Section
+        padding="0 16px"
+        fixedWidth={pathname === '/login'}
+        color={headerColor}
+      >
         <FooterStyle>
           <FooterRow>
             <SideFooter>
