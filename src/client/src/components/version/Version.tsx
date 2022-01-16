@@ -3,7 +3,6 @@ import { useGetLatestVersionQuery } from '../../../src/graphql/queries/__generat
 import getConfig from 'next/config';
 import styled from 'styled-components';
 import { Link } from '../link/Link';
-import { appUrls } from '../../utils/appUrls';
 
 const VersionBox = styled.div`
   width: 100%;
@@ -48,7 +47,10 @@ export const Version = () => {
   }
 
   return (
-    <Link href={appUrls.update} newTab={true}>
+    <Link
+      href={'https://github.com/apotdevin/thunderhub#updating'}
+      newTab={true}
+    >
       <VersionBox>{`Version ${githubVersion} is available. You are on version ${npmVersion}`}</VersionBox>
     </Link>
   );
