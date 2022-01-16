@@ -3,7 +3,6 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { ContextType } from 'src/server/app.module';
 import { appConstants } from 'src/server/utils/appConstants';
-import { appUrls } from 'src/server/utils/appUrls';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
@@ -11,10 +10,12 @@ import { LnMarketsService } from './lnmarkets.service';
 import cookie from 'cookie';
 import { AuthResponse } from '../lnurl/lnurl.types';
 import { LnMarketsUserInfo } from './lnmarkets.types';
+import { ConfigService } from '@nestjs/config';
 
 @Resolver()
 export class LnMarketsResolver {
   constructor(
+    private configService: ConfigService,
     private nodeService: NodeService,
     private lnmarketsService: LnMarketsService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
@@ -35,7 +36,9 @@ export class LnMarketsResolver {
       throw new Error('ProblemAuthenticatingWithLnMarkets');
     }
 
-    return `${appUrls.lnMarketsExchange}/login/token?token=${cookieString}`;
+    return `${this.configService.get(
+      'urls.lnMarketsExchange'
+    )}/login/token?token=${cookieString}`;
   }
 
   @Query(() => String)

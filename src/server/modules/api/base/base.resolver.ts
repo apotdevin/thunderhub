@@ -1,6 +1,6 @@
+import { ConfigService } from '@nestjs/config';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { gql } from 'graphql-tag';
-import { appUrls } from 'src/server/utils/appUrls';
 import { FetchService } from '../../fetch/fetch.service';
 import { BaseInvoice, BaseNode, BasePoints } from './base.types';
 
@@ -52,12 +52,15 @@ const createThunderPointsQuery = gql`
 
 @Resolver()
 export class BaseResolver {
-  constructor(private fetchService: FetchService) {}
+  constructor(
+    private configService: ConfigService,
+    private fetchService: FetchService
+  ) {}
 
   @Query(() => Boolean)
   async getBaseCanConnect() {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      appUrls.tbase,
+      this.configService.get('urls.tbase'),
       getBaseCanConnectQuery
     );
 
@@ -69,7 +72,7 @@ export class BaseResolver {
   @Query(() => [BaseNode])
   async getBaseNodes() {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      appUrls.tbase,
+      this.configService.get('urls.tbase'),
       getBaseNodesQuery
     );
 
@@ -83,7 +86,7 @@ export class BaseResolver {
   @Query(() => [BasePoints])
   async getBasePoints() {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      appUrls.tbase,
+      this.configService.get('urls.tbase'),
       getBasePointsQuery
     );
 
@@ -97,7 +100,7 @@ export class BaseResolver {
     if (!amount) return '';
 
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      appUrls.tbase,
+      this.configService.get('urls.tbase'),
       createBaseInvoiceQuery,
       { amount }
     );
@@ -116,7 +119,7 @@ export class BaseResolver {
     @Args('public_key') public_key: string
   ) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      appUrls.tbase,
+      this.configService.get('urls.tbase'),
       createThunderPointsQuery,
       { id, alias, uris, public_key }
     );

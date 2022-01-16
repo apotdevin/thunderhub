@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { appUrls } from 'src/server/utils/appUrls';
 import { Logger } from 'winston';
 import { FetchService } from '../../fetch/fetch.service';
 
 @Injectable()
 export class BoltzService {
   constructor(
+    private configService: ConfigService,
     private fetchService: FetchService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
@@ -14,7 +15,7 @@ export class BoltzService {
   async getPairs() {
     try {
       const response = await this.fetchService.fetchWithProxy(
-        `${appUrls.boltz}/getpairs`
+        `${this.configService.get('urls.boltz')}/getpairs`
       );
       return response.json();
     } catch (error: any) {
@@ -26,7 +27,7 @@ export class BoltzService {
   async getFeeEstimations() {
     try {
       const response = await this.fetchService.fetchWithProxy(
-        `${appUrls.boltz}/getfeeestimation`
+        `${this.configService.get('urls.boltz')}/getfeeestimation`
       );
       return response.json();
     } catch (error: any) {
@@ -39,7 +40,7 @@ export class BoltzService {
     try {
       const body = { id };
       const response = await this.fetchService.fetchWithProxy(
-        `${appUrls.boltz}/swapstatus`,
+        `${this.configService.get('urls.boltz')}/swapstatus`,
         {
           method: 'POST',
           body: JSON.stringify(body),
@@ -69,7 +70,7 @@ export class BoltzService {
         claimPublicKey,
       };
       const response = await this.fetchService.fetchWithProxy(
-        `${appUrls.boltz}/createswap`,
+        `${this.configService.get('urls.boltz')}/createswap`,
         {
           method: 'POST',
           body: JSON.stringify(body),
@@ -90,7 +91,7 @@ export class BoltzService {
         transactionHex,
       };
       const response = await this.fetchService.fetchWithProxy(
-        `${appUrls.boltz}/broadcasttransaction`,
+        `${this.configService.get('urls.boltz')}/broadcasttransaction`,
         {
           method: 'POST',
           body: JSON.stringify(body),

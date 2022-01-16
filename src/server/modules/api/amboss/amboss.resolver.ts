@@ -1,7 +1,6 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FetchService } from '../../fetch/fetch.service';
 import { gql } from 'graphql-tag';
-import { appUrls } from 'src/server/utils/appUrls';
 import { ContextType } from 'src/server/app.module';
 import { appConstants } from 'src/server/utils/appConstants';
 import { Inject } from '@nestjs/common';
@@ -15,6 +14,11 @@ import {
   LightningNodeSocialInfo,
   NodeBosHistory,
 } from './amboss.types';
+import { ConfigService } from '@nestjs/config';
+import { toWithError } from 'src/server/utils/async';
+import { NodeService } from '../../node/node.service';
+import { UserId } from '../../security/security.types';
+import { CurrentUser } from '../../security/security.decorators';
 
 const ONE_MONTH_SECONDS = 60 * 60 * 24 * 30;
 
@@ -146,6 +150,8 @@ const getNodeSocialInfo = gql`
 @Resolver()
 export class AmbossResolver {
   constructor(
+    private nodeService: NodeService,
+    private configService: ConfigService,
     private fetchService: FetchService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
@@ -153,7 +159,7 @@ export class AmbossResolver {
   @Query(() => AmbossUser, { nullable: true })
   async getAmbossUser(@Context() { ambossAuth }: ContextType) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      appUrls.amboss,
+      this.configService.get('urls.amboss'),
       getUserQuery,
       undefined,
       {
@@ -171,7 +177,7 @@ export class AmbossResolver {
   @Query(() => String)
   async getAmbossLoginToken(@Context() { ambossAuth }: ContextType) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      appUrls.amboss,
+      this.configService.get('urls.amboss'),
       getLoginTokenQuery,
       { seconds: ONE_MONTH_SECONDS },
       {
@@ -192,7 +198,7 @@ export class AmbossResolver {
     @Context() { ambossAuth }: ContextType
   ) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      appUrls.amboss,
+      this.configService.get('urls.amboss'),
       getNodeBosHistoryQuery,
       { pubkey },
       {
@@ -213,7 +219,7 @@ export class AmbossResolver {
   @Query(() => [BosScore])
   async getBosScores() {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      appUrls.amboss,
+      this.configService.get('urls.amboss'),
       getBosScoresQuery
     );
 
@@ -230,7 +236,7 @@ export class AmbossResolver {
   @Query(() => [LightningAddress])
   async getLightningAddresses() {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      appUrls.amboss,
+      this.configService.get('urls.amboss'),
       getLightningAddresses
     );
 
@@ -250,7 +256,7 @@ export class AmbossResolver {
     @Context() { ambossAuth }: ContextType
   ) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      appUrls.amboss,
+      this.configService.get('urls.amboss'),
       getNodeSocialInfo,
       { pubkey },
       {
@@ -269,9 +275,12 @@ export class AmbossResolver {
   }
 
   @Mutation(() => Boolean)
-  async loginAmboss(@Context() { res }: ContextType) {
+  async loginAmboss(
+    @Context() { res }: ContextType,
+    @CurrentUser() user: UserId
+  ) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      appUrls.amboss,
+      this.configService.get('urls.amboss'),
       getSignInfoQuery
     );
 
@@ -282,15 +291,9 @@ export class AmbossResolver {
       throw new Error('Error getting login information from Amboss');
     }
 
-    // const [message, signError] = await toWithError<{ signature: string }>(
-    //   signMessage({
-    //     lnd,
-    //     message: data.getSignInfo.message,
-    //   })
-    // );
-
-    const message = { signature: '' };
-    const signError = null;
+    const [message, signError] = await toWithError<{ signature: string }>(
+      this.nodeService.signMessage(user.id, data.getSignInfo.message)
+    );
 
     if (!message?.signature || signError) {
       if (signError) {
@@ -312,7 +315,7 @@ export class AmbossResolver {
 
     const { data: loginData, error: loginError } =
       await this.fetchService.graphqlFetchWithProxy(
-        appUrls.amboss,
+        this.configService.get('urls.amboss'),
         loginMutation,
         params
       );

@@ -3,12 +3,13 @@ import { FetchService } from '../../fetch/fetch.service';
 import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import { appUrls } from 'src/server/utils/appUrls';
 import { BitcoinFee } from './bitcoin.types';
+import { ConfigService } from '@nestjs/config';
 
 @Resolver()
 export class BitcoinResolver {
   constructor(
+    private configService: ConfigService,
     private fetchService: FetchService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
@@ -16,7 +17,9 @@ export class BitcoinResolver {
   @Query(() => String)
   async getBitcoinPrice() {
     try {
-      const response = await this.fetchService.fetchWithProxy(appUrls.ticker);
+      const response = await this.fetchService.fetchWithProxy(
+        this.configService.get('urls.ticker')
+      );
       const json = await response.json();
 
       return JSON.stringify(json);
@@ -29,7 +32,9 @@ export class BitcoinResolver {
   @Query(() => BitcoinFee)
   async getBitcoinFees() {
     try {
-      const response = await this.fetchService.fetchWithProxy(appUrls.fees);
+      const response = await this.fetchService.fetchWithProxy(
+        this.configService.get('urls.fees')
+      );
       const json = (await response.json()) as any;
 
       if (json) {
