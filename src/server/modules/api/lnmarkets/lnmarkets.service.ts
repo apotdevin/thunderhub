@@ -8,9 +8,9 @@ import BIP32Factory, { BIP32Interface } from 'bip32';
 import secp256k1 from 'secp256k1';
 import * as ecc from 'tiny-secp256k1';
 import { enc } from 'crypto-js';
-import { appUrls } from 'src/server/utils/appUrls';
 import { FetchService } from '../../fetch/fetch.service';
 import { bech32 } from 'bech32';
+import { ConfigService } from '@nestjs/config';
 
 const bip32 = BIP32Factory(ecc);
 
@@ -32,6 +32,7 @@ const decodeLnUrl = (url: string): string => {
 @Injectable()
 export class LnMarketsService {
   constructor(
+    private configService: ConfigService,
     private fetchService: FetchService,
     private nodeService: NodeService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
@@ -40,7 +41,7 @@ export class LnMarketsService {
   async getUser(token: string) {
     try {
       const response = await this.fetchService.fetchWithProxy(
-        `${appUrls.lnMarkets}/user`,
+        `${this.configService.get('urls.lnMarkets')}/user`,
         {
           headers: {
             Accept: 'application/json',
@@ -51,7 +52,9 @@ export class LnMarketsService {
       return (await response.json()) as any;
     } catch (error: any) {
       this.logger.error(
-        `Error getting user info from ${appUrls.lnMarkets}/user`,
+        `Error getting user info from ${this.configService.get(
+          'urls.lnMarkets'
+        )}/user`,
         { error }
       );
       throw new Error('ProblemAuthenticatingWithLnMarkets');
@@ -61,7 +64,7 @@ export class LnMarketsService {
   async getDepositInvoice(token: string, amount: number) {
     try {
       const response = await this.fetchService.fetchWithProxy(
-        `${appUrls.lnMarkets}/user/deposit`,
+        `${this.configService.get('urls.lnMarkets')}/user/deposit`,
         {
           method: 'post',
           headers: {
@@ -84,7 +87,7 @@ export class LnMarketsService {
   async withdraw(token: string, amount: number, invoice: string) {
     try {
       const response = await this.fetchService.fetchWithProxy(
-        `${appUrls.lnMarkets}/user/withdraw`,
+        `${this.configService.get('urls.lnMarkets')}/user/withdraw`,
         {
           method: 'post',
           headers: {
@@ -185,7 +188,7 @@ export class LnMarketsService {
     // Get a new lnUrl from LnMarkets
     try {
       const response = await this.fetchService.fetchWithProxy(
-        `${appUrls.lnMarkets}/lnurl/auth`,
+        `${this.configService.get('urls.lnMarkets')}/lnurl/auth`,
         {
           method: 'post',
         }
@@ -196,9 +199,14 @@ export class LnMarketsService {
       lnUrl = json?.lnurl;
       if (!lnUrl) throw new Error();
     } catch (error: any) {
-      this.logger.error(`Error getting lnAuth url from ${appUrls.lnMarkets}`, {
-        error,
-      });
+      this.logger.error(
+        `Error getting lnAuth url from ${this.configService.get(
+          'urls.lnMarkets'
+        )}`,
+        {
+          error,
+        }
+      );
       throw new Error('ProblemAuthenticatingWithLnMarkets');
     }
 

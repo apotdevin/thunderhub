@@ -14,6 +14,14 @@ type Throttler = {
 
 type Urls = {
   mempool: string;
+  amboss: string;
+  tbase: string;
+  ticker: string;
+  fees: string;
+  boltz: string;
+  github: string;
+  lnMarkets: string;
+  lnMarketsExchange: string;
 };
 
 export type YamlEnvs = {
@@ -52,8 +60,23 @@ export default (): ConfigType => {
     `Getting ${isProduction ? 'production' : 'development'} env variables.`
   );
 
-  const urls = {
-    mempool: process.env.MEMPOOL_URL || 'https://mempool.space',
+  const amboss =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:5000/graphql'
+      : 'https://api.amboss.space/graphql';
+
+  const mempool = process.env.MEMPOOL_URL || 'https://mempool.space';
+
+  const urls: Urls = {
+    mempool,
+    fees: `${mempool}/api/v1/fees/recommended`,
+    amboss,
+    tbase: 'https://api.thunderbase.io/v1',
+    ticker: 'https://blockchain.info/ticker',
+    github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
+    lnMarkets: 'https://api.lnmarkets.com/v1',
+    lnMarketsExchange: 'https://lnmarkets.com',
+    boltz: 'https://boltz.exchange/api',
   };
 
   const sso = {
