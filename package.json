@@ -14,6 +14,7 @@
     "build:64": "docker build -f arm64v8.Dockerfile -t apotdevin/thunderhub:test-arm64v8 .",
     "build:manifest": "docker manifest create apotdevin/thunderhub:test apotdevin/thunderhub:test-amd64 apotdevin/thunderhub:test-arm32v7 apotdevin/thunderhub:test-arm64v8",
     "build:all": "sh ./scripts/buildAllImages.sh",
+    "build:all:next": "sh ./scripts/buildAllNextImages.sh",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
