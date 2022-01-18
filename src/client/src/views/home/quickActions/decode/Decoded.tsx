@@ -42,7 +42,7 @@ export const Decoded = ({ request, setShow }: DecodedProps) => {
     destination_node,
   } = data.decodeRequest;
 
-  const alias = destination_node?.node.alias || 'Unknown';
+  const alias = destination_node?.node?.alias || 'Unknown';
 
   return (
     <>

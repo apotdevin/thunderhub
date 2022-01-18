@@ -6,7 +6,6 @@ import {
   Server,
   Settings,
   Shield,
-  Crosshair,
   GitPullRequest,
   Link as LinkIcon,
   Repeat,
@@ -132,7 +131,6 @@ const TRANS = '/transactions';
 const FORWARDS = '/forwards';
 const CHAIN_TRANS = '/chain';
 const TOOLS = '/tools';
-const DETAILS = '/details';
 const STATS = '/stats';
 const DONATIONS = '/leaderboard';
 const CHAT = '/chat';
@@ -186,7 +184,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Peers', PEERS, Users, sidebar)}
       {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
       {renderNavButton('Rebalance', REBALANCE, Repeat, sidebar)}
-      {renderNavButton('Details', DETAILS, Crosshair, sidebar)}
       {renderNavButton('Transactions', TRANS, Server, sidebar)}
       {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
       {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
@@ -204,7 +201,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Peers', PEERS, Users)}
       {renderBurgerNav('Channels', CHANNEL, Cpu)}
       {renderBurgerNav('Rebalance', REBALANCE, Repeat)}
-      {renderBurgerNav('Details', DETAILS, Crosshair)}
       {renderBurgerNav('Transactions', TRANS, Server)}
       {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}

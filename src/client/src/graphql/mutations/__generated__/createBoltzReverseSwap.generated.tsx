@@ -2,7 +2,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type CreateBoltzReverseSwapMutationVariables = Types.Exact<{
   amount: Types.Scalars['Float'];
   address?: Types.InputMaybe<Types.Scalars['String']>;
@@ -36,7 +36,14 @@ export type CreateBoltzReverseSwapMutation = {
           destination_node?:
             | {
                 __typename?: 'Node';
-                node: { __typename?: 'NodeType'; alias: string };
+                node?:
+                  | {
+                      __typename?: 'NodeType';
+                      alias: string;
+                      public_key: string;
+                    }
+                  | null
+                  | undefined;
               }
             | null
             | undefined;
@@ -71,6 +78,7 @@ export const CreateBoltzReverseSwapDocument = gql`
         destination_node {
           node {
             alias
+            public_key
           }
         }
       }

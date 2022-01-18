@@ -71,7 +71,7 @@ export const TransactionsWidget = () => {
           info: (
             <S.nowrap>
               {c.destination_node
-                ? `Payment to ${c.destination_node.node.alias}`
+                ? `Payment to ${c.destination_node.node?.alias || 'Unknown'}`
                 : `Payment to ${shorten(c.destination)}`}
             </S.nowrap>
           ),

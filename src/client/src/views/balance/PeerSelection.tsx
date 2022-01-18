@@ -44,10 +44,7 @@ export const PeerSelection = ({
 
       let label = `${shorten(channel.partner_public_key)}`;
 
-      if (
-        channel.partner_node_info.node.alias &&
-        channel.partner_node_info.node.alias !== 'Node not found'
-      ) {
+      if (channel.partner_node_info.node?.alias) {
         label = `${channel.partner_node_info.node.alias} (${shorten(
           channel.partner_public_key
         )})`;

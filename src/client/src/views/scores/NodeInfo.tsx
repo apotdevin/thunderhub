@@ -9,12 +9,6 @@ import {
   SubTitle,
 } from '../../components/generic/Styled';
 import { LoadingCard } from '../../components/loading/LoadingCard';
-import {
-  getDateDif,
-  getFormatDate,
-  renderLine,
-} from '../../components/generic/helpers';
-import { Price } from '../../components/price/Price';
 
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
@@ -41,7 +35,7 @@ export const NodeInfo = () => {
     return <LoadingCard title={'Node Info'} />;
   }
 
-  if (!data?.getNode.node || data?.getNode?.node?.alias === 'Node not found') {
+  if (!data?.getNode.node?.alias) {
     return (
       <CardWithTitle>
         <SubTitle>Node Info</SubTitle>
@@ -52,17 +46,13 @@ export const NodeInfo = () => {
     );
   }
 
-  const { alias, channel_count, capacity, updated_at } = data.getNode.node;
+  const { alias } = data.getNode.node;
 
   return (
     <CardWithTitle>
       <SubTitle>Node Info</SubTitle>
       <Card>
         <SubTitle>{alias}</SubTitle>
-        {renderLine('Channel Count', channel_count)}
-        {renderLine('Capacity', <Price amount={capacity} />)}
-        {renderLine('Last Update', `${getDateDif(updated_at)} ago`)}
-        {renderLine('Last Update Date', getFormatDate(updated_at))}
       </Card>
     </CardWithTitle>
   );

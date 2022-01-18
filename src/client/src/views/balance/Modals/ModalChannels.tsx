@@ -29,7 +29,7 @@ export const ModalChannels: React.FC<ModalChannelsType> = ({
   }
 
   const allChannels = data.getChannels.map(p => ({
-    alias: p?.partner_node_info.node.alias || '',
+    alias: p?.partner_node_info.node?.alias || '',
     id: p?.id || '',
     publicKey: p?.partner_public_key || '',
   }));

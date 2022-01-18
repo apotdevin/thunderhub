@@ -5,9 +5,14 @@ import {
   useSortBy,
   useAsyncDebounce,
   useGlobalFilter,
+  TableInstance,
+  useFilters,
 } from 'react-table';
 import { separationColor } from '../../../src/styles/Themes';
 import { Input } from '../input';
+import { Settings, X } from 'react-feather';
+import { ColorButton } from '../buttons/colorButton/ColorButton';
+import { SubCard } from '../generic/Styled';
 
 type StyledTableProps = {
   withBorder?: boolean;
@@ -50,6 +55,24 @@ const Styles = styled.div`
   }
 `;
 
+const S = {
+  options: styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  `,
+  option: styled.label`
+    margin: 4px 8px;
+  `,
+  row: styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  `,
+};
+
 const FilterLine = styled.div`
   margin-bottom: 24px;
 `;
@@ -81,19 +104,32 @@ const GlobalFilter = ({
   );
 };
 
+type TableColumn = {
+  Header: string;
+  accessor: string;
+};
+
 type TableProps = {
   tableData: any[];
-  tableColumns:
-    | { Header: string; accessor: string }[]
-    | { Header: string; columns: { Header: string; accessor: string }[] }[];
+  tableColumns: (
+    | TableColumn
+    | {
+        Header: string;
+        columns: TableColumn[];
+      }
+  )[];
   withBorder?: boolean;
   fontSize?: string;
   filterPlaceholder?: string;
   notSortable?: boolean;
   alignCenter?: boolean;
+  defaultHiddenColumns?: string[];
+  onHideToggle?: (hide: boolean, id: string) => void;
 };
 
 export const Table: React.FC<TableProps> = ({
+  onHideToggle,
+  defaultHiddenColumns = [],
   tableData,
   tableColumns,
   withBorder,
@@ -102,10 +138,31 @@ export const Table: React.FC<TableProps> = ({
   notSortable,
   alignCenter,
 }) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const data = useMemo(() => tableData, [tableData]);
   const columns = useMemo(() => tableColumns, [tableColumns]);
+  const hiddenColumns = useMemo(
+    () => defaultHiddenColumns,
+    [defaultHiddenColumns]
+  );
+
+  const instance = useTable(
+    {
+      autoResetSortBy: false,
+      columns,
+      data,
+      initialState: {
+        hiddenColumns,
+      },
+    } as any,
+    useFilters,
+    useGlobalFilter,
+    useSortBy
+  );
 
   const {
+    allColumns,
     getTableProps,
     getTableBodyProps,
     headerGroups,
@@ -114,24 +171,64 @@ export const Table: React.FC<TableProps> = ({
     state,
     preGlobalFilteredRows,
     setGlobalFilter,
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useGlobalFilter,
-    useSortBy
-  );
+  } = instance as TableInstance & {
+    preGlobalFilteredRows: any;
+    setGlobalFilter: any;
+  };
+
+  const hidableColumns = allColumns.filter(c => {
+    if (!c.isVisible) {
+      return true;
+    }
+    return !(c as any).forceVisible;
+  });
 
   return (
     <>
-      {!!filterPlaceholder && (
-        <GlobalFilter
-          preGlobalFilteredRows={preGlobalFilteredRows}
-          globalFilter={state.globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          filterPlaceholder={filterPlaceholder}
-        />
+      {filterPlaceholder || onHideToggle ? (
+        <S.row>
+          {filterPlaceholder ? (
+            <GlobalFilter
+              preGlobalFilteredRows={preGlobalFilteredRows}
+              globalFilter={(state as any).globalFilter}
+              setGlobalFilter={setGlobalFilter}
+              filterPlaceholder={filterPlaceholder}
+            />
+          ) : null}
+          {onHideToggle ? (
+            <ColorButton onClick={() => setIsOpen(p => !p)}>
+              {isOpen ? <X size={18} /> : <Settings size={18} />}
+            </ColorButton>
+          ) : null}
+        </S.row>
+      ) : null}
+      {isOpen && (
+        <SubCard>
+          <S.options>
+            {hidableColumns.map(column => {
+              const parent = column?.parent?.Header || '';
+              const title = parent
+                ? `${parent} - ${column.Header}`
+                : column.Header;
+              const { checked } = column.getToggleHiddenProps();
+
+              return (
+                <S.option key={column.id}>
+                  <label>
+                    <input
+                      onClick={() =>
+                        onHideToggle && onHideToggle(checked, column.id)
+                      }
+                      type={'checkbox'}
+                      {...column.getToggleHiddenProps()}
+                    />
+                    {title}
+                  </label>
+                </S.option>
+              );
+            })}
+          </S.options>
+        </SubCard>
       )}
       <Styles
         withBorder={withBorder}
@@ -142,14 +239,16 @@ export const Table: React.FC<TableProps> = ({
           <thead>
             {headerGroups.map((headerGroup, index) => (
               <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-                {headerGroup.headers.map((column, index) => (
+                {headerGroup.headers.map((column: any, index) => (
                   <th
                     {...column.getHeaderProps(
                       notSortable ? undefined : column.getSortByToggleProps()
                     )}
                     key={index}
                   >
-                    {column.render('Header')}
+                    <span style={{ whiteSpace: 'nowrap' }}>
+                      {column.render('Header')}
+                    </span>
                     <span>
                       {column.isSorted ? (column.isSortedDesc ? '⬇' : '⬆') : ''}
                     </span>

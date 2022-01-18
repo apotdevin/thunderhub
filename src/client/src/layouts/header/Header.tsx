@@ -91,6 +91,8 @@ export const Header = () => {
   return (
     <>
       <Section
+        padding="0 16px"
+        fixedWidth={pathname === MAIN}
         color={pathname === MAIN ? 'transparent' : headerColor}
         textColor={headerTextColor}
       >

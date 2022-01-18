@@ -7,7 +7,6 @@ import { ColorButton } from '../../../../src/components/buttons/colorButton/Colo
 import { Input } from '../../../../src/components/input';
 
 type ChangeDetailsType = {
-  callback: () => void;
   transaction_id?: string;
   transaction_vout?: number;
   base_fee_mtokens?: string | null;
@@ -18,7 +17,6 @@ type ChangeDetailsType = {
 };
 
 export const ChangeDetails = ({
-  callback,
   transaction_id,
   transaction_vout,
   base_fee_mtokens,
@@ -55,7 +53,6 @@ export const ChangeDetails = ({
       data.updateFees
         ? toast.success('Channel fees updated')
         : toast.error('Error updating channel fees');
-      callback();
     },
     refetchQueries: ['GetChannels', 'ChannelFees'],
   });

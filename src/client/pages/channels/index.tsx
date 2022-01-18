@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Settings } from 'react-feather';
-import { IconCursor } from '../src/views/channels/channels/Channel.style';
-import { ChannelManage } from '../src/views/channels/channels/ChannelManage';
-import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
+import { ChannelManage } from '../../src/views/channels/channels/ChannelManage';
+import { GridWrapper } from '../../src/components/gridWrapper/GridWrapper';
 import { NextPageContext } from 'next';
-import { getProps } from '../src/utils/ssr';
-import { useGetNodeInfoQuery } from '../src/graphql/queries/__generated__/getNodeInfo.generated';
-import { Channels } from '../src/views/channels/channels/Channels';
-import { PendingChannels } from '../src/views/channels/pendingChannels/PendingChannels';
-import { ClosedChannels } from '../src/views/channels/closedChannels/ClosedChannels';
+import { getProps } from '../../src/utils/ssr';
+import { useGetNodeInfoQuery } from '../../src/graphql/queries/__generated__/getNodeInfo.generated';
+import { PendingChannels } from '../../src/views/channels/pendingChannels/PendingChannels';
+import { ClosedChannels } from '../../src/views/channels/closedChannels/ClosedChannels';
 import {
   CardWithTitle,
   SubTitle,
   SmallButton,
   Card,
-} from '../src/components/generic/Styled';
-import { mediaWidths } from '../src/styles/Themes';
+} from '../../src/components/generic/Styled';
+import { mediaWidths } from '../../src/styles/Themes';
+import { ChannelTable } from '../../src/views/channels/channels/ChannelTable';
+
+export const IconCursor = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 8px;
+`;
 
 const ChannelsCardTitle = styled.div`
   display: flex;
@@ -63,13 +69,21 @@ const ChannelView = () => {
   const getView = () => {
     switch (view) {
       case 2:
-        return <PendingChannels />;
+        return (
+          <Card mobileNoBackground={true}>
+            <PendingChannels />
+          </Card>
+        );
       case 3:
-        return <ClosedChannels />;
+        return (
+          <Card mobileNoBackground={true}>
+            <ClosedChannels />
+          </Card>
+        );
       default:
         return (
-          <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-            <Channels />
+          <Card mobileNoBackground={true}>
+            <ChannelTable />
           </Card>
         );
     }
@@ -114,7 +128,7 @@ const ChannelView = () => {
 };
 
 const Wrapped = () => (
-  <GridWrapper>
+  <GridWrapper centerContent={false}>
     <ChannelView />
   </GridWrapper>
 );

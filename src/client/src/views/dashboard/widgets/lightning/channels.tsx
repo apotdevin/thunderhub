@@ -1,5 +1,5 @@
-import { Channels } from '../../../../views/channels/channels/Channels';
 import styled from 'styled-components';
+import { ChannelTable } from '../../../channels/channels/ChannelTable';
 
 const S = {
   wrapper: styled.div`
@@ -12,7 +12,7 @@ const S = {
 export const ChannelListWidget = () => {
   return (
     <S.wrapper>
-      <Channels />
+      <ChannelTable />
     </S.wrapper>
   );
 };

@@ -21,9 +21,9 @@ import { StatusDot, DetailLine } from './CardGeneric';
 const { publicRuntimeConfig } = getConfig();
 const { disableLinks, mempoolUrl } = publicRuntimeConfig;
 
-export const shorten = (text: string): string => {
+export const shorten = (text: string, length?: number): string => {
   if (!text) return '';
-  const amount = 6;
+  const amount = length || 6;
   const beginning = text.slice(0, amount);
   const end = text.slice(text.length - amount);
 
@@ -126,6 +126,22 @@ export const getNodeLink = (
         </SmallLink>
       )}
       {copyLink(publicKey)}
+    </>
+  );
+};
+
+export const getChannelLink = (id: string) => {
+  const link = `https://amboss.space/edge/${id}`;
+  return (
+    <>
+      {disableLinks ? (
+        id
+      ) : (
+        <SmallLink href={link} target="_blank">
+          {id}
+        </SmallLink>
+      )}
+      {copyLink(id)}
     </>
   );
 };

@@ -2,7 +2,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type GetPeersQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetPeersQuery = {
@@ -20,14 +20,10 @@ export type GetPeersQuery = {
     tokens_sent: number;
     partner_node_info: {
       __typename?: 'Node';
-      node: {
-        __typename?: 'NodeType';
-        alias: string;
-        capacity?: string | null | undefined;
-        channel_count?: number | null | undefined;
-        color?: string | null | undefined;
-        updated_at?: string | null | undefined;
-      };
+      node?:
+        | { __typename?: 'NodeType'; alias: string; public_key: string }
+        | null
+        | undefined;
     };
   }>;
 };
@@ -47,10 +43,7 @@ export const GetPeersDocument = gql`
       partner_node_info {
         node {
           alias
-          capacity
-          channel_count
-          color
-          updated_at
+          public_key
         }
       }
     }

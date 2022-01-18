@@ -4,21 +4,13 @@ import { Field, ObjectType } from '@nestjs/graphql';
 export class NodeType {
   @Field()
   alias: string;
-  @Field({ nullable: true })
-  capacity: string;
-  @Field({ nullable: true })
-  channel_count: number;
-  @Field({ nullable: true })
-  color: string;
-  @Field({ nullable: true })
-  updated_at: string;
-  @Field({ nullable: true })
+  @Field()
   public_key: string;
 }
 
 @ObjectType()
 export class Node {
-  @Field(() => NodeType)
+  @Field(() => NodeType, { nullable: true })
   node: NodeType;
 }
 

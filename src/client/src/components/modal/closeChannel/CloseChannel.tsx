@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AlertTriangle } from 'react-feather';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
@@ -22,12 +22,6 @@ import {
   SingleButton,
 } from '../../buttons/multiButton/MultiButton';
 
-interface CloseChannelProps {
-  callback: () => void;
-  channelId: string;
-  channelName: string;
-}
-
 const Warning = styled.div`
   font-size: 14px;
   color: ${chartColors.orange};
@@ -40,15 +34,12 @@ const WarningCard = styled.div`
   align-items: center;
 `;
 
-const CenterLine = styled(SingleLine)`
-  justify-content: center;
-`;
+type CloseChannelProps = {
+  channelId: string;
+  channelName: string;
+};
 
-export const CloseChannel = ({
-  callback,
-  channelId,
-  channelName,
-}: CloseChannelProps) => {
+export const CloseChannel = ({ channelId, channelName }: CloseChannelProps) => {
   const { fetchFees } = useConfigState();
   const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
 
@@ -57,7 +48,11 @@ export const CloseChannel = ({
   const [amount, setAmount] = useState<number | undefined>();
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
 
-  const [closeChannel, { loading, data }] = useCloseChannelMutation({
+  const [closeChannel, { loading }] = useCloseChannelMutation({
+    onCompleted: () => {
+      toast.success('Channel Closed');
+      () => setIsConfirmed(false);
+    },
     onError: error => toast.error(getErrorContent(error)),
     refetchQueries: [
       'GetChannels',
@@ -66,15 +61,6 @@ export const CloseChannel = ({
       'GetChannelAmountInfo',
     ],
   });
-
-  useEffect(() => {
-    if (data && data.closeChannel) {
-      toast.success('Channel Closed');
-      callback();
-    }
-  }, [data, callback]);
-
-  const handleOnlyClose = () => callback();
 
   const renderButton = (
     onClick: () => void,
@@ -138,7 +124,7 @@ export const CloseChannel = ({
         fullWidth={true}
         disabled={loading}
         withMargin={'4px'}
-        onClick={handleOnlyClose}
+        onClick={() => setIsConfirmed(false)}
       >
         Cancel
       </ColorButton>
@@ -236,26 +222,17 @@ export const CloseChannel = ({
           inputCallback={e => setAmount(Number(e))}
         />
       )}
-      <Separation />
-      <CenterLine>
-        <ColorButton
-          withMargin={'4px'}
-          withBorder={true}
-          onClick={handleOnlyClose}
-        >
-          Cancel
-        </ColorButton>
-        <ColorButton
-          disabled={!amount && !isForce}
-          arrow={true}
-          withMargin={'4px'}
-          withBorder={true}
-          color={'red'}
-          onClick={() => setIsConfirmed(true)}
-        >
-          Close Channel
-        </ColorButton>
-      </CenterLine>
+      <ColorButton
+        disabled={!amount && !isForce}
+        arrow={true}
+        fullWidth={true}
+        withMargin={'32px 0 0'}
+        withBorder={true}
+        color={'red'}
+        onClick={() => setIsConfirmed(true)}
+      >
+        Close Channel
+      </ColorButton>
     </>
   );
 

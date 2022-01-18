@@ -2,7 +2,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type BosRebalanceMutationVariables = Types.Exact<{
   avoid?: Types.InputMaybe<
     Array<Types.Scalars['String']> | Types.Scalars['String']

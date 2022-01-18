@@ -17,6 +17,7 @@ import {
   GetClosedChannelsType,
   GetForwards,
   GetForwardsParams,
+  GetHeightType,
   GetInvoices,
   GetNodeType,
   GetPayments,
@@ -46,6 +47,7 @@ import {
   getWalletInfo,
   getClosedChannels,
   getPendingChannels,
+  getHeight,
   getNode,
   getChannels,
   getChainBalance,
@@ -95,6 +97,14 @@ export class LndService {
   async getWalletVersion(account: EnrichedAccount) {
     return to(
       getWalletVersion({
+        lnd: account.lnd,
+      })
+    );
+  }
+
+  async getHeight(account: EnrichedAccount) {
+    return to<GetHeightType>(
+      getHeight({
         lnd: account.lnd,
       })
     );

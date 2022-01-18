@@ -13,10 +13,12 @@ export const Price = ({
   amount,
   breakNumber = false,
   override,
+  noUnit,
 }: {
   amount: number | string | null | undefined;
   breakNumber?: boolean;
   override?: string;
+  noUnit?: boolean;
 }): JSX.Element => {
   const { currency, displayValues, useSatWord } = useConfigState();
   const { fiat, prices, dontShow } = usePriceState();
@@ -46,7 +48,14 @@ export const Price = ({
 
   return (
     <span>
-      {getValue({ amount, ...priceProps, breakNumber, override, useSatWord })}
+      {getValue({
+        amount,
+        ...priceProps,
+        breakNumber,
+        override,
+        noUnit,
+        useSatWord,
+      })}
     </span>
   );
 };

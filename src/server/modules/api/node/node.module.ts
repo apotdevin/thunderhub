@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { FetchModule } from '../../fetch/fetch.module';
 import { NodeModule as NodeServiceModule } from '../../node/node.module';
 import {
   BalancesResolver,
@@ -9,7 +10,7 @@ import {
 } from './node.resolver';
 
 @Module({
-  imports: [NodeServiceModule],
+  imports: [FetchModule, NodeServiceModule],
   providers: [
     NodeResolver,
     BalancesResolver,

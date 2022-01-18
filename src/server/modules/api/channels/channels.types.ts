@@ -1,5 +1,4 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { BosScore } from '../amboss/amboss.types';
 import { Node } from '../node/node.types';
 
 @ObjectType()
@@ -64,11 +63,12 @@ export class NodePolicy {
   max_htlc_mtokens: string;
   @Field({ nullable: true })
   min_htlc_mtokens: string;
-  public_key: string;
   @Field({ nullable: true })
   updated_at: string;
   @Field(() => Node, { nullable: true })
   node: Node;
+
+  public_key: string;
 }
 
 @ObjectType()
@@ -120,6 +120,8 @@ export class Channel {
   @Field()
   partner_public_key: string;
   @Field()
+  past_states: number;
+  @Field()
   received: number;
   @Field()
   remote_balance: number;
@@ -147,8 +149,6 @@ export class Channel {
   pending_payments: PendingPayment[];
   @Field(() => PendingResume)
   pending_resume: PendingResume;
-  @Field(() => BosScore, { nullable: true })
-  bosScore: BosScore;
 }
 
 export type SingleChannelParentType = {
@@ -191,8 +191,10 @@ export class ClosedChannel {
   transaction_vout: number;
   @Field(() => Node)
   partner_node_info: Node;
-  @Field()
+  @Field({ nullable: true })
   channel_age: number;
+  @Field({ nullable: true })
+  closed_for_blocks: number;
 }
 
 @ObjectType()
