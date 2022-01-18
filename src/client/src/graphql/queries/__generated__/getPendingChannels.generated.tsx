@@ -2,7 +2,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type GetPendingChannelsQueryVariables = Types.Exact<{
   [key: string]: never;
 }>;
@@ -30,14 +30,7 @@ export type GetPendingChannelsQuery = {
     transaction_vout: number;
     partner_node_info: {
       __typename?: 'Node';
-      node: {
-        __typename?: 'NodeType';
-        alias: string;
-        capacity?: string | null | undefined;
-        channel_count?: number | null | undefined;
-        color?: string | null | undefined;
-        updated_at?: string | null | undefined;
-      };
+      node?: { __typename?: 'NodeType'; alias: string } | null | undefined;
     };
   }>;
 };
@@ -65,10 +58,6 @@ export const GetPendingChannelsDocument = gql`
       partner_node_info {
         node {
           alias
-          capacity
-          channel_count
-          color
-          updated_at
         }
       }
     }

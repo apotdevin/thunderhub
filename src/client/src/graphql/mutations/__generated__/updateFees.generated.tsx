@@ -2,7 +2,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type UpdateFeesMutationVariables = Types.Exact<{
   transaction_id?: Types.InputMaybe<Types.Scalars['String']>;
   transaction_vout?: Types.InputMaybe<Types.Scalars['Float']>;

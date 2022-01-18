@@ -15,10 +15,7 @@ export const GET_PEERS = gql`
       partner_node_info {
         node {
           alias
-          capacity
-          channel_count
-          color
-          updated_at
+          public_key
         }
       }
     }

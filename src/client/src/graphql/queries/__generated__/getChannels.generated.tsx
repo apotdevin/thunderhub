@@ -2,7 +2,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type GetChannelsQueryVariables = Types.Exact<{
   active?: Types.InputMaybe<Types.Scalars['Boolean']>;
 }>;
@@ -24,6 +24,7 @@ export type GetChannelsQuery = {
     local_balance: number;
     local_reserve: number;
     partner_public_key: string;
+    past_states: number;
     received: number;
     remote_balance: number;
     remote_reserve: number;
@@ -45,14 +46,7 @@ export type GetChannelsQuery = {
     };
     partner_node_info: {
       __typename?: 'Node';
-      node: {
-        __typename?: 'NodeType';
-        alias: string;
-        capacity?: string | null | undefined;
-        channel_count?: number | null | undefined;
-        color?: string | null | undefined;
-        updated_at?: string | null | undefined;
-      };
+      node?: { __typename?: 'NodeType'; alias: string } | null | undefined;
     };
     partner_fee_info: {
       __typename?: 'SingleChannel';
@@ -73,21 +67,12 @@ export type GetChannelsQuery = {
             base_fee_mtokens?: string | null | undefined;
             fee_rate?: number | null | undefined;
             cltv_delta?: number | null | undefined;
+            max_htlc_mtokens?: string | null | undefined;
+            min_htlc_mtokens?: string | null | undefined;
           }
         | null
         | undefined;
     };
-    bosScore?:
-      | {
-          __typename?: 'BosScore';
-          alias: string;
-          public_key: string;
-          score: number;
-          updated: string;
-          position: number;
-        }
-      | null
-      | undefined;
   }>;
 };
 
@@ -107,6 +92,7 @@ export const GetChannelsDocument = gql`
       local_balance
       local_reserve
       partner_public_key
+      past_states
       received
       remote_balance
       remote_reserve
@@ -128,10 +114,6 @@ export const GetChannelsDocument = gql`
       partner_node_info {
         node {
           alias
-          capacity
-          channel_count
-          color
-          updated_at
         }
       }
       partner_fee_info {
@@ -146,14 +128,9 @@ export const GetChannelsDocument = gql`
           base_fee_mtokens
           fee_rate
           cltv_delta
+          max_htlc_mtokens
+          min_htlc_mtokens
         }
-      }
-      bosScore {
-        alias
-        public_key
-        score
-        updated
-        position
       }
     }
   }

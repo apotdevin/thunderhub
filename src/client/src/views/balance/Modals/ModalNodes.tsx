@@ -39,7 +39,7 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
   const [nodeData, resetMutationResult] = useMutationResultWithReset(_data);
 
   React.useEffect(() => {
-    if (nodeData && nodeData.getNode.node.channel_count) {
+    if (nodeData && nodeData.getNode.node?.alias) {
       dispatch &&
         dispatch({
           type: 'addNode',
@@ -50,7 +50,7 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
         });
       newNodeSet('');
       resetMutationResult();
-    } else if (nodeData && !nodeData.getNode.node.channel_count) {
+    } else if (nodeData && !nodeData.getNode.node?.alias) {
       toast.error(`Node ${newNode} not found.`);
       resetMutationResult();
     }
@@ -61,7 +61,7 @@ export const ModalNodes: React.FC<ModalNodesType> = ({
   }
 
   const peers = data.getPeers.map(p => ({
-    alias: p?.partner_node_info.node.alias || '',
+    alias: p?.partner_node_info.node?.alias || '',
     id: p?.public_key || '',
   }));
   const allNodes: RebalanceIdType[] = [

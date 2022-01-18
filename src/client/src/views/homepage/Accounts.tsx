@@ -41,7 +41,7 @@ const DetailsLine = styled.div`
 const RenderIntro = () => {
   const [detailsOpen, setDetailsOpen] = React.useState(false);
   return (
-    <Section color={'transparent'}>
+    <Section fixedWidth={true} color={'transparent'}>
       <ConnectTitle changeColor={true}>Hi! Welcome to ThunderHub</ConnectTitle>
       <Card>
         {'To start you must create an account on your server. '}
@@ -107,7 +107,7 @@ export const Accounts = () => {
 
   if (loadingData) {
     return (
-      <Section color={'transparent'}>
+      <Section fixedWidth={true} color={'transparent'}>
         <LoadingCard />
       </Section>
     );
@@ -161,7 +161,7 @@ export const Accounts = () => {
   return (
     <>
       {newAccount && <Login account={newAccount} />}
-      <Section color={'transparent'}>
+      <Section fixedWidth={true} color={'transparent'}>
         <ConnectTitle changeColor={!newAccount}>
           {!newAccount ? 'Accounts' : 'Other Accounts'}
         </ConnectTitle>

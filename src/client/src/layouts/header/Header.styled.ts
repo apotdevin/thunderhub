@@ -12,7 +12,7 @@ export const HeaderStyle = styled.div`
   padding: 16px 0;
 
   @media (${mediaWidths.mobile}) {
-    padding: 16px 0 0;
+    padding: 16px 16px 0;
   }
 `;
 

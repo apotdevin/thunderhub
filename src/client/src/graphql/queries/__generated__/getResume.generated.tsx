@@ -2,7 +2,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type GetResumeQueryVariables = Types.Exact<{
   offset?: Types.InputMaybe<Types.Scalars['Float']>;
   limit?: Types.InputMaybe<Types.Scalars['Float']>;
@@ -67,15 +67,17 @@ export type GetResumeQuery = {
           date: string;
           destination_node: {
             __typename?: 'Node';
-            node: { __typename?: 'NodeType'; alias: string };
+            node?:
+              | { __typename?: 'NodeType'; alias: string; public_key: string }
+              | null
+              | undefined;
           };
           hops: Array<{
             __typename?: 'Node';
-            node: {
-              __typename?: 'NodeType';
-              alias: string;
-              public_key?: string | null | undefined;
-            };
+            node?:
+              | { __typename?: 'NodeType'; alias: string; public_key: string }
+              | null
+              | undefined;
           }>;
         }
     >;
@@ -120,6 +122,7 @@ export const GetResumeDocument = gql`
           destination_node {
             node {
               alias
+              public_key
             }
           }
           fee

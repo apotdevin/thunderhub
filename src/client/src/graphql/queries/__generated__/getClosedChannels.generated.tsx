@@ -2,7 +2,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type GetClosedChannelsQueryVariables = Types.Exact<{
   [key: string]: never;
 }>;
@@ -14,6 +14,7 @@ export type GetClosedChannelsQuery = {
     capacity: number;
     close_confirm_height?: number | null | undefined;
     close_transaction_id?: string | null | undefined;
+    closed_for_blocks?: number | null | undefined;
     final_local_balance: number;
     final_time_locked_balance: number;
     id?: string | null | undefined;
@@ -25,17 +26,10 @@ export type GetClosedChannelsQuery = {
     partner_public_key: string;
     transaction_id: string;
     transaction_vout: number;
-    channel_age: number;
+    channel_age?: number | null | undefined;
     partner_node_info: {
       __typename?: 'Node';
-      node: {
-        __typename?: 'NodeType';
-        alias: string;
-        capacity?: string | null | undefined;
-        channel_count?: number | null | undefined;
-        color?: string | null | undefined;
-        updated_at?: string | null | undefined;
-      };
+      node?: { __typename?: 'NodeType'; alias: string } | null | undefined;
     };
   }>;
 };
@@ -46,6 +40,7 @@ export const GetClosedChannelsDocument = gql`
       capacity
       close_confirm_height
       close_transaction_id
+      closed_for_blocks
       final_local_balance
       final_time_locked_balance
       id
@@ -57,16 +52,12 @@ export const GetClosedChannelsDocument = gql`
       partner_public_key
       transaction_id
       transaction_vout
+      channel_age
       partner_node_info {
         node {
           alias
-          capacity
-          channel_count
-          color
-          updated_at
         }
       }
-      channel_age
     }
   }
 `;

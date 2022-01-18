@@ -1,40 +1,87 @@
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
 import { toast } from 'react-toastify';
 import { useGetUtxosQuery } from '../../../graphql/queries/__generated__/getUtxos.generated';
-import {
-  SubTitle,
-  Card,
-  CardWithTitle,
-} from '../../../components/generic/Styled';
+import { DarkSubTitle } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
-import { UtxoCard } from './UtxoCard';
+import { Table } from '../../../components/table';
+import { getAddressLink } from '../../../components/generic/helpers';
+import { Price } from '../../../components/price/Price';
+import { blockToTime } from '../../../utils/helpers';
 
 export const ChainUtxos = () => {
-  const [indexOpen, setIndexOpen] = useState(0);
-
   const { loading, data } = useGetUtxosQuery({
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  if (loading || !data || !data.getUtxos) {
-    return <LoadingCard title={'Unspent Utxos'} />;
+  const tableData = useMemo(() => {
+    const channelData = data?.getUtxos || [];
+
+    return channelData.map((c, index) => {
+      return {
+        ...c,
+        index: index + 1,
+        time: blockToTime(c.confirmation_count),
+      };
+    });
+  }, [data]);
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: '',
+        accessor: 'index',
+      },
+      {
+        Header: 'Sats',
+        accessor: 'tokens',
+        Cell: ({ row }: any) => (
+          <div style={{ whiteSpace: 'nowrap' }}>
+            <Price amount={row.original.tokens} />
+          </div>
+        ),
+      },
+      {
+        Header: 'Confirmations',
+        columns: [
+          { Header: 'Blocks', accessor: 'confirmation_count' },
+          {
+            Header: 'Since',
+            accessor: 'time',
+          },
+        ],
+      },
+      {
+        Header: 'Address',
+        columns: [
+          {
+            Header: 'Link',
+            accessor: 'output_addresses',
+            Cell: ({ row }: any) => (
+              <div style={{ whiteSpace: 'nowrap' }}>
+                {getAddressLink(row.original.address)}
+              </div>
+            ),
+          },
+          {
+            Header: 'Format',
+            accessor: 'address_format',
+          },
+        ],
+      },
+    ],
+    []
+  );
+
+  if (loading) {
+    return <LoadingCard noCard={true} />;
+  }
+
+  if (!data?.getUtxos?.length) {
+    return <DarkSubTitle>No Utxos found</DarkSubTitle>;
   }
 
   return (
-    <CardWithTitle>
-      <SubTitle>Unspent Utxos</SubTitle>
-      <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-        {data.getUtxos.map((utxo, index: number) => (
-          <UtxoCard
-            utxo={utxo}
-            key={index}
-            index={index + 1}
-            setIndexOpen={setIndexOpen}
-            indexOpen={indexOpen}
-          />
-        ))}
-      </Card>
-    </CardWithTitle>
+    <Table withBorder={true} tableColumns={columns} tableData={tableData} />
   );
 };

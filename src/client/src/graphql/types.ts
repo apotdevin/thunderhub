@@ -174,7 +174,6 @@ export type ChainTransaction = {
 
 export type Channel = {
   __typename?: 'Channel';
-  bosScore?: Maybe<BosScore>;
   capacity: Scalars['Float'];
   channel_age: Scalars['Float'];
   commit_transaction_fee: Scalars['Float'];
@@ -191,6 +190,7 @@ export type Channel = {
   partner_fee_info: SingleChannel;
   partner_node_info: Node;
   partner_public_key: Scalars['String'];
+  past_states: Scalars['Float'];
   pending_payments: Array<PendingPayment>;
   pending_resume: PendingResume;
   received: Scalars['Float'];
@@ -273,9 +273,10 @@ export type ChannelsTimeHealth = {
 export type ClosedChannel = {
   __typename?: 'ClosedChannel';
   capacity: Scalars['Float'];
-  channel_age: Scalars['Float'];
+  channel_age?: Maybe<Scalars['Float']>;
   close_confirm_height?: Maybe<Scalars['Float']>;
   close_transaction_id?: Maybe<Scalars['String']>;
+  closed_for_blocks?: Maybe<Scalars['Float']>;
   final_local_balance: Scalars['Float'];
   final_time_locked_balance: Scalars['Float'];
   id?: Maybe<Scalars['String']>;
@@ -704,7 +705,7 @@ export type NetworkInfoInput = {
 
 export type Node = {
   __typename?: 'Node';
-  node: NodeType;
+  node?: Maybe<NodeType>;
 };
 
 export type NodeBosHistory = {
@@ -762,11 +763,7 @@ export type NodeSocialInfo = {
 export type NodeType = {
   __typename?: 'NodeType';
   alias: Scalars['String'];
-  capacity?: Maybe<Scalars['String']>;
-  channel_count?: Maybe<Scalars['Float']>;
-  color?: Maybe<Scalars['String']>;
-  public_key?: Maybe<Scalars['String']>;
-  updated_at?: Maybe<Scalars['String']>;
+  public_key: Scalars['String'];
 };
 
 export type OnChainBalance = {
@@ -976,7 +973,6 @@ export type QueryGetBoltzSwapStatusArgs = {
 
 export type QueryGetChannelArgs = {
   id: Scalars['String'];
-  pubkey?: InputMaybe<Scalars['String']>;
 };
 
 export type QueryGetChannelsArgs = {

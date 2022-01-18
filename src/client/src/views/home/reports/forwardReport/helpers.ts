@@ -159,7 +159,7 @@ export const getAliasFromClosedChannels = (
 
   const channel = channels.find(c => c?.id === channelId);
 
-  if (channel?.partner_node_info.node.alias) {
+  if (channel?.partner_node_info.node?.alias) {
     return { alias: channel.partner_node_info.node.alias, closed: true };
   }
 

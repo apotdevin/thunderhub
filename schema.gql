@@ -137,7 +137,6 @@ type ChainTransaction {
 }
 
 type Channel {
-  bosScore: BosScore
   capacity: Float!
   channel_age: Float!
   commit_transaction_fee: Float!
@@ -154,6 +153,7 @@ type Channel {
   partner_fee_info: SingleChannel!
   partner_node_info: Node!
   partner_public_key: String!
+  past_states: Float!
   pending_payments: [PendingPayment!]!
   pending_resume: PendingResume!
   received: Float!
@@ -227,9 +227,10 @@ type ChannelsTimeHealth {
 
 type ClosedChannel {
   capacity: Float!
-  channel_age: Float!
+  channel_age: Float
   close_confirm_height: Float
   close_transaction_id: String
+  closed_for_blocks: Float
   final_local_balance: Float!
   final_time_locked_balance: Float!
   id: String
@@ -468,7 +469,7 @@ input NetworkInfoInput {
 }
 
 type Node {
-  node: NodeType!
+  node: NodeType
 }
 
 type NodeBosHistory {
@@ -520,11 +521,7 @@ type NodeSocialInfo {
 
 type NodeType {
   alias: String!
-  capacity: String
-  channel_count: Float
-  color: String
-  public_key: String
-  updated_at: String
+  public_key: String!
 }
 
 type OnChainBalance {
@@ -668,7 +665,7 @@ type Query {
   getBoltzSwapStatus(ids: [String!]!): [BoltzSwap!]!
   getBosScores: [BosScore!]!
   getChainTransactions: [ChainTransaction!]!
-  getChannel(id: String!, pubkey: String): SingleChannel!
+  getChannel(id: String!): SingleChannel!
   getChannelReport: ChannelReport!
   getChannels(active: Boolean): [Channel!]!
   getClosedChannels: [ClosedChannel!]!

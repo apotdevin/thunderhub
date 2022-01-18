@@ -2,7 +2,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type GetNodeQueryVariables = Types.Exact<{
   publicKey: Types.Scalars['String'];
   withoutChannels?: Types.InputMaybe<Types.Scalars['Boolean']>;
@@ -12,14 +12,7 @@ export type GetNodeQuery = {
   __typename?: 'Query';
   getNode: {
     __typename?: 'Node';
-    node: {
-      __typename?: 'NodeType';
-      alias: string;
-      capacity?: string | null | undefined;
-      channel_count?: number | null | undefined;
-      color?: string | null | undefined;
-      updated_at?: string | null | undefined;
-    };
+    node?: { __typename?: 'NodeType'; alias: string } | null | undefined;
   };
 };
 
@@ -28,10 +21,6 @@ export const GetNodeDocument = gql`
     getNode(publicKey: $publicKey, withoutChannels: $withoutChannels) {
       node {
         alias
-        capacity
-        channel_count
-        color
-        updated_at
       }
     }
   }

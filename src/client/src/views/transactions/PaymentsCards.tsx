@@ -92,10 +92,10 @@ export const PaymentsCard = ({
         {renderLine('Fee msats:', `${fee_mtokens} millisats`)}
         {renderLine('Hops:', hops.length)}
         {hops.map((hop, index: number) => (
-          <Fragment key={`${index}-${hop.node.alias}}`}>
+          <Fragment key={`${index}-${hop.node?.alias}}`}>
             {renderLine(
               `Hop ${index + 1}:`,
-              getNodeLink(hop.node.public_key, hop.node.alias)
+              getNodeLink(hop.node?.public_key, hop.node?.alias)
             )}
           </Fragment>
         ))}

@@ -60,7 +60,7 @@ export const KeysendModal: React.FC<KeysendProps> = ({
     return <LoadingCard noCard={true} />;
   }
 
-  const { alias } = data.getNode.node;
+  const alias = data.getNode.node?.alias || 'Unknown';
 
   const handleEnter = () => {
     if (loading || keysendLoading) return;

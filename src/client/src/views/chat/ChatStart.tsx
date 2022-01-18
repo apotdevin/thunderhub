@@ -36,7 +36,7 @@ const PeerChatCard = ({
 }: PeerProps) => {
   const { partner_node_info, public_key } = peer;
 
-  const alias = partner_node_info?.node?.alias;
+  const alias = partner_node_info?.node?.alias || 'Unknown';
 
   const handleClick = () => {
     if (indexOpen === index) {

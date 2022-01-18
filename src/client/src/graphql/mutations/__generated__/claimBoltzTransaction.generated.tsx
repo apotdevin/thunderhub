@@ -2,7 +2,7 @@ import * as Types from '../../types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-const defaultOptions = {};
+const defaultOptions = {} as const;
 export type ClaimBoltzTransactionMutationVariables = Types.Exact<{
   redeem: Types.Scalars['String'];
   transaction: Types.Scalars['String'];
