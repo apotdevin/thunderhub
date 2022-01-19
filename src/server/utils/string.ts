@@ -6,3 +6,6 @@ export const shorten = (text: string): string => {
 
   return `${beginning}...${end}`;
 };
+
+export const reversedBytes = hex =>
+  Buffer.from(hex, 'hex').reverse().toString('hex');

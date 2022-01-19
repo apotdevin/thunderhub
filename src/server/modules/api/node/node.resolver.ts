@@ -16,6 +16,7 @@ import { toWithError } from 'src/server/utils/async';
 import { FetchService } from '../../fetch/fetch.service';
 import { ConfigService } from '@nestjs/config';
 import { gql } from 'graphql-tag';
+import { getNetwork } from 'src/server/utils/network';
 
 @Resolver(LightningBalance)
 export class LightningBalanceResolver {
@@ -148,18 +149,23 @@ export class NodeFieldResolver {
       return null;
     }
 
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
-      gql`
-        query GetNodeAlias($pubkey: String!) {
-          getNodeAlias(pubkey: $pubkey)
-        }
-      `,
-      { pubkey: publicKey }
-    );
+    const nodeInfo = await this.nodeService.getWalletInfo(id);
+    const network = getNetwork(nodeInfo?.chains?.[0] || '');
 
-    if (data?.getNodeAlias && !error) {
-      return { alias: data.getNodeAlias, public_key: publicKey };
+    if (network === 'btc') {
+      const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+        this.configService.get('urls.amboss'),
+        gql`
+          query GetNodeAlias($pubkey: String!) {
+            getNodeAlias(pubkey: $pubkey)
+          }
+        `,
+        { pubkey: publicKey }
+      );
+
+      if (data?.getNodeAlias && !error) {
+        return { alias: data.getNodeAlias, public_key: publicKey };
+      }
     }
 
     const [info, nodeError] = await toWithError(
