@@ -103,6 +103,7 @@ export type GetWalletInfoType = {
   public_key: string;
   version: string;
   current_block_height: number;
+  chains: string[];
 };
 
 export type DiffieHellmanComputeSecretType = {
