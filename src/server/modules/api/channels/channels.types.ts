@@ -111,8 +111,6 @@ export class Channel {
   is_partner_initiated: boolean;
   @Field()
   is_private: boolean;
-  @Field({ nullable: true })
-  is_static_remote_key: boolean;
   @Field()
   local_balance: number;
   @Field()

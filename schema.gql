@@ -147,7 +147,6 @@ type Channel {
   is_opening: Boolean!
   is_partner_initiated: Boolean!
   is_private: Boolean!
-  is_static_remote_key: Boolean
   local_balance: Float!
   local_reserve: Float!
   partner_fee_info: SingleChannel!
