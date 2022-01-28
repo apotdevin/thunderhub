@@ -6,10 +6,11 @@ import {
 } from 'date-fns';
 import { groupBy } from 'lodash';
 import { GetForwardsQuery } from '../../../graphql/queries/__generated__/getForwards.generated';
-import { Transaction } from '../../../graphql/types';
 import { defaultGrid } from '../../../utils/gridConstants';
 import { StoredWidget } from '..';
 import { widgetList, WidgetProps } from './widgetList';
+import { GetInvoicesQuery } from '../../../graphql/queries/__generated__/getInvoices.generated';
+import { GetPaymentsQuery } from '../../../graphql/queries/__generated__/getPayments.generated';
 
 const getColumns = (width: number): number => {
   const { lg, md, sm, xs } = defaultGrid.breakpoints;
@@ -66,18 +67,28 @@ export const getWidgets = (
   return normalized;
 };
 
-type ArrayType = GetForwardsQuery['getForwards'] | Transaction[];
+type ArrayType =
+  | GetForwardsQuery['getForwards']
+  | GetInvoicesQuery['getInvoices']['invoices']
+  | GetPaymentsQuery['getPayments']['payments'];
 
 export const getByTime = (array: ArrayType, time: number): any[] => {
   if (!array?.length) return [];
 
-  const transactions: any[] = [];
+  const transactions: {
+    difference: number;
+    date: string;
+    tokens: number;
+    fee?: number;
+  }[] = [];
+
   const isDay = time <= 1;
 
   const today = new Date();
 
   array.forEach((transaction: ArrayType[0]) => {
-    if (!transaction) return;
+    if (!transaction?.__typename) return;
+
     if (transaction.__typename === 'InvoiceType') {
       if (!transaction.is_confirmed || !transaction.confirmed_at) return;
 
@@ -148,7 +159,7 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
       (total, transaction) => {
         return {
           tokens: total.tokens + transaction.tokens,
-          fee: total.fee + transaction.fee || 0,
+          fee: total.fee + (transaction.fee || 0),
           amount: total.amount + 1,
           date: total.date
             ? total.date
@@ -171,15 +182,6 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
 
     final.push(reduced);
   });
-
-  //   final.push({ tokens: 1, amount: 0, date: new Date().toString() });
-  //   final.push({
-  //     tokens: 1,
-  //     amount: 0,
-  //     date: isDay
-  //       ? subHours(new Date(), 25).toString()
-  //       : subDays(new Date(), time + 1).toString(),
-  //   });
 
   return final;
 };
