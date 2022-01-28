@@ -12,7 +12,6 @@ export const GET_CHANNELS = gql`
       is_opening
       is_partner_initiated
       is_private
-      is_static_remote_key
       local_balance
       local_reserve
       partner_public_key

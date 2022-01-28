@@ -20,7 +20,6 @@ export type GetChannelsQuery = {
     is_opening: boolean;
     is_partner_initiated: boolean;
     is_private: boolean;
-    is_static_remote_key?: boolean | null | undefined;
     local_balance: number;
     local_reserve: number;
     partner_public_key: string;
@@ -88,7 +87,6 @@ export const GetChannelsDocument = gql`
       is_opening
       is_partner_initiated
       is_private
-      is_static_remote_key
       local_balance
       local_reserve
       partner_public_key

@@ -184,7 +184,6 @@ export type Channel = {
   is_opening: Scalars['Boolean'];
   is_partner_initiated: Scalars['Boolean'];
   is_private: Scalars['Boolean'];
-  is_static_remote_key?: Maybe<Scalars['Boolean']>;
   local_balance: Scalars['Float'];
   local_reserve: Scalars['Float'];
   partner_fee_info: SingleChannel;
