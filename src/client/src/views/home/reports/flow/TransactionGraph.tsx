@@ -1,11 +1,12 @@
 import { FC, useMemo } from 'react';
 import { BarChart } from '../../../../components/chart/BarChart';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { useGetResumeQuery } from '../../../../graphql/queries/__generated__/getResume.generated';
-import { PaymentType } from '../../../../graphql/types';
 import { chartColors } from '../../../../styles/Themes';
 import { getByTime } from '../../../../views/dashboard/widgets/helpers';
 import styled from 'styled-components';
+import { useGetInvoicesQuery } from '../../../../graphql/queries/__generated__/getInvoices.generated';
+import { differenceInDays } from 'date-fns';
+import { useGetPaymentsQuery } from '../../../../graphql/queries/__generated__/getPayments.generated';
 
 const S = {
   row: styled.div`
@@ -39,43 +40,59 @@ const S = {
 };
 
 type TransactionsGraphProps = {
-  days: number;
+  showPay: boolean;
   type: string;
 };
 
 export const TransactionsGraph: FC<TransactionsGraphProps> = ({
-  days,
+  showPay,
   type,
 }) => {
-  const { data, loading } = useGetResumeQuery({
-    variables: { limit: days },
-    errorPolicy: 'ignore',
-  });
+  const { data, loading } = useGetInvoicesQuery();
+  const { data: paymentsData, loading: paymentsLoading } =
+    useGetPaymentsQuery();
 
-  const { invoicesByDate, paymentsByDate } = useMemo(() => {
-    const resume = data?.getResume.resume || [];
-    const invoices: any[] = [];
-    const payments: PaymentType[] = [];
+  const invoicesByDate = useMemo(() => {
+    const invoices = data?.getInvoices.invoices || [];
+    const filtered = invoices.filter(i => !!i.is_confirmed);
 
-    resume.forEach(t => {
-      if (!t) return;
-      if (t.__typename === 'InvoiceType') {
-        if (!t.is_confirmed) return;
-        invoices.push(t);
-      }
-      if (t.__typename === 'PaymentType') {
-        if (!t.is_confirmed) return;
-        payments.push(t);
-      }
-    });
+    if (!filtered.length) {
+      return [];
+    }
 
-    const invoicesByDate = getByTime(invoices, days);
-    const paymentsByDate = getByTime(payments, days);
+    const lastInvoice = filtered[filtered.length - 1];
 
-    return { invoicesByDate, paymentsByDate };
-  }, [data, days]);
+    const difference = differenceInDays(
+      new Date(),
+      new Date(lastInvoice.confirmed_at || '')
+    );
 
-  if (loading) {
+    const invoicesByDate = getByTime(filtered, difference);
+
+    return invoicesByDate;
+  }, [data]);
+
+  const paymentsByDate = useMemo(() => {
+    const payments = paymentsData?.getPayments.payments || [];
+    const filtered = payments.filter(i => !!i.is_confirmed);
+
+    if (!filtered.length) {
+      return [];
+    }
+
+    const lastPayment = filtered[filtered.length - 1];
+
+    const difference = differenceInDays(
+      new Date(),
+      new Date(lastPayment.created_at || '')
+    );
+
+    const paymentsByDate = getByTime(filtered, difference);
+
+    return paymentsByDate;
+  }, [paymentsData]);
+
+  if (loading || paymentsLoading) {
     return (
       <S.wrapper>
         <S.contentWrapper>
@@ -85,7 +102,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     );
   }
 
-  if (!data?.getResume.resume.length) {
+  if (!data?.getInvoices.invoices.length) {
     return (
       <S.wrapper>
         <S.contentWrapper>No transactions for this period.</S.contentWrapper>
@@ -93,20 +110,21 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     );
   }
 
+  const finalArray = showPay ? paymentsByDate : invoicesByDate;
+  const finalColor = showPay ? [chartColors.darkyellow] : [chartColors.orange2];
+
   return (
     <S.wrapper>
       <S.content>
         <BarChart
           priceLabel={type !== 'amount'}
-          data={invoicesByDate.map(f => {
-            const payment = paymentsByDate.find(p => p.date === f.date);
+          data={finalArray.map(f => {
             return {
               Invoices: f?.[type] || 0,
-              Payments: payment?.[type] || 0,
               date: f.date,
             };
           })}
-          colorRange={[chartColors.orange2, chartColors.darkyellow]}
+          colorRange={finalColor}
         />
       </S.content>
     </S.wrapper>

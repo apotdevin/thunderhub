@@ -55,6 +55,30 @@ function createApolloClient(authToken: string) {
     link,
     cache: new InMemoryCache({
       ...possibleTypes,
+      typePolicies: {
+        Query: {
+          fields: {
+            getInvoices: {
+              keyArgs: false,
+              merge(existing = { next: '', invoices: [] }, incoming) {
+                return {
+                  next: incoming.next,
+                  invoices: [...existing.invoices, ...incoming.invoices],
+                };
+              },
+            },
+            getPayments: {
+              keyArgs: false,
+              merge(existing = { next: '', payments: [] }, incoming) {
+                return {
+                  next: incoming.next,
+                  payments: [...existing.payments, ...incoming.payments],
+                };
+              },
+            },
+          },
+        },
+      },
     }),
     defaultOptions: {
       query: {

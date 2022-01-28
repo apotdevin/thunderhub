@@ -13,6 +13,8 @@ export class NetworkInfoInput {
   @Field()
   is_ok_to_derive_keys: boolean;
   @Field()
+  is_ok_to_get_access_ids: boolean;
+  @Field()
   is_ok_to_get_chain_transactions: boolean;
   @Field()
   is_ok_to_get_invoices: boolean;
@@ -24,6 +26,8 @@ export class NetworkInfoInput {
   is_ok_to_get_peers: boolean;
   @Field()
   is_ok_to_pay: boolean;
+  @Field()
+  is_ok_to_revoke_access_ids: boolean;
   @Field()
   is_ok_to_send_to_chain_addresses: boolean;
   @Field()

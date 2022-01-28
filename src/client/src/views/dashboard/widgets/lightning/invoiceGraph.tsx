@@ -1,18 +1,17 @@
 import { useMemo, useState } from 'react';
-
 import { BarChart } from '../../../../components/chart/BarChart';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { SmallSelectWithValue } from '../../../../components/select';
-import { useGetResumeQuery } from '../../../../graphql/queries/__generated__/getResume.generated';
-import { InvoiceType } from '../../../../graphql/types';
 import { chartColors } from '../../../../styles/Themes';
 import styled from 'styled-components';
 import { getByTime } from '../helpers';
+import { useGetInvoicesQuery } from '../../../../graphql/queries/__generated__/getInvoices.generated';
+import { differenceInDays } from 'date-fns';
 
 const S = {
   row: styled.div`
     display: grid;
-    grid-template-columns: 1fr 60px 90px;
+    grid-template-columns: 1fr 90px;
   `,
   wrapper: styled.div`
     width: 100%;
@@ -40,57 +39,46 @@ const S = {
   `,
 };
 
-const options = [
-  { label: '1D', value: 1 },
-  { label: '7D', value: 7 },
-  { label: '1M', value: 30 },
-  { label: '2M', value: 60 },
-];
-
 const typeOptions = [
   { label: 'Count', value: 'amount' },
   { label: 'Amount', value: 'tokens' },
 ];
 
 export const InvoicesGraph = () => {
-  const [days, setDays] = useState(options[1]);
   const [type, setType] = useState(typeOptions[0]);
 
-  const { data, loading } = useGetResumeQuery({
-    variables: { limit: days.value },
+  const { data, loading } = useGetInvoicesQuery({
     errorPolicy: 'ignore',
   });
 
   const invoicesByDate = useMemo(() => {
-    const resume = data?.getResume.resume || [];
-    const invoices = resume.reduce((p: any, c) => {
-      if (!c) return p;
-      if (c.__typename === 'InvoiceType') {
-        if (!c.is_confirmed) return p;
-        return [...p, c];
-      }
-      return p;
-    }, [] as InvoiceType[]);
+    const invoices = data?.getInvoices.invoices || [];
+    const filtered = invoices.filter(i => !!i.is_confirmed);
 
-    return getByTime(invoices, days.value);
-  }, [data?.getResume.resume, days.value]);
+    if (!filtered.length) {
+      return [];
+    }
+
+    const lastInvoice = filtered[filtered.length - 1];
+
+    const difference = differenceInDays(
+      new Date(),
+      new Date(lastInvoice.confirmed_at || '')
+    );
+
+    const invoicesByDate = getByTime(filtered, difference);
+
+    return invoicesByDate;
+  }, [data]);
 
   const Header = () => (
     <S.row>
       <S.title>Invoices</S.title>
       <SmallSelectWithValue
-        callback={e => setDays((e[0] || options[1]) as any)}
-        options={options}
-        value={days}
-        isClearable={false}
-        maxWidth={'60px'}
-      />
-      <SmallSelectWithValue
         callback={e => setType((e[0] || typeOptions[1]) as any)}
         options={typeOptions}
         value={type}
         isClearable={false}
-        maxWidth={'90px'}
       />
     </S.row>
   );
@@ -106,7 +94,7 @@ export const InvoicesGraph = () => {
     );
   }
 
-  if (!data?.getResume.resume.length) {
+  if (!invoicesByDate.length) {
     return (
       <S.wrapper>
         <Header />

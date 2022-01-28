@@ -3,16 +3,16 @@ import { useMemo, useState } from 'react';
 import { BarChart } from '../../../../components/chart/BarChart';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { SmallSelectWithValue } from '../../../../components/select';
-import { useGetResumeQuery } from '../../../../graphql/queries/__generated__/getResume.generated';
-import { PaymentType } from '../../../../graphql/types';
 import { chartColors } from '../../../../styles/Themes';
 import styled from 'styled-components';
 import { getByTime } from '../helpers';
+import { useGetPaymentsQuery } from '../../../../graphql/queries/__generated__/getPayments.generated';
+import { differenceInDays } from 'date-fns';
 
 const S = {
   row: styled.div`
     display: grid;
-    grid-template-columns: 1fr 60px 90px;
+    grid-template-columns: 1fr 90px;
   `,
   wrapper: styled.div`
     width: 100%;
@@ -40,52 +40,39 @@ const S = {
   `,
 };
 
-const options = [
-  { label: '1D', value: 1 },
-  { label: '7D', value: 7 },
-  { label: '1M', value: 30 },
-  { label: '2M', value: 60 },
-];
-
 const typeOptions = [
   { label: 'Count', value: 'amount' },
   { label: 'Amount', value: 'tokens' },
 ];
 
 export const PaymentsGraph = () => {
-  const [days, setDays] = useState(options[1]);
   const [type, setType] = useState(typeOptions[0]);
 
-  const { data, loading } = useGetResumeQuery({
-    variables: { limit: days.value },
-    errorPolicy: 'ignore',
-  });
-
-  const resume = data?.getResume.resume || [];
+  const { data, loading } = useGetPaymentsQuery();
 
   const paymentsByDate = useMemo(() => {
-    const payments = resume.reduce((p, c) => {
-      if (!c) return p;
-      if (c.__typename === 'PaymentType') {
-        if (!c.is_confirmed) return p;
-        return [...p, c];
-      }
-      return p;
-    }, [] as PaymentType[]);
+    const payments = data?.getPayments.payments || [];
+    const filtered = payments.filter(i => !!i.is_confirmed);
 
-    return getByTime(payments, days.value);
-  }, [resume]);
+    if (!filtered.length) {
+      return [];
+    }
+
+    const lastPayment = filtered[filtered.length - 1];
+
+    const difference = differenceInDays(
+      new Date(),
+      new Date(lastPayment.created_at || '')
+    );
+
+    const paymentsByDate = getByTime(filtered, difference);
+
+    return paymentsByDate;
+  }, [data]);
 
   const Header = () => (
     <S.row>
       <S.title>Payments</S.title>
-      <SmallSelectWithValue
-        callback={e => setDays((e[0] || options[1]) as any)}
-        options={options}
-        value={days}
-        isClearable={false}
-        maxWidth={'60px'}
-      />
       <SmallSelectWithValue
         callback={e => setType((e[0] || typeOptions[1]) as any)}
         options={typeOptions}
@@ -107,7 +94,7 @@ export const PaymentsGraph = () => {
     );
   }
 
-  if (!resume.length) {
+  if (!paymentsByDate.length) {
     return (
       <S.wrapper>
         <Header />

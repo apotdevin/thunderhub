@@ -30,12 +30,14 @@ const InitPermissions = {
   is_ok_to_create_invoices: false,
   is_ok_to_create_macaroons: false,
   is_ok_to_derive_keys: false,
+  is_ok_to_get_access_ids: false,
   is_ok_to_get_chain_transactions: false,
   is_ok_to_get_invoices: false,
   is_ok_to_get_wallet_info: false,
   is_ok_to_get_payments: false,
   is_ok_to_get_peers: false,
   is_ok_to_pay: false,
+  is_ok_to_revoke_access_ids: false,
   is_ok_to_send_to_chain_addresses: false,
   is_ok_to_sign_bytes: false,
   is_ok_to_sign_messages: false,
@@ -141,17 +143,19 @@ export const Bakery = () => {
     <>
       <Separation />
       <Sub4Title>Permissions</Sub4Title>
-      {renderLine('Adjust Peers', 'is_ok_to_adjust_peers')}
-      {renderLine('Create Chain Address', 'is_ok_to_create_chain_addresses')}
+      {renderLine('Add or remove Peers', 'is_ok_to_adjust_peers')}
+      {renderLine('Create Chain Addresses', 'is_ok_to_create_chain_addresses')}
       {renderLine('Create Invoices', 'is_ok_to_create_invoices')}
       {renderLine('Create Macaroons', 'is_ok_to_create_macaroons')}
       {renderLine('Derive Keys', 'is_ok_to_derive_keys')}
+      {renderLine('Get Access Keys', 'is_ok_to_get_access_ids')}
       {renderLine('Get Chain Transactions', 'is_ok_to_get_chain_transactions')}
       {renderLine('Get Invoices', 'is_ok_to_get_invoices')}
       {renderLine('Get Wallet Info', 'is_ok_to_get_wallet_info')}
       {renderLine('Get Payments', 'is_ok_to_get_payments')}
       {renderLine('Get Peers', 'is_ok_to_get_peers')}
       {renderLine('Pay Invoices', 'is_ok_to_pay')}
+      {renderLine('Revoke Access Ids', 'is_ok_to_revoke_access_ids')}
       {renderLine('Send to Chain Adresses', 'is_ok_to_send_to_chain_addresses')}
       {renderLine('Sign bytes', 'is_ok_to_sign_bytes')}
       {renderLine('Sign Messages', 'is_ok_to_sign_messages')}

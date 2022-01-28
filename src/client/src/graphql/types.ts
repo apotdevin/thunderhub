@@ -365,16 +365,22 @@ export type Forward = {
   tokens: Scalars['Float'];
 };
 
+export type GetInvoicesType = {
+  __typename?: 'GetInvoicesType';
+  invoices: Array<InvoiceType>;
+  next?: Maybe<Scalars['String']>;
+};
+
 export type GetMessages = {
   __typename?: 'GetMessages';
   messages: Array<Message>;
   token?: Maybe<Scalars['String']>;
 };
 
-export type GetResumeType = {
-  __typename?: 'GetResumeType';
-  offset: Scalars['Float'];
-  resume: Array<Transaction>;
+export type GetPaymentsType = {
+  __typename?: 'GetPaymentsType';
+  next?: Maybe<Scalars['String']>;
+  payments: Array<PaymentType>;
 };
 
 export type Hops = {
@@ -689,12 +695,14 @@ export type NetworkInfoInput = {
   is_ok_to_create_invoices: Scalars['Boolean'];
   is_ok_to_create_macaroons: Scalars['Boolean'];
   is_ok_to_derive_keys: Scalars['Boolean'];
+  is_ok_to_get_access_ids: Scalars['Boolean'];
   is_ok_to_get_chain_transactions: Scalars['Boolean'];
   is_ok_to_get_invoices: Scalars['Boolean'];
   is_ok_to_get_payments: Scalars['Boolean'];
   is_ok_to_get_peers: Scalars['Boolean'];
   is_ok_to_get_wallet_info: Scalars['Boolean'];
   is_ok_to_pay: Scalars['Boolean'];
+  is_ok_to_revoke_access_ids: Scalars['Boolean'];
   is_ok_to_send_to_chain_addresses: Scalars['Boolean'];
   is_ok_to_sign_bytes: Scalars['Boolean'];
   is_ok_to_sign_messages: Scalars['Boolean'];
@@ -927,6 +935,7 @@ export type Query = {
   getForwards: Array<Forward>;
   getHello: Scalars['String'];
   getInvoiceStatusChange: Scalars['String'];
+  getInvoices: GetInvoicesType;
   getLatestVersion: Scalars['String'];
   getLightningAddressInfo: PayRequest;
   getLightningAddresses: Array<LightningAddress>;
@@ -940,9 +949,9 @@ export type Query = {
   getNodeBosHistory: NodeBosHistory;
   getNodeInfo: NodeInfo;
   getNodeSocialInfo: LightningNodeSocialInfo;
+  getPayments: GetPaymentsType;
   getPeers: Array<Peer>;
   getPendingChannels: Array<PendingChannel>;
-  getResume: GetResumeType;
   getServerAccounts: Array<ServerAccount>;
   getTimeHealth: ChannelsTimeHealth;
   getTwofaSecret: TwofaResult;
@@ -987,6 +996,10 @@ export type QueryGetInvoiceStatusChangeArgs = {
   id: Scalars['String'];
 };
 
+export type QueryGetInvoicesArgs = {
+  token?: InputMaybe<Scalars['String']>;
+};
+
 export type QueryGetLightningAddressInfoArgs = {
   address: Scalars['String'];
 };
@@ -1008,9 +1021,8 @@ export type QueryGetNodeSocialInfoArgs = {
   pubkey: Scalars['String'];
 };
 
-export type QueryGetResumeArgs = {
-  limit?: InputMaybe<Scalars['Float']>;
-  offset?: InputMaybe<Scalars['Float']>;
+export type QueryGetPaymentsArgs = {
+  token?: InputMaybe<Scalars['String']>;
 };
 
 export type QueryRecoverFundsArgs = {
@@ -1059,8 +1071,6 @@ export type SingleChannel = {
   transaction_vout: Scalars['Float'];
   updated_at?: Maybe<Scalars['String']>;
 };
-
-export type Transaction = InvoiceType | PaymentType;
 
 export type TwofaResult = {
   __typename?: 'TwofaResult';
