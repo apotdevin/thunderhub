@@ -1,6 +1,5 @@
 {
   "possibleTypes": {
-    "LnUrlRequest": ["ChannelRequest", "PayRequest", "WithdrawRequest"],
-    "Transaction": ["InvoiceType", "PaymentType"]
+    "LnUrlRequest": ["ChannelRequest", "PayRequest", "WithdrawRequest"]
   }
 }

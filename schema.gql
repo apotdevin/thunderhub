@@ -313,14 +313,19 @@ type Forward {
   tokens: Float!
 }
 
+type GetInvoicesType {
+  invoices: [InvoiceType!]!
+  next: String
+}
+
 type GetMessages {
   messages: [Message!]!
   token: String
 }
 
-type GetResumeType {
-  offset: Float!
-  resume: [Transaction!]!
+type GetPaymentsType {
+  next: String
+  payments: [PaymentType!]!
 }
 
 type Hops {
@@ -454,12 +459,14 @@ input NetworkInfoInput {
   is_ok_to_create_invoices: Boolean!
   is_ok_to_create_macaroons: Boolean!
   is_ok_to_derive_keys: Boolean!
+  is_ok_to_get_access_ids: Boolean!
   is_ok_to_get_chain_transactions: Boolean!
   is_ok_to_get_invoices: Boolean!
   is_ok_to_get_payments: Boolean!
   is_ok_to_get_peers: Boolean!
   is_ok_to_get_wallet_info: Boolean!
   is_ok_to_pay: Boolean!
+  is_ok_to_revoke_access_ids: Boolean!
   is_ok_to_send_to_chain_addresses: Boolean!
   is_ok_to_sign_bytes: Boolean!
   is_ok_to_sign_messages: Boolean!
@@ -673,6 +680,7 @@ type Query {
   getForwards(days: Float!): [Forward!]!
   getHello: String!
   getInvoiceStatusChange(id: String!): String!
+  getInvoices(token: String): GetInvoicesType!
   getLatestVersion: String!
   getLightningAddressInfo(address: String!): PayRequest!
   getLightningAddresses: [LightningAddress!]!
@@ -686,9 +694,9 @@ type Query {
   getNodeBosHistory(pubkey: String!): NodeBosHistory!
   getNodeInfo: NodeInfo!
   getNodeSocialInfo(pubkey: String!): LightningNodeSocialInfo!
+  getPayments(token: String): GetPaymentsType!
   getPeers: [Peer!]!
   getPendingChannels: [PendingChannel!]!
-  getResume(limit: Float, offset: Float): GetResumeType!
   getServerAccounts: [ServerAccount!]!
   getTimeHealth: ChannelsTimeHealth!
   getTwofaSecret: TwofaResult!
@@ -727,8 +735,6 @@ type SingleChannel {
   transaction_vout: Float!
   updated_at: String
 }
-
-union Transaction = InvoiceType | PaymentType
 
 type TwofaResult {
   secret: String!

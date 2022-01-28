@@ -6,6 +6,7 @@ import {
   textColor,
   inputBorderColor,
   themeColors,
+  selectColors,
 } from '../../../src/styles/Themes';
 
 type WrapperProps = {
@@ -55,7 +56,7 @@ const StyledSelect = styled(ReactSelect)`
 const StyledSmallSelect = styled(ReactSelect)`
   & .Select__control {
     cursor: pointer;
-    background-color: transparent;
+    background-color: ${selectColors.smallBackground};
     border: none;
     font-size: 12px;
 

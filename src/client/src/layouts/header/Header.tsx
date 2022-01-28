@@ -5,7 +5,6 @@ import {
   X,
   MessageCircle,
   Settings,
-  Home,
   Heart,
   Activity,
 } from 'react-feather';
@@ -38,7 +37,6 @@ export type Icon = FC<IconProps>;
 
 const SSO = '/sso';
 const MAIN = '/login';
-const HOME = '/';
 const CHAT = '/chat';
 const DONATIONS = '/leaderboard';
 const SETTINGS = '/settings';
@@ -52,8 +50,6 @@ export const Header = () => {
   const { connected } = useBaseConnect();
 
   const isRoot = pathname === MAIN || pathname === SSO;
-
-  const showHomeButton = (): boolean => !isRoot && pathname !== HOME;
 
   useEffect(() => {
     if (!isRoot || !open) return;
@@ -77,7 +73,6 @@ export const Header = () => {
       </ViewSwitch>
       <ViewSwitch hideMobile={true}>
         <HeaderButtons>
-          {showHomeButton() && renderNavButton(HOME, Home)}
           {connected && renderNavButton(DONATIONS, Heart)}
           {lnMarketsAuth && renderNavButton(LN_MARKETS, Activity)}
           {renderNavButton(CHAT, MessageCircle)}

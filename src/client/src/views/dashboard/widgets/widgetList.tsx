@@ -19,8 +19,6 @@ import {
   SendOnChain,
 } from './lightning/modal';
 import { PaymentsGraph } from './lightning/paymentGraph';
-import { TransactionsWidget } from './lightning/transactions';
-import { TransactionsGraph } from './lightning/transactionsGraph';
 import {
   ChannelViewLink,
   DashSettingsLink,
@@ -122,14 +120,6 @@ export const widgetList: WidgetProps[] = [
     default: { ...defaultProps, w: 2, h: 2 },
   },
   {
-    id: 8,
-    name: 'Transactions',
-    group: 'Lightning',
-    subgroup: 'Table',
-    component: TransactionsWidget,
-    default: { ...defaultProps, w: 5, h: 16, minW: 3 },
-  },
-  {
     id: 9,
     name: 'Forwards',
     group: 'Lightning',
@@ -143,14 +133,6 @@ export const widgetList: WidgetProps[] = [
     group: 'Lightning',
     subgroup: 'Graph',
     component: ForwardsGraph,
-    default: { ...defaultProps, w: 8, h: 16, minW: 5, minH: 8 },
-  },
-  {
-    id: 11,
-    name: 'Transactions',
-    group: 'Lightning',
-    subgroup: 'Graph',
-    component: TransactionsGraph,
     default: { ...defaultProps, w: 8, h: 16, minW: 5, minH: 8 },
   },
   {

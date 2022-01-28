@@ -28,7 +28,9 @@ const S = {
   row: styled.div`
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 60px 90px;
+    column-gap: 16px;
+    grid-template-columns: 1fr 70px 90px;
+    margin-bottom: 8px;
   `,
 };
 
@@ -60,14 +62,12 @@ export const ForwardBox = () => {
             options={options}
             value={days}
             isClearable={false}
-            maxWidth={'60px'}
           />
           <SmallSelectWithValue
             callback={e => setType((e[0] || typeOptions[1]) as any)}
             options={typeOptions}
             value={type}
             isClearable={false}
-            maxWidth={'90px'}
           />
         </S.row>
       </CardTitle>

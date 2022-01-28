@@ -231,13 +231,13 @@ export class NodeService {
     return this.lndService.getForwards(account, options);
   }
 
-  async getPayments(id: string, options: GetPaymentsParams) {
+  async getPayments(id: string, options: GetPaymentsParams = {}) {
     const account = this.accountsService.getAccount(id);
     if (!account) throw new Error('Node account not found');
     return this.lndService.getPayments(account, options);
   }
 
-  async getInvoices(id: string, options: GetPaymentsParams) {
+  async getInvoices(id: string, options: GetPaymentsParams = {}) {
     const account = this.accountsService.getAccount(id);
     if (!account) throw new Error('Node account not found');
     return this.lndService.getInvoices(account, options);

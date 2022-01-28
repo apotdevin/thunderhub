@@ -1,4 +1,4 @@
-import { createUnionType, Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Node } from '../node/node.types';
 
 @ObjectType()
@@ -99,15 +99,20 @@ export class PaymentType {
   date: string;
 }
 
-export const Transaction = createUnionType({
-  name: 'Transaction',
-  types: () => [InvoiceType, PaymentType],
-});
+@ObjectType()
+export class GetInvoicesType {
+  @Field({ nullable: true })
+  next: string;
+
+  @Field(() => [InvoiceType])
+  invoices: InvoiceType[];
+}
 
 @ObjectType()
-export class GetResumeType {
-  @Field()
-  offset: number;
-  @Field(() => [Transaction])
-  resume: Array<typeof Transaction>;
+export class GetPaymentsType {
+  @Field({ nullable: true })
+  next: string;
+
+  @Field(() => [PaymentType])
+  payments: PaymentType[];
 }

@@ -324,11 +324,11 @@ export class LndService {
     return to<GetForwards>(getForwards({ lnd: account.lnd, ...options }));
   }
 
-  async getPayments(account: EnrichedAccount, options: GetPaymentsParams) {
+  async getPayments(account: EnrichedAccount, options: GetPaymentsParams = {}) {
     return to<GetPayments>(getPayments({ lnd: account.lnd, ...options }));
   }
 
-  async getInvoices(account: EnrichedAccount, options: GetPaymentsParams) {
+  async getInvoices(account: EnrichedAccount, options: GetPaymentsParams = {}) {
     return to<GetInvoices>(getInvoices({ lnd: account.lnd, ...options }));
   }
 

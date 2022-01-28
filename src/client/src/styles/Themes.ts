@@ -304,6 +304,17 @@ export const progressBackground = theme('mode', {
 });
 
 // ---------------------------------------
+// SELECT COLORS
+// ---------------------------------------
+export const selectColors = {
+  smallBackground: theme('mode', {
+    light: 'rgba(255, 255, 255, 0.7)',
+    dark: 'rgba(0, 0, 0, 0.2)',
+    night: 'rgba(255, 255, 255, 0.1)',
+  }),
+};
+
+// ---------------------------------------
 // CHART COLORS
 // ---------------------------------------
 export const chartLinkColor = theme('mode', {

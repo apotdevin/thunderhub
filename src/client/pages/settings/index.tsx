@@ -10,6 +10,7 @@ import { DangerView } from '../../src/views/settings/Danger';
 import { ChatSettings } from '../../src/views/settings/Chat';
 import { PrivacySettings } from '../../src/views/settings/Privacy';
 import { Security } from '../../src/views/settings/Security';
+import { NetworkInfo } from '../../src/views/home/networkInfo/NetworkInfo';
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -29,6 +30,7 @@ const SettingsView = () => {
       <PrivacySettings />
       <ChatSettings />
       <DangerView />
+      <NetworkInfo />
     </>
   );
 };
