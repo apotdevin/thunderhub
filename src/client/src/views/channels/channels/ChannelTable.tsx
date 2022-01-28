@@ -121,6 +121,9 @@ export const ChannelTable = () => {
         ...pending,
         ...partnerInfo,
         alias: c.partner_node_info.node?.alias || 'Unknown',
+        undercaseAlias: (
+          c.partner_node_info.node?.alias || 'Unknown'
+        ).toLowerCase(),
         channel_age_duplicate: c.channel_age,
         percentOnline: getPercent(timeOnline, timeOffline),
         percentOnlineText: `${getPercent(timeOnline, timeOffline)}%`,
@@ -222,7 +225,7 @@ export const ChannelTable = () => {
         columns: [
           {
             Header: 'Peer',
-            accessor: 'alias',
+            accessor: 'undercaseAlias',
             Cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>{row.original.alias}</div>
             ),
