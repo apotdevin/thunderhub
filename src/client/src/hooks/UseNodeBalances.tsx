@@ -11,9 +11,7 @@ const initialState = {
 };
 
 export const useNodeBalances = () => {
-  const { data, loading, error } = useGetNodeBalancesQuery({
-    pollInterval: 10000,
-  });
+  const { data, loading, error } = useGetNodeBalancesQuery();
 
   if (!data?.getNodeBalances || loading || error) {
     return initialState;

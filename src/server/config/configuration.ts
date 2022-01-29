@@ -36,6 +36,15 @@ export type YamlEnvs = {
   YML_ENV_4: string;
 };
 
+type SubscriptionsConfig = {
+  disableAll: boolean;
+  disableInvoices: boolean;
+  disablePayments: boolean;
+  disableForwards: boolean;
+  disableChannels: boolean;
+  disableBackups: boolean;
+};
+
 type ConfigType = {
   basePath: string;
   isProduction: boolean;
@@ -53,6 +62,7 @@ type ConfigType = {
   masterPasswordOverride: string;
   disable2FA: boolean;
   headers: Headers;
+  subscriptions: SubscriptionsConfig;
 };
 
 export default (): ConfigType => {
@@ -106,6 +116,15 @@ export default (): ConfigType => {
     YML_ENV_4: process.env.YML_ENV_4 || '',
   };
 
+  const subscriptions = {
+    disableAll: process.env.DISABLE_ALL_SUBS === 'true',
+    disableInvoices: process.env.DISABLE_INVOICE_SUB === 'true',
+    disablePayments: process.env.DISABLE_PAYMENT_SUB === 'true',
+    disableForwards: process.env.DISABLE_FORWARD_SUB === 'true',
+    disableChannels: process.env.DISABLE_CHANNEL_SUB === 'true',
+    disableBackups: process.env.DISABLE_BACKUP_SUB === 'true',
+  };
+
   const config: ConfigType = {
     logJson: process.env.LOG_JSON === 'true',
     masterPasswordOverride: process.env.MASTER_PASSWORD_OVERRIDE || '',
@@ -123,6 +142,7 @@ export default (): ConfigType => {
     urls,
     jwtSecret,
     yamlEnvs,
+    subscriptions,
   };
 
   if (!isProduction) {

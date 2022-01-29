@@ -1,8 +1,6 @@
+import { useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
-import { StyledToastContainer } from '../src/components/toastContainer/ToastContainer';
 import { AppProps } from 'next/app';
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '../config/client';
@@ -13,13 +11,17 @@ import { GlobalStyles } from '../src/styles/GlobalStyle';
 import { Header } from '../src/layouts/header/Header';
 import { Footer } from '../src/layouts/footer/Footer';
 import { PageWrapper, HeaderBodyWrapper } from '../src/layouts/Layout.styled';
+import { ToastContainer } from 'react-toastify';
+import { useListener } from '../src/hooks/UseListener';
+import { SocketProvider } from '../src/context/SocketContext';
+import { useRouter } from 'next/router';
 import getConfig from 'next/config';
+import Head from 'next/head';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import 'react-circular-progressbar/dist/styles.css';
-import { useEffect } from 'react';
 
 const { publicRuntimeConfig } = getConfig();
 const { logoutUrl } = publicRuntimeConfig;
@@ -57,6 +59,8 @@ const Wrapper: React.FC<{ authenticated: boolean }> = ({
 
   const isRoot = pathname === '/login' || pathname === '/sso';
 
+  useListener(isRoot);
+
   return (
     <ThemeProvider theme={{ mode: isRoot ? 'light' : theme }}>
       <ModalProvider backgroundComponent={BaseModalBackground}>
@@ -67,6 +71,7 @@ const Wrapper: React.FC<{ authenticated: boolean }> = ({
             {authenticated ? children : <NotAuthenticated />}
           </HeaderBodyWrapper>
           <Footer />
+          <ToastContainer theme={theme === 'light' ? 'light' : 'dark'} />
         </PageWrapper>
       </ModalProvider>
     </ThemeProvider>
@@ -91,14 +96,15 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <ConfigProvider initialConfig={initialConfig}>
         <BaseProvider initialHasToken={hasToken}>
-          <ContextProvider>
-            <Wrapper authenticated={authenticated}>
-              <Component {...pageProps} />
-            </Wrapper>
-          </ContextProvider>
+          <SocketProvider authToken={authToken}>
+            <ContextProvider>
+              <Wrapper authenticated={authenticated}>
+                <Component {...pageProps} />
+              </Wrapper>
+            </ContextProvider>
+          </SocketProvider>
         </BaseProvider>
       </ConfigProvider>
-      <StyledToastContainer />
     </ApolloProvider>
   );
 }
