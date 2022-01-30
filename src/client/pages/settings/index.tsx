@@ -11,6 +11,7 @@ import { ChatSettings } from '../../src/views/settings/Chat';
 import { PrivacySettings } from '../../src/views/settings/Privacy';
 import { Security } from '../../src/views/settings/Security';
 import { NetworkInfo } from '../../src/views/home/networkInfo/NetworkInfo';
+import { NotificationSettings } from '../../src/views/settings/Notifications';
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -25,6 +26,7 @@ const SettingsView = () => {
   return (
     <>
       <InterfaceSettings />
+      <NotificationSettings />
       <Security />
       <DashboardSettings />
       <PrivacySettings />
