@@ -41,6 +41,7 @@ type SubscriptionsConfig = {
   disableInvoices: boolean;
   disablePayments: boolean;
   disableForwards: boolean;
+  enableAllForwards: boolean;
   disableChannels: boolean;
   disableBackups: boolean;
 };
@@ -121,6 +122,7 @@ export default (): ConfigType => {
     disableInvoices: process.env.DISABLE_INVOICE_SUB === 'true',
     disablePayments: process.env.DISABLE_PAYMENT_SUB === 'true',
     disableForwards: process.env.DISABLE_FORWARD_SUB === 'true',
+    enableAllForwards: process.env.ENABLE_ALL_FORWARDS === 'true',
     disableChannels: process.env.DISABLE_CHANNEL_SUB === 'true',
     disableBackups: process.env.DISABLE_BACKUP_SUB === 'true',
   };

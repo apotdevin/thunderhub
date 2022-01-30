@@ -246,7 +246,16 @@ export class SubService implements OnApplicationBootstrap {
 
                     sub.on('forward', data => {
                       this.logger.info('forward', { node: node.name });
-                      this.wsService.emit(node.id, 'forward', data);
+
+                      const enabled = this.configService.get(
+                        'subscriptions.enableAllForwards'
+                      );
+
+                      if (enabled) {
+                        this.wsService.emit(node.id, 'forward', data);
+                      } else if (data.is_confirmed) {
+                        this.wsService.emit(node.id, 'forward', data);
+                      }
 
                       return;
                     });
