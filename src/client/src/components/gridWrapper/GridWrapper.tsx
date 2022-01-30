@@ -5,7 +5,6 @@ import { BitcoinPrice } from '../../../src/components/bitcoinInfo/BitcoinPrice';
 import { mediaWidths } from '../../styles/Themes';
 import { Section } from '../section/Section';
 import { Navigation } from '../../layouts/navigation/Navigation';
-import { StatusCheck } from '../statusCheck/StatusCheck';
 
 type GridProps = {
   noNavigation?: boolean;
@@ -41,7 +40,6 @@ export const GridWrapper: React.FC<GridProps & { centerContent?: boolean }> = ({
     <Container noNavigation={noNavigation}>
       <BitcoinPrice />
       <BitcoinFees />
-      <StatusCheck />
       {!noNavigation && <Navigation />}
       <ContentStyle>
         {centerContent ? (
@@ -58,7 +56,6 @@ export const SimpleWrapper: React.FC<GridProps> = ({ children }) => (
   <Section padding={'16px'}>
     <BitcoinPrice />
     <BitcoinFees />
-    <StatusCheck />
     {children}
   </Section>
 );

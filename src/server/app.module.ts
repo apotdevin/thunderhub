@@ -15,6 +15,8 @@ import { transports, format } from 'winston';
 import configuration from './config/configuration';
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
+import { WsModule } from './modules/ws/ws.module';
+import { SubModule } from './modules/sub/sub.module';
 
 const { combine, timestamp, prettyPrint, json } = format;
 
@@ -36,6 +38,9 @@ export type JwtObjectType = {
 
 @Module({
   imports: [
+    AuthenticationModule,
+    SubModule,
+    WsModule,
     ApiModule,
     ViewModule,
     NodeModule,

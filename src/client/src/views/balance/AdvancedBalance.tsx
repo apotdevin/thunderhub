@@ -28,6 +28,8 @@ import {
   RebalanceSubTitle,
 } from './Balance.styled';
 import { PeerSelection } from './PeerSelection';
+import { LoadingCard } from '../../components/loading/LoadingCard';
+import { RebalanceLogs } from './Logs';
 
 export type RebalanceIdType = {
   alias: string;
@@ -145,6 +147,7 @@ const SettingLine: React.FC<{ title: string }> = ({ children, title }) => (
 );
 
 export const AdvancedBalance = () => {
+  const [messages, setMessages] = useState<any[]>([]);
   const [openType, openTypeSet] = useState<string>('none');
   const [isTarget, setIsTarget] = useState<boolean>(false);
 
@@ -174,7 +177,7 @@ export const AdvancedBalance = () => {
     }
   );
 
-  const [rebalance, { data: _data, loading }] = useBosRebalanceMutation({
+  const [rebalance, { data: _data, loading, error }] = useBosRebalanceMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: () => {
       dispatch({ type: 'clearFilters' });
@@ -311,13 +314,15 @@ export const AdvancedBalance = () => {
         </ColorButton>
       </SettingLine>
       <Separation />
-      <Text>{'5. Set a timeout for the rebalance attempt. (Optional)'}</Text>
+      <Text>
+        {'5. Set a timeout for the rebalance attempt. (Default: 5 minutes)'}
+      </Text>
       <InputWithDeco
         inputType={'number'}
-        title={'Max time'}
+        title={'Max minutes'}
         value={state.timeout_minutes || ''}
         override={'m'}
-        placeholder={'timeout'}
+        placeholder={'timeout minutes'}
         customAmount={
           state.timeout_minutes ? <span>{state.timeout_minutes}m</span> : ''
         }
@@ -329,9 +334,16 @@ export const AdvancedBalance = () => {
     </>
   );
 
-  return (
-    <>
-      {data && data.bosRebalance ? (
+  const renderRebalance = () => {
+    if (loading) {
+      return (
+        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+          <LoadingCard noCard={true} />
+        </Card>
+      );
+    }
+    if (data?.bosRebalance) {
+      return (
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
           <AdvancedResult rebalanceResult={data.bosRebalance} />
           <ColorButton
@@ -343,46 +355,61 @@ export const AdvancedBalance = () => {
             Balance Again
           </ColorButton>
         </Card>
-      ) : (
-        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          {renderDetails()}
-          <SingleLine>
-            <ColorButton
-              color={chartColors.orange2}
-              withMargin={'16px 8px 0 0'}
-              fullWidth={true}
-              onClick={() => {
-                dispatch({ type: 'clearFilters' });
-              }}
-            >
-              Reset
-            </ColorButton>
-            <ColorButton
-              withMargin={'16px 0 0'}
-              loading={loading}
-              disabled={isDisabled}
-              fullWidth={true}
-              onClick={() => {
-                rebalance({
-                  variables: {
-                    ...(isTarget
-                      ? { out_inbound: state.out_inbound }
-                      : { max_rebalance: state.max_rebalance }),
-                    max_fee_rate: state.max_fee_rate,
-                    max_fee: state.max_fee,
-                    timeout_minutes: state.timeout_minutes,
-                    avoid: state.avoid.map(a => a.id),
-                    in_through: state.in_through.id,
-                    out_through: state.out_through.id,
-                  },
-                });
-              }}
-            >
-              Rebalance
-            </ColorButton>
-          </SingleLine>
-        </Card>
-      )}
+      );
+    }
+  };
+
+  const renderContent = () => {
+    if ((loading || data?.bosRebalance) && !error) {
+      return <>{renderRebalance()}</>;
+    }
+    return (
+      <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+        {renderDetails()}
+        <SingleLine>
+          <ColorButton
+            color={chartColors.orange2}
+            withMargin={'16px 8px 0 0'}
+            fullWidth={true}
+            onClick={() => {
+              dispatch({ type: 'clearFilters' });
+            }}
+          >
+            Reset
+          </ColorButton>
+          <ColorButton
+            withMargin={'16px 0 0'}
+            loading={loading}
+            disabled={isDisabled}
+            fullWidth={true}
+            onClick={() => {
+              setMessages([]);
+              rebalance({
+                variables: {
+                  ...(isTarget
+                    ? { out_inbound: state.out_inbound }
+                    : { max_rebalance: state.max_rebalance }),
+                  max_fee_rate: state.max_fee_rate,
+                  max_fee: state.max_fee,
+                  timeout_minutes: state.timeout_minutes,
+                  avoid: state.avoid.map(a => a.id),
+                  in_through: state.in_through.id,
+                  out_through: state.out_through.id,
+                },
+              });
+            }}
+          >
+            Rebalance
+          </ColorButton>
+        </SingleLine>
+      </Card>
+    );
+  };
+
+  return (
+    <>
+      {renderContent()}
+      <RebalanceLogs messages={messages} setMessages={setMessages} />
       <Modal
         isOpen={openType !== 'none'}
         closeCallback={() => {
