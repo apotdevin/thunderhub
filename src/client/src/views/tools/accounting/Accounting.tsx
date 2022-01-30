@@ -25,7 +25,7 @@ type ReportType =
   | 'invoices'
   | 'payments';
 // type FiatType = 'eur' | 'usd';
-type YearType = 2017 | 2018 | 2019 | 2020 | 2021;
+type YearType = 2017 | 2018 | 2019 | 2020 | 2021 | 2022;
 type MonthType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | null;
 
 type StateType = {
@@ -156,6 +156,7 @@ export const Accounting = () => {
           {yearButton(2019)}
           {yearButton(2020)}
           {yearButton(2021)}
+          {yearButton(2022)}
         </MultiButton>
       </ToolsResponsiveLine>
       <ToolsResponsiveLine>
