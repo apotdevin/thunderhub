@@ -24,6 +24,10 @@ export const getErrorMsg = (error: any[] | string): string => {
     return errorString;
   }
 
+  if (error[1] && typeof error[1] === 'string') {
+    return error[1];
+  }
+
   console.log('Unknown Error:', error);
   return 'Unknown Error';
 };
