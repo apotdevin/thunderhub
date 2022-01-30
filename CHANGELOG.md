@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.2](https://github.com/apotdevin/thunderhub/compare/v0.13.1...v0.13.2) (2022-01-30)
+
+
+### Bug Fixes
+
+* accounting report ([5b6dc40](https://github.com/apotdevin/thunderhub/commit/5b6dc4022f6e761f9f0fddc409a5803171994c9f))
+* lnurl utility func ([3035b1a](https://github.com/apotdevin/thunderhub/commit/3035b1afd96f57fc8175c6d19f9e648e312248b7))
+* move dev dependency ([af89bf4](https://github.com/apotdevin/thunderhub/commit/af89bf4270e49f3af973689274529318f3376d82))
+
+
+### Improvements
+
+* small ui change ([6d7171d](https://github.com/apotdevin/thunderhub/commit/6d7171dea9b28161bfa8736a0c201ffa7c82ce79))
+
 ### [0.13.1](https://github.com/apotdevin/thunderhub/compare/v0.13.0...v0.13.1) (2022-01-28)
 
 
