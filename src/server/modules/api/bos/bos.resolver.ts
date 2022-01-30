@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { rebalance } from 'balanceofsatoshis/swaps';
 import { getAccountingReport } from 'balanceofsatoshis/balances';
-import { fetchRequest } from 'balanceofsatoshis/commands';
+import { simpleRequest } from 'balanceofsatoshis/commands';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AccountsService } from '../../accounts/accounts.service';
 import { CurrentUser } from '../../security/security.decorators';
@@ -31,17 +31,26 @@ export class BosResolver {
     const account = this.accountsService.getAccount(user.id);
     if (!account) throw new Error('Node account not found');
 
+    this.logger.info('Generating accounting report', {
+      category,
+      currency,
+      fiat,
+      month,
+      year,
+    });
+
     const response = await to(
       getAccountingReport({
         lnd: account.lnd,
         logger: this.logger,
-        request: fetchRequest,
+        request: simpleRequest,
         is_csv: true,
         category,
         currency,
         fiat,
         month,
         year,
+        rate_provider: 'coingecko',
       })
     );
 
