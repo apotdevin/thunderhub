@@ -5,7 +5,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { enc } from 'crypto-js';
 import hmacSHA256 from 'crypto-js/hmac-sha256';
-import bip39 from 'bip39';
+import { entropyToMnemonic, mnemonicToSeedSync } from 'bip39';
 import BIP32Factory, { BIP32Interface } from 'bip32';
 import secp256k1 from 'secp256k1';
 import * as ecc from 'tiny-secp256k1';
@@ -54,8 +54,8 @@ export class LnUrlService {
       hashed.match(/.{1,4}/g)?.map(index => parseInt(index, 16)) || [];
 
     // Generate private seed from entropy
-    const secretKey = bip39.entropyToMnemonic(hashed);
-    const base58 = bip39.mnemonicToSeedSync(secretKey);
+    const secretKey = entropyToMnemonic(hashed);
+    const base58 = mnemonicToSeedSync(secretKey);
 
     // Derive private seed from previous private seed and path
     const node: BIP32Interface = bip32.fromSeed(base58);
