@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { toast } from 'react-toastify';
 import {
   getNodeLink,
@@ -8,13 +8,11 @@ import {
 } from '../components/generic/helpers';
 import { Separation } from '../components/generic/Styled';
 import { formatSats } from '../utils/helpers';
+import { defaultSettings } from '../views/settings/Notifications';
+import { useLocalStorage } from './UseLocalStorage';
 import { useSocket, useSocketEvent } from './UseSocket';
 
 const refetchTimeMs = 1000 * 1;
-
-const options: { autoClose: false } = {
-  autoClose: false,
-};
 
 const renderToast = (
   title: string,
@@ -30,6 +28,15 @@ const renderToast = (
 };
 
 export const useListener = (disabled?: boolean) => {
+  const [{ allForwards, autoClose }] = useLocalStorage(
+    'notificationSettings',
+    defaultSettings
+  );
+
+  const options: { autoClose: false } | undefined = useMemo(() => {
+    return autoClose ? undefined : { autoClose: false };
+  }, [autoClose]);
+
   const refetchQueryTimeout: { current: ReturnType<typeof setTimeout> | null } =
     useRef(null);
 
@@ -152,7 +159,7 @@ export const useListener = (disabled?: boolean) => {
 
     if (is_send || is_receive) return;
 
-    if (!is_confirmed) {
+    if (!is_confirmed && allForwards) {
       toast.warn(
         renderToast(
           'Forward Attempt',
