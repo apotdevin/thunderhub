@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.4](https://github.com/apotdevin/thunderhub/compare/v0.13.3...v0.13.4) (2022-01-30)
+
+
+### Improvements
+
+* notification settings ([ee3f772](https://github.com/apotdevin/thunderhub/commit/ee3f772ff3fd080ba3175cd68d4e55814608f403))
+
 ### [0.13.3](https://github.com/apotdevin/thunderhub/compare/v0.13.2...v0.13.3) (2022-01-30)
 
 
