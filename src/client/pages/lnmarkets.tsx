@@ -96,7 +96,7 @@ const LnMarketsView = () => {
 };
 
 const Wrapped = () => (
-  <GridWrapper noNavigation={true}>
+  <GridWrapper>
     <LnMarketsView />
   </GridWrapper>
 );
