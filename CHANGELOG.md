@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.5](https://github.com/apotdevin/thunderhub/compare/v0.13.4...v0.13.5) (2022-01-31)
+
+
+### Bug Fixes
+
+* mutation account ([832644e](https://github.com/apotdevin/thunderhub/commit/832644e1cc7e23ef8de1a16133ebf3ae1a9d47ac))
+
 ### [0.13.4](https://github.com/apotdevin/thunderhub/compare/v0.13.3...v0.13.4) (2022-01-30)
 
 
