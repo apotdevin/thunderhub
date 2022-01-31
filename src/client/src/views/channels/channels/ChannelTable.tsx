@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { BalanceBars } from '../../../components/balance';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { getChannelLink } from '../../../components/generic/helpers';
+import { getNodeLink } from '../../../components/generic/helpers';
 import { DarkSubTitle } from '../../../components/generic/Styled';
 import { Link } from '../../../components/link/Link';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
@@ -227,7 +228,9 @@ export const ChannelTable = () => {
             Header: 'Peer',
             accessor: 'undercaseAlias',
             Cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>{row.original.alias}</div>
+              <div style={{ whiteSpace: 'nowrap' }}>
+                {getNodeLink(row.original.partner_public_key, row.original.alias)}
+              </div>
             ),
           },
           {
