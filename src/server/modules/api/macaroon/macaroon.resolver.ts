@@ -1,10 +1,11 @@
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { NodeService } from '../../node/node.service';
 import { UserId } from '../../security/security.types';
 import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { CreateMacaroon, NetworkInfoInput } from './macaroon.types';
+import { CurrentUser } from '../../security/security.decorators';
 
 @Resolver()
 export class MacaroonResolver {
@@ -16,7 +17,7 @@ export class MacaroonResolver {
   @Mutation(() => CreateMacaroon)
   async createMacaroon(
     @Args('permissions') permissions: NetworkInfoInput,
-    @Context() { id }: UserId
+    @CurrentUser() { id }: UserId
   ) {
     const { macaroon, permissions: permissionList } =
       await this.nodeService.grantAccess(id, permissions);
