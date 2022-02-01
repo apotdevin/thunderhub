@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
-import { ArrowDown, ArrowUp, Check, Circle } from 'react-feather';
+import { ArrowDown, ArrowUp, Check, ChevronRight, Circle } from 'react-feather';
 import { toast } from 'react-toastify';
+import styled from 'styled-components';
 import { BalanceBars } from '../../../components/balance';
-import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import {
   getChannelLink,
   getNodeLink,
@@ -17,6 +17,14 @@ import { useLocalStorage } from '../../../hooks/UseLocalStorage';
 import { chartColors } from '../../../styles/Themes';
 import { getErrorContent } from '../../../utils/error';
 import { blockToTime, formatSeconds, getPercent } from '../../../utils/helpers';
+
+const S = {
+  link: styled.span`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `,
+};
 
 const getBar = (top: number, bottom: number) => {
   const percent = (top / bottom) * 100;
@@ -193,9 +201,12 @@ export const ChannelTable = () => {
           </div>
         ),
         viewAction: (
-          <ColorButton>
-            <Link to={`/channels/${c.id}`}> View</Link>
-          </ColorButton>
+          <Link to={`/channels/${c.id}`}>
+            <S.link>
+              View
+              <ChevronRight size={12} />
+            </S.link>
+          </Link>
         ),
       };
     });
