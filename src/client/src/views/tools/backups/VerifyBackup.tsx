@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { X } from 'react-feather';
-import { useVerifyBackupsLazyQuery } from '../../../graphql/queries/__generated__/verifyBackups.generated';
 import { getErrorContent } from '../../../utils/error';
 import {
   SingleLine,
@@ -11,20 +10,21 @@ import {
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../../components/input';
 import { NoWrap } from '../Tools.styled';
+import { useVerifyBackupLazyQuery } from '../../../graphql/queries/__generated__/verifyBackup.generated';
 
-export const VerifyBackups = () => {
+export const VerifyBackup = () => {
   const [backupString, setBackupString] = useState<string>('');
   const [isPasting, setIsPasting] = useState<boolean>(false);
 
-  const [verifyBackup, { data, loading }] = useVerifyBackupsLazyQuery({
+  const [verifyBackup, { data, loading }] = useVerifyBackupLazyQuery({
     onError: error => toast.error(getErrorContent(error)),
   });
 
   useEffect(() => {
-    if (!loading && data && data.verifyBackups) {
+    if (!loading && data && data.verifyBackup) {
       toast.success('Valid Backup String');
     }
-    if (!loading && data && !data.verifyBackups) {
+    if (!loading && data && !data.verifyBackup) {
       toast.error('Invalid Backup String');
     }
   }, [data, loading]);
@@ -33,10 +33,10 @@ export const VerifyBackups = () => {
     <SubCard>
       <SingleLine>
         <NoWrap>
-          <DarkSubTitle>Backup String:</DarkSubTitle>
+          <DarkSubTitle>Backup Hex String:</DarkSubTitle>
         </NoWrap>
         <Input
-          placeholder="Content from file"
+          placeholder="Hex string for single channel"
           withMargin={'8px 0 0'}
           onChange={e => setBackupString(e.target.value)}
         />
@@ -60,7 +60,7 @@ export const VerifyBackups = () => {
   return (
     <>
       <SingleLine>
-        <DarkSubTitle>Verify Channels Backup</DarkSubTitle>
+        <DarkSubTitle>Verify Single Channel Backup</DarkSubTitle>
         <ColorButton
           withMargin={'4px 0'}
           disabled={loading}

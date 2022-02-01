@@ -85,6 +85,12 @@ export class NodeService {
     return this.lndService.getNode(account, pubkey, withoutChannels);
   }
 
+  async verifyBackup(id: string, backup: string) {
+    const account = this.accountsService.getAccount(id);
+    if (!account) throw new Error('Node account not found');
+    return this.lndService.verifyBackup(account, backup);
+  }
+
   async verifyBackups(id: string, backup: string, channels: BackupChannel[]) {
     const account = this.accountsService.getAccount(id);
     if (!account) throw new Error('Node account not found');

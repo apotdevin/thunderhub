@@ -4,7 +4,9 @@ import {
   multiSelectColor,
   colorButtonBorder,
   multiButtonColor,
+  themeColors,
 } from '../../../styles/Themes';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 
 interface StyledSingleProps {
   selected?: boolean;
@@ -34,6 +36,7 @@ const StyledSingleButton = styled.button<StyledSingleProps>`
 `;
 
 interface SingleButtonProps {
+  disabled?: boolean;
   selected?: boolean;
   color?: string;
   withPadding?: string;
@@ -42,6 +45,7 @@ interface SingleButtonProps {
 
 export const SingleButton: React.FC<SingleButtonProps> = ({
   children,
+  disabled,
   selected,
   color,
   withPadding,
@@ -49,6 +53,7 @@ export const SingleButton: React.FC<SingleButtonProps> = ({
 }) => {
   return (
     <StyledSingleButton
+      disabled={disabled}
       selected={selected}
       buttonColor={color}
       withPadding={withPadding}
@@ -79,11 +84,25 @@ const MultiBackground = styled.div<MultiBackProps>`
 
 interface MultiButtonProps {
   margin?: string;
+  loading?: boolean;
+  width?: string;
 }
 
 export const MultiButton: React.FC<MultiButtonProps> = ({
   children,
   margin,
+  loading,
+  width = 'auto',
 }) => {
-  return <MultiBackground margin={margin}>{children}</MultiBackground>;
+  return (
+    <MultiBackground margin={margin}>
+      {loading ? (
+        <div style={{ width, textAlign: 'center' }}>
+          <ScaleLoader height={21} color={themeColors.blue3} />
+        </div>
+      ) : (
+        children
+      )}
+    </MultiBackground>
+  );
 };

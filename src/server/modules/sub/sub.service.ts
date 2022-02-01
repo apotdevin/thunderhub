@@ -16,6 +16,11 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { AccountsService } from '../accounts/accounts.service';
 import { WsService } from '../ws/ws.service';
 import { ConfigService } from '@nestjs/config';
+import { FetchService } from '../fetch/fetch.service';
+import { gql } from 'graphql-tag';
+import { NodeService } from '../node/node.service';
+import { UserConfigService } from '../api/userConfig/userConfig.service';
+import { getNetwork } from 'src/server/utils/network';
 
 const restartSubscriptionTimeMs = 1000 * 30;
 
@@ -26,6 +31,12 @@ type NodeType = {
   lnd: any;
 };
 
+const saveBackupMutation = gql`
+  mutation SaveBackup($backup: String!, $signature: String!) {
+    saveBackup(backup: $backup, signature: $signature)
+  }
+`;
+
 @Injectable()
 export class SubService implements OnApplicationBootstrap {
   subscriptions = [];
@@ -34,6 +45,9 @@ export class SubService implements OnApplicationBootstrap {
     private accountsService: AccountsService,
     private wsService: WsService,
     private configService: ConfigService,
+    private fetchService: FetchService,
+    private nodeService: NodeService,
+    private userConfigService: UserConfigService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -78,14 +92,16 @@ export class SubService implements OnApplicationBootstrap {
                   try {
                     const info = await getWalletInfo({ lnd });
 
+                    const network = getNetwork(info?.chains?.[0] || '');
                     const sliced = info.public_key.slice(0, 10);
-                    const name = `${info.alias}(${sliced})`;
+                    const name = `${info.alias}(${sliced})[${network}]`;
 
                     return {
                       id,
                       name,
                       pubkey: info.public_key,
                       lnd,
+                      network,
                     };
                   } catch (err) {
                     this.logger.error('Error connecting to node', {
@@ -379,13 +395,57 @@ export class SubService implements OnApplicationBootstrap {
                         clearTimeout(postBackupTimeoutHandle);
                       }
 
-                      postBackupTimeoutHandle = setTimeout(async () => {
-                        const time = Math.round(new Date().getTime() / 1000);
-                        this.logger.info('channel_backup', { node: node.name });
-                        this.wsService.emit(node.id, 'channel_backup', {
-                          file: `${time}-${node.name}-backup.txt`,
-                          backup,
+                      const { backupsEnabled } =
+                        this.userConfigService.getConfig();
+
+                      if (!backupsEnabled) {
+                        this.logger.info('ignoring backup', {
+                          node: node.name,
                         });
+
+                        return;
+                      }
+
+                      postBackupTimeoutHandle = setTimeout(async () => {
+                        const isProduction =
+                          this.configService.get('isProduction');
+
+                        if (!isProduction) {
+                          this.logger.info(
+                            'Backups are only sent in production',
+                            { node: node.name }
+                          );
+                          return;
+                        }
+
+                        if (node.network !== 'btc') {
+                          this.logger.info(
+                            'Backups are only sent for mainnet',
+                            { node: node.name }
+                          );
+                          return;
+                        }
+
+                        this.logger.info('backup', {
+                          node: node.name,
+                        });
+
+                        const { signature } =
+                          await this.nodeService.signMessage(node.id, backup);
+
+                        const { data, error } =
+                          await this.fetchService.graphqlFetchWithProxy(
+                            this.configService.get('urls.amboss'),
+                            saveBackupMutation,
+                            { backup, signature }
+                          );
+
+                        if (!data?.saveBackup || error) {
+                          this.logger.error('Error saving backup', {
+                            node: node.name,
+                            error,
+                          });
+                        }
                       }, restartSubscriptionTimeMs);
 
                       return;

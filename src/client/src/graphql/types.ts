@@ -501,6 +501,7 @@ export type Mutation = {
   removeTwofaSecret: Scalars['Boolean'];
   sendMessage: Scalars['Float'];
   sendToAddress: ChainAddressSend;
+  toggleAutoBackups: Scalars['Boolean'];
   updateFees: Scalars['Boolean'];
   updateMultipleFees: Scalars['Boolean'];
   updateTwofaSecret: Scalars['Boolean'];
@@ -916,6 +917,7 @@ export type Query = {
   getAccountingReport: Scalars['String'];
   getAmbossLoginToken: Scalars['String'];
   getAmbossUser?: Maybe<AmbossUser>;
+  getBackupState: Scalars['Boolean'];
   getBackups: Scalars['String'];
   getBaseCanConnect: Scalars['Boolean'];
   getBaseNodes: Array<BaseNode>;
@@ -959,6 +961,7 @@ export type Query = {
   getWalletInfo: Wallet;
   recoverFunds: Scalars['Boolean'];
   signMessage: Scalars['String'];
+  verifyBackup: Scalars['Boolean'];
   verifyBackups: Scalars['Boolean'];
   verifyMessage: Scalars['String'];
 };
@@ -1030,6 +1033,10 @@ export type QueryRecoverFundsArgs = {
 
 export type QuerySignMessageArgs = {
   message: Scalars['String'];
+};
+
+export type QueryVerifyBackupArgs = {
+  backup: Scalars['String'];
 };
 
 export type QueryVerifyBackupsArgs = {
