@@ -14,6 +14,7 @@ import { getDateDif, getFormatDate } from '../../../components/generic/helpers';
 import { DownloadBackups } from './DownloadBackups';
 import { VerifyBackups } from './VerifyBackups';
 import { RecoverFunds } from './RecoverFunds';
+import { VerifyBackup } from './VerifyBackup';
 
 export const BackupsView = () => {
   const [lastDate, setLastDate] = useState('');
@@ -47,6 +48,7 @@ export const BackupsView = () => {
         <Separation />
         <DownloadBackups />
         <VerifyBackups />
+        <VerifyBackup />
         <RecoverFunds />
       </Card>
     </CardWithTitle>

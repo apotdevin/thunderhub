@@ -45,5 +45,10 @@ export type AccountConfigType = {
   hashed: boolean | null;
   masterPassword: string | null;
   defaultNetwork: string | null;
+  backupsEnabled: boolean | null;
   accounts: AccountType[];
+};
+
+export type ConfigType = {
+  backupsEnabled: boolean;
 };

@@ -31,9 +31,7 @@ export class FilesService {
   ) {}
 
   readFile(filePath: string, encoding: EncodingType = 'hex'): string | null {
-    if (filePath === '') {
-      return null;
-    }
+    if (!filePath) return null;
 
     const fileExists = fs.existsSync(filePath);
 
@@ -55,8 +53,19 @@ export class FilesService {
   }
 
   parseYaml(filePath: string): AccountConfigType | null {
-    if (filePath === '') {
-      return null;
+    if (!filePath) return null;
+
+    const fileExists = fs.existsSync(filePath);
+
+    if (!fileExists) {
+      try {
+        const yamlString = yaml.dump({ backupsEnabled: false });
+        fs.writeFileSync(filePath, yamlString);
+        this.logger.info('Succesfully created yaml file.');
+      } catch (error: any) {
+        this.logger.error('Error creating yaml file.');
+        return null;
+      }
     }
 
     const yamlConfig = this.readFile(filePath, 'utf-8');
