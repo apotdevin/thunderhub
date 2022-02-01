@@ -1,5 +1,11 @@
 import { useGetNodeInfoQuery } from '../../src/graphql/queries/__generated__/getNodeInfo.generated';
 import { getVersion } from '../../src/utils/version';
+import getConfig from 'next/config';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+
+const { publicRuntimeConfig } = getConfig();
+const { logoutUrl, basePath } = publicRuntimeConfig;
 
 type StatusState = {
   alias: string;
@@ -33,6 +39,12 @@ const initialState: StatusState = {
 
 export const useNodeInfo = (): StatusState => {
   const { data, loading, error } = useGetNodeInfoQuery();
+
+  useEffect(() => {
+    if (!error) return;
+    toast.error(`Unable to connect to node`);
+    window.location.href = logoutUrl || `${basePath}/login`;
+  }, [error]);
 
   if (!data?.getNodeInfo || loading || error) {
     return initialState;
