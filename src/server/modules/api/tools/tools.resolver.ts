@@ -37,20 +37,19 @@ export class ToolsResolver {
   }
 
   @Query(() => Boolean)
-  async recoverFunds(
-    @Args('backup') backupString: string,
+  async verifyBackup(
+    @Args('backup') backup: string,
     @CurrentUser() { id }: UserId
   ) {
-    let backupObj = { backup: '' };
-    try {
-      backupObj = JSON.parse(backupString);
-    } catch (error: any) {
-      this.logger.error('Corrupt backup file', { error });
-      throw new Error('Corrupt backup file');
-    }
+    const { is_valid } = await this.nodeService.verifyBackup(id, backup);
+    return is_valid;
+  }
 
-    const { backup } = backupObj;
-
+  @Query(() => Boolean)
+  async recoverFunds(
+    @Args('backup') backup: string,
+    @CurrentUser() { id }: UserId
+  ) {
     await this.nodeService.recoverFundsFromChannels(id, backup);
     return true;
   }

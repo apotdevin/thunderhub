@@ -24,9 +24,11 @@ import { ChatModule } from './chat/chat.module';
 import { BoltzModule } from './boltz/boltz.module';
 import { LnMarketsModule } from './lnmarkets/lnmarkets.module';
 import { BosModule } from './bos/bos.module';
+import { UserConfigModule } from './userConfig/userConfig.module';
 
 @Module({
   imports: [
+    UserConfigModule,
     MainModule,
     BaseModule,
     AuthModule,

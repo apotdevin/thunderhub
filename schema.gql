@@ -436,6 +436,7 @@ type Mutation {
   removeTwofaSecret(token: String!): Boolean!
   sendMessage(maxFee: Float, message: String!, messageType: String, publicKey: String!, tokens: Float): Float!
   sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
+  toggleAutoBackups: Boolean!
   updateFees(base_fee_tokens: Float, cltv_delta: Float, fee_rate: Float, max_htlc_mtokens: String, min_htlc_mtokens: String, transaction_id: String, transaction_vout: Float): Boolean!
   updateMultipleFees(channels: [UpdateRoutingFeesParams!]!): Boolean!
   updateTwofaSecret(secret: String!, token: String!): Boolean!
@@ -661,6 +662,7 @@ type Query {
   getAccountingReport(category: String, currency: String, fiat: String, month: String, year: String): String!
   getAmbossLoginToken: String!
   getAmbossUser: AmbossUser
+  getBackupState: Boolean!
   getBackups: String!
   getBaseCanConnect: Boolean!
   getBaseNodes: [BaseNode!]!
@@ -704,6 +706,7 @@ type Query {
   getWalletInfo: Wallet!
   recoverFunds(backup: String!): Boolean!
   signMessage(message: String!): String!
+  verifyBackup(backup: String!): Boolean!
   verifyBackups(backup: String!): Boolean!
   verifyMessage(message: String!, signature: String!): String!
 }

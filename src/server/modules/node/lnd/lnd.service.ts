@@ -54,6 +54,7 @@ import {
   getPendingChainBalance,
   getChannelBalance,
   getWalletVersion,
+  verifyBackup,
   verifyBackups,
   recoverFundsFromChannels,
   getBackups,
@@ -171,6 +172,17 @@ export class LndService {
         is_omitting_channels,
       })
     );
+  }
+
+  async verifyBackup(account: EnrichedAccount, backup: string) {
+    const result = await to<{ is_valid: boolean }>(
+      verifyBackup({
+        lnd: account.lnd,
+        backup,
+      })
+    );
+    console.log(result);
+    return result;
   }
 
   async verifyBackups(
