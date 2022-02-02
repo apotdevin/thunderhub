@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
 import { toast } from 'react-toastify';
 import {
   getNodeLink,
@@ -9,7 +9,9 @@ import {
 import { Separation } from '../components/generic/Styled';
 import { formatSats } from '../utils/helpers';
 import { defaultSettings } from '../views/settings/Notifications';
+import { useChannelInfo } from './UseChannelInfo';
 import { useLocalStorage } from './UseLocalStorage';
+import { useNodeDetails } from './UseNodeDetails';
 import { useSocket, useSocketEvent } from './UseSocket';
 
 const refetchTimeMs = 1000 * 1;
@@ -27,14 +29,30 @@ const renderToast = (
   );
 };
 
+const PeerAlias: FC<{ pubkey: string }> = ({ pubkey }) => {
+  const { alias } = useNodeDetails(pubkey);
+
+  return <div>{getNodeLink(pubkey, alias)}</div>;
+};
+
+const ChannelPeerAlias: FC<{ id: string }> = ({ id }) => {
+  const {
+    peer: { alias, pubkey },
+  } = useChannelInfo(id);
+
+  return <div> {getNodeLink(pubkey, alias)}</div>;
+};
+
 export const useListener = (disabled?: boolean) => {
   const [{ allForwards, autoClose }] = useLocalStorage(
     'notificationSettings',
     defaultSettings
   );
 
-  const options: { autoClose: false } | undefined = useMemo(() => {
-    return autoClose ? undefined : { autoClose: false };
+  const options: { autoClose?: false; closeOnClick: boolean } = useMemo(() => {
+    return autoClose
+      ? { closeOnClick: false }
+      : { autoClose: false, closeOnClick: false };
   }, [autoClose]);
 
   const refetchQueryTimeout: { current: ReturnType<typeof setTimeout> | null } =
@@ -120,7 +138,7 @@ export const useListener = (disabled?: boolean) => {
       renderToast(
         'New Payment',
         <>
-          {renderLine('Destination', getNodeLink(destination))}
+          {renderLine('Destination', <PeerAlias pubkey={destination} />)}
           {renderLine('Amount', formatSats(tokens))}
           {renderLine('Fee', fee ? formatSats(fee) : null)}
           {hopLines}
@@ -164,6 +182,8 @@ export const useListener = (disabled?: boolean) => {
         renderToast(
           'Forward Attempt',
           <>
+            {renderLine('In Peer', <ChannelPeerAlias id={in_channel} />)}
+            {renderLine('Out Peer', <ChannelPeerAlias id={out_channel} />)}
             {renderLine('In Channel', in_channel)}
             {renderLine('Out Channel', out_channel)}
             {renderLine('Tokens', formatSats(tokens))}
@@ -193,6 +213,8 @@ export const useListener = (disabled?: boolean) => {
         renderToast(
           'Successful Forward',
           <>
+            {renderLine('In Peer', <ChannelPeerAlias id={in_channel} />)}
+            {renderLine('Out Peer', <ChannelPeerAlias id={out_channel} />)}
             {renderLine('In Channel', in_channel)}
             {renderLine('Out Channel', out_channel)}
             {renderLine('Fee', fee ? formatSats(fee) : null)}
@@ -254,7 +276,7 @@ export const useListener = (disabled?: boolean) => {
           {renderLine('Reason', getCloseType())}
           {renderLine('Capacity', formatSats(capacity))}
           {renderLine('Id', id)}
-          {renderLine('Peer', getNodeLink(partner_public_key))}
+          {renderLine('Peer', <PeerAlias pubkey={partner_public_key} />)}
           {renderLine(
             'Tx',
             transaction_id ? getTransactionLink(transaction_id) : null
@@ -298,7 +320,7 @@ export const useListener = (disabled?: boolean) => {
             is_partner_initiated ? 'Your Peer' : 'You'
           )}
           {renderLine('Id', id)}
-          {renderLine('Peer', getNodeLink(partner_public_key))}
+          {renderLine('Peer', <PeerAlias pubkey={partner_public_key} />)}
           {renderLine('Private', is_private ? 'Yes' : 'No')}
           {renderLine('Capacity', formatSats(capacity))}
           {renderLine('Local', formatSats(local_balance))}

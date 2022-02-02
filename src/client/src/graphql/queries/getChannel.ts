@@ -7,6 +7,7 @@ export const GET_CHANNEL = gql`
         node {
           node {
             alias
+            public_key
           }
         }
       }

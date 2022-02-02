@@ -18,7 +18,11 @@ export type GetChannelQuery = {
             | {
                 __typename?: 'Node';
                 node?:
-                  | { __typename?: 'NodeType'; alias: string }
+                  | {
+                      __typename?: 'NodeType';
+                      alias: string;
+                      public_key: string;
+                    }
                   | null
                   | undefined;
               }
@@ -77,6 +81,7 @@ export const GetChannelDocument = gql`
         node {
           node {
             alias
+            public_key
           }
         }
       }
