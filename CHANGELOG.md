@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.6](https://github.com/apotdevin/thunderhub/compare/v0.13.5...v0.13.6) (2022-02-02)
+
+
+### Bug Fixes
+
+* invalid token redirect and error handling ([194dafb](https://github.com/apotdevin/thunderhub/commit/194dafb940500f8bccbc35f068495a82d8503fdb))
+
+
+### Styling
+
+* channel list button ([12f9d63](https://github.com/apotdevin/thunderhub/commit/12f9d6388d5543424fdb104f22b5e79238b285ec))
+
+
+### Improvements
+
+* auto backups ([b1a7dba](https://github.com/apotdevin/thunderhub/commit/b1a7dba752f0b4d2b929572432b61b1aff07a1f8))
+* linting ([ca1c729](https://github.com/apotdevin/thunderhub/commit/ca1c7292a4a65b4fa1196626e618ca631e57d3af))
+* notification aliases ([90e6f97](https://github.com/apotdevin/thunderhub/commit/90e6f97b153fe8ac803a72416a901bfc8ca066ed))
+
 ### [0.13.5](https://github.com/apotdevin/thunderhub/compare/v0.13.4...v0.13.5) (2022-01-31)
 
 
