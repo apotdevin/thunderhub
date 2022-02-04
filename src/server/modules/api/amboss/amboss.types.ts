@@ -17,38 +17,6 @@ export class AmbossUser {
 }
 
 @ObjectType()
-export class BosScore {
-  @Field()
-  position: number;
-  @Field()
-  score: number;
-  @Field()
-  updated: string;
-  @Field()
-  alias: string;
-  @Field()
-  public_key: string;
-}
-
-@ObjectType()
-export class BosScoreInfo {
-  @Field()
-  count: number;
-  @Field(() => BosScore, { nullable: true })
-  first: BosScore;
-  @Field(() => BosScore, { nullable: true })
-  last: BosScore;
-}
-
-@ObjectType()
-export class NodeBosHistory {
-  @Field(() => BosScoreInfo)
-  info: BosScoreInfo;
-  @Field(() => [BosScore])
-  scores: BosScore[];
-}
-
-@ObjectType()
 export class LightningAddress {
   @Field()
   pubkey: string;

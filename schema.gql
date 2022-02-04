@@ -99,20 +99,6 @@ type BosResult {
   rebalanced: String!
 }
 
-type BosScore {
-  alias: String!
-  position: Float!
-  public_key: String!
-  score: Float!
-  updated: String!
-}
-
-type BosScoreInfo {
-  count: Float!
-  first: BosScore
-  last: BosScore
-}
-
 type ChainAddressSend {
   confirmationCount: Float!
   id: String!
@@ -479,11 +465,6 @@ type Node {
   node: NodeType
 }
 
-type NodeBosHistory {
-  info: BosScoreInfo!
-  scores: [BosScore!]!
-}
-
 type NodeInfo {
   active_channels_count: Float!
   alias: String!
@@ -671,7 +652,6 @@ type Query {
   getBitcoinPrice: String!
   getBoltzInfo: BoltzInfoType!
   getBoltzSwapStatus(ids: [String!]!): [BoltzSwap!]!
-  getBosScores: [BosScore!]!
   getChainTransactions: [ChainTransaction!]!
   getChannel(id: String!): SingleChannel!
   getChannelReport: ChannelReport!
@@ -692,7 +672,6 @@ type Query {
   getNetworkInfo: NetworkInfo!
   getNode(publicKey: String!, withoutChannels: Boolean): Node!
   getNodeBalances: Balances!
-  getNodeBosHistory(pubkey: String!): NodeBosHistory!
   getNodeInfo: NodeInfo!
   getNodeSocialInfo(pubkey: String!): LightningNodeSocialInfo!
   getPayments(token: String): GetPaymentsType!
