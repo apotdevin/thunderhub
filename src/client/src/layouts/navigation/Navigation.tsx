@@ -14,7 +14,6 @@ import {
   BarChart2,
   Heart,
   Shuffle,
-  Aperture,
   Grid,
 } from 'react-feather';
 import { useRouter } from 'next/router';
@@ -136,7 +135,6 @@ const DONATIONS = '/leaderboard';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
 const SWAP = '/swap';
-const SCORES = '/scores';
 
 interface NavigationProps {
   isBurger?: boolean;
@@ -190,7 +188,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Tools', TOOLS, Shield, sidebar)}
       {renderNavButton('Swap', SWAP, Shuffle, sidebar)}
       {renderNavButton('Stats', STATS, BarChart2, sidebar)}
-      {renderNavButton('Scores', SCORES, Aperture, sidebar)}
     </ButtonSection>
   );
 
@@ -207,7 +204,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Swap', SWAP, Shuffle)}
       {renderBurgerNav('Stats', STATS, BarChart2)}
-      {renderBurgerNav('Scores', SCORES, Aperture)}
       {connected && renderBurgerNav('Donations', DONATIONS, Heart)}
       {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}

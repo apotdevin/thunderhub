@@ -131,22 +131,6 @@ export type BosResult = {
   rebalanced: Scalars['String'];
 };
 
-export type BosScore = {
-  __typename?: 'BosScore';
-  alias: Scalars['String'];
-  position: Scalars['Float'];
-  public_key: Scalars['String'];
-  score: Scalars['Float'];
-  updated: Scalars['String'];
-};
-
-export type BosScoreInfo = {
-  __typename?: 'BosScoreInfo';
-  count: Scalars['Float'];
-  first?: Maybe<BosScore>;
-  last?: Maybe<BosScore>;
-};
-
 export type ChainAddressSend = {
   __typename?: 'ChainAddressSend';
   confirmationCount: Scalars['Float'];
@@ -716,12 +700,6 @@ export type Node = {
   node?: Maybe<NodeType>;
 };
 
-export type NodeBosHistory = {
-  __typename?: 'NodeBosHistory';
-  info: BosScoreInfo;
-  scores: Array<BosScore>;
-};
-
 export type NodeInfo = {
   __typename?: 'NodeInfo';
   active_channels_count: Scalars['Float'];
@@ -926,7 +904,6 @@ export type Query = {
   getBitcoinPrice: Scalars['String'];
   getBoltzInfo: BoltzInfoType;
   getBoltzSwapStatus: Array<BoltzSwap>;
-  getBosScores: Array<BosScore>;
   getChainTransactions: Array<ChainTransaction>;
   getChannel: SingleChannel;
   getChannelReport: ChannelReport;
@@ -947,7 +924,6 @@ export type Query = {
   getNetworkInfo: NetworkInfo;
   getNode: Node;
   getNodeBalances: Balances;
-  getNodeBosHistory: NodeBosHistory;
   getNodeInfo: NodeInfo;
   getNodeSocialInfo: LightningNodeSocialInfo;
   getPayments: GetPaymentsType;
@@ -1013,10 +989,6 @@ export type QueryGetMessagesArgs = {
 export type QueryGetNodeArgs = {
   publicKey: Scalars['String'];
   withoutChannels?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type QueryGetNodeBosHistoryArgs = {
-  pubkey: Scalars['String'];
 };
 
 export type QueryGetNodeSocialInfoArgs = {

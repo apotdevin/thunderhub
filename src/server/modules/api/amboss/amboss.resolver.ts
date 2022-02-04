@@ -9,10 +9,8 @@ import { Logger } from 'winston';
 import cookie from 'cookie';
 import {
   AmbossUser,
-  BosScore,
   LightningAddress,
   LightningNodeSocialInfo,
-  NodeBosHistory,
 } from './amboss.types';
 import { ConfigService } from '@nestjs/config';
 import { toWithError } from 'src/server/utils/async';
@@ -65,59 +63,6 @@ const loginMutation = gql`
       details: $details
       token: $token
     )
-  }
-`;
-
-const getNodeBosHistoryQuery = gql`
-  query GetNodeBosHistory($pubkey: String!) {
-    getNodeBosHistory(pubkey: $pubkey) {
-      info {
-        count
-        first {
-          position
-          score
-          updated
-        }
-        last {
-          position
-          score
-          updated
-        }
-      }
-      scores {
-        position
-        score
-        updated
-      }
-    }
-  }
-`;
-
-// const getLastNodeScoreQuery = gql`
-//   query GetNodeBosHistory($pubkey: String!) {
-//     getNodeBosHistory(pubkey: $pubkey) {
-//       info {
-//         last {
-//           alias
-//           public_key
-//           position
-//           score
-//           updated
-//         }
-//       }
-//     }
-//   }
-// `;
-
-const getBosScoresQuery = gql`
-  query GetBosScores {
-    getBosScores {
-      position
-      score
-      updated
-      alias
-      public_key
-    }
   }
 `;
 
@@ -190,47 +135,6 @@ export class AmbossResolver {
     }
 
     return data.getLoginToken;
-  }
-
-  @Query(() => NodeBosHistory)
-  async getNodeBosHistory(
-    @Args('pubkey') pubkey: string,
-    @Context() { ambossAuth }: ContextType
-  ) {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
-      getNodeBosHistoryQuery,
-      { pubkey },
-      {
-        authorization: ambossAuth ? `Bearer ${ambossAuth}` : '',
-      }
-    );
-
-    if (!data?.getNodeBosHistory || error) {
-      if (error) {
-        this.logger.error(error);
-      }
-      throw new Error('Error getting BOS scores for this node');
-    }
-
-    return data.getNodeBosHistory;
-  }
-
-  @Query(() => [BosScore])
-  async getBosScores() {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
-      getBosScoresQuery
-    );
-
-    if (!data?.getBosScores || error) {
-      if (error) {
-        this.logger.error(error);
-      }
-      throw new Error('Error getting BOS scores');
-    }
-
-    return data.getBosScores;
   }
 
   @Query(() => [LightningAddress])
