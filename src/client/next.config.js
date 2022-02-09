@@ -8,7 +8,6 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 module.exports = {
   reactStrictMode: true,
-  distDir: '../../.next',
   poweredByHeader: false,
   basePath: process.env.BASE_PATH || '',
   publicRuntimeConfig: {
