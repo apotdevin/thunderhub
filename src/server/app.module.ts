@@ -42,7 +42,6 @@ export type JwtObjectType = {
     SubModule,
     WsModule,
     ApiModule,
-    ViewModule,
     NodeModule,
     AuthenticationModule,
     FilesModule,
@@ -108,6 +107,8 @@ export type JwtObjectType = {
           : combine(timestamp(), prettyPrint()),
       }),
     }),
+    // ViewModule has to be the last because of the wildcard controller
+    ViewModule,
   ],
 })
 export class AppModule {}

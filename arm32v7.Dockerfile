@@ -58,7 +58,7 @@ COPY --from=build /app/node_modules/ ./node_modules
 # Copy NextJS files
 COPY --from=build /app/src/client/public ./src/client/public
 COPY --from=build /app/src/client/next.config.js ./src/client/
-COPY --from=build /app/.next/ ./.next
+COPY --from=build /app/src/client/.next/ ./src/client/.next
 
 # Copy NestJS files
 COPY --from=build /app/dist/ ./dist

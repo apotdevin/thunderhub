@@ -5,6 +5,7 @@
 !README*.md
 /node_modules
 /.next
+src/client/.next
 /dist
 /docs
 /.github
