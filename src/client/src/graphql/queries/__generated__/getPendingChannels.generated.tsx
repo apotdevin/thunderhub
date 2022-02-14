@@ -11,26 +11,26 @@ export type GetPendingChannelsQuery = {
   __typename?: 'Query';
   getPendingChannels: Array<{
     __typename?: 'PendingChannel';
-    close_transaction_id?: string | null | undefined;
+    close_transaction_id?: string | null;
     is_active: boolean;
     is_closing: boolean;
     is_opening: boolean;
     is_timelocked: boolean;
     local_balance: number;
     local_reserve: number;
-    timelock_blocks?: number | null | undefined;
-    timelock_expiration?: number | null | undefined;
+    timelock_blocks?: number | null;
+    timelock_expiration?: number | null;
     partner_public_key: string;
     received: number;
     remote_balance: number;
     remote_reserve: number;
     sent: number;
-    transaction_fee?: number | null | undefined;
+    transaction_fee?: number | null;
     transaction_id: string;
     transaction_vout: number;
     partner_node_info: {
       __typename?: 'Node';
-      node?: { __typename?: 'NodeType'; alias: string } | null | undefined;
+      node?: { __typename?: 'NodeType'; alias: string } | null;
     };
   }>;
 };

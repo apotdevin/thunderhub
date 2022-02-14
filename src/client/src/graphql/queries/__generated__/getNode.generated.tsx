@@ -12,7 +12,7 @@ export type GetNodeQuery = {
   __typename?: 'Query';
   getNode: {
     __typename?: 'Node';
-    node?: { __typename?: 'NodeType'; alias: string } | null | undefined;
+    node?: { __typename?: 'NodeType'; alias: string } | null;
   };
 };
 

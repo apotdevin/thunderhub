@@ -11,24 +11,18 @@ export type GetNodeSocialInfoQuery = {
   __typename?: 'Query';
   getNodeSocialInfo: {
     __typename?: 'LightningNodeSocialInfo';
-    socials?:
-      | {
-          __typename?: 'NodeSocial';
-          info?:
-            | {
-                __typename?: 'NodeSocialInfo';
-                private?: boolean | null | undefined;
-                telegram?: string | null | undefined;
-                twitter?: string | null | undefined;
-                twitter_verified?: boolean | null | undefined;
-                website?: string | null | undefined;
-                email?: string | null | undefined;
-              }
-            | null
-            | undefined;
-        }
-      | null
-      | undefined;
+    socials?: {
+      __typename?: 'NodeSocial';
+      info?: {
+        __typename?: 'NodeSocialInfo';
+        private?: boolean | null;
+        telegram?: string | null;
+        twitter?: string | null;
+        twitter_verified?: boolean | null;
+        website?: string | null;
+        email?: string | null;
+      } | null;
+    } | null;
   };
 };
 

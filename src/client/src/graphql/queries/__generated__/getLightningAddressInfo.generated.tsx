@@ -11,12 +11,12 @@ export type GetLightningAddressInfoQuery = {
   __typename?: 'Query';
   getLightningAddressInfo: {
     __typename?: 'PayRequest';
-    callback?: string | null | undefined;
-    maxSendable?: string | null | undefined;
-    minSendable?: string | null | undefined;
-    metadata?: string | null | undefined;
-    commentAllowed?: number | null | undefined;
-    tag?: string | null | undefined;
+    callback?: string | null;
+    maxSendable?: string | null;
+    minSendable?: string | null;
+    metadata?: string | null;
+    commentAllowed?: number | null;
+    tag?: string | null;
   };
 };
 

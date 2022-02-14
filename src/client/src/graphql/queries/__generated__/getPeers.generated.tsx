@@ -12,7 +12,7 @@ export type GetPeersQuery = {
     bytes_received: number;
     bytes_sent: number;
     is_inbound: boolean;
-    is_sync_peer?: boolean | null | undefined;
+    is_sync_peer?: boolean | null;
     ping_time: number;
     public_key: string;
     socket: string;
@@ -20,10 +20,11 @@ export type GetPeersQuery = {
     tokens_sent: number;
     partner_node_info: {
       __typename?: 'Node';
-      node?:
-        | { __typename?: 'NodeType'; alias: string; public_key: string }
-        | null
-        | undefined;
+      node?: {
+        __typename?: 'NodeType';
+        alias: string;
+        public_key: string;
+      } | null;
     };
   }>;
 };
