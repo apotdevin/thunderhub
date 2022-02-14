@@ -12,28 +12,28 @@ export type FetchLnUrlMutation = {
   fetchLnUrl:
     | {
         __typename?: 'ChannelRequest';
-        tag?: string | null | undefined;
-        k1?: string | null | undefined;
-        callback?: string | null | undefined;
-        uri?: string | null | undefined;
+        tag?: string | null;
+        k1?: string | null;
+        callback?: string | null;
+        uri?: string | null;
       }
     | {
         __typename?: 'PayRequest';
-        callback?: string | null | undefined;
-        maxSendable?: string | null | undefined;
-        minSendable?: string | null | undefined;
-        metadata?: string | null | undefined;
-        commentAllowed?: number | null | undefined;
-        tag?: string | null | undefined;
+        callback?: string | null;
+        maxSendable?: string | null;
+        minSendable?: string | null;
+        metadata?: string | null;
+        commentAllowed?: number | null;
+        tag?: string | null;
       }
     | {
         __typename?: 'WithdrawRequest';
-        callback?: string | null | undefined;
-        k1?: string | null | undefined;
-        maxWithdrawable?: string | null | undefined;
-        defaultDescription?: string | null | undefined;
-        minWithdrawable?: string | null | undefined;
-        tag?: string | null | undefined;
+        callback?: string | null;
+        k1?: string | null;
+        maxWithdrawable?: string | null;
+        defaultDescription?: string | null;
+        minWithdrawable?: string | null;
+        tag?: string | null;
       };
 };
 
@@ -56,12 +56,12 @@ export type PayLnUrlMutation = {
   __typename?: 'Mutation';
   lnUrlPay: {
     __typename?: 'PaySuccess';
-    tag?: string | null | undefined;
-    description?: string | null | undefined;
-    url?: string | null | undefined;
-    message?: string | null | undefined;
-    ciphertext?: string | null | undefined;
-    iv?: string | null | undefined;
+    tag?: string | null;
+    description?: string | null;
+    url?: string | null;
+    message?: string | null;
+    ciphertext?: string | null;
+    iv?: string | null;
   };
 };
 

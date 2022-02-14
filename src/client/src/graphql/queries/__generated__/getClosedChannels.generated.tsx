@@ -12,12 +12,12 @@ export type GetClosedChannelsQuery = {
   getClosedChannels: Array<{
     __typename?: 'ClosedChannel';
     capacity: number;
-    close_confirm_height?: number | null | undefined;
-    close_transaction_id?: string | null | undefined;
-    closed_for_blocks?: number | null | undefined;
+    close_confirm_height?: number | null;
+    close_transaction_id?: string | null;
+    closed_for_blocks?: number | null;
     final_local_balance: number;
     final_time_locked_balance: number;
-    id?: string | null | undefined;
+    id?: string | null;
     is_breach_close: boolean;
     is_cooperative_close: boolean;
     is_funding_cancel: boolean;
@@ -26,10 +26,10 @@ export type GetClosedChannelsQuery = {
     partner_public_key: string;
     transaction_id: string;
     transaction_vout: number;
-    channel_age?: number | null | undefined;
+    channel_age?: number | null;
     partner_node_info: {
       __typename?: 'Node';
-      node?: { __typename?: 'NodeType'; alias: string } | null | undefined;
+      node?: { __typename?: 'NodeType'; alias: string } | null;
     };
   }>;
 };

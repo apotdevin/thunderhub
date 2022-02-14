@@ -11,28 +11,25 @@ export type DecodeRequestQuery = {
   __typename?: 'Query';
   decodeRequest: {
     __typename?: 'DecodeInvoice';
-    chain_address?: string | null | undefined;
-    cltv_delta?: number | null | undefined;
+    chain_address?: string | null;
+    cltv_delta?: number | null;
     description: string;
-    description_hash?: string | null | undefined;
+    description_hash?: string | null;
     destination: string;
     expires_at: string;
     id: string;
     tokens: number;
-    destination_node?:
-      | {
-          __typename?: 'Node';
-          node?: { __typename?: 'NodeType'; alias: string } | null | undefined;
-        }
-      | null
-      | undefined;
+    destination_node?: {
+      __typename?: 'Node';
+      node?: { __typename?: 'NodeType'; alias: string } | null;
+    } | null;
     routes: Array<
       Array<{
         __typename?: 'Route';
-        base_fee_mtokens?: string | null | undefined;
-        channel?: string | null | undefined;
-        cltv_delta?: number | null | undefined;
-        fee_rate?: number | null | undefined;
+        base_fee_mtokens?: string | null;
+        channel?: string | null;
+        cltv_delta?: number | null;
+        fee_rate?: number | null;
         public_key: string;
       }>
     >;

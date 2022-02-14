@@ -11,27 +11,18 @@ export type GetVolumeHealthQuery = {
   __typename?: 'Query';
   getVolumeHealth: {
     __typename?: 'ChannelsHealth';
-    score?: number | null | undefined;
-    channels?:
-      | Array<{
-          __typename?: 'ChannelHealth';
-          id?: string | null | undefined;
-          score?: number | null | undefined;
-          volumeNormalized?: string | null | undefined;
-          averageVolumeNormalized?: string | null | undefined;
-          partner?:
-            | {
-                __typename?: 'Node';
-                node?:
-                  | { __typename?: 'NodeType'; alias: string }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>
-      | null
-      | undefined;
+    score?: number | null;
+    channels?: Array<{
+      __typename?: 'ChannelHealth';
+      id?: string | null;
+      score?: number | null;
+      volumeNormalized?: string | null;
+      averageVolumeNormalized?: string | null;
+      partner?: {
+        __typename?: 'Node';
+        node?: { __typename?: 'NodeType'; alias: string } | null;
+      } | null;
+    }> | null;
   };
 };
 

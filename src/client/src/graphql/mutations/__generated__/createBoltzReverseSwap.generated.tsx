@@ -18,38 +18,29 @@ export type CreateBoltzReverseSwapMutation = {
     onchainAmount: number;
     timeoutBlockHeight: number;
     lockupAddress: string;
-    minerFeeInvoice?: string | null | undefined;
+    minerFeeInvoice?: string | null;
     receivingAddress: string;
-    preimage?: string | null | undefined;
-    preimageHash?: string | null | undefined;
-    privateKey?: string | null | undefined;
-    publicKey?: string | null | undefined;
-    decodedInvoice?:
-      | {
-          __typename?: 'DecodeInvoice';
-          description: string;
-          destination: string;
-          expires_at: string;
-          id: string;
-          safe_tokens: number;
-          tokens: number;
-          destination_node?:
-            | {
-                __typename?: 'Node';
-                node?:
-                  | {
-                      __typename?: 'NodeType';
-                      alias: string;
-                      public_key: string;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }
-      | null
-      | undefined;
+    preimage?: string | null;
+    preimageHash?: string | null;
+    privateKey?: string | null;
+    publicKey?: string | null;
+    decodedInvoice?: {
+      __typename?: 'DecodeInvoice';
+      description: string;
+      destination: string;
+      expires_at: string;
+      id: string;
+      safe_tokens: number;
+      tokens: number;
+      destination_node?: {
+        __typename?: 'Node';
+        node?: {
+          __typename?: 'NodeType';
+          alias: string;
+          public_key: string;
+        } | null;
+      } | null;
+    } | null;
   };
 };
 
