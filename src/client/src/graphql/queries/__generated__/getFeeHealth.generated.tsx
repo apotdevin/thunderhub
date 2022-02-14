@@ -9,50 +9,35 @@ export type GetFeeHealthQuery = {
   __typename?: 'Query';
   getFeeHealth: {
     __typename?: 'ChannelsFeeHealth';
-    score?: number | null | undefined;
-    channels?:
-      | Array<{
-          __typename?: 'ChannelFeeHealth';
-          id?: string | null | undefined;
-          partnerSide?:
-            | {
-                __typename?: 'FeeHealth';
-                score?: number | null | undefined;
-                rate?: number | null | undefined;
-                base?: string | null | undefined;
-                rateScore?: number | null | undefined;
-                baseScore?: number | null | undefined;
-                rateOver?: boolean | null | undefined;
-                baseOver?: boolean | null | undefined;
-              }
-            | null
-            | undefined;
-          mySide?:
-            | {
-                __typename?: 'FeeHealth';
-                score?: number | null | undefined;
-                rate?: number | null | undefined;
-                base?: string | null | undefined;
-                rateScore?: number | null | undefined;
-                baseScore?: number | null | undefined;
-                rateOver?: boolean | null | undefined;
-                baseOver?: boolean | null | undefined;
-              }
-            | null
-            | undefined;
-          partner?:
-            | {
-                __typename?: 'Node';
-                node?:
-                  | { __typename?: 'NodeType'; alias: string }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }>
-      | null
-      | undefined;
+    score?: number | null;
+    channels?: Array<{
+      __typename?: 'ChannelFeeHealth';
+      id?: string | null;
+      partnerSide?: {
+        __typename?: 'FeeHealth';
+        score?: number | null;
+        rate?: number | null;
+        base?: string | null;
+        rateScore?: number | null;
+        baseScore?: number | null;
+        rateOver?: boolean | null;
+        baseOver?: boolean | null;
+      } | null;
+      mySide?: {
+        __typename?: 'FeeHealth';
+        score?: number | null;
+        rate?: number | null;
+        base?: string | null;
+        rateScore?: number | null;
+        baseScore?: number | null;
+        rateOver?: boolean | null;
+        baseOver?: boolean | null;
+      } | null;
+      partner?: {
+        __typename?: 'Node';
+        node?: { __typename?: 'NodeType'; alias: string } | null;
+      } | null;
+    }> | null;
   };
 };
 

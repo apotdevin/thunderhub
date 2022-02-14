@@ -11,12 +11,12 @@ export type GetLnMarketsUserInfoQuery = {
   __typename?: 'Query';
   getLnMarketsUserInfo: {
     __typename?: 'LnMarketsUserInfo';
-    uid?: string | null | undefined;
-    balance?: string | null | undefined;
-    account_type?: string | null | undefined;
-    username?: string | null | undefined;
-    linkingpublickey?: string | null | undefined;
-    last_ip?: string | null | undefined;
+    uid?: string | null;
+    balance?: string | null;
+    account_type?: string | null;
+    username?: string | null;
+    linkingpublickey?: string | null;
+    last_ip?: string | null;
   };
 };
 

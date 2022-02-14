@@ -11,11 +11,11 @@ export type GetChainTransactionsQuery = {
   __typename?: 'Query';
   getChainTransactions: Array<{
     __typename?: 'ChainTransaction';
-    block_id?: string | null | undefined;
-    confirmation_count?: number | null | undefined;
-    confirmation_height?: number | null | undefined;
+    block_id?: string | null;
+    confirmation_count?: number | null;
+    confirmation_height?: number | null;
     created_at: string;
-    fee?: number | null | undefined;
+    fee?: number | null;
     id: string;
     output_addresses: Array<string>;
     tokens: number;

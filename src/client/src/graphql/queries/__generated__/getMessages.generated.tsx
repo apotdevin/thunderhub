@@ -11,17 +11,17 @@ export type GetMessagesQuery = {
   __typename?: 'Query';
   getMessages: {
     __typename?: 'GetMessages';
-    token?: string | null | undefined;
+    token?: string | null;
     messages: Array<{
       __typename?: 'Message';
       date: string;
-      contentType?: string | null | undefined;
-      alias?: string | null | undefined;
-      message?: string | null | undefined;
+      contentType?: string | null;
+      alias?: string | null;
+      message?: string | null;
       id: string;
-      sender?: string | null | undefined;
+      sender?: string | null;
       verified: boolean;
-      tokens?: number | null | undefined;
+      tokens?: number | null;
     }>;
   };
 };
