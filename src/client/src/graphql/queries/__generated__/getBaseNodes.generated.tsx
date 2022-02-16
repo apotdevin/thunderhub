@@ -9,8 +9,8 @@ export type GetBaseNodesQuery = {
   __typename?: 'Query';
   getBaseNodes: Array<{
     __typename?: 'BaseNode';
-    _id?: string | null | undefined;
-    name?: string | null | undefined;
+    _id?: string | null;
+    name?: string | null;
     public_key: string;
     socket: string;
   }>;

@@ -11,26 +11,17 @@ export type GetChannelQuery = {
   __typename?: 'Query';
   getChannel: {
     __typename?: 'SingleChannel';
-    partner_node_policies?:
-      | {
-          __typename?: 'NodePolicy';
-          node?:
-            | {
-                __typename?: 'Node';
-                node?:
-                  | {
-                      __typename?: 'NodeType';
-                      alias: string;
-                      public_key: string;
-                    }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }
-      | null
-      | undefined;
+    partner_node_policies?: {
+      __typename?: 'NodePolicy';
+      node?: {
+        __typename?: 'Node';
+        node?: {
+          __typename?: 'NodeType';
+          alias: string;
+          public_key: string;
+        } | null;
+      } | null;
+    } | null;
   };
 };
 
@@ -44,33 +35,21 @@ export type GetChannelInfoQuery = {
     __typename?: 'SingleChannel';
     transaction_id: string;
     transaction_vout: number;
-    node_policies?:
-      | {
-          __typename?: 'NodePolicy';
-          base_fee_mtokens?: string | null | undefined;
-          max_htlc_mtokens?: string | null | undefined;
-          min_htlc_mtokens?: string | null | undefined;
-          fee_rate?: number | null | undefined;
-          cltv_delta?: number | null | undefined;
-        }
-      | null
-      | undefined;
-    partner_node_policies?:
-      | {
-          __typename?: 'NodePolicy';
-          node?:
-            | {
-                __typename?: 'Node';
-                node?:
-                  | { __typename?: 'NodeType'; alias: string }
-                  | null
-                  | undefined;
-              }
-            | null
-            | undefined;
-        }
-      | null
-      | undefined;
+    node_policies?: {
+      __typename?: 'NodePolicy';
+      base_fee_mtokens?: string | null;
+      max_htlc_mtokens?: string | null;
+      min_htlc_mtokens?: string | null;
+      fee_rate?: number | null;
+      cltv_delta?: number | null;
+    } | null;
+    partner_node_policies?: {
+      __typename?: 'NodePolicy';
+      node?: {
+        __typename?: 'Node';
+        node?: { __typename?: 'NodeType'; alias: string } | null;
+      } | null;
+    } | null;
   };
 };
 
