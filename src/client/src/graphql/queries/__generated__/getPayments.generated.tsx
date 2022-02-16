@@ -11,7 +11,7 @@ export type GetPaymentsQuery = {
   __typename?: 'Query';
   getPayments: {
     __typename?: 'GetPaymentsType';
-    next?: string | null | undefined;
+    next?: string | null;
     payments: Array<{
       __typename?: 'PaymentType';
       created_at: string;
@@ -19,30 +19,32 @@ export type GetPaymentsQuery = {
       fee: number;
       fee_mtokens: string;
       id: string;
-      index?: number | null | undefined;
+      index?: number | null;
       is_confirmed: boolean;
       is_outgoing: boolean;
       mtokens: string;
-      request?: string | null | undefined;
+      request?: string | null;
       safe_fee: number;
-      safe_tokens?: number | null | undefined;
+      safe_tokens?: number | null;
       secret: string;
       tokens: string;
       type: string;
       date: string;
       destination_node: {
         __typename?: 'Node';
-        node?:
-          | { __typename?: 'NodeType'; alias: string; public_key: string }
-          | null
-          | undefined;
+        node?: {
+          __typename?: 'NodeType';
+          alias: string;
+          public_key: string;
+        } | null;
       };
       hops: Array<{
         __typename?: 'Node';
-        node?:
-          | { __typename?: 'NodeType'; alias: string; public_key: string }
-          | null
-          | undefined;
+        node?: {
+          __typename?: 'NodeType';
+          alias: string;
+          public_key: string;
+        } | null;
       }>;
     }>;
   };

@@ -19,7 +19,7 @@ export type PayAddressMutation = {
     id: string;
     isConfirmed: boolean;
     isOutgoing: boolean;
-    tokens?: number | null | undefined;
+    tokens?: number | null;
   };
 };
 

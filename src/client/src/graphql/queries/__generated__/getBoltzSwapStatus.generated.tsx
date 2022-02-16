@@ -11,23 +11,17 @@ export type GetBoltzSwapStatusQuery = {
   __typename?: 'Query';
   getBoltzSwapStatus: Array<{
     __typename?: 'BoltzSwap';
-    id?: string | null | undefined;
-    boltz?:
-      | {
-          __typename?: 'BoltzSwapStatus';
-          status: string;
-          transaction?:
-            | {
-                __typename?: 'BoltzSwapTransaction';
-                id?: string | null | undefined;
-                hex?: string | null | undefined;
-                eta?: number | null | undefined;
-              }
-            | null
-            | undefined;
-        }
-      | null
-      | undefined;
+    id?: string | null;
+    boltz?: {
+      __typename?: 'BoltzSwapStatus';
+      status: string;
+      transaction?: {
+        __typename?: 'BoltzSwapTransaction';
+        id?: string | null;
+        hex?: string | null;
+        eta?: number | null;
+      } | null;
+    } | null;
   }>;
 };
 

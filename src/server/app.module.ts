@@ -17,6 +17,7 @@ import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
 import { WsModule } from './modules/ws/ws.module';
 import { SubModule } from './modules/sub/sub.module';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 const { combine, timestamp, prettyPrint, json } = format;
 
@@ -52,7 +53,8 @@ export type JwtObjectType = {
       load: [configuration],
       envFilePath: ['.env.local', '.env'],
     }),
-    GraphQLModule.forRootAsync({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         autoSchemaFile: 'schema.gql',

@@ -11,24 +11,24 @@ export type GetInvoicesQuery = {
   __typename?: 'Query';
   getInvoices: {
     __typename?: 'GetInvoicesType';
-    next?: string | null | undefined;
+    next?: string | null;
     invoices: Array<{
       __typename?: 'InvoiceType';
-      chain_address?: string | null | undefined;
-      confirmed_at?: string | null | undefined;
+      chain_address?: string | null;
+      confirmed_at?: string | null;
       created_at: string;
       description: string;
-      description_hash?: string | null | undefined;
+      description_hash?: string | null;
       expires_at: string;
       id: string;
-      is_canceled?: boolean | null | undefined;
+      is_canceled?: boolean | null;
       is_confirmed: boolean;
-      is_held?: boolean | null | undefined;
+      is_held?: boolean | null;
       is_private: boolean;
-      is_push?: boolean | null | undefined;
+      is_push?: boolean | null;
       received: number;
       received_mtokens: string;
-      request?: string | null | undefined;
+      request?: string | null;
       secret: string;
       tokens: string;
       type: string;
@@ -36,10 +36,10 @@ export type GetInvoicesQuery = {
       payments: Array<{
         __typename?: 'InvoicePayment';
         in_channel: string;
-        messages?:
-          | { __typename?: 'MessageType'; message?: string | null | undefined }
-          | null
-          | undefined;
+        messages?: {
+          __typename?: 'MessageType';
+          message?: string | null;
+        } | null;
       }>;
     }>;
   };

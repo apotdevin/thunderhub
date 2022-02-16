@@ -21,40 +21,31 @@ export type BosRebalanceMutation = {
   __typename?: 'Mutation';
   bosRebalance: {
     __typename?: 'BosRebalanceResult';
-    increase?:
-      | {
-          __typename?: 'BosIncrease';
-          increased_inbound_on: string;
-          liquidity_inbound: string;
-          liquidity_inbound_opening?: string | null | undefined;
-          liquidity_inbound_pending?: string | null | undefined;
-          liquidity_outbound: string;
-          liquidity_outbound_opening?: string | null | undefined;
-          liquidity_outbound_pending?: string | null | undefined;
-        }
-      | null
-      | undefined;
-    decrease?:
-      | {
-          __typename?: 'BosDecrease';
-          decreased_inbound_on: string;
-          liquidity_inbound: string;
-          liquidity_inbound_opening?: string | null | undefined;
-          liquidity_inbound_pending?: string | null | undefined;
-          liquidity_outbound: string;
-          liquidity_outbound_opening?: string | null | undefined;
-          liquidity_outbound_pending?: string | null | undefined;
-        }
-      | null
-      | undefined;
-    result?:
-      | {
-          __typename?: 'BosResult';
-          rebalanced: string;
-          rebalance_fees_spent: string;
-        }
-      | null
-      | undefined;
+    increase?: {
+      __typename?: 'BosIncrease';
+      increased_inbound_on: string;
+      liquidity_inbound: string;
+      liquidity_inbound_opening?: string | null;
+      liquidity_inbound_pending?: string | null;
+      liquidity_outbound: string;
+      liquidity_outbound_opening?: string | null;
+      liquidity_outbound_pending?: string | null;
+    } | null;
+    decrease?: {
+      __typename?: 'BosDecrease';
+      decreased_inbound_on: string;
+      liquidity_inbound: string;
+      liquidity_inbound_opening?: string | null;
+      liquidity_inbound_pending?: string | null;
+      liquidity_outbound: string;
+      liquidity_outbound_opening?: string | null;
+      liquidity_outbound_pending?: string | null;
+    } | null;
+    result?: {
+      __typename?: 'BosResult';
+      rebalanced: string;
+      rebalance_fees_spent: string;
+    } | null;
   };
 };
 
