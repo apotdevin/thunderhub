@@ -9,7 +9,7 @@ import { Accounts } from '../src/views/homepage/Accounts';
 
 const ContextApp = () => (
   <>
-    <ThunderStorm alt={''} src={appendBasePath('/static/thunderstorm.gif')} />
+    <ThunderStorm alt={''} src={appendBasePath('/static/thunderstorm.webp')} />
     <TopSection />
     <Accounts />
     <Spacer />
