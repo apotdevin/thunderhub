@@ -1,5 +1,13 @@
-import { useCallback, useMemo } from 'react';
-import { ArrowDown, ArrowUp, Check, ChevronRight, Circle } from 'react-feather';
+import { useCallback, useMemo, useState } from 'react';
+import {
+  ArrowDown,
+  ArrowUp,
+  Check,
+  ChevronRight,
+  Circle,
+  Edit,
+  X,
+} from 'react-feather';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { BalanceBars } from '../../../components/balance';
@@ -10,6 +18,8 @@ import {
 import { DarkSubTitle } from '../../../components/generic/Styled';
 import { Link } from '../../../components/link/Link';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
+import { CloseChannel } from '../../../components/modal/closeChannel/CloseChannel';
+import Modal from '../../../components/modal/ReactModal';
 import { Price } from '../../../components/price/Price';
 import { Table } from '../../../components/table';
 import { useGetChannelsQuery } from '../../../graphql/queries/__generated__/getChannels.generated';
@@ -17,12 +27,26 @@ import { useLocalStorage } from '../../../hooks/UseLocalStorage';
 import { chartColors } from '../../../styles/Themes';
 import { getErrorContent } from '../../../utils/error';
 import { blockToTime, formatSeconds, getPercent } from '../../../utils/helpers';
+import { ChannelDetails } from './ChannelDetails';
 
 const S = {
   link: styled.span`
     display: flex;
     align-items: center;
     justify-content: center;
+  `,
+  button: styled.button`
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+
+    :hover {
+      color: ${chartColors.orange};
+    }
   `,
 };
 
@@ -32,6 +56,12 @@ const getBar = (top: number, bottom: number) => {
 };
 
 export const ChannelTable = () => {
+  const [channel, setChannel] = useState<{
+    name: string;
+    channel: string;
+    action: string;
+  } | null>();
+
   const { data, loading, error } = useGetChannelsQuery({
     onError: error => toast.error(getErrorContent(error)),
   });
@@ -125,12 +155,42 @@ export const ChannelTable = () => {
       const timeOnline = c.time_online || 0;
       const timeOffline = c.time_offline || 0;
 
+      const actions = {
+        editAction: (
+          <S.button
+            onClick={() =>
+              setChannel({
+                channel: c.id,
+                action: 'edit',
+                name: c.partner_node_info.node?.alias || 'Unknown',
+              })
+            }
+          >
+            <Edit size={14} />
+          </S.button>
+        ),
+        closeAction: (
+          <S.button
+            onClick={() =>
+              setChannel({
+                channel: c.id,
+                action: 'close',
+                name: c.partner_node_info.node?.alias || 'Unknown',
+              })
+            }
+          >
+            <X size={14} />
+          </S.button>
+        ),
+      };
+
       return {
         ...c,
         ...status,
         ...myInfo,
         ...pending,
         ...partnerInfo,
+        ...actions,
         alias: c.partner_node_info.node?.alias || 'Unknown',
         undercaseAlias: (
           c.partner_node_info.node?.alias || 'Unknown'
@@ -231,6 +291,21 @@ export const ChannelTable = () => {
             Header: 'Initiated',
             accessor: 'channelOpenerLogo',
             sortType: numberStringSorting('channelOpener'),
+          },
+        ],
+      },
+      {
+        Header: 'Actions',
+        columns: [
+          {
+            Header: <Edit size={14} />,
+            accessor: 'editAction',
+            disableSortBy: true,
+          },
+          {
+            Header: <X size={14} />,
+            accessor: 'closeAction',
+            disableSortBy: true,
           },
         ],
       },
@@ -430,7 +505,7 @@ export const ChannelTable = () => {
           },
         ],
       },
-      { Header: 'Actions', accessor: 'viewAction', forceVisible: true },
+      { Header: 'Details', accessor: 'viewAction', forceVisible: true },
     ],
     [numberStringSorting]
   );
@@ -452,14 +527,38 @@ export const ChannelTable = () => {
     return <DarkSubTitle>Error loading channels. Try refreshing.</DarkSubTitle>;
   }
 
+  const renderModalContent = () => {
+    if (!channel?.channel) return;
+
+    switch (channel.action) {
+      case 'edit':
+        return <ChannelDetails id={channel.channel} />;
+      case 'close':
+        return (
+          <CloseChannel
+            channelId={channel.channel}
+            channelName={channel.name}
+            callback={() => setChannel(null)}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <Table
-      withBorder={true}
-      tableColumns={columns}
-      tableData={tableData}
-      onHideToggle={handleToggle}
-      defaultHiddenColumns={hiddenColumns}
-      filterPlaceholder="channels"
-    />
+    <>
+      <Table
+        withBorder={true}
+        tableColumns={columns}
+        tableData={tableData}
+        onHideToggle={handleToggle}
+        defaultHiddenColumns={hiddenColumns}
+        filterPlaceholder="channels"
+      />
+      <Modal isOpen={!!channel} closeCallback={() => setChannel(null)}>
+        {renderModalContent()}
+      </Modal>
+    </>
   );
 };

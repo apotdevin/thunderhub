@@ -7,12 +7,14 @@ import {
   useGlobalFilter,
   TableInstance,
   useFilters,
+  ColumnInstance,
 } from 'react-table';
-import { separationColor } from '../../../src/styles/Themes';
+import { mediaWidths, separationColor } from '../../../src/styles/Themes';
 import { Input } from '../input';
 import { Settings, X } from 'react-feather';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
-import { SubCard } from '../generic/Styled';
+import { DarkSubTitle, SubCard } from '../generic/Styled';
+import { groupBy } from 'lodash';
 
 type StyledTableProps = {
   withBorder?: boolean;
@@ -57,11 +59,15 @@ const Styles = styled.div`
 
 const S = {
   options: styled.div`
-    width: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     flex-wrap: wrap;
+
+    @media (${mediaWidths.mobile}) {
+      flex-direction: row;
+    }
   `,
   option: styled.label`
     margin: 4px 8px;
@@ -70,6 +76,16 @@ const S = {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+  `,
+  optionRow: styled.div`
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-wrap: wrap;
+
+    @media (${mediaWidths.mobile}) {
+      display: block;
+    }
   `,
 };
 
@@ -105,7 +121,7 @@ const GlobalFilter = ({
 };
 
 type TableColumn = {
-  Header: string;
+  Header: string | JSX.Element;
   accessor: string;
 };
 
@@ -114,7 +130,7 @@ type TableProps = {
   tableColumns: (
     | TableColumn
     | {
-        Header: string;
+        Header: string | JSX.Element;
         columns: TableColumn[];
       }
   )[];
@@ -176,12 +192,31 @@ export const Table: React.FC<TableProps> = ({
     setGlobalFilter: any;
   };
 
-  const hidableColumns = allColumns.filter(c => {
-    if (!c.isVisible) {
-      return true;
+  const orderedColumns = useMemo(() => {
+    const hidableColumns = allColumns.reduce((p, c) => {
+      if (c.isVisible && (c as any).forceVisible) {
+        return p;
+      }
+
+      return [...p, c];
+    }, [] as ColumnInstance[]);
+
+    const grouped = groupBy(
+      hidableColumns,
+      (c: any) => c?.parent?.Header || ''
+    );
+
+    const final = [];
+
+    for (const key in grouped) {
+      if (Object.prototype.hasOwnProperty.call(grouped, key)) {
+        const group = grouped[key];
+        final.push({ name: key, items: group });
+      }
     }
-    return !(c as any).forceVisible;
-  });
+
+    return final;
+  }, [allColumns]);
 
   return (
     <>
@@ -203,32 +238,37 @@ export const Table: React.FC<TableProps> = ({
         </S.row>
       ) : null}
       {isOpen && (
-        <SubCard>
-          <S.options>
-            {hidableColumns.map(column => {
-              const parent = column?.parent?.Header || '';
-              const title = parent
-                ? `${parent} - ${column.Header}`
-                : column.Header;
-              const { checked } = column.getToggleHiddenProps();
+        <S.optionRow>
+          {orderedColumns.map((column, index) => {
+            const { name, items } = column;
 
-              return (
-                <S.option key={column.id}>
-                  <label>
-                    <input
-                      onClick={() =>
-                        onHideToggle && onHideToggle(checked, column.id)
-                      }
-                      type={'checkbox'}
-                      {...column.getToggleHiddenProps()}
-                    />
-                    {title}
-                  </label>
-                </S.option>
-              );
-            })}
-          </S.options>
-        </SubCard>
+            return (
+              <SubCard key={`${name}${index}`} style={{ height: 'auto' }}>
+                <DarkSubTitle fontSize="16px">{name || 'General'}</DarkSubTitle>
+                <S.options>
+                  {items.map(item => {
+                    const { checked } = item.getToggleHiddenProps();
+
+                    return (
+                      <S.option key={item.id}>
+                        <label>
+                          <input
+                            onClick={() =>
+                              onHideToggle && onHideToggle(checked, item.id)
+                            }
+                            type={'checkbox'}
+                            {...item.getToggleHiddenProps()}
+                          />
+                          {item.Header}
+                        </label>
+                      </S.option>
+                    );
+                  })}
+                </S.options>
+              </SubCard>
+            );
+          })}
+        </S.optionRow>
       )}
       <Styles
         withBorder={withBorder}

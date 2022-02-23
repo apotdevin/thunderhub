@@ -108,7 +108,9 @@ export const PendingChannels = () => {
         accessor: 'timelock_expiration',
         Cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
-            {`${row.original.timelock_expiration} blocks`}
+            {row.original.timelock_expiration
+              ? `${row.original.timelock_expiration} blocks`
+              : '-'}
           </div>
         ),
       },
@@ -117,7 +119,9 @@ export const PendingChannels = () => {
         accessor: 'timelock_blocks',
         Cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
-            {`${row.original.timelock_blocks} blocks`}
+            {row.original.timelock_blocks
+              ? `${row.original.timelock_blocks} blocks`
+              : '-'}
           </div>
         ),
       },
