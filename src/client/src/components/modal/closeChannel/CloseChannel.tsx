@@ -37,9 +37,14 @@ const WarningCard = styled.div`
 type CloseChannelProps = {
   channelId: string;
   channelName: string;
+  callback?: () => void;
 };
 
-export const CloseChannel = ({ channelId, channelName }: CloseChannelProps) => {
+export const CloseChannel = ({
+  channelId,
+  channelName,
+  callback,
+}: CloseChannelProps) => {
   const { fetchFees } = useConfigState();
   const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
 
@@ -52,6 +57,7 @@ export const CloseChannel = ({ channelId, channelName }: CloseChannelProps) => {
     onCompleted: () => {
       toast.success('Channel Closed');
       () => setIsConfirmed(false);
+      callback?.();
     },
     onError: error => toast.error(getErrorContent(error)),
     refetchQueries: [
