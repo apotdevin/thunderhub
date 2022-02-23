@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.7](https://github.com/apotdevin/thunderhub/compare/v0.13.6...v0.13.7) (2022-02-23)
+
+
+### Bug Fixes
+
+* lnurl ([b6076b5](https://github.com/apotdevin/thunderhub/commit/b6076b58d9cc8147112f04dcbfe669a993e35568))
+
+
+### Improvements
+
+* add retry count to subs ([e5442d1](https://github.com/apotdevin/thunderhub/commit/e5442d1c21e443dcdfd30ca8217f76d00dc27d16))
+* bump deps ([#407](https://github.com/apotdevin/thunderhub/issues/407)) ([bdfe248](https://github.com/apotdevin/thunderhub/commit/bdfe2482370cd199d09b6160c625841c00329cb0))
+* bump deps ([#413](https://github.com/apotdevin/thunderhub/issues/413)) ([4f46fee](https://github.com/apotdevin/thunderhub/commit/4f46fee497bc10c9e99c5bde61cebe11073edec5))
+* channel table changes ([b11ea68](https://github.com/apotdevin/thunderhub/commit/b11ea689e8f6351eb7c047eb5dcdfd2572bbafe9))
+* cleanup ([bcea9bb](https://github.com/apotdevin/thunderhub/commit/bcea9bb62f9f28ca2c38d53cb63556aa6642d9e4))
+* docker changes ([c88d3ed](https://github.com/apotdevin/thunderhub/commit/c88d3ede367e4314ee8513ddaa7b140d0761f61f))
+
 ### [0.13.6](https://github.com/apotdevin/thunderhub/compare/v0.13.5...v0.13.6) (2022-02-02)
 
 
