@@ -40,6 +40,7 @@ const saveBackupMutation = gql`
 @Injectable()
 export class SubService implements OnApplicationBootstrap {
   subscriptions = [];
+  retryCount = 0;
 
   constructor(
     private accountsService: AccountsService,
@@ -476,12 +477,22 @@ export class SubService implements OnApplicationBootstrap {
             } else {
               this.logger.error('AsyncAuto results:', results);
             }
-            const message = `Restarting subscription after ${restartSubscriptionTimeMs} ms`;
+
+            this.retryCount = this.retryCount + 1;
+
+            if (this.retryCount >= 4) {
+              next('Max retries attempted');
+              return;
+            }
+
+            const retryTime = restartSubscriptionTimeMs * this.retryCount;
+
+            const message = `Restarting subscription (Retry: ${this.retryCount}) after ${retryTime} ms`;
             this.logger.warn(message);
             setTimeout(async () => {
               this.logger.warn('Restarting...');
               next(null, 'retry');
-            }, restartSubscriptionTimeMs);
+            }, retryTime);
           }
         );
       },
