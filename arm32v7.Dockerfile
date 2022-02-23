@@ -15,7 +15,7 @@ RUN apk add --update --no-cache \
 
 # Install app dependencies
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 
 # ---------------
 # Build App
@@ -52,7 +52,7 @@ ARG NODE_ENV="production"
 ENV NODE_ENV=${NODE_ENV}
 ENV NEXT_TELEMETRY_DISABLED=1
 
-COPY --from=build /app/package.json /app/package-lock.json ./
+COPY --from=build /app/package.json ./
 COPY --from=build /app/node_modules/ ./node_modules 
 
 # Copy NextJS files

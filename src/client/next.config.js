@@ -10,6 +10,9 @@ module.exports = {
   reactStrictMode: true,
   poweredByHeader: false,
   basePath: process.env.BASE_PATH || '',
+  compiler: {
+    styledComponents: true,
+  },
   publicRuntimeConfig: {
     mempoolUrl: process.env.MEMPOOL_URL || 'https://mempool.space',
     disable2FA: process.env.DISABLE_TWOFA === 'true',
