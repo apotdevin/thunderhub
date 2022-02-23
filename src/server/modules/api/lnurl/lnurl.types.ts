@@ -55,6 +55,19 @@ export class ChannelRequest {
 export const LnUrlRequestUnion = createUnionType({
   name: 'LnUrlRequest',
   types: () => [WithdrawRequest, PayRequest, ChannelRequest],
+  resolveType: request => {
+    if ('maxSendable' in request) {
+      return PayRequest;
+    }
+    if ('maxWithdrawable' in request) {
+      return WithdrawRequest;
+    }
+    if ('uri' in request) {
+      return ChannelRequest;
+    }
+
+    return undefined;
+  },
 });
 
 export type LnUrlPayResponseType = {
