@@ -157,7 +157,7 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
         date: isDay
           ? subHours(today, 24 - Number(key))
               .toISOString()
-              .slice(0, 10)
+              .slice(0, 13)
           : subDays(today, time - Number(key))
               .toISOString()
               .slice(0, 10),
@@ -176,7 +176,7 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
             : isDay
             ? subHours(today, 24 - Number(key))
                 .toISOString()
-                .slice(0, 10)
+                .slice(0, 13)
             : subDays(today, time - Number(key))
                 .toISOString()
                 .slice(0, 10),
