@@ -84,7 +84,7 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
 
   const isDay = time <= 1;
 
-  const today = new Date();
+  const today = isDay ? new Date().setMinutes(0, 0, 0) : new Date().setHours(0, 0, 0, 0);
 
   array.forEach((transaction: ArrayType[0]) => {
     if (!transaction?.__typename) return;
@@ -93,8 +93,8 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
       if (!transaction.is_confirmed || !transaction.confirmed_at) return;
 
       const difference = isDay
-        ? 24 - differenceInHours(today, new Date(transaction.confirmed_at))
-        : time - differenceInDays(today, new Date(transaction.confirmed_at));
+        ? differenceInHours(today, new Date(transaction.confirmed_at).setMinutes(0, 0, 0))
+        : differenceInDays(today, new Date(transaction.confirmed_at).setHours(0, 0, 0, 0));
 
       transactions.push({
         difference,
@@ -105,8 +105,8 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
       if (!transaction.is_confirmed) return;
 
       const difference = isDay
-        ? 24 - differenceInHours(today, new Date(transaction.created_at))
-        : time - differenceInDays(today, new Date(transaction.created_at));
+        ? differenceInHours(today, new Date(transaction.created_at).setMinutes(0, 0, 0))
+        : differenceInDays(today, new Date(transaction.created_at).setHours(0, 0, 0, 0));
 
       transactions.push({
         difference,
@@ -115,12 +115,12 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
       });
     } else if (transaction.__typename === 'Forward') {
       const difference = isDay
-        ? 24 - differenceInHours(today, new Date(transaction.created_at))
-        : time - differenceInDays(today, new Date(transaction.created_at));
+        ? differenceInHours(today, new Date(transaction.created_at).setMinutes(0, 0, 0))
+        : differenceInDays(today, new Date(transaction.created_at).setHours(0, 0, 0, 0));
 
       transactions.push({
         difference,
-        date: transaction.created_at,
+        date: new Date(transaction.created_at).toISOString(),
         tokens: Number(transaction.tokens),
         fee: Number(transaction.fee),
       });
@@ -133,7 +133,7 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
 
   const final: any[] = [];
   const differences = Array.from(
-    { length: isDay ? 25 : time + 1 },
+    { length: isDay ? 24 : time },
     (_, i) => i
   );
 
@@ -145,12 +145,8 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
         amount: 0,
         fee: 0,
         date: isDay
-          ? subHours(today, 24 - Number(key))
-              .toISOString()
-              .slice(0, 10)
-          : subDays(today, time - Number(key))
-              .toISOString()
-              .slice(0, 10),
+          ? subHours(today, Number(key)).toISOString()
+          : subDays(today, Number(key)).toISOString(),
       });
       return;
     }
@@ -164,12 +160,8 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
           date: total.date
             ? total.date
             : isDay
-            ? subHours(today, 24 - Number(key))
-                .toISOString()
-                .slice(0, 10)
-            : subDays(today, time - Number(key))
-                .toISOString()
-                .slice(0, 10),
+              ? subHours(today, Number(key)).toISOString()
+              : subDays(today, Number(key)).toISOString(),
         };
       },
       {
@@ -183,5 +175,5 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
     final.push(reduced);
   });
 
-  return final;
+  return final.reverse();
 };
