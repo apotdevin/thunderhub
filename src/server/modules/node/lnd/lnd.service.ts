@@ -1,48 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import {
-  BackupChannel,
-  CloseChannel,
-  CloseChannelParams,
-  CreateInvoiceParams,
-  CreateInvoiceType,
-  DecodedType,
-  DiffieHellmanComputeSecretParams,
-  DiffieHellmanComputeSecretResult,
-  GetChainBalanceType,
-  GetChainTransactionsType,
-  GetChannelBalanceType,
-  GetChannelsParams,
-  GetChannelsType,
-  GetChannelType,
-  GetClosedChannelsType,
-  GetForwards,
-  GetForwardsParams,
-  GetHeightType,
-  GetInvoices,
-  GetNodeType,
-  GetPayments,
-  GetPaymentsParams,
-  GetPeers,
-  GetPendingChainBalanceType,
-  GetPendingChannelsType,
-  GetUtxosType,
-  GetWalletInfoType,
-  GrantAccess,
-  NetworkInfo,
-  OpenChannel,
-  OpenChannelParams,
-  PayInvoiceParams,
-  PayInvoiceType,
-  PayViaPaymentDetailsParams,
-  Permissions,
-  SendToChainAddressType,
-  SendToChainParams,
-  SignMessage,
-  UpdateRoutingFees,
-  UpdateRoutingFeesParams,
-  VerifyMessage,
-} from './lnd.types';
-import {
   diffieHellmanComputeSecret,
   getWalletInfo,
   getClosedChannels,
@@ -80,7 +37,22 @@ import {
   getPayments,
   getInvoices,
   subscribeToInvoice,
-} from 'ln-service';
+  removePeer,
+  GetChannelsArgs,
+  VerifyBackupsArgs,
+  SendToChainAddressArgs,
+  DiffieHellmanComputeSecretArgs,
+  PayArgs,
+  CreateInvoiceArgs,
+  CloseChannelArgs,
+  OpenChannelArgs,
+  UpdateRoutingFeesArgs,
+  GetForwardsArgs,
+  PayViaPaymentDetailsArgs,
+  GetPaymentsArgs,
+  GrantAccessArgs,
+  GetInvoicesArgs,
+} from 'lightning';
 import { EnrichedAccount } from '../../accounts/accounts.types';
 import { to } from './lnd.helpers';
 import EventEmitter from 'events';
@@ -88,7 +60,7 @@ import EventEmitter from 'events';
 @Injectable()
 export class LndService {
   async getWalletInfo(account: EnrichedAccount) {
-    return to<GetWalletInfoType>(
+    return to(
       getWalletInfo({
         lnd: account.lnd,
       })
@@ -104,7 +76,7 @@ export class LndService {
   }
 
   async getHeight(account: EnrichedAccount) {
-    return to<GetHeightType>(
+    return to(
       getHeight({
         lnd: account.lnd,
       })
@@ -112,7 +84,7 @@ export class LndService {
   }
 
   async getClosedChannels(account: EnrichedAccount) {
-    return to<GetClosedChannelsType>(
+    return to(
       getClosedChannels({
         lnd: account.lnd,
       })
@@ -120,15 +92,18 @@ export class LndService {
   }
 
   async getPendingChannels(account: EnrichedAccount) {
-    return to<GetPendingChannelsType>(
+    return to(
       getPendingChannels({
         lnd: account.lnd,
       })
     );
   }
 
-  async getChannels(account: EnrichedAccount, options?: GetChannelsParams) {
-    return to<GetChannelsType>(
+  async getChannels(
+    account: EnrichedAccount,
+    options?: Omit<GetChannelsArgs, 'lnd'>
+  ) {
+    return to(
       getChannels({
         lnd: account.lnd,
         ...options,
@@ -137,7 +112,7 @@ export class LndService {
   }
 
   async getChannelBalance(account: EnrichedAccount) {
-    return to<GetChannelBalanceType>(
+    return to(
       getChannelBalance({
         lnd: account.lnd,
       })
@@ -145,7 +120,7 @@ export class LndService {
   }
 
   async getChainBalance(account: EnrichedAccount) {
-    return to<GetChainBalanceType>(
+    return to(
       getChainBalance({
         lnd: account.lnd,
       })
@@ -153,7 +128,7 @@ export class LndService {
   }
 
   async getPendingChainBalance(account: EnrichedAccount) {
-    return to<GetPendingChainBalanceType>(
+    return to(
       getPendingChainBalance({
         lnd: account.lnd,
       })
@@ -165,7 +140,7 @@ export class LndService {
     public_key: string,
     is_omitting_channels = true
   ) {
-    return to<GetNodeType>(
+    return to(
       getNode({
         lnd: account.lnd,
         public_key,
@@ -187,20 +162,18 @@ export class LndService {
 
   async verifyBackups(
     account: EnrichedAccount,
-    backup: string,
-    channels: BackupChannel[]
+    args: Omit<VerifyBackupsArgs, 'lnd'>
   ) {
-    return to<{ is_valid: boolean }>(
+    return to(
       verifyBackups({
         lnd: account.lnd,
-        backup,
-        channels,
+        ...args,
       })
     );
   }
 
   async recoverFundsFromChannels(account: EnrichedAccount, backup: string) {
-    return to<void>(
+    return to(
       recoverFundsFromChannels({
         lnd: account.lnd,
         backup,
@@ -209,9 +182,7 @@ export class LndService {
   }
 
   async getBackups(account: EnrichedAccount) {
-    return to<{ backup: string; channels: BackupChannel[] }>(
-      getBackups({ lnd: account.lnd })
-    );
+    return to(getBackups({ lnd: account.lnd }));
   }
 
   async verifyMessage(
@@ -219,25 +190,26 @@ export class LndService {
     message: string,
     signature: string
   ) {
-    return to<VerifyMessage>(
-      verifyMessage({ lnd: account.lnd, message, signature })
-    );
+    return to(verifyMessage({ lnd: account.lnd, message, signature }));
   }
 
   async signMessage(account: EnrichedAccount, message: string) {
-    return to<SignMessage>(signMessage({ lnd: account.lnd, message }));
+    return to(signMessage({ lnd: account.lnd, message }));
   }
 
-  async grantAccess(account: EnrichedAccount, permissions: Permissions) {
-    return to<GrantAccess>(grantAccess({ lnd: account.lnd, ...permissions }));
+  async grantAccess(
+    account: EnrichedAccount,
+    permissions: Omit<GrantAccessArgs, 'lnd'>
+  ) {
+    return to(grantAccess({ lnd: account.lnd, ...permissions }));
   }
 
   async getNetworkInfo(account: EnrichedAccount) {
-    return to<NetworkInfo>(getNetworkInfo({ lnd: account.lnd }));
+    return to(getNetworkInfo({ lnd: account.lnd }));
   }
 
   async getPeers(account: EnrichedAccount) {
-    return to<GetPeers>(getPeers({ lnd: account.lnd }));
+    return to(getPeers({ lnd: account.lnd }));
   }
 
   async addPeer(
@@ -246,31 +218,27 @@ export class LndService {
     socket: string,
     is_temporary: boolean
   ) {
-    return to<void>(
-      addPeer({ lnd: account.lnd, public_key, socket, is_temporary })
-    );
+    return to(addPeer({ lnd: account.lnd, public_key, socket, is_temporary }));
   }
 
   async removePeer(account: EnrichedAccount, public_key: string) {
-    return to<void>(getPeers({ lnd: account.lnd, public_key }));
+    return to(removePeer({ lnd: account.lnd, public_key }));
   }
 
   async getChainTransactions(account: EnrichedAccount) {
-    return to<GetChainTransactionsType>(
-      getChainTransactions({ lnd: account.lnd })
-    );
+    return to(getChainTransactions({ lnd: account.lnd }));
   }
 
   async getUtxos(account: EnrichedAccount) {
-    return to<GetUtxosType>(getUtxos({ lnd: account.lnd }));
+    return to(getUtxos({ lnd: account.lnd }));
   }
 
   async createChainAddress(
     account: EnrichedAccount,
     is_unused: boolean,
-    format: string
+    format: 'np2wpkh' | 'p2wpkh'
   ) {
-    return to<{ address: string }>(
+    return to(
       createChainAddress({
         lnd: account.lnd,
         is_unused,
@@ -281,75 +249,106 @@ export class LndService {
 
   async sendToChainAddress(
     account: EnrichedAccount,
-    options: SendToChainParams
+    options: Omit<SendToChainAddressArgs, 'lnd'>
   ) {
-    return to<SendToChainAddressType>(
-      sendToChainAddress({ lnd: account.lnd, ...options })
+    return to(
+      sendToChainAddress({
+        lnd: account.lnd,
+        ...(options as SendToChainAddressArgs),
+      })
     );
   }
 
   async diffieHellmanComputeSecret(
     account: EnrichedAccount,
-    options: DiffieHellmanComputeSecretParams
+    options: Omit<DiffieHellmanComputeSecretArgs, 'lnd'>
   ) {
-    return to<DiffieHellmanComputeSecretResult>(
-      diffieHellmanComputeSecret({ lnd: account.lnd, ...options })
-    );
+    return to(diffieHellmanComputeSecret({ lnd: account.lnd, ...options }));
   }
 
   async decodePaymentRequest(account: EnrichedAccount, request: string) {
-    return to<DecodedType>(decodePaymentRequest({ lnd: account.lnd, request }));
+    return to(decodePaymentRequest({ lnd: account.lnd, request }));
   }
 
-  async pay(account: EnrichedAccount, options: PayInvoiceParams) {
-    return to<PayInvoiceType>(pay({ lnd: account.lnd, ...options }));
+  async pay(account: EnrichedAccount, options: Omit<PayArgs, 'lnd'>) {
+    return to(pay({ lnd: account.lnd, ...options }));
   }
 
-  async createInvoice(account: EnrichedAccount, options: CreateInvoiceParams) {
-    return to<CreateInvoiceType>(
-      createInvoice({ lnd: account.lnd, ...options })
-    );
+  async createInvoice(
+    account: EnrichedAccount,
+    options: Omit<CreateInvoiceArgs, 'lnd'>
+  ) {
+    return to(createInvoice({ lnd: account.lnd, ...options }));
   }
 
   async getChannel(account: EnrichedAccount, id: string) {
-    return to<GetChannelType>(getChannel({ lnd: account.lnd, id }));
+    return to(getChannel({ lnd: account.lnd, id }));
   }
 
-  async closeChannel(account: EnrichedAccount, options: CloseChannelParams) {
-    return to<CloseChannel>(closeChannel({ lnd: account.lnd, ...options }));
+  async closeChannel(
+    account: EnrichedAccount,
+    options: Omit<CloseChannelArgs, 'lnd'>
+  ) {
+    return to(
+      closeChannel({ lnd: account.lnd, ...(options as CloseChannelArgs) })
+    );
   }
 
-  async openChannel(account: EnrichedAccount, options: OpenChannelParams) {
-    return to<OpenChannel>(openChannel({ lnd: account.lnd, ...options }));
+  async openChannel(
+    account: EnrichedAccount,
+    options: Omit<OpenChannelArgs, 'lnd'>
+  ) {
+    return to(openChannel({ lnd: account.lnd, ...options }));
   }
 
   async updateRoutingFees(
     account: EnrichedAccount,
-    options: UpdateRoutingFeesParams
+    options: Omit<UpdateRoutingFeesArgs, 'lnd'>
   ) {
-    return to<UpdateRoutingFees>(
-      updateRoutingFees({ lnd: account.lnd, ...options })
+    return to(
+      updateRoutingFees({
+        lnd: account.lnd,
+        ...(options as UpdateRoutingFeesArgs),
+      })
     );
   }
 
-  async getForwards(account: EnrichedAccount, options: GetForwardsParams) {
-    return to<GetForwards>(getForwards({ lnd: account.lnd, ...options }));
+  async getForwards(
+    account: EnrichedAccount,
+    options: Omit<GetForwardsArgs, 'lnd'>
+  ) {
+    return to(
+      getForwards({ lnd: account.lnd, ...(options as GetForwardsArgs) })
+    );
   }
 
-  async getPayments(account: EnrichedAccount, options: GetPaymentsParams = {}) {
-    return to<GetPayments>(getPayments({ lnd: account.lnd, ...options }));
+  async getPayments(
+    account: EnrichedAccount,
+    options: Omit<GetPaymentsArgs, 'lnd'>
+  ) {
+    return to(
+      getPayments({ lnd: account.lnd, ...(options as GetPaymentsArgs) })
+    );
   }
 
-  async getInvoices(account: EnrichedAccount, options: GetPaymentsParams = {}) {
-    return to<GetInvoices>(getInvoices({ lnd: account.lnd, ...options }));
+  async getInvoices(
+    account: EnrichedAccount,
+    options: Omit<GetInvoicesArgs, 'lnd'>
+  ) {
+    return to(
+      getInvoices({ lnd: account.lnd, ...(options as GetInvoicesArgs) })
+    );
   }
 
   async payViaPaymentDetails(
     account: EnrichedAccount,
-    options: PayViaPaymentDetailsParams
+    options: Omit<PayViaPaymentDetailsArgs, 'lnd' | 'routes'>
   ) {
-    return to<PayInvoiceType>(
-      payViaPaymentDetails({ lnd: account.lnd, ...options })
+    return to(
+      payViaPaymentDetails({
+        lnd: account.lnd,
+        ...(options as PayViaPaymentDetailsArgs),
+      })
     );
   }
 
