@@ -4,6 +4,7 @@ import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { sortBy } from 'lodash';
 import { ChainAddressSend, ChainTransaction, Utxo } from './chain.types';
+import { SendToChainAddressArgs } from 'lightning';
 
 @Resolver()
 export class ChainResolver {
@@ -48,14 +49,15 @@ export class ChainResolver {
       ? { target_confirmations: target }
       : {};
 
+    const hasTokens = tokens && !sendAllFlag ? { tokens } : {};
     const sendAll = sendAllFlag ? { is_send_all: true } : {};
 
     const options = {
       address,
-      ...(tokens && { tokens }),
+      ...hasTokens,
       ...props,
       ...sendAll,
-    };
+    } as SendToChainAddressArgs;
 
     const send = await this.nodeService.sendToChainAddress(id, options);
 

@@ -1,5 +1,7 @@
+import { GetForwardsResult } from 'lightning';
 import { groupBy } from 'lodash';
-import { Forward } from '../../node/lnd/lnd.types';
+
+type Forward = GetForwardsResult['forwards'][0];
 
 type GroupedObject = {
   [key: string]: Forward[];

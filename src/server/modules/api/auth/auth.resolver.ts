@@ -312,7 +312,7 @@ export class AuthResolver {
         path: '/',
       })
     );
-    return info?.version || '';
+    return info?.['version'] || ''; // TODO: Remove unsafe casting when GetWalletInfo type is updated
   }
 
   @Mutation(() => Boolean)

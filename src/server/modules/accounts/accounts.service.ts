@@ -1,7 +1,7 @@
 import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FilesService } from '../files/files.service';
-import { authenticatedLndGrpc } from 'ln-service';
+import { authenticatedLndGrpc } from 'lightning';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { EnrichedAccount } from './accounts.types';

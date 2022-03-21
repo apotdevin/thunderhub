@@ -6,7 +6,7 @@ import {
   subscribeToInvoices,
   subscribeToBackups,
   subscribeToPastPayments,
-} from 'ln-service';
+} from 'lightning';
 import asyncAuto from 'async/auto';
 import asyncEach from 'async/each';
 import asyncMap from 'async/map';
