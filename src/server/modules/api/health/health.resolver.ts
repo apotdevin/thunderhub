@@ -3,7 +3,6 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { toWithError } from 'src/server/utils/async';
 import { Logger } from 'winston';
-import { GetChannelType } from '../../node/lnd/lnd.types';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
@@ -53,7 +52,7 @@ export class HealthResolver {
               return null;
             }
 
-            const policies = (channelInfo as GetChannelType).policies;
+            const policies = channelInfo.policies;
 
             let partnerBaseFee = 0;
             let partnerFeeRate = 0;

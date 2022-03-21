@@ -26,13 +26,7 @@ export class ToolsResolver {
       throw new Error('Corrupt backup file');
     }
 
-    const { backup, channels } = backupObj;
-
-    const { is_valid } = await this.nodeService.verifyBackups(
-      id,
-      backup,
-      channels
-    );
+    const { is_valid } = await this.nodeService.verifyBackups(id, backupObj);
     return is_valid;
   }
 
