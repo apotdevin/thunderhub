@@ -119,13 +119,14 @@ export class InvoicesResolver {
     @Args('max_fee') max_fee: number,
     @Args('max_paths') max_paths: number,
     @Args('request') request: string,
-    @Args('out', { nullable: true, type: () => [String] }) out: string[]
+    @Args('out', { nullable: true, type: () => [String] })
+    outgoing_channels: string[]
   ) {
     const props = {
       max_fee,
       max_paths,
       request,
-      out,
+      outgoing_channels,
     };
 
     this.logger.debug('Paying invoice with params', props);

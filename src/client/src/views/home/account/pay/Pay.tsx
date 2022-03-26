@@ -139,7 +139,7 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
         title={'Out Channels'}
         isMulti={true}
         maxWidth={'300px'}
-        callback={p => setPeers(p.map(peer => peer.partner_public_key))}
+        callback={p => setPeers(p.map(peer => peer.id))}
       />
       <Separation />
       <ColorButton
