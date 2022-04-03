@@ -12,6 +12,10 @@ import { widgetList, WidgetProps } from './widgetList';
 import { GetInvoicesQuery } from '../../../graphql/queries/__generated__/getInvoices.generated';
 import { GetPaymentsQuery } from '../../../graphql/queries/__generated__/getPayments.generated';
 
+const removeTime = (date: Date) => {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+};
+
 const getColumns = (width: number): number => {
   const { lg, md, sm, xs } = defaultGrid.breakpoints;
 
@@ -94,7 +98,11 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
 
       const difference = isDay
         ? 24 - differenceInHours(today, new Date(transaction.confirmed_at))
-        : time - differenceInDays(today, new Date(transaction.confirmed_at));
+        : time -
+          differenceInDays(
+            today,
+            removeTime(new Date(transaction.confirmed_at))
+          );
 
       transactions.push({
         difference,
@@ -106,7 +114,8 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
 
       const difference = isDay
         ? 24 - differenceInHours(today, new Date(transaction.created_at))
-        : time - differenceInDays(today, new Date(transaction.created_at));
+        : time -
+          differenceInDays(today, removeTime(new Date(transaction.created_at)));
 
       transactions.push({
         difference,
@@ -116,7 +125,8 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
     } else if (transaction.__typename === 'Forward') {
       const difference = isDay
         ? 24 - differenceInHours(today, new Date(transaction.created_at))
-        : time - differenceInDays(today, new Date(transaction.created_at));
+        : time -
+          differenceInDays(today, removeTime(new Date(transaction.created_at)));
 
       transactions.push({
         difference,
@@ -147,7 +157,7 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
         date: isDay
           ? subHours(today, 24 - Number(key))
               .toISOString()
-              .slice(0, 10)
+              .slice(0, 13)
           : subDays(today, time - Number(key))
               .toISOString()
               .slice(0, 10),
@@ -166,7 +176,7 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
             : isDay
             ? subHours(today, 24 - Number(key))
                 .toISOString()
-                .slice(0, 10)
+                .slice(0, 13)
             : subDays(today, time - Number(key))
                 .toISOString()
                 .slice(0, 10),
