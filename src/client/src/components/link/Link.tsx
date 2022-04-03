@@ -81,7 +81,7 @@ export const Link: React.FC<LinkProps> = ({
 
   if (to) {
     return (
-      <RouterLink href={to}>
+      <RouterLink href={to} passHref>
         <CorrectLink {...props}>{children}</CorrectLink>
       </RouterLink>
     );
