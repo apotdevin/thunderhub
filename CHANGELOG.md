@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.10](https://github.com/apotdevin/thunderhub/compare/v0.13.9...v0.13.10) (2022-04-04)
+
+
+### CI
+
+* docker image changes ([841960e](https://github.com/apotdevin/thunderhub/commit/841960e23f1023ce75c6ca776e2784f5cefba8c0))
+
 ### [0.13.9](https://github.com/apotdevin/thunderhub/compare/v0.13.8...v0.13.9) (2022-04-04)
 
 
