@@ -53,10 +53,11 @@ const amountOfXTicks = (width: number) => {
   }
 };
 
-const parseDate = timeParse('%Y-%m-%d');
-const format = timeFormat('%b %d');
-
-const formatDate = (date: string) => format(parseDate(date) as Date);
+const parseDate = timeParse('%Y-%m-%dT%H:%M:%S.%L%Z');
+const formatDate = timeFormat('%b %d');
+const formatTime = timeFormat('%H:%M');
+const tickFormatDate = (date: string) => formatDate(parseDate(date) as Date);
+const tickFormatTime = (date: string) => formatTime(parseDate(date) as Date);
 
 const tooltipStyles = {
   ...defaultStyles,
@@ -196,7 +197,7 @@ const Chart = ({
         <AxisBottom
           numTicks={amountOfXTicks(width)}
           top={yMax + margin.top}
-          tickFormat={formatDate}
+          tickFormat={data.length == 24 ? tickFormatTime : tickFormatDate}
           scale={xScale}
           stroke={axisColor}
           tickStroke={axisColor}
