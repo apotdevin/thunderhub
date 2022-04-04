@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.8](https://github.com/apotdevin/thunderhub/compare/v0.13.7...v0.13.8) (2022-04-04)
+
+
+### Bug Fixes
+
+* base path controller ([7191263](https://github.com/apotdevin/thunderhub/commit/719126378e6e77afef7ab3bdbfe695f7bcd7869c))
+* change pay out channels to pass channel id instead of node key and out prop name ([#428](https://github.com/apotdevin/thunderhub/issues/428)) ([55c1e28](https://github.com/apotdevin/thunderhub/commit/55c1e28518c3f6f4b3c8ddfb044028066766dc75))
+* missing prop ([658b04e](https://github.com/apotdevin/thunderhub/commit/658b04e52ac27e105cfac7f8303fd0da15a8b486))
+
+
+### Reverts
+
+* Revert "Improve "group by date" functionality in charts (#415)" ([311a62d](https://github.com/apotdevin/thunderhub/commit/311a62d4d68b33a3ad8c7de3c64e271e07900bd7)), closes [#415](https://github.com/apotdevin/thunderhub/issues/415)
+
+
+### Improvements
+
+* bump dependencies ([#426](https://github.com/apotdevin/thunderhub/issues/426)) ([f8a0045](https://github.com/apotdevin/thunderhub/commit/f8a0045bf59638b6d909f65f9b3dee1424272a3f))
+* self host fonts ([d119739](https://github.com/apotdevin/thunderhub/commit/d119739c56642327fdb7cfadab2307d566aa5fdc))
+
 ### [0.13.7](https://github.com/apotdevin/thunderhub/compare/v0.13.6...v0.13.7) (2022-02-23)
 
 
