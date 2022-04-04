@@ -33,7 +33,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the NestJS and NextJS application
 COPY . .
-RUN npm run build
+RUN npm run build:nest
+RUN npm run build:next
 
 # Remove non production necessary modules
 RUN npm prune --production

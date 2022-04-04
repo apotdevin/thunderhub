@@ -1,17 +1,14 @@
 # ---------------
 # Install Dependencies
 # ---------------
-FROM arm64v8/node:14.15-alpine as deps
+
+# NOTE: The arm64 image does not use alpine because of an issue with NextJS where it does not find the .next build folder.
+
+FROM arm64v8/node:14 as deps
 
 WORKDIR /app
 
-# Install dependencies neccesary for node-gyp on node alpine
-RUN apk add --update --no-cache \
-    libc6-compat \
-    python \
-    make \
-    g++
-
+RUN apt-get update && apt-get -y dist-upgrade
 
 # Install app dependencies
 COPY package.json package-lock.json ./
@@ -33,7 +30,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the NestJS and NextJS application
 COPY . .
-RUN npm run build
+RUN npm run build:nest
+RUN npm run build:next
 
 # Remove non production necessary modules
 RUN npm prune --production
@@ -41,7 +39,7 @@ RUN npm prune --production
 # ---------------
 # Release App
 # ---------------
-FROM arm64v8/node:14.15-alpine
+FROM arm64v8/node:14
 
 WORKDIR /app
 
