@@ -54,17 +54,9 @@ const amountOfXTicks = (width: number) => {
 };
 
 const parseDate = timeParse('%Y-%m-%d');
-const parseDateAndHour = timeParse('%Y-%m-%dT%H');
 const format = timeFormat('%b %d');
-const hourFormat = timeFormat('%b %d: %H');
 
-const formatDate = (date: string) => {
-  if (date.length === 10) {
-    return format(parseDate(date) as Date);
-  } else {
-    return hourFormat(parseDateAndHour(date) as Date);
-  }
-};
+const formatDate = (date: string) => format(parseDate(date) as Date);
 
 const tooltipStyles = {
   ...defaultStyles,
