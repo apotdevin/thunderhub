@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCreateAddressMutation } from '../../../../graphql/mutations/__generated__/createAddress.generated';
-import QRCode from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
 import { Copy } from 'react-feather';
 import { getErrorContent } from '../../../../utils/error';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
@@ -61,7 +61,7 @@ export const ReceiveOnChainCard = () => {
       {data && data.createAddress ? (
         <Responsive>
           <QRWrapper>
-            <QRCode value={data.createAddress} renderAs={'svg'} size={248} />
+            <QRCodeSVG value={data.createAddress} size={248} />
           </QRWrapper>
           <Column>
             <WrapRequest>{data.createAddress}</WrapRequest>
