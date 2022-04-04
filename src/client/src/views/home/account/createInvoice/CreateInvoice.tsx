@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Copy, CheckCircle } from 'react-feather';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import QRCode from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCreateInvoiceMutation } from '../../../../graphql/mutations/__generated__/createInvoice.generated';
 import { Title } from '../../../../layouts/footer/Footer.styled';
@@ -110,7 +110,7 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
       <Responsive>
         <InvoiceStatus id={id} callback={status => setInvoiceStatus(status)} />
         <QRWrapper>
-          <QRCode value={`lightning:${request}`} renderAs={'svg'} size={248} />
+          <QRCodeSVG value={`lightning:${request}`} size={248} />
         </QRWrapper>
         <Column>
           <WrapRequest>{request}</WrapRequest>

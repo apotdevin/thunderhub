@@ -11,7 +11,7 @@ import {
 } from '../../components/generic/Styled';
 import { useGetTwofaSecretQuery } from '../../graphql/queries/__generated__/getTwofaSecret.generated';
 import { useAccount } from '../../hooks/UseAccount';
-import QRCode from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { useRemoveTwofaSecretMutation } from '../../graphql/mutations/__generated__/removeTwofaSecret.generated';
 import { InputWithDeco } from '../../components/input/InputWithDeco';
@@ -78,7 +78,7 @@ const Enable: FC<{ callback: () => void }> = ({ callback }) => {
       <Separation />
       <S.center>
         <S.QRWrapper>
-          <QRCode value={data.getTwofaSecret.url} renderAs={'svg'} size={248} />
+          <QRCodeSVG value={data.getTwofaSecret.url} size={248} />
         </S.QRWrapper>
         {data.getTwofaSecret.secret}
       </S.center>

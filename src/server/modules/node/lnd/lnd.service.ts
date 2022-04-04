@@ -52,6 +52,7 @@ import {
   GetPaymentsArgs,
   GrantAccessArgs,
   GetInvoicesArgs,
+  CreateChainAddressArgs,
 } from 'lightning';
 import { EnrichedAccount } from '../../accounts/accounts.types';
 import { to } from './lnd.helpers';
@@ -236,7 +237,7 @@ export class LndService {
   async createChainAddress(
     account: EnrichedAccount,
     is_unused: boolean,
-    format: 'np2wpkh' | 'p2wpkh'
+    format: CreateChainAddressArgs['format']
   ) {
     return to(
       createChainAddress({
