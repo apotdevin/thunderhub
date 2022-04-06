@@ -7,11 +7,10 @@ WORKDIR /app
 
 # Install dependencies neccesary for node-gyp on node alpine
 RUN apk add --update --no-cache \
-    libc6-compat \
-    python \
-    make \
-    g++
-
+  libc6-compat \
+  python \
+  make \
+  g++
 
 # Install app dependencies
 COPY package.json package-lock.json ./
@@ -42,7 +41,7 @@ RUN npm prune --production
 # ---------------
 # Release App
 # ---------------
-FROM node:14.15-alpine
+FROM node:14.15-alpine as final
 
 WORKDIR /app
 
@@ -54,7 +53,7 @@ ENV NODE_ENV=${NODE_ENV}
 ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=build /app/package.json ./
-COPY --from=build /app/node_modules/ ./node_modules 
+COPY --from=build /app/node_modules/ ./node_modules
 
 # Copy NextJS files
 COPY --from=build /app/src/client/public ./src/client/public
