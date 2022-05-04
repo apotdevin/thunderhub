@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { AppProps } from 'next/app';
 import { ApolloProvider } from '@apollo/client';
@@ -26,28 +26,14 @@ import 'react-circular-progressbar/dist/styles.css';
 const { publicRuntimeConfig } = getConfig();
 const { logoutUrl } = publicRuntimeConfig;
 
-const S = {
-  center: styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 30vh;
-  `,
-};
-
 const NotAuthenticated: React.FC = () => {
   const { push } = useRouter();
 
   useEffect(() => {
-    const timeout = setTimeout(() => push(logoutUrl || '/login'), 3000);
-
-    return () => {
-      clearTimeout(timeout);
-    };
+    push(logoutUrl || '/login');
   }, [push]);
 
-  return <S.center>You do not have permission to view this page.</S.center>;
+  return null;
 };
 
 const Wrapper: React.FC<{ authenticated: boolean }> = ({
