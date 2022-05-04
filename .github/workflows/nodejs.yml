@@ -5,26 +5,28 @@ on:
     branches:
       - master
   pull_request:
-    branches:
-      - master
+    types: [opened, reopened, synchronize]
 
 jobs:
-  build:
+  test_lint_build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '14'
-      - name: Use NextJS Cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
-      - name: Install deps
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Install modules
         run: npm ci
-      - name: Build
-        run: |
-          npm run build
+
+      - name: Run eslint
+        run: npm run lint:check
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Run docker build
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: false
