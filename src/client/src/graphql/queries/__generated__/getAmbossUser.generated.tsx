@@ -9,12 +9,20 @@ export type GetAmbossUserQuery = {
   __typename?: 'Query';
   getAmbossUser?: {
     __typename?: 'AmbossUser';
-    subscription?: {
+    subscription: {
       __typename?: 'AmbossSubscription';
       end_date: string;
       subscribed: boolean;
       upgradable: boolean;
-    } | null;
+    };
+    backups: {
+      __typename?: 'UserBackupInfo';
+      last_update?: string | null;
+      last_update_size?: string | null;
+      total_size_saved: string;
+      available_size: string;
+      remaining_size: string;
+    };
   } | null;
 };
 
@@ -25,6 +33,13 @@ export const GetAmbossUserDocument = gql`
         end_date
         subscribed
         upgradable
+      }
+      backups {
+        last_update
+        last_update_size
+        total_size_saved
+        available_size
+        remaining_size
       }
     }
   }

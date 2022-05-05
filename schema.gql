@@ -9,7 +9,8 @@ type AmbossSubscription {
 }
 
 type AmbossUser {
-  subscription: AmbossSubscription
+  backups: UserBackupInfo!
+  subscription: AmbossSubscription!
 }
 
 type AuthResponse {
@@ -418,6 +419,7 @@ type Mutation {
   logout: Boolean!
   openChannel(amount: Float!, isPrivate: Boolean, partnerPublicKey: String!, pushTokens: Float = 0, tokensPerVByte: Float): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
+  pushBackup: Boolean!
   removePeer(publicKey: String): Boolean!
   removeTwofaSecret(token: String!): Boolean!
   sendMessage(maxFee: Float, message: String!, messageType: String, publicKey: String!, tokens: Float): Float!
@@ -731,6 +733,14 @@ input UpdateRoutingFeesParams {
   min_htlc_mtokens: String
   transaction_id: String
   transaction_vout: Float
+}
+
+type UserBackupInfo {
+  available_size: String!
+  last_update: String
+  last_update_size: String
+  remaining_size: String!
+  total_size_saved: String!
 }
 
 type Utxo {

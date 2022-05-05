@@ -27,7 +27,8 @@ export type AmbossSubscription = {
 
 export type AmbossUser = {
   __typename?: 'AmbossUser';
-  subscription?: Maybe<AmbossSubscription>;
+  backups: UserBackupInfo;
+  subscription: AmbossSubscription;
 };
 
 export type AuthResponse = {
@@ -481,6 +482,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   openChannel: OpenOrCloseChannel;
   pay: Scalars['Boolean'];
+  pushBackup: Scalars['Boolean'];
   removePeer: Scalars['Boolean'];
   removeTwofaSecret: Scalars['Boolean'];
   sendMessage: Scalars['Float'];
@@ -1065,6 +1067,15 @@ export type UpdateRoutingFeesParams = {
   min_htlc_mtokens?: InputMaybe<Scalars['String']>;
   transaction_id?: InputMaybe<Scalars['String']>;
   transaction_vout?: InputMaybe<Scalars['Float']>;
+};
+
+export type UserBackupInfo = {
+  __typename?: 'UserBackupInfo';
+  available_size: Scalars['String'];
+  last_update?: Maybe<Scalars['String']>;
+  last_update_size?: Maybe<Scalars['String']>;
+  remaining_size: Scalars['String'];
+  total_size_saved: Scalars['String'];
 };
 
 export type Utxo = {
