@@ -7,5 +7,5 @@ export const useAmbossUser = () => {
     return { user: null, loading };
   }
 
-  return { user: data.getAmbossUser.subscription, loading };
+  return { user: data.getAmbossUser, loading };
 };

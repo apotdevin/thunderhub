@@ -11,9 +11,30 @@ export class AmbossSubscription {
 }
 
 @ObjectType()
+export class UserBackupInfo {
+  @Field({ nullable: true })
+  last_update: string;
+
+  @Field({ nullable: true })
+  last_update_size: string;
+
+  @Field()
+  total_size_saved: string;
+
+  @Field()
+  available_size: string;
+
+  @Field()
+  remaining_size: string;
+}
+
+@ObjectType()
 export class AmbossUser {
-  @Field(() => AmbossSubscription, { nullable: true })
+  @Field(() => AmbossSubscription)
   subscription: AmbossSubscription;
+
+  @Field(() => UserBackupInfo)
+  backups: UserBackupInfo;
 }
 
 @ObjectType()

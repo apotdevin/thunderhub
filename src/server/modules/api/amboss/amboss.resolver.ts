@@ -28,6 +28,13 @@ const getUserQuery = gql`
         subscribed
         upgradable
       }
+      backups {
+        available_size
+        last_update
+        last_update_size
+        remaining_size
+        total_size_saved
+      }
     }
   }
 `;
@@ -92,6 +99,12 @@ const getNodeSocialInfo = gql`
   }
 `;
 
+const saveBackupMutation = gql`
+  mutation SaveBackup($backup: String!, $signature: String!) {
+    saveBackup(backup: $backup, signature: $signature)
+  }
+`;
+
 @Resolver()
 export class AmbossResolver {
   constructor(
@@ -103,12 +116,14 @@ export class AmbossResolver {
 
   @Query(() => AmbossUser, { nullable: true })
   async getAmbossUser(@Context() { ambossAuth }: ContextType) {
+    if (!ambossAuth) return null;
+
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
       this.configService.get('urls.amboss'),
       getUserQuery,
       undefined,
       {
-        authorization: ambossAuth ? `Bearer ${ambossAuth}` : '',
+        authorization: `Bearer ${ambossAuth}`,
       }
     );
 
@@ -242,6 +257,29 @@ export class AmbossResolver {
         path: '/',
       })
     );
+
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async pushBackup(@CurrentUser() { id }: UserId) {
+    const backups = await this.nodeService.getBackups(id);
+
+    const { signature } = await this.nodeService.signMessage(
+      id,
+      backups.backup
+    );
+
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+      this.configService.get('urls.amboss'),
+      saveBackupMutation,
+      { backup: backups.backup, signature }
+    );
+
+    if (!data?.saveBackup || error) {
+      this.logger.error('Error pushing backup to Amboss', { error, data });
+      throw new Error('Error pushing backup to Amboss');
+    }
 
     return true;
   }

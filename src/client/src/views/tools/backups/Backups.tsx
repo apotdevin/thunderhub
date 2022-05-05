@@ -1,56 +1,118 @@
-import React, { useState, useEffect } from 'react';
-import { useAccount } from '../../../hooks/UseAccount';
+import React from 'react';
 import {
   CardWithTitle,
   CardTitle,
   SubTitle,
   Card,
   Separation,
-  Sub4Title,
-  ResponsiveLine,
+  SingleLine,
   DarkSubTitle,
 } from '../../../components/generic/Styled';
-import { getDateDif, getFormatDate } from '../../../components/generic/helpers';
 import { DownloadBackups } from './DownloadBackups';
 import { VerifyBackups } from './VerifyBackups';
 import { RecoverFunds } from './RecoverFunds';
 import { VerifyBackup } from './VerifyBackup';
+import { useAmbossUser } from '../../../hooks/UseAmbossUser';
+import { getFormatDate, renderLine } from '../../../components/generic/helpers';
+import numeral from 'numeral';
+import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
+import { usePushBackupMutation } from '../../../graphql/mutations/__generated__/pushBackup.generated';
+import { getErrorContent } from '../../../utils/error';
+import { toast } from 'react-toastify';
 
-export const BackupsView = () => {
-  const [lastDate, setLastDate] = useState('');
+const PushBackup = () => {
+  const [backup, { loading }] = usePushBackupMutation({
+    onCompleted: () => toast.success('Backup saved on Amboss'),
+    onError: error => toast.error(getErrorContent(error)),
+    refetchQueries: ['GetAmbossUser'],
+  });
 
-  const account = useAccount();
+  return (
+    <SingleLine>
+      <DarkSubTitle>Push Backup to Amboss</DarkSubTitle>
+      <ColorButton
+        withMargin={'4px 0'}
+        disabled={loading}
+        onClick={() => backup()}
+        loading={loading}
+      >
+        Push
+      </ColorButton>
+    </SingleLine>
+  );
+};
 
-  useEffect(() => {
-    if (account) {
-      const date = localStorage.getItem(`lastBackup-${account.id}`);
-      date && setLastDate(date);
-    }
-  }, [account]);
+const AmbossBackupsView = () => {
+  const { user } = useAmbossUser();
 
-  const getDate = () => {
-    if (lastDate) {
-      return `${getDateDif(lastDate)} ago (${getFormatDate(lastDate)})`;
-    }
-    return 'Has not been backed up!';
+  const renderContent = () => {
+    if (!user) return null;
+
+    const {
+      backups: {
+        remaining_size,
+        total_size_saved,
+        last_update,
+        last_update_size,
+      },
+    } = user;
+
+    const total = Number(total_size_saved) / 1e6;
+    const remaining = Number(remaining_size) / 1e6;
+
+    return (
+      <>
+        {renderLine(
+          'Last Update',
+          last_update
+            ? getFormatDate(last_update)
+            : 'No backups done this month'
+        )}
+        {last_update_size
+          ? renderLine('Last Update Size', `${last_update_size} bytes`)
+          : null}
+        <Separation />
+        {renderLine(
+          'Total Size Saved',
+          `${numeral(total).format('0.[0000]')} MB`
+        )}
+        {renderLine(
+          'Remaining Size Available',
+          `${numeral(remaining).format('0.[0000]')} MB`
+        )}
+        <Separation />
+      </>
+    );
   };
 
   return (
     <CardWithTitle>
       <CardTitle>
-        <SubTitle>Backups</SubTitle>
+        <SubTitle>Amboss Backups</SubTitle>
       </CardTitle>
       <Card>
-        <ResponsiveLine>
-          <DarkSubTitle>Last Backup Date:</DarkSubTitle>
-          <Sub4Title>{getDate()}</Sub4Title>
-        </ResponsiveLine>
-        <Separation />
-        <DownloadBackups />
-        <VerifyBackups />
-        <VerifyBackup />
-        <RecoverFunds />
+        {renderContent()}
+        <PushBackup />
       </Card>
     </CardWithTitle>
+  );
+};
+
+export const BackupsView = () => {
+  return (
+    <>
+      <AmbossBackupsView />
+      <CardWithTitle>
+        <CardTitle>
+          <SubTitle>Backups</SubTitle>
+        </CardTitle>
+        <Card>
+          <DownloadBackups />
+          <VerifyBackups />
+          <VerifyBackup />
+          <RecoverFunds />
+        </Card>
+      </CardWithTitle>
+    </>
   );
 };
