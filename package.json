@@ -199,7 +199,7 @@
   "lint-staged": {
     "*.+(ts|tsx)": [
       "prettier --write",
-      "jest --bail --findRelatedTests",
+      "jest --bail --findRelatedTests --passWithNoTests",
       "eslint --fix"
     ]
   },

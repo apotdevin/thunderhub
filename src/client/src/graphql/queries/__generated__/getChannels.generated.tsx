@@ -47,7 +47,7 @@ export type GetChannelsQuery = {
       __typename?: 'Node';
       node?: { __typename?: 'NodeType'; alias: string } | null;
     };
-    partner_fee_info: {
+    partner_fee_info?: {
       __typename?: 'SingleChannel';
       node_policies?: {
         __typename?: 'NodePolicy';
@@ -65,7 +65,7 @@ export type GetChannelsQuery = {
         max_htlc_mtokens?: string | null;
         min_htlc_mtokens?: string | null;
       } | null;
-    };
+    } | null;
   }>;
 };
 
