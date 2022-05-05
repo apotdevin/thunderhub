@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.11](https://github.com/apotdevin/thunderhub/compare/v0.13.10...v0.13.11) (2022-05-05)
+
+
+### Bug Fixes
+
+* undefined channel info ([d91ad11](https://github.com/apotdevin/thunderhub/commit/d91ad1183e3ecfd59153cefee2acfac0ae1de5e9))
+
+
+### CI
+
+* github action ([4525874](https://github.com/apotdevin/thunderhub/commit/452587428775bc635de612837c418b01ebde00dc))
+
+
+### Improvements
+
+* bump deps ([2a65bb3](https://github.com/apotdevin/thunderhub/commit/2a65bb3caa7635f7ef42a04c0d3591900c588441))
+* cleanup backup section ([19219d7](https://github.com/apotdevin/thunderhub/commit/19219d7c63900028c2bc0804ab678a2b1f04c825))
+* instant redirect ([896ad1b](https://github.com/apotdevin/thunderhub/commit/896ad1be2c50a9ac154e6dc99db6077895659235))
+* update package lock ([d6dca8c](https://github.com/apotdevin/thunderhub/commit/d6dca8c81f2dd1ac72fb16f36b910c138095b44d))
+
 ### [0.13.10](https://github.com/apotdevin/thunderhub/compare/v0.13.9...v0.13.10) (2022-04-04)
 
 
