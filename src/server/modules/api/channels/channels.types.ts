@@ -139,7 +139,7 @@ export class Channel {
   unsettled_balance: number;
   @Field(() => Node)
   partner_node_info: Node;
-  @Field(() => SingleChannel)
+  @Field(() => SingleChannel, { nullable: true })
   partner_fee_info: SingleChannel;
   @Field()
   channel_age: number;

@@ -93,30 +93,30 @@ export const ChannelTable = () => {
     return channelData.map(c => {
       const myInfo = {
         myBase:
-          Number(c.partner_fee_info.node_policies?.base_fee_mtokens || 0) /
+          Number(c.partner_fee_info?.node_policies?.base_fee_mtokens || 0) /
           1000,
-        myRate: c.partner_fee_info.node_policies?.fee_rate,
+        myRate: c.partner_fee_info?.node_policies?.fee_rate,
         myMaxHtlc:
-          Number(c.partner_fee_info.node_policies?.max_htlc_mtokens || 0) /
+          Number(c.partner_fee_info?.node_policies?.max_htlc_mtokens || 0) /
           1000,
         myMinHtlc:
-          Number(c.partner_fee_info.node_policies?.min_htlc_mtokens || 0) /
+          Number(c.partner_fee_info?.node_policies?.min_htlc_mtokens || 0) /
           1000,
       };
 
       const partnerInfo = {
         partnerBase:
           Number(
-            c.partner_fee_info.partner_node_policies?.base_fee_mtokens || 0
+            c.partner_fee_info?.partner_node_policies?.base_fee_mtokens || 0
           ) / 1000,
-        partnerRate: c.partner_fee_info.partner_node_policies?.fee_rate,
+        partnerRate: c.partner_fee_info?.partner_node_policies?.fee_rate,
         partnerMaxHtlc:
           Number(
-            c.partner_fee_info.partner_node_policies?.max_htlc_mtokens || 0
+            c.partner_fee_info?.partner_node_policies?.max_htlc_mtokens || 0
           ) / 1000,
         partnerMinHtlc:
           Number(
-            c.partner_fee_info.partner_node_policies?.min_htlc_mtokens || 0
+            c.partner_fee_info?.partner_node_policies?.min_htlc_mtokens || 0
           ) / 1000,
       };
 

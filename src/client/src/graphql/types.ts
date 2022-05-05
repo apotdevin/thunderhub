@@ -170,7 +170,7 @@ export type Channel = {
   is_private: Scalars['Boolean'];
   local_balance: Scalars['Float'];
   local_reserve: Scalars['Float'];
-  partner_fee_info: SingleChannel;
+  partner_fee_info?: Maybe<SingleChannel>;
   partner_node_info: Node;
   partner_public_key: Scalars['String'];
   past_states: Scalars['Float'];

@@ -135,7 +135,7 @@ type Channel {
   is_private: Boolean!
   local_balance: Float!
   local_reserve: Float!
-  partner_fee_info: SingleChannel!
+  partner_fee_info: SingleChannel
   partner_node_info: Node!
   partner_public_key: String!
   past_states: Float!
