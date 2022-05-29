@@ -28,6 +28,7 @@ import { chartColors } from '../../../styles/Themes';
 import { getErrorContent } from '../../../utils/error';
 import { blockToTime, formatSeconds, getPercent } from '../../../utils/helpers';
 import { ChannelDetails } from './ChannelDetails';
+import { defaultHiddenColumns } from './helpers';
 
 const S = {
   link: styled.span`
@@ -67,8 +68,8 @@ export const ChannelTable = () => {
   });
 
   const [hiddenColumns, setHiddenColumns] = useLocalStorage(
-    'hiddenColumns',
-    [] as string[]
+    'hiddenColumns-v2',
+    defaultHiddenColumns
   );
 
   const numberStringSorting = useCallback(
@@ -327,6 +328,7 @@ export const ChannelTable = () => {
           {
             Header: 'Channel Id',
             accessor: 'id',
+            forceVisible: true,
             Cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
                 {getChannelLink(row.original.id)}
@@ -505,7 +507,7 @@ export const ChannelTable = () => {
           },
         ],
       },
-      { Header: 'Details', accessor: 'viewAction', forceVisible: true },
+      { Header: 'Details', accessor: 'viewAction' },
     ],
     [numberStringSorting]
   );
