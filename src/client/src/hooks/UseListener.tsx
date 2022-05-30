@@ -43,7 +43,7 @@ const ChannelPeerAlias: FC<{ id: string }> = ({ id }) => {
 };
 
 export const useListener = (disabled?: boolean) => {
-  const { channels, failedForwards, forwards, invoices, payments, autoClose } =
+  const { channels, forwardAttempts, forwards, invoices, payments, autoClose } =
     useNotificationState();
 
   const options: { autoClose?: false; closeOnClick: boolean } = useMemo(() => {
@@ -160,7 +160,7 @@ export const useListener = (disabled?: boolean) => {
 
       if (is_send || is_receive) return;
 
-      if (!is_confirmed && failedForwards) {
+      if (!is_confirmed && forwardAttempts) {
         toast.warn(
           renderToast(
             'Forward Attempt',
@@ -194,7 +194,7 @@ export const useListener = (disabled?: boolean) => {
         handleRefetchQueries(['GetForwards']);
       }
     },
-    [handleRefetchQueries, failedForwards, forwards, options]
+    [handleRefetchQueries, forwardAttempts, forwards, options]
   );
 
   const handleClosed = useCallback(
