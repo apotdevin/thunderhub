@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, VFC } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { AppProps } from 'next/app';
@@ -36,6 +36,11 @@ const NotAuthenticated: React.FC = () => {
   return null;
 };
 
+const Listener: VFC<{ isRoot: boolean }> = ({ isRoot }) => {
+  useListener(isRoot);
+  return null;
+};
+
 const Wrapper: React.FC<{ authenticated: boolean }> = ({
   children,
   authenticated,
@@ -45,8 +50,6 @@ const Wrapper: React.FC<{ authenticated: boolean }> = ({
 
   const isRoot = pathname === '/login' || pathname === '/sso';
 
-  useListener(isRoot);
-
   return (
     <ThemeProvider theme={{ mode: isRoot ? 'light' : theme }}>
       <ModalProvider backgroundComponent={BaseModalBackground}>
@@ -54,6 +57,7 @@ const Wrapper: React.FC<{ authenticated: boolean }> = ({
         <PageWrapper>
           <HeaderBodyWrapper>
             <Header />
+            <Listener isRoot={isRoot} />
             {authenticated ? children : <NotAuthenticated />}
           </HeaderBodyWrapper>
           <Footer />

@@ -32,7 +32,11 @@ export const useSocket = (disabled?: boolean) => {
   };
 };
 
-export const useSocketEvent = (socket: Socket | undefined, event: string) => {
+export const useSocketEvent = (
+  socket: Socket | undefined,
+  event: string,
+  cbk?: (data: any) => void
+) => {
   const context = useContext(SocketContext);
 
   if (context === undefined) {
@@ -46,6 +50,11 @@ export const useSocketEvent = (socket: Socket | undefined, event: string) => {
   useEffect(() => {
     registerSharedListener(event);
   }, [event, registerSharedListener]);
+
+  useEffect(() => {
+    if (!lastMessage) return;
+    cbk?.(lastMessage);
+  }, [lastMessage, cbk]);
 
   return { lastMessage, sendMessage };
 };
