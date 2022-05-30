@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.12](https://github.com/apotdevin/thunderhub/compare/v0.13.11...v0.13.12) (2022-05-30)
+
+
+### Improvements
+
+* bump dependencies ([d4bce70](https://github.com/apotdevin/thunderhub/commit/d4bce70ee34acfe6b4238056e0c77704fe48cba4))
+* default channel columns ([c95c16c](https://github.com/apotdevin/thunderhub/commit/c95c16ca2ccc6d9a39263c1bb85a95143551522b))
+
+
+### Refactoring
+
+* notifications ([8ffa13d](https://github.com/apotdevin/thunderhub/commit/8ffa13dba2915867f3e69f55dfd8b49dfa37b56a))
+
 ### [0.13.11](https://github.com/apotdevin/thunderhub/compare/v0.13.10...v0.13.11) (2022-05-05)
 
 
