@@ -8,8 +8,12 @@ import {
   SingleLine,
   SubTitle,
 } from '../../components/generic/Styled';
-import { useLocalStorage } from '../../hooks/UseLocalStorage';
 import styled from 'styled-components';
+import { VFC } from 'react';
+import {
+  useNotificationDispatch,
+  useNotificationState,
+} from '../../context/NotificationContext';
 
 const NoWrapText = styled.div`
   white-space: nowrap;
@@ -18,57 +22,81 @@ const NoWrapText = styled.div`
 
 const InputTitle = styled(NoWrapText)``;
 
-export const defaultSettings = {
-  allForwards: false,
-  autoClose: false,
+const Toggle: VFC<{
+  title: string;
+  property: string;
+  value: boolean;
+  cbk: (fields: any) => void;
+}> = ({ title, property, value, cbk }) => {
+  return (
+    <SingleLine>
+      <InputTitle>{title}</InputTitle>
+      <MultiButton>
+        <SingleButton
+          selected={value}
+          onClick={() => cbk({ [property]: true })}
+        >
+          Yes
+        </SingleButton>
+        <SingleButton
+          selected={!value}
+          onClick={() => cbk({ [property]: false })}
+        >
+          No
+        </SingleButton>
+      </MultiButton>
+    </SingleLine>
+  );
 };
 
 export const NotificationSettings = () => {
-  const [settings, setSettings] = useLocalStorage(
-    'notificationSettings',
-    defaultSettings
-  );
+  const { channels, forwardAttempts, forwards, invoices, payments, autoClose } =
+    useNotificationState();
 
-  const { allForwards, autoClose } = settings;
+  const dispatch = useNotificationDispatch();
+
+  const handleToggle = (fields: any) => dispatch({ type: 'change', ...fields });
 
   return (
     <CardWithTitle>
       <SubTitle>Notifications</SubTitle>
       <Card>
-        <SingleLine>
-          <InputTitle>All Forwards</InputTitle>
-          <MultiButton>
-            <SingleButton
-              selected={allForwards}
-              onClick={() => setSettings({ ...settings, allForwards: true })}
-            >
-              Yes
-            </SingleButton>
-            <SingleButton
-              selected={!allForwards}
-              onClick={() => setSettings({ ...settings, allForwards: false })}
-            >
-              No
-            </SingleButton>
-          </MultiButton>
-        </SingleLine>
-        <SingleLine>
-          <InputTitle>Auto Close</InputTitle>
-          <MultiButton>
-            <SingleButton
-              selected={autoClose}
-              onClick={() => setSettings({ ...settings, autoClose: true })}
-            >
-              Yes
-            </SingleButton>
-            <SingleButton
-              selected={!autoClose}
-              onClick={() => setSettings({ ...settings, autoClose: false })}
-            >
-              No
-            </SingleButton>
-          </MultiButton>
-        </SingleLine>
+        <Toggle
+          title="Invoices"
+          property="invoices"
+          value={invoices}
+          cbk={handleToggle}
+        />
+        <Toggle
+          title="Payments"
+          property="payments"
+          value={payments}
+          cbk={handleToggle}
+        />
+        <Toggle
+          title="Channels"
+          property="channels"
+          value={channels}
+          cbk={handleToggle}
+        />
+        <Toggle
+          title="Forwards"
+          property="forwards"
+          value={forwards}
+          cbk={handleToggle}
+        />
+        <Toggle
+          title="Forward Attempts"
+          property="forwardAttempts"
+          value={forwardAttempts}
+          cbk={handleToggle}
+        />
+        <Toggle
+          title="Auto Close"
+          property="autoClose"
+          value={autoClose}
+          cbk={handleToggle}
+        />
       </Card>
     </CardWithTitle>
   );

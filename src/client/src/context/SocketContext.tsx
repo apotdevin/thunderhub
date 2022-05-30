@@ -69,7 +69,7 @@ const SocketProvider: FC<{ authToken?: string }> = ({
     socket.on('disconnect', handleDisconnect);
 
     return { socket, cleanup };
-  }, []);
+  }, [authToken]);
 
   const getLastMessage = (forEvent = '') => lastMessages[forEvent];
   const setLastMessage = (forEvent: string, message: any) =>
@@ -86,12 +86,12 @@ const SocketProvider: FC<{ authToken?: string }> = ({
     if (!sockets.current) return;
     if (sockets.current.hasListeners(forEvent)) return;
 
-    sockets.current.on(forEvent, (message: any) =>
+    sockets.current.on(forEvent, (message: any) => {
       setLastMessages(state => ({
         ...state,
         [forEvent]: message,
-      }))
-    );
+      }));
+    });
   };
 
   return (
