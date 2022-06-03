@@ -25,6 +25,7 @@ import { BoltzModule } from './boltz/boltz.module';
 import { LnMarketsModule } from './lnmarkets/lnmarkets.module';
 import { BosModule } from './bos/bos.module';
 import { UserConfigModule } from './userConfig/userConfig.module';
+import { PeerSwapModule } from './peerswap/peerswap.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { UserConfigModule } from './userConfig/userConfig.module';
     BoltzModule,
     LnMarketsModule,
     BosModule,
+    PeerSwapModule
   ],
 })
 export class ApiModule {}

@@ -30,6 +30,10 @@ import { useConfigState } from '../../context/ConfigContext';
 import { Link } from '../../components/link/Link';
 import { SideSettings } from './sideSettings/SideSettings';
 import { NodeInfo } from './nodeInfo/NodeInfo';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
+const { peerSwapEnabled } = publicRuntimeConfig;
 
 // Icon import from react-feather is not working
 // TODO: recheck if the type is available
@@ -135,6 +139,7 @@ const DONATIONS = '/leaderboard';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
 const SWAP = '/swap';
+const PEERSWAP = '/peerswap';
 
 interface NavigationProps {
   isBurger?: boolean;
@@ -187,6 +192,8 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
       {renderNavButton('Tools', TOOLS, Shield, sidebar)}
       {renderNavButton('Swap', SWAP, Shuffle, sidebar)}
+      {peerSwapEnabled &&
+        renderNavButton('PeerSwap', PEERSWAP, Shuffle, sidebar)}
       {renderNavButton('Stats', STATS, BarChart2, sidebar)}
     </ButtonSection>
   );
@@ -203,6 +210,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Swap', SWAP, Shuffle)}
+      {peerSwapEnabled && renderBurgerNav('PeerSwap', PEERSWAP, Shuffle)}
       {renderBurgerNav('Stats', STATS, BarChart2)}
       {connected && renderBurgerNav('Donations', DONATIONS, Heart)}
       {renderBurgerNav('Chat', CHAT, MessageCircle)}
