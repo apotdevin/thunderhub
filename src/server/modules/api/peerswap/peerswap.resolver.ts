@@ -1,6 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PeerSwapService } from '../../peerswap/peerswap.service';
-import { GetPeerSwapPeersType, GetPeerSwapSwapsType, PeerSwapSwapType } from './peerswap.types';
+import {
+  GetPeerSwapPeersType,
+  GetPeerSwapSwapsType,
+  PeerSwapSwapType,
+} from './peerswap.types';
 
 @Resolver()
 export class PeerSwapResolver {
@@ -21,8 +25,13 @@ export class PeerSwapResolver {
     @Args('amount') amount: number,
     @Args('asset') asset: string,
     @Args('channelId') channelId: string,
-    @Args('type') type: string,
+    @Args('type') type: string
   ) {
-    return await this.peerSwapService.createSwap({amount, asset, channelId, type});
+    return await this.peerSwapService.createSwap({
+      amount,
+      asset,
+      channelId,
+      type,
+    });
   }
 }

@@ -45,9 +45,9 @@ type SubscriptionsConfig = {
   disableBackups: boolean;
 };
 
-type PeerSwapConfig ={
+type PeerSwapConfig = {
   socket: string;
-}
+};
 
 type ConfigType = {
   basePath: string;
@@ -67,7 +67,7 @@ type ConfigType = {
   disable2FA: boolean;
   headers: Headers;
   subscriptions: SubscriptionsConfig;
-  peerswap: PeerSwapConfig
+  peerswap: PeerSwapConfig;
 };
 
 export default (): ConfigType => {
@@ -131,8 +131,8 @@ export default (): ConfigType => {
   };
 
   const peerswap = {
-    socket: process.env.PEERSWAP_SOCKET || ''
-  }
+    socket: process.env.PEERSWAP_SOCKET || '',
+  };
 
   const config: ConfigType = {
     logJson: process.env.LOG_JSON === 'true',
@@ -152,7 +152,7 @@ export default (): ConfigType => {
     jwtSecret,
     yamlEnvs,
     subscriptions,
-    peerswap
+    peerswap,
   };
 
   if (!isProduction) {

@@ -55,7 +55,7 @@ import { PeerSwapModule } from './peerswap/peerswap.module';
     BoltzModule,
     LnMarketsModule,
     BosModule,
-    PeerSwapModule
+    PeerSwapModule,
   ],
 })
 export class ApiModule {}
