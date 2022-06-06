@@ -27,5 +27,6 @@ module.exports = {
     disableLnMarkets: process.env.DISABLE_LNMARKETS === 'true',
     noVersionCheck: process.env.NO_VERSION_CHECK === 'true',
     logoutUrl: process.env.LOGOUT_URL || '',
+    peerSwapEnabled: process.env.PEERSWAP_SOCKET && process.env.PEERSWAP_SOCKET !== '',
   },
 };

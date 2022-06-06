@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  isFuture,
   format,
   formatDistanceToNowStrict,
   differenceInCalendarDays,
@@ -150,13 +149,6 @@ export const getChannelLink = (id: string) => {
 export const getDateDif = (date: string | null | undefined): string | null => {
   if (!date) return null;
   return formatDistanceToNowStrict(new Date(date));
-};
-
-export const getPastFutureStr = (
-  date: string | null | undefined
-): string | null => {
-  if (!date) return null;
-  return isFuture(new Date(date)) ? 'from now' : 'ago';
 };
 
 export const getFormatDate = (

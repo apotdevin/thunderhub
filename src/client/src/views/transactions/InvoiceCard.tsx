@@ -9,7 +9,6 @@ import { Price } from '../../components/price/Price';
 import {
   getStatusDot,
   getDateDif,
-  getPastFutureStr,
   getFormatDate,
   renderLine,
 } from '../../components/generic/helpers';
@@ -142,9 +141,7 @@ export const InvoiceCard = ({
         )}
         {renderLine(
           'Expires:',
-          `${getDateDif(expires_at)} ${getPastFutureStr(
-            expires_at
-          )} (${getFormatDate(expires_at)})`
+          `${getDateDif(expires_at)} ago (${getFormatDate(expires_at)})`
         )}
         {renderLine('Id:', id)}
         {renderLine('Chain Address:', chain_address)}
