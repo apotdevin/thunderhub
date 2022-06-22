@@ -3,9 +3,6 @@ import { toast } from 'react-toastify';
 import { usePayAddressMutation } from '../../../../graphql/mutations/__generated__/sendToAddress.generated';
 import { InputWithDeco } from '../../../../components/input/InputWithDeco';
 import { useBitcoinFees } from '../../../../hooks/UseBitcoinFees';
-import dynamic from 'next/dynamic';
-import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { Camera } from 'react-feather';
 import {
   Separation,
   SingleLine,
@@ -24,16 +21,7 @@ import { ColorButton } from '../../../../components/buttons/colorButton/ColorBut
 import { renderLine } from '../../../../components/generic/helpers';
 import { usePriceState } from '../../../../context/PriceContext';
 
-const QRCodeReader = dynamic(() => import('../../../../components/qrReader'), {
-  ssr: false,
-  loading: function Loading() {
-    return <LoadingCard noCard={true} />;
-  },
-});
-
 export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
-  const [scannerOpen, setScannerOpen] = useState<boolean>(false);
-
   const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
   const { currency, displayValues, fetchFees } = useConfigState();
   const priceContext = usePriceState();
@@ -97,21 +85,12 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
 
   return (
     <>
-      <SingleLine>
-        <InputWithDeco
-          title={'Send to Address'}
-          value={address}
-          placeholder={'Address'}
-          inputCallback={value => setAddress(value)}
-          inputMaxWidth={'440px'}
-        />
-        <ColorButton
-          withMargin={'0 0 0 8px'}
-          onClick={() => setScannerOpen(true)}
-        >
-          <Camera size={18} />
-        </ColorButton>
-      </SingleLine>
+      <InputWithDeco
+        title={'Send to Address'}
+        value={address}
+        placeholder={'Address'}
+        inputCallback={value => setAddress(value)}
+      />
       <Separation />
       <InputWithDeco title={'Send All'} noInput={true}>
         <MultiButton>
@@ -243,25 +222,6 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
         >
           Send To Address
         </ColorButton>
-      </Modal>
-      <Modal
-        isOpen={scannerOpen}
-        closeCallback={() => {
-          setScannerOpen(false);
-        }}
-      >
-        <QRCodeReader
-          onScan={value => {
-            setAddress(value);
-            setScannerOpen(false);
-          }}
-          onError={() => {
-            toast.error(
-              'Error loading QR Reader. Check your browser permissions'
-            );
-            setScannerOpen(false);
-          }}
-        />
       </Modal>
     </>
   );
