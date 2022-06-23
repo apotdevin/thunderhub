@@ -7,19 +7,8 @@ import { ChannelSelect } from '../../../../components/select/specific/ChannelSel
 import { useDecodeRequestLazyQuery } from '../../../../graphql/queries/__generated__/decodeRequest.generated';
 import { renderLine } from '../../../../components/generic/helpers';
 import { Price } from '../../../../components/price/Price';
-import { Camera } from 'react-feather';
-import Modal from '../../../../components/modal/ReactModal';
-import dynamic from 'next/dynamic';
-import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { usePayMutation } from '../../../../graphql/mutations/__generated__/pay.generated';
-import { SingleLine, Separation } from '../../../../components/generic/Styled';
-
-const QRCodeReader = dynamic(() => import('../../../../components/qrReader'), {
-  ssr: false,
-  loading: function Loading() {
-    return <LoadingCard noCard={true} />;
-  },
-});
+import { Separation } from '../../../../components/generic/Styled';
 
 interface PayProps {
   predefinedRequest?: string;
@@ -27,8 +16,6 @@ interface PayProps {
 }
 
 export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-
   const [request, setRequest] = useState<string>(predefinedRequest || '');
   const [peers, setPeers] = useState<string[]>([]);
   const [fee, setFee] = useState<number>(10);
@@ -91,26 +78,18 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
     <>
       {!predefinedRequest && (
         <>
-          <SingleLine>
-            <InputWithDeco
-              title={'Request'}
-              value={request}
-              placeholder={'Invoice'}
-              inputCallback={value => setRequest(value)}
-              onEnter={() => handleEnter()}
-              inputMaxWidth={'240px'}
-              blurCallback={() => {
-                if (!request) return;
-                decode({ variables: { request } });
-              }}
-            />
-            <ColorButton
-              withMargin={'0 0 0 8px'}
-              onClick={() => setModalOpen(true)}
-            >
-              <Camera size={18} />
-            </ColorButton>
-          </SingleLine>
+          <InputWithDeco
+            title={'Request'}
+            value={request}
+            placeholder={'Invoice'}
+            inputCallback={value => setRequest(value)}
+            onEnter={() => handleEnter()}
+            inputMaxWidth={'300px'}
+            blurCallback={() => {
+              if (!request) return;
+              decode({ variables: { request } });
+            }}
+          />
           <Separation />
         </>
       )}
@@ -151,25 +130,6 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
       >
         Pay
       </ColorButton>
-      <Modal
-        isOpen={modalOpen}
-        closeCallback={() => {
-          setModalOpen(false);
-        }}
-      >
-        <QRCodeReader
-          onScan={value => {
-            setRequest(value);
-            setModalOpen(false);
-          }}
-          onError={() => {
-            toast.error(
-              'Error loading QR Reader. Check your browser permissions'
-            );
-            setModalOpen(false);
-          }}
-        />
-      </Modal>
     </>
   );
 };
