@@ -1,14 +1,14 @@
 # ---------------
 # Install Dependencies
 # ---------------
-FROM node:14.15-alpine as deps
+FROM node:16.15.1-alpine as deps
 
 WORKDIR /app
 
 # Install dependencies neccesary for node-gyp on node alpine
 RUN apk add --update --no-cache \
   libc6-compat \
-  python \
+  python3 \
   make \
   g++
 
@@ -41,7 +41,7 @@ RUN npm prune --production
 # ---------------
 # Release App
 # ---------------
-FROM node:14.15-alpine as final
+FROM node:16.15.1-alpine as final
 
 WORKDIR /app
 
