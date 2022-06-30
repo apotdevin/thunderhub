@@ -139,7 +139,9 @@ export class AmbossService {
 
           const names = unique.map(a => a.name);
 
-          this.logger.info(`Connected to ${names.join(', ')}`);
+          this.logger.silly(
+            `Connected to ${names.join(', ')} for healthcheck ping`
+          );
 
           return unique;
         },
@@ -181,7 +183,11 @@ export class AmbossService {
     })
       .then(result => {
         const nodes = result.checkAvailable.length;
-        this.logger.debug(`Finished healthcheck pings for ${nodes} nodes.`);
+        this.logger.silly(
+          `Finished healthcheck pings for ${nodes} node${
+            nodes.length > 1 ? 's' : ''
+          }.`
+        );
       })
       .catch(error => {
         this.logger.error(error.message);
