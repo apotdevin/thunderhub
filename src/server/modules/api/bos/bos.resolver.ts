@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { reconnect } from 'balanceofsatoshis/network';
 import { rebalance } from 'balanceofsatoshis/swaps';
 import { getAccountingReport } from 'balanceofsatoshis/balances';
 import { simpleRequest } from 'balanceofsatoshis/commands';
@@ -13,6 +14,16 @@ import { to } from 'src/server/utils/async';
 import { BosRebalanceResult, RebalanceResponseType } from './bos.types';
 import { WsService } from '../../ws/ws.service';
 import { stripAnsi } from 'src/server/utils/string';
+import { auto, map, each } from 'async';
+import { getWalletInfo } from 'lightning';
+import { Cron } from '@nestjs/schedule';
+
+type NodeType = {
+  id: string;
+  name: string;
+  pubkey: string;
+  lnd: any;
+};
 
 @Resolver()
 export class BosResolver {
@@ -134,5 +145,107 @@ export class BosResolver {
     };
 
     return result;
+  }
+
+  // Run every hour
+  @Cron('0 0 * * * *')
+  async reconnectToPeers() {
+    this.logger.debug('Reconnecting to disconnected peers for all nodes.');
+
+    await auto({
+      // Get Authenticated LND objects for each node
+      getNodes: async () => {
+        const accounts = this.accountsService.getAllAccounts();
+
+        const validAccounts = [];
+
+        for (const key in accounts) {
+          if (accounts.hasOwnProperty(key)) {
+            const account = accounts[key];
+            if (!account.encrypted) {
+              validAccounts.push({ id: account.hash, lnd: account.lnd });
+            }
+          }
+        }
+
+        return validAccounts;
+      },
+
+      // Try to connect to nodes
+      checkNodes: [
+        'getNodes',
+        async ({ getNodes }) => {
+          return map(getNodes, async ({ lnd, id }) => {
+            try {
+              const info = await getWalletInfo({ lnd });
+
+              const sliced = info.public_key.slice(0, 10);
+              const name = `${info.alias}(${sliced})`;
+
+              return {
+                id,
+                name,
+                pubkey: info.public_key,
+                lnd,
+              };
+            } catch (err) {
+              this.logger.error('Error connecting to node', {
+                id,
+                err,
+              });
+            }
+          });
+        },
+      ],
+
+      // Check which nodes are available and remove duplicates
+      checkAvailable: [
+        'checkNodes',
+        async ({ checkNodes }: { checkNodes: NodeType[] }) => {
+          const unique = checkNodes.filter(Boolean);
+
+          if (!unique.length) {
+            throw new Error(
+              'No nodes available to try reconnecting to disconnected peers.'
+            );
+          }
+
+          const names = unique.map(a => a.name);
+
+          this.logger.silly(
+            `Connected to ${names.join(', ')} for peer reconnection`
+          );
+
+          return unique;
+        },
+      ],
+
+      reconnectToNodes: [
+        'checkAvailable',
+        async ({ checkAvailable }) => {
+          await each(checkAvailable, async ({ lnd, name }) => {
+            try {
+              await reconnect({ lnd });
+            } catch (error) {
+              this.logger.error('Error reconnecting to peers', {
+                node: name,
+                error,
+              });
+            }
+          });
+        },
+      ],
+    })
+      .then(result => {
+        const nodes = result.checkAvailable.length;
+        this.logger.silly(
+          `Finished reconnecting to peers for ${nodes} node${
+            nodes.length > 1 ? 's' : ''
+          }.`
+        );
+      })
+      .catch(error => {
+        this.logger.error(error.message);
+      });
   }
 }
