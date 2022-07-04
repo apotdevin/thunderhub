@@ -46,9 +46,11 @@ export type AccountConfigType = {
   masterPassword: string | null;
   defaultNetwork: string | null;
   backupsEnabled: boolean | null;
+  healthCheckPingEnabled: boolean | null;
   accounts: AccountType[];
 };
 
 export type ConfigType = {
   backupsEnabled: boolean;
+  healthCheckPingEnabled: boolean;
 };

@@ -275,6 +275,12 @@ export type ClosedChannel = {
   transaction_vout: Scalars['Float'];
 };
 
+export type ConfigState = {
+  __typename?: 'ConfigState';
+  backup_state: Scalars['Boolean'];
+  healthcheck_ping_state: Scalars['Boolean'];
+};
+
 export type CreateBoltzReverseSwapType = {
   __typename?: 'CreateBoltzReverseSwapType';
   decodedInvoice?: Maybe<DecodeInvoice>;
@@ -488,6 +494,7 @@ export type Mutation = {
   sendMessage: Scalars['Float'];
   sendToAddress: ChainAddressSend;
   toggleAutoBackups: Scalars['Boolean'];
+  toggleHealthPings: Scalars['Boolean'];
   updateFees: Scalars['Boolean'];
   updateMultipleFees: Scalars['Boolean'];
   updateTwofaSecret: Scalars['Boolean'];
@@ -897,7 +904,6 @@ export type Query = {
   getAccountingReport: Scalars['String'];
   getAmbossLoginToken: Scalars['String'];
   getAmbossUser?: Maybe<AmbossUser>;
-  getBackupState: Scalars['Boolean'];
   getBackups: Scalars['String'];
   getBaseCanConnect: Scalars['Boolean'];
   getBaseNodes: Array<BaseNode>;
@@ -911,6 +917,7 @@ export type Query = {
   getChannelReport: ChannelReport;
   getChannels: Array<Channel>;
   getClosedChannels: Array<ClosedChannel>;
+  getConfigState: ConfigState;
   getFeeHealth: ChannelsFeeHealth;
   getForwards: Array<Forward>;
   getHello: Scalars['String'];

@@ -18,6 +18,7 @@ import cookie from 'cookie';
 import { WsModule } from './modules/ws/ws.module';
 import { SubModule } from './modules/sub/sub.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ScheduleModule } from '@nestjs/schedule';
 
 const { combine, timestamp, prettyPrint, json } = format;
 
@@ -48,6 +49,7 @@ export type JwtObjectType = {
     FilesModule,
     AccountsModule,
     FetchModule,
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],

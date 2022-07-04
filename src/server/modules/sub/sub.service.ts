@@ -7,20 +7,16 @@ import {
   subscribeToBackups,
   subscribeToPastPayments,
 } from 'lightning';
-import asyncAuto from 'async/auto';
-import asyncEach from 'async/each';
-import asyncMap from 'async/map';
-import asyncForever from 'async/forever';
+import { auto, each, map, forever } from 'async';
 import { Logger } from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { AccountsService } from '../accounts/accounts.service';
 import { WsService } from '../ws/ws.service';
 import { ConfigService } from '@nestjs/config';
-import { FetchService } from '../fetch/fetch.service';
-import { gql } from 'graphql-tag';
 import { NodeService } from '../node/node.service';
 import { UserConfigService } from '../api/userConfig/userConfig.service';
 import { getNetwork } from 'src/server/utils/network';
+import { AmbossService } from '../api/amboss/amboss.service';
 
 const restartSubscriptionTimeMs = 1000 * 30;
 
@@ -31,22 +27,16 @@ type NodeType = {
   lnd: any;
 };
 
-const saveBackupMutation = gql`
-  mutation SaveBackup($backup: String!, $signature: String!) {
-    saveBackup(backup: $backup, signature: $signature)
-  }
-`;
-
 @Injectable()
 export class SubService implements OnApplicationBootstrap {
   subscriptions = [];
   retryCount = 0;
 
   constructor(
+    private ambossService: AmbossService,
     private accountsService: AccountsService,
     private wsService: WsService,
     private configService: ConfigService,
-    private fetchService: FetchService,
     private nodeService: NodeService,
     private userConfigService: UserConfigService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
@@ -62,13 +52,13 @@ export class SubService implements OnApplicationBootstrap {
     this.startSubscription();
   }
 
-  startSubscription() {
-    return asyncForever(
+  async startSubscription() {
+    return forever(
       next => {
-        return asyncAuto(
+        return auto(
           {
             // Get Authenticated LND objects for each node
-            getNodes: callback => {
+            getNodes: async () => {
               const accounts = this.accountsService.getAllAccounts();
 
               const validAccounts = [];
@@ -82,14 +72,14 @@ export class SubService implements OnApplicationBootstrap {
                 }
               }
 
-              callback(null, validAccounts);
+              return validAccounts;
             },
 
             // Try to connect to nodes
             checkNodes: [
               'getNodes',
               async ({ getNodes }) => {
-                return asyncMap(getNodes, async ({ lnd, id }) => {
+                return map(getNodes, async ({ lnd, id }) => {
                   try {
                     const info = await getWalletInfo({ lnd });
 
@@ -152,7 +142,7 @@ export class SubService implements OnApplicationBootstrap {
                   connections: names.join(', '),
                 });
 
-                return asyncEach(
+                return each(
                   checkAvailable,
                   (node, cbk) => {
                     const sub = subscribeToInvoices({ lnd: node.lnd });
@@ -203,7 +193,7 @@ export class SubService implements OnApplicationBootstrap {
                   connections: names.join(', '),
                 });
 
-                return asyncEach(
+                return each(
                   checkAvailable,
                   (node, cbk) => {
                     const sub = subscribeToPastPayments({ lnd: node.lnd });
@@ -254,7 +244,7 @@ export class SubService implements OnApplicationBootstrap {
                   connections: names.join(', '),
                 });
 
-                return asyncEach(
+                return each(
                   checkAvailable,
                   (node, cbk) => {
                     const sub = subscribeToForwards({ lnd: node.lnd });
@@ -305,7 +295,7 @@ export class SubService implements OnApplicationBootstrap {
                   connections: names.join(', '),
                 });
 
-                return asyncEach(
+                return each(
                   checkAvailable,
                   (node, cbk) => {
                     const sub = subscribeToChannels({ lnd: node.lnd });
@@ -383,7 +373,7 @@ export class SubService implements OnApplicationBootstrap {
                   connections: names.join(', '),
                 });
 
-                return asyncEach(
+                return each(
                   checkAvailable,
                   (node, cbk) => {
                     let postBackupTimeoutHandle;
@@ -434,19 +424,7 @@ export class SubService implements OnApplicationBootstrap {
                         const { signature } =
                           await this.nodeService.signMessage(node.id, backup);
 
-                        const { data, error } =
-                          await this.fetchService.graphqlFetchWithProxy(
-                            this.configService.get('urls.amboss'),
-                            saveBackupMutation,
-                            { backup, signature }
-                          );
-
-                        if (!data?.saveBackup || error) {
-                          this.logger.error('Error saving backup', {
-                            node: node.name,
-                            error,
-                          });
-                        }
+                        await this.ambossService.pushBackup(backup, signature);
                       }, restartSubscriptionTimeMs);
 
                       return;

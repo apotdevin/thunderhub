@@ -27,10 +27,38 @@ export class UserConfigService implements OnModuleInit {
       this.logger.info(
         `No account config file found at path ${accountConfigPath}`
       );
-      return { backupsEnabled: false };
+      return { backupsEnabled: false, healthCheckPingEnabled: false };
     }
 
-    return { backupsEnabled: !!yaml.backupsEnabled };
+    return {
+      backupsEnabled: !!yaml.backupsEnabled,
+      healthCheckPingEnabled: !!yaml.healthCheckPingEnabled,
+    };
+  }
+
+  toggleHealthCheckPing(): void {
+    const accountConfigPath = this.configService.get('accountConfigPath');
+
+    if (!accountConfigPath) {
+      this.logger.verbose('No config file path provided');
+      throw new Error('Error enabling auto backups');
+    }
+
+    const accountConfig = this.filesService.parseYaml(accountConfigPath);
+
+    if (!accountConfig) {
+      this.logger.info(`No config file found at path ${accountConfigPath}`);
+      throw new Error('Error enabling auto backups');
+    }
+
+    const currentStatus = accountConfig.healthCheckPingEnabled;
+    const configCopy = {
+      ...accountConfig,
+      healthCheckPingEnabled: !currentStatus,
+    };
+
+    this.config = configCopy;
+    this.filesService.saveHashedYaml(configCopy, accountConfigPath);
   }
 
   toggleAutoBackups(): void {
