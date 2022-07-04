@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.14](https://github.com/apotdevin/thunderhub/compare/v0.13.13...v0.13.14) (2022-07-04)
+
+
+### Improvements
+
+* add nvmrc file and bump deps ([71b9e54](https://github.com/apotdevin/thunderhub/commit/71b9e54632161e446c301a971090648cefbc60b7))
+* bump deps ([#463](https://github.com/apotdevin/thunderhub/issues/463)) ([eeb8ad4](https://github.com/apotdevin/thunderhub/commit/eeb8ad4d7bee622ccea85e69f7a55932f163514e))
+* bump some dependencies ([3fce3be](https://github.com/apotdevin/thunderhub/commit/3fce3bedb5d3aeeba27c16f2687e9877a2bf7a7d))
+* npm audit ([484e384](https://github.com/apotdevin/thunderhub/commit/484e3846d2a81583e3bab4d03f381b8ac8d8abbc))
+* **release:** 0.13.13 ([00cecc4](https://github.com/apotdevin/thunderhub/commit/00cecc4cabc7e417ae64c05cbbabbdf490543fec))
+* update node version ([f92a2ba](https://github.com/apotdevin/thunderhub/commit/f92a2bad56fcf076095e8ac6fe7d0a35ac3e935e))
+
 ### [0.13.12](https://github.com/apotdevin/thunderhub/compare/v0.13.11...v0.13.12) (2022-05-30)
 
 
