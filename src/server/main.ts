@@ -7,7 +7,7 @@ async function bootstrap() {
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   app.setGlobalPrefix(process.env.BASE_PATH || '');
 
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 3000, process.env.HOST);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
