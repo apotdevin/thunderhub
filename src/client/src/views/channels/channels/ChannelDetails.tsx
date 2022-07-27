@@ -4,7 +4,10 @@ import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { ChangeDetails } from '../../../components/modal/changeDetails/ChangeDetails';
 import { useGetChannelInfoQuery } from '../../../graphql/queries/__generated__/getChannel.generated';
 
-export const ChannelDetails: FC<{ id?: string }> = ({ id = '' }) => {
+export const ChannelDetails: FC<{ id?: string; name?: string }> = ({
+  id = '',
+  name = '',
+}) => {
   const { data, loading, error } = useGetChannelInfoQuery({
     variables: { id },
     skip: !id,
@@ -26,6 +29,8 @@ export const ChannelDetails: FC<{ id?: string }> = ({ id = '' }) => {
 
   return (
     <ChangeDetails
+      id={id}
+      name={name}
       transaction_id={transaction_id}
       transaction_vout={transaction_vout}
       base_fee_mtokens={node_policies?.base_fee_mtokens || '0'}

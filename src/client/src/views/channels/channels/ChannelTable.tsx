@@ -534,7 +534,7 @@ export const ChannelTable = () => {
 
     switch (channel.action) {
       case 'edit':
-        return <ChannelDetails id={channel.channel} />;
+        return <ChannelDetails id={channel.channel} name={channel.name} />;
       case 'close':
         return (
           <CloseChannel
