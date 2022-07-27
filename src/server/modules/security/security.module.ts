@@ -12,7 +12,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt', session: true }),
     ThrottlerModule.forRootAsync({
-      imports: [ConfigService],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         ttl: config.get('throttler.ttl'),
