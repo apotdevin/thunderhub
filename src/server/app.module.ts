@@ -59,7 +59,7 @@ export type JwtObjectType = {
       driver: ApolloDriver,
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        autoSchemaFile: 'schema.gql',
+        autoSchemaFile: config.get('isProduction') ? true : 'schema.gql',
         sortSchema: true,
         playground: config.get('playground'),
         introspection: config.get('playground'),
