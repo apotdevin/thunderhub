@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.15](https://github.com/apotdevin/thunderhub/compare/v0.13.14...v0.13.15) (2022-07-28)
+
+
+### Improvements
+
+* bump deps ([#473](https://github.com/apotdevin/thunderhub/issues/473)) ([3f52833](https://github.com/apotdevin/thunderhub/commit/3f52833bcf422c9f80ee997e95c0af4d35a0fc12))
+* prod schema file change ([2b036ab](https://github.com/apotdevin/thunderhub/commit/2b036ab39a1880d29f5b63ac1a211c19fc68b877))
+
 ### [0.13.14](https://github.com/apotdevin/thunderhub/compare/v0.13.13...v0.13.14) (2022-07-04)
 
 
