@@ -6,6 +6,9 @@ import { Agent } from 'https';
 import { SocksProxyAgent } from 'socks-proxy-agent';
 import { DocumentNode, GraphQLError, print } from 'graphql';
 
+type Variables = {
+  [key: string]: string | number | string[] | boolean | any[] | Variables;
+};
 @Injectable()
 export class FetchService {
   agent: Agent | null = null;
@@ -31,7 +34,7 @@ export class FetchService {
   async graphqlFetchWithProxy(
     url: string,
     query: DocumentNode,
-    variables?: { [key: string]: string | number | string[] | boolean },
+    variables?: Variables,
     headers?: { [key: string]: string | number | string[] | boolean }
   ): Promise<{
     data: any;
