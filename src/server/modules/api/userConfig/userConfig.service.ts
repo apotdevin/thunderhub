@@ -27,59 +27,66 @@ export class UserConfigService implements OnModuleInit {
       this.logger.info(
         `No account config file found at path ${accountConfigPath}`
       );
-      return { backupsEnabled: false, healthCheckPingEnabled: false };
+      return {
+        backupsEnabled: false,
+        healthCheckPingEnabled: false,
+        onchainPushEnabled: false,
+        channelPushEnabled: false,
+        privateChannelPushEnabled: false,
+      };
     }
 
     return {
       backupsEnabled: !!yaml.backupsEnabled,
       healthCheckPingEnabled: !!yaml.healthCheckPingEnabled,
+      onchainPushEnabled: !!yaml.onchainPushEnabled,
+      channelPushEnabled: !!yaml.channelPushEnabled,
+      privateChannelPushEnabled: !!yaml.privateChannelPushEnabled,
     };
+  }
+
+  toggleValue(field: string): void {
+    const accountConfigPath = this.configService.get('accountConfigPath');
+
+    if (!accountConfigPath) {
+      this.logger.verbose('No config file path provided');
+      throw new Error('Error enabling auto backups');
+    }
+
+    const accountConfig = this.filesService.parseYaml(accountConfigPath);
+
+    if (!accountConfig) {
+      this.logger.info(`No config file found at path ${accountConfigPath}`);
+      throw new Error('Error enabling auto backups');
+    }
+
+    const currentStatus = accountConfig[field];
+    const configCopy = {
+      ...accountConfig,
+      [field]: !currentStatus,
+    };
+
+    this.config = configCopy;
+    this.filesService.saveHashedYaml(configCopy, accountConfigPath);
+  }
+
+  togglePrivateChannelPush(): void {
+    this.toggleValue('privateChannelPushEnabled');
+  }
+
+  toggleChannelPush(): void {
+    this.toggleValue('channelPushEnabled');
+  }
+
+  toggleOnChainPush(): void {
+    this.toggleValue('onchainPushEnabled');
   }
 
   toggleHealthCheckPing(): void {
-    const accountConfigPath = this.configService.get('accountConfigPath');
-
-    if (!accountConfigPath) {
-      this.logger.verbose('No config file path provided');
-      throw new Error('Error enabling auto backups');
-    }
-
-    const accountConfig = this.filesService.parseYaml(accountConfigPath);
-
-    if (!accountConfig) {
-      this.logger.info(`No config file found at path ${accountConfigPath}`);
-      throw new Error('Error enabling auto backups');
-    }
-
-    const currentStatus = accountConfig.healthCheckPingEnabled;
-    const configCopy = {
-      ...accountConfig,
-      healthCheckPingEnabled: !currentStatus,
-    };
-
-    this.config = configCopy;
-    this.filesService.saveHashedYaml(configCopy, accountConfigPath);
+    this.toggleValue('healthCheckPingEnabled');
   }
 
   toggleAutoBackups(): void {
-    const accountConfigPath = this.configService.get('accountConfigPath');
-
-    if (!accountConfigPath) {
-      this.logger.verbose('No config file path provided');
-      throw new Error('Error enabling auto backups');
-    }
-
-    const accountConfig = this.filesService.parseYaml(accountConfigPath);
-
-    if (!accountConfig) {
-      this.logger.info(`No config file found at path ${accountConfigPath}`);
-      throw new Error('Error enabling auto backups');
-    }
-
-    const currentStatus = accountConfig.backupsEnabled;
-    const configCopy = { ...accountConfig, backupsEnabled: !currentStatus };
-
-    this.config = configCopy;
-    this.filesService.saveHashedYaml(configCopy, accountConfigPath);
+    this.toggleValue('backupsEnabled');
   }
 }
