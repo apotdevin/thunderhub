@@ -90,3 +90,9 @@ export const pingHealthCheckMutation = gql`
     healthCheck(signature: $signature, timestamp: $timestamp)
   }
 `;
+
+export const pushBalancesMutation = gql`
+  mutation PushBalances($input: BalancePushInput!) {
+    pushBalances(input: $input)
+  }
+`;

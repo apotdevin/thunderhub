@@ -9,11 +9,13 @@ import {
   SubTitle,
 } from '../../components/generic/Styled';
 import styled from 'styled-components';
-import { useToggleAutoBackupsMutation } from '../../graphql/mutations/__generated__/toggleAutoBackups.generated';
 import { getErrorContent } from '../../utils/error';
 import { toast } from 'react-toastify';
 import { useGetConfigStateQuery } from '../../graphql/queries/__generated__/getConfigState.generated';
-import { useToggleHealthPingsMutation } from '../../graphql/mutations/__generated__/toggleHealthPings.generated';
+import { useToggleConfigMutation } from '../../graphql/mutations/__generated__/toggleConfig.generated';
+import { ConfigFields } from '../../graphql/types';
+import { VFC } from 'react';
+import { LoadingCard } from '../../components/loading/LoadingCard';
 
 const NoWrapText = styled.div`
   white-space: nowrap;
@@ -22,68 +24,31 @@ const NoWrapText = styled.div`
 
 const InputTitle = styled(NoWrapText)``;
 
-const AutoBackups = () => {
-  const { data, loading } = useGetConfigStateQuery({
-    onError: err => toast.error(getErrorContent(err)),
-  });
-
-  const [toggle, { loading: toggleLoading }] = useToggleAutoBackupsMutation({
+const ConfigFieldToggle: VFC<{
+  title: string;
+  enabled: boolean;
+  field: ConfigFields;
+}> = ({ title, enabled, field }) => {
+  const [toggle, { loading }] = useToggleConfigMutation({
     refetchQueries: ['GetConfigState'],
     onError: err => toast.error(getErrorContent(err)),
   });
 
-  const enabled = data?.getConfigState.backup_state || false;
-
   return (
     <SingleLine>
-      <InputTitle>Auto Backups</InputTitle>
-      <MultiButton loading={loading || toggleLoading} width="103px">
+      <InputTitle>{title}</InputTitle>
+      <MultiButton loading={loading} width="103px">
         <SingleButton
-          disabled={loading || toggleLoading}
+          disabled={loading}
           selected={enabled}
-          onClick={toggle}
+          onClick={() => toggle({ variables: { field } })}
         >
           Yes
         </SingleButton>
         <SingleButton
-          disabled={loading || toggleLoading}
+          disabled={loading}
           selected={!enabled}
-          onClick={toggle}
-        >
-          No
-        </SingleButton>
-      </MultiButton>
-    </SingleLine>
-  );
-};
-
-const HealthPings = () => {
-  const { data, loading } = useGetConfigStateQuery({
-    onError: err => toast.error(getErrorContent(err)),
-  });
-
-  const [toggle, { loading: toggleLoading }] = useToggleHealthPingsMutation({
-    refetchQueries: ['GetConfigState'],
-    onError: err => toast.error(getErrorContent(err)),
-  });
-
-  const enabled = data?.getConfigState.healthcheck_ping_state || false;
-
-  return (
-    <SingleLine>
-      <InputTitle>Healthcheck Pings</InputTitle>
-      <MultiButton loading={loading || toggleLoading} width="103px">
-        <SingleButton
-          disabled={loading || toggleLoading}
-          selected={enabled}
-          onClick={toggle}
-        >
-          Yes
-        </SingleButton>
-        <SingleButton
-          disabled={loading || toggleLoading}
-          selected={!enabled}
-          onClick={toggle}
+          onClick={() => toggle({ variables: { field } })}
         >
           No
         </SingleButton>
@@ -93,12 +58,55 @@ const HealthPings = () => {
 };
 
 export const AmbossSettings = () => {
+  const { data, loading } = useGetConfigStateQuery({
+    onError: err => toast.error(getErrorContent(err)),
+  });
+
+  if (loading) {
+    return <LoadingCard title="Amboss" />;
+  }
+
+  if (!data?.getConfigState) {
+    return null;
+  }
+
+  const {
+    backup_state,
+    channels_push_enabled,
+    healthcheck_ping_state,
+    onchain_push_enabled,
+    private_channels_push_enabled,
+  } = data.getConfigState;
+
   return (
     <CardWithTitle>
       <SubTitle>Amboss</SubTitle>
       <Card>
-        <AutoBackups />
-        <HealthPings />
+        <ConfigFieldToggle
+          field={ConfigFields.Backups}
+          enabled={backup_state}
+          title={'Auto Backups'}
+        />
+        <ConfigFieldToggle
+          field={ConfigFields.Healthchecks}
+          enabled={healthcheck_ping_state}
+          title={'Healthcheck Pings'}
+        />
+        <ConfigFieldToggle
+          field={ConfigFields.OnchainPush}
+          enabled={onchain_push_enabled}
+          title={'Onchain Push'}
+        />
+        <ConfigFieldToggle
+          field={ConfigFields.ChannelsPush}
+          enabled={channels_push_enabled}
+          title={'Channels Push'}
+        />
+        <ConfigFieldToggle
+          field={ConfigFields.PrivateChannelsPush}
+          enabled={private_channels_push_enabled}
+          title={'Private Channel Push'}
+        />
       </Card>
     </CardWithTitle>
   );

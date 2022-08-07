@@ -275,10 +275,21 @@ export type ClosedChannel = {
   transaction_vout: Scalars['Float'];
 };
 
+export enum ConfigFields {
+  Backups = 'BACKUPS',
+  ChannelsPush = 'CHANNELS_PUSH',
+  Healthchecks = 'HEALTHCHECKS',
+  OnchainPush = 'ONCHAIN_PUSH',
+  PrivateChannelsPush = 'PRIVATE_CHANNELS_PUSH',
+}
+
 export type ConfigState = {
   __typename?: 'ConfigState';
   backup_state: Scalars['Boolean'];
+  channels_push_enabled: Scalars['Boolean'];
   healthcheck_ping_state: Scalars['Boolean'];
+  onchain_push_enabled: Scalars['Boolean'];
+  private_channels_push_enabled: Scalars['Boolean'];
 };
 
 export type CreateBoltzReverseSwapType = {
@@ -493,8 +504,7 @@ export type Mutation = {
   removeTwofaSecret: Scalars['Boolean'];
   sendMessage: Scalars['Float'];
   sendToAddress: ChainAddressSend;
-  toggleAutoBackups: Scalars['Boolean'];
-  toggleHealthPings: Scalars['Boolean'];
+  toggleConfig: Scalars['Boolean'];
   updateFees: Scalars['Boolean'];
   updateMultipleFees: Scalars['Boolean'];
   updateTwofaSecret: Scalars['Boolean'];
@@ -649,6 +659,10 @@ export type MutationSendToAddressArgs = {
   sendAll?: InputMaybe<Scalars['Boolean']>;
   target?: InputMaybe<Scalars['Float']>;
   tokens?: InputMaybe<Scalars['Float']>;
+};
+
+export type MutationToggleConfigArgs = {
+  field: ConfigFields;
 };
 
 export type MutationUpdateFeesArgs = {

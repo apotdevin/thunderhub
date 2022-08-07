@@ -13,6 +13,9 @@ export type GetConfigStateQuery = {
     __typename?: 'ConfigState';
     backup_state: boolean;
     healthcheck_ping_state: boolean;
+    onchain_push_enabled: boolean;
+    channels_push_enabled: boolean;
+    private_channels_push_enabled: boolean;
   };
 };
 
@@ -21,6 +24,9 @@ export const GetConfigStateDocument = gql`
     getConfigState {
       backup_state
       healthcheck_ping_state
+      onchain_push_enabled
+      channels_push_enabled
+      private_channels_push_enabled
     }
   }
 `;

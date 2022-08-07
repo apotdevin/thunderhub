@@ -47,6 +47,7 @@ type SubscriptionsConfig = {
 
 type AmbossConfig = {
   disableHealthCheckPings: boolean;
+  disableBalancePushes: boolean;
 };
 
 type ConfigType = {
@@ -132,6 +133,7 @@ export default (): ConfigType => {
 
   const amboss = {
     disableHealthCheckPings: process.env.DISABLE_HEALTHCHECK_PINGS === 'true',
+    disableBalancePushes: process.env.DISABLE_BALANCE_PUSHES === 'true',
   };
 
   const config: ConfigType = {
