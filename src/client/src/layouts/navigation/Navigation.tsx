@@ -15,6 +15,7 @@ import {
   Heart,
   Shuffle,
   Grid,
+  Globe,
 } from 'react-feather';
 import { useRouter } from 'next/router';
 import { useBaseConnect } from '../../hooks/UseBaseConnect';
@@ -135,6 +136,7 @@ const DONATIONS = '/leaderboard';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
 const SWAP = '/swap';
+const AMBOSS = '/amboss';
 
 interface NavigationProps {
   isBurger?: boolean;
@@ -185,6 +187,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Transactions', TRANS, Server, sidebar)}
       {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
       {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
+      {renderNavButton('Amboss', AMBOSS, Globe, sidebar)}
       {renderNavButton('Tools', TOOLS, Shield, sidebar)}
       {renderNavButton('Swap', SWAP, Shuffle, sidebar)}
       {renderNavButton('Stats', STATS, BarChart2, sidebar)}
@@ -201,6 +204,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Transactions', TRANS, Server)}
       {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
+      {renderBurgerNav('Amboss', AMBOSS, Globe)}
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Swap', SWAP, Shuffle)}
       {renderBurgerNav('Stats', STATS, BarChart2)}
