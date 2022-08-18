@@ -113,7 +113,7 @@
     "winston": "^3.8.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.11.0",
+    "@graphql-codegen/cli": "^2.11.6",
     "@graphql-codegen/fragment-matcher": "^3.3.0",
     "@graphql-codegen/introspection": "^2.2.0",
     "@graphql-codegen/near-operation-file-preset": "^2.4.0",
