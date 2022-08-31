@@ -96,3 +96,54 @@ export const pushBalancesMutation = gql`
     pushBalances(input: $input)
   }
 `;
+
+export const getOfferRecommendations = gql`
+  query GetOfferRecommendations($channelSize: Float!) {
+    getOfferRecommendations(channelSize: $channelSize) {
+      list {
+        account
+        base_fee
+        base_fee_cap
+        fee_rate
+        fee_rate_cap
+        id
+        max_size
+        min_block_length
+        min_size
+        orders {
+          locked_size
+        }
+        side
+        status
+        total_size
+        seller_score
+        amboss_fee_rate
+        tags {
+          name
+        }
+      }
+    }
+  }
+`;
+
+export const getUserOrders = gql`
+  query GetUserOrders {
+    getUserOrders {
+      list {
+        id
+        offer
+        offer_account
+        payment_status
+        size
+        status
+        request
+      }
+    }
+  }
+`;
+
+export const createOrder = gql`
+  mutation CreateOrder($input: CreateOrder!) {
+    createOrder(input: $input)
+  }
+`;
