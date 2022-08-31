@@ -16,7 +16,6 @@ import { WsService } from '../../ws/ws.service';
 import { stripAnsi } from 'src/server/utils/string';
 import { auto, map, each } from 'async';
 import { getWalletInfo } from 'lightning';
-import { Cron } from '@nestjs/schedule';
 
 type NodeType = {
   id: string;
@@ -147,8 +146,9 @@ export class BosResolver {
     return result;
   }
 
+  // Disabled until solution for https://github.com/apotdevin/thunderhub/issues/480 is found
   // Run every hour
-  @Cron('0 0 * * * *')
+  // @Cron('0 0 * * * *')
   async reconnectToPeers() {
     this.logger.debug('Reconnecting to disconnected peers for all nodes.');
 
