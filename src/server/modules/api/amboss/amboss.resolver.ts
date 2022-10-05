@@ -1,6 +1,5 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FetchService } from '../../fetch/fetch.service';
-import { gql } from 'graphql-tag';
 import { ContextType } from 'src/server/app.module';
 import { appConstants } from 'src/server/utils/appConstants';
 import { Inject } from '@nestjs/common';
@@ -17,93 +16,17 @@ import { toWithError } from 'src/server/utils/async';
 import { NodeService } from '../../node/node.service';
 import { UserId } from '../../security/security.types';
 import { CurrentUser } from '../../security/security.decorators';
+import {
+  getLightningAddresses,
+  getLoginTokenQuery,
+  getNodeSocialInfo,
+  getSignInfoQuery,
+  getUserQuery,
+  loginMutation,
+} from './amboss.gql';
+import { AmbossService } from './amboss.service';
 
 const ONE_MONTH_SECONDS = 60 * 60 * 24 * 30;
-
-const getUserQuery = gql`
-  query GetUser {
-    getUser {
-      subscription {
-        end_date
-        subscribed
-        upgradable
-      }
-      backups {
-        available_size
-        last_update
-        last_update_size
-        remaining_size
-        total_size_saved
-      }
-    }
-  }
-`;
-
-const getLoginTokenQuery = gql`
-  query GetLoginToken($seconds: Float) {
-    getLoginToken(seconds: $seconds)
-  }
-`;
-
-const getSignInfoQuery = gql`
-  query GetSignInfo {
-    getSignInfo {
-      expiry
-      identifier
-      message
-    }
-  }
-`;
-
-const loginMutation = gql`
-  mutation Login(
-    $identifier: String!
-    $signature: String!
-    $seconds: Float
-    $details: String
-    $token: Boolean
-  ) {
-    login(
-      identifier: $identifier
-      signature: $signature
-      seconds: $seconds
-      details: $details
-      token: $token
-    )
-  }
-`;
-
-const getLightningAddresses = gql`
-  query GetLightningAddresses {
-    getLightningAddresses {
-      pubkey
-      lightning_address
-    }
-  }
-`;
-
-const getNodeSocialInfo = gql`
-  query GetNodeSocialInfo($pubkey: String!) {
-    getNode(pubkey: $pubkey) {
-      socials {
-        info {
-          private
-          telegram
-          twitter
-          twitter_verified
-          website
-          email
-        }
-      }
-    }
-  }
-`;
-
-const saveBackupMutation = gql`
-  mutation SaveBackup($backup: String!, $signature: String!) {
-    saveBackup(backup: $backup, signature: $signature)
-  }
-`;
 
 @Resolver()
 export class AmbossResolver {
@@ -111,6 +34,7 @@ export class AmbossResolver {
     private nodeService: NodeService,
     private configService: ConfigService,
     private fetchService: FetchService,
+    private ambossService: AmbossService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -270,16 +194,7 @@ export class AmbossResolver {
       backups.backup
     );
 
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
-      saveBackupMutation,
-      { backup: backups.backup, signature }
-    );
-
-    if (!data?.saveBackup || error) {
-      this.logger.error('Error pushing backup to Amboss', { error, data });
-      throw new Error('Error pushing backup to Amboss');
-    }
+    await this.ambossService.pushBackup(backups.backup, signature);
 
     return true;
   }

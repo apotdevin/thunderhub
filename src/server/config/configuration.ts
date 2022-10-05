@@ -49,6 +49,11 @@ type PeerSwapConfig = {
   socket: string;
 };
 
+type AmbossConfig = {
+  disableHealthCheckPings: boolean;
+  disableBalancePushes: boolean;
+};
+
 type ConfigType = {
   basePath: string;
   isProduction: boolean;
@@ -68,6 +73,7 @@ type ConfigType = {
   headers: Headers;
   subscriptions: SubscriptionsConfig;
   peerswap: PeerSwapConfig;
+  amboss: AmbossConfig;
 };
 
 export default (): ConfigType => {
@@ -134,6 +140,11 @@ export default (): ConfigType => {
     socket: process.env.PEERSWAP_SOCKET || '',
   };
 
+  const amboss = {
+    disableHealthCheckPings: process.env.DISABLE_HEALTHCHECK_PINGS === 'true',
+    disableBalancePushes: process.env.DISABLE_BALANCE_PUSHES === 'true',
+  };
+
   const config: ConfigType = {
     logJson: process.env.LOG_JSON === 'true',
     masterPasswordOverride: process.env.MASTER_PASSWORD_OVERRIDE || '',
@@ -153,6 +164,7 @@ export default (): ConfigType => {
     yamlEnvs,
     subscriptions,
     peerswap,
+    amboss,
   };
 
   if (!isProduction) {

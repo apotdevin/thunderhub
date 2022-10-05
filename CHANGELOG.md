@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.16](https://github.com/apotdevin/thunderhub/compare/v0.13.15...v0.13.16) (2022-09-13)
+
+
+### Features
+
+* balances ([#476](https://github.com/apotdevin/thunderhub/issues/476)) ([29fb50a](https://github.com/apotdevin/thunderhub/commit/29fb50ab7ead26946ef01ef7e945b884d0daf85d))
+
+
+### Bug Fixes
+
+* import error ([383ebef](https://github.com/apotdevin/thunderhub/commit/383ebeffb782874a76efd8593da624ac69dab50e))
+
+
+### Improvements
+
+* bump deps ([#481](https://github.com/apotdevin/thunderhub/issues/481)) ([8778158](https://github.com/apotdevin/thunderhub/commit/87781588cdbc9e4eae6fa2f7ebc1c0b003beaa35))
+* disable peer reconnection cron ([334dafb](https://github.com/apotdevin/thunderhub/commit/334dafb68434bd0f6e979e48203cca2f333a08c3))
+* new view ([e2065e1](https://github.com/apotdevin/thunderhub/commit/e2065e1c888508ea780fdb7a6abcbf36532ee11c))
+
+### [0.13.15](https://github.com/apotdevin/thunderhub/compare/v0.13.14...v0.13.15) (2022-07-28)
+
+
+### Improvements
+
+* bump deps ([#473](https://github.com/apotdevin/thunderhub/issues/473)) ([3f52833](https://github.com/apotdevin/thunderhub/commit/3f52833bcf422c9f80ee997e95c0af4d35a0fc12))
+* prod schema file change ([2b036ab](https://github.com/apotdevin/thunderhub/commit/2b036ab39a1880d29f5b63ac1a211c19fc68b877))
+
+### [0.13.14](https://github.com/apotdevin/thunderhub/compare/v0.13.13...v0.13.14) (2022-07-04)
+
+
+### Improvements
+
+* add nvmrc file and bump deps ([71b9e54](https://github.com/apotdevin/thunderhub/commit/71b9e54632161e446c301a971090648cefbc60b7))
+* bump deps ([#463](https://github.com/apotdevin/thunderhub/issues/463)) ([eeb8ad4](https://github.com/apotdevin/thunderhub/commit/eeb8ad4d7bee622ccea85e69f7a55932f163514e))
+* bump some dependencies ([3fce3be](https://github.com/apotdevin/thunderhub/commit/3fce3bedb5d3aeeba27c16f2687e9877a2bf7a7d))
+* npm audit ([484e384](https://github.com/apotdevin/thunderhub/commit/484e3846d2a81583e3bab4d03f381b8ac8d8abbc))
+* **release:** 0.13.13 ([00cecc4](https://github.com/apotdevin/thunderhub/commit/00cecc4cabc7e417ae64c05cbbabbdf490543fec))
+* update node version ([f92a2ba](https://github.com/apotdevin/thunderhub/commit/f92a2bad56fcf076095e8ac6fe7d0a35ac3e935e))
+
 ### [0.13.12](https://github.com/apotdevin/thunderhub/compare/v0.13.11...v0.13.12) (2022-05-30)
 
 

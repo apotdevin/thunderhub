@@ -72,7 +72,13 @@ const Channel = () => {
         <SubTitle>{`${query.slug}`}</SubTitle>
       </S.row>
       <Card>
-        <ChannelDetails id={id} />
+        <ChannelDetails
+          id={id}
+          name={
+            data.getChannel.partner_node_policies?.node?.node?.alias ||
+            'Unknown'
+          }
+        />
       </Card>
       <Card>
         <CloseChannel

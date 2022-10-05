@@ -19,6 +19,7 @@ import { WsModule } from './modules/ws/ws.module';
 import { SubModule } from './modules/sub/sub.module';
 import { PeerSwapModule } from './modules/peerswap/peerswap.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ScheduleModule } from '@nestjs/schedule';
 
 const { combine, timestamp, prettyPrint, json } = format;
 
@@ -50,6 +51,7 @@ export type JwtObjectType = {
     AccountsModule,
     FetchModule,
     PeerSwapModule,
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
@@ -59,7 +61,7 @@ export type JwtObjectType = {
       driver: ApolloDriver,
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        autoSchemaFile: 'schema.gql',
+        autoSchemaFile: config.get('isProduction') ? true : 'schema.gql',
         sortSchema: true,
         playground: config.get('playground'),
         introspection: config.get('playground'),

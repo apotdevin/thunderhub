@@ -46,9 +46,17 @@ export type AccountConfigType = {
   masterPassword: string | null;
   defaultNetwork: string | null;
   backupsEnabled: boolean | null;
+  healthCheckPingEnabled: boolean | null;
+  onchainPushEnabled: boolean | null;
+  channelPushEnabled: boolean | null;
+  privateChannelPushEnabled: boolean | null;
   accounts: AccountType[];
 };
 
 export type ConfigType = {
   backupsEnabled: boolean;
+  healthCheckPingEnabled: boolean;
+  onchainPushEnabled: boolean;
+  channelPushEnabled: boolean;
+  privateChannelPushEnabled: boolean;
 };

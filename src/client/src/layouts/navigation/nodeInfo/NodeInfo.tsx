@@ -54,6 +54,10 @@ const Balance = styled.div`
 `;
 
 const Alias = styled.div`
+  max-width: 200px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   border-bottom: 2px solid
     ${({ bottomColor }: { bottomColor: string }) => bottomColor};
 `;
@@ -185,7 +189,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     <>
       <Title>
         <Alias bottomColor={color} data-tip={`Version: ${version}`}>
-          {addEllipsis(alias)}
+          {alias}
         </Alias>
       </Title>
       <Separation lineColor={unSelectedNavButton} />

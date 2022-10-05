@@ -5,8 +5,11 @@ import { getErrorContent } from '../../../../src/utils/error';
 import { InputWithDeco } from '../../../../src/components/input/InputWithDeco';
 import { ColorButton } from '../../../../src/components/buttons/colorButton/ColorButton';
 import { Input } from '../../../../src/components/input';
+import { SingleLine, SubTitle, Sub4Title } from '../../generic/Styled';
 
 type ChangeDetailsType = {
+  id?: string;
+  name?: string;
   transaction_id?: string;
   transaction_vout?: number;
   base_fee_mtokens?: string | null;
@@ -17,6 +20,8 @@ type ChangeDetailsType = {
 };
 
 export const ChangeDetails = ({
+  id,
+  name,
   transaction_id,
   transaction_vout,
   base_fee_mtokens,
@@ -51,14 +56,18 @@ export const ChangeDetails = ({
     },
     onCompleted: data => {
       data.updateFees
-        ? toast.success('Channel fees updated')
-        : toast.error('Error updating channel fees');
+        ? toast.success('Channel policy updated')
+        : toast.error('Error updating channel policy');
     },
     refetchQueries: ['GetChannels', 'ChannelFees'],
   });
 
   return (
     <>
+      <SingleLine>
+        <SubTitle>{'Update Channel Policy'}</SubTitle>
+        <Sub4Title>{`${name} [${id}]`}</Sub4Title>
+      </SingleLine>
       <InputWithDeco
         title={'Base Fee'}
         customAmount={`${newBaseFee} sats`}

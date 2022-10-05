@@ -231,6 +231,22 @@ type ClosedChannel {
   transaction_vout: Float!
 }
 
+enum ConfigFields {
+  BACKUPS
+  CHANNELS_PUSH
+  HEALTHCHECKS
+  ONCHAIN_PUSH
+  PRIVATE_CHANNELS_PUSH
+}
+
+type ConfigState {
+  backup_state: Boolean!
+  channels_push_enabled: Boolean!
+  healthcheck_ping_state: Boolean!
+  onchain_push_enabled: Boolean!
+  private_channels_push_enabled: Boolean!
+}
+
 type CreateBoltzReverseSwapType {
   decodedInvoice: DecodeInvoice
   id: String!
@@ -433,7 +449,7 @@ type Mutation {
   removeTwofaSecret(token: String!): Boolean!
   sendMessage(maxFee: Float, message: String!, messageType: String, publicKey: String!, tokens: Float): Float!
   sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
-  toggleAutoBackups: Boolean!
+  toggleConfig(field: ConfigFields!): Boolean!
   updateFees(base_fee_tokens: Float, cltv_delta: Float, fee_rate: Float, max_htlc_mtokens: String, min_htlc_mtokens: String, transaction_id: String, transaction_vout: Float): Boolean!
   updateMultipleFees(channels: [UpdateRoutingFeesParams!]!): Boolean!
   updateTwofaSecret(secret: String!, token: String!): Boolean!
@@ -694,7 +710,6 @@ type Query {
   getAccountingReport(category: String, currency: String, fiat: String, month: String, year: String): String!
   getAmbossLoginToken: String!
   getAmbossUser: AmbossUser
-  getBackupState: Boolean!
   getBackups: String!
   getBaseCanConnect: Boolean!
   getBaseNodes: [BaseNode!]!
@@ -708,6 +723,7 @@ type Query {
   getChannelReport: ChannelReport!
   getChannels(active: Boolean): [Channel!]!
   getClosedChannels: [ClosedChannel!]!
+  getConfigState: ConfigState!
   getFeeHealth: ChannelsFeeHealth!
   getForwards(days: Float!): [Forward!]!
   getHello: String!
