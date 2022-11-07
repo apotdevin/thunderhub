@@ -8,6 +8,7 @@ const initialState = {
     commit: '0',
     pending: '0',
   },
+  liquid: '0',
 };
 
 export const useNodeBalances = () => {

@@ -6,6 +6,7 @@ import {
   listPeers,
   swapIn,
   swapOut,
+  liquidGetBalance,
 } from '@vilm3r/peerswap-client';
 
 @Injectable()
@@ -28,5 +29,13 @@ export class PeerSwapService {
     return type === 'swap_in'
       ? swapIn(this.client, channelId, amount, asset)
       : swapOut(this.client, channelId, amount, asset);
+  }
+
+  async getLiquidBalance() {
+    try {
+      return (await liquidGetBalance(this.client)).satAmount || null;
+    } catch (ex) {
+      return null;
+    }
   }
 }

@@ -11,6 +11,7 @@ export type GetNodeBalancesQuery = {
   __typename?: 'Query';
   getNodeBalances: {
     __typename?: 'Balances';
+    liquid?: string | null;
     onchain: {
       __typename?: 'OnChainBalance';
       confirmed: string;
@@ -41,6 +42,7 @@ export const GetNodeBalancesDocument = gql`
         commit
         pending
       }
+      liquid
     }
   }
 `;

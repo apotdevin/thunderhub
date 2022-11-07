@@ -76,4 +76,6 @@ export class Balances {
   onchain: OnChainBalance;
   @Field(() => LightningBalance)
   lightning: LightningBalance;
+  @Field({ nullable: true })
+  liquid: string;
 }

@@ -91,6 +91,11 @@ export class BalancesResolver {
       commit,
     };
   }
+
+  @ResolveField()
+  async liquid() {
+    return await this.nodeService.getLiquidBalance();
+  }
 }
 
 @Resolver()

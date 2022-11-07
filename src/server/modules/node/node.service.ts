@@ -19,12 +19,14 @@ import {
 } from 'lightning';
 import { AccountsService } from '../accounts/accounts.service';
 import { LndService } from './lnd/lnd.service';
+import { PeerSwapService } from '../peerswap/peerswap.service';
 
 @Injectable()
 export class NodeService {
   constructor(
     private accountsService: AccountsService,
-    private lndService: LndService
+    private lndService: LndService,
+    private peerSwapService: PeerSwapService
   ) {}
 
   async getWalletInfo(id: string) {
@@ -274,5 +276,11 @@ export class NodeService {
     const account = this.accountsService.getAccount(id);
     if (!account) throw new Error('Node account not found');
     return this.lndService.subscribeToInvoice(account, invoice);
+  }
+
+  async getLiquidBalance() {
+    // const account = this.accountsService.getAccount(id);
+    // if (!account) throw new Error('Node account not found');
+    return this.peerSwapService.getLiquidBalance();
   }
 }

@@ -14,6 +14,7 @@ export const GET_NODE_BALANCES = gql`
         commit
         pending
       }
+      liquid
     }
   }
 `;

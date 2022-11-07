@@ -79,7 +79,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     peersCount,
   } = useNodeInfo();
 
-  const { onchain, lightning } = useNodeBalances();
+  const { onchain, lightning, liquid } = useNodeBalances();
 
   const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
@@ -201,6 +201,12 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         <Anchor size={18} color={chainPending === 0 ? '#FFD300' : '#652EC7'} />
         <Price amount={totalChain} />
       </Balance>
+      {liquid && (
+        <Balance>
+          <Anchor size={18} color={'#46beae'} />
+          <Price amount={liquid} />
+        </Balance>
+      )}
       <Balance
         data-tip
         data-for="node_tip"

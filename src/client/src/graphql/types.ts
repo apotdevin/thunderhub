@@ -40,6 +40,7 @@ export type AuthResponse = {
 export type Balances = {
   __typename?: 'Balances';
   lightning: LightningBalance;
+  liquid?: Maybe<Scalars['String']>;
   onchain: OnChainBalance;
 };
 
