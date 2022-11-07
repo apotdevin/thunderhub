@@ -12,4 +12,6 @@ export class ServerAccount {
   type: string;
   @Field()
   twofaEnabled: boolean;
+  @Field()
+  peerSwapEnabled: boolean;
 }

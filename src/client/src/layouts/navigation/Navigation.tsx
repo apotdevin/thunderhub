@@ -31,10 +31,7 @@ import { useConfigState } from '../../context/ConfigContext';
 import { Link } from '../../components/link/Link';
 import { SideSettings } from './sideSettings/SideSettings';
 import { NodeInfo } from './nodeInfo/NodeInfo';
-import getConfig from 'next/config';
-
-const { publicRuntimeConfig } = getConfig();
-const { peerSwapEnabled } = publicRuntimeConfig;
+import { useAccount } from '../../hooks/UseAccount';
 
 // Icon import from react-feather is not working
 // TODO: recheck if the type is available
@@ -151,6 +148,8 @@ interface NavigationProps {
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const { pathname } = useRouter();
   const { sidebar } = useConfigState();
+  const account = useAccount();
+  const peerSwapEnabled = account?.peerSwapEnabled || false;
 
   const { connected } = useBaseConnect();
 

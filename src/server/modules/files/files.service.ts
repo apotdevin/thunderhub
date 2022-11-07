@@ -250,6 +250,7 @@ export class FilesService {
       password,
       encrypted,
       twofaSecret,
+      peerSwapSocket,
     } = resolvedAccount;
 
     const missingFields: string[] = [];
@@ -311,6 +312,7 @@ export class FilesService {
       cert: cert || '',
       password: password || masterPassword || '',
       twofaSecret: twofaSecret || '',
+      peerSwapSocket: peerSwapSocket || '',
       ...encryptedProps,
     };
   }

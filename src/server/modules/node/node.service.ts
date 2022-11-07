@@ -278,9 +278,7 @@ export class NodeService {
     return this.lndService.subscribeToInvoice(account, invoice);
   }
 
-  async getLiquidBalance() {
-    // const account = this.accountsService.getAccount(id);
-    // if (!account) throw new Error('Node account not found');
-    return this.peerSwapService.getLiquidBalance();
+  async getLiquidBalance(id: string) {
+    return this.peerSwapService.getLiquidBalance(id);
   }
 }

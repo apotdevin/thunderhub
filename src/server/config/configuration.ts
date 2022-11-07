@@ -45,10 +45,6 @@ type SubscriptionsConfig = {
   disableBackups: boolean;
 };
 
-type PeerSwapConfig = {
-  socket: string;
-};
-
 type AmbossConfig = {
   disableHealthCheckPings: boolean;
   disableBalancePushes: boolean;
@@ -72,7 +68,6 @@ type ConfigType = {
   disable2FA: boolean;
   headers: Headers;
   subscriptions: SubscriptionsConfig;
-  peerswap: PeerSwapConfig;
   amboss: AmbossConfig;
 };
 
@@ -136,10 +131,6 @@ export default (): ConfigType => {
     disableBackups: process.env.DISABLE_BACKUP_SUB === 'true',
   };
 
-  const peerswap = {
-    socket: process.env.PEERSWAP_SOCKET || '',
-  };
-
   const amboss = {
     disableHealthCheckPings: process.env.DISABLE_HEALTHCHECK_PINGS === 'true',
     disableBalancePushes: process.env.DISABLE_BALANCE_PUSHES === 'true',
@@ -163,7 +154,6 @@ export default (): ConfigType => {
     jwtSecret,
     yamlEnvs,
     subscriptions,
-    peerswap,
     amboss,
   };
 

@@ -46,6 +46,7 @@ export class AccountsService implements OnModuleInit {
         socket: ssoUrl,
         cert: ssoCert,
         twofaSecret: '',
+        peerSwapSocket: '',
       };
       const { lnd } = authenticatedLndGrpc(sso);
 

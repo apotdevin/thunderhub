@@ -13,6 +13,7 @@ export type AccountType = {
   certificate?: string;
   encrypted?: boolean;
   twofaSecret?: string | null;
+  peerSwapSocket?: string | null;
 };
 
 export type UnresolvedAccountType = {
@@ -39,6 +40,7 @@ export type ParsedAccount = {
   encrypted: boolean;
   encryptedMacaroon: string;
   twofaSecret: string;
+  peerSwapSocket: string;
 };
 
 export type AccountConfigType = {

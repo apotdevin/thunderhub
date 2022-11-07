@@ -14,6 +14,7 @@ export type GetAccountQuery = {
     loggedIn: boolean;
     type: string;
     twofaEnabled: boolean;
+    peerSwapEnabled: boolean;
   };
 };
 
@@ -25,6 +26,7 @@ export const GetAccountDocument = gql`
       loggedIn
       type
       twofaEnabled
+      peerSwapEnabled
     }
   }
 `;

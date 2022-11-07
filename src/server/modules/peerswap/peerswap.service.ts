@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import {
   getPeerSwapClient,
   listSwaps,
@@ -8,32 +7,36 @@ import {
   swapOut,
   liquidGetBalance,
 } from '@vilm3r/peerswap-client';
+import { AccountsService } from '../accounts/accounts.service';
 
 @Injectable()
 export class PeerSwapService {
-  constructor(private configService: ConfigService) {}
+  constructor(private accountsService: AccountsService) {}
 
-  client = getPeerSwapClient({
-    socket: this.configService.get('peerswap.socket'),
-  });
-
-  async getSwaps() {
-    return listSwaps(this.client);
+  getClient(id: string) {
+    const account = this.accountsService.getAccount(id);
+    if (!account?.peerSwapSocket)
+      throw new Error('Peerswap socket entry missing or invalid');
+    return getPeerSwapClient({ socket: account.peerSwapSocket });
   }
 
-  async getPeers() {
-    return listPeers(this.client);
+  async getSwaps(id: string) {
+    return listSwaps(this.getClient(id));
   }
 
-  async createSwap({ amount, asset, channelId, type }) {
+  async getPeers(id: string) {
+    return listPeers(this.getClient(id));
+  }
+
+  async createSwap(id: string, { amount, asset, channelId, type }) {
     return type === 'swap_in'
-      ? swapIn(this.client, channelId, amount, asset)
-      : swapOut(this.client, channelId, amount, asset);
+      ? swapIn(this.getClient(id), channelId, amount, asset)
+      : swapOut(this.getClient(id), channelId, amount, asset);
   }
 
-  async getLiquidBalance() {
+  async getLiquidBalance(id: string) {
     try {
-      return (await liquidGetBalance(this.client)).satAmount || null;
+      return (await liquidGetBalance(this.getClient(id))).satAmount || null;
     } catch (ex) {
       return null;
     }

@@ -93,8 +93,8 @@ export class BalancesResolver {
   }
 
   @ResolveField()
-  async liquid() {
-    return await this.nodeService.getLiquidBalance();
+  async liquid(@CurrentUser() { id }: UserId) {
+    return await this.nodeService.getLiquidBalance(id);
   }
 }
 

@@ -1129,6 +1129,7 @@ export type ServerAccount = {
   id: Scalars['String'];
   loggedIn: Scalars['Boolean'];
   name: Scalars['String'];
+  peerSwapEnabled: Scalars['Boolean'];
   twofaEnabled: Scalars['Boolean'];
   type: Scalars['String'];
 };
