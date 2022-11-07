@@ -389,6 +389,11 @@ export type GetPeerSwapPeersType = {
   peers: Array<PeerSwapPeerType>;
 };
 
+export type GetPeerSwapSwapType = {
+  __typename?: 'GetPeerSwapSwapType';
+  swap: PeerSwapSwapType;
+};
+
 export type GetPeerSwapSwapsType = {
   __typename?: 'GetPeerSwapSwapsType';
   swaps: Array<PeerSwapSwapType>;
@@ -492,7 +497,7 @@ export type Mutation = {
   createBoltzReverseSwap: CreateBoltzReverseSwapType;
   createInvoice: CreateInvoice;
   createMacaroon: CreateMacaroon;
-  createPeerSwapSwap: PeerSwapSwapType;
+  createPeerSwapSwap: GetPeerSwapSwapType;
   createThunderPoints: Scalars['Boolean'];
   fetchLnUrl: LnUrlRequest;
   getAuthToken: Scalars['Boolean'];
@@ -908,12 +913,14 @@ export type PeerSwapStatsType = {
 export type PeerSwapSwapType = {
   __typename?: 'PeerSwapSwapType';
   amount: Scalars['String'];
+  asset: Scalars['String'];
   cancelMessage: Scalars['String'];
   channelId: Scalars['String'];
   claimTxId: Scalars['String'];
   createdAt: Scalars['String'];
   id: Scalars['String'];
   initiatorNodeId: Scalars['String'];
+  lndChanId: Scalars['String'];
   openingTxId: Scalars['String'];
   peerNodeId: Scalars['String'];
   role: Scalars['String'];

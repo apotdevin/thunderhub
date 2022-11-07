@@ -46,7 +46,7 @@
     "@nestjs/schedule": "^2.1.0",
     "@nestjs/throttler": "^3.0.0",
     "@nestjs/websockets": "^9.0.11",
-    "@vilm3r/peerswap-client": "^0.1.2",
+    "@vilm3r/peerswap-client": "^1.0.0",
     "@visx/axis": "^2.12.2",
     "@visx/chord": "^2.10.0",
     "@visx/event": "^2.6.0",

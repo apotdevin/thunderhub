@@ -6,6 +6,7 @@ export const GET_PEER_SWAP_SWAPS = gql`
       swaps {
         id
         createdAt
+        asset
         type
         role
         state
@@ -16,6 +17,7 @@ export const GET_PEER_SWAP_SWAPS = gql`
         openingTxId
         claimTxId
         cancelMessage
+        lndChanId
       }
     }
   }

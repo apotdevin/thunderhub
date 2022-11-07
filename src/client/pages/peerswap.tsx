@@ -59,7 +59,7 @@ const PeerSwapView = () => {
   const beforeDate = useMemo(() => {
     const swaps = swapsQuery.data?.getPeerSwapSwaps.swaps || [];
     const lastSwap = swaps[0]?.createdAt
-      ? new Date(swaps[0]?.createdAt)
+      ? new Date(parseInt(swaps[0]?.createdAt) * 1000)
       : new Date();
 
     return `${format(lastSwap, 'dd/MM/yy')} -> Today`;

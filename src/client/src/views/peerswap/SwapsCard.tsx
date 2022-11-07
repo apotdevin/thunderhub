@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { PeerSwapSwapType } from '../../graphql/types';
 import { ArrowDown, ArrowUp } from 'react-feather';
 import styled from 'styled-components';
+import { format } from 'date-fns';
 import { chartColors, mediaWidths } from '../../styles/Themes';
 import { useGetChannelQuery } from '../../graphql/queries/__generated__/getChannel.generated';
 import { LoadingCard } from '../../components/loading/LoadingCard';
@@ -37,7 +38,11 @@ const S = {
   `,
 };
 
-const arrowStyle: React.CSSProperties = { top: '3px', marginRight: '3px', position: 'relative' };
+const arrowStyle: React.CSSProperties = {
+  top: '3px',
+  marginRight: '3px',
+  position: 'relative',
+};
 
 interface SwapsCardProps {
   swap: PeerSwapSwapType;
@@ -59,8 +64,6 @@ const ChannelAlias: FC<{ id: string }> = ({ id }) => {
     return <>Unknown</>;
   }
 
-  console.log(data?.getChannel.partner_node_policies?.node?.node);
-
   const alias =
     data?.getChannel.partner_node_policies?.node?.node?.alias || 'Unknown';
 
@@ -76,6 +79,7 @@ export const SwapsCard = ({
   const {
     id,
     createdAt,
+    asset,
     amount,
     channelId,
     cancelMessage,
@@ -100,7 +104,11 @@ export const SwapsCard = ({
       <>
         <Separation />
         {renderLine('Id:', id)}
-        {renderLine('Created:', createdAt)}
+        {renderLine(
+          'Created:',
+          format(new Date(parseInt(createdAt) * 1000), 'dd/MM/yy hh:mm:ss aa')
+        )}
+        {renderLine('Asset:', asset)}
         {renderLine('Type:', type)}
         {renderLine('Role:', role)}
         {renderLine('State:', state)}
@@ -135,10 +143,10 @@ export const SwapsCard = ({
                 style={arrowStyle}
               />
             )}
-            {type === 'swap in' ? 'Swap In' : 'Swap Out'}
+            {type === 'swap-in' ? 'Swap In' : 'Swap Out'}
           </DarkSubTitle>
           <DarkSubTitle>{`(${getDateDif(
-            new Date(createdAt).toString()
+            new Date(parseInt(createdAt) * 1000).toString()
           )} ago)`}</DarkSubTitle>
           <Price amount={amount} />
         </S.grid>

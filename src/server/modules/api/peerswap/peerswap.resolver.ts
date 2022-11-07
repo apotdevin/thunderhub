@@ -3,7 +3,7 @@ import { PeerSwapService } from '../../peerswap/peerswap.service';
 import {
   GetPeerSwapPeersType,
   GetPeerSwapSwapsType,
-  PeerSwapSwapType,
+  GetPeerSwapSwapType,
 } from './peerswap.types';
 
 @Resolver()
@@ -20,7 +20,7 @@ export class PeerSwapResolver {
     return await this.peerSwapService.getPeers();
   }
 
-  @Mutation(() => PeerSwapSwapType)
+  @Mutation(() => GetPeerSwapSwapType)
   async createPeerSwapSwap(
     @Args('amount') amount: number,
     @Args('asset') asset: string,

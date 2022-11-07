@@ -15,6 +15,7 @@ export type GetPeerSwapSwapsQuery = {
       __typename?: 'PeerSwapSwapType';
       id: string;
       createdAt: string;
+      asset: string;
       type: string;
       role: string;
       state: string;
@@ -25,6 +26,7 @@ export type GetPeerSwapSwapsQuery = {
       openingTxId: string;
       claimTxId: string;
       cancelMessage: string;
+      lndChanId: string;
     }>;
   };
 };
@@ -35,6 +37,7 @@ export const GetPeerSwapSwapsDocument = gql`
       swaps {
         id
         createdAt
+        asset
         type
         role
         state
@@ -45,6 +48,7 @@ export const GetPeerSwapSwapsDocument = gql`
         openingTxId
         claimTxId
         cancelMessage
+        lndChanId
       }
     }
   }

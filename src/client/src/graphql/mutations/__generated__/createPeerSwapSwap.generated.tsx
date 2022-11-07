@@ -13,19 +13,24 @@ export type CreatePeerSwapSwapMutationVariables = Types.Exact<{
 export type CreatePeerSwapSwapMutation = {
   __typename?: 'Mutation';
   createPeerSwapSwap: {
-    __typename?: 'PeerSwapSwapType';
-    id: string;
-    createdAt: string;
-    type: string;
-    role: string;
-    state: string;
-    initiatorNodeId: string;
-    peerNodeId: string;
-    amount: string;
-    channelId: string;
-    openingTxId: string;
-    claimTxId: string;
-    cancelMessage: string;
+    __typename?: 'GetPeerSwapSwapType';
+    swap: {
+      __typename?: 'PeerSwapSwapType';
+      id: string;
+      createdAt: string;
+      asset: string;
+      type: string;
+      role: string;
+      state: string;
+      initiatorNodeId: string;
+      peerNodeId: string;
+      amount: string;
+      channelId: string;
+      openingTxId: string;
+      claimTxId: string;
+      cancelMessage: string;
+      lndChanId: string;
+    };
   };
 };
 
@@ -42,18 +47,22 @@ export const CreatePeerSwapSwapDocument = gql`
       channelId: $channelId
       type: $type
     ) {
-      id
-      createdAt
-      type
-      role
-      state
-      initiatorNodeId
-      peerNodeId
-      amount
-      channelId
-      openingTxId
-      claimTxId
-      cancelMessage
+      swap {
+        id
+        createdAt
+        asset
+        type
+        role
+        state
+        initiatorNodeId
+        peerNodeId
+        amount
+        channelId
+        openingTxId
+        claimTxId
+        cancelMessage
+        lndChanId
+      }
     }
   }
 `;

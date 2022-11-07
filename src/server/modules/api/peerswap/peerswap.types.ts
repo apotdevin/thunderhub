@@ -7,6 +7,8 @@ export class PeerSwapSwapType {
   @Field()
   createdAt: string;
   @Field()
+  asset: string;
+  @Field()
   type: string;
   @Field()
   role: string;
@@ -26,6 +28,8 @@ export class PeerSwapSwapType {
   claimTxId: string;
   @Field()
   cancelMessage: string;
+  @Field()
+  lndChanId: string;
 }
 
 @ObjectType()
@@ -76,6 +80,12 @@ export class PeerSwapPeerType {
 export class GetPeerSwapSwapsType {
   @Field(() => [PeerSwapSwapType])
   swaps: PeerSwapSwapType[];
+}
+
+@ObjectType()
+export class GetPeerSwapSwapType {
+  @Field(() => PeerSwapSwapType)
+  swap: PeerSwapSwapType;
 }
 
 @ObjectType()

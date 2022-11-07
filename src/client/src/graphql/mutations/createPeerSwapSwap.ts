@@ -13,18 +13,22 @@ export const CREATE_INVOICE = gql`
       channelId: $channelId
       type: $type
     ) {
-      id
-      createdAt
-      type
-      role
-      state
-      initiatorNodeId
-      peerNodeId
-      amount
-      channelId
-      openingTxId
-      claimTxId
-      cancelMessage
+      swap {
+        id
+        createdAt
+        asset
+        type
+        role
+        state
+        initiatorNodeId
+        peerNodeId
+        amount
+        channelId
+        openingTxId
+        claimTxId
+        cancelMessage
+        lndChanId
+      }
     }
   }
 `;

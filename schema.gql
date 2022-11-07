@@ -334,6 +334,10 @@ type GetPeerSwapPeersType {
   peers: [PeerSwapPeerType!]!
 }
 
+type GetPeerSwapSwapType {
+  swap: PeerSwapSwapType!
+}
+
 type GetPeerSwapSwapsType {
   swaps: [PeerSwapSwapType!]!
 }
@@ -426,7 +430,7 @@ type Mutation {
   createBoltzReverseSwap(address: String, amount: Float!): CreateBoltzReverseSwapType!
   createInvoice(amount: Float!, description: String, includePrivate: Boolean, secondsUntil: Float): CreateInvoice!
   createMacaroon(permissions: NetworkInfoInput!): CreateMacaroon!
-  createPeerSwapSwap(amount: Float!, asset: String!, channelId: String!, type: String!): PeerSwapSwapType!
+  createPeerSwapSwap(amount: Float!, asset: String!, channelId: String!, type: String!): GetPeerSwapSwapType!
   createThunderPoints(alias: String!, id: String!, public_key: String!, uris: [String!]!): Boolean!
   fetchLnUrl(url: String!): LnUrlRequest!
   getAuthToken(cookie: String): Boolean!
@@ -643,12 +647,14 @@ type PeerSwapStatsType {
 
 type PeerSwapSwapType {
   amount: String!
+  asset: String!
   cancelMessage: String!
   channelId: String!
   claimTxId: String!
   createdAt: String!
   id: String!
   initiatorNodeId: String!
+  lndChanId: String!
   openingTxId: String!
   peerNodeId: String!
   role: String!
