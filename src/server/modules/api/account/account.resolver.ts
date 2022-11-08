@@ -32,7 +32,7 @@ export class AccountResolver {
         loggedIn: true,
         type: 'sso',
         twofaEnabled: false,
-        peerSwapEnabled: currentAccount.peerSwapSocket !== '',
+        peerSwapEnabled: currentAccount?.peerSwapSocket !== '',
       };
     }
 
@@ -42,7 +42,7 @@ export class AccountResolver {
       loggedIn: true,
       type: 'server',
       twofaEnabled: !!currentAccount.twofaSecret,
-      peerSwapEnabled: currentAccount.peerSwapSocket !== '',
+      peerSwapEnabled: currentAccount?.peerSwapSocket !== '',
     };
   }
 
@@ -69,7 +69,7 @@ export class AccountResolver {
             loggedIn: currentAccount?.hash === key,
             type: key === 'sso' ? 'sso' : 'server',
             twofaEnabled: false,
-            peerSwapEnabled: currentAccount.peerSwapSocket !== '',
+            peerSwapEnabled: currentAccount?.peerSwapSocket !== '',
           });
         }
       }
