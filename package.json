@@ -29,6 +29,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "upgrade-latest": "npx npm-check -u",
     "update": "sh ./scripts/updateToLatest.sh",
+    "build:image": "docker build --pull --rm -f Dockerfile -t thunderhub:balances '.'",
+    "build:image:base": "docker build --pull --rm -f Dockerfile --build-arg BASE_PATH=/thub -t thunderhub:balances .",
     "prepare": "husky install"
   },
   "dependencies": {
