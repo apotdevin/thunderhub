@@ -94,7 +94,7 @@ export class AmbossService {
       { input }
     );
 
-    if (!data?.pushBalances || error) {
+    if (!data?.pushNodeBalances || error) {
       this.logger.error('Error pushing balances to Amboss', {
         error,
         data,
