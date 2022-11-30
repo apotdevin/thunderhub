@@ -91,8 +91,8 @@ export const pingHealthCheckMutation = gql`
   }
 `;
 
-export const pushBalancesMutation = gql`
-  mutation PushBalances($input: BalancePushInput!) {
-    pushBalances(input: $input)
+export const pushNodeBalancesMutation = gql`
+  mutation PushNodeBalances($input: ChannelBalancePushInput!) {
+    pushNodeBalances(input: $input)
   }
 `;
