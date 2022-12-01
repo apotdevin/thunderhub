@@ -385,9 +385,9 @@ export class AmbossService {
                   local: amounts.local + '',
                   total: amounts.total + '',
                 };
-
-                message += `${amounts.local}${amounts.total}`;
               }
+
+              message += `${pendingChannelBalance.local}${pendingChannelBalance.total}`;
             }
 
             const allChannels = [];
