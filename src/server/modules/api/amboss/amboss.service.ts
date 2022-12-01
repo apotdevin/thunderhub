@@ -399,11 +399,19 @@ export class AmbossService {
 
               if (!channels.channels.length) return;
 
-              const mapped = channels.channels.map(c => ({
-                chan_id: c.id,
-                balance: c.local_balance + '',
-                capacity: c.capacity + '',
-              }));
+              const mapped = channels.channels.map(c => {
+                const heldAmount = c.pending_payments.reduce((p, pp) => {
+                  if (!pp) return p;
+                  if (!pp.is_outgoing) return p;
+                  return p + pp.tokens;
+                }, 0);
+
+                return {
+                  chan_id: c.id,
+                  balance: (c.local_balance + heldAmount).toString(),
+                  capacity: c.capacity + '',
+                };
+              });
 
               allChannels.push(...mapped);
             }
@@ -416,11 +424,19 @@ export class AmbossService {
 
               if (!privateChannels.channels.length) return;
 
-              const mapped = privateChannels.channels.map(c => ({
-                chan_id: c.id,
-                balance: c.local_balance + '',
-                capacity: c.capacity + '',
-              }));
+              const mapped = privateChannels.channels.map(c => {
+                const heldAmount = c.pending_payments.reduce((p, pp) => {
+                  if (!pp) return p;
+                  if (!pp.is_outgoing) return p;
+                  return p + pp.tokens;
+                }, 0);
+
+                return {
+                  chan_id: c.id,
+                  balance: (c.local_balance + heldAmount).toString(),
+                  capacity: c.capacity + '',
+                };
+              });
 
               allChannels.push(...mapped);
             }
