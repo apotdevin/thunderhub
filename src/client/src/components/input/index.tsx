@@ -82,6 +82,7 @@ interface InputCompProps {
   fullWidth?: boolean;
   mobileFullWidth?: boolean;
   maxWidth?: string;
+  autoFocus?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -103,9 +104,11 @@ export const Input = ({
   onBlur,
   onKeyDown,
   onEnter,
+  autoFocus,
 }: InputCompProps) => {
   return (
     <StyledInput
+      autoFocus={autoFocus}
       type={type}
       placeholder={placeholder}
       value={value}
