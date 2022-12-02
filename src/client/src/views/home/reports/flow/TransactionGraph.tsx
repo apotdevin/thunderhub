@@ -120,7 +120,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
           priceLabel={type !== 'amount'}
           data={finalArray.map(f => {
             return {
-              Invoices: f?.[type] || 0,
+              [showPay ? 'Payments' : 'Invoices']: f?.[type] || 0,
               date: f.date,
             };
           })}
