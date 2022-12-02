@@ -84,6 +84,7 @@ export const Login = ({ account }: LoginProps) => {
         <SingleLine>
           <Sub4Title>Password</Sub4Title>
           <Input
+            autoFocus
             maxWidth="800px"
             type={'password'}
             withMargin={'0 0 8px 16px'}
