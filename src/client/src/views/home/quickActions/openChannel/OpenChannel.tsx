@@ -47,7 +47,7 @@ export const OpenChannelCard = ({
   const [isNewPeer, setIsNewPeer] = useState<boolean>(false);
   const [fee, setFee] = useState(0);
   const [publicKey, setPublicKey] = useState(initialPublicKey);
-  const [privateChannel, setPrivateChannel] = useState(false);
+  const [privateChannel, setPrivateChannel] = useState(true);
   const [type, setType] = useState('fee');
 
   const [openChannel, { loading }] = useOpenChannelMutation({
