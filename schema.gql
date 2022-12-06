@@ -339,8 +339,20 @@ type Hops {
 }
 
 type InvoicePayment {
+  canceled_at: String
+  confirmed_at: String
+  created_at: String!
+  created_height: Float!
   in_channel: String!
+  is_canceled: Boolean!
+  is_confirmed: Boolean!
+  is_held: Boolean!
   messages: MessageType
+  mtokens: String!
+  pending_index: Float
+  timeout: Float!
+  tokens: Float!
+  total_mtokens: String
 }
 
 type InvoiceType {
@@ -413,7 +425,7 @@ type Mutation {
   bosRebalance(avoid: [String!], in_through: String, max_fee: Float, max_fee_rate: Float, max_rebalance: Float, node: String, out_inbound: Float, out_through: String, timeout_minutes: Float): BosRebalanceResult!
   claimBoltzTransaction(destination: String!, fee: Float!, preimage: String!, privateKey: String!, redeem: String!, transaction: String!): String!
   closeChannel(forceClose: Boolean, id: String!, targetConfirmations: Float, tokensPerVByte: Float): OpenOrCloseChannel!
-  createAddress: String!
+  createAddress(type: String = "p2wpkh"): String!
   createBaseInvoice(amount: Float!): BaseInvoice!
   createBoltzReverseSwap(address: String, amount: Float!): CreateBoltzReverseSwapType!
   createInvoice(amount: Float!, description: String, includePrivate: Boolean, secondsUntil: Float): CreateInvoice!

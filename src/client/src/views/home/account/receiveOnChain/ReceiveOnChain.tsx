@@ -8,6 +8,25 @@ import { Copy } from 'react-feather';
 import { getErrorContent } from '../../../../utils/error';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { mediaWidths } from '../../../../styles/Themes';
+import { SmallSelectWithValue } from '../../../../components/select';
+import {
+  ResponsiveLine,
+  SubTitle,
+} from '../../../../components/generic/Styled';
+
+const S = {
+  row: styled.div`
+    display: grid;
+    align-items: center;
+    gap: 16px;
+    grid-template-columns: 1fr 2fr;
+
+    @media (${mediaWidths.mobile}) {
+      width: 100%;
+      display: block;
+    }
+  `,
+};
 
 const Responsive = styled.div`
   display: flex;
@@ -45,7 +64,14 @@ const Column = styled.div`
   align-items: center;
 `;
 
+const options = [
+  { label: 'p2wpkh (Default)', value: 'p2wpkh' },
+  { label: 'p2tr (Taproot)', value: 'p2tr' },
+  { label: 'np2wpkh', value: 'np2wpkh' },
+];
+
 export const ReceiveOnChainCard = () => {
+  const [type, setType] = useState(options[0]);
   const [received, setReceived] = useState(false);
 
   const [createAddress, { data, loading }] = useCreateAddressMutation({
@@ -77,17 +103,30 @@ export const ReceiveOnChainCard = () => {
           </Column>
         </Responsive>
       ) : (
-        <ColorButton
-          onClick={() => createAddress()}
-          disabled={received}
-          withMargin={'0 0 0 16px'}
-          mobileMargin={'16px 0 0'}
-          arrow={true}
-          loading={loading}
-          mobileFullWidth={true}
-        >
-          Create Address
-        </ColorButton>
+        <>
+          <ResponsiveLine>
+            <S.row>
+              <SubTitle>Address Type:</SubTitle>
+              <SmallSelectWithValue
+                callback={e => setType((e[0] || options[1]) as any)}
+                options={options}
+                value={type}
+                isClearable={false}
+              />
+            </S.row>
+            <ColorButton
+              onClick={() => createAddress({ variables: { type: type.value } })}
+              disabled={received}
+              withMargin={'0 0 0 16px'}
+              mobileMargin={'16px 0 0'}
+              arrow={true}
+              loading={loading}
+              mobileFullWidth={true}
+            >
+              Create Address
+            </ColorButton>
+          </ResponsiveLine>
+        </>
       )}
     </>
   );

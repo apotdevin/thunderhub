@@ -25,6 +25,18 @@ export const GET_INVOICES = gql`
         type
         date
         payments {
+          canceled_at
+          confirmed_at
+          created_at
+          created_height
+          is_canceled
+          is_confirmed
+          is_held
+          mtokens
+          pending_index
+          timeout
+          tokens
+          total_mtokens
           in_channel
           messages {
             message

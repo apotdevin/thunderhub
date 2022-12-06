@@ -395,8 +395,20 @@ export type Hops = {
 
 export type InvoicePayment = {
   __typename?: 'InvoicePayment';
+  canceled_at?: Maybe<Scalars['String']>;
+  confirmed_at?: Maybe<Scalars['String']>;
+  created_at: Scalars['String'];
+  created_height: Scalars['Float'];
   in_channel: Scalars['String'];
+  is_canceled: Scalars['Boolean'];
+  is_confirmed: Scalars['Boolean'];
+  is_held: Scalars['Boolean'];
   messages?: Maybe<MessageType>;
+  mtokens: Scalars['String'];
+  pending_index?: Maybe<Scalars['Float']>;
+  timeout: Scalars['Float'];
+  tokens: Scalars['Float'];
+  total_mtokens?: Maybe<Scalars['String']>;
 };
 
 export type InvoiceType = {
@@ -543,6 +555,10 @@ export type MutationCloseChannelArgs = {
   id: Scalars['String'];
   targetConfirmations?: InputMaybe<Scalars['Float']>;
   tokensPerVByte?: InputMaybe<Scalars['Float']>;
+};
+
+export type MutationCreateAddressArgs = {
+  type?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationCreateBaseInvoiceArgs = {

@@ -5,10 +5,16 @@ import { UserId } from '../../security/security.types';
 import { sortBy } from 'lodash';
 import { ChainAddressSend, ChainTransaction, Utxo } from './chain.types';
 import { SendToChainAddressArgs } from 'lightning';
+import { Logger } from 'winston';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Inject } from '@nestjs/common';
 
 @Resolver()
 export class ChainResolver {
-  constructor(private nodeService: NodeService) {}
+  constructor(
+    private nodeService: NodeService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+  ) {}
 
   @Query(() => [ChainTransaction])
   async getChainTransactions(@CurrentUser() { id }: UserId) {
@@ -29,9 +35,22 @@ export class ChainResolver {
   }
 
   @Mutation(() => String)
-  async createAddress(@CurrentUser() { id }: UserId) {
-    const address = await this.nodeService.createChainAddress(id);
-    return address.address;
+  async createAddress(
+    @Args('type', { defaultValue: 'p2wpkh' })
+    type: string,
+    @CurrentUser() { id }: UserId
+  ) {
+    const isValidType = ['np2wpkh', 'p2tr', 'p2wpkh'].includes(type);
+
+    this.logger.debug('Creating onchain address', { type });
+
+    const { address } = await this.nodeService.createChainAddress(
+      id,
+      true,
+      (isValidType ? type : 'p2wpkh') as any
+    );
+
+    return address;
   }
 
   @Mutation(() => ChainAddressSend)
