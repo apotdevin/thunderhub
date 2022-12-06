@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { NodeModule } from '../../node/node.module';
-import { ChannelResolver, ChannelsResolver } from './channels.resolver';
+import { ChannelResolver } from './channel.resolver';
+import { ChannelsResolver } from './channels.resolver';
 
 @Module({
   imports: [NodeModule],
