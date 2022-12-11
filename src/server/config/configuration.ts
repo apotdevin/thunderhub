@@ -88,7 +88,7 @@ export default (): ConfigType => {
     mempool,
     amboss: 'https://api.amboss.space/graphql',
     fees: `${mempool}/api/v1/fees/recommended`,
-    tbase: 'https://api.thunderbase.io/v1',
+    tbase: 'https://api.thunderhub.io/api/graphql',
     ticker: 'https://blockchain.info/ticker',
     github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
     lnMarkets: 'https://api.lnmarkets.com/v1',
