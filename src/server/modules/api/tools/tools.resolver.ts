@@ -18,15 +18,22 @@ export class ToolsResolver {
     @Args('backup') backupString: string,
     @CurrentUser() { id }: UserId
   ) {
-    let backupObj = { backup: '', channels: [] };
-    try {
-      backupObj = JSON.parse(backupString);
-    } catch (error: any) {
-      this.logger.error('Corrupt backup file', { error });
-      throw new Error('Corrupt backup file');
-    }
+    const { channels } = await this.nodeService.getChannels(id);
 
-    const { is_valid } = await this.nodeService.verifyBackups(id, backupObj);
+    if (!channels.length) throw new Error('No channels to verify found.');
+
+    const channelInfo = channels.map(
+      ({ transaction_id, transaction_vout }) => ({
+        transaction_id,
+        transaction_vout,
+      })
+    );
+
+    const { is_valid } = await this.nodeService.verifyBackups(id, {
+      backup: backupString,
+      channels: channelInfo,
+    });
+
     return is_valid;
   }
 
@@ -50,8 +57,8 @@ export class ToolsResolver {
 
   @Query(() => String)
   async getBackups(@CurrentUser() { id }: UserId) {
-    const backups = await this.nodeService.getBackups(id);
-    return JSON.stringify(backups);
+    const { backup } = await this.nodeService.getBackups(id);
+    return backup;
   }
 
   @Query(() => String)

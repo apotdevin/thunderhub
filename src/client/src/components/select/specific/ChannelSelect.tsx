@@ -1,7 +1,7 @@
 import React from 'react';
 import { shorten } from '../../../../src/components/generic/helpers';
 import { Channel } from '../../../../src/graphql/types';
-import { useGetChannelsQuery } from '../../../../src/graphql/queries/__generated__/getChannels.generated';
+import { useGetChannelsWithPeersQuery } from '../../../../src/graphql/queries/__generated__/getChannels.generated';
 import { SelectWithDeco } from '../SelectWithDeco';
 import { ValueProp } from '..';
 
@@ -18,7 +18,7 @@ export const ChannelSelect = ({
   maxWidth,
   callback,
 }: ChannelSelectProps) => {
-  const { data, loading } = useGetChannelsQuery();
+  const { data, loading } = useGetChannelsWithPeersQuery();
 
   const channels = data?.getChannels || [];
 

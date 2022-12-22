@@ -35,6 +35,18 @@ export type GetInvoicesQuery = {
       date: string;
       payments: Array<{
         __typename?: 'InvoicePayment';
+        canceled_at?: string | null;
+        confirmed_at?: string | null;
+        created_at: string;
+        created_height: number;
+        is_canceled: boolean;
+        is_confirmed: boolean;
+        is_held: boolean;
+        mtokens: string;
+        pending_index?: number | null;
+        timeout: number;
+        tokens: number;
+        total_mtokens?: string | null;
         in_channel: string;
         messages?: {
           __typename?: 'MessageType';
@@ -70,6 +82,18 @@ export const GetInvoicesDocument = gql`
         type
         date
         payments {
+          canceled_at
+          confirmed_at
+          created_at
+          created_height
+          is_canceled
+          is_confirmed
+          is_held
+          mtokens
+          pending_index
+          timeout
+          tokens
+          total_mtokens
           in_channel
           messages {
             message

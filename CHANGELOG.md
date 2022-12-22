@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.18](https://github.com/apotdevin/thunderhub/compare/v0.13.17...v0.13.18) (2022-12-06)
+
+
+### Improvements
+
+* extra queries and changes ([cb61a50](https://github.com/apotdevin/thunderhub/commit/cb61a5073a0f67730704ffa55abb214fde8b0ec4))
+
+### [0.13.17](https://github.com/apotdevin/thunderhub/compare/v0.13.16...v0.13.17) (2022-12-06)
+
+
+### Features
+
+* autofocus password input ([#492](https://github.com/apotdevin/thunderhub/issues/492)) ([c693fa1](https://github.com/apotdevin/thunderhub/commit/c693fa1d09222369ed7289c3075219df1dbcefe5))
+
+
+### Bug Fixes
+
+* balance calculation ([66735bd](https://github.com/apotdevin/thunderhub/commit/66735bd2e37ac091ce9c9611265f6a7dd4c77863))
+* invalid message ([8157d60](https://github.com/apotdevin/thunderhub/commit/8157d60a22909faca0fd692490084cd5c8435db5))
+* tooltip key in tx bar chart ([#491](https://github.com/apotdevin/thunderhub/issues/491)) ([ded19a1](https://github.com/apotdevin/thunderhub/commit/ded19a1d36f4911293a89937f0d2e09eeb45c912))
+* wrong error handling ([f310785](https://github.com/apotdevin/thunderhub/commit/f310785b165d61f66c1ebea963aff972171dca9c))
+
+
+### Docs
+
+* extra scripts ([a53918e](https://github.com/apotdevin/thunderhub/commit/a53918e30d7d05df5dddbbc938edaff30e0fc8a2))
+
+
+### Improvements
+
+* balance changes ([acdf43d](https://github.com/apotdevin/thunderhub/commit/acdf43da20426869f445de5632fb8185c86f526f))
+* improvements ([3c9fa41](https://github.com/apotdevin/thunderhub/commit/3c9fa41ab451f4db202eaff00e68b1a0d440e273))
+* npm audit fix ([8635881](https://github.com/apotdevin/thunderhub/commit/8635881a8251518561e2ad178fbf7a8954bb6836))
+
 ### [0.13.16](https://github.com/apotdevin/thunderhub/compare/v0.13.15...v0.13.16) (2022-09-13)
 
 

@@ -1,30 +1,63 @@
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { useEffect, useState } from 'react';
+import { useState, VFC } from 'react';
 import { InputWithDeco } from '../../../../components/input/InputWithDeco';
 import { ChannelSelect } from '../../../../components/select/specific/ChannelSelect';
-import { useDecodeRequestLazyQuery } from '../../../../graphql/queries/__generated__/decodeRequest.generated';
+import { useDecodeRequestQuery } from '../../../../graphql/queries/__generated__/decodeRequest.generated';
 import { renderLine } from '../../../../components/generic/helpers';
 import { Price } from '../../../../components/price/Price';
 import { usePayMutation } from '../../../../graphql/mutations/__generated__/pay.generated';
 import { Separation } from '../../../../components/generic/Styled';
+import { Center } from '../../../../components/typography/Styled';
+import { LoadingCard } from '../../../../components/loading/LoadingCard';
 
 interface PayProps {
   predefinedRequest?: string;
   payCallback?: () => void;
 }
 
+const DecodeInvoice: VFC<{ invoice: string | undefined | null }> = ({
+  invoice,
+}) => {
+  const { data, loading } = useDecodeRequestQuery({
+    variables: { request: invoice || '' },
+    skip: !invoice,
+    onError: () => toast.error('Error decoding invoice'),
+  });
+
+  if (loading) {
+    return (
+      <Center>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          Decoding
+          <LoadingCard noCard />
+        </div>
+      </Center>
+    );
+  }
+
+  if (!data?.decodeRequest || !invoice) return null;
+
+  const { description, tokens, destination_node } = data.decodeRequest;
+
+  const { alias } = destination_node?.node || { alias: 'Unknown' };
+
+  return (
+    <>
+      {renderLine('Description', description)}
+      {renderLine('Value', <Price amount={tokens} />)}
+      {renderLine('Destination', alias)}
+      <Separation />
+    </>
+  );
+};
+
 export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
   const [request, setRequest] = useState<string>(predefinedRequest || '');
   const [peers, setPeers] = useState<string[]>([]);
   const [fee, setFee] = useState<number>(10);
   const [paths, setPaths] = useState<number>(1);
-
-  const [decode, { data, loading: decodeLoading }] = useDecodeRequestLazyQuery({
-    fetchPolicy: 'network-only',
-    onError: () => toast.error('Error decoding invoice'),
-  });
 
   const [pay, { loading }] = usePayMutation({
     onCompleted: () => {
@@ -34,12 +67,6 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
     },
     onError: error => toast.error(getErrorContent(error)),
   });
-
-  useEffect(() => {
-    if (predefinedRequest) {
-      decode({ variables: { request: predefinedRequest } });
-    }
-  }, []);
 
   const handleEnter = () => {
     if (loading || !request) return;
@@ -53,27 +80,6 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
     });
   };
 
-  const renderDecoded = () => {
-    if (decodeLoading) {
-      return <>Decoding invoice...</>;
-    }
-
-    if (!data?.decodeRequest) return null;
-
-    const { description, tokens, destination_node } = data.decodeRequest;
-
-    const { alias } = destination_node?.node || { alias: 'Unknown' };
-
-    return (
-      <>
-        {renderLine('Description', description)}
-        {renderLine('Value', <Price amount={tokens} />)}
-        {renderLine('Destination', alias)}
-        <Separation />
-      </>
-    );
-  };
-
   return (
     <>
       {!predefinedRequest && (
@@ -85,15 +91,10 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
             inputCallback={value => setRequest(value)}
             onEnter={() => handleEnter()}
             inputMaxWidth={'300px'}
-            blurCallback={() => {
-              if (!request) return;
-              decode({ variables: { request } });
-            }}
           />
           <Separation />
         </>
       )}
-      {renderDecoded()}
       <InputWithDeco
         title={'Max Fee'}
         value={fee}
@@ -121,6 +122,7 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
         callback={p => setPeers(p.map(peer => peer.id))}
       />
       <Separation />
+      <DecodeInvoice invoice={request || predefinedRequest} />
       <ColorButton
         loading={loading}
         disabled={loading || !request}

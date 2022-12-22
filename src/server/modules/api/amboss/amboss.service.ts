@@ -9,13 +9,14 @@ import { AccountsService } from '../../accounts/accounts.service';
 import { FetchService } from '../../fetch/fetch.service';
 import {
   pingHealthCheckMutation,
-  pushBalancesMutation,
+  pushNodeBalancesMutation,
   saveBackupMutation,
 } from './amboss.gql';
 import { auto, map, each } from 'async';
 import { NodeService } from '../../node/node.service';
 import { UserConfigService } from '../userConfig/userConfig.service';
 import { getSHA256Hash } from 'src/server/utils/crypto';
+import { orderBy } from 'lodash';
 
 const ONE_MINUTE = 60 * 1000;
 
@@ -24,6 +25,24 @@ type NodeType = {
   name: string;
   pubkey: string;
   lnd: any;
+};
+
+type ChannelBalanceInputType = {
+  signature: string;
+  timestamp: string;
+  pendingChannelBalance?: {
+    local: string;
+    total: string;
+  };
+  onchainBalance?: {
+    confirmed: string;
+    pending: string;
+  };
+  channelBalance?: {
+    local: string;
+    total: string;
+  };
+  channels: { balance: string; capacity: string; chan_id: string }[];
 };
 
 @Injectable()
@@ -68,19 +87,14 @@ export class AmbossService {
     }
   }
 
-  async pushBalancesToAmboss(
-    timestamp: string,
-    signature: string,
-    onchainBalance: string,
-    channels: { balance: string; capacity: string; chan_id: string }[]
-  ) {
+  async pushBalancesToAmboss(input: ChannelBalanceInputType) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
       this.ambossUrl,
-      pushBalancesMutation,
-      { input: { signature, timestamp, channels, onchainBalance } }
+      pushNodeBalancesMutation,
+      { input }
     );
 
-    if (!data?.pushBalances || error) {
+    if (!data?.pushNodeBalances || error) {
       this.logger.error('Error pushing balances to Amboss', {
         error,
         data,
@@ -335,8 +349,45 @@ export class AmbossService {
               const { pending_chain_balance } =
                 await this.nodeService.getPendingChainBalance(node.id);
 
-              onchain = (chain_balance + pending_chain_balance).toString();
-              message += onchain;
+              onchain = {
+                confirmed: chain_balance + '',
+                pending: pending_chain_balance + '',
+              };
+
+              message += `${chain_balance}${pending_chain_balance}`;
+            }
+
+            let pendingChannelBalance;
+
+            if (channelPushEnabled) {
+              pendingChannelBalance = {
+                local: '0',
+                total: '0',
+              };
+
+              const { pending_channels } =
+                await this.nodeService.getPendingChannels(node.id);
+
+              if (pending_channels.length) {
+                const amounts = pending_channels.reduce(
+                  (p, c) => {
+                    if (!c) return p;
+
+                    const local = p.local + c.local_balance;
+                    const total = p.total + c.capacity;
+
+                    return { local, total };
+                  },
+                  { local: 0, total: 0 }
+                );
+
+                pendingChannelBalance = {
+                  local: amounts.local + '',
+                  total: amounts.total + '',
+                };
+              }
+
+              message += `${pendingChannelBalance.local}${pendingChannelBalance.total}`;
             }
 
             const allChannels = [];
@@ -348,11 +399,19 @@ export class AmbossService {
 
               if (!channels.channels.length) return;
 
-              const mapped = channels.channels.map(c => ({
-                chan_id: c.id,
-                balance: c.local_balance + '',
-                capacity: c.capacity + '',
-              }));
+              const mapped = channels.channels.map(c => {
+                const heldAmount = c.pending_payments.reduce((p, pp) => {
+                  if (!pp) return p;
+                  if (!pp.is_outgoing) return p;
+                  return p + pp.tokens;
+                }, 0);
+
+                return {
+                  chan_id: c.id,
+                  balance: (c.local_balance + heldAmount).toString(),
+                  capacity: c.capacity + '',
+                };
+              });
 
               allChannels.push(...mapped);
             }
@@ -365,17 +424,27 @@ export class AmbossService {
 
               if (!privateChannels.channels.length) return;
 
-              const mapped = privateChannels.channels.map(c => ({
-                chan_id: c.id,
-                balance: c.local_balance + '',
-                capacity: c.capacity + '',
-              }));
+              const mapped = privateChannels.channels.map(c => {
+                const heldAmount = c.pending_payments.reduce((p, pp) => {
+                  if (!pp) return p;
+                  if (!pp.is_outgoing) return p;
+                  return p + pp.tokens;
+                }, 0);
+
+                return {
+                  chan_id: c.id,
+                  balance: (c.local_balance + heldAmount).toString(),
+                  capacity: c.capacity + '',
+                };
+              });
 
               allChannels.push(...mapped);
             }
 
-            if (allChannels.length) {
-              const infoString = allChannels.reduce((p, c) => {
+            const sortedChannels = orderBy(allChannels, ['chan_id'], ['desc']);
+
+            if (sortedChannels.length) {
+              const infoString = sortedChannels.reduce((p, c) => {
                 return p + `${c.chan_id}${c.balance}${c.capacity || ''}`;
               }, '');
 
@@ -392,17 +461,19 @@ export class AmbossService {
 
             this.logger.info('Push Info', {
               onchainBalance: !!onchain,
-              amountOfChannels: allChannels.length,
+              pendingChannelBalance: !!pendingChannelBalance,
+              amountOfChannels: sortedChannels.length,
               finalMessage,
               signature,
             });
 
-            await this.pushBalancesToAmboss(
+            await this.pushBalancesToAmboss({
               timestamp,
               signature,
-              onchain,
-              allChannels
-            );
+              pendingChannelBalance,
+              onchainBalance: onchain,
+              channels: sortedChannels,
+            });
           });
         },
       ],

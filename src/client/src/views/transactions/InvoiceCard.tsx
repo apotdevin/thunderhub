@@ -52,17 +52,17 @@ const ChannelAlias: FC<{ id: string }> = ({ id }) => {
   });
 
   if (loading) {
-    return <>{renderLine('Peer', <LoadingCard noCard={true} />)}</>;
+    return <>{renderLine('Incoming Peer', <LoadingCard noCard={true} />)}</>;
   }
 
   if (error) {
-    return <>{renderLine('Peer', 'Unknown')}</>;
+    return <>{renderLine('Incoming Peer', 'Unknown')}</>;
   }
 
   const alias =
     data?.getChannel.partner_node_policies?.node?.node?.alias || 'Unknown';
 
-  return <>{renderLine('Peer', alias)}</>;
+  return <>{renderLine('Incoming Peer', alias)}</>;
 };
 
 export const InvoiceCard = ({
@@ -89,9 +89,6 @@ export const InvoiceCard = ({
     payments,
   } = invoice;
 
-  const inChannels = payments.map(p => p?.in_channel).filter(Boolean);
-  const hasChannels = !!inChannels.length;
-
   const texts = payments.map(p => p?.messages?.message).filter(Boolean);
   const hasMessages = !!texts.length;
 
@@ -103,33 +100,29 @@ export const InvoiceCard = ({
     }
   };
 
-  const renderMessages = () => (
-    <>
-      {texts.map((t, index) => (
-        <Fragment key={`${index}-${t}`}>{renderLine('Message', t)}</Fragment>
-      ))}
-      <Separation />
-    </>
-  );
-
-  const renderInChannels = () => (
-    <>
-      {inChannels.map((t, index) => (
-        <Fragment key={`${index}-${t}`}>
-          {renderLine('In Through', t)}
-          {t && <ChannelAlias id={t} />}
-        </Fragment>
-      ))}
-      <Separation />
-    </>
-  );
+  const renderPayments = () => {
+    return (
+      <>
+        {payments.map((p, index) => {
+          return (
+            <Fragment key={index}>
+              {renderLine('Sats', <Price amount={p.tokens} />)}
+              {renderLine('Incoming Channel', p.in_channel)}
+              {<ChannelAlias id={p.in_channel} />}
+              {renderLine('Message', p.messages?.message || '-')}
+              <Separation />
+            </Fragment>
+          );
+        })}
+      </>
+    );
+  };
 
   const renderDetails = () => {
     return (
       <>
         <Separation />
-        {hasMessages && renderMessages()}
-        {hasChannels && renderInChannels()}
+        {renderPayments()}
         {is_confirmed &&
           renderLine(
             'Confirmed:',

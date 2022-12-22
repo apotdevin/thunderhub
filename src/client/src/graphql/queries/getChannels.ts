@@ -58,3 +58,16 @@ export const GET_CHANNELS = gql`
     }
   }
 `;
+
+export const GET_CHANNELS_WITH_PEERS = gql`
+  query GetChannelsWithPeers($active: Boolean) {
+    getChannels(active: $active) {
+      partner_public_key
+      partner_node_info {
+        node {
+          alias
+        }
+      }
+    }
+  }
+`;

@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type CreateAddressMutationVariables = Types.Exact<{
-  [key: string]: never;
+  type?: Types.InputMaybe<Types.Scalars['String']>;
 }>;
 
 export type CreateAddressMutation = {
@@ -13,8 +13,8 @@ export type CreateAddressMutation = {
 };
 
 export const CreateAddressDocument = gql`
-  mutation CreateAddress {
-    createAddress
+  mutation CreateAddress($type: String) {
+    createAddress(type: $type)
   }
 `;
 export type CreateAddressMutationFn = Apollo.MutationFunction<
@@ -35,6 +35,7 @@ export type CreateAddressMutationFn = Apollo.MutationFunction<
  * @example
  * const [createAddressMutation, { data, loading, error }] = useCreateAddressMutation({
  *   variables: {
+ *      type: // value for 'type'
  *   },
  * });
  */

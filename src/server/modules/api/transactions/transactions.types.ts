@@ -9,6 +9,30 @@ export class MessageType {
 
 @ObjectType()
 export class InvoicePayment {
+  @Field({ nullable: true })
+  canceled_at: string;
+  @Field({ nullable: true })
+  confirmed_at: string;
+  @Field()
+  created_at: string;
+  @Field()
+  created_height: number;
+  @Field()
+  is_canceled: boolean;
+  @Field()
+  is_confirmed: boolean;
+  @Field()
+  is_held: boolean;
+  @Field()
+  mtokens: string;
+  @Field({ nullable: true })
+  pending_index: number;
+  @Field()
+  timeout: number;
+  @Field()
+  tokens: number;
+  @Field({ nullable: true })
+  total_mtokens: string;
   @Field()
   in_channel: string;
   @Field({ nullable: true })
