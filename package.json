@@ -77,7 +77,7 @@
     "jest-fetch-mock": "^3.0.3",
     "js-cookie": "^3.0.1",
     "js-yaml": "^4.1.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lightning": "^6.3.2",
     "lodash": "^4.17.21",
     "nest-winston": "^1.8.0",
