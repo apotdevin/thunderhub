@@ -57,7 +57,7 @@
     "@visx/shape": "^2.12.2",
     "@visx/tooltip": "^2.16.0",
     "apollo-server-express": "^3.11.1",
-    "balanceofsatoshis": "^13.10.4",
+    "balanceofsatoshis": "^13.15.0",
     "bcryptjs": "^2.4.3",
     "bech32": "^2.0.0",
     "big.js": "^6.2.1",
