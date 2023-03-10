@@ -126,12 +126,16 @@ export const Accounting = () => {
     </SingleButton>
   );
 
-  const years: number[] = [];
+  const years: number[] = React.useMemo(() => {
+    return [];
+  }, []);
   const currentYear = new Date().getFullYear();
 
-  for (let index = 2017; index <= currentYear; index++) {
-    years.push(index);
-  }
+  React.useMemo(() => {
+    for (let index = 2017; index <= currentYear; index++) {
+      years.push(index);
+    }
+  }, [years, currentYear]);
 
   const renderDetails = () => (
     <>
