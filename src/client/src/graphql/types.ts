@@ -355,6 +355,16 @@ export type FeeHealth = {
   score?: Maybe<Scalars['Float']>;
 };
 
+export type FollowList = {
+  __typename?: 'FollowList';
+  following: Array<Scalars['String']>;
+};
+
+export type FollowPeers = {
+  __typename?: 'FollowPeers';
+  peers: NostrEvent;
+};
+
 export type Forward = {
   __typename?: 'Forward';
   created_at: Scalars['String'];
@@ -496,6 +506,8 @@ export type Mutation = {
   createMacaroon: CreateMacaroon;
   createThunderPoints: Scalars['Boolean'];
   fetchLnUrl: LnUrlRequest;
+  followPeers?: Maybe<FollowPeers>;
+  generateNostrProfile: NostrGenerateProfile;
   getAuthToken: Scalars['Boolean'];
   getSessionToken: Scalars['String'];
   keysend: PayInvoice;
@@ -511,6 +523,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   openChannel: OpenOrCloseChannel;
   pay: Scalars['Boolean'];
+  postNostrNote: NostrEvent;
   pushBackup: Scalars['Boolean'];
   removePeer: Scalars['Boolean'];
   removeTwofaSecret: Scalars['Boolean'];
@@ -592,6 +605,14 @@ export type MutationFetchLnUrlArgs = {
   url: Scalars['String'];
 };
 
+export type MutationFollowPeersArgs = {
+  privateKey: Scalars['String'];
+};
+
+export type MutationGenerateNostrProfileArgs = {
+  privateKey: Scalars['String'];
+};
+
 export type MutationGetAuthTokenArgs = {
   cookie?: InputMaybe<Scalars['String']>;
 };
@@ -651,6 +672,11 @@ export type MutationPayArgs = {
   max_paths: Scalars['Float'];
   out?: InputMaybe<Array<Scalars['String']>>;
   request: Scalars['String'];
+};
+
+export type MutationPostNostrNoteArgs = {
+  note: Scalars['String'];
+  privateKey: Scalars['String'];
 };
 
 export type MutationRemovePeerArgs = {
@@ -789,6 +815,45 @@ export type NodeType = {
   __typename?: 'NodeType';
   alias: Scalars['String'];
   public_key: Scalars['String'];
+};
+
+export type NostrEvent = {
+  __typename?: 'NostrEvent';
+  content: Scalars['String'];
+  created_at: Scalars['Float'];
+  id: Scalars['String'];
+  kind: Scalars['Float'];
+  pubkey: Scalars['String'];
+  sig: Scalars['String'];
+  tags: Array<Array<Scalars['String']>>;
+};
+
+export type NostrFeed = {
+  __typename?: 'NostrFeed';
+  feed: Array<NostrEvent>;
+};
+
+export type NostrGenerateProfile = {
+  __typename?: 'NostrGenerateProfile';
+  announcement: NostrEvent;
+  profile: NostrEvent;
+};
+
+export type NostrKeys = {
+  __typename?: 'NostrKeys';
+  privkey: Scalars['String'];
+  pubkey: Scalars['String'];
+};
+
+export type NostrProfile = {
+  __typename?: 'NostrProfile';
+  attestation: NostrEvent;
+  profile: NostrEvent;
+};
+
+export type NostrRelays = {
+  __typename?: 'NostrRelays';
+  urls: Array<Scalars['String']>;
 };
 
 export type OnChainBalance = {
@@ -949,6 +1014,7 @@ export type Query = {
   getClosedChannels: Array<ClosedChannel>;
   getConfigState: ConfigState;
   getFeeHealth: ChannelsFeeHealth;
+  getFollowList: FollowList;
   getForwards: Array<Forward>;
   getHello: Scalars['String'];
   getInvoiceStatusChange: Scalars['String'];
@@ -965,6 +1031,10 @@ export type Query = {
   getNodeBalances: Balances;
   getNodeInfo: NodeInfo;
   getNodeSocialInfo: LightningNodeSocialInfo;
+  getNostrFeed: NostrFeed;
+  getNostrKeys: NostrKeys;
+  getNostrProfile: NostrProfile;
+  getNostrRelays: NostrRelays;
   getPayments: GetPaymentsType;
   getPeers: Array<Peer>;
   getPendingChannels: Array<PendingChannel>;
@@ -1005,6 +1075,10 @@ export type QueryGetChannelsArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type QueryGetFollowListArgs = {
+  myPubkey: Scalars['String'];
+};
+
 export type QueryGetForwardsArgs = {
   days: Scalars['Float'];
 };
@@ -1031,6 +1105,14 @@ export type QueryGetNodeArgs = {
 };
 
 export type QueryGetNodeSocialInfoArgs = {
+  pubkey: Scalars['String'];
+};
+
+export type QueryGetNostrFeedArgs = {
+  myPubkey: Scalars['String'];
+};
+
+export type QueryGetNostrProfileArgs = {
   pubkey: Scalars['String'];
 };
 

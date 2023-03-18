@@ -108,6 +108,16 @@ export const getWithCopy = (text: string | null | undefined) => {
   );
 };
 
+export const getWithCopyFull = (text: string | null | undefined) => {
+  if (!text) return null;
+  return (
+    <>
+      {text}
+      {copyLink(text)}
+    </>
+  );
+};
+
 export const getNodeLink = (
   publicKey: string | undefined | null,
   alias?: string | undefined | null

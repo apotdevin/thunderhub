@@ -22,6 +22,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import 'react-circular-progressbar/dist/styles.css';
+import { NostrProvider } from '../src/context/NostrContext';
 
 const { publicRuntimeConfig } = getConfig();
 const { logoutUrl } = publicRuntimeConfig;
@@ -87,11 +88,13 @@ export default function App({ Component, pageProps }: AppProps) {
       <ConfigProvider initialConfig={initialConfig}>
         <BaseProvider initialHasToken={hasToken}>
           <SocketProvider authToken={authToken}>
-            <ContextProvider>
-              <Wrapper authenticated={authenticated}>
-                <Component {...pageProps} />
-              </Wrapper>
-            </ContextProvider>
+            <NostrProvider>
+              <ContextProvider>
+                <Wrapper authenticated={authenticated}>
+                  <Component {...pageProps} />
+                </Wrapper>
+              </ContextProvider>
+            </NostrProvider>
           </SocketProvider>
         </BaseProvider>
       </ConfigProvider>

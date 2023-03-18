@@ -305,6 +305,14 @@ type FeeHealth {
   score: Float
 }
 
+type FollowList {
+  following: [String!]!
+}
+
+type FollowPeers {
+  peers: NostrEvent!
+}
+
 type Forward {
   created_at: String!
   fee: Float!
@@ -432,6 +440,8 @@ type Mutation {
   createMacaroon(permissions: NetworkInfoInput!): CreateMacaroon!
   createThunderPoints(alias: String!, id: String!, public_key: String!, uris: [String!]!): Boolean!
   fetchLnUrl(url: String!): LnUrlRequest!
+  followPeers(privateKey: String!): FollowPeers
+  generateNostrProfile(privateKey: String!): NostrGenerateProfile!
   getAuthToken(cookie: String): Boolean!
   getSessionToken(id: String!, password: String!, token: String): String!
   keysend(destination: String, tokens: Float!): PayInvoice!
@@ -447,6 +457,7 @@ type Mutation {
   logout: Boolean!
   openChannel(amount: Float!, isPrivate: Boolean, partnerPublicKey: String!, pushTokens: Float = 0, tokensPerVByte: Float): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
+  postNostrNote(note: String!, privateKey: String!): NostrEvent!
   pushBackup: Boolean!
   removePeer(publicKey: String): Boolean!
   removeTwofaSecret(token: String!): Boolean!
@@ -540,6 +551,39 @@ type NodeSocialInfo {
 type NodeType {
   alias: String!
   public_key: String!
+}
+
+type NostrEvent {
+  content: String!
+  created_at: Float!
+  id: String!
+  kind: Float!
+  pubkey: String!
+  sig: String!
+  tags: [[String!]!]!
+}
+
+type NostrFeed {
+  feed: [NostrEvent!]!
+}
+
+type NostrGenerateProfile {
+  announcement: NostrEvent!
+  profile: NostrEvent!
+}
+
+type NostrKeys {
+  privkey: String!
+  pubkey: String!
+}
+
+type NostrProfile {
+  attestation: NostrEvent!
+  profile: NostrEvent!
+}
+
+type NostrRelays {
+  urls: [String!]!
 }
 
 type OnChainBalance {
@@ -688,6 +732,7 @@ type Query {
   getClosedChannels: [ClosedChannel!]!
   getConfigState: ConfigState!
   getFeeHealth: ChannelsFeeHealth!
+  getFollowList(myPubkey: String!): FollowList!
   getForwards(days: Float!): [Forward!]!
   getHello: String!
   getInvoiceStatusChange(id: String!): String!
@@ -704,6 +749,10 @@ type Query {
   getNodeBalances: Balances!
   getNodeInfo: NodeInfo!
   getNodeSocialInfo(pubkey: String!): LightningNodeSocialInfo!
+  getNostrFeed(myPubkey: String!): NostrFeed!
+  getNostrKeys: NostrKeys!
+  getNostrProfile(pubkey: String!): NostrProfile!
+  getNostrRelays: NostrRelays!
   getPayments(token: String): GetPaymentsType!
   getPeers: [Peer!]!
   getPendingChannels: [PendingChannel!]!

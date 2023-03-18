@@ -83,6 +83,7 @@
     "nest-winston": "^1.8.0",
     "next": "^12.1.0",
     "node-fetch": "^3.3.0",
+    "nostr-tools": "^1.7.4",
     "numeral": "^2.0.6",
     "otplib": "^12.0.1",
     "passport": "^0.6.0",
@@ -112,6 +113,7 @@
     "styled-theming": "^2.2.0",
     "tiny-secp256k1": "^2.2.1",
     "uuid": "^9.0.0",
+    "websocket-polyfill": "^0.0.3",
     "winston": "^3.8.2"
   },
   "devDependencies": {
@@ -199,6 +201,7 @@
       "eslint --fix"
     ]
   },
+  "type": "module",
   "standard-version": {
     "skip": {
       "commit": true,
