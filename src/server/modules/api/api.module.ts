@@ -25,6 +25,7 @@ import { BoltzModule } from './boltz/boltz.module';
 import { LnMarketsModule } from './lnmarkets/lnmarkets.module';
 import { BosModule } from './bos/bos.module';
 import { UserConfigModule } from './userConfig/userConfig.module';
+import { NostrModule } from './nostr/nostr.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { UserConfigModule } from './userConfig/userConfig.module';
     BoltzModule,
     LnMarketsModule,
     BosModule,
+    NostrModule,
   ],
 })
 export class ApiModule {}

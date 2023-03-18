@@ -378,6 +378,11 @@ type InvoiceType {
   type: String!
 }
 
+type Keys {
+  privkey: String!
+  pubkey: String!
+}
+
 type LightningAddress {
   lightning_address: String!
   pubkey: String!
@@ -692,6 +697,7 @@ type Query {
   getHello: String!
   getInvoiceStatusChange(id: String!): String!
   getInvoices(token: String): GetInvoicesType!
+  getKeys: Keys!
   getLatestVersion: String!
   getLightningAddressInfo(address: String!): PayRequest!
   getLightningAddresses: [LightningAddress!]!
