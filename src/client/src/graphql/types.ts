@@ -435,6 +435,12 @@ export type InvoiceType = {
   type: Scalars['String'];
 };
 
+export type Keys = {
+  __typename?: 'Keys';
+  privkey: Scalars['String'];
+  pubkey: Scalars['String'];
+};
+
 export type LightningAddress = {
   __typename?: 'LightningAddress';
   lightning_address: Scalars['String'];
@@ -953,6 +959,7 @@ export type Query = {
   getHello: Scalars['String'];
   getInvoiceStatusChange: Scalars['String'];
   getInvoices: GetInvoicesType;
+  getKeys: Keys;
   getLatestVersion: Scalars['String'];
   getLightningAddressInfo: PayRequest;
   getLightningAddresses: Array<LightningAddress>;
