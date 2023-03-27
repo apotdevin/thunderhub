@@ -5,7 +5,6 @@ import {
   SubTitle,
   Separation,
   SingleLine,
-  DarkSubTitle,
 } from '../../components/generic/Styled';
 import { Text } from '../../components/typography/Styled';
 import numeral from 'numeral';
@@ -27,7 +26,7 @@ const PushBackup = () => {
 
   return (
     <SingleLine>
-      <DarkSubTitle>Push Backup to Amboss</DarkSubTitle>
+      <Text>Push Backup to Amboss</Text>
       <ColorButton
         color="#ff0080"
         withMargin={'4px 0'}
