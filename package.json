@@ -107,7 +107,7 @@
     "secp256k1": "^4.0.3",
     "socket.io-client": "^4.5.4",
     "socks-proxy-agent": "^7.0.0",
-    "styled-components": "^5.3.6",
+    "styled-components": "^5.3.7",
     "styled-react-modal": "^3.0.0",
     "styled-theming": "^2.2.0",
     "tiny-secp256k1": "^2.2.1",
