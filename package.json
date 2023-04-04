@@ -41,7 +41,7 @@
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.2.1",
     "@nestjs/graphql": "^10.1.6",
-    "@nestjs/jwt": "^9.0.0",
+    "@nestjs/jwt": "^10.0.0",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.2.1",
     "@nestjs/platform-socket.io": "^9.2.1",
