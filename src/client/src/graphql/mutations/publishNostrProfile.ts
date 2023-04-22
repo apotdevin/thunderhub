@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const GENERATE_NOSTR_PROFILE = gql`
-  mutation GenerateNostrProfile($privateKey: String!) {
-    generateNostrProfile(privateKey: $privateKey) {
+export const PUBLISH_NOSTR_PROFILE = gql`
+  mutation PublishNostrProfile($privateKey: String!) {
+    publishNostrProfile(privateKey: $privateKey) {
       profile {
         kind
         tags

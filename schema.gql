@@ -441,7 +441,6 @@ type Mutation {
   createThunderPoints(alias: String!, id: String!, public_key: String!, uris: [String!]!): Boolean!
   fetchLnUrl(url: String!): LnUrlRequest!
   followPeers(privateKey: String!): FollowPeers
-  generateNostrProfile(privateKey: String!): NostrGenerateProfile!
   getAuthToken(cookie: String): Boolean!
   getSessionToken(id: String!, password: String!, token: String): String!
   keysend(destination: String, tokens: Float!): PayInvoice!
@@ -458,6 +457,7 @@ type Mutation {
   openChannel(amount: Float!, isPrivate: Boolean, partnerPublicKey: String!, pushTokens: Float = 0, tokensPerVByte: Float): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
   postNostrNote(note: String!, privateKey: String!): NostrEvent!
+  publishNostrProfile(privateKey: String!): ProfileAnnouncement!
   pushBackup: Boolean!
   removePeer(publicKey: String): Boolean!
   removeTwofaSecret(token: String!): Boolean!
@@ -567,19 +567,14 @@ type NostrFeed {
   feed: [NostrEvent!]!
 }
 
-type NostrGenerateProfile {
-  announcement: NostrEvent!
-  profile: NostrEvent!
-}
-
 type NostrKeys {
   privkey: String!
   pubkey: String!
 }
 
 type NostrProfile {
-  attestation: NostrEvent!
-  profile: NostrEvent!
+  attestation: NostrEvent
+  profile: NostrEvent
 }
 
 type NostrRelays {
@@ -709,6 +704,11 @@ type Policy {
   min_htlc_mtokens: String
   public_key: String!
   updated_at: String
+}
+
+type ProfileAnnouncement {
+  announcement: NostrEvent!
+  profile: NostrEvent!
 }
 
 type Query {

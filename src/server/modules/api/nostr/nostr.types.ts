@@ -41,7 +41,7 @@ export class NostrEvent {
 }
 
 @ObjectType()
-export class NostrGenerateProfile {
+export class ProfileAnnouncement {
   @Field(() => NostrEvent)
   profile: NostrEvent;
 
@@ -63,10 +63,10 @@ export class FollowPeers {
 
 @ObjectType()
 export class NostrProfile {
-  @Field(() => NostrEvent)
+  @Field(() => NostrEvent, { nullable: true })
   profile: NostrEvent;
 
-  @Field(() => NostrEvent)
+  @Field(() => NostrEvent, { nullable: true })
   attestation: NostrEvent;
 }
 

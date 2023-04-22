@@ -21,10 +21,9 @@ import {
   Separation,
 } from '../../../components/generic/Styled';
 import { mediaWidths, themeColors } from '../../../styles/Themes';
-import { useLocalStorage } from '../../../hooks/UseLocalStorage';
 import { useNostrDispatch, useNostrState } from '../../../context/NostrContext';
 import { useNostrKeysLazyQuery } from '../../../graphql/queries/__generated__/getNostrKeys.generated';
-import { useNostrProfileLazyQuery } from '../../../graphql/queries/__generated__/getNostrProfile.generated';
+import { useNostrProfileQuery } from '../../../graphql/queries/__generated__/getNostrProfile.generated';
 import { useGenerateNostrProfileMutation } from '../../../graphql/mutations/__generated__/generateNostrProfile.generated';
 
 const Key = styled.div`
@@ -72,24 +71,30 @@ const ButtonRow = styled.div`
 export const Profile = () => {
   const { initialized, nsec, npub, pub, sec, attestation } = useNostrState();
   const dispatch = useNostrDispatch();
-  const [nostrCache, setNostrCache] = useLocalStorage('nostr', {});
   const [open, openSet] = useState<boolean>(false);
   const [input, setInput] = useState<string>('');
 
   const [willSend, setWillSend] = React.useState(false);
-  // setWillSend(false);
+  setWillSend(false);
 
   const { loading, data } = useGetNodeInfoQuery({
     ssr: false,
     onError: error => toast.error(getErrorContent(error)),
   });
-  // useGenerateNostrProfile --> from pubkey, get rest
+  // useGenerateNostrProfile -- from pubkey, get rest
   //useGetkeys ==> give sec key, then gen pubkey
-  const [getKeys, { data: keysData, loading: keysLoading }] =
-    useNostrKeysLazyQuery({
-      onError: error => toast.error(getErrorContent(error)),
-      onCompleted: () => toast.success('Generated nostr keys.'),
-    });
+  const [getKeys, { loading: keysLoading }] = useNostrKeysLazyQuery({
+    onError: error => toast.error(getErrorContent(error)),
+    onCompleted: data => {
+      dispatch({
+        type: 'createdKeys',
+        sec: data.getNostrKeys.privkey,
+        pub: data.getNostrKeys.pubkey,
+      });
+      toast.success('Generated nostr keys.');
+      generateProfile();
+    },
+  });
 
   const [
     generateProfile,
@@ -97,23 +102,36 @@ export const Profile = () => {
   ] = useGenerateNostrProfileMutation({
     variables: { privateKey: sec || '' },
     onError: error => toast.error(getErrorContent(error)),
-    onCompleted: () =>
-      toast.success('Generated nostr profile and created node announement.'),
+    onCompleted: () => {
+      toast.success('Generated nostr profile and created node announcement.');
+    },
   });
 
-  const [getProfile, { data: profileData, loading: profileLoading }] =
-    useNostrProfileLazyQuery({
-      variables: { pubkey: input || '' },
-      onError: error => {
-        toast.error(getErrorContent(error));
-        generateProfile();
-      },
-      onCompleted: () => toast.success('Retrieved nostr profile.'),
-    });
-  useEffect(() => {
-    //delete me later
-    console.log(nostrCache, setWillSend, attestation);
-  }, [nostrCache, setWillSend, attestation]);
+  const {
+    data: profileData,
+    loading: profileLoading,
+    // refetch: profileRefetch,
+  } = useNostrProfileQuery({
+    variables: { pubkey: pub },
+    onError: error => {
+      toast.error(getErrorContent(error));
+      // generateProfile();
+    },
+    onCompleted: () => {
+      toast.success('Retrieved nostr profile.');
+      // profileRefetch();
+      // dispatch({ type: 'loaded', nsec: profile });
+    },
+  });
+  // useEffect(() => {
+  //   if (!nsec) return;
+  //   if (!npub) {
+  //     getProfile();
+  //     dispatch({ type: 'loaded', nsec });
+  //     return;
+  //   } else {
+  //   }
+  // }, [nsec, npub, pub, sec, dispatch, setNostrCache, getProfile]);
 
   useEffect(() => {
     console.log('profile', profileData);
@@ -126,38 +144,15 @@ export const Profile = () => {
     const profileBlob =
       profileData?.getNostrProfile?.attestation?.content ||
       genProfileData?.generateNostrProfile.announcement?.content;
-    console.log('blob', profileBlob);
 
     const profileObject = profileBlob ? JSON.parse(profileBlob) : {};
-    console.log('obj', profileObject);
     const sig = profileObject['s'] || 'sig failed';
-    console.log('sig', sig);
-    // const content = ;
+
     dispatch({
-      type: 'profileLoaded',
+      type: 'profileFetched',
       attestation: sig,
     });
   }, [profileData, genProfileData, dispatch]);
-
-  useEffect(() => {
-    if (!nsec) return;
-    if (!npub) {
-      getProfile();
-      dispatch({ type: 'loaded', nsec });
-      return;
-    } else {
-    }
-  }, [nsec, npub, pub, sec, dispatch, setNostrCache, getProfile]);
-
-  useEffect(() => {
-    if (!initialized || keysLoading || !keysData) return;
-    console.log('keysData', keysData);
-    dispatch({
-      type: 'created',
-      sec: keysData.getNostrKeys.privkey,
-      pub: keysData.getNostrKeys.pubkey,
-    });
-  }, [initialized, keysLoading, keysData, dispatch]);
 
   useEffect(() => {
     if (!initialized) {
@@ -185,7 +180,7 @@ export const Profile = () => {
           <ColorButton
             withMargin={'0 0 0 8px'}
             onClick={() => {
-              dispatch({ type: 'loaded', nsec: input });
+              dispatch({ type: 'loadedKeys', nsec: input });
             }}
             arrow={willSend ? false : true}
             disabled={

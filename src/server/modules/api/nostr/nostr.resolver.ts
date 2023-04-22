@@ -7,7 +7,7 @@ import {
   FollowPeers,
   NostrEvent,
   NostrFeed,
-  NostrGenerateProfile,
+  ProfileAnnouncement,
   NostrKeys,
   NostrProfile,
   NostrRelays,
@@ -36,16 +36,17 @@ export class RelaysResolver {
   }
 }
 
-@Resolver(() => NostrGenerateProfile)
+@Resolver(() => ProfileAnnouncement)
 export class EventResolver {
   constructor(private nostrService: NostrService) {}
 
-  @Mutation(() => NostrGenerateProfile, { name: 'generateNostrProfile' })
-  async generateNostrProfile(
+  @Mutation(() => ProfileAnnouncement, { name: 'publishNostrProfile' })
+  async publishNostrProfile(
     @CurrentUser() { id }: UserId,
     @Args('privateKey') privateKey: string
   ) {
-    const profile = await this.nostrService.generateProfile(privateKey, id);
+    const profile = await this.nostrService.publishProfile(privateKey, id);
+    console.log('PROFILE', profile);
     return profile;
   }
 }
@@ -59,7 +60,6 @@ export class FollowResolver {
     @CurrentUser() { id }: UserId,
     @Args('privateKey') privateKey: string
   ) {
-    console.log('fef');
     const peers = await this.nostrService.addPeersToFollowList(privateKey, id);
     return peers;
   }
@@ -72,7 +72,6 @@ export class FollowListResolver {
   @Query(() => FollowList)
   async getFollowList(@Args('myPubkey') myPubkey: string) {
     const list = await this.nostrService.getFollowingList(myPubkey);
-    console.log('list', list);
     return list;
   }
 }
@@ -95,7 +94,6 @@ export class NostrFeedResolver {
   @Query(() => NostrFeed, { name: 'getNostrFeed' })
   async getNostrFeed(@Args('myPubkey') myPubkey: string) {
     const feed = await this.nostrService.getNostrFeed(myPubkey);
-    console.log('FEEd', feed);
     return feed;
   }
 }
@@ -110,7 +108,6 @@ export class NostrEventResolver {
     @Args('note') note: string
   ) {
     const post = await this.nostrService.postNostrNote(privateKey, note);
-    console.log('Post', post);
     return post;
   }
 }

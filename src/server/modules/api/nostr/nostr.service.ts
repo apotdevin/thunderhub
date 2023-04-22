@@ -1,6 +1,12 @@
 import 'websocket-polyfill';
 import { Inject, Injectable } from '@nestjs/common';
-import * as nostr from 'nostr-tools';
+import {
+  relayInit,
+  signEvent,
+  getEventHash,
+  getPublicKey,
+  generatePrivateKey,
+} from 'nostr-tools';
 import { EventTemplate, Kind, Relay, UnsignedEvent, Event } from 'nostr-tools';
 import { AccountsService } from '../../accounts/accounts.service';
 import { Logger } from 'winston';
@@ -10,7 +16,7 @@ import { NostrNodeAttestation } from './nostr.types';
 
 @Injectable()
 export class NostrService {
-  relays = ['wss://nos.lol'];
+  relays = ['wss://nostream.localtest.me'];
 
   connectedRelays: Relay[] = [];
   constructor(
@@ -20,19 +26,18 @@ export class NostrService {
   ) {
     this.connectToRelay();
   }
-  async connectToRelay(): Promise<Relay> {
-    return new Promise(async resolve => {
-      const relay = nostr.relayInit(this.relays[0]);
-      await relay.connect();
-      relay.on('connect', () => {
-        this.logger.info(`Connected to ${relay.url}`);
-      });
-      relay.on('error', e => {
-        this.logger.error('No node ', e);
-      });
-      this.connectedRelays.push(relay);
-      resolve(relay);
+  async connectToRelay(): Promise<void> {
+    const relay = relayInit(this.relays[0]);
+    relay.on('connect', () => {
+      this.logger.info(`Connected to ${relay.url}`);
     });
+    relay.on('error', e => {
+      this.logger.error('No node ', e);
+    });
+    await relay.connect().catch(e => {
+      this.logger.error(`it broke ${e}`);
+    });
+    this.connectedRelays.push(relay);
   }
 
   getRelays(): string[] {
@@ -44,16 +49,16 @@ export class NostrService {
   generatePrivateKey(id: string) {
     const account = this.accountService.getAccount(id);
     if (!account) throw new Error('Node account not found');
-    return nostr.generatePrivateKey();
+    return generatePrivateKey();
   }
 
   getPublicKey(privateKey: string, id: string) {
     const account = this.accountService.getAccount(id);
     if (!account) throw new Error('Node account not found');
-    return nostr.getPublicKey(privateKey);
+    return getPublicKey(privateKey);
   }
 
-  async generateProfile(privateKey: string, id: string) {
+  async publishProfile(privateKey: string, id: string) {
     return new Promise(async (resolve, reject) => {
       const account = this.accountService.getAccount(id);
       if (!account) throw new Error('Node account not found.');
@@ -84,14 +89,14 @@ export class NostrService {
       // Attach the pubkey
       const unsignedProfileEvent: UnsignedEvent = {
         ...profile,
-        pubkey: nostr.getPublicKey(privateKey),
+        pubkey: getPublicKey(privateKey),
       };
 
       // Create the signature
       const signedProfileEvent: Event = {
         ...unsignedProfileEvent,
-        id: nostr.getEventHash(unsignedProfileEvent),
-        sig: nostr.signEvent(unsignedProfileEvent, privateKey),
+        id: getEventHash(unsignedProfileEvent),
+        sig: signEvent(unsignedProfileEvent, privateKey),
       };
 
       // broadcast profile
@@ -108,21 +113,21 @@ export class NostrService {
         reject('could not create profile. you fucking loser.');
       });
 
-      const announcment = await this.createNodeAnnouncement(
+      const announcement = await this.createNodeAnnouncement(
         privateKey,
         attestation.signature,
         'regtest',
         node.public_key
       );
-      if (!announcment) reject('could not make node announement');
+      if (!announcement) reject('could not make node announcement');
       console.log(
         '== CREATED ACCOUNT ==',
         'Nostr Account',
         profile,
-        'Node Announcment/Attestation',
-        announcment
+        'Node Announcement/Attestation',
+        announcement
       );
-      resolve({ profile: signedProfileEvent, announcement: announcment });
+      resolve({ profile: signedProfileEvent, announcement: announcement });
     });
   }
 
@@ -151,13 +156,13 @@ export class NostrService {
 
       const nodeAnnouncementUnsigned: UnsignedEvent = {
         ...nodeAnnouncement,
-        pubkey: nostr.getPublicKey(privateKey),
+        pubkey: getPublicKey(privateKey),
       };
 
       const nodeAnnouncementEvent: Event = {
         ...nodeAnnouncementUnsigned,
-        id: nostr.getEventHash(nodeAnnouncementUnsigned),
-        sig: nostr.signEvent(nodeAnnouncementUnsigned, privateKey),
+        id: getEventHash(nodeAnnouncementUnsigned),
+        sig: signEvent(nodeAnnouncementUnsigned, privateKey),
       };
 
       const announceNode = this.connectedRelays[0].publish(
@@ -171,7 +176,7 @@ export class NostrService {
 
       announceNode.on('failed', e => {
         this.logger.error('Could not announce node.', e);
-        resolve(null);
+        throw new Error('could not announce node');
       });
     });
   }
@@ -240,13 +245,13 @@ export class NostrService {
 
       const unsignedFollow: UnsignedEvent = {
         ...followContent,
-        pubkey: nostr.getPublicKey(privateKey),
+        pubkey: getPublicKey(privateKey),
       };
 
       const signedFollow: Event = {
         ...unsignedFollow,
-        id: nostr.getEventHash(unsignedFollow),
-        sig: nostr.signEvent(unsignedFollow, privateKey),
+        id: getEventHash(unsignedFollow),
+        sig: signEvent(unsignedFollow, privateKey),
       };
 
       console.log('== ADDING CONTACT LIST EVENT ==', signedFollow);
@@ -280,13 +285,14 @@ export class NostrService {
   }
 
   async getNostrProfile(pubkey: string) {
-    const profile = await this.connectedRelays[0].list([
+    const _profile = this.connectedRelays[0].list([
       { kinds: [Kind.Metadata], authors: [pubkey] },
     ]);
-
-    const attestation = await this.connectedRelays[0].list([
+    const _attestation = this.connectedRelays[0].list([
       { kinds: [80081], authors: [pubkey] },
     ]);
+    const [profile, attestation] = await Promise.all([_profile, _attestation]);
+    if (profile.length === 0 || attestation.length === 0) return {};
     return { profile: profile[0], attestation: attestation[0] };
   }
 
@@ -309,13 +315,13 @@ export class NostrService {
 
       const unsignedNote: UnsignedEvent = {
         ...noteObj,
-        pubkey: nostr.getPublicKey(privateKey),
+        pubkey: getPublicKey(privateKey),
       };
 
       const signedNote: Event = {
         ...unsignedNote,
-        id: nostr.getEventHash(unsignedNote),
-        sig: nostr.signEvent(unsignedNote, privateKey),
+        id: getEventHash(unsignedNote),
+        sig: signEvent(unsignedNote, privateKey),
       };
 
       const post = this.connectedRelays[0].publish(signedNote);

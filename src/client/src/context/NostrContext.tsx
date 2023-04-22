@@ -28,15 +28,15 @@ type ActionType =
       nsec: string;
     }
   | {
-      type: 'loaded'; // User pastes in nsec
+      type: 'loadedKeys'; // User pastes in nsec or nsec is cached
       nsec: string;
     }
   | {
-      type: 'profileLoaded'; // User pastes in nsec
+      type: 'profileFetched'; // attestation is fetched from relay
       attestation: string;
     }
   | {
-      type: 'created'; // Generates new nsec
+      type: 'createdKeys'; // Generates new nsec
       sec: string;
       pub: string;
     }
@@ -57,6 +57,7 @@ const initialState: State = {
   npub: '',
   pub: '',
   sec: '',
+  attestation: '',
 };
 const handleSetNsec = (nsec: string) => {
   try {
@@ -87,18 +88,25 @@ const stateReducer = (state: State, action: ActionType): State => {
   switch (action.type) {
     case 'initialized':
       const cache = localStorage.getItem('nostr');
-      const obj = {
+      let obj = {
         ...state,
         initialized: true,
         ...action,
       };
       try {
-        const c = JSON.parse(cache);
-        if (c?.nsec !== '') obj.nsec = c.nsec;
+        const c = JSON.parse(cache ?? '{}');
+        if (c?.nsec !== '') {
+          obj.nsec = c.nsec;
+          obj = {
+            ...obj,
+            ...handleSetNsec(c.nsec),
+          };
+        }
       } catch (e) {}
       return obj;
-    case 'loaded':
-      console.log('loaded');
+
+    case 'loadedKeys':
+      console.log('loadedKeys');
       newState = {
         ...state,
         initialized: true,
@@ -107,7 +115,8 @@ const stateReducer = (state: State, action: ActionType): State => {
       };
       localStorage.setItem('nostr', JSON.stringify(newState));
       return newState;
-    case 'created':
+
+    case 'createdKeys':
       newState = {
         ...state,
         ...action,
@@ -115,10 +124,11 @@ const stateReducer = (state: State, action: ActionType): State => {
         npub: nip19.npubEncode(action.pub),
         nsec: nip19.nsecEncode(action.sec),
       };
-      console.log('NEW STATE, created', newState);
+      console.log('NEW STATE, createdKeys', newState);
       localStorage.setItem('nostr', JSON.stringify(newState));
       return newState;
-    case 'profileLoaded':
+
+    case 'profileFetched':
       newState = {
         ...state,
         ...action,
@@ -140,7 +150,7 @@ const NostrProvider: React.FC = ({ children }) => {
     const savedConfig = JSON.parse(localStorage.getItem('nostr') || '{}');
     console.log('saved config', savedConfig);
     if (savedConfig?.nostr) {
-      dispatch({ type: 'loaded', ...savedConfig });
+      dispatch({ type: 'loadedKeys', ...savedConfig });
     }
   }, []);
   const [state, dispatch] = useReducer(stateReducer, initialState);

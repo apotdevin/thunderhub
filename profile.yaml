@@ -1,0 +1,8 @@
+masterPassword: thunderhub-$2a$12$Ix0ICJCnxveeMqWBWUKrb.4uTSmo9nzxsq/r3bm96VEQtsCOQsn5q
+accounts:
+  - name: Account 1
+    serverUrl: 127.0.0.1:10006
+    macaroonPath: >-
+      /Users/alex/.polar/networks/14/volumes/lnd/alice/data/chain/bitcoin/regtest/admin.macaroon
+    certificatePath: /Users/alex/.polar/networks/14/volumes/lnd/alice/tls.cert
+    password: thunderhub-$2a$12$jHqnNzqcAAnm3Lb2FcXBvOxda4FVIBmjD4W2KvC82Ibsm.zcKZlES
