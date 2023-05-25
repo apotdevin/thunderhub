@@ -25,13 +25,12 @@ type ReportType =
   | 'invoices'
   | 'payments';
 // type FiatType = 'eur' | 'usd';
-type YearType = 2017 | 2018 | 2019 | 2020 | 2021 | 2022;
 type MonthType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | null;
 
 type StateType = {
   type: ReportType;
   // fiat?: FiatType;
-  year?: YearType;
+  year?: number;
   month?: MonthType;
 };
 
@@ -46,7 +45,7 @@ export type ActionType =
   //   }
   | {
       type: 'year';
-      year: YearType;
+      year: number;
     }
   | {
       type: 'month';
@@ -89,7 +88,7 @@ export const Accounting = () => {
         true
       );
     }
-  }, [data, loading]);
+  }, [data, loading, state.type, state.year, state.month]);
 
   const reportButton = (report: ReportType, title: string) => (
     <SingleButton
@@ -109,7 +108,7 @@ export const Accounting = () => {
   //   </SingleButton>
   // );
 
-  const yearButton = (year: YearType) => (
+  const yearButton = (year: number) => (
     <SingleButton
       selected={state.year === year}
       onClick={() => !loading && dispatch({ type: 'year', year })}
@@ -126,6 +125,17 @@ export const Accounting = () => {
       {month ? month : 'All'}
     </SingleButton>
   );
+
+  const years: number[] = React.useMemo(() => {
+    return [];
+  }, []);
+  const currentYear = new Date().getFullYear();
+
+  React.useMemo(() => {
+    for (let index = 2017; index <= currentYear; index++) {
+      years.push(index);
+    }
+  }, [years, currentYear]);
 
   const renderDetails = () => (
     <>
@@ -150,14 +160,7 @@ export const Accounting = () => {
       </ToolsResponsiveLine> */}
       <ToolsResponsiveLine>
         <DarkSubTitle>Year</DarkSubTitle>
-        <MultiButton>
-          {yearButton(2017)}
-          {yearButton(2018)}
-          {yearButton(2019)}
-          {yearButton(2020)}
-          {yearButton(2021)}
-          {yearButton(2022)}
-        </MultiButton>
+        <MultiButton>{years.map(year => yearButton(year))}</MultiButton>
       </ToolsResponsiveLine>
       <ToolsResponsiveLine>
         <DarkSubTitle>Month</DarkSubTitle>

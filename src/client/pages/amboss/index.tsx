@@ -8,6 +8,7 @@ import { Backups } from '../../src/views/amboss/Backups';
 import { SectionTitle, Text } from '../../src/components/typography/Styled';
 import { Healthchecks } from '../../src/views/amboss/Healthchecks';
 import { Balances } from '../../src/views/amboss/Balances';
+import { Billboard } from '../../src/views/amboss/Billboard';
 
 const AmbossView = () => (
   <>
@@ -30,6 +31,7 @@ const Wrapped = () => (
     <Backups />
     <Healthchecks />
     <Balances />
+    <Billboard />
   </GridWrapper>
 );
 
