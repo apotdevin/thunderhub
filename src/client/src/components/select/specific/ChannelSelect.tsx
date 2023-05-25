@@ -1,8 +1,8 @@
 import React from 'react';
 import { shorten } from '../../../../src/components/generic/helpers';
-import { Channel } from '../../../../src/graphql/types';
 import { useGetChannelsWithPeersQuery } from '../../../../src/graphql/queries/__generated__/getChannels.generated';
 import { SelectWithDeco } from '../SelectWithDeco';
+import { Channel } from '../../../graphql/types';
 import { ValueProp } from '..';
 
 type ChannelSelectProps = {
@@ -28,7 +28,7 @@ export const ChannelSelect = ({
         return null;
       }
 
-      const label = `${channel.partner_node_info.node?.id}
+      const label = `${channel.id}
        ${
          channel?.partner_node_info?.node?.alias
            ? ` - ${channel.partner_node_info.node.alias}`
@@ -47,7 +47,7 @@ export const ChannelSelect = ({
     const finalPeers = value
       .map(v => {
         const peer = channels.find(p => p?.partner_public_key === v.value);
-        return peer ? peer : null;
+        return peer?.id ? peer : null;
       })
       .filter(Boolean);
     if (finalPeers.length) {

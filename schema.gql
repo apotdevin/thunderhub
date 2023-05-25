@@ -539,7 +539,6 @@ type NodeSocialInfo {
 
 type NodeType {
   alias: String!
-  id: String
   public_key: String!
 }
 

@@ -77,14 +77,11 @@ export type GetChannelsWithPeersQuery = {
   __typename?: 'Query';
   getChannels: Array<{
     __typename?: 'Channel';
+    id: string;
     partner_public_key: string;
     partner_node_info: {
       __typename?: 'Node';
-      node?: {
-        __typename?: 'NodeType';
-        alias: string;
-        id?: string | null;
-      } | null;
+      node?: { __typename?: 'NodeType'; alias: string } | null;
     };
   }>;
 };
@@ -199,11 +196,11 @@ export type GetChannelsQueryResult = Apollo.QueryResult<
 export const GetChannelsWithPeersDocument = gql`
   query GetChannelsWithPeers($active: Boolean) {
     getChannels(active: $active) {
+      id
       partner_public_key
       partner_node_info {
         node {
           alias
-          id
         }
       }
     }
