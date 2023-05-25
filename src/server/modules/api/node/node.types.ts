@@ -6,6 +6,8 @@ export class NodeType {
   alias: string;
   @Field()
   public_key: string;
+  @Field({ nullable: true })
+  id: string;
 }
 
 @ObjectType()

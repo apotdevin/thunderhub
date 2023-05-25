@@ -80,7 +80,11 @@ export type GetChannelsWithPeersQuery = {
     partner_public_key: string;
     partner_node_info: {
       __typename?: 'Node';
-      node?: { __typename?: 'NodeType'; alias: string } | null;
+      node?: {
+        __typename?: 'NodeType';
+        alias: string;
+        id?: string | null;
+      } | null;
     };
   }>;
 };
@@ -199,6 +203,7 @@ export const GetChannelsWithPeersDocument = gql`
       partner_node_info {
         node {
           alias
+          id
         }
       }
     }

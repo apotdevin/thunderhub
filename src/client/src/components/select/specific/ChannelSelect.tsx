@@ -27,13 +27,14 @@ export const ChannelSelect = ({
       if (!channel?.partner_public_key) {
         return null;
       }
-      let label = shorten(channel.partner_public_key);
 
-      if (channel.partner_node_info.node?.alias) {
-        label = `${channel.partner_node_info.node.alias} (${shorten(
-          channel.partner_public_key
-        )})`;
-      }
+      const label = `${channel.partner_node_info.node?.id}
+       ${
+         channel?.partner_node_info?.node?.alias
+           ? ` - ${channel.partner_node_info.node.alias}`
+           : ''
+       } - 
+       ${shorten(channel.partner_public_key)}`;
 
       return {
         value: channel.partner_public_key,

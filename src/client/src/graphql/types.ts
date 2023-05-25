@@ -788,6 +788,7 @@ export type NodeSocialInfo = {
 export type NodeType = {
   __typename?: 'NodeType';
   alias: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
   public_key: Scalars['String'];
 };
 

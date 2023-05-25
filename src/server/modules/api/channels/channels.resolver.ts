@@ -67,7 +67,10 @@ export class ChannelsResolver {
       ...channel,
       partner_fee_info: { localKey: public_key },
       channel_age: getChannelAge(channel.id, current_block_height),
-      partner_node_info: { publicKey: channel.partner_public_key },
+      partner_node_info: {
+        publicKey: channel.partner_public_key,
+        id: channel.id,
+      },
     }));
   }
 

@@ -66,6 +66,7 @@ export const GET_CHANNELS_WITH_PEERS = gql`
       partner_node_info {
         node {
           alias
+          id
         }
       }
     }

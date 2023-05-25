@@ -140,7 +140,7 @@ export class NodeFieldResolver {
   @ResolveField()
   async node(
     @Parent()
-    { publicKey }: { publicKey: string },
+    { publicKey, id: channelId }: { publicKey: string; id: string },
     @CurrentUser() { id }: UserId
   ) {
     if (!publicKey) {
@@ -155,11 +155,15 @@ export class NodeFieldResolver {
           getNodeAlias(pubkey: $pubkey)
         }
       `,
-      { pubkey: publicKey }
+      { pubkey: publicKey, id: channelId || null }
     );
 
     if (data?.getNodeAlias && !error) {
-      return { alias: data.getNodeAlias, public_key: publicKey };
+      return {
+        alias: data.getNodeAlias,
+        public_key: publicKey,
+        id: channelId || null,
+      };
     }
 
     const [info, nodeError] = await toWithError(
@@ -168,6 +172,6 @@ export class NodeFieldResolver {
 
     if (nodeError || !info) return null;
 
-    return { ...info, public_key: publicKey };
+    return { ...info, public_key: publicKey, id: channelId || null };
   }
 }
