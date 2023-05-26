@@ -4,8 +4,8 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type KeysendMutationVariables = Types.Exact<{
-  destination: Types.Scalars['String'];
-  tokens: Types.Scalars['Float'];
+  destination: Types.Scalars['String']['input'];
+  tokens: Types.Scalars['Float']['input'];
 }>;
 
 export type KeysendMutation = {

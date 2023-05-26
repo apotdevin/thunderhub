@@ -1,9 +1,9 @@
-import * as React from 'react';
 import styled from 'styled-components';
 import { mediaWidths, themeColors } from '../../../src/styles/Themes';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { SingleLine } from '../generic/Styled';
 import { Select, SelectWithValue, ValueProp } from '.';
+import { FC, ReactNode } from 'react';
 
 const NoWrapText = styled.div`
   white-space: nowrap;
@@ -38,9 +38,10 @@ type InputWithDecoProps = {
   loading?: boolean;
   maxWidth?: string;
   callback: (value: ValueProp[]) => void;
+  children?: ReactNode;
 };
 
-export const SelectWithDeco: React.FC<InputWithDecoProps> = ({
+export const SelectWithDeco: FC<InputWithDecoProps> = ({
   children,
   title,
   noInput,
@@ -86,6 +87,7 @@ type InputWithDecoAndValueProps = {
   noInput?: boolean;
   loading?: boolean;
   callback: (value: ValueProp[]) => void;
+  children?: React.ReactNode;
 };
 
 export const SelectWithDecoAndValue: React.FC<InputWithDecoAndValueProps> = ({

@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetChannelsQueryVariables = Types.Exact<{
-  active?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  active?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
 export type GetChannelsQuery = {
@@ -70,7 +70,7 @@ export type GetChannelsQuery = {
 };
 
 export type GetChannelsWithPeersQueryVariables = Types.Exact<{
-  active?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  active?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
 export type GetChannelsWithPeersQuery = {

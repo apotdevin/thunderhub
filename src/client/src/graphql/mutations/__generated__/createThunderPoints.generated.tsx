@@ -4,10 +4,12 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type CreateThunderPointsMutationVariables = Types.Exact<{
-  id: Types.Scalars['String'];
-  alias: Types.Scalars['String'];
-  uris: Array<Types.Scalars['String']> | Types.Scalars['String'];
-  public_key: Types.Scalars['String'];
+  id: Types.Scalars['String']['input'];
+  alias: Types.Scalars['String']['input'];
+  uris:
+    | Array<Types.Scalars['String']['input']>
+    | Types.Scalars['String']['input'];
+  public_key: Types.Scalars['String']['input'];
 }>;
 
 export type CreateThunderPointsMutation = {

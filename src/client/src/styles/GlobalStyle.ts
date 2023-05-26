@@ -1,5 +1,8 @@
 import { createGlobalStyle } from 'styled-components';
 import { backgroundColor, textColor } from './Themes';
+import { Inter } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const GlobalStyles = createGlobalStyle`
     html, body {
@@ -8,7 +11,7 @@ export const GlobalStyles = createGlobalStyle`
     }
     * {
         font-variant-numeric: tabular-nums;
-        font-family: 'Inter', sans-serif;
+        font-family: ${inter.style.fontFamily}, sans-serif;
     }
     *, *::after, *::before {
         box-sizing: border-box;
@@ -16,6 +19,8 @@ export const GlobalStyles = createGlobalStyle`
     body {
         background: ${backgroundColor};
         color: ${textColor};
+        font-variant-numeric: tabular-nums;
+        font-family: ${inter.style.fontFamily}, sans-serif;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;

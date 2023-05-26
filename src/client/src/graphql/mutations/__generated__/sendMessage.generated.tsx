@@ -4,11 +4,11 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type SendMessageMutationVariables = Types.Exact<{
-  publicKey: Types.Scalars['String'];
-  message: Types.Scalars['String'];
-  messageType?: Types.InputMaybe<Types.Scalars['String']>;
-  tokens?: Types.InputMaybe<Types.Scalars['Float']>;
-  maxFee?: Types.InputMaybe<Types.Scalars['Float']>;
+  publicKey: Types.Scalars['String']['input'];
+  message: Types.Scalars['String']['input'];
+  messageType?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  tokens?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  maxFee?: Types.InputMaybe<Types.Scalars['Float']['input']>;
 }>;
 
 export type SendMessageMutation = {

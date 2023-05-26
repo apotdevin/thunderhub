@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { ReactNode, createContext, useContext, useReducer } from 'react';
 import { Message } from '../../src/graphql/types';
 
 export interface SentChatProps extends Message {
@@ -92,7 +92,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const ChatProvider: React.FC = ({ children }) => {
+const ChatProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (

@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  ReactNode,
+} from 'react';
 
 const STORAGE_KEY = 'notificationSettings-v2';
 
@@ -57,7 +63,9 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const NotificationProvider: React.FC = ({ children }) => {
+const NotificationProvider: React.FC<{ children?: ReactNode }> = ({
+  children,
+}) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   useEffect(() => {

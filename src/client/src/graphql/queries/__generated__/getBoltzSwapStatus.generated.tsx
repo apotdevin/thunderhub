@@ -4,7 +4,9 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetBoltzSwapStatusQueryVariables = Types.Exact<{
-  ids: Array<Types.Scalars['String']> | Types.Scalars['String'];
+  ids:
+    | Array<Types.Scalars['String']['input']>
+    | Types.Scalars['String']['input'];
 }>;
 
 export type GetBoltzSwapStatusQuery = {

@@ -4,12 +4,12 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type PayMutationVariables = Types.Exact<{
-  max_fee: Types.Scalars['Float'];
-  max_paths: Types.Scalars['Float'];
+  max_fee: Types.Scalars['Float']['input'];
+  max_paths: Types.Scalars['Float']['input'];
   out?: Types.InputMaybe<
-    Array<Types.Scalars['String']> | Types.Scalars['String']
+    Array<Types.Scalars['String']['input']> | Types.Scalars['String']['input']
   >;
-  request: Types.Scalars['String'];
+  request: Types.Scalars['String']['input'];
 }>;
 
 export type PayMutation = { __typename?: 'Mutation'; pay: boolean };

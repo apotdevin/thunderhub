@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetMessagesQueryVariables = Types.Exact<{
-  initialize?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  initialize?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
 export type GetMessagesQuery = {

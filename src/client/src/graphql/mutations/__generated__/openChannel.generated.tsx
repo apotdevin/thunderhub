@@ -4,11 +4,11 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type OpenChannelMutationVariables = Types.Exact<{
-  amount: Types.Scalars['Float'];
-  partnerPublicKey: Types.Scalars['String'];
-  tokensPerVByte?: Types.InputMaybe<Types.Scalars['Float']>;
-  isPrivate?: Types.InputMaybe<Types.Scalars['Boolean']>;
-  pushTokens?: Types.InputMaybe<Types.Scalars['Float']>;
+  amount: Types.Scalars['Float']['input'];
+  partnerPublicKey: Types.Scalars['String']['input'];
+  tokensPerVByte?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  isPrivate?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
+  pushTokens?: Types.InputMaybe<Types.Scalars['Float']['input']>;
 }>;
 
 export type OpenChannelMutation = {

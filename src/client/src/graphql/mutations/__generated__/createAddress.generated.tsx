@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type CreateAddressMutationVariables = Types.Exact<{
-  type?: Types.InputMaybe<Types.Scalars['String']>;
+  type?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 export type CreateAddressMutation = {

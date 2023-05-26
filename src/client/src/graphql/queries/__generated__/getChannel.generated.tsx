@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetChannelQueryVariables = Types.Exact<{
-  id: Types.Scalars['String'];
+  id: Types.Scalars['String']['input'];
 }>;
 
 export type GetChannelQuery = {
@@ -26,7 +26,7 @@ export type GetChannelQuery = {
 };
 
 export type GetChannelInfoQueryVariables = Types.Exact<{
-  id: Types.Scalars['String'];
+  id: Types.Scalars['String']['input'];
 }>;
 
 export type GetChannelInfoQuery = {

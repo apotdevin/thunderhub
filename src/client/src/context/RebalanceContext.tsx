@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { ReactNode, createContext, useContext, useReducer } from 'react';
 import { Channel } from '../../src/graphql/types';
 
 type State = {
@@ -42,7 +42,9 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const RebalanceProvider: React.FC = ({ children }) => {
+const RebalanceProvider: React.FC<{ children?: ReactNode }> = ({
+  children,
+}) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (

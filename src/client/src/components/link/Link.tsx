@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeSet } from 'styled-theming';
 import RouterLink from 'next/link';
@@ -48,6 +48,7 @@ interface LinkProps {
   fullWidth?: boolean;
   noStyling?: boolean;
   newTab?: boolean;
+  children?: ReactNode;
 }
 
 export const Link: React.FC<LinkProps> = ({
@@ -81,7 +82,7 @@ export const Link: React.FC<LinkProps> = ({
 
   if (to) {
     return (
-      <RouterLink href={to} passHref>
+      <RouterLink href={to} passHref legacyBehavior>
         <CorrectLink {...props}>{children}</CorrectLink>
       </RouterLink>
     );

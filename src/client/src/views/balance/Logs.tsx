@@ -27,10 +27,10 @@ export const RebalanceLogs: FC<RebalanceProps> = ({
   }, [lastMessage, setMessages]);
 
   const renderContent = () => {
-    return messages.map(m => {
+    return messages.map((m, index) => {
       if ('rebalance_target_amount' in m) {
         return (
-          <SubCard>
+          <SubCard key={index}>
             {renderLine(
               'Amount',
               formatSats(btcToSat(m.rebalance_target_amount))
@@ -42,14 +42,14 @@ export const RebalanceLogs: FC<RebalanceProps> = ({
       }
       if ('circular_rebalance_for' in m) {
         return (
-          <SubCard>
+          <SubCard key={index}>
             {renderLine('Rebalancing peer', m.circular_rebalance_for)}
           </SubCard>
         );
       }
       if ('evaluating' in m) {
         return (
-          <SubCard>
+          <SubCard key={index}>
             {m.evaluating.map((s: string, index: number) =>
               renderLine(index + 1, s)
             )}
@@ -58,13 +58,15 @@ export const RebalanceLogs: FC<RebalanceProps> = ({
       }
       if ('evaluating_amount' in m) {
         return (
-          <SubCard>
+          <SubCard key={index}>
             {renderLine('Evaluating amount', formatSats(m.evaluating_amount))}
           </SubCard>
         );
       }
       if ('failure' in m) {
-        return <SubCard>{renderLine('Failure', m.failure)}</SubCard>;
+        return (
+          <SubCard key={index}>{renderLine('Failure', m.failure)}</SubCard>
+        );
       }
       return null;
     });

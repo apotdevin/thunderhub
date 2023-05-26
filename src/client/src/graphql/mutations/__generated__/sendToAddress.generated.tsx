@@ -4,11 +4,11 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type PayAddressMutationVariables = Types.Exact<{
-  address: Types.Scalars['String'];
-  tokens?: Types.InputMaybe<Types.Scalars['Float']>;
-  fee?: Types.InputMaybe<Types.Scalars['Float']>;
-  target?: Types.InputMaybe<Types.Scalars['Float']>;
-  sendAll?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  address: Types.Scalars['String']['input'];
+  tokens?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  fee?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  target?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  sendAll?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
 export type PayAddressMutation = {

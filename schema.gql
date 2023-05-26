@@ -425,7 +425,7 @@ type Mutation {
   bosRebalance(avoid: [String!], in_through: String, max_fee: Float, max_fee_rate: Float, max_rebalance: Float, node: String, out_inbound: Float, out_through: String, timeout_minutes: Float): BosRebalanceResult!
   claimBoltzTransaction(destination: String!, fee: Float!, preimage: String!, privateKey: String!, redeem: String!, transaction: String!): String!
   closeChannel(forceClose: Boolean, id: String!, targetConfirmations: Float, tokensPerVByte: Float): OpenOrCloseChannel!
-  createAddress(type: String = "p2wpkh"): String!
+  createAddress(type: String! = "p2wpkh"): String!
   createBaseInvoice(amount: Float!): BaseInvoice!
   createBoltzReverseSwap(address: String, amount: Float!): CreateBoltzReverseSwapType!
   createInvoice(amount: Float!, description: String, includePrivate: Boolean, secondsUntil: Float): CreateInvoice!

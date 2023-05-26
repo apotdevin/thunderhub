@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, ReactNode, useEffect } from 'react';
 import { LogOut } from 'react-feather';
 import { useLogoutMutation } from '../../../src/graphql/mutations/__generated__/logout.generated';
 import { useApolloClient } from '@apollo/client';
@@ -25,7 +25,7 @@ const LogoutWrapperStyled = styled(Logout)`
   width: 100%;
 `;
 
-export const LogoutWrapper: FC = ({ children }) => {
+export const LogoutWrapper: FC<{ children?: ReactNode }> = ({ children }) => {
   const client = useApolloClient();
 
   const dispatchChat = useChatDispatch();

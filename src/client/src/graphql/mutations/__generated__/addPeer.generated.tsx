@@ -4,10 +4,10 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type AddPeerMutationVariables = Types.Exact<{
-  url?: Types.InputMaybe<Types.Scalars['String']>;
-  publicKey?: Types.InputMaybe<Types.Scalars['String']>;
-  socket?: Types.InputMaybe<Types.Scalars['String']>;
-  isTemporary?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  url?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  publicKey?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  socket?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  isTemporary?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
 export type AddPeerMutation = { __typename?: 'Mutation'; addPeer: boolean };

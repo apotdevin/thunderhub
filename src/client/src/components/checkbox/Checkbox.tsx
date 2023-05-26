@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import {
   colorButtonBackground,
@@ -39,6 +39,7 @@ const StyledCheckbox = styled.div<{ checked: boolean }>`
 type CheckboxProps = {
   checked: boolean;
   onChange: (state: boolean) => void;
+  children?: ReactNode;
 };
 
 export const Checkbox: React.FC<CheckboxProps> = ({

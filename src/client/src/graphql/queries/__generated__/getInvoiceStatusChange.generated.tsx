@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetInvoiceStatusChangeQueryVariables = Types.Exact<{
-  id: Types.Scalars['String'];
+  id: Types.Scalars['String']['input'];
 }>;
 
 export type GetInvoiceStatusChangeQuery = {

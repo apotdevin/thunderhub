@@ -4,8 +4,8 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetNodeQueryVariables = Types.Exact<{
-  publicKey: Types.Scalars['String'];
-  withoutChannels?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  publicKey: Types.Scalars['String']['input'];
+  withoutChannels?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
 export type GetNodeQuery = {

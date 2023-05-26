@@ -4,11 +4,11 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetAccountingReportQueryVariables = Types.Exact<{
-  category?: Types.InputMaybe<Types.Scalars['String']>;
-  currency?: Types.InputMaybe<Types.Scalars['String']>;
-  fiat?: Types.InputMaybe<Types.Scalars['String']>;
-  month?: Types.InputMaybe<Types.Scalars['String']>;
-  year?: Types.InputMaybe<Types.Scalars['String']>;
+  category?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  currency?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  fiat?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  month?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  year?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 export type GetAccountingReportQuery = {

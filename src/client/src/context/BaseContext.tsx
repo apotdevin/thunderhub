@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { ReactNode, createContext, useContext, useReducer } from 'react';
 
 type State = {
   hasToken: boolean;
@@ -23,10 +23,10 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const BaseProvider: React.FC<{ initialHasToken: boolean }> = ({
-  children,
-  initialHasToken = false,
-}) => {
+const BaseProvider: React.FC<{
+  initialHasToken: boolean;
+  children?: ReactNode;
+}> = ({ children, initialHasToken = false }) => {
   const [state, dispatch] = useReducer(stateReducer, {
     hasToken: initialHasToken,
   });

@@ -5,16 +5,16 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type BosRebalanceMutationVariables = Types.Exact<{
   avoid?: Types.InputMaybe<
-    Array<Types.Scalars['String']> | Types.Scalars['String']
+    Array<Types.Scalars['String']['input']> | Types.Scalars['String']['input']
   >;
-  in_through?: Types.InputMaybe<Types.Scalars['String']>;
-  max_fee?: Types.InputMaybe<Types.Scalars['Float']>;
-  max_fee_rate?: Types.InputMaybe<Types.Scalars['Float']>;
-  max_rebalance?: Types.InputMaybe<Types.Scalars['Float']>;
-  timeout_minutes?: Types.InputMaybe<Types.Scalars['Float']>;
-  node?: Types.InputMaybe<Types.Scalars['String']>;
-  out_through?: Types.InputMaybe<Types.Scalars['String']>;
-  out_inbound?: Types.InputMaybe<Types.Scalars['Float']>;
+  in_through?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  max_fee?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  max_fee_rate?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  max_rebalance?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  timeout_minutes?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  node?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  out_through?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  out_inbound?: Types.InputMaybe<Types.Scalars['Float']['input']>;
 }>;
 
 export type BosRebalanceMutation = {

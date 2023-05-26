@@ -15,6 +15,7 @@ import { Settings, X } from 'react-feather';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { DarkSubTitle, SubCard } from '../generic/Styled';
 import { groupBy } from 'lodash';
+import 'regenerator-runtime/runtime';
 
 type StyledTableProps = {
   withBorder?: boolean;
@@ -259,7 +260,7 @@ export const Table: React.FC<TableProps> = ({
                             type={'checkbox'}
                             {...item.getToggleHiddenProps()}
                           />
-                          {item.Header}
+                          {item.Header as any}
                         </label>
                       </S.option>
                     );

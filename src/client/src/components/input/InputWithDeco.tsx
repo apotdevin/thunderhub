@@ -50,6 +50,7 @@ type InputWithDecoProps = {
   blurCallback?: (value: string) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onEnter?: () => void;
+  children?: React.ReactNode;
 };
 
 export const InputWithDeco: React.FC<InputWithDecoProps> = ({
@@ -72,7 +73,7 @@ export const InputWithDeco: React.FC<InputWithDecoProps> = ({
   const showAmount = !!amount || customAmount;
   let correctValue = value ? value : '';
 
-  if (inputType === 'number' && value) {
+  if (inputType === 'number' && typeof value === 'number') {
     correctValue = value && value > 0 ? value : '';
   }
 
