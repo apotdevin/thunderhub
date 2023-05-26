@@ -1,4 +1,4 @@
-import { useEffect, VFC } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { AppProps } from 'next/app';
@@ -36,12 +36,12 @@ const NotAuthenticated: React.FC = () => {
   return null;
 };
 
-const Listener: VFC<{ isRoot: boolean }> = ({ isRoot }) => {
+const Listener: FC<{ isRoot: boolean }> = ({ isRoot }) => {
   useListener(isRoot);
   return null;
 };
 
-const Wrapper: React.FC<{ authenticated: boolean }> = ({
+const Wrapper: React.FC<{ authenticated: boolean; children?: ReactNode }> = ({
   children,
   authenticated,
 }) => {

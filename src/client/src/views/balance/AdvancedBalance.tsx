@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'react';
+import { ReactNode, useReducer, useState } from 'react';
 import { useBosRebalanceMutation } from '../../graphql/mutations/__generated__/bosRebalance.generated';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
@@ -139,7 +139,10 @@ const reducer = (state: StateType, action: ActionType): StateType => {
   }
 };
 
-const SettingLine: React.FC<{ title: string }> = ({ children, title }) => (
+const SettingLine: React.FC<{ title: string; children?: ReactNode }> = ({
+  children,
+  title,
+}) => (
   <RebalanceLine>
     <RebalanceSubTitle>{title}</RebalanceSubTitle>
     <SingleLine>{children}</SingleLine>

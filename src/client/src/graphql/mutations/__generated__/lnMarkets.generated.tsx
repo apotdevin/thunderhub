@@ -17,7 +17,7 @@ export type LnMarketsLoginMutation = {
 };
 
 export type LnMarketsWithdrawMutationVariables = Types.Exact<{
-  amount: Types.Scalars['Float'];
+  amount: Types.Scalars['Float']['input'];
 }>;
 
 export type LnMarketsWithdrawMutation = {
@@ -26,7 +26,7 @@ export type LnMarketsWithdrawMutation = {
 };
 
 export type LnMarketsDepositMutationVariables = Types.Exact<{
-  amount: Types.Scalars['Float'];
+  amount: Types.Scalars['Float']['input'];
 }>;
 
 export type LnMarketsDepositMutation = {

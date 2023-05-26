@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type VerifyBackupQueryVariables = Types.Exact<{
-  backup: Types.Scalars['String'];
+  backup: Types.Scalars['String']['input'];
 }>;
 
 export type VerifyBackupQuery = { __typename?: 'Query'; verifyBackup: boolean };

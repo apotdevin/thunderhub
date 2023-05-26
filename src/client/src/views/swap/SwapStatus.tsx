@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Trash } from 'react-feather';
-import ReactTooltip from 'react-tooltip';
+import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { getTransactionLink } from '../../components/generic/helpers';
 import {
@@ -262,7 +262,7 @@ export const SwapStatus = () => {
           </Fragment>
         ))}
       </Card>
-      <ReactTooltip id={`cleanup`} effect={'solid'}>
+      <ReactTooltip id={`cleanup`}>
         Cleanup expired, refunded and completed swaps.
       </ReactTooltip>
       <Modal

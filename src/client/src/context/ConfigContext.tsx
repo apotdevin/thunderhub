@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  ReactNode,
+} from 'react';
 import getConfig from 'next/config';
 import Cookies from 'js-cookie';
 import { omit } from 'lodash';
@@ -53,6 +59,7 @@ type State = {
 
 type ConfigInitProps = {
   initialConfig: { theme: string };
+  children?: ReactNode;
 };
 
 type ActionType =

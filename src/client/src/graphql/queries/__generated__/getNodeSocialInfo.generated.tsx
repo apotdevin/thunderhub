@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetNodeSocialInfoQueryVariables = Types.Exact<{
-  pubkey: Types.Scalars['String'];
+  pubkey: Types.Scalars['String']['input'];
 }>;
 
 export type GetNodeSocialInfoQuery = {

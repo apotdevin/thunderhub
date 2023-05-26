@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type RemovePeerMutationVariables = Types.Exact<{
-  publicKey: Types.Scalars['String'];
+  publicKey: Types.Scalars['String']['input'];
 }>;
 
 export type RemovePeerMutation = {

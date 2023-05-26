@@ -3,7 +3,7 @@ import ScaleLoader from 'react-spinners/ScaleLoader';
 import { useGetChannelQuery } from '../../../../graphql/queries/__generated__/getChannel.generated';
 import { useGetClosedChannelsQuery } from '../../../../graphql/queries/__generated__/getClosedChannels.generated';
 import { themeColors } from '../../../../styles/Themes';
-import ReactTooltip from 'react-tooltip';
+import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { Info } from 'react-feather';
 import styled from 'styled-components';
 import { getAliasFromClosedChannels } from './helpers';
@@ -51,7 +51,7 @@ export const ChannelAlias: FC<{ id: string }> = ({ id }) => {
           <S.icon>
             <Info size={16} data-tip data-for={'channel_info'} />
           </S.icon>
-          <ReactTooltip id={'channel_info'} effect={'solid'} place={'right'}>
+          <ReactTooltip id={'channel_info'} place={'right'}>
             This channel has been closed.
           </ReactTooltip>
         </>

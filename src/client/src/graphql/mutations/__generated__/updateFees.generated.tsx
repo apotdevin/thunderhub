@@ -4,13 +4,13 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type UpdateFeesMutationVariables = Types.Exact<{
-  transaction_id?: Types.InputMaybe<Types.Scalars['String']>;
-  transaction_vout?: Types.InputMaybe<Types.Scalars['Float']>;
-  base_fee_tokens?: Types.InputMaybe<Types.Scalars['Float']>;
-  fee_rate?: Types.InputMaybe<Types.Scalars['Float']>;
-  cltv_delta?: Types.InputMaybe<Types.Scalars['Float']>;
-  max_htlc_mtokens?: Types.InputMaybe<Types.Scalars['String']>;
-  min_htlc_mtokens?: Types.InputMaybe<Types.Scalars['String']>;
+  transaction_id?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  transaction_vout?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  base_fee_tokens?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  fee_rate?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  cltv_delta?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  max_htlc_mtokens?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  min_htlc_mtokens?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 export type UpdateFeesMutation = {

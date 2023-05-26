@@ -4,9 +4,9 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetSessionTokenMutationVariables = Types.Exact<{
-  id: Types.Scalars['String'];
-  password: Types.Scalars['String'];
-  token?: Types.InputMaybe<Types.Scalars['String']>;
+  id: Types.Scalars['String']['input'];
+  password: Types.Scalars['String']['input'];
+  token?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 export type GetSessionTokenMutation = {

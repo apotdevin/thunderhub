@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type SignMessageQueryVariables = Types.Exact<{
-  message: Types.Scalars['String'];
+  message: Types.Scalars['String']['input'];
 }>;
 
 export type SignMessageQuery = { __typename?: 'Query'; signMessage: string };

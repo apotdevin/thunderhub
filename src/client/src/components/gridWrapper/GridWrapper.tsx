@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import { BitcoinFees } from '../../../src/components/bitcoinInfo/BitcoinFees';
 import { BitcoinPrice } from '../../../src/components/bitcoinInfo/BitcoinPrice';
@@ -8,6 +8,7 @@ import { Navigation } from '../../layouts/navigation/Navigation';
 
 type GridProps = {
   noNavigation?: boolean;
+  children?: ReactNode;
 };
 
 const Container = styled.div<GridProps>`
@@ -31,11 +32,9 @@ const ContentStyle = styled.div`
   grid-area: content;
 `;
 
-export const GridWrapper: React.FC<GridProps & { centerContent?: boolean }> = ({
-  children,
-  centerContent = true,
-  noNavigation,
-}) => (
+export const GridWrapper: React.FC<
+  GridProps & { centerContent?: boolean; children?: ReactNode }
+> = ({ children, centerContent = true, noNavigation }) => (
   <Section padding={'16px 16px 32px'}>
     <Container noNavigation={noNavigation}>
       <BitcoinPrice />

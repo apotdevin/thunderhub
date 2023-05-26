@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import {
   multiSelectColor,
@@ -41,6 +41,7 @@ interface SingleButtonProps {
   color?: string;
   withPadding?: string;
   onClick?: () => void;
+  children?: ReactNode;
 }
 
 export const SingleButton: React.FC<SingleButtonProps> = ({
@@ -86,6 +87,7 @@ interface MultiButtonProps {
   margin?: string;
   loading?: boolean;
   width?: string;
+  children?: ReactNode;
 }
 
 export const MultiButton: React.FC<MultiButtonProps> = ({

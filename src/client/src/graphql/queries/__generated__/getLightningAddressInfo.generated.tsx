@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetLightningAddressInfoQueryVariables = Types.Exact<{
-  address: Types.Scalars['String'];
+  address: Types.Scalars['String']['input'];
 }>;
 
 export type GetLightningAddressInfoQuery = {

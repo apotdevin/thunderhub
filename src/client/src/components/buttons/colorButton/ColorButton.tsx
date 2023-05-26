@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import { ChevronRight } from 'react-feather';
 import ScaleLoader from 'react-spinners/ScaleLoader';
@@ -131,6 +131,7 @@ export interface ColorButtonProps {
   mobileFullWidth?: boolean;
   width?: string;
   backgroundColor?: string | ThemeSet;
+  children?: ReactNode;
 }
 
 export const ColorButton: React.FC<ColorButtonProps> = ({

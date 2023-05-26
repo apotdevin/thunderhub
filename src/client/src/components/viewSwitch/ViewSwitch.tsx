@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import { mediaWidths } from '../../styles/Themes';
 
@@ -17,6 +17,7 @@ const HideDesktop = styled.div`
 
 interface ViewSwitchProps {
   hideMobile?: boolean;
+  children?: ReactNode;
 }
 
 export const ViewSwitch: React.FC<ViewSwitchProps> = ({

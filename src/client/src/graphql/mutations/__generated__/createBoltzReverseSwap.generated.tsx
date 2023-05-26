@@ -4,8 +4,8 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type CreateBoltzReverseSwapMutationVariables = Types.Exact<{
-  amount: Types.Scalars['Float'];
-  address?: Types.InputMaybe<Types.Scalars['String']>;
+  amount: Types.Scalars['Float']['input'];
+  address?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 export type CreateBoltzReverseSwapMutation = {

@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type FetchLnUrlMutationVariables = Types.Exact<{
-  url: Types.Scalars['String'];
+  url: Types.Scalars['String']['input'];
 }>;
 
 export type FetchLnUrlMutation = {
@@ -38,7 +38,7 @@ export type FetchLnUrlMutation = {
 };
 
 export type AuthLnUrlMutationVariables = Types.Exact<{
-  url: Types.Scalars['String'];
+  url: Types.Scalars['String']['input'];
 }>;
 
 export type AuthLnUrlMutation = {
@@ -47,9 +47,9 @@ export type AuthLnUrlMutation = {
 };
 
 export type PayLnUrlMutationVariables = Types.Exact<{
-  callback: Types.Scalars['String'];
-  amount: Types.Scalars['Float'];
-  comment?: Types.InputMaybe<Types.Scalars['String']>;
+  callback: Types.Scalars['String']['input'];
+  amount: Types.Scalars['Float']['input'];
+  comment?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 export type PayLnUrlMutation = {
@@ -66,10 +66,10 @@ export type PayLnUrlMutation = {
 };
 
 export type WithdrawLnUrlMutationVariables = Types.Exact<{
-  callback: Types.Scalars['String'];
-  amount: Types.Scalars['Float'];
-  k1: Types.Scalars['String'];
-  description?: Types.InputMaybe<Types.Scalars['String']>;
+  callback: Types.Scalars['String']['input'];
+  amount: Types.Scalars['Float']['input'];
+  k1: Types.Scalars['String']['input'];
+  description?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 export type WithdrawLnUrlMutation = {
@@ -78,9 +78,9 @@ export type WithdrawLnUrlMutation = {
 };
 
 export type ChannelLnUrlMutationVariables = Types.Exact<{
-  callback: Types.Scalars['String'];
-  k1: Types.Scalars['String'];
-  uri: Types.Scalars['String'];
+  callback: Types.Scalars['String']['input'];
+  k1: Types.Scalars['String']['input'];
+  uri: Types.Scalars['String']['input'];
 }>;
 
 export type ChannelLnUrlMutation = {

@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetForwardsQueryVariables = Types.Exact<{
-  days: Types.Scalars['Float'];
+  days: Types.Scalars['Float']['input'];
 }>;
 
 export type GetForwardsQuery = {

@@ -5,6 +5,7 @@ import { StatHeaderLine } from './styles';
 
 type StatWrapperProps = {
   title: string;
+  children?: React.ReactNode;
 };
 
 export const StatWrapper: React.FC<StatWrapperProps> = ({

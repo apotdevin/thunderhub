@@ -4,8 +4,8 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type VerifyMessageQueryVariables = Types.Exact<{
-  message: Types.Scalars['String'];
-  signature: Types.Scalars['String'];
+  message: Types.Scalars['String']['input'];
+  signature: Types.Scalars['String']['input'];
 }>;
 
 export type VerifyMessageQuery = {

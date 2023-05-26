@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  ReactNode,
+} from 'react';
 import { toast } from 'react-toastify';
 import { CreateBoltzReverseSwap } from './types';
 
@@ -74,7 +80,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const SwapsProvider: React.FC = ({ children }) => {
+const SwapsProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   useEffect(() => {

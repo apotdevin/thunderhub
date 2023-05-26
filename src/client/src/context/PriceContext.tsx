@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  ReactNode,
+} from 'react';
 
 type PriceProps = {
   last: number;
@@ -57,7 +63,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const PriceProvider: React.FC = ({ children }) => {
+const PriceProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   useEffect(() => {

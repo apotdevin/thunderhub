@@ -4,10 +4,10 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type CloseChannelMutationVariables = Types.Exact<{
-  id: Types.Scalars['String'];
-  forceClose?: Types.InputMaybe<Types.Scalars['Boolean']>;
-  target?: Types.InputMaybe<Types.Scalars['Float']>;
-  tokens?: Types.InputMaybe<Types.Scalars['Float']>;
+  id: Types.Scalars['String']['input'];
+  forceClose?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
+  target?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  tokens?: Types.InputMaybe<Types.Scalars['Float']['input']>;
 }>;
 
 export type CloseChannelMutation = {

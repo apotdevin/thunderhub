@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type RecoverFundsQueryVariables = Types.Exact<{
-  backup: Types.Scalars['String'];
+  backup: Types.Scalars['String']['input'];
 }>;
 
 export type RecoverFundsQuery = { __typename?: 'Query'; recoverFunds: boolean };

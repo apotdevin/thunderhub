@@ -4,8 +4,8 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type UpdateTwofaSecretMutationVariables = Types.Exact<{
-  secret: Types.Scalars['String'];
-  token: Types.Scalars['String'];
+  secret: Types.Scalars['String']['input'];
+  token: Types.Scalars['String']['input'];
 }>;
 
 export type UpdateTwofaSecretMutation = {

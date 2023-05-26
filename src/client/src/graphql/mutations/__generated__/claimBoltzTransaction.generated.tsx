@@ -4,12 +4,12 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type ClaimBoltzTransactionMutationVariables = Types.Exact<{
-  redeem: Types.Scalars['String'];
-  transaction: Types.Scalars['String'];
-  preimage: Types.Scalars['String'];
-  privateKey: Types.Scalars['String'];
-  destination: Types.Scalars['String'];
-  fee: Types.Scalars['Float'];
+  redeem: Types.Scalars['String']['input'];
+  transaction: Types.Scalars['String']['input'];
+  preimage: Types.Scalars['String']['input'];
+  privateKey: Types.Scalars['String']['input'];
+  destination: Types.Scalars['String']['input'];
+  fee: Types.Scalars['Float']['input'];
 }>;
 
 export type ClaimBoltzTransactionMutation = {

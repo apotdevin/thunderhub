@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useRef, useState } from 'react';
+import React, { FC, ReactNode, useCallback, useRef, useState } from 'react';
 import io from 'socket.io-client';
 import { Socket } from 'socket.io-client';
 import getConfig from 'next/config';
@@ -28,7 +28,7 @@ type Context = {
 
 const SocketContext = React.createContext<Context | undefined>(undefined);
 
-const SocketProvider: FC<{ authToken?: string }> = ({
+const SocketProvider: FC<{ authToken?: string; children?: ReactNode }> = ({
   children,
   authToken,
 }) => {

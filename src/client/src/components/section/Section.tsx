@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeSet } from 'styled-theming';
 import { backgroundColor, mediaWidths } from '../../styles/Themes';
@@ -44,6 +44,7 @@ type SectionProps = {
   color?: string | ThemeSet;
   textColor?: string | ThemeSet;
   padding?: string;
+  children?: ReactNode;
 };
 
 export const Section: React.FC<SectionProps> = ({

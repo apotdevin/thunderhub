@@ -16,13 +16,12 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
     const request = connection?.context?.req ? connection.context.req : req;
     const ip = getIp(request);
     const key = this.generateKey(context, ip);
-    const ttls = await this.storageService.getRecord(key);
+    const { totalHits } = await this.storageService.increment(key, ttl);
 
-    if (ttls.length >= limit) {
+    if (totalHits >= limit) {
       throw new ThrottlerException();
     }
 
-    await this.storageService.addRecord(key, ttl);
     return true;
   }
 }
