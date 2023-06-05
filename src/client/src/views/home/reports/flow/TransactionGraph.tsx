@@ -1,5 +1,4 @@
 import { FC, useMemo } from 'react';
-import { BarChart } from '../../../../components/chart/BarChart';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { chartColors } from '../../../../styles/Themes';
 import { getByTime } from '../../../../views/dashboard/widgets/helpers';
@@ -7,6 +6,7 @@ import styled from 'styled-components';
 import { useGetInvoicesQuery } from '../../../../graphql/queries/__generated__/getInvoices.generated';
 import { differenceInDays } from 'date-fns';
 import { useGetPaymentsQuery } from '../../../../graphql/queries/__generated__/getPayments.generated';
+import { BarChartV2 } from '../../../../components/chart/BarChartV2';
 
 const S = {
   row: styled.div`
@@ -116,8 +116,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
   return (
     <S.wrapper>
       <S.content>
-        <BarChart
-          priceLabel={type !== 'amount'}
+        <BarChartV2
           data={finalArray.map(f => {
             return {
               [showPay ? 'Payments' : 'Invoices']: f?.[type] || 0,
@@ -125,6 +124,8 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
             };
           })}
           colorRange={finalColor}
+          yAxisLabel={showPay ? '# of Payments' : '# of Invoices'}
+          title={showPay ? `Payments ${type}` : `Invoices ${type}`}
         />
       </S.content>
     </S.wrapper>

@@ -2,11 +2,13 @@
 const path = require('path');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const withTM = require('next-transpile-modules')(['echarts', 'zrender']);
 
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+dotenv.config({path: path.resolve(process.cwd(), '.env.local')});
+dotenv.config({path: path.resolve(process.cwd(), '.env')});
 
-module.exports = {
+module.exports = withTM({
   reactStrictMode: true,
   poweredByHeader: false,
   basePath: process.env.BASE_PATH || '',
@@ -28,4 +30,4 @@ module.exports = {
     noVersionCheck: process.env.NO_VERSION_CHECK === 'true',
     logoutUrl: process.env.LOGOUT_URL || '',
   },
-};
+});
