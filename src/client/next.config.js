@@ -3,8 +3,8 @@ const path = require('path');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
 
-dotenv.config({path: path.resolve(process.cwd(), '.env.local')});
-dotenv.config({path: path.resolve(process.cwd(), '.env')});
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 module.exports = {
   reactStrictMode: true,
