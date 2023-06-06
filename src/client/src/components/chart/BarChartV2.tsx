@@ -49,11 +49,11 @@ export const BarChartV2 = ({
         name: title,
         type: 'bar',
         emphasis: { focus: 'series' },
-        data: data.map(d => d.Invoices),
+        data: data.map((d: any) => d.Invoices),
       },
     ];
 
-    const dates = data.map(d => d.date);
+    const dates = data.map((d: any) => d.date);
 
     return { dates, series };
   }, [data, title]);
