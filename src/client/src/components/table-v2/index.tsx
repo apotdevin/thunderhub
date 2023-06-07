@@ -128,8 +128,6 @@ export default function TableV2({
           </thead>
           <tbody>
             {table.getRowModel().rows.map(row => {
-              console.log('ROWS');
-              console.log(row);
               return (
                 <tr key={row.id}>
                   {row.getVisibleCells().map(cell => {
