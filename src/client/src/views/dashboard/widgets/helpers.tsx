@@ -12,6 +12,8 @@ import { widgetList, WidgetProps } from './widgetList';
 import { GetInvoicesQuery } from '../../../graphql/queries/__generated__/getInvoices.generated';
 import { GetPaymentsQuery } from '../../../graphql/queries/__generated__/getPayments.generated';
 
+const ONE_WEEK = 7;
+
 const getColumns = (width: number): number => {
   const { lg, md, sm, xs } = defaultGrid.breakpoints;
 
@@ -82,12 +84,14 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
     fee?: number;
   }[] = [];
 
+  // check to see if we're working in days (isDay = false) or hours (isDay = true)
   const isDay = time <= 1;
 
   const today = isDay
     ? new Date().setMinutes(0, 0, 0)
     : new Date().setHours(0, 0, 0, 0);
 
+  // Look through each transaction in the array and build an array of transactions with the difference between today and the day (or hour) that the tx occurred
   array.forEach((transaction: ArrayType[0]) => {
     if (!transaction?.__typename) return;
 
@@ -149,10 +153,16 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
 
   if (!transactions?.length) return [];
 
+  // Group the transactionw in the array according to the 'difference' property of the object
   const grouped = groupBy(transactions, 'difference');
 
   const final: any[] = [];
-  const differences = Array.from({ length: isDay ? 24 : time }, (_, i) => i);
+
+  // If were working with a single day, divide the array in 24 pieces, one for each hour, otherwise, go back 7 days
+  const differences = Array.from(
+    { length: isDay ? 24 : ONE_WEEK },
+    (_, i) => i
+  );
 
   differences.forEach(key => {
     const group = grouped[key];

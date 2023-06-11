@@ -14,6 +14,7 @@ import ReactEChartsCore from 'echarts-for-react/lib/core';
 import { ThemeContext } from 'styled-components';
 import numeral from 'numeral';
 import { timeFormat, timeParse } from 'd3-time-format';
+import { getFormatDate } from '../generic/helpers';
 
 echarts.use([
   BarChart,
@@ -31,6 +32,7 @@ interface BarChartProps {
   data: any;
   yAxisLabel: string;
   title: string;
+  dataKey: string;
 }
 
 export const BarChartV2 = ({
@@ -38,6 +40,7 @@ export const BarChartV2 = ({
   colorRange,
   yAxisLabel,
   title,
+  dataKey,
 }: BarChartProps) => {
   const themeContext = useContext(ThemeContext);
 
@@ -49,7 +52,7 @@ export const BarChartV2 = ({
         name: title,
         type: 'bar',
         emphasis: { focus: 'series' },
-        data: data.map((d: any) => d.Invoices),
+        data: data.map((d: any) => d[dataKey]),
       },
     ];
 
@@ -63,11 +66,6 @@ export const BarChartV2 = ({
 
     return {
       color: colorRange,
-      legend: {
-        textStyle: { color: fontColor },
-        orient: 'horizontal',
-        top: 0,
-      },
       title: {
         text: title,
         textStyle: { color: fontColor },
@@ -83,6 +81,10 @@ export const BarChartV2 = ({
         trigger: 'axis',
         axisPointer: {
           animation: false,
+        },
+        formatter: (params: any) => {
+          return `Date: ${getFormatDate(params[0].axisValue)}<br />
+          ${params[0].seriesName}: ${params[0].value}<br />`;
         },
       },
       xAxis: {
@@ -105,8 +107,10 @@ export const BarChartV2 = ({
         nameLocation: 'center',
         nameGap: 48,
         type: 'value',
-        axisLine: { show: true, lineStyle: { color: fontColor } },
+        minInterval: 1,
         splitLine: { show: false },
+        axisLine: { show: true, lineStyle: { color: fontColor } },
+        axisTick: { show: true },
         axisLabel: {
           formatter: function (value: number) {
             return numeral(value).format('0.0a');

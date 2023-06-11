@@ -160,10 +160,11 @@ export const getPastFutureStr = (
 };
 
 export const getFormatDate = (
-  date: string | null | undefined
+  date: string | null | undefined,
+  style?: string
 ): string | null => {
   if (!date) return null;
-  return format(new Date(date), 'dd/MM/yyyy - HH:mm:ss');
+  return format(new Date(date), style || 'dd/MM/yyyy - HH:mm:ss');
 };
 
 export const getMessageDate = (

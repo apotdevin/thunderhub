@@ -48,12 +48,29 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
   showPay,
   type,
 }) => {
-  const { data, loading } = useGetInvoicesQuery();
+  const { data: invoiceData, loading } = useGetInvoicesQuery();
   const { data: paymentsData, loading: paymentsLoading } =
     useGetPaymentsQuery();
 
+  const labels = useMemo(() => {
+    switch (type) {
+      case 'amount':
+        return {
+          yAxisLabel: `# of ${showPay ? 'Payments' : 'Invoices'}`,
+          title: `# of ${showPay ? 'Payments' : 'Invoices'}`,
+        };
+      case 'tokens':
+        return {
+          yAxisLabel: `${showPay ? 'Payments' : 'Invoices'} Volume`,
+          title: `${showPay ? 'Payments' : 'Invoices'} Volume`,
+        };
+      default:
+        return {};
+    }
+  }, [type, showPay]);
+
   const invoicesByDate = useMemo(() => {
-    const invoices = data?.getInvoices.invoices || [];
+    const invoices = invoiceData?.getInvoices.invoices || [];
     const filtered = invoices.filter(i => !!i.is_confirmed);
 
     if (!filtered.length) {
@@ -70,7 +87,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     const invoicesByDate = getByTime(filtered, difference);
 
     return invoicesByDate;
-  }, [data]);
+  }, [invoiceData, showPay]);
 
   const paymentsByDate = useMemo(() => {
     const payments = paymentsData?.getPayments.payments || [];
@@ -90,7 +107,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     const paymentsByDate = getByTime(filtered, difference);
 
     return paymentsByDate;
-  }, [paymentsData]);
+  }, [paymentsData, showPay]);
 
   if (loading || paymentsLoading) {
     return (
@@ -102,10 +119,15 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     );
   }
 
-  if (!data?.getInvoices.invoices.length) {
+  if (
+    (!showPay && !invoiceData?.getInvoices.invoices.length) ||
+    (showPay && !paymentsData?.getPayments.payments.length)
+  ) {
     return (
       <S.wrapper>
-        <S.contentWrapper>No transactions for this period.</S.contentWrapper>
+        <S.contentWrapper>
+          No {showPay ? 'payments' : 'invoices'} for this period.
+        </S.contentWrapper>
       </S.wrapper>
     );
   }
@@ -124,8 +146,9 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
             };
           })}
           colorRange={finalColor}
-          yAxisLabel={showPay ? '# of Payments' : '# of Invoices'}
-          title={showPay ? `Payments ${type}` : `Invoices ${type}`}
+          yAxisLabel={labels.yAxisLabel || ''}
+          title={labels.title || ''}
+          dataKey={showPay ? 'Payments' : 'Invoices'}
         />
       </S.content>
     </S.wrapper>
