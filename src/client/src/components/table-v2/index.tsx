@@ -5,8 +5,10 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   flexRender,
   ColumnDef,
+  SortingState,
 } from '@tanstack/react-table';
 import { Input } from '../input';
 import { separationColor } from '../../../src/styles/Themes';
@@ -41,6 +43,10 @@ const Styles = styled.div`
         }
       }
     }
+    .cursor {
+      cursor: pointer;
+    }
+    ,
     th,
     td {
       font-size: ${({ fontSize }: StyledTableProps) => fontSize || '14px'};
@@ -74,15 +80,20 @@ export default function TableV2({
   fontSize,
 }: TableV2Props) {
   const [globalFilter, setGlobalFilter] = useState('');
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
     data,
     columns,
     state: {
       globalFilter,
+      sorting,
     },
+    enableSorting: true,
     onGlobalFilterChange: setGlobalFilter,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
@@ -93,7 +104,7 @@ export default function TableV2({
         <DebouncedInput
           value={globalFilter ?? ''}
           onChange={value => setGlobalFilter(String(value))}
-          placeholder={`Search ${filterPlaceholder}`}
+          placeholder={filterPlaceholder}
           count={table.getFilteredRowModel().rows.length}
         />
       </FilterLine>
@@ -109,14 +120,29 @@ export default function TableV2({
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => {
                   return (
-                    <th key={header.id} colSpan={header.colSpan}>
+                    <th
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      style={{ whiteSpace: 'nowrap' }}
+                    >
                       {header.isPlaceholder ? null : (
                         <>
-                          <div>
+                          <div
+                            {...{
+                              className: header.column.getCanSort()
+                                ? 'cursor'
+                                : '',
+                              onClick: header.column.getToggleSortingHandler(),
+                            }}
+                          >
                             {flexRender(
                               header.column.columnDef.header,
                               header.getContext()
                             )}
+                            {{
+                              asc: ' ⬆',
+                              desc: ' ⬇',
+                            }[header.column.getIsSorted() as string] ?? null}
                           </div>
                         </>
                       )}

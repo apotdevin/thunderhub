@@ -36,6 +36,7 @@ export const PendingChannels = () => {
       {
         header: 'Status',
         accessorKey: 'is_opening',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {row.original.is_opening ? 'Opening' : 'Closing'}
@@ -45,6 +46,7 @@ export const PendingChannels = () => {
       {
         header: 'Peer',
         accessorKey: 'alias',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {getNodeLink(row.original.partner_public_key, row.original.alias)}
@@ -54,6 +56,7 @@ export const PendingChannels = () => {
       {
         header: 'Local Balance',
         accessorKey: 'local_balance',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.local_balance} />
@@ -63,6 +66,7 @@ export const PendingChannels = () => {
       {
         header: 'Remote Balance',
         accessorKey: 'remote_balance',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.remote_balance} />
@@ -72,6 +76,7 @@ export const PendingChannels = () => {
       {
         header: 'Balance',
         accessorKey: 'capacity',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.capacity} />
@@ -81,6 +86,7 @@ export const PendingChannels = () => {
       {
         header: 'Sent',
         accessorKey: 'send',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.sent} />
@@ -90,6 +96,7 @@ export const PendingChannels = () => {
       {
         header: 'Received',
         accessorKey: 'received',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.received} />
@@ -99,6 +106,7 @@ export const PendingChannels = () => {
       {
         header: 'Force Closed',
         accessorKey: 'force_closed',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {row.original.force_closed}
@@ -108,6 +116,7 @@ export const PendingChannels = () => {
       {
         header: 'Timelock Expiration',
         accessorKey: 'timelock_expiration',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {row.original.timelock_expiration
@@ -119,6 +128,7 @@ export const PendingChannels = () => {
       {
         header: 'Timelock Blocks',
         accessorKey: 'timelock_blocks',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {row.original.timelock_blocks
@@ -130,6 +140,7 @@ export const PendingChannels = () => {
       {
         header: 'Transaction Fee',
         accessorKey: 'transaction_fee',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {row.original.transaction_fee || '-'}
@@ -139,6 +150,7 @@ export const PendingChannels = () => {
       {
         header: 'Transaction',
         accessorKey: 'transaction_id',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {getTransactionLink(row.original.transaction_id)}
@@ -148,6 +160,7 @@ export const PendingChannels = () => {
       {
         header: 'Close Transaction',
         accessorKey: 'close_transaction_id',
+        enableSorting: true,
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {getTransactionLink(row.original.close_transaction_id)}
