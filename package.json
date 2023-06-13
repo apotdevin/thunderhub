@@ -48,6 +48,7 @@
     "@nestjs/schedule": "^2.2.2",
     "@nestjs/throttler": "^4.0.0",
     "@nestjs/websockets": "^9.4.2",
+    "@tanstack/react-table": "^8.9.1",
     "@visx/axis": "^2.12.2",
     "@visx/chord": "^2.10.0",
     "@visx/event": "^2.6.0",
