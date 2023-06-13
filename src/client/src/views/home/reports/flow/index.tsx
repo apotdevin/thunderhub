@@ -43,7 +43,7 @@ const options = [
 
 const typeOptions = [
   { label: 'Count', value: 'amount' },
-  { label: 'Amount', value: 'tokens' },
+  { label: 'Volume', value: 'tokens' },
 ];
 
 export const FlowBox = () => {

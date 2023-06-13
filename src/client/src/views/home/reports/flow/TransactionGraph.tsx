@@ -56,13 +56,13 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     switch (type) {
       case 'amount':
         return {
-          yAxisLabel: `# of ${showPay ? 'Payments' : 'Invoices'}`,
-          title: `# of ${showPay ? 'Payments' : 'Invoices'}`,
+          yAxisLabel: `Amount of ${showPay ? 'Payments' : 'Invoices'}`,
+          title: `Amount of ${showPay ? 'Payments' : 'Invoices'}`,
         };
       case 'tokens':
         return {
-          yAxisLabel: `${showPay ? 'Payments' : 'Invoices'} Volume`,
-          title: `${showPay ? 'Payments' : 'Invoices'} Volume`,
+          yAxisLabel: `${showPay ? 'Payments' : 'Invoices'} Volume (sats)`,
+          title: `${showPay ? 'Payments' : 'Invoices'} Volume (sats)`,
         };
       default:
         return {};
@@ -146,7 +146,6 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
             };
           })}
           colorRange={finalColor}
-          yAxisLabel={labels.yAxisLabel || ''}
           title={labels.title || ''}
           dataKey={showPay ? 'Payments' : 'Invoices'}
         />

@@ -164,7 +164,7 @@ export const getFormatDate = (
   style?: string
 ): string | null => {
   if (!date) return null;
-  return format(new Date(date), style || 'dd/MM/yyyy - HH:mm:ss');
+  return format(new Date(date), style || 'yyyy.MM.dd - HH:mm:ss');
 };
 
 export const getMessageDate = (
