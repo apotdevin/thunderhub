@@ -8,8 +8,10 @@ import {
   getNodeLink,
   getTransactionLink,
 } from '../../../components/generic/helpers';
-import { Table } from '../../../components/table';
+import TableV2 from '../../../components/table-v2';
 import { Price } from '../../../components/price/Price';
+import { ColumnDef } from '@tanstack/react-table';
+import { PendingChannel } from '../../../graphql/types';
 
 export const PendingChannels = () => {
   const { loading, data } = useGetPendingChannelsQuery({
@@ -29,84 +31,93 @@ export const PendingChannels = () => {
     });
   }, [data]);
 
-  const columns = useMemo(
+  const columns = useMemo<ColumnDef<PendingChannel, any>[]>(
     () => [
       {
-        Header: 'Status',
-        accessor: 'is_opening',
-        Cell: ({ row }: any) => (
+        header: 'Status',
+        accessorKey: 'is_opening',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {row.original.is_opening ? 'Opening' : 'Closing'}
           </div>
         ),
       },
       {
-        Header: 'Peer',
-        accessor: 'alias',
-        Cell: ({ row }: any) => (
+        header: 'Peer',
+        accessorKey: 'alias',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {getNodeLink(row.original.partner_public_key, row.original.alias)}
           </div>
         ),
       },
       {
-        Header: 'Local Balance',
-        accessor: 'local_balance',
-        Cell: ({ row }: any) => (
+        header: 'Local Balance',
+        accessorKey: 'local_balance',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.local_balance} />
           </div>
         ),
       },
       {
-        Header: 'Remote Balance',
-        accessor: 'remote_balance',
-        Cell: ({ row }: any) => (
+        header: 'Remote Balance',
+        accessorKey: 'remote_balance',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.remote_balance} />
           </div>
         ),
       },
       {
-        Header: 'Balance',
-        accessor: 'capacity',
-        Cell: ({ row }: any) => (
+        header: 'Balance',
+        accessorKey: 'capacity',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.capacity} />
           </div>
         ),
       },
       {
-        Header: 'Sent',
-        accessor: 'send',
-        Cell: ({ row }: any) => (
+        header: 'Sent',
+        accessorKey: 'send',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.sent} />
           </div>
         ),
       },
       {
-        Header: 'Received',
-        accessor: 'received',
-        Cell: ({ row }: any) => (
+        header: 'Received',
+        accessorKey: 'received',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.received} />
           </div>
         ),
       },
       {
-        Header: 'Force Closed',
-        accessor: 'force_closed',
-        Cell: ({ row }: any) => (
+        header: 'Force Closed',
+        accessorKey: 'force_closed',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {row.original.force_closed}
           </div>
         ),
       },
       {
-        Header: 'Timelock Expiration',
-        accessor: 'timelock_expiration',
-        Cell: ({ row }: any) => (
+        header: 'Timelock Expiration',
+        accessorKey: 'timelock_expiration',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {row.original.timelock_expiration
               ? `${row.original.timelock_expiration} blocks`
@@ -115,9 +126,10 @@ export const PendingChannels = () => {
         ),
       },
       {
-        Header: 'Timelock Blocks',
-        accessor: 'timelock_blocks',
-        Cell: ({ row }: any) => (
+        header: 'Timelock Blocks',
+        accessorKey: 'timelock_blocks',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {row.original.timelock_blocks
               ? `${row.original.timelock_blocks} blocks`
@@ -126,27 +138,30 @@ export const PendingChannels = () => {
         ),
       },
       {
-        Header: 'Transaction Fee',
-        accessor: 'transaction_fee',
-        Cell: ({ row }: any) => (
+        header: 'Transaction Fee',
+        accessorKey: 'transaction_fee',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {row.original.transaction_fee || '-'}
           </div>
         ),
       },
       {
-        Header: 'Transaction',
-        accessor: 'transaction_id',
-        Cell: ({ row }: any) => (
+        header: 'Transaction',
+        accessorKey: 'transaction_id',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {getTransactionLink(row.original.transaction_id)}
           </div>
         ),
       },
       {
-        Header: 'Close Transaction',
-        accessor: 'close_transaction_id',
-        Cell: ({ row }: any) => (
+        header: 'Close Transaction',
+        accessorKey: 'close_transaction_id',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {getTransactionLink(row.original.close_transaction_id)}
           </div>
@@ -165,10 +180,10 @@ export const PendingChannels = () => {
   }
 
   return (
-    <Table
+    <TableV2
+      columns={columns}
+      data={tableData}
       withBorder={true}
-      tableColumns={columns}
-      tableData={tableData}
       filterPlaceholder="channels"
     />
   );
