@@ -21,7 +21,7 @@ import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { CloseChannel } from '../../../components/modal/closeChannel/CloseChannel';
 import Modal from '../../../components/modal/ReactModal';
 import { Price } from '../../../components/price/Price';
-import { Table } from '../../../components/table';
+import TableV2 from '../../../components/table-v2';
 import { useGetChannelsQuery } from '../../../graphql/queries/__generated__/getChannels.generated';
 import { useLocalStorage } from '../../../hooks/UseLocalStorage';
 import { chartColors } from '../../../styles/Themes';
@@ -29,6 +29,7 @@ import { getErrorContent } from '../../../utils/error';
 import { blockToTime, formatSeconds, getPercent } from '../../../utils/helpers';
 import { ChannelDetails } from './ChannelDetails';
 import { defaultHiddenColumns } from './helpers';
+import { VisibilityState } from '@tanstack/react-table';
 
 const S = {
   link: styled.span`
@@ -276,47 +277,52 @@ export const ChannelTable = () => {
   const columns = useMemo(
     () => [
       {
-        Header: 'Status',
+        header: 'Status',
         columns: [
           {
-            Header: 'Active',
-            accessor: 'channelActiveLogo',
+            header: 'Active',
+            accessorKey: 'channelActiveLogo',
             sortType: numberStringSorting('channelActive'),
+            cell: ({ cell }: any) => cell.renderValue(),
           },
           {
-            Header: 'Private',
-            accessor: 'channelPrivateLogo',
+            header: 'Private',
+            accessorKey: 'channelPrivateLogo',
             sortType: numberStringSorting('channelPrivate'),
+            cell: ({ cell }: any) => cell.renderValue(),
           },
           {
-            Header: 'Initiated',
-            accessor: 'channelOpenerLogo',
+            header: 'Initiated',
+            accessorKey: 'channelOpenerLogo',
             sortType: numberStringSorting('channelOpener'),
+            cell: ({ cell }: any) => cell.renderValue(),
           },
         ],
       },
       {
-        Header: 'Actions',
+        header: 'Actions',
         columns: [
           {
-            Header: <Edit size={14} />,
-            accessor: 'editAction',
+            header: <Edit size={14} />,
+            accessorKey: 'editAction',
             disableSortBy: true,
+            cell: ({ cell }: any) => cell.renderValue(),
           },
           {
-            Header: <X size={14} />,
-            accessor: 'closeAction',
+            header: <X size={14} />,
+            accessorKey: 'closeAction',
             disableSortBy: true,
+            cell: ({ cell }: any) => cell.renderValue(),
           },
         ],
       },
       {
-        Header: 'Info',
+        header: 'Info',
         columns: [
           {
-            Header: 'Peer',
-            accessor: 'undercaseAlias',
-            Cell: ({ row }: any) => (
+            header: 'Peer',
+            accessorKey: 'undercaseAlias',
+            cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
                 {getNodeLink(
                   row.original.partner_public_key,
@@ -326,86 +332,88 @@ export const ChannelTable = () => {
             ),
           },
           {
-            Header: 'Channel Id',
-            accessor: 'id',
-            forceVisible: true,
-            Cell: ({ row }: any) => (
+            header: 'Channel Id',
+            accessorKey: 'id',
+            enableHiding: false,
+            cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
                 {getChannelLink(row.original.id)}
               </div>
             ),
           },
           {
-            Header: 'Capacity',
-            accessor: 'capacity',
-            Cell: ({ row }: any) => (
+            header: 'Capacity',
+            accessorKey: 'capacity',
+            cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
                 <Price amount={row.original.capacity} />
               </div>
             ),
           },
-          { Header: 'Block Age', accessor: 'channel_age' },
+          { header: 'Block Age', accessorKey: 'channel_age' },
           {
-            Header: 'Channel Age',
-            accessor: 'channel_age_duplicate',
-            Cell: ({ row }: any) => (
+            header: 'Channel Age',
+            accessorKey: 'channel_age_duplicate',
+            cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
                 {blockToTime(row.original.channel_age)}
               </div>
             ),
           },
           {
-            Header: 'Past States',
-            accessor: 'past_states',
+            header: 'Past States',
+            accessorKey: 'past_states',
           },
         ],
       },
       {
-        Header: 'Balance',
+        header: 'Balance',
         columns: [
           {
-            Header: 'Local',
-            accessor: 'local_balance',
-            Cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
-                <Price amount={row.original.local_balance} />
-              </div>
-            ),
+            header: 'Local',
+            accessorKey: 'local_balance',
+            cell: ({ row }: any) => {
+              return (
+                <div style={{ whiteSpace: 'nowrap' }}>
+                  <Price amount={row.original.local_balance} />
+                </div>
+              );
+            },
           },
           {
-            Header: 'Remote',
-            accessor: 'remote_balance',
-            Cell: ({ row }: any) => (
+            header: 'Remote',
+            accessorKey: 'remote_balance',
+            cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
                 <Price amount={row.original.remote_balance} />
               </div>
             ),
           },
           {
-            Header: 'Percent',
-            accessor: 'balancePercentText',
+            header: 'Percent',
+            accessorKey: 'balancePercentText',
             sortType: numberStringSorting('balancePercent'),
           },
         ],
       },
       {
-        Header: 'Pending HTLC',
+        header: 'Pending HTLC',
         columns: [
-          { Header: 'Total HTLC', accessor: 'pending_total_amount' },
-          { Header: 'Total Sats', accessor: 'pending_total_tokens' },
-          { Header: 'Incoming HTLC', accessor: 'pending_incoming_amount' },
-          { Header: 'Incoming Sats', accessor: 'pending_incoming_tokens' },
-          { Header: 'Outgoing HTLC', accessor: 'pending_outgoing_amount' },
-          { Header: 'Outgoing Sats', accessor: 'pending_outgoing_tokens' },
+          { header: 'Total HTLC', accessorKey: 'pending_total_amount' },
+          { header: 'Total Sats', accessorKey: 'pending_total_tokens' },
+          { header: 'Incoming HTLC', accessorKey: 'pending_incoming_amount' },
+          { header: 'Incoming Sats', accessorKey: 'pending_incoming_tokens' },
+          { header: 'Outgoing HTLC', accessorKey: 'pending_outgoing_amount' },
+          { header: 'Outgoing Sats', accessorKey: 'pending_outgoing_tokens' },
         ],
       },
       {
-        Header: 'Monitoring',
+        header: 'Monitoring',
         columns: [
           {
-            Header: 'Online',
-            accessor: 'time_online',
-            Cell: ({ row }: any) => (
+            header: 'Online',
+            accessorKey: 'time_online',
+            cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
                 {formatSeconds(
                   Math.round((row.original.time_online || 0) / 1000)
@@ -414,9 +422,9 @@ export const ChannelTable = () => {
             ),
           },
           {
-            Header: 'Offline',
-            accessor: 'time_offline',
-            Cell: ({ row }: any) => (
+            header: 'Offline',
+            accessorKey: 'time_offline',
+            cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
                 {formatSeconds(
                   Math.round((row.original.time_offline || 0) / 1000)
@@ -425,89 +433,96 @@ export const ChannelTable = () => {
             ),
           },
           {
-            Header: 'Percent',
-            accessor: 'percentOnlineText',
+            header: 'Percent',
+            accessorKey: 'percentOnlineText',
             sortType: numberStringSorting('percentOnline'),
           },
         ],
       },
       {
-        Header: 'Activity',
+        header: 'Activity',
         columns: [
           {
-            Header: 'Sent',
-            accessor: 'sent',
-            Cell: ({ row }: any) => (
+            header: 'Sent',
+            accessorKey: 'sent',
+            cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
                 <Price amount={row.original.sent} />
               </div>
             ),
           },
           {
-            Header: 'Received',
-            accessor: 'received',
-            Cell: ({ row }: any) => (
+            header: 'Received',
+            accessorKey: 'received',
+            cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
                 <Price amount={row.original.received} />
               </div>
             ),
           },
           {
-            Header: 'Percent',
-            accessor: 'activityPercentText',
+            header: 'Percent',
+            accessorKey: 'activityPercentText',
             sortType: numberStringSorting('activityPercent'),
           },
         ],
       },
       {
-        Header: 'My Fees',
+        header: 'My Fees',
         columns: [
-          { Header: 'Rate', accessor: 'myRate' },
-          { Header: 'Base', accessor: 'myBase' },
+          { header: 'Rate', accessorKey: 'myRate' },
+          { header: 'Base', accessorKey: 'myBase' },
         ],
       },
       {
-        Header: 'Partner Fees',
+        header: 'Partner Fees',
         columns: [
-          { Header: 'Rate', accessor: 'partnerRate' },
-          { Header: 'Base', accessor: 'partnerBase' },
+          { header: 'Rate', accessorKey: 'partnerRate' },
+          { header: 'Base', accessorKey: 'partnerBase' },
         ],
       },
       {
-        Header: 'My HTLC',
+        header: 'My HTLC',
         columns: [
-          { Header: 'Max', accessor: 'myMaxHtlc' },
-          { Header: 'Min', accessor: 'myMinHtlc' },
+          { header: 'Max', accessorKey: 'myMaxHtlc' },
+          { header: 'Min', accessorKey: 'myMinHtlc' },
         ],
       },
       {
-        Header: 'Partner HTLC',
+        header: 'Partner HTLC',
         columns: [
-          { Header: 'Max', accessor: 'partnerMaxHtlc' },
-          { Header: 'Min', accessor: 'partnerMinHtlc' },
+          { header: 'Max', accessorKey: 'partnerMaxHtlc' },
+          { header: 'Min', accessorKey: 'partnerMinHtlc' },
         ],
       },
       {
-        Header: 'Bars',
+        header: 'Bars',
         columns: [
           {
-            Header: 'Balance',
-            accessor: 'balanceBars',
+            header: 'Balance',
+            accessorKey: 'balanceBars',
             sortType: numberStringSorting('balancePercent'),
+            cell: ({ cell }: any) => cell.renderValue(),
           },
           {
-            Header: 'Proportional',
-            accessor: 'proportionalBars',
+            header: 'Proportional',
+            accessorKey: 'proportionalBars',
             sortType: numberStringSorting('balancePercent'),
+            cell: ({ cell }: any) => cell.renderValue(),
           },
           {
-            Header: 'Activity',
-            accessor: 'activityBars',
+            header: 'Activity',
+            accessorKey: 'activityBars',
             sortType: numberStringSorting('activityPercent'),
+            cell: ({ cell }: any) => cell.renderValue(),
           },
         ],
       },
-      { Header: 'Details', accessor: 'viewAction' },
+      {
+        header: 'Details',
+        accessorKey: 'viewAction',
+        cell: ({ cell }: any) => cell.renderValue(),
+      },
     ],
     [numberStringSorting]
   );
@@ -520,6 +535,14 @@ export const ChannelTable = () => {
       setHiddenColumns(filtered);
     }
   };
+
+  const hiddenColumnState: VisibilityState = useMemo(() => {
+    const defaultColumns: VisibilityState = {};
+    hiddenColumns.forEach(c => {
+      defaultColumns[c] = false;
+    });
+    return defaultColumns;
+  }, [hiddenColumns]);
 
   if (loading) {
     return <LoadingCard noCard={true} />;
@@ -550,12 +573,12 @@ export const ChannelTable = () => {
 
   return (
     <>
-      <Table
+      <TableV2
         withBorder={true}
-        tableColumns={columns}
-        tableData={tableData}
+        columns={columns}
+        data={tableData}
         onHideToggle={handleToggle}
-        defaultHiddenColumns={hiddenColumns}
+        defaultHiddenColumns={hiddenColumnState}
         filterPlaceholder="channels"
       />
       <Modal isOpen={!!channel} closeCallback={() => setChannel(null)}>
