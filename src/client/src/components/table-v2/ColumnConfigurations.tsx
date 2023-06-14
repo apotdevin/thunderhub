@@ -8,6 +8,7 @@ import { DarkSubTitle, SubCard } from '../generic/Styled';
 interface ColumnConfigurationsProps {
   isOpen: boolean;
   table: Table<any>;
+  toggleConfiguration: (hide: boolean, id: string) => void;
 }
 
 const S = {
@@ -46,6 +47,7 @@ const S = {
 export const ColumnConfigurations: FC<ColumnConfigurationsProps> = ({
   isOpen,
   table,
+  toggleConfiguration,
 }: ColumnConfigurationsProps) => {
   // The columns that are hideable in configurations need to be grouped by their parents id in order for display purposes, see enableHiding to toggle viewability of each column
   const groupedHideableColumns = useMemo(() => {
@@ -78,6 +80,9 @@ export const ColumnConfigurations: FC<ColumnConfigurationsProps> = ({
                             checked: column.getIsVisible(),
                             onChange: column.getToggleVisibilityHandler(),
                           }}
+                          onClick={(e: any) =>
+                            toggleConfiguration(!e.target.checked, column.id)
+                          }
                         />{' '}
                         {column.columnDef.header}
                       </label>

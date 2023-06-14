@@ -25,7 +25,7 @@ interface TableV2Props {
   alignCenter?: boolean;
   fontSize?: string;
   defaultHiddenColumns?: VisibilityState;
-  showConfigurations?: (hide: boolean, id: string) => void;
+  toggleConfiguration?: (hide: boolean, id: string) => void;
 }
 
 type StyledTableProps = {
@@ -90,7 +90,7 @@ export default function TableV2({
   alignCenter,
   fontSize,
   defaultHiddenColumns,
-  showConfigurations,
+  toggleConfiguration,
 }: TableV2Props) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -127,14 +127,19 @@ export default function TableV2({
           placeholder={filterPlaceholder}
           count={table.getFilteredRowModel().rows.length}
         />
-        {showConfigurations ? (
-          <ColorButton onClick={() => setIsOpen(p => !p)}>
-            {isOpen ? <X size={18} /> : <Settings size={18} />}
-          </ColorButton>
+        {toggleConfiguration ? (
+          <>
+            <ColorButton onClick={() => setIsOpen(p => !p)}>
+              {isOpen ? <X size={18} /> : <Settings size={18} />}
+            </ColorButton>
+            <ColumnConfigurations
+              isOpen={isOpen}
+              table={table}
+              toggleConfiguration={toggleConfiguration}
+            />
+          </>
         ) : null}
       </S.row>
-
-      <ColumnConfigurations table={table} isOpen={isOpen} />
 
       <S.wrapper
         withBorder={withBorder}
