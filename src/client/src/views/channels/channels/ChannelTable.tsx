@@ -577,7 +577,7 @@ export const ChannelTable = () => {
         withBorder={true}
         columns={columns}
         data={tableData}
-        onHideToggle={handleToggle}
+        showConfigurations={handleToggle}
         defaultHiddenColumns={hiddenColumnState}
         filterPlaceholder="channels"
       />

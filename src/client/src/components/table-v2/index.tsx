@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import {
   useReactTable,
@@ -15,9 +15,7 @@ import { Settings, X } from 'react-feather';
 import { Input } from '../input';
 import { separationColor } from '../../../src/styles/Themes';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
-import { mediaWidths } from '../../../src/styles/Themes';
-import { groupBy } from 'lodash';
-import { DarkSubTitle, SubCard } from '../generic/Styled';
+import { ColumnConfigurations } from './ColumnConfigurations';
 
 interface TableV2Props {
   columns: ColumnDef<any, any>[];
@@ -27,7 +25,7 @@ interface TableV2Props {
   alignCenter?: boolean;
   fontSize?: string;
   defaultHiddenColumns?: VisibilityState;
-  onHideToggle?: (hide: boolean, id: string) => void;
+  showConfigurations?: (hide: boolean, id: string) => void;
 }
 
 type StyledTableProps = {
@@ -42,30 +40,6 @@ const S = {
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 24px;
-  `,
-  optionRow: styled.div`
-    display: flex;
-    justify-content: flex-start;
-    align-items: stretch;
-    flex-wrap: wrap;
-
-    @media (${mediaWidths.mobile}) {
-      display: block;
-    }
-  `,
-  option: styled.label`
-    margin: 4px 8px;
-  `,
-  options: styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-wrap: wrap;
-
-    @media (${mediaWidths.mobile}) {
-      flex-direction: row;
-    }
   `,
   wrapper: styled.div`
     overflow-x: auto;
@@ -116,7 +90,7 @@ export default function TableV2({
   alignCenter,
   fontSize,
   defaultHiddenColumns,
-  onHideToggle,
+  showConfigurations,
 }: TableV2Props) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -144,15 +118,6 @@ export default function TableV2({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  // The columns that are hideable in configurations need to be grouped by their parents id in order for display purposes
-  const groupedHideableColumns = useMemo(() => {
-    const allLeafColumns = table
-      .getAllLeafColumns()
-      .filter(c => c.getCanHide());
-    const grouped = groupBy(allLeafColumns, (c: any) => c?.parent?.id);
-    return grouped;
-  }, [table]);
-
   return (
     <>
       <S.row>
@@ -162,46 +127,14 @@ export default function TableV2({
           placeholder={filterPlaceholder}
           count={table.getFilteredRowModel().rows.length}
         />
-        {onHideToggle ? (
+        {showConfigurations ? (
           <ColorButton onClick={() => setIsOpen(p => !p)}>
             {isOpen ? <X size={18} /> : <Settings size={18} />}
           </ColorButton>
         ) : null}
       </S.row>
 
-      {isOpen ? (
-        <S.optionRow>
-          {Object.keys(groupedHideableColumns).map(
-            (group: string, index: number) => {
-              return (
-                <SubCard key={`${group}-${index}`} style={{ height: 'auto' }}>
-                  <DarkSubTitle fontSize="16px">
-                    {group === 'undefined' ? 'General' : group}
-                  </DarkSubTitle>
-                  <S.options>
-                    {groupedHideableColumns[group].map((column: any) => {
-                      return (
-                        <S.option key={column.id} className="px-1">
-                          <label>
-                            <input
-                              {...{
-                                type: 'checkbox',
-                                checked: column.getIsVisible(),
-                                onChange: column.getToggleVisibilityHandler(),
-                              }}
-                            />{' '}
-                            {column.columnDef.header}
-                          </label>
-                        </S.option>
-                      );
-                    })}
-                  </S.options>
-                </SubCard>
-              );
-            }
-          )}
-        </S.optionRow>
-      ) : null}
+      <ColumnConfigurations table={table} isOpen={isOpen} />
 
       <S.wrapper
         withBorder={withBorder}
