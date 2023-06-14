@@ -4,7 +4,7 @@ import { useGetUtxosQuery } from '../../../graphql/queries/__generated__/getUtxo
 import { DarkSubTitle } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
-import TableV2 from '../../../components/table-v2';
+import Table from '../../../components/table';
 import { getAddressLink } from '../../../components/generic/helpers';
 import { Price } from '../../../components/price/Price';
 import { blockToTime } from '../../../utils/helpers';
@@ -85,7 +85,7 @@ export const ChainUtxos = () => {
   }
 
   return (
-    <TableV2
+    <Table
       withBorder={true}
       columns={columns}
       data={tableData}

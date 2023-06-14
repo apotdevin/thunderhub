@@ -10,7 +10,7 @@ import { Forward } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
 import { ChannelAlias } from '../home/reports/forwardReport/ChannelAlias';
 import { sortByNode } from './helpers';
-import TableV2 from '../../components/table-v2';
+import Table from '../../components/table';
 
 const getBar = (top: number, bottom: number) => {
   const percent = (top / bottom) * 100;
@@ -93,5 +93,5 @@ export const ForwardTable: FC<{ days: number; order: string }> = ({
     outgoingBar: <SingleBar value={getBar(f.outgoing, maxOut)} height={16} />,
   }));
 
-  return <TableV2 data={tableData} columns={columns} withSorting={true} />;
+  return <Table data={tableData} columns={columns} withSorting={true} />;
 };

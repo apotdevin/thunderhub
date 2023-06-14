@@ -7,7 +7,7 @@ import { Price } from '../../components/price/Price';
 import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
 import { getErrorContent } from '../../utils/error';
 import { ChannelAlias } from '../home/reports/forwardReport/ChannelAlias';
-import TableV2 from '../../components/table-v2';
+import Table from '../../components/table';
 
 type ForwardProps = {
   days: number;
@@ -108,7 +108,7 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
   }
 
   return (
-    <TableV2
+    <Table
       withBorder={true}
       columns={columns}
       data={tableData}

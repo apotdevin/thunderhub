@@ -21,7 +21,7 @@ import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { CloseChannel } from '../../../components/modal/closeChannel/CloseChannel';
 import Modal from '../../../components/modal/ReactModal';
 import { Price } from '../../../components/price/Price';
-import TableV2 from '../../../components/table-v2';
+import Table from '../../../components/table';
 import { useGetChannelsQuery } from '../../../graphql/queries/__generated__/getChannels.generated';
 import { useLocalStorage } from '../../../hooks/UseLocalStorage';
 import { chartColors } from '../../../styles/Themes';
@@ -574,7 +574,7 @@ export const ChannelTable = () => {
 
   return (
     <>
-      <TableV2
+      <Table
         withBorder={true}
         columns={columns}
         data={tableData}

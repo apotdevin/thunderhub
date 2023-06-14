@@ -1,6 +1,6 @@
 import { getDateDif } from '../../../../components/generic/helpers';
 import { Price } from '../../../../components/price/Price';
-import TableV2 from '../../../../components/table-v2';
+import Table from '../../../../components/table';
 import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 import { ChannelAlias } from '../../../../views/home/reports/forwardReport/ChannelAlias';
 import styled from 'styled-components';
@@ -85,7 +85,7 @@ export const ForwardListWidget = () => {
     <S.wrapper>
       <S.title>Forwards</S.title>
       <S.table>
-        <TableV2 columns={columns} data={tableData} withSorting={true} />
+        <Table columns={columns} data={tableData} withSorting={true} />
       </S.table>
     </S.wrapper>
   );

@@ -3,7 +3,7 @@ import {
   CardWithTitle,
   SubTitle,
 } from '../../../../components/generic/Styled';
-import TableV2 from '../../../../components/table-v2';
+import Table from '../../../../components/table';
 import { useBitcoinFees } from '../../../../hooks/UseBitcoinFees';
 
 export const MempoolReport = () => {
@@ -49,7 +49,7 @@ export const MempoolReport = () => {
     <CardWithTitle>
       <SubTitle>Mempool Fees</SubTitle>
       <Card>
-        <TableV2 alignCenter={true} columns={columns} data={data} />
+        <Table alignCenter={true} columns={columns} data={data} />
       </Card>
     </CardWithTitle>
   );

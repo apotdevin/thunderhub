@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { ChannelAlias } from './ChannelAlias';
-import TableV2 from '../../../../components/table-v2';
+import Table from '../../../../components/table';
 
 export type RouteType = {
   route: string;
@@ -76,7 +76,7 @@ export const RouteTable: FC<RouteTableProps> = ({ order, forwardArray }) => {
     aliasOut: <ChannelAlias id={f.outgoing_channel} />,
   }));
 
-  return <TableV2 data={tableData} columns={columns} withSorting={true} />;
+  return <Table data={tableData} columns={columns} withSorting={true} />;
 };
 
 export const ChannelTable: FC<ChannelTableProps> = ({
@@ -128,5 +128,5 @@ export const ChannelTable: FC<ChannelTableProps> = ({
     alias: <ChannelAlias id={f.channelId} />,
   }));
 
-  return <TableV2 data={tableData} columns={columns} withSorting={true} />;
+  return <Table data={tableData} columns={columns} withSorting={true} />;
 };

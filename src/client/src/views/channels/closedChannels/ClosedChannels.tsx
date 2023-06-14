@@ -4,7 +4,7 @@ import { useGetClosedChannelsQuery } from '../../../graphql/queries/__generated_
 import { DarkSubTitle } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
-import TableV2 from '../../../components/table-v2';
+import Table from '../../../components/table';
 import { Price } from '../../../components/price/Price';
 import { blockToTime } from '../../../utils/helpers';
 import { orderBy } from 'lodash';
@@ -118,7 +118,7 @@ export const ClosedChannels = () => {
   }
 
   return (
-    <TableV2
+    <Table
       columns={columns}
       data={tableData}
       withBorder={true}

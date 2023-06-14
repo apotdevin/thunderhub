@@ -4,7 +4,7 @@ import { useGetChainTransactionsQuery } from '../../../graphql/queries/__generat
 import { DarkSubTitle } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
-import TableV2 from '../../../components/table-v2';
+import Table from '../../../components/table';
 import {
   getAddressLink,
   getDateDif,
@@ -108,7 +108,7 @@ export const ChainTransactions = () => {
   }
 
   return (
-    <TableV2
+    <Table
       withBorder={true}
       columns={columns}
       data={tableData}

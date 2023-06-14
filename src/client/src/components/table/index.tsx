@@ -1,21 +1,34 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import {
-  useTable,
-  useSortBy,
-  useAsyncDebounce,
-  useGlobalFilter,
-  TableInstance,
-  useFilters,
-  ColumnInstance,
-} from 'react-table';
-import { mediaWidths, separationColor } from '../../../src/styles/Themes';
-import { Input } from '../input';
+  useReactTable,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  flexRender,
+  ColumnDef,
+  SortingState,
+  VisibilityState,
+} from '@tanstack/react-table';
 import { Settings, X } from 'react-feather';
+import { separationColor } from '../../styles/Themes';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
-import { DarkSubTitle, SubCard } from '../generic/Styled';
-import { groupBy } from 'lodash';
-import 'regenerator-runtime/runtime';
+import { ColumnConfigurations } from './ColumnConfigurations';
+import { DebouncedInput } from './DebouncedInput';
+
+interface TableProps {
+  columns: ColumnDef<any, any>[];
+  data: any;
+  filterPlaceholder?: string;
+  withGlobalSort?: boolean; // enables the global search box
+  withSorting?: boolean; // enables columns to be sorted
+  withBorder?: boolean;
+  alignCenter?: boolean;
+  fontSize?: string;
+  defaultHiddenColumns?: VisibilityState;
+  toggleConfiguration?: (hide: boolean, id: string) => void;
+}
 
 type StyledTableProps = {
   withBorder?: boolean;
@@ -23,290 +36,186 @@ type StyledTableProps = {
   fontSize?: string;
 };
 
-const Styles = styled.div`
-  overflow-x: auto;
-  table {
-    border-spacing: 0;
-    tr {
-      :last-child {
-        td {
-          border-bottom: 0;
+const S = {
+  row: styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  `,
+  wrapper: styled.div`
+    overflow-x: auto;
+    table {
+      width: 100%;
+      border-spacing: 0;
+      tr {
+        :last-child {
+          td {
+            border-bottom: 0;
+          }
+        }
+      }
+      .cursor {
+        cursor: pointer;
+      }
+      ,
+      th,
+      td {
+        font-size: ${({ fontSize }: StyledTableProps) => fontSize || '14px'};
+        text-align: left;
+        margin: 0;
+        padding: 8px;
+        ${({ withBorder }: StyledTableProps) =>
+          withBorder &&
+          css`
+            border-bottom: 1px solid ${separationColor};
+          `}
+        ${({ alignCenter }: StyledTableProps) =>
+          alignCenter &&
+          css`
+            text-align: center;
+            padding: 8px;
+          `}
+        :last-child {
+          border-right: 0;
         }
       }
     }
-    th,
-    td {
-      font-size: ${({ fontSize }: StyledTableProps) => fontSize || '14px'};
-      text-align: left;
-      margin: 0;
-      padding: 8px;
-      ${({ withBorder }: StyledTableProps) =>
-        withBorder &&
-        css`
-          border-bottom: 1px solid ${separationColor};
-        `}
-      ${({ alignCenter }: StyledTableProps) =>
-        alignCenter &&
-        css`
-          text-align: center;
-          padding: 8px;
-        `}
-      :last-child {
-        border-right: 0;
-      }
-    }
-  }
-`;
-
-const S = {
-  options: styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-wrap: wrap;
-
-    @media (${mediaWidths.mobile}) {
-      flex-direction: row;
-    }
-  `,
-  option: styled.label`
-    margin: 4px 8px;
-  `,
-  row: styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  `,
-  optionRow: styled.div`
-    display: flex;
-    justify-content: flex-start;
-    align-items: stretch;
-    flex-wrap: wrap;
-
-    @media (${mediaWidths.mobile}) {
-      display: block;
-    }
   `,
 };
 
-const FilterLine = styled.div`
-  margin-bottom: 24px;
-`;
-
-const GlobalFilter = ({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
+export default function Table({
+  columns,
+  data,
   filterPlaceholder,
-}: any) => {
-  const count = preGlobalFilteredRows.length;
-  const [value, setValue] = useState(globalFilter);
-  const onChange = useAsyncDebounce(value => {
-    setGlobalFilter(value || undefined);
-  }, 200);
-
-  return (
-    <FilterLine>
-      <Input
-        maxWidth={'300px'}
-        value={value || ''}
-        onChange={e => {
-          setValue(e.target.value);
-          onChange(e.target.value);
-        }}
-        placeholder={`Search ${count} ${filterPlaceholder || ''}`}
-      />
-    </FilterLine>
-  );
-};
-
-type TableColumn = {
-  Header: string | JSX.Element;
-  accessor: string;
-};
-
-type TableProps = {
-  tableData: any[];
-  tableColumns: (
-    | TableColumn
-    | {
-        Header: string | JSX.Element;
-        columns: TableColumn[];
-      }
-  )[];
-  withBorder?: boolean;
-  fontSize?: string;
-  filterPlaceholder?: string;
-  notSortable?: boolean;
-  alignCenter?: boolean;
-  defaultHiddenColumns?: string[];
-  onHideToggle?: (hide: boolean, id: string) => void;
-};
-
-export const Table: React.FC<TableProps> = ({
-  onHideToggle,
-  defaultHiddenColumns = [],
-  tableData,
-  tableColumns,
   withBorder,
-  fontSize,
-  filterPlaceholder,
-  notSortable,
   alignCenter,
-}) => {
+  fontSize,
+  defaultHiddenColumns,
+  toggleConfiguration,
+  withGlobalSort = false,
+  withSorting = false,
+}: TableProps) {
+  const [globalFilter, setGlobalFilter] = useState('');
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const data = useMemo(() => tableData, [tableData]);
-  const columns = useMemo(() => tableColumns, [tableColumns]);
-  const hiddenColumns = useMemo(
-    () => defaultHiddenColumns,
-    [defaultHiddenColumns]
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+    defaultHiddenColumns || {}
   );
 
-  const instance = useTable(
-    {
-      autoResetSortBy: false,
-      columns,
-      data,
-      initialState: {
-        hiddenColumns,
-      },
-    } as any,
-    useFilters,
-    useGlobalFilter,
-    useSortBy
-  );
-
-  const {
-    allColumns,
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state,
-    preGlobalFilteredRows,
-    setGlobalFilter,
-  } = instance as TableInstance & {
-    preGlobalFilteredRows: any;
-    setGlobalFilter: any;
+  const tableConfigs = {
+    data,
+    columns,
+    state: {
+      columnVisibility,
+      globalFilter,
+      sorting,
+    },
+    enableSorting: withSorting,
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   };
 
-  const orderedColumns = useMemo(() => {
-    const hidableColumns = allColumns.reduce((p, c) => {
-      if (c.isVisible && (c as any).forceVisible) {
-        return p;
-      }
+  if (withGlobalSort) {
+    tableConfigs.enableSorting = true;
+    tableConfigs.state.globalFilter = globalFilter;
+    tableConfigs.onGlobalFilterChange = setGlobalFilter;
+  }
 
-      return [...p, c];
-    }, [] as ColumnInstance[]);
+  if (withSorting) {
+    tableConfigs.state.sorting = sorting;
+    tableConfigs.onSortingChange = setSorting;
+  }
 
-    const grouped = groupBy(
-      hidableColumns,
-      (c: any) => c?.parent?.Header || ''
-    );
-
-    const final = [];
-
-    for (const key in grouped) {
-      if (Object.prototype.hasOwnProperty.call(grouped, key)) {
-        const group = grouped[key];
-        final.push({ name: key, items: group });
-      }
-    }
-
-    return final;
-  }, [allColumns]);
+  const table = useReactTable(tableConfigs);
 
   return (
     <>
-      {filterPlaceholder || onHideToggle ? (
-        <S.row>
-          {filterPlaceholder ? (
-            <GlobalFilter
-              preGlobalFilteredRows={preGlobalFilteredRows}
-              globalFilter={(state as any).globalFilter}
-              setGlobalFilter={setGlobalFilter}
-              filterPlaceholder={filterPlaceholder}
-            />
-          ) : null}
-          {onHideToggle ? (
+      <S.row>
+        {withGlobalSort ? (
+          <DebouncedInput
+            value={globalFilter ?? ''}
+            onChange={value => setGlobalFilter(String(value))}
+            placeholder={filterPlaceholder || ''}
+            count={table.getFilteredRowModel().rows.length}
+          />
+        ) : null}
+        {toggleConfiguration ? (
+          <>
             <ColorButton onClick={() => setIsOpen(p => !p)}>
               {isOpen ? <X size={18} /> : <Settings size={18} />}
             </ColorButton>
-          ) : null}
-        </S.row>
+          </>
+        ) : null}
+      </S.row>
+
+      {isOpen && toggleConfiguration ? (
+        <ColumnConfigurations
+          table={table}
+          toggleConfiguration={toggleConfiguration}
+        />
       ) : null}
-      {isOpen && (
-        <S.optionRow>
-          {orderedColumns.map((column, index) => {
-            const { name, items } = column;
 
-            return (
-              <SubCard key={`${name}${index}`} style={{ height: 'auto' }}>
-                <DarkSubTitle fontSize="16px">{name || 'General'}</DarkSubTitle>
-                <S.options>
-                  {items.map(item => {
-                    const { checked } = item.getToggleHiddenProps();
-
-                    return (
-                      <S.option key={item.id}>
-                        <label>
-                          <input
-                            onClick={() =>
-                              onHideToggle && onHideToggle(checked, item.id)
-                            }
-                            type={'checkbox'}
-                            {...item.getToggleHiddenProps()}
-                          />
-                          {item.Header as any}
-                        </label>
-                      </S.option>
-                    );
-                  })}
-                </S.options>
-              </SubCard>
-            );
-          })}
-        </S.optionRow>
-      )}
-      <Styles
+      <S.wrapper
         withBorder={withBorder}
         fontSize={fontSize}
         alignCenter={alignCenter}
       >
-        <table {...getTableProps()} style={{ width: '100%' }}>
+        <table>
           <thead>
-            {headerGroups.map((headerGroup, index) => (
-              <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-                {headerGroup.headers.map((column: any, index) => (
-                  <th
-                    {...column.getHeaderProps(
-                      notSortable ? undefined : column.getSortByToggleProps()
-                    )}
-                    key={index}
-                  >
-                    <span style={{ whiteSpace: 'nowrap' }}>
-                      {column.render('Header')}
-                    </span>
-                    <span>
-                      {column.isSorted ? (column.isSortedDesc ? '⬇' : '⬆') : ''}
-                    </span>
-                  </th>
-                ))}
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => {
+                  return (
+                    <th
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      style={{ whiteSpace: 'nowrap' }}
+                    >
+                      {header.isPlaceholder ? null : (
+                        <>
+                          <div
+                            {...{
+                              className: header.column.getCanSort()
+                                ? 'cursor'
+                                : '',
+                              onClick: header.column.getToggleSortingHandler(),
+                            }}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: ' ⬆',
+                              desc: ' ⬇',
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
+                        </>
+                      )}
+                    </th>
+                  );
+                })}
               </tr>
             ))}
           </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, index) => {
-              prepareRow(row);
+          <tbody>
+            {table.getRowModel().rows.map(row => {
               return (
-                <tr {...row.getRowProps()} key={index}>
-                  {row.cells.map((cell, index) => {
+                <tr key={row.id}>
+                  {row.getVisibleCells().map(cell => {
                     return (
-                      <td {...cell.getCellProps()} key={index}>
-                        {cell.render('Cell')}
+                      <td key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </td>
                     );
                   })}
@@ -315,7 +224,7 @@ export const Table: React.FC<TableProps> = ({
             })}
           </tbody>
         </table>
-      </Styles>
+      </S.wrapper>
     </>
   );
-};
+}

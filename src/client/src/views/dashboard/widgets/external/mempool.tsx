@@ -1,4 +1,4 @@
-import TableV2 from '../../../../components/table-v2';
+import Table from '../../../../components/table';
 import { useBitcoinFees } from '../../../../hooks/UseBitcoinFees';
 import styled from 'styled-components';
 
@@ -34,7 +34,7 @@ export const MempoolWidget = () => {
 
   return (
     <S.wrapper>
-      <TableV2 alignCenter={true} columns={columns} data={data} />
+      <Table alignCenter={true} columns={columns} data={data} />
     </S.wrapper>
   );
 };
