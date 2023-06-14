@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import {
   useReactTable,
@@ -12,15 +12,17 @@ import {
   VisibilityState,
 } from '@tanstack/react-table';
 import { Settings, X } from 'react-feather';
-import { Input } from '../input';
 import { separationColor } from '../../../src/styles/Themes';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { ColumnConfigurations } from './ColumnConfigurations';
+import { DebouncedInput } from './DebouncedInput';
 
 interface TableV2Props {
   columns: ColumnDef<any, any>[];
   data: any;
-  filterPlaceholder: string;
+  filterPlaceholder?: string;
+  withGlobalSort?: boolean; // enables the global search box
+  withSorting?: boolean; // enables columns to be sorted
   withBorder?: boolean;
   alignCenter?: boolean;
   fontSize?: string;
@@ -91,6 +93,8 @@ export default function TableV2({
   fontSize,
   defaultHiddenColumns,
   toggleConfiguration,
+  withGlobalSort = false,
+  withSorting = false,
 }: TableV2Props) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -100,7 +104,7 @@ export default function TableV2({
     defaultHiddenColumns || {}
   );
 
-  const table = useReactTable({
+  const tableConfigs = {
     data,
     columns,
     state: {
@@ -108,38 +112,55 @@ export default function TableV2({
       globalFilter,
       sorting,
     },
-    enableSorting: true,
-    onGlobalFilterChange: setGlobalFilter,
+    enableSorting: withSorting,
     onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-  });
+  };
+
+  if (withGlobalSort) {
+    tableConfigs.enableSorting = true;
+    tableConfigs.state.globalFilter = globalFilter;
+    tableConfigs.onGlobalFilterChange = setGlobalFilter;
+  }
+
+  if (withSorting) {
+    tableConfigs.state.sorting = sorting;
+    tableConfigs.onSortingChange = setSorting;
+  }
+
+  const table = useReactTable(tableConfigs);
 
   return (
     <>
       <S.row>
-        <DebouncedInput
-          value={globalFilter ?? ''}
-          onChange={value => setGlobalFilter(String(value))}
-          placeholder={filterPlaceholder}
-          count={table.getFilteredRowModel().rows.length}
-        />
+        {withGlobalSort ? (
+          <DebouncedInput
+            value={globalFilter ?? ''}
+            onChange={value => setGlobalFilter(String(value))}
+            placeholder={filterPlaceholder || ''}
+            count={table.getFilteredRowModel().rows.length}
+          />
+        ) : null}
         {toggleConfiguration ? (
           <>
             <ColorButton onClick={() => setIsOpen(p => !p)}>
               {isOpen ? <X size={18} /> : <Settings size={18} />}
             </ColorButton>
-            <ColumnConfigurations
-              isOpen={isOpen}
-              table={table}
-              toggleConfiguration={toggleConfiguration}
-            />
           </>
         ) : null}
       </S.row>
+
+      {isOpen && toggleConfiguration ? (
+        <ColumnConfigurations
+          table={table}
+          toggleConfiguration={toggleConfiguration}
+        />
+      ) : null}
 
       <S.wrapper
         withBorder={withBorder}
@@ -205,43 +226,5 @@ export default function TableV2({
         </table>
       </S.wrapper>
     </>
-  );
-}
-
-// A debounced input react component
-function DebouncedInput({
-  value: initialValue,
-  onChange,
-  debounce = 500,
-  placeholder,
-  count,
-}: {
-  value: string | number;
-  onChange: (value: string | number) => void;
-  count: number;
-  debounce?: number;
-  placeholder?: string;
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
-  const [value, setValue] = useState(initialValue);
-
-  useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value);
-    }, debounce);
-
-    return () => clearTimeout(timeout);
-  }, [value]);
-
-  return (
-    <Input
-      maxWidth={'300px'}
-      value={value || ''}
-      onChange={e => setValue(e.target.value)}
-      placeholder={`Search ${count} ${placeholder || ''}`}
-    />
   );
 }

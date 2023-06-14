@@ -6,7 +6,6 @@ import { groupBy } from 'lodash';
 import { DarkSubTitle, SubCard } from '../generic/Styled';
 
 interface ColumnConfigurationsProps {
-  isOpen: boolean;
   table: Table<any>;
   toggleConfiguration: (hide: boolean, id: string) => void;
 }
@@ -45,7 +44,6 @@ const S = {
 };
 
 export const ColumnConfigurations: FC<ColumnConfigurationsProps> = ({
-  isOpen,
   table,
   toggleConfiguration,
 }: ColumnConfigurationsProps) => {
@@ -57,8 +55,6 @@ export const ColumnConfigurations: FC<ColumnConfigurationsProps> = ({
     const grouped = groupBy(allLeafColumns, (c: any) => c?.parent?.id);
     return grouped;
   }, [table]);
-
-  if (!isOpen) return null;
 
   return (
     <S.optionRow>

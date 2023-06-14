@@ -305,13 +305,13 @@ export const ChannelTable = () => {
           {
             header: <Edit size={14} />,
             accessorKey: 'editAction',
-            disableSortBy: true,
+            enableSorting: false,
             cell: ({ cell }: any) => cell.renderValue(),
           },
           {
             header: <X size={14} />,
             accessorKey: 'closeAction',
-            disableSortBy: true,
+            enableSorting: false,
             cell: ({ cell }: any) => cell.renderValue(),
           },
         ],
@@ -521,6 +521,7 @@ export const ChannelTable = () => {
       {
         header: 'Details',
         accessorKey: 'viewAction',
+        enableSorting: false,
         cell: ({ cell }: any) => cell.renderValue(),
       },
     ],
@@ -577,6 +578,8 @@ export const ChannelTable = () => {
         withBorder={true}
         columns={columns}
         data={tableData}
+        withGlobalSort={true}
+        withSorting={true}
         toggleConfiguration={handleToggle}
         defaultHiddenColumns={hiddenColumnState}
         filterPlaceholder="channels"

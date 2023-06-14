@@ -4,7 +4,7 @@ import { useGetChainTransactionsQuery } from '../../../graphql/queries/__generat
 import { DarkSubTitle } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
-import { Table } from '../../../components/table';
+import TableV2 from '../../../components/table-v2';
 import {
   getAddressLink,
   getDateDif,
@@ -33,9 +33,9 @@ export const ChainTransactions = () => {
   const columns = useMemo(
     () => [
       {
-        Header: 'Type',
-        accessor: 'transaction_type',
-        Cell: ({ row }: any) => (
+        header: 'Type',
+        accessorKey: 'transaction_type',
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {row.original.transaction_type === 'Sent' ? (
               <ArrowUp color={chartColors.red} size={16} />
@@ -46,38 +46,39 @@ export const ChainTransactions = () => {
         ),
       },
       {
-        Header: 'Date',
-        accessor: 'created_at',
-        Cell: ({ row }: any) => (
+        header: 'Date',
+        accessorKey: 'created_at',
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {`${getDateDif(row.original.created_at)} ago`}
           </div>
         ),
       },
       {
-        Header: 'Sats',
-        accessor: 'tokens',
-        Cell: ({ row }: any) => (
+        header: 'Sats',
+        accessorKey: 'tokens',
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.tokens} />
           </div>
         ),
       },
       {
-        Header: 'Fee',
-        accessor: 'fee',
-        Cell: ({ row }: any) => (
+        header: 'Fee',
+        accessorKey: 'fee',
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.fee} />
           </div>
         ),
       },
-      { Header: 'Confirmations', accessor: 'confirmation_count' },
-      { Header: 'Confirmation Block', accessor: 'confirmation_height' },
+      { header: 'Confirmations', accessorKey: 'confirmation_count' },
+      { header: 'Confirmation Block', accessorKey: 'confirmation_height' },
       {
-        Header: 'Output Addresses',
-        accessor: 'output_addresses',
-        Cell: ({ row }: any) =>
+        header: 'Output Addresses',
+        accessorKey: 'output_addresses',
+        enableSorting: false,
+        cell: ({ row }: any) =>
           row.original.output_addresses.map((a: string) => (
             <div key={a} style={{ whiteSpace: 'nowrap' }}>
               {getAddressLink(a)}
@@ -85,9 +86,10 @@ export const ChainTransactions = () => {
           )),
       },
       {
-        Header: 'Transaction',
-        accessor: 'id',
-        Cell: ({ row }: any) => (
+        header: 'Transaction',
+        accessorKey: 'id',
+        enableSorting: false,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {getTransactionLink(row.original.id)}
           </div>
@@ -106,6 +108,11 @@ export const ChainTransactions = () => {
   }
 
   return (
-    <Table withBorder={true} tableColumns={columns} tableData={tableData} />
+    <TableV2
+      withBorder={true}
+      columns={columns}
+      data={tableData}
+      withSorting={true}
+    />
   );
 };

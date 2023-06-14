@@ -1,4 +1,4 @@
-import { Table } from '../../../../components/table';
+import TableV2 from '../../../../components/table-v2';
 import { useBitcoinFees } from '../../../../hooks/UseBitcoinFees';
 import styled from 'styled-components';
 
@@ -17,10 +17,10 @@ export const MempoolWidget = () => {
   }
 
   const columns = [
-    { Header: 'Fastest', accessor: 'fast' },
-    { Header: 'Half Hour', accessor: 'halfHour' },
-    { Header: 'Hour', accessor: 'hour' },
-    { Header: 'Minimum', accessor: 'minimum' },
+    { header: 'Fastest', accessorKey: 'fast' },
+    { header: 'Half Hour', accessorKey: 'halfHour' },
+    { header: 'Hour', accessorKey: 'hour' },
+    { header: 'Minimum', accessorKey: 'minimum' },
   ];
 
   const data = [
@@ -34,7 +34,7 @@ export const MempoolWidget = () => {
 
   return (
     <S.wrapper>
-      <Table alignCenter={true} tableColumns={columns} tableData={data} />
+      <TableV2 alignCenter={true} columns={columns} data={data} />
     </S.wrapper>
   );
 };

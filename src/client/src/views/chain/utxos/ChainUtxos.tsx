@@ -4,7 +4,7 @@ import { useGetUtxosQuery } from '../../../graphql/queries/__generated__/getUtxo
 import { DarkSubTitle } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
-import { Table } from '../../../components/table';
+import TableV2 from '../../../components/table-v2';
 import { getAddressLink } from '../../../components/generic/helpers';
 import { Price } from '../../../components/price/Price';
 import { blockToTime } from '../../../utils/helpers';
@@ -29,43 +29,46 @@ export const ChainUtxos = () => {
   const columns = useMemo(
     () => [
       {
-        Header: '',
-        accessor: 'index',
+        header: '',
+        accessorKey: 'index',
       },
       {
-        Header: 'Sats',
-        accessor: 'tokens',
-        Cell: ({ row }: any) => (
+        header: 'Sats',
+        accessorKey: 'tokens',
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.tokens} />
           </div>
         ),
       },
       {
-        Header: 'Confirmations',
+        header: 'Confirmations',
         columns: [
-          { Header: 'Blocks', accessor: 'confirmation_count' },
+          { header: 'Blocks', accessorKey: 'confirmation_count' },
           {
-            Header: 'Since',
-            accessor: 'time',
+            header: 'Since',
+            accessorKey: 'time',
           },
         ],
       },
       {
-        Header: 'Address',
+        header: 'Address',
+        enableSorting: false,
         columns: [
           {
-            Header: 'Link',
-            accessor: 'output_addresses',
-            Cell: ({ row }: any) => (
+            header: 'Link',
+            enableSorting: false,
+            accessorKey: 'output_addresses',
+            cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
                 {getAddressLink(row.original.address)}
               </div>
             ),
           },
           {
-            Header: 'Format',
-            accessor: 'address_format',
+            header: 'Format',
+            enableSorting: false,
+            accessorKey: 'address_format',
           },
         ],
       },
@@ -82,6 +85,11 @@ export const ChainUtxos = () => {
   }
 
   return (
-    <Table withBorder={true} tableColumns={columns} tableData={tableData} />
+    <TableV2
+      withBorder={true}
+      columns={columns}
+      data={tableData}
+      withSorting={true}
+    />
   );
 };

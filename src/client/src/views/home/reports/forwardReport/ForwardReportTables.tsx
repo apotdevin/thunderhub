@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Table } from '../../../../components/table';
 import { ChannelAlias } from './ChannelAlias';
+import TableV2 from '../../../../components/table-v2';
 
 export type RouteType = {
   route: string;
@@ -53,9 +53,21 @@ export const RouteTable: FC<RouteTableProps> = ({ order, forwardArray }) => {
   };
 
   const columns = [
-    { Header: 'In', accessor: 'aliasIn' },
-    { Header: 'Out', accessor: 'aliasOut' },
-    { Header: getTitle(), accessor: getAccesor() },
+    {
+      header: 'In',
+      accessorKey: 'aliasIn',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Out',
+      accessorKey: 'aliasOut',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: getTitle(),
+      accessorKey: getAccesor(),
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
   ];
 
   const tableData = forwardArray.map(f => ({
@@ -64,7 +76,7 @@ export const RouteTable: FC<RouteTableProps> = ({ order, forwardArray }) => {
     aliasOut: <ChannelAlias id={f.outgoing_channel} />,
   }));
 
-  return <Table tableData={tableData} tableColumns={columns} />;
+  return <TableV2 data={tableData} columns={columns} withSorting={true} />;
 };
 
 export const ChannelTable: FC<ChannelTableProps> = ({
@@ -94,9 +106,21 @@ export const ChannelTable: FC<ChannelTableProps> = ({
   };
 
   const columns = [
-    { Header: 'Alias', accessor: 'alias' },
-    { Header: 'Id', accessor: 'name' },
-    { Header: getTitle(), accessor: getAccesor() },
+    {
+      header: 'Alias',
+      accessorKey: 'alias',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Id',
+      accessorKey: 'name',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: getTitle(),
+      accessorKey: getAccesor(),
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
   ];
 
   const tableData = forwardArray.map(f => ({
@@ -104,5 +128,5 @@ export const ChannelTable: FC<ChannelTableProps> = ({
     alias: <ChannelAlias id={f.channelId} />,
   }));
 
-  return <Table tableData={tableData} tableColumns={columns} />;
+  return <TableV2 data={tableData} columns={columns} withSorting={true} />;
 };
