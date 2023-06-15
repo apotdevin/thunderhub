@@ -4,7 +4,6 @@ import {
   useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   flexRender,
   ColumnDef,
@@ -119,7 +118,6 @@ export default function Table({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
   };
 
   if (withGlobalSort) {
