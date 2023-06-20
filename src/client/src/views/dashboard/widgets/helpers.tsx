@@ -160,7 +160,7 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
 
   // If were working with a single day, divide the array in 24 pieces, one for each hour, otherwise, go back 7 days
   const differences = Array.from(
-    { length: isDay ? 24 : ONE_WEEK },
+    { length: isDay ? 24 : time ? time : ONE_WEEK },
     (_, i) => i
   );
 

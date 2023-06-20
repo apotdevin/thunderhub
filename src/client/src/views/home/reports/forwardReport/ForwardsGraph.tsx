@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { BarChart } from '../../../../components/chart/BarChart';
+import { BarChartV2 } from '../../../../components/chart/BarChartV2';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 import { chartColors } from '../../../../styles/Themes';
@@ -82,13 +82,14 @@ export const ForwardsGraph: FC<ForwardGraphProps> = ({ days, type }) => {
   return (
     <S.wrapper>
       <S.content>
-        <BarChart
-          priceLabel={type.value !== 'amount'}
+        <BarChartV2
+          title="Forwards"
           data={forwards.map(f => ({
             Forward: f[type.value] || 0,
             date: f.date,
           }))}
           colorRange={[chartColors.purple]}
+          dataKey="Forward"
         />
       </S.content>
     </S.wrapper>
