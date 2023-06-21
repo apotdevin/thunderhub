@@ -18,6 +18,7 @@ import {
   CardTitle,
   Separation,
 } from '../src/components/generic/Styled';
+import { ForwardSankey } from '../src/views/forwards/forwardSankey';
 
 const S = {
   options: styled.div`
@@ -88,6 +89,10 @@ const ForwardsView = () => {
             <SubTitle>Chord Graph</SubTitle>
             <Card>
               <ForwardChord days={days.value} order={type.value} />
+            </Card>
+            <SubTitle>Sankey</SubTitle>
+            <Card>
+              <ForwardSankey days={days.value} />
             </Card>
           </>
         )}
