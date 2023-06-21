@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { useGetInvoicesQuery } from '../../../../graphql/queries/__generated__/getInvoices.generated';
 import { differenceInDays } from 'date-fns';
 import { useGetPaymentsQuery } from '../../../../graphql/queries/__generated__/getPayments.generated';
-import { BarChartV2 } from '../../../../components/chart/BarChartV2';
+import { BarChart } from '../../../../components/chart/BarChart';
 
 const S = {
   row: styled.div`
@@ -138,7 +138,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
   return (
     <S.wrapper>
       <S.content>
-        <BarChartV2
+        <BarChart
           data={finalArray.map(f => {
             return {
               [showPay ? 'Payments' : 'Invoices']: f?.[type] || 0,

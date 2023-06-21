@@ -1,5 +1,5 @@
 import { useContext, useMemo } from 'react';
-import { BarChart } from 'echarts/charts';
+import { BarChart as EBarChart } from 'echarts/charts';
 import {
   GraphicComponent,
   GridComponent,
@@ -18,7 +18,7 @@ import { getFormatDate } from '../generic/helpers';
 import { formatSats } from '../../utils/helpers';
 
 echarts.use([
-  BarChart,
+  EBarChart,
   CanvasRenderer,
   GridComponent,
   TooltipComponent,
@@ -35,7 +35,7 @@ interface BarChartProps {
   dataKey: string;
 }
 
-export const BarChartV2 = ({
+export const BarChart = ({
   data,
   colorRange,
   title,

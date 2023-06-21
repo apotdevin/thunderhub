@@ -9,7 +9,7 @@ import { useGetLiquidReportQuery } from '../../../../graphql/queries/__generated
 import { chartColors } from '../../../../styles/Themes';
 import styled from 'styled-components';
 import { WarningText } from '../../../../views/stats/styles';
-import { HorizontalBarChartV2 } from '../../../../components/chart/HorizontalBarChartV2';
+import { HorizontalBarChart } from '../../../../components/chart/HorizontalBarChart';
 
 const S = {
   row: styled.div`
@@ -95,7 +95,7 @@ export const LiquidityGraph = () => {
         <SubTitle>Liquidity Report</SubTitle>
         <Card mobileCardPadding={'8px 0'}>
           <S.wrapper>
-            <HorizontalBarChartV2
+            <HorizontalBarChart
               dataKey="Value"
               data={liquidity}
               colorRange={[chartColors.green]}
@@ -118,7 +118,7 @@ export const LiquidityGraph = () => {
             </DarkSubTitle>
           ) : (
             <S.wrapper>
-              <HorizontalBarChartV2
+              <HorizontalBarChart
                 dataKey="Value"
                 data={htlc}
                 colorRange={[chartColors.green]}

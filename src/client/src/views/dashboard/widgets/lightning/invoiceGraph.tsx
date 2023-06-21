@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { getByTime } from '../helpers';
 import { useGetInvoicesQuery } from '../../../../graphql/queries/__generated__/getInvoices.generated';
 import { differenceInDays } from 'date-fns';
-import { BarChartV2 } from '../../../../components/chart/BarChartV2';
+import { BarChart } from '../../../../components/chart/BarChart';
 
 const S = {
   row: styled.div`
@@ -107,7 +107,7 @@ export const InvoicesGraph = () => {
     <S.wrapper>
       <Header />
       <S.content>
-        <BarChartV2
+        <BarChart
           data={invoicesByDate.map(f => {
             return {
               Invoices: f?.[type.value] || 0,

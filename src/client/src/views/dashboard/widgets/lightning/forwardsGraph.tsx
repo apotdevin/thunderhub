@@ -5,7 +5,7 @@ import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/g
 import { chartColors } from '../../../../styles/Themes';
 import styled from 'styled-components';
 import { getByTime } from '../helpers';
-import { BarChartV2 } from '../../../../components/chart/BarChartV2';
+import { BarChart } from '../../../../components/chart/BarChart';
 
 const S = {
   row: styled.div`
@@ -109,7 +109,7 @@ export const ForwardsGraph = () => {
     <S.wrapper>
       <Header />
       <S.content>
-        <BarChartV2
+        <BarChart
           data={forwards.map(f => ({
             Forward: f[type.value] || 0,
             date: f.date,

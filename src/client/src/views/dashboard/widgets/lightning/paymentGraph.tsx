@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { getByTime } from '../helpers';
 import { useGetPaymentsQuery } from '../../../../graphql/queries/__generated__/getPayments.generated';
 import { differenceInDays } from 'date-fns';
-import { BarChartV2 } from '../../../../components/chart/BarChartV2';
+import { BarChart } from '../../../../components/chart/BarChart';
 
 const S = {
   row: styled.div`
@@ -106,7 +106,7 @@ export const PaymentsGraph = () => {
     <S.wrapper>
       <Header />
       <S.content>
-        <BarChartV2
+        <BarChart
           data={paymentsByDate.map(f => {
             return {
               Payments: f?.[type.value] || 0,
