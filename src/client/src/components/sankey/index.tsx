@@ -58,7 +58,7 @@ export const Sankey = ({ data, width, height }: SankeyProps) => {
       series: [
         {
           type: 'sankey',
-          nodeAlign: 'left',
+          nodeAlign: 'justify',
           layoutIterations: 32,
           data: data.nodes,
           links: data.links,
