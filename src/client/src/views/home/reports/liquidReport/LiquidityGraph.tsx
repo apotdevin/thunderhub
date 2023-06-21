@@ -1,4 +1,3 @@
-import { HorizontalBarChart } from '../../../../components/chart/HorizontalBarChart';
 import {
   Card,
   CardWithTitle,
@@ -10,6 +9,7 @@ import { useGetLiquidReportQuery } from '../../../../graphql/queries/__generated
 import { chartColors } from '../../../../styles/Themes';
 import styled from 'styled-components';
 import { WarningText } from '../../../../views/stats/styles';
+import { HorizontalBarChartV2 } from '../../../../components/chart/HorizontalBarChartV2';
 
 const S = {
   row: styled.div`
@@ -76,11 +76,11 @@ export const LiquidityGraph = () => {
   } = data.getChannelReport;
 
   const liquidity = [
-    { label: 'Total Commit', Value: commit },
-    { label: 'Max Outgoing', Value: maxOut },
-    { label: 'Max Incoming', Value: maxIn },
-    { label: 'Local Balance', Value: local },
     { label: 'Remote Balance', Value: remote },
+    { label: 'Local Balance', Value: local },
+    { label: 'Max Incoming', Value: maxIn },
+    { label: 'Max Outgoing', Value: maxOut },
+    { label: 'Total Commit', Value: commit },
   ];
 
   const htlc = [
@@ -95,8 +95,8 @@ export const LiquidityGraph = () => {
         <SubTitle>Liquidity Report</SubTitle>
         <Card mobileCardPadding={'8px 0'}>
           <S.wrapper>
-            <HorizontalBarChart
-              priceLabel={true}
+            <HorizontalBarChartV2
+              dataKey="Value"
               data={liquidity}
               colorRange={[chartColors.green]}
             />
@@ -118,8 +118,8 @@ export const LiquidityGraph = () => {
             </DarkSubTitle>
           ) : (
             <S.wrapper>
-              <HorizontalBarChart
-                priceLabel={false}
+              <HorizontalBarChartV2
+                dataKey="Value"
                 data={htlc}
                 colorRange={[chartColors.green]}
               />

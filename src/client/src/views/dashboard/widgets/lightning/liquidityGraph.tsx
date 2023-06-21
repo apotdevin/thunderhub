@@ -1,4 +1,4 @@
-import { HorizontalBarChart } from '../../../../components/chart/HorizontalBarChart';
+import { HorizontalBarChartV2 } from '../../../../components/chart/HorizontalBarChartV2';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { useGetLiquidReportQuery } from '../../../../graphql/queries/__generated__/getChannelReport.generated';
 import { chartColors } from '../../../../styles/Themes';
@@ -61,10 +61,10 @@ export const LiquidityGraph = () => {
 
   return (
     <S.wrapper>
-      <HorizontalBarChart
-        priceLabel={true}
+      <HorizontalBarChartV2
         data={liquidity}
         colorRange={[chartColors.green]}
+        dataKey="Value"
       />
     </S.wrapper>
   );

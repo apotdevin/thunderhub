@@ -1,6 +1,4 @@
 import { useMemo, useState } from 'react';
-
-import { BarChart } from '../../../../components/chart/BarChart';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { SmallSelectWithValue } from '../../../../components/select';
 import { chartColors } from '../../../../styles/Themes';
@@ -8,6 +6,7 @@ import styled from 'styled-components';
 import { getByTime } from '../helpers';
 import { useGetPaymentsQuery } from '../../../../graphql/queries/__generated__/getPayments.generated';
 import { differenceInDays } from 'date-fns';
+import { BarChartV2 } from '../../../../components/chart/BarChartV2';
 
 const S = {
   row: styled.div`
@@ -107,8 +106,7 @@ export const PaymentsGraph = () => {
     <S.wrapper>
       <Header />
       <S.content>
-        <BarChart
-          priceLabel={type.value !== 'amount'}
+        <BarChartV2
           data={paymentsByDate.map(f => {
             return {
               Payments: f?.[type.value] || 0,
@@ -116,6 +114,8 @@ export const PaymentsGraph = () => {
             };
           })}
           colorRange={[chartColors.darkyellow]}
+          title="Payments"
+          dataKey="Payments"
         />
       </S.content>
     </S.wrapper>
