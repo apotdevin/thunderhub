@@ -110,8 +110,6 @@ const TransactionsView = () => {
         return '';
       }
     }
-
-    console.log(lastInvoice, lastPayment);
   }, [invoiceQuery.data, paymentQuery.data, show]);
 
   const renderInvoices = useCallback(() => {
