@@ -4,7 +4,6 @@ import { getProps } from '../src/utils/ssr';
 import { ForwardsList } from '../src/views/forwards/index';
 import { ForwardChannelsReport } from '../src/views/home/reports/forwardReport/ForwardChannelReport';
 import { useState } from 'react';
-import { ForwardChord } from '../src/views/forwards/forwardChord';
 import { ForwardTable } from '../src/views/forwards/ForwardTable';
 import { options, typeOptions } from '../src/views/home/reports/forwardReport';
 import { ForwardsGraph } from '../src/views/home/reports/forwardReport/ForwardsGraph';
@@ -85,10 +84,6 @@ const ForwardsView = () => {
             <SubTitle>Grouped by Channel</SubTitle>
             <Card>
               <ForwardTable days={days.value} order={type.value} />
-            </Card>
-            <SubTitle>Chord Graph</SubTitle>
-            <Card>
-              <ForwardChord days={days.value} order={type.value} />
             </Card>
             <SubTitle>Sankey</SubTitle>
             <Card>
