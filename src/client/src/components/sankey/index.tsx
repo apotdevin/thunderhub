@@ -25,8 +25,8 @@ echarts.use([
 ]);
 
 export type SankeyProps = {
-  width: number;
-  height: number;
+  width: string;
+  height: string;
   data: SankeyData;
 };
 

@@ -1,15 +1,16 @@
 import React, { useMemo } from 'react';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
-import { ParentSize } from '@visx/responsive';
 import styled from 'styled-components';
 import { mediaWidths } from '../../styles/Themes';
 import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
 import { Sankey, SankeyData } from '../../components/sankey';
 import { Forward } from '../../graphql/types';
 
+const SANKEY_HEIGHT = '800px';
+
 const Wrapper = styled.div`
-  height: 800px;
+  height: ${SANKEY_HEIGHT};
   width: 100%;
 
   @media (${mediaWidths.mobile}) {
@@ -57,15 +58,7 @@ export const ForwardSankey = ({ days }: { days: number }) => {
   return (
     <>
       <Wrapper>
-        <ParentSize>
-          {parent => (
-            <Sankey
-              data={sankeyData}
-              width={parent.width}
-              height={parent.height}
-            />
-          )}
-        </ParentSize>
+        <Sankey data={sankeyData} width="100%" height={SANKEY_HEIGHT} />
       </Wrapper>
     </>
   );
