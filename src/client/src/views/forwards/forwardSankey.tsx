@@ -9,7 +9,7 @@ import { Sankey, SankeyData } from '../../components/sankey';
 import { Forward } from '../../graphql/types';
 
 const Wrapper = styled.div`
-  height: 400px;
+  height: 800px;
   width: 100%;
 
   @media (${mediaWidths.mobile}) {
@@ -32,13 +32,13 @@ export const ForwardSankey = ({ days }: { days: number }) => {
 
     // We need to put unique nodes in an array for future sorting
     data.getForwards.map((forward: Forward) => {
-      if (nodeArr.indexOf(forward.incoming_channel) === -1)
-        nodeArr.push(forward.incoming_channel);
-      if (nodeArr.indexOf(forward.outgoing_channel) === -1)
-        nodeArr.push(forward.outgoing_channel);
+      const source = `source: ${forward.incoming_channel}`;
+      const target = `target: ${forward.outgoing_channel}`;
+      if (nodeArr.indexOf(source) === -1) nodeArr.push(source);
+      if (nodeArr.indexOf(target) === -1) nodeArr.push(target);
       orderedData.links.push({
-        source: forward.incoming_channel,
-        target: forward.outgoing_channel,
+        source,
+        target,
         value: forward.tokens,
       });
     });
