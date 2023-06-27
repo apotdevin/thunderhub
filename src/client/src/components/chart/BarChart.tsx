@@ -111,7 +111,7 @@ export const BarChart = ({
         axisTick: { show: true },
         axisLabel: {
           formatter: function (value: number) {
-            return numeral(value).format('0.0a');
+            return numeral(value).format('0');
           },
         },
       },
