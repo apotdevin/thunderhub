@@ -14,7 +14,7 @@ export class ChainResolver {
   constructor(
     private nodeService: NodeService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
-  ) {}
+  ) { }
 
   @Query(() => [ChainTransaction])
   async getChainTransactions(@CurrentUser() { id }: UserId) {
@@ -36,18 +36,18 @@ export class ChainResolver {
 
   @Mutation(() => String)
   async createAddress(
-    @Args('type', { defaultValue: 'p2wpkh' })
+    @Args('type', { defaultValue: 'p2tr' })
     type: string,
     @CurrentUser() { id }: UserId
   ) {
-    const isValidType = ['np2wpkh', 'p2tr', 'p2wpkh'].includes(type);
+    const isValidType = ['np2wpkh', 'p2wpkh', 'p2tr'].includes(type);
 
     this.logger.debug('Creating onchain address', { type });
 
     const { address } = await this.nodeService.createChainAddress(
       id,
       true,
-      (isValidType ? type : 'p2wpkh') as any
+      (isValidType ? type : 'p2tr') as any
     );
 
     return address;
@@ -65,8 +65,8 @@ export class ChainResolver {
     const props = fee
       ? { fee_tokens_per_vbyte: fee }
       : target
-      ? { target_confirmations: target }
-      : {};
+        ? { target_confirmations: target }
+        : {};
 
     const hasTokens = tokens && !sendAllFlag ? { tokens } : {};
     const sendAll = sendAllFlag ? { is_send_all: true } : {};
