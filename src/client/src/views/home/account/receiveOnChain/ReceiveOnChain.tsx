@@ -65,9 +65,9 @@ const Column = styled.div`
 `;
 
 const options = [
-  { label: 'p2wpkh (Default)', value: 'p2wpkh' },
-  { label: 'p2tr (Taproot)', value: 'p2tr' },
-  { label: 'np2wpkh', value: 'np2wpkh' },
+  { label: 'p2tr (Default)', value: 'p2tr' },
+  { label: 'p2wpkh (Segwit)', value: 'p2wpkh' },
+  { label: 'np2wpkh (Nested Segwit)', value: 'np2wpkh' },
 ];
 
 export const ReceiveOnChainCard = () => {
