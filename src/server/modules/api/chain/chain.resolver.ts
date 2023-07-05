@@ -36,18 +36,18 @@ export class ChainResolver {
 
   @Mutation(() => String)
   async createAddress(
-    @Args('type', { defaultValue: 'p2wpkh' })
+    @Args('type', { defaultValue: 'p2tr' })
     type: string,
     @CurrentUser() { id }: UserId
   ) {
-    const isValidType = ['np2wpkh', 'p2tr', 'p2wpkh'].includes(type);
+    const isValidType = ['np2wpkh', 'p2wpkh', 'p2tr'].includes(type);
 
     this.logger.debug('Creating onchain address', { type });
 
     const { address } = await this.nodeService.createChainAddress(
       id,
       true,
-      (isValidType ? type : 'p2wpkh') as any
+      (isValidType ? type : 'p2tr') as any
     );
 
     return address;
