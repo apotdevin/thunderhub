@@ -74,7 +74,8 @@ export const HorizontalBarChart = ({
       color: colorRange,
       grid: {
         left: '25px',
-        bottom: '0px',
+        bottom: '25px',
+        top: '25px',
         right: '25px',
       },
       tooltip: {
@@ -84,8 +85,11 @@ export const HorizontalBarChart = ({
         },
       },
       xAxis: {
-        max: maxValue * 1.2,
+        max: maxValue * 1.4,
         show: false,
+        alignTicks: 'value',
+        zIndex: 10,
+        z: 10,
       },
       yAxis: {
         axisPointer: {
@@ -117,7 +121,7 @@ export const HorizontalBarChart = ({
         data: yLabels,
         type: 'category',
         inverse: true,
-        max: 5,
+        max: 4,
         position: 'right',
       },
       legend: { show: true },

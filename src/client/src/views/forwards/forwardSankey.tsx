@@ -7,14 +7,14 @@ import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForw
 import { Sankey, SankeyData } from '../../components/sankey';
 import { Forward } from '../../graphql/types';
 
-const SANKEY_HEIGHT = '800px';
+const SANKEY_HEIGHT_DESKTOP = '800px';
 
 const Wrapper = styled.div`
-  height: ${SANKEY_HEIGHT};
+  height: ${SANKEY_HEIGHT_DESKTOP};
   width: 100%;
 
   @media (${mediaWidths.mobile}) {
-    height: 300px;
+    height: ${SANKEY_HEIGHT_DESKTOP};
   }
 `;
 
@@ -58,7 +58,7 @@ export const ForwardSankey = ({ days }: { days: number }) => {
   return (
     <>
       <Wrapper>
-        <Sankey data={sankeyData} width="100%" height={SANKEY_HEIGHT} />
+        <Sankey data={sankeyData} width="100%" height={SANKEY_HEIGHT_DESKTOP} />
       </Wrapper>
     </>
   );

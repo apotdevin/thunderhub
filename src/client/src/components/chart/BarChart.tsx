@@ -65,15 +65,11 @@ export const BarChart = ({
 
     return {
       color: colorRange,
-      title: {
-        text: title,
-        textStyle: { color: fontColor },
-      },
       grid: {
         containLabel: true,
         top: '50px',
         left: '25px',
-        bottom: '0px',
+        bottom: '25px',
         right: '25px',
       },
       tooltip: {
@@ -111,7 +107,8 @@ export const BarChart = ({
         axisTick: { show: true },
         axisLabel: {
           formatter: function (value: number) {
-            return numeral(value).format('0');
+            const format = value < 1000 ? '0a' : '0.0a';
+            return numeral(value).format(format);
           },
         },
       },
@@ -126,9 +123,7 @@ export const BarChart = ({
       notMerge={true}
       lazyUpdate={true}
       showLoading={false}
-      style={{
-        height: '100%',
-      }}
+      style={{ height: '100%' }}
     />
   );
 };
