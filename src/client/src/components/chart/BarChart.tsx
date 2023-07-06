@@ -14,8 +14,8 @@ import ReactEChartsCore from 'echarts-for-react/lib/core';
 import { ThemeContext } from 'styled-components';
 import numeral from 'numeral';
 import { timeFormat, timeParse } from 'd3-time-format';
-import { getFormatDate } from '../generic/helpers';
 import { formatSats } from '../../utils/helpers';
+import { COMMON_CHART_STYLES } from './common';
 
 echarts.use([
   EBarChart,
@@ -78,9 +78,12 @@ export const BarChart = ({
           animation: false,
         },
         formatter: (params: any) => {
-          return `Date: ${getFormatDate(params[0].axisValue)}<br />
-          ${params[0].seriesName}: ${formatSats(params[0].value)}<br />`;
+          return `<span style='color: ${
+            colorRange[0]
+          }; font-weight: bold;'>${title}</span><br />
+          ${formatSats(params[0].value)}<br />`;
         },
+        ...COMMON_CHART_STYLES.tooltip,
       },
       xAxis: {
         name: 'Dates',

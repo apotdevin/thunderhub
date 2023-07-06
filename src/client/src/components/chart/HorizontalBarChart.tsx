@@ -13,6 +13,8 @@ import {
 import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
+import { formatSats } from '../../utils/helpers';
+import { COMMON_CHART_STYLES } from './common';
 
 echarts.use([
   BarChart,
@@ -83,6 +85,13 @@ export const HorizontalBarChart = ({
         axisPointer: {
           animation: false,
         },
+        formatter: (params: any) => {
+          return `<span style='color: ${
+            colorRange[0]
+          }; font-weight: bold;'>Value</span><br />
+          ${formatSats(params[0].value)}`;
+        },
+        ...COMMON_CHART_STYLES.tooltip,
       },
       xAxis: {
         max: maxValue * 1.4,
