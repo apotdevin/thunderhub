@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import { ProgressBar } from '../../components/generic/CardGeneric';
 import { SingleLine } from '../../components/generic/Styled';
 import { getPrice } from '../../components/price/Price';
-import { Table } from '../../components/table';
 import { useConfigState } from '../../context/ConfigContext';
 import { usePriceState } from '../../context/PriceContext';
 import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
@@ -11,6 +10,7 @@ import { Forward } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
 import { ChannelAlias } from '../home/reports/forwardReport/ChannelAlias';
 import { sortByNode } from './helpers';
+import Table from '../../components/table';
 
 const getBar = (top: number, bottom: number) => {
   const percent = (top / bottom) * 100;
@@ -52,12 +52,36 @@ export const ForwardTable: FC<{ days: number; order: string }> = ({
   );
 
   const columns = [
-    { Header: 'Alias', accessor: 'alias' },
-    { Header: 'Channel', accessor: 'channel' },
-    { Header: 'Incoming', accessor: 'incoming' },
-    { Header: 'Outgoing', accessor: 'outgoing' },
-    { Header: 'Incoming', accessor: 'incomingBar' },
-    { Header: 'Outgoing', accessor: 'outgoingBar' },
+    {
+      header: 'Alias',
+      accessorKey: 'alias',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Channel',
+      accessorKey: 'channel',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Incoming',
+      accessorKey: 'incoming',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Outgoing',
+      accessorKey: 'outgoing',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Incoming',
+      accessorKey: 'incomingBar',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Outgoing',
+      accessorKey: 'outgoingBar',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
   ];
 
   const tableData = final.map(f => ({
@@ -69,5 +93,5 @@ export const ForwardTable: FC<{ days: number; order: string }> = ({
     outgoingBar: <SingleBar value={getBar(f.outgoing, maxOut)} height={16} />,
   }));
 
-  return <Table tableData={tableData} tableColumns={columns} />;
+  return <Table data={tableData} columns={columns} withSorting={true} />;
 };

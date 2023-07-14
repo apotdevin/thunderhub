@@ -8,7 +8,7 @@ import {
   getNodeLink,
   getTransactionLink,
 } from '../../../components/generic/helpers';
-import TableV2 from '../../../components/table-v2';
+import Table from '../../../components/table';
 import { Price } from '../../../components/price/Price';
 import { ColumnDef } from '@tanstack/react-table';
 import { PendingChannel } from '../../../graphql/types';
@@ -180,10 +180,12 @@ export const PendingChannels = () => {
   }
 
   return (
-    <TableV2
+    <Table
       columns={columns}
       data={tableData}
       withBorder={true}
+      withGlobalSort={true}
+      withSorting={true}
       filterPlaceholder="channels"
     />
   );

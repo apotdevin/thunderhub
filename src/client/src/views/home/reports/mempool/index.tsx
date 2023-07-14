@@ -3,7 +3,7 @@ import {
   CardWithTitle,
   SubTitle,
 } from '../../../../components/generic/Styled';
-import { Table } from '../../../../components/table';
+import Table from '../../../../components/table';
 import { useBitcoinFees } from '../../../../hooks/UseBitcoinFees';
 
 export const MempoolReport = () => {
@@ -14,10 +14,26 @@ export const MempoolReport = () => {
   }
 
   const columns = [
-    { Header: 'Fastest', accessor: 'fast' },
-    { Header: 'Half Hour', accessor: 'halfHour' },
-    { Header: 'Hour', accessor: 'hour' },
-    { Header: 'Minimum', accessor: 'minimum' },
+    {
+      header: 'Fastest',
+      accessorKey: 'fast',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Half Hour',
+      accessorKey: 'halfHour',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Hour',
+      accessorKey: 'hour',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Minimum',
+      accessorKey: 'minimum',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
   ];
 
   const data = [
@@ -33,7 +49,7 @@ export const MempoolReport = () => {
     <CardWithTitle>
       <SubTitle>Mempool Fees</SubTitle>
       <Card>
-        <Table alignCenter={true} tableColumns={columns} tableData={data} />
+        <Table alignCenter={true} columns={columns} data={data} />
       </Card>
     </CardWithTitle>
   );

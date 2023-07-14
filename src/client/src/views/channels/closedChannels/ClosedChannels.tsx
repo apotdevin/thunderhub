@@ -4,7 +4,7 @@ import { useGetClosedChannelsQuery } from '../../../graphql/queries/__generated_
 import { DarkSubTitle } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
-import { Table } from '../../../components/table';
+import Table from '../../../components/table';
 import { Price } from '../../../components/price/Price';
 import { blockToTime } from '../../../utils/helpers';
 import { orderBy } from 'lodash';
@@ -56,49 +56,54 @@ export const ClosedChannels = () => {
   const columns = useMemo(
     () => [
       {
-        Header: 'Peer',
-        accessor: 'alias',
-        Cell: ({ row }: any) => (
+        header: 'Peer',
+        accessorKey: 'alias',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {getNodeLink(row.original.partner_public_key, row.original.alias)}
           </div>
         ),
       },
       {
-        Header: 'Closed Since',
-        accessor: 'closed_for_blocks',
-        Cell: ({ row }: any) => (
+        header: 'Closed Since',
+        accessorKey: 'closed_for_blocks',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {blockToTime(row.original.closed_for_blocks)}
           </div>
         ),
       },
       {
-        Header: 'Channel Age',
-        accessor: 'channel_age',
-        Cell: ({ row }: any) => (
+        header: 'Channel Age',
+        accessorKey: 'channel_age',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {blockToTime(row.original.channel_age)}
           </div>
         ),
       },
       {
-        Header: 'Capacity',
-        accessor: 'capacity',
-        Cell: ({ row }: any) => (
+        header: 'Capacity',
+        accessorKey: 'capacity',
+        enableSorting: true,
+        cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             <Price amount={row.original.capacity} />
           </div>
         ),
       },
       {
-        Header: 'Close Type',
-        accessor: 'closeType',
+        header: 'Close Type',
+        accessorKey: 'closeType',
       },
       {
-        Header: 'Transaction Id',
-        accessor: 'transaction_id',
-        Cell: ({ row }: any) => getTransactionLink(row.original.transaction_id),
+        header: 'Transaction Id',
+        accessorKey: 'transaction_id',
+        enableSorting: true,
+        cell: ({ row }: any) => getTransactionLink(row.original.transaction_id),
       },
     ],
     []
@@ -114,9 +119,11 @@ export const ClosedChannels = () => {
 
   return (
     <Table
+      columns={columns}
+      data={tableData}
       withBorder={true}
-      tableColumns={columns}
-      tableData={tableData}
+      withGlobalSort={true}
+      withSorting={true}
       filterPlaceholder="channels"
     />
   );
