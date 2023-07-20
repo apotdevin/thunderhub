@@ -1,6 +1,6 @@
 import { getDateDif } from '../../../../components/generic/helpers';
 import { Price } from '../../../../components/price/Price';
-import { Table } from '../../../../components/table';
+import Table from '../../../../components/table';
 import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 import { ChannelAlias } from '../../../../views/home/reports/forwardReport/ChannelAlias';
 import styled from 'styled-components';
@@ -32,11 +32,31 @@ export const ForwardListWidget = () => {
   const forwards = data?.getForwards || [];
 
   const columns = [
-    { Header: 'Date', accessor: 'date' },
-    { Header: 'Amount', accessor: 'amount' },
-    { Header: 'Fee', accessor: 'fee' },
-    { Header: 'Incoming', accessor: 'incoming' },
-    { Header: 'Outgoing', accessor: 'outgoing' },
+    {
+      header: 'Date',
+      accessorKey: 'date',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Amount',
+      accessorKey: 'amount',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Fee',
+      accessorKey: 'fee',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Incoming',
+      accessorKey: 'incoming',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
+    {
+      header: 'Outgoing',
+      accessorKey: 'outgoing',
+      cell: ({ cell }: any) => cell.renderValue(),
+    },
   ];
 
   const tableData = forwards.reduce((p, f) => {
@@ -65,7 +85,7 @@ export const ForwardListWidget = () => {
     <S.wrapper>
       <S.title>Forwards</S.title>
       <S.table>
-        <Table tableColumns={columns} tableData={tableData} />
+        <Table columns={columns} data={tableData} withSorting={true} />
       </S.table>
     </S.wrapper>
   );
