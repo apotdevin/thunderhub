@@ -19,7 +19,10 @@ import { getSHA256Hash, hashPassword } from 'src/server/utils/crypto';
 import { resolveEnvVarsInAccount } from 'src/server/utils/env';
 
 const isValidNetwork = (network: string | null): network is BitcoinNetwork =>
-  network === 'mainnet' || network === 'regtest' || network === 'testnet';
+  network === 'mainnet' ||
+  network === 'regtest' ||
+  network === 'testnet' ||
+  network == 'signet';
 
 export const PRE_PASS_STRING = 'thunderhub-';
 
