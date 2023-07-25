@@ -10,11 +10,13 @@ import { getChannelAge } from './channels.helpers';
 import {
   Channel,
   ClosedChannel,
+  OpenChannelParams,
   OpenOrCloseChannel,
   PendingChannel,
   SingleChannel,
   UpdateRoutingFeesParams,
 } from './channels.types';
+import { GraphQLError } from 'graphql';
 
 @Resolver()
 export class ChannelsResolver {
@@ -130,34 +132,54 @@ export class ChannelsResolver {
   @Mutation(() => OpenOrCloseChannel)
   async openChannel(
     @CurrentUser() user: UserId,
-    @Args('amount') local_tokens: number,
-    @Args('partnerPublicKey') partner_public_key: string,
-    @Args('isPrivate', { nullable: true }) is_private: boolean,
-    @Args('pushTokens', { nullable: true, defaultValue: 0 }) pushTokens: number,
-    @Args('tokensPerVByte', { nullable: true })
-    chain_fee_tokens_per_vbyte: number
+    @Args('input') input: OpenChannelParams
   ) {
+    const {
+      channel_size = 0,
+      partner_public_key,
+      is_private,
+      is_max_funding,
+      give_tokens = 0,
+      chain_fee_tokens_per_vbyte,
+      base_fee_mtokens,
+      fee_rate,
+    } = input;
+
+    if (!channel_size && !is_max_funding) {
+      throw new GraphQLError('You need to specify a channel size.');
+    }
+
+    this.logger.info('Starting opening channel attempt', { input });
+
     let public_key = partner_public_key;
 
     if (partner_public_key.indexOf('@') >= 0) {
+      this.logger.info('Connecting to new peer', { partner_public_key });
+
       const parts = partner_public_key.split('@');
       public_key = parts[0];
       await this.nodeService.addPeer(user.id, public_key, parts[1], false);
+
+      this.logger.info(`Connected to new peer`, { partner_public_key });
     }
 
     const openParams = {
-      is_private,
-      local_tokens,
-      chain_fee_tokens_per_vbyte,
+      local_tokens: channel_size,
       partner_public_key: public_key,
-      give_tokens: Math.min(pushTokens, local_tokens),
+      ...(is_private ? { is_private } : {}),
+      ...(give_tokens ? { give_tokens } : {}),
+      ...(chain_fee_tokens_per_vbyte ? { chain_fee_tokens_per_vbyte } : {}),
+      ...(is_max_funding ? { is_max_funding } : {}),
+      ...(base_fee_mtokens ? { base_fee_mtokens } : {}),
+      ...(fee_rate ? { fee_rate } : {}),
     };
-
-    this.logger.info('Opening channel with params', { openParams });
 
     const info = await this.nodeService.openChannel(user.id, openParams);
 
-    this.logger.info('Channel opened');
+    this.logger.info('Channel opened with params', {
+      params: openParams,
+      result: info,
+    });
 
     return {
       transactionId: info.transaction_id,

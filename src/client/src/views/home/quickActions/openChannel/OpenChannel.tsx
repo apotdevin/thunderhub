@@ -48,7 +48,11 @@ export const OpenChannelCard = ({
   const [fee, setFee] = useState(0);
   const [publicKey, setPublicKey] = useState(initialPublicKey);
   const [privateChannel, setPrivateChannel] = useState(false);
+  const [isMaxFunding, setIsMaxFunding] = useState(false);
   const [type, setType] = useState('fee');
+
+  const [feeRate, setFeeRate] = useState<number | null>(null);
+  const [baseFee, setBaseFee] = useState<number | null>(null);
 
   const [openChannel, { loading }] = useOpenChannelMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -59,7 +63,7 @@ export const OpenChannelCard = ({
     refetchQueries: ['GetChannels', 'GetPendingChannels'],
   });
 
-  const canOpen = publicKey !== '' && size > 0 && fee > 0;
+  const canOpen = publicKey !== '' && (size > 0 || isMaxFunding) && fee > 0;
 
   const pushAmount =
     pushType === 'none'
@@ -164,13 +168,57 @@ export const OpenChannelCard = ({
         />
       )}
       <Separation />
+      <InputWithDeco title={'Max Size'} noInput={true}>
+        <MultiButton>
+          {renderButton(
+            () => {
+              setIsMaxFunding(true);
+              setSize(0);
+            },
+            'Yes',
+            isMaxFunding
+          )}
+          {renderButton(() => setIsMaxFunding(false), 'No', !isMaxFunding)}
+        </MultiButton>
+      </InputWithDeco>
+      {!isMaxFunding ? (
+        <InputWithDeco
+          title={'Channel Size'}
+          value={size}
+          placeholder={'Sats'}
+          amount={size}
+          inputType={'number'}
+          inputCallback={value => setSize(Number(value))}
+        />
+      ) : null}
+      <Separation />
       <InputWithDeco
-        title={'Channel Size'}
-        value={size}
-        placeholder={'Sats'}
-        amount={size}
+        title={'Fee Rate'}
+        value={feeRate}
+        placeholder={'ppm'}
+        amount={feeRate}
         inputType={'number'}
-        inputCallback={value => setSize(Number(value))}
+        inputCallback={value => {
+          if (value == null) {
+            setFeeRate(null);
+          } else {
+            setFeeRate(Number(value));
+          }
+        }}
+      />
+      <InputWithDeco
+        title={'Base Fee'}
+        value={baseFee}
+        placeholder={'msats'}
+        amount={baseFee}
+        inputType={'number'}
+        inputCallback={value => {
+          if (value == null) {
+            setBaseFee(null);
+          } else {
+            setBaseFee(Number(value));
+          }
+        }}
       />
       <Separation />
       {fetchFees && !dontShow && (
@@ -243,11 +291,16 @@ export const OpenChannelCard = ({
         onClick={() =>
           openChannel({
             variables: {
-              amount: size,
-              partnerPublicKey: publicKey || '',
-              tokensPerVByte: fee,
-              isPrivate: privateChannel,
-              pushTokens: pushAmount,
+              input: {
+                channel_size: size,
+                partner_public_key: publicKey || '',
+                is_private: privateChannel,
+                is_max_funding: isMaxFunding,
+                give_tokens: pushAmount,
+                chain_fee_tokens_per_vbyte: fee,
+                base_fee_mtokens: baseFee == null ? undefined : baseFee + '',
+                fee_rate: feeRate,
+              },
             },
           })
         }
