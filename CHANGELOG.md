@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.20](https://github.com/apotdevin/thunderhub/compare/v0.13.19...v0.13.20) (2023-07-25)
+
+
+### Features
+
+* add signet network ([#545](https://github.com/apotdevin/thunderhub/issues/545)) ([accdc5e](https://github.com/apotdevin/thunderhub/commit/accdc5e0ab659c3223745010af233161dfb0baf3))
+
+
+### Bug Fixes
+
+* new react table ([#538](https://github.com/apotdevin/thunderhub/issues/538)) ([edc7785](https://github.com/apotdevin/thunderhub/commit/edc77854f0cbfbb408011eb66b2ffbc3a016c6a1))
+* update lightning package ([#537](https://github.com/apotdevin/thunderhub/issues/537)) ([ffb955c](https://github.com/apotdevin/thunderhub/commit/ffb955c20386337ba52b0c633331cf90aba85faf))
+
+
+### Improvements
+
+* improve channel open ([#550](https://github.com/apotdevin/thunderhub/issues/550)) ([f63af91](https://github.com/apotdevin/thunderhub/commit/f63af9115ce839aa32da6465518db81952c46984))
+* run lint ([8a55db4](https://github.com/apotdevin/thunderhub/commit/8a55db4cb40ab2fcfea33977b4469b3513afb68a))
+
 ### [0.13.19](https://github.com/apotdevin/thunderhub/compare/v0.13.18...v0.13.19) (2023-05-26)
 
 
