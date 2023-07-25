@@ -567,7 +567,7 @@ export type MutationCloseChannelArgs = {
 };
 
 export type MutationCreateAddressArgs = {
-  type?: InputMaybe<Scalars['String']['input']>;
+  type?: Scalars['String']['input'];
 };
 
 export type MutationCreateBaseInvoiceArgs = {
@@ -648,11 +648,7 @@ export type MutationLnUrlWithdrawArgs = {
 };
 
 export type MutationOpenChannelArgs = {
-  amount: Scalars['Float']['input'];
-  isPrivate?: InputMaybe<Scalars['Boolean']['input']>;
-  partnerPublicKey: Scalars['String']['input'];
-  pushTokens?: InputMaybe<Scalars['Float']['input']>;
-  tokensPerVByte?: InputMaybe<Scalars['Float']['input']>;
+  input: OpenChannelParams;
 };
 
 export type MutationPayArgs = {
@@ -805,6 +801,17 @@ export type OnChainBalance = {
   closing: Scalars['String']['output'];
   confirmed: Scalars['String']['output'];
   pending: Scalars['String']['output'];
+};
+
+export type OpenChannelParams = {
+  base_fee_mtokens?: InputMaybe<Scalars['String']['input']>;
+  chain_fee_tokens_per_vbyte?: InputMaybe<Scalars['Float']['input']>;
+  channel_size?: InputMaybe<Scalars['Float']['input']>;
+  fee_rate?: InputMaybe<Scalars['Float']['input']>;
+  give_tokens?: InputMaybe<Scalars['Float']['input']>;
+  is_max_funding?: InputMaybe<Scalars['Boolean']['input']>;
+  is_private?: InputMaybe<Scalars['Boolean']['input']>;
+  partner_public_key: Scalars['String']['input'];
 };
 
 export type OpenOrCloseChannel = {
