@@ -48,7 +48,7 @@ export const Version = () => {
 
   return (
     <Link
-      href={'https://github.com/apotdevin/thunderhub#updating'}
+      href={'https://docs.thunderhub.io/installation#updating'}
       newTab={true}
     >
       <VersionBox>{`Version ${githubVersion} is available. You are on version ${npmVersion}`}</VersionBox>
