@@ -445,7 +445,7 @@ type Mutation {
   lnUrlWithdraw(amount: Float!, callback: String!, description: String, k1: String!): String!
   loginAmboss: Boolean!
   logout: Boolean!
-  openChannel(amount: Float!, isPrivate: Boolean, partnerPublicKey: String!, pushTokens: Float = 0, tokensPerVByte: Float): OpenOrCloseChannel!
+  openChannel(input: OpenChannelParams!): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
   pushBackup: Boolean!
   removePeer(publicKey: String): Boolean!
@@ -546,6 +546,17 @@ type OnChainBalance {
   closing: String!
   confirmed: String!
   pending: String!
+}
+
+input OpenChannelParams {
+  base_fee_mtokens: String
+  chain_fee_tokens_per_vbyte: Float
+  channel_size: Float
+  fee_rate: Float
+  give_tokens: Float = 0
+  is_max_funding: Boolean
+  is_private: Boolean
+  partner_public_key: String!
 }
 
 type OpenOrCloseChannel {

@@ -262,3 +262,23 @@ export class UpdateRoutingFeesParams {
   @Field({ nullable: true })
   min_htlc_mtokens?: string;
 }
+
+@InputType()
+export class OpenChannelParams {
+  @Field()
+  partner_public_key: string;
+  @Field({ nullable: true })
+  channel_size: number;
+  @Field({ nullable: true })
+  is_private: boolean;
+  @Field({ nullable: true })
+  is_max_funding: boolean;
+  @Field({ nullable: true, defaultValue: 0 })
+  give_tokens: number;
+  @Field({ nullable: true })
+  chain_fee_tokens_per_vbyte: number;
+  @Field({ nullable: true })
+  base_fee_mtokens: string;
+  @Field({ nullable: true })
+  fee_rate: number;
+}
