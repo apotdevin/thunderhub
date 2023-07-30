@@ -51,19 +51,24 @@ export const Sankey = ({ data, width, height }: SankeyProps) => {
   const option = useMemo(() => {
     const fontColor = themeContext.mode === 'light' ? 'black' : 'white';
     return {
+      resize: true,
       tooltip: {
         trigger: 'item',
         triggerOn: 'mousemove',
       },
       series: [
         {
+          height,
           type: 'sankey',
           nodeAlign: 'justify',
+          nodeGap: 3,
           layoutIterations: 32,
           data: data.nodes,
           links: data.links,
-          nodeGap: 100,
           dragable: false,
+          left: 'left',
+          bottom: '5',
+          top: 'top',
           label: {
             show: true,
             color: fontColor,
