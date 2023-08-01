@@ -86,7 +86,7 @@ export const Sankey = ({ data, width, height }: SankeyProps) => {
         },
       ],
     };
-  }, [data, themeContext]);
+  }, [data, themeContext, height]);
 
   return (
     <ReactEChartsCore

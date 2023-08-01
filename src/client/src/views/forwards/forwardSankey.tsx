@@ -11,7 +11,7 @@ const SANKEY_HEIGHT_DESKTOP = '800px';
 
 const Wrapper = styled.div`
   height: ${SANKEY_HEIGHT_DESKTOP};
-  maxheight: ${SANKEY_HEIGHT_DESKTOP};
+  max-height: ${SANKEY_HEIGHT_DESKTOP};
   width: 100%;
 
   @media (${mediaWidths.mobile}) {
@@ -50,7 +50,7 @@ export const ForwardSankey = ({ days }: { days: number }) => {
     });
 
     return orderedData;
-  }, [data]);
+  }, [data, loading]);
 
   if (loading || !data?.getForwards?.length) {
     return null;
