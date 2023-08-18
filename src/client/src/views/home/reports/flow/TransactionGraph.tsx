@@ -1,5 +1,4 @@
 import { FC, useMemo } from 'react';
-import { BarChart } from '../../../../components/chart/BarChart';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { chartColors } from '../../../../styles/Themes';
 import { getByTime } from '../../../../views/dashboard/widgets/helpers';
@@ -7,6 +6,7 @@ import styled from 'styled-components';
 import { useGetInvoicesQuery } from '../../../../graphql/queries/__generated__/getInvoices.generated';
 import { differenceInDays } from 'date-fns';
 import { useGetPaymentsQuery } from '../../../../graphql/queries/__generated__/getPayments.generated';
+import { BarChart } from '../../../../components/chart/BarChart';
 
 const S = {
   row: styled.div`
@@ -48,12 +48,29 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
   showPay,
   type,
 }) => {
-  const { data, loading } = useGetInvoicesQuery();
+  const { data: invoiceData, loading } = useGetInvoicesQuery();
   const { data: paymentsData, loading: paymentsLoading } =
     useGetPaymentsQuery();
 
+  const labels = useMemo(() => {
+    switch (type) {
+      case 'amount':
+        return {
+          yAxisLabel: `Amount of ${showPay ? 'Payments' : 'Invoices'}`,
+          title: `Amount of ${showPay ? 'Payments' : 'Invoices'}`,
+        };
+      case 'tokens':
+        return {
+          yAxisLabel: `${showPay ? 'Payments' : 'Invoices'} Volume (sats)`,
+          title: `${showPay ? 'Payments' : 'Invoices'} Volume (sats)`,
+        };
+      default:
+        return {};
+    }
+  }, [type, showPay]);
+
   const invoicesByDate = useMemo(() => {
-    const invoices = data?.getInvoices.invoices || [];
+    const invoices = invoiceData?.getInvoices.invoices || [];
     const filtered = invoices.filter(i => !!i.is_confirmed);
 
     if (!filtered.length) {
@@ -70,7 +87,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     const invoicesByDate = getByTime(filtered, difference);
 
     return invoicesByDate;
-  }, [data]);
+  }, [invoiceData, showPay]);
 
   const paymentsByDate = useMemo(() => {
     const payments = paymentsData?.getPayments.payments || [];
@@ -90,7 +107,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     const paymentsByDate = getByTime(filtered, difference);
 
     return paymentsByDate;
-  }, [paymentsData]);
+  }, [paymentsData, showPay]);
 
   if (loading || paymentsLoading) {
     return (
@@ -102,10 +119,15 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     );
   }
 
-  if (!data?.getInvoices.invoices.length) {
+  if (
+    (!showPay && !invoiceData?.getInvoices.invoices.length) ||
+    (showPay && !paymentsData?.getPayments.payments.length)
+  ) {
     return (
       <S.wrapper>
-        <S.contentWrapper>No transactions for this period.</S.contentWrapper>
+        <S.contentWrapper>
+          No {showPay ? 'payments' : 'invoices'} for this period.
+        </S.contentWrapper>
       </S.wrapper>
     );
   }
@@ -117,7 +139,6 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     <S.wrapper>
       <S.content>
         <BarChart
-          priceLabel={type !== 'amount'}
           data={finalArray.map(f => {
             return {
               [showPay ? 'Payments' : 'Invoices']: f?.[type] || 0,
@@ -125,6 +146,8 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
             };
           })}
           colorRange={finalColor}
+          title={labels.title || ''}
+          dataKey={showPay ? 'Payments' : 'Invoices'}
         />
       </S.content>
     </S.wrapper>

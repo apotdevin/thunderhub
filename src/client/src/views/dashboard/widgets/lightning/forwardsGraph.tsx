@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { BarChart } from '../../../../components/chart/BarChart';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { SmallSelectWithValue } from '../../../../components/select';
 import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 import { chartColors } from '../../../../styles/Themes';
 import styled from 'styled-components';
 import { getByTime } from '../helpers';
+import { BarChart } from '../../../../components/chart/BarChart';
 
 const S = {
   row: styled.div`
@@ -110,11 +110,12 @@ export const ForwardsGraph = () => {
       <Header />
       <S.content>
         <BarChart
-          priceLabel={type.value !== 'amount'}
           data={forwards.map(f => ({
             Forward: f[type.value] || 0,
             date: f.date,
           }))}
+          dataKey="Forward"
+          title="Forwards Report"
           colorRange={[chartColors.purple]}
         />
       </S.content>

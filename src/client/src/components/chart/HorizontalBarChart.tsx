@@ -1,191 +1,155 @@
-import { Group } from '@visx/group';
-import { BarGroupHorizontal, Bar } from '@visx/shape';
-import { AxisLeft } from '@visx/axis';
-import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
-import { ParentSize } from '@visx/responsive';
-import { chartColors } from '../../../src/styles/Themes';
+import { chartColors } from '../../styles/Themes';
 import { ThemeContext } from 'styled-components';
-import { useContext } from 'react';
-import { TooltipWithBounds, defaultStyles, useTooltip } from '@visx/tooltip';
-import { localPoint } from '@visx/event';
-import { Price } from '../price/Price';
+import { useContext, useMemo } from 'react';
+import { BarChart } from 'echarts/charts';
+import {
+  GraphicComponent,
+  GridComponent,
+  LegendComponent,
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent,
+} from 'echarts/components';
+import * as echarts from 'echarts/core';
+import { CanvasRenderer } from 'echarts/renderers';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
+import { formatSats } from '../../utils/helpers';
+import { COMMON_CHART_STYLES } from './common';
 
-type BarGroupProps = {
-  width: number;
-  height: number;
-} & BarChartProps;
+echarts.use([
+  BarChart,
+  CanvasRenderer,
+  GridComponent,
+  TooltipComponent,
+  GraphicComponent,
+  TitleComponent,
+  LegendComponent,
+  ToolboxComponent,
+]);
 
-type BarChartProps = {
+type HorizontalBarChartProps = {
   data: any[];
-  margin?: { top: number; right: number; bottom: number; left: number };
-  events?: boolean;
+  dataKey: string;
   colorRange?: string[];
-  priceLabel?: boolean;
 };
 
-const defaultMargin = { top: 40, right: 0, bottom: 40, left: 0 };
 const defaultColorRange = [
   chartColors.green,
   chartColors.orange,
   chartColors.lightblue,
 ];
 
-const tooltipStyles = {
-  ...defaultStyles,
-  minWidth: 60,
-  backgroundColor: 'rgba(0,0,0,0.9)',
-  color: 'white',
-};
-
-const Chart = ({
-  width,
-  height,
-  margin = defaultMargin,
+export const HorizontalBarChart = ({
   data = [],
   colorRange = defaultColorRange,
-  priceLabel,
-}: BarGroupProps) => {
-  const {
-    tooltipData,
-    tooltipLeft,
-    tooltipTop,
-    tooltipOpen,
-    showTooltip,
-    hideTooltip,
-  } = useTooltip<any>();
-
+  dataKey,
+}: HorizontalBarChartProps) => {
   const themeContext = useContext(ThemeContext);
-  const axisColor = themeContext.mode === 'light' ? 'black' : 'white';
 
   const keys = Object.keys(data[0] || {}).filter(d => d !== 'label');
-
-  if (!keys.length) return null;
 
   const maxValue = Math.max(
     ...data.map(d => Math.max(...keys.map(key => Number(d[key]))))
   );
 
-  let tooltipTimeout: number;
+  const seriesData = useMemo(() => {
+    if (data.length === 0) return [{ type: 'bar', data: [], barWidth: 25 }];
 
-  const getLabel = (d: any) => d.label;
+    return [
+      {
+        type: 'bar',
+        data: data.map((d: any) => d[dataKey]),
+        barWidth: '25',
+      },
+    ];
+  }, [data, dataKey]);
 
-  const yScale = scaleBand<string>({
-    domain: data.map(getLabel),
-  });
+  const yLabels = useMemo(() => {
+    if (!data.length) return [];
+    return data.map(d => d.label);
+  }, [data]);
 
-  const barScale = scaleBand<string>({
-    domain: keys,
-    padding: 0.1,
-  });
+  const option = useMemo(() => {
+    const themeColor = themeContext.mode === 'light' ? 'black' : 'white';
 
-  const xScale = scaleLinear<number>({
-    domain: [0, maxValue + 0.1 * maxValue],
-  });
+    return {
+      color: colorRange,
+      grid: {
+        left: '25px',
+        bottom: '25px',
+        top: '25px',
+        right: '25px',
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          animation: false,
+        },
+        formatter: (params: any) => {
+          return `<span style='color: ${
+            colorRange[0]
+          }; font-weight: bold;'>Value</span><br />
+          ${formatSats(params[0].value)}`;
+        },
+        ...COMMON_CHART_STYLES.tooltip,
+      },
+      xAxis: {
+        max: maxValue * 1.4,
+        show: false,
+        alignTicks: 'value',
+        zIndex: 10,
+        z: 10,
+      },
+      yAxis: {
+        axisPointer: {
+          show: true,
+          type: 'none',
+          triggerTooltip: true,
+        },
+        lineStyle: {
+          color: themeColor,
+          type: 'solid',
+        },
+        axisLine: {
+          onZero: false,
+          lineStyle: {
+            color: themeColor,
+            type: 'solid',
+          },
+        },
+        axisLabel: {
+          inside: true,
+          interval: 'auto',
+        },
+        axisTick: {
+          show: true,
+          alignWithLabel: true,
+          interval: 'auto',
+          inside: true,
+        },
+        data: yLabels,
+        type: 'category',
+        inverse: true,
+        max: 4,
+        position: 'right',
+      },
+      legend: { show: true },
+      series: seriesData,
+    };
+  }, [colorRange, themeContext, seriesData, yLabels]);
 
-  const colorScale = scaleOrdinal<string, string>({
-    domain: keys,
-    range: colorRange,
-  });
-
-  // bounds
-  const xMax = width - margin.left - margin.right;
-  const yMax = height - margin.top - margin.bottom;
-
-  // update scale output dimensions
-  xScale.rangeRound([0, xMax]);
-  yScale.rangeRound([yMax, 0]);
-  barScale.rangeRound([0, yScale.bandwidth()]);
+  if (!keys.length) return null;
 
   return (
-    <div style={{ position: 'relative' }}>
-      <svg width={width} height={height - 10}>
-        <Group top={margin.top} left={margin.left}>
-          <BarGroupHorizontal
-            data={data}
-            keys={keys}
-            width={xMax}
-            y0={getLabel}
-            y0Scale={yScale}
-            y1Scale={barScale}
-            xScale={xScale}
-            color={colorScale}
-          >
-            {barGroups =>
-              barGroups.map(barGroup => (
-                <Group
-                  key={`bar-group-${barGroup.index}-${barGroup.y0}`}
-                  top={barGroup.y0}
-                >
-                  {barGroup.bars.map(bar => (
-                    <Bar
-                      key={`bar-group-bar-${barGroup.index}-${bar.index}-${bar.value}-${bar.key}`}
-                      x={bar.x}
-                      y={bar.y}
-                      width={bar.width < 10 ? 10 : bar.width}
-                      height={Math.abs(bar.height)}
-                      fill={bar.color}
-                      onMouseOver={(e: any) => {
-                        if (tooltipTimeout) clearTimeout(tooltipTimeout);
-
-                        const coords = localPoint(e.target.ownerSVGElement, e);
-                        if (!coords) return;
-
-                        showTooltip({
-                          tooltipLeft: coords.x,
-                          tooltipTop: coords.y,
-                          tooltipData: bar,
-                        });
-                      }}
-                      onMouseLeave={() => {
-                        tooltipTimeout = window.setTimeout(() => {
-                          hideTooltip();
-                        }, 300);
-                      }}
-                    />
-                  ))}
-                </Group>
-              ))
-            }
-          </BarGroupHorizontal>
-        </Group>
-        <AxisLeft
-          left={width - margin.left}
-          top={margin.bottom}
-          hideZero={true}
-          scale={yScale}
-          stroke={axisColor}
-          tickStroke={axisColor}
-          tickLabelProps={() => ({
-            fill: axisColor,
-            fontSize: 11,
-            textAnchor: 'end',
-            dy: '0.33em',
-            dx: '-0.33em',
-          })}
-        />
-      </svg>
-      {tooltipOpen && tooltipData ? (
-        <TooltipWithBounds
-          top={tooltipTop}
-          left={tooltipLeft}
-          style={tooltipStyles}
-        >
-          <div style={{ color: colorScale(tooltipData.key) }}>
-            <strong>{tooltipData.key}</strong>
-          </div>
-          {priceLabel ? (
-            <Price amount={tooltipData.value} />
-          ) : (
-            tooltipData.value
-          )}
-        </TooltipWithBounds>
-      ) : null}
+    <div style={{ position: 'relative', height: '100%' }}>
+      <ReactEChartsCore
+        echarts={echarts}
+        option={option}
+        notMerge={true}
+        lazyUpdate={true}
+        showLoading={false}
+        style={{ height: '100%' }}
+      />
     </div>
   );
 };
-
-export const HorizontalBarChart = (props: BarChartProps) => (
-  <ParentSize>
-    {parent => <Chart width={parent.width} height={parent.height} {...props} />}
-  </ParentSize>
-);

@@ -1,235 +1,132 @@
-import { Group } from '@visx/group';
-import { BarGroup } from '@visx/shape';
-import { AxisBottom, AxisLeft } from '@visx/axis';
-import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
-import { timeParse, timeFormat } from 'd3-time-format';
-import { ParentSize } from '@visx/responsive';
-import { chartColors } from '../../../src/styles/Themes';
+import { useContext, useMemo } from 'react';
+import { BarChart as EBarChart } from 'echarts/charts';
+import {
+  GraphicComponent,
+  GridComponent,
+  LegendComponent,
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent,
+} from 'echarts/components';
+import * as echarts from 'echarts/core';
+import { CanvasRenderer } from 'echarts/renderers';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
 import { ThemeContext } from 'styled-components';
-import { useContext } from 'react';
-import { TooltipWithBounds, defaultStyles, useTooltip } from '@visx/tooltip';
-import { localPoint } from '@visx/event';
-import { Price } from '../price/Price';
+import numeral from 'numeral';
+import { timeFormat, timeParse } from 'd3-time-format';
+import { formatSats } from '../../utils/helpers';
+import { COMMON_CHART_STYLES } from './common';
 
-type BarGroupProps = {
-  width: number;
-  height: number;
-} & BarChartProps;
+echarts.use([
+  EBarChart,
+  CanvasRenderer,
+  GridComponent,
+  TooltipComponent,
+  GraphicComponent,
+  TitleComponent,
+  LegendComponent,
+  ToolboxComponent,
+]);
 
-type BarChartProps = {
-  data: any[];
-  margin?: { top: number; right: number; bottom: number; left: number };
-  events?: boolean;
-  colorRange?: string[];
-  priceLabel?: boolean;
-};
+interface BarChartProps {
+  colorRange: string[];
+  data: any;
+  title: string;
+  dataKey: string;
+}
 
-const defaultMargin = { top: 40, right: 0, bottom: 40, left: 0 };
-const defaultColorRange = [
-  chartColors.green,
-  chartColors.orange,
-  chartColors.lightblue,
-];
-
-const amountOfYTicks = (height: number) => {
-  switch (true) {
-    case height < 300:
-      return 3;
-    case height < 400:
-      return 6;
-    default:
-      return 10;
-  }
-};
-
-const amountOfXTicks = (width: number) => {
-  switch (true) {
-    case width < 300:
-      return 2;
-    case width < 400:
-      return 6;
-    default:
-      return 10;
-  }
-};
-
-const parseDate = timeParse('%Y-%m-%dT%H:%M:%S.%L%Z');
-const formatDate = timeFormat('%b %d');
-const formatTime = timeFormat('%H:%M');
-const tickFormatDate = (date: string) => formatDate(parseDate(date) as Date);
-const tickFormatTime = (date: string) => formatTime(parseDate(date) as Date);
-
-const tooltipStyles = {
-  ...defaultStyles,
-  minWidth: 60,
-  backgroundColor: 'rgba(0,0,0,0.9)',
-  color: 'white',
-};
-
-const Chart = ({
-  width,
-  height,
-  margin = defaultMargin,
-  data = [],
-  colorRange = defaultColorRange,
-  priceLabel,
-}: BarGroupProps) => {
-  const {
-    tooltipData,
-    tooltipLeft,
-    tooltipTop,
-    tooltipOpen,
-    showTooltip,
-    hideTooltip,
-  } = useTooltip<any>();
-
+export const BarChart = ({
+  data,
+  colorRange,
+  title,
+  dataKey,
+}: BarChartProps) => {
   const themeContext = useContext(ThemeContext);
 
-  const axisColor = themeContext.mode === 'light' ? 'black' : 'white';
+  const seriesData = useMemo(() => {
+    if (data.length === 0) return { dates: [], series: [] };
 
-  const keys = Object.keys(data[0] || {}).filter(d => d !== 'date');
+    const series = [
+      {
+        name: title,
+        type: 'bar',
+        emphasis: { focus: 'series' },
+        data: data.map((d: any) => d[dataKey]),
+      },
+    ];
 
-  if (!keys.length) return null;
+    const dates = data.map((d: any) => d.date);
 
-  let tooltipTimeout: number;
+    return { dates, series };
+  }, [data, title]);
 
-  const getDate = (d: any) => d.date;
+  const option = useMemo(() => {
+    const fontColor = themeContext.mode === 'light' ? 'black' : 'white';
 
-  const xScale = scaleBand<string>({
-    domain: data.map(getDate),
-    padding: 0.2,
-  });
-
-  const barScale = scaleBand<string>({
-    domain: keys,
-    padding: 0.1,
-  });
-
-  const yScale = scaleLinear<number>({
-    domain: [
-      0,
-      Math.max(...data.map(d => Math.max(...keys.map(key => Number(d[key]))))),
-    ],
-  });
-
-  const colorScale = scaleOrdinal<string, string>({
-    domain: keys,
-    range: colorRange,
-  });
-
-  // bounds
-  const xMax = width - margin.left - margin.right;
-  const yMax = height - margin.top - margin.bottom;
-
-  // update scale output dimensions
-  xScale.rangeRound([0, xMax]);
-  yScale.rangeRound([yMax, 0]);
-  barScale.rangeRound([0, xScale.bandwidth()]);
+    return {
+      color: colorRange,
+      grid: {
+        containLabel: true,
+        top: '50px',
+        left: '25px',
+        bottom: '25px',
+        right: '25px',
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          animation: false,
+        },
+        formatter: (params: any) => {
+          return `<span style='color: ${
+            colorRange[0]
+          }; font-weight: bold;'>${title}</span><br />
+          ${formatSats(params[0].value)}<br />`;
+        },
+        ...COMMON_CHART_STYLES.tooltip,
+      },
+      xAxis: {
+        name: 'Dates',
+        nameLocation: 'center',
+        nameGap: 32,
+        type: 'category',
+        axisLine: { show: true, lineStyle: { color: fontColor } },
+        data: seriesData.dates,
+        axisLabel: {
+          formatter: function (value: string) {
+            const parseDate = timeParse('%Y-%m-%dT%H:%M:%S.%L%Z');
+            const formatDate = timeFormat('%b %d');
+            return formatDate(parseDate(value) as Date);
+          },
+        },
+      },
+      yAxis: {
+        nameLocation: 'center',
+        nameGap: 48,
+        type: 'value',
+        minInterval: 1,
+        splitLine: { show: false },
+        axisLine: { show: true, lineStyle: { color: fontColor } },
+        axisTick: { show: true },
+        axisLabel: {
+          formatter: function (value: number) {
+            const format = value < 1000 ? '0a' : '0.0a';
+            return numeral(value).format(format);
+          },
+        },
+      },
+      series: seriesData.series,
+    };
+  }, [colorRange, themeContext, seriesData, title]);
 
   return (
-    <div style={{ position: 'relative' }}>
-      <svg width={width} height={height - 10}>
-        <Group top={margin.top} left={margin.left}>
-          <BarGroup
-            data={data}
-            keys={keys}
-            height={yMax}
-            x0={getDate}
-            x0Scale={xScale}
-            x1Scale={barScale}
-            yScale={yScale}
-            color={colorScale}
-          >
-            {barGroups =>
-              barGroups.map(barGroup => (
-                <Group
-                  key={`bar-group-${barGroup.index}-${barGroup.x0}`}
-                  left={barGroup.x0}
-                >
-                  {barGroup.bars.map(bar => (
-                    <rect
-                      key={`bar-group-bar-${barGroup.index}-${bar.index}-${bar.value}-${bar.key}`}
-                      x={bar.x}
-                      y={bar.y}
-                      width={bar.width}
-                      height={Math.abs(bar.height)}
-                      fill={bar.color}
-                      onMouseOver={(e: any) => {
-                        if (tooltipTimeout) clearTimeout(tooltipTimeout);
-
-                        const coords = localPoint(e.target.ownerSVGElement, e);
-                        if (!coords) return;
-
-                        showTooltip({
-                          tooltipLeft: coords.x,
-                          tooltipTop: coords.y,
-                          tooltipData: bar,
-                        });
-                      }}
-                      onMouseLeave={() => {
-                        tooltipTimeout = window.setTimeout(() => {
-                          hideTooltip();
-                        }, 300);
-                      }}
-                    />
-                  ))}
-                </Group>
-              ))
-            }
-          </BarGroup>
-        </Group>
-        <AxisLeft
-          numTicks={amountOfYTicks(height)}
-          left={width - margin.left}
-          top={margin.bottom}
-          hideZero={true}
-          scale={yScale}
-          stroke={axisColor}
-          tickStroke={axisColor}
-          tickLabelProps={() => ({
-            fill: axisColor,
-            fontSize: 11,
-            textAnchor: 'end',
-            dy: '0.33em',
-            dx: '-0.33em',
-          })}
-        />
-        <AxisBottom
-          numTicks={amountOfXTicks(width)}
-          top={yMax + margin.top}
-          tickFormat={data.length == 24 ? tickFormatTime : tickFormatDate}
-          scale={xScale}
-          stroke={axisColor}
-          tickStroke={axisColor}
-          tickLabelProps={() => ({
-            fill: axisColor,
-            fontSize: 11,
-            textAnchor: 'middle',
-          })}
-        />
-      </svg>
-      {tooltipOpen && tooltipData ? (
-        <TooltipWithBounds
-          top={tooltipTop}
-          left={tooltipLeft}
-          style={tooltipStyles}
-        >
-          <div style={{ color: colorScale(tooltipData.key) }}>
-            <strong>{tooltipData.key}</strong>
-          </div>
-          {priceLabel ? (
-            <Price amount={tooltipData.value} />
-          ) : (
-            tooltipData.value
-          )}
-        </TooltipWithBounds>
-      ) : null}
-    </div>
+    <ReactEChartsCore
+      echarts={echarts}
+      option={option}
+      notMerge={true}
+      lazyUpdate={true}
+      showLoading={false}
+      style={{ height: '100%' }}
+    />
   );
 };
-
-export const BarChart = (props: BarChartProps) => (
-  <ParentSize>
-    {parent => <Chart width={parent.width} height={parent.height} {...props} />}
-  </ParentSize>
-);

@@ -62,9 +62,9 @@ export const LiquidityGraph = () => {
   return (
     <S.wrapper>
       <HorizontalBarChart
-        priceLabel={true}
         data={liquidity}
         colorRange={[chartColors.green]}
+        dataKey="Value"
       />
     </S.wrapper>
   );

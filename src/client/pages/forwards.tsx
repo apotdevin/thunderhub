@@ -4,7 +4,6 @@ import { getProps } from '../src/utils/ssr';
 import { ForwardsList } from '../src/views/forwards/index';
 import { ForwardChannelsReport } from '../src/views/home/reports/forwardReport/ForwardChannelReport';
 import { useState } from 'react';
-import { ForwardChord } from '../src/views/forwards/forwardChord';
 import { ForwardTable } from '../src/views/forwards/ForwardTable';
 import { options, typeOptions } from '../src/views/home/reports/forwardReport';
 import { ForwardsGraph } from '../src/views/home/reports/forwardReport/ForwardsGraph';
@@ -18,6 +17,7 @@ import {
   CardTitle,
   Separation,
 } from '../src/components/generic/Styled';
+import { ForwardSankey } from '../src/views/forwards/forwardSankey';
 
 const S = {
   options: styled.div`
@@ -85,9 +85,12 @@ const ForwardsView = () => {
             <Card>
               <ForwardTable days={days.value} order={type.value} />
             </Card>
-            <SubTitle>Chord Graph</SubTitle>
+            <SubTitle>Sankey</SubTitle>
             <Card>
-              <ForwardChord days={days.value} order={type.value} />
+              <ForwardSankey
+                days={days.value}
+                type={type.value as 'amount' | 'fee' | 'tokens'}
+              />
             </Card>
           </>
         )}

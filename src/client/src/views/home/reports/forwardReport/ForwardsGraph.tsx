@@ -83,12 +83,13 @@ export const ForwardsGraph: FC<ForwardGraphProps> = ({ days, type }) => {
     <S.wrapper>
       <S.content>
         <BarChart
-          priceLabel={type.value !== 'amount'}
+          title="Forwards"
           data={forwards.map(f => ({
             Forward: f[type.value] || 0,
             date: f.date,
           }))}
           colorRange={[chartColors.purple]}
+          dataKey="Forward"
         />
       </S.content>
     </S.wrapper>
