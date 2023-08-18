@@ -282,19 +282,19 @@ export const ChannelTable = () => {
           {
             header: 'Active',
             accessorKey: 'channelActiveLogo',
-            sortType: numberStringSorting('channelActive'),
+            sortingFn: numberStringSorting('channelActive'),
             cell: ({ cell }: any) => cell.renderValue(),
           },
           {
             header: 'Private',
             accessorKey: 'channelPrivateLogo',
-            sortType: numberStringSorting('channelPrivate'),
+            sortingFn: numberStringSorting('channelPrivate'),
             cell: ({ cell }: any) => cell.renderValue(),
           },
           {
             header: 'Initiated',
             accessorKey: 'channelOpenerLogo',
-            sortType: numberStringSorting('channelOpener'),
+            sortingFn: numberStringSorting('channelOpener'),
             cell: ({ cell }: any) => cell.renderValue(),
           },
         ],
@@ -392,7 +392,7 @@ export const ChannelTable = () => {
           {
             header: 'Percent',
             accessorKey: 'balancePercentText',
-            sortType: numberStringSorting('balancePercent'),
+            sortingFn: numberStringSorting('balancePercent'),
           },
         ],
       },
@@ -435,7 +435,7 @@ export const ChannelTable = () => {
           {
             header: 'Percent',
             accessorKey: 'percentOnlineText',
-            sortType: numberStringSorting('percentOnline'),
+            sortingFn: numberStringSorting('percentOnline'),
           },
         ],
       },
@@ -463,7 +463,7 @@ export const ChannelTable = () => {
           {
             header: 'Percent',
             accessorKey: 'activityPercentText',
-            sortType: numberStringSorting('activityPercent'),
+            sortingFn: numberStringSorting('activityPercent'),
           },
         ],
       },
@@ -501,19 +501,19 @@ export const ChannelTable = () => {
           {
             header: 'Balance',
             accessorKey: 'balanceBars',
-            sortType: numberStringSorting('balancePercent'),
+            sortingFn: numberStringSorting('balancePercent'),
             cell: ({ cell }: any) => cell.renderValue(),
           },
           {
             header: 'Proportional',
             accessorKey: 'proportionalBars',
-            sortType: numberStringSorting('balancePercent'),
+            sortingFn: numberStringSorting('balancePercent'),
             cell: ({ cell }: any) => cell.renderValue(),
           },
           {
             header: 'Activity',
             accessorKey: 'activityBars',
-            sortType: numberStringSorting('activityPercent'),
+            sortingFn: numberStringSorting('activityPercent'),
             cell: ({ cell }: any) => cell.renderValue(),
           },
         ],
