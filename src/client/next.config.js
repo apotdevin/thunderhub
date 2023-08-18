@@ -10,7 +10,7 @@ module.exports = {
   reactStrictMode: true,
   poweredByHeader: false,
   basePath: process.env.BASE_PATH || '',
-  transpilePackages: ['echarts', 'echarts-for-react', 'zrender'],
+  transpilePackages: ['echarts', 'zrender'],
   compiler: {
     styledComponents: true,
   },

@@ -87,7 +87,10 @@ const ForwardsView = () => {
             </Card>
             <SubTitle>Sankey</SubTitle>
             <Card>
-              <ForwardSankey days={days.value} />
+              <ForwardSankey
+                days={days.value}
+                type={type.value as 'amount' | 'fee' | 'tokens'}
+              />
             </Card>
           </>
         )}
