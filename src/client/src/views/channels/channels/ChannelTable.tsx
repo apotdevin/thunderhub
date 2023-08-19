@@ -507,7 +507,7 @@ export const ChannelTable = () => {
           {
             header: 'Proportional',
             accessorKey: 'proportionalBars',
-            sortingFn: numberStringSorting('balancePercent'),
+            sortingFn: numberStringSorting('local_balance'),
             cell: ({ cell }: any) => cell.renderValue(),
           },
           {
