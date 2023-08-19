@@ -61,7 +61,7 @@ export const Sankey = ({ data, width, height }: SankeyProps) => {
           height,
           type: 'sankey',
           nodeAlign: 'justify',
-          nodeGap: 3,
+          nodeGap: 14,
           layoutIterations: 32,
           data: data.nodes,
           links: data.links,

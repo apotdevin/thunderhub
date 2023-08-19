@@ -35,6 +35,11 @@ type BaseNode {
   socket: String!
 }
 
+type BaseNodeInfo {
+  alias: String!
+  public_key: String!
+}
+
 type BasePoints {
   alias: String!
   amount: Float!
@@ -166,6 +171,11 @@ type ChannelHealth {
   partner: Node
   score: Float
   volumeNormalized: String
+}
+
+type ChannelInfo {
+  node1_info: BaseNodeInfo!
+  node2_info: BaseNodeInfo!
 }
 
 type ChannelReport {
@@ -310,8 +320,10 @@ type Forward {
   fee: Float!
   fee_mtokens: String!
   incoming_channel: String!
+  incoming_channel_info: ChannelInfo
   mtokens: String!
   outgoing_channel: String!
+  outgoing_channel_info: ChannelInfo
   tokens: Float!
 }
 

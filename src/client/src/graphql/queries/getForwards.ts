@@ -10,6 +10,22 @@ export const GET_FORWARDS = gql`
       mtokens
       outgoing_channel
       tokens
+      incoming_channel_info {
+        node1_info {
+          alias
+        }
+        node2_info {
+          alias
+        }
+      }
+      outgoing_channel_info {
+        node1_info {
+          alias
+        }
+        node2_info {
+          alias
+        }
+      }
     }
   }
 `;

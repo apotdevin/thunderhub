@@ -35,9 +35,10 @@ export const ForwardSankey: FC<{
     const mapped = data.getForwards.map(d => ({
       ...d,
       group: `${d.incoming_channel}-${d.outgoing_channel}`,
+      groupAlias: `${d.incoming_channel_info.node2_info.alias}-${d.outgoing_channel_info.node2_info.alias}`,
     }));
 
-    const grouped = groupBy(mapped, 'group');
+    const grouped = groupBy(mapped, 'groupAlias');
 
     const aggregated: {
       incoming_channel: string;
@@ -55,8 +56,8 @@ export const ForwardSankey: FC<{
       const firstValue = value[0];
 
       aggregated.push({
-        incoming_channel: firstValue.incoming_channel,
-        outgoing_channel: firstValue.outgoing_channel,
+        incoming_channel: firstValue.incoming_channel_info.node2_info.alias,
+        outgoing_channel: firstValue.outgoing_channel_info.node2_info.alias,
         fee: totalFees,
         tokens: totalTokens,
         amount: totalAmount,
@@ -90,7 +91,7 @@ export const ForwardSankey: FC<{
     return null;
   }
 
-  const graphHeight = 800 + 10 * sankeyData.links.length;
+  const graphHeight = 800 + 16 * sankeyData.links.length;
 
   return (
     <Wrapper $height={graphHeight}>

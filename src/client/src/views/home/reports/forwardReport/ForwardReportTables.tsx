@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { ChannelAlias } from './ChannelAlias';
 import Table from '../../../../components/table';
 
 export type RouteType = {
@@ -55,12 +54,12 @@ export const RouteTable: FC<RouteTableProps> = ({ order, forwardArray }) => {
   const columns = [
     {
       header: 'In',
-      accessorKey: 'aliasIn',
+      accessorKey: 'incoming_alias',
       cell: ({ cell }: any) => cell.renderValue(),
     },
     {
       header: 'Out',
-      accessorKey: 'aliasOut',
+      accessorKey: 'outgoing_alias',
       cell: ({ cell }: any) => cell.renderValue(),
     },
     {
@@ -70,13 +69,7 @@ export const RouteTable: FC<RouteTableProps> = ({ order, forwardArray }) => {
     },
   ];
 
-  const tableData = forwardArray.map(f => ({
-    ...f,
-    aliasIn: <ChannelAlias id={f.incoming_channel} />,
-    aliasOut: <ChannelAlias id={f.outgoing_channel} />,
-  }));
-
-  return <Table data={tableData} columns={columns} withSorting={true} />;
+  return <Table data={forwardArray} columns={columns} withSorting={true} />;
 };
 
 export const ChannelTable: FC<ChannelTableProps> = ({
@@ -123,10 +116,5 @@ export const ChannelTable: FC<ChannelTableProps> = ({
     },
   ];
 
-  const tableData = forwardArray.map(f => ({
-    ...f,
-    alias: <ChannelAlias id={f.channelId} />,
-  }));
-
-  return <Table data={tableData} columns={columns} withSorting={true} />;
+  return <Table data={forwardArray} columns={columns} withSorting={true} />;
 };

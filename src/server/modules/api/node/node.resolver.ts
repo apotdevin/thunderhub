@@ -1,4 +1,11 @@
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
@@ -13,9 +20,7 @@ import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { toWithError } from 'src/server/utils/async';
-import { FetchService } from '../../fetch/fetch.service';
-import { ConfigService } from '@nestjs/config';
-import { gql } from 'graphql-tag';
+import { ContextType } from 'src/server/app.module';
 
 @Resolver(LightningBalance)
 export class LightningBalanceResolver {
@@ -132,8 +137,6 @@ export class NodeResolver {
 export class NodeFieldResolver {
   constructor(
     private nodeService: NodeService,
-    private fetchService: FetchService,
-    private configService: ConfigService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -141,25 +144,18 @@ export class NodeFieldResolver {
   async node(
     @Parent()
     { publicKey }: { publicKey: string },
-    @CurrentUser() { id }: UserId
+    @CurrentUser() { id }: UserId,
+    @Context() { loaders }: ContextType
   ) {
     if (!publicKey) {
       this.logger.error('No public key to get node');
       return null;
     }
 
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
-      gql`
-        query GetNodeAlias($pubkey: String!) {
-          getNodeAlias(pubkey: $pubkey)
-        }
-      `,
-      { pubkey: publicKey }
-    );
+    const node = await loaders.nodesLoader.load(publicKey);
 
-    if (data?.getNodeAlias && !error) {
-      return { alias: data.getNodeAlias, public_key: publicKey };
+    if (node) {
+      return { alias: node.alias, public_key: node.pub_key };
     }
 
     const [info, nodeError] = await toWithError(

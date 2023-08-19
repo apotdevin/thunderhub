@@ -19,6 +19,11 @@ import { WsModule } from './modules/ws/ws.module';
 import { SubModule } from './modules/sub/sub.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ScheduleModule } from '@nestjs/schedule';
+import {
+  DataloaderService,
+  DataloaderTypes,
+} from './modules/dataloader/dataloader.service';
+import { DataloaderModule } from './modules/dataloader/dataloader.module';
 
 const { combine, timestamp, prettyPrint, json } = format;
 
@@ -29,6 +34,7 @@ export type ContextType = {
   lnMarketsAuth: string | null;
   tokenAuth: string | null;
   ambossAuth: string | null;
+  loaders: DataloaderTypes;
 };
 
 export type JwtObjectType = {
@@ -57,8 +63,12 @@ export type JwtObjectType = {
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
+      imports: [DataloaderModule],
+      inject: [ConfigService, DataloaderService],
+      useFactory: (
+        config: ConfigService,
+        dataloaderService: DataloaderService
+      ) => ({
         autoSchemaFile: config.get('isProduction') ? true : 'schema.gql',
         sortSchema: true,
         playground: config.get('playground'),
@@ -77,12 +87,15 @@ export type JwtObjectType = {
           const tokenAuth = cookies[appConstants.tokenCookieName];
           const ambossAuth = cookies[appConstants.ambossCookieName];
 
+          const loaders = dataloaderService.createLoaders();
+
           const context = {
             req,
             res,
             lnMarketsAuth,
             tokenAuth,
             ambossAuth,
+            loaders,
           };
 
           if (!token) return context;

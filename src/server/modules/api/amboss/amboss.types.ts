@@ -72,3 +72,27 @@ export class LightningNodeSocialInfo {
   @Field(() => NodeSocial, { nullable: true })
   socials: NodeSocial;
 }
+
+export type NodeAlias = {
+  alias: string;
+  pub_key: string;
+};
+
+export type BaseNodeInfoType = {
+  alias: string;
+  pub_key: string;
+};
+
+export type EdgeInfo = {
+  short_channel_id: string;
+  info: {
+    node1_pub: string;
+    node1_info: {
+      node: BaseNodeInfoType;
+    };
+    node2_pub: string;
+    node2_info: {
+      node: BaseNodeInfoType;
+    };
+  };
+};

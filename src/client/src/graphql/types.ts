@@ -66,6 +66,12 @@ export type BaseNode = {
   socket: Scalars['String']['output'];
 };
 
+export type BaseNodeInfo = {
+  __typename?: 'BaseNodeInfo';
+  alias: Scalars['String']['output'];
+  public_key: Scalars['String']['output'];
+};
+
 export type BasePoints = {
   __typename?: 'BasePoints';
   alias: Scalars['String']['output'];
@@ -212,6 +218,12 @@ export type ChannelHealth = {
   partner?: Maybe<Node>;
   score?: Maybe<Scalars['Float']['output']>;
   volumeNormalized?: Maybe<Scalars['String']['output']>;
+};
+
+export type ChannelInfo = {
+  __typename?: 'ChannelInfo';
+  node1_info: BaseNodeInfo;
+  node2_info: BaseNodeInfo;
 };
 
 export type ChannelReport = {
@@ -370,8 +382,10 @@ export type Forward = {
   fee: Scalars['Float']['output'];
   fee_mtokens: Scalars['String']['output'];
   incoming_channel: Scalars['String']['output'];
+  incoming_channel_info: ChannelInfo;
   mtokens: Scalars['String']['output'];
   outgoing_channel: Scalars['String']['output'];
+  outgoing_channel_info: ChannelInfo;
   tokens: Scalars['Float']['output'];
 };
 

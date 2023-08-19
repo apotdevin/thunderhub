@@ -2,7 +2,6 @@ import { getDateDif } from '../../../../components/generic/helpers';
 import { Price } from '../../../../components/price/Price';
 import Table from '../../../../components/table';
 import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
-import { ChannelAlias } from '../../../../views/home/reports/forwardReport/ChannelAlias';
 import styled from 'styled-components';
 
 const S = {
@@ -75,8 +74,8 @@ export const ForwardListWidget = () => {
             <Price amount={f.fee} />
           </S.nowrap>
         ),
-        incoming: <ChannelAlias id={f.incoming_channel} />,
-        outgoing: <ChannelAlias id={f.outgoing_channel} />,
+        incoming: f.incoming_channel_info.node2_info.alias || '',
+        outgoing: f.outgoing_channel_info.node2_info.alias || '',
       },
     ];
   }, [] as any);
