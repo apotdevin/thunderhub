@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.21](https://github.com/apotdevin/thunderhub/compare/v0.13.20...v0.13.21) (2023-08-19)
+
+
+### Features
+
+* dataloaders ([#561](https://github.com/apotdevin/thunderhub/issues/561)) ([bf1959f](https://github.com/apotdevin/thunderhub/commit/bf1959f4902aac493f714aec318c795220e2a02d))
+
+
+### Bug Fixes
+
+* channel table sorting fns ([#559](https://github.com/apotdevin/thunderhub/issues/559)) ([b7180a8](https://github.com/apotdevin/thunderhub/commit/b7180a8b0d2c8cb668183d051e0e22562a3dff8d))
+
+
+### Improvements
+
+* bump deps ([#560](https://github.com/apotdevin/thunderhub/issues/560)) ([d8b3ea8](https://github.com/apotdevin/thunderhub/commit/d8b3ea8b437d1b560639aeb066f9a005e8fc760a))
+* change column sorting ([3d4bdad](https://github.com/apotdevin/thunderhub/commit/3d4bdad565fdb2434d01d177748c9b211b765772))
+
 ### [0.13.20](https://github.com/apotdevin/thunderhub/compare/v0.13.19...v0.13.20) (2023-07-25)
 
 
