@@ -8,6 +8,8 @@ import { Logger } from 'winston';
 import { AccountsService } from '../../accounts/accounts.service';
 import { FetchService } from '../../fetch/fetch.service';
 import {
+  getEdgeInfoBatchQuery,
+  getNodeAliasBatchQuery,
   pingHealthCheckMutation,
   pushNodeBalancesMutation,
   saveBackupMutation,
@@ -17,6 +19,8 @@ import { NodeService } from '../../node/node.service';
 import { UserConfigService } from '../userConfig/userConfig.service';
 import { getSHA256Hash } from 'src/server/utils/crypto';
 import { orderBy } from 'lodash';
+import { mapEdgeResult, mapNodeResult } from './amboss.helpers';
+import { EdgeInfo, NodeAlias } from './amboss.types';
 
 const ONE_MINUTE = 60 * 1000;
 
@@ -57,6 +61,40 @@ export class AmbossService {
   ) {}
 
   ambossUrl = this.configService.get('urls.amboss');
+
+  async getNodeAliasBatchQuery(pubkeys: string[]) {
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+      this.configService.get('urls.amboss'),
+      getNodeAliasBatchQuery,
+      { pubkeys }
+    );
+
+    if (!data?.getNodeAliasBatch || error) return [];
+
+    return data.getNodeAliasBatch;
+  }
+
+  async getNodeAliasBatch(pubkeys: string[]): Promise<(NodeAlias | null)[]> {
+    const nodes = await this.getNodeAliasBatchQuery(pubkeys);
+    return mapNodeResult(pubkeys, nodes);
+  }
+
+  async getEdgeInfoBatchQuery(ids: string[]) {
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+      this.configService.get('urls.amboss'),
+      getEdgeInfoBatchQuery,
+      { ids }
+    );
+
+    if (!data?.getEdgeInfoBatch || error) return [];
+
+    return data.getEdgeInfoBatch;
+  }
+
+  async getEdgeInfoBatch(ids: string[]): Promise<(EdgeInfo | null)[]> {
+    const edges = await this.getEdgeInfoBatchQuery(ids);
+    return mapEdgeResult(ids, edges);
+  }
 
   async pushBackup(backup: string, signature: string) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(

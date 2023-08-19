@@ -6,7 +6,6 @@ import { LoadingCard } from '../../components/loading/LoadingCard';
 import { Price } from '../../components/price/Price';
 import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
 import { getErrorContent } from '../../utils/error';
-import { ChannelAlias } from '../home/reports/forwardReport/ChannelAlias';
 import Table from '../../components/table';
 
 type ForwardProps = {
@@ -25,8 +24,8 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
     return channelData.map(c => {
       return {
         ...c,
-        incoming_name: <ChannelAlias id={c.incoming_channel} />,
-        outgoing_name: <ChannelAlias id={c.outgoing_channel} />,
+        incoming_name: c.incoming_channel_info.node2_info.alias || '',
+        outgoing_name: c.outgoing_channel_info.node2_info.alias || '',
       };
     });
   }, [data]);

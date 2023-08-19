@@ -1,9 +1,19 @@
 import { Module } from '@nestjs/common';
 import { NodeModule } from '../../node/node.module';
-import { ForwardsResolver } from './forwards.resolver';
+import {
+  BaseNodeInfoResolver,
+  ChannelInfoResolver,
+  ForwardResolver,
+  ForwardsResolver,
+} from './forwards.resolver';
 
 @Module({
   imports: [NodeModule],
-  providers: [ForwardsResolver],
+  providers: [
+    ForwardsResolver,
+    ForwardResolver,
+    ChannelInfoResolver,
+    BaseNodeInfoResolver,
+  ],
 })
 export class ForwardsModule {}

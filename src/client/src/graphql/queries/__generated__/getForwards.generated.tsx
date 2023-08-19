@@ -18,6 +18,16 @@ export type GetForwardsQuery = {
     mtokens: string;
     outgoing_channel: string;
     tokens: number;
+    incoming_channel_info: {
+      __typename?: 'ChannelInfo';
+      node1_info: { __typename?: 'BaseNodeInfo'; alias: string };
+      node2_info: { __typename?: 'BaseNodeInfo'; alias: string };
+    };
+    outgoing_channel_info: {
+      __typename?: 'ChannelInfo';
+      node1_info: { __typename?: 'BaseNodeInfo'; alias: string };
+      node2_info: { __typename?: 'BaseNodeInfo'; alias: string };
+    };
   }>;
 };
 
@@ -31,6 +41,22 @@ export const GetForwardsDocument = gql`
       mtokens
       outgoing_channel
       tokens
+      incoming_channel_info {
+        node1_info {
+          alias
+        }
+        node2_info {
+          alias
+        }
+      }
+      outgoing_channel_info {
+        node1_info {
+          alias
+        }
+        node2_info {
+          alias
+        }
+      }
     }
   }
 `;

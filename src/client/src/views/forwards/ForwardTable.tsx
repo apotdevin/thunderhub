@@ -8,7 +8,6 @@ import { usePriceState } from '../../context/PriceContext';
 import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
 import { Forward } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
-import { ChannelAlias } from '../home/reports/forwardReport/ChannelAlias';
 import { sortByNode } from './helpers';
 import Table from '../../components/table';
 
@@ -86,7 +85,6 @@ export const ForwardTable: FC<{ days: number; order: string }> = ({
 
   const tableData = final.map(f => ({
     ...f,
-    alias: <ChannelAlias id={f.channel} />,
     incoming: format({ amount: f.incoming, noUnit: order === 'amount' }),
     outgoing: format({ amount: f.outgoing, noUnit: order === 'amount' }),
     incomingBar: <SingleBar value={getBar(f.incoming, maxIn)} height={16} />,

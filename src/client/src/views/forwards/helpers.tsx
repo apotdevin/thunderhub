@@ -1,4 +1,4 @@
-import { sortBy } from 'lodash';
+import { sortBy, uniqBy } from 'lodash';
 import { Forward } from '../../graphql/types';
 
 export const sortByNode = (order: string, forwardArray: Forward[]) => {
@@ -12,27 +12,36 @@ export const sortByNode = (order: string, forwardArray: Forward[]) => {
     }
 
     return {
+      incoming_alias: f.incoming_channel_info.node2_info.alias || '',
       incoming_channel: f.incoming_channel,
+      outgoing_alias: f.outgoing_channel_info.node2_info.alias || '',
       outgoing_channel: f.outgoing_channel,
       value,
     };
   });
 
-  const incomingNodes = cleaned.map(f => f.incoming_channel);
-  const outgoingNodes = cleaned.map(f => f.outgoing_channel);
+  const incomingNodes = cleaned.map(f => ({
+    alias: f.incoming_alias,
+    channel: f.incoming_channel,
+  }));
+  const outgoingNodes = cleaned.map(f => ({
+    alias: f.outgoing_alias,
+    channel: f.outgoing_channel,
+  }));
 
-  const uniqueNodes = [
-    ...Array.from(new Set(incomingNodes)),
-    ...Array.from(new Set(outgoingNodes)),
-  ];
+  const uniqueNodes = uniqBy([...incomingNodes, ...outgoingNodes], 'channel');
   const nodeLength = uniqueNodes.length;
 
-  const incoming = new Array(nodeLength).fill(0);
-  const outgoing = new Array(nodeLength).fill(0);
+  const incoming: number[] = new Array(nodeLength).fill(0);
+  const outgoing: number[] = new Array(nodeLength).fill(0);
 
   cleaned.forEach(f => {
-    const inIndex = uniqueNodes.indexOf(f.incoming_channel);
-    const outIndex = uniqueNodes.indexOf(f.outgoing_channel);
+    const inIndex = uniqueNodes.findIndex(
+      n => n.channel === f.incoming_channel
+    );
+    const outIndex = uniqueNodes.findIndex(
+      n => n.channel === f.outgoing_channel
+    );
 
     const currentIncoming = incoming[inIndex];
     const currentOutgoing = outgoing[outIndex];
@@ -52,7 +61,8 @@ export const sortByNode = (order: string, forwardArray: Forward[]) => {
     maxOut = Math.max(maxOut, outgoingValue);
 
     return {
-      channel: n,
+      alias: n.alias,
+      channel: n.channel,
       incoming: incomingValue,
       outgoing: outgoingValue,
     };
