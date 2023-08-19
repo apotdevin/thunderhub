@@ -28,10 +28,9 @@ const S = {
 
     border-radius: 4px;
     padding: 8px;
-    ${({ widgetColor }) =>
-      css`
-        border-top: 2px solid #${widgetColor};
-      `}
+    ${({ widgetColor }) => css`
+      border-top: 2px solid #${widgetColor};
+    `}
   `,
   gridWrapper: styled.div`
     width: 100%;

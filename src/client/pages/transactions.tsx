@@ -118,19 +118,22 @@ const TransactionsView = () => {
       return null;
     }
 
-    const filtered = list.reduce((p, c) => {
-      const { confirmed } = settings;
+    const filtered = list.reduce(
+      (p, c) => {
+        const { confirmed } = settings;
 
-      if (!c) return p;
+        if (!c) return p;
 
-      if (confirmed) {
-        if (!c.is_confirmed) {
-          return p;
+        if (confirmed) {
+          if (!c.is_confirmed) {
+            return p;
+          }
         }
-      }
 
-      return [...p, c];
-    }, [] as GetInvoicesQuery['getInvoices']['invoices']);
+        return [...p, c];
+      },
+      [] as GetInvoicesQuery['getInvoices']['invoices']
+    );
 
     return (
       <>
@@ -154,28 +157,31 @@ const TransactionsView = () => {
       return null;
     }
 
-    const filtered = list.reduce((p, c) => {
-      const { rebalance, confirmed } = settings;
+    const filtered = list.reduce(
+      (p, c) => {
+        const { rebalance, confirmed } = settings;
 
-      if (!c) return p;
+        if (!c) return p;
 
-      if (rebalance) {
-        if (c.destination === publicKey) {
-          return p;
+        if (rebalance) {
+          if (c.destination === publicKey) {
+            return p;
+          }
+          if (selfInvoices.includes(c.id)) {
+            return p;
+          }
         }
-        if (selfInvoices.includes(c.id)) {
-          return p;
-        }
-      }
 
-      if (confirmed) {
-        if (!c.is_confirmed) {
-          return p;
+        if (confirmed) {
+          if (!c.is_confirmed) {
+            return p;
+          }
         }
-      }
 
-      return [...p, c];
-    }, [] as GetPaymentsQuery['getPayments']['payments']);
+        return [...p, c];
+      },
+      [] as GetPaymentsQuery['getPayments']['payments']
+    );
 
     return (
       <>
