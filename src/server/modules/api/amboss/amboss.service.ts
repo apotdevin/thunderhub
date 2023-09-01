@@ -79,7 +79,14 @@ export class AmbossService {
       amount: pubkeys.length,
     });
 
+    const start = new Date();
     const nodes = await this.getNodeAliasBatchQuery(pubkeys);
+    const end = new Date();
+
+    this.logger.debug('Time to fetch node info', {
+      duration: end.getTime() - start.getTime() + ' ms',
+    });
+
     return mapNodeResult(pubkeys, nodes);
   }
 
@@ -100,7 +107,14 @@ export class AmbossService {
       amount: ids.length,
     });
 
+    const start = new Date();
     const edges = await this.getEdgeInfoBatchQuery(ids);
+    const end = new Date();
+
+    this.logger.debug('Time to fetch edge info', {
+      duration: end.getTime() - start.getTime() + ' ms',
+    });
+
     return mapEdgeResult(ids, edges);
   }
 
