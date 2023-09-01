@@ -77,8 +77,10 @@ const countRoutes = (list: Forward[]) => {
         .reduce((p: number, c: number) => p + c);
 
       channelInfo.push({
-        incoming_alias: element[0].incoming_channel_info.node2_info.alias || '',
-        outgoing_alias: element[0].outgoing_channel_info.node2_info.alias || '',
+        incoming_alias:
+          element[0].incoming_channel_info?.node2_info.alias || 'Unknown',
+        outgoing_alias:
+          element[0].outgoing_channel_info?.node2_info.alias || 'Unknown',
         incoming_channel: element[0].incoming_channel,
         outgoing_channel: element[0].outgoing_channel,
         route: key,
@@ -114,8 +116,8 @@ const countArray = (list: Forward[], type: boolean) => {
         : element[0].outgoing_channel;
 
       const alias = type
-        ? element[0].incoming_channel_info.node2_info.alias || ''
-        : element[0].outgoing_channel_info.node2_info.alias || '';
+        ? element[0].incoming_channel_info?.node2_info.alias || 'Unknown'
+        : element[0].outgoing_channel_info?.node2_info.alias || 'Unknown';
 
       channelInfo.push({
         alias,

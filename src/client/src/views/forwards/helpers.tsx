@@ -12,9 +12,9 @@ export const sortByNode = (order: string, forwardArray: Forward[]) => {
     }
 
     return {
-      incoming_alias: f.incoming_channel_info.node2_info.alias || '',
+      incoming_alias: f.incoming_channel_info?.node2_info.alias || 'Unknown',
       incoming_channel: f.incoming_channel,
-      outgoing_alias: f.outgoing_channel_info.node2_info.alias || '',
+      outgoing_alias: f.outgoing_channel_info?.node2_info.alias || 'Unknown',
       outgoing_channel: f.outgoing_channel,
       value,
     };

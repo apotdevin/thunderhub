@@ -74,8 +74,8 @@ export const ForwardListWidget = () => {
             <Price amount={f.fee} />
           </S.nowrap>
         ),
-        incoming: f.incoming_channel_info.node2_info.alias || '',
-        outgoing: f.outgoing_channel_info.node2_info.alias || '',
+        incoming: f.incoming_channel_info?.node2_info.alias || 'Unknown',
+        outgoing: f.outgoing_channel_info?.node2_info.alias || 'Unknown',
       },
     ];
   }, [] as any);

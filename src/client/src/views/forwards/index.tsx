@@ -24,8 +24,8 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
     return channelData.map(c => {
       return {
         ...c,
-        incoming_name: c.incoming_channel_info.node2_info.alias || '',
-        outgoing_name: c.outgoing_channel_info.node2_info.alias || '',
+        incoming_name: c.incoming_channel_info?.node2_info.alias || 'Unknown',
+        outgoing_name: c.outgoing_channel_info?.node2_info.alias || 'Unknown',
       };
     });
   }, [data]);

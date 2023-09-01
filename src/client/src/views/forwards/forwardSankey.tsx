@@ -35,7 +35,9 @@ export const ForwardSankey: FC<{
     const mapped = data.getForwards.map(d => ({
       ...d,
       group: `${d.incoming_channel}-${d.outgoing_channel}`,
-      groupAlias: `${d.incoming_channel_info.node2_info.alias}-${d.outgoing_channel_info.node2_info.alias}`,
+      groupAlias: `${d.incoming_channel_info?.node2_info.alias || 'Unknown'}-${
+        d.outgoing_channel_info?.node2_info.alias || 'Unknown'
+      }`,
     }));
 
     const grouped = groupBy(mapped, 'groupAlias');
@@ -56,8 +58,10 @@ export const ForwardSankey: FC<{
       const firstValue = value[0];
 
       aggregated.push({
-        incoming_channel: firstValue.incoming_channel_info.node2_info.alias,
-        outgoing_channel: firstValue.outgoing_channel_info.node2_info.alias,
+        incoming_channel:
+          firstValue.incoming_channel_info?.node2_info.alias || 'Unknown',
+        outgoing_channel:
+          firstValue.outgoing_channel_info?.node2_info.alias || 'Unknown',
         fee: totalFees,
         tokens: totalTokens,
         amount: totalAmount,
