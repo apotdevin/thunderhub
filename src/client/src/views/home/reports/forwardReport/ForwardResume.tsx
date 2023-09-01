@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
+import { useGetBasicForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 import styled from 'styled-components';
 import { differenceInDays } from 'date-fns';
 import { Price } from '../../../../components/price/Price';
@@ -37,7 +37,7 @@ type ForwardResumeProps = {
 };
 
 export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
-  const { data, loading } = useGetForwardsQuery({
+  const { data, loading } = useGetBasicForwardsQuery({
     ssr: false,
     variables: { days: 30 },
     errorPolicy: 'ignore',

@@ -53,6 +53,7 @@ import {
   GrantAccessArgs,
   GetInvoicesArgs,
   CreateChainAddressArgs,
+  getIdentity,
 } from 'lightning';
 import { EnrichedAccount } from '../../accounts/accounts.types';
 import { to } from './lnd.helpers';
@@ -66,6 +67,10 @@ export class LndService {
         lnd: account.lnd,
       })
     );
+  }
+
+  async getIdentity(account: EnrichedAccount) {
+    return to(getIdentity({ lnd: account.lnd }));
   }
 
   async getWalletVersion(account: EnrichedAccount) {

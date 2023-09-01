@@ -20,6 +20,9 @@ import {
 } from './forwards.types';
 import { ContextType } from 'src/server/app.module';
 import { BaseNodeInfoType } from '../amboss/amboss.types';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
+import { Inject } from '@nestjs/common';
 
 @Resolver(BaseNodeInfo)
 export class BaseNodeInfoResolver {
@@ -69,19 +72,27 @@ export class ForwardResolver {
 
 @Resolver()
 export class ForwardsResolver {
-  constructor(private nodeService: NodeService) {}
+  constructor(
+    private nodeService: NodeService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+  ) {}
 
   @Query(() => [Forward])
   async getForwards(
     @CurrentUser() user: UserId,
     @Args('days') days: number
   ): Promise<ForwardsWithPubkey[]> {
-    const walletInfo = await this.nodeService.getWalletInfo(user.id);
+    const walletInfo = await this.nodeService.getIdentity(user.id);
 
     if (!walletInfo) return [];
 
     const today = new Date();
     const startDate = subDays(today, days);
+
+    this.logger.debug('Getting forwards', {
+      from: startDate.toISOString(),
+      to: today.toISOString(),
+    });
 
     const forwardsList = await this.nodeService.getForwards(user.id, {
       after: startDate.toISOString(),
@@ -93,7 +104,7 @@ export class ForwardsResolver {
 
     let finishedFetching = false;
 
-    if (!next || !forwards || forwards.length <= 0) {
+    if (!next || !forwards?.length) {
       finishedFetching = true;
     }
 
@@ -109,6 +120,13 @@ export class ForwardsResolver {
         finishedFetching = true;
       }
     }
+
+    const end = new Date();
+
+    this.logger.debug('Time to get forwards', {
+      forward_amount: forwards.length,
+      duration: end.getTime() - today.getTime() + ' ms',
+    });
 
     const forwardsWithCurrentPubkey = forwards.map(f => ({
       ...f,

@@ -29,3 +29,15 @@ export const GET_FORWARDS = gql`
     }
   }
 `;
+
+export const GET_BASIC_FORWARDS = gql`
+  query GetBasicForwards($days: Float!) {
+    getForwards(days: $days) {
+      created_at
+      fee
+      fee_mtokens
+      mtokens
+      tokens
+    }
+  }
+`;

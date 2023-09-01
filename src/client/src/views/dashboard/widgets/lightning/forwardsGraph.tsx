@@ -54,7 +54,7 @@ const typeOptions = [
 ];
 
 export const ForwardsGraph = () => {
-  const [days, setDays] = useState(options[1]);
+  const [days, setDays] = useState(options[0]);
   const [type, setType] = useState(typeOptions[0]);
 
   const { data, loading } = useGetForwardsQuery({

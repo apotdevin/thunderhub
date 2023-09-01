@@ -382,10 +382,10 @@ export type Forward = {
   fee: Scalars['Float']['output'];
   fee_mtokens: Scalars['String']['output'];
   incoming_channel: Scalars['String']['output'];
-  incoming_channel_info: ChannelInfo;
+  incoming_channel_info?: Maybe<ChannelInfo>;
   mtokens: Scalars['String']['output'];
   outgoing_channel: Scalars['String']['output'];
-  outgoing_channel_info: ChannelInfo;
+  outgoing_channel_info?: Maybe<ChannelInfo>;
   tokens: Scalars['Float']['output'];
 };
 

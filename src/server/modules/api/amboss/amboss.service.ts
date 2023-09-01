@@ -75,6 +75,10 @@ export class AmbossService {
   }
 
   async getNodeAliasBatch(pubkeys: string[]): Promise<(NodeAlias | null)[]> {
+    this.logger.info('Fetching information for nodes', {
+      amount: pubkeys.length,
+    });
+
     const nodes = await this.getNodeAliasBatchQuery(pubkeys);
     return mapNodeResult(pubkeys, nodes);
   }
@@ -92,6 +96,10 @@ export class AmbossService {
   }
 
   async getEdgeInfoBatch(ids: string[]): Promise<(EdgeInfo | null)[]> {
+    this.logger.info('Fetching information for edges', {
+      amount: ids.length,
+    });
+
     const edges = await this.getEdgeInfoBatchQuery(ids);
     return mapEdgeResult(ids, edges);
   }

@@ -49,7 +49,7 @@ export const typeOptions = [
 ];
 
 export const ForwardBox = () => {
-  const [days, setDays] = useState(options[2]);
+  const [days, setDays] = useState(options[0]);
   const [type, setType] = useState(typeOptions[0]);
 
   return (

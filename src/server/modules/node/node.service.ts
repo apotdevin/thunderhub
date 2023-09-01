@@ -7,6 +7,7 @@ import {
   DiffieHellmanComputeSecretArgs,
   GetChannelsArgs,
   GetForwardsArgs,
+  GetIdentityResult,
   GetInvoicesArgs,
   GetPaymentsArgs,
   GrantAccessArgs,
@@ -274,5 +275,11 @@ export class NodeService {
     const account = this.accountsService.getAccount(id);
     if (!account) throw new Error('Node account not found');
     return this.lndService.subscribeToInvoice(account, invoice);
+  }
+
+  async getIdentity(id: string): Promise<GetIdentityResult> {
+    const account = this.accountsService.getAccount(id);
+    if (!account) throw new Error('Node account not found');
+    return this.lndService.getIdentity(account);
   }
 }
