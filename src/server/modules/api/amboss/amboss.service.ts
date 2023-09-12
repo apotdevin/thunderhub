@@ -19,7 +19,11 @@ import { NodeService } from '../../node/node.service';
 import { UserConfigService } from '../userConfig/userConfig.service';
 import { getSHA256Hash } from 'src/server/utils/crypto';
 import { orderBy } from 'lodash';
-import { mapEdgeResult, mapNodeResult } from './amboss.helpers';
+import {
+  getMappedChannelInfo,
+  mapEdgeResult,
+  mapNodeResult,
+} from './amboss.helpers';
 import { EdgeInfo, NodeAlias } from './amboss.types';
 
 const ONE_MINUTE = 60 * 1000;
@@ -457,22 +461,7 @@ export class AmbossService {
                 is_public: true,
               });
 
-              if (!channels.channels.length) return;
-
-              const mapped = channels.channels.map(c => {
-                const heldAmount = c.pending_payments.reduce((p, pp) => {
-                  if (!pp) return p;
-                  if (!pp.is_outgoing) return p;
-                  return p + pp.tokens;
-                }, 0);
-
-                return {
-                  chan_id: c.id,
-                  balance: (c.local_balance + heldAmount).toString(),
-                  capacity: c.capacity + '',
-                };
-              });
-
+              const mapped = getMappedChannelInfo(channels);
               allChannels.push(...mapped);
             }
 
@@ -482,31 +471,17 @@ export class AmbossService {
                 { is_private: true }
               );
 
-              if (!privateChannels.channels.length) return;
-
-              const mapped = privateChannels.channels.map(c => {
-                const heldAmount = c.pending_payments.reduce((p, pp) => {
-                  if (!pp) return p;
-                  if (!pp.is_outgoing) return p;
-                  return p + pp.tokens;
-                }, 0);
-
-                return {
-                  chan_id: c.id,
-                  balance: (c.local_balance + heldAmount).toString(),
-                  capacity: c.capacity + '',
-                };
-              });
-
+              const mapped = getMappedChannelInfo(privateChannels);
               allChannels.push(...mapped);
             }
 
             const sortedChannels = orderBy(allChannels, ['chan_id'], ['desc']);
 
             if (sortedChannels.length) {
-              const infoString = sortedChannels.reduce((p, c) => {
-                return p + `${c.chan_id}${c.balance}${c.capacity || ''}`;
-              }, '');
+              const infoString = sortedChannels.reduce(
+                (p, c) => p + `${c.chan_id}${c.balance}${c.capacity || ''}`,
+                ''
+              );
 
               message += getSHA256Hash(infoString);
             }
