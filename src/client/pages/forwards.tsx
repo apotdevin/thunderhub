@@ -1,7 +1,7 @@
 import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
 import { NextPageContext } from 'next';
 import { getProps } from '../src/utils/ssr';
-import { ForwardsList } from '../src/views/forwards/index';
+import { ForwardsList } from '../src/views/forwards';
 import { ForwardChannelsReport } from '../src/views/home/reports/forwardReport/ForwardChannelReport';
 import { useState } from 'react';
 import { ForwardTable } from '../src/views/forwards/ForwardTable';
@@ -19,6 +19,7 @@ import {
 } from '../src/components/generic/Styled';
 import { ForwardSankey } from '../src/views/forwards/forwardSankey';
 import { ChannelCart } from '../src/components/chart/ChannelChart';
+import { useGetChannelsQuery } from '../src/graphql/queries/__generated__/getChannels.generated';
 
 const S = {
   options: styled.div`
@@ -30,7 +31,7 @@ const S = {
   temp: styled.div`
     display: flex;
     gap: 8px;
-    width: 40%;
+    width: 80%;
     justify-content: flex-end;
   `,
 };
@@ -40,13 +41,23 @@ const viewOptions = [
   { label: 'List', value: 'list' },
   { label: 'By Channel', value: 'byChannel' },
 ];
+const channelWasNotFound = { label: 'Channels was not found', value: '' };
 
 const ForwardsView = () => {
   const [days, setDays] = useState(options[0]);
   const [type, setType] = useState(typeOptions[0]);
   const [view, setView] = useState(viewOptions[0]);
-  // todo channels dropdown,
-  //  show it if  viewOption == byChannel
+  const channelOptions = useGetChannelsQuery().data?.getChannels.map(it => {
+    return {
+      label: `${it.id} ${
+        it.partner_node_info.node ? it.partner_node_info.node.alias : ''
+      }`,
+      value: it.id,
+    };
+  });
+  const [channel, setChannel] = useState(
+    channelOptions ? channelOptions[0] : channelWasNotFound
+  );
 
   return (
     <>
@@ -69,13 +80,23 @@ const ForwardsView = () => {
                 isClearable={false}
                 maxWidth={'80px'}
               />
-              {view.value != 'byChannel' && (
+              {view.value != 'byChannel' ? (
                 <SelectWithValue
                   callback={e => setType((e[0] || typeOptions[1]) as any)}
                   options={typeOptions}
                   value={type}
                   isClearable={false}
                   maxWidth={'110px'}
+                />
+              ) : (
+                <SelectWithValue
+                  callback={e =>
+                    setChannel((e[0] || channelWasNotFound) as any)
+                  }
+                  options={channelOptions || [channelWasNotFound]}
+                  value={channel}
+                  isClearable={false}
+                  maxWidth={'200px'}
                 />
               )}
             </S.temp>
@@ -110,7 +131,7 @@ const ForwardsView = () => {
         )}
         {view.value === 'byChannel' && (
           <>
-            <ChannelCart channelId={'asd'} days={days.value} />
+            <ChannelCart channelId={channel.value} days={days.value} />
           </>
         )}
       </CardWithTitle>
