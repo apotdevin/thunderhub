@@ -15,8 +15,6 @@ import { CloseChannel } from '../../src/components/modal/closeChannel/CloseChann
 import { useGetChannelInfoQuery } from '../../src/graphql/queries/__generated__/getChannel.generated';
 import { getProps } from '../../src/utils/ssr';
 import { ChannelDetails } from '../../src/views/channels/channels/ChannelDetails';
-import React from 'react';
-import { ChannelCart } from '../../src/components/chart/ChannelChart';
 
 const S = {
   row: styled.div`
@@ -90,9 +88,6 @@ const Channel = () => {
             'Unknown'
           }
         />
-      </Card>
-      <Card>
-        <ChannelCart channelId={id} />
       </Card>
     </CardWithTitle>
   );
