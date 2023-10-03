@@ -41,7 +41,7 @@ const viewOptions = [
   { label: 'List', value: 'list' },
   { label: 'By Channel', value: 'byChannel' },
 ];
-const channelWasNotFound = { label: 'Channels was not found', value: '' };
+const emptyChannel = { label: 'Chose channel', value: '' };
 
 const ForwardsView = () => {
   const [days, setDays] = useState(options[0]);
@@ -55,9 +55,7 @@ const ForwardsView = () => {
       value: it.id,
     };
   });
-  const [channel, setChannel] = useState(
-    channelOptions ? channelOptions[0] : channelWasNotFound
-  );
+  const [channel, setChannel] = useState(emptyChannel);
 
   return (
     <>
@@ -90,10 +88,8 @@ const ForwardsView = () => {
                 />
               ) : (
                 <SelectWithValue
-                  callback={e =>
-                    setChannel((e[0] || channelWasNotFound) as any)
-                  }
-                  options={channelOptions || [channelWasNotFound]}
+                  callback={e => setChannel((e[0] || emptyChannel) as any)}
+                  options={channelOptions || [emptyChannel]}
                   value={channel}
                   isClearable={false}
                   maxWidth={'200px'}
