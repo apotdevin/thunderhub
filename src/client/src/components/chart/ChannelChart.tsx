@@ -28,7 +28,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
   );
   console.log('santa filteredData', filteredData);
   const option = useMemo(() => {
-    // const fontColor = themeContext.mode === 'light' ? 'black' : 'white';
+    const fontColor = themeContext.mode === 'light' ? 'black' : 'white';
     return {
       tooltip: {
         trigger: 'axis',
@@ -48,7 +48,10 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
         },
       },
       legend: {
-        data: ['Evaporation', 'Precipitation', 'Temperature'],
+        data: ['Send', 'Received', 'Fee', 'Earning'],
+        itemGap: 50,
+        textStyle: { color: fontColor },
+        lineStyle: { shadowColor: 'blue' },
       },
       xAxis: [
         {
@@ -57,25 +60,30 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           axisPointer: {
             type: 'shadow',
           },
+          axisLine: { show: true, lineStyle: { color: fontColor } },
+          axisLabel: { color: fontColor },
         },
       ],
       yAxis: [
         {
           type: 'value',
-          name: 'Precipitation',
+          name: 'Received',
           min: 0,
           max: 250,
           interval: 50,
+          axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
+            color: fontColor,
             formatter: '{value} ml',
           },
         },
         {
           type: 'value',
-          name: 'Temperature',
+          name: 'Fee',
           min: 0,
           max: 25,
           interval: 5,
+          axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
             formatter: '{value} °C',
           },
@@ -83,7 +91,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
       ],
       series: [
         {
-          name: 'Evaporation',
+          name: 'Send',
           type: 'bar',
           tooltip: {
             valueFormatter: (value: string) => value + ' ml',
@@ -93,7 +101,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           ],
         },
         {
-          name: 'Precipitation',
+          name: 'Received',
           type: 'bar',
           tooltip: {
             valueFormatter: (value: string) => value + ' ml',
@@ -103,7 +111,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           ],
         },
         {
-          name: 'Temperature',
+          name: 'Fee',
           type: 'line',
           yAxisIndex: 1,
           tooltip: {
@@ -111,6 +119,17 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           },
           data: [
             2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2,
+          ],
+        },
+        {
+          name: 'Earning',
+          type: 'line',
+          yAxisIndex: 1,
+          tooltip: {
+            valueFormatter: (value: string) => value + ' °C',
+          },
+          data: [
+            3.0, 5.2, 1.3, 4.5, 6.3, 10.2, 15.3, 23.4, 23.0, 10.5, 20.0, 6.2,
           ],
         },
       ],
