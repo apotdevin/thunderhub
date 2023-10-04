@@ -22,16 +22,15 @@ import { ChannelCart } from '../src/components/chart/ChannelChart';
 import { useGetChannelsQuery } from '../src/graphql/queries/__generated__/getChannels.generated';
 
 const S = {
-  options: styled.div`
+  header: styled.div`
     margin: 0 0 8px;
     width: 100%;
     display: flex;
-    justify-content: space-between;
   `,
-  temp: styled.div`
+  options: styled.div`
     display: flex;
+    flex-grow: 1;
     gap: 8px;
-    width: 80%;
     justify-content: flex-end;
   `,
 };
@@ -61,9 +60,9 @@ const ForwardsView = () => {
     <>
       <CardWithTitle>
         <CardTitle>
-          <S.options>
+          <S.header>
             <SubTitle>Forwards</SubTitle>
-            <S.temp>
+            <S.options>
               <SelectWithValue
                 callback={e => setView((e[0] || viewOptions[0]) as any)}
                 options={viewOptions}
@@ -95,8 +94,8 @@ const ForwardsView = () => {
                   maxWidth={'200px'}
                 />
               )}
-            </S.temp>
-          </S.options>
+            </S.options>
+          </S.header>
         </CardTitle>
         {view.value === 'list' && (
           <Card mobileCardPadding={'0'} mobileNoBackground={true}>
