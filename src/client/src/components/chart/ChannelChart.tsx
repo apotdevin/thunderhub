@@ -29,26 +29,26 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
   console.log('santa filteredData', filteredData);
   const option = useMemo(() => {
     const fontColor = themeContext.mode === 'light' ? 'black' : 'white';
+    const oppositeColor = themeContext.mode === 'light' ? 'white' : 'black';
     return {
+      grid: {
+        containLabel: true,
+        top: '50px',
+        left: '75px',
+        bottom: '25px',
+        right: '25px',
+      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
           type: 'cross',
           crossStyle: {
-            color: '#999',
+            color: fontColor,
           },
         },
       },
-      toolbox: {
-        feature: {
-          dataView: { show: true, readOnly: false },
-          magicType: { show: true, type: ['line', 'bar'] },
-          restore: { show: true },
-          saveAsImage: { show: true },
-        },
-      },
       legend: {
-        data: ['Send', 'Received', 'Fee', 'Earning'],
+        data: ['Send', 'Received', 'Earning', 'Fee'],
         itemGap: 50,
         textStyle: { color: fontColor },
         lineStyle: { shadowColor: 'blue' },
@@ -57,36 +57,53 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
         {
           type: 'category',
           data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          axisPointer: {
-            type: 'shadow',
-          },
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: { color: fontColor },
+          axisPointer: { show: false },
         },
       ],
       yAxis: [
         {
           type: 'value',
-          name: 'Received',
+          position: 'left',
+          offset: '100',
+          name: 'Earned',
           min: 0,
           max: 250,
           interval: 50,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
             color: fontColor,
-            formatter: '{value} ml',
+            formatter: '{value} sats',
           },
+          axisPointer: { label: { color: oppositeColor } },
         },
         {
           type: 'value',
           name: 'Fee',
+          position: 'left',
+          min: 0,
+          max: 250,
+          interval: 50,
+          axisLine: { show: true, lineStyle: { color: fontColor } },
+          axisLabel: {
+            color: fontColor,
+            formatter: '{value} ppm',
+          },
+          axisPointer: { label: { color: oppositeColor } },
+        },
+        {
+          type: 'value',
+          name: 'Amount',
+          position: 'right',
           min: 0,
           max: 25,
           interval: 5,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
-            formatter: '{value} °C',
+            formatter: '{value} °sats',
           },
+          axisPointer: { label: { color: oppositeColor } },
         },
       ],
       series: [
@@ -94,7 +111,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           name: 'Send',
           type: 'bar',
           tooltip: {
-            valueFormatter: (value: string) => value + ' ml',
+            valueFormatter: (value: string) => value + ' sats',
           },
           data: [
             2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3,
@@ -104,7 +121,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           name: 'Received',
           type: 'bar',
           tooltip: {
-            valueFormatter: (value: string) => value + ' ml',
+            valueFormatter: (value: string) => value + ' sats',
           },
           data: [
             2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3,
@@ -115,7 +132,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           type: 'line',
           yAxisIndex: 1,
           tooltip: {
-            valueFormatter: (value: string) => value + ' °C',
+            valueFormatter: (value: string) => value + ' ppm',
           },
           data: [
             2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2,
@@ -126,7 +143,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           type: 'line',
           yAxisIndex: 1,
           tooltip: {
-            valueFormatter: (value: string) => value + ' °C',
+            valueFormatter: (value: string) => value + ' sats',
           },
           data: [
             3.0, 5.2, 1.3, 4.5, 6.3, 10.2, 15.3, 23.4, 23.0, 10.5, 20.0, 6.2,
@@ -144,7 +161,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
         notMerge={true}
         lazyUpdate={true}
         showLoading={false}
-        style={{ height: '34em', marginTop: '2em' }}
+        style={{ height: '34em' }}
       />
     </Card>
   );
