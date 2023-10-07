@@ -7,8 +7,6 @@ import { useContext, useMemo } from 'react';
 import { ThemeContext } from 'styled-components';
 import { LineChart } from 'echarts/charts';
 import { Card } from '../generic/Styled';
-// import { GraphicComponent, GridComponent } from 'echarts/components';
-// import { CanvasRenderer } from 'echarts/renderers';
 echarts.use([LineChart]);
 
 type ChannelCartProps = { channelId: string; days: number };
@@ -27,6 +25,19 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
     it => it.incoming_channel === channelId || it.outgoing_channel === channelId
   );
   console.log('santa filteredData', filteredData);
+
+  const xAxisData = (): string[] => {
+    if (days === 1) {
+      return Array.from(Array(24))
+        .map((_, i) => ` ${i} hour ago`)
+        .reverse();
+    } else {
+      return Array.from(Array(days))
+        .map((_, i) => ` ${i} days ago`)
+        .reverse();
+    }
+  };
+
   const option = useMemo(() => {
     const fontColor = themeContext.mode === 'light' ? 'black' : 'white';
     const oppositeColor = themeContext.mode === 'light' ? 'white' : 'black';
@@ -39,27 +50,25 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
         right: '25px',
       },
       tooltip: {
-        trigger: 'axis',
+        trigger: 'item',
         axisPointer: {
-          type: 'cross',
+          type: 'line',
           crossStyle: {
             color: fontColor,
           },
         },
       },
       legend: {
-        data: ['Send', 'Received', 'Earning', 'Fee'],
+        data: ['Earning', 'Fee', 'Send', 'Received'],
         itemGap: 50,
         textStyle: { color: fontColor },
-        lineStyle: { shadowColor: 'blue' },
       },
       xAxis: [
         {
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: xAxisData(),
           axisLine: { show: true, lineStyle: { color: fontColor } },
-          axisLabel: { color: fontColor },
-          axisPointer: { show: false },
+          axisPointer: { show: true, label: { color: oppositeColor } },
         },
       ],
       yAxis: [
@@ -73,7 +82,6 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           interval: 50,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
-            color: fontColor,
             formatter: '{value} sats',
           },
           axisPointer: { label: { color: oppositeColor } },
@@ -87,7 +95,6 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           interval: 50,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
-            color: fontColor,
             formatter: '{value} ppm',
           },
           axisPointer: { label: { color: oppositeColor } },
@@ -151,7 +158,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
         },
       ],
     };
-  }, [themeContext]);
+  }, [themeContext, days]);
 
   return (
     <Card>
