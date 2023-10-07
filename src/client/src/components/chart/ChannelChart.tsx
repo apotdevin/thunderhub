@@ -7,8 +7,9 @@ import { useContext, useMemo } from 'react';
 import { ThemeContext } from 'styled-components';
 import { LineChart } from 'echarts/charts';
 import { Card } from '../generic/Styled';
-echarts.use([LineChart]);
 
+echarts.use([LineChart]);
+const MILLISECONDS_PER_HOUR = 1000 * 60 * 60;
 type ChannelCartProps = { channelId: string; days: number };
 
 /**
@@ -21,26 +22,43 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
     variables: { days: days },
     onError: error => toast.error(getErrorContent(error)),
   });
-  const filteredData = data?.getForwards.filter(
-    it => it.incoming_channel === channelId || it.outgoing_channel === channelId
-  );
-  console.log('santa filteredData', filteredData);
+  const filteredData = data
+    ? data.getForwards.filter(
+        it =>
+          it.incoming_channel === channelId || it.outgoing_channel === channelId
+      )
+    : [];
 
-  const xAxisData = (): string[] => {
-    if (days === 1) {
-      return Array.from(Array(24))
-        .map((_, i) => ` ${i} hour ago`)
-        .reverse();
-    } else {
-      return Array.from(Array(days))
-        .map((_, i) => ` ${i} days ago`)
-        .reverse();
-    }
+  console.log('santa filteredData', filteredData); //todo remove
+  // Helper data
+  const fontColor = themeContext.mode === 'light' ? 'black' : 'white';
+  const oppositeColor = themeContext.mode === 'light' ? 'white' : 'black';
+  const columnNumber = days === 1 ? 24 : days;
+  const now = new Date();
+
+  // Helper functions
+  const getColumnNumber = (createdAt: string): number => {
+    const diffInHour = Math.floor(
+      (now.getTime() - new Date(createdAt).getTime()) / MILLISECONDS_PER_HOUR
+    );
+    return (
+      columnNumber - 1 - (days === 1 ? diffInHour : Math.floor(diffInHour / 24))
+    );
   };
 
+  const xAxisData = Array.from(Array(columnNumber))
+    .map((_, i) => (days === 1 ? `${i} hour ago` : `${i} days ago`))
+    .reverse();
+
+  const earningArr: number[] = filteredData
+    .reduce((acc, it) => {
+      acc[getColumnNumber(it.created_at)] += Number.parseInt(it.fee_mtokens);
+      return acc;
+    }, Array<number>(columnNumber).fill(0))
+    .map(i => i / 1000);
+  console.log('aaa', earningArr); // todo after changing channel chart not update.
+
   const option = useMemo(() => {
-    const fontColor = themeContext.mode === 'light' ? 'black' : 'white';
-    const oppositeColor = themeContext.mode === 'light' ? 'white' : 'black';
     return {
       grid: {
         containLabel: true,
@@ -66,7 +84,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
       xAxis: [
         {
           type: 'category',
-          data: xAxisData(),
+          data: xAxisData,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisPointer: { show: true, label: { color: oppositeColor } },
         },
@@ -78,8 +96,8 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           offset: '100',
           name: 'Earned',
           min: 0,
-          max: 250,
-          interval: 50,
+          max: Math.floor(Math.max(...earningArr) + 1),
+          // interval: 100,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
             formatter: '{value} sats',
@@ -92,7 +110,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           position: 'left',
           min: 0,
           max: 250,
-          interval: 50,
+          // interval: 50,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
             formatter: '{value} ppm',
@@ -105,7 +123,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           position: 'right',
           min: 0,
           max: 25,
-          interval: 5,
+          // interval: 5,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
             formatter: '{value} °sats',
@@ -142,19 +160,17 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
             valueFormatter: (value: string) => value + ' ppm',
           },
           data: [
-            2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2,
+            44.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2,
           ],
         },
         {
           name: 'Earning',
           type: 'line',
-          yAxisIndex: 1,
+          yAxisIndex: 0,
           tooltip: {
             valueFormatter: (value: string) => value + ' sats',
           },
-          data: [
-            3.0, 5.2, 1.3, 4.5, 6.3, 10.2, 15.3, 23.4, 23.0, 10.5, 20.0, 6.2,
-          ],
+          data: earningArr,
         },
       ],
     };
