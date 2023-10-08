@@ -56,7 +56,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
       return acc;
     }, Array<number>(columnNumber).fill(0))
     .map(i => i / 1000);
-  console.log('aaa', earningArr); // todo after changing channel chart not update.
+  console.log('aaa', earningArr); // todo remove
 
   const option = useMemo(() => {
     return {
@@ -126,7 +126,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           // interval: 5,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
-            formatter: '{value} °sats',
+            formatter: '{value} sats',
           },
           axisPointer: { label: { color: oppositeColor } },
         },
@@ -174,7 +174,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
         },
       ],
     };
-  }, [themeContext, days]);
+  }, [themeContext, days, channelId]);
 
   return (
     <Card>

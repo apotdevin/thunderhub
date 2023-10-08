@@ -149,7 +149,7 @@ export const SelectWithValue = ({
     }
   };
   return (
-    <StyledWrapper maxWidth={maxWidth} fullWidth={true}>
+    <StyledWrapper maxWidth={maxWidth} fullWidth={false}>
       <StyledSelect
         isMulti={isMulti}
         classNamePrefix={'Select'}

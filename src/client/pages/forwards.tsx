@@ -48,7 +48,7 @@ const ForwardsView = () => {
   const [view, setView] = useState(viewOptions[0]);
   const channelOptions = useGetChannelsQuery().data?.getChannels.map(it => {
     return {
-      label: `${it.id} ${
+      label: `${it.id}, ${
         it.partner_node_info.node ? it.partner_node_info.node.alias : ''
       }`,
       value: it.id,
@@ -91,7 +91,7 @@ const ForwardsView = () => {
                   options={channelOptions || [emptyChannel]}
                   value={channel}
                   isClearable={false}
-                  maxWidth={'250px'}
+                  maxWidth={'340px'}
                 />
               )}
             </S.options>
