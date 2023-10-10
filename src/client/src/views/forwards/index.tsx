@@ -89,7 +89,7 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
           },
           {
             header: 'Outgoing',
-            accessorKeyKey: 'outgoing_channel',
+            accessorKey: 'outgoing_channel',
             cell: ({ cell }: any) => cell.renderValue(),
           },
         ],
