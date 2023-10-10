@@ -52,7 +52,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
     .reverse();
 
   const mEarningArr = Array<number>(columnSize).fill(0);
-  const mFeeArr = Array<number>(columnSize).fill(0);
+  let feeReceivedArr = Array<number>(columnSize).fill(0);
   const recieveArr = Array<number>(columnSize).fill(0);
   const sendArr = Array<number>(columnSize).fill(0);
   // todo fee count is for out channel or in or both direction? 038c030bb15b8c561e7b 7d check!!!
@@ -60,17 +60,24 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
   filteredData.forEach(it => {
     const columnIndex = calculateColumnIndex(it.created_at);
     mEarningArr[columnIndex] += Number.parseInt(it.fee_mtokens);
-    mFeeArr[columnIndex] +=
-      (Number.parseInt(it.fee_mtokens) / it.tokens) * 1000;
     if (it.outgoing_channel === channelId) {
       sendArr[columnIndex] += it.tokens;
+      feeReceivedArr[columnIndex] +=
+        (Number.parseInt(it.fee_mtokens) / it.tokens) * 1000;
     } else {
       recieveArr[columnIndex] += it.tokens;
     }
   });
-  console.log(recieveArr);
-  console.log(sendArr);
-  console.log('max ', Math.max(...recieveArr, ...sendArr));
+  //fill zeros with previous non-zero value
+  let lastNotZeroValue: number;
+  feeReceivedArr = feeReceivedArr.map(Math.round).map(it => {
+    if (it !== 0) {
+      lastNotZeroValue = it;
+    } else if (lastNotZeroValue !== 0) {
+      return lastNotZeroValue;
+    }
+    return it;
+  });
 
   const option = useMemo(() => {
     return {
@@ -93,11 +100,18 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
       color: [
         chartColors.orange2,
         chartColors.purple,
-        chartColors.lightblue,
         chartColors.green,
+        chartColors.orange,
+        chartColors.lightblue,
       ],
       legend: {
-        data: ['Earning', 'Fee', 'Send', 'Received'],
+        data: [
+          'Earning (received)',
+          'Fee (received)',
+          'Received',
+          'Earning (send)',
+          'Send',
+        ],
         itemGap: 50,
         textStyle: { color: fontColor },
       },
@@ -129,7 +143,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           name: 'Fee',
           position: 'left',
           min: 0,
-          max: Math.floor(Math.max(...mFeeArr) / 1000 + 1),
+          max: Math.floor(Math.max(...feeReceivedArr) + 1),
           // interval: 50,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
@@ -153,7 +167,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
       ],
       series: [
         {
-          name: 'Earning',
+          name: 'Earning (received)',
           type: 'line',
           yAxisIndex: 0,
           tooltip: {
@@ -162,22 +176,13 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           data: mEarningArr.map(x => x / 1000),
         },
         {
-          name: 'Fee',
+          name: 'Fee (received)',
           type: 'line',
           yAxisIndex: 1,
           tooltip: {
             valueFormatter: (value: string) => value + ' ppm',
           },
-          data: mFeeArr.map(x => x / 1000),
-        },
-        {
-          name: 'Send',
-          type: 'bar',
-          yAxisIndex: 2,
-          tooltip: {
-            valueFormatter: (value: string) => value + ' sats',
-          },
-          data: sendArr,
+          data: feeReceivedArr,
         },
         {
           name: 'Received',
@@ -187,6 +192,24 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
             valueFormatter: (value: string) => value + ' sats',
           },
           data: recieveArr,
+        },
+        {
+          name: 'Earning (send)',
+          type: 'line',
+          yAxisIndex: 0,
+          tooltip: {
+            valueFormatter: (value: string) => value + ' sats',
+          },
+          data: mEarningArr.map(x => x / 1000),
+        },
+        {
+          name: 'Send',
+          type: 'bar',
+          yAxisIndex: 2,
+          tooltip: {
+            valueFormatter: (value: string) => value + ' sats',
+          },
+          data: sendArr,
         },
       ],
     };

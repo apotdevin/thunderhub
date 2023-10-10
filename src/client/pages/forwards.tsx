@@ -75,7 +75,7 @@ const ForwardsView = () => {
                 options={options}
                 value={days}
                 isClearable={false}
-                maxWidth={'80px'}
+                maxWidth={'85px'}
               />
               {view.value != 'byChannel' ? (
                 <SelectWithValue
