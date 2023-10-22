@@ -96,7 +96,12 @@ export default function Table({
   withSorting = false,
 }: TableProps) {
   const [globalFilter, setGlobalFilter] = useState('');
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: 'balanceBars',
+      desc: false,
+    },
+  ]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
