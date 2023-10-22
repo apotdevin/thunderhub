@@ -6,7 +6,7 @@ import { Price } from '../../../../components/price/Price';
 import { mediaWidths } from '../../../../styles/Themes';
 import { DarkSubTitle } from '../../../../components/generic/Styled';
 
-type ArrayType = { fee: number; tokens: number };
+type ArrayType = { fee: number; fee_mtokens: string; tokens: number };
 
 const S = {
   grid: styled.div`
@@ -68,7 +68,7 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
     const dayValue = day.reduce((p, c) => {
       if (!c) return p;
       if (type.value === 'fee') {
-        return p + c.fee;
+        return p + Number.parseInt(c.fee_mtokens);
       }
       if (type.value === 'tokens') {
         return p + c.tokens;
@@ -78,7 +78,7 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
     const weekValue = week.reduce((p, c) => {
       if (!c) return p;
       if (type.value === 'fee') {
-        return p + c.fee;
+        return p + Number.parseInt(c.fee_mtokens);
       }
       if (type.value === 'tokens') {
         return p + c.tokens;
@@ -88,7 +88,7 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
     const monthValue = forwards.reduce((p, c) => {
       if (!c) return p;
       if (type.value === 'fee') {
-        return p + c.fee;
+        return p + Number.parseInt(c.fee_mtokens);
       }
       if (type.value === 'tokens') {
         return p + c.tokens;
@@ -106,6 +106,8 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
   const renderValue = (value: number) => {
     if (type.value === 'amount') {
       return <div>{value}</div>;
+    } else if (type.value === 'fee') {
+      return <Price amount={Math.floor(value / 1000)} />;
     }
     return <Price amount={value} />;
   };
