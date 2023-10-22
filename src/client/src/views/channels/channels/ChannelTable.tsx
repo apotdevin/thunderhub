@@ -254,10 +254,10 @@ export const ChannelTable = () => {
               local={getPercent(c.received, c.sent)}
               remote={getPercent(c.sent, c.received)}
               formatLocal={
-                <Price amount={c.sent} breakNumber={true} noUnit={true} />
+                <Price amount={c.received} breakNumber={true} noUnit={true} />
               }
               formatRemote={
-                <Price amount={c.received} breakNumber={true} noUnit={true} />
+                <Price amount={c.sent} breakNumber={true} noUnit={true} />
               }
             />
           </div>
