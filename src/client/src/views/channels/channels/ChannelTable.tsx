@@ -251,8 +251,8 @@ export const ChannelTable = () => {
         activityBars: (
           <div style={{ minWidth: '180px' }}>
             <BalanceBars
-              local={getPercent(c.sent, c.received)}
-              remote={getPercent(c.received, c.sent)}
+              local={getPercent(c.received, c.sent)}
+              remote={getPercent(c.sent, c.received)}
               formatLocal={
                 <Price amount={c.sent} breakNumber={true} noUnit={true} />
               }
@@ -443,20 +443,20 @@ export const ChannelTable = () => {
         header: 'Activity',
         columns: [
           {
-            header: 'Sent',
-            accessorKey: 'sent',
-            cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
-                <Price amount={row.original.sent} />
-              </div>
-            ),
-          },
-          {
             header: 'Received',
             accessorKey: 'received',
             cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
                 <Price amount={row.original.received} />
+              </div>
+            ),
+          },
+          {
+            header: 'Sent',
+            accessorKey: 'sent',
+            cell: ({ row }: any) => (
+              <div style={{ whiteSpace: 'nowrap' }}>
+                <Price amount={row.original.sent} />
               </div>
             ),
           },
