@@ -12,6 +12,10 @@ import { chartColors } from '../../styles/Themes';
 echarts.use([LineChart]);
 const MILLISECONDS_PER_HOUR = 1000 * 60 * 60;
 type ChannelCartProps = { channelId: string; days: number };
+const getMax = (arr: number[]): number => {
+  const max = Math.max(...arr);
+  return max - (max % 100) + 200;
+};
 
 /**
  * lnd currently not support filter for channelId, so now it impossible to optimize query.
@@ -55,10 +59,9 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
   let feeSendArr = Array<number>(columnSize).fill(0);
   const receiveArr = Array<number>(columnSize).fill(0);
   const sendArr = Array<number>(columnSize).fill(0);
-  // todo fee count is for out channel or in or both direction? 038c030bb15b8c561e7b 7d check!!!
   filteredData.forEach(it => {
     const columnIndex = calculateColumnIndex(it.created_at);
-    mEarningArr[columnIndex] += Number.parseInt(it.fee_mtokens);
+    mEarningArr[columnIndex] += Number.parseInt(it.fee_mtokens) / 1000;
     if (it.outgoing_channel === channelId) {
       sendArr[columnIndex] += it.tokens;
       feeSendArr[columnIndex] +=
@@ -77,6 +80,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
     }
     return it;
   });
+  console.log(mEarningArr);
 
   const option = useMemo(() => {
     return {
@@ -122,7 +126,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           offset: '100',
           name: 'Earned',
           min: 0,
-          max: Math.floor(Math.max(...mEarningArr) / 1000 + 1),
+          max: getMax(mEarningArr),
           // interval: 100,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
@@ -165,7 +169,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           tooltip: {
             valueFormatter: (value: string) => value + ' sats',
           },
-          data: mEarningArr.map(x => x / 1000),
+          data: mEarningArr.map(it => it.toFixed(3)),
         },
         {
           // updated by send (out) tx
@@ -197,7 +201,15 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
         },
       ],
     };
-  }, [themeContext, days, channelId]);
+  }, [
+    fontColor,
+    xAxisData,
+    oppositeColor,
+    mEarningArr,
+    feeSendArr,
+    receiveArr,
+    sendArr,
+  ]);
 
   return (
     <Card>
