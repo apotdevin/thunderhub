@@ -12,9 +12,10 @@ import { chartColors } from '../../styles/Themes';
 echarts.use([LineChart]);
 const MILLISECONDS_PER_HOUR = 1000 * 60 * 60;
 type ChannelCartProps = { channelId: string; days: number };
-const getMax = (arr: number[]): number => {
+const getMaxHeight = (arr: number[], rounding?: number): number => {
   const max = Math.max(...arr);
-  return max - (max % 100) + 200;
+  const index = Math.pow(10, rounding || Math.floor(max).toString().length - 1);
+  return max - (max % index) + index * 2;
 };
 
 /**
@@ -56,7 +57,13 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
     .reverse();
 
   const mEarningArr = Array<number>(columnSize).fill(0);
-  let feeSendArr = Array<number>(columnSize).fill(0);
+  let feeSendArr: Array<any> = Array(columnSize)
+    .fill(0)
+    .map(() => ({
+      sum: 0,
+      count: 0,
+    }));
+  console.log('init', feeSendArr);
   const receiveArr = Array<number>(columnSize).fill(0);
   const sendArr = Array<number>(columnSize).fill(0);
   filteredData.forEach(it => {
@@ -64,30 +71,29 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
     mEarningArr[columnIndex] += Number.parseInt(it.fee_mtokens) / 1000;
     if (it.outgoing_channel === channelId) {
       sendArr[columnIndex] += it.tokens;
-      feeSendArr[columnIndex] +=
+      feeSendArr[columnIndex].sum +=
         (Number.parseInt(it.fee_mtokens) / it.tokens) * 1000;
+      feeSendArr[columnIndex].count++;
     } else {
       receiveArr[columnIndex] += it.tokens;
     }
   });
   //fill zeros with previous non-zero value
-  let lastNotZeroValue: number;
-  feeSendArr = feeSendArr.map(Math.round).map(it => {
-    if (it !== 0) {
-      lastNotZeroValue = it;
-    } else if (lastNotZeroValue !== 0) {
-      return lastNotZeroValue;
+  let lastNotZeroValue = 0;
+  feeSendArr = feeSendArr.map(it => {
+    const { sum, count } = it;
+    if (count !== 0) {
+      lastNotZeroValue = sum / count;
     }
-    return it;
+    return lastNotZeroValue.toFixed();
   });
-  console.log(mEarningArr);
 
   const option = useMemo(() => {
     return {
       grid: {
         containLabel: true,
         top: '50px',
-        left: '95px',
+        left: '25px',
         bottom: '25px',
         right: '25px',
       },
@@ -123,10 +129,10 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
         {
           type: 'value',
           position: 'left',
-          offset: '100',
+          offset: '80',
           name: 'Earned',
           min: 0,
-          max: getMax(mEarningArr),
+          max: getMaxHeight(mEarningArr),
           // interval: 100,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
@@ -139,7 +145,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           name: 'Fee',
           position: 'left',
           min: 0,
-          max: Math.floor(Math.max(...feeSendArr) + 1),
+          max: getMaxHeight(feeSendArr),
           // interval: 50,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
@@ -152,7 +158,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           name: 'Amount',
           position: 'right',
           min: 0,
-          max: Math.max(...receiveArr, ...sendArr),
+          max: getMaxHeight([...receiveArr, ...sendArr]),
           // interval: 5,
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
