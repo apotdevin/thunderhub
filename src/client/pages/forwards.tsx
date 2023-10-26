@@ -40,7 +40,7 @@ const viewOptions = [
   { label: 'List', value: 'list' },
   { label: 'By Channel', value: 'byChannel' },
 ];
-const emptyChannel = { label: 'Chose channel', value: '' };
+const emptyChannel = { label: 'All channels', value: '' };
 
 const ForwardsView = () => {
   const [days, setDays] = useState(options[0]);
@@ -88,7 +88,11 @@ const ForwardsView = () => {
               ) : (
                 <SelectWithValue
                   callback={e => setChannel((e[0] || emptyChannel) as any)}
-                  options={channelOptions || [emptyChannel]}
+                  options={
+                    channelOptions
+                      ? [emptyChannel, ...channelOptions]
+                      : [emptyChannel]
+                  }
                   value={channel}
                   isClearable={false}
                   maxWidth={'340px'}
