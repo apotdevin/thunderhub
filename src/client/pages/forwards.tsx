@@ -92,6 +92,7 @@ const ForwardsView = () => {
                   value={channel}
                   isClearable={false}
                   maxWidth={'340px'}
+                  minWidth={'250px'}
                 />
               )}
             </S.options>

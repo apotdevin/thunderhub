@@ -7,10 +7,11 @@ import {
   inputBorderColor,
   themeColors,
   selectColors,
-} from '../../../src/styles/Themes';
+} from '../../styles/Themes';
 
 type WrapperProps = {
   maxWidth?: string;
+  minWidth?: string;
   fullWidth?: boolean;
 };
 
@@ -19,6 +20,11 @@ const StyledWrapper = styled.div<WrapperProps>`
     maxWidth &&
     css`
       max-width: ${maxWidth};
+    `}
+  ${({ minWidth }) =>
+    minWidth &&
+    css`
+      min-width: ${minWidth};
     `}
   width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
 `;
@@ -129,6 +135,7 @@ type SelectWithValueProps = {
   value: ValueProp | undefined;
   isMulti?: boolean;
   maxWidth?: string;
+  minWidth?: string;
   isClearable?: boolean;
   callback: (value: ValueProp[]) => void;
 };
@@ -137,6 +144,7 @@ export const SelectWithValue = ({
   isMulti,
   options,
   maxWidth,
+  minWidth,
   callback,
   value,
   isClearable = true,
@@ -149,7 +157,7 @@ export const SelectWithValue = ({
     }
   };
   return (
-    <StyledWrapper maxWidth={maxWidth} fullWidth={false}>
+    <StyledWrapper maxWidth={maxWidth} minWidth={minWidth} fullWidth={false}>
       <StyledSelect
         isMulti={isMulti}
         classNamePrefix={'Select'}
