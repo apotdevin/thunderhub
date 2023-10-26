@@ -122,7 +122,11 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           type: 'category',
           data: xAxisData,
           axisLine: { show: true, lineStyle: { color: fontColor } },
-          axisPointer: { show: true, label: { color: oppositeColor } },
+          axisPointer: {
+            type: 'shadow',
+            show: true,
+            label: { color: oppositeColor },
+          },
         },
       ],
       yAxis: [
@@ -133,7 +137,8 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           name: 'Earned',
           min: 0,
           max: getMaxHeight(mEarningArr),
-          // interval: 100,
+          splitLine: { show: false },
+          axisTick: { show: true },
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
             formatter: '{value} sats',
@@ -146,7 +151,8 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           position: 'left',
           min: 0,
           max: getMaxHeight(feeSendArr),
-          // interval: 50,
+          splitLine: { show: false },
+          axisTick: { show: true },
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
             formatter: '{value} ppm',
@@ -159,7 +165,8 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           position: 'right',
           min: 0,
           max: getMaxHeight([...receiveArr, ...sendArr]),
-          // interval: 5,
+          splitLine: { show: false },
+          axisTick: { show: true },
           axisLine: { show: true, lineStyle: { color: fontColor } },
           axisLabel: {
             formatter: '{value} sats',
