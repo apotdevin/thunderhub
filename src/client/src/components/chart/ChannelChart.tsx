@@ -38,7 +38,6 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
       )
     : [];
 
-  console.log('santa filteredData', filteredData); //todo remove
   // Helper data
   const fontColor = themeContext.mode === 'light' ? 'black' : 'white';
   const oppositeColor = themeContext.mode === 'light' ? 'white' : 'black';
