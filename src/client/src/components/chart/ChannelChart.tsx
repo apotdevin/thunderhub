@@ -59,26 +59,25 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
     .map((_, i) => (days === 1 ? `${i} hour ago` : `${i} days ago`))
     .reverse();
 
-  const mEarningArr = Array<number>(columnSize).fill(0);
+  const mEarningSendArr = Array<number>(columnSize).fill(0);
   let feeSendArr: Array<any> = Array(columnSize)
     .fill(0)
     .map(() => ({
       sum: 0,
       count: 0,
     }));
-  console.log('init', feeSendArr);
   const receiveArr = Array<number>(columnSize).fill(0);
   const sendArr = Array<number>(columnSize).fill(0);
   filteredData.forEach(it => {
     const columnIndex = calculateColumnIndex(it.created_at);
-    mEarningArr[columnIndex] += Number.parseInt(it.fee_mtokens) / 1000;
-    if (it.outgoing_channel !== channelId) {
-      receiveArr[columnIndex] += it.tokens;
-    } else {
+    if (it.outgoing_channel === channelId || channelId === '') {
+      mEarningSendArr[columnIndex] += Number.parseInt(it.fee_mtokens) / 1000;
       sendArr[columnIndex] += it.tokens;
       feeSendArr[columnIndex].sum +=
         (Number.parseInt(it.fee_mtokens) / it.tokens) * 1000;
       feeSendArr[columnIndex].count++;
+    } else {
+      receiveArr[columnIndex] += it.tokens;
     }
   });
   //fill zeros with previous non-zero value
@@ -116,12 +115,9 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
         chartColors.green,
       ],
       legend: {
-        data: [
-          'Earning',
-          'Fee',
-          channelId ? 'Received' : 'Activity',
-          channelId ? 'Send' : '',
-        ],
+        data: channelId
+          ? ['Earning (Send)', 'Fee', 'Received', 'Send']
+          : ['Earning (Send)', 'Fee', 'Activity'],
         itemGap: 50,
         textStyle: { color: fontColor },
       },
@@ -144,7 +140,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           offset: '80',
           name: 'Earned',
           min: 0,
-          max: getMaxHeight(mEarningArr),
+          max: getMaxHeight(mEarningSendArr),
           splitLine: { show: false },
           axisTick: { show: true },
           axisLine: { show: true, lineStyle: { color: fontColor } },
@@ -184,13 +180,13 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
       ],
       series: [
         {
-          name: 'Earning',
+          name: 'Earning (Send)',
           type: 'line',
           yAxisIndex: 0,
           tooltip: {
             valueFormatter: (value: number) => formatSats(value) + ' sats',
           },
-          data: mEarningArr.map(it => it.toFixed(3)),
+          data: mEarningSendArr.map(it => it.toFixed(3)),
         },
         {
           // updated by send (out) tx
@@ -202,17 +198,20 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           },
           data: feeSendArr,
         },
+        channelId
+          ? {
+              name: 'Received',
+              show: false,
+              type: 'bar',
+              yAxisIndex: 2,
+              tooltip: {
+                valueFormatter: (value: number) => formatSats(value) + ' sats',
+              },
+              data: receiveArr,
+            }
+          : null,
         {
-          name: channelId ? 'Received' : 'Activity',
-          type: 'bar',
-          yAxisIndex: 2,
-          tooltip: {
-            valueFormatter: (value: number) => formatSats(value) + ' sats',
-          },
-          data: receiveArr,
-        },
-        {
-          name: 'Send',
+          name: channelId ? 'Send' : 'Activity',
           type: 'bar',
           yAxisIndex: 2,
           tooltip: {
@@ -220,14 +219,14 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
           },
           data: sendArr,
         },
-      ],
+      ].filter(it => it),
     };
   }, [
     fontColor,
     channelId,
     xAxisData,
     oppositeColor,
-    mEarningArr,
+    mEarningSendArr,
     feeSendArr,
     receiveArr,
     sendArr,
