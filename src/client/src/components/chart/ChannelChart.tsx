@@ -12,6 +12,7 @@ import { formatSats } from '../../utils/helpers';
 
 echarts.use([LineChart]);
 const MILLISECONDS_PER_HOUR = 1000 * 60 * 60;
+const OFFSET_MILLISECONDS = new Date().getTimezoneOffset() * 60 * 1000;
 type ChannelCartProps = { channelId: string; days: number };
 const getMaxHeight = (arr: number[], rounding?: number): number => {
   const max = Math.max(...arr);
@@ -47,7 +48,8 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
   // Helper functions
   const calculateColumnIndex = (createdAt: string): number => {
     const diffInHour = Math.floor(
-      (now.getTime() - new Date(createdAt).getTime()) / MILLISECONDS_PER_HOUR
+      (now.getTime() - new Date(createdAt).getTime() + OFFSET_MILLISECONDS) /
+        MILLISECONDS_PER_HOUR
     );
     return (
       columnSize - 1 - (days === 1 ? diffInHour : Math.floor(diffInHour / 24))
