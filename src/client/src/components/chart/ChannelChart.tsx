@@ -9,9 +9,9 @@ import { LineChart } from 'echarts/charts';
 import { Card } from '../generic/Styled';
 import { chartColors } from '../../styles/Themes';
 import { formatSats } from '../../utils/helpers';
-import { differenceInHours } from 'date-fns';
 
 echarts.use([LineChart]);
+const MILLISECONDS_PER_HOUR = 1000 * 60 * 60;
 type ChannelCartProps = { channelId: string; days: number };
 const getMaxHeight = (arr: number[], rounding?: number): number => {
   const max = Math.max(...arr);
@@ -42,21 +42,17 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
   const fontColor = themeContext.mode === 'light' ? 'black' : 'white';
   const oppositeColor = themeContext.mode === 'light' ? 'white' : 'black';
   const columnSize = days === 1 ? 24 : days;
-  const now =
-    days === 1
-      ? new Date().setMinutes(0, 0, 0)
-      : new Date().setHours(0, 0, 0, 0);
+  const now = new Date();
 
   // Helper functions
   const calculateColumnIndex = (createdAt: string): number => {
-    const txTime =
-      days === 1
-        ? new Date(createdAt).setMinutes(0, 0, 0)
-        : new Date(createdAt).setHours(0, 0, 0, 0);
-    const diffInHour = differenceInHours(now, txTime);
-    return (
-      columnSize - 1 - (days === 1 ? diffInHour : Math.floor(diffInHour / 24))
+    const diffInHour = Math.floor(
+      (now.getTime() - new Date(createdAt).getTime()) / MILLISECONDS_PER_HOUR
     );
+    const columnIndex =
+      columnSize - 1 - (days === 1 ? diffInHour : Math.floor(diffInHour / 24));
+    //sometimes tx created before 10 min. FE: current time - createdAt = 24h10m
+    return columnIndex < 0 ? 0 : columnIndex;
   };
 
   const xAxisData = Array.from(Array(columnSize))
