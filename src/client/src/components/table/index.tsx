@@ -22,6 +22,7 @@ interface TableProps {
   filterPlaceholder?: string;
   withGlobalSort?: boolean; // enables the global search box
   withSorting?: boolean; // enables columns to be sorted
+  initSorting?: SortingState;
   withBorder?: boolean;
   alignCenter?: boolean;
   fontSize?: string;
@@ -94,9 +95,10 @@ export default function Table({
   toggleConfiguration,
   withGlobalSort = false,
   withSorting = false,
+  initSorting,
 }: TableProps) {
   const [globalFilter, setGlobalFilter] = useState('');
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>(initSorting || []);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
