@@ -93,7 +93,7 @@ export const getValue = ({
     );
   }
 
-  const amountInFiat = (value / 100000000) * price;
+  const amountInFiat = ((value / 100000000) * price).toFixed(2);
   return noUnit ? (
     numeral(amountInFiat).format('0,0.00')
   ) : (

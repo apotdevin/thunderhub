@@ -58,7 +58,7 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
             accessorKey: 'fee',
             cell: ({ row }: any) => (
               <div style={{ whiteSpace: 'nowrap' }}>
-                <Price amount={row.original.fee} />
+                <Price amount={row.original.fee_mtokens / 1000} />
               </div>
             ),
           },

@@ -6,13 +6,13 @@ import { Price } from '../../../../components/price/Price';
 import { mediaWidths } from '../../../../styles/Themes';
 import { DarkSubTitle } from '../../../../components/generic/Styled';
 
-type ArrayType = { fee: number; tokens: number };
+type ArrayType = { fee: number; fee_mtokens: string; tokens: number };
 
 const S = {
   grid: styled.div`
     display: grid;
     grid-gap: 16px;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 
     @media (${mediaWidths.mobile}) {
       display: block;
@@ -39,17 +39,18 @@ type ForwardResumeProps = {
 export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
   const { data, loading } = useGetBasicForwardsQuery({
     ssr: false,
-    variables: { days: 30 },
+    variables: { days: 365 },
     errorPolicy: 'ignore',
   });
 
   const values = useMemo(() => {
     const day: ArrayType[] = [];
     const week: ArrayType[] = [];
+    const month: ArrayType[] = [];
 
     const forwards = data?.getForwards || [];
 
-    if (!forwards.length) return { day: 0, week: 0, month: 0 };
+    if (!forwards.length) return { day: 0, week: 0, month: 0, year: 0 };
 
     const today = new Date();
 
@@ -63,12 +64,15 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
       if (differenceInDays(today, forwardDate) < 7) {
         week.push(f);
       }
+      if (differenceInDays(today, forwardDate) < 30) {
+        month.push(f);
+      }
     });
 
     const dayValue = day.reduce((p, c) => {
       if (!c) return p;
       if (type.value === 'fee') {
-        return p + c.fee;
+        return p + Number.parseInt(c.fee_mtokens);
       }
       if (type.value === 'tokens') {
         return p + c.tokens;
@@ -78,17 +82,27 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
     const weekValue = week.reduce((p, c) => {
       if (!c) return p;
       if (type.value === 'fee') {
-        return p + c.fee;
+        return p + Number.parseInt(c.fee_mtokens);
       }
       if (type.value === 'tokens') {
         return p + c.tokens;
       }
       return p + 1;
     }, 0);
-    const monthValue = forwards.reduce((p, c) => {
+    const monthValue = month.reduce((p, c) => {
       if (!c) return p;
       if (type.value === 'fee') {
-        return p + c.fee;
+        return p + Number.parseInt(c.fee_mtokens);
+      }
+      if (type.value === 'tokens') {
+        return p + c.tokens;
+      }
+      return p + 1;
+    }, 0);
+    const yearValue = forwards.reduce((p, c) => {
+      if (!c) return p;
+      if (type.value === 'fee') {
+        return p + Number.parseInt(c.fee_mtokens);
       }
       if (type.value === 'tokens') {
         return p + c.tokens;
@@ -96,7 +110,12 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
       return p + 1;
     }, 0);
 
-    return { day: dayValue, week: weekValue, month: monthValue };
+    return {
+      day: dayValue,
+      week: weekValue,
+      month: monthValue,
+      year: yearValue,
+    };
   }, [data, type]);
 
   if (loading) {
@@ -106,6 +125,8 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
   const renderValue = (value: number) => {
     if (type.value === 'amount') {
       return <div>{value}</div>;
+    } else if (type.value === 'fee') {
+      return <Price amount={Math.floor(value / 1000)} />;
     }
     return <Price amount={value} />;
   };
@@ -123,6 +144,10 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
       <S.item>
         <DarkSubTitle>Month</DarkSubTitle>
         {renderValue(values.month)}
+      </S.item>
+      <S.item>
+        <DarkSubTitle>Year</DarkSubTitle>
+        {renderValue(values.year)}
       </S.item>
     </S.grid>
   );
