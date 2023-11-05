@@ -30,7 +30,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
     onError: error => toast.error(getErrorContent(error)),
   });
   const filteredData = data
-    ? data.getForwards.filter(it =>
+    ? data.getForwards.list.filter(it =>
         channelId
           ? it.incoming_channel === channelId ||
             it.outgoing_channel === channelId

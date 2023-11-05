@@ -87,9 +87,24 @@ export function useGetPeersLazyQuery(
     options
   );
 }
+export function useGetPeersSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetPeersQuery,
+    GetPeersQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetPeersQuery, GetPeersQueryVariables>(
+    GetPeersDocument,
+    options
+  );
+}
 export type GetPeersQueryHookResult = ReturnType<typeof useGetPeersQuery>;
 export type GetPeersLazyQueryHookResult = ReturnType<
   typeof useGetPeersLazyQuery
+>;
+export type GetPeersSuspenseQueryHookResult = ReturnType<
+  typeof useGetPeersSuspenseQuery
 >;
 export type GetPeersQueryResult = Apollo.QueryResult<
   GetPeersQuery,

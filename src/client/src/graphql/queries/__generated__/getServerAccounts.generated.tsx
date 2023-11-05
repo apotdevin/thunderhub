@@ -68,11 +68,26 @@ export function useGetServerAccountsLazyQuery(
     GetServerAccountsQueryVariables
   >(GetServerAccountsDocument, options);
 }
+export function useGetServerAccountsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetServerAccountsQuery,
+    GetServerAccountsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetServerAccountsQuery,
+    GetServerAccountsQueryVariables
+  >(GetServerAccountsDocument, options);
+}
 export type GetServerAccountsQueryHookResult = ReturnType<
   typeof useGetServerAccountsQuery
 >;
 export type GetServerAccountsLazyQueryHookResult = ReturnType<
   typeof useGetServerAccountsLazyQuery
+>;
+export type GetServerAccountsSuspenseQueryHookResult = ReturnType<
+  typeof useGetServerAccountsSuspenseQuery
 >;
 export type GetServerAccountsQueryResult = Apollo.QueryResult<
   GetServerAccountsQuery,

@@ -76,11 +76,26 @@ export function useGetNetworkInfoLazyQuery(
     options
   );
 }
+export function useGetNetworkInfoSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetNetworkInfoQuery,
+    GetNetworkInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetNetworkInfoQuery,
+    GetNetworkInfoQueryVariables
+  >(GetNetworkInfoDocument, options);
+}
 export type GetNetworkInfoQueryHookResult = ReturnType<
   typeof useGetNetworkInfoQuery
 >;
 export type GetNetworkInfoLazyQueryHookResult = ReturnType<
   typeof useGetNetworkInfoLazyQuery
+>;
+export type GetNetworkInfoSuspenseQueryHookResult = ReturnType<
+  typeof useGetNetworkInfoSuspenseQuery
 >;
 export type GetNetworkInfoQueryResult = Apollo.QueryResult<
   GetNetworkInfoQuery,

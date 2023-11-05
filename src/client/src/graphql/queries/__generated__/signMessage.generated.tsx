@@ -55,9 +55,24 @@ export function useSignMessageLazyQuery(
     options
   );
 }
+export function useSignMessageSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    SignMessageQuery,
+    SignMessageQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<SignMessageQuery, SignMessageQueryVariables>(
+    SignMessageDocument,
+    options
+  );
+}
 export type SignMessageQueryHookResult = ReturnType<typeof useSignMessageQuery>;
 export type SignMessageLazyQueryHookResult = ReturnType<
   typeof useSignMessageLazyQuery
+>;
+export type SignMessageSuspenseQueryHookResult = ReturnType<
+  typeof useSignMessageSuspenseQuery
 >;
 export type SignMessageQueryResult = Apollo.QueryResult<
   SignMessageQuery,

@@ -55,11 +55,26 @@ export function useRecoverFundsLazyQuery(
     options
   );
 }
+export function useRecoverFundsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    RecoverFundsQuery,
+    RecoverFundsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<RecoverFundsQuery, RecoverFundsQueryVariables>(
+    RecoverFundsDocument,
+    options
+  );
+}
 export type RecoverFundsQueryHookResult = ReturnType<
   typeof useRecoverFundsQuery
 >;
 export type RecoverFundsLazyQueryHookResult = ReturnType<
   typeof useRecoverFundsLazyQuery
+>;
+export type RecoverFundsSuspenseQueryHookResult = ReturnType<
+  typeof useRecoverFundsSuspenseQuery
 >;
 export type RecoverFundsQueryResult = Apollo.QueryResult<
   RecoverFundsQuery,

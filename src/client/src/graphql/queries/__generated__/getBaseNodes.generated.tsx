@@ -66,11 +66,26 @@ export function useGetBaseNodesLazyQuery(
     options
   );
 }
+export function useGetBaseNodesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetBaseNodesQuery,
+    GetBaseNodesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetBaseNodesQuery, GetBaseNodesQueryVariables>(
+    GetBaseNodesDocument,
+    options
+  );
+}
 export type GetBaseNodesQueryHookResult = ReturnType<
   typeof useGetBaseNodesQuery
 >;
 export type GetBaseNodesLazyQueryHookResult = ReturnType<
   typeof useGetBaseNodesLazyQuery
+>;
+export type GetBaseNodesSuspenseQueryHookResult = ReturnType<
+  typeof useGetBaseNodesSuspenseQuery
 >;
 export type GetBaseNodesQueryResult = Apollo.QueryResult<
   GetBaseNodesQuery,

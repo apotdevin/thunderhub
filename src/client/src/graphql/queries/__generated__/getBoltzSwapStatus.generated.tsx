@@ -83,11 +83,26 @@ export function useGetBoltzSwapStatusLazyQuery(
     GetBoltzSwapStatusQueryVariables
   >(GetBoltzSwapStatusDocument, options);
 }
+export function useGetBoltzSwapStatusSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetBoltzSwapStatusQuery,
+    GetBoltzSwapStatusQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetBoltzSwapStatusQuery,
+    GetBoltzSwapStatusQueryVariables
+  >(GetBoltzSwapStatusDocument, options);
+}
 export type GetBoltzSwapStatusQueryHookResult = ReturnType<
   typeof useGetBoltzSwapStatusQuery
 >;
 export type GetBoltzSwapStatusLazyQueryHookResult = ReturnType<
   typeof useGetBoltzSwapStatusLazyQuery
+>;
+export type GetBoltzSwapStatusSuspenseQueryHookResult = ReturnType<
+  typeof useGetBoltzSwapStatusSuspenseQuery
 >;
 export type GetBoltzSwapStatusQueryResult = Apollo.QueryResult<
   GetBoltzSwapStatusQuery,

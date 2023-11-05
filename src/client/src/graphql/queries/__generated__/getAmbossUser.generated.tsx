@@ -84,11 +84,26 @@ export function useGetAmbossUserLazyQuery(
     options
   );
 }
+export function useGetAmbossUserSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetAmbossUserQuery,
+    GetAmbossUserQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetAmbossUserQuery,
+    GetAmbossUserQueryVariables
+  >(GetAmbossUserDocument, options);
+}
 export type GetAmbossUserQueryHookResult = ReturnType<
   typeof useGetAmbossUserQuery
 >;
 export type GetAmbossUserLazyQueryHookResult = ReturnType<
   typeof useGetAmbossUserLazyQuery
+>;
+export type GetAmbossUserSuspenseQueryHookResult = ReturnType<
+  typeof useGetAmbossUserSuspenseQuery
 >;
 export type GetAmbossUserQueryResult = Apollo.QueryResult<
   GetAmbossUserQuery,

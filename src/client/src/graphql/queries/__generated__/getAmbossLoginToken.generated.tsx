@@ -57,11 +57,26 @@ export function useGetAmbossLoginTokenLazyQuery(
     GetAmbossLoginTokenQueryVariables
   >(GetAmbossLoginTokenDocument, options);
 }
+export function useGetAmbossLoginTokenSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetAmbossLoginTokenQuery,
+    GetAmbossLoginTokenQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetAmbossLoginTokenQuery,
+    GetAmbossLoginTokenQueryVariables
+  >(GetAmbossLoginTokenDocument, options);
+}
 export type GetAmbossLoginTokenQueryHookResult = ReturnType<
   typeof useGetAmbossLoginTokenQuery
 >;
 export type GetAmbossLoginTokenLazyQueryHookResult = ReturnType<
   typeof useGetAmbossLoginTokenLazyQuery
+>;
+export type GetAmbossLoginTokenSuspenseQueryHookResult = ReturnType<
+  typeof useGetAmbossLoginTokenSuspenseQuery
 >;
 export type GetAmbossLoginTokenQueryResult = Apollo.QueryResult<
   GetAmbossLoginTokenQuery,

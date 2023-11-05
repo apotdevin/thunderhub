@@ -87,7 +87,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     const invoicesByDate = getByTime(filtered, difference);
 
     return invoicesByDate;
-  }, [invoiceData, showPay]);
+  }, [invoiceData]);
 
   const paymentsByDate = useMemo(() => {
     const payments = paymentsData?.getPayments.payments || [];
@@ -107,7 +107,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     const paymentsByDate = getByTime(filtered, difference);
 
     return paymentsByDate;
-  }, [paymentsData, showPay]);
+  }, [paymentsData]);
 
   if (loading || paymentsLoading) {
     return (

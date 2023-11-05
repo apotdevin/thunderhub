@@ -69,9 +69,24 @@ export function useGetUtxosLazyQuery(
     options
   );
 }
+export function useGetUtxosSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetUtxosQuery,
+    GetUtxosQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetUtxosQuery, GetUtxosQueryVariables>(
+    GetUtxosDocument,
+    options
+  );
+}
 export type GetUtxosQueryHookResult = ReturnType<typeof useGetUtxosQuery>;
 export type GetUtxosLazyQueryHookResult = ReturnType<
   typeof useGetUtxosLazyQuery
+>;
+export type GetUtxosSuspenseQueryHookResult = ReturnType<
+  typeof useGetUtxosSuspenseQuery
 >;
 export type GetUtxosQueryResult = Apollo.QueryResult<
   GetUtxosQuery,

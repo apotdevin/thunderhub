@@ -57,11 +57,26 @@ export function useGetLatestVersionLazyQuery(
     GetLatestVersionQueryVariables
   >(GetLatestVersionDocument, options);
 }
+export function useGetLatestVersionSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetLatestVersionQuery,
+    GetLatestVersionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetLatestVersionQuery,
+    GetLatestVersionQueryVariables
+  >(GetLatestVersionDocument, options);
+}
 export type GetLatestVersionQueryHookResult = ReturnType<
   typeof useGetLatestVersionQuery
 >;
 export type GetLatestVersionLazyQueryHookResult = ReturnType<
   typeof useGetLatestVersionLazyQuery
+>;
+export type GetLatestVersionSuspenseQueryHookResult = ReturnType<
+  typeof useGetLatestVersionSuspenseQuery
 >;
 export type GetLatestVersionQueryResult = Apollo.QueryResult<
   GetLatestVersionQuery,

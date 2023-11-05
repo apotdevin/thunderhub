@@ -27,6 +27,52 @@ export type Scalars = {
   Float: { input: number; output: number };
 };
 
+export type AggregatedChannelForwards = {
+  __typename?: 'AggregatedChannelForwards';
+  channel?: Maybe<Scalars['String']['output']>;
+  channel_info?: Maybe<ChannelInfo>;
+  id: Scalars['String']['output'];
+  incoming: AggregatedSideStats;
+  outgoing: AggregatedSideStats;
+};
+
+export type AggregatedChannelSideForwards = {
+  __typename?: 'AggregatedChannelSideForwards';
+  channel?: Maybe<Scalars['String']['output']>;
+  channel_info?: Maybe<ChannelInfo>;
+  count: Scalars['Float']['output'];
+  fee: Scalars['Float']['output'];
+  fee_mtokens: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  mtokens: Scalars['String']['output'];
+  tokens: Scalars['Float']['output'];
+};
+
+export type AggregatedRouteForwards = {
+  __typename?: 'AggregatedRouteForwards';
+  count: Scalars['Float']['output'];
+  fee: Scalars['Float']['output'];
+  fee_mtokens: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  incoming_channel: Scalars['String']['output'];
+  incoming_channel_info?: Maybe<ChannelInfo>;
+  mtokens: Scalars['String']['output'];
+  outgoing_channel: Scalars['String']['output'];
+  outgoing_channel_info?: Maybe<ChannelInfo>;
+  route: Scalars['String']['output'];
+  tokens: Scalars['Float']['output'];
+};
+
+export type AggregatedSideStats = {
+  __typename?: 'AggregatedSideStats';
+  count: Scalars['Float']['output'];
+  fee: Scalars['Float']['output'];
+  fee_mtokens: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  mtokens: Scalars['String']['output'];
+  tokens: Scalars['Float']['output'];
+};
+
 export type AmbossSubscription = {
   __typename?: 'AmbossSubscription';
   end_date: Scalars['String']['output'];
@@ -381,12 +427,20 @@ export type Forward = {
   created_at: Scalars['String']['output'];
   fee: Scalars['Float']['output'];
   fee_mtokens: Scalars['String']['output'];
+  id: Scalars['String']['output'];
   incoming_channel: Scalars['String']['output'];
-  incoming_channel_info?: Maybe<ChannelInfo>;
   mtokens: Scalars['String']['output'];
   outgoing_channel: Scalars['String']['output'];
-  outgoing_channel_info?: Maybe<ChannelInfo>;
   tokens: Scalars['Float']['output'];
+};
+
+export type GetForwards = {
+  __typename?: 'GetForwards';
+  by_channel: Array<AggregatedChannelForwards>;
+  by_incoming: Array<AggregatedChannelSideForwards>;
+  by_outgoing: Array<AggregatedChannelSideForwards>;
+  by_route: Array<AggregatedRouteForwards>;
+  list: Array<Forward>;
 };
 
 export type GetInvoicesType = {
@@ -979,7 +1033,7 @@ export type Query = {
   getClosedChannels: Array<ClosedChannel>;
   getConfigState: ConfigState;
   getFeeHealth: ChannelsFeeHealth;
-  getForwards: Array<Forward>;
+  getForwards: GetForwards;
   getHello: Scalars['String']['output'];
   getInvoiceStatusChange: Scalars['String']['output'];
   getInvoices: GetInvoicesType;

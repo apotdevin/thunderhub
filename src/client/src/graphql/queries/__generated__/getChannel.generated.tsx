@@ -108,9 +108,24 @@ export function useGetChannelLazyQuery(
     options
   );
 }
+export function useGetChannelSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetChannelQuery,
+    GetChannelQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetChannelQuery, GetChannelQueryVariables>(
+    GetChannelDocument,
+    options
+  );
+}
 export type GetChannelQueryHookResult = ReturnType<typeof useGetChannelQuery>;
 export type GetChannelLazyQueryHookResult = ReturnType<
   typeof useGetChannelLazyQuery
+>;
+export type GetChannelSuspenseQueryHookResult = ReturnType<
+  typeof useGetChannelSuspenseQuery
 >;
 export type GetChannelQueryResult = Apollo.QueryResult<
   GetChannelQuery,
@@ -179,11 +194,26 @@ export function useGetChannelInfoLazyQuery(
     options
   );
 }
+export function useGetChannelInfoSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetChannelInfoQuery,
+    GetChannelInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetChannelInfoQuery,
+    GetChannelInfoQueryVariables
+  >(GetChannelInfoDocument, options);
+}
 export type GetChannelInfoQueryHookResult = ReturnType<
   typeof useGetChannelInfoQuery
 >;
 export type GetChannelInfoLazyQueryHookResult = ReturnType<
   typeof useGetChannelInfoLazyQuery
+>;
+export type GetChannelInfoSuspenseQueryHookResult = ReturnType<
+  typeof useGetChannelInfoSuspenseQuery
 >;
 export type GetChannelInfoQueryResult = Apollo.QueryResult<
   GetChannelInfoQuery,

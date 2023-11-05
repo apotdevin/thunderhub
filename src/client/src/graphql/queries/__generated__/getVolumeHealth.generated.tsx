@@ -84,11 +84,26 @@ export function useGetVolumeHealthLazyQuery(
     GetVolumeHealthQueryVariables
   >(GetVolumeHealthDocument, options);
 }
+export function useGetVolumeHealthSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetVolumeHealthQuery,
+    GetVolumeHealthQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetVolumeHealthQuery,
+    GetVolumeHealthQueryVariables
+  >(GetVolumeHealthDocument, options);
+}
 export type GetVolumeHealthQueryHookResult = ReturnType<
   typeof useGetVolumeHealthQuery
 >;
 export type GetVolumeHealthLazyQueryHookResult = ReturnType<
   typeof useGetVolumeHealthLazyQuery
+>;
+export type GetVolumeHealthSuspenseQueryHookResult = ReturnType<
+  typeof useGetVolumeHealthSuspenseQuery
 >;
 export type GetVolumeHealthQueryResult = Apollo.QueryResult<
   GetVolumeHealthQuery,

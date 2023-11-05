@@ -69,7 +69,7 @@ export const ForwardsGraph: FC<ForwardGraphProps> = ({ days, type }) => {
     );
   }
 
-  if (!data?.getForwards.length) {
+  if (!data?.getForwards.list.length) {
     return (
       <S.wrapper>
         <S.contentWrapper>No forwards for this period.</S.contentWrapper>
@@ -77,7 +77,7 @@ export const ForwardsGraph: FC<ForwardGraphProps> = ({ days, type }) => {
     );
   }
 
-  const forwards = getByTime(data.getForwards, days.value);
+  const forwards = getByTime(data.getForwards.list, days.value);
 
   return (
     <S.wrapper>

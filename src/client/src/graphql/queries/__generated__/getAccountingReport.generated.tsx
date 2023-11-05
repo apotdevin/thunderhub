@@ -78,11 +78,26 @@ export function useGetAccountingReportLazyQuery(
     GetAccountingReportQueryVariables
   >(GetAccountingReportDocument, options);
 }
+export function useGetAccountingReportSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetAccountingReportQuery,
+    GetAccountingReportQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetAccountingReportQuery,
+    GetAccountingReportQueryVariables
+  >(GetAccountingReportDocument, options);
+}
 export type GetAccountingReportQueryHookResult = ReturnType<
   typeof useGetAccountingReportQuery
 >;
 export type GetAccountingReportLazyQueryHookResult = ReturnType<
   typeof useGetAccountingReportLazyQuery
+>;
+export type GetAccountingReportSuspenseQueryHookResult = ReturnType<
+  typeof useGetAccountingReportSuspenseQuery
 >;
 export type GetAccountingReportQueryResult = Apollo.QueryResult<
   GetAccountingReportQuery,

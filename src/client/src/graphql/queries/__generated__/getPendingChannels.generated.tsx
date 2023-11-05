@@ -103,11 +103,26 @@ export function useGetPendingChannelsLazyQuery(
     GetPendingChannelsQueryVariables
   >(GetPendingChannelsDocument, options);
 }
+export function useGetPendingChannelsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetPendingChannelsQuery,
+    GetPendingChannelsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetPendingChannelsQuery,
+    GetPendingChannelsQueryVariables
+  >(GetPendingChannelsDocument, options);
+}
 export type GetPendingChannelsQueryHookResult = ReturnType<
   typeof useGetPendingChannelsQuery
 >;
 export type GetPendingChannelsLazyQueryHookResult = ReturnType<
   typeof useGetPendingChannelsLazyQuery
+>;
+export type GetPendingChannelsSuspenseQueryHookResult = ReturnType<
+  typeof useGetPendingChannelsSuspenseQuery
 >;
 export type GetPendingChannelsQueryResult = Apollo.QueryResult<
   GetPendingChannelsQuery,

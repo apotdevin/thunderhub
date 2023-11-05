@@ -64,11 +64,26 @@ export function useGetBoltzInfoLazyQuery(
     options
   );
 }
+export function useGetBoltzInfoSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetBoltzInfoQuery,
+    GetBoltzInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetBoltzInfoQuery, GetBoltzInfoQueryVariables>(
+    GetBoltzInfoDocument,
+    options
+  );
+}
 export type GetBoltzInfoQueryHookResult = ReturnType<
   typeof useGetBoltzInfoQuery
 >;
 export type GetBoltzInfoLazyQueryHookResult = ReturnType<
   typeof useGetBoltzInfoLazyQuery
+>;
+export type GetBoltzInfoSuspenseQueryHookResult = ReturnType<
+  typeof useGetBoltzInfoSuspenseQuery
 >;
 export type GetBoltzInfoQueryResult = Apollo.QueryResult<
   GetBoltzInfoQuery,

@@ -185,9 +185,24 @@ export function useGetChannelsLazyQuery(
     options
   );
 }
+export function useGetChannelsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetChannelsQuery,
+    GetChannelsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetChannelsQuery, GetChannelsQueryVariables>(
+    GetChannelsDocument,
+    options
+  );
+}
 export type GetChannelsQueryHookResult = ReturnType<typeof useGetChannelsQuery>;
 export type GetChannelsLazyQueryHookResult = ReturnType<
   typeof useGetChannelsLazyQuery
+>;
+export type GetChannelsSuspenseQueryHookResult = ReturnType<
+  typeof useGetChannelsSuspenseQuery
 >;
 export type GetChannelsQueryResult = Apollo.QueryResult<
   GetChannelsQuery,
@@ -247,11 +262,26 @@ export function useGetChannelsWithPeersLazyQuery(
     GetChannelsWithPeersQueryVariables
   >(GetChannelsWithPeersDocument, options);
 }
+export function useGetChannelsWithPeersSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetChannelsWithPeersQuery,
+    GetChannelsWithPeersQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetChannelsWithPeersQuery,
+    GetChannelsWithPeersQueryVariables
+  >(GetChannelsWithPeersDocument, options);
+}
 export type GetChannelsWithPeersQueryHookResult = ReturnType<
   typeof useGetChannelsWithPeersQuery
 >;
 export type GetChannelsWithPeersLazyQueryHookResult = ReturnType<
   typeof useGetChannelsWithPeersLazyQuery
+>;
+export type GetChannelsWithPeersSuspenseQueryHookResult = ReturnType<
+  typeof useGetChannelsWithPeersSuspenseQuery
 >;
 export type GetChannelsWithPeersQueryResult = Apollo.QueryResult<
   GetChannelsWithPeersQuery,

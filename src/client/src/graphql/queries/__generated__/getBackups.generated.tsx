@@ -52,9 +52,24 @@ export function useGetBackupsLazyQuery(
     options
   );
 }
+export function useGetBackupsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetBackupsQuery,
+    GetBackupsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetBackupsQuery, GetBackupsQueryVariables>(
+    GetBackupsDocument,
+    options
+  );
+}
 export type GetBackupsQueryHookResult = ReturnType<typeof useGetBackupsQuery>;
 export type GetBackupsLazyQueryHookResult = ReturnType<
   typeof useGetBackupsLazyQuery
+>;
+export type GetBackupsSuspenseQueryHookResult = ReturnType<
+  typeof useGetBackupsSuspenseQuery
 >;
 export type GetBackupsQueryResult = Apollo.QueryResult<
   GetBackupsQuery,

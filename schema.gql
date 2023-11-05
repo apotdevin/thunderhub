@@ -2,6 +2,48 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AggregatedChannelForwards {
+  channel: String
+  channel_info: ChannelInfo
+  id: String!
+  incoming: AggregatedSideStats!
+  outgoing: AggregatedSideStats!
+}
+
+type AggregatedChannelSideForwards {
+  channel: String
+  channel_info: ChannelInfo
+  count: Float!
+  fee: Float!
+  fee_mtokens: String!
+  id: String!
+  mtokens: String!
+  tokens: Float!
+}
+
+type AggregatedRouteForwards {
+  count: Float!
+  fee: Float!
+  fee_mtokens: String!
+  id: String!
+  incoming_channel: String!
+  incoming_channel_info: ChannelInfo
+  mtokens: String!
+  outgoing_channel: String!
+  outgoing_channel_info: ChannelInfo
+  route: String!
+  tokens: Float!
+}
+
+type AggregatedSideStats {
+  count: Float!
+  fee: Float!
+  fee_mtokens: String!
+  id: String!
+  mtokens: String!
+  tokens: Float!
+}
+
 type AmbossSubscription {
   end_date: String!
   subscribed: Boolean!
@@ -319,12 +361,19 @@ type Forward {
   created_at: String!
   fee: Float!
   fee_mtokens: String!
+  id: String!
   incoming_channel: String!
-  incoming_channel_info: ChannelInfo
   mtokens: String!
   outgoing_channel: String!
-  outgoing_channel_info: ChannelInfo
   tokens: Float!
+}
+
+type GetForwards {
+  by_channel: [AggregatedChannelForwards!]!
+  by_incoming: [AggregatedChannelSideForwards!]!
+  by_outgoing: [AggregatedChannelSideForwards!]!
+  by_route: [AggregatedRouteForwards!]!
+  list: [Forward!]!
 }
 
 type GetInvoicesType {
@@ -711,7 +760,7 @@ type Query {
   getClosedChannels: [ClosedChannel!]!
   getConfigState: ConfigState!
   getFeeHealth: ChannelsFeeHealth!
-  getForwards(days: Float!): [Forward!]!
+  getForwards(days: Float!): GetForwards!
   getHello: String!
   getInvoiceStatusChange(id: String!): String!
   getInvoices(token: String): GetInvoicesType!

@@ -1,10 +1,10 @@
 import { FC, useMemo } from 'react';
-import { useGetBasicForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 import styled from 'styled-components';
 import { differenceInDays } from 'date-fns';
 import { Price } from '../../../../components/price/Price';
 import { mediaWidths } from '../../../../styles/Themes';
 import { DarkSubTitle } from '../../../../components/generic/Styled';
+import { useGetForwardsListQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 
 type ArrayType = { fee: number; fee_mtokens: string; tokens: number };
 
@@ -37,7 +37,7 @@ type ForwardResumeProps = {
 };
 
 export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
-  const { data, loading } = useGetBasicForwardsQuery({
+  const { data, loading } = useGetForwardsListQuery({
     ssr: false,
     variables: { days: 365 },
     errorPolicy: 'ignore',
@@ -48,7 +48,7 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
     const week: ArrayType[] = [];
     const month: ArrayType[] = [];
 
-    const forwards = data?.getForwards || [];
+    const forwards = data?.getForwards.list || [];
 
     if (!forwards.length) return { day: 0, week: 0, month: 0, year: 0 };
 
@@ -123,7 +123,7 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
   }
 
   const renderValue = (value: number) => {
-    if (type.value === 'amount') {
+    if (type.value === 'count') {
       return <div>{value}</div>;
     } else if (type.value === 'fee') {
       return <Price amount={Math.floor(value / 1000)} />;
