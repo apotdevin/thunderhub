@@ -60,11 +60,26 @@ export function useGetTwofaSecretLazyQuery(
     options
   );
 }
+export function useGetTwofaSecretSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetTwofaSecretQuery,
+    GetTwofaSecretQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetTwofaSecretQuery,
+    GetTwofaSecretQueryVariables
+  >(GetTwofaSecretDocument, options);
+}
 export type GetTwofaSecretQueryHookResult = ReturnType<
   typeof useGetTwofaSecretQuery
 >;
 export type GetTwofaSecretLazyQueryHookResult = ReturnType<
   typeof useGetTwofaSecretLazyQuery
+>;
+export type GetTwofaSecretSuspenseQueryHookResult = ReturnType<
+  typeof useGetTwofaSecretSuspenseQuery
 >;
 export type GetTwofaSecretQueryResult = Apollo.QueryResult<
   GetTwofaSecretQuery,

@@ -144,9 +144,24 @@ export function useGetInvoicesLazyQuery(
     options
   );
 }
+export function useGetInvoicesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetInvoicesQuery,
+    GetInvoicesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetInvoicesQuery, GetInvoicesQueryVariables>(
+    GetInvoicesDocument,
+    options
+  );
+}
 export type GetInvoicesQueryHookResult = ReturnType<typeof useGetInvoicesQuery>;
 export type GetInvoicesLazyQueryHookResult = ReturnType<
   typeof useGetInvoicesLazyQuery
+>;
+export type GetInvoicesSuspenseQueryHookResult = ReturnType<
+  typeof useGetInvoicesSuspenseQuery
 >;
 export type GetInvoicesQueryResult = Apollo.QueryResult<
   GetInvoicesQuery,

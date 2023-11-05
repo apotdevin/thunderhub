@@ -70,7 +70,7 @@ export const getWidgets = (
 };
 
 type ArrayType =
-  | GetForwardsQuery['getForwards']
+  | GetForwardsQuery['getForwards']['list']
   | GetInvoicesQuery['getInvoices']['invoices']
   | GetPaymentsQuery['getPayments']['payments'];
 
@@ -169,7 +169,7 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
     if (!group) {
       final.push({
         tokens: 0,
-        amount: 0,
+        count: 0,
         fee: 0,
         date: isDay
           ? subHours(today, Number(key)).toISOString()
@@ -183,7 +183,7 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
         return {
           tokens: total.tokens + transaction.tokens,
           fee: total.fee + (transaction.fee || 0),
-          amount: total.amount + 1,
+          count: total.count + 1,
           date: total.date
             ? total.date
             : isDay
@@ -194,7 +194,7 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
       {
         tokens: 0,
         fee: 0,
-        amount: 0,
+        count: 0,
         date: '',
       }
     );

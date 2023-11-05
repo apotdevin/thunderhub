@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import { mediaWidths } from '../../styles/Themes';
 import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
 import { Sankey, SankeyData } from '../../components/sankey';
-import { groupBy, orderBy, reduce, uniq } from 'lodash';
+import { orderBy, reduce, uniq } from 'lodash';
+import { AggregatedRouteForwards } from '../../graphql/types';
 
 const Wrapper = styled.div<{ $height: number }>`
   height: ${props => props.$height}px;
@@ -17,9 +18,22 @@ const Wrapper = styled.div<{ $height: number }>`
   }
 `;
 
+const getValue = (item: AggregatedRouteForwards, type: string) => {
+  switch (type) {
+    case 'count':
+      return item.count;
+    case 'tokens':
+      return item.tokens;
+    case 'fee':
+      return item.fee;
+    default:
+      return 0;
+  }
+};
+
 export const ForwardSankey: FC<{
   days: number;
-  type: 'amount' | 'fee' | 'tokens';
+  type: string;
 }> = ({ days, type }) => {
   const { data, loading } = useGetForwardsQuery({
     ssr: false,
@@ -28,54 +42,22 @@ export const ForwardSankey: FC<{
   });
 
   const sankeyData: SankeyData = useMemo(() => {
-    if (loading || !data || !data.getForwards.length) {
+    if (loading || !data || !data.getForwards.by_route.length) {
       return { links: [], nodes: [] };
     }
 
-    const mapped = data.getForwards.map(d => ({
-      ...d,
-      group: `${d.incoming_channel}-${d.outgoing_channel}`,
-      groupAlias: `${d.incoming_channel_info?.node2_info.alias || 'Unknown'}-${
-        d.outgoing_channel_info?.node2_info.alias || 'Unknown'
-      }`,
-    }));
-
-    const grouped = groupBy(mapped, 'groupAlias');
-
-    const aggregated: {
-      incoming_channel: string;
-      outgoing_channel: string;
-      fee: number;
-      tokens: number;
-      amount: number;
-    }[] = [];
-
-    Object.entries(grouped).forEach(([, value]) => {
-      const totalFees = value.map(v => v.fee).reduce((p, c) => p + c, 0);
-      const totalTokens = value.map(v => v.tokens).reduce((p, c) => p + c, 0);
-      const totalAmount = value.length;
-
-      const firstValue = value[0];
-
-      aggregated.push({
-        incoming_channel:
-          firstValue.incoming_channel_info?.node2_info.alias || 'Unknown',
-        outgoing_channel:
-          firstValue.outgoing_channel_info?.node2_info.alias || 'Unknown',
-        fee: totalFees,
-        tokens: totalTokens,
-        amount: totalAmount,
-      });
-    });
-
     const finalData = reduce(
-      aggregated,
+      data.getForwards.by_route,
       (p, c) => {
-        const source = `source: ${c.incoming_channel}`;
-        const target = `target: ${c.outgoing_channel}`;
+        const source = `source: ${
+          c.incoming_channel_info?.node2_info.alias || 'Unknown'
+        } (${c.incoming_channel})`;
+        const target = `target: ${
+          c.outgoing_channel_info?.node2_info.alias || 'Unknown'
+        } (${c.outgoing_channel})`;
 
         return {
-          links: [...p.links, { source, target, value: c[type] || 0 }],
+          links: [...p.links, { source, target, value: getValue(c, type) }],
           nodes: [...p.nodes, source, target],
         };
       },
@@ -91,7 +73,7 @@ export const ForwardSankey: FC<{
     };
   }, [data, loading, type]);
 
-  if (loading || !data?.getForwards?.length) {
+  if (loading || !data?.getForwards.by_route.length) {
     return null;
   }
 

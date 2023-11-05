@@ -40,7 +40,7 @@ const S = {
 };
 
 const typeOptions = [
-  { label: 'Count', value: 'amount' },
+  { label: 'Count', value: 'count' },
   { label: 'Amount', value: 'tokens' },
 ];
 

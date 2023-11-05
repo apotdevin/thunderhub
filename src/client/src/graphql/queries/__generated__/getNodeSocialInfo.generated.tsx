@@ -83,11 +83,26 @@ export function useGetNodeSocialInfoLazyQuery(
     GetNodeSocialInfoQueryVariables
   >(GetNodeSocialInfoDocument, options);
 }
+export function useGetNodeSocialInfoSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetNodeSocialInfoQuery,
+    GetNodeSocialInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetNodeSocialInfoQuery,
+    GetNodeSocialInfoQueryVariables
+  >(GetNodeSocialInfoDocument, options);
+}
 export type GetNodeSocialInfoQueryHookResult = ReturnType<
   typeof useGetNodeSocialInfoQuery
 >;
 export type GetNodeSocialInfoLazyQueryHookResult = ReturnType<
   typeof useGetNodeSocialInfoLazyQuery
+>;
+export type GetNodeSocialInfoSuspenseQueryHookResult = ReturnType<
+  typeof useGetNodeSocialInfoSuspenseQuery
 >;
 export type GetNodeSocialInfoQueryResult = Apollo.QueryResult<
   GetNodeSocialInfoQuery,

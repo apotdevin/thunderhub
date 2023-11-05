@@ -84,11 +84,26 @@ export function useGetNodeBalancesLazyQuery(
     GetNodeBalancesQueryVariables
   >(GetNodeBalancesDocument, options);
 }
+export function useGetNodeBalancesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetNodeBalancesQuery,
+    GetNodeBalancesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetNodeBalancesQuery,
+    GetNodeBalancesQueryVariables
+  >(GetNodeBalancesDocument, options);
+}
 export type GetNodeBalancesQueryHookResult = ReturnType<
   typeof useGetNodeBalancesQuery
 >;
 export type GetNodeBalancesLazyQueryHookResult = ReturnType<
   typeof useGetNodeBalancesLazyQuery
+>;
+export type GetNodeBalancesSuspenseQueryHookResult = ReturnType<
+  typeof useGetNodeBalancesSuspenseQuery
 >;
 export type GetNodeBalancesQueryResult = Apollo.QueryResult<
   GetNodeBalancesQuery,

@@ -57,11 +57,26 @@ export function useGetBitcoinPriceLazyQuery(
     GetBitcoinPriceQueryVariables
   >(GetBitcoinPriceDocument, options);
 }
+export function useGetBitcoinPriceSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetBitcoinPriceQuery,
+    GetBitcoinPriceQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetBitcoinPriceQuery,
+    GetBitcoinPriceQueryVariables
+  >(GetBitcoinPriceDocument, options);
+}
 export type GetBitcoinPriceQueryHookResult = ReturnType<
   typeof useGetBitcoinPriceQuery
 >;
 export type GetBitcoinPriceLazyQueryHookResult = ReturnType<
   typeof useGetBitcoinPriceLazyQuery
+>;
+export type GetBitcoinPriceSuspenseQueryHookResult = ReturnType<
+  typeof useGetBitcoinPriceSuspenseQuery
 >;
 export type GetBitcoinPriceQueryResult = Apollo.QueryResult<
   GetBitcoinPriceQuery,

@@ -76,11 +76,26 @@ export function useGetLiquidReportLazyQuery(
     GetLiquidReportQueryVariables
   >(GetLiquidReportDocument, options);
 }
+export function useGetLiquidReportSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetLiquidReportQuery,
+    GetLiquidReportQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetLiquidReportQuery,
+    GetLiquidReportQueryVariables
+  >(GetLiquidReportDocument, options);
+}
 export type GetLiquidReportQueryHookResult = ReturnType<
   typeof useGetLiquidReportQuery
 >;
 export type GetLiquidReportLazyQueryHookResult = ReturnType<
   typeof useGetLiquidReportLazyQuery
+>;
+export type GetLiquidReportSuspenseQueryHookResult = ReturnType<
+  typeof useGetLiquidReportSuspenseQuery
 >;
 export type GetLiquidReportQueryResult = Apollo.QueryResult<
   GetLiquidReportQuery,

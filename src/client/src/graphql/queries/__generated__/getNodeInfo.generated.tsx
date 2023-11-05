@@ -80,9 +80,24 @@ export function useGetNodeInfoLazyQuery(
     options
   );
 }
+export function useGetNodeInfoSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetNodeInfoQuery,
+    GetNodeInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetNodeInfoQuery, GetNodeInfoQueryVariables>(
+    GetNodeInfoDocument,
+    options
+  );
+}
 export type GetNodeInfoQueryHookResult = ReturnType<typeof useGetNodeInfoQuery>;
 export type GetNodeInfoLazyQueryHookResult = ReturnType<
   typeof useGetNodeInfoLazyQuery
+>;
+export type GetNodeInfoSuspenseQueryHookResult = ReturnType<
+  typeof useGetNodeInfoSuspenseQuery
 >;
 export type GetNodeInfoQueryResult = Apollo.QueryResult<
   GetNodeInfoQuery,

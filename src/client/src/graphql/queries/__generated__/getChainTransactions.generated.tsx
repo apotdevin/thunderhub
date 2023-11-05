@@ -76,11 +76,26 @@ export function useGetChainTransactionsLazyQuery(
     GetChainTransactionsQueryVariables
   >(GetChainTransactionsDocument, options);
 }
+export function useGetChainTransactionsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetChainTransactionsQuery,
+    GetChainTransactionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetChainTransactionsQuery,
+    GetChainTransactionsQueryVariables
+  >(GetChainTransactionsDocument, options);
+}
 export type GetChainTransactionsQueryHookResult = ReturnType<
   typeof useGetChainTransactionsQuery
 >;
 export type GetChainTransactionsLazyQueryHookResult = ReturnType<
   typeof useGetChainTransactionsLazyQuery
+>;
+export type GetChainTransactionsSuspenseQueryHookResult = ReturnType<
+  typeof useGetChainTransactionsSuspenseQuery
 >;
 export type GetChainTransactionsQueryResult = Apollo.QueryResult<
   GetChainTransactionsQuery,

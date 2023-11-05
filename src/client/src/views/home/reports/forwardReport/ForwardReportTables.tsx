@@ -1,5 +1,12 @@
 import { FC } from 'react';
 import Table from '../../../../components/table';
+import {
+  AggregatedChannelSideForwards,
+  AggregatedRouteForwards,
+} from '../../../../graphql/types';
+import { getNodeLink } from '../../../../components/generic/helpers';
+import { Price } from '../../../../components/price/Price';
+import { numberWithCommas } from '../../../../utils/number';
 
 export type RouteType = {
   route: string;
@@ -19,100 +26,92 @@ export type ChannelType = {
 };
 
 type RouteTableProps = {
-  order: string;
-  forwardArray: RouteType[];
+  forwardArray: AggregatedRouteForwards[];
 };
 
 type ChannelTableProps = {
-  order: string;
-  forwardArray: ChannelType[];
+  forwardArray: AggregatedChannelSideForwards[];
 };
 
-export const RouteTable: FC<RouteTableProps> = ({ order, forwardArray }) => {
-  const getTitle = () => {
-    switch (order) {
-      case 'fee':
-        return 'Fee (sats)';
-      case 'tokens':
-        return 'Amount (sats)';
-      default:
-        return 'Count';
-    }
-  };
-
-  const getAccesor = () => {
-    switch (order) {
-      case 'fee':
-        return 'fee';
-      case 'tokens':
-        return 'tokens';
-      default:
-        return 'amount';
-    }
-  };
-
+export const RouteTable: FC<RouteTableProps> = ({ forwardArray }) => {
   const columns = [
     {
       header: 'In',
       accessorKey: 'incoming_alias',
-      cell: ({ cell }: any) => cell.renderValue(),
+      cell: ({ row }: any) => (
+        <div style={{ whiteSpace: 'nowrap' }}>
+          {getNodeLink(
+            row.original.incoming_channel_info.node2_info.public_key,
+            row.original.incoming_channel_info.node2_info.alias
+          )}
+        </div>
+      ),
     },
     {
       header: 'Out',
       accessorKey: 'outgoing_alias',
-      cell: ({ cell }: any) => cell.renderValue(),
+      cell: ({ row }: any) => (
+        <div style={{ whiteSpace: 'nowrap' }}>
+          {getNodeLink(
+            row.original.outgoing_channel_info.node2_info.public_key,
+            row.original.outgoing_channel_info.node2_info.alias
+          )}
+        </div>
+      ),
     },
     {
-      header: getTitle(),
-      accessorKey: getAccesor(),
-      cell: ({ cell }: any) => cell.renderValue(),
+      header: 'Count',
+      accessorKey: 'count',
+      cell: ({ row }: any) => numberWithCommas(row.original.count),
+    },
+    {
+      header: 'Fee (sats)',
+      accessorKey: 'fee',
+      cell: ({ row }: any) => <Price amount={row.original.fee} />,
+    },
+    {
+      header: 'Amount (sats)',
+      accessorKey: 'tokens',
+      cell: ({ row }: any) => <Price amount={row.original.tokens} />,
     },
   ];
 
   return <Table data={forwardArray} columns={columns} withSorting={true} />;
 };
 
-export const ChannelTable: FC<ChannelTableProps> = ({
-  order,
-  forwardArray,
-}) => {
-  const getTitle = () => {
-    switch (order) {
-      case 'fee':
-        return 'Fee (sats)';
-      case 'tokens':
-        return 'Amount (sats)';
-      default:
-        return 'Count';
-    }
-  };
-
-  const getAccesor = () => {
-    switch (order) {
-      case 'fee':
-        return 'fee';
-      case 'tokens':
-        return 'tokens';
-      default:
-        return 'amount';
-    }
-  };
-
+export const ChannelTable: FC<ChannelTableProps> = ({ forwardArray }) => {
   const columns = [
     {
       header: 'Alias',
       accessorKey: 'alias',
-      cell: ({ cell }: any) => cell.renderValue(),
+      cell: ({ row }: any) => (
+        <div style={{ whiteSpace: 'nowrap' }}>
+          {getNodeLink(
+            row.original.channel_info.node2_info.public_key,
+            row.original.channel_info.node2_info.alias
+          )}
+        </div>
+      ),
     },
     {
       header: 'Id',
       accessorKey: 'name',
-      cell: ({ cell }: any) => cell.renderValue(),
+      cell: ({ row }: any) => row.original.channel,
     },
     {
-      header: getTitle(),
-      accessorKey: getAccesor(),
-      cell: ({ cell }: any) => cell.renderValue(),
+      header: 'Count',
+      accessorKey: 'count',
+      cell: ({ row }: any) => numberWithCommas(row.original.count),
+    },
+    {
+      header: 'Fee (sats)',
+      accessorKey: 'fee',
+      cell: ({ row }: any) => <Price amount={row.original.fee} />,
+    },
+    {
+      header: 'Amount (sats)',
+      accessorKey: 'tokens',
+      cell: ({ row }: any) => <Price amount={row.original.tokens} />,
     },
   ];
 

@@ -48,7 +48,7 @@ const options = [
 ];
 
 const typeOptions = [
-  { label: 'Count', value: 'amount' },
+  { label: 'Count', value: 'count' },
   { label: 'Amount', value: 'tokens' },
   { label: 'Fees', value: 'fee' },
 ];
@@ -94,7 +94,7 @@ export const ForwardsGraph = () => {
     );
   }
 
-  if (!data?.getForwards.length) {
+  if (!data?.getForwards.list.length) {
     return (
       <S.wrapper>
         <Header />
@@ -103,7 +103,7 @@ export const ForwardsGraph = () => {
     );
   }
 
-  const forwards = getByTime(data.getForwards, days.value);
+  const forwards = getByTime(data.getForwards.list, days.value);
 
   return (
     <S.wrapper>

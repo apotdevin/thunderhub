@@ -68,11 +68,26 @@ export function useGetBitcoinFeesLazyQuery(
     options
   );
 }
+export function useGetBitcoinFeesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetBitcoinFeesQuery,
+    GetBitcoinFeesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetBitcoinFeesQuery,
+    GetBitcoinFeesQueryVariables
+  >(GetBitcoinFeesDocument, options);
+}
 export type GetBitcoinFeesQueryHookResult = ReturnType<
   typeof useGetBitcoinFeesQuery
 >;
 export type GetBitcoinFeesLazyQueryHookResult = ReturnType<
   typeof useGetBitcoinFeesLazyQuery
+>;
+export type GetBitcoinFeesSuspenseQueryHookResult = ReturnType<
+  typeof useGetBitcoinFeesSuspenseQuery
 >;
 export type GetBitcoinFeesQueryResult = Apollo.QueryResult<
   GetBitcoinFeesQuery,

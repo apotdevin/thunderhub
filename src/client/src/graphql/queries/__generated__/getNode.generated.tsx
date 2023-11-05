@@ -61,8 +61,23 @@ export function useGetNodeLazyQuery(
     options
   );
 }
+export function useGetNodeSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetNodeQuery,
+    GetNodeQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetNodeQuery, GetNodeQueryVariables>(
+    GetNodeDocument,
+    options
+  );
+}
 export type GetNodeQueryHookResult = ReturnType<typeof useGetNodeQuery>;
 export type GetNodeLazyQueryHookResult = ReturnType<typeof useGetNodeLazyQuery>;
+export type GetNodeSuspenseQueryHookResult = ReturnType<
+  typeof useGetNodeSuspenseQuery
+>;
 export type GetNodeQueryResult = Apollo.QueryResult<
   GetNodeQuery,
   GetNodeQueryVariables

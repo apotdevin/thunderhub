@@ -60,11 +60,26 @@ export function useVerifyMessageLazyQuery(
     options
   );
 }
+export function useVerifyMessageSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    VerifyMessageQuery,
+    VerifyMessageQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    VerifyMessageQuery,
+    VerifyMessageQueryVariables
+  >(VerifyMessageDocument, options);
+}
 export type VerifyMessageQueryHookResult = ReturnType<
   typeof useVerifyMessageQuery
 >;
 export type VerifyMessageLazyQueryHookResult = ReturnType<
   typeof useVerifyMessageLazyQuery
+>;
+export type VerifyMessageSuspenseQueryHookResult = ReturnType<
+  typeof useVerifyMessageSuspenseQuery
 >;
 export type VerifyMessageQueryResult = Apollo.QueryResult<
   VerifyMessageQuery,

@@ -128,9 +128,24 @@ export function useGetPaymentsLazyQuery(
     options
   );
 }
+export function useGetPaymentsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetPaymentsQuery,
+    GetPaymentsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(
+    GetPaymentsDocument,
+    options
+  );
+}
 export type GetPaymentsQueryHookResult = ReturnType<typeof useGetPaymentsQuery>;
 export type GetPaymentsLazyQueryHookResult = ReturnType<
   typeof useGetPaymentsLazyQuery
+>;
+export type GetPaymentsSuspenseQueryHookResult = ReturnType<
+  typeof useGetPaymentsSuspenseQuery
 >;
 export type GetPaymentsQueryResult = Apollo.QueryResult<
   GetPaymentsQuery,

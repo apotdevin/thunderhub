@@ -68,9 +68,24 @@ export function useGetAccountLazyQuery(
     options
   );
 }
+export function useGetAccountSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetAccountQuery,
+    GetAccountQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetAccountQuery, GetAccountQueryVariables>(
+    GetAccountDocument,
+    options
+  );
+}
 export type GetAccountQueryHookResult = ReturnType<typeof useGetAccountQuery>;
 export type GetAccountLazyQueryHookResult = ReturnType<
   typeof useGetAccountLazyQuery
+>;
+export type GetAccountSuspenseQueryHookResult = ReturnType<
+  typeof useGetAccountSuspenseQuery
 >;
 export type GetAccountQueryResult = Apollo.QueryResult<
   GetAccountQuery,

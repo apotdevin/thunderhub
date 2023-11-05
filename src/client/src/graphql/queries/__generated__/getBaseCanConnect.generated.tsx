@@ -57,11 +57,26 @@ export function useGetBaseCanConnectLazyQuery(
     GetBaseCanConnectQueryVariables
   >(GetBaseCanConnectDocument, options);
 }
+export function useGetBaseCanConnectSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetBaseCanConnectQuery,
+    GetBaseCanConnectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetBaseCanConnectQuery,
+    GetBaseCanConnectQueryVariables
+  >(GetBaseCanConnectDocument, options);
+}
 export type GetBaseCanConnectQueryHookResult = ReturnType<
   typeof useGetBaseCanConnectQuery
 >;
 export type GetBaseCanConnectLazyQueryHookResult = ReturnType<
   typeof useGetBaseCanConnectLazyQuery
+>;
+export type GetBaseCanConnectSuspenseQueryHookResult = ReturnType<
+  typeof useGetBaseCanConnectSuspenseQuery
 >;
 export type GetBaseCanConnectQueryResult = Apollo.QueryResult<
   GetBaseCanConnectQuery,

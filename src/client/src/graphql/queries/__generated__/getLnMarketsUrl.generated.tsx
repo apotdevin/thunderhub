@@ -57,11 +57,26 @@ export function useGetLnMarketsUrlLazyQuery(
     GetLnMarketsUrlQueryVariables
   >(GetLnMarketsUrlDocument, options);
 }
+export function useGetLnMarketsUrlSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetLnMarketsUrlQuery,
+    GetLnMarketsUrlQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetLnMarketsUrlQuery,
+    GetLnMarketsUrlQueryVariables
+  >(GetLnMarketsUrlDocument, options);
+}
 export type GetLnMarketsUrlQueryHookResult = ReturnType<
   typeof useGetLnMarketsUrlQuery
 >;
 export type GetLnMarketsUrlLazyQueryHookResult = ReturnType<
   typeof useGetLnMarketsUrlLazyQuery
+>;
+export type GetLnMarketsUrlSuspenseQueryHookResult = ReturnType<
+  typeof useGetLnMarketsUrlSuspenseQuery
 >;
 export type GetLnMarketsUrlQueryResult = Apollo.QueryResult<
   GetLnMarketsUrlQuery,

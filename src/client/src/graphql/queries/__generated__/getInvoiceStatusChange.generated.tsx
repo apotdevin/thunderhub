@@ -58,11 +58,26 @@ export function useGetInvoiceStatusChangeLazyQuery(
     GetInvoiceStatusChangeQueryVariables
   >(GetInvoiceStatusChangeDocument, options);
 }
+export function useGetInvoiceStatusChangeSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetInvoiceStatusChangeQuery,
+    GetInvoiceStatusChangeQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetInvoiceStatusChangeQuery,
+    GetInvoiceStatusChangeQueryVariables
+  >(GetInvoiceStatusChangeDocument, options);
+}
 export type GetInvoiceStatusChangeQueryHookResult = ReturnType<
   typeof useGetInvoiceStatusChangeQuery
 >;
 export type GetInvoiceStatusChangeLazyQueryHookResult = ReturnType<
   typeof useGetInvoiceStatusChangeLazyQuery
+>;
+export type GetInvoiceStatusChangeSuspenseQueryHookResult = ReturnType<
+  typeof useGetInvoiceStatusChangeSuspenseQuery
 >;
 export type GetInvoiceStatusChangeQueryResult = Apollo.QueryResult<
   GetInvoiceStatusChangeQuery,

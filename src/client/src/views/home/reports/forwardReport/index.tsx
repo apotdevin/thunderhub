@@ -6,7 +6,6 @@ import {
   SubTitle,
   Card,
   CardTitle,
-  Separation,
 } from '../../../../components/generic/Styled';
 import { mediaWidths } from '../../../../styles/Themes';
 import { ForwardChannelsReport } from './ForwardChannelReport';
@@ -43,7 +42,7 @@ export const options = [
 ];
 
 export const typeOptions = [
-  { label: 'Count', value: 'amount' },
+  { label: 'Count', value: 'count' },
   { label: 'Amount', value: 'tokens' },
   { label: 'Fees', value: 'fee' },
 ];
@@ -72,11 +71,11 @@ export const ForwardBox = () => {
         </S.row>
       </CardTitle>
       <Card mobileCardPadding={'8px'}>
-        <ForwardsGraph days={days} type={type} />
-        <Separation />
         <ForwardResume type={type} />
-        <Separation />
-        <ForwardChannelsReport days={days.value} order={type.value} />
+      </Card>
+      <Card mobileCardPadding={'8px'}>
+        <ForwardsGraph days={days} type={type} />
+        <ForwardChannelsReport days={days.value} />
       </Card>
     </CardWithTitle>
   );

@@ -42,7 +42,7 @@ const options = [
 ];
 
 const typeOptions = [
-  { label: 'Count', value: 'amount' },
+  { label: 'Count', value: 'count' },
   { label: 'Volume', value: 'tokens' },
 ];
 

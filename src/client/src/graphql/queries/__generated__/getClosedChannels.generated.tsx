@@ -101,11 +101,26 @@ export function useGetClosedChannelsLazyQuery(
     GetClosedChannelsQueryVariables
   >(GetClosedChannelsDocument, options);
 }
+export function useGetClosedChannelsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetClosedChannelsQuery,
+    GetClosedChannelsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetClosedChannelsQuery,
+    GetClosedChannelsQueryVariables
+  >(GetClosedChannelsDocument, options);
+}
 export type GetClosedChannelsQueryHookResult = ReturnType<
   typeof useGetClosedChannelsQuery
 >;
 export type GetClosedChannelsLazyQueryHookResult = ReturnType<
   typeof useGetClosedChannelsLazyQuery
+>;
+export type GetClosedChannelsSuspenseQueryHookResult = ReturnType<
+  typeof useGetClosedChannelsSuspenseQuery
 >;
 export type GetClosedChannelsQueryResult = Apollo.QueryResult<
   GetClosedChannelsQuery,

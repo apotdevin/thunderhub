@@ -5,31 +5,23 @@ import {
   MultiButton,
   SingleButton,
 } from '../../../../components/buttons/multiButton/MultiButton';
-import { Forward } from '../../../../graphql/types';
 import styled from 'styled-components';
 import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 import { getErrorContent } from '../../../../utils/error';
 import { SingleLine, SubTitle } from '../../../../components/generic/Styled';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { orderForwardChannels } from './helpers';
-import {
-  ChannelTable,
-  RouteTable,
-  RouteType,
-  ChannelType,
-} from './ForwardReportTables';
+import { ChannelTable, RouteTable } from './ForwardReportTables';
 import { CardContent } from '.';
 
 type Props = {
   days: number;
-  order: string;
 };
 
 const Spacing = styled.div`
   margin-bottom: 16px;
 `;
 
-export const ForwardChannelsReport = ({ days, order }: Props) => {
+export const ForwardChannelsReport = ({ days }: Props) => {
   const [type, setType] = useState<'route' | 'incoming' | 'outgoing'>('route');
 
   const { data, loading } = useGetForwardsQuery({
@@ -38,26 +30,27 @@ export const ForwardChannelsReport = ({ days, order }: Props) => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  if (!data?.getForwards || loading) {
+  if (loading) {
     return <LoadingCard noCard={true} title={'Forward Report'} />;
   }
 
-  const forwardArray = orderForwardChannels(
-    type,
-    order,
-    data.getForwards as Forward[]
-  );
+  if (!data?.getForwards.list.length) {
+    return null;
+  }
 
-  const renderContent = (parsed: (ChannelType | RouteType)[]) => {
+  const renderContent = () => {
+    if (loading || !data?.getForwards.list.length) return null;
+    const { by_incoming, by_outgoing, by_route } = data.getForwards;
+
     switch (type) {
       case 'route':
-        return (
-          <RouteTable order={order} forwardArray={parsed as RouteType[]} />
-        );
+        return <RouteTable forwardArray={by_route} />;
+      case 'incoming':
+        return <ChannelTable forwardArray={by_incoming} />;
+      case 'outgoing':
+        return <ChannelTable forwardArray={by_outgoing} />;
       default:
-        return (
-          <ChannelTable order={order} forwardArray={parsed as ChannelType[]} />
-        );
+        return null;
     }
   };
 
@@ -103,14 +96,10 @@ export const ForwardChannelsReport = ({ days, order }: Props) => {
     }
   };
 
-  if (forwardArray.length <= 0) {
-    return null;
-  }
-
   return (
     <CardContent>
       {renderTitle()}
-      {renderContent(forwardArray)}
+      {renderContent()}
     </CardContent>
   );
 };

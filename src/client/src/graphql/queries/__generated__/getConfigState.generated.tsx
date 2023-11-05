@@ -70,11 +70,26 @@ export function useGetConfigStateLazyQuery(
     options
   );
 }
+export function useGetConfigStateSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetConfigStateQuery,
+    GetConfigStateQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetConfigStateQuery,
+    GetConfigStateQueryVariables
+  >(GetConfigStateDocument, options);
+}
 export type GetConfigStateQueryHookResult = ReturnType<
   typeof useGetConfigStateQuery
 >;
 export type GetConfigStateLazyQueryHookResult = ReturnType<
   typeof useGetConfigStateLazyQuery
+>;
+export type GetConfigStateSuspenseQueryHookResult = ReturnType<
+  typeof useGetConfigStateSuspenseQuery
 >;
 export type GetConfigStateQueryResult = Apollo.QueryResult<
   GetConfigStateQuery,

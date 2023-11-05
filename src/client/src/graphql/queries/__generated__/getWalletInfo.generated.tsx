@@ -76,11 +76,26 @@ export function useGetWalletInfoLazyQuery(
     options
   );
 }
+export function useGetWalletInfoSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetWalletInfoQuery,
+    GetWalletInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetWalletInfoQuery,
+    GetWalletInfoQueryVariables
+  >(GetWalletInfoDocument, options);
+}
 export type GetWalletInfoQueryHookResult = ReturnType<
   typeof useGetWalletInfoQuery
 >;
 export type GetWalletInfoLazyQueryHookResult = ReturnType<
   typeof useGetWalletInfoLazyQuery
+>;
+export type GetWalletInfoSuspenseQueryHookResult = ReturnType<
+  typeof useGetWalletInfoSuspenseQuery
 >;
 export type GetWalletInfoQueryResult = Apollo.QueryResult<
   GetWalletInfoQuery,

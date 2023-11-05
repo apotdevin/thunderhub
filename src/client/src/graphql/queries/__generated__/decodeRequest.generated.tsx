@@ -103,11 +103,26 @@ export function useDecodeRequestLazyQuery(
     options
   );
 }
+export function useDecodeRequestSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    DecodeRequestQuery,
+    DecodeRequestQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    DecodeRequestQuery,
+    DecodeRequestQueryVariables
+  >(DecodeRequestDocument, options);
+}
 export type DecodeRequestQueryHookResult = ReturnType<
   typeof useDecodeRequestQuery
 >;
 export type DecodeRequestLazyQueryHookResult = ReturnType<
   typeof useDecodeRequestLazyQuery
+>;
+export type DecodeRequestSuspenseQueryHookResult = ReturnType<
+  typeof useDecodeRequestSuspenseQuery
 >;
 export type DecodeRequestQueryResult = Apollo.QueryResult<
   DecodeRequestQuery,

@@ -55,11 +55,26 @@ export function useVerifyBackupLazyQuery(
     options
   );
 }
+export function useVerifyBackupSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    VerifyBackupQuery,
+    VerifyBackupQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<VerifyBackupQuery, VerifyBackupQueryVariables>(
+    VerifyBackupDocument,
+    options
+  );
+}
 export type VerifyBackupQueryHookResult = ReturnType<
   typeof useVerifyBackupQuery
 >;
 export type VerifyBackupLazyQueryHookResult = ReturnType<
   typeof useVerifyBackupLazyQuery
+>;
+export type VerifyBackupSuspenseQueryHookResult = ReturnType<
+  typeof useVerifyBackupSuspenseQuery
 >;
 export type VerifyBackupQueryResult = Apollo.QueryResult<
   VerifyBackupQuery,

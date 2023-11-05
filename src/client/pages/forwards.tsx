@@ -3,7 +3,7 @@ import { NextPageContext } from 'next';
 import { getProps } from '../src/utils/ssr';
 import { ForwardsList } from '../src/views/forwards';
 import { ForwardChannelsReport } from '../src/views/home/reports/forwardReport/ForwardChannelReport';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ForwardTable } from '../src/views/forwards/ForwardTable';
 import { options, typeOptions } from '../src/views/home/reports/forwardReport';
 import { ForwardsGraph } from '../src/views/home/reports/forwardReport/ForwardsGraph';
@@ -15,11 +15,13 @@ import {
   Card,
   CardWithTitle,
   CardTitle,
-  Separation,
 } from '../src/components/generic/Styled';
 import { ForwardSankey } from '../src/views/forwards/forwardSankey';
 import { ChannelCart } from '../src/components/chart/ChannelChart';
 import { useGetChannelsQuery } from '../src/graphql/queries/__generated__/getChannels.generated';
+import { useGetForwardsListQuery } from '../src/graphql/queries/__generated__/getForwards.generated';
+import { toast } from 'react-toastify';
+import { getErrorContent } from '../src/utils/error';
 
 const S = {
   header: styled.div`
@@ -55,6 +57,16 @@ const ForwardsView = () => {
     };
   });
   const [channel, setChannel] = useState(emptyChannel);
+
+  const { data, loading } = useGetForwardsListQuery({
+    variables: { days: days.value },
+    onError: error => toast.error(getErrorContent(error)),
+  });
+
+  const amountForwards = useMemo(() => {
+    if (loading || !data?.getForwards.list.length) return 0;
+    return data.getForwards.list.length;
+  }, [data, loading]);
 
   return (
     <>
@@ -110,23 +122,26 @@ const ForwardsView = () => {
         {view.value === 'graph' && (
           <>
             <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-              <ForwardsGraph days={days} type={type} />
-              <Separation />
               <ForwardResume type={type} />
-              <Separation />
-              <ForwardChannelsReport days={days.value} order={type.value} />
             </Card>
-            <SubTitle>Grouped by Channel</SubTitle>
             <Card>
-              <ForwardTable days={days.value} order={type.value} />
+              <ForwardsGraph days={days} type={type} />
             </Card>
-            <SubTitle>Sankey</SubTitle>
-            <Card>
-              <ForwardSankey
-                days={days.value}
-                type={type.value as 'amount' | 'fee' | 'tokens'}
-              />
-            </Card>
+            {amountForwards ? (
+              <>
+                <Card>
+                  <ForwardChannelsReport days={days.value} />
+                </Card>
+                <SubTitle>Grouped by Channel</SubTitle>
+                <Card>
+                  <ForwardTable days={days.value} />
+                </Card>
+                <SubTitle>Sankey</SubTitle>
+                <Card>
+                  <ForwardSankey days={days.value} type={type.value} />
+                </Card>
+              </>
+            ) : null}
           </>
         )}
         {view.value === 'byChannel' && (

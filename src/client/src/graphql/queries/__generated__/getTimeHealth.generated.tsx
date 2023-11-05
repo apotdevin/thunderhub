@@ -86,11 +86,26 @@ export function useGetTimeHealthLazyQuery(
     options
   );
 }
+export function useGetTimeHealthSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetTimeHealthQuery,
+    GetTimeHealthQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetTimeHealthQuery,
+    GetTimeHealthQueryVariables
+  >(GetTimeHealthDocument, options);
+}
 export type GetTimeHealthQueryHookResult = ReturnType<
   typeof useGetTimeHealthQuery
 >;
 export type GetTimeHealthLazyQueryHookResult = ReturnType<
   typeof useGetTimeHealthLazyQuery
+>;
+export type GetTimeHealthSuspenseQueryHookResult = ReturnType<
+  typeof useGetTimeHealthSuspenseQuery
 >;
 export type GetTimeHealthQueryResult = Apollo.QueryResult<
   GetTimeHealthQuery,

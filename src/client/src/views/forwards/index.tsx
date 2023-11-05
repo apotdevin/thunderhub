@@ -1,15 +1,28 @@
 import { FC, useMemo } from 'react';
 import { toast } from 'react-toastify';
-import { getDateDif } from '../../components/generic/helpers';
+import {
+  getChannelLink,
+  getDateDif,
+  getNodeLink,
+} from '../../components/generic/helpers';
 import { DarkSubTitle } from '../../components/generic/Styled';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { Price } from '../../components/price/Price';
 import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
 import { getErrorContent } from '../../utils/error';
 import Table from '../../components/table';
+import { useChannelInfo } from '../../hooks/UseChannelInfo';
 
 type ForwardProps = {
   days: number;
+};
+
+const ChannelPeer: FC<{ channel: string }> = ({ channel }) => {
+  const {
+    peer: { alias, pubkey },
+  } = useChannelInfo(channel);
+
+  return <div>{getNodeLink(pubkey, alias)}</div>;
 };
 
 export const ForwardsList: FC<ForwardProps> = ({ days }) => {
@@ -19,13 +32,11 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
   });
 
   const tableData = useMemo(() => {
-    const channelData = data?.getForwards || [];
+    const channelData = data?.getForwards.list || [];
 
     return channelData.map(c => {
       return {
         ...c,
-        incoming_name: c.incoming_channel_info?.node2_info.alias || 'Unknown',
-        outgoing_name: c.outgoing_channel_info?.node2_info.alias || 'Unknown',
       };
     });
   }, [data]);
@@ -70,12 +81,16 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
           {
             header: 'Incoming',
             accessorKey: 'incoming_name',
-            cell: ({ cell }: any) => cell.renderValue(),
+            cell: ({ row }: any) => (
+              <ChannelPeer channel={row.original.incoming_channel} />
+            ),
           },
           {
             header: 'Outgoing',
             accessorKey: 'outgoing_name',
-            cell: ({ cell }: any) => cell.renderValue(),
+            cell: ({ row }: any) => (
+              <ChannelPeer channel={row.original.outgoing_channel} />
+            ),
           },
         ],
       },
@@ -85,12 +100,14 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
           {
             header: 'Incoming',
             accessorKey: 'incoming_channel',
-            cell: ({ cell }: any) => cell.renderValue(),
+            cell: ({ row }: any) =>
+              getChannelLink(row.original.incoming_channel),
           },
           {
             header: 'Outgoing',
             accessorKey: 'outgoing_channel',
-            cell: ({ cell }: any) => cell.renderValue(),
+            cell: ({ row }: any) =>
+              getChannelLink(row.original.outgoing_channel),
           },
         ],
       },
@@ -102,7 +119,7 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
     return <LoadingCard noCard={true} />;
   }
 
-  if (!data || !data.getForwards?.length) {
+  if (!data || !data.getForwards.list.length) {
     return <DarkSubTitle>No forwards found</DarkSubTitle>;
   }
 

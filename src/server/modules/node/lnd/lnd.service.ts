@@ -162,7 +162,7 @@ export class LndService {
         backup,
       })
     );
-    console.log(result);
+
     return result;
   }
 

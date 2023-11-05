@@ -73,11 +73,26 @@ export function useGetLightningAddressInfoLazyQuery(
     GetLightningAddressInfoQueryVariables
   >(GetLightningAddressInfoDocument, options);
 }
+export function useGetLightningAddressInfoSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetLightningAddressInfoQuery,
+    GetLightningAddressInfoQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetLightningAddressInfoQuery,
+    GetLightningAddressInfoQueryVariables
+  >(GetLightningAddressInfoDocument, options);
+}
 export type GetLightningAddressInfoQueryHookResult = ReturnType<
   typeof useGetLightningAddressInfoQuery
 >;
 export type GetLightningAddressInfoLazyQueryHookResult = ReturnType<
   typeof useGetLightningAddressInfoLazyQuery
+>;
+export type GetLightningAddressInfoSuspenseQueryHookResult = ReturnType<
+  typeof useGetLightningAddressInfoSuspenseQuery
 >;
 export type GetLightningAddressInfoQueryResult = Apollo.QueryResult<
   GetLightningAddressInfoQuery,
