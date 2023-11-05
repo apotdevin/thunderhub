@@ -7,7 +7,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { Inject } from '@nestjs/common';
 import { UserId } from '../../security/security.types';
-import { Throttle } from '@nestjs/throttler';
+import { Throttle, seconds } from '@nestjs/throttler';
 
 @Resolver()
 export class AccountResolver {
@@ -45,7 +45,7 @@ export class AccountResolver {
   }
 
   @Public()
-  @Throttle(4, 10)
+  @Throttle({ default: { limit: 4, ttl: seconds(10) } })
   @Query(() => [ServerAccount])
   async getServerAccounts(
     @Context() { authToken }: ContextType

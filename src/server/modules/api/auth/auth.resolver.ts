@@ -21,7 +21,7 @@ import { UserId } from '../../security/security.types';
 import { authenticator } from 'otplib';
 import { shorten } from 'src/server/utils/string';
 import { TwofaResult } from './auth.types';
-import { Throttle } from '@nestjs/throttler';
+import { Throttle, seconds } from '@nestjs/throttler';
 
 @Resolver()
 export class AuthResolver {
@@ -149,7 +149,7 @@ export class AuthResolver {
   }
 
   @Public()
-  @Throttle(4, 10)
+  @Throttle({ default: { limit: 4, ttl: seconds(10) } })
   @Mutation(() => Boolean)
   async getAuthToken(
     @Args('cookie', { nullable: true }) cookie: string,
@@ -225,7 +225,7 @@ export class AuthResolver {
   }
 
   @Public()
-  @Throttle(4, 10)
+  @Throttle({ default: { limit: 4, ttl: seconds(10) } })
   @Mutation(() => String)
   async getSessionToken(
     @Args('id') id: string,
