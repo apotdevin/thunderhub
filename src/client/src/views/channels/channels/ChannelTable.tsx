@@ -202,6 +202,12 @@ export const ChannelTable = () => {
         percentOnlineText: `${getPercent(timeOnline, timeOffline)}%`,
         activityPercent: getPercent(c.sent, c.received),
         activityPercentText: `${getPercent(c.sent, c.received)}%`,
+        // sats flow per 1 sats capacity in 1 month
+        activityFlowIndex: (
+          ((c.sent + c.received) / c.capacity / c.channel_age) *
+          144 *
+          30
+        ).toFixed(2),
         balancePercent: getPercent(c.local_balance, c.remote_balance),
         balancePercentText: `${getPercent(c.local_balance, c.remote_balance)}%`,
         proportionalBars: (
@@ -464,6 +470,11 @@ export const ChannelTable = () => {
             header: 'Percent',
             accessorKey: 'activityPercentText',
             sortingFn: numberStringSorting('activityPercent'),
+          },
+          {
+            header: 'Flow index',
+            accessorKey: 'activityFlowIndex',
+            sortingFn: numberStringSorting('activityFlowIndex'),
           },
         ],
       },
