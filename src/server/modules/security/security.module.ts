@@ -13,10 +13,12 @@ import { ThrottlerModule } from '@nestjs/throttler';
     PassportModule.register({ defaultStrategy: 'jwt', session: true }),
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        ttl: config.get('throttler.ttl'),
-        limit: config.get('throttler.limit'),
-      }),
+      useFactory: (config: ConfigService) => [
+        {
+          ttl: config.get('throttler.ttl'),
+          limit: config.get('throttler.limit') * 1000,
+        },
+      ],
     }),
   ],
 
