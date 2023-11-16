@@ -78,6 +78,18 @@ export const AccountInfo = () => {
                 <Price amount={totalChain} />
               </div>
             </Tile>
+            <Tile>
+              <DarkSubTitle>Fedimint Ecash</DarkSubTitle>
+              <div>
+                <Price amount={totalLightning} />
+              </div>
+            </Tile>
+            <Tile>
+              <DarkSubTitle>Onchain Bitcoin</DarkSubTitle>
+              <div>
+                <Price amount={totalChain} />
+              </div>
+            </Tile>
             {gatewayInfo && (
               <Tile>
                 <DarkSubTitle>Fedimint Ecash</DarkSubTitle>
