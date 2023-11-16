@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Zap, Anchor, Pocket } from 'react-feather';
+import { Zap, Anchor, Pocket, Book } from 'react-feather';
 import { useNodeBalances } from '../../../hooks/UseNodeBalances';
 import Big from 'big.js';
 import { renderLine } from '../../../components/generic/helpers';
@@ -20,7 +20,7 @@ const S = {
   grid: styled.div`
     display: grid;
     grid-gap: 16px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
 
     @media (${mediaWidths.mobile}) {
       display: block;
@@ -93,13 +93,19 @@ export const AccountInfo = () => {
               </div>
             </Tile>
             <Tile>
-              <DarkSubTitle>Bitcoin</DarkSubTitle>
+              <DarkSubTitle>Lightning</DarkSubTitle>
+              <div>
+                <Price amount={totalLightning} />
+              </div>
+            </Tile>
+            <Tile>
+              <DarkSubTitle>Onchain Bitcoin</DarkSubTitle>
               <div>
                 <Price amount={totalChain} />
               </div>
             </Tile>
             <Tile>
-              <DarkSubTitle>Lightning</DarkSubTitle>
+              <DarkSubTitle>Fedimint Ecash</DarkSubTitle>
               <div>
                 <Price amount={totalLightning} />
               </div>
@@ -136,6 +142,18 @@ export const AccountInfo = () => {
             {renderLine('Available', <Price amount={onchain.confirmed} />)}
             {renderLine('Pending', <Price amount={onchain.pending} />)}
             {renderLine('Force Closures', <Price amount={onchain.closing} />)}
+          </Card>
+        </CardWithTitle>
+        <CardWithTitle>
+          <Card>
+            <SingleLine>
+              <Book size={18} />
+              <SubTitle>Fedimint eCash</SubTitle>
+            </SingleLine>
+            <Separation />
+            {renderLine('Available', <Price amount={activeLightning} />)}
+            {renderLine('Not Available', <Price amount={inactiveLightning} />)}
+            {renderLine('Pending', <Price amount={lightning.pending} />)}
           </Card>
         </CardWithTitle>
       </S.grid>
