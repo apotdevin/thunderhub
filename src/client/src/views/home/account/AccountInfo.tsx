@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Zap, Anchor, Pocket, Book } from 'react-feather';
+import { Zap, Anchor, Pocket } from 'react-feather';
 import { useNodeBalances } from '../../../hooks/UseNodeBalances';
 import Big from 'big.js';
 import { renderLine } from '../../../components/generic/helpers';
@@ -15,6 +15,7 @@ import {
 } from '../../../components/generic/Styled';
 import { Price } from '../../../components/price/Price';
 import { mediaWidths } from '../../../styles/Themes';
+import { FedimintGatewayCard } from './gateway/FedimintGatewayCard';
 
 const S = {
   grid: styled.div`
@@ -144,18 +145,7 @@ export const AccountInfo = () => {
             {renderLine('Force Closures', <Price amount={onchain.closing} />)}
           </Card>
         </CardWithTitle>
-        <CardWithTitle>
-          <Card>
-            <SingleLine>
-              <Book size={18} />
-              <SubTitle>Fedimint eCash</SubTitle>
-            </SingleLine>
-            <Separation />
-            {renderLine('Available', <Price amount={activeLightning} />)}
-            {renderLine('Not Available', <Price amount={inactiveLightning} />)}
-            {renderLine('Pending', <Price amount={lightning.pending} />)}
-          </Card>
-        </CardWithTitle>
+        <FedimintGatewayCard />
       </S.grid>
     </>
   );
