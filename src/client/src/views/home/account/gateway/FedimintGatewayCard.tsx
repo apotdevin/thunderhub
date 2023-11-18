@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Card,
   CardWithTitle,
-  OverflowText,
   Separation,
   SingleLine,
   SubTitle,
@@ -46,11 +45,11 @@ export const FedimintGatewayCard = ({
           <SubTitle>Fedimint Ecash</SubTitle>
         </SingleLine>
         <Separation />
-        {gatewayInfo.federations.length === 0 ? (
+        {!gatewayInfo.federations || gatewayInfo.federations.length === 0 ? (
           <>
             {/* TODO: Left Align the Text */}
-            <div style={{ margin: '-4px 0 16px 0' }}>
-              <OverflowText>{'Connect to a Federation'}</OverflowText>
+            <div style={{ margin: '-4px 0 16px 0', textAlign: 'left' }}>
+              {'Connect to a Federation'}
             </div>
             <SingleLine>
               <Input

@@ -84,7 +84,7 @@ export const AccountInfo = () => {
     <>
       <CardWithTitle>
         <SubTitle>
-          Network: {gatewayInfo ? gatewayInfo.network : 'Bitcoin'}{' '}
+          Network: {gatewayInfo?.network ? gatewayInfo.network : 'Bitcoin'}{' '}
         </SubTitle>
         <Card>
           <ResponsiveLine>

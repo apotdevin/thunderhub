@@ -4,7 +4,7 @@ import { useGatewayState } from '../context/GatewayContext';
 export const useGatewayEcashTotal = () => {
   const { gatewayInfo } = useGatewayState();
 
-  if (!gatewayInfo) {
+  if (!gatewayInfo || !gatewayInfo.federations) {
     return new Big(0).toString();
   }
 
