@@ -16,12 +16,16 @@ import {
 import { Price } from '../../../components/price/Price';
 import { mediaWidths } from '../../../styles/Themes';
 import { FedimintGatewayCard } from './gateway/FedimintGatewayCard';
+import { useGatewayEcashTotal } from '../../../hooks/UseGatewayEcashTotal';
+import { useGatewayState } from '../../../context/GatewayContext';
+import { GatewayInfo } from '../../../api/types';
 
 const S = {
-  grid: styled.div`
+  grid: styled.div<{ gatewayInfo?: GatewayInfo | null }>`
     display: grid;
     grid-gap: 16px;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: ${({ gatewayInfo }) =>
+      gatewayInfo ? '1fr 1fr 1fr' : '1fr 1fr'};
 
     @media (${mediaWidths.mobile}) {
       display: block;
@@ -48,12 +52,15 @@ const sectionColor = '#FFD300';
 
 export const AccountInfo = () => {
   const { onchain, lightning } = useNodeBalances();
+  const { gatewayInfo } = useGatewayState();
+  const totalFedimintEcash = useGatewayEcashTotal();
 
   const totalAmount = new Big(onchain.confirmed)
     .add(onchain.pending)
     .add(onchain.closing)
     .add(lightning.confirmed)
     .add(lightning.pending)
+    .add(totalFedimintEcash)
     .toString();
 
   const totalChain = new Big(onchain.confirmed).add(onchain.pending).toString();
@@ -76,7 +83,9 @@ export const AccountInfo = () => {
   return (
     <>
       <CardWithTitle>
-        <SubTitle>Resume</SubTitle>
+        <SubTitle>
+          Network: {gatewayInfo ? gatewayInfo.network : 'Bitcoin'}{' '}
+        </SubTitle>
         <Card>
           <ResponsiveLine>
             <Pocket
@@ -105,16 +114,18 @@ export const AccountInfo = () => {
                 <Price amount={totalChain} />
               </div>
             </Tile>
-            <Tile>
-              <DarkSubTitle>Fedimint Ecash</DarkSubTitle>
-              <div>
-                <Price amount={totalLightning} />
-              </div>
-            </Tile>
+            {gatewayInfo && (
+              <Tile>
+                <DarkSubTitle>Fedimint Ecash</DarkSubTitle>
+                <div>
+                  <Price amount={totalFedimintEcash} />
+                </div>
+              </Tile>
+            )}
           </ResponsiveLine>
         </Card>
       </CardWithTitle>
-      <S.grid>
+      <S.grid gatewayInfo={gatewayInfo}>
         <CardWithTitle>
           <Card>
             <SingleLine>
@@ -145,7 +156,7 @@ export const AccountInfo = () => {
             {renderLine('Force Closures', <Price amount={onchain.closing} />)}
           </Card>
         </CardWithTitle>
-        <FedimintGatewayCard />
+        {gatewayInfo ? <FedimintGatewayCard gatewayInfo={gatewayInfo} /> : null}
       </S.grid>
     </>
   );

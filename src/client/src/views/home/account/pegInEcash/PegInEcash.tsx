@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { useCreateAddressMutation } from '../../../../graphql/mutations/__generated__/createAddress.generated';
 import { QRCodeSVG } from 'qrcode.react';
 import { Copy } from 'react-feather';
-import { getErrorContent } from '../../../../utils/error';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { mediaWidths } from '../../../../styles/Themes';
 import { SmallSelectWithValue } from '../../../../components/select';
@@ -13,6 +11,9 @@ import {
   ResponsiveLine,
   SubTitle,
 } from '../../../../components/generic/Styled';
+import { Federation } from '../../../../api/types';
+import { gatewayApi } from '../../../../api/GatewayApi';
+import { useGatewayFederations } from '../../../../hooks/UseGatewayFederations';
 
 const S = {
   row: styled.div`
@@ -64,35 +65,30 @@ const Column = styled.div`
   align-items: center;
 `;
 
-const options = [
-  { label: 'p2tr (Default)', value: 'p2tr' },
-  { label: 'p2wpkh (Segwit)', value: 'p2wpkh' },
-  { label: 'np2wpkh (Nested Segwit)', value: 'np2wpkh' },
-];
-
 export const PegInEcashCard = () => {
-  const [type, setType] = useState(options[0]);
-  const [received, setReceived] = useState(false);
+  const federations: Federation[] = useGatewayFederations();
+  const [selectedFederation, setSelectedFederation] =
+    useState<Federation | null>(null);
+  const [address, setAddress] = useState('');
 
-  const [createAddress, { data, loading }] = useCreateAddressMutation({
-    onError: error => toast.error(getErrorContent(error)),
-  });
-
-  useEffect(() => {
-    data && data.createAddress && setReceived(true);
-  }, [data]);
+  const handleFetchPegInAddress = () => {
+    if (!selectedFederation) return;
+    gatewayApi.fetchAddress(selectedFederation.federation_id).then(address => {
+      setAddress(address);
+    });
+  };
 
   return (
     <>
-      {data && data.createAddress ? (
+      {address !== '' ? (
         <Responsive>
           <QRWrapper>
-            <QRCodeSVG value={data.createAddress} size={248} />
+            <QRCodeSVG value={address} size={248} />
           </QRWrapper>
           <Column>
-            <WrapRequest>{data.createAddress}</WrapRequest>
+            <WrapRequest>{address}</WrapRequest>
             <CopyToClipboard
-              text={data.createAddress}
+              text={address}
               onCopy={() => toast.success('Address Copied')}
             >
               <ColorButton>
@@ -106,24 +102,37 @@ export const PegInEcashCard = () => {
         <>
           <ResponsiveLine>
             <S.row>
-              <SubTitle>Address Type:</SubTitle>
-              <SmallSelectWithValue
-                callback={e => setType((e[0] || options[1]) as any)}
-                options={options}
-                value={type}
-                isClearable={false}
-              />
+              <SubTitle>Into Federation:</SubTitle>
+              {federations.length > 0 && (
+                <SmallSelectWithValue
+                  callback={e => setSelectedFederation(e[0] as any)}
+                  options={federations.map(f => ({
+                    label:
+                      f.config.meta.federation_name ||
+                      'No connected Federations',
+                    value: f.federation_id || 'No connected Federations',
+                  }))}
+                  value={{
+                    label:
+                      federations[0].config.meta.federation_name ||
+                      'No connected Federations',
+                    value:
+                      federations[0].federation_id ||
+                      'No connected Federations',
+                  }}
+                  isClearable={false}
+                />
+              )}
             </S.row>
             <ColorButton
-              onClick={() => createAddress({ variables: { type: type.value } })}
-              disabled={received}
+              onClick={() => handleFetchPegInAddress()}
+              disabled={false}
               withMargin={'0 0 0 16px'}
               mobileMargin={'16px 0 0'}
               arrow={true}
-              loading={loading}
               mobileFullWidth={true}
             >
-              Create Address
+              Create Peg In Address
             </ColorButton>
           </ResponsiveLine>
         </>
