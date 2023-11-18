@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { usePayAddressMutation } from '../../../../graphql/mutations/__generated__/sendToAddress.generated';
 import { InputWithDeco } from '../../../../components/input/InputWithDeco';
 import { useBitcoinFees } from '../../../../hooks/UseBitcoinFees';
 import {
@@ -8,7 +7,6 @@ import {
   SingleLine,
   SubTitle,
 } from '../../../../components/generic/Styled';
-import { getErrorContent } from '../../../../utils/error';
 import { Input } from '../../../../components/input';
 import {
   MultiButton,
@@ -20,6 +18,10 @@ import Modal from '../../../../components/modal/ReactModal';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { renderLine } from '../../../../components/generic/helpers';
 import { usePriceState } from '../../../../context/PriceContext';
+import { Federation, dummyFederation } from '../../../../api/types';
+import { SmallSelectWithValue } from '../../../../components/select';
+import { useGatewayFederations } from '../../../../hooks/UseGatewayFederations';
+import { gatewayApi } from '../../../../api/GatewayApi';
 
 export const PegOutEcashCard = ({ setOpen }: { setOpen: () => void }) => {
   const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
@@ -34,17 +36,26 @@ export const PegOutEcashCard = ({ setOpen }: { setOpen: () => void }) => {
   const [type, setType] = useState(dontShow || !fetchFees ? 'fee' : 'none');
   const [amount, setAmount] = useState(0);
   const [sendAll, setSendAll] = useState(false);
+  const federations: Federation[] = useGatewayFederations();
+  const [selectedFederation, setSelectedFederation] = useState(dummyFederation);
 
   const canSend = address !== '' && (sendAll || tokens > 0) && amount > 0;
 
-  const [payAddress, { loading }] = usePayAddressMutation({
-    onError: error => toast.error(getErrorContent(error)),
-    onCompleted: () => {
-      toast.success('Payment Sent!');
+  const handlePegOut = (
+    federationId: string,
+    tokenAmount: { sendAll?: boolean; tokens?: number },
+    address: string
+  ) => {
+    const amountSat =
+      sendAll && selectedFederation.balance_msat
+        ? selectedFederation.balance_msat
+        : tokenAmount.tokens || 0;
+
+    gatewayApi.requestWithdrawal(federationId, amountSat, address).then(() => {
+      toast.success('Withdrawal request sent');
       setOpen();
-    },
-    refetchQueries: ['GetNodeInfo', 'GetBalances'],
-  });
+    });
+  };
 
   useEffect(() => {
     if (type === 'none' && amount === 0) {
@@ -59,17 +70,17 @@ export const PegOutEcashCard = ({ setOpen }: { setOpen: () => void }) => {
     return `${amount} blocks`;
   };
 
-  const typeAmount = () => {
-    switch (type) {
-      case 'none':
-      case 'fee':
-        return { fee: amount };
-      case 'target':
-        return { target: amount };
-      default:
-        return {};
-    }
-  };
+  // const typeAmount = () => {
+  //   switch (type) {
+  //     case 'none':
+  //     case 'fee':
+  //       return { fee: amount };
+  //     case 'target':
+  //       return { target: amount };
+  //     default:
+  //       return {};
+  //   }
+  // };
 
   const tokenAmount = sendAll ? { sendAll } : { tokens };
 
@@ -86,11 +97,31 @@ export const PegOutEcashCard = ({ setOpen }: { setOpen: () => void }) => {
   return (
     <>
       <InputWithDeco
-        title={'Send to Address'}
+        title={'Peg Out to Address'}
         value={address}
         placeholder={'Address'}
         inputCallback={value => setAddress(value)}
       />
+      <Separation />
+      <InputWithDeco title={'From Federation'} noInput={true}>
+        <SmallSelectWithValue
+          callback={e =>
+            setSelectedFederation((e[0] || dummyFederation) as any)
+          }
+          options={federations.map(f => ({
+            label: f.config.meta.federation_name || 'No connected Federations',
+            value: f.federation_id || 'No connected Federations',
+          }))}
+          value={{
+            label:
+              federations[0].config.meta.federation_name ||
+              'No connected Federations',
+            value: federations[0].federation_id || 'No connected Federations',
+          }}
+          isClearable={false}
+          maxWidth={'500px'}
+        />
+      </InputWithDeco>
       <Separation />
       <InputWithDeco title={'Send All'} noInput={true}>
         <MultiButton>
@@ -190,7 +221,7 @@ export const PegOutEcashCard = ({ setOpen }: { setOpen: () => void }) => {
       <ColorButton
         disabled={!canSend}
         withMargin={'16px 0 0'}
-        loading={loading}
+        loading={false}
         fullWidth={true}
         onClick={() => {
           setModalOpen(true);
@@ -210,15 +241,13 @@ export const PegOutEcashCard = ({ setOpen }: { setOpen: () => void }) => {
         )}
         <ColorButton
           onClick={() =>
-            payAddress({
-              variables: { address, ...typeAmount(), ...tokenAmount },
-            })
+            handlePegOut(selectedFederation.federation_id, tokenAmount, address)
           }
           disabled={!canSend}
           withMargin={'16px 0 0'}
           fullWidth={true}
           arrow={true}
-          loading={loading}
+          loading={false}
         >
           Send To Address
         </ColorButton>
