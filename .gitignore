@@ -44,5 +44,6 @@ lerna-debug.log*
 
 # config files
 config.yaml
-data
-data/*
+
+# For Dev
+local_data
