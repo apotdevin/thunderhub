@@ -31,7 +31,8 @@
     "update": "sh ./scripts/updateToLatest.sh",
     "build:image": "docker build --pull --rm -f Dockerfile -t thunderhub:testing '.'",
     "build:image:base": "docker build --pull --rm -f Dockerfile --build-arg BASE_PATH=/thub -t thunderhub:testing .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "nix-gateway": "./scripts/mprocs-nix.sh dev-fed mprocs-nix-gateway.yml"
   },
   "dependencies": {
     "@apollo/client": "^3.8.8",
