@@ -50,6 +50,11 @@ type AmbossConfig = {
   disableBalancePushes: boolean;
 };
 
+type FedimintGatewayConfig = {
+  apiUrl: string;
+  password: string;
+};
+
 type ConfigType = {
   basePath: string;
   isProduction: boolean;
@@ -69,6 +74,7 @@ type ConfigType = {
   headers: Headers;
   subscriptions: SubscriptionsConfig;
   amboss: AmbossConfig;
+  fedimintGateway: FedimintGatewayConfig;
 };
 
 export default (): ConfigType => {
@@ -136,6 +142,11 @@ export default (): ConfigType => {
     disableBalancePushes: process.env.DISABLE_BALANCE_PUSHES === 'true',
   };
 
+  const fedimintGateway = {
+    apiUrl: process.env.FM_GATEWAY_API || '',
+    password: process.env.FM_GATEWAY_PASSWORD || '',
+  };
+
   const config: ConfigType = {
     logJson: process.env.LOG_JSON === 'true',
     masterPasswordOverride: process.env.MASTER_PASSWORD_OVERRIDE || '',
@@ -155,6 +166,7 @@ export default (): ConfigType => {
     yamlEnvs,
     subscriptions,
     amboss,
+    fedimintGateway,
   };
 
   if (!isProduction) {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Anchor, X, Zap } from 'react-feather';
+import { Anchor, X, Zap, Book } from 'react-feather';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Card } from '../../../components/generic/Styled';
 import { mediaWidths } from '../../../styles/Themes';
@@ -8,6 +8,8 @@ import { CreateInvoiceCard } from './createInvoice/CreateInvoice';
 import { PayCard } from './pay/Payment';
 import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 import { SendOnChainCard } from './sendOnChain/SendOnChain';
+import { PegInEcashCard } from './pegInEcash/PegInEcash';
+import { PegOutEcashCard } from './pegOutEcash/PegOutEcash';
 
 const SECTION_COLOR = '#FFD300';
 
@@ -15,7 +17,7 @@ const S = {
   grid: styled.div`
     display: grid;
     grid-gap: 8px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     margin-bottom: 32px;
 
     @media (${mediaWidths.mobile}) {
@@ -37,6 +39,10 @@ export const AccountButtons = () => {
         return <SendOnChainCard setOpen={() => setState('none')} />;
       case 'receive_chain':
         return <ReceiveOnChainCard />;
+      case 'pegin_ecash':
+        return <PegInEcashCard />;
+      case 'pegout_ecash':
+        return <PegOutEcashCard setOpen={() => setState('none')} />;
       default:
         return null;
     }
@@ -94,6 +100,32 @@ export const AccountButtons = () => {
             <Anchor size={18} color={SECTION_COLOR} />
           )}
           Receive
+        </ColorButton>
+        <ColorButton
+          withBorder={state === 'pegin_ecash'}
+          onClick={() =>
+            setState(state === 'pegin_ecash' ? 'none' : 'pegin_ecash')
+          }
+        >
+          {state === 'pegin_ecash' ? (
+            <X size={18} color={SECTION_COLOR} />
+          ) : (
+            <Book size={18} color={SECTION_COLOR} />
+          )}
+          Peg In
+        </ColorButton>
+        <ColorButton
+          withBorder={state === 'pegout_ecash'}
+          onClick={() =>
+            setState(state === 'pegout_ecash' ? 'none' : 'pegout_ecash')
+          }
+        >
+          {state === 'pegout_ecash' ? (
+            <X size={18} color={SECTION_COLOR} />
+          ) : (
+            <Book size={18} color={SECTION_COLOR} />
+          )}
+          Peg Out
         </ColorButton>
       </S.grid>
       {state !== 'none' && <Card>{renderContent()}</Card>}

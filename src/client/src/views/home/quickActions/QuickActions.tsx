@@ -29,7 +29,8 @@ export const QuickCard = styled.div`
   border-radius: 4px;
   border: 1px solid ${cardBorderColor};
   height: 100px;
-  width: 100px;
+  flex-grow: 1;
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -61,6 +62,7 @@ export const QuickTitle = styled.div`
 const QuickRow = styled.div`
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 `;
 
 export const QuickActions = () => {

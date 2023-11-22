@@ -28,5 +28,7 @@ module.exports = {
     disableLnMarkets: process.env.DISABLE_LNMARKETS === 'true',
     noVersionCheck: process.env.NO_VERSION_CHECK === 'true',
     logoutUrl: process.env.LOGOUT_URL || '',
+    fmGatewayUrl: process.env.FM_GATEWAY_URL || '',
+    fmGatewayPassword: process.env.FM_GATEWAY_PASSWORD || '',
   },
 };
