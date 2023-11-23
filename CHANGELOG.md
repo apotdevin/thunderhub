@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.24](https://github.com/apotdevin/thunderhub/compare/v0.13.23...v0.13.24) (2023-11-23)
+
+
+### Improvements
+
+* bump deps ([#582](https://github.com/apotdevin/thunderhub/issues/582)) ([0d0dae9](https://github.com/apotdevin/thunderhub/commit/0d0dae9fdeddd0170a5c007a5694446f2e2b2f02))
+
+
+### Refactoring
+
+* forwards api ([#583](https://github.com/apotdevin/thunderhub/issues/583)) ([8e51084](https://github.com/apotdevin/thunderhub/commit/8e51084167a4034e32f2ae3ac53b0e065f1ec068))
+
 ### [0.13.23](https://github.com/apotdevin/thunderhub/compare/v0.13.22...v0.13.23) (2023-09-12)
 
 

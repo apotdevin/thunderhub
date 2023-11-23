@@ -37,6 +37,10 @@ export const FedimintGatewayCard = ({
     });
   };
 
+  const formatFederationId = (id: string) => {
+    return `${id.slice(0, 6)}...${id.slice(-6)}`;
+  };
+
   return (
     <CardWithTitle>
       <Card>
@@ -77,7 +81,10 @@ export const FedimintGatewayCard = ({
               'Federation',
               gatewayInfo.federations[0].config.meta.federation_name
             )}
-            {renderLine('ID', gatewayInfo.federations[0].federation_id)}
+            {renderLine(
+              'ID',
+              formatFederationId(gatewayInfo.federations[0].federation_id)
+            )}
           </div>
         )}
       </Card>
