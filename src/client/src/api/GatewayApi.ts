@@ -1,41 +1,16 @@
+// import { publicRuntimeConfig } from '../../next.config';
+// import { publicRuntimeConfig } from '../../next.config';
+import getConfig from 'next/config';
 import { GatewayInfo, Federation } from './types';
 
-const SESSION_STORAGE_KEY = 'gateway-ui-key';
+// const SESSION_STORAGE_KEY = 'gateway-ui-key';
+
+const { publicRuntimeConfig } = getConfig();
 
 // GatewayApi is an implementation of the ApiInterface
 export class GatewayApi {
-  private baseUrl: string | undefined = process.env.FM_GATEWAY_API;
-
-  // Tests a provided password, or the one in the environment config, or the one in session storage
-  testPassword = async (password?: string): Promise<boolean> => {
-    const tempPassword =
-      password || this.getPassword() || process.env.FM_GATEWAY_PASSWORD;
-
-    if (!tempPassword) {
-      return false;
-    }
-
-    // Replace with temp password to check.
-    sessionStorage.setItem(SESSION_STORAGE_KEY, tempPassword);
-
-    try {
-      await this.fetchInfo();
-      return true;
-    } catch (err) {
-      // TODO: make sure error is auth error, not unrelated
-      console.error(err);
-      this.clearPassword();
-      return false;
-    }
-  };
-
-  private getPassword = (): string | null => {
-    return sessionStorage.getItem(SESSION_STORAGE_KEY);
-  };
-
-  clearPassword = () => {
-    sessionStorage.removeItem(SESSION_STORAGE_KEY);
-  };
+  private baseUrl: string | undefined = publicRuntimeConfig.fmGatewayUrl;
+  private password: string | undefined = publicRuntimeConfig.fmGatewayPassword;
 
   private post = async (api: string, body: unknown): Promise<Response> => {
     if (this.baseUrl === undefined) {
@@ -44,18 +19,11 @@ export class GatewayApi {
       );
     }
 
-    const password = this.getPassword();
-    if (!password) {
-      throw new Error(
-        'Misconfigured Gateway API. Make sure gateway password is configured appropriately'
-      );
-    }
-
     return fetch(`${this.baseUrl}/${api}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${password}`,
+        Authorization: `Bearer ${this.password}`,
       },
       body: JSON.stringify(body),
     });
@@ -72,6 +40,7 @@ export class GatewayApi {
 
       throw responseToError(res);
     } catch (error) {
+      console.log(`baseUrl`, this.baseUrl);
       return Promise.reject({ message: 'Error fetching gateway info', error });
     }
   };

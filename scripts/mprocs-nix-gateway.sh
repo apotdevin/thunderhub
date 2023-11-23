@@ -26,12 +26,11 @@ accounts:
     certificatePath: $FM_LND_TLS_CERT
 EOF
 
-echo $TEMP_FILE
 # -----------
 # Fedimint Config
 # -----------
 export ACCOUNT_CONFIG_PATH=$TEMP_FILE
-export FM_GATEWAY_URL=$FM_GATEWAY_API_ADDR
+export FM_GATEWAY_API=$FM_GATEWAY_API_ADDR
 export FM_GATEWAY_PASSWORD=$FM_GATEWAY_PASSWORD
 
 npm run start:dev
