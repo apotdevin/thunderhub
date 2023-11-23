@@ -114,6 +114,7 @@ export const AccountButtons = () => {
           )}
           Peg Out
         </ColorButton>
+<<<<<<< HEAD
         <ColorButton
           withBorder={state === 'pegin_ecash'}
           onClick={() =>
@@ -127,6 +128,22 @@ export const AccountButtons = () => {
           )}
           Peg In
         </ColorButton>
+||||||| parent of 51c324fe (fix: fix peg out command)
+=======
+        <ColorButton
+          withBorder={state === 'pegin_ecash'}
+          onClick={() =>
+            setState(state === 'pegin_ecash' ? 'none' : 'pegin_ecash')
+          }
+        >
+          {state === 'pegin_ecash' ? (
+            <X size={18} color={SECTION_COLOR} />
+          ) : (
+            <Book size={18} color={SECTION_COLOR} />
+          )}
+          Peg In
+        </ColorButton>
+>>>>>>> 51c324fe (fix: fix peg out command)
       </S.grid>
       {state !== 'none' && <Card>{renderContent()}</Card>}
     </>
