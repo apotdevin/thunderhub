@@ -49,9 +49,6 @@ export const PegOutEcashCard = ({ setOpen }: { setOpen: () => void }) => {
     const amountSat = sendAll
       ? federations[selectedFederation].balance_msat
       : tokenAmount.tokens || 0;
-
-    console.log('selectedFederation', selectedFederation);
-    console.log('amountSat', amountSat);
     gatewayApi
       .requestWithdrawal(
         federations[federationIdx].federation_id,
@@ -61,6 +58,9 @@ export const PegOutEcashCard = ({ setOpen }: { setOpen: () => void }) => {
       .then(() => {
         toast.success('Withdrawal request sent');
         setOpen();
+      })
+      .catch(e => {
+        toast.error('Error sending withdrawal request', e);
       });
   };
 
