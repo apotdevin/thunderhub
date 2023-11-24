@@ -67,15 +67,18 @@ const Column = styled.div`
 
 export const PegInEcashCard = () => {
   const federations: Federation[] = useGatewayFederations();
-  const [selectedFederation, setSelectedFederation] =
-    useState<Federation | null>(null);
+  const [selectedFederation, setSelectedFederation] = useState<number>(0);
   const [address, setAddress] = useState('');
 
   const handleFetchPegInAddress = () => {
-    if (!selectedFederation) return;
-    gatewayApi.fetchAddress(selectedFederation.federation_id).then(address => {
-      setAddress(address);
-    });
+    gatewayApi
+      .fetchAddress(federations[selectedFederation].federation_id)
+      .then(address => {
+        setAddress(address);
+      })
+      .catch(e => {
+        toast.error('Error fetching peg out address', e);
+      });
   };
 
   return (

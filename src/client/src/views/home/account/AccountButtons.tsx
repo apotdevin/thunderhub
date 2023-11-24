@@ -39,10 +39,10 @@ export const AccountButtons = () => {
         return <SendOnChainCard setOpen={() => setState('none')} />;
       case 'receive_chain':
         return <ReceiveOnChainCard />;
-      case 'pegin_ecash':
-        return <PegInEcashCard />;
       case 'pegout_ecash':
         return <PegOutEcashCard setOpen={() => setState('none')} />;
+      case 'pegin_ecash':
+        return <PegInEcashCard />;
       default:
         return null;
     }
@@ -102,19 +102,6 @@ export const AccountButtons = () => {
           Receive
         </ColorButton>
         <ColorButton
-          withBorder={state === 'pegin_ecash'}
-          onClick={() =>
-            setState(state === 'pegin_ecash' ? 'none' : 'pegin_ecash')
-          }
-        >
-          {state === 'pegin_ecash' ? (
-            <X size={18} color={SECTION_COLOR} />
-          ) : (
-            <Book size={18} color={SECTION_COLOR} />
-          )}
-          Peg In
-        </ColorButton>
-        <ColorButton
           withBorder={state === 'pegout_ecash'}
           onClick={() =>
             setState(state === 'pegout_ecash' ? 'none' : 'pegout_ecash')
@@ -126,6 +113,19 @@ export const AccountButtons = () => {
             <Book size={18} color={SECTION_COLOR} />
           )}
           Peg Out
+        </ColorButton>
+        <ColorButton
+          withBorder={state === 'pegin_ecash'}
+          onClick={() =>
+            setState(state === 'pegin_ecash' ? 'none' : 'pegin_ecash')
+          }
+        >
+          {state === 'pegin_ecash' ? (
+            <X size={18} color={SECTION_COLOR} />
+          ) : (
+            <Book size={18} color={SECTION_COLOR} />
+          )}
+          Peg In
         </ColorButton>
       </S.grid>
       {state !== 'none' && <Card>{renderContent()}</Card>}
