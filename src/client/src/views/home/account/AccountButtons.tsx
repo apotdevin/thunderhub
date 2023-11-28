@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Anchor, X, Zap, Book } from 'react-feather';
+import { Anchor, X, Zap, Sun } from 'react-feather';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Card } from '../../../components/generic/Styled';
 import { mediaWidths } from '../../../styles/Themes';
@@ -110,7 +110,7 @@ export const AccountButtons = () => {
           {state === 'pegout_ecash' ? (
             <X size={18} color={SECTION_COLOR} />
           ) : (
-            <Book size={18} color={SECTION_COLOR} />
+            <Sun size={18} color={SECTION_COLOR} />
           )}
           Peg Out
         </ColorButton>
@@ -123,7 +123,7 @@ export const AccountButtons = () => {
           {state === 'pegin_ecash' ? (
             <X size={18} color={SECTION_COLOR} />
           ) : (
-            <Book size={18} color={SECTION_COLOR} />
+            <Sun size={18} color={SECTION_COLOR} />
           )}
           Peg In
         </ColorButton>

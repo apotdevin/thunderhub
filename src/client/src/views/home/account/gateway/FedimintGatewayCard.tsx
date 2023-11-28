@@ -20,6 +20,8 @@ interface FedimintGatewayCardProps {
   gatewayInfo: GatewayInfo;
 }
 
+const sectionColor = '#FFD300';
+
 export const FedimintGatewayCard = ({
   gatewayInfo,
 }: FedimintGatewayCardProps) => {
@@ -45,7 +47,7 @@ export const FedimintGatewayCard = ({
     <CardWithTitle>
       <Card>
         <SingleLine>
-          <Sun size={18} />
+          <Sun size={18} color={sectionColor} />
           <SubTitle>Fedimint Ecash</SubTitle>
         </SingleLine>
         <Separation />
