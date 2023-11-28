@@ -27,7 +27,7 @@ interface GeneralProps {
 const GeneralButton = styled.button<GeneralProps>`
   min-height: 38px;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   cursor: pointer;
   outline: none;
