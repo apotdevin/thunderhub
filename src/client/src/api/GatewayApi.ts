@@ -19,6 +19,12 @@ export class GatewayApi {
       );
     }
 
+    if (this.password === undefined) {
+      throw new Error(
+        'Misconfigured Gateway API. Make sure gateway password is configured appropriately'
+      );
+    }
+
     return fetch(`${this.baseUrl}/${api}`, {
       method: 'POST',
       headers: {
@@ -40,7 +46,6 @@ export class GatewayApi {
 
       throw responseToError(res);
     } catch (error) {
-      console.log(`baseUrl`, this.baseUrl);
       return Promise.reject({ message: 'Error fetching gateway info', error });
     }
   };
@@ -110,5 +115,3 @@ export class GatewayApi {
 const responseToError = (res: Response): Error => {
   return new Error(`Status : ${res.status} \nReason : ${res.statusText}\n`);
 };
-
-export const gatewayApi = new GatewayApi();
