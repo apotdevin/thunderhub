@@ -114,3 +114,5 @@ class GatewayApi {
 const responseToError = (res: Response): Error => {
   return new Error(`Status : ${res.status} \nReason : ${res.statusText}\n`);
 };
+
+export const gatewayApi = new GatewayApi();
