@@ -8,7 +8,7 @@ import { GatewayInfo, Federation } from './types';
 const { publicRuntimeConfig } = getConfig();
 
 // GatewayApi is an implementation of the ApiInterface
-export class GatewayApi {
+class GatewayApi {
   private baseUrl: string | undefined = publicRuntimeConfig.fmGatewayUrl;
   private password: string | undefined = publicRuntimeConfig.fmGatewayPassword;
 
@@ -115,3 +115,5 @@ export class GatewayApi {
 const responseToError = (res: Response): Error => {
   return new Error(`Status : ${res.status} \nReason : ${res.statusText}\n`);
 };
+
+export const gatewayApi = new GatewayApi();
