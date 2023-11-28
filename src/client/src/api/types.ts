@@ -22,8 +22,13 @@ interface ApiEndpoint {
 
 export type MetaConfig = { federation_name?: string };
 
+export type ConsensusVersion = {
+  major: number;
+  minor: number;
+};
+
 export interface ClientConfig {
-  consensus_version: number;
+  consensus_version: ConsensusVersion;
   epoch_pk: string;
   federation_id: string;
   api_endpoints: Record<number, ApiEndpoint>;

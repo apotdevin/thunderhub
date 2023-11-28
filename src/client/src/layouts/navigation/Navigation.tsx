@@ -2,6 +2,7 @@ import React, { FC, SVGAttributes } from 'react';
 import styled, { css } from 'styled-components';
 import {
   Home,
+  Sun,
   Cpu,
   Server,
   Settings,
@@ -123,6 +124,7 @@ const BurgerNav = styled.a<NavProps>`
 `;
 
 const HOME = '/';
+const FEDIMINTS = '/fedimints';
 const DASHBOARD = '/dashboard';
 const PEERS = '/peers';
 const CHANNEL = '/channels';
@@ -180,6 +182,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const renderLinks = () => (
     <ButtonSection isOpen={sidebar}>
       {renderNavButton('Home', HOME, Home, sidebar)}
+      {renderNavButton('Fedimints', FEDIMINTS, Sun, sidebar)}
       {renderNavButton('Dashboard', DASHBOARD, Grid, sidebar)}
       {renderNavButton('Peers', PEERS, Users, sidebar)}
       {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
