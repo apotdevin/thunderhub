@@ -10,14 +10,16 @@ import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 import { SendOnChainCard } from './sendOnChain/SendOnChain';
 import { PegInEcashCard } from './pegInEcash/PegInEcash';
 import { PegOutEcashCard } from './pegOutEcash/PegOutEcash';
+import { useGatewayState } from '../../../context/GatewayContext';
 
 const SECTION_COLOR = '#FFD300';
 
 const S = {
-  grid: styled.div`
+  grid: styled.div<{ federations: number }>`
     display: grid;
     grid-gap: 8px;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: ${({ federations }) =>
+      federations > 0 ? '1fr 1fr 1fr 1fr 1fr 1fr' : '1fr 1fr 1fr 1fr'};
     margin-bottom: 32px;
 
     @media (${mediaWidths.modifiedMobile}) {
@@ -28,6 +30,7 @@ const S = {
 
 export const AccountButtons = () => {
   const [state, setState] = useState<string>('none');
+  const { gatewayInfo } = useGatewayState();
 
   const renderContent = () => {
     switch (state) {
@@ -50,7 +53,7 @@ export const AccountButtons = () => {
 
   return (
     <>
-      <S.grid>
+      <S.grid federations={gatewayInfo?.federations.length || 0}>
         <ColorButton
           withBorder={state === 'send_ln'}
           onClick={() => setState(state === 'send_ln' ? 'none' : 'send_ln')}
@@ -101,49 +104,36 @@ export const AccountButtons = () => {
           )}
           Receive
         </ColorButton>
-        <ColorButton
-          withBorder={state === 'pegout_ecash'}
-          onClick={() =>
-            setState(state === 'pegout_ecash' ? 'none' : 'pegout_ecash')
-          }
-        >
-          {state === 'pegout_ecash' ? (
-            <X size={18} color={SECTION_COLOR} />
-          ) : (
-            <Sun size={18} color={SECTION_COLOR} />
-          )}
-          Peg Out
-        </ColorButton>
-<<<<<<< HEAD
-        <ColorButton
-          withBorder={state === 'pegin_ecash'}
-          onClick={() =>
-            setState(state === 'pegin_ecash' ? 'none' : 'pegin_ecash')
-          }
-        >
-          {state === 'pegin_ecash' ? (
-            <X size={18} color={SECTION_COLOR} />
-          ) : (
-            <Sun size={18} color={SECTION_COLOR} />
-          )}
-          Peg In
-        </ColorButton>
-||||||| parent of 51c324fe (fix: fix peg out command)
-=======
-        <ColorButton
-          withBorder={state === 'pegin_ecash'}
-          onClick={() =>
-            setState(state === 'pegin_ecash' ? 'none' : 'pegin_ecash')
-          }
-        >
-          {state === 'pegin_ecash' ? (
-            <X size={18} color={SECTION_COLOR} />
-          ) : (
-            <Book size={18} color={SECTION_COLOR} />
-          )}
-          Peg In
-        </ColorButton>
->>>>>>> 51c324fe (fix: fix peg out command)
+        {gatewayInfo?.federations && gatewayInfo?.federations.length > 0 && (
+          <ColorButton
+            withBorder={state === 'pegout_ecash'}
+            onClick={() =>
+              setState(state === 'pegout_ecash' ? 'none' : 'pegout_ecash')
+            }
+          >
+            {state === 'pegout_ecash' ? (
+              <X size={18} color={SECTION_COLOR} />
+            ) : (
+              <Sun size={18} color={SECTION_COLOR} />
+            )}
+            Peg Out
+          </ColorButton>
+        )}
+        {gatewayInfo?.federations && gatewayInfo?.federations.length > 0 && (
+          <ColorButton
+            withBorder={state === 'pegin_ecash'}
+            onClick={() =>
+              setState(state === 'pegin_ecash' ? 'none' : 'pegin_ecash')
+            }
+          >
+            {state === 'pegin_ecash' ? (
+              <X size={18} color={SECTION_COLOR} />
+            ) : (
+              <Sun size={18} color={SECTION_COLOR} />
+            )}
+            Peg In
+          </ColorButton>
+        )}
       </S.grid>
       {state !== 'none' && <Card>{renderContent()}</Card>}
     </>
