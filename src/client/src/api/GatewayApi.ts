@@ -89,7 +89,7 @@ class GatewayApi {
 
   requestWithdrawal = async (
     federationId: string,
-    amountSat: number,
+    amountSat: number | 'all',
     address: string
   ): Promise<string> => {
     try {

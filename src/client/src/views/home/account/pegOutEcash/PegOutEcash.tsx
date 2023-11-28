@@ -46,9 +46,7 @@ export const PegOutEcashCard = ({ setOpen }: { setOpen: () => void }) => {
     tokenAmount: { sendAll?: boolean; tokens?: number },
     address: string
   ) => {
-    const amountSat = sendAll
-      ? federations[selectedFederation].balance_msat
-      : tokenAmount.tokens || 0;
+    const amountSat = sendAll ? 'all' : tokenAmount.tokens || 0;
     gatewayApi
       .requestWithdrawal(
         federations[federationIdx].federation_id,
@@ -238,7 +236,7 @@ export const PegOutEcashCard = ({ setOpen }: { setOpen: () => void }) => {
         <SingleLine>
           <SubTitle>Send to Address</SubTitle>
         </SingleLine>
-        {renderLine('Amount:', sendAll ? 'All' : <Price amount={tokens} />)}
+        {renderLine('Amount:', sendAll ? 'all' : <Price amount={tokens} />)}
         {renderLine('Address:', address)}
         {renderLine(
           'Fee:',
