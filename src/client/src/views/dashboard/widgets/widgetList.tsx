@@ -3,6 +3,7 @@ import { MempoolWidget } from './external/mempool';
 import {
   ChainBalance,
   ChannelBalance,
+  FedimintBalance,
   TotalBalance,
 } from './lightning/balances';
 import { ChannelListWidget } from './lightning/channels';
@@ -109,6 +110,14 @@ export const widgetList: WidgetProps[] = [
     group: 'Lightning',
     subgroup: 'Info',
     component: ChainBalance,
+    default: { ...defaultProps, w: 2, h: 3 },
+  },
+  {
+    id: 6,
+    name: 'Fedimint Balance',
+    group: 'Lightning',
+    subgroup: 'Info',
+    component: FedimintBalance,
     default: { ...defaultProps, w: 2, h: 3 },
   },
   {

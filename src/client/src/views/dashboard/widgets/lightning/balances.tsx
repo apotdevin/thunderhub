@@ -3,6 +3,7 @@ import { useNodeBalances } from '../../../../hooks/UseNodeBalances';
 import { unSelectedNavButton } from '../../../../styles/Themes';
 import styled from 'styled-components';
 import Big from 'big.js';
+import { useGatewayEcashTotal } from '../../../../hooks/UseGatewayEcashTotal';
 
 const S = {
   wrapper: styled.div`
@@ -79,6 +80,19 @@ export const ChainBalance = () => {
           <Price amount={onchain.pending} />
         </S.pending>
       ) : null}
+    </S.wrapper>
+  );
+};
+
+export const FedimintBalance = () => {
+  const totalFedimintEcash = useGatewayEcashTotal();
+
+  return (
+    <S.wrapper>
+      <S.pending>Fedimint Balance</S.pending>
+      <S.smallTotal>
+        <Price amount={totalFedimintEcash} />
+      </S.smallTotal>
     </S.wrapper>
   );
 };
