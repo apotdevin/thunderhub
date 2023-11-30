@@ -99,6 +99,7 @@
       },
       "locked": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "lastModified": 1701469066,
         "narHash": "sha256-3pt8qUfaUvQRl1gWY2Qkk4MRBbzpYtId/rdTitLffBQ=",
 ||||||| parent of 8bdccdae (feat: fedimint 0.2 api updates)
@@ -108,8 +109,16 @@
         "lastModified": 1701034148,
         "narHash": "sha256-e2+nccJSCqprcE5Tr9/6UU7ctYcozk1xglGTa9jbEBs=",
 >>>>>>> 8bdccdae (feat: fedimint 0.2 api updates)
+||||||| parent of d29320cb (fix: hold)
+        "lastModified": 1701034148,
+        "narHash": "sha256-e2+nccJSCqprcE5Tr9/6UU7ctYcozk1xglGTa9jbEBs=",
+=======
+        "lastModified": 1701251322,
+        "narHash": "sha256-og7C8Q19KsHf4HCsgiI1CbNEWk4kUcArtiitWteTXpw=",
+>>>>>>> d29320cb (fix: hold)
         "owner": "fedimint",
         "repo": "fedimint",
+<<<<<<< HEAD
 <<<<<<< HEAD
         "rev": "f316e987aaf1a81b1626f7e418318ca683e0a47a",
 ||||||| parent of 8bdccdae (feat: fedimint 0.2 api updates)
@@ -117,17 +126,28 @@
 =======
         "rev": "f47e6638c98c75a8c146144a69d236b4763848bf",
 >>>>>>> 8bdccdae (feat: fedimint 0.2 api updates)
+||||||| parent of d29320cb (fix: hold)
+        "rev": "f47e6638c98c75a8c146144a69d236b4763848bf",
+=======
+        "rev": "bbe587845935517df8a36b9b2a6b98fa4bc1e19e",
+>>>>>>> d29320cb (fix: hold)
         "type": "github"
       },
       "original": {
         "owner": "fedimint",
         "repo": "fedimint",
 <<<<<<< HEAD
+<<<<<<< HEAD
 ||||||| parent of 8bdccdae (feat: fedimint 0.2 api updates)
         "rev": "f58f1913e62b6529a2ff36ec5c89a3852aba7ca7",
 =======
         "rev": "f47e6638c98c75a8c146144a69d236b4763848bf",
 >>>>>>> 8bdccdae (feat: fedimint 0.2 api updates)
+||||||| parent of d29320cb (fix: hold)
+        "rev": "f47e6638c98c75a8c146144a69d236b4763848bf",
+=======
+        "rev": "bbe587845935517df8a36b9b2a6b98fa4bc1e19e",
+>>>>>>> d29320cb (fix: hold)
         "type": "github"
       }
     },
