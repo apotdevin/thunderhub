@@ -154,6 +154,14 @@ export const RightAlign = styled.div`
   align-items: center;
 `;
 
+export const LeftAlign = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+`;
+
 export const ColumnLine = styled.div`
   display: flex;
   flex-direction: column;

@@ -200,6 +200,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const renderBurger = () => (
     <BurgerRow>
       {renderBurgerNav('Home', HOME, Home)}
+      {renderBurgerNav('Fedimints', FEDIMINTS, Sun)}
       {renderBurgerNav('Dashboard', DASHBOARD, Grid)}
       {renderBurgerNav('Peers', PEERS, Users)}
       {renderBurgerNav('Channels', CHANNEL, Cpu)}

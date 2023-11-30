@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Anchor, X, Zap, Sun } from 'react-feather';
+import { Link, X, Zap, Sun } from 'react-feather';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Card } from '../../../components/generic/Styled';
 import { mediaWidths } from '../../../styles/Themes';
@@ -84,7 +84,7 @@ export const AccountButtons = () => {
           {state === 'send_chain' ? (
             <X size={18} color={SECTION_COLOR} />
           ) : (
-            <Anchor size={18} color={SECTION_COLOR} />
+            <Link size={18} color={SECTION_COLOR} />
           )}
           Send
         </ColorButton>
@@ -97,7 +97,7 @@ export const AccountButtons = () => {
           {state === 'receive_chain' ? (
             <X size={18} color={SECTION_COLOR} />
           ) : (
-            <Anchor size={18} color={SECTION_COLOR} />
+            <Link size={18} color={SECTION_COLOR} />
           )}
           Receive
         </ColorButton>

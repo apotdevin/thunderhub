@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Card,
   CardWithTitle,
+  LeftAlign,
   Separation,
   SingleLine,
   SubTitle,
@@ -46,10 +47,10 @@ export const FedimintGatewayCard = ({
   return (
     <CardWithTitle>
       <Card>
-        <SingleLine>
+        <LeftAlign>
           <Sun size={18} color={sectionColor} />
           <SubTitle>Fedimint Ecash</SubTitle>
-        </SingleLine>
+        </LeftAlign>
         <Separation />
         {!gatewayInfo.federations || gatewayInfo.federations.length === 0 ? (
           <>

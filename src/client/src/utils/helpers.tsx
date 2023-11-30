@@ -1,5 +1,5 @@
 import numeral from 'numeral';
-import { SatoshiSymbol } from '../components/satoshi/Satoshi';
+// import { SatoshiSymbol } from '../components/satoshi/Satoshi';
 import { unSelectedNavButton } from '../styles/Themes';
 import styled from 'styled-components';
 
@@ -87,8 +87,7 @@ export const getValue = ({
 
     return (
       <>
-        {breakAmount}
-        <SatoshiSymbol color={'grey'} transform={'translate(0,2)'} />
+        {breakAmount} {'sats'}
       </>
     );
   }
