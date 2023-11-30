@@ -34,6 +34,21 @@ const S = {
   `,
 };
 
+// const Tile = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-between;
+//   align-items: ${({ startTile }: { startTile?: boolean }) =>
+//     startTile ? 'flex-start' : 'flex-end'};
+
+//   @media (${mediaWidths.mobile}) {
+//     width: 100%;
+//     flex-direction: row;
+//     align-items: flex-end;
+//     margin: 0 0 8px;
+//   }
+// `;
+
 const sectionColor = '#FFD300';
 
 export const AccountInfo = () => {
