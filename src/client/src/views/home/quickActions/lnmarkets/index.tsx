@@ -11,7 +11,7 @@ import { useLnMarketsLoginMutation } from '../../../../graphql/mutations/__gener
 import { useGetLnMarketsStatusQuery } from '../../../../graphql/queries/__generated__/getLnMarketsStatus.generated';
 import { getErrorContent } from '../../../../utils/error';
 import getConfig from 'next/config';
-import { QuickCard, QuickTitle } from '../QuickActions';
+import { QuickCard, QuickTitle } from '../MainnetQuickActions';
 
 const { publicRuntimeConfig } = getConfig();
 const { disableLnMarkets } = publicRuntimeConfig;

@@ -7,10 +7,9 @@ import { MempoolReport } from '../src/views/home/reports/mempool';
 import { LiquidityGraph } from '../src/views/home/reports/liquidReport/LiquidityGraph';
 import { AccountButtons } from '../src/views/home/account/AccountButtons';
 import { AccountInfo } from '../src/views/home/account/AccountInfo';
-import { QuickActions } from '../src/views/home/quickActions/QuickActions';
-import { FlowBox } from '../src/views/home/reports/flow';
 import { ForwardBox } from '../src/views/home/reports/forwardReport';
 import { ConnectCard } from '../src/views/home/connect/Connect';
+import { QuickActions } from '../src/views/home/quickActions/QuickActions';
 
 const HomeView = () => (
   <>
@@ -19,7 +18,6 @@ const HomeView = () => (
     <AccountButtons />
     <ConnectCard />
     <QuickActions />
-    <FlowBox />
     <LiquidityGraph />
     <ForwardBox />
     <MempoolReport />
