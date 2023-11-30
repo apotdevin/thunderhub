@@ -58,10 +58,10 @@ export const Card = styled.div<CardProps>`
             padding: ${mobileCardPadding};
           `
         : cardPadding
-        ? css`
-            padding: ${cardPadding};
-          `
-        : ''};
+          ? css`
+              padding: ${cardPadding};
+            `
+          : ''};
   }
 `;
 

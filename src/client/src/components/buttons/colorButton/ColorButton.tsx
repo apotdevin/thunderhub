@@ -48,20 +48,20 @@ const GeneralButton = styled.button<GeneralProps>`
             margin: ${mobileMargin};
           `
         : withMargin
-        ? css`
-            margin: ${withMargin};
-          `
-        : '0'};
+          ? css`
+              margin: ${withMargin};
+            `
+          : '0'};
     ${({ fullWidth, mobileFullWidth }) =>
       mobileFullWidth
         ? css`
             width: 100%;
           `
         : fullWidth
-        ? css`
-            width: 100%;
-          `
-        : ''};
+          ? css`
+              width: 100%;
+            `
+          : ''};
   }
 `;
 
@@ -88,8 +88,8 @@ const BorderButton = styled(GeneralButton)<BorderProps>`
           ? borderColor
           : colorButtonBorder
         : selected
-        ? colorButtonBorder
-        : colorButtonBorderTwo};
+          ? colorButtonBorder
+          : colorButtonBorderTwo};
 
   &:hover {
     ${({ borderColor, selected }: BorderProps) =>

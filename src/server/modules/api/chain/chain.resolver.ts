@@ -65,8 +65,8 @@ export class ChainResolver {
     const props = fee
       ? { fee_tokens_per_vbyte: fee }
       : target
-      ? { target_confirmations: target }
-      : {};
+        ? { target_confirmations: target }
+        : {};
 
     const hasTokens = tokens && !sendAllFlag ? { tokens } : {};
     const sendAll = sendAllFlag ? { is_send_all: true } : {};

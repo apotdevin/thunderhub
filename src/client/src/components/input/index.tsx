@@ -45,20 +45,20 @@ export const StyledInput = styled.input<InputProps>`
             margin: ${mobileMargin};
           `
         : withMargin
-        ? css`
-            margin: ${withMargin};
-          `
-        : ''};
+          ? css`
+              margin: ${withMargin};
+            `
+          : ''};
     ${({ fullWidth, mobileFullWidth }) =>
       mobileFullWidth
         ? css`
             width: 100%;
           `
         : fullWidth
-        ? css`
-            width: 100%;
-          `
-        : ''};
+          ? css`
+              width: 100%;
+            `
+          : ''};
   }
 
   &:hover {

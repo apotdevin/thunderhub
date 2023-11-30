@@ -69,8 +69,8 @@ export const OpenChannelCard = ({
     pushType === 'none'
       ? 0
       : pushType === 'half'
-      ? size / 2
-      : Math.min(pushTokens, size * 0.9);
+        ? size / 2
+        : Math.min(pushTokens, size * 0.9);
 
   useEffect(() => {
     if (type === 'none' && fee === 0) {

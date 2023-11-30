@@ -187,8 +187,8 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
           date: total.date
             ? total.date
             : isDay
-            ? subHours(today, Number(key)).toISOString()
-            : subDays(today, Number(key)).toISOString(),
+              ? subHours(today, Number(key)).toISOString()
+              : subDays(today, Number(key)).toISOString(),
         };
       },
       {
