@@ -91,6 +91,7 @@ export const dummyFederation = {
 ||||||| parent of 17bf936c (feat: refactor to gateway context pattern)
 =======
 
+// For testing
 export const dummyFederation = {
   federation_id: 'test_federation_id',
   balance_msat: 1000,

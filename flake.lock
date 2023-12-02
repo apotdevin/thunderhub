@@ -101,6 +101,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         "lastModified": 1701469066,
         "narHash": "sha256-3pt8qUfaUvQRl1gWY2Qkk4MRBbzpYtId/rdTitLffBQ=",
 ||||||| parent of 8bdccdae (feat: fedimint 0.2 api updates)
@@ -124,8 +125,16 @@
         "lastModified": 1701034148,
         "narHash": "sha256-e2+nccJSCqprcE5Tr9/6UU7ctYcozk1xglGTa9jbEBs=",
 >>>>>>> 7f9cb0f7 (feat: skyler updates)
+||||||| parent of 02175d04 (feat: bump fedimint version for multifederation support)
+        "lastModified": 1701034148,
+        "narHash": "sha256-e2+nccJSCqprcE5Tr9/6UU7ctYcozk1xglGTa9jbEBs=",
+=======
+        "lastModified": 1701469066,
+        "narHash": "sha256-3pt8qUfaUvQRl1gWY2Qkk4MRBbzpYtId/rdTitLffBQ=",
+>>>>>>> 02175d04 (feat: bump fedimint version for multifederation support)
         "owner": "fedimint",
         "repo": "fedimint",
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -145,11 +154,17 @@
 =======
         "rev": "f47e6638c98c75a8c146144a69d236b4763848bf",
 >>>>>>> 7f9cb0f7 (feat: skyler updates)
+||||||| parent of 02175d04 (feat: bump fedimint version for multifederation support)
+        "rev": "f47e6638c98c75a8c146144a69d236b4763848bf",
+=======
+        "rev": "f316e987aaf1a81b1626f7e418318ca683e0a47a",
+>>>>>>> 02175d04 (feat: bump fedimint version for multifederation support)
         "type": "github"
       },
       "original": {
         "owner": "fedimint",
         "repo": "fedimint",
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -168,6 +183,10 @@
 =======
         "rev": "f47e6638c98c75a8c146144a69d236b4763848bf",
 >>>>>>> 7f9cb0f7 (feat: skyler updates)
+||||||| parent of 02175d04 (feat: bump fedimint version for multifederation support)
+        "rev": "f47e6638c98c75a8c146144a69d236b4763848bf",
+=======
+>>>>>>> 02175d04 (feat: bump fedimint version for multifederation support)
         "type": "github"
       }
     },
