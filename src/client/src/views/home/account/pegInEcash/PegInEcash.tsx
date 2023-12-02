@@ -70,6 +70,11 @@ export const PegInEcashCard = () => {
   const [selectedFederation, setSelectedFederation] = useState<number>(0);
   const [address, setAddress] = useState('');
 
+  const options = federations.map(f => ({
+    label: f.config.meta.federation_name || 'No connected Federations',
+    value: f.federation_id || 'No connected Federations',
+  }));
+
   const handleFetchPegInAddress = () => {
     gatewayApi
       .fetchAddress(federations[selectedFederation].federation_id)
@@ -108,21 +113,13 @@ export const PegInEcashCard = () => {
               <SubTitle>Into Federation:</SubTitle>
               {federations.length > 0 && (
                 <SmallSelectWithValue
-                  callback={e => setSelectedFederation(e[0] as any)}
-                  options={federations.map(f => ({
-                    label:
-                      f.config.meta.federation_name ||
-                      'No connected Federations',
-                    value: f.federation_id || 'No connected Federations',
-                  }))}
-                  value={{
-                    label:
-                      federations[0].config.meta.federation_name ||
-                      'No connected Federations',
-                    value:
-                      federations[0].federation_id ||
-                      'No connected Federations',
-                  }}
+                  callback={e =>
+                    setSelectedFederation(
+                      federations.findIndex(f => f.federation_id === e[0].value)
+                    )
+                  }
+                  options={options}
+                  value={options[selectedFederation]}
                   isClearable={false}
                 />
               )}

@@ -53,14 +53,15 @@ export interface GatewayInfo {
 
 // Type adaptation from https://docs.rs/bitcoin/latest/bitcoin/network/enum.Network.html
 export enum Network {
-  Bitcoin = 'main',
-  Testnet = 'test',
+  Bitcoin = 'bitcoin',
+  Testnet = 'testnet',
   Signet = 'signet',
   Regtest = 'regtest',
 }
 
 export type TransactionId = string;
 
+// For testing
 export const dummyFederation = {
   federation_id: 'test_federation_id',
   balance_msat: 1000,

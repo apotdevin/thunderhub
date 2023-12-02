@@ -101,7 +101,6 @@ class GatewayApi {
 
       if (res.ok) {
         const txid: string = await res.text();
-        console.log('txid', txid);
         return Promise.resolve(txid);
       }
 

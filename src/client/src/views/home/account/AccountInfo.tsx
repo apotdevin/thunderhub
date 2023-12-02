@@ -28,46 +28,17 @@ const S = {
     grid-template-columns: ${({ gatewayInfo }) =>
       gatewayInfo ? '1fr 1fr 1fr' : '1fr 1fr'};
 
-    @media (${mediaWidths.mobile}) {
+    @media (${mediaWidths.modifiedMobile}) {
       display: block;
     }
   `,
 };
-
-// const Tile = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: space-between;
-//   align-items: ${({ startTile }: { startTile?: boolean }) =>
-//     startTile ? 'flex-start' : 'flex-end'};
-
-//   @media (${mediaWidths.mobile}) {
-//     width: 100%;
-//     flex-direction: row;
-//     align-items: flex-end;
-//     margin: 0 0 8px;
-//   }
-// `;
 
 const sectionColor = '#FFD300';
 
 export const AccountInfo = () => {
   const { onchain, lightning } = useNodeBalances();
   const { gatewayInfo } = useGatewayState();
-  // const totalFedimintEcash = useGatewayEcashTotal();
-
-  // const totalAmount = new Big(onchain.confirmed)
-  //   .add(onchain.pending)
-  //   .add(onchain.closing)
-  //   .add(lightning.confirmed)
-  //   .add(lightning.pending)
-  //   .add(totalFedimintEcash)
-  //   .toString();
-
-  // const totalChain = new Big(onchain.confirmed).add(onchain.pending).toString();
-  // const totalLightning = new Big(lightning.confirmed)
-  //   .add(lightning.pending)
-  //   .toString();
 
   const activeLightning = new Big(lightning.active)
     .sub(lightning.commit)

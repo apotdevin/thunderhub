@@ -20,7 +20,7 @@ const S = {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     margin-bottom: 32px;
 
-    @media (${mediaWidths.mobile}) {
+    @media (${mediaWidths.modifiedMobile}) {
       grid-template-columns: 1fr 1fr;
     }
   `,

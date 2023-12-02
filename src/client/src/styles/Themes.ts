@@ -43,9 +43,11 @@ export const fontColors = {
 
 export const mediaDimensions = {
   mobile: 700,
+  modifiedMobile: 950,
 };
 export const mediaWidths = {
   mobile: `max-width: ${mediaDimensions.mobile}px`,
+  modifiedMobile: `max-width: ${mediaDimensions.modifiedMobile}px`,
 };
 
 // ---------------------------------------
