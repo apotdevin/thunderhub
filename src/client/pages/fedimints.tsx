@@ -8,11 +8,14 @@ import {
   Card,
   DarkSubTitle,
 } from '../src/components/generic/Styled';
+import { X } from 'react-feather';
 import { AddMint } from '../src/views/fedimints/AddMint';
 import Table from '../src/components/table';
 import { useGatewayFederations } from '../src/hooks/UseGatewayFederations';
 import { Federation } from '../src/api/types';
 import { CellContext } from '@tanstack/react-table';
+import { toast } from 'react-toastify';
+import { Price } from '../src/components/price/Price';
 
 const FedimintsView = () => {
   const federations = useGatewayFederations();
@@ -40,34 +43,45 @@ const FedimintsView = () => {
         ),
       },
       {
-        header: 'Federation ID',
-        accessorKey: 'federation_id',
-        cell: (props: CellContext<Federation, any>) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
-            {`${props.row.original.federation_id.slice(
-              0,
-              6
-            )}...${props.row.original.federation_id.slice(-6)}`}
-          </div>
-        ),
-      },
-      {
-        header: 'Balance (msat)',
+        header: 'Balance',
         accessorKey: 'balance_msat',
         cell: (props: CellContext<Federation, any>) => (
           <div style={{ whiteSpace: 'nowrap' }}>
-            {props.row.original.balance_msat}
+            <Price amount={props.row.original.balance_msat / 1000} />
           </div>
         ),
       },
       {
-        header: 'Consensus Version',
-        accessorKey: 'consensus_version',
+        header: 'Suported Modules',
+        accessorKey: 'modules',
         cell: (props: CellContext<Federation, any>) => (
           <div style={{ whiteSpace: 'nowrap' }}>
-            {props.row.original.config.consensus_version.major +
-              '.' +
-              props.row.original.config.consensus_version.minor}
+            {Object.values(props.row.original.config.modules)
+              .map(module => module.kind)
+              .join(', ')}
+          </div>
+        ),
+      },
+      {
+        header: 'Leave',
+        accessorKey: 'leave',
+        cell: (props: CellContext<Federation, any>) => (
+          <div
+            style={{
+              display: 'flex',
+              whiteSpace: 'nowrap',
+              cursor: 'pointer',
+              justifyContent: 'center',
+            }}
+            onClick={() => {
+              if (props.row.original.balance_msat > 0) {
+                toast.error("Can't leave a federation you've got sats in!");
+              } else {
+                toast.warn('Not implemented yet!');
+              }
+            }}
+          >
+            <X />
           </div>
         ),
       },

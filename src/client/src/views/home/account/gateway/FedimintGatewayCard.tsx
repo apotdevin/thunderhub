@@ -40,10 +40,6 @@ export const FedimintGatewayCard = ({
     });
   };
 
-  const formatFederationId = (id: string) => {
-    return `${id.slice(0, 6)}...${id.slice(-6)}`;
-  };
-
   return (
     <CardWithTitle>
       <Card>
@@ -75,18 +71,14 @@ export const FedimintGatewayCard = ({
             </SingleLine>
           </>
         ) : (
-          <div style={{ margin: '0px 0px 8px 0px' }}>
+          <div style={{ margin: '0px 0px 8px 0px', minHeight: '54px' }}>
             {renderLine(
-              'Amount',
+              'Total Amount',
               <Price amount={gatewayInfo.federations[0].balance_msat} />
             )}
             {renderLine(
-              'Federation',
-              gatewayInfo.federations[0].config.meta.federation_name
-            )}
-            {renderLine(
-              'ID',
-              formatFederationId(gatewayInfo.federations[0].federation_id)
+              'Connected Federations',
+              gatewayInfo.federations.length
             )}
           </div>
         )}
