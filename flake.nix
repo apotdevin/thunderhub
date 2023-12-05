@@ -2,7 +2,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     flake-utils.url = "github:numtide/flake-utils";
-    fedimint = { url = "github:fedimint/fedimint?branch=releases/0.2"; };
+    fedimint = {
+      url =
+        "github:fedimint/fedimint?rev=24113a64b270bf2ecb49b8f4554ba975025711db";
+    };
   };
   outputs = { self, nixpkgs, flake-utils, fedimint }:
     flake-utils.lib.eachDefaultSystem (system:
