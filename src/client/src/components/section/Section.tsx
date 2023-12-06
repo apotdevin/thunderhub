@@ -10,19 +10,19 @@ interface FullWidthProps {
   textColor?: string | ThemeSet;
 }
 
-const FullWidth = styled.div`
+const FullWidth = styled.div<FullWidthProps>`
   width: 100%;
-  ${({ padding }: FullWidthProps) =>
+  ${({ padding }) =>
     padding &&
     css`
       padding: ${padding};
     `}
-  ${({ textColor }: FullWidthProps) =>
+  ${({ textColor }) =>
     textColor &&
     css`
       color: ${textColor};
     `}
-    background-color: ${({ sectionColor }: FullWidthProps) =>
+    background-color: ${({ sectionColor }) =>
     sectionColor ? sectionColor : backgroundColor};
 
   @media (${mediaWidths.mobile}) {

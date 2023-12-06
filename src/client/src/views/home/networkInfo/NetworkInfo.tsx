@@ -13,13 +13,12 @@ import { unSelectedNavButton, mediaWidths } from '../../../styles/Themes';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { Price } from '../../../components/price/Price';
 
-const Tile = styled.div`
+const Tile = styled.div<{ start?: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   margin: 0 16px;
-  align-items: ${({ start }: { start?: boolean }) =>
-    start ? 'flex-start' : 'flex-end'};
+  align-items: ${({ start }) => (start ? 'flex-start' : 'flex-end')};
 
   @media (${mediaWidths.mobile}) {
     margin: 0 0 8px;

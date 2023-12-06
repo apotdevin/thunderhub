@@ -43,7 +43,7 @@ const S = {
     justify-content: space-between;
     margin-bottom: 24px;
   `,
-  wrapper: styled.div`
+  wrapper: styled.div<StyledTableProps>`
     overflow-x: auto;
     table {
       width: 100%;
@@ -58,10 +58,10 @@ const S = {
       .cursor {
         cursor: pointer;
       }
-      ,
+
       th,
       td {
-        font-size: ${({ fontSize }: StyledTableProps) => fontSize || '14px'};
+        font-size: ${({ fontSize }) => fontSize || '14px'};
         text-align: left;
         margin: 0;
         padding: 8px;

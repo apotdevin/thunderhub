@@ -6,8 +6,8 @@ import {
 } from '../../../src/styles/Themes';
 import styled from 'styled-components';
 
-const StyledSlider = styled(ReactSlider)<{ maxWidth?: string }>`
-  max-width: ${({ maxWidth }) => maxWidth || '500px'};
+const StyledSlider = styled(ReactSlider)`
+  max-width: 440px;
   width: 100%;
   height: 38px;
   display: flex;
@@ -42,19 +42,11 @@ type SliderProps = {
   max: number;
   min: number;
   onChange: (value: number) => void;
-  maxWidth?: string;
 };
 
-export const Slider = ({
-  value,
-  max,
-  min,
-  onChange,
-  maxWidth,
-}: SliderProps) => {
+export const Slider = ({ value, max, min, onChange }: SliderProps) => {
   return (
     <StyledSlider
-      maxWidth={maxWidth}
       value={value}
       max={max}
       min={min}

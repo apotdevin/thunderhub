@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect } from 'react';
-import { ThemeProvider } from 'styled-components';
+import { StyleSheetManager, ThemeProvider } from 'styled-components';
 import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { AppProps } from 'next/app';
 import { ApolloProvider } from '@apollo/client';
@@ -17,6 +17,7 @@ import { SocketProvider } from '../src/context/SocketContext';
 import { useRouter } from 'next/router';
 import getConfig from 'next/config';
 import Head from 'next/head';
+import isPropValid from '@emotion/is-prop-valid';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 import 'react-grid-layout/css/styles.css';
@@ -25,6 +26,15 @@ import 'react-circular-progressbar/dist/styles.css';
 
 const { publicRuntimeConfig } = getConfig();
 const { logoutUrl } = publicRuntimeConfig;
+
+function shouldForwardProp(propName: string, target: any) {
+  if (typeof target === 'string') {
+    // For HTML elements, forward the prop if it is a valid HTML attribute
+    return isPropValid(propName);
+  }
+  // For other elements, forward all props
+  return true;
+}
 
 const NotAuthenticated: React.FC = () => {
   const { push } = useRouter();
@@ -80,21 +90,23 @@ export default function App({ Component, pageProps }: AppProps) {
   const apolloClient = useApollo(authToken, initialApolloState);
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <Head>
-        <title>ThunderHub - Lightning Node Manager</title>
-      </Head>
-      <ConfigProvider initialConfig={initialConfig}>
-        <BaseProvider initialHasToken={hasToken}>
-          <SocketProvider authToken={authToken}>
-            <ContextProvider>
-              <Wrapper authenticated={authenticated}>
-                <Component {...pageProps} />
-              </Wrapper>
-            </ContextProvider>
-          </SocketProvider>
-        </BaseProvider>
-      </ConfigProvider>
-    </ApolloProvider>
+    <StyleSheetManager shouldForwardProp={shouldForwardProp}>
+      <ApolloProvider client={apolloClient}>
+        <Head>
+          <title>ThunderHub - Lightning Node Manager</title>
+        </Head>
+        <ConfigProvider initialConfig={initialConfig}>
+          <BaseProvider initialHasToken={hasToken}>
+            <SocketProvider authToken={authToken}>
+              <ContextProvider>
+                <Wrapper authenticated={authenticated}>
+                  <Component {...pageProps} />
+                </Wrapper>
+              </ContextProvider>
+            </SocketProvider>
+          </BaseProvider>
+        </ConfigProvider>
+      </ApolloProvider>
+    </StyleSheetManager>
   );
 }

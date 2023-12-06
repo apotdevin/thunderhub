@@ -4,10 +4,9 @@ import styled from 'styled-components';
 import { CardWithTitle, CardTitle, SubTitle, Card } from '../generic/Styled';
 import { themeColors } from '../../styles/Themes';
 
-const Loading = styled.div`
+const Loading = styled.div<{ loadingHeight?: string }>`
   width: 100%;
-  height: ${({ loadingHeight }: { loadingHeight?: string }) =>
-    loadingHeight ? loadingHeight : 'auto'};
+  height: ${({ loadingHeight }) => (loadingHeight ? loadingHeight : 'auto')};
   display: flex;
   justify-content: center;
   align-items: center;

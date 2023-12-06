@@ -28,12 +28,11 @@ const S = {
   `,
 };
 
-const Tile = styled.div`
+const Tile = styled.div<{ startTile?: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: ${({ startTile }: { startTile?: boolean }) =>
-    startTile ? 'flex-start' : 'flex-end'};
+  align-items: ${({ startTile }) => (startTile ? 'flex-start' : 'flex-end')};
 
   @media (${mediaWidths.mobile}) {
     width: 100%;

@@ -37,11 +37,10 @@ const Title = styled.div`
   align-items: center;
 `;
 
-const Info = styled.div`
+const Info = styled.div<{ bottomColor: string }>`
   font-size: 14px;
   color: #bfbfbf;
-  border-bottom: 2px solid
-    ${({ bottomColor }: { bottomColor: string }) => bottomColor};
+  border-bottom: 2px solid ${({ bottomColor }) => bottomColor};
 `;
 
 const Balance = styled.div`
@@ -53,13 +52,12 @@ const Balance = styled.div`
   cursor: default;
 `;
 
-const Alias = styled.div`
+const Alias = styled.div<{ bottomColor: string }>`
   max-width: 200px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  border-bottom: 2px solid
-    ${({ bottomColor }: { bottomColor: string }) => bottomColor};
+  border-bottom: 2px solid ${({ bottomColor }) => bottomColor};
 `;
 
 interface NodeInfoProps {

@@ -13,14 +13,14 @@ export const Progress = styled.div`
   background: ${progressBackground};
 `;
 
-interface ProgressBar {
+type ProgressBar = {
   percent: number;
   order?: number;
   barHeight?: number;
-}
+};
 
-export const ProgressBar = styled.div.attrs(
-  ({ order, percent, barHeight }: ProgressBar) => {
+export const ProgressBar = styled.div.attrs<ProgressBar>(
+  ({ order, percent, barHeight }) => {
     let color: string | ThemeSet = chartColors.purple;
     switch (order) {
       case 1:
@@ -50,17 +50,14 @@ export const ProgressBar = styled.div.attrs(
     }
 
     return {
-      backgroundColor: color,
-      barHeight: barHeight ? `${barHeight}px` : '10px',
       style: {
+        'background-color': color,
+        height: barHeight ? `${barHeight}px` : '10px',
         width: `${percent}%`,
       },
     };
   }
-)`
-  background-color: ${({ backgroundColor }) => backgroundColor};
-  height: ${({ barHeight }) => barHeight};
-`;
+)``;
 
 export const NodeTitle = styled.div`
   font-size: 16px;
@@ -98,12 +95,12 @@ export const MainInfo = styled.div<MainProps>`
     `}
 `;
 
-export const StatusDot = styled.div`
+export const StatusDot = styled.div<{ color: string }>`
   margin: 0 2px;
   height: 8px;
   width: 8px;
   border-radius: 100%;
-  background-color: ${({ color }: { color: string }) => color};
+  background-color: ${({ color }) => color};
 `;
 
 export const DetailLine = styled.div`

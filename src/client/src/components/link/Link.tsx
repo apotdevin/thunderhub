@@ -11,9 +11,9 @@ interface StyledProps {
   fullWidth?: boolean;
 }
 
-const StyledLink = styled.a`
+const StyledLink = styled.a<StyledProps>`
   cursor: pointer;
-  color: ${({ fontColor, inheritColor }: StyledProps) =>
+  color: ${({ fontColor, inheritColor }) =>
     inheritColor ? 'inherit' : fontColor ?? textColor};
   text-decoration: none;
   ${({ fullWidth }: StyledProps) =>

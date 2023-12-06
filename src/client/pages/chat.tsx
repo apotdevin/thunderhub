@@ -21,10 +21,9 @@ import { ChatCard } from '../src/views/chat/Chat.styled';
 import { ViewSwitch } from '../src/components/viewSwitch/ViewSwitch';
 import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
 
-const ChatLayout = styled.div`
+const ChatLayout = styled.div<{ withHeight: boolean }>`
   display: flex;
-  ${({ withHeight = true }: { withHeight: boolean }) =>
-    withHeight && 'height: 600px'}
+  ${({ withHeight = true }) => withHeight && 'height: 600px'}
 `;
 
 type State = {

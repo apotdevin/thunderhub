@@ -12,10 +12,9 @@ interface ProgressBar {
   barColor?: string;
 }
 
-const ProgressBar = styled.div`
+const ProgressBar = styled.div<ProgressBar>`
   height: 10px;
-  background-color: ${({ barColor }: ProgressBar) =>
-    barColor ? barColor : 'blue'};
+  background-color: ${({ barColor }) => (barColor ? barColor : 'blue')};
   width: ${({ percent }: ProgressBar) => `${percent}%`};
 `;
 

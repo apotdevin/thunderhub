@@ -89,7 +89,6 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
             />
           ) : (
             <Slider
-              maxWidth={'440px'}
               value={amount}
               max={max}
               min={min}

@@ -10,11 +10,10 @@ export const Center = styled.div`
   text-align: center;
 `;
 
-export const Title = styled.h1`
+export const Title = styled.h1<{ textColor?: string }>`
   width: 100%;
   text-align: center;
-  color: ${({ textColor }: { textColor?: string }) =>
-    textColor ? textColor : fontColors.grey3};
+  color: ${({ textColor }) => (textColor ? textColor : fontColors.grey3)};
   font-size: 40px;
 
   @media (${mediaWidths.mobile}) {
@@ -22,15 +21,13 @@ export const Title = styled.h1`
   }
 `;
 
-export const SectionTitle = styled.h2`
-  color: ${({ textColor }: { textColor?: string }) =>
-    textColor ? textColor : fontColors.blue};
+export const SectionTitle = styled.h2<{ textColor?: string }>`
+  color: ${({ textColor }) => (textColor ? textColor : fontColors.blue)};
   font-size: 24px;
 `;
 
-export const Subtitle = styled.h2`
-  color: ${({ textColor }: { textColor?: string }) =>
-    textColor ? textColor : fontColors.blue};
+export const Subtitle = styled.h2<{ textColor?: string }>`
+  color: ${({ textColor }) => (textColor ? textColor : fontColors.blue)};
   font-size: 16px;
   max-width: 600px;
 `;

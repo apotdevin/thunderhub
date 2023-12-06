@@ -10,11 +10,10 @@ export const Headline = styled.div`
   }
 `;
 
-export const HomeTitle = styled.h1`
+export const HomeTitle = styled.h1<{ textColor?: string }>`
   width: 100%;
   text-align: center;
-  color: ${({ textColor }: { textColor?: string }) =>
-    textColor ? textColor : fontColors.white};
+  color: ${({ textColor }) => (textColor ? textColor : fontColors.white)};
   font-size: 56px;
   margin: 0;
   font-weight: 900;
@@ -42,11 +41,10 @@ export const FullWidth = styled.div`
   margin-top: 8px;
 `;
 
-export const ConnectTitle = styled.div`
+export const ConnectTitle = styled.div<{ changeColor?: boolean | null }>`
   width: 100%;
   font-size: 18px;
-  ${({ changeColor }: { changeColor?: boolean | null }) =>
-    changeColor && `color: ${fontColors.white};`}
+  ${({ changeColor }) => changeColor && `color: ${fontColors.white};`}
   padding-bottom: 8px;
 `;
 

@@ -216,9 +216,9 @@ export const OverflowText = styled.div`
   }
 `;
 
-export const ResponsiveLine = styled(SingleLine)`
+export const ResponsiveLine = styled(SingleLine)<{ withWrap?: boolean }>`
   width: 100%;
-  ${({ withWrap }: { withWrap?: boolean }) =>
+  ${({ withWrap }) =>
     withWrap &&
     css`
       flex-wrap: wrap;

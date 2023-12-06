@@ -61,7 +61,7 @@ export const BarChart = ({
   }, [data, title]);
 
   const option = useMemo(() => {
-    const fontColor = themeContext.mode === 'light' ? 'black' : 'white';
+    const fontColor = themeContext?.mode === 'light' ? 'black' : 'white';
 
     return {
       color: colorRange,
