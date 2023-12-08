@@ -136,7 +136,7 @@ export const HorizontalBarChart = ({
       legend: { show: true },
       series: seriesData,
     };
-  }, [colorRange, themeContext, seriesData, yLabels]);
+  }, [colorRange, themeContext, seriesData, yLabels, maxValue]);
 
   if (!keys.length) return null;
 

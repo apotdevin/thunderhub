@@ -1,0 +1,59 @@
+name: fedimint-thunderhub
+
+on:
+  push:
+    branches:
+      - master
+    tags: ['v*']
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            fedimintui/fedimint-thunderhub
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+
+      - name: Login to Docker Hub
+        if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
+        uses: docker/login-action@v2
+        with:
+          username: fedimintui
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push gateway-ui
+        uses: docker/build-push-action@v4
+        with:
+          file: Dockerfile
+          push: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Checkout repository content
+        if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
+        uses: actions/checkout@v4
+
+      # This workflow requires the repository content to be locally available to read the README
+      - name: Update the Docker Hub description
+        if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: fedimintui
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          repository: fedimintui/fedimint-thunderhub
+          readme-filepath: ./README.md

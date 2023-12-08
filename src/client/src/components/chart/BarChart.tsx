@@ -58,7 +58,7 @@ export const BarChart = ({
     const dates = data.map((d: any) => d.date);
 
     return { dates, series };
-  }, [data, title]);
+  }, [data, title, dataKey]);
 
   const option = useMemo(() => {
     const fontColor = themeContext?.mode === 'light' ? 'black' : 'white';

@@ -71,7 +71,6 @@ const FedimintsView = () => {
               display: 'flex',
               whiteSpace: 'nowrap',
               cursor: 'pointer',
-              justifyContent: 'center',
             }}
             onClick={() => {
               if (props.row.original.balance_msat > 0) {

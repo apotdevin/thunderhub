@@ -3,7 +3,6 @@ import React from 'react';
 export const getNetworkIndicator = (network: string) => {
   let color: string;
   let name: string;
-
   switch (network) {
     case 'bitcoin':
       color = 'orange';

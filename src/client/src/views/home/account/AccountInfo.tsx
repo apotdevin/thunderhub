@@ -56,7 +56,7 @@ export const AccountInfo = () => {
     <>
       <CardWithTitle>
         <SubTitle>
-          Network: {getNetworkIndicator(gatewayInfo?.network || 'bitcoin')}
+          Network: {getNetworkIndicator(gatewayInfo?.network || 'unknown')}
         </SubTitle>
         {/* <Card>
           <ResponsiveLine>
