@@ -129,3 +129,12 @@ export const getEdgeInfoBatchQuery = gql`
     }
   }
 `;
+
+export const getPhantomPayment = gql`
+  query GetPhantomPayment($input: PhantomPaymentInput!) {
+    getPhantomPayment(input: $input) {
+      preimage
+      payment_amount
+    }
+  }
+`;

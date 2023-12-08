@@ -10,6 +10,7 @@ import { FetchService } from '../../fetch/fetch.service';
 import {
   getEdgeInfoBatchQuery,
   getNodeAliasBatchQuery,
+  getPhantomPayment,
   pingHealthCheckMutation,
   pushNodeBalancesMutation,
   saveBackupMutation,
@@ -76,6 +77,21 @@ export class AmbossService {
     if (!data?.getNodeAliasBatch || error) return [];
 
     return data.getNodeAliasBatch;
+  }
+
+  async getPhantomPayment(paymentHash: string, signature: string) {
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+      this.configService.get('urls.amboss'),
+      getPhantomPayment,
+      { input: { payment_hash: paymentHash, signature } }
+    );
+
+    if (!data?.getPhantomPayment || error) {
+      this.logger.error('Error getting phantom payment info', { data, error });
+      return null;
+    }
+
+    return data.getPhantomPayment;
   }
 
   async getNodeAliasBatch(pubkeys: string[]): Promise<(NodeAlias | null)[]> {

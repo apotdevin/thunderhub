@@ -6,6 +6,8 @@ import {
   subscribeToInvoices,
   subscribeToBackups,
   subscribeToPastPayments,
+  subscribeToForwardRequests,
+  SubscribeToForwardRequestsForwardRequestEvent,
 } from 'lightning';
 import { auto, each, map, forever } from 'async';
 import { Logger } from 'winston';
@@ -17,6 +19,8 @@ import { NodeService } from '../node/node.service';
 import { UserConfigService } from '../api/userConfig/userConfig.service';
 import { getNetwork } from 'src/server/utils/network';
 import { AmbossService } from '../api/amboss/amboss.service';
+
+const SHORT_CHANNEL_ID = '1052673x257x257';
 
 const restartSubscriptionTimeMs = 1000 * 30;
 
@@ -268,6 +272,112 @@ export class SubService implements OnApplicationBootstrap {
 
                       cbk([
                         'ErrorInForwardSubscribe',
+                        { node: node.name, err },
+                      ]);
+                    });
+                  },
+                  callback
+                );
+              },
+            ],
+
+            // Subscribe to node forward requests
+            forwardRequests: [
+              'checkAvailable',
+              async ({ checkAvailable }, callback) => {
+                const names = checkAvailable.map(a => a.name);
+
+                this.logger.info('Forward request subscription', {
+                  connections: names.join(', '),
+                });
+
+                return each(
+                  checkAvailable,
+                  (node, cbk) => {
+                    const sub = subscribeToForwardRequests({ lnd: node.lnd });
+
+                    this.subscriptions.push(sub);
+
+                    sub.on(
+                      'forward_request',
+                      async (
+                        data: SubscribeToForwardRequestsForwardRequestEvent
+                      ) => {
+                        this.logger.info('forward request', {
+                          node: node.name,
+                          data,
+                        });
+
+                        if (data.out_channel !== SHORT_CHANNEL_ID) {
+                          this.logger.debug(
+                            'Accepting non phantom forward request'
+                          );
+                          data.accept();
+
+                          return;
+                        }
+
+                        this.logger.info('Accepting phantom payment');
+
+                        const { signature } =
+                          await this.nodeService.signMessage(
+                            node.id,
+                            data.hash
+                          );
+
+                        const info = await this.ambossService.getPhantomPayment(
+                          data.hash,
+                          signature
+                        );
+
+                        if (!info) {
+                          this.logger.error('Unable to accept phantom payment');
+                          data.reject();
+
+                          return;
+                        }
+
+                        if (data.mtokens < info.payment_amount) {
+                          this.logger.error(
+                            'Unable to accept phantom payment because size is below expected',
+                            {
+                              expected: info.payment_amount,
+                              received: data.mtokens,
+                            }
+                          );
+                          data.reject();
+
+                          return;
+                        }
+
+                        if (!!info.preimage) {
+                          data.settle({ secret: info.preimage });
+
+                          this.logger.info('Accepted phantom payment request', {
+                            info,
+                          });
+
+                          return;
+                        }
+
+                        this.logger.error(
+                          'Error accepting phantom payment request',
+                          { info }
+                        );
+                        data.reject();
+                      }
+                    );
+
+                    sub.on('error', async err => {
+                      sub.removeAllListeners();
+
+                      this.logger.error(
+                        `ErrorInForwardRequestsSubscribe: ${node.name}`,
+                        { err }
+                      );
+
+                      cbk([
+                        'ErrorInForwardRequestsSubscribe',
                         { node: node.name, err },
                       ]);
                     });
