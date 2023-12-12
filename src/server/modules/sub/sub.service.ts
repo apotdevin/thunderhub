@@ -303,9 +303,12 @@ export class SubService implements OnApplicationBootstrap {
                       async (
                         data: SubscribeToForwardRequestsForwardRequestEvent
                       ) => {
-                        this.logger.info('forward request', {
+                        this.logger.silly('New forward request event', {
                           node: node.name,
-                          data,
+                          amount_msats: data.mtokens,
+                          fee_msats: data.fee_mtokens,
+                          in_channel: data.in_channel,
+                          out_channel: data.out_channel,
                         });
 
                         if (data.out_channel !== SHORT_CHANNEL_ID) {
