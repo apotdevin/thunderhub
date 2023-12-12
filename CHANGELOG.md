@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.28](https://github.com/apotdevin/thunderhub/compare/v0.13.27...v0.13.28) (2023-12-12)
+
+
+### Features
+
+* forward request sub ([#594](https://github.com/apotdevin/thunderhub/issues/594)) ([ccdf6cd](https://github.com/apotdevin/thunderhub/commit/ccdf6cd8ac3267109915ad1dbbab5f5a36c37f74))
+
 ### [0.13.27](https://github.com/apotdevin/thunderhub/compare/v0.13.26...v0.13.27) (2023-12-07)
 
 
