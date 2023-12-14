@@ -43,5 +43,9 @@ export const NetworkIndicator: FC<NetworkIndicatorProps> = ({
     // isMutinynet(bitcoinRpcUrl)
   );
 
-  return <span style={{ color }}>{name}</span>;
+  return (
+    <div>
+      Network: <span style={{ color }}>{name}</span>
+    </div>
+  );
 };
