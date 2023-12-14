@@ -19,7 +19,7 @@ import { FedimintGatewayCard } from './gateway/FedimintGatewayCard';
 // import { useGatewayEcashTotal } from '../../../hooks/UseGatewayEcashTotal';
 import { useGatewayState } from '../../../context/GatewayContext';
 import { GatewayInfo } from '../../../api/types';
-import { getNetworkIndicator } from './network';
+import { NetworkIndicator } from './NetworkIndicator';
 
 const S = {
   grid: styled.div<{ gatewayInfo?: GatewayInfo | null }>`
@@ -56,7 +56,7 @@ export const AccountInfo = () => {
     <>
       <CardWithTitle>
         <SubTitle>
-          Network: {getNetworkIndicator(gatewayInfo?.network || 'unknown')}
+          <NetworkIndicator network={gatewayInfo?.network || 'unknown'} />
         </SubTitle>
         {/* <Card>
           <ResponsiveLine>
