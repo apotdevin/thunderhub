@@ -285,6 +285,17 @@ export class SubService implements OnApplicationBootstrap {
             forwardRequests: [
               'checkAvailable',
               async ({ checkAvailable }, callback) => {
+                const disabled = this.configService.get(
+                  'subscriptions.disableForwardRequests'
+                );
+
+                if (disabled) {
+                  this.logger.info(
+                    'Forward requests subscriptions are disabled'
+                  );
+                  return;
+                }
+
                 const names = checkAvailable.map(a => a.name);
 
                 this.logger.info('Forward request subscription', {
@@ -303,24 +314,30 @@ export class SubService implements OnApplicationBootstrap {
                       async (
                         data: SubscribeToForwardRequestsForwardRequestEvent
                       ) => {
-                        this.logger.silly('New forward request event', {
+                        this.logger.silly('Full new forward request event', {
+                          node: node.name,
+                          data,
+                        });
+
+                        this.logger.debug('New forward request event', {
                           node: node.name,
                           amount_msats: data.mtokens,
                           fee_msats: data.fee_mtokens,
                           in_channel: data.in_channel,
                           out_channel: data.out_channel,
+                          payment_hash: data.hash,
                         });
 
                         if (data.out_channel !== SHORT_CHANNEL_ID) {
                           this.logger.debug(
-                            'Accepting non phantom forward request'
+                            'Accepting non ghost forward request'
                           );
                           data.accept();
 
                           return;
                         }
 
-                        this.logger.info('Accepting phantom payment');
+                        this.logger.info('Accepting ghost payment');
 
                         const { signature } =
                           await this.nodeService.signMessage(
@@ -328,13 +345,15 @@ export class SubService implements OnApplicationBootstrap {
                             data.hash
                           );
 
-                        const info = await this.ambossService.getPhantomPayment(
+                        const info = await this.ambossService.getGhostPayment(
                           data.hash,
                           signature
                         );
 
                         if (!info) {
-                          this.logger.error('Unable to accept phantom payment');
+                          this.logger.error('Unable to accept ghost payment', {
+                            payment_hash: data.hash,
+                          });
                           data.reject();
 
                           return;
@@ -342,7 +361,7 @@ export class SubService implements OnApplicationBootstrap {
 
                         if (data.mtokens < info.payment_amount) {
                           this.logger.error(
-                            'Unable to accept phantom payment because size is below expected',
+                            'Unable to accept ghost payment because size is below expected',
                             {
                               expected: info.payment_amount,
                               received: data.mtokens,
@@ -356,7 +375,7 @@ export class SubService implements OnApplicationBootstrap {
                         if (!!info.preimage) {
                           data.settle({ secret: info.preimage });
 
-                          this.logger.info('Accepted phantom payment request', {
+                          this.logger.info('Accepted ghost payment request', {
                             info,
                           });
 
@@ -364,7 +383,7 @@ export class SubService implements OnApplicationBootstrap {
                         }
 
                         this.logger.error(
-                          'Error accepting phantom payment request',
+                          'Error accepting ghost payment request',
                           { info }
                         );
                         data.reject();

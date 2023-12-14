@@ -130,9 +130,9 @@ export const getEdgeInfoBatchQuery = gql`
   }
 `;
 
-export const getPhantomPayment = gql`
-  query GetPhantomPayment($input: PhantomPaymentInput!) {
-    getPhantomPayment(input: $input) {
+export const getGhostPayment = gql`
+  query GetGhostPayment($input: GhostPaymentInput!) {
+    getGhostPayment(input: $input) {
       preimage
       payment_amount
     }
