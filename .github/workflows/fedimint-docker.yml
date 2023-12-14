@@ -2,8 +2,6 @@ name: fedimint-thunderhub
 
 on:
   push:
-    branches:
-      - master
     tags: ['v*']
 
 jobs:
@@ -36,7 +34,7 @@ jobs:
           username: fedimintui
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Build and push gateway-ui
+      - name: Build and push
         uses: docker/build-push-action@v4
         with:
           file: Dockerfile
