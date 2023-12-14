@@ -16,6 +16,7 @@ import { Price } from '../../../../components/price/Price';
 import { useGatewayDispatch } from '../../../../context/GatewayContext';
 import { gatewayApi } from '../../../../api/GatewayApi';
 import { GatewayInfo } from '../../../../api/types';
+import { useGatewayEcashTotalSats } from '../../../../hooks/UseGatewayEcashTotal';
 
 interface FedimintGatewayCardProps {
   gatewayInfo: GatewayInfo;
@@ -28,6 +29,7 @@ export const FedimintGatewayCard = ({
 }: FedimintGatewayCardProps) => {
   const gatewayDispath = useGatewayDispatch();
   const [inviteCode, setInviteCode] = useState('');
+  const totalFedimintEcash = useGatewayEcashTotalSats();
 
   const handleEnter = () => {
     gatewayApi.connectFederation(inviteCode).then(() => {
@@ -72,10 +74,7 @@ export const FedimintGatewayCard = ({
           </>
         ) : (
           <div style={{ margin: '0px 0px 8px 0px', minHeight: '54px' }}>
-            {renderLine(
-              'Total Amount',
-              <Price amount={gatewayInfo.federations[0].balance_msat} />
-            )}
+            {renderLine('Total Amount', <Price amount={totalFedimintEcash} />)}
             {renderLine(
               'Connected Federations',
               gatewayInfo.federations.length

@@ -16,7 +16,7 @@ import {
 } from '../../../components/generic/Styled';
 import { useConfigState } from '../../../context/ConfigContext';
 import { usePriceState } from '../../../context/PriceContext';
-import { useGatewayEcashTotal } from '../../../hooks/UseGatewayEcashTotal';
+import { useGatewayEcashTotalSats } from '../../../hooks/UseGatewayEcashTotal';
 
 const Closed = styled.div`
   display: flex;
@@ -80,7 +80,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   } = useNodeInfo();
 
   const { onchain, lightning } = useNodeBalances();
-  const totalFedimintEcash = useGatewayEcashTotal();
+  const totalFedimintEcash = useGatewayEcashTotalSats();
 
   const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
