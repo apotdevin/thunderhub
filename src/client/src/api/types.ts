@@ -60,7 +60,6 @@ export enum Network {
 }
 
 export type TransactionId = string;
-<<<<<<< HEAD
 
 // For testing
 export const dummyFederation = {
@@ -88,33 +87,3 @@ export const dummyFederation = {
     },
   },
 };
-||||||| parent of 17bf936c (feat: refactor to gateway context pattern)
-=======
-
-// For testing
-export const dummyFederation = {
-  federation_id: 'test_federation_id',
-  balance_msat: 1000,
-  config: {
-    consensus_version: 1,
-    epoch_pk: 'test_epoch_pk',
-    federation_id: 'test_federation_id',
-    api_endpoints: {
-      0: {
-        name: 'test_api_endpoint_name',
-        url: 'test_api_endpoint_url',
-      },
-    },
-    modules: {
-      0: {
-        config: 'test_module_config',
-        kind: ModuleKind.Ln,
-        version: 1,
-      },
-    },
-    meta: {
-      federation_name: 'test_federation_name',
-    },
-  },
-};
->>>>>>> 17bf936c (feat: refactor to gateway context pattern)
