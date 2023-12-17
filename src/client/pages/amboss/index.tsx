@@ -9,6 +9,7 @@ import { SectionTitle, Text } from '../../src/components/typography/Styled';
 import { Healthchecks } from '../../src/views/amboss/Healthchecks';
 import { Balances } from '../../src/views/amboss/Balances';
 import { Billboard } from '../../src/views/amboss/Billboard';
+import { Ghost } from '../../src/views/amboss/Ghost';
 
 const AmbossView = () => (
   <>
@@ -28,6 +29,7 @@ const AmbossView = () => (
 const Wrapped = () => (
   <GridWrapper>
     <AmbossView />
+    <Ghost />
     <Backups />
     <Healthchecks />
     <Balances />

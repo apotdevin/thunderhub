@@ -52,6 +52,7 @@ type AmbossSubscription {
 
 type AmbossUser {
   backups: UserBackupInfo!
+  ghost: UserGhostInfo!
   subscription: AmbossSubscription!
 }
 
@@ -261,6 +262,10 @@ type ChannelsHealth {
 type ChannelsTimeHealth {
   channels: [ChannelTimeHealth!]
   score: Float
+}
+
+type ClaimGhostAddress {
+  username: String!
 }
 
 type ClosedChannel {
@@ -485,6 +490,7 @@ type Mutation {
   addPeer(isTemporary: Boolean, publicKey: String, socket: String, url: String): Boolean!
   bosRebalance(avoid: [String!], in_through: String, max_fee: Float, max_fee_rate: Float, max_rebalance: Float, node: String, out_inbound: Float, out_through: String, timeout_minutes: Float): BosRebalanceResult!
   claimBoltzTransaction(destination: String!, fee: Float!, preimage: String!, privateKey: String!, redeem: String!, transaction: String!): String!
+  claimGhostAddress(address: String): ClaimGhostAddress!
   closeChannel(forceClose: Boolean, id: String!, targetConfirmations: Float, tokensPerVByte: Float): OpenOrCloseChannel!
   createAddress(type: String! = "p2tr"): String!
   createBaseInvoice(amount: Float!): BaseInvoice!
@@ -841,6 +847,10 @@ type UserBackupInfo {
   last_update_size: String
   remaining_size: String!
   total_size_saved: String!
+}
+
+type UserGhostInfo {
+  username: String
 }
 
 type Utxo {

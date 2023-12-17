@@ -3,6 +3,10 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { gql } from 'graphql-tag';
 import { FetchService } from '../../fetch/fetch.service';
 import { BaseInvoice, BaseNode, BasePoints } from './base.types';
+import { GraphQLError } from 'graphql';
+import { Logger } from 'winston';
+import { Inject } from '@nestjs/common';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 const getBaseCanConnectQuery = gql`
   {
@@ -54,7 +58,8 @@ const createThunderPointsQuery = gql`
 export class BaseResolver {
   constructor(
     private configService: ConfigService,
-    private fetchService: FetchService
+    private fetchService: FetchService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
   @Query(() => Boolean)
@@ -97,7 +102,9 @@ export class BaseResolver {
 
   @Mutation(() => BaseInvoice)
   async createBaseInvoice(@Args('amount') amount: number) {
-    if (!amount) return '';
+    if (!amount) {
+      throw new GraphQLError('No amount provided for donation invoice.');
+    }
 
     const { data, error } = await this.fetchService.graphqlFetchWithProxy(
       this.configService.get('urls.tbase'),
@@ -105,10 +112,12 @@ export class BaseResolver {
       { amount }
     );
 
-    if (error) return null;
-    if (data?.createInvoice) return data.createInvoice;
+    if (error || !data?.createInvoice) {
+      this.logger.error('Error getting donation invoice.', { error, data });
+      throw new GraphQLError('Error creating donation invoice.');
+    }
 
-    return null;
+    return data.createInvoice;
   }
 
   @Mutation(() => Boolean)

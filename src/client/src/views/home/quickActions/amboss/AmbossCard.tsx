@@ -30,9 +30,7 @@ const QuickCard = styled.button`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 25px;
   padding: 10px;
-  margin-right: 10px;
   cursor: pointer;
   color: #69c0ff;
 

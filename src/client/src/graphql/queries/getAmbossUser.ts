@@ -15,6 +15,9 @@ export const GET_AMBOSS_USER = gql`
         available_size
         remaining_size
       }
+      ghost {
+        username
+      }
     }
   }
 `;

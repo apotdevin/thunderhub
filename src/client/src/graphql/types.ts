@@ -83,6 +83,7 @@ export type AmbossSubscription = {
 export type AmbossUser = {
   __typename?: 'AmbossUser';
   backups: UserBackupInfo;
+  ghost: UserGhostInfo;
   subscription: AmbossSubscription;
 };
 
@@ -319,6 +320,11 @@ export type ChannelsTimeHealth = {
   __typename?: 'ChannelsTimeHealth';
   channels?: Maybe<Array<ChannelTimeHealth>>;
   score?: Maybe<Scalars['Float']['output']>;
+};
+
+export type ClaimGhostAddress = {
+  __typename?: 'ClaimGhostAddress';
+  username: Scalars['String']['output'];
 };
 
 export type ClosedChannel = {
@@ -565,6 +571,7 @@ export type Mutation = {
   addPeer: Scalars['Boolean']['output'];
   bosRebalance: BosRebalanceResult;
   claimBoltzTransaction: Scalars['String']['output'];
+  claimGhostAddress: ClaimGhostAddress;
   closeChannel: OpenOrCloseChannel;
   createAddress: Scalars['String']['output'];
   createBaseInvoice: BaseInvoice;
@@ -625,6 +632,10 @@ export type MutationClaimBoltzTransactionArgs = {
   privateKey: Scalars['String']['input'];
   redeem: Scalars['String']['input'];
   transaction: Scalars['String']['input'];
+};
+
+export type MutationClaimGhostAddressArgs = {
+  address?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MutationCloseChannelArgs = {
@@ -1197,6 +1208,11 @@ export type UserBackupInfo = {
   last_update_size?: Maybe<Scalars['String']['output']>;
   remaining_size: Scalars['String']['output'];
   total_size_saved: Scalars['String']['output'];
+};
+
+export type UserGhostInfo = {
+  __typename?: 'UserGhostInfo';
+  username?: Maybe<Scalars['String']['output']>;
 };
 
 export type Utxo = {

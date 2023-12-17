@@ -1,13 +1,12 @@
-import * as React from 'react';
-import { Heart } from 'react-feather';
 import styled from 'styled-components';
 import {
-  chartColors,
-  cardColor,
   cardBorderColor,
-  unSelectedNavButton,
+  cardColor,
   mediaWidths,
+  unSelectedNavButton,
 } from '../../../../styles/Themes';
+import { GhostLogo } from '../../../../components/logo/GhostIcon';
+import { useRouter } from 'next/router';
 
 const QuickTitle = styled.div`
   font-size: 12px;
@@ -37,7 +36,7 @@ const QuickCard = styled.div`
   }
 
   &:hover {
-    background-color: ${chartColors.green};
+    background-color: black;
     color: white;
 
     & ${QuickTitle} {
@@ -46,15 +45,13 @@ const QuickCard = styled.div`
   }
 `;
 
-type SupportCardProps = {
-  callback: () => void;
-};
+export const GhostCard = () => {
+  const { push } = useRouter();
 
-export const SupportCard = ({ callback }: SupportCardProps) => {
   return (
-    <QuickCard onClick={callback}>
-      <Heart size={24} />
-      <QuickTitle>Donate</QuickTitle>
+    <QuickCard onClick={() => push('/amboss')}>
+      <GhostLogo size={24} />
+      <QuickTitle>Ghost</QuickTitle>
     </QuickCard>
   );
 };

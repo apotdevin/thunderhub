@@ -23,6 +23,7 @@ export type GetAmbossUserQuery = {
       available_size: string;
       remaining_size: string;
     };
+    ghost: { __typename?: 'UserGhostInfo'; username?: string | null };
   } | null;
 };
 
@@ -40,6 +41,9 @@ export const GetAmbossUserDocument = gql`
         total_size_saved
         available_size
         remaining_size
+      }
+      ghost {
+        username
       }
     }
   }
