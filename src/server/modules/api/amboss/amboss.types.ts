@@ -29,12 +29,21 @@ export class UserBackupInfo {
 }
 
 @ObjectType()
+export class UserGhostInfo {
+  @Field({ nullable: true })
+  username: string;
+}
+
+@ObjectType()
 export class AmbossUser {
   @Field(() => AmbossSubscription)
   subscription: AmbossSubscription;
 
   @Field(() => UserBackupInfo)
   backups: UserBackupInfo;
+
+  @Field(() => UserGhostInfo)
+  ghost: UserGhostInfo;
 }
 
 @ObjectType()
@@ -71,6 +80,12 @@ export class NodeSocial {
 export class LightningNodeSocialInfo {
   @Field(() => NodeSocial, { nullable: true })
   socials: NodeSocial;
+}
+
+@ObjectType()
+export class ClaimGhostAddress {
+  @Field()
+  username: string;
 }
 
 export type NodeAlias = {

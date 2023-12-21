@@ -20,6 +20,7 @@ import { useCreateThunderPointsMutation } from '../../../../graphql/mutations/__
 import { toast } from 'react-toastify';
 import { useBaseConnect } from '../../../../hooks/UseBaseConnect';
 import { Pay } from '../../account/pay/Pay';
+import { getErrorContent } from '../../../../utils/error';
 
 const StyledText = styled.div`
   text-align: center;
@@ -45,7 +46,9 @@ export const SupportBar = () => {
 
   const [withPoints, setWithPoints] = React.useState<boolean>(false);
 
-  const [getInvoice, { data, loading }] = useCreateBaseInvoiceMutation();
+  const [getInvoice, { data, loading }] = useCreateBaseInvoiceMutation({
+    onError: error => toast.error(getErrorContent(error)),
+  });
 
   const [createPoints, { data: pointsData, called, loading: pointsLoading }] =
     useCreateThunderPointsMutation({ refetchQueries: ['GetBasePoints'] });
