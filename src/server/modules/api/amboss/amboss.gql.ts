@@ -15,6 +15,9 @@ export const getUserQuery = gql`
         remaining_size
         total_size_saved
       }
+      ghost {
+        username
+      }
     }
   }
 `;
@@ -135,6 +138,14 @@ export const getGhostPayment = gql`
     getGhostPayment(input: $input) {
       preimage
       payment_amount
+    }
+  }
+`;
+
+export const claimGhostAddress = gql`
+  mutation claimGhostAddress($address: String) {
+    claimGhostAddress(address: $address) {
+      username
     }
   }
 `;

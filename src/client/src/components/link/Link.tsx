@@ -73,7 +73,7 @@ export const Link: React.FC<LinkProps> = ({
       <CorrectLink
         href={href}
         {...props}
-        {...(newTab && { target: '_blank', rel: 'noreferrer' })}
+        {...(newTab && { target: '_blank', rel: 'noreferrer noopener' })}
       >
         {children}
       </CorrectLink>

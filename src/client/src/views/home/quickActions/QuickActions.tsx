@@ -22,6 +22,7 @@ import { LnUrlCard } from './lnurl';
 import { LnMarketsCard } from './lnmarkets';
 import { AmbossCard } from './amboss/AmbossCard';
 import { LightningAddressCard } from './lightningAddress/LightningAddress';
+import { GhostCard } from './ghost/GhostQuickAction';
 
 export const QuickCard = styled.div`
   background: ${cardColor};
@@ -34,9 +35,7 @@ export const QuickCard = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 25px;
   padding: 10px;
-  margin-right: 10px;
   cursor: pointer;
   color: #69c0ff;
 
@@ -61,6 +60,8 @@ export const QuickTitle = styled.div`
 const QuickRow = styled.div`
   display: flex;
   flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 32px;
 `;
 
 export const QuickActions = () => {
@@ -104,6 +105,7 @@ export const QuickActions = () => {
       default:
         return (
           <QuickRow>
+            <GhostCard />
             <SupportCard callback={() => setOpenCard('support')} />
             <AmbossCard />
             <QuickCard onClick={() => setOpenCard('lightning_address')}>

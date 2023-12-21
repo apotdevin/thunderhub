@@ -8,6 +8,7 @@ import { Logger } from 'winston';
 import cookie from 'cookie';
 import {
   AmbossUser,
+  ClaimGhostAddress,
   LightningAddress,
   LightningNodeSocialInfo,
 } from './amboss.types';
@@ -17,6 +18,7 @@ import { NodeService } from '../../node/node.service';
 import { UserId } from '../../security/security.types';
 import { CurrentUser } from '../../security/security.decorators';
 import {
+  claimGhostAddress,
   getLightningAddresses,
   getLoginTokenQuery,
   getNodeSocialInfo,
@@ -25,6 +27,7 @@ import {
   loginMutation,
 } from './amboss.gql';
 import { AmbossService } from './amboss.service';
+import { GraphQLError } from 'graphql';
 
 const ONE_MONTH_SECONDS = 60 * 60 * 24 * 30;
 
@@ -197,5 +200,30 @@ export class AmbossResolver {
     await this.ambossService.pushBackup(backups.backup, signature);
 
     return true;
+  }
+
+  @Mutation(() => ClaimGhostAddress)
+  async claimGhostAddress(
+    @Args('address', { nullable: true }) address: string | null,
+    @Context() { ambossAuth }: ContextType
+  ) {
+    if (!ambossAuth) {
+      throw new GraphQLError(
+        'You need to login to Amboss before you can claim your Ghost address.'
+      );
+    }
+
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+      this.configService.get('urls.amboss'),
+      claimGhostAddress,
+      { address },
+      { authorization: `Bearer ${ambossAuth}` }
+    );
+
+    if (!data?.claimGhostAddress || error) {
+      throw new GraphQLError('Error claiming Ghost address.');
+    }
+
+    return data.claimGhostAddress;
   }
 }
