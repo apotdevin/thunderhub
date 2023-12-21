@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.29](https://github.com/apotdevin/thunderhub/compare/v0.13.28...v0.13.29) (2023-12-21)
+
+
+### Improvements
+
+* cleanup ([e0498a6](https://github.com/apotdevin/thunderhub/commit/e0498a6c91a5cd238c81153cfbab42b766ad625b))
+* ghost button ([#596](https://github.com/apotdevin/thunderhub/issues/596)) ([5aad967](https://github.com/apotdevin/thunderhub/commit/5aad9670cf9b76e473ed377d203650186f5b3821))
+
 ### [0.13.28](https://github.com/apotdevin/thunderhub/compare/v0.13.27...v0.13.28) (2023-12-12)
 
 
