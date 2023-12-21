@@ -1,6 +1,6 @@
 {
   "name": "thunderhub",
-  "version": "0.13.28",
+  "version": "0.13.29",
   "description": "Lightning Node Manager",
   "license": "MIT",
   "scripts": {
