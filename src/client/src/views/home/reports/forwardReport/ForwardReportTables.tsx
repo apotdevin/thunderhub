@@ -41,8 +41,8 @@ export const RouteTable: FC<RouteTableProps> = ({ forwardArray }) => {
       cell: ({ row }: any) => (
         <div style={{ whiteSpace: 'nowrap' }}>
           {getNodeLink(
-            row.original.incoming_channel_info.node2_info.public_key,
-            row.original.incoming_channel_info.node2_info.alias
+            row.original.incoming_channel_info?.node2_info?.public_key,
+            row.original.incoming_channel_info?.node2_info?.alias
           )}
         </div>
       ),
@@ -53,8 +53,8 @@ export const RouteTable: FC<RouteTableProps> = ({ forwardArray }) => {
       cell: ({ row }: any) => (
         <div style={{ whiteSpace: 'nowrap' }}>
           {getNodeLink(
-            row.original.outgoing_channel_info.node2_info.public_key,
-            row.original.outgoing_channel_info.node2_info.alias
+            row.original.outgoing_channel_info?.node2_info?.public_key,
+            row.original.outgoing_channel_info?.node2_info?.alias
           )}
         </div>
       ),
