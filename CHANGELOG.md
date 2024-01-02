@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.30](https://github.com/apotdevin/thunderhub/compare/v0.13.29...v0.13.30) (2024-01-02)
+
+
+### Bug Fixes
+
+* Boltz swap claim transaction fees ([#600](https://github.com/apotdevin/thunderhub/issues/600)) ([f92a810](https://github.com/apotdevin/thunderhub/commit/f92a810b31db0d184ca3cb1e99b8916506300f00))
+
+
+### Improvements
+
+* extra error log ([#601](https://github.com/apotdevin/thunderhub/issues/601)) ([f68fabd](https://github.com/apotdevin/thunderhub/commit/f68fabdcfadb0911c95c57afe3237015e3931378))
+
 ### [0.13.29](https://github.com/apotdevin/thunderhub/compare/v0.13.28...v0.13.29) (2023-12-21)
 
 
