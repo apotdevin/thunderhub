@@ -93,7 +93,7 @@ export default (): ConfigType => {
     github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
     lnMarkets: 'https://api.lnmarkets.com/v1',
     lnMarketsExchange: 'https://lnmarkets.com',
-    boltz: 'https://boltz.exchange/api',
+    boltz: 'https://api.boltz.exchange',
   };
 
   const npmVersion = process.env.npm_package_version || '0.0.0';
