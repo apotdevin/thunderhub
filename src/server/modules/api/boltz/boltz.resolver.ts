@@ -11,7 +11,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { NodeService } from '../../node/node.service';
 import { BoltzService } from './boltz.service';
-import { constructClaimTransaction, detectSwap } from 'boltz-core';
+import { constructClaimTransaction, detectSwap, targetFee } from 'boltz-core';
 import { generateKeys, getHexBuffer, validateAddress } from './boltz.helpers';
 import { GraphQLError } from 'graphql';
 import { address, networks, Transaction } from 'bitcoinjs-lib';
@@ -171,10 +171,8 @@ export class BoltzResolver {
       networks.bitcoin
     );
 
-    const finalTransaction = constructClaimTransaction(
-      utxos,
-      destinationScript,
-      fee
+    const finalTransaction = targetFee(fee, absoluteFee =>
+      constructClaimTransaction(utxos, destinationScript, absoluteFee)
     );
 
     this.logger.debug('Final transaction', { finalTransaction });
