@@ -3,7 +3,7 @@ import { useNodeBalances } from '../../../../hooks/UseNodeBalances';
 import { unSelectedNavButton } from '../../../../styles/Themes';
 import styled from 'styled-components';
 import Big from 'big.js';
-import { useGatewayEcashTotal } from '../../../../hooks/UseGatewayEcashTotal';
+import { useGatewayEcashTotalSats } from '../../../../hooks/UseGatewayEcashTotal';
 
 const S = {
   wrapper: styled.div`
@@ -85,7 +85,7 @@ export const ChainBalance = () => {
 };
 
 export const FedimintBalance = () => {
-  const totalFedimintEcash = useGatewayEcashTotal();
+  const totalFedimintEcash = useGatewayEcashTotalSats();
 
   return (
     <S.wrapper>
