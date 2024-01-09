@@ -10,19 +10,27 @@ import { AccountInfo } from '../src/views/home/account/AccountInfo';
 import { ForwardBox } from '../src/views/home/reports/forwardReport';
 import { ConnectCard } from '../src/views/home/connect/Connect';
 import { QuickActions } from '../src/views/home/quickActions/QuickActions';
+import { useGatewayState } from '../src/context/GatewayContext';
+import { Network } from '../src/api/types';
+import { FaucetActions } from '../src/views/home/faucetActions/FaucetActions';
 
-const HomeView = () => (
-  <>
-    <Version />
-    <AccountInfo />
-    <AccountButtons />
-    <ConnectCard />
-    <QuickActions />
-    <LiquidityGraph />
-    <ForwardBox />
-    <MempoolReport />
-  </>
-);
+const HomeView = () => {
+  const { gatewayInfo } = useGatewayState();
+
+  return (
+    <>
+      <Version />
+      <AccountInfo />
+      <AccountButtons />
+      <ConnectCard />
+      <QuickActions />
+      {gatewayInfo?.network === Network.Signet ? <FaucetActions /> : null}
+      <LiquidityGraph />
+      <ForwardBox />
+      <MempoolReport />
+    </>
+  );
+};
 
 const Wrapped = () => (
   <GridWrapper>

@@ -31,12 +31,12 @@ import { BaseNode } from '../../../../graphql/types';
 import { OpenChannelCard } from './OpenChannel';
 import { OpenRecommended } from './OpenRecommended';
 
-const IconStyle = styled.div`
+export const IconStyle = styled.div`
   margin-bottom: 8px;
   color: ${themeColors.blue2};
 `;
 
-const Item = styled.div`
+export const Item = styled.div`
   font-size: 14px;
   display: flex;
   flex-direction: column;
@@ -67,7 +67,7 @@ const Item = styled.div`
   }
 `;
 
-const Container = styled.div`
+export const Container = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -88,6 +88,7 @@ export const OpenChannel = ({ setOpenCard }: OpenChannelProps) => {
     if (!loading && data && data.getBaseNodes) {
       if (data.getBaseNodes.length > 0) {
         set(true);
+        console.log(data.getBaseNodes);
       }
     }
   }, [loading, data]);
