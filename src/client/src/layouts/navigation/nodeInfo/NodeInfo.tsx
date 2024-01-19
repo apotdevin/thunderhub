@@ -129,7 +129,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
           <Price amount={totalChain} />
         </SingleLine>
         <SingleLine>
-          <Sun size={18} color={chainPending === 0 ? '#FFD300' : '#652EC7'} />
+          <Sun size={18} color={'#FFD300'} />
           <Price amount={totalFedimintEcash} />
         </SingleLine>
       </>
@@ -207,7 +207,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         <Price amount={totalChain} />
       </Balance>
       <Balance data-tip data-for="full_fedimint_tip">
-        <Sun size={18} color={chainPending === 0 ? '#FFD300' : '#652EC7'} />
+        <Sun size={18} color={'#FFD300'} />
         <Price amount={totalFedimintEcash} />
       </Balance>
       <Balance
