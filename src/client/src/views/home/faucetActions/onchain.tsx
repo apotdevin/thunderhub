@@ -35,7 +35,7 @@ export const Onchain = () => {
         />
         <InputWithDeco
           value={address}
-          placeholder="bcrt1..."
+          placeholder="tb1..."
           title="Address"
           inputCallback={value => setAddress(value)}
           onEnter={() => handleOnchain()}
