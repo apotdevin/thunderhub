@@ -16,6 +16,7 @@ import { Federation } from '../src/api/types';
 import { CellContext } from '@tanstack/react-table';
 import { toast } from 'react-toastify';
 import { Price } from '../src/components/price/Price';
+import { gatewayApi } from '../src/api/GatewayApi';
 
 const FedimintsView = () => {
   const federations = useGatewayFederations();
@@ -76,7 +77,12 @@ const FedimintsView = () => {
               if (props.row.original.balance_msat > 0) {
                 toast.error("Can't leave a federation you've got sats in!");
               } else {
-                toast.warn('Not implemented yet!');
+                try {
+                  gatewayApi.leaveFederation(props.row.original.federation_id);
+                  toast.success('Left Federation');
+                } catch (e: any) {
+                  toast.error(e.message);
+                }
               }
             }}
           >
