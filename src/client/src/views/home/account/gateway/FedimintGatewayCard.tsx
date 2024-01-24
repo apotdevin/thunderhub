@@ -73,11 +73,15 @@ export const FedimintGatewayCard = ({
             </SingleLine>
           </>
         ) : (
-          <div style={{ margin: '0px 0px 8px 0px', minHeight: '54px' }}>
+          <div style={{ minHeight: '54px' }}>
             {renderLine('Total Amount', <Price amount={totalFedimintEcash} />)}
             {renderLine(
               'Connected Federations',
               gatewayInfo.federations.length
+            )}
+            {renderLine(
+              'FeeRate (Base/PPM)',
+              `${gatewayInfo.fees.base_msat}/${gatewayInfo.fees.proportional_millionths}`
             )}
           </div>
         )}
