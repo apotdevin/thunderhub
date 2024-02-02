@@ -13,13 +13,21 @@ import {
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { gatewayApi } from '../../api/GatewayApi';
 import { useGatewayDispatch } from '../../context/GatewayContext';
+import { useNodeInfo } from '../../hooks/UseNodeInfo';
 
 export const AddMint = () => {
   const gatewayDispatch = useGatewayDispatch();
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [inviteCode, setInviteCode] = useState<string>('');
+  const { syncedToChain } = useNodeInfo();
 
   const handleEnter = () => {
+    if (!syncedToChain) {
+      toast.error(
+        'Node not synced to chain yet, cannot connect to federation.'
+      );
+      return;
+    }
     gatewayApi.connectFederation(inviteCode).then(() => {
       gatewayApi
         .fetchInfo()
