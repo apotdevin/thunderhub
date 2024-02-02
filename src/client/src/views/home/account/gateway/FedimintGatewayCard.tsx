@@ -17,6 +17,7 @@ import { useGatewayDispatch } from '../../../../context/GatewayContext';
 import { gatewayApi } from '../../../../api/GatewayApi';
 import { GatewayInfo } from '../../../../api/types';
 import { useGatewayEcashTotalSats } from '../../../../hooks/UseGatewayEcashTotal';
+import { useNodeInfo } from '../../../../hooks/UseNodeInfo';
 
 interface FedimintGatewayCardProps {
   gatewayInfo: GatewayInfo;
@@ -30,8 +31,16 @@ export const FedimintGatewayCard = ({
   const gatewayDispath = useGatewayDispatch();
   const [inviteCode, setInviteCode] = useState('');
   const totalFedimintEcash = useGatewayEcashTotalSats();
+  const { syncedToChain } = useNodeInfo();
 
   const handleEnter = () => {
+    if (!syncedToChain) {
+      toast.error(
+        'Node not synced to chain yet, cannot connect to federation.'
+      );
+      return;
+    }
+
     gatewayApi.connectFederation(inviteCode).then(() => {
       gatewayApi
         .fetchInfo()
