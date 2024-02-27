@@ -226,7 +226,7 @@ export class AmbossResolver {
         error,
         address,
       });
-      throw new GraphQLError(error);
+      throw new GraphQLError(error?.message || 'Error claiming Ghost address.');
     }
 
     return data.claimGhostAddress;
