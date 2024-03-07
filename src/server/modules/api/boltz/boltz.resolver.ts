@@ -1,3 +1,4 @@
+import zkpInit from '@vulpemventures/secp256k1-zkp';
 import { Inject } from '@nestjs/common';
 import {
   Args,
@@ -11,10 +12,22 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { NodeService } from '../../node/node.service';
 import { BoltzService } from './boltz.service';
-import { constructClaimTransaction, detectSwap, targetFee } from 'boltz-core';
-import { generateKeys, getHexBuffer, validateAddress } from './boltz.helpers';
+import {
+  ClaimDetails,
+  SwapTreeSerializer,
+  TaprootUtils,
+  constructClaimTransaction,
+  detectSwap,
+  targetFee,
+} from 'boltz-core';
+import {
+  findTaprootOutput,
+  generateKeys,
+  getHexBuffer,
+  validateAddress,
+} from './boltz.helpers';
 import { GraphQLError } from 'graphql';
-import { address, networks, Transaction } from 'bitcoinjs-lib';
+import { address, initEccLib, networks, Transaction } from 'bitcoinjs-lib';
 import {
   BoltzInfoType,
   BoltzSwap,
@@ -106,7 +119,7 @@ export class BoltzResolver {
       throw new Error(info.error);
     }
 
-    const btcPair = info?.pairs?.['BTC/BTC'];
+    const btcPair = info?.BTC?.BTC;
 
     if (!btcPair) {
       this.logger.error('No BTC > LN BTC information received from Boltz');
@@ -129,6 +142,7 @@ export class BoltzResolver {
 
   @Mutation(() => String)
   async claimBoltzTransaction(
+    @Args('id') id: string,
     @Args('redeem') redeem: string,
     @Args('transaction') transaction: string,
     @Args('preimage') preimage: string,
@@ -141,54 +155,105 @@ export class BoltzResolver {
       throw new GraphQLError('InvalidBitcoinAddress');
     }
 
-    const redeemScript = getHexBuffer(redeem);
+    initEccLib(ecc);
+
+    const checkOutput = (output: any | undefined) => {
+      if (output === undefined) {
+        this.logger.error('Cannot get vout or type from Boltz');
+        this.logger.debug('Swap info', {
+          lockupTransaction,
+          output,
+        });
+        throw new Error('ErrorCreatingClaimTransaction');
+      }
+    };
+
     const lockupTransaction = Transaction.fromHex(transaction);
-
-    const info = detectSwap(redeemScript, lockupTransaction);
-
-    if (info?.vout === undefined || info?.type === undefined) {
-      this.logger.error('Cannot get vout or type from Boltz');
-      this.logger.debug('Swap info', {
-        redeemScript,
-        lockupTransaction,
-        info,
-      });
-      throw new Error('ErrorCreatingClaimTransaction');
-    }
-
-    const utxos = [
-      {
-        ...info,
-        redeemScript,
-        txHash: lockupTransaction.getHash(),
-        preimage: getHexBuffer(preimage),
-        keys: ECPair.fromPrivateKey(getHexBuffer(privateKey)),
-      },
-    ];
+    const keys = ECPair.fromPrivateKey(getHexBuffer(privateKey));
 
     const destinationScript = address.toOutputScript(
       destination,
       networks.bitcoin
     );
 
-    const finalTransaction = targetFee(fee, absoluteFee =>
-      constructClaimTransaction(utxos, destinationScript, absoluteFee)
-    );
+    const isTaproot = redeem.startsWith('{');
 
-    this.logger.debug('Final transaction', { finalTransaction });
+    if (isTaproot) {
+      const zkp = await zkpInit();
+      const tree = SwapTreeSerializer.deserializeSwapTree(redeem);
+      const output = findTaprootOutput(zkp, lockupTransaction, tree, keys);
+      checkOutput(output);
 
-    const response = await this.boltzService.broadcastTransaction(
-      finalTransaction.toHex()
-    );
+      const utxo: ClaimDetails = {
+        ...output.swapOutput,
+        keys,
+        swapTree: tree,
+        cooperative: true,
+        preimage: getHexBuffer(preimage),
+        txHash: lockupTransaction.getHash(),
+        internalKey: output.musig.getAggregatedPublicKey(),
+      };
 
-    this.logger.debug('Response from Boltz', { response });
+      // Try the cooperative key path spend first
+      try {
+        const claimTransaction = this.constructTransaction(
+          [utxo],
+          destinationScript,
+          fee
+        );
+        const theirPartial =
+          await this.boltzService.getReverseSwapClaimSignature(
+            id,
+            preimage,
+            claimTransaction.toHex(),
+            0,
+            Buffer.from(output.musig.getPublicNonce()).toString('hex')
+          );
 
-    if (!response?.transactionId) {
-      this.logger.error('Did not receive a transaction id from Boltz');
-      throw new Error('NoTransactionIdFromBoltz');
+        output.musig.aggregateNonces([
+          [output.theirPublicKey, getHexBuffer(theirPartial.pubNonce)],
+        ]);
+        output.musig.initializeSession(
+          TaprootUtils.hashForWitnessV1([utxo], claimTransaction, 0)
+        );
+        output.musig.addPartial(
+          output.theirPublicKey,
+          getHexBuffer(theirPartial.partialSignature)
+        );
+        output.musig.signPartial();
+        claimTransaction.ins[0].witness = [output.musig.aggregatePartials()];
+
+        return this.broadcastTransaction(claimTransaction);
+      } catch (e) {
+        this.logger.warn(`Cooperative Swap claim failed`, e);
+      }
+
+      // If cooperative fails, enforce the HTLC via a script path spend
+      utxo.cooperative = false;
+      return this.broadcastTransaction(
+        this.constructTransaction([utxo], destinationScript, fee)
+      );
+    } else {
+      const redeemScript = getHexBuffer(redeem);
+      const output = detectSwap(redeemScript, lockupTransaction);
+      checkOutput(output);
+
+      return this.broadcastTransaction(
+        this.constructTransaction(
+          [
+            {
+              ...output,
+              keys,
+              redeemScript,
+              txHash: lockupTransaction.getHash(),
+              preimage: getHexBuffer(preimage),
+            },
+          ],
+          destinationScript,
+          fee
+        )
+      );
     }
-
-    return response.transactionId;
   }
 
   @Mutation(() => CreateBoltzReverseSwapType)
@@ -239,6 +304,7 @@ export class BoltzResolver {
       ...info,
       receivingAddress: btcAddress,
       preimage: preimage.toString('hex'),
+      redeemScript: JSON.stringify(info.swapTree),
       preimageHash: hash,
       privateKey,
       publicKey,
@@ -248,4 +314,30 @@ export class BoltzResolver {
 
     return finalInfo;
   }
+
+  private constructTransaction = (
+    utxos: ClaimDetails[],
+    destinationScript: Buffer,
+    fee: number
+  ) =>
+    targetFee(fee, absoluteFee =>
+      constructClaimTransaction(utxos, destinationScript, absoluteFee)
+    );
+
+  private broadcastTransaction = async (finalTransaction: Transaction) => {
+    this.logger.debug('Final transaction', { finalTransaction });
+
+    const response = await this.boltzService.broadcastTransaction(
+      finalTransaction.toHex()
+    );
+
+    this.logger.debug('Response from Boltz', { response });
+
+    if (!response?.id) {
+      this.logger.error('Did not receive a transaction id from Boltz');
+      throw new Error('NoTransactionIdFromBoltz');
+    }
+
+    return response.id;
+  };
 }

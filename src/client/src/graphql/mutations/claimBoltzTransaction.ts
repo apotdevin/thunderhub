@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 
 export const CLAIM_BOLTZ_TRANSACTION = gql`
   mutation ClaimBoltzTransaction(
+    $id: String!
     $redeem: String!
     $transaction: String!
     $preimage: String!
@@ -10,6 +11,7 @@ export const CLAIM_BOLTZ_TRANSACTION = gql`
     $fee: Float!
   ) {
     claimBoltzTransaction(
+      id: $id
       redeem: $redeem
       transaction: $transaction
       preimage: $preimage

@@ -4,6 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type ClaimBoltzTransactionMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
   redeem: Types.Scalars['String']['input'];
   transaction: Types.Scalars['String']['input'];
   preimage: Types.Scalars['String']['input'];
@@ -19,6 +20,7 @@ export type ClaimBoltzTransactionMutation = {
 
 export const ClaimBoltzTransactionDocument = gql`
   mutation ClaimBoltzTransaction(
+    $id: String!
     $redeem: String!
     $transaction: String!
     $preimage: String!
@@ -27,6 +29,7 @@ export const ClaimBoltzTransactionDocument = gql`
     $fee: Float!
   ) {
     claimBoltzTransaction(
+      id: $id
       redeem: $redeem
       transaction: $transaction
       preimage: $preimage
@@ -54,6 +57,7 @@ export type ClaimBoltzTransactionMutationFn = Apollo.MutationFunction<
  * @example
  * const [claimBoltzTransactionMutation, { data, loading, error }] = useClaimBoltzTransactionMutation({
  *   variables: {
+ *      id: // value for 'id'
  *      redeem: // value for 'redeem'
  *      transaction: // value for 'transaction'
  *      preimage: // value for 'preimage'
