@@ -77,7 +77,8 @@ export const SwapClaim = () => {
   }
 
   const claimingSwap = swaps[claim];
-  const { redeemScript, preimage, receivingAddress, privateKey } = claimingSwap;
+  const { redeemScript, preimage, receivingAddress, privateKey, id } =
+    claimingSwap;
 
   if (!preimage || !transactionHex || !privateKey) {
     return <Missing />;
@@ -129,7 +130,7 @@ export const SwapClaim = () => {
           </MultiButton>
         </InputWithDeco>
       )}
-      <InputWithDeco title={'Fee Amount'} amount={fee * 223} noInput={true}>
+      <InputWithDeco title={'Fee Amount'} amount={fee * 111} noInput={true}>
         {type !== 'none' && (
           <Input
             maxWidth={'240px'}
@@ -176,6 +177,7 @@ export const SwapClaim = () => {
         onClick={() =>
           claimTransaction({
             variables: {
+              id,
               redeem: redeemScript,
               transaction: transactionHex,
               preimage,
