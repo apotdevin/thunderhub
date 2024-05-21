@@ -68,7 +68,7 @@
     "dataloader": "^2.2.2",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
-    "echarts": "^5.4.3",
+    "echarts": "^5.5.0",
     "echarts-for-react": "^3.0.2",
     "ecpair": "^2.0.1",
     "graphql": "^16.8.1",
