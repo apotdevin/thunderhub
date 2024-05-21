@@ -6,7 +6,6 @@ import {
 import {
   Card,
   DarkSubTitle,
-  Separation,
   SingleLine,
   SubTitle,
 } from '../../components/generic/Styled';
@@ -21,7 +20,6 @@ import { useCreateBoltzReverseSwapMutation } from '../../graphql/mutations/__gen
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../utils/error';
 import { useMutationResultWithReset } from '../../hooks/UseMutationWithReset';
-import { saveToPc } from '../../utils/helpers';
 import { useSwapsDispatch } from './SwapContext';
 
 type StartSwapProps = {
@@ -45,8 +43,6 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [address, setAddress] = useState<string>();
 
-  const [download, setDownload] = useState<boolean>(true);
-
   const dispatch = useSwapsDispatch();
 
   const [getQuote, { data: _data, loading }] =
@@ -61,15 +57,9 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
       type: 'add',
       swap: data.createBoltzReverseSwap,
     });
-    download &&
-      saveToPc(
-        JSON.stringify(data.createBoltzReverseSwap),
-        `Swap-${data.createBoltzReverseSwap.id}`,
-        false,
-        true
-      );
+
     resetMutation();
-  }, [data, dispatch, resetMutation, download]);
+  }, [data, dispatch, resetMutation]);
 
   return (
     <Card mobileCardPadding={'0'} mobileNoBackground={true}>
@@ -129,17 +119,7 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
           inputCallback={value => setAddress(value)}
         />
       )}
-      <Separation />
-      <InputWithDeco title={'Download Backup'} noInput={true}>
-        <MultiButton>
-          <SingleButton selected={download} onClick={() => setDownload(true)}>
-            Yes
-          </SingleButton>
-          <SingleButton selected={!download} onClick={() => setDownload(false)}>
-            No
-          </SingleButton>
-        </MultiButton>
-      </InputWithDeco>
+
       <ColorButton
         disabled={!amount || loading}
         loading={loading}
