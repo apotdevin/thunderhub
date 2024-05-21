@@ -40,8 +40,10 @@ fi
 
 START=`date +%s`
 
+docker buildx create --name mybuilder --use
+docker buildx install
 
-docker buildx build \
+docker build \
     --platform linux/amd64,linux/arm64,linux/arm/v7 \
     --tag $REPO:$VERSION \
     --file ./Dockerfile \
@@ -55,7 +57,7 @@ echo "Building basepath multiarch image for" $REPO
 echo
 echo
 
-docker buildx build \
+docker build \
     --build-arg BASE_PATH='/thub' \
     --platform linux/amd64,linux/arm64,linux/arm/v7 \
     --tag $REPO:$BASE-$VERSION \
