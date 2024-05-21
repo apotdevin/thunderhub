@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.31](https://github.com/apotdevin/thunderhub/compare/v0.13.30...v0.13.31) (2024-05-21)
+
+
+### Features
+
+* Taproot swaps ([#611](https://github.com/apotdevin/thunderhub/issues/611)) ([96b5b84](https://github.com/apotdevin/thunderhub/commit/96b5b84dfa8c472189e39873704d3074c662196b))
+
+
+### Bug Fixes
+
+* error message ([6099f17](https://github.com/apotdevin/thunderhub/commit/6099f178a304a9cc011552d86e3388dc21e67570))
+
+
+### Improvements
+
+* remove swap backup ([de5bbf4](https://github.com/apotdevin/thunderhub/commit/de5bbf48119cbf69879e9e8695b652a64eb33c95))
+* show ghost error to user ([#610](https://github.com/apotdevin/thunderhub/issues/610)) ([019c9a3](https://github.com/apotdevin/thunderhub/commit/019c9a3496d3e697ed7d38fce35ff9cb6520be76))
+* udpate package lock ([d4439e6](https://github.com/apotdevin/thunderhub/commit/d4439e69b9214807758580be98eed73b334591bd))
+
 ### [0.13.30](https://github.com/apotdevin/thunderhub/compare/v0.13.29...v0.13.30) (2024-01-02)
 
 
