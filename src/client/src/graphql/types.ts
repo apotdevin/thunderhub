@@ -1204,11 +1204,10 @@ export type UpdateRoutingFeesParams = {
 
 export type UserBackupInfo = {
   __typename?: 'UserBackupInfo';
-  available_size: Scalars['String']['output'];
   last_update?: Maybe<Scalars['String']['output']>;
   last_update_size?: Maybe<Scalars['String']['output']>;
-  remaining_size: Scalars['String']['output'];
   total_size_saved: Scalars['String']['output'];
+  slots: Scalars['Float']['output'];
 };
 
 export type UserGhostInfo = {

@@ -22,10 +22,7 @@ export class UserBackupInfo {
   total_size_saved: string;
 
   @Field()
-  available_size: string;
-
-  @Field()
-  remaining_size: string;
+  slots: number;
 }
 
 @ObjectType()

@@ -9,11 +9,10 @@ export const getUserQuery = gql`
         upgradable
       }
       backups {
-        available_size
         last_update
         last_update_size
-        remaining_size
         total_size_saved
+        slots
       }
       ghost {
         username
