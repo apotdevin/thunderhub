@@ -12,7 +12,6 @@ export const getUserQuery = gql`
         last_update
         last_update_size
         total_size_saved
-        slots
       }
       ghost {
         username

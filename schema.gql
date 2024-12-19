@@ -845,7 +845,6 @@ type UserBackupInfo {
   last_update: String
   last_update_size: String
   total_size_saved: String!
-  slots: Float!
 }
 
 type UserGhostInfo {
