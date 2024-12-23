@@ -47,16 +47,10 @@ export const AmbossBackupsView = () => {
     if (!user) return null;
 
     const {
-      backups: {
-        remaining_size,
-        total_size_saved,
-        last_update,
-        last_update_size,
-      },
+      backups: { total_size_saved, last_update, last_update_size },
     } = user;
 
     const total = Number(total_size_saved) / 1e6;
-    const remaining = Number(remaining_size) / 1e6;
 
     return (
       <>
@@ -73,10 +67,6 @@ export const AmbossBackupsView = () => {
         {renderLine(
           'Total Size Saved',
           `${numeral(total).format('0.[0000]')} MB`
-        )}
-        {renderLine(
-          'Remaining Size Available',
-          `${numeral(remaining).format('0.[0000]')} MB`
         )}
         <Separation />
       </>

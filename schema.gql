@@ -842,10 +842,8 @@ input UpdateRoutingFeesParams {
 }
 
 type UserBackupInfo {
-  available_size: String!
   last_update: String
   last_update_size: String
-  remaining_size: String!
   total_size_saved: String!
 }
 
