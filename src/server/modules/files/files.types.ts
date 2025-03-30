@@ -1,5 +1,5 @@
 export type EncodingType = 'hex' | 'utf-8';
-export type BitcoinNetwork = 'mainnet' | 'regtest' | 'testnet' | 'signet';
+export type BitcoinNetwork = 'mainnet' | 'regtest' | 'testnet' | 'testnet4' | 'signet';
 
 export type AccountType = {
   name?: string;
