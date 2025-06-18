@@ -3,6 +3,13 @@ import { ConfigService } from '@nestjs/config';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { FetchService } from '../../fetch/fetch.service';
+import { wrapFetch } from 'src/server/utils/fetch';
+import {
+  BroadcastTransaction,
+  CreateReverseSwap,
+  ReverseSwapPair,
+  SwapStatus,
+} from './boltz.types';
 
 @Injectable()
 export class BoltzService {
@@ -13,39 +20,30 @@ export class BoltzService {
   ) {}
 
   async getPairs() {
-    try {
-      const response = await this.fetchService.fetchWithProxy(
+    return wrapFetch<ReverseSwapPair>(
+      this.fetchService.fetchWithProxy(
         `${this.configService.get('urls.boltz')}/v2/swap/reverse`
-      );
-      return response.json();
-    } catch (error: any) {
-      this.logger.error('Error getting pairs from Boltz', { error });
-      throw new Error('ErrorGettingBoltzPairs');
-    }
+      ),
+      10_000
+    );
   }
 
   async getFeeEstimation() {
-    try {
-      const response = await this.fetchService.fetchWithProxy(
+    return wrapFetch(
+      this.fetchService.fetchWithProxy(
         `${this.configService.get('urls.boltz')}/v2/chain/BTC/fee`
-      );
-      return response.json();
-    } catch (error: any) {
-      this.logger.error('Error getting fee estimations from Boltz', { error });
-      throw new Error(error);
-    }
+      ),
+      10_000
+    );
   }
 
   async getSwapStatus(id: string) {
-    try {
-      const response = await this.fetchService.fetchWithProxy(
+    return wrapFetch<SwapStatus>(
+      this.fetchService.fetchWithProxy(
         `${this.configService.get('urls.boltz')}/v2/swap/${id}`
-      );
-      return response.json();
-    } catch (error: any) {
-      this.logger.error('Error getting fee estimations from Boltz', { error });
-      throw new Error(error);
-    }
+      ),
+      10_000
+    );
   }
 
   async createReverseSwap(
@@ -53,28 +51,25 @@ export class BoltzService {
     preimageHash: string,
     claimPublicKey: string
   ) {
-    try {
-      const body = {
-        from: 'BTC',
-        to: 'BTC',
-        referralId: 'thunderhub',
-        invoiceAmount,
-        preimageHash,
-        claimPublicKey,
-      };
-      const response = await this.fetchService.fetchWithProxy(
+    const body = {
+      from: 'BTC',
+      to: 'BTC',
+      referralId: 'thunderhub',
+      invoiceAmount,
+      preimageHash,
+      claimPublicKey,
+    };
+    return wrapFetch<CreateReverseSwap>(
+      this.fetchService.fetchWithProxy(
         `${this.configService.get('urls.boltz')}/v2/swap/reverse`,
         {
           method: 'POST',
           body: JSON.stringify(body),
           headers: { 'Content-Type': 'application/json' },
         }
-      );
-      return response.json();
-    } catch (error: any) {
-      this.logger.error('Error getting fee estimations from Boltz', { error });
-      throw new Error(error);
-    }
+      ),
+      10_000
+    );
   }
 
   async getReverseSwapClaimSignature(
@@ -87,48 +82,40 @@ export class BoltzService {
     pubNonce: string;
     partialSignature: string;
   }> {
-    try {
-      const body = {
-        id,
-        index,
-        preimage,
-        pubNonce,
-        transaction,
-      };
-      const response = await this.fetchService.fetchWithProxy(
+    const body = {
+      id,
+      index,
+      preimage,
+      pubNonce,
+      transaction,
+    };
+    return wrapFetch(
+      this.fetchService.fetchWithProxy(
         `${this.configService.get('urls.boltz')}/v2/swap/reverse/claim`,
         {
           method: 'POST',
           body: JSON.stringify(body),
           headers: { 'Content-Type': 'application/json' },
         }
-      );
-      return response.json();
-    } catch (error: any) {
-      this.logger.error('Error getting partial claim signature from Boltz', {
-        error,
-      });
-      throw new Error(error);
-    }
+      ),
+      10_000
+    );
   }
 
   async broadcastTransaction(transactionHex: string) {
-    try {
-      const body = {
-        hex: transactionHex,
-      };
-      const response = await this.fetchService.fetchWithProxy(
+    const body = {
+      hex: transactionHex,
+    };
+    return wrapFetch<BroadcastTransaction>(
+      this.fetchService.fetchWithProxy(
         `${this.configService.get('urls.boltz')}/v2/chain/BTC/transaction`,
         {
           method: 'POST',
           body: JSON.stringify(body),
           headers: { 'Content-Type': 'application/json' },
         }
-      );
-      return response.json();
-    } catch (error: any) {
-      this.logger.error('Error broadcasting transaction from Boltz', { error });
-      throw new Error(error);
-    }
+      ),
+      10_000
+    );
   }
 }

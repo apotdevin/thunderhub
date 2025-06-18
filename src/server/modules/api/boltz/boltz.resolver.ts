@@ -32,6 +32,7 @@ import {
   BoltzInfoType,
   BoltzSwap,
   CreateBoltzReverseSwapType,
+  isBoltzError,
 } from './boltz.types';
 import { getPreimageAndHash } from 'src/server/utils/crypto';
 import { CurrentUser } from '../../security/security.decorators';
@@ -39,45 +40,9 @@ import { UserId } from '../../security/security.types';
 import { toWithError } from 'src/server/utils/async';
 import { ECPairAPI, ECPairFactory } from 'ecpair';
 import * as ecc from 'tiny-secp256k1';
+import { mapSeries } from 'async';
 
 const ECPair: ECPairAPI = ECPairFactory(ecc);
-
-@Resolver(BoltzSwap)
-export class BoltzSwapResolver {
-  constructor(
-    private boltzService: BoltzService,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
-  ) {}
-
-  @ResolveField()
-  async id(@Parent() parent: string) {
-    return parent;
-  }
-
-  @ResolveField()
-  async boltz(@Parent() parent: string) {
-    const [info, error] = await toWithError(
-      this.boltzService.getSwapStatus(parent)
-    );
-
-    if (error || info?.error) {
-      this.logger.error(`Error getting status for swap with id: ${parent}`, {
-        error: error || info.error,
-      });
-      return null;
-    }
-
-    if (!info?.status) {
-      this.logger.debug(
-        `No status in Boltz response for swap with id: ${parent}`,
-        { info }
-      );
-      return null;
-    }
-
-    return info;
-  }
-}
 
 @Resolver(CreateBoltzReverseSwapType)
 export class CreateBoltzReverseSwapTypeResolver {
@@ -110,13 +75,14 @@ export class BoltzResolver {
 
   @Query(() => BoltzInfoType)
   async getBoltzInfo() {
-    const info = await this.boltzService.getPairs();
+    const [info, error] = await toWithError(this.boltzService.getPairs());
 
-    if (info?.error) {
+    if (error || isBoltzError(info)) {
       this.logger.error('Error getting swap information from Boltz', {
-        error: info.error,
+        error,
+        boltzError: info,
       });
-      throw new Error(info.error);
+      throw new GraphQLError('Error getting swap informaion from Boltz');
     }
 
     const btcPair = info?.BTC?.BTC;
@@ -137,7 +103,29 @@ export class BoltzResolver {
   async getBoltzSwapStatus(
     @Args('ids', { type: () => [String] }) ids: string[]
   ) {
-    return ids;
+    return mapSeries(ids, async (id: string) => {
+      const [info, error] = await toWithError(
+        this.boltzService.getSwapStatus(id)
+      );
+
+      if (error || isBoltzError(info)) {
+        this.logger.error(`Error getting status for swap with id: ${id}`, {
+          error,
+          boltzError: info,
+        });
+        return { id };
+      }
+
+      if (!info.status) {
+        this.logger.debug(
+          `No status in Boltz response for swap with id: ${id}`,
+          { info }
+        );
+        return { id };
+      }
+
+      return { id, boltz: info };
+    });
   }
 
   @Mutation(() => String)
@@ -289,15 +277,16 @@ export class BoltzResolver {
       publicKey,
     });
 
-    const info = await this.boltzService.createReverseSwap(
-      amount,
-      hash,
-      publicKey
+    const [info, error] = await toWithError(
+      this.boltzService.createReverseSwap(amount, hash, publicKey)
     );
 
-    if (info?.error) {
-      this.logger.error('Error creating reverse swap with Boltz', info.error);
-      throw new Error(info.error);
+    if (error || isBoltzError(info)) {
+      this.logger.error('Error creating reverse swap with Boltz', {
+        error,
+        boltzError: info,
+      });
+      throw new GraphQLError('Error creating reverse swap with Boltz');
     }
 
     const finalInfo = {
@@ -327,17 +316,23 @@ export class BoltzResolver {
   private broadcastTransaction = async (finalTransaction: Transaction) => {
     this.logger.debug('Final transaction', { finalTransaction });
 
-    const response = await this.boltzService.broadcastTransaction(
-      finalTransaction.toHex()
+    const [info, error] = await toWithError(
+      this.boltzService.broadcastTransaction(finalTransaction.toHex())
     );
 
-    this.logger.debug('Response from Boltz', { response });
+    if (error || isBoltzError(info)) {
+      this.logger.error('Error broadcasting transaction through Boltz', {
+        error,
+        boltzError: info,
+      });
+      throw new GraphQLError('Error broadcasting transaction through Boltz');
+    }
 
-    if (!response?.id) {
+    if (!info.id) {
       this.logger.error('Did not receive a transaction id from Boltz');
       throw new Error('NoTransactionIdFromBoltz');
     }
 
-    return response.id;
+    return info.id;
   };
 }
