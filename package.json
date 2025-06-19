@@ -31,7 +31,7 @@
     "update": "sh ./scripts/updateToLatest.sh",
     "build:image": "docker build --pull --rm -f Dockerfile -t thunderhub:testing '.'",
     "build:image:base": "docker build --pull --rm -f Dockerfile --build-arg BASE_PATH=/thub -t thunderhub:testing .",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",
@@ -156,7 +156,7 @@
     "eslint-config-next": "^14.0.3",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.5.0",
-    "husky": "^8.0.3",
+    "husky": "^9.1.7",
     "jest": "^29.7.0",
     "lint-staged": "^15.1.0",
     "prettier": "^3.5.3",
