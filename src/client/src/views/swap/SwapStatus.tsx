@@ -71,6 +71,7 @@ export const MEMPOOL = 'transaction.mempool';
 const CONFIRMED = 'transaction.confirmed';
 const SETTLED = 'invoice.settled';
 const EXPIRED = 'swap.expired';
+const INVOICE_EXPIRED = 'invoice.expired';
 const REFUNDED = 'transaction.refunded';
 
 const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
@@ -109,6 +110,7 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
   }
 
   switch (swap.boltz.status) {
+    case INVOICE_EXPIRED:
     case EXPIRED:
       return (
         <S.row>
@@ -182,7 +184,12 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
         </S.row>
       );
     default:
-      return <ErrorComponent />;
+      return (
+        <S.row>
+          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
+          <S.expired>{swap.boltz.status}</S.expired>
+        </S.row>
+      );
   }
 };
 
