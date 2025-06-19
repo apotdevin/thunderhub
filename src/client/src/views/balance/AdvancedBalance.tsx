@@ -87,8 +87,6 @@ export type ActionType =
       type: 'clearFilters';
     };
 
-type Reducer<S, A> = (prevState: S, action: A) => S;
-
 const initialState: StateType = {
   avoid: [],
   in_through: defaultRebalanceId,
@@ -171,14 +169,11 @@ export const AdvancedBalance = () => {
       }
     : defaultRebalanceId;
 
-  const [state, dispatch] = useReducer<Reducer<StateType, ActionType>>(
-    reducer,
-    {
-      ...initialState,
-      in_through,
-      out_through,
-    }
-  );
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
+    in_through,
+    out_through,
+  });
 
   const [rebalance, { data: _data, loading, error }] = useBosRebalanceMutation({
     onError: error => toast.error(getErrorContent(error)),

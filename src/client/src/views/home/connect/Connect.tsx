@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Radio, Copy, X } from 'react-feather';
+import { Radio, Copy, X, Check } from 'react-feather';
 import styled from 'styled-components';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { renderLine } from '../../../components/generic/helpers';
 import { useGetNodeInfoQuery } from '../../../graphql/queries/__generated__/getNodeInfo.generated';
@@ -18,6 +17,7 @@ import {
   Separation,
 } from '../../../components/generic/Styled';
 import { mediaWidths, themeColors } from '../../../styles/Themes';
+import useCopyClipboard from '../../../hooks/UseCopyToClipboard';
 
 const Key = styled.div`
   overflow: hidden;
@@ -68,6 +68,8 @@ export const ConnectCard = () => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
+  const [isCopied, copy] = useCopyClipboard({ successDuration: 1000 });
+
   if (!data || loading) {
     return <LoadingCard title={'Connect'} />;
   }
@@ -101,25 +103,23 @@ export const ConnectCard = () => {
           </Tile>
           <ButtonRow>
             {onionAddress ? (
-              <CopyToClipboard
-                text={onionAddress}
-                onCopy={() => toast.success('Onion Address Copied')}
+              <ColorButton
+                fullWidth={true}
+                withMargin={'0 4px 0 0'}
+                onClick={() => copy(onionAddress)}
               >
-                <ColorButton fullWidth={true} withMargin={'0 4px 0 0'}>
-                  <Copy size={18} />
-                  <TextPadding>Onion</TextPadding>
-                </ColorButton>
-              </CopyToClipboard>
+                {isCopied ? <Check size={18} /> : <Copy size={18} />}
+                <TextPadding>Onion</TextPadding>
+              </ColorButton>
             ) : null}
             {normalAddress ? (
-              <CopyToClipboard
-                text={normalAddress}
-                onCopy={() => toast.success('Public Address Copied')}
+              <ColorButton
+                fullWidth={true}
+                withMargin={'0 0 0 4px'}
+                onClick={() => copy(normalAddress)}
               >
-                <ColorButton fullWidth={true} withMargin={'0 0 0 4px'}>
-                  <Copy size={18} />
-                </ColorButton>
-              </CopyToClipboard>
+                {isCopied ? <Check size={18} /> : <Copy size={18} />}
+              </ColorButton>
             ) : null}
             <ColorButton
               fullWidth={true}

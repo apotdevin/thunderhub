@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { X, Copy } from 'react-feather';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import { X, Copy, Check } from 'react-feather';
 import { useSignMessageLazyQuery } from '../../../graphql/queries/__generated__/signMessage.generated';
 import { Input } from '../../../components/input';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
@@ -13,10 +12,13 @@ import {
 import { getErrorContent } from '../../../utils/error';
 import { Column, WrapRequest } from '../Tools.styled';
 import { NoWrap } from './Messages';
+import useCopyClipboard from '../../../hooks/UseCopyToClipboard';
 
 export const SignMessage = () => {
   const [message, setMessage] = useState<string>('');
   const [signed, setSigned] = useState<string>('');
+
+  const [isCopied, copy] = useCopyClipboard({ successDuration: 1000 });
 
   const [signMessage, { data, loading }] = useSignMessageLazyQuery({
     onError: error => toast.error(getErrorContent(error)),
@@ -56,15 +58,11 @@ export const SignMessage = () => {
       <Separation />
       <Column>
         <WrapRequest>{signed}</WrapRequest>
-        <CopyToClipboard
-          text={signed}
-          onCopy={() => toast.success('Signature Copied')}
-        >
-          <ColorButton>
-            <Copy size={18} />
-            Copy
-          </ColorButton>
-        </CopyToClipboard>
+
+        <ColorButton onClick={() => copy(signed)}>
+          {isCopied ? <Check size={18} /> : <Copy size={18} />}
+          Copy
+        </ColorButton>
       </Column>
     </>
   );
