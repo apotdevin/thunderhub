@@ -22,6 +22,7 @@ const isValidNetwork = (network: string | null): network is BitcoinNetwork =>
   network === 'mainnet' ||
   network === 'regtest' ||
   network === 'testnet' ||
+  network === 'testnet4' ||
   network == 'signet';
 
 export const PRE_PASS_STRING = 'thunderhub-';
