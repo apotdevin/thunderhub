@@ -18,7 +18,6 @@ import getConfig from 'next/config';
 import Head from 'next/head';
 import isPropValid from '@emotion/is-prop-valid';
 
-import 'react-toastify/dist/ReactToastify.min.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import 'react-circular-progressbar/dist/styles.css';
