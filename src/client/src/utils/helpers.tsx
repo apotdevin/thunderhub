@@ -2,6 +2,7 @@ import numeral from 'numeral';
 import { SatoshiSymbol } from '../components/satoshi/Satoshi';
 import { unSelectedNavButton } from '../styles/Themes';
 import styled from 'styled-components';
+import { ReactNode } from 'react';
 
 const DarkUnit = styled.span`
   font-size: 12px;
@@ -38,7 +39,7 @@ export const getValue = ({
   override,
   noUnit,
   useSatWord,
-}: GetNumberProps): JSX.Element | string => {
+}: GetNumberProps): ReactNode | string => {
   if (!amount) return '';
   const correctCurrency = override || currency;
   let value = 0;

@@ -14,7 +14,7 @@ import { appConstants } from './utils/appConstants';
 import { transports, format } from 'winston';
 import configuration from './config/configuration';
 import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import { WsModule } from './modules/ws/ws.module';
 import { SubModule } from './modules/sub/sub.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';

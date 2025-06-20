@@ -8,7 +8,7 @@ interface Size {
 }
 
 function useElementSize<T extends HTMLElement = HTMLDivElement>(
-  elementRef: RefObject<T>
+  elementRef: RefObject<T | null>
 ): Size {
   const [size, setSize] = useState<Size>({
     width: 0,

@@ -11,7 +11,7 @@ import {
 } from '../src/components/generic/Styled';
 import { LoadingCard } from '../src/components/loading/LoadingCard';
 import { AddPeer } from '../src/views/peers/AddPeer';
-import { copyLink, getNodeLink } from '../src/components/generic/helpers';
+import { CopyLink, getNodeLink } from '../src/components/generic/helpers';
 import { Price } from '../src/components/price/Price';
 import Table from '../src/components/table';
 
@@ -55,7 +55,7 @@ const PeersView = () => {
         cell: ({ row }: any) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {row.original.socket.includes('.onion') ? 'Tor' : 'Clearnet'}
-            {copyLink(row.original.socket)}
+            <CopyLink text={row.original.socket} />
           </div>
         ),
       },

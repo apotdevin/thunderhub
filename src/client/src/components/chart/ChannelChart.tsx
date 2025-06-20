@@ -39,8 +39,9 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
     : [];
 
   // Helper data
-  const fontColor = themeContext?.mode === 'light' ? 'black' : 'white';
-  const oppositeColor = themeContext?.mode === 'light' ? 'white' : 'black';
+  const fontColor = (themeContext as any)?.mode === 'light' ? 'black' : 'white';
+  const oppositeColor =
+    (themeContext as any)?.mode === 'light' ? 'white' : 'black';
   const columnSize = days === 1 ? 24 : days;
   const now = new Date();
 
