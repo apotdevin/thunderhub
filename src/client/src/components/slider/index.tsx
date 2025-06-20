@@ -1,41 +1,4 @@
-import ReactSlider from 'react-slider';
-import {
-  sliderBackgroundColor,
-  sliderThumbColor,
-  themeColors,
-} from '../../../src/styles/Themes';
-import styled from 'styled-components';
-
-const StyledSlider = styled(ReactSlider)`
-  max-width: 440px;
-  width: 100%;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  outline: none;
-`;
-
-const StyledThumb = styled.div`
-  height: 24px;
-  width: 24px;
-  background-color: ${sliderThumbColor};
-  color: #fff;
-  border-radius: 50%;
-  cursor: grab;
-`;
-
-const Thumb = (props: any) => <StyledThumb {...props} />;
-
-const StyledTrack = styled.div<{ index: number }>`
-  height: 8px;
-  background: ${({ index }) =>
-    index === 1 ? sliderBackgroundColor : themeColors.blue2};
-  border-radius: 8px;
-`;
-
-const Track = (props: any, state: any) => (
-  <StyledTrack {...props} index={state.index} />
-);
+import { Slider as RadixSlider } from 'radix-ui';
 
 type SliderProps = {
   value: number;
@@ -46,13 +9,50 @@ type SliderProps = {
 
 export const Slider = ({ value, max, min, onChange }: SliderProps) => {
   return (
-    <StyledSlider
-      value={value}
+    <RadixSlider.Root
       max={max}
       min={min}
-      renderTrack={Track}
-      renderThumb={Thumb}
-      onChange={value => value && typeof value === 'number' && onChange(value)}
-    />
+      value={[value]}
+      onValueChange={v => onChange(v[0])}
+      style={{
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        userSelect: 'none',
+        touchAction: 'none',
+        maxWidth: '440px',
+        width: '100%',
+        height: '20px',
+      }}
+    >
+      <RadixSlider.Track
+        style={{
+          backgroundColor: '#737a86',
+          position: 'relative',
+          flexGrow: '1',
+          height: '2px',
+          borderRadius: '10px',
+        }}
+      >
+        <RadixSlider.Range
+          style={{
+            position: 'absolute',
+            backgroundColor: '#6284e4',
+            borderRadius: '10px',
+            height: '100%',
+          }}
+        />
+      </RadixSlider.Track>
+      <RadixSlider.Thumb
+        style={{
+          display: 'block',
+          width: '20px',
+          height: '20px',
+          backgroundColor: 'white',
+          borderRadius: '10px',
+          cursor: 'grab',
+        }}
+      />
+    </RadixSlider.Root>
   );
 };

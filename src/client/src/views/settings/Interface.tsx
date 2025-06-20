@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import Modal from '../../components/modal/ReactModal';
@@ -53,7 +53,7 @@ export const InterfaceSettings = () => {
   };
 
   const renderFiat = () => {
-    const cards: JSX.Element[] = [];
+    const cards: ReactNode[] = [];
     for (const key in prices) {
       if (Object.prototype.hasOwnProperty.call(prices, key)) {
         const element = prices[key];

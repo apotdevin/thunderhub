@@ -9,7 +9,7 @@ import {
   SubTitle,
 } from '../../components/generic/Styled';
 import styled from 'styled-components';
-import { VFC } from 'react';
+import { FC } from 'react';
 import {
   useNotificationDispatch,
   useNotificationState,
@@ -22,7 +22,7 @@ const NoWrapText = styled.div`
 
 const InputTitle = styled(NoWrapText)``;
 
-const Toggle: VFC<{
+const Toggle: FC<{
   title: string;
   property: string;
   value: boolean;

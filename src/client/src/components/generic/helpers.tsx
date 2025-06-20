@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, ReactNode } from 'react';
 import {
   isFuture,
   format,
@@ -6,9 +6,7 @@ import {
   differenceInCalendarDays,
   isToday,
 } from 'date-fns';
-import { X, Copy } from 'react-feather';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import { toast } from 'react-toastify';
+import { X, Copy, Check } from 'react-feather';
 import getConfig from 'next/config';
 import {
   SmallLink,
@@ -18,6 +16,7 @@ import {
   CopyIcon,
 } from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
+import useCopyClipboard from '../../hooks/UseCopyToClipboard';
 
 const { publicRuntimeConfig } = getConfig();
 const { disableLinks, mempoolUrl } = publicRuntimeConfig;
@@ -48,13 +47,18 @@ export const addEllipsis = (
   return `${beginning}...`;
 };
 
-export const copyLink = (text: string) => (
-  <CopyToClipboard text={text} onCopy={() => toast.success('Copied')}>
-    <CopyIcon>
-      <Copy size={12} />
-    </CopyIcon>
-  </CopyToClipboard>
-);
+export const CopyLink: FC<{ text: string }> = ({ text }) => {
+  const [isCopied, copy] = useCopyClipboard({ successDuration: 1000 });
+
+  return (
+    <button
+      onClick={() => copy(text)}
+      style={{ background: 'transparent', border: 'none', color: 'inherit' }}
+    >
+      <CopyIcon>{isCopied ? <Check size={12} /> : <Copy size={12} />}</CopyIcon>
+    </button>
+  );
+};
 
 export const getAddressLink = (transaction: string | null | undefined) => {
   if (!transaction) return null;
@@ -62,7 +66,7 @@ export const getAddressLink = (transaction: string | null | undefined) => {
     return (
       <>
         {shorten(transaction)}
-        {copyLink(transaction)}
+        <CopyLink text={transaction} />
       </>
     );
   }
@@ -72,7 +76,7 @@ export const getAddressLink = (transaction: string | null | undefined) => {
       <SmallLink href={link} target="_blank">
         {shorten(transaction)}
       </SmallLink>
-      {copyLink(transaction)}
+      <CopyLink text={transaction} />
     </>
   );
 };
@@ -83,7 +87,7 @@ export const getTransactionLink = (transaction: string | null | undefined) => {
     return (
       <>
         {shorten(transaction)}
-        {copyLink(transaction)}
+        <CopyLink text={transaction} />
       </>
     );
   }
@@ -93,7 +97,7 @@ export const getTransactionLink = (transaction: string | null | undefined) => {
       <SmallLink href={link} target="_blank">
         {shorten(transaction)}
       </SmallLink>
-      {copyLink(transaction)}
+      <CopyLink text={transaction} />
     </>
   );
 };
@@ -103,7 +107,7 @@ export const getWithCopy = (text: string | null | undefined) => {
   return (
     <>
       {shorten(text)}
-      {copyLink(text)}
+      <CopyLink text={text} />
     </>
   );
 };
@@ -126,7 +130,7 @@ export const getNodeLink = (
           {text}
         </SmallLink>
       )}
-      {copyLink(publicKey)}
+      <CopyLink text={publicKey} />
     </>
   );
 };
@@ -142,7 +146,7 @@ export const getChannelLink = (id: string) => {
           {id}
         </SmallLink>
       )}
-      {copyLink(id)}
+      <CopyLink text={id} />
     </>
   );
 };
@@ -218,10 +222,10 @@ export const getStatusDot = (status: boolean, type: string) => {
 
 export const renderLine = (
   title: string | number,
-  content: number | string | JSX.Element | undefined | null,
+  content: number | string | ReactNode | undefined | null,
   key?: string | number,
   deleteCallback?: () => void
-): JSX.Element | null => {
+): ReactNode | null => {
   if (!content) return null;
   return (
     <DetailLine key={key}>

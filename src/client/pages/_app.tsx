@@ -1,6 +1,5 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { StyleSheetManager, ThemeProvider } from 'styled-components';
-import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { AppProps } from 'next/app';
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '../config/client';
@@ -62,18 +61,16 @@ const Wrapper: React.FC<{ authenticated: boolean; children?: ReactNode }> = ({
 
   return (
     <ThemeProvider theme={{ mode: isRoot ? 'light' : theme }}>
-      <ModalProvider backgroundComponent={BaseModalBackground}>
-        <GlobalStyles />
-        <PageWrapper>
-          <HeaderBodyWrapper>
-            <Header />
-            <Listener isRoot={isRoot} />
-            {authenticated ? children : <NotAuthenticated />}
-          </HeaderBodyWrapper>
-          <Footer />
-          <ToastContainer theme={theme === 'light' ? 'light' : 'dark'} />
-        </PageWrapper>
-      </ModalProvider>
+      <GlobalStyles />
+      <PageWrapper>
+        <HeaderBodyWrapper>
+          <Header />
+          <Listener isRoot={isRoot} />
+          {authenticated ? children : <NotAuthenticated />}
+        </HeaderBodyWrapper>
+        <Footer />
+        <ToastContainer theme={theme === 'light' ? 'light' : 'dark'} />
+      </PageWrapper>
     </ThemeProvider>
   );
 };
