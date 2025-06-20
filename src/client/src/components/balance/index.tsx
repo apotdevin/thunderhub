@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import { ProgressBar } from '../generic/CardGeneric';
 
@@ -42,8 +42,8 @@ const RightValue = styled(ValueBox)`
 type BalanceProps = {
   local: number;
   remote: number;
-  formatLocal?: JSX.Element | string;
-  formatRemote?: JSX.Element | string;
+  formatLocal?: ReactNode | string;
+  formatRemote?: ReactNode | string;
   height?: number;
   withBorderColor?: boolean;
 };

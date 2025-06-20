@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
-import { Trash } from 'react-feather';
+import { RefreshCw, Trash } from 'react-feather';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { getTransactionLink } from '../../components/generic/helpers';
@@ -11,7 +11,7 @@ import {
   SubTitle,
 } from '../../components/generic/Styled';
 import Modal from '../../components/modal/ReactModal';
-import { useGetBoltzSwapStatusLazyQuery } from '../../graphql/queries/__generated__/getBoltzSwapStatus.generated';
+import { useGetBoltzSwapStatusQuery } from '../../graphql/queries/__generated__/getBoltzSwapStatus.generated';
 import { chartColors, themeColors } from '../../styles/Themes';
 import styled from 'styled-components';
 import { SwapClaim } from './SwapClaim';
@@ -71,6 +71,7 @@ export const MEMPOOL = 'transaction.mempool';
 const CONFIRMED = 'transaction.confirmed';
 const SETTLED = 'invoice.settled';
 const EXPIRED = 'swap.expired';
+const INVOICE_EXPIRED = 'invoice.expired';
 const REFUNDED = 'transaction.refunded';
 
 const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
@@ -109,6 +110,7 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
   }
 
   switch (swap.boltz.status) {
+    case INVOICE_EXPIRED:
     case EXPIRED:
       return (
         <S.row>
@@ -182,7 +184,12 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
         </S.row>
       );
     default:
-      return <ErrorComponent />;
+      return (
+        <S.row>
+          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
+          <S.expired>{swap.boltz.status}</S.expired>
+        </S.row>
+      );
   }
 };
 
@@ -192,20 +199,14 @@ export const SwapStatus = () => {
 
   const [enriched, setEnriched] = useState<EnrichedSwap[]>([]);
 
-  const [getStatus, { data, loading }] = useGetBoltzSwapStatusLazyQuery({
-    pollInterval: 2000,
+  const { data, refetch, networkStatus } = useGetBoltzSwapStatusQuery({
+    notifyOnNetworkStatusChange: true,
+    variables: { ids: swaps.map((s: { id: string }) => s.id).filter(Boolean) },
     fetchPolicy: 'network-only',
+    skip: !swaps.length,
   });
 
-  useEffect(() => {
-    if (swaps.length) {
-      getStatus({
-        variables: {
-          ids: swaps.map((s: { id: string }) => s.id).filter(Boolean),
-        },
-      });
-    }
-  }, [swaps, getStatus]);
+  const loading = [1, 2, 3, 4, 6].includes(networkStatus);
 
   useEffect(() => {
     if (loading || !data?.getBoltzSwapStatus) return;
@@ -232,7 +233,19 @@ export const SwapStatus = () => {
     dispatch({ type: 'cleanup', swaps: cleaned });
   };
 
-  if (!swaps.length || !data?.getBoltzSwapStatus || loading) {
+  if (loading) {
+    return (
+      <>
+        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+          <SubTitle>Swap History</SubTitle>
+          <Separation />
+          <DarkSubTitle>Loading swap statuses...</DarkSubTitle>
+        </Card>
+      </>
+    );
+  }
+
+  if (!swaps.length || !data?.getBoltzSwapStatus) {
     return (
       <>
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
@@ -249,11 +262,20 @@ export const SwapStatus = () => {
       <Card mobileCardPadding={'0'} mobileNoBackground={true}>
         <SingleLine>
           <SubTitle>Swap History</SubTitle>
-          <div data-tip data-for={`cleanup`}>
-            <ColorButton disabled={loading} onClick={handleCleanup}>
-              <Trash size={18} />
+          <SingleLine>
+            <ColorButton
+              disabled={loading}
+              onClick={() => refetch()}
+              withMargin="0 4px 0 0"
+            >
+              <RefreshCw size={18} />
             </ColorButton>
-          </div>
+            <div data-tip data-for={`cleanup`}>
+              <ColorButton disabled={loading} onClick={handleCleanup}>
+                <Trash size={18} />
+              </ColorButton>
+            </div>
+          </SingleLine>
         </SingleLine>
         <Separation />
         {enriched.map((swap, index) => (

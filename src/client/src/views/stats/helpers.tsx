@@ -21,7 +21,7 @@ export const getProgressColor = (score: number | null | undefined): string => {
 export const getIcon = (
   score: number | null | undefined,
   notSignificant?: boolean
-): JSX.Element => {
+): React.ReactNode => {
   if (!score) {
     return <XCircle color={getProgressColor(score)} />;
   }

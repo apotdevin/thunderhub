@@ -66,3 +66,58 @@ export class CreateBoltzReverseSwapType {
   @Field({ nullable: true })
   publicKey: string;
 }
+
+export type BoltzError = { error: string };
+
+export type BroadcastTransaction = { id: string } | BoltzError;
+
+export type CreateReverseSwap =
+  | {
+      id: string;
+      invoice: string;
+      swapTree: {
+        claimLeaf: {
+          version: number;
+          output: string;
+        };
+        refundLeaf: {
+          version: number;
+          output: string;
+        };
+      };
+      lockupAddress: string;
+      refundPublicKey: string;
+      refundAddress: string;
+      timeoutBlockHeight: number;
+      onchainAmount: number;
+      blindingKey: string;
+      referralId: string;
+    }
+  | BoltzError;
+
+export type ReverseSwapPair =
+  | {
+      [key: string]: {
+        [key: string]: {
+          hash: string;
+          limits: { maximal: number; minimal: number };
+          fees: {
+            percentage: number;
+            minerFees: { claim: number; lockup: number };
+          };
+        };
+      };
+    }
+  | BoltzError;
+
+export type SwapStatus =
+  | {
+      status: string;
+      zeroConfRejected: true;
+      transaction: { id: string; hex: string };
+    }
+  | BoltzError;
+
+export const isBoltzError = (obj: unknown): obj is BoltzError => {
+  return !!(obj as BoltzError).error;
+};
