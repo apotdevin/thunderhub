@@ -1,19 +1,9 @@
 # ---------------
-# Base Image
-# ---------------
-FROM node:20.11.1-alpine AS base
-
-WORKDIR /app
-
-# Set env variables
-ARG BASE_PATH=""
-ENV BASE_PATH=${BASE_PATH}
-ENV NEXT_TELEMETRY_DISABLED=1
-
-# ---------------
 # Install Dependencies
 # ---------------
-FROM base AS deps
+FROM node:18.18.2-alpine as deps
+
+WORKDIR /app
 
 # Install dependencies neccesary for node-gyp on node alpine
 RUN apk add --update --no-cache \
@@ -29,10 +19,16 @@ RUN npm ci
 # ---------------
 # Build App
 # ---------------
-FROM deps AS build
+FROM deps as build
 
+WORKDIR /app
+
+# Set env variables
+ARG BASE_PATH=""
+ENV BASE_PATH=${BASE_PATH}
 ARG NODE_ENV="production"
 ENV NODE_ENV=${NODE_ENV}
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the NestJS and NextJS application
 COPY . .
@@ -45,10 +41,16 @@ RUN npm prune --production
 # ---------------
 # Release App
 # ---------------
-FROM base AS final
+FROM node:18.18.2-alpine as final
 
+WORKDIR /app
+
+# Set env variables
+ARG BASE_PATH=""
+ENV BASE_PATH=${BASE_PATH}
 ARG NODE_ENV="production"
 ENV NODE_ENV=${NODE_ENV}
+ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=build /app/package.json ./
 COPY --from=build /app/node_modules/ ./node_modules
