@@ -1,11 +1,12 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import createServer from 'next';
+import { NextServer } from 'next/dist/server/next';
 import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ViewService implements OnModuleInit {
-  private server;
+  private server: NextServer;
 
   constructor(private configService: ConfigService) {}
 

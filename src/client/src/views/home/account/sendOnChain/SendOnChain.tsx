@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { usePayAddressMutation } from '../../../../graphql/mutations/__generated__/sendToAddress.generated';
 import { InputWithDeco } from '../../../../components/input/InputWithDeco';
@@ -52,7 +52,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
     }
   }, [type, amount, fast]);
 
-  const feeFormat = (amount: number): ReactNode | string => {
+  const feeFormat = (amount: number): JSX.Element | string => {
     if (type === 'fee' || type === 'none') {
       return format({ amount });
     }

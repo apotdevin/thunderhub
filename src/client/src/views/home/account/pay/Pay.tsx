@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../../../../utils/error';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { FC, useState } from 'react';
+import { useState, VFC } from 'react';
 import { InputWithDeco } from '../../../../components/input/InputWithDeco';
 import { ChannelSelect } from '../../../../components/select/specific/ChannelSelect';
 import { useDecodeRequestQuery } from '../../../../graphql/queries/__generated__/decodeRequest.generated';
@@ -17,7 +17,7 @@ interface PayProps {
   payCallback?: () => void;
 }
 
-const DecodeInvoice: FC<{ invoice: string | undefined | null }> = ({
+const DecodeInvoice: VFC<{ invoice: string | undefined | null }> = ({
   invoice,
 }) => {
   const { data, loading } = useDecodeRequestQuery({

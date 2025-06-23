@@ -42,7 +42,7 @@ type InputWithDecoProps = {
   noInput?: boolean;
   amount?: number | null;
   override?: string;
-  customAmount?: string | React.ReactNode;
+  customAmount?: string | JSX.Element;
   color?: string;
   placeholder?: string;
   inputType?: string;

@@ -1,5 +1,6 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { StyleSheetManager, ThemeProvider } from 'styled-components';
+import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { AppProps } from 'next/app';
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '../config/client';
@@ -18,6 +19,7 @@ import getConfig from 'next/config';
 import Head from 'next/head';
 import isPropValid from '@emotion/is-prop-valid';
 
+import 'react-toastify/dist/ReactToastify.min.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import 'react-circular-progressbar/dist/styles.css';
@@ -60,16 +62,18 @@ const Wrapper: React.FC<{ authenticated: boolean; children?: ReactNode }> = ({
 
   return (
     <ThemeProvider theme={{ mode: isRoot ? 'light' : theme }}>
-      <GlobalStyles />
-      <PageWrapper>
-        <HeaderBodyWrapper>
-          <Header />
-          <Listener isRoot={isRoot} />
-          {authenticated ? children : <NotAuthenticated />}
-        </HeaderBodyWrapper>
-        <Footer />
-        <ToastContainer theme={theme === 'light' ? 'light' : 'dark'} />
-      </PageWrapper>
+      <ModalProvider backgroundComponent={BaseModalBackground}>
+        <GlobalStyles />
+        <PageWrapper>
+          <HeaderBodyWrapper>
+            <Header />
+            <Listener isRoot={isRoot} />
+            {authenticated ? children : <NotAuthenticated />}
+          </HeaderBodyWrapper>
+          <Footer />
+          <ToastContainer theme={theme === 'light' ? 'light' : 'dark'} />
+        </PageWrapper>
+      </ModalProvider>
     </ThemeProvider>
   );
 };

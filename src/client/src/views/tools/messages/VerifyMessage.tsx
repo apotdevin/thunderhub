@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { X, Copy, Check } from 'react-feather';
+import { X, Copy } from 'react-feather';
+import CopyToClipboard from 'react-copy-to-clipboard';
 import { useVerifyMessageLazyQuery } from '../../../graphql/queries/__generated__/verifyMessage.generated';
 import { Input } from '../../../components/input';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
@@ -13,15 +14,12 @@ import { getErrorContent } from '../../../utils/error';
 import { Column, WrapRequest } from '../Tools.styled';
 import { getNodeLink } from '../../../components/generic/helpers';
 import { NoWrap } from './Messages';
-import useCopyClipboard from '../../../hooks/UseCopyToClipboard';
 
 export const VerifyMessage = () => {
   const [message, setMessage] = useState<string>('');
   const [signature, setSignature] = useState<string>('');
   const [isPasting, setIsPasting] = useState<boolean>(false);
   const [signedBy, setSignedBy] = useState<string>('');
-
-  const [isCopied, copy] = useCopyClipboard({ successDuration: 1000 });
 
   const [signMessage, { data, loading }] = useVerifyMessageLazyQuery({
     onError: error => toast.error(getErrorContent(error)),
@@ -69,11 +67,15 @@ export const VerifyMessage = () => {
   const renderMessage = () => (
     <Column>
       <WrapRequest>{getNodeLink(signedBy)}</WrapRequest>
-
-      <ColorButton onClick={() => copy(signedBy)}>
-        {isCopied ? <Check size={18} /> : <Copy size={18} />}
-        Copy
-      </ColorButton>
+      <CopyToClipboard
+        text={signedBy}
+        onCopy={() => toast.success('Public Node Key Copied')}
+      >
+        <ColorButton>
+          <Copy size={18} />
+          Copy
+        </ColorButton>
+      </CopyToClipboard>
     </Column>
   );
 

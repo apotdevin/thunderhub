@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client';
-import { FC, ReactNode, useCallback, useEffect, useMemo, useRef } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
 import { toast } from 'react-toastify';
 import {
   getNodeLink,
@@ -17,7 +17,7 @@ const refetchTimeMs = 1000 * 1;
 
 const renderToast = (
   title: string,
-  content: ReactNode | null | string | number
+  content: JSX.Element | null | string | number
 ) => {
   return (
     <>

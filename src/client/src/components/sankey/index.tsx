@@ -49,8 +49,7 @@ export const Sankey = ({ data, width, height }: SankeyProps) => {
   const themeContext = useContext(ThemeContext);
 
   const option = useMemo(() => {
-    const fontColor =
-      (themeContext as any)?.mode === 'light' ? 'black' : 'white';
+    const fontColor = themeContext?.mode === 'light' ? 'black' : 'white';
     return {
       resize: true,
       tooltip: {

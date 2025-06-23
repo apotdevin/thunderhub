@@ -1,8 +1,7 @@
 import React, { ReactNode } from 'react';
-import styled, { css } from 'styled-components';
+import { css } from 'styled-components';
+import ReactModal from 'styled-react-modal';
 import { cardColor, mediaWidths, themeColors } from '../../styles/Themes';
-import { Dialog } from 'radix-ui';
-import { X } from 'react-feather';
 
 interface ModalProps {
   children: ReactNode;
@@ -34,14 +33,14 @@ const generalCSS = css`
   }
 `;
 
-const StyleModal = styled(Dialog.Content)`
-  ${generalCSS}
-  min-width: 578px;
-`;
+const StyleModal = ReactModal.styled`
+         ${generalCSS}
+        min-width: 578px;
+        `;
 
-const StyleModalSmall = styled(Dialog.Content)`
-  ${generalCSS}
-  background-color: ${themeColors.white};
+const StyleModalSmall = ReactModal.styled`
+        ${generalCSS}
+        background-color: ${themeColors.white};
 `;
 
 const Modal = ({
@@ -53,46 +52,13 @@ const Modal = ({
   const Styled = noMinWidth ? StyleModalSmall : StyleModal;
 
   return (
-    <Dialog.Root
-      open={isOpen}
-      onOpenChange={open => {
-        console.log(open);
-        if (!open) {
-          closeCallback();
-        }
-      }}
+    <Styled
+      isOpen={isOpen}
+      onBackgroundClick={closeCallback}
+      onEscapeKeydown={closeCallback}
     >
-      <Dialog.Portal>
-        <Dialog.Overlay
-          style={{
-            backgroundColor: '#00000080',
-            position: 'fixed',
-            inset: '0',
-          }}
-        >
-          <Styled>
-            {children}
-
-            <Dialog.Close asChild>
-              <button
-                aria-label="Close"
-                style={{
-                  position: 'fixed',
-                  top: '10px',
-                  right: '10px',
-                  cursor: 'pointer',
-                  backgroundColor: 'transparent',
-                  color: 'inherit',
-                  border: 'none',
-                }}
-              >
-                <X size={16} />
-              </button>
-            </Dialog.Close>
-          </Styled>
-        </Dialog.Overlay>
-      </Dialog.Portal>
-    </Dialog.Root>
+      {children}
+    </Styled>
   );
 };
 

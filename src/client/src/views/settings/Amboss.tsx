@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import { useGetConfigStateQuery } from '../../graphql/queries/__generated__/getConfigState.generated';
 import { useToggleConfigMutation } from '../../graphql/mutations/__generated__/toggleConfig.generated';
 import { ConfigFields } from '../../graphql/types';
-import { FC } from 'react';
+import { VFC } from 'react';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 
 const NoWrapText = styled.div`
@@ -24,7 +24,7 @@ const NoWrapText = styled.div`
 
 const InputTitle = styled(NoWrapText)``;
 
-const ConfigFieldToggle: FC<{
+const ConfigFieldToggle: VFC<{
   title: string;
   enabled: boolean;
   field: ConfigFields;

@@ -1,12 +1,32 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { ThrottlerGuard } from '@nestjs/throttler';
+import {
+  ThrottlerException,
+  ThrottlerGuard,
+  ThrottlerOptions,
+} from '@nestjs/throttler';
+import { getIp } from 'src/server/utils/request';
 
 @Injectable()
 export class GqlThrottlerGuard extends ThrottlerGuard {
-  getRequestResponse(context: ExecutionContext) {
+  async handleRequest(
+    context: ExecutionContext,
+    limit: number,
+    ttl: number,
+    throttler: ThrottlerOptions
+  ): Promise<boolean> {
     const gqlCtx = GqlExecutionContext.create(context);
-    const ctx = gqlCtx.getContext();
-    return { req: ctx.req, res: ctx.res };
+    const { req, connection } = gqlCtx.getContext();
+
+    const request = connection?.context?.req ? connection.context.req : req;
+    const ip = getIp(request);
+    const key = this.generateKey(context, ip, throttler.name);
+    const { totalHits } = await this.storageService.increment(key, ttl);
+
+    if (totalHits >= limit) {
+      throw new ThrottlerException();
+    }
+
+    return true;
   }
 }

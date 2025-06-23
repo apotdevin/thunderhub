@@ -102,7 +102,7 @@ export const ChatBubble = ({ message }: ChatBubbleProps) => {
   } = message;
 
   let color: ThemeSet | string = chatBubbleColor;
-  let textMessage: React.ReactNode | string = chatMessage || '';
+  let textMessage: JSX.Element | string = chatMessage || '';
   let dotColor = '';
   let showButton = false;
   let amount = 0;

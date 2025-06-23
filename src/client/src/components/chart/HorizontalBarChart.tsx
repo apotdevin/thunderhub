@@ -70,8 +70,7 @@ export const HorizontalBarChart = ({
   }, [data]);
 
   const option = useMemo(() => {
-    const themeColor =
-      (themeContext as any)?.mode === 'light' ? 'black' : 'white';
+    const themeColor = themeContext?.mode === 'light' ? 'black' : 'white';
 
     return {
       color: colorRange,

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
+import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCreateAddressMutation } from '../../../../graphql/mutations/__generated__/createAddress.generated';
 import { QRCodeSVG } from 'qrcode.react';
-import { Check, Copy } from 'react-feather';
+import { Copy } from 'react-feather';
 import { getErrorContent } from '../../../../utils/error';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { mediaWidths } from '../../../../styles/Themes';
@@ -12,7 +13,6 @@ import {
   ResponsiveLine,
   SubTitle,
 } from '../../../../components/generic/Styled';
-import useCopyClipboard from '../../../../hooks/UseCopyToClipboard';
 
 const S = {
   row: styled.div`
@@ -74,8 +74,6 @@ export const ReceiveOnChainCard = () => {
   const [type, setType] = useState(options[0]);
   const [received, setReceived] = useState(false);
 
-  const [isCopied, copy] = useCopyClipboard({ successDuration: 1000 });
-
   const [createAddress, { data, loading }] = useCreateAddressMutation({
     onError: error => toast.error(getErrorContent(error)),
   });
@@ -93,12 +91,15 @@ export const ReceiveOnChainCard = () => {
           </QRWrapper>
           <Column>
             <WrapRequest>{data.createAddress}</WrapRequest>
-            <button onClick={() => copy(data.createAddress)}>
+            <CopyToClipboard
+              text={data.createAddress}
+              onCopy={() => toast.success('Address Copied')}
+            >
               <ColorButton>
-                {isCopied ? <Check size={18} /> : <Copy size={18} />}
+                <Copy size={18} />
                 Copy
               </ColorButton>
-            </button>
+            </CopyToClipboard>
           </Column>
         </Responsive>
       ) : (

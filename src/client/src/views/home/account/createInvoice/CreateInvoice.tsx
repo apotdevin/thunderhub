@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Copy, CheckCircle, Check } from 'react-feather';
+import { Copy, CheckCircle } from 'react-feather';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { QRCodeSVG } from 'qrcode.react';
+import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCreateInvoiceMutation } from '../../../../graphql/mutations/__generated__/createInvoice.generated';
 import { Title } from '../../../../layouts/footer/Footer.styled';
 import { Link } from '../../../../components/link/Link';
@@ -17,7 +18,6 @@ import { ColorButton } from '../../../../components/buttons/colorButton/ColorBut
 import { mediaWidths, chartColors } from '../../../../styles/Themes';
 import { InvoiceStatus } from './InvoiceStatus';
 import { Timer } from './Timer';
-import useCopyClipboard from '../../../../hooks/UseCopyToClipboard';
 
 const Responsive = styled.div`
   display: flex;
@@ -76,8 +76,6 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  const [isCopied, copy] = useCopyClipboard({ successDuration: 1000 });
-
   useEffect(() => {
     if (!loading && data && data.createInvoice) {
       setRequest(data.createInvoice.request);
@@ -116,12 +114,15 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
         </QRWrapper>
         <Column>
           <WrapRequest>{request}</WrapRequest>
-          <button onClick={() => copy(request)}>
+          <CopyToClipboard
+            text={request}
+            onCopy={() => toast.success('Request Copied')}
+          >
             <ColorButton>
-              {isCopied ? <Check size={18} /> : <Copy size={18} />}
+              <Copy size={18} />
               Copy
             </ColorButton>
-          </button>
+          </CopyToClipboard>
         </Column>
       </Responsive>
     </>

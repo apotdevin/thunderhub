@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { useConfigState } from '../../context/ConfigContext';
 import { getValue } from '../../utils/helpers';
 import { usePriceState } from '../../context/PriceContext';
@@ -19,7 +19,7 @@ export const Price = ({
   breakNumber?: boolean;
   override?: string;
   noUnit?: boolean;
-}): ReactNode => {
+}): JSX.Element => {
   const { currency, displayValues, useSatWord } = useConfigState();
   const { fiat, prices, dontShow } = usePriceState();
 
@@ -67,7 +67,7 @@ interface GetPriceProps {
   noUnit?: boolean;
 }
 
-export type FormatFnType = (options: GetPriceProps) => ReactNode | string;
+export type FormatFnType = (options: GetPriceProps) => JSX.Element | string;
 
 export const getPrice =
   (
@@ -84,7 +84,7 @@ export const getPrice =
     breakNumber = false,
     override,
     noUnit,
-  }: GetPriceProps): ReactNode | string => {
+  }: GetPriceProps): JSX.Element | string => {
     if (!amount) return '-';
     const { prices, dontShow, fiat } = priceContext;
 
