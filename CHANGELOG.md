@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.32](https://github.com/apotdevin/thunderhub/compare/v0.13.31...v0.13.32) (2025-06-23)
+
+
+### Bug Fixes
+
+* linting ([72ff667](https://github.com/apotdevin/thunderhub/commit/72ff6679ba7ca222449c4a5ce9add963ca294180))
+
+
+### Reverts
+
+* Revert "chore: bump deps (#627)" ([4b8175e](https://github.com/apotdevin/thunderhub/commit/4b8175e1c7a0de5fc3cd89af03d7c7c63dc8a75c)), closes [#627](https://github.com/apotdevin/thunderhub/issues/627)
+
+
+### Build
+
+* buildx setup ([0a9ae34](https://github.com/apotdevin/thunderhub/commit/0a9ae34eb3b5b076c245c5fa866d9c24caba7a4d))
+
+
+### Refactoring
+
+* boltz query handling ([a63ee52](https://github.com/apotdevin/thunderhub/commit/a63ee5256bc5d1bc48111aa9bf26d6f45e5076e0))
+* replace deprecated fields ([#619](https://github.com/apotdevin/thunderhub/issues/619)) ([828e267](https://github.com/apotdevin/thunderhub/commit/828e26721a92bb068b0c8f4d24c8edd403ce5aec))
+
+
+### Improvements
+
+* extra enum cleanup ([ca3046c](https://github.com/apotdevin/thunderhub/commit/ca3046c516b30a44381ad32378105cfd0d8bae80))
+* small change ([a059cf9](https://github.com/apotdevin/thunderhub/commit/a059cf975460d1921da94a6d22736cd65a91ead1))
+
 ### [0.13.31](https://github.com/apotdevin/thunderhub/compare/v0.13.30...v0.13.31) (2024-05-21)
 
 
