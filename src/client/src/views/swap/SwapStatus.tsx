@@ -224,7 +224,12 @@ export const SwapStatus = () => {
     const cleaned = enriched.filter(s => {
       if (!s.boltz?.status) return true;
       const status = s.boltz.status;
-      if (status === SETTLED || status === REFUNDED || status === EXPIRED) {
+      if (
+        status === SETTLED ||
+        status === REFUNDED ||
+        status === EXPIRED ||
+        status === INVOICE_EXPIRED
+      ) {
         return false;
       }
       return true;
