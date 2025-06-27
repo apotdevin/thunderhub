@@ -8,6 +8,8 @@ import { useNodeInfo } from '../../../hooks/UseNodeInfo';
 import { useNodeBalances } from '../../../hooks/UseNodeBalances';
 import Big from 'big.js';
 import { unSelectedNavButton } from '../../../styles/Themes';
+import { useQuery } from '@apollo/client';
+import { GET_BITCOIN_BLOCK_HEIGHT } from '../../../graphql/queries/getBitcoinBlockHeight';
 import {
   Separation,
   SingleLine,
@@ -60,6 +62,26 @@ const Alias = styled.div<{ bottomColor: string }>`
   border-bottom: 2px solid ${({ bottomColor }) => bottomColor};
 `;
 
+const ProgressBar = styled.div<{ percentage: number; color: string }>`
+  width: 100%;
+  height: 6px;
+  background-color: #3a3a3a;
+  border-radius: 3px;
+  margin-top: 6px;
+  overflow: hidden;
+  border: 1px solid #555;
+
+  &::after {
+    content: '';
+    display: block;
+    width: ${({ percentage }) => Math.min(Math.max(percentage, 0), 100)}%;
+    height: 100%;
+    background-color: ${({ color }) => color};
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+`;
+
 interface NodeInfoProps {
   isOpen?: boolean;
   isBurger?: boolean;
@@ -71,6 +93,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     color,
     version,
     syncedToChain,
+    currentBlockHeight,
     activeChannelCount,
     pendingChannelCount,
     closedChannelCount,
@@ -78,6 +101,27 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   } = useNodeInfo();
 
   const { onchain, lightning } = useNodeBalances();
+  const {
+    data: blockHeightData,
+    loading: blockHeightLoading,
+    error: blockHeightError,
+  } = useQuery(GET_BITCOIN_BLOCK_HEIGHT);
+
+  // Debug logging
+  console.log(
+    'Block height query - Loading:',
+    blockHeightLoading,
+    'Error:',
+    blockHeightError,
+    'Data:',
+    blockHeightData
+  );
+  console.log(
+    'Node info - currentBlockHeight:',
+    currentBlockHeight,
+    'syncedToChain:',
+    syncedToChain
+  );
 
   const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
@@ -96,6 +140,29 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   const chainPending = Number(onchain.pending) + Number(onchain.closing);
   const channelPending = Number(lightning.pending);
 
+  // Calculate actual sync percentage using current Bitcoin height
+  const currentBitcoinHeight = blockHeightData?.getCurrentBlockHeight
+    ? parseInt(blockHeightData.getCurrentBlockHeight, 10)
+    : null;
+
+  const syncPercentage =
+    currentBitcoinHeight && currentBlockHeight > 0
+      ? Math.min(
+          Math.round((currentBlockHeight / currentBitcoinHeight) * 100),
+          99
+        )
+      : !syncedToChain
+        ? 75
+        : null;
+
+  const syncText = syncedToChain
+    ? 'Synced'
+    : syncPercentage !== null
+      ? `Chain syncing... (${syncPercentage}%)`
+      : 'Chain syncing...';
+
+  const syncColor = syncedToChain ? '#95de64' : '#ff7875';
+
   if (!alias) return null;
 
   if (isBurger) {
@@ -103,11 +170,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
       <>
         <SingleLine>
           <SubTitle>{addEllipsis(alias)}</SubTitle>
-          <Circle
-            size={18}
-            strokeWidth={'0'}
-            fill={syncedToChain ? '#95de64' : '#ff7875'}
-          />
+          <Circle size={18} strokeWidth={'0'} fill={syncColor} />
         </SingleLine>
         <SingleLine>
           <Sub4Title>Channels</Sub4Title>
@@ -137,11 +200,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
       <>
         <Closed>
           <div data-tip data-for="full_balance_tip">
-            <Circle
-              size={18}
-              strokeWidth={'0'}
-              fill={syncedToChain ? '#95de64' : '#ff7875'}
-            />
+            <Circle size={18} strokeWidth={'0'} fill={syncColor} />
             {(channelPending > 0 || chainPending > 0) && (
               <div>
                 <Circle size={18} fill={'#652EC7'} strokeWidth={'0'} />
@@ -204,9 +263,14 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
         data-for="node_tip"
       >{`${activeChannelCount} / ${pendingChannelCount} / ${closedChannelCount} / ${peersCount}`}</Balance>
       <Balance>
-        <Info bottomColor={syncedToChain ? '#95de64' : '#ff7875'}>
-          {syncedToChain ? 'Synced' : 'Not Synced'}
-        </Info>
+        <div style={{ width: '100%' }}>
+          <Info bottomColor={syncedToChain ? syncColor : 'transparent'}>
+            {syncText}
+          </Info>
+          {!syncedToChain && syncPercentage !== null && (
+            <ProgressBar percentage={syncPercentage} color={syncColor} />
+          )}
+        </div>
       </Balance>
       <Separation lineColor={unSelectedNavButton} />
       <ReactTooltip place={'right'} />
