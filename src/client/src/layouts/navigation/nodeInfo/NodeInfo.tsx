@@ -101,27 +101,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   } = useNodeInfo();
 
   const { onchain, lightning } = useNodeBalances();
-  const {
-    data: blockHeightData,
-    loading: blockHeightLoading,
-    error: blockHeightError,
-  } = useQuery(GET_BITCOIN_BLOCK_HEIGHT);
-
-  // Debug logging
-  console.log(
-    'Block height query - Loading:',
-    blockHeightLoading,
-    'Error:',
-    blockHeightError,
-    'Data:',
-    blockHeightData
-  );
-  console.log(
-    'Node info - currentBlockHeight:',
-    currentBlockHeight,
-    'syncedToChain:',
-    syncedToChain
-  );
+  const { data: blockHeightData } = useQuery(GET_BITCOIN_BLOCK_HEIGHT);
 
   const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
