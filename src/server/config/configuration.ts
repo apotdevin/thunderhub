@@ -18,6 +18,7 @@ type Urls = {
   tbase: string;
   ticker: string;
   fees: string;
+  blockHeight: string;
   boltz: string;
   github: string;
   lnMarkets: string;
@@ -88,6 +89,7 @@ export default (): ConfigType => {
     mempool,
     amboss: 'https://api.amboss.space/graphql',
     fees: `${mempool}/api/v1/fees/recommended`,
+    blockHeight: `${mempool}/api/blocks/tip/height`,
     tbase: 'https://api.thunderhub.io/api/graphql',
     ticker: 'https://blockchain.info/ticker',
     github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
