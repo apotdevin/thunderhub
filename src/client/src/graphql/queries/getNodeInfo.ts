@@ -9,6 +9,7 @@ export const GET_NODE_INFO = gql`
       chains
       color
       is_synced_to_chain
+      current_block_height
       peers_count
       version
       active_channels_count

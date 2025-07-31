@@ -11,6 +11,7 @@ type StatusState = {
   alias: string;
   color: string;
   syncedToChain: boolean;
+  currentBlockHeight: number;
   version: string;
   mayorVersion: number;
   minorVersion: number;
@@ -26,6 +27,7 @@ const initialState: StatusState = {
   alias: '',
   color: '',
   syncedToChain: false,
+  currentBlockHeight: 0,
   version: '',
   mayorVersion: 0,
   minorVersion: 0,
@@ -62,12 +64,17 @@ export const useNodeInfo = (): StatusState => {
     public_key,
   } = data.getNodeInfo;
 
+  // Handle the new field with fallback for type safety
+  const current_block_height =
+    (data.getNodeInfo as any).current_block_height || 0;
+
   const { mayor, minor, revision, versionWithPatch } = getVersion(version);
 
   return {
     alias,
     color,
     syncedToChain: is_synced_to_chain,
+    currentBlockHeight: current_block_height || 0,
     version: versionWithPatch,
     mayorVersion: mayor,
     minorVersion: minor,
