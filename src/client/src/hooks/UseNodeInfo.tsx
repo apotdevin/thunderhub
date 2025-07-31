@@ -21,6 +21,7 @@ type StatusState = {
   closedChannelCount: number;
   peersCount: number;
   publicKey: string;
+  latestBlockHeight?: number | undefined | null;
 };
 
 const initialState: StatusState = {
@@ -62,11 +63,9 @@ export const useNodeInfo = (): StatusState => {
     closed_channels_count,
     peers_count,
     public_key,
+    current_block_height,
+    latest_block_height,
   } = data.getNodeInfo;
-
-  // Handle the new field with fallback for type safety
-  const current_block_height =
-    (data.getNodeInfo as any).current_block_height || 0;
 
   const { mayor, minor, revision, versionWithPatch } = getVersion(version);
 
@@ -84,5 +83,6 @@ export const useNodeInfo = (): StatusState => {
     closedChannelCount: closed_channels_count,
     peersCount: peers_count,
     publicKey: public_key,
+    latestBlockHeight: latest_block_height,
   };
 };

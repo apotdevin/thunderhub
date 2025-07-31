@@ -52,17 +52,4 @@ export class BitcoinResolver {
       throw new Error('Problem getting Bitcoin fees.');
     }
   }
-
-  @Query(() => String)
-  async getCurrentBlockHeight() {
-    try {
-      const response = await this.fetchService.fetchWithProxy(
-        this.configService.get('urls.blockHeight')
-      );
-      return await response.text();
-    } catch (error: any) {
-      this.logger.error('Error getting current block height', { error });
-      throw new Error('Problem getting current block height.');
-    }
-  }
 }

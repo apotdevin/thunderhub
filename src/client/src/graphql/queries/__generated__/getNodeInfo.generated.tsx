@@ -16,6 +16,7 @@ export type GetNodeInfoQuery = {
     color: string;
     is_synced_to_chain: boolean;
     current_block_height: number;
+    latest_block_height?: number | null;
     peers_count: number;
     version: string;
     active_channels_count: number;
@@ -34,6 +35,7 @@ export const GetNodeInfoDocument = gql`
       color
       is_synced_to_chain
       current_block_height
+      latest_block_height
       peers_count
       version
       active_channels_count

@@ -825,6 +825,7 @@ export type NodeInfo = {
   is_synced_to_chain: Scalars['Boolean']['output'];
   is_synced_to_graph: Scalars['Boolean']['output'];
   latest_block_at: Scalars['String']['output'];
+  latest_block_height?: Maybe<Scalars['Float']['output']>;
   peers_count: Scalars['Float']['output'];
   pending_channels_count: Scalars['Float']['output'];
   public_key: Scalars['String']['output'];

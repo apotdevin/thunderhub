@@ -21,6 +21,8 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { toWithError } from 'src/server/utils/async';
 import { ContextType } from 'src/server/app.module';
+import { ConfigService } from '@nestjs/config';
+import { FetchService } from '../../fetch/fetch.service';
 
 @Resolver(LightningBalance)
 export class LightningBalanceResolver {
@@ -94,6 +96,32 @@ export class BalancesResolver {
       active,
       commit,
     };
+  }
+}
+
+@Resolver(NodeInfo)
+export class NodeInfoResolver {
+  constructor(
+    private configService: ConfigService,
+    private fetchService: FetchService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+  ) {}
+
+  @ResolveField()
+  async latest_block_height(@Parent() { is_synced_to_chain }: NodeInfo) {
+    if (is_synced_to_chain) return;
+
+    try {
+      const response = await this.fetchService.fetchWithProxy(
+        this.configService.get('urls.blockHeight')
+      );
+      return await response.text();
+    } catch (error: any) {
+      this.logger.error('Error getting latest block height from Mempool', {
+        error,
+      });
+      return;
+    }
   }
 }
 

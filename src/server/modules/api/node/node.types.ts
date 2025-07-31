@@ -30,6 +30,8 @@ export class NodeInfo {
   current_block_hash: string;
   @Field()
   current_block_height: number;
+  @Field({ nullable: true })
+  latest_block_height: number;
   @Field()
   is_synced_to_chain: boolean;
   @Field()

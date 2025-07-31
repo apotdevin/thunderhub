@@ -567,6 +567,7 @@ type NodeInfo {
   is_synced_to_chain: Boolean!
   is_synced_to_graph: Boolean!
   latest_block_at: String!
+  latest_block_height: Float
   peers_count: Float!
   pending_channels_count: Float!
   public_key: String!

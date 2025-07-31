@@ -8,8 +8,6 @@ import { useNodeInfo } from '../../../hooks/UseNodeInfo';
 import { useNodeBalances } from '../../../hooks/UseNodeBalances';
 import Big from 'big.js';
 import { unSelectedNavButton } from '../../../styles/Themes';
-import { useQuery } from '@apollo/client';
-import { GET_BITCOIN_BLOCK_HEIGHT } from '../../../graphql/queries/getBitcoinBlockHeight';
 import {
   Separation,
   SingleLine,
@@ -98,10 +96,10 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
     pendingChannelCount,
     closedChannelCount,
     peersCount,
+    latestBlockHeight,
   } = useNodeInfo();
 
   const { onchain, lightning } = useNodeBalances();
-  const { data: blockHeightData } = useQuery(GET_BITCOIN_BLOCK_HEIGHT);
 
   const { currency, displayValues } = useConfigState();
   const priceContext = usePriceState();
@@ -120,24 +118,14 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   const chainPending = Number(onchain.pending) + Number(onchain.closing);
   const channelPending = Number(lightning.pending);
 
-  // Calculate actual sync percentage using current Bitcoin height
-  const currentBitcoinHeight = blockHeightData?.getCurrentBlockHeight
-    ? parseInt(blockHeightData.getCurrentBlockHeight, 10)
-    : null;
-
   const syncPercentage =
-    currentBitcoinHeight && currentBlockHeight > 0
-      ? Math.min(
-          Math.round((currentBlockHeight / currentBitcoinHeight) * 100),
-          99
-        )
-      : !syncedToChain
-        ? 75
-        : null;
+    !!latestBlockHeight && currentBlockHeight > 0
+      ? Math.min(Math.round((currentBlockHeight / latestBlockHeight) * 100), 99)
+      : null;
 
   const syncText = syncedToChain
     ? 'Synced'
-    : syncPercentage !== null
+    : !!syncPercentage
       ? `Chain syncing... (${syncPercentage}%)`
       : 'Chain syncing...';
 
@@ -247,7 +235,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
           <Info bottomColor={syncedToChain ? syncColor : 'transparent'}>
             {syncText}
           </Info>
-          {!syncedToChain && syncPercentage !== null && (
+          {!!syncPercentage && (
             <ProgressBar percentage={syncPercentage} color={syncColor} />
           )}
         </div>
