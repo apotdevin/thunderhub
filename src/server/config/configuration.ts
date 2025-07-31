@@ -131,7 +131,6 @@ export default (): ConfigType => {
     disableForwards: process.env.DISABLE_FORWARD_SUB === 'true',
     disableChannels: process.env.DISABLE_CHANNEL_SUB === 'true',
     disableBackups: process.env.DISABLE_BACKUP_SUB === 'true',
-    disableForwardRequests: process.env.DISABLE_FORWARD_REQUESTS_SUB === 'true',
   };
 
   const amboss = {

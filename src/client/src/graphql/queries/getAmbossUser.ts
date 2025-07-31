@@ -13,9 +13,6 @@ export const GET_AMBOSS_USER = gql`
         last_update_size
         total_size_saved
       }
-      ghost {
-        username
-      }
     }
   }
 `;

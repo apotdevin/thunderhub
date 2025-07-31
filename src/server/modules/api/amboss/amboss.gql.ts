@@ -13,9 +13,6 @@ export const getUserQuery = gql`
         last_update_size
         total_size_saved
       }
-      ghost {
-        username
-      }
     }
   }
 `;
@@ -127,23 +124,6 @@ export const getEdgeInfoBatchQuery = gql`
         }
         node2_pub
       }
-    }
-  }
-`;
-
-export const getGhostPayment = gql`
-  query GetGhostPayment($input: GhostPaymentInput!) {
-    getGhostPayment(input: $input) {
-      preimage
-      payment_amount
-    }
-  }
-`;
-
-export const claimGhostAddress = gql`
-  mutation claimGhostAddress($address: String) {
-    claimGhostAddress(address: $address) {
-      username
     }
   }
 `;

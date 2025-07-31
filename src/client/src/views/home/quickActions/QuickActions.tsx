@@ -22,7 +22,6 @@ import { LnUrlCard } from './lnurl';
 import { LnMarketsCard } from './lnmarkets';
 import { AmbossCard } from './amboss/AmbossCard';
 import { LightningAddressCard } from './lightningAddress/LightningAddress';
-import { GhostCard } from './ghost/GhostQuickAction';
 
 export const QuickCard = styled.div`
   background: ${cardColor};
@@ -105,7 +104,6 @@ export const QuickActions = () => {
       default:
         return (
           <QuickRow>
-            <GhostCard />
             <SupportCard callback={() => setOpenCard('support')} />
             <AmbossCard />
             <QuickCard onClick={() => setOpenCard('lightning_address')}>
