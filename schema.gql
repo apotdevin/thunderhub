@@ -613,7 +613,8 @@ input OpenChannelParams {
   give_tokens: Float = 0
   is_max_funding: Boolean
   is_private: Boolean
-  partner_public_key: String!
+  is_recommended: Boolean
+  partner_public_key: String
 }
 
 type OpenOrCloseChannel {

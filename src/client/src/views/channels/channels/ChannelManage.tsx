@@ -6,9 +6,9 @@ import {
   SingleLine,
 } from '../../../components/generic/Styled';
 import { DetailsChange } from '../../../components/details/detailsChange';
-import { OpenChannel } from '../../../views/home/quickActions/openChannel';
 import { X } from 'react-feather';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
+import { OpenChannel } from '../../home/liquidity/OpenChannel';
 
 export const ChannelManage = () => {
   const [openWindow, setOpenWindow] = React.useState<string>('none');
@@ -49,7 +49,7 @@ export const ChannelManage = () => {
           <>
             {renderOpenButton()}
             <Separation />
-            <OpenChannel setOpenCard={() => setOpenWindow('none')} />
+            <OpenChannel closeCbk={() => setOpenWindow('none')} />
           </>
         );
       case 'details':

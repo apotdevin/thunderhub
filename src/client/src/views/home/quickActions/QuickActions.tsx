@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { X, Layers, GitBranch, Command, Zap } from 'react-feather';
+import { X, Layers, Command, Zap } from 'react-feather';
 import {
   CardWithTitle,
   SubTitle,
@@ -17,7 +17,6 @@ import {
 import { DecodeCard } from './decode/Decode';
 import { SupportCard } from './donate/DonateCard';
 import { SupportBar } from './donate/DonateContent';
-import { OpenChannel } from './openChannel';
 import { LnUrlCard } from './lnurl';
 import { LnMarketsCard } from './lnmarkets';
 import { AmbossCard } from './amboss/AmbossCard';
@@ -60,7 +59,7 @@ const QuickRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 16px 0 32px;
+  margin: 16px 0px 32px;
 `;
 
 export const QuickActions = () => {
@@ -70,8 +69,6 @@ export const QuickActions = () => {
     switch (openCard) {
       case 'decode':
         return 'Decode a Lightning Request';
-      case 'open_channel':
-        return 'Open a Channel';
       case 'ln_url':
         return 'Use lnurl';
       case 'lightning_address':
@@ -95,12 +92,6 @@ export const QuickActions = () => {
         return <LnUrlCard />;
       case 'lightning_address':
         return <LightningAddressCard />;
-      case 'open_channel':
-        return (
-          <Card>
-            <OpenChannel setOpenCard={setOpenCard} />
-          </Card>
-        );
       default:
         return (
           <QuickRow>
@@ -109,10 +100,6 @@ export const QuickActions = () => {
             <QuickCard onClick={() => setOpenCard('lightning_address')}>
               <Zap size={24} />
               <QuickTitle>Address</QuickTitle>
-            </QuickCard>
-            <QuickCard onClick={() => setOpenCard('open_channel')}>
-              <GitBranch size={24} />
-              <QuickTitle>Open</QuickTitle>
             </QuickCard>
             <QuickCard onClick={() => setOpenCard('decode')}>
               <Layers size={24} />

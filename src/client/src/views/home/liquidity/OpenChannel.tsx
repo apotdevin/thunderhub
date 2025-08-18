@@ -1,41 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, Settings, X } from 'react-feather';
 import { toast } from 'react-toastify';
-import { useOpenChannelMutation } from '../../../../graphql/mutations/__generated__/openChannel.generated';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { useBitcoinFees } from '../../../../hooks/UseBitcoinFees';
-import { useConfigState } from '../../../../context/ConfigContext';
-import { PeerSelect } from '../../../../components/select/specific/PeerSelect';
-import { WarningText } from '../../../../views/stats/styles';
+import { useOpenChannelMutation } from '../../../graphql/mutations/__generated__/openChannel.generated';
+import { InputWithDeco } from '../../../components/input/InputWithDeco';
+import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
+import { useBitcoinFees } from '../../../hooks/UseBitcoinFees';
+import { useConfigState } from '../../../context/ConfigContext';
+import { PeerSelect } from '../../../components/select/specific/PeerSelect';
 import styled from 'styled-components';
 import {
+  Card,
   DarkSubTitle,
   Separation,
   SingleLine,
   SubCard,
-} from '../../../../components/generic/Styled';
-import { getErrorContent } from '../../../../utils/error';
-import { Input } from '../../../../components/input';
+} from '../../../components/generic/Styled';
+import { getErrorContent } from '../../../utils/error';
+import { Input } from '../../../components/input';
 import {
   SingleButton,
   MultiButton,
-} from '../../../../components/buttons/multiButton/MultiButton';
+} from '../../../components/buttons/multiButton/MultiButton';
 
-interface OpenChannelProps {
-  initialPublicKey?: string | undefined | null;
-  setOpenCard: (card: string) => void;
-}
+type OpenChannelProps = {
+  closeCbk: () => void;
+};
 
 const LineTitle = styled.div`
   white-space: nowrap;
   font-size: 14px;
 `;
 
-export const OpenChannelCard = ({
-  setOpenCard,
-  initialPublicKey = '',
-}: OpenChannelProps) => {
+const RecommendedBanner = styled.div`
+  text-align: center;
+  font-size: 14px;
+  background: oklch(0.982 0.018 155.826);
+  color: oklch(0.627 0.194 149.214);
+  padding: 8px;
+  border-radius: 8px;
+`;
+
+const NotRecommendedBanner = styled.div`
+  text-align: center;
+  font-size: 14px;
+  background: oklch(0.987 0.022 95.277);
+  color: oklch(0.666 0.179 58.318);
+  padding: 8px;
+  border-radius: 8px;
+`;
+
+export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
+  const [useRecommended, setUseRecommended] = useState(true);
+
   const { fetchFees } = useConfigState();
   const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
   const [size, setSize] = useState(0);
@@ -44,12 +60,12 @@ export const OpenChannelCard = ({
   const [pushType, setPushType] = useState('none');
   const [pushTokens, setPushTokens] = useState(0);
 
-  const [isNewPeer, setIsNewPeer] = useState<boolean>(false);
+  const [isNewPeer, setIsNewPeer] = useState<boolean>(true);
   const [fee, setFee] = useState(0);
-  const [publicKey, setPublicKey] = useState(initialPublicKey);
+  const [publicKey, setPublicKey] = useState('');
   const [privateChannel, setPrivateChannel] = useState(false);
-  const [isMaxFunding, setIsMaxFunding] = useState(false);
-  const [type, setType] = useState('fee');
+  const [isMaxFunding, setIsMaxFunding] = useState(true);
+  const [type, setType] = useState('none');
 
   const [feeRate, setFeeRate] = useState<number | null>(null);
   const [baseFee, setBaseFee] = useState<number | null>(null);
@@ -58,12 +74,15 @@ export const OpenChannelCard = ({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: () => {
       toast.success('Channel Opened');
-      setOpenCard('none');
+      closeCbk();
     },
     refetchQueries: ['GetChannels', 'GetPendingChannels'],
   });
 
-  const canOpen = publicKey !== '' && (size > 0 || isMaxFunding) && fee > 0;
+  const canOpen =
+    (publicKey !== '' || useRecommended) &&
+    (size > 0 || isMaxFunding) &&
+    fee > 0;
 
   const pushAmount =
     pushType === 'none'
@@ -139,35 +158,62 @@ export const OpenChannelCard = ({
           />
         )}
         {pushType !== 'none' && (
-          <WarningText>You will lose these pushed tokens.</WarningText>
+          <NotRecommendedBanner>
+            You will lose these pushed tokens.
+          </NotRecommendedBanner>
         )}
       </SubCard>
     );
   };
 
   return (
-    <>
-      <InputWithDeco title={'Is New Peer'} noInput={true}>
+    <Card>
+      <InputWithDeco title={'Recommended Peer'} noInput={true}>
         <MultiButton>
-          {renderButton(() => setIsNewPeer(true), 'Yes', isNewPeer)}
-          {renderButton(() => setIsNewPeer(false), 'No', !isNewPeer)}
+          {renderButton(() => setUseRecommended(true), 'Yes', useRecommended)}
+          {renderButton(() => setUseRecommended(false), 'No', !useRecommended)}
         </MultiButton>
       </InputWithDeco>
-      {!initialPublicKey && !isNewPeer && (
-        <PeerSelect
-          title={'Node'}
-          callback={peer => setPublicKey(peer[0].public_key)}
-        />
-      )}
-      {!initialPublicKey && isNewPeer && (
-        <InputWithDeco
-          title={'New Node'}
-          value={publicKey}
-          placeholder={'PublicKey@Socket'}
-          inputCallback={value => setPublicKey(value)}
-        />
-      )}
+
       <Separation />
+
+      {useRecommended ? (
+        <RecommendedBanner>
+          Connect to the Amboss Rails cluster - optimized for fast, reliable,
+          high-throughput payments.
+        </RecommendedBanner>
+      ) : (
+        <>
+          <NotRecommendedBanner>
+            ⚠️ Performance may vary. For the best experience, connect to the
+            Amboss Rails cluster.
+          </NotRecommendedBanner>
+
+          <InputWithDeco title={'Is New Peer'} noInput={true}>
+            <MultiButton>
+              {renderButton(() => setIsNewPeer(true), 'Yes', isNewPeer)}
+              {renderButton(() => setIsNewPeer(false), 'No', !isNewPeer)}
+            </MultiButton>
+          </InputWithDeco>
+
+          {isNewPeer ? (
+            <InputWithDeco
+              title={'New Node'}
+              value={publicKey}
+              placeholder={'PublicKey@Socket'}
+              inputCallback={value => setPublicKey(value)}
+            />
+          ) : (
+            <PeerSelect
+              title={'Node'}
+              callback={peer => setPublicKey(peer[0].public_key)}
+            />
+          )}
+        </>
+      )}
+
+      <Separation />
+
       <InputWithDeco title={'Max Size'} noInput={true}>
         <MultiButton>
           {renderButton(
@@ -181,6 +227,7 @@ export const OpenChannelCard = ({
           {renderButton(() => setIsMaxFunding(false), 'No', !isMaxFunding)}
         </MultiButton>
       </InputWithDeco>
+
       {!isMaxFunding ? (
         <InputWithDeco
           title={'Channel Size'}
@@ -191,7 +238,9 @@ export const OpenChannelCard = ({
           inputCallback={value => setSize(Number(value))}
         />
       ) : null}
+
       <Separation />
+
       <InputWithDeco
         title={'Fee Rate'}
         value={feeRate}
@@ -206,10 +255,11 @@ export const OpenChannelCard = ({
           }
         }}
       />
+
       <InputWithDeco
         title={'Base Fee'}
         value={baseFee}
-        placeholder={'msats'}
+        placeholder={'sats'}
         amount={baseFee}
         inputType={'number'}
         inputCallback={value => {
@@ -220,7 +270,9 @@ export const OpenChannelCard = ({
           }
         }}
       />
+
       <Separation />
+
       {fetchFees && !dontShow && (
         <>
           <InputWithDeco title={'Fee'} noInput={true}>
@@ -293,12 +345,14 @@ export const OpenChannelCard = ({
             variables: {
               input: {
                 channel_size: size,
+                is_recommended: useRecommended,
                 partner_public_key: publicKey || '',
                 is_private: privateChannel,
                 is_max_funding: isMaxFunding,
                 give_tokens: pushAmount,
                 chain_fee_tokens_per_vbyte: fee,
-                base_fee_mtokens: baseFee == null ? undefined : baseFee + '',
+                base_fee_mtokens:
+                  baseFee == null ? undefined : baseFee * 1000 + '',
                 fee_rate: feeRate,
               },
             },
@@ -308,6 +362,6 @@ export const OpenChannelCard = ({
         Open Channel
         <ChevronRight size={18} />
       </ColorButton>
-    </>
+    </Card>
   );
 };

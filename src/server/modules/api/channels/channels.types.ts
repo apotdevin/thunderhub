@@ -265,7 +265,9 @@ export class UpdateRoutingFeesParams {
 
 @InputType()
 export class OpenChannelParams {
-  @Field()
+  @Field({ nullable: true })
+  is_recommended: boolean;
+  @Field({ nullable: true })
   partner_public_key: string;
   @Field({ nullable: true })
   channel_size: number;
@@ -282,3 +284,10 @@ export class OpenChannelParams {
   @Field({ nullable: true })
   fee_rate: number;
 }
+
+export type OpenChannelAuto = {
+  checkArgs: void;
+  recommendedPeer: { pubkey: string } | undefined;
+  peer: { pubkey: string } | undefined;
+  openChannel: { transactionId: string; transactionOutputIndex: string };
+};
