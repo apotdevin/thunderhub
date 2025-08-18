@@ -1,5 +1,37 @@
 import { gql } from 'graphql-tag';
 
+export const NodeLoginInfo = gql`
+  query NodeLoginInfo {
+    login {
+      node_login {
+        id
+        identifier
+        message
+      }
+    }
+  }
+`;
+
+export const NodeLogin = gql`
+  mutation NodeLogin($input: NodeLoginInput!) {
+    public {
+      node_login(input: $input) {
+        jwt
+      }
+    }
+  }
+`;
+
+export const CreateApiKey = gql`
+  mutation CreateApiKey($input: ApiKeyInput!) {
+    api_keys {
+      create(input: $input) {
+        token
+      }
+    }
+  }
+`;
+
 export const getUserQuery = gql`
   query GetUser {
     getUser {
@@ -17,12 +49,6 @@ export const getUserQuery = gql`
   }
 `;
 
-export const getLoginTokenQuery = gql`
-  query GetLoginToken($seconds: Float) {
-    getLoginToken(seconds: $seconds)
-  }
-`;
-
 export const getSignInfoQuery = gql`
   query GetSignInfo {
     getSignInfo {
@@ -33,29 +59,13 @@ export const getSignInfoQuery = gql`
   }
 `;
 
-export const loginMutation = gql`
-  mutation Login(
-    $identifier: String!
-    $signature: String!
-    $seconds: Float
-    $details: String
-    $token: Boolean
-  ) {
-    login(
-      identifier: $identifier
-      signature: $signature
-      seconds: $seconds
-      details: $details
-      token: $token
-    )
-  }
-`;
-
-export const getLightningAddresses = gql`
-  query GetLightningAddresses {
-    getLightningAddresses {
-      pubkey
-      lightning_address
+export const AuthorizeDomain = gql`
+  mutation AuthorizeDomain($input: AuthorizeInput!) {
+    auth {
+      authorize_domain(input: $input) {
+        token_url
+        has_access
+      }
     }
   }
 `;

@@ -90,3 +90,16 @@ export type EdgeInfo = {
     };
   };
 };
+
+export type LoginAuto = {
+  nodePubkey: { pubkey: string | undefined };
+  signMessage: { identifier: string; signature: string };
+  getAuthJwt: { jwt: string };
+  createJwt: { jwt: string };
+};
+
+export type OauthAuto = {
+  signMessage: { identifier: string; signature: string };
+  getAuthJwt: { jwt: string };
+  getOauth: { url: string };
+};

@@ -152,7 +152,7 @@ export class BosResolver {
   async reconnectToPeers() {
     this.logger.debug('Reconnecting to disconnected peers for all nodes.');
 
-    await auto({
+    await auto<any>({
       // Get Authenticated LND objects for each node
       getNodes: async () => {
         const accounts = this.accountsService.getAllAccounts();
@@ -222,7 +222,11 @@ export class BosResolver {
 
       reconnectToNodes: [
         'checkAvailable',
-        async ({ checkAvailable }) => {
+        async ({
+          checkAvailable,
+        }: {
+          checkAvailable: { lnd: any; name: string }[];
+        }) => {
           await each(checkAvailable, async ({ lnd, name }) => {
             try {
               await reconnect({ lnd });

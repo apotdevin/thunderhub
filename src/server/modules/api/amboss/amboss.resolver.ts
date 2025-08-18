@@ -8,8 +8,9 @@ import { Logger } from 'winston';
 import cookie from 'cookie';
 import {
   AmbossUser,
-  LightningAddress,
   LightningNodeSocialInfo,
+  LoginAuto,
+  OauthAuto,
 } from './amboss.types';
 import { ConfigService } from '@nestjs/config';
 import { toWithError } from 'src/server/utils/async';
@@ -17,14 +18,15 @@ import { NodeService } from '../../node/node.service';
 import { UserId } from '../../security/security.types';
 import { CurrentUser } from '../../security/security.decorators';
 import {
-  getLightningAddresses,
-  getLoginTokenQuery,
+  AuthorizeDomain,
+  CreateApiKey,
+  NodeLogin,
+  NodeLoginInfo,
   getNodeSocialInfo,
-  getSignInfoQuery,
   getUserQuery,
-  loginMutation,
 } from './amboss.gql';
 import { AmbossService } from './amboss.service';
+import { auto } from 'async';
 
 const ONE_MONTH_SECONDS = 60 * 60 * 24 * 30;
 
@@ -42,13 +44,11 @@ export class AmbossResolver {
   async getAmbossUser(@Context() { ambossAuth }: ContextType) {
     if (!ambossAuth) return null;
 
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
+      this.configService.get('urls.amboss.space'),
       getUserQuery,
       undefined,
-      {
-        authorization: `Bearer ${ambossAuth}`,
-      }
+      { authorization: `Bearer ${ambossAuth}` }
     );
 
     if (!data?.getUser || error) {
@@ -59,38 +59,90 @@ export class AmbossResolver {
   }
 
   @Query(() => String)
-  async getAmbossLoginToken(@Context() { ambossAuth }: ContextType) {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
-      getLoginTokenQuery,
-      { seconds: ONE_MONTH_SECONDS },
-      {
-        authorization: ambossAuth ? `Bearer ${ambossAuth}` : '',
-      }
-    );
+  async getAmbossLoginToken(@CurrentUser() user: UserId) {
+    const info = await auto<OauthAuto>({
+      signMessage: async (): Promise<OauthAuto['signMessage']> => {
+        const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
+          login: { node_login: { identifier: string; message: string } };
+        }>(this.configService.get('urls.amboss.auth'), NodeLoginInfo);
 
-    if (!data?.getLoginToken || error) {
-      throw new Error('Error getting login token from Amboss');
-    }
+        if (!data?.login.node_login || error) {
+          if (error) this.logger.error(error);
+          throw new Error('Error getting login information from Amboss');
+        }
 
-    return data.getLoginToken;
-  }
+        const { identifier, message } = data.login.node_login;
 
-  @Query(() => [LightningAddress])
-  async getLightningAddresses() {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
-      getLightningAddresses
-    );
+        const [signedMessage, signError] = await toWithError<{
+          signature: string;
+        }>(this.nodeService.signMessage(user.id, message));
 
-    if (!data?.getLightningAddresses || error) {
-      if (error) {
-        this.logger.error(error);
-      }
-      throw new Error('Error getting Lightning Addresses from Amboss');
-    }
+        if (!signedMessage?.signature || signError) {
+          if (signError) this.logger.error(signError);
+          throw new Error('Error signing message to login');
+        }
 
-    return data.getLightningAddresses;
+        this.logger.debug('Signed Amboss login message');
+
+        return { identifier, signature: signedMessage.signature };
+      },
+
+      getAuthJwt: [
+        'signMessage',
+        async ({ signMessage }): Promise<OauthAuto['getAuthJwt']> => {
+          const { data, error } =
+            await this.fetchService.graphqlFetchWithProxy<{
+              public: { node_login: { jwt: string } };
+            }>(this.configService.get('urls.amboss.auth'), NodeLogin, {
+              input: {
+                identifier: signMessage.identifier,
+                signature: signMessage.signature,
+              },
+            });
+
+          if (!data?.public.node_login.jwt || error) {
+            if (error) this.logger.error(error);
+            throw new Error('Error getting login information from Amboss');
+          }
+
+          return { jwt: data.public.node_login.jwt };
+        },
+      ],
+
+      getOauth: [
+        'getAuthJwt',
+        async ({ getAuthJwt }): Promise<OauthAuto['getOauth']> => {
+          const { data, error } =
+            await this.fetchService.graphqlFetchWithProxy<{
+              auth: {
+                authorize_domain: { token_url: string; has_access: string };
+              };
+            }>(
+              this.configService.get('urls.amboss.auth'),
+              AuthorizeDomain,
+              {
+                input: {
+                  redirect_url: 'https://amboss.space/oauth',
+                },
+              },
+              { authorization: `Bearer ${getAuthJwt.jwt}` }
+            );
+
+          if (!data?.auth.authorize_domain.token_url || error) {
+            if (error) this.logger.error(error);
+            throw new Error('Error getting login information from Amboss');
+          }
+
+          console.log(data);
+
+          this.logger.debug('Got Amboss login token');
+
+          return { url: data.auth.authorize_domain.token_url };
+        },
+      ],
+    });
+
+    return info.getOauth.url;
   }
 
   @Query(() => LightningNodeSocialInfo)
@@ -98,13 +150,11 @@ export class AmbossResolver {
     @Args('pubkey') pubkey: string,
     @Context() { ambossAuth }: ContextType
   ) {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
+      this.configService.get('urls.amboss.space'),
       getNodeSocialInfo,
       { pubkey },
-      {
-        authorization: ambossAuth ? `Bearer ${ambossAuth}` : '',
-      }
+      { authorization: ambossAuth ? `Bearer ${ambossAuth}` : '' }
     );
 
     if (!data?.getNode || error) {
@@ -122,59 +172,100 @@ export class AmbossResolver {
     @Context() { res }: ContextType,
     @CurrentUser() user: UserId
   ) {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
-      getSignInfoQuery
-    );
+    const info = await auto<LoginAuto>({
+      nodePubkey: async (): Promise<LoginAuto['nodePubkey']> => {
+        const [info, error] = await toWithError(
+          this.nodeService.getWalletInfo(user.id)
+        );
 
-    if (!data?.getSignInfo || error) {
-      if (error) {
-        this.logger.error(error);
-      }
-      throw new Error('Error getting login information from Amboss');
-    }
+        if (!info.public_key || error) return { pubkey: undefined };
 
-    const [message, signError] = await toWithError<{ signature: string }>(
-      this.nodeService.signMessage(user.id, data.getSignInfo.message)
-    );
+        return { pubkey: info.public_key };
+      },
 
-    if (!message?.signature || signError) {
-      if (signError) {
-        this.logger.error(signError);
-      }
-      throw new Error('Error signing message to login');
-    }
+      signMessage: async (): Promise<LoginAuto['signMessage']> => {
+        const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
+          login: { node_login: { identifier: string; message: string } };
+        }>(this.configService.get('urls.amboss.auth'), NodeLoginInfo);
 
-    this.logger.debug('Signed Amboss login message');
+        if (!data?.login.node_login || error) {
+          if (error) this.logger.error(error);
+          throw new Error('Error getting login information from Amboss');
+        }
 
-    const { identifier } = data.getSignInfo;
-    const params = {
-      details: 'ThunderHub',
-      identifier,
-      signature: message.signature,
-      token: true,
-      seconds: ONE_MONTH_SECONDS,
-    };
+        const { identifier, message } = data.login.node_login;
 
-    const { data: loginData, error: loginError } =
-      await this.fetchService.graphqlFetchWithProxy(
-        this.configService.get('urls.amboss'),
-        loginMutation,
-        params
-      );
+        const [signedMessage, signError] = await toWithError<{
+          signature: string;
+        }>(this.nodeService.signMessage(user.id, message));
 
-    if (!loginData.login || loginError) {
-      if (loginError) {
-        this.logger.silly(`Error logging into Amboss: ${loginError}`);
-      }
-      throw new Error('Error logging into Amboss');
-    }
+        if (!signedMessage?.signature || signError) {
+          if (signError) this.logger.error(signError);
+          throw new Error('Error signing message to login');
+        }
 
-    this.logger.debug('Got Amboss login token');
+        this.logger.debug('Signed Amboss login message');
+
+        return { identifier, signature: signedMessage.signature };
+      },
+
+      getAuthJwt: [
+        'signMessage',
+        async ({ signMessage }): Promise<LoginAuto['getAuthJwt']> => {
+          const { data, error } =
+            await this.fetchService.graphqlFetchWithProxy<{
+              public: { node_login: { jwt: string } };
+            }>(this.configService.get('urls.amboss.auth'), NodeLogin, {
+              input: {
+                identifier: signMessage.identifier,
+                signature: signMessage.signature,
+              },
+            });
+
+          if (!data?.public.node_login.jwt || error) {
+            if (error) this.logger.error(error);
+            throw new Error('Error getting login information from Amboss');
+          }
+
+          return { jwt: data.public.node_login.jwt };
+        },
+      ],
+
+      createJwt: [
+        'nodePubkey',
+        'getAuthJwt',
+        async ({ nodePubkey, getAuthJwt }): Promise<LoginAuto['createJwt']> => {
+          const { data, error } =
+            await this.fetchService.graphqlFetchWithProxy<{
+              api_keys: { create: { token: string } };
+            }>(
+              this.configService.get('urls.amboss.auth'),
+              CreateApiKey,
+              {
+                input: {
+                  details: 'ThunderHub',
+                  seconds: ONE_MONTH_SECONDS,
+                  pubkey: nodePubkey.pubkey,
+                },
+              },
+              { authorization: `Bearer ${getAuthJwt.jwt}` }
+            );
+
+          if (!data?.api_keys.create.token || error) {
+            if (error) this.logger.error(error);
+            throw new Error('Error getting login information from Amboss');
+          }
+
+          this.logger.debug('Got Amboss login token');
+
+          return { jwt: data.api_keys.create.token };
+        },
+      ],
+    });
 
     res.setHeader(
       'Set-Cookie',
-      cookie.serialize(appConstants.ambossCookieName, loginData.login, {
+      cookie.serialize(appConstants.ambossCookieName, info.createJwt.jwt, {
         maxAge: ONE_MONTH_SECONDS,
         httpOnly: true,
         sameSite: true,

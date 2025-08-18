@@ -8,7 +8,7 @@ import { useGetLightningAddressInfoLazyQuery } from '../../../../graphql/queries
 import { useLocalStorage } from '../../../../hooks/UseLocalStorage';
 import { useMutationResultWithReset } from '../../../../hooks/UseMutationWithReset';
 import { LnPay } from '../lnurl/LnPay';
-import { PreviousAddresses, AmbossAddresses } from './Addresses';
+import { PreviousAddresses } from './Addresses';
 
 export const LightningAddressCard = () => {
   const [address, setAddress] = useState<string>('');
@@ -56,7 +56,6 @@ export const LightningAddressCard = () => {
           Pay
         </ColorButton>
         <PreviousAddresses handleClick={handleClick} />
-        <AmbossAddresses handleClick={handleClick} />
       </Card>
       <Modal
         isOpen={!!data?.getLightningAddressInfo}

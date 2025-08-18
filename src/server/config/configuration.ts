@@ -14,7 +14,11 @@ type Throttler = {
 
 type Urls = {
   mempool: string;
-  amboss: string;
+  amboss: {
+    space: string;
+    auth: string;
+    magma: string;
+  };
   tbase: string;
   ticker: string;
   fees: string;
@@ -87,7 +91,11 @@ export default (): ConfigType => {
 
   const urls: Urls = {
     mempool,
-    amboss: 'https://api.amboss.space/graphql',
+    amboss: {
+      space: 'https://api.amboss.space/graphql',
+      auth: 'https://account.amboss.tech/graphql',
+      magma: 'https://magma.amboss.tech/graphql',
+    },
     fees: `${mempool}/api/v1/fees/recommended`,
     blockHeight: `${mempool}/api/blocks/tip/height`,
     tbase: 'https://api.thunderhub.io/api/graphql',

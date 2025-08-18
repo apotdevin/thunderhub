@@ -74,7 +74,8 @@ export const AmbossCard = () => {
       return;
     }
     if (!window?.open) return;
-    const url = `https://amboss.space/token?key=${data.getAmbossLoginToken}`;
+
+    const url = data.getAmbossLoginToken;
     (window as any).open(url, '_blank').focus();
   }, [data, tokenLoading]);
 

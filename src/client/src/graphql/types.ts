@@ -512,12 +512,6 @@ export type InvoiceType = {
   type: Scalars['String']['output'];
 };
 
-export type LightningAddress = {
-  __typename?: 'LightningAddress';
-  lightning_address: Scalars['String']['output'];
-  pubkey: Scalars['String']['output'];
-};
-
 export type LightningBalance = {
   __typename?: 'LightningBalance';
   active: Scalars['String']['output'];
@@ -1041,7 +1035,6 @@ export type Query = {
   getInvoices: GetInvoicesType;
   getLatestVersion: Scalars['String']['output'];
   getLightningAddressInfo: PayRequest;
-  getLightningAddresses: Array<LightningAddress>;
   getLnMarketsStatus: Scalars['String']['output'];
   getLnMarketsUrl: Scalars['String']['output'];
   getLnMarketsUserInfo: LnMarketsUserInfo;
