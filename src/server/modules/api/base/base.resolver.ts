@@ -64,7 +64,7 @@ export class BaseResolver {
 
   @Query(() => Boolean)
   async getBaseCanConnect() {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
       this.configService.get('urls.tbase'),
       getBaseCanConnectQuery
     );
@@ -76,7 +76,7 @@ export class BaseResolver {
 
   @Query(() => [BaseNode])
   async getBaseNodes() {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
       this.configService.get('urls.tbase'),
       getBaseNodesQuery
     );
@@ -90,7 +90,7 @@ export class BaseResolver {
 
   @Query(() => [BasePoints])
   async getBasePoints() {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
       this.configService.get('urls.tbase'),
       getBasePointsQuery
     );
@@ -106,7 +106,7 @@ export class BaseResolver {
       throw new GraphQLError('No amount provided for donation invoice.');
     }
 
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
       this.configService.get('urls.tbase'),
       createBaseInvoiceQuery,
       { amount }
@@ -127,7 +127,7 @@ export class BaseResolver {
     @Args('uris', { type: () => [String] }) uris: string[],
     @Args('public_key') public_key: string
   ) {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
       this.configService.get('urls.tbase'),
       createThunderPointsQuery,
       { id, alias, uris, public_key }

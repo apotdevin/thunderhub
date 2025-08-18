@@ -31,16 +31,17 @@ export class FetchService {
       : fetch(url, options);
   }
 
-  async graphqlFetchWithProxy(
+  async graphqlFetchWithProxy<T>(
     url: string,
     query: DocumentNode,
     variables?: Variables,
     headers?: { [key: string]: string | number | string[] | boolean }
   ): Promise<{
-    data: any;
+    data: T;
     error: undefined | GraphQLError;
   }> {
-    const needsHeaders = url === this.configService.get('urls.amboss');
+    const needsHeaders = url.includes('amboss.');
+
     return this.fetchWithProxy(url, {
       method: 'post',
       headers: {

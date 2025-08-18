@@ -439,11 +439,6 @@ type InvoiceType {
   type: String!
 }
 
-type LightningAddress {
-  lightning_address: String!
-  pubkey: String!
-}
-
 type LightningBalance {
   active: String!
   commit: String!
@@ -767,7 +762,6 @@ type Query {
   getInvoices(token: String): GetInvoicesType!
   getLatestVersion: String!
   getLightningAddressInfo(address: String!): PayRequest!
-  getLightningAddresses: [LightningAddress!]!
   getLnMarketsStatus: String!
   getLnMarketsUrl: String!
   getLnMarketsUserInfo: LnMarketsUserInfo!

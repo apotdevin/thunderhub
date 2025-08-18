@@ -54,8 +54,8 @@ export class SubService implements OnApplicationBootstrap {
 
   async startSubscription() {
     return forever(
-      next => {
-        return auto(
+      (next: any) => {
+        return auto<any>(
           {
             // Get Authenticated LND objects for each node
             getNodes: async () => {
@@ -144,7 +144,7 @@ export class SubService implements OnApplicationBootstrap {
 
                 return each(
                   checkAvailable,
-                  (node, cbk) => {
+                  (node: any, cbk: any) => {
                     const sub = subscribeToInvoices({ lnd: node.lnd });
 
                     this.subscriptions.push(sub);
@@ -195,7 +195,7 @@ export class SubService implements OnApplicationBootstrap {
 
                 return each(
                   checkAvailable,
-                  (node, cbk) => {
+                  (node: any, cbk: any) => {
                     const sub = subscribeToPastPayments({ lnd: node.lnd });
 
                     this.subscriptions.push(sub);
@@ -246,7 +246,7 @@ export class SubService implements OnApplicationBootstrap {
 
                 return each(
                   checkAvailable,
-                  (node, cbk) => {
+                  (node: any, cbk: any) => {
                     const sub = subscribeToForwards({ lnd: node.lnd });
 
                     this.subscriptions.push(sub);
@@ -297,7 +297,7 @@ export class SubService implements OnApplicationBootstrap {
 
                 return each(
                   checkAvailable,
-                  (node, cbk) => {
+                  (node: any, cbk: any) => {
                     const sub = subscribeToChannels({ lnd: node.lnd });
 
                     this.subscriptions.push(sub);
@@ -375,7 +375,7 @@ export class SubService implements OnApplicationBootstrap {
 
                 return each(
                   checkAvailable,
-                  (node, cbk) => {
+                  (node: any, cbk: any) => {
                     let postBackupTimeoutHandle;
                     const sub = subscribeToBackups({ lnd: node.lnd });
 

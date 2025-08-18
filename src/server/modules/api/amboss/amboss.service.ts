@@ -64,11 +64,11 @@ export class AmbossService {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
-  ambossUrl = this.configService.get('urls.amboss');
+  ambossUrl = this.configService.get('urls.amboss.space');
 
   async getNodeAliasBatchQuery(pubkeys: string[]) {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
+      this.configService.get('urls.amboss.space'),
       getNodeAliasBatchQuery,
       { pubkeys }
     );
@@ -95,8 +95,8 @@ export class AmbossService {
   }
 
   async getEdgeInfoBatchQuery(ids: string[]) {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
-      this.configService.get('urls.amboss'),
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
+      this.configService.get('urls.amboss.space'),
       getEdgeInfoBatchQuery,
       { ids }
     );
@@ -123,7 +123,7 @@ export class AmbossService {
   }
 
   async pushBackup(backup: string, signature: string) {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
       this.ambossUrl,
       saveBackupMutation,
       { backup, signature }
@@ -136,7 +136,7 @@ export class AmbossService {
   }
 
   async pingHealthCheck(timestamp: string, signature: string) {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
       this.ambossUrl,
       pingHealthCheckMutation,
       { timestamp, signature }
@@ -152,7 +152,7 @@ export class AmbossService {
   }
 
   async pushBalancesToAmboss(input: ChannelBalanceInputType) {
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy(
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
       this.ambossUrl,
       pushNodeBalancesMutation,
       { input }
@@ -189,7 +189,7 @@ export class AmbossService {
       return;
     }
 
-    await auto({
+    await auto<any>({
       // Get Authenticated LND objects for each node
       getNodes: async () => {
         const accounts = this.accountsService.getAllAccounts();
@@ -211,7 +211,7 @@ export class AmbossService {
       // Try to connect to nodes
       checkNodes: [
         'getNodes',
-        async ({ getNodes }) => {
+        async ({ getNodes }: { getNodes: { id: string; lnd: any }[] }) => {
           return map(getNodes, async ({ lnd, id }) => {
             try {
               const info = await getWalletInfo({ lnd });
@@ -259,7 +259,11 @@ export class AmbossService {
 
       pingAmboss: [
         'checkAvailable',
-        async ({ checkAvailable }) => {
+        async ({
+          checkAvailable,
+        }: {
+          checkAvailable: { id: string; network: string; name: string }[];
+        }) => {
           await each(checkAvailable, async node => {
             if (node.network !== 'btc') {
               this.logger.silly(
@@ -324,7 +328,7 @@ export class AmbossService {
       return;
     }
 
-    await auto({
+    await auto<any>({
       // Get Authenticated LND objects for each node
       getNodes: async () => {
         const accounts = this.accountsService.getAllAccounts();
@@ -346,7 +350,7 @@ export class AmbossService {
       // Try to connect to nodes
       checkNodes: [
         'getNodes',
-        async ({ getNodes }) => {
+        async ({ getNodes }: { getNodes: { id: string; lnd: any }[] }) => {
           return map(getNodes, async ({ lnd, id }) => {
             try {
               const info = await getWalletInfo({ lnd });
@@ -394,7 +398,11 @@ export class AmbossService {
 
       pingAmboss: [
         'checkAvailable',
-        async ({ checkAvailable }) => {
+        async ({
+          checkAvailable,
+        }: {
+          checkAvailable: { id: string; network: string; name: string }[];
+        }) => {
           await each(checkAvailable, async node => {
             if (node.network !== 'btc') {
               this.logger.silly('Balance pushes are only sent for mainnet', {
