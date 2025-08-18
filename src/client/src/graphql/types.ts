@@ -875,7 +875,8 @@ export type OpenChannelParams = {
   give_tokens?: InputMaybe<Scalars['Float']['input']>;
   is_max_funding?: InputMaybe<Scalars['Boolean']['input']>;
   is_private?: InputMaybe<Scalars['Boolean']['input']>;
-  partner_public_key: Scalars['String']['input'];
+  is_recommended?: InputMaybe<Scalars['Boolean']['input']>;
+  partner_public_key?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type OpenOrCloseChannel = {

@@ -11,6 +11,7 @@ import { QuickActions } from '../src/views/home/quickActions/QuickActions';
 import { FlowBox } from '../src/views/home/reports/flow';
 import { ForwardBox } from '../src/views/home/reports/forwardReport';
 import { ConnectCard } from '../src/views/home/connect/Connect';
+import { Liquidity } from '../src/views/home/liquidity/Liquidity';
 
 const HomeView = () => (
   <>
@@ -18,6 +19,7 @@ const HomeView = () => (
     <AccountInfo />
     <AccountButtons />
     <ConnectCard />
+    <Liquidity />
     <QuickActions />
     <FlowBox />
     <LiquidityGraph />

@@ -1,5 +1,17 @@
 import { gql } from 'graphql-tag';
 
+export const GetRecommendedNode = gql`
+  query GetRecommendedNode {
+    rails {
+      get_recommended_node {
+        id
+        pubkey
+        sockets
+      }
+    }
+  }
+`;
+
 export const NodeLoginInfo = gql`
   query NodeLoginInfo {
     login {

@@ -10,6 +10,7 @@ import { getChannelAge } from './channels.helpers';
 import {
   Channel,
   ClosedChannel,
+  OpenChannelAuto,
   OpenChannelParams,
   OpenOrCloseChannel,
   PendingChannel,
@@ -17,11 +18,17 @@ import {
   UpdateRoutingFeesParams,
 } from './channels.types';
 import { GraphQLError } from 'graphql';
+import { auto } from 'async';
+import { FetchService } from '../../fetch/fetch.service';
+import { ConfigService } from '@nestjs/config';
+import { GetRecommendedNode } from '../amboss/amboss.gql';
 
 @Resolver()
 export class ChannelsResolver {
   constructor(
     private nodeService: NodeService,
+    private fetchService: FetchService,
+    private configService: ConfigService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -133,8 +140,9 @@ export class ChannelsResolver {
   async openChannel(
     @CurrentUser() user: UserId,
     @Args('input') input: OpenChannelParams
-  ) {
+  ): Promise<OpenOrCloseChannel> {
     const {
+      is_recommended = false,
       channel_size = 0,
       partner_public_key,
       is_private,
@@ -145,46 +153,120 @@ export class ChannelsResolver {
       fee_rate,
     } = input;
 
-    if (!channel_size && !is_max_funding) {
-      throw new GraphQLError('You need to specify a channel size.');
-    }
+    const info = await auto<OpenChannelAuto>({
+      checkArgs: async () => {
+        if (!channel_size && !is_max_funding) {
+          throw new GraphQLError('You need to specify a channel size.');
+        }
 
-    this.logger.info('Starting opening channel attempt', { input });
+        if (!is_recommended && !partner_public_key) {
+          throw new GraphQLError('You need to specify a channel peer.');
+        }
+      },
 
-    let public_key = partner_public_key;
+      recommendedPeer: [
+        'checkArgs',
+        async (): Promise<OpenChannelAuto['recommendedPeer']> => {
+          if (!is_recommended) return;
 
-    if (partner_public_key.indexOf('@') >= 0) {
-      this.logger.info('Connecting to new peer', { partner_public_key });
+          const { data, error } =
+            await this.fetchService.graphqlFetchWithProxy<{
+              rails: {
+                get_recommended_node: {
+                  id: string;
+                  pubkey: string;
+                  sockets: string[];
+                };
+              };
+            }>(this.configService.get('urls.amboss.auth'), GetRecommendedNode);
 
-      const parts = partner_public_key.split('@');
-      public_key = parts[0];
-      await this.nodeService.addPeer(user.id, public_key, parts[1], false);
+          if (!data?.rails.get_recommended_node.sockets.length || error) {
+            if (error) this.logger.error(error);
+            throw new Error('Error getting recommended node info');
+          }
 
-      this.logger.info(`Connected to new peer`, { partner_public_key });
-    }
+          const { pubkey, sockets } = data.rails.get_recommended_node;
 
-    const openParams = {
-      local_tokens: channel_size,
-      partner_public_key: public_key,
-      ...(is_private ? { is_private } : {}),
-      ...(give_tokens ? { give_tokens } : {}),
-      ...(chain_fee_tokens_per_vbyte ? { chain_fee_tokens_per_vbyte } : {}),
-      ...(is_max_funding ? { is_max_funding } : {}),
-      ...(base_fee_mtokens ? { base_fee_mtokens } : {}),
-      ...(fee_rate ? { fee_rate } : {}),
-    };
+          await this.nodeService.addPeer(user.id, pubkey, sockets[0], false);
 
-    const info = await this.nodeService.openChannel(user.id, openParams);
+          this.logger.info(
+            'Connected to recommended peer for channel opening',
+            { node: data.rails.get_recommended_node }
+          );
 
-    this.logger.info('Channel opened with params', {
-      params: openParams,
-      result: info,
+          return { pubkey };
+        },
+      ],
+
+      peer: [
+        'checkArgs',
+        async (): Promise<OpenChannelAuto['peer']> => {
+          if (is_recommended) return;
+          if (!partner_public_key) return;
+
+          const parts = partner_public_key.split('@');
+
+          const [pubkey, socket] = parts;
+
+          if (!!socket) {
+            await this.nodeService.addPeer(user.id, pubkey, socket, false);
+
+            this.logger.info('Connected to peer for channel opening', {
+              node: { pubkey, socket },
+            });
+          }
+
+          return { pubkey };
+        },
+      ],
+
+      openChannel: [
+        'recommendedPeer',
+        'peer',
+        async ({
+          recommendedPeer,
+          peer,
+        }: Pick<OpenChannelAuto, 'recommendedPeer' | 'peer'>) => {
+          if (!recommendedPeer.pubkey && !peer.pubkey) {
+            throw new Error('No peer provided to open channel to');
+          }
+
+          const params = {
+            local_tokens: channel_size,
+            partner_public_key: recommendedPeer.pubkey || peer.pubkey,
+            ...(is_private ? { is_private } : {}),
+            ...(give_tokens ? { give_tokens } : {}),
+            ...(chain_fee_tokens_per_vbyte
+              ? { chain_fee_tokens_per_vbyte }
+              : {}),
+            ...(is_max_funding ? { is_max_funding } : {}),
+            ...(base_fee_mtokens ? { base_fee_mtokens } : {}),
+            ...(fee_rate ? { fee_rate } : {}),
+          };
+
+          this.logger.info('Opening channel with params', { params });
+
+          const info = await this.nodeService.openChannel(user.id, params);
+
+          this.logger.info('Channel opened', { result: info });
+
+          return {
+            transactionId: info.transaction_id,
+            transactionOutputIndex: info.transaction_vout,
+          };
+        },
+      ],
+    }).catch(error => {
+      if (error instanceof GraphQLError) {
+        throw error;
+      }
+
+      this.logger.error('Error opening channel', { input, error });
+
+      throw new Error('Error opening channel');
     });
 
-    return {
-      transactionId: info.transaction_id,
-      transactionOutputIndex: info.transaction_vout,
-    };
+    return info.openChannel;
   }
 
   @Mutation(() => Boolean)
