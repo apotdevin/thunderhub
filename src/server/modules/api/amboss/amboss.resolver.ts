@@ -148,6 +148,8 @@ export class AmbossResolver {
             this.logger.error(`Failed to pay invoice`, { infoError, info });
             throw new GraphQLError('Failed to pay invoice for liquidity');
           }
+
+          this.logger.info('Liquidity Invoice Paid', { info });
         },
       ],
     });
