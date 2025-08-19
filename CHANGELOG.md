@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.14.1](https://github.com/apotdevin/thunderhub/compare/v0.14.0...v0.14.1) (2025-08-19)
+
+
+### Bug Fixes
+
+* open channel fee setting ([015664f](https://github.com/apotdevin/thunderhub/commit/015664f87d78f66a251efb5bcd4df13f96fe923f))
+
 ## [0.14.0](https://github.com/apotdevin/thunderhub/compare/v0.13.32...v0.14.0) (2025-08-19)
 
 
