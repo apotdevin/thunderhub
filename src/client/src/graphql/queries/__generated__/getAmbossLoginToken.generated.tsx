@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetAmbossLoginTokenQueryVariables = Types.Exact<{
-  [key: string]: never;
+  redirect_url?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 export type GetAmbossLoginTokenQuery = {
@@ -13,8 +13,8 @@ export type GetAmbossLoginTokenQuery = {
 };
 
 export const GetAmbossLoginTokenDocument = gql`
-  query GetAmbossLoginToken {
-    getAmbossLoginToken
+  query GetAmbossLoginToken($redirect_url: String) {
+    getAmbossLoginToken(redirect_url: $redirect_url)
   }
 `;
 
@@ -30,6 +30,7 @@ export const GetAmbossLoginTokenDocument = gql`
  * @example
  * const { data, loading, error } = useGetAmbossLoginTokenQuery({
  *   variables: {
+ *      redirect_url: // value for 'redirect_url'
  *   },
  * });
  */

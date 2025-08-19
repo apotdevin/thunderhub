@@ -198,3 +198,15 @@ export const formatSeconds = (
   const sDisplay = s > 0 ? `${s}s` : '';
   return yDisplay + dDisplay + hDisplay + mDisplay + sDisplay;
 };
+
+export const formatCurrency = (amount: string | number, currency: string) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+    maximumFractionDigits: 0,
+  }).format(Number(amount));
+};
+
+export const formatNumber = (amount: string | number) => {
+  return new Intl.NumberFormat('en-US').format(Number(amount));
+};

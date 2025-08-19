@@ -1,5 +1,29 @@
 import { gql } from 'graphql-tag';
 
+export const GetLiquidityPerUsd = gql`
+  query GetLiquidityPerUsd {
+    market {
+      liquidity {
+        liquidity_per_usd {
+          sats
+        }
+      }
+    }
+  }
+`;
+
+export const PurchaseLiquidity = gql`
+  mutation PurchaseLiquidity($input: LiquidityOrderInput!) {
+    liquidity {
+      buy(input: $input) {
+        payment {
+          lightning_invoice
+        }
+      }
+    }
+  }
+`;
+
 export const GetRecommendedNode = gql`
   query GetRecommendedNode {
     rails {

@@ -582,6 +582,7 @@ export type Mutation = {
   logout: Scalars['Boolean']['output'];
   openChannel: OpenOrCloseChannel;
   pay: Scalars['Boolean']['output'];
+  purchaseLiquidity: Scalars['Boolean']['output'];
   pushBackup: Scalars['Boolean']['output'];
   removePeer: Scalars['Boolean']['output'];
   removeTwofaSecret: Scalars['Boolean']['output'];
@@ -719,6 +720,10 @@ export type MutationPayArgs = {
   max_paths: Scalars['Float']['input'];
   out?: InputMaybe<Array<Scalars['String']['input']>>;
   request: Scalars['String']['input'];
+};
+
+export type MutationPurchaseLiquidityArgs = {
+  amount_cents: Scalars['String']['input'];
 };
 
 export type MutationRemovePeerArgs = {
@@ -1036,6 +1041,7 @@ export type Query = {
   getInvoices: GetInvoicesType;
   getLatestVersion: Scalars['String']['output'];
   getLightningAddressInfo: PayRequest;
+  getLiquidityPerUsd: Scalars['String']['output'];
   getLnMarketsStatus: Scalars['String']['output'];
   getLnMarketsUrl: Scalars['String']['output'];
   getLnMarketsUserInfo: LnMarketsUserInfo;
@@ -1071,6 +1077,10 @@ export type QueryGetAccountingReportArgs = {
   fiat?: InputMaybe<Scalars['String']['input']>;
   month?: InputMaybe<Scalars['String']['input']>;
   year?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type QueryGetAmbossLoginTokenArgs = {
+  redirect_url?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type QueryGetBoltzSwapStatusArgs = {
