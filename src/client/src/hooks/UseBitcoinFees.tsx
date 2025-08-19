@@ -16,9 +16,10 @@ const initialState: State = {
   minimum: 0,
 };
 
-export const useBitcoinFees = (): State => {
+export const useBitcoinFees = (dontFetch?: boolean): State => {
   const { loading, data, error } = useGetBitcoinFeesQuery({
     fetchPolicy: 'cache-first',
+    skip: dontFetch,
   });
 
   if (!data?.getBitcoinFees || loading || error) {

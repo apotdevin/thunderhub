@@ -53,7 +53,8 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
   const [useRecommended, setUseRecommended] = useState(true);
 
   const { fetchFees } = useConfigState();
-  const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
+  const { fast, halfHour, hour, minimum, dontShow } =
+    useBitcoinFees(!fetchFees);
   const [size, setSize] = useState(0);
 
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
@@ -65,7 +66,7 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
   const [publicKey, setPublicKey] = useState('');
   const [privateChannel, setPrivateChannel] = useState(false);
   const [isMaxFunding, setIsMaxFunding] = useState(true);
-  const [type, setType] = useState('none');
+  const [type, setType] = useState(fetchFees ? 'none' : 'fee');
 
   const [feeRate, setFeeRate] = useState<number | null>(null);
   const [baseFee, setBaseFee] = useState<number | null>(null);
@@ -301,6 +302,7 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
           </SingleLine>
         </>
       )}
+
       <InputWithDeco title={'Fee Amount'} amount={fee * 223} noInput={true}>
         {type !== 'none' && (
           <Input
