@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.0](https://github.com/apotdevin/thunderhub/compare/v0.13.32...v0.14.0) (2025-08-19)
+
+
+### Features
+
+* add sync percentage display with progress bar ([#628](https://github.com/apotdevin/thunderhub/issues/628)) ([f6a9c56](https://github.com/apotdevin/thunderhub/commit/f6a9c56056b311d00e5e3d36954deaa5355e52ea))
+* purchase liquidity ([#633](https://github.com/apotdevin/thunderhub/issues/633)) ([1ae2d1c](https://github.com/apotdevin/thunderhub/commit/1ae2d1c2a4fa34ff1c1e75ee97b4bac8d2760963))
+
+
+### Improvements
+
+* deprecate ghost addresses ([#630](https://github.com/apotdevin/thunderhub/issues/630)) ([2db1755](https://github.com/apotdevin/thunderhub/commit/2db175510088be7d052bb98915ea98b0736a09dd))
+* run dep audit ([ff2454f](https://github.com/apotdevin/thunderhub/commit/ff2454fcfa3ecfbaaf175d3ac04571f9f62d4f79))
+* small cleanup ([0e2f381](https://github.com/apotdevin/thunderhub/commit/0e2f38132a5947bbd321cfe1b9c1ae4d98e68300))
+
+
+### Refactoring
+
+* amboss login ([#631](https://github.com/apotdevin/thunderhub/issues/631)) ([a406dee](https://github.com/apotdevin/thunderhub/commit/a406dee802c902cc606c9f82bc2577d8431a4ab1))
+* open channel ([#632](https://github.com/apotdevin/thunderhub/issues/632)) ([fd85be7](https://github.com/apotdevin/thunderhub/commit/fd85be780f79b13b6e6c0f6ee7ef0d0b539b3ba2))
+
 ### [0.13.32](https://github.com/apotdevin/thunderhub/compare/v0.13.31...v0.13.32) (2025-06-23)
 
 
