@@ -103,3 +103,10 @@ export type OauthAuto = {
   getAuthJwt: { jwt: string };
   getOauth: { url: string };
 };
+
+export type PurchaseAuto = {
+  nodeUri: string;
+  ambossJwt: string;
+  liquidityInvoice: string;
+  pay: void;
+};

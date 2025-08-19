@@ -503,6 +503,7 @@ type Mutation {
   logout: Boolean!
   openChannel(input: OpenChannelParams!): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
+  purchaseLiquidity(amount_cents: String!): Boolean!
   pushBackup: Boolean!
   removePeer(publicKey: String): Boolean!
   removeTwofaSecret(token: String!): Boolean!
@@ -740,7 +741,7 @@ type Query {
   decodeRequest(request: String!): DecodeInvoice!
   getAccount: ServerAccount!
   getAccountingReport(category: String, currency: String, fiat: String, month: String, year: String): String!
-  getAmbossLoginToken: String!
+  getAmbossLoginToken(redirect_url: String): String!
   getAmbossUser: AmbossUser
   getBackups: String!
   getBaseCanConnect: Boolean!
@@ -763,6 +764,7 @@ type Query {
   getInvoices(token: String): GetInvoicesType!
   getLatestVersion: String!
   getLightningAddressInfo(address: String!): PayRequest!
+  getLiquidityPerUsd: String!
   getLnMarketsStatus: String!
   getLnMarketsUrl: String!
   getLnMarketsUserInfo: LnMarketsUserInfo!

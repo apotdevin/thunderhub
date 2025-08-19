@@ -4,8 +4,8 @@ import { PayCard } from '../../../views/home/account/pay/Payment';
 import { ReceiveOnChainCard } from '../../../views/home/account/receiveOnChain/ReceiveOnChain';
 import { SendOnChainCard } from '../../../views/home/account/sendOnChain/SendOnChain';
 import { SupportBar } from '../../../views/home/quickActions/donate/DonateContent';
-import { OpenChannel } from '../../../views/home/quickActions/openChannel';
 import { SignMessage } from '../../../views/tools/messages/SignMessage';
+import { OpenChannel } from '../../home/liquidity/OpenChannel';
 
 export const DashboardModal = () => {
   const { modalType } = useDashState();
@@ -32,7 +32,7 @@ export const DashboardModal = () => {
       case 'openChannel':
         return (
           <OpenChannel
-            setOpenCard={() => dispatch({ type: 'openModal', modalType: '' })}
+            closeCbk={() => dispatch({ type: 'openModal', modalType: '' })}
           />
         );
       case 'donate':

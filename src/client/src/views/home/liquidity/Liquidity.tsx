@@ -14,7 +14,7 @@ import {
 import { ArrowDownRight, ArrowUpRight, X } from 'react-feather';
 import { useState } from 'react';
 import { OpenChannel } from './OpenChannel';
-import { BuyChannel } from './BuyChannel';
+import { BuyChannel, GoToMagma } from './BuyChannel';
 
 export const QuickCard = styled.div`
   background: ${cardColor};
@@ -85,11 +85,16 @@ export const Liquidity = () => {
     <CardWithTitle>
       <CardTitle>
         <SubTitle>Liquidity</SubTitle>
-        {openCard !== 'none' && (
-          <SmallButton onClick={() => setOpenCard('none')}>
-            <X size={18} />
-          </SmallButton>
-        )}
+
+        <div style={{ display: 'flex' }}>
+          {openCard === 'buy' ? <GoToMagma /> : null}
+
+          {openCard !== 'none' && (
+            <SmallButton onClick={() => setOpenCard('none')}>
+              <X size={18} />
+            </SmallButton>
+          )}
+        </div>
       </CardTitle>
       {getContent()}
     </CardWithTitle>

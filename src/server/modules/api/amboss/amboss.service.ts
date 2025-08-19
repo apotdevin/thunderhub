@@ -8,6 +8,9 @@ import { Logger } from 'winston';
 import { AccountsService } from '../../accounts/accounts.service';
 import { FetchService } from '../../fetch/fetch.service';
 import {
+  CreateApiKey,
+  NodeLogin,
+  NodeLoginInfo,
   getEdgeInfoBatchQuery,
   getNodeAliasBatchQuery,
   pingHealthCheckMutation,
@@ -24,9 +27,11 @@ import {
   mapEdgeResult,
   mapNodeResult,
 } from './amboss.helpers';
-import { EdgeInfo, NodeAlias } from './amboss.types';
+import { EdgeInfo, LoginAuto, NodeAlias } from './amboss.types';
+import { toWithError } from 'src/server/utils/async';
 
 const ONE_MINUTE = 60 * 1000;
+export const ONE_MONTH_SECONDS = 60 * 60 * 24 * 30;
 
 type NodeType = {
   id: string;
@@ -65,6 +70,101 @@ export class AmbossService {
   ) {}
 
   ambossUrl = this.configService.get('urls.amboss.space');
+
+  async getAmbossJWT(userId: string): Promise<string> {
+    const info = await auto<LoginAuto>({
+      nodePubkey: async (): Promise<LoginAuto['nodePubkey']> => {
+        const [info, error] = await toWithError(
+          this.nodeService.getWalletInfo(userId)
+        );
+
+        if (!info.public_key || error) return { pubkey: undefined };
+
+        return { pubkey: info.public_key };
+      },
+
+      signMessage: async (): Promise<LoginAuto['signMessage']> => {
+        const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
+          login: { node_login: { identifier: string; message: string } };
+        }>(this.configService.get('urls.amboss.auth'), NodeLoginInfo);
+
+        if (!data?.login.node_login || error) {
+          if (error) this.logger.error(error);
+          throw new Error('Error getting login information from Amboss');
+        }
+
+        const { identifier, message } = data.login.node_login;
+
+        const [signedMessage, signError] = await toWithError<{
+          signature: string;
+        }>(this.nodeService.signMessage(userId, message));
+
+        if (!signedMessage?.signature || signError) {
+          if (signError) this.logger.error(signError);
+          throw new Error('Error signing message to login');
+        }
+
+        this.logger.debug('Signed Amboss login message');
+
+        return { identifier, signature: signedMessage.signature };
+      },
+
+      getAuthJwt: [
+        'signMessage',
+        async ({ signMessage }): Promise<LoginAuto['getAuthJwt']> => {
+          const { data, error } =
+            await this.fetchService.graphqlFetchWithProxy<{
+              public: { node_login: { jwt: string } };
+            }>(this.configService.get('urls.amboss.auth'), NodeLogin, {
+              input: {
+                identifier: signMessage.identifier,
+                signature: signMessage.signature,
+              },
+            });
+
+          if (!data?.public.node_login.jwt || error) {
+            if (error) this.logger.error(error);
+            throw new Error('Error getting login information from Amboss');
+          }
+
+          return { jwt: data.public.node_login.jwt };
+        },
+      ],
+
+      createJwt: [
+        'nodePubkey',
+        'getAuthJwt',
+        async ({ nodePubkey, getAuthJwt }): Promise<LoginAuto['createJwt']> => {
+          const { data, error } =
+            await this.fetchService.graphqlFetchWithProxy<{
+              api_keys: { create: { token: string } };
+            }>(
+              this.configService.get('urls.amboss.auth'),
+              CreateApiKey,
+              {
+                input: {
+                  details: 'ThunderHub',
+                  seconds: ONE_MONTH_SECONDS,
+                  pubkey: nodePubkey.pubkey,
+                },
+              },
+              { authorization: `Bearer ${getAuthJwt.jwt}` }
+            );
+
+          if (!data?.api_keys.create.token || error) {
+            if (error) this.logger.error(error);
+            throw new Error('Error getting login information from Amboss');
+          }
+
+          this.logger.debug('Got Amboss login token');
+
+          return { jwt: data.api_keys.create.token };
+        },
+      ],
+    });
+
+    return info.createJwt.jwt;
+  }
 
   async getNodeAliasBatchQuery(pubkeys: string[]) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
