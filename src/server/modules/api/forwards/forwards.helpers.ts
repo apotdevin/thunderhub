@@ -1,11 +1,12 @@
+import Big from 'big.js';
 import { forOwn, mapValues, orderBy } from 'lodash';
+import { v5 as uuidv5 } from 'uuid';
+
 import {
   AggregatedByChannelSide,
   AggregatedByRoute,
   ForwardsWithPubkey,
 } from './forwards.types';
-import Big from 'big.js';
-import { v5 as uuidv5 } from 'uuid';
 
 export const reduceByChannel = (
   currentPubkey: string,

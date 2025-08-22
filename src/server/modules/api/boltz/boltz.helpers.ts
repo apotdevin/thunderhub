@@ -8,7 +8,7 @@ import {
 } from 'boltz-core';
 import { SwapTree } from 'boltz-core/dist/lib/consts/Types';
 import { randomBytes } from 'crypto';
-import { ECPairFactory, ECPairAPI, ECPairInterface } from 'ecpair';
+import { ECPairAPI, ECPairFactory, ECPairInterface } from 'ecpair';
 import * as ecc from 'tiny-secp256k1';
 
 const ECPair: ECPairAPI = ECPairFactory(ecc);
@@ -29,7 +29,7 @@ export const validateAddress = (
   try {
     address.toOutputScript(btcAddress, network);
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 };

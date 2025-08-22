@@ -1,19 +1,20 @@
+import { Inject } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import {
-  WebSocketGateway,
-  OnGatewayInit,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  OnGatewayInit,
+  WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Inject } from '@nestjs/common';
-import { Server, Socket } from 'socket.io';
-import { WsService } from './ws.service';
 import { parse } from 'cookie';
-import { appConstants } from 'src/server/utils/appConstants';
-import { AuthenticationService } from '../auth/auth.service';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Server, Socket } from 'socket.io';
+import { appConstants } from 'src/server/utils/appConstants';
 import { Logger } from 'winston';
-import { ConfigModule } from '@nestjs/config';
+
+import { AuthenticationService } from '../auth/auth.service';
+import { WsService } from './ws.service';
 
 ConfigModule.forRoot({
   envFilePath: ['.env.local', '.env'],

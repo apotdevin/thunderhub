@@ -1,13 +1,14 @@
+import { Inject } from '@nestjs/common';
 import { Context, Query, Resolver } from '@nestjs/graphql';
+import { seconds, Throttle } from '@nestjs/throttler';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { ContextType } from 'src/server/app.module';
+import { Logger } from 'winston';
+
 import { AccountsService } from '../../accounts/accounts.service';
 import { CurrentUser, Public } from '../../security/security.decorators';
-import { ServerAccount } from './account.types';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
-import { Inject } from '@nestjs/common';
 import { UserId } from '../../security/security.types';
-import { Throttle, seconds } from '@nestjs/throttler';
+import { ServerAccount } from './account.types';
 
 @Resolver()
 export class AccountResolver {

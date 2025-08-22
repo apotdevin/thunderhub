@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { FetchModule } from '../../fetch/fetch.module';
 import { BitcoinResolver } from './bitcoin.resolver';
 

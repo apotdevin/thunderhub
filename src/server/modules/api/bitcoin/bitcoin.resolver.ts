@@ -1,10 +1,11 @@
-import { Query, Resolver } from '@nestjs/graphql';
-import { FetchService } from '../../fetch/fetch.service';
 import { Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Query, Resolver } from '@nestjs/graphql';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
+
+import { FetchService } from '../../fetch/fetch.service';
 import { BitcoinFee } from './bitcoin.types';
-import { ConfigService } from '@nestjs/config';
 
 @Resolver()
 export class BitcoinResolver {

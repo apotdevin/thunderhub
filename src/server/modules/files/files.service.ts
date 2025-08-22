@@ -1,11 +1,15 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
-import fs from 'fs';
-import crypto from 'crypto';
-import path from 'path';
-import os from 'os';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import crypto from 'crypto';
+import fs from 'fs';
+import yaml from 'js-yaml';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import os from 'os';
+import path from 'path';
+import { getSHA256Hash, hashPassword } from 'src/server/utils/crypto';
+import { resolveEnvVarsInAccount } from 'src/server/utils/env';
+import { Logger } from 'winston';
+
 import {
   AccountConfigType,
   AccountType,
@@ -14,9 +18,6 @@ import {
   ParsedAccount,
   UnresolvedAccountType,
 } from './files.types';
-import yaml from 'js-yaml';
-import { getSHA256Hash, hashPassword } from 'src/server/utils/crypto';
-import { resolveEnvVarsInAccount } from 'src/server/utils/env';
 
 const isValidNetwork = (network: string | null): network is BitcoinNetwork =>
   network === 'mainnet' ||
@@ -66,7 +67,7 @@ export class FilesService {
         const yamlString = yaml.dump({ backupsEnabled: false });
         fs.writeFileSync(filePath, yamlString);
         this.logger.info('Succesfully created yaml file.');
-      } catch (error: any) {
+      } catch {
         this.logger.error('Error creating yaml file.');
         return null;
       }
@@ -99,7 +100,7 @@ export class FilesService {
       const yamlString = yaml.dump(config);
       fs.writeFileSync(filePath, yamlString);
       this.logger.info('Succesfully saved');
-    } catch (error: any) {
+    } catch {
       this.logger.error('Error saving yaml file.');
     }
   };
@@ -167,7 +168,7 @@ export class FilesService {
 
     cloned.accounts = hashedAccounts;
 
-    hasChanged && this.saveHashedYaml(cloned, filePath);
+    if (hasChanged) this.saveHashedYaml(cloned, filePath);
 
     return cloned;
   }

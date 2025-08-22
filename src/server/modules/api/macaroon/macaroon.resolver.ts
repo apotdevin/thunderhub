@@ -1,11 +1,12 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { NodeService } from '../../node/node.service';
-import { UserId } from '../../security/security.types';
 import { Inject } from '@nestjs/common';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import { CreateMacaroon, NetworkInfoInput } from './macaroon.types';
+
+import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
+import { UserId } from '../../security/security.types';
+import { CreateMacaroon, NetworkInfoInput } from './macaroon.types';
 
 @Resolver()
 export class MacaroonResolver {

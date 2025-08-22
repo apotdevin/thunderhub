@@ -1,6 +1,7 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
+
 import { IS_PUBLIC_KEY, Role, ROLES_KEY } from '../security.decorators';
 import { UserId } from '../security.types';
 

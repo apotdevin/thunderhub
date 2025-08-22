@@ -1,6 +1,7 @@
-import { Controller, Get, Res, Req } from '@nestjs/common';
+import { Controller, Get, Req, Res } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
 import { Request, Response } from 'express';
+
 import { Public } from '../security/security.decorators';
 import { ViewService } from './view.service';
 

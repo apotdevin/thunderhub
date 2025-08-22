@@ -1,12 +1,13 @@
+import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GraphQLError } from 'graphql';
 import { gql } from 'graphql-tag';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
+
 import { FetchService } from '../../fetch/fetch.service';
 import { BaseInvoice, BaseNode, BasePoints } from './base.types';
-import { GraphQLError } from 'graphql';
-import { Logger } from 'winston';
-import { Inject } from '@nestjs/common';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 const getBaseCanConnectQuery = gql`
   {

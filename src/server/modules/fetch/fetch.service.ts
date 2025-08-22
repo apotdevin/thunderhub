@@ -1,10 +1,10 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Agent } from 'https';
-import { SocksProxyAgent } from 'socks-proxy-agent';
 import { DocumentNode, GraphQLError, print } from 'graphql';
+import { Agent } from 'https';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { SocksProxyAgent } from 'socks-proxy-agent';
+import { Logger } from 'winston';
 
 type Variables = {
   [key: string]: string | number | string[] | boolean | any[] | Variables;

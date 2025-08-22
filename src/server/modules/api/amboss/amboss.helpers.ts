@@ -1,4 +1,5 @@
 import { GetChannelsResult } from 'lightning';
+
 import { EdgeInfo, NodeAlias } from './amboss.types';
 
 export const mapNodeResult = (

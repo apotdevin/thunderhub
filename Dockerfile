@@ -5,16 +5,21 @@ FROM node:18.18.2-alpine as deps
 
 WORKDIR /app
 
-# Install dependencies neccesary for node-gyp on node alpine
+# Install dependencies necessary for node-gyp on node alpine
 RUN apk add --update --no-cache \
   libc6-compat \
   python3 \
   make \
   g++
 
-# Install app dependencies
-COPY package.json package-lock.json ./
-RUN npm ci
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy package.json and pnpm-lock.yaml
+COPY package.json pnpm-lock.yaml ./
+
+# Install app dependencies using pnpm
+RUN pnpm install --frozen-lockfile
 
 # ---------------
 # Build App
@@ -30,13 +35,15 @@ ARG NODE_ENV="production"
 ENV NODE_ENV=${NODE_ENV}
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build the NestJS and NextJS application
+# Copy all source files
 COPY . .
-RUN npm run build:nest
-RUN npm run build:next
 
-# Remove non production necessary modules
-RUN npm prune --production
+# Build the NestJS and NextJS application
+RUN pnpm run build:nest
+RUN pnpm run build:next
+
+# Remove non-production dependencies
+RUN pnpm prune --prod
 
 # ---------------
 # Release App
@@ -45,6 +52,9 @@ FROM node:18.18.2-alpine as final
 
 WORKDIR /app
 
+# Install pnpm in the final stage
+RUN npm install -g pnpm
+
 # Set env variables
 ARG BASE_PATH=""
 ENV BASE_PATH=${BASE_PATH}
@@ -52,7 +62,9 @@ ARG NODE_ENV="production"
 ENV NODE_ENV=${NODE_ENV}
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# Copy package.json and pnpm-lock.yaml
 COPY --from=build /app/package.json ./
+COPY --from=build /app/pnpm-lock.yaml ./
 COPY --from=build /app/node_modules/ ./node_modules
 
 # Copy NextJS files
@@ -65,4 +77,4 @@ COPY --from=build /app/dist/ ./dist
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "start:prod" ]
+CMD ["pnpm", "run", "start:prod"]
