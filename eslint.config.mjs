@@ -70,6 +70,7 @@ export default defineConfig([
       'import/first': 'error',
       'import/no-duplicates': 'error',
       'import/no-namespace': 'error',
+      'import/no-duplicates': 'off',
       'import/newline-after-import': 'error',
       'import/no-unassigned-import': 'error',
       'import/no-namespace': 'off',
