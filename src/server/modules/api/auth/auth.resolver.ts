@@ -1,27 +1,28 @@
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { AccountsService } from '../../accounts/accounts.service';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
 import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { FilesService } from '../../files/files.service';
-import jwt from 'jsonwebtoken';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { seconds, Throttle } from '@nestjs/throttler';
 import cookieLib from 'cookie';
+import jwt from 'jsonwebtoken';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { authenticator } from 'otplib';
 import { ContextType } from 'src/server/app.module';
 import { appConstants } from 'src/server/utils/appConstants';
-import { NodeService } from '../../node/node.service';
 import { toWithError } from 'src/server/utils/async';
 import { decodeMacaroon, isCorrectPassword } from 'src/server/utils/crypto';
+import { shorten } from 'src/server/utils/string';
+import { Logger } from 'winston';
+
+import { AccountsService } from '../../accounts/accounts.service';
+import { FilesService } from '../../files/files.service';
+import { NodeService } from '../../node/node.service';
 import {
   CurrentIp,
   CurrentUser,
   Public,
 } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
-import { authenticator } from 'otplib';
-import { shorten } from 'src/server/utils/string';
 import { TwofaResult } from './auth.types';
-import { Throttle, seconds } from '@nestjs/throttler';
 
 @Resolver()
 export class AuthResolver {

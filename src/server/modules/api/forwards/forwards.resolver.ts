@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import {
   Args,
   Context,
@@ -6,11 +7,22 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { groupBy, orderBy, uniq } from 'lodash';
 import { subDays } from 'date-fns';
+import { groupBy, orderBy, uniq } from 'lodash';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { ContextType } from 'src/server/app.module';
+import { v5 as uuidv5 } from 'uuid';
+import { Logger } from 'winston';
+
 import { NodeService } from '../../node/node.service';
-import { UserId } from '../../security/security.types';
 import { CurrentUser } from '../../security/security.decorators';
+import { UserId } from '../../security/security.types';
+import { BaseNodeInfoType } from '../amboss/amboss.types';
+import {
+  mapByChannel,
+  reduceByChannel,
+  reduceByRoute,
+} from './forwards.helpers';
 import {
   AggregatedByChannel,
   AggregatedByChannelSide,
@@ -21,23 +33,12 @@ import {
   AggregatedSideStats,
   BaseNodeInfo,
   ChannelInfo,
+  defaultValues,
   EdgeInfoWithPubkey,
   Forward,
   ForwardsWithPubkey,
   GetForwards,
-  defaultValues,
 } from './forwards.types';
-import { ContextType } from 'src/server/app.module';
-import { BaseNodeInfoType } from '../amboss/amboss.types';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
-import { Inject } from '@nestjs/common';
-import { v5 as uuidv5 } from 'uuid';
-import {
-  mapByChannel,
-  reduceByChannel,
-  reduceByRoute,
-} from './forwards.helpers';
 
 @Resolver(BaseNodeInfo)
 export class BaseNodeInfoResolver {

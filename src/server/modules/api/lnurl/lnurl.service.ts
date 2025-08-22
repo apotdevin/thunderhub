@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { NodeService } from '../../node/node.service';
-import { Inject } from '@nestjs/common';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+import { Inject, Injectable } from '@nestjs/common';
+import BIP32Factory, { BIP32Interface } from 'bip32';
+import { entropyToMnemonic, mnemonicToSeedSync } from 'bip39';
 import { enc } from 'crypto-js';
 import hmacSHA256 from 'crypto-js/hmac-sha256';
-import { entropyToMnemonic, mnemonicToSeedSync } from 'bip39';
-import BIP32Factory, { BIP32Interface } from 'bip32';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import secp256k1 from 'secp256k1';
 import * as ecc from 'tiny-secp256k1';
+import { Logger } from 'winston';
+
+import { NodeService } from '../../node/node.service';
 
 const bip32 = BIP32Factory(ecc);
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import DataLoader from 'dataloader';
+
 import { AmbossService } from '../api/amboss/amboss.service';
 import { EdgeInfo, NodeAlias } from '../api/amboss/amboss.types';
 

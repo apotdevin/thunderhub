@@ -1,11 +1,17 @@
 import { Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { auto } from 'async';
+import { GraphQLError } from 'graphql';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { toWithError } from 'src/server/utils/async';
 import { Logger } from 'winston';
+
+import { FetchService } from '../../fetch/fetch.service';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
+import { GetRecommendedNode } from '../amboss/amboss.gql';
 import { getChannelAge } from './channels.helpers';
 import {
   Channel,
@@ -17,11 +23,6 @@ import {
   SingleChannel,
   UpdateRoutingFeesParams,
 } from './channels.types';
-import { GraphQLError } from 'graphql';
-import { auto } from 'async';
-import { FetchService } from '../../fetch/fetch.service';
-import { ConfigService } from '@nestjs/config';
-import { GetRecommendedNode } from '../amboss/amboss.gql';
 
 @Resolver()
 export class ChannelsResolver {

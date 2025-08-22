@@ -1,4 +1,3 @@
-import zkpInit from '@vulpemventures/secp256k1-zkp';
 import { Inject } from '@nestjs/common';
 import {
   Args,
@@ -8,39 +7,41 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
-import { NodeService } from '../../node/node.service';
-import { BoltzService } from './boltz.service';
+import zkpInit from '@vulpemventures/secp256k1-zkp';
+import { mapSeries } from 'async';
+import { address, initEccLib, networks, Transaction } from 'bitcoinjs-lib';
 import {
   ClaimDetails,
-  SwapTreeSerializer,
-  TaprootUtils,
   constructClaimTransaction,
   detectSwap,
+  SwapTreeSerializer,
+  TaprootUtils,
   targetFee,
 } from 'boltz-core';
+import { ECPairAPI, ECPairFactory } from 'ecpair';
+import { GraphQLError } from 'graphql';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { toWithError } from 'src/server/utils/async';
+import { getPreimageAndHash } from 'src/server/utils/crypto';
+import * as ecc from 'tiny-secp256k1';
+import { Logger } from 'winston';
+
+import { NodeService } from '../../node/node.service';
+import { CurrentUser } from '../../security/security.decorators';
+import { UserId } from '../../security/security.types';
 import {
   findTaprootOutput,
   generateKeys,
   getHexBuffer,
   validateAddress,
 } from './boltz.helpers';
-import { GraphQLError } from 'graphql';
-import { address, initEccLib, networks, Transaction } from 'bitcoinjs-lib';
+import { BoltzService } from './boltz.service';
 import {
   BoltzInfoType,
   BoltzSwap,
   CreateBoltzReverseSwapType,
   isBoltzError,
 } from './boltz.types';
-import { getPreimageAndHash } from 'src/server/utils/crypto';
-import { CurrentUser } from '../../security/security.decorators';
-import { UserId } from '../../security/security.types';
-import { toWithError } from 'src/server/utils/async';
-import { ECPairAPI, ECPairFactory } from 'ecpair';
-import * as ecc from 'tiny-secp256k1';
-import { mapSeries } from 'async';
 
 const ECPair: ECPairAPI = ECPairFactory(ecc);
 

@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
-import { FetchService } from '../../fetch/fetch.service';
 import { wrapFetch } from 'src/server/utils/fetch';
+import { Logger } from 'winston';
+
+import { FetchService } from '../../fetch/fetch.service';
 import {
   BroadcastTransaction,
   CreateReverseSwap,

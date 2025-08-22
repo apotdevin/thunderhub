@@ -1,22 +1,23 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { auto, each, forever, map } from 'async';
 import {
-  subscribeToForwards,
   getWalletInfo,
-  subscribeToChannels,
-  subscribeToInvoices,
   subscribeToBackups,
+  subscribeToChannels,
+  subscribeToForwards,
+  subscribeToInvoices,
   subscribeToPastPayments,
 } from 'lightning';
-import { auto, each, map, forever } from 'async';
-import { Logger } from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { AccountsService } from '../accounts/accounts.service';
-import { WsService } from '../ws/ws.service';
-import { ConfigService } from '@nestjs/config';
-import { NodeService } from '../node/node.service';
-import { UserConfigService } from '../api/userConfig/userConfig.service';
 import { getNetwork } from 'src/server/utils/network';
+import { Logger } from 'winston';
+
+import { AccountsService } from '../accounts/accounts.service';
 import { AmbossService } from '../api/amboss/amboss.service';
+import { UserConfigService } from '../api/userConfig/userConfig.service';
+import { NodeService } from '../node/node.service';
+import { WsService } from '../ws/ws.service';
 
 const restartSubscriptionTimeMs = 1000 * 30;
 

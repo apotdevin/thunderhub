@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { DataloaderService } from './dataloader.service';
+
 import { AmbossModule } from '../api/amboss/amboss.module';
+import { DataloaderService } from './dataloader.service';
 
 @Module({
   imports: [AmbossModule],

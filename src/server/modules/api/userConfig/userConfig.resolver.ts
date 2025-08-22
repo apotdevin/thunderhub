@@ -10,6 +10,7 @@ import {
 } from '@nestjs/graphql';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
+
 import { UserConfigService } from './userConfig.service';
 import { ConfigFields, ConfigState } from './userConfig.types';
 

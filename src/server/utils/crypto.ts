@@ -1,7 +1,8 @@
+import bcrypt from 'bcryptjs';
 import { createHash, randomBytes } from 'crypto';
 import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
-import bcrypt from 'bcryptjs';
+
 import { PRE_PASS_STRING } from '../modules/files/files.service';
 
 export const getPreimageAndHash = () => {
@@ -19,7 +20,7 @@ export const getSHA256Hash = (
 export const decodeMacaroon = (macaroon: string, password: string) => {
   try {
     return AES.decrypt(macaroon, password).toString(Utf8);
-  } catch (error: any) {
+  } catch {
     console.log(`Error decoding macaroon with password: ${password}`);
     throw new Error('WrongPasswordForLogin');
   }

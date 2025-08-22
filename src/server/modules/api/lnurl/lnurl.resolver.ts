@@ -1,7 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { randomBytes } from 'crypto';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
+
 import { FetchService } from '../../fetch/fetch.service';
+import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { LnUrlService } from './lnurl.service';
@@ -12,9 +16,6 @@ import {
   PayRequest,
   PaySuccess,
 } from './lnurl.types';
-import { Logger } from 'winston';
-import { randomBytes } from 'crypto';
-import { NodeService } from '../../node/node.service';
 
 @Resolver()
 export class LnUrlResolver {
@@ -49,7 +50,7 @@ export class LnUrlResolver {
       }
 
       return result;
-    } catch (error) {
+    } catch {
       throw new Error('Invalid lightning address');
     }
   }

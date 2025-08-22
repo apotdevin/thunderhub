@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtStrategy } from './jwt.strategy';
-import { RolesGuard } from './guards/roles.guard';
-import { GqlAuthGuard } from './guards/graphql.guard';
-import { GqlThrottlerGuard as ThrottlerGuard } from './guards/throttler.guard';
+import { PassportModule } from '@nestjs/passport';
 import { ThrottlerModule } from '@nestjs/throttler';
+
+import { GqlAuthGuard } from './guards/graphql.guard';
+import { RolesGuard } from './guards/roles.guard';
+import { GqlThrottlerGuard as ThrottlerGuard } from './guards/throttler.guard';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [

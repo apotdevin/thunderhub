@@ -1,3 +1,5 @@
+import { Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   Args,
   Context,
@@ -6,6 +8,12 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { ContextType } from 'src/server/app.module';
+import { toWithError } from 'src/server/utils/async';
+import { Logger } from 'winston';
+
+import { FetchService } from '../../fetch/fetch.service';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
@@ -16,13 +24,6 @@ import {
   NodeInfo,
   OnChainBalance,
 } from './node.types';
-import { Inject } from '@nestjs/common';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
-import { toWithError } from 'src/server/utils/async';
-import { ContextType } from 'src/server/app.module';
-import { ConfigService } from '@nestjs/config';
-import { FetchService } from '../../fetch/fetch.service';
 
 @Resolver(LightningBalance)
 export class LightningBalanceResolver {

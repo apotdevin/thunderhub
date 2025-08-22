@@ -1,10 +1,11 @@
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtObjectType, UserId } from './security.types';
+import { PassportStrategy } from '@nestjs/passport';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Logger } from 'winston';
+
+import { JwtObjectType, UserId } from './security.types';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
