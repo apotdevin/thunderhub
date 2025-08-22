@@ -1,0 +1,47 @@
+name: Test, lint and build Thunderhub
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  test_lint_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.18.2'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install modules
+        run: pnpm install
+
+      - name: Run eslint
+        run: pnpm run lint:check
+
+      - name: Run tests
+        run: pnpm run test
+
+      - name: Setup Docker Buildx Driver
+        id: docker_driver_setup
+        uses: docker/setup-buildx-action@v3
+
+      - name: Run docker build
+        id: docker_build
+        uses: docker/build-push-action@v6
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
