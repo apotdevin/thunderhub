@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.14.2](https://github.com/apotdevin/thunderhub/compare/v0.14.1...v0.14.2) (2025-08-27)
+
+
+### Improvements
+
+* add info href ([3be3967](https://github.com/apotdevin/thunderhub/commit/3be39676b3279e1886c930795c2237fb19b3da7a))
+
 ### [0.14.1](https://github.com/apotdevin/thunderhub/compare/v0.14.0...v0.14.1) (2025-08-19)
 
 
