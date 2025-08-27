@@ -180,8 +180,15 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
 
       {useRecommended ? (
         <RecommendedBanner>
-          Connect to the Amboss Rails cluster - optimized for fast, reliable,
-          high-throughput payments.
+          Connect to the{' '}
+          <a
+            style={{ color: 'inherit' }}
+            href={'https://amboss.tech/rails/stats'}
+            target="__blank"
+          >
+            Amboss Rails cluster
+          </a>{' '}
+          - optimized for fast, reliable, high-throughput payments.
         </RecommendedBanner>
       ) : (
         <>

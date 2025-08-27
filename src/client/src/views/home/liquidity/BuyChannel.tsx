@@ -114,8 +114,23 @@ export const BuyChannel = () => {
   return (
     <Card>
       <RecommendedBanner>
-        Secure liquidity from our Rails cluster or Magma sellers to ensure you
-        can accept payments reliably.
+        Secure liquidity from the{' '}
+        <a
+          style={{ color: 'inherit' }}
+          href={'https://amboss.tech/rails/stats'}
+          target="__blank"
+        >
+          Amboss Rails cluster
+        </a>{' '}
+        or{' '}
+        <a
+          style={{ color: 'inherit' }}
+          href={'https://magma.amboss.tech/buy'}
+          target="__blank"
+        >
+          Magma sellers
+        </a>{' '}
+        to ensure you can accept payments reliably.
       </RecommendedBanner>
       <InputWithDeco
         customAmount={formattedAmount}
