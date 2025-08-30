@@ -65,7 +65,7 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
   const [fee, setFee] = useState(0);
   const [publicKey, setPublicKey] = useState('');
   const [privateChannel, setPrivateChannel] = useState(false);
-  const [isMaxFunding, setIsMaxFunding] = useState(true);
+  const [isMaxFunding, setIsMaxFunding] = useState(false);
   const [type, setType] = useState(fetchFees ? 'none' : 'fee');
 
   const [feeRate, setFeeRate] = useState<number | null>(null);
