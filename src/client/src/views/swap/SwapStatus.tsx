@@ -139,7 +139,6 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
                   type: 'claim',
                   claim: index,
                   claimType: MEMPOOL,
-                  claimTransaction: swap.boltz?.transaction?.hex || '',
                 })
               }
               arrow={true}
@@ -162,7 +161,6 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
                   type: 'claim',
                   claim: index,
                   claimType: CONFIRMED,
-                  claimTransaction: swap.boltz?.transaction?.hex || '',
                 })
               }
               arrow={true}
@@ -180,6 +178,19 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
           <S.single>
             {getTransactionLink(swap.claimTransaction)}
             <S.finished>Completed</S.finished>
+            <ColorButton
+              onClick={() =>
+                dispatch({
+                  type: 'claim',
+                  claim: index,
+                  claimType: CONFIRMED,
+                })
+              }
+              arrow={true}
+              withMargin={'0 0 0 4px'}
+            >
+              Claim
+            </ColorButton>
           </S.single>
         </S.row>
       );

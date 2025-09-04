@@ -4,7 +4,7 @@ export const CLAIM_BOLTZ_TRANSACTION = gql`
   mutation ClaimBoltzTransaction(
     $id: String!
     $redeem: String!
-    $transaction: String!
+    $lockupAddress: String!
     $preimage: String!
     $privateKey: String!
     $destination: String!
@@ -13,7 +13,7 @@ export const CLAIM_BOLTZ_TRANSACTION = gql`
     claimBoltzTransaction(
       id: $id
       redeem: $redeem
-      transaction: $transaction
+      lockupAddress: $lockupAddress
       preimage: $preimage
       privateKey: $privateKey
       destination: $destination

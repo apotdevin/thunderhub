@@ -13,7 +13,6 @@ type State = {
   open: number | null;
   claim: number | null;
   claimType: string | null;
-  claimTransaction: string | null;
 };
 
 type ActionType =
@@ -27,7 +26,6 @@ type ActionType =
       type: 'claim';
       claim: number;
       claimType: string;
-      claimTransaction: string;
     }
   | { type: 'cleanup'; swaps: CreateBoltzReverseSwap[] }
   | { type: 'complete'; index: number; transactionId: string }
@@ -43,7 +41,6 @@ const initialState: State = {
   open: null,
   claim: null,
   claimType: null,
-  claimTransaction: null,
 };
 
 const stateReducer = (state: State, action: ActionType): State => {
@@ -63,7 +60,6 @@ const stateReducer = (state: State, action: ActionType): State => {
         ...state,
         claim: action.claim,
         claimType: action.claimType,
-        claimTransaction: action.claimTransaction,
       };
     case 'complete': {
       state.swaps[action.index].claimTransaction = action.transactionId;

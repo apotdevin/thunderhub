@@ -41,6 +41,7 @@ import { toWithError } from 'src/server/utils/async';
 import { ECPairAPI, ECPairFactory } from 'ecpair';
 import * as ecc from 'tiny-secp256k1';
 import { mapSeries } from 'async';
+import { MempoolService } from '../../mempool/mempool.service';
 
 const ECPair: ECPairAPI = ECPairFactory(ecc);
 
@@ -70,6 +71,7 @@ export class BoltzResolver {
   constructor(
     private nodeService: NodeService,
     private boltzService: BoltzService,
+    private mempoolService: MempoolService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -132,12 +134,70 @@ export class BoltzResolver {
   async claimBoltzTransaction(
     @Args('id') id: string,
     @Args('redeem') redeem: string,
-    @Args('transaction') transaction: string,
+    @Args('lockupAddress') lockupAddress: string,
     @Args('preimage') preimage: string,
     @Args('privateKey') privateKey: string,
     @Args('destination') destination: string,
     @Args('fee') fee: number
   ) {
+    if (!fee || fee < 1) {
+      throw new GraphQLError('The fee cannot be below 1 sat/vbyte');
+    }
+
+    const [txInfo, txError] = await toWithError(
+      this.mempoolService.getAddressTransactions(lockupAddress)
+    );
+
+    if (!txInfo?.length || txError) {
+      this.logger.error('Error getting lockup address tx information', {
+        txInfo,
+        txError,
+      });
+      throw new GraphQLError(
+        'Error getting lockup address info. Please try again.'
+      );
+    }
+
+    this.logger.debug('Lockup address transactions', { txInfo });
+
+    if (txInfo.length > 1) {
+      throw new GraphQLError(
+        'A claim transaction has already been broadcasted for this transaction.'
+      );
+    }
+
+    const lockupTransactionInfo = txInfo.find(t =>
+      t.vout.some(v => v.scriptpubkey_address === lockupAddress)
+    );
+
+    if (!lockupTransactionInfo) {
+      throw new GraphQLError(
+        'Error getting lockup transaction info. Please try again.'
+      );
+    }
+
+    this.logger.debug('Lockup transaction for lockup address', {
+      lockupTransactionInfo,
+    });
+
+    const [transactionHex, transactionHexError] = await toWithError(
+      this.mempoolService.getTransactionHex(lockupTransactionInfo.txid)
+    );
+
+    if (!transactionHex || transactionHexError) {
+      this.logger.error('Error getting lockup transaction information', {
+        transactionHex,
+        transactionHexError,
+      });
+      throw new GraphQLError(
+        'Error getting lockup transaction info. Please try again.'
+      );
+    }
+
+    this.logger.debug('Found transaction hex for lockup address', {
+      transactionHex,
+    });
+
     if (!validateAddress(destination)) {
       this.logger.error(`Invalid bitcoin address: ${destination}`);
       throw new GraphQLError('InvalidBitcoinAddress');
@@ -156,7 +216,7 @@ export class BoltzResolver {
       }
     };
 
-    const lockupTransaction = Transaction.fromHex(transaction);
+    const lockupTransaction = Transaction.fromHex(transactionHex);
     const keys = ECPair.fromPrivateKey(getHexBuffer(privateKey));
 
     const destinationScript = address.toOutputScript(

@@ -617,10 +617,10 @@ export type MutationClaimBoltzTransactionArgs = {
   destination: Scalars['String']['input'];
   fee: Scalars['Float']['input'];
   id: Scalars['String']['input'];
+  lockupAddress: Scalars['String']['input'];
   preimage: Scalars['String']['input'];
   privateKey: Scalars['String']['input'];
   redeem: Scalars['String']['input'];
-  transaction: Scalars['String']['input'];
 };
 
 export type MutationCloseChannelArgs = {

@@ -41,12 +41,7 @@ export const SwapClaim = () => {
   const [fee, setFee] = useState<number>(0);
   const [type, setType] = useState('fee');
 
-  const {
-    swaps,
-    claim,
-    claimType,
-    claimTransaction: transactionHex,
-  } = useSwapsState();
+  const { swaps, claim, claimType } = useSwapsState();
   const dispatch = useSwapsDispatch();
 
   const [claimTransaction, { data, loading }] =
@@ -77,10 +72,16 @@ export const SwapClaim = () => {
   }
 
   const claimingSwap = swaps[claim];
-  const { redeemScript, preimage, receivingAddress, privateKey, id } =
-    claimingSwap;
+  const {
+    redeemScript,
+    preimage,
+    receivingAddress,
+    privateKey,
+    id,
+    lockupAddress,
+  } = claimingSwap;
 
-  if (!preimage || !transactionHex || !privateKey) {
+  if (!preimage || !lockupAddress || !privateKey) {
     return <Missing />;
   }
 
@@ -179,7 +180,7 @@ export const SwapClaim = () => {
             variables: {
               id,
               redeem: redeemScript,
-              transaction: transactionHex,
+              lockupAddress,
               preimage,
               privateKey,
               destination: receivingAddress,
