@@ -162,7 +162,7 @@ export class BoltzResolver {
 
     if (txInfo.length > 1) {
       throw new GraphQLError(
-        'A claim transaction has already been broadcasted for this transaction.'
+        'A claim transaction has already been broadcasted for this swap.'
       );
     }
 
