@@ -6,7 +6,7 @@ const defaultOptions = {} as const;
 export type ClaimBoltzTransactionMutationVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
   redeem: Types.Scalars['String']['input'];
-  transaction: Types.Scalars['String']['input'];
+  lockupAddress: Types.Scalars['String']['input'];
   preimage: Types.Scalars['String']['input'];
   privateKey: Types.Scalars['String']['input'];
   destination: Types.Scalars['String']['input'];
@@ -22,7 +22,7 @@ export const ClaimBoltzTransactionDocument = gql`
   mutation ClaimBoltzTransaction(
     $id: String!
     $redeem: String!
-    $transaction: String!
+    $lockupAddress: String!
     $preimage: String!
     $privateKey: String!
     $destination: String!
@@ -31,7 +31,7 @@ export const ClaimBoltzTransactionDocument = gql`
     claimBoltzTransaction(
       id: $id
       redeem: $redeem
-      transaction: $transaction
+      lockupAddress: $lockupAddress
       preimage: $preimage
       privateKey: $privateKey
       destination: $destination
@@ -59,7 +59,7 @@ export type ClaimBoltzTransactionMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      id: // value for 'id'
  *      redeem: // value for 'redeem'
- *      transaction: // value for 'transaction'
+ *      lockupAddress: // value for 'lockupAddress'
  *      preimage: // value for 'preimage'
  *      privateKey: // value for 'privateKey'
  *      destination: // value for 'destination'

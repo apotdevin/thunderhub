@@ -6,9 +6,10 @@ import {
   CreateBoltzReverseSwapTypeResolver,
 } from './boltz.resolver';
 import { BoltzService } from './boltz.service';
+import { MempoolModule } from '../../mempool/mempool.module';
 
 @Module({
-  imports: [NodeModule, FetchModule],
+  imports: [NodeModule, FetchModule, MempoolModule],
   providers: [BoltzService, CreateBoltzReverseSwapTypeResolver, BoltzResolver],
   exports: [BoltzService],
 })
