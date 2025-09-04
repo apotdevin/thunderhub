@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.14.3](https://github.com/apotdevin/thunderhub/compare/v0.14.2...v0.14.3) (2025-09-04)
+
+
+### Bug Fixes
+
+* claim boltz swap logic ([#637](https://github.com/apotdevin/thunderhub/issues/637)) ([521c027](https://github.com/apotdevin/thunderhub/commit/521c0271f0a3c99befbffcc6c8e767cd9f3e02d4))
+
 ### [0.14.2](https://github.com/apotdevin/thunderhub/compare/v0.14.1...v0.14.2) (2025-08-27)
 
 
