@@ -178,7 +178,7 @@ export class ChannelsResolver {
                   sockets: string[];
                 };
               };
-            }>(this.configService.get('urls.amboss.auth'), GetRecommendedNode);
+            }>(this.configService.get('urls.amboss.space'), GetRecommendedNode);
 
           if (!data?.rails.get_recommended_node.sockets.length || error) {
             if (error) this.logger.error(error);
@@ -227,13 +227,13 @@ export class ChannelsResolver {
           recommendedPeer,
           peer,
         }: Pick<OpenChannelAuto, 'recommendedPeer' | 'peer'>) => {
-          if (!recommendedPeer.pubkey && !peer.pubkey) {
+          if (!recommendedPeer?.pubkey && !peer?.pubkey) {
             throw new Error('No peer provided to open channel to');
           }
 
           const params = {
             local_tokens: channel_size,
-            partner_public_key: recommendedPeer.pubkey || peer.pubkey,
+            partner_public_key: recommendedPeer?.pubkey || peer?.pubkey,
             ...(is_private ? { is_private } : {}),
             ...(give_tokens ? { give_tokens } : {}),
             ...(chain_fee_tokens_per_vbyte
