@@ -48,7 +48,7 @@ export const Balances = () => {
           </ColorButton>
         </SingleLine>
         <Text>
-          Push your onchain balance to Amboss to get historical reports.
+          Push your onchain balance to Amboss to get historical reports. This data will be shared with third parties.
         </Text>
         <Separation />
         <SingleLine>
