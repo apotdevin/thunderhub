@@ -121,3 +121,14 @@ export type SwapStatus =
 export const isBoltzError = (obj: unknown): obj is BoltzError => {
   return !!(obj as BoltzError).error;
 };
+
+export type BroadcastResult = {
+  id: string | undefined;
+  error?: Error;
+};
+
+export type BroadcastAuto = {
+  boltz: BroadcastResult;
+  mempool: BroadcastResult;
+  blockstream: BroadcastResult;
+};

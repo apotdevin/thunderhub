@@ -14,6 +14,7 @@ type Throttler = {
 
 type Urls = {
   mempool: string;
+  blockstream: string;
   amboss: {
     space: string;
     auth: string;
@@ -91,6 +92,7 @@ export default (): ConfigType => {
 
   const urls: Urls = {
     mempool,
+    blockstream: 'https://blockstream.info',
     amboss: {
       space: 'https://api.amboss.space/graphql',
       auth: 'https://account.amboss.tech/graphql',

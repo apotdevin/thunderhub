@@ -28,4 +28,16 @@ export class MempoolService {
     );
     return (await response.text()) as string;
   }
+
+  async broadcastTransaction(transactionHex: string): Promise<string> {
+    const response = await this.fetchService.fetchWithProxy(
+      this.config.get('urls.mempool') + `/api/tx`,
+      {
+        method: 'POST',
+        body: transactionHex,
+        headers: { 'Content-Type': 'text/plain' },
+      }
+    );
+    return (await response.text()) as string;
+  }
 }

@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { RefreshCw, Trash } from 'react-feather';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { getTransactionLink } from '../../components/generic/helpers';
+import { getAddressLink } from '../../components/generic/helpers';
 import {
   Card,
   DarkSubTitle,
@@ -132,6 +132,7 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
         <S.row>
           <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
           <S.single>
+            {getAddressLink(swap.receivingAddress)}
             <S.warning>Waiting for confirmation</S.warning>
             <ColorButton
               onClick={() =>
@@ -154,6 +155,7 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
         <S.row>
           <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
           <S.single>
+            {getAddressLink(swap.receivingAddress)}
             <S.claiming>Ready to Claim</S.claiming>
             <ColorButton
               onClick={() =>
@@ -176,7 +178,7 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
         <S.row>
           <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
           <S.single>
-            {getTransactionLink(swap.claimTransaction)}
+            {getAddressLink(swap.receivingAddress)}
             <S.finished>Completed</S.finished>
             <ColorButton
               onClick={() =>
@@ -198,7 +200,10 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
       return (
         <S.row>
           <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.expired>{swap.boltz.status}</S.expired>
+          <S.single>
+            {getAddressLink(swap.receivingAddress)}
+            <S.expired>{swap.boltz.status}</S.expired>
+          </S.single>
         </S.row>
       );
   }
