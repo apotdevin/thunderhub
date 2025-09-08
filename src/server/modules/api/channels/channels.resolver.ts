@@ -187,14 +187,26 @@ export class ChannelsResolver {
 
           const { pubkey, sockets } = data.rails.get_recommended_node;
 
-          await this.nodeService.addPeer(user.id, pubkey, sockets[0], false);
+          let connectErr: Error;
 
-          this.logger.info(
-            'Connected to recommended peer for channel opening',
-            { node: data.rails.get_recommended_node }
-          );
+          for (const socket of sockets) {
+            const [, err] = await toWithError(
+              this.nodeService.addPeer(user.id, pubkey, socket, false)
+            );
+            if (err) {
+              connectErr = err;
+              continue;
+            }
 
-          return { pubkey };
+            this.logger.info(
+              'Connected to recommended peer for channel opening',
+              { node: data.rails.get_recommended_node }
+            );
+
+            return { pubkey };
+          }
+
+          throw connectErr;
         },
       ],
 
