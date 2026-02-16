@@ -1,8 +1,8 @@
-import React from 'react';
 import styled from 'styled-components';
 import { AlertCircle } from 'react-feather';
 import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.generated';
 import { config } from '../../config/thunderhubConfig';
+import { safeRedirect } from '../../utils/url';
 import {
   Card,
   CardWithTitle,
@@ -54,7 +54,10 @@ export const DangerView = () => {
 
   const [logout] = useLogoutMutation({
     onCompleted: () => {
-      window.location.href = config.logoutUrl || `${config.basePath}/login`;
+      safeRedirect(
+        config.logoutUrl || `${config.basePath}/login`,
+        `${config.basePath}/login`
+      );
     },
   });
 

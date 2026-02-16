@@ -372,19 +372,15 @@ export class FilesService {
       return null;
     }
 
-    const adminExists = fs.existsSync(`${macaroonPath}/admin.macaroon`);
+    const fullPath = path.join(macaroonPath, 'admin.macaroon');
+    const adminExists = fs.existsSync(fullPath);
 
     if (!adminExists) {
-      this.logger.error(
-        `No admin.macaroon file found at path: ${macaroonPath}/admin.macaroon`
-      );
+      this.logger.error(`No admin.macaroon file found at path: ${fullPath}`);
       return null;
     } else {
       try {
-        const ssoAdmin = fs.readFileSync(
-          `${macaroonPath}/admin.macaroon`,
-          'hex'
-        );
+        const ssoAdmin = fs.readFileSync(fullPath, 'hex');
         return ssoAdmin;
       } catch (error: any) {
         this.logger.error(
@@ -401,7 +397,7 @@ export class FilesService {
       const curDir = path.resolve(parentDir, childDir);
       try {
         if (!fs.existsSync(curDir)) {
-          fs.mkdirSync(curDir);
+          fs.mkdirSync(curDir, { mode: 0o700 });
         }
       } catch (error: any) {
         if (error.code !== 'EEXIST') {

@@ -16,6 +16,37 @@ import { Logger } from 'winston';
 import { randomBytes } from 'crypto';
 import { NodeService } from '../../node/node.service';
 
+const validateCallbackUrl = (url: string): void => {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new Error('Invalid callback URL');
+  }
+
+  if (parsed.protocol !== 'https:') {
+    throw new Error('Callback URL must use HTTPS');
+  }
+
+  const hostname = parsed.hostname;
+
+  // Block private/internal IPs
+  if (
+    hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    hostname === '::1' ||
+    hostname === '0.0.0.0' ||
+    hostname.startsWith('10.') ||
+    hostname.startsWith('192.168.') ||
+    hostname.startsWith('169.254.') ||
+    /^172\.(1[6-9]|2\d|3[01])\./.test(hostname) ||
+    hostname.endsWith('.local') ||
+    hostname.endsWith('.internal')
+  ) {
+    throw new Error('Callback URL points to a private network');
+  }
+};
+
 @Resolver()
 export class LnUrlResolver {
   constructor(
@@ -99,6 +130,8 @@ export class LnUrlResolver {
     @Args('amount') amount: number,
     @Args('comment', { nullable: true }) comment: string
   ) {
+    validateCallbackUrl(callback);
+
     this.logger.debug('LnUrlPay initiated with params', {
       callback,
       amount,
@@ -183,6 +216,8 @@ export class LnUrlResolver {
     @Args('description', { nullable: true }) description: string,
     @Args('k1') k1: string
   ) {
+    validateCallbackUrl(callback);
+
     this.logger.debug('LnUrlWithdraw initiated with params', {
       callback,
       amount,
@@ -226,6 +261,8 @@ export class LnUrlResolver {
     @Args('uri') uri: string,
     @Args('k1') k1: string
   ) {
+    validateCallbackUrl(callback);
+
     this.logger.debug('LnUrlChannel initiated with params', {
       callback,
       uri,

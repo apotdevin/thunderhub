@@ -77,7 +77,7 @@ export type JwtObjectType = {
         playground: config.get('playground'),
         introspection: config.get('playground'),
         cors: {
-          origin: true,
+          origin: config.get('isProduction') ? false : true,
           credentials: true,
         },
         path: `${config.get('basePath')}/graphql`,

@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { themeColors } from '../../../src/styles/Themes';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { config } from '../../config/thunderhubConfig';
+import { safeRedirect } from '../../utils/url';
 import { useChatDispatch } from '../../context/ChatContext';
 
 const Logout = styled.button`
@@ -36,7 +37,10 @@ export const LogoutWrapper: FC<{ children?: ReactNode }> = ({ children }) => {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
 
-      window.location.href = config.logoutUrl || `${config.basePath}/login`;
+      safeRedirect(
+        config.logoutUrl || `${config.basePath}/login`,
+        `${config.basePath}/login`
+      );
     }
   }, [data, dispatchChat, client]);
 
@@ -69,7 +73,10 @@ export const LogoutButton = () => {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
 
-      window.location.href = config.logoutUrl || `${config.basePath}/login`;
+      safeRedirect(
+        config.logoutUrl || `${config.basePath}/login`,
+        `${config.basePath}/login`
+      );
     }
   }, [data, dispatchChat, client]);
 

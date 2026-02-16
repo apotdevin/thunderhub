@@ -173,12 +173,14 @@ export class LnMarketsResolver {
       return { ...json, message: json.reason || 'LnServiceError' };
     }
 
+    const isProduction = this.configService.get('isProduction');
     res.setHeader(
       'Set-Cookie',
       cookie.serialize(appConstants.lnMarketsAuth, cookieString, {
         httpOnly: true,
         sameSite: true,
         path: '/',
+        secure: isProduction,
       })
     );
 
@@ -187,6 +189,7 @@ export class LnMarketsResolver {
 
   @Mutation(() => Boolean)
   async lnMarketsLogout(@Context() { res }: ContextType) {
+    const isProduction = this.configService.get('isProduction');
     res.setHeader(
       'Set-Cookie',
       cookie.serialize(appConstants.lnMarketsAuth, '', {
@@ -194,6 +197,7 @@ export class LnMarketsResolver {
         httpOnly: true,
         sameSite: true,
         path: '/',
+        secure: isProduction,
       })
     );
     return true;

@@ -1,6 +1,7 @@
 import { useGetNodeInfoQuery } from '../../src/graphql/queries/__generated__/getNodeInfo.generated';
 import { getVersion } from '../../src/utils/version';
 import { config } from '../config/thunderhubConfig';
+import { safeRedirect } from '../utils/url';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
@@ -43,7 +44,10 @@ export const useNodeInfo = (): StatusState => {
   useEffect(() => {
     if (!error) return;
     toast.error(`Unable to connect to node`);
-    window.location.href = config.logoutUrl || `${config.basePath}/login`;
+    safeRedirect(
+      config.logoutUrl || `${config.basePath}/login`,
+      `${config.basePath}/login`
+    );
   }, [error]);
 
   if (!data?.getNodeInfo || loading || error) {

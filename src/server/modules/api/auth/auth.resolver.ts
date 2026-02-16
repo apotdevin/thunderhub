@@ -207,7 +207,10 @@ export class AuthResolver {
       }
 
       const jwtSecret = this.configService.get('jwtSecret');
-      const token = jwt.sign({ sub: 'sso' }, jwtSecret);
+      const token = jwt.sign({ sub: 'sso' }, jwtSecret, {
+        algorithm: 'HS256',
+        expiresIn: '24h',
+      });
 
       res.setHeader(
         'Set-Cookie',
@@ -215,6 +218,7 @@ export class AuthResolver {
           httpOnly: true,
           sameSite: true,
           path: '/',
+          secure: isProduction,
         })
       );
       return true;
@@ -302,7 +306,10 @@ export class AuthResolver {
     }
 
     const jwtSecret = this.configService.get('jwtSecret');
-    const jwtToken = jwt.sign({ sub: id }, jwtSecret);
+    const jwtToken = jwt.sign({ sub: id }, jwtSecret, {
+      algorithm: 'HS256',
+      expiresIn: '24h',
+    });
 
     res.setHeader(
       'Set-Cookie',
@@ -310,6 +317,7 @@ export class AuthResolver {
         httpOnly: true,
         sameSite: true,
         path: '/',
+        secure: isProduction,
       })
     );
     return info?.['version'] || ''; // TODO: Remove unsafe casting when GetWalletInfo type is updated
@@ -317,6 +325,7 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   async logout(@Context() { res }: ContextType) {
+    const isProduction = this.configService.get('isProduction');
     const cookies = [];
 
     for (const cookieName in appConstants) {
@@ -329,6 +338,7 @@ export class AuthResolver {
             httpOnly: true,
             sameSite: true,
             path: '/',
+            secure: isProduction,
           })
         );
       }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getUrlParam } from '../utils/url';
+import { getUrlParam, safeRedirect } from '../utils/url';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../utils/error';
 import { config } from '../config/thunderhubConfig';
@@ -12,12 +12,14 @@ export const useCheckAuthToken = () => {
 
   const cookieParam = getUrlParam(searchParams.get('token') ?? undefined);
 
+  const loginFallback = `${basePath}/login`;
+
   const [getToken, { data }] = useGetAuthTokenMutation({
     variables: { cookie: cookieParam },
     refetchQueries: ['GetNodeInfo'],
     onError: error => {
       toast.error(getErrorContent(error));
-      window.location.href = logoutUrl || `${basePath}/login`;
+      safeRedirect(logoutUrl || loginFallback, loginFallback);
     },
   });
 
@@ -25,7 +27,7 @@ export const useCheckAuthToken = () => {
     if (cookieParam) {
       getToken();
     } else {
-      window.location.href = logoutUrl || `${basePath}/login`;
+      safeRedirect(logoutUrl || loginFallback, loginFallback);
     }
   }, [cookieParam, getToken]);
 
@@ -36,7 +38,7 @@ export const useCheckAuthToken = () => {
     }
     if (!data.getAuthToken) {
       toast.warning('Unable to SSO. Check your logs.');
-      window.location.href = logoutUrl || `${basePath}/login`;
+      safeRedirect(logoutUrl || loginFallback, loginFallback);
     }
   }, [data, cookieParam]);
 };
