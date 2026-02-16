@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 import { LogOut } from 'react-feather';
 import { useLogoutMutation } from '../../../src/graphql/mutations/__generated__/logout.generated';
 import { useApolloClient } from '@apollo/client';
@@ -8,8 +8,6 @@ import { themeColors } from '../../../src/styles/Themes';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { config } from '../../config/thunderhubConfig';
 import { useChatDispatch } from '../../context/ChatContext';
-
-const { logoutUrl, basePath } = config;
 
 const Logout = styled.button`
   cursor: pointer;
@@ -38,7 +36,7 @@ export const LogoutWrapper: FC<{ children?: ReactNode }> = ({ children }) => {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
 
-      window.location.href = logoutUrl || `${basePath}/login`;
+      window.location.href = config.logoutUrl || `${config.basePath}/login`;
     }
   }, [data, dispatchChat, client]);
 
@@ -71,7 +69,7 @@ export const LogoutButton = () => {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
 
-      window.location.href = logoutUrl || `${basePath}/login`;
+      window.location.href = config.logoutUrl || `${config.basePath}/login`;
     }
   }, [data, dispatchChat, client]);
 

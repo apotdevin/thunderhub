@@ -4,8 +4,6 @@ import { config } from '../config/thunderhubConfig';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-const { logoutUrl, basePath } = config;
-
 type StatusState = {
   alias: string;
   color: string;
@@ -45,7 +43,7 @@ export const useNodeInfo = (): StatusState => {
   useEffect(() => {
     if (!error) return;
     toast.error(`Unable to connect to node`);
-    window.location.href = logoutUrl || `${basePath}/login`;
+    window.location.href = config.logoutUrl || `${config.basePath}/login`;
   }, [error]);
 
   if (!data?.getNodeInfo || loading || error) {

@@ -91,32 +91,28 @@ type Dispatch = (action: ActionType) => void;
 const StateContext = createContext<State | undefined>(undefined);
 const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
-const {
-  defaultTheme: defT,
-  defaultCurrency: defC,
-  fetchPrices,
-  fetchFees,
-} = config;
-
-const initialState: State = {
-  currency: currencyTypes.indexOf(defC) > -1 ? defC : 'sat',
-  theme: themeTypes.indexOf(defT) > -1 ? defT : 'dark',
-  lnMarketsAuth: false,
-  sidebar: true,
-  fetchFees,
-  fetchPrices,
-  displayValues: true,
-  hideFee: false,
-  hideNonVerified: false,
-  maxFee: 20,
-  chatPollingSpeed: 1000,
-  channelBarStyle: 'normal',
-  channelBarType: 'balance',
-  channelSort: 'none',
-  sortDirection: 'decrease',
-  extraColumns: 'none',
-  maxSatValue: 'auto',
-  useSatWord: false,
+const getInitialState = (): State => {
+  const { defaultTheme: defT, defaultCurrency: defC } = config;
+  return {
+    currency: currencyTypes.indexOf(defC) > -1 ? defC : 'sat',
+    theme: themeTypes.indexOf(defT) > -1 ? defT : 'dark',
+    lnMarketsAuth: false,
+    sidebar: true,
+    fetchFees: config.fetchFees,
+    fetchPrices: config.fetchPrices,
+    displayValues: true,
+    hideFee: false,
+    hideNonVerified: false,
+    maxFee: 20,
+    chatPollingSpeed: 1000,
+    channelBarStyle: 'normal',
+    channelBarType: 'balance',
+    channelSort: 'none',
+    sortDirection: 'decrease',
+    extraColumns: 'none',
+    maxSatValue: 'auto',
+    useSatWord: false,
+  };
 };
 
 const stateReducer = (state: State, action: ActionType): State => {
@@ -162,7 +158,7 @@ const ConfigProvider: React.FC<ConfigInitProps> = ({
   initialConfig = { theme: 'dark' },
 }) => {
   const [state, dispatch] = useReducer(stateReducer, {
-    ...initialState,
+    ...getInitialState(),
     theme:
       themeTypes.indexOf(initialConfig.theme) > -1
         ? initialConfig.theme

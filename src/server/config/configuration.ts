@@ -56,6 +56,22 @@ type AmbossConfig = {
   disableBalancePushes: boolean;
 };
 
+export type ClientConfig = {
+  basePath: string;
+  apiUrl: string;
+  mempoolUrl: string;
+  defaultTheme: string;
+  defaultCurrency: string;
+  fetchPrices: boolean;
+  fetchFees: boolean;
+  disableLinks: boolean;
+  disableLnMarkets: boolean;
+  noVersionCheck: boolean;
+  logoutUrl: string;
+  disable2FA: boolean;
+  npmVersion: string;
+};
+
 type ConfigType = {
   basePath: string;
   isProduction: boolean;
@@ -75,6 +91,7 @@ type ConfigType = {
   headers: Headers;
   subscriptions: SubscriptionsConfig;
   amboss: AmbossConfig;
+  clientConfig: ClientConfig;
 };
 
 export default (): ConfigType => {
@@ -148,11 +165,29 @@ export default (): ConfigType => {
     disableBalancePushes: process.env.DISABLE_BALANCE_PUSHES === 'true',
   };
 
+  const basePath = process.env.BASE_PATH || '';
+
+  const clientConfig: ClientConfig = {
+    basePath,
+    apiUrl: `${basePath}/graphql`,
+    mempoolUrl: mempool,
+    defaultTheme: process.env.THEME || 'dark',
+    defaultCurrency: process.env.CURRENCY || 'sat',
+    fetchPrices: process.env.FETCH_PRICES !== 'false',
+    fetchFees: process.env.FETCH_FEES !== 'false',
+    disableLinks: process.env.DISABLE_LINKS === 'true',
+    disableLnMarkets: process.env.DISABLE_LNMARKETS === 'true',
+    noVersionCheck: process.env.NO_VERSION_CHECK === 'true',
+    logoutUrl: process.env.LOGOUT_URL || '',
+    disable2FA: process.env.DISABLE_TWOFA === 'true',
+    npmVersion,
+  };
+
   const config: ConfigType = {
     logJson: process.env.LOG_JSON === 'true',
     masterPasswordOverride: process.env.MASTER_PASSWORD_OVERRIDE || '',
     disable2FA: process.env.DISABLE_TWOFA === 'true',
-    basePath: process.env.BASE_PATH || '',
+    basePath,
     playground: !isProduction,
     logLevel: process.env.LOG_LEVEL,
     cookiePath: process.env.COOKIE_PATH || '',
@@ -167,6 +202,7 @@ export default (): ConfigType => {
     yamlEnvs,
     subscriptions,
     amboss,
+    clientConfig,
   };
 
   if (!isProduction) {

@@ -13,9 +13,8 @@ import { getErrorContent } from '../../../../utils/error';
 import { config } from '../../../../config/thunderhubConfig';
 import { QuickCard, QuickTitle } from '../QuickActions';
 
-const { disableLnMarkets } = config;
-
 export const LnMarketsCard = () => {
+  const { disableLnMarkets } = config;
   const navigate = useNavigate();
   const dispatch = useConfigDispatch();
   const { lnMarketsAuth } = useConfigState();

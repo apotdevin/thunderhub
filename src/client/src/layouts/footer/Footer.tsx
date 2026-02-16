@@ -18,8 +18,6 @@ import {
 } from './Footer.styled';
 import { useLocation } from 'react-router-dom';
 
-const { npmVersion } = config;
-
 export const Footer = () => {
   const { pathname } = useLocation();
 
@@ -35,7 +33,7 @@ export const Footer = () => {
             <SideFooter>
               <Line>
                 <Title>ThunderHub</Title>
-                <Version>{npmVersion}</Version>
+                <Version>{config.npmVersion}</Version>
               </Line>
               <SideText>Open-source Lightning Node Manager.</SideText>
             </SideFooter>

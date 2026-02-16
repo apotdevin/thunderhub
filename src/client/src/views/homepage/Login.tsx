@@ -18,8 +18,6 @@ import {
 import { config } from '../../config/thunderhubConfig';
 import { GetServerAccountsQuery } from '../../graphql/queries/__generated__/getServerAccounts.generated';
 
-const { basePath, disable2FA } = config;
-
 type ServerAccount = GetServerAccountsQuery['getServerAccounts'][0];
 
 const StyledTitle = styled(Title)`
@@ -58,7 +56,7 @@ export const Login = ({ account }: LoginProps) => {
         'ThunderHub supports LND version 0.11.0 and higher. Please update your node, you are in risk of losing funds.'
       );
     } else {
-      window.location.href = `${basePath}/`;
+      window.location.href = `${config.basePath}/`;
     }
   }, [data, loading]);
 
@@ -91,7 +89,7 @@ export const Login = ({ account }: LoginProps) => {
             onEnter={() => handleEnter()}
           />
         </SingleLine>
-        {disable2FA ? null : (
+        {config.disable2FA ? null : (
           <SingleLine>
             <Sub4Title>{'2FA (if enabled)'}</Sub4Title>
             <Input

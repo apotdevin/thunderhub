@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useGetLatestVersionQuery } from '../../../src/graphql/queries/__generated__/getLatestVersion.generated';
 import { config } from '../../config/thunderhubConfig';
 import styled from 'styled-components';
@@ -17,9 +16,9 @@ const VersionBox = styled.div`
   }
 `;
 
-const { npmVersion, noVersionCheck } = config;
-
 export const Version = () => {
+  const { npmVersion, noVersionCheck } = config;
+
   const { data, loading, error } = useGetLatestVersionQuery({
     skip: noVersionCheck,
   });

@@ -11,12 +11,13 @@ import possibleTypes from '../src/graphql/fragmentTypes.json';
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
 
-const uri = config.apiUrl;
-
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 function createApolloClient(authToken: string) {
-  const httpLink = createHttpLink({ uri, credentials: 'include' });
+  const httpLink = createHttpLink({
+    uri: config.apiUrl,
+    credentials: 'include',
+  });
 
   const authLink = setContext((_, { headers }) => {
     return {

@@ -19,8 +19,6 @@ import { toast } from 'react-toastify';
 import { useUpdateTwofaSecretMutation } from '../../graphql/mutations/__generated__/updateTwofaSecret.generated';
 import { config } from '../../config/thunderhubConfig';
 
-const { disable2FA } = config;
-
 const S = {
   QRWrapper: styled.div`
     width: 280px;
@@ -151,7 +149,7 @@ export const Security = () => {
   const user = useAccount();
   const [enable, setEnabled] = useState<boolean>(false);
 
-  if (!user || disable2FA) {
+  if (!user || config.disable2FA) {
     return null;
   }
 

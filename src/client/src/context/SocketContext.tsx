@@ -3,8 +3,6 @@ import io from 'socket.io-client';
 import { Socket } from 'socket.io-client';
 import { config } from '../config/thunderhubConfig';
 
-const { basePath } = config;
-
 type Connection = {
   socket: Socket | undefined;
   cleanup: () => void;
@@ -49,7 +47,7 @@ const SocketProvider: FC<{ children?: ReactNode }> = ({ children }) => {
     const handleDisconnect = () => setStatus('disconnected');
 
     const socket = io({
-      ...(basePath ? { path: `${basePath}/socket.io` } : {}),
+      ...(config.basePath ? { path: `${config.basePath}/socket.io` } : {}),
       reconnectionAttempts: 5,
     });
 

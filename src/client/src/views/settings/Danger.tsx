@@ -14,8 +14,6 @@ import { fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { useChatDispatch } from '../../context/ChatContext';
 
-const { logoutUrl, basePath } = config;
-
 export const ButtonRow = styled.div`
   width: auto;
   display: flex;
@@ -56,7 +54,7 @@ export const DangerView = () => {
 
   const [logout] = useLogoutMutation({
     onCompleted: () => {
-      window.location.href = logoutUrl || `${basePath}/login`;
+      window.location.href = config.logoutUrl || `${config.basePath}/login`;
     },
   });
 

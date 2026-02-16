@@ -6,9 +6,8 @@ import { getErrorContent } from '../utils/error';
 import { config } from '../config/thunderhubConfig';
 import { useGetAuthTokenMutation } from '../graphql/mutations/__generated__/getAuthToken.generated';
 
-const { logoutUrl, basePath } = config;
-
 export const useCheckAuthToken = () => {
+  const { logoutUrl, basePath } = config;
   const [searchParams] = useSearchParams();
 
   const cookieParam = getUrlParam(searchParams.get('token') ?? undefined);

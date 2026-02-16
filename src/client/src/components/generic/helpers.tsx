@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   isFuture,
   format,
@@ -18,8 +17,6 @@ import {
   CopyIcon,
 } from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
-
-const { disableLinks, mempoolUrl } = config;
 
 export const shorten = (text: string, length?: number): string => {
   if (!text) return '';
@@ -57,7 +54,7 @@ export const copyLink = (text: string) => (
 
 export const getAddressLink = (transaction: string | null | undefined) => {
   if (!transaction) return null;
-  if (disableLinks) {
+  if (config.disableLinks) {
     return (
       <>
         {shorten(transaction)}
@@ -65,7 +62,7 @@ export const getAddressLink = (transaction: string | null | undefined) => {
       </>
     );
   }
-  const link = `${mempoolUrl}/address/${transaction}`;
+  const link = `${config.mempoolUrl}/address/${transaction}`;
   return (
     <>
       <SmallLink href={link} target="_blank">
@@ -78,7 +75,7 @@ export const getAddressLink = (transaction: string | null | undefined) => {
 
 export const getTransactionLink = (transaction: string | null | undefined) => {
   if (!transaction) return null;
-  if (disableLinks) {
+  if (config.disableLinks) {
     return (
       <>
         {shorten(transaction)}
@@ -86,7 +83,7 @@ export const getTransactionLink = (transaction: string | null | undefined) => {
       </>
     );
   }
-  const link = `${mempoolUrl}/tx/${transaction}`;
+  const link = `${config.mempoolUrl}/tx/${transaction}`;
   return (
     <>
       <SmallLink href={link} target="_blank">
@@ -118,7 +115,7 @@ export const getNodeLink = (
   const text = alias ? alias : shorten(publicKey);
   return (
     <>
-      {disableLinks ? (
+      {config.disableLinks ? (
         text
       ) : (
         <SmallLink href={link} target="_blank">
@@ -134,7 +131,7 @@ export const getChannelLink = (id: string) => {
   const link = `https://amboss.space/edge/${id}`;
   return (
     <>
-      {disableLinks ? (
+      {config.disableLinks ? (
         id
       ) : (
         <SmallLink href={link} target="_blank">

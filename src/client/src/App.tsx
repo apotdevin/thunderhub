@@ -62,8 +62,6 @@ const S = {
   `,
 };
 
-const { logoutUrl } = config;
-
 function shouldForwardProp(propName: string, target: any) {
   if (typeof target === 'string') {
     return isPropValid(propName);
@@ -75,7 +73,7 @@ const NotAuthenticated: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate(logoutUrl || '/login');
+    navigate(config.logoutUrl || '/login');
   }, [navigate]);
 
   return null;
