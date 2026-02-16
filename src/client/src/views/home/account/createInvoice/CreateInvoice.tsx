@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Copy, CheckCircle } from 'react-feather';
+import { Copy, CheckCircle } from 'lucide-react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { QRCodeSVG } from 'qrcode.react';

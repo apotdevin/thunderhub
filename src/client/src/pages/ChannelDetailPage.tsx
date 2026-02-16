@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { ChevronRight } from 'react-feather';
+import { ChevronRight } from 'lucide-react';
 import styled from 'styled-components';
 import { Card } from '../components/generic/CardGeneric';
 import {

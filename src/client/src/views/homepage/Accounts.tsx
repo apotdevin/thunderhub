@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import { Lock, Unlock, ChevronDown, ChevronUp } from 'react-feather';
+import { Lock, Unlock, ChevronDown, ChevronUp } from 'lucide-react';
 import { chartColors } from '../../styles/Themes';
 import { useNavigate } from 'react-router-dom';
 import { Link } from '../../components/link/Link';

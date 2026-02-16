@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { InvoiceCard } from '../views/transactions/InvoiceCard';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
-import { Settings } from 'react-feather';
+import { Settings } from 'lucide-react';
 import styled from 'styled-components';
 import { useLocalStorage } from '../hooks/UseLocalStorage';
 import { useNodeInfo } from '../hooks/UseNodeInfo';

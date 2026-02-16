@@ -7,7 +7,7 @@ import {
   SingleLine,
 } from '../../../components/generic/Styled';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { Plus, Minus } from 'react-feather';
+import { Plus, Minus } from 'lucide-react';
 import { shorten } from '../../../components/generic/helpers';
 import { Input } from '../../../components/input';
 import { useGetNodeLazyQuery } from '../../../graphql/queries/__generated__/getNode.generated';

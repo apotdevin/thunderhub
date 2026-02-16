@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { mediaWidths, themeColors } from '../../../src/styles/Themes';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import { Loader2 } from 'lucide-react';
 import { SingleLine } from '../generic/Styled';
 import { Select, SelectWithValue, ValueProp } from '.';
 import { FC, ReactNode } from 'react';
@@ -54,7 +54,13 @@ export const SelectWithDeco: FC<InputWithDecoProps> = ({
   const renderContent = () => {
     switch (true) {
       case loading:
-        return <ScaleLoader height={20} color={themeColors.blue3} />;
+        return (
+          <Loader2
+            className="animate-spin"
+            size={20}
+            style={{ color: themeColors.blue3 }}
+          />
+        );
       case !noInput:
         return (
           <Select
@@ -103,7 +109,13 @@ export const SelectWithDecoAndValue: React.FC<InputWithDecoAndValueProps> = ({
   const renderContent = () => {
     switch (true) {
       case loading:
-        return <ScaleLoader height={20} color={themeColors.blue3} />;
+        return (
+          <Loader2
+            className="animate-spin"
+            size={20}
+            style={{ color: themeColors.blue3 }}
+          />
+        );
       case !noInput:
         return (
           <SelectWithValue

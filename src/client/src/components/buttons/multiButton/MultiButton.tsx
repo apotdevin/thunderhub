@@ -6,7 +6,7 @@ import {
   multiButtonColor,
   themeColors,
 } from '../../../styles/Themes';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import { Loader2 } from 'lucide-react';
 
 interface StyledSingleProps {
   selected?: boolean;
@@ -100,7 +100,11 @@ export const MultiButton: React.FC<MultiButtonProps> = ({
     <MultiBackground margin={margin}>
       {loading ? (
         <div style={{ width, textAlign: 'center' }}>
-          <ScaleLoader height={21} color={themeColors.blue3} />
+          <Loader2
+            className="animate-spin"
+            size={21}
+            style={{ color: themeColors.blue3 }}
+          />
         </div>
       ) : (
         children

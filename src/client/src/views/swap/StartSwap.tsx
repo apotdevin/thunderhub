@@ -11,7 +11,7 @@ import {
 } from '../../components/generic/Styled';
 import { useEffect, useState } from 'react';
 import { Slider } from '../../components/slider';
-import { Edit2, X } from 'react-feather';
+import { Edit2, X } from 'lucide-react';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import styled from 'styled-components';
 import { mediaWidths } from '../../styles/Themes';

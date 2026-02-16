@@ -13,7 +13,7 @@ import {
   MultiButton,
   SingleButton,
 } from '../../../components/buttons/multiButton/MultiButton';
-import { X } from 'react-feather';
+import { X } from 'lucide-react';
 import { saveToPc } from '../../../utils/helpers';
 import { ToolsResponsiveLine } from '../Tools.styled';
 

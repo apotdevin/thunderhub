@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { X, ChevronRight } from 'react-feather';
+import { X, ChevronRight } from 'lucide-react';
 import { useGetPeersQuery } from '../../graphql/queries/__generated__/getPeers.generated';
 import { Peer } from '../../graphql/types';
 import { Input } from '../../components/input';

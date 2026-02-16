@@ -21,7 +21,7 @@ import { useMutationResultWithReset } from '../../../hooks/UseMutationWithReset'
 import Modal from '../../../components/modal/ReactModal';
 import { shorten } from '../../../components/generic/helpers';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { Copy } from 'react-feather';
+import { Copy } from 'lucide-react';
 import { NetworkInfoInput } from '../../../graphql/types';
 
 const InitPermissions = {

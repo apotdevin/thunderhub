@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Radio, Copy, X } from 'react-feather';
+import { Radio, Copy, X } from 'lucide-react';
 import styled from 'styled-components';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';

@@ -6,7 +6,7 @@ import {
   ResponsiveLine,
 } from '../../components/generic/Styled';
 import { renderLine } from '../../components/generic/helpers';
-import { ChevronsUp, ChevronsDown } from 'react-feather';
+import { ChevronsUp, ChevronsDown } from 'lucide-react';
 import { chartColors } from '../../styles/Themes';
 import { Price } from '../../components/price/Price';
 import { btcToSat } from '../../utils/helpers';

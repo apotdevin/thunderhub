@@ -6,7 +6,7 @@ import {
   SubTitle,
 } from '../components/generic/Styled';
 import { AdvancedBalance } from '../views/balance/AdvancedBalance';
-import { HelpCircle } from 'react-feather';
+import { HelpCircle } from 'lucide-react';
 import { chartColors } from '../styles/Themes';
 
 const Button = styled.a`

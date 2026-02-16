@@ -88,6 +88,16 @@ const Wrapper: React.FC<{ children?: ReactNode }> = ({ children }) => {
   const { theme } = useConfigState();
   const { pathname } = useLocation();
 
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove('dark', 'night');
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else if (theme === 'night') {
+      root.classList.add('night');
+    }
+  }, [theme]);
+
   const { data, loading, error } = useGetNodeInfoQuery({
     fetchPolicy: 'network-only',
     skip: pathname === '/login' || pathname === '/sso',

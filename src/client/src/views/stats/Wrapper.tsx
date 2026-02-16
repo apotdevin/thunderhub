@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Card, SubTitle } from '../../components/generic/Styled';
-import { ChevronDown, ChevronUp } from 'react-feather';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { StatHeaderLine } from './styles';
 
 type StatWrapperProps = {

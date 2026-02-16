@@ -5,7 +5,7 @@ import {
   differenceInCalendarDays,
   isToday,
 } from 'date-fns';
-import { X, Copy } from 'react-feather';
+import { X, Copy } from 'lucide-react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { config } from '../../config/thunderhubConfig';

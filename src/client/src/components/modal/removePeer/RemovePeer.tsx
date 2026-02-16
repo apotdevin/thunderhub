@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle } from 'react-feather';
+import { AlertTriangle } from 'lucide-react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { useRemovePeerMutation } from '../../../../src/graphql/mutations/__generated__/removePeer.generated';

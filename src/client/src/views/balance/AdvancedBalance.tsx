@@ -10,7 +10,7 @@ import {
 } from '../../components/buttons/multiButton/MultiButton';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import Modal from '../../components/modal/ReactModal';
-import { Plus, Minus } from 'react-feather';
+import { Plus, Minus } from 'lucide-react';
 import { chartColors } from '../../styles/Themes';
 import { ViewSwitch } from '../../components/viewSwitch/ViewSwitch';
 import { useMutationResultWithReset } from '../../hooks/UseMutationWithReset';

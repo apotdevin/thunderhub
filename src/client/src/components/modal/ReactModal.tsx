@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { css } from 'styled-components';
 import ReactModal from 'styled-react-modal';
 import { cardColor, mediaWidths, themeColors } from '../../styles/Themes';

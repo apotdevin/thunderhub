@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, Anchor, Circle } from 'react-feather';
+import { Zap, Anchor, Circle } from 'lucide-react';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import styled from 'styled-components';
 import { getPrice, Price } from '../../../components/price/Price';

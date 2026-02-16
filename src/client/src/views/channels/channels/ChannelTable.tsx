@@ -7,7 +7,7 @@ import {
   Circle,
   Edit,
   X,
-} from 'react-feather';
+} from 'lucide-react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { BalanceBars } from '../../../components/balance';

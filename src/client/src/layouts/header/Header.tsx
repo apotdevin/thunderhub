@@ -1,4 +1,4 @@
-import React, { FC, SVGAttributes, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Cpu,
   Menu,
@@ -7,7 +7,8 @@ import {
   Settings,
   Heart,
   Activity,
-} from 'react-feather';
+  LucideProps,
+} from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useBaseConnect } from '../../hooks/UseBaseConnect';
 import { LogoutButton } from '../../components/logoutButton';
@@ -28,12 +29,7 @@ import {
   HeaderNavButton,
 } from './Header.styled';
 
-type IconProps = SVGAttributes<SVGElement> & {
-  color?: string;
-  size?: string | number;
-};
-
-export type Icon = FC<IconProps>;
+export type Icon = FC<LucideProps>;
 
 const SSO = '/sso';
 const MAIN = '/login';

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Settings } from 'react-feather';
+import { Settings } from 'lucide-react';
 import { ChannelManage } from '../views/channels/channels/ChannelManage';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
 import { useGetNodeInfoQuery } from '../graphql/queries/__generated__/getNodeInfo.generated';

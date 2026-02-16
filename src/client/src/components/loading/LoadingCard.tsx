@@ -1,5 +1,5 @@
 import React from 'react';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import { Loader2 } from 'lucide-react';
 import styled from 'styled-components';
 import { CardWithTitle, CardTitle, SubTitle, Card } from '../generic/Styled';
 import { themeColors } from '../../styles/Themes';
@@ -34,7 +34,11 @@ export const LoadingCard = ({
   if (noCard) {
     return (
       <Loading loadingHeight={loadingHeight}>
-        <ScaleLoader height={20} color={loadingColor} />
+        <Loader2
+          className="animate-spin"
+          size={20}
+          style={{ color: loadingColor }}
+        />
       </Loading>
     );
   }
@@ -43,7 +47,11 @@ export const LoadingCard = ({
     return (
       <Card>
         <Loading loadingHeight={loadingHeight}>
-          <ScaleLoader height={20} color={loadingColor} />
+          <Loader2
+            className="animate-spin"
+            size={20}
+            style={{ color: loadingColor }}
+          />
         </Loading>
       </Card>
     );
@@ -56,7 +64,11 @@ export const LoadingCard = ({
       </CardTitle>
       <Card>
         <Loading loadingHeight={loadingHeight}>
-          <ScaleLoader height={20} color={loadingColor} />
+          <Loader2
+            className="animate-spin"
+            size={20}
+            style={{ color: loadingColor }}
+          />
         </Loading>
       </Card>
     </CardWithTitle>

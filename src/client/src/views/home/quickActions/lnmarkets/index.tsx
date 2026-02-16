@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Activity } from 'react-feather';
+import { Activity } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import {

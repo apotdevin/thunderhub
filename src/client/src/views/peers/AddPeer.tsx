@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X } from 'react-feather';
+import { X } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useAddPeerMutation } from '../../graphql/mutations/__generated__/addPeer.generated';
 import { InputWithDeco } from '../../components/input/InputWithDeco';

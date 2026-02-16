@@ -1,4 +1,4 @@
-import React, { FC, SVGAttributes } from 'react';
+import { FC } from 'react';
 import styled, { css } from 'styled-components';
 import {
   Home,
@@ -16,7 +16,8 @@ import {
   Shuffle,
   Grid,
   Globe,
-} from 'react-feather';
+  LucideProps,
+} from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useBaseConnect } from '../../hooks/UseBaseConnect';
 import {
@@ -32,13 +33,7 @@ import { Link } from '../../components/link/Link';
 import { SideSettings } from './sideSettings/SideSettings';
 import { NodeInfo } from './nodeInfo/NodeInfo';
 
-// Icon import from react-feather is not working
-// TODO: recheck if the type is available
-type IconProps = SVGAttributes<SVGElement> & {
-  color?: string;
-  size?: string | number;
-};
-type Icon = FC<IconProps>;
+type Icon = FC<LucideProps>;
 
 const NavigationStyle = styled.div<{ isOpen: boolean }>`
   grid-area: nav;

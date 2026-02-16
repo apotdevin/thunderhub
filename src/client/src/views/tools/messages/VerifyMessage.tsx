@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { X, Copy } from 'react-feather';
+import { X, Copy } from 'lucide-react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useVerifyMessageLazyQuery } from '../../../graphql/queries/__generated__/verifyMessage.generated';
 import { Input } from '../../../components/input';

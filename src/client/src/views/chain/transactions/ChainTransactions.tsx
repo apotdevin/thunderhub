@@ -11,7 +11,7 @@ import {
   getTransactionLink,
 } from '../../../components/generic/helpers';
 import { Price } from '../../../components/price/Price';
-import { ArrowDown, ArrowUp } from 'react-feather';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 import { chartColors } from '../../../styles/Themes';
 
 export const ChainTransactions = () => {

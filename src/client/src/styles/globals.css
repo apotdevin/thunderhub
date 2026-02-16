@@ -1,0 +1,120 @@
+@import 'tailwindcss/theme' layer(theme);
+@import 'tailwindcss/utilities' layer(utilities);
+
+@theme {
+  --radius-lg: 0.5rem;
+  --radius-md: calc(var(--radius-lg) - 2px);
+  --radius-sm: calc(var(--radius-lg) - 4px);
+  --radius-xl: calc(var(--radius-lg) + 4px);
+}
+
+/* Light theme (default) */
+:root {
+  --background: 245 246 249;
+  --foreground: 33 39 53;
+  --card: 255 255 255;
+  --card-foreground: 33 39 53;
+  --popover: 255 255 255;
+  --popover-foreground: 33 39 53;
+  --primary: 81 99 186;
+  --primary-foreground: 255 255 255;
+  --secondary: 240 242 248;
+  --secondary-foreground: 33 39 53;
+  --muted: 240 242 248;
+  --muted-foreground: 110 120 135;
+  --accent: 240 242 248;
+  --accent-foreground: 33 39 53;
+  --destructive: 220 38 38;
+  --destructive-foreground: 255 255 255;
+  --border: 240 242 248;
+  --input: 225 230 237;
+  --ring: 81 99 186;
+  --chart-1: 105 56 241;
+  --chart-2: 253 95 0;
+  --chart-3: 255 211 0;
+  --chart-4: 24 144 255;
+  --chart-5: 160 217 17;
+}
+
+/* Dark theme */
+.dark {
+  --background: 24 28 48;
+  --foreground: 255 255 255;
+  --card: 26 31 53;
+  --card-foreground: 255 255 255;
+  --popover: 26 31 53;
+  --popover-foreground: 255 255 255;
+  --primary: 81 99 186;
+  --primary-foreground: 255 255 255;
+  --secondary: 21 23 39;
+  --secondary-foreground: 255 255 255;
+  --muted: 21 23 39;
+  --muted-foreground: 176 179 199;
+  --accent: 21 23 39;
+  --accent-foreground: 255 255 255;
+  --destructive: 220 38 38;
+  --destructive-foreground: 255 255 255;
+  --border: 32 38 61;
+  --input: 74 86 105;
+  --ring: 81 99 186;
+  --chart-1: 105 56 241;
+  --chart-2: 253 95 0;
+  --chart-3: 255 211 0;
+  --chart-4: 24 144 255;
+  --chart-5: 160 217 17;
+}
+
+/* Night theme */
+.night {
+  --background: 0 0 0;
+  --foreground: 255 255 255;
+  --card: 0 0 0;
+  --card-foreground: 255 255 255;
+  --popover: 0 0 0;
+  --popover-foreground: 255 255 255;
+  --primary: 98 132 228;
+  --primary-foreground: 255 255 255;
+  --secondary: 10 10 10;
+  --secondary-foreground: 255 255 255;
+  --muted: 10 10 10;
+  --muted-foreground: 176 179 199;
+  --accent: 10 10 10;
+  --accent-foreground: 255 255 255;
+  --destructive: 220 38 38;
+  --destructive-foreground: 255 255 255;
+  --border: 32 38 61;
+  --input: 74 86 105;
+  --ring: 98 132 228;
+  --chart-1: 105 56 241;
+  --chart-2: 253 95 0;
+  --chart-3: 255 211 0;
+  --chart-4: 24 144 255;
+  --chart-5: 160 217 17;
+}
+
+@theme {
+  --color-background: rgb(var(--background));
+  --color-foreground: rgb(var(--foreground));
+  --color-card: rgb(var(--card));
+  --color-card-foreground: rgb(var(--card-foreground));
+  --color-popover: rgb(var(--popover));
+  --color-popover-foreground: rgb(var(--popover-foreground));
+  --color-primary: rgb(var(--primary));
+  --color-primary-foreground: rgb(var(--primary-foreground));
+  --color-secondary: rgb(var(--secondary));
+  --color-secondary-foreground: rgb(var(--secondary-foreground));
+  --color-muted: rgb(var(--muted));
+  --color-muted-foreground: rgb(var(--muted-foreground));
+  --color-accent: rgb(var(--accent));
+  --color-accent-foreground: rgb(var(--accent-foreground));
+  --color-destructive: rgb(var(--destructive));
+  --color-destructive-foreground: rgb(var(--destructive-foreground));
+  --color-border: rgb(var(--border));
+  --color-input: rgb(var(--input));
+  --color-ring: rgb(var(--ring));
+  --color-chart-1: rgb(var(--chart-1));
+  --color-chart-2: rgb(var(--chart-2));
+  --color-chart-3: rgb(var(--chart-3));
+  --color-chart-4: rgb(var(--chart-4));
+  --color-chart-5: rgb(var(--chart-5));
+}

@@ -1,4 +1,4 @@
-import React, { useId } from 'react';
+import { useId } from 'react';
 import ReactSelect from 'react-select';
 import styled, { css } from 'styled-components';
 import {

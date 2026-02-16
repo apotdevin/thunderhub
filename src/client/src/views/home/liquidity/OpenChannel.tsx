@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronRight, Settings, X } from 'react-feather';
+import { useState, useEffect } from 'react';
+import { ChevronRight, Settings, X } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useOpenChannelMutation } from '../../../graphql/mutations/__generated__/openChannel.generated';
 import { InputWithDeco } from '../../../components/input/InputWithDeco';

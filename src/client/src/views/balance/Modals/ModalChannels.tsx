@@ -6,7 +6,7 @@ import {
   SingleLine,
 } from '../../../components/generic/Styled';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { Plus, Minus } from 'react-feather';
+import { Plus, Minus } from 'lucide-react';
 import { useGetChannelsQuery } from '../../../graphql/queries/__generated__/getChannels.generated';
 import { themeColors, chartColors } from '../../../styles/Themes';
 import { RebalanceIdType } from '../AdvancedBalance';

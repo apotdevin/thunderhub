@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
-import { X, Layers, Command, Zap } from 'react-feather';
+import { X, Layers, Command, Zap } from 'lucide-react';
 import {
   CardWithTitle,
   SubTitle,

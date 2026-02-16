@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
+import { GitCommit, ArrowDown, ArrowUp } from 'lucide-react';
 import {
   MultiButton,
   SingleButton,

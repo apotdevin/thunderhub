@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Users } from 'react-feather';
+import { Users } from 'lucide-react';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
 import { ChatInit } from '../components/chat/ChatInit';
 import { ChatFetcher } from '../components/chat/ChatFetcher';

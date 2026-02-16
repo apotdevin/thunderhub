@@ -1,4 +1,4 @@
-import { Heart } from 'react-feather';
+import { Heart } from 'lucide-react';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { useDashDispatch } from '../../../../context/DashContext';
 import styled from 'styled-components';

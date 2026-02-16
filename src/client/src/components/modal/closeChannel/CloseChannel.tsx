@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { AlertTriangle } from 'react-feather';
+import { useState } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { useCloseChannelMutation } from '../../../../src/graphql/mutations/__generated__/closeChannel.generated';

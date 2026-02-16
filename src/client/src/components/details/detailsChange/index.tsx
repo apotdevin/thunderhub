@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { ChevronRight } from 'react-feather';
+import { ChevronRight } from 'lucide-react';
 import { useUpdateFeesMutation } from '../../../../src/graphql/mutations/__generated__/updateFees.generated';
 import { Input } from '../../../../src/components/input';
 import { InputWithDeco } from '../../../../src/components/input/InputWithDeco';

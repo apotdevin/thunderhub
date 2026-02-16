@@ -1,6 +1,6 @@
 import React, { FC, Fragment } from 'react';
 import { InvoiceType } from '../../graphql/types';
-import { MessageCircle } from 'react-feather';
+import { MessageCircle } from 'lucide-react';
 import styled from 'styled-components';
 import { mediaWidths, themeColors } from '../../styles/Themes';
 import { useGetChannelQuery } from '../../graphql/queries/__generated__/getChannel.generated';

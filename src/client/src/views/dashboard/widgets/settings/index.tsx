@@ -1,4 +1,4 @@
-import { Star, Sun, Moon } from 'react-feather';
+import { Star, Sun, Moon } from 'lucide-react';
 import { SingleButton } from '../../../../components/buttons/multiButton/MultiButton';
 import {
   useConfigDispatch,

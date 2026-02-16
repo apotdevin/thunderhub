@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Anchor, X, Zap } from 'react-feather';
+import { Anchor, X, Zap } from 'lucide-react';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { Card } from '../../../components/generic/Styled';
 import { mediaWidths } from '../../../styles/Themes';

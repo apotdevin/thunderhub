@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { getErrorContent } from '../../utils/error';
-import { Lock } from 'react-feather';
+import { Lock } from 'lucide-react';
 import { getVersion } from '../../utils/version';
 import { useGetSessionTokenMutation } from '../../graphql/mutations/__generated__/getSessionToken.generated';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';

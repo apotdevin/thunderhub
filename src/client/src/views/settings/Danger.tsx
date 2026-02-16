@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { AlertCircle } from 'react-feather';
+import { AlertCircle } from 'lucide-react';
 import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.generated';
 import { config } from '../../config/thunderhubConfig';
 import { safeRedirect } from '../../utils/url';
