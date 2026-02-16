@@ -44,7 +44,8 @@ export const GetNodeDocument = gql`
  * });
  */
 export function useGetNodeQuery(
-  baseOptions: Apollo.QueryHookOptions<GetNodeQuery, GetNodeQueryVariables>
+  baseOptions: Apollo.QueryHookOptions<GetNodeQuery, GetNodeQueryVariables> &
+    ({ variables: GetNodeQueryVariables; skip?: boolean } | { skip: boolean })
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetNodeQuery, GetNodeQueryVariables>(
@@ -61,13 +62,30 @@ export function useGetNodeLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetNodeSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetNodeQuery,
     GetNodeQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<GetNodeQuery, GetNodeQueryVariables>;
+export function useGetNodeSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetNodeQuery, GetNodeQueryVariables>
+): Apollo.UseSuspenseQueryResult<
+  GetNodeQuery | undefined,
+  GetNodeQueryVariables
+>;
+export function useGetNodeSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetNodeQuery, GetNodeQueryVariables>
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetNodeQuery, GetNodeQueryVariables>(
     GetNodeDocument,
     options

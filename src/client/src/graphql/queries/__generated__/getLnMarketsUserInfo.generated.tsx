@@ -72,13 +72,39 @@ export function useGetLnMarketsUserInfoLazyQuery(
     GetLnMarketsUserInfoQueryVariables
   >(GetLnMarketsUserInfoDocument, options);
 }
+// @ts-ignore
 export function useGetLnMarketsUserInfoSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetLnMarketsUserInfoQuery,
     GetLnMarketsUserInfoQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetLnMarketsUserInfoQuery,
+  GetLnMarketsUserInfoQueryVariables
+>;
+export function useGetLnMarketsUserInfoSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetLnMarketsUserInfoQuery,
+        GetLnMarketsUserInfoQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetLnMarketsUserInfoQuery | undefined,
+  GetLnMarketsUserInfoQueryVariables
+>;
+export function useGetLnMarketsUserInfoSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetLnMarketsUserInfoQuery,
+        GetLnMarketsUserInfoQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetLnMarketsUserInfoQuery,
     GetLnMarketsUserInfoQueryVariables

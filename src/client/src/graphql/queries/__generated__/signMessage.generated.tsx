@@ -35,7 +35,11 @@ export function useSignMessageQuery(
   baseOptions: Apollo.QueryHookOptions<
     SignMessageQuery,
     SignMessageQueryVariables
-  >
+  > &
+    (
+      | { variables: SignMessageQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<SignMessageQuery, SignMessageQueryVariables>(
@@ -55,13 +59,36 @@ export function useSignMessageLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useSignMessageSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     SignMessageQuery,
     SignMessageQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<SignMessageQuery, SignMessageQueryVariables>;
+export function useSignMessageSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        SignMessageQuery,
+        SignMessageQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  SignMessageQuery | undefined,
+  SignMessageQueryVariables
+>;
+export function useSignMessageSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        SignMessageQuery,
+        SignMessageQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<SignMessageQuery, SignMessageQueryVariables>(
     SignMessageDocument,
     options

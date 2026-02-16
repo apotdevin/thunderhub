@@ -83,7 +83,11 @@ export function useDecodeRequestQuery(
   baseOptions: Apollo.QueryHookOptions<
     DecodeRequestQuery,
     DecodeRequestQueryVariables
-  >
+  > &
+    (
+      | { variables: DecodeRequestQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<DecodeRequestQuery, DecodeRequestQueryVariables>(
@@ -103,13 +107,39 @@ export function useDecodeRequestLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useDecodeRequestSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     DecodeRequestQuery,
     DecodeRequestQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  DecodeRequestQuery,
+  DecodeRequestQueryVariables
+>;
+export function useDecodeRequestSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        DecodeRequestQuery,
+        DecodeRequestQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  DecodeRequestQuery | undefined,
+  DecodeRequestQueryVariables
+>;
+export function useDecodeRequestSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        DecodeRequestQuery,
+        DecodeRequestQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     DecodeRequestQuery,
     DecodeRequestQueryVariables

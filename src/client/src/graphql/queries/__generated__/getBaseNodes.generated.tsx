@@ -66,13 +66,36 @@ export function useGetBaseNodesLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetBaseNodesSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetBaseNodesQuery,
     GetBaseNodesQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<GetBaseNodesQuery, GetBaseNodesQueryVariables>;
+export function useGetBaseNodesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBaseNodesQuery,
+        GetBaseNodesQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetBaseNodesQuery | undefined,
+  GetBaseNodesQueryVariables
+>;
+export function useGetBaseNodesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBaseNodesQuery,
+        GetBaseNodesQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetBaseNodesQuery, GetBaseNodesQueryVariables>(
     GetBaseNodesDocument,
     options

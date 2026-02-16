@@ -62,13 +62,39 @@ export function useGetBasePointsLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetBasePointsSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetBasePointsQuery,
     GetBasePointsQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetBasePointsQuery,
+  GetBasePointsQueryVariables
+>;
+export function useGetBasePointsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBasePointsQuery,
+        GetBasePointsQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetBasePointsQuery | undefined,
+  GetBasePointsQueryVariables
+>;
+export function useGetBasePointsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBasePointsQuery,
+        GetBasePointsQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetBasePointsQuery,
     GetBasePointsQueryVariables

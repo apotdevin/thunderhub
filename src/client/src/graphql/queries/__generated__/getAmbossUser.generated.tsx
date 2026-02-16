@@ -80,13 +80,39 @@ export function useGetAmbossUserLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetAmbossUserSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetAmbossUserQuery,
     GetAmbossUserQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetAmbossUserQuery,
+  GetAmbossUserQueryVariables
+>;
+export function useGetAmbossUserSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAmbossUserQuery,
+        GetAmbossUserQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetAmbossUserQuery | undefined,
+  GetAmbossUserQueryVariables
+>;
+export function useGetAmbossUserSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAmbossUserQuery,
+        GetAmbossUserQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetAmbossUserQuery,
     GetAmbossUserQueryVariables

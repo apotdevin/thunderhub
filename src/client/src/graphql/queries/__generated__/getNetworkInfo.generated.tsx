@@ -76,13 +76,39 @@ export function useGetNetworkInfoLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetNetworkInfoSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetNetworkInfoQuery,
     GetNetworkInfoQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetNetworkInfoQuery,
+  GetNetworkInfoQueryVariables
+>;
+export function useGetNetworkInfoSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetNetworkInfoQuery,
+        GetNetworkInfoQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetNetworkInfoQuery | undefined,
+  GetNetworkInfoQueryVariables
+>;
+export function useGetNetworkInfoSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetNetworkInfoQuery,
+        GetNetworkInfoQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetNetworkInfoQuery,
     GetNetworkInfoQueryVariables

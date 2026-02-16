@@ -114,13 +114,36 @@ export function useGetFeeHealthLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetFeeHealthSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetFeeHealthQuery,
     GetFeeHealthQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<GetFeeHealthQuery, GetFeeHealthQueryVariables>;
+export function useGetFeeHealthSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetFeeHealthQuery,
+        GetFeeHealthQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetFeeHealthQuery | undefined,
+  GetFeeHealthQueryVariables
+>;
+export function useGetFeeHealthSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetFeeHealthQuery,
+        GetFeeHealthQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetFeeHealthQuery, GetFeeHealthQueryVariables>(
     GetFeeHealthDocument,
     options

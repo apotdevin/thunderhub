@@ -57,13 +57,39 @@ export function useGetBaseCanConnectLazyQuery(
     GetBaseCanConnectQueryVariables
   >(GetBaseCanConnectDocument, options);
 }
+// @ts-ignore
 export function useGetBaseCanConnectSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetBaseCanConnectQuery,
     GetBaseCanConnectQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetBaseCanConnectQuery,
+  GetBaseCanConnectQueryVariables
+>;
+export function useGetBaseCanConnectSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBaseCanConnectQuery,
+        GetBaseCanConnectQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetBaseCanConnectQuery | undefined,
+  GetBaseCanConnectQueryVariables
+>;
+export function useGetBaseCanConnectSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBaseCanConnectQuery,
+        GetBaseCanConnectQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetBaseCanConnectQuery,
     GetBaseCanConnectQueryVariables

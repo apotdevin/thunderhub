@@ -63,7 +63,11 @@ export function useGetNodeSocialInfoQuery(
   baseOptions: Apollo.QueryHookOptions<
     GetNodeSocialInfoQuery,
     GetNodeSocialInfoQueryVariables
-  >
+  > &
+    (
+      | { variables: GetNodeSocialInfoQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<
@@ -83,13 +87,39 @@ export function useGetNodeSocialInfoLazyQuery(
     GetNodeSocialInfoQueryVariables
   >(GetNodeSocialInfoDocument, options);
 }
+// @ts-ignore
 export function useGetNodeSocialInfoSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetNodeSocialInfoQuery,
     GetNodeSocialInfoQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetNodeSocialInfoQuery,
+  GetNodeSocialInfoQueryVariables
+>;
+export function useGetNodeSocialInfoSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetNodeSocialInfoQuery,
+        GetNodeSocialInfoQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetNodeSocialInfoQuery | undefined,
+  GetNodeSocialInfoQueryVariables
+>;
+export function useGetNodeSocialInfoSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetNodeSocialInfoQuery,
+        GetNodeSocialInfoQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetNodeSocialInfoQuery,
     GetNodeSocialInfoQueryVariables

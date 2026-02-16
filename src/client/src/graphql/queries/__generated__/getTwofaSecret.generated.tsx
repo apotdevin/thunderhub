@@ -60,13 +60,39 @@ export function useGetTwofaSecretLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetTwofaSecretSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetTwofaSecretQuery,
     GetTwofaSecretQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetTwofaSecretQuery,
+  GetTwofaSecretQueryVariables
+>;
+export function useGetTwofaSecretSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTwofaSecretQuery,
+        GetTwofaSecretQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetTwofaSecretQuery | undefined,
+  GetTwofaSecretQueryVariables
+>;
+export function useGetTwofaSecretSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTwofaSecretQuery,
+        GetTwofaSecretQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetTwofaSecretQuery,
     GetTwofaSecretQueryVariables

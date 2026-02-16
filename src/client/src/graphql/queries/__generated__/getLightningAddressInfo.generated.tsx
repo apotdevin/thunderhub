@@ -53,7 +53,11 @@ export function useGetLightningAddressInfoQuery(
   baseOptions: Apollo.QueryHookOptions<
     GetLightningAddressInfoQuery,
     GetLightningAddressInfoQueryVariables
-  >
+  > &
+    (
+      | { variables: GetLightningAddressInfoQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<
@@ -73,13 +77,39 @@ export function useGetLightningAddressInfoLazyQuery(
     GetLightningAddressInfoQueryVariables
   >(GetLightningAddressInfoDocument, options);
 }
+// @ts-ignore
 export function useGetLightningAddressInfoSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetLightningAddressInfoQuery,
     GetLightningAddressInfoQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetLightningAddressInfoQuery,
+  GetLightningAddressInfoQueryVariables
+>;
+export function useGetLightningAddressInfoSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetLightningAddressInfoQuery,
+        GetLightningAddressInfoQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetLightningAddressInfoQuery | undefined,
+  GetLightningAddressInfoQueryVariables
+>;
+export function useGetLightningAddressInfoSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetLightningAddressInfoQuery,
+        GetLightningAddressInfoQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetLightningAddressInfoQuery,
     GetLightningAddressInfoQueryVariables

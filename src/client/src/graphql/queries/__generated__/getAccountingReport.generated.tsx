@@ -78,13 +78,39 @@ export function useGetAccountingReportLazyQuery(
     GetAccountingReportQueryVariables
   >(GetAccountingReportDocument, options);
 }
+// @ts-ignore
 export function useGetAccountingReportSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetAccountingReportQuery,
     GetAccountingReportQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetAccountingReportQuery,
+  GetAccountingReportQueryVariables
+>;
+export function useGetAccountingReportSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAccountingReportQuery,
+        GetAccountingReportQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetAccountingReportQuery | undefined,
+  GetAccountingReportQueryVariables
+>;
+export function useGetAccountingReportSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAccountingReportQuery,
+        GetAccountingReportQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetAccountingReportQuery,
     GetAccountingReportQueryVariables

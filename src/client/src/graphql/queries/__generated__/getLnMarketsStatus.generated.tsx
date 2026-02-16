@@ -57,13 +57,39 @@ export function useGetLnMarketsStatusLazyQuery(
     GetLnMarketsStatusQueryVariables
   >(GetLnMarketsStatusDocument, options);
 }
+// @ts-ignore
 export function useGetLnMarketsStatusSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetLnMarketsStatusQuery,
     GetLnMarketsStatusQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetLnMarketsStatusQuery,
+  GetLnMarketsStatusQueryVariables
+>;
+export function useGetLnMarketsStatusSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetLnMarketsStatusQuery,
+        GetLnMarketsStatusQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetLnMarketsStatusQuery | undefined,
+  GetLnMarketsStatusQueryVariables
+>;
+export function useGetLnMarketsStatusSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetLnMarketsStatusQuery,
+        GetLnMarketsStatusQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetLnMarketsStatusQuery,
     GetLnMarketsStatusQueryVariables

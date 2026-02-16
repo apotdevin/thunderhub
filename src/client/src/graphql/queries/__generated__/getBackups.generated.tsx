@@ -52,13 +52,30 @@ export function useGetBackupsLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetBackupsSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetBackupsQuery,
     GetBackupsQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<GetBackupsQuery, GetBackupsQueryVariables>;
+export function useGetBackupsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetBackupsQuery, GetBackupsQueryVariables>
+): Apollo.UseSuspenseQueryResult<
+  GetBackupsQuery | undefined,
+  GetBackupsQueryVariables
+>;
+export function useGetBackupsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetBackupsQuery, GetBackupsQueryVariables>
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetBackupsQuery, GetBackupsQueryVariables>(
     GetBackupsDocument,
     options
