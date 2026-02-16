@@ -1,7 +1,7 @@
 # ---------------
 # Install Dependencies
 # ---------------
-FROM node:18.18.2-alpine as deps
+FROM node:24.13.1-alpine as deps
 
 WORKDIR /app
 
@@ -40,7 +40,7 @@ RUN npm prune --production
 # ---------------
 # Release App
 # ---------------
-FROM node:18.18.2-alpine as final
+FROM node:24.13.1-alpine as final
 
 WORKDIR /app
 
@@ -59,6 +59,7 @@ COPY --from=build /app/src/client/dist/ ./src/client/dist
 # Copy NestJS files
 COPY --from=build /app/dist/ ./dist
 
+ENV PORT=3000
 EXPOSE 3000
 
 CMD [ "npm", "run", "start:prod" ]

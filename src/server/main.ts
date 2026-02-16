@@ -9,7 +9,7 @@ async function bootstrap() {
   app.use(helmet());
   app.setGlobalPrefix(process.env.BASE_PATH || '');
 
-  await app.listen(process.env.PORT || 3000, process.env.HOST);
+  await app.listen(process.env.PORT || 3001, process.env.HOST);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();

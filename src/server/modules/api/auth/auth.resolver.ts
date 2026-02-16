@@ -12,11 +12,7 @@ import { appConstants } from 'src/server/utils/appConstants';
 import { NodeService } from '../../node/node.service';
 import { toWithError } from 'src/server/utils/async';
 import { decodeMacaroon, isCorrectPassword } from 'src/server/utils/crypto';
-import {
-  CurrentIp,
-  CurrentUser,
-  Public,
-} from '../../security/security.decorators';
+import { CurrentUser, Public } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { authenticator } from 'otplib';
 import { shorten } from 'src/server/utils/string';
@@ -235,7 +231,6 @@ export class AuthResolver {
     @Args('id') id: string,
     @Args('password') password: string,
     @Args('token', { nullable: true }) token: string,
-    @CurrentIp() ip: string,
     @Context() { res }: ContextType
   ) {
     const account = this.accountsService.getAccount(id);
@@ -266,9 +261,7 @@ export class AuthResolver {
       this.logger.debug(`Decrypted the macaroon for account ${id}`);
     } else {
       if (!isCorrectPassword(password, account.password)) {
-        this.logger.error(
-          `Authentication failed from ip: ${ip} - Invalid Password!`
-        );
+        this.logger.error(`Authentication failed - Invalid Password!`);
         throw new Error('Wrong credentials for login');
       }
 
