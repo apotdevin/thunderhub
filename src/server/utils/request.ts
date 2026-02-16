@@ -1,4 +1,7 @@
 import { Ipware } from '@fullerstack/nax-ipware';
+import cookie from 'cookie';
+import { appConstants } from './appConstants';
+
 const ipware = new Ipware();
 
 export const getIp = (req: any) => {
@@ -10,7 +13,9 @@ export const getAuthToken = (req: Request) => {
   const authHeader = req.headers['authorization'] || '';
   if (authHeader.startsWith('Bearer ')) {
     return authHeader.substring(7, authHeader.length);
-  } else {
-    return '';
   }
+
+  // Fall back to reading from the httpOnly cookie
+  const cookies = cookie.parse(req.headers['cookie'] || '');
+  return cookies[appConstants.cookieName] || '';
 };

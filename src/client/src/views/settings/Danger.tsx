@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { AlertCircle } from 'react-feather';
 import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.generated';
-import getConfig from 'next/config';
+import { config } from '../../config/thunderhubConfig';
 import {
   Card,
   CardWithTitle,
@@ -14,8 +14,7 @@ import { fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { useChatDispatch } from '../../context/ChatContext';
 
-const { publicRuntimeConfig } = getConfig();
-const { logoutUrl, basePath } = publicRuntimeConfig;
+const { logoutUrl, basePath } = config;
 
 export const ButtonRow = styled.div`
   width: auto;

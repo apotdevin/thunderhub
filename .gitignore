@@ -1,8 +1,7 @@
 # compiled output
 /dist
 /node_modules
-/.next
-src/client/.next
+src/client/dist
 
 # Logs
 logs

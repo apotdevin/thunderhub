@@ -1,22 +1,20 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
-import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
-import { NextPageContext } from 'next';
-import { getProps } from '../src/utils/ssr';
-import { UserInfo } from '../src/views/lnmarkets/UserInfo';
-import { Title } from '../src/components/typography/Styled';
-import { GoToLnMarkets } from '../src/views/lnmarkets/GoToLnMarkets';
-import { DepositWithdraw } from '../src/views/lnmarkets/DepositWithdraw';
-import { useGetLnMarketsStatusQuery } from '../src/graphql/queries/__generated__/getLnMarketsStatus.generated';
+import { GridWrapper } from '../components/gridWrapper/GridWrapper';
+import { UserInfo } from '../views/lnmarkets/UserInfo';
+import { Title } from '../components/typography/Styled';
+import { GoToLnMarkets } from '../views/lnmarkets/GoToLnMarkets';
+import { DepositWithdraw } from '../views/lnmarkets/DepositWithdraw';
+import { useGetLnMarketsStatusQuery } from '../graphql/queries/__generated__/getLnMarketsStatus.generated';
 import {
   useLnMarketsLoginMutation,
   useLnMarketsLogoutMutation,
-} from '../src/graphql/mutations/__generated__/lnMarkets.generated';
-import { getErrorContent } from '../src/utils/error';
+} from '../graphql/mutations/__generated__/lnMarkets.generated';
+import { getErrorContent } from '../utils/error';
 import { toast } from 'react-toastify';
-import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
-import { useConfigDispatch } from '../src/context/ConfigContext';
-import { SingleLine } from '../src/components/generic/Styled';
+import { ColorButton } from '../components/buttons/colorButton/ColorButton';
+import { useConfigDispatch } from '../context/ConfigContext';
+import { SingleLine } from '../components/generic/Styled';
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -95,14 +93,10 @@ const LnMarketsView = () => {
   );
 };
 
-const Wrapped = () => (
+const LnMarketsPage = () => (
   <GridWrapper>
     <LnMarketsView />
   </GridWrapper>
 );
 
-export default Wrapped;
-
-export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context);
-}
+export default LnMarketsPage;

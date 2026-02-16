@@ -1,27 +1,25 @@
-import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
-import { NextPageContext } from 'next';
-import { getProps } from '../src/utils/ssr';
-import { ForwardsList } from '../src/views/forwards';
-import { ForwardChannelsReport } from '../src/views/home/reports/forwardReport/ForwardChannelReport';
+import { GridWrapper } from '../components/gridWrapper/GridWrapper';
+import { ForwardsList } from '../views/forwards';
+import { ForwardChannelsReport } from '../views/home/reports/forwardReport/ForwardChannelReport';
 import { useMemo, useState } from 'react';
-import { ForwardTable } from '../src/views/forwards/ForwardTable';
-import { options, typeOptions } from '../src/views/home/reports/forwardReport';
-import { ForwardsGraph } from '../src/views/home/reports/forwardReport/ForwardsGraph';
+import { ForwardTable } from '../views/forwards/ForwardTable';
+import { options, typeOptions } from '../views/home/reports/forwardReport';
+import { ForwardsGraph } from '../views/home/reports/forwardReport/ForwardsGraph';
 import styled from 'styled-components';
-import { SelectWithValue } from '../src/components/select';
-import { ForwardResume } from '../src/views/home/reports/forwardReport/ForwardResume';
+import { SelectWithValue } from '../components/select';
+import { ForwardResume } from '../views/home/reports/forwardReport/ForwardResume';
 import {
   SubTitle,
   Card,
   CardWithTitle,
   CardTitle,
-} from '../src/components/generic/Styled';
-import { ForwardSankey } from '../src/views/forwards/forwardSankey';
-import { ChannelCart } from '../src/components/chart/ChannelChart';
-import { useGetChannelsQuery } from '../src/graphql/queries/__generated__/getChannels.generated';
-import { useGetForwardsListQuery } from '../src/graphql/queries/__generated__/getForwards.generated';
+} from '../components/generic/Styled';
+import { ForwardSankey } from '../views/forwards/forwardSankey';
+import { ChannelCart } from '../components/chart/ChannelChart';
+import { useGetChannelsQuery } from '../graphql/queries/__generated__/getChannels.generated';
+import { useGetForwardsListQuery } from '../graphql/queries/__generated__/getForwards.generated';
 import { toast } from 'react-toastify';
-import { getErrorContent } from '../src/utils/error';
+import { getErrorContent } from '../utils/error';
 
 const S = {
   header: styled.div`
@@ -154,14 +152,10 @@ const ForwardsView = () => {
   );
 };
 
-const Wrapped = () => (
+const ForwardsPage = () => (
   <GridWrapper>
     <ForwardsView />
   </GridWrapper>
 );
 
-export default Wrapped;
-
-export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context);
-}
+export default ForwardsPage;

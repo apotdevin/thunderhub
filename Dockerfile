@@ -28,12 +28,11 @@ ARG BASE_PATH=""
 ENV BASE_PATH=${BASE_PATH}
 ARG NODE_ENV="production"
 ENV NODE_ENV=${NODE_ENV}
-ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build the NestJS and NextJS application
+# Build the NestJS and Vite application
 COPY . .
 RUN npm run build:nest
-RUN npm run build:next
+RUN npm run build:client
 
 # Remove non production necessary modules
 RUN npm prune --production
@@ -50,15 +49,12 @@ ARG BASE_PATH=""
 ENV BASE_PATH=${BASE_PATH}
 ARG NODE_ENV="production"
 ENV NODE_ENV=${NODE_ENV}
-ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=build /app/package.json ./
 COPY --from=build /app/node_modules/ ./node_modules
 
-# Copy NextJS files
-COPY --from=build /app/src/client/public ./src/client/public
-COPY --from=build /app/src/client/next.config.js ./src/client/
-COPY --from=build /app/src/client/.next/ ./src/client/.next
+# Copy Vite client build
+COPY --from=build /app/src/client/dist/ ./src/client/dist
 
 # Copy NestJS files
 COPY --from=build /app/dist/ ./dist

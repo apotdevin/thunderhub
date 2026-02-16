@@ -15,11 +15,10 @@ import {
   mediaWidths,
   chartColors,
 } from '../../styles/Themes';
-import getConfig from 'next/config';
+import { config } from '../../config/thunderhubConfig';
 import { GetServerAccountsQuery } from '../../graphql/queries/__generated__/getServerAccounts.generated';
 
-const { publicRuntimeConfig } = getConfig();
-const { basePath, disable2FA } = publicRuntimeConfig;
+const { basePath, disable2FA } = config;
 
 type ServerAccount = GetServerAccountsQuery['getServerAccounts'][0];
 

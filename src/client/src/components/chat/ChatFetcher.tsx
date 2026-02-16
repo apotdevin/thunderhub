@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/router';
+import { useLocation } from 'react-router-dom';
 import { useGetMessagesQuery } from '../../../src/graphql/queries/__generated__/getMessages.generated';
 import { useAccount } from '../../../src/hooks/UseAccount';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
@@ -13,7 +13,7 @@ export const ChatFetcher: React.FC = () => {
   const { chatPollingSpeed } = useConfigState();
 
   const account = useAccount();
-  const { pathname } = useRouter();
+  const { pathname } = useLocation();
   const { lastChat, chats, sentChats, initialized } = useChatState();
   const dispatch = useChatDispatch();
 

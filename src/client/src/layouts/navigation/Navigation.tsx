@@ -17,7 +17,7 @@ import {
   Grid,
   Globe,
 } from 'react-feather';
-import { useRouter } from 'next/router';
+import { useLocation } from 'react-router-dom';
 import { useBaseConnect } from '../../hooks/UseBaseConnect';
 import {
   unSelectedNavButton,
@@ -144,7 +144,7 @@ interface NavigationProps {
 }
 
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
-  const { pathname } = useRouter();
+  const { pathname } = useLocation();
   const { sidebar } = useConfigState();
 
   const { connected } = useBaseConnect();

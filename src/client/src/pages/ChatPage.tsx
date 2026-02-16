@@ -1,25 +1,23 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Users } from 'react-feather';
-import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
-import { ChatInit } from '../src/components/chat/ChatInit';
-import { ChatFetcher } from '../src/components/chat/ChatFetcher';
-import { NextPageContext } from 'next';
-import { getProps } from '../src/utils/ssr';
-import { useChatState } from '../src/context/ChatContext';
-import { separateBySender, getSenders } from '../src/utils/chat';
+import { GridWrapper } from '../components/gridWrapper/GridWrapper';
+import { ChatInit } from '../components/chat/ChatInit';
+import { ChatFetcher } from '../components/chat/ChatFetcher';
+import { useChatState } from '../context/ChatContext';
+import { separateBySender, getSenders } from '../utils/chat';
 import {
   CardWithTitle,
   SubTitle,
   SingleLine,
-} from '../src/components/generic/Styled';
-import { Contacts } from '../src/views/chat/Contacts';
-import { ChatBox } from '../src/views/chat/ChatBox';
-import { ChatStart } from '../src/views/chat/ChatStart';
-import { LoadingCard } from '../src/components/loading/LoadingCard';
-import { ChatCard } from '../src/views/chat/Chat.styled';
-import { ViewSwitch } from '../src/components/viewSwitch/ViewSwitch';
-import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
+} from '../components/generic/Styled';
+import { Contacts } from '../views/chat/Contacts';
+import { ChatBox } from '../views/chat/ChatBox';
+import { ChatStart } from '../views/chat/ChatStart';
+import { LoadingCard } from '../components/loading/LoadingCard';
+import { ChatCard } from '../views/chat/Chat.styled';
+import { ViewSwitch } from '../components/viewSwitch/ViewSwitch';
+import { ColorButton } from '../components/buttons/colorButton/ColorButton';
 
 const ChatLayout = styled.div<{ withHeight: boolean }>`
   display: flex;
@@ -127,7 +125,7 @@ const ChatView = () => {
   );
 };
 
-const Wrapped = () => (
+const ChatPage = () => (
   <GridWrapper>
     <ChatInit />
     <ChatFetcher />
@@ -135,8 +133,4 @@ const Wrapped = () => (
   </GridWrapper>
 );
 
-export default Wrapped;
-
-export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context);
-}
+export default ChatPage;

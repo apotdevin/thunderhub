@@ -1,5 +1,3 @@
-/* eslint @typescript-eslint/no-var-requires: 0 */
-import { IncomingMessage, ServerResponse } from 'http';
 import { useMemo } from 'react';
 import {
   ApolloClient,
@@ -8,20 +6,14 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client';
-import getConfig from 'next/config';
+import { config } from '../src/config/thunderhubConfig';
 import possibleTypes from '../src/graphql/fragmentTypes.json';
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
 
-const { publicRuntimeConfig } = getConfig();
-const { apiUrl: uri } = publicRuntimeConfig;
+const uri = config.apiUrl;
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
-
-export type ResolverContext = {
-  req?: IncomingMessage;
-  res?: ServerResponse;
-};
 
 function createApolloClient(authToken: string) {
   const httpLink = createHttpLink({ uri, credentials: 'include' });
@@ -51,7 +43,7 @@ function createApolloClient(authToken: string) {
 
   return new ApolloClient({
     credentials: 'same-origin',
-    ssrMode: typeof window === 'undefined',
+    ssrMode: false,
     link,
     cache: new InMemoryCache({
       ...possibleTypes,
@@ -98,7 +90,6 @@ export function initializeApollo(
     const existingCache = _apolloClient.extract();
     _apolloClient.cache.restore({ ...existingCache, ...initialState });
   }
-  if (typeof window === 'undefined') return _apolloClient;
   if (!apolloClient) apolloClient = _apolloClient;
 
   return _apolloClient;

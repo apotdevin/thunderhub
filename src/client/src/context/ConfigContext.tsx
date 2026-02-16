@@ -5,9 +5,9 @@ import React, {
   useEffect,
   ReactNode,
 } from 'react';
-import getConfig from 'next/config';
 import Cookies from 'js-cookie';
 import { omit } from 'lodash';
+import { config } from '../config/thunderhubConfig';
 
 const themeTypes = ['dark', 'light', 'night'];
 const currencyTypes = ['sat', 'btc', 'fiat'];
@@ -91,13 +91,12 @@ type Dispatch = (action: ActionType) => void;
 const StateContext = createContext<State | undefined>(undefined);
 const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
-const { publicRuntimeConfig } = getConfig();
 const {
   defaultTheme: defT,
   defaultCurrency: defC,
   fetchPrices,
   fetchFees,
-} = publicRuntimeConfig;
+} = config;
 
 const initialState: State = {
   currency: currencyTypes.indexOf(defC) > -1 ? defC : 'sat',

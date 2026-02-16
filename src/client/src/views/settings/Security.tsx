@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
-import { SettingsLine } from '../../../pages/settings';
+import { SettingsLine } from '../../pages/SettingsPage';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
   Card,
@@ -17,10 +17,9 @@ import { useRemoveTwofaSecretMutation } from '../../graphql/mutations/__generate
 import { InputWithDeco } from '../../components/input/InputWithDeco';
 import { toast } from 'react-toastify';
 import { useUpdateTwofaSecretMutation } from '../../graphql/mutations/__generated__/updateTwofaSecret.generated';
-import getConfig from 'next/config';
+import { config } from '../../config/thunderhubConfig';
 
-const { publicRuntimeConfig } = getConfig();
-const { disable2FA } = publicRuntimeConfig;
+const { disable2FA } = config;
 
 const S = {
   QRWrapper: styled.div`

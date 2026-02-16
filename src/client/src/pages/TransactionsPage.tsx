@@ -1,37 +1,35 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { toast } from 'react-toastify';
-import { InvoiceCard } from '../src/views/transactions/InvoiceCard';
-import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
-import { NextPageContext } from 'next';
-import { getProps } from '../src/utils/ssr';
+import { InvoiceCard } from '../views/transactions/InvoiceCard';
+import { GridWrapper } from '../components/gridWrapper/GridWrapper';
 import { Settings } from 'react-feather';
 import styled from 'styled-components';
-import { useLocalStorage } from '../src/hooks/UseLocalStorage';
-import { useNodeInfo } from '../src/hooks/UseNodeInfo';
+import { useLocalStorage } from '../hooks/UseLocalStorage';
+import { useNodeInfo } from '../hooks/UseNodeInfo';
 import {
   defaultSettings,
   TransactionSettings,
-} from '../src/views/transactions/Settings';
+} from '../views/transactions/Settings';
 import { format } from 'date-fns';
 import {
   Card,
   CardWithTitle,
   SubTitle,
   DarkSubTitle,
-} from '../src/components/generic/Styled';
-import { getErrorContent } from '../src/utils/error';
-import { PaymentsCard } from '../src/views/transactions/PaymentsCards';
-import { ColorButton } from '../src/components/buttons/colorButton/ColorButton';
-import { FlowBox } from '../src/views/home/reports/flow';
+} from '../components/generic/Styled';
+import { getErrorContent } from '../utils/error';
+import { PaymentsCard } from '../views/transactions/PaymentsCards';
+import { ColorButton } from '../components/buttons/colorButton/ColorButton';
+import { FlowBox } from '../views/home/reports/flow';
 import {
   GetInvoicesQuery,
   useGetInvoicesQuery,
-} from '../src/graphql/queries/__generated__/getInvoices.generated';
+} from '../graphql/queries/__generated__/getInvoices.generated';
 import {
   GetPaymentsQuery,
   useGetPaymentsQuery,
-} from '../src/graphql/queries/__generated__/getPayments.generated';
-import { SmallSelectWithValue } from '../src/components/select';
+} from '../graphql/queries/__generated__/getPayments.generated';
+import { SmallSelectWithValue } from '../components/select';
 
 const S = {
   row: styled.div`
@@ -270,14 +268,10 @@ const TransactionsView = () => {
   );
 };
 
-const Wrapped = () => (
+const TransactionsPage = () => (
   <GridWrapper>
     <TransactionsView />
   </GridWrapper>
 );
 
-export default Wrapped;
-
-export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context);
-}
+export default TransactionsPage;

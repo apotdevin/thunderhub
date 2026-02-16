@@ -1,18 +1,17 @@
 import * as React from 'react';
-import { useRouter } from 'next/router';
+import { useSearchParams } from 'react-router-dom';
 import { getUrlParam } from '../utils/url';
 import { toast } from 'react-toastify';
 import { getErrorContent } from '../utils/error';
-import getConfig from 'next/config';
+import { config } from '../config/thunderhubConfig';
 import { useGetAuthTokenMutation } from '../graphql/mutations/__generated__/getAuthToken.generated';
 
-const { publicRuntimeConfig } = getConfig();
-const { logoutUrl, basePath } = publicRuntimeConfig;
+const { logoutUrl, basePath } = config;
 
 export const useCheckAuthToken = () => {
-  const { query } = useRouter();
+  const [searchParams] = useSearchParams();
 
-  const cookieParam = getUrlParam(query?.token);
+  const cookieParam = getUrlParam(searchParams.get('token') ?? undefined);
 
   const [getToken, { data }] = useGetAuthTokenMutation({
     variables: { cookie: cookieParam },

@@ -1,11 +1,10 @@
 import { useGetNodeInfoQuery } from '../../src/graphql/queries/__generated__/getNodeInfo.generated';
 import { getVersion } from '../../src/utils/version';
-import getConfig from 'next/config';
+import { config } from '../config/thunderhubConfig';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-const { publicRuntimeConfig } = getConfig();
-const { logoutUrl, basePath } = publicRuntimeConfig;
+const { logoutUrl, basePath } = config;
 
 type StatusState = {
   alias: string;

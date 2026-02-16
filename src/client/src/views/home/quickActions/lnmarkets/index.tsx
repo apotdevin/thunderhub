@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Activity } from 'react-feather';
 import { toast } from 'react-toastify';
@@ -10,14 +10,13 @@ import {
 import { useLnMarketsLoginMutation } from '../../../../graphql/mutations/__generated__/lnMarkets.generated';
 import { useGetLnMarketsStatusQuery } from '../../../../graphql/queries/__generated__/getLnMarketsStatus.generated';
 import { getErrorContent } from '../../../../utils/error';
-import getConfig from 'next/config';
+import { config } from '../../../../config/thunderhubConfig';
 import { QuickCard, QuickTitle } from '../QuickActions';
 
-const { publicRuntimeConfig } = getConfig();
-const { disableLnMarkets } = publicRuntimeConfig;
+const { disableLnMarkets } = config;
 
 export const LnMarketsCard = () => {
-  const { push } = useRouter();
+  const navigate = useNavigate();
   const dispatch = useConfigDispatch();
   const { lnMarketsAuth } = useConfigState();
 
@@ -38,9 +37,9 @@ export const LnMarketsCard = () => {
   useEffect(() => {
     if (data?.lnMarketsLogin?.status === 'OK') {
       dispatch({ type: 'change', lnMarketsAuth: true });
-      push('/lnmarkets');
+      navigate('/lnmarkets');
     }
-  }, [data, push, dispatch]);
+  }, [data, navigate, dispatch]);
 
   if (disableLnMarkets) {
     return null;
@@ -56,7 +55,7 @@ export const LnMarketsCard = () => {
 
   if (lnMarketsAuth) {
     return (
-      <QuickCard onClick={() => push('/lnmarkets')}>
+      <QuickCard onClick={() => navigate('/lnmarkets')}>
         <Activity size={24} />
         <QuickTitle>LnMarkets</QuickTitle>
       </QuickCard>

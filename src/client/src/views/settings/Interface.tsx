@@ -13,7 +13,7 @@ import {
   SubCard,
   DarkSubTitle,
 } from '../../components/generic/Styled';
-import { SettingsLine } from '../../../pages/settings';
+import { SettingsLine } from '../../pages/SettingsPage';
 import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 import {
   MultiButton,

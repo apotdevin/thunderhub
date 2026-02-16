@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Settings } from 'react-feather';
-import { ChannelManage } from '../../src/views/channels/channels/ChannelManage';
-import { GridWrapper } from '../../src/components/gridWrapper/GridWrapper';
-import { NextPageContext } from 'next';
-import { getProps } from '../../src/utils/ssr';
-import { useGetNodeInfoQuery } from '../../src/graphql/queries/__generated__/getNodeInfo.generated';
-import { PendingChannels } from '../../src/views/channels/pendingChannels/PendingChannels';
-import { ClosedChannels } from '../../src/views/channels/closedChannels/ClosedChannels';
+import { ChannelManage } from '../views/channels/channels/ChannelManage';
+import { GridWrapper } from '../components/gridWrapper/GridWrapper';
+import { useGetNodeInfoQuery } from '../graphql/queries/__generated__/getNodeInfo.generated';
+import { PendingChannels } from '../views/channels/pendingChannels/PendingChannels';
+import { ClosedChannels } from '../views/channels/closedChannels/ClosedChannels';
 import {
   CardWithTitle,
   SubTitle,
   SmallButton,
   Card,
-} from '../../src/components/generic/Styled';
-import { mediaWidths } from '../../src/styles/Themes';
-import { ChannelTable } from '../../src/views/channels/channels/ChannelTable';
+} from '../components/generic/Styled';
+import { mediaWidths } from '../styles/Themes';
+import { ChannelTable } from '../views/channels/channels/ChannelTable';
 
 export const IconCursor = styled.div`
   display: flex;
@@ -127,14 +125,10 @@ const ChannelView = () => {
   );
 };
 
-const Wrapped = () => (
+const ChannelsPage = () => (
   <GridWrapper centerContent={false}>
     <ChannelView />
   </GridWrapper>
 );
 
-export default Wrapped;
-
-export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context);
-}
+export default ChannelsPage;

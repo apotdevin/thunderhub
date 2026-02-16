@@ -1,19 +1,17 @@
-import React, { useMemo } from 'react';
-import { useGetPeersQuery } from '../src/graphql/queries/__generated__/getPeers.generated';
-import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
-import { NextPageContext } from 'next';
-import { getProps } from '../src/utils/ssr';
+import { useMemo } from 'react';
+import { useGetPeersQuery } from '../graphql/queries/__generated__/getPeers.generated';
+import { GridWrapper } from '../components/gridWrapper/GridWrapper';
 import {
   CardWithTitle,
   SubTitle,
   Card,
   DarkSubTitle,
-} from '../src/components/generic/Styled';
-import { LoadingCard } from '../src/components/loading/LoadingCard';
-import { AddPeer } from '../src/views/peers/AddPeer';
-import { copyLink, getNodeLink } from '../src/components/generic/helpers';
-import { Price } from '../src/components/price/Price';
-import Table from '../src/components/table';
+} from '../components/generic/Styled';
+import { LoadingCard } from '../components/loading/LoadingCard';
+import { AddPeer } from '../views/peers/AddPeer';
+import { copyLink, getNodeLink } from '../components/generic/helpers';
+import { Price } from '../components/price/Price';
+import Table from '../components/table';
 
 const PeersView = () => {
   const { loading, data } = useGetPeersQuery();
@@ -141,15 +139,11 @@ const PeersView = () => {
   );
 };
 
-const Wrapped = () => (
+const PeersPage = () => (
   <GridWrapper>
     <AddPeer />
     <PeersView />
   </GridWrapper>
 );
 
-export default Wrapped;
-
-export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context);
-}
+export default PeersPage;

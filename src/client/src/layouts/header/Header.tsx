@@ -8,7 +8,7 @@ import {
   Heart,
   Activity,
 } from 'react-feather';
-import { useRouter } from 'next/router';
+import { useLocation } from 'react-router-dom';
 import { useBaseConnect } from '../../hooks/UseBaseConnect';
 import { LogoutButton } from '../../components/logoutButton';
 import { useConfigState } from '../../context/ConfigContext';
@@ -43,7 +43,7 @@ const SETTINGS = '/settings';
 const LN_MARKETS = '/lnmarkets';
 
 export const Header = () => {
-  const { pathname } = useRouter();
+  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
 
   const { lnMarketsAuth } = useConfigState();

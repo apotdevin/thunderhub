@@ -1,10 +1,9 @@
 import React, { FC, ReactNode, useCallback, useRef, useState } from 'react';
 import io from 'socket.io-client';
 import { Socket } from 'socket.io-client';
-import getConfig from 'next/config';
+import { config } from '../config/thunderhubConfig';
 
-const { publicRuntimeConfig } = getConfig();
-const { basePath } = publicRuntimeConfig;
+const { basePath } = config;
 
 type Connection = {
   socket: Socket | undefined;
@@ -28,10 +27,7 @@ type Context = {
 
 const SocketContext = React.createContext<Context | undefined>(undefined);
 
-const SocketProvider: FC<{ authToken?: string; children?: ReactNode }> = ({
-  children,
-  authToken,
-}) => {
+const SocketProvider: FC<{ children?: ReactNode }> = ({ children }) => {
   const sockets = useRef<Socket | undefined>(undefined);
 
   const [status, setStatus] = useState<Status>('disconnected');
@@ -43,11 +39,6 @@ const SocketProvider: FC<{ authToken?: string; children?: ReactNode }> = ({
     const cleanup = () => {
       sockets.current?.disconnect();
     };
-
-    // Early return if the user has no authToken cookie
-    if (!authToken) {
-      return { socket: undefined, cleanup };
-    }
 
     if (sockets.current) {
       sockets.current.connect();
@@ -69,7 +60,7 @@ const SocketProvider: FC<{ authToken?: string; children?: ReactNode }> = ({
     socket.on('disconnect', handleDisconnect);
 
     return { socket, cleanup };
-  }, [authToken]);
+  }, []);
 
   const getLastMessage = (forEvent = '') => lastMessages[forEvent];
   const setLastMessage = (forEvent: string, message: any) =>

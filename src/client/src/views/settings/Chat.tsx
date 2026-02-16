@@ -5,7 +5,7 @@ import {
   Card,
   Sub4Title,
 } from '../../components/generic/Styled';
-import { SettingsLine } from '../../../pages/settings';
+import { SettingsLine } from '../../pages/SettingsPage';
 
 import {
   MultiButton,

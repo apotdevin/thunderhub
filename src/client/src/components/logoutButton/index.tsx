@@ -6,11 +6,10 @@ import { HeaderNavButton } from '../../../src/layouts/header/Header.styled';
 import styled from 'styled-components';
 import { themeColors } from '../../../src/styles/Themes';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import getConfig from 'next/config';
+import { config } from '../../config/thunderhubConfig';
 import { useChatDispatch } from '../../context/ChatContext';
 
-const { publicRuntimeConfig } = getConfig();
-const { logoutUrl, basePath } = publicRuntimeConfig;
+const { logoutUrl, basePath } = config;
 
 const Logout = styled.button`
   cursor: pointer;

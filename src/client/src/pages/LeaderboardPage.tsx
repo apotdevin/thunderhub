@@ -1,19 +1,13 @@
 import React from 'react';
-import { GridWrapper } from '../src/components/gridWrapper/GridWrapper';
-import { NextPageContext } from 'next';
-import { getProps } from '../src/utils/ssr';
-import { useGetBasePointsQuery } from '../src/graphql/queries/__generated__/getBasePoints.generated';
-import { NodeCard } from '../src/views/leaderboard/NodeCard';
-import { SupportBar } from '../src/views/home/quickActions/donate/DonateContent';
-import {
-  CardWithTitle,
-  SubTitle,
-  Card,
-} from '../src/components/generic/Styled';
-import { LoadingCard } from '../src/components/loading/LoadingCard';
+import { GridWrapper } from '../components/gridWrapper/GridWrapper';
+import { useGetBasePointsQuery } from '../graphql/queries/__generated__/getBasePoints.generated';
+import { NodeCard } from '../views/leaderboard/NodeCard';
+import { SupportBar } from '../views/home/quickActions/donate/DonateContent';
+import { CardWithTitle, SubTitle, Card } from '../components/generic/Styled';
+import { LoadingCard } from '../components/loading/LoadingCard';
 
 const LeaderboardView = () => {
-  const { loading, data } = useGetBasePointsQuery({ ssr: false });
+  const { loading, data } = useGetBasePointsQuery();
 
   const renderBoard = () => {
     if (loading || !data?.getBasePoints) {
@@ -46,14 +40,10 @@ const LeaderboardView = () => {
   );
 };
 
-const Wrapped = () => (
+const LeaderboardPage = () => (
   <GridWrapper>
     <LeaderboardView />
   </GridWrapper>
 );
 
-export default Wrapped;
-
-export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context);
-}
+export default LeaderboardPage;

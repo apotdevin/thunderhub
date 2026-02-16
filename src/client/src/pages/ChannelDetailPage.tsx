@@ -1,20 +1,18 @@
-import { NextPageContext } from 'next';
-import { useRouter } from 'next/router';
+import { useParams } from 'react-router-dom';
 import { ChevronRight } from 'react-feather';
 import styled from 'styled-components';
-import { Card } from '../../src/components/generic/CardGeneric';
+import { Card } from '../components/generic/CardGeneric';
 import {
   CardWithTitle,
   DarkSubTitle,
   SubTitle,
-} from '../../src/components/generic/Styled';
-import { GridWrapper } from '../../src/components/gridWrapper/GridWrapper';
-import { Link } from '../../src/components/link/Link';
-import { LoadingCard } from '../../src/components/loading/LoadingCard';
-import { CloseChannel } from '../../src/components/modal/closeChannel/CloseChannel';
-import { useGetChannelInfoQuery } from '../../src/graphql/queries/__generated__/getChannel.generated';
-import { getProps } from '../../src/utils/ssr';
-import { ChannelDetails } from '../../src/views/channels/channels/ChannelDetails';
+} from '../components/generic/Styled';
+import { GridWrapper } from '../components/gridWrapper/GridWrapper';
+import { Link } from '../components/link/Link';
+import { LoadingCard } from '../components/loading/LoadingCard';
+import { CloseChannel } from '../components/modal/closeChannel/CloseChannel';
+import { useGetChannelInfoQuery } from '../graphql/queries/__generated__/getChannel.generated';
+import { ChannelDetails } from '../views/channels/channels/ChannelDetails';
 
 const S = {
   row: styled.div`
@@ -25,9 +23,9 @@ const S = {
 };
 
 const Channel = () => {
-  const { query } = useRouter();
+  const { slug } = useParams<{ slug: string }>();
 
-  const id = typeof query.slug === 'string' ? query.slug : '';
+  const id = slug || '';
 
   const { data, loading, error } = useGetChannelInfoQuery({
     variables: { id },
@@ -40,7 +38,7 @@ const Channel = () => {
         <S.row>
           <Link to={'/channels'}>Channels</Link>
           <ChevronRight size={18} />
-          <SubTitle>{`${query.slug}`}</SubTitle>
+          <SubTitle>{slug}</SubTitle>
         </S.row>
         <LoadingCard noTitle />
       </CardWithTitle>
@@ -53,7 +51,7 @@ const Channel = () => {
         <S.row>
           <Link to={'/channels'}>Channels</Link>
           <ChevronRight size={18} />
-          <SubTitle>{`${query.slug}`}</SubTitle>
+          <SubTitle>{slug}</SubTitle>
         </S.row>
         <Card>
           <DarkSubTitle>
@@ -69,7 +67,7 @@ const Channel = () => {
       <S.row>
         <Link to={'/channels'}>Channels</Link>
         <ChevronRight size={18} />
-        <SubTitle>{`${query.slug}`}</SubTitle>
+        <SubTitle>{slug}</SubTitle>
       </S.row>
       <Card>
         <ChannelDetails
@@ -93,14 +91,10 @@ const Channel = () => {
   );
 };
 
-const Wrapped = () => (
+const ChannelDetailPage = () => (
   <GridWrapper>
     <Channel />
   </GridWrapper>
 );
 
-export default Wrapped;
-
-export async function getServerSideProps(context: NextPageContext) {
-  return await getProps(context);
-}
+export default ChannelDetailPage;

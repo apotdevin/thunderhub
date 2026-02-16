@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ViewModule } from './modules/view/view.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { WinstonModule } from 'nest-winston';
 import { AuthenticationModule } from './modules/security/security.module';
 import { FilesModule } from './modules/files/files.module';
@@ -124,8 +125,20 @@ export type JwtObjectType = {
           : combine(timestamp(), prettyPrint()),
       }),
     }),
-    // ViewModule has to be the last because of the wildcard controller
-    ViewModule,
+    ServeStaticModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => [
+        {
+          rootPath: join(__dirname, '..', '..', 'src', 'client', 'dist'),
+          serveRoot: config.get('basePath') || '/',
+          exclude: [
+            `${config.get('basePath') || ''}/graphql*`,
+            `${config.get('basePath') || ''}/socket.io*`,
+          ],
+        },
+      ],
+    }),
   ],
 })
 export class AppModule {}

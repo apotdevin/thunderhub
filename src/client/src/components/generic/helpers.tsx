@@ -9,7 +9,7 @@ import {
 import { X, Copy } from 'react-feather';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
-import getConfig from 'next/config';
+import { config } from '../../config/thunderhubConfig';
 import {
   SmallLink,
   DarkSubTitle,
@@ -19,8 +19,7 @@ import {
 } from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
 
-const { publicRuntimeConfig } = getConfig();
-const { disableLinks, mempoolUrl } = publicRuntimeConfig;
+const { disableLinks, mempoolUrl } = config;
 
 export const shorten = (text: string, length?: number): string => {
   if (!text) return '';

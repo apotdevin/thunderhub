@@ -1,5 +1,5 @@
 import React from 'react';
-import getConfig from 'next/config';
+import { config } from '../../config/thunderhubConfig';
 import { Section } from '../../components/section/Section';
 import { Link } from '../../components/link/Link';
 import { Emoji } from '../../components/emoji/Emoji';
@@ -16,13 +16,12 @@ import {
   FooterRow,
   FooterCenterText,
 } from './Footer.styled';
-import { useRouter } from 'next/router';
+import { useLocation } from 'react-router-dom';
 
-const { publicRuntimeConfig } = getConfig();
-const { npmVersion } = publicRuntimeConfig;
+const { npmVersion } = config;
 
 export const Footer = () => {
-  const { pathname } = useRouter();
+  const { pathname } = useLocation();
 
   return (
     <FooterWrapper>

@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
-import { SettingsLine } from '../../../pages/settings';
+import { useNavigate } from 'react-router-dom';
+import { SettingsLine } from '../../pages/SettingsPage';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
   Card,
@@ -9,7 +9,7 @@ import {
 } from '../../components/generic/Styled';
 
 export const DashboardSettings = () => {
-  const { push } = useRouter();
+  const navigate = useNavigate();
 
   return (
     <CardWithTitle>
@@ -17,7 +17,10 @@ export const DashboardSettings = () => {
       <Card>
         <SettingsLine>
           <Sub4Title>Widgets</Sub4Title>
-          <ColorButton arrow={true} onClick={() => push('/settings/dashboard')}>
+          <ColorButton
+            arrow={true}
+            onClick={() => navigate('/settings/dashboard')}
+          >
             Change
           </ColorButton>
         </SettingsLine>
