@@ -947,7 +947,6 @@ export type Query = {
   __typename?: 'Query';
   decodeRequest: DecodeInvoice;
   getAccount: ServerAccount;
-  getAccountingReport: Scalars['String']['output'];
   getAmbossLoginToken: Scalars['String']['output'];
   getAmbossUser?: Maybe<AmbossUser>;
   getBackups: Scalars['String']['output'];
@@ -996,14 +995,6 @@ export type Query = {
 
 export type QueryDecodeRequestArgs = {
   request: Scalars['String']['input'];
-};
-
-export type QueryGetAccountingReportArgs = {
-  category?: InputMaybe<Scalars['String']['input']>;
-  currency?: InputMaybe<Scalars['String']['input']>;
-  fiat?: InputMaybe<Scalars['String']['input']>;
-  month?: InputMaybe<Scalars['String']['input']>;
-  year?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type QueryGetAmbossLoginTokenArgs = {
