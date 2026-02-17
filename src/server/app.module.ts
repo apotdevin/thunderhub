@@ -16,7 +16,7 @@ import { transports, format } from 'winston';
 import configuration from './config/configuration';
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
-import { WsModule } from './modules/ws/ws.module';
+import { SseModule } from './modules/sse/sse.module';
 import { SubModule } from './modules/sub/sub.module';
 import { ClientConfigModule } from './modules/clientConfig/clientConfig.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -50,7 +50,7 @@ export type JwtObjectType = {
   imports: [
     AuthenticationModule,
     SubModule,
-    WsModule,
+    SseModule,
     ClientConfigModule,
     ApiModule,
     NodeModule,
@@ -136,7 +136,6 @@ export type JwtObjectType = {
           serveRoot: config.get('basePath') || '/',
           exclude: [
             `${config.get('basePath') || ''}/graphql*`,
-            `${config.get('basePath') || ''}/socket.io*`,
             `${config.get('basePath') || ''}/api*`,
           ],
         },

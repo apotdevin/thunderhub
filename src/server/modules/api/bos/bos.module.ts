@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AccountsModule } from '../../accounts/accounts.module';
-import { WsModule } from '../../ws/ws.module';
+import { SseModule } from '../../sse/sse.module';
 import { BosResolver } from './bos.resolver';
 
 @Module({
-  imports: [WsModule, AccountsModule],
+  imports: [SseModule, AccountsModule],
   providers: [BosResolver],
 })
 export class BosModule {}

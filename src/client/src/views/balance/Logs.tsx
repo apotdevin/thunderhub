@@ -6,7 +6,7 @@ import {
   SubCard,
   SubTitle,
 } from '../../components/generic/Styled';
-import { useSocket, useSocketEvent } from '../../hooks/UseSocket';
+import { useSse, useSseEvent } from '../../hooks/useSse';
 import { btcToSat, formatSats } from '../../utils/helpers';
 
 type RebalanceProps = {
@@ -18,8 +18,8 @@ export const RebalanceLogs: FC<RebalanceProps> = ({
   messages,
   setMessages,
 }) => {
-  const { socket } = useSocket();
-  const { lastMessage } = useSocketEvent(socket, 'rebalance');
+  useSse();
+  const { lastMessage } = useSseEvent('rebalance');
 
   useEffect(() => {
     if (!lastMessage) return;

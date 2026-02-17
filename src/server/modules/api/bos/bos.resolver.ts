@@ -12,7 +12,7 @@ import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { to } from 'src/server/utils/async';
 import { BosRebalanceResult, RebalanceResponseType } from './bos.types';
-import { WsService } from '../../ws/ws.service';
+import { SseService } from '../../sse/sse.service';
 import { stripAnsi } from 'src/server/utils/string';
 import { auto, map, each } from 'async';
 import { getWalletInfo } from 'lightning';
@@ -27,7 +27,7 @@ type NodeType = {
 @Resolver()
 export class BosResolver {
   constructor(
-    private wsService: WsService,
+    private sseService: SseService,
     private accountsService: AccountsService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
@@ -115,15 +115,15 @@ export class BosResolver {
           };
         }
 
-        this.wsService.emit(user.id, 'rebalance', payload);
+        this.sseService.emit(user.id, 'rebalance', payload);
         this.logger.info(message, args);
       },
       warn: (message, ...args) => {
-        this.wsService.emit(user.id, 'rebalance', message);
+        this.sseService.emit(user.id, 'rebalance', message);
         this.logger.warn(message, args);
       },
       error: (message, ...args) => {
-        this.wsService.emit(user.id, 'rebalance', message);
+        this.sseService.emit(user.id, 'rebalance', message);
         this.logger.error(message, args);
       },
     };

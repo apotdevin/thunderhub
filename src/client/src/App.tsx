@@ -14,7 +14,7 @@ import { Footer } from './layouts/footer/Footer';
 import { PageWrapper, HeaderBodyWrapper } from './layouts/Layout.styled';
 import { ToastContainer } from 'react-toastify';
 import { useListener } from './hooks/UseListener';
-import { SocketProvider } from './context/SocketContext';
+import { SseProvider } from './context/SseContext';
 import { config } from './config/thunderhubConfig';
 import { LoadingCard } from './components/loading/LoadingCard';
 import { useGetNodeInfoQuery } from './graphql/queries/__generated__/getNodeInfo.generated';
@@ -174,13 +174,13 @@ export default function App() {
       <ApolloProvider client={apolloClient}>
         <ConfigProvider initialConfig={{ theme: themeCookie }}>
           <BaseProvider initialHasToken={false}>
-            <SocketProvider>
+            <SseProvider>
               <ContextProvider>
                 <Wrapper>
                   <AuthenticatedRoutes />
                 </Wrapper>
               </ContextProvider>
-            </SocketProvider>
+            </SseProvider>
           </BaseProvider>
         </ConfigProvider>
       </ApolloProvider>
