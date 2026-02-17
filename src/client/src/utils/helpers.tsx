@@ -1,4 +1,3 @@
-import numeral from 'numeral';
 import { SatoshiSymbol } from '../components/satoshi/Satoshi';
 import { unSelectedNavButton } from '../styles/Themes';
 import styled from 'styled-components';
@@ -9,14 +8,17 @@ const DarkUnit = styled.span`
   color: ${unSelectedNavButton};
 `;
 
+const fmt1 = (n: number) =>
+  n.toLocaleString('en-US', { maximumFractionDigits: 1 });
+
 const getValueString = (amount: number): string => {
   if (amount >= 100000) {
-    return `${numeral(amount / 1000000).format('0,0.[0]')}m`;
+    return `${fmt1(amount / 1000000)}m`;
   }
   if (amount >= 1000) {
-    return `${numeral(amount / 1000).format('0,0.[0]')}k`;
+    return `${fmt1(amount / 1000)}k`;
   }
-  return `${numeral(amount).format('0,0.[0]')}`;
+  return `${fmt1(amount)}`;
 };
 
 interface GetNumberProps {
@@ -50,7 +52,7 @@ export const getValue = ({
   }
 
   if (correctCurrency === 'ppm') {
-    const amount = numeral(value).format('0,0.[000]');
+    const amount = value.toLocaleString('en-US', { maximumFractionDigits: 3 });
     return noUnit ? amount : `${amount} ppm`;
   }
 
@@ -71,7 +73,7 @@ export const getValue = ({
   if (correctCurrency === 'sat') {
     const breakAmount = breakNumber
       ? getValueString(value)
-      : numeral(value).format('0,0.[000]');
+      : value.toLocaleString('en-US', { maximumFractionDigits: 3 });
 
     if (noUnit) {
       return `${breakAmount}`;
@@ -96,18 +98,23 @@ export const getValue = ({
     );
   }
 
-  const amountInFiat = ((value / 100000000) * price).toFixed(2);
+  const amountInFiat = (value / 100000000) * price;
+  const fiatFormatted = amountInFiat.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
   return noUnit ? (
-    numeral(amountInFiat).format('0,0.00')
+    fiatFormatted
   ) : (
     <>
-      {numeral(amountInFiat).format('0,0.00')}
+      {fiatFormatted}
       <DarkUnit className="ml-1">{symbol}</DarkUnit>
     </>
   );
 };
 
-export const formatSats = (value: number) => numeral(value).format('0,0.[000]');
+export const formatSats = (value: number) =>
+  value.toLocaleString('en-US', { maximumFractionDigits: 3 });
 
 export const btcToSat = (value: number | string | null | undefined): number => {
   if (!value) return 0;

@@ -7,7 +7,6 @@ import {
   SingleLine,
 } from '../../components/generic/Styled';
 import { Text } from '../../components/typography/Styled';
-import numeral from 'numeral';
 import { toast } from 'react-toastify';
 import { usePushBackupMutation } from '../../graphql/mutations/__generated__/pushBackup.generated';
 import { getErrorContent } from '../../utils/error';
@@ -66,7 +65,10 @@ export const AmbossBackupsView = () => {
         <Separation />
         {renderLine(
           'Total Size Saved',
-          `${numeral(total).format('0.[0000]')} MB`
+          `${total.toLocaleString('en-US', {
+            useGrouping: false,
+            maximumFractionDigits: 4,
+          })} MB`
         )}
         <Separation />
       </>

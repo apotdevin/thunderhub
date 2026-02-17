@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import Modal from '../../components/modal/ReactModal';
-import numeral from 'numeral';
 import { themeColors } from '../../styles/Themes';
 import {
   CardWithTitle,
@@ -66,9 +65,11 @@ export const InterfaceSettings = () => {
           >
             <SingleLine>
               {key}
-              <DarkSubTitle>{`${element.symbol} ${numeral(element.last).format(
-                '0,0'
-              )}`}</DarkSubTitle>
+              <DarkSubTitle>{`${element.symbol} ${Number(
+                element.last
+              ).toLocaleString('en-US', {
+                maximumFractionDigits: 0,
+              })}`}</DarkSubTitle>
               <ColorButton
                 onClick={() => handleFiatClick(key)}
                 disabled={isCurrent}
