@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Radio, Copy, X } from 'lucide-react';
 import styled from 'styled-components';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { renderLine } from '../../../components/generic/helpers';
 import { useGetNodeInfoQuery } from '../../../graphql/queries/__generated__/getNodeInfo.generated';
@@ -101,25 +100,31 @@ export const ConnectCard = () => {
           </Tile>
           <ButtonRow>
             {onionAddress ? (
-              <CopyToClipboard
-                text={onionAddress}
-                onCopy={() => toast.success('Onion Address Copied')}
+              <ColorButton
+                fullWidth={true}
+                withMargin={'0 4px 0 0'}
+                onClick={() =>
+                  navigator.clipboard
+                    .writeText(onionAddress)
+                    .then(() => toast.success('Onion Address Copied'))
+                }
               >
-                <ColorButton fullWidth={true} withMargin={'0 4px 0 0'}>
-                  <Copy size={18} />
-                  <TextPadding>Onion</TextPadding>
-                </ColorButton>
-              </CopyToClipboard>
+                <Copy size={18} />
+                <TextPadding>Onion</TextPadding>
+              </ColorButton>
             ) : null}
             {normalAddress ? (
-              <CopyToClipboard
-                text={normalAddress}
-                onCopy={() => toast.success('Public Address Copied')}
+              <ColorButton
+                fullWidth={true}
+                withMargin={'0 0 0 4px'}
+                onClick={() =>
+                  navigator.clipboard
+                    .writeText(normalAddress)
+                    .then(() => toast.success('Public Address Copied'))
+                }
               >
-                <ColorButton fullWidth={true} withMargin={'0 0 0 4px'}>
-                  <Copy size={18} />
-                </ColorButton>
-              </CopyToClipboard>
+                <Copy size={18} />
+              </ColorButton>
             ) : null}
             <ColorButton
               fullWidth={true}

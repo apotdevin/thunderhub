@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCreateAddressMutation } from '../../../../graphql/mutations/__generated__/createAddress.generated';
 import { QRCodeSVG } from 'qrcode.react';
 import { Copy } from 'lucide-react';
@@ -91,15 +90,16 @@ export const ReceiveOnChainCard = () => {
           </QRWrapper>
           <Column>
             <WrapRequest>{data.createAddress}</WrapRequest>
-            <CopyToClipboard
-              text={data.createAddress}
-              onCopy={() => toast.success('Address Copied')}
+            <ColorButton
+              onClick={() =>
+                navigator.clipboard
+                  .writeText(data.createAddress)
+                  .then(() => toast.success('Address Copied'))
+              }
             >
-              <ColorButton>
-                <Copy size={18} />
-                Copy
-              </ColorButton>
-            </CopyToClipboard>
+              <Copy size={18} />
+              Copy
+            </ColorButton>
           </Column>
         </Responsive>
       ) : (

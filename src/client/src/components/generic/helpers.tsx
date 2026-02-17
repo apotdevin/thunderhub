@@ -6,7 +6,6 @@ import {
   isToday,
 } from 'date-fns';
 import { X, Copy } from 'lucide-react';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { config } from '../../config/thunderhubConfig';
 import {
@@ -45,11 +44,13 @@ export const addEllipsis = (
 };
 
 export const copyLink = (text: string) => (
-  <CopyToClipboard text={text} onCopy={() => toast.success('Copied')}>
-    <CopyIcon>
-      <Copy size={12} />
-    </CopyIcon>
-  </CopyToClipboard>
+  <CopyIcon
+    onClick={() =>
+      navigator.clipboard.writeText(text).then(() => toast.success('Copied'))
+    }
+  >
+    <Copy size={12} />
+  </CopyIcon>
 );
 
 export const getAddressLink = (transaction: string | null | undefined) => {

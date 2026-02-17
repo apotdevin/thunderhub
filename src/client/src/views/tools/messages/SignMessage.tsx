@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { X, Copy } from 'lucide-react';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { useSignMessageLazyQuery } from '../../../graphql/queries/__generated__/signMessage.generated';
 import { Input } from '../../../components/input';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
@@ -56,15 +55,16 @@ export const SignMessage = () => {
       <Separation />
       <Column>
         <WrapRequest>{signed}</WrapRequest>
-        <CopyToClipboard
-          text={signed}
-          onCopy={() => toast.success('Signature Copied')}
+        <ColorButton
+          onClick={() =>
+            navigator.clipboard
+              .writeText(signed)
+              .then(() => toast.success('Signature Copied'))
+          }
         >
-          <ColorButton>
-            <Copy size={18} />
-            Copy
-          </ColorButton>
-        </CopyToClipboard>
+          <Copy size={18} />
+          Copy
+        </ColorButton>
       </Column>
     </>
   );

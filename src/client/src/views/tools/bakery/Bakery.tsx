@@ -20,7 +20,6 @@ import { getErrorContent } from '../../../utils/error';
 import { useMutationResultWithReset } from '../../../hooks/UseMutationWithReset';
 import Modal from '../../../components/modal/ReactModal';
 import { shorten } from '../../../components/generic/helpers';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { Copy } from 'lucide-react';
 import { NetworkInfoInput } from '../../../graphql/types';
 
@@ -87,29 +86,31 @@ export const Bakery = () => {
         <SubTitle>Base64 Encoded</SubTitle>
         <SingleLine>
           <Sub4Title>{shorten(base)}</Sub4Title>
-          <CopyToClipboard
-            text={base}
-            onCopy={() => toast.success('Macaroon Copied')}
+          <ColorButton
+            onClick={() =>
+              navigator.clipboard
+                .writeText(base)
+                .then(() => toast.success('Macaroon Copied'))
+            }
           >
-            <ColorButton>
-              <Copy size={18} />
-              Copy
-            </ColorButton>
-          </CopyToClipboard>
+            <Copy size={18} />
+            Copy
+          </ColorButton>
         </SingleLine>
         <Separation />
         <SubTitle>Hex Encoded</SubTitle>
         <SingleLine>
           <Sub4Title>{shorten(hex)}</Sub4Title>
-          <CopyToClipboard
-            text={hex}
-            onCopy={() => toast.success('Macaroon Copied')}
+          <ColorButton
+            onClick={() =>
+              navigator.clipboard
+                .writeText(hex)
+                .then(() => toast.success('Macaroon Copied'))
+            }
           >
-            <ColorButton>
-              <Copy size={18} />
-              Copy
-            </ColorButton>
-          </CopyToClipboard>
+            <Copy size={18} />
+            Copy
+          </ColorButton>
         </SingleLine>
       </>
     );

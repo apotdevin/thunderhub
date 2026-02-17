@@ -3,7 +3,6 @@ import { Copy, CheckCircle } from 'lucide-react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import { QRCodeSVG } from 'qrcode.react';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCreateInvoiceMutation } from '../../../../graphql/mutations/__generated__/createInvoice.generated';
 import { Title } from '../../../../layouts/footer/Footer.styled';
 import { Link } from '../../../../components/link/Link';
@@ -114,15 +113,16 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
         </QRWrapper>
         <Column>
           <WrapRequest>{request}</WrapRequest>
-          <CopyToClipboard
-            text={request}
-            onCopy={() => toast.success('Request Copied')}
+          <ColorButton
+            onClick={() =>
+              navigator.clipboard
+                .writeText(request)
+                .then(() => toast.success('Request Copied'))
+            }
           >
-            <ColorButton>
-              <Copy size={18} />
-              Copy
-            </ColorButton>
-          </CopyToClipboard>
+            <Copy size={18} />
+            Copy
+          </ColorButton>
         </Column>
       </Responsive>
     </>
