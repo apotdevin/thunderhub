@@ -22,7 +22,6 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { ChatModule } from './chat/chat.module';
 import { BoltzModule } from './boltz/boltz.module';
-import { BosModule } from './bos/bos.module';
 import { UserConfigModule } from './userConfig/userConfig.module';
 
 @Module({
@@ -51,7 +50,6 @@ import { UserConfigModule } from './userConfig/userConfig.module';
     InvoicesModule,
     ChatModule,
     BoltzModule,
-    BosModule,
   ],
 })
 export class ApiModule {}

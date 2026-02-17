@@ -35,7 +35,6 @@ import PeersPage from './pages/PeersPage';
 import TransactionsPage from './pages/TransactionsPage';
 import ForwardsPage from './pages/ForwardsPage';
 import ChainPage from './pages/ChainPage';
-import RebalancePage from './pages/RebalancePage';
 import ToolsPage from './pages/ToolsPage';
 import StatsPage from './pages/StatsPage';
 import SwapPage from './pages/SwapPage';
@@ -140,7 +139,6 @@ const AuthenticatedRoutes = () => (
     <Route path="/transactions" element={<TransactionsPage />} />
     <Route path="/forwards" element={<ForwardsPage />} />
     <Route path="/chain" element={<ChainPage />} />
-    <Route path="/rebalance" element={<RebalancePage />} />
     <Route path="/tools" element={<ToolsPage />} />
     <Route path="/stats" element={<StatsPage />} />
     <Route path="/swap" element={<SwapPage />} />

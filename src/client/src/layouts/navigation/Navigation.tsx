@@ -8,7 +8,6 @@ import {
   Shield,
   GitPullRequest,
   Link as LinkIcon,
-  Repeat,
   Users,
   MessageCircle,
   BarChart2,
@@ -121,7 +120,6 @@ const HOME = '/';
 const DASHBOARD = '/dashboard';
 const PEERS = '/peers';
 const CHANNEL = '/channels';
-const REBALANCE = '/rebalance';
 const TRANS = '/transactions';
 const FORWARDS = '/forwards';
 const CHAIN_TRANS = '/chain';
@@ -178,7 +176,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Dashboard', DASHBOARD, Grid, sidebar)}
       {renderNavButton('Peers', PEERS, Users, sidebar)}
       {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
-      {renderNavButton('Rebalance', REBALANCE, Repeat, sidebar)}
       {renderNavButton('Transactions', TRANS, Server, sidebar)}
       {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
       {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
@@ -195,7 +192,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Dashboard', DASHBOARD, Grid)}
       {renderBurgerNav('Peers', PEERS, Users)}
       {renderBurgerNav('Channels', CHANNEL, Cpu)}
-      {renderBurgerNav('Rebalance', REBALANCE, Repeat)}
       {renderBurgerNav('Transactions', TRANS, Server)}
       {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}

@@ -48,13 +48,3 @@ export const ChannelViewLink = () => {
     </S.wrapper>
   );
 };
-
-export const RebalanceViewLink = () => {
-  return (
-    <S.wrapper>
-      <Link href={'/rebalance'}>
-        <ColorButton fullWidth={true}>Rebalance</ColorButton>
-      </Link>
-    </S.wrapper>
-  );
-};

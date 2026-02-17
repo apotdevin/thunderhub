@@ -158,41 +158,6 @@ export type BoltzSwapTransaction = {
   id?: Maybe<Scalars['String']['output']>;
 };
 
-export type BosDecrease = {
-  __typename?: 'BosDecrease';
-  decreased_inbound_on: Scalars['String']['output'];
-  liquidity_inbound: Scalars['String']['output'];
-  liquidity_inbound_opening?: Maybe<Scalars['String']['output']>;
-  liquidity_inbound_pending?: Maybe<Scalars['String']['output']>;
-  liquidity_outbound: Scalars['String']['output'];
-  liquidity_outbound_opening?: Maybe<Scalars['String']['output']>;
-  liquidity_outbound_pending?: Maybe<Scalars['String']['output']>;
-};
-
-export type BosIncrease = {
-  __typename?: 'BosIncrease';
-  increased_inbound_on: Scalars['String']['output'];
-  liquidity_inbound: Scalars['String']['output'];
-  liquidity_inbound_opening?: Maybe<Scalars['String']['output']>;
-  liquidity_inbound_pending?: Maybe<Scalars['String']['output']>;
-  liquidity_outbound: Scalars['String']['output'];
-  liquidity_outbound_opening?: Maybe<Scalars['String']['output']>;
-  liquidity_outbound_pending?: Maybe<Scalars['String']['output']>;
-};
-
-export type BosRebalanceResult = {
-  __typename?: 'BosRebalanceResult';
-  decrease?: Maybe<BosDecrease>;
-  increase?: Maybe<BosIncrease>;
-  result?: Maybe<BosResult>;
-};
-
-export type BosResult = {
-  __typename?: 'BosResult';
-  rebalance_fees_spent: Scalars['String']['output'];
-  rebalanced: Scalars['String']['output'];
-};
-
 export type ChainAddressSend = {
   __typename?: 'ChainAddressSend';
   confirmationCount: Scalars['Float']['output'];
@@ -547,7 +512,6 @@ export type MessageType = {
 export type Mutation = {
   __typename?: 'Mutation';
   addPeer: Scalars['Boolean']['output'];
-  bosRebalance: BosRebalanceResult;
   claimBoltzTransaction: Scalars['String']['output'];
   closeChannel: OpenOrCloseChannel;
   createAddress: Scalars['String']['output'];
@@ -585,18 +549,6 @@ export type MutationAddPeerArgs = {
   publicKey?: InputMaybe<Scalars['String']['input']>;
   socket?: InputMaybe<Scalars['String']['input']>;
   url?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type MutationBosRebalanceArgs = {
-  avoid?: InputMaybe<Array<Scalars['String']['input']>>;
-  in_through?: InputMaybe<Scalars['String']['input']>;
-  max_fee?: InputMaybe<Scalars['Float']['input']>;
-  max_fee_rate?: InputMaybe<Scalars['Float']['input']>;
-  max_rebalance?: InputMaybe<Scalars['Float']['input']>;
-  node?: InputMaybe<Scalars['String']['input']>;
-  out_inbound?: InputMaybe<Scalars['Float']['input']>;
-  out_through?: InputMaybe<Scalars['String']['input']>;
-  timeout_minutes?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type MutationClaimBoltzTransactionArgs = {
