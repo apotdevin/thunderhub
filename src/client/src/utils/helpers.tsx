@@ -2,6 +2,7 @@ import numeral from 'numeral';
 import { SatoshiSymbol } from '../components/satoshi/Satoshi';
 import { unSelectedNavButton } from '../styles/Themes';
 import styled from 'styled-components';
+import { Bitcoin } from 'lucide-react';
 
 const DarkUnit = styled.span`
   font-size: 12px;
@@ -61,10 +62,10 @@ export const getValue = ({
     return noUnit ? (
       `${rounded}`
     ) : (
-      <>
-        <DarkUnit>₿</DarkUnit>
+      <span className="flex items-center">
+        <Bitcoin color={'grey'} size={16} />
         {rounded}
-      </>
+      </span>
     );
   }
   if (correctCurrency === 'sat') {
@@ -80,16 +81,18 @@ export const getValue = ({
       return (
         <>
           {breakAmount}
-          <DarkUnit as={'span'}>sats</DarkUnit>
+          <DarkUnit as={'span'} className="ml-1">
+            sats
+          </DarkUnit>
         </>
       );
     }
 
     return (
-      <>
+      <span className="flex items-center">
         {breakAmount}
         <SatoshiSymbol color={'grey'} transform={'translate(0,2)'} />
-      </>
+      </span>
     );
   }
 
@@ -99,7 +102,7 @@ export const getValue = ({
   ) : (
     <>
       {numeral(amountInFiat).format('0,0.00')}
-      <DarkUnit>{symbol}</DarkUnit>
+      <DarkUnit className="ml-1">{symbol}</DarkUnit>
     </>
   );
 };

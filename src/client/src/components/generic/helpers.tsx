@@ -56,20 +56,20 @@ export const getAddressLink = (transaction: string | null | undefined) => {
   if (!transaction) return null;
   if (config.disableLinks) {
     return (
-      <>
+      <span className="flex items-center">
         {shorten(transaction)}
         {copyLink(transaction)}
-      </>
+      </span>
     );
   }
   const link = `${config.mempoolUrl}/address/${transaction}`;
   return (
-    <>
+    <span className="flex items-center">
       <SmallLink href={link} target="_blank">
         {shorten(transaction)}
       </SmallLink>
       {copyLink(transaction)}
-    </>
+    </span>
   );
 };
 
@@ -77,30 +77,30 @@ export const getTransactionLink = (transaction: string | null | undefined) => {
   if (!transaction) return null;
   if (config.disableLinks) {
     return (
-      <>
+      <span className="flex items-center">
         {shorten(transaction)}
         {copyLink(transaction)}
-      </>
+      </span>
     );
   }
   const link = `${config.mempoolUrl}/tx/${transaction}`;
   return (
-    <>
+    <span className="flex items-center">
       <SmallLink href={link} target="_blank">
         {shorten(transaction)}
       </SmallLink>
       {copyLink(transaction)}
-    </>
+    </span>
   );
 };
 
 export const getWithCopy = (text: string | null | undefined) => {
   if (!text) return null;
   return (
-    <>
+    <span className="flex items-center">
       {shorten(text)}
       {copyLink(text)}
-    </>
+    </span>
   );
 };
 
@@ -114,7 +114,7 @@ export const getNodeLink = (
   const link = `https://amboss.space/node/${publicKey}`;
   const text = alias ? alias : shorten(publicKey);
   return (
-    <>
+    <span className="flex items-center">
       {config.disableLinks ? (
         text
       ) : (
@@ -123,14 +123,14 @@ export const getNodeLink = (
         </SmallLink>
       )}
       {copyLink(publicKey)}
-    </>
+    </span>
   );
 };
 
 export const getChannelLink = (id: string) => {
   const link = `https://amboss.space/edge/${id}`;
   return (
-    <>
+    <span className="flex items-center">
       {config.disableLinks ? (
         id
       ) : (
@@ -139,7 +139,7 @@ export const getChannelLink = (id: string) => {
         </SmallLink>
       )}
       {copyLink(id)}
-    </>
+    </span>
   );
 };
 

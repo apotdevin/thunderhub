@@ -121,7 +121,7 @@ export const Accounts = () => {
       size: 14,
     };
     return (
-      <div>
+      <div className="flex items-center">
         {type === 'sso' ? 'SSO Account' : name}
         <LockPadding>
           {loggedIn ? <Unlock {...props} /> : <Lock {...props} />}

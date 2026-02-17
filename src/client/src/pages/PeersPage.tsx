@@ -51,7 +51,7 @@ const PeersView = () => {
         header: 'Socket',
         accessorKey: 'socket',
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap flex items-center">
             {row.original.socket.includes('.onion') ? 'Tor' : 'Clearnet'}
             {copyLink(row.original.socket)}
           </div>
