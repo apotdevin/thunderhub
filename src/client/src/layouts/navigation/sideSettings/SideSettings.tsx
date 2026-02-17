@@ -4,7 +4,6 @@ import {
   Moon,
   ChevronLeft,
   ChevronRight,
-  Star,
   LucideProps,
 } from 'lucide-react';
 import styled from 'styled-components';
@@ -64,7 +63,7 @@ const BurgerPadding = styled(SingleLine)`
 const currencyArray = ['sat', 'btc', 'fiat'];
 const currencyNoFiatArray = ['sat', 'btc'];
 
-const themeArray = ['light', 'dark', 'night'];
+const themeArray = ['light', 'dark'];
 
 const currencyMap: { [key: string]: string } = {
   sat: 'S',
@@ -173,7 +172,6 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         <IconRow>
           {renderIcon('theme', 'light', '', false, Sun)}
           {renderIcon('theme', 'dark', '', false, Moon)}
-          {renderIcon('theme', 'night', '', false, Star)}
         </IconRow>
       </>
     );
@@ -190,7 +188,6 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         <IconRow>
           {renderIcon('theme', 'light', '', false, Sun)}
           {renderIcon('theme', 'dark', '', false, Moon)}
-          {renderIcon('theme', 'night', '', false, Star)}
         </IconRow>
       </BurgerPadding>
     );

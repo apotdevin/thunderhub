@@ -88,13 +88,7 @@ const Wrapper: React.FC<{ children?: ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const root = document.documentElement;
-    root.classList.remove('dark', 'night');
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else if (theme === 'night') {
-      root.classList.add('night');
-    }
+    document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
   const { data, loading, error } = useGetNodeInfoQuery({

@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 import { omit } from 'lodash';
 import { config } from '../config/thunderhubConfig';
 
-const themeTypes = ['dark', 'light', 'night'];
+const themeTypes = ['dark', 'light'];
 const currencyTypes = ['sat', 'btc', 'fiat'];
 
 export type channelBarStyleTypes =

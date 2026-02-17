@@ -1,4 +1,4 @@
-import { Star, Sun, Moon } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
 import { SingleButton } from '../../../../components/buttons/multiButton/MultiButton';
 import {
   useConfigDispatch,
@@ -36,12 +36,6 @@ export const ThemeSetting = () => {
         onClick={() => handleDispatch('dark')}
       >
         <Moon size={16} />
-      </SingleButton>
-      <SingleButton
-        selected={theme === 'night'}
-        onClick={() => handleDispatch('night')}
-      >
-        <Star size={16} />
       </SingleButton>
     </S.wrapper>
   );
