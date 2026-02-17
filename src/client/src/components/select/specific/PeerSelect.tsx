@@ -7,11 +7,10 @@ import { ValueProp } from '..';
 
 type PeerSelectProps = {
   title: string;
-  isMulti?: boolean;
   callback: (peer: Peer[]) => void;
 };
 
-export const PeerSelect = ({ title, isMulti, callback }: PeerSelectProps) => {
+export const PeerSelect = ({ title, callback }: PeerSelectProps) => {
   const { data, loading } = useGetPeersQuery();
 
   const peers = data?.getPeers || [];
@@ -55,7 +54,6 @@ export const PeerSelect = ({ title, isMulti, callback }: PeerSelectProps) => {
 
   return (
     <SelectWithDeco
-      isMulti={isMulti}
       loading={loading}
       title={title}
       options={options}

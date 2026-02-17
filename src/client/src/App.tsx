@@ -1,6 +1,5 @@
 import { FC, ReactNode, useEffect, lazy, Suspense } from 'react';
 import { StyleSheetManager, ThemeProvider } from 'styled-components';
-import { ModalProvider, BaseModalBackground } from 'styled-react-modal';
 import { ApolloProvider } from '@apollo/client';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -109,24 +108,22 @@ const Wrapper: React.FC<{ children?: ReactNode }> = ({ children }) => {
 
   return (
     <ThemeProvider theme={{ mode: isRoot ? 'light' : theme }}>
-      <ModalProvider backgroundComponent={BaseModalBackground}>
-        <GlobalStyles />
-        <PageWrapper>
-          <HeaderBodyWrapper>
-            <Header />
-            <Listener isRoot={isRoot} />
-            {checking ? (
-              <LoadingCard noCard={true} loadingHeight={'80vh'} />
-            ) : isRoot || authenticated ? (
-              children
-            ) : (
-              <NotAuthenticated />
-            )}
-          </HeaderBodyWrapper>
-          <Footer />
-          <ToastContainer theme={theme === 'light' ? 'light' : 'dark'} />
-        </PageWrapper>
-      </ModalProvider>
+      <GlobalStyles />
+      <PageWrapper>
+        <HeaderBodyWrapper>
+          <Header />
+          <Listener isRoot={isRoot} />
+          {checking ? (
+            <LoadingCard noCard={true} loadingHeight={'80vh'} />
+          ) : isRoot || authenticated ? (
+            children
+          ) : (
+            <NotAuthenticated />
+          )}
+        </HeaderBodyWrapper>
+        <Footer />
+        <ToastContainer theme={theme === 'light' ? 'light' : 'dark'} />
+      </PageWrapper>
     </ThemeProvider>
   );
 };

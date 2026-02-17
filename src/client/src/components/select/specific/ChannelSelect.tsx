@@ -7,14 +7,12 @@ import { ValueProp } from '..';
 
 type ChannelSelectProps = {
   title: string;
-  isMulti?: boolean;
   maxWidth?: string;
   callback: (peer: Channel[]) => void;
 };
 
 export const ChannelSelect = ({
   title,
-  isMulti,
   maxWidth,
   callback,
 }: ChannelSelectProps) => {
@@ -59,7 +57,6 @@ export const ChannelSelect = ({
 
   return (
     <SelectWithDeco
-      isMulti={isMulti}
       loading={loading}
       title={title}
       options={options}

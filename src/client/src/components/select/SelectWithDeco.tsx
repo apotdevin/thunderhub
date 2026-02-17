@@ -33,7 +33,6 @@ const InputLine = styled(SingleLine)`
 type InputWithDecoProps = {
   title: string;
   options: ValueProp[];
-  isMulti?: boolean;
   noInput?: boolean;
   loading?: boolean;
   maxWidth?: string;
@@ -46,7 +45,6 @@ export const SelectWithDeco: FC<InputWithDecoProps> = ({
   title,
   noInput,
   options,
-  isMulti,
   loading,
   maxWidth,
   callback,
@@ -64,7 +62,6 @@ export const SelectWithDeco: FC<InputWithDecoProps> = ({
       case !noInput:
         return (
           <Select
-            isMulti={isMulti}
             maxWidth={maxWidth || '500px'}
             options={options}
             callback={callback}
@@ -89,7 +86,6 @@ type InputWithDecoAndValueProps = {
   title: string;
   value: ValueProp | undefined;
   options: ValueProp[];
-  isMulti?: boolean;
   noInput?: boolean;
   loading?: boolean;
   callback: (value: ValueProp[]) => void;
@@ -101,7 +97,6 @@ export const SelectWithDecoAndValue: React.FC<InputWithDecoAndValueProps> = ({
   title,
   noInput,
   options,
-  isMulti,
   loading,
   callback,
   value,
@@ -119,7 +114,6 @@ export const SelectWithDecoAndValue: React.FC<InputWithDecoAndValueProps> = ({
       case !noInput:
         return (
           <SelectWithValue
-            isMulti={isMulti}
             maxWidth={'500px'}
             options={options}
             callback={callback}
