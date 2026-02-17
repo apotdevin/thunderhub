@@ -6,13 +6,11 @@ import {
   MessageCircle,
   Settings,
   Heart,
-  Activity,
   LucideProps,
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useBaseConnect } from '../../hooks/UseBaseConnect';
 import { LogoutButton } from '../../components/logoutButton';
-import { useConfigState } from '../../context/ConfigContext';
 import { headerColor, headerTextColor } from '../../styles/Themes';
 import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
@@ -36,13 +34,11 @@ const MAIN = '/login';
 const CHAT = '/chat';
 const DONATIONS = '/leaderboard';
 const SETTINGS = '/settings';
-const LN_MARKETS = '/lnmarkets';
 
 export const Header = () => {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
 
-  const { lnMarketsAuth } = useConfigState();
   const { connected } = useBaseConnect();
 
   const isRoot = pathname === MAIN || pathname === SSO;
@@ -70,7 +66,6 @@ export const Header = () => {
       <ViewSwitch hideMobile={true}>
         <HeaderButtons>
           {connected && renderNavButton(DONATIONS, Heart)}
-          {lnMarketsAuth && renderNavButton(LN_MARKETS, Activity)}
           {renderNavButton(CHAT, MessageCircle)}
           {renderNavButton(SETTINGS, Settings)}
           <LogoutButton />

@@ -18,7 +18,6 @@ import { DecodeCard } from './decode/Decode';
 import { SupportCard } from './donate/DonateCard';
 import { SupportBar } from './donate/DonateContent';
 import { LnUrlCard } from './lnurl';
-import { LnMarketsCard } from './lnmarkets';
 import { AmbossCard } from './amboss/AmbossCard';
 import { LightningAddressCard } from './lightningAddress/LightningAddress';
 
@@ -109,7 +108,6 @@ export const QuickActions = () => {
               <Command size={24} />
               <QuickTitle>LNURL</QuickTitle>
             </QuickCard>
-            <LnMarketsCard />
           </QuickRow>
         );
     }

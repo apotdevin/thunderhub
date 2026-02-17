@@ -22,7 +22,6 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { ChatModule } from './chat/chat.module';
 import { BoltzModule } from './boltz/boltz.module';
-import { LnMarketsModule } from './lnmarkets/lnmarkets.module';
 import { BosModule } from './bos/bos.module';
 import { UserConfigModule } from './userConfig/userConfig.module';
 
@@ -52,7 +51,6 @@ import { UserConfigModule } from './userConfig/userConfig.module';
     InvoicesModule,
     ChatModule,
     BoltzModule,
-    LnMarketsModule,
     BosModule,
   ],
 })

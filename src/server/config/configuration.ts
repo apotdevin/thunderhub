@@ -26,8 +26,6 @@ type Urls = {
   blockHeight: string;
   boltz: string;
   github: string;
-  lnMarkets: string;
-  lnMarketsExchange: string;
 };
 
 type Headers = {
@@ -65,7 +63,6 @@ export type ClientConfig = {
   fetchPrices: boolean;
   fetchFees: boolean;
   disableLinks: boolean;
-  disableLnMarkets: boolean;
   noVersionCheck: boolean;
   logoutUrl: string;
   disable2FA: boolean;
@@ -120,8 +117,6 @@ export default (): ConfigType => {
     tbase: 'https://api.thunderhub.io/api/graphql',
     ticker: 'https://blockchain.info/ticker',
     github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
-    lnMarkets: 'https://api.lnmarkets.com/v1',
-    lnMarketsExchange: 'https://lnmarkets.com',
     boltz: 'https://api.boltz.exchange',
   };
 
@@ -176,7 +171,6 @@ export default (): ConfigType => {
     fetchPrices: process.env.FETCH_PRICES !== 'false',
     fetchFees: process.env.FETCH_FEES !== 'false',
     disableLinks: process.env.DISABLE_LINKS === 'true',
-    disableLnMarkets: process.env.DISABLE_LNMARKETS === 'true',
     noVersionCheck: process.env.NO_VERSION_CHECK === 'true',
     logoutUrl: process.env.LOGOUT_URL || '',
     disable2FA: process.env.DISABLE_TWOFA === 'true',

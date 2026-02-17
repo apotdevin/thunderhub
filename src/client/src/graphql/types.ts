@@ -525,16 +525,6 @@ export type LightningNodeSocialInfo = {
   socials?: Maybe<NodeSocial>;
 };
 
-export type LnMarketsUserInfo = {
-  __typename?: 'LnMarketsUserInfo';
-  account_type?: Maybe<Scalars['String']['output']>;
-  balance?: Maybe<Scalars['String']['output']>;
-  last_ip?: Maybe<Scalars['String']['output']>;
-  linkingpublickey?: Maybe<Scalars['String']['output']>;
-  uid?: Maybe<Scalars['String']['output']>;
-  username?: Maybe<Scalars['String']['output']>;
-};
-
 export type LnUrlRequest = ChannelRequest | PayRequest | WithdrawRequest;
 
 export type Message = {
@@ -570,10 +560,6 @@ export type Mutation = {
   getAuthToken: Scalars['Boolean']['output'];
   getSessionToken: Scalars['String']['output'];
   keysend: PayInvoice;
-  lnMarketsDeposit: Scalars['Boolean']['output'];
-  lnMarketsLogin: AuthResponse;
-  lnMarketsLogout: Scalars['Boolean']['output'];
-  lnMarketsWithdraw: Scalars['Boolean']['output'];
   lnUrlAuth: AuthResponse;
   lnUrlChannel: Scalars['String']['output'];
   lnUrlPay: PaySuccess;
@@ -678,14 +664,6 @@ export type MutationGetSessionTokenArgs = {
 export type MutationKeysendArgs = {
   destination?: InputMaybe<Scalars['String']['input']>;
   tokens: Scalars['Float']['input'];
-};
-
-export type MutationLnMarketsDepositArgs = {
-  amount: Scalars['Float']['input'];
-};
-
-export type MutationLnMarketsWithdrawArgs = {
-  amount: Scalars['Float']['input'];
 };
 
 export type MutationLnUrlAuthArgs = {
@@ -1042,9 +1020,6 @@ export type Query = {
   getLatestVersion: Scalars['String']['output'];
   getLightningAddressInfo: PayRequest;
   getLiquidityPerUsd: Scalars['String']['output'];
-  getLnMarketsStatus: Scalars['String']['output'];
-  getLnMarketsUrl: Scalars['String']['output'];
-  getLnMarketsUserInfo: LnMarketsUserInfo;
   getMessages: GetMessages;
   getNetworkInfo: NetworkInfo;
   getNode: Node;

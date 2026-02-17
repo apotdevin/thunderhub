@@ -7,7 +7,6 @@ interface ThunderhubConfig {
   fetchPrices: boolean;
   fetchFees: boolean;
   disableLinks: boolean;
-  disableLnMarkets: boolean;
   noVersionCheck: boolean;
   logoutUrl: string;
   disable2FA: boolean;
@@ -23,7 +22,6 @@ export const config: ThunderhubConfig = {
   fetchPrices: true,
   fetchFees: true,
   disableLinks: false,
-  disableLnMarkets: false,
   noVersionCheck: false,
   logoutUrl: '',
   disable2FA: false,

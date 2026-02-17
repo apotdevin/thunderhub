@@ -39,7 +39,6 @@ import RebalancePage from './pages/RebalancePage';
 import ToolsPage from './pages/ToolsPage';
 import StatsPage from './pages/StatsPage';
 import SwapPage from './pages/SwapPage';
-import LnMarketsPage from './pages/LnMarketsPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ChatPage from './pages/ChatPage';
 import SettingsPage from './pages/SettingsPage';
@@ -145,7 +144,6 @@ const AuthenticatedRoutes = () => (
     <Route path="/tools" element={<ToolsPage />} />
     <Route path="/stats" element={<StatsPage />} />
     <Route path="/swap" element={<SwapPage />} />
-    <Route path="/lnmarkets" element={<LnMarketsPage />} />
     <Route path="/leaderboard" element={<LeaderboardPage />} />
     <Route path="/chat" element={<ChatPage />} />
     <Route path="/settings" element={<SettingsPage />} />

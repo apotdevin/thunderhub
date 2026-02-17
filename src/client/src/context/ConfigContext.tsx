@@ -39,7 +39,6 @@ export type maxSatValueType = 'auto' | 1000000 | 5000000 | 10000000 | 16777215;
 type State = {
   currency: string;
   theme: string;
-  lnMarketsAuth: boolean;
   sidebar: boolean;
   fetchFees: boolean;
   fetchPrices: boolean;
@@ -67,7 +66,6 @@ type ActionType =
       type: 'change' | 'initChange';
       currency?: string;
       theme?: string;
-      lnMarketsAuth?: boolean;
       sidebar?: boolean;
       fetchFees?: boolean;
       fetchPrices?: boolean;
@@ -96,7 +94,6 @@ const getInitialState = (): State => {
   return {
     currency: currencyTypes.indexOf(defC) > -1 ? defC : 'sat',
     theme: themeTypes.indexOf(defT) > -1 ? defT : 'dark',
-    lnMarketsAuth: false,
     sidebar: true,
     fetchFees: config.fetchFees,
     fetchPrices: config.fetchPrices,
@@ -129,10 +126,7 @@ const stateReducer = (state: State, action: ActionType): State => {
         ...state,
         ...settings,
       };
-      localStorage.setItem(
-        'config',
-        JSON.stringify(omit(newState, 'theme', 'lnMarketsAuth'))
-      );
+      localStorage.setItem('config', JSON.stringify(omit(newState, 'theme')));
       return newState;
     }
     case 'themeChange': {
