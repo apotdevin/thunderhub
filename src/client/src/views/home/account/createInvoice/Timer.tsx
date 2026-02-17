@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { DarkSubTitle } from '../../../../components/generic/Styled';
 import styled from 'styled-components';
 
@@ -12,10 +12,7 @@ type TimerProps = {
   initialSeconds: number;
 };
 
-export const Timer: React.FC<TimerProps> = ({
-  initialMinute,
-  initialSeconds,
-}) => {
+export const Timer: FC<TimerProps> = ({ initialMinute, initialSeconds }) => {
   const [minutes, setMinutes] = useState(initialMinute);
   const [seconds, setSeconds] = useState(initialSeconds);
 

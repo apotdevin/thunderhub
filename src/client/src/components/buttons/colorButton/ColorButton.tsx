@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import { ChevronRight } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
@@ -134,7 +134,7 @@ export interface ColorButtonProps {
   children?: ReactNode;
 }
 
-export const ColorButton: React.FC<ColorButtonProps> = ({
+export const ColorButton: FC<ColorButtonProps> = ({
   loading,
   color,
   disabled,

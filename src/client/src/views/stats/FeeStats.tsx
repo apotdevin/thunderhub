@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { useGetFeeHealthQuery } from '../../graphql/queries/__generated__/getFeeHealth.generated';
 import {
   SubCard,
@@ -65,7 +65,7 @@ const FeeStatCard = ({
   };
 
   return (
-    <React.Fragment key={channel.id || ''}>
+    <Fragment key={channel.id || ''}>
       <SubCard>
         <Clickable onClick={() => openSet(open ? 0 : index)}>
           <ResponsiveLine>
@@ -75,18 +75,18 @@ const FeeStatCard = ({
         </Clickable>
         {open && renderDetails()}
       </SubCard>
-    </React.Fragment>
+    </Fragment>
   );
 };
 
 export const FeeStats = () => {
-  const [open, openSet] = React.useState(0);
-  const [openTwo, openTwoSet] = React.useState(0);
+  const [open, openSet] = useState(0);
+  const [openTwo, openTwoSet] = useState(0);
   const dispatch = useStatsDispatch();
 
   const { data, loading } = useGetFeeHealthQuery({ ssr: false });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data && data.getFeeHealth) {
       dispatch({
         type: 'change',

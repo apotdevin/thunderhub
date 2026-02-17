@@ -1,4 +1,3 @@
-import React from 'react';
 import { config } from '../../config/thunderhubConfig';
 import { Section } from '../../components/section/Section';
 import { Link } from '../../components/link/Link';

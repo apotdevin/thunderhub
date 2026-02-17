@@ -8,7 +8,7 @@ import {
   Edit,
   X,
 } from 'lucide-react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import { BalanceBars } from '../../../components/balance';
 import {

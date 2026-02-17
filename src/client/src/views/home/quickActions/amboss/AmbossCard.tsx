@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useLoginAmbossMutation } from '../../../../graphql/mutations/__generated__/loginAmboss.generated';
 import { useGetAmbossLoginTokenLazyQuery } from '../../../../graphql/queries/__generated__/getAmbossLoginToken.generated';
 import { useAmbossUser } from '../../../../hooks/UseAmbossUser';

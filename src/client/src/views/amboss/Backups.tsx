@@ -7,7 +7,7 @@ import {
   SingleLine,
 } from '../../components/generic/Styled';
 import { Text } from '../../components/typography/Styled';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { usePushBackupMutation } from '../../graphql/mutations/__generated__/pushBackup.generated';
 import { getErrorContent } from '../../utils/error';
 import { useAmbossUser } from '../../hooks/UseAmbossUser';

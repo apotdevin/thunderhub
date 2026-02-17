@@ -6,7 +6,7 @@ import {
   isToday,
 } from 'date-fns';
 import { X, Copy } from 'lucide-react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { config } from '../../config/thunderhubConfig';
 import {
   SmallLink,

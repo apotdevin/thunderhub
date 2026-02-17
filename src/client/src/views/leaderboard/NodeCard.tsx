@@ -1,4 +1,3 @@
-import React from 'react';
 import { BasePoints } from '../../graphql/types';
 import styled from 'styled-components';
 import { DarkSubTitle } from '../../components/generic/Styled';

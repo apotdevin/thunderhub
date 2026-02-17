@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import {
   multiSelectColor,
@@ -44,7 +44,7 @@ interface SingleButtonProps {
   children?: ReactNode;
 }
 
-export const SingleButton: React.FC<SingleButtonProps> = ({
+export const SingleButton: FC<SingleButtonProps> = ({
   children,
   disabled,
   selected,
@@ -90,7 +90,7 @@ interface MultiButtonProps {
   children?: ReactNode;
 }
 
-export const MultiButton: React.FC<MultiButtonProps> = ({
+export const MultiButton: FC<MultiButtonProps> = ({
   children,
   margin,
   loading,

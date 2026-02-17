@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import {
   CardWithTitle,
   SubTitle,
@@ -15,7 +15,7 @@ import {
   MultiButton,
 } from '../../../components/buttons/multiButton/MultiButton';
 import { useCreateMacaroonMutation } from '../../../graphql/mutations/__generated__/createMacaroon.generated';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../utils/error';
 import { useMutationResultWithReset } from '../../../hooks/UseMutationWithReset';
 import Modal from '../../../components/modal/ReactModal';
@@ -46,11 +46,11 @@ const InitPermissions = {
 };
 
 export const Bakery = () => {
-  const [isOpen, isOpenSet] = React.useState<boolean>(false);
-  const [newMacaroon, newMacaroonSet] = React.useState<boolean>(false);
+  const [isOpen, isOpenSet] = useState<boolean>(false);
+  const [newMacaroon, newMacaroonSet] = useState<boolean>(false);
 
   const [permissions, permissionSet] =
-    React.useState<NetworkInfoInput>(InitPermissions);
+    useState<NetworkInfoInput>(InitPermissions);
 
   let hasATrue = false;
   Object.entries(permissions);

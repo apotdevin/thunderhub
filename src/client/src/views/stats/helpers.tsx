@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { chartColors } from '../../styles/Themes';
 import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 

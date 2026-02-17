@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { useUpdateFeesMutation } from '../../../../src/graphql/mutations/__generated__/updateFees.generated';
 import { getErrorContent } from '../../../../src/utils/error';
 import { InputWithDeco } from '../../../../src/components/input/InputWithDeco';

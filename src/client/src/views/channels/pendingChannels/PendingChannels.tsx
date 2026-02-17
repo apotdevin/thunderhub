@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { toast } from 'react-toastify';
+import { useMemo } from 'react';
+import toast from 'react-hot-toast';
 import { useGetPendingChannelsQuery } from '../../../graphql/queries/__generated__/getPendingChannels.generated';
 import { DarkSubTitle } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';

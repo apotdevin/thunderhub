@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { InvoiceCard } from '../views/transactions/InvoiceCard';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
 import { Settings } from 'lucide-react';

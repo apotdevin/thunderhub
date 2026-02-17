@@ -1,4 +1,11 @@
-import React, { FC, ReactNode, useCallback, useRef, useState } from 'react';
+import {
+  createContext,
+  FC,
+  ReactNode,
+  useCallback,
+  useRef,
+  useState,
+} from 'react';
 import { config } from '../config/thunderhubConfig';
 
 type Status = 'connecting' | 'connected' | 'disconnected';
@@ -14,7 +21,7 @@ type Context = {
   getStatus: () => Status;
 };
 
-const SseContext = React.createContext<Context | undefined>(undefined);
+const SseContext = createContext<Context | undefined>(undefined);
 
 const SseProvider: FC<{ children?: ReactNode }> = ({ children }) => {
   const eventSource = useRef<EventSource | undefined>(undefined);

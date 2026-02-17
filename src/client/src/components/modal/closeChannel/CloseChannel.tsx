@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import styled from 'styled-components';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useCloseChannelMutation } from '../../../../src/graphql/mutations/__generated__/closeChannel.generated';
 import { useBitcoinFees } from '../../../../src/hooks/UseBitcoinFees';
 import { useConfigState } from '../../../../src/context/ConfigContext';

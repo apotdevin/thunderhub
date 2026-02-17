@@ -8,7 +8,7 @@ import { InputWithDeco } from '../../../../components/input/InputWithDeco';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { usePayLnUrlMutation } from '../../../../graphql/mutations/__generated__/lnUrl.generated';
 import { Link } from '../../../../components/link/Link';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../../utils/error';
 
 const ModalText = styled.div`
@@ -122,9 +122,9 @@ export const LnPay: FC<LnPayProps> = ({ request }) => {
         withMargin={'16px 0 0'}
         onClick={() => {
           if (min && amount < min) {
-            toast.warning('Amount is below the minimum');
+            toast.error('Amount is below the minimum');
           } else if (max && amount > max) {
-            toast.warning('Amount is above the maximum');
+            toast.error('Amount is above the maximum');
           } else {
             payLnUrl({ variables: { callback, amount, comment } });
           }

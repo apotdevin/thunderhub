@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { X } from 'lucide-react';
 import { useVerifyBackupsLazyQuery } from '../../../graphql/queries/__generated__/verifyBackups.generated';
 import { getErrorContent } from '../../../utils/error';

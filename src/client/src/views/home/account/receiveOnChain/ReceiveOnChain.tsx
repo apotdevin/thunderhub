@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useCreateAddressMutation } from '../../../../graphql/mutations/__generated__/createAddress.generated';
 import { QRCodeSVG } from 'qrcode.react';
 import { Copy } from 'lucide-react';

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { Lock, Unlock, ChevronDown, ChevronUp } from 'lucide-react';
 import { chartColors } from '../../styles/Themes';
 import { useNavigate } from 'react-router-dom';
@@ -39,7 +39,7 @@ const DetailsLine = styled.div`
 `;
 
 const RenderIntro = () => {
-  const [detailsOpen, setDetailsOpen] = React.useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   return (
     <Section fixedWidth={true} color={'transparent'}>
       <ConnectTitle changeColor={true}>Hi! Welcome to ThunderHub</ConnectTitle>
@@ -78,9 +78,7 @@ const RenderIntro = () => {
 
 export const Accounts = () => {
   const navigate = useNavigate();
-  const [newAccount, setNewAccount] = React.useState<ServerAccount | null>(
-    null
-  );
+  const [newAccount, setNewAccount] = useState<ServerAccount | null>(null);
 
   const [logout] = useLogoutMutation({ refetchQueries: ['GetServerAccounts'] });
 
@@ -95,7 +93,7 @@ export const Accounts = () => {
     },
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!loading && data && data.getNodeInfo) {
       navigate('/');
     }

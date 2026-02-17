@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { Card } from '../../../../components/generic/Styled';
 import { InputWithDeco } from '../../../../components/input/InputWithDeco';
@@ -35,7 +35,7 @@ export const LnUrlCard = () => {
 
   const handleDecode = () => {
     if (!lnurl) {
-      toast.warning('Please input a LNURL');
+      toast.error('Please input a LNURL');
       return;
     }
     try {

@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { Separation } from '../../../../components/generic/Styled';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';

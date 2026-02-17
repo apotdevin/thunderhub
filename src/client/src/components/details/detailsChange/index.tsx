@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { ChevronRight } from 'lucide-react';
 import { useUpdateFeesMutation } from '../../../../src/graphql/mutations/__generated__/updateFees.generated';
 import { Input } from '../../../../src/components/input';

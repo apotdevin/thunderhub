@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useReducer, useEffect, useMemo } from 'react';
 import {
   CardWithTitle,
   SubTitle,
@@ -75,12 +75,12 @@ const reducer = (state: StateType, action: ActionType): StateType => {
 };
 
 export const Accounting = () => {
-  const [showDetails, setShowDetails] = React.useState(false);
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+  const [showDetails, setShowDetails] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const [getReport, { data, loading }] = useGetAccountingReportLazyQuery();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!loading && data && data.getAccountingReport) {
       saveToPc(
         data.getAccountingReport,
@@ -126,12 +126,12 @@ export const Accounting = () => {
     </SingleButton>
   );
 
-  const years: number[] = React.useMemo(() => {
+  const years: number[] = useMemo(() => {
     return [];
   }, []);
   const currentYear = new Date().getFullYear();
 
-  React.useMemo(() => {
+  useMemo(() => {
     for (let index = 2017; index <= currentYear; index++) {
       years.push(index);
     }

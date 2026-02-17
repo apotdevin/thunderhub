@@ -15,7 +15,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { useRemoveTwofaSecretMutation } from '../../graphql/mutations/__generated__/removeTwofaSecret.generated';
 import { InputWithDeco } from '../../components/input/InputWithDeco';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useUpdateTwofaSecretMutation } from '../../graphql/mutations/__generated__/updateTwofaSecret.generated';
 import { config } from '../../config/thunderhubConfig';
 

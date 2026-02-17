@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { Price } from '../../components/price/Price';
 import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
 import { getErrorContent } from '../../utils/error';

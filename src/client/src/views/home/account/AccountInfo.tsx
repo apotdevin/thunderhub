@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Zap, Anchor, Pocket } from 'lucide-react';
 import { useNodeBalances } from '../../../hooks/UseNodeBalances';

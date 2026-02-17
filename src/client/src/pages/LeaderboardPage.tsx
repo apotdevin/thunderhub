@@ -1,4 +1,4 @@
-import React from 'react';
+import { Fragment } from 'react';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
 import { useGetBasePointsQuery } from '../graphql/queries/__generated__/getBasePoints.generated';
 import { NodeCard } from '../views/leaderboard/NodeCard';
@@ -21,9 +21,9 @@ const LeaderboardView = () => {
         <SubTitle>Supporters</SubTitle>
         <Card mobileCardPadding={'0'} mobileNoBackground={true}>
           {data.getBasePoints.map((node, index: number) => (
-            <React.Fragment key={index}>
+            <Fragment key={index}>
               <NodeCard node={node} index={index + 1} />
-            </React.Fragment>
+            </Fragment>
           ))}
         </Card>
       </CardWithTitle>

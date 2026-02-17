@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useContext, useReducer } from 'react';
+import { FC, ReactNode, createContext, useContext, useReducer } from 'react';
 
 type State = {
   modalType: string;
@@ -23,7 +23,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const DashProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
+const DashProvider: FC<{ children?: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, {
     modalType: '',
   });

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X } from 'lucide-react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useAddPeerMutation } from '../../graphql/mutations/__generated__/addPeer.generated';
 import { InputWithDeco } from '../../components/input/InputWithDeco';
 import {

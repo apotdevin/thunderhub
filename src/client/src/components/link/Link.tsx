@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeSet } from 'styled-theming';
 import { Link as RouterLink } from 'react-router-dom';
@@ -14,7 +14,7 @@ interface StyledProps {
 const StyledSpan = styled.span<StyledProps>`
   cursor: pointer;
   color: ${({ fontColor, inheritColor }) =>
-    inheritColor ? 'inherit' : fontColor ?? textColor};
+    inheritColor ? 'inherit' : (fontColor ?? textColor)};
   text-decoration: none;
   ${({ fullWidth }: StyledProps) =>
     fullWidth &&
@@ -42,7 +42,7 @@ const NoStylingSpan = styled.span`
 const StyledLink = styled.a<StyledProps>`
   cursor: pointer;
   color: ${({ fontColor, inheritColor }) =>
-    inheritColor ? 'inherit' : fontColor ?? textColor};
+    inheritColor ? 'inherit' : (fontColor ?? textColor)};
   text-decoration: none;
   ${({ fullWidth }: StyledProps) =>
     fullWidth &&
@@ -79,7 +79,7 @@ interface LinkProps {
   children?: ReactNode;
 }
 
-export const Link: React.FC<LinkProps> = ({
+export const Link: FC<LinkProps> = ({
   children,
   href,
   to,

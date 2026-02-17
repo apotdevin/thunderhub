@@ -1,4 +1,3 @@
-import React from 'react';
 import { Loader2 } from 'lucide-react';
 import styled from 'styled-components';
 import { CardWithTitle, CardTitle, SubTitle, Card } from '../generic/Styled';

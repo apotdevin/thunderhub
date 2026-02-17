@@ -12,7 +12,7 @@ import { GlobalStyles } from './styles/GlobalStyle';
 import { Header } from './layouts/header/Header';
 import { Footer } from './layouts/footer/Footer';
 import { PageWrapper, HeaderBodyWrapper } from './layouts/Layout.styled';
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'react-hot-toast';
 import { useListener } from './hooks/UseListener';
 import { SseProvider } from './context/SseContext';
 import { config } from './config/thunderhubConfig';
@@ -20,7 +20,6 @@ import { LoadingCard } from './components/loading/LoadingCard';
 import { useGetNodeInfoQuery } from './graphql/queries/__generated__/getNodeInfo.generated';
 import styled from 'styled-components';
 
-import 'react-toastify/dist/ReactToastify.min.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -65,7 +64,7 @@ function shouldForwardProp(propName: string, target: any) {
   return true;
 }
 
-const NotAuthenticated: React.FC = () => {
+const NotAuthenticated: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,7 +79,7 @@ const Listener: FC<{ isRoot: boolean }> = ({ isRoot }) => {
   return null;
 };
 
-const Wrapper: React.FC<{ children?: ReactNode }> = ({ children }) => {
+const Wrapper: FC<{ children?: ReactNode }> = ({ children }) => {
   const { theme } = useConfigState();
   const { pathname } = useLocation();
 
@@ -113,7 +112,7 @@ const Wrapper: React.FC<{ children?: ReactNode }> = ({ children }) => {
           )}
         </HeaderBodyWrapper>
         <Footer />
-        <ToastContainer theme={theme === 'light' ? 'light' : 'dark'} />
+        <Toaster position="top-right" />
       </PageWrapper>
     </ThemeProvider>
   );

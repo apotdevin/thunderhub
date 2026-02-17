@@ -1,5 +1,5 @@
-import React, { FC, useMemo } from 'react';
-import { toast } from 'react-toastify';
+import { FC, useMemo } from 'react';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
 import styled from 'styled-components';
 import { mediaWidths } from '../../styles/Themes';

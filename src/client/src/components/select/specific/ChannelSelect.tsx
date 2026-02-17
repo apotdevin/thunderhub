@@ -1,4 +1,3 @@
-import React from 'react';
 import { shorten } from '../../../../src/components/generic/helpers';
 import { useGetChannelsWithPeersQuery } from '../../../../src/graphql/queries/__generated__/getChannels.generated';
 import { SelectWithDeco } from '../SelectWithDeco';

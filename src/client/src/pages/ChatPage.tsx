@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useReducer } from 'react';
 import styled from 'styled-components';
 import { Users } from 'lucide-react';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
@@ -56,7 +56,7 @@ const ChatView = () => {
   const bySender = separateBySender([...chats, ...sentChats]);
   const senders = getSenders(bySender) || [];
 
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const { user, showContacts } = state;
 
   const setUser = (user: string) => dispatch({ type: 'setUserAndHide', user });

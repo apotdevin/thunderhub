@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import {
   SubTitle,
   Separation,
@@ -17,7 +17,7 @@ import styled from 'styled-components';
 import { chartColors, mediaWidths } from '../../../../styles/Themes';
 import { useGetNodeInfoQuery } from '../../../../graphql/queries/__generated__/getNodeInfo.generated';
 import { useCreateThunderPointsMutation } from '../../../../graphql/mutations/__generated__/createThunderPoints.generated';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useBaseConnect } from '../../../../hooks/UseBaseConnect';
 import { Pay } from '../../account/pay/Pay';
 import { getErrorContent } from '../../../../utils/error';
@@ -37,14 +37,14 @@ const Warning = styled(StyledText)`
 `;
 
 export const SupportBar = () => {
-  const [modalOpen, modalOpenSet] = React.useState<boolean>(false);
-  const [amount, amountSet] = React.useState<number>(0);
-  const [invoice, invoiceSet] = React.useState<string>('');
-  const [id, idSet] = React.useState<string>('');
+  const [modalOpen, modalOpenSet] = useState<boolean>(false);
+  const [amount, amountSet] = useState<number>(0);
+  const [invoice, invoiceSet] = useState<string>('');
+  const [id, idSet] = useState<string>('');
 
   const { connected } = useBaseConnect();
 
-  const [withPoints, setWithPoints] = React.useState<boolean>(false);
+  const [withPoints, setWithPoints] = useState<boolean>(false);
 
   const [getInvoice, { data, loading }] = useCreateBaseInvoiceMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -54,7 +54,7 @@ export const SupportBar = () => {
     useCreateThunderPointsMutation({ refetchQueries: ['GetBasePoints'] });
   const { data: info } = useGetNodeInfoQuery({ ssr: false });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data?.createBaseInvoice) {
       const { request, id } = data.createBaseInvoice;
       invoiceSet(request);
@@ -63,7 +63,7 @@ export const SupportBar = () => {
     }
   }, [data]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!pointsLoading && called) {
       if (pointsData?.createThunderPoints) {
         toast.success('Points Created');

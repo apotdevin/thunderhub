@@ -1,4 +1,5 @@
-import React, {
+import {
+  FC,
   createContext,
   useContext,
   useReducer,
@@ -147,7 +148,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const ConfigProvider: React.FC<ConfigInitProps> = ({
+const ConfigProvider: FC<ConfigInitProps> = ({
   children,
   initialConfig = { theme: 'dark' },
 }) => {

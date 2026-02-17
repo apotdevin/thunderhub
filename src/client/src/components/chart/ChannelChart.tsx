@@ -1,5 +1,5 @@
 import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';

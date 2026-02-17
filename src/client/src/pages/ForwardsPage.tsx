@@ -18,7 +18,7 @@ import { ForwardSankey } from '../views/forwards/forwardSankey';
 import { ChannelCart } from '../components/chart/ChannelChart';
 import { useGetChannelsQuery } from '../graphql/queries/__generated__/getChannels.generated';
 import { useGetForwardsListQuery } from '../graphql/queries/__generated__/getForwards.generated';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../utils/error';
 
 const S = {

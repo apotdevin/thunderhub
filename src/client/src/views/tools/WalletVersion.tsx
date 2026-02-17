@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useGetWalletInfoQuery } from '../../graphql/queries/__generated__/getWalletInfo.generated';
 import {
   CardWithTitle,

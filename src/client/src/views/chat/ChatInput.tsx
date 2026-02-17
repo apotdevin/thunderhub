@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { useSendMessageMutation } from '../../graphql/mutations/__generated__/sendMessage.generated';
 import { useMutationResultWithReset } from '../../hooks/UseMutationWithReset';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
@@ -22,7 +22,7 @@ export const ChatInput = ({
   withMargin?: string;
   callback?: () => void;
 }) => {
-  const [message, setMessage] = React.useState('');
+  const [message, setMessage] = useState('');
 
   const { maxFee } = useConfigState();
   const { sender } = useChatState();
@@ -38,7 +38,7 @@ export const ChatInput = ({
   const [formattedMessage, contentType, tokens, canSend] =
     handleMessage(message);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!loading && account && data?.sendMessage) {
       setMessage('');
       dispatch({

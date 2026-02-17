@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { toast } from 'react-toastify';
+import { FC, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 import { useGetMessagesQuery } from '../../../src/graphql/queries/__generated__/getMessages.generated';
 import { useAccount } from '../../../src/hooks/UseAccount';
@@ -7,7 +7,7 @@ import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 import { useConfigState } from '../../context/ConfigContext';
 
-export const ChatFetcher: React.FC = () => {
+export const ChatFetcher: FC = () => {
   const newChatToastId = 'newChatToastId';
 
   const { chatPollingSpeed } = useConfigState();
@@ -28,7 +28,7 @@ export const ChatFetcher: React.FC = () => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data && data.getMessages?.messages) {
       const messages = [...data.getMessages.messages];
       let index = -1;

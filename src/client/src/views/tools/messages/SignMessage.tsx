@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { X, Copy } from 'lucide-react';
 import { useSignMessageLazyQuery } from '../../../graphql/queries/__generated__/signMessage.generated';
 import { Input } from '../../../components/input';

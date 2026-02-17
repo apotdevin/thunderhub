@@ -3,7 +3,7 @@ import { getVersion } from '../../src/utils/version';
 import { config } from '../config/thunderhubConfig';
 import { safeRedirect } from '../utils/url';
 import { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 
 type StatusState = {
   alias: string;

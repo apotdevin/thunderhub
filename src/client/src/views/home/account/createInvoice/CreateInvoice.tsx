@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Copy, CheckCircle } from 'lucide-react';
 import styled from 'styled-components';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { QRCodeSVG } from 'qrcode.react';
 import { useCreateInvoiceMutation } from '../../../../graphql/mutations/__generated__/createInvoice.generated';
 import { Title } from '../../../../layouts/footer/Footer.styled';

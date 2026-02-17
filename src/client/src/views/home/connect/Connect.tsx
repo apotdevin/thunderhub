@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Radio, Copy, X } from 'lucide-react';
 import styled from 'styled-components';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';

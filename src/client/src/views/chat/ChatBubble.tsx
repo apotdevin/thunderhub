@@ -1,6 +1,6 @@
-import * as React from 'react';
+import { useEffect } from 'react';
 import { ThemeSet } from 'styled-theming';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { Circle } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
 import { useSendMessageMutation } from '../../graphql/mutations/__generated__/sendMessage.generated';
@@ -43,7 +43,7 @@ const SendButton = ({ amount }: SendButtonProps) => {
   });
   const [data, resetMutationResult] = useMutationResultWithReset(_data);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!loading && data && data?.sendMessage) {
       dispatch({
         type: 'newChat',

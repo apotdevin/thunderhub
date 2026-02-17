@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
 import { Lock } from 'lucide-react';
 import { getVersion } from '../../utils/version';

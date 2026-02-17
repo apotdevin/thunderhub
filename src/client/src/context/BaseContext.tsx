@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useContext, useReducer } from 'react';
+import { FC, ReactNode, createContext, useContext, useReducer } from 'react';
 
 type State = {
   hasToken: boolean;
@@ -23,7 +23,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const BaseProvider: React.FC<{
+const BaseProvider: FC<{
   initialHasToken: boolean;
   children?: ReactNode;
 }> = ({ children, initialHasToken = false }) => {

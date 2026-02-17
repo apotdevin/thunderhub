@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react';
+import { FC, Fragment } from 'react';
 import { InvoiceType } from '../../graphql/types';
 import { MessageCircle } from 'lucide-react';
 import styled from 'styled-components';

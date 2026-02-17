@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { X, ChevronRight } from 'lucide-react';
 import { useGetPeersQuery } from '../../graphql/queries/__generated__/getPeers.generated';
 import { Peer } from '../../graphql/types';
@@ -84,9 +84,9 @@ export const ChatStart = ({
   noTitle?: boolean;
   callback: () => void;
 }) => {
-  const [indexOpen, setIndexOpen] = React.useState(0);
-  const [willSend, setWillSend] = React.useState(false);
-  const [publicKey, setPublicKey] = React.useState('');
+  const [indexOpen, setIndexOpen] = useState(0);
+  const [willSend, setWillSend] = useState(false);
+  const [publicKey, setPublicKey] = useState('');
 
   const { loading, data } = useGetPeersQuery();
 

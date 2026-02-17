@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { toast } from 'react-toastify';
+import { FC, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { useGetMessagesLazyQuery } from '../../../src/graphql/queries/__generated__/getMessages.generated';
 import { useAccount } from '../../../src/hooks/UseAccount';
 import { useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 
-export const ChatInit: React.FC = () => {
+export const ChatInit: FC = () => {
   const dispatch = useChatDispatch();
 
   const [
@@ -18,7 +18,7 @@ export const ChatInit: React.FC = () => {
 
   const account = useAccount();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (account) {
       const storageChats =
         localStorage.getItem(`${account.id}-sentChats`) || '';
@@ -42,7 +42,7 @@ export const ChatInit: React.FC = () => {
     }
   }, [dispatch, getMessages, account]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!initLoading && !initError && initData && initData.getMessages) {
       const { messages } = initData.getMessages;
 
