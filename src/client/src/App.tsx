@@ -23,7 +23,6 @@ import styled from 'styled-components';
 import 'react-toastify/dist/ReactToastify.min.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import 'react-circular-progressbar/dist/styles.css';
 
 // Page imports
 import HomePage from './pages/HomePage';
