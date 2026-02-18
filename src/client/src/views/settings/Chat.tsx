@@ -32,19 +32,19 @@ export const ChatSettings = () => {
       onClick={() => {
         switch (type) {
           case 'fee':
-            typeof value === 'boolean' &&
+            if (typeof value === 'boolean')
               dispatch({ type: 'change', hideFee: value });
             break;
           case 'nonverified':
-            typeof value === 'boolean' &&
+            if (typeof value === 'boolean')
               dispatch({ type: 'change', hideNonVerified: value });
             break;
           case 'pollingSpeed':
-            typeof value === 'number' &&
+            if (typeof value === 'number')
               dispatch({ type: 'change', chatPollingSpeed: value });
             break;
           default:
-            typeof value === 'number' &&
+            if (typeof value === 'number')
               dispatch({ type: 'change', maxFee: value });
             break;
         }

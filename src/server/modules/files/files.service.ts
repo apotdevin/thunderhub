@@ -66,7 +66,7 @@ export class FilesService {
         const yamlString = yaml.dump({ backupsEnabled: false });
         fs.writeFileSync(filePath, yamlString);
         this.logger.info('Succesfully created yaml file.');
-      } catch (error: any) {
+      } catch {
         this.logger.error('Error creating yaml file.');
         return null;
       }
@@ -99,7 +99,7 @@ export class FilesService {
       const yamlString = yaml.dump(config);
       fs.writeFileSync(filePath, yamlString);
       this.logger.info('Succesfully saved');
-    } catch (error: any) {
+    } catch {
       this.logger.error('Error saving yaml file.');
     }
   };
@@ -167,7 +167,7 @@ export class FilesService {
 
     cloned.accounts = hashedAccounts;
 
-    hasChanged && this.saveHashedYaml(cloned, filePath);
+    if (hasChanged) this.saveHashedYaml(cloned, filePath);
 
     return cloned;
   }

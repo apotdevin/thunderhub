@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtObjectType, UserId } from './security.types';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import { appConstants } from '../../utils/appConstants';
 
 const cookieExtractor = (req: any) => {

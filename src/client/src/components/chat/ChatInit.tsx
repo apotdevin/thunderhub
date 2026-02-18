@@ -34,7 +34,7 @@ export const ChatInit: FC = () => {
               sender,
             });
           }
-        } catch (error: any) {
+        } catch {
           localStorage.removeItem('sentChats');
         }
       }

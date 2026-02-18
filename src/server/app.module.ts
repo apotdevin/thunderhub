@@ -15,7 +15,7 @@ import { appConstants } from './utils/appConstants';
 import { transports, format } from 'winston';
 import configuration from './config/configuration';
 import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import { SseModule } from './modules/sse/sse.module';
 import { SubModule } from './modules/sub/sub.module';
 import { ClientConfigModule } from './modules/clientConfig/clientConfig.module';
@@ -107,7 +107,7 @@ export type JwtObjectType = {
               ...context,
               authToken,
             };
-          } catch (error) {
+          } catch {
             return context;
           }
         },

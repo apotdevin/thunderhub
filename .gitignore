@@ -47,3 +47,6 @@ config.yaml
 # For Dev
 local_data
 docker-compose.dev.yml
+
+# LLM
+.claude

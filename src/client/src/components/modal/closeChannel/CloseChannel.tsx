@@ -56,7 +56,7 @@ export const CloseChannel = ({
   const [closeChannel, { loading }] = useCloseChannelMutation({
     onCompleted: () => {
       toast.success('Channel Closed');
-      () => setIsConfirmed(false);
+      setIsConfirmed(false);
       callback?.();
     },
     onError: error => toast.error(getErrorContent(error)),

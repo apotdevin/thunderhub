@@ -1,4 +1,4 @@
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import { appConstants } from './appConstants';
 
 export const getAuthToken = (req: Request) => {

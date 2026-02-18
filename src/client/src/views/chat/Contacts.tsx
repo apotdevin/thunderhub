@@ -72,12 +72,13 @@ export const ContactCard = ({
   return (
     <ChatSubCard
       onClick={() => {
-        contactSender &&
+        if (contactSender) {
           dispatch({
             type: 'changeActive',
             sender: contactSender,
             userId: account?.id || '',
           });
+        }
         setUser(nodeName);
       }}
     >

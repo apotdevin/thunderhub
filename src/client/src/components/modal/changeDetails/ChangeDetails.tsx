@@ -55,9 +55,11 @@ export const ChangeDetails = ({
       toast.error(getErrorContent(error));
     },
     onCompleted: data => {
-      data.updateFees
-        ? toast.success('Channel policy updated')
-        : toast.error('Error updating channel policy');
+      if (data.updateFees) {
+        toast.success('Channel policy updated');
+      } else {
+        toast.error('Error updating channel policy');
+      }
     },
     refetchQueries: ['GetChannels', 'ChannelFees'],
   });

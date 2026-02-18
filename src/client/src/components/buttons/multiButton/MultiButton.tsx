@@ -59,7 +59,7 @@ export const SingleButton: FC<SingleButtonProps> = ({
       buttonColor={color}
       withPadding={withPadding}
       onClick={() => {
-        onClick && onClick();
+        if (onClick) onClick();
       }}
     >
       {children}

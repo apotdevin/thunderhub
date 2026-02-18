@@ -84,7 +84,7 @@ const SwapsProvider: FC<{ children?: ReactNode }> = ({ children }) => {
     try {
       const swaps = JSON.parse(localStorage.getItem('swaps') || '[]');
       dispatch({ type: 'init', swaps });
-    } catch (error: any) {
+    } catch {
       toast.error('Invalid swaps stored in browser');
     }
   }, []);

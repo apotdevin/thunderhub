@@ -61,7 +61,7 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
 
   const [pay, { loading }] = usePayMutation({
     onCompleted: () => {
-      payCallback && payCallback();
+      if (payCallback) payCallback();
       toast.success('Payment Sent');
       setRequest('');
     },

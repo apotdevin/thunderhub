@@ -37,9 +37,10 @@ export const InterfaceSettings = () => {
       selected={current === value}
       onClick={() => {
         localStorage.setItem(type, value);
-        type === 'theme' && dispatch({ type: 'themeChange', theme: value });
-        type === 'currency' && dispatch({ type: 'change', currency: value });
-        type === 'symbol' && dispatch({ type: 'change', useSatWord: !!value });
+        if (type === 'theme') dispatch({ type: 'themeChange', theme: value });
+        if (type === 'currency') dispatch({ type: 'change', currency: value });
+        if (type === 'symbol')
+          dispatch({ type: 'change', useSatWord: !!value });
       }}
     >
       {title}

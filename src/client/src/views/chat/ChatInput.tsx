@@ -58,7 +58,7 @@ export const ChatInput = ({
         sender: customSender || sender,
       });
       resetMutationResult();
-      callback && callback();
+      if (callback) callback();
     }
   }, [
     loading,

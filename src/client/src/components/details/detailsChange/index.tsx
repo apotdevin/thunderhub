@@ -27,10 +27,12 @@ export const DetailsChange = ({ callback }: DetailsChangeProps) => {
       setCLTV(0);
       setMax(0);
       setMin(0);
-      data.updateFees
-        ? toast.success('Channel Details Updated')
-        : toast.error('Error updating fees');
-      callback && callback();
+      if (data.updateFees) {
+        toast.success('Channel Details Updated');
+      } else {
+        toast.error('Error updating fees');
+      }
+      if (callback) callback();
     },
     refetchQueries: ['GetChannels', 'ChannelFees'],
   });

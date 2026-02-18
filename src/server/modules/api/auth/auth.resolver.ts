@@ -6,7 +6,7 @@ import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FilesService } from '../../files/files.service';
 import jwt from 'jsonwebtoken';
-import cookieLib from 'cookie';
+import * as cookieLib from 'cookie';
 import { ContextType } from 'src/server/app.module';
 import { appConstants } from 'src/server/utils/appConstants';
 import { NodeService } from '../../node/node.service';
@@ -14,7 +14,7 @@ import { toWithError } from 'src/server/utils/async';
 import { decodeMacaroon, isCorrectPassword } from 'src/server/utils/crypto';
 import { CurrentUser, Public } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
-import { authenticator } from 'otplib';
+import { generateSecret, generateURI, verifySync } from 'otplib';
 import { shorten } from 'src/server/utils/string';
 import { TwofaResult } from './auth.types';
 import { Throttle, seconds } from '@nestjs/throttler';
@@ -47,13 +47,13 @@ export class AuthResolver {
 
     const node = await this.nodeService.getWalletInfo(id);
 
-    const secret = authenticator.generateSecret();
+    const secret = generateSecret();
 
-    const otpauth = authenticator.keyuri(
-      shorten(node.public_key),
-      'ThunderHub',
-      secret
-    );
+    const otpauth = generateURI({
+      secret,
+      label: shorten(node.public_key),
+      issuer: 'ThunderHub',
+    });
 
     return { url: otpauth, secret };
   }
@@ -79,8 +79,7 @@ export class AuthResolver {
     }
 
     try {
-      authenticator.options = { window: 1 };
-      const isValid = authenticator.verify({ token, secret });
+      const isValid = verifySync({ token, secret, epochTolerance: 30 });
 
       if (!isValid) {
         throw new Error();
@@ -118,10 +117,10 @@ export class AuthResolver {
     }
 
     try {
-      authenticator.options = { window: 1 };
-      const isValid = authenticator.verify({
+      const isValid = verifySync({
         token,
         secret: account.twofaSecret,
+        epochTolerance: 30,
       });
 
       if (!isValid) {
@@ -275,10 +274,10 @@ export class AuthResolver {
       }
 
       try {
-        authenticator.options = { window: 1 };
-        const isValid = authenticator.verify({
+        const isValid = verifySync({
           token,
           secret: account.twofaSecret,
+          epochTolerance: 30,
         });
         if (!isValid) {
           throw new Error('token not valid');

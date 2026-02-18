@@ -78,7 +78,7 @@ export const ReceiveOnChainCard = () => {
   });
 
   useEffect(() => {
-    data && data.createAddress && setReceived(true);
+    if (data?.createAddress) setReceived(true);
   }, [data]);
 
   return (

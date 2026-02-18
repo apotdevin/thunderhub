@@ -125,7 +125,7 @@ export const Input = ({
         if (onEnter && e.key === 'Enter') {
           onEnter();
         } else {
-          onKeyDown && onKeyDown(e);
+          if (onKeyDown) onKeyDown(e);
         }
       }}
     />

@@ -5,7 +5,7 @@ import { appConstants } from 'src/server/utils/appConstants';
 import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import {
   AmbossUser,
   LightningNodeSocialInfo,

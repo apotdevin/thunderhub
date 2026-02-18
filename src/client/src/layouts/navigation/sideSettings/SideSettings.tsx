@@ -127,13 +127,14 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         }
         onClick={() => {
           localStorage.setItem(type, value);
-          type === 'currency' &&
+          if (type === 'currency') {
             dispatch({
               type: 'change',
               currency:
                 sidebar || isBurger ? value : getNextValue(correctArray, value),
             });
-          type === 'theme' && dispatch({ type: 'themeChange', theme: value });
+          }
+          if (type === 'theme') dispatch({ type: 'themeChange', theme: value });
         }}
       >
         {renderText()}

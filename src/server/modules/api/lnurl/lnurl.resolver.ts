@@ -80,7 +80,7 @@ export class LnUrlResolver {
       }
 
       return result;
-    } catch (error) {
+    } catch {
       throw new Error('Invalid lightning address');
     }
   }

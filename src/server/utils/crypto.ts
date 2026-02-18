@@ -34,7 +34,7 @@ export const decodeMacaroon = (macaroon: string, password: string) => {
     ]);
 
     return decrypted.toString('utf8');
-  } catch (error: any) {
+  } catch {
     console.log('Error decoding macaroon: invalid password');
     throw new Error('WrongPasswordForLogin');
   }
