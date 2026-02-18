@@ -9,9 +9,12 @@ import {
   LucideProps,
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import { useBaseConnect } from '../../hooks/UseBaseConnect';
 import { LogoutButton } from '../../components/logoutButton';
 import { headerColor, headerTextColor } from '../../styles/Themes';
+import {
+  useDonate,
+  DonateModal,
+} from '../../views/home/quickActions/donate/DonateContent';
 import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
 import { Section } from '../../components/section/Section';
@@ -32,14 +35,18 @@ export type Icon = FC<LucideProps>;
 const SSO = '/sso';
 const MAIN = '/login';
 const CHAT = '/chat';
-const DONATIONS = '/leaderboard';
 const SETTINGS = '/settings';
 
 export const Header = () => {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
 
-  const { connected } = useBaseConnect();
+  const {
+    openDonate,
+    payRequest: donatePayRequest,
+    modalOpen: donateModalOpen,
+    closeDonate,
+  } = useDonate();
 
   const isRoot = pathname === MAIN || pathname === SSO;
 
@@ -65,7 +72,9 @@ export const Header = () => {
       </ViewSwitch>
       <ViewSwitch hideMobile={true}>
         <HeaderButtons>
-          {connected && renderNavButton(DONATIONS, Heart)}
+          <HeaderNavButton onClick={openDonate} style={{ cursor: 'pointer' }}>
+            <Heart size={18} />
+          </HeaderNavButton>
           {renderNavButton(CHAT, MessageCircle)}
           {renderNavButton(SETTINGS, Settings)}
           <LogoutButton />
@@ -101,6 +110,11 @@ export const Header = () => {
           <BurgerMenu open={open} setOpen={setOpen} />
         </ViewSwitch>
       )}
+      <DonateModal
+        payRequest={donatePayRequest}
+        modalOpen={donateModalOpen}
+        closeDonate={closeDonate}
+      />
     </>
   );
 };

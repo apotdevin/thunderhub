@@ -61,6 +61,7 @@ export class LnUrlResolver {
     const split = address.split('@');
 
     if (split.length !== 2) {
+      this.logger.debug('Invalid lightning address provided', { address });
       throw new Error('Invalid lightning address');
     }
 
@@ -76,11 +77,13 @@ export class LnUrlResolver {
       if (!result.minSendable) valid = false;
 
       if (!valid) {
+        this.logger.debug('Invalid lightning address provided', { result });
         throw new Error('Invalid lightning address');
       }
 
       return result;
-    } catch {
+    } catch (error) {
+      this.logger.debug('Error getting LN address info', { error });
       throw new Error('Invalid lightning address');
     }
   }

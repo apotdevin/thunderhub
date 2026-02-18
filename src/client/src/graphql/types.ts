@@ -98,30 +98,10 @@ export type Balances = {
   onchain: OnChainBalance;
 };
 
-export type BaseInvoice = {
-  __typename?: 'BaseInvoice';
-  id: Scalars['String']['output'];
-  request: Scalars['String']['output'];
-};
-
-export type BaseNode = {
-  __typename?: 'BaseNode';
-  _id?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  public_key: Scalars['String']['output'];
-  socket: Scalars['String']['output'];
-};
-
 export type BaseNodeInfo = {
   __typename?: 'BaseNodeInfo';
   alias: Scalars['String']['output'];
   public_key: Scalars['String']['output'];
-};
-
-export type BasePoints = {
-  __typename?: 'BasePoints';
-  alias: Scalars['String']['output'];
-  amount: Scalars['Float']['output'];
 };
 
 export type BitcoinFee = {
@@ -515,11 +495,9 @@ export type Mutation = {
   claimBoltzTransaction: Scalars['String']['output'];
   closeChannel: OpenOrCloseChannel;
   createAddress: Scalars['String']['output'];
-  createBaseInvoice: BaseInvoice;
   createBoltzReverseSwap: CreateBoltzReverseSwapType;
   createInvoice: CreateInvoice;
   createMacaroon: CreateMacaroon;
-  createThunderPoints: Scalars['Boolean']['output'];
   fetchLnUrl: LnUrlRequest;
   getAuthToken: Scalars['Boolean']['output'];
   getSessionToken: Scalars['String']['output'];
@@ -572,10 +550,6 @@ export type MutationCreateAddressArgs = {
   type?: Scalars['String']['input'];
 };
 
-export type MutationCreateBaseInvoiceArgs = {
-  amount: Scalars['Float']['input'];
-};
-
 export type MutationCreateBoltzReverseSwapArgs = {
   address?: InputMaybe<Scalars['String']['input']>;
   amount: Scalars['Float']['input'];
@@ -590,13 +564,6 @@ export type MutationCreateInvoiceArgs = {
 
 export type MutationCreateMacaroonArgs = {
   permissions: NetworkInfoInput;
-};
-
-export type MutationCreateThunderPointsArgs = {
-  alias: Scalars['String']['input'];
-  id: Scalars['String']['input'];
-  public_key: Scalars['String']['input'];
-  uris: Array<Scalars['String']['input']>;
 };
 
 export type MutationFetchLnUrlArgs = {
@@ -950,9 +917,6 @@ export type Query = {
   getAmbossLoginToken: Scalars['String']['output'];
   getAmbossUser?: Maybe<AmbossUser>;
   getBackups: Scalars['String']['output'];
-  getBaseCanConnect: Scalars['Boolean']['output'];
-  getBaseNodes: Array<BaseNode>;
-  getBasePoints: Array<BasePoints>;
   getBitcoinFees: BitcoinFee;
   getBitcoinPrice: Scalars['String']['output'];
   getBoltzInfo: BoltzInfoType;

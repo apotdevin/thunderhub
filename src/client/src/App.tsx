@@ -5,7 +5,6 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import isPropValid from '@emotion/is-prop-valid';
 import { useApollo } from '../config/client';
-import { BaseProvider } from './context/BaseContext';
 import { ContextProvider } from './context/ContextProvider';
 import { useConfigState, ConfigProvider } from './context/ConfigContext';
 import { GlobalStyles } from './styles/GlobalStyle';
@@ -36,7 +35,6 @@ import ChainPage from './pages/ChainPage';
 import ToolsPage from './pages/ToolsPage';
 import StatsPage from './pages/StatsPage';
 import SwapPage from './pages/SwapPage';
-import LeaderboardPage from './pages/LeaderboardPage';
 import ChatPage from './pages/ChatPage';
 import SettingsPage from './pages/SettingsPage';
 import AmbossPage from './pages/AmbossPage';
@@ -140,7 +138,6 @@ const AuthenticatedRoutes = () => (
     <Route path="/tools" element={<ToolsPage />} />
     <Route path="/stats" element={<StatsPage />} />
     <Route path="/swap" element={<SwapPage />} />
-    <Route path="/leaderboard" element={<LeaderboardPage />} />
     <Route path="/chat" element={<ChatPage />} />
     <Route path="/settings" element={<SettingsPage />} />
     <Route
@@ -167,15 +164,13 @@ export default function App() {
     <StyleSheetManager shouldForwardProp={shouldForwardProp}>
       <ApolloProvider client={apolloClient}>
         <ConfigProvider initialConfig={{ theme: themeCookie }}>
-          <BaseProvider initialHasToken={false}>
-            <SseProvider>
-              <ContextProvider>
-                <Wrapper>
-                  <AuthenticatedRoutes />
-                </Wrapper>
-              </ContextProvider>
-            </SseProvider>
-          </BaseProvider>
+          <SseProvider>
+            <ContextProvider>
+              <Wrapper>
+                <AuthenticatedRoutes />
+              </Wrapper>
+            </ContextProvider>
+          </SseProvider>
         </ConfigProvider>
       </ApolloProvider>
     </StyleSheetManager>

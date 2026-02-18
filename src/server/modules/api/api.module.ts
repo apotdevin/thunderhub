@@ -3,7 +3,6 @@ import { NodeModule } from './node/node.module';
 import { AccountModule } from './account/account.module';
 import { AmbossModule } from './amboss/amboss.module';
 import { AuthModule } from './auth/auth.module';
-import { BaseModule } from './base/base.module';
 import { BitcoinModule } from './bitcoin/bitcoin.module';
 import { MainModule } from './main/main.module';
 import { GithubModule } from './github/github.module';
@@ -28,7 +27,6 @@ import { UserConfigModule } from './userConfig/userConfig.module';
   imports: [
     UserConfigModule,
     MainModule,
-    BaseModule,
     AuthModule,
     AccountModule,
     AmbossModule,

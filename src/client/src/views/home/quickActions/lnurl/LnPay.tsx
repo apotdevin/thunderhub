@@ -23,9 +23,11 @@ const StyledLink = styled(ModalText)`
 
 type LnPayProps = {
   request: PayRequest;
+  defaultAmount?: number;
+  title?: string;
 };
 
-export const LnPay: FC<LnPayProps> = ({ request }) => {
+export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
   const { minSendable, maxSendable, callback, commentAllowed } = request;
 
   const min = Number(minSendable) / 1000 || 0;
@@ -33,7 +35,8 @@ export const LnPay: FC<LnPayProps> = ({ request }) => {
 
   const isSame = min === max;
 
-  const [amount, setAmount] = useState<number>(min);
+  const initial = isSame ? min : (defaultAmount ?? min);
+  const [amount, setAmount] = useState<number>(initial);
   const [comment, setComment] = useState<string>('');
 
   const [payLnUrl, { data, loading }] = usePayLnUrlMutation({
@@ -87,10 +90,14 @@ export const LnPay: FC<LnPayProps> = ({ request }) => {
 
   return (
     <>
-      <Title>Pay</Title>
+      <Title>{title || 'Pay'}</Title>
       <Separation />
-      <ModalText>{`Pay to ${callbackUrl.host}`}</ModalText>
-      <Separation />
+      {!title && (
+        <>
+          <ModalText>{`Pay to ${callbackUrl.host}`}</ModalText>
+          <Separation />
+        </>
+      )}
       {isSame && renderLine('Pay Amount (sats)', max)}
       {!isSame && renderLine('Max Pay Amount (sats)', max)}
       {!isSame && renderLine('Min Pay Amount (sats)', min)}

@@ -20,7 +20,6 @@ type Urls = {
     auth: string;
     magma: string;
   };
-  tbase: string;
   ticker: string;
   fees: string;
   blockHeight: string;
@@ -114,7 +113,6 @@ export default (): ConfigType => {
     },
     fees: `${mempool}/api/v1/fees/recommended`,
     blockHeight: `${mempool}/api/blocks/tip/height`,
-    tbase: 'https://api.thunderhub.io/api/graphql',
     ticker: 'https://blockchain.info/ticker',
     github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
     boltz: 'https://api.boltz.exchange',

@@ -65,26 +65,9 @@ type Balances {
   onchain: OnChainBalance!
 }
 
-type BaseInvoice {
-  id: String!
-  request: String!
-}
-
-type BaseNode {
-  _id: String
-  name: String
-  public_key: String!
-  socket: String!
-}
-
 type BaseNodeInfo {
   alias: String!
   public_key: String!
-}
-
-type BasePoints {
-  alias: String!
-  amount: Float!
 }
 
 type BitcoinFee {
@@ -441,11 +424,9 @@ type Mutation {
   claimBoltzTransaction(destination: String!, fee: Float!, id: String!, lockupAddress: String!, preimage: String!, privateKey: String!, redeem: String!): String!
   closeChannel(forceClose: Boolean, id: String!, targetConfirmations: Float, tokensPerVByte: Float): OpenOrCloseChannel!
   createAddress(type: String! = "p2tr"): String!
-  createBaseInvoice(amount: Float!): BaseInvoice!
   createBoltzReverseSwap(address: String, amount: Float!): CreateBoltzReverseSwapType!
   createInvoice(amount: Float!, description: String, includePrivate: Boolean, secondsUntil: Float): CreateInvoice!
   createMacaroon(permissions: NetworkInfoInput!): CreateMacaroon!
-  createThunderPoints(alias: String!, id: String!, public_key: String!, uris: [String!]!): Boolean!
   fetchLnUrl(url: String!): LnUrlRequest!
   getAuthToken(cookie: String): Boolean!
   getSessionToken(id: String!, password: String!, token: String): String!
@@ -698,9 +679,6 @@ type Query {
   getAmbossLoginToken(redirect_url: String): String!
   getAmbossUser: AmbossUser
   getBackups: String!
-  getBaseCanConnect: Boolean!
-  getBaseNodes: [BaseNode!]!
-  getBasePoints: [BasePoints!]!
   getBitcoinFees: BitcoinFee!
   getBitcoinPrice: String!
   getBoltzInfo: BoltzInfoType!

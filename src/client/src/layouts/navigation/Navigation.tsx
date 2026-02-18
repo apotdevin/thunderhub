@@ -11,14 +11,12 @@ import {
   Users,
   MessageCircle,
   BarChart2,
-  Heart,
   Shuffle,
   Grid,
   Globe,
   LucideProps,
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import { useBaseConnect } from '../../hooks/UseBaseConnect';
 import {
   unSelectedNavButton,
   navBackgroundColor,
@@ -125,7 +123,6 @@ const FORWARDS = '/forwards';
 const CHAIN_TRANS = '/chain';
 const TOOLS = '/tools';
 const STATS = '/stats';
-const DONATIONS = '/leaderboard';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
 const SWAP = '/swap';
@@ -139,8 +136,6 @@ interface NavigationProps {
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const { pathname } = useLocation();
   const { sidebar } = useConfigState();
-
-  const { connected } = useBaseConnect();
 
   const isRoot = pathname === '/login' || pathname === '/sso';
 
@@ -199,7 +194,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Swap', SWAP, Shuffle)}
       {renderBurgerNav('Stats', STATS, BarChart2)}
-      {connected && renderBurgerNav('Donations', DONATIONS, Heart)}
       {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}
     </BurgerRow>
