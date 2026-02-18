@@ -36,7 +36,6 @@ export const ForwardSankey: FC<{
   type: string;
 }> = ({ days, type }) => {
   const { data, loading } = useGetForwardsQuery({
-    ssr: false,
     variables: { days },
     onError: error => toast.error(getErrorContent(error)),
   });

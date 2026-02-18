@@ -1,8 +1,8 @@
 import { FC, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
-import { useGetMessagesQuery } from '../../../src/graphql/queries/__generated__/getMessages.generated';
-import { useAccount } from '../../../src/hooks/UseAccount';
+import { useGetMessagesQuery } from '@/graphql/queries/__generated__/getMessages.generated';
+import { useAccount } from '@/hooks/UseAccount';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 import { useConfigState } from '../../context/ConfigContext';
@@ -20,7 +20,6 @@ export const ChatFetcher: FC = () => {
   const noChatsAvailable = chats.length <= 0 && sentChats.length <= 0;
 
   const { data, loading, error } = useGetMessagesQuery({
-    ssr: false,
     skip: initialized || noChatsAvailable || !account,
     pollInterval: chatPollingSpeed,
     fetchPolicy: 'network-only',

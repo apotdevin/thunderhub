@@ -25,7 +25,6 @@ const getMaxHeight = (arr: number[], rounding?: number): number => {
 export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
   const themeContext = useContext(ThemeContext);
   const { data } = useGetForwardsQuery({
-    ssr: false,
     variables: { days: days },
     onError: error => toast.error(getErrorContent(error)),
   });

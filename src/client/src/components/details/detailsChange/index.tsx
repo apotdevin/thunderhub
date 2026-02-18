@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { ChevronRight } from 'lucide-react';
-import { useUpdateFeesMutation } from '../../../../src/graphql/mutations/__generated__/updateFees.generated';
-import { Input } from '../../../../src/components/input';
-import { InputWithDeco } from '../../../../src/components/input/InputWithDeco';
-import { ColorButton } from '../../../../src/components/buttons/colorButton/ColorButton';
-import { getErrorContent } from '../../../../src/utils/error';
+import { useUpdateFeesMutation } from '@/graphql/mutations/__generated__/updateFees.generated';
+import { Input } from '@/components/input';
+import { InputWithDeco } from '@/components/input/InputWithDeco';
+import { ColorButton } from '@/components/buttons/colorButton/ColorButton';
+import { getErrorContent } from '@/utils/error';
 import { RightAlign } from '../../generic/Styled';
 
 type DetailsChangeProps = {

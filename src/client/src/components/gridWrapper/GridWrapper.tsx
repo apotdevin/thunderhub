@@ -1,7 +1,7 @@
 import { FC, ReactNode } from 'react';
 import styled, { css } from 'styled-components';
-import { BitcoinFees } from '../../../src/components/bitcoinInfo/BitcoinFees';
-import { BitcoinPrice } from '../../../src/components/bitcoinInfo/BitcoinPrice';
+import { BitcoinFees } from '@/components/bitcoinInfo/BitcoinFees';
+import { BitcoinPrice } from '@/components/bitcoinInfo/BitcoinPrice';
 import { mediaWidths } from '../../styles/Themes';
 import { Section } from '../section/Section';
 import { Navigation } from '../../layouts/navigation/Navigation';

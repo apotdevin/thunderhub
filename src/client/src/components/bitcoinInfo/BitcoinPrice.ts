@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useGetBitcoinPriceQuery } from '../../../src/graphql/queries/__generated__/getBitcoinPrice.generated';
+import { useGetBitcoinPriceQuery } from '@/graphql/queries/__generated__/getBitcoinPrice.generated';
 import { usePriceDispatch } from '../../context/PriceContext';
 import { useConfigState } from '../../context/ConfigContext';
 
@@ -7,7 +7,6 @@ export const BitcoinPrice: React.FC = () => {
   const { fetchPrices } = useConfigState();
   const setPrices = usePriceDispatch();
   const { loading, data, stopPolling } = useGetBitcoinPriceQuery({
-    ssr: false,
     skip: !fetchPrices,
     fetchPolicy: 'network-only',
     onError: () => {

@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useGetMessagesLazyQuery } from '../../../src/graphql/queries/__generated__/getMessages.generated';
-import { useAccount } from '../../../src/hooks/UseAccount';
+import { useGetMessagesLazyQuery } from '@/graphql/queries/__generated__/getMessages.generated';
+import { useAccount } from '@/hooks/UseAccount';
 import { useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 

@@ -38,7 +38,6 @@ type ForwardResumeProps = {
 
 export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
   const { data, loading } = useGetForwardsListQuery({
-    ssr: false,
     variables: { days: 365 },
     errorPolicy: 'ignore',
   });

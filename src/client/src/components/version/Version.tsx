@@ -1,4 +1,4 @@
-import { useGetLatestVersionQuery } from '../../../src/graphql/queries/__generated__/getLatestVersion.generated';
+import { useGetLatestVersionQuery } from '@/graphql/queries/__generated__/getLatestVersion.generated';
 import { config } from '../../config/thunderhubConfig';
 import styled from 'styled-components';
 import { Link } from '../link/Link';

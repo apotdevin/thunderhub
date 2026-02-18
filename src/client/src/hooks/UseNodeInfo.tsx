@@ -1,5 +1,5 @@
-import { useGetNodeInfoQuery } from '../../src/graphql/queries/__generated__/getNodeInfo.generated';
-import { getVersion } from '../../src/utils/version';
+import { useGetNodeInfoQuery } from '@/graphql/queries/__generated__/getNodeInfo.generated';
+import { getVersion } from '@/utils/version';
 import { config } from '../config/thunderhubConfig';
 import { safeRedirect } from '../utils/url';
 import { useEffect } from 'react';

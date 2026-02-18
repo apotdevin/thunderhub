@@ -1,10 +1,10 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { LogOut } from 'lucide-react';
-import { useLogoutMutation } from '../../../src/graphql/mutations/__generated__/logout.generated';
+import { useLogoutMutation } from '@/graphql/mutations/__generated__/logout.generated';
 import { useApolloClient } from '@apollo/client';
-import { HeaderNavButton } from '../../../src/layouts/header/Header.styled';
+import { HeaderNavButton } from '@/layouts/header/Header.styled';
 import styled from 'styled-components';
-import { themeColors } from '../../../src/styles/Themes';
+import { themeColors } from '@/styles/Themes';
 import { Loader2 } from 'lucide-react';
 import { config } from '../../config/thunderhubConfig';
 import { safeRedirect } from '../../utils/url';

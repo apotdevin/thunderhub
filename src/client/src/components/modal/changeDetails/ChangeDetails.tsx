@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useUpdateFeesMutation } from '../../../../src/graphql/mutations/__generated__/updateFees.generated';
-import { getErrorContent } from '../../../../src/utils/error';
-import { InputWithDeco } from '../../../../src/components/input/InputWithDeco';
-import { ColorButton } from '../../../../src/components/buttons/colorButton/ColorButton';
-import { Input } from '../../../../src/components/input';
+import { useUpdateFeesMutation } from '@/graphql/mutations/__generated__/updateFees.generated';
+import { getErrorContent } from '@/utils/error';
+import { InputWithDeco } from '@/components/input/InputWithDeco';
+import { ColorButton } from '@/components/buttons/colorButton/ColorButton';
+import { Input } from '@/components/input';
 import { SingleLine, SubTitle, Sub4Title } from '../../generic/Styled';
 
 type ChangeDetailsType = {

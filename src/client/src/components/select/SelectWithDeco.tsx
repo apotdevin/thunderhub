@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mediaWidths, themeColors } from '../../../src/styles/Themes';
+import { mediaWidths, themeColors } from '@/styles/Themes';
 import { Loader2 } from 'lucide-react';
 import { SingleLine } from '../generic/Styled';
 import { Select, SelectWithValue, ValueProp } from '.';

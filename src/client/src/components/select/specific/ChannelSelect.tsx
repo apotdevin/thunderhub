@@ -1,5 +1,5 @@
-import { shorten } from '../../../../src/components/generic/helpers';
-import { useGetChannelsWithPeersQuery } from '../../../../src/graphql/queries/__generated__/getChannels.generated';
+import { shorten } from '@/components/generic/helpers';
+import { useGetChannelsWithPeersQuery } from '@/graphql/queries/__generated__/getChannels.generated';
 import { SelectWithDeco } from '../SelectWithDeco';
 import { Channel } from '../../../graphql/types';
 import { ValueProp } from '..';

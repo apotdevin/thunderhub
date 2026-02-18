@@ -25,7 +25,6 @@ export const ForwardChannelsReport = ({ days }: Props) => {
   const [type, setType] = useState<'route' | 'incoming' | 'outgoing'>('route');
 
   const { data, loading } = useGetForwardsQuery({
-    ssr: false,
     variables: { days },
     onError: error => toast.error(getErrorContent(error)),
   });

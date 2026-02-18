@@ -1,6 +1,6 @@
-import { useGetPeersQuery } from '../../../../src/graphql/queries/__generated__/getPeers.generated';
-import { shorten } from '../../../../src/components/generic/helpers';
-import { Peer } from '../../../../src/graphql/types';
+import { useGetPeersQuery } from '@/graphql/queries/__generated__/getPeers.generated';
+import { shorten } from '@/components/generic/helpers';
+import { Peer } from '@/graphql/types';
 import { SelectWithDeco } from '../SelectWithDeco';
 import { ValueProp } from '..';
 

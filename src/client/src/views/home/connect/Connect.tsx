@@ -63,7 +63,6 @@ export const ConnectCard = () => {
   const [open, openSet] = useState<boolean>(false);
 
   const { loading, data } = useGetNodeInfoQuery({
-    ssr: false,
     onError: error => toast.error(getErrorContent(error)),
   });
 
