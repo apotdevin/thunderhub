@@ -9,6 +9,7 @@
     "build:nest": "nest build",
     "build:client": "cd src/client && npx vite build",
     "build:all": "sh ./scripts/buildMultiArchImage.sh",
+    "build:all:test": "sh ./scripts/buildMultiArchImage.sh --test",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "cross-env NODE_ENV=production nest start",
     "start:dev": "concurrently \"nest start --watch\" \"cd src/client && npx vite\"",
