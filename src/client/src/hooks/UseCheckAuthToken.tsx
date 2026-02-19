@@ -1,44 +1,44 @@
-import * as React from 'react';
-import { useRouter } from 'next/router';
-import { getUrlParam } from '../utils/url';
-import { toast } from 'react-toastify';
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { getUrlParam, safeRedirect } from '../utils/url';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../utils/error';
-import getConfig from 'next/config';
+import { config } from '../config/thunderhubConfig';
 import { useGetAuthTokenMutation } from '../graphql/mutations/__generated__/getAuthToken.generated';
 
-const { publicRuntimeConfig } = getConfig();
-const { logoutUrl, basePath } = publicRuntimeConfig;
-
 export const useCheckAuthToken = () => {
-  const { query } = useRouter();
+  const { logoutUrl, basePath } = config;
+  const [searchParams] = useSearchParams();
 
-  const cookieParam = getUrlParam(query?.token);
+  const cookieParam = getUrlParam(searchParams.get('token') ?? undefined);
+
+  const loginFallback = `${basePath}/login`;
 
   const [getToken, { data }] = useGetAuthTokenMutation({
     variables: { cookie: cookieParam },
     refetchQueries: ['GetNodeInfo'],
     onError: error => {
       toast.error(getErrorContent(error));
-      window.location.href = logoutUrl || `${basePath}/login`;
+      safeRedirect(logoutUrl || loginFallback, loginFallback);
     },
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (cookieParam) {
       getToken();
     } else {
-      window.location.href = logoutUrl || `${basePath}/login`;
+      safeRedirect(logoutUrl || loginFallback, loginFallback);
     }
   }, [cookieParam, getToken]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!cookieParam || !data) return;
     if (data.getAuthToken) {
       window.location.href = `${basePath}/`;
     }
     if (!data.getAuthToken) {
-      toast.warning('Unable to SSO. Check your logs.');
-      window.location.href = logoutUrl || `${basePath}/login`;
+      toast.error('Unable to SSO. Check your logs.');
+      safeRedirect(logoutUrl || loginFallback, loginFallback);
     }
   }, [data, cookieParam]);
 };

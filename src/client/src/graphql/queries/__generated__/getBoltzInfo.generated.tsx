@@ -64,13 +64,36 @@ export function useGetBoltzInfoLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetBoltzInfoSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetBoltzInfoQuery,
     GetBoltzInfoQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<GetBoltzInfoQuery, GetBoltzInfoQueryVariables>;
+export function useGetBoltzInfoSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBoltzInfoQuery,
+        GetBoltzInfoQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetBoltzInfoQuery | undefined,
+  GetBoltzInfoQueryVariables
+>;
+export function useGetBoltzInfoSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBoltzInfoQuery,
+        GetBoltzInfoQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetBoltzInfoQuery, GetBoltzInfoQueryVariables>(
     GetBoltzInfoDocument,
     options

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Utxo } from '../../../graphql/types';
 import { Separation, SubCard } from '../../../components/generic/Styled';
 import { MainInfo } from '../../../components/generic/CardGeneric';

@@ -4,6 +4,43 @@ trap "exit" INT
 
 REPO=apotdevin/thunderhub
 BASE=base
+TEST_MODE=false
+
+# Parse flags
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --test) TEST_MODE=true; shift;;
+        *) echo "Unknown option: $1"; exit 1;;
+    esac
+done
+
+if [ "$TEST_MODE" = true ]; then
+    echo
+    echo "------------------------------------------"
+    echo "Test build (local, no push, no branch switch)"
+    echo "------------------------------------------"
+    echo
+
+    docker buildx create --name mybuilder --driver-opt network=host --use 2>/dev/null || true
+
+    START=`date +%s`
+
+    docker buildx build \
+        --platform linux/amd64,linux/arm64 \
+        --tag $REPO:test \
+        --file ./Dockerfile \
+        ./
+
+    END=`date +%s`
+    RUNTIME=$((END-START))
+
+    echo
+    echo "------------------------------------------"
+    echo "DONE - Test build took $RUNTIME seconds"
+    echo "------------------------------------------"
+    echo
+    exit 0
+fi
 
 echo
 echo
@@ -26,7 +63,7 @@ echo "Do you want to build images for version" $VERSION "?"
 select yn in "Yes" "No" "Specify"; do
     case $yn in
         Yes ) break;;
-        Specify) NOT_LATEST=true; break;; 
+        Specify) NOT_LATEST=true; break;;
         No ) exit;;
     esac
 done
@@ -36,16 +73,19 @@ read -p "Enter the version you want to build: "  VERSION
 git checkout $VERSION || exit
 fi
 
-# docker buildx create --use
-
 START=`date +%s`
 
-docker buildx create --name mybuilder --use
-docker buildx install
+docker buildx create --name mybuilder --driver-opt network=host --use 2>/dev/null || true
 
-docker build \
-    --platform linux/amd64,linux/arm64,linux/arm/v7 \
+LATEST_TAGS=""
+if [ "$NOT_LATEST" = false ]; then
+    LATEST_TAGS="--tag $REPO:latest"
+fi
+
+docker buildx build \
+    --platform linux/amd64,linux/arm64 \
     --tag $REPO:$VERSION \
+    $LATEST_TAGS \
     --file ./Dockerfile \
     --push ./
 
@@ -57,9 +97,9 @@ echo "Building basepath multiarch image for" $REPO
 echo
 echo
 
-docker build \
+docker buildx build \
     --build-arg BASE_PATH='/thub' \
-    --platform linux/amd64,linux/arm64,linux/arm/v7 \
+    --platform linux/amd64,linux/arm64 \
     --tag $REPO:$BASE-$VERSION \
     --file ./Dockerfile \
     --push ./

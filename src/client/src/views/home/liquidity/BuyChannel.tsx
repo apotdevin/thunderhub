@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react';
 import { InputWithDeco } from '../../../components/input/InputWithDeco';
 import { formatCurrency, formatNumber } from '../../../utils/helpers';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { ChevronRight, ExternalLink, Loader } from 'react-feather';
+import { ChevronRight, ExternalLink, Loader } from 'lucide-react';
 import { unSelectedNavButton } from '../../../styles/Themes';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { usePurchaseLiquidityMutation } from '../../../graphql/mutations/__generated__/purchaseLiquidity.generated';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useGetAmbossLoginTokenLazyQuery } from '../../../graphql/queries/__generated__/getAmbossLoginToken.generated';
 
 const RecommendedBanner = styled.div`

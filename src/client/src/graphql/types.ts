@@ -98,30 +98,10 @@ export type Balances = {
   onchain: OnChainBalance;
 };
 
-export type BaseInvoice = {
-  __typename?: 'BaseInvoice';
-  id: Scalars['String']['output'];
-  request: Scalars['String']['output'];
-};
-
-export type BaseNode = {
-  __typename?: 'BaseNode';
-  _id?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  public_key: Scalars['String']['output'];
-  socket: Scalars['String']['output'];
-};
-
 export type BaseNodeInfo = {
   __typename?: 'BaseNodeInfo';
   alias: Scalars['String']['output'];
   public_key: Scalars['String']['output'];
-};
-
-export type BasePoints = {
-  __typename?: 'BasePoints';
-  alias: Scalars['String']['output'];
-  amount: Scalars['Float']['output'];
 };
 
 export type BitcoinFee = {
@@ -156,41 +136,6 @@ export type BoltzSwapTransaction = {
   eta?: Maybe<Scalars['Float']['output']>;
   hex?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
-};
-
-export type BosDecrease = {
-  __typename?: 'BosDecrease';
-  decreased_inbound_on: Scalars['String']['output'];
-  liquidity_inbound: Scalars['String']['output'];
-  liquidity_inbound_opening?: Maybe<Scalars['String']['output']>;
-  liquidity_inbound_pending?: Maybe<Scalars['String']['output']>;
-  liquidity_outbound: Scalars['String']['output'];
-  liquidity_outbound_opening?: Maybe<Scalars['String']['output']>;
-  liquidity_outbound_pending?: Maybe<Scalars['String']['output']>;
-};
-
-export type BosIncrease = {
-  __typename?: 'BosIncrease';
-  increased_inbound_on: Scalars['String']['output'];
-  liquidity_inbound: Scalars['String']['output'];
-  liquidity_inbound_opening?: Maybe<Scalars['String']['output']>;
-  liquidity_inbound_pending?: Maybe<Scalars['String']['output']>;
-  liquidity_outbound: Scalars['String']['output'];
-  liquidity_outbound_opening?: Maybe<Scalars['String']['output']>;
-  liquidity_outbound_pending?: Maybe<Scalars['String']['output']>;
-};
-
-export type BosRebalanceResult = {
-  __typename?: 'BosRebalanceResult';
-  decrease?: Maybe<BosDecrease>;
-  increase?: Maybe<BosIncrease>;
-  result?: Maybe<BosResult>;
-};
-
-export type BosResult = {
-  __typename?: 'BosResult';
-  rebalance_fees_spent: Scalars['String']['output'];
-  rebalanced: Scalars['String']['output'];
 };
 
 export type ChainAddressSend = {
@@ -525,16 +470,6 @@ export type LightningNodeSocialInfo = {
   socials?: Maybe<NodeSocial>;
 };
 
-export type LnMarketsUserInfo = {
-  __typename?: 'LnMarketsUserInfo';
-  account_type?: Maybe<Scalars['String']['output']>;
-  balance?: Maybe<Scalars['String']['output']>;
-  last_ip?: Maybe<Scalars['String']['output']>;
-  linkingpublickey?: Maybe<Scalars['String']['output']>;
-  uid?: Maybe<Scalars['String']['output']>;
-  username?: Maybe<Scalars['String']['output']>;
-};
-
 export type LnUrlRequest = ChannelRequest | PayRequest | WithdrawRequest;
 
 export type Message = {
@@ -557,23 +492,16 @@ export type MessageType = {
 export type Mutation = {
   __typename?: 'Mutation';
   addPeer: Scalars['Boolean']['output'];
-  bosRebalance: BosRebalanceResult;
   claimBoltzTransaction: Scalars['String']['output'];
   closeChannel: OpenOrCloseChannel;
   createAddress: Scalars['String']['output'];
-  createBaseInvoice: BaseInvoice;
   createBoltzReverseSwap: CreateBoltzReverseSwapType;
   createInvoice: CreateInvoice;
   createMacaroon: CreateMacaroon;
-  createThunderPoints: Scalars['Boolean']['output'];
   fetchLnUrl: LnUrlRequest;
   getAuthToken: Scalars['Boolean']['output'];
   getSessionToken: Scalars['String']['output'];
   keysend: PayInvoice;
-  lnMarketsDeposit: Scalars['Boolean']['output'];
-  lnMarketsLogin: AuthResponse;
-  lnMarketsLogout: Scalars['Boolean']['output'];
-  lnMarketsWithdraw: Scalars['Boolean']['output'];
   lnUrlAuth: AuthResponse;
   lnUrlChannel: Scalars['String']['output'];
   lnUrlPay: PaySuccess;
@@ -601,18 +529,6 @@ export type MutationAddPeerArgs = {
   url?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type MutationBosRebalanceArgs = {
-  avoid?: InputMaybe<Array<Scalars['String']['input']>>;
-  in_through?: InputMaybe<Scalars['String']['input']>;
-  max_fee?: InputMaybe<Scalars['Float']['input']>;
-  max_fee_rate?: InputMaybe<Scalars['Float']['input']>;
-  max_rebalance?: InputMaybe<Scalars['Float']['input']>;
-  node?: InputMaybe<Scalars['String']['input']>;
-  out_inbound?: InputMaybe<Scalars['Float']['input']>;
-  out_through?: InputMaybe<Scalars['String']['input']>;
-  timeout_minutes?: InputMaybe<Scalars['Float']['input']>;
-};
-
 export type MutationClaimBoltzTransactionArgs = {
   destination: Scalars['String']['input'];
   fee: Scalars['Float']['input'];
@@ -634,10 +550,6 @@ export type MutationCreateAddressArgs = {
   type?: Scalars['String']['input'];
 };
 
-export type MutationCreateBaseInvoiceArgs = {
-  amount: Scalars['Float']['input'];
-};
-
 export type MutationCreateBoltzReverseSwapArgs = {
   address?: InputMaybe<Scalars['String']['input']>;
   amount: Scalars['Float']['input'];
@@ -652,13 +564,6 @@ export type MutationCreateInvoiceArgs = {
 
 export type MutationCreateMacaroonArgs = {
   permissions: NetworkInfoInput;
-};
-
-export type MutationCreateThunderPointsArgs = {
-  alias: Scalars['String']['input'];
-  id: Scalars['String']['input'];
-  public_key: Scalars['String']['input'];
-  uris: Array<Scalars['String']['input']>;
 };
 
 export type MutationFetchLnUrlArgs = {
@@ -678,14 +583,6 @@ export type MutationGetSessionTokenArgs = {
 export type MutationKeysendArgs = {
   destination?: InputMaybe<Scalars['String']['input']>;
   tokens: Scalars['Float']['input'];
-};
-
-export type MutationLnMarketsDepositArgs = {
-  amount: Scalars['Float']['input'];
-};
-
-export type MutationLnMarketsWithdrawArgs = {
-  amount: Scalars['Float']['input'];
 };
 
 export type MutationLnUrlAuthArgs = {
@@ -1017,13 +914,9 @@ export type Query = {
   __typename?: 'Query';
   decodeRequest: DecodeInvoice;
   getAccount: ServerAccount;
-  getAccountingReport: Scalars['String']['output'];
   getAmbossLoginToken: Scalars['String']['output'];
   getAmbossUser?: Maybe<AmbossUser>;
   getBackups: Scalars['String']['output'];
-  getBaseCanConnect: Scalars['Boolean']['output'];
-  getBaseNodes: Array<BaseNode>;
-  getBasePoints: Array<BasePoints>;
   getBitcoinFees: BitcoinFee;
   getBitcoinPrice: Scalars['String']['output'];
   getBoltzInfo: BoltzInfoType;
@@ -1042,9 +935,6 @@ export type Query = {
   getLatestVersion: Scalars['String']['output'];
   getLightningAddressInfo: PayRequest;
   getLiquidityPerUsd: Scalars['String']['output'];
-  getLnMarketsStatus: Scalars['String']['output'];
-  getLnMarketsUrl: Scalars['String']['output'];
-  getLnMarketsUserInfo: LnMarketsUserInfo;
   getMessages: GetMessages;
   getNetworkInfo: NetworkInfo;
   getNode: Node;
@@ -1069,14 +959,6 @@ export type Query = {
 
 export type QueryDecodeRequestArgs = {
   request: Scalars['String']['input'];
-};
-
-export type QueryGetAccountingReportArgs = {
-  category?: InputMaybe<Scalars['String']['input']>;
-  currency?: InputMaybe<Scalars['String']['input']>;
-  fiat?: InputMaybe<Scalars['String']['input']>;
-  month?: InputMaybe<Scalars['String']['input']>;
-  year?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type QueryGetAmbossLoginTokenArgs = {

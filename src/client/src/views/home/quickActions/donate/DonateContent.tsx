@@ -1,113 +1,67 @@
-import * as React from 'react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 import {
   SubTitle,
   Separation,
   Sub4Title,
 } from '../../../../components/generic/Styled';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import Modal from '../../../../components/modal/ReactModal';
 import { Emoji } from '../../../../components/emoji/Emoji';
-import { useCreateBaseInvoiceMutation } from '../../../../graphql/mutations/__generated__/createBaseInvoice.generated';
-import {
-  SingleButton,
-  MultiButton,
-} from '../../../../components/buttons/multiButton/MultiButton';
-import styled from 'styled-components';
-import { chartColors, mediaWidths } from '../../../../styles/Themes';
-import { useGetNodeInfoQuery } from '../../../../graphql/queries/__generated__/getNodeInfo.generated';
-import { useCreateThunderPointsMutation } from '../../../../graphql/mutations/__generated__/createThunderPoints.generated';
-import { toast } from 'react-toastify';
-import { useBaseConnect } from '../../../../hooks/UseBaseConnect';
-import { Pay } from '../../account/pay/Pay';
-import { getErrorContent } from '../../../../utils/error';
+import { useGetLightningAddressInfoLazyQuery } from '../../../../graphql/queries/__generated__/getLightningAddressInfo.generated';
+import { PayRequest } from '../../../../graphql/types';
+import { LnPay } from '../lnurl/LnPay';
 
-const StyledText = styled.div`
-  text-align: center;
-  font-size: 14px;
-  margin: 16px 40px 0;
+export const DONATE_ADDRESS = 'tony@bancolibre.com';
+const DEFAULT_DONATE_AMOUNT = 20000;
 
-  @media (${mediaWidths.mobile}) {
-    margin: 16px 0 0;
-  }
-`;
+export const useDonate = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [payRequest, setPayRequest] = useState<PayRequest | null>(null);
 
-const Warning = styled(StyledText)`
-  color: ${chartColors.orange};
-`;
-
-export const SupportBar = () => {
-  const [modalOpen, modalOpenSet] = React.useState<boolean>(false);
-  const [amount, amountSet] = React.useState<number>(0);
-  const [invoice, invoiceSet] = React.useState<string>('');
-  const [id, idSet] = React.useState<string>('');
-
-  const { connected } = useBaseConnect();
-
-  const [withPoints, setWithPoints] = React.useState<boolean>(false);
-
-  const [getInvoice, { data, loading }] = useCreateBaseInvoiceMutation({
-    onError: error => toast.error(getErrorContent(error)),
+  const [getInfo, { loading }] = useGetLightningAddressInfoLazyQuery({
+    fetchPolicy: 'network-only',
+    onCompleted: data => {
+      setPayRequest(data.getLightningAddressInfo);
+      setModalOpen(true);
+    },
+    onError: ({ graphQLErrors }) => {
+      const messages = graphQLErrors.map(e => (
+        <div key={e.message}>{e.message}</div>
+      ));
+      toast.error(<div>{messages}</div>);
+    },
   });
 
-  const [createPoints, { data: pointsData, called, loading: pointsLoading }] =
-    useCreateThunderPointsMutation({ refetchQueries: ['GetBasePoints'] });
-  const { data: info } = useGetNodeInfoQuery({ ssr: false });
+  const openDonate = () => getInfo({ variables: { address: DONATE_ADDRESS } });
+  const closeDonate = () => setModalOpen(false);
 
-  React.useEffect(() => {
-    if (data?.createBaseInvoice) {
-      const { request, id } = data.createBaseInvoice;
-      invoiceSet(request);
-      idSet(id);
-      modalOpenSet(true);
-    }
-  }, [data]);
+  return { openDonate, loading, payRequest, modalOpen, closeDonate };
+};
 
-  React.useEffect(() => {
-    if (!pointsLoading && called) {
-      if (pointsData?.createThunderPoints) {
-        toast.success('Points Created');
-      } else {
-        toast.error('Error creating points. Write to us on telegram!');
-      }
-    }
-  }, [pointsData, pointsLoading, called]);
+export const DonateModal = ({
+  payRequest,
+  modalOpen,
+  closeDonate,
+}: {
+  payRequest: PayRequest | null;
+  modalOpen: boolean;
+  closeDonate: () => void;
+}) => (
+  <Modal isOpen={modalOpen} closeCallback={closeDonate}>
+    {payRequest ? (
+      <LnPay
+        request={payRequest}
+        defaultAmount={DEFAULT_DONATE_AMOUNT}
+        title={'Donate to ThunderHub'}
+      />
+    ) : null}
+  </Modal>
+);
 
-  if (!connected)
-    return (
-      <div style={{ textAlign: 'center' }}>
-        <SubTitle>Unable to connect to donation server.</SubTitle>
-        <Sub4Title>
-          Please check back later.Thanks for wanting to donate
-          <Emoji symbol={'❤️'} label={'heart'} />
-        </Sub4Title>
-      </div>
-    );
-
-  const handleReset = () => {
-    modalOpenSet(false);
-    amountSet(0);
-    invoiceSet('');
-    idSet('');
-  };
-
-  const handlePaidReset = () => {
-    if (withPoints && info?.getNodeInfo) {
-      const { alias, public_key, uris } = info.getNodeInfo;
-      createPoints({ variables: { id, alias, public_key, uris } });
-    }
-    handleReset();
-  };
-
-  const renderButton = (
-    onClick: () => void,
-    text: string,
-    selected: boolean
-  ) => (
-    <SingleButton selected={selected} onClick={onClick}>
-      {text}
-    </SingleButton>
-  );
+export const SupportBar = () => {
+  const { openDonate, loading, payRequest, modalOpen, closeDonate } =
+    useDonate();
 
   return (
     <>
@@ -119,49 +73,20 @@ export const SupportBar = () => {
         </Sub4Title>
       </div>
       <Separation />
-      <InputWithDeco
-        title={'Amount'}
-        value={amount}
-        amount={amount}
-        inputType={'number'}
-        inputCallback={value => amountSet(Number(value))}
-      />
-      <Separation />
-      <InputWithDeco title={'With Points'} noInput={true}>
-        <MultiButton>
-          {renderButton(() => setWithPoints(true), 'Yes', withPoints)}
-          {renderButton(() => setWithPoints(false), 'No', !withPoints)}
-        </MultiButton>
-      </InputWithDeco>
-      {withPoints && (
-        <>
-          <StyledText>
-            This means your node will appear in the ThunderHub donation
-            leaderboard. If you want to remain anonymous, do not enable this
-            option. Your node alias and public key will be stored if you enable
-            it.
-          </StyledText>
-          <Warning>
-            Due to the increasing price of Bitcoin, to incentivize development
-            and to give everyone an opportunity to be in the top of the
-            leaderboard, points have a half life of 6 months. This means that
-            every 6 months they are halved.
-          </Warning>
-        </>
-      )}
-      <Separation />
       <ColorButton
-        onClick={() => getInvoice({ variables: { amount } })}
+        onClick={openDonate}
         loading={loading}
-        disabled={amount <= 0 || loading}
+        disabled={loading}
         fullWidth={true}
         withMargin={'8px 0 0 0'}
       >
-        Send
+        Donate
       </ColorButton>
-      <Modal isOpen={modalOpen} closeCallback={handleReset}>
-        <Pay predefinedRequest={invoice} payCallback={handlePaidReset} />
-      </Modal>
+      <DonateModal
+        payRequest={payRequest}
+        modalOpen={modalOpen}
+        closeDonate={closeDonate}
+      />
     </>
   );
 };

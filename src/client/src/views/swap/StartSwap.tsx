@@ -11,13 +11,13 @@ import {
 } from '../../components/generic/Styled';
 import { useEffect, useState } from 'react';
 import { Slider } from '../../components/slider';
-import { Edit2, X } from 'react-feather';
+import { Edit2, X } from 'lucide-react';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import styled from 'styled-components';
 import { mediaWidths } from '../../styles/Themes';
 import { Input } from '../../components/input';
 import { useCreateBoltzReverseSwapMutation } from '../../graphql/mutations/__generated__/createBoltzReverseSwap.generated';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
 import { useMutationResultWithReset } from '../../hooks/UseMutationWithReset';
 import { useSwapsDispatch } from './SwapContext';

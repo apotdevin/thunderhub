@@ -87,13 +87,30 @@ export function useGetPeersLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetPeersSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetPeersQuery,
     GetPeersQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<GetPeersQuery, GetPeersQueryVariables>;
+export function useGetPeersSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetPeersQuery, GetPeersQueryVariables>
+): Apollo.UseSuspenseQueryResult<
+  GetPeersQuery | undefined,
+  GetPeersQueryVariables
+>;
+export function useGetPeersSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetPeersQuery, GetPeersQueryVariables>
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetPeersQuery, GetPeersQueryVariables>(
     GetPeersDocument,
     options

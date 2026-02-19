@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { toast } from 'react-toastify';
-import { Lock, Unlock, ChevronDown, ChevronUp } from 'react-feather';
+import toast from 'react-hot-toast';
+import { Lock, Unlock, ChevronDown, ChevronUp } from 'lucide-react';
 import { chartColors } from '../../styles/Themes';
-import { useRouter } from 'next/router';
+import { useNavigate } from 'react-router-dom';
 import { Link } from '../../components/link/Link';
 import {
   GetServerAccountsQuery,
@@ -39,7 +39,7 @@ const DetailsLine = styled.div`
 `;
 
 const RenderIntro = () => {
-  const [detailsOpen, setDetailsOpen] = React.useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   return (
     <Section fixedWidth={true} color={'transparent'}>
       <ConnectTitle changeColor={true}>Hi! Welcome to ThunderHub</ConnectTitle>
@@ -77,16 +77,10 @@ const RenderIntro = () => {
 };
 
 export const Accounts = () => {
-  const { push, prefetch } = useRouter();
-  const [newAccount, setNewAccount] = React.useState<ServerAccount | null>(
-    null
-  );
+  const navigate = useNavigate();
+  const [newAccount, setNewAccount] = useState<ServerAccount | null>(null);
 
   const [logout] = useLogoutMutation({ refetchQueries: ['GetServerAccounts'] });
-
-  React.useEffect(() => {
-    prefetch('/');
-  }, [prefetch]);
 
   const { data: accountData, loading: loadingData } =
     useGetServerAccountsQuery();
@@ -99,11 +93,11 @@ export const Accounts = () => {
     },
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!loading && data && data.getNodeInfo) {
-      push('/');
+      navigate('/');
     }
-  }, [data, loading, push]);
+  }, [data, loading, navigate]);
 
   if (loadingData) {
     return (
@@ -125,7 +119,7 @@ export const Accounts = () => {
       size: 14,
     };
     return (
-      <div>
+      <div className="flex items-center">
         {type === 'sso' ? 'SSO Account' : name}
         <LockPadding>
           {loggedIn ? <Unlock {...props} /> : <Lock {...props} />}

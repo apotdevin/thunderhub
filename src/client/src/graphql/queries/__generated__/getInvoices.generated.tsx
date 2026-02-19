@@ -144,13 +144,36 @@ export function useGetInvoicesLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetInvoicesSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetInvoicesQuery,
     GetInvoicesQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<GetInvoicesQuery, GetInvoicesQueryVariables>;
+export function useGetInvoicesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetInvoicesQuery,
+        GetInvoicesQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetInvoicesQuery | undefined,
+  GetInvoicesQueryVariables
+>;
+export function useGetInvoicesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetInvoicesQuery,
+        GetInvoicesQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetInvoicesQuery, GetInvoicesQueryVariables>(
     GetInvoicesDocument,
     options

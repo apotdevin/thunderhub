@@ -1,4 +1,4 @@
-import { useGetBitcoinFeesQuery } from '../../src/graphql/queries/__generated__/getBitcoinFees.generated';
+import { useGetBitcoinFeesQuery } from '@/graphql/queries/__generated__/getBitcoinFees.generated';
 
 type State = {
   dontShow: boolean;

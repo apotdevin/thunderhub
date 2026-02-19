@@ -1,6 +1,5 @@
-import * as React from 'react';
 import { chartColors } from '../../styles/Themes';
-import { CheckCircle, AlertCircle, XCircle } from 'react-feather';
+import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 
 export const getProgressColor = (score: number | null | undefined): string => {
   if (!score) return chartColors.red;

@@ -1,40 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
-import { Lock } from 'react-feather';
+import { Lock } from 'lucide-react';
 import { getVersion } from '../../utils/version';
 import { useGetSessionTokenMutation } from '../../graphql/mutations/__generated__/getSessionToken.generated';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { Input } from '../../components/input';
 import { Section } from '../../components/section/Section';
-import { Title } from '../../components/typography/Styled';
-import {
-  inverseTextColor,
-  mediaWidths,
-  chartColors,
-} from '../../styles/Themes';
-import getConfig from 'next/config';
+import { chartColors } from '../../styles/Themes';
+import { config } from '../../config/thunderhubConfig';
 import { GetServerAccountsQuery } from '../../graphql/queries/__generated__/getServerAccounts.generated';
 
-const { publicRuntimeConfig } = getConfig();
-const { basePath, disable2FA } = publicRuntimeConfig;
-
 type ServerAccount = GetServerAccountsQuery['getServerAccounts'][0];
-
-const StyledTitle = styled(Title)`
-  font-size: 24px;
-  color: ${inverseTextColor};
-
-  @media (${mediaWidths.mobile}) {
-    font-size: 18px;
-  }
-`;
-
-const IconPadding = styled.span`
-  margin-left: 4px;
-`;
 
 type LoginProps = {
   account: ServerAccount;
@@ -59,7 +37,7 @@ export const Login = ({ account }: LoginProps) => {
         'ThunderHub supports LND version 0.11.0 and higher. Please update your node, you are in risk of losing funds.'
       );
     } else {
-      window.location.href = `${basePath}/`;
+      window.location.href = `${config.basePath}/`;
     }
   }, [data, loading]);
 
@@ -74,12 +52,14 @@ export const Login = ({ account }: LoginProps) => {
 
   return (
     <Section fixedWidth={true} color={'transparent'}>
-      <StyledTitle>
-        {`Login to ${account.name}`}
-        <IconPadding>
-          <Lock size={18} color={chartColors.green} />
-        </IconPadding>
-      </StyledTitle>
+      <div className="w-full flex justify-center pb-2 font-semibold">
+        <h1 className="text-2xl text-white flex items-center">
+          {`Login to ${account.name}`}
+          <div className="ml-1">
+            <Lock size={18} color={chartColors.green} />
+          </div>
+        </h1>
+      </div>
       <Card cardPadding={'32px'} mobileCardPadding={'16px'}>
         <SingleLine>
           <Sub4Title>Password</Sub4Title>
@@ -92,7 +72,7 @@ export const Login = ({ account }: LoginProps) => {
             onEnter={() => handleEnter()}
           />
         </SingleLine>
-        {disable2FA ? null : (
+        {config.disable2FA ? null : (
           <SingleLine>
             <Sub4Title>{'2FA (if enabled)'}</Sub4Title>
             <Input

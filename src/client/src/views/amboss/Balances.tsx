@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
   Card,

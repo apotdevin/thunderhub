@@ -1,8 +1,8 @@
-import React from 'react';
 import styled from 'styled-components';
-import { AlertCircle } from 'react-feather';
+import { AlertCircle } from 'lucide-react';
 import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.generated';
-import getConfig from 'next/config';
+import { config } from '../../config/thunderhubConfig';
+import { safeRedirect } from '../../utils/url';
 import {
   Card,
   CardWithTitle,
@@ -13,9 +13,6 @@ import {
 import { fontColors } from '../../styles/Themes';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { useChatDispatch } from '../../context/ChatContext';
-
-const { publicRuntimeConfig } = getConfig();
-const { logoutUrl, basePath } = publicRuntimeConfig;
 
 export const ButtonRow = styled.div`
   width: auto;
@@ -57,7 +54,10 @@ export const DangerView = () => {
 
   const [logout] = useLogoutMutation({
     onCompleted: () => {
-      window.location.href = logoutUrl || `${basePath}/login`;
+      safeRedirect(
+        config.logoutUrl || `${config.basePath}/login`,
+        `${config.basePath}/login`
+      );
     },
   });
 

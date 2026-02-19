@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import Modal from '../../components/modal/ReactModal';
-import numeral from 'numeral';
 import { themeColors } from '../../styles/Themes';
 import {
   CardWithTitle,
@@ -13,7 +12,7 @@ import {
   SubCard,
   DarkSubTitle,
 } from '../../components/generic/Styled';
-import { SettingsLine } from '../../../pages/settings';
+import { SettingsLine } from '../../pages/SettingsPage';
 import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 import {
   MultiButton,
@@ -38,9 +37,10 @@ export const InterfaceSettings = () => {
       selected={current === value}
       onClick={() => {
         localStorage.setItem(type, value);
-        type === 'theme' && dispatch({ type: 'themeChange', theme: value });
-        type === 'currency' && dispatch({ type: 'change', currency: value });
-        type === 'symbol' && dispatch({ type: 'change', useSatWord: !!value });
+        if (type === 'theme') dispatch({ type: 'themeChange', theme: value });
+        if (type === 'currency') dispatch({ type: 'change', currency: value });
+        if (type === 'symbol')
+          dispatch({ type: 'change', useSatWord: !!value });
       }}
     >
       {title}
@@ -66,9 +66,11 @@ export const InterfaceSettings = () => {
           >
             <SingleLine>
               {key}
-              <DarkSubTitle>{`${element.symbol} ${numeral(element.last).format(
-                '0,0'
-              )}`}</DarkSubTitle>
+              <DarkSubTitle>{`${element.symbol} ${Number(
+                element.last
+              ).toLocaleString('en-US', {
+                maximumFractionDigits: 0,
+              })}`}</DarkSubTitle>
               <ColorButton
                 onClick={() => handleFiatClick(key)}
                 disabled={isCurrent}
@@ -95,7 +97,6 @@ export const InterfaceSettings = () => {
             <MultiButton>
               {renderButton('Light', 'light', 'theme', theme)}
               {renderButton('Dark', 'dark', 'theme', theme)}
-              {renderButton('Night', 'night', 'theme', theme)}
             </MultiButton>
           </SettingsLine>
           <SettingsLine>

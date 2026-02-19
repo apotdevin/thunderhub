@@ -66,7 +66,7 @@ export class FilesService {
         const yamlString = yaml.dump({ backupsEnabled: false });
         fs.writeFileSync(filePath, yamlString);
         this.logger.info('Succesfully created yaml file.');
-      } catch (error: any) {
+      } catch {
         this.logger.error('Error creating yaml file.');
         return null;
       }
@@ -99,7 +99,7 @@ export class FilesService {
       const yamlString = yaml.dump(config);
       fs.writeFileSync(filePath, yamlString);
       this.logger.info('Succesfully saved');
-    } catch (error: any) {
+    } catch {
       this.logger.error('Error saving yaml file.');
     }
   };
@@ -167,7 +167,7 @@ export class FilesService {
 
     cloned.accounts = hashedAccounts;
 
-    hasChanged && this.saveHashedYaml(cloned, filePath);
+    if (hasChanged) this.saveHashedYaml(cloned, filePath);
 
     return cloned;
   }
@@ -372,19 +372,15 @@ export class FilesService {
       return null;
     }
 
-    const adminExists = fs.existsSync(`${macaroonPath}/admin.macaroon`);
+    const fullPath = path.join(macaroonPath, 'admin.macaroon');
+    const adminExists = fs.existsSync(fullPath);
 
     if (!adminExists) {
-      this.logger.error(
-        `No admin.macaroon file found at path: ${macaroonPath}/admin.macaroon`
-      );
+      this.logger.error(`No admin.macaroon file found at path: ${fullPath}`);
       return null;
     } else {
       try {
-        const ssoAdmin = fs.readFileSync(
-          `${macaroonPath}/admin.macaroon`,
-          'hex'
-        );
+        const ssoAdmin = fs.readFileSync(fullPath, 'hex');
         return ssoAdmin;
       } catch (error: any) {
         this.logger.error(
@@ -401,7 +397,7 @@ export class FilesService {
       const curDir = path.resolve(parentDir, childDir);
       try {
         if (!fs.existsSync(curDir)) {
-          fs.mkdirSync(curDir);
+          fs.mkdirSync(curDir, { mode: 0o700 });
         }
       } catch (error: any) {
         if (error.code !== 'EEXIST') {

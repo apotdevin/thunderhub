@@ -1,5 +1,4 @@
-import React from 'react';
-import getConfig from 'next/config';
+import { config } from '../../config/thunderhubConfig';
 import { Section } from '../../components/section/Section';
 import { Link } from '../../components/link/Link';
 import { Emoji } from '../../components/emoji/Emoji';
@@ -16,13 +15,10 @@ import {
   FooterRow,
   FooterCenterText,
 } from './Footer.styled';
-import { useRouter } from 'next/router';
-
-const { publicRuntimeConfig } = getConfig();
-const { npmVersion } = publicRuntimeConfig;
+import { useLocation } from 'react-router-dom';
 
 export const Footer = () => {
-  const { pathname } = useRouter();
+  const { pathname } = useLocation();
 
   return (
     <FooterWrapper>
@@ -36,7 +32,7 @@ export const Footer = () => {
             <SideFooter>
               <Line>
                 <Title>ThunderHub</Title>
-                <Version>{npmVersion}</Version>
+                <Version>{config.npmVersion}</Version>
               </Line>
               <SideText>Open-source Lightning Node Manager.</SideText>
             </SideFooter>

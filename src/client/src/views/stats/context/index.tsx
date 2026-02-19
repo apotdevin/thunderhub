@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useContext, useReducer } from 'react';
+import { FC, ReactNode, createContext, useContext, useReducer } from 'react';
 
 type State = {
   volumeScore: number | null;
@@ -37,7 +37,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const StatsProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
+const StatsProvider: FC<{ children?: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (

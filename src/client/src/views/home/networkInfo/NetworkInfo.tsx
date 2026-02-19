@@ -1,6 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
-import { Globe, Cpu } from 'react-feather';
+import { Globe, Cpu } from 'lucide-react';
 import { useGetNetworkInfoQuery } from '../../../graphql/queries/__generated__/getNetworkInfo.generated';
 import {
   Card,
@@ -60,7 +59,7 @@ const Padding = styled.span`
 `;
 
 export const NetworkInfo = () => {
-  const { loading, data, error } = useGetNetworkInfoQuery({ ssr: false });
+  const { loading, data, error } = useGetNetworkInfoQuery();
 
   if (error) {
     return null;

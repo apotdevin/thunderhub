@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronRight, Settings, X } from 'react-feather';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from 'react';
+import { ChevronRight, Settings, X } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useOpenChannelMutation } from '../../../graphql/mutations/__generated__/openChannel.generated';
 import { InputWithDeco } from '../../../components/input/InputWithDeco';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';

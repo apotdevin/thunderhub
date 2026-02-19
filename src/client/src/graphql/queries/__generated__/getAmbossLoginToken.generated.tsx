@@ -58,13 +58,39 @@ export function useGetAmbossLoginTokenLazyQuery(
     GetAmbossLoginTokenQueryVariables
   >(GetAmbossLoginTokenDocument, options);
 }
+// @ts-ignore
 export function useGetAmbossLoginTokenSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetAmbossLoginTokenQuery,
     GetAmbossLoginTokenQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetAmbossLoginTokenQuery,
+  GetAmbossLoginTokenQueryVariables
+>;
+export function useGetAmbossLoginTokenSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAmbossLoginTokenQuery,
+        GetAmbossLoginTokenQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetAmbossLoginTokenQuery | undefined,
+  GetAmbossLoginTokenQueryVariables
+>;
+export function useGetAmbossLoginTokenSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAmbossLoginTokenQuery,
+        GetAmbossLoginTokenQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetAmbossLoginTokenQuery,
     GetAmbossLoginTokenQueryVariables

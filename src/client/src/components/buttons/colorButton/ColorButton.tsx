@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import styled, { css } from 'styled-components';
-import { ChevronRight } from 'react-feather';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import { ChevronRight } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { ThemeSet } from 'styled-theming';
 import {
   textColor,
@@ -134,7 +134,7 @@ export interface ColorButtonProps {
   children?: ReactNode;
 }
 
-export const ColorButton: React.FC<ColorButtonProps> = ({
+export const ColorButton: FC<ColorButtonProps> = ({
   loading,
   color,
   disabled,
@@ -174,7 +174,11 @@ export const ColorButton: React.FC<ColorButtonProps> = ({
         mobileFullWidth={mobileFullWidth}
         buttonWidth={width}
       >
-        <ScaleLoader height={16} color={themeColors.blue2} />
+        <Loader2
+          className="animate-spin"
+          size={16}
+          style={{ color: themeColors.blue2 }}
+        />
       </DisabledButton>
     );
   }

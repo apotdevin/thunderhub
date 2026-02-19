@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import {
   Card,
   Sub4Title,
@@ -6,12 +6,12 @@ import {
   SingleLine,
 } from '../../../components/generic/Styled';
 import { DetailsChange } from '../../../components/details/detailsChange';
-import { X } from 'react-feather';
+import { X } from 'lucide-react';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
 import { OpenChannel } from '../../home/liquidity/OpenChannel';
 
 export const ChannelManage = () => {
-  const [openWindow, setOpenWindow] = React.useState<string>('none');
+  const [openWindow, setOpenWindow] = useState<string>('none');
 
   const renderOpenButton = () => (
     <SingleLine>

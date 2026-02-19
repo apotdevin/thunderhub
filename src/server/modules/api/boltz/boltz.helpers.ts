@@ -17,9 +17,9 @@ export const getHexBuffer = (input: string) => {
   return Buffer.from(input, 'hex');
 };
 
-export const getHexString = (input?: Buffer): string => {
+export const getHexString = (input?: Buffer | Uint8Array): string => {
   if (!input) return '';
-  return input.toString('hex');
+  return Buffer.from(input).toString('hex');
 };
 
 export const validateAddress = (
@@ -29,7 +29,7 @@ export const validateAddress = (
   try {
     address.toOutputScript(btcAddress, network);
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 };
@@ -61,7 +61,7 @@ export const findTaprootOutput = (
 
     const musig = new Musig(zkp, keys, randomBytes(32), [
       compressedKey,
-      keys.publicKey,
+      Buffer.from(keys.publicKey),
     ]);
     const tweakedKey = TaprootUtils.tweakMusig(musig, tree.tree);
 

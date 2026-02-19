@@ -1,8 +1,8 @@
-import * as React from 'react';
+import { useEffect } from 'react';
 import { ThemeSet } from 'styled-theming';
-import { toast } from 'react-toastify';
-import { Circle } from 'react-feather';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import toast from 'react-hot-toast';
+import { Circle } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useSendMessageMutation } from '../../graphql/mutations/__generated__/sendMessage.generated';
 import { useMutationResultWithReset } from '../../hooks/UseMutationWithReset';
 import { useAccount } from '../../hooks/UseAccount';
@@ -43,7 +43,7 @@ const SendButton = ({ amount }: SendButtonProps) => {
   });
   const [data, resetMutationResult] = useMutationResultWithReset(_data);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!loading && data && data?.sendMessage) {
       dispatch({
         type: 'newChat',
@@ -79,7 +79,11 @@ const SendButton = ({ amount }: SendButtonProps) => {
         })
       }
     >
-      {loading ? <ScaleLoader height={8} color={'white'} width={2} /> : 'Pay'}
+      {loading ? (
+        <Loader2 className="animate-spin" size={8} color={'white'} />
+      ) : (
+        'Pay'
+      )}
     </ChatSendButton>
   );
 };

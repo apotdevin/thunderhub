@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
-import { GitCommit, ArrowDown, ArrowUp } from 'react-feather';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { GitCommit, ArrowDown, ArrowUp } from 'lucide-react';
 import {
   MultiButton,
   SingleButton,
@@ -25,7 +25,6 @@ export const ForwardChannelsReport = ({ days }: Props) => {
   const [type, setType] = useState<'route' | 'incoming' | 'outgoing'>('route');
 
   const { data, loading } = useGetForwardsQuery({
-    ssr: false,
     variables: { days },
     onError: error => toast.error(getErrorContent(error)),
   });

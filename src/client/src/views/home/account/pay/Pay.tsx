@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../../utils/error';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { useState, VFC } from 'react';
@@ -61,7 +61,7 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
 
   const [pay, { loading }] = usePayMutation({
     onCompleted: () => {
-      payCallback && payCallback();
+      if (payCallback) payCallback();
       toast.success('Payment Sent');
       setRequest('');
     },
@@ -117,7 +117,6 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
       <Separation />
       <ChannelSelect
         title={'Out Channels'}
-        isMulti={true}
         maxWidth={'300px'}
         callback={p => setPeers(p.map(peer => peer.id))}
       />

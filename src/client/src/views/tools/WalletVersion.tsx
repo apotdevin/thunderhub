@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useGetWalletInfoQuery } from '../../graphql/queries/__generated__/getWalletInfo.generated';
 import {
   CardWithTitle,
@@ -11,9 +10,7 @@ import { LoadingCard } from '../../components/loading/LoadingCard';
 import { renderLine } from '../../components/generic/helpers';
 
 export const WalletVersion = () => {
-  const { data, loading, error } = useGetWalletInfoQuery({
-    ssr: false,
-  });
+  const { data, loading, error } = useGetWalletInfoQuery();
 
   const getStatus = (status: boolean) => (status ? 'Enabled' : 'Disabled');
 

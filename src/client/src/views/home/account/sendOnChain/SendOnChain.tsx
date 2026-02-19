@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { usePayAddressMutation } from '../../../../graphql/mutations/__generated__/sendToAddress.generated';
 import { InputWithDeco } from '../../../../components/input/InputWithDeco';
 import { useBitcoinFees } from '../../../../hooks/UseBitcoinFees';

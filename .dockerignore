@@ -4,13 +4,14 @@
 *.md
 !README*.md
 /node_modules
-/.next
-src/client/.next
 /dist
 /docs
 /.github
 .vscode
 CHANGELOG.md
+coverage
+test
+src/client/dist
 
 # all env files
 .env

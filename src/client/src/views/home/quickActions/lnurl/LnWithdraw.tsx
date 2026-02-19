@@ -12,10 +12,10 @@ import { ColorButton } from '../../../../components/buttons/colorButton/ColorBut
 import { useWithdrawLnUrlMutation } from '../../../../graphql/mutations/__generated__/lnUrl.generated';
 import { useGetInvoiceStatusChangeLazyQuery } from '../../../../graphql/queries/__generated__/getInvoiceStatusChange.generated';
 import { chartColors } from '../../../../styles/Themes';
-import { CheckCircle } from 'react-feather';
+import { CheckCircle } from 'lucide-react';
 import { Link } from '../../../../components/link/Link';
 import { getErrorContent } from '../../../../utils/error';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { Timer } from '../../account/createInvoice/Timer';
 
 const Center = styled.div`
@@ -144,9 +144,9 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
           withMargin={'16px 0 0'}
           onClick={() => {
             if (min && amount < min) {
-              toast.warning('Amount is below the minimum');
+              toast.error('Amount is below the minimum');
             } else if (max && amount > max) {
-              toast.warning('Amount is above the maximum');
+              toast.error('Amount is above the maximum');
             } else {
               withdraw({
                 variables: { callback, amount, k1: k1 || '', description },

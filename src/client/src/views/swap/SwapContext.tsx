@@ -1,11 +1,12 @@
-import React, {
+import {
+  FC,
   createContext,
   useContext,
   useReducer,
   useEffect,
   ReactNode,
 } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { CreateBoltzReverseSwap } from './types';
 
 type State = {
@@ -76,14 +77,14 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const SwapsProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
+const SwapsProvider: FC<{ children?: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   useEffect(() => {
     try {
       const swaps = JSON.parse(localStorage.getItem('swaps') || '[]');
       dispatch({ type: 'init', swaps });
-    } catch (error: any) {
+    } catch {
       toast.error('Invalid swaps stored in browser');
     }
   }, []);

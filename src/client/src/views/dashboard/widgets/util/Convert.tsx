@@ -1,4 +1,3 @@
-import numeral from 'numeral';
 import { useState } from 'react';
 import { Input } from '../../../../components/input';
 import { SelectWithValue } from '../../../../components/select';
@@ -96,11 +95,11 @@ export const ConvertWidget = () => {
   const getValue = (value: number, current: string) => {
     switch (current) {
       case 'btc':
-        return numeral(value).format('0,0.[00000000]');
+        return value.toLocaleString('en-US', { maximumFractionDigits: 8 });
       case 'sat':
-        return numeral(value).format('0,0');
+        return value.toLocaleString('en-US', { maximumFractionDigits: 0 });
       default:
-        return numeral(value).format('0,0.[00]');
+        return value.toLocaleString('en-US', { maximumFractionDigits: 2 });
     }
   };
 

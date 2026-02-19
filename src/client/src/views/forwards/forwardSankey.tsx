@@ -1,5 +1,5 @@
-import React, { FC, useMemo } from 'react';
-import { toast } from 'react-toastify';
+import { FC, useMemo } from 'react';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
 import styled from 'styled-components';
 import { mediaWidths } from '../../styles/Themes';
@@ -36,7 +36,6 @@ export const ForwardSankey: FC<{
   type: string;
 }> = ({ days, type }) => {
   const { data, loading } = useGetForwardsQuery({
-    ssr: false,
     variables: { days },
     onError: error => toast.error(getErrorContent(error)),
   });

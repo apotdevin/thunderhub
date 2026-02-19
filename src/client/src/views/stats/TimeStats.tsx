@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { useGetTimeHealthQuery } from '../../graphql/queries/__generated__/getTimeHealth.generated';
 import {
   SubCard,
@@ -46,7 +46,7 @@ const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
     </>
   );
   return (
-    <React.Fragment key={channel.id || ''}>
+    <Fragment key={channel.id || ''}>
       <SubCard>
         <Clickable onClick={() => openSet(open ? 0 : index)}>
           <ResponsiveLine>
@@ -60,16 +60,16 @@ const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
         </Clickable>
         {open && renderContent()}
       </SubCard>
-    </React.Fragment>
+    </Fragment>
   );
 };
 
 export const TimeStats = () => {
-  const [open, openSet] = React.useState(0);
+  const [open, openSet] = useState(0);
   const dispatch = useStatsDispatch();
-  const { data, loading } = useGetTimeHealthQuery({ ssr: false });
+  const { data, loading } = useGetTimeHealthQuery();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data && data.getTimeHealth) {
       dispatch({
         type: 'change',

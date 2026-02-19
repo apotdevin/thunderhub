@@ -103,13 +103,39 @@ export function useGetPendingChannelsLazyQuery(
     GetPendingChannelsQueryVariables
   >(GetPendingChannelsDocument, options);
 }
+// @ts-ignore
 export function useGetPendingChannelsSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetPendingChannelsQuery,
     GetPendingChannelsQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetPendingChannelsQuery,
+  GetPendingChannelsQueryVariables
+>;
+export function useGetPendingChannelsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetPendingChannelsQuery,
+        GetPendingChannelsQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetPendingChannelsQuery | undefined,
+  GetPendingChannelsQueryVariables
+>;
+export function useGetPendingChannelsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetPendingChannelsQuery,
+        GetPendingChannelsQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetPendingChannelsQuery,
     GetPendingChannelsQueryVariables

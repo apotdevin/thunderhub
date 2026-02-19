@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
-import { RefreshCw, Trash } from 'react-feather';
+import { RefreshCw, Trash } from 'lucide-react';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import { getAddressLink } from '../../components/generic/helpers';

@@ -5,7 +5,7 @@ import { appConstants } from 'src/server/utils/appConstants';
 import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import {
   AmbossUser,
   LightningNodeSocialInfo,
@@ -77,6 +77,7 @@ export class AmbossResolver {
         if (ambossAuth) return ambossAuth;
 
         const jwt = await this.ambossService.getAmbossJWT(user.id);
+        const isProduction = this.configService.get('isProduction');
 
         res.setHeader(
           'Set-Cookie',
@@ -85,6 +86,7 @@ export class AmbossResolver {
             httpOnly: true,
             sameSite: true,
             path: '/',
+            secure: isProduction,
           })
         );
 
@@ -291,6 +293,7 @@ export class AmbossResolver {
     @CurrentUser() user: UserId
   ) {
     const jwt = await this.ambossService.getAmbossJWT(user.id);
+    const isProduction = this.configService.get('isProduction');
 
     res.setHeader(
       'Set-Cookie',
@@ -299,6 +302,7 @@ export class AmbossResolver {
         httpOnly: true,
         sameSite: true,
         path: '/',
+        secure: isProduction,
       })
     );
 

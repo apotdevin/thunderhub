@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { Heart } from 'react-feather';
+import { Heart } from 'lucide-react';
 import styled from 'styled-components';
 import {
   chartColors,

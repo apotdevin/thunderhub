@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import {
   multiSelectColor,
@@ -6,7 +6,7 @@ import {
   multiButtonColor,
   themeColors,
 } from '../../../styles/Themes';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import { Loader2 } from 'lucide-react';
 
 interface StyledSingleProps {
   selected?: boolean;
@@ -44,7 +44,7 @@ interface SingleButtonProps {
   children?: ReactNode;
 }
 
-export const SingleButton: React.FC<SingleButtonProps> = ({
+export const SingleButton: FC<SingleButtonProps> = ({
   children,
   disabled,
   selected,
@@ -59,7 +59,7 @@ export const SingleButton: React.FC<SingleButtonProps> = ({
       buttonColor={color}
       withPadding={withPadding}
       onClick={() => {
-        onClick && onClick();
+        if (onClick) onClick();
       }}
     >
       {children}
@@ -90,7 +90,7 @@ interface MultiButtonProps {
   children?: ReactNode;
 }
 
-export const MultiButton: React.FC<MultiButtonProps> = ({
+export const MultiButton: FC<MultiButtonProps> = ({
   children,
   margin,
   loading,
@@ -100,7 +100,11 @@ export const MultiButton: React.FC<MultiButtonProps> = ({
     <MultiBackground margin={margin}>
       {loading ? (
         <div style={{ width, textAlign: 'center' }}>
-          <ScaleLoader height={21} color={themeColors.blue3} />
+          <Loader2
+            className="animate-spin"
+            size={21}
+            style={{ color: themeColors.blue3 }}
+          />
         </div>
       ) : (
         children

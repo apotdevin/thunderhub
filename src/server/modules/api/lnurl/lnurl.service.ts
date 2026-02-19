@@ -3,8 +3,7 @@ import { NodeService } from '../../node/node.service';
 import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import { enc } from 'crypto-js';
-import hmacSHA256 from 'crypto-js/hmac-sha256';
+import { hmacSHA256 } from 'src/server/utils/crypto';
 import { entropyToMnemonic, mnemonicToSeedSync } from 'bip39';
 import BIP32Factory, { BIP32Interface } from 'bip32';
 import secp256k1 from 'secp256k1';
@@ -48,7 +47,7 @@ export class LnUrlService {
     });
 
     // Generate hash from host and entropy
-    const hashed = hmacSHA256(host, secret.secret).toString(enc.Hex);
+    const hashed = hmacSHA256(host, secret.secret);
 
     const indexes =
       hashed.match(/.{1,4}/g)?.map(index => parseInt(index, 16)) || [];

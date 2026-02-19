@@ -57,13 +57,39 @@ export function useGetLiquidityPerUsdLazyQuery(
     GetLiquidityPerUsdQueryVariables
   >(GetLiquidityPerUsdDocument, options);
 }
+// @ts-ignore
 export function useGetLiquidityPerUsdSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetLiquidityPerUsdQuery,
     GetLiquidityPerUsdQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetLiquidityPerUsdQuery,
+  GetLiquidityPerUsdQueryVariables
+>;
+export function useGetLiquidityPerUsdSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetLiquidityPerUsdQuery,
+        GetLiquidityPerUsdQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetLiquidityPerUsdQuery | undefined,
+  GetLiquidityPerUsdQueryVariables
+>;
+export function useGetLiquidityPerUsdSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetLiquidityPerUsdQuery,
+        GetLiquidityPerUsdQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetLiquidityPerUsdQuery,
     GetLiquidityPerUsdQueryVariables

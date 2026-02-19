@@ -1,4 +1,3 @@
-import React from 'react';
 import { useConfigState } from '../../context/ConfigContext';
 import { getValue } from '../../utils/helpers';
 import { usePriceState } from '../../context/PriceContext';

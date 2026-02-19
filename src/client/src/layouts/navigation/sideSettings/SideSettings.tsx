@@ -1,5 +1,11 @@
-import React, { FC, SVGAttributes } from 'react';
-import { Sun, Moon, ChevronLeft, ChevronRight, Star } from 'react-feather';
+import { FC } from 'react';
+import {
+  Sun,
+  Moon,
+  ChevronLeft,
+  ChevronRight,
+  LucideProps,
+} from 'lucide-react';
 import styled from 'styled-components';
 import { SatoshiSymbol } from '../../../components/satoshi/Satoshi';
 import { Separation, SingleLine } from '../../../components/generic/Styled';
@@ -15,13 +21,7 @@ import {
 } from '../../../styles/Themes';
 import { usePriceState } from '../../../context/PriceContext';
 
-// Icon import from react-feather is not working
-// TODO: recheck if the type is available
-type IconProps = SVGAttributes<SVGElement> & {
-  color?: string;
-  size?: string | number;
-};
-type Icon = FC<IconProps>;
+type Icon = FC<LucideProps>;
 
 const SelectedIcon = styled.div<{ selected: boolean }>`
   display: flex;
@@ -63,7 +63,7 @@ const BurgerPadding = styled(SingleLine)`
 const currencyArray = ['sat', 'btc', 'fiat'];
 const currencyNoFiatArray = ['sat', 'btc'];
 
-const themeArray = ['light', 'dark', 'night'];
+const themeArray = ['light', 'dark'];
 
 const currencyMap: { [key: string]: string } = {
   sat: 'S',
@@ -127,13 +127,14 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         }
         onClick={() => {
           localStorage.setItem(type, value);
-          type === 'currency' &&
+          if (type === 'currency') {
             dispatch({
               type: 'change',
               currency:
                 sidebar || isBurger ? value : getNextValue(correctArray, value),
             });
-          type === 'theme' && dispatch({ type: 'themeChange', theme: value });
+          }
+          if (type === 'theme') dispatch({ type: 'themeChange', theme: value });
         }}
       >
         {renderText()}
@@ -172,7 +173,6 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         <IconRow>
           {renderIcon('theme', 'light', '', false, Sun)}
           {renderIcon('theme', 'dark', '', false, Moon)}
-          {renderIcon('theme', 'night', '', false, Star)}
         </IconRow>
       </>
     );
@@ -189,7 +189,6 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         <IconRow>
           {renderIcon('theme', 'light', '', false, Sun)}
           {renderIcon('theme', 'dark', '', false, Moon)}
-          {renderIcon('theme', 'night', '', false, Star)}
         </IconRow>
       </BurgerPadding>
     );

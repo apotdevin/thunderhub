@@ -1,15 +1,16 @@
-import React, {
+import {
+  FC,
   createContext,
   useContext,
   useReducer,
   useEffect,
   ReactNode,
 } from 'react';
-import getConfig from 'next/config';
 import Cookies from 'js-cookie';
 import { omit } from 'lodash';
+import { config } from '../config/thunderhubConfig';
 
-const themeTypes = ['dark', 'light', 'night'];
+const themeTypes = ['dark', 'light'];
 const currencyTypes = ['sat', 'btc', 'fiat'];
 
 export type channelBarStyleTypes =
@@ -39,7 +40,6 @@ export type maxSatValueType = 'auto' | 1000000 | 5000000 | 10000000 | 16777215;
 type State = {
   currency: string;
   theme: string;
-  lnMarketsAuth: boolean;
   sidebar: boolean;
   fetchFees: boolean;
   fetchPrices: boolean;
@@ -67,7 +67,6 @@ type ActionType =
       type: 'change' | 'initChange';
       currency?: string;
       theme?: string;
-      lnMarketsAuth?: boolean;
       sidebar?: boolean;
       fetchFees?: boolean;
       fetchPrices?: boolean;
@@ -91,33 +90,27 @@ type Dispatch = (action: ActionType) => void;
 const StateContext = createContext<State | undefined>(undefined);
 const DispatchContext = createContext<Dispatch | undefined>(undefined);
 
-const { publicRuntimeConfig } = getConfig();
-const {
-  defaultTheme: defT,
-  defaultCurrency: defC,
-  fetchPrices,
-  fetchFees,
-} = publicRuntimeConfig;
-
-const initialState: State = {
-  currency: currencyTypes.indexOf(defC) > -1 ? defC : 'sat',
-  theme: themeTypes.indexOf(defT) > -1 ? defT : 'dark',
-  lnMarketsAuth: false,
-  sidebar: true,
-  fetchFees,
-  fetchPrices,
-  displayValues: true,
-  hideFee: false,
-  hideNonVerified: false,
-  maxFee: 20,
-  chatPollingSpeed: 1000,
-  channelBarStyle: 'normal',
-  channelBarType: 'balance',
-  channelSort: 'none',
-  sortDirection: 'decrease',
-  extraColumns: 'none',
-  maxSatValue: 'auto',
-  useSatWord: false,
+const getInitialState = (): State => {
+  const { defaultTheme: defT, defaultCurrency: defC } = config;
+  return {
+    currency: currencyTypes.indexOf(defC) > -1 ? defC : 'sat',
+    theme: themeTypes.indexOf(defT) > -1 ? defT : 'dark',
+    sidebar: true,
+    fetchFees: config.fetchFees,
+    fetchPrices: config.fetchPrices,
+    displayValues: true,
+    hideFee: false,
+    hideNonVerified: false,
+    maxFee: 20,
+    chatPollingSpeed: 1000,
+    channelBarStyle: 'normal',
+    channelBarType: 'balance',
+    channelSort: 'none',
+    sortDirection: 'decrease',
+    extraColumns: 'none',
+    maxSatValue: 'auto',
+    useSatWord: false,
+  };
 };
 
 const stateReducer = (state: State, action: ActionType): State => {
@@ -134,10 +127,7 @@ const stateReducer = (state: State, action: ActionType): State => {
         ...state,
         ...settings,
       };
-      localStorage.setItem(
-        'config',
-        JSON.stringify(omit(newState, 'theme', 'lnMarketsAuth'))
-      );
+      localStorage.setItem('config', JSON.stringify(omit(newState, 'theme')));
       return newState;
     }
     case 'themeChange': {
@@ -158,12 +148,12 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const ConfigProvider: React.FC<ConfigInitProps> = ({
+const ConfigProvider: FC<ConfigInitProps> = ({
   children,
   initialConfig = { theme: 'dark' },
 }) => {
   const [state, dispatch] = useReducer(stateReducer, {
-    ...initialState,
+    ...getInitialState(),
     theme:
       themeTypes.indexOf(initialConfig.theme) > -1
         ? initialConfig.theme

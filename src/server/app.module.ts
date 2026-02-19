@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ViewModule } from './modules/view/view.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { WinstonModule } from 'nest-winston';
 import { AuthenticationModule } from './modules/security/security.module';
 import { FilesModule } from './modules/files/files.module';
@@ -14,9 +15,10 @@ import { appConstants } from './utils/appConstants';
 import { transports, format } from 'winston';
 import configuration from './config/configuration';
 import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
-import { WsModule } from './modules/ws/ws.module';
+import * as cookie from 'cookie';
+import { SseModule } from './modules/sse/sse.module';
 import { SubModule } from './modules/sub/sub.module';
+import { ClientConfigModule } from './modules/clientConfig/clientConfig.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ScheduleModule } from '@nestjs/schedule';
 import {
@@ -31,7 +33,6 @@ export type ContextType = {
   req: any;
   res: any;
   authToken?: JwtObjectType;
-  lnMarketsAuth: string | null;
   tokenAuth: string | null;
   ambossAuth: string | null;
   loaders: DataloaderTypes;
@@ -48,7 +49,8 @@ export type JwtObjectType = {
   imports: [
     AuthenticationModule,
     SubModule,
-    WsModule,
+    SseModule,
+    ClientConfigModule,
     ApiModule,
     NodeModule,
     AuthenticationModule,
@@ -74,7 +76,7 @@ export type JwtObjectType = {
         playground: config.get('playground'),
         introspection: config.get('playground'),
         cors: {
-          origin: true,
+          origin: config.get('isProduction') ? false : true,
           credentials: true,
         },
         path: `${config.get('basePath')}/graphql`,
@@ -83,7 +85,6 @@ export type JwtObjectType = {
 
           const token = getAuthToken(req);
 
-          const lnMarketsAuth = cookies[appConstants.lnMarketsAuth];
           const tokenAuth = cookies[appConstants.tokenCookieName];
           const ambossAuth = cookies[appConstants.ambossCookieName];
 
@@ -92,7 +93,6 @@ export type JwtObjectType = {
           const context = {
             req,
             res,
-            lnMarketsAuth,
             tokenAuth,
             ambossAuth,
             loaders,
@@ -107,7 +107,7 @@ export type JwtObjectType = {
               ...context,
               authToken,
             };
-          } catch (error) {
+          } catch {
             return context;
           }
         },
@@ -124,8 +124,20 @@ export type JwtObjectType = {
           : combine(timestamp(), prettyPrint()),
       }),
     }),
-    // ViewModule has to be the last because of the wildcard controller
-    ViewModule,
+    ServeStaticModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => [
+        {
+          rootPath: join(process.cwd(), 'src', 'client', 'dist'),
+          serveRoot: config.get('basePath'),
+          exclude: [
+            `${config.get('basePath') || ''}/graphql{*path}`,
+            `${config.get('basePath') || ''}/api{*path}`,
+          ],
+        },
+      ],
+    }),
   ],
 })
 export class AppModule {}

@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeSet } from 'styled-theming';
-import RouterLink from 'next/link';
+import { Link as RouterLink } from 'react-router-dom';
 import { textColor, linkHighlight } from '../../styles/Themes';
 
 interface StyledProps {
@@ -11,10 +11,38 @@ interface StyledProps {
   fullWidth?: boolean;
 }
 
+const StyledSpan = styled.span<StyledProps>`
+  cursor: pointer;
+  color: ${({ fontColor, inheritColor }) =>
+    inheritColor ? 'inherit' : (fontColor ?? textColor)};
+  text-decoration: none;
+  ${({ fullWidth }: StyledProps) =>
+    fullWidth &&
+    css`
+      width: 100%;
+    `};
+
+  :hover {
+    background: linear-gradient(
+      to bottom,
+      ${({ underline }: StyledProps) => underline ?? linkHighlight} 0%,
+      ${({ underline }: StyledProps) => underline ?? linkHighlight} 100%
+    );
+    background-position: 0 100%;
+    background-size: 2px 2px;
+    background-repeat: repeat-x;
+  }
+`;
+
+const NoStylingSpan = styled.span`
+  cursor: pointer;
+  text-decoration: none;
+`;
+
 const StyledLink = styled.a<StyledProps>`
   cursor: pointer;
   color: ${({ fontColor, inheritColor }) =>
-    inheritColor ? 'inherit' : fontColor ?? textColor};
+    inheritColor ? 'inherit' : (fontColor ?? textColor)};
   text-decoration: none;
   ${({ fullWidth }: StyledProps) =>
     fullWidth &&
@@ -51,7 +79,7 @@ interface LinkProps {
   children?: ReactNode;
 }
 
-export const Link: React.FC<LinkProps> = ({
+export const Link: FC<LinkProps> = ({
   children,
   href,
   to,
@@ -81,9 +109,10 @@ export const Link: React.FC<LinkProps> = ({
   }
 
   if (to) {
+    const CorrectSpan = noStyling ? NoStylingSpan : StyledSpan;
     return (
-      <RouterLink href={to} passHref legacyBehavior>
-        <CorrectLink {...props}>{children}</CorrectLink>
+      <RouterLink to={to} style={{ textDecoration: 'none' }}>
+        <CorrectSpan {...props}>{children}</CorrectSpan>
       </RouterLink>
     );
   }

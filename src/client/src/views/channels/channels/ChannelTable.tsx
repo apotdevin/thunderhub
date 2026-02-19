@@ -7,8 +7,8 @@ import {
   Circle,
   Edit,
   X,
-} from 'react-feather';
-import { toast } from 'react-toastify';
+} from 'lucide-react';
+import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import { BalanceBars } from '../../../components/balance';
 import {

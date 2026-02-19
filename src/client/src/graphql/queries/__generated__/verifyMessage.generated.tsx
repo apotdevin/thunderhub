@@ -40,7 +40,11 @@ export function useVerifyMessageQuery(
   baseOptions: Apollo.QueryHookOptions<
     VerifyMessageQuery,
     VerifyMessageQueryVariables
-  >
+  > &
+    (
+      | { variables: VerifyMessageQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<VerifyMessageQuery, VerifyMessageQueryVariables>(
@@ -60,13 +64,39 @@ export function useVerifyMessageLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useVerifyMessageSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     VerifyMessageQuery,
     VerifyMessageQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  VerifyMessageQuery,
+  VerifyMessageQueryVariables
+>;
+export function useVerifyMessageSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        VerifyMessageQuery,
+        VerifyMessageQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  VerifyMessageQuery | undefined,
+  VerifyMessageQueryVariables
+>;
+export function useVerifyMessageSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        VerifyMessageQuery,
+        VerifyMessageQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     VerifyMessageQuery,
     VerifyMessageQueryVariables

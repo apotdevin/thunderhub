@@ -1,4 +1,4 @@
-import { useGetNodeBalancesQuery } from '../../src/graphql/queries/__generated__/getNodeBalances.generated';
+import { useGetNodeBalancesQuery } from '@/graphql/queries/__generated__/getNodeBalances.generated';
 
 const initialState = {
   onchain: { confirmed: '0', pending: '0', closing: '0' },

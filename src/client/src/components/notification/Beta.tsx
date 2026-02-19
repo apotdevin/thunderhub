@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { chartColors, mediaWidths } from '../../../src/styles/Themes';
+import { chartColors, mediaWidths } from '@/styles/Themes';
 
 export const BetaNotification = styled.div`
   width: 100%;

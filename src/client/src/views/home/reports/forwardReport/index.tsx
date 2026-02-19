@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SmallSelectWithValue } from '../../../../components/select';
 import styled from 'styled-components';
 import {

@@ -1,8 +1,7 @@
 # compiled output
 /dist
 /node_modules
-/.next
-src/client/.next
+src/client/dist
 
 # Logs
 logs
@@ -48,3 +47,6 @@ config.yaml
 # For Dev
 local_data
 docker-compose.dev.yml
+
+# LLM
+.claude

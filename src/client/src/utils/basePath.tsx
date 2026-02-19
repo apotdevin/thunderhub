@@ -1,6 +1,4 @@
-import getConfig from 'next/config';
+import { config } from '../config/thunderhubConfig';
 
-const { publicRuntimeConfig } = getConfig();
-const { basePath } = publicRuntimeConfig;
-
-export const appendBasePath = (url: string): string => `${basePath}${url}`;
+export const appendBasePath = (url: string): string =>
+  `${config.basePath}${url}`;

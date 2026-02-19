@@ -68,13 +68,39 @@ export function useGetServerAccountsLazyQuery(
     GetServerAccountsQueryVariables
   >(GetServerAccountsDocument, options);
 }
+// @ts-ignore
 export function useGetServerAccountsSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetServerAccountsQuery,
     GetServerAccountsQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetServerAccountsQuery,
+  GetServerAccountsQueryVariables
+>;
+export function useGetServerAccountsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetServerAccountsQuery,
+        GetServerAccountsQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetServerAccountsQuery | undefined,
+  GetServerAccountsQueryVariables
+>;
+export function useGetServerAccountsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetServerAccountsQuery,
+        GetServerAccountsQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetServerAccountsQuery,
     GetServerAccountsQueryVariables
