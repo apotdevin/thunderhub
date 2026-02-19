@@ -49,10 +49,10 @@ export const ForwardSankey: FC<{
       data.getForwards.by_route,
       (p, c) => {
         const source = `source: ${
-          c.incoming_channel_info?.node2_info.alias || 'Unknown'
+          c.incoming_channel_info?.node2_info?.alias || 'Unknown'
         } (${c.incoming_channel})`;
         const target = `target: ${
-          c.outgoing_channel_info?.node2_info.alias || 'Unknown'
+          c.outgoing_channel_info?.node2_info?.alias || 'Unknown'
         } (${c.outgoing_channel})`;
 
         return {
