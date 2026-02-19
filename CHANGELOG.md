@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.15.0](https://github.com/apotdevin/thunderhub/compare/v0.14.6...v0.15.0) (2026-02-19)
+
+
+### Features
+
+* big cleanup and refactor ([#644](https://github.com/apotdevin/thunderhub/issues/644)) ([d94e7c3](https://github.com/apotdevin/thunderhub/commit/d94e7c341c9cce863eedb9b6430f881cf2846834))
+
 ### [0.14.6](https://github.com/apotdevin/thunderhub/compare/v0.14.5...v0.14.6) (2025-09-08)
 
 
