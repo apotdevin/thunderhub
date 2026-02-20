@@ -71,6 +71,7 @@ export type ClientConfig = {
 type ConfigType = {
   basePath: string;
   isProduction: boolean;
+  secureCookie: boolean;
   logJson: boolean;
   playground: boolean;
   logLevel: string;
@@ -186,6 +187,7 @@ export default (): ConfigType => {
     accountConfigPath: process.env.ACCOUNT_CONFIG_PATH || '',
     torProxy: process.env.TOR_PROXY_SERVER || '',
     isProduction,
+    secureCookie: process.env.SECURE_COOKIE === 'true',
     headers,
     throttler,
     sso,
