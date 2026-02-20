@@ -77,7 +77,7 @@ export class AmbossResolver {
         if (ambossAuth) return ambossAuth;
 
         const jwt = await this.ambossService.getAmbossJWT(user.id);
-        const secureCookie = this.configService.get('secureCookie');
+        const useHttps = this.configService.get('useHttps');
 
         res.setHeader(
           'Set-Cookie',
@@ -86,7 +86,7 @@ export class AmbossResolver {
             httpOnly: true,
             sameSite: true,
             path: '/',
-            secure: secureCookie,
+            secure: useHttps,
           })
         );
 
@@ -293,7 +293,7 @@ export class AmbossResolver {
     @CurrentUser() user: UserId
   ) {
     const jwt = await this.ambossService.getAmbossJWT(user.id);
-    const secureCookie = this.configService.get('secureCookie');
+    const useHttps = this.configService.get('useHttps');
 
     res.setHeader(
       'Set-Cookie',
@@ -302,7 +302,7 @@ export class AmbossResolver {
         httpOnly: true,
         sameSite: true,
         path: '/',
-        secure: secureCookie,
+        secure: useHttps,
       })
     );
 

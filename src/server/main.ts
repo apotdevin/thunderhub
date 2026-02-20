@@ -6,12 +6,14 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+  const useHttps = process.env.USE_HTTPS === 'true';
+
   app.use(
     helmet({
       contentSecurityPolicy: {
         directives: {
           ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-          'upgrade-insecure-requests': null,
+          ...(!useHttps && { 'upgrade-insecure-requests': null }),
         },
       },
     })
