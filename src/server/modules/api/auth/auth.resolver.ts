@@ -153,6 +153,7 @@ export class AuthResolver {
     const dangerousNoSSOAuth = this.configService.get('sso.dangerousNoSSOAuth');
     const cookiePath = this.configService.get('cookiePath');
     const isProduction = this.configService.get('isProduction');
+    const secureCookie = this.configService.get('secureCookie');
 
     const ssoAccount = this.accountsService.getAccount('sso');
 
@@ -213,7 +214,7 @@ export class AuthResolver {
           httpOnly: true,
           sameSite: true,
           path: '/',
-          secure: isProduction,
+          secure: secureCookie,
         })
       );
       return true;
@@ -240,6 +241,7 @@ export class AuthResolver {
     }
 
     const isProduction = this.configService.get('isProduction');
+    const secureCookie = this.configService.get('secureCookie');
     const disable2FA = this.configService.get('disable2FA');
 
     if (account.encrypted) {
@@ -309,7 +311,7 @@ export class AuthResolver {
         httpOnly: true,
         sameSite: true,
         path: '/',
-        secure: isProduction,
+        secure: secureCookie,
       })
     );
     return info?.['version'] || ''; // TODO: Remove unsafe casting when GetWalletInfo type is updated
@@ -317,7 +319,7 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   async logout(@Context() { res }: ContextType) {
-    const isProduction = this.configService.get('isProduction');
+    const secureCookie = this.configService.get('secureCookie');
     const cookies = [];
 
     for (const cookieName in appConstants) {
@@ -330,7 +332,7 @@ export class AuthResolver {
             httpOnly: true,
             sameSite: true,
             path: '/',
-            secure: isProduction,
+            secure: secureCookie,
           })
         );
       }
