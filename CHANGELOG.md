@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.15.1](https://github.com/apotdevin/thunderhub/compare/v0.15.0...v0.15.1) (2026-02-20)
+
+
+### Bug Fixes
+
+* handle undefined objects ([d9dc4e2](https://github.com/apotdevin/thunderhub/commit/d9dc4e278fda74dfcba728433d94327f79841b7a))
+* local access ([#646](https://github.com/apotdevin/thunderhub/issues/646)) ([25d5a06](https://github.com/apotdevin/thunderhub/commit/25d5a06d69fd9400a37db6c19af4cdba2c6f2e4a))
+
+
+### Improvements
+
+* dep cleanup ([7d3a211](https://github.com/apotdevin/thunderhub/commit/7d3a2111b8f222caf14b355bd386f8b37b588724))
+* rename config env ([e3f3822](https://github.com/apotdevin/thunderhub/commit/e3f382292ced6355f6f74231092c6b6fa3761020))
+
 ## [0.15.0](https://github.com/apotdevin/thunderhub/compare/v0.14.6...v0.15.0) (2026-02-19)
 
 
