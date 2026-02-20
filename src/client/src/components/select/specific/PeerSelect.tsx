@@ -1,17 +1,15 @@
-import React from 'react';
-import { useGetPeersQuery } from '../../../../src/graphql/queries/__generated__/getPeers.generated';
-import { shorten } from '../../../../src/components/generic/helpers';
-import { Peer } from '../../../../src/graphql/types';
+import { useGetPeersQuery } from '@/graphql/queries/__generated__/getPeers.generated';
+import { shorten } from '@/components/generic/helpers';
+import { Peer } from '@/graphql/types';
 import { SelectWithDeco } from '../SelectWithDeco';
 import { ValueProp } from '..';
 
 type PeerSelectProps = {
   title: string;
-  isMulti?: boolean;
   callback: (peer: Peer[]) => void;
 };
 
-export const PeerSelect = ({ title, isMulti, callback }: PeerSelectProps) => {
+export const PeerSelect = ({ title, callback }: PeerSelectProps) => {
   const { data, loading } = useGetPeersQuery();
 
   const peers = data?.getPeers || [];
@@ -55,7 +53,6 @@ export const PeerSelect = ({ title, isMulti, callback }: PeerSelectProps) => {
 
   return (
     <SelectWithDeco
-      isMulti={isMulti}
       loading={loading}
       title={title}
       options={options}

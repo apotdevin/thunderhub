@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { InputWithDeco } from '../../../../components/input/InputWithDeco';
 import {
   MultiButton,
@@ -29,7 +29,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
     if (!isRequest) {
       setModalOpen(true);
     } else {
-      toast.warn('Please Input a Public Key');
+      toast.error('Please Input a Public Key');
     }
   };
 

@@ -23,7 +23,7 @@ export class AuthenticationService {
           return payload.sub;
         }
       }
-    } catch (error) {
+    } catch {
       this.logger.error('Invalid token for authentication');
     }
   }

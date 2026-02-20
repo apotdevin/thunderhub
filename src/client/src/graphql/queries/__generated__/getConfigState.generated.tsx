@@ -70,13 +70,39 @@ export function useGetConfigStateLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetConfigStateSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetConfigStateQuery,
     GetConfigStateQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetConfigStateQuery,
+  GetConfigStateQueryVariables
+>;
+export function useGetConfigStateSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetConfigStateQuery,
+        GetConfigStateQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetConfigStateQuery | undefined,
+  GetConfigStateQueryVariables
+>;
+export function useGetConfigStateSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetConfigStateQuery,
+        GetConfigStateQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetConfigStateQuery,
     GetConfigStateQueryVariables

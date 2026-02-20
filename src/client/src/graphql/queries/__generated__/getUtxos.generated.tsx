@@ -69,13 +69,30 @@ export function useGetUtxosLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetUtxosSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetUtxosQuery,
     GetUtxosQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<GetUtxosQuery, GetUtxosQueryVariables>;
+export function useGetUtxosSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetUtxosQuery, GetUtxosQueryVariables>
+): Apollo.UseSuspenseQueryResult<
+  GetUtxosQuery | undefined,
+  GetUtxosQueryVariables
+>;
+export function useGetUtxosSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetUtxosQuery, GetUtxosQueryVariables>
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetUtxosQuery, GetUtxosQueryVariables>(
     GetUtxosDocument,
     options

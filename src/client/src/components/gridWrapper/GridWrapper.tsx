@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import styled, { css } from 'styled-components';
-import { BitcoinFees } from '../../../src/components/bitcoinInfo/BitcoinFees';
-import { BitcoinPrice } from '../../../src/components/bitcoinInfo/BitcoinPrice';
+import { BitcoinFees } from '@/components/bitcoinInfo/BitcoinFees';
+import { BitcoinPrice } from '@/components/bitcoinInfo/BitcoinPrice';
 import { mediaWidths } from '../../styles/Themes';
 import { Section } from '../section/Section';
 import { Navigation } from '../../layouts/navigation/Navigation';
@@ -32,7 +32,7 @@ const ContentStyle = styled.div`
   grid-area: content;
 `;
 
-export const GridWrapper: React.FC<
+export const GridWrapper: FC<
   GridProps & { centerContent?: boolean; children?: ReactNode }
 > = ({ children, centerContent = true, noNavigation }) => (
   <Section padding={'16px 16px 32px'}>
@@ -51,7 +51,7 @@ export const GridWrapper: React.FC<
   </Section>
 );
 
-export const SimpleWrapper: React.FC<GridProps> = ({ children }) => (
+export const SimpleWrapper: FC<GridProps> = ({ children }) => (
   <Section padding={'16px'}>
     <BitcoinPrice />
     <BitcoinFees />

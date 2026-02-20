@@ -3,7 +3,7 @@ import { AccountsModule } from '../accounts/accounts.module';
 import { AmbossModule } from '../api/amboss/amboss.module';
 import { UserConfigModule } from '../api/userConfig/userConfig.module';
 import { NodeModule } from '../node/node.module';
-import { WsModule } from '../ws/ws.module';
+import { SseModule } from '../sse/sse.module';
 import { SubService } from './sub.service';
 
 @Module({
@@ -11,7 +11,7 @@ import { SubService } from './sub.service';
     UserConfigModule,
     NodeModule,
     AccountsModule,
-    WsModule,
+    SseModule,
     AmbossModule,
   ],
   providers: [SubService],

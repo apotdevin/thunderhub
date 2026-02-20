@@ -1,4 +1,4 @@
-import { useGetAmbossUserQuery } from '../../src/graphql/queries/__generated__/getAmbossUser.generated';
+import { useGetAmbossUserQuery } from '@/graphql/queries/__generated__/getAmbossUser.generated';
 
 export const useAmbossUser = () => {
   const { data, loading } = useGetAmbossUserQuery();

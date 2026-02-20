@@ -6,19 +6,15 @@ import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FilesService } from '../../files/files.service';
 import jwt from 'jsonwebtoken';
-import cookieLib from 'cookie';
+import * as cookieLib from 'cookie';
 import { ContextType } from 'src/server/app.module';
 import { appConstants } from 'src/server/utils/appConstants';
 import { NodeService } from '../../node/node.service';
 import { toWithError } from 'src/server/utils/async';
 import { decodeMacaroon, isCorrectPassword } from 'src/server/utils/crypto';
-import {
-  CurrentIp,
-  CurrentUser,
-  Public,
-} from '../../security/security.decorators';
+import { CurrentUser, Public } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
-import { authenticator } from 'otplib';
+import { generateSecret, generateURI, verifySync } from 'otplib';
 import { shorten } from 'src/server/utils/string';
 import { TwofaResult } from './auth.types';
 import { Throttle, seconds } from '@nestjs/throttler';
@@ -51,13 +47,13 @@ export class AuthResolver {
 
     const node = await this.nodeService.getWalletInfo(id);
 
-    const secret = authenticator.generateSecret();
+    const secret = generateSecret();
 
-    const otpauth = authenticator.keyuri(
-      shorten(node.public_key),
-      'ThunderHub',
-      secret
-    );
+    const otpauth = generateURI({
+      secret,
+      label: shorten(node.public_key),
+      issuer: 'ThunderHub',
+    });
 
     return { url: otpauth, secret };
   }
@@ -83,8 +79,7 @@ export class AuthResolver {
     }
 
     try {
-      authenticator.options = { window: 1 };
-      const isValid = authenticator.verify({ token, secret });
+      const isValid = verifySync({ token, secret, epochTolerance: 30 });
 
       if (!isValid) {
         throw new Error();
@@ -122,10 +117,10 @@ export class AuthResolver {
     }
 
     try {
-      authenticator.options = { window: 1 };
-      const isValid = authenticator.verify({
+      const isValid = verifySync({
         token,
         secret: account.twofaSecret,
+        epochTolerance: 30,
       });
 
       if (!isValid) {
@@ -207,7 +202,10 @@ export class AuthResolver {
       }
 
       const jwtSecret = this.configService.get('jwtSecret');
-      const token = jwt.sign({ sub: 'sso' }, jwtSecret);
+      const token = jwt.sign({ sub: 'sso' }, jwtSecret, {
+        algorithm: 'HS256',
+        expiresIn: '24h',
+      });
 
       res.setHeader(
         'Set-Cookie',
@@ -215,6 +213,7 @@ export class AuthResolver {
           httpOnly: true,
           sameSite: true,
           path: '/',
+          secure: isProduction,
         })
       );
       return true;
@@ -231,7 +230,6 @@ export class AuthResolver {
     @Args('id') id: string,
     @Args('password') password: string,
     @Args('token', { nullable: true }) token: string,
-    @CurrentIp() ip: string,
     @Context() { res }: ContextType
   ) {
     const account = this.accountsService.getAccount(id);
@@ -262,9 +260,7 @@ export class AuthResolver {
       this.logger.debug(`Decrypted the macaroon for account ${id}`);
     } else {
       if (!isCorrectPassword(password, account.password)) {
-        this.logger.error(
-          `Authentication failed from ip: ${ip} - Invalid Password!`
-        );
+        this.logger.error(`Authentication failed - Invalid Password!`);
         throw new Error('Wrong credentials for login');
       }
 
@@ -278,10 +274,10 @@ export class AuthResolver {
       }
 
       try {
-        authenticator.options = { window: 1 };
-        const isValid = authenticator.verify({
+        const isValid = verifySync({
           token,
           secret: account.twofaSecret,
+          epochTolerance: 30,
         });
         if (!isValid) {
           throw new Error('token not valid');
@@ -302,7 +298,10 @@ export class AuthResolver {
     }
 
     const jwtSecret = this.configService.get('jwtSecret');
-    const jwtToken = jwt.sign({ sub: id }, jwtSecret);
+    const jwtToken = jwt.sign({ sub: id }, jwtSecret, {
+      algorithm: 'HS256',
+      expiresIn: '24h',
+    });
 
     res.setHeader(
       'Set-Cookie',
@@ -310,6 +309,7 @@ export class AuthResolver {
         httpOnly: true,
         sameSite: true,
         path: '/',
+        secure: isProduction,
       })
     );
     return info?.['version'] || ''; // TODO: Remove unsafe casting when GetWalletInfo type is updated
@@ -317,6 +317,7 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   async logout(@Context() { res }: ContextType) {
+    const isProduction = this.configService.get('isProduction');
     const cookies = [];
 
     for (const cookieName in appConstants) {
@@ -329,6 +330,7 @@ export class AuthResolver {
             httpOnly: true,
             sameSite: true,
             path: '/',
+            secure: isProduction,
           })
         );
       }

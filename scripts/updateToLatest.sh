@@ -20,13 +20,13 @@ else
     echo "Installing dependencies..."
     npm install --quiet
 
-    # build nextjs
+    # build app
     echo "Building application..."
     npm run build
 
-    # remove useless deps
-    echo "Removing unneccesary modules..."
-    npm prune --production
+    # remove dev deps
+    echo "Removing unnecessary modules..."
+    npm prune --omit=dev
 
     TAG=$(git tag | sort -V | tail -1)
     echo "Updated to version" $TAG

@@ -57,13 +57,39 @@ export function useGetBitcoinPriceLazyQuery(
     GetBitcoinPriceQueryVariables
   >(GetBitcoinPriceDocument, options);
 }
+// @ts-ignore
 export function useGetBitcoinPriceSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetBitcoinPriceQuery,
     GetBitcoinPriceQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetBitcoinPriceQuery,
+  GetBitcoinPriceQueryVariables
+>;
+export function useGetBitcoinPriceSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBitcoinPriceQuery,
+        GetBitcoinPriceQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetBitcoinPriceQuery | undefined,
+  GetBitcoinPriceQueryVariables
+>;
+export function useGetBitcoinPriceSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBitcoinPriceQuery,
+        GetBitcoinPriceQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetBitcoinPriceQuery,
     GetBitcoinPriceQueryVariables

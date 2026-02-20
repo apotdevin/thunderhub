@@ -23,7 +23,6 @@ import {
   ChannelViewLink,
   DashSettingsLink,
   ForwardsViewLink,
-  RebalanceViewLink,
   TransactionsViewLink,
 } from './link';
 import { CurrencySetting, ThemeSetting } from './settings';
@@ -213,14 +212,6 @@ export const widgetList: WidgetProps[] = [
     group: 'Link',
     subgroup: '',
     component: ChannelViewLink,
-    default: { ...defaultProps, w: 2, h: 2 },
-  },
-  {
-    id: 22,
-    name: 'Rebalance View',
-    group: 'Link',
-    subgroup: '',
-    component: RebalanceViewLink,
     default: { ...defaultProps, w: 2, h: 2 },
   },
   {

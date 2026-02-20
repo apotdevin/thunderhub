@@ -38,7 +38,11 @@ export function useGetInvoiceStatusChangeQuery(
   baseOptions: Apollo.QueryHookOptions<
     GetInvoiceStatusChangeQuery,
     GetInvoiceStatusChangeQueryVariables
-  >
+  > &
+    (
+      | { variables: GetInvoiceStatusChangeQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<
@@ -58,13 +62,39 @@ export function useGetInvoiceStatusChangeLazyQuery(
     GetInvoiceStatusChangeQueryVariables
   >(GetInvoiceStatusChangeDocument, options);
 }
+// @ts-ignore
 export function useGetInvoiceStatusChangeSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetInvoiceStatusChangeQuery,
     GetInvoiceStatusChangeQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetInvoiceStatusChangeQuery,
+  GetInvoiceStatusChangeQueryVariables
+>;
+export function useGetInvoiceStatusChangeSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetInvoiceStatusChangeQuery,
+        GetInvoiceStatusChangeQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetInvoiceStatusChangeQuery | undefined,
+  GetInvoiceStatusChangeQueryVariables
+>;
+export function useGetInvoiceStatusChangeSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetInvoiceStatusChangeQuery,
+        GetInvoiceStatusChangeQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetInvoiceStatusChangeQuery,
     GetInvoiceStatusChangeQueryVariables

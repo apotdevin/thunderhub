@@ -76,13 +76,39 @@ export function useGetChainTransactionsLazyQuery(
     GetChainTransactionsQueryVariables
   >(GetChainTransactionsDocument, options);
 }
+// @ts-ignore
 export function useGetChainTransactionsSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetChainTransactionsQuery,
     GetChainTransactionsQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetChainTransactionsQuery,
+  GetChainTransactionsQueryVariables
+>;
+export function useGetChainTransactionsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetChainTransactionsQuery,
+        GetChainTransactionsQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetChainTransactionsQuery | undefined,
+  GetChainTransactionsQueryVariables
+>;
+export function useGetChainTransactionsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetChainTransactionsQuery,
+        GetChainTransactionsQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetChainTransactionsQuery,
     GetChainTransactionsQueryVariables

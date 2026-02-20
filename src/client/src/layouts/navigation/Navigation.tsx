@@ -1,4 +1,4 @@
-import React, { FC, SVGAttributes } from 'react';
+import { FC } from 'react';
 import styled, { css } from 'styled-components';
 import {
   Home,
@@ -8,17 +8,15 @@ import {
   Shield,
   GitPullRequest,
   Link as LinkIcon,
-  Repeat,
   Users,
   MessageCircle,
   BarChart2,
-  Heart,
   Shuffle,
   Grid,
   Globe,
-} from 'react-feather';
-import { useRouter } from 'next/router';
-import { useBaseConnect } from '../../hooks/UseBaseConnect';
+  LucideProps,
+} from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import {
   unSelectedNavButton,
   navBackgroundColor,
@@ -32,13 +30,7 @@ import { Link } from '../../components/link/Link';
 import { SideSettings } from './sideSettings/SideSettings';
 import { NodeInfo } from './nodeInfo/NodeInfo';
 
-// Icon import from react-feather is not working
-// TODO: recheck if the type is available
-type IconProps = SVGAttributes<SVGElement> & {
-  color?: string;
-  size?: string | number;
-};
-type Icon = FC<IconProps>;
+type Icon = FC<LucideProps>;
 
 const NavigationStyle = styled.div<{ isOpen: boolean }>`
   grid-area: nav;
@@ -126,13 +118,11 @@ const HOME = '/';
 const DASHBOARD = '/dashboard';
 const PEERS = '/peers';
 const CHANNEL = '/channels';
-const REBALANCE = '/rebalance';
 const TRANS = '/transactions';
 const FORWARDS = '/forwards';
 const CHAIN_TRANS = '/chain';
 const TOOLS = '/tools';
 const STATS = '/stats';
-const DONATIONS = '/leaderboard';
 const CHAT = '/chat';
 const SETTINGS = '/settings';
 const SWAP = '/swap';
@@ -144,10 +134,8 @@ interface NavigationProps {
 }
 
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
-  const { pathname } = useRouter();
+  const { pathname } = useLocation();
   const { sidebar } = useConfigState();
-
-  const { connected } = useBaseConnect();
 
   const isRoot = pathname === '/login' || pathname === '/sso';
 
@@ -183,7 +171,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Dashboard', DASHBOARD, Grid, sidebar)}
       {renderNavButton('Peers', PEERS, Users, sidebar)}
       {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
-      {renderNavButton('Rebalance', REBALANCE, Repeat, sidebar)}
       {renderNavButton('Transactions', TRANS, Server, sidebar)}
       {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
       {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
@@ -200,7 +187,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Dashboard', DASHBOARD, Grid)}
       {renderBurgerNav('Peers', PEERS, Users)}
       {renderBurgerNav('Channels', CHANNEL, Cpu)}
-      {renderBurgerNav('Rebalance', REBALANCE, Repeat)}
       {renderBurgerNav('Transactions', TRANS, Server)}
       {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}
       {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
@@ -208,7 +194,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Swap', SWAP, Shuffle)}
       {renderBurgerNav('Stats', STATS, BarChart2)}
-      {connected && renderBurgerNav('Donations', DONATIONS, Heart)}
       {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}
     </BurgerRow>

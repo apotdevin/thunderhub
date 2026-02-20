@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { useGetNodeLazyQuery } from '../../graphql/queries/__generated__/getNode.generated';
 import { useAccount } from '../../hooks/UseAccount';
 import {
@@ -38,7 +38,7 @@ export const ContactCard = ({
   } = contact;
   const { sender } = useChatState();
   const dispatch = useChatDispatch();
-  const [nodeName, setNodeName] = React.useState(alias || '');
+  const [nodeName, setNodeName] = useState(alias || '');
 
   const account = useAccount();
 
@@ -46,7 +46,7 @@ export const ContactCard = ({
     variables: { publicKey: contactSender || '' },
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!alias) {
       getInfo();
     }
@@ -56,7 +56,7 @@ export const ContactCard = ({
     }
   }, [alias, getInfo, contactSender, setName, sender, user]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (loading || !data?.getNode) return;
 
     const alias = data.getNode?.node?.alias;
@@ -72,12 +72,13 @@ export const ContactCard = ({
   return (
     <ChatSubCard
       onClick={() => {
-        contactSender &&
+        if (contactSender) {
           dispatch({
             type: 'changeActive',
             sender: contactSender,
             userId: account?.id || '',
           });
+        }
         setUser(nodeName);
       }}
     >
@@ -112,14 +113,14 @@ export const Contacts = ({
       {contacts.map((contact, index) => {
         if (contact) {
           return (
-            <React.Fragment key={contact.sender || index}>
+            <Fragment key={contact.sender || index}>
               <ContactCard
                 contact={contact}
                 setUser={setUser}
                 user={user}
                 setName={setName}
               />
-            </React.Fragment>
+            </Fragment>
           );
         }
       })}

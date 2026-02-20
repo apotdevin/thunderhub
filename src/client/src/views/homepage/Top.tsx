@@ -1,4 +1,3 @@
-import React from 'react';
 import { inverseTextColor } from '../../styles/Themes';
 import { Section } from '../../components/section/Section';
 import { Headline, HomeTitle, HomeText, FullWidth } from './HomePage.styled';

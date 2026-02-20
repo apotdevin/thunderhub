@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.15.0](https://github.com/apotdevin/thunderhub/compare/v0.14.6...v0.15.0) (2026-02-19)
+
+
+### Features
+
+* big cleanup and refactor ([#644](https://github.com/apotdevin/thunderhub/issues/644)) ([d94e7c3](https://github.com/apotdevin/thunderhub/commit/d94e7c341c9cce863eedb9b6430f881cf2846834))
+
+### [0.14.6](https://github.com/apotdevin/thunderhub/compare/v0.14.5...v0.14.6) (2025-09-08)
+
+
+### Refactoring
+
+* transaction broadcast ([44c634c](https://github.com/apotdevin/thunderhub/commit/44c634c9ec70aafe3f1c7906e96e525b3f315356))
+
+### [0.14.5](https://github.com/apotdevin/thunderhub/compare/v0.14.4...v0.14.5) (2025-09-08)
+
+
+### Improvements
+
+* try to connect to all sockets ([#640](https://github.com/apotdevin/thunderhub/issues/640)) ([a41d359](https://github.com/apotdevin/thunderhub/commit/a41d3592fe65c519c15a2672cf5f307270d5f7e6))
+
 ### [0.14.4](https://github.com/apotdevin/thunderhub/compare/v0.14.3...v0.14.4) (2025-09-05)
 
 

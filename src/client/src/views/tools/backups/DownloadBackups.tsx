@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { useGetBackupsLazyQuery } from '../../../graphql/queries/__generated__/getBackups.generated';
 import { format } from 'date-fns';
 import { useNodeInfo } from '../../../hooks/UseNodeInfo';

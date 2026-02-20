@@ -1,26 +1,25 @@
-import * as React from 'react';
-import { toast } from 'react-toastify';
-import { useRouter } from 'next/router';
-import { useGetMessagesQuery } from '../../../src/graphql/queries/__generated__/getMessages.generated';
-import { useAccount } from '../../../src/hooks/UseAccount';
+import { FC, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
+import { useGetMessagesQuery } from '@/graphql/queries/__generated__/getMessages.generated';
+import { useAccount } from '@/hooks/UseAccount';
 import { useChatState, useChatDispatch } from '../../context/ChatContext';
 import { getErrorContent } from '../../utils/error';
 import { useConfigState } from '../../context/ConfigContext';
 
-export const ChatFetcher: React.FC = () => {
+export const ChatFetcher: FC = () => {
   const newChatToastId = 'newChatToastId';
 
   const { chatPollingSpeed } = useConfigState();
 
   const account = useAccount();
-  const { pathname } = useRouter();
+  const { pathname } = useLocation();
   const { lastChat, chats, sentChats, initialized } = useChatState();
   const dispatch = useChatDispatch();
 
   const noChatsAvailable = chats.length <= 0 && sentChats.length <= 0;
 
   const { data, loading, error } = useGetMessagesQuery({
-    ssr: false,
     skip: initialized || noChatsAvailable || !account,
     pollInterval: chatPollingSpeed,
     fetchPolicy: 'network-only',
@@ -28,7 +27,7 @@ export const ChatFetcher: React.FC = () => {
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data && data.getMessages?.messages) {
       const messages = [...data.getMessages.messages];
       let index = -1;

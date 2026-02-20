@@ -1,6 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
-import { Zap, Anchor, Pocket } from 'react-feather';
+import { Zap, Anchor, Pocket } from 'lucide-react';
 import { useNodeBalances } from '../../../hooks/UseNodeBalances';
 import Big from 'big.js';
 import { renderLine } from '../../../components/generic/helpers';

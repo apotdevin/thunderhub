@@ -1,11 +1,10 @@
-import React from 'react';
 import {
   CardWithTitle,
   SubTitle,
   Card,
   Sub4Title,
 } from '../../components/generic/Styled';
-import { SettingsLine } from '../../../pages/settings';
+import { SettingsLine } from '../../pages/SettingsPage';
 import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 
 import {

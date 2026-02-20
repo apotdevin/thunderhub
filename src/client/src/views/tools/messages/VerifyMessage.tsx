@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { X, Copy } from 'react-feather';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import { X, Copy } from 'lucide-react';
 import { useVerifyMessageLazyQuery } from '../../../graphql/queries/__generated__/verifyMessage.generated';
 import { Input } from '../../../components/input';
 import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
@@ -67,15 +66,16 @@ export const VerifyMessage = () => {
   const renderMessage = () => (
     <Column>
       <WrapRequest>{getNodeLink(signedBy)}</WrapRequest>
-      <CopyToClipboard
-        text={signedBy}
-        onCopy={() => toast.success('Public Node Key Copied')}
+      <ColorButton
+        onClick={() =>
+          navigator.clipboard
+            .writeText(signedBy)
+            .then(() => toast.success('Public Node Key Copied'))
+        }
       >
-        <ColorButton>
-          <Copy size={18} />
-          Copy
-        </ColorButton>
-      </CopyToClipboard>
+        <Copy size={18} />
+        Copy
+      </ColorButton>
     </Column>
   );
 

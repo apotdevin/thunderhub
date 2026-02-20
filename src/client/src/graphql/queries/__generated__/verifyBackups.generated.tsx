@@ -38,7 +38,11 @@ export function useVerifyBackupsQuery(
   baseOptions: Apollo.QueryHookOptions<
     VerifyBackupsQuery,
     VerifyBackupsQueryVariables
-  >
+  > &
+    (
+      | { variables: VerifyBackupsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<VerifyBackupsQuery, VerifyBackupsQueryVariables>(
@@ -58,13 +62,39 @@ export function useVerifyBackupsLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useVerifyBackupsSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     VerifyBackupsQuery,
     VerifyBackupsQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  VerifyBackupsQuery,
+  VerifyBackupsQueryVariables
+>;
+export function useVerifyBackupsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        VerifyBackupsQuery,
+        VerifyBackupsQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  VerifyBackupsQuery | undefined,
+  VerifyBackupsQueryVariables
+>;
+export function useVerifyBackupsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        VerifyBackupsQuery,
+        VerifyBackupsQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     VerifyBackupsQuery,
     VerifyBackupsQueryVariables

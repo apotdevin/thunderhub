@@ -1,6 +1,6 @@
-import * as React from 'react';
+import { FC, KeyboardEvent, ReactNode } from 'react';
 import styled from 'styled-components';
-import { unSelectedNavButton, mediaWidths } from '../../../src/styles/Themes';
+import { unSelectedNavButton, mediaWidths } from '@/styles/Themes';
 import { SingleLine } from '../generic/Styled';
 import { Price } from '../price/Price';
 import { Input } from '.';
@@ -48,12 +48,12 @@ type InputWithDecoProps = {
   inputType?: string;
   inputCallback?: (value: string) => void;
   blurCallback?: (value: string) => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
   onEnter?: () => void;
-  children?: React.ReactNode;
+  children?: ReactNode;
 };
 
-export const InputWithDeco: React.FC<InputWithDecoProps> = ({
+export const InputWithDeco: FC<InputWithDecoProps> = ({
   title,
   value,
   amount,

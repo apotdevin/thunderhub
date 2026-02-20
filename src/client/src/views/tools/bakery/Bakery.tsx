@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import {
   CardWithTitle,
   SubTitle,
@@ -15,13 +15,12 @@ import {
   MultiButton,
 } from '../../../components/buttons/multiButton/MultiButton';
 import { useCreateMacaroonMutation } from '../../../graphql/mutations/__generated__/createMacaroon.generated';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../utils/error';
 import { useMutationResultWithReset } from '../../../hooks/UseMutationWithReset';
 import Modal from '../../../components/modal/ReactModal';
 import { shorten } from '../../../components/generic/helpers';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import { Copy } from 'react-feather';
+import { Copy } from 'lucide-react';
 import { NetworkInfoInput } from '../../../graphql/types';
 
 const InitPermissions = {
@@ -47,11 +46,11 @@ const InitPermissions = {
 };
 
 export const Bakery = () => {
-  const [isOpen, isOpenSet] = React.useState<boolean>(false);
-  const [newMacaroon, newMacaroonSet] = React.useState<boolean>(false);
+  const [isOpen, isOpenSet] = useState<boolean>(false);
+  const [newMacaroon, newMacaroonSet] = useState<boolean>(false);
 
   const [permissions, permissionSet] =
-    React.useState<NetworkInfoInput>(InitPermissions);
+    useState<NetworkInfoInput>(InitPermissions);
 
   let hasATrue = false;
   Object.entries(permissions);
@@ -87,29 +86,31 @@ export const Bakery = () => {
         <SubTitle>Base64 Encoded</SubTitle>
         <SingleLine>
           <Sub4Title>{shorten(base)}</Sub4Title>
-          <CopyToClipboard
-            text={base}
-            onCopy={() => toast.success('Macaroon Copied')}
+          <ColorButton
+            onClick={() =>
+              navigator.clipboard
+                .writeText(base)
+                .then(() => toast.success('Macaroon Copied'))
+            }
           >
-            <ColorButton>
-              <Copy size={18} />
-              Copy
-            </ColorButton>
-          </CopyToClipboard>
+            <Copy size={18} />
+            Copy
+          </ColorButton>
         </SingleLine>
         <Separation />
         <SubTitle>Hex Encoded</SubTitle>
         <SingleLine>
           <Sub4Title>{shorten(hex)}</Sub4Title>
-          <CopyToClipboard
-            text={hex}
-            onCopy={() => toast.success('Macaroon Copied')}
+          <ColorButton
+            onClick={() =>
+              navigator.clipboard
+                .writeText(hex)
+                .then(() => toast.success('Macaroon Copied'))
+            }
           >
-            <ColorButton>
-              <Copy size={18} />
-              Copy
-            </ColorButton>
-          </CopyToClipboard>
+            <Copy size={18} />
+            Copy
+          </ColorButton>
         </SingleLine>
       </>
     );

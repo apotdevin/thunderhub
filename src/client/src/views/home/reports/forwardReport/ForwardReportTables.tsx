@@ -87,8 +87,8 @@ export const ChannelTable: FC<ChannelTableProps> = ({ forwardArray }) => {
       cell: ({ row }: any) => (
         <div style={{ whiteSpace: 'nowrap' }}>
           {getNodeLink(
-            row.original.channel_info.node2_info.public_key,
-            row.original.channel_info.node2_info.alias
+            row.original.channel_info?.node2_info?.public_key,
+            row.original.channel_info?.node2_info?.alias
           )}
         </div>
       ),

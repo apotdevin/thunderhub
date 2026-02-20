@@ -1,4 +1,4 @@
-import React, { FC, SVGAttributes, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Cpu,
   Menu,
@@ -6,13 +6,15 @@ import {
   MessageCircle,
   Settings,
   Heart,
-  Activity,
-} from 'react-feather';
-import { useRouter } from 'next/router';
-import { useBaseConnect } from '../../hooks/UseBaseConnect';
+  LucideProps,
+} from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { LogoutButton } from '../../components/logoutButton';
-import { useConfigState } from '../../context/ConfigContext';
 import { headerColor, headerTextColor } from '../../styles/Themes';
+import {
+  useDonate,
+  DonateModal,
+} from '../../views/home/quickActions/donate/DonateContent';
 import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
 import { Section } from '../../components/section/Section';
@@ -28,26 +30,23 @@ import {
   HeaderNavButton,
 } from './Header.styled';
 
-type IconProps = SVGAttributes<SVGElement> & {
-  color?: string;
-  size?: string | number;
-};
-
-export type Icon = FC<IconProps>;
+export type Icon = FC<LucideProps>;
 
 const SSO = '/sso';
 const MAIN = '/login';
 const CHAT = '/chat';
-const DONATIONS = '/leaderboard';
 const SETTINGS = '/settings';
-const LN_MARKETS = '/lnmarkets';
 
 export const Header = () => {
-  const { pathname } = useRouter();
+  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
 
-  const { lnMarketsAuth } = useConfigState();
-  const { connected } = useBaseConnect();
+  const {
+    openDonate,
+    payRequest: donatePayRequest,
+    modalOpen: donateModalOpen,
+    closeDonate,
+  } = useDonate();
 
   const isRoot = pathname === MAIN || pathname === SSO;
 
@@ -73,8 +72,9 @@ export const Header = () => {
       </ViewSwitch>
       <ViewSwitch hideMobile={true}>
         <HeaderButtons>
-          {connected && renderNavButton(DONATIONS, Heart)}
-          {lnMarketsAuth && renderNavButton(LN_MARKETS, Activity)}
+          <HeaderNavButton onClick={openDonate} style={{ cursor: 'pointer' }}>
+            <Heart size={18} />
+          </HeaderNavButton>
           {renderNavButton(CHAT, MessageCircle)}
           {renderNavButton(SETTINGS, Settings)}
           <LogoutButton />
@@ -110,6 +110,11 @@ export const Header = () => {
           <BurgerMenu open={open} setOpen={setOpen} />
         </ViewSwitch>
       )}
+      <DonateModal
+        payRequest={donatePayRequest}
+        modalOpen={donateModalOpen}
+        closeDonate={closeDonate}
+      />
     </>
   );
 };

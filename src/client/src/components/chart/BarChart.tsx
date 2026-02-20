@@ -12,7 +12,6 @@ import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import { ThemeContext } from 'styled-components';
-import numeral from 'numeral';
 import { timeFormat, timeParse } from 'd3-time-format';
 import { formatSats } from '../../utils/helpers';
 import { COMMON_CHART_STYLES } from './common';
@@ -110,8 +109,10 @@ export const BarChart = ({
         axisTick: { show: true },
         axisLabel: {
           formatter: function (value: number) {
-            const format = value < 1000 ? '0a' : '0.0a';
-            return numeral(value).format(format);
+            return value.toLocaleString('en-US', {
+              notation: 'compact',
+              maximumFractionDigits: value < 1000 ? 0 : 1,
+            });
           },
         },
       },

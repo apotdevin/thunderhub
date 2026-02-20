@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useLoginAmbossMutation } from '../../../../graphql/mutations/__generated__/loginAmboss.generated';
 import { useGetAmbossLoginTokenLazyQuery } from '../../../../graphql/queries/__generated__/getAmbossLoginToken.generated';
 import { useAmbossUser } from '../../../../hooks/UseAmbossUser';
@@ -10,7 +10,6 @@ import {
   unSelectedNavButton,
 } from '../../../../styles/Themes';
 import styled from 'styled-components';
-import Image from 'next/image';
 import { appendBasePath } from '../../../../utils/basePath';
 
 const QuickTitle = styled.div`
@@ -88,7 +87,7 @@ export const AmbossCard = () => {
         }}
         disabled={loading}
       >
-        <Image
+        <img
           src={appendBasePath('/assets/amboss_icon.png')}
           width={32}
           height={32}
@@ -107,7 +106,7 @@ export const AmbossCard = () => {
       }}
       disabled={tokenLoading}
     >
-      <Image
+      <img
         src={appendBasePath('/assets/amboss_icon.png')}
         width={32}
         height={32}

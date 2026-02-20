@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { useGetVolumeHealthQuery } from '../../graphql/queries/__generated__/getVolumeHealth.generated';
 import {
   SubCard,
@@ -43,7 +43,7 @@ const VolumeStatCard = ({
     </>
   );
   return (
-    <React.Fragment key={channel.id || ''}>
+    <Fragment key={channel.id || ''}>
       <SubCard>
         <Clickable onClick={() => openSet(open ? 0 : index)}>
           <ResponsiveLine>
@@ -57,16 +57,16 @@ const VolumeStatCard = ({
         </Clickable>
         {open && renderContent()}
       </SubCard>
-    </React.Fragment>
+    </Fragment>
   );
 };
 
 export const VolumeStats = () => {
-  const [open, openSet] = React.useState(0);
+  const [open, openSet] = useState(0);
   const dispatch = useStatsDispatch();
-  const { data, loading } = useGetVolumeHealthQuery({ ssr: false });
+  const { data, loading } = useGetVolumeHealthQuery();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data && data.getVolumeHealth) {
       dispatch({
         type: 'change',

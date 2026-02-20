@@ -35,7 +35,11 @@ export function useRecoverFundsQuery(
   baseOptions: Apollo.QueryHookOptions<
     RecoverFundsQuery,
     RecoverFundsQueryVariables
-  >
+  > &
+    (
+      | { variables: RecoverFundsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<RecoverFundsQuery, RecoverFundsQueryVariables>(
@@ -55,13 +59,36 @@ export function useRecoverFundsLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useRecoverFundsSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     RecoverFundsQuery,
     RecoverFundsQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<RecoverFundsQuery, RecoverFundsQueryVariables>;
+export function useRecoverFundsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        RecoverFundsQuery,
+        RecoverFundsQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  RecoverFundsQuery | undefined,
+  RecoverFundsQueryVariables
+>;
+export function useRecoverFundsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        RecoverFundsQuery,
+        RecoverFundsQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<RecoverFundsQuery, RecoverFundsQueryVariables>(
     RecoverFundsDocument,
     options

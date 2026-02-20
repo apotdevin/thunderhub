@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client';
 import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import {
   getNodeLink,
   getTransactionLink,
@@ -11,7 +11,7 @@ import { useNotificationState } from '../context/NotificationContext';
 import { formatSats } from '../utils/helpers';
 import { useChannelInfo } from './UseChannelInfo';
 import { useNodeDetails } from './UseNodeDetails';
-import { useSocket, useSocketEvent } from './UseSocket';
+import { useSse, useSseEvent } from './useSse';
 
 const refetchTimeMs = 1000 * 1;
 
@@ -20,11 +20,11 @@ const renderToast = (
   content: JSX.Element | null | string | number
 ) => {
   return (
-    <>
+    <div>
       {title}
       <Separation lineColor={'transparent'} withMargin="4px 0" />
       {content}
-    </>
+    </div>
   );
 };
 
@@ -46,10 +46,8 @@ export const useListener = (disabled?: boolean) => {
   const { channels, forwardAttempts, forwards, invoices, payments, autoClose } =
     useNotificationState();
 
-  const options: { autoClose?: false; closeOnClick: boolean } = useMemo(() => {
-    return autoClose
-      ? { closeOnClick: false }
-      : { autoClose: false, closeOnClick: false };
+  const options: { duration?: number } = useMemo(() => {
+    return autoClose ? {} : { duration: Infinity };
   }, [autoClose]);
 
   const refetchQueryTimeout: { current: ReturnType<typeof setTimeout> | null } =
@@ -57,7 +55,7 @@ export const useListener = (disabled?: boolean) => {
 
   const client = useApolloClient();
 
-  const { socket } = useSocket(disabled);
+  useSse(disabled);
 
   const handleRefetchQueries = useCallback(
     (extra: string[] = []) => {
@@ -102,7 +100,7 @@ export const useListener = (disabled?: boolean) => {
           options
         );
       } else {
-        toast.info(
+        toast.success(
           renderToast(
             'New Invoice Created',
             <>
@@ -161,7 +159,7 @@ export const useListener = (disabled?: boolean) => {
       if (is_send || is_receive) return;
 
       if (!is_confirmed && forwardAttempts) {
-        toast.warn(
+        toast.error(
           renderToast(
             'Forward Attempt',
             <>
@@ -236,7 +234,7 @@ export const useListener = (disabled?: boolean) => {
         return types.join(', ');
       };
 
-      toast.info(
+      toast.success(
         renderToast(
           'Channel Closed',
           <>
@@ -282,7 +280,7 @@ export const useListener = (disabled?: boolean) => {
         is_private,
       } = message;
 
-      toast.info(
+      toast.success(
         renderToast(
           'Channel Opened',
           <>
@@ -309,7 +307,7 @@ export const useListener = (disabled?: boolean) => {
     (message: any) => {
       if (!channels) return;
 
-      toast.info(
+      toast.success(
         renderToast(
           'Channel Opening',
           renderLine('Transaction', getTransactionLink(message.transaction_id))
@@ -321,10 +319,10 @@ export const useListener = (disabled?: boolean) => {
     [handleRefetchQueries, channels, options]
   );
 
-  useSocketEvent(socket, 'invoice_updated', handleInvoice);
-  useSocketEvent(socket, 'payment', handlePayment);
-  useSocketEvent(socket, 'forward', handleForward);
-  useSocketEvent(socket, 'channel_closed', handleClosed);
-  useSocketEvent(socket, 'channel_opened', handleOpen);
-  useSocketEvent(socket, 'channel_opening', handleOpening);
+  useSseEvent('invoice_updated', handleInvoice);
+  useSseEvent('payment', handlePayment);
+  useSseEvent('forward', handleForward);
+  useSseEvent('channel_closed', handleClosed);
+  useSseEvent('channel_opened', handleOpen);
+  useSseEvent('channel_opening', handleOpening);
 };

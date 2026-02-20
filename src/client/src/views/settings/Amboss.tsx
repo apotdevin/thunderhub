@@ -10,7 +10,7 @@ import {
 } from '../../components/generic/Styled';
 import styled from 'styled-components';
 import { getErrorContent } from '../../utils/error';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useGetConfigStateQuery } from '../../graphql/queries/__generated__/getConfigState.generated';
 import { useToggleConfigMutation } from '../../graphql/mutations/__generated__/toggleConfig.generated';
 import { ConfigFields } from '../../graphql/types';

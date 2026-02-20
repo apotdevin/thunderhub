@@ -10,7 +10,7 @@ import {
   SortingState,
   VisibilityState,
 } from '@tanstack/react-table';
-import { Settings, X } from 'react-feather';
+import { Settings, X } from 'lucide-react';
 import { separationColor } from '../../styles/Themes';
 import { ColorButton } from '../buttons/colorButton/ColorButton';
 import { ColumnConfigurations } from './ColumnConfigurations';

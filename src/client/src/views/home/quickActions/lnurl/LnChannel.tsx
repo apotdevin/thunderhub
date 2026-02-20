@@ -9,7 +9,7 @@ import {
 } from '../../../../components/generic/helpers';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
 import { useChannelLnUrlMutation } from '../../../../graphql/mutations/__generated__/lnUrl.generated';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../../utils/error';
 
 const ModalText = styled.div`

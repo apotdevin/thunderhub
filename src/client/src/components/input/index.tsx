@@ -1,4 +1,4 @@
-import React from 'react';
+import { ChangeEvent, KeyboardEvent } from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeSet } from 'styled-theming';
 import {
@@ -83,9 +83,9 @@ interface InputCompProps {
   mobileFullWidth?: boolean;
   maxWidth?: string;
   autoFocus?: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
   onEnter?: () => void;
 }
 
@@ -125,7 +125,7 @@ export const Input = ({
         if (onEnter && e.key === 'Enter') {
           onEnter();
         } else {
-          onKeyDown && onKeyDown(e);
+          if (onKeyDown) onKeyDown(e);
         }
       }}
     />

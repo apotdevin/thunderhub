@@ -128,13 +128,36 @@ export function useGetPaymentsLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetPaymentsSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetPaymentsQuery,
     GetPaymentsQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<GetPaymentsQuery, GetPaymentsQueryVariables>;
+export function useGetPaymentsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetPaymentsQuery,
+        GetPaymentsQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetPaymentsQuery | undefined,
+  GetPaymentsQueryVariables
+>;
+export function useGetPaymentsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetPaymentsQuery,
+        GetPaymentsQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(
     GetPaymentsDocument,
     options

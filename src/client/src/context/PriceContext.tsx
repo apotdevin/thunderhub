@@ -1,4 +1,5 @@
-import React, {
+import {
+  FC,
   createContext,
   useContext,
   useReducer,
@@ -63,7 +64,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const PriceProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
+const PriceProvider: FC<{ children?: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   useEffect(() => {

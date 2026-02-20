@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   isFuture,
   format,
@@ -6,10 +5,9 @@ import {
   differenceInCalendarDays,
   isToday,
 } from 'date-fns';
-import { X, Copy } from 'react-feather';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import { toast } from 'react-toastify';
-import getConfig from 'next/config';
+import { X, Copy } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { config } from '../../config/thunderhubConfig';
 import {
   SmallLink,
   DarkSubTitle,
@@ -18,9 +16,6 @@ import {
   CopyIcon,
 } from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
-
-const { publicRuntimeConfig } = getConfig();
-const { disableLinks, mempoolUrl } = publicRuntimeConfig;
 
 export const shorten = (text: string, length?: number): string => {
   if (!text) return '';
@@ -49,62 +44,64 @@ export const addEllipsis = (
 };
 
 export const copyLink = (text: string) => (
-  <CopyToClipboard text={text} onCopy={() => toast.success('Copied')}>
-    <CopyIcon>
-      <Copy size={12} />
-    </CopyIcon>
-  </CopyToClipboard>
+  <CopyIcon
+    onClick={() =>
+      navigator.clipboard.writeText(text).then(() => toast.success('Copied'))
+    }
+  >
+    <Copy size={12} />
+  </CopyIcon>
 );
 
 export const getAddressLink = (transaction: string | null | undefined) => {
   if (!transaction) return null;
-  if (disableLinks) {
+  if (config.disableLinks) {
     return (
-      <>
+      <span className="flex items-center">
         {shorten(transaction)}
         {copyLink(transaction)}
-      </>
+      </span>
     );
   }
-  const link = `${mempoolUrl}/address/${transaction}`;
+  const link = `${config.mempoolUrl}/address/${transaction}`;
   return (
-    <>
+    <span className="flex items-center">
       <SmallLink href={link} target="_blank">
         {shorten(transaction)}
       </SmallLink>
       {copyLink(transaction)}
-    </>
+    </span>
   );
 };
 
 export const getTransactionLink = (transaction: string | null | undefined) => {
   if (!transaction) return null;
-  if (disableLinks) {
+  if (config.disableLinks) {
     return (
-      <>
+      <span className="flex items-center">
         {shorten(transaction)}
         {copyLink(transaction)}
-      </>
+      </span>
     );
   }
-  const link = `${mempoolUrl}/tx/${transaction}`;
+  const link = `${config.mempoolUrl}/tx/${transaction}`;
   return (
-    <>
+    <span className="flex items-center">
       <SmallLink href={link} target="_blank">
         {shorten(transaction)}
       </SmallLink>
       {copyLink(transaction)}
-    </>
+    </span>
   );
 };
 
 export const getWithCopy = (text: string | null | undefined) => {
   if (!text) return null;
   return (
-    <>
+    <span className="flex items-center">
       {shorten(text)}
       {copyLink(text)}
-    </>
+    </span>
   );
 };
 
@@ -118,8 +115,8 @@ export const getNodeLink = (
   const link = `https://amboss.space/node/${publicKey}`;
   const text = alias ? alias : shorten(publicKey);
   return (
-    <>
-      {disableLinks ? (
+    <span className="flex items-center">
+      {config.disableLinks ? (
         text
       ) : (
         <SmallLink href={link} target="_blank">
@@ -127,15 +124,15 @@ export const getNodeLink = (
         </SmallLink>
       )}
       {copyLink(publicKey)}
-    </>
+    </span>
   );
 };
 
 export const getChannelLink = (id: string) => {
   const link = `https://amboss.space/edge/${id}`;
   return (
-    <>
-      {disableLinks ? (
+    <span className="flex items-center">
+      {config.disableLinks ? (
         id
       ) : (
         <SmallLink href={link} target="_blank">
@@ -143,7 +140,7 @@ export const getChannelLink = (id: string) => {
         </SmallLink>
       )}
       {copyLink(id)}
-    </>
+    </span>
   );
 };
 

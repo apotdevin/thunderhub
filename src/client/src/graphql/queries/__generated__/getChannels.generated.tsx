@@ -185,13 +185,36 @@ export function useGetChannelsLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetChannelsSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetChannelsQuery,
     GetChannelsQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<GetChannelsQuery, GetChannelsQueryVariables>;
+export function useGetChannelsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetChannelsQuery,
+        GetChannelsQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetChannelsQuery | undefined,
+  GetChannelsQueryVariables
+>;
+export function useGetChannelsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetChannelsQuery,
+        GetChannelsQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetChannelsQuery, GetChannelsQueryVariables>(
     GetChannelsDocument,
     options
@@ -262,13 +285,39 @@ export function useGetChannelsWithPeersLazyQuery(
     GetChannelsWithPeersQueryVariables
   >(GetChannelsWithPeersDocument, options);
 }
+// @ts-ignore
 export function useGetChannelsWithPeersSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetChannelsWithPeersQuery,
     GetChannelsWithPeersQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetChannelsWithPeersQuery,
+  GetChannelsWithPeersQueryVariables
+>;
+export function useGetChannelsWithPeersSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetChannelsWithPeersQuery,
+        GetChannelsWithPeersQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetChannelsWithPeersQuery | undefined,
+  GetChannelsWithPeersQueryVariables
+>;
+export function useGetChannelsWithPeersSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetChannelsWithPeersQuery,
+        GetChannelsWithPeersQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetChannelsWithPeersQuery,
     GetChannelsWithPeersQueryVariables

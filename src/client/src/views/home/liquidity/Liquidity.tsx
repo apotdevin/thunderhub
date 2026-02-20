@@ -11,7 +11,7 @@ import {
   mediaWidths,
   unSelectedNavButton,
 } from '../../../styles/Themes';
-import { ArrowDownRight, ArrowUpRight, X } from 'react-feather';
+import { ArrowDownRight, ArrowUpRight, X } from 'lucide-react';
 import { useState } from 'react';
 import { OpenChannel } from './OpenChannel';
 import { BuyChannel, GoToMagma } from './BuyChannel';

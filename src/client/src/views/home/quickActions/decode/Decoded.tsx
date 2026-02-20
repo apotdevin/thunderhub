@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useDecodeRequestQuery } from '../../../../graphql/queries/__generated__/decodeRequest.generated';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';

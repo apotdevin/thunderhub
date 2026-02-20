@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { toast } from 'react-toastify';
+import { useMemo } from 'react';
+import toast from 'react-hot-toast';
 import { useGetChainTransactionsQuery } from '../../../graphql/queries/__generated__/getChainTransactions.generated';
 import { DarkSubTitle } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
@@ -11,7 +11,7 @@ import {
   getTransactionLink,
 } from '../../../components/generic/helpers';
 import { Price } from '../../../components/price/Price';
-import { ArrowDown, ArrowUp } from 'react-feather';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 import { chartColors } from '../../../styles/Themes';
 
 export const ChainTransactions = () => {

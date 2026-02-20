@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { mediaWidths, themeColors } from '../../../src/styles/Themes';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import { mediaWidths, themeColors } from '@/styles/Themes';
+import { Loader2 } from 'lucide-react';
 import { SingleLine } from '../generic/Styled';
 import { Select, SelectWithValue, ValueProp } from '.';
 import { FC, ReactNode } from 'react';
@@ -33,7 +33,6 @@ const InputLine = styled(SingleLine)`
 type InputWithDecoProps = {
   title: string;
   options: ValueProp[];
-  isMulti?: boolean;
   noInput?: boolean;
   loading?: boolean;
   maxWidth?: string;
@@ -46,7 +45,6 @@ export const SelectWithDeco: FC<InputWithDecoProps> = ({
   title,
   noInput,
   options,
-  isMulti,
   loading,
   maxWidth,
   callback,
@@ -54,11 +52,16 @@ export const SelectWithDeco: FC<InputWithDecoProps> = ({
   const renderContent = () => {
     switch (true) {
       case loading:
-        return <ScaleLoader height={20} color={themeColors.blue3} />;
+        return (
+          <Loader2
+            className="animate-spin"
+            size={20}
+            style={{ color: themeColors.blue3 }}
+          />
+        );
       case !noInput:
         return (
           <Select
-            isMulti={isMulti}
             maxWidth={maxWidth || '500px'}
             options={options}
             callback={callback}
@@ -83,7 +86,6 @@ type InputWithDecoAndValueProps = {
   title: string;
   value: ValueProp | undefined;
   options: ValueProp[];
-  isMulti?: boolean;
   noInput?: boolean;
   loading?: boolean;
   callback: (value: ValueProp[]) => void;
@@ -95,7 +97,6 @@ export const SelectWithDecoAndValue: React.FC<InputWithDecoAndValueProps> = ({
   title,
   noInput,
   options,
-  isMulti,
   loading,
   callback,
   value,
@@ -103,11 +104,16 @@ export const SelectWithDecoAndValue: React.FC<InputWithDecoAndValueProps> = ({
   const renderContent = () => {
     switch (true) {
       case loading:
-        return <ScaleLoader height={20} color={themeColors.blue3} />;
+        return (
+          <Loader2
+            className="animate-spin"
+            size={20}
+            style={{ color: themeColors.blue3 }}
+          />
+        );
       case !noInput:
         return (
           <SelectWithValue
-            isMulti={isMulti}
             maxWidth={'500px'}
             options={options}
             callback={callback}

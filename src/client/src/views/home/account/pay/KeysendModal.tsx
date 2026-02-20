@@ -1,8 +1,8 @@
-import * as React from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { useGetNodeQuery } from '../../../../graphql/queries/__generated__/getNode.generated';
 import { useKeysendMutation } from '../../../../graphql/mutations/__generated__/keysend.generated';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../../utils/error';
 import { InputWithDeco } from '../../../../components/input/InputWithDeco';
 import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
@@ -27,11 +27,8 @@ interface KeysendProps {
   handleReset: () => void;
 }
 
-export const KeysendModal: React.FC<KeysendProps> = ({
-  publicKey,
-  handleReset,
-}) => {
-  const [tokens, setTokens] = React.useState(0);
+export const KeysendModal: FC<KeysendProps> = ({ publicKey, handleReset }) => {
+  const [tokens, setTokens] = useState(0);
 
   const { data, loading, error } = useGetNodeQuery({
     variables: { publicKey },

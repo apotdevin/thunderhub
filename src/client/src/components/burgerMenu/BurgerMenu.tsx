@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
 import { burgerColor } from '../../styles/Themes';
 import { NodeInfo } from '../../layouts/navigation/nodeInfo/NodeInfo';

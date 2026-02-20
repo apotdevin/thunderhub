@@ -303,7 +303,11 @@ export function useGetForwardsQuery(
   baseOptions: Apollo.QueryHookOptions<
     GetForwardsQuery,
     GetForwardsQueryVariables
-  >
+  > &
+    (
+      | { variables: GetForwardsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetForwardsQuery, GetForwardsQueryVariables>(
@@ -323,13 +327,36 @@ export function useGetForwardsLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetForwardsSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetForwardsQuery,
     GetForwardsQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<GetForwardsQuery, GetForwardsQueryVariables>;
+export function useGetForwardsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetForwardsQuery,
+        GetForwardsQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetForwardsQuery | undefined,
+  GetForwardsQueryVariables
+>;
+export function useGetForwardsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetForwardsQuery,
+        GetForwardsQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetForwardsQuery, GetForwardsQueryVariables>(
     GetForwardsDocument,
     options
@@ -383,7 +410,11 @@ export function useGetForwardsListQuery(
   baseOptions: Apollo.QueryHookOptions<
     GetForwardsListQuery,
     GetForwardsListQueryVariables
-  >
+  > &
+    (
+      | { variables: GetForwardsListQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetForwardsListQuery, GetForwardsListQueryVariables>(
@@ -403,13 +434,39 @@ export function useGetForwardsListLazyQuery(
     GetForwardsListQueryVariables
   >(GetForwardsListDocument, options);
 }
+// @ts-ignore
 export function useGetForwardsListSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetForwardsListQuery,
     GetForwardsListQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetForwardsListQuery,
+  GetForwardsListQueryVariables
+>;
+export function useGetForwardsListSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetForwardsListQuery,
+        GetForwardsListQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetForwardsListQuery | undefined,
+  GetForwardsListQueryVariables
+>;
+export function useGetForwardsListSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetForwardsListQuery,
+        GetForwardsListQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetForwardsListQuery,
     GetForwardsListQueryVariables

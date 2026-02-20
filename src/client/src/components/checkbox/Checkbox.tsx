@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 import {
   colorButtonBackground,
@@ -42,7 +42,7 @@ type CheckboxProps = {
   children?: ReactNode;
 };
 
-export const Checkbox: React.FC<CheckboxProps> = ({
+export const Checkbox: FC<CheckboxProps> = ({
   children,
   checked,
   onChange,

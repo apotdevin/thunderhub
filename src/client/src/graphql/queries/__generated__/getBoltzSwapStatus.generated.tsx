@@ -63,7 +63,11 @@ export function useGetBoltzSwapStatusQuery(
   baseOptions: Apollo.QueryHookOptions<
     GetBoltzSwapStatusQuery,
     GetBoltzSwapStatusQueryVariables
-  >
+  > &
+    (
+      | { variables: GetBoltzSwapStatusQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<
@@ -83,13 +87,39 @@ export function useGetBoltzSwapStatusLazyQuery(
     GetBoltzSwapStatusQueryVariables
   >(GetBoltzSwapStatusDocument, options);
 }
+// @ts-ignore
 export function useGetBoltzSwapStatusSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetBoltzSwapStatusQuery,
     GetBoltzSwapStatusQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetBoltzSwapStatusQuery,
+  GetBoltzSwapStatusQueryVariables
+>;
+export function useGetBoltzSwapStatusSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBoltzSwapStatusQuery,
+        GetBoltzSwapStatusQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetBoltzSwapStatusQuery | undefined,
+  GetBoltzSwapStatusQueryVariables
+>;
+export function useGetBoltzSwapStatusSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBoltzSwapStatusQuery,
+        GetBoltzSwapStatusQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetBoltzSwapStatusQuery,
     GetBoltzSwapStatusQueryVariables

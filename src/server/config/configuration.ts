@@ -14,19 +14,17 @@ type Throttler = {
 
 type Urls = {
   mempool: string;
+  blockstream: string;
   amboss: {
     space: string;
     auth: string;
     magma: string;
   };
-  tbase: string;
   ticker: string;
   fees: string;
   blockHeight: string;
   boltz: string;
   github: string;
-  lnMarkets: string;
-  lnMarketsExchange: string;
 };
 
 type Headers = {
@@ -55,6 +53,21 @@ type AmbossConfig = {
   disableBalancePushes: boolean;
 };
 
+export type ClientConfig = {
+  basePath: string;
+  apiUrl: string;
+  mempoolUrl: string;
+  defaultTheme: string;
+  defaultCurrency: string;
+  fetchPrices: boolean;
+  fetchFees: boolean;
+  disableLinks: boolean;
+  noVersionCheck: boolean;
+  logoutUrl: string;
+  disable2FA: boolean;
+  npmVersion: string;
+};
+
 type ConfigType = {
   basePath: string;
   isProduction: boolean;
@@ -74,6 +87,7 @@ type ConfigType = {
   headers: Headers;
   subscriptions: SubscriptionsConfig;
   amboss: AmbossConfig;
+  clientConfig: ClientConfig;
 };
 
 export default (): ConfigType => {
@@ -91,6 +105,7 @@ export default (): ConfigType => {
 
   const urls: Urls = {
     mempool,
+    blockstream: 'https://blockstream.info',
     amboss: {
       space: 'https://api.amboss.space/graphql',
       auth: 'https://account.amboss.tech/graphql',
@@ -98,11 +113,8 @@ export default (): ConfigType => {
     },
     fees: `${mempool}/api/v1/fees/recommended`,
     blockHeight: `${mempool}/api/blocks/tip/height`,
-    tbase: 'https://api.thunderhub.io/api/graphql',
     ticker: 'https://blockchain.info/ticker',
     github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
-    lnMarkets: 'https://api.lnmarkets.com/v1',
-    lnMarketsExchange: 'https://lnmarkets.com',
     boltz: 'https://api.boltz.exchange',
   };
 
@@ -146,11 +158,28 @@ export default (): ConfigType => {
     disableBalancePushes: process.env.DISABLE_BALANCE_PUSHES === 'true',
   };
 
+  const basePath = process.env.BASE_PATH || '';
+
+  const clientConfig: ClientConfig = {
+    basePath,
+    apiUrl: `${basePath}/graphql`,
+    mempoolUrl: mempool,
+    defaultTheme: process.env.THEME || 'dark',
+    defaultCurrency: process.env.CURRENCY || 'sat',
+    fetchPrices: process.env.FETCH_PRICES !== 'false',
+    fetchFees: process.env.FETCH_FEES !== 'false',
+    disableLinks: process.env.DISABLE_LINKS === 'true',
+    noVersionCheck: process.env.NO_VERSION_CHECK === 'true',
+    logoutUrl: process.env.LOGOUT_URL || '',
+    disable2FA: process.env.DISABLE_TWOFA === 'true',
+    npmVersion,
+  };
+
   const config: ConfigType = {
     logJson: process.env.LOG_JSON === 'true',
     masterPasswordOverride: process.env.MASTER_PASSWORD_OVERRIDE || '',
     disable2FA: process.env.DISABLE_TWOFA === 'true',
-    basePath: process.env.BASE_PATH || '',
+    basePath,
     playground: !isProduction,
     logLevel: process.env.LOG_LEVEL,
     cookiePath: process.env.COOKIE_PATH || '',
@@ -165,6 +194,7 @@ export default (): ConfigType => {
     yamlEnvs,
     subscriptions,
     amboss,
+    clientConfig,
   };
 
   if (!isProduction) {

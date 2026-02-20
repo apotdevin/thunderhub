@@ -68,13 +68,30 @@ export function useGetAccountLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetAccountSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetAccountQuery,
     GetAccountQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<GetAccountQuery, GetAccountQueryVariables>;
+export function useGetAccountSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetAccountQuery, GetAccountQueryVariables>
+): Apollo.UseSuspenseQueryResult<
+  GetAccountQuery | undefined,
+  GetAccountQueryVariables
+>;
+export function useGetAccountSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetAccountQuery, GetAccountQueryVariables>
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<GetAccountQuery, GetAccountQueryVariables>(
     GetAccountDocument,
     options

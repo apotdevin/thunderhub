@@ -1,5 +1,5 @@
 import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
@@ -25,7 +25,6 @@ const getMaxHeight = (arr: number[], rounding?: number): number => {
 export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
   const themeContext = useContext(ThemeContext);
   const { data } = useGetForwardsQuery({
-    ssr: false,
     variables: { days: days },
     onError: error => toast.error(getErrorContent(error)),
   });

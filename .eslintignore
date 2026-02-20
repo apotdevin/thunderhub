@@ -1,6 +1,0 @@
-node_modules
-.next
-src/client/.next
-
-**/*.generated.tsx
-src/graphql/types.ts

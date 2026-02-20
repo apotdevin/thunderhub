@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Fragment } from 'react';
 import { sortBy } from 'lodash';
 import { Message } from '../../graphql/types';
 import { SentChatProps } from '../../context/ChatContext';
@@ -72,7 +72,7 @@ export const ChatBox = ({ messages, alias }: ChatBoxProps) => {
             index < sorted.length - 1 ? sorted[index + 1].date : message.date;
           const isDifferent = getIsDifferentDay(message.date, nextDate);
           return (
-            <React.Fragment key={`${message.sender}/${message.date}`}>
+            <Fragment key={`${message.sender}/${message.date}`}>
               <MessageCard message={message} />
               {isDifferent && (
                 <ChatDaySeparator>
@@ -84,7 +84,7 @@ export const ChatBox = ({ messages, alias }: ChatBoxProps) => {
                   {getDayChange(message.date)}
                 </ChatDaySeparator>
               )}
-            </React.Fragment>
+            </Fragment>
           );
         })}
       </ChatColumn>

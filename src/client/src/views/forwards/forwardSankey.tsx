@@ -1,5 +1,5 @@
-import React, { FC, useMemo } from 'react';
-import { toast } from 'react-toastify';
+import { FC, useMemo } from 'react';
+import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
 import styled from 'styled-components';
 import { mediaWidths } from '../../styles/Themes';
@@ -36,7 +36,6 @@ export const ForwardSankey: FC<{
   type: string;
 }> = ({ days, type }) => {
   const { data, loading } = useGetForwardsQuery({
-    ssr: false,
     variables: { days },
     onError: error => toast.error(getErrorContent(error)),
   });
@@ -50,10 +49,10 @@ export const ForwardSankey: FC<{
       data.getForwards.by_route,
       (p, c) => {
         const source = `source: ${
-          c.incoming_channel_info?.node2_info.alias || 'Unknown'
+          c.incoming_channel_info?.node2_info?.alias || 'Unknown'
         } (${c.incoming_channel})`;
         const target = `target: ${
-          c.outgoing_channel_info?.node2_info.alias || 'Unknown'
+          c.outgoing_channel_info?.node2_info?.alias || 'Unknown'
         } (${c.outgoing_channel})`;
 
         return {

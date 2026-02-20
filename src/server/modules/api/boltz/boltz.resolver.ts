@@ -31,6 +31,8 @@ import { address, initEccLib, networks, Transaction } from 'bitcoinjs-lib';
 import {
   BoltzInfoType,
   BoltzSwap,
+  BroadcastAuto,
+  BroadcastResult,
   CreateBoltzReverseSwapType,
   isBoltzError,
 } from './boltz.types';
@@ -40,8 +42,9 @@ import { UserId } from '../../security/security.types';
 import { toWithError } from 'src/server/utils/async';
 import { ECPairAPI, ECPairFactory } from 'ecpair';
 import * as ecc from 'tiny-secp256k1';
-import { mapSeries } from 'async';
+import { auto, mapSeries } from 'async';
 import { MempoolService } from '../../mempool/mempool.service';
+import { BlockstreamService } from '../../blockstream/blockstream.service';
 
 const ECPair: ECPairAPI = ECPairFactory(ecc);
 
@@ -72,6 +75,7 @@ export class BoltzResolver {
     private nodeService: NodeService,
     private boltzService: BoltzService,
     private mempoolService: MempoolService,
+    private blockstreamService: BlockstreamService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -376,23 +380,49 @@ export class BoltzResolver {
   private broadcastTransaction = async (finalTransaction: Transaction) => {
     this.logger.debug('Final transaction', { finalTransaction });
 
-    const [info, error] = await toWithError(
-      this.boltzService.broadcastTransaction(finalTransaction.toHex())
-    );
+    const hex = finalTransaction.toHex();
 
-    if (error || isBoltzError(info)) {
-      this.logger.error('Error broadcasting transaction through Boltz', {
-        error,
-        boltzError: info,
-      });
-      throw new GraphQLError('Error broadcasting transaction through Boltz');
+    const finalIds = await auto<BroadcastAuto>({
+      boltz: async (): Promise<BroadcastResult> => {
+        const [info, error] = await toWithError(
+          this.boltzService.broadcastTransaction(hex)
+        );
+
+        if (error || isBoltzError(info) || !info.id) {
+          return { id: undefined, error };
+        }
+
+        return { id: info.id };
+      },
+      mempool: async (): Promise<BroadcastResult> => {
+        const [info, error] = await toWithError(
+          this.mempoolService.broadcastTransaction(hex)
+        );
+
+        return error ? { id: undefined, error } : { id: info };
+      },
+      blockstream: async (): Promise<BroadcastResult> => {
+        const [info, error] = await toWithError(
+          this.blockstreamService.broadcastTransaction(hex)
+        );
+
+        return error ? { id: undefined, error } : { id: info };
+      },
+    });
+
+    this.logger.debug('Broadcasted transaction across multiple endpoints', {
+      finalIds,
+    });
+
+    const id =
+      finalIds.boltz.id || finalIds.mempool.id || finalIds.blockstream.id;
+
+    if (!id) {
+      throw new GraphQLError(
+        'Error broadcasting transaction. Please check the logs.'
+      );
     }
 
-    if (!info.id) {
-      this.logger.error('Did not receive a transaction id from Boltz');
-      throw new Error('NoTransactionIdFromBoltz');
-    }
-
-    return info.id;
+    return id;
   };
 }

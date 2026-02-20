@@ -3,7 +3,6 @@ import { NodeModule } from './node/node.module';
 import { AccountModule } from './account/account.module';
 import { AmbossModule } from './amboss/amboss.module';
 import { AuthModule } from './auth/auth.module';
-import { BaseModule } from './base/base.module';
 import { BitcoinModule } from './bitcoin/bitcoin.module';
 import { MainModule } from './main/main.module';
 import { GithubModule } from './github/github.module';
@@ -22,15 +21,12 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { ChatModule } from './chat/chat.module';
 import { BoltzModule } from './boltz/boltz.module';
-import { LnMarketsModule } from './lnmarkets/lnmarkets.module';
-import { BosModule } from './bos/bos.module';
 import { UserConfigModule } from './userConfig/userConfig.module';
 
 @Module({
   imports: [
     UserConfigModule,
     MainModule,
-    BaseModule,
     AuthModule,
     AccountModule,
     AmbossModule,
@@ -52,8 +48,6 @@ import { UserConfigModule } from './userConfig/userConfig.module';
     InvoicesModule,
     ChatModule,
     BoltzModule,
-    LnMarketsModule,
-    BosModule,
   ],
 })
 export class ApiModule {}

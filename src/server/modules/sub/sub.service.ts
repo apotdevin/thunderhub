@@ -11,7 +11,7 @@ import { auto, each, map, forever } from 'async';
 import { Logger } from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { AccountsService } from '../accounts/accounts.service';
-import { WsService } from '../ws/ws.service';
+import { SseService } from '../sse/sse.service';
 import { ConfigService } from '@nestjs/config';
 import { NodeService } from '../node/node.service';
 import { UserConfigService } from '../api/userConfig/userConfig.service';
@@ -35,7 +35,7 @@ export class SubService implements OnApplicationBootstrap {
   constructor(
     private ambossService: AmbossService,
     private accountsService: AccountsService,
-    private wsService: WsService,
+    private sseService: SseService,
     private configService: ConfigService,
     private nodeService: NodeService,
     private userConfigService: UserConfigService,
@@ -151,7 +151,7 @@ export class SubService implements OnApplicationBootstrap {
 
                     sub.on('invoice_updated', data => {
                       this.logger.info('invoice_updated', { node: node.name });
-                      this.wsService.emit(node.id, 'invoice_updated', data);
+                      this.sseService.emit(node.id, 'invoice_updated', data);
 
                       return;
                     });
@@ -202,7 +202,7 @@ export class SubService implements OnApplicationBootstrap {
 
                     sub.on('payment', data => {
                       this.logger.info('payment', { node: node.name });
-                      this.wsService.emit(node.id, 'payment', data);
+                      this.sseService.emit(node.id, 'payment', data);
 
                       return;
                     });
@@ -253,7 +253,7 @@ export class SubService implements OnApplicationBootstrap {
 
                     sub.on('forward', data => {
                       this.logger.info('forward', { node: node.name });
-                      this.wsService.emit(node.id, 'forward', data);
+                      this.sseService.emit(node.id, 'forward', data);
 
                       return;
                     });
@@ -306,7 +306,7 @@ export class SubService implements OnApplicationBootstrap {
                       this.logger.info('channel_active_changed', {
                         node: node.name,
                       });
-                      this.wsService.emit(
+                      this.sseService.emit(
                         node.id,
                         'channel_active_changed',
                         data
@@ -317,21 +317,21 @@ export class SubService implements OnApplicationBootstrap {
 
                     sub.on('channel_closed', data => {
                       this.logger.info('channel_closed', { node: node.name });
-                      this.wsService.emit(node.id, 'channel_closed', data);
+                      this.sseService.emit(node.id, 'channel_closed', data);
 
                       return;
                     });
 
                     sub.on('channel_opened', data => {
                       this.logger.info('channel_opened', { node: node.name });
-                      this.wsService.emit(node.id, 'channel_opened', data);
+                      this.sseService.emit(node.id, 'channel_opened', data);
 
                       return;
                     });
 
                     sub.on('channel_opening', data => {
                       this.logger.info('channel_opening', { node: node.name });
-                      this.wsService.emit(node.id, 'channel_opening', data);
+                      this.sseService.emit(node.id, 'channel_opening', data);
 
                       return;
                     });

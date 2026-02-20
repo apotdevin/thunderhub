@@ -1,16 +1,14 @@
-import React, { FC, ReactNode, useEffect } from 'react';
-import { LogOut } from 'react-feather';
-import { useLogoutMutation } from '../../../src/graphql/mutations/__generated__/logout.generated';
+import { FC, ReactNode, useEffect } from 'react';
+import { LogOut } from 'lucide-react';
+import { useLogoutMutation } from '@/graphql/mutations/__generated__/logout.generated';
 import { useApolloClient } from '@apollo/client';
-import { HeaderNavButton } from '../../../src/layouts/header/Header.styled';
+import { HeaderNavButton } from '@/layouts/header/Header.styled';
 import styled from 'styled-components';
-import { themeColors } from '../../../src/styles/Themes';
-import ScaleLoader from 'react-spinners/ScaleLoader';
-import getConfig from 'next/config';
+import { themeColors } from '@/styles/Themes';
+import { Loader2 } from 'lucide-react';
+import { config } from '../../config/thunderhubConfig';
+import { safeRedirect } from '../../utils/url';
 import { useChatDispatch } from '../../context/ChatContext';
-
-const { publicRuntimeConfig } = getConfig();
-const { logoutUrl, basePath } = publicRuntimeConfig;
 
 const Logout = styled.button`
   cursor: pointer;
@@ -39,14 +37,21 @@ export const LogoutWrapper: FC<{ children?: ReactNode }> = ({ children }) => {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
 
-      window.location.href = logoutUrl || `${basePath}/login`;
+      safeRedirect(
+        config.logoutUrl || `${config.basePath}/login`,
+        `${config.basePath}/login`
+      );
     }
   }, [data, dispatchChat, client]);
 
   if (loading) {
     return (
       <LogoutWrapperStyled>
-        <ScaleLoader height={14} width={1} color={themeColors.blue3} />
+        <Loader2
+          className="animate-spin"
+          size={14}
+          style={{ color: themeColors.blue3 }}
+        />
       </LogoutWrapperStyled>
     );
   }
@@ -72,7 +77,10 @@ export const LogoutButton = () => {
       dispatchChat({ type: 'disconnected' });
       client.clearStore();
 
-      window.location.href = logoutUrl || `${basePath}/login`;
+      safeRedirect(
+        config.logoutUrl || `${config.basePath}/login`,
+        `${config.basePath}/login`
+      );
     }
   }, [data, dispatchChat, client]);
 
@@ -80,7 +88,11 @@ export const LogoutButton = () => {
     return (
       <Logout>
         <HeaderNavButton>
-          <ScaleLoader height={14} width={1} color={themeColors.blue3} />
+          <Loader2
+            className="animate-spin"
+            size={14}
+            style={{ color: themeColors.blue3 }}
+          />
         </HeaderNavButton>
       </Logout>
     );

@@ -54,7 +54,6 @@ type ForwardGraphProps = {
 
 export const ForwardsGraph: FC<ForwardGraphProps> = ({ days, type }) => {
   const { data, loading } = useGetForwardsQuery({
-    ssr: false,
     variables: { days: days.value },
     errorPolicy: 'ignore',
   });

@@ -1,97 +1,4 @@
-import React, { useId } from 'react';
-import ReactSelect from 'react-select';
-import styled, { css } from 'styled-components';
-import {
-  inputBackgroundColor,
-  textColor,
-  inputBorderColor,
-  themeColors,
-  selectColors,
-} from '../../styles/Themes';
-
-type WrapperProps = {
-  maxWidth?: string;
-  minWidth?: string;
-  fullWidth?: boolean;
-};
-
-const StyledWrapper = styled.div<WrapperProps>`
-  ${({ maxWidth }) =>
-    maxWidth &&
-    css`
-      max-width: ${maxWidth};
-    `}
-  ${({ minWidth }) =>
-    minWidth &&
-    css`
-      min-width: ${minWidth};
-    `}
-  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
-`;
-
-const StyledSelect = styled(ReactSelect)`
-  & .Select__control {
-    cursor: pointer;
-    background-color: ${inputBackgroundColor};
-    border: 1px solid ${inputBorderColor};
-    font-size: 14px;
-
-    & .Select__control--is-focused {
-      border: 1px solid ${themeColors.blue2};
-    }
-
-    & .Select__single-value {
-      color: ${textColor};
-    }
-  }
-
-  & .Select__menu {
-    font-size: 14px;
-    color: black;
-
-    & .Select__option {
-      cursor: pointer;
-    }
-
-    & .Select__option--is-selected {
-      background-color: ${themeColors.blue2};
-    }
-  }
-`;
-
-const StyledSmallSelect = styled(ReactSelect)`
-  & .Select__control {
-    cursor: pointer;
-    background-color: ${selectColors.smallBackground};
-    border: none;
-    font-size: 12px;
-
-    & .Select__control--is-focused {
-      border: 1px solid ${themeColors.blue2};
-    }
-
-    & .Select__single-value {
-      color: ${textColor};
-    }
-
-    & .Select__dropdown-indicator {
-      padding: 0 0 0 4px;
-    }
-  }
-
-  & .Select__menu {
-    font-size: 14px;
-    color: black;
-
-    & .Select__option {
-      cursor: pointer;
-    }
-
-    & .Select__option--is-selected {
-      background-color: ${themeColors.blue2};
-    }
-  }
-`;
+import { NativeSelect, NativeSelectOption } from '../ui/native-select';
 
 export type ValueProp = {
   value: string | number;
@@ -100,41 +7,34 @@ export type ValueProp = {
 
 type SelectProps = {
   options: ValueProp[];
-  isMulti?: boolean;
   maxWidth?: string;
   callback: (value: ValueProp[]) => void;
 };
 
-export const Select = ({
-  isMulti,
-  options,
-  maxWidth,
-  callback,
-}: SelectProps) => {
-  const handleChange: any = (value: ValueProp | ValueProp[]) => {
-    if (Array.isArray(value)) {
-      callback(value);
-    } else {
-      callback([value]);
-    }
-  };
+export const Select = ({ options, maxWidth, callback }: SelectProps) => {
   return (
-    <StyledWrapper maxWidth={maxWidth} fullWidth={true}>
-      <StyledSelect
-        instanceId={useId()}
-        isMulti={isMulti}
-        classNamePrefix={'Select'}
-        options={options}
-        onChange={handleChange}
-      />
-    </StyledWrapper>
+    <div style={{ maxWidth: maxWidth || undefined, width: '100%' }}>
+      <NativeSelect
+        defaultValue=""
+        onChange={e => {
+          const option = options.find(o => String(o.value) === e.target.value);
+          if (option) callback([option]);
+        }}
+      >
+        <NativeSelectOption value="">Select...</NativeSelectOption>
+        {options.map(opt => (
+          <NativeSelectOption key={String(opt.value)} value={String(opt.value)}>
+            {String(opt.label)}
+          </NativeSelectOption>
+        ))}
+      </NativeSelect>
+    </div>
   );
 };
 
 type SelectWithValueProps = {
   options: ValueProp[];
   value: ValueProp | undefined;
-  isMulti?: boolean;
   maxWidth?: string;
   minWidth?: string;
   isClearable?: boolean;
@@ -142,7 +42,6 @@ type SelectWithValueProps = {
 };
 
 export const SelectWithValue = ({
-  isMulti,
   options,
   maxWidth,
   minWidth,
@@ -150,54 +49,64 @@ export const SelectWithValue = ({
   value,
   isClearable = true,
 }: SelectWithValueProps) => {
-  const handleChange: any = (value: ValueProp | ValueProp[]) => {
-    if (Array.isArray(value)) {
-      callback(value);
-    } else {
-      callback([value]);
-    }
-  };
   return (
-    <StyledWrapper maxWidth={maxWidth} minWidth={minWidth} fullWidth={false}>
-      <StyledSelect
-        instanceId={useId()}
-        isMulti={isMulti}
-        classNamePrefix={'Select'}
-        options={options}
-        onChange={handleChange}
-        value={value || null}
-        isClearable={isClearable}
-      />
-    </StyledWrapper>
+    <div style={{ maxWidth, minWidth, width: maxWidth ? undefined : 'auto' }}>
+      <NativeSelect
+        value={value ? String(value.value) : ''}
+        onChange={e => {
+          const selectedValue = e.target.value;
+          if (!selectedValue) {
+            callback([]);
+            return;
+          }
+          const option = options.find(o => String(o.value) === selectedValue);
+          if (option) callback([option]);
+        }}
+      >
+        {(isClearable || !value) && (
+          <NativeSelectOption value="">Select...</NativeSelectOption>
+        )}
+        {options.map(opt => (
+          <NativeSelectOption key={String(opt.value)} value={String(opt.value)}>
+            {String(opt.label)}
+          </NativeSelectOption>
+        ))}
+      </NativeSelect>
+    </div>
   );
 };
 
 export const SmallSelectWithValue = ({
-  isMulti,
   options,
   maxWidth,
   callback,
   value,
   isClearable = true,
 }: SelectWithValueProps) => {
-  const handleChange: any = (value: ValueProp | ValueProp[]) => {
-    if (Array.isArray(value)) {
-      callback(value);
-    } else {
-      callback([value]);
-    }
-  };
   return (
-    <StyledWrapper maxWidth={maxWidth} fullWidth={true}>
-      <StyledSmallSelect
-        instanceId={useId()}
-        isMulti={isMulti}
-        classNamePrefix={'Select'}
-        options={options}
-        onChange={handleChange}
-        value={value || null}
-        isClearable={isClearable}
-      />
-    </StyledWrapper>
+    <div style={{ maxWidth, width: '100%' }}>
+      <NativeSelect
+        size="sm"
+        value={value ? String(value.value) : ''}
+        onChange={e => {
+          const selectedValue = e.target.value;
+          if (!selectedValue) {
+            callback([]);
+            return;
+          }
+          const option = options.find(o => String(o.value) === selectedValue);
+          if (option) callback([option]);
+        }}
+      >
+        {(isClearable || !value) && (
+          <NativeSelectOption value="">Select...</NativeSelectOption>
+        )}
+        {options.map(opt => (
+          <NativeSelectOption key={String(opt.value)} value={String(opt.value)}>
+            {String(opt.label)}
+          </NativeSelectOption>
+        ))}
+      </NativeSelect>
+    </div>
   );
 };

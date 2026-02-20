@@ -101,13 +101,39 @@ export function useGetClosedChannelsLazyQuery(
     GetClosedChannelsQueryVariables
   >(GetClosedChannelsDocument, options);
 }
+// @ts-ignore
 export function useGetClosedChannelsSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetClosedChannelsQuery,
     GetClosedChannelsQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetClosedChannelsQuery,
+  GetClosedChannelsQueryVariables
+>;
+export function useGetClosedChannelsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetClosedChannelsQuery,
+        GetClosedChannelsQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetClosedChannelsQuery | undefined,
+  GetClosedChannelsQueryVariables
+>;
+export function useGetClosedChannelsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetClosedChannelsQuery,
+        GetClosedChannelsQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetClosedChannelsQuery,
     GetClosedChannelsQueryVariables

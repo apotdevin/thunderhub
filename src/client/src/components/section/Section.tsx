@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { FC, Fragment, ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeSet } from 'styled-theming';
 import { backgroundColor, mediaWidths } from '../../styles/Themes';
@@ -47,14 +47,14 @@ type SectionProps = {
   children?: ReactNode;
 };
 
-export const Section: React.FC<SectionProps> = ({
+export const Section: FC<SectionProps> = ({
   fixedWidth = false,
   children,
   color,
   textColor,
   padding,
 }) => {
-  const Fixed = fixedWidth ? FixedWidth : React.Fragment;
+  const Fixed = fixedWidth ? FixedWidth : Fragment;
 
   return (
     <FullWidth padding={padding} sectionColor={color} textColor={textColor}>

@@ -5,6 +5,16 @@ import { ConfigService } from '@nestjs/config';
 import { JwtObjectType, UserId } from './security.types';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
+import * as cookie from 'cookie';
+import { appConstants } from '../../utils/appConstants';
+
+const cookieExtractor = (req: any) => {
+  if (req?.headers?.cookie) {
+    const cookies = cookie.parse(req.headers.cookie);
+    return cookies[appConstants.cookieName] || null;
+  }
+  return null;
+};
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -13,8 +23,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+        cookieExtractor,
+      ]),
       secretOrKey: configService.get('jwtSecret'),
+      algorithms: ['HS256'],
     });
   }
 

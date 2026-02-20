@@ -76,13 +76,39 @@ export function useGetLiquidReportLazyQuery(
     GetLiquidReportQueryVariables
   >(GetLiquidReportDocument, options);
 }
+// @ts-ignore
 export function useGetLiquidReportSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetLiquidReportQuery,
     GetLiquidReportQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetLiquidReportQuery,
+  GetLiquidReportQueryVariables
+>;
+export function useGetLiquidReportSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetLiquidReportQuery,
+        GetLiquidReportQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetLiquidReportQuery | undefined,
+  GetLiquidReportQueryVariables
+>;
+export function useGetLiquidReportSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetLiquidReportQuery,
+        GetLiquidReportQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetLiquidReportQuery,
     GetLiquidReportQueryVariables

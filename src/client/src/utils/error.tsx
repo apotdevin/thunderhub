@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import styled from 'styled-components';
 import { ApolloError } from '@apollo/client';
 
@@ -26,8 +26,6 @@ const getMessage = (error: string) => {
   }
 };
 
-const ErrorBox = styled.div``;
-
 const ErrorLine = styled.div`
   padding: 4px 0;
 
@@ -39,19 +37,19 @@ const ErrorLine = styled.div`
   hyphens: auto;
 `;
 
-export const getErrorContent = (error: ApolloError): ReactNode => {
+export const getErrorContent = (error: ApolloError): JSX.Element => {
   const errors = error.graphQLErrors.map(x => x.message);
 
   if (!errors.length) {
-    return <ErrorBox>{JSON.stringify(error)}</ErrorBox>;
+    return <div>{JSON.stringify(error)}</div>;
   }
 
   return (
-    <ErrorBox>
+    <div>
       {errors.map((errorMsg, i) => {
         return <ErrorLine key={i}>{getMessage(errorMsg)}</ErrorLine>;
       })}
-    </ErrorBox>
+    </div>
   );
 };
 

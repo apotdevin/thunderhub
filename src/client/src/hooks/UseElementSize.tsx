@@ -29,7 +29,6 @@ function useElementSize<T extends HTMLElement = HTMLDivElement>(
   // Initial size on mount
   useEffect(() => {
     updateSize();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEventListener('resize', updateSize);

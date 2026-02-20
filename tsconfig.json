@@ -10,6 +10,9 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/client/src/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "esModuleInterop": true

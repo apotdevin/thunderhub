@@ -65,26 +65,9 @@ type Balances {
   onchain: OnChainBalance!
 }
 
-type BaseInvoice {
-  id: String!
-  request: String!
-}
-
-type BaseNode {
-  _id: String
-  name: String
-  public_key: String!
-  socket: String!
-}
-
 type BaseNodeInfo {
   alias: String!
   public_key: String!
-}
-
-type BasePoints {
-  alias: String!
-  amount: Float!
 }
 
 type BitcoinFee {
@@ -114,37 +97,6 @@ type BoltzSwapTransaction {
   eta: Float
   hex: String
   id: String
-}
-
-type BosDecrease {
-  decreased_inbound_on: String!
-  liquidity_inbound: String!
-  liquidity_inbound_opening: String
-  liquidity_inbound_pending: String
-  liquidity_outbound: String!
-  liquidity_outbound_opening: String
-  liquidity_outbound_pending: String
-}
-
-type BosIncrease {
-  increased_inbound_on: String!
-  liquidity_inbound: String!
-  liquidity_inbound_opening: String
-  liquidity_inbound_pending: String
-  liquidity_outbound: String!
-  liquidity_outbound_opening: String
-  liquidity_outbound_pending: String
-}
-
-type BosRebalanceResult {
-  decrease: BosDecrease
-  increase: BosIncrease
-  result: BosResult
-}
-
-type BosResult {
-  rebalance_fees_spent: String!
-  rebalanced: String!
 }
 
 type ChainAddressSend {
@@ -450,15 +402,6 @@ type LightningNodeSocialInfo {
   socials: NodeSocial
 }
 
-type LnMarketsUserInfo {
-  account_type: String
-  balance: String
-  last_ip: String
-  linkingpublickey: String
-  uid: String
-  username: String
-}
-
 union LnUrlRequest = ChannelRequest | PayRequest | WithdrawRequest
 
 type Message {
@@ -478,23 +421,16 @@ type MessageType {
 
 type Mutation {
   addPeer(isTemporary: Boolean, publicKey: String, socket: String, url: String): Boolean!
-  bosRebalance(avoid: [String!], in_through: String, max_fee: Float, max_fee_rate: Float, max_rebalance: Float, node: String, out_inbound: Float, out_through: String, timeout_minutes: Float): BosRebalanceResult!
   claimBoltzTransaction(destination: String!, fee: Float!, id: String!, lockupAddress: String!, preimage: String!, privateKey: String!, redeem: String!): String!
   closeChannel(forceClose: Boolean, id: String!, targetConfirmations: Float, tokensPerVByte: Float): OpenOrCloseChannel!
   createAddress(type: String! = "p2tr"): String!
-  createBaseInvoice(amount: Float!): BaseInvoice!
   createBoltzReverseSwap(address: String, amount: Float!): CreateBoltzReverseSwapType!
   createInvoice(amount: Float!, description: String, includePrivate: Boolean, secondsUntil: Float): CreateInvoice!
   createMacaroon(permissions: NetworkInfoInput!): CreateMacaroon!
-  createThunderPoints(alias: String!, id: String!, public_key: String!, uris: [String!]!): Boolean!
   fetchLnUrl(url: String!): LnUrlRequest!
   getAuthToken(cookie: String): Boolean!
   getSessionToken(id: String!, password: String!, token: String): String!
   keysend(destination: String, tokens: Float!): PayInvoice!
-  lnMarketsDeposit(amount: Float!): Boolean!
-  lnMarketsLogin: AuthResponse!
-  lnMarketsLogout: Boolean!
-  lnMarketsWithdraw(amount: Float!): Boolean!
   lnUrlAuth(url: String!): AuthResponse!
   lnUrlChannel(callback: String!, k1: String!, uri: String!): String!
   lnUrlPay(amount: Float!, callback: String!, comment: String): PaySuccess!
@@ -740,13 +676,9 @@ type Policy {
 type Query {
   decodeRequest(request: String!): DecodeInvoice!
   getAccount: ServerAccount!
-  getAccountingReport(category: String, currency: String, fiat: String, month: String, year: String): String!
   getAmbossLoginToken(redirect_url: String): String!
   getAmbossUser: AmbossUser
   getBackups: String!
-  getBaseCanConnect: Boolean!
-  getBaseNodes: [BaseNode!]!
-  getBasePoints: [BasePoints!]!
   getBitcoinFees: BitcoinFee!
   getBitcoinPrice: String!
   getBoltzInfo: BoltzInfoType!
@@ -765,9 +697,6 @@ type Query {
   getLatestVersion: String!
   getLightningAddressInfo(address: String!): PayRequest!
   getLiquidityPerUsd: String!
-  getLnMarketsStatus: String!
-  getLnMarketsUrl: String!
-  getLnMarketsUserInfo: LnMarketsUserInfo!
   getMessages(initialize: Boolean): GetMessages!
   getNetworkInfo: NetworkInfo!
   getNode(publicKey: String!, withoutChannels: Boolean): Node!

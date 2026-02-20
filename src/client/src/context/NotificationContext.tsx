@@ -1,4 +1,5 @@
-import React, {
+import {
+  FC,
   createContext,
   useContext,
   useReducer,
@@ -63,9 +64,7 @@ const stateReducer = (state: State, action: ActionType): State => {
   }
 };
 
-const NotificationProvider: React.FC<{ children?: ReactNode }> = ({
-  children,
-}) => {
+const NotificationProvider: FC<{ children?: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   useEffect(() => {

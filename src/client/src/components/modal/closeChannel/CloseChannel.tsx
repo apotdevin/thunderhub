@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { AlertTriangle } from 'react-feather';
+import { useState } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import styled from 'styled-components';
-import { toast } from 'react-toastify';
-import { useCloseChannelMutation } from '../../../../src/graphql/mutations/__generated__/closeChannel.generated';
-import { useBitcoinFees } from '../../../../src/hooks/UseBitcoinFees';
-import { useConfigState } from '../../../../src/context/ConfigContext';
-import { renderLine } from '../../../../src/components/generic/helpers';
-import { InputWithDeco } from '../../../../src/components/input/InputWithDeco';
-import { chartColors } from '../../../../src/styles/Themes';
+import toast from 'react-hot-toast';
+import { useCloseChannelMutation } from '@/graphql/mutations/__generated__/closeChannel.generated';
+import { useBitcoinFees } from '@/hooks/UseBitcoinFees';
+import { useConfigState } from '@/context/ConfigContext';
+import { renderLine } from '@/components/generic/helpers';
+import { InputWithDeco } from '@/components/input/InputWithDeco';
+import { chartColors } from '@/styles/Themes';
 import {
   Separation,
   SingleLine,
@@ -56,7 +56,7 @@ export const CloseChannel = ({
   const [closeChannel, { loading }] = useCloseChannelMutation({
     onCompleted: () => {
       toast.success('Channel Closed');
-      () => setIsConfirmed(false);
+      setIsConfirmed(false);
       callback?.();
     },
     onError: error => toast.error(getErrorContent(error)),

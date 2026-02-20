@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
-import { SettingsLine } from '../../../pages/settings';
+import { SettingsLine } from '../../pages/SettingsPage';
 import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
 import {
   Card,
@@ -15,12 +15,9 @@ import { QRCodeSVG } from 'qrcode.react';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { useRemoveTwofaSecretMutation } from '../../graphql/mutations/__generated__/removeTwofaSecret.generated';
 import { InputWithDeco } from '../../components/input/InputWithDeco';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useUpdateTwofaSecretMutation } from '../../graphql/mutations/__generated__/updateTwofaSecret.generated';
-import getConfig from 'next/config';
-
-const { publicRuntimeConfig } = getConfig();
-const { disable2FA } = publicRuntimeConfig;
+import { config } from '../../config/thunderhubConfig';
 
 const S = {
   QRWrapper: styled.div`
@@ -152,7 +149,7 @@ export const Security = () => {
   const user = useAccount();
   const [enable, setEnabled] = useState<boolean>(false);
 
-  if (!user || disable2FA) {
+  if (!user || config.disable2FA) {
     return null;
   }
 

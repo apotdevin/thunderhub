@@ -1,8 +1,4 @@
-import * as React from 'react';
-import {
-  CircularProgressbarWithChildren,
-  buildStyles,
-} from 'react-circular-progressbar';
+import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 import { DarkSubTitle } from '../../components/generic/Styled';
 import { mediaWidths } from '../../styles/Themes';
@@ -36,6 +32,58 @@ const ScoreTitle = styled.div`
   }
 `;
 
+const SIZE = 200;
+const STROKE = 10;
+const RADIUS = (SIZE - STROKE) / 2;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+
+const CircularProgress: FC<{
+  value: number;
+  pathColor: string;
+  children: ReactNode;
+}> = ({ value, pathColor, children }) => {
+  const offset = CIRCUMFERENCE - (value / 100) * CIRCUMFERENCE;
+
+  return (
+    <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width="100%" height="100%">
+      <circle
+        cx={SIZE / 2}
+        cy={SIZE / 2}
+        r={RADIUS}
+        fill="none"
+        stroke="rgba(0, 0, 0, 0.1)"
+        strokeWidth={STROKE}
+      />
+      <circle
+        cx={SIZE / 2}
+        cy={SIZE / 2}
+        r={RADIUS}
+        fill="none"
+        stroke={pathColor}
+        strokeWidth={STROKE}
+        strokeDasharray={CIRCUMFERENCE}
+        strokeDashoffset={offset}
+        strokeLinecap="round"
+        transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
+        style={{ transition: 'stroke-dashoffset 0.3s ease' }}
+      />
+      <foreignObject x="0" y="0" width={SIZE} height={SIZE}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+          }}
+        >
+          {children}
+        </div>
+      </foreignObject>
+    </svg>
+  );
+};
+
 export const StatResume = () => {
   const { volumeScore, timeScore, feeScore } = useStatsState();
 
@@ -44,40 +92,31 @@ export const StatResume = () => {
       <StatsTitle>Node Statistics</StatsTitle>
       <ProgressRow>
         <ProgressCard>
-          <CircularProgressbarWithChildren
+          <CircularProgress
             value={volumeScore || 0}
-            styles={buildStyles({
-              pathColor: getProgressColor(volumeScore),
-              trailColor: 'rgba(0, 0, 0, 0.1)',
-            })}
+            pathColor={getProgressColor(volumeScore)}
           >
             <DarkSubTitle>Flow</DarkSubTitle>
             <ScoreTitle>{volumeScore}</ScoreTitle>
-          </CircularProgressbarWithChildren>
+          </CircularProgress>
         </ProgressCard>
         <ProgressCard>
-          <CircularProgressbarWithChildren
+          <CircularProgress
             value={timeScore || 0}
-            styles={buildStyles({
-              pathColor: getProgressColor(timeScore),
-              trailColor: 'rgba(0, 0, 0, 0.1)',
-            })}
+            pathColor={getProgressColor(timeScore)}
           >
             <DarkSubTitle>Time</DarkSubTitle>
             <ScoreTitle>{timeScore}</ScoreTitle>
-          </CircularProgressbarWithChildren>
+          </CircularProgress>
         </ProgressCard>
         <ProgressCard>
-          <CircularProgressbarWithChildren
+          <CircularProgress
             value={feeScore || 0}
-            styles={buildStyles({
-              pathColor: getProgressColor(feeScore),
-              trailColor: 'rgba(0, 0, 0, 0.1)',
-            })}
+            pathColor={getProgressColor(feeScore)}
           >
             <DarkSubTitle>Fee</DarkSubTitle>
             <ScoreTitle>{feeScore}</ScoreTitle>
-          </CircularProgressbarWithChildren>
+          </CircularProgress>
         </ProgressCard>
       </ProgressRow>
     </>

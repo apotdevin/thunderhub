@@ -68,13 +68,39 @@ export function useGetBitcoinFeesLazyQuery(
     options
   );
 }
+// @ts-ignore
 export function useGetBitcoinFeesSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
     GetBitcoinFeesQuery,
     GetBitcoinFeesQueryVariables
   >
+): Apollo.UseSuspenseQueryResult<
+  GetBitcoinFeesQuery,
+  GetBitcoinFeesQueryVariables
+>;
+export function useGetBitcoinFeesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBitcoinFeesQuery,
+        GetBitcoinFeesQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetBitcoinFeesQuery | undefined,
+  GetBitcoinFeesQueryVariables
+>;
+export function useGetBitcoinFeesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetBitcoinFeesQuery,
+        GetBitcoinFeesQueryVariables
+      >
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
     GetBitcoinFeesQuery,
     GetBitcoinFeesQueryVariables

@@ -1,8 +1,5 @@
-import numeral from 'numeral';
-
 export const numberWithCommas = (
-  x: number | string | undefined | null,
-  format = '0,0'
+  x: number | string | undefined | null
 ): string => {
   const normalized = Number(x);
 
@@ -10,5 +7,5 @@ export const numberWithCommas = (
     return '-';
   }
 
-  return numeral(normalized).format(format);
+  return normalized.toLocaleString('en-US', { maximumFractionDigits: 0 });
 };
