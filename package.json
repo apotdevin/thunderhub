@@ -77,7 +77,7 @@
     "js-cookie": "^3.0.5",
     "js-yaml": "^4.1.1",
     "jsonwebtoken": "^9.0.3",
-    "lightning": "^11.0.1",
+    "lightning": "^11.0.2",
     "lodash": "^4.17.23",
     "lucide-react": "^0.574.0",
     "nest-winston": "^1.10.2",
