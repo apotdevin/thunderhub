@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import toast from 'react-hot-toast';
-import { Lock, Unlock, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  Lock,
+  Unlock,
+  ChevronDown,
+  ChevronUp,
+  ChevronRight,
+  Loader2,
+} from 'lucide-react';
 import { chartColors } from '../../styles/Themes';
 import { useNavigate } from 'react-router-dom';
 import { Link } from '../../components/link/Link';
@@ -12,7 +18,6 @@ import {
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.generated';
 import { useGetNodeInfoLazyQuery } from '../../graphql/queries/__generated__/getNodeInfo.generated';
-import { Section } from '../../components/section/Section';
 import {
   Card,
   SingleLine,
@@ -20,29 +25,19 @@ import {
   Sub4Title,
   Separation,
 } from '../../components/generic/Styled';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { ConnectTitle, LockPadding } from './HomePage.styled';
+import { Button } from '@/components/ui/button';
+import { cn } from '../../lib/utils';
 import { Login } from './Login';
 
 type ServerAccount = GetServerAccountsQuery['getServerAccounts'][0];
 
-const AccountLine = styled.div`
-  margin: 8px 0;
-`;
-
-const DetailsLine = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: space-between;
-  cursor: pointer;
-`;
-
 const RenderIntro = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   return (
-    <Section fixedWidth={true} color={'transparent'}>
-      <ConnectTitle changeColor={true}>Hi! Welcome to ThunderHub</ConnectTitle>
+    <div className="w-full bg-transparent max-w-[1000px] mx-auto px-4 lg:px-0">
+      <div className="w-full text-lg pb-2 text-white">
+        Hi! Welcome to ThunderHub
+      </div>
       <Card>
         {'To start you must create an account on your server. '}
         <Link
@@ -53,10 +48,13 @@ const RenderIntro = () => {
         </Link>
       </Card>
       <Card>
-        <DetailsLine onClick={() => setDetailsOpen(p => !p)}>
+        <div
+          className="flex items-center w-full justify-between cursor-pointer"
+          onClick={() => setDetailsOpen(p => !p)}
+        >
           <DarkSubTitle>{'Did you already create accounts?'}</DarkSubTitle>
           {detailsOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-        </DetailsLine>
+        </div>
         {detailsOpen && (
           <>
             <Separation />
@@ -72,7 +70,7 @@ const RenderIntro = () => {
           </>
         )}
       </Card>
-    </Section>
+    </div>
   );
 };
 
@@ -101,9 +99,9 @@ export const Accounts = () => {
 
   if (loadingData) {
     return (
-      <Section fixedWidth={true} color={'transparent'}>
+      <div className="w-full bg-transparent max-w-[1000px] mx-auto px-4 lg:px-0">
         <LoadingCard />
-      </Section>
+      </div>
     );
   }
 
@@ -121,9 +119,9 @@ export const Accounts = () => {
     return (
       <div className="flex items-center">
         {type === 'sso' ? 'SSO Account' : name}
-        <LockPadding>
+        <span className="ml-1">
           {loggedIn ? <Unlock {...props} /> : <Lock {...props} />}
-        </LockPadding>
+        </span>
       </div>
     );
   };
@@ -155,31 +153,38 @@ export const Accounts = () => {
   return (
     <>
       {newAccount && <Login account={newAccount} />}
-      <Section fixedWidth={true} color={'transparent'}>
-        <ConnectTitle changeColor={!newAccount}>
+      <div className="w-full bg-transparent max-w-[1000px] mx-auto px-4 lg:px-0">
+        <div className={cn('w-full text-lg pb-2', !newAccount && 'text-white')}>
           {!newAccount ? 'Accounts' : 'Other Accounts'}
-        </ConnectTitle>
+        </div>
         <Card>
           {accountData?.getServerAccounts?.map((account, index) => {
             if (!account) return null;
+            const isThisLoading = newAccount?.id === account.id && loading;
             return (
-              <AccountLine key={`${account.id}-${index}`}>
+              <div className="my-2" key={`${account.id}-${index}`}>
                 <SingleLine>
                   {getTitle(account)}
-                  <ColorButton
+                  <Button
+                    variant="outline"
                     onClick={handleClick(account)}
-                    arrow={getArrow(account)}
-                    loading={newAccount?.id === account.id && loading}
                     disabled={newAccount?.id === account.id || loading}
                   >
-                    {getButtonTitle(account)}
-                  </ColorButton>
+                    {isThisLoading ? (
+                      <Loader2 className="animate-spin" size={16} />
+                    ) : (
+                      <>
+                        {getButtonTitle(account)}{' '}
+                        {getArrow(account) && <ChevronRight size={18} />}
+                      </>
+                    )}
+                  </Button>
                 </SingleLine>
-              </AccountLine>
+              </div>
             );
           })}
         </Card>
-      </Section>
+      </div>
     </>
   );
 };

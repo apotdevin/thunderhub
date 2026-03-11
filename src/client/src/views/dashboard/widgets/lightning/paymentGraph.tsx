@@ -2,42 +2,10 @@ import { useMemo, useState } from 'react';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { SmallSelectWithValue } from '../../../../components/select';
 import { chartColors } from '../../../../styles/Themes';
-import styled from 'styled-components';
 import { getByTime } from '../helpers';
 import { useGetPaymentsQuery } from '../../../../graphql/queries/__generated__/getPayments.generated';
 import { differenceInDays } from 'date-fns';
 import { BarChart } from '../../../../components/chart/BarChart';
-
-const S = {
-  row: styled.div`
-    display: grid;
-    grid-template-columns: 1fr 90px;
-  `,
-  wrapper: styled.div`
-    width: 100%;
-    height: 100%;
-  `,
-  contentWrapper: styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `,
-  content: styled.div`
-    width: 100%;
-    padding: 0 16px;
-    height: calc(100% - 40px);
-    overflow: auto;
-  `,
-  title: styled.h4`
-    font-weight: 900;
-    margin: 8px 0;
-  `,
-  nowrap: styled.div`
-    white-space: nowrap;
-  `,
-};
 
 const typeOptions = [
   { label: 'Count', value: 'count' },
@@ -70,8 +38,8 @@ export const PaymentsGraph = () => {
   }, [data]);
 
   const Header = () => (
-    <S.row>
-      <S.title>Payments</S.title>
+    <div className="grid" style={{ gridTemplateColumns: '1fr 90px' }}>
+      <h4 className="font-black my-2">Payments</h4>
       <SmallSelectWithValue
         callback={e => setType((e[0] || typeOptions[1]) as any)}
         options={typeOptions}
@@ -79,33 +47,38 @@ export const PaymentsGraph = () => {
         isClearable={false}
         maxWidth={'90px'}
       />
-    </S.row>
+    </div>
   );
 
   if (loading) {
     return (
-      <S.wrapper>
+      <div className="w-full h-full">
         <Header />
-        <S.contentWrapper>
+        <div className="w-full h-full flex justify-center items-center">
           <LoadingCard noCard={true} />
-        </S.contentWrapper>
-      </S.wrapper>
+        </div>
+      </div>
     );
   }
 
   if (!paymentsByDate.length) {
     return (
-      <S.wrapper>
+      <div className="w-full h-full">
         <Header />
-        <S.contentWrapper>No payments for this period.</S.contentWrapper>
-      </S.wrapper>
+        <div className="w-full h-full flex justify-center items-center">
+          No payments for this period.
+        </div>
+      </div>
     );
   }
 
   return (
-    <S.wrapper>
+    <div className="w-full h-full">
       <Header />
-      <S.content>
+      <div
+        className="w-full px-4 overflow-auto"
+        style={{ height: 'calc(100% - 40px)' }}
+      >
         <BarChart
           data={paymentsByDate.map(f => {
             return {
@@ -117,7 +90,7 @@ export const PaymentsGraph = () => {
           title="Payments"
           dataKey="Payments"
         />
-      </S.content>
-    </S.wrapper>
+      </div>
+    </div>
   );
 };

@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { Globe, Cpu } from 'lucide-react';
 import { useGetNetworkInfoQuery } from '../../../graphql/queries/__generated__/getNetworkInfo.generated';
 import {
@@ -8,55 +7,39 @@ import {
   SingleLine,
   Separation,
 } from '../../../components/generic/Styled';
-import { unSelectedNavButton, mediaWidths } from '../../../styles/Themes';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { Price } from '../../../components/price/Price';
+import { cn } from '@/lib/utils';
 
-const Tile = styled.div<{ start?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin: 0 16px;
-  align-items: ${({ start }) => (start ? 'flex-start' : 'flex-end')};
+const Tile = ({
+  children,
+  className,
+  start,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  start?: boolean;
+}) => (
+  <div
+    className={cn(
+      'flex flex-row justify-between w-full mb-2 mx-0 md:flex-col md:mx-4 md:mb-0 md:w-auto',
+      start ? 'items-start' : 'items-end',
+      className
+    )}
+  >
+    {children}
+  </div>
+);
 
-  @media (${mediaWidths.mobile}) {
-    margin: 0 0 8px;
-    flex-direction: row;
-    width: 100%;
-  }
-`;
+const TileTitle = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-sm text-muted-foreground mb-0 md:mb-2.5">{children}</div>
+);
 
-const TileTitle = styled.div`
-  font-size: 14px;
-  color: ${unSelectedNavButton};
-  margin-bottom: 10px;
-
-  @media (${mediaWidths.mobile}) {
-    margin-bottom: 0;
-  }
-`;
-
-const Title = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 120px;
-
-  @media (${mediaWidths.mobile}) {
-    justify-content: center;
-    padding-bottom: 16px;
-    width: 100%;
-  }
-`;
-
-const ResponsiveLine = styled(SingleLine)`
-  flex-wrap: wrap;
-`;
-
-const Padding = styled.span`
-  margin-bottom: -2px;
-  margin-right: 2px;
-`;
+const Title = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex justify-center items-center w-full pb-4 md:justify-start md:pb-0 md:w-[120px]">
+    {children}
+  </div>
+);
 
 export const NetworkInfo = () => {
   const { loading, data, error } = useGetNetworkInfoQuery();
@@ -90,11 +73,11 @@ export const NetworkInfo = () => {
     <CardWithTitle>
       <SubTitle>Network Info</SubTitle>
       <Card>
-        <ResponsiveLine>
+        <SingleLine className="flex-wrap">
           <Title>
-            <Padding>
+            <span className="-mb-0.5 mr-0.5">
               <Globe size={18} color={'#2f6fb7'} />
-            </Padding>
+            </span>
             Global
           </Title>
           <Tile>
@@ -113,13 +96,13 @@ export const NetworkInfo = () => {
             <TileTitle>Zombie Nodes</TileTitle>
             {notRecentlyUpdatedPolicyCount}
           </Tile>
-        </ResponsiveLine>
+        </SingleLine>
         <Separation />
-        <ResponsiveLine>
+        <SingleLine className="flex-wrap">
           <Title>
-            <Padding>
+            <span className="-mb-0.5 mr-0.5">
               <Cpu size={18} color={'#2f6fb7'} />
-            </Padding>
+            </span>
             Channel Size
           </Title>
           <Tile>
@@ -138,7 +121,7 @@ export const NetworkInfo = () => {
             <TileTitle>Min</TileTitle>
             {minSize}
           </Tile>
-        </ResponsiveLine>
+        </SingleLine>
       </Card>
     </CardWithTitle>
   );

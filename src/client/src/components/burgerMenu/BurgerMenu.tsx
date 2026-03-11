@@ -1,25 +1,8 @@
-import styled, { css } from 'styled-components';
-import { burgerColor } from '../../styles/Themes';
 import { NodeInfo } from '../../layouts/navigation/nodeInfo/NodeInfo';
 import { SideSettings } from '../../layouts/navigation/sideSettings/SideSettings';
 import { Navigation } from '../../layouts/navigation/Navigation';
-import { LogoutWrapper } from '../logoutButton';
-import { ColorButton } from '../buttons/colorButton/ColorButton';
-
-type StyledProps = {
-  open: boolean;
-};
-
-const StyledBurger = styled.div<StyledProps>`
-  padding: 16px 16px 0;
-  background-color: ${burgerColor};
-  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-  ${({ open }) =>
-    open &&
-    css`
-      margin-bottom: 16px;
-    `}
-`;
+import { LogoutButton } from '../logoutButton';
+import { cn } from '@/lib/utils';
 
 interface BurgerProps {
   open: boolean;
@@ -28,15 +11,21 @@ interface BurgerProps {
 
 export const BurgerMenu = ({ open, setOpen }: BurgerProps) => {
   return (
-    <StyledBurger open={open}>
+    <div
+      className={cn(
+        'px-4 pt-4 bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)]',
+        open && 'mb-4'
+      )}
+    >
       <NodeInfo isBurger={true} />
       <SideSettings isBurger={true} />
       <Navigation isBurger={true} setOpen={setOpen} />
-      <LogoutWrapper>
-        <ColorButton fullWidth={true} withMargin={'16px 0'}>
-          Logout
-        </ColorButton>
-      </LogoutWrapper>
-    </StyledBurger>
+      <LogoutButton
+        variant="outline"
+        size="default"
+        className="w-full my-4"
+        label="Logout"
+      />
+    </div>
   );
 };

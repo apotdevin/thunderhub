@@ -1,23 +1,15 @@
-import { AlertTriangle } from 'lucide-react';
-import styled from 'styled-components';
+import { AlertTriangle, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useRemovePeerMutation } from '@/graphql/mutations/__generated__/removePeer.generated';
 import { SubTitle } from '../../generic/Styled';
 import { getErrorContent } from '../../../utils/error';
-import { ColorButton } from '../../buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
 
 interface RemovePeerProps {
   setModalOpen: (status: boolean) => void;
   publicKey: string;
   peerAlias: string;
 }
-
-const WarningCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
 
 export const RemovePeerModal = ({
   setModalOpen,
@@ -27,6 +19,7 @@ export const RemovePeerModal = ({
   const [removePeer, { loading }] = useRemovePeerMutation({
     onCompleted: () => {
       toast.success('Peer Removed');
+      setModalOpen(false);
     },
     onError: error => {
       toast.error(getErrorContent(error));
@@ -37,23 +30,30 @@ export const RemovePeerModal = ({
   const handleOnlyClose = () => setModalOpen(false);
 
   return (
-    <WarningCard>
+    <div className="flex flex-col justify-center items-center">
       <AlertTriangle size={32} color={'red'} />
       <SubTitle>Are you sure you want to remove this peer?</SubTitle>
-      <ColorButton
+      <Button
+        variant="destructive"
         onClick={() => {
           removePeer({ variables: { publicKey } });
         }}
-        color={'red'}
         disabled={loading}
-        loading={loading}
-        withMargin={'4px'}
+        style={{ margin: '4px' }}
       >
-        {`Remove Peer [${peerAlias || publicKey?.substring(0, 6)}]`}
-      </ColorButton>
-      <ColorButton withMargin={'4px'} onClick={handleOnlyClose}>
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>{`Remove Peer [${peerAlias || publicKey?.substring(0, 6)}]`}</>
+        )}
+      </Button>
+      <Button
+        variant="outline"
+        style={{ margin: '4px' }}
+        onClick={handleOnlyClose}
+      >
         Cancel
-      </ColorButton>
-    </WarningCard>
+      </Button>
+    </div>
   );
 };

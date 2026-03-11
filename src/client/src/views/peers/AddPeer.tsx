@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, ChevronRight, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAddPeerMutation } from '../../graphql/mutations/__generated__/addPeer.generated';
-import { InputWithDeco } from '../../components/input/InputWithDeco';
+import { Input } from '@/components/ui/input';
 import {
   CardWithTitle,
   SubTitle,
@@ -12,11 +12,8 @@ import {
   NoWrapTitle,
   Separation,
 } from '../../components/generic/Styled';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { getErrorContent } from '../../utils/error';
 
 export const AddPeer = () => {
@@ -45,9 +42,13 @@ export const AddPeer = () => {
     text: string,
     selected: boolean
   ) => (
-    <SingleButton selected={selected} onClick={onClick}>
+    <Button
+      variant={selected ? 'default' : 'ghost'}
+      onClick={() => onClick()}
+      className={cn('grow', !selected && 'text-foreground')}
+    >
       {text}
-    </SingleButton>
+    </Button>
   );
 
   const renderAdding = () => (
@@ -55,7 +56,7 @@ export const AddPeer = () => {
       <Separation />
       <SingleLine>
         <NoWrapTitle>Type:</NoWrapTitle>
-        <MultiButton>
+        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
           {renderButton(
             () => {
               setKey('');
@@ -73,54 +74,77 @@ export const AddPeer = () => {
             'Separate',
             separate
           )}
-        </MultiButton>
+        </div>
       </SingleLine>
       <Separation />
       {!separate && (
-        <InputWithDeco
-          title={'Url'}
-          value={url}
-          inputCallback={value => setUrl(value)}
-          placeholder={'public_key@socket'}
-        />
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>Url</span>
+          </div>
+          <Input
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '500px' }}
+            value={url}
+            onChange={e => setUrl(e.target.value)}
+            placeholder={'public_key@socket'}
+          />
+        </div>
       )}
       {separate && (
         <>
-          <InputWithDeco
-            title={'Public Key'}
-            value={key}
-            inputCallback={value => setKey(value)}
-            placeholder={'Public Key'}
-          />
-          <InputWithDeco
-            title={'Socket'}
-            value={socket}
-            inputCallback={value => setSocket(value)}
-            placeholder={'Socket'}
-          />
+          <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+            <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+              <span>Public Key</span>
+            </div>
+            <Input
+              className="ml-0 md:ml-2"
+              style={{ maxWidth: '500px' }}
+              value={key}
+              onChange={e => setKey(e.target.value)}
+              placeholder={'Public Key'}
+            />
+          </div>
+          <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+            <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+              <span>Socket</span>
+            </div>
+            <Input
+              className="ml-0 md:ml-2"
+              style={{ maxWidth: '500px' }}
+              value={socket}
+              onChange={e => setSocket(e.target.value)}
+              placeholder={'Socket'}
+            />
+          </div>
         </>
       )}
       <SingleLine>
         <NoWrapTitle>Is Temporary:</NoWrapTitle>
-        <MultiButton>
+        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
           {renderButton(() => setTemp(true), 'Yes', temp)}
           {renderButton(() => setTemp(false), 'No', !temp)}
-        </MultiButton>
+        </div>
       </SingleLine>
-      <ColorButton
+      <Button
+        variant="outline"
         onClick={() =>
           addPeer({
             variables: { url, publicKey: key, socket, isTemporary: temp },
           })
         }
-        disabled={url === '' && (socket === '' || key === '')}
-        withMargin={'16px 0 0'}
-        loading={loading}
-        arrow={true}
-        fullWidth={true}
+        disabled={(url === '' && (socket === '' || key === '')) || loading}
+        style={{ margin: '16px 0 0' }}
+        className="w-full"
       >
-        Add
-      </ColorButton>
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>
+            Add <ChevronRight size={18} />
+          </>
+        )}
+      </Button>
     </>
   );
 
@@ -130,12 +154,13 @@ export const AddPeer = () => {
       <Card>
         <SingleLine>
           <DarkSubTitle>Add Peer</DarkSubTitle>
-          <ColorButton
-            withMargin={'4px 0'}
+          <Button
+            variant="outline"
+            style={{ margin: '4px 0' }}
             onClick={() => setIsAdding(prev => !prev)}
           >
             {isAdding ? <X size={18} /> : 'Add'}
-          </ColorButton>
+          </Button>
         </SingleLine>
         {isAdding && renderAdding()}
       </Card>

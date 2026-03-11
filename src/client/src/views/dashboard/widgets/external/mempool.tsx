@@ -1,13 +1,5 @@
 import Table from '../../../../components/table';
 import { useBitcoinFees } from '../../../../hooks/UseBitcoinFees';
-import styled from 'styled-components';
-
-const S = {
-  wrapper: styled.div`
-    width: 100%;
-    overflow: auto;
-  `,
-};
 
 export const MempoolWidget = () => {
   const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
@@ -33,8 +25,8 @@ export const MempoolWidget = () => {
   ];
 
   return (
-    <S.wrapper>
+    <div className="w-full overflow-auto">
       <Table alignCenter={true} columns={columns} data={data} />
-    </S.wrapper>
+    </div>
   );
 };

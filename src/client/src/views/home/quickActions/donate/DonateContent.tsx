@@ -5,7 +5,8 @@ import {
   Separation,
   Sub4Title,
 } from '../../../../components/generic/Styled';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import Modal from '../../../../components/modal/ReactModal';
 import { Emoji } from '../../../../components/emoji/Emoji';
 import { useGetLightningAddressInfoLazyQuery } from '../../../../graphql/queries/__generated__/getLightningAddressInfo.generated';
@@ -73,15 +74,15 @@ export const SupportBar = () => {
         </Sub4Title>
       </div>
       <Separation />
-      <ColorButton
+      <Button
+        variant="outline"
         onClick={openDonate}
-        loading={loading}
         disabled={loading}
-        fullWidth={true}
-        withMargin={'8px 0 0 0'}
+        className="w-full"
+        style={{ margin: '8px 0 0 0' }}
       >
-        Donate
-      </ColorButton>
+        {loading ? <Loader2 className="animate-spin" size={16} /> : <>Donate</>}
+      </Button>
       <DonateModal
         payRequest={payRequest}
         modalOpen={modalOpen}

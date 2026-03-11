@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ChevronRight, Loader2 } from 'lucide-react';
 import { Card } from '../../../../components/generic/Styled';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
 import Modal from '../../../../components/modal/ReactModal';
 import { useGetLightningAddressInfoLazyQuery } from '../../../../graphql/queries/__generated__/getLightningAddressInfo.generated';
 import { useLocalStorage } from '../../../../hooks/UseLocalStorage';
@@ -40,21 +41,32 @@ export const LightningAddressCard = () => {
   return (
     <>
       <Card>
-        <InputWithDeco
-          title={'Lightning Address'}
-          value={address}
-          inputCallback={v => setAddress(v)}
-        />
-        <ColorButton
-          arrow={true}
-          fullWidth={true}
-          loading={loading}
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>Lightning Address</span>
+          </div>
+          <Input
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '500px' }}
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+          />
+        </div>
+        <Button
+          variant="outline"
+          className="w-full"
           disabled={!address || loading}
-          withMargin={'16px 0 0'}
+          style={{ margin: '16px 0 0' }}
           onClick={() => getInfo({ variables: { address } })}
         >
-          Pay
-        </ColorButton>
+          {loading ? (
+            <Loader2 className="animate-spin" size={16} />
+          ) : (
+            <>
+              Pay <ChevronRight size={18} />
+            </>
+          )}
+        </Button>
         <PreviousAddresses handleClick={handleClick} />
       </Card>
       <Modal

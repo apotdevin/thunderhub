@@ -1,36 +1,7 @@
 import { FC, ReactNode } from 'react';
-import styled from 'styled-components';
 import { DarkSubTitle } from '../../components/generic/Styled';
-import { mediaWidths } from '../../styles/Themes';
 import { useStatsState } from './context';
-import { StatsTitle } from './styles';
 import { getProgressColor } from './helpers';
-
-const ProgressRow = styled.div`
-  display: flex;
-  justify-content: space-around;
-  margin: 32px 0;
-
-  @media (${mediaWidths.mobile}) {
-    margin: 16px 0;
-  }
-`;
-
-const ProgressCard = styled.div`
-  width: 20%;
-
-  @media (${mediaWidths.mobile}) {
-    width: 30%;
-  }
-`;
-
-const ScoreTitle = styled.div`
-  font-size: 32px;
-
-  @media (${mediaWidths.mobile}) {
-    font-size: 18px;
-  }
-`;
 
 const SIZE = 200;
 const STROKE = 10;
@@ -89,36 +60,36 @@ export const StatResume = () => {
 
   return (
     <>
-      <StatsTitle>Node Statistics</StatsTitle>
-      <ProgressRow>
-        <ProgressCard>
+      <div className="text-2xl w-full text-center">Node Statistics</div>
+      <div className="flex justify-around my-4 md:my-8">
+        <div className="w-[30%] md:w-[20%]">
           <CircularProgress
             value={volumeScore || 0}
             pathColor={getProgressColor(volumeScore)}
           >
             <DarkSubTitle>Flow</DarkSubTitle>
-            <ScoreTitle>{volumeScore}</ScoreTitle>
+            <div className="text-lg md:text-[32px]">{volumeScore}</div>
           </CircularProgress>
-        </ProgressCard>
-        <ProgressCard>
+        </div>
+        <div className="w-[30%] md:w-[20%]">
           <CircularProgress
             value={timeScore || 0}
             pathColor={getProgressColor(timeScore)}
           >
             <DarkSubTitle>Time</DarkSubTitle>
-            <ScoreTitle>{timeScore}</ScoreTitle>
+            <div className="text-lg md:text-[32px]">{timeScore}</div>
           </CircularProgress>
-        </ProgressCard>
-        <ProgressCard>
+        </div>
+        <div className="w-[30%] md:w-[20%]">
           <CircularProgress
             value={feeScore || 0}
             pathColor={getProgressColor(feeScore)}
           >
             <DarkSubTitle>Fee</DarkSubTitle>
-            <ScoreTitle>{feeScore}</ScoreTitle>
+            <div className="text-lg md:text-[32px]">{feeScore}</div>
           </CircularProgress>
-        </ProgressCard>
-      </ProgressRow>
+        </div>
+      </div>
     </>
   );
 };

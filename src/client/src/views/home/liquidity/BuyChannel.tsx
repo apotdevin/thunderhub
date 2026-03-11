@@ -1,50 +1,14 @@
-import styled, { keyframes } from 'styled-components';
 import { Card, SmallButton } from '../../../components/generic/Styled';
 import { useGetLiquidityPerUsdQuery } from '../../../graphql/queries/__generated__/getLiquidityPerUsd.generated';
 import { useEffect, useState } from 'react';
-import { InputWithDeco } from '../../../components/input/InputWithDeco';
+import { Input } from '@/components/ui/input';
 import { formatCurrency, formatNumber } from '../../../utils/helpers';
-import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { ChevronRight, ExternalLink, Loader } from 'lucide-react';
-import { unSelectedNavButton } from '../../../styles/Themes';
+import { Button } from '@/components/ui/button';
+import { ChevronRight, ExternalLink, Loader2 } from 'lucide-react';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { usePurchaseLiquidityMutation } from '../../../graphql/mutations/__generated__/purchaseLiquidity.generated';
 import toast from 'react-hot-toast';
 import { useGetAmbossLoginTokenLazyQuery } from '../../../graphql/queries/__generated__/getAmbossLoginToken.generated';
-
-const RecommendedBanner = styled.div`
-  text-align: center;
-  font-size: 14px;
-  background: oklch(0.982 0.018 155.826);
-  color: oklch(0.627 0.194 149.214);
-  padding: 8px;
-  border-radius: 8px;
-`;
-
-const InfoBanner = styled.div`
-  text-align: center;
-  font-size: 14px;
-  background: oklch(0.97 0.014 254.604);
-  color: oklch(0.546 0.245 262.881);
-  padding: 8px;
-  border-radius: 8px;
-`;
-
-const NoteP = styled.p`
-  text-align: center;
-  font-size: 12px;
-  color: ${unSelectedNavButton};
-`;
-
-const spin = keyframes`
-  to {
-    transform: rotate(360deg);
-  }
-`;
-
-const Spinner = styled(Loader)`
-  animation: ${spin} 1s linear infinite;
-`;
 
 export const GoToMagma = () => {
   const [getToken, { data, loading: tokenLoading }] =
@@ -76,7 +40,11 @@ export const GoToMagma = () => {
       {!tokenLoading ? (
         <ExternalLink size={14} style={{ marginLeft: '4px' }} />
       ) : (
-        <Spinner size={14} style={{ marginLeft: '4px' }} />
+        <Loader2
+          className="animate-spin"
+          size={14}
+          style={{ marginLeft: '4px' }}
+        />
       )}
     </SmallButton>
   );
@@ -111,9 +79,11 @@ export const BuyChannel = () => {
     Number(data.getLiquidityPerUsd) * amount
   );
 
+  const isLoading = loading || purchaseData.loading;
+
   return (
     <Card>
-      <RecommendedBanner>
+      <div className="text-center text-sm bg-[oklch(0.982_0.018_155.826)] text-[oklch(0.627_0.194_149.214)] p-2 rounded-lg">
         Secure liquidity from the{' '}
         <a
           style={{ color: 'inherit' }}
@@ -131,39 +101,54 @@ export const BuyChannel = () => {
           Magma sellers
         </a>{' '}
         to ensure you can accept payments reliably.
-      </RecommendedBanner>
-      <InputWithDeco
-        customAmount={formattedAmount}
-        title={'Purchase Amount'}
-        value={amount}
-        placeholder={'USD'}
-        amount={amount}
-        inputType={'number'}
-        inputCallback={value => {
-          const minAmount = Math.max(Number(value), 5);
-          setAmount(minAmount);
-        }}
-      />
+      </div>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Purchase Amount</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            {formattedAmount}
+          </span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '500px' }}
+          placeholder={'USD'}
+          type={'number'}
+          value={amount && amount > 0 ? amount : ''}
+          onChange={e => {
+            const minAmount = Math.max(Number(e.target.value), 5);
+            setAmount(minAmount);
+          }}
+        />
+      </div>
 
-      <InfoBanner>{`${formattedAmount} will buy you ~${formattedLiquidity} sats of inbound liquidity*.`}</InfoBanner>
+      <div className="text-center text-sm bg-[oklch(0.97_0.014_254.604)] text-[oklch(0.546_0.245_262.881)] p-2 rounded-lg">
+        {`${formattedAmount} will buy you ~${formattedLiquidity} sats of inbound liquidity*.`}
+      </div>
 
-      <ColorButton
-        withMargin={'8px 0 0'}
-        loading={loading || purchaseData.loading}
-        fullWidth={true}
-        disabled={!amount || loading || purchaseData.loading}
+      <Button
+        variant="outline"
+        style={{ margin: '8px 0 0' }}
+        className="w-full"
+        disabled={!amount || isLoading}
         onClick={() => {
           purchase({ variables: { amount_cents: (amount * 100).toString() } });
         }}
       >
-        {`Buy ${formattedAmount} of Inbound Liquidity`}
-        <ChevronRight size={18} />
-      </ColorButton>
+        {isLoading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>
+            {`Buy ${formattedAmount} of Inbound Liquidity`}{' '}
+            <ChevronRight size={18} />
+          </>
+        )}
+      </Button>
 
-      <NoteP>
+      <p className="text-center text-xs text-muted-foreground">
         * Liquidity may be sourced from different providers that charge
         different fees, hence the estimated amounts in sats.
-      </NoteP>
+      </p>
     </Card>
   );
 };

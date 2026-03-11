@@ -1,60 +1,43 @@
 import { FC, ReactNode } from 'react';
-import styled, { css } from 'styled-components';
 import { BitcoinFees } from '@/components/bitcoinInfo/BitcoinFees';
 import { BitcoinPrice } from '@/components/bitcoinInfo/BitcoinPrice';
-import { mediaWidths } from '../../styles/Themes';
-import { Section } from '../section/Section';
 import { Navigation } from '../../layouts/navigation/Navigation';
+import { cn } from '@/lib/utils';
 
 type GridProps = {
   noNavigation?: boolean;
   children?: ReactNode;
 };
 
-const Container = styled.div<GridProps>`
-  display: grid;
-  grid-template-areas: 'nav content content';
-  grid-template-columns: auto 1fr 200px;
-
-  ${({ noNavigation }) =>
-    !noNavigation &&
-    css`
-      gap: 16px;
-    `}
-
-  @media (${mediaWidths.mobile}) {
-    display: flex;
-    flex-direction: column;
-  }
-`;
-
-const ContentStyle = styled.div`
-  grid-area: content;
-`;
-
 export const GridWrapper: FC<
   GridProps & { centerContent?: boolean; children?: ReactNode }
 > = ({ children, centerContent = true, noNavigation }) => (
-  <Section padding={'16px 16px 32px'}>
-    <Container noNavigation={noNavigation}>
+  <div className="w-full bg-[#f5f6f9] dark:bg-[#181c30] md:p-[16px_16px_32px]">
+    <div
+      className={cn(
+        'grid grid-cols-[auto_1fr_200px] [grid-template-areas:"nav_content_content"] md:grid',
+        'flex flex-col md:grid md:grid-cols-[auto_1fr_200px]',
+        !noNavigation && 'gap-4'
+      )}
+    >
       <BitcoinPrice />
       <BitcoinFees />
       {!noNavigation && <Navigation />}
-      <ContentStyle>
+      <div className="[grid-area:content]">
         {centerContent ? (
-          <Section fixedWidth={true}>{children}</Section>
+          <div className="max-w-[1000px] mx-auto px-4 lg:px-0">{children}</div>
         ) : (
           children
         )}
-      </ContentStyle>
-    </Container>
-  </Section>
+      </div>
+    </div>
+  </div>
 );
 
 export const SimpleWrapper: FC<GridProps> = ({ children }) => (
-  <Section padding={'16px'}>
+  <div className="w-full bg-[#f5f6f9] dark:bg-[#181c30] md:p-4">
     <BitcoinPrice />
     <BitcoinFees />
     {children}
-  </Section>
+  </div>
 );

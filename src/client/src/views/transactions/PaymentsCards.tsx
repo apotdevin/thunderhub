@@ -1,7 +1,5 @@
 import { Fragment } from 'react';
-import styled from 'styled-components';
 import { PaymentType } from '../../graphql/types';
-import { mediaWidths } from '../../styles/Themes';
 import {
   Separation,
   SubCard,
@@ -27,22 +25,6 @@ interface PaymentsCardProps {
   setIndexOpen: (index: number) => void;
   indexOpen: number;
 }
-
-const RedValue = styled.div`
-  color: red;
-`;
-
-const S = {
-  grid: styled.div`
-    width: 100%;
-    display: grid;
-    grid-template-columns: 3fr 2fr 1fr;
-
-    @media (${mediaWidths.mobile}) {
-      grid-template-columns: 1fr;
-    }
-  `,
-};
 
 export const PaymentsCard = ({
   payment,
@@ -111,11 +93,11 @@ export const PaymentsCard = ({
     <SubCard key={index}>
       <MainInfo onClick={() => handleClick()}>
         <StatusLine>{getStatusDot(is_confirmed, 'active')}</StatusLine>
-        <S.grid>
+        <div className="w-full grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr]">
           <NodeTitle>{`Payment to: ${alias}`}</NodeTitle>
           <DarkSubTitle>{`(${getDateDif(date)} ago)`}</DarkSubTitle>
-          <RedValue>{formatAmount}</RedValue>
-        </S.grid>
+          <div className="text-red-500">{formatAmount}</div>
+        </div>
       </MainInfo>
       {index === indexOpen && renderDetails()}
     </SubCard>

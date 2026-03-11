@@ -1,66 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Copy, CheckCircle } from 'lucide-react';
-import styled from 'styled-components';
+import { Copy, CheckCircle, ChevronRight, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { QRCodeSVG } from 'qrcode.react';
 import { useCreateInvoiceMutation } from '../../../../graphql/mutations/__generated__/createInvoice.generated';
-import { Title } from '../../../../layouts/footer/Footer.styled';
 import { Link } from '../../../../components/link/Link';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
+import { Input } from '@/components/ui/input';
+import { Price } from '../../../../components/price/Price';
 import { formatSeconds } from '../../../../utils/helpers';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../../../components/buttons/multiButton/MultiButton';
+import { cn } from '@/lib/utils';
 import { getErrorContent } from '../../../../utils/error';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { mediaWidths, chartColors } from '../../../../styles/Themes';
+import { Button } from '@/components/ui/button';
+import { chartColors } from '../../../../styles/Themes';
 import { InvoiceStatus } from './InvoiceStatus';
 import { Timer } from './Timer';
 
-const Responsive = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  @media (${mediaWidths.mobile}) {
-    flex-direction: column;
-  }
-`;
-
-const Center = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const WrapRequest = styled.div`
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  -ms-word-break: break-all;
-  word-break: break-word;
-  margin: 24px;
-  font-size: 14px;
-`;
-
-const QRWrapper = styled.div`
-  width: 280px;
-  height: 280px;
-  margin: 16px;
-  background: white;
-  padding: 16px;
-`;
-
-const Column = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const CreateInvoiceCard = ({ color }: { color: string }) => {
+export const CreateInvoiceCard = () => {
   const [amount, setAmount] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [description, setDescription] = useState('');
@@ -84,36 +38,37 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
 
   if (invoiceStatus === 'paid') {
     return (
-      <Center>
+      <div className="flex justify-center items-center">
         <CheckCircle stroke={chartColors.green} size={32} />
-        <Title>Paid</Title>
-      </Center>
+        <div className="font-extrabold text-white">Paid</div>
+      </div>
     );
   }
 
   if (invoiceStatus === 'not_paid' || invoiceStatus === 'timeout') {
     return (
-      <Center>
-        <Title>
+      <div className="flex justify-center items-center">
+        <div className="font-extrabold text-white">
           Check the status of this invoice in the
           <Link to={'/transactions'}> Transactions </Link>
           view
-        </Title>
-      </Center>
+        </div>
+      </div>
     );
   }
 
   const renderQr = () => (
     <>
       <Timer initialMinute={1} initialSeconds={30} />
-      <Responsive>
+      <div className="flex flex-col justify-between items-center md:flex-row">
         <InvoiceStatus id={id} callback={status => setInvoiceStatus(status)} />
-        <QRWrapper>
+        <div className="w-[280px] h-[280px] m-4 bg-white p-4">
           <QRCodeSVG value={`lightning:${request}`} size={248} />
-        </QRWrapper>
-        <Column>
-          <WrapRequest>{request}</WrapRequest>
-          <ColorButton
+        </div>
+        <div className="w-full h-full flex flex-col justify-center items-center">
+          <div className="wrap-break-words m-6 text-sm">{request}</div>
+          <Button
+            variant="outline"
             onClick={() =>
               navigator.clipboard
                 .writeText(request)
@@ -122,9 +77,9 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
           >
             <Copy size={18} />
             Copy
-          </ColorButton>
-        </Column>
-      </Responsive>
+          </Button>
+        </div>
+      </div>
     </>
   );
 
@@ -137,59 +92,88 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
 
   const renderContent = () => (
     <>
-      <InputWithDeco
-        title={'Amount to receive'}
-        value={amount}
-        placeholder={'sats'}
-        amount={amount}
-        inputType={'number'}
-        inputCallback={value => setAmount(Number(value))}
-        color={color}
-        onEnter={() => handleEnter()}
-      />
-      <InputWithDeco
-        title={'Description'}
-        value={description}
-        placeholder={'description'}
-        inputCallback={value => setDescription(value)}
-        color={color}
-        onEnter={() => handleEnter()}
-      />
-      <InputWithDeco
-        title={'Expires in'}
-        value={seconds}
-        placeholder={'seconds until expiration'}
-        inputCallback={value => setSeconds(Number(value))}
-        customAmount={formatSeconds(seconds) || ''}
-        color={color}
-        onEnter={() => handleEnter()}
-      />
-      <InputWithDeco title={'Include Private Channels'} noInput={true}>
-        <MultiButton>
-          <SingleButton
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Amount to receive</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            <Price amount={amount} />
+          </span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '500px' }}
+          placeholder={'sats'}
+          type={'number'}
+          value={amount && amount > 0 ? amount : ''}
+          onChange={e => setAmount(Number(e.target.value))}
+          onKeyDown={e => e.key === 'Enter' && handleEnter()}
+        />
+      </div>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Description</span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '500px' }}
+          placeholder={'description'}
+          value={description}
+          onChange={e => setDescription(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleEnter()}
+        />
+      </div>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Expires in</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            {formatSeconds(seconds) || ''}
+          </span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '500px' }}
+          placeholder={'seconds until expiration'}
+          value={seconds && seconds > 0 ? seconds : ''}
+          onChange={e => setSeconds(Number(e.target.value))}
+          onKeyDown={e => e.key === 'Enter' && handleEnter()}
+        />
+      </div>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Include Private Channels</span>
+        </div>
+        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
+          <Button
+            variant={includePrivate ? 'default' : 'ghost'}
             onClick={() => setIncludePrivate(true)}
-            selected={includePrivate}
+            className={cn('grow', !includePrivate && 'text-foreground')}
           >
             Yes
-          </SingleButton>
-          <SingleButton
+          </Button>
+          <Button
+            variant={!includePrivate ? 'default' : 'ghost'}
             onClick={() => setIncludePrivate(false)}
-            selected={!includePrivate}
+            className={cn('grow', includePrivate && 'text-foreground')}
           >
             No
-          </SingleButton>
-        </MultiButton>
-      </InputWithDeco>
-      <ColorButton
+          </Button>
+        </div>
+      </div>
+      <Button
+        variant="outline"
         onClick={() => handleEnter()}
-        disabled={amount === 0}
-        withMargin={'16px 0 0'}
-        arrow={true}
-        loading={loading}
-        fullWidth={true}
+        disabled={amount === 0 || loading}
+        style={{ margin: '16px 0 0' }}
+        className="w-full"
       >
-        Create Invoice
-      </ColorButton>
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>
+            Create Invoice <ChevronRight size={18} />
+          </>
+        )}
+      </Button>
     </>
   );
 

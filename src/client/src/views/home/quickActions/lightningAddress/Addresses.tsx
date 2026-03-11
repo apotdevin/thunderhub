@@ -1,29 +1,6 @@
 import { useLocalStorage } from '../../../../hooks/UseLocalStorage';
 import { Separation, Sub4Title } from '../../../../components/generic/Styled';
-import styled from 'styled-components';
-import { cardBorderColor, subCardColor } from '../../../../styles/Themes';
 import { FC } from 'react';
-
-const S = {
-  wrapper: styled.div`
-    display: flex;
-    flex-wrap: wrap;
-  `,
-  address: styled.button`
-    font-size: 14px;
-    padding: 4px 8px;
-    margin: 2px;
-    border: 1px solid ${cardBorderColor};
-    background-color: ${subCardColor};
-    border-radius: 4px;
-    cursor: pointer;
-    color: inherit;
-
-    :hover {
-      background-color: ${cardBorderColor};
-    }
-  `,
-};
 
 type AddressProps = {
   handleClick: (address: string) => void;
@@ -43,13 +20,17 @@ export const PreviousAddresses: FC<AddressProps> = ({ handleClick }) => {
     <>
       <Separation />
       <Sub4Title>Previously Used Addresses:</Sub4Title>
-      <S.wrapper>
+      <div className="flex flex-wrap">
         {savedAddresses.map((a, index) => (
-          <S.address onClick={() => handleClick(a)} key={`${index}${a}`}>
+          <button
+            className="text-sm py-1 px-2 m-0.5 border border-[#e1e6ed] dark:border-[#4a5669] bg-white dark:bg-[#151727] rounded cursor-pointer text-inherit hover:bg-[#e1e6ed] hover:dark:bg-[#4a5669]"
+            onClick={() => handleClick(a)}
+            key={`${index}${a}`}
+          >
             {a}
-          </S.address>
+          </button>
         ))}
-      </S.wrapper>
+      </div>
     </>
   );
 };

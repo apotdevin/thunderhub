@@ -9,11 +9,9 @@ import {
   Separation,
   Sub4Title,
 } from '../../../components/generic/Styled';
-import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import {
-  SingleButton,
-  MultiButton,
-} from '../../../components/buttons/multiButton/MultiButton';
+import { Button } from '@/components/ui/button';
+import { ChevronRight, Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { useCreateMacaroonMutation } from '../../../graphql/mutations/__generated__/createMacaroon.generated';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../utils/error';
@@ -86,7 +84,8 @@ export const Bakery = () => {
         <SubTitle>Base64 Encoded</SubTitle>
         <SingleLine>
           <Sub4Title>{shorten(base)}</Sub4Title>
-          <ColorButton
+          <Button
+            variant="outline"
             onClick={() =>
               navigator.clipboard
                 .writeText(base)
@@ -95,13 +94,14 @@ export const Bakery = () => {
           >
             <Copy size={18} />
             Copy
-          </ColorButton>
+          </Button>
         </SingleLine>
         <Separation />
         <SubTitle>Hex Encoded</SubTitle>
         <SingleLine>
           <Sub4Title>{shorten(hex)}</Sub4Title>
-          <ColorButton
+          <Button
+            variant="outline"
             onClick={() =>
               navigator.clipboard
                 .writeText(hex)
@@ -110,7 +110,7 @@ export const Bakery = () => {
           >
             <Copy size={18} />
             Copy
-          </ColorButton>
+          </Button>
         </SingleLine>
       </>
     );
@@ -123,20 +123,22 @@ export const Bakery = () => {
       ) : (
         <DarkSubTitle>{title}</DarkSubTitle>
       )}
-      <MultiButton>
-        <SingleButton
-          selected={permissions[value]}
+      <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
+        <Button
+          variant={permissions[value] ? 'default' : 'ghost'}
           onClick={() => permissionSet(p => ({ ...p, [value]: true }))}
+          className={cn('grow', !permissions[value] && 'text-foreground')}
         >
           Yes
-        </SingleButton>
-        <SingleButton
-          selected={!permissions[value]}
+        </Button>
+        <Button
+          variant={!permissions[value] ? 'default' : 'ghost'}
           onClick={() => permissionSet(p => ({ ...p, [value]: false }))}
+          className={cn('grow', permissions[value] && 'text-foreground')}
         >
           No
-        </SingleButton>
-      </MultiButton>
+        </Button>
+      </div>
     </ResponsiveLine>
   );
 
@@ -163,15 +165,19 @@ export const Bakery = () => {
       {renderLine('Stop Daemon', 'is_ok_to_stop_daemon')}
       {renderLine('Verify bytes signature', 'is_ok_to_verify_bytes_signatures')}
       {renderLine('Verify messages', 'is_ok_to_verify_messages')}
-      <ColorButton
-        fullWidth={true}
-        withMargin={'16px 0 0'}
+      <Button
+        variant="outline"
+        className="w-full"
+        style={{ margin: '16px 0 0' }}
         onClick={() => bake({ variables: { permissions } })}
         disabled={loading || !hasATrue}
-        loading={loading}
       >
-        Bake new macaroon
-      </ColorButton>
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>Bake new macaroon</>
+        )}
+      </Button>
     </>
   );
 
@@ -182,9 +188,13 @@ export const Bakery = () => {
         <Card>
           <SingleLine>
             <DarkSubTitle>Macaroon</DarkSubTitle>
-            <ColorButton onClick={() => isOpenSet(o => !o)} arrow={!isOpen}>
-              {isOpen ? 'Cancel' : 'Bake'}
-            </ColorButton>
+            <Button variant="outline" onClick={() => isOpenSet(o => !o)}>
+              {isOpen ? (
+                'Cancel'
+              ) : (
+                <>Bake {!isOpen && <ChevronRight size={18} />}</>
+              )}
+            </Button>
           </SingleLine>
           {isOpen && renderPermissions()}
         </Card>

@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { useAmbossUser } from '../../hooks/UseAmbossUser';
 import { useLoginAmbossMutation } from '../../graphql/mutations/__generated__/loginAmboss.generated';
 import { useGetAmbossLoginTokenLazyQuery } from '../../graphql/queries/__generated__/getAmbossLoginToken.generated';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
 
 export const AmbossLoginButton = () => {
   const { user } = useAmbossUser();
@@ -32,8 +32,7 @@ export const AmbossLoginButton = () => {
 
   if (!user) {
     return (
-      <ColorButton
-        color="#ff0080"
+      <Button
         onClick={() => {
           if (loading) return;
           login();
@@ -41,13 +40,12 @@ export const AmbossLoginButton = () => {
         disabled={loading}
       >
         {loading ? 'Loading...' : 'Login'}
-      </ColorButton>
+      </Button>
     );
   }
 
   return (
-    <ColorButton
-      color="#ff0080"
+    <Button
       onClick={() => {
         if (tokenLoading) return;
         getToken();
@@ -55,6 +53,6 @@ export const AmbossLoginButton = () => {
       disabled={tokenLoading}
     >
       {tokenLoading ? 'Loading...' : 'Go To'}
-    </ColorButton>
+    </Button>
   );
 };

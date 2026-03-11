@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { X, Copy } from 'lucide-react';
+import { X, Copy, ChevronRight, Loader2 } from 'lucide-react';
 import { useSignMessageLazyQuery } from '../../../graphql/queries/__generated__/signMessage.generated';
-import { Input } from '../../../components/input';
-import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import {
   SingleLine,
   DarkSubTitle,
   Separation,
 } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
-import { Column, WrapRequest } from '../Tools.styled';
 import { NoWrap } from './Messages';
 
 export const SignMessage = () => {
@@ -34,28 +33,29 @@ export const SignMessage = () => {
           <DarkSubTitle>Message: </DarkSubTitle>
         </NoWrap>
         <Input
-          withMargin={'8px 0 0'}
+          style={{ margin: '8px 0 0' }}
           onChange={e => setMessage(e.target.value)}
         />
       </SingleLine>
-      <ColorButton
+      <Button
+        variant="outline"
         onClick={() => signMessage({ variables: { message } })}
-        fullWidth={true}
-        withMargin={'8px 0 4px'}
-        disabled={message === ''}
-        loading={loading}
+        className="w-full"
+        style={{ margin: '8px 0 4px' }}
+        disabled={message === '' || loading}
       >
-        Sign
-      </ColorButton>
+        {loading ? <Loader2 className="animate-spin" size={16} /> : <>Sign</>}
+      </Button>
     </>
   );
 
   const renderMessage = () => (
     <>
       <Separation />
-      <Column>
-        <WrapRequest>{signed}</WrapRequest>
-        <ColorButton
+      <div className="w-full h-full flex flex-col justify-center items-center">
+        <div className="break-words m-6 text-sm">{signed}</div>
+        <Button
+          variant="outline"
           onClick={() =>
             navigator.clipboard
               .writeText(signed)
@@ -64,8 +64,8 @@ export const SignMessage = () => {
         >
           <Copy size={18} />
           Copy
-        </ColorButton>
-      </Column>
+        </Button>
+      </div>
     </>
   );
 
@@ -84,13 +84,17 @@ export const SignMessageCard = () => {
     <>
       <SingleLine>
         <DarkSubTitle>Sign Message</DarkSubTitle>
-        <ColorButton
-          withMargin={'4px 0'}
-          arrow={!isPasting}
+        <Button
+          variant="outline"
+          style={{ margin: '4px 0' }}
           onClick={() => setIsPasting(prev => !prev)}
         >
-          {isPasting ? <X size={18} /> : 'Sign'}
-        </ColorButton>
+          {isPasting ? (
+            <X size={18} />
+          ) : (
+            <>Sign {!isPasting && <ChevronRight size={18} />}</>
+          )}
+        </Button>
       </SingleLine>
       {isPasting && <SignMessage />}
     </>

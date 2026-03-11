@@ -1,38 +1,23 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { renderLine } from '../../components/generic/helpers';
 import {
   DarkSubTitle,
   Separation,
   SubTitle,
 } from '../../components/generic/Styled';
-import { Input } from '../../components/input';
-import { InputWithDeco } from '../../components/input/InputWithDeco';
+import { Input } from '@/components/ui/input';
+import { Price } from '../../components/price/Price';
 import { useConfigState } from '../../context/ConfigContext';
 import { useClaimBoltzTransactionMutation } from '../../graphql/mutations/__generated__/claimBoltzTransaction.generated';
 import { useBitcoinFees } from '../../hooks/UseBitcoinFees';
 import { chartColors } from '../../styles/Themes';
 import { getErrorContent } from '../../utils/error';
-import styled from 'styled-components';
-import { WarningText } from '../stats/styles';
 import { useSwapsDispatch, useSwapsState } from './SwapContext';
 import { MEMPOOL } from './SwapStatus';
-
-const S = {
-  warning: styled.div`
-    border: 1px solid ${chartColors.darkyellow};
-    background-color: rgba(255, 193, 10, 0.1);
-    padding: 4px 8px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 14px;
-  `,
-};
 
 export const SwapClaim = () => {
   const { fetchFees } = useConfigState();
@@ -90,9 +75,13 @@ export const SwapClaim = () => {
     text: string,
     selected: boolean
   ) => (
-    <SingleButton selected={selected} onClick={onClick}>
+    <Button
+      variant={selected ? 'default' : 'ghost'}
+      onClick={() => onClick()}
+      className={cn('grow', !selected && 'text-foreground')}
+    >
       {text}
-    </SingleButton>
+    </Button>
   );
 
   return (
@@ -101,17 +90,26 @@ export const SwapClaim = () => {
       {claimType === MEMPOOL && (
         <>
           <Separation />
-          <S.warning>
+          <div
+            className="border rounded-lg p-1 px-2 text-center text-sm"
+            style={{
+              borderColor: chartColors.darkyellow,
+              backgroundColor: 'rgba(255, 193, 10, 0.1)',
+            }}
+          >
             This will be an instant swap. This means that the locking
             transaction from Boltz has still not been confirmed in the
             blockchain.
-          </S.warning>
+          </div>
         </>
       )}
       <Separation />
       {fetchFees && !dontShow && (
-        <InputWithDeco title={'Fee'} noInput={true}>
-          <MultiButton>
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>Fee</span>
+          </div>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {renderButton(
               () => {
                 setType('none');
@@ -128,20 +126,27 @@ export const SwapClaim = () => {
               'Fee (Sats/Byte)',
               type === 'fee'
             )}
-          </MultiButton>
-        </InputWithDeco>
+          </div>
+        </div>
       )}
-      <InputWithDeco title={'Fee Amount'} amount={fee * 111} noInput={true}>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Fee Amount</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            <Price amount={fee * 111} />
+          </span>
+        </div>
         {type !== 'none' && (
           <Input
-            maxWidth={'240px'}
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '240px' }}
             placeholder={'Sats/Byte'}
             type={'number'}
             onChange={e => setFee(Number(e.target.value))}
           />
         )}
         {type === 'none' && (
-          <MultiButton>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {renderButton(
               () => setFee(fast),
               `Fastest (${fast} sats)`,
@@ -158,23 +163,29 @@ export const SwapClaim = () => {
               `Hour (${hour} sats)`,
               fee === hour
             )}
-          </MultiButton>
+          </div>
         )}
-      </InputWithDeco>
+      </div>
       {!dontShow && renderLine('Minimum', `${minimum} sat/vByte`)}
-      <WarningText>
+      <DarkSubTitle
+        className="w-full text-center"
+        style={{ color: chartColors.orange }}
+      >
         {
           'If you set a low fee the swap will take more time if the mempool is congested.'
         }
-      </WarningText>
-      <WarningText>
+      </DarkSubTitle>
+      <DarkSubTitle
+        className="w-full text-center"
+        style={{ color: chartColors.orange }}
+      >
         {' You can see fee estimates by selecting the "Auto" option above.'}
-      </WarningText>
-      <ColorButton
-        loading={loading}
+      </DarkSubTitle>
+      <Button
+        variant="outline"
         disabled={loading || !fee || fee <= 0}
-        fullWidth={true}
-        withMargin={'16px 0 0'}
+        className="w-full"
+        style={{ margin: '16px 0 0' }}
         onClick={() =>
           claimTransaction({
             variables: {
@@ -189,8 +200,8 @@ export const SwapClaim = () => {
           })
         }
       >
-        Claim
-      </ColorButton>
+        {loading ? <Loader2 className="animate-spin" size={16} /> : <>Claim</>}
+      </Button>
     </>
   );
 };

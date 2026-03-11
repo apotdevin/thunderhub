@@ -1,30 +1,6 @@
 import { Price } from '../../../../components/price/Price';
 import { useNodeBalances } from '../../../../hooks/UseNodeBalances';
-import { unSelectedNavButton } from '../../../../styles/Themes';
-import styled from 'styled-components';
 import Big from 'big.js';
-
-const S = {
-  wrapper: styled.div`
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-  `,
-  total: styled.h2`
-    margin: 0;
-  `,
-  smallTotal: styled.h3`
-    margin: 0;
-  `,
-  pending: styled.div`
-    color: ${unSelectedNavButton};
-    font-size: 14px;
-  `,
-};
 
 export const TotalBalance = () => {
   const { onchain, lightning } = useNodeBalances();
@@ -33,17 +9,17 @@ export const TotalBalance = () => {
   const pending = new Big(onchain.pending).add(lightning.pending).toString();
 
   return (
-    <S.wrapper>
-      <S.pending>Total Balance</S.pending>
-      <S.total>
+    <div className="overflow-auto flex flex-col justify-center items-center w-full h-full">
+      <div className="text-gray-500 text-sm">Total Balance</div>
+      <h2 className="m-0">
         <Price amount={total} />
-      </S.total>
+      </h2>
       {Number(pending) > 0 ? (
-        <S.pending>
+        <div className="text-gray-500 text-sm">
           <Price amount={pending} />
-        </S.pending>
+        </div>
       ) : null}
-    </S.wrapper>
+    </div>
   );
 };
 
@@ -51,17 +27,17 @@ export const ChannelBalance = () => {
   const { lightning } = useNodeBalances();
 
   return (
-    <S.wrapper>
-      <S.pending>Channel Balance</S.pending>
-      <S.smallTotal>
+    <div className="overflow-auto flex flex-col justify-center items-center w-full h-full">
+      <div className="text-gray-500 text-sm">Channel Balance</div>
+      <h3 className="m-0">
         <Price amount={lightning.confirmed} />
-      </S.smallTotal>
+      </h3>
       {Number(lightning.pending) > 0 ? (
-        <S.pending>
+        <div className="text-gray-500 text-sm">
           <Price amount={lightning.pending} />
-        </S.pending>
+        </div>
       ) : null}
-    </S.wrapper>
+    </div>
   );
 };
 
@@ -69,16 +45,16 @@ export const ChainBalance = () => {
   const { onchain } = useNodeBalances();
 
   return (
-    <S.wrapper>
-      <S.pending>Chain Balance</S.pending>
-      <S.smallTotal>
+    <div className="overflow-auto flex flex-col justify-center items-center w-full h-full">
+      <div className="text-gray-500 text-sm">Chain Balance</div>
+      <h3 className="m-0">
         <Price amount={onchain.confirmed} />
-      </S.smallTotal>
+      </h3>
       {Number(onchain.pending) > 0 ? (
-        <S.pending>
+        <div className="text-gray-500 text-sm">
           <Price amount={onchain.pending} />
-        </S.pending>
+        </div>
       ) : null}
-    </S.wrapper>
+    </div>
   );
 };

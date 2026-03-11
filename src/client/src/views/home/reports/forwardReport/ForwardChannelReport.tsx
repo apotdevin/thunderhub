@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { GitCommit, ArrowDown, ArrowUp } from 'lucide-react';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../../../components/buttons/multiButton/MultiButton';
-import styled from 'styled-components';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 import { getErrorContent } from '../../../../utils/error';
 import { SingleLine, SubTitle } from '../../../../components/generic/Styled';
@@ -16,10 +13,6 @@ import { CardContent } from '.';
 type Props = {
   days: number;
 };
-
-const Spacing = styled.div`
-  margin-bottom: 16px;
-`;
 
 export const ForwardChannelsReport = ({ days }: Props) => {
   const [type, setType] = useState<'route' | 'incoming' | 'outgoing'>('route');
@@ -54,34 +47,34 @@ export const ForwardChannelsReport = ({ days }: Props) => {
   };
 
   const renderTop = (title: string) => (
-    <Spacing>
+    <div className="mb-4">
       <SingleLine>
         <SubTitle>{title}</SubTitle>
-        <MultiButton>
-          <SingleButton
-            withPadding={'4px 8px'}
-            selected={type === 'incoming'}
+        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
+          <Button
+            variant={type === 'incoming' ? 'default' : 'ghost'}
             onClick={() => setType('incoming')}
+            className={cn('grow', type !== 'incoming' && 'text-foreground')}
           >
             <ArrowDown size={14} />
-          </SingleButton>
-          <SingleButton
-            withPadding={'4px 8px'}
-            selected={type === 'route'}
+          </Button>
+          <Button
+            variant={type === 'route' ? 'default' : 'ghost'}
             onClick={() => setType('route')}
+            className={cn('grow', type !== 'route' && 'text-foreground')}
           >
             <GitCommit size={14} />
-          </SingleButton>
-          <SingleButton
-            withPadding={'4px 8px'}
-            selected={type === 'outgoing'}
+          </Button>
+          <Button
+            variant={type === 'outgoing' ? 'default' : 'ghost'}
             onClick={() => setType('outgoing')}
+            className={cn('grow', type !== 'outgoing' && 'text-foreground')}
           >
             <ArrowUp size={14} />
-          </SingleButton>
-        </MultiButton>
+          </Button>
+        </div>
       </SingleLine>
-    </Spacing>
+    </div>
   );
 
   const renderTitle = () => {

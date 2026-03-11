@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import {
   GraphicComponent,
   GridComponent,
@@ -11,7 +11,7 @@ import * as echarts from 'echarts/core';
 import { SankeyChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
-import { ThemeContext } from 'styled-components';
+import { useThemeMode } from '../../hooks/useThemeMode';
 
 echarts.use([
   SankeyChart,
@@ -46,10 +46,10 @@ export interface SankeyData {
 }
 
 export const Sankey = ({ data, width, height }: SankeyProps) => {
-  const themeContext = useContext(ThemeContext);
+  const themeMode = useThemeMode();
 
   const option = useMemo(() => {
-    const fontColor = themeContext?.mode === 'light' ? 'black' : 'white';
+    const fontColor = themeMode === 'light' ? 'black' : 'white';
     return {
       resize: true,
       tooltip: {
@@ -86,7 +86,7 @@ export const Sankey = ({ data, width, height }: SankeyProps) => {
         },
       ],
     };
-  }, [data, themeContext, height]);
+  }, [data, themeMode, height]);
 
   return (
     <ReactEChartsCore

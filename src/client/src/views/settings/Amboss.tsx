@@ -1,14 +1,12 @@
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
 import {
   Card,
   CardWithTitle,
   SingleLine,
   SubTitle,
 } from '../../components/generic/Styled';
-import styled from 'styled-components';
 import { getErrorContent } from '../../utils/error';
 import toast from 'react-hot-toast';
 import { useGetConfigStateQuery } from '../../graphql/queries/__generated__/getConfigState.generated';
@@ -16,13 +14,6 @@ import { useToggleConfigMutation } from '../../graphql/mutations/__generated__/t
 import { ConfigFields } from '../../graphql/types';
 import { VFC } from 'react';
 import { LoadingCard } from '../../components/loading/LoadingCard';
-
-const NoWrapText = styled.div`
-  white-space: nowrap;
-  font-size: 14px;
-`;
-
-const InputTitle = styled(NoWrapText)``;
 
 const ConfigFieldToggle: VFC<{
   title: string;
@@ -36,23 +27,33 @@ const ConfigFieldToggle: VFC<{
 
   return (
     <SingleLine>
-      <InputTitle>{title}</InputTitle>
-      <MultiButton loading={loading} width="103px">
-        <SingleButton
-          disabled={loading}
-          selected={enabled}
-          onClick={() => toggle({ variables: { field } })}
-        >
-          Yes
-        </SingleButton>
-        <SingleButton
-          disabled={loading}
-          selected={!enabled}
-          onClick={() => toggle({ variables: { field } })}
-        >
-          No
-        </SingleButton>
-      </MultiButton>
+      <div className="whitespace-nowrap text-sm">{title}</div>
+      <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
+        {loading ? (
+          <div style={{ width: '103px', textAlign: 'center' }}>
+            <Loader2 className="animate-spin text-primary" size={21} />
+          </div>
+        ) : (
+          <>
+            <Button
+              variant={enabled ? 'default' : 'ghost'}
+              disabled={loading}
+              onClick={() => toggle({ variables: { field } })}
+              className={cn('grow', !enabled && 'text-foreground')}
+            >
+              Yes
+            </Button>
+            <Button
+              variant={!enabled ? 'default' : 'ghost'}
+              disabled={loading}
+              onClick={() => toggle({ variables: { field } })}
+              className={cn('grow', enabled && 'text-foreground')}
+            >
+              No
+            </Button>
+          </>
+        )}
+      </div>
     </SingleLine>
   );
 };

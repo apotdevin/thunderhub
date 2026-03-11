@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { usePayAddressMutation } from '../../../../graphql/mutations/__generated__/sendToAddress.generated';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
+import { Input } from '@/components/ui/input';
 import { useBitcoinFees } from '../../../../hooks/UseBitcoinFees';
 import {
   Separation,
@@ -9,15 +9,12 @@ import {
   SubTitle,
 } from '../../../../components/generic/Styled';
 import { getErrorContent } from '../../../../utils/error';
-import { Input } from '../../../../components/input';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../../../components/buttons/multiButton/MultiButton';
+import { cn } from '@/lib/utils';
 import { Price, getPrice } from '../../../../components/price/Price';
 import { useConfigState } from '../../../../context/ConfigContext';
 import Modal from '../../../../components/modal/ReactModal';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { ChevronRight, Loader2 } from 'lucide-react';
 import { renderLine } from '../../../../components/generic/helpers';
 import { usePriceState } from '../../../../context/PriceContext';
 
@@ -78,39 +75,63 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
     text: string,
     selected: boolean
   ) => (
-    <SingleButton selected={selected} onClick={onClick}>
+    <Button
+      variant={selected ? 'default' : 'ghost'}
+      onClick={() => onClick()}
+      className={cn('grow', !selected && 'text-foreground')}
+    >
       {text}
-    </SingleButton>
+    </Button>
   );
 
   return (
     <>
-      <InputWithDeco
-        title={'Send to Address'}
-        value={address}
-        placeholder={'Address'}
-        inputCallback={value => setAddress(value)}
-      />
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Send to Address</span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '500px' }}
+          value={address}
+          placeholder={'Address'}
+          onChange={e => setAddress(e.target.value)}
+        />
+      </div>
       <Separation />
-      <InputWithDeco title={'Send All'} noInput={true}>
-        <MultiButton>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Send All</span>
+        </div>
+        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
           {renderButton(() => setSendAll(true), 'Yes', sendAll)}
           {renderButton(() => setSendAll(false), 'No', !sendAll)}
-        </MultiButton>
-      </InputWithDeco>
+        </div>
+      </div>
       {!sendAll && (
-        <InputWithDeco
-          title={'Amount'}
-          value={tokens}
-          placeholder={'Sats'}
-          amount={tokens}
-          inputType={'number'}
-          inputCallback={value => setTokens(Number(value))}
-        />
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>Amount</span>
+            <span className="text-muted-foreground mx-2 ml-4">
+              <Price amount={tokens} />
+            </span>
+          </div>
+          <Input
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '500px' }}
+            placeholder={'Sats'}
+            type={'number'}
+            value={tokens && tokens > 0 ? tokens : ''}
+            onChange={e => setTokens(Number(e.target.value))}
+          />
+        </div>
       )}
       <Separation />
-      <InputWithDeco title={'Fee'} noInput={true}>
-        <MultiButton>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Fee</span>
+        </div>
+        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
           {fetchFees &&
             !dontShow &&
             renderButton(
@@ -137,35 +158,34 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
             'Target Confirmations',
             type === 'target'
           )}
-        </MultiButton>
-      </InputWithDeco>
-      <InputWithDeco
-        title={'Fee Amount'}
-        value={amount}
-        noInput={true}
-        customAmount={
-          type === 'target' ? (
-            `(~${amount} blocks)`
-          ) : (
-            <>
-              {'(~'}
-              {feeFormat(amount * 223)}
-              {')'}
-            </>
-          )
-        }
-      >
+        </div>
+      </div>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Fee Amount</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            {type === 'target' ? (
+              `(~${amount} blocks)`
+            ) : (
+              <span>
+                {'(~'}
+                {feeFormat(amount * 223)}
+                {')'}
+              </span>
+            )}
+          </span>
+        </div>
         {type !== 'none' ? (
           <Input
-            value={amount && amount > 0 ? amount : undefined}
-            maxWidth={'500px'}
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '500px' }}
+            value={amount && amount > 0 ? amount : ''}
             placeholder={type === 'target' ? 'Blocks' : 'Sats/Byte'}
             type={'number'}
-            withMargin={'0 0 0 8px'}
             onChange={e => setAmount(Number(e.target.value))}
           />
         ) : (
-          <MultiButton>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {renderButton(
               () => setAmount(fast),
               `Fastest (${fast} sats)`,
@@ -182,22 +202,22 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
               `Hour (${hour} sats)`,
               amount === hour
             )}
-          </MultiButton>
+          </div>
         )}
-      </InputWithDeco>
+      </div>
       {!dontShow && renderLine('Minimum', `${minimum} sat/vByte`)}
       <Separation />
-      <ColorButton
-        disabled={!canSend}
-        withMargin={'16px 0 0'}
-        loading={loading}
-        fullWidth={true}
+      <Button
+        variant="outline"
+        disabled={!canSend || loading}
+        style={{ margin: '16px 0 0' }}
+        className="w-full"
         onClick={() => {
           setModalOpen(true);
         }}
       >
-        Send
-      </ColorButton>
+        {loading ? <Loader2 className="animate-spin" size={16} /> : <>Send</>}
+      </Button>
       <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
         <SingleLine>
           <SubTitle>Send to Address</SubTitle>
@@ -208,20 +228,25 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
           'Fee:',
           type === 'target' ? `${amount} Blocks` : `${amount} Sats/Byte`
         )}
-        <ColorButton
+        <Button
+          variant="outline"
           onClick={() =>
             payAddress({
               variables: { address, ...typeAmount(), ...tokenAmount },
             })
           }
-          disabled={!canSend}
-          withMargin={'16px 0 0'}
-          fullWidth={true}
-          arrow={true}
-          loading={loading}
+          disabled={!canSend || loading}
+          style={{ margin: '16px 0 0' }}
+          className="w-full"
         >
-          Send To Address
-        </ColorButton>
+          {loading ? (
+            <Loader2 className="animate-spin" size={16} />
+          ) : (
+            <>
+              Send To Address <ChevronRight size={18} />
+            </>
+          )}
+        </Button>
       </Modal>
     </>
   );

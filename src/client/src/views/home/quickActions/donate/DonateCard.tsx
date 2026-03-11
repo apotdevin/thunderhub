@@ -1,49 +1,5 @@
 import { Heart } from 'lucide-react';
-import styled from 'styled-components';
-import {
-  chartColors,
-  cardColor,
-  cardBorderColor,
-  unSelectedNavButton,
-  mediaWidths,
-} from '../../../../styles/Themes';
-
-const QuickTitle = styled.div`
-  font-size: 12px;
-  color: ${unSelectedNavButton};
-  margin-top: 10px;
-`;
-
-const QuickCard = styled.div`
-  background: ${cardColor};
-  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  border: 1px solid ${cardBorderColor};
-  height: 100px;
-  width: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  cursor: pointer;
-  color: #69c0ff;
-
-  @media (${mediaWidths.mobile}) {
-    padding: 4px;
-    height: 80px;
-    width: 80px;
-  }
-
-  &:hover {
-    background-color: ${chartColors.green};
-    color: white;
-
-    & ${QuickTitle} {
-      color: white;
-    }
-  }
-`;
+import { chartColors } from '../../../../styles/Themes';
 
 type SupportCardProps = {
   callback: () => void;
@@ -51,9 +7,24 @@ type SupportCardProps = {
 
 export const SupportCard = ({ callback }: SupportCardProps) => {
   return (
-    <QuickCard onClick={callback}>
+    <div
+      className="bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-[#e1e6ed] dark:border-[#4a5669] h-20 w-20 flex flex-col justify-center items-center p-1 cursor-pointer text-[#69c0ff] md:p-2.5 md:h-[100px] md:w-[100px] group"
+      style={{ ['--hover-bg' as string]: chartColors.green }}
+      onClick={callback}
+      onMouseEnter={e => {
+        (e.currentTarget as HTMLElement).style.backgroundColor =
+          chartColors.green;
+        (e.currentTarget as HTMLElement).style.color = 'white';
+      }}
+      onMouseLeave={e => {
+        (e.currentTarget as HTMLElement).style.backgroundColor = '';
+        (e.currentTarget as HTMLElement).style.color = '#69c0ff';
+      }}
+    >
       <Heart size={24} />
-      <QuickTitle>Donate</QuickTitle>
-    </QuickCard>
+      <div className="text-xs text-muted-foreground mt-2.5 group-hover:text-white">
+        Donate
+      </div>
+    </div>
   );
 };

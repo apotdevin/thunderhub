@@ -1,26 +1,16 @@
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   Card,
   CardWithTitle,
   SingleLine,
   SubTitle,
 } from '../../components/generic/Styled';
-import styled from 'styled-components';
 import { VFC } from 'react';
 import {
   useNotificationDispatch,
   useNotificationState,
 } from '../../context/NotificationContext';
-
-const NoWrapText = styled.div`
-  white-space: nowrap;
-  font-size: 14px;
-`;
-
-const InputTitle = styled(NoWrapText)``;
 
 const Toggle: VFC<{
   title: string;
@@ -30,21 +20,23 @@ const Toggle: VFC<{
 }> = ({ title, property, value, cbk }) => {
   return (
     <SingleLine>
-      <InputTitle>{title}</InputTitle>
-      <MultiButton>
-        <SingleButton
-          selected={value}
+      <div className="whitespace-nowrap text-sm">{title}</div>
+      <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
+        <Button
+          variant={value ? 'default' : 'ghost'}
           onClick={() => cbk({ [property]: true })}
+          className={cn('grow', !value && 'text-foreground')}
         >
           Yes
-        </SingleButton>
-        <SingleButton
-          selected={!value}
+        </Button>
+        <Button
+          variant={!value ? 'default' : 'ghost'}
           onClick={() => cbk({ [property]: false })}
+          className={cn('grow', value && 'text-foreground')}
         >
           No
-        </SingleButton>
-      </MultiButton>
+        </Button>
+      </div>
     </SingleLine>
   );
 };

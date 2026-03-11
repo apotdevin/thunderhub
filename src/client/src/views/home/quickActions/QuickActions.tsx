@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import styled from 'styled-components';
 import { X, Layers, Command, Zap } from 'lucide-react';
 import {
   CardWithTitle,
@@ -8,12 +7,6 @@ import {
   SmallButton,
   Card,
 } from '../../../components/generic/Styled';
-import {
-  unSelectedNavButton,
-  cardColor,
-  cardBorderColor,
-  mediaWidths,
-} from '../../../styles/Themes';
 import { DecodeCard } from './decode/Decode';
 import { SupportCard } from './donate/DonateCard';
 import { SupportBar } from './donate/DonateContent';
@@ -21,45 +14,33 @@ import { LnUrlCard } from './lnurl';
 import { AmbossCard } from './amboss/AmbossCard';
 import { LightningAddressCard } from './lightningAddress/LightningAddress';
 
-export const QuickCard = styled.div`
-  background: ${cardColor};
-  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  border: 1px solid ${cardBorderColor};
-  height: 100px;
-  width: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  cursor: pointer;
-  color: #69c0ff;
+export const QuickCard = ({
+  children,
+  className,
+  onClick,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={`bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-[#e1e6ed] dark:border-[#4a5669] h-20 w-20 flex flex-col justify-center items-center p-1 cursor-pointer text-[#69c0ff] md:p-2.5 md:h-[100px] md:w-[100px] hover:border-[#69c0ff] ${className ?? ''}`}
+    onClick={onClick}
+    {...props}
+  >
+    {children}
+  </div>
+);
 
-  @media (${mediaWidths.mobile}) {
-    padding: 4px;
-    height: 80px;
-    width: 80px;
-  }
-
-  &:hover {
-    border: 1px solid #69c0ff;
-  }
-`;
-
-export const QuickTitle = styled.div`
-  font-size: 12px;
-  color: ${unSelectedNavButton};
-  margin-top: 10px;
-  text-align: center;
-`;
-
-const QuickRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 16px 0px 32px;
-`;
+export const QuickTitle = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={`text-xs text-muted-foreground mt-2.5 text-center ${className ?? ''}`}
+    {...props}
+  >
+    {children}
+  </div>
+);
 
 export const QuickActions = () => {
   const [openCard, setOpenCard] = useState('none');
@@ -93,7 +74,7 @@ export const QuickActions = () => {
         return <LightningAddressCard />;
       default:
         return (
-          <QuickRow>
+          <div className="flex flex-wrap gap-2 my-4 mb-8">
             <SupportCard callback={() => setOpenCard('support')} />
             <AmbossCard />
             <QuickCard onClick={() => setOpenCard('lightning_address')}>
@@ -108,7 +89,7 @@ export const QuickActions = () => {
               <Command size={24} />
               <QuickTitle>LNURL</QuickTitle>
             </QuickCard>
-          </QuickRow>
+          </div>
         );
     }
   };

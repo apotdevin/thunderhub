@@ -1,60 +1,13 @@
-import styled from 'styled-components';
 import {
   CardTitle,
   CardWithTitle,
   SmallButton,
   SubTitle,
 } from '../../../components/generic/Styled';
-import {
-  cardBorderColor,
-  cardColor,
-  mediaWidths,
-  unSelectedNavButton,
-} from '../../../styles/Themes';
 import { ArrowDownRight, ArrowUpRight, X } from 'lucide-react';
 import { useState } from 'react';
 import { OpenChannel } from './OpenChannel';
 import { BuyChannel, GoToMagma } from './BuyChannel';
-
-export const QuickCard = styled.div`
-  background: ${cardColor};
-  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  border: 1px solid ${cardBorderColor};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  cursor: pointer;
-  color: #69c0ff;
-  gap: 8px;
-
-  @media (${mediaWidths.mobile}) {
-    padding: 4px;
-    height: 80px;
-    width: 80px;
-  }
-
-  &:hover {
-    border: 1px solid #69c0ff;
-  }
-`;
-
-export const QuickTitle = styled.div`
-  font-size: 14px;
-  color: ${unSelectedNavButton};
-  text-align: center;
-`;
-
-const S = {
-  row: styled.div`
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-    margin-bottom: 16px;
-    margin-top: 16px;
-  `,
-};
 
 export const Liquidity = () => {
   const [openCard, setOpenCard] = useState('none');
@@ -67,16 +20,26 @@ export const Liquidity = () => {
         return <BuyChannel />;
       default:
         return (
-          <S.row>
-            <QuickCard onClick={() => setOpenCard('open')}>
+          <div className="grid md:grid-cols-2 gap-4 my-4">
+            <div
+              className="bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-[#e1e6ed] dark:border-[#4a5669] flex justify-center items-center p-2.5 cursor-pointer text-[#69c0ff] gap-2 hover:border-[#69c0ff]"
+              onClick={() => setOpenCard('open')}
+            >
               <ArrowUpRight size={24} />
-              <QuickTitle>Open a Channel</QuickTitle>
-            </QuickCard>
-            <QuickCard onClick={() => setOpenCard('buy')}>
+              <div className="text-sm text-muted-foreground text-center">
+                Open a Channel
+              </div>
+            </div>
+            <div
+              className="bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-[#e1e6ed] dark:border-[#4a5669] flex justify-center items-center p-2.5 cursor-pointer text-[#69c0ff] gap-2 hover:border-[#69c0ff]"
+              onClick={() => setOpenCard('buy')}
+            >
               <ArrowDownRight size={24} />
-              <QuickTitle>Buy Inbound Liquidity</QuickTitle>
-            </QuickCard>
-          </S.row>
+              <div className="text-sm text-muted-foreground text-center">
+                Buy Inbound Liquidity
+              </div>
+            </div>
+          </div>
         );
     }
   };

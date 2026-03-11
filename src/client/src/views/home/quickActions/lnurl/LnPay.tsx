@@ -1,25 +1,16 @@
 import { FC, useState } from 'react';
 import { PayRequest } from '../../../../graphql/types';
-import styled from 'styled-components';
 import { Title } from '../../../../components/typography/Styled';
 import { Separation } from '../../../../components/generic/Styled';
 import { renderLine } from '../../../../components/generic/helpers';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import { Input } from '@/components/ui/input';
+import { Price } from '../../../../components/price/Price';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import { usePayLnUrlMutation } from '../../../../graphql/mutations/__generated__/lnUrl.generated';
 import { Link } from '../../../../components/link/Link';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../../utils/error';
-
-const ModalText = styled.div`
-  width: 100%;
-  text-align: center;
-`;
-
-const StyledLink = styled(ModalText)`
-  margin: 16px 0 32px;
-  font-size: 24px;
-`;
 
 type LnPayProps = {
   request: PayRequest;
@@ -44,7 +35,11 @@ export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
   });
 
   if (!callback) {
-    return <ModalText>Missing information from LN Service</ModalText>;
+    return (
+      <div className="w-full text-center">
+        Missing information from LN Service
+      </div>
+    );
   }
 
   const callbackUrl = new URL(callback);
@@ -56,11 +51,13 @@ export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
         <>
           <Title>Success</Title>
           {(description || url) && <Separation />}
-          {description && <ModalText>{description}</ModalText>}
+          {description && (
+            <div className="w-full text-center">{description}</div>
+          )}
           {url && (
-            <StyledLink>
+            <div className="w-full text-center my-4 mb-8 text-2xl">
               <Link href={url}>{url}</Link>
-            </StyledLink>
+            </div>
           )}
         </>
       );
@@ -70,7 +67,7 @@ export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
         <>
           <Title>Success</Title>
           {message && <Separation />}
-          {message && <ModalText>{message}</ModalText>}
+          {message && <div className="w-full text-center">{message}</div>}
         </>
       );
     }
@@ -79,7 +76,9 @@ export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
         <>
           <Title>Success</Title>
           {(description || ciphertext || iv) && <Separation />}
-          {description && <ModalText>{description}</ModalText>}
+          {description && (
+            <div className="w-full text-center">{description}</div>
+          )}
           {renderLine('Ciphertext', ciphertext)}
           {renderLine('IV', iv)}
         </>
@@ -94,7 +93,7 @@ export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
       <Separation />
       {!title && (
         <>
-          <ModalText>{`Pay to ${callbackUrl.host}`}</ModalText>
+          <div className="w-full text-center">{`Pay to ${callbackUrl.host}`}</div>
           <Separation />
         </>
       )}
@@ -103,30 +102,42 @@ export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
       {!isSame && renderLine('Min Pay Amount (sats)', min)}
       <Separation />
       {!!commentAllowed && (
-        <InputWithDeco
-          inputMaxWidth={'300px'}
-          title={`Comment (Max ${commentAllowed} characters)`}
-          value={comment}
-          inputCallback={value => {
-            setComment(value.substring(0, commentAllowed));
-          }}
-        />
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>{`Comment (Max ${commentAllowed} characters)`}</span>
+          </div>
+          <Input
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '300px' }}
+            value={comment}
+            onChange={e =>
+              setComment(e.target.value.substring(0, commentAllowed))
+            }
+          />
+        </div>
       )}
       {!isSame && (
-        <InputWithDeco
-          inputMaxWidth={'300px'}
-          title={'Amount'}
-          amount={amount}
-          value={amount}
-          inputType={'number'}
-          inputCallback={value => setAmount(Number(value))}
-        />
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>Amount</span>
+            <span className="text-muted-foreground mx-2 ml-4">
+              <Price amount={amount} />
+            </span>
+          </div>
+          <Input
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '300px' }}
+            type={'number'}
+            value={amount && amount > 0 ? amount : ''}
+            onChange={e => setAmount(Number(e.target.value))}
+          />
+        </div>
       )}
-      <ColorButton
-        loading={loading}
+      <Button
+        variant="outline"
         disabled={loading || !amount}
-        fullWidth={true}
-        withMargin={'16px 0 0'}
+        className="w-full"
+        style={{ margin: '16px 0 0' }}
         onClick={() => {
           if (min && amount < min) {
             toast.error('Amount is below the minimum');
@@ -137,8 +148,12 @@ export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
           }
         }}
       >
-        {`Pay (${amount} sats)`}
-      </ColorButton>
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>{`Pay (${amount} sats)`}</>
+        )}
+      </Button>
     </>
   );
 };

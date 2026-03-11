@@ -2,42 +2,10 @@ import { FC, useMemo } from 'react';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { chartColors } from '../../../../styles/Themes';
 import { getByTime } from '../../../../views/dashboard/widgets/helpers';
-import styled from 'styled-components';
 import { useGetInvoicesQuery } from '../../../../graphql/queries/__generated__/getInvoices.generated';
 import { differenceInDays } from 'date-fns';
 import { useGetPaymentsQuery } from '../../../../graphql/queries/__generated__/getPayments.generated';
 import { BarChart } from '../../../../components/chart/BarChart';
-
-const S = {
-  row: styled.div`
-    display: grid;
-    grid-template-columns: 1fr 60px 90px;
-  `,
-  wrapper: styled.div`
-    width: 100%;
-    height: 300px;
-  `,
-  contentWrapper: styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `,
-  content: styled.div`
-    width: 100%;
-    padding: 0 16px;
-    height: calc(100% - 40px);
-    overflow: auto;
-  `,
-  title: styled.h4`
-    font-weight: 900;
-    margin: 8px 0;
-  `,
-  nowrap: styled.div`
-    white-space: nowrap;
-  `,
-};
 
 type TransactionsGraphProps = {
   showPay: boolean;
@@ -111,11 +79,11 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
 
   if (loading || paymentsLoading) {
     return (
-      <S.wrapper>
-        <S.contentWrapper>
+      <div className="w-full h-[300px]">
+        <div className="flex h-full w-full items-center justify-center">
           <LoadingCard noCard={true} />
-        </S.contentWrapper>
-      </S.wrapper>
+        </div>
+      </div>
     );
   }
 
@@ -124,11 +92,11 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     (showPay && !paymentsData?.getPayments.payments.length)
   ) {
     return (
-      <S.wrapper>
-        <S.contentWrapper>
+      <div className="w-full h-[300px]">
+        <div className="flex h-full w-full items-center justify-center">
           No {showPay ? 'payments' : 'invoices'} for this period.
-        </S.contentWrapper>
-      </S.wrapper>
+        </div>
+      </div>
     );
   }
 
@@ -136,8 +104,11 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
   const finalColor = showPay ? [chartColors.darkyellow] : [chartColors.orange2];
 
   return (
-    <S.wrapper>
-      <S.content>
+    <div className="w-full h-[300px]">
+      <div
+        className="w-full px-4 overflow-auto"
+        style={{ height: 'calc(100% - 40px)' }}
+      >
         <BarChart
           data={finalArray.map(f => {
             return {
@@ -149,7 +120,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
           title={labels.title || ''}
           dataKey={showPay ? 'Payments' : 'Invoices'}
         />
-      </S.content>
-    </S.wrapper>
+      </div>
+    </div>
   );
 };

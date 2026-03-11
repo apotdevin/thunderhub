@@ -36,7 +36,6 @@ type SelectWithValueProps = {
   options: ValueProp[];
   value: ValueProp | undefined;
   maxWidth?: string;
-  minWidth?: string;
   isClearable?: boolean;
   callback: (value: ValueProp[]) => void;
 };
@@ -44,13 +43,12 @@ type SelectWithValueProps = {
 export const SelectWithValue = ({
   options,
   maxWidth,
-  minWidth,
   callback,
   value,
   isClearable = true,
 }: SelectWithValueProps) => {
   return (
-    <div style={{ maxWidth, minWidth, width: maxWidth ? undefined : 'auto' }}>
+    <div style={{ maxWidth, width: maxWidth ? undefined : 'auto' }}>
       <NativeSelect
         value={value ? String(value.value) : ''}
         onChange={e => {
@@ -84,9 +82,8 @@ export const SmallSelectWithValue = ({
   isClearable = true,
 }: SelectWithValueProps) => {
   return (
-    <div style={{ maxWidth, width: '100%' }}>
+    <div style={{ maxWidth }}>
       <NativeSelect
-        size="sm"
         value={value ? String(value.value) : ''}
         onChange={e => {
           const selectedValue = e.target.value;

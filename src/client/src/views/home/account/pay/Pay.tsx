@@ -1,8 +1,9 @@
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../../utils/error';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Loader2 } from 'lucide-react';
 import { useState, VFC } from 'react';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
 import { ChannelSelect } from '../../../../components/select/specific/ChannelSelect';
 import { useDecodeRequestQuery } from '../../../../graphql/queries/__generated__/decodeRequest.generated';
 import { renderLine } from '../../../../components/generic/helpers';
@@ -84,36 +85,53 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
     <>
       {!predefinedRequest && (
         <>
-          <InputWithDeco
-            title={'Request'}
-            value={request}
-            placeholder={'Invoice'}
-            inputCallback={value => setRequest(value)}
-            onEnter={() => handleEnter()}
-            inputMaxWidth={'300px'}
-          />
+          <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+            <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+              <span>Request</span>
+            </div>
+            <Input
+              className="ml-0 md:ml-2"
+              style={{ maxWidth: '300px' }}
+              value={request}
+              placeholder={'Invoice'}
+              onChange={e => setRequest(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleEnter()}
+            />
+          </div>
           <Separation />
         </>
       )}
-      <InputWithDeco
-        title={'Max Fee'}
-        value={fee}
-        amount={fee}
-        placeholder={'sats'}
-        inputType={'number'}
-        inputMaxWidth={'300px'}
-        inputCallback={value => setFee(Math.max(1, Number(value)))}
-        onEnter={() => handleEnter()}
-      />
-      <InputWithDeco
-        title={'Max Paths'}
-        value={paths}
-        placeholder={'paths'}
-        inputType={'number'}
-        inputMaxWidth={'300px'}
-        inputCallback={value => setPaths(Math.max(1, Number(value)))}
-        onEnter={() => handleEnter()}
-      />
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Max Fee</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            <Price amount={fee} />
+          </span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '300px' }}
+          placeholder={'sats'}
+          type={'number'}
+          value={fee && fee > 0 ? fee : ''}
+          onChange={e => setFee(Math.max(1, Number(e.target.value)))}
+          onKeyDown={e => e.key === 'Enter' && handleEnter()}
+        />
+      </div>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Max Paths</span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '300px' }}
+          placeholder={'paths'}
+          type={'number'}
+          value={paths && paths > 0 ? paths : ''}
+          onChange={e => setPaths(Math.max(1, Number(e.target.value)))}
+          onKeyDown={e => e.key === 'Enter' && handleEnter()}
+        />
+      </div>
       <Separation />
       <ChannelSelect
         title={'Out Channels'}
@@ -122,15 +140,15 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
       />
       <Separation />
       <DecodeInvoice invoice={request || predefinedRequest} />
-      <ColorButton
-        loading={loading}
+      <Button
+        variant="outline"
         disabled={loading || !request}
-        withMargin={'16px 0 0 0'}
-        fullWidth={true}
+        style={{ margin: '16px 0 0 0' }}
+        className="w-full"
         onClick={() => handleEnter()}
       >
-        Pay
-      </ColorButton>
+        {loading ? <Loader2 className="animate-spin" size={16} /> : <>Pay</>}
+      </Button>
     </>
   );
 };

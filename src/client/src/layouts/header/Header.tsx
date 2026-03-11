@@ -1,40 +1,20 @@
 import { FC, useEffect, useState } from 'react';
-import {
-  Cpu,
-  Menu,
-  X,
-  MessageCircle,
-  Settings,
-  Heart,
-  LucideProps,
-} from 'lucide-react';
+import { Cpu, Menu, X, Settings, Heart, LucideProps } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { LogoutButton } from '../../components/logoutButton';
-import { headerColor, headerTextColor } from '../../styles/Themes';
 import {
   useDonate,
   DonateModal,
 } from '../../views/home/quickActions/donate/DonateContent';
-import { SingleLine } from '../../components/generic/Styled';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
-import { Section } from '../../components/section/Section';
 import { Link } from '../../components/link/Link';
-import { ViewSwitch } from '../../components/viewSwitch/ViewSwitch';
-import {
-  IconWrapper,
-  HeaderStyle,
-  HeaderLine,
-  HeaderTitle,
-  IconPadding,
-  HeaderButtons,
-  HeaderNavButton,
-} from './Header.styled';
+import { cn } from '../../lib/utils';
+import { Button } from '@/components/ui/button';
 
 export type Icon = FC<LucideProps>;
 
 const SSO = '/sso';
 const MAIN = '/login';
-const CHAT = '/chat';
 const SETTINGS = '/settings';
 
 export const Header = () => {
@@ -57,58 +37,72 @@ export const Header = () => {
 
   const renderNavButton = (link: string, NavIcon: Icon) => (
     <Link to={link} noStyling={true}>
-      <HeaderNavButton selected={pathname === link}>
+      <Button variant={'ghost'} size={'icon'}>
         <NavIcon size={18} />
-      </HeaderNavButton>
+      </Button>
     </Link>
   );
 
   const renderLoggedIn = () => (
     <>
-      <ViewSwitch>
-        <IconWrapper onClick={() => setOpen(prev => !prev)}>
-          {open ? <X size={24} /> : <Menu size={24} />}
-        </IconWrapper>
-      </ViewSwitch>
-      <ViewSwitch hideMobile={true}>
-        <HeaderButtons>
-          <HeaderNavButton onClick={openDonate} style={{ cursor: 'pointer' }}>
-            <Heart size={18} />
-          </HeaderNavButton>
-          {renderNavButton(CHAT, MessageCircle)}
-          {renderNavButton(SETTINGS, Settings)}
-          <LogoutButton />
-        </HeaderButtons>
-      </ViewSwitch>
+      <div
+        className="flex md:hidden justify-center items-center w-6 h-6"
+        onClick={() => setOpen(prev => !prev)}
+      >
+        {open ? <X size={24} /> : <Menu size={24} />}
+      </div>
+      <div className="hidden md:flex items-center">
+        <Button onClick={openDonate} variant={'ghost'} size={'icon'}>
+          <Heart size={18} />
+        </Button>
+        {renderNavButton(SETTINGS, Settings)}
+        <LogoutButton />
+      </div>
     </>
   );
 
   return (
     <>
-      <Section
-        padding="0 16px"
-        fixedWidth={pathname === MAIN}
-        color={pathname === MAIN ? 'transparent' : headerColor}
-        textColor={headerTextColor}
+      <div
+        className={cn(
+          'w-full py-4 px-4 text-white',
+          pathname === MAIN ? 'bg-transparent' : 'bg-[#151727]'
+        )}
       >
-        <HeaderStyle>
-          <HeaderLine loggedIn={!isRoot}>
-            <Link to={!isRoot ? '/' : '/login'} underline={'transparent'}>
-              <HeaderTitle withPadding={isRoot}>
-                <IconPadding>
+        <div
+          className={cn(
+            pathname === MAIN && 'max-w-[1000px] mx-auto px-4 lg:px-0'
+          )}
+        >
+          <div
+            className={cn(
+              'flex justify-between items-center',
+              !isRoot ? '' : 'w-full flex-col md:w-auto md:flex-row'
+            )}
+          >
+            <Link to={!isRoot ? '/' : '/login'} noStyling>
+              <div
+                className={cn(
+                  'text-white font-extrabold flex items-center justify-center',
+                  isRoot && 'mb-4 md:mb-0'
+                )}
+              >
+                <div className="pr-1.5 -mb-1">
                   <Cpu color={'white'} size={18} />
-                </IconPadding>
+                </div>
                 ThunderHub
-              </HeaderTitle>
+              </div>
             </Link>
-            <SingleLine>{!isRoot && renderLoggedIn()}</SingleLine>
-          </HeaderLine>
-        </HeaderStyle>
-      </Section>
+            <div className="flex justify-between items-center">
+              {!isRoot && renderLoggedIn()}
+            </div>
+          </div>
+        </div>
+      </div>
       {open && (
-        <ViewSwitch>
+        <div className="block md:hidden">
           <BurgerMenu open={open} setOpen={setOpen} />
-        </ViewSwitch>
+        </div>
       )}
       <DonateModal
         payRequest={donatePayRequest}

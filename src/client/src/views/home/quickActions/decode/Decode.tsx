@@ -4,9 +4,11 @@ import {
   Sub4Title,
   ResponsiveLine,
 } from '../../../../components/generic/Styled';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { Input } from '../../../../components/input';
+import { Button } from '@/components/ui/button';
+import { ChevronRight } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { Decoded } from './Decoded';
+import { cn } from '@/lib/utils';
 
 export const DecodeCard = () => {
   const [request, setRequest] = useState('');
@@ -19,23 +21,21 @@ export const DecodeCard = () => {
           <Sub4Title>Request:</Sub4Title>
           <Input
             placeholder={'Lightning Invoice'}
-            withMargin={'0 0 0 24px'}
-            mobileMargin={'0 0 16px'}
+            style={{ margin: '0 0 0 24px' }}
             value={request}
             onChange={e => setRequest(e.target.value)}
           />
-          <ColorButton
+          <Button
+            variant="outline"
             disabled={request === ''}
-            withMargin={'0 0 0 16px'}
-            mobileMargin={'0'}
-            arrow={true}
-            mobileFullWidth={true}
+            style={{ margin: '0 0 0 16px' }}
+            className={cn('w-full md:w-auto')}
             onClick={() => {
               setShow(true);
             }}
           >
-            Decode
-          </ColorButton>
+            Decode <ChevronRight size={18} />
+          </Button>
         </ResponsiveLine>
       )}
       {show && <Decoded request={request} setShow={setShow} />}

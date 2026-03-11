@@ -1,20 +1,10 @@
 import { Sun, Moon } from 'lucide-react';
-import { SingleButton } from '../../../../components/buttons/multiButton/MultiButton';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   useConfigDispatch,
   useConfigState,
 } from '../../../../context/ConfigContext';
-import styled from 'styled-components';
-
-const S = {
-  wrapper: styled.div`
-    overflow: auto;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-wrap: wrap;
-  `,
-};
 
 export const ThemeSetting = () => {
   const { theme } = useConfigState();
@@ -24,20 +14,22 @@ export const ThemeSetting = () => {
     dispatch({ type: 'themeChange', theme });
 
   return (
-    <S.wrapper>
-      <SingleButton
-        selected={theme === 'light'}
+    <div className="overflow-auto w-full h-full flex flex-wrap">
+      <Button
+        variant={theme === 'light' ? 'default' : 'ghost'}
         onClick={() => handleDispatch('light')}
+        className={cn('grow', theme !== 'light' && 'text-foreground')}
       >
         <Sun size={16} />
-      </SingleButton>
-      <SingleButton
-        selected={theme === 'dark'}
+      </Button>
+      <Button
+        variant={theme === 'dark' ? 'default' : 'ghost'}
         onClick={() => handleDispatch('dark')}
+        className={cn('grow', theme !== 'dark' && 'text-foreground')}
       >
         <Moon size={16} />
-      </SingleButton>
-    </S.wrapper>
+      </Button>
+    </div>
   );
 };
 
@@ -49,25 +41,28 @@ export const CurrencySetting = () => {
     dispatch({ type: 'change', currency });
 
   return (
-    <S.wrapper>
-      <SingleButton
-        selected={currency === 'sat'}
+    <div className="overflow-auto w-full h-full flex flex-wrap">
+      <Button
+        variant={currency === 'sat' ? 'default' : 'ghost'}
         onClick={() => handleDispatch('sat')}
+        className={cn('grow', currency !== 'sat' && 'text-foreground')}
       >
         Sat
-      </SingleButton>
-      <SingleButton
-        selected={currency === 'btc'}
+      </Button>
+      <Button
+        variant={currency === 'btc' ? 'default' : 'ghost'}
         onClick={() => handleDispatch('btc')}
+        className={cn('grow', currency !== 'btc' && 'text-foreground')}
       >
         Btc
-      </SingleButton>
-      <SingleButton
-        selected={currency === 'fiat'}
+      </Button>
+      <Button
+        variant={currency === 'fiat' ? 'default' : 'ghost'}
         onClick={() => handleDispatch('fiat')}
+        className={cn('grow', currency !== 'fiat' && 'text-foreground')}
       >
         Fiat
-      </SingleButton>
-    </S.wrapper>
+      </Button>
+    </div>
   );
 };

@@ -1,5 +1,6 @@
 import toast from 'react-hot-toast';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import {
   Card,
   CardWithTitle,
@@ -23,6 +24,7 @@ export const Healthchecks = () => {
   });
 
   const isEnabled = data?.getConfigState.healthcheck_ping_state || false;
+  const isLoading = loading || toggleLoading;
 
   return (
     <CardWithTitle>
@@ -34,17 +36,20 @@ export const Healthchecks = () => {
               ? 'By disabling automatic healthcheck pings to Amboss, ThunderHub will no longer ping Amboss.'
               : 'By enabling automatic healthcheck pings to Amboss, ThunderHub will consistently ping Amboss to show the liveliness of your node.'}
           </Text>
-          <ColorButton
-            color="#ff0080"
-            loading={loading || toggleLoading}
-            disabled={loading || toggleLoading}
-            withMargin="0 0 0 16px"
+          <Button
+            variant="outline"
+            disabled={isLoading}
+            style={{ margin: '0 0 0 16px' }}
             onClick={() =>
               toggle({ variables: { field: ConfigFields.Healthchecks } })
             }
           >
-            {isEnabled ? 'Disable' : 'Enable'}
-          </ColorButton>
+            {isLoading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              <>{isEnabled ? 'Disable' : 'Enable'}</>
+            )}
+          </Button>
         </SingleLine>
       </Card>
     </CardWithTitle>

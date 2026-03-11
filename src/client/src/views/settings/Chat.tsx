@@ -6,10 +6,8 @@ import {
 } from '../../components/generic/Styled';
 import { SettingsLine } from '../../pages/SettingsPage';
 
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 
 export const ChatSettings = () => {
@@ -27,8 +25,9 @@ export const ChatSettings = () => {
     current: boolean,
     value: boolean | number
   ) => (
-    <SingleButton
-      selected={current}
+    <Button
+      variant={current ? 'default' : 'ghost'}
+      className={cn('grow', !current && 'text-foreground')}
       onClick={() => {
         switch (type) {
           case 'fee':
@@ -51,7 +50,7 @@ export const ChatSettings = () => {
       }}
     >
       {title}
-    </SingleButton>
+    </Button>
   );
 
   return (
@@ -60,31 +59,31 @@ export const ChatSettings = () => {
       <Card>
         <SettingsLine>
           <Sub4Title>Fee:</Sub4Title>
-          <MultiButton>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {renderButton('Hide', 'fee', hideFee, true)}
             {renderButton('Show', 'fee', !hideFee, false)}
-          </MultiButton>
+          </div>
         </SettingsLine>
         <SettingsLine>
           <Sub4Title>Non-Verified Messages:</Sub4Title>
-          <MultiButton>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {renderButton('Hide', 'nonverified', hideNonVerified, true)}
             {renderButton('Show', 'nonverified', !hideNonVerified, false)}
-          </MultiButton>
+          </div>
         </SettingsLine>
         <SettingsLine>
           <Sub4Title>{'Max Fee (sats):'}</Sub4Title>
-          <MultiButton>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {renderButton('10', 'maxFee', maxFee === 10, 10)}
             {renderButton('20', 'maxFee', maxFee === 20, 20)}
             {renderButton('30', 'maxFee', maxFee === 30, 30)}
             {renderButton('50', 'maxFee', maxFee === 50, 50)}
             {renderButton('100', 'maxFee', maxFee === 100, 100)}
-          </MultiButton>
+          </div>
         </SettingsLine>
         <SettingsLine>
           <Sub4Title>{'Polling Speed:'}</Sub4Title>
-          <MultiButton>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {renderButton('1s', 'pollingSpeed', cps === 1000, 1000)}
             {renderButton('5s', 'pollingSpeed', cps === 5000, 5000)}
             {renderButton('10s', 'pollingSpeed', cps === 10000, 10000)}
@@ -92,7 +91,7 @@ export const ChatSettings = () => {
             {renderButton('10m', 'pollingSpeed', cps === 600000, 600000)}
             {renderButton('30m', 'pollingSpeed', cps === 1800000, 1800000)}
             {renderButton('None', 'pollingSpeed', cps === 0, 0)}
-          </MultiButton>
+          </div>
         </SettingsLine>
       </Card>
     </CardWithTitle>

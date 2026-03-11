@@ -1,8 +1,8 @@
 import { shorten } from '@/components/generic/helpers';
 import { useGetChannelsWithPeersQuery } from '@/graphql/queries/__generated__/getChannels.generated';
-import { SelectWithDeco } from '../SelectWithDeco';
+import { Loader2 } from 'lucide-react';
+import { Select, ValueProp } from '..';
 import { Channel } from '../../../graphql/types';
-import { ValueProp } from '..';
 
 type ChannelSelectProps = {
   title: string;
@@ -30,7 +30,7 @@ export const ChannelSelect = ({
          channel?.partner_node_info?.node?.alias
            ? ` - ${channel.partner_node_info.node.alias}`
            : ''
-       } - 
+       } -
        ${shorten(channel.partner_public_key)}`;
 
       return {
@@ -55,12 +55,19 @@ export const ChannelSelect = ({
   };
 
   return (
-    <SelectWithDeco
-      loading={loading}
-      title={title}
-      options={options}
-      callback={handleChange}
-      maxWidth={maxWidth}
-    />
+    <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+      <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+        <span>{title}</span>
+      </div>
+      {loading ? (
+        <Loader2 className="animate-spin text-[#5163ba]" size={20} />
+      ) : (
+        <Select
+          maxWidth={maxWidth || '500px'}
+          options={options}
+          callback={handleChange}
+        />
+      )}
+    </div>
   );
 };

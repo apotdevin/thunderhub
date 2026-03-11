@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { X } from 'lucide-react';
+import { X, ChevronRight, Loader2 } from 'lucide-react';
 import { useRecoverFundsLazyQuery } from '../../../graphql/queries/__generated__/recoverFunds.generated';
 import { getErrorContent } from '../../../utils/error';
 import { SingleLine, DarkSubTitle } from '../../../components/generic/Styled';
-import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { Input } from '../../../components/input';
-import { NoWrap } from '../Tools.styled';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export const RecoverFunds = () => {
   const [backupString, setBackupString] = useState<string>('');
@@ -25,20 +24,24 @@ export const RecoverFunds = () => {
   const renderInput = () => (
     <>
       <SingleLine>
-        <NoWrap>
+        <div className="mr-4 whitespace-nowrap">
           <DarkSubTitle>Backup String: </DarkSubTitle>
-        </NoWrap>
+        </div>
         <Input onChange={e => setBackupString(e.target.value)} />
       </SingleLine>
-      <ColorButton
-        fullWidth={true}
-        withMargin={'8px 0 4px'}
+      <Button
+        variant="outline"
+        className="w-full"
+        style={{ margin: '8px 0 4px' }}
         onClick={() => recoverFunds({ variables: { backup: backupString } })}
-        disabled={backupString === ''}
-        loading={loading}
+        disabled={backupString === '' || loading}
       >
-        Recover
-      </ColorButton>
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>Recover</>
+        )}
+      </Button>
     </>
   );
 
@@ -46,14 +49,18 @@ export const RecoverFunds = () => {
     <>
       <SingleLine>
         <DarkSubTitle>Recover Funds from Channels</DarkSubTitle>
-        <ColorButton
-          withMargin={'4px 0'}
+        <Button
+          variant="outline"
+          style={{ margin: '4px 0' }}
           disabled={loading}
-          arrow={!isPasting}
           onClick={() => setIsPasting(prev => !prev)}
         >
-          {isPasting ? <X size={18} /> : 'Recover'}
-        </ColorButton>
+          {isPasting ? (
+            <X size={18} />
+          ) : (
+            <>Recover {!isPasting && <ChevronRight size={18} />}</>
+          )}
+        </Button>
       </SingleLine>
       {isPasting && renderInput()}
     </>

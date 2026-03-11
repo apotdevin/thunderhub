@@ -1,18 +1,14 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
+import { cn } from '@/lib/utils';
 import {
-  MultiButton,
-  SingleButton,
-} from '../../../../components/buttons/multiButton/MultiButton';
-import {
-  Sub4Title,
   ResponsiveLine,
   NoWrapTitle,
 } from '../../../../components/generic/Styled';
-import { Input } from '../../../../components/input';
+import { Input } from '@/components/ui/input';
 import Modal from '../../../../components/modal/ReactModal';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { ChevronRight } from 'lucide-react';
 import { isLightningInvoice } from '../../../../utils/helpers';
 import { KeysendModal } from './KeysendModal';
 import { Pay } from './Pay';
@@ -45,26 +41,24 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
         return (
           <ResponsiveLine>
             <NoWrapTitle>
-              <Sub4Title as={'div'}>Public Key</Sub4Title>
+              <div className="my-2.5 font-medium">Public Key</div>
             </NoWrapTitle>
             <Input
               value={request}
               placeholder={'Public Key'}
-              withMargin={'0 0 0 24px'}
-              mobileMargin={'0 0 16px'}
+              className="ml-0 md:ml-6"
               onChange={e => setRequest(e.target.value)}
-              onEnter={() => handleClick()}
+              onKeyDown={e => e.key === 'Enter' && handleClick()}
             />
-            <ColorButton
+            <Button
+              variant="outline"
               disabled={request === ''}
-              withMargin={'0 0 0 16px'}
-              mobileMargin={'0'}
-              mobileFullWidth={true}
+              style={{ margin: '0 0 0 16px' }}
+              className={cn('w-full md:w-auto')}
               onClick={() => handleClick()}
-              arrow={true}
             >
-              Decode
-            </ColorButton>
+              Decode <ChevronRight size={18} />
+            </Button>
           </ResponsiveLine>
         );
       default:
@@ -74,19 +68,27 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
 
   return (
     <>
-      <InputWithDeco title={'Is Keysend'} noInput={true}>
-        <MultiButton>
-          <SingleButton selected={isKeysend} onClick={() => setIsKeysend(true)}>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Is Keysend</span>
+        </div>
+        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
+          <Button
+            variant={isKeysend ? 'default' : 'ghost'}
+            onClick={() => setIsKeysend(true)}
+            className={cn('grow', !isKeysend && 'text-foreground')}
+          >
             Yes
-          </SingleButton>
-          <SingleButton
-            selected={!isKeysend}
+          </Button>
+          <Button
+            variant={!isKeysend ? 'default' : 'ghost'}
             onClick={() => setIsKeysend(false)}
+            className={cn('grow', isKeysend && 'text-foreground')}
           >
             No
-          </SingleButton>
-        </MultiButton>
-      </InputWithDeco>
+          </Button>
+        </div>
+      </div>
       {renderContent()}
       <Modal
         isOpen={modalOpen}

@@ -1,6 +1,6 @@
 import { chartColors } from '../../styles/Themes';
-import { ThemeContext } from 'styled-components';
-import { useContext, useMemo } from 'react';
+import { useThemeMode } from '../../hooks/useThemeMode';
+import { useMemo } from 'react';
 import { BarChart } from 'echarts/charts';
 import {
   GraphicComponent,
@@ -44,7 +44,7 @@ export const HorizontalBarChart = ({
   colorRange = defaultColorRange,
   dataKey,
 }: HorizontalBarChartProps) => {
-  const themeContext = useContext(ThemeContext);
+  const themeMode = useThemeMode();
 
   const keys = Object.keys(data[0] || {}).filter(d => d !== 'label');
 
@@ -70,7 +70,7 @@ export const HorizontalBarChart = ({
   }, [data]);
 
   const option = useMemo(() => {
-    const themeColor = themeContext?.mode === 'light' ? 'black' : 'white';
+    const themeColor = themeMode === 'light' ? 'black' : 'white';
 
     return {
       color: colorRange,
@@ -136,7 +136,7 @@ export const HorizontalBarChart = ({
       legend: { show: true },
       series: seriesData,
     };
-  }, [colorRange, themeContext, seriesData, yLabels]);
+  }, [colorRange, themeMode, seriesData, yLabels]);
 
   if (!keys.length) return null;
 

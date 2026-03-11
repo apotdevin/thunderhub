@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { X } from 'lucide-react';
+import { X, ChevronRight, Loader2 } from 'lucide-react';
 import { useVerifyBackupsLazyQuery } from '../../../graphql/queries/__generated__/verifyBackups.generated';
 import { getErrorContent } from '../../../utils/error';
 import {
@@ -8,9 +8,8 @@ import {
   DarkSubTitle,
   SubCard,
 } from '../../../components/generic/Styled';
-import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { Input } from '../../../components/input';
-import { NoWrap } from '../Tools.styled';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export const VerifyBackups = () => {
   const [backupString, setBackupString] = useState<string>('');
@@ -32,28 +31,28 @@ export const VerifyBackups = () => {
   const renderInput = () => (
     <SubCard>
       <SingleLine>
-        <NoWrap>
+        <div className="mr-4 whitespace-nowrap">
           <DarkSubTitle>Backup String:</DarkSubTitle>
-        </NoWrap>
+        </div>
         <Input
           placeholder="Content from file"
-          withMargin={'8px 0 0'}
+          style={{ margin: '8px 0 0' }}
           onChange={e => setBackupString(e.target.value)}
         />
       </SingleLine>
-      <ColorButton
-        fullWidth={true}
-        withMargin={'8px 0 4px'}
-        disabled={backupString === ''}
-        loading={loading}
+      <Button
+        variant="outline"
+        className="w-full"
+        style={{ margin: '8px 0 4px' }}
+        disabled={backupString === '' || loading}
         onClick={() =>
           verifyBackup({
             variables: { backup: backupString },
           })
         }
       >
-        Verify
-      </ColorButton>
+        {loading ? <Loader2 className="animate-spin" size={16} /> : <>Verify</>}
+      </Button>
     </SubCard>
   );
 
@@ -61,14 +60,18 @@ export const VerifyBackups = () => {
     <>
       <SingleLine>
         <DarkSubTitle>Verify Channels Backup</DarkSubTitle>
-        <ColorButton
-          withMargin={'4px 0'}
+        <Button
+          variant="outline"
+          style={{ margin: '4px 0' }}
           disabled={loading}
-          arrow={!isPasting}
           onClick={() => setIsPasting(prev => !prev)}
         >
-          {isPasting ? <X size={18} /> : 'Verify'}
-        </ColorButton>
+          {isPasting ? (
+            <X size={18} />
+          ) : (
+            <>Verify {!isPasting && <ChevronRight size={18} />}</>
+          )}
+        </Button>
       </SingleLine>
       {isPasting && renderInput()}
     </>

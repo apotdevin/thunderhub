@@ -1,37 +1,27 @@
 import { useState } from 'react';
 import { SmallSelectWithValue } from '../../../../components/select';
-import styled from 'styled-components';
 import {
   CardWithTitle,
   SubTitle,
   Card,
   CardTitle,
 } from '../../../../components/generic/Styled';
-import { mediaWidths } from '../../../../styles/Themes';
 import { ForwardChannelsReport } from './ForwardChannelReport';
 import { ForwardResume } from './ForwardResume';
 import { ForwardsGraph } from './ForwardsGraph';
 
-export const CardContent = styled.div`
-  height: 100%;
-  display: flex;
-  flex-flow: column;
-  padding: 0 16px;
-
-  @media (${mediaWidths.mobile}) {
-    padding: 0 8px;
-  }
-`;
-
-const S = {
-  row: styled.div`
-    width: 100%;
-    display: grid;
-    column-gap: 16px;
-    grid-template-columns: 1fr 70px 90px;
-    margin-bottom: 8px;
-  `,
-};
+export const CardContent = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={`h-full flex flex-col px-2 md:px-4 ${className ?? ''}`}
+    {...props}
+  >
+    {children}
+  </div>
+);
 
 export const options = [
   { label: '1D', value: 1 },
@@ -53,9 +43,10 @@ export const ForwardBox = () => {
 
   return (
     <CardWithTitle>
-      <CardTitle>
-        <S.row>
-          <SubTitle>Forward Report</SubTitle>
+      <CardTitle className="flex flex-col md:flex-row mb-2">
+        <SubTitle>Forward Report</SubTitle>
+
+        <div className="flex gap-2">
           <SmallSelectWithValue
             callback={e => setDays((e[0] || options[1]) as any)}
             options={options}
@@ -68,8 +59,9 @@ export const ForwardBox = () => {
             value={type}
             isClearable={false}
           />
-        </S.row>
+        </div>
       </CardTitle>
+
       <Card mobileCardPadding={'8px'}>
         <ForwardResume type={type} />
       </Card>

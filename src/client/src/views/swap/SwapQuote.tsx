@@ -6,26 +6,8 @@ import {
 import { Card, Separation, SubTitle } from '../../components/generic/Styled';
 import { Price } from '../../components/price/Price';
 import { chartColors } from '../../styles/Themes';
-import styled from 'styled-components';
 import { Pay } from '../home/account/pay/Pay';
 import { useSwapsDispatch, useSwapsState } from './SwapContext';
-
-const S = {
-  info: styled.div`
-    border: 1px solid ${chartColors.green};
-    background-color: rgba(10, 255, 59, 0.05);
-    padding: 8px 16px;
-    border-radius: 8px;
-  `,
-  warning: styled.div`
-    border: 1px solid ${chartColors.darkyellow};
-    background-color: rgba(255, 193, 10, 0.1);
-    padding: 4px 8px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 14px;
-  `,
-};
 
 export const SwapQuote = () => {
   const { swaps, open } = useSwapsState();
@@ -64,7 +46,13 @@ export const SwapQuote = () => {
       )}
       {renderLine('Description', decodedInvoice.description)}
       <Separation />
-      <S.info>
+      <div
+        className="rounded-lg p-2 px-4"
+        style={{
+          border: `1px solid ${chartColors.green}`,
+          backgroundColor: 'rgba(10, 255, 59, 0.05)',
+        }}
+      >
         <SubTitle>Transaction</SubTitle>
         {renderLine('You send', <Price amount={decodedInvoice.tokens} />)}
         {renderLine(
@@ -77,16 +65,22 @@ export const SwapQuote = () => {
           <Price amount={onchainAmount} />
         )}
         {renderLine('At BTC Address', getAddressLink(receivingAddress))}
-      </S.info>
+      </div>
       <Separation />
       <SubTitle>Pay Swap Invoice</SubTitle>
       <Separation />
       <Pay predefinedRequest={invoice} payCallback={handlePaid} />
       <Separation />
-      <S.warning>
+      <div
+        className="border rounded-lg p-1 px-2 text-center text-sm"
+        style={{
+          borderColor: chartColors.darkyellow,
+          backgroundColor: 'rgba(255, 193, 10, 0.1)',
+        }}
+      >
         It is ok to close this modal after 5 seconds of having paid even if it
         still shows as loading.
-      </S.warning>
+      </div>
     </>
   );
 };

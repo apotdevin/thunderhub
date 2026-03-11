@@ -11,7 +11,7 @@ import { sortBy } from 'lodash';
 import { renderLine } from '../../components/generic/helpers';
 import { ChannelHealth } from '../../graphql/types';
 import { useStatsDispatch } from './context';
-import { ScoreLine, Clickable, WarningText } from './styles';
+import { chartColors } from '../../styles/Themes';
 import { StatWrapper } from './Wrapper';
 import { getIcon, getVolumeMessage, getProgressColor } from './helpers';
 
@@ -32,9 +32,12 @@ const VolumeStatCard = ({
   const renderContent = () => (
     <>
       <Separation />
-      <WarningText warningColor={getProgressColor(channel.score)}>
+      <DarkSubTitle
+        className="w-full text-center"
+        style={{ color: getProgressColor(channel.score) || chartColors.orange }}
+      >
         {message}
-      </WarningText>
+      </DarkSubTitle>
       {renderLine('Flow (sats/block):', channel.volumeNormalized)}
       {renderLine(
         'Average Flow (sats/block):',
@@ -45,16 +48,19 @@ const VolumeStatCard = ({
   return (
     <Fragment key={channel.id || ''}>
       <SubCard>
-        <Clickable onClick={() => openSet(open ? 0 : index)}>
+        <div
+          className="cursor-pointer"
+          onClick={() => openSet(open ? 0 : index)}
+        >
           <ResponsiveLine>
             <SubTitle>{channel?.partner?.node?.alias}</SubTitle>
-            <ScoreLine>
+            <div className="flex justify-between mt-2 w-full md:mt-0 md:w-40">
               <DarkSubTitle>{'Score'}</DarkSubTitle>
               {channel.score}
               {getIcon(channel.score)}
-            </ScoreLine>
+            </div>
           </ResponsiveLine>
-        </Clickable>
+        </div>
         {open && renderContent()}
       </SubCard>
     </Fragment>

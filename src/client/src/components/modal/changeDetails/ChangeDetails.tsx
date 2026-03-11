@@ -2,9 +2,9 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useUpdateFeesMutation } from '@/graphql/mutations/__generated__/updateFees.generated';
 import { getErrorContent } from '@/utils/error';
-import { InputWithDeco } from '@/components/input/InputWithDeco';
-import { ColorButton } from '@/components/buttons/colorButton/ColorButton';
-import { Input } from '@/components/input';
+import { Input } from '@/components/ui/input';
+import { Price } from '@/components/price/Price';
+import { Button } from '@/components/ui/button';
 import { SingleLine, SubTitle, Sub4Title } from '../../generic/Styled';
 
 type ChangeDetailsType = {
@@ -70,66 +70,88 @@ export const ChangeDetails = ({
         <SubTitle>{'Update Channel Policy'}</SubTitle>
         <Sub4Title>{`${name} [${id}]`}</Sub4Title>
       </SingleLine>
-      <InputWithDeco
-        title={'Base Fee'}
-        customAmount={`${newBaseFee} sats`}
-        noInput={true}
-      >
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Base Fee</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            {`${newBaseFee} sats`}
+          </span>
+        </div>
         <Input
-          maxWidth={'160px'}
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '160px' }}
           placeholder={'sats'}
-          withMargin={'0 0 0 8px'}
-          mobileMargin={'0'}
           type={'number'}
           onChange={e => setBaseFee(Number(e.target.value))}
-          value={newBaseFee || undefined}
+          value={newBaseFee || ''}
         />
-      </InputWithDeco>
-      <InputWithDeco
-        title={'Fee Rate'}
-        customAmount={`${feeRatePercent}%`}
-        noInput={true}
-      >
+      </div>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Fee Rate</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            {`${feeRatePercent}%`}
+          </span>
+        </div>
         <Input
-          maxWidth={'160px'}
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '160px' }}
           placeholder={'ppm'}
-          withMargin={'0 0 0 8px'}
-          mobileMargin={'0'}
           type={'number'}
           onChange={e => setFeeRate(Number(e.target.value))}
-          value={newFeeRate || undefined}
+          value={newFeeRate || ''}
         />
-      </InputWithDeco>
-      <InputWithDeco
-        title={'CLTV Delta'}
-        value={newCLTV}
-        placeholder={'cltv delta'}
-        customAmount={newCLTV?.toString() || ''}
-        inputType={'number'}
-        inputCallback={value => setCLTV(Number(value))}
-        inputMaxWidth={'160px'}
-      />
-      <InputWithDeco
-        title={'Max HTLC'}
-        value={newMax}
-        placeholder={'sats'}
-        amount={newMax}
-        override={'sat'}
-        inputType={'number'}
-        inputCallback={value => setMax(Number(value))}
-        inputMaxWidth={'160px'}
-      />
-      <InputWithDeco
-        title={'Min HTLC'}
-        value={newMin}
-        placeholder={'sats'}
-        amount={newMin}
-        override={'sat'}
-        inputType={'number'}
-        inputCallback={value => setMin(Number(value))}
-        inputMaxWidth={'160px'}
-      />
-      <ColorButton
+      </div>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>CLTV Delta</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            {newCLTV?.toString() || ''}
+          </span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '160px' }}
+          placeholder={'cltv delta'}
+          type={'number'}
+          value={newCLTV != null && newCLTV > 0 ? newCLTV : ''}
+          onChange={e => setCLTV(Number(e.target.value))}
+        />
+      </div>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Max HTLC</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            <Price amount={newMax} override={'sat'} />
+          </span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '160px' }}
+          placeholder={'sats'}
+          type={'number'}
+          value={newMax && newMax > 0 ? newMax : ''}
+          onChange={e => setMax(Number(e.target.value))}
+        />
+      </div>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Min HTLC</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            <Price amount={newMin} override={'sat'} />
+          </span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '160px' }}
+          placeholder={'sats'}
+          type={'number'}
+          value={newMin && newMin > 0 ? newMin : ''}
+          onChange={e => setMin(Number(e.target.value))}
+        />
+      </div>
+      <Button
+        variant="outline"
         onClick={() =>
           updateFees({
             variables: {
@@ -152,11 +174,11 @@ export const ChangeDetails = ({
           })
         }
         disabled={!withChanges}
-        fullWidth={true}
-        withMargin={'16px 0 0'}
+        className="w-full"
+        style={{ margin: '16px 0 0' }}
       >
         Update Channel Details
-      </ColorButton>
+      </Button>
     </>
   );
 };

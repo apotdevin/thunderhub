@@ -1,7 +1,6 @@
 import { FC, ReactNode, useState } from 'react';
 import { Card, SubTitle } from '../../components/generic/Styled';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { StatHeaderLine } from './styles';
 
 type StatWrapperProps = {
   title: string;
@@ -13,10 +12,14 @@ export const StatWrapper: FC<StatWrapperProps> = ({ children, title }) => {
 
   return (
     <Card>
-      <StatHeaderLine isOpen={open} onClick={() => openSet(p => !p)}>
+      <div
+        className="cursor-pointer flex py-2 pb-4 justify-between items-center"
+        style={{ marginBottom: open ? 0 : '-8px' }}
+        onClick={() => openSet(p => !p)}
+      >
         <SubTitle>{title}</SubTitle>
         {open ? <ChevronUp /> : <ChevronDown />}
-      </StatHeaderLine>
+      </div>
       {open && children}
     </Card>
   );

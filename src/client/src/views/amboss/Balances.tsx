@@ -1,5 +1,6 @@
 import toast from 'react-hot-toast';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import {
   Card,
   CardWithTitle,
@@ -29,23 +30,28 @@ export const Balances = () => {
     private_channels_push_enabled = false,
   } = data?.getConfigState || {};
 
+  const isLoading = loading || toggleLoading;
+
   return (
     <CardWithTitle>
       <SubTitle>Balances</SubTitle>
       <Card>
         <SingleLine>
           <SubTitle>Push Onchain</SubTitle>
-          <ColorButton
-            color="#ff0080"
-            loading={loading || toggleLoading}
-            disabled={loading || toggleLoading}
-            withMargin="0 0 0 16px"
+          <Button
+            variant="outline"
+            disabled={isLoading}
+            style={{ margin: '0 0 0 16px' }}
             onClick={() =>
               toggle({ variables: { field: ConfigFields.OnchainPush } })
             }
           >
-            {onchain_push_enabled ? 'Disable' : 'Enable'}
-          </ColorButton>
+            {isLoading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              <>{onchain_push_enabled ? 'Disable' : 'Enable'}</>
+            )}
+          </Button>
         </SingleLine>
         <Text>
           Push your onchain balance to Amboss to get historical reports.
@@ -53,17 +59,20 @@ export const Balances = () => {
         <Separation />
         <SingleLine>
           <SubTitle>Push Public Channels</SubTitle>
-          <ColorButton
-            color="#ff0080"
-            loading={loading || toggleLoading}
-            disabled={loading || toggleLoading}
-            withMargin="0 0 0 16px"
+          <Button
+            variant="outline"
+            disabled={isLoading}
+            style={{ margin: '0 0 0 16px' }}
             onClick={() =>
               toggle({ variables: { field: ConfigFields.ChannelsPush } })
             }
           >
-            {channels_push_enabled ? 'Disable' : 'Enable'}
-          </ColorButton>
+            {isLoading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              <>{channels_push_enabled ? 'Disable' : 'Enable'}</>
+            )}
+          </Button>
         </SingleLine>
         <Text>
           Push your public channel balances to get historical reports.
@@ -71,17 +80,20 @@ export const Balances = () => {
         <Separation />
         <SingleLine>
           <SubTitle>Push Private Channels</SubTitle>
-          <ColorButton
-            color="#ff0080"
-            loading={loading || toggleLoading}
-            disabled={loading || toggleLoading}
-            withMargin="0 0 0 16px"
+          <Button
+            variant="outline"
+            disabled={isLoading}
+            style={{ margin: '0 0 0 16px' }}
             onClick={() =>
               toggle({ variables: { field: ConfigFields.PrivateChannelsPush } })
             }
           >
-            {private_channels_push_enabled ? 'Disable' : 'Enable'}
-          </ColorButton>
+            {isLoading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              <>{private_channels_push_enabled ? 'Disable' : 'Enable'}</>
+            )}
+          </Button>
         </SingleLine>
         <Text>
           Push your private channel balances to get historical reports.

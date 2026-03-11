@@ -5,14 +5,7 @@ import { useGetClosedChannelsQuery } from '../../../../graphql/queries/__generat
 import { themeColors } from '../../../../styles/Themes';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { Info } from 'lucide-react';
-import styled from 'styled-components';
 import { getAliasFromClosedChannels } from './helpers';
-
-const S = {
-  icon: styled.span`
-    margin-left: 4px;
-  `,
-};
 
 export const ChannelAlias: FC<{ id: string }> = ({ id }) => {
   const { data: closedChannelData } = useGetClosedChannelsQuery({
@@ -54,9 +47,9 @@ export const ChannelAlias: FC<{ id: string }> = ({ id }) => {
       return (
         <>
           {closedAlias}
-          <S.icon>
+          <span className="ml-1">
             <Info size={16} data-tip data-for={'channel_info'} />
-          </S.icon>
+          </span>
           <ReactTooltip id={'channel_info'} place={'right'}>
             This channel has been closed.
           </ReactTooltip>

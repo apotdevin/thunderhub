@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import { BarChart as EBarChart } from 'echarts/charts';
 import {
   GraphicComponent,
@@ -11,7 +11,7 @@ import {
 import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
-import { ThemeContext } from 'styled-components';
+import { useThemeMode } from '../../hooks/useThemeMode';
 import { timeFormat, timeParse } from 'd3-time-format';
 import { formatSats } from '../../utils/helpers';
 import { COMMON_CHART_STYLES } from './common';
@@ -40,7 +40,7 @@ export const BarChart = ({
   title,
   dataKey,
 }: BarChartProps) => {
-  const themeContext = useContext(ThemeContext);
+  const themeMode = useThemeMode();
 
   const seriesData = useMemo(() => {
     if (data.length === 0) return { dates: [], series: [] };
@@ -60,7 +60,7 @@ export const BarChart = ({
   }, [data, title]);
 
   const option = useMemo(() => {
-    const fontColor = themeContext?.mode === 'light' ? 'black' : 'white';
+    const fontColor = themeMode === 'light' ? 'black' : 'white';
 
     return {
       color: colorRange,
@@ -118,7 +118,7 @@ export const BarChart = ({
       },
       series: seriesData.series,
     };
-  }, [colorRange, themeContext, seriesData, title]);
+  }, [colorRange, themeMode, seriesData, title]);
 
   return (
     <ReactEChartsCore
