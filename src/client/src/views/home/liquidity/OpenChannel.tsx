@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-import { ChevronRight, Settings, X } from 'lucide-react';
+import { ChevronRight, Settings, X, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useOpenChannelMutation } from '../../../graphql/mutations/__generated__/openChannel.generated';
-import { InputWithDeco } from '../../../components/input/InputWithDeco';
-import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
+import { Input } from '@/components/ui/input';
+import { Price } from '../../../components/price/Price';
+import { Button } from '@/components/ui/button';
 import { useBitcoinFees } from '../../../hooks/UseBitcoinFees';
 import { useConfigState } from '../../../context/ConfigContext';
 import { PeerSelect } from '../../../components/select/specific/PeerSelect';
-import styled from 'styled-components';
 import {
   Card,
   DarkSubTitle,
@@ -16,38 +16,11 @@ import {
   SubCard,
 } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
-import { Input } from '../../../components/input';
-import {
-  SingleButton,
-  MultiButton,
-} from '../../../components/buttons/multiButton/MultiButton';
+import { cn } from '@/lib/utils';
 
 type OpenChannelProps = {
   closeCbk: () => void;
 };
-
-const LineTitle = styled.div`
-  white-space: nowrap;
-  font-size: 14px;
-`;
-
-const RecommendedBanner = styled.div`
-  text-align: center;
-  font-size: 14px;
-  background: oklch(0.982 0.018 155.826);
-  color: oklch(0.627 0.194 149.214);
-  padding: 8px;
-  border-radius: 8px;
-`;
-
-const NotRecommendedBanner = styled.div`
-  text-align: center;
-  font-size: 14px;
-  background: oklch(0.987 0.022 95.277);
-  color: oklch(0.666 0.179 58.318);
-  padding: 8px;
-  border-radius: 8px;
-`;
 
 export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
   const [useRecommended, setUseRecommended] = useState(true);
@@ -102,19 +75,26 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
     onClick: () => void,
     text: string,
     selected: boolean,
-    buttonColor?: string
+    variant?: 'default' | 'destructive'
   ) => (
-    <SingleButton selected={selected} onClick={onClick} color={buttonColor}>
+    <Button
+      variant={selected ? variant || 'default' : 'ghost'}
+      onClick={() => onClick()}
+      className={cn('grow', !selected && 'text-foreground')}
+    >
       {text}
-    </SingleButton>
+    </Button>
   );
 
   const renderAdvanced = () => {
     if (!showAdvanced) return null;
     return (
       <SubCard withMargin={'16px 0 0'}>
-        <InputWithDeco title={'Type'} noInput={true}>
-          <MultiButton>
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>Type</span>
+          </div>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {renderButton(
               () => setPrivateChannel(true),
               'Private',
@@ -125,10 +105,13 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
               'Public',
               !privateChannel
             )}
-          </MultiButton>
-        </InputWithDeco>
-        <InputWithDeco title={'Push Tokens to Partner'} noInput={true}>
-          <MultiButton>
+          </div>
+        </div>
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>Push Tokens to Partner</span>
+          </div>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {renderButton(
               () => setPushType('none'),
               'None',
@@ -138,30 +121,42 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
               () => setPushType('half'),
               'Half',
               pushType === 'half',
-              'red'
+              'destructive'
             )}
             {renderButton(
               () => setPushType('custom'),
               'Custom',
               pushType === 'custom',
-              'red'
+              'destructive'
             )}
-          </MultiButton>
-        </InputWithDeco>
+          </div>
+        </div>
         {pushType === 'custom' && (
-          <InputWithDeco
-            title={'Amount'}
-            value={Math.min(pushTokens, size * 0.9)}
-            placeholder={`Sats (Max: ${size * 0.9} sats)`}
-            amount={Math.min(pushTokens, size * 0.9)}
-            inputType={'number'}
-            inputCallback={value => setPushTokens(Number(value))}
-          />
+          <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+            <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+              <span>Amount</span>
+              <span className="text-muted-foreground mx-2 ml-4">
+                <Price amount={Math.min(pushTokens, size * 0.9)} />
+              </span>
+            </div>
+            <Input
+              className="ml-0 md:ml-2"
+              style={{ maxWidth: '500px' }}
+              placeholder={`Sats (Max: ${size * 0.9} sats)`}
+              type={'number'}
+              value={
+                Math.min(pushTokens, size * 0.9) > 0
+                  ? Math.min(pushTokens, size * 0.9)
+                  : ''
+              }
+              onChange={e => setPushTokens(Number(e.target.value))}
+            />
+          </div>
         )}
         {pushType !== 'none' && (
-          <NotRecommendedBanner>
+          <div className="text-center text-sm bg-[oklch(0.987_0.022_95.277)] text-[oklch(0.666_0.179_58.318)] p-2 rounded-lg">
             You will lose these pushed tokens.
-          </NotRecommendedBanner>
+          </div>
         )}
       </SubCard>
     );
@@ -169,17 +164,20 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
 
   return (
     <Card>
-      <InputWithDeco title={'Recommended Peer'} noInput={true}>
-        <MultiButton>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Recommended Peer</span>
+        </div>
+        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
           {renderButton(() => setUseRecommended(true), 'Yes', useRecommended)}
           {renderButton(() => setUseRecommended(false), 'No', !useRecommended)}
-        </MultiButton>
-      </InputWithDeco>
+        </div>
+      </div>
 
       <Separation />
 
       {useRecommended ? (
-        <RecommendedBanner>
+        <div className="text-center text-sm bg-[oklch(0.982_0.018_155.826)] text-[oklch(0.627_0.194_149.214)] p-2 rounded-lg">
           Connect to the{' '}
           <a
             style={{ color: 'inherit' }}
@@ -189,28 +187,37 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
             Amboss Rails cluster
           </a>{' '}
           - optimized for fast, reliable, high-throughput payments.
-        </RecommendedBanner>
+        </div>
       ) : (
         <>
-          <NotRecommendedBanner>
-            ⚠️ Performance may vary. For the best experience, connect to the
-            Amboss Rails cluster.
-          </NotRecommendedBanner>
+          <div className="text-center text-sm bg-[oklch(0.987_0.022_95.277)] text-[oklch(0.666_0.179_58.318)] p-2 rounded-lg">
+            Performance may vary. For the best experience, connect to the Amboss
+            Rails cluster.
+          </div>
 
-          <InputWithDeco title={'Is New Peer'} noInput={true}>
-            <MultiButton>
+          <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+            <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+              <span>Is New Peer</span>
+            </div>
+            <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
               {renderButton(() => setIsNewPeer(true), 'Yes', isNewPeer)}
               {renderButton(() => setIsNewPeer(false), 'No', !isNewPeer)}
-            </MultiButton>
-          </InputWithDeco>
+            </div>
+          </div>
 
           {isNewPeer ? (
-            <InputWithDeco
-              title={'New Node'}
-              value={publicKey}
-              placeholder={'PublicKey@Socket'}
-              inputCallback={value => setPublicKey(value)}
-            />
+            <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+              <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+                <span>New Node</span>
+              </div>
+              <Input
+                className="ml-0 md:ml-2"
+                style={{ maxWidth: '500px' }}
+                value={publicKey}
+                placeholder={'PublicKey@Socket'}
+                onChange={e => setPublicKey(e.target.value)}
+              />
+            </div>
           ) : (
             <PeerSelect
               title={'Node'}
@@ -222,8 +229,11 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
 
       <Separation />
 
-      <InputWithDeco title={'Max Size'} noInput={true}>
-        <MultiButton>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Max Size</span>
+        </div>
+        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
           {renderButton(
             () => {
               setIsMaxFunding(true);
@@ -233,58 +243,89 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
             isMaxFunding
           )}
           {renderButton(() => setIsMaxFunding(false), 'No', !isMaxFunding)}
-        </MultiButton>
-      </InputWithDeco>
+        </div>
+      </div>
 
       {!isMaxFunding ? (
-        <InputWithDeco
-          title={'Channel Size'}
-          value={size}
-          placeholder={'Sats'}
-          amount={size}
-          inputType={'number'}
-          inputCallback={value => setSize(Number(value))}
-        />
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>Channel Size</span>
+            <span className="text-muted-foreground mx-2 ml-4">
+              <Price amount={size} />
+            </span>
+          </div>
+          <Input
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '500px' }}
+            placeholder={'Sats'}
+            type={'number'}
+            value={size && size > 0 ? size : ''}
+            onChange={e => setSize(Number(e.target.value))}
+          />
+        </div>
       ) : null}
 
       <Separation />
 
-      <InputWithDeco
-        title={'Fee Rate'}
-        value={feeRate}
-        placeholder={'ppm'}
-        amount={feeRate}
-        inputType={'number'}
-        inputCallback={value => {
-          if (value == null) {
-            setFeeRate(null);
-          } else {
-            setFeeRate(Number(value));
-          }
-        }}
-      />
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Fee Rate</span>
+          {feeRate != null && (
+            <span className="text-muted-foreground mx-2 ml-4">
+              <Price amount={feeRate} />
+            </span>
+          )}
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '500px' }}
+          placeholder={'ppm'}
+          type={'number'}
+          value={feeRate != null && feeRate > 0 ? feeRate : ''}
+          onChange={e => {
+            if (e.target.value === '') {
+              setFeeRate(null);
+            } else {
+              setFeeRate(Number(e.target.value));
+            }
+          }}
+        />
+      </div>
 
-      <InputWithDeco
-        title={'Base Fee'}
-        value={baseFee}
-        placeholder={'sats'}
-        amount={baseFee}
-        inputType={'number'}
-        inputCallback={value => {
-          if (value == null) {
-            setBaseFee(null);
-          } else {
-            setBaseFee(Number(value));
-          }
-        }}
-      />
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Base Fee</span>
+          {baseFee != null && (
+            <span className="text-muted-foreground mx-2 ml-4">
+              <Price amount={baseFee} />
+            </span>
+          )}
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '500px' }}
+          placeholder={'sats'}
+          type={'number'}
+          value={baseFee != null && baseFee > 0 ? baseFee : ''}
+          onChange={e => {
+            if (e.target.value === '') {
+              setBaseFee(null);
+            } else {
+              setBaseFee(Number(e.target.value));
+            }
+          }}
+        />
+      </div>
 
       <Separation />
 
       {fetchFees && !dontShow && (
         <>
-          <InputWithDeco title={'Fee'} noInput={true}>
-            <MultiButton>
+          <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+            <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+              <span>Fee</span>
+            </div>
+            <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
               {renderButton(
                 () => {
                   setType('none');
@@ -301,26 +342,33 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
                 'Fee (sats/vByte)',
                 type === 'fee'
               )}
-            </MultiButton>
-          </InputWithDeco>
+            </div>
+          </div>
           <SingleLine>
-            <LineTitle>Minimum</LineTitle>
+            <div className="whitespace-nowrap text-sm">Minimum</div>
             <DarkSubTitle>{`${minimum} sat/vByte`}</DarkSubTitle>
           </SingleLine>
         </>
       )}
 
-      <InputWithDeco title={'Fee Amount'} amount={fee * 223} noInput={true}>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Fee Amount</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            <Price amount={fee * 223} />
+          </span>
+        </div>
         {type !== 'none' && (
           <Input
-            maxWidth={'500px'}
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '500px' }}
             placeholder={'sats/vByte'}
             type={'number'}
             onChange={e => setFee(Number(e.target.value))}
           />
         )}
         {type === 'none' && (
-          <MultiButton>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {renderButton(
               () => setFee(fast),
               `Fastest (${fast})`,
@@ -333,21 +381,21 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
                 fee === halfHour
               )}
             {renderButton(() => setFee(hour), `Hour (${hour})`, fee === hour)}
-          </MultiButton>
+          </div>
         )}
-      </InputWithDeco>
+      </div>
       <Separation />
       <SingleLine>
-        <LineTitle>Advanced</LineTitle>
-        <ColorButton onClick={() => setShowAdvanced(s => !s)}>
+        <div className="whitespace-nowrap text-sm">Advanced</div>
+        <Button variant="outline" onClick={() => setShowAdvanced(s => !s)}>
           {showAdvanced ? <X size={16} /> : <Settings size={16} />}
-        </ColorButton>
+        </Button>
       </SingleLine>
       {renderAdvanced()}
-      <ColorButton
-        withMargin={'32px 0 0'}
-        loading={loading}
-        fullWidth={true}
+      <Button
+        variant="outline"
+        style={{ margin: '32px 0 0' }}
+        className="w-full"
         disabled={!canOpen || loading}
         onClick={() =>
           openChannel({
@@ -368,9 +416,14 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
           })
         }
       >
-        Open Channel
-        <ChevronRight size={18} />
-      </ColorButton>
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>
+            Open Channel <ChevronRight size={18} />
+          </>
+        )}
+      </Button>
     </Card>
   );
 };

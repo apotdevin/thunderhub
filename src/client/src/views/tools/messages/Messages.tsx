@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import {
   CardWithTitle,
   SubTitle,
@@ -7,10 +6,15 @@ import {
 import { SignMessageCard } from './SignMessage';
 import { VerifyMessage } from './VerifyMessage';
 
-export const NoWrap = styled.div`
-  margin-right: 16px;
-  white-space: nowrap;
-`;
+export const NoWrap = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`mr-4 whitespace-nowrap ${className ?? ''}`} {...props}>
+    {children}
+  </div>
+);
 
 export const MessagesView = () => {
   return (

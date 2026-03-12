@@ -7,31 +7,7 @@ import {
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { useGetLiquidReportQuery } from '../../../../graphql/queries/__generated__/getChannelReport.generated';
 import { chartColors } from '../../../../styles/Themes';
-import styled from 'styled-components';
-import { WarningText } from '../../../../views/stats/styles';
 import { HorizontalBarChart } from '../../../../components/chart/HorizontalBarChart';
-
-const S = {
-  row: styled.div`
-    display: grid;
-    grid-template-columns: 1fr 60px 90px;
-  `,
-  wrapper: styled.div`
-    width: 100%;
-    height: 240px;
-  `,
-  contentWrapper: styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `,
-  title: styled.h4`
-    font-weight: 900;
-    margin: 8px 0;
-  `,
-};
 
 export const LiquidityGraph = () => {
   const { data, loading } = useGetLiquidReportQuery({ errorPolicy: 'ignore' });
@@ -41,11 +17,11 @@ export const LiquidityGraph = () => {
       <CardWithTitle>
         <SubTitle>Liquidity Report</SubTitle>
         <Card mobileCardPadding={'8px 0'}>
-          <S.wrapper>
-            <S.contentWrapper>
+          <div className="w-full h-[240px]">
+            <div className="flex h-full w-full items-center justify-center">
               <LoadingCard noCard={true} />
-            </S.contentWrapper>
-          </S.wrapper>
+            </div>
+          </div>
         </Card>
       </CardWithTitle>
     );
@@ -56,9 +32,11 @@ export const LiquidityGraph = () => {
       <CardWithTitle>
         <SubTitle>Liquidity Report</SubTitle>
         <Card mobileCardPadding={'8px 0'}>
-          <S.wrapper>
-            <S.contentWrapper>Unable to get liquidity data.</S.contentWrapper>
-          </S.wrapper>
+          <div className="w-full h-[240px]">
+            <div className="flex h-full w-full items-center justify-center">
+              Unable to get liquidity data.
+            </div>
+          </div>
         </Card>
       </CardWithTitle>
     );
@@ -94,36 +72,39 @@ export const LiquidityGraph = () => {
       <CardWithTitle>
         <SubTitle>Liquidity Report</SubTitle>
         <Card mobileCardPadding={'8px 0'}>
-          <S.wrapper>
+          <div className="w-full h-[240px]">
             <HorizontalBarChart
               dataKey="Value"
               data={liquidity}
               colorRange={[chartColors.green]}
             />
-          </S.wrapper>
+          </div>
         </Card>
       </CardWithTitle>
       <CardWithTitle>
         <SubTitle>Pending HTLCs</SubTitle>
         <Card mobileCardPadding={'8px 0'}>
           {(totalPendingHtlc || 0) >= 300 && (
-            <WarningText>
+            <DarkSubTitle
+              className="w-full text-center"
+              style={{ color: chartColors.orange }}
+            >
               You have a high amount of pending HTLCs. Be careful, a channel can
               hold a maximum of 483.
-            </WarningText>
+            </DarkSubTitle>
           )}
           {!totalPendingHtlc ? (
             <DarkSubTitle>
               None of your channels have pending HTLCs
             </DarkSubTitle>
           ) : (
-            <S.wrapper>
+            <div className="w-full h-[240px]">
               <HorizontalBarChart
                 dataKey="Value"
                 data={htlc}
                 colorRange={[chartColors.green]}
               />
-            </S.wrapper>
+            </div>
           )}
         </Card>
       </CardWithTitle>

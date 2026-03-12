@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ChevronRight, Loader2 } from 'lucide-react';
 import { Card } from '../../../../components/generic/Styled';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
 import Modal from '../../../../components/modal/ReactModal';
 import { useAuthLnUrlMutation } from '../../../../graphql/mutations/__generated__/lnUrl.generated';
 import { getErrorContent } from '../../../../utils/error';
@@ -61,22 +62,34 @@ export const LnUrlCard = () => {
   return (
     <>
       <Card>
-        <InputWithDeco
-          value={lnurl}
-          placeholder={'LnPay / LnWithdraw / LnChannel / LnAuth'}
-          title={'LNURL'}
-          inputCallback={value => setLnUrl(value)}
-          onEnter={() => handleDecode()}
-        />
-        <ColorButton
-          arrow={true}
-          fullWidth={true}
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>LNURL</span>
+          </div>
+          <Input
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '500px' }}
+            value={lnurl}
+            placeholder={'LnPay / LnWithdraw / LnChannel / LnAuth'}
+            onChange={e => setLnUrl(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleDecode()}
+          />
+        </div>
+        <Button
+          variant="outline"
+          className="w-full"
           disabled={!lnurl || loading}
-          withMargin={'16px 0 0'}
+          style={{ margin: '16px 0 0' }}
           onClick={() => handleDecode()}
         >
-          Confirm
-        </ColorButton>
+          {loading ? (
+            <Loader2 className="animate-spin" size={16} />
+          ) : (
+            <>
+              Confirm <ChevronRight size={18} />
+            </>
+          )}
+        </Button>
       </Card>
       <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
         <LnUrlModal url={url} type={type} />

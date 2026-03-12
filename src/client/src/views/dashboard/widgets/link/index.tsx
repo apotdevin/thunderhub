@@ -1,50 +1,50 @@
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
 import { Link } from '../../../../components/link/Link';
-import styled from 'styled-components';
-
-const S = {
-  wrapper: styled.div`
-    width: 100%;
-    overflow: hidden;
-  `,
-};
 
 export const DashSettingsLink = () => {
   return (
-    <S.wrapper>
+    <div className="w-full overflow-hidden">
       <Link href={'/settings/dashboard'}>
-        <ColorButton fullWidth={true}>Dash Settings</ColorButton>
+        <Button variant="outline" className="w-full">
+          Dash Settings
+        </Button>
       </Link>
-    </S.wrapper>
+    </div>
   );
 };
 
 export const ForwardsViewLink = () => {
   return (
-    <S.wrapper>
+    <div className="w-full overflow-hidden">
       <Link href={'/forwards'}>
-        <ColorButton fullWidth={true}>Forwards</ColorButton>
+        <Button variant="outline" className="w-full">
+          Forwards
+        </Button>
       </Link>
-    </S.wrapper>
+    </div>
   );
 };
 
 export const TransactionsViewLink = () => {
   return (
-    <S.wrapper>
+    <div className="w-full overflow-hidden">
       <Link href={'/transactions'}>
-        <ColorButton fullWidth={true}>Transactions</ColorButton>
+        <Button variant="outline" className="w-full">
+          Transactions
+        </Button>
       </Link>
-    </S.wrapper>
+    </div>
   );
 };
 
 export const ChannelViewLink = () => {
   return (
-    <S.wrapper>
+    <div className="w-full overflow-hidden">
       <Link href={'/channels'}>
-        <ColorButton fullWidth={true}>Channels</ColorButton>
+        <Button variant="outline" className="w-full">
+          Channels
+        </Button>
       </Link>
-    </S.wrapper>
+    </div>
   );
 };

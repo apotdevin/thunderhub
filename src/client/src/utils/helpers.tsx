@@ -1,12 +1,5 @@
 import { SatoshiSymbol } from '../components/satoshi/Satoshi';
-import { unSelectedNavButton } from '../styles/Themes';
-import styled from 'styled-components';
 import { Bitcoin } from 'lucide-react';
-
-const DarkUnit = styled.span`
-  font-size: 12px;
-  color: ${unSelectedNavButton};
-`;
 
 const fmt1 = (n: number) =>
   n.toLocaleString('en-US', { maximumFractionDigits: 1 });
@@ -83,9 +76,7 @@ export const getValue = ({
       return (
         <>
           {breakAmount}
-          <DarkUnit as={'span'} className="ml-1">
-            sats
-          </DarkUnit>
+          <span className="ml-1 text-xs text-gray-500">sats</span>
         </>
       );
     }
@@ -108,7 +99,7 @@ export const getValue = ({
   ) : (
     <>
       {fiatFormatted}
-      <DarkUnit className="ml-1">{symbol}</DarkUnit>
+      <span className="ml-1 text-xs text-gray-500">{symbol}</span>
     </>
   );
 };

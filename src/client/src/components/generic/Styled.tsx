@@ -1,259 +1,359 @@
-import styled, { css } from 'styled-components';
-import { ThemeSet } from 'styled-theming';
 import {
-  cardColor,
-  cardBorderColor,
-  subCardColor,
-  smallLinkColor,
-  unSelectedNavButton,
-  textColor,
-  chartLinkColor,
-  inverseTextColor,
-  separationColor,
-  mediaWidths,
-  colorButtonBackground,
-  colorButtonBorder,
-  hoverTextColor,
-  themeColors,
-} from '../../styles/Themes';
+  forwardRef,
+  HTMLAttributes,
+  AnchorHTMLAttributes,
+  ComponentProps,
+} from 'react';
+import { cn } from '../../lib/utils';
+import { Button } from '../ui/button';
 
-export const CardWithTitle = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`;
+// ─── Layout ──────────────────────────────────────────────
 
-export const CardTitle = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
+export const CardWithTitle = forwardRef<
+  HTMLDivElement,
+  HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn('flex flex-col w-full', className)} {...props} />
+));
 
-export interface CardProps {
+export const CardTitle = forwardRef<
+  HTMLDivElement,
+  HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn('flex justify-between', className)} {...props} />
+));
+
+export const SingleLine = forwardRef<
+  HTMLDivElement,
+  HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn('flex justify-between items-center', className)}
+    {...props}
+  />
+));
+
+export const RightAlign = forwardRef<
+  HTMLDivElement,
+  HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn('w-full flex justify-end items-center', className)}
+    {...props}
+  />
+));
+
+export const ColumnLine = forwardRef<
+  HTMLDivElement,
+  HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn('flex flex-col w-full md:w-auto', className)}
+    {...props}
+  />
+));
+
+interface ResponsiveLineProps extends HTMLAttributes<HTMLDivElement> {
+  withWrap?: boolean;
+}
+
+export const ResponsiveLine = forwardRef<HTMLDivElement, ResponsiveLineProps>(
+  ({ withWrap, className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        'flex flex-col justify-between items-center w-full md:flex-row',
+        withWrap && 'flex-wrap',
+        className
+      )}
+      {...props}
+    />
+  )
+);
+
+export const ResponsiveCol = forwardRef<
+  HTMLDivElement,
+  HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn('grow w-full md:w-auto', className)}
+    {...props}
+  />
+));
+
+export const ResponsiveSingle = forwardRef<
+  HTMLDivElement,
+  HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      'flex justify-between items-center grow min-w-[200px] w-full md:w-auto',
+      className
+    )}
+    {...props}
+  />
+));
+
+// ─── Card ────────────────────────────────────────────────
+
+export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   bottom?: string;
   cardPadding?: string;
   mobileCardPadding?: string;
   mobileNoBackground?: boolean;
 }
 
-export const Card = styled.div<CardProps>`
-  padding: ${({ cardPadding }) => cardPadding ?? '16px'};
-  background: ${cardColor};
-  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  border: 1px solid ${cardBorderColor};
-  margin-bottom: ${({ bottom }) => (bottom ? bottom : '25px')};
-  width: 100%;
+export const Card = forwardRef<HTMLDivElement, CardProps>(
+  (
+    {
+      bottom,
+      cardPadding,
+      mobileCardPadding,
+      mobileNoBackground,
+      className,
+      style,
+      ...props
+    },
+    ref
+  ) => (
+    <div
+      ref={ref}
+      className={cn(
+        'bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-[#f0f2f8] dark:border-[#20263d] w-full',
+        mobileNoBackground &&
+          'bg-transparent border-none shadow-none md:bg-white md:dark:bg-[#1a1f35] md:shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] md:border md:border-[#f0f2f8] md:dark:border-[#20263d]',
+        className
+      )}
+      style={{
+        padding: cardPadding ?? '16px',
+        marginBottom: bottom ?? '25px',
+        ...(mobileCardPadding
+          ? ({ '--mobile-padding': mobileCardPadding } as React.CSSProperties)
+          : {}),
+        ...style,
+      }}
+      {...props}
+    />
+  )
+);
 
-  @media (${mediaWidths.mobile}) {
-    ${({ mobileNoBackground }) =>
-      mobileNoBackground &&
-      css`
-        background: unset;
-        border: none;
-        box-shadow: none;
-      `}
-    ${({ cardPadding, mobileCardPadding }) =>
-      mobileCardPadding
-        ? css`
-            padding: ${mobileCardPadding};
-          `
-        : cardPadding
-          ? css`
-              padding: ${cardPadding};
-            `
-          : ''};
+// Inject a tiny style rule for mobile card padding override
+if (typeof document !== 'undefined') {
+  const id = 'card-mobile-padding';
+  if (!document.getElementById(id)) {
+    const style = document.createElement('style');
+    style.id = id;
+    style.textContent = `@media (max-width:767px){[style*="--mobile-padding"]{padding:var(--mobile-padding)!important}}`;
+    document.head.appendChild(style);
   }
-`;
-
-interface SeparationProps {
-  height?: number;
-  lineColor?: string | ThemeSet;
-  withMargin?: string;
 }
 
-export const Separation = styled.div<SeparationProps>`
-  height: ${({ height }) => (height ? height : '1')}px;
-  background-color: ${({ lineColor }) => lineColor ?? separationColor};
-  width: 100%;
-  margin: ${({ withMargin }) => withMargin || '16px 0'};
-`;
+// ─── SubCard ─────────────────────────────────────────────
 
-interface SubCardProps {
-  subColor?: string | null;
+interface SubCardProps extends HTMLAttributes<HTMLDivElement> {
   padding?: string;
   withMargin?: string;
-  noCard?: boolean;
   noBackground?: boolean;
 }
 
-export const SubCard = styled.div<SubCardProps>`
-  margin: ${({ withMargin }) => (withMargin ? withMargin : '0 0 10px 0')};
-  padding: ${({ padding }) => (padding ? padding : '16px')};
-  ${({ noBackground }) =>
-    !noBackground &&
-    css`
-      background: ${subCardColor};
-      border: 1px solid ${cardBorderColor};
-    `}
-  border-left: ${({ color }) => (color ? `2px solid ${color}` : '')};
+export const SubCard = forwardRef<HTMLDivElement, SubCardProps>(
+  (
+    { padding, withMargin, noBackground, color, className, style, ...props },
+    ref
+  ) => (
+    <div
+      ref={ref}
+      className={cn(
+        !noBackground &&
+          'bg-white dark:bg-[#151727] border border-[#f0f2f8] dark:border-[#20263d]',
+        'hover:shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)]',
+        className
+      )}
+      style={{
+        margin: withMargin ?? '0 0 10px 0',
+        padding: padding ?? '16px',
+        ...(color ? { borderLeft: `2px solid ${color}` } : {}),
+        ...style,
+      }}
+      {...props}
+    />
+  )
+);
 
-  &:hover {
-    box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-  }
-`;
+// ─── Separation ──────────────────────────────────────────
 
-export const SmallLink = styled.a`
-  text-decoration: none;
-  color: ${smallLinkColor};
+interface SeparationProps extends HTMLAttributes<HTMLDivElement> {
+  height?: number;
+  lineColor?: string;
+  withMargin?: string;
+}
 
-  &:hover {
-    text-decoration: underline;
-  }
-`;
+export const Separation = forwardRef<HTMLDivElement, SeparationProps>(
+  ({ height, lineColor, withMargin, className, style, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        'w-full',
+        !lineColor && 'bg-[#f0f2f8] dark:bg-[#212735]',
+        className
+      )}
+      style={{
+        height: `${height ?? 1}px`,
+        margin: withMargin ?? '16px 0',
+        ...(lineColor ? { backgroundColor: lineColor } : {}),
+        ...style,
+      }}
+      {...props}
+    />
+  )
+);
 
-type SubTitleProps = {
-  subtitleColor?: string | ThemeSet;
+// ─── Typography ──────────────────────────────────────────
+
+interface SubTitleProps extends HTMLAttributes<HTMLHeadingElement> {
+  subtitleColor?: string;
   fontWeight?: string;
   inverseColor?: boolean;
-};
+}
 
-export const SubTitle = styled.h4<SubTitleProps>`
-  color: ${({ inverseColor }) => (inverseColor ? inverseTextColor : textColor)};
-  margin: 5px 0;
-  ${({ subtitleColor }) =>
-    subtitleColor &&
-    css`
-      color: ${subtitleColor};
-    `}
-  font-weight: ${({ fontWeight }) => (fontWeight ? fontWeight : '500')};
-`;
+export const SubTitle = forwardRef<HTMLHeadingElement, SubTitleProps>(
+  (
+    { subtitleColor, fontWeight, inverseColor, className, style, ...props },
+    ref
+  ) => (
+    <h4
+      ref={ref}
+      className={cn(
+        'my-[5px]',
+        !subtitleColor &&
+          (inverseColor
+            ? 'text-white dark:text-[#212735]'
+            : 'text-[#212735] dark:text-white'),
+        className
+      )}
+      style={{
+        fontWeight: fontWeight ?? '500',
+        ...(subtitleColor ? { color: subtitleColor } : {}),
+        ...style,
+      }}
+      {...props}
+    />
+  )
+);
 
-export const InverseSubtitle = styled(SubTitle)`
-  color: ${inverseTextColor};
-`;
+export const InverseSubtitle = forwardRef<
+  HTMLHeadingElement,
+  HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h4
+    ref={ref}
+    className={cn(
+      'my-[5px] font-medium text-white dark:text-[#212735]',
+      className
+    )}
+    {...props}
+  />
+));
 
-export const Sub4Title = styled.h5`
-  margin: 10px 0;
-  font-weight: 500;
-`;
+export const Sub4Title = forwardRef<
+  HTMLHeadingElement,
+  HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h5 ref={ref} className={cn('my-2.5 font-medium', className)} {...props} />
+));
 
-export const NoWrapTitle = styled(Sub4Title)`
-  white-space: nowrap;
-`;
+export const NoWrapTitle = forwardRef<
+  HTMLHeadingElement,
+  HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h5
+    ref={ref}
+    className={cn('my-2.5 font-medium whitespace-nowrap', className)}
+    {...props}
+  />
+));
 
-export const SingleLine = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-export const RightAlign = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-`;
-
-export const ColumnLine = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  @media (${mediaWidths.mobile}) {
-    width: 100%;
-  }
-`;
-
-interface DarkProps {
+interface DarkSubTitleProps extends HTMLAttributes<HTMLDivElement> {
   fontSize?: string;
   withMargin?: string;
 }
 
-export const DarkSubTitle = styled.div<DarkProps>`
-  font-size: ${({ fontSize }) => (fontSize ? fontSize : '14px')};
-  color: ${unSelectedNavButton};
-  margin: ${({ withMargin }) => (withMargin ? withMargin : '0')};
-`;
+export const DarkSubTitle = forwardRef<HTMLDivElement, DarkSubTitleProps>(
+  ({ fontSize, withMargin, className, style, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn('text-gray-500', className)}
+      style={{
+        fontSize: fontSize ?? '14px',
+        margin: withMargin ?? '0',
+        ...style,
+      }}
+      {...props}
+    />
+  )
+);
 
-type SmallButtonProps = {
+export const OverflowText = forwardRef<
+  HTMLDivElement,
+  HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      'text-right ml-2 wrap-break-words hyphens-auto md:ml-4',
+      className
+    )}
+    {...props}
+  />
+));
+
+// ─── Buttons & Links ─────────────────────────────────────
+
+interface SmallButtonProps extends ComponentProps<typeof Button> {
   selected?: boolean;
-};
+}
 
-export const SmallButton = styled.button<SmallButtonProps>`
-  cursor: pointer;
-  outline: none;
-  padding: 5px;
-  margin: 5px;
-  text-decoration: none;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  white-space: nowrap;
-  color: ${({ selected }) => (selected ? hoverTextColor : chartLinkColor)};
-  background-color: ${({ selected }) =>
-    selected ? colorButtonBorder : colorButtonBackground};
+export const SmallButton = forwardRef<HTMLButtonElement, SmallButtonProps>(
+  ({ selected, className, ...props }, ref) => (
+    <Button
+      ref={ref}
+      variant={selected ? 'default' : 'secondary'}
+      size="xs"
+      className={cn('m-[5px]', className)}
+      {...props}
+    />
+  )
+);
 
-  &:hover {
-    color: ${hoverTextColor};
-    background-color: ${colorButtonBorder};
-  }
-`;
+export const SmallLink = forwardRef<
+  HTMLAnchorElement,
+  AnchorHTMLAttributes<HTMLAnchorElement>
+>(({ className, ...props }, ref) => (
+  <a
+    ref={ref}
+    className={cn(
+      'no-underline text-[#9254de] dark:text-[#adc6ff] hover:underline',
+      className
+    )}
+    {...props}
+  />
+));
 
-export const OverflowText = styled.div`
-  text-align: right;
-  margin-left: 16px;
-
-  -ms-word-break: break-all;
-  word-break: break-all;
-  word-break: break-word;
-  -webkit-hyphens: auto;
-  -moz-hyphens: auto;
-  hyphens: auto;
-
-  @media (${mediaWidths.mobile}) {
-    margin-left: 8px;
-  }
-`;
-
-export const ResponsiveLine = styled(SingleLine)<{ withWrap?: boolean }>`
-  width: 100%;
-  ${({ withWrap }) =>
-    withWrap &&
-    css`
-      flex-wrap: wrap;
-    `}
-
-  @media (${mediaWidths.mobile}) {
-    flex-direction: column;
-  }
-`;
-
-export const ResponsiveCol = styled.div`
-  flex-grow: 1;
-
-  @media (${mediaWidths.mobile}) {
-    width: 100%;
-  }
-`;
-
-export const ResponsiveSingle = styled(SingleLine)`
-  flex-grow: 1;
-  min-width: 200px;
-
-  @media (${mediaWidths.mobile}) {
-    width: 100%;
-  }
-`;
-
-export const CopyIcon = styled.span`
-  cursor: pointer;
-  margin-left: 4px;
-  padding: 0 4px;
-  border-radius: 2px;
-
-  &:hover {
-    background-color: ${themeColors.blue2};
-    color: white;
-  }
-`;
+export const CopyIcon = forwardRef<
+  HTMLSpanElement,
+  HTMLAttributes<HTMLSpanElement>
+>(({ className, ...props }, ref) => (
+  <span
+    ref={ref}
+    className={cn(
+      'cursor-pointer ml-1 px-1 rounded-sm hover:bg-[#6284e4] hover:text-white',
+      className
+    )}
+    {...props}
+  />
+));

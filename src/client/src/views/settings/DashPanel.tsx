@@ -1,20 +1,14 @@
 import { groupBy } from 'lodash';
 import { Fragment } from 'react';
 import { Layouts } from 'react-grid-layout';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { ChevronRight } from 'lucide-react';
 import { Card, SubTitle } from '../../components/generic/Styled';
 import { Link } from '../../components/link/Link';
 import { useLocalStorage } from '../../hooks/UseLocalStorage';
-import styled from 'styled-components';
 import { StoredWidget } from '../dashboard';
 import { widgetList } from '../dashboard/widgets/widgetList';
 import { WidgetRow } from './WidgetRow';
-
-const S = {
-  subTitle: styled(SubTitle)`
-    margin: 32px 0 8px;
-  `,
-};
 
 export type NormalizedWidgets = {
   id: number;
@@ -65,7 +59,9 @@ const DashPanel = () => {
 
           return (
             <Fragment key={key + index + subIndex}>
-              <S.subTitle>{subKey ? `${key} - ${subKey}` : key}</S.subTitle>
+              <SubTitle className="mt-8 mb-2">
+                {subKey ? `${key} - ${subKey}` : key}
+              </SubTitle>
               {subWidgets.map(w => (
                 <Fragment key={w.id}>
                   <WidgetRow
@@ -80,20 +76,25 @@ const DashPanel = () => {
         });
       })}
       <Link href={'/dashboard'}>
-        <ColorButton withMargin={'16px 0 0'} width={'100%'} arrow={true}>
-          To Dashboard
-        </ColorButton>
+        <Button
+          variant="outline"
+          style={{ margin: '16px 0 0' }}
+          className="w-full"
+        >
+          To Dashboard <ChevronRight size={18} />
+        </Button>
       </Link>
-      <ColorButton
-        withMargin={'8px 0 0'}
-        width={'100%'}
+      <Button
+        variant="outline"
+        style={{ margin: '8px 0 0' }}
+        className="w-full"
         onClick={() => {
           setLayouts({});
           setAvailableWidgets([]);
         }}
       >
         Reset Widgets
-      </ColorButton>
+      </Button>
     </Card>
   );
 };

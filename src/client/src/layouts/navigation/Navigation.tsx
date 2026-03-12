@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import styled, { css } from 'styled-components';
 import {
   Home,
   Cpu,
@@ -9,7 +8,6 @@ import {
   GitPullRequest,
   Link as LinkIcon,
   Users,
-  MessageCircle,
   BarChart2,
   Shuffle,
   Grid,
@@ -17,102 +15,13 @@ import {
   LucideProps,
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import {
-  unSelectedNavButton,
-  navBackgroundColor,
-  navTextColor,
-  subCardColor,
-  mediaWidths,
-  burgerRowColor,
-} from '../../styles/Themes';
+import { cn } from '../../lib/utils';
 import { useConfigState } from '../../context/ConfigContext';
 import { Link } from '../../components/link/Link';
 import { SideSettings } from './sideSettings/SideSettings';
 import { NodeInfo } from './nodeInfo/NodeInfo';
 
 type Icon = FC<LucideProps>;
-
-const NavigationStyle = styled.div<{ isOpen: boolean }>`
-  grid-area: nav;
-  width: ${({ isOpen }) => (isOpen ? '200px' : '60px')};
-
-  @media (${mediaWidths.mobile}) {
-    display: none;
-  }
-`;
-
-const StickyCard = styled.div`
-  position: -webkit-sticky;
-  position: sticky;
-  top: 16px;
-`;
-
-const LinkView = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 8px 0;
-`;
-
-const ButtonSection = styled.div<{ isOpen: boolean }>`
-  width: 100%;
-  ${({ isOpen }) =>
-    !isOpen &&
-    css`
-      margin: 8px 0;
-    `}
-`;
-
-const NavSeparation = styled.div`
-  margin-left: 8px;
-  font-size: 14px;
-`;
-
-interface NavProps {
-  selected: boolean;
-  isOpen?: boolean;
-}
-
-const NavButton = styled.div<NavProps>`
-  padding: 4px;
-  border-radius: 4px;
-  background: ${({ selected }) => selected && navBackgroundColor};
-  display: flex;
-  align-items: center;
-  ${({ isOpen }) => !isOpen && 'justify-content: center'};
-  width: 100%;
-  text-decoration: none;
-  margin: 4px 0;
-  color: ${({ selected }) => (selected ? navTextColor : unSelectedNavButton)};
-
-  &:hover {
-    color: ${navTextColor};
-    background: ${navBackgroundColor};
-  }
-`;
-
-const BurgerRow = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  overflow: scroll;
-  background: ${burgerRowColor};
-  margin: 0 -16px;
-  padding: 16px;
-`;
-
-const BurgerNav = styled.a<NavProps>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 16px 16px 8px;
-  border-radius: 4px;
-  text-decoration: none;
-  background: ${({ selected }) => selected && subCardColor};
-  ${({ isOpen }) => !isOpen && 'justify-content: center'};
-  color: ${({ selected }) => (selected ? navTextColor : unSelectedNavButton)};
-`;
 
 const HOME = '/';
 const DASHBOARD = '/dashboard';
@@ -123,7 +32,6 @@ const FORWARDS = '/forwards';
 const CHAIN_TRANS = '/chain';
 const TOOLS = '/tools';
 const STATS = '/stats';
-const CHAT = '/chat';
 const SETTINGS = '/settings';
 const SWAP = '/swap';
 const AMBOSS = '/amboss';
@@ -146,27 +54,41 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     open = true
   ) => (
     <Link to={link}>
-      <NavButton isOpen={sidebar} selected={pathname === link}>
+      <div
+        className={cn(
+          'p-1 rounded flex items-center w-full no-underline my-1',
+          pathname === link
+            ? 'bg-white dark:bg-[#151727] text-[#212735] dark:text-white'
+            : 'text-gray-500',
+          !sidebar && 'justify-center',
+          'hover:text-[#212735] hover:dark:text-white hover:bg-white hover:dark:bg-[#151727]'
+        )}
+      >
         <NavIcon size={18} />
-        {open && <NavSeparation>{title}</NavSeparation>}
-      </NavButton>
+        {open && <div className="ml-2 text-sm">{title}</div>}
+      </div>
     </Link>
   );
 
   const renderBurgerNav = (title: string, link: string, NavIcon: Icon) => (
     <Link to={link}>
-      <BurgerNav
-        selected={pathname === link}
+      <div
+        className={cn(
+          'flex flex-col items-center justify-center px-4 pt-4 pb-2 rounded no-underline',
+          pathname === link
+            ? 'bg-white dark:bg-[#151727] text-[#212735] dark:text-white'
+            : 'text-gray-500'
+        )}
         onClick={() => setOpen && setOpen(false)}
       >
         <NavIcon />
         {title}
-      </BurgerNav>
+      </div>
     </Link>
   );
 
   const renderLinks = () => (
-    <ButtonSection isOpen={sidebar}>
+    <div className={cn('w-full', !sidebar && 'my-2')}>
       {renderNavButton('Home', HOME, Home, sidebar)}
       {renderNavButton('Dashboard', DASHBOARD, Grid, sidebar)}
       {renderNavButton('Peers', PEERS, Users, sidebar)}
@@ -178,11 +100,11 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderNavButton('Tools', TOOLS, Shield, sidebar)}
       {renderNavButton('Swap', SWAP, Shuffle, sidebar)}
       {renderNavButton('Stats', STATS, BarChart2, sidebar)}
-    </ButtonSection>
+    </div>
   );
 
   const renderBurger = () => (
-    <BurgerRow>
+    <div className="flex justify-start items-center overflow-scroll bg-[#f0f2f8] dark:bg-[#20263d] -mx-4 px-4 py-4">
       {renderBurgerNav('Home', HOME, Home)}
       {renderBurgerNav('Dashboard', DASHBOARD, Grid)}
       {renderBurgerNav('Peers', PEERS, Users)}
@@ -194,9 +116,8 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       {renderBurgerNav('Tools', TOOLS, Shield)}
       {renderBurgerNav('Swap', SWAP, Shuffle)}
       {renderBurgerNav('Stats', STATS, BarChart2)}
-      {renderBurgerNav('Chat', CHAT, MessageCircle)}
       {renderBurgerNav('Settings', SETTINGS, Settings)}
-    </BurgerRow>
+    </div>
   );
 
   if (isBurger) {
@@ -204,14 +125,17 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   }
 
   return (
-    <NavigationStyle isOpen={sidebar}>
-      <StickyCard>
-        <LinkView>
+    <div
+      className="[grid-area:nav] hidden md:block"
+      style={{ width: sidebar ? '200px' : '60px' }}
+    >
+      <div className="sticky top-4">
+        <div className="flex flex-col items-start py-2">
           {!isRoot && <NodeInfo isOpen={sidebar} />}
           {renderLinks()}
           <SideSettings />
-        </LinkView>
-      </StickyCard>
-    </NavigationStyle>
+        </div>
+      </div>
+    </div>
   );
 };

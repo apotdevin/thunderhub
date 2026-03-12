@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { ChevronRight } from 'lucide-react';
 import Modal from '../../components/modal/ReactModal';
 import { themeColors } from '../../styles/Themes';
 import {
@@ -14,10 +15,7 @@ import {
 } from '../../components/generic/Styled';
 import { SettingsLine } from '../../pages/SettingsPage';
 import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
+import { cn } from '@/lib/utils';
 import { usePriceState, usePriceDispatch } from '../../context/PriceContext';
 
 export const InterfaceSettings = () => {
@@ -33,8 +31,9 @@ export const InterfaceSettings = () => {
     type: string,
     current: string
   ) => (
-    <SingleButton
-      selected={current === value}
+    <Button
+      variant={current === value ? 'default' : 'ghost'}
+      className={cn('grow', current !== value && 'text-foreground')}
       onClick={() => {
         localStorage.setItem(type, value);
         if (type === 'theme') dispatch({ type: 'themeChange', theme: value });
@@ -44,7 +43,7 @@ export const InterfaceSettings = () => {
       }}
     >
       {title}
-    </SingleButton>
+    </Button>
   );
 
   const handleFiatClick = (fiatCurrency: string) => {
@@ -60,10 +59,7 @@ export const InterfaceSettings = () => {
         if (!element || !element.last || !element.symbol) return;
         const isCurrent = fiat === key;
         cards.push(
-          <SubCard
-            subColor={isCurrent ? themeColors.blue2 : undefined}
-            key={key}
-          >
+          <SubCard color={isCurrent ? themeColors.blue2 : undefined} key={key}>
             <SingleLine>
               {key}
               <DarkSubTitle>{`${element.symbol} ${Number(
@@ -71,13 +67,13 @@ export const InterfaceSettings = () => {
               ).toLocaleString('en-US', {
                 maximumFractionDigits: 0,
               })}`}</DarkSubTitle>
-              <ColorButton
+              <Button
+                variant="outline"
                 onClick={() => handleFiatClick(key)}
                 disabled={isCurrent}
-                arrow={true}
               >
-                Select
-              </ColorButton>
+                Select <ChevronRight size={18} />
+              </Button>
             </SingleLine>
           </SubCard>
         );
@@ -94,26 +90,32 @@ export const InterfaceSettings = () => {
         <Card>
           <SettingsLine>
             <Sub4Title>Theme</Sub4Title>
-            <MultiButton>
+            <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
               {renderButton('Light', 'light', 'theme', theme)}
               {renderButton('Dark', 'dark', 'theme', theme)}
-            </MultiButton>
+            </div>
           </SettingsLine>
           <SettingsLine>
             <Sub4Title>Currency</Sub4Title>
-            <MultiButton margin={'0 0 0 16px'}>
+            <div
+              className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap"
+              style={{ margin: '0 0 0 16px' }}
+            >
               {renderButton('Satoshis', 'sat', 'currency', currency)}
               {renderButton('Bitcoin', 'btc', 'currency', currency)}
               {!dontShow && renderButton('Fiat', 'fiat', 'currency', currency)}
-            </MultiButton>
+            </div>
           </SettingsLine>
           {currency === 'sat' && (
             <SettingsLine>
               <Sub4Title>Sat Word Unit</Sub4Title>
-              <MultiButton margin={'0 0 0 16px'}>
+              <div
+                className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap"
+                style={{ margin: '0 0 0 16px' }}
+              >
                 {renderButton('Yes', 'yes', 'symbol', useSatWord ? 'yes' : '')}
                 {renderButton('No', '', 'symbol', useSatWord ? 'yes' : '')}
-              </MultiButton>
+              </div>
             </SettingsLine>
           )}
           {currency === 'fiat' && !dontShow && (
@@ -124,9 +126,9 @@ export const InterfaceSettings = () => {
                   withMargin={'0 0 0 8px'}
                 >{`(${fiat})`}</DarkSubTitle>
               </SingleLine>
-              <ColorButton onClick={() => changeFiatSet(true)} arrow={true}>
-                Change
-              </ColorButton>
+              <Button variant="outline" onClick={() => changeFiatSet(true)}>
+                Change <ChevronRight size={18} />
+              </Button>
             </SettingsLine>
           )}
         </Card>

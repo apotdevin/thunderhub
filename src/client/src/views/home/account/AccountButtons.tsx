@@ -1,28 +1,13 @@
 import { useState } from 'react';
 import { Anchor, X, Zap } from 'lucide-react';
-import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
 import { Card } from '../../../components/generic/Styled';
-import { mediaWidths } from '../../../styles/Themes';
-import styled from 'styled-components';
 import { CreateInvoiceCard } from './createInvoice/CreateInvoice';
 import { PayCard } from './pay/Payment';
 import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 import { SendOnChainCard } from './sendOnChain/SendOnChain';
 
 const SECTION_COLOR = '#FFD300';
-
-const S = {
-  grid: styled.div`
-    display: grid;
-    grid-gap: 8px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    margin-bottom: 32px;
-
-    @media (${mediaWidths.mobile}) {
-      grid-template-columns: 1fr 1fr;
-    }
-  `,
-};
 
 export const AccountButtons = () => {
   const [state, setState] = useState<string>('none');
@@ -32,7 +17,7 @@ export const AccountButtons = () => {
       case 'send_ln':
         return <PayCard setOpen={() => setState('none')} />;
       case 'receive_ln':
-        return <CreateInvoiceCard color={SECTION_COLOR} />;
+        return <CreateInvoiceCard />;
       case 'send_chain':
         return <SendOnChainCard setOpen={() => setState('none')} />;
       case 'receive_chain':
@@ -44,9 +29,9 @@ export const AccountButtons = () => {
 
   return (
     <>
-      <S.grid>
-        <ColorButton
-          withBorder={state === 'send_ln'}
+      <div className="grid gap-2 grid-cols-2 md:grid-cols-4 mb-8">
+        <Button
+          variant={state === 'send_ln' ? 'default' : 'outline'}
           onClick={() => setState(state === 'send_ln' ? 'none' : 'send_ln')}
         >
           {state === 'send_ln' ? (
@@ -55,9 +40,9 @@ export const AccountButtons = () => {
             <Zap size={18} color={SECTION_COLOR} />
           )}
           Send
-        </ColorButton>
-        <ColorButton
-          withBorder={state === 'receive_ln'}
+        </Button>
+        <Button
+          variant={state === 'receive_ln' ? 'default' : 'outline'}
           onClick={() =>
             setState(state === 'receive_ln' ? 'none' : 'receive_ln')
           }
@@ -68,9 +53,9 @@ export const AccountButtons = () => {
             <Zap size={18} color={SECTION_COLOR} />
           )}
           Receive
-        </ColorButton>
-        <ColorButton
-          withBorder={state === 'send_chain'}
+        </Button>
+        <Button
+          variant={state === 'send_chain' ? 'default' : 'outline'}
           onClick={() =>
             setState(state === 'send_chain' ? 'none' : 'send_chain')
           }
@@ -81,9 +66,9 @@ export const AccountButtons = () => {
             <Anchor size={18} color={SECTION_COLOR} />
           )}
           Send
-        </ColorButton>
-        <ColorButton
-          withBorder={state === 'receive_chain'}
+        </Button>
+        <Button
+          variant={state === 'receive_chain' ? 'default' : 'outline'}
           onClick={() =>
             setState(state === 'receive_chain' ? 'none' : 'receive_chain')
           }
@@ -94,8 +79,8 @@ export const AccountButtons = () => {
             <Anchor size={18} color={SECTION_COLOR} />
           )}
           Receive
-        </ColorButton>
-      </S.grid>
+        </Button>
+      </div>
       {state !== 'none' && <Card>{renderContent()}</Card>}
     </>
   );

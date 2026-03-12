@@ -1,77 +1,11 @@
 import { FC, ReactNode } from 'react';
-import styled, { css } from 'styled-components';
-import { ThemeSet } from 'styled-theming';
 import { Link as RouterLink } from 'react-router-dom';
-import { textColor, linkHighlight } from '../../styles/Themes';
-
-interface StyledProps {
-  fontColor?: string | ThemeSet;
-  underline?: string | ThemeSet;
-  inheritColor?: boolean;
-  fullWidth?: boolean;
-}
-
-const StyledSpan = styled.span<StyledProps>`
-  cursor: pointer;
-  color: ${({ fontColor, inheritColor }) =>
-    inheritColor ? 'inherit' : (fontColor ?? textColor)};
-  text-decoration: none;
-  ${({ fullWidth }: StyledProps) =>
-    fullWidth &&
-    css`
-      width: 100%;
-    `};
-
-  :hover {
-    background: linear-gradient(
-      to bottom,
-      ${({ underline }: StyledProps) => underline ?? linkHighlight} 0%,
-      ${({ underline }: StyledProps) => underline ?? linkHighlight} 100%
-    );
-    background-position: 0 100%;
-    background-size: 2px 2px;
-    background-repeat: repeat-x;
-  }
-`;
-
-const NoStylingSpan = styled.span`
-  cursor: pointer;
-  text-decoration: none;
-`;
-
-const StyledLink = styled.a<StyledProps>`
-  cursor: pointer;
-  color: ${({ fontColor, inheritColor }) =>
-    inheritColor ? 'inherit' : (fontColor ?? textColor)};
-  text-decoration: none;
-  ${({ fullWidth }: StyledProps) =>
-    fullWidth &&
-    css`
-      width: 100%;
-    `};
-
-  :hover {
-    background: linear-gradient(
-      to bottom,
-      ${({ underline }: StyledProps) => underline ?? linkHighlight} 0%,
-      ${({ underline }: StyledProps) => underline ?? linkHighlight} 100%
-    );
-    background-position: 0 100%;
-    background-size: 2px 2px;
-    background-repeat: repeat-x;
-  }
-`;
-
-const NoStyling = styled.a`
-  cursor: pointer;
-  text-decoration: none;
-`;
+import { cn } from '@/lib/utils';
 
 interface LinkProps {
   href?: string;
   to?: string;
-  color?: string | ThemeSet;
-  underline?: string | ThemeSet;
+  color?: string;
   inheritColor?: boolean;
   fullWidth?: boolean;
   noStyling?: boolean;
@@ -79,40 +13,59 @@ interface LinkProps {
   children?: ReactNode;
 }
 
+const getLinkClass = (opts: {
+  inheritColor?: boolean;
+  color?: string;
+  fullWidth?: boolean;
+  noStyling?: boolean;
+}) => {
+  if (opts.noStyling) {
+    return 'cursor-pointer no-underline';
+  }
+
+  return cn(
+    'cursor-pointer no-underline hover:underline hover:decoration-[#5163ba] hover:decoration-2 hover:underline-offset-2',
+    opts.inheritColor
+      ? 'text-inherit'
+      : !opts.color && 'text-[#212735] dark:text-white',
+    opts.fullWidth && 'w-full'
+  );
+};
+
 export const Link: FC<LinkProps> = ({
   children,
   href,
   to,
   color,
-  underline,
   inheritColor,
   fullWidth,
   noStyling,
   newTab,
 }) => {
-  const props = { fontColor: color, underline, inheritColor, fullWidth };
-
   if (!href && !to) return null;
 
-  const CorrectLink = noStyling ? NoStyling : StyledLink;
+  const className = getLinkClass({ inheritColor, color, fullWidth, noStyling });
+  const style = color && !inheritColor ? { color } : undefined;
 
   if (href) {
     return (
-      <CorrectLink
+      <a
         href={href}
-        {...props}
+        className={className}
+        style={style}
         {...(newTab && { target: '_blank', rel: 'noreferrer noopener' })}
       >
         {children}
-      </CorrectLink>
+      </a>
     );
   }
 
   if (to) {
-    const CorrectSpan = noStyling ? NoStylingSpan : StyledSpan;
     return (
       <RouterLink to={to} style={{ textDecoration: 'none' }}>
-        <CorrectSpan {...props}>{children}</CorrectSpan>
+        <span className={className} style={style}>
+          {children}
+        </span>
       </RouterLink>
     );
   }

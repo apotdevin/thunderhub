@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Input } from '../input';
+import { Input } from '@/components/ui/input';
 
 // A debounced input react component
 export function DebouncedInput({
@@ -31,7 +31,7 @@ export function DebouncedInput({
 
   return (
     <Input
-      maxWidth={'300px'}
+      style={{ maxWidth: '300px' }}
       value={value || ''}
       onChange={e => setValue(e.target.value)}
       placeholder={`Search ${count} ${placeholder || ''}`}

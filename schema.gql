@@ -333,11 +333,6 @@ type GetInvoicesType {
   next: String
 }
 
-type GetMessages {
-  messages: [Message!]!
-  token: String
-}
-
 type GetPaymentsType {
   next: String
   payments: [PaymentType!]!
@@ -404,17 +399,6 @@ type LightningNodeSocialInfo {
 
 union LnUrlRequest = ChannelRequest | PayRequest | WithdrawRequest
 
-type Message {
-  alias: String
-  contentType: String
-  date: String!
-  id: String!
-  message: String
-  sender: String
-  tokens: Float
-  verified: Boolean!
-}
-
 type MessageType {
   message: String
 }
@@ -443,7 +427,6 @@ type Mutation {
   pushBackup: Boolean!
   removePeer(publicKey: String): Boolean!
   removeTwofaSecret(token: String!): Boolean!
-  sendMessage(maxFee: Float, message: String!, messageType: String, publicKey: String!, tokens: Float): Float!
   sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
   toggleConfig(field: ConfigFields!): Boolean!
   updateFees(base_fee_tokens: Float, cltv_delta: Float, fee_rate: Float, max_htlc_mtokens: String, min_htlc_mtokens: String, transaction_id: String, transaction_vout: Float): Boolean!
@@ -697,7 +680,6 @@ type Query {
   getLatestVersion: String!
   getLightningAddressInfo(address: String!): PayRequest!
   getLiquidityPerUsd: String!
-  getMessages(initialize: Boolean): GetMessages!
   getNetworkInfo: NetworkInfo!
   getNode(publicKey: String!, withoutChannels: Boolean): Node!
   getNodeBalances: Balances!

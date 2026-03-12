@@ -1,20 +1,8 @@
 import { FC } from 'react';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { DarkSubTitle } from '../../components/generic/Styled';
-import styled from 'styled-components';
 import { NormalizedWidgets } from './DashPanel';
-
-const S = {
-  line: styled.div`
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  `,
-};
 
 type WidgetRowParams = {
   widget: NormalizedWidgets;
@@ -27,21 +15,23 @@ export const WidgetRow: FC<WidgetRowParams> = ({
   handleAdd,
   handleDelete,
 }) => (
-  <S.line>
+  <div className="mb-2 flex justify-between items-center">
     <DarkSubTitle>{widget.name}</DarkSubTitle>
-    <MultiButton>
-      <SingleButton
-        selected={widget.active}
+    <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
+      <Button
+        variant={widget.active ? 'default' : 'ghost'}
         onClick={() => handleAdd(widget.id)}
+        className={cn('grow', !widget.active && 'text-foreground')}
       >
         Show
-      </SingleButton>
-      <SingleButton
-        selected={!widget.active}
+      </Button>
+      <Button
+        variant={!widget.active ? 'default' : 'ghost'}
         onClick={() => handleDelete(widget.id)}
+        className={cn('grow', widget.active && 'text-foreground')}
       >
         Hide
-      </SingleButton>
-    </MultiButton>
-  </S.line>
+      </Button>
+    </div>
+  </div>
 );

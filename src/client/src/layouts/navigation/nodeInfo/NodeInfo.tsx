@@ -1,12 +1,10 @@
 import { Zap, Anchor, Circle } from 'lucide-react';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
-import styled from 'styled-components';
 import { getPrice, Price } from '../../../components/price/Price';
 import { addEllipsis, renderLine } from '../../../components/generic/helpers';
 import { useNodeInfo } from '../../../hooks/UseNodeInfo';
 import { useNodeBalances } from '../../../hooks/UseNodeBalances';
 import Big from 'big.js';
-import { unSelectedNavButton } from '../../../styles/Themes';
 import {
   Separation,
   SingleLine,
@@ -15,69 +13,6 @@ import {
 } from '../../../components/generic/Styled';
 import { useConfigState } from '../../../context/ConfigContext';
 import { usePriceState } from '../../../context/PriceContext';
-
-const Closed = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-`;
-
-const Margin = styled.div`
-  margin: 8px 0 2px;
-`;
-
-const Title = styled.div`
-  font-size: 18px;
-  font-weight: 700;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Info = styled.div<{ bottomColor: string }>`
-  font-size: 14px;
-  color: #bfbfbf;
-  border-bottom: 2px solid ${({ bottomColor }) => bottomColor};
-`;
-
-const Balance = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 2px 0;
-  padding: 0 5px;
-  cursor: default;
-`;
-
-const Alias = styled.div<{ bottomColor: string }>`
-  max-width: 200px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  border-bottom: 2px solid ${({ bottomColor }) => bottomColor};
-`;
-
-const ProgressBar = styled.div<{ percentage: number; color: string }>`
-  width: 100%;
-  height: 6px;
-  background-color: #3a3a3a;
-  border-radius: 3px;
-  margin-top: 6px;
-  overflow: hidden;
-  border: 1px solid #555;
-
-  &::after {
-    content: '';
-    display: block;
-    width: ${({ percentage }) => Math.min(Math.max(percentage, 0), 100)}%;
-    height: 100%;
-    background-color: ${({ color }) => color};
-    border-radius: 2px;
-    transition: width 0.3s ease;
-  }
-`;
 
 interface NodeInfoProps {
   isOpen?: boolean;
@@ -165,7 +100,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
   if (!isOpen) {
     return (
       <>
-        <Closed>
+        <div className="flex justify-center items-center flex-col w-full">
           <div data-tip data-for="full_balance_tip">
             <Circle size={18} strokeWidth={'0'} fill={syncColor} />
             {(channelPending > 0 || chainPending > 0) && (
@@ -173,13 +108,13 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
                 <Circle size={18} fill={'#652EC7'} strokeWidth={'0'} />
               </div>
             )}
-            <Margin>
+            <div className="mt-2 mb-0.5">
               <Zap
                 size={18}
                 fill={channelPending === 0 ? '#FFD300' : '#652EC7'}
                 color={channelPending === 0 ? '#FFD300' : '#652EC7'}
               />
-            </Margin>
+            </div>
             <Anchor
               size={18}
               color={chainPending === 0 ? '#FFD300' : '#652EC7'}
@@ -191,8 +126,8 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
             <SingleLine>{closedChannelCount}</SingleLine>
             <SingleLine>{peersCount}</SingleLine>
           </div>
-        </Closed>
-        <Separation lineColor={unSelectedNavButton} />
+        </div>
+        <Separation lineColor={'grey'} />
         <ReactTooltip id={'full_balance_tip'} place={'right'}>
           {renderLine('Channel Balance', formatCCB)}
           {renderLine('Pending Channel Balance', formatPCB)}
@@ -211,35 +146,61 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
 
   return (
     <>
-      <Title>
-        <Alias bottomColor={color} data-tip={`Version: ${version}`}>
+      <div className="text-lg font-bold flex justify-center items-center">
+        <div
+          className="max-w-[200px] text-ellipsis whitespace-nowrap overflow-hidden"
+          style={{ borderBottom: `2px solid ${color}` }}
+          data-tip={`Version: ${version}`}
+        >
           {alias}
-        </Alias>
-      </Title>
-      <Separation lineColor={unSelectedNavButton} />
-      <Balance data-tip data-for="balance_tip">
+        </div>
+      </div>
+      <Separation lineColor={'grey'} />
+      <div
+        className="flex justify-center items-center my-0.5 px-[5px] cursor-default"
+        data-tip
+        data-for="balance_tip"
+      >
         <Zap size={18} color={channelPending === 0 ? '#FFD300' : '#652EC7'} />
         <Price amount={totalLightning} />
-      </Balance>
-      <Balance data-tip data-for="chain_balance_tip">
+      </div>
+      <div
+        className="flex justify-center items-center my-0.5 px-[5px] cursor-default"
+        data-tip
+        data-for="chain_balance_tip"
+      >
         <Anchor size={18} color={chainPending === 0 ? '#FFD300' : '#652EC7'} />
         <Price amount={totalChain} />
-      </Balance>
-      <Balance
+      </div>
+      <div
+        className="flex justify-center items-center my-0.5 px-[5px] cursor-default"
         data-tip
         data-for="node_tip"
-      >{`${activeChannelCount} / ${pendingChannelCount} / ${closedChannelCount} / ${peersCount}`}</Balance>
-      <Balance>
+      >{`${activeChannelCount} / ${pendingChannelCount} / ${closedChannelCount} / ${peersCount}`}</div>
+      <div className="flex justify-center items-center my-0.5 px-[5px] cursor-default">
         <div style={{ width: '100%' }}>
-          <Info bottomColor={syncedToChain ? syncColor : 'transparent'}>
+          <div
+            className="text-sm text-[#bfbfbf]"
+            style={{
+              borderBottom: `2px solid ${syncedToChain ? syncColor : 'transparent'}`,
+            }}
+          >
             {syncText}
-          </Info>
+          </div>
           {!!syncPercentage && (
-            <ProgressBar percentage={syncPercentage} color={syncColor} />
+            <div className="w-full h-1.5 bg-[#3a3a3a] rounded-[3px] mt-1.5 overflow-hidden border border-[#555]">
+              <div
+                className="h-full rounded-[2px] transition-[width] duration-300 ease-in-out"
+                style={{
+                  width: `${Math.min(Math.max(syncPercentage, 0), 100)}%`,
+                  backgroundColor: syncColor,
+                }}
+              />
+            </div>
           )}
         </div>
-      </Balance>
-      <Separation lineColor={unSelectedNavButton} />
+      </div>
+      <Separation lineColor={'grey'} />
       <ReactTooltip place={'right'} />
       <ReactTooltip id={'balance_tip'} place={'right'}>
         <div>

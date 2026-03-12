@@ -1,11 +1,12 @@
 import { FC, useState } from 'react';
-import styled from 'styled-components';
 import { useGetNodeQuery } from '../../../../graphql/queries/__generated__/getNode.generated';
 import { useKeysendMutation } from '../../../../graphql/mutations/__generated__/keysend.generated';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../../utils/error';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import { Input } from '@/components/ui/input';
+import { Price } from '../../../../components/price/Price';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import {
   SingleLine,
   SubTitle,
@@ -14,13 +15,25 @@ import {
 } from '../../../../components/generic/Styled';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 
-export const WithMargin = styled.div`
-  margin-right: 4px;
-`;
+export const WithMargin = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`mr-1 ${className ?? ''}`} {...props}>
+    {children}
+  </div>
+);
 
-export const Centered = styled.div`
-  text-align: center;
-`;
+export const Centered = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`text-center ${className ?? ''}`} {...props}>
+    {children}
+  </div>
+);
 
 interface KeysendProps {
   publicKey: string;
@@ -71,26 +84,38 @@ export const KeysendModal: FC<KeysendProps> = ({ publicKey, handleReset }) => {
         <div>{alias}</div>
       </SingleLine>
       <Separation />
-      <InputWithDeco
-        title={'Sats'}
-        value={tokens}
-        amount={tokens}
-        inputType={'number'}
-        inputCallback={amount => setTokens(Number(amount))}
-        onEnter={() => handleEnter()}
-      />
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Sats</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            <Price amount={tokens} />
+          </span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '500px' }}
+          type={'number'}
+          value={tokens && tokens > 0 ? tokens : ''}
+          onChange={e => setTokens(Number(e.target.value))}
+          onKeyDown={e => e.key === 'Enter' && handleEnter()}
+        />
+      </div>
       <DarkSubTitle withMargin={'16px 0'}>
         Remember keysend is an experimental feature. Use at your own risk.
       </DarkSubTitle>
-      <ColorButton
+      <Button
+        variant="outline"
         onClick={() => handleEnter()}
-        loading={keysendLoading}
         disabled={loading || keysendLoading}
-        withMargin={'16px 0 0'}
-        fullWidth={true}
+        style={{ margin: '16px 0 0' }}
+        className="w-full"
       >
-        Send
-      </ColorButton>
+        {keysendLoading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>Send</>
+        )}
+      </Button>
     </>
   );
 };

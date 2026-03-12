@@ -5,7 +5,6 @@ import { useMemo, useState } from 'react';
 import { ForwardTable } from '../views/forwards/ForwardTable';
 import { options, typeOptions } from '../views/home/reports/forwardReport';
 import { ForwardsGraph } from '../views/home/reports/forwardReport/ForwardsGraph';
-import styled from 'styled-components';
 import { SelectWithValue } from '../components/select';
 import { ForwardResume } from '../views/home/reports/forwardReport/ForwardResume';
 import {
@@ -20,20 +19,6 @@ import { useGetChannelsQuery } from '../graphql/queries/__generated__/getChannel
 import { useGetForwardsListQuery } from '../graphql/queries/__generated__/getForwards.generated';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../utils/error';
-
-const S = {
-  header: styled.div`
-    margin: 0 0 8px;
-    width: 100%;
-    display: flex;
-  `,
-  options: styled.div`
-    display: flex;
-    flex-grow: 1;
-    gap: 8px;
-    justify-content: flex-end;
-  `,
-};
 
 const viewOptions = [
   { label: 'Graph', value: 'graph' },
@@ -70,9 +55,10 @@ const ForwardsView = () => {
     <>
       <CardWithTitle>
         <CardTitle>
-          <S.header>
+          <div className="mb-2 w-full flex flex-col md:flex-row gap-2">
             <SubTitle>Forwards</SubTitle>
-            <S.options>
+
+            <div className="flex grow gap-2 justify-end">
               <SelectWithValue
                 callback={e => setView((e[0] || viewOptions[0]) as any)}
                 options={viewOptions}
@@ -95,7 +81,10 @@ const ForwardsView = () => {
                   isClearable={false}
                   maxWidth={'110px'}
                 />
-              ) : (
+              ) : null}
+            </div>
+            <div className="">
+              {view.value != 'byChannel' ? null : (
                 <SelectWithValue
                   callback={e => setChannel((e[0] || emptyChannel) as any)}
                   options={
@@ -105,12 +94,10 @@ const ForwardsView = () => {
                   }
                   value={channel}
                   isClearable={false}
-                  maxWidth={'340px'}
-                  minWidth={'250px'}
                 />
               )}
-            </S.options>
-          </S.header>
+            </div>
+          </div>
         </CardTitle>
         {view.value === 'list' && (
           <Card mobileCardPadding={'0'} mobileNoBackground={true}>

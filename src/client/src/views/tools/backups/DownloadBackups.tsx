@@ -6,7 +6,8 @@ import { useNodeInfo } from '../../../hooks/UseNodeInfo';
 import { DarkSubTitle, SingleLine } from '../../../components/generic/Styled';
 import { saveToPc } from '../../../utils/helpers';
 import { getErrorContent } from '../../../utils/error';
-import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 
 export const DownloadBackups = () => {
   const [getBackups, { data, loading }] = useGetBackupsLazyQuery({
@@ -27,14 +28,18 @@ export const DownloadBackups = () => {
   return (
     <SingleLine>
       <DarkSubTitle>Backup All Channels</DarkSubTitle>
-      <ColorButton
-        withMargin={'4px 0'}
+      <Button
+        variant="outline"
+        style={{ margin: '4px 0' }}
         disabled={loading}
         onClick={() => getBackups()}
-        loading={loading}
       >
-        Download
-      </ColorButton>
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>Download</>
+        )}
+      </Button>
     </SingleLine>
   );
 };

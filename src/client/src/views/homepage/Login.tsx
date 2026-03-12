@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
-import { Lock } from 'lucide-react';
+import { Lock, Loader2 } from 'lucide-react';
 import { getVersion } from '../../utils/version';
 import { useGetSessionTokenMutation } from '../../graphql/mutations/__generated__/getSessionToken.generated';
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { Input } from '../../components/input';
-import { Section } from '../../components/section/Section';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { chartColors } from '../../styles/Themes';
 import { config } from '../../config/thunderhubConfig';
 import { GetServerAccountsQuery } from '../../graphql/queries/__generated__/getServerAccounts.generated';
@@ -51,7 +50,7 @@ export const Login = ({ account }: LoginProps) => {
   };
 
   return (
-    <Section fixedWidth={true} color={'transparent'}>
+    <div className="w-full bg-transparent max-w-[1000px] mx-auto px-4 lg:px-0">
       <div className="w-full flex justify-center pb-2 font-semibold">
         <h1 className="text-2xl text-white flex items-center">
           {`Login to ${account.name}`}
@@ -65,34 +64,40 @@ export const Login = ({ account }: LoginProps) => {
           <Sub4Title>Password</Sub4Title>
           <Input
             autoFocus
-            maxWidth="800px"
+            style={{ maxWidth: '800px', margin: '0 0 8px 16px' }}
             type={'password'}
-            withMargin={'0 0 8px 16px'}
             onChange={e => setPass(e.target.value)}
-            onEnter={() => handleEnter()}
+            onKeyDown={e => {
+              if (e.key === 'Enter') handleEnter();
+            }}
           />
         </SingleLine>
         {config.disable2FA ? null : (
           <SingleLine>
             <Sub4Title>{'2FA (if enabled)'}</Sub4Title>
             <Input
-              maxWidth="800px"
-              withMargin={'0 0 0 16px'}
+              style={{ maxWidth: '800px', margin: '0 0 0 16px' }}
               onChange={e => setToken(e.target.value)}
-              onEnter={() => handleEnter()}
+              onKeyDown={e => {
+                if (e.key === 'Enter') handleEnter();
+              }}
             />
           </SingleLine>
         )}
-        <ColorButton
+        <Button
+          variant="outline"
           disabled={pass === '' || loading}
           onClick={() => handleEnter()}
-          withMargin={'16px 0 0'}
-          fullWidth={true}
-          loading={loading}
+          style={{ margin: '16px 0 0' }}
+          className="w-full"
         >
-          Connect
-        </ColorButton>
+          {loading ? (
+            <Loader2 className="animate-spin" size={16} />
+          ) : (
+            <>Connect</>
+          )}
+        </Button>
       </Card>
-    </Section>
+    </div>
   );
 };

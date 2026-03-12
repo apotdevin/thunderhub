@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import { Settings } from 'lucide-react';
 import { ChannelManage } from '../views/channels/channels/ChannelManage';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
@@ -12,30 +11,17 @@ import {
   SmallButton,
   Card,
 } from '../components/generic/Styled';
-import { mediaWidths } from '../styles/Themes';
 import { ChannelTable } from '../views/channels/channels/ChannelTable';
 
-export const IconCursor = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  margin-left: 8px;
-`;
-
-const ChannelsCardTitle = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  @media (${mediaWidths.mobile}) {
-    flex-direction: column;
-    align-items: center;
-  }
-`;
-
-const ButtonRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
+export const IconCursor = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={`flex items-center cursor-pointer ml-2 ${className ?? ''}`}
+    {...props}
+  />
+);
 
 const ChannelView = () => {
   const [isOpen, isOpenSet] = useState<boolean>(false);
@@ -100,9 +86,9 @@ const ChannelView = () => {
 
   return (
     <CardWithTitle>
-      <ChannelsCardTitle>
+      <div className="flex justify-between flex-col items-center md:flex-row">
         <SubTitle>{getTitle()}</SubTitle>
-        <ButtonRow>
+        <div className="flex flex-wrap">
           <SmallButton onClick={() => setView(1)}>
             {`Open (${amounts.active})`}
           </SmallButton>
@@ -117,8 +103,8 @@ const ChannelView = () => {
               <Settings size={16} onClick={() => isOpenSet(p => !p)} />
             </IconCursor>
           )}
-        </ButtonRow>
-      </ChannelsCardTitle>
+        </div>
+      </div>
       {view === 1 && isOpen && <ChannelManage />}
       {getView()}
     </CardWithTitle>

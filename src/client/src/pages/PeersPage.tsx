@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { Trash2 } from 'lucide-react';
 import { useGetPeersQuery } from '../graphql/queries/__generated__/getPeers.generated';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
 import {
@@ -11,10 +12,17 @@ import { LoadingCard } from '../components/loading/LoadingCard';
 import { AddPeer } from '../views/peers/AddPeer';
 import { copyLink, getNodeLink } from '../components/generic/helpers';
 import { Price } from '../components/price/Price';
+import { Button } from '@/components/ui/button';
+import { RemovePeerModal } from '../components/modal/removePeer/RemovePeer';
+import Modal from '../components/modal/ReactModal';
 import Table from '../components/table';
 
 const PeersView = () => {
   const { loading, data } = useGetPeersQuery();
+  const [removePeer, setRemovePeer] = useState<{
+    publicKey: string;
+    alias: string;
+  } | null>(null);
 
   const tableData = useMemo(() => {
     const channelData = data?.getPeers || [];
@@ -102,6 +110,25 @@ const PeersView = () => {
           </div>
         ),
       },
+      {
+        header: '',
+        id: 'actions',
+        cell: ({ row }: any) => (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-red-500"
+            onClick={() =>
+              setRemovePeer({
+                publicKey: row.original.public_key,
+                alias: row.original.alias,
+              })
+            }
+          >
+            <Trash2 size={16} />
+          </Button>
+        ),
+      },
     ],
     []
   );
@@ -123,19 +150,30 @@ const PeersView = () => {
   }
 
   return (
-    <CardWithTitle>
-      <SubTitle>Peers</SubTitle>
-      <Card mobileNoBackground={true}>
-        <Table
-          withBorder={true}
-          columns={columns}
-          data={tableData}
-          withSorting={true}
-          withGlobalSort={true}
-          filterPlaceholder="peers"
-        />
-      </Card>
-    </CardWithTitle>
+    <>
+      <CardWithTitle>
+        <SubTitle>Peers</SubTitle>
+        <Card mobileNoBackground={true}>
+          <Table
+            withBorder={true}
+            columns={columns}
+            data={tableData}
+            withSorting={true}
+            withGlobalSort={true}
+            filterPlaceholder="peers"
+          />
+        </Card>
+      </CardWithTitle>
+      <Modal isOpen={!!removePeer} closeCallback={() => setRemovePeer(null)}>
+        {removePeer && (
+          <RemovePeerModal
+            setModalOpen={() => setRemovePeer(null)}
+            publicKey={removePeer.publicKey}
+            peerAlias={removePeer.alias}
+          />
+        )}
+      </Modal>
+    </>
   );
 };
 

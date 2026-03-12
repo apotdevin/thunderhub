@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Radio, Copy, X } from 'lucide-react';
-import styled from 'styled-components';
-import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
 import { renderLine } from '../../../components/generic/helpers';
 import { useGetNodeInfoQuery } from '../../../graphql/queries/__generated__/getNodeInfo.generated';
 import { getErrorContent } from '../../../utils/error';
@@ -12,52 +11,10 @@ import {
   CardTitle,
   SubTitle,
   Card,
-  SingleLine,
   DarkSubTitle,
   Separation,
 } from '../../../components/generic/Styled';
-import { mediaWidths, themeColors } from '../../../styles/Themes';
-
-const Key = styled.div`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 400px;
-
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-
-  -ms-word-break: break-all;
-  word-break: break-all;
-`;
-
-const Responsive = styled(SingleLine)`
-  @media (${mediaWidths.mobile}) {
-    flex-direction: column;
-  }
-`;
-
-const Tile = styled.div<{ startTile?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: ${({ startTile }) => (startTile ? 'flex-start' : 'flex-end')};
-
-  @media (${mediaWidths.mobile}) {
-    margin: 16px 0;
-  }
-`;
-
-const TextPadding = styled.span`
-  margin-left: 5px;
-`;
-
-const ButtonRow = styled.div`
-  display: flex;
-
-  @media (${mediaWidths.mobile}) {
-    width: 100%;
-  }
-`;
+import { themeColors } from '../../../styles/Themes';
 
 export const ConnectCard = () => {
   const [open, openSet] = useState<boolean>(false);
@@ -91,17 +48,20 @@ export const ConnectCard = () => {
         <SubTitle>Connect</SubTitle>
       </CardTitle>
       <Card>
-        <Responsive>
-          <Radio size={18} color={themeColors.blue2} />
-          <Tile startTile={true}>
+        <div className="flex justify-between items-center flex-col md:flex-row gap-4">
+          <div>
+            <Radio size={18} color={themeColors.blue2} />
+          </div>
+
+          <div className="flex flex-col justify-between items-start w-full">
             <DarkSubTitle>Public Key</DarkSubTitle>
-            <Key>{public_key}</Key>
-          </Tile>
-          <ButtonRow>
+            <div className="text-ellipsis break-all">{public_key}</div>
+          </div>
+
+          <div className="flex gap-2">
             {onionAddress ? (
-              <ColorButton
-                fullWidth={true}
-                withMargin={'0 4px 0 0'}
+              <Button
+                variant="outline"
                 onClick={() =>
                   navigator.clipboard
                     .writeText(onionAddress)
@@ -109,13 +69,12 @@ export const ConnectCard = () => {
                 }
               >
                 <Copy size={18} />
-                <TextPadding>Onion</TextPadding>
-              </ColorButton>
+                <span className="ml-1">Onion</span>
+              </Button>
             ) : null}
             {normalAddress ? (
-              <ColorButton
-                fullWidth={true}
-                withMargin={'0 0 0 4px'}
+              <Button
+                variant="outline"
                 onClick={() =>
                   navigator.clipboard
                     .writeText(normalAddress)
@@ -123,17 +82,13 @@ export const ConnectCard = () => {
                 }
               >
                 <Copy size={18} />
-              </ColorButton>
+              </Button>
             ) : null}
-            <ColorButton
-              fullWidth={true}
-              withMargin={'0 0 0 8px'}
-              onClick={() => openSet(s => !s)}
-            >
+            <Button variant="outline" onClick={() => openSet(s => !s)}>
               {open ? <X size={18} /> : 'Details'}
-            </ColorButton>
-          </ButtonRow>
-        </Responsive>
+            </Button>
+          </div>
+        </div>
         {open && (
           <>
             <Separation />

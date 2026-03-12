@@ -20,7 +20,7 @@ export const DashboardModal = () => {
           />
         );
       case 'createInvoice':
-        return <CreateInvoiceCard color={'#FFD300'} />;
+        return <CreateInvoiceCard />;
       case 'sendChain':
         return (
           <SendOnChainCard

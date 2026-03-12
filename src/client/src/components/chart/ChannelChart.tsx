@@ -3,8 +3,8 @@ import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
-import { useContext, useMemo } from 'react';
-import { ThemeContext } from 'styled-components';
+import { useMemo } from 'react';
+import { useThemeMode } from '../../hooks/useThemeMode';
 import { LineChart } from 'echarts/charts';
 import { Card } from '../generic/Styled';
 import { chartColors } from '../../styles/Themes';
@@ -23,7 +23,7 @@ const getMaxHeight = (arr: number[], rounding?: number): number => {
  * lnd currently not support filter for channelId, so now it impossible to optimize query.
  */
 export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
-  const themeContext = useContext(ThemeContext);
+  const themeMode = useThemeMode();
   const { data } = useGetForwardsQuery({
     variables: { days: days },
     onError: error => toast.error(getErrorContent(error)),
@@ -38,8 +38,8 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
     : [];
 
   // Helper data
-  const fontColor = themeContext?.mode === 'light' ? 'black' : 'white';
-  const oppositeColor = themeContext?.mode === 'light' ? 'white' : 'black';
+  const fontColor = themeMode === 'light' ? 'black' : 'white';
+  const oppositeColor = themeMode === 'light' ? 'white' : 'black';
   const columnSize = days === 1 ? 24 : days;
   const now = new Date();
 

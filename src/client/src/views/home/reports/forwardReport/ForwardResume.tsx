@@ -1,31 +1,10 @@
 import { FC, useMemo } from 'react';
-import styled from 'styled-components';
 import { differenceInDays } from 'date-fns';
 import { Price } from '../../../../components/price/Price';
-import { mediaWidths } from '../../../../styles/Themes';
 import { DarkSubTitle } from '../../../../components/generic/Styled';
 import { useGetForwardsListQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 
 type ArrayType = { fee: number; fee_mtokens: string; tokens: number };
-
-const S = {
-  grid: styled.div`
-    display: grid;
-    grid-gap: 16px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-
-    @media (${mediaWidths.mobile}) {
-      display: block;
-    }
-  `,
-  item: styled.div`
-    text-align: center;
-
-    @media (${mediaWidths.mobile}) {
-      margin: 8px 0;
-    }
-  `,
-};
 
 type TypeOptionProps = {
   label: string;
@@ -131,23 +110,23 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
   };
 
   return (
-    <S.grid>
-      <S.item>
+    <div className="block md:grid md:gap-4 md:grid-cols-4">
+      <div className="text-center my-2 md:my-0">
         <DarkSubTitle>Day</DarkSubTitle>
         {renderValue(values.day)}
-      </S.item>
-      <S.item>
+      </div>
+      <div className="text-center my-2 md:my-0">
         <DarkSubTitle>Week</DarkSubTitle>
         {renderValue(values.week)}
-      </S.item>
-      <S.item>
+      </div>
+      <div className="text-center my-2 md:my-0">
         <DarkSubTitle>Month</DarkSubTitle>
         {renderValue(values.month)}
-      </S.item>
-      <S.item>
+      </div>
+      <div className="text-center my-2 md:my-0">
         <DarkSubTitle>Year</DarkSubTitle>
         {renderValue(values.year)}
-      </S.item>
-    </S.grid>
+      </div>
+    </div>
   );
 };

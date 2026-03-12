@@ -1,46 +1,7 @@
 import { useState } from 'react';
-import { Input } from '../../../../components/input';
+import { Input } from '@/components/ui/input';
 import { SelectWithValue } from '../../../../components/select';
 import { usePriceState } from '../../../../context/PriceContext';
-import styled from 'styled-components';
-
-const S = {
-  row: styled.div`
-    margin: 8px 0;
-    display: grid;
-    grid-gap: 8px;
-    grid-template-columns: 2fr 4fr 100px;
-    align-items: center;
-  `,
-  wrapper: styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 4px;
-  `,
-  contentWrapper: styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `,
-  content: styled.div`
-    width: 100%;
-    padding: 0 16px;
-    height: calc(100% - 40px);
-    overflow: auto;
-  `,
-  title: styled.h4`
-    font-weight: 900;
-    margin: 8px 0;
-  `,
-  nowrap: styled.div`
-    white-space: nowrap;
-  `,
-};
 
 export const ConvertWidget = () => {
   const { prices, dontShow } = usePriceState();
@@ -60,9 +21,9 @@ export const ConvertWidget = () => {
 
   if (dontShow) {
     return (
-      <S.contentWrapper>
+      <div className="w-full h-full flex justify-center items-center">
         Fetching fiat prices is disabled. Enable it in the settings.
-      </S.contentWrapper>
+      </div>
     );
   }
 
@@ -104,11 +65,10 @@ export const ConvertWidget = () => {
   };
 
   return (
-    <S.wrapper>
-      <S.row>
+    <div className="w-full h-full flex flex-col justify-center px-1">
+      <div className="my-2 grid gap-2 grid-cols-[2fr_4fr_100px] items-center">
         <div>{getValue(firstAmount, first.value)}</div>
         <Input
-          fullWidth={true}
           placeholder={'Amount'}
           value={firstAmount}
           type={'number'}
@@ -131,7 +91,6 @@ export const ConvertWidget = () => {
         />
         <div>{getValue(secondAmount, second.value)}</div>
         <Input
-          fullWidth={true}
           placeholder={'Amount'}
           value={secondAmount}
           type={'number'}
@@ -152,7 +111,7 @@ export const ConvertWidget = () => {
           isClearable={false}
           maxWidth={'100px'}
         />
-      </S.row>
-    </S.wrapper>
+      </div>
+    </div>
   );
 };

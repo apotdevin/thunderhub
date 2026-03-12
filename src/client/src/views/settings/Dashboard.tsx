@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { SettingsLine } from '../../pages/SettingsPage';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { ChevronRight } from 'lucide-react';
 import {
   Card,
   CardWithTitle,
@@ -17,12 +18,12 @@ export const DashboardSettings = () => {
       <Card>
         <SettingsLine>
           <Sub4Title>Widgets</Sub4Title>
-          <ColorButton
-            arrow={true}
+          <Button
+            variant="outline"
             onClick={() => navigate('/settings/dashboard')}
           >
-            Change
-          </ColorButton>
+            Change <ChevronRight size={18} />
+          </Button>
         </SettingsLine>
       </Card>
     </CardWithTitle>

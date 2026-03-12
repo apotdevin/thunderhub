@@ -10,7 +10,7 @@ import { ChannelFeeHealth } from '../../graphql/types';
 import { sortBy } from 'lodash';
 import { renderLine } from '../../components/generic/helpers';
 import { useStatsDispatch } from './context';
-import { ScoreLine, Clickable, WarningText } from './styles';
+import { chartColors } from '../../styles/Themes';
 import { StatWrapper } from './Wrapper';
 import { getIcon, getFeeMessage, getProgressColor } from './helpers';
 
@@ -34,11 +34,11 @@ const FeeStatCard = ({
     const { score } = stats || {};
 
     return (
-      <ScoreLine>
+      <div className="flex justify-between mt-2 w-full md:mt-0 md:w-40">
         <DarkSubTitle>Score</DarkSubTitle>
         {score}
         {getIcon(score)}
-      </ScoreLine>
+      </div>
     );
   };
 
@@ -52,12 +52,18 @@ const FeeStatCard = ({
     return (
       <>
         <Separation />
-        <WarningText warningColor={getProgressColor(rateScore)}>
+        <DarkSubTitle
+          className="w-full text-center"
+          style={{ color: getProgressColor(rateScore) || chartColors.orange }}
+        >
           {message}
-        </WarningText>
-        <WarningText warningColor={getProgressColor(baseScore)}>
+        </DarkSubTitle>
+        <DarkSubTitle
+          className="w-full text-center"
+          style={{ color: getProgressColor(baseScore) || chartColors.orange }}
+        >
           {baseMessage}
-        </WarningText>
+        </DarkSubTitle>
         {renderLine('Fee Rate (ppm):', rate)}
         {renderLine('Base Fee (sats):', base)}
       </>
@@ -67,12 +73,17 @@ const FeeStatCard = ({
   return (
     <Fragment key={channel.id || ''}>
       <SubCard>
-        <Clickable onClick={() => openSet(open ? 0 : index)}>
+        <div
+          className="cursor-pointer"
+          onClick={() => openSet(open ? 0 : index)}
+        >
           <ResponsiveLine>
             {channel?.partner?.node?.alias}
-            <ScoreLine>{renderContent()}</ScoreLine>
+            <div className="flex justify-between mt-2 w-full md:mt-0 md:w-40">
+              {renderContent()}
+            </div>
           </ResponsiveLine>
-        </Clickable>
+        </div>
         {open && renderDetails()}
       </SubCard>
     </Fragment>

@@ -6,59 +6,16 @@ import {
   ChevronRight,
   LucideProps,
 } from 'lucide-react';
-import styled from 'styled-components';
+import { cn } from '../../../lib/utils';
 import { SatoshiSymbol } from '../../../components/satoshi/Satoshi';
 import { Separation, SingleLine } from '../../../components/generic/Styled';
 import {
   useConfigState,
   useConfigDispatch,
 } from '../../../context/ConfigContext';
-import {
-  progressBackground,
-  iconButtonHover,
-  inverseTextColor,
-  unSelectedNavButton,
-} from '../../../styles/Themes';
 import { usePriceState } from '../../../context/PriceContext';
 
 type Icon = FC<LucideProps>;
-
-const SelectedIcon = styled.div<{ selected: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  outline: none;
-  width: 30px;
-  height: 30px;
-  border-radius: 100%;
-  margin: 0 5px;
-  cursor: pointer;
-
-  @media (min-width: 579px) {
-    &:hover {
-      background-color: ${iconButtonHover};
-      color: ${inverseTextColor};
-    }
-  }
-  background-color: ${({ selected }) => (selected ? progressBackground : '')};
-`;
-
-const Symbol = styled.div`
-  margin-top: 2px;
-  font-weight: 700;
-`;
-
-const IconRow = styled.div<{ center?: boolean }>`
-  margin: 5px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  ${({ center }) => center && 'width: 100%'}
-`;
-
-const BurgerPadding = styled(SingleLine)`
-  margin: 16px 0;
-`;
 
 const currencyArray = ['sat', 'btc', 'fiat'];
 const currencyNoFiatArray = ['sat', 'btc'];
@@ -113,18 +70,24 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         if (text === 'S') {
           return <SatoshiSymbol />;
         }
-        return <Symbol>{text}</Symbol>;
+        return <div className="mt-0.5 font-bold">{text}</div>;
       }
       if (type === 'theme' && SideIcon) {
         return <SideIcon size={18} />;
       }
       return '';
     };
+
+    const selected =
+      (type === 'currency' ? currency === value : theme === value) || on;
+
     return (
-      <SelectedIcon
-        selected={
-          (type === 'currency' ? currency === value : theme === value) || on
-        }
+      <div
+        className={cn(
+          'flex justify-center items-center outline-none w-[30px] h-[30px] rounded-full mx-[5px] cursor-pointer',
+          'sm:hover:bg-[#5163ba] sm:hover:text-white sm:dark:hover:text-[#212735]',
+          selected && 'bg-[#e1e6ed] dark:bg-[#212735]'
+        )}
         onClick={() => {
           localStorage.setItem(type, value);
           if (type === 'currency') {
@@ -138,7 +101,7 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         }}
       >
         {renderText()}
-      </SelectedIcon>
+      </div>
     );
   };
 
@@ -146,11 +109,11 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
     if (!sidebar) {
       return (
         <>
-          <Separation lineColor={unSelectedNavButton} />
-          <IconRow center={true}>
+          <Separation lineColor={'grey'} />
+          <div className="my-[5px] flex justify-center items-center w-full">
             {renderIcon('currency', currency, correctMap[currency], true)}
-          </IconRow>
-          <IconRow center={true}>
+          </div>
+          <div className="my-[5px] flex justify-center items-center w-full">
             {renderIcon(
               'theme',
               getNextValue(themeArray, theme),
@@ -158,56 +121,65 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
               true,
               getNextValue(themeArray, theme) === 'light' ? Sun : Moon
             )}
-          </IconRow>
+          </div>
         </>
       );
     }
     return (
       <>
-        <Separation lineColor={unSelectedNavButton} />
-        <IconRow>
+        <Separation lineColor={'grey'} />
+        <div className="my-[5px] flex justify-center items-center">
           {renderIcon('currency', 'sat', 'S')}
           {renderIcon('currency', 'btc', '₿')}
           {!dontShow && renderIcon('currency', 'fiat', 'F')}
-        </IconRow>
-        <IconRow>
+        </div>
+        <div className="my-[5px] flex justify-center items-center">
           {renderIcon('theme', 'light', '', false, Sun)}
           {renderIcon('theme', 'dark', '', false, Moon)}
-        </IconRow>
+        </div>
       </>
     );
   };
 
   if (isBurger) {
     return (
-      <BurgerPadding>
-        <IconRow>
+      <SingleLine className="my-4">
+        <div className="my-[5px] flex justify-center items-center">
           {renderIcon('currency', 'sat', 'S')}
           {renderIcon('currency', 'btc', '₿')}
           {!dontShow && renderIcon('currency', 'fiat', 'F')}
-        </IconRow>
-        <IconRow>
+        </div>
+        <div className="my-[5px] flex justify-center items-center">
           {renderIcon('theme', 'light', '', false, Sun)}
           {renderIcon('theme', 'dark', '', false, Moon)}
-        </IconRow>
-      </BurgerPadding>
+        </div>
+      </SingleLine>
     );
   }
 
   return (
     <>
       {renderContent()}
-      <IconRow center={!sidebar}>
-        <SelectedIcon
-          selected={true}
+      <div
+        className={cn(
+          'my-[5px] flex justify-center items-center',
+          !sidebar && 'w-full'
+        )}
+      >
+        <div
+          className={cn(
+            'flex justify-center items-center outline-none w-[30px] h-[30px] rounded-full mx-[5px] cursor-pointer',
+            'sm:hover:bg-[#5163ba] sm:hover:text-white sm:dark:hover:text-[#212735]',
+            'bg-[#e1e6ed] dark:bg-[#212735]'
+          )}
           onClick={() => {
             localStorage.setItem('sidebar', (!sidebar).toString());
             dispatch({ type: 'change', sidebar: !sidebar });
           }}
         >
           {sidebar ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
-        </SelectedIcon>
-      </IconRow>
+        </div>
+      </div>
     </>
   );
 };

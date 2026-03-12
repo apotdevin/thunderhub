@@ -7,10 +7,8 @@ import {
 import { SettingsLine } from '../../pages/SettingsPage';
 import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export const PrivacySettings = () => {
   const { fetchFees, fetchPrices, displayValues } = useConfigState();
@@ -22,15 +20,16 @@ export const PrivacySettings = () => {
     type: string,
     current: boolean
   ) => (
-    <SingleButton
-      selected={current === value}
+    <Button
+      variant={current === value ? 'default' : 'ghost'}
+      className={cn('grow', current !== value && 'text-foreground')}
       onClick={() => {
         localStorage.setItem(type, JSON.stringify(value));
         dispatch({ type: 'change', [type]: value });
       }}
     >
       {title}
-    </SingleButton>
+    </Button>
   );
 
   return (
@@ -39,24 +38,30 @@ export const PrivacySettings = () => {
       <Card>
         <SettingsLine>
           <Sub4Title>Fetch Bitcoin Fees:</Sub4Title>
-          <MultiButton>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {renderButton('On', true, 'fetchFees', fetchFees)}
             {renderButton('Off', false, 'fetchFees', fetchFees)}
-          </MultiButton>
+          </div>
         </SettingsLine>
         <SettingsLine>
           <Sub4Title>Fetch Fiat Prices:</Sub4Title>
-          <MultiButton margin={'0 0 0 16px'}>
+          <div
+            className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap"
+            style={{ margin: '0 0 0 16px' }}
+          >
             {renderButton('On', true, 'fetchPrices', fetchPrices)}
             {renderButton('Off', false, 'fetchPrices', fetchPrices)}
-          </MultiButton>
+          </div>
         </SettingsLine>
         <SettingsLine>
           <Sub4Title>Values:</Sub4Title>
-          <MultiButton margin={'0 0 0 16px'}>
+          <div
+            className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap"
+            style={{ margin: '0 0 0 16px' }}
+          >
             {renderButton('Show', true, 'displayValues', displayValues)}
             {renderButton('Hide', false, 'displayValues', displayValues)}
-          </MultiButton>
+          </div>
         </SettingsLine>
       </Card>
     </CardWithTitle>

@@ -1,13 +1,11 @@
 import { useState } from 'react';
-import { AlertTriangle } from 'lucide-react';
-import styled from 'styled-components';
+import { AlertTriangle, ChevronRight, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useCloseChannelMutation } from '@/graphql/mutations/__generated__/closeChannel.generated';
 import { useBitcoinFees } from '@/hooks/UseBitcoinFees';
 import { useConfigState } from '@/context/ConfigContext';
 import { renderLine } from '@/components/generic/helpers';
-import { InputWithDeco } from '@/components/input/InputWithDeco';
-import { chartColors } from '@/styles/Themes';
+import { Input } from '@/components/ui/input';
 import {
   Separation,
   SingleLine,
@@ -16,23 +14,8 @@ import {
   DarkSubTitle,
 } from '../../generic/Styled';
 import { getErrorContent } from '../../../utils/error';
-import { ColorButton } from '../../buttons/colorButton/ColorButton';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../buttons/multiButton/MultiButton';
-
-const Warning = styled.div`
-  font-size: 14px;
-  color: ${chartColors.orange};
-`;
-
-const WarningCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 type CloseChannelProps = {
   channelId: string;
@@ -73,13 +56,17 @@ export const CloseChannel = ({
     text: string,
     selected: boolean
   ) => (
-    <SingleButton selected={selected} onClick={onClick}>
+    <Button
+      variant={selected ? 'default' : 'ghost'}
+      onClick={() => onClick()}
+      className={cn('grow', !selected && 'text-foreground')}
+    >
       {text}
-    </SingleButton>
+    </Button>
   );
 
   const renderWarning = () => (
-    <WarningCard>
+    <div className="flex flex-col justify-center items-center">
       <AlertTriangle size={32} color={'red'} />
       <SubTitle>Are you sure you want to close the channel?</SubTitle>
       <Separation />
@@ -98,12 +85,11 @@ export const CloseChannel = ({
         <DarkSubTitle>This is a force close</DarkSubTitle>
       )}
       <Separation />
-      <ColorButton
-        fullWidth={true}
+      <Button
+        variant="destructive"
+        className="w-full"
         disabled={(loading || !amount) && !isForce}
-        loading={loading}
-        withMargin={'16px 4px 4px'}
-        color={'red'}
+        style={{ margin: '16px 4px 4px' }}
         onClick={() => {
           let details:
             | { target: number }
@@ -124,17 +110,22 @@ export const CloseChannel = ({
           });
         }}
       >
-        {`Close Channel [ ${channelName}/${channelId} ]`}
-      </ColorButton>
-      <ColorButton
-        fullWidth={true}
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>{`Close Channel [ ${channelName}/${channelId} ]`}</>
+        )}
+      </Button>
+      <Button
+        variant="outline"
+        className="w-full"
         disabled={loading}
-        withMargin={'4px'}
+        style={{ margin: '4px' }}
         onClick={() => setIsConfirmed(false)}
       >
         Cancel
-      </ColorButton>
-    </WarningCard>
+      </Button>
+    </div>
   );
 
   const renderContent = () => (
@@ -147,7 +138,7 @@ export const CloseChannel = ({
       <SingleLine>
         <Sub4Title>Force Close Channel:</Sub4Title>
       </SingleLine>
-      <MultiButton>
+      <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
         {renderButton(
           () => {
             setAmount(undefined);
@@ -157,14 +148,18 @@ export const CloseChannel = ({
           isForce
         )}
         {renderButton(() => setIsForce(false), 'No', !isForce)}
-      </MultiButton>
+      </div>
       {!isForce && (
         <>
           <SingleLine>
             <Sub4Title>Fee:</Sub4Title>
-            {!dontShow && <Warning>{`Minimum: ${minimum} sats/vByte`}</Warning>}
+            {!dontShow && (
+              <span className="text-sm text-[#ffa940]">
+                {`Minimum: ${minimum} sats/vByte`}
+              </span>
+            )}
           </SingleLine>
-          <MultiButton>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {fetchFees &&
               !dontShow &&
               renderButton(
@@ -191,7 +186,7 @@ export const CloseChannel = ({
               'Target',
               isType === 'target'
             )}
-          </MultiButton>
+          </div>
         </>
       )}
       {isType === 'none' && !isForce && (
@@ -199,7 +194,7 @@ export const CloseChannel = ({
           <SingleLine>
             <Sub4Title>Fee Amount:</Sub4Title>
           </SingleLine>
-          <MultiButton>
+          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
             {renderButton(
               () => setAmount(fast),
               `Fastest (${fast} sats)`,
@@ -216,29 +211,35 @@ export const CloseChannel = ({
               `Hour (${hour} sats)`,
               amount === hour
             )}
-          </MultiButton>
+          </div>
         </>
       )}
       {isType !== 'none' && !isForce && (
-        <InputWithDeco
-          title={isType === 'target' ? 'Target Blocks:' : 'Fee (Sats/Byte)'}
-          placeholder={isType === 'target' ? 'Blocks' : 'Sats/Byte'}
-          value={amount}
-          inputType={'number'}
-          inputCallback={e => setAmount(Number(e))}
-        />
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>
+              {isType === 'target' ? 'Target Blocks:' : 'Fee (Sats/Byte)'}
+            </span>
+          </div>
+          <Input
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '500px' }}
+            placeholder={isType === 'target' ? 'Blocks' : 'Sats/Byte'}
+            type={'number'}
+            value={amount != null && amount > 0 ? amount : ''}
+            onChange={e => setAmount(Number(e.target.value))}
+          />
+        </div>
       )}
-      <ColorButton
+      <Button
+        variant="destructive"
         disabled={!amount && !isForce}
-        arrow={true}
-        fullWidth={true}
-        withMargin={'32px 0 0'}
-        withBorder={true}
-        color={'red'}
+        className="w-full"
+        style={{ margin: '32px 0 0' }}
         onClick={() => setIsConfirmed(true)}
       >
-        Close Channel
-      </ColorButton>
+        Close Channel <ChevronRight size={18} />
+      </Button>
     </>
   );
 

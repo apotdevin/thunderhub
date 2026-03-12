@@ -3,55 +3,7 @@ import toast from 'react-hot-toast';
 import { useLoginAmbossMutation } from '../../../../graphql/mutations/__generated__/loginAmboss.generated';
 import { useGetAmbossLoginTokenLazyQuery } from '../../../../graphql/queries/__generated__/getAmbossLoginToken.generated';
 import { useAmbossUser } from '../../../../hooks/UseAmbossUser';
-import {
-  cardBorderColor,
-  cardColor,
-  mediaWidths,
-  unSelectedNavButton,
-} from '../../../../styles/Themes';
-import styled from 'styled-components';
 import { appendBasePath } from '../../../../utils/basePath';
-
-const QuickTitle = styled.div`
-  font-size: 12px;
-  color: ${unSelectedNavButton};
-  margin-top: 10px;
-`;
-
-const QuickCard = styled.button`
-  background: ${cardColor};
-  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  border: 1px solid ${cardBorderColor};
-  height: 100px;
-  width: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  cursor: pointer;
-  color: #69c0ff;
-
-  @media (${mediaWidths.mobile}) {
-    padding: 4px;
-    height: 80px;
-    width: 80px;
-  }
-
-  &:hover {
-    background-color: #ff0080;
-    color: white;
-
-    img {
-      filter: brightness(0) invert(1);
-    }
-
-    & ${QuickTitle} {
-      color: white;
-    }
-  }
-`;
 
 export const AmbossCard = () => {
   const { user } = useAmbossUser();
@@ -80,7 +32,8 @@ export const AmbossCard = () => {
 
   if (!user) {
     return (
-      <QuickCard
+      <button
+        className="bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-[#e1e6ed] dark:border-[#4a5669] h-20 w-20 flex flex-col justify-center items-center p-1 cursor-pointer text-[#69c0ff] md:p-2.5 md:h-[100px] md:w-[100px] hover:bg-[#ff0080] hover:text-white group"
         onClick={() => {
           if (loading) return;
           login();
@@ -88,18 +41,22 @@ export const AmbossCard = () => {
         disabled={loading}
       >
         <img
+          className="group-hover:brightness-0 group-hover:invert"
           src={appendBasePath('/assets/amboss_icon.png')}
           width={32}
           height={32}
           alt={'Amboss Logo'}
         />
-        <QuickTitle>{loading ? 'Loading...' : 'Login'}</QuickTitle>
-      </QuickCard>
+        <div className="text-xs text-muted-foreground mt-2.5 group-hover:text-white">
+          {loading ? 'Loading...' : 'Login'}
+        </div>
+      </button>
     );
   }
 
   return (
-    <QuickCard
+    <button
+      className="bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-[#e1e6ed] dark:border-[#4a5669] h-20 w-20 flex flex-col justify-center items-center p-1 cursor-pointer text-[#69c0ff] md:p-2.5 md:h-[100px] md:w-[100px] hover:bg-[#ff0080] hover:text-white group"
       onClick={() => {
         if (tokenLoading) return;
         getToken();
@@ -107,12 +64,15 @@ export const AmbossCard = () => {
       disabled={tokenLoading}
     >
       <img
+        className="group-hover:brightness-0 group-hover:invert"
         src={appendBasePath('/assets/amboss_icon.png')}
         width={32}
         height={32}
         alt={'Amboss Logo'}
       />
-      <QuickTitle>{tokenLoading ? 'Loading...' : 'Go To'}</QuickTitle>
-    </QuickCard>
+      <div className="text-xs text-muted-foreground mt-2.5 group-hover:text-white">
+        {tokenLoading ? 'Loading...' : 'Go To'}
+      </div>
+    </button>
   );
 };

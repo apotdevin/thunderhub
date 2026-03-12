@@ -1,4 +1,5 @@
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import {
   Card,
   CardWithTitle,
@@ -26,15 +27,14 @@ const PushBackup = () => {
   return (
     <SingleLine>
       <Text>Push Backup to Amboss</Text>
-      <ColorButton
-        color="#ff0080"
-        withMargin={'4px 0'}
+      <Button
+        variant="outline"
+        style={{ margin: '4px 0' }}
         disabled={loading}
         onClick={() => backup()}
-        loading={loading}
       >
-        Push
-      </ColorButton>
+        {loading ? <Loader2 className="animate-spin" size={16} /> : <>Push</>}
+      </Button>
     </SingleLine>
   );
 };
@@ -106,17 +106,20 @@ export const Backups = () => {
               ? 'By disabling automatic backups to Amboss, ThunderHub will no longer push encrypted backups.'
               : 'By enabling automatic backups to Amboss, ThunderHub will automatically push an encrypted version of your static channel backups (SCB) whenever there is a change that needs backing up.'}
           </Text>
-          <ColorButton
-            color="#ff0080"
-            loading={loading || toggleLoading}
+          <Button
+            variant="outline"
             disabled={loading || toggleLoading}
-            withMargin="0 0 0 16px"
+            style={{ margin: '0 0 0 16px' }}
             onClick={() =>
               toggle({ variables: { field: ConfigFields.Backups } })
             }
           >
-            {isEnabled ? 'Disable' : 'Enable'}
-          </ColorButton>
+            {loading || toggleLoading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              <>{isEnabled ? 'Disable' : 'Enable'}</>
+            )}
+          </Button>
         </SingleLine>
         <AmbossBackupsView />
       </Card>

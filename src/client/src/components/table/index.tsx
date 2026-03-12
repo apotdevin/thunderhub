@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import styled, { css } from 'styled-components';
 import {
   useReactTable,
   getCoreRowModel,
@@ -11,10 +10,10 @@ import {
   VisibilityState,
 } from '@tanstack/react-table';
 import { Settings, X } from 'lucide-react';
-import { separationColor } from '../../styles/Themes';
-import { ColorButton } from '../buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
 import { ColumnConfigurations } from './ColumnConfigurations';
 import { DebouncedInput } from './DebouncedInput';
+import { cn } from '@/lib/utils';
 
 interface TableProps {
   columns: ColumnDef<any, any>[];
@@ -29,60 +28,6 @@ interface TableProps {
   defaultHiddenColumns?: VisibilityState;
   toggleConfiguration?: (hide: boolean, id: string) => void;
 }
-
-type StyledTableProps = {
-  withBorder?: boolean;
-  alignCenter?: boolean;
-  fontSize?: string;
-};
-
-const S = {
-  row: styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  `,
-  wrapper: styled.div<StyledTableProps>`
-    overflow-x: auto;
-    table {
-      width: 100%;
-      border-spacing: 0;
-      tr {
-        :last-child {
-          td {
-            border-bottom: 0;
-          }
-        }
-      }
-      .cursor {
-        cursor: pointer;
-      }
-
-      th,
-      td {
-        font-size: ${({ fontSize }) => fontSize || '14px'};
-        text-align: left;
-        margin: 0;
-        padding: 8px;
-        ${({ withBorder }: StyledTableProps) =>
-          withBorder &&
-          css`
-            border-bottom: 1px solid ${separationColor};
-          `}
-        ${({ alignCenter }: StyledTableProps) =>
-          alignCenter &&
-          css`
-            text-align: center;
-            padding: 8px;
-          `}
-        :last-child {
-          border-right: 0;
-        }
-      }
-    }
-  `,
-};
 
 export default function Table({
   columns,
@@ -137,7 +82,7 @@ export default function Table({
 
   return (
     <>
-      <S.row>
+      <div className="flex flex-row justify-between mb-6">
         {withGlobalSort ? (
           <DebouncedInput
             value={globalFilter ?? ''}
@@ -148,12 +93,12 @@ export default function Table({
         ) : null}
         {toggleConfiguration ? (
           <>
-            <ColorButton onClick={() => setIsOpen(p => !p)}>
+            <Button variant="outline" onClick={() => setIsOpen(p => !p)}>
               {isOpen ? <X size={18} /> : <Settings size={18} />}
-            </ColorButton>
+            </Button>
           </>
         ) : null}
-      </S.row>
+      </div>
 
       {isOpen && toggleConfiguration ? (
         <ColumnConfigurations
@@ -162,10 +107,23 @@ export default function Table({
         />
       ) : null}
 
-      <S.wrapper
-        withBorder={withBorder}
-        fontSize={fontSize}
-        alignCenter={alignCenter}
+      <div
+        className={cn(
+          'overflow-x-auto',
+          '[&_table]:w-full [&_table]:border-spacing-0',
+          '[&_table_tr:last-child_td]:border-b-0',
+          '[&_table_.cursor]:cursor-pointer',
+          '[&_table_th]:text-left [&_table_th]:m-0 [&_table_th]:p-2',
+          '[&_table_td]:text-left [&_table_td]:m-0 [&_table_td]:p-2',
+          '[&_table_th:last-child]:border-r-0',
+          '[&_table_td:last-child]:border-r-0',
+          withBorder &&
+            '[&_table_th]:border-b [&_table_th]:border-[#f0f2f8] [&_table_th]:dark:border-[#212735] [&_table_td]:border-b [&_table_td]:border-[#f0f2f8] [&_table_td]:dark:border-[#212735]',
+          alignCenter && '[&_table_th]:text-center [&_table_td]:text-center'
+        )}
+        style={{
+          fontSize: fontSize || '14px',
+        }}
       >
         <table>
           <thead>
@@ -224,7 +182,7 @@ export default function Table({
             })}
           </tbody>
         </table>
-      </S.wrapper>
+      </div>
     </>
   );
 }

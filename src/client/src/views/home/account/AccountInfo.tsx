@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { Zap, Anchor, Pocket } from 'lucide-react';
 import { useNodeBalances } from '../../../hooks/UseNodeBalances';
 import Big from 'big.js';
@@ -13,33 +12,20 @@ import {
   SingleLine,
 } from '../../../components/generic/Styled';
 import { Price } from '../../../components/price/Price';
-import { mediaWidths } from '../../../styles/Themes';
 
-const S = {
-  grid: styled.div`
-    display: grid;
-    grid-gap: 16px;
-    grid-template-columns: 1fr 1fr;
-
-    @media (${mediaWidths.mobile}) {
-      display: block;
-    }
-  `,
-};
-
-const Tile = styled.div<{ startTile?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: ${({ startTile }) => (startTile ? 'flex-start' : 'flex-end')};
-
-  @media (${mediaWidths.mobile}) {
-    width: 100%;
-    flex-direction: row;
-    align-items: flex-end;
-    margin: 0 0 8px;
-  }
-`;
+const Tile = ({
+  children,
+  startTile,
+}: {
+  children: React.ReactNode;
+  startTile?: boolean;
+}) => (
+  <div
+    className={`flex justify-between w-full flex-row items-end mb-2 md:w-auto md:flex-col md:mb-0 ${startTile ? 'md:items-start' : 'md:items-end'}`}
+  >
+    {children}
+  </div>
+);
 
 const sectionColor = '#FFD300';
 
@@ -105,7 +91,7 @@ export const AccountInfo = () => {
           </ResponsiveLine>
         </Card>
       </CardWithTitle>
-      <S.grid>
+      <div className="block md:grid md:gap-4 md:grid-cols-2">
         <CardWithTitle>
           <Card>
             <SingleLine>
@@ -136,7 +122,7 @@ export const AccountInfo = () => {
             {renderLine('Force Closures', <Price amount={onchain.closing} />)}
           </Card>
         </CardWithTitle>
-      </S.grid>
+      </div>
     </>
   );
 };

@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import styled from 'styled-components';
 import { Card } from '../components/generic/CardGeneric';
 import {
   CardWithTitle,
@@ -13,14 +12,6 @@ import { LoadingCard } from '../components/loading/LoadingCard';
 import { CloseChannel } from '../components/modal/closeChannel/CloseChannel';
 import { useGetChannelInfoQuery } from '../graphql/queries/__generated__/getChannel.generated';
 import { ChannelDetails } from '../views/channels/channels/ChannelDetails';
-
-const S = {
-  row: styled.div`
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-  `,
-};
 
 const Channel = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -35,11 +26,11 @@ const Channel = () => {
   if (loading) {
     return (
       <CardWithTitle>
-        <S.row>
+        <div className="flex justify-start items-center">
           <Link to={'/channels'}>Channels</Link>
           <ChevronRight size={18} />
           <SubTitle>{slug}</SubTitle>
-        </S.row>
+        </div>
         <LoadingCard noTitle />
       </CardWithTitle>
     );
@@ -48,11 +39,11 @@ const Channel = () => {
   if (!data?.getChannel || error) {
     return (
       <CardWithTitle>
-        <S.row>
+        <div className="flex justify-start items-center">
           <Link to={'/channels'}>Channels</Link>
           <ChevronRight size={18} />
           <SubTitle>{slug}</SubTitle>
-        </S.row>
+        </div>
         <Card>
           <DarkSubTitle>
             Error getting channel information. Try refreshing the page.
@@ -64,11 +55,11 @@ const Channel = () => {
 
   return (
     <CardWithTitle>
-      <S.row>
+      <div className="flex justify-start items-center">
         <Link to={'/channels'}>Channels</Link>
         <ChevronRight size={18} />
         <SubTitle>{slug}</SubTitle>
-      </S.row>
+      </div>
       <Card>
         <ChannelDetails
           id={id}

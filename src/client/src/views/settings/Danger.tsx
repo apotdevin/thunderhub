@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { AlertCircle } from 'lucide-react';
 import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.generated';
 import { config } from '../../config/thunderhubConfig';
@@ -11,47 +10,65 @@ import {
   Sub4Title,
 } from '../../components/generic/Styled';
 import { fontColors } from '../../styles/Themes';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { useChatDispatch } from '../../context/ChatContext';
+import { Button } from '@/components/ui/button';
 
-export const ButtonRow = styled.div`
-  width: auto;
-  display: flex;
-`;
+export const ButtonRow = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`w-auto flex ${className ?? ''}`} {...props}>
+    {children}
+  </div>
+);
 
-const OutlineCard = styled(Card)`
-  &:hover {
-    border: 1px solid red;
-  }
-`;
+export const SettingsLine = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <SingleLine className={`my-2.5 ${className ?? ''}`} {...props}>
+    {children}
+  </SingleLine>
+);
 
-export const SettingsLine = styled(SingleLine)`
-  margin: 10px 0;
-`;
+export const CheckboxText = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={`text-[13px] text-[#595959] text-justify ${className ?? ''}`}
+    {...props}
+  >
+    {children}
+  </div>
+);
 
-export const CheckboxText = styled.div`
-  font-size: 13px;
-  color: ${fontColors.grey7};
-  text-align: justify;
-`;
+export const StyledContainer = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={`flex justify-center items-center mt-4 ${className ?? ''}`}
+    {...props}
+  >
+    {children}
+  </div>
+);
 
-export const StyledContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 16px;
-`;
-
-export const FixedWidth = styled.div`
-  height: 18px;
-  width: 18px;
-  margin: 0px;
-  margin-right: 8px;
-`;
+export const FixedWidth = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`h-[18px] w-[18px] mr-2 ${className ?? ''}`} {...props}>
+    {children}
+  </div>
+);
 
 export const DangerView = () => {
-  const chatDispatch = useChatDispatch();
-
   const [logout] = useLogoutMutation({
     onCompleted: () => {
       safeRedirect(
@@ -62,7 +79,6 @@ export const DangerView = () => {
   });
 
   const handleDeleteAll = () => {
-    chatDispatch({ type: 'disconnected' });
     localStorage.clear();
     sessionStorage.clear();
 
@@ -72,13 +88,13 @@ export const DangerView = () => {
   return (
     <CardWithTitle>
       <SubTitle>Danger Zone</SubTitle>
-      <OutlineCard>
+      <Card className="hover:border hover:border-red-500">
         <SettingsLine>
-          <Sub4Title>Delete chats and settings:</Sub4Title>
+          <Sub4Title>Delete settings:</Sub4Title>
           <ButtonRow>
-            <ColorButton color={'red'} onClick={handleDeleteAll}>
+            <Button variant="destructive" onClick={handleDeleteAll}>
               Delete
-            </ColorButton>
+            </Button>
           </ButtonRow>
         </SettingsLine>
         <StyledContainer>
@@ -90,7 +106,7 @@ export const DangerView = () => {
             saved in this browser.
           </CheckboxText>
         </StyledContainer>
-      </OutlineCard>
+      </Card>
     </CardWithTitle>
   );
 };

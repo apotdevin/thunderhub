@@ -1,7 +1,8 @@
 import { FC, useState } from 'react';
-import styled from 'styled-components';
 import { SettingsLine } from '../../pages/SettingsPage';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ChevronRight, Loader2 } from 'lucide-react';
 import {
   Card,
   CardWithTitle,
@@ -14,27 +15,9 @@ import { useAccount } from '../../hooks/UseAccount';
 import { QRCodeSVG } from 'qrcode.react';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { useRemoveTwofaSecretMutation } from '../../graphql/mutations/__generated__/removeTwofaSecret.generated';
-import { InputWithDeco } from '../../components/input/InputWithDeco';
 import toast from 'react-hot-toast';
 import { useUpdateTwofaSecretMutation } from '../../graphql/mutations/__generated__/updateTwofaSecret.generated';
 import { config } from '../../config/thunderhubConfig';
-
-const S = {
-  QRWrapper: styled.div`
-    width: 280px;
-    height: 280px;
-    margin: 16px;
-    background: white;
-    padding: 16px;
-  `,
-  center: styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  `,
-};
 
 const Enable: FC<{ callback: () => void }> = ({ callback }) => {
   const [token, setToken] = useState<string>('');
@@ -59,11 +42,19 @@ const Enable: FC<{ callback: () => void }> = ({ callback }) => {
   }
 
   if (error?.message) {
-    return <S.center>{error.message}</S.center>;
+    return (
+      <div className="w-full flex flex-col justify-center items-center">
+        {error.message}
+      </div>
+    );
   }
 
   if (!data?.getTwofaSecret.url) {
-    return <S.center>Unable to get secret to enable 2FA.</S.center>;
+    return (
+      <div className="w-full flex flex-col justify-center items-center">
+        Unable to get secret to enable 2FA.
+      </div>
+    );
   }
 
   const handleClick = () => {
@@ -73,30 +64,40 @@ const Enable: FC<{ callback: () => void }> = ({ callback }) => {
   return (
     <>
       <Separation />
-      <S.center>
-        <S.QRWrapper>
+      <div className="w-full flex flex-col justify-center items-center">
+        <div className="w-[280px] h-[280px] m-4 bg-white p-4">
           <QRCodeSVG value={data.getTwofaSecret.url} size={248} />
-        </S.QRWrapper>
+        </div>
         {data.getTwofaSecret.secret}
-      </S.center>
+      </div>
       <Separation />
-      <InputWithDeco
-        title="2FA"
-        inputType="number"
-        placeholder="2FA Token"
-        value={token}
-        inputCallback={v => setToken(v)}
-        onEnter={handleClick}
-      />
-      <ColorButton
-        withMargin="16px 0 0"
-        width="100%"
-        loading={updateLoading}
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>2FA</span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '500px' }}
+          type="number"
+          placeholder="2FA Token"
+          value={token}
+          onChange={e => setToken(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleClick()}
+        />
+      </div>
+      <Button
+        variant="outline"
+        style={{ margin: '16px 0 0' }}
+        className="w-full"
         disabled={!token || updateLoading}
         onClick={handleClick}
       >
-        Enable
-      </ColorButton>
+        {updateLoading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>Enable</>
+        )}
+      </Button>
     </>
   );
 };
@@ -124,23 +125,33 @@ const Disable: FC<{ callback: () => void }> = ({ callback }) => {
   return (
     <>
       <Separation />
-      <InputWithDeco
-        title="2FA"
-        inputType="number"
-        placeholder="2FA Token"
-        value={token}
-        inputCallback={v => setToken(v)}
-        onEnter={handleClick}
-      />
-      <ColorButton
-        withMargin="16px 0 0"
-        width="100%"
-        loading={loading}
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>2FA</span>
+        </div>
+        <Input
+          className="ml-0 md:ml-2"
+          style={{ maxWidth: '500px' }}
+          type="number"
+          placeholder="2FA Token"
+          value={token}
+          onChange={e => setToken(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleClick()}
+        />
+      </div>
+      <Button
+        variant="outline"
+        style={{ margin: '16px 0 0' }}
+        className="w-full"
         disabled={!token || loading}
         onClick={handleClick}
       >
-        Disable
-      </ColorButton>
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>Disable</>
+        )}
+      </Button>
     </>
   );
 };
@@ -159,9 +170,13 @@ export const Security = () => {
         <>
           <SettingsLine>
             <Sub4Title>Disable 2FA</Sub4Title>
-            <ColorButton arrow={!enable} onClick={() => setEnabled(p => !p)}>
-              {enable ? 'Cancel' : 'Disable'}
-            </ColorButton>
+            <Button variant="outline" onClick={() => setEnabled(p => !p)}>
+              {enable ? (
+                'Cancel'
+              ) : (
+                <>Disable {!enable && <ChevronRight size={18} />}</>
+              )}
+            </Button>
           </SettingsLine>
           {enable ? <Disable callback={() => setEnabled(false)} /> : null}
         </>
@@ -171,9 +186,13 @@ export const Security = () => {
       <>
         <SettingsLine>
           <Sub4Title>Enable 2FA</Sub4Title>
-          <ColorButton arrow={!enable} onClick={() => setEnabled(p => !p)}>
-            {enable ? 'Cancel' : 'Enable'}
-          </ColorButton>
+          <Button variant="outline" onClick={() => setEnabled(p => !p)}>
+            {enable ? (
+              'Cancel'
+            ) : (
+              <>Enable {!enable && <ChevronRight size={18} />}</>
+            )}
+          </Button>
         </SettingsLine>
         {enable ? <Enable callback={() => setEnabled(false)} /> : null}
       </>

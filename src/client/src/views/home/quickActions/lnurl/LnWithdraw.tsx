@@ -1,14 +1,15 @@
 import { FC, useEffect, useState } from 'react';
 import { WithdrawRequest } from '../../../../graphql/types';
-import styled from 'styled-components';
 import { Title } from '../../../../components/typography/Styled';
 import {
   DarkSubTitle,
   Separation,
 } from '../../../../components/generic/Styled';
 import { renderLine } from '../../../../components/generic/helpers';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import { Input } from '@/components/ui/input';
+import { Price } from '../../../../components/price/Price';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import { useWithdrawLnUrlMutation } from '../../../../graphql/mutations/__generated__/lnUrl.generated';
 import { useGetInvoiceStatusChangeLazyQuery } from '../../../../graphql/queries/__generated__/getInvoiceStatusChange.generated';
 import { chartColors } from '../../../../styles/Themes';
@@ -17,18 +18,6 @@ import { Link } from '../../../../components/link/Link';
 import { getErrorContent } from '../../../../utils/error';
 import toast from 'react-hot-toast';
 import { Timer } from '../../account/createInvoice/Timer';
-
-const Center = styled.div`
-  margin: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ModalText = styled.div`
-  width: 100%;
-  text-align: center;
-`;
 
 type LnWithdrawProps = {
   request: WithdrawRequest;
@@ -69,7 +58,11 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
   }, [statusLoading, statusData]);
 
   if (!callback) {
-    return <ModalText>Missing information from LN Service</ModalText>;
+    return (
+      <div className="w-full text-center">
+        Missing information from LN Service
+      </div>
+    );
   }
 
   const callbackUrl = new URL(callback);
@@ -77,34 +70,34 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
   const renderContent = () => {
     if (error) {
       return (
-        <Center>
+        <div className="m-4 flex justify-center items-center">
           <DarkSubTitle>
             Failed to check status of the withdrawal. Please check the status in
             the
             <Link to={'/transactions'}> Transactions </Link>
             view
           </DarkSubTitle>
-        </Center>
+        </div>
       );
     }
     if (invoiceStatus === 'paid') {
       return (
-        <Center>
+        <div className="m-4 flex justify-center items-center">
           <CheckCircle stroke={chartColors.green} size={32} />
           <Title>Paid</Title>
-        </Center>
+        </div>
       );
     }
 
     if (invoiceStatus === 'not_paid' || invoiceStatus === 'timeout') {
       return (
-        <Center>
+        <div className="m-4 flex justify-center items-center">
           <Title>
             Check the status of this invoice in the
             <Link to={'/transactions'}> Transactions </Link>
             view
           </Title>
-        </Center>
+        </div>
       );
     }
     if (statusLoading) {
@@ -121,27 +114,39 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
         {!isSame && renderLine('Max Withdraw Amount', max)}
         {!isSame && renderLine('Min Withdraw Amount', min)}
         <Separation />
-        <InputWithDeco
-          inputMaxWidth={'300px'}
-          title={'Description'}
-          value={description}
-          inputCallback={value => setDescription(value)}
-        />
-        {!isSame && (
-          <InputWithDeco
-            inputMaxWidth={'300px'}
-            title={'Amount'}
-            amount={amount}
-            value={amount}
-            inputType={'number'}
-            inputCallback={value => setAmount(Number(value))}
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>Description</span>
+          </div>
+          <Input
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '300px' }}
+            value={description}
+            onChange={e => setDescription(e.target.value)}
           />
+        </div>
+        {!isSame && (
+          <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+            <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+              <span>Amount</span>
+              <span className="text-muted-foreground mx-2 ml-4">
+                <Price amount={amount} />
+              </span>
+            </div>
+            <Input
+              className="ml-0 md:ml-2"
+              style={{ maxWidth: '300px' }}
+              type={'number'}
+              value={amount && amount > 0 ? amount : ''}
+              onChange={e => setAmount(Number(e.target.value))}
+            />
+          </div>
         )}
-        <ColorButton
-          loading={loading || statusLoading}
+        <Button
+          variant="outline"
           disabled={loading || !k1 || statusLoading || !amount}
-          fullWidth={true}
-          withMargin={'16px 0 0'}
+          className="w-full"
+          style={{ margin: '16px 0 0' }}
           onClick={() => {
             if (min && amount < min) {
               toast.error('Amount is below the minimum');
@@ -154,8 +159,12 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
             }
           }}
         >
-          {`Withdraw (${amount} sats)`}
-        </ColorButton>
+          {loading || statusLoading ? (
+            <Loader2 className="animate-spin" size={16} />
+          ) : (
+            <>{`Withdraw (${amount} sats)`}</>
+          )}
+        </Button>
       </>
     );
   };
@@ -164,7 +173,7 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
     <>
       <Title>Withdraw</Title>
       <Separation />
-      <ModalText>{`Withdraw from ${callbackUrl.host}`}</ModalText>
+      <div className="w-full text-center">{`Withdraw from ${callbackUrl.host}`}</div>
       <Separation />
       {renderContent()}
     </>

@@ -1,24 +1,18 @@
 import { FC, ReactNode, useEffect, lazy, Suspense } from 'react';
-import { StyleSheetManager, ThemeProvider } from 'styled-components';
 import { ApolloProvider } from '@apollo/client';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import isPropValid from '@emotion/is-prop-valid';
 import { useApollo } from '../config/client';
 import { ContextProvider } from './context/ContextProvider';
 import { useConfigState, ConfigProvider } from './context/ConfigContext';
-import { GlobalStyles } from './styles/GlobalStyle';
 import { Header } from './layouts/header/Header';
 import { Footer } from './layouts/footer/Footer';
-import { PageWrapper, HeaderBodyWrapper } from './layouts/Layout.styled';
 import { Toaster } from 'react-hot-toast';
 import { useListener } from './hooks/UseListener';
 import { SseProvider } from './context/SseContext';
 import { config } from './config/thunderhubConfig';
 import { LoadingCard } from './components/loading/LoadingCard';
 import { useGetNodeInfoQuery } from './graphql/queries/__generated__/getNodeInfo.generated';
-import styled from 'styled-components';
-
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -35,7 +29,6 @@ import ChainPage from './pages/ChainPage';
 import ToolsPage from './pages/ToolsPage';
 import StatsPage from './pages/StatsPage';
 import SwapPage from './pages/SwapPage';
-import ChatPage from './pages/ChatPage';
 import SettingsPage from './pages/SettingsPage';
 import AmbossPage from './pages/AmbossPage';
 
@@ -48,19 +41,6 @@ const LoadingComp = () => <LoadingCard noCard={true} loadingHeight={'90vh'} />;
 const LoadingCompSmall = () => (
   <LoadingCard noCard={true} loadingHeight={'30vh'} />
 );
-
-const S = {
-  wrapper: styled.div`
-    position: relative;
-  `,
-};
-
-function shouldForwardProp(propName: string, target: any) {
-  if (typeof target === 'string') {
-    return isPropValid(propName);
-  }
-  return true;
-}
 
 const NotAuthenticated: FC = () => {
   const navigate = useNavigate();
@@ -95,24 +75,21 @@ const Wrapper: FC<{ children?: ReactNode }> = ({ children }) => {
   const checking = !isRoot && loading;
 
   return (
-    <ThemeProvider theme={{ mode: isRoot ? 'light' : theme }}>
-      <GlobalStyles />
-      <PageWrapper>
-        <HeaderBodyWrapper>
-          <Header />
-          <Listener isRoot={isRoot} />
-          {checking ? (
-            <LoadingCard noCard={true} loadingHeight={'80vh'} />
-          ) : isRoot || authenticated ? (
-            children
-          ) : (
-            <NotAuthenticated />
-          )}
-        </HeaderBodyWrapper>
-        <Footer />
-        <Toaster position="top-right" />
-      </PageWrapper>
-    </ThemeProvider>
+    <div className="relative min-h-screen">
+      <div className="pb-[120px]">
+        <Header />
+        <Listener isRoot={isRoot} />
+        {checking ? (
+          <LoadingCard noCard={true} loadingHeight={'80vh'} />
+        ) : isRoot || authenticated ? (
+          children
+        ) : (
+          <NotAuthenticated />
+        )}
+      </div>
+      <Footer />
+      <Toaster position="top-right" />
+    </div>
   );
 };
 
@@ -123,9 +100,9 @@ const AuthenticatedRoutes = () => (
       path="/dashboard"
       element={
         <Suspense fallback={<LoadingComp />}>
-          <S.wrapper>
+          <div className="relative">
             <DashboardPage />
-          </S.wrapper>
+          </div>
         </Suspense>
       }
     />
@@ -138,7 +115,6 @@ const AuthenticatedRoutes = () => (
     <Route path="/tools" element={<ToolsPage />} />
     <Route path="/stats" element={<StatsPage />} />
     <Route path="/swap" element={<SwapPage />} />
-    <Route path="/chat" element={<ChatPage />} />
     <Route path="/settings" element={<SettingsPage />} />
     <Route
       path="/settings/dashboard"
@@ -161,18 +137,16 @@ export default function App() {
   const apolloClient = useApollo('', null);
 
   return (
-    <StyleSheetManager shouldForwardProp={shouldForwardProp}>
-      <ApolloProvider client={apolloClient}>
-        <ConfigProvider initialConfig={{ theme: themeCookie }}>
-          <SseProvider>
-            <ContextProvider>
-              <Wrapper>
-                <AuthenticatedRoutes />
-              </Wrapper>
-            </ContextProvider>
-          </SseProvider>
-        </ConfigProvider>
-      </ApolloProvider>
-    </StyleSheetManager>
+    <ApolloProvider client={apolloClient}>
+      <ConfigProvider initialConfig={{ theme: themeCookie }}>
+        <SseProvider>
+          <ContextProvider>
+            <Wrapper>
+              <AuthenticatedRoutes />
+            </Wrapper>
+          </ContextProvider>
+        </SseProvider>
+      </ConfigProvider>
+    </ApolloProvider>
   );
 }

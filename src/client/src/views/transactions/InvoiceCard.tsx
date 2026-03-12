@@ -1,8 +1,7 @@
 import { FC, Fragment } from 'react';
 import { InvoiceType } from '../../graphql/types';
 import { MessageCircle } from 'lucide-react';
-import styled from 'styled-components';
-import { mediaWidths, themeColors } from '../../styles/Themes';
+import { themeColors } from '../../styles/Themes';
 import { useGetChannelQuery } from '../../graphql/queries/__generated__/getChannel.generated';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { Price } from '../../components/price/Price';
@@ -23,21 +22,6 @@ import {
   SubCard,
   DarkSubTitle,
 } from '../../components/generic/Styled';
-
-const S = {
-  icon: styled.span`
-    margin-left: 4px;
-  `,
-  grid: styled.div`
-    width: 100%;
-    display: grid;
-    grid-template-columns: 3fr 2fr 1fr;
-
-    @media (${mediaWidths.mobile}) {
-      grid-template-columns: 1fr;
-    }
-  `,
-};
 
 interface InvoiceCardProps {
   invoice: InvoiceType;
@@ -154,18 +138,18 @@ export const InvoiceCard = ({
     <SubCard key={index}>
       <MainInfo onClick={() => handleClick()}>
         <StatusLine>{getStatusDot(is_confirmed, 'active')}</StatusLine>
-        <S.grid>
+        <div className="w-full grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr]">
           <NodeTitle>
             {description ? description : 'Invoice'}
             {hasMessages && (
-              <S.icon>
+              <span className="ml-1">
                 <MessageCircle size={16} stroke={themeColors.blue2} />
-              </S.icon>
+              </span>
             )}
           </NodeTitle>
           <DarkSubTitle>{`(${getDateDif(date)} ago)`}</DarkSubTitle>
           <Price amount={tokens} />
-        </S.grid>
+        </div>
       </MainInfo>
       {index === indexOpen && renderDetails()}
     </SubCard>

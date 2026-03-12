@@ -1,20 +1,6 @@
 import { useGetLatestVersionQuery } from '@/graphql/queries/__generated__/getLatestVersion.generated';
 import { config } from '../../config/thunderhubConfig';
-import styled from 'styled-components';
 import { Link } from '../link/Link';
-
-const VersionBox = styled.div`
-  width: 100%;
-  text-align: center;
-  font-size: 14px;
-  opacity: 0.3;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 1;
-    color: white;
-  }
-`;
 
 export const Version = () => {
   const { npmVersion, noVersionCheck } = config;
@@ -49,7 +35,9 @@ export const Version = () => {
       href={'https://docs.thunderhub.io/installation#updating'}
       newTab={true}
     >
-      <VersionBox>{`Version ${githubVersion} is available. You are on version ${npmVersion}`}</VersionBox>
+      <div className="w-full text-center text-sm cursor-pointer text-muted-foreground">
+        {`Version ${githubVersion} is available. You are on version ${npmVersion}`}
+      </div>
     </Link>
   );
 };

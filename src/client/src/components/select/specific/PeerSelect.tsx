@@ -1,8 +1,8 @@
 import { useGetPeersQuery } from '@/graphql/queries/__generated__/getPeers.generated';
 import { shorten } from '@/components/generic/helpers';
 import { Peer } from '@/graphql/types';
-import { SelectWithDeco } from '../SelectWithDeco';
-import { ValueProp } from '..';
+import { Loader2 } from 'lucide-react';
+import { Select, ValueProp } from '..';
 
 type PeerSelectProps = {
   title: string;
@@ -52,11 +52,15 @@ export const PeerSelect = ({ title, callback }: PeerSelectProps) => {
   };
 
   return (
-    <SelectWithDeco
-      loading={loading}
-      title={title}
-      options={options}
-      callback={handleChange}
-    />
+    <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+      <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+        <span>{title}</span>
+      </div>
+      {loading ? (
+        <Loader2 className="animate-spin text-[#5163ba]" size={20} />
+      ) : (
+        <Select maxWidth={'500px'} options={options} callback={handleChange} />
+      )}
+    </div>
   );
 };

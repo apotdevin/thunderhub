@@ -19,7 +19,6 @@ import { ForwardsModule } from './forwards/forwards.module';
 import { HealthModule } from './health/health.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { InvoicesModule } from './invoices/invoices.module';
-import { ChatModule } from './chat/chat.module';
 import { BoltzModule } from './boltz/boltz.module';
 import { UserConfigModule } from './userConfig/userConfig.module';
 
@@ -46,7 +45,6 @@ import { UserConfigModule } from './userConfig/userConfig.module';
     HealthModule,
     TransactionsModule,
     InvoicesModule,
-    ChatModule,
     BoltzModule,
   ],
 })

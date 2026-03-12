@@ -1,8 +1,4 @@
-import { InputWithDeco } from '../../components/input/InputWithDeco';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
+import { cn } from '@/lib/utils';
 import {
   Card,
   DarkSubTitle,
@@ -11,13 +7,12 @@ import {
 } from '../../components/generic/Styled';
 import { useEffect, useState } from 'react';
 import { Slider } from '../../components/slider';
-import { Edit2, X } from 'lucide-react';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import styled from 'styled-components';
-import { mediaWidths } from '../../styles/Themes';
-import { Input } from '../../components/input';
+import { Edit2, X, ChevronRight, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useCreateBoltzReverseSwapMutation } from '../../graphql/mutations/__generated__/createBoltzReverseSwap.generated';
 import toast from 'react-hot-toast';
+import { Price } from '../../components/price/Price';
 import { getErrorContent } from '../../utils/error';
 import { useMutationResultWithReset } from '../../hooks/UseMutationWithReset';
 import { useSwapsDispatch } from './SwapContext';
@@ -26,16 +21,6 @@ type StartSwapProps = {
   max: number;
   min: number;
 };
-
-const StyledRow = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: flex-end;
-
-  @media (${mediaWidths.mobile}) {
-    justify-content: center;
-  }
-`;
 
 export const StartSwap = ({ max, min }: StartSwapProps) => {
   const [amount, setAmount] = useState<number>(min);
@@ -67,11 +52,18 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
         <SubTitle>Start Swap</SubTitle>
         <DarkSubTitle>Lightning BTC to BTC</DarkSubTitle>
       </SingleLine>
-      <InputWithDeco title={'Amount'} noInput={true} amount={amount}>
-        <StyledRow>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Amount</span>
+          <span className="text-muted-foreground mx-2 ml-4">
+            <Price amount={amount} />
+          </span>
+        </div>
+        <div className="flex w-full justify-center md:justify-end">
           {isEdit ? (
             <Input
-              maxWidth={'440px'}
+              className="ml-0 md:ml-2"
+              style={{ maxWidth: '440px' }}
               value={amount}
               type={'number'}
               placeholder={'Satoshis'}
@@ -86,52 +78,71 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
             />
           )}
 
-          <ColorButton
-            withMargin={'0 0 0 8px'}
+          <Button
+            variant={isEdit ? 'default' : 'outline'}
+            style={{ margin: '0 0 0 8px' }}
             onClick={() => setIsEdit(p => !p)}
-            selected={isEdit}
           >
             {!isEdit ? <Edit2 size={18} /> : <X size={18} />}
-          </ColorButton>
-        </StyledRow>
-      </InputWithDeco>
-      <InputWithDeco title={'Address'} noInput={true}>
-        <MultiButton>
-          <SingleButton
-            selected={!isCustom}
+          </Button>
+        </div>
+      </div>
+      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+          <span>Address</span>
+        </div>
+        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
+          <Button
+            variant={!isCustom ? 'default' : 'ghost'}
             onClick={() => {
               setIsCustom(false);
               setAddress('');
             }}
+            className={cn('grow', isCustom && 'text-foreground')}
           >
             Auto
-          </SingleButton>
-          <SingleButton selected={isCustom} onClick={() => setIsCustom(true)}>
+          </Button>
+          <Button
+            variant={isCustom ? 'default' : 'ghost'}
+            onClick={() => setIsCustom(true)}
+            className={cn('grow', !isCustom && 'text-foreground')}
+          >
             Custom
-          </SingleButton>
-        </MultiButton>
-      </InputWithDeco>
+          </Button>
+        </div>
+      </div>
       {isCustom && (
-        <InputWithDeco
-          title={'Send to'}
-          placeholder={'Bitcoin address'}
-          value={address}
-          inputCallback={value => setAddress(value)}
-        />
+        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
+          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
+            <span>Send to</span>
+          </div>
+          <Input
+            className="ml-0 md:ml-2"
+            style={{ maxWidth: '500px' }}
+            placeholder={'Bitcoin address'}
+            value={address ?? ''}
+            onChange={e => setAddress(e.target.value)}
+          />
+        </div>
       )}
 
-      <ColorButton
+      <Button
+        variant="outline"
         disabled={!amount || loading}
-        loading={loading}
         onClick={() =>
           getQuote({ variables: { amount, ...(address && { address }) } })
         }
-        arrow={true}
-        withMargin={'16px 0 0'}
-        fullWidth={true}
+        style={{ margin: '16px 0 0' }}
+        className="w-full"
       >
-        Get Quote
-      </ColorButton>
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>
+            Get Quote <ChevronRight size={18} />
+          </>
+        )}
+      </Button>
     </Card>
   );
 };

@@ -12,7 +12,7 @@ import { sortBy } from 'lodash';
 import { renderLine } from '../../components/generic/helpers';
 import { formatSeconds } from '../../utils/helpers';
 import { useStatsDispatch } from './context';
-import { ScoreLine, WarningText, Clickable } from './styles';
+import { chartColors } from '../../styles/Themes';
 import { StatWrapper } from './Wrapper';
 import { getIcon, getTimeMessage, getProgressColor } from './helpers';
 
@@ -29,14 +29,20 @@ const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
     <>
       <Separation />
       {!channel.significant && (
-        <WarningText>
+        <DarkSubTitle
+          className="w-full text-center"
+          style={{ color: chartColors.orange }}
+        >
           Needs to be monitored for a longer period to give significant
           statistics.
-        </WarningText>
+        </DarkSubTitle>
       )}
-      <WarningText warningColor={getProgressColor(channel.score)}>
+      <DarkSubTitle
+        className="w-full text-center"
+        style={{ color: getProgressColor(channel.score) || chartColors.orange }}
+      >
         {message}
-      </WarningText>
+      </DarkSubTitle>
       {renderLine('Monitored time:', formatSeconds(channel.monitoredTime))}
       {renderLine('Monitored up time:', formatSeconds(channel.monitoredUptime))}
       {renderLine(
@@ -48,16 +54,19 @@ const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
   return (
     <Fragment key={channel.id || ''}>
       <SubCard>
-        <Clickable onClick={() => openSet(open ? 0 : index)}>
+        <div
+          className="cursor-pointer"
+          onClick={() => openSet(open ? 0 : index)}
+        >
           <ResponsiveLine>
             <SubTitle>{channel?.partner?.node?.alias}</SubTitle>
-            <ScoreLine>
+            <div className="flex justify-between mt-2 w-full md:mt-0 md:w-40">
               <DarkSubTitle>Score</DarkSubTitle>
               {channel.score}
               {getIcon(channel.score, !channel.significant)}
-            </ScoreLine>
+            </div>
           </ResponsiveLine>
-        </Clickable>
+        </div>
         {open && renderContent()}
       </SubCard>
     </Fragment>

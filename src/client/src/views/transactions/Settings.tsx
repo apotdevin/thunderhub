@@ -1,17 +1,7 @@
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { SingleLine } from '../../components/generic/Styled';
 import { useLocalStorage } from '../../hooks/UseLocalStorage';
-import styled from 'styled-components';
-
-const NoWrapText = styled.div`
-  white-space: nowrap;
-  font-size: 14px;
-`;
-
-const InputTitle = styled(NoWrapText)``;
 
 export const defaultSettings = {
   rebalance: false,
@@ -29,38 +19,45 @@ export const TransactionSettings = () => {
   return (
     <>
       <SingleLine>
-        <InputTitle>Confirmed</InputTitle>
-        <MultiButton>
-          <SingleButton
-            selected={confirmed}
+        <div className="whitespace-nowrap text-sm">Confirmed</div>
+        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
+          <Button
+            variant={confirmed ? 'default' : 'ghost'}
             onClick={() => setSettings({ ...settings, confirmed: true })}
+            className={cn('grow', !confirmed && 'text-foreground')}
           >
             Yes
-          </SingleButton>
-          <SingleButton
-            selected={!confirmed}
+          </Button>
+          <Button
+            variant={!confirmed ? 'default' : 'ghost'}
             onClick={() => setSettings({ ...settings, confirmed: false })}
+            className={cn('grow', confirmed && 'text-foreground')}
           >
             No
-          </SingleButton>
-        </MultiButton>
+          </Button>
+        </div>
       </SingleLine>
       <SingleLine>
-        <InputTitle>Circular Payment</InputTitle>
-        <MultiButton margin={'8px 0'}>
-          <SingleButton
-            selected={rebalance}
+        <div className="whitespace-nowrap text-sm">Circular Payment</div>
+        <div
+          className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap"
+          style={{ margin: '8px 0' }}
+        >
+          <Button
+            variant={rebalance ? 'default' : 'ghost'}
             onClick={() => setSettings({ ...settings, rebalance: true })}
+            className={cn('grow', !rebalance && 'text-foreground')}
           >
             Yes
-          </SingleButton>
-          <SingleButton
-            selected={!rebalance}
+          </Button>
+          <Button
+            variant={!rebalance ? 'default' : 'ghost'}
             onClick={() => setSettings({ ...settings, rebalance: false })}
+            className={cn('grow', rebalance && 'text-foreground')}
           >
             No
-          </SingleButton>
-        </MultiButton>
+          </Button>
+        </div>
       </SingleLine>
     </>
   );

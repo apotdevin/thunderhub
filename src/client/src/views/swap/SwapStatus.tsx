@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
-import { RefreshCw, Trash } from 'lucide-react';
+import { RefreshCw, Trash, ChevronRight } from 'lucide-react';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
 import { getAddressLink } from '../../components/generic/helpers';
 import {
   Card,
@@ -13,58 +13,11 @@ import {
 import Modal from '../../components/modal/ReactModal';
 import { useGetBoltzSwapStatusQuery } from '../../graphql/queries/__generated__/getBoltzSwapStatus.generated';
 import { chartColors, themeColors } from '../../styles/Themes';
-import styled from 'styled-components';
 import { SwapClaim } from './SwapClaim';
 import { useSwapsDispatch, useSwapsState } from './SwapContext';
 import { useSwapExpire } from './SwapExpire';
 import { SwapQuote } from './SwapQuote';
 import { EnrichedSwap } from './types';
-
-const S = {
-  row: styled.div`
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 14px;
-  `,
-  single: styled.div`
-    display: flex;
-    align-items: center;
-  `,
-  expired: styled.div`
-    border: 1px solid ${chartColors.orange};
-    background-color: rgba(255, 193, 10, 0.1);
-    padding: 4px 8px;
-    border-radius: 8px;
-  `,
-  warning: styled.div`
-    border: 1px solid ${chartColors.darkyellow};
-    background-color: rgba(255, 193, 10, 0.1);
-    padding: 4px 8px;
-    border-radius: 8px;
-  `,
-  ready: styled.div`
-    border: 1px solid ${chartColors.green};
-    background-color: rgba(10, 255, 59, 0.05);
-    padding: 4px 8px;
-    border-radius: 8px;
-  `,
-  claiming: styled.div`
-    border: 1px solid ${chartColors.green};
-    background-color: rgba(10, 255, 59, 0.05);
-    color: ${chartColors.green};
-    padding: 4px 8px;
-    border-radius: 8px;
-  `,
-  finished: styled.div`
-    border: 1px solid ${themeColors.grey8};
-    background-color: rgba(10, 255, 59, 0.05);
-    padding: 4px 8px;
-    border-radius: 8px;
-  `,
-};
 
 const CREATED = 'swap.created';
 export const MEMPOOL = 'transaction.mempool';
@@ -80,27 +33,43 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
   const ReadyComponent = () => {
     const time = useSwapExpire(swap.decodedInvoice?.expires_at);
     return (
-      <S.row>
+      <div className="flex w-full justify-between items-center mb-2 text-sm">
         <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-        <S.single>
-          <S.ready>Ready to Pay {time}</S.ready>
-          <ColorButton
-            onClick={() => dispatch({ type: 'open', open: index })}
-            arrow={true}
-            withMargin={'0 0 0 4px'}
+        <div className="flex items-center">
+          <div
+            className="rounded-lg p-1 px-2"
+            style={{
+              border: `1px solid ${chartColors.green}`,
+              backgroundColor: 'rgba(10, 255, 59, 0.05)',
+            }}
           >
-            Pay
-          </ColorButton>
-        </S.single>
-      </S.row>
+            Ready to Pay {time}
+          </div>
+          <Button
+            variant="outline"
+            onClick={() => dispatch({ type: 'open', open: index })}
+            style={{ margin: '0 0 0 4px' }}
+          >
+            Pay <ChevronRight size={18} />
+          </Button>
+        </div>
+      </div>
     );
   };
 
   const ErrorComponent = () => (
-    <S.row>
+    <div className="flex w-full justify-between items-center mb-2 text-sm">
       <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-      <S.expired>Unable to get status</S.expired>
-    </S.row>
+      <div
+        className="rounded-lg p-1 px-2"
+        style={{
+          border: `1px solid ${chartColors.orange}`,
+          backgroundColor: 'rgba(255, 193, 10, 0.1)',
+        }}
+      >
+        Unable to get status
+      </div>
+    </div>
   );
 
   if (!swap?.id) return null;
@@ -113,28 +82,53 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
     case INVOICE_EXPIRED:
     case EXPIRED:
       return (
-        <S.row>
+        <div className="flex w-full justify-between items-center mb-2 text-sm">
           <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.expired>Expired</S.expired>
-        </S.row>
+          <div
+            className="rounded-lg p-1 px-2"
+            style={{
+              border: `1px solid ${chartColors.orange}`,
+              backgroundColor: 'rgba(255, 193, 10, 0.1)',
+            }}
+          >
+            Expired
+          </div>
+        </div>
       );
     case REFUNDED:
       return (
-        <S.row>
+        <div className="flex w-full justify-between items-center mb-2 text-sm">
           <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.warning>Refunded</S.warning>
-        </S.row>
+          <div
+            className="rounded-lg p-1 px-2"
+            style={{
+              border: `1px solid ${chartColors.darkyellow}`,
+              backgroundColor: 'rgba(255, 193, 10, 0.1)',
+            }}
+          >
+            Refunded
+          </div>
+        </div>
       );
     case CREATED:
       return <ReadyComponent />;
     case MEMPOOL:
       return (
-        <S.row>
+        <div className="flex w-full justify-between items-center mb-2 text-sm">
           <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.single>
+          <div className="flex items-center">
             {getAddressLink(swap.receivingAddress)}
-            <S.warning>Waiting for confirmation</S.warning>
-            <ColorButton
+            <div
+              className="rounded-lg p-1 px-2"
+              style={{
+                border: `1px solid ${chartColors.darkyellow}`,
+                backgroundColor: 'rgba(255, 193, 10, 0.1)',
+              }}
+            >
+              Waiting for confirmation
+            </div>
+            <Button
+              variant="outline"
               onClick={() =>
                 dispatch({
                   type: 'claim',
@@ -142,22 +136,31 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
                   claimType: MEMPOOL,
                 })
               }
-              arrow={true}
-              withMargin={'0 0 0 4px'}
+              style={{ margin: '0 0 0 4px' }}
             >
-              Claim Instantly
-            </ColorButton>
-          </S.single>
-        </S.row>
+              Claim Instantly <ChevronRight size={18} />
+            </Button>
+          </div>
+        </div>
       );
     case CONFIRMED:
       return (
-        <S.row>
+        <div className="flex w-full justify-between items-center mb-2 text-sm">
           <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.single>
+          <div className="flex items-center">
             {getAddressLink(swap.receivingAddress)}
-            <S.claiming>Ready to Claim</S.claiming>
-            <ColorButton
+            <div
+              className="rounded-lg p-1 px-2"
+              style={{
+                border: `1px solid ${chartColors.green}`,
+                backgroundColor: 'rgba(10, 255, 59, 0.05)',
+                color: chartColors.green,
+              }}
+            >
+              Ready to Claim
+            </div>
+            <Button
+              variant="outline"
               onClick={() =>
                 dispatch({
                   type: 'claim',
@@ -165,22 +168,30 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
                   claimType: CONFIRMED,
                 })
               }
-              arrow={true}
-              withMargin={'0 0 0 4px'}
+              style={{ margin: '0 0 0 4px' }}
             >
-              Claim
-            </ColorButton>
-          </S.single>
-        </S.row>
+              Claim <ChevronRight size={18} />
+            </Button>
+          </div>
+        </div>
       );
     case SETTLED:
       return (
-        <S.row>
+        <div className="flex w-full justify-between items-center mb-2 text-sm">
           <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.single>
+          <div className="flex items-center">
             {getAddressLink(swap.receivingAddress)}
-            <S.finished>Completed</S.finished>
-            <ColorButton
+            <div
+              className="rounded-lg p-1 px-2"
+              style={{
+                border: `1px solid ${themeColors.grey8}`,
+                backgroundColor: 'rgba(10, 255, 59, 0.05)',
+              }}
+            >
+              Completed
+            </div>
+            <Button
+              variant="outline"
               onClick={() =>
                 dispatch({
                   type: 'claim',
@@ -188,23 +199,30 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
                   claimType: CONFIRMED,
                 })
               }
-              arrow={true}
-              withMargin={'0 0 0 4px'}
+              style={{ margin: '0 0 0 4px' }}
             >
-              Claim
-            </ColorButton>
-          </S.single>
-        </S.row>
+              Claim <ChevronRight size={18} />
+            </Button>
+          </div>
+        </div>
       );
     default:
       return (
-        <S.row>
+        <div className="flex w-full justify-between items-center mb-2 text-sm">
           <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.single>
+          <div className="flex items-center">
             {getAddressLink(swap.receivingAddress)}
-            <S.expired>{swap.boltz.status}</S.expired>
-          </S.single>
-        </S.row>
+            <div
+              className="rounded-lg p-1 px-2"
+              style={{
+                border: `1px solid ${chartColors.orange}`,
+                backgroundColor: 'rgba(255, 193, 10, 0.1)',
+              }}
+            >
+              {swap.boltz.status}
+            </div>
+          </div>
+        </div>
       );
   }
 };
@@ -284,17 +302,22 @@ export const SwapStatus = () => {
         <SingleLine>
           <SubTitle>Swap History</SubTitle>
           <SingleLine>
-            <ColorButton
+            <Button
+              variant="outline"
               disabled={loading}
               onClick={() => refetch()}
-              withMargin="0 4px 0 0"
+              style={{ margin: '0 4px 0 0' }}
             >
               <RefreshCw size={18} />
-            </ColorButton>
+            </Button>
             <div data-tip data-for={`cleanup`}>
-              <ColorButton disabled={loading} onClick={handleCleanup}>
+              <Button
+                variant="outline"
+                disabled={loading}
+                onClick={handleCleanup}
+              >
                 <Trash size={18} />
-              </ColorButton>
+              </Button>
             </div>
           </SingleLine>
         </SingleLine>

@@ -2,8 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { InvoiceCard } from '../views/transactions/InvoiceCard';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
-import { Settings } from 'lucide-react';
-import styled from 'styled-components';
+import { Settings, Loader2 } from 'lucide-react';
 import { useLocalStorage } from '../hooks/UseLocalStorage';
 import { useNodeInfo } from '../hooks/UseNodeInfo';
 import {
@@ -19,7 +18,7 @@ import {
 } from '../components/generic/Styled';
 import { getErrorContent } from '../utils/error';
 import { PaymentsCard } from '../views/transactions/PaymentsCards';
-import { ColorButton } from '../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
 import { FlowBox } from '../views/home/reports/flow';
 import {
   GetInvoicesQuery,
@@ -30,17 +29,6 @@ import {
   useGetPaymentsQuery,
 } from '../graphql/queries/__generated__/getPayments.generated';
 import { SmallSelectWithValue } from '../components/select';
-
-const S = {
-  row: styled.div`
-    width: 100%;
-    display: grid;
-    column-gap: 16px;
-    grid-template-columns: 1fr 110px 50px;
-    margin-bottom: 8px;
-    align-items: center;
-  `,
-};
 
 const options = [
   { label: 'Invoices', value: 'invoices' },
@@ -225,7 +213,10 @@ const TransactionsView = () => {
     <>
       <FlowBox />
       <CardWithTitle>
-        <S.row>
+        <div
+          className="grid w-full items-center gap-4 mb-2"
+          style={{ gridTemplateColumns: '1fr 110px 50px' }}
+        >
           <SubTitle>
             Transactions
             <DarkSubTitle fontSize={'12px'}>{beforeDate}</DarkSubTitle>
@@ -236,14 +227,15 @@ const TransactionsView = () => {
             value={show}
             isClearable={false}
           />
-          <ColorButton
+          <Button
+            variant="outline"
             onClick={() => {
               setOpen(p => !p);
             }}
           >
             <Settings size={18} />
-          </ColorButton>
-        </S.row>
+          </Button>
+        </div>
         {open && (
           <Card>
             <TransactionSettings />
@@ -252,15 +244,19 @@ const TransactionsView = () => {
         <Card bottom={'8px'} mobileCardPadding={'0'} mobileNoBackground={true}>
           {show.value === 'invoices' ? renderInvoices() : renderPayments()}
           {isDisabled ? null : (
-            <ColorButton
-              loading={loadingOrRefetching}
+            <Button
+              variant="outline"
+              className="w-full"
+              style={{ margin: '16px 0 0' }}
               disabled={loadingOrRefetching}
-              fullWidth={true}
-              withMargin={'16px 0 0'}
               onClick={() => handleClick()}
             >
-              Fetch More
-            </ColorButton>
+              {loadingOrRefetching ? (
+                <Loader2 className="animate-spin" size={16} />
+              ) : (
+                <>Fetch More</>
+              )}
+            </Button>
           )}
         </Card>
       </CardWithTitle>

@@ -9,7 +9,6 @@ import {
   X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import styled from 'styled-components';
 import { BalanceBars } from '../../../components/balance';
 import {
   getChannelLink,
@@ -30,27 +29,6 @@ import { blockToTime, formatSeconds, getPercent } from '../../../utils/helpers';
 import { ChannelDetails } from './ChannelDetails';
 import { defaultHiddenColumns } from './helpers';
 import { VisibilityState } from '@tanstack/react-table';
-
-const S = {
-  link: styled.span`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `,
-  button: styled.button`
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 0;
-    font: inherit;
-    cursor: pointer;
-    outline: inherit;
-
-    :hover {
-      color: ${chartColors.orange};
-    }
-  `,
-};
 
 const getBar = (top: number, bottom: number) => {
   const percent = (top / bottom) * 100;
@@ -159,7 +137,8 @@ export const ChannelTable = () => {
 
       const actions = {
         editAction: (
-          <S.button
+          <button
+            className="bg-none text-inherit border-none p-0 font-inherit cursor-pointer outline-inherit hover:text-[#FFA940]"
             onClick={() =>
               setChannel({
                 channel: c.id,
@@ -169,10 +148,11 @@ export const ChannelTable = () => {
             }
           >
             <Edit size={14} />
-          </S.button>
+          </button>
         ),
         closeAction: (
-          <S.button
+          <button
+            className="bg-none text-inherit border-none p-0 font-inherit cursor-pointer outline-inherit hover:text-[#FFA940]"
             onClick={() =>
               setChannel({
                 channel: c.id,
@@ -182,7 +162,7 @@ export const ChannelTable = () => {
             }
           >
             <X size={14} />
-          </S.button>
+          </button>
         ),
       };
 
@@ -270,10 +250,10 @@ export const ChannelTable = () => {
         ),
         viewAction: (
           <Link to={`/channels/${c.id}`}>
-            <S.link>
+            <span className="flex items-center justify-center">
               View
               <ChevronRight size={12} />
-            </S.link>
+            </span>
           </Link>
         ),
       };

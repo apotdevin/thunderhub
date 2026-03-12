@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import styled from 'styled-components';
 import { ApolloError } from '@apollo/client';
 
 const getMessage = (error: string) => {
@@ -26,17 +25,6 @@ const getMessage = (error: string) => {
   }
 };
 
-const ErrorLine = styled.div`
-  padding: 4px 0;
-
-  -ms-word-break: break-all;
-  word-break: break-all;
-  word-break: break-word;
-  -webkit-hyphens: auto;
-  -moz-hyphens: auto;
-  hyphens: auto;
-`;
-
 export const getErrorContent = (error: ApolloError): JSX.Element => {
   const errors = error.graphQLErrors.map(x => x.message);
 
@@ -47,7 +35,11 @@ export const getErrorContent = (error: ApolloError): JSX.Element => {
   return (
     <div>
       {errors.map((errorMsg, i) => {
-        return <ErrorLine key={i}>{getMessage(errorMsg)}</ErrorLine>;
+        return (
+          <div key={i} className="py-1 break-words hyphens-auto">
+            {getMessage(errorMsg)}
+          </div>
+        );
       })}
     </div>
   );

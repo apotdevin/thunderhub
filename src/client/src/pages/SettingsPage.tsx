@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
 import { DashboardSettings } from '../views/settings/Dashboard';
 import { SingleLine } from '../components/generic/Styled';
@@ -10,15 +9,22 @@ import { Security } from '../views/settings/Security';
 import { NetworkInfo } from '../views/home/networkInfo/NetworkInfo';
 import { NotificationSettings } from '../views/settings/Notifications';
 import { AmbossSettings } from '../views/settings/Amboss';
+import { HTMLAttributes } from 'react';
+import { cn } from '@/lib/utils';
 
-export const ButtonRow = styled.div`
-  width: auto;
-  display: flex;
-`;
+export const ButtonRow = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('flex w-auto', className)} {...props} />
+);
 
-export const SettingsLine = styled(SingleLine)`
-  margin: 8px 0;
-`;
+export const SettingsLine = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) => (
+  <SingleLine className={cn('my-2', className)} {...props} />
+);
 
 const SettingsView = () => (
   <>
