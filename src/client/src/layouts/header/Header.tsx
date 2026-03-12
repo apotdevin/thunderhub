@@ -65,8 +65,8 @@ export const Header = () => {
     <>
       <div
         className={cn(
-          'w-full py-4 px-4 text-white',
-          pathname === MAIN ? 'bg-transparent' : 'bg-[#151727]'
+          'dark w-full py-4 px-4 text-foreground bg-background',
+          pathname === MAIN && 'bg-transparent'
         )}
       >
         <div
@@ -83,12 +83,12 @@ export const Header = () => {
             <Link to={!isRoot ? '/' : '/login'} noStyling>
               <div
                 className={cn(
-                  'text-white font-extrabold flex items-center justify-center',
+                  'font-extrabold flex items-center justify-center',
                   isRoot && 'mb-4 md:mb-0'
                 )}
               >
                 <div className="pr-1.5 -mb-1">
-                  <Cpu color={'white'} size={18} />
+                  <Cpu size={18} />
                 </div>
                 ThunderHub
               </div>

@@ -7,7 +7,7 @@ import { useGetSessionTokenMutation } from '../../graphql/mutations/__generated_
 import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { chartColors } from '../../styles/Themes';
+import { useChartColors } from '../../lib/chart-colors';
 import { config } from '../../config/thunderhubConfig';
 import { GetServerAccountsQuery } from '../../graphql/queries/__generated__/getServerAccounts.generated';
 
@@ -18,6 +18,7 @@ type LoginProps = {
 };
 
 export const Login = ({ account }: LoginProps) => {
+  const chartColors = useChartColors();
   const [pass, setPass] = useState('');
   const [token, setToken] = useState('');
 

@@ -12,7 +12,7 @@ type GridProps = {
 export const GridWrapper: FC<
   GridProps & { centerContent?: boolean; children?: ReactNode }
 > = ({ children, centerContent = true, noNavigation }) => (
-  <div className="w-full bg-[#f5f6f9] dark:bg-[#181c30] md:p-[16px_16px_32px]">
+  <div className="w-full md:p-[16px_16px_32px]">
     <div
       className={cn(
         'grid grid-cols-[auto_1fr_200px] [grid-template-areas:"nav_content_content"] md:grid',
@@ -35,7 +35,7 @@ export const GridWrapper: FC<
 );
 
 export const SimpleWrapper: FC<GridProps> = ({ children }) => (
-  <div className="w-full bg-[#f5f6f9] dark:bg-[#181c30] md:p-4">
+  <div className="w-full bg-muted md:p-4">
     <BitcoinPrice />
     <BitcoinFees />
     {children}

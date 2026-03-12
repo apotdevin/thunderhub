@@ -154,7 +154,7 @@ export const CloseChannel = ({
           <SingleLine>
             <Sub4Title>Fee:</Sub4Title>
             {!dontShow && (
-              <span className="text-sm text-[#ffa940]">
+              <span className="text-sm text-orange-400">
                 {`Minimum: ${minimum} sats/vByte`}
               </span>
             )}

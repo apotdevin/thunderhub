@@ -124,9 +124,9 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={cn(
-        'bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-[#f0f2f8] dark:border-[#20263d] w-full',
+        'bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-border w-full',
         mobileNoBackground &&
-          'bg-transparent border-none shadow-none md:bg-white md:dark:bg-[#1a1f35] md:shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] md:border md:border-[#f0f2f8] md:dark:border-[#20263d]',
+          'bg-transparent border-none shadow-none md:bg-card md:shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] md:border md:border-border',
         className
       )}
       style={{
@@ -169,8 +169,7 @@ export const SubCard = forwardRef<HTMLDivElement, SubCardProps>(
     <div
       ref={ref}
       className={cn(
-        !noBackground &&
-          'bg-white dark:bg-[#151727] border border-[#f0f2f8] dark:border-[#20263d]',
+        !noBackground && 'bg-card border border-border',
         'hover:shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)]',
         className
       )}
@@ -197,11 +196,7 @@ export const Separation = forwardRef<HTMLDivElement, SeparationProps>(
   ({ height, lineColor, withMargin, className, style, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(
-        'w-full',
-        !lineColor && 'bg-[#f0f2f8] dark:bg-[#212735]',
-        className
-      )}
+      className={cn('w-full', !lineColor && 'bg-border', className)}
       style={{
         height: `${height ?? 1}px`,
         margin: withMargin ?? '16px 0',
@@ -231,9 +226,7 @@ export const SubTitle = forwardRef<HTMLHeadingElement, SubTitleProps>(
       className={cn(
         'my-[5px]',
         !subtitleColor &&
-          (inverseColor
-            ? 'text-white dark:text-[#212735]'
-            : 'text-[#212735] dark:text-white'),
+          (inverseColor ? 'text-background' : 'text-foreground'),
         className
       )}
       style={{
@@ -252,10 +245,7 @@ export const InverseSubtitle = forwardRef<
 >(({ className, ...props }, ref) => (
   <h4
     ref={ref}
-    className={cn(
-      'my-[5px] font-medium text-white dark:text-[#212735]',
-      className
-    )}
+    className={cn('my-[5px] font-medium text-background', className)}
     {...props}
   />
 ));
@@ -336,10 +326,7 @@ export const SmallLink = forwardRef<
 >(({ className, ...props }, ref) => (
   <a
     ref={ref}
-    className={cn(
-      'no-underline text-[#9254de] dark:text-[#adc6ff] hover:underline',
-      className
-    )}
+    className={cn('no-underline text-primary hover:underline', className)}
     {...props}
   />
 ));
@@ -351,7 +338,7 @@ export const CopyIcon = forwardRef<
   <span
     ref={ref}
     className={cn(
-      'cursor-pointer ml-1 px-1 rounded-sm hover:bg-[#6284e4] hover:text-white',
+      'cursor-pointer ml-1 px-1 rounded-sm hover:bg-primary hover:text-primary-foreground',
       className
     )}
     {...props}

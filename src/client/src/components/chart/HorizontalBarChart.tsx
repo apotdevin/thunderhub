@@ -1,5 +1,4 @@
-import { chartColors } from '../../styles/Themes';
-import { useThemeMode } from '../../hooks/useThemeMode';
+import { useChartColors, useThemeColors } from '../../lib/chart-colors';
 import { useMemo } from 'react';
 import { BarChart } from 'echarts/charts';
 import {
@@ -33,18 +32,18 @@ type HorizontalBarChartProps = {
   colorRange?: string[];
 };
 
-const defaultColorRange = [
-  chartColors.green,
-  chartColors.orange,
-  chartColors.lightblue,
-];
-
 export const HorizontalBarChart = ({
   data = [],
-  colorRange = defaultColorRange,
+  colorRange,
   dataKey,
 }: HorizontalBarChartProps) => {
-  const themeMode = useThemeMode();
+  const chartColors = useChartColors();
+  const { foreground } = useThemeColors();
+  const effectiveColorRange = colorRange ?? [
+    chartColors.green,
+    chartColors.orange,
+    chartColors.lightblue,
+  ];
 
   const keys = Object.keys(data[0] || {}).filter(d => d !== 'label');
 
@@ -70,10 +69,8 @@ export const HorizontalBarChart = ({
   }, [data]);
 
   const option = useMemo(() => {
-    const themeColor = themeMode === 'light' ? 'black' : 'white';
-
     return {
-      color: colorRange,
+      color: effectiveColorRange,
       grid: {
         left: '25px',
         bottom: '25px',
@@ -87,7 +84,7 @@ export const HorizontalBarChart = ({
         },
         formatter: (params: any) => {
           return `<span style='color: ${
-            colorRange[0]
+            effectiveColorRange[0]
           }; font-weight: bold;'>Value</span><br />
           ${formatSats(params[0].value)}`;
         },
@@ -107,13 +104,13 @@ export const HorizontalBarChart = ({
           triggerTooltip: true,
         },
         lineStyle: {
-          color: themeColor,
+          color: foreground,
           type: 'solid',
         },
         axisLine: {
           onZero: false,
           lineStyle: {
-            color: themeColor,
+            color: foreground,
             type: 'solid',
           },
         },
@@ -136,7 +133,7 @@ export const HorizontalBarChart = ({
       legend: { show: true },
       series: seriesData,
     };
-  }, [colorRange, themeMode, seriesData, yLabels]);
+  }, [effectiveColorRange, foreground, seriesData, yLabels]);
 
   if (!keys.length) return null;
 

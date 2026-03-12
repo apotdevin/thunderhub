@@ -14,7 +14,6 @@ import {
   DarkSubTitle,
   Separation,
 } from '../../../components/generic/Styled';
-import { themeColors } from '../../../styles/Themes';
 
 export const ConnectCard = () => {
   const [open, openSet] = useState<boolean>(false);
@@ -50,7 +49,7 @@ export const ConnectCard = () => {
       <Card>
         <div className="flex justify-between items-center flex-col md:flex-row gap-4">
           <div>
-            <Radio size={18} color={themeColors.blue2} />
+            <Radio size={18} className="text-primary" />
           </div>
 
           <div className="flex flex-col justify-between items-start w-full">

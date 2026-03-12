@@ -1,5 +1,5 @@
 export const TopSection = () => (
-  <div className="w-full bg-transparent text-white dark:text-[#212735]">
+  <div className="w-full bg-transparent text-background">
     <div className="p-0 md:py-4 w-full">
       <h1 className="w-full text-center text-white text-2xl md:text-[56px] font-black m-0">
         Control the Lightning

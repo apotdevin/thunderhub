@@ -22,7 +22,7 @@ export const Liquidity = () => {
         return (
           <div className="grid md:grid-cols-2 gap-4 my-4">
             <div
-              className="bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-[#e1e6ed] dark:border-[#4a5669] flex justify-center items-center p-2.5 cursor-pointer text-[#69c0ff] gap-2 hover:border-[#69c0ff]"
+              className="bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-border flex justify-center items-center p-2.5 cursor-pointer text-primary gap-2 hover:border-primary"
               onClick={() => setOpenCard('open')}
             >
               <ArrowUpRight size={24} />
@@ -31,7 +31,7 @@ export const Liquidity = () => {
               </div>
             </div>
             <div
-              className="bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-[#e1e6ed] dark:border-[#4a5669] flex justify-center items-center p-2.5 cursor-pointer text-[#69c0ff] gap-2 hover:border-[#69c0ff]"
+              className="bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-border flex justify-center items-center p-2.5 cursor-pointer text-primary gap-2 hover:border-primary"
               onClick={() => setOpenCard('buy')}
             >
               <ArrowDownRight size={24} />

@@ -60,7 +60,7 @@ export const ChannelSelect = ({
         <span>{title}</span>
       </div>
       {loading ? (
-        <Loader2 className="animate-spin text-[#5163ba]" size={20} />
+        <Loader2 className="animate-spin text-primary" size={20} />
       ) : (
         <Select
           maxWidth={maxWidth || '500px'}

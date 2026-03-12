@@ -11,7 +11,7 @@ import { sortBy } from 'lodash';
 import { renderLine } from '../../components/generic/helpers';
 import { ChannelHealth } from '../../graphql/types';
 import { useStatsDispatch } from './context';
-import { chartColors } from '../../styles/Themes';
+import { useChartColors } from '../../lib/chart-colors';
 import { StatWrapper } from './Wrapper';
 import { getIcon, getVolumeMessage, getProgressColor } from './helpers';
 
@@ -28,13 +28,17 @@ const VolumeStatCard = ({
   openSet,
   index,
 }: VolumeStatCardProps) => {
+  const chartColors = useChartColors();
   const message = getVolumeMessage(channel.score);
   const renderContent = () => (
     <>
       <Separation />
       <DarkSubTitle
         className="w-full text-center"
-        style={{ color: getProgressColor(channel.score) || chartColors.orange }}
+        style={{
+          color:
+            getProgressColor(channel.score, chartColors) || chartColors.orange,
+        }}
       >
         {message}
       </DarkSubTitle>
@@ -57,7 +61,7 @@ const VolumeStatCard = ({
             <div className="flex justify-between mt-2 w-full md:mt-0 md:w-40">
               <DarkSubTitle>{'Score'}</DarkSubTitle>
               {channel.score}
-              {getIcon(channel.score)}
+              {getIcon(channel.score, chartColors)}
             </div>
           </ResponsiveLine>
         </div>

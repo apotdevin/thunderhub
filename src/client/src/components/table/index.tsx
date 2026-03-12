@@ -118,7 +118,7 @@ export default function Table({
           '[&_table_th:last-child]:border-r-0',
           '[&_table_td:last-child]:border-r-0',
           withBorder &&
-            '[&_table_th]:border-b [&_table_th]:border-[#f0f2f8] [&_table_th]:dark:border-[#212735] [&_table_td]:border-b [&_table_td]:border-[#f0f2f8] [&_table_td]:dark:border-[#212735]',
+            '[&_table_th]:border-b [&_table_th]:border-border [&_table_td]:border-b [&_table_td]:border-border',
           alignCenter && '[&_table_th]:text-center [&_table_td]:text-center'
         )}
         style={{

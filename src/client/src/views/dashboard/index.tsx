@@ -60,7 +60,7 @@ const Dashboard = () => {
     }
     return (
       <>
-        <div className="[&_.react-resizable-handle::after]:border-b-2 [&_.react-resizable-handle::after]:border-r-2 [&_.react-resizable-handle::after]:border-[#212735] [&_.react-resizable-handle::after]:dark:border-white">
+        <div className="[&_.react-resizable-handle::after]:border-b-2 [&_.react-resizable-handle::after]:border-r-2 [&_.react-resizable-handle::after]:border-foreground">
           <ResponsiveGridLayout
             {...props}
             className="layout"

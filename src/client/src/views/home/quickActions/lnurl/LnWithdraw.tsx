@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { useWithdrawLnUrlMutation } from '../../../../graphql/mutations/__generated__/lnUrl.generated';
 import { useGetInvoiceStatusChangeLazyQuery } from '../../../../graphql/queries/__generated__/getInvoiceStatusChange.generated';
-import { chartColors } from '../../../../styles/Themes';
+import { useChartColors } from '../../../../lib/chart-colors';
 import { CheckCircle } from 'lucide-react';
 import { Link } from '../../../../components/link/Link';
 import { getErrorContent } from '../../../../utils/error';
@@ -24,6 +24,7 @@ type LnWithdrawProps = {
 };
 
 export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
+  const chartColors = useChartColors();
   const { minWithdrawable, maxWithdrawable, callback, defaultDescription, k1 } =
     request;
 

@@ -11,10 +11,10 @@ import {
 import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
-import { useThemeMode } from '../../hooks/useThemeMode';
 import { timeFormat, timeParse } from 'd3-time-format';
 import { formatSats } from '../../utils/helpers';
 import { COMMON_CHART_STYLES } from './common';
+import { useThemeColors } from '../../lib/chart-colors';
 
 echarts.use([
   EBarChart,
@@ -40,7 +40,7 @@ export const BarChart = ({
   title,
   dataKey,
 }: BarChartProps) => {
-  const themeMode = useThemeMode();
+  const { foreground } = useThemeColors();
 
   const seriesData = useMemo(() => {
     if (data.length === 0) return { dates: [], series: [] };
@@ -60,8 +60,6 @@ export const BarChart = ({
   }, [data, title]);
 
   const option = useMemo(() => {
-    const fontColor = themeMode === 'light' ? 'black' : 'white';
-
     return {
       color: colorRange,
       grid: {
@@ -89,7 +87,7 @@ export const BarChart = ({
         nameLocation: 'center',
         nameGap: 32,
         type: 'category',
-        axisLine: { show: true, lineStyle: { color: fontColor } },
+        axisLine: { show: true, lineStyle: { color: foreground } },
         data: seriesData.dates,
         axisLabel: {
           formatter: function (value: string) {
@@ -105,7 +103,7 @@ export const BarChart = ({
         type: 'value',
         minInterval: 1,
         splitLine: { show: false },
-        axisLine: { show: true, lineStyle: { color: fontColor } },
+        axisLine: { show: true, lineStyle: { color: foreground } },
         axisTick: { show: true },
         axisLabel: {
           formatter: function (value: number) {
@@ -118,7 +116,7 @@ export const BarChart = ({
       },
       series: seriesData.series,
     };
-  }, [colorRange, themeMode, seriesData, title]);
+  }, [colorRange, foreground, seriesData, title]);
 
   return (
     <ReactEChartsCore

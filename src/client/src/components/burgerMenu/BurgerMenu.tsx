@@ -13,7 +13,7 @@ export const BurgerMenu = ({ open, setOpen }: BurgerProps) => {
   return (
     <div
       className={cn(
-        'px-4 pt-4 bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)]',
+        'px-4 pt-4 bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)]',
         open && 'mb-4'
       )}
     >

@@ -23,7 +23,7 @@ export const PreviousAddresses: FC<AddressProps> = ({ handleClick }) => {
       <div className="flex flex-wrap">
         {savedAddresses.map((a, index) => (
           <button
-            className="text-sm py-1 px-2 m-0.5 border border-[#e1e6ed] dark:border-[#4a5669] bg-white dark:bg-[#151727] rounded cursor-pointer text-inherit hover:bg-[#e1e6ed] hover:dark:bg-[#4a5669]"
+            className="text-sm py-1 px-2 m-0.5 border border-border bg-card rounded cursor-pointer text-inherit hover:bg-muted"
             onClick={() => handleClick(a)}
             key={`${index}${a}`}
           >

@@ -24,10 +24,8 @@ const getLinkClass = (opts: {
   }
 
   return cn(
-    'cursor-pointer no-underline hover:underline hover:decoration-[#5163ba] hover:decoration-2 hover:underline-offset-2',
-    opts.inheritColor
-      ? 'text-inherit'
-      : !opts.color && 'text-[#212735] dark:text-white',
+    'cursor-pointer no-underline hover:underline hover:decoration-primary hover:decoration-2 hover:underline-offset-2',
+    opts.inheritColor ? 'text-inherit' : !opts.color && 'text-foreground',
     opts.fullWidth && 'w-full'
   );
 };

@@ -5,11 +5,12 @@ import {
 } from '../../components/generic/helpers';
 import { Card, Separation, SubTitle } from '../../components/generic/Styled';
 import { Price } from '../../components/price/Price';
-import { chartColors } from '../../styles/Themes';
+import { useChartColors } from '../../lib/chart-colors';
 import { Pay } from '../home/account/pay/Pay';
 import { useSwapsDispatch, useSwapsState } from './SwapContext';
 
 export const SwapQuote = () => {
+  const chartColors = useChartColors();
   const { swaps, open } = useSwapsState();
   const dispatch = useSwapsDispatch();
 

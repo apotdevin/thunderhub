@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { SmallSelectWithValue } from '../../../../components/select';
 import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
-import { chartColors } from '../../../../styles/Themes';
+import { useChartColors } from '../../../../lib/chart-colors';
 import { getByTime } from '../helpers';
 import { BarChart } from '../../../../components/chart/BarChart';
 
@@ -22,6 +22,7 @@ const typeOptions = [
 ];
 
 export const ForwardsGraph = () => {
+  const chartColors = useChartColors();
   const [days, setDays] = useState(options[0]);
   const [type, setType] = useState(typeOptions[0]);
 

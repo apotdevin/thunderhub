@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useGetChannelQuery } from '../../../../graphql/queries/__generated__/getChannel.generated';
 import { useGetClosedChannelsQuery } from '../../../../graphql/queries/__generated__/getClosedChannels.generated';
-import { themeColors } from '../../../../styles/Themes';
+
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { Info } from 'lucide-react';
 import { getAliasFromClosedChannels } from './helpers';
@@ -24,13 +24,7 @@ export const ChannelAlias: FC<{ id: string }> = ({ id }) => {
   }
 
   if (loading) {
-    return (
-      <Loader2
-        className="animate-spin"
-        size={8}
-        style={{ color: themeColors.blue3 }}
-      />
-    );
+    return <Loader2 className="animate-spin text-primary" size={8} />;
   }
 
   if (data?.getChannel.partner_node_policies?.node?.node?.alias) {

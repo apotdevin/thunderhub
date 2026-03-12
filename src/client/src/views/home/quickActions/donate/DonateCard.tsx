@@ -1,14 +1,16 @@
 import { Heart } from 'lucide-react';
-import { chartColors } from '../../../../styles/Themes';
+import { useChartColors } from '../../../../lib/chart-colors';
 
 type SupportCardProps = {
   callback: () => void;
 };
 
 export const SupportCard = ({ callback }: SupportCardProps) => {
+  const chartColors = useChartColors();
+
   return (
     <div
-      className="bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-[#e1e6ed] dark:border-[#4a5669] h-20 w-20 flex flex-col justify-center items-center p-1 cursor-pointer text-[#69c0ff] md:p-2.5 md:h-[100px] md:w-[100px] group"
+      className="bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-border h-20 w-20 flex flex-col justify-center items-center p-1 cursor-pointer text-primary md:p-2.5 md:h-[100px] md:w-[100px] group"
       style={{ ['--hover-bg' as string]: chartColors.green }}
       onClick={callback}
       onMouseEnter={e => {
@@ -18,7 +20,7 @@ export const SupportCard = ({ callback }: SupportCardProps) => {
       }}
       onMouseLeave={e => {
         (e.currentTarget as HTMLElement).style.backgroundColor = '';
-        (e.currentTarget as HTMLElement).style.color = '#69c0ff';
+        (e.currentTarget as HTMLElement).style.color = '';
       }}
     >
       <Heart size={24} />

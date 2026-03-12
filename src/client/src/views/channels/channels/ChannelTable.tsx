@@ -23,7 +23,7 @@ import { Price } from '../../../components/price/Price';
 import Table from '../../../components/table';
 import { useGetChannelsQuery } from '../../../graphql/queries/__generated__/getChannels.generated';
 import { useLocalStorage } from '../../../hooks/UseLocalStorage';
-import { chartColors } from '../../../styles/Themes';
+import { useChartColors } from '../../../lib/chart-colors';
 import { getErrorContent } from '../../../utils/error';
 import { blockToTime, formatSeconds, getPercent } from '../../../utils/helpers';
 import { ChannelDetails } from './ChannelDetails';
@@ -36,6 +36,8 @@ const getBar = (top: number, bottom: number) => {
 };
 
 export const ChannelTable = () => {
+  const chartColors = useChartColors();
+
   const [channel, setChannel] = useState<{
     name: string;
     channel: string;
@@ -138,7 +140,7 @@ export const ChannelTable = () => {
       const actions = {
         editAction: (
           <button
-            className="bg-none text-inherit border-none p-0 font-inherit cursor-pointer outline-inherit hover:text-[#FFA940]"
+            className="bg-none text-inherit border-none p-0 font-inherit cursor-pointer outline-inherit hover:text-orange-400"
             onClick={() =>
               setChannel({
                 channel: c.id,
@@ -152,7 +154,7 @@ export const ChannelTable = () => {
         ),
         closeAction: (
           <button
-            className="bg-none text-inherit border-none p-0 font-inherit cursor-pointer outline-inherit hover:text-[#FFA940]"
+            className="bg-none text-inherit border-none p-0 font-inherit cursor-pointer outline-inherit hover:text-orange-400"
             onClick={() =>
               setChannel({
                 channel: c.id,
@@ -258,7 +260,7 @@ export const ChannelTable = () => {
         ),
       };
     });
-  }, [data]);
+  }, [data, chartColors]);
 
   const columns = useMemo(
     () => [

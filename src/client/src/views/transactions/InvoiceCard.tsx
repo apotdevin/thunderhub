@@ -1,7 +1,7 @@
 import { FC, Fragment } from 'react';
 import { InvoiceType } from '../../graphql/types';
 import { MessageCircle } from 'lucide-react';
-import { themeColors } from '../../styles/Themes';
+
 import { useGetChannelQuery } from '../../graphql/queries/__generated__/getChannel.generated';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { Price } from '../../components/price/Price';
@@ -143,7 +143,7 @@ export const InvoiceCard = ({
             {description ? description : 'Invoice'}
             {hasMessages && (
               <span className="ml-1">
-                <MessageCircle size={16} stroke={themeColors.blue2} />
+                <MessageCircle size={16} className="stroke-primary" />
               </span>
             )}
           </NodeTitle>

@@ -85,11 +85,10 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
       <div
         className={cn(
           'flex justify-center items-center outline-none w-[30px] h-[30px] rounded-full mx-[5px] cursor-pointer',
-          'sm:hover:bg-[#5163ba] sm:hover:text-white sm:dark:hover:text-[#212735]',
-          selected && 'bg-[#e1e6ed] dark:bg-[#212735]'
+          'sm:hover:bg-primary sm:hover:text-primary-foreground',
+          selected && 'bg-muted'
         )}
         onClick={() => {
-          localStorage.setItem(type, value);
           if (type === 'currency') {
             dispatch({
               type: 'change',
@@ -169,8 +168,8 @@ export const SideSettings = ({ isBurger }: SideSettingsProps) => {
         <div
           className={cn(
             'flex justify-center items-center outline-none w-[30px] h-[30px] rounded-full mx-[5px] cursor-pointer',
-            'sm:hover:bg-[#5163ba] sm:hover:text-white sm:dark:hover:text-[#212735]',
-            'bg-[#e1e6ed] dark:bg-[#212735]'
+            'sm:hover:bg-primary sm:hover:text-primary-foreground',
+            'bg-muted'
           )}
           onClick={() => {
             localStorage.setItem('sidebar', (!sidebar).toString());

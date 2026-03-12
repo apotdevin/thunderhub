@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { SmallSelectWithValue } from '../../../../components/select';
-import { chartColors } from '../../../../styles/Themes';
+import { useChartColors } from '../../../../lib/chart-colors';
 import { getByTime } from '../helpers';
 import { useGetPaymentsQuery } from '../../../../graphql/queries/__generated__/getPayments.generated';
 import { differenceInDays } from 'date-fns';
@@ -13,6 +13,7 @@ const typeOptions = [
 ];
 
 export const PaymentsGraph = () => {
+  const chartColors = useChartColors();
   const [type, setType] = useState(typeOptions[0]);
 
   const { data, loading } = useGetPaymentsQuery();

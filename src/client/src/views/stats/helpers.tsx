@@ -1,7 +1,19 @@
-import { chartColors } from '../../styles/Themes';
 import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 
-export const getProgressColor = (score: number | null | undefined): string => {
+export type ChartColors = {
+  darkyellow: string;
+  orange: string;
+  orange2: string;
+  lightblue: string;
+  green: string;
+  purple: string;
+  red: string;
+};
+
+export const getProgressColor = (
+  score: number | null | undefined,
+  chartColors: ChartColors
+): string => {
   if (!score) return chartColors.red;
   switch (true) {
     case score > 90:
@@ -19,25 +31,26 @@ export const getProgressColor = (score: number | null | undefined): string => {
 
 export const getIcon = (
   score: number | null | undefined,
+  chartColors: ChartColors,
   notSignificant?: boolean
 ): JSX.Element => {
   if (!score) {
-    return <XCircle color={getProgressColor(score)} />;
+    return <XCircle color={getProgressColor(score, chartColors)} />;
   }
   if (notSignificant) {
     return <AlertCircle color={chartColors.orange} />;
   }
   switch (true) {
     case score > 90:
-      return <CheckCircle color={getProgressColor(score)} />;
+      return <CheckCircle color={getProgressColor(score, chartColors)} />;
     case score > 75:
-      return <CheckCircle color={getProgressColor(score)} />;
+      return <CheckCircle color={getProgressColor(score, chartColors)} />;
     case score > 60:
-      return <CheckCircle color={getProgressColor(score)} />;
+      return <CheckCircle color={getProgressColor(score, chartColors)} />;
     case score > 50:
-      return <XCircle color={getProgressColor(score)} />;
+      return <XCircle color={getProgressColor(score, chartColors)} />;
     default:
-      return <XCircle color={getProgressColor(score)} />;
+      return <XCircle color={getProgressColor(score, chartColors)} />;
   }
 };
 

@@ -14,12 +14,13 @@ import { Price } from '../../components/price/Price';
 import { useConfigState } from '../../context/ConfigContext';
 import { useClaimBoltzTransactionMutation } from '../../graphql/mutations/__generated__/claimBoltzTransaction.generated';
 import { useBitcoinFees } from '../../hooks/UseBitcoinFees';
-import { chartColors } from '../../styles/Themes';
+import { useChartColors } from '../../lib/chart-colors';
 import { getErrorContent } from '../../utils/error';
 import { useSwapsDispatch, useSwapsState } from './SwapContext';
 import { MEMPOOL } from './SwapStatus';
 
 export const SwapClaim = () => {
+  const chartColors = useChartColors();
   const { fetchFees } = useConfigState();
   const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
 

@@ -12,9 +12,11 @@ import {
 } from '../../../components/generic/helpers';
 import { Price } from '../../../components/price/Price';
 import { ArrowDown, ArrowUp } from 'lucide-react';
-import { chartColors } from '../../../styles/Themes';
+import { useChartColors } from '../../../lib/chart-colors';
 
 export const ChainTransactions = () => {
+  const chartColors = useChartColors();
+
   const { loading, data } = useGetChainTransactionsQuery({
     onError: error => toast.error(getErrorContent(error)),
   });
@@ -96,7 +98,7 @@ export const ChainTransactions = () => {
         ),
       },
     ],
-    []
+    [chartColors]
   );
 
   if (loading) {

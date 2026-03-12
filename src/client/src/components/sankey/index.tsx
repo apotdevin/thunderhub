@@ -11,7 +11,7 @@ import * as echarts from 'echarts/core';
 import { SankeyChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
-import { useThemeMode } from '../../hooks/useThemeMode';
+import { useThemeColors } from '../../lib/chart-colors';
 
 echarts.use([
   SankeyChart,
@@ -46,10 +46,9 @@ export interface SankeyData {
 }
 
 export const Sankey = ({ data, width, height }: SankeyProps) => {
-  const themeMode = useThemeMode();
+  const { foreground } = useThemeColors();
 
   const option = useMemo(() => {
-    const fontColor = themeMode === 'light' ? 'black' : 'white';
     return {
       resize: true,
       tooltip: {
@@ -71,7 +70,7 @@ export const Sankey = ({ data, width, height }: SankeyProps) => {
           top: 'top',
           label: {
             show: true,
-            color: fontColor,
+            color: foreground,
           },
           emphasis: {
             focus: 'adjacency',
@@ -86,7 +85,7 @@ export const Sankey = ({ data, width, height }: SankeyProps) => {
         },
       ],
     };
-  }, [data, themeMode, height]);
+  }, [data, foreground, height]);
 
   return (
     <ReactEChartsCore

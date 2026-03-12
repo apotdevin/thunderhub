@@ -10,7 +10,7 @@ import { ChannelFeeHealth } from '../../graphql/types';
 import { sortBy } from 'lodash';
 import { renderLine } from '../../components/generic/helpers';
 import { useStatsDispatch } from './context';
-import { chartColors } from '../../styles/Themes';
+import { useChartColors } from '../../lib/chart-colors';
 import { StatWrapper } from './Wrapper';
 import { getIcon, getFeeMessage, getProgressColor } from './helpers';
 
@@ -29,6 +29,8 @@ const FeeStatCard = ({
   openSet,
   index,
 }: FeeStatCardProps) => {
+  const chartColors = useChartColors();
+
   const renderContent = () => {
     const stats = myStats ? channel.mySide : channel.partnerSide;
     const { score } = stats || {};
@@ -37,7 +39,7 @@ const FeeStatCard = ({
       <div className="flex justify-between mt-2 w-full md:mt-0 md:w-40">
         <DarkSubTitle>Score</DarkSubTitle>
         {score}
-        {getIcon(score)}
+        {getIcon(score, chartColors)}
       </div>
     );
   };
@@ -54,13 +56,19 @@ const FeeStatCard = ({
         <Separation />
         <DarkSubTitle
           className="w-full text-center"
-          style={{ color: getProgressColor(rateScore) || chartColors.orange }}
+          style={{
+            color:
+              getProgressColor(rateScore, chartColors) || chartColors.orange,
+          }}
         >
           {message}
         </DarkSubTitle>
         <DarkSubTitle
           className="w-full text-center"
-          style={{ color: getProgressColor(baseScore) || chartColors.orange }}
+          style={{
+            color:
+              getProgressColor(baseScore, chartColors) || chartColors.orange,
+          }}
         >
           {baseMessage}
         </DarkSubTitle>

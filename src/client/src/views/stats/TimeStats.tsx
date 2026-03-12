@@ -12,7 +12,7 @@ import { sortBy } from 'lodash';
 import { renderLine } from '../../components/generic/helpers';
 import { formatSeconds } from '../../utils/helpers';
 import { useStatsDispatch } from './context';
-import { chartColors } from '../../styles/Themes';
+import { useChartColors } from '../../lib/chart-colors';
 import { StatWrapper } from './Wrapper';
 import { getIcon, getTimeMessage, getProgressColor } from './helpers';
 
@@ -24,6 +24,7 @@ type TimeStatCardProps = {
 };
 
 const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
+  const chartColors = useChartColors();
   const message = getTimeMessage(channel.score);
   const renderContent = () => (
     <>
@@ -39,7 +40,10 @@ const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
       )}
       <DarkSubTitle
         className="w-full text-center"
-        style={{ color: getProgressColor(channel.score) || chartColors.orange }}
+        style={{
+          color:
+            getProgressColor(channel.score, chartColors) || chartColors.orange,
+        }}
       >
         {message}
       </DarkSubTitle>
@@ -63,7 +67,7 @@ const TimeStatCard = ({ channel, open, openSet, index }: TimeStatCardProps) => {
             <div className="flex justify-between mt-2 w-full md:mt-0 md:w-40">
               <DarkSubTitle>Score</DarkSubTitle>
               {channel.score}
-              {getIcon(channel.score, !channel.significant)}
+              {getIcon(channel.score, chartColors, !channel.significant)}
             </div>
           </ResponsiveLine>
         </div>

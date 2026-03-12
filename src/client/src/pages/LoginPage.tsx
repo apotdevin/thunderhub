@@ -7,7 +7,7 @@ const LoginPage = () => (
     <img
       alt={''}
       src={appendBasePath('/static/thunderstorm.webp')}
-      className="h-80 w-full top-0 object-cover absolute z-[-1] bg-[#151727]"
+      className="dark h-80 w-full top-0 object-cover absolute z-[-1] bg-background"
     />
     <TopSection />
     <Accounts />

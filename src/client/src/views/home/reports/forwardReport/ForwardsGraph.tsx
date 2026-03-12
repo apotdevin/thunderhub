@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { BarChart } from '../../../../components/chart/BarChart';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
-import { chartColors } from '../../../../styles/Themes';
+import { useChartColors } from '../../../../lib/chart-colors';
 import { getByTime } from '../../../../views/dashboard/widgets/helpers';
 
 type DayOptionProps = {
@@ -21,6 +21,7 @@ type ForwardGraphProps = {
 };
 
 export const ForwardsGraph: FC<ForwardGraphProps> = ({ days, type }) => {
+  const chartColors = useChartColors();
   const { data, loading } = useGetForwardsQuery({
     variables: { days: days.value },
     errorPolicy: 'ignore',

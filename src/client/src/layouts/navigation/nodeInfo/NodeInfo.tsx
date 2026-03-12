@@ -180,7 +180,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
       <div className="flex justify-center items-center my-0.5 px-[5px] cursor-default">
         <div style={{ width: '100%' }}>
           <div
-            className="text-sm text-[#bfbfbf]"
+            className="text-sm text-muted-foreground"
             style={{
               borderBottom: `2px solid ${syncedToChain ? syncColor : 'transparent'}`,
             }}
@@ -188,7 +188,7 @@ export const NodeInfo = ({ isOpen, isBurger }: NodeInfoProps) => {
             {syncText}
           </div>
           {!!syncPercentage && (
-            <div className="w-full h-1.5 bg-[#3a3a3a] rounded-[3px] mt-1.5 overflow-hidden border border-[#555]">
+            <div className="w-full h-1.5 bg-muted rounded-[3px] mt-1.5 overflow-hidden border border-border">
               <div
                 className="h-full rounded-[2px] transition-[width] duration-300 ease-in-out"
                 style={{

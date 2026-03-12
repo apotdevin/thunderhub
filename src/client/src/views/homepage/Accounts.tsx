@@ -8,7 +8,7 @@ import {
   ChevronRight,
   Loader2,
 } from 'lucide-react';
-import { chartColors } from '../../styles/Themes';
+import { useChartColors } from '../../lib/chart-colors';
 import { useNavigate } from 'react-router-dom';
 import { Link } from '../../components/link/Link';
 import {
@@ -75,6 +75,7 @@ const RenderIntro = () => {
 };
 
 export const Accounts = () => {
+  const chartColors = useChartColors();
   const navigate = useNavigate();
   const [newAccount, setNewAccount] = useState<ServerAccount | null>(null);
 

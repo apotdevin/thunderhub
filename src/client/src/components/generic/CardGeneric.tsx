@@ -7,11 +7,7 @@ export const Progress = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('m-[5px] bg-[#e1e6ed] dark:bg-[#212735]', className)}
-    {...props}
-  />
+  <div ref={ref} className={cn('m-[5px] bg-muted', className)} {...props} />
 ));
 
 // ─── ProgressBar ─────────────────────────────────────────
@@ -52,10 +48,7 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
     return (
       <div
         ref={ref}
-        className={cn(
-          isThemeDependent && 'bg-[#e1e6ed] dark:bg-[#212735]',
-          className
-        )}
+        className={cn(isThemeDependent && 'bg-muted', className)}
         style={{
           width: `${percent}%`,
           height: barHeight ? `${barHeight}px` : '10px',
@@ -153,7 +146,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={cn(
-        'bg-white dark:bg-[#1a1f35] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-[#f0f2f8] dark:border-[#20263d] w-full',
+        'bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-border w-full',
         className
       )}
       style={{

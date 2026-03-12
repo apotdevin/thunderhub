@@ -10,11 +10,12 @@ import { formatSeconds } from '../../../../utils/helpers';
 import { cn } from '@/lib/utils';
 import { getErrorContent } from '../../../../utils/error';
 import { Button } from '@/components/ui/button';
-import { chartColors } from '../../../../styles/Themes';
+import { useChartColors } from '../../../../lib/chart-colors';
 import { InvoiceStatus } from './InvoiceStatus';
 import { Timer } from './Timer';
 
 export const CreateInvoiceCard = () => {
+  const chartColors = useChartColors();
   const [amount, setAmount] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [description, setDescription] = useState('');

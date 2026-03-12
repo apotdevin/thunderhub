@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import Modal from '../../components/modal/ReactModal';
-import { themeColors } from '../../styles/Themes';
+
 import {
   CardWithTitle,
   SubTitle,
@@ -35,7 +35,6 @@ export const InterfaceSettings = () => {
       variant={current === value ? 'default' : 'ghost'}
       className={cn('grow', current !== value && 'text-foreground')}
       onClick={() => {
-        localStorage.setItem(type, value);
         if (type === 'theme') dispatch({ type: 'themeChange', theme: value });
         if (type === 'currency') dispatch({ type: 'change', currency: value });
         if (type === 'symbol')
@@ -59,7 +58,10 @@ export const InterfaceSettings = () => {
         if (!element || !element.last || !element.symbol) return;
         const isCurrent = fiat === key;
         cards.push(
-          <SubCard color={isCurrent ? themeColors.blue2 : undefined} key={key}>
+          <SubCard
+            color={isCurrent ? 'var(--color-primary)' : undefined}
+            key={key}
+          >
             <SingleLine>
               {key}
               <DarkSubTitle>{`${element.symbol} ${Number(

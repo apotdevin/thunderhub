@@ -1,7 +1,6 @@
 import { FC, ReactNode, useEffect, lazy, Suspense } from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import { useApollo } from '../config/client';
 import { ContextProvider } from './context/ContextProvider';
 import { useConfigState, ConfigProvider } from './context/ConfigContext';
@@ -132,13 +131,13 @@ const AuthenticatedRoutes = () => (
 );
 
 export default function App() {
-  const themeCookie = Cookies.get('theme') || config.defaultTheme;
+  const savedTheme = localStorage.getItem('theme') || config.defaultTheme;
 
   const apolloClient = useApollo('', null);
 
   return (
     <ApolloProvider client={apolloClient}>
-      <ConfigProvider initialConfig={{ theme: themeCookie }}>
+      <ConfigProvider initialConfig={{ theme: savedTheme }}>
         <SseProvider>
           <ContextProvider>
             <Wrapper>

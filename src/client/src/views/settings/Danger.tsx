@@ -9,7 +9,7 @@ import {
   SingleLine,
   Sub4Title,
 } from '../../components/generic/Styled';
-import { fontColors } from '../../styles/Themes';
+
 import { Button } from '@/components/ui/button';
 
 export const ButtonRow = ({
@@ -38,7 +38,7 @@ export const CheckboxText = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={`text-[13px] text-[#595959] text-justify ${className ?? ''}`}
+    className={`text-[13px] text-muted-foreground text-justify ${className ?? ''}`}
     {...props}
   >
     {children}
@@ -99,7 +99,7 @@ export const DangerView = () => {
         </SettingsLine>
         <StyledContainer>
           <FixedWidth>
-            <AlertCircle size={18} color={fontColors.grey7} />
+            <AlertCircle size={18} className="text-muted-foreground" />
           </FixedWidth>
           <CheckboxText>
             This does not affect in any way your node, only the information

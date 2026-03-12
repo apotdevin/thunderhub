@@ -1,6 +1,6 @@
 import { FC, useMemo } from 'react';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { chartColors } from '../../../../styles/Themes';
+import { useChartColors } from '../../../../lib/chart-colors';
 import { getByTime } from '../../../../views/dashboard/widgets/helpers';
 import { useGetInvoicesQuery } from '../../../../graphql/queries/__generated__/getInvoices.generated';
 import { differenceInDays } from 'date-fns';
@@ -16,6 +16,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
   showPay,
   type,
 }) => {
+  const chartColors = useChartColors();
   const { data: invoiceData, loading } = useGetInvoicesQuery();
   const { data: paymentsData, loading: paymentsLoading } =
     useGetPaymentsQuery();

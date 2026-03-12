@@ -57,7 +57,7 @@ export const PeerSelect = ({ title, callback }: PeerSelectProps) => {
         <span>{title}</span>
       </div>
       {loading ? (
-        <Loader2 className="animate-spin text-[#5163ba]" size={20} />
+        <Loader2 className="animate-spin text-primary" size={20} />
       ) : (
         <Select maxWidth={'500px'} options={options} callback={handleChange} />
       )}

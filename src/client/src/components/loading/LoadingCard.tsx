@@ -33,7 +33,7 @@ export const LoadingCard = ({
   loadingHeight,
   inverseColor,
 }: LoadingCardProps) => {
-  const loadingColor = color || '#5163ba';
+  const loadingColor = color || 'var(--color-primary)';
 
   if (noCard) {
     return <Spinner loadingHeight={loadingHeight} color={loadingColor} />;

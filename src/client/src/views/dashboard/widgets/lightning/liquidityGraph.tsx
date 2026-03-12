@@ -1,9 +1,10 @@
 import { HorizontalBarChart } from '../../../../components/chart/HorizontalBarChart';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { useGetLiquidReportQuery } from '../../../../graphql/queries/__generated__/getChannelReport.generated';
-import { chartColors } from '../../../../styles/Themes';
+import { useChartColors } from '../../../../lib/chart-colors';
 
 export const LiquidityGraph = () => {
+  const chartColors = useChartColors();
   const { data, loading } = useGetLiquidReportQuery({ errorPolicy: 'ignore' });
 
   if (loading) {

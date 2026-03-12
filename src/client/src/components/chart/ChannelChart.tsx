@@ -4,11 +4,10 @@ import { getErrorContent } from '../../utils/error';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
 import { useMemo } from 'react';
-import { useThemeMode } from '../../hooks/useThemeMode';
 import { LineChart } from 'echarts/charts';
 import { Card } from '../generic/Styled';
-import { chartColors } from '../../styles/Themes';
 import { formatSats } from '../../utils/helpers';
+import { useChartColors, useThemeColors } from '../../lib/chart-colors';
 
 echarts.use([LineChart]);
 const MILLISECONDS_PER_HOUR = 1000 * 60 * 60;
@@ -23,7 +22,8 @@ const getMaxHeight = (arr: number[], rounding?: number): number => {
  * lnd currently not support filter for channelId, so now it impossible to optimize query.
  */
 export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
-  const themeMode = useThemeMode();
+  const chartColors = useChartColors();
+  const { foreground } = useThemeColors();
   const { data } = useGetForwardsQuery({
     variables: { days: days },
     onError: error => toast.error(getErrorContent(error)),
@@ -38,8 +38,8 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
     : [];
 
   // Helper data
-  const fontColor = themeMode === 'light' ? 'black' : 'white';
-  const oppositeColor = themeMode === 'light' ? 'white' : 'black';
+  const fontColor = foreground;
+  const oppositeColor = foreground;
   const columnSize = days === 1 ? 24 : days;
   const now = new Date();
 

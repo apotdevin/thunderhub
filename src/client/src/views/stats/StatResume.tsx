@@ -1,5 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { DarkSubTitle } from '../../components/generic/Styled';
+import { useChartColors } from '../../lib/chart-colors';
 import { useStatsState } from './context';
 import { getProgressColor } from './helpers';
 
@@ -56,6 +57,7 @@ const CircularProgress: FC<{
 };
 
 export const StatResume = () => {
+  const chartColors = useChartColors();
   const { volumeScore, timeScore, feeScore } = useStatsState();
 
   return (
@@ -65,7 +67,7 @@ export const StatResume = () => {
         <div className="w-[30%] md:w-[20%]">
           <CircularProgress
             value={volumeScore || 0}
-            pathColor={getProgressColor(volumeScore)}
+            pathColor={getProgressColor(volumeScore, chartColors)}
           >
             <DarkSubTitle>Flow</DarkSubTitle>
             <div className="text-lg md:text-[32px]">{volumeScore}</div>
@@ -74,7 +76,7 @@ export const StatResume = () => {
         <div className="w-[30%] md:w-[20%]">
           <CircularProgress
             value={timeScore || 0}
-            pathColor={getProgressColor(timeScore)}
+            pathColor={getProgressColor(timeScore, chartColors)}
           >
             <DarkSubTitle>Time</DarkSubTitle>
             <div className="text-lg md:text-[32px]">{timeScore}</div>
@@ -83,7 +85,7 @@ export const StatResume = () => {
         <div className="w-[30%] md:w-[20%]">
           <CircularProgress
             value={feeScore || 0}
-            pathColor={getProgressColor(feeScore)}
+            pathColor={getProgressColor(feeScore, chartColors)}
           >
             <DarkSubTitle>Fee</DarkSubTitle>
             <div className="text-lg md:text-[32px]">{feeScore}</div>

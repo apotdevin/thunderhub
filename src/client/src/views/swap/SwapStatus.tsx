@@ -12,7 +12,7 @@ import {
 } from '../../components/generic/Styled';
 import Modal from '../../components/modal/ReactModal';
 import { useGetBoltzSwapStatusQuery } from '../../graphql/queries/__generated__/getBoltzSwapStatus.generated';
-import { chartColors, themeColors } from '../../styles/Themes';
+import { useChartColors } from '../../lib/chart-colors';
 import { SwapClaim } from './SwapClaim';
 import { useSwapsDispatch, useSwapsState } from './SwapContext';
 import { useSwapExpire } from './SwapExpire';
@@ -28,6 +28,7 @@ const INVOICE_EXPIRED = 'invoice.expired';
 const REFUNDED = 'transaction.refunded';
 
 const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
+  const chartColors = useChartColors();
   const dispatch = useSwapsDispatch();
 
   const ReadyComponent = () => {
@@ -184,7 +185,7 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
             <div
               className="rounded-lg p-1 px-2"
               style={{
-                border: `1px solid ${themeColors.grey8}`,
+                border: `1px solid var(--border)`,
                 backgroundColor: 'rgba(10, 255, 59, 0.05)',
               }}
             >

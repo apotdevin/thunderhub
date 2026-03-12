@@ -57,11 +57,9 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       <div
         className={cn(
           'p-1 rounded flex items-center w-full no-underline my-1',
-          pathname === link
-            ? 'bg-white dark:bg-[#151727] text-[#212735] dark:text-white'
-            : 'text-gray-500',
+          pathname === link ? 'bg-card text-foreground' : 'text-gray-500',
           !sidebar && 'justify-center',
-          'hover:text-[#212735] hover:dark:text-white hover:bg-white hover:dark:bg-[#151727]'
+          'hover:text-foreground hover:bg-card'
         )}
       >
         <NavIcon size={18} />
@@ -75,9 +73,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       <div
         className={cn(
           'flex flex-col items-center justify-center px-4 pt-4 pb-2 rounded no-underline',
-          pathname === link
-            ? 'bg-white dark:bg-[#151727] text-[#212735] dark:text-white'
-            : 'text-gray-500'
+          pathname === link ? 'bg-card text-foreground' : 'text-gray-500'
         )}
         onClick={() => setOpen && setOpen(false)}
       >
@@ -104,7 +100,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   );
 
   const renderBurger = () => (
-    <div className="flex justify-start items-center overflow-scroll bg-[#f0f2f8] dark:bg-[#20263d] -mx-4 px-4 py-4">
+    <div className="flex justify-start items-center overflow-scroll bg-muted -mx-4 px-4 py-4">
       {renderBurgerNav('Home', HOME, Home)}
       {renderBurgerNav('Dashboard', DASHBOARD, Grid)}
       {renderBurgerNav('Peers', PEERS, Users)}

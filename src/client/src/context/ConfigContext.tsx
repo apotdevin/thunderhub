@@ -6,7 +6,6 @@ import {
   useEffect,
   ReactNode,
 } from 'react';
-import Cookies from 'js-cookie';
 import { omit } from 'lodash';
 import { config } from '../config/thunderhubConfig';
 
@@ -132,10 +131,7 @@ const stateReducer = (state: State, action: ActionType): State => {
     }
     case 'themeChange': {
       if (settings.theme) {
-        Cookies.set('theme', settings.theme, {
-          expires: 365,
-          sameSite: 'strict',
-        });
+        localStorage.setItem('theme', settings.theme);
         return {
           ...state,
           theme: settings.theme,
