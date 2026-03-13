@@ -8,9 +8,9 @@ type SupportCardProps = {
 export const SupportCard = ({ callback }: SupportCardProps) => (
   <QuickCard
     onClick={callback}
-    className="hover:bg-pink-500/5 hover:border-pink-500/30"
+    className="hover:border-pink-500/30 hover:bg-pink-500/5"
   >
-    <Heart size={24} className="text-pink-500" />
+    <Heart size={16} className="text-pink-500" />
     <QuickTitle>Donate</QuickTitle>
   </QuickCard>
 );

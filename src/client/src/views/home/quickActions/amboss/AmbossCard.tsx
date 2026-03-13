@@ -4,6 +4,7 @@ import { useLoginAmbossMutation } from '../../../../graphql/mutations/__generate
 import { useGetAmbossLoginTokenLazyQuery } from '../../../../graphql/queries/__generated__/getAmbossLoginToken.generated';
 import { useAmbossUser } from '../../../../hooks/UseAmbossUser';
 import { appendBasePath } from '../../../../utils/basePath';
+import { QuickCard, QuickTitle } from '../QuickActions';
 
 export const AmbossCard = () => {
   const { user } = useAmbossUser();
@@ -30,49 +31,29 @@ export const AmbossCard = () => {
     (window as any).open(url, '_blank').focus();
   }, [data, tokenLoading]);
 
-  if (!user) {
-    return (
-      <button
-        className="bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-border h-20 w-20 flex flex-col justify-center items-center p-1 cursor-pointer text-primary md:p-2.5 md:h-[100px] md:w-[100px] hover:bg-[#ff0080] hover:text-white group"
-        onClick={() => {
-          if (loading) return;
-          login();
-        }}
-        disabled={loading}
-      >
-        <img
-          className="group-hover:brightness-0 group-hover:invert"
-          src={appendBasePath('/assets/amboss_icon.png')}
-          width={32}
-          height={32}
-          alt={'Amboss Logo'}
-        />
-        <div className="text-xs text-muted-foreground mt-2.5 group-hover:text-white">
-          {loading ? 'Loading...' : 'Login'}
-        </div>
-      </button>
-    );
-  }
+  const isLoading = user ? tokenLoading : loading;
+  const label = isLoading ? 'Loading...' : user ? 'Go To' : 'Login';
+
+  const handleClick = () => {
+    if (user) {
+      if (!tokenLoading) getToken();
+    } else {
+      if (!loading) login();
+    }
+  };
 
   return (
-    <button
-      className="bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-border h-20 w-20 flex flex-col justify-center items-center p-1 cursor-pointer text-primary md:p-2.5 md:h-[100px] md:w-[100px] hover:bg-[#ff0080] hover:text-white group"
-      onClick={() => {
-        if (tokenLoading) return;
-        getToken();
-      }}
-      disabled={tokenLoading}
+    <QuickCard
+      className="hover:border-purple-500/30 hover:bg-purple-500/5"
+      onClick={handleClick}
     >
       <img
-        className="group-hover:brightness-0 group-hover:invert"
         src={appendBasePath('/assets/amboss_icon.png')}
-        width={32}
-        height={32}
-        alt={'Amboss Logo'}
+        width={16}
+        height={16}
+        alt="Amboss Logo"
       />
-      <div className="text-xs text-muted-foreground mt-2.5 group-hover:text-white">
-        {tokenLoading ? 'Loading...' : 'Go To'}
-      </div>
-    </button>
+      <QuickTitle>{label}</QuickTitle>
+    </QuickCard>
   );
 };

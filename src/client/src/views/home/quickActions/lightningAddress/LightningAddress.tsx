@@ -2,13 +2,16 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from '@/components/ui/native-select';
 import { ChevronRight, Loader2 } from 'lucide-react';
 import Modal from '../../../../components/modal/ReactModal';
 import { useGetLightningAddressInfoLazyQuery } from '../../../../graphql/queries/__generated__/getLightningAddressInfo.generated';
 import { useLocalStorage } from '../../../../hooks/UseLocalStorage';
 import { useMutationResultWithReset } from '../../../../hooks/UseMutationWithReset';
 import { LnPay } from '../lnurl/LnPay';
-import { PreviousAddresses } from './Addresses';
 
 export const LightningAddressCard = () => {
   const [address, setAddress] = useState('');
@@ -35,24 +38,32 @@ export const LightningAddressCard = () => {
 
   const [data, reset] = useMutationResultWithReset(_data);
 
-  const handleClick = (address: string) => setAddress(address);
-
   return (
     <>
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-muted-foreground">
-            Lightning Address
-          </label>
-          <Input
-            value={address}
-            placeholder="user@domain.com"
-            onChange={e => setAddress(e.target.value)}
-          />
-        </div>
+      <div className="flex gap-2">
+        {savedAddresses.length > 0 && (
+          <NativeSelect value="" onChange={e => setAddress(e.target.value)}>
+            <NativeSelectOption value="" disabled>
+              Recent
+            </NativeSelectOption>
+            {savedAddresses.map(a => (
+              <NativeSelectOption key={a} value={a}>
+                {a}
+              </NativeSelectOption>
+            ))}
+          </NativeSelect>
+        )}
+        <Input
+          className="flex-1"
+          value={address}
+          placeholder="user@domain.com"
+          onChange={e => setAddress(e.target.value)}
+          onKeyDown={e =>
+            e.key === 'Enter' && address && getInfo({ variables: { address } })
+          }
+        />
         <Button
           variant="outline"
-          className="w-full"
           disabled={!address || loading}
           onClick={() => getInfo({ variables: { address } })}
         >
@@ -64,7 +75,6 @@ export const LightningAddressCard = () => {
             </>
           )}
         </Button>
-        <PreviousAddresses handleClick={handleClick} />
       </div>
       <Modal
         isOpen={!!data?.getLightningAddressInfo}

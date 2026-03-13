@@ -11,17 +11,14 @@ export const DecodeCard = () => {
   return (
     <div className="flex flex-col gap-3">
       {!show && (
-        <>
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-muted-foreground">
-              Request
-            </label>
-            <Input
-              placeholder="Lightning Invoice"
-              value={request}
-              onChange={e => setRequest(e.target.value)}
-            />
-          </div>
+        <div className="flex gap-2">
+          <Input
+            className="flex-1"
+            placeholder="Lightning Invoice"
+            value={request}
+            onChange={e => setRequest(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && request && setShow(true)}
+          />
           <Button
             variant="outline"
             disabled={request === ''}
@@ -29,7 +26,7 @@ export const DecodeCard = () => {
           >
             Decode <ChevronRight size={18} />
           </Button>
-        </>
+        </div>
       )}
       {show && <Decoded request={request} setShow={setShow} />}
     </div>

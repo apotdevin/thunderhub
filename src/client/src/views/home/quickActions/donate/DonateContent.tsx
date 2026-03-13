@@ -78,33 +78,30 @@ export const SupportBar = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-start gap-3 rounded border border-pink-500/20 bg-pink-500/5 p-3">
-        <Heart size={16} className="mt-0.5 shrink-0 text-pink-500" />
-        <div className="flex flex-col gap-0.5 text-xs">
-          <span className="font-medium text-pink-500">
-            Support this project
-          </span>
-          <span className="text-muted-foreground">
-            ThunderHub is completely free and open-source. If you find it
-            useful, consider sending a few sats to help keep development going.
+      <div className="flex items-center gap-3">
+        <div className="flex min-w-0 flex-1 items-center gap-2 rounded border border-pink-500/20 bg-pink-500/5 px-3 py-2 text-xs text-muted-foreground">
+          <Heart size={14} className="shrink-0 text-pink-500" />
+          <span>
+            ThunderHub is free and open-source. Consider sending a few sats to
+            support development.
           </span>
         </div>
+        <Button
+          variant="outline"
+          onClick={openDonate}
+          disabled={loading}
+          className="shrink-0"
+        >
+          {loading ? (
+            <Loader2 className="animate-spin" size={16} />
+          ) : (
+            <>
+              <Heart size={14} className="text-pink-500" />
+              Donate
+            </>
+          )}
+        </Button>
       </div>
-      <Button
-        variant="outline"
-        onClick={openDonate}
-        disabled={loading}
-        className="w-full"
-      >
-        {loading ? (
-          <Loader2 className="animate-spin" size={16} />
-        ) : (
-          <>
-            <Heart size={14} className="text-pink-500" />
-            Donate
-          </>
-        )}
-      </Button>
       <DonateModal
         payRequest={payRequest}
         modalOpen={modalOpen}

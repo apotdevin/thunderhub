@@ -60,21 +60,16 @@ export const LnUrlCard = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-muted-foreground">
-            LNURL
-          </label>
-          <Input
-            value={lnurl}
-            placeholder="LnPay / LnWithdraw / LnChannel / LnAuth"
-            onChange={e => setLnUrl(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleDecode()}
-          />
-        </div>
+      <div className="flex gap-2">
+        <Input
+          className="flex-1"
+          value={lnurl}
+          placeholder="LnPay / LnWithdraw / LnChannel / LnAuth"
+          onChange={e => setLnUrl(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleDecode()}
+        />
         <Button
           variant="outline"
-          className="w-full"
           disabled={!lnurl || loading}
           onClick={() => handleDecode()}
         >

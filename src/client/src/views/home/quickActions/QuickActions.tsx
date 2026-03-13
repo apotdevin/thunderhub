@@ -16,7 +16,7 @@ export const QuickCard = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={`flex h-20 w-20 cursor-pointer flex-col items-center justify-center rounded border border-border p-1 text-primary transition-colors hover:border-primary md:h-[100px] md:w-[100px] md:p-2.5 ${className ?? ''}`}
+    className={`flex cursor-pointer items-center gap-2 rounded border border-border px-3 py-2 text-primary transition-colors ${className ?? ''}`}
     onClick={onClick}
     {...props}
   >
@@ -30,7 +30,7 @@ export const QuickTitle = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={`mt-2.5 text-center text-xs text-muted-foreground ${className ?? ''}`}
+    className={`text-xs text-muted-foreground ${className ?? ''}`}
     {...props}
   >
     {children}
@@ -68,16 +68,25 @@ export const QuickActions = () => {
           <div className="flex flex-wrap gap-2">
             <SupportCard callback={() => setOpenCard('support')} />
             <AmbossCard />
-            <QuickCard onClick={() => setOpenCard('lightning_address')}>
-              <Zap size={24} />
+            <QuickCard
+              className="hover:border-yellow-500/30 hover:bg-yellow-500/5"
+              onClick={() => setOpenCard('lightning_address')}
+            >
+              <Zap size={16} className="text-yellow-500" />
               <QuickTitle>Address</QuickTitle>
             </QuickCard>
-            <QuickCard onClick={() => setOpenCard('decode')}>
-              <Layers size={24} />
+            <QuickCard
+              className="hover:border-blue-500/30 hover:bg-blue-500/5"
+              onClick={() => setOpenCard('decode')}
+            >
+              <Layers size={16} className="text-blue-500" />
               <QuickTitle>Decode</QuickTitle>
             </QuickCard>
-            <QuickCard onClick={() => setOpenCard('ln_url')}>
-              <Command size={24} />
+            <QuickCard
+              className="hover:border-emerald-500/30 hover:bg-emerald-500/5"
+              onClick={() => setOpenCard('ln_url')}
+            >
+              <Command size={16} className="text-emerald-500" />
               <QuickTitle>LNURL</QuickTitle>
             </QuickCard>
           </div>
