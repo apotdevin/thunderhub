@@ -13,6 +13,7 @@ import {
   Separation,
 } from '../../components/generic/Styled';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { getErrorContent } from '../../utils/error';
 
@@ -121,10 +122,7 @@ export const AddPeer = () => {
       )}
       <SingleLine>
         <NoWrapTitle>Is Temporary:</NoWrapTitle>
-        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-          {renderButton(() => setTemp(true), 'Yes', temp)}
-          {renderButton(() => setTemp(false), 'No', !temp)}
-        </div>
+        <Switch checked={temp} onCheckedChange={setTemp} />
       </SingleLine>
       <Button
         variant="outline"

@@ -7,6 +7,7 @@ import { useConfigState, ConfigProvider } from './context/ConfigContext';
 import { Header } from './layouts/header/Header';
 import { Footer } from './layouts/footer/Footer';
 import { Toaster } from 'react-hot-toast';
+import { TooltipProvider } from './components/ui/tooltip';
 import { useListener } from './hooks/UseListener';
 import { SseProvider } from './context/SseContext';
 import { config } from './config/thunderhubConfig';
@@ -61,7 +62,20 @@ const Wrapper: FC<{ children?: ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
+    const applyTheme = (resolved: 'dark' | 'light') => {
+      document.documentElement.classList.toggle('dark', resolved === 'dark');
+    };
+
+    if (theme === 'system') {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      applyTheme(mq.matches ? 'dark' : 'light');
+      const handler = (e: MediaQueryListEvent) =>
+        applyTheme(e.matches ? 'dark' : 'light');
+      mq.addEventListener('change', handler);
+      return () => mq.removeEventListener('change', handler);
+    }
+
+    applyTheme(theme === 'dark' ? 'dark' : 'light');
   }, [theme]);
 
   const { data, loading, error } = useGetNodeInfoQuery({
@@ -140,9 +154,11 @@ export default function App() {
       <ConfigProvider initialConfig={{ theme: savedTheme }}>
         <SseProvider>
           <ContextProvider>
-            <Wrapper>
-              <AuthenticatedRoutes />
-            </Wrapper>
+            <TooltipProvider>
+              <Wrapper>
+                <AuthenticatedRoutes />
+              </Wrapper>
+            </TooltipProvider>
           </ContextProvider>
         </SseProvider>
       </ConfigProvider>

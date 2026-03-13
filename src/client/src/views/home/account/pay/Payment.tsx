@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { cn } from '@/lib/utils';
+import { Switch } from '@/components/ui/switch';
 import {
   ResponsiveLine,
   NoWrapTitle,
@@ -72,22 +72,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
         <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
           <span>Is Keysend</span>
         </div>
-        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-          <Button
-            variant={isKeysend ? 'default' : 'ghost'}
-            onClick={() => setIsKeysend(true)}
-            className={cn('grow', !isKeysend && 'text-foreground')}
-          >
-            Yes
-          </Button>
-          <Button
-            variant={!isKeysend ? 'default' : 'ghost'}
-            onClick={() => setIsKeysend(false)}
-            className={cn('grow', isKeysend && 'text-foreground')}
-          >
-            No
-          </Button>
-        </div>
+        <Switch checked={isKeysend} onCheckedChange={setIsKeysend} />
       </div>
       {renderContent()}
       <Modal

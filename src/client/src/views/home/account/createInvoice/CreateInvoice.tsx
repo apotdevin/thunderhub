@@ -7,7 +7,7 @@ import { Link } from '../../../../components/link/Link';
 import { Input } from '@/components/ui/input';
 import { Price } from '../../../../components/price/Price';
 import { formatSeconds } from '../../../../utils/helpers';
-import { cn } from '@/lib/utils';
+import { Switch } from '@/components/ui/switch';
 import { getErrorContent } from '../../../../utils/error';
 import { Button } from '@/components/ui/button';
 import { useChartColors } from '../../../../lib/chart-colors';
@@ -143,22 +143,7 @@ export const CreateInvoiceCard = () => {
         <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
           <span>Include Private Channels</span>
         </div>
-        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-          <Button
-            variant={includePrivate ? 'default' : 'ghost'}
-            onClick={() => setIncludePrivate(true)}
-            className={cn('grow', !includePrivate && 'text-foreground')}
-          >
-            Yes
-          </Button>
-          <Button
-            variant={!includePrivate ? 'default' : 'ghost'}
-            onClick={() => setIncludePrivate(false)}
-            className={cn('grow', includePrivate && 'text-foreground')}
-          >
-            No
-          </Button>
-        </div>
+        <Switch checked={includePrivate} onCheckedChange={setIncludePrivate} />
       </div>
       <Button
         variant="outline"

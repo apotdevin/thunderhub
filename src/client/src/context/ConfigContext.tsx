@@ -9,7 +9,7 @@ import {
 import { omit } from 'lodash';
 import { config } from '../config/thunderhubConfig';
 
-const themeTypes = ['dark', 'light'];
+const themeTypes = ['dark', 'light', 'system'];
 const currencyTypes = ['sat', 'btc', 'fiat'];
 
 export type channelBarStyleTypes =
@@ -43,11 +43,6 @@ type State = {
   fetchFees: boolean;
   fetchPrices: boolean;
   displayValues: boolean;
-  hideFee: boolean;
-  hideNonVerified: boolean;
-  maxFee: number;
-  chatPollingSpeed: number;
-  useSatWord: boolean;
   channelBarStyle: channelBarStyleTypes;
   channelBarType: channelBarTypeTypes;
   channelSort: channelSortTypes;
@@ -70,11 +65,6 @@ type ActionType =
       fetchFees?: boolean;
       fetchPrices?: boolean;
       displayValues?: boolean;
-      hideFee?: boolean;
-      hideNonVerified?: boolean;
-      maxFee?: number;
-      chatPollingSpeed?: number;
-      useSatWord?: boolean;
       channelBarStyle?: channelBarStyleTypes;
       channelBarType?: channelBarTypeTypes;
       channelSort?: channelSortTypes;
@@ -98,17 +88,12 @@ const getInitialState = (): State => {
     fetchFees: config.fetchFees,
     fetchPrices: config.fetchPrices,
     displayValues: true,
-    hideFee: false,
-    hideNonVerified: false,
-    maxFee: 20,
-    chatPollingSpeed: 1000,
     channelBarStyle: 'normal',
     channelBarType: 'balance',
     channelSort: 'none',
     sortDirection: 'decrease',
     extraColumns: 'none',
     maxSatValue: 'auto',
-    useSatWord: false,
   };
 };
 

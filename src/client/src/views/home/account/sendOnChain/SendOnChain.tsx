@@ -14,6 +14,7 @@ import { Price, getPrice } from '../../../../components/price/Price';
 import { useConfigState } from '../../../../context/ConfigContext';
 import Modal from '../../../../components/modal/ReactModal';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { ChevronRight, Loader2 } from 'lucide-react';
 import { renderLine } from '../../../../components/generic/helpers';
 import { usePriceState } from '../../../../context/PriceContext';
@@ -103,10 +104,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
         <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
           <span>Send All</span>
         </div>
-        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-          {renderButton(() => setSendAll(true), 'Yes', sendAll)}
-          {renderButton(() => setSendAll(false), 'No', !sendAll)}
-        </div>
+        <Switch checked={sendAll} onCheckedChange={setSendAll} />
       </div>
       {!sendAll && (
         <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">

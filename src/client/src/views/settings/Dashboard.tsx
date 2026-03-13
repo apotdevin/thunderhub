@@ -1,31 +1,35 @@
 import { useNavigate } from 'react-router-dom';
-import { SettingsLine } from '../../pages/SettingsPage';
 import { Button } from '@/components/ui/button';
-import { ChevronRight } from 'lucide-react';
 import {
   Card,
-  CardWithTitle,
-  Sub4Title,
-  SubTitle,
-} from '../../components/generic/Styled';
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
+import { ChevronRight } from 'lucide-react';
 
 export const DashboardSettings = () => {
   const navigate = useNavigate();
 
   return (
-    <CardWithTitle>
-      <SubTitle>Dashboard</SubTitle>
-      <Card>
-        <SettingsLine>
-          <Sub4Title>Widgets</Sub4Title>
+    <Card>
+      <CardHeader>
+        <CardTitle>Dashboard</CardTitle>
+        <CardDescription>Configure your dashboard layout</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium">Widgets</span>
           <Button
             variant="outline"
+            size="sm"
             onClick={() => navigate('/settings/dashboard')}
           >
-            Change <ChevronRight size={18} />
+            Customize <ChevronRight size={16} />
           </Button>
-        </SettingsLine>
-      </Card>
-    </CardWithTitle>
+        </div>
+      </CardContent>
+    </Card>
   );
 };

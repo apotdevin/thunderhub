@@ -1,20 +1,14 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { X, Copy, ChevronRight, Loader2 } from 'lucide-react';
+import { ChevronRight, X, Copy, Loader2 } from 'lucide-react';
 import { useSignMessageLazyQuery } from '../../../graphql/queries/__generated__/signMessage.generated';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import {
-  SingleLine,
-  DarkSubTitle,
-  Separation,
-} from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
-import { NoWrap } from './Messages';
 
 export const SignMessage = () => {
-  const [message, setMessage] = useState<string>('');
-  const [signed, setSigned] = useState<string>('');
+  const [message, setMessage] = useState('');
+  const [signed, setSigned] = useState('');
 
   const [signMessage, { data, loading }] = useSignMessageLazyQuery({
     onError: error => toast.error(getErrorContent(error)),
@@ -26,77 +20,69 @@ export const SignMessage = () => {
     }
   }, [loading, data]);
 
-  const renderInput = () => (
-    <>
-      <SingleLine>
-        <NoWrap>
-          <DarkSubTitle>Message: </DarkSubTitle>
-        </NoWrap>
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-2">
         <Input
-          style={{ margin: '8px 0 0' }}
+          className="text-sm"
+          placeholder="Enter message to sign"
           onChange={e => setMessage(e.target.value)}
         />
-      </SingleLine>
-      <Button
-        variant="outline"
-        onClick={() => signMessage({ variables: { message } })}
-        className="w-full"
-        style={{ margin: '8px 0 4px' }}
-        disabled={message === '' || loading}
-      >
-        {loading ? <Loader2 className="animate-spin" size={16} /> : <>Sign</>}
-      </Button>
-    </>
-  );
-
-  const renderMessage = () => (
-    <>
-      <Separation />
-      <div className="w-full h-full flex flex-col justify-center items-center">
-        <div className="break-words m-6 text-sm">{signed}</div>
         <Button
           variant="outline"
-          onClick={() =>
-            navigator.clipboard
-              .writeText(signed)
-              .then(() => toast.success('Signature Copied'))
-          }
+          size="sm"
+          disabled={message === '' || loading}
+          onClick={() => signMessage({ variables: { message } })}
         >
-          <Copy size={18} />
-          Copy
+          {loading ? <Loader2 className="animate-spin" size={14} /> : 'Sign'}
         </Button>
       </div>
-    </>
-  );
-
-  return (
-    <>
-      {renderInput()}
-      {signed !== '' && renderMessage()}
-    </>
+      {signed && (
+        <div className="rounded border border-border bg-muted/50 p-3 text-center space-y-2">
+          <p className="text-xs text-muted-foreground">Signature</p>
+          <div className="text-sm font-mono break-all">{signed}</div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              navigator.clipboard
+                .writeText(signed)
+                .then(() => toast.success('Signature Copied'))
+            }
+          >
+            <Copy size={14} />
+            Copy
+          </Button>
+        </div>
+      )}
+    </div>
   );
 };
 
 export const SignMessageCard = () => {
-  const [isPasting, setIsPasting] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <>
-      <SingleLine>
-        <DarkSubTitle>Sign Message</DarkSubTitle>
-        <Button
-          variant="outline"
-          style={{ margin: '4px 0' }}
-          onClick={() => setIsPasting(prev => !prev)}
-        >
-          {isPasting ? (
-            <X size={18} />
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <div>
+          <span className="text-sm font-medium">Sign Message</span>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Sign a message with your node key
+          </p>
+        </div>
+        <Button variant="outline" size="sm" onClick={() => setIsOpen(o => !o)}>
+          {isOpen ? (
+            <X size={14} />
           ) : (
-            <>Sign {!isPasting && <ChevronRight size={18} />}</>
+            <>
+              <span>Sign</span>
+              <ChevronRight size={14} />
+            </>
           )}
         </Button>
-      </SingleLine>
-      {isPasting && <SignMessage />}
-    </>
+      </div>
+      {isOpen && <SignMessage />}
+    </div>
   );
 };

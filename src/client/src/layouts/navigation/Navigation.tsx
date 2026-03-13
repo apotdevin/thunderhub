@@ -18,8 +18,12 @@ import { useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { useConfigState } from '../../context/ConfigContext';
 import { Link } from '../../components/link/Link';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '../../components/ui/tooltip';
 import { SideSettings } from './sideSettings/SideSettings';
-import { NodeInfo } from './nodeInfo/NodeInfo';
 
 type Icon = FC<LucideProps>;
 
@@ -36,6 +40,29 @@ const SETTINGS = '/settings';
 const SWAP = '/swap';
 const AMBOSS = '/amboss';
 
+interface NavItem {
+  title: string;
+  link: string;
+  icon: Icon;
+}
+
+const mainNav: NavItem[] = [
+  { title: 'Home', link: HOME, icon: Home },
+  { title: 'Dashboard', link: DASHBOARD, icon: Grid },
+  { title: 'Peers', link: PEERS, icon: Users },
+  { title: 'Channels', link: CHANNEL, icon: Cpu },
+  { title: 'Transactions', link: TRANS, icon: Server },
+  { title: 'Forwards', link: FORWARDS, icon: GitPullRequest },
+  { title: 'Chain', link: CHAIN_TRANS, icon: LinkIcon },
+  { title: 'Tools', link: TOOLS, icon: Shield },
+];
+
+const secondaryNav: NavItem[] = [
+  { title: 'Amboss', link: AMBOSS, icon: Globe },
+  { title: 'Swap', link: SWAP, icon: Shuffle },
+  { title: 'Stats', link: STATS, icon: BarChart2 },
+];
+
 interface NavigationProps {
   isBurger?: boolean;
   setOpen?: (state: boolean) => void;
@@ -45,90 +72,135 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const { pathname } = useLocation();
   const { sidebar } = useConfigState();
 
-  const isRoot = pathname === '/login' || pathname === '/sso';
+  const renderNavButton = (item: NavItem, open = true) => {
+    const isActive = pathname === item.link;
+    const NavIcon = item.icon;
 
-  const renderNavButton = (
-    title: string,
-    link: string,
-    NavIcon: Icon,
-    open = true
-  ) => (
-    <Link to={link}>
-      <div
-        className={cn(
-          'p-1 rounded flex items-center w-full no-underline my-1',
-          pathname === link ? 'bg-card text-foreground' : 'text-gray-500',
-          !sidebar && 'justify-center',
-          'hover:text-foreground hover:bg-card'
-        )}
-      >
-        <NavIcon size={18} />
-        {open && <div className="ml-2 text-sm">{title}</div>}
-      </div>
-    </Link>
-  );
+    const button = (
+      <Link key={item.link} to={item.link}>
+        <div
+          className={cn(
+            'group relative flex items-center gap-2.5 rounded-md text-xs font-medium transition-colors',
+            open ? 'px-2.5 py-1.5' : 'justify-center p-2',
+            isActive
+              ? 'bg-primary/10 text-primary'
+              : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+          )}
+        >
+          <NavIcon size={15} className="shrink-0" />
+          {open && <span>{item.title}</span>}
+        </div>
+      </Link>
+    );
 
-  const renderBurgerNav = (title: string, link: string, NavIcon: Icon) => (
-    <Link to={link}>
-      <div
-        className={cn(
-          'flex flex-col items-center justify-center px-4 pt-4 pb-2 rounded no-underline',
-          pathname === link ? 'bg-card text-foreground' : 'text-gray-500'
-        )}
-        onClick={() => setOpen && setOpen(false)}
-      >
-        <NavIcon />
-        {title}
-      </div>
-    </Link>
-  );
+    if (!open) {
+      return (
+        <Tooltip key={item.link}>
+          <TooltipTrigger asChild>{button}</TooltipTrigger>
+          <TooltipContent side="right" className="text-xs">
+            {item.title}
+          </TooltipContent>
+        </Tooltip>
+      );
+    }
 
-  const renderLinks = () => (
-    <div className={cn('w-full', !sidebar && 'my-2')}>
-      {renderNavButton('Home', HOME, Home, sidebar)}
-      {renderNavButton('Dashboard', DASHBOARD, Grid, sidebar)}
-      {renderNavButton('Peers', PEERS, Users, sidebar)}
-      {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
-      {renderNavButton('Transactions', TRANS, Server, sidebar)}
-      {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
-      {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
-      {renderNavButton('Amboss', AMBOSS, Globe, sidebar)}
-      {renderNavButton('Tools', TOOLS, Shield, sidebar)}
-      {renderNavButton('Swap', SWAP, Shuffle, sidebar)}
-      {renderNavButton('Stats', STATS, BarChart2, sidebar)}
-    </div>
-  );
+    return button;
+  };
 
-  const renderBurger = () => (
-    <div className="flex justify-start items-center overflow-scroll bg-muted -mx-4 px-4 py-4">
-      {renderBurgerNav('Home', HOME, Home)}
-      {renderBurgerNav('Dashboard', DASHBOARD, Grid)}
-      {renderBurgerNav('Peers', PEERS, Users)}
-      {renderBurgerNav('Channels', CHANNEL, Cpu)}
-      {renderBurgerNav('Transactions', TRANS, Server)}
-      {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}
-      {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
-      {renderBurgerNav('Amboss', AMBOSS, Globe)}
-      {renderBurgerNav('Tools', TOOLS, Shield)}
-      {renderBurgerNav('Swap', SWAP, Shuffle)}
-      {renderBurgerNav('Stats', STATS, BarChart2)}
-      {renderBurgerNav('Settings', SETTINGS, Settings)}
-    </div>
-  );
+  const renderBurgerNav = (item: NavItem) => {
+    const isActive = pathname === item.link;
+    const NavIcon = item.icon;
+
+    return (
+      <Link key={item.link} to={item.link}>
+        <div
+          className={cn(
+            'flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors',
+            isActive
+              ? 'bg-primary/10 text-primary font-medium'
+              : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+          )}
+          onClick={() => setOpen && setOpen(false)}
+        >
+          <NavIcon size={16} />
+          <span>{item.title}</span>
+        </div>
+      </Link>
+    );
+  };
 
   if (isBurger) {
-    return renderBurger();
+    return (
+      <div className="px-4 py-2">
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-3 mb-1">
+          Navigation
+        </div>
+        <nav className="flex flex-col gap-0.5">
+          {mainNav.map(item => renderBurgerNav(item))}
+        </nav>
+        <div className="my-2 mx-3 h-px bg-border/60" />
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-3 mb-1">
+          Tools
+        </div>
+        <nav className="flex flex-col gap-0.5">
+          {secondaryNav.map(item => renderBurgerNav(item))}
+          {renderBurgerNav({
+            title: 'Settings',
+            link: SETTINGS,
+            icon: Settings,
+          })}
+        </nav>
+      </div>
+    );
   }
 
   return (
     <div
-      className="[grid-area:nav] hidden md:block"
-      style={{ width: sidebar ? '200px' : '60px' }}
+      className={cn(
+        '[grid-area:nav] hidden md:flex flex-col transition-[width] duration-200',
+        sidebar ? 'w-[180px]' : 'w-[52px]'
+      )}
     >
-      <div className="sticky top-4">
-        <div className="flex flex-col items-start py-2">
-          {!isRoot && <NodeInfo isOpen={sidebar} />}
-          {renderLinks()}
+      <div className="sticky top-[96px]">
+        <div className="flex flex-col h-full">
+          {sidebar && (
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-2.5 mb-1">
+              Menu
+            </div>
+          )}
+          <nav
+            className={cn(
+              'flex flex-col gap-0.5 w-full',
+              !sidebar && 'items-center'
+            )}
+          >
+            {mainNav.map(item => renderNavButton(item, sidebar))}
+          </nav>
+          <div
+            className={cn(
+              'my-2 h-px bg-border/60',
+              sidebar ? 'mx-2.5' : 'mx-2'
+            )}
+          />
+          {sidebar && (
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-2.5 mb-1">
+              Tools
+            </div>
+          )}
+          <nav
+            className={cn(
+              'flex flex-col gap-0.5 w-full',
+              !sidebar && 'items-center'
+            )}
+          >
+            {secondaryNav.map(item => renderNavButton(item, sidebar))}
+          </nav>
+          <div
+            className={cn(
+              'my-2 h-px bg-border/60',
+              sidebar ? 'mx-2.5' : 'mx-2'
+            )}
+          />
           <SideSettings />
         </div>
       </div>

@@ -5,6 +5,7 @@ import { useOpenChannelMutation } from '../../../graphql/mutations/__generated__
 import { Input } from '@/components/ui/input';
 import { Price } from '../../../components/price/Price';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { useBitcoinFees } from '../../../hooks/UseBitcoinFees';
 import { useConfigState } from '../../../context/ConfigContext';
 import { PeerSelect } from '../../../components/select/specific/PeerSelect';
@@ -168,10 +169,7 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
         <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
           <span>Recommended Peer</span>
         </div>
-        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-          {renderButton(() => setUseRecommended(true), 'Yes', useRecommended)}
-          {renderButton(() => setUseRecommended(false), 'No', !useRecommended)}
-        </div>
+        <Switch checked={useRecommended} onCheckedChange={setUseRecommended} />
       </div>
 
       <Separation />
@@ -199,10 +197,7 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
             <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
               <span>Is New Peer</span>
             </div>
-            <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-              {renderButton(() => setIsNewPeer(true), 'Yes', isNewPeer)}
-              {renderButton(() => setIsNewPeer(false), 'No', !isNewPeer)}
-            </div>
+            <Switch checked={isNewPeer} onCheckedChange={setIsNewPeer} />
           </div>
 
           {isNewPeer ? (
@@ -233,17 +228,13 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
         <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
           <span>Max Size</span>
         </div>
-        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-          {renderButton(
-            () => {
-              setIsMaxFunding(true);
-              setSize(0);
-            },
-            'Yes',
-            isMaxFunding
-          )}
-          {renderButton(() => setIsMaxFunding(false), 'No', !isMaxFunding)}
-        </div>
+        <Switch
+          checked={isMaxFunding}
+          onCheckedChange={v => {
+            setIsMaxFunding(v);
+            if (v) setSize(0);
+          }}
+        />
       </div>
 
       {!isMaxFunding ? (

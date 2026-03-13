@@ -3,11 +3,10 @@ import toast from 'react-hot-toast';
 import { useGetBackupsLazyQuery } from '../../../graphql/queries/__generated__/getBackups.generated';
 import { format } from 'date-fns';
 import { useNodeInfo } from '../../../hooks/UseNodeInfo';
-import { DarkSubTitle, SingleLine } from '../../../components/generic/Styled';
 import { saveToPc } from '../../../utils/helpers';
 import { getErrorContent } from '../../../utils/error';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { Download, Loader2 } from 'lucide-react';
 
 export const DownloadBackups = () => {
   const [getBackups, { data, loading }] = useGetBackupsLazyQuery({
@@ -26,20 +25,28 @@ export const DownloadBackups = () => {
   }, [data, loading, publicKey]);
 
   return (
-    <SingleLine>
-      <DarkSubTitle>Backup All Channels</DarkSubTitle>
+    <div className="flex items-center justify-between">
+      <div>
+        <span className="text-sm font-medium">Download All Channels</span>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          Export a backup file for all channels
+        </p>
+      </div>
       <Button
         variant="outline"
-        style={{ margin: '4px 0' }}
+        size="sm"
         disabled={loading}
         onClick={() => getBackups()}
       >
         {loading ? (
-          <Loader2 className="animate-spin" size={16} />
+          <Loader2 className="animate-spin" size={14} />
         ) : (
-          <>Download</>
+          <>
+            <Download size={14} />
+            Download
+          </>
         )}
       </Button>
-    </SingleLine>
+    </div>
   );
 };

@@ -1,4 +1,3 @@
-import { SatoshiSymbol } from '../components/satoshi/Satoshi';
 import { Bitcoin } from 'lucide-react';
 
 const fmt1 = (n: number) =>
@@ -22,7 +21,6 @@ interface GetNumberProps {
   breakNumber?: boolean;
   override?: string;
   noUnit?: boolean;
-  useSatWord?: boolean;
 }
 
 export const getValue = ({
@@ -33,7 +31,6 @@ export const getValue = ({
   breakNumber,
   override,
   noUnit,
-  useSatWord,
 }: GetNumberProps): JSX.Element | string => {
   if (!amount) return '';
   const correctCurrency = override || currency;
@@ -72,20 +69,11 @@ export const getValue = ({
       return `${breakAmount}`;
     }
 
-    if (useSatWord) {
-      return (
-        <>
-          {breakAmount}
-          <span className="ml-1 text-xs text-gray-500">sats</span>
-        </>
-      );
-    }
-
     return (
-      <span className="flex items-center">
+      <>
         {breakAmount}
-        <SatoshiSymbol color={'grey'} transform={'translate(0,2)'} />
-      </span>
+        <span className="ml-1 text-xs text-gray-500">sats</span>
+      </>
     );
   }
 

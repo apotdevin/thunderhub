@@ -1,45 +1,15 @@
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Switch } from '@/components/ui/switch';
 import {
   Card,
-  CardWithTitle,
-  SingleLine,
-  SubTitle,
-} from '../../components/generic/Styled';
-import { VFC } from 'react';
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
 import {
   useNotificationDispatch,
   useNotificationState,
 } from '../../context/NotificationContext';
-
-const Toggle: VFC<{
-  title: string;
-  property: string;
-  value: boolean;
-  cbk: (fields: any) => void;
-}> = ({ title, property, value, cbk }) => {
-  return (
-    <SingleLine>
-      <div className="whitespace-nowrap text-sm">{title}</div>
-      <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-        <Button
-          variant={value ? 'default' : 'ghost'}
-          onClick={() => cbk({ [property]: true })}
-          className={cn('grow', !value && 'text-foreground')}
-        >
-          Yes
-        </Button>
-        <Button
-          variant={!value ? 'default' : 'ghost'}
-          onClick={() => cbk({ [property]: false })}
-          className={cn('grow', value && 'text-foreground')}
-        >
-          No
-        </Button>
-      </div>
-    </SingleLine>
-  );
-};
 
 export const NotificationSettings = () => {
   const { channels, forwardAttempts, forwards, invoices, payments, autoClose } =
@@ -47,49 +17,44 @@ export const NotificationSettings = () => {
 
   const dispatch = useNotificationDispatch();
 
-  const handleToggle = (fields: any) => dispatch({ type: 'change', ...fields });
+  const handleToggle = (property: string, value: boolean) =>
+    dispatch({ type: 'change', [property]: value });
+
+  const items = [
+    { label: 'Invoices', property: 'invoices', value: invoices },
+    { label: 'Payments', property: 'payments', value: payments },
+    { label: 'Channels', property: 'channels', value: channels },
+    { label: 'Forwards', property: 'forwards', value: forwards },
+    {
+      label: 'Forward Attempts',
+      property: 'forwardAttempts',
+      value: forwardAttempts,
+    },
+    { label: 'Auto Close', property: 'autoClose', value: autoClose },
+  ];
 
   return (
-    <CardWithTitle>
-      <SubTitle>Notifications</SubTitle>
-      <Card>
-        <Toggle
-          title="Invoices"
-          property="invoices"
-          value={invoices}
-          cbk={handleToggle}
-        />
-        <Toggle
-          title="Payments"
-          property="payments"
-          value={payments}
-          cbk={handleToggle}
-        />
-        <Toggle
-          title="Channels"
-          property="channels"
-          value={channels}
-          cbk={handleToggle}
-        />
-        <Toggle
-          title="Forwards"
-          property="forwards"
-          value={forwards}
-          cbk={handleToggle}
-        />
-        <Toggle
-          title="Forward Attempts"
-          property="forwardAttempts"
-          value={forwardAttempts}
-          cbk={handleToggle}
-        />
-        <Toggle
-          title="Auto Close"
-          property="autoClose"
-          value={autoClose}
-          cbk={handleToggle}
-        />
-      </Card>
-    </CardWithTitle>
+    <Card>
+      <CardHeader>
+        <CardTitle>Notifications</CardTitle>
+        <CardDescription>
+          Choose which events trigger notifications
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {items.map(item => (
+          <div
+            key={item.property}
+            className="flex items-center justify-between"
+          >
+            <span className="text-sm font-medium">{item.label}</span>
+            <Switch
+              checked={item.value}
+              onCheckedChange={checked => handleToggle(item.property, checked)}
+            />
+          </div>
+        ))}
+      </CardContent>
+    </Card>
   );
 };

@@ -1,21 +1,21 @@
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Switch } from '@/components/ui/switch';
 import { Loader2 } from 'lucide-react';
 import {
   Card,
-  CardWithTitle,
-  SingleLine,
-  SubTitle,
-} from '../../components/generic/Styled';
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
 import { getErrorContent } from '../../utils/error';
 import toast from 'react-hot-toast';
 import { useGetConfigStateQuery } from '../../graphql/queries/__generated__/getConfigState.generated';
 import { useToggleConfigMutation } from '../../graphql/mutations/__generated__/toggleConfig.generated';
 import { ConfigFields } from '../../graphql/types';
-import { VFC } from 'react';
+import { FC } from 'react';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 
-const ConfigFieldToggle: VFC<{
+const ConfigFieldToggle: FC<{
   title: string;
   enabled: boolean;
   field: ConfigFields;
@@ -26,35 +26,18 @@ const ConfigFieldToggle: VFC<{
   });
 
   return (
-    <SingleLine>
-      <div className="whitespace-nowrap text-sm">{title}</div>
-      <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-        {loading ? (
-          <div style={{ width: '103px', textAlign: 'center' }}>
-            <Loader2 className="animate-spin text-primary" size={21} />
-          </div>
-        ) : (
-          <>
-            <Button
-              variant={enabled ? 'default' : 'ghost'}
-              disabled={loading}
-              onClick={() => toggle({ variables: { field } })}
-              className={cn('grow', !enabled && 'text-foreground')}
-            >
-              Yes
-            </Button>
-            <Button
-              variant={!enabled ? 'default' : 'ghost'}
-              disabled={loading}
-              onClick={() => toggle({ variables: { field } })}
-              className={cn('grow', enabled && 'text-foreground')}
-            >
-              No
-            </Button>
-          </>
-        )}
-      </div>
-    </SingleLine>
+    <div className="flex items-center justify-between">
+      <span className="text-sm font-medium">{title}</span>
+      {loading ? (
+        <Loader2 className="animate-spin text-muted-foreground" size={18} />
+      ) : (
+        <Switch
+          checked={enabled}
+          disabled={loading}
+          onCheckedChange={() => toggle({ variables: { field } })}
+        />
+      )}
+    </div>
   );
 };
 
@@ -80,35 +63,38 @@ export const AmbossSettings = () => {
   } = data.getConfigState;
 
   return (
-    <CardWithTitle>
-      <SubTitle>Amboss</SubTitle>
-      <Card>
+    <Card>
+      <CardHeader>
+        <CardTitle>Amboss</CardTitle>
+        <CardDescription>Configure Amboss integration settings</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
         <ConfigFieldToggle
           field={ConfigFields.Backups}
           enabled={backup_state}
-          title={'Auto Backups'}
+          title="Auto Backups"
         />
         <ConfigFieldToggle
           field={ConfigFields.Healthchecks}
           enabled={healthcheck_ping_state}
-          title={'Healthcheck Pings'}
+          title="Healthcheck Pings"
         />
         <ConfigFieldToggle
           field={ConfigFields.OnchainPush}
           enabled={onchain_push_enabled}
-          title={'Onchain Push'}
+          title="Onchain Push"
         />
         <ConfigFieldToggle
           field={ConfigFields.ChannelsPush}
           enabled={channels_push_enabled}
-          title={'Channels Push'}
+          title="Channels Push"
         />
         <ConfigFieldToggle
           field={ConfigFields.PrivateChannelsPush}
           enabled={private_channels_push_enabled}
-          title={'Private Channel Push'}
+          title="Private Channel Push"
         />
-      </Card>
-    </CardWithTitle>
+      </CardContent>
+    </Card>
   );
 };

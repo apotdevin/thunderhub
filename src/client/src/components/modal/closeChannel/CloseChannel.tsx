@@ -15,6 +15,7 @@ import {
 } from '../../generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 
 type CloseChannelProps = {
@@ -138,17 +139,13 @@ export const CloseChannel = ({
       <SingleLine>
         <Sub4Title>Force Close Channel:</Sub4Title>
       </SingleLine>
-      <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-        {renderButton(
-          () => {
-            setAmount(undefined);
-            setIsForce(true);
-          },
-          'Yes',
-          isForce
-        )}
-        {renderButton(() => setIsForce(false), 'No', !isForce)}
-      </div>
+      <Switch
+        checked={isForce}
+        onCheckedChange={v => {
+          if (v) setAmount(undefined);
+          setIsForce(v);
+        }}
+      />
       {!isForce && (
         <>
           <SingleLine>

@@ -3,22 +3,16 @@ import {
   CardWithTitle,
   SubTitle,
   Card,
-  DarkSubTitle,
-  SingleLine,
-  ResponsiveLine,
-  Separation,
-  Sub4Title,
 } from '../../../components/generic/Styled';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Switch } from '@/components/ui/switch';
+import { ChevronRight, Copy, Cookie, Loader2 } from 'lucide-react';
 import { useCreateMacaroonMutation } from '../../../graphql/mutations/__generated__/createMacaroon.generated';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../utils/error';
 import { useMutationResultWithReset } from '../../../hooks/UseMutationWithReset';
 import Modal from '../../../components/modal/ReactModal';
 import { shorten } from '../../../components/generic/helpers';
-import { Copy } from 'lucide-react';
 import { NetworkInfoInput } from '../../../graphql/types';
 
 const InitPermissions = {
@@ -43,164 +37,180 @@ const InitPermissions = {
   is_ok_to_verify_messages: false,
 };
 
-export const Bakery = () => {
-  const [isOpen, isOpenSet] = useState<boolean>(false);
-  const [newMacaroon, newMacaroonSet] = useState<boolean>(false);
+const permissionLabels: Record<keyof typeof InitPermissions, string> = {
+  is_ok_to_adjust_peers: 'Adjust Peers',
+  is_ok_to_create_chain_addresses: 'Create Chain Addresses',
+  is_ok_to_create_invoices: 'Create Invoices',
+  is_ok_to_create_macaroons: 'Create Macaroons',
+  is_ok_to_derive_keys: 'Derive Keys',
+  is_ok_to_get_access_ids: 'Get Access Keys',
+  is_ok_to_get_chain_transactions: 'Get Chain Transactions',
+  is_ok_to_get_invoices: 'Get Invoices',
+  is_ok_to_get_wallet_info: 'Get Wallet Info',
+  is_ok_to_get_payments: 'Get Payments',
+  is_ok_to_get_peers: 'Get Peers',
+  is_ok_to_pay: 'Pay Invoices',
+  is_ok_to_revoke_access_ids: 'Revoke Access IDs',
+  is_ok_to_send_to_chain_addresses: 'Send to Chain Addresses',
+  is_ok_to_sign_bytes: 'Sign Bytes',
+  is_ok_to_sign_messages: 'Sign Messages',
+  is_ok_to_stop_daemon: 'Stop Daemon',
+  is_ok_to_verify_bytes_signatures: 'Verify Bytes Signatures',
+  is_ok_to_verify_messages: 'Verify Messages',
+};
 
-  const [permissions, permissionSet] =
+export const Bakery = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [newMacaroon, setNewMacaroon] = useState(false);
+  const [permissions, setPermissions] =
     useState<NetworkInfoInput>(InitPermissions);
 
-  let hasATrue = false;
-  Object.entries(permissions);
-  for (const [, value] of Object.entries(permissions)) {
-    if (value) {
-      hasATrue = true;
-    }
-  }
+  const hasAnyPermission = Object.values(permissions).some(Boolean);
 
   const [bake, { loading, data: _data }] = useCreateMacaroonMutation({
-    onCompleted: () => newMacaroonSet(true),
+    onCompleted: () => setNewMacaroon(true),
     onError: error => toast.error(getErrorContent(error)),
   });
 
   const [data, resetMutationResult] = useMutationResultWithReset(_data);
 
-  const resetPermissions = () => permissionSet(InitPermissions);
-
   const closeCallback = () => {
-    newMacaroonSet(false);
-    isOpenSet(false);
-    resetPermissions();
+    setNewMacaroon(false);
+    setIsOpen(false);
+    setPermissions(InitPermissions);
     resetMutationResult();
   };
-
-  const renderModal = () => {
-    if (!data?.createMacaroon) return null;
-    const { base, hex } = data.createMacaroon;
-    return (
-      <>
-        <SubTitle>New Macaroon</SubTitle>
-        <Separation />
-        <SubTitle>Base64 Encoded</SubTitle>
-        <SingleLine>
-          <Sub4Title>{shorten(base)}</Sub4Title>
-          <Button
-            variant="outline"
-            onClick={() =>
-              navigator.clipboard
-                .writeText(base)
-                .then(() => toast.success('Macaroon Copied'))
-            }
-          >
-            <Copy size={18} />
-            Copy
-          </Button>
-        </SingleLine>
-        <Separation />
-        <SubTitle>Hex Encoded</SubTitle>
-        <SingleLine>
-          <Sub4Title>{shorten(hex)}</Sub4Title>
-          <Button
-            variant="outline"
-            onClick={() =>
-              navigator.clipboard
-                .writeText(hex)
-                .then(() => toast.success('Macaroon Copied'))
-            }
-          >
-            <Copy size={18} />
-            Copy
-          </Button>
-        </SingleLine>
-      </>
-    );
-  };
-
-  const renderLine = (title: string, value: keyof NetworkInfoInput) => (
-    <ResponsiveLine>
-      {permissions[value] ? (
-        <Sub4Title>{title}</Sub4Title>
-      ) : (
-        <DarkSubTitle>{title}</DarkSubTitle>
-      )}
-      <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-        <Button
-          variant={permissions[value] ? 'default' : 'ghost'}
-          onClick={() => permissionSet(p => ({ ...p, [value]: true }))}
-          className={cn('grow', !permissions[value] && 'text-foreground')}
-        >
-          Yes
-        </Button>
-        <Button
-          variant={!permissions[value] ? 'default' : 'ghost'}
-          onClick={() => permissionSet(p => ({ ...p, [value]: false }))}
-          className={cn('grow', permissions[value] && 'text-foreground')}
-        >
-          No
-        </Button>
-      </div>
-    </ResponsiveLine>
-  );
-
-  const renderPermissions = () => (
-    <>
-      <Separation />
-      <Sub4Title>Permissions</Sub4Title>
-      {renderLine('Add or remove Peers', 'is_ok_to_adjust_peers')}
-      {renderLine('Create Chain Addresses', 'is_ok_to_create_chain_addresses')}
-      {renderLine('Create Invoices', 'is_ok_to_create_invoices')}
-      {renderLine('Create Macaroons', 'is_ok_to_create_macaroons')}
-      {renderLine('Derive Keys', 'is_ok_to_derive_keys')}
-      {renderLine('Get Access Keys', 'is_ok_to_get_access_ids')}
-      {renderLine('Get Chain Transactions', 'is_ok_to_get_chain_transactions')}
-      {renderLine('Get Invoices', 'is_ok_to_get_invoices')}
-      {renderLine('Get Wallet Info', 'is_ok_to_get_wallet_info')}
-      {renderLine('Get Payments', 'is_ok_to_get_payments')}
-      {renderLine('Get Peers', 'is_ok_to_get_peers')}
-      {renderLine('Pay Invoices', 'is_ok_to_pay')}
-      {renderLine('Revoke Access Ids', 'is_ok_to_revoke_access_ids')}
-      {renderLine('Send to Chain Adresses', 'is_ok_to_send_to_chain_addresses')}
-      {renderLine('Sign bytes', 'is_ok_to_sign_bytes')}
-      {renderLine('Sign Messages', 'is_ok_to_sign_messages')}
-      {renderLine('Stop Daemon', 'is_ok_to_stop_daemon')}
-      {renderLine('Verify bytes signature', 'is_ok_to_verify_bytes_signatures')}
-      {renderLine('Verify messages', 'is_ok_to_verify_messages')}
-      <Button
-        variant="outline"
-        className="w-full"
-        style={{ margin: '16px 0 0' }}
-        onClick={() => bake({ variables: { permissions } })}
-        disabled={loading || !hasATrue}
-      >
-        {loading ? (
-          <Loader2 className="animate-spin" size={16} />
-        ) : (
-          <>Bake new macaroon</>
-        )}
-      </Button>
-    </>
-  );
 
   return (
     <>
       <CardWithTitle>
-        <SubTitle>Bakery</SubTitle>
-        <Card>
-          <SingleLine>
-            <DarkSubTitle>Macaroon</DarkSubTitle>
-            <Button variant="outline" onClick={() => isOpenSet(o => !o)}>
-              {isOpen ? (
-                'Cancel'
-              ) : (
-                <>Bake {!isOpen && <ChevronRight size={18} />}</>
-              )}
-            </Button>
-          </SingleLine>
-          {isOpen && renderPermissions()}
+        <div className="flex items-center gap-2 mb-1">
+          <Cookie size={18} className="text-muted-foreground" />
+          <SubTitle>Bakery</SubTitle>
+        </div>
+        <Card bottom="0">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-sm font-medium">Bake Macaroon</span>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Create a macaroon with custom permissions
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsOpen(o => !o)}
+              >
+                {isOpen ? (
+                  'Cancel'
+                ) : (
+                  <>
+                    <span>Bake</span>
+                    <ChevronRight size={14} />
+                  </>
+                )}
+              </Button>
+            </div>
+
+            {isOpen && (
+              <div className="space-y-4">
+                <div className="border-t border-border pt-4">
+                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                    Permissions
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mt-3">
+                    {(
+                      Object.keys(permissionLabels) as Array<
+                        keyof typeof InitPermissions
+                      >
+                    ).map(key => (
+                      <label
+                        key={key}
+                        className="flex items-center justify-between gap-2 py-1 cursor-pointer"
+                      >
+                        <span
+                          className={`text-sm ${permissions[key] ? 'text-foreground font-medium' : 'text-muted-foreground'}`}
+                        >
+                          {permissionLabels[key]}
+                        </span>
+                        <Switch
+                          checked={!!permissions[key]}
+                          onCheckedChange={v =>
+                            setPermissions(p => ({ ...p, [key]: v }))
+                          }
+                        />
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <Button
+                  className="w-full"
+                  onClick={() => bake({ variables: { permissions } })}
+                  disabled={loading || !hasAnyPermission}
+                >
+                  {loading ? (
+                    <Loader2 className="animate-spin" size={14} />
+                  ) : (
+                    'Bake Macaroon'
+                  )}
+                </Button>
+              </div>
+            )}
+          </div>
         </Card>
       </CardWithTitle>
+
       <Modal isOpen={!!newMacaroon} closeCallback={closeCallback}>
-        {renderModal()}
+        {data?.createMacaroon && (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">New Macaroon</h3>
+
+            <div className="space-y-3">
+              <div className="rounded border border-border bg-muted/50 p-3 space-y-2">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Base64 Encoded
+                </p>
+                <p className="text-sm font-mono break-all">
+                  {shorten(data.createMacaroon.base)}
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    navigator.clipboard
+                      .writeText(data.createMacaroon!.base)
+                      .then(() => toast.success('Macaroon Copied'))
+                  }
+                >
+                  <Copy size={14} />
+                  Copy
+                </Button>
+              </div>
+
+              <div className="rounded border border-border bg-muted/50 p-3 space-y-2">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Hex Encoded
+                </p>
+                <p className="text-sm font-mono break-all">
+                  {shorten(data.createMacaroon.hex)}
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    navigator.clipboard
+                      .writeText(data.createMacaroon!.hex)
+                      .then(() => toast.success('Macaroon Copied'))
+                  }
+                >
+                  <Copy size={14} />
+                  Copy
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </Modal>
     </>
   );

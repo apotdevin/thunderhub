@@ -1,69 +1,62 @@
+import { Switch } from '@/components/ui/switch';
 import {
-  CardWithTitle,
-  SubTitle,
   Card,
-  Sub4Title,
-} from '../../components/generic/Styled';
-import { SettingsLine } from '../../pages/SettingsPage';
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
 import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
-
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 
 export const PrivacySettings = () => {
   const { fetchFees, fetchPrices, displayValues } = useConfigState();
   const dispatch = useConfigDispatch();
 
-  const renderButton = (
-    title: string,
-    value: boolean,
-    type: string,
-    current: boolean
-  ) => (
-    <Button
-      variant={current === value ? 'default' : 'ghost'}
-      className={cn('grow', current !== value && 'text-foreground')}
-      onClick={() => {
-        localStorage.setItem(type, JSON.stringify(value));
-        dispatch({ type: 'change', [type]: value });
-      }}
-    >
-      {title}
-    </Button>
-  );
+  const handleToggle = (type: string, value: boolean) => {
+    localStorage.setItem(type, JSON.stringify(value));
+    dispatch({ type: 'change', [type]: value });
+  };
+
+  const items = [
+    {
+      label: 'Fetch Bitcoin Fees',
+      property: 'fetchFees',
+      value: fetchFees,
+    },
+    {
+      label: 'Fetch Fiat Prices',
+      property: 'fetchPrices',
+      value: fetchPrices,
+    },
+    {
+      label: 'Display Values',
+      property: 'displayValues',
+      value: displayValues,
+    },
+  ];
 
   return (
-    <CardWithTitle>
-      <SubTitle>Privacy</SubTitle>
-      <Card>
-        <SettingsLine>
-          <Sub4Title>Fetch Bitcoin Fees:</Sub4Title>
-          <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-            {renderButton('On', true, 'fetchFees', fetchFees)}
-            {renderButton('Off', false, 'fetchFees', fetchFees)}
-          </div>
-        </SettingsLine>
-        <SettingsLine>
-          <Sub4Title>Fetch Fiat Prices:</Sub4Title>
+    <Card>
+      <CardHeader>
+        <CardTitle>Privacy</CardTitle>
+        <CardDescription>
+          Control what data is fetched and displayed
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {items.map(item => (
           <div
-            className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap"
-            style={{ margin: '0 0 0 16px' }}
+            key={item.property}
+            className="flex items-center justify-between"
           >
-            {renderButton('On', true, 'fetchPrices', fetchPrices)}
-            {renderButton('Off', false, 'fetchPrices', fetchPrices)}
+            <span className="text-sm font-medium">{item.label}</span>
+            <Switch
+              checked={item.value}
+              onCheckedChange={checked => handleToggle(item.property, checked)}
+            />
           </div>
-        </SettingsLine>
-        <SettingsLine>
-          <Sub4Title>Values:</Sub4Title>
-          <div
-            className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap"
-            style={{ margin: '0 0 0 16px' }}
-          >
-            {renderButton('Show', true, 'displayValues', displayValues)}
-            {renderButton('Hide', false, 'displayValues', displayValues)}
-          </div>
-        </SettingsLine>
-      </Card>
-    </CardWithTitle>
+        ))}
+      </CardContent>
+    </Card>
   );
 };

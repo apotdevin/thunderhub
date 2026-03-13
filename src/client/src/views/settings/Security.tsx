@@ -1,15 +1,15 @@
 import { FC, useState } from 'react';
-import { SettingsLine } from '../../pages/SettingsPage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ChevronRight, Loader2 } from 'lucide-react';
 import {
   Card,
-  CardWithTitle,
-  Separation,
-  Sub4Title,
-  SubTitle,
-} from '../../components/generic/Styled';
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { ChevronRight, Loader2, ShieldCheck, ShieldOff } from 'lucide-react';
 import { useGetTwofaSecretQuery } from '../../graphql/queries/__generated__/getTwofaSecret.generated';
 import { useAccount } from '../../hooks/UseAccount';
 import { QRCodeSVG } from 'qrcode.react';
@@ -43,7 +43,7 @@ const Enable: FC<{ callback: () => void }> = ({ callback }) => {
 
   if (error?.message) {
     return (
-      <div className="w-full flex flex-col justify-center items-center">
+      <div className="w-full flex flex-col justify-center items-center text-sm text-muted-foreground">
         {error.message}
       </div>
     );
@@ -51,7 +51,7 @@ const Enable: FC<{ callback: () => void }> = ({ callback }) => {
 
   if (!data?.getTwofaSecret.url) {
     return (
-      <div className="w-full flex flex-col justify-center items-center">
+      <div className="w-full flex flex-col justify-center items-center text-sm text-muted-foreground">
         Unable to get secret to enable 2FA.
       </div>
     );
@@ -62,43 +62,42 @@ const Enable: FC<{ callback: () => void }> = ({ callback }) => {
   };
 
   return (
-    <>
-      <Separation />
-      <div className="w-full flex flex-col justify-center items-center">
-        <div className="w-[280px] h-[280px] m-4 bg-white p-4">
-          <QRCodeSVG value={data.getTwofaSecret.url} size={248} />
+    <div className="space-y-4 pt-2">
+      <Separator />
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-[248px] h-[248px] bg-white p-3 rounded-lg">
+          <QRCodeSVG value={data.getTwofaSecret.url} size={224} />
         </div>
-        {data.getTwofaSecret.secret}
+        <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+          {data.getTwofaSecret.secret}
+        </code>
       </div>
-      <Separation />
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>2FA</span>
-        </div>
+      <Separator />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '500px' }}
           type="number"
-          placeholder="2FA Token"
+          placeholder="Enter 2FA token"
           value={token}
           onChange={e => setToken(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleClick()}
+          className="sm:max-w-[280px]"
         />
+        <Button
+          className="w-full sm:w-auto"
+          disabled={!token || updateLoading}
+          onClick={handleClick}
+        >
+          {updateLoading ? (
+            <Loader2 className="animate-spin" size={16} />
+          ) : (
+            <>
+              <ShieldCheck size={16} />
+              Enable 2FA
+            </>
+          )}
+        </Button>
       </div>
-      <Button
-        variant="outline"
-        style={{ margin: '16px 0 0' }}
-        className="w-full"
-        disabled={!token || updateLoading}
-        onClick={handleClick}
-      >
-        {updateLoading ? (
-          <Loader2 className="animate-spin" size={16} />
-        ) : (
-          <>Enable</>
-        )}
-      </Button>
-    </>
+    </div>
   );
 };
 
@@ -123,36 +122,34 @@ const Disable: FC<{ callback: () => void }> = ({ callback }) => {
   };
 
   return (
-    <>
-      <Separation />
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>2FA</span>
-        </div>
+    <div className="space-y-4 pt-2">
+      <Separator />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '500px' }}
           type="number"
-          placeholder="2FA Token"
+          placeholder="Enter 2FA token"
           value={token}
           onChange={e => setToken(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleClick()}
+          className="sm:max-w-[280px]"
         />
+        <Button
+          variant="destructive"
+          className="w-full sm:w-auto"
+          disabled={!token || loading}
+          onClick={handleClick}
+        >
+          {loading ? (
+            <Loader2 className="animate-spin" size={16} />
+          ) : (
+            <>
+              <ShieldOff size={16} />
+              Disable 2FA
+            </>
+          )}
+        </Button>
       </div>
-      <Button
-        variant="outline"
-        style={{ margin: '16px 0 0' }}
-        className="w-full"
-        disabled={!token || loading}
-        onClick={handleClick}
-      >
-        {loading ? (
-          <Loader2 className="animate-spin" size={16} />
-        ) : (
-          <>Disable</>
-        )}
-      </Button>
-    </>
+    </div>
   );
 };
 
@@ -164,45 +161,43 @@ export const Security = () => {
     return null;
   }
 
-  const renderContent = () => {
-    if (user.twofaEnabled) {
-      return (
-        <>
-          <SettingsLine>
-            <Sub4Title>Disable 2FA</Sub4Title>
-            <Button variant="outline" onClick={() => setEnabled(p => !p)}>
-              {enable ? (
-                'Cancel'
-              ) : (
-                <>Disable {!enable && <ChevronRight size={18} />}</>
-              )}
-            </Button>
-          </SettingsLine>
-          {enable ? <Disable callback={() => setEnabled(false)} /> : null}
-        </>
-      );
-    }
-    return (
-      <>
-        <SettingsLine>
-          <Sub4Title>Enable 2FA</Sub4Title>
-          <Button variant="outline" onClick={() => setEnabled(p => !p)}>
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Security</CardTitle>
+        <CardDescription>
+          {user.twofaEnabled
+            ? 'Two-factor authentication is enabled'
+            : 'Protect your account with two-factor authentication'}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium">
+            {user.twofaEnabled ? 'Disable 2FA' : 'Enable 2FA'}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setEnabled(p => !p)}
+          >
             {enable ? (
               'Cancel'
             ) : (
-              <>Enable {!enable && <ChevronRight size={18} />}</>
+              <>
+                {user.twofaEnabled ? 'Disable' : 'Enable'}{' '}
+                <ChevronRight size={16} />
+              </>
             )}
           </Button>
-        </SettingsLine>
-        {enable ? <Enable callback={() => setEnabled(false)} /> : null}
-      </>
-    );
-  };
-
-  return (
-    <CardWithTitle>
-      <SubTitle>Security</SubTitle>
-      <Card>{renderContent()}</Card>
-    </CardWithTitle>
+        </div>
+        {enable &&
+          (user.twofaEnabled ? (
+            <Disable callback={() => setEnabled(false)} />
+          ) : (
+            <Enable callback={() => setEnabled(false)} />
+          ))}
+      </CardContent>
+    </Card>
   );
 };
