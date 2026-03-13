@@ -1,24 +1,21 @@
+import { FC, useState } from 'react';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../../utils/error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
-import { useState, VFC } from 'react';
 import { ChannelSelect } from '../../../../components/select/specific/ChannelSelect';
 import { useDecodeRequestQuery } from '../../../../graphql/queries/__generated__/decodeRequest.generated';
-import { renderLine } from '../../../../components/generic/helpers';
 import { Price } from '../../../../components/price/Price';
 import { usePayMutation } from '../../../../graphql/mutations/__generated__/pay.generated';
-import { Separation } from '../../../../components/generic/Styled';
-import { Center } from '../../../../components/typography/Styled';
-import { LoadingCard } from '../../../../components/loading/LoadingCard';
+import { Separator } from '@/components/ui/separator';
 
 interface PayProps {
   predefinedRequest?: string;
   payCallback?: () => void;
 }
 
-const DecodeInvoice: VFC<{ invoice: string | undefined | null }> = ({
+const DecodeInvoice: FC<{ invoice: string | undefined | null }> = ({
   invoice,
 }) => {
   const { data, loading } = useDecodeRequestQuery({
@@ -29,47 +26,58 @@ const DecodeInvoice: VFC<{ invoice: string | undefined | null }> = ({
 
   if (loading) {
     return (
-      <Center>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          Decoding
-          <LoadingCard noCard />
-        </div>
-      </Center>
+      <div className="flex items-center justify-center gap-2 py-2 text-xs text-muted-foreground">
+        <Loader2 className="animate-spin" size={14} />
+        Decoding...
+      </div>
     );
   }
 
   if (!data?.decodeRequest || !invoice) return null;
 
   const { description, tokens, destination_node } = data.decodeRequest;
-
   const { alias } = destination_node?.node || { alias: 'Unknown' };
 
   return (
-    <>
-      {renderLine('Description', description)}
-      {renderLine('Value', <Price amount={tokens} />)}
-      {renderLine('Destination', alias)}
-      <Separation />
-    </>
+    <div className="divide-y divide-border rounded border border-border text-xs">
+      {description && (
+        <div className="flex items-center justify-between px-3 py-2">
+          <span className="text-muted-foreground">Description</span>
+          <span className="font-medium">{description}</span>
+        </div>
+      )}
+      <div className="flex items-center justify-between px-3 py-2">
+        <span className="text-muted-foreground">Amount</span>
+        <span className="font-medium">
+          <Price amount={tokens} />
+        </span>
+      </div>
+      <div className="flex items-center justify-between px-3 py-2">
+        <span className="text-muted-foreground">Destination</span>
+        <span className="font-medium">{alias}</span>
+      </div>
+    </div>
   );
 };
 
-export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
+export const Pay: FC<PayProps> = ({ predefinedRequest, payCallback }) => {
   const [request, setRequest] = useState<string>(predefinedRequest || '');
   const [peers, setPeers] = useState<string[]>([]);
   const [fee, setFee] = useState<number>(10);
   const [paths, setPaths] = useState<number>(1);
+  const [confirming, setConfirming] = useState(false);
 
   const [pay, { loading }] = usePayMutation({
     onCompleted: () => {
       if (payCallback) payCallback();
       toast.success('Payment Sent');
       setRequest('');
+      setConfirming(false);
     },
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  const handleEnter = () => {
+  const handlePay = () => {
     if (loading || !request) return;
     pay({
       variables: {
@@ -82,73 +90,102 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-3">
+      {/* Invoice */}
       {!predefinedRequest && (
-        <>
-          <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-            <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-              <span>Request</span>
-            </div>
-            <Input
-              className="ml-0 md:ml-2"
-              style={{ maxWidth: '300px' }}
-              value={request}
-              placeholder={'Invoice'}
-              onChange={e => setRequest(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleEnter()}
-            />
-          </div>
-          <Separation />
-        </>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted-foreground">
+            Invoice
+          </label>
+          <Input
+            value={request}
+            placeholder="lnbc..."
+            onChange={e => setRequest(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handlePay()}
+          />
+        </div>
       )}
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Max Fee</span>
-          <span className="text-muted-foreground mx-2 ml-4">
+
+      {/* Decoded info */}
+      <DecodeInvoice invoice={request || predefinedRequest} />
+
+      <Separator />
+
+      {/* Max Fee */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Max Fee{' '}
+          <span className="text-foreground">
             <Price amount={fee} />
           </span>
-        </div>
+        </label>
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '300px' }}
-          placeholder={'sats'}
-          type={'number'}
+          placeholder="sats"
+          type="number"
           value={fee && fee > 0 ? fee : ''}
           onChange={e => setFee(Math.max(1, Number(e.target.value)))}
-          onKeyDown={e => e.key === 'Enter' && handleEnter()}
+          onKeyDown={e => e.key === 'Enter' && handlePay()}
         />
       </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Max Paths</span>
-        </div>
+
+      {/* Max Paths */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Max Paths
+        </label>
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '300px' }}
-          placeholder={'paths'}
-          type={'number'}
+          placeholder="paths"
+          type="number"
           value={paths && paths > 0 ? paths : ''}
           onChange={e => setPaths(Math.max(1, Number(e.target.value)))}
-          onKeyDown={e => e.key === 'Enter' && handleEnter()}
+          onKeyDown={e => e.key === 'Enter' && handlePay()}
         />
       </div>
-      <Separation />
-      <ChannelSelect
-        title={'Out Channels'}
-        maxWidth={'300px'}
-        callback={p => setPeers(p.map(peer => peer.id))}
-      />
-      <Separation />
-      <DecodeInvoice invoice={request || predefinedRequest} />
-      <Button
-        variant="outline"
-        disabled={loading || !request}
-        style={{ margin: '16px 0 0 0' }}
-        className="w-full"
-        onClick={() => handleEnter()}
-      >
-        {loading ? <Loader2 className="animate-spin" size={16} /> : <>Pay</>}
-      </Button>
-    </>
+
+      <Separator />
+
+      {/* Out Channels */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Out Channels
+        </label>
+        <ChannelSelect callback={p => setPeers(p.map(peer => peer.id))} />
+      </div>
+
+      <Separator />
+
+      {/* Pay / Confirm */}
+      {!confirming ? (
+        <Button
+          variant="outline"
+          disabled={loading || !request}
+          className="w-full"
+          onClick={() => setConfirming(true)}
+        >
+          Pay
+        </Button>
+      ) : (
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={() => setConfirming(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="flex-1"
+            disabled={loading || !request}
+            onClick={handlePay}
+          >
+            {loading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              'Confirm Pay'
+            )}
+          </Button>
+        </div>
+      )}
+    </div>
   );
 };

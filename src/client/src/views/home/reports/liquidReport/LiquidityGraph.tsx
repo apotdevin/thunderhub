@@ -1,9 +1,5 @@
-import {
-  Card,
-  CardWithTitle,
-  DarkSubTitle,
-  SubTitle,
-} from '../../../../components/generic/Styled';
+import { AlertTriangle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { useGetLiquidReportQuery } from '../../../../graphql/queries/__generated__/getChannelReport.generated';
 import { useChartColors } from '../../../../lib/chart-colors';
@@ -15,31 +11,31 @@ export const LiquidityGraph = () => {
 
   if (loading) {
     return (
-      <CardWithTitle>
-        <SubTitle>Liquidity Report</SubTitle>
-        <Card mobileCardPadding={'8px 0'}>
-          <div className="w-full h-[240px]">
-            <div className="flex h-full w-full items-center justify-center">
-              <LoadingCard noCard={true} />
-            </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Liquidity Report</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex h-[240px] w-full items-center justify-center">
+            <LoadingCard noCard={true} />
           </div>
-        </Card>
-      </CardWithTitle>
+        </CardContent>
+      </Card>
     );
   }
 
   if (!data?.getChannelReport) {
     return (
-      <CardWithTitle>
-        <SubTitle>Liquidity Report</SubTitle>
-        <Card mobileCardPadding={'8px 0'}>
-          <div className="w-full h-[240px]">
-            <div className="flex h-full w-full items-center justify-center">
-              Unable to get liquidity data.
-            </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Liquidity Report</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex h-[240px] w-full items-center justify-center text-sm text-muted-foreground">
+            Unable to get liquidity data.
           </div>
-        </Card>
-      </CardWithTitle>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -70,36 +66,39 @@ export const LiquidityGraph = () => {
 
   return (
     <>
-      <CardWithTitle>
-        <SubTitle>Liquidity Report</SubTitle>
-        <Card mobileCardPadding={'8px 0'}>
-          <div className="w-full h-[240px]">
+      <Card>
+        <CardHeader>
+          <CardTitle>Liquidity Report</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[240px] w-full">
             <HorizontalBarChart
               dataKey="Value"
               data={liquidity}
               colorRange={[chartColors.green]}
             />
           </div>
-        </Card>
-      </CardWithTitle>
-      <CardWithTitle>
-        <SubTitle>Pending HTLCs</SubTitle>
-        <Card mobileCardPadding={'8px 0'}>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Pending HTLCs</CardTitle>
+        </CardHeader>
+        <CardContent>
           {(totalPendingHtlc || 0) >= 300 && (
-            <DarkSubTitle
-              className="w-full text-center"
-              style={{ color: chartColors.orange }}
-            >
+            <div className="mb-3 flex items-center gap-2 rounded border border-orange-500/30 bg-orange-500/5 p-2 text-xs text-orange-500">
+              <AlertTriangle size={14} className="shrink-0" />
               You have a high amount of pending HTLCs. Be careful, a channel can
               hold a maximum of 483.
-            </DarkSubTitle>
+            </div>
           )}
           {!totalPendingHtlc ? (
-            <DarkSubTitle>
+            <div className="text-sm text-muted-foreground">
               None of your channels have pending HTLCs
-            </DarkSubTitle>
+            </div>
           ) : (
-            <div className="w-full h-[240px]">
+            <div className="h-[240px] w-full">
               <HorizontalBarChart
                 dataKey="Value"
                 data={htlc}
@@ -107,8 +106,8 @@ export const LiquidityGraph = () => {
               />
             </div>
           )}
-        </Card>
-      </CardWithTitle>
+        </CardContent>
+      </Card>
     </>
   );
 };

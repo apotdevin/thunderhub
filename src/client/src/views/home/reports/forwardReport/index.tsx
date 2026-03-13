@@ -1,22 +1,18 @@
 import { useState } from 'react';
 import { SmallSelectWithValue } from '../../../../components/select';
-import {
-  CardWithTitle,
-  SubTitle,
-  Card,
-  CardTitle,
-} from '../../../../components/generic/Styled';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { ForwardChannelsReport } from './ForwardChannelReport';
 import { ForwardResume } from './ForwardResume';
 import { ForwardsGraph } from './ForwardsGraph';
 
-export const CardContent = ({
+export const CardContentLayout = ({
   children,
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={`h-full flex flex-col px-2 md:px-4 ${className ?? ''}`}
+    className={`flex h-full flex-col px-2 md:px-4 ${className ?? ''}`}
     {...props}
   >
     {children}
@@ -42,33 +38,34 @@ export const ForwardBox = () => {
   const [type, setType] = useState(typeOptions[0]);
 
   return (
-    <CardWithTitle>
-      <CardTitle className="flex flex-col md:flex-row mb-2">
-        <SubTitle>Forward Report</SubTitle>
-
-        <div className="flex gap-2">
-          <SmallSelectWithValue
-            callback={e => setDays((e[0] || options[1]) as any)}
-            options={options}
-            value={days}
-            isClearable={false}
-          />
-          <SmallSelectWithValue
-            callback={e => setType((e[0] || typeOptions[1]) as any)}
-            options={typeOptions}
-            value={type}
-            isClearable={false}
-          />
+    <Card>
+      <CardHeader>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <CardTitle>Forward Report</CardTitle>
+          <div className="flex gap-2">
+            <SmallSelectWithValue
+              callback={e => setDays((e[0] || options[1]) as any)}
+              options={options}
+              value={days}
+              isClearable={false}
+            />
+            <SmallSelectWithValue
+              callback={e => setType((e[0] || typeOptions[1]) as any)}
+              options={typeOptions}
+              value={type}
+              isClearable={false}
+            />
+          </div>
         </div>
-      </CardTitle>
-
-      <Card mobileCardPadding={'8px'}>
+      </CardHeader>
+      <CardContent>
         <ForwardResume type={type} />
-      </Card>
-      <Card mobileCardPadding={'8px'}>
+      </CardContent>
+      <Separator />
+      <CardContent>
         <ForwardsGraph days={days} type={type} />
         <ForwardChannelsReport days={days.value} />
-      </Card>
-    </CardWithTitle>
+      </CardContent>
+    </Card>
   );
 };

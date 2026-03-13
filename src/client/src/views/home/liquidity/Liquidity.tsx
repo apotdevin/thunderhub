@@ -1,12 +1,8 @@
-import {
-  CardTitle,
-  CardWithTitle,
-  SubTitle,
-} from '../../../components/generic/Styled';
-import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
+import { Cable, Rocket } from 'lucide-react';
 import { useState } from 'react';
 import { OpenChannel } from './OpenChannel';
-import { BuyChannel, GoToMagma } from './BuyChannel';
+import { BuyChannel } from './BuyChannel';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -21,32 +17,34 @@ export const Liquidity = () => {
   const [openDialog, setOpenDialog] = useState<DialogState>('none');
 
   return (
-    <CardWithTitle>
-      <CardTitle>
-        <SubTitle>Liquidity</SubTitle>
-        {openDialog === 'buy' && <GoToMagma />}
-      </CardTitle>
-
-      <div className="grid md:grid-cols-2 gap-4 my-4">
-        <div
-          className="bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-border flex justify-center items-center p-2.5 cursor-pointer text-primary gap-2 hover:border-primary"
-          onClick={() => setOpenDialog('open')}
-        >
-          <ArrowUpRight size={24} />
-          <div className="text-sm text-muted-foreground text-center">
-            Open a Channel
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>Liquidity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 md:grid-cols-2">
+            <button
+              className="flex cursor-pointer items-center justify-center gap-2 rounded border border-border bg-transparent p-3 text-primary transition-colors hover:border-primary"
+              onClick={() => setOpenDialog('open')}
+            >
+              <Cable size={20} />
+              <span className="text-sm text-muted-foreground">
+                Open a Channel
+              </span>
+            </button>
+            <button
+              className="flex cursor-pointer items-center justify-center gap-2 rounded border border-border bg-transparent p-3 text-primary transition-colors hover:border-primary"
+              onClick={() => setOpenDialog('buy')}
+            >
+              <Rocket size={20} />
+              <span className="text-sm text-muted-foreground">
+                Buy Inbound Liquidity
+              </span>
+            </button>
           </div>
-        </div>
-        <div
-          className="bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-border flex justify-center items-center p-2.5 cursor-pointer text-primary gap-2 hover:border-primary"
-          onClick={() => setOpenDialog('buy')}
-        >
-          <ArrowDownRight size={24} />
-          <div className="text-sm text-muted-foreground text-center">
-            Buy Inbound Liquidity
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       <Dialog
         open={openDialog === 'open'}
@@ -67,16 +65,17 @@ export const Liquidity = () => {
         open={openDialog === 'buy'}
         onOpenChange={open => !open && setOpenDialog('none')}
       >
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Buy Inbound Liquidity</DialogTitle>
             <DialogDescription>
-              Purchase inbound capacity to receive payments on your node.
+              Get inbound capacity so you can start receiving payments
+              instantly.
             </DialogDescription>
           </DialogHeader>
           <BuyChannel />
         </DialogContent>
       </Dialog>
-    </CardWithTitle>
+    </>
   );
 };

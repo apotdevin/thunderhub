@@ -3,7 +3,6 @@ import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ChevronRight, Loader2 } from 'lucide-react';
-import { Card } from '../../../../components/generic/Styled';
 import Modal from '../../../../components/modal/ReactModal';
 import { useGetLightningAddressInfoLazyQuery } from '../../../../graphql/queries/__generated__/getLightningAddressInfo.generated';
 import { useLocalStorage } from '../../../../hooks/UseLocalStorage';
@@ -12,7 +11,7 @@ import { LnPay } from '../lnurl/LnPay';
 import { PreviousAddresses } from './Addresses';
 
 export const LightningAddressCard = () => {
-  const [address, setAddress] = useState<string>('');
+  const [address, setAddress] = useState('');
   const [savedAddresses, setSavedAddresses] = useLocalStorage<string[]>(
     'saved_lightning_address',
     []
@@ -40,15 +39,14 @@ export const LightningAddressCard = () => {
 
   return (
     <>
-      <Card>
-        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-            <span>Lightning Address</span>
-          </div>
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted-foreground">
+            Lightning Address
+          </label>
           <Input
-            className="ml-0 md:ml-2"
-            style={{ maxWidth: '500px' }}
             value={address}
+            placeholder="user@domain.com"
             onChange={e => setAddress(e.target.value)}
           />
         </div>
@@ -56,7 +54,6 @@ export const LightningAddressCard = () => {
           variant="outline"
           className="w-full"
           disabled={!address || loading}
-          style={{ margin: '16px 0 0' }}
           onClick={() => getInfo({ variables: { address } })}
         >
           {loading ? (
@@ -68,7 +65,7 @@ export const LightningAddressCard = () => {
           )}
         </Button>
         <PreviousAddresses handleClick={handleClick} />
-      </Card>
+      </div>
       <Modal
         isOpen={!!data?.getLightningAddressInfo}
         closeCallback={() => {

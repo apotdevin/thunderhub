@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import {
-  SubTitle,
-  Separation,
-  Sub4Title,
-} from '../../../../components/generic/Styled';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-import Modal from '../../../../components/modal/ReactModal';
-import { Emoji } from '../../../../components/emoji/Emoji';
+import { Heart, Loader2 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { useGetLightningAddressInfoLazyQuery } from '../../../../graphql/queries/__generated__/getLightningAddressInfo.generated';
 import { PayRequest } from '../../../../graphql/types';
 import { LnPay } from '../lnurl/LnPay';
@@ -49,15 +49,27 @@ export const DonateModal = ({
   modalOpen: boolean;
   closeDonate: () => void;
 }) => (
-  <Modal isOpen={modalOpen} closeCallback={closeDonate}>
-    {payRequest ? (
-      <LnPay
-        request={payRequest}
-        defaultAmount={DEFAULT_DONATE_AMOUNT}
-        title={'Donate to ThunderHub'}
-      />
-    ) : null}
-  </Modal>
+  <Dialog open={modalOpen} onOpenChange={open => !open && closeDonate()}>
+    <DialogContent className="sm:max-w-md">
+      <DialogHeader>
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-500/10">
+            <Heart size={16} className="text-pink-500" />
+          </div>
+          <div>
+            <DialogTitle>Support ThunderHub</DialogTitle>
+            <DialogDescription>
+              ThunderHub is free and open-source. Your donation helps keep it
+              that way.
+            </DialogDescription>
+          </div>
+        </div>
+      </DialogHeader>
+      {payRequest ? (
+        <LnPay request={payRequest} defaultAmount={DEFAULT_DONATE_AMOUNT} />
+      ) : null}
+    </DialogContent>
+  </Dialog>
 );
 
 export const SupportBar = () => {
@@ -65,29 +77,39 @@ export const SupportBar = () => {
     useDonate();
 
   return (
-    <>
-      <div style={{ textAlign: 'center' }}>
-        <SubTitle>This project is completely free and open-source.</SubTitle>
-        <Sub4Title>
-          If you have enjoyed it, please consider supporting ThunderHub with
-          some sats <Emoji symbol={'❤️'} label={'heart'} />
-        </Sub4Title>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-start gap-3 rounded border border-pink-500/20 bg-pink-500/5 p-3">
+        <Heart size={16} className="mt-0.5 shrink-0 text-pink-500" />
+        <div className="flex flex-col gap-0.5 text-xs">
+          <span className="font-medium text-pink-500">
+            Support this project
+          </span>
+          <span className="text-muted-foreground">
+            ThunderHub is completely free and open-source. If you find it
+            useful, consider sending a few sats to help keep development going.
+          </span>
+        </div>
       </div>
-      <Separation />
       <Button
         variant="outline"
         onClick={openDonate}
         disabled={loading}
         className="w-full"
-        style={{ margin: '8px 0 0 0' }}
       >
-        {loading ? <Loader2 className="animate-spin" size={16} /> : <>Donate</>}
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>
+            <Heart size={14} className="text-pink-500" />
+            Donate
+          </>
+        )}
       </Button>
       <DonateModal
         payRequest={payRequest}
         modalOpen={modalOpen}
         closeDonate={closeDonate}
       />
-    </>
+    </div>
   );
 };

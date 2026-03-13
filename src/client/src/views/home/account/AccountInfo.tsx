@@ -1,33 +1,22 @@
 import { Zap, Anchor, Pocket } from 'lucide-react';
 import { useNodeBalances } from '../../../hooks/UseNodeBalances';
 import Big from 'big.js';
-import { renderLine } from '../../../components/generic/helpers';
-import {
-  Card,
-  CardWithTitle,
-  SubTitle,
-  Separation,
-  DarkSubTitle,
-  ResponsiveLine,
-  SingleLine,
-} from '../../../components/generic/Styled';
 import { Price } from '../../../components/price/Price';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 
-const Tile = ({
+const StatItem = ({
+  label,
   children,
-  startTile,
 }: {
+  label: string;
   children: React.ReactNode;
-  startTile?: boolean;
 }) => (
-  <div
-    className={`flex justify-between w-full flex-row items-end mb-2 md:w-auto md:flex-col md:mb-0 ${startTile ? 'md:items-start' : 'md:items-end'}`}
-  >
-    {children}
+  <div className="flex items-center justify-between md:flex-col md:items-end md:gap-0.5">
+    <span className="text-xs text-muted-foreground">{label}</span>
+    <span className="text-sm font-medium font-mono">{children}</span>
   </div>
 );
-
-const sectionColor = '#FFD300';
 
 export const AccountInfo = () => {
   const { onchain, lightning } = useNodeBalances();
@@ -58,70 +47,109 @@ export const AccountInfo = () => {
 
   return (
     <>
-      <CardWithTitle>
-        <SubTitle>Resume</SubTitle>
-        <Card>
-          <ResponsiveLine>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
             <Pocket
-              size={18}
-              color={
+              size={16}
+              className={
                 chainPending === 0 && channelPending === 0
-                  ? '#2bbc54'
-                  : '#652EC7'
+                  ? 'text-green-500'
+                  : 'text-purple-500'
               }
             />
-            <Tile>
-              <DarkSubTitle>Total</DarkSubTitle>
-              <div>
-                <Price amount={totalAmount} />
-              </div>
-            </Tile>
-            <Tile>
-              <DarkSubTitle>Bitcoin</DarkSubTitle>
-              <div>
-                <Price amount={totalChain} />
-              </div>
-            </Tile>
-            <Tile>
-              <DarkSubTitle>Lightning</DarkSubTitle>
-              <div>
-                <Price amount={totalLightning} />
-              </div>
-            </Tile>
-          </ResponsiveLine>
-        </Card>
-      </CardWithTitle>
-      <div className="block md:grid md:gap-4 md:grid-cols-2">
-        <CardWithTitle>
-          <Card>
-            <SingleLine>
+            <CardTitle>Balance</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <StatItem label="Total">
+              <Price amount={totalAmount} />
+            </StatItem>
+            <StatItem label="Bitcoin">
+              <Price amount={totalChain} />
+            </StatItem>
+            <StatItem label="Lightning">
+              <Price amount={totalLightning} />
+            </StatItem>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
               <Zap
-                size={18}
-                color={channelPending === 0 ? sectionColor : '#652EC7'}
+                size={16}
+                className={
+                  channelPending === 0 ? 'text-yellow-500' : 'text-purple-500'
+                }
               />
-              <SubTitle>Lightning</SubTitle>
-            </SingleLine>
-            <Separation />
-            {renderLine('Available', <Price amount={activeLightning} />)}
-            {renderLine('Not Available', <Price amount={inactiveLightning} />)}
-            {renderLine('Pending', <Price amount={lightning.pending} />)}
-          </Card>
-        </CardWithTitle>
-        <CardWithTitle>
-          <Card>
-            <SingleLine>
+              <CardTitle>Lightning</CardTitle>
+            </div>
+          </CardHeader>
+          <Separator />
+          <CardContent>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Available</span>
+                <span className="font-mono">
+                  <Price amount={activeLightning} />
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Not Available</span>
+                <span className="font-mono">
+                  <Price amount={inactiveLightning} />
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Pending</span>
+                <span className="font-mono">
+                  <Price amount={lightning.pending} />
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
               <Anchor
-                size={18}
-                color={chainPending === 0 ? sectionColor : '#652EC7'}
+                size={16}
+                className={
+                  chainPending === 0 ? 'text-yellow-500' : 'text-purple-500'
+                }
               />
-              <SubTitle>Bitcoin</SubTitle>
-            </SingleLine>
-            <Separation />
-            {renderLine('Available', <Price amount={onchain.confirmed} />)}
-            {renderLine('Pending', <Price amount={onchain.pending} />)}
-            {renderLine('Force Closures', <Price amount={onchain.closing} />)}
-          </Card>
-        </CardWithTitle>
+              <CardTitle>Bitcoin</CardTitle>
+            </div>
+          </CardHeader>
+          <Separator />
+          <CardContent>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Available</span>
+                <span className="font-mono">
+                  <Price amount={onchain.confirmed} />
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Pending</span>
+                <span className="font-mono">
+                  <Price amount={onchain.pending} />
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Force Closures</span>
+                <span className="font-mono">
+                  <Price amount={onchain.closing} />
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </>
   );

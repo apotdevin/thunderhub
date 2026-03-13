@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import { SmallSelectWithValue } from '../../../../components/select';
-import {
-  CardWithTitle,
-  SubTitle,
-  Card,
-  CardTitle,
-} from '../../../../components/generic/Styled';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TransactionsGraph } from './TransactionGraph';
 
 export interface PeriodProps {
@@ -28,12 +23,11 @@ export const FlowBox = () => {
   const [show, setShow] = useState(options[0]);
   const [type, setType] = useState(typeOptions[0]);
 
-  const Header = () => {
-    return (
-      <CardTitle>
-        <div className="w-full flex justify-between mb-2 flex-col md:flex-row">
-          <SubTitle>Transactions</SubTitle>
-
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <CardTitle>Transactions</CardTitle>
           <div className="flex gap-2">
             <SmallSelectWithValue
               callback={e => setShow((e[0] || options[1]) as any)}
@@ -49,19 +43,13 @@ export const FlowBox = () => {
             />
           </div>
         </div>
-      </CardTitle>
-    );
-  };
-
-  return (
-    <CardWithTitle>
-      <Header />
-      <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
+      </CardHeader>
+      <CardContent>
         <TransactionsGraph
           showPay={show.value === 'payments'}
           type={type.value}
         />
-      </Card>
-    </CardWithTitle>
+      </CardContent>
+    </Card>
   );
 };

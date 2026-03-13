@@ -1,7 +1,8 @@
-import { Zap, Anchor, Users, Radio, Wallet } from 'lucide-react';
+import { Zap, Anchor, Users, Radio, Wallet, Gauge } from 'lucide-react';
 import { Price } from '../../components/price/Price';
 import { useNodeInfo } from '../../hooks/UseNodeInfo';
 import { useNodeBalances } from '../../hooks/UseNodeBalances';
+import { useBitcoinFees } from '../../hooks/UseBitcoinFees';
 import Big from 'big.js';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
@@ -35,6 +36,14 @@ export const NodeInfoBar = () => {
     !!latestBlockHeight && currentBlockHeight > 0
       ? Math.min(Math.round((currentBlockHeight / latestBlockHeight) * 100), 99)
       : null;
+
+  const {
+    fast,
+    halfHour,
+    hour,
+    minimum,
+    dontShow: dontShowFees,
+  } = useBitcoinFees();
 
   if (!alias) return null;
 
@@ -139,6 +148,27 @@ export const NodeInfoBar = () => {
           </div>
           <span>{peersCount} connected</span>
         </div>
+
+        {/* Mempool Fees */}
+        {!dontShowFees && (
+          <>
+            <div className="w-px h-3.5 bg-border shrink-0" />
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-1">
+                <Gauge size={12} />
+                <span className="text-foreground font-medium">Fees</span>
+              </div>
+              <span>{fast} sat/vB</span>
+              {halfHour !== fast && (
+                <span className="text-muted-foreground/60">
+                  30m: {halfHour}
+                </span>
+              )}
+              <span className="text-muted-foreground/60">1h: {hour}</span>
+              <span className="text-muted-foreground/60">min: {minimum}</span>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import { FC, useState, useEffect } from 'react';
-import { DarkSubTitle } from '../../../../components/generic/Styled';
 
 type TimerProps = {
   initialMinute: number;
@@ -30,8 +29,8 @@ export const Timer: FC<TimerProps> = ({ initialMinute, initialSeconds }) => {
   });
 
   return minutes === 0 && seconds === 0 ? null : (
-    <DarkSubTitle className="w-full text-center">
-      {`Will disappear in ${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`}
-    </DarkSubTitle>
+    <span className="text-xs text-muted-foreground">
+      {`Expires in ${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`}
+    </span>
   );
 };

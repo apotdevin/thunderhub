@@ -5,16 +5,12 @@ import { Select, ValueProp } from '..';
 import { Channel } from '../../../graphql/types';
 
 type ChannelSelectProps = {
-  title: string;
+  title?: string;
   maxWidth?: string;
   callback: (peer: Channel[]) => void;
 };
 
-export const ChannelSelect = ({
-  title,
-  maxWidth,
-  callback,
-}: ChannelSelectProps) => {
+export const ChannelSelect = ({ maxWidth, callback }: ChannelSelectProps) => {
   const { data, loading } = useGetChannelsWithPeersQuery();
 
   const channels = data?.getChannels || [];
@@ -54,20 +50,16 @@ export const ChannelSelect = ({
     }
   };
 
+  if (loading) {
+    return <Loader2 className="animate-spin text-muted-foreground" size={16} />;
+  }
+
   return (
-    <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-      <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-        <span>{title}</span>
-      </div>
-      {loading ? (
-        <Loader2 className="animate-spin text-primary" size={20} />
-      ) : (
-        <Select
-          maxWidth={maxWidth || '500px'}
-          options={options}
-          callback={handleChange}
-        />
-      )}
-    </div>
+    <Select
+      maxWidth={maxWidth || '100%'}
+      options={options}
+      callback={handleChange}
+      className="w-full"
+    />
   );
 };

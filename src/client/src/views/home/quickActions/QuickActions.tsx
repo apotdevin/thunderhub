@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import { X, Layers, Command, Zap } from 'lucide-react';
-import {
-  CardWithTitle,
-  SubTitle,
-  CardTitle,
-  SmallButton,
-  Card,
-} from '../../../components/generic/Styled';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DecodeCard } from './decode/Decode';
 import { SupportCard } from './donate/DonateCard';
 import { SupportBar } from './donate/DonateContent';
@@ -21,7 +16,7 @@ export const QuickCard = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={`bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-border h-20 w-20 flex flex-col justify-center items-center p-1 cursor-pointer text-primary md:p-2.5 md:h-[100px] md:w-[100px] hover:border-primary ${className ?? ''}`}
+    className={`flex h-20 w-20 cursor-pointer flex-col items-center justify-center rounded border border-border p-1 text-primary transition-colors hover:border-primary md:h-[100px] md:w-[100px] md:p-2.5 ${className ?? ''}`}
     onClick={onClick}
     {...props}
   >
@@ -35,7 +30,7 @@ export const QuickTitle = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={`text-xs text-muted-foreground mt-2.5 text-center ${className ?? ''}`}
+    className={`mt-2.5 text-center text-xs text-muted-foreground ${className ?? ''}`}
     {...props}
   >
     {children}
@@ -61,11 +56,7 @@ export const QuickActions = () => {
   const renderContent = () => {
     switch (openCard) {
       case 'support':
-        return (
-          <Card>
-            <SupportBar />
-          </Card>
-        );
+        return <SupportBar />;
       case 'decode':
         return <DecodeCard />;
       case 'ln_url':
@@ -74,7 +65,7 @@ export const QuickActions = () => {
         return <LightningAddressCard />;
       default:
         return (
-          <div className="flex flex-wrap gap-2 my-4 mb-8">
+          <div className="flex flex-wrap gap-2">
             <SupportCard callback={() => setOpenCard('support')} />
             <AmbossCard />
             <QuickCard onClick={() => setOpenCard('lightning_address')}>
@@ -95,16 +86,22 @@ export const QuickActions = () => {
   };
 
   return (
-    <CardWithTitle>
-      <CardTitle>
-        <SubTitle>{getTitle()}</SubTitle>
-        {openCard !== 'none' && (
-          <SmallButton onClick={() => setOpenCard('none')}>
-            <X size={18} />
-          </SmallButton>
-        )}
-      </CardTitle>
-      {renderContent()}
-    </CardWithTitle>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>{getTitle()}</CardTitle>
+          {openCard !== 'none' && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setOpenCard('none')}
+            >
+              <X size={14} />
+            </Button>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent>{renderContent()}</CardContent>
+    </Card>
   );
 };

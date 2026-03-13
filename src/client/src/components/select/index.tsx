@@ -8,13 +8,20 @@ export type ValueProp = {
 type SelectProps = {
   options: ValueProp[];
   maxWidth?: string;
+  className?: string;
   callback: (value: ValueProp[]) => void;
 };
 
-export const Select = ({ options, maxWidth, callback }: SelectProps) => {
+export const Select = ({
+  options,
+  maxWidth,
+  className,
+  callback,
+}: SelectProps) => {
   return (
     <div style={{ maxWidth: maxWidth || undefined, width: '100%' }}>
       <NativeSelect
+        className={className}
         defaultValue=""
         onChange={e => {
           const option = options.find(o => String(o.value) === e.target.value);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Copy, CheckCircle, ChevronRight, Loader2 } from 'lucide-react';
+import { Copy, CheckCircle, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { QRCodeSVG } from 'qrcode.react';
 import { useCreateInvoiceMutation } from '../../../../graphql/mutations/__generated__/createInvoice.generated';
@@ -10,12 +10,11 @@ import { formatSeconds } from '../../../../utils/helpers';
 import { Switch } from '@/components/ui/switch';
 import { getErrorContent } from '../../../../utils/error';
 import { Button } from '@/components/ui/button';
-import { useChartColors } from '../../../../lib/chart-colors';
+import { Separator } from '@/components/ui/separator';
 import { InvoiceStatus } from './InvoiceStatus';
 import { Timer } from './Timer';
 
 export const CreateInvoiceCard = () => {
-  const chartColors = useChartColors();
   const [amount, setAmount] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [description, setDescription] = useState('');
@@ -39,50 +38,26 @@ export const CreateInvoiceCard = () => {
 
   if (invoiceStatus === 'paid') {
     return (
-      <div className="flex justify-center items-center">
-        <CheckCircle stroke={chartColors.green} size={32} />
-        <div className="font-extrabold text-white">Paid</div>
+      <div className="flex flex-col items-center gap-3 py-4">
+        <CheckCircle size={32} className="text-green-500" />
+        <span className="text-sm font-medium">Invoice Paid</span>
       </div>
     );
   }
 
   if (invoiceStatus === 'not_paid' || invoiceStatus === 'timeout') {
     return (
-      <div className="flex justify-center items-center">
-        <div className="font-extrabold text-white">
-          Check the status of this invoice in the
-          <Link to={'/transactions'}> Transactions </Link>
-          view
-        </div>
+      <div className="flex flex-col items-center gap-2 py-4 text-sm text-muted-foreground">
+        <span>
+          Check the status of this invoice in the{' '}
+          <Link to="/transactions">
+            <span className="text-primary hover:underline">Transactions</span>
+          </Link>{' '}
+          view.
+        </span>
       </div>
     );
   }
-
-  const renderQr = () => (
-    <>
-      <Timer initialMinute={1} initialSeconds={30} />
-      <div className="flex flex-col justify-between items-center md:flex-row">
-        <InvoiceStatus id={id} callback={status => setInvoiceStatus(status)} />
-        <div className="w-[280px] h-[280px] m-4 bg-white p-4">
-          <QRCodeSVG value={`lightning:${request}`} size={248} />
-        </div>
-        <div className="w-full h-full flex flex-col justify-center items-center">
-          <div className="wrap-break-words m-6 text-sm">{request}</div>
-          <Button
-            variant="outline"
-            onClick={() =>
-              navigator.clipboard
-                .writeText(request)
-                .then(() => toast.success('Request Copied'))
-            }
-          >
-            <Copy size={18} />
-            Copy
-          </Button>
-        </div>
-      </div>
-    </>
-  );
 
   const handleEnter = () => {
     if (amount === 0) return;
@@ -91,77 +66,118 @@ export const CreateInvoiceCard = () => {
     });
   };
 
-  const renderContent = () => (
-    <>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Amount to receive</span>
-          <span className="text-muted-foreground mx-2 ml-4">
+  if (request !== '') {
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-medium text-muted-foreground">
+            Invoice Created
+          </span>
+          <Timer initialMinute={1} initialSeconds={30} />
+        </div>
+
+        <InvoiceStatus id={id} callback={status => setInvoiceStatus(status)} />
+
+        <div className="flex flex-col items-center gap-3">
+          <div className="rounded border border-border bg-white p-3">
+            <QRCodeSVG value={`lightning:${request}`} size={200} />
+          </div>
+          <div className="max-w-full break-all text-center font-mono text-[11px] text-muted-foreground">
+            {request}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              navigator.clipboard
+                .writeText(request)
+                .then(() => toast.success('Copied to clipboard'))
+            }
+          >
+            <Copy size={14} />
+            Copy Invoice
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      {/* Amount */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Amount{' '}
+          <span className="text-foreground">
             <Price amount={amount} />
           </span>
-        </div>
+        </label>
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '500px' }}
-          placeholder={'sats'}
-          type={'number'}
+          placeholder="sats"
+          type="number"
           value={amount && amount > 0 ? amount : ''}
           onChange={e => setAmount(Number(e.target.value))}
           onKeyDown={e => e.key === 'Enter' && handleEnter()}
         />
       </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Description</span>
-        </div>
+
+      {/* Description */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Description
+        </label>
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '500px' }}
-          placeholder={'description'}
+          placeholder="Optional description"
           value={description}
           onChange={e => setDescription(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleEnter()}
         />
       </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Expires in</span>
-          <span className="text-muted-foreground mx-2 ml-4">
-            {formatSeconds(seconds) || ''}
-          </span>
-        </div>
+
+      <Separator />
+
+      {/* Expires In */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Expires In{' '}
+          {seconds > 0 && (
+            <span className="text-foreground/60">
+              ({formatSeconds(seconds)})
+            </span>
+          )}
+        </label>
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '500px' }}
-          placeholder={'seconds until expiration'}
+          placeholder="seconds (0 = default)"
+          type="number"
           value={seconds && seconds > 0 ? seconds : ''}
           onChange={e => setSeconds(Number(e.target.value))}
           onKeyDown={e => e.key === 'Enter' && handleEnter()}
         />
       </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Include Private Channels</span>
-        </div>
+
+      {/* Include Private */}
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-medium text-muted-foreground">
+          Include Private Channels
+        </span>
         <Switch checked={includePrivate} onCheckedChange={setIncludePrivate} />
       </div>
+
+      <Separator />
+
+      {/* Create */}
       <Button
         variant="outline"
-        onClick={() => handleEnter()}
+        onClick={handleEnter}
         disabled={amount === 0 || loading}
-        style={{ margin: '16px 0 0' }}
         className="w-full"
       >
         {loading ? (
           <Loader2 className="animate-spin" size={16} />
         ) : (
-          <>
-            Create Invoice <ChevronRight size={18} />
-          </>
+          'Create Invoice'
         )}
       </Button>
-    </>
+    </div>
   );
-
-  return request !== '' ? renderQr() : renderContent();
 };

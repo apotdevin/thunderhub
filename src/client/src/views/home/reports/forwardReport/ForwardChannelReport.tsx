@@ -8,7 +8,7 @@ import { getErrorContent } from '../../../../utils/error';
 import { SingleLine, SubTitle } from '../../../../components/generic/Styled';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { ChannelTable, RouteTable } from './ForwardReportTables';
-import { CardContent } from '.';
+import { CardContentLayout } from '.';
 
 type Props = {
   days: number;
@@ -89,9 +89,9 @@ export const ForwardChannelsReport = ({ days }: Props) => {
   };
 
   return (
-    <CardContent>
+    <CardContentLayout>
       {renderTitle()}
       {renderContent()}
-    </CardContent>
+    </CardContentLayout>
   );
 };
