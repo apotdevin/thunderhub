@@ -21,7 +21,6 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SsoPage from './pages/SsoPage';
 import ChannelsPage from './pages/ChannelsPage';
-import ChannelDetailPage from './pages/ChannelDetailPage';
 import PeersPage from './pages/PeersPage';
 import TransactionsPage from './pages/TransactionsPage';
 import ForwardsPage from './pages/ForwardsPage';
@@ -120,7 +119,8 @@ const AuthenticatedRoutes = () => (
       }
     />
     <Route path="/channels" element={<ChannelsPage />} />
-    <Route path="/channels/:slug" element={<ChannelDetailPage />} />
+    <Route path="/channels/pending" element={<ChannelsPage />} />
+    <Route path="/channels/closed" element={<ChannelsPage />} />
     <Route path="/peers" element={<PeersPage />} />
     <Route path="/transactions" element={<TransactionsPage />} />
     <Route path="/forwards" element={<ForwardsPage />} />

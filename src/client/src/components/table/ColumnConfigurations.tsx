@@ -1,7 +1,7 @@
 import { Table } from '@tanstack/react-table';
 import { FC, useMemo } from 'react';
 import { groupBy } from 'lodash';
-import { DarkSubTitle, SubCard } from '../generic/Styled';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface ColumnConfigurationsProps {
   table: Table<any>;
@@ -21,34 +21,40 @@ export const ColumnConfigurations: FC<ColumnConfigurationsProps> = ({
   }, [table]);
 
   return (
-    <div className="flex justify-start items-stretch flex-wrap md:flex md:flex-row">
+    <div className="flex flex-wrap gap-4 rounded border border-border p-3">
       {Object.keys(groupedHideableColumns).map(
-        (group: string, index: number) => {
-          return (
-            <SubCard key={`${group}-${index}`} style={{ height: 'auto' }}>
-              <DarkSubTitle fontSize="16px">
-                {group === 'undefined' ? 'General' : group}
-              </DarkSubTitle>
-              <div className="flex flex-row md:flex-col justify-start items-start flex-wrap">
-                {groupedHideableColumns[group].map((column: any) => {
-                  return (
-                    <label key={column.id} className="m-1 mx-2">
-                      <input
-                        type="checkbox"
-                        checked={column.getIsVisible()}
-                        onChange={column.getToggleVisibilityHandler()}
-                        onClick={(e: any) =>
-                          toggleConfiguration(!e.target.checked, column.id)
-                        }
-                      />{' '}
-                      {column.columnDef.header}
-                    </label>
-                  );
-                })}
-              </div>
-            </SubCard>
-          );
-        }
+        (group: string, index: number) => (
+          <div key={`${group}-${index}`} className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-muted-foreground">
+              {group === 'undefined' ? 'General' : group}
+            </span>
+            <div className="flex flex-col gap-1">
+              {groupedHideableColumns[group].map((column: any) => {
+                const label =
+                  typeof column.columnDef.header === 'string'
+                    ? column.columnDef.header
+                    : column.id;
+                return (
+                  <label
+                    key={column.id}
+                    className="flex cursor-pointer items-center gap-2 text-xs"
+                  >
+                    <Checkbox
+                      checked={column.getIsVisible()}
+                      onCheckedChange={checked => {
+                        column.getToggleVisibilityHandler()({
+                          target: { checked },
+                        });
+                        toggleConfiguration(!checked, column.id);
+                      }}
+                    />
+                    {label}
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+        )
       )}
     </div>
   );

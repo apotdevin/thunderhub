@@ -1,21 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
-import {
-  ArrowDown,
-  ArrowUp,
-  Check,
-  ChevronRight,
-  Circle,
-  Edit,
-  X,
-} from 'lucide-react';
+import { ArrowDown, ArrowUp, Check, Circle, Edit, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { BalanceBars } from '../../../components/balance';
 import {
   getChannelLink,
   getNodeLink,
 } from '../../../components/generic/helpers';
-import { DarkSubTitle } from '../../../components/generic/Styled';
-import { Link } from '../../../components/link/Link';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import { CloseChannel } from '../../../components/modal/closeChannel/CloseChannel';
 import Modal from '../../../components/modal/ReactModal';
@@ -57,8 +47,7 @@ export const ChannelTable = () => {
     (param: string) => (rowA: any, rowB: any) => {
       const rowAId = rowA?.original?.[param] || '0';
       const rowBId = rowB?.original?.[param] || '0';
-      const rowAisBigger = Number(rowAId) >= Number(rowBId);
-      return rowAisBigger ? 1 : -1;
+      return Number(rowAId) >= Number(rowBId) ? 1 : -1;
     },
     []
   );
@@ -66,9 +55,10 @@ export const ChannelTable = () => {
   const tableData = useMemo(() => {
     const channelData = data?.getChannels || [];
 
-    const balanceArray = channelData.reduce((p, c) => {
-      return [...p, c.remote_balance || 0, c.local_balance || 0];
-    }, [] as number[]);
+    const balanceArray = channelData.reduce(
+      (p, c) => [...p, c.remote_balance || 0, c.local_balance || 0],
+      [] as number[]
+    );
 
     const maxBalance = Math.max(...balanceArray);
 
@@ -104,14 +94,12 @@ export const ChannelTable = () => {
 
       const status = {
         channelActive: c.is_active ? 1 : 0,
-        channelActiveLogo: c.is_active ? (
+        channelActiveLogo: (
           <Circle
             size={14}
-            fill={chartColors.green}
-            stroke={chartColors.green}
+            fill={c.is_active ? chartColors.green : 'red'}
+            stroke={c.is_active ? chartColors.green : 'red'}
           />
-        ) : (
-          <Circle size={14} fill={'red'} stroke={'red'} />
         ),
         channelPrivate: c.is_private ? 1 : 0,
         channelPrivateLogo: c.is_private ? (
@@ -140,7 +128,7 @@ export const ChannelTable = () => {
       const actions = {
         editAction: (
           <button
-            className="bg-none text-inherit border-none p-0 font-inherit cursor-pointer outline-inherit hover:text-orange-400"
+            className="inline-flex items-center justify-center border-none bg-transparent p-0 text-inherit cursor-pointer hover:text-orange-400"
             onClick={() =>
               setChannel({
                 channel: c.id,
@@ -154,7 +142,7 @@ export const ChannelTable = () => {
         ),
         closeAction: (
           <button
-            className="bg-none text-inherit border-none p-0 font-inherit cursor-pointer outline-inherit hover:text-orange-400"
+            className="inline-flex items-center justify-center border-none bg-transparent p-0 text-inherit cursor-pointer hover:text-orange-400"
             onClick={() =>
               setChannel({
                 channel: c.id,
@@ -184,7 +172,6 @@ export const ChannelTable = () => {
         percentOnlineText: `${getPercent(timeOnline, timeOffline)}%`,
         activityPercent: getPercent(c.sent, c.received),
         activityPercentText: `${getPercent(c.sent, c.received)}%`,
-        // sats flow per 1 sats capacity in 1 month
         activityFlowIndex: (
           ((c.sent + c.received) / c.capacity / c.channel_age) *
           144 *
@@ -193,7 +180,7 @@ export const ChannelTable = () => {
         balancePercent: getPercent(c.local_balance, c.remote_balance),
         balancePercentText: `${getPercent(c.local_balance, c.remote_balance)}%`,
         proportionalBars: (
-          <div style={{ minWidth: '180px' }}>
+          <div className="min-w-[180px]">
             <BalanceBars
               local={getBar(c.local_balance, maxBalance)}
               remote={getBar(c.remote_balance, maxBalance)}
@@ -215,7 +202,7 @@ export const ChannelTable = () => {
           </div>
         ),
         balanceBars: (
-          <div style={{ minWidth: '180px' }}>
+          <div className="min-w-[180px]">
             <BalanceBars
               local={getPercent(c.local_balance, c.remote_balance)}
               remote={getPercent(c.remote_balance, c.local_balance)}
@@ -237,7 +224,7 @@ export const ChannelTable = () => {
           </div>
         ),
         activityBars: (
-          <div style={{ minWidth: '180px' }}>
+          <div className="min-w-[180px]">
             <BalanceBars
               local={getPercent(c.received, c.sent)}
               remote={getPercent(c.sent, c.received)}
@@ -249,14 +236,6 @@ export const ChannelTable = () => {
               }
             />
           </div>
-        ),
-        viewAction: (
-          <Link to={`/channels/${c.id}`}>
-            <span className="flex items-center justify-center">
-              View
-              <ChevronRight size={12} />
-            </span>
-          </Link>
         ),
       };
     });
@@ -311,7 +290,7 @@ export const ChannelTable = () => {
             header: 'Peer',
             accessorKey: 'undercaseAlias',
             cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
+              <div className="whitespace-nowrap">
                 {getNodeLink(
                   row.original.partner_public_key,
                   row.original.alias
@@ -324,7 +303,7 @@ export const ChannelTable = () => {
             accessorKey: 'id',
             enableHiding: false,
             cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
+              <div className="whitespace-nowrap">
                 {getChannelLink(row.original.id)}
               </div>
             ),
@@ -333,7 +312,7 @@ export const ChannelTable = () => {
             header: 'Capacity',
             accessorKey: 'capacity',
             cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
+              <div className="whitespace-nowrap">
                 <Price amount={row.original.capacity} />
               </div>
             ),
@@ -343,7 +322,7 @@ export const ChannelTable = () => {
             header: 'Channel Age',
             accessorKey: 'channel_age_duplicate',
             cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
+              <div className="whitespace-nowrap">
                 {blockToTime(row.original.channel_age)}
               </div>
             ),
@@ -360,19 +339,17 @@ export const ChannelTable = () => {
           {
             header: 'Local',
             accessorKey: 'local_balance',
-            cell: ({ row }: any) => {
-              return (
-                <div style={{ whiteSpace: 'nowrap' }}>
-                  <Price amount={row.original.local_balance} />
-                </div>
-              );
-            },
+            cell: ({ row }: any) => (
+              <div className="whitespace-nowrap">
+                <Price amount={row.original.local_balance} />
+              </div>
+            ),
           },
           {
             header: 'Remote',
             accessorKey: 'remote_balance',
             cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
+              <div className="whitespace-nowrap">
                 <Price amount={row.original.remote_balance} />
               </div>
             ),
@@ -402,7 +379,7 @@ export const ChannelTable = () => {
             header: 'Online',
             accessorKey: 'time_online',
             cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
+              <div className="whitespace-nowrap">
                 {formatSeconds(
                   Math.round((row.original.time_online || 0) / 1000)
                 )}
@@ -413,7 +390,7 @@ export const ChannelTable = () => {
             header: 'Offline',
             accessorKey: 'time_offline',
             cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
+              <div className="whitespace-nowrap">
                 {formatSeconds(
                   Math.round((row.original.time_offline || 0) / 1000)
                 )}
@@ -434,7 +411,7 @@ export const ChannelTable = () => {
             header: 'Received',
             accessorKey: 'received',
             cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
+              <div className="whitespace-nowrap">
                 <Price amount={row.original.received} />
               </div>
             ),
@@ -443,7 +420,7 @@ export const ChannelTable = () => {
             header: 'Sent',
             accessorKey: 'sent',
             cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
+              <div className="whitespace-nowrap">
                 <Price amount={row.original.sent} />
               </div>
             ),
@@ -511,12 +488,6 @@ export const ChannelTable = () => {
           },
         ],
       },
-      {
-        header: 'Details',
-        accessorKey: 'viewAction',
-        enableSorting: false,
-        cell: ({ cell }: any) => cell.renderValue(),
-      },
     ],
     [numberStringSorting]
   );
@@ -543,7 +514,11 @@ export const ChannelTable = () => {
   }
 
   if (error) {
-    return <DarkSubTitle>Error loading channels. Try refreshing.</DarkSubTitle>;
+    return (
+      <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
+        Error loading channels. Try refreshing.
+      </div>
+    );
   }
 
   const renderModalContent = () => {
@@ -573,12 +548,7 @@ export const ChannelTable = () => {
         data={tableData}
         withGlobalSort={true}
         withSorting={true}
-        initSorting={[
-          {
-            id: 'balanceBars',
-            desc: false,
-          },
-        ]}
+        initSorting={[{ id: 'balanceBars', desc: false }]}
         toggleConfiguration={handleToggle}
         defaultHiddenColumns={hiddenColumnState}
         filterPlaceholder="channels"

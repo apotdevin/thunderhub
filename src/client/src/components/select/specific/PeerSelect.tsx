@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-react';
 import { Select, ValueProp } from '..';
 
 type PeerSelectProps = {
-  title: string;
+  title?: string;
   callback: (peer: Peer[]) => void;
 };
 
@@ -51,16 +51,22 @@ export const PeerSelect = ({ title, callback }: PeerSelectProps) => {
     }
   };
 
-  return (
-    <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-      <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-        <span>{title}</span>
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-2">
+        <Loader2 className="animate-spin text-muted-foreground" size={16} />
       </div>
-      {loading ? (
-        <Loader2 className="animate-spin text-primary" size={20} />
-      ) : (
-        <Select maxWidth={'500px'} options={options} callback={handleChange} />
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-1 **:data-[slot=native-select-wrapper]:w-full">
+      {title && (
+        <label className="text-xs font-medium text-muted-foreground">
+          {title}
+        </label>
       )}
+      <Select options={options} callback={handleChange} />
     </div>
   );
 };

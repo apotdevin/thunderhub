@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useGetPendingChannelsQuery } from '../../../graphql/queries/__generated__/getPendingChannels.generated';
-import { DarkSubTitle } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import {
@@ -21,14 +20,12 @@ export const PendingChannels = () => {
   const tableData = useMemo(() => {
     const channelData = data?.getPendingChannels || [];
 
-    return channelData.map(c => {
-      return {
-        ...c,
-        alias: c.partner_node_info.node?.alias || 'Unknown',
-        capacity: (c.local_balance || 0) + (c.remote_balance || 0),
-        force_closed: c.is_timelocked ? 'Yes' : '-',
-      };
-    });
+    return channelData.map(c => ({
+      ...c,
+      alias: c.partner_node_info.node?.alias || 'Unknown',
+      capacity: (c.local_balance || 0) + (c.remote_balance || 0),
+      force_closed: c.is_timelocked ? 'Yes' : '-',
+    }));
   }, [data]);
 
   const columns = useMemo<ColumnDef<PendingChannel, any>[]>(
@@ -38,7 +35,7 @@ export const PendingChannels = () => {
         accessorKey: 'is_opening',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             {row.original.is_opening ? 'Opening' : 'Closing'}
           </div>
         ),
@@ -48,7 +45,7 @@ export const PendingChannels = () => {
         accessorKey: 'alias',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             {getNodeLink(row.original.partner_public_key, row.original.alias)}
           </div>
         ),
@@ -58,7 +55,7 @@ export const PendingChannels = () => {
         accessorKey: 'local_balance',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             <Price amount={row.original.local_balance} />
           </div>
         ),
@@ -68,7 +65,7 @@ export const PendingChannels = () => {
         accessorKey: 'remote_balance',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             <Price amount={row.original.remote_balance} />
           </div>
         ),
@@ -78,7 +75,7 @@ export const PendingChannels = () => {
         accessorKey: 'capacity',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             <Price amount={row.original.capacity} />
           </div>
         ),
@@ -88,7 +85,7 @@ export const PendingChannels = () => {
         accessorKey: 'send',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             <Price amount={row.original.sent} />
           </div>
         ),
@@ -98,7 +95,7 @@ export const PendingChannels = () => {
         accessorKey: 'received',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             <Price amount={row.original.received} />
           </div>
         ),
@@ -108,9 +105,7 @@ export const PendingChannels = () => {
         accessorKey: 'force_closed',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
-            {row.original.force_closed}
-          </div>
+          <div className="whitespace-nowrap">{row.original.force_closed}</div>
         ),
       },
       {
@@ -118,7 +113,7 @@ export const PendingChannels = () => {
         accessorKey: 'timelock_expiration',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             {row.original.timelock_expiration
               ? `${row.original.timelock_expiration} blocks`
               : '-'}
@@ -130,7 +125,7 @@ export const PendingChannels = () => {
         accessorKey: 'timelock_blocks',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             {row.original.timelock_blocks
               ? `${row.original.timelock_blocks} blocks`
               : '-'}
@@ -142,7 +137,7 @@ export const PendingChannels = () => {
         accessorKey: 'transaction_fee',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             {row.original.transaction_fee || '-'}
           </div>
         ),
@@ -152,7 +147,7 @@ export const PendingChannels = () => {
         accessorKey: 'transaction_id',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             {getTransactionLink(row.original.transaction_id)}
           </div>
         ),
@@ -162,7 +157,7 @@ export const PendingChannels = () => {
         accessorKey: 'close_transaction_id',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             {getTransactionLink(row.original.close_transaction_id)}
           </div>
         ),
@@ -176,7 +171,11 @@ export const PendingChannels = () => {
   }
 
   if (!data || !data.getPendingChannels?.length) {
-    return <DarkSubTitle>No pending channels found</DarkSubTitle>;
+    return (
+      <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
+        No pending channels found
+      </div>
+    );
   }
 
   return (

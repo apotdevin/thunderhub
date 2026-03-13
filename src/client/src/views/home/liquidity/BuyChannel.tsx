@@ -1,4 +1,4 @@
-import { Card, SmallButton } from '../../../components/generic/Styled';
+import { SmallButton } from '../../../components/generic/Styled';
 import { useGetLiquidityPerUsdQuery } from '../../../graphql/queries/__generated__/getLiquidityPerUsd.generated';
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
@@ -38,13 +38,9 @@ export const GoToMagma = () => {
     >
       {`Go to Magma`}
       {!tokenLoading ? (
-        <ExternalLink size={14} style={{ marginLeft: '4px' }} />
+        <ExternalLink size={14} className="ml-1" />
       ) : (
-        <Loader2
-          className="animate-spin"
-          size={14}
-          style={{ marginLeft: '4px' }}
-        />
+        <Loader2 className="ml-1 animate-spin" size={14} />
       )}
     </SmallButton>
   );
@@ -71,7 +67,11 @@ export const BuyChannel = () => {
   if (loading) return <LoadingCard />;
 
   if (!data?.getLiquidityPerUsd || error) {
-    return <Card>Error getting liquidity information. Please try again.</Card>;
+    return (
+      <div className="text-sm text-muted-foreground">
+        Error getting liquidity information. Please try again.
+      </div>
+    );
   }
 
   const formattedAmount = formatCurrency(amount, 'USD');
@@ -82,38 +82,35 @@ export const BuyChannel = () => {
   const isLoading = loading || purchaseData.loading;
 
   return (
-    <Card>
-      <div className="text-center text-sm bg-[oklch(0.982_0.018_155.826)] text-[oklch(0.627_0.194_149.214)] p-2 rounded-lg">
+    <div className="flex flex-col gap-3">
+      <div className="text-center text-xs bg-[oklch(0.982_0.018_155.826)] text-[oklch(0.627_0.194_149.214)] p-2 rounded-lg">
         Secure liquidity from the{' '}
         <a
-          style={{ color: 'inherit' }}
+          className="text-inherit underline"
           href={'https://amboss.tech/rails/stats'}
-          target="__blank"
+          target="_blank"
         >
           Amboss Rails cluster
         </a>{' '}
         or{' '}
         <a
-          style={{ color: 'inherit' }}
+          className="text-inherit underline"
           href={'https://magma.amboss.tech/buy'}
-          target="__blank"
+          target="_blank"
         >
           Magma sellers
         </a>{' '}
         to ensure you can accept payments reliably.
       </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Purchase Amount</span>
-          <span className="text-muted-foreground mx-2 ml-4">
-            {formattedAmount}
-          </span>
-        </div>
+
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Purchase Amount{' '}
+          <span className="text-foreground">{formattedAmount}</span>
+        </label>
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '500px' }}
-          placeholder={'USD'}
-          type={'number'}
+          placeholder="USD"
+          type="number"
           value={amount && amount > 0 ? amount : ''}
           onChange={e => {
             const minAmount = Math.max(Number(e.target.value), 5);
@@ -122,14 +119,13 @@ export const BuyChannel = () => {
         />
       </div>
 
-      <div className="text-center text-sm bg-[oklch(0.97_0.014_254.604)] text-[oklch(0.546_0.245_262.881)] p-2 rounded-lg">
+      <div className="text-center text-xs bg-[oklch(0.97_0.014_254.604)] text-[oklch(0.546_0.245_262.881)] p-2 rounded-lg">
         {`${formattedAmount} will buy you ~${formattedLiquidity} sats of inbound liquidity*.`}
       </div>
 
       <Button
         variant="outline"
-        style={{ margin: '8px 0 0' }}
-        className="w-full"
+        className="mt-1 w-full"
         disabled={!amount || isLoading}
         onClick={() => {
           purchase({ variables: { amount_cents: (amount * 100).toString() } });
@@ -149,6 +145,6 @@ export const BuyChannel = () => {
         * Liquidity may be sourced from different providers that charge
         different fees, hence the estimated amounts in sats.
       </p>
-    </Card>
+    </div>
   );
 };

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { Loader2 } from 'lucide-react';
 import { useUpdateFeesMutation } from '@/graphql/mutations/__generated__/updateFees.generated';
 import { getErrorContent } from '@/utils/error';
 import { Input } from '@/components/ui/input';
 import { Price } from '@/components/price/Price';
 import { Button } from '@/components/ui/button';
-import { SingleLine, SubTitle, Sub4Title } from '../../generic/Styled';
 
 type ChangeDetailsType = {
   id?: string;
@@ -39,6 +39,7 @@ export const ChangeDetails = ({
   const [newCLTV, setCLTV] = useState(cltv_delta);
   const [newMax, setMax] = useState(max_htlc);
   const [newMin, setMin] = useState(min_htlc);
+  const [confirming, setConfirming] = useState(false);
 
   const withChanges =
     newBaseFee !== base_fee ||
@@ -50,11 +51,13 @@ export const ChangeDetails = ({
   const feeRatePercent =
     Math.round(((newFeeRate || 0) / 1000000) * 100000) / 1000;
 
-  const [updateFees] = useUpdateFeesMutation({
+  const [updateFees, { loading }] = useUpdateFeesMutation({
     onError: error => {
       toast.error(getErrorContent(error));
+      setConfirming(false);
     },
     onCompleted: data => {
+      setConfirming(false);
       if (data.updateFees) {
         toast.success('Channel policy updated');
       } else {
@@ -64,121 +67,141 @@ export const ChangeDetails = ({
     refetchQueries: ['GetChannels', 'ChannelFees'],
   });
 
+  const handleUpdate = () => {
+    updateFees({
+      variables: {
+        transaction_id,
+        transaction_vout,
+        ...((newBaseFee ?? -1) >= 0 && {
+          base_fee_tokens: newBaseFee,
+        }),
+        ...((newFeeRate ?? -1) >= 0 && {
+          fee_rate: newFeeRate,
+        }),
+        ...(newCLTV !== 0 && { cltv_delta: newCLTV }),
+        ...(newMax !== 0 && {
+          max_htlc_mtokens: (newMax * 1000).toString(),
+        }),
+        ...(newMin !== 0 && {
+          min_htlc_mtokens: (newMin * 1000).toString(),
+        }),
+      },
+    });
+  };
+
   return (
-    <>
-      <SingleLine>
-        <SubTitle>{'Update Channel Policy'}</SubTitle>
-        <Sub4Title>{`${name} [${id}]`}</Sub4Title>
-      </SingleLine>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Base Fee</span>
-          <span className="text-muted-foreground mx-2 ml-4">
-            {`${newBaseFee} sats`}
-          </span>
-        </div>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium">Update Channel Policy</span>
+        <span className="text-xs text-muted-foreground">
+          {name} [{id}]
+        </span>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Base Fee <span className="text-foreground">{newBaseFee} sats</span>
+        </label>
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '160px' }}
-          placeholder={'sats'}
-          type={'number'}
+          placeholder="sats"
+          type="number"
           onChange={e => setBaseFee(Number(e.target.value))}
           value={newBaseFee || ''}
         />
       </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Fee Rate</span>
-          <span className="text-muted-foreground mx-2 ml-4">
-            {`${feeRatePercent}%`}
+
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Fee Rate{' '}
+          <span className="text-foreground">
+            {newFeeRate} ppm ({feeRatePercent}%)
           </span>
-        </div>
+        </label>
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '160px' }}
-          placeholder={'ppm'}
-          type={'number'}
+          placeholder="ppm"
+          type="number"
           onChange={e => setFeeRate(Number(e.target.value))}
           value={newFeeRate || ''}
         />
       </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>CLTV Delta</span>
-          <span className="text-muted-foreground mx-2 ml-4">
-            {newCLTV?.toString() || ''}
-          </span>
-        </div>
+
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          CLTV Delta{' '}
+          {newCLTV ? <span className="text-foreground">{newCLTV}</span> : null}
+        </label>
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '160px' }}
-          placeholder={'cltv delta'}
-          type={'number'}
+          placeholder="cltv delta"
+          type="number"
           value={newCLTV != null && newCLTV > 0 ? newCLTV : ''}
           onChange={e => setCLTV(Number(e.target.value))}
         />
       </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Max HTLC</span>
-          <span className="text-muted-foreground mx-2 ml-4">
-            <Price amount={newMax} override={'sat'} />
-          </span>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted-foreground">
+            Max HTLC{' '}
+            <span className="text-foreground">
+              <Price amount={newMax} override={'sat'} />
+            </span>
+          </label>
+          <Input
+            placeholder="sats"
+            type="number"
+            value={newMax && newMax > 0 ? newMax : ''}
+            onChange={e => setMax(Number(e.target.value))}
+          />
         </div>
-        <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '160px' }}
-          placeholder={'sats'}
-          type={'number'}
-          value={newMax && newMax > 0 ? newMax : ''}
-          onChange={e => setMax(Number(e.target.value))}
-        />
-      </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Min HTLC</span>
-          <span className="text-muted-foreground mx-2 ml-4">
-            <Price amount={newMin} override={'sat'} />
-          </span>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted-foreground">
+            Min HTLC{' '}
+            <span className="text-foreground">
+              <Price amount={newMin} override={'sat'} />
+            </span>
+          </label>
+          <Input
+            placeholder="sats"
+            type="number"
+            value={newMin && newMin > 0 ? newMin : ''}
+            onChange={e => setMin(Number(e.target.value))}
+          />
         </div>
-        <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '160px' }}
-          placeholder={'sats'}
-          type={'number'}
-          value={newMin && newMin > 0 ? newMin : ''}
-          onChange={e => setMin(Number(e.target.value))}
-        />
       </div>
-      <Button
-        variant="outline"
-        onClick={() =>
-          updateFees({
-            variables: {
-              transaction_id,
-              transaction_vout,
-              ...((newBaseFee ?? -1) >= 0 && {
-                base_fee_tokens: newBaseFee,
-              }),
-              ...((newFeeRate ?? -1) >= 0 && {
-                fee_rate: newFeeRate,
-              }),
-              ...(newCLTV !== 0 && { cltv_delta: newCLTV }),
-              ...(newMax !== 0 && {
-                max_htlc_mtokens: (newMax * 1000).toString(),
-              }),
-              ...(newMin !== 0 && {
-                min_htlc_mtokens: (newMin * 1000).toString(),
-              }),
-            },
-          })
-        }
-        disabled={!withChanges}
-        className="w-full"
-        style={{ margin: '16px 0 0' }}
-      >
-        Update Channel Details
-      </Button>
-    </>
+
+      {confirming ? (
+        <div className="mt-1 flex gap-2">
+          <Button
+            variant="outline"
+            className="flex-1"
+            disabled={loading}
+            onClick={() => setConfirming(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="default"
+            className="flex-1"
+            disabled={loading}
+            onClick={handleUpdate}
+          >
+            {loading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              'Confirm Update'
+            )}
+          </Button>
+        </div>
+      ) : (
+        <Button
+          variant="outline"
+          disabled={!withChanges}
+          className="mt-1 w-full"
+          onClick={() => setConfirming(true)}
+        >
+          Update Channel Policy
+        </Button>
+      )}
+    </div>
   );
 };

@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Price } from '@/components/price/Price';
 import { Button } from '@/components/ui/button';
 import { getErrorContent } from '@/utils/error';
-import { RightAlign } from '../../generic/Styled';
 
 type DetailsChangeProps = {
   callback?: () => void;
@@ -19,6 +18,8 @@ export const DetailsChange = ({ callback }: DetailsChangeProps) => {
   const [max, setMax] = useState(0);
   const [min, setMin] = useState(0);
   const [baseFeeDirty, setBaseFeeDirty] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+
   const [updateFees] = useUpdateFeesMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: data => {
@@ -38,19 +39,17 @@ export const DetailsChange = ({ callback }: DetailsChangeProps) => {
   });
 
   return (
-    <>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>BaseFee</span>
-          <span className="text-muted-foreground mx-2 ml-4">
-            {baseFeeDirty ? `${baseFee} sats` : ''}
-          </span>
-        </div>
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Base Fee{' '}
+          {baseFeeDirty && (
+            <span className="text-foreground">{baseFee} sats</span>
+          )}
+        </label>
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '500px' }}
-          placeholder={'sats'}
-          type={'number'}
+          placeholder="sats"
+          type="number"
           onChange={e => {
             setBaseFeeDirty(true);
             setBaseFee(Number(e.target.value));
@@ -58,100 +57,108 @@ export const DetailsChange = ({ callback }: DetailsChangeProps) => {
           value={baseFee || ''}
         />
       </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Fee Rate</span>
-          <span className="text-muted-foreground mx-2 ml-4">
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Fee Rate{' '}
+          <span className="text-foreground">
             <Price amount={feeRate} override={'ppm'} />
           </span>
-        </div>
+        </label>
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '500px' }}
-          placeholder={'ppm'}
-          type={'number'}
+          placeholder="ppm"
+          type="number"
           value={feeRate && feeRate > 0 ? feeRate : ''}
           onChange={e => setFeeRate(Number(e.target.value))}
         />
       </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>CLTV Delta</span>
-          <span className="text-muted-foreground mx-2 ml-4">
-            {cltv ? cltv.toString() : ''}
-          </span>
-        </div>
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          CLTV Delta{' '}
+          {cltv ? <span className="text-foreground">{cltv}</span> : null}
+        </label>
         <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '500px' }}
-          placeholder={'cltv delta'}
-          type={'number'}
+          placeholder="cltv delta"
+          type="number"
           value={cltv && cltv > 0 ? cltv : ''}
           onChange={e => setCLTV(Number(e.target.value))}
         />
       </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Max HTLC</span>
-          <span className="text-muted-foreground mx-2 ml-4">
-            <Price amount={max} override={'sat'} />
-          </span>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted-foreground">
+            Max HTLC{' '}
+            <span className="text-foreground">
+              <Price amount={max} override={'sat'} />
+            </span>
+          </label>
+          <Input
+            placeholder="sats"
+            type="number"
+            value={max && max > 0 ? max : ''}
+            onChange={e => setMax(Number(e.target.value))}
+          />
         </div>
-        <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '500px' }}
-          placeholder={'sats'}
-          type={'number'}
-          value={max && max > 0 ? max : ''}
-          onChange={e => setMax(Number(e.target.value))}
-        />
-      </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Min HTLC</span>
-          <span className="text-muted-foreground mx-2 ml-4">
-            <Price amount={min} override={'sat'} />
-          </span>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted-foreground">
+            Min HTLC{' '}
+            <span className="text-foreground">
+              <Price amount={min} override={'sat'} />
+            </span>
+          </label>
+          <Input
+            placeholder="sats"
+            type="number"
+            value={min && min > 0 ? min : ''}
+            onChange={e => setMin(Number(e.target.value))}
+          />
         </div>
-        <Input
-          className="ml-0 md:ml-2"
-          style={{ maxWidth: '500px' }}
-          placeholder={'sats'}
-          type={'number'}
-          value={min && min > 0 ? min : ''}
-          onChange={e => setMin(Number(e.target.value))}
-        />
       </div>
 
-      <RightAlign>
+      {confirming ? (
+        <div className="mt-1 flex gap-2">
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={() => setConfirming(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="default"
+            className="flex-1"
+            onClick={() =>
+              updateFees({
+                variables: {
+                  ...(baseFee >= 0 &&
+                    baseFeeDirty && { base_fee_tokens: baseFee }),
+                  ...(feeRate !== 0 && { fee_rate: feeRate }),
+                  ...(cltv !== 0 && { cltv_delta: cltv }),
+                  ...(max !== 0 && {
+                    max_htlc_mtokens: (max * 1000).toString(),
+                  }),
+                  ...(min !== 0 && {
+                    min_htlc_mtokens: (min * 1000).toString(),
+                  }),
+                },
+              })
+            }
+          >
+            Confirm Update
+          </Button>
+        </div>
+      ) : (
         <Button
           variant="outline"
-          onClick={() =>
-            updateFees({
-              variables: {
-                ...(baseFee >= 0 &&
-                  baseFeeDirty && { base_fee_tokens: baseFee }),
-                ...(feeRate !== 0 && { fee_rate: feeRate }),
-                ...(cltv !== 0 && { cltv_delta: cltv }),
-                ...(max !== 0 && {
-                  max_htlc_mtokens: (max * 1000).toString(),
-                }),
-                ...(min !== 0 && {
-                  min_htlc_mtokens: (min * 1000).toString(),
-                }),
-              },
-            })
-          }
           disabled={
             baseFee < 0 && feeRate === 0 && cltv === 0 && max === 0 && min === 0
           }
-          className="w-full"
-          style={{ margin: '16px 0 0' }}
+          className="mt-1 w-full"
+          onClick={() => setConfirming(true)}
         >
           Update All Channels
           <ChevronRight size={18} />
         </Button>
-      </RightAlign>
-    </>
+      )}
+    </div>
   );
 };

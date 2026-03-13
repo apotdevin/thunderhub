@@ -44,8 +44,7 @@ export default function Table({
 }: TableProps) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<SortingState>(initSorting || []);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  const [isOpen, setIsOpen] = useState(false);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
     defaultHiddenColumns || {}
   );
@@ -82,7 +81,7 @@ export default function Table({
 
   return (
     <>
-      <div className="flex flex-row justify-between mb-6">
+      <div className="mb-6 flex flex-row justify-between">
         {withGlobalSort ? (
           <DebouncedInput
             value={globalFilter ?? ''}
@@ -92,19 +91,28 @@ export default function Table({
           />
         ) : null}
         {toggleConfiguration ? (
-          <>
-            <Button variant="outline" onClick={() => setIsOpen(p => !p)}>
-              {isOpen ? <X size={18} /> : <Settings size={18} />}
-            </Button>
-          </>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsOpen(p => !p)}
+          >
+            {isOpen ? (
+              <X size={16} className="mr-1.5" />
+            ) : (
+              <Settings size={16} className="mr-1.5" />
+            )}
+            Columns
+          </Button>
         ) : null}
       </div>
 
       {isOpen && toggleConfiguration ? (
-        <ColumnConfigurations
-          table={table}
-          toggleConfiguration={toggleConfiguration}
-        />
+        <div className="mb-4">
+          <ColumnConfigurations
+            table={table}
+            toggleConfiguration={toggleConfiguration}
+          />
+        </div>
       ) : null}
 
       <div
