@@ -5,28 +5,16 @@ import {
   Unlock,
   ChevronDown,
   ChevronUp,
-  ChevronRight,
   Loader2,
+  ExternalLink,
 } from 'lucide-react';
-import { useChartColors } from '../../lib/chart-colors';
 import { useNavigate } from 'react-router-dom';
-import { Link } from '../../components/link/Link';
 import {
   GetServerAccountsQuery,
   useGetServerAccountsQuery,
 } from '../../graphql/queries/__generated__/getServerAccounts.generated';
-import { LoadingCard } from '../../components/loading/LoadingCard';
 import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.generated';
 import { useGetNodeInfoLazyQuery } from '../../graphql/queries/__generated__/getNodeInfo.generated';
-import {
-  Card,
-  SingleLine,
-  DarkSubTitle,
-  Sub4Title,
-  Separation,
-} from '../../components/generic/Styled';
-import { Button } from '@/components/ui/button';
-import { cn } from '../../lib/utils';
 import { Login } from './Login';
 
 type ServerAccount = GetServerAccountsQuery['getServerAccounts'][0];
@@ -34,48 +22,51 @@ type ServerAccount = GetServerAccountsQuery['getServerAccounts'][0];
 const RenderIntro = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   return (
-    <div className="w-full bg-transparent max-w-[1000px] mx-auto px-4 lg:px-0">
-      <div className="w-full text-lg pb-2 text-white">
-        Hi! Welcome to ThunderHub
-      </div>
-      <Card>
-        {'To start you must create an account on your server. '}
-        <Link
-          newTab={true}
-          href={'https://docs.thunderhub.io/setup/#server-accounts'}
-        >
-          You can find instructions for this here.
-        </Link>
-      </Card>
-      <Card>
-        <div
-          className="flex items-center w-full justify-between cursor-pointer"
-          onClick={() => setDetailsOpen(p => !p)}
-        >
-          <DarkSubTitle>{'Did you already create accounts?'}</DarkSubTitle>
-          {detailsOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+    <div className="mx-auto w-full max-w-md px-4">
+      <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+        <div className="mb-4 text-center">
+          <h2 className="text-lg font-semibold text-foreground">
+            Welcome to ThunderHub
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            To get started, create an account on your server.
+          </p>
         </div>
-        {detailsOpen && (
-          <>
-            <Separation />
-            <Sub4Title>
-              The accounts might be missing information that is needed for them
-              to be available. Please check your logs to see if there is
-              anything missing.
-            </Sub4Title>
-            <Sub4Title>
-              On server start you will see a log message of the accounts that
-              will be available.
-            </Sub4Title>
-          </>
-        )}
-      </Card>
+
+        <a
+          href="https://docs.thunderhub.io/setup/#server-accounts"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-1.5 text-sm text-primary hover:underline"
+        >
+          View setup instructions
+          <ExternalLink size={12} />
+        </a>
+
+        <div className="mt-4 border-t border-border pt-4">
+          <button
+            className="flex w-full cursor-pointer items-center justify-between bg-transparent p-0 text-xs text-muted-foreground"
+            onClick={() => setDetailsOpen(p => !p)}
+          >
+            Already created accounts?
+            {detailsOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+          {detailsOpen && (
+            <div className="mt-3 flex flex-col gap-2 text-xs text-muted-foreground">
+              <p>
+                Your accounts might be missing required information. Check your
+                server logs for details.
+              </p>
+              <p>On startup, the server logs which accounts are available.</p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
 export const Accounts = () => {
-  const chartColors = useChartColors();
   const navigate = useNavigate();
   const [newAccount, setNewAccount] = useState<ServerAccount | null>(null);
 
@@ -100,8 +91,8 @@ export const Accounts = () => {
 
   if (loadingData) {
     return (
-      <div className="w-full bg-transparent max-w-[1000px] mx-auto px-4 lg:px-0">
-        <LoadingCard />
+      <div className="flex justify-center py-8">
+        <Loader2 className="animate-spin text-white/60" size={24} />
       </div>
     );
   }
@@ -109,37 +100,6 @@ export const Accounts = () => {
   if (!accountData?.getServerAccounts?.length) {
     return <RenderIntro />;
   }
-
-  const getTitle = (account: ServerAccount) => {
-    const { type, name, loggedIn } = account;
-
-    const props = {
-      color: chartColors.green,
-      size: 14,
-    };
-    return (
-      <div className="flex items-center">
-        {type === 'sso' ? 'SSO Account' : name}
-        <span className="ml-1">
-          {loggedIn ? <Unlock {...props} /> : <Lock {...props} />}
-        </span>
-      </div>
-    );
-  };
-
-  const getButtonTitle = (account: ServerAccount): string => {
-    if (account.loggedIn) {
-      return 'Connect';
-    }
-    return 'Login';
-  };
-
-  const getArrow = (account: ServerAccount): boolean => {
-    if (account.loggedIn) {
-      return false;
-    }
-    return true;
-  };
 
   const handleClick = (account: ServerAccount) => () => {
     if (account.type === 'sso') {
@@ -152,40 +112,56 @@ export const Accounts = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       {newAccount && <Login account={newAccount} />}
-      <div className="w-full bg-transparent max-w-[1000px] mx-auto px-4 lg:px-0">
-        <div className={cn('w-full text-lg pb-2', !newAccount && 'text-white')}>
-          {!newAccount ? 'Accounts' : 'Other Accounts'}
-        </div>
-        <Card>
-          {accountData?.getServerAccounts?.map((account, index) => {
-            if (!account) return null;
-            const isThisLoading = newAccount?.id === account.id && loading;
-            return (
-              <div className="my-2" key={`${account.id}-${index}`}>
-                <SingleLine>
-                  {getTitle(account)}
-                  <Button
-                    variant="outline"
-                    onClick={handleClick(account)}
-                    disabled={newAccount?.id === account.id || loading}
-                  >
-                    {isThisLoading ? (
-                      <Loader2 className="animate-spin" size={16} />
+
+      <div className="mx-auto w-full max-w-md px-4">
+        <div className="rounded-lg border border-border bg-card p-5 shadow-sm">
+          <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            {newAccount ? 'Other Accounts' : 'Accounts'}
+          </h3>
+
+          <div className="flex flex-col gap-1.5">
+            {accountData?.getServerAccounts?.map((account, index) => {
+              if (!account) return null;
+              const isActive = newAccount?.id === account.id;
+              const isThisLoading = isActive && loading;
+
+              return (
+                <button
+                  key={`${account.id}-${index}`}
+                  className={`flex w-full cursor-pointer items-center justify-between rounded-md border bg-transparent px-3 py-2.5 transition-colors ${
+                    isActive
+                      ? 'border-primary/30 bg-primary/5'
+                      : 'border-border hover:border-primary/30'
+                  }`}
+                  disabled={isActive || loading}
+                  onClick={handleClick(account)}
+                >
+                  <div className="flex items-center gap-2">
+                    {account.loggedIn ? (
+                      <Unlock size={13} className="text-green-500" />
                     ) : (
-                      <>
-                        {getButtonTitle(account)}{' '}
-                        {getArrow(account) && <ChevronRight size={18} />}
-                      </>
+                      <Lock size={13} className="text-muted-foreground" />
                     )}
-                  </Button>
-                </SingleLine>
-              </div>
-            );
-          })}
-        </Card>
+                    <span className="text-sm font-medium text-foreground">
+                      {account.type === 'sso' ? 'SSO Account' : account.name}
+                    </span>
+                  </div>
+
+                  {isThisLoading ? (
+                    <Loader2 className="animate-spin text-primary" size={14} />
+                  ) : (
+                    <span className="text-xs text-muted-foreground">
+                      {account.loggedIn ? 'Connect' : 'Login'}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };

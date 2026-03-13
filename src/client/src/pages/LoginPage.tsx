@@ -3,15 +3,17 @@ import { TopSection } from '../views/homepage/Top';
 import { Accounts } from '../views/homepage/Accounts';
 
 const LoginPage = () => (
-  <>
+  <div className="relative min-h-screen">
     <img
-      alt={''}
+      alt=""
       src={appendBasePath('/static/thunderstorm.webp')}
-      className="dark h-80 w-full top-0 object-cover absolute z-[-1] bg-background"
+      className="absolute inset-0 z-[-1] h-72 w-full object-cover bg-background"
     />
-    <TopSection />
-    <Accounts />
-  </>
+    <div className="flex flex-col gap-6 pb-12 pt-8">
+      <TopSection />
+      <Accounts />
+    </div>
+  </div>
 );
 
 export default LoginPage;

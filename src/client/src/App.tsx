@@ -89,7 +89,7 @@ const Wrapper: FC<{ children?: ReactNode }> = ({ children }) => {
   return (
     <div className="relative min-h-screen">
       <div className="pb-[120px]">
-        <Header />
+        {!isRoot && <Header />}
         <Listener isRoot={isRoot} />
         {checking ? (
           <LoadingCard noCard={true} loadingHeight={'80vh'} />

@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
-import { Lock, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { getVersion } from '../../utils/version';
 import { useGetSessionTokenMutation } from '../../graphql/mutations/__generated__/getSessionToken.generated';
-import { SingleLine, Sub4Title, Card } from '../../components/generic/Styled';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useChartColors } from '../../lib/chart-colors';
 import { config } from '../../config/thunderhubConfig';
 import { GetServerAccountsQuery } from '../../graphql/queries/__generated__/getServerAccounts.generated';
 
@@ -18,7 +16,6 @@ type LoginProps = {
 };
 
 export const Login = ({ account }: LoginProps) => {
-  const chartColors = useChartColors();
   const [pass, setPass] = useState('');
   const [token, setToken] = useState('');
 
@@ -51,54 +48,62 @@ export const Login = ({ account }: LoginProps) => {
   };
 
   return (
-    <div className="w-full bg-transparent max-w-[1000px] mx-auto px-4 lg:px-0">
-      <div className="w-full flex justify-center pb-2 font-semibold">
-        <h1 className="text-2xl text-white flex items-center">
-          {`Login to ${account.name}`}
-          <div className="ml-1">
-            <Lock size={18} color={chartColors.green} />
-          </div>
-        </h1>
-      </div>
-      <Card cardPadding={'32px'} mobileCardPadding={'16px'}>
-        <SingleLine>
-          <Sub4Title>Password</Sub4Title>
-          <Input
-            autoFocus
-            style={{ maxWidth: '800px', margin: '0 0 8px 16px' }}
-            type={'password'}
-            onChange={e => setPass(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter') handleEnter();
-            }}
-          />
-        </SingleLine>
-        {config.disable2FA ? null : (
-          <SingleLine>
-            <Sub4Title>{'2FA (if enabled)'}</Sub4Title>
+    <div className="mx-auto w-full max-w-md px-4">
+      <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+        <div className="mb-5 text-center">
+          <h2 className="text-lg font-semibold text-foreground">
+            {account.name}
+          </h2>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            Enter your credentials to connect
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-muted-foreground">
+              Password
+            </label>
             <Input
-              style={{ maxWidth: '800px', margin: '0 0 0 16px' }}
-              onChange={e => setToken(e.target.value)}
+              autoFocus
+              type="password"
+              placeholder="Enter password"
+              onChange={e => setPass(e.target.value)}
               onKeyDown={e => {
                 if (e.key === 'Enter') handleEnter();
               }}
             />
-          </SingleLine>
-        )}
-        <Button
-          variant="outline"
-          disabled={pass === '' || loading}
-          onClick={() => handleEnter()}
-          style={{ margin: '16px 0 0' }}
-          className="w-full"
-        >
-          {loading ? (
-            <Loader2 className="animate-spin" size={16} />
-          ) : (
-            <>Connect</>
+          </div>
+
+          {!config.disable2FA && (
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-muted-foreground">
+                2FA Code{' '}
+                <span className="text-foreground/40">(if enabled)</span>
+              </label>
+              <Input
+                placeholder="6-digit code"
+                onChange={e => setToken(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') handleEnter();
+                }}
+              />
+            </div>
           )}
-        </Button>
-      </Card>
+
+          <Button
+            disabled={pass === '' || loading}
+            onClick={handleEnter}
+            className="mt-1 w-full"
+          >
+            {loading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              'Connect'
+            )}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
