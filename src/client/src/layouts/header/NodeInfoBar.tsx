@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from 'react';
 import { Zap, Anchor, Users, Radio, Wallet, Gauge } from 'lucide-react';
 import { Price } from '../../components/price/Price';
 import { useNodeInfo } from '../../hooks/UseNodeInfo';
@@ -7,6 +8,31 @@ import Big from 'big.js';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
+
+const subscribeToTheme = (cb: () => void) => {
+  const observer = new MutationObserver(cb);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+  return () => observer.disconnect();
+};
+const getIsDark = () => document.documentElement.classList.contains('dark');
+const useIsDarkTheme = () => useSyncExternalStore(subscribeToTheme, getIsDark);
+
+const hexToRgb = (hex: string) => {
+  const c = hex.replace('#', '');
+  return {
+    r: parseInt(c.substring(0, 2), 16),
+    g: parseInt(c.substring(2, 4), 16),
+    b: parseInt(c.substring(4, 6), 16),
+  };
+};
+
+const getLuminance = (hex: string) => {
+  const { r, g, b } = hexToRgb(hex);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+};
 
 export const NodeInfoBar = () => {
   const {
@@ -45,19 +71,65 @@ export const NodeInfoBar = () => {
     dontShow: dontShowFees,
   } = useBitcoinFees();
 
+  const isDark = useIsDarkTheme();
+
   if (!alias) return null;
+
+  const { r, g, b } = hexToRgb(color);
+  const lum = getLuminance(color);
+
+  // Mix color toward a target by amount (0 = original, 1 = target)
+  const mixColor = (
+    r: number,
+    g: number,
+    b: number,
+    target: number,
+    amount: number
+  ) => ({
+    r: Math.round(r + (target - r) * amount),
+    g: Math.round(g + (target - g) * amount),
+    b: Math.round(b + (target - b) * amount),
+  });
+
+  const getAliasStyle = () => {
+    // Very light colors on light theme / very dark on dark theme: use foreground text
+    if ((!isDark && lum > 0.85) || (isDark && lum < 0.15)) {
+      return {
+        backgroundColor: `rgba(${r},${g},${b},0.15)`,
+        color: 'var(--color-foreground)',
+      };
+    }
+    // Dark theme: lighten text (mix toward white)
+    // Light theme: darken text (mix toward black)
+    const target = isDark ? 255 : 0;
+    const mixAmount = isDark
+      ? Math.max(0.2, 0.85 - lum)
+      : Math.max(0.2, lum - 0.15);
+    const mixed = mixColor(r, g, b, target, mixAmount);
+    return {
+      backgroundColor: `rgba(${r},${g},${b},${lum < 0.3 ? 0.25 : 0.15})`,
+      color: `rgb(${mixed.r},${mixed.g},${mixed.b})`,
+    };
+  };
 
   return (
     <div className="flex items-center h-9 text-xs text-muted-foreground overflow-x-auto">
-      {/* Node color accent bar */}
-      <div className="w-1 h-full shrink-0" style={{ backgroundColor: color }} />
-
-      <div className="flex items-center gap-5 px-4">
-        {/* Node alias */}
-        <span className="font-medium text-foreground truncate max-w-[140px] shrink-0">
+      {/* Node alias */}
+      <div
+        className="flex items-center shrink-0 h-full pl-4 pr-6"
+        style={{
+          background: `linear-gradient(to right, ${getAliasStyle().backgroundColor}, transparent)`,
+        }}
+      >
+        <span
+          className="font-medium truncate max-w-[140px]"
+          style={{ color: getAliasStyle().color }}
+        >
           {alias}
         </span>
+      </div>
 
+      <div className="flex items-center gap-5 px-4">
         {/* Sync status badge */}
         <Badge
           variant={syncedToChain ? 'secondary' : 'destructive'}

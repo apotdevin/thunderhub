@@ -121,7 +121,7 @@ export const Header = () => {
           size="icon-sm"
           className="text-muted-foreground hover:text-foreground"
         >
-          <Heart size={14} />
+          <Heart size={14} className="text-red-500 fill-red-500" />
         </Button>
         <Link to={SETTINGS} noStyling>
           <Button
