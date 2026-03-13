@@ -394,12 +394,6 @@ export type GetInvoicesType = {
   next?: Maybe<Scalars['String']['output']>;
 };
 
-export type GetMessages = {
-  __typename?: 'GetMessages';
-  messages: Array<Message>;
-  token?: Maybe<Scalars['String']['output']>;
-};
-
 export type GetPaymentsType = {
   __typename?: 'GetPaymentsType';
   next?: Maybe<Scalars['String']['output']>;
@@ -472,18 +466,6 @@ export type LightningNodeSocialInfo = {
 
 export type LnUrlRequest = ChannelRequest | PayRequest | WithdrawRequest;
 
-export type Message = {
-  __typename?: 'Message';
-  alias?: Maybe<Scalars['String']['output']>;
-  contentType?: Maybe<Scalars['String']['output']>;
-  date: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  message?: Maybe<Scalars['String']['output']>;
-  sender?: Maybe<Scalars['String']['output']>;
-  tokens?: Maybe<Scalars['Float']['output']>;
-  verified: Scalars['Boolean']['output'];
-};
-
 export type MessageType = {
   __typename?: 'MessageType';
   message?: Maybe<Scalars['String']['output']>;
@@ -514,7 +496,6 @@ export type Mutation = {
   pushBackup: Scalars['Boolean']['output'];
   removePeer: Scalars['Boolean']['output'];
   removeTwofaSecret: Scalars['Boolean']['output'];
-  sendMessage: Scalars['Float']['output'];
   sendToAddress: ChainAddressSend;
   toggleConfig: Scalars['Boolean']['output'];
   updateFees: Scalars['Boolean']['output'];
@@ -582,6 +563,7 @@ export type MutationGetSessionTokenArgs = {
 
 export type MutationKeysendArgs = {
   destination?: InputMaybe<Scalars['String']['input']>;
+  message?: InputMaybe<Scalars['String']['input']>;
   tokens: Scalars['Float']['input'];
 };
 
@@ -629,14 +611,6 @@ export type MutationRemovePeerArgs = {
 
 export type MutationRemoveTwofaSecretArgs = {
   token: Scalars['String']['input'];
-};
-
-export type MutationSendMessageArgs = {
-  maxFee?: InputMaybe<Scalars['Float']['input']>;
-  message: Scalars['String']['input'];
-  messageType?: InputMaybe<Scalars['String']['input']>;
-  publicKey: Scalars['String']['input'];
-  tokens?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type MutationSendToAddressArgs = {
@@ -935,7 +909,6 @@ export type Query = {
   getLatestVersion: Scalars['String']['output'];
   getLightningAddressInfo: PayRequest;
   getLiquidityPerUsd: Scalars['String']['output'];
-  getMessages: GetMessages;
   getNetworkInfo: NetworkInfo;
   getNode: Node;
   getNodeBalances: Balances;
@@ -991,10 +964,6 @@ export type QueryGetInvoicesArgs = {
 
 export type QueryGetLightningAddressInfoArgs = {
   address: Scalars['String']['input'];
-};
-
-export type QueryGetMessagesArgs = {
-  initialize?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type QueryGetNodeArgs = {

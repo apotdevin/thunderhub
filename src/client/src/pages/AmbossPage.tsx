@@ -1,34 +1,38 @@
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
-import { SingleLine } from '../components/generic/Styled';
 import { AmbossLoginButton } from '../views/amboss/LoginButton';
 import { Backups } from '../views/amboss/Backups';
-import { SectionTitle, Text } from '../components/typography/Styled';
 import { Healthchecks } from '../views/amboss/Healthchecks';
 import { Balances } from '../views/amboss/Balances';
 import { Billboard } from '../views/amboss/Billboard';
-
-const AmbossView = () => (
-  <>
-    <SingleLine>
-      <SectionTitle style={{ margin: '0', color: '#ff0080', fontWeight: 900 }}>
-        AMBOSS
-      </SectionTitle>
-      <AmbossLoginButton />
-    </SingleLine>
-    <Text>
-      Amboss offers different integration options that can help you monitor your
-      node, store backups and get historical graphs about your balances.
-    </Text>
-  </>
-);
+import { appendBasePath } from '../utils/basePath';
 
 const AmbossPage = () => (
   <GridWrapper>
-    <AmbossView />
-    <Backups />
-    <Healthchecks />
-    <Balances />
-    <Billboard />
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <img
+            src={appendBasePath('/assets/amboss_icon.png')}
+            width={28}
+            height={28}
+            alt="Amboss"
+          />
+          <div>
+            <h2 className="text-lg font-semibold text-foreground">Amboss</h2>
+            <p className="text-sm text-muted-foreground">
+              Monitor your node and store backups.
+            </p>
+          </div>
+        </div>
+        <AmbossLoginButton />
+      </div>
+      <div className="grid gap-4">
+        <Backups />
+        <Healthchecks />
+        <Balances />
+        <Billboard />
+      </div>
+    </div>
   </GridWrapper>
 );
 

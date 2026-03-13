@@ -1,18 +1,47 @@
 import toast from 'react-hot-toast';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
 import {
   Card,
-  CardWithTitle,
-  Separation,
-  SingleLine,
-  SubTitle,
-} from '../../components/generic/Styled';
-import { Text } from '../../components/typography/Styled';
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
+import { Loader2, BarChart3 } from 'lucide-react';
 import { useToggleConfigMutation } from '../../graphql/mutations/__generated__/toggleConfig.generated';
 import { useGetConfigStateQuery } from '../../graphql/queries/__generated__/getConfigState.generated';
 import { ConfigFields } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
+
+interface BalanceToggleProps {
+  label: string;
+  description: string;
+  enabled: boolean;
+  loading: boolean;
+  onToggle: () => void;
+}
+
+const BalanceToggle = ({
+  label,
+  description,
+  enabled,
+  loading,
+  onToggle,
+}: BalanceToggleProps) => (
+  <div className="flex items-center justify-between gap-4">
+    <div className="space-y-0.5">
+      <p className="text-sm font-medium text-foreground">{label}</p>
+      <p className="text-xs text-muted-foreground">{description}</p>
+    </div>
+    <div className="flex items-center gap-2">
+      {loading ? (
+        <Loader2 className="animate-spin text-muted-foreground" size={14} />
+      ) : null}
+      <Switch checked={enabled} disabled={loading} onCheckedChange={onToggle} />
+    </div>
+  </div>
+);
 
 export const Balances = () => {
   const { data, loading } = useGetConfigStateQuery({
@@ -33,72 +62,48 @@ export const Balances = () => {
   const isLoading = loading || toggleLoading;
 
   return (
-    <CardWithTitle>
-      <SubTitle>Balances</SubTitle>
-      <Card>
-        <SingleLine>
-          <SubTitle>Push Onchain</SubTitle>
-          <Button
-            variant="outline"
-            disabled={isLoading}
-            style={{ margin: '0 0 0 16px' }}
-            onClick={() =>
-              toggle({ variables: { field: ConfigFields.OnchainPush } })
-            }
-          >
-            {isLoading ? (
-              <Loader2 className="animate-spin" size={16} />
-            ) : (
-              <>{onchain_push_enabled ? 'Disable' : 'Enable'}</>
-            )}
-          </Button>
-        </SingleLine>
-        <Text>
-          Push your onchain balance to Amboss to get historical reports.
-        </Text>
-        <Separation />
-        <SingleLine>
-          <SubTitle>Push Public Channels</SubTitle>
-          <Button
-            variant="outline"
-            disabled={isLoading}
-            style={{ margin: '0 0 0 16px' }}
-            onClick={() =>
-              toggle({ variables: { field: ConfigFields.ChannelsPush } })
-            }
-          >
-            {isLoading ? (
-              <Loader2 className="animate-spin" size={16} />
-            ) : (
-              <>{channels_push_enabled ? 'Disable' : 'Enable'}</>
-            )}
-          </Button>
-        </SingleLine>
-        <Text>
-          Push your public channel balances to get historical reports.
-        </Text>
-        <Separation />
-        <SingleLine>
-          <SubTitle>Push Private Channels</SubTitle>
-          <Button
-            variant="outline"
-            disabled={isLoading}
-            style={{ margin: '0 0 0 16px' }}
-            onClick={() =>
-              toggle({ variables: { field: ConfigFields.PrivateChannelsPush } })
-            }
-          >
-            {isLoading ? (
-              <Loader2 className="animate-spin" size={16} />
-            ) : (
-              <>{private_channels_push_enabled ? 'Disable' : 'Enable'}</>
-            )}
-          </Button>
-        </SingleLine>
-        <Text>
-          Push your private channel balances to get historical reports.
-        </Text>
-      </Card>
-    </CardWithTitle>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <BarChart3 size={16} className="text-muted-foreground" />
+          <CardTitle>Balances</CardTitle>
+        </div>
+        <CardDescription>
+          Push balance data to Amboss for historical reporting and analytics.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <Separator />
+        <BalanceToggle
+          label="Onchain Balance"
+          description="Push your onchain balance for historical reports"
+          enabled={onchain_push_enabled}
+          loading={isLoading}
+          onToggle={() =>
+            toggle({ variables: { field: ConfigFields.OnchainPush } })
+          }
+        />
+        <Separator />
+        <BalanceToggle
+          label="Public Channels"
+          description="Push your public channel balances for historical reports"
+          enabled={channels_push_enabled}
+          loading={isLoading}
+          onToggle={() =>
+            toggle({ variables: { field: ConfigFields.ChannelsPush } })
+          }
+        />
+        <Separator />
+        <BalanceToggle
+          label="Private Channels"
+          description="Push your private channel balances for historical reports"
+          enabled={private_channels_push_enabled}
+          loading={isLoading}
+          onToggle={() =>
+            toggle({ variables: { field: ConfigFields.PrivateChannelsPush } })
+          }
+        />
+      </CardContent>
+    </Card>
   );
 };

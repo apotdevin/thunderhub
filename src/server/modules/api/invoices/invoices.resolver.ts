@@ -9,6 +9,7 @@ import { CreateInvoice, DecodeInvoice, PayInvoice } from './invoices.types';
 import { randomBytes, createHash } from 'crypto';
 
 const KEYSEND_TYPE = '5482373484';
+const MESSAGE_TYPE = '34349334';
 
 @Resolver()
 export class InvoicesResolver {
@@ -94,22 +95,28 @@ export class InvoicesResolver {
   async keysend(
     @CurrentUser() user: UserId,
     @Args('tokens') tokens: number,
-    @Args('destination', { nullable: true }) destination: string
+    @Args('destination', { nullable: true }) destination: string,
+    @Args('message', { nullable: true }) message: string
   ) {
     const preimage = randomBytes(32);
     const secret = preimage.toString('hex');
     const id = createHash('sha256').update(preimage).digest().toString('hex');
 
+    const messages = [
+      {
+        type: KEYSEND_TYPE,
+        value: secret,
+      },
+      ...(message
+        ? [{ type: MESSAGE_TYPE, value: Buffer.from(message).toString('hex') }]
+        : []),
+    ];
+
     return await this.nodeService.payViaPaymentDetails(user.id, {
       id,
       tokens,
       destination,
-      messages: [
-        {
-          type: KEYSEND_TYPE,
-          value: secret,
-        },
-      ],
+      messages,
     });
   }
 
