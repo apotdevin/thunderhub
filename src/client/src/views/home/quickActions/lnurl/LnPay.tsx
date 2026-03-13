@@ -2,8 +2,9 @@ import { FC, useState } from 'react';
 import { PayRequest } from '../../../../graphql/types';
 import { Input } from '@/components/ui/input';
 import { Price } from '../../../../components/price/Price';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Loader2 } from 'lucide-react';
+import { CheckCircle, ChevronRight, Loader2 } from 'lucide-react';
 import { usePayLnUrlMutation } from '../../../../graphql/mutations/__generated__/lnUrl.generated';
 import { Link } from '../../../../components/link/Link';
 import toast from 'react-hot-toast';
@@ -12,10 +13,14 @@ import { getErrorContent } from '../../../../utils/error';
 type LnPayProps = {
   request: PayRequest;
   defaultAmount?: number;
-  title?: string;
+  hideTitle?: boolean;
 };
 
-export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
+export const LnPay: FC<LnPayProps> = ({
+  request,
+  defaultAmount,
+  hideTitle,
+}) => {
   const { minSendable, maxSendable, callback, commentAllowed } = request;
 
   const min = Number(minSendable) / 1000 || 0;
@@ -26,6 +31,7 @@ export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
   const initial = isSame ? min : (defaultAmount ?? min);
   const [amount, setAmount] = useState<number>(initial);
   const [comment, setComment] = useState('');
+  const [confirming, setConfirming] = useState(false);
 
   const [payLnUrl, { data, loading }] = usePayLnUrlMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -93,11 +99,9 @@ export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
 
   return (
     <div className="flex flex-col gap-3">
-      {title && <span className="text-sm font-medium">{title}</span>}
-
-      {!title && (
-        <span className="text-sm text-muted-foreground">
-          Pay to {callbackUrl.host}
+      {!hideTitle && (
+        <span className="text-sm text-center uppercase font-semibold">
+          {`Pay to ${callbackUrl.host}`}
         </span>
       )}
 
@@ -110,15 +114,15 @@ export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
           </span>
         </div>
       ) : (
-        <div className="flex gap-2 text-xs">
-          <div className="flex flex-1 items-center justify-between rounded border border-border px-3 py-2">
-            <span className="text-muted-foreground">Min</span>
-            <span className="font-mono">{min.toLocaleString()}</span>
-          </div>
-          <div className="flex flex-1 items-center justify-between rounded border border-border px-3 py-2">
-            <span className="text-muted-foreground">Max</span>
-            <span className="font-mono">{max.toLocaleString()}</span>
-          </div>
+        <div className="grid grid-cols-2 gap-2">
+          <Badge variant="secondary" className="font-normal w-full">
+            Min:{' '}
+            <span className="font-mono ml-1">{min.toLocaleString()} sats</span>
+          </Badge>
+          <Badge variant="secondary" className="font-normal w-full">
+            Max:{' '}
+            <span className="font-mono ml-1">{max.toLocaleString()} sats</span>
+          </Badge>
         </div>
       )}
 
@@ -159,26 +163,47 @@ export const LnPay: FC<LnPayProps> = ({ request, defaultAmount, title }) => {
         </div>
       )}
 
-      <Button
-        variant="outline"
-        disabled={loading || !amount}
-        className="mt-1 w-full"
-        onClick={() => {
-          if (min && amount < min) {
-            toast.error('Amount is below the minimum');
-          } else if (max && amount > max) {
-            toast.error('Amount is above the maximum');
-          } else {
-            payLnUrl({ variables: { callback, amount, comment } });
-          }
-        }}
-      >
-        {loading ? (
-          <Loader2 className="animate-spin" size={16} />
-        ) : (
-          `Pay ${amount.toLocaleString()} sats`
-        )}
-      </Button>
+      {confirming ? (
+        <div className="mt-1 flex gap-2">
+          <Button
+            variant="outline"
+            className="flex-1"
+            disabled={loading}
+            onClick={() => setConfirming(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="default"
+            className="flex-1"
+            disabled={loading}
+            onClick={() => {
+              if (min && amount < min) {
+                toast.error('Amount is below the minimum');
+              } else if (max && amount > max) {
+                toast.error('Amount is above the maximum');
+              } else {
+                payLnUrl({ variables: { callback, amount, comment } });
+              }
+            }}
+          >
+            {loading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              `Confirm Pay`
+            )}
+          </Button>
+        </div>
+      ) : (
+        <Button
+          variant="outline"
+          disabled={!amount}
+          className="mt-1 w-full"
+          onClick={() => setConfirming(true)}
+        >
+          Pay {amount.toLocaleString()} sats <ChevronRight size={18} />
+        </Button>
+      )}
     </div>
   );
 };

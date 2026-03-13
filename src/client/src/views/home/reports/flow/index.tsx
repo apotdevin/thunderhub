@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { SmallSelectWithValue } from '../../../../components/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { TransactionsGraph } from './TransactionGraph';
 
 export interface PeriodProps {
@@ -9,46 +9,49 @@ export interface PeriodProps {
   tokens: number;
 }
 
-const options = [
-  { label: 'Invoices', value: 'invoices' },
-  { label: 'Payments', value: 'payments' },
-];
-
-const typeOptions = [
-  { label: 'Count', value: 'count' },
-  { label: 'Volume', value: 'tokens' },
-];
-
 export const FlowBox = () => {
-  const [show, setShow] = useState(options[0]);
-  const [type, setType] = useState(typeOptions[0]);
+  const [show, setShow] = useState('invoices');
+  const [type, setType] = useState('count');
 
   return (
     <Card>
       <CardHeader>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle>Transactions</CardTitle>
-          <div className="flex gap-2">
-            <SmallSelectWithValue
-              callback={e => setShow((e[0] || options[1]) as any)}
-              options={options}
+          <div className="flex gap-1.5">
+            <ToggleGroup
+              type="single"
               value={show}
-              isClearable={false}
-            />
-            <SmallSelectWithValue
-              callback={e => setType((e[0] || typeOptions[1]) as any)}
-              options={typeOptions}
+              onValueChange={v => v && setShow(v)}
+              variant="outline"
+              size="sm"
+            >
+              <ToggleGroupItem value="invoices" className="text-xs px-2">
+                Invoices
+              </ToggleGroupItem>
+              <ToggleGroupItem value="payments" className="text-xs px-2">
+                Payments
+              </ToggleGroupItem>
+            </ToggleGroup>
+            <ToggleGroup
+              type="single"
               value={type}
-              isClearable={false}
-            />
+              onValueChange={v => v && setType(v)}
+              variant="outline"
+              size="sm"
+            >
+              <ToggleGroupItem value="count" className="text-xs px-2">
+                Count
+              </ToggleGroupItem>
+              <ToggleGroupItem value="tokens" className="text-xs px-2">
+                Volume
+              </ToggleGroupItem>
+            </ToggleGroup>
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <TransactionsGraph
-          showPay={show.value === 'payments'}
-          type={type.value}
-        />
+        <TransactionsGraph showPay={show === 'payments'} type={type} />
       </CardContent>
     </Card>
   );

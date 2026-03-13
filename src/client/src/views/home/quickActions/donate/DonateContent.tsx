@@ -66,7 +66,11 @@ export const DonateModal = ({
         </div>
       </DialogHeader>
       {payRequest ? (
-        <LnPay request={payRequest} defaultAmount={DEFAULT_DONATE_AMOUNT} />
+        <LnPay
+          request={payRequest}
+          defaultAmount={DEFAULT_DONATE_AMOUNT}
+          hideTitle
+        />
       ) : null}
     </DialogContent>
   </Dialog>

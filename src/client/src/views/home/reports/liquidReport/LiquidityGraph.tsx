@@ -98,7 +98,7 @@ export const LiquidityGraph = () => {
               None of your channels have pending HTLCs
             </div>
           ) : (
-            <div className="h-[240px] w-full">
+            <div className="w-full" style={{ height: htlc.length * 48 }}>
               <HorizontalBarChart
                 dataKey="Value"
                 data={htlc}

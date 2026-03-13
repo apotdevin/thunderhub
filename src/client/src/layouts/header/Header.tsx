@@ -7,6 +7,8 @@ import {
   Sun,
   Moon,
   Monitor,
+  PanelLeft,
+  PanelRight,
   LucideProps,
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
@@ -24,6 +26,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 import { usePriceState } from '../../context/PriceContext';
 import { NodeInfoBar } from './NodeInfoBar';
+import { BalancesContent } from '../sidebar/BalancesContent';
 
 export type Icon = FC<LucideProps>;
 
@@ -34,8 +37,9 @@ const SETTINGS = '/settings';
 export const Header = () => {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
+  const [balancesOpen, setBalancesOpen] = useState(false);
 
-  const { theme, currency } = useConfigState();
+  const { theme, currency, sidebar, rightSidebar } = useConfigState();
   const dispatch = useConfigDispatch();
   const { dontShow } = usePriceState();
 
@@ -50,24 +54,40 @@ export const Header = () => {
 
   const renderLoggedIn = () => (
     <>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            className="md:hidden text-muted-foreground"
+      <div className="md:hidden text-muted-foreground flex">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon-sm">
+              <Menu size={18} />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            showCloseButton={true}
+            className="p-0 w-[280px]"
           >
-            <Menu size={18} />
-          </Button>
-        </SheetTrigger>
-        <SheetContent
-          side="right"
-          showCloseButton={true}
-          className="p-0 w-[280px]"
-        >
-          <BurgerMenu setOpen={setOpen} openDonate={openDonate} />
-        </SheetContent>
-      </Sheet>
+            <BurgerMenu setOpen={setOpen} openDonate={openDonate} />
+          </SheetContent>
+        </Sheet>
+
+        <Sheet open={balancesOpen} onOpenChange={setBalancesOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon-sm">
+              <PanelRight size={18} />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            showCloseButton={true}
+            className="p-0 w-[320px]"
+          >
+            <div className="pt-4">
+              <BalancesContent />
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+
       <div className="hidden md:flex items-center gap-1">
         {/* Currency toggle */}
         <ToggleGroup
@@ -112,6 +132,55 @@ export const Header = () => {
             <Monitor size={12} />
           </ToggleGroupItem>
         </ToggleGroup>
+
+        <div className="w-px h-4 bg-border mx-0.5" />
+
+        <Button
+          onClick={() => dispatch({ type: 'change', sidebar: !sidebar })}
+          variant="ghost"
+          size="icon-sm"
+          className={cn(
+            'hover:text-foreground',
+            sidebar ? 'text-foreground' : 'text-muted-foreground/40'
+          )}
+        >
+          <PanelLeft size={14} />
+        </Button>
+
+        <Button
+          onClick={() =>
+            dispatch({ type: 'change', rightSidebar: !rightSidebar })
+          }
+          variant="ghost"
+          size="icon-sm"
+          className={cn(
+            'hidden lg:flex hover:text-foreground',
+            rightSidebar ? 'text-foreground' : 'text-muted-foreground/40'
+          )}
+        >
+          <PanelRight size={14} />
+        </Button>
+
+        <Sheet open={balancesOpen} onOpenChange={setBalancesOpen}>
+          <SheetTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className="lg:hidden text-muted-foreground"
+            >
+              <PanelRight size={18} />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            showCloseButton={true}
+            className="p-0 w-[320px]"
+          >
+            <div className="pt-4">
+              <BalancesContent />
+            </div>
+          </SheetContent>
+        </Sheet>
 
         <div className="w-px h-4 bg-border mx-0.5" />
 

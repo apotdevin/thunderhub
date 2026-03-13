@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Anchor, X, Zap } from 'lucide-react';
+import { Anchor, ArrowUpRight, ArrowDownLeft, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CreateInvoiceCard } from './createInvoice/CreateInvoice';
@@ -7,8 +7,64 @@ import { PayCard } from './pay/Payment';
 import { ReceiveOnChainCard } from './receiveOnChain/ReceiveOnChain';
 import { SendOnChainCard } from './sendOnChain/SendOnChain';
 
+type ActiveState =
+  | 'none'
+  | 'send_ln'
+  | 'receive_ln'
+  | 'send_chain'
+  | 'receive_chain';
+
+const ActionSection = ({
+  label,
+  icon: Icon,
+  iconClassName,
+  sendKey,
+  receiveKey,
+  active,
+  onToggle,
+}: {
+  label: string;
+  icon: typeof Zap;
+  iconClassName?: string;
+  sendKey: ActiveState;
+  receiveKey: ActiveState;
+  active: ActiveState;
+  onToggle: (key: ActiveState) => void;
+}) => (
+  <div className="flex items-center justify-between bg-card py-4 px-4 ring-1 ring-foreground/10 text-card-foreground">
+    <div className="flex items-center gap-2">
+      <Icon size={14} className={iconClassName} />
+      <span className="text-sm font-medium">{label}</span>
+    </div>
+    <div className="flex items-center gap-2">
+      <Button
+        variant={active === sendKey ? 'default' : 'outline'}
+        size="sm"
+        className="text-xs"
+        onClick={() => onToggle(sendKey)}
+      >
+        <ArrowUpRight size={14} />
+        Send
+      </Button>
+      <Button
+        variant={active === receiveKey ? 'default' : 'outline'}
+        size="sm"
+        className="text-xs"
+        onClick={() => onToggle(receiveKey)}
+      >
+        <ArrowDownLeft size={14} />
+        Receive
+      </Button>
+    </div>
+  </div>
+);
+
 export const AccountButtons = () => {
-  const [state, setState] = useState<string>('none');
+  const [state, setState] = useState<ActiveState>('none');
+
+  const toggle = (key: ActiveState) => {
+    setState(prev => (prev === key ? 'none' : key));
+  };
 
   const renderContent = () => {
     switch (state) {
@@ -25,30 +81,27 @@ export const AccountButtons = () => {
     }
   };
 
-  const buttons = [
-    { key: 'send_ln', label: 'Send', icon: Zap },
-    { key: 'receive_ln', label: 'Receive', icon: Zap },
-    { key: 'send_chain', label: 'Send', icon: Anchor },
-    { key: 'receive_chain', label: 'Receive', icon: Anchor },
-  ] as const;
-
   return (
     <>
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-        {buttons.map(btn => {
-          const active = state === btn.key;
-          const Icon = btn.icon;
-          return (
-            <Button
-              key={btn.key}
-              variant={active ? 'default' : 'outline'}
-              onClick={() => setState(active ? 'none' : btn.key)}
-            >
-              {active ? <X size={16} /> : <Icon size={16} />}
-              {btn.label}
-            </Button>
-          );
-        })}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-0">
+        <ActionSection
+          label="Lightning"
+          icon={Zap}
+          iconClassName="text-yellow-500 fill-yellow-500"
+          sendKey="send_ln"
+          receiveKey="receive_ln"
+          active={state}
+          onToggle={toggle}
+        />
+        <ActionSection
+          label="On-chain"
+          icon={Anchor}
+          iconClassName="text-yellow-500"
+          sendKey="send_chain"
+          receiveKey="receive_chain"
+          active={state}
+          onToggle={toggle}
+        />
       </div>
       {state !== 'none' && (
         <Card>

@@ -40,6 +40,7 @@ type State = {
   currency: string;
   theme: string;
   sidebar: boolean;
+  rightSidebar: boolean;
   fetchFees: boolean;
   fetchPrices: boolean;
   displayValues: boolean;
@@ -62,6 +63,7 @@ type ActionType =
       currency?: string;
       theme?: string;
       sidebar?: boolean;
+      rightSidebar?: boolean;
       fetchFees?: boolean;
       fetchPrices?: boolean;
       displayValues?: boolean;
@@ -85,6 +87,7 @@ const getInitialState = (): State => {
     currency: currencyTypes.indexOf(defC) > -1 ? defC : 'sat',
     theme: themeTypes.indexOf(defT) > -1 ? defT : 'dark',
     sidebar: true,
+    rightSidebar: true,
     fetchFees: config.fetchFees,
     fetchPrices: config.fetchPrices,
     displayValues: true,
