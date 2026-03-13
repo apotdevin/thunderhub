@@ -54,18 +54,30 @@ function createApolloClient(authToken: string) {
             getInvoices: {
               keyArgs: false,
               merge(existing = { next: '', invoices: [] }, incoming) {
+                const seen = new Set(
+                  existing.invoices.map((i: any) => i.__ref || i.id)
+                );
+                const deduped = incoming.invoices.filter(
+                  (i: any) => !seen.has(i.__ref || i.id)
+                );
                 return {
                   next: incoming.next,
-                  invoices: [...existing.invoices, ...incoming.invoices],
+                  invoices: [...existing.invoices, ...deduped],
                 };
               },
             },
             getPayments: {
               keyArgs: false,
               merge(existing = { next: '', payments: [] }, incoming) {
+                const seen = new Set(
+                  existing.payments.map((p: any) => p.__ref || p.id)
+                );
+                const deduped = incoming.payments.filter(
+                  (p: any) => !seen.has(p.__ref || p.id)
+                );
                 return {
                   next: incoming.next,
-                  payments: [...existing.payments, ...incoming.payments],
+                  payments: [...existing.payments, ...deduped],
                 };
               },
             },

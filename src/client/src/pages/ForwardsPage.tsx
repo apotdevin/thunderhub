@@ -7,38 +7,26 @@ import { options, typeOptions } from '../views/home/reports/forwardReport';
 import { ForwardsGraph } from '../views/home/reports/forwardReport/ForwardsGraph';
 import { SelectWithValue } from '../components/select';
 import { ForwardResume } from '../views/home/reports/forwardReport/ForwardResume';
-import {
-  SubTitle,
-  Card,
-  CardWithTitle,
-  CardTitle,
-} from '../components/generic/Styled';
 import { ForwardSankey } from '../views/forwards/forwardSankey';
 import { ChannelCart } from '../components/chart/ChannelChart';
 import { useGetChannelsQuery } from '../graphql/queries/__generated__/getChannels.generated';
 import { useGetForwardsListQuery } from '../graphql/queries/__generated__/getForwards.generated';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../utils/error';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Separator } from '@/components/ui/separator';
 
-const viewOptions = [
-  { label: 'Graph', value: 'graph' },
-  { label: 'List', value: 'list' },
-  { label: 'By Channel', value: 'byChannel' },
-];
 const emptyChannel = { label: 'All channels', value: '' };
 
 const ForwardsView = () => {
   const [days, setDays] = useState(options[0]);
   const [type, setType] = useState(typeOptions[0]);
-  const [view, setView] = useState(viewOptions[0]);
-  const channelOptions = useGetChannelsQuery().data?.getChannels.map(it => {
-    return {
-      label: `${it.id}, ${
-        it.partner_node_info.node ? it.partner_node_info.node.alias : ''
-      }`,
-      value: it.id,
-    };
-  });
+  const [view, setView] = useState('graph');
+  const channelOptions = useGetChannelsQuery().data?.getChannels.map(it => ({
+    label: `${it.id}, ${it.partner_node_info.node ? it.partner_node_info.node.alias : ''}`,
+    value: it.id,
+  }));
   const [channel, setChannel] = useState(emptyChannel);
 
   const { data, loading } = useGetForwardsListQuery({
@@ -52,20 +40,25 @@ const ForwardsView = () => {
   }, [data, loading]);
 
   return (
-    <>
-      <CardWithTitle>
-        <CardTitle>
-          <div className="mb-2 w-full flex flex-col md:flex-row gap-2">
-            <SubTitle>Forwards</SubTitle>
-
-            <div className="flex grow gap-2 justify-end">
-              <SelectWithValue
-                callback={e => setView((e[0] || viewOptions[0]) as any)}
-                options={viewOptions}
-                value={view}
-                isClearable={false}
-                maxWidth={'140px'}
-              />
+    <Card>
+      <CardHeader className="border-b">
+        <div className="flex flex-col gap-3 w-full">
+          <div className="flex items-center justify-between">
+            <CardTitle>Forwards</CardTitle>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <ToggleGroup
+              type="single"
+              variant="outline"
+              size="sm"
+              value={view}
+              onValueChange={v => v && setView(v)}
+            >
+              <ToggleGroupItem value="graph">Graph</ToggleGroupItem>
+              <ToggleGroupItem value="list">List</ToggleGroupItem>
+              <ToggleGroupItem value="byChannel">By Channel</ToggleGroupItem>
+            </ToggleGroup>
+            <div className="flex gap-2 sm:ml-auto">
               <SelectWithValue
                 callback={e => setDays((e[0] || options[1]) as any)}
                 options={options}
@@ -73,7 +66,7 @@ const ForwardsView = () => {
                 isClearable={false}
                 maxWidth={'85px'}
               />
-              {view.value != 'byChannel' ? (
+              {view !== 'byChannel' && (
                 <SelectWithValue
                   callback={e => setType((e[0] || typeOptions[1]) as any)}
                   options={typeOptions}
@@ -81,61 +74,55 @@ const ForwardsView = () => {
                   isClearable={false}
                   maxWidth={'110px'}
                 />
-              ) : null}
-            </div>
-            <div className="">
-              {view.value != 'byChannel' ? null : (
-                <SelectWithValue
-                  callback={e => setChannel((e[0] || emptyChannel) as any)}
-                  options={
-                    channelOptions
-                      ? [emptyChannel, ...channelOptions]
-                      : [emptyChannel]
-                  }
-                  value={channel}
-                  isClearable={false}
-                />
               )}
             </div>
           </div>
-        </CardTitle>
-        {view.value === 'list' && (
-          <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-            <ForwardsList days={days.value} />
-          </Card>
-        )}
-        {view.value === 'graph' && (
-          <>
-            <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-              <ForwardResume type={type} />
-            </Card>
-            <Card>
-              <ForwardsGraph days={days} type={type} />
-            </Card>
-            {amountForwards ? (
+          {view === 'byChannel' && (
+            <SelectWithValue
+              callback={e => setChannel((e[0] || emptyChannel) as any)}
+              options={
+                channelOptions
+                  ? [emptyChannel, ...channelOptions]
+                  : [emptyChannel]
+              }
+              value={channel}
+              isClearable={false}
+            />
+          )}
+        </div>
+      </CardHeader>
+      <CardContent>
+        {view === 'list' && <ForwardsList days={days.value} />}
+        {view === 'graph' && (
+          <div className="flex flex-col gap-6">
+            <ForwardResume type={type} />
+            <Separator />
+            <ForwardsGraph days={days} type={type} />
+            {amountForwards > 0 && (
               <>
-                <Card>
-                  <ForwardChannelsReport days={days.value} />
-                </Card>
-                <SubTitle>Grouped by Channel</SubTitle>
-                <Card>
+                <Separator />
+                <ForwardChannelsReport days={days.value} />
+                <Separator />
+                <div>
+                  <h4 className="text-sm font-medium mb-3">
+                    Grouped by Channel
+                  </h4>
                   <ForwardTable days={days.value} />
-                </Card>
-                <SubTitle>Sankey</SubTitle>
-                <Card>
+                </div>
+                <Separator />
+                <div>
+                  <h4 className="text-sm font-medium mb-3">Sankey</h4>
                   <ForwardSankey days={days.value} type={type.value} />
-                </Card>
+                </div>
               </>
-            ) : null}
-          </>
+            )}
+          </div>
         )}
-        {view.value === 'byChannel' && (
-          <>
-            <ChannelCart channelId={channel.value} days={days.value} />
-          </>
+        {view === 'byChannel' && (
+          <ChannelCart channelId={channel.value} days={days.value} />
         )}
-      </CardWithTitle>
-    </>
+      </CardContent>
+    </Card>
   );
 };
 

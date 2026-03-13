@@ -1,5 +1,4 @@
 import { Switch } from '@/components/ui/switch';
-import { SingleLine } from '../../components/generic/Styled';
 import { useLocalStorage } from '../../hooks/UseLocalStorage';
 
 export const defaultSettings = {
@@ -16,21 +15,31 @@ export const TransactionSettings = () => {
   const { rebalance, confirmed } = settings;
 
   return (
-    <>
-      <SingleLine>
-        <div className="whitespace-nowrap text-sm">Confirmed</div>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-xs font-medium">Show Confirmed Only</span>
+          <span className="text-[11px] text-muted-foreground">
+            Hide unconfirmed transactions
+          </span>
+        </div>
         <Switch
           checked={confirmed}
           onCheckedChange={v => setSettings({ ...settings, confirmed: v })}
         />
-      </SingleLine>
-      <SingleLine>
-        <div className="whitespace-nowrap text-sm">Circular Payment</div>
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-xs font-medium">Hide Circular Payments</span>
+          <span className="text-[11px] text-muted-foreground">
+            Filter out rebalance payments
+          </span>
+        </div>
         <Switch
           checked={rebalance}
           onCheckedChange={v => setSettings({ ...settings, rebalance: v })}
         />
-      </SingleLine>
-    </>
+      </div>
+    </div>
   );
 };

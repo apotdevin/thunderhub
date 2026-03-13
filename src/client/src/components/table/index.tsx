@@ -117,20 +117,22 @@ export default function Table({
 
       <div
         className={cn(
-          'overflow-x-auto',
+          'overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0',
           '[&_table]:w-full [&_table]:border-spacing-0',
           '[&_table_tr:last-child_td]:border-b-0',
           '[&_table_.cursor]:cursor-pointer',
-          '[&_table_th]:text-left [&_table_th]:m-0 [&_table_th]:p-2',
-          '[&_table_td]:text-left [&_table_td]:m-0 [&_table_td]:p-2',
+          '[&_table_th]:text-left [&_table_th]:m-0 [&_table_th]:px-2 [&_table_th]:py-1.5 md:[&_table_th]:p-2',
+          '[&_table_td]:text-left [&_table_td]:m-0 [&_table_td]:px-2 [&_table_td]:py-1.5 md:[&_table_td]:p-2',
           '[&_table_th:last-child]:border-r-0',
           '[&_table_td:last-child]:border-r-0',
+          '[&_table_th]:text-xs [&_table_th]:font-medium [&_table_th]:text-muted-foreground',
+          '[&_table_tr]:transition-colors [&_table_tbody_tr:hover]:bg-muted/50',
           withBorder &&
             '[&_table_th]:border-b [&_table_th]:border-border [&_table_td]:border-b [&_table_td]:border-border',
           alignCenter && '[&_table_th]:text-center [&_table_td]:text-center'
         )}
         style={{
-          fontSize: fontSize || '14px',
+          fontSize: fontSize || '13px',
         }}
       >
         <table>

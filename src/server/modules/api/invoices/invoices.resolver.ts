@@ -5,7 +5,7 @@ import { Logger } from 'winston';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
-import { CreateInvoice, DecodeInvoice, PayInvoice } from './invoices.types';
+import { CreateInvoice, PayInvoice } from './invoices.types';
 import { randomBytes, createHash } from 'crypto';
 
 const KEYSEND_TYPE = '5482373484';
@@ -46,22 +46,6 @@ export class InvoicesResolver {
       .catch(e => {
         if (e) return 'timeout';
       });
-  }
-
-  @Query(() => DecodeInvoice)
-  async decodeRequest(
-    @CurrentUser() user: UserId,
-    @Args('request') request: string
-  ) {
-    const decoded = await this.nodeService.decodePaymentRequest(
-      user.id,
-      request
-    );
-
-    return {
-      ...decoded,
-      destination_node: { publicKey: decoded.destination },
-    };
   }
 
   @Mutation(() => CreateInvoice)

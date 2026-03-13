@@ -1,42 +1,52 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../../utils/error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
 import { ChannelSelect } from '../../../../components/select/specific/ChannelSelect';
-import { useDecodeRequestQuery } from '../../../../graphql/queries/__generated__/decodeRequest.generated';
 import { Price } from '../../../../components/price/Price';
 import { usePayMutation } from '../../../../graphql/mutations/__generated__/pay.generated';
 import { Separator } from '@/components/ui/separator';
+import { decode } from 'light-bolt11-decoder';
 
 interface PayProps {
   predefinedRequest?: string;
   payCallback?: () => void;
 }
 
+const getDecodedInvoice = (invoice: string | undefined | null) => {
+  if (!invoice) return null;
+  try {
+    const decoded = decode(invoice);
+    const description =
+      (
+        decoded.sections.find(s => s.name === 'description') as
+          | { value: string }
+          | undefined
+      )?.value || null;
+    const amount =
+      (
+        decoded.sections.find(s => s.name === 'amount') as
+          | { value: string }
+          | undefined
+      )?.value || null;
+    // amount is in millisatoshis string, convert to sats
+    const tokens = amount ? Math.floor(Number(amount) / 1000) : null;
+    return { description, tokens };
+  } catch {
+    return null;
+  }
+};
+
 const DecodeInvoice: FC<{ invoice: string | undefined | null }> = ({
   invoice,
 }) => {
-  const { data, loading } = useDecodeRequestQuery({
-    variables: { request: invoice || '' },
-    skip: !invoice,
-    onError: () => toast.error('Error decoding invoice'),
-  });
+  const decoded = useMemo(() => getDecodedInvoice(invoice), [invoice]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center gap-2 py-2 text-xs text-muted-foreground">
-        <Loader2 className="animate-spin" size={14} />
-        Decoding...
-      </div>
-    );
-  }
+  if (!decoded || !invoice) return null;
 
-  if (!data?.decodeRequest || !invoice) return null;
-
-  const { description, tokens, destination_node } = data.decodeRequest;
-  const { alias } = destination_node?.node || { alias: 'Unknown' };
+  const { description, tokens } = decoded;
 
   return (
     <div className="divide-y divide-border rounded border border-border text-xs">
@@ -46,16 +56,14 @@ const DecodeInvoice: FC<{ invoice: string | undefined | null }> = ({
           <span className="font-medium">{description}</span>
         </div>
       )}
-      <div className="flex items-center justify-between px-3 py-2">
-        <span className="text-muted-foreground">Amount</span>
-        <span className="font-medium">
-          <Price amount={tokens} />
-        </span>
-      </div>
-      <div className="flex items-center justify-between px-3 py-2">
-        <span className="text-muted-foreground">Destination</span>
-        <span className="font-medium">{alias}</span>
-      </div>
+      {tokens !== null && (
+        <div className="flex items-center justify-between px-3 py-2">
+          <span className="text-muted-foreground">Amount</span>
+          <span className="font-medium">
+            <Price amount={tokens} />
+          </span>
+        </div>
+      )}
     </div>
   );
 };

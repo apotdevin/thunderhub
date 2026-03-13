@@ -1,23 +1,16 @@
-import { Fragment } from 'react';
+import { useMemo } from 'react';
 import { PaymentType } from '../../graphql/types';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import {
-  Separation,
-  SubCard,
-  DarkSubTitle,
-} from '../../components/generic/Styled';
-import {
-  StatusLine,
-  NodeTitle,
-  MainInfo,
-} from '../../components/generic/CardGeneric';
-import {
-  getStatusDot,
   getDateDif,
   getFormatDate,
   getNodeLink,
-  renderLine,
 } from '../../components/generic/helpers';
 import { Price } from '../../components/price/Price';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { decode } from 'light-bolt11-decoder';
+import { DetailTable, DetailRow } from './DetailTable';
 
 interface PaymentsCardProps {
   payment: PaymentType;
@@ -25,6 +18,41 @@ interface PaymentsCardProps {
   setIndexOpen: (index: number) => void;
   indexOpen: number;
 }
+
+const StatusBadge = ({ confirmed }: { confirmed: boolean }) => {
+  if (confirmed) {
+    return (
+      <Badge
+        variant="secondary"
+        className="w-[70px] justify-center text-[10px] rounded-sm bg-green-500/10 text-green-600 dark:text-green-400"
+      >
+        Confirmed
+      </Badge>
+    );
+  }
+  return (
+    <Badge
+      variant="secondary"
+      className="w-[70px] justify-center text-[10px] rounded-sm"
+    >
+      Pending
+    </Badge>
+  );
+};
+
+const decodeRequest = (request: string | null | undefined) => {
+  if (!request) return null;
+  try {
+    const decoded = decode(request);
+    const descSection = decoded.sections.find(s => s.name === 'description');
+    if (descSection && 'value' in descSection && descSection.value) {
+      return descSection.value as string;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
 
 export const PaymentsCard = ({
   payment,
@@ -43,63 +71,92 @@ export const PaymentsCard = ({
     is_confirmed,
     is_outgoing,
     mtokens,
+    request,
     secret,
     tokens,
     date,
   } = payment;
 
   const alias = destination_node?.node?.alias;
+  const isOpen = index === indexOpen;
 
-  const formatAmount = <Price amount={tokens} />;
-  const formatFee = <Price amount={fee} />;
+  const description = useMemo(() => decodeRequest(request), [request]);
 
   const handleClick = () => {
-    if (indexOpen === index) {
-      setIndexOpen(0);
-    } else {
-      setIndexOpen(index);
-    }
+    setIndexOpen(isOpen ? 0 : index);
   };
 
-  const renderDetails = () => {
-    return (
-      <>
-        <Separation />
-        {renderLine(
-          'Created:',
-          `${getDateDif(created_at)} ago (${getFormatDate(created_at)})`
-        )}
-        {renderLine('Destination Node:', getNodeLink(destination, alias))}
-        {renderLine('Fee:', formatFee)}
-        {renderLine('Fee msats:', `${fee_mtokens} millisats`)}
-        {renderLine('Hops:', hops.length)}
-        {hops.map((hop, index: number) => (
-          <Fragment key={`${index}-${hop.node?.alias}}`}>
-            {renderLine(
-              `Hop ${index + 1}:`,
-              getNodeLink(hop.node?.public_key, hop.node?.alias)
-            )}
-          </Fragment>
-        ))}
-        {renderLine('Id:', id)}
-        {renderLine('Is Outgoing:', is_outgoing ? 'true' : 'false')}
-        {renderLine('Secret:', secret)}
-        {renderLine('M Tokens:', `${mtokens} millisats`)}
-      </>
-    );
-  };
+  const title = description || alias || 'Unknown';
 
   return (
-    <SubCard key={index}>
-      <MainInfo onClick={() => handleClick()}>
-        <StatusLine>{getStatusDot(is_confirmed, 'active')}</StatusLine>
-        <div className="w-full grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr]">
-          <NodeTitle>{`Payment to: ${alias}`}</NodeTitle>
-          <DarkSubTitle>{`(${getDateDif(date)} ago)`}</DarkSubTitle>
-          <div className="text-red-500">{formatAmount}</div>
+    <div className="rounded border border-border bg-card/50 hover:bg-card transition-colors">
+      <button
+        onClick={handleClick}
+        className="w-full text-left px-3 py-2.5 cursor-pointer"
+      >
+        <div className="flex items-center gap-3">
+          <div className="shrink-0">
+            <StatusBadge confirmed={is_confirmed} />
+          </div>
+          <div className="hidden sm:block flex-1 min-w-0">
+            <span className="font-medium text-sm truncate block">{title}</span>
+          </div>
+          <span className="hidden sm:block text-xs text-muted-foreground shrink-0">
+            {getDateDif(date)} ago
+          </span>
+          <span className="font-mono text-sm font-medium text-destructive shrink-0 ml-auto sm:ml-0">
+            -<Price amount={tokens} />
+          </span>
+          {isOpen ? (
+            <ChevronUp size={14} className="text-muted-foreground shrink-0" />
+          ) : (
+            <ChevronDown size={14} className="text-muted-foreground shrink-0" />
+          )}
         </div>
-      </MainInfo>
-      {index === indexOpen && renderDetails()}
-    </SubCard>
+        <div className="flex sm:hidden items-center gap-2 mt-1.5">
+          <span className="text-xs truncate text-muted-foreground">
+            {title}
+          </span>
+          <span className="text-[11px] text-muted-foreground shrink-0 ml-auto">
+            {getDateDif(date)} ago
+          </span>
+        </div>
+      </button>
+      {isOpen && (
+        <div className="px-3 pb-3">
+          <Separator className="mb-3" />
+          <DetailTable>
+            {description && (
+              <DetailRow label="Description">{description}</DetailRow>
+            )}
+            <DetailRow label="Created">
+              {`${getDateDif(created_at)} ago (${getFormatDate(created_at)})`}
+            </DetailRow>
+            <DetailRow label="Destination">
+              {getNodeLink(destination, alias)}
+            </DetailRow>
+            <DetailRow label="Fee">
+              <Price amount={fee} />
+            </DetailRow>
+            <DetailRow label="Fee (msats)">
+              {`${fee_mtokens} millisats`}
+            </DetailRow>
+            <DetailRow label="Hops">{hops.length}</DetailRow>
+            {hops.map((hop, idx) => (
+              <DetailRow key={idx} label={`Hop ${idx + 1}`}>
+                {getNodeLink(hop.node?.public_key, hop.node?.alias)}
+              </DetailRow>
+            ))}
+            <DetailRow label="ID">{id}</DetailRow>
+            <DetailRow label="Outgoing">{is_outgoing ? 'Yes' : 'No'}</DetailRow>
+            {secret && <DetailRow label="Secret">{secret}</DetailRow>}
+            <DetailRow label="Amount (msats)">
+              {`${mtokens} millisats`}
+            </DetailRow>
+            {request && <DetailRow label="Request">{request}</DetailRow>}
+          </DetailTable>
+        </div>
+      )}
+    </div>
   );
 };

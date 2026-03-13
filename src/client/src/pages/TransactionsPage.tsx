@@ -10,12 +10,6 @@ import {
   TransactionSettings,
 } from '../views/transactions/Settings';
 import { format } from 'date-fns';
-import {
-  Card,
-  CardWithTitle,
-  SubTitle,
-  DarkSubTitle,
-} from '../components/generic/Styled';
 import { getErrorContent } from '../utils/error';
 import { PaymentsCard } from '../views/transactions/PaymentsCards';
 import { Button } from '@/components/ui/button';
@@ -28,18 +22,21 @@ import {
   GetPaymentsQuery,
   useGetPaymentsQuery,
 } from '../graphql/queries/__generated__/getPayments.generated';
-import { SmallSelectWithValue } from '../components/select';
-
-const options = [
-  { label: 'Invoices', value: 'invoices' },
-  { label: 'Payments', value: 'payments' },
-];
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardAction,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Separator } from '@/components/ui/separator';
 
 const TransactionsView = () => {
-  const [show, setShow] = useState(options[0]);
+  const [activeTab, setActiveTab] = useState('invoices');
   const [indexOpen, setIndexOpen] = useState(0);
-
-  const [open, setOpen] = useState<boolean>(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const { publicKey } = useNodeInfo();
 
@@ -79,50 +76,51 @@ const TransactionsView = () => {
     const lastInvoice = invoices[invoices.length - 1]?.created_at;
     const lastPayment = payments[payments.length - 1]?.created_at;
 
-    if (show.value === 'invoices') {
+    if (activeTab === 'invoices') {
       if (lastInvoice) {
-        const date = new Date(lastInvoice);
-        return `${format(date, 'dd/MM/yy')} -> Today`;
-      } else {
-        return '';
+        return `${format(new Date(lastInvoice), 'dd/MM/yy')} - Today`;
       }
+      return '';
     }
 
-    if (show.value === 'payments') {
+    if (activeTab === 'payments') {
       if (lastPayment) {
-        const date = new Date(lastPayment);
-        return `${format(date, 'dd/MM/yy')} -> Today`;
-      } else {
-        return '';
+        return `${format(new Date(lastPayment), 'dd/MM/yy')} - Today`;
       }
+      return '';
     }
-  }, [invoiceQuery.data, paymentQuery.data, show]);
+  }, [invoiceQuery.data, paymentQuery.data, activeTab]);
 
   const renderInvoices = useCallback(() => {
     const list = invoiceQuery.data?.getInvoices.invoices || [];
     if (!list.length) {
-      return null;
+      return (
+        <div className="py-8 text-center text-muted-foreground text-sm">
+          No invoices found
+        </div>
+      );
     }
 
     const filtered = list.reduce(
       (p, c) => {
         const { confirmed } = settings;
-
         if (!c) return p;
-
-        if (confirmed) {
-          if (!c.is_confirmed) {
-            return p;
-          }
-        }
-
+        if (confirmed && !c.is_confirmed) return p;
         return [...p, c];
       },
       [] as GetInvoicesQuery['getInvoices']['invoices']
     );
 
+    if (!filtered.length) {
+      return (
+        <div className="py-8 text-center text-muted-foreground text-sm">
+          No matching invoices
+        </div>
+      );
+    }
+
     return (
-      <>
+      <div className="flex flex-col gap-2">
         {filtered.map((i, index) => (
           <InvoiceCard
             invoice={i as any}
@@ -132,7 +130,7 @@ const TransactionsView = () => {
             indexOpen={indexOpen}
           />
         ))}
-      </>
+      </div>
     );
   }, [invoiceQuery.data, indexOpen, settings]);
 
@@ -140,37 +138,37 @@ const TransactionsView = () => {
     const list = paymentQuery.data?.getPayments.payments || [];
 
     if (!list.length) {
-      return null;
+      return (
+        <div className="py-8 text-center text-muted-foreground text-sm">
+          No payments found
+        </div>
+      );
     }
 
     const filtered = list.reduce(
       (p, c) => {
         const { rebalance, confirmed } = settings;
-
         if (!c) return p;
-
         if (rebalance) {
-          if (c.destination === publicKey) {
-            return p;
-          }
-          if (selfInvoices.includes(c.id)) {
-            return p;
-          }
+          if (c.destination === publicKey) return p;
+          if (selfInvoices.includes(c.id)) return p;
         }
-
-        if (confirmed) {
-          if (!c.is_confirmed) {
-            return p;
-          }
-        }
-
+        if (confirmed && !c.is_confirmed) return p;
         return [...p, c];
       },
       [] as GetPaymentsQuery['getPayments']['payments']
     );
 
+    if (!filtered.length) {
+      return (
+        <div className="py-8 text-center text-muted-foreground text-sm">
+          No matching payments
+        </div>
+      );
+    }
+
     return (
-      <>
+      <div className="flex flex-col gap-2">
         {filtered.map((i, index) => (
           <PaymentsCard
             payment={i}
@@ -180,25 +178,19 @@ const TransactionsView = () => {
             indexOpen={indexOpen}
           />
         ))}
-      </>
+      </div>
     );
   }, [paymentQuery.data, indexOpen, settings, publicKey, selfInvoices]);
 
   const isDisabled = useMemo(() => {
-    if (show.value === 'invoices') {
-      if (!invoiceQuery.data?.getInvoices.next) {
-        return true;
-      }
-    } else {
-      if (!paymentQuery.data?.getPayments.next) {
-        return true;
-      }
+    if (activeTab === 'invoices') {
+      return !invoiceQuery.data?.getInvoices.next;
     }
-    return false;
-  }, [invoiceQuery.data, paymentQuery.data, show]);
+    return !paymentQuery.data?.getPayments.next;
+  }, [invoiceQuery.data, paymentQuery.data, activeTab]);
 
   const handleClick = () => {
-    if (show.value === 'invoices') {
+    if (activeTab === 'invoices') {
       const token = invoiceQuery.data?.getInvoices.next;
       if (!token) return;
       invoiceQuery.fetchMore({ variables: { token } });
@@ -212,54 +204,67 @@ const TransactionsView = () => {
   return (
     <>
       <FlowBox />
-      <CardWithTitle>
-        <div
-          className="grid w-full items-center gap-4 mb-2"
-          style={{ gridTemplateColumns: '1fr 110px 50px' }}
-        >
-          <SubTitle>
+      <Card>
+        <CardHeader className="border-b">
+          <CardTitle className="flex items-center gap-2">
             Transactions
-            <DarkSubTitle fontSize={'12px'}>{beforeDate}</DarkSubTitle>
-          </SubTitle>
-          <SmallSelectWithValue
-            callback={e => setShow((e[0] || options[1]) as any)}
-            options={options}
-            value={show}
-            isClearable={false}
-          />
-          <Button
-            variant="outline"
-            onClick={() => {
-              setOpen(p => !p);
-            }}
-          >
-            <Settings size={18} />
-          </Button>
-        </div>
-        {open && (
-          <Card>
-            <TransactionSettings />
-          </Card>
+            {beforeDate && (
+              <span className="text-xs font-normal text-muted-foreground">
+                {beforeDate}
+              </span>
+            )}
+          </CardTitle>
+          <CardAction>
+            <Button
+              variant={settingsOpen ? 'secondary' : 'ghost'}
+              size="sm"
+              onClick={() => setSettingsOpen(p => !p)}
+            >
+              <Settings size={14} />
+            </Button>
+          </CardAction>
+        </CardHeader>
+        {settingsOpen && (
+          <>
+            <CardContent>
+              <TransactionSettings />
+            </CardContent>
+            <Separator />
+          </>
         )}
-        <Card bottom={'8px'} mobileCardPadding={'0'} mobileNoBackground={true}>
-          {show.value === 'invoices' ? renderInvoices() : renderPayments()}
-          {isDisabled ? null : (
+        <CardContent>
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            size="sm"
+            value={activeTab}
+            onValueChange={v => v && setActiveTab(v)}
+          >
+            <ToggleGroupItem value="invoices">Invoices</ToggleGroupItem>
+            <ToggleGroupItem value="payments">Payments</ToggleGroupItem>
+          </ToggleGroup>
+          <div className="mt-3">
+            {activeTab === 'invoices' ? renderInvoices() : renderPayments()}
+          </div>
+        </CardContent>
+        {!isDisabled && (
+          <CardFooter>
             <Button
               variant="outline"
               className="w-full"
-              style={{ margin: '16px 0 0' }}
+              size="sm"
               disabled={loadingOrRefetching}
               onClick={() => handleClick()}
             >
               {loadingOrRefetching ? (
-                <Loader2 className="animate-spin" size={16} />
+                <Loader2 className="animate-spin" size={14} />
               ) : (
-                <>Fetch More</>
+                'Load More'
               )}
             </Button>
-          )}
-        </Card>
-      </CardWithTitle>
+          </CardFooter>
+        )}
+      </Card>
     </>
   );
 };

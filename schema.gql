@@ -657,7 +657,6 @@ type Policy {
 }
 
 type Query {
-  decodeRequest(request: String!): DecodeInvoice!
   getAccount: ServerAccount!
   getAmbossLoginToken(redirect_url: String): String!
   getAmbossUser: AmbossUser
