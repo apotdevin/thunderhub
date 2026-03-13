@@ -404,38 +404,12 @@ type MessageType {
 }
 
 type Mutation {
-  addPeer(
-    isTemporary: Boolean
-    publicKey: String
-    socket: String
-    url: String
-  ): Boolean!
-  claimBoltzTransaction(
-    destination: String!
-    fee: Float!
-    id: String!
-    lockupAddress: String!
-    preimage: String!
-    privateKey: String!
-    redeem: String!
-  ): String!
-  closeChannel(
-    forceClose: Boolean
-    id: String!
-    targetConfirmations: Float
-    tokensPerVByte: Float
-  ): OpenOrCloseChannel!
+  addPeer(isTemporary: Boolean, publicKey: String, socket: String, url: String): Boolean!
+  claimBoltzTransaction(destination: String!, fee: Float!, id: String!, lockupAddress: String!, preimage: String!, privateKey: String!, redeem: String!): String!
+  closeChannel(forceClose: Boolean, id: String!, targetConfirmations: Float, tokensPerVByte: Float): OpenOrCloseChannel!
   createAddress(type: String! = "p2tr"): String!
-  createBoltzReverseSwap(
-    address: String
-    amount: Float!
-  ): CreateBoltzReverseSwapType!
-  createInvoice(
-    amount: Float!
-    description: String
-    includePrivate: Boolean
-    secondsUntil: Float
-  ): CreateInvoice!
+  createBoltzReverseSwap(address: String, amount: Float!): CreateBoltzReverseSwapType!
+  createInvoice(amount: Float!, description: String, includePrivate: Boolean, secondsUntil: Float): CreateInvoice!
   createMacaroon(permissions: NetworkInfoInput!): CreateMacaroon!
   fetchLnUrl(url: String!): LnUrlRequest!
   getAuthToken(cookie: String): Boolean!
@@ -444,42 +418,18 @@ type Mutation {
   lnUrlAuth(url: String!): AuthResponse!
   lnUrlChannel(callback: String!, k1: String!, uri: String!): String!
   lnUrlPay(amount: Float!, callback: String!, comment: String): PaySuccess!
-  lnUrlWithdraw(
-    amount: Float!
-    callback: String!
-    description: String
-    k1: String!
-  ): String!
+  lnUrlWithdraw(amount: Float!, callback: String!, description: String, k1: String!): String!
   loginAmboss: Boolean!
   logout: Boolean!
   openChannel(input: OpenChannelParams!): OpenOrCloseChannel!
-  pay(
-    max_fee: Float!
-    max_paths: Float!
-    out: [String!]
-    request: String!
-  ): Boolean!
+  pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
   purchaseLiquidity(amount_cents: String!): Boolean!
   pushBackup: Boolean!
   removePeer(publicKey: String): Boolean!
   removeTwofaSecret(token: String!): Boolean!
-  sendToAddress(
-    address: String!
-    fee: Float
-    sendAll: Boolean
-    target: Float
-    tokens: Float
-  ): ChainAddressSend!
+  sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
   toggleConfig(field: ConfigFields!): Boolean!
-  updateFees(
-    base_fee_tokens: Float
-    cltv_delta: Float
-    fee_rate: Float
-    max_htlc_mtokens: String
-    min_htlc_mtokens: String
-    transaction_id: String
-    transaction_vout: Float
-  ): Boolean!
+  updateFees(base_fee_tokens: Float, cltv_delta: Float, fee_rate: Float, max_htlc_mtokens: String, min_htlc_mtokens: String, transaction_id: String, transaction_vout: Float): Boolean!
   updateMultipleFees(channels: [UpdateRoutingFeesParams!]!): Boolean!
   updateTwofaSecret(secret: String!, token: String!): Boolean!
 }

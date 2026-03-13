@@ -1,11 +1,17 @@
 import { FC, ReactNode } from 'react';
-import { DarkSubTitle } from '../../components/generic/Styled';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '../../components/ui/card';
+import { Activity } from 'lucide-react';
 import { useChartColors } from '../../lib/chart-colors';
 import { useStatsState } from './context';
-import { getProgressColor } from './helpers';
+import { getProgressColor, getScoreVariant } from './helpers';
 
-const SIZE = 200;
-const STROKE = 10;
+const SIZE = 160;
+const STROKE = 8;
 const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
@@ -17,81 +23,89 @@ const CircularProgress: FC<{
   const offset = CIRCUMFERENCE - (value / 100) * CIRCUMFERENCE;
 
   return (
-    <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width="100%" height="100%">
-      <circle
-        cx={SIZE / 2}
-        cy={SIZE / 2}
-        r={RADIUS}
-        fill="none"
-        stroke="rgba(0, 0, 0, 0.1)"
-        strokeWidth={STROKE}
-      />
-      <circle
-        cx={SIZE / 2}
-        cy={SIZE / 2}
-        r={RADIUS}
-        fill="none"
-        stroke={pathColor}
-        strokeWidth={STROKE}
-        strokeDasharray={CIRCUMFERENCE}
-        strokeDashoffset={offset}
-        strokeLinecap="round"
-        transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
-        style={{ transition: 'stroke-dashoffset 0.3s ease' }}
-      />
-      <foreignObject x="0" y="0" width={SIZE} height={SIZE}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-          }}
+    <div className="relative">
+      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full h-full">
+        <circle
+          cx={SIZE / 2}
+          cy={SIZE / 2}
+          r={RADIUS}
+          fill="none"
+          className="stroke-muted"
+          strokeWidth={STROKE}
+        />
+        <circle
+          cx={SIZE / 2}
+          cy={SIZE / 2}
+          r={RADIUS}
+          fill="none"
+          stroke={pathColor}
+          strokeWidth={STROKE}
+          strokeDasharray={CIRCUMFERENCE}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
+          className="transition-all duration-500 ease-out"
+        />
+        <foreignObject x="0" y="0" width={SIZE} height={SIZE}>
+          <div className="flex flex-col items-center justify-center h-full gap-0.5">
+            {children}
+          </div>
+        </foreignObject>
+      </svg>
+    </div>
+  );
+};
+
+const variantLabel: Record<string, string> = {
+  success: 'text-emerald-600 dark:text-emerald-400',
+  warning: 'text-amber-600 dark:text-amber-400',
+  danger: 'text-red-600 dark:text-red-400',
+};
+
+const ScoreRing: FC<{
+  label: string;
+  score: number | null;
+}> = ({ label, score }) => {
+  const chartColors = useChartColors();
+  const variant = getScoreVariant(score);
+
+  return (
+    <div className="flex flex-col items-center gap-1 w-28 md:w-36">
+      <CircularProgress
+        value={score || 0}
+        pathColor={getProgressColor(score, chartColors)}
+      >
+        <span
+          className={`text-2xl md:text-3xl font-semibold font-mono ${variantLabel[variant]}`}
         >
-          {children}
-        </div>
-      </foreignObject>
-    </svg>
+          {score ?? '—'}
+        </span>
+        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+          {label}
+        </span>
+      </CircularProgress>
+    </div>
   );
 };
 
 export const StatResume = () => {
-  const chartColors = useChartColors();
   const { volumeScore, timeScore, feeScore } = useStatsState();
 
   return (
-    <>
-      <div className="text-2xl w-full text-center">Node Statistics</div>
-      <div className="flex justify-around my-4 md:my-8">
-        <div className="w-[30%] md:w-[20%]">
-          <CircularProgress
-            value={volumeScore || 0}
-            pathColor={getProgressColor(volumeScore, chartColors)}
-          >
-            <DarkSubTitle>Flow</DarkSubTitle>
-            <div className="text-lg md:text-[32px]">{volumeScore}</div>
-          </CircularProgress>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Activity size={16} className="text-muted-foreground" />
+          <CardTitle>Node Health</CardTitle>
         </div>
-        <div className="w-[30%] md:w-[20%]">
-          <CircularProgress
-            value={timeScore || 0}
-            pathColor={getProgressColor(timeScore, chartColors)}
-          >
-            <DarkSubTitle>Time</DarkSubTitle>
-            <div className="text-lg md:text-[32px]">{timeScore}</div>
-          </CircularProgress>
+      </CardHeader>
+      <CardContent>
+        <div className="flex justify-around items-center">
+          <ScoreRing label="Flow" score={volumeScore} />
+          <ScoreRing label="Uptime" score={timeScore} />
+          <ScoreRing label="Fees" score={feeScore} />
         </div>
-        <div className="w-[30%] md:w-[20%]">
-          <CircularProgress
-            value={feeScore || 0}
-            pathColor={getProgressColor(feeScore, chartColors)}
-          >
-            <DarkSubTitle>Fee</DarkSubTitle>
-            <div className="text-lg md:text-[32px]">{feeScore}</div>
-          </CircularProgress>
-        </div>
-      </div>
-    </>
+      </CardContent>
+    </Card>
   );
 };

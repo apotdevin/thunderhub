@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 
 export type ChartColors = {
@@ -15,43 +16,47 @@ export const getProgressColor = (
   chartColors: ChartColors
 ): string => {
   if (!score) return chartColors.red;
-  switch (true) {
-    case score > 90:
-      return chartColors.green;
-    case score > 75:
-      return chartColors.darkyellow;
-    case score > 60:
-      return chartColors.orange;
-    case score > 50:
-      return chartColors.orange2;
-    default:
-      return chartColors.red;
-  }
+  if (score > 90) return chartColors.green;
+  if (score > 75) return chartColors.darkyellow;
+  if (score > 60) return chartColors.orange;
+  if (score > 50) return chartColors.orange2;
+  return chartColors.red;
+};
+
+export const getScoreVariant = (
+  score: number | null | undefined
+): 'success' | 'warning' | 'danger' => {
+  if (!score) return 'danger';
+  if (score > 75) return 'success';
+  if (score > 50) return 'warning';
+  return 'danger';
+};
+
+const variantStyles = {
+  success:
+    'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+  warning:
+    'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
+  danger: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20',
+};
+
+export const getScoreBadgeClass = (
+  score: number | null | undefined
+): string => {
+  return variantStyles[getScoreVariant(score)];
 };
 
 export const getIcon = (
   score: number | null | undefined,
   chartColors: ChartColors,
   notSignificant?: boolean
-): JSX.Element => {
-  if (!score) {
-    return <XCircle color={getProgressColor(score, chartColors)} />;
-  }
-  if (notSignificant) {
-    return <AlertCircle color={chartColors.orange} />;
-  }
-  switch (true) {
-    case score > 90:
-      return <CheckCircle color={getProgressColor(score, chartColors)} />;
-    case score > 75:
-      return <CheckCircle color={getProgressColor(score, chartColors)} />;
-    case score > 60:
-      return <CheckCircle color={getProgressColor(score, chartColors)} />;
-    case score > 50:
-      return <XCircle color={getProgressColor(score, chartColors)} />;
-    default:
-      return <XCircle color={getProgressColor(score, chartColors)} />;
-  }
+): ReactElement => {
+  const color = getProgressColor(score, chartColors);
+  if (!score) return <XCircle size={16} color={color} />;
+  if (notSignificant)
+    return <AlertCircle size={16} color={chartColors.orange} />;
+  if (score > 60) return <CheckCircle size={16} color={color} />;
+  return <XCircle size={16} color={color} />;
 };
 
 export const getFeeMessage = (
@@ -60,32 +65,32 @@ export const getFeeMessage = (
   isBase?: boolean
 ): string => {
   if (!score) return '';
-  let message = '';
   const ending = isBase ? 'base fees' : 'ppm fees';
+  let message = '';
   switch (true) {
     case score > 90:
-      message = 'This channel has very good';
+      message = 'Very good';
       break;
     case score > 75:
-      message = 'This channel has good';
+      message = 'Good';
       break;
     case score > 60 && isOver:
-      message = 'This channel has above average high';
+      message = 'Above average high';
       break;
     case score > 60:
-      message = 'This channel could have higher';
+      message = 'Could have higher';
       break;
     case score > 50 && isOver:
-      message = 'This channel has high';
+      message = 'High';
       break;
     case score > 50:
-      message = 'This channel has too low';
+      message = 'Too low';
       break;
     case isOver:
-      message = 'This channel has very high';
+      message = 'Very high';
       break;
     default:
-      message = 'This channel has very low';
+      message = 'Very low';
       break;
   }
   return `${message} ${ending}`;
@@ -93,51 +98,20 @@ export const getFeeMessage = (
 
 export const getTimeMessage = (score: number | undefined | null): string => {
   if (!score) return '';
-  let message = '';
-  switch (true) {
-    case score > 90:
-      message = 'This channel has very good uptime';
-      break;
-    case score > 75:
-      message = 'This channel has good uptime';
-      break;
-    case score > 60:
-      message = 'This channel has average uptime';
-      break;
-    case score > 50:
-      message = 'This channel has below average uptime';
-      break;
-    default:
-      message = 'This channel has very bad uptime';
-      break;
-  }
-  return message;
+  if (score > 90) return 'Very good uptime';
+  if (score > 75) return 'Good uptime';
+  if (score > 60) return 'Average uptime';
+  if (score > 50) return 'Below average uptime';
+  return 'Very bad uptime';
 };
 
 export const getVolumeMessage = (score: number | undefined | null): string => {
   if (!score) return '';
-  let message = '';
-  switch (true) {
-    case score > 100:
-      message = `This channel moves ${
-        score - 100
-      }% more volume than the average from all your channels`;
-      break;
-    case score > 90:
-      message = 'This channel moves very good volume';
-      break;
-    case score > 75:
-      message = 'This channel moves good volume';
-      break;
-    case score > 60:
-      message = 'This channel moves average volume';
-      break;
-    case score > 50:
-      message = 'This channel moves below average volume';
-      break;
-    default:
-      message = 'This channel moves very low volume';
-      break;
-  }
-  return message;
+  if (score > 100)
+    return `${score - 100}% more volume than average across your channels`;
+  if (score > 90) return 'Very good volume';
+  if (score > 75) return 'Good volume';
+  if (score > 60) return 'Average volume';
+  if (score > 50) return 'Below average volume';
+  return 'Very low volume';
 };
