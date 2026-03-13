@@ -1,18 +1,19 @@
 import { Fragment, useEffect, useState } from 'react';
-import { RefreshCw, Trash, ChevronRight } from 'lucide-react';
+import {
+  RefreshCw,
+  Trash,
+  ChevronRight,
+  Clock,
+  Check,
+  AlertTriangle,
+  XCircle,
+} from 'lucide-react';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { getAddressLink } from '../../components/generic/helpers';
-import {
-  Card,
-  DarkSubTitle,
-  Separation,
-  SingleLine,
-  SubTitle,
-} from '../../components/generic/Styled';
 import Modal from '../../components/modal/ReactModal';
 import { useGetBoltzSwapStatusQuery } from '../../graphql/queries/__generated__/getBoltzSwapStatus.generated';
-import { useChartColors } from '../../lib/chart-colors';
 import { SwapClaim } from './SwapClaim';
 import { useSwapsDispatch, useSwapsState } from './SwapContext';
 import { useSwapExpire } from './SwapExpire';
@@ -27,87 +28,116 @@ const EXPIRED = 'swap.expired';
 const INVOICE_EXPIRED = 'invoice.expired';
 const REFUNDED = 'transaction.refunded';
 
+const StatusBadge = ({
+  variant,
+  icon: Icon,
+  children,
+}: {
+  variant: 'success' | 'warning' | 'error' | 'default';
+  icon?: React.ElementType;
+  children: React.ReactNode;
+}) => {
+  const styles = {
+    success:
+      'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+    warning:
+      'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
+    error: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20',
+    default: 'bg-muted text-muted-foreground border-border',
+  };
+
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${styles[variant]}`}
+    >
+      {Icon && <Icon size={12} />}
+      {children}
+    </span>
+  );
+};
+
+const rowBase = 'flex w-full text-left items-center gap-3 py-3';
+const rowContent =
+  'flex flex-col items-start gap-1 min-w-0 flex-1 md:flex-row md:items-center md:justify-between';
+const clickableRow = `${rowBase} cursor-pointer rounded-md -mx-2 px-2 transition-colors hover:bg-muted/50`;
+
+const RowAction = ({ label }: { label: string }) => (
+  <div className="flex items-center gap-1 shrink-0 text-xs text-muted-foreground">
+    <span>{label}</span>
+    <ChevronRight size={14} />
+  </div>
+);
+
 const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
-  const chartColors = useChartColors();
   const dispatch = useSwapsDispatch();
 
   const ReadyComponent = () => {
     const time = useSwapExpire(swap.decodedInvoice?.expires_at);
     return (
-      <div className="flex w-full justify-between items-center mb-2 text-sm">
-        <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-        <div className="flex items-center">
-          <div
-            className="rounded-lg p-1 px-2"
-            style={{
-              border: `1px solid ${chartColors.green}`,
-              backgroundColor: 'rgba(10, 255, 59, 0.05)',
-            }}
-          >
-            Ready to Pay {time}
+      <button
+        className={clickableRow}
+        onClick={() => dispatch({ type: 'open', open: index })}
+      >
+        <div className={rowContent}>
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="text-xs font-medium font-mono truncate">
+              {swap.id}
+            </span>
+            {time && (
+              <span className="text-[10px] text-muted-foreground">{time}</span>
+            )}
           </div>
-          <Button
-            variant="outline"
-            onClick={() => dispatch({ type: 'open', open: index })}
-            style={{ margin: '0 0 0 4px' }}
-          >
-            Pay <ChevronRight size={18} />
-          </Button>
+          <StatusBadge variant="success" icon={Clock}>
+            Ready to Pay
+          </StatusBadge>
         </div>
-      </div>
+        <RowAction label="Pay" />
+      </button>
     );
   };
-
-  const ErrorComponent = () => (
-    <div className="flex w-full justify-between items-center mb-2 text-sm">
-      <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-      <div
-        className="rounded-lg p-1 px-2"
-        style={{
-          border: `1px solid ${chartColors.orange}`,
-          backgroundColor: 'rgba(255, 193, 10, 0.1)',
-        }}
-      >
-        Unable to get status
-      </div>
-    </div>
-  );
 
   if (!swap?.id) return null;
 
   if (!swap.boltz?.status) {
-    return <ErrorComponent />;
+    return (
+      <div className={rowBase}>
+        <div className={rowContent}>
+          <span className="text-xs font-medium font-mono truncate">
+            {swap.id}
+          </span>
+          <StatusBadge variant="error" icon={AlertTriangle}>
+            Unable to get status
+          </StatusBadge>
+        </div>
+      </div>
+    );
   }
 
   switch (swap.boltz.status) {
     case INVOICE_EXPIRED:
     case EXPIRED:
       return (
-        <div className="flex w-full justify-between items-center mb-2 text-sm">
-          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <div
-            className="rounded-lg p-1 px-2"
-            style={{
-              border: `1px solid ${chartColors.orange}`,
-              backgroundColor: 'rgba(255, 193, 10, 0.1)',
-            }}
-          >
-            Expired
+        <div className={rowBase}>
+          <div className={rowContent}>
+            <span className="text-xs font-medium font-mono truncate">
+              {swap.id}
+            </span>
+            <StatusBadge variant="error" icon={XCircle}>
+              Expired
+            </StatusBadge>
           </div>
         </div>
       );
     case REFUNDED:
       return (
-        <div className="flex w-full justify-between items-center mb-2 text-sm">
-          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <div
-            className="rounded-lg p-1 px-2"
-            style={{
-              border: `1px solid ${chartColors.darkyellow}`,
-              backgroundColor: 'rgba(255, 193, 10, 0.1)',
-            }}
-          >
-            Refunded
+        <div className={rowBase}>
+          <div className={rowContent}>
+            <span className="text-xs font-medium font-mono truncate">
+              {swap.id}
+            </span>
+            <StatusBadge variant="warning" icon={AlertTriangle}>
+              Refunded
+            </StatusBadge>
           </div>
         </div>
       );
@@ -115,113 +145,89 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
       return <ReadyComponent />;
     case MEMPOOL:
       return (
-        <div className="flex w-full justify-between items-center mb-2 text-sm">
-          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <div className="flex items-center">
-            {getAddressLink(swap.receivingAddress)}
-            <div
-              className="rounded-lg p-1 px-2"
-              style={{
-                border: `1px solid ${chartColors.darkyellow}`,
-                backgroundColor: 'rgba(255, 193, 10, 0.1)',
-              }}
-            >
-              Waiting for confirmation
+        <button
+          className={clickableRow}
+          onClick={() =>
+            dispatch({ type: 'claim', claim: index, claimType: MEMPOOL })
+          }
+        >
+          <div className={rowContent}>
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-xs font-medium font-mono truncate">
+                {swap.id}
+              </span>
+              <span className="text-[10px] text-muted-foreground">
+                {getAddressLink(swap.receivingAddress)}
+              </span>
             </div>
-            <Button
-              variant="outline"
-              onClick={() =>
-                dispatch({
-                  type: 'claim',
-                  claim: index,
-                  claimType: MEMPOOL,
-                })
-              }
-              style={{ margin: '0 0 0 4px' }}
-            >
-              Claim Instantly <ChevronRight size={18} />
-            </Button>
+            <StatusBadge variant="warning" icon={Clock}>
+              In Mempool
+            </StatusBadge>
           </div>
-        </div>
+          <RowAction label="Claim" />
+        </button>
       );
     case CONFIRMED:
       return (
-        <div className="flex w-full justify-between items-center mb-2 text-sm">
-          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <div className="flex items-center">
-            {getAddressLink(swap.receivingAddress)}
-            <div
-              className="rounded-lg p-1 px-2"
-              style={{
-                border: `1px solid ${chartColors.green}`,
-                backgroundColor: 'rgba(10, 255, 59, 0.05)',
-                color: chartColors.green,
-              }}
-            >
-              Ready to Claim
+        <button
+          className={clickableRow}
+          onClick={() =>
+            dispatch({ type: 'claim', claim: index, claimType: CONFIRMED })
+          }
+        >
+          <div className={rowContent}>
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-xs font-medium font-mono truncate">
+                {swap.id}
+              </span>
+              <span className="text-[10px] text-muted-foreground">
+                {getAddressLink(swap.receivingAddress)}
+              </span>
             </div>
-            <Button
-              variant="outline"
-              onClick={() =>
-                dispatch({
-                  type: 'claim',
-                  claim: index,
-                  claimType: CONFIRMED,
-                })
-              }
-              style={{ margin: '0 0 0 4px' }}
-            >
-              Claim <ChevronRight size={18} />
-            </Button>
+            <StatusBadge variant="success" icon={Check}>
+              Ready to Claim
+            </StatusBadge>
           </div>
-        </div>
+          <RowAction label="Claim" />
+        </button>
       );
     case SETTLED:
       return (
-        <div className="flex w-full justify-between items-center mb-2 text-sm">
-          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <div className="flex items-center">
-            {getAddressLink(swap.receivingAddress)}
-            <div
-              className="rounded-lg p-1 px-2"
-              style={{
-                border: `1px solid var(--border)`,
-                backgroundColor: 'rgba(10, 255, 59, 0.05)',
-              }}
-            >
-              Completed
+        <button
+          className={clickableRow}
+          onClick={() =>
+            dispatch({ type: 'claim', claim: index, claimType: CONFIRMED })
+          }
+        >
+          <div className={rowContent}>
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-xs font-medium font-mono truncate">
+                {swap.id}
+              </span>
+              <span className="text-[10px] text-muted-foreground">
+                {getAddressLink(swap.receivingAddress)}
+              </span>
             </div>
-            <Button
-              variant="outline"
-              onClick={() =>
-                dispatch({
-                  type: 'claim',
-                  claim: index,
-                  claimType: CONFIRMED,
-                })
-              }
-              style={{ margin: '0 0 0 4px' }}
-            >
-              Claim <ChevronRight size={18} />
-            </Button>
+            <StatusBadge variant="default" icon={Check}>
+              Completed
+            </StatusBadge>
           </div>
-        </div>
+          <RowAction label="Claim" />
+        </button>
       );
     default:
       return (
-        <div className="flex w-full justify-between items-center mb-2 text-sm">
-          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <div className="flex items-center">
-            {getAddressLink(swap.receivingAddress)}
-            <div
-              className="rounded-lg p-1 px-2"
-              style={{
-                border: `1px solid ${chartColors.orange}`,
-                backgroundColor: 'rgba(255, 193, 10, 0.1)',
-              }}
-            >
-              {swap.boltz.status}
+        <div className={rowBase}>
+          <div className={rowContent}>
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-xs font-medium font-mono truncate">
+                {swap.id}
+              </span>
+              <span className="text-[10px] text-muted-foreground">
+                {getAddressLink(swap.receivingAddress)}
+              </span>
             </div>
+            <StatusBadge variant="warning">{swap.boltz.status}</StatusBadge>
           </div>
         </div>
       );
@@ -273,65 +279,76 @@ export const SwapStatus = () => {
     dispatch({ type: 'cleanup', swaps: cleaned });
   };
 
-  if (loading) {
-    return (
-      <>
-        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          <SubTitle>Swap History</SubTitle>
-          <Separation />
-          <DarkSubTitle>Loading swap statuses...</DarkSubTitle>
-        </Card>
-      </>
-    );
-  }
-
-  if (!swaps.length || !data?.getBoltzSwapStatus) {
-    return (
-      <>
-        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          <SubTitle>Swap History</SubTitle>
-          <Separation />
-          <DarkSubTitle>You have not started any swaps.</DarkSubTitle>
-        </Card>
-      </>
-    );
-  }
-
   return (
     <>
-      <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-        <SingleLine>
-          <SubTitle>Swap History</SubTitle>
-          <SingleLine>
-            <Button
-              variant="outline"
-              disabled={loading}
-              onClick={() => refetch()}
-              style={{ margin: '0 4px 0 0' }}
-            >
-              <RefreshCw size={18} />
-            </Button>
-            <div data-tip data-for={`cleanup`}>
+      <div className="rounded-lg border border-border bg-card p-5">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-semibold tracking-tight">
+              Swap History
+            </h3>
+            {swaps.length > 0 && (
+              <Badge variant="secondary" className="rounded-full">
+                {swaps.length}
+              </Badge>
+            )}
+          </div>
+          {swaps.length > 0 && (
+            <div className="flex items-center gap-1">
               <Button
-                variant="outline"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
                 disabled={loading}
-                onClick={handleCleanup}
+                onClick={() => refetch()}
               >
-                <Trash size={18} />
+                <RefreshCw
+                  size={14}
+                  className={loading ? 'animate-spin' : ''}
+                />
               </Button>
+              <div data-tip data-for={`cleanup`}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  disabled={loading}
+                  onClick={handleCleanup}
+                >
+                  <Trash size={14} />
+                </Button>
+              </div>
             </div>
-          </SingleLine>
-        </SingleLine>
-        <Separation />
-        {enriched.map((swap, index) => (
-          <Fragment key={`${swap?.id}-${index}`}>
-            <SwapRow swap={swap} index={index} />
-          </Fragment>
-        ))}
-      </Card>
+          )}
+        </div>
+
+        {loading && (
+          <p className="text-xs text-muted-foreground py-4 text-center">
+            Loading swap statuses...
+          </p>
+        )}
+
+        {!loading && (!swaps.length || !data?.getBoltzSwapStatus) && (
+          <p className="text-xs text-muted-foreground py-4 text-center">
+            No swaps yet. Create one above to get started.
+          </p>
+        )}
+
+        {!loading && enriched.length > 0 && (
+          <div className="divide-y divide-border">
+            {enriched.map((swap, index) => (
+              <Fragment key={`${swap?.id}-${index}`}>
+                <SwapRow swap={swap} index={index} />
+              </Fragment>
+            ))}
+          </div>
+        )}
+      </div>
+
       <ReactTooltip id={`cleanup`}>
         Cleanup expired, refunded and completed swaps.
       </ReactTooltip>
+
       <Modal
         isOpen={typeof open === 'number' || typeof claim === 'number'}
         closeCallback={() => dispatch({ type: 'close' })}

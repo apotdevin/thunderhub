@@ -1,15 +1,9 @@
-import { cn } from '@/lib/utils';
-import {
-  Card,
-  DarkSubTitle,
-  SingleLine,
-  SubTitle,
-} from '../../components/generic/Styled';
 import { useEffect, useState } from 'react';
 import { Slider } from '../../components/slider';
-import { Edit2, X, ChevronRight, Loader2 } from 'lucide-react';
+import { Edit2, X, ChevronRight, Loader2, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useCreateBoltzReverseSwapMutation } from '../../graphql/mutations/__generated__/createBoltzReverseSwap.generated';
 import toast from 'react-hot-toast';
 import { Price } from '../../components/price/Price';
@@ -47,102 +41,106 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
   }, [data, dispatch, resetMutation]);
 
   return (
-    <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-      <SingleLine>
-        <SubTitle>Start Swap</SubTitle>
-        <DarkSubTitle>Lightning BTC to BTC</DarkSubTitle>
-      </SingleLine>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Amount</span>
-          <span className="text-muted-foreground mx-2 ml-4">
+    <div className="rounded-lg border border-border bg-card p-5">
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-sm font-semibold tracking-tight">New Swap</h3>
+        <span className="text-xs text-muted-foreground">
+          Lightning BTC to BTC
+        </span>
+      </div>
+
+      {/* Amount */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Amount
+          </label>
+          <span className="text-sm font-medium tabular-nums">
             <Price amount={amount} />
           </span>
         </div>
-        <div className="flex w-full justify-center md:justify-end">
+        <div className="flex items-center gap-2">
           {isEdit ? (
             <Input
-              className="ml-0 md:ml-2"
-              style={{ maxWidth: '440px' }}
+              className="flex-1"
               value={amount}
               type={'number'}
               placeholder={'Satoshis'}
               onChange={value => setAmount(Number(value.target.value))}
             />
           ) : (
-            <Slider
-              value={amount}
-              max={max}
-              min={min}
-              onChange={value => setAmount(value)}
-            />
+            <div className="flex-1">
+              <Slider
+                value={amount}
+                max={max}
+                min={min}
+                onChange={value => setAmount(value)}
+              />
+            </div>
           )}
-
           <Button
             variant={isEdit ? 'default' : 'outline'}
-            style={{ margin: '0 0 0 8px' }}
+            size="icon"
+            className="shrink-0"
             onClick={() => setIsEdit(p => !p)}
           >
-            {!isEdit ? <Edit2 size={18} /> : <X size={18} />}
+            {!isEdit ? <Edit2 size={14} /> : <X size={14} />}
           </Button>
         </div>
       </div>
-      <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-        <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-          <span>Address</span>
-        </div>
-        <div className="flex justify-center items-center rounded-md p-1 bg-secondary flex-wrap">
-          <Button
-            variant={!isCustom ? 'default' : 'ghost'}
-            onClick={() => {
-              setIsCustom(false);
-              setAddress('');
+
+      {/* Separator */}
+      <div className="my-5 h-px bg-border" />
+
+      {/* Address */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Destination
+          </label>
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            size="sm"
+            value={isCustom ? 'custom' : 'auto'}
+            onValueChange={value => {
+              if (!value) return;
+              setIsCustom(value === 'custom');
+              if (value === 'auto') setAddress('');
             }}
-            className={cn('grow', isCustom && 'text-foreground')}
           >
-            Auto
-          </Button>
-          <Button
-            variant={isCustom ? 'default' : 'ghost'}
-            onClick={() => setIsCustom(true)}
-            className={cn('grow', !isCustom && 'text-foreground')}
-          >
-            Custom
-          </Button>
+            <ToggleGroupItem value="auto">Auto</ToggleGroupItem>
+            <ToggleGroupItem value="custom">Custom</ToggleGroupItem>
+          </ToggleGroup>
         </div>
-      </div>
-      {isCustom && (
-        <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
-          <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
-            <span>Send to</span>
-          </div>
+
+        {isCustom && (
           <Input
-            className="ml-0 md:ml-2"
-            style={{ maxWidth: '500px' }}
-            placeholder={'Bitcoin address'}
+            placeholder={'Enter Bitcoin address'}
             value={address ?? ''}
             onChange={e => setAddress(e.target.value)}
           />
-        </div>
-      )}
+        )}
+      </div>
 
+      {/* Submit */}
       <Button
-        variant="outline"
         disabled={!amount || loading}
         onClick={() =>
           getQuote({ variables: { amount, ...(address && { address }) } })
         }
-        style={{ margin: '16px 0 0' }}
-        className="w-full"
+        className="w-full mt-5"
       >
         {loading ? (
           <Loader2 className="animate-spin" size={16} />
         ) : (
           <>
-            Get Quote <ChevronRight size={18} />
+            <Zap size={14} className="mr-1" />
+            Get Quote
+            <ChevronRight size={16} className="ml-1" />
           </>
         )}
       </Button>
-    </Card>
+    </div>
   );
 };

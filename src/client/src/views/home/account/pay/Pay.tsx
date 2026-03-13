@@ -111,45 +111,41 @@ export const Pay: FC<PayProps> = ({ predefinedRequest, payCallback }) => {
 
       <Separator />
 
-      {/* Max Fee */}
-      <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-muted-foreground">
-          Max Fee{' '}
-          <span className="text-foreground">
-            <Price amount={fee} />
-          </span>
-        </label>
-        <Input
-          placeholder="sats"
-          type="number"
-          value={fee && fee > 0 ? fee : ''}
-          onChange={e => setFee(Math.max(1, Number(e.target.value)))}
-          onKeyDown={e => e.key === 'Enter' && handlePay()}
-        />
-      </div>
-
-      {/* Max Paths */}
-      <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-muted-foreground">
-          Max Paths
-        </label>
-        <Input
-          placeholder="paths"
-          type="number"
-          value={paths && paths > 0 ? paths : ''}
-          onChange={e => setPaths(Math.max(1, Number(e.target.value)))}
-          onKeyDown={e => e.key === 'Enter' && handlePay()}
-        />
-      </div>
-
-      <Separator />
-
-      {/* Out Channels */}
-      <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-muted-foreground">
-          Out Channels
-        </label>
-        <ChannelSelect callback={p => setPeers(p.map(peer => peer.id))} />
+      {/* Max Fee, Max Paths, Out Channels */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted-foreground">
+            Max Fee{' '}
+            <span className="text-foreground">
+              <Price amount={fee} />
+            </span>
+          </label>
+          <Input
+            placeholder="sats"
+            type="number"
+            value={fee && fee > 0 ? fee : ''}
+            onChange={e => setFee(Math.max(1, Number(e.target.value)))}
+            onKeyDown={e => e.key === 'Enter' && handlePay()}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted-foreground">
+            Max Paths
+          </label>
+          <Input
+            placeholder="paths"
+            type="number"
+            value={paths && paths > 0 ? paths : ''}
+            onChange={e => setPaths(Math.max(1, Number(e.target.value)))}
+            onKeyDown={e => e.key === 'Enter' && handlePay()}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted-foreground">
+            Out Channels
+          </label>
+          <ChannelSelect callback={p => setPeers(p.map(peer => peer.id))} />
+        </div>
       </div>
 
       <Separator />

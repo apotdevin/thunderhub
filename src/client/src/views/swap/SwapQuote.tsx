@@ -3,14 +3,13 @@ import {
   getNodeLink,
   getAddressLink,
 } from '../../components/generic/helpers';
-import { Card, Separation, SubTitle } from '../../components/generic/Styled';
+import { Separation } from '../../components/generic/Styled';
 import { Price } from '../../components/price/Price';
-import { useChartColors } from '../../lib/chart-colors';
 import { Pay } from '../home/account/pay/Pay';
 import { useSwapsDispatch, useSwapsState } from './SwapContext';
+import { Info, ArrowDown } from 'lucide-react';
 
 export const SwapQuote = () => {
-  const chartColors = useChartColors();
   const { swaps, open } = useSwapsState();
   const dispatch = useSwapsDispatch();
 
@@ -22,9 +21,10 @@ export const SwapQuote = () => {
 
   if (!openSwap?.decodedInvoice) {
     return (
-      <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+      <div className="flex items-center justify-center p-6 text-sm text-muted-foreground">
+        <Info className="mr-2" size={14} />
         Error decoding invoice in swap.
-      </Card>
+      </div>
     );
   }
 
@@ -35,53 +35,71 @@ export const SwapQuote = () => {
   };
 
   return (
-    <>
-      <SubTitle>{`Swap - ${openSwap.id}`}</SubTitle>
-      <Separation />
-      {renderLine(
-        'Sending to',
-        getNodeLink(
-          decodedInvoice.destination,
-          decodedInvoice.destination_node?.node?.alias
-        )
-      )}
-      {renderLine('Description', decodedInvoice.description)}
-      <Separation />
-      <div
-        className="rounded-lg p-2 px-4"
-        style={{
-          border: `1px solid ${chartColors.green}`,
-          backgroundColor: 'rgba(10, 255, 59, 0.05)',
-        }}
-      >
-        <SubTitle>Transaction</SubTitle>
-        {renderLine('You send', <Price amount={decodedInvoice.tokens} />)}
-        {renderLine(
-          'Fees you pay (Boltz + Chain fee)',
-          <Price amount={decodedInvoice.tokens - onchainAmount} />
-        )}
-        <Separation />
-        {renderLine(
-          'Lockup Transaction Value',
-          <Price amount={onchainAmount} />
-        )}
-        {renderLine('At BTC Address', getAddressLink(receivingAddress))}
+    <div className="space-y-4">
+      <div>
+        <h3 className="text-sm font-semibold tracking-tight">Swap Quote</h3>
+        <p className="text-xs text-muted-foreground font-mono mt-0.5">
+          {openSwap.id}
+        </p>
       </div>
+
+      <div className="space-y-1 text-sm">
+        {renderLine(
+          'Sending to',
+          getNodeLink(
+            decodedInvoice.destination,
+            decodedInvoice.destination_node?.node?.alias
+          )
+        )}
+        {renderLine('Description', decodedInvoice.description)}
+      </div>
+
+      <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4 space-y-2">
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+          Transaction Details
+        </h4>
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted-foreground">You send</span>
+          <span className="font-medium">
+            <Price amount={decodedInvoice.tokens} />
+          </span>
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted-foreground">Fees (Boltz + Chain)</span>
+          <span className="font-medium text-amber-600 dark:text-amber-400">
+            <Price amount={decodedInvoice.tokens - onchainAmount} />
+          </span>
+        </div>
+        <div className="my-2 flex items-center gap-2">
+          <div className="flex-1 h-px bg-border" />
+          <ArrowDown size={12} className="text-muted-foreground" />
+          <div className="flex-1 h-px bg-border" />
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted-foreground">Lockup Value</span>
+          <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+            <Price amount={onchainAmount} />
+          </span>
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted-foreground">BTC Address</span>
+          <span>{getAddressLink(receivingAddress)}</span>
+        </div>
+      </div>
+
       <Separation />
-      <SubTitle>Pay Swap Invoice</SubTitle>
-      <Separation />
-      <Pay predefinedRequest={invoice} payCallback={handlePaid} />
-      <Separation />
-      <div
-        className="border rounded-lg p-1 px-2 text-center text-sm"
-        style={{
-          borderColor: chartColors.darkyellow,
-          backgroundColor: 'rgba(255, 193, 10, 0.1)',
-        }}
-      >
+
+      <div>
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+          Pay Invoice
+        </h4>
+        <Pay predefinedRequest={invoice} payCallback={handlePaid} />
+      </div>
+
+      <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-center text-xs text-amber-600 dark:text-amber-400">
         It is ok to close this modal after 5 seconds of having paid even if it
         still shows as loading.
       </div>
-    </>
+    </div>
   );
 };
