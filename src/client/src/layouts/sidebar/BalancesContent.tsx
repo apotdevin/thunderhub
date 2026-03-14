@@ -121,20 +121,20 @@ export const BalancesContent = () => {
         </div>
       </div>
 
-      <div className="p-2">
-        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 mb-2">
+      <div>
+        <div className="p-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
           Liquidity
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col pb-2">
           <button
-            className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent/50"
+            className="flex items-center gap-2 w-full px-2 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent/50"
             onClick={() => setOpenDialog('open')}
           >
             <Cable size={13} className="text-blue-500" />
             Open Channel
           </button>
           <button
-            className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent/50"
+            className="flex items-center gap-2 w-full px-2 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent/50"
             onClick={() => setOpenDialog('buy')}
           >
             <Rocket size={13} className="text-orange-500" />

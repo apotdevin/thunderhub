@@ -1,31 +1,14 @@
 import { useApolloClient } from '@apollo/client';
-import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
-import toast from 'react-hot-toast';
-import {
-  getNodeLink,
-  getTransactionLink,
-  renderLine,
-} from '../components/generic/helpers';
+import { FC, useCallback, useEffect, useRef } from 'react';
+import { getNodeLink, getTransactionLink } from '../components/generic/helpers';
 import { useNotificationState } from '../context/NotificationContext';
+import { useEventLog, EventField } from '../context/EventLogContext';
 import { formatSats } from '../utils/helpers';
 import { useChannelInfo } from './UseChannelInfo';
 import { useNodeDetails } from './UseNodeDetails';
 import { useSse, useSseEvent } from './useSse';
 
 const refetchTimeMs = 1000 * 1;
-
-const renderToast = (
-  title: string,
-  content: JSX.Element | null | string | number
-) => {
-  return (
-    <div>
-      {title}
-      <div className="h-1" />
-      {content}
-    </div>
-  );
-};
 
 const PeerAlias: FC<{ pubkey: string }> = ({ pubkey }) => {
   const { alias } = useNodeDetails(pubkey);
@@ -42,12 +25,10 @@ const ChannelPeerAlias: FC<{ id: string }> = ({ id }) => {
 };
 
 export const useListener = (disabled?: boolean) => {
-  const { channels, forwardAttempts, forwards, invoices, payments, autoClose } =
+  const { channels, forwardAttempts, forwards, invoices, payments } =
     useNotificationState();
 
-  const options: { duration?: number } = useMemo(() => {
-    return autoClose ? {} : { duration: Infinity };
-  }, [autoClose]);
+  const { addEvent } = useEventLog();
 
   const refetchQueryTimeout: { current: ReturnType<typeof setTimeout> | null } =
     useRef(null);
@@ -87,33 +68,27 @@ export const useListener = (disabled?: boolean) => {
         message;
 
       if (is_confirmed) {
-        toast.success(
-          renderToast(
-            'Invoice Paid',
-            <>
-              {renderLine('Description', description)}
-              {renderLine('Description Hash', description_hash)}
-              {renderLine('Amount', formatSats(received))}
-            </>
-          ),
-          options
-        );
+        addEvent({
+          title: 'Invoice Paid',
+          summary: [{ label: 'Amount', value: formatSats(received) }],
+          details: [
+            { label: 'Description', value: description },
+            { label: 'Description Hash', value: description_hash },
+          ],
+        });
       } else {
-        toast.success(
-          renderToast(
-            'New Invoice Created',
-            <>
-              {renderLine('Description', description)}
-              {renderLine('Description Hash', description_hash)}
-              {renderLine('Amount', formatSats(tokens))}
-            </>
-          ),
-          options
-        );
+        addEvent({
+          title: 'New Invoice Created',
+          summary: [{ label: 'Amount', value: formatSats(tokens) }],
+          details: [
+            { label: 'Description', value: description },
+            { label: 'Description Hash', value: description_hash },
+          ],
+        });
       }
       handleRefetchQueries(['GetInvoices']);
     },
-    [handleRefetchQueries, invoices, options]
+    [handleRefetchQueries, invoices, addEvent]
   );
 
   const handlePayment = useCallback(
@@ -122,25 +97,25 @@ export const useListener = (disabled?: boolean) => {
 
       const { hops, fee, destination, tokens } = message;
 
-      const hopLines = hops.map((h: any, index: number) =>
-        renderLine(`Hop ${index + 1}`, h.channel)
-      );
+      const hopFields: EventField[] = hops.map((h: any, index: number) => ({
+        label: `Hop ${index + 1}`,
+        value: h.channel,
+      }));
 
-      toast.success(
-        renderToast(
-          'New Payment',
-          <>
-            {renderLine('Destination', <PeerAlias pubkey={destination} />)}
-            {renderLine('Amount', formatSats(tokens))}
-            {renderLine('Fee', fee ? formatSats(fee) : null)}
-            {hopLines}
-          </>
-        ),
-        options
-      );
+      addEvent({
+        title: 'New Payment',
+        summary: [
+          { label: 'Amount', value: formatSats(tokens) },
+          { label: 'Destination', value: <PeerAlias pubkey={destination} /> },
+        ],
+        details: [
+          ...(fee ? [{ label: 'Fee', value: formatSats(fee) }] : []),
+          ...hopFields,
+        ],
+      });
       handleRefetchQueries(['GetPayments']);
     },
-    [handleRefetchQueries, payments, options]
+    [handleRefetchQueries, payments, addEvent]
   );
 
   const handleForward = useCallback(
@@ -158,40 +133,35 @@ export const useListener = (disabled?: boolean) => {
       if (is_send || is_receive) return;
 
       if (!is_confirmed && forwardAttempts) {
-        toast.error(
-          renderToast(
-            'Forward Attempt',
-            <>
-              {renderLine('In Peer', <ChannelPeerAlias id={in_channel} />)}
-              {renderLine('Out Peer', <ChannelPeerAlias id={out_channel} />)}
-              {renderLine('In Channel', in_channel)}
-              {renderLine('Out Channel', out_channel)}
-              {renderLine('Tokens', formatSats(tokens))}
-              {renderLine('Fee', fee ? formatSats(fee) : null)}
-            </>
-          ),
-          options
-        );
+        addEvent({
+          title: 'Forward Attempt',
+          summary: [{ label: 'Tokens', value: formatSats(tokens) }],
+          details: [
+            { label: 'In Peer', value: <ChannelPeerAlias id={in_channel} /> },
+            { label: 'Out Peer', value: <ChannelPeerAlias id={out_channel} /> },
+            { label: 'In Channel', value: in_channel },
+            { label: 'Out Channel', value: out_channel },
+            ...(fee ? [{ label: 'Fee', value: formatSats(fee) }] : []),
+          ],
+          status: 'error',
+        });
       }
 
       if (is_confirmed && forwards) {
-        toast.success(
-          renderToast(
-            'Successful Forward',
-            <>
-              {renderLine('In Peer', <ChannelPeerAlias id={in_channel} />)}
-              {renderLine('Out Peer', <ChannelPeerAlias id={out_channel} />)}
-              {renderLine('In Channel', in_channel)}
-              {renderLine('Out Channel', out_channel)}
-              {renderLine('Fee', fee ? formatSats(fee) : null)}
-            </>
-          ),
-          options
-        );
+        addEvent({
+          title: 'Successful Forward',
+          summary: fee ? [{ label: 'Fee', value: formatSats(fee) }] : [],
+          details: [
+            { label: 'In Peer', value: <ChannelPeerAlias id={in_channel} /> },
+            { label: 'Out Peer', value: <ChannelPeerAlias id={out_channel} /> },
+            { label: 'In Channel', value: in_channel },
+            { label: 'Out Channel', value: out_channel },
+          ],
+        });
         handleRefetchQueries(['GetForwards']);
       }
     },
-    [handleRefetchQueries, forwardAttempts, forwards, options]
+    [handleRefetchQueries, forwardAttempts, forwards, addEvent]
   );
 
   const handleClosed = useCallback(
@@ -233,28 +203,31 @@ export const useListener = (disabled?: boolean) => {
         return types.join(', ');
       };
 
-      toast.success(
-        renderToast(
-          'Channel Closed',
-          <>
-            {renderLine('Reason', getCloseType())}
-            {renderLine('Capacity', formatSats(capacity))}
-            {renderLine('Id', id)}
-            {renderLine('Peer', <PeerAlias pubkey={partner_public_key} />)}
-            {renderLine(
-              'Tx',
-              transaction_id ? getTransactionLink(transaction_id) : null
-            )}
-            {renderLine(
-              'Closing Tx',
-              close_transaction_id
-                ? getTransactionLink(close_transaction_id)
-                : null
-            )}
-          </>
-        ),
-        options
-      );
+      addEvent({
+        title: 'Channel Closed',
+        summary: [
+          { label: 'Reason', value: getCloseType() },
+          { label: 'Capacity', value: formatSats(capacity) },
+        ],
+        details: [
+          { label: 'Id', value: id },
+          {
+            label: 'Peer',
+            value: <PeerAlias pubkey={partner_public_key} />,
+          },
+          ...(transaction_id
+            ? [{ label: 'Tx', value: getTransactionLink(transaction_id) }]
+            : []),
+          ...(close_transaction_id
+            ? [
+                {
+                  label: 'Closing Tx',
+                  value: getTransactionLink(close_transaction_id),
+                },
+              ]
+            : []),
+        ],
+      });
 
       handleRefetchQueries([
         'GetChannels',
@@ -262,7 +235,7 @@ export const useListener = (disabled?: boolean) => {
         'GetClosedChannels',
       ]);
     },
-    [handleRefetchQueries, channels, options]
+    [handleRefetchQueries, channels, addEvent]
   );
 
   const handleOpen = useCallback(
@@ -279,43 +252,47 @@ export const useListener = (disabled?: boolean) => {
         is_private,
       } = message;
 
-      toast.success(
-        renderToast(
-          'Channel Opened',
-          <>
-            {renderLine(
-              'Initiated By',
-              is_partner_initiated ? 'Your Peer' : 'You'
-            )}
-            {renderLine('Id', id)}
-            {renderLine('Peer', <PeerAlias pubkey={partner_public_key} />)}
-            {renderLine('Private', is_private ? 'Yes' : 'No')}
-            {renderLine('Capacity', formatSats(capacity))}
-            {renderLine('Local', formatSats(local_balance))}
-            {renderLine('Remote', formatSats(remote_balance))}
-          </>
-        ),
-        options
-      );
+      addEvent({
+        title: 'Channel Opened',
+        summary: [
+          { label: 'Capacity', value: formatSats(capacity) },
+          {
+            label: 'Initiated By',
+            value: is_partner_initiated ? 'Your Peer' : 'You',
+          },
+        ],
+        details: [
+          { label: 'Id', value: id },
+          {
+            label: 'Peer',
+            value: <PeerAlias pubkey={partner_public_key} />,
+          },
+          { label: 'Private', value: is_private ? 'Yes' : 'No' },
+          { label: 'Local', value: formatSats(local_balance) },
+          { label: 'Remote', value: formatSats(remote_balance) },
+        ],
+      });
       handleRefetchQueries(['GetChannels', 'GetPendingChannels']);
     },
-    [handleRefetchQueries, channels, options]
+    [handleRefetchQueries, channels, addEvent]
   );
 
   const handleOpening = useCallback(
     (message: any) => {
       if (!channels) return;
 
-      toast.success(
-        renderToast(
-          'Channel Opening',
-          renderLine('Transaction', getTransactionLink(message.transaction_id))
-        ),
-        options
-      );
+      addEvent({
+        title: 'Channel Opening',
+        summary: [
+          {
+            label: 'Transaction',
+            value: getTransactionLink(message.transaction_id),
+          },
+        ],
+      });
       handleRefetchQueries(['GetChannels', 'GetPendingChannels']);
     },
-    [handleRefetchQueries, channels, options]
+    [handleRefetchQueries, channels, addEvent]
   );
 
   useSseEvent('invoice_updated', handleInvoice);

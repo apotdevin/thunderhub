@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast';
 import { TooltipProvider } from './components/ui/tooltip';
 import { useListener } from './hooks/UseListener';
 import { SseProvider } from './context/SseContext';
+import { EventLogProvider } from './context/EventLogContext';
 import { config } from './config/thunderhubConfig';
 import { LoadingCard } from './components/loading/LoadingCard';
 import { useGetNodeInfoQuery } from './graphql/queries/__generated__/getNodeInfo.generated';
@@ -162,11 +163,13 @@ export default function App() {
       <ConfigProvider initialConfig={{ theme: savedTheme }}>
         <SseProvider>
           <ContextProvider>
-            <TooltipProvider>
-              <Wrapper>
-                <AuthenticatedRoutes />
-              </Wrapper>
-            </TooltipProvider>
+            <EventLogProvider>
+              <TooltipProvider>
+                <Wrapper>
+                  <AuthenticatedRoutes />
+                </Wrapper>
+              </TooltipProvider>
+            </EventLogProvider>
           </ContextProvider>
         </SseProvider>
       </ConfigProvider>

@@ -9,7 +9,7 @@ export const Footer = () => {
 
   return (
     <div className="absolute bottom-0 w-full h-[120px]">
-      <div className="dark w-full bg-background px-4">
+      <div className="dark w-full bg-background px-4 border-t border-border/60">
         <div
           className={
             pathname === '/login'
