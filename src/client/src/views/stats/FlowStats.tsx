@@ -4,9 +4,8 @@ import { sortBy } from 'lodash';
 import { ChannelHealth } from '../../graphql/types';
 import { useStatsDispatch } from './context';
 import { useChartColors } from '../../lib/chart-colors';
-import { StatWrapper } from './Wrapper';
 import { getIcon, getVolumeMessage, getScoreBadgeClass } from './helpers';
-import { BarChart3, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Separator } from '../../components/ui/separator';
 
 type VolumeStatCardProps = {
@@ -105,11 +104,7 @@ export const VolumeStats = () => {
   const sortedArray = sortBy(data.getVolumeHealth.channels, 'score');
 
   return (
-    <StatWrapper
-      title="Flow Stats"
-      icon={<BarChart3 size={16} className="text-muted-foreground" />}
-      count={sortedArray.length}
-    >
+    <div className="flex flex-col gap-2">
       {sortedArray.map((channel, index) => (
         <VolumeStatCard
           key={channel?.id || ''}
@@ -119,6 +114,6 @@ export const VolumeStats = () => {
           index={index + 1}
         />
       ))}
-    </StatWrapper>
+    </div>
   );
 };

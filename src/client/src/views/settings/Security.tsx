@@ -1,13 +1,7 @@
 import { FC, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { ChevronRight, Loader2, ShieldCheck, ShieldOff } from 'lucide-react';
 import { useGetTwofaSecretQuery } from '../../graphql/queries/__generated__/getTwofaSecret.generated';
@@ -162,42 +156,37 @@ export const Security = () => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Security</CardTitle>
-        <CardDescription>
-          {user.twofaEnabled
-            ? 'Two-factor authentication is enabled'
-            : 'Protect your account with two-factor authentication'}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium">
-            {user.twofaEnabled ? 'Disable 2FA' : 'Enable 2FA'}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setEnabled(p => !p)}
-          >
-            {enable ? (
-              'Cancel'
+    <div className="flex flex-col gap-4">
+      <h2 className="text-lg font-semibold">Security</h2>
+      <Card>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium">
+              {user.twofaEnabled ? 'Disable 2FA' : 'Enable 2FA'}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setEnabled(p => !p)}
+            >
+              {enable ? (
+                'Cancel'
+              ) : (
+                <>
+                  {user.twofaEnabled ? 'Disable' : 'Enable'}{' '}
+                  <ChevronRight size={16} />
+                </>
+              )}
+            </Button>
+          </div>
+          {enable &&
+            (user.twofaEnabled ? (
+              <Disable callback={() => setEnabled(false)} />
             ) : (
-              <>
-                {user.twofaEnabled ? 'Disable' : 'Enable'}{' '}
-                <ChevronRight size={16} />
-              </>
-            )}
-          </Button>
-        </div>
-        {enable &&
-          (user.twofaEnabled ? (
-            <Disable callback={() => setEnabled(false)} />
-          ) : (
-            <Enable callback={() => setEnabled(false)} />
-          ))}
-      </CardContent>
-    </Card>
+              <Enable callback={() => setEnabled(false)} />
+            ))}
+        </CardContent>
+      </Card>
+    </div>
   );
 };

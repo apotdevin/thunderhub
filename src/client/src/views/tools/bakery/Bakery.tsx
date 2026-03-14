@@ -1,12 +1,8 @@
 import { useState } from 'react';
-import {
-  CardWithTitle,
-  SubTitle,
-  Card,
-} from '../../../components/generic/Styled';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { ChevronRight, Copy, Cookie, Loader2 } from 'lucide-react';
+import { Copy, Cookie, Loader2 } from 'lucide-react';
 import { useCreateMacaroonMutation } from '../../../graphql/mutations/__generated__/createMacaroon.generated';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../../utils/error';
@@ -83,39 +79,33 @@ export const Bakery = () => {
 
   return (
     <>
-      <CardWithTitle>
-        <div className="flex items-center gap-2 mb-1">
-          <Cookie size={18} className="text-muted-foreground" />
-          <SubTitle>Bakery</SubTitle>
-        </div>
-        <Card bottom="0">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-sm font-medium">Bake Macaroon</span>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Create a macaroon with custom permissions
-                </p>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsOpen(o => !o)}
-              >
-                {isOpen ? (
-                  'Cancel'
-                ) : (
-                  <>
-                    <span>Bake</span>
-                    <ChevronRight size={14} />
-                  </>
-                )}
-              </Button>
-            </div>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-lg font-semibold">Bakery</h2>
 
-            {isOpen && (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsOpen(o => !o)}
+            >
+              {isOpen ? (
+                'Cancel'
+              ) : (
+                <>
+                  <Cookie className="mr-1 size-4" />
+                  Bake Macaroon
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {isOpen && (
+          <Card>
+            <CardContent>
               <div className="space-y-4">
-                <div className="border-t border-border pt-4">
+                <div className="border-b border-border pb-4">
                   <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                     Permissions
                   </span>
@@ -156,10 +146,10 @@ export const Bakery = () => {
                   )}
                 </Button>
               </div>
-            )}
-          </div>
-        </Card>
-      </CardWithTitle>
+            </CardContent>
+          </Card>
+        )}
+      </div>
 
       <Modal isOpen={!!newMacaroon} closeCallback={closeCallback}>
         {data?.createMacaroon && (

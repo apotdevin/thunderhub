@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
-import { Separation } from '../../../../components/generic/Styled';
+import { Separator } from '@/components/ui/separator';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { Title } from '../../../../components/typography/Styled';
 import { useFetchLnUrlMutation } from '../../../../graphql/mutations/__generated__/lnUrl.generated';
@@ -51,7 +51,7 @@ export const LnUrlModal: FC<lnUrlProps> = ({ url, type }) => {
   return (
     <>
       <Title>Login</Title>
-      <Separation />
+      <Separator />
       <div className="w-full text-center">{`Login to ${fullUrl.host}`}</div>;
       <Button
         variant="outline"

@@ -6,10 +6,6 @@ import { Copy, ChevronRight, Loader2 } from 'lucide-react';
 import { getErrorContent } from '../../../../utils/error';
 import { Button } from '@/components/ui/button';
 import { SmallSelectWithValue } from '../../../../components/select';
-import {
-  ResponsiveLine,
-  SubTitle,
-} from '../../../../components/generic/Styled';
 
 const options = [
   { label: 'p2tr (Default)', value: 'p2tr' },
@@ -53,8 +49,8 @@ export const ReceiveOnChainCard = () => {
         </div>
       ) : (
         <>
-          <ResponsiveLine>
-            <SubTitle>Address Type:</SubTitle>
+          <div className="flex flex-col justify-between items-center w-full md:flex-row">
+            <h4 className="text-sm font-medium my-1">Address Type:</h4>
 
             <div className="flex gap-2 flex-col md:flex-row">
               <SmallSelectWithValue
@@ -80,7 +76,7 @@ export const ReceiveOnChainCard = () => {
                 )}
               </Button>
             </div>
-          </ResponsiveLine>
+          </div>
         </>
       )}
     </>

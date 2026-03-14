@@ -5,9 +5,8 @@ import { sortBy } from 'lodash';
 import { formatSeconds } from '../../utils/helpers';
 import { useStatsDispatch } from './context';
 import { useChartColors } from '../../lib/chart-colors';
-import { StatWrapper } from './Wrapper';
 import { getIcon, getTimeMessage, getScoreBadgeClass } from './helpers';
-import { Clock, ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
+import { ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
 import { Separator } from '../../components/ui/separator';
 
 type TimeStatCardProps = {
@@ -111,11 +110,7 @@ export const TimeStats = () => {
   const sortedArray = sortBy(data.getTimeHealth.channels, 'score');
 
   return (
-    <StatWrapper
-      title="Time Stats"
-      icon={<Clock size={16} className="text-muted-foreground" />}
-      count={sortedArray.length}
-    >
+    <div className="flex flex-col gap-2">
       {sortedArray.map((channel, index) => (
         <TimeStatCard
           key={channel?.id || ''}
@@ -125,6 +120,6 @@ export const TimeStats = () => {
           index={index + 1}
         />
       ))}
-    </StatWrapper>
+    </div>
   );
 };

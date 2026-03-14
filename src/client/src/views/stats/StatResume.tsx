@@ -1,10 +1,5 @@
 import { FC, ReactNode } from 'react';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '../../components/ui/card';
+import { Card, CardContent } from '../../components/ui/card';
 import { Activity } from 'lucide-react';
 import { useChartColors } from '../../lib/chart-colors';
 import { useStatsState } from './context';
@@ -92,20 +87,20 @@ export const StatResume = () => {
   const { volumeScore, timeScore, feeScore } = useStatsState();
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center gap-2">
-          <Activity size={16} className="text-muted-foreground" />
-          <CardTitle>Node Health</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="flex justify-around items-center">
-          <ScoreRing label="Flow" score={volumeScore} />
-          <ScoreRing label="Uptime" score={timeScore} />
-          <ScoreRing label="Fees" score={feeScore} />
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-4">
+      <h2 className="flex items-center gap-2 text-lg font-semibold">
+        <Activity size={16} className="text-muted-foreground" />
+        Node Health
+      </h2>
+      <Card>
+        <CardContent>
+          <div className="flex justify-around items-center">
+            <ScoreRing label="Flow" score={volumeScore} />
+            <ScoreRing label="Uptime" score={timeScore} />
+            <ScoreRing label="Fees" score={feeScore} />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };

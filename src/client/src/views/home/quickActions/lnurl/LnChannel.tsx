@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { ChannelRequest } from '../../../../graphql/types';
 import { Title } from '../../../../components/typography/Styled';
-import { Separation } from '../../../../components/generic/Styled';
+import { Separator } from '@/components/ui/separator';
 import {
   getNodeLink,
   renderLine,
@@ -39,11 +39,11 @@ export const LnChannel: FC<LnChannelProps> = ({ request }) => {
   return (
     <>
       <Title>Channel</Title>
-      <Separation />
+      <Separator />
       <div className="w-full text-center">{`Request from ${callbackUrl.host}`}</div>
-      <Separation />
+      <Separator />
       {split?.[0] && renderLine('Peer', getNodeLink(split[0]))}
-      <Separation />
+      <Separator />
       <Button
         variant="outline"
         disabled={loading || !!data?.lnUrlChannel}

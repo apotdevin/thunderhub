@@ -3,7 +3,7 @@ import {
   getNodeLink,
   getAddressLink,
 } from '../../components/generic/helpers';
-import { Separation } from '../../components/generic/Styled';
+import { Separator } from '@/components/ui/separator';
 import { Price } from '../../components/price/Price';
 import { Pay } from '../home/account/pay/Pay';
 import { useSwapsDispatch, useSwapsState } from './SwapContext';
@@ -87,7 +87,7 @@ export const SwapQuote = () => {
         </div>
       </div>
 
-      <Separation />
+      <Separator />
 
       <div>
         <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">

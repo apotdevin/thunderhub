@@ -1,5 +1,5 @@
 import { Utxo } from '../../../graphql/types';
-import { Separation, SubCard } from '../../../components/generic/Styled';
+import { Separator } from '@/components/ui/separator';
 import { MainInfo } from '../../../components/generic/CardGeneric';
 import {
   getTransactionLink,
@@ -49,7 +49,7 @@ export const UtxoCard = ({
   const renderDetails = () => {
     return (
       <>
-        <Separation />
+        <Separator className="my-3" />
         {renderLine('Address Format:', address_format)}
         {renderLine('Confirmations: ', confirmation_count)}
         {renderLine('Output Script: ', output_script)}
@@ -63,12 +63,15 @@ export const UtxoCard = ({
   };
 
   return (
-    <SubCard key={index}>
+    <div
+      key={index}
+      className="rounded-md border border-border bg-card p-4 hover:shadow-sm transition-shadow"
+    >
       <MainInfo onClick={() => handleClick()}>
         {renderLine('Address', address)}
         {renderLine('Amount', formatAmount)}
       </MainInfo>
       {index === indexOpen && renderDetails()}
-    </SubCard>
+    </div>
   );
 };

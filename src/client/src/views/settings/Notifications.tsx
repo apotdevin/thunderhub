@@ -1,11 +1,5 @@
 import { Switch } from '@/components/ui/switch';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   useNotificationDispatch,
   useNotificationState,
@@ -34,27 +28,26 @@ export const NotificationSettings = () => {
   ];
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Notifications</CardTitle>
-        <CardDescription>
-          Choose which events trigger notifications
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {items.map(item => (
-          <div
-            key={item.property}
-            className="flex items-center justify-between"
-          >
-            <span className="text-sm font-medium">{item.label}</span>
-            <Switch
-              checked={item.value}
-              onCheckedChange={checked => handleToggle(item.property, checked)}
-            />
-          </div>
-        ))}
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-4">
+      <h2 className="text-lg font-semibold">Notifications</h2>
+      <Card>
+        <CardContent className="space-y-4">
+          {items.map(item => (
+            <div
+              key={item.property}
+              className="flex items-center justify-between"
+            >
+              <span className="text-sm font-medium">{item.label}</span>
+              <Switch
+                checked={item.value}
+                onCheckedChange={checked =>
+                  handleToggle(item.property, checked)
+                }
+              />
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    </div>
   );
 };

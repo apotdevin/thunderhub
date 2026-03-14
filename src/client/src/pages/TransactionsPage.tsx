@@ -22,21 +22,15 @@ import {
   GetPaymentsQuery,
   useGetPaymentsQuery,
 } from '../graphql/queries/__generated__/getPayments.generated';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardAction,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Separator } from '@/components/ui/separator';
 
 const TransactionsView = () => {
   const [activeTab, setActiveTab] = useState('invoices');
   const [indexOpen, setIndexOpen] = useState(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [graphShow, setGraphShow] = useState('invoices');
+  const [graphType, setGraphType] = useState('count');
 
   const { publicKey } = useNodeInfo();
 
@@ -202,48 +196,74 @@ const TransactionsView = () => {
   };
 
   return (
-    <>
-      <FlowBox />
-      <Card>
-        <CardHeader className="border-b">
-          <CardTitle className="flex items-center gap-2">
-            Transactions
-            {beforeDate && (
-              <span className="text-xs font-normal text-muted-foreground">
-                {beforeDate}
-              </span>
-            )}
-          </CardTitle>
-          <CardAction>
-            <Button
-              variant={settingsOpen ? 'secondary' : 'ghost'}
-              size="sm"
-              onClick={() => setSettingsOpen(p => !p)}
-            >
-              <Settings size={14} />
-            </Button>
-          </CardAction>
-        </CardHeader>
-        {settingsOpen && (
-          <>
-            <CardContent>
-              <TransactionSettings />
-            </CardContent>
-            <Separator />
-          </>
-        )}
-        <CardContent>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-lg font-semibold">
+          Transactions
+          {beforeDate && (
+            <span className="ml-2 text-xs font-normal text-muted-foreground">
+              {beforeDate}
+            </span>
+          )}
+        </h2>
+
+        <div className="flex items-center gap-2">
           <ToggleGroup
             type="single"
             variant="outline"
             size="sm"
-            value={activeTab}
-            onValueChange={v => v && setActiveTab(v)}
+            value={graphShow}
+            onValueChange={v => v && setGraphShow(v)}
           >
             <ToggleGroupItem value="invoices">Invoices</ToggleGroupItem>
             <ToggleGroupItem value="payments">Payments</ToggleGroupItem>
           </ToggleGroup>
-          <div className="mt-3">
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            size="sm"
+            value={graphType}
+            onValueChange={v => v && setGraphType(v)}
+          >
+            <ToggleGroupItem value="count">Count</ToggleGroupItem>
+            <ToggleGroupItem value="tokens">Volume</ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+      </div>
+
+      <FlowBox show={graphShow} type={graphType} />
+
+      <div className="flex items-center justify-end gap-2">
+        <ToggleGroup
+          type="single"
+          variant="outline"
+          size="sm"
+          value={activeTab}
+          onValueChange={v => v && setActiveTab(v)}
+        >
+          <ToggleGroupItem value="invoices">Invoices</ToggleGroupItem>
+          <ToggleGroupItem value="payments">Payments</ToggleGroupItem>
+        </ToggleGroup>
+        <Button
+          variant={settingsOpen ? 'secondary' : 'outline'}
+          size="sm"
+          onClick={() => setSettingsOpen(p => !p)}
+        >
+          <Settings size={14} />
+        </Button>
+      </div>
+
+      {settingsOpen && (
+        <Card>
+          <CardContent>
+            <TransactionSettings />
+          </CardContent>
+        </Card>
+      )}
+
+      <Card>
+        <CardContent>
+          <div>
             {activeTab === 'invoices' ? renderInvoices() : renderPayments()}
           </div>
         </CardContent>
@@ -265,12 +285,12 @@ const TransactionsView = () => {
           </CardFooter>
         )}
       </Card>
-    </>
+    </div>
   );
 };
 
 const TransactionsPage = () => (
-  <GridWrapper>
+  <GridWrapper centerContent={false}>
     <TransactionsView />
   </GridWrapper>
 );

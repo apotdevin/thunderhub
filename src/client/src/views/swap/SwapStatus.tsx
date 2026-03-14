@@ -11,6 +11,7 @@ import {
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { getAddressLink } from '../../components/generic/helpers';
 import Modal from '../../components/modal/ReactModal';
 import { useGetBoltzSwapStatusQuery } from '../../graphql/queries/__generated__/getBoltzSwapStatus.generated';
@@ -281,18 +282,16 @@ export const SwapStatus = () => {
 
   return (
     <>
-      <div className="rounded-lg border border-border bg-card p-5">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold tracking-tight">
-              Swap History
-            </h3>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <h2 className="flex items-center gap-2 text-lg font-semibold">
+            Swap History
             {swaps.length > 0 && (
-              <Badge variant="secondary" className="rounded-full">
+              <Badge variant="secondary" className="min-w-5 justify-center">
                 {swaps.length}
               </Badge>
             )}
-          </div>
+          </h2>
           {swaps.length > 0 && (
             <div className="flex items-center gap-1">
               <Button
@@ -322,27 +321,31 @@ export const SwapStatus = () => {
           )}
         </div>
 
-        {loading && (
-          <p className="text-xs text-muted-foreground py-4 text-center">
-            Loading swap statuses...
-          </p>
-        )}
+        <Card>
+          <CardContent>
+            {loading && (
+              <p className="text-xs text-muted-foreground py-4 text-center">
+                Loading swap statuses...
+              </p>
+            )}
 
-        {!loading && (!swaps.length || !data?.getBoltzSwapStatus) && (
-          <p className="text-xs text-muted-foreground py-4 text-center">
-            No swaps yet. Create one above to get started.
-          </p>
-        )}
+            {!loading && (!swaps.length || !data?.getBoltzSwapStatus) && (
+              <p className="text-xs text-muted-foreground py-4 text-center">
+                No swaps yet. Create one above to get started.
+              </p>
+            )}
 
-        {!loading && enriched.length > 0 && (
-          <div className="divide-y divide-border">
-            {enriched.map((swap, index) => (
-              <Fragment key={`${swap?.id}-${index}`}>
-                <SwapRow swap={swap} index={index} />
-              </Fragment>
-            ))}
-          </div>
-        )}
+            {!loading && enriched.length > 0 && (
+              <div className="divide-y divide-border">
+                {enriched.map((swap, index) => (
+                  <Fragment key={`${swap?.id}-${index}`}>
+                    <SwapRow swap={swap} index={index} />
+                  </Fragment>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       <ReactTooltip id={`cleanup`}>

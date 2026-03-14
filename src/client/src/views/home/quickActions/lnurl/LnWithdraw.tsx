@@ -1,10 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { WithdrawRequest } from '../../../../graphql/types';
 import { Title } from '../../../../components/typography/Styled';
-import {
-  DarkSubTitle,
-  Separation,
-} from '../../../../components/generic/Styled';
+import { Separator } from '@/components/ui/separator';
 import { renderLine } from '../../../../components/generic/helpers';
 import { Input } from '@/components/ui/input';
 import { Price } from '../../../../components/price/Price';
@@ -72,12 +69,12 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
     if (error) {
       return (
         <div className="m-4 flex justify-center items-center">
-          <DarkSubTitle>
+          <p className="text-sm text-muted-foreground">
             Failed to check status of the withdrawal. Please check the status in
             the
             <Link to={'/transactions'}> Transactions </Link>
             view
-          </DarkSubTitle>
+          </p>
         </div>
       );
     }
@@ -114,7 +111,7 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
         {isSame && renderLine('Withdraw Amount', max)}
         {!isSame && renderLine('Max Withdraw Amount', max)}
         {!isSame && renderLine('Min Withdraw Amount', min)}
-        <Separation />
+        <Separator />
         <div className="flex items-center w-full my-2 flex-col md:flex-row justify-between">
           <div className="flex text-sm whitespace-nowrap flex-wrap md:my-0 my-2">
             <span>Description</span>
@@ -173,9 +170,9 @@ export const LnWithdraw: FC<LnWithdrawProps> = ({ request }) => {
   return (
     <>
       <Title>Withdraw</Title>
-      <Separation />
+      <Separator />
       <div className="w-full text-center">{`Withdraw from ${callbackUrl.host}`}</div>
-      <Separation />
+      <Separator />
       {renderContent()}
     </>
   );

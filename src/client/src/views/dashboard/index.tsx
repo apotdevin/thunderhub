@@ -1,10 +1,12 @@
-import { Layouts, Responsive as ResponsiveGridLayout } from 'react-grid-layout';
+import {
+  ResponsiveGridLayout,
+  ResponsiveLayouts,
+  useContainerWidth,
+} from 'react-grid-layout';
 import { defaultGrid } from '../../utils/gridConstants';
 import { useLocalStorage } from '../../hooks/UseLocalStorage';
 import { LoadingCard } from '../../components/loading/LoadingCard';
-import { useRef } from 'react';
-import useElementSize from '../../hooks/UseElementSize';
-import { Card, SubTitle } from '../../components/generic/Styled';
+import { Card } from '@/components/ui/card';
 import { Link } from '../../components/link/Link';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
@@ -18,22 +20,19 @@ export type StoredWidget = {
 };
 
 const Dashboard = () => {
-  const wrapperRef = useRef(null);
-
-  const { width } = useElementSize(wrapperRef);
+  const { width, containerRef, mounted } = useContainerWidth();
 
   const { modalType } = useDashState();
   const dispatch = useDashDispatch();
 
-  const [layouts, setLayouts] = useLocalStorage<Layouts>('layouts', {});
+  const [layouts, setLayouts] = useLocalStorage<ResponsiveLayouts>(
+    'layouts',
+    {}
+  );
   const [availableWidgets] = useLocalStorage<StoredWidget[]>(
     'dashboardWidgets',
     []
   );
-
-  const props = {
-    isBounded: true,
-  };
 
   const handleChange = (_: any, layouts: any) => {
     setLayouts(layouts);
@@ -44,7 +43,7 @@ const Dashboard = () => {
   if (!widgets.length) {
     return (
       <div className="h-[80vh] w-full flex flex-col justify-center items-center">
-        <SubTitle>No Widgets Enabled!</SubTitle>
+        <h4 className="text-lg font-medium">No Widgets Enabled!</h4>
         <Link href={'settings/dashboard'}>
           <Button variant="outline">
             Settings <ChevronRight size={18} />
@@ -55,14 +54,13 @@ const Dashboard = () => {
   }
 
   const renderContent = () => {
-    if (width === 0) {
+    if (!mounted) {
       return <LoadingCard noCard={true} loadingHeight={'90vh'} />;
     }
     return (
       <>
         <div className="[&_.react-resizable-handle::after]:border-b-2 [&_.react-resizable-handle::after]:border-r-2 [&_.react-resizable-handle::after]:border-foreground">
           <ResponsiveGridLayout
-            {...props}
             className="layout"
             layouts={layouts}
             rowHeight={28}
@@ -70,6 +68,7 @@ const Dashboard = () => {
             margin={defaultGrid.margin}
             breakpoints={defaultGrid.breakpoints}
             cols={defaultGrid.columns}
+            dragConfig={{ bounded: true }}
             onLayoutChange={handleChange}
           >
             {widgets.map(w => (
@@ -95,7 +94,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="w-full" ref={wrapperRef}>
+    <div className="w-full" ref={containerRef}>
       {renderContent()}
     </div>
   );

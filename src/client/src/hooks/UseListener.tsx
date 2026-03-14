@@ -6,7 +6,6 @@ import {
   getTransactionLink,
   renderLine,
 } from '../components/generic/helpers';
-import { Separation } from '../components/generic/Styled';
 import { useNotificationState } from '../context/NotificationContext';
 import { formatSats } from '../utils/helpers';
 import { useChannelInfo } from './UseChannelInfo';
@@ -22,7 +21,7 @@ const renderToast = (
   return (
     <div>
       {title}
-      <Separation lineColor={'transparent'} withMargin="4px 0" />
+      <div className="h-1" />
       {content}
     </div>
   );

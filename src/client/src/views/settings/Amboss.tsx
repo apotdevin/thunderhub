@@ -1,12 +1,6 @@
 import { Switch } from '@/components/ui/switch';
 import { Loader2 } from 'lucide-react';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { getErrorContent } from '../../utils/error';
 import toast from 'react-hot-toast';
 import { useGetConfigStateQuery } from '../../graphql/queries/__generated__/getConfigState.generated';
@@ -63,38 +57,37 @@ export const AmbossSettings = () => {
   } = data.getConfigState;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Amboss</CardTitle>
-        <CardDescription>Configure Amboss integration settings</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <ConfigFieldToggle
-          field={ConfigFields.Backups}
-          enabled={backup_state}
-          title="Auto Backups"
-        />
-        <ConfigFieldToggle
-          field={ConfigFields.Healthchecks}
-          enabled={healthcheck_ping_state}
-          title="Healthcheck Pings"
-        />
-        <ConfigFieldToggle
-          field={ConfigFields.OnchainPush}
-          enabled={onchain_push_enabled}
-          title="Onchain Push"
-        />
-        <ConfigFieldToggle
-          field={ConfigFields.ChannelsPush}
-          enabled={channels_push_enabled}
-          title="Channels Push"
-        />
-        <ConfigFieldToggle
-          field={ConfigFields.PrivateChannelsPush}
-          enabled={private_channels_push_enabled}
-          title="Private Channel Push"
-        />
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-4">
+      <h2 className="text-lg font-semibold">Amboss</h2>
+      <Card>
+        <CardContent className="space-y-4">
+          <ConfigFieldToggle
+            field={ConfigFields.Backups}
+            enabled={backup_state}
+            title="Auto Backups"
+          />
+          <ConfigFieldToggle
+            field={ConfigFields.Healthchecks}
+            enabled={healthcheck_ping_state}
+            title="Healthcheck Pings"
+          />
+          <ConfigFieldToggle
+            field={ConfigFields.OnchainPush}
+            enabled={onchain_push_enabled}
+            title="Onchain Push"
+          />
+          <ConfigFieldToggle
+            field={ConfigFields.ChannelsPush}
+            enabled={channels_push_enabled}
+            title="Channels Push"
+          />
+          <ConfigFieldToggle
+            field={ConfigFields.PrivateChannelsPush}
+            enabled={private_channels_push_enabled}
+            title="Private Channel Push"
+          />
+        </CardContent>
+      </Card>
+    </div>
   );
 };

@@ -1,14 +1,8 @@
 import toast from 'react-hot-toast';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, BarChart3 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useToggleConfigMutation } from '../../graphql/mutations/__generated__/toggleConfig.generated';
 import { useGetConfigStateQuery } from '../../graphql/queries/__generated__/getConfigState.generated';
 import { ConfigFields } from '../../graphql/types';
@@ -62,48 +56,41 @@ export const Balances = () => {
   const isLoading = loading || toggleLoading;
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center gap-2">
-          <BarChart3 size={16} className="text-muted-foreground" />
-          <CardTitle>Balances</CardTitle>
-        </div>
-        <CardDescription>
-          Push balance data to Amboss for historical reporting and analytics.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <Separator />
-        <BalanceToggle
-          label="Onchain Balance"
-          description="Push your onchain balance for historical reports"
-          enabled={onchain_push_enabled}
-          loading={isLoading}
-          onToggle={() =>
-            toggle({ variables: { field: ConfigFields.OnchainPush } })
-          }
-        />
-        <Separator />
-        <BalanceToggle
-          label="Public Channels"
-          description="Push your public channel balances for historical reports"
-          enabled={channels_push_enabled}
-          loading={isLoading}
-          onToggle={() =>
-            toggle({ variables: { field: ConfigFields.ChannelsPush } })
-          }
-        />
-        <Separator />
-        <BalanceToggle
-          label="Private Channels"
-          description="Push your private channel balances for historical reports"
-          enabled={private_channels_push_enabled}
-          loading={isLoading}
-          onToggle={() =>
-            toggle({ variables: { field: ConfigFields.PrivateChannelsPush } })
-          }
-        />
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-4">
+      <h2 className="text-lg font-semibold">Balances</h2>
+      <Card>
+        <CardContent className="space-y-4">
+          <BalanceToggle
+            label="Onchain Balance"
+            description="Push your onchain balance for historical reports"
+            enabled={onchain_push_enabled}
+            loading={isLoading}
+            onToggle={() =>
+              toggle({ variables: { field: ConfigFields.OnchainPush } })
+            }
+          />
+          <Separator />
+          <BalanceToggle
+            label="Public Channels"
+            description="Push your public channel balances for historical reports"
+            enabled={channels_push_enabled}
+            loading={isLoading}
+            onToggle={() =>
+              toggle({ variables: { field: ConfigFields.ChannelsPush } })
+            }
+          />
+          <Separator />
+          <BalanceToggle
+            label="Private Channels"
+            description="Push your private channel balances for historical reports"
+            enabled={private_channels_push_enabled}
+            loading={isLoading}
+            onToggle={() =>
+              toggle({ variables: { field: ConfigFields.PrivateChannelsPush } })
+            }
+          />
+        </CardContent>
+      </Card>
+    </div>
   );
 };

@@ -1,60 +1,38 @@
 import { Loader2 } from 'lucide-react';
-import { CardWithTitle, CardTitle, SubTitle, Card } from '../generic/Styled';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface LoadingCardProps {
   title?: string;
   noCard?: boolean;
-  color?: string;
-  noTitle?: boolean;
   loadingHeight?: string;
-  inverseColor?: boolean;
 }
 
-const Spinner = ({
-  loadingHeight,
-  color,
-}: {
-  loadingHeight?: string;
-  color: string;
-}) => (
+const Spinner = ({ loadingHeight }: { loadingHeight?: string }) => (
   <div
-    className="w-full flex justify-center items-center"
+    className="w-full flex justify-center items-center py-8"
     style={{ height: loadingHeight || 'auto' }}
   >
-    <Loader2 className="animate-spin" size={20} style={{ color }} />
+    <Loader2 className="animate-spin text-muted-foreground" size={20} />
   </div>
 );
 
 export const LoadingCard = ({
-  title = '',
-  color,
+  title,
   noCard = false,
-  noTitle = false,
   loadingHeight,
-  inverseColor,
 }: LoadingCardProps) => {
-  const loadingColor = color || 'var(--color-primary)';
-
   if (noCard) {
-    return <Spinner loadingHeight={loadingHeight} color={loadingColor} />;
-  }
-
-  if (noTitle) {
-    return (
-      <Card>
-        <Spinner loadingHeight={loadingHeight} color={loadingColor} />
-      </Card>
-    );
+    return <Spinner loadingHeight={loadingHeight} />;
   }
 
   return (
-    <CardWithTitle>
-      <CardTitle>
-        <SubTitle inverseColor={inverseColor}>{title}</SubTitle>
-      </CardTitle>
+    <div className="flex flex-col gap-4">
+      {title && <h2 className="text-lg font-semibold">{title}</h2>}
       <Card>
-        <Spinner loadingHeight={loadingHeight} color={loadingColor} />
+        <CardContent>
+          <Spinner loadingHeight={loadingHeight} />
+        </CardContent>
       </Card>
-    </CardWithTitle>
+    </div>
   );
 };

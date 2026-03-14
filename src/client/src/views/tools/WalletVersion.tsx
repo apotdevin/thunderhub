@@ -1,8 +1,7 @@
 import { useGetWalletInfoQuery } from '../../graphql/queries/__generated__/getWalletInfo.generated';
-import { Card, CardWithTitle, SubTitle } from '../../components/generic/Styled';
+import { Card, CardContent } from '@/components/ui/card';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { Badge } from '@/components/ui/badge';
-import { Cpu } from 'lucide-react';
 
 export const WalletVersion = () => {
   const { data, loading, error } = useGetWalletInfoQuery();
@@ -10,12 +9,7 @@ export const WalletVersion = () => {
   if (error) return null;
 
   if (loading || !data?.getWalletInfo) {
-    return (
-      <CardWithTitle>
-        <SubTitle>Wallet Version</SubTitle>
-        <LoadingCard />
-      </CardWithTitle>
-    );
+    return <LoadingCard />;
   }
 
   const {
@@ -41,36 +35,35 @@ export const WalletVersion = () => {
   ];
 
   return (
-    <CardWithTitle>
-      <div className="flex items-center gap-2 mb-1">
-        <Cpu size={18} className="text-muted-foreground" />
-        <SubTitle>Wallet Version</SubTitle>
-      </div>
-      <Card bottom="0">
-        <div className="space-y-4">
-          <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
-            <span className="text-muted-foreground">Commit</span>
-            <span className="font-mono text-xs break-all">{commit_hash}</span>
-            <span className="text-muted-foreground">Build Tags</span>
-            <span className="break-words">{build_tags.join(', ')}</span>
-          </div>
+    <div className="flex flex-col gap-4">
+      <h2 className="text-lg font-semibold">Wallet Version</h2>
+      <Card>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
+              <span className="text-muted-foreground">Commit</span>
+              <span className="font-mono text-xs break-all">{commit_hash}</span>
+              <span className="text-muted-foreground">Build Tags</span>
+              <span className="break-words">{build_tags.join(', ')}</span>
+            </div>
 
-          <div className="border-t border-border pt-4">
-            <span className="text-sm font-medium">RPC Services</span>
-            <div className="flex flex-wrap gap-2 mt-3">
-              {rpcServices.map(({ name, enabled }) => (
-                <Badge
-                  key={name}
-                  variant={enabled ? 'default' : 'outline'}
-                  className={!enabled ? 'opacity-50' : ''}
-                >
-                  {name}
-                </Badge>
-              ))}
+            <div className="border-t border-border pt-4">
+              <span className="text-sm font-medium">RPC Services</span>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {rpcServices.map(({ name, enabled }) => (
+                  <Badge
+                    key={name}
+                    variant={enabled ? 'default' : 'outline'}
+                    className={!enabled ? 'opacity-50' : ''}
+                  >
+                    {name}
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        </CardContent>
       </Card>
-    </CardWithTitle>
+    </div>
   );
 };

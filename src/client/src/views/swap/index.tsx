@@ -6,9 +6,10 @@ import { getErrorContent } from '../../utils/error';
 import { SwapsProvider } from './SwapContext';
 import { StartSwap } from './StartSwap';
 import { SwapStatus } from './SwapStatus';
-import { ArrowLeftRight, Info, Zap } from 'lucide-react';
+import { Info, Zap } from 'lucide-react';
 import { Link } from '../../components/link/Link';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 
 export const SwapView = () => {
   const { data, loading, error } = useGetBoltzInfoQuery({
@@ -32,55 +33,37 @@ export const SwapView = () => {
 
   return (
     <SwapsProvider>
-      <div className="flex flex-col gap-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
-              <ArrowLeftRight className="text-primary" size={20} />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold tracking-tight">
-                Reverse Swap
-              </h2>
-              <p className="text-xs text-muted-foreground">
-                Lightning to on-chain
-              </p>
-            </div>
-          </div>
-          <Link href={'https://boltz.exchange/'} newTab>
-            <Badge variant="outline" className="gap-1.5 rounded-full px-3 py-1">
-              <Zap size={10} />
-              Powered by Boltz
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-lg font-semibold">Reverse Swap</h2>
+
+          <div className="flex items-center gap-2">
+            <Badge variant="secondary" className="gap-1.5">
+              Fee {feePercent}%
             </Badge>
-          </Link>
-        </div>
-
-        {/* Info bar */}
-        <div className="rounded-lg border border-border bg-card p-5">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground">Fee</span>
-              <span className="font-medium">{feePercent}%</span>
-            </div>
-            <div className="hidden md:block h-4 w-px bg-border" />
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground">Min</span>
-              <span className="font-medium">
-                <Price amount={min} />
-              </span>
-            </div>
-            <div className="hidden md:block h-4 w-px bg-border" />
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground">Max</span>
-              <span className="font-medium">
-                <Price amount={max} />
-              </span>
-            </div>
+            <Badge variant="secondary" className="gap-1.5">
+              Min <Price amount={min} />
+            </Badge>
+            <Badge variant="secondary" className="gap-1.5">
+              Max <Price amount={max} />
+            </Badge>
+            <Link href={'https://boltz.exchange/'} newTab>
+              <Badge
+                variant="outline"
+                className="gap-1.5 rounded-full px-3 py-1"
+              >
+                <Zap size={10} />
+                Boltz
+              </Badge>
+            </Link>
           </div>
         </div>
 
-        <StartSwap max={max} min={min} />
+        <Card>
+          <CardContent>
+            <StartSwap max={max} min={min} />
+          </CardContent>
+        </Card>
         <SwapStatus />
       </div>
     </SwapsProvider>

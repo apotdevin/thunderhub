@@ -14,7 +14,7 @@ const ToolsView = () => (
 );
 
 const ToolsPage = () => (
-  <GridWrapper>
+  <GridWrapper centerContent={false}>
     <ToolsView />
   </GridWrapper>
 );

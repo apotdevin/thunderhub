@@ -1,14 +1,9 @@
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, HeartPulse } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useToggleConfigMutation } from '../../graphql/mutations/__generated__/toggleConfig.generated';
 import { useGetConfigStateQuery } from '../../graphql/queries/__generated__/getConfigState.generated';
 import { ConfigFields } from '../../graphql/types';
@@ -28,45 +23,44 @@ export const Healthchecks = () => {
   const isLoading = loading || toggleLoading;
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <HeartPulse size={16} className="text-muted-foreground" />
-            <CardTitle>Healthchecks</CardTitle>
-            <Badge
-              variant="secondary"
-              className={cn(
-                'shrink-0 text-[10px] rounded-sm',
-                isEnabled &&
-                  'bg-green-500/10 text-green-600 dark:text-green-400'
-              )}
-            >
-              {isEnabled ? 'Active' : 'Inactive'}
-            </Badge>
-          </div>
-          <div className="flex items-center gap-2">
-            {isLoading ? (
-              <Loader2
-                className="animate-spin text-muted-foreground"
-                size={14}
-              />
-            ) : null}
-            <Switch
-              checked={isEnabled}
-              disabled={isLoading}
-              onCheckedChange={() =>
-                toggle({ variables: { field: ConfigFields.Healthchecks } })
-              }
-            />
-          </div>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="flex items-center gap-2 text-lg font-semibold">
+          Healthchecks
+          <Badge
+            variant="secondary"
+            className={cn(
+              'shrink-0 text-[10px] rounded-sm',
+              isEnabled && 'bg-green-500/10 text-green-600 dark:text-green-400'
+            )}
+          >
+            {isEnabled ? 'Active' : 'Inactive'}
+          </Badge>
+        </h2>
+
+        <div className="flex items-center gap-2">
+          {isLoading ? (
+            <Loader2 className="animate-spin text-muted-foreground" size={14} />
+          ) : null}
+          <Switch
+            checked={isEnabled}
+            disabled={isLoading}
+            onCheckedChange={() =>
+              toggle({ variables: { field: ConfigFields.Healthchecks } })
+            }
+          />
         </div>
-        <CardDescription>
-          {isEnabled
-            ? 'ThunderHub consistently pings Amboss to show the liveliness of your node.'
-            : 'Enable to automatically ping Amboss and show the liveliness of your node.'}
-        </CardDescription>
-      </CardHeader>
-    </Card>
+      </div>
+
+      <Card>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            {isEnabled
+              ? 'ThunderHub consistently pings Amboss to show the liveliness of your node.'
+              : 'Enable to automatically ping Amboss and show the liveliness of your node.'}
+          </p>
+        </CardContent>
+      </Card>
+    </div>
   );
 };

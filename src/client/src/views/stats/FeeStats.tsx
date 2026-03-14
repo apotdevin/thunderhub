@@ -4,9 +4,8 @@ import { ChannelFeeHealth } from '../../graphql/types';
 import { sortBy } from 'lodash';
 import { useStatsDispatch } from './context';
 import { useChartColors } from '../../lib/chart-colors';
-import { StatWrapper } from './Wrapper';
 import { getIcon, getFeeMessage, getScoreBadgeClass } from './helpers';
-import { DollarSign, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Separator } from '../../components/ui/separator';
 
 type FeeStatCardProps = {
@@ -104,9 +103,7 @@ const FeeDetails = ({
   );
 };
 
-export const FeeStats = () => {
-  const [open, openSet] = useState(0);
-  const [openTwo, openTwoSet] = useState(0);
+const useFeeData = () => {
   const dispatch = useStatsDispatch();
   const { data, loading } = useGetFeeHealthQuery();
 
@@ -119,6 +116,13 @@ export const FeeStats = () => {
     }
   }, [data, dispatch]);
 
+  return { data, loading };
+};
+
+export const PartnerFeeStats = () => {
+  const [open, openSet] = useState(0);
+  const { data, loading } = useFeeData();
+
   if (loading || !data?.getFeeHealth?.channels?.length) {
     return null;
   }
@@ -127,44 +131,47 @@ export const FeeStats = () => {
     data.getFeeHealth.channels,
     c => c?.partnerSide?.score
   );
+
+  return (
+    <div className="flex flex-col gap-2">
+      {sortedArray.map((channel, index) => (
+        <FeeStatCard
+          key={channel?.id || ''}
+          channel={channel as ChannelFeeHealth}
+          open={index + 1 === open}
+          openSet={openSet}
+          index={index + 1}
+        />
+      ))}
+    </div>
+  );
+};
+
+export const MyFeeStats = () => {
+  const [open, openSet] = useState(0);
+  const { data, loading } = useFeeData();
+
+  if (loading || !data?.getFeeHealth?.channels?.length) {
+    return null;
+  }
+
   const sortedArrayMyStats = sortBy(
     data.getFeeHealth.channels,
     c => c?.mySide?.score
   );
 
   return (
-    <>
-      <StatWrapper
-        title="Partner Fee Stats"
-        icon={<DollarSign size={16} className="text-muted-foreground" />}
-        count={sortedArray.length}
-      >
-        {sortedArray.map((channel, index) => (
-          <FeeStatCard
-            key={channel?.id || ''}
-            channel={channel as ChannelFeeHealth}
-            open={index + 1 === open}
-            openSet={openSet}
-            index={index + 1}
-          />
-        ))}
-      </StatWrapper>
-      <StatWrapper
-        title="My Fee Stats"
-        icon={<DollarSign size={16} className="text-muted-foreground" />}
-        count={sortedArrayMyStats.length}
-      >
-        {sortedArrayMyStats.map((channel, index) => (
-          <FeeStatCard
-            key={channel?.id || ''}
-            channel={channel as ChannelFeeHealth}
-            myStats
-            open={index + 1 === openTwo}
-            openSet={openTwoSet}
-            index={index + 1}
-          />
-        ))}
-      </StatWrapper>
-    </>
+    <div className="flex flex-col gap-2">
+      {sortedArrayMyStats.map((channel, index) => (
+        <FeeStatCard
+          key={channel?.id || ''}
+          channel={channel as ChannelFeeHealth}
+          myStats
+          open={index + 1 === open}
+          openSet={openSet}
+          index={index + 1}
+        />
+      ))}
+    </div>
   );
 };

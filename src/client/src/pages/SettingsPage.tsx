@@ -8,8 +8,8 @@ import { NotificationSettings } from '../views/settings/Notifications';
 import { AmbossSettings } from '../views/settings/Amboss';
 
 const SettingsPage = () => (
-  <GridWrapper>
-    <div className="space-y-4">
+  <GridWrapper centerContent={false}>
+    <div className="flex flex-col gap-6">
       <InterfaceSettings />
       <NotificationSettings />
       <AmbossSettings />

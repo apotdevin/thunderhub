@@ -5,6 +5,7 @@ import {
   Shield,
   ArrowDownToLine,
   ArrowUpFromLine,
+  Plus,
 } from 'lucide-react';
 import { useGetPeersQuery } from '../graphql/queries/__generated__/getPeers.generated';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
@@ -17,6 +18,14 @@ import { Button } from '@/components/ui/button';
 import { RemovePeerModal } from '../components/modal/removePeer/RemovePeer';
 import Modal from '../components/modal/ReactModal';
 import Table from '../components/table';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import {
   Tooltip,
   TooltipContent,
@@ -37,6 +46,7 @@ const PeersView = () => {
     publicKey: string;
     alias: string;
   } | null>(null);
+  const [addPeerOpen, setAddPeerOpen] = useState(false);
 
   const tableData = useMemo(() => {
     const peers = data?.getPeers || [];
@@ -176,34 +186,64 @@ const PeersView = () => {
     return <LoadingCard />;
   }
 
-  if (!data || !data.getPeers?.length) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-        <p className="text-sm">No peers connected</p>
-      </div>
-    );
-  }
-
   return (
-    <>
-      <div className="flex flex-col w-full">
-        <h4 className="my-[5px] font-medium text-foreground">
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-lg font-semibold">
           Peers
-          <span className="ml-2 text-xs font-normal text-muted-foreground">
-            ({tableData.length})
-          </span>
-        </h4>
-        <div className="bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-border w-full p-4 mb-[25px]">
-          <Table
-            withBorder={true}
-            columns={columns}
-            data={tableData}
-            withSorting={true}
-            withGlobalSort={true}
-            filterPlaceholder="peers"
-          />
+          {tableData.length > 0 && (
+            <Badge variant="secondary" className="ml-2 min-w-5 justify-center">
+              {tableData.length}
+            </Badge>
+          )}
+        </h2>
+
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setAddPeerOpen(true)}
+          >
+            <Plus className="mr-1 size-4" />
+            Add Peer
+          </Button>
         </div>
       </div>
+
+      <Card>
+        <CardContent>
+          {!data || !data.getPeers?.length ? (
+            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+              <p className="text-sm">No peers connected</p>
+            </div>
+          ) : (
+            <Table
+              withBorder={true}
+              columns={columns}
+              data={tableData}
+              withSorting={true}
+              withGlobalSort={true}
+              filterPlaceholder="peers"
+            />
+          )}
+        </CardContent>
+      </Card>
+
+      <Dialog
+        open={addPeerOpen}
+        onOpenChange={open => !open && setAddPeerOpen(false)}
+      >
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Add Peer</DialogTitle>
+            <DialogDescription>
+              Connect to a new Lightning Network peer.
+            </DialogDescription>
+          </DialogHeader>
+          <AddPeer closeCbk={() => setAddPeerOpen(false)} />
+        </DialogContent>
+      </Dialog>
+
       <Modal isOpen={!!removePeer} closeCallback={() => setRemovePeer(null)}>
         {removePeer && (
           <RemovePeerModal
@@ -213,13 +253,12 @@ const PeersView = () => {
           />
         )}
       </Modal>
-    </>
+    </div>
   );
 };
 
 const PeersPage = () => (
-  <GridWrapper>
-    <AddPeer />
+  <GridWrapper centerContent={false}>
     <PeersView />
   </GridWrapper>
 );

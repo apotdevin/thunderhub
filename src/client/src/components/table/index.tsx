@@ -81,30 +81,32 @@ export default function Table({
 
   return (
     <>
-      <div className="mb-6 flex flex-row justify-between">
-        {withGlobalSort ? (
-          <DebouncedInput
-            value={globalFilter ?? ''}
-            onChange={value => setGlobalFilter(String(value))}
-            placeholder={filterPlaceholder || ''}
-            count={table.getFilteredRowModel().rows.length}
-          />
-        ) : null}
-        {toggleConfiguration ? (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsOpen(p => !p)}
-          >
-            {isOpen ? (
-              <X size={16} className="mr-1.5" />
-            ) : (
-              <Settings size={16} className="mr-1.5" />
-            )}
-            Columns
-          </Button>
-        ) : null}
-      </div>
+      {(withGlobalSort || toggleConfiguration) && (
+        <div className="mb-6 flex flex-row justify-between">
+          {withGlobalSort ? (
+            <DebouncedInput
+              value={globalFilter ?? ''}
+              onChange={value => setGlobalFilter(String(value))}
+              placeholder={filterPlaceholder || ''}
+              count={table.getFilteredRowModel().rows.length}
+            />
+          ) : null}
+          {toggleConfiguration ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsOpen(p => !p)}
+            >
+              {isOpen ? (
+                <X size={16} className="mr-1.5" />
+              ) : (
+                <Settings size={16} className="mr-1.5" />
+              )}
+              Columns
+            </Button>
+          ) : null}
+        </div>
+      )}
 
       {isOpen && toggleConfiguration ? (
         <div className="mb-4">

@@ -41,14 +41,7 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
   }, [data, dispatch, resetMutation]);
 
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="text-sm font-semibold tracking-tight">New Swap</h3>
-        <span className="text-xs text-muted-foreground">
-          Lightning BTC to BTC
-        </span>
-      </div>
-
+    <div>
       {/* Amount */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">

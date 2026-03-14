@@ -1,22 +1,10 @@
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import {
-  Loader2,
-  Upload,
-  DatabaseBackup,
-  Clock,
-  HardDrive,
-} from 'lucide-react';
+import { Loader2, Upload, Clock, HardDrive } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { usePushBackupMutation } from '../../graphql/mutations/__generated__/pushBackup.generated';
 import { getErrorContent } from '../../utils/error';
@@ -104,77 +92,76 @@ export const Backups = () => {
   const isLoading = loading || toggleLoading;
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <DatabaseBackup size={16} className="text-muted-foreground" />
-            <CardTitle>Backups</CardTitle>
-            <Badge
-              variant="secondary"
-              className={cn(
-                'shrink-0 text-[10px] rounded-sm',
-                isEnabled &&
-                  'bg-green-500/10 text-green-600 dark:text-green-400'
-              )}
-            >
-              {isEnabled ? 'Active' : 'Inactive'}
-            </Badge>
-          </div>
-          <div className="flex items-center gap-2">
-            {isLoading ? (
-              <Loader2
-                className="animate-spin text-muted-foreground"
-                size={14}
-              />
-            ) : null}
-            <Switch
-              checked={isEnabled}
-              disabled={isLoading}
-              onCheckedChange={() =>
-                toggle({ variables: { field: ConfigFields.Backups } })
-              }
-            />
-          </div>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="flex items-center gap-2 text-lg font-semibold">
+          Backups
+          <Badge
+            variant="secondary"
+            className={cn(
+              'shrink-0 text-[10px] rounded-sm',
+              isEnabled && 'bg-green-500/10 text-green-600 dark:text-green-400'
+            )}
+          >
+            {isEnabled ? 'Active' : 'Inactive'}
+          </Badge>
+        </h2>
+
+        <div className="flex items-center gap-2">
+          {isLoading ? (
+            <Loader2 className="animate-spin text-muted-foreground" size={14} />
+          ) : null}
+          <Switch
+            checked={isEnabled}
+            disabled={isLoading}
+            onCheckedChange={() =>
+              toggle({ variables: { field: ConfigFields.Backups } })
+            }
+          />
         </div>
-        <CardDescription>
-          {isEnabled
-            ? 'ThunderHub automatically pushes encrypted static channel backups (SCB) whenever changes occur.'
-            : 'Enable to automatically push encrypted static channel backups (SCB) to Amboss when changes occur.'}
-        </CardDescription>
-      </CardHeader>
-      {user ? (
+      </div>
+
+      <Card>
         <CardContent className="space-y-4">
-          <Separator />
-          <BackupStats />
-          <Separator />
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-foreground">
-                Manual Backup
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Push a backup to Amboss now
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={backupLoading}
-              onClick={() => backup()}
-            >
-              {backupLoading ? (
-                <Loader2 className="animate-spin" size={14} />
-              ) : (
-                <>
-                  <Upload size={14} className="mr-1.5" />
-                  Push Backup
-                </>
-              )}
-            </Button>
-          </div>
+          {user ? (
+            <>
+              <BackupStats />
+              <Separator />
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-foreground">
+                    Manual Backup
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Push a backup to Amboss now
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={backupLoading}
+                  onClick={() => backup()}
+                >
+                  {backupLoading ? (
+                    <Loader2 className="animate-spin" size={14} />
+                  ) : (
+                    <>
+                      <Upload size={14} className="mr-1.5" />
+                      Push Backup
+                    </>
+                  )}
+                </Button>
+              </div>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              {isEnabled
+                ? 'Automatically pushing encrypted static channel backups (SCB) whenever changes occur.'
+                : 'Enable to automatically push encrypted static channel backups (SCB) to Amboss when changes occur.'}
+            </p>
+          )}
         </CardContent>
-      ) : null}
-    </Card>
+      </Card>
+    </div>
   );
 };
