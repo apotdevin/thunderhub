@@ -543,7 +543,6 @@ export const ChannelTable = () => {
   return (
     <>
       <Table
-        withBorder={true}
         columns={columns}
         data={tableData}
         withGlobalSort={true}

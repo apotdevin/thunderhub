@@ -182,7 +182,6 @@ export const PendingChannels = () => {
     <Table
       columns={columns}
       data={tableData}
-      withBorder={true}
       withGlobalSort={true}
       withSorting={true}
       filterPlaceholder="channels"

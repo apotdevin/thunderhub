@@ -123,12 +123,5 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
     );
   }
 
-  return (
-    <Table
-      withBorder={true}
-      columns={columns}
-      data={tableData}
-      withSorting={true}
-    />
-  );
+  return <Table columns={columns} data={tableData} withSorting={true} />;
 };

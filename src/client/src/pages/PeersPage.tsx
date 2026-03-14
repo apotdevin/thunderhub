@@ -218,7 +218,6 @@ const PeersView = () => {
             </div>
           ) : (
             <Table
-              withBorder={true}
               columns={columns}
               data={tableData}
               withSorting={true}

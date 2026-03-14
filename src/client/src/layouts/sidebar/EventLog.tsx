@@ -70,7 +70,7 @@ const EventEntry: FC<{ entry: EventLogEntry; index: number }> = ({
   const hasDetails = entry.details.length > 0;
 
   return (
-    <div className={`px-2 ${index % 2 === 1 ? 'bg-muted/30' : ''}`}>
+    <div className={`px-2 ${index % 2 === 1 ? 'bg-muted/50' : ''}`}>
       <div className="flex items-start gap-2 py-1.5">
         <span
           className={`mt-0.5 shrink-0 ${

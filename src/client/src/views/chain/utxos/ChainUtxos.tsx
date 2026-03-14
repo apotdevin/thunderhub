@@ -39,36 +39,25 @@ export const ChainUtxos = () => {
           </div>
         ),
       },
+      { header: 'Confirmations', accessorKey: 'confirmation_count' },
       {
-        header: 'Confirmations',
-        columns: [
-          { header: 'Blocks', accessorKey: 'confirmation_count' },
-          {
-            header: 'Since',
-            accessorKey: 'time',
-          },
-        ],
+        header: 'Since',
+        accessorKey: 'time',
       },
       {
         header: 'Address',
         enableSorting: false,
-        columns: [
-          {
-            header: 'Link',
-            enableSorting: false,
-            accessorKey: 'output_addresses',
-            cell: ({ row }: any) => (
-              <div className="whitespace-nowrap">
-                {getAddressLink(row.original.address)}
-              </div>
-            ),
-          },
-          {
-            header: 'Format',
-            enableSorting: false,
-            accessorKey: 'address_format',
-          },
-        ],
+        accessorKey: 'output_addresses',
+        cell: ({ row }: any) => (
+          <div className="whitespace-nowrap">
+            {getAddressLink(row.original.address)}
+          </div>
+        ),
+      },
+      {
+        header: 'Format',
+        enableSorting: false,
+        accessorKey: 'address_format',
       },
     ],
     []
@@ -87,12 +76,5 @@ export const ChainUtxos = () => {
     );
   }
 
-  return (
-    <Table
-      withBorder={true}
-      columns={columns}
-      data={tableData}
-      withSorting={true}
-    />
-  );
+  return <Table columns={columns} data={tableData} withSorting={true} />;
 };
