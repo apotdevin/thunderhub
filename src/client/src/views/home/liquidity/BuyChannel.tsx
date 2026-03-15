@@ -55,11 +55,12 @@ const GoToMagmaLink = () => {
   );
 };
 
-const PRESET_AMOUNTS = [5, 10, 25, 50];
-const MAX_AMOUNT = 1_000_000;
+const PRESET_AMOUNTS = [10, 25, 50, 100];
+const MIN_AMOUNT = 5;
+const MAX_AMOUNT = 5_000;
 
 export const BuyChannel = () => {
-  const [amount, setAmount] = useState<number>(25);
+  const [amount, setAmount] = useState<number>(10);
   const [custom, setCustom] = useState(false);
   const [confirming, setConfirming] = useState(false);
 
@@ -177,7 +178,7 @@ export const BuyChannel = () => {
           <label className="text-xs font-medium text-muted-foreground">
             Amount{' '}
             <Badge variant="secondary" className="ml-1 text-[10px]">
-              $5 – ${MAX_AMOUNT.toLocaleString()}
+              ${MIN_AMOUNT} – ${MAX_AMOUNT.toLocaleString()}
             </Badge>
           </label>
           <div className="relative">
@@ -189,7 +190,7 @@ export const BuyChannel = () => {
               className="pl-8"
               placeholder="USD"
               type="number"
-              min={5}
+              min={MIN_AMOUNT}
               max={MAX_AMOUNT}
               value={amount && amount > 0 ? amount : ''}
               onChange={e => {
@@ -203,17 +204,23 @@ export const BuyChannel = () => {
 
       {/* Summary card */}
       <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-        <div className="flex items-center justify-between">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
           <div className="flex flex-col gap-0.5">
-            <span className="text-xs text-muted-foreground">You pay</span>
-            <span className="text-lg font-bold text-foreground">
+            <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+              You pay
+            </span>
+            <span className="text-xl font-bold text-foreground">
               {formattedAmount}
             </span>
           </div>
-          <ArrowRight size={20} className="text-primary" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+            <ArrowRight size={16} className="text-primary" />
+          </div>
           <div className="flex flex-col items-end gap-0.5">
-            <span className="text-xs text-muted-foreground">You receive</span>
-            <span className="text-lg font-bold text-primary">
+            <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+              You receive
+            </span>
+            <span className="text-xl font-bold text-primary">
               ~{formattedLiquidity}
             </span>
             <span className="text-[10px] text-muted-foreground">
@@ -227,7 +234,9 @@ export const BuyChannel = () => {
       {!confirming ? (
         <Button
           className="w-full"
-          disabled={!amount || amount < 5 || amount > MAX_AMOUNT || isLoading}
+          disabled={
+            !amount || amount < MIN_AMOUNT || amount > MAX_AMOUNT || isLoading
+          }
           onClick={() => setConfirming(true)}
         >
           Boost Your Liquidity for {formattedAmount}
