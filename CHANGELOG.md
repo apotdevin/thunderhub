@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.15.2](https://github.com/apotdevin/thunderhub/compare/v0.15.1...v0.15.2) (2026-03-16)
+
+
+### Features
+
+* rework boltz swaps ([efcb28d](https://github.com/apotdevin/thunderhub/commit/efcb28d587b8ea7e0d36e501cce7fb5dd6fde2c4))
+
+
+### Bug Fixes
+
+* channel open error ([fd505a5](https://github.com/apotdevin/thunderhub/commit/fd505a59423042ef635aa719be01bce1ff7aaedf))
+
+
+### Improvements
+
+* buy inbound cleanup ([eeca153](https://github.com/apotdevin/thunderhub/commit/eeca15378af58ea051513028ace5d986989ec306))
+* cleanup channels view ([9c72a21](https://github.com/apotdevin/thunderhub/commit/9c72a21bd7ff28150098d848678d4601c3adbe17))
+* cleanup table stylings ([d6729d4](https://github.com/apotdevin/thunderhub/commit/d6729d44097cba614d233364e974c473b45f6d87))
+* dependency updates ([9e2efb0](https://github.com/apotdevin/thunderhub/commit/9e2efb02c7f45f7dbf45bfac0e14a6218abb1dfc))
+* deps audit ([6a3bef4](https://github.com/apotdevin/thunderhub/commit/6a3bef400f5734d3d5e954b47ccbc03ebd4d097c))
+* expandable sidebar items ([026e905](https://github.com/apotdevin/thunderhub/commit/026e905b34ebc01e69a573aa5dac58a28e497ae0))
+* font change ([555d4f9](https://github.com/apotdevin/thunderhub/commit/555d4f976b42aacca5c5b201bd618fa34cb34838))
+* homepage cleanup ([1ae151c](https://github.com/apotdevin/thunderhub/commit/1ae151ccdf00c3cd9ba524886783f28a72105d19))
+* homepage style changes ([018c033](https://github.com/apotdevin/thunderhub/commit/018c033aea35b0cf42397f69f7ca88969ac50a67))
+* login view styling ([cc7999d](https://github.com/apotdevin/thunderhub/commit/cc7999dda0a7fc9f90117ca74bfef9f42d02f143))
+* migrate to tailwind ([#655](https://github.com/apotdevin/thunderhub/issues/655)) ([89e3e4c](https://github.com/apotdevin/thunderhub/commit/89e3e4cfbcd0dc89d7fe32aee6397c597be6cc28))
+* more styling changes ([cb676a4](https://github.com/apotdevin/thunderhub/commit/cb676a4b33822b72709dfd6e08dae54ec6519270))
+* more views ([4f8e249](https://github.com/apotdevin/thunderhub/commit/4f8e249af78d0592d55a17208743c80aa348518d))
+* page styling changes ([6b7577e](https://github.com/apotdevin/thunderhub/commit/6b7577e290ff83a106549dfde0a700d55db169ca))
+* quick action changes ([6df966b](https://github.com/apotdevin/thunderhub/commit/6df966b22afa3a6f78c1533c425d541f009b76eb))
+* sidebar events ([fdcd6da](https://github.com/apotdevin/thunderhub/commit/fdcd6dafaaa8b1ca2cb53ce63fa166e34c136a77))
+* small cleanup ([7bf7b99](https://github.com/apotdevin/thunderhub/commit/7bf7b995f7ea253b4c928cc275f380fb12a848ac))
+* stats page changes ([1f416e9](https://github.com/apotdevin/thunderhub/commit/1f416e950141f412e5c8cc2661783e649f601c9b))
+* styles cleanup ([fd3387a](https://github.com/apotdevin/thunderhub/commit/fd3387ae4ef11c6a394f542df8636e304973d4e2))
+* swap styling changes ([d7f7c34](https://github.com/apotdevin/thunderhub/commit/d7f7c343a3ed8b8dee7da1a6184b906116372bb9))
+* themes changes ([0cacfaa](https://github.com/apotdevin/thunderhub/commit/0cacfaaf017f25099ac5743bbff7455b4e674f9f))
+
 ### [0.15.1](https://github.com/apotdevin/thunderhub/compare/v0.15.0...v0.15.1) (2026-02-20)
 
 
