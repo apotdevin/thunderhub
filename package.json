@@ -41,7 +41,7 @@
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@fontsource-variable/noto-sans": "^5.2.10",
     "@nestjs/apollo": "^13.2.4",
-    "@nestjs/common": "^11.1.16",
+    "@nestjs/common": "^11.1.17",
     "@nestjs/config": "^4.0.3",
     "@nestjs/core": "^11.1.16",
     "@nestjs/graphql": "^13.2.4",
