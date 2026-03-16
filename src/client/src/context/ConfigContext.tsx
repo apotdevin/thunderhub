@@ -41,6 +41,8 @@ type State = {
   theme: string;
   sidebar: boolean;
   rightSidebar: boolean;
+  sidebarSwapExpanded: boolean;
+  sidebarEventsExpanded: boolean;
   fetchFees: boolean;
   fetchPrices: boolean;
   displayValues: boolean;
@@ -64,6 +66,8 @@ type ActionType =
       theme?: string;
       sidebar?: boolean;
       rightSidebar?: boolean;
+      sidebarSwapExpanded?: boolean;
+      sidebarEventsExpanded?: boolean;
       fetchFees?: boolean;
       fetchPrices?: boolean;
       displayValues?: boolean;
@@ -88,6 +92,8 @@ const getInitialState = (): State => {
     theme: themeTypes.indexOf(defT) > -1 ? defT : 'dark',
     sidebar: true,
     rightSidebar: true,
+    sidebarSwapExpanded: true,
+    sidebarEventsExpanded: true,
     fetchFees: config.fetchFees,
     fetchPrices: config.fetchPrices,
     displayValues: true,

@@ -5,11 +5,14 @@ import {
   Edit2,
   X,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Zap,
   Shuffle,
   Check,
   AlertTriangle,
 } from 'lucide-react';
+import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 import { useGetBoltzInfoQuery } from '../../graphql/queries/__generated__/getBoltzInfo.generated';
 import { useCreateBoltzReverseSwapMutation } from '../../graphql/mutations/__generated__/createBoltzReverseSwap.generated';
 import { usePayMutation } from '../../graphql/mutations/__generated__/pay.generated';
@@ -28,6 +31,7 @@ import { Slider } from '../../components/slider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { cn } from '@/lib/utils';
 
 // --- State machine for auto-pay flow ---
 
@@ -251,25 +255,43 @@ const SwapWidget = ({ max, min }: { max: number; min: number }) => {
 // --- Outer wrapper ---
 
 export const SidebarSwap = () => {
+  const { sidebarSwapExpanded } = useConfigState();
+  const dispatch = useConfigDispatch();
+
   const { data, loading, error } = useGetBoltzInfoQuery({
     onError: error => toast.error(getErrorContent(error)),
   });
 
+  const toggleExpanded = () => {
+    dispatch({ type: 'change', sidebarSwapExpanded: !sidebarSwapExpanded });
+  };
+
   if (loading) {
     return (
       <div className="p-2 border-t border-border/60">
-        <div className="flex items-center gap-1.5 mb-2">
+        <button
+          onClick={toggleExpanded}
+          className={cn(
+            'flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 hover:text-muted-foreground transition-colors',
+            sidebarSwapExpanded && 'mb-2'
+          )}
+        >
+          {sidebarSwapExpanded ? (
+            <ChevronDown size={10} />
+          ) : (
+            <ChevronUp size={10} />
+          )}
           <Shuffle size={13} className="text-emerald-500" />
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
-            Quick Swap
-          </span>
-        </div>
-        <div className="flex items-center justify-center py-4">
-          <Loader2
-            className="animate-spin text-muted-foreground/40"
-            size={16}
-          />
-        </div>
+          Quick Swap
+        </button>
+        {sidebarSwapExpanded && (
+          <div className="flex items-center justify-center py-4">
+            <Loader2
+              className="animate-spin text-muted-foreground/40"
+              size={16}
+            />
+          </div>
+        )}
       </div>
     );
   }
@@ -282,30 +304,45 @@ export const SidebarSwap = () => {
 
   return (
     <div className="p-2 border-t border-border/60">
-      <div className="flex items-center justify-between mb-2.5">
-        <div className="flex items-center gap-1.5">
+      <div
+        className={cn(
+          'flex items-center justify-between',
+          sidebarSwapExpanded && 'mb-2.5'
+        )}
+      >
+        <button
+          onClick={toggleExpanded}
+          className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+        >
+          {sidebarSwapExpanded ? (
+            <ChevronDown size={10} />
+          ) : (
+            <ChevronUp size={10} />
+          )}
           <Shuffle size={13} className="text-emerald-500" />
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
-            Quick Swap
-          </span>
-        </div>
+          Quick Swap
+        </button>
         <span className="text-[10px] text-muted-foreground/50">
-          {feePercent}% fee
+          {sidebarSwapExpanded ? `${feePercent}% fee` : 'LN → BTC'}
         </span>
       </div>
 
-      <SwapWidget max={max} min={min} />
+      {sidebarSwapExpanded && (
+        <>
+          <SwapWidget max={max} min={min} />
 
-      <div className="mt-2 text-center">
-        <a
-          href="https://boltz.exchange/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
-        >
-          Powered by Boltz
-        </a>
-      </div>
+          <div className="mt-2 text-center">
+            <a
+              href="https://boltz.exchange/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
+            >
+              Powered by Boltz
+            </a>
+          </div>
+        </>
+      )}
     </div>
   );
 };

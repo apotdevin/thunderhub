@@ -10,6 +10,7 @@ import {
   useNotificationState,
   useNotificationDispatch,
 } from '../../context/NotificationContext';
+import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 import {
   Popover,
   PopoverContent,
@@ -17,6 +18,7 @@ import {
 } from '../../components/ui/popover';
 import { Switch } from '../../components/ui/switch';
 import {
+  Activity,
   Trash2,
   Zap,
   ArrowRightLeft,
@@ -163,7 +165,8 @@ export const EventLog: FC = () => {
   const { entries } = useEventLogState();
   const dispatch = useEventLogDispatch();
   const { addEvent } = useEventLog();
-  const [collapsed, setCollapsed] = useState(false);
+  const { sidebarEventsExpanded } = useConfigState();
+  const configDispatch = useConfigDispatch();
   const [ping, setPing] = useState(false);
   const prevCount = useRef(entries.length);
 
@@ -194,10 +197,20 @@ export const EventLog: FC = () => {
     <div className="flex flex-col flex-1 min-h-0">
       <div className="flex items-center justify-between p-2 border-y border-border/60">
         <button
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={() =>
+            configDispatch({
+              type: 'change',
+              sidebarEventsExpanded: !sidebarEventsExpanded,
+            })
+          }
           className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 hover:text-muted-foreground transition-colors"
         >
-          {collapsed ? <ChevronUp size={10} /> : <ChevronDown size={10} />}
+          {sidebarEventsExpanded ? (
+            <ChevronDown size={10} />
+          ) : (
+            <ChevronUp size={10} />
+          )}
+          <Activity size={13} className="text-purple-400" />
           Events
           {entries.length > 0 && (
             <span className="text-muted-foreground/40 flex items-center gap-2">
@@ -247,7 +260,7 @@ export const EventLog: FC = () => {
           )}
         </div>
       </div>
-      {!collapsed && (
+      {sidebarEventsExpanded && (
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
           {!anyEnabled ? (
             <div className="flex flex-col items-center justify-center py-8 gap-1.5 text-muted-foreground/40">
