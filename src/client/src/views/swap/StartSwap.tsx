@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 import { Price } from '../../components/price/Price';
 import { getErrorContent } from '../../utils/error';
 import { useMutationResultWithReset } from '../../hooks/UseMutationWithReset';
-import { useSwapsDispatch } from './SwapContext';
+import { useBoltzSwapActions } from '../../context/BoltzSwapContext';
 
 type StartSwapProps = {
   max: number;
@@ -22,7 +22,7 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [address, setAddress] = useState<string>();
 
-  const dispatch = useSwapsDispatch();
+  const actions = useBoltzSwapActions();
 
   const [getQuote, { data: _data, loading }] =
     useCreateBoltzReverseSwapMutation({
@@ -32,13 +32,11 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
 
   useEffect(() => {
     if (!data?.createBoltzReverseSwap) return;
-    dispatch({
-      type: 'add',
-      swap: data.createBoltzReverseSwap,
-    });
-
+    const swap = data.createBoltzReverseSwap;
+    actions.addSwap(swap);
+    actions.openSwap(swap.id);
     resetMutation();
-  }, [data, dispatch, resetMutation]);
+  }, [data, actions, resetMutation]);
 
   return (
     <div>

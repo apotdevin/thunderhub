@@ -1,6 +1,5 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment } from 'react';
 import {
-  RefreshCw,
   Trash,
   ChevronRight,
   Clock,
@@ -8,18 +7,21 @@ import {
   AlertTriangle,
   XCircle,
 } from 'lucide-react';
-import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { getAddressLink } from '../../components/generic/helpers';
-import Modal from '../../components/modal/ReactModal';
-import { useGetBoltzSwapStatusQuery } from '../../graphql/queries/__generated__/getBoltzSwapStatus.generated';
-import { SwapClaim } from './SwapClaim';
-import { useSwapsDispatch, useSwapsState } from './SwapContext';
 import { useSwapExpire } from './SwapExpire';
-import { SwapQuote } from './SwapQuote';
-import { EnrichedSwap } from './types';
+import {
+  useBoltzSwaps,
+  useBoltzSwapActions,
+  SwapEntry,
+} from '../../context/BoltzSwapContext';
 
 const CREATED = 'swap.created';
 export const MEMPOOL = 'transaction.mempool';
@@ -69,37 +71,37 @@ const RowAction = ({ label }: { label: string }) => (
   </div>
 );
 
-const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
-  const dispatch = useSwapsDispatch();
+const ReadyRow = ({ swap }: { swap: SwapEntry }) => {
+  const actions = useBoltzSwapActions();
+  const time = useSwapExpire(swap.decodedInvoice?.expires_at);
 
-  const ReadyComponent = () => {
-    const time = useSwapExpire(swap.decodedInvoice?.expires_at);
-    return (
-      <button
-        className={clickableRow}
-        onClick={() => dispatch({ type: 'open', open: index })}
-      >
-        <div className={rowContent}>
-          <div className="flex flex-col gap-0.5 min-w-0">
-            <span className="text-xs font-medium font-mono truncate">
-              {swap.id}
-            </span>
-            {time && (
-              <span className="text-[10px] text-muted-foreground">{time}</span>
-            )}
-          </div>
-          <StatusBadge variant="success" icon={Clock}>
-            Ready to Pay
-          </StatusBadge>
+  return (
+    <button className={clickableRow} onClick={() => actions.openSwap(swap.id)}>
+      <div className={rowContent}>
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <span className="text-xs font-medium font-mono truncate">
+            {swap.id}
+          </span>
+          {time && (
+            <span className="text-[10px] text-muted-foreground">{time}</span>
+          )}
         </div>
-        <RowAction label="Pay" />
-      </button>
-    );
-  };
+        <StatusBadge variant="success" icon={Clock}>
+          Ready to Pay
+        </StatusBadge>
+      </div>
+      <RowAction label="Pay" />
+    </button>
+  );
+};
+
+const SwapRow = ({ swap }: { swap: SwapEntry }) => {
+  const actions = useBoltzSwapActions();
+  const status = swap.liveStatus?.status;
 
   if (!swap?.id) return null;
 
-  if (!swap.boltz?.status) {
+  if (!status) {
     return (
       <div className={rowBase}>
         <div className={rowContent}>
@@ -114,7 +116,7 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
     );
   }
 
-  switch (swap.boltz.status) {
+  switch (status) {
     case INVOICE_EXPIRED:
     case EXPIRED:
       return (
@@ -143,14 +145,12 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
         </div>
       );
     case CREATED:
-      return <ReadyComponent />;
+      return <ReadyRow swap={swap} />;
     case MEMPOOL:
       return (
         <button
           className={clickableRow}
-          onClick={() =>
-            dispatch({ type: 'claim', claim: index, claimType: MEMPOOL })
-          }
+          onClick={() => actions.openClaim(swap.id, MEMPOOL)}
         >
           <div className={rowContent}>
             <div className="flex flex-col gap-0.5 min-w-0">
@@ -172,9 +172,7 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
       return (
         <button
           className={clickableRow}
-          onClick={() =>
-            dispatch({ type: 'claim', claim: index, claimType: CONFIRMED })
-          }
+          onClick={() => actions.openClaim(swap.id, CONFIRMED)}
         >
           <div className={rowContent}>
             <div className="flex flex-col gap-0.5 min-w-0">
@@ -196,9 +194,7 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
       return (
         <button
           className={clickableRow}
-          onClick={() =>
-            dispatch({ type: 'claim', claim: index, claimType: CONFIRMED })
-          }
+          onClick={() => actions.openClaim(swap.id, CONFIRMED)}
         >
           <div className={rowContent}>
             <div className="flex flex-col gap-0.5 min-w-0">
@@ -228,7 +224,7 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
                 {getAddressLink(swap.receivingAddress)}
               </span>
             </div>
-            <StatusBadge variant="warning">{swap.boltz.status}</StatusBadge>
+            <StatusBadge variant="warning">{status}</StatusBadge>
           </div>
         </div>
       );
@@ -236,49 +232,8 @@ const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
 };
 
 export const SwapStatus = () => {
-  const { swaps, open, claim } = useSwapsState();
-  const dispatch = useSwapsDispatch();
-
-  const [enriched, setEnriched] = useState<EnrichedSwap[]>([]);
-
-  const { data, refetch, networkStatus } = useGetBoltzSwapStatusQuery({
-    notifyOnNetworkStatusChange: true,
-    variables: { ids: swaps.map((s: { id: string }) => s.id).filter(Boolean) },
-    fetchPolicy: 'network-only',
-    skip: !swaps.length,
-  });
-
-  const loading = [1, 2, 3, 4, 6].includes(networkStatus);
-
-  useEffect(() => {
-    if (loading || !data?.getBoltzSwapStatus) return;
-
-    const swapsWithState: EnrichedSwap[] = swaps.map(swap => {
-      const status = data.getBoltzSwapStatus.find(s => s?.id === swap.id);
-      const enriched = { ...swap, boltz: status?.boltz };
-      return enriched;
-    });
-
-    setEnriched(swapsWithState);
-  }, [data, loading, swaps]);
-
-  const handleCleanup = () => {
-    const cleaned = enriched.filter(s => {
-      if (!s.boltz?.status) return true;
-      const status = s.boltz.status;
-      if (
-        status === SETTLED ||
-        status === REFUNDED ||
-        status === EXPIRED ||
-        status === INVOICE_EXPIRED
-      ) {
-        return false;
-      }
-      return true;
-    });
-
-    dispatch({ type: 'cleanup', swaps: cleaned });
-  };
+  const { swaps } = useBoltzSwaps();
+  const actions = useBoltzSwapActions();
 
   return (
     <>
@@ -293,53 +248,37 @@ export const SwapStatus = () => {
             )}
           </h2>
           {swaps.length > 0 && (
-            <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                disabled={loading}
-                onClick={() => refetch()}
-              >
-                <RefreshCw
-                  size={14}
-                  className={loading ? 'animate-spin' : ''}
-                />
-              </Button>
-              <div data-tip data-for={`cleanup`}>
+            <Tooltip>
+              <TooltipTrigger>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8"
-                  disabled={loading}
-                  onClick={handleCleanup}
+                  onClick={() => actions.cleanup()}
                 >
                   <Trash size={14} />
                 </Button>
-              </div>
-            </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                Cleanup expired, refunded and completed swaps.
+              </TooltipContent>
+            </Tooltip>
           )}
         </div>
 
         <Card>
           <CardContent>
-            {loading && (
-              <p className="text-xs text-muted-foreground py-4 text-center">
-                Loading swap statuses...
-              </p>
-            )}
-
-            {!loading && (!swaps.length || !data?.getBoltzSwapStatus) && (
+            {!swaps.length && (
               <p className="text-xs text-muted-foreground py-4 text-center">
                 No swaps yet. Create one above to get started.
               </p>
             )}
 
-            {!loading && enriched.length > 0 && (
+            {swaps.length > 0 && (
               <div className="divide-y divide-border">
-                {enriched.map((swap, index) => (
-                  <Fragment key={`${swap?.id}-${index}`}>
-                    <SwapRow swap={swap} index={index} />
+                {swaps.map(swap => (
+                  <Fragment key={swap.id}>
+                    <SwapRow swap={swap} />
                   </Fragment>
                 ))}
               </div>
@@ -347,17 +286,6 @@ export const SwapStatus = () => {
           </CardContent>
         </Card>
       </div>
-
-      <ReactTooltip id={`cleanup`}>
-        Cleanup expired, refunded and completed swaps.
-      </ReactTooltip>
-
-      <Modal
-        isOpen={typeof open === 'number' || typeof claim === 'number'}
-        closeCallback={() => dispatch({ type: 'close' })}
-      >
-        {typeof open === 'number' ? <SwapQuote /> : <SwapClaim />}
-      </Modal>
     </>
   );
 };

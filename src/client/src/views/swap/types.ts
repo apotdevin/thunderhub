@@ -1,8 +1,4 @@
-import {
-  BoltzSwapStatus,
-  CreateBoltzReverseSwapType,
-  DecodeInvoice,
-} from '../../graphql/types';
+import { CreateBoltzReverseSwapType, DecodeInvoice } from '../../graphql/types';
 
 export type CreateBoltzReverseSwap = Pick<
   CreateBoltzReverseSwapType,
@@ -28,7 +24,3 @@ export type CreateBoltzReverseSwap = Pick<
     | 'destination_node'
   > | null;
 } & { claimTransaction?: string };
-
-export type EnrichedSwap = {
-  boltz?: Pick<BoltzSwapStatus, 'status' | 'transaction'> | null;
-} & CreateBoltzReverseSwap;

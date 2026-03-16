@@ -83,22 +83,6 @@ type BoltzInfoType {
   min: Float!
 }
 
-type BoltzSwap {
-  boltz: BoltzSwapStatus
-  id: String
-}
-
-type BoltzSwapStatus {
-  status: String!
-  transaction: BoltzSwapTransaction
-}
-
-type BoltzSwapTransaction {
-  eta: Float
-  hex: String
-  id: String
-}
-
 type ChainAddressSend {
   confirmationCount: Float!
   id: String!
@@ -664,7 +648,6 @@ type Query {
   getBitcoinFees: BitcoinFee!
   getBitcoinPrice: String!
   getBoltzInfo: BoltzInfoType!
-  getBoltzSwapStatus(ids: [String!]!): [BoltzSwap!]!
   getChainTransactions: [ChainTransaction!]!
   getChannel(id: String!): SingleChannel!
   getChannelReport: ChannelReport!

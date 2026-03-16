@@ -13,6 +13,8 @@ import { decode } from 'light-bolt11-decoder';
 interface PayProps {
   predefinedRequest?: string;
   payCallback?: () => void;
+  defaultFee?: number;
+  defaultPaths?: number;
 }
 
 const getDecodedInvoice = (invoice: string | undefined | null) => {
@@ -68,11 +70,16 @@ const DecodeInvoice: FC<{ invoice: string | undefined | null }> = ({
   );
 };
 
-export const Pay: FC<PayProps> = ({ predefinedRequest, payCallback }) => {
+export const Pay: FC<PayProps> = ({
+  predefinedRequest,
+  payCallback,
+  defaultFee = 10,
+  defaultPaths = 10,
+}) => {
   const [request, setRequest] = useState<string>(predefinedRequest || '');
   const [peers, setPeers] = useState<string[]>([]);
-  const [fee, setFee] = useState<number>(10);
-  const [paths, setPaths] = useState<number>(1);
+  const [fee, setFee] = useState<number>(defaultFee);
+  const [paths, setPaths] = useState<number>(defaultPaths);
   const [confirming, setConfirming] = useState(false);
 
   const [pay, { loading }] = usePayMutation({
@@ -165,6 +172,7 @@ export const Pay: FC<PayProps> = ({ predefinedRequest, payCallback }) => {
           disabled={loading || !request}
           className="w-full"
           onClick={() => setConfirming(true)}
+          autoFocus
         >
           Pay
         </Button>

@@ -6,20 +6,22 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Price } from '../../components/price/Price';
 import { Pay } from '../home/account/pay/Pay';
-import { useSwapsDispatch, useSwapsState } from './SwapContext';
+import {
+  useBoltzSwaps,
+  useBoltzSwapById,
+} from '../../context/BoltzSwapContext';
+import { SwapProgressStepper, getSwapStep } from './SwapProgress';
 import { Info, ArrowDown } from 'lucide-react';
 
 export const SwapQuote = () => {
-  const { swaps, open } = useSwapsState();
-  const dispatch = useSwapsDispatch();
+  const { openSwapId } = useBoltzSwaps();
+  const openSwap = useBoltzSwapById(openSwapId);
 
-  if (typeof open !== 'number') {
+  if (!openSwapId || !openSwap) {
     return null;
   }
 
-  const openSwap = swaps[open];
-
-  if (!openSwap?.decodedInvoice) {
+  if (!openSwap.decodedInvoice) {
     return (
       <div className="flex items-center justify-center p-6 text-sm text-muted-foreground">
         <Info className="mr-2" size={14} />
@@ -30,9 +32,12 @@ export const SwapQuote = () => {
 
   const { decodedInvoice, onchainAmount, receivingAddress, invoice } = openSwap;
 
-  const handlePaid = () => {
-    dispatch({ type: 'close' });
-  };
+  const maxFee = Math.min(
+    10000,
+    Math.max(100, Math.round(decodedInvoice.tokens * 0.005))
+  );
+
+  const step = getSwapStep(openSwap);
 
   return (
     <div className="space-y-4">
@@ -42,6 +47,8 @@ export const SwapQuote = () => {
           {openSwap.id}
         </p>
       </div>
+
+      <SwapProgressStepper currentStep={step} />
 
       <div className="space-y-1 text-sm">
         {renderLine(
@@ -93,12 +100,11 @@ export const SwapQuote = () => {
         <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           Pay Invoice
         </h4>
-        <Pay predefinedRequest={invoice} payCallback={handlePaid} />
-      </div>
-
-      <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-center text-xs text-amber-600 dark:text-amber-400">
-        It is ok to close this modal after 5 seconds of having paid even if it
-        still shows as loading.
+        <Pay
+          predefinedRequest={invoice}
+          defaultFee={maxFee}
+          defaultPaths={10}
+        />
       </div>
     </div>
   );

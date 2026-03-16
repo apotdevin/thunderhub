@@ -119,25 +119,6 @@ export type BoltzInfoType = {
   min: Scalars['Float']['output'];
 };
 
-export type BoltzSwap = {
-  __typename?: 'BoltzSwap';
-  boltz?: Maybe<BoltzSwapStatus>;
-  id?: Maybe<Scalars['String']['output']>;
-};
-
-export type BoltzSwapStatus = {
-  __typename?: 'BoltzSwapStatus';
-  status: Scalars['String']['output'];
-  transaction?: Maybe<BoltzSwapTransaction>;
-};
-
-export type BoltzSwapTransaction = {
-  __typename?: 'BoltzSwapTransaction';
-  eta?: Maybe<Scalars['Float']['output']>;
-  hex?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['String']['output']>;
-};
-
 export type ChainAddressSend = {
   __typename?: 'ChainAddressSend';
   confirmationCount: Scalars['Float']['output'];
@@ -886,7 +867,6 @@ export type Policy = {
 
 export type Query = {
   __typename?: 'Query';
-  decodeRequest: DecodeInvoice;
   getAccount: ServerAccount;
   getAmbossLoginToken: Scalars['String']['output'];
   getAmbossUser?: Maybe<AmbossUser>;
@@ -894,7 +874,6 @@ export type Query = {
   getBitcoinFees: BitcoinFee;
   getBitcoinPrice: Scalars['String']['output'];
   getBoltzInfo: BoltzInfoType;
-  getBoltzSwapStatus: Array<BoltzSwap>;
   getChainTransactions: Array<ChainTransaction>;
   getChannel: SingleChannel;
   getChannelReport: ChannelReport;
@@ -930,16 +909,8 @@ export type Query = {
   verifyMessage: Scalars['String']['output'];
 };
 
-export type QueryDecodeRequestArgs = {
-  request: Scalars['String']['input'];
-};
-
 export type QueryGetAmbossLoginTokenArgs = {
   redirect_url?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type QueryGetBoltzSwapStatusArgs = {
-  ids: Array<Scalars['String']['input']>;
 };
 
 export type QueryGetChannelArgs = {

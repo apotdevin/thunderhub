@@ -10,7 +10,11 @@ import { useConfigState } from '../../context/ConfigContext';
 import { useClaimBoltzTransactionMutation } from '../../graphql/mutations/__generated__/claimBoltzTransaction.generated';
 import { useBitcoinFees } from '../../hooks/UseBitcoinFees';
 import { getErrorContent } from '../../utils/error';
-import { useSwapsDispatch, useSwapsState } from './SwapContext';
+import {
+  useBoltzSwaps,
+  useBoltzSwapById,
+  useBoltzSwapActions,
+} from '../../context/BoltzSwapContext';
 import { MEMPOOL } from './SwapStatus';
 
 export const SwapClaim = () => {
@@ -52,23 +56,19 @@ export const SwapClaim = () => {
     return options;
   })();
 
-  const { swaps, claim, claimType } = useSwapsState();
-  const dispatch = useSwapsDispatch();
+  const { claimSwapId, claimType } = useBoltzSwaps();
+  const claimingSwap = useBoltzSwapById(claimSwapId);
+  const actions = useBoltzSwapActions();
 
-  const [claimTransaction, { data, loading }] =
-    useClaimBoltzTransactionMutation({
-      onError: error => toast.error(getErrorContent(error)),
-    });
-
-  useEffect(() => {
-    if (!data?.claimBoltzTransaction || typeof claim !== 'number') return;
-    dispatch({
-      type: 'complete',
-      index: claim,
-      transactionId: data.claimBoltzTransaction,
-    });
-    toast.success('Transaction Claimed');
-  }, [data, dispatch, claim]);
+  const [claimTransaction, { loading }] = useClaimBoltzTransactionMutation({
+    onError: error => toast.error(getErrorContent(error)),
+    onCompleted: data => {
+      if (data?.claimBoltzTransaction && claimSwapId) {
+        actions.completeSwap(claimSwapId, data.claimBoltzTransaction);
+        toast.success('Transaction Claimed');
+      }
+    },
+  });
 
   const Missing = () => (
     <div className="flex items-center justify-center p-6 text-sm text-muted-foreground">
@@ -77,11 +77,10 @@ export const SwapClaim = () => {
     </div>
   );
 
-  if (typeof claim !== 'number') {
+  if (!claimSwapId || !claimingSwap) {
     return <Missing />;
   }
 
-  const claimingSwap = swaps[claim];
   const {
     redeemScript,
     preimage,
@@ -147,6 +146,7 @@ export const SwapClaim = () => {
             Fee Amount
           </label>
           <span className="text-sm font-medium tabular-nums">
+            {/* 111 vbytes ≈ typical claim tx size */}
             <Price amount={fee * 111} />
           </span>
         </div>
