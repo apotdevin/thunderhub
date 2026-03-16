@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.15.3](https://github.com/apotdevin/thunderhub/compare/v0.15.2...v0.15.3) (2026-03-16)
+
+
+### Bug Fixes
+
+* build pipeline ([b9a495f](https://github.com/apotdevin/thunderhub/commit/b9a495ffc019c6610428843ec353d60f49eb8579))
+
+
+### CI
+
+* actions version bumps ([8123134](https://github.com/apotdevin/thunderhub/commit/81231342adf12322d0df872c256013d580ea5235))
+
 ### [0.15.2](https://github.com/apotdevin/thunderhub/compare/v0.15.1...v0.15.2) (2026-03-16)
 
 
