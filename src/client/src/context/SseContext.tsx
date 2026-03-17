@@ -71,6 +71,8 @@ const SseProvider: FC<{ children?: ReactNode }> = ({ children }) => {
     };
 
     es.onerror = () => {
+      es.close();
+      eventSource.current = undefined;
       setError('SSE connection error');
       setStatus('disconnected');
     };

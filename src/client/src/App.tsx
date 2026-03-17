@@ -12,6 +12,7 @@ import { useListener } from './hooks/UseListener';
 import { SseProvider } from './context/SseContext';
 import { EventLogProvider } from './context/EventLogContext';
 import { config } from './config/thunderhubConfig';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { LoadingCard } from './components/loading/LoadingCard';
 import { useGetNodeInfoQuery } from './graphql/queries/__generated__/getNodeInfo.generated';
 import { Navigation } from './layouts/navigation/Navigation';
@@ -159,20 +160,22 @@ export default function App() {
   const apolloClient = useApollo('', null);
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <ConfigProvider initialConfig={{ theme: savedTheme }}>
-        <SseProvider>
-          <ContextProvider>
-            <EventLogProvider>
-              <TooltipProvider>
-                <Wrapper>
-                  <AuthenticatedRoutes />
-                </Wrapper>
-              </TooltipProvider>
-            </EventLogProvider>
-          </ContextProvider>
-        </SseProvider>
-      </ConfigProvider>
-    </ApolloProvider>
+    <ErrorBoundary>
+      <ApolloProvider client={apolloClient}>
+        <ConfigProvider initialConfig={{ theme: savedTheme }}>
+          <SseProvider>
+            <ContextProvider>
+              <EventLogProvider>
+                <TooltipProvider>
+                  <Wrapper>
+                    <AuthenticatedRoutes />
+                  </Wrapper>
+                </TooltipProvider>
+              </EventLogProvider>
+            </ContextProvider>
+          </SseProvider>
+        </ConfigProvider>
+      </ApolloProvider>
+    </ErrorBoundary>
   );
 }
