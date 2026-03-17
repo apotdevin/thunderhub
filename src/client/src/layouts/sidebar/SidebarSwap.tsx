@@ -259,6 +259,7 @@ export const SidebarSwap = () => {
   const dispatch = useConfigDispatch();
 
   const { data, loading, error } = useGetBoltzInfoQuery({
+    skip: !sidebarSwapExpanded,
     onError: error => toast.error(getErrorContent(error)),
   });
 
@@ -296,11 +297,11 @@ export const SidebarSwap = () => {
     );
   }
 
-  if (error || !data?.getBoltzInfo) {
+  if (error || (sidebarSwapExpanded && !loading && !data?.getBoltzInfo)) {
     return null;
   }
 
-  const { max, min, feePercent } = data.getBoltzInfo;
+  const boltzInfo = data?.getBoltzInfo;
 
   return (
     <div className="p-2 border-t border-border/60">
@@ -323,13 +324,13 @@ export const SidebarSwap = () => {
           Quick Swap
         </button>
         <span className="text-[10px] text-muted-foreground/50">
-          {sidebarSwapExpanded ? `${feePercent}% fee` : 'LN → BTC'}
+          {boltzInfo ? `${boltzInfo.feePercent}% fee` : 'LN → BTC'}
         </span>
       </div>
 
-      {sidebarSwapExpanded && (
+      {sidebarSwapExpanded && boltzInfo && (
         <>
-          <SwapWidget max={max} min={min} />
+          <SwapWidget max={boltzInfo.max} min={boltzInfo.min} />
 
           <div className="mt-2 text-center">
             <a
