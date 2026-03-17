@@ -73,7 +73,7 @@ const DecodeInvoice: FC<{ invoice: string | undefined | null }> = ({
 export const Pay: FC<PayProps> = ({
   predefinedRequest,
   payCallback,
-  defaultFee = 10,
+  defaultFee = 100,
   defaultPaths = 10,
 }) => {
   const [request, setRequest] = useState<string>(predefinedRequest || '');

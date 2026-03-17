@@ -1,4 +1,11 @@
-import { Sun, Moon, Monitor, Heart } from 'lucide-react';
+import {
+  Sun,
+  Moon,
+  Monitor,
+  Heart,
+  ArrowDownToLine,
+  ArrowUpFromLine,
+} from 'lucide-react';
 import { NodeInfo } from '../../layouts/navigation/nodeInfo/NodeInfo';
 import { Navigation } from '../../layouts/navigation/Navigation';
 import { LogoutButton } from '../logoutButton';
@@ -11,9 +18,16 @@ import { usePriceState } from '../../context/PriceContext';
 interface BurgerProps {
   setOpen: (state: boolean) => void;
   openDonate?: () => void;
+  openDeposit?: () => void;
+  openWithdraw?: () => void;
 }
 
-export const BurgerMenu = ({ setOpen, openDonate }: BurgerProps) => {
+export const BurgerMenu = ({
+  setOpen,
+  openDonate,
+  openDeposit,
+  openWithdraw,
+}: BurgerProps) => {
   const { theme, currency } = useConfigState();
   const dispatch = useConfigDispatch();
   const { dontShow } = usePriceState();
@@ -73,6 +87,36 @@ export const BurgerMenu = ({ setOpen, openDonate }: BurgerProps) => {
               <Monitor size={12} />
             </ToggleGroupItem>
           </ToggleGroup>
+        </div>
+        <div className="flex gap-2">
+          {openDeposit && (
+            <Button
+              onClick={() => {
+                openDeposit();
+                setOpen(false);
+              }}
+              variant="outline"
+              size="default"
+              className="flex-1"
+            >
+              <ArrowDownToLine size={14} />
+              <span>Deposit</span>
+            </Button>
+          )}
+          {openWithdraw && (
+            <Button
+              onClick={() => {
+                openWithdraw();
+                setOpen(false);
+              }}
+              variant="outline"
+              size="default"
+              className="flex-1"
+            >
+              <ArrowUpFromLine size={14} />
+              <span>Withdraw</span>
+            </Button>
+          )}
         </div>
         <div className="flex gap-2">
           {openDonate && (

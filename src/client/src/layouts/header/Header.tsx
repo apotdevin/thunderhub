@@ -10,6 +10,8 @@ import {
   PanelLeft,
   PanelRight,
   LucideProps,
+  ArrowDownToLine,
+  ArrowUpFromLine,
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { LogoutButton } from '../../components/logoutButton';
@@ -17,6 +19,14 @@ import {
   useDonate,
   DonateModal,
 } from '../../views/home/quickActions/donate/DonateContent';
+import {
+  useDeposit,
+  DepositModal,
+} from '../../views/home/quickActions/exchange/DepositContent';
+import {
+  useWithdraw,
+  WithdrawModal,
+} from '../../views/home/quickActions/exchange/WithdrawContent';
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
 import { Link } from '../../components/link/Link';
 import { cn } from '../../lib/utils';
@@ -50,6 +60,18 @@ export const Header = () => {
     closeDonate,
   } = useDonate();
 
+  const {
+    openDeposit,
+    modalOpen: depositModalOpen,
+    closeDeposit,
+  } = useDeposit();
+
+  const {
+    openWithdraw,
+    modalOpen: withdrawModalOpen,
+    closeWithdraw,
+  } = useWithdraw();
+
   const isRoot = pathname === MAIN || pathname === SSO;
 
   const renderLoggedIn = () => (
@@ -66,7 +88,12 @@ export const Header = () => {
             showCloseButton={true}
             className="p-0 w-[280px]"
           >
-            <BurgerMenu setOpen={setOpen} openDonate={openDonate} />
+            <BurgerMenu
+              setOpen={setOpen}
+              openDonate={openDonate}
+              openDeposit={openDeposit}
+              openWithdraw={openWithdraw}
+            />
           </SheetContent>
         </Sheet>
 
@@ -89,6 +116,27 @@ export const Header = () => {
       </div>
 
       <div className="hidden md:flex items-center gap-1">
+        <Button
+          onClick={openDeposit}
+          variant="ghost"
+          size="sm"
+          className="text-muted-foreground hover:text-foreground text-xs h-7 px-2"
+        >
+          <ArrowDownToLine size={12} className="text-green-500" />
+          Deposit
+        </Button>
+        <Button
+          onClick={openWithdraw}
+          variant="ghost"
+          size="sm"
+          className="text-muted-foreground hover:text-foreground text-xs h-7 px-2"
+        >
+          <ArrowUpFromLine size={12} className="text-orange-500" />
+          Withdraw
+        </Button>
+
+        <div className="w-px h-4 bg-border mx-0.5" />
+
         {/* Currency toggle */}
         <ToggleGroup
           type="single"
@@ -241,6 +289,11 @@ export const Header = () => {
         payRequest={donatePayRequest}
         modalOpen={donateModalOpen}
         closeDonate={closeDonate}
+      />
+      <DepositModal modalOpen={depositModalOpen} closeDeposit={closeDeposit} />
+      <WithdrawModal
+        modalOpen={withdrawModalOpen}
+        closeWithdraw={closeWithdraw}
       />
     </>
   );
