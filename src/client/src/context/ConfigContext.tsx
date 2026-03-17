@@ -42,6 +42,8 @@ type State = {
   sidebar: boolean;
   rightSidebar: boolean;
   sidebarSwapExpanded: boolean;
+  sidebarBalancesExpanded: boolean;
+  sidebarLiquidityExpanded: boolean;
   sidebarEventsExpanded: boolean;
   fetchFees: boolean;
   fetchPrices: boolean;
@@ -67,6 +69,8 @@ type ActionType =
       sidebar?: boolean;
       rightSidebar?: boolean;
       sidebarSwapExpanded?: boolean;
+      sidebarBalancesExpanded?: boolean;
+      sidebarLiquidityExpanded?: boolean;
       sidebarEventsExpanded?: boolean;
       fetchFees?: boolean;
       fetchPrices?: boolean;
@@ -93,6 +97,8 @@ const getInitialState = (): State => {
     sidebar: true,
     rightSidebar: true,
     sidebarSwapExpanded: true,
+    sidebarBalancesExpanded: true,
+    sidebarLiquidityExpanded: true,
     sidebarEventsExpanded: true,
     fetchFees: config.fetchFees,
     fetchPrices: config.fetchPrices,

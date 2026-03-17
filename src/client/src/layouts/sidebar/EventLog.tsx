@@ -25,7 +25,6 @@ import {
   Cable,
   FileText,
   ChevronDown,
-  ChevronUp,
   Plus,
   Settings,
 } from 'lucide-react';
@@ -205,11 +204,10 @@ export const EventLog: FC = () => {
           }
           className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 hover:text-muted-foreground transition-colors"
         >
-          {sidebarEventsExpanded ? (
-            <ChevronDown size={10} />
-          ) : (
-            <ChevronUp size={10} />
-          )}
+          <ChevronDown
+            size={10}
+            className={`transition-transform ${sidebarEventsExpanded ? '' : '-rotate-90'}`}
+          />
           <Activity size={13} className="text-purple-400" />
           Events
           {entries.length > 0 && (

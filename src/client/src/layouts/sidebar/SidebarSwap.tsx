@@ -6,7 +6,6 @@ import {
   X,
   ChevronRight,
   ChevronDown,
-  ChevronUp,
   Zap,
   Shuffle,
   Check,
@@ -269,7 +268,7 @@ export const SidebarSwap = () => {
 
   if (loading) {
     return (
-      <div className="p-2 border-t border-border/60">
+      <div className="p-2">
         <button
           onClick={toggleExpanded}
           className={cn(
@@ -277,11 +276,10 @@ export const SidebarSwap = () => {
             sidebarSwapExpanded && 'mb-2'
           )}
         >
-          {sidebarSwapExpanded ? (
-            <ChevronDown size={10} />
-          ) : (
-            <ChevronUp size={10} />
-          )}
+          <ChevronDown
+            size={10}
+            className={`transition-transform ${sidebarSwapExpanded ? '' : '-rotate-90'}`}
+          />
           <Shuffle size={13} className="text-emerald-500" />
           Quick Swap
         </button>
@@ -304,7 +302,7 @@ export const SidebarSwap = () => {
   const boltzInfo = data?.getBoltzInfo;
 
   return (
-    <div className="p-2 border-t border-border/60">
+    <div className="p-2">
       <div
         className={cn(
           'flex items-center justify-between',
@@ -315,11 +313,10 @@ export const SidebarSwap = () => {
           onClick={toggleExpanded}
           className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 hover:text-muted-foreground transition-colors"
         >
-          {sidebarSwapExpanded ? (
-            <ChevronDown size={10} />
-          ) : (
-            <ChevronUp size={10} />
-          )}
+          <ChevronDown
+            size={10}
+            className={`transition-transform ${sidebarSwapExpanded ? '' : '-rotate-90'}`}
+          />
           <Shuffle size={13} className="text-emerald-500" />
           Quick Swap
         </button>
