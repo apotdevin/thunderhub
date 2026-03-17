@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.15.4](https://github.com/apotdevin/thunderhub/compare/v0.15.2...v0.15.4) (2026-03-17)
+
+
+### Features
+
+* deposit and withdraw flows ([11921ef](https://github.com/apotdevin/thunderhub/commit/11921effe0012aa85d2c110400a8128540f2223c))
+
+
+### Bug Fixes
+
+* build pipeline ([b9a495f](https://github.com/apotdevin/thunderhub/commit/b9a495ffc019c6610428843ec353d60f49eb8579))
+
+
+### CI
+
+* actions version bumps ([8123134](https://github.com/apotdevin/thunderhub/commit/81231342adf12322d0df872c256013d580ea5235))
+
+
+### Improvements
+
+* **release:** 0.15.3 ([2e9b1f2](https://github.com/apotdevin/thunderhub/commit/2e9b1f23b2fd0a29ace7f732317c4b4140ce90e2))
+* skip query when not expanded ([94b12c6](https://github.com/apotdevin/thunderhub/commit/94b12c6641059b70dd23f398b618d2d1321b3205))
+
 ### [0.15.3](https://github.com/apotdevin/thunderhub/compare/v0.15.2...v0.15.3) (2026-03-16)
 
 
