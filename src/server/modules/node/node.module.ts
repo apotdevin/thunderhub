@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AccountsModule } from '../accounts/accounts.module';
-import { LndModule } from './lnd/lnd.module';
+import { ProviderRegistryModule } from './provider-registry.module';
 import { NodeService } from './node.service';
 
 @Module({
-  imports: [LndModule, AccountsModule],
+  imports: [ProviderRegistryModule, AccountsModule],
   providers: [NodeService],
   exports: [NodeService],
 })

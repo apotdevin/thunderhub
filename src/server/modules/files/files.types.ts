@@ -1,3 +1,5 @@
+import { NodeType } from '../node/lightning.types';
+
 export type EncodingType = 'hex' | 'utf-8';
 export type BitcoinNetwork =
   | 'mainnet'
@@ -7,6 +9,7 @@ export type BitcoinNetwork =
   | 'signet';
 
 export type AccountType = {
+  type?: string;
   name?: string;
   serverUrl?: string;
   lndDir?: string;
@@ -18,9 +21,11 @@ export type AccountType = {
   certificate?: string;
   encrypted?: boolean;
   twofaSecret?: string | null;
+  authToken?: string;
 };
 
 export type UnresolvedAccountType = {
+  type?: string;
   name?: string;
   serverUrl?: string;
   lndDir?: string;
@@ -31,9 +36,11 @@ export type UnresolvedAccountType = {
   macaroon?: string;
   certificate?: string;
   encrypted?: boolean | string;
+  authToken?: string;
 };
 
 export type ParsedAccount = {
+  type: NodeType;
   index: number;
   name: string;
   hash: string;
@@ -44,6 +51,7 @@ export type ParsedAccount = {
   encrypted: boolean;
   encryptedMacaroon: string;
   twofaSecret: string;
+  authToken?: string;
 };
 
 export type AccountConfigType = {

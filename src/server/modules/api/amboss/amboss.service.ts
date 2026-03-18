@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Interval } from '@nestjs/schedule';
-import { getWalletInfo } from 'lightning';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { getNetwork } from 'src/server/utils/network';
 import { Logger } from 'winston';
@@ -33,11 +32,10 @@ import { toWithError } from 'src/server/utils/async';
 const ONE_MINUTE = 60 * 1000;
 export const ONE_MONTH_SECONDS = 60 * 60 * 24 * 30;
 
-type NodeType = {
+type AmbossNode = {
   id: string;
   name: string;
   pubkey: string;
-  lnd: any;
 };
 
 type ChannelBalanceInputType = {
@@ -300,7 +298,7 @@ export class AmbossService {
           if (accounts.hasOwnProperty(key)) {
             const account = accounts[key];
             if (!account.encrypted) {
-              validAccounts.push({ id: account.hash, lnd: account.lnd });
+              validAccounts.push({ id: account.hash });
             }
           }
         }
@@ -311,10 +309,10 @@ export class AmbossService {
       // Try to connect to nodes
       checkNodes: [
         'getNodes',
-        async ({ getNodes }: { getNodes: { id: string; lnd: any }[] }) => {
-          return map(getNodes, async ({ lnd, id }) => {
+        async ({ getNodes }: { getNodes: { id: string }[] }) => {
+          return map(getNodes, async ({ id }) => {
             try {
-              const info = await getWalletInfo({ lnd });
+              const info = await this.nodeService.getWalletInfo(id);
 
               const network = getNetwork(info?.chains?.[0] || '');
               const sliced = info.public_key.slice(0, 10);
@@ -324,7 +322,6 @@ export class AmbossService {
                 id,
                 name,
                 pubkey: info.public_key,
-                lnd,
                 network,
               };
             } catch (err) {
@@ -340,7 +337,7 @@ export class AmbossService {
       // Check which nodes are available and remove duplicates
       checkAvailable: [
         'checkNodes',
-        async ({ checkNodes }: { checkNodes: NodeType[] }) => {
+        async ({ checkNodes }: { checkNodes: AmbossNode[] }) => {
           const unique = checkNodes.filter(Boolean);
 
           if (!unique.length) {
@@ -439,7 +436,7 @@ export class AmbossService {
           if (accounts.hasOwnProperty(key)) {
             const account = accounts[key];
             if (!account.encrypted) {
-              validAccounts.push({ id: account.hash, lnd: account.lnd });
+              validAccounts.push({ id: account.hash });
             }
           }
         }
@@ -450,10 +447,10 @@ export class AmbossService {
       // Try to connect to nodes
       checkNodes: [
         'getNodes',
-        async ({ getNodes }: { getNodes: { id: string; lnd: any }[] }) => {
-          return map(getNodes, async ({ lnd, id }) => {
+        async ({ getNodes }: { getNodes: { id: string }[] }) => {
+          return map(getNodes, async ({ id }) => {
             try {
-              const info = await getWalletInfo({ lnd });
+              const info = await this.nodeService.getWalletInfo(id);
 
               const network = getNetwork(info?.chains?.[0] || '');
               const sliced = info.public_key.slice(0, 10);
@@ -463,7 +460,6 @@ export class AmbossService {
                 id,
                 name,
                 pubkey: info.public_key,
-                lnd,
                 network,
               };
             } catch (err) {
@@ -479,7 +475,7 @@ export class AmbossService {
       // Check which nodes are available and remove duplicates
       checkAvailable: [
         'checkNodes',
-        async ({ checkNodes }: { checkNodes: NodeType[] }) => {
+        async ({ checkNodes }: { checkNodes: AmbossNode[] }) => {
           const unique = checkNodes.filter(Boolean);
 
           if (!unique.length) {
