@@ -5,6 +5,7 @@ type SSOConfig = {
   certPath: string;
   macaroonPath: string;
   dangerousNoSSOAuth: boolean;
+  nodeType: string;
 };
 
 type Throttler = {
@@ -131,6 +132,7 @@ export default (): ConfigType => {
     certPath: process.env.SSO_CERT_PATH || '',
     macaroonPath: process.env.SSO_MACAROON_PATH || '',
     dangerousNoSSOAuth: process.env.DANGEROUS_NO_SSO_AUTH === 'true',
+    nodeType: process.env.SSO_NODE_TYPE || 'lnd',
   };
 
   const throttler = {

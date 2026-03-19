@@ -66,11 +66,20 @@ export class SubService implements OnApplicationBootstrap {
               for (const key in accounts) {
                 if (accounts.hasOwnProperty(key)) {
                   const account = accounts[key];
-                  // Subscriptions currently only support LND nodes
-                  if (!account.encrypted && account.type === NodeType.LND) {
+                  const isSupported =
+                    account.type === NodeType.LND ||
+                    account.type === NodeType.LITD;
+
+                  if (!account.encrypted && isSupported) {
+                    // For litd, extract the lnd handle from the connection wrapper
+                    const connection =
+                      account.type === NodeType.LITD
+                        ? account.connection.lnd
+                        : account.connection;
+
                     validAccounts.push({
                       id: account.hash,
-                      connection: account.connection,
+                      connection,
                     });
                   }
                 }

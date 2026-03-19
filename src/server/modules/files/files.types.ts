@@ -13,6 +13,7 @@ export type AccountType = {
   name?: string;
   serverUrl?: string;
   lndDir?: string;
+  litDir?: string;
   network?: BitcoinNetwork;
   macaroonPath?: string;
   certificatePath?: string;
@@ -22,6 +23,8 @@ export type AccountType = {
   encrypted?: boolean;
   twofaSecret?: string | null;
   authToken?: string;
+  connectionMode?: string;
+  pairingPhrase?: string;
 };
 
 export type UnresolvedAccountType = {
@@ -29,6 +32,7 @@ export type UnresolvedAccountType = {
   name?: string;
   serverUrl?: string;
   lndDir?: string;
+  litDir?: string;
   network?: BitcoinNetwork;
   macaroonPath?: string;
   certificatePath?: string;
@@ -37,6 +41,8 @@ export type UnresolvedAccountType = {
   certificate?: string;
   encrypted?: boolean | string;
   authToken?: string;
+  connectionMode?: string;
+  pairingPhrase?: string;
 };
 
 export type ParsedAccount = {
@@ -52,6 +58,8 @@ export type ParsedAccount = {
   encryptedMacaroon: string;
   twofaSecret: string;
   authToken?: string;
+  connectionMode?: string;
+  pairingPhrase?: string;
 };
 
 export type AccountConfigType = {
