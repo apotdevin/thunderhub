@@ -2,8 +2,6 @@
 
 Two-node local development environment with Bitcoin Core (regtest), two Lightning Terminal (litd) nodes (Alice & Bob), and two ThunderHub instances.
 
-Alice is configured with a public universe (`--taproot-assets.universe.public-access=rw`), allowing other nodes to sync assets from her.
-
 ## Quick Start
 
 ```bash
@@ -37,11 +35,14 @@ Login password for both ThunderHub instances: `thunderhub`
 ## Fund Wallets and Mine Blocks
 
 ```bash
-# Fund Alice (6 blocks)
-docker compose exec bitcoind bitcoin-cli -regtest -rpcuser=rpcuser -rpcpassword=rpcpassword generatetoaddress 6 $(docker compose exec litd-alice lncli --network=regtest newaddress p2wkh | jq -r '.address')
+# Fund Alice
+docker compose exec bitcoind bitcoin-cli -regtest -rpcuser=rpcuser -rpcpassword=rpcpassword generatetoaddress 110 $(docker compose exec litd-alice lncli --network=regtest newaddress p2wkh | jq -r '.address')
 
-# Fund Bob (6 blocks)
+# Fund Bob
 docker compose exec bitcoind bitcoin-cli -regtest -rpcuser=rpcuser -rpcpassword=rpcpassword generatetoaddress 6 $(docker compose exec litd-bob lncli --network=regtest newaddress p2wkh | jq -r '.address')
+
+# Mine more blocks
+docker compose exec bitcoind bitcoin-cli -regtest -rpcuser=rpcuser -rpcpassword=rpcpassword generatetoaddress 6 $(docker compose exec litd-alice lncli --network=regtest newaddress p2wkh | jq -r '.address')
 ```
 
 ## Connect Peers and Open Channel
