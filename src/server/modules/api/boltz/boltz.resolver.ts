@@ -30,7 +30,6 @@ import { GraphQLError } from 'graphql';
 import { address, initEccLib, networks, Transaction } from 'bitcoinjs-lib';
 import {
   BoltzInfoType,
-  BoltzSwap,
   BroadcastAuto,
   BroadcastResult,
   CreateBoltzReverseSwapType,
@@ -42,7 +41,7 @@ import { UserId } from '../../security/security.types';
 import { toWithError } from 'src/server/utils/async';
 import { ECPairAPI, ECPairFactory } from 'ecpair';
 import * as ecc from 'tiny-secp256k1';
-import { auto, mapSeries } from 'async';
+import { auto } from 'async';
 import { MempoolService } from '../../mempool/mempool.service';
 import { BlockstreamService } from '../../blockstream/blockstream.service';
 
@@ -103,35 +102,6 @@ export class BoltzResolver {
     const feePercent = btcPair.fees?.percentage || 0;
 
     return { max, min, feePercent };
-  }
-
-  @Query(() => [BoltzSwap])
-  async getBoltzSwapStatus(
-    @Args('ids', { type: () => [String] }) ids: string[]
-  ) {
-    return mapSeries(ids, async (id: string) => {
-      const [info, error] = await toWithError(
-        this.boltzService.getSwapStatus(id)
-      );
-
-      if (error || isBoltzError(info)) {
-        this.logger.error(`Error getting status for swap with id: ${id}`, {
-          error,
-          boltzError: info,
-        });
-        return { id };
-      }
-
-      if (!info.status) {
-        this.logger.debug(
-          `No status in Boltz response for swap with id: ${id}`,
-          { info }
-        );
-        return { id };
-      }
-
-      return { id, boltz: info };
-    });
   }
 
   @Mutation(() => String)

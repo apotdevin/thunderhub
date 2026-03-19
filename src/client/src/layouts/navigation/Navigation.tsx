@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import styled, { css } from 'styled-components';
 import {
   Home,
   Cpu,
@@ -9,7 +8,6 @@ import {
   GitPullRequest,
   Link as LinkIcon,
   Users,
-  MessageCircle,
   BarChart2,
   Shuffle,
   Grid,
@@ -17,102 +15,17 @@ import {
   LucideProps,
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import {
-  unSelectedNavButton,
-  navBackgroundColor,
-  navTextColor,
-  subCardColor,
-  mediaWidths,
-  burgerRowColor,
-} from '../../styles/Themes';
+import { cn } from '../../lib/utils';
 import { useConfigState } from '../../context/ConfigContext';
 import { Link } from '../../components/link/Link';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '../../components/ui/tooltip';
 import { SideSettings } from './sideSettings/SideSettings';
-import { NodeInfo } from './nodeInfo/NodeInfo';
 
 type Icon = FC<LucideProps>;
-
-const NavigationStyle = styled.div<{ isOpen: boolean }>`
-  grid-area: nav;
-  width: ${({ isOpen }) => (isOpen ? '200px' : '60px')};
-
-  @media (${mediaWidths.mobile}) {
-    display: none;
-  }
-`;
-
-const StickyCard = styled.div`
-  position: -webkit-sticky;
-  position: sticky;
-  top: 16px;
-`;
-
-const LinkView = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 8px 0;
-`;
-
-const ButtonSection = styled.div<{ isOpen: boolean }>`
-  width: 100%;
-  ${({ isOpen }) =>
-    !isOpen &&
-    css`
-      margin: 8px 0;
-    `}
-`;
-
-const NavSeparation = styled.div`
-  margin-left: 8px;
-  font-size: 14px;
-`;
-
-interface NavProps {
-  selected: boolean;
-  isOpen?: boolean;
-}
-
-const NavButton = styled.div<NavProps>`
-  padding: 4px;
-  border-radius: 4px;
-  background: ${({ selected }) => selected && navBackgroundColor};
-  display: flex;
-  align-items: center;
-  ${({ isOpen }) => !isOpen && 'justify-content: center'};
-  width: 100%;
-  text-decoration: none;
-  margin: 4px 0;
-  color: ${({ selected }) => (selected ? navTextColor : unSelectedNavButton)};
-
-  &:hover {
-    color: ${navTextColor};
-    background: ${navBackgroundColor};
-  }
-`;
-
-const BurgerRow = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  overflow: scroll;
-  background: ${burgerRowColor};
-  margin: 0 -16px;
-  padding: 16px;
-`;
-
-const BurgerNav = styled.a<NavProps>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 16px 16px 8px;
-  border-radius: 4px;
-  text-decoration: none;
-  background: ${({ selected }) => selected && subCardColor};
-  ${({ isOpen }) => !isOpen && 'justify-content: center'};
-  color: ${({ selected }) => (selected ? navTextColor : unSelectedNavButton)};
-`;
 
 const HOME = '/';
 const DASHBOARD = '/dashboard';
@@ -123,10 +36,32 @@ const FORWARDS = '/forwards';
 const CHAIN_TRANS = '/chain';
 const TOOLS = '/tools';
 const STATS = '/stats';
-const CHAT = '/chat';
 const SETTINGS = '/settings';
 const SWAP = '/swap';
 const AMBOSS = '/amboss';
+
+interface NavItem {
+  title: string;
+  link: string;
+  icon: Icon;
+}
+
+const mainNav: NavItem[] = [
+  { title: 'Home', link: HOME, icon: Home },
+  { title: 'Dashboard', link: DASHBOARD, icon: Grid },
+  { title: 'Peers', link: PEERS, icon: Users },
+  { title: 'Channels', link: CHANNEL, icon: Cpu },
+  { title: 'Transactions', link: TRANS, icon: Server },
+  { title: 'Forwards', link: FORWARDS, icon: GitPullRequest },
+  { title: 'Chain', link: CHAIN_TRANS, icon: LinkIcon },
+  { title: 'Tools', link: TOOLS, icon: Shield },
+];
+
+const secondaryNav: NavItem[] = [
+  { title: 'Amboss', link: AMBOSS, icon: Globe },
+  { title: 'Swap', link: SWAP, icon: Shuffle },
+  { title: 'Stats', link: STATS, icon: BarChart2 },
+];
 
 interface NavigationProps {
   isBurger?: boolean;
@@ -137,81 +72,138 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const { pathname } = useLocation();
   const { sidebar } = useConfigState();
 
-  const isRoot = pathname === '/login' || pathname === '/sso';
+  const renderNavButton = (item: NavItem, open = true) => {
+    const isActive = pathname === item.link;
+    const NavIcon = item.icon;
 
-  const renderNavButton = (
-    title: string,
-    link: string,
-    NavIcon: Icon,
-    open = true
-  ) => (
-    <Link to={link}>
-      <NavButton isOpen={sidebar} selected={pathname === link}>
-        <NavIcon size={18} />
-        {open && <NavSeparation>{title}</NavSeparation>}
-      </NavButton>
-    </Link>
-  );
+    const button = (
+      <Link key={item.link} to={item.link}>
+        <div
+          className={cn(
+            'group relative flex items-center gap-2.5 rounded-md text-xs font-medium transition-colors',
+            open ? 'px-2.5 py-1.5' : 'justify-center p-2',
+            isActive
+              ? 'bg-primary/10 text-primary'
+              : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+          )}
+        >
+          <NavIcon size={15} className="shrink-0" />
+          {open && <span>{item.title}</span>}
+        </div>
+      </Link>
+    );
 
-  const renderBurgerNav = (title: string, link: string, NavIcon: Icon) => (
-    <Link to={link}>
-      <BurgerNav
-        selected={pathname === link}
-        onClick={() => setOpen && setOpen(false)}
-      >
-        <NavIcon />
-        {title}
-      </BurgerNav>
-    </Link>
-  );
+    if (!open) {
+      return (
+        <Tooltip key={item.link}>
+          <TooltipTrigger asChild>{button}</TooltipTrigger>
+          <TooltipContent side="right" className="text-xs">
+            {item.title}
+          </TooltipContent>
+        </Tooltip>
+      );
+    }
 
-  const renderLinks = () => (
-    <ButtonSection isOpen={sidebar}>
-      {renderNavButton('Home', HOME, Home, sidebar)}
-      {renderNavButton('Dashboard', DASHBOARD, Grid, sidebar)}
-      {renderNavButton('Peers', PEERS, Users, sidebar)}
-      {renderNavButton('Channels', CHANNEL, Cpu, sidebar)}
-      {renderNavButton('Transactions', TRANS, Server, sidebar)}
-      {renderNavButton('Forwards', FORWARDS, GitPullRequest, sidebar)}
-      {renderNavButton('Chain', CHAIN_TRANS, LinkIcon, sidebar)}
-      {renderNavButton('Amboss', AMBOSS, Globe, sidebar)}
-      {renderNavButton('Tools', TOOLS, Shield, sidebar)}
-      {renderNavButton('Swap', SWAP, Shuffle, sidebar)}
-      {renderNavButton('Stats', STATS, BarChart2, sidebar)}
-    </ButtonSection>
-  );
+    return button;
+  };
 
-  const renderBurger = () => (
-    <BurgerRow>
-      {renderBurgerNav('Home', HOME, Home)}
-      {renderBurgerNav('Dashboard', DASHBOARD, Grid)}
-      {renderBurgerNav('Peers', PEERS, Users)}
-      {renderBurgerNav('Channels', CHANNEL, Cpu)}
-      {renderBurgerNav('Transactions', TRANS, Server)}
-      {renderBurgerNav('Forwards', FORWARDS, GitPullRequest)}
-      {renderBurgerNav('Chain', CHAIN_TRANS, LinkIcon)}
-      {renderBurgerNav('Amboss', AMBOSS, Globe)}
-      {renderBurgerNav('Tools', TOOLS, Shield)}
-      {renderBurgerNav('Swap', SWAP, Shuffle)}
-      {renderBurgerNav('Stats', STATS, BarChart2)}
-      {renderBurgerNav('Chat', CHAT, MessageCircle)}
-      {renderBurgerNav('Settings', SETTINGS, Settings)}
-    </BurgerRow>
-  );
+  const renderBurgerNav = (item: NavItem) => {
+    const isActive = pathname === item.link;
+    const NavIcon = item.icon;
+
+    return (
+      <Link key={item.link} to={item.link}>
+        <div
+          className={cn(
+            'flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors',
+            isActive
+              ? 'bg-primary/10 text-primary font-medium'
+              : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+          )}
+          onClick={() => setOpen && setOpen(false)}
+        >
+          <NavIcon size={16} />
+          <span>{item.title}</span>
+        </div>
+      </Link>
+    );
+  };
 
   if (isBurger) {
-    return renderBurger();
+    return (
+      <div className="px-4 py-2">
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-3 mb-1">
+          Navigation
+        </div>
+        <nav className="flex flex-col gap-0.5">
+          {mainNav.map(item => renderBurgerNav(item))}
+        </nav>
+        <div className="my-2 mx-3 h-px bg-border/60" />
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-3 mb-1">
+          Tools
+        </div>
+        <nav className="flex flex-col gap-0.5">
+          {secondaryNav.map(item => renderBurgerNav(item))}
+          {renderBurgerNav({
+            title: 'Settings',
+            link: SETTINGS,
+            icon: Settings,
+          })}
+        </nav>
+      </div>
+    );
   }
 
   return (
-    <NavigationStyle isOpen={sidebar}>
-      <StickyCard>
-        <LinkView>
-          {!isRoot && <NodeInfo isOpen={sidebar} />}
-          {renderLinks()}
+    <div
+      className={cn(
+        'hidden md:flex flex-col shrink-0 transition-[width] duration-200 border-r border-border/60',
+        sidebar ? 'w-[180px]' : 'w-[52px]'
+      )}
+    >
+      <div className="sticky top-[77px] p-4 pr-2">
+        <div className="flex flex-col h-full">
+          {sidebar && (
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-2.5 mb-1">
+              Menu
+            </div>
+          )}
+          <nav
+            className={cn(
+              'flex flex-col gap-0.5 w-full',
+              !sidebar && 'items-center'
+            )}
+          >
+            {mainNav.map(item => renderNavButton(item, sidebar))}
+          </nav>
+          <div
+            className={cn(
+              'my-2 h-px bg-border/60',
+              sidebar ? 'mx-2.5' : 'mx-2'
+            )}
+          />
+          {sidebar && (
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-2.5 mb-1">
+              Tools
+            </div>
+          )}
+          <nav
+            className={cn(
+              'flex flex-col gap-0.5 w-full',
+              !sidebar && 'items-center'
+            )}
+          >
+            {secondaryNav.map(item => renderNavButton(item, sidebar))}
+          </nav>
+          <div
+            className={cn(
+              'my-2 h-px bg-border/60',
+              sidebar ? 'mx-2.5' : 'mx-2'
+            )}
+          />
           <SideSettings />
-        </LinkView>
-      </StickyCard>
-    </NavigationStyle>
+        </div>
+      </div>
+    </div>
   );
 };

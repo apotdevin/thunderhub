@@ -1,10 +1,11 @@
 import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FilesService } from '../files/files.service';
-import { authenticatedLndGrpc } from 'lightning';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { EnrichedAccount } from './accounts.types';
+import { ProviderRegistryService } from '../node/provider-registry.service';
+import { NodeType } from '../node/lightning.types';
 
 @Injectable()
 export class AccountsService implements OnModuleInit {
@@ -13,6 +14,7 @@ export class AccountsService implements OnModuleInit {
   constructor(
     private configService: ConfigService,
     private filesService: FilesService,
+    private providerRegistry: ProviderRegistryService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -36,6 +38,7 @@ export class AccountsService implements OnModuleInit {
       }
 
       const sso = {
+        type: NodeType.LND,
         index: 999,
         name: 'SSO Account',
         id: '',
@@ -47,9 +50,19 @@ export class AccountsService implements OnModuleInit {
         cert: ssoCert,
         twofaSecret: '',
       };
-      const { lnd } = authenticatedLndGrpc(sso);
 
-      this.accounts['sso'] = { ...sso, hash: 'sso', lnd };
+      const provider = this.providerRegistry.getProvider(NodeType.LND);
+      const connection = provider.connect({
+        socket: ssoUrl,
+        cert: ssoCert || undefined,
+        macaroon: ssoMacaroon,
+      });
+
+      this.accounts['sso'] = {
+        ...sso,
+        hash: 'sso',
+        connection,
+      };
     }
 
     const accounts = this.filesService.getAccounts(accountConfigPath);
@@ -57,10 +70,28 @@ export class AccountsService implements OnModuleInit {
     if (!accounts.length) return;
 
     accounts.forEach(account => {
-      const { socket, cert, macaroon } = account;
-      const { lnd } = authenticatedLndGrpc({ socket, cert, macaroon });
+      const nodeType = account.type || NodeType.LND;
 
-      this.accounts[account.hash] = { ...account, lnd };
+      if (!this.providerRegistry.hasProvider(nodeType)) {
+        this.logger.error(
+          `No provider registered for account type "${nodeType}" (account: ${account.name}). Skipping.`
+        );
+        return;
+      }
+
+      const provider = this.providerRegistry.getProvider(nodeType);
+      const connection = provider.connect({
+        socket: account.socket,
+        cert: account.cert || undefined,
+        macaroon: account.macaroon || undefined,
+        authToken: account.authToken,
+      });
+
+      this.accounts[account.hash] = {
+        ...account,
+        type: nodeType,
+        connection,
+      };
     });
   }
 
@@ -75,11 +106,16 @@ export class AccountsService implements OnModuleInit {
 
   updateAccountMacaroon(id: string, macaroon: string): void {
     if (this.accounts?.[id]) {
-      const { socket, cert } = this.accounts[id];
-      const { lnd } = authenticatedLndGrpc({ socket, cert, macaroon });
+      const account = this.accounts[id];
+      const provider = this.providerRegistry.getProvider(account.type);
+      const connection = provider.connect({
+        socket: account.socket,
+        cert: account.cert || undefined,
+        macaroon,
+      });
 
       this.accounts[id].macaroon = macaroon;
-      this.accounts[id].lnd = lnd;
+      this.accounts[id].connection = connection;
     } else {
       this.logger.error(`Account not found to update macaroon`, { id });
     }

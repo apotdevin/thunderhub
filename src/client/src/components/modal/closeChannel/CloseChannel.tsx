@@ -1,38 +1,16 @@
 import { useState } from 'react';
-import { AlertTriangle } from 'lucide-react';
-import styled from 'styled-components';
+import { ChevronRight, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useCloseChannelMutation } from '@/graphql/mutations/__generated__/closeChannel.generated';
 import { useBitcoinFees } from '@/hooks/UseBitcoinFees';
 import { useConfigState } from '@/context/ConfigContext';
-import { renderLine } from '@/components/generic/helpers';
-import { InputWithDeco } from '@/components/input/InputWithDeco';
-import { chartColors } from '@/styles/Themes';
-import {
-  Separation,
-  SingleLine,
-  SubTitle,
-  Sub4Title,
-  DarkSubTitle,
-} from '../../generic/Styled';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { getErrorContent } from '../../../utils/error';
-import { ColorButton } from '../../buttons/colorButton/ColorButton';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../buttons/multiButton/MultiButton';
-
-const Warning = styled.div`
-  font-size: 14px;
-  color: ${chartColors.orange};
-`;
-
-const WarningCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
 
 type CloseChannelProps = {
   channelId: string;
@@ -40,18 +18,14 @@ type CloseChannelProps = {
   callback?: () => void;
 };
 
-export const CloseChannel = ({
-  channelId,
-  channelName,
-  callback,
-}: CloseChannelProps) => {
+export const CloseChannel = ({ channelId, callback }: CloseChannelProps) => {
   const { fetchFees } = useConfigState();
   const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
 
-  const [isForce, setIsForce] = useState<boolean>(false);
-  const [isType, setIsType] = useState<string>('fee');
+  const [isForce, setIsForce] = useState(false);
+  const [feeType, setFeeType] = useState<'auto' | 'fee' | 'target'>('fee');
   const [amount, setAmount] = useState<number | undefined>();
-  const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const [closeChannel, { loading }] = useCloseChannelMutation({
     onCompleted: () => {
@@ -68,179 +42,183 @@ export const CloseChannel = ({
     ],
   });
 
-  const renderButton = (
-    onClick: () => void,
-    text: string,
-    selected: boolean
-  ) => (
-    <SingleButton selected={selected} onClick={onClick}>
-      {text}
-    </SingleButton>
-  );
+  const handleClose = () => {
+    let details:
+      | { target: number }
+      | { tokens: number }
+      | Record<string, unknown> =
+      feeType === 'target' ? { target: amount } : { tokens: amount };
 
-  const renderWarning = () => (
-    <WarningCard>
-      <AlertTriangle size={32} color={'red'} />
-      <SubTitle>Are you sure you want to close the channel?</SubTitle>
-      <Separation />
-      {!isForce ? (
-        <>
-          {renderLine(
-            'Type',
-            isType === 'none' ? 'Auto' : isType === 'fee' ? 'Fee' : 'Target'
+    if (isForce) {
+      details = {};
+    }
+
+    closeChannel({
+      variables: {
+        id: channelId,
+        forceClose: isForce,
+        ...details,
+      },
+    });
+  };
+
+  const feeSpeedValue =
+    amount === fast
+      ? 'fast'
+      : amount === halfHour
+        ? 'half'
+        : amount === hour
+          ? 'hour'
+          : '';
+
+  const dedupedFees = (() => {
+    const seen = new Set<number>();
+    const options: { value: string; label: string }[] = [];
+    const entries = [
+      { value: 'fast', rate: fast, label: 'Fastest' },
+      { value: 'half', rate: halfHour, label: '30 min' },
+      { value: 'hour', rate: hour, label: '1 hour' },
+    ];
+    for (const e of entries) {
+      if (!seen.has(e.rate)) {
+        seen.add(e.rate);
+        options.push({ value: e.value, label: `${e.label} (${e.rate})` });
+      }
+    }
+    return options;
+  })();
+
+  return (
+    <div className="flex flex-col gap-3">
+      {/* Force close toggle */}
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-xs font-medium text-muted-foreground">
+            Force Close
+          </span>
+          {isForce && (
+            <span className="text-xs text-destructive">
+              Force closing can take days and may result in higher fees.
+            </span>
           )}
-          {renderLine(
-            isType !== 'target' ? 'Fee (sats/vbyte)' : 'Blocks',
-            amount
-          )}
-        </>
-      ) : (
-        <DarkSubTitle>This is a force close</DarkSubTitle>
-      )}
-      <Separation />
-      <ColorButton
-        fullWidth={true}
-        disabled={(loading || !amount) && !isForce}
-        loading={loading}
-        withMargin={'16px 4px 4px'}
-        color={'red'}
-        onClick={() => {
-          let details:
-            | { target: number }
-            | { tokens: number }
-            | Record<string, unknown> =
-            isType === 'target' ? { target: amount } : { tokens: amount };
+        </div>
+        <Switch
+          checked={isForce}
+          onCheckedChange={v => {
+            if (v) setAmount(undefined);
+            setIsForce(v);
+          }}
+        />
+      </div>
 
-          if (isForce) {
-            details = {};
-          }
-
-          closeChannel({
-            variables: {
-              id: channelId,
-              forceClose: isForce,
-              ...details,
-            },
-          });
-        }}
-      >
-        {`Close Channel [ ${channelName}/${channelId} ]`}
-      </ColorButton>
-      <ColorButton
-        fullWidth={true}
-        disabled={loading}
-        withMargin={'4px'}
-        onClick={() => setIsConfirmed(false)}
-      >
-        Cancel
-      </ColorButton>
-    </WarningCard>
-  );
-
-  const renderContent = () => (
-    <>
-      <SingleLine>
-        <SubTitle>{'Close Channel'}</SubTitle>
-        <Sub4Title>{`${channelName} [${channelId}]`}</Sub4Title>
-      </SingleLine>
-      <Separation />
-      <SingleLine>
-        <Sub4Title>Force Close Channel:</Sub4Title>
-      </SingleLine>
-      <MultiButton>
-        {renderButton(
-          () => {
-            setAmount(undefined);
-            setIsForce(true);
-          },
-          'Yes',
-          isForce
-        )}
-        {renderButton(() => setIsForce(false), 'No', !isForce)}
-      </MultiButton>
       {!isForce && (
         <>
-          <SingleLine>
-            <Sub4Title>Fee:</Sub4Title>
-            {!dontShow && <Warning>{`Minimum: ${minimum} sats/vByte`}</Warning>}
-          </SingleLine>
-          <MultiButton>
-            {fetchFees &&
-              !dontShow &&
-              renderButton(
-                () => {
-                  setAmount(undefined);
-                  setIsType('none');
-                },
-                'Auto',
-                isType === 'none'
-              )}
-            {renderButton(
-              () => {
-                setAmount(undefined);
-                setIsType('fee');
-              },
-              'Fee',
-              isType === 'fee'
-            )}
-            {renderButton(
-              () => {
-                setAmount(undefined);
-                setIsType('target');
-              },
-              'Target',
-              isType === 'target'
-            )}
-          </MultiButton>
-        </>
-      )}
-      {isType === 'none' && !isForce && (
-        <>
-          <SingleLine>
-            <Sub4Title>Fee Amount:</Sub4Title>
-          </SingleLine>
-          <MultiButton>
-            {renderButton(
-              () => setAmount(fast),
-              `Fastest (${fast} sats)`,
-              amount === fast
-            )}
-            {halfHour !== fast &&
-              renderButton(
-                () => setAmount(halfHour),
-                `Half Hour (${halfHour} sats)`,
-                amount === halfHour
-              )}
-            {renderButton(
-              () => setAmount(hour),
-              `Hour (${hour} sats)`,
-              amount === hour
-            )}
-          </MultiButton>
-        </>
-      )}
-      {isType !== 'none' && !isForce && (
-        <InputWithDeco
-          title={isType === 'target' ? 'Target Blocks:' : 'Fee (Sats/Byte)'}
-          placeholder={isType === 'target' ? 'Blocks' : 'Sats/Byte'}
-          value={amount}
-          inputType={'number'}
-          inputCallback={e => setAmount(Number(e))}
-        />
-      )}
-      <ColorButton
-        disabled={!amount && !isForce}
-        arrow={true}
-        fullWidth={true}
-        withMargin={'32px 0 0'}
-        withBorder={true}
-        color={'red'}
-        onClick={() => setIsConfirmed(true)}
-      >
-        Close Channel
-      </ColorButton>
-    </>
-  );
+          <Separator />
 
-  return isConfirmed ? renderWarning() : renderContent();
+          {/* Fee type */}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-muted-foreground">
+                Fee{' '}
+                {fetchFees && !dontShow && (
+                  <Badge variant="secondary" className="ml-1.5">
+                    min {minimum} sat/vB
+                  </Badge>
+                )}
+              </span>
+              <ToggleGroup
+                type="single"
+                variant="outline"
+                size="sm"
+                value={feeType}
+                onValueChange={value => {
+                  if (!value) return;
+                  setAmount(undefined);
+                  setFeeType(value as 'auto' | 'fee' | 'target');
+                }}
+              >
+                {fetchFees && !dontShow && (
+                  <ToggleGroupItem value="auto">Auto</ToggleGroupItem>
+                )}
+                <ToggleGroupItem value="fee">Fee</ToggleGroupItem>
+                <ToggleGroupItem value="target">Target</ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+
+            {feeType === 'auto' ? (
+              <ToggleGroup
+                type="single"
+                variant="outline"
+                size="sm"
+                className="w-full"
+                value={feeSpeedValue}
+                onValueChange={value => {
+                  if (!value) return;
+                  if (value === 'fast') setAmount(fast);
+                  else if (value === 'half') setAmount(halfHour);
+                  else if (value === 'hour') setAmount(hour);
+                }}
+              >
+                {dedupedFees.map(f => (
+                  <ToggleGroupItem
+                    key={f.value}
+                    value={f.value}
+                    className="flex-1"
+                  >
+                    {f.label}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            ) : (
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-medium text-muted-foreground">
+                  {feeType === 'target' ? 'Target Blocks' : 'Fee (sats/vByte)'}
+                </label>
+                <Input
+                  placeholder={feeType === 'target' ? 'Blocks' : 'sats/vByte'}
+                  type="number"
+                  value={amount != null && amount > 0 ? amount : ''}
+                  onChange={e => setAmount(Number(e.target.value))}
+                />
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {isConfirmed ? (
+        <div className="mt-1 flex gap-2">
+          <Button
+            variant="outline"
+            className="flex-1"
+            disabled={loading}
+            onClick={() => setIsConfirmed(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            className="flex-1"
+            disabled={loading}
+            onClick={handleClose}
+          >
+            {loading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              'Confirm Close'
+            )}
+          </Button>
+        </div>
+      ) : (
+        <Button
+          variant="destructive"
+          disabled={!amount && !isForce}
+          className="mt-1 w-full"
+          onClick={() => setIsConfirmed(true)}
+        >
+          Close Channel <ChevronRight size={18} />
+        </Button>
+      )}
+    </div>
+  );
 };

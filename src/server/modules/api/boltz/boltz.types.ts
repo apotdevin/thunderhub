@@ -12,32 +12,6 @@ export class BoltzInfoType {
 }
 
 @ObjectType()
-export class BoltzSwapTransaction {
-  @Field({ nullable: true })
-  id: string;
-  @Field({ nullable: true })
-  hex: string;
-  @Field({ nullable: true })
-  eta: number;
-}
-
-@ObjectType()
-export class BoltzSwapStatus {
-  @Field()
-  status: string;
-  @Field(() => BoltzSwapTransaction, { nullable: true })
-  transaction: BoltzSwapTransaction;
-}
-
-@ObjectType()
-export class BoltzSwap {
-  @Field({ nullable: true })
-  id: string;
-  @Field(() => BoltzSwapStatus, { nullable: true })
-  boltz: BoltzSwapStatus;
-}
-
-@ObjectType()
 export class CreateBoltzReverseSwapType {
   @Field()
   id: string;
@@ -107,14 +81,6 @@ export type ReverseSwapPair =
           };
         };
       };
-    }
-  | BoltzError;
-
-export type SwapStatus =
-  | {
-      status: string;
-      zeroConfRejected: true;
-      transaction: { id: string; hex: string };
     }
   | BoltzError;
 

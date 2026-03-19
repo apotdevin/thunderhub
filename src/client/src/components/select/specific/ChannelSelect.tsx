@@ -1,20 +1,16 @@
 import { shorten } from '@/components/generic/helpers';
 import { useGetChannelsWithPeersQuery } from '@/graphql/queries/__generated__/getChannels.generated';
-import { SelectWithDeco } from '../SelectWithDeco';
+import { Loader2 } from 'lucide-react';
+import { Select, ValueProp } from '..';
 import { Channel } from '../../../graphql/types';
-import { ValueProp } from '..';
 
 type ChannelSelectProps = {
-  title: string;
+  title?: string;
   maxWidth?: string;
   callback: (peer: Channel[]) => void;
 };
 
-export const ChannelSelect = ({
-  title,
-  maxWidth,
-  callback,
-}: ChannelSelectProps) => {
+export const ChannelSelect = ({ maxWidth, callback }: ChannelSelectProps) => {
   const { data, loading } = useGetChannelsWithPeersQuery();
 
   const channels = data?.getChannels || [];
@@ -30,7 +26,7 @@ export const ChannelSelect = ({
          channel?.partner_node_info?.node?.alias
            ? ` - ${channel.partner_node_info.node.alias}`
            : ''
-       } - 
+       } -
        ${shorten(channel.partner_public_key)}`;
 
       return {
@@ -54,13 +50,16 @@ export const ChannelSelect = ({
     }
   };
 
+  if (loading) {
+    return <Loader2 className="animate-spin text-muted-foreground" size={16} />;
+  }
+
   return (
-    <SelectWithDeco
-      loading={loading}
-      title={title}
+    <Select
+      maxWidth={maxWidth || '100%'}
       options={options}
       callback={handleChange}
-      maxWidth={maxWidth}
+      className="w-full"
     />
   );
 };

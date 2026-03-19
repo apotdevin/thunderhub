@@ -1,20 +1,27 @@
 import { useState, useEffect } from 'react';
-import { formatDistanceToNowStrict } from 'date-fns';
 
 export const useSwapExpire = (date?: string) => {
-  const [, setCount] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    const myInterval = setInterval(() => {
-      setCount(p => p + 1);
-    }, 1000);
-    return () => {
-      clearInterval(myInterval);
-    };
-  });
+    const interval = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   if (!date) return '';
-  return `(Expires in ${formatDistanceToNowStrict(new Date(date), {
-    unit: 'second',
-  })})`;
+
+  const diff = Math.max(0, Math.floor((new Date(date).getTime() - now) / 1000));
+
+  if (diff <= 0) return '(Expired)';
+
+  const hours = Math.floor(diff / 3600);
+  const mins = Math.floor((diff % 3600) / 60);
+  const secs = diff % 60;
+
+  const time =
+    hours > 0
+      ? `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+      : `${mins}:${secs.toString().padStart(2, '0')}`;
+
+  return `(Expires in ${time})`;
 };

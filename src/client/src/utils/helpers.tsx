@@ -1,12 +1,4 @@
-import { SatoshiSymbol } from '../components/satoshi/Satoshi';
-import { unSelectedNavButton } from '../styles/Themes';
-import styled from 'styled-components';
 import { Bitcoin } from 'lucide-react';
-
-const DarkUnit = styled.span`
-  font-size: 12px;
-  color: ${unSelectedNavButton};
-`;
 
 const fmt1 = (n: number) =>
   n.toLocaleString('en-US', { maximumFractionDigits: 1 });
@@ -29,7 +21,6 @@ interface GetNumberProps {
   breakNumber?: boolean;
   override?: string;
   noUnit?: boolean;
-  useSatWord?: boolean;
 }
 
 export const getValue = ({
@@ -40,7 +31,6 @@ export const getValue = ({
   breakNumber,
   override,
   noUnit,
-  useSatWord,
 }: GetNumberProps): JSX.Element | string => {
   if (!amount) return '';
   const correctCurrency = override || currency;
@@ -79,22 +69,11 @@ export const getValue = ({
       return `${breakAmount}`;
     }
 
-    if (useSatWord) {
-      return (
-        <>
-          {breakAmount}
-          <DarkUnit as={'span'} className="ml-1">
-            sats
-          </DarkUnit>
-        </>
-      );
-    }
-
     return (
-      <span className="flex items-center">
+      <>
         {breakAmount}
-        <SatoshiSymbol color={'grey'} transform={'translate(0,2)'} />
-      </span>
+        <span className="ml-1 text-xs text-gray-500">sats</span>
+      </>
     );
   }
 
@@ -108,7 +87,7 @@ export const getValue = ({
   ) : (
     <>
       {fiatFormatted}
-      <DarkUnit className="ml-1">{symbol}</DarkUnit>
+      <span className="ml-1 text-xs text-gray-500">{symbol}</span>
     </>
   );
 };

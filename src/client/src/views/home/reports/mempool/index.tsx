@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardWithTitle,
-  SubTitle,
-} from '../../../../components/generic/Styled';
-import Table from '../../../../components/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBitcoinFees } from '../../../../hooks/UseBitcoinFees';
 
 export const MempoolReport = () => {
@@ -13,44 +8,33 @@ export const MempoolReport = () => {
     return null;
   }
 
-  const columns = [
-    {
-      header: 'Fastest',
-      accessorKey: 'fast',
-      cell: ({ cell }: any) => cell.renderValue(),
-    },
-    {
-      header: 'Half Hour',
-      accessorKey: 'halfHour',
-      cell: ({ cell }: any) => cell.renderValue(),
-    },
-    {
-      header: 'Hour',
-      accessorKey: 'hour',
-      cell: ({ cell }: any) => cell.renderValue(),
-    },
-    {
-      header: 'Minimum',
-      accessorKey: 'minimum',
-      cell: ({ cell }: any) => cell.renderValue(),
-    },
-  ];
-
-  const data = [
-    {
-      fast: `${fast} sat/vB`,
-      halfHour: `${halfHour} sat/vB`,
-      hour: `${hour} sat/vB`,
-      minimum: `${minimum} sat/vB`,
-    },
+  const fees = [
+    { label: 'Fastest', value: fast },
+    { label: 'Half Hour', value: halfHour },
+    { label: 'Hour', value: hour },
+    { label: 'Minimum', value: minimum },
   ];
 
   return (
-    <CardWithTitle>
-      <SubTitle>Mempool Fees</SubTitle>
-      <Card>
-        <Table alignCenter={true} columns={columns} data={data} />
-      </Card>
-    </CardWithTitle>
+    <Card>
+      <CardHeader>
+        <CardTitle>Mempool Fees</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {fees.map(fee => (
+            <div
+              key={fee.label}
+              className="flex flex-col items-center gap-0.5 rounded border border-border p-3"
+            >
+              <span className="text-xs text-muted-foreground">{fee.label}</span>
+              <span className="text-sm font-medium font-mono">
+                {fee.value} sat/vB
+              </span>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };

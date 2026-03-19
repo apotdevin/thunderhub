@@ -1,71 +1,38 @@
-import { Layouts, Responsive as ResponsiveGridLayout } from 'react-grid-layout';
-import styled, { css } from 'styled-components';
+import {
+  ResponsiveGridLayout,
+  ResponsiveLayouts,
+  useContainerWidth,
+} from 'react-grid-layout';
 import { defaultGrid } from '../../utils/gridConstants';
 import { useLocalStorage } from '../../hooks/UseLocalStorage';
 import { LoadingCard } from '../../components/loading/LoadingCard';
-import { useRef } from 'react';
-import useElementSize from '../../hooks/UseElementSize';
-import { Card, SubTitle } from '../../components/generic/Styled';
-import { textColor } from '../../styles/Themes';
+import { Card } from '@/components/ui/card';
 import { Link } from '../../components/link/Link';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
+import { ChevronRight } from 'lucide-react';
 import { useDashDispatch, useDashState } from '../../context/DashContext';
 import Modal from '../../components/modal/ReactModal';
 import { getWidgets } from './widgets/helpers';
 import { DashboardModal } from './modal';
-
-const S = {
-  styles: styled.div`
-    .react-resizable-handle::after {
-      border-bottom: 2px solid ${textColor};
-      border-right: 2px solid ${textColor};
-    }
-  `,
-  card: styled(Card)<{ widgetColor?: string }>`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    border-radius: 4px;
-    padding: 8px;
-    ${({ widgetColor }) => css`
-      border-top: 2px solid #${widgetColor};
-    `}
-  `,
-  gridWrapper: styled.div`
-    width: 100%;
-  `,
-  fill: styled.div`
-    height: 80vh;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  `,
-};
 
 export type StoredWidget = {
   id: number;
 };
 
 const Dashboard = () => {
-  const wrapperRef = useRef(null);
-
-  const { width } = useElementSize(wrapperRef);
+  const { width, containerRef, mounted } = useContainerWidth();
 
   const { modalType } = useDashState();
   const dispatch = useDashDispatch();
 
-  const [layouts, setLayouts] = useLocalStorage<Layouts>('layouts', {});
+  const [layouts, setLayouts] = useLocalStorage<ResponsiveLayouts>(
+    'layouts',
+    {}
+  );
   const [availableWidgets] = useLocalStorage<StoredWidget[]>(
     'dashboardWidgets',
     []
   );
-
-  const props = {
-    isBounded: true,
-  };
 
   const handleChange = (_: any, layouts: any) => {
     setLayouts(layouts);
@@ -75,24 +42,25 @@ const Dashboard = () => {
 
   if (!widgets.length) {
     return (
-      <S.fill>
-        <SubTitle>No Widgets Enabled!</SubTitle>
+      <div className="h-[80vh] w-full flex flex-col justify-center items-center">
+        <h4 className="text-lg font-medium">No Widgets Enabled!</h4>
         <Link href={'settings/dashboard'}>
-          <ColorButton arrow={true}>Settings</ColorButton>
+          <Button variant="outline">
+            Settings <ChevronRight size={18} />
+          </Button>
         </Link>
-      </S.fill>
+      </div>
     );
   }
 
   const renderContent = () => {
-    if (width === 0) {
+    if (!mounted) {
       return <LoadingCard noCard={true} loadingHeight={'90vh'} />;
     }
     return (
       <>
-        <S.styles>
+        <div className="[&_.react-resizable-handle::after]:border-b-2 [&_.react-resizable-handle::after]:border-r-2 [&_.react-resizable-handle::after]:border-foreground">
           <ResponsiveGridLayout
-            {...props}
             className="layout"
             layouts={layouts}
             rowHeight={28}
@@ -100,15 +68,21 @@ const Dashboard = () => {
             margin={defaultGrid.margin}
             breakpoints={defaultGrid.breakpoints}
             cols={defaultGrid.columns}
+            dragConfig={{ bounded: true }}
             onLayoutChange={handleChange}
           >
             {widgets.map(w => (
-              <S.card widgetColor={w.color} key={w.id} data-grid={w.default}>
+              <Card
+                className="flex justify-center items-center rounded p-2"
+                style={{ borderTop: `2px solid #${w.color}` }}
+                key={w.id}
+                data-grid={w.default}
+              >
                 <w.component />
-              </S.card>
+              </Card>
             ))}
           </ResponsiveGridLayout>
-        </S.styles>
+        </div>
         <Modal
           isOpen={!!modalType}
           closeCallback={() => dispatch({ type: 'openModal', modalType: '' })}
@@ -119,7 +93,11 @@ const Dashboard = () => {
     );
   };
 
-  return <S.gridWrapper ref={wrapperRef}>{renderContent()}</S.gridWrapper>;
+  return (
+    <div className="w-full" ref={containerRef}>
+      {renderContent()}
+    </div>
+  );
 };
 
 export default Dashboard;

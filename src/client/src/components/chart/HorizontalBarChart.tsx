@@ -1,6 +1,5 @@
-import { chartColors } from '../../styles/Themes';
-import { ThemeContext } from 'styled-components';
-import { useContext, useMemo } from 'react';
+import { useChartColors, useThemeColors } from '../../lib/chart-colors';
+import { useMemo } from 'react';
 import { BarChart } from 'echarts/charts';
 import {
   GraphicComponent,
@@ -33,18 +32,18 @@ type HorizontalBarChartProps = {
   colorRange?: string[];
 };
 
-const defaultColorRange = [
-  chartColors.green,
-  chartColors.orange,
-  chartColors.lightblue,
-];
-
 export const HorizontalBarChart = ({
   data = [],
-  colorRange = defaultColorRange,
+  colorRange,
   dataKey,
 }: HorizontalBarChartProps) => {
-  const themeContext = useContext(ThemeContext);
+  const chartColors = useChartColors();
+  const { mutedForeground, border } = useThemeColors();
+  const effectiveColorRange = colorRange ?? [
+    chartColors.green,
+    chartColors.orange,
+    chartColors.lightblue,
+  ];
 
   const keys = Object.keys(data[0] || {}).filter(d => d !== 'label');
 
@@ -53,16 +52,26 @@ export const HorizontalBarChart = ({
   );
 
   const seriesData = useMemo(() => {
-    if (data.length === 0) return [{ type: 'bar', data: [], barWidth: 25 }];
+    if (data.length === 0) return [{ type: 'bar', data: [], barWidth: 20 }];
 
     return [
       {
         type: 'bar',
         data: data.map((d: any) => d[dataKey]),
-        barWidth: '25',
+        barWidth: 20,
+        itemStyle: {
+          borderRadius: [0, 3, 3, 0],
+        },
+        label: {
+          show: true,
+          position: 'right',
+          fontSize: 10,
+          color: mutedForeground,
+          formatter: (params: any) => formatSats(params.value),
+        },
       },
     ];
-  }, [data, dataKey]);
+  }, [data, dataKey, mutedForeground]);
 
   const yLabels = useMemo(() => {
     if (!data.length) return [];
@@ -70,35 +79,33 @@ export const HorizontalBarChart = ({
   }, [data]);
 
   const option = useMemo(() => {
-    const themeColor = themeContext?.mode === 'light' ? 'black' : 'white';
-
     return {
-      color: colorRange,
+      color: effectiveColorRange,
       grid: {
-        left: '25px',
-        bottom: '25px',
-        top: '25px',
-        right: '25px',
+        left: '8px',
+        bottom: '8px',
+        top: '8px',
+        right: '80px',
+        containLabel: true,
       },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
           animation: false,
+          type: 'shadow',
+          shadowStyle: {
+            color: 'rgba(150, 150, 150, 0.05)',
+          },
         },
         formatter: (params: any) => {
-          return `<span style='color: ${
-            colorRange[0]
-          }; font-weight: bold;'>Value</span><br />
-          ${formatSats(params[0].value)}`;
+          return `<span style="font-weight:600">${params[0].name}</span>
+            <span style="float:right;margin-left:16px;font-weight:600">${formatSats(params[0].value)}</span>`;
         },
         ...COMMON_CHART_STYLES.tooltip,
       },
       xAxis: {
         max: maxValue * 1.4,
         show: false,
-        alignTicks: 'value',
-        zIndex: 10,
-        z: 10,
       },
       yAxis: {
         axisPointer: {
@@ -106,50 +113,48 @@ export const HorizontalBarChart = ({
           type: 'none',
           triggerTooltip: true,
         },
-        lineStyle: {
-          color: themeColor,
-          type: 'solid',
-        },
-        axisLine: {
-          onZero: false,
-          lineStyle: {
-            color: themeColor,
-            type: 'solid',
-          },
-        },
+        axisLine: { show: false },
         axisLabel: {
-          inside: true,
-          interval: 'auto',
+          color: mutedForeground,
+          fontSize: 11,
         },
-        axisTick: {
+        axisTick: { show: false },
+        splitLine: {
           show: true,
-          alignWithLabel: true,
-          interval: 'auto',
-          inside: true,
+          lineStyle: {
+            color: border,
+            type: 'dashed',
+            opacity: 0.3,
+          },
         },
         data: yLabels,
         type: 'category',
         inverse: true,
-        max: 4,
-        position: 'right',
+        max: data.length - 1,
       },
-      legend: { show: true },
+      legend: { show: false },
       series: seriesData,
     };
-  }, [colorRange, themeContext, seriesData, yLabels]);
+  }, [
+    effectiveColorRange,
+    mutedForeground,
+    border,
+    seriesData,
+    yLabels,
+    maxValue,
+    data.length,
+  ]);
 
   if (!keys.length) return null;
 
   return (
-    <div style={{ position: 'relative', height: '100%' }}>
-      <ReactEChartsCore
-        echarts={echarts}
-        option={option}
-        notMerge={true}
-        lazyUpdate={true}
-        showLoading={false}
-        style={{ height: '100%' }}
-      />
-    </div>
+    <ReactEChartsCore
+      echarts={echarts}
+      option={option}
+      notMerge={true}
+      lazyUpdate={true}
+      showLoading={false}
+      style={{ height: '100%' }}
+    />
   );
 };

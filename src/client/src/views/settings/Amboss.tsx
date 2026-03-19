@@ -1,30 +1,15 @@
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
-import {
-  Card,
-  CardWithTitle,
-  SingleLine,
-  SubTitle,
-} from '../../components/generic/Styled';
-import styled from 'styled-components';
+import { Switch } from '@/components/ui/switch';
+import { Loader2 } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import { getErrorContent } from '../../utils/error';
 import toast from 'react-hot-toast';
 import { useGetConfigStateQuery } from '../../graphql/queries/__generated__/getConfigState.generated';
 import { useToggleConfigMutation } from '../../graphql/mutations/__generated__/toggleConfig.generated';
 import { ConfigFields } from '../../graphql/types';
-import { VFC } from 'react';
+import { FC } from 'react';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 
-const NoWrapText = styled.div`
-  white-space: nowrap;
-  font-size: 14px;
-`;
-
-const InputTitle = styled(NoWrapText)``;
-
-const ConfigFieldToggle: VFC<{
+const ConfigFieldToggle: FC<{
   title: string;
   enabled: boolean;
   field: ConfigFields;
@@ -35,25 +20,18 @@ const ConfigFieldToggle: VFC<{
   });
 
   return (
-    <SingleLine>
-      <InputTitle>{title}</InputTitle>
-      <MultiButton loading={loading} width="103px">
-        <SingleButton
+    <div className="flex items-center justify-between">
+      <span className="text-sm font-medium">{title}</span>
+      {loading ? (
+        <Loader2 className="animate-spin text-muted-foreground" size={18} />
+      ) : (
+        <Switch
+          checked={enabled}
           disabled={loading}
-          selected={enabled}
-          onClick={() => toggle({ variables: { field } })}
-        >
-          Yes
-        </SingleButton>
-        <SingleButton
-          disabled={loading}
-          selected={!enabled}
-          onClick={() => toggle({ variables: { field } })}
-        >
-          No
-        </SingleButton>
-      </MultiButton>
-    </SingleLine>
+          onCheckedChange={() => toggle({ variables: { field } })}
+        />
+      )}
+    </div>
   );
 };
 
@@ -79,35 +57,37 @@ export const AmbossSettings = () => {
   } = data.getConfigState;
 
   return (
-    <CardWithTitle>
-      <SubTitle>Amboss</SubTitle>
+    <div className="flex flex-col gap-4">
+      <h2 className="text-lg font-semibold">Amboss</h2>
       <Card>
-        <ConfigFieldToggle
-          field={ConfigFields.Backups}
-          enabled={backup_state}
-          title={'Auto Backups'}
-        />
-        <ConfigFieldToggle
-          field={ConfigFields.Healthchecks}
-          enabled={healthcheck_ping_state}
-          title={'Healthcheck Pings'}
-        />
-        <ConfigFieldToggle
-          field={ConfigFields.OnchainPush}
-          enabled={onchain_push_enabled}
-          title={'Onchain Push'}
-        />
-        <ConfigFieldToggle
-          field={ConfigFields.ChannelsPush}
-          enabled={channels_push_enabled}
-          title={'Channels Push'}
-        />
-        <ConfigFieldToggle
-          field={ConfigFields.PrivateChannelsPush}
-          enabled={private_channels_push_enabled}
-          title={'Private Channel Push'}
-        />
+        <CardContent className="space-y-4">
+          <ConfigFieldToggle
+            field={ConfigFields.Backups}
+            enabled={backup_state}
+            title="Auto Backups"
+          />
+          <ConfigFieldToggle
+            field={ConfigFields.Healthchecks}
+            enabled={healthcheck_ping_state}
+            title="Healthcheck Pings"
+          />
+          <ConfigFieldToggle
+            field={ConfigFields.OnchainPush}
+            enabled={onchain_push_enabled}
+            title="Onchain Push"
+          />
+          <ConfigFieldToggle
+            field={ConfigFields.ChannelsPush}
+            enabled={channels_push_enabled}
+            title="Channels Push"
+          />
+          <ConfigFieldToggle
+            field={ConfigFields.PrivateChannelsPush}
+            enabled={private_channels_push_enabled}
+            title="Private Channel Push"
+          />
+        </CardContent>
       </Card>
-    </CardWithTitle>
+    </div>
   );
 };

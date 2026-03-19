@@ -1,70 +1,27 @@
-import { Fragment, useEffect, useState } from 'react';
-import { RefreshCw, Trash } from 'lucide-react';
-import { Tooltip as ReactTooltip } from 'react-tooltip';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { getAddressLink } from '../../components/generic/helpers';
+import { Fragment } from 'react';
 import {
-  Card,
-  DarkSubTitle,
-  Separation,
-  SingleLine,
-  SubTitle,
-} from '../../components/generic/Styled';
-import Modal from '../../components/modal/ReactModal';
-import { useGetBoltzSwapStatusQuery } from '../../graphql/queries/__generated__/getBoltzSwapStatus.generated';
-import { chartColors, themeColors } from '../../styles/Themes';
-import styled from 'styled-components';
-import { SwapClaim } from './SwapClaim';
-import { useSwapsDispatch, useSwapsState } from './SwapContext';
+  Trash,
+  ChevronRight,
+  Clock,
+  Check,
+  AlertTriangle,
+  XCircle,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { getAddressLink } from '../../components/generic/helpers';
 import { useSwapExpire } from './SwapExpire';
-import { SwapQuote } from './SwapQuote';
-import { EnrichedSwap } from './types';
-
-const S = {
-  row: styled.div`
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 14px;
-  `,
-  single: styled.div`
-    display: flex;
-    align-items: center;
-  `,
-  expired: styled.div`
-    border: 1px solid ${chartColors.orange};
-    background-color: rgba(255, 193, 10, 0.1);
-    padding: 4px 8px;
-    border-radius: 8px;
-  `,
-  warning: styled.div`
-    border: 1px solid ${chartColors.darkyellow};
-    background-color: rgba(255, 193, 10, 0.1);
-    padding: 4px 8px;
-    border-radius: 8px;
-  `,
-  ready: styled.div`
-    border: 1px solid ${chartColors.green};
-    background-color: rgba(10, 255, 59, 0.05);
-    padding: 4px 8px;
-    border-radius: 8px;
-  `,
-  claiming: styled.div`
-    border: 1px solid ${chartColors.green};
-    background-color: rgba(10, 255, 59, 0.05);
-    color: ${chartColors.green};
-    padding: 4px 8px;
-    border-radius: 8px;
-  `,
-  finished: styled.div`
-    border: 1px solid ${themeColors.grey8};
-    background-color: rgba(10, 255, 59, 0.05);
-    padding: 4px 8px;
-    border-radius: 8px;
-  `,
-};
+import {
+  useBoltzSwaps,
+  useBoltzSwapActions,
+  SwapEntry,
+} from '../../context/BoltzSwapContext';
 
 const CREATED = 'swap.created';
 export const MEMPOOL = 'transaction.mempool';
@@ -74,246 +31,261 @@ const EXPIRED = 'swap.expired';
 const INVOICE_EXPIRED = 'invoice.expired';
 const REFUNDED = 'transaction.refunded';
 
-const SwapRow = ({ swap, index }: { swap: EnrichedSwap; index: number }) => {
-  const dispatch = useSwapsDispatch();
-
-  const ReadyComponent = () => {
-    const time = useSwapExpire(swap.decodedInvoice?.expires_at);
-    return (
-      <S.row>
-        <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-        <S.single>
-          <S.ready>Ready to Pay {time}</S.ready>
-          <ColorButton
-            onClick={() => dispatch({ type: 'open', open: index })}
-            arrow={true}
-            withMargin={'0 0 0 4px'}
-          >
-            Pay
-          </ColorButton>
-        </S.single>
-      </S.row>
-    );
+const StatusBadge = ({
+  variant,
+  icon: Icon,
+  children,
+}: {
+  variant: 'success' | 'warning' | 'error' | 'default';
+  icon?: React.ElementType;
+  children: React.ReactNode;
+}) => {
+  const styles = {
+    success:
+      'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+    warning:
+      'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
+    error: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20',
+    default: 'bg-muted text-muted-foreground border-border',
   };
 
-  const ErrorComponent = () => (
-    <S.row>
-      <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-      <S.expired>Unable to get status</S.expired>
-    </S.row>
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${styles[variant]}`}
+    >
+      {Icon && <Icon size={12} />}
+      {children}
+    </span>
   );
+};
+
+const rowBase = 'flex w-full text-left items-center gap-3 py-3';
+const rowContent =
+  'flex flex-col items-start gap-1 min-w-0 flex-1 md:flex-row md:items-center md:justify-between';
+const clickableRow = `${rowBase} cursor-pointer rounded-md -mx-2 px-2 transition-colors hover:bg-muted/50`;
+
+const RowAction = ({ label }: { label: string }) => (
+  <div className="flex items-center gap-1 shrink-0 text-xs text-muted-foreground">
+    <span>{label}</span>
+    <ChevronRight size={14} />
+  </div>
+);
+
+const ReadyRow = ({ swap }: { swap: SwapEntry }) => {
+  const actions = useBoltzSwapActions();
+  const time = useSwapExpire(swap.decodedInvoice?.expires_at);
+
+  return (
+    <button className={clickableRow} onClick={() => actions.openSwap(swap.id)}>
+      <div className={rowContent}>
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <span className="text-xs font-medium font-mono truncate">
+            {swap.id}
+          </span>
+          {time && (
+            <span className="text-[10px] text-muted-foreground">{time}</span>
+          )}
+        </div>
+        <StatusBadge variant="success" icon={Clock}>
+          Ready to Pay
+        </StatusBadge>
+      </div>
+      <RowAction label="Pay" />
+    </button>
+  );
+};
+
+const SwapRow = ({ swap }: { swap: SwapEntry }) => {
+  const actions = useBoltzSwapActions();
+  const status = swap.liveStatus?.status;
 
   if (!swap?.id) return null;
 
-  if (!swap.boltz?.status) {
-    return <ErrorComponent />;
+  if (!status) {
+    return (
+      <div className={rowBase}>
+        <div className={rowContent}>
+          <span className="text-xs font-medium font-mono truncate">
+            {swap.id}
+          </span>
+          <StatusBadge variant="error" icon={AlertTriangle}>
+            Unable to get status
+          </StatusBadge>
+        </div>
+      </div>
+    );
   }
 
-  switch (swap.boltz.status) {
+  switch (status) {
     case INVOICE_EXPIRED:
     case EXPIRED:
       return (
-        <S.row>
-          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.expired>Expired</S.expired>
-        </S.row>
+        <div className={rowBase}>
+          <div className={rowContent}>
+            <span className="text-xs font-medium font-mono truncate">
+              {swap.id}
+            </span>
+            <StatusBadge variant="error" icon={XCircle}>
+              Expired
+            </StatusBadge>
+          </div>
+        </div>
       );
     case REFUNDED:
       return (
-        <S.row>
-          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.warning>Refunded</S.warning>
-        </S.row>
+        <div className={rowBase}>
+          <div className={rowContent}>
+            <span className="text-xs font-medium font-mono truncate">
+              {swap.id}
+            </span>
+            <StatusBadge variant="warning" icon={AlertTriangle}>
+              Refunded
+            </StatusBadge>
+          </div>
+        </div>
       );
     case CREATED:
-      return <ReadyComponent />;
+      return <ReadyRow swap={swap} />;
     case MEMPOOL:
       return (
-        <S.row>
-          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.single>
-            {getAddressLink(swap.receivingAddress)}
-            <S.warning>Waiting for confirmation</S.warning>
-            <ColorButton
-              onClick={() =>
-                dispatch({
-                  type: 'claim',
-                  claim: index,
-                  claimType: MEMPOOL,
-                })
-              }
-              arrow={true}
-              withMargin={'0 0 0 4px'}
-            >
-              Claim Instantly
-            </ColorButton>
-          </S.single>
-        </S.row>
+        <button
+          className={clickableRow}
+          onClick={() => actions.openClaim(swap.id, MEMPOOL)}
+        >
+          <div className={rowContent}>
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-xs font-medium font-mono truncate">
+                {swap.id}
+              </span>
+              <span className="text-[10px] text-muted-foreground">
+                {getAddressLink(swap.receivingAddress)}
+              </span>
+            </div>
+            <StatusBadge variant="warning" icon={Clock}>
+              In Mempool
+            </StatusBadge>
+          </div>
+          <RowAction label="Claim" />
+        </button>
       );
     case CONFIRMED:
       return (
-        <S.row>
-          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.single>
-            {getAddressLink(swap.receivingAddress)}
-            <S.claiming>Ready to Claim</S.claiming>
-            <ColorButton
-              onClick={() =>
-                dispatch({
-                  type: 'claim',
-                  claim: index,
-                  claimType: CONFIRMED,
-                })
-              }
-              arrow={true}
-              withMargin={'0 0 0 4px'}
-            >
-              Claim
-            </ColorButton>
-          </S.single>
-        </S.row>
+        <button
+          className={clickableRow}
+          onClick={() => actions.openClaim(swap.id, CONFIRMED)}
+        >
+          <div className={rowContent}>
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-xs font-medium font-mono truncate">
+                {swap.id}
+              </span>
+              <span className="text-[10px] text-muted-foreground">
+                {getAddressLink(swap.receivingAddress)}
+              </span>
+            </div>
+            <StatusBadge variant="success" icon={Check}>
+              Ready to Claim
+            </StatusBadge>
+          </div>
+          <RowAction label="Claim" />
+        </button>
       );
     case SETTLED:
       return (
-        <S.row>
-          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.single>
-            {getAddressLink(swap.receivingAddress)}
-            <S.finished>Completed</S.finished>
-            <ColorButton
-              onClick={() =>
-                dispatch({
-                  type: 'claim',
-                  claim: index,
-                  claimType: CONFIRMED,
-                })
-              }
-              arrow={true}
-              withMargin={'0 0 0 4px'}
-            >
-              Claim
-            </ColorButton>
-          </S.single>
-        </S.row>
+        <button
+          className={clickableRow}
+          onClick={() => actions.openClaim(swap.id, CONFIRMED)}
+        >
+          <div className={rowContent}>
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-xs font-medium font-mono truncate">
+                {swap.id}
+              </span>
+              <span className="text-[10px] text-muted-foreground">
+                {getAddressLink(swap.receivingAddress)}
+              </span>
+            </div>
+            <StatusBadge variant="default" icon={Check}>
+              Completed
+            </StatusBadge>
+          </div>
+          <RowAction label="Claim" />
+        </button>
       );
     default:
       return (
-        <S.row>
-          <DarkSubTitle>{`Id: ${swap.id}`}</DarkSubTitle>
-          <S.single>
-            {getAddressLink(swap.receivingAddress)}
-            <S.expired>{swap.boltz.status}</S.expired>
-          </S.single>
-        </S.row>
+        <div className={rowBase}>
+          <div className={rowContent}>
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-xs font-medium font-mono truncate">
+                {swap.id}
+              </span>
+              <span className="text-[10px] text-muted-foreground">
+                {getAddressLink(swap.receivingAddress)}
+              </span>
+            </div>
+            <StatusBadge variant="warning">{status}</StatusBadge>
+          </div>
+        </div>
       );
   }
 };
 
 export const SwapStatus = () => {
-  const { swaps, open, claim } = useSwapsState();
-  const dispatch = useSwapsDispatch();
-
-  const [enriched, setEnriched] = useState<EnrichedSwap[]>([]);
-
-  const { data, refetch, networkStatus } = useGetBoltzSwapStatusQuery({
-    notifyOnNetworkStatusChange: true,
-    variables: { ids: swaps.map((s: { id: string }) => s.id).filter(Boolean) },
-    fetchPolicy: 'network-only',
-    skip: !swaps.length,
-  });
-
-  const loading = [1, 2, 3, 4, 6].includes(networkStatus);
-
-  useEffect(() => {
-    if (loading || !data?.getBoltzSwapStatus) return;
-
-    const swapsWithState: EnrichedSwap[] = swaps.map(swap => {
-      const status = data.getBoltzSwapStatus.find(s => s?.id === swap.id);
-      const enriched = { ...swap, boltz: status?.boltz };
-      return enriched;
-    });
-
-    setEnriched(swapsWithState);
-  }, [data, loading, swaps]);
-
-  const handleCleanup = () => {
-    const cleaned = enriched.filter(s => {
-      if (!s.boltz?.status) return true;
-      const status = s.boltz.status;
-      if (
-        status === SETTLED ||
-        status === REFUNDED ||
-        status === EXPIRED ||
-        status === INVOICE_EXPIRED
-      ) {
-        return false;
-      }
-      return true;
-    });
-
-    dispatch({ type: 'cleanup', swaps: cleaned });
-  };
-
-  if (loading) {
-    return (
-      <>
-        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          <SubTitle>Swap History</SubTitle>
-          <Separation />
-          <DarkSubTitle>Loading swap statuses...</DarkSubTitle>
-        </Card>
-      </>
-    );
-  }
-
-  if (!swaps.length || !data?.getBoltzSwapStatus) {
-    return (
-      <>
-        <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-          <SubTitle>Swap History</SubTitle>
-          <Separation />
-          <DarkSubTitle>You have not started any swaps.</DarkSubTitle>
-        </Card>
-      </>
-    );
-  }
+  const { swaps } = useBoltzSwaps();
+  const actions = useBoltzSwapActions();
 
   return (
     <>
-      <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-        <SingleLine>
-          <SubTitle>Swap History</SubTitle>
-          <SingleLine>
-            <ColorButton
-              disabled={loading}
-              onClick={() => refetch()}
-              withMargin="0 4px 0 0"
-            >
-              <RefreshCw size={18} />
-            </ColorButton>
-            <div data-tip data-for={`cleanup`}>
-              <ColorButton disabled={loading} onClick={handleCleanup}>
-                <Trash size={18} />
-              </ColorButton>
-            </div>
-          </SingleLine>
-        </SingleLine>
-        <Separation />
-        {enriched.map((swap, index) => (
-          <Fragment key={`${swap?.id}-${index}`}>
-            <SwapRow swap={swap} index={index} />
-          </Fragment>
-        ))}
-      </Card>
-      <ReactTooltip id={`cleanup`}>
-        Cleanup expired, refunded and completed swaps.
-      </ReactTooltip>
-      <Modal
-        isOpen={typeof open === 'number' || typeof claim === 'number'}
-        closeCallback={() => dispatch({ type: 'close' })}
-      >
-        {typeof open === 'number' ? <SwapQuote /> : <SwapClaim />}
-      </Modal>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <h2 className="flex items-center gap-2 text-lg font-semibold">
+            Swap History
+            {swaps.length > 0 && (
+              <Badge variant="secondary" className="min-w-5 justify-center">
+                {swaps.length}
+              </Badge>
+            )}
+          </h2>
+          {swaps.length > 0 && (
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => actions.cleanup()}
+                >
+                  <Trash size={14} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Cleanup expired, refunded and completed swaps.
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+
+        <Card>
+          <CardContent>
+            {!swaps.length && (
+              <p className="text-xs text-muted-foreground py-4 text-center">
+                No swaps yet. Create one above to get started.
+              </p>
+            )}
+
+            {swaps.length > 0 && (
+              <div className="divide-y divide-border">
+                {swaps.map(swap => (
+                  <Fragment key={swap.id}>
+                    <SwapRow swap={swap} />
+                  </Fragment>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 };

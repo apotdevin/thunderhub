@@ -1,22 +1,10 @@
 import { FC, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
-import styled from 'styled-components';
-import { mediaWidths } from '../../styles/Themes';
 import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
 import { Sankey, SankeyData } from '../../components/sankey';
 import { orderBy, reduce, uniq } from 'lodash';
 import { AggregatedRouteForwards } from '../../graphql/types';
-
-const Wrapper = styled.div<{ $height: number }>`
-  height: ${props => props.$height}px;
-  max-height: ${props => props.$height}px;
-  width: 100%;
-
-  @media (${mediaWidths.mobile}) {
-    height: ${props => props.$height}px;
-  }
-`;
 
 const getValue = (item: AggregatedRouteForwards, type: string) => {
   switch (type) {
@@ -79,8 +67,11 @@ export const ForwardSankey: FC<{
   const graphHeight = 800 + 16 * sankeyData.links.length;
 
   return (
-    <Wrapper $height={graphHeight}>
+    <div
+      className="w-full"
+      style={{ height: `${graphHeight}px`, maxHeight: `${graphHeight}px` }}
+    >
       <Sankey data={sankeyData} width="100%" height={`${graphHeight}px`} />
-    </Wrapper>
+    </div>
   );
 };

@@ -5,10 +5,11 @@ import { Logger } from 'winston';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
-import { CreateInvoice, DecodeInvoice, PayInvoice } from './invoices.types';
+import { CreateInvoice, PayInvoice } from './invoices.types';
 import { randomBytes, createHash } from 'crypto';
 
 const KEYSEND_TYPE = '5482373484';
+const MESSAGE_TYPE = '34349334';
 
 @Resolver()
 export class InvoicesResolver {
@@ -47,22 +48,6 @@ export class InvoicesResolver {
       });
   }
 
-  @Query(() => DecodeInvoice)
-  async decodeRequest(
-    @CurrentUser() user: UserId,
-    @Args('request') request: string
-  ) {
-    const decoded = await this.nodeService.decodePaymentRequest(
-      user.id,
-      request
-    );
-
-    return {
-      ...decoded,
-      destination_node: { publicKey: decoded.destination },
-    };
-  }
-
   @Mutation(() => CreateInvoice)
   async createInvoice(
     @CurrentUser() user: UserId,
@@ -94,22 +79,28 @@ export class InvoicesResolver {
   async keysend(
     @CurrentUser() user: UserId,
     @Args('tokens') tokens: number,
-    @Args('destination', { nullable: true }) destination: string
+    @Args('destination', { nullable: true }) destination: string,
+    @Args('message', { nullable: true }) message: string
   ) {
     const preimage = randomBytes(32);
     const secret = preimage.toString('hex');
     const id = createHash('sha256').update(preimage).digest().toString('hex');
 
+    const messages = [
+      {
+        type: KEYSEND_TYPE,
+        value: secret,
+      },
+      ...(message
+        ? [{ type: MESSAGE_TYPE, value: Buffer.from(message).toString('hex') }]
+        : []),
+    ];
+
     return await this.nodeService.payViaPaymentDetails(user.id, {
       id,
       tokens,
       destination,
-      messages: [
-        {
-          type: KEYSEND_TYPE,
-          value: secret,
-        },
-      ],
+      messages,
     });
   }
 

@@ -83,22 +83,6 @@ type BoltzInfoType {
   min: Float!
 }
 
-type BoltzSwap {
-  boltz: BoltzSwapStatus
-  id: String
-}
-
-type BoltzSwapStatus {
-  status: String!
-  transaction: BoltzSwapTransaction
-}
-
-type BoltzSwapTransaction {
-  eta: Float
-  hex: String
-  id: String
-}
-
 type ChainAddressSend {
   confirmationCount: Float!
   id: String!
@@ -333,11 +317,6 @@ type GetInvoicesType {
   next: String
 }
 
-type GetMessages {
-  messages: [Message!]!
-  token: String
-}
-
 type GetPaymentsType {
   next: String
   payments: [PaymentType!]!
@@ -404,17 +383,6 @@ type LightningNodeSocialInfo {
 
 union LnUrlRequest = ChannelRequest | PayRequest | WithdrawRequest
 
-type Message {
-  alias: String
-  contentType: String
-  date: String!
-  id: String!
-  message: String
-  sender: String
-  tokens: Float
-  verified: Boolean!
-}
-
 type MessageType {
   message: String
 }
@@ -430,7 +398,7 @@ type Mutation {
   fetchLnUrl(url: String!): LnUrlRequest!
   getAuthToken(cookie: String): Boolean!
   getSessionToken(id: String!, password: String!, token: String): String!
-  keysend(destination: String, tokens: Float!): PayInvoice!
+  keysend(destination: String, message: String, tokens: Float!): PayInvoice!
   lnUrlAuth(url: String!): AuthResponse!
   lnUrlChannel(callback: String!, k1: String!, uri: String!): String!
   lnUrlPay(amount: Float!, callback: String!, comment: String): PaySuccess!
@@ -443,7 +411,6 @@ type Mutation {
   pushBackup: Boolean!
   removePeer(publicKey: String): Boolean!
   removeTwofaSecret(token: String!): Boolean!
-  sendMessage(maxFee: Float, message: String!, messageType: String, publicKey: String!, tokens: Float): Float!
   sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
   toggleConfig(field: ConfigFields!): Boolean!
   updateFees(base_fee_tokens: Float, cltv_delta: Float, fee_rate: Float, max_htlc_mtokens: String, min_htlc_mtokens: String, transaction_id: String, transaction_vout: Float): Boolean!
@@ -674,7 +641,6 @@ type Policy {
 }
 
 type Query {
-  decodeRequest(request: String!): DecodeInvoice!
   getAccount: ServerAccount!
   getAmbossLoginToken(redirect_url: String): String!
   getAmbossUser: AmbossUser
@@ -682,7 +648,6 @@ type Query {
   getBitcoinFees: BitcoinFee!
   getBitcoinPrice: String!
   getBoltzInfo: BoltzInfoType!
-  getBoltzSwapStatus(ids: [String!]!): [BoltzSwap!]!
   getChainTransactions: [ChainTransaction!]!
   getChannel(id: String!): SingleChannel!
   getChannelReport: ChannelReport!
@@ -697,7 +662,6 @@ type Query {
   getLatestVersion: String!
   getLightningAddressInfo(address: String!): PayRequest!
   getLiquidityPerUsd: String!
-  getMessages(initialize: Boolean): GetMessages!
   getNetworkInfo: NetworkInfo!
   getNode(publicKey: String!, withoutChannels: Boolean): Node!
   getNodeBalances: Balances!

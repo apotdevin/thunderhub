@@ -1,51 +1,31 @@
 import { HorizontalBarChart } from '../../../../components/chart/HorizontalBarChart';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { useGetLiquidReportQuery } from '../../../../graphql/queries/__generated__/getChannelReport.generated';
-import { chartColors } from '../../../../styles/Themes';
-import styled from 'styled-components';
-
-const S = {
-  row: styled.div`
-    display: grid;
-    grid-template-columns: 1fr 60px 90px;
-  `,
-  wrapper: styled.div`
-    width: 100%;
-    height: 100%;
-  `,
-  contentWrapper: styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `,
-  title: styled.h4`
-    font-weight: 900;
-    margin: 8px 0;
-  `,
-};
+import { useChartColors } from '../../../../lib/chart-colors';
 
 export const LiquidityGraph = () => {
+  const chartColors = useChartColors();
   const { data, loading } = useGetLiquidReportQuery({ errorPolicy: 'ignore' });
 
   if (loading) {
     return (
-      <S.wrapper>
-        <S.title>Liquidity</S.title>
-        <S.contentWrapper>
+      <div className="w-full h-full">
+        <h4 className="font-black my-2">Liquidity</h4>
+        <div className="w-full h-full flex justify-center items-center">
           <LoadingCard noCard={true} />
-        </S.contentWrapper>
-      </S.wrapper>
+        </div>
+      </div>
     );
   }
 
   if (!data?.getChannelReport) {
     return (
-      <S.wrapper>
-        <S.title>Liquidity</S.title>
-        <S.contentWrapper>Unable to get liquidity data.</S.contentWrapper>
-      </S.wrapper>
+      <div className="w-full h-full">
+        <h4 className="font-black my-2">Liquidity</h4>
+        <div className="w-full h-full flex justify-center items-center">
+          Unable to get liquidity data.
+        </div>
+      </div>
     );
   }
 
@@ -60,12 +40,12 @@ export const LiquidityGraph = () => {
   ];
 
   return (
-    <S.wrapper>
+    <div className="w-full h-full">
       <HorizontalBarChart
         data={liquidity}
         colorRange={[chartColors.green]}
         dataKey="Value"
       />
-    </S.wrapper>
+    </div>
   );
 };

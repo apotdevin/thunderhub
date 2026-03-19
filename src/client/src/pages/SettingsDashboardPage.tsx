@@ -2,7 +2,7 @@ import { GridWrapper } from '../components/gridWrapper/GridWrapper';
 import DashPanel from '../views/settings/DashPanel';
 
 const SettingsDashboardPage = () => (
-  <GridWrapper noNavigation={true}>
+  <GridWrapper>
     <DashPanel />
   </GridWrapper>
 );

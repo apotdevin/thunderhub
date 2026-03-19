@@ -8,7 +8,6 @@ import {
   BroadcastTransaction,
   CreateReverseSwap,
   ReverseSwapPair,
-  SwapStatus,
 } from './boltz.types';
 
 @Injectable()
@@ -32,15 +31,6 @@ export class BoltzService {
     return wrapFetch(
       this.fetchService.fetchWithProxy(
         `${this.configService.get('urls.boltz')}/v2/chain/BTC/fee`
-      ),
-      10_000
-    );
-  }
-
-  async getSwapStatus(id: string) {
-    return wrapFetch<SwapStatus>(
-      this.fetchService.fetchWithProxy(
-        `${this.configService.get('urls.boltz')}/v2/swap/${id}`
       ),
       10_000
     );

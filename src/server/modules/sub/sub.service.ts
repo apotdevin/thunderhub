@@ -1,7 +1,6 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import {
   subscribeToForwards,
-  getWalletInfo,
   subscribeToChannels,
   subscribeToInvoices,
   subscribeToBackups,
@@ -17,14 +16,15 @@ import { NodeService } from '../node/node.service';
 import { UserConfigService } from '../api/userConfig/userConfig.service';
 import { getNetwork } from 'src/server/utils/network';
 import { AmbossService } from '../api/amboss/amboss.service';
+import { NodeType } from '../node/lightning.types';
 
 const restartSubscriptionTimeMs = 1000 * 30;
 
-type NodeType = {
+type SubscriptionNode = {
   id: string;
   name: string;
   pubkey: string;
-  lnd: any;
+  connection: any;
 };
 
 @Injectable()
@@ -57,7 +57,7 @@ export class SubService implements OnApplicationBootstrap {
       (next: any) => {
         return auto<any>(
           {
-            // Get Authenticated LND objects for each node
+            // Get authenticated connection objects for each node
             getNodes: async () => {
               const accounts = this.accountsService.getAllAccounts();
 
@@ -66,8 +66,12 @@ export class SubService implements OnApplicationBootstrap {
               for (const key in accounts) {
                 if (accounts.hasOwnProperty(key)) {
                   const account = accounts[key];
-                  if (!account.encrypted) {
-                    validAccounts.push({ id: account.hash, lnd: account.lnd });
+                  // Subscriptions currently only support LND nodes
+                  if (!account.encrypted && account.type === NodeType.LND) {
+                    validAccounts.push({
+                      id: account.hash,
+                      connection: account.connection,
+                    });
                   }
                 }
               }
@@ -79,9 +83,9 @@ export class SubService implements OnApplicationBootstrap {
             checkNodes: [
               'getNodes',
               async ({ getNodes }) => {
-                return map(getNodes, async ({ lnd, id }) => {
+                return map(getNodes, async ({ connection, id }) => {
                   try {
-                    const info = await getWalletInfo({ lnd });
+                    const info = await this.nodeService.getWalletInfo(id);
 
                     const network = getNetwork(info?.chains?.[0] || '');
                     const sliced = info.public_key.slice(0, 10);
@@ -91,7 +95,7 @@ export class SubService implements OnApplicationBootstrap {
                       id,
                       name,
                       pubkey: info.public_key,
-                      lnd,
+                      connection,
                       network,
                     };
                   } catch (err) {
@@ -107,7 +111,7 @@ export class SubService implements OnApplicationBootstrap {
             // Check which nodes are available and remove duplicates
             checkAvailable: [
               'checkNodes',
-              async ({ checkNodes }: { checkNodes: NodeType[] }) => {
+              async ({ checkNodes }: { checkNodes: SubscriptionNode[] }) => {
                 const unique = checkNodes.filter(Boolean);
 
                 if (!unique.length) {
@@ -145,7 +149,7 @@ export class SubService implements OnApplicationBootstrap {
                 return each(
                   checkAvailable,
                   (node: any, cbk: any) => {
-                    const sub = subscribeToInvoices({ lnd: node.lnd });
+                    const sub = subscribeToInvoices({ lnd: node.connection });
 
                     this.subscriptions.push(sub);
 
@@ -196,7 +200,9 @@ export class SubService implements OnApplicationBootstrap {
                 return each(
                   checkAvailable,
                   (node: any, cbk: any) => {
-                    const sub = subscribeToPastPayments({ lnd: node.lnd });
+                    const sub = subscribeToPastPayments({
+                      lnd: node.connection,
+                    });
 
                     this.subscriptions.push(sub);
 
@@ -247,7 +253,7 @@ export class SubService implements OnApplicationBootstrap {
                 return each(
                   checkAvailable,
                   (node: any, cbk: any) => {
-                    const sub = subscribeToForwards({ lnd: node.lnd });
+                    const sub = subscribeToForwards({ lnd: node.connection });
 
                     this.subscriptions.push(sub);
 
@@ -298,7 +304,7 @@ export class SubService implements OnApplicationBootstrap {
                 return each(
                   checkAvailable,
                   (node: any, cbk: any) => {
-                    const sub = subscribeToChannels({ lnd: node.lnd });
+                    const sub = subscribeToChannels({ lnd: node.connection });
 
                     this.subscriptions.push(sub);
 
@@ -377,7 +383,7 @@ export class SubService implements OnApplicationBootstrap {
                   checkAvailable,
                   (node: any, cbk: any) => {
                     let postBackupTimeoutHandle;
-                    const sub = subscribeToBackups({ lnd: node.lnd });
+                    const sub = subscribeToBackups({ lnd: node.connection });
 
                     this.subscriptions.push(sub);
 

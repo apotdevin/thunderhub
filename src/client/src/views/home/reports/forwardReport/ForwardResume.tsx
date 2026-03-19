@@ -1,31 +1,9 @@
 import { FC, useMemo } from 'react';
-import styled from 'styled-components';
 import { differenceInDays } from 'date-fns';
 import { Price } from '../../../../components/price/Price';
-import { mediaWidths } from '../../../../styles/Themes';
-import { DarkSubTitle } from '../../../../components/generic/Styled';
 import { useGetForwardsListQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 
 type ArrayType = { fee: number; fee_mtokens: string; tokens: number };
-
-const S = {
-  grid: styled.div`
-    display: grid;
-    grid-gap: 16px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-
-    @media (${mediaWidths.mobile}) {
-      display: block;
-    }
-  `,
-  item: styled.div`
-    text-align: center;
-
-    @media (${mediaWidths.mobile}) {
-      margin: 8px 0;
-    }
-  `,
-};
 
 type TypeOptionProps = {
   label: string;
@@ -68,86 +46,57 @@ export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
       }
     });
 
-    const dayValue = day.reduce((p, c) => {
-      if (!c) return p;
-      if (type.value === 'fee') {
-        return p + Number.parseInt(c.fee_mtokens);
-      }
-      if (type.value === 'tokens') {
-        return p + c.tokens;
-      }
-      return p + 1;
-    }, 0);
-    const weekValue = week.reduce((p, c) => {
-      if (!c) return p;
-      if (type.value === 'fee') {
-        return p + Number.parseInt(c.fee_mtokens);
-      }
-      if (type.value === 'tokens') {
-        return p + c.tokens;
-      }
-      return p + 1;
-    }, 0);
-    const monthValue = month.reduce((p, c) => {
-      if (!c) return p;
-      if (type.value === 'fee') {
-        return p + Number.parseInt(c.fee_mtokens);
-      }
-      if (type.value === 'tokens') {
-        return p + c.tokens;
-      }
-      return p + 1;
-    }, 0);
-    const yearValue = forwards.reduce((p, c) => {
-      if (!c) return p;
-      if (type.value === 'fee') {
-        return p + Number.parseInt(c.fee_mtokens);
-      }
-      if (type.value === 'tokens') {
-        return p + c.tokens;
-      }
-      return p + 1;
-    }, 0);
+    const reduce = (arr: ArrayType[]) =>
+      arr.reduce((p, c) => {
+        if (!c) return p;
+        if (type.value === 'fee') return p + Number.parseInt(c.fee_mtokens);
+        if (type.value === 'tokens') return p + c.tokens;
+        return p + 1;
+      }, 0);
 
     return {
-      day: dayValue,
-      week: weekValue,
-      month: monthValue,
-      year: yearValue,
+      day: reduce(day),
+      week: reduce(week),
+      month: reduce(month),
+      year: reduce(forwards as ArrayType[]),
     };
   }, [data, type]);
 
-  if (loading) {
-    return null;
-  }
+  if (loading) return null;
 
   const renderValue = (value: number) => {
     if (type.value === 'count') {
-      return <div>{value}</div>;
-    } else if (type.value === 'fee') {
-      return <Price amount={Math.floor(value / 1000)} />;
+      return <span className="text-sm font-medium font-mono">{value}</span>;
     }
-    return <Price amount={value} />;
+    if (type.value === 'fee') {
+      return (
+        <span className="text-sm font-medium font-mono">
+          <Price amount={Math.floor(value / 1000)} />
+        </span>
+      );
+    }
+    return (
+      <span className="text-sm font-medium font-mono">
+        <Price amount={value} />
+      </span>
+    );
   };
 
+  const items = [
+    { label: 'Day', value: values.day },
+    { label: 'Week', value: values.week },
+    { label: 'Month', value: values.month },
+    { label: 'Year', value: values.year },
+  ];
+
   return (
-    <S.grid>
-      <S.item>
-        <DarkSubTitle>Day</DarkSubTitle>
-        {renderValue(values.day)}
-      </S.item>
-      <S.item>
-        <DarkSubTitle>Week</DarkSubTitle>
-        {renderValue(values.week)}
-      </S.item>
-      <S.item>
-        <DarkSubTitle>Month</DarkSubTitle>
-        {renderValue(values.month)}
-      </S.item>
-      <S.item>
-        <DarkSubTitle>Year</DarkSubTitle>
-        {renderValue(values.year)}
-      </S.item>
-    </S.grid>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {items.map(item => (
+        <div key={item.label} className="flex flex-col items-center gap-0.5">
+          <span className="text-xs text-muted-foreground">{item.label}</span>
+          {renderValue(item.value)}
+        </div>
+      ))}
+    </div>
   );
 };

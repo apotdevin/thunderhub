@@ -1,38 +1,22 @@
 import { Heart } from 'lucide-react';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
 import { useDashDispatch } from '../../../../context/DashContext';
-import styled from 'styled-components';
-
-const S = {
-  wrapper: styled.div`
-    height: 100%;
-    width: 100%;
-  `,
-  title: styled.div`
-    font-size: 14px;
-    margin-left: 4px;
-  `,
-  row: styled.div`
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-  `,
-};
 
 export const DonateWidget = () => {
   const dispatch = useDashDispatch();
 
   return (
-    <S.wrapper>
-      <ColorButton
-        fullWidth={true}
+    <div className="h-full w-full">
+      <Button
+        variant="outline"
+        className="w-full"
         onClick={() => dispatch({ type: 'openModal', modalType: 'donate' })}
       >
-        <S.row>
+        <div className="flex justify-around items-center">
           <Heart size={18} />
-          <S.title>Donate</S.title>
-        </S.row>
-      </ColorButton>
-    </S.wrapper>
+          <div className="text-sm ml-1">Donate</div>
+        </div>
+      </Button>
+    </div>
   );
 };

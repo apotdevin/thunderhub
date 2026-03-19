@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useGetClosedChannelsQuery } from '../../../graphql/queries/__generated__/getClosedChannels.generated';
-import { DarkSubTitle } from '../../../components/generic/Styled';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 import Table from '../../../components/table';
@@ -26,21 +25,11 @@ export const ClosedChannels = () => {
       const getCloseType = (): string => {
         const types: string[] = [];
 
-        if (c.is_breach_close) {
-          types.push('Breach');
-        }
-        if (c.is_cooperative_close) {
-          types.push('Cooperative');
-        }
-        if (c.is_funding_cancel) {
-          types.push('Funding Cancel');
-        }
-        if (c.is_local_force_close) {
-          types.push('Local Force Close');
-        }
-        if (c.is_remote_force_close) {
-          types.push('Remote Force Close');
-        }
+        if (c.is_breach_close) types.push('Breach');
+        if (c.is_cooperative_close) types.push('Cooperative');
+        if (c.is_funding_cancel) types.push('Funding Cancel');
+        if (c.is_local_force_close) types.push('Local Force Close');
+        if (c.is_remote_force_close) types.push('Remote Force Close');
 
         return types.join(', ');
       };
@@ -60,7 +49,7 @@ export const ClosedChannels = () => {
         accessorKey: 'alias',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             {getNodeLink(row.original.partner_public_key, row.original.alias)}
           </div>
         ),
@@ -70,7 +59,7 @@ export const ClosedChannels = () => {
         accessorKey: 'closed_for_blocks',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             {blockToTime(row.original.closed_for_blocks)}
           </div>
         ),
@@ -80,7 +69,7 @@ export const ClosedChannels = () => {
         accessorKey: 'channel_age',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             {blockToTime(row.original.channel_age)}
           </div>
         ),
@@ -90,7 +79,7 @@ export const ClosedChannels = () => {
         accessorKey: 'capacity',
         enableSorting: true,
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             <Price amount={row.original.capacity} />
           </div>
         ),
@@ -114,14 +103,17 @@ export const ClosedChannels = () => {
   }
 
   if (!data || !data.getClosedChannels) {
-    return <DarkSubTitle>No closed channels found</DarkSubTitle>;
+    return (
+      <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
+        No closed channels found
+      </div>
+    );
   }
 
   return (
     <Table
       columns={columns}
       data={tableData}
-      withBorder={true}
       withGlobalSort={true}
       withSorting={true}
       filterPlaceholder="channels"

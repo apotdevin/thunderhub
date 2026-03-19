@@ -1,20 +1,14 @@
 import { FC, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { Separation } from '../../../../components/generic/Styled';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { Title } from '../../../../components/typography/Styled';
 import { useFetchLnUrlMutation } from '../../../../graphql/mutations/__generated__/lnUrl.generated';
 import { getErrorContent } from '../../../../utils/error';
-import styled from 'styled-components';
 import { LnChannel } from './LnChannel';
 import { LnPay } from './LnPay';
 import { LnWithdraw } from './LnWithdraw';
-
-const ModalText = styled.div`
-  width: 100%;
-  text-align: center;
-`;
 
 type lnUrlProps = {
   url: string;
@@ -57,11 +51,15 @@ export const LnUrlModal: FC<lnUrlProps> = ({ url, type }) => {
   return (
     <>
       <Title>Login</Title>
-      <Separation />
-      <ModalText>{`Login to ${fullUrl.host}`}</ModalText>;
-      <ColorButton fullWidth={true} withMargin={'32px 0 0'}>
+      <Separator />
+      <div className="w-full text-center">{`Login to ${fullUrl.host}`}</div>;
+      <Button
+        variant="outline"
+        className="w-full"
+        style={{ margin: '32px 0 0' }}
+      >
         Confirm
-      </ColorButton>
+      </Button>
     </>
   );
 };

@@ -1,17 +1,41 @@
 import toast from 'react-hot-toast';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import {
-  Card,
-  CardWithTitle,
-  Separation,
-  SingleLine,
-  SubTitle,
-} from '../../components/generic/Styled';
-import { Text } from '../../components/typography/Styled';
+import { Card, CardContent } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
+import { Loader2 } from 'lucide-react';
 import { useToggleConfigMutation } from '../../graphql/mutations/__generated__/toggleConfig.generated';
 import { useGetConfigStateQuery } from '../../graphql/queries/__generated__/getConfigState.generated';
 import { ConfigFields } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
+
+interface BalanceToggleProps {
+  label: string;
+  description: string;
+  enabled: boolean;
+  loading: boolean;
+  onToggle: () => void;
+}
+
+const BalanceToggle = ({
+  label,
+  description,
+  enabled,
+  loading,
+  onToggle,
+}: BalanceToggleProps) => (
+  <div className="flex items-center justify-between gap-4">
+    <div className="space-y-0.5">
+      <p className="text-sm font-medium text-foreground">{label}</p>
+      <p className="text-xs text-muted-foreground">{description}</p>
+    </div>
+    <div className="flex items-center gap-2">
+      {loading ? (
+        <Loader2 className="animate-spin text-muted-foreground" size={14} />
+      ) : null}
+      <Switch checked={enabled} disabled={loading} onCheckedChange={onToggle} />
+    </div>
+  </div>
+);
 
 export const Balances = () => {
   const { data, loading } = useGetConfigStateQuery({
@@ -29,64 +53,44 @@ export const Balances = () => {
     private_channels_push_enabled = false,
   } = data?.getConfigState || {};
 
+  const isLoading = loading || toggleLoading;
+
   return (
-    <CardWithTitle>
-      <SubTitle>Balances</SubTitle>
+    <div className="flex flex-col gap-4">
+      <h2 className="text-lg font-semibold">Balances</h2>
       <Card>
-        <SingleLine>
-          <SubTitle>Push Onchain</SubTitle>
-          <ColorButton
-            color="#ff0080"
-            loading={loading || toggleLoading}
-            disabled={loading || toggleLoading}
-            withMargin="0 0 0 16px"
-            onClick={() =>
+        <CardContent className="space-y-4">
+          <BalanceToggle
+            label="Onchain Balance"
+            description="Push your onchain balance for historical reports"
+            enabled={onchain_push_enabled}
+            loading={isLoading}
+            onToggle={() =>
               toggle({ variables: { field: ConfigFields.OnchainPush } })
             }
-          >
-            {onchain_push_enabled ? 'Disable' : 'Enable'}
-          </ColorButton>
-        </SingleLine>
-        <Text>
-          Push your onchain balance to Amboss to get historical reports.
-        </Text>
-        <Separation />
-        <SingleLine>
-          <SubTitle>Push Public Channels</SubTitle>
-          <ColorButton
-            color="#ff0080"
-            loading={loading || toggleLoading}
-            disabled={loading || toggleLoading}
-            withMargin="0 0 0 16px"
-            onClick={() =>
+          />
+          <Separator />
+          <BalanceToggle
+            label="Public Channels"
+            description="Push your public channel balances for historical reports"
+            enabled={channels_push_enabled}
+            loading={isLoading}
+            onToggle={() =>
               toggle({ variables: { field: ConfigFields.ChannelsPush } })
             }
-          >
-            {channels_push_enabled ? 'Disable' : 'Enable'}
-          </ColorButton>
-        </SingleLine>
-        <Text>
-          Push your public channel balances to get historical reports.
-        </Text>
-        <Separation />
-        <SingleLine>
-          <SubTitle>Push Private Channels</SubTitle>
-          <ColorButton
-            color="#ff0080"
-            loading={loading || toggleLoading}
-            disabled={loading || toggleLoading}
-            withMargin="0 0 0 16px"
-            onClick={() =>
+          />
+          <Separator />
+          <BalanceToggle
+            label="Private Channels"
+            description="Push your private channel balances for historical reports"
+            enabled={private_channels_push_enabled}
+            loading={isLoading}
+            onToggle={() =>
               toggle({ variables: { field: ConfigFields.PrivateChannelsPush } })
             }
-          >
-            {private_channels_push_enabled ? 'Disable' : 'Enable'}
-          </ColorButton>
-        </SingleLine>
-        <Text>
-          Push your private channel balances to get historical reports.
-        </Text>
+          />
+        </CardContent>
       </Card>
-    </CardWithTitle>
+    </div>
   );
 };

@@ -1,23 +1,14 @@
-import { AlertTriangle } from 'lucide-react';
-import styled from 'styled-components';
+import { AlertTriangle, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useRemovePeerMutation } from '@/graphql/mutations/__generated__/removePeer.generated';
-import { SubTitle } from '../../generic/Styled';
 import { getErrorContent } from '../../../utils/error';
-import { ColorButton } from '../../buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
 
 interface RemovePeerProps {
   setModalOpen: (status: boolean) => void;
   publicKey: string;
   peerAlias: string;
 }
-
-const WarningCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
 
 export const RemovePeerModal = ({
   setModalOpen,
@@ -26,7 +17,8 @@ export const RemovePeerModal = ({
 }: RemovePeerProps) => {
   const [removePeer, { loading }] = useRemovePeerMutation({
     onCompleted: () => {
-      toast.success('Peer Removed');
+      toast.success('Peer removed');
+      setModalOpen(false);
     },
     onError: error => {
       toast.error(getErrorContent(error));
@@ -34,26 +26,43 @@ export const RemovePeerModal = ({
     refetchQueries: ['GetPeers'],
   });
 
-  const handleOnlyClose = () => setModalOpen(false);
+  const displayName = peerAlias || publicKey?.substring(0, 8) + '...';
 
   return (
-    <WarningCard>
-      <AlertTriangle size={32} color={'red'} />
-      <SubTitle>Are you sure you want to remove this peer?</SubTitle>
-      <ColorButton
-        onClick={() => {
-          removePeer({ variables: { publicKey } });
-        }}
-        color={'red'}
-        disabled={loading}
-        loading={loading}
-        withMargin={'4px'}
-      >
-        {`Remove Peer [${peerAlias || publicKey?.substring(0, 6)}]`}
-      </ColorButton>
-      <ColorButton withMargin={'4px'} onClick={handleOnlyClose}>
-        Cancel
-      </ColorButton>
-    </WarningCard>
+    <div className="flex flex-col items-center gap-4 p-2">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+        <AlertTriangle size={24} className="text-destructive" />
+      </div>
+
+      <div className="text-center space-y-1">
+        <h3 className="text-sm font-semibold">Remove Peer</h3>
+        <p className="text-sm text-muted-foreground">
+          Are you sure you want to disconnect from{' '}
+          <span className="font-medium text-foreground">{displayName}</span>?
+        </p>
+      </div>
+
+      <div className="flex w-full flex-col gap-2 pt-2">
+        <Button
+          variant="destructive"
+          onClick={() => removePeer({ variables: { publicKey } })}
+          disabled={loading}
+          className="w-full"
+        >
+          {loading ? (
+            <Loader2 className="animate-spin" size={16} />
+          ) : (
+            'Remove Peer'
+          )}
+        </Button>
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={() => setModalOpen(false)}
+        >
+          Cancel
+        </Button>
+      </div>
+    </div>
   );
 };

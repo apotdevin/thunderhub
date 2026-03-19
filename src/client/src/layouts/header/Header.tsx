@@ -1,45 +1,57 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import {
   Cpu,
   Menu,
-  X,
-  MessageCircle,
   Settings,
   Heart,
+  Sun,
+  Moon,
+  Monitor,
+  PanelLeft,
+  PanelRight,
   LucideProps,
+  ArrowDownToLine,
+  ArrowUpFromLine,
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { LogoutButton } from '../../components/logoutButton';
-import { headerColor, headerTextColor } from '../../styles/Themes';
 import {
   useDonate,
   DonateModal,
 } from '../../views/home/quickActions/donate/DonateContent';
-import { SingleLine } from '../../components/generic/Styled';
-import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
-import { Section } from '../../components/section/Section';
-import { Link } from '../../components/link/Link';
-import { ViewSwitch } from '../../components/viewSwitch/ViewSwitch';
 import {
-  IconWrapper,
-  HeaderStyle,
-  HeaderLine,
-  HeaderTitle,
-  IconPadding,
-  HeaderButtons,
-  HeaderNavButton,
-} from './Header.styled';
+  useDeposit,
+  DepositModal,
+} from '../../views/home/quickActions/exchange/DepositContent';
+import {
+  useWithdraw,
+  WithdrawModal,
+} from '../../views/home/quickActions/exchange/WithdrawContent';
+import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
+import { Link } from '../../components/link/Link';
+import { cn } from '../../lib/utils';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
+import { usePriceState } from '../../context/PriceContext';
+import { NodeInfoBar } from './NodeInfoBar';
+import { BalancesContent } from '../sidebar/BalancesContent';
 
 export type Icon = FC<LucideProps>;
 
 const SSO = '/sso';
 const MAIN = '/login';
-const CHAT = '/chat';
 const SETTINGS = '/settings';
 
 export const Header = () => {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
+  const [balancesOpen, setBalancesOpen] = useState(false);
+
+  const { theme, currency, sidebar, rightSidebar } = useConfigState();
+  const dispatch = useConfigDispatch();
+  const { dontShow } = usePriceState();
 
   const {
     openDonate,
@@ -48,72 +60,240 @@ export const Header = () => {
     closeDonate,
   } = useDonate();
 
+  const {
+    openDeposit,
+    modalOpen: depositModalOpen,
+    closeDeposit,
+  } = useDeposit();
+
+  const {
+    openWithdraw,
+    modalOpen: withdrawModalOpen,
+    closeWithdraw,
+  } = useWithdraw();
+
   const isRoot = pathname === MAIN || pathname === SSO;
-
-  useEffect(() => {
-    if (!isRoot || !open) return;
-    setOpen(false);
-  }, [isRoot, open]);
-
-  const renderNavButton = (link: string, NavIcon: Icon) => (
-    <Link to={link} noStyling={true}>
-      <HeaderNavButton selected={pathname === link}>
-        <NavIcon size={18} />
-      </HeaderNavButton>
-    </Link>
-  );
 
   const renderLoggedIn = () => (
     <>
-      <ViewSwitch>
-        <IconWrapper onClick={() => setOpen(prev => !prev)}>
-          {open ? <X size={24} /> : <Menu size={24} />}
-        </IconWrapper>
-      </ViewSwitch>
-      <ViewSwitch hideMobile={true}>
-        <HeaderButtons>
-          <HeaderNavButton onClick={openDonate} style={{ cursor: 'pointer' }}>
-            <Heart size={18} />
-          </HeaderNavButton>
-          {renderNavButton(CHAT, MessageCircle)}
-          {renderNavButton(SETTINGS, Settings)}
-          <LogoutButton />
-        </HeaderButtons>
-      </ViewSwitch>
+      <div className="md:hidden text-muted-foreground flex">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon-sm">
+              <Menu size={18} />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            showCloseButton={true}
+            className="p-0 w-[280px]"
+          >
+            <BurgerMenu
+              setOpen={setOpen}
+              openDonate={openDonate}
+              openDeposit={openDeposit}
+              openWithdraw={openWithdraw}
+            />
+          </SheetContent>
+        </Sheet>
+
+        <Sheet open={balancesOpen} onOpenChange={setBalancesOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon-sm">
+              <PanelRight size={18} />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            showCloseButton={true}
+            className="p-0 w-[320px]"
+          >
+            <div className="pt-4">
+              <BalancesContent />
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      <div className="hidden md:flex items-center gap-1">
+        <Button
+          onClick={openDeposit}
+          variant="ghost"
+          size="sm"
+          className="text-muted-foreground hover:text-foreground text-xs h-7 px-2"
+        >
+          <ArrowDownToLine size={12} className="text-green-500" />
+          Deposit
+        </Button>
+        <Button
+          onClick={openWithdraw}
+          variant="ghost"
+          size="sm"
+          className="text-muted-foreground hover:text-foreground text-xs h-7 px-2"
+        >
+          <ArrowUpFromLine size={12} className="text-orange-500" />
+          Withdraw
+        </Button>
+
+        <div className="w-px h-4 bg-border mx-0.5" />
+
+        {/* Currency toggle */}
+        <ToggleGroup
+          type="single"
+          value={currency}
+          onValueChange={value => {
+            if (value) dispatch({ type: 'change', currency: value });
+          }}
+          variant="outline"
+          size="sm"
+        >
+          <ToggleGroupItem value="sat" className="text-xs px-1.5">
+            sat
+          </ToggleGroupItem>
+          <ToggleGroupItem value="btc" className="text-xs px-1.5 font-bold">
+            ₿
+          </ToggleGroupItem>
+          {!dontShow && (
+            <ToggleGroupItem value="fiat" className="text-xs px-1.5 font-bold">
+              F
+            </ToggleGroupItem>
+          )}
+        </ToggleGroup>
+
+        {/* Theme toggle */}
+        <ToggleGroup
+          type="single"
+          value={theme}
+          onValueChange={value => {
+            if (value) dispatch({ type: 'themeChange', theme: value });
+          }}
+          variant="outline"
+          size="sm"
+        >
+          <ToggleGroupItem value="light" className="px-1.5">
+            <Sun size={12} />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="dark" className="px-1.5">
+            <Moon size={12} />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="system" className="px-1.5">
+            <Monitor size={12} />
+          </ToggleGroupItem>
+        </ToggleGroup>
+
+        <div className="w-px h-4 bg-border mx-0.5" />
+
+        <Button
+          onClick={() => dispatch({ type: 'change', sidebar: !sidebar })}
+          variant="ghost"
+          size="icon-sm"
+          className={cn(
+            'hover:text-foreground',
+            sidebar ? 'text-foreground' : 'text-muted-foreground/40'
+          )}
+        >
+          <PanelLeft size={14} />
+        </Button>
+
+        <Button
+          onClick={() =>
+            dispatch({ type: 'change', rightSidebar: !rightSidebar })
+          }
+          variant="ghost"
+          size="icon-sm"
+          className={cn(
+            'hidden lg:flex hover:text-foreground',
+            rightSidebar ? 'text-foreground' : 'text-muted-foreground/40'
+          )}
+        >
+          <PanelRight size={14} />
+        </Button>
+
+        <Sheet open={balancesOpen} onOpenChange={setBalancesOpen}>
+          <SheetTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className="lg:hidden text-muted-foreground"
+            >
+              <PanelRight size={18} />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            showCloseButton={true}
+            className="p-0 w-[320px]"
+          >
+            <div className="pt-4">
+              <BalancesContent />
+            </div>
+          </SheetContent>
+        </Sheet>
+
+        <div className="w-px h-4 bg-border mx-0.5" />
+
+        <Button
+          onClick={openDonate}
+          variant="ghost"
+          size="icon-sm"
+          className="text-muted-foreground hover:text-foreground"
+        >
+          <Heart size={14} className="text-red-500 fill-red-500" />
+        </Button>
+        <Link to={SETTINGS} noStyling>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <Settings size={14} />
+          </Button>
+        </Link>
+        <div className="w-px h-4 bg-border mx-0.5" />
+        <LogoutButton />
+      </div>
     </>
   );
 
   return (
     <>
-      <Section
-        padding="0 16px"
-        fixedWidth={pathname === MAIN}
-        color={pathname === MAIN ? 'transparent' : headerColor}
-        textColor={headerTextColor}
+      <header
+        className={cn(
+          'sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md supports-backdrop-filter:bg-background/60',
+          isRoot && 'bg-transparent backdrop-blur-none'
+        )}
       >
-        <HeaderStyle>
-          <HeaderLine loggedIn={!isRoot}>
-            <Link to={!isRoot ? '/' : '/login'} underline={'transparent'}>
-              <HeaderTitle withPadding={isRoot}>
-                <IconPadding>
-                  <Cpu color={'white'} size={18} />
-                </IconPadding>
-                ThunderHub
-              </HeaderTitle>
-            </Link>
-            <SingleLine>{!isRoot && renderLoggedIn()}</SingleLine>
-          </HeaderLine>
-        </HeaderStyle>
-      </Section>
-      {open && (
-        <ViewSwitch>
-          <BurgerMenu open={open} setOpen={setOpen} />
-        </ViewSwitch>
-      )}
+        <div
+          className={cn(
+            'flex h-10 items-center justify-between px-4 border-b border-border/60',
+            isRoot && 'max-w-[1000px] mx-auto border-transparent'
+          )}
+        >
+          <Link to={!isRoot ? '/' : '/login'} noStyling>
+            <div className="flex items-center gap-2 font-bold text-sm tracking-tight hover:opacity-80 transition-opacity">
+              <div className="flex items-center justify-center w-6 h-6 rounded-md bg-primary/10 text-primary">
+                <Cpu size={14} />
+              </div>
+              <span>ThunderHub</span>
+            </div>
+          </Link>
+          {!isRoot && renderLoggedIn()}
+        </div>
+        {!isRoot && (
+          <div className="hidden md:block border-b border-border/40">
+            <NodeInfoBar />
+          </div>
+        )}
+      </header>
       <DonateModal
         payRequest={donatePayRequest}
         modalOpen={donateModalOpen}
         closeDonate={closeDonate}
+      />
+      <DepositModal modalOpen={depositModalOpen} closeDeposit={closeDeposit} />
+      <WithdrawModal
+        modalOpen={withdrawModalOpen}
+        closeWithdraw={closeWithdraw}
       />
     </>
   );

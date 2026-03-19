@@ -1,145 +1,137 @@
 import { Injectable } from '@nestjs/common';
 import EventEmitter from 'events';
-import {
-  CloseChannelArgs,
-  CreateChainAddressArgs,
-  CreateInvoiceArgs,
-  DiffieHellmanComputeSecretArgs,
-  GetChannelsArgs,
-  GetForwardsArgs,
-  GetIdentityResult,
-  GetInvoicesArgs,
-  GetPaymentsArgs,
-  GrantAccessArgs,
-  OpenChannelArgs,
-  PayArgs,
-  PayViaPaymentDetailsArgs,
-  SendToChainAddressArgs,
-  UpdateRoutingFeesArgs,
-  VerifyBackupsArgs,
-} from 'lightning';
 import { AccountsService } from '../accounts/accounts.service';
-import { LndService } from './lnd/lnd.service';
+import { ProviderRegistryService } from './provider-registry.service';
+import { EnrichedAccount } from '../accounts/accounts.types';
+import { LightningProvider } from './lightning.types';
+import {
+  CloseChannelOptions,
+  CreateChainAddressFormat,
+  CreateInvoiceOptions,
+  DiffieHellmanComputeSecretOptions,
+  GetChannelsOptions,
+  GetForwardsOptions,
+  GetInvoicesOptions,
+  GetPaymentsOptions,
+  GrantAccessOptions,
+  OpenChannelOptions,
+  PayOptions,
+  PayViaPaymentDetailsOptions,
+  SendToChainAddressOptions,
+  UpdateRoutingFeesOptions,
+  VerifyBackupsOptions,
+} from './lightning.types';
 
 @Injectable()
 export class NodeService {
   constructor(
     private accountsService: AccountsService,
-    private lndService: LndService
+    private providerRegistry: ProviderRegistryService
   ) {}
 
-  async getWalletInfo(id: string) {
+  private getAccountAndProvider(id: string): {
+    account: EnrichedAccount;
+    provider: LightningProvider;
+  } {
     const account = this.accountsService.getAccount(id);
     if (!account) throw new Error('Node account not found');
-    return this.lndService.getWalletInfo(account);
+    const provider = this.providerRegistry.getProvider(account.type);
+    return { account, provider };
+  }
+
+  async getWalletInfo(id: string) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getWalletInfo(account.connection);
   }
 
   async getWalletVersion(id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getWalletVersion(account);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getWalletVersion(account.connection);
   }
 
   async getHeight(id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getHeight(account);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getHeight(account.connection);
   }
 
   async getClosedChannels(id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getClosedChannels(account);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getClosedChannels(account.connection);
   }
 
   async getPendingChannels(id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getPendingChannels(account);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getPendingChannels(account.connection);
   }
 
-  async getChannels(id: string, options?: Omit<GetChannelsArgs, 'lnd'>) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getChannels(account, options);
+  async getChannels(id: string, options?: GetChannelsOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getChannels(account.connection, options);
   }
 
   async getChannelBalance(id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getChannelBalance(account);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getChannelBalance(account.connection);
   }
 
   async getChainBalance(id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getChainBalance(account);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getChainBalance(account.connection);
   }
 
   async getPendingChainBalance(id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getPendingChainBalance(account);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getPendingChainBalance(account.connection);
   }
 
   async getNode(id: string, pubkey: string, withoutChannels: boolean) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getNode(account, pubkey, withoutChannels);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getNode(account.connection, pubkey, withoutChannels);
   }
 
   async verifyBackup(id: string, backup: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.verifyBackup(account, backup);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.verifyBackup(account.connection, backup);
   }
 
-  async verifyBackups(id: string, args: Omit<VerifyBackupsArgs, 'lnd'>) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.verifyBackups(account, args);
+  async verifyBackups(id: string, args: VerifyBackupsOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.verifyBackups(account.connection, args);
   }
 
   async recoverFundsFromChannels(id: string, backup: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.recoverFundsFromChannels(account, backup);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.recoverFundsFromChannels(account.connection, backup);
   }
 
   async getBackups(id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getBackups(account);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getBackups(account.connection);
   }
 
   async verifyMessage(id: string, message: string, signature: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.verifyMessage(account, message, signature);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.verifyMessage(account.connection, message, signature);
   }
 
   async signMessage(id: string, message: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.signMessage(account, message);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.signMessage(account.connection, message);
   }
 
-  async grantAccess(id: string, permissions: Omit<GrantAccessArgs, 'lnd'>) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.grantAccess(account, permissions);
+  async grantAccess(id: string, permissions: GrantAccessOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.grantAccess(account.connection, permissions);
   }
 
   async getNetworkInfo(id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getNetworkInfo(account);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getNetworkInfo(account.connection);
   }
 
   async getPeers(id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getPeers(account);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getPeers(account.connection);
   }
 
   async addPeer(
@@ -148,138 +140,114 @@ export class NodeService {
     socket: string,
     is_temporary: boolean
   ) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.addPeer(account, public_key, socket, is_temporary);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.addPeer(
+      account.connection,
+      public_key,
+      socket,
+      is_temporary
+    );
   }
 
   async removePeer(id: string, public_key: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.removePeer(account, public_key);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.removePeer(account.connection, public_key);
   }
 
   async getChainTransactions(id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getChainTransactions(account);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getChainTransactions(account.connection);
   }
 
   async getUtxos(id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getUtxos(account);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getUtxos(account.connection);
   }
 
   async createChainAddress(
     id: string,
     is_unused = true,
-    format: CreateChainAddressArgs['format'] = 'p2wpkh'
+    format: CreateChainAddressFormat = 'p2wpkh'
   ) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.createChainAddress(account, is_unused, format);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.createChainAddress(account.connection, is_unused, format);
   }
 
-  async sendToChainAddress(
-    id: string,
-    options: Omit<SendToChainAddressArgs, 'lnd'>
-  ) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.sendToChainAddress(account, options);
+  async sendToChainAddress(id: string, options: SendToChainAddressOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.sendToChainAddress(account.connection, options);
   }
 
   async diffieHellmanComputeSecret(
     id: string,
-    options: Omit<DiffieHellmanComputeSecretArgs, 'lnd'>
+    options: DiffieHellmanComputeSecretOptions
   ) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.diffieHellmanComputeSecret(account, options);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.diffieHellmanComputeSecret(account.connection, options);
   }
 
   async decodePaymentRequest(id: string, request: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.decodePaymentRequest(account, request);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.decodePaymentRequest(account.connection, request);
   }
 
-  async pay(id: string, options: Omit<PayArgs, 'lnd'>) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.pay(account, options);
+  async pay(id: string, options: PayOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.pay(account.connection, options);
   }
 
-  async createInvoice(id: string, options: Omit<CreateInvoiceArgs, 'lnd'>) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.createInvoice(account, options);
+  async createInvoice(id: string, options: CreateInvoiceOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.createInvoice(account.connection, options);
   }
 
   async getChannel(id: string, channel_id: string) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getChannel(account, channel_id);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getChannel(account.connection, channel_id);
   }
 
-  async closeChannel(id: string, options: Omit<CloseChannelArgs, 'lnd'>) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.closeChannel(account, options);
+  async closeChannel(id: string, options: CloseChannelOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.closeChannel(account.connection, options);
   }
 
-  async openChannel(id: string, options: Omit<OpenChannelArgs, 'lnd'>) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.openChannel(account, options);
+  async openChannel(id: string, options: OpenChannelOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.openChannel(account.connection, options);
   }
 
-  async updateRoutingFees(
-    id: string,
-    options: Omit<UpdateRoutingFeesArgs, 'lnd'>
-  ) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.updateRoutingFees(account, options);
+  async updateRoutingFees(id: string, options: UpdateRoutingFeesOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.updateRoutingFees(account.connection, options);
   }
 
-  async getForwards(id: string, options: Omit<GetForwardsArgs, 'lnd'>) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getForwards(account, options);
+  async getForwards(id: string, options: GetForwardsOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getForwards(account.connection, options);
   }
 
-  async getPayments(id: string, options: Omit<GetPaymentsArgs, 'lnd'>) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getPayments(account, options);
+  async getPayments(id: string, options: GetPaymentsOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getPayments(account.connection, options);
   }
 
-  async getInvoices(id: string, options: Omit<GetInvoicesArgs, 'lnd'>) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getInvoices(account, options);
+  async getInvoices(id: string, options: GetInvoicesOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getInvoices(account.connection, options);
   }
 
-  async payViaPaymentDetails(
-    id: string,
-    options: Omit<PayViaPaymentDetailsArgs, 'lnd' | 'routes'>
-  ) {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.payViaPaymentDetails(account, options);
+  async payViaPaymentDetails(id: string, options: PayViaPaymentDetailsOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.payViaPaymentDetails(account.connection, options);
   }
 
   subscribeToInvoice(id: string, invoice: string): EventEmitter {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.subscribeToInvoice(account, invoice);
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.subscribeToInvoice(account.connection, invoice);
   }
 
-  async getIdentity(id: string): Promise<GetIdentityResult> {
-    const account = this.accountsService.getAccount(id);
-    if (!account) throw new Error('Node account not found');
-    return this.lndService.getIdentity(account);
+  async getIdentity(id: string) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getIdentity(account.connection);
   }
 }

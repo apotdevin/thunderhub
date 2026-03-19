@@ -1,6 +1,5 @@
 import { FC } from 'react';
-import { DarkSubTitle } from '../../../components/generic/Styled';
-import { LoadingCard } from '../../../components/loading/LoadingCard';
+import { Loader2 } from 'lucide-react';
 import { ChangeDetails } from '../../../components/modal/changeDetails/ChangeDetails';
 import { useGetChannelInfoQuery } from '../../../graphql/queries/__generated__/getChannel.generated';
 
@@ -14,14 +13,18 @@ export const ChannelDetails: FC<{ id?: string; name?: string }> = ({
   });
 
   if (loading) {
-    return <LoadingCard noTitle />;
+    return (
+      <div className="flex items-center justify-center py-4">
+        <Loader2 className="animate-spin text-muted-foreground" size={16} />
+      </div>
+    );
   }
 
   if (!data?.getChannel || error) {
     return (
-      <DarkSubTitle>
+      <div className="py-4 text-center text-sm text-muted-foreground">
         Error getting channel information. Try refreshing the page.
-      </DarkSubTitle>
+      </div>
     );
   }
 

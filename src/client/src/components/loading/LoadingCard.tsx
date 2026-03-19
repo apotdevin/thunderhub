@@ -1,75 +1,38 @@
 import { Loader2 } from 'lucide-react';
-import styled from 'styled-components';
-import { CardWithTitle, CardTitle, SubTitle, Card } from '../generic/Styled';
-import { themeColors } from '../../styles/Themes';
-
-const Loading = styled.div<{ loadingHeight?: string }>`
-  width: 100%;
-  height: ${({ loadingHeight }) => (loadingHeight ? loadingHeight : 'auto')};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+import { Card, CardContent } from '@/components/ui/card';
 
 interface LoadingCardProps {
   title?: string;
   noCard?: boolean;
-  color?: string;
-  noTitle?: boolean;
   loadingHeight?: string;
-  inverseColor?: boolean;
 }
 
+const Spinner = ({ loadingHeight }: { loadingHeight?: string }) => (
+  <div
+    className="w-full flex justify-center items-center py-8"
+    style={{ height: loadingHeight || 'auto' }}
+  >
+    <Loader2 className="animate-spin text-muted-foreground" size={20} />
+  </div>
+);
+
 export const LoadingCard = ({
-  title = '',
-  color,
+  title,
   noCard = false,
-  noTitle = false,
   loadingHeight,
-  inverseColor,
 }: LoadingCardProps) => {
-  const loadingColor = color ? color : themeColors.blue3;
-
   if (noCard) {
-    return (
-      <Loading loadingHeight={loadingHeight}>
-        <Loader2
-          className="animate-spin"
-          size={20}
-          style={{ color: loadingColor }}
-        />
-      </Loading>
-    );
-  }
-
-  if (noTitle) {
-    return (
-      <Card>
-        <Loading loadingHeight={loadingHeight}>
-          <Loader2
-            className="animate-spin"
-            size={20}
-            style={{ color: loadingColor }}
-          />
-        </Loading>
-      </Card>
-    );
+    return <Spinner loadingHeight={loadingHeight} />;
   }
 
   return (
-    <CardWithTitle>
-      <CardTitle>
-        <SubTitle inverseColor={inverseColor}>{title}</SubTitle>
-      </CardTitle>
+    <div className="flex flex-col gap-4">
+      {title && <h2 className="text-lg font-semibold">{title}</h2>}
       <Card>
-        <Loading loadingHeight={loadingHeight}>
-          <Loader2
-            className="animate-spin"
-            size={20}
-            style={{ color: loadingColor }}
-          />
-        </Loading>
+        <CardContent>
+          <Spinner loadingHeight={loadingHeight} />
+        </CardContent>
       </Card>
-    </CardWithTitle>
+    </div>
   );
 };

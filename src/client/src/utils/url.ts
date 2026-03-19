@@ -42,8 +42,21 @@ export const getUrlParam = (
 };
 
 export const decodeLnUrl = (url: string): string => {
-  const cleanUrl = url.toLowerCase().replace('lightning:', '');
-  const { words } = bech32.decode(cleanUrl, 500);
+  const cleaned = url.trim().replace(/^lightning:/i, '');
+
+  // If it's already a plain URL, return it directly
+  if (/^https?:\/\//i.test(cleaned)) {
+    return cleaned;
+  }
+
+  // Handle lnurlp://, lnurlw://, lnurlc:// protocol schemes
+  const protocolMatch = cleaned.match(/^lnurl[pwc]:\/\/(.+)/i);
+  if (protocolMatch) {
+    return `https://${protocolMatch[1]}`;
+  }
+
+  // Otherwise, try bech32 decoding (LNURL1...)
+  const { words } = bech32.decode(cleaned.toLowerCase(), 500);
   const bytes = bech32.fromWords(words);
   return new String(Buffer.from(bytes)).toString();
 };

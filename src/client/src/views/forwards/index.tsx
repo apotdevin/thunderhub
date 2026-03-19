@@ -5,13 +5,13 @@ import {
   getDateDif,
   getNodeLink,
 } from '../../components/generic/helpers';
-import { DarkSubTitle } from '../../components/generic/Styled';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { Price } from '../../components/price/Price';
 import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
 import { getErrorContent } from '../../utils/error';
 import Table from '../../components/table';
 import { useChannelInfo } from '../../hooks/UseChannelInfo';
+import { ArrowRightLeft } from 'lucide-react';
 
 type ForwardProps = {
   days: number;
@@ -33,12 +33,7 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
 
   const tableData = useMemo(() => {
     const channelData = data?.getForwards.list || [];
-
-    return channelData.map(c => {
-      return {
-        ...c,
-      };
-    });
+    return channelData.map(c => ({ ...c }));
   }, [data]);
 
   const columns = useMemo(
@@ -47,7 +42,7 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
         header: 'Date',
         accessorKey: 'created_at',
         cell: ({ row }: any) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
+          <div className="whitespace-nowrap">
             {`${getDateDif(row.original.created_at)} ago`}
           </div>
         ),
@@ -59,7 +54,7 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
             header: 'Forwarded',
             accessorKey: 'tokens',
             cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
+              <div className="whitespace-nowrap font-mono">
                 <Price amount={row.original.tokens} />
               </div>
             ),
@@ -68,7 +63,7 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
             header: 'Earned',
             accessorKey: 'fee',
             cell: ({ row }: any) => (
-              <div style={{ whiteSpace: 'nowrap' }}>
+              <div className="whitespace-nowrap font-mono">
                 <Price amount={row.original.fee_mtokens / 1000} />
               </div>
             ),
@@ -120,15 +115,13 @@ export const ForwardsList: FC<ForwardProps> = ({ days }) => {
   }
 
   if (!data || !data.getForwards.list.length) {
-    return <DarkSubTitle>No forwards found</DarkSubTitle>;
+    return (
+      <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
+        <ArrowRightLeft size={24} className="mb-2 opacity-50" />
+        <span className="text-sm">No forwards found</span>
+      </div>
+    );
   }
 
-  return (
-    <Table
-      withBorder={true}
-      columns={columns}
-      data={tableData}
-      withSorting={true}
-    />
-  );
+  return <Table columns={columns} data={tableData} withSorting={true} />;
 };

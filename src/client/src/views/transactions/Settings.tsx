@@ -1,17 +1,5 @@
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
-import { SingleLine } from '../../components/generic/Styled';
+import { Switch } from '@/components/ui/switch';
 import { useLocalStorage } from '../../hooks/UseLocalStorage';
-import styled from 'styled-components';
-
-const NoWrapText = styled.div`
-  white-space: nowrap;
-  font-size: 14px;
-`;
-
-const InputTitle = styled(NoWrapText)``;
 
 export const defaultSettings = {
   rebalance: false,
@@ -27,41 +15,31 @@ export const TransactionSettings = () => {
   const { rebalance, confirmed } = settings;
 
   return (
-    <>
-      <SingleLine>
-        <InputTitle>Confirmed</InputTitle>
-        <MultiButton>
-          <SingleButton
-            selected={confirmed}
-            onClick={() => setSettings({ ...settings, confirmed: true })}
-          >
-            Yes
-          </SingleButton>
-          <SingleButton
-            selected={!confirmed}
-            onClick={() => setSettings({ ...settings, confirmed: false })}
-          >
-            No
-          </SingleButton>
-        </MultiButton>
-      </SingleLine>
-      <SingleLine>
-        <InputTitle>Circular Payment</InputTitle>
-        <MultiButton margin={'8px 0'}>
-          <SingleButton
-            selected={rebalance}
-            onClick={() => setSettings({ ...settings, rebalance: true })}
-          >
-            Yes
-          </SingleButton>
-          <SingleButton
-            selected={!rebalance}
-            onClick={() => setSettings({ ...settings, rebalance: false })}
-          >
-            No
-          </SingleButton>
-        </MultiButton>
-      </SingleLine>
-    </>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-xs font-medium">Show Confirmed Only</span>
+          <span className="text-[11px] text-muted-foreground">
+            Hide unconfirmed transactions
+          </span>
+        </div>
+        <Switch
+          checked={confirmed}
+          onCheckedChange={v => setSettings({ ...settings, confirmed: v })}
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-xs font-medium">Hide Circular Payments</span>
+          <span className="text-[11px] text-muted-foreground">
+            Filter out rebalance payments
+          </span>
+        </div>
+        <Switch
+          checked={rebalance}
+          onCheckedChange={v => setSettings({ ...settings, rebalance: v })}
+        />
+      </div>
+    </div>
   );
 };

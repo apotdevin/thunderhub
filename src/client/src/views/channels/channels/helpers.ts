@@ -27,5 +27,4 @@ export const defaultHiddenColumns = [
   'partnerMinHtlc',
   'proportionalBars',
   'activityBars',
-  'viewAction',
 ];

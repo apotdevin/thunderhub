@@ -1,144 +1,117 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAddPeerMutation } from '../../graphql/mutations/__generated__/addPeer.generated';
-import { InputWithDeco } from '../../components/input/InputWithDeco';
-import {
-  CardWithTitle,
-  SubTitle,
-  Card,
-  SingleLine,
-  DarkSubTitle,
-  NoWrapTitle,
-  Separation,
-} from '../../components/generic/Styled';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { getErrorContent } from '../../utils/error';
 
-export const AddPeer = () => {
-  const [isAdding, setIsAdding] = useState<boolean>(false);
-  const [temp, setTemp] = useState<boolean>(false);
-  const [separate, setSeparate] = useState<boolean>(false);
-  const [url, setUrl] = useState<string>('');
-  const [key, setKey] = useState<string>('');
-  const [socket, setSocket] = useState<string>('');
+export const AddPeer = ({ closeCbk }: { closeCbk?: () => void }) => {
+  const [temp, setTemp] = useState(false);
+  const [separate, setSeparate] = useState(false);
+  const [url, setUrl] = useState('');
+  const [key, setKey] = useState('');
+  const [socket, setSocket] = useState('');
 
   const [addPeer, { loading }] = useAddPeerMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: () => {
-      toast.success('Peer Added');
-      setIsAdding(false);
-      setTemp(false);
-      setUrl('');
-      setKey('');
-      setSocket('');
+      toast.success('Peer added successfully');
+      closeCbk?.();
     },
     refetchQueries: ['GetPeers'],
   });
 
-  const renderButton = (
-    onClick: () => void,
-    text: string,
-    selected: boolean
-  ) => (
-    <SingleButton selected={selected} onClick={onClick}>
-      {text}
-    </SingleButton>
-  );
+  const canSubmit = url !== '' || (socket !== '' && key !== '');
 
-  const renderAdding = () => (
-    <>
-      <Separation />
-      <SingleLine>
-        <NoWrapTitle>Type:</NoWrapTitle>
-        <MultiButton>
-          {renderButton(
-            () => {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <label className="text-sm font-medium min-w-[80px]">Format</label>
+        <div className="flex rounded-md bg-secondary p-0.5">
+          <Button
+            variant={!separate ? 'default' : 'ghost'}
+            size="sm"
+            className="text-xs"
+            onClick={() => {
               setKey('');
               setSocket('');
               setSeparate(false);
-            },
-            'Joined',
-            !separate
-          )}
-          {renderButton(
-            () => {
+            }}
+          >
+            Combined
+          </Button>
+          <Button
+            variant={separate ? 'default' : 'ghost'}
+            size="sm"
+            className="text-xs"
+            onClick={() => {
               setUrl('');
               setSeparate(true);
-            },
-            'Separate',
-            separate
-          )}
-        </MultiButton>
-      </SingleLine>
-      <Separation />
-      {!separate && (
-        <InputWithDeco
-          title={'Url'}
-          value={url}
-          inputCallback={value => setUrl(value)}
-          placeholder={'public_key@socket'}
-        />
-      )}
-      {separate && (
-        <>
-          <InputWithDeco
-            title={'Public Key'}
-            value={key}
-            inputCallback={value => setKey(value)}
-            placeholder={'Public Key'}
+            }}
+          >
+            Separate
+          </Button>
+        </div>
+      </div>
+
+      {!separate ? (
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium">Connection String</label>
+          <Input
+            value={url}
+            onChange={e => setUrl(e.target.value)}
+            placeholder="public_key@host:port"
           />
-          <InputWithDeco
-            title={'Socket'}
-            value={socket}
-            inputCallback={value => setSocket(value)}
-            placeholder={'Socket'}
-          />
-        </>
+        </div>
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium">Public Key</label>
+            <Input
+              value={key}
+              onChange={e => setKey(e.target.value)}
+              placeholder="02abc..."
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium">Socket</label>
+            <Input
+              value={socket}
+              onChange={e => setSocket(e.target.value)}
+              placeholder="host:port"
+            />
+          </div>
+        </div>
       )}
-      <SingleLine>
-        <NoWrapTitle>Is Temporary:</NoWrapTitle>
-        <MultiButton>
-          {renderButton(() => setTemp(true), 'Yes', temp)}
-          {renderButton(() => setTemp(false), 'No', !temp)}
-        </MultiButton>
-      </SingleLine>
-      <ColorButton
+
+      <div className="flex items-center justify-between">
+        <div className="space-y-0.5">
+          <label className="text-sm font-medium">Temporary</label>
+          <p className="text-xs text-muted-foreground">
+            Peer will not be reconnected on restart
+          </p>
+        </div>
+        <Switch checked={temp} onCheckedChange={setTemp} />
+      </div>
+
+      <Button
         onClick={() =>
           addPeer({
-            variables: { url, publicKey: key, socket, isTemporary: temp },
+            variables: {
+              url,
+              publicKey: key,
+              socket,
+              isTemporary: temp,
+            },
           })
         }
-        disabled={url === '' && (socket === '' || key === '')}
-        withMargin={'16px 0 0'}
-        loading={loading}
-        arrow={true}
-        fullWidth={true}
+        disabled={!canSubmit || loading}
+        className="w-full"
       >
-        Add
-      </ColorButton>
-    </>
-  );
-
-  return (
-    <CardWithTitle>
-      <SubTitle>Peer Management</SubTitle>
-      <Card>
-        <SingleLine>
-          <DarkSubTitle>Add Peer</DarkSubTitle>
-          <ColorButton
-            withMargin={'4px 0'}
-            onClick={() => setIsAdding(prev => !prev)}
-          >
-            {isAdding ? <X size={18} /> : 'Add'}
-          </ColorButton>
-        </SingleLine>
-        {isAdding && renderAdding()}
-      </Card>
-    </CardWithTitle>
+        {loading ? <Loader2 className="animate-spin" size={16} /> : 'Add Peer'}
+      </Button>
+    </div>
   );
 };

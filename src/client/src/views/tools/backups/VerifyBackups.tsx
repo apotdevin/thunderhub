@@ -1,20 +1,14 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { X } from 'lucide-react';
+import { ChevronRight, X, Loader2 } from 'lucide-react';
 import { useVerifyBackupsLazyQuery } from '../../../graphql/queries/__generated__/verifyBackups.generated';
 import { getErrorContent } from '../../../utils/error';
-import {
-  SingleLine,
-  DarkSubTitle,
-  SubCard,
-} from '../../../components/generic/Styled';
-import { ColorButton } from '../../../components/buttons/colorButton/ColorButton';
-import { Input } from '../../../components/input';
-import { NoWrap } from '../Tools.styled';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export const VerifyBackups = () => {
-  const [backupString, setBackupString] = useState<string>('');
-  const [isPasting, setIsPasting] = useState<boolean>(false);
+  const [backupString, setBackupString] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
   const [verifyBackup, { data, loading }] = useVerifyBackupsLazyQuery({
     onError: error => toast.error(getErrorContent(error)),
@@ -29,48 +23,54 @@ export const VerifyBackups = () => {
     }
   }, [data, loading]);
 
-  const renderInput = () => (
-    <SubCard>
-      <SingleLine>
-        <NoWrap>
-          <DarkSubTitle>Backup String:</DarkSubTitle>
-        </NoWrap>
-        <Input
-          placeholder="Content from file"
-          withMargin={'8px 0 0'}
-          onChange={e => setBackupString(e.target.value)}
-        />
-      </SingleLine>
-      <ColorButton
-        fullWidth={true}
-        withMargin={'8px 0 4px'}
-        disabled={backupString === ''}
-        loading={loading}
-        onClick={() =>
-          verifyBackup({
-            variables: { backup: backupString },
-          })
-        }
-      >
-        Verify
-      </ColorButton>
-    </SubCard>
-  );
-
   return (
-    <>
-      <SingleLine>
-        <DarkSubTitle>Verify Channels Backup</DarkSubTitle>
-        <ColorButton
-          withMargin={'4px 0'}
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <div>
+          <span className="text-sm font-medium">Verify All Channels</span>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Validate an exported channel backup
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
           disabled={loading}
-          arrow={!isPasting}
-          onClick={() => setIsPasting(prev => !prev)}
+          onClick={() => setIsOpen(o => !o)}
         >
-          {isPasting ? <X size={18} /> : 'Verify'}
-        </ColorButton>
-      </SingleLine>
-      {isPasting && renderInput()}
-    </>
+          {isOpen ? (
+            <X size={14} />
+          ) : (
+            <>
+              <span>Verify</span>
+              <ChevronRight size={14} />
+            </>
+          )}
+        </Button>
+      </div>
+      {isOpen && (
+        <div className="flex gap-2">
+          <Input
+            placeholder="Paste backup content"
+            className="text-sm"
+            onChange={e => setBackupString(e.target.value)}
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={backupString === '' || loading}
+            onClick={() =>
+              verifyBackup({ variables: { backup: backupString } })
+            }
+          >
+            {loading ? (
+              <Loader2 className="animate-spin" size={14} />
+            ) : (
+              'Verify'
+            )}
+          </Button>
+        </div>
+      )}
+    </div>
   );
 };

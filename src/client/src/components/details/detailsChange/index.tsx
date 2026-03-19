@@ -2,11 +2,10 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { ChevronRight } from 'lucide-react';
 import { useUpdateFeesMutation } from '@/graphql/mutations/__generated__/updateFees.generated';
-import { Input } from '@/components/input';
-import { InputWithDeco } from '@/components/input/InputWithDeco';
-import { ColorButton } from '@/components/buttons/colorButton/ColorButton';
+import { Input } from '@/components/ui/input';
+import { Price } from '@/components/price/Price';
+import { Button } from '@/components/ui/button';
 import { getErrorContent } from '@/utils/error';
-import { RightAlign } from '../../generic/Styled';
 
 type DetailsChangeProps = {
   callback?: () => void;
@@ -19,6 +18,8 @@ export const DetailsChange = ({ callback }: DetailsChangeProps) => {
   const [max, setMax] = useState(0);
   const [min, setMin] = useState(0);
   const [baseFeeDirty, setBaseFeeDirty] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+
   const [updateFees] = useUpdateFeesMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: data => {
@@ -38,89 +39,126 @@ export const DetailsChange = ({ callback }: DetailsChangeProps) => {
   });
 
   return (
-    <>
-      <InputWithDeco
-        title={'BaseFee'}
-        customAmount={baseFeeDirty ? `${baseFee} sats` : ''}
-        noInput={true}
-      >
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Base Fee{' '}
+          {baseFeeDirty && (
+            <span className="text-foreground">{baseFee} sats</span>
+          )}
+        </label>
         <Input
-          placeholder={'sats'}
-          maxWidth={`500px`}
-          withMargin={'0 0 0 8px'}
-          mobileMargin={'0'}
-          type={'number'}
+          placeholder="sats"
+          type="number"
           onChange={e => {
             setBaseFeeDirty(true);
             setBaseFee(Number(e.target.value));
           }}
-          value={baseFee || undefined}
+          value={baseFee || ''}
         />
-      </InputWithDeco>
-      <InputWithDeco
-        title={'Fee Rate'}
-        value={feeRate}
-        placeholder={'ppm'}
-        amount={feeRate}
-        override={'ppm'}
-        inputType={'number'}
-        inputCallback={value => setFeeRate(Number(value))}
-      />
-      <InputWithDeco
-        title={'CLTV Delta'}
-        value={cltv}
-        placeholder={'cltv delta'}
-        customAmount={cltv ? cltv.toString() : ''}
-        inputType={'number'}
-        inputCallback={value => setCLTV(Number(value))}
-      />
-      <InputWithDeco
-        title={'Max HTLC'}
-        value={max}
-        placeholder={'sats'}
-        amount={max}
-        override={'sat'}
-        inputType={'number'}
-        inputCallback={value => setMax(Number(value))}
-      />
-      <InputWithDeco
-        title={'Min HTLC'}
-        value={min}
-        placeholder={'sats'}
-        amount={min}
-        override={'sat'}
-        inputType={'number'}
-        inputCallback={value => setMin(Number(value))}
-      />
+      </div>
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Fee Rate{' '}
+          <span className="text-foreground">
+            <Price amount={feeRate} override={'ppm'} />
+          </span>
+        </label>
+        <Input
+          placeholder="ppm"
+          type="number"
+          value={feeRate && feeRate > 0 ? feeRate : ''}
+          onChange={e => setFeeRate(Number(e.target.value))}
+        />
+      </div>
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          CLTV Delta{' '}
+          {cltv ? <span className="text-foreground">{cltv}</span> : null}
+        </label>
+        <Input
+          placeholder="cltv delta"
+          type="number"
+          value={cltv && cltv > 0 ? cltv : ''}
+          onChange={e => setCLTV(Number(e.target.value))}
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted-foreground">
+            Max HTLC{' '}
+            <span className="text-foreground">
+              <Price amount={max} override={'sat'} />
+            </span>
+          </label>
+          <Input
+            placeholder="sats"
+            type="number"
+            value={max && max > 0 ? max : ''}
+            onChange={e => setMax(Number(e.target.value))}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted-foreground">
+            Min HTLC{' '}
+            <span className="text-foreground">
+              <Price amount={min} override={'sat'} />
+            </span>
+          </label>
+          <Input
+            placeholder="sats"
+            type="number"
+            value={min && min > 0 ? min : ''}
+            onChange={e => setMin(Number(e.target.value))}
+          />
+        </div>
+      </div>
 
-      <RightAlign>
-        <ColorButton
-          onClick={() =>
-            updateFees({
-              variables: {
-                ...(baseFee >= 0 &&
-                  baseFeeDirty && { base_fee_tokens: baseFee }),
-                ...(feeRate !== 0 && { fee_rate: feeRate }),
-                ...(cltv !== 0 && { cltv_delta: cltv }),
-                ...(max !== 0 && {
-                  max_htlc_mtokens: (max * 1000).toString(),
-                }),
-                ...(min !== 0 && {
-                  min_htlc_mtokens: (min * 1000).toString(),
-                }),
-              },
-            })
-          }
+      {confirming ? (
+        <div className="mt-1 flex gap-2">
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={() => setConfirming(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="default"
+            className="flex-1"
+            onClick={() =>
+              updateFees({
+                variables: {
+                  ...(baseFee >= 0 &&
+                    baseFeeDirty && { base_fee_tokens: baseFee }),
+                  ...(feeRate !== 0 && { fee_rate: feeRate }),
+                  ...(cltv !== 0 && { cltv_delta: cltv }),
+                  ...(max !== 0 && {
+                    max_htlc_mtokens: (max * 1000).toString(),
+                  }),
+                  ...(min !== 0 && {
+                    min_htlc_mtokens: (min * 1000).toString(),
+                  }),
+                },
+              })
+            }
+          >
+            Confirm Update
+          </Button>
+        </div>
+      ) : (
+        <Button
+          variant="outline"
           disabled={
             baseFee < 0 && feeRate === 0 && cltv === 0 && max === 0 && min === 0
           }
-          fullWidth={true}
-          withMargin={'16px 0 0'}
+          className="mt-1 w-full"
+          onClick={() => setConfirming(true)}
         >
           Update All Channels
           <ChevronRight size={18} />
-        </ColorButton>
-      </RightAlign>
-    </>
+        </Button>
+      )}
+    </div>
   );
 };

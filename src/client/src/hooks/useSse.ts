@@ -15,11 +15,24 @@ export const useSse = (disabled?: boolean) => {
 
   useEffect(() => {
     if (disabled) return;
+
     const { cleanup } = connect();
+
     return () => {
       cleanup();
     };
   }, [connect, disabled]);
+
+  // Auto-reconnect after disconnect
+  useEffect(() => {
+    if (disabled || status !== 'disconnected') return;
+
+    const timer = setTimeout(() => {
+      connect();
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [connect, disabled, status]);
 
   return {
     connected: status === 'connected',

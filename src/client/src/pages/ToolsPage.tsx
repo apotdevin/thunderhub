@@ -5,16 +5,16 @@ import { MessagesView } from '../views/tools/messages/Messages';
 import { WalletVersion } from '../views/tools/WalletVersion';
 
 const ToolsView = () => (
-  <>
+  <div className="flex flex-col gap-6">
     <BackupsView />
     <MessagesView />
     <Bakery />
     <WalletVersion />
-  </>
+  </div>
 );
 
 const ToolsPage = () => (
-  <GridWrapper>
+  <GridWrapper centerContent={false}>
     <ToolsView />
   </GridWrapper>
 );

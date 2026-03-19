@@ -1,66 +1,41 @@
-import {
-  Card,
-  CardWithTitle,
-  DarkSubTitle,
-  SubTitle,
-} from '../../../../components/generic/Styled';
+import { AlertTriangle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { useGetLiquidReportQuery } from '../../../../graphql/queries/__generated__/getChannelReport.generated';
-import { chartColors } from '../../../../styles/Themes';
-import styled from 'styled-components';
-import { WarningText } from '../../../../views/stats/styles';
+import { useChartColors } from '../../../../lib/chart-colors';
 import { HorizontalBarChart } from '../../../../components/chart/HorizontalBarChart';
 
-const S = {
-  row: styled.div`
-    display: grid;
-    grid-template-columns: 1fr 60px 90px;
-  `,
-  wrapper: styled.div`
-    width: 100%;
-    height: 240px;
-  `,
-  contentWrapper: styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `,
-  title: styled.h4`
-    font-weight: 900;
-    margin: 8px 0;
-  `,
-};
-
 export const LiquidityGraph = () => {
+  const chartColors = useChartColors();
   const { data, loading } = useGetLiquidReportQuery({ errorPolicy: 'ignore' });
 
   if (loading) {
     return (
-      <CardWithTitle>
-        <SubTitle>Liquidity Report</SubTitle>
-        <Card mobileCardPadding={'8px 0'}>
-          <S.wrapper>
-            <S.contentWrapper>
-              <LoadingCard noCard={true} />
-            </S.contentWrapper>
-          </S.wrapper>
-        </Card>
-      </CardWithTitle>
+      <Card>
+        <CardHeader>
+          <CardTitle>Liquidity Report</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex h-[240px] w-full items-center justify-center">
+            <LoadingCard noCard={true} />
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
   if (!data?.getChannelReport) {
     return (
-      <CardWithTitle>
-        <SubTitle>Liquidity Report</SubTitle>
-        <Card mobileCardPadding={'8px 0'}>
-          <S.wrapper>
-            <S.contentWrapper>Unable to get liquidity data.</S.contentWrapper>
-          </S.wrapper>
-        </Card>
-      </CardWithTitle>
+      <Card>
+        <CardHeader>
+          <CardTitle>Liquidity Report</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex h-[240px] w-full items-center justify-center text-sm text-muted-foreground">
+            Unable to get liquidity data.
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -91,42 +66,48 @@ export const LiquidityGraph = () => {
 
   return (
     <>
-      <CardWithTitle>
-        <SubTitle>Liquidity Report</SubTitle>
-        <Card mobileCardPadding={'8px 0'}>
-          <S.wrapper>
+      <Card>
+        <CardHeader>
+          <CardTitle>Liquidity Report</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[240px] w-full">
             <HorizontalBarChart
               dataKey="Value"
               data={liquidity}
               colorRange={[chartColors.green]}
             />
-          </S.wrapper>
-        </Card>
-      </CardWithTitle>
-      <CardWithTitle>
-        <SubTitle>Pending HTLCs</SubTitle>
-        <Card mobileCardPadding={'8px 0'}>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Pending HTLCs</CardTitle>
+        </CardHeader>
+        <CardContent>
           {(totalPendingHtlc || 0) >= 300 && (
-            <WarningText>
+            <div className="mb-3 flex items-center gap-2 rounded border border-orange-500/30 bg-orange-500/5 p-2 text-xs text-orange-500">
+              <AlertTriangle size={14} className="shrink-0" />
               You have a high amount of pending HTLCs. Be careful, a channel can
               hold a maximum of 483.
-            </WarningText>
+            </div>
           )}
           {!totalPendingHtlc ? (
-            <DarkSubTitle>
+            <div className="text-sm text-muted-foreground">
               None of your channels have pending HTLCs
-            </DarkSubTitle>
+            </div>
           ) : (
-            <S.wrapper>
+            <div className="w-full" style={{ height: htlc.length * 48 }}>
               <HorizontalBarChart
                 dataKey="Value"
                 data={htlc}
                 colorRange={[chartColors.green]}
               />
-            </S.wrapper>
+            </div>
           )}
-        </Card>
-      </CardWithTitle>
+        </CardContent>
+      </Card>
     </>
   );
 };

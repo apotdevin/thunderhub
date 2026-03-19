@@ -6,6 +6,7 @@ const defaultOptions = {} as const;
 export type KeysendMutationVariables = Types.Exact<{
   destination: Types.Scalars['String']['input'];
   tokens: Types.Scalars['Float']['input'];
+  message?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 export type KeysendMutation = {
@@ -14,8 +15,8 @@ export type KeysendMutation = {
 };
 
 export const KeysendDocument = gql`
-  mutation Keysend($destination: String!, $tokens: Float!) {
-    keysend(destination: $destination, tokens: $tokens) {
+  mutation Keysend($destination: String!, $tokens: Float!, $message: String) {
+    keysend(destination: $destination, tokens: $tokens, message: $message) {
       is_confirmed
     }
   }
@@ -40,6 +41,7 @@ export type KeysendMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      destination: // value for 'destination'
  *      tokens: // value for 'tokens'
+ *      message: // value for 'message'
  *   },
  * });
  */

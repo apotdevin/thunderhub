@@ -1,11 +1,7 @@
 import { useState } from 'react';
-import {
-  Card,
-  Sub4Title,
-  ResponsiveLine,
-} from '../../../../components/generic/Styled';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { Input } from '../../../../components/input';
+import { Button } from '@/components/ui/button';
+import { ChevronRight } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { Decoded } from './Decoded';
 
 export const DecodeCard = () => {
@@ -13,32 +9,26 @@ export const DecodeCard = () => {
   const [show, setShow] = useState(false);
 
   return (
-    <Card bottom={'20px'}>
+    <div className="flex flex-col gap-3">
       {!show && (
-        <ResponsiveLine>
-          <Sub4Title>Request:</Sub4Title>
+        <div className="flex gap-2">
           <Input
-            placeholder={'Lightning Invoice'}
-            withMargin={'0 0 0 24px'}
-            mobileMargin={'0 0 16px'}
+            className="flex-1"
+            placeholder="Lightning Invoice"
             value={request}
             onChange={e => setRequest(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && request && setShow(true)}
           />
-          <ColorButton
+          <Button
+            variant="outline"
             disabled={request === ''}
-            withMargin={'0 0 0 16px'}
-            mobileMargin={'0'}
-            arrow={true}
-            mobileFullWidth={true}
-            onClick={() => {
-              setShow(true);
-            }}
+            onClick={() => setShow(true)}
           >
-            Decode
-          </ColorButton>
-        </ResponsiveLine>
+            Decode <ChevronRight size={18} />
+          </Button>
+        </div>
       )}
       {show && <Decoded request={request} setShow={setShow} />}
-    </Card>
+    </div>
   );
 };

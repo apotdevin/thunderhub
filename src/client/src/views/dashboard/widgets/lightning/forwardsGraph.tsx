@@ -2,41 +2,9 @@ import { useState } from 'react';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { SmallSelectWithValue } from '../../../../components/select';
 import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
-import { chartColors } from '../../../../styles/Themes';
-import styled from 'styled-components';
+import { useChartColors } from '../../../../lib/chart-colors';
 import { getByTime } from '../helpers';
 import { BarChart } from '../../../../components/chart/BarChart';
-
-const S = {
-  row: styled.div`
-    display: grid;
-    grid-template-columns: 1fr 60px 90px;
-  `,
-  wrapper: styled.div`
-    width: 100%;
-    height: 100%;
-  `,
-  contentWrapper: styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `,
-  content: styled.div`
-    width: 100%;
-    padding: 0 16px;
-    height: calc(100% - 40px);
-    overflow: auto;
-  `,
-  title: styled.h4`
-    font-weight: 900;
-    margin: 8px 0;
-  `,
-  nowrap: styled.div`
-    white-space: nowrap;
-  `,
-};
 
 const options = [
   { label: '1D', value: 1 },
@@ -54,6 +22,7 @@ const typeOptions = [
 ];
 
 export const ForwardsGraph = () => {
+  const chartColors = useChartColors();
   const [days, setDays] = useState(options[0]);
   const [type, setType] = useState(typeOptions[0]);
 
@@ -63,8 +32,8 @@ export const ForwardsGraph = () => {
   });
 
   const Header = () => (
-    <S.row>
-      <S.title>Forwards</S.title>
+    <div className="grid" style={{ gridTemplateColumns: '1fr 60px 90px' }}>
+      <h4 className="font-black my-2">Forwards</h4>
       <SmallSelectWithValue
         callback={e => setDays((e[0] || options[1]) as any)}
         options={options}
@@ -79,35 +48,40 @@ export const ForwardsGraph = () => {
         isClearable={false}
         maxWidth={'90px'}
       />
-    </S.row>
+    </div>
   );
 
   if (loading) {
     return (
-      <S.wrapper>
+      <div className="w-full h-full">
         <Header />
-        <S.contentWrapper>
+        <div className="w-full h-full flex justify-center items-center">
           <LoadingCard noCard={true} />
-        </S.contentWrapper>
-      </S.wrapper>
+        </div>
+      </div>
     );
   }
 
   if (!data?.getForwards.list.length) {
     return (
-      <S.wrapper>
+      <div className="w-full h-full">
         <Header />
-        <S.contentWrapper>No forwards for this period.</S.contentWrapper>
-      </S.wrapper>
+        <div className="w-full h-full flex justify-center items-center">
+          No forwards for this period.
+        </div>
+      </div>
     );
   }
 
   const forwards = getByTime(data.getForwards.list, days.value);
 
   return (
-    <S.wrapper>
+    <div className="w-full h-full">
       <Header />
-      <S.content>
+      <div
+        className="w-full px-4 overflow-auto"
+        style={{ height: 'calc(100% - 40px)' }}
+      >
         <BarChart
           data={forwards.map(f => ({
             Forward: f[type.value] || 0,
@@ -117,7 +91,7 @@ export const ForwardsGraph = () => {
           title="Forwards Report"
           colorRange={[chartColors.purple]}
         />
-      </S.content>
-    </S.wrapper>
+      </div>
+    </div>
   );
 };

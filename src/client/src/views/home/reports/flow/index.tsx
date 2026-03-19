@@ -1,34 +1,7 @@
 import { useState } from 'react';
-import styled from 'styled-components';
-import { SmallSelectWithValue } from '../../../../components/select';
-import { mediaWidths } from '../../../../styles/Themes';
-import {
-  CardWithTitle,
-  SubTitle,
-  Card,
-  CardTitle,
-} from '../../../../components/generic/Styled';
+import { Card, CardContent } from '@/components/ui/card';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { TransactionsGraph } from './TransactionGraph';
-
-const S = {
-  row: styled.div`
-    width: 100%;
-    display: grid;
-    column-gap: 16px;
-    grid-template-columns: 1fr 110px 110px;
-    margin-bottom: 8px;
-  `,
-  grid: styled.div`
-    width: 100%;
-    display: grid;
-    grid-gap: 8px;
-    grid-template-columns: 1fr 1fr;
-
-    @media (${mediaWidths.mobile}) {
-      grid-template-columns: 1fr;
-    }
-  `,
-};
 
 export interface PeriodProps {
   period: number;
@@ -36,51 +9,57 @@ export interface PeriodProps {
   tokens: number;
 }
 
-const options = [
-  { label: 'Invoices', value: 'invoices' },
-  { label: 'Payments', value: 'payments' },
-];
+export const FlowBox = ({
+  show: controlledShow,
+  type: controlledType,
+}: {
+  show?: string;
+  type?: string;
+} = {}) => {
+  const [localShow, setLocalShow] = useState('invoices');
+  const [localType, setLocalType] = useState('count');
 
-const typeOptions = [
-  { label: 'Count', value: 'count' },
-  { label: 'Volume', value: 'tokens' },
-];
-
-export const FlowBox = () => {
-  const [show, setShow] = useState(options[0]);
-  const [type, setType] = useState(typeOptions[0]);
-
-  const Header = () => {
-    return (
-      <CardTitle>
-        <S.row>
-          <SubTitle>Transactions</SubTitle>
-          <SmallSelectWithValue
-            callback={e => setShow((e[0] || options[1]) as any)}
-            options={options}
-            value={show}
-            isClearable={false}
-          />
-          <SmallSelectWithValue
-            callback={e => setType((e[0] || typeOptions[1]) as any)}
-            options={typeOptions}
-            value={type}
-            isClearable={false}
-          />
-        </S.row>
-      </CardTitle>
-    );
-  };
+  const show = controlledShow ?? localShow;
+  const type = controlledType ?? localType;
+  const isControlled = controlledShow !== undefined;
 
   return (
-    <CardWithTitle>
-      <Header />
-      <Card bottom={'10px'} mobileCardPadding={'8px 0'}>
-        <TransactionsGraph
-          showPay={show.value === 'payments'}
-          type={type.value}
-        />
-      </Card>
-    </CardWithTitle>
+    <Card>
+      {!isControlled && (
+        <div className="flex gap-1.5 px-5 pt-5">
+          <ToggleGroup
+            type="single"
+            value={show}
+            onValueChange={v => v && setLocalShow(v)}
+            variant="outline"
+            size="sm"
+          >
+            <ToggleGroupItem value="invoices" className="text-xs px-2">
+              Invoices
+            </ToggleGroupItem>
+            <ToggleGroupItem value="payments" className="text-xs px-2">
+              Payments
+            </ToggleGroupItem>
+          </ToggleGroup>
+          <ToggleGroup
+            type="single"
+            value={type}
+            onValueChange={v => v && setLocalType(v)}
+            variant="outline"
+            size="sm"
+          >
+            <ToggleGroupItem value="count" className="text-xs px-2">
+              Count
+            </ToggleGroupItem>
+            <ToggleGroupItem value="tokens" className="text-xs px-2">
+              Volume
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+      )}
+      <CardContent>
+        <TransactionsGraph showPay={show === 'payments'} type={type} />
+      </CardContent>
+    </Card>
   );
 };

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import styled, { css } from 'styled-components';
 import {
   useReactTable,
   getCoreRowModel,
@@ -11,10 +10,10 @@ import {
   VisibilityState,
 } from '@tanstack/react-table';
 import { Settings, X } from 'lucide-react';
-import { separationColor } from '../../styles/Themes';
-import { ColorButton } from '../buttons/colorButton/ColorButton';
+import { Button } from '@/components/ui/button';
 import { ColumnConfigurations } from './ColumnConfigurations';
 import { DebouncedInput } from './DebouncedInput';
+import { cn } from '@/lib/utils';
 
 interface TableProps {
   columns: ColumnDef<any, any>[];
@@ -23,72 +22,16 @@ interface TableProps {
   withGlobalSort?: boolean; // enables the global search box
   withSorting?: boolean; // enables columns to be sorted
   initSorting?: SortingState;
-  withBorder?: boolean;
   alignCenter?: boolean;
   fontSize?: string;
   defaultHiddenColumns?: VisibilityState;
   toggleConfiguration?: (hide: boolean, id: string) => void;
 }
 
-type StyledTableProps = {
-  withBorder?: boolean;
-  alignCenter?: boolean;
-  fontSize?: string;
-};
-
-const S = {
-  row: styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  `,
-  wrapper: styled.div<StyledTableProps>`
-    overflow-x: auto;
-    table {
-      width: 100%;
-      border-spacing: 0;
-      tr {
-        :last-child {
-          td {
-            border-bottom: 0;
-          }
-        }
-      }
-      .cursor {
-        cursor: pointer;
-      }
-
-      th,
-      td {
-        font-size: ${({ fontSize }) => fontSize || '14px'};
-        text-align: left;
-        margin: 0;
-        padding: 8px;
-        ${({ withBorder }: StyledTableProps) =>
-          withBorder &&
-          css`
-            border-bottom: 1px solid ${separationColor};
-          `}
-        ${({ alignCenter }: StyledTableProps) =>
-          alignCenter &&
-          css`
-            text-align: center;
-            padding: 8px;
-          `}
-        :last-child {
-          border-right: 0;
-        }
-      }
-    }
-  `,
-};
-
 export default function Table({
   columns,
   data,
   filterPlaceholder,
-  withBorder,
   alignCenter,
   fontSize,
   defaultHiddenColumns,
@@ -99,8 +42,7 @@ export default function Table({
 }: TableProps) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<SortingState>(initSorting || []);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  const [isOpen, setIsOpen] = useState(false);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
     defaultHiddenColumns || {}
   );
@@ -137,35 +79,58 @@ export default function Table({
 
   return (
     <>
-      <S.row>
-        {withGlobalSort ? (
-          <DebouncedInput
-            value={globalFilter ?? ''}
-            onChange={value => setGlobalFilter(String(value))}
-            placeholder={filterPlaceholder || ''}
-            count={table.getFilteredRowModel().rows.length}
-          />
-        ) : null}
-        {toggleConfiguration ? (
-          <>
-            <ColorButton onClick={() => setIsOpen(p => !p)}>
-              {isOpen ? <X size={18} /> : <Settings size={18} />}
-            </ColorButton>
-          </>
-        ) : null}
-      </S.row>
+      {(withGlobalSort || toggleConfiguration) && (
+        <div className="mb-6 flex flex-row justify-between">
+          {withGlobalSort ? (
+            <DebouncedInput
+              value={globalFilter ?? ''}
+              onChange={value => setGlobalFilter(String(value))}
+              placeholder={filterPlaceholder || ''}
+              count={table.getFilteredRowModel().rows.length}
+            />
+          ) : null}
+          {toggleConfiguration ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsOpen(p => !p)}
+            >
+              {isOpen ? (
+                <X size={16} className="mr-1.5" />
+              ) : (
+                <Settings size={16} className="mr-1.5" />
+              )}
+              Columns
+            </Button>
+          ) : null}
+        </div>
+      )}
 
       {isOpen && toggleConfiguration ? (
-        <ColumnConfigurations
-          table={table}
-          toggleConfiguration={toggleConfiguration}
-        />
+        <div className="mb-4">
+          <ColumnConfigurations
+            table={table}
+            toggleConfiguration={toggleConfiguration}
+          />
+        </div>
       ) : null}
 
-      <S.wrapper
-        withBorder={withBorder}
-        fontSize={fontSize}
-        alignCenter={alignCenter}
+      <div
+        className={cn(
+          'overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0',
+          '[&_table]:w-full [&_table]:border-spacing-0',
+          '[&_table_.cursor]:cursor-pointer',
+          '[&_table_th]:text-left [&_table_th]:m-0 [&_table_th]:px-2 [&_table_th]:py-1.5 md:[&_table_th]:p-2',
+          '[&_table_td]:text-left [&_table_td]:m-0 [&_table_td]:px-2 [&_table_td]:py-1.5 md:[&_table_td]:p-2',
+          '[&_table_th]:text-xs [&_table_th]:font-medium [&_table_th]:text-muted-foreground',
+          '[&_table_tr]:transition-colors [&_table_tbody_tr:hover]:bg-muted/50',
+          '[&_table_tbody_tr:nth-child(even)]:bg-muted/50',
+          '[&_table_thead_tr:last-child_th]:border-b [&_table_thead_tr:last-child_th]:border-border',
+          alignCenter && '[&_table_th]:text-center [&_table_td]:text-center'
+        )}
+        style={{
+          fontSize: fontSize || '13px',
+        }}
       >
         <table>
           <thead>
@@ -224,7 +189,7 @@ export default function Table({
             })}
           </tbody>
         </table>
-      </S.wrapper>
+      </div>
     </>
   );
 }

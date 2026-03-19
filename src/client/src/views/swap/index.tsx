@@ -1,20 +1,14 @@
 import toast from 'react-hot-toast';
-import { renderLine } from '../../components/generic/helpers';
-import {
-  Card,
-  DarkSubTitle,
-  SingleLine,
-  SubTitle,
-} from '../../components/generic/Styled';
-import { Link } from '../../components/link/Link';
 import { LoadingCard } from '../../components/loading/LoadingCard';
 import { Price } from '../../components/price/Price';
-import { Subtitle } from '../../components/typography/Styled';
 import { useGetBoltzInfoQuery } from '../../graphql/queries/__generated__/getBoltzInfo.generated';
 import { getErrorContent } from '../../utils/error';
-import { SwapsProvider } from './SwapContext';
 import { StartSwap } from './StartSwap';
 import { SwapStatus } from './SwapStatus';
+import { Info, Zap } from 'lucide-react';
+import { Link } from '../../components/link/Link';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 
 export const SwapView = () => {
   const { data, loading, error } = useGetBoltzInfoQuery({
@@ -27,30 +21,45 @@ export const SwapView = () => {
 
   if (error || !data?.getBoltzInfo) {
     return (
-      <Card mobileCardPadding={'0'} mobileNoBackground={true}>
+      <div className="flex items-center justify-center p-12 text-muted-foreground">
+        <Info className="mr-2" size={16} />
         Unable to connect to Boltz
-      </Card>
+      </div>
     );
   }
 
   const { max, min, feePercent } = data.getBoltzInfo;
 
   return (
-    <SwapsProvider>
-      <SingleLine>
-        <Subtitle>Reverse Swap</Subtitle>
-        <DarkSubTitle>
-          <Link href={'https://boltz.exchange/'}>powered by Boltz</Link>
-        </DarkSubTitle>
-      </SingleLine>
-      <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-        <SubTitle>Information</SubTitle>
-        {renderLine('Boltz fee', `${feePercent}%`)}
-        {renderLine('Minimum amount', <Price amount={min} />)}
-        {renderLine('Maximum amount', <Price amount={max} />)}
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-lg font-semibold">Reverse Swap</h2>
+
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="gap-1.5">
+            Fee {feePercent}%
+          </Badge>
+          <Badge variant="secondary" className="gap-1.5">
+            Min <Price amount={min} />
+          </Badge>
+          <Badge variant="secondary" className="gap-1.5">
+            Max <Price amount={max} />
+          </Badge>
+          <Link href={'https://boltz.exchange/'} newTab>
+            <Badge variant="outline" className="gap-1.5 rounded-full px-3 py-1">
+              <Zap size={10} />
+              Boltz
+            </Badge>
+          </Link>
+        </div>
+      </div>
+
+      <Card>
+        <CardContent>
+          <StartSwap max={max} min={min} />
+        </CardContent>
       </Card>
-      <StartSwap max={max} min={min} />
       <SwapStatus />
-    </SwapsProvider>
+    </div>
   );
 };

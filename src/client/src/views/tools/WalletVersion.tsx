@@ -1,63 +1,69 @@
 import { useGetWalletInfoQuery } from '../../graphql/queries/__generated__/getWalletInfo.generated';
-import {
-  CardWithTitle,
-  SubTitle,
-  Card,
-  Sub4Title,
-  Separation,
-} from '../../components/generic/Styled';
+import { Card, CardContent } from '@/components/ui/card';
 import { LoadingCard } from '../../components/loading/LoadingCard';
-import { renderLine } from '../../components/generic/helpers';
+import { Badge } from '@/components/ui/badge';
 
 export const WalletVersion = () => {
   const { data, loading, error } = useGetWalletInfoQuery();
 
-  const getStatus = (status: boolean) => (status ? 'Enabled' : 'Disabled');
+  if (error) return null;
 
-  if (error) {
-    return null;
+  if (loading || !data?.getWalletInfo) {
+    return <LoadingCard />;
   }
 
-  const renderContent = () => {
-    if (loading || !data?.getWalletInfo) {
-      return <LoadingCard />;
-    }
+  const {
+    build_tags,
+    is_autopilotrpc_enabled,
+    is_chainrpc_enabled,
+    is_invoicesrpc_enabled,
+    is_signrpc_enabled,
+    is_walletrpc_enabled,
+    is_watchtowerrpc_enabled,
+    is_wtclientrpc_enabled,
+    commit_hash,
+  } = data.getWalletInfo;
 
-    const {
-      build_tags,
-      is_autopilotrpc_enabled,
-      is_chainrpc_enabled,
-      is_invoicesrpc_enabled,
-      is_signrpc_enabled,
-      is_walletrpc_enabled,
-      is_watchtowerrpc_enabled,
-      is_wtclientrpc_enabled,
-      commit_hash,
-    } = data.getWalletInfo;
-
-    return (
-      <Card>
-        {renderLine('Commit hash:', commit_hash)}
-        {renderLine('Build Tags:', build_tags.join(', '))}
-        <Separation />
-        <Sub4Title>
-          <b>RPC</b>
-        </Sub4Title>
-        {renderLine('Autopilot:', getStatus(is_autopilotrpc_enabled))}
-        {renderLine('Chain:', getStatus(is_chainrpc_enabled))}
-        {renderLine('Invoices:', getStatus(is_invoicesrpc_enabled))}
-        {renderLine('Signer:', getStatus(is_signrpc_enabled))}
-        {renderLine('Wallet:', getStatus(is_walletrpc_enabled))}
-        {renderLine('Watchtower:', getStatus(is_watchtowerrpc_enabled))}
-        {renderLine('WTClient:', getStatus(is_wtclientrpc_enabled))}
-      </Card>
-    );
-  };
+  const rpcServices = [
+    { name: 'Autopilot', enabled: is_autopilotrpc_enabled },
+    { name: 'Chain', enabled: is_chainrpc_enabled },
+    { name: 'Invoices', enabled: is_invoicesrpc_enabled },
+    { name: 'Signer', enabled: is_signrpc_enabled },
+    { name: 'Wallet', enabled: is_walletrpc_enabled },
+    { name: 'Watchtower', enabled: is_watchtowerrpc_enabled },
+    { name: 'WTClient', enabled: is_wtclientrpc_enabled },
+  ];
 
   return (
-    <CardWithTitle>
-      <SubTitle>Wallet Version</SubTitle>
-      {renderContent()}
-    </CardWithTitle>
+    <div className="flex flex-col gap-4">
+      <h2 className="text-lg font-semibold">Wallet Version</h2>
+      <Card>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
+              <span className="text-muted-foreground">Commit</span>
+              <span className="font-mono text-xs break-all">{commit_hash}</span>
+              <span className="text-muted-foreground">Build Tags</span>
+              <span className="break-words">{build_tags.join(', ')}</span>
+            </div>
+
+            <div className="border-t border-border pt-4">
+              <span className="text-sm font-medium">RPC Services</span>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {rpcServices.map(({ name, enabled }) => (
+                  <Badge
+                    key={name}
+                    variant={enabled ? 'default' : 'outline'}
+                    className={!enabled ? 'opacity-50' : ''}
+                  >
+                    {name}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };

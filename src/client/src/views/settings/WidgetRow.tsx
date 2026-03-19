@@ -1,20 +1,6 @@
 import { FC } from 'react';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
-import { DarkSubTitle } from '../../components/generic/Styled';
-import styled from 'styled-components';
+import { Switch } from '@/components/ui/switch';
 import { NormalizedWidgets } from './DashPanel';
-
-const S = {
-  line: styled.div`
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  `,
-};
 
 type WidgetRowParams = {
   widget: NormalizedWidgets;
@@ -27,21 +13,13 @@ export const WidgetRow: FC<WidgetRowParams> = ({
   handleAdd,
   handleDelete,
 }) => (
-  <S.line>
-    <DarkSubTitle>{widget.name}</DarkSubTitle>
-    <MultiButton>
-      <SingleButton
-        selected={widget.active}
-        onClick={() => handleAdd(widget.id)}
-      >
-        Show
-      </SingleButton>
-      <SingleButton
-        selected={!widget.active}
-        onClick={() => handleDelete(widget.id)}
-      >
-        Hide
-      </SingleButton>
-    </MultiButton>
-  </S.line>
+  <div className="flex items-center justify-between">
+    <span className="text-sm text-muted-foreground">{widget.name}</span>
+    <Switch
+      checked={widget.active}
+      onCheckedChange={checked =>
+        checked ? handleAdd(widget.id) : handleDelete(widget.id)
+      }
+    />
+  </div>
 );

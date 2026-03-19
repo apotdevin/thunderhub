@@ -1,20 +1,21 @@
 import { groupBy } from 'lodash';
 import { Fragment } from 'react';
-import { Layouts } from 'react-grid-layout';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import { Card, SubTitle } from '../../components/generic/Styled';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { ArrowLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import { Link } from '../../components/link/Link';
 import { useLocalStorage } from '../../hooks/UseLocalStorage';
-import styled from 'styled-components';
 import { StoredWidget } from '../dashboard';
 import { widgetList } from '../dashboard/widgets/widgetList';
 import { WidgetRow } from './WidgetRow';
-
-const S = {
-  subTitle: styled(SubTitle)`
-    margin: 32px 0 8px;
-  `,
-};
+import { ResponsiveLayouts } from 'react-grid-layout';
 
 export type NormalizedWidgets = {
   id: number;
@@ -24,7 +25,7 @@ export type NormalizedWidgets = {
 };
 
 const DashPanel = () => {
-  const [, setLayouts] = useLocalStorage<Layouts>('layouts', {});
+  const [, setLayouts] = useLocalStorage<ResponsiveLayouts>('layouts', {});
   const [availableWidgets, setAvailableWidgets] = useLocalStorage<
     StoredWidget[]
   >('dashboardWidgets', []);
@@ -54,47 +55,74 @@ const DashPanel = () => {
   const keys = Object.keys(grouped);
 
   return (
-    <Card>
-      {keys.map((key, index) => {
-        const widgets = grouped[key];
-        const subGrouped = groupBy(widgets, 'subgroup');
-        const subKeys = Object.keys(subGrouped);
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <Link to="/settings" noStyling>
+          <Button variant="outline" size="sm">
+            <ArrowLeft size={16} />
+            Settings
+          </Button>
+        </Link>
+        <div className="flex gap-2">
+          <Link to="/dashboard" noStyling>
+            <Button variant="outline" size="sm">
+              Dashboard <ChevronRight size={16} />
+            </Button>
+          </Link>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setLayouts({});
+              setAvailableWidgets([]);
+            }}
+          >
+            <RotateCcw size={16} />
+            Reset
+          </Button>
+        </div>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Dashboard Widgets</CardTitle>
+          <CardDescription>
+            Toggle widgets to customize your dashboard
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {keys.map((key, index) => {
+            const widgets = grouped[key];
+            const subGrouped = groupBy(widgets, 'subgroup');
+            const subKeys = Object.keys(subGrouped);
 
-        return subKeys.map((subKey, subIndex) => {
-          const subWidgets = subGrouped[subKey];
+            return subKeys.map((subKey, subIndex) => {
+              const subWidgets = subGrouped[subKey];
 
-          return (
-            <Fragment key={key + index + subIndex}>
-              <S.subTitle>{subKey ? `${key} - ${subKey}` : key}</S.subTitle>
-              {subWidgets.map(w => (
-                <Fragment key={w.id}>
-                  <WidgetRow
-                    widget={w}
-                    handleAdd={handleAdd}
-                    handleDelete={handleDelete}
-                  />
+              return (
+                <Fragment key={key + index + subIndex}>
+                  {(index > 0 || subIndex > 0) && <Separator />}
+                  <div>
+                    <h4 className="text-sm font-medium mb-2">
+                      {subKey ? `${key} — ${subKey}` : key}
+                    </h4>
+                    <div className="space-y-1">
+                      {subWidgets.map(w => (
+                        <WidgetRow
+                          key={w.id}
+                          widget={w}
+                          handleAdd={handleAdd}
+                          handleDelete={handleDelete}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </Fragment>
-              ))}
-            </Fragment>
-          );
-        });
-      })}
-      <Link href={'/dashboard'}>
-        <ColorButton withMargin={'16px 0 0'} width={'100%'} arrow={true}>
-          To Dashboard
-        </ColorButton>
-      </Link>
-      <ColorButton
-        withMargin={'8px 0 0'}
-        width={'100%'}
-        onClick={() => {
-          setLayouts({});
-          setAvailableWidgets([]);
-        }}
-      >
-        Reset Widgets
-      </ColorButton>
-    </Card>
+              );
+            });
+          })}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

@@ -275,7 +275,8 @@ export class ChannelsResolver {
 
       this.logger.error('Error opening channel', { input, error });
 
-      throw new Error('Error opening channel');
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Error opening channel: ${message}`);
     });
 
     return info.openChannel;

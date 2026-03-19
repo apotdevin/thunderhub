@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import { BarChart as EBarChart } from 'echarts/charts';
 import {
   GraphicComponent,
@@ -11,10 +11,10 @@ import {
 import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
-import { ThemeContext } from 'styled-components';
 import { timeFormat, timeParse } from 'd3-time-format';
 import { formatSats } from '../../utils/helpers';
 import { COMMON_CHART_STYLES } from './common';
+import { useThemeColors } from '../../lib/chart-colors';
 
 echarts.use([
   EBarChart,
@@ -40,7 +40,7 @@ export const BarChart = ({
   title,
   dataKey,
 }: BarChartProps) => {
-  const themeContext = useContext(ThemeContext);
+  const { foreground, mutedForeground, border } = useThemeColors();
 
   const seriesData = useMemo(() => {
     if (data.length === 0) return { dates: [], series: [] };
@@ -51,63 +51,80 @@ export const BarChart = ({
         type: 'bar',
         emphasis: { focus: 'series' },
         data: data.map((d: any) => d[dataKey]),
+        itemStyle: {
+          borderRadius: [2, 2, 0, 0],
+        },
+        barMaxWidth: 32,
       },
     ];
 
     const dates = data.map((d: any) => d.date);
 
     return { dates, series };
-  }, [data, title]);
+  }, [data, title, dataKey]);
 
   const option = useMemo(() => {
-    const fontColor = themeContext?.mode === 'light' ? 'black' : 'white';
-
     return {
       color: colorRange,
       grid: {
         containLabel: true,
-        top: '50px',
-        left: '25px',
-        bottom: '25px',
-        right: '25px',
+        top: '16px',
+        left: '8px',
+        bottom: '8px',
+        right: '8px',
       },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
           animation: false,
+          type: 'shadow',
+          shadowStyle: {
+            color: 'rgba(150, 150, 150, 0.05)',
+          },
         },
         formatter: (params: any) => {
-          return `<span style='color: ${
-            colorRange[0]
-          }; font-weight: bold;'>${title}</span><br />
-          ${formatSats(params[0].value)}<br />`;
+          const parseDate = timeParse('%Y-%m-%dT%H:%M:%S.%L%Z');
+          const formatDate = timeFormat('%b %d, %Y');
+          const date = parseDate(params[0].axisValue);
+          const dateStr = date ? formatDate(date) : params[0].axisValue;
+          return `<div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:4px">${dateStr}</div>
+            <span style='color: ${colorRange[0]}; font-weight: 600;'>${title}</span>
+            <span style="float:right;margin-left:16px;font-weight:600">${formatSats(params[0].value)}</span>`;
         },
         ...COMMON_CHART_STYLES.tooltip,
       },
       xAxis: {
-        name: 'Dates',
-        nameLocation: 'center',
-        nameGap: 32,
         type: 'category',
-        axisLine: { show: true, lineStyle: { color: fontColor } },
         data: seriesData.dates,
+        axisLine: { show: false },
+        axisTick: { show: false },
         axisLabel: {
+          color: mutedForeground,
+          fontSize: 10,
           formatter: function (value: string) {
             const parseDate = timeParse('%Y-%m-%dT%H:%M:%S.%L%Z');
             const formatDate = timeFormat('%b %d');
             return formatDate(parseDate(value) as Date);
           },
         },
+        splitLine: { show: false },
       },
       yAxis: {
-        nameLocation: 'center',
-        nameGap: 48,
         type: 'value',
         minInterval: 1,
-        splitLine: { show: false },
-        axisLine: { show: true, lineStyle: { color: fontColor } },
-        axisTick: { show: true },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: border,
+            type: 'dashed',
+            opacity: 0.5,
+          },
+        },
+        axisLine: { show: false },
+        axisTick: { show: false },
         axisLabel: {
+          color: mutedForeground,
+          fontSize: 10,
           formatter: function (value: number) {
             return value.toLocaleString('en-US', {
               notation: 'compact',
@@ -118,7 +135,7 @@ export const BarChart = ({
       },
       series: seriesData.series,
     };
-  }, [colorRange, themeContext, seriesData, title]);
+  }, [colorRange, foreground, mutedForeground, border, seriesData, title]);
 
   return (
     <ReactEChartsCore

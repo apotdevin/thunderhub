@@ -17,6 +17,7 @@ import {
 import yaml from 'js-yaml';
 import { getSHA256Hash, hashPassword } from 'src/server/utils/crypto';
 import { resolveEnvVarsInAccount } from 'src/server/utils/env';
+import { NodeType } from '../node/lightning.types';
 
 const isValidNetwork = (network: string | null): network is BitcoinNetwork =>
   network === 'mainnet' ||
@@ -245,6 +246,7 @@ export class FilesService {
     const resolvedAccount = resolveEnvVarsInAccount(account, yamlEnvs);
 
     const {
+      type: accountType,
       name,
       serverUrl,
       network,
@@ -254,12 +256,18 @@ export class FilesService {
       password,
       encrypted,
       twofaSecret,
+      authToken,
     } = resolvedAccount;
+
+    const nodeType = (accountType as NodeType) || NodeType.LND;
+    const isLnd = nodeType === NodeType.LND;
 
     const missingFields: string[] = [];
     if (!name) missingFields.push('name');
     if (!serverUrl) missingFields.push('server url');
-    if (!lndDir && !macaroonPath && !macaroonValue) {
+
+    // Only require macaroon for LND accounts
+    if (isLnd && !lndDir && !macaroonPath && !macaroonValue) {
       missingFields.push('macaroon');
     }
 
@@ -283,38 +291,45 @@ export class FilesService {
       return null;
     }
 
-    const cert = this.getCertificate(resolvedAccount);
-    if (!cert) {
-      this.logger.warn(
-        `No certificate for account ${name}. Make sure you don't need it to connect.`
-      );
-    }
+    let cert: string | null = null;
+    let macaroon: string | null = null;
 
-    const macaroon = this.getMacaroon(resolvedAccount, defaultNetwork);
-    if (!macaroon) {
-      this.logger.error(
-        `Account ${name} has neither lnd directory, macaroon nor macaroon path specified.`
-      );
-      return null;
+    if (isLnd) {
+      cert = this.getCertificate(resolvedAccount);
+      if (!cert) {
+        this.logger.warn(
+          `No certificate for account ${name}. Make sure you don't need it to connect.`
+        );
+      }
+
+      macaroon = this.getMacaroon(resolvedAccount, defaultNetwork);
+      if (!macaroon) {
+        this.logger.error(
+          `Account ${name} has neither lnd directory, macaroon nor macaroon path specified.`
+        );
+        return null;
+      }
     }
 
     const hash = getSHA256Hash(
-      JSON.stringify({ name, serverUrl, macaroon, cert, index })
+      JSON.stringify({ name, serverUrl, macaroon, cert, index, type: nodeType })
     );
 
     const encryptedProps = encrypted
-      ? { encrypted: true, encryptedMacaroon: macaroon }
+      ? { encrypted: true, encryptedMacaroon: macaroon || '' }
       : { encrypted: false, encryptedMacaroon: '' };
 
     return {
+      type: nodeType,
       index,
       name: name || '',
       socket: serverUrl || '',
       hash,
-      macaroon,
+      macaroon: macaroon || '',
       cert: cert || '',
       password: password || masterPassword || '',
       twofaSecret: twofaSecret || '',
+      authToken: authToken || undefined,
       ...encryptedProps,
     };
   }

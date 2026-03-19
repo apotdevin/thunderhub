@@ -6,11 +6,10 @@ import {
   useEffect,
   ReactNode,
 } from 'react';
-import Cookies from 'js-cookie';
 import { omit } from 'lodash';
 import { config } from '../config/thunderhubConfig';
 
-const themeTypes = ['dark', 'light'];
+const themeTypes = ['dark', 'light', 'system'];
 const currencyTypes = ['sat', 'btc', 'fiat'];
 
 export type channelBarStyleTypes =
@@ -41,14 +40,14 @@ type State = {
   currency: string;
   theme: string;
   sidebar: boolean;
+  rightSidebar: boolean;
+  sidebarSwapExpanded: boolean;
+  sidebarBalancesExpanded: boolean;
+  sidebarLiquidityExpanded: boolean;
+  sidebarEventsExpanded: boolean;
   fetchFees: boolean;
   fetchPrices: boolean;
   displayValues: boolean;
-  hideFee: boolean;
-  hideNonVerified: boolean;
-  maxFee: number;
-  chatPollingSpeed: number;
-  useSatWord: boolean;
   channelBarStyle: channelBarStyleTypes;
   channelBarType: channelBarTypeTypes;
   channelSort: channelSortTypes;
@@ -68,14 +67,14 @@ type ActionType =
       currency?: string;
       theme?: string;
       sidebar?: boolean;
+      rightSidebar?: boolean;
+      sidebarSwapExpanded?: boolean;
+      sidebarBalancesExpanded?: boolean;
+      sidebarLiquidityExpanded?: boolean;
+      sidebarEventsExpanded?: boolean;
       fetchFees?: boolean;
       fetchPrices?: boolean;
       displayValues?: boolean;
-      hideFee?: boolean;
-      hideNonVerified?: boolean;
-      maxFee?: number;
-      chatPollingSpeed?: number;
-      useSatWord?: boolean;
       channelBarStyle?: channelBarStyleTypes;
       channelBarType?: channelBarTypeTypes;
       channelSort?: channelSortTypes;
@@ -96,20 +95,20 @@ const getInitialState = (): State => {
     currency: currencyTypes.indexOf(defC) > -1 ? defC : 'sat',
     theme: themeTypes.indexOf(defT) > -1 ? defT : 'dark',
     sidebar: true,
+    rightSidebar: true,
+    sidebarSwapExpanded: true,
+    sidebarBalancesExpanded: true,
+    sidebarLiquidityExpanded: true,
+    sidebarEventsExpanded: true,
     fetchFees: config.fetchFees,
     fetchPrices: config.fetchPrices,
     displayValues: true,
-    hideFee: false,
-    hideNonVerified: false,
-    maxFee: 20,
-    chatPollingSpeed: 1000,
     channelBarStyle: 'normal',
     channelBarType: 'balance',
     channelSort: 'none',
     sortDirection: 'decrease',
     extraColumns: 'none',
     maxSatValue: 'auto',
-    useSatWord: false,
   };
 };
 
@@ -132,10 +131,7 @@ const stateReducer = (state: State, action: ActionType): State => {
     }
     case 'themeChange': {
       if (settings.theme) {
-        Cookies.set('theme', settings.theme, {
-          expires: 365,
-          sameSite: 'strict',
-        });
+        localStorage.setItem('theme', settings.theme);
         return {
           ...state,
           theme: settings.theme,

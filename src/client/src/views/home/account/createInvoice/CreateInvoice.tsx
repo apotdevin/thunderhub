@@ -1,66 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Copy, CheckCircle } from 'lucide-react';
-import styled from 'styled-components';
+import { Copy, CheckCircle, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { QRCodeSVG } from 'qrcode.react';
 import { useCreateInvoiceMutation } from '../../../../graphql/mutations/__generated__/createInvoice.generated';
-import { Title } from '../../../../layouts/footer/Footer.styled';
 import { Link } from '../../../../components/link/Link';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
+import { Input } from '@/components/ui/input';
+import { Price } from '../../../../components/price/Price';
 import { formatSeconds } from '../../../../utils/helpers';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../../../components/buttons/multiButton/MultiButton';
+import { Switch } from '@/components/ui/switch';
 import { getErrorContent } from '../../../../utils/error';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { mediaWidths, chartColors } from '../../../../styles/Themes';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { InvoiceStatus } from './InvoiceStatus';
 import { Timer } from './Timer';
 
-const Responsive = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  @media (${mediaWidths.mobile}) {
-    flex-direction: column;
-  }
-`;
-
-const Center = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const WrapRequest = styled.div`
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  -ms-word-break: break-all;
-  word-break: break-word;
-  margin: 24px;
-  font-size: 14px;
-`;
-
-const QRWrapper = styled.div`
-  width: 280px;
-  height: 280px;
-  margin: 16px;
-  background: white;
-  padding: 16px;
-`;
-
-const Column = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const CreateInvoiceCard = ({ color }: { color: string }) => {
+export const CreateInvoiceCard = () => {
   const [amount, setAmount] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [description, setDescription] = useState('');
@@ -84,49 +38,26 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
 
   if (invoiceStatus === 'paid') {
     return (
-      <Center>
-        <CheckCircle stroke={chartColors.green} size={32} />
-        <Title>Paid</Title>
-      </Center>
+      <div className="flex flex-col items-center gap-3 py-4">
+        <CheckCircle size={32} className="text-green-500" />
+        <span className="text-sm font-medium">Invoice Paid</span>
+      </div>
     );
   }
 
   if (invoiceStatus === 'not_paid' || invoiceStatus === 'timeout') {
     return (
-      <Center>
-        <Title>
-          Check the status of this invoice in the
-          <Link to={'/transactions'}> Transactions </Link>
-          view
-        </Title>
-      </Center>
+      <div className="flex flex-col items-center gap-2 py-4 text-sm text-muted-foreground">
+        <span>
+          Check the status of this invoice in the{' '}
+          <Link to="/transactions">
+            <span className="text-primary hover:underline">Transactions</span>
+          </Link>{' '}
+          view.
+        </span>
+      </div>
     );
   }
-
-  const renderQr = () => (
-    <>
-      <Timer initialMinute={1} initialSeconds={30} />
-      <Responsive>
-        <InvoiceStatus id={id} callback={status => setInvoiceStatus(status)} />
-        <QRWrapper>
-          <QRCodeSVG value={`lightning:${request}`} size={248} />
-        </QRWrapper>
-        <Column>
-          <WrapRequest>{request}</WrapRequest>
-          <ColorButton
-            onClick={() =>
-              navigator.clipboard
-                .writeText(request)
-                .then(() => toast.success('Request Copied'))
-            }
-          >
-            <Copy size={18} />
-            Copy
-          </ColorButton>
-        </Column>
-      </Responsive>
-    </>
-  );
 
   const handleEnter = () => {
     if (amount === 0) return;
@@ -135,63 +66,118 @@ export const CreateInvoiceCard = ({ color }: { color: string }) => {
     });
   };
 
-  const renderContent = () => (
-    <>
-      <InputWithDeco
-        title={'Amount to receive'}
-        value={amount}
-        placeholder={'sats'}
-        amount={amount}
-        inputType={'number'}
-        inputCallback={value => setAmount(Number(value))}
-        color={color}
-        onEnter={() => handleEnter()}
-      />
-      <InputWithDeco
-        title={'Description'}
-        value={description}
-        placeholder={'description'}
-        inputCallback={value => setDescription(value)}
-        color={color}
-        onEnter={() => handleEnter()}
-      />
-      <InputWithDeco
-        title={'Expires in'}
-        value={seconds}
-        placeholder={'seconds until expiration'}
-        inputCallback={value => setSeconds(Number(value))}
-        customAmount={formatSeconds(seconds) || ''}
-        color={color}
-        onEnter={() => handleEnter()}
-      />
-      <InputWithDeco title={'Include Private Channels'} noInput={true}>
-        <MultiButton>
-          <SingleButton
-            onClick={() => setIncludePrivate(true)}
-            selected={includePrivate}
-          >
-            Yes
-          </SingleButton>
-          <SingleButton
-            onClick={() => setIncludePrivate(false)}
-            selected={!includePrivate}
-          >
-            No
-          </SingleButton>
-        </MultiButton>
-      </InputWithDeco>
-      <ColorButton
-        onClick={() => handleEnter()}
-        disabled={amount === 0}
-        withMargin={'16px 0 0'}
-        arrow={true}
-        loading={loading}
-        fullWidth={true}
-      >
-        Create Invoice
-      </ColorButton>
-    </>
-  );
+  if (request !== '') {
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-medium text-muted-foreground">
+            Invoice Created
+          </span>
+          <Timer initialMinute={1} initialSeconds={30} />
+        </div>
 
-  return request !== '' ? renderQr() : renderContent();
+        <InvoiceStatus id={id} callback={status => setInvoiceStatus(status)} />
+
+        <div className="flex flex-col items-center gap-3">
+          <div className="rounded border border-border bg-white p-3">
+            <QRCodeSVG value={`lightning:${request}`} size={200} />
+          </div>
+          <div className="max-w-full break-all text-center font-mono text-[11px] text-muted-foreground">
+            {request}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              navigator.clipboard
+                .writeText(request)
+                .then(() => toast.success('Copied to clipboard'))
+            }
+          >
+            <Copy size={14} />
+            Copy Invoice
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      {/* Amount */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Amount{' '}
+          <span className="text-foreground">
+            <Price amount={amount} />
+          </span>
+        </label>
+        <Input
+          placeholder="sats"
+          type="number"
+          value={amount && amount > 0 ? amount : ''}
+          onChange={e => setAmount(Number(e.target.value))}
+          onKeyDown={e => e.key === 'Enter' && handleEnter()}
+        />
+      </div>
+
+      {/* Description */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Description
+        </label>
+        <Input
+          placeholder="Optional description"
+          value={description}
+          onChange={e => setDescription(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleEnter()}
+        />
+      </div>
+
+      <Separator />
+
+      {/* Expires In */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Expires In{' '}
+          {seconds > 0 && (
+            <span className="text-foreground/60">
+              ({formatSeconds(seconds)})
+            </span>
+          )}
+        </label>
+        <Input
+          placeholder="seconds (0 = default)"
+          type="number"
+          value={seconds && seconds > 0 ? seconds : ''}
+          onChange={e => setSeconds(Number(e.target.value))}
+          onKeyDown={e => e.key === 'Enter' && handleEnter()}
+        />
+      </div>
+
+      {/* Include Private */}
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-medium text-muted-foreground">
+          Include Private Channels
+        </span>
+        <Switch checked={includePrivate} onCheckedChange={setIncludePrivate} />
+      </div>
+
+      <Separator />
+
+      {/* Create */}
+      <Button
+        variant="outline"
+        onClick={handleEnter}
+        disabled={amount === 0 || loading}
+        className="w-full"
+      >
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          'Create Invoice'
+        )}
+      </Button>
+    </div>
+  );
 };

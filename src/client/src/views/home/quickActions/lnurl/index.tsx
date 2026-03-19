@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { Card } from '../../../../components/generic/Styled';
-import { InputWithDeco } from '../../../../components/input/InputWithDeco';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ChevronRight, Loader2 } from 'lucide-react';
 import Modal from '../../../../components/modal/ReactModal';
 import { useAuthLnUrlMutation } from '../../../../graphql/mutations/__generated__/lnUrl.generated';
 import { getErrorContent } from '../../../../utils/error';
@@ -10,10 +10,10 @@ import { decodeLnUrl } from '../../../../utils/url';
 import { LnUrlModal } from './lnUrlModal';
 
 export const LnUrlCard = () => {
-  const [lnurl, setLnUrl] = useState<string>('');
-  const [url, setUrl] = useState<string>('');
-  const [type, setType] = useState<string>('');
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [lnurl, setLnUrl] = useState('');
+  const [url, setUrl] = useState('');
+  const [type, setType] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
 
   const [auth, { data, loading }] = useAuthLnUrlMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -60,24 +60,28 @@ export const LnUrlCard = () => {
 
   return (
     <>
-      <Card>
-        <InputWithDeco
+      <div className="flex gap-2">
+        <Input
+          className="flex-1"
           value={lnurl}
-          placeholder={'LnPay / LnWithdraw / LnChannel / LnAuth'}
-          title={'LNURL'}
-          inputCallback={value => setLnUrl(value)}
-          onEnter={() => handleDecode()}
+          placeholder="LnPay / LnWithdraw / LnChannel / LnAuth"
+          onChange={e => setLnUrl(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleDecode()}
         />
-        <ColorButton
-          arrow={true}
-          fullWidth={true}
+        <Button
+          variant="outline"
           disabled={!lnurl || loading}
-          withMargin={'16px 0 0'}
           onClick={() => handleDecode()}
         >
-          Confirm
-        </ColorButton>
-      </Card>
+          {loading ? (
+            <Loader2 className="animate-spin" size={16} />
+          ) : (
+            <>
+              Confirm <ChevronRight size={18} />
+            </>
+          )}
+        </Button>
+      </div>
       <Modal isOpen={modalOpen} closeCallback={() => setModalOpen(false)}>
         <LnUrlModal url={url} type={type} />
       </Modal>

@@ -1,53 +1,17 @@
 import { Table } from '@tanstack/react-table';
 import { FC, useMemo } from 'react';
-import styled from 'styled-components';
-import { mediaWidths } from '../../styles/Themes';
 import { groupBy } from 'lodash';
-import { DarkSubTitle, SubCard } from '../generic/Styled';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface ColumnConfigurationsProps {
   table: Table<any>;
   toggleConfiguration: (hide: boolean, id: string) => void;
 }
 
-const S = {
-  row: styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  `,
-  optionRow: styled.div`
-    display: flex;
-    justify-content: flex-start;
-    align-items: stretch;
-    flex-wrap: wrap;
-
-    @media (${mediaWidths.mobile}) {
-      display: block;
-    }
-  `,
-  option: styled.label`
-    margin: 4px 8px;
-  `,
-  options: styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-wrap: wrap;
-
-    @media (${mediaWidths.mobile}) {
-      flex-direction: row;
-    }
-  `,
-};
-
 export const ColumnConfigurations: FC<ColumnConfigurationsProps> = ({
   table,
   toggleConfiguration,
 }: ColumnConfigurationsProps) => {
-  // The columns that are hideable in configurations need to be grouped by their parents id in order for display purposes, see enableHiding to toggle viewability of each column
   const groupedHideableColumns = useMemo(() => {
     const allLeafColumns = table
       .getAllLeafColumns()
@@ -57,39 +21,41 @@ export const ColumnConfigurations: FC<ColumnConfigurationsProps> = ({
   }, [table]);
 
   return (
-    <S.optionRow>
+    <div className="flex flex-wrap gap-4 rounded border border-border p-3">
       {Object.keys(groupedHideableColumns).map(
-        (group: string, index: number) => {
-          return (
-            <SubCard key={`${group}-${index}`} style={{ height: 'auto' }}>
-              <DarkSubTitle fontSize="16px">
-                {group === 'undefined' ? 'General' : group}
-              </DarkSubTitle>
-              <S.options>
-                {groupedHideableColumns[group].map((column: any) => {
-                  return (
-                    <S.option key={column.id} className="px-1">
-                      <label>
-                        <input
-                          {...{
-                            type: 'checkbox',
-                            checked: column.getIsVisible(),
-                            onChange: column.getToggleVisibilityHandler(),
-                          }}
-                          onClick={(e: any) =>
-                            toggleConfiguration(!e.target.checked, column.id)
-                          }
-                        />{' '}
-                        {column.columnDef.header}
-                      </label>
-                    </S.option>
-                  );
-                })}
-              </S.options>
-            </SubCard>
-          );
-        }
+        (group: string, index: number) => (
+          <div key={`${group}-${index}`} className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-muted-foreground">
+              {group === 'undefined' ? 'General' : group}
+            </span>
+            <div className="flex flex-col gap-1">
+              {groupedHideableColumns[group].map((column: any) => {
+                const label =
+                  typeof column.columnDef.header === 'string'
+                    ? column.columnDef.header
+                    : column.id;
+                return (
+                  <label
+                    key={column.id}
+                    className="flex cursor-pointer items-center gap-2 text-xs"
+                  >
+                    <Checkbox
+                      checked={column.getIsVisible()}
+                      onCheckedChange={checked => {
+                        column.getToggleVisibilityHandler()({
+                          target: { checked },
+                        });
+                        toggleConfiguration(!checked, column.id);
+                      }}
+                    />
+                    {label}
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+        )
       )}
-    </S.optionRow>
+    </div>
   );
 };

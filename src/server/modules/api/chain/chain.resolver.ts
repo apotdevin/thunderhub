@@ -4,7 +4,7 @@ import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { sortBy } from 'lodash';
 import { ChainAddressSend, ChainTransaction, Utxo } from './chain.types';
-import { SendToChainAddressArgs } from 'lightning';
+import { SendToChainAddressOptions } from '../../node/lightning.types';
 import { Logger } from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Inject } from '@nestjs/common';
@@ -76,7 +76,7 @@ export class ChainResolver {
       ...hasTokens,
       ...props,
       ...sendAll,
-    } as SendToChainAddressArgs;
+    } as SendToChainAddressOptions;
 
     const send = await this.nodeService.sendToChainAddress(id, options);
 

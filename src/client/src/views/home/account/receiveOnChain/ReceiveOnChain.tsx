@@ -1,67 +1,11 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import toast from 'react-hot-toast';
 import { useCreateAddressMutation } from '../../../../graphql/mutations/__generated__/createAddress.generated';
 import { QRCodeSVG } from 'qrcode.react';
-import { Copy } from 'lucide-react';
+import { Copy, ChevronRight, Loader2 } from 'lucide-react';
 import { getErrorContent } from '../../../../utils/error';
-import { ColorButton } from '../../../../components/buttons/colorButton/ColorButton';
-import { mediaWidths } from '../../../../styles/Themes';
+import { Button } from '@/components/ui/button';
 import { SmallSelectWithValue } from '../../../../components/select';
-import {
-  ResponsiveLine,
-  SubTitle,
-} from '../../../../components/generic/Styled';
-
-const S = {
-  row: styled.div`
-    display: grid;
-    align-items: center;
-    gap: 16px;
-    grid-template-columns: 1fr 2fr;
-
-    @media (${mediaWidths.mobile}) {
-      width: 100%;
-      display: block;
-    }
-  `,
-};
-
-const Responsive = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  @media (${mediaWidths.mobile}) {
-    flex-direction: column;
-  }
-`;
-
-const WrapRequest = styled.div`
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  -ms-word-break: break-all;
-  word-break: break-word;
-  margin: 24px;
-  font-size: 14px;
-`;
-
-const QRWrapper = styled.div`
-  width: 280px;
-  height: 280px;
-  margin: 16px;
-  background: white;
-  padding: 16px;
-`;
-
-const Column = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
 
 const options = [
   { label: 'p2tr (Default)', value: 'p2tr' },
@@ -84,13 +28,14 @@ export const ReceiveOnChainCard = () => {
   return (
     <>
       {data && data.createAddress ? (
-        <Responsive>
-          <QRWrapper>
+        <div className="flex flex-col justify-between items-center md:flex-row">
+          <div className="w-[280px] h-[280px] m-4 bg-white p-4">
             <QRCodeSVG value={data.createAddress} size={248} />
-          </QRWrapper>
-          <Column>
-            <WrapRequest>{data.createAddress}</WrapRequest>
-            <ColorButton
+          </div>
+          <div className="w-full h-full flex flex-col justify-center items-center">
+            <div className="break-all m-6 text-sm">{data.createAddress}</div>
+            <Button
+              variant="outline"
               onClick={() =>
                 navigator.clipboard
                   .writeText(data.createAddress)
@@ -99,33 +44,39 @@ export const ReceiveOnChainCard = () => {
             >
               <Copy size={18} />
               Copy
-            </ColorButton>
-          </Column>
-        </Responsive>
+            </Button>
+          </div>
+        </div>
       ) : (
         <>
-          <ResponsiveLine>
-            <S.row>
-              <SubTitle>Address Type:</SubTitle>
+          <div className="flex flex-col justify-between items-center w-full md:flex-row">
+            <h4 className="text-sm font-medium my-1">Address Type:</h4>
+
+            <div className="flex gap-2 flex-col md:flex-row">
               <SmallSelectWithValue
                 callback={e => setType((e[0] || options[1]) as any)}
                 options={options}
                 value={type}
                 isClearable={false}
               />
-            </S.row>
-            <ColorButton
-              onClick={() => createAddress({ variables: { type: type.value } })}
-              disabled={received}
-              withMargin={'0 0 0 16px'}
-              mobileMargin={'16px 0 0'}
-              arrow={true}
-              loading={loading}
-              mobileFullWidth={true}
-            >
-              Create Address
-            </ColorButton>
-          </ResponsiveLine>
+
+              <Button
+                variant="outline"
+                onClick={() =>
+                  createAddress({ variables: { type: type.value } })
+                }
+                disabled={received || loading}
+              >
+                {loading ? (
+                  <Loader2 className="animate-spin" size={16} />
+                ) : (
+                  <>
+                    Create Address <ChevronRight size={18} />
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
         </>
       )}
     </>

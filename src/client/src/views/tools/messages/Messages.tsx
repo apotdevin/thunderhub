@@ -1,25 +1,21 @@
-import styled from 'styled-components';
-import {
-  CardWithTitle,
-  SubTitle,
-  Card,
-} from '../../../components/generic/Styled';
+import { Card, CardContent } from '@/components/ui/card';
 import { SignMessageCard } from './SignMessage';
 import { VerifyMessage } from './VerifyMessage';
 
-export const NoWrap = styled.div`
-  margin-right: 16px;
-  white-space: nowrap;
-`;
-
-export const MessagesView = () => {
-  return (
-    <CardWithTitle>
-      <SubTitle>Messages</SubTitle>
-      <Card>
-        <VerifyMessage />
-        <SignMessageCard />
-      </Card>
-    </CardWithTitle>
-  );
-};
+export const MessagesView = () => (
+  <div className="flex flex-col gap-4">
+    <h2 className="text-lg font-semibold">Messages</h2>
+    <Card>
+      <CardContent>
+        <div className="divide-y divide-border">
+          <div className="pb-3">
+            <VerifyMessage />
+          </div>
+          <div className="pt-3">
+            <SignMessageCard />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  </div>
+);

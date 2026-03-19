@@ -3,55 +3,8 @@ import toast from 'react-hot-toast';
 import { useLoginAmbossMutation } from '../../../../graphql/mutations/__generated__/loginAmboss.generated';
 import { useGetAmbossLoginTokenLazyQuery } from '../../../../graphql/queries/__generated__/getAmbossLoginToken.generated';
 import { useAmbossUser } from '../../../../hooks/UseAmbossUser';
-import {
-  cardBorderColor,
-  cardColor,
-  mediaWidths,
-  unSelectedNavButton,
-} from '../../../../styles/Themes';
-import styled from 'styled-components';
 import { appendBasePath } from '../../../../utils/basePath';
-
-const QuickTitle = styled.div`
-  font-size: 12px;
-  color: ${unSelectedNavButton};
-  margin-top: 10px;
-`;
-
-const QuickCard = styled.button`
-  background: ${cardColor};
-  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  border: 1px solid ${cardBorderColor};
-  height: 100px;
-  width: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  cursor: pointer;
-  color: #69c0ff;
-
-  @media (${mediaWidths.mobile}) {
-    padding: 4px;
-    height: 80px;
-    width: 80px;
-  }
-
-  &:hover {
-    background-color: #ff0080;
-    color: white;
-
-    img {
-      filter: brightness(0) invert(1);
-    }
-
-    & ${QuickTitle} {
-      color: white;
-    }
-  }
-`;
+import { QuickCard, QuickTitle } from '../QuickActions';
 
 export const AmbossCard = () => {
   const { user } = useAmbossUser();
@@ -78,41 +31,29 @@ export const AmbossCard = () => {
     (window as any).open(url, '_blank').focus();
   }, [data, tokenLoading]);
 
-  if (!user) {
-    return (
-      <QuickCard
-        onClick={() => {
-          if (loading) return;
-          login();
-        }}
-        disabled={loading}
-      >
-        <img
-          src={appendBasePath('/assets/amboss_icon.png')}
-          width={32}
-          height={32}
-          alt={'Amboss Logo'}
-        />
-        <QuickTitle>{loading ? 'Loading...' : 'Login'}</QuickTitle>
-      </QuickCard>
-    );
-  }
+  const isLoading = user ? tokenLoading : loading;
+  const label = isLoading ? 'Loading...' : user ? 'Go To' : 'Login';
+
+  const handleClick = () => {
+    if (user) {
+      if (!tokenLoading) getToken();
+    } else {
+      if (!loading) login();
+    }
+  };
 
   return (
     <QuickCard
-      onClick={() => {
-        if (tokenLoading) return;
-        getToken();
-      }}
-      disabled={tokenLoading}
+      className="hover:border-purple-500/30 hover:bg-purple-500/5"
+      onClick={handleClick}
     >
       <img
         src={appendBasePath('/assets/amboss_icon.png')}
-        width={32}
-        height={32}
-        alt={'Amboss Logo'}
+        width={16}
+        height={16}
+        alt="Amboss Logo"
       />
-      <QuickTitle>{tokenLoading ? 'Loading...' : 'Go To'}</QuickTitle>
+      <QuickTitle>{label}</QuickTitle>
     </QuickCard>
   );
 };

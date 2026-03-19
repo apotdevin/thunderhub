@@ -1,41 +1,20 @@
-import { InputWithDeco } from '../../components/input/InputWithDeco';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
-import {
-  Card,
-  DarkSubTitle,
-  SingleLine,
-  SubTitle,
-} from '../../components/generic/Styled';
 import { useEffect, useState } from 'react';
 import { Slider } from '../../components/slider';
-import { Edit2, X } from 'lucide-react';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import styled from 'styled-components';
-import { mediaWidths } from '../../styles/Themes';
-import { Input } from '../../components/input';
+import { Edit2, X, ChevronRight, Loader2, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useCreateBoltzReverseSwapMutation } from '../../graphql/mutations/__generated__/createBoltzReverseSwap.generated';
 import toast from 'react-hot-toast';
+import { Price } from '../../components/price/Price';
 import { getErrorContent } from '../../utils/error';
 import { useMutationResultWithReset } from '../../hooks/UseMutationWithReset';
-import { useSwapsDispatch } from './SwapContext';
+import { useBoltzSwapActions } from '../../context/BoltzSwapContext';
 
 type StartSwapProps = {
   max: number;
   min: number;
 };
-
-const StyledRow = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: flex-end;
-
-  @media (${mediaWidths.mobile}) {
-    justify-content: center;
-  }
-`;
 
 export const StartSwap = ({ max, min }: StartSwapProps) => {
   const [amount, setAmount] = useState<number>(min);
@@ -43,7 +22,7 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [address, setAddress] = useState<string>();
 
-  const dispatch = useSwapsDispatch();
+  const actions = useBoltzSwapActions();
 
   const [getQuote, { data: _data, loading }] =
     useCreateBoltzReverseSwapMutation({
@@ -53,85 +32,106 @@ export const StartSwap = ({ max, min }: StartSwapProps) => {
 
   useEffect(() => {
     if (!data?.createBoltzReverseSwap) return;
-    dispatch({
-      type: 'add',
-      swap: data.createBoltzReverseSwap,
-    });
-
+    const swap = data.createBoltzReverseSwap;
+    actions.addSwap(swap);
+    actions.openSwap(swap.id);
     resetMutation();
-  }, [data, dispatch, resetMutation]);
+  }, [data, actions, resetMutation]);
 
   return (
-    <Card mobileCardPadding={'0'} mobileNoBackground={true}>
-      <SingleLine>
-        <SubTitle>Start Swap</SubTitle>
-        <DarkSubTitle>Lightning BTC to BTC</DarkSubTitle>
-      </SingleLine>
-      <InputWithDeco title={'Amount'} noInput={true} amount={amount}>
-        <StyledRow>
+    <div>
+      {/* Amount */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Amount
+          </label>
+          <span className="text-sm font-medium tabular-nums">
+            <Price amount={amount} />
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
           {isEdit ? (
             <Input
-              maxWidth={'440px'}
+              className="flex-1"
               value={amount}
               type={'number'}
               placeholder={'Satoshis'}
               onChange={value => setAmount(Number(value.target.value))}
             />
           ) : (
-            <Slider
-              value={amount}
-              max={max}
-              min={min}
-              onChange={value => setAmount(value)}
-            />
+            <div className="flex-1">
+              <Slider
+                value={amount}
+                max={max}
+                min={min}
+                onChange={value => setAmount(value)}
+              />
+            </div>
           )}
-
-          <ColorButton
-            withMargin={'0 0 0 8px'}
+          <Button
+            variant={isEdit ? 'default' : 'outline'}
+            size="icon"
+            className="shrink-0"
             onClick={() => setIsEdit(p => !p)}
-            selected={isEdit}
           >
-            {!isEdit ? <Edit2 size={18} /> : <X size={18} />}
-          </ColorButton>
-        </StyledRow>
-      </InputWithDeco>
-      <InputWithDeco title={'Address'} noInput={true}>
-        <MultiButton>
-          <SingleButton
-            selected={!isCustom}
-            onClick={() => {
-              setIsCustom(false);
-              setAddress('');
+            {!isEdit ? <Edit2 size={14} /> : <X size={14} />}
+          </Button>
+        </div>
+      </div>
+
+      {/* Separator */}
+      <div className="my-5 h-px bg-border" />
+
+      {/* Address */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Destination
+          </label>
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            size="sm"
+            value={isCustom ? 'custom' : 'auto'}
+            onValueChange={value => {
+              if (!value) return;
+              setIsCustom(value === 'custom');
+              if (value === 'auto') setAddress('');
             }}
           >
-            Auto
-          </SingleButton>
-          <SingleButton selected={isCustom} onClick={() => setIsCustom(true)}>
-            Custom
-          </SingleButton>
-        </MultiButton>
-      </InputWithDeco>
-      {isCustom && (
-        <InputWithDeco
-          title={'Send to'}
-          placeholder={'Bitcoin address'}
-          value={address}
-          inputCallback={value => setAddress(value)}
-        />
-      )}
+            <ToggleGroupItem value="auto">Auto</ToggleGroupItem>
+            <ToggleGroupItem value="custom">Custom</ToggleGroupItem>
+          </ToggleGroup>
+        </div>
 
-      <ColorButton
+        {isCustom && (
+          <Input
+            placeholder={'Enter Bitcoin address'}
+            value={address ?? ''}
+            onChange={e => setAddress(e.target.value)}
+          />
+        )}
+      </div>
+
+      {/* Submit */}
+      <Button
         disabled={!amount || loading}
-        loading={loading}
         onClick={() =>
           getQuote({ variables: { amount, ...(address && { address }) } })
         }
-        arrow={true}
-        withMargin={'16px 0 0'}
-        fullWidth={true}
+        className="w-full mt-5"
       >
-        Get Quote
-      </ColorButton>
-    </Card>
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <>
+            <Zap size={14} className="mr-1" />
+            Get Quote
+            <ChevronRight size={16} className="ml-1" />
+          </>
+        )}
+      </Button>
+    </div>
   );
 };

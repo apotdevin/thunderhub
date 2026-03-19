@@ -1,11 +1,11 @@
 import { useGetPeersQuery } from '@/graphql/queries/__generated__/getPeers.generated';
 import { shorten } from '@/components/generic/helpers';
 import { Peer } from '@/graphql/types';
-import { SelectWithDeco } from '../SelectWithDeco';
-import { ValueProp } from '..';
+import { Loader2 } from 'lucide-react';
+import { Select, ValueProp } from '..';
 
 type PeerSelectProps = {
-  title: string;
+  title?: string;
   callback: (peer: Peer[]) => void;
 };
 
@@ -51,12 +51,22 @@ export const PeerSelect = ({ title, callback }: PeerSelectProps) => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-2">
+        <Loader2 className="animate-spin text-muted-foreground" size={16} />
+      </div>
+    );
+  }
+
   return (
-    <SelectWithDeco
-      loading={loading}
-      title={title}
-      options={options}
-      callback={handleChange}
-    />
+    <div className="flex flex-col gap-1 **:data-[slot=native-select-wrapper]:w-full">
+      {title && (
+        <label className="text-xs font-medium text-muted-foreground">
+          {title}
+        </label>
+      )}
+      <Select options={options} callback={handleChange} />
+    </div>
   );
 };

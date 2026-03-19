@@ -2,17 +2,10 @@ import { FC } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useGetChannelQuery } from '../../../../graphql/queries/__generated__/getChannel.generated';
 import { useGetClosedChannelsQuery } from '../../../../graphql/queries/__generated__/getClosedChannels.generated';
-import { themeColors } from '../../../../styles/Themes';
+
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { Info } from 'lucide-react';
-import styled from 'styled-components';
 import { getAliasFromClosedChannels } from './helpers';
-
-const S = {
-  icon: styled.span`
-    margin-left: 4px;
-  `,
-};
 
 export const ChannelAlias: FC<{ id: string }> = ({ id }) => {
   const { data: closedChannelData } = useGetClosedChannelsQuery({
@@ -31,13 +24,7 @@ export const ChannelAlias: FC<{ id: string }> = ({ id }) => {
   }
 
   if (loading) {
-    return (
-      <Loader2
-        className="animate-spin"
-        size={8}
-        style={{ color: themeColors.blue3 }}
-      />
-    );
+    return <Loader2 className="animate-spin text-primary" size={8} />;
   }
 
   if (data?.getChannel.partner_node_policies?.node?.node?.alias) {
@@ -54,9 +41,9 @@ export const ChannelAlias: FC<{ id: string }> = ({ id }) => {
       return (
         <>
           {closedAlias}
-          <S.icon>
+          <span className="ml-1">
             <Info size={16} data-tip data-for={'channel_info'} />
-          </S.icon>
+          </span>
           <ReactTooltip id={'channel_info'} place={'right'}>
             This channel has been closed.
           </ReactTooltip>

@@ -8,13 +8,6 @@ import {
 import { X, Copy } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { config } from '../../config/thunderhubConfig';
-import {
-  SmallLink,
-  DarkSubTitle,
-  OverflowText,
-  SingleLine,
-  CopyIcon,
-} from './Styled';
 import { StatusDot, DetailLine } from './CardGeneric';
 
 export const shorten = (text: string, length?: number): string => {
@@ -44,13 +37,14 @@ export const addEllipsis = (
 };
 
 export const copyLink = (text: string) => (
-  <CopyIcon
+  <span
+    className="cursor-pointer ml-1 px-1 rounded-sm hover:bg-primary hover:text-primary-foreground"
     onClick={() =>
       navigator.clipboard.writeText(text).then(() => toast.success('Copied'))
     }
   >
     <Copy size={12} />
-  </CopyIcon>
+  </span>
 );
 
 export const getAddressLink = (transaction: string | null | undefined) => {
@@ -66,9 +60,13 @@ export const getAddressLink = (transaction: string | null | undefined) => {
   const link = `${config.mempoolUrl}/address/${transaction}`;
   return (
     <span className="flex items-center">
-      <SmallLink href={link} target="_blank">
+      <a
+        href={link}
+        target="_blank"
+        className="no-underline text-primary hover:underline"
+      >
         {shorten(transaction)}
-      </SmallLink>
+      </a>
       {copyLink(transaction)}
     </span>
   );
@@ -87,9 +85,13 @@ export const getTransactionLink = (transaction: string | null | undefined) => {
   const link = `${config.mempoolUrl}/tx/${transaction}`;
   return (
     <span className="flex items-center">
-      <SmallLink href={link} target="_blank">
+      <a
+        href={link}
+        target="_blank"
+        className="no-underline text-primary hover:underline"
+      >
         {shorten(transaction)}
-      </SmallLink>
+      </a>
       {copyLink(transaction)}
     </span>
   );
@@ -119,9 +121,13 @@ export const getNodeLink = (
       {config.disableLinks ? (
         text
       ) : (
-        <SmallLink href={link} target="_blank">
+        <a
+          href={link}
+          target="_blank"
+          className="no-underline text-primary hover:underline"
+        >
           {text}
-        </SmallLink>
+        </a>
       )}
       {copyLink(publicKey)}
     </span>
@@ -135,9 +141,13 @@ export const getChannelLink = (id: string) => {
       {config.disableLinks ? (
         id
       ) : (
-        <SmallLink href={link} target="_blank">
+        <a
+          href={link}
+          target="_blank"
+          className="no-underline text-primary hover:underline"
+        >
           {id}
-        </SmallLink>
+        </a>
       )}
       {copyLink(id)}
     </span>
@@ -222,9 +232,11 @@ export const renderLine = (
   if (!content) return null;
   return (
     <DetailLine key={key}>
-      <DarkSubTitle>{title}</DarkSubTitle>
-      <SingleLine>
-        <OverflowText>{content}</OverflowText>
+      <div className="text-sm text-muted-foreground">{title}</div>
+      <div className="flex justify-between items-center">
+        <div className="text-right ml-2 wrap-break-words hyphens-auto md:ml-4">
+          {content}
+        </div>
         {deleteCallback && (
           <div
             role={'button'}
@@ -236,7 +248,7 @@ export const renderLine = (
             <X size={18} />
           </div>
         )}
-      </SingleLine>
+      </div>
     </DetailLine>
   );
 };

@@ -1,77 +1,86 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { ColorButton } from '../../components/buttons/colorButton/ColorButton';
-import {
-  MultiButton,
-  SingleButton,
-} from '../../components/buttons/multiButton/MultiButton';
+import { Button } from '@/components/ui/button';
+import { Loader2, AlertTriangle } from 'lucide-react';
 import { renderLine } from '../../components/generic/helpers';
-import {
-  DarkSubTitle,
-  Separation,
-  SubTitle,
-} from '../../components/generic/Styled';
-import { Input } from '../../components/input';
-import { InputWithDeco } from '../../components/input/InputWithDeco';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Input } from '@/components/ui/input';
+import { Price } from '../../components/price/Price';
 import { useConfigState } from '../../context/ConfigContext';
 import { useClaimBoltzTransactionMutation } from '../../graphql/mutations/__generated__/claimBoltzTransaction.generated';
 import { useBitcoinFees } from '../../hooks/UseBitcoinFees';
-import { chartColors } from '../../styles/Themes';
 import { getErrorContent } from '../../utils/error';
-import styled from 'styled-components';
-import { WarningText } from '../stats/styles';
-import { useSwapsDispatch, useSwapsState } from './SwapContext';
+import {
+  useBoltzSwaps,
+  useBoltzSwapById,
+  useBoltzSwapActions,
+} from '../../context/BoltzSwapContext';
 import { MEMPOOL } from './SwapStatus';
-
-const S = {
-  warning: styled.div`
-    border: 1px solid ${chartColors.darkyellow};
-    background-color: rgba(255, 193, 10, 0.1);
-    padding: 4px 8px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 14px;
-  `,
-};
 
 export const SwapClaim = () => {
   const { fetchFees } = useConfigState();
   const { fast, halfHour, hour, minimum, dontShow } = useBitcoinFees();
 
   const [fee, setFee] = useState<number>(0);
-  const [type, setType] = useState('fee');
-
-  const { swaps, claim, claimType } = useSwapsState();
-  const dispatch = useSwapsDispatch();
-
-  const [claimTransaction, { data, loading }] =
-    useClaimBoltzTransactionMutation({
-      onError: error => toast.error(getErrorContent(error)),
-    });
+  const [type, setType] = useState('none');
 
   useEffect(() => {
-    if (!data?.claimBoltzTransaction || typeof claim !== 'number') return;
-    dispatch({
-      type: 'complete',
-      index: claim,
-      transactionId: data.claimBoltzTransaction,
-    });
-    toast.success('Transaction Claimed');
-  }, [data, dispatch, claim]);
+    if (fast && type === 'none' && fee === 0) {
+      setFee(fast);
+    }
+  }, [fast, type, fee]);
+
+  const feeSpeedValue =
+    fee === fast
+      ? 'fast'
+      : fee === halfHour
+        ? 'half'
+        : fee === hour
+          ? 'hour'
+          : '';
+
+  const dedupedFees = (() => {
+    const seen = new Set<number>();
+    const options: { value: string; label: string }[] = [];
+    const entries = [
+      { value: 'fast', rate: fast, label: 'Fastest' },
+      { value: 'half', rate: halfHour, label: '30 min' },
+      { value: 'hour', rate: hour, label: '1 hour' },
+    ];
+    for (const e of entries) {
+      if (!seen.has(e.rate)) {
+        seen.add(e.rate);
+        options.push({ value: e.value, label: `${e.label} (${e.rate})` });
+      }
+    }
+    return options;
+  })();
+
+  const { claimSwapId, claimType } = useBoltzSwaps();
+  const claimingSwap = useBoltzSwapById(claimSwapId);
+  const actions = useBoltzSwapActions();
+
+  const [claimTransaction, { loading }] = useClaimBoltzTransactionMutation({
+    onError: error => toast.error(getErrorContent(error)),
+    onCompleted: data => {
+      if (data?.claimBoltzTransaction && claimSwapId) {
+        actions.completeSwap(claimSwapId, data.claimBoltzTransaction);
+        toast.success('Transaction Claimed');
+      }
+    },
+  });
 
   const Missing = () => (
-    <>
-      <DarkSubTitle>
-        Missing information to claim transaction. Please try again.
-      </DarkSubTitle>
-    </>
+    <div className="flex items-center justify-center p-6 text-sm text-muted-foreground">
+      <AlertTriangle className="mr-2" size={14} />
+      Missing information to claim transaction. Please try again.
+    </div>
   );
 
-  if (typeof claim !== 'number') {
+  if (!claimSwapId || !claimingSwap) {
     return <Missing />;
   }
 
-  const claimingSwap = swaps[claim];
   const {
     redeemScript,
     preimage,
@@ -85,96 +94,104 @@ export const SwapClaim = () => {
     return <Missing />;
   }
 
-  const renderButton = (
-    onClick: () => void,
-    text: string,
-    selected: boolean
-  ) => (
-    <SingleButton selected={selected} onClick={onClick}>
-      {text}
-    </SingleButton>
-  );
-
   return (
-    <>
-      <SubTitle>Claim the Transaction</SubTitle>
+    <div className="space-y-4">
+      <div>
+        <h3 className="text-sm font-semibold tracking-tight">
+          Claim Transaction
+        </h3>
+        <p className="text-xs text-muted-foreground font-mono mt-0.5">{id}</p>
+      </div>
+
       {claimType === MEMPOOL && (
-        <>
-          <Separation />
-          <S.warning>
-            This will be an instant swap. This means that the locking
-            transaction from Boltz has still not been confirmed in the
-            blockchain.
-          </S.warning>
-        </>
+        <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-xs text-amber-600 dark:text-amber-400 text-center">
+          <AlertTriangle size={12} className="inline mr-1.5 -mt-0.5" />
+          Instant swap - the locking transaction from Boltz has not yet been
+          confirmed in the blockchain.
+        </div>
       )}
-      <Separation />
+
+      {/* Fee selection */}
       {fetchFees && !dontShow && (
-        <InputWithDeco title={'Fee'} noInput={true}>
-          <MultiButton>
-            {renderButton(
-              () => {
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Fee Mode
+          </label>
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            size="sm"
+            value={type}
+            onValueChange={value => {
+              if (!value) return;
+              if (value === 'none') {
                 setType('none');
                 setFee(fast);
-              },
-              'Auto',
-              type === 'none'
-            )}
-            {renderButton(
-              () => {
+              } else {
                 setFee(0);
                 setType('fee');
-              },
-              'Fee (Sats/Byte)',
-              type === 'fee'
-            )}
-          </MultiButton>
-        </InputWithDeco>
+              }
+            }}
+          >
+            <ToggleGroupItem value="none">Auto</ToggleGroupItem>
+            <ToggleGroupItem value="fee">Custom</ToggleGroupItem>
+          </ToggleGroup>
+        </div>
       )}
-      <InputWithDeco title={'Fee Amount'} amount={fee * 111} noInput={true}>
+
+      {/* Fee amount */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Fee Amount
+          </label>
+          <span className="text-sm font-medium tabular-nums">
+            {/* 111 vbytes ≈ typical claim tx size */}
+            <Price amount={fee * 111} />
+          </span>
+        </div>
+
         {type !== 'none' && (
           <Input
-            maxWidth={'240px'}
             placeholder={'Sats/Byte'}
             type={'number'}
             onChange={e => setFee(Number(e.target.value))}
           />
         )}
+
         {type === 'none' && (
-          <MultiButton>
-            {renderButton(
-              () => setFee(fast),
-              `Fastest (${fast} sats)`,
-              fee === fast
-            )}
-            {halfHour !== fast &&
-              renderButton(
-                () => setFee(halfHour),
-                `Half Hour (${halfHour} sats)`,
-                fee === halfHour
-              )}
-            {renderButton(
-              () => setFee(hour),
-              `Hour (${hour} sats)`,
-              fee === hour
-            )}
-          </MultiButton>
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            size="sm"
+            className="w-full"
+            value={feeSpeedValue}
+            onValueChange={value => {
+              if (!value) return;
+              if (value === 'fast') setFee(fast);
+              else if (value === 'half') setFee(halfHour);
+              else if (value === 'hour') setFee(hour);
+            }}
+          >
+            {dedupedFees.map(f => (
+              <ToggleGroupItem key={f.value} value={f.value} className="flex-1">
+                {f.label}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
         )}
-      </InputWithDeco>
+      </div>
+
       {!dontShow && renderLine('Minimum', `${minimum} sat/vByte`)}
-      <WarningText>
-        {
-          'If you set a low fee the swap will take more time if the mempool is congested.'
-        }
-      </WarningText>
-      <WarningText>
-        {' You can see fee estimates by selecting the "Auto" option above.'}
-      </WarningText>
-      <ColorButton
-        loading={loading}
+
+      <p className="text-xs text-center text-amber-600 dark:text-amber-400">
+        Low fees may cause delays if the mempool is congested. Select
+        &quot;Auto&quot; above for fee estimates.
+      </p>
+
+      <Button
         disabled={loading || !fee || fee <= 0}
-        fullWidth={true}
-        withMargin={'16px 0 0'}
+        className="w-full"
         onClick={() =>
           claimTransaction({
             variables: {
@@ -189,8 +206,12 @@ export const SwapClaim = () => {
           })
         }
       >
-        Claim
-      </ColorButton>
-    </>
+        {loading ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          'Claim Transaction'
+        )}
+      </Button>
+    </div>
   );
 };

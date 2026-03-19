@@ -1,102 +1,81 @@
-import styled from 'styled-components';
-import {
-  CardTitle,
-  CardWithTitle,
-  SmallButton,
-  SubTitle,
-} from '../../../components/generic/Styled';
-import {
-  cardBorderColor,
-  cardColor,
-  mediaWidths,
-  unSelectedNavButton,
-} from '../../../styles/Themes';
-import { ArrowDownRight, ArrowUpRight, X } from 'lucide-react';
+import { Cable, Rocket } from 'lucide-react';
 import { useState } from 'react';
 import { OpenChannel } from './OpenChannel';
-import { BuyChannel, GoToMagma } from './BuyChannel';
+import { BuyChannel } from './BuyChannel';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
-export const QuickCard = styled.div`
-  background: ${cardColor};
-  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  border: 1px solid ${cardBorderColor};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  cursor: pointer;
-  color: #69c0ff;
-  gap: 8px;
-
-  @media (${mediaWidths.mobile}) {
-    padding: 4px;
-    height: 80px;
-    width: 80px;
-  }
-
-  &:hover {
-    border: 1px solid #69c0ff;
-  }
-`;
-
-export const QuickTitle = styled.div`
-  font-size: 14px;
-  color: ${unSelectedNavButton};
-  text-align: center;
-`;
-
-const S = {
-  row: styled.div`
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-    margin-bottom: 16px;
-    margin-top: 16px;
-  `,
-};
+type DialogState = 'none' | 'open' | 'buy';
 
 export const Liquidity = () => {
-  const [openCard, setOpenCard] = useState('none');
-
-  const getContent = () => {
-    switch (openCard) {
-      case 'open':
-        return <OpenChannel closeCbk={() => setOpenCard('none')} />;
-      case 'buy':
-        return <BuyChannel />;
-      default:
-        return (
-          <S.row>
-            <QuickCard onClick={() => setOpenCard('open')}>
-              <ArrowUpRight size={24} />
-              <QuickTitle>Open a Channel</QuickTitle>
-            </QuickCard>
-            <QuickCard onClick={() => setOpenCard('buy')}>
-              <ArrowDownRight size={24} />
-              <QuickTitle>Buy Inbound Liquidity</QuickTitle>
-            </QuickCard>
-          </S.row>
-        );
-    }
-  };
+  const [openDialog, setOpenDialog] = useState<DialogState>('none');
 
   return (
-    <CardWithTitle>
-      <CardTitle>
-        <SubTitle>Liquidity</SubTitle>
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>Liquidity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 md:grid-cols-2">
+            <button
+              className="flex cursor-pointer items-center justify-center gap-2 rounded border border-border bg-transparent p-3 text-primary transition-colors hover:border-primary"
+              onClick={() => setOpenDialog('open')}
+            >
+              <Cable size={20} />
+              <span className="text-sm text-muted-foreground">
+                Open a Channel
+              </span>
+            </button>
+            <button
+              className="flex cursor-pointer items-center justify-center gap-2 rounded border border-border bg-transparent p-3 text-primary transition-colors hover:border-primary"
+              onClick={() => setOpenDialog('buy')}
+            >
+              <Rocket size={20} />
+              <span className="text-sm text-muted-foreground">
+                Buy Inbound Liquidity
+              </span>
+            </button>
+          </div>
+        </CardContent>
+      </Card>
 
-        <div style={{ display: 'flex' }}>
-          {openCard === 'buy' ? <GoToMagma /> : null}
+      <Dialog
+        open={openDialog === 'open'}
+        onOpenChange={open => !open && setOpenDialog('none')}
+      >
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Open Channel</DialogTitle>
+            <DialogDescription>
+              Open a new payment channel with a Lightning Network peer.
+            </DialogDescription>
+          </DialogHeader>
+          <OpenChannel closeCbk={() => setOpenDialog('none')} />
+        </DialogContent>
+      </Dialog>
 
-          {openCard !== 'none' && (
-            <SmallButton onClick={() => setOpenCard('none')}>
-              <X size={18} />
-            </SmallButton>
-          )}
-        </div>
-      </CardTitle>
-      {getContent()}
-    </CardWithTitle>
+      <Dialog
+        open={openDialog === 'buy'}
+        onOpenChange={open => !open && setOpenDialog('none')}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Buy Inbound Liquidity</DialogTitle>
+            <DialogDescription>
+              Get inbound capacity so you can start receiving payments
+              instantly.
+            </DialogDescription>
+          </DialogHeader>
+          <BuyChannel />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
