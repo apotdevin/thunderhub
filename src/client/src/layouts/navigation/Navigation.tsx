@@ -12,6 +12,7 @@ import {
   Shuffle,
   Grid,
   Globe,
+  Gem,
   LucideProps,
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
@@ -39,6 +40,7 @@ const STATS = '/stats';
 const SETTINGS = '/settings';
 const SWAP = '/swap';
 const AMBOSS = '/amboss';
+const ASSETS = '/assets';
 
 interface NavItem {
   title: string;
@@ -58,6 +60,7 @@ const mainNav: NavItem[] = [
 ];
 
 const secondaryNav: NavItem[] = [
+  { title: 'Assets', link: ASSETS, icon: Gem },
   { title: 'Amboss', link: AMBOSS, icon: Globe },
   { title: 'Swap', link: SWAP, icon: Shuffle },
   { title: 'Stats', link: STATS, icon: BarChart2 },

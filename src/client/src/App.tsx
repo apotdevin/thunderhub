@@ -34,6 +34,7 @@ import StatsPage from './pages/StatsPage';
 import SwapPage from './pages/SwapPage';
 import SettingsPage from './pages/SettingsPage';
 import AmbossPage from './pages/AmbossPage';
+import AssetsPage from './pages/AssetsPage';
 
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const SettingsDashboardPage = lazy(
@@ -148,6 +149,7 @@ const AuthenticatedRoutes = () => (
       }
     />
     <Route path="/amboss" element={<AmbossPage />} />
+    <Route path="/assets" element={<AssetsPage />} />
     <Route path="/login" element={<LoginPage />} />
     <Route path="/sso" element={<SsoPage />} />
     <Route path="*" element={<HomePage />} />
