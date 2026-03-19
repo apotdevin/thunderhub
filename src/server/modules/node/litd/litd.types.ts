@@ -1,8 +1,8 @@
 import { AuthenticatedLnd } from 'lightning';
-
-export type LitdConnectionMode = 'grpc';
+import { TapdRpcApis } from '@lightningpolar/tapd-api';
 
 export type LitdConnection = {
   lnd: AuthenticatedLnd;
-  mode: LitdConnectionMode;
+  tapd: TapdRpcApis;
+  mode: 'grpc';
 };
