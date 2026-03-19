@@ -6,6 +6,7 @@ import { Routes } from 'lightning';
 export const NodeType = {
   LND: 'lnd',
   LITD: 'litd',
+  LDK_SERVER: 'ldk-server',
 } as const;
 
 export type NodeType = (typeof NodeType)[keyof typeof NodeType];
@@ -367,6 +368,7 @@ export interface LightningProvider {
     cert?: string;
     macaroon?: string;
     authToken?: string;
+    tlsCertPath?: string;
   }): any;
 
   /** Verify the connection is valid and the node matches this provider type */

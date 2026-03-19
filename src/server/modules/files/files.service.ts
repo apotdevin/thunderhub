@@ -269,6 +269,7 @@ export class FilesService {
       encrypted,
       twofaSecret,
       authToken,
+      tlsCertPath,
     } = resolvedAccount;
 
     const nodeType = (accountType as NodeType) || NodeType.LND;
@@ -350,6 +351,7 @@ export class FilesService {
       password: password || masterPassword || '',
       twofaSecret: twofaSecret || '',
       authToken: authToken || undefined,
+      tlsCertPath: tlsCertPath || undefined,
       ...encryptedProps,
     };
   }
