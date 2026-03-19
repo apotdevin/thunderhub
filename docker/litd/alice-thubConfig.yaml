@@ -1,0 +1,7 @@
+masterPassword: thunderhub-$2b$12$qa8BYC99ReVVafMRzJLpouTvAx8dr8W2XQTQgXinDigK/eF7YaaZ6
+accounts:
+  - name: Alice (litd)
+    type: litd
+    serverUrl: litd-alice:8443
+    macaroonPath: /data/litd/regtest/super.macaroon
+    certificatePath: /data/litd/tls.cert
