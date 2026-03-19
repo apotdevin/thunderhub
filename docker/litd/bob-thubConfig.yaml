@@ -3,6 +3,5 @@ accounts:
   - name: Bob (litd)
     type: litd
     serverUrl: litd-bob:8443
-    connectionMode: grpc
     macaroonPath: /data/litd/regtest/super.macaroon
     certificatePath: /data/litd/tls.cert
