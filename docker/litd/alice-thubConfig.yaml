@@ -3,5 +3,6 @@ accounts:
   - name: Alice (litd)
     type: litd
     serverUrl: litd-alice:8443
+    connectionMode: grpc
     macaroonPath: /data/litd/regtest/super.macaroon
     certificatePath: /data/litd/tls.cert
