@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { LightningProvider, NodeType } from './lightning.types';
 import { LndService } from './lnd/lnd.service';
+import { LdkServerService } from './ldk-server/ldk-server.service';
 
 @Injectable()
 export class ProviderRegistryService {
   private providers = new Map<string, LightningProvider>();
 
-  constructor(lndService: LndService) {
+  constructor(
+    lndService: LndService,
+    ldkServerService: LdkServerService
+  ) {
     this.providers.set(NodeType.LND, lndService);
+    this.providers.set(NodeType.LDK_SERVER, ldkServerService);
   }
 
   register(type: string, provider: LightningProvider): void {

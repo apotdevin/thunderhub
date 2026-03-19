@@ -17,6 +17,10 @@ import { UserConfigService } from '../api/userConfig/userConfig.service';
 import { getNetwork } from 'src/server/utils/network';
 import { AmbossService } from '../api/amboss/amboss.service';
 import { NodeType } from '../node/lightning.types';
+import {
+  LdkServerRabbitMqConsumer,
+  createLdkServerRabbitMqConsumer,
+} from '../node/ldk-server/ldk-server.rabbitmq';
 
 const restartSubscriptionTimeMs = 1000 * 30;
 
@@ -30,6 +34,7 @@ type SubscriptionNode = {
 @Injectable()
 export class SubService implements OnApplicationBootstrap {
   subscriptions = [];
+  ldkConsumers: LdkServerRabbitMqConsumer[] = [];
   retryCount = 0;
 
   constructor(
@@ -50,6 +55,54 @@ export class SubService implements OnApplicationBootstrap {
     }
 
     this.startSubscription();
+    this.startLdkServerSubscriptions();
+  }
+
+  async startLdkServerSubscriptions() {
+    const accounts = this.accountsService.getAllAccounts();
+
+    for (const key in accounts) {
+      if (!accounts.hasOwnProperty(key)) continue;
+
+      const account = accounts[key];
+      if (
+        account.type !== NodeType.LDK_SERVER ||
+        account.encrypted ||
+        !account.rabbitmqUrl
+      ) {
+        continue;
+      }
+
+      try {
+        const info = await this.nodeService.getWalletInfo(account.hash);
+        const sliced = info.public_key.slice(0, 10);
+        const name = `${info.alias || 'ldk-server'}(${sliced})`;
+
+        this.logger.info(
+          `Starting RabbitMQ subscription for ldk-server node: ${name}`
+        );
+
+        const consumer = createLdkServerRabbitMqConsumer({
+          rabbitmqUrl: account.rabbitmqUrl,
+          exchangeName: account.rabbitmqExchangeName || 'ldk_events',
+          accountId: account.hash,
+          sseService: this.sseService,
+          logger: this.logger,
+        });
+
+        await consumer.start();
+        this.ldkConsumers.push(consumer);
+
+        this.logger.info(
+          `RabbitMQ subscription active for ldk-server node: ${name}`
+        );
+      } catch (err) {
+        this.logger.error(
+          `Failed to start RabbitMQ subscription for ldk-server account ${account.name}`,
+          { err }
+        );
+      }
+    }
   }
 
   async startSubscription() {

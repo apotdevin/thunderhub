@@ -68,4 +68,5 @@ module.exports = defineConfig([{
     "**/node_modules",
     "**/dist",
     "**/*.generated.tsx",
+    "**/ldk-server/proto/**",
 ])]);

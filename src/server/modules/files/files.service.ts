@@ -257,6 +257,9 @@ export class FilesService {
       encrypted,
       twofaSecret,
       authToken,
+      tlsCertPath,
+      rabbitmqUrl,
+      rabbitmqExchangeName,
     } = resolvedAccount;
 
     const nodeType = (accountType as NodeType) || NodeType.LND;
@@ -330,6 +333,9 @@ export class FilesService {
       password: password || masterPassword || '',
       twofaSecret: twofaSecret || '',
       authToken: authToken || undefined,
+      tlsCertPath: tlsCertPath || undefined,
+      rabbitmqUrl: rabbitmqUrl || undefined,
+      rabbitmqExchangeName: rabbitmqExchangeName || undefined,
       ...encryptedProps,
     };
   }

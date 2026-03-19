@@ -4,6 +4,7 @@ import EventEmitter from 'events';
 
 export const NodeType = {
   LND: 'lnd',
+  LDK_SERVER: 'ldk-server',
 } as const;
 
 export type NodeType = (typeof NodeType)[keyof typeof NodeType];
@@ -257,5 +258,6 @@ export interface LightningProvider {
     cert?: string;
     macaroon?: string;
     authToken?: string;
+    tlsCertPath?: string;
   }): any;
 }

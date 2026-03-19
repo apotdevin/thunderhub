@@ -85,6 +85,7 @@ export class AccountsService implements OnModuleInit {
         cert: account.cert || undefined,
         macaroon: account.macaroon || undefined,
         authToken: account.authToken,
+        tlsCertPath: account.tlsCertPath,
       });
 
       this.accounts[account.hash] = {

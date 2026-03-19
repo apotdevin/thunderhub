@@ -22,6 +22,9 @@ export type AccountType = {
   encrypted?: boolean;
   twofaSecret?: string | null;
   authToken?: string;
+  tlsCertPath?: string;
+  rabbitmqUrl?: string;
+  rabbitmqExchangeName?: string;
 };
 
 export type UnresolvedAccountType = {
@@ -37,6 +40,9 @@ export type UnresolvedAccountType = {
   certificate?: string;
   encrypted?: boolean | string;
   authToken?: string;
+  tlsCertPath?: string;
+  rabbitmqUrl?: string;
+  rabbitmqExchangeName?: string;
 };
 
 export type ParsedAccount = {
@@ -52,6 +58,9 @@ export type ParsedAccount = {
   encryptedMacaroon: string;
   twofaSecret: string;
   authToken?: string;
+  tlsCertPath?: string;
+  rabbitmqUrl?: string;
+  rabbitmqExchangeName?: string;
 };
 
 export type AccountConfigType = {
