@@ -25,6 +25,7 @@ export enum Capability {
   NETWORK_INFO = 'network_info',
   ROUTING_FEES = 'routing_fees',
   DIFFIE_HELLMAN = 'diffie_hellman',
+  TAPROOT_ASSETS = 'taproot_assets',
 }
 
 // ─── Common arg types ────────────────────────────────────────────
