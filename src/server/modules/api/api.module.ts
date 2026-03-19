@@ -21,6 +21,7 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { BoltzModule } from './boltz/boltz.module';
 import { UserConfigModule } from './userConfig/userConfig.module';
+import { TapdApiModule } from './tapd/tapd.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { UserConfigModule } from './userConfig/userConfig.module';
     TransactionsModule,
     InvoicesModule,
     BoltzModule,
+    TapdApiModule,
   ],
 })
 export class ApiModule {}
