@@ -4,6 +4,7 @@ import EventEmitter from 'events';
 
 export const NodeType = {
   LND: 'lnd',
+  LITD: 'litd',
 } as const;
 
 export type NodeType = (typeof NodeType)[keyof typeof NodeType];
@@ -249,6 +250,10 @@ export interface LightningProvider {
     connection: any,
     options: DiffieHellmanComputeSecretOptions
   ): Promise<any>;
+
+  // ── Subscriptions ──
+  /** Extract the raw AuthenticatedLnd handle for use by subscription service */
+  getSubscriptionConnection(connection: any): any;
 
   // ── Connection ──
   /** Create a connection object from account config */
