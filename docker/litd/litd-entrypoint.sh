@@ -2,6 +2,38 @@
 set -e
 
 MACAROON_PATH="/root/.lit/regtest/super.macaroon"
+BITCOIN_RPC_USER="${BITCOIN_RPC_USER:-rpcuser}"
+BITCOIN_RPC_PASS="${BITCOIN_RPC_PASS:-rpcpassword}"
+BITCOIN_RPC_PORT="${BITCOIN_RPC_PORT:-18443}"
+
+rpc_call() {
+  wget -qO- \
+    --header="Content-Type: application/json" \
+    --post-data="$1" \
+    "http://${BITCOIN_RPC_USER}:${BITCOIN_RPC_PASS}@${BITCOIN_RPC_HOST}:${BITCOIN_RPC_PORT}/" 2>/dev/null
+}
+
+# Mine 1 block before starting litd so bitcoind exits IBD mode.
+# (Regtest genesis has an old timestamp so bitcoind stays in IBD until a
+# block with a recent timestamp is mined — LND waits for IBD to finish.)
+if [ -n "$BITCOIN_RPC_HOST" ]; then
+  echo "Waiting for bitcoind RPC..."
+  until rpc_call '{"jsonrpc":"1.0","method":"getnetworkinfo","params":[]}' | jq -e '.result.version' > /dev/null 2>&1; do
+    sleep 2
+  done
+  # Only mine if bitcoind is still in IBD — existing data is left untouched.
+  if rpc_call '{"jsonrpc":"1.0","method":"getblockchaininfo","params":[]}' | jq -e '.result.initialblockdownload == false' > /dev/null 2>&1; then
+    echo "bitcoind already out of IBD, skipping"
+  else
+    echo "Mining 1 block to exit IBD..."
+    # Create a wallet if none exists, then mine 1 block to any address
+    rpc_call '{"jsonrpc":"1.0","method":"createwallet","params":["default"]}' > /dev/null 2>&1 || true
+    ADDR=$(rpc_call '{"jsonrpc":"1.0","method":"getnewaddress","params":[]}' | jq -r '.result')
+    [ -n "$ADDR" ] && [ "$ADDR" != "null" ] || { echo "Failed to get address for mining"; exit 1; }
+    rpc_call "{\"jsonrpc\":\"1.0\",\"method\":\"generatetoaddress\",\"params\":[1,\"$ADDR\"]}" > /dev/null
+    echo "Block mined"
+  fi
+fi
 
 # Start litd in the background
 litd "$@" &
@@ -29,11 +61,7 @@ if [ -n "$BITCOIN_RPC_HOST" ]; then
   ADDR=$(lncli --network=regtest newaddress p2wkh | sed -n 's/.*"address": "\(.*\)".*/\1/p')
   if [ -n "$ADDR" ]; then
     echo "Mining 6 blocks to $ADDR..."
-    # Use bitcoind JSON-RPC directly
-    RESULT=$(wget -qO- --post-data="{\"jsonrpc\":\"1.0\",\"method\":\"generatetoaddress\",\"params\":[6,\"$ADDR\"]}" \
-      --header="Content-Type: application/json" \
-      --header="Authorization: Basic $(echo -n rpcuser:rpcpassword | base64)" \
-      "http://${BITCOIN_RPC_HOST}:18443/" 2>&1) && echo "Blocks mined" || echo "Mining skipped: $RESULT"
+    rpc_call "{\"jsonrpc\":\"1.0\",\"method\":\"generatetoaddress\",\"params\":[6,\"$ADDR\"]}" > /dev/null && echo "Blocks mined" || echo "Mining skipped"
   fi
 fi
 
