@@ -26,6 +26,7 @@ type Urls = {
   blockHeight: string;
   boltz: string;
   github: string;
+  trade: string;
 };
 
 type Headers = {
@@ -123,6 +124,7 @@ export default (): ConfigType => {
     ticker: 'https://blockchain.info/ticker',
     github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
     boltz: 'https://api.boltz.exchange',
+    trade: process.env.TRADE_API_URL || '',
   };
 
   const npmVersion = process.env.npm_package_version || '0.0.0';

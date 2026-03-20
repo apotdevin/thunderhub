@@ -6,11 +6,13 @@ import { SendAsset } from './SendAsset';
 import { ReceiveAsset } from './ReceiveAsset';
 import { AssetTransfers } from './AssetTransfers';
 import { FundAssetChannel } from './FundAssetChannel';
+import { TradingOffers } from './TradingOffers';
 import { UniverseManager } from './UniverseManager';
 import { cn } from '../../lib/utils';
 
 type Tab =
   | 'assets'
+  | 'trading'
   | 'send'
   | 'receive'
   | 'channels'
@@ -19,6 +21,7 @@ type Tab =
 
 const tabs: { id: Tab; label: string }[] = [
   { id: 'assets', label: 'Assets' },
+  { id: 'trading', label: 'Trading' },
   { id: 'send', label: 'Send' },
   { id: 'receive', label: 'Receive' },
   { id: 'channels', label: 'Channels' },
@@ -53,6 +56,7 @@ export const AssetsView = () => {
       </div>
 
       {activeTab === 'assets' && <AssetsList />}
+      {activeTab === 'trading' && <TradingOffers />}
       {activeTab === 'send' && <SendAsset />}
       {activeTab === 'receive' && <ReceiveAsset />}
       {activeTab === 'channels' && <FundAssetChannel />}

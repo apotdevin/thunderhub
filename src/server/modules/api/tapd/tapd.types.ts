@@ -277,3 +277,47 @@ export class TapFundChannelResponse {
   @Field({ nullable: true })
   outputIndex?: number;
 }
+
+// ─── Trading Offers ─────────────────────────────────────────────
+
+@ObjectType()
+export class TapTradeOfferNode {
+  @Field({ nullable: true })
+  alias?: string;
+
+  @Field({ nullable: true })
+  pubkey?: string;
+}
+
+@ObjectType()
+export class TapTradeOfferAmount {
+  @Field({ nullable: true })
+  displayAmount?: string;
+
+  @Field({ nullable: true })
+  fullAmount?: string;
+}
+
+@ObjectType()
+export class TapTradeOffer {
+  @Field()
+  id: string;
+
+  @Field(() => TapTradeOfferNode)
+  node: TapTradeOfferNode;
+
+  @Field(() => TapTradeOfferAmount)
+  rate: TapTradeOfferAmount;
+
+  @Field(() => TapTradeOfferAmount)
+  available: TapTradeOfferAmount;
+}
+
+@ObjectType()
+export class TapTradeOfferList {
+  @Field(() => [TapTradeOffer])
+  list: TapTradeOffer[];
+
+  @Field()
+  totalCount: number;
+}
