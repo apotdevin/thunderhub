@@ -1,5 +1,10 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
+import { FetchService } from '../../fetch/fetch.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import {
@@ -12,11 +17,13 @@ import {
   TapMintResponse,
   TapFundChannelResponse,
   TapSyncResult,
+  TapTradeOfferList,
   TapUniverseAssetList,
   TapTransferList,
   TapUniverseInfo,
   TapUniverseStats,
 } from './tapd.types';
+import { getOffersQuery } from './tapd.gql';
 
 const ASSET_TYPE_MAP: Record<string, number> = {
   NORMAL: 0,
@@ -58,7 +65,12 @@ const serializeAsset = (asset: any) => ({
 
 @Resolver()
 export class TapdResolver {
-  constructor(private tapdNodeService: TapdNodeService) {}
+  constructor(
+    private tapdNodeService: TapdNodeService,
+    private fetchService: FetchService,
+    private configService: ConfigService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+  ) {}
 
   // ── Assets ──
 
@@ -394,6 +406,69 @@ export class TapdResolver {
     return {
       txid: result.txid,
       outputIndex: result.outputIndex,
+    };
+  }
+
+  // ── Trading Offers ──
+
+  @Query(() => TapTradeOfferList)
+  async getTapOffers(
+    @CurrentUser() _user: UserId,
+    @Args('assetId') assetId: string,
+    @Args('transactionType') transactionType: string,
+    @Args('sortBy', { nullable: true }) sortBy?: string,
+    @Args('sortDir', { nullable: true }) sortDir?: string,
+    @Args('limit', { type: () => Int, nullable: true }) limit?: number,
+    @Args('offset', { type: () => Int, nullable: true }) offset?: number
+  ) {
+    const tradeUrl = this.configService.get<string>('urls.trade');
+    if (!tradeUrl) {
+      return { list: [], totalCount: 0 };
+    }
+
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
+      public: {
+        offers: {
+          list: any[];
+          total_count: number;
+        };
+      };
+    }>(tradeUrl, getOffersQuery, {
+      input: {
+        asset_id: assetId,
+        transaction_type: transactionType,
+        ...(sortBy ? { sort_by: sortBy } : {}),
+        ...(sortDir ? { sort_dir: sortDir } : {}),
+        ...(limit || offset
+          ? { page: { limit: limit || 20, offset: offset || 0 } }
+          : {}),
+      },
+    });
+
+    if (error || !data?.public?.offers) {
+      if (error) this.logger.error('Error fetching trade offers', { error });
+      return { list: [], totalCount: 0 };
+    }
+
+    const offers = data.public.offers;
+
+    return {
+      list: offers.list.map((o: any) => ({
+        id: o.id,
+        node: {
+          alias: o.node?.alias,
+          pubkey: o.node?.pubkey,
+        },
+        rate: {
+          displayAmount: o.rate?.display_amount,
+          fullAmount: o.rate?.full_amount,
+        },
+        available: {
+          displayAmount: o.available?.display_amount,
+          fullAmount: o.available?.full_amount,
+        },
+      })),
+      totalCount: offers.total_count,
     };
   }
 }
