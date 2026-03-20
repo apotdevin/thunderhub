@@ -1,0 +1,21 @@
+FROM node:24.13.1-alpine
+
+WORKDIR /app
+
+RUN apk add --update --no-cache \
+  libc6-compat \
+  python3 \
+  make \
+  g++
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build:nest && npm run build:client
+
+ENV NODE_ENV=production
+ENV PORT=3000
+EXPOSE 3000
+
+CMD [ "npm", "run", "start:prod" ]

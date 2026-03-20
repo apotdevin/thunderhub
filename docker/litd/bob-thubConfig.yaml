@@ -1,0 +1,7 @@
+masterPassword: thunderhub-$2b$12$4qMa3dtF.kS7RAYcWZrzyO/PwWhj3HVF1v/WHSS.7O9uTT2xzOmHm
+accounts:
+  - name: Bob (litd)
+    type: litd
+    serverUrl: litd-bob:8443
+    macaroonPath: /data/litd/regtest/super.macaroon
+    certificatePath: /data/litd/tls.cert
