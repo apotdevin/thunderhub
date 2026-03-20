@@ -37,8 +37,13 @@ export class AccountsService implements OnModuleInit {
         );
       }
 
+      const ssoNodeType = this.configService.get<NodeType>(
+        'sso.nodeType',
+        NodeType.LND
+      );
+
       const sso = {
-        type: NodeType.LND,
+        type: ssoNodeType,
         index: 999,
         name: 'SSO Account',
         id: '',
@@ -51,7 +56,7 @@ export class AccountsService implements OnModuleInit {
         twofaSecret: '',
       };
 
-      const provider = this.providerRegistry.getProvider(NodeType.LND);
+      const provider = this.providerRegistry.getProvider(ssoNodeType);
       const connection = provider.connect({
         socket: ssoUrl,
         cert: ssoCert || undefined,

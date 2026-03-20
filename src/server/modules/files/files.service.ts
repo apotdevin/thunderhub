@@ -177,6 +177,7 @@ export class FilesService {
     certificate,
     certificatePath,
     lndDir,
+    litDir,
   }: AccountType): string | null {
     if (certificate) {
       return certificate;
@@ -190,11 +191,15 @@ export class FilesService {
       return this.readFile(path.join(lndDir, 'tls.cert'));
     }
 
+    if (litDir) {
+      return this.readFile(path.join(litDir, 'tls.cert'));
+    }
+
     return null;
   }
 
   getMacaroon(
-    { macaroon, macaroonPath, network, lndDir, encrypted }: AccountType,
+    { macaroon, macaroonPath, network, lndDir, litDir, encrypted }: AccountType,
     defaultNetwork: BitcoinNetwork
   ): string | null {
     if (macaroon) {
@@ -205,20 +210,26 @@ export class FilesService {
       return this.readFile(macaroonPath, encrypted ? 'utf-8' : 'hex');
     }
 
-    if (!lndDir) {
-      return null;
+    if (lndDir) {
+      return this.readFile(
+        path.join(
+          lndDir,
+          'data',
+          'chain',
+          'bitcoin',
+          network || defaultNetwork,
+          'admin.macaroon'
+        )
+      );
     }
 
-    return this.readFile(
-      path.join(
-        lndDir,
-        'data',
-        'chain',
-        'bitcoin',
-        network || defaultNetwork,
-        'admin.macaroon'
-      )
-    );
+    if (litDir) {
+      return this.readFile(
+        path.join(litDir, network || defaultNetwork, 'lit.macaroon')
+      );
+    }
+
+    return null;
   }
 
   getAccounts(filePath: string): ParsedAccount[] {
@@ -251,6 +262,7 @@ export class FilesService {
       serverUrl,
       network,
       lndDir,
+      litDir,
       macaroonPath,
       macaroon: macaroonValue,
       password,
@@ -261,13 +273,20 @@ export class FilesService {
 
     const nodeType = (accountType as NodeType) || NodeType.LND;
     const isLnd = nodeType === NodeType.LND;
+    const isLitd = nodeType === NodeType.LITD;
+    const needsMacaroon = isLnd || isLitd;
 
     const missingFields: string[] = [];
     if (!name) missingFields.push('name');
     if (!serverUrl) missingFields.push('server url');
 
-    // Only require macaroon for LND accounts
-    if (isLnd && !lndDir && !macaroonPath && !macaroonValue) {
+    if (
+      needsMacaroon &&
+      !lndDir &&
+      !litDir &&
+      !macaroonPath &&
+      !macaroonValue
+    ) {
       missingFields.push('macaroon');
     }
 
@@ -294,8 +313,9 @@ export class FilesService {
     let cert: string | null = null;
     let macaroon: string | null = null;
 
-    if (isLnd) {
+    if (needsMacaroon) {
       cert = this.getCertificate(resolvedAccount);
+
       if (!cert) {
         this.logger.warn(
           `No certificate for account ${name}. Make sure you don't need it to connect.`
@@ -303,10 +323,9 @@ export class FilesService {
       }
 
       macaroon = this.getMacaroon(resolvedAccount, defaultNetwork);
+
       if (!macaroon) {
-        this.logger.error(
-          `Account ${name} has neither lnd directory, macaroon nor macaroon path specified.`
-        );
+        this.logger.error(`Account ${name} has no macaroon configured.`);
         return null;
       }
     }

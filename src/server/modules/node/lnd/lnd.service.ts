@@ -83,6 +83,10 @@ export class LndService implements LightningProvider {
     return lnd;
   }
 
+  getSubscriptionConnection(connection: AuthenticatedLnd): AuthenticatedLnd {
+    return connection;
+  }
+
   async getWalletInfo(lnd: AuthenticatedLnd) {
     return to(getWalletInfo({ lnd }));
   }
