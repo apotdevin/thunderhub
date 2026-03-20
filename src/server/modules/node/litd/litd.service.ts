@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { authenticatedLndGrpc } from 'lightning';
+import { TapClient, TapdRpcApis } from '@lightningpolar/tapd-api';
 import EventEmitter from 'events';
 import {
   Capability,
@@ -21,28 +22,15 @@ import {
   DiffieHellmanComputeSecretOptions,
 } from '../lightning.types';
 import { LndService } from '../lnd/lnd.service';
+import { TaprootAssetsProvider } from '../tapd/taproot-assets.types';
 import { LitdConnection } from './litd.types';
 
 @Injectable()
-export class LitdService implements LightningProvider {
+export class LitdService implements LightningProvider, TaprootAssetsProvider {
   constructor(private readonly lndService: LndService) {}
 
   getCapabilities(): Set<Capability> {
-    return new Set([
-      Capability.WALLET_INFO,
-      Capability.CHANNELS,
-      Capability.CHAIN,
-      Capability.INVOICES,
-      Capability.PAYMENTS,
-      Capability.PEERS,
-      Capability.FORWARDS,
-      Capability.BACKUPS,
-      Capability.MACAROONS,
-      Capability.SIGN_MESSAGE,
-      Capability.NETWORK_INFO,
-      Capability.ROUTING_FEES,
-      Capability.DIFFIE_HELLMAN,
-    ]);
+    return new Set(Object.values(Capability));
   }
 
   connect(config: {
@@ -57,7 +45,17 @@ export class LitdService implements LightningProvider {
       macaroon: config.macaroon,
     });
 
-    return { lnd, mode: 'grpc' };
+    const tapd = TapClient.create({
+      socket: config.socket,
+      macaroon: config.macaroon || '',
+      cert: config.cert || '',
+    });
+
+    return { lnd, tapd, mode: 'grpc' };
+  }
+
+  getTapd(connection: LitdConnection): TapdRpcApis {
+    return connection.tapd;
   }
 
   getSubscriptionConnection(connection: LitdConnection) {
