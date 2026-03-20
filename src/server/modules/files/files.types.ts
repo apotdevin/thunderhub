@@ -13,6 +13,7 @@ export type AccountType = {
   name?: string;
   serverUrl?: string;
   lndDir?: string;
+  litDir?: string;
   network?: BitcoinNetwork;
   macaroonPath?: string;
   certificatePath?: string;
@@ -29,6 +30,7 @@ export type UnresolvedAccountType = {
   name?: string;
   serverUrl?: string;
   lndDir?: string;
+  litDir?: string;
   network?: BitcoinNetwork;
   macaroonPath?: string;
   certificatePath?: string;

@@ -6,6 +6,6 @@ import { NodeService } from './node.service';
 @Module({
   imports: [ProviderRegistryModule, AccountsModule],
   providers: [NodeService],
-  exports: [NodeService],
+  exports: [NodeService, ProviderRegistryModule],
 })
 export class NodeModule {}
