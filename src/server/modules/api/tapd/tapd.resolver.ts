@@ -22,6 +22,7 @@ import {
   TapAssetType,
   TapBalanceGroupBy,
   TapBalances,
+  TapAssetInvoiceResponse,
   TapFederationServerList,
   TapFinalizeBatchResponse,
   TapMintResponse,
@@ -514,6 +515,46 @@ export class TapdResolver {
       (u: SyncedUniverse) => bufToHex(u.newAssetRoot?.id?.assetId) || 'unknown'
     );
     return { syncedUniverses };
+  }
+
+  // ── Asset Invoices ──
+
+  @Mutation(() => TapAssetInvoiceResponse)
+  async addTapAssetInvoice(
+    @CurrentUser() { id }: UserId,
+    @Args('assetAmount', { type: () => Int }) assetAmount: number,
+    @Args('assetId', { nullable: true }) assetId?: string,
+    @Args('groupKey', { nullable: true }) groupKey?: string,
+    @Args('peerPubkey', { nullable: true }) peerPubkey?: string,
+    @Args('memo', { nullable: true }) memo?: string,
+    @Args('expiry', { type: () => Int, nullable: true }) expiry?: number
+  ) {
+    const result = await this.tapdNodeService.addAssetInvoice({
+      id,
+      assetId: assetId || undefined,
+      groupKey: groupKey || undefined,
+      assetAmount,
+      peerPubkey: peerPubkey || undefined,
+      memo: memo || undefined,
+      expiry: expiry || undefined,
+    });
+
+    const invoiceResult = result.invoiceResult;
+    const quote = result.acceptedBuyQuote;
+
+    return {
+      paymentRequest: invoiceResult?.paymentRequest || '',
+      rHash: invoiceResult?.rHash
+        ? Buffer.from(invoiceResult.rHash).toString('hex')
+        : '',
+      addIndex: invoiceResult?.addIndex || '0',
+      paymentAddr: invoiceResult?.paymentAddr
+        ? Buffer.from(invoiceResult.paymentAddr).toString('hex')
+        : '',
+      assetId: bufToHex(quote?.assetSpec?.id),
+      groupKey: bufToHex(quote?.assetSpec?.groupPubKey),
+      assetAmount: quote?.assetMaxAmount || String(assetAmount),
+    };
   }
 
   // ── Asset Channels ──

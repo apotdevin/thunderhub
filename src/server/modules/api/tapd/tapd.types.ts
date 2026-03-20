@@ -271,6 +271,30 @@ export class TapSyncResult {
 }
 
 @ObjectType()
+export class TapAssetInvoiceResponse {
+  @Field()
+  paymentRequest: string;
+
+  @Field()
+  rHash: string;
+
+  @Field()
+  addIndex: string;
+
+  @Field()
+  paymentAddr: string;
+
+  @Field({ nullable: true })
+  assetId?: string;
+
+  @Field({ nullable: true })
+  groupKey?: string;
+
+  @Field()
+  assetAmount: string;
+}
+
+@ObjectType()
 export class TapFundChannelResponse {
   @Field()
   txid: string;
