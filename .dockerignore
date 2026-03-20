@@ -12,6 +12,8 @@ CHANGELOG.md
 coverage
 test
 src/client/dist
+docker/litd/data
+.claude
 
 # all env files
 .env
