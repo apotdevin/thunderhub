@@ -16,7 +16,7 @@ import { NodeService } from '../node/node.service';
 import { UserConfigService } from '../api/userConfig/userConfig.service';
 import { getNetwork } from 'src/server/utils/network';
 import { AmbossService } from '../api/amboss/amboss.service';
-import { NodeType } from '../node/lightning.types';
+import { ProviderRegistryService } from '../node/provider-registry.service';
 
 const restartSubscriptionTimeMs = 1000 * 30;
 
@@ -35,6 +35,7 @@ export class SubService implements OnApplicationBootstrap {
   constructor(
     private ambossService: AmbossService,
     private accountsService: AccountsService,
+    private providerRegistry: ProviderRegistryService,
     private sseService: SseService,
     private configService: ConfigService,
     private nodeService: NodeService,
@@ -66,11 +67,21 @@ export class SubService implements OnApplicationBootstrap {
               for (const key in accounts) {
                 if (accounts.hasOwnProperty(key)) {
                   const account = accounts[key];
-                  // Subscriptions currently only support LND nodes
-                  if (!account.encrypted && account.type === NodeType.LND) {
+
+                  if (
+                    !account.encrypted &&
+                    this.providerRegistry.hasProvider(account.type)
+                  ) {
+                    const provider = this.providerRegistry.getProvider(
+                      account.type
+                    );
+                    const connection = provider.getSubscriptionConnection(
+                      account.connection
+                    );
+
                     validAccounts.push({
                       id: account.hash,
-                      connection: account.connection,
+                      connection,
                     });
                   }
                 }
