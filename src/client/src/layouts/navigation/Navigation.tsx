@@ -13,6 +13,7 @@ import {
   Grid,
   Globe,
   Gem,
+  ArrowLeftRight,
   LucideProps,
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
@@ -41,6 +42,7 @@ const SETTINGS = '/settings';
 const SWAP = '/swap';
 const AMBOSS = '/amboss';
 const ASSETS = '/assets';
+const TRADING = '/trading';
 
 interface NavItem {
   title: string;
@@ -61,6 +63,7 @@ const mainNav: NavItem[] = [
 
 const secondaryNav: NavItem[] = [
   { title: 'Assets', link: ASSETS, icon: Gem },
+  { title: 'Trading', link: TRADING, icon: ArrowLeftRight },
   { title: 'Amboss', link: AMBOSS, icon: Globe },
   { title: 'Swap', link: SWAP, icon: Shuffle },
   { title: 'Stats', link: STATS, icon: BarChart2 },

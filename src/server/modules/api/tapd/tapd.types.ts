@@ -278,3 +278,77 @@ export class TapFundChannelResponse {
   @Field(() => Int)
   outputIndex: number;
 }
+
+// ─── Trading Offers ─────────────────────────────────────────────
+
+@ObjectType()
+export class TapTradeOfferNode {
+  @Field({ nullable: true })
+  alias?: string;
+
+  @Field({ nullable: true })
+  pubkey?: string;
+}
+
+@ObjectType()
+export class TapTradeOfferAmount {
+  @Field({ nullable: true })
+  displayAmount?: string;
+
+  @Field({ nullable: true })
+  fullAmount?: string;
+}
+
+@ObjectType()
+export class TapTradeOffer {
+  @Field()
+  id: string;
+
+  @Field(() => TapTradeOfferNode)
+  node: TapTradeOfferNode;
+
+  @Field(() => TapTradeOfferAmount)
+  rate: TapTradeOfferAmount;
+
+  @Field(() => TapTradeOfferAmount)
+  available: TapTradeOfferAmount;
+}
+
+@ObjectType()
+export class TapTradeOfferList {
+  @Field(() => [TapTradeOffer])
+  list: TapTradeOffer[];
+
+  @Field()
+  totalCount: number;
+}
+
+@ObjectType()
+export class TapSupportedAsset {
+  @Field()
+  id: string;
+
+  @Field({ nullable: true })
+  symbol?: string;
+
+  @Field({ nullable: true })
+  description?: string;
+
+  @Field({ nullable: true })
+  precision?: number;
+
+  @Field({ nullable: true })
+  assetId?: string;
+
+  @Field({ nullable: true })
+  groupKey?: string;
+}
+
+@ObjectType()
+export class TapSupportedAssetList {
+  @Field(() => [TapSupportedAsset])
+  list: TapSupportedAsset[];
+
+  @Field()
+  totalCount: number;
+}

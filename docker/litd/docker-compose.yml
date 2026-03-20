@@ -199,6 +199,7 @@ services:
       - ACCOUNT_CONFIG_PATH=/config/thubConfig.yaml
       - LOG_LEVEL=debug
       - COOKIE_PATH=/tmp/cookie-alice
+      - TRADE_API_URL=${TRADE_API_URL:-}
     ports:
       - "3000:3000"
     volumes:
@@ -222,6 +223,7 @@ services:
       - ACCOUNT_CONFIG_PATH=/config/thubConfig.yaml
       - LOG_LEVEL=debug
       - COOKIE_PATH=/tmp/cookie-bob
+      - TRADE_API_URL=${TRADE_API_URL:-}
     ports:
       - "3001:3000"
     volumes:
