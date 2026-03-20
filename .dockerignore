@@ -12,6 +12,9 @@ CHANGELOG.md
 coverage
 test
 src/client/dist
+src/client/.next
+docker/litd/data
+.claude
 
 # all env files
 .env
