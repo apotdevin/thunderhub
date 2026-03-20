@@ -389,6 +389,7 @@ type MessageType {
 
 type Mutation {
   addPeer(isTemporary: Boolean, publicKey: String, socket: String, url: String): Boolean!
+  addTapAssetInvoice(assetAmount: Int!, assetId: String, expiry: Int, groupKey: String, memo: String, peerPubkey: String): TapAssetInvoiceResponse!
   addTapFederationServer(host: String!): Boolean!
   burnTapAsset(amount: Int!, assetId: String!): Boolean!
   cancelTapBatch: Boolean!
@@ -764,6 +765,16 @@ type TapAssetGenesis {
   metaHash: String!
   name: String!
   outputIndex: Float!
+}
+
+type TapAssetInvoiceResponse {
+  addIndex: String!
+  assetAmount: String!
+  assetId: String
+  groupKey: String
+  paymentAddr: String!
+  paymentRequest: String!
+  rHash: String!
 }
 
 type TapAssetList {

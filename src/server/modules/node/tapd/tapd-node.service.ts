@@ -27,6 +27,7 @@ import {
   UniverseAssetStats,
   AddFederationServerResponse,
 } from '@lightningpolar/tapd-api';
+import { AddInvoiceResponse as TapAddInvoiceResponse } from '@lightningpolar/tapd-api/dist/types/tapchannelrpc/AddInvoiceResponse';
 import { AccountsService } from '../../accounts/accounts.service';
 import { EnrichedAccount } from '../../accounts/accounts.types';
 import { ProviderRegistryService } from '../provider-registry.service';
@@ -323,6 +324,33 @@ export class TapdNodeService {
     const tapd = this.getTapd(opts.id);
     return tapd.universe.syncUniverse({
       universeHost: opts.host,
+    });
+  }
+
+  // ── Asset Invoices ──
+
+  async addAssetInvoice(opts: {
+    id: string;
+    assetId?: string;
+    groupKey?: string;
+    assetAmount: number;
+    peerPubkey?: string;
+    memo?: string;
+    expiry?: number;
+  }): Promise<TapAddInvoiceResponse> {
+    const tapd = this.getTapd(opts.id);
+    return tapd.channels.addInvoice({
+      ...(opts.groupKey
+        ? { groupKey: Buffer.from(opts.groupKey, 'hex') }
+        : { assetId: Buffer.from(opts.assetId || '', 'hex') }),
+      assetAmount: String(opts.assetAmount),
+      ...(opts.peerPubkey
+        ? { peerPubkey: Buffer.from(opts.peerPubkey, 'hex') }
+        : {}),
+      invoiceRequest: {
+        ...(opts.memo ? { memo: opts.memo } : {}),
+        ...(opts.expiry ? { expiry: String(opts.expiry) } : {}),
+      },
     });
   }
 
