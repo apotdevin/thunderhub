@@ -411,7 +411,7 @@ type Mutation {
   loginAmboss: Boolean!
   logout: Boolean!
   mintTapAsset(amount: Int!, assetType: TapAssetType! = NORMAL, groupKey: String, name: String!): TapMintResponse!
-  newTapAddress(amt: Int!, assetId: String, groupKey: String): TapAddress!
+  newTapAddress(amt: Int, assetId: String, groupKey: String): TapAddress!
   openChannel(input: OpenChannelParams!): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
   purchaseLiquidity(amount_cents: String!): Boolean!

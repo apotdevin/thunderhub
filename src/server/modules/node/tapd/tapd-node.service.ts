@@ -32,6 +32,7 @@ import { EnrichedAccount } from '../../accounts/accounts.types';
 import { ProviderRegistryService } from '../provider-registry.service';
 import { Capability } from '../lightning.types';
 import { isTaprootAssetsProvider } from './taproot-assets.types';
+import { bufToHex } from 'src/server/utils/string';
 
 @Injectable()
 export class TapdNodeService {
@@ -97,12 +98,12 @@ export class TapdNodeService {
     if (groupBy === 'assetId') {
       return tapd.taprootAssets.listBalances({
         assetId: true,
-        ...(filter ? { assetFilter: Buffer.from(filter, 'hex') } : {}),
+        ...(filter ? { assetFilter: bufToHex(filter) } : {}),
       });
     }
     return tapd.taprootAssets.listBalances({
       groupKey: true,
-      ...(filter ? { groupKeyFilter: Buffer.from(filter, 'hex') } : {}),
+      ...(filter ? { groupKeyFilter: bufToHex(filter) } : {}),
     });
   }
 

@@ -17,33 +17,25 @@ import {
   TapUniverseInfo,
   TapUniverseStats,
 } from './tapd.types';
+import { bufToHex } from 'src/server/utils/string';
+import {
+  Asset,
+  AssetBalance,
+  AssetGroupBalance,
+  AssetTransfer,
+  TransferInput,
+  TransferOutput,
+  SyncedUniverse,
+} from '@lightningpolar/tapd-api';
 
-const ASSET_TYPE_MAP: Record<string, number> = {
-  NORMAL: 0,
-  COLLECTIBLE: 1,
-};
-
-const bufToHex = (val: any): string | undefined => {
-  if (!val) return undefined;
-  if (Buffer.isBuffer(val)) return val.toString('hex');
-  if (val instanceof Uint8Array) return Buffer.from(val).toString('hex');
-  if (typeof val === 'string') return val;
-  if (val?.type === 'Buffer' && Array.isArray(val?.data)) {
-    return Buffer.from(val.data).toString('hex');
-  }
-  return undefined;
-};
-
-const serializeAsset = (asset: any) => ({
+const serializeAsset = (asset: Asset) => ({
   assetGenesis: asset.assetGenesis
     ? {
         genesisPoint: asset.assetGenesis.genesisPoint,
         name: asset.assetGenesis.name,
         metaHash: bufToHex(asset.assetGenesis.metaHash),
         assetId: bufToHex(asset.assetGenesis.assetId),
-        assetType:
-          ASSET_TYPE_MAP[asset.assetGenesis.assetType] ??
-          asset.assetGenesis.assetType,
+        assetType: asset.assetGenesis.assetType,
         outputIndex: asset.assetGenesis.outputIndex,
       }
     : null,
@@ -78,52 +70,35 @@ export class TapdResolver {
   ) {
     const mode =
       groupBy === 'assetId' ? ('assetId' as const) : ('groupKey' as const);
+
+    if (mode === 'assetId') {
+      const result = await this.tapdNodeService.listBalances({
+        id,
+        groupBy: mode,
+        filter,
+      });
+      const balances = Object.entries(result.assetBalances || {}).map(
+        ([key, value]: [string, AssetBalance]) => ({
+          assetId: key,
+          groupKey: bufToHex(value.groupKey),
+          name: value?.assetGenesis.name,
+          balance: value.balance.toString(),
+        })
+      );
+      return { balances };
+    }
+
     const result = await this.tapdNodeService.listBalances({
       id,
       groupBy: mode,
       filter,
     });
 
-    if (mode === 'assetId') {
-      const balances = Object.entries(result.assetBalances || {}).map(
-        ([key, value]: [string, any]) => ({
-          assetId: key,
-          groupKey: bufToHex(value?.groupKey),
-          name: value?.assetGenesis?.name,
-          balance: value?.balance?.toString(),
-        })
-      );
-      return { balances };
-    }
-
-    // For groupKey mode, also fetch by assetId to get names and asset IDs
-    const assetResult = await this.tapdNodeService.listBalances({
-      id,
-      groupBy: 'assetId',
-    });
-    const assetMap = new Map<string, { assetId: string; name: string }>();
-    for (const [assetId, value] of Object.entries(
-      assetResult.assetBalances || {}
-    )) {
-      const gk = bufToHex((value as any)?.groupKey);
-      if (gk) {
-        assetMap.set(gk, {
-          assetId,
-          name: (value as any)?.assetGenesis?.name || '',
-        });
-      }
-    }
-
     const balances = Object.entries(result.assetGroupBalances || {}).map(
-      ([key, value]: [string, any]) => {
-        const assetInfo = assetMap.get(key);
-        return {
-          assetId: assetInfo?.assetId,
-          groupKey: key,
-          name: assetInfo?.name,
-          balance: value?.balance?.toString(),
-        };
-      }
+      ([key, value]: [string, AssetGroupBalance]) => ({
+        groupKey: key,
+        balance: value.balance.toString(),
+      })
     );
 
     return { balances };
@@ -132,18 +107,18 @@ export class TapdResolver {
   @Query(() => TapTransferList)
   async getTapTransfers(@CurrentUser() { id }: UserId) {
     const result = await this.tapdNodeService.listTransfers({ id });
-    const transfers = (result.transfers || []).map((t: any) => ({
+    const transfers = (result.transfers || []).map((t: AssetTransfer) => ({
       anchorTxHash: bufToHex(t.anchorTxHash) || t.anchorTxHash,
       anchorTxHeightHint: t.anchorTxHeightHint,
       anchorTxChainFees: t.anchorTxChainFees?.toString(),
       transferTimestamp: t.transferTimestamp?.toString(),
       label: t.label || null,
-      inputs: (t.inputs || []).map((i: any) => ({
+      inputs: (t.inputs || []).map((i: TransferInput) => ({
         anchorPoint: i.anchorPoint,
         assetId: bufToHex(i.assetId),
         amount: i.amount?.toString(),
       })),
-      outputs: (t.outputs || []).map((o: any) => ({
+      outputs: (t.outputs || []).map((o: TransferOutput) => ({
         assetId: bufToHex(o.assetId),
         amount: o.amount?.toString(),
         scriptKeyIsLocal: o.scriptKeyIsLocal,
@@ -160,7 +135,7 @@ export class TapdResolver {
     @CurrentUser() { id }: UserId,
     @Args('assetId', { nullable: true }) assetId?: string,
     @Args('groupKey', { nullable: true }) groupKey?: string,
-    @Args('amt', { type: () => Int }) amt?: number
+    @Args('amt', { type: () => Int, nullable: true }) amt?: number
   ) {
     const result = await this.tapdNodeService.newAddr({
       id,
@@ -285,27 +260,33 @@ export class TapdResolver {
     const xCoordToFullKey = new Map<string, string>();
     const assetIdToGroupKey = new Map<string, string>();
     for (const asset of assetsResult.assets || []) {
-      const fullKey = bufToHex((asset as any).assetGroup?.tweakedGroupKey);
+      const fullKey = bufToHex(asset.assetGroup?.tweakedGroupKey);
       if (fullKey && fullKey.length === 66) {
         // x-coordinate is the key without the 02/03 prefix
         xCoordToFullKey.set(fullKey.slice(2), fullKey);
       }
-      const aid = bufToHex((asset as any).assetGenesis?.assetId);
+      const aid = bufToHex(asset.assetGenesis?.assetId);
       if (aid && fullKey) {
         assetIdToGroupKey.set(aid, fullKey);
       }
     }
 
-    const assets: any[] = [];
+    const assets: {
+      name: string | null;
+      assetId: string | null;
+      groupKey: string | null;
+      proofType: string | null;
+      totalSupply: string;
+    }[] = [];
     const seen = new Set<string>();
 
-    for (const [key, root] of Object.entries(roots) as [string, any][]) {
-      const uid = root.id || {};
-      const rawGroupKey = bufToHex(uid.groupKey);
+    for (const [key, root] of Object.entries(roots)) {
+      const uid = root.id;
+      const rawGroupKey = bufToHex(uid?.groupKey);
       const keyHex = key.replace(/^(issuance|transfer)-/, '');
 
       const totalSupply = Object.values(root.amountsByAssetId || {}).reduce(
-        (sum: number, amt: any) => sum + Number(amt || 0),
+        (sum: number, amt: string) => sum + Number(amt || 0),
         0
       );
 
@@ -379,7 +360,7 @@ export class TapdResolver {
   ) {
     const result = await this.tapdNodeService.syncUniverse({ id, host });
     const syncedUniverses = (result.syncedUniverses || []).map(
-      (u: any) => u.id?.assetIdStr || bufToHex(u.id?.assetId) || 'unknown'
+      (u: SyncedUniverse) => bufToHex(u.newAssetRoot.id.assetId)
     );
     return { syncedUniverses };
   }

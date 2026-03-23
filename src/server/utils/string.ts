@@ -26,3 +26,14 @@ export const stripAnsi = string => {
 
   return string.replace(ansiRegex(), '');
 };
+
+export const bufToHex = (val: any): string | undefined => {
+  if (!val) return undefined;
+  if (Buffer.isBuffer(val)) return val.toString('hex');
+  if (val instanceof Uint8Array) return Buffer.from(val).toString('hex');
+  if (typeof val === 'string') return val;
+  if (val?.type === 'Buffer' && Array.isArray(val?.data)) {
+    return Buffer.from(val.data).toString('hex');
+  }
+  return undefined;
+};
