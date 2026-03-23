@@ -1,4 +1,4 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 
 // ─── Enums ──────────────────────────────────────────────────────
 
@@ -8,6 +8,13 @@ export enum TapAssetType {
 }
 
 registerEnumType(TapAssetType, { name: 'TapAssetType' });
+
+export enum TapBalanceGroupBy {
+  GROUP_KEY = 'groupKey',
+  ASSET_ID = 'assetId',
+}
+
+registerEnumType(TapBalanceGroupBy, { name: 'TapBalanceGroupBy' });
 
 // ─── Asset Genesis ──────────────────────────────────────────────
 
@@ -25,10 +32,10 @@ export class TapAssetGenesis {
   @Field()
   assetId: string;
 
-  @Field()
-  assetType: number;
+  @Field(() => TapAssetType)
+  assetType: TapAssetType;
 
-  @Field()
+  @Field(() => Int)
   outputIndex: number;
 }
 
@@ -42,13 +49,13 @@ export class TapAsset {
   @Field()
   amount: string;
 
-  @Field()
+  @Field(() => Int)
   lockTime: number;
 
-  @Field()
+  @Field(() => Int)
   relativeLockTime: number;
 
-  @Field()
+  @Field(() => Int)
   scriptVersion: number;
 
   @Field()
@@ -153,7 +160,7 @@ export class TapTransfer {
   @Field()
   anchorTxHash: string;
 
-  @Field()
+  @Field(() => Int)
   anchorTxHeightHint: number;
 
   @Field()
@@ -202,16 +209,16 @@ export class TapUniverseInfo {
 
 @ObjectType()
 export class TapUniverseStats {
-  @Field()
+  @Field(() => Int)
   numTotalAssets: number;
 
-  @Field()
+  @Field(() => Int)
   numTotalSyncs: number;
 
-  @Field()
+  @Field(() => Int)
   numTotalProofs: number;
 
-  @Field()
+  @Field(() => Int)
   numTotalGroups: number;
 }
 
@@ -244,7 +251,7 @@ export class TapFederationServer {
   @Field()
   host: string;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   id?: number;
 }
 
@@ -268,6 +275,6 @@ export class TapFundChannelResponse {
   @Field()
   txid: string;
 
-  @Field()
+  @Field(() => Int)
   outputIndex: number;
 }

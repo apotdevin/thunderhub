@@ -683,7 +683,7 @@ type Query {
   getPendingChannels: [PendingChannel!]!
   getServerAccounts: [ServerAccount!]!
   getTapAssets: TapAssetList!
-  getTapBalances(filter: String, groupBy: String = "groupKey"): TapBalances!
+  getTapBalances(filter: String, groupBy: TapBalanceGroupBy = GROUP_KEY): TapBalances!
   getTapFederationServers: TapFederationServerList!
   getTapTransfers: TapTransferList!
   getTapUniverseAssets: TapUniverseAssetList!
@@ -744,10 +744,10 @@ type TapAsset {
   assetGenesis: TapAssetGenesis
   isBurn: Boolean!
   isSpent: Boolean!
-  lockTime: Float!
-  relativeLockTime: Float!
+  lockTime: Int!
+  relativeLockTime: Int!
   scriptKey: String!
-  scriptVersion: Float!
+  scriptVersion: Int!
 }
 
 type TapAssetBalanceEntry {
@@ -759,11 +759,11 @@ type TapAssetBalanceEntry {
 
 type TapAssetGenesis {
   assetId: String!
-  assetType: Float!
+  assetType: TapAssetType!
   genesisPoint: String!
   metaHash: String!
   name: String!
-  outputIndex: Float!
+  outputIndex: Int!
 }
 
 type TapAssetList {
@@ -775,13 +775,18 @@ enum TapAssetType {
   NORMAL
 }
 
+enum TapBalanceGroupBy {
+  ASSET_ID
+  GROUP_KEY
+}
+
 type TapBalances {
   balances: [TapAssetBalanceEntry!]!
 }
 
 type TapFederationServer {
   host: String!
-  id: Float
+  id: Int
 }
 
 type TapFederationServerList {
@@ -794,7 +799,7 @@ type TapFinalizeBatchResponse {
 }
 
 type TapFundChannelResponse {
-  outputIndex: Float!
+  outputIndex: Int!
   txid: String!
 }
 
@@ -809,7 +814,7 @@ type TapSyncResult {
 type TapTransfer {
   anchorTxChainFees: String!
   anchorTxHash: String!
-  anchorTxHeightHint: Float!
+  anchorTxHeightHint: Int!
   inputs: [TapTransferInput!]!
   label: String
   outputs: [TapTransferOutput!]!
@@ -850,10 +855,10 @@ type TapUniverseInfo {
 }
 
 type TapUniverseStats {
-  numTotalAssets: Float!
-  numTotalGroups: Float!
-  numTotalProofs: Float!
-  numTotalSyncs: Float!
+  numTotalAssets: Int!
+  numTotalGroups: Int!
+  numTotalProofs: Int!
+  numTotalSyncs: Int!
 }
 
 type TwofaResult {
