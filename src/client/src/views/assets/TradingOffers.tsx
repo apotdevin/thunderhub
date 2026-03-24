@@ -1,11 +1,14 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Loader2, Info, ArrowUpDown } from 'lucide-react';
 import { useGetTapOffersQuery } from '../../graphql/queries/__generated__/getTapOffers.generated';
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
+import { useLoginAmbossMutation } from '../../graphql/mutations/__generated__/loginAmboss.generated';
+import { useAmbossUser } from '../../hooks/UseAmbossUser';
 import { getErrorContent } from '../../utils/error';
 import { cn } from '../../lib/utils';
+import { Button } from '@/components/ui/button';
 
 type TransactionType = 'PURCHASE' | 'SALE';
 type SortBy = 'RATE' | 'AVAILABLE';
@@ -15,6 +18,21 @@ export const TradingOffers: FC = () => {
   const [txType, setTxType] = useState<TransactionType>('PURCHASE');
   const [sortBy, setSortBy] = useState<SortBy>('RATE');
   const [sortDir, setSortDir] = useState<'ASC' | 'DESC'>('ASC');
+  const [minAmountInput, setMinAmountInput] = useState('');
+  const [minAmount, setMinAmount] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMinAmount(minAmountInput), 300);
+    return () => clearTimeout(timer);
+  }, [minAmountInput]);
+
+  const { user: ambossUser, loading: ambossLoading } = useAmbossUser();
+
+  const [loginAmboss, { loading: loginLoading }] = useLoginAmbossMutation({
+    onCompleted: () => toast.success('Logged in to Amboss'),
+    onError: () => toast.error('Error logging in to Amboss'),
+    refetchQueries: ['GetAmbossUser', 'GetTapSupportedAssets', 'GetTapOffers'],
+  });
 
   const { data: supportedData, loading: assetsLoading } =
     useGetTapSupportedAssetsQuery({
@@ -52,6 +70,7 @@ export const TradingOffers: FC = () => {
       transactionType: txType,
       sortBy,
       sortDir,
+      ...(minAmount ? { minAmount } : {}),
     },
     skip: !selectedAsset,
     onError: err => toast.error(getErrorContent(err)),
@@ -81,6 +100,23 @@ export const TradingOffers: FC = () => {
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Amboss login prompt */}
+      {!ambossUser && !ambossLoading && allSupported.length === 0 && (
+        <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 px-4 py-3">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Info size={16} />
+            Log in with Amboss to access trading offers
+          </div>
+          <Button
+            size="sm"
+            onClick={() => loginAmboss()}
+            disabled={loginLoading}
+          >
+            {loginLoading ? 'Logging in...' : 'Login with Amboss'}
+          </Button>
+        </div>
+      )}
+
       {/* Buy / Sell toggle + Asset pills */}
       <div className="flex items-center gap-2 flex-wrap">
         <div className="flex rounded-md overflow-hidden border border-border">
@@ -146,7 +182,9 @@ export const TradingOffers: FC = () => {
         <div className="relative flex-1">
           <input
             type="text"
-            placeholder="P2P Trade amount"
+            placeholder="Min trade amount"
+            value={minAmountInput}
+            onChange={e => setMinAmountInput(e.target.value)}
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-20"
           />
           {selectedSymbol && (
@@ -226,8 +264,11 @@ export const TradingOffers: FC = () => {
                     {offer.rate.displayAmount || offer.rate.fullAmount}
                   </td>
                   <td className="py-3 px-3">
-                    {offer.available.displayAmount ||
-                      offer.available.fullAmount}
+                    {Number(
+                      offer.available.displayAmount ||
+                        offer.available.fullAmount ||
+                        0
+                    ).toLocaleString()}
                     {selectedSymbol && (
                       <span className="text-muted-foreground ml-1">
                         {selectedSymbol}

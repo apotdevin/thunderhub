@@ -116,7 +116,8 @@ export default (): ConfigType => {
     blockstream: 'https://blockstream.info',
     amboss: {
       space: 'https://api.amboss.space/graphql',
-      auth: 'https://account.amboss.tech/graphql',
+      auth:
+        process.env.AMBOSS_AUTH_URL || 'https://account.amboss.tech/graphql',
       magma: 'https://magma.amboss.tech/graphql',
     },
     fees: `${mempool}/api/v1/fees/recommended`,
@@ -124,7 +125,7 @@ export default (): ConfigType => {
     ticker: 'https://blockchain.info/ticker',
     github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
     boltz: 'https://api.boltz.exchange',
-    trade: process.env.TRADE_API_URL || '',
+    trade: process.env.TRADE_API_URL || 'https://rails.amboss.tech/graphql',
   };
 
   const npmVersion = process.env.npm_package_version || '0.0.0';

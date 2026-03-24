@@ -7,6 +7,7 @@ export type GetTapOffersQueryVariables = {
   transactionType: string;
   sortBy?: string | null;
   sortDir?: string | null;
+  minAmount?: string | null;
   limit?: number | null;
   offset?: number | null;
 };
@@ -44,6 +45,7 @@ export const GetTapOffersDocument = gql`
     $transactionType: String!
     $sortBy: String
     $sortDir: String
+    $minAmount: String
     $limit: Int
     $offset: Int
   ) {
@@ -52,6 +54,7 @@ export const GetTapOffersDocument = gql`
       transactionType: $transactionType
       sortBy: $sortBy
       sortDir: $sortDir
+      minAmount: $minAmount
       limit: $limit
       offset: $offset
     ) {

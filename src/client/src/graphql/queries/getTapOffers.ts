@@ -6,6 +6,7 @@ export const GET_TAP_OFFERS = gql`
     $transactionType: String!
     $sortBy: String
     $sortDir: String
+    $minAmount: String
     $limit: Int
     $offset: Int
   ) {
@@ -14,6 +15,7 @@ export const GET_TAP_OFFERS = gql`
       transactionType: $transactionType
       sortBy: $sortBy
       sortDir: $sortDir
+      minAmount: $minAmount
       limit: $limit
       offset: $offset
     ) {

@@ -39,19 +39,21 @@ export const getOffersQuery = gql`
 export const getSupportedAssetsQuery = gql`
   query GetSupportedAssets($input: SupportedAssetsInput) {
     public {
-      supported_assets(input: $input) {
-        list {
-          id
-          symbol
-          description
-          precision
-          type
-          taproot_asset_details {
-            asset_id
-            group_key
+      assets {
+        supported(input: $input) {
+          list {
+            id
+            symbol
+            description
+            precision
+            type
+            taproot_asset_details {
+              asset_id
+              group_key
+            }
           }
+          total_count
         }
-        total_count
       }
     }
   }

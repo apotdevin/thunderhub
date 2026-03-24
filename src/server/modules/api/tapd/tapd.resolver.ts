@@ -569,12 +569,13 @@ export class TapdResolver {
 
   @Query(() => TapTradeOfferList)
   async getTapOffers(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    @CurrentUser() { id }: UserId,
+    @CurrentUser() _user: UserId,
+    @Context() { ambossAuth }: ContextType,
     @Args('assetId') assetId: string,
     @Args('transactionType') transactionType: string,
     @Args('sortBy', { nullable: true }) sortBy?: string,
     @Args('sortDir', { nullable: true }) sortDir?: string,
+    @Args('minAmount', { nullable: true }) minAmount?: string,
     @Args('limit', { type: () => Int, nullable: true }) limit?: number,
     @Args('offset', { type: () => Int, nullable: true }) offset?: number
   ) {
@@ -583,6 +584,8 @@ export class TapdResolver {
       return { list: [], totalCount: 0 };
     }
 
+    const headers = ambossAuth ? { authorization: `Bearer ${ambossAuth}` } : {};
+
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       public: {
         offers: {
@@ -590,17 +593,23 @@ export class TapdResolver {
           total_count: number;
         };
       };
-    }>(tradeUrl, getOffersQuery, {
-      input: {
-        asset_id: assetId,
-        transaction_type: transactionType,
-        ...(sortBy ? { sort_by: sortBy } : {}),
-        ...(sortDir ? { sort_dir: sortDir } : {}),
-        ...(limit || offset
-          ? { page: { limit: limit || 20, offset: offset || 0 } }
-          : {}),
+    }>(
+      tradeUrl,
+      getOffersQuery,
+      {
+        input: {
+          asset_id: assetId,
+          transaction_type: transactionType,
+          ...(sortBy ? { sort_by: sortBy } : {}),
+          ...(sortDir ? { sort_dir: sortDir } : {}),
+          ...(minAmount ? { min_amount: minAmount } : {}),
+          ...(limit || offset
+            ? { page: { limit: limit || 20, offset: offset || 0 } }
+            : {}),
+        },
       },
-    });
+      headers
+    );
 
     if (error || !data?.public?.offers) {
       if (error) this.logger.error('Error fetching trade offers', { error });
@@ -631,30 +640,34 @@ export class TapdResolver {
 
   @Query(() => TapSupportedAssetList)
   async getTapSupportedAssets(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    @CurrentUser() { id }: UserId
+    @CurrentUser() _user: UserId,
+    @Context() { ambossAuth }: ContextType
   ) {
     const tradeUrl = this.configService.get<string>('urls.trade');
     if (!tradeUrl) {
       return { list: [], totalCount: 0 };
     }
 
+    const headers = ambossAuth ? { authorization: `Bearer ${ambossAuth}` } : {};
+
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       public: {
-        supported_assets: {
-          list: any[];
-          total_count: number;
+        assets: {
+          supported: {
+            list: any[];
+            total_count: number;
+          };
         };
       };
-    }>(tradeUrl, getSupportedAssetsQuery);
+    }>(tradeUrl, getSupportedAssetsQuery, undefined, headers);
 
-    if (error || !data?.public?.supported_assets) {
+    if (error || !data?.public?.assets?.supported) {
       if (error)
         this.logger.error('Error fetching supported assets', { error });
       return { list: [], totalCount: 0 };
     }
 
-    const assets = data.public.supported_assets;
+    const assets = data.public.assets.supported;
 
     return {
       list: assets.list.map((a: any) => ({

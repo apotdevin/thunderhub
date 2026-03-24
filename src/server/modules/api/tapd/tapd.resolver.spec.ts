@@ -51,7 +51,12 @@ describe('TapdResolver', () => {
   beforeEach(() => {
     service = mockService();
     mockLogger.error.mockClear();
-    resolver = new TapdResolver(service as never, mockLogger as never);
+    resolver = new TapdResolver(
+      service as never,
+      {} as never,
+      {} as never,
+      mockLogger as never
+    );
   });
 
   describe('getTapAssets', () => {
