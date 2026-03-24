@@ -32,7 +32,11 @@ import {
   TapUniverseInfo,
   TapUniverseStats,
 } from './tapd.types';
-import { bufToHex } from '../../../utils/string';
+import {
+  bufToHex,
+  buildXCoordToFullKeyMap,
+  resolveFullGroupKey,
+} from '../../../utils/string';
 import { toWithError } from '../../../utils/async';
 import {
   Asset,
@@ -117,14 +121,15 @@ export class TapdResolver {
         ? ('assetId' as const)
         : ('groupKey' as const);
 
+    const [result, error] = await toWithError(
+      this.tapdNodeService.listBalances({ id, groupBy: mode })
+    );
+    if (error || !result) {
+      this.logger.error('Failed to list balances', { error });
+      throw new GraphQLError('Failed to list balances');
+    }
+
     if (mode === 'assetId') {
-      const [result, error] = await toWithError(
-        this.tapdNodeService.listBalances({ id, groupBy: mode })
-      );
-      if (error || !result) {
-        this.logger.error('Failed to list balances', { error });
-        throw new GraphQLError('Failed to list balances');
-      }
       const balances = Object.entries(result.assetBalances || {}).map(
         ([key, value]: [string, AssetBalance]) => ({
           assetId: key,
@@ -136,21 +141,27 @@ export class TapdResolver {
       return { balances };
     }
 
-    const [result, error] = await toWithError(
-      this.tapdNodeService.listBalances({ id, groupBy: mode })
+    // groupKey mode: resolve names via a parallel assetId lookup
+    const [assetResult] = await toWithError(
+      this.tapdNodeService.listBalances({ id, groupBy: 'assetId' })
     );
-    if (error || !result) {
-      this.logger.error('Failed to list balances', { error });
-      throw new GraphQLError('Failed to list balances');
+    const nameByGroupKey = new Map<string, string>();
+    for (const value of Object.values(
+      assetResult?.assetBalances || {}
+    ) as AssetBalance[]) {
+      const gk = bufToHex(value.groupKey);
+      if (gk && value.assetGenesis?.name) {
+        nameByGroupKey.set(gk, value.assetGenesis.name);
+      }
     }
 
     const balances = Object.entries(result.assetGroupBalances || {}).map(
       ([key, value]: [string, AssetGroupBalance]) => ({
         groupKey: key,
+        name: nameByGroupKey.get(key) || null,
         balance: value.balance.toString(),
       })
     );
-
     return { balances };
   }
 
@@ -366,16 +377,7 @@ export class TapdResolver {
 
     const roots = rootsResult.universeRoots || {};
 
-    // Build a map from x-coordinate (32 bytes) to full group key (33 bytes)
-    // using the owned assets which have the full tweakedGroupKey
-    const xCoordToFullKey = new Map<string, string>();
-    for (const asset of assetsResult.assets || []) {
-      const fullKey = bufToHex(asset.assetGroup.tweakedGroupKey);
-      if (fullKey && fullKey.length === 66) {
-        // x-coordinate is the key without the 02/03 prefix
-        xCoordToFullKey.set(fullKey.slice(2), fullKey);
-      }
-    }
+    const xCoordToFullKey = buildXCoordToFullKeyMap(assetsResult.assets || []);
 
     const assets: {
       name: string | null;
@@ -396,10 +398,7 @@ export class TapdResolver {
         BigInt(0)
       );
 
-      // Resolve full group key from x-coordinate
-      const fullGroupKey = rawGroupKey
-        ? xCoordToFullKey.get(rawGroupKey) || null
-        : null;
+      const fullGroupKey = resolveFullGroupKey(rawGroupKey, xCoordToFullKey);
 
       const assetId = keyHex && keyHex.length === 64 ? keyHex : null;
 

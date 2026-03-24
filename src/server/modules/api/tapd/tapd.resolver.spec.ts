@@ -113,12 +113,49 @@ describe('TapdResolver', () => {
       });
     });
 
-    it('returns balances grouped by groupKey', async () => {
-      service.listBalances.mockResolvedValue({
-        assetGroupBalances: {
-          groupkey1: { groupKey: Buffer.alloc(0), balance: '1000' },
-        },
+    it('returns balances grouped by groupKey with resolved names', async () => {
+      const groupKeyHex = '02' + 'ab'.repeat(32);
+
+      service.listBalances
+        .mockResolvedValueOnce({
+          assetGroupBalances: {
+            [groupKeyHex]: {
+              groupKey: Buffer.alloc(0),
+              balance: '1000',
+            },
+          },
+        })
+        .mockResolvedValueOnce({
+          assetBalances: {
+            asset1: {
+              groupKey: Buffer.from(groupKeyHex, 'hex'),
+              assetGenesis: { name: 'TestCoin' },
+              balance: '1000',
+            },
+          },
+        });
+
+      const result = await resolver.getTapBalances(
+        userId,
+        TapBalanceGroupBy.GROUP_KEY
+      );
+
+      expect(result.balances).toHaveLength(1);
+      expect(result.balances[0]).toEqual({
+        groupKey: groupKeyHex,
+        name: 'TestCoin',
+        balance: '1000',
       });
+    });
+
+    it('returns null name when assetId lookup fails', async () => {
+      service.listBalances
+        .mockResolvedValueOnce({
+          assetGroupBalances: {
+            groupkey1: { groupKey: Buffer.alloc(0), balance: '500' },
+          },
+        })
+        .mockRejectedValueOnce(new Error('lookup failed'));
 
       const result = await resolver.getTapBalances(
         userId,
@@ -128,7 +165,8 @@ describe('TapdResolver', () => {
       expect(result.balances).toHaveLength(1);
       expect(result.balances[0]).toEqual({
         groupKey: 'groupkey1',
-        balance: '1000',
+        name: null,
+        balance: '500',
       });
     });
   });

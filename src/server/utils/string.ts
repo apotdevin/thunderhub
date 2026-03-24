@@ -27,6 +27,48 @@ export const stripAnsi = string => {
   return string.replace(ansiRegex(), '');
 };
 
+/**
+ * Build a map from compressed public key x-coordinate (32 bytes hex)
+ * to the full compressed public key (33 bytes hex, with 02/03 prefix).
+ *
+ * Universe roots store only the x-coordinate of group keys (32 bytes,
+ * serialized via schnorr.SerializePubKey), but downstream APIs like
+ * newAddr and fundChannel require the full compressed key (33 bytes
+ * with 02/03 parity prefix, parsed via btcec.ParsePubKey).
+ *
+ * This resolves the mapping using assets that carry the full
+ * tweakedGroupKey from listAssets.
+ */
+export const buildXCoordToFullKeyMap = (
+  assets: { assetGroup: { tweakedGroupKey: any } }[]
+): Map<string, string> => {
+  const map = new Map<string, string>();
+  for (const asset of assets) {
+    const fullKey = bufToHex(asset.assetGroup?.tweakedGroupKey);
+    if (fullKey && fullKey.length === 66) {
+      map.set(fullKey.slice(2), fullKey);
+    }
+  }
+  return map;
+};
+
+/**
+ * Resolve an x-only group key (32 bytes) to a full compressed key (33 bytes).
+ * First tries the owned-asset map, then falls back to the 02 prefix
+ * (even parity, the most common case for taproot keys).
+ */
+export const resolveFullGroupKey = (
+  rawGroupKey: string | undefined,
+  xCoordToFullKey: Map<string, string>
+): string | null => {
+  if (!rawGroupKey) return null;
+  if (rawGroupKey.length === 66) return rawGroupKey;
+  if (rawGroupKey.length === 64) {
+    return xCoordToFullKey.get(rawGroupKey) || '02' + rawGroupKey;
+  }
+  return null;
+};
+
 export const bufToHex = (val: any): string | undefined => {
   if (!val) return undefined;
   if (Buffer.isBuffer(val)) return val.toString('hex');
