@@ -269,6 +269,33 @@ describe('TapdResolver', () => {
       expect(result.encoded).toBe('tap1...');
       expect(result.assetId).toBe('aa');
     });
+
+    it('creates an address with groupKey', async () => {
+      service.newAddr.mockResolvedValue({
+        encoded: 'tap1group...',
+        assetId: Buffer.from('aa', 'hex'),
+        amount: '200',
+        scriptKey: Buffer.from('bb', 'hex'),
+        internalKey: Buffer.from('cc', 'hex'),
+        taprootOutputKey: Buffer.from('dd', 'hex'),
+      });
+
+      const result = await resolver.newTapAddress(
+        userId,
+        undefined,
+        'group1',
+        200
+      );
+
+      expect(result.encoded).toBe('tap1group...');
+      expect(result.amount).toBe('200');
+      expect(service.newAddr).toHaveBeenCalledWith({
+        id: userId.id,
+        groupKey: 'group1',
+        assetId: undefined,
+        amt: 200,
+      });
+    });
   });
 
   describe('fundTapAssetChannel', () => {
