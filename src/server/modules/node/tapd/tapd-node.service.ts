@@ -32,7 +32,6 @@ import { EnrichedAccount } from '../../accounts/accounts.types';
 import { ProviderRegistryService } from '../provider-registry.service';
 import { Capability } from '../lightning.types';
 import { isTaprootAssetsProvider } from './taproot-assets.types';
-import { bufToHex } from 'src/server/utils/string';
 
 @Injectable()
 export class TapdNodeService {
@@ -90,21 +89,14 @@ export class TapdNodeService {
   async listBalances(opts: {
     id: string;
     groupBy?: 'groupKey' | 'assetId';
-    filter?: string;
   }): Promise<ListBalancesResponse> {
     const tapd = this.getTapd(opts.id);
-    const { groupBy = 'groupKey', filter } = opts;
+    const { groupBy = 'groupKey' } = opts;
 
     if (groupBy === 'assetId') {
-      return tapd.taprootAssets.listBalances({
-        assetId: true,
-        ...(filter ? { assetFilter: bufToHex(filter) } : {}),
-      });
+      return tapd.taprootAssets.listBalances({ assetId: true });
     }
-    return tapd.taprootAssets.listBalances({
-      groupKey: true,
-      ...(filter ? { groupKeyFilter: bufToHex(filter) } : {}),
-    });
+    return tapd.taprootAssets.listBalances({ groupKey: true });
   }
 
   async listGroups(opts: { id: string }): Promise<ListGroupsResponse> {

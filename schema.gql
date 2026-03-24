@@ -683,7 +683,7 @@ type Query {
   getPendingChannels: [PendingChannel!]!
   getServerAccounts: [ServerAccount!]!
   getTapAssets: TapAssetList!
-  getTapBalances(filter: String, groupBy: TapBalanceGroupBy = GROUP_KEY): TapBalances!
+  getTapBalances(groupBy: TapBalanceGroupBy = GROUP_KEY): TapBalances!
   getTapFederationServers: TapFederationServerList!
   getTapTransfers: TapTransferList!
   getTapUniverseAssets: TapUniverseAssetList!

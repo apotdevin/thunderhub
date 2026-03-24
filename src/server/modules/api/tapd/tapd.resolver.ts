@@ -110,8 +110,7 @@ export class TapdResolver {
       nullable: true,
       defaultValue: TapBalanceGroupBy.GROUP_KEY,
     })
-    groupBy?: TapBalanceGroupBy,
-    @Args('filter', { nullable: true }) filter?: string
+    groupBy?: TapBalanceGroupBy
   ) {
     const mode =
       groupBy === TapBalanceGroupBy.ASSET_ID
@@ -120,7 +119,7 @@ export class TapdResolver {
 
     if (mode === 'assetId') {
       const [result, error] = await toWithError(
-        this.tapdNodeService.listBalances({ id, groupBy: mode, filter })
+        this.tapdNodeService.listBalances({ id, groupBy: mode })
       );
       if (error || !result) {
         this.logger.error('Failed to list balances', { error });
@@ -138,7 +137,7 @@ export class TapdResolver {
     }
 
     const [result, error] = await toWithError(
-      this.tapdNodeService.listBalances({ id, groupBy: mode, filter })
+      this.tapdNodeService.listBalances({ id, groupBy: mode })
     );
     if (error || !result) {
       this.logger.error('Failed to list balances', { error });
@@ -370,16 +369,11 @@ export class TapdResolver {
     // Build a map from x-coordinate (32 bytes) to full group key (33 bytes)
     // using the owned assets which have the full tweakedGroupKey
     const xCoordToFullKey = new Map<string, string>();
-    const assetIdToGroupKey = new Map<string, string>();
     for (const asset of assetsResult.assets || []) {
       const fullKey = bufToHex(asset.assetGroup.tweakedGroupKey);
       if (fullKey && fullKey.length === 66) {
         // x-coordinate is the key without the 02/03 prefix
         xCoordToFullKey.set(fullKey.slice(2), fullKey);
-      }
-      const aid = bufToHex(asset.assetGenesis.assetId);
-      if (aid && fullKey) {
-        assetIdToGroupKey.set(aid, fullKey);
       }
     }
 
