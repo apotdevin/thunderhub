@@ -47,7 +47,7 @@ export const SendAsset: FC = () => {
     if (address.startsWith('tap') && address.length > 20) {
       const timer = setTimeout(() => {
         decodeAddr({ variables: { addr: address } });
-      }, 500);
+      }, 50);
       setDecodeTimer(timer);
     }
 
