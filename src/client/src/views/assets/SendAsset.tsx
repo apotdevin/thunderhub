@@ -18,7 +18,7 @@ export const SendAsset: FC = () => {
     useDecodeTapAddressLazyQuery();
 
   const { data: balancesData } = useGetTapBalancesQuery({
-    variables: { groupBy: 'groupKey' },
+    variables: { groupBy: 'GROUP_KEY' },
   });
 
   const nameMap = new Map(

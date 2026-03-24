@@ -22,7 +22,7 @@ export const ReceiveAsset: FC = () => {
   const [copied, setCopied] = useState(false);
 
   const { data: balancesData } = useGetTapBalancesQuery({
-    variables: { groupBy: 'groupKey' },
+    variables: { groupBy: 'GROUP_KEY' },
   });
 
   const { data: universeData } = useGetTapUniverseAssetsQuery();

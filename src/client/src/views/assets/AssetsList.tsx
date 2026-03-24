@@ -8,7 +8,7 @@ import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getT
 import { getErrorContent } from '../../utils/error';
 import { cn } from '../../lib/utils';
 
-type GroupBy = 'groupKey' | 'assetId';
+type GroupBy = 'GROUP_KEY' | 'ASSET_ID';
 
 const CopyableKey: FC<{ label: string; value: string }> = ({
   label,
@@ -40,7 +40,7 @@ const CopyableKey: FC<{ label: string; value: string }> = ({
 };
 
 export const AssetsList: FC = () => {
-  const [groupBy, setGroupBy] = useState<GroupBy>('groupKey');
+  const [groupBy, setGroupBy] = useState<GroupBy>('GROUP_KEY');
 
   const {
     data: assetsData,
@@ -90,7 +90,7 @@ export const AssetsList: FC = () => {
       <div className="flex items-center gap-2">
         <span className="text-xs text-muted-foreground">Group by:</span>
         <div className="flex gap-1">
-          {(['groupKey', 'assetId'] as const).map(option => (
+          {(['GROUP_KEY', 'ASSET_ID'] as const).map(option => (
             <Button
               key={option}
               variant={groupBy === option ? 'default' : 'outline'}
@@ -98,7 +98,7 @@ export const AssetsList: FC = () => {
               className={cn('text-xs h-7')}
               onClick={() => setGroupBy(option)}
             >
-              {option === 'groupKey' ? 'Group Key' : 'Asset ID'}
+              {option === 'GROUP_KEY' ? 'Group Key' : 'Asset ID'}
             </Button>
           ))}
         </div>
@@ -107,10 +107,10 @@ export const AssetsList: FC = () => {
       <div className="grid gap-3">
         {balances.map((entry, i) => {
           const keyValue =
-            groupBy === 'groupKey'
+            groupBy === 'GROUP_KEY'
               ? entry.groupKey || entry.assetId
               : entry.assetId;
-          const keyLabel = groupBy === 'groupKey' ? 'Group key' : 'Asset ID';
+          const keyLabel = groupBy === 'GROUP_KEY' ? 'Group key' : 'Asset ID';
 
           return (
             <Card key={`${keyValue}-${i}`}>
@@ -123,12 +123,12 @@ export const AssetsList: FC = () => {
                     {keyValue && (
                       <CopyableKey label={keyLabel} value={keyValue} />
                     )}
-                    {groupBy === 'groupKey' && entry.groupKey && (
+                    {groupBy === 'GROUP_KEY' && entry.groupKey && (
                       <span className="text-[10px] text-muted-foreground/60">
                         Group
                       </span>
                     )}
-                    {groupBy === 'groupKey' && entry.assetId && (
+                    {groupBy === 'GROUP_KEY' && entry.assetId && (
                       <CopyableKey label="Asset ID" value={entry.assetId} />
                     )}
                   </div>

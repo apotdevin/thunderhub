@@ -1,35 +1,33 @@
+import * as Types from '../../types';
+
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type GetTapAssetsQueryVariables = { [key: string]: never };
-
-export type TapAssetGenesis = {
-  __typename?: 'TapAssetGenesis';
-  genesisPoint?: string | null;
-  name?: string | null;
-  metaHash?: string | null;
-  assetId?: string | null;
-  assetType?: number | null;
-  outputIndex?: number | null;
-};
-
-export type TapAssetItem = {
-  __typename?: 'TapAsset';
-  assetGenesis?: TapAssetGenesis | null;
-  amount?: string | null;
-  lockTime?: number | null;
-  relativeLockTime?: number | null;
-  scriptVersion?: number | null;
-  scriptKey?: string | null;
-  isSpent?: boolean | null;
-  isBurn?: boolean | null;
-};
+export type GetTapAssetsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetTapAssetsQuery = {
   __typename?: 'Query';
   getTapAssets: {
     __typename?: 'TapAssetList';
-    assets: TapAssetItem[];
+    assets: Array<{
+      __typename?: 'TapAsset';
+      amount: string;
+      lockTime: number;
+      relativeLockTime: number;
+      scriptVersion: number;
+      scriptKey: string;
+      isSpent: boolean;
+      isBurn: boolean;
+      assetGenesis?: {
+        __typename?: 'TapAssetGenesis';
+        genesisPoint: string;
+        name: string;
+        metaHash: string;
+        assetId: string;
+        assetType: Types.TapAssetType;
+        outputIndex: number;
+      } | null;
+    }>;
   };
 };
 
@@ -57,6 +55,21 @@ export const GetTapAssetsDocument = gql`
   }
 `;
 
+/**
+ * __useGetTapAssetsQuery__
+ *
+ * To run a query within a React component, call `useGetTapAssetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTapAssetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTapAssetsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
 export function useGetTapAssetsQuery(
   baseOptions?: Apollo.QueryHookOptions<
     GetTapAssetsQuery,
@@ -69,7 +82,6 @@ export function useGetTapAssetsQuery(
     options
   );
 }
-
 export function useGetTapAssetsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetTapAssetsQuery,
@@ -82,3 +94,51 @@ export function useGetTapAssetsLazyQuery(
     options
   );
 }
+// @ts-ignore
+export function useGetTapAssetsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetTapAssetsQuery,
+    GetTapAssetsQueryVariables
+  >
+): Apollo.UseSuspenseQueryResult<GetTapAssetsQuery, GetTapAssetsQueryVariables>;
+export function useGetTapAssetsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTapAssetsQuery,
+        GetTapAssetsQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetTapAssetsQuery | undefined,
+  GetTapAssetsQueryVariables
+>;
+export function useGetTapAssetsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTapAssetsQuery,
+        GetTapAssetsQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetTapAssetsQuery, GetTapAssetsQueryVariables>(
+    GetTapAssetsDocument,
+    options
+  );
+}
+export type GetTapAssetsQueryHookResult = ReturnType<
+  typeof useGetTapAssetsQuery
+>;
+export type GetTapAssetsLazyQueryHookResult = ReturnType<
+  typeof useGetTapAssetsLazyQuery
+>;
+export type GetTapAssetsSuspenseQueryHookResult = ReturnType<
+  typeof useGetTapAssetsSuspenseQuery
+>;
+export type GetTapAssetsQueryResult = Apollo.QueryResult<
+  GetTapAssetsQuery,
+  GetTapAssetsQueryVariables
+>;
