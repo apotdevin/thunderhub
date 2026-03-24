@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { Loader2, Info } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,9 +10,7 @@ import { getErrorContent } from '../../utils/error';
 
 export const SendAsset: FC = () => {
   const [address, setAddress] = useState('');
-  const [decodeTimer, setDecodeTimer] = useState<ReturnType<
-    typeof setTimeout
-  > | null>(null);
+  const decodeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [decodeAddr, { data: decoded, loading: decoding, error: decodeError }] =
     useDecodeTapAddressLazyQuery();
@@ -43,19 +41,18 @@ export const SendAsset: FC = () => {
   });
 
   useEffect(() => {
-    if (decodeTimer) clearTimeout(decodeTimer);
+    if (decodeTimerRef.current) clearTimeout(decodeTimerRef.current);
 
     if (address.startsWith('tap') && address.length > 20) {
-      const timer = setTimeout(() => {
+      decodeTimerRef.current = setTimeout(() => {
         decodeAddr({ variables: { addr: address } });
       }, 50);
-      setDecodeTimer(timer);
     }
 
     return () => {
-      if (decodeTimer) clearTimeout(decodeTimer);
+      if (decodeTimerRef.current) clearTimeout(decodeTimerRef.current);
     };
-  }, [address]);
+  }, [address, decodeAddr]);
 
   const handleSend = () => {
     if (!address) {
