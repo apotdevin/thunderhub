@@ -89,21 +89,14 @@ export class TapdNodeService {
   async listBalances(opts: {
     id: string;
     groupBy?: 'groupKey' | 'assetId';
-    filter?: string;
   }): Promise<ListBalancesResponse> {
     const tapd = this.getTapd(opts.id);
-    const { groupBy = 'groupKey', filter } = opts;
+    const { groupBy = 'groupKey' } = opts;
 
     if (groupBy === 'assetId') {
-      return tapd.taprootAssets.listBalances({
-        assetId: true,
-        ...(filter ? { assetFilter: Buffer.from(filter, 'hex') } : {}),
-      });
+      return tapd.taprootAssets.listBalances({ assetId: true });
     }
-    return tapd.taprootAssets.listBalances({
-      groupKey: true,
-      ...(filter ? { groupKeyFilter: Buffer.from(filter, 'hex') } : {}),
-    });
+    return tapd.taprootAssets.listBalances({ groupKey: true });
   }
 
   async listGroups(opts: { id: string }): Promise<ListGroupsResponse> {
