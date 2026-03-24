@@ -128,9 +128,6 @@ export const AssetsList: FC = () => {
                         Group
                       </span>
                     )}
-                    {groupBy === 'GROUP_KEY' && entry.assetId && (
-                      <CopyableKey label="Asset ID" value={entry.assetId} />
-                    )}
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     <span className="text-lg font-semibold">
