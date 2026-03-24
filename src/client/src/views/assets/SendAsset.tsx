@@ -26,8 +26,9 @@ export const SendAsset: FC = () => {
       .filter(b => b.assetId || b.groupKey)
       .flatMap(b => {
         const entries: [string, string][] = [];
-        if (b.assetId) entries.push([b.assetId, b.name || 'Unknown']);
-        if (b.groupKey) entries.push([b.groupKey, b.name || 'Unknown']);
+        const label = b.names?.join(', ') || 'Unknown';
+        if (b.assetId) entries.push([b.assetId, label]);
+        if (b.groupKey) entries.push([b.groupKey, label]);
         return entries;
       })
   );

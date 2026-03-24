@@ -6,7 +6,7 @@ export const GET_TAP_BALANCES = gql`
       balances {
         assetId
         groupKey
-        name
+        names
         balance
       }
     }

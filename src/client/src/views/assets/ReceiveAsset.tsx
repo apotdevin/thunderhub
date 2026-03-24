@@ -33,7 +33,7 @@ export const ReceiveAsset: FC = () => {
     .map(
       (b): GroupEntry => ({
         groupKey: b.groupKey!,
-        name: b.name || 'Unknown',
+        name: b.names?.join(', ') || 'Unknown',
         source: 'owned',
       })
     );

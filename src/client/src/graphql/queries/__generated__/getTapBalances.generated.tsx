@@ -15,7 +15,7 @@ export type GetTapBalancesQuery = {
       __typename?: 'TapAssetBalanceEntry';
       assetId?: string | null;
       groupKey?: string | null;
-      name?: string | null;
+      names?: Array<string> | null;
       balance: string;
     }>;
   };
@@ -27,7 +27,7 @@ export const GetTapBalancesDocument = gql`
       balances {
         assetId
         groupKey
-        name
+        names
         balance
       }
     }

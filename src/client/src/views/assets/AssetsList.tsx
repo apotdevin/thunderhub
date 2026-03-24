@@ -118,7 +118,7 @@ export const AssetsList: FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex flex-col gap-1">
                     <span className="font-semibold">
-                      {entry.name || 'Unknown'}
+                      {entry.names?.length ? entry.names.join(', ') : 'Unknown'}
                     </span>
                     {keyValue && (
                       <CopyableKey label={keyLabel} value={keyValue} />
