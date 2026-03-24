@@ -108,7 +108,7 @@ describe('TapdResolver', () => {
       expect(result.balances[0]).toEqual({
         assetId: 'abc123',
         groupKey: 'aa',
-        name: 'TestCoin',
+        names: ['TestCoin'],
         balance: '500',
       });
     });
@@ -143,9 +143,85 @@ describe('TapdResolver', () => {
       expect(result.balances).toHaveLength(1);
       expect(result.balances[0]).toEqual({
         groupKey: groupKeyHex,
-        name: 'TestCoin',
+        names: ['TestCoin'],
         balance: '1000',
       });
+    });
+
+    it('collects multiple names for a grouped asset with different mints', async () => {
+      const groupKeyHex = '02' + 'cd'.repeat(32);
+
+      service.listBalances
+        .mockResolvedValueOnce({
+          assetGroupBalances: {
+            [groupKeyHex]: {
+              groupKey: Buffer.alloc(0),
+              balance: '3000',
+            },
+          },
+        })
+        .mockResolvedValueOnce({
+          assetBalances: {
+            mint1: {
+              groupKey: Buffer.from(groupKeyHex, 'hex'),
+              assetGenesis: { name: 'AlphaToken' },
+              balance: '1000',
+            },
+            mint2: {
+              groupKey: Buffer.from(groupKeyHex, 'hex'),
+              assetGenesis: { name: 'BetaToken' },
+              balance: '2000',
+            },
+          },
+        });
+
+      const result = await resolver.getTapBalances(
+        userId,
+        TapBalanceGroupBy.GROUP_KEY
+      );
+
+      expect(result.balances).toHaveLength(1);
+      expect(result.balances[0].groupKey).toBe(groupKeyHex);
+      expect(result.balances[0].balance).toBe('3000');
+      expect(result.balances[0].names).toHaveLength(2);
+      expect(result.balances[0].names).toContain('AlphaToken');
+      expect(result.balances[0].names).toContain('BetaToken');
+    });
+
+    it('deduplicates identical names across mints', async () => {
+      const groupKeyHex = '02' + 'ef'.repeat(32);
+
+      service.listBalances
+        .mockResolvedValueOnce({
+          assetGroupBalances: {
+            [groupKeyHex]: {
+              groupKey: Buffer.alloc(0),
+              balance: '2000',
+            },
+          },
+        })
+        .mockResolvedValueOnce({
+          assetBalances: {
+            mint1: {
+              groupKey: Buffer.from(groupKeyHex, 'hex'),
+              assetGenesis: { name: 'SameName' },
+              balance: '1000',
+            },
+            mint2: {
+              groupKey: Buffer.from(groupKeyHex, 'hex'),
+              assetGenesis: { name: 'SameName' },
+              balance: '1000',
+            },
+          },
+        });
+
+      const result = await resolver.getTapBalances(
+        userId,
+        TapBalanceGroupBy.GROUP_KEY
+      );
+
+      expect(result.balances).toHaveLength(1);
+      expect(result.balances[0].names).toEqual(['SameName']);
     });
 
     it('returns null name when assetId lookup fails', async () => {
@@ -165,7 +241,7 @@ describe('TapdResolver', () => {
       expect(result.balances).toHaveLength(1);
       expect(result.balances[0]).toEqual({
         groupKey: 'groupkey1',
-        name: null,
+        names: null,
         balance: '500',
       });
     });

@@ -84,8 +84,8 @@ export class TapAssetBalanceEntry {
   @Field({ nullable: true })
   groupKey?: string;
 
-  @Field({ nullable: true })
-  name?: string;
+  @Field(() => [String], { nullable: true })
+  names?: string[];
 
   @Field()
   balance: string;

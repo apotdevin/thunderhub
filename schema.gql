@@ -754,7 +754,7 @@ type TapAssetBalanceEntry {
   assetId: String
   balance: String!
   groupKey: String
-  name: String
+  names: [String!]
 }
 
 type TapAssetGenesis {

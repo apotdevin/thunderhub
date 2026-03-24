@@ -134,7 +134,7 @@ export class TapdResolver {
         ([key, value]: [string, AssetBalance]) => ({
           assetId: key,
           groupKey: bufToHex(value.groupKey),
-          name: value.assetGenesis.name,
+          names: [value.assetGenesis.name],
           balance: value.balance.toString(),
         })
       );
@@ -145,22 +145,30 @@ export class TapdResolver {
     const [assetResult] = await toWithError(
       this.tapdNodeService.listBalances({ id, groupBy: 'assetId' })
     );
-    const nameByGroupKey = new Map<string, string>();
+    const namesByGroupKey = new Map<string, Set<string>>();
     for (const value of Object.values(
       assetResult?.assetBalances || {}
     ) as AssetBalance[]) {
       const gk = bufToHex(value.groupKey);
       if (gk && value.assetGenesis?.name) {
-        nameByGroupKey.set(gk, value.assetGenesis.name);
+        const existing = namesByGroupKey.get(gk);
+        if (existing) {
+          existing.add(value.assetGenesis.name);
+        } else {
+          namesByGroupKey.set(gk, new Set([value.assetGenesis.name]));
+        }
       }
     }
 
     const balances = Object.entries(result.assetGroupBalances || {}).map(
-      ([key, value]: [string, AssetGroupBalance]) => ({
-        groupKey: key,
-        name: nameByGroupKey.get(key) || null,
-        balance: value.balance.toString(),
-      })
+      ([key, value]: [string, AssetGroupBalance]) => {
+        const names = [...(namesByGroupKey.get(key) || [])];
+        return {
+          groupKey: key,
+          names: names.length > 0 ? names : null,
+          balance: value.balance.toString(),
+        };
+      }
     );
     return { balances };
   }
