@@ -41,6 +41,7 @@ export const FundAssetChannel: FC = () => {
       setFeeRate('');
       setPushSat('');
     },
+    refetchQueries: ['GetTapBalances'],
   });
 
   const handleFund = () => {

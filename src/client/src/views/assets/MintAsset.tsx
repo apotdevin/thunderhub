@@ -105,26 +105,15 @@ export const MintAsset: FC = () => {
           </div>
           <div>
             <label className="text-xs text-muted-foreground mb-1 block">
-              {groupKey
-                ? 'Asset Name'
-                : grouped
-                  ? 'Asset & Group Name'
-                  : 'Asset Name'}
+              Asset Name
             </label>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder={
-                groupKey ? 'my-asset' : grouped ? 'my-asset-group' : 'my-asset'
-              }
+              placeholder="my-asset"
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             />
-            {grouped && !groupKey && (
-              <p className="text-[10px] text-muted-foreground mt-1">
-                This name identifies both the asset and the new group
-              </p>
-            )}
           </div>
           <div>
             <label className="text-xs text-muted-foreground mb-1 block">
