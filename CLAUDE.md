@@ -39,6 +39,16 @@ Run a targeted test when touching a specific module:
 npm run test -- --testPathPattern="<module-name>"
 ```
 
+### Regenerating GraphQL types
+
+When changes touch GraphQL resolvers, types, queries, or mutations, you **must** regenerate the typed client code:
+
+1. Start the dev server: `npm run start:dev`
+2. Once the server is listening on `localhost:3000`, run: `npm run generate`
+3. Commit the updated `schema.gql` and `__generated__/*.generated.tsx` files alongside your changes.
+
+Skipping this step will cause the client to use stale types that may not match the server schema.
+
 ## Architecture
 
 Monorepo with two apps under `src/`:
