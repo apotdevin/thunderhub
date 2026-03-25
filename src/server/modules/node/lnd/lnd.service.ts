@@ -67,7 +67,9 @@ import {
 @Injectable()
 export class LndService implements LightningProvider {
   getCapabilities(): Set<Capability> {
-    return new Set(Object.values(Capability));
+    const caps = new Set(Object.values(Capability));
+    caps.delete(Capability.TAPROOT_ASSETS);
+    return caps;
   }
 
   connect(config: {
