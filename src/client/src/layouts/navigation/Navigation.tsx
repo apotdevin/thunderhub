@@ -25,7 +25,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '../../components/ui/tooltip';
+import { useGetNodeCapabilitiesQuery } from '../../graphql/queries/__generated__/getNodeCapabilities.generated';
 import { SideSettings } from './sideSettings/SideSettings';
+
+const TAPD_TOOLTIP =
+  'Enable Trading by running Lightning Terminal with Taproot Assets. Trading powered by RailsX By Amboss';
 
 type Icon = FC<LucideProps>;
 
@@ -48,6 +52,8 @@ interface NavItem {
   title: string;
   link: string;
   icon: Icon;
+  disabled?: boolean;
+  disabledTooltip?: string;
 }
 
 const mainNav: NavItem[] = [
@@ -61,7 +67,14 @@ const mainNav: NavItem[] = [
   { title: 'Tools', link: TOOLS, icon: Shield },
 ];
 
-const secondaryNav: NavItem[] = [
+const TAPD_LINKS = new Set([ASSETS, TRADING]);
+
+interface NavigationProps {
+  isBurger?: boolean;
+  setOpen?: (state: boolean) => void;
+}
+
+const secondaryNavItems: NavItem[] = [
   { title: 'Assets', link: ASSETS, icon: Gem },
   { title: 'Trading', link: TRADING, icon: ArrowLeftRight },
   { title: 'Amboss', link: AMBOSS, icon: Globe },
@@ -69,18 +82,47 @@ const secondaryNav: NavItem[] = [
   { title: 'Stats', link: STATS, icon: BarChart2 },
 ];
 
-interface NavigationProps {
-  isBurger?: boolean;
-  setOpen?: (state: boolean) => void;
-}
-
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const { pathname } = useLocation();
   const { sidebar } = useConfigState();
 
+  const { data: capData } = useGetNodeCapabilitiesQuery();
+  const tapdAvailable =
+    capData?.getNodeCapabilities?.capabilities?.includes('taproot_assets') ??
+    false;
+
+  const secondaryNav: NavItem[] = secondaryNavItems.map(item =>
+    TAPD_LINKS.has(item.link) && !tapdAvailable
+      ? { ...item, disabled: true, disabledTooltip: TAPD_TOOLTIP }
+      : item
+  );
+
   const renderNavButton = (item: NavItem, open = true) => {
     const isActive = pathname === item.link;
     const NavIcon = item.icon;
+
+    if (item.disabled) {
+      const disabledButton = (
+        <div
+          className={cn(
+            'group relative flex items-center gap-2.5 rounded-md text-xs font-medium cursor-not-allowed opacity-50',
+            open ? 'px-2.5 py-1.5' : 'justify-center p-2'
+          )}
+        >
+          <NavIcon size={15} className="shrink-0" />
+          {open && <span>{item.title}</span>}
+        </div>
+      );
+
+      return (
+        <Tooltip key={item.link}>
+          <TooltipTrigger asChild>{disabledButton}</TooltipTrigger>
+          <TooltipContent side="right" className="text-xs max-w-[200px]">
+            {item.disabledTooltip}
+          </TooltipContent>
+        </Tooltip>
+      );
+    }
 
     const button = (
       <Link key={item.link} to={item.link}>
@@ -116,6 +158,22 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const renderBurgerNav = (item: NavItem) => {
     const isActive = pathname === item.link;
     const NavIcon = item.icon;
+
+    if (item.disabled) {
+      return (
+        <Tooltip key={item.link}>
+          <TooltipTrigger asChild>
+            <div className="flex items-center gap-2 px-3 py-2 rounded-md text-sm cursor-not-allowed opacity-50">
+              <NavIcon size={16} />
+              <span>{item.title}</span>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent side="right" className="text-xs max-w-[200px]">
+            {item.disabledTooltip}
+          </TooltipContent>
+        </Tooltip>
+      );
+    }
 
     return (
       <Link key={item.link} to={item.link}>
