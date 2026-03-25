@@ -10,6 +10,7 @@ import { getErrorContent } from '../../utils/error';
 import { cn } from '../../lib/utils';
 import { Button } from '@/components/ui/button';
 import {
+  TapBalanceGroupBy,
   TapTransactionType,
   TapOfferSortBy,
   TapOfferSortDir,
@@ -44,7 +45,7 @@ export const TradingOffers: FC = () => {
     });
 
   const { data: balancesData } = useGetTapBalancesQuery({
-    variables: { groupBy: 'groupKey' },
+    variables: { groupBy: TapBalanceGroupBy.GroupKey },
   });
 
   const allSupported = supportedData?.getTapSupportedAssets?.list || [];
@@ -299,6 +300,10 @@ export const TradingOffers: FC = () => {
           )}
         </div>
       )}
+
+      <div className="text-xs text-muted-foreground text-center pt-2">
+        Trading powered by RailsX By Amboss
+      </div>
     </div>
   );
 };

@@ -54,7 +54,7 @@ interface NavItem {
 }
 
 const TAPD_TOOLTIP =
-  'Enable Trading by running Lightning Terminal with Taproot Assets. Trading powered by RailsX By Amboss';
+  'Enable Trading by running Lightning Terminal with Taproot Assets.';
 
 const mainNav: NavItem[] = [
   { title: 'Home', link: HOME, icon: Home },
