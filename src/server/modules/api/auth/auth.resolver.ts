@@ -79,10 +79,10 @@ export class AuthResolver {
     }
 
     try {
-      const isValid = verifySync({ token, secret, epochTolerance: 30 });
+      const { valid } = verifySync({ token, secret, epochTolerance: 30 });
 
-      if (!isValid) {
-        throw new Error();
+      if (!valid) {
+        throw new Error('Invalid token');
       }
     } catch (error) {
       this.logger.error('Error validating token', { error });
@@ -90,7 +90,7 @@ export class AuthResolver {
     }
 
     const accountConfigPath = this.configService.get('accountConfigPath');
-    await this.filesService.updateTwofaSecret(
+    this.filesService.updateTwofaSecret(
       accountConfigPath,
       account.index,
       secret
@@ -117,14 +117,14 @@ export class AuthResolver {
     }
 
     try {
-      const isValid = verifySync({
+      const { valid } = verifySync({
         token,
         secret: account.twofaSecret,
         epochTolerance: 30,
       });
 
-      if (!isValid) {
-        throw new Error();
+      if (!valid) {
+        throw new Error('Invalid token');
       }
     } catch (error) {
       this.logger.error('Error validating token', { error });
@@ -276,12 +276,12 @@ export class AuthResolver {
       }
 
       try {
-        const isValid = verifySync({
+        const { valid } = verifySync({
           token,
           secret: account.twofaSecret,
           epochTolerance: 30,
         });
-        if (!isValid) {
+        if (!valid) {
           throw new Error('token not valid');
         }
       } catch (err) {

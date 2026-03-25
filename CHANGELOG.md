@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.15.5](https://github.com/apotdevin/thunderhub/compare/v0.15.4...v0.15.5) (2026-03-24)
+
+
+### Features
+
+* add litd as a backend provider ([#660](https://github.com/apotdevin/thunderhub/issues/660)) ([d3bc744](https://github.com/apotdevin/thunderhub/commit/d3bc744460f63723bc800486fa1f2e7f5b6ce80c))
+* add litd docker dev environment ([#661](https://github.com/apotdevin/thunderhub/issues/661)) ([5024ca4](https://github.com/apotdevin/thunderhub/commit/5024ca450790b4882871c5090a1971b25be44dfe))
+* add tapd GraphQL API ([#663](https://github.com/apotdevin/thunderhub/issues/663)) ([c7f5ea1](https://github.com/apotdevin/thunderhub/commit/c7f5ea1c50447c65c8b74d3728883273e445355a))
+* add tapd server infrastructure and provider ([#662](https://github.com/apotdevin/thunderhub/issues/662)) ([81ed04e](https://github.com/apotdevin/thunderhub/commit/81ed04e557caab4b0d586fbff42c9e3f16c3cfb5))
+* allow for other LN providers ([2cca730](https://github.com/apotdevin/thunderhub/commit/2cca73038348d896950624a8ce7f5aef7554be49))
+
+
+### Docs
+
+* add CLAUDE.md for Claude Code context ([#657](https://github.com/apotdevin/thunderhub/issues/657)) ([368fa01](https://github.com/apotdevin/thunderhub/commit/368fa01c957ea8a9c4e17f3011580fdd83f46aed))
+* make CLAUDE.md agent-agnostic and add AGENTS.md symlink ([#666](https://github.com/apotdevin/thunderhub/issues/666)) ([72ff04e](https://github.com/apotdevin/thunderhub/commit/72ff04e390b4d43e7e24c9c095f2b2ea4db6e842))
+
+
+### Improvements
+
+* add `litd` in Dockerignore ([#670](https://github.com/apotdevin/thunderhub/issues/670)) ([aef8155](https://github.com/apotdevin/thunderhub/commit/aef81553dafccef685f2e8ee81d559b3561e167a))
+* better error handling ([d70def4](https://github.com/apotdevin/thunderhub/commit/d70def463341d464fefdde6b72120253c75a24a4))
+* cleanup sidebar sections ([121f12b](https://github.com/apotdevin/thunderhub/commit/121f12b31370fa73b3de21e7bbb41d64b8312fd8))
+* fix two factor authentication ([#674](https://github.com/apotdevin/thunderhub/issues/674)) ([7723781](https://github.com/apotdevin/thunderhub/commit/7723781eca24dffccfeea99326c076cdc1643129))
+* generate types ([#673](https://github.com/apotdevin/thunderhub/issues/673)) ([dbe7b1a](https://github.com/apotdevin/thunderhub/commit/dbe7b1afe75f9ad919909b4459a47bc154aed9b9))
+
 ### [0.15.4](https://github.com/apotdevin/thunderhub/compare/v0.15.2...v0.15.4) (2026-03-17)
 
 
