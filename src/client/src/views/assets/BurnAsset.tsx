@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useBurnTapAssetMutation } from '../../graphql/mutations/__generated__/burnTapAsset.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
+import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
 
 export const BurnAsset: FC = () => {
@@ -13,25 +14,14 @@ export const BurnAsset: FC = () => {
   const [confirmed, setConfirmed] = useState(false);
 
   const { data: assetBalances } = useGetTapBalancesQuery({
-    variables: { groupBy: 'assetId' },
+    variables: { groupBy: TapBalanceGroupBy.AssetId },
   });
-
-  const { data: groupBalances } = useGetTapBalancesQuery({
-    variables: { groupBy: 'groupKey' },
-  });
-
-  // Merge: prefer assetId balances, enrich with group names
-  const groupNameMap = new Map(
-    (groupBalances?.getTapBalances?.balances || [])
-      .filter(b => b.assetId)
-      .map(b => [b.assetId!, b.name || 'Unknown'])
-  );
 
   const knownAssets = (assetBalances?.getTapBalances?.balances || [])
     .filter(b => b.assetId && b.balance && Number(b.balance) > 0)
     .map(b => ({
       assetId: b.assetId!,
-      name: b.name || groupNameMap.get(b.assetId!) || 'Unknown',
+      name: b.names?.[0] || 'Unknown',
       balance: b.balance!,
     }));
 

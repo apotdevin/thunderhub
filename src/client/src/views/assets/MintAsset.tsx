@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useMintTapAssetMutation } from '../../graphql/mutations/__generated__/mintTapAsset.generated';
 import { useFinalizeTapBatchMutation } from '../../graphql/mutations/__generated__/finalizeTapBatch.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
+import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
 
 export const MintAsset: FC = () => {
@@ -14,16 +15,20 @@ export const MintAsset: FC = () => {
   const [assetType, setAssetType] = useState<'NORMAL' | 'COLLECTIBLE'>(
     'NORMAL'
   );
+  const [grouped, setGrouped] = useState(true);
   const [groupKey, setGroupKey] = useState('');
   const [batchKey, setBatchKey] = useState<string | null>(null);
 
   const { data: balancesData } = useGetTapBalancesQuery({
-    variables: { groupBy: 'groupKey' },
+    variables: { groupBy: TapBalanceGroupBy.GroupKey },
   });
 
   const existingGroups = (balancesData?.getTapBalances?.balances || [])
     .filter(b => b.groupKey)
-    .map(b => ({ key: b.groupKey!, name: b.name || 'Unknown' }));
+    .map(b => ({
+      key: b.groupKey!,
+      name: b.names?.[0] || 'Unknown',
+    }));
 
   const [mintAsset, { loading: minting }] = useMintTapAssetMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -43,6 +48,7 @@ export const MintAsset: FC = () => {
       setBatchKey(null);
       setName('');
       setAmount('');
+      setGrouped(true);
       setGroupKey('');
     },
     refetchQueries: ['GetTapAssets', 'GetTapBalances'],
@@ -58,6 +64,7 @@ export const MintAsset: FC = () => {
         name,
         amount: parseInt(amount, 10),
         assetType,
+        grouped,
         groupKey: groupKey || null,
       },
     });
@@ -73,11 +80,24 @@ export const MintAsset: FC = () => {
               Group
             </label>
             <select
-              value={groupKey}
-              onChange={e => setGroupKey(e.target.value)}
+              value={grouped ? groupKey || '__new__' : '__none__'}
+              onChange={e => {
+                const val = e.target.value;
+                if (val === '__none__') {
+                  setGrouped(false);
+                  setGroupKey('');
+                } else if (val === '__new__') {
+                  setGrouped(true);
+                  setGroupKey('');
+                } else {
+                  setGrouped(true);
+                  setGroupKey(val);
+                }
+              }}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             >
-              <option value="">Create new group</option>
+              <option value="__none__">No group</option>
+              <option value="__new__">Create new group</option>
               {existingGroups.map(g => (
                 <option key={g.key} value={g.key}>
                   {g.name} ({g.key.slice(0, 16)}...)
@@ -87,16 +107,22 @@ export const MintAsset: FC = () => {
           </div>
           <div>
             <label className="text-xs text-muted-foreground mb-1 block">
-              {groupKey ? 'Asset Name' : 'Asset & Group Name'}
+              {groupKey
+                ? 'Asset Name'
+                : grouped
+                  ? 'Asset & Group Name'
+                  : 'Asset Name'}
             </label>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder={groupKey ? 'my-asset' : 'my-asset-group'}
+              placeholder={
+                groupKey ? 'my-asset' : grouped ? 'my-asset-group' : 'my-asset'
+              }
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             />
-            {!groupKey && (
+            {grouped && !groupKey && (
               <p className="text-[10px] text-muted-foreground mt-1">
                 This name identifies both the asset and the new group
               </p>

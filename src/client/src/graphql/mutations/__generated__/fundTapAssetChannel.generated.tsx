@@ -1,22 +1,23 @@
+import * as Types from '../../types';
+
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-
-export type FundTapAssetChannelMutationVariables = {
-  peerPubkey: string;
-  assetAmount: number;
-  groupKey?: string | null;
-  assetId?: string | null;
-  feeRateSatPerVbyte?: number | null;
-  pushSat?: number | null;
-};
+export type FundTapAssetChannelMutationVariables = Types.Exact<{
+  peerPubkey: Types.Scalars['String']['input'];
+  assetAmount: Types.Scalars['Int']['input'];
+  groupKey?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  assetId?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  feeRateSatPerVbyte?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  pushSat?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+}>;
 
 export type FundTapAssetChannelMutation = {
   __typename?: 'Mutation';
   fundTapAssetChannel: {
     __typename?: 'TapFundChannelResponse';
-    txid?: string | null;
-    outputIndex?: number | null;
+    txid: string;
+    outputIndex: number;
   };
 };
 
@@ -42,7 +43,33 @@ export const FundTapAssetChannelDocument = gql`
     }
   }
 `;
+export type FundTapAssetChannelMutationFn = Apollo.MutationFunction<
+  FundTapAssetChannelMutation,
+  FundTapAssetChannelMutationVariables
+>;
 
+/**
+ * __useFundTapAssetChannelMutation__
+ *
+ * To run a mutation, you first call `useFundTapAssetChannelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFundTapAssetChannelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [fundTapAssetChannelMutation, { data, loading, error }] = useFundTapAssetChannelMutation({
+ *   variables: {
+ *      peerPubkey: // value for 'peerPubkey'
+ *      assetAmount: // value for 'assetAmount'
+ *      groupKey: // value for 'groupKey'
+ *      assetId: // value for 'assetId'
+ *      feeRateSatPerVbyte: // value for 'feeRateSatPerVbyte'
+ *      pushSat: // value for 'pushSat'
+ *   },
+ * });
+ */
 export function useFundTapAssetChannelMutation(
   baseOptions?: Apollo.MutationHookOptions<
     FundTapAssetChannelMutation,
@@ -55,3 +82,12 @@ export function useFundTapAssetChannelMutation(
     FundTapAssetChannelMutationVariables
   >(FundTapAssetChannelDocument, options);
 }
+export type FundTapAssetChannelMutationHookResult = ReturnType<
+  typeof useFundTapAssetChannelMutation
+>;
+export type FundTapAssetChannelMutationResult =
+  Apollo.MutationResult<FundTapAssetChannelMutation>;
+export type FundTapAssetChannelMutationOptions = Apollo.BaseMutationOptions<
+  FundTapAssetChannelMutation,
+  FundTapAssetChannelMutationVariables
+>;

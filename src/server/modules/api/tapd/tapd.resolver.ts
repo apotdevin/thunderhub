@@ -311,6 +311,7 @@ export class TapdResolver {
       defaultValue: TapAssetType.NORMAL,
     })
     assetType: TapAssetType,
+    @Args('grouped', { nullable: true, defaultValue: true }) grouped: boolean,
     @Args('groupKey', { nullable: true }) groupKey?: string
   ) {
     const typeStr =
@@ -321,6 +322,7 @@ export class TapdResolver {
         name,
         amount,
         assetType: typeStr,
+        grouped,
         groupKey,
       })
     );
