@@ -529,15 +529,30 @@ export class TapdResolver {
     @Args('memo', { nullable: true }) memo?: string,
     @Args('expiry', { type: () => Int, nullable: true }) expiry?: number
   ) {
-    const result = await this.tapdNodeService.addAssetInvoice({
-      id,
-      assetId: assetId || undefined,
-      groupKey: groupKey || undefined,
-      assetAmount,
-      peerPubkey: peerPubkey || undefined,
-      memo: memo || undefined,
-      expiry: expiry || undefined,
-    });
+    if (!assetId && !groupKey) {
+      throw new GraphQLError(
+        'At least one of assetId or groupKey must be provided'
+      );
+    }
+    if (assetAmount <= 0) {
+      throw new GraphQLError('assetAmount must be greater than zero');
+    }
+
+    const [result, error] = await toWithError(
+      this.tapdNodeService.addAssetInvoice({
+        id,
+        assetId: assetId || undefined,
+        groupKey: groupKey || undefined,
+        assetAmount,
+        peerPubkey: peerPubkey || undefined,
+        memo: memo || undefined,
+        expiry: expiry || undefined,
+      })
+    );
+    if (error || !result) {
+      this.logger.error('Failed to create asset invoice', { error });
+      throw new GraphQLError('Failed to create asset invoice');
+    }
 
     const invoiceResult = result.invoiceResult;
     const quote = result.acceptedBuyQuote;
