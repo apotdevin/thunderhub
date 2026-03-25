@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useSendTapAssetMutation } from '../../graphql/mutations/__generated__/sendTapAsset.generated';
 import { useDecodeTapAddressLazyQuery } from '../../graphql/queries/__generated__/decodeTapAddress.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
+import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
 
 export const SendAsset: FC = () => {
@@ -16,7 +17,7 @@ export const SendAsset: FC = () => {
     useDecodeTapAddressLazyQuery();
 
   const { data: balancesData } = useGetTapBalancesQuery({
-    variables: { groupBy: 'GROUP_KEY' },
+    variables: { groupBy: TapBalanceGroupBy.GroupKey },
   });
 
   const nameMap = new Map(

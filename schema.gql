@@ -410,7 +410,7 @@ type Mutation {
   lnUrlWithdraw(amount: Float!, callback: String!, description: String, k1: String!): String!
   loginAmboss: Boolean!
   logout: Boolean!
-  mintTapAsset(amount: Int!, assetType: TapAssetType! = NORMAL, groupKey: String, name: String!): TapMintResponse!
+  mintTapAsset(amount: Int!, assetType: TapAssetType! = NORMAL, groupKey: String, grouped: Boolean = true, name: String!): TapMintResponse!
   newTapAddress(amt: Int, assetId: String, groupKey: String): TapAddress!
   openChannel(input: OpenChannelParams!): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!

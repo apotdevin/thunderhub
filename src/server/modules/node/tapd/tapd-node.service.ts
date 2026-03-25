@@ -187,21 +187,25 @@ export class TapdNodeService {
     name: string;
     amount: number;
     assetType: 'NORMAL' | 'COLLECTIBLE';
+    grouped?: boolean;
     groupKey?: string;
   }): Promise<MintAssetResponse> {
     const tapd = this.getTapd(opts.id);
+    const grouped = opts.grouped ?? true;
+
     return tapd.mint.mintAsset({
       asset: {
         name: opts.name,
         amount: String(opts.amount),
         assetType: opts.assetType,
-        newGroupedAsset: !opts.groupKey,
         ...(opts.groupKey
           ? {
               groupedAsset: true,
               groupKey: Buffer.from(opts.groupKey, 'hex'),
             }
-          : {}),
+          : grouped
+            ? { newGroupedAsset: true }
+            : {}),
       },
     });
   }

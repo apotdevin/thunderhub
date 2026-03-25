@@ -603,6 +603,7 @@ export type MutationMintTapAssetArgs = {
   amount: Scalars['Int']['input'];
   assetType?: TapAssetType;
   groupKey?: InputMaybe<Scalars['String']['input']>;
+  grouped?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
 };
 

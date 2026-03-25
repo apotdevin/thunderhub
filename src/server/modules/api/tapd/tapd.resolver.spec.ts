@@ -414,7 +414,8 @@ describe('TapdResolver', () => {
         userId,
         'TestCoin',
         1000,
-        TapAssetType.NORMAL
+        TapAssetType.NORMAL,
+        true
       );
 
       expect(result.batchKey).toBe('aabb');

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useNewTapAddressMutation } from '../../graphql/mutations/__generated__/newTapAddress.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
 import { useGetTapUniverseAssetsQuery } from '../../graphql/queries/__generated__/getTapUniverseAssets.generated';
+import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
 
 type GroupEntry = {
@@ -22,7 +23,7 @@ export const ReceiveAsset: FC = () => {
   const [copied, setCopied] = useState(false);
 
   const { data: balancesData } = useGetTapBalancesQuery({
-    variables: { groupBy: 'GROUP_KEY' },
+    variables: { groupBy: TapBalanceGroupBy.GroupKey },
   });
 
   const { data: universeData } = useGetTapUniverseAssetsQuery();
