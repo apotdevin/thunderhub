@@ -16,6 +16,27 @@ export enum TapBalanceGroupBy {
 
 registerEnumType(TapBalanceGroupBy, { name: 'TapBalanceGroupBy' });
 
+export enum TapTransactionType {
+  PURCHASE = 'PURCHASE',
+  SALE = 'SALE',
+}
+
+registerEnumType(TapTransactionType, { name: 'TapTransactionType' });
+
+export enum TapOfferSortBy {
+  RATE = 'RATE',
+  AVAILABLE = 'AVAILABLE',
+}
+
+registerEnumType(TapOfferSortBy, { name: 'TapOfferSortBy' });
+
+export enum TapOfferSortDir {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+
+registerEnumType(TapOfferSortDir, { name: 'TapOfferSortDir' });
+
 // ─── Asset Genesis ──────────────────────────────────────────────
 
 @ObjectType()

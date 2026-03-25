@@ -5,9 +5,9 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetTapOffersQueryVariables = Types.Exact<{
   assetId: Types.Scalars['String']['input'];
-  transactionType: Types.Scalars['String']['input'];
-  sortBy?: Types.InputMaybe<Types.Scalars['String']['input']>;
-  sortDir?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  transactionType: Types.TapTransactionType;
+  sortBy?: Types.InputMaybe<Types.TapOfferSortBy>;
+  sortDir?: Types.InputMaybe<Types.TapOfferSortDir>;
   minAmount?: Types.InputMaybe<Types.Scalars['String']['input']>;
   limit?: Types.InputMaybe<Types.Scalars['Int']['input']>;
   offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
@@ -43,9 +43,9 @@ export type GetTapOffersQuery = {
 export const GetTapOffersDocument = gql`
   query GetTapOffers(
     $assetId: String!
-    $transactionType: String!
-    $sortBy: String
-    $sortDir: String
+    $transactionType: TapTransactionType!
+    $sortBy: TapOfferSortBy
+    $sortDir: TapOfferSortDir
     $minAmount: String
     $limit: Int
     $offset: Int

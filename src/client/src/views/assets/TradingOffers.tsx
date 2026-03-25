@@ -9,15 +9,19 @@ import { useAmbossUser } from '../../hooks/UseAmbossUser';
 import { getErrorContent } from '../../utils/error';
 import { cn } from '../../lib/utils';
 import { Button } from '@/components/ui/button';
-
-type TransactionType = 'PURCHASE' | 'SALE';
-type SortBy = 'RATE' | 'AVAILABLE';
+import {
+  TapTransactionType,
+  TapOfferSortBy,
+  TapOfferSortDir,
+} from '../../graphql/types';
 
 export const TradingOffers: FC = () => {
   const [selectedAsset, setSelectedAsset] = useState('');
-  const [txType, setTxType] = useState<TransactionType>('PURCHASE');
-  const [sortBy, setSortBy] = useState<SortBy>('RATE');
-  const [sortDir, setSortDir] = useState<'ASC' | 'DESC'>('ASC');
+  const [txType, setTxType] = useState<TapTransactionType>(
+    TapTransactionType.Purchase
+  );
+  const [sortBy, setSortBy] = useState<TapOfferSortBy>(TapOfferSortBy.Rate);
+  const [sortDir, setSortDir] = useState<TapOfferSortDir>(TapOfferSortDir.Asc);
   const [minAmountInput, setMinAmountInput] = useState('');
   const [minAmount, setMinAmount] = useState('');
 
@@ -52,7 +56,7 @@ export const TradingOffers: FC = () => {
 
   // For SALE, only show assets the node owns (match by group key)
   const supportedAssets =
-    txType === 'SALE'
+    txType === TapTransactionType.Sale
       ? allSupported.filter(a => a.groupKey && ownedGroupKeys.has(a.groupKey))
       : allSupported;
 
@@ -79,16 +83,18 @@ export const TradingOffers: FC = () => {
   const offers = offersData?.getTapOffers?.list || [];
   const totalCount = offersData?.getTapOffers?.totalCount || 0;
 
-  const toggleSort = (field: SortBy) => {
+  const toggleSort = (field: TapOfferSortBy) => {
     if (sortBy === field) {
-      setSortDir(d => (d === 'ASC' ? 'DESC' : 'ASC'));
+      setSortDir(d =>
+        d === TapOfferSortDir.Asc ? TapOfferSortDir.Desc : TapOfferSortDir.Asc
+      );
     } else {
       setSortBy(field);
-      setSortDir('ASC');
+      setSortDir(TapOfferSortDir.Asc);
     }
   };
 
-  const SortIcon: FC<{ field: SortBy }> = ({ field }) => (
+  const SortIcon: FC<{ field: TapOfferSortBy }> = ({ field }) => (
     <ArrowUpDown
       size={12}
       className={cn(
@@ -120,13 +126,15 @@ export const TradingOffers: FC = () => {
       {/* Buy / Sell toggle + Asset pills */}
       <div className="flex items-center gap-2 flex-wrap">
         <div className="flex rounded-md overflow-hidden border border-border">
-          {(['PURCHASE', 'SALE'] as const).map(t => (
+          {(
+            [TapTransactionType.Purchase, TapTransactionType.Sale] as const
+          ).map(t => (
             <button
               key={t}
               onClick={() => {
                 setTxType(t);
                 // Clear selection if switching to Sell and current asset isn't owned
-                if (t === 'SALE' && selectedAsset) {
+                if (t === TapTransactionType.Sale && selectedAsset) {
                   const selected = allSupported.find(
                     a => (a.assetId || a.id) === selectedAsset
                   );
@@ -145,7 +153,7 @@ export const TradingOffers: FC = () => {
                   : 'bg-background text-muted-foreground hover:text-foreground'
               )}
             >
-              {t === 'PURCHASE' ? 'Buy' : 'Sell'}
+              {t === TapTransactionType.Purchase ? 'Buy' : 'Sell'}
             </button>
           ))}
         </div>
@@ -153,7 +161,8 @@ export const TradingOffers: FC = () => {
         <div className="flex gap-1 ml-2 items-center">
           {assetsLoading ? (
             <Loader2 className="animate-spin text-muted-foreground" size={16} />
-          ) : supportedAssets.length === 0 && txType === 'SALE' ? (
+          ) : supportedAssets.length === 0 &&
+            txType === TapTransactionType.Sale ? (
             <span className="text-sm text-muted-foreground">
               You don&#39;t have any supported assets to sell
             </span>
@@ -241,17 +250,17 @@ export const TradingOffers: FC = () => {
                 </th>
                 <th
                   className="text-left py-3 px-3 font-medium cursor-pointer select-none"
-                  onClick={() => toggleSort('RATE')}
+                  onClick={() => toggleSort(TapOfferSortBy.Rate)}
                 >
                   {selectedSymbol ? `${selectedSymbol}/BTC` : 'Rate'}
-                  <SortIcon field="RATE" />
+                  <SortIcon field={TapOfferSortBy.Rate} />
                 </th>
                 <th
                   className="text-left py-3 px-3 font-medium cursor-pointer select-none"
-                  onClick={() => toggleSort('AVAILABLE')}
+                  onClick={() => toggleSort(TapOfferSortBy.Available)}
                 >
                   Available
-                  <SortIcon field="AVAILABLE" />
+                  <SortIcon field={TapOfferSortBy.Available} />
                 </th>
               </tr>
             </thead>

@@ -690,7 +690,7 @@ type Query {
   getTapAssets: TapAssetList!
   getTapBalances(groupBy: TapBalanceGroupBy = GROUP_KEY): TapBalances!
   getTapFederationServers: TapFederationServerList!
-  getTapOffers(assetId: String!, limit: Int, minAmount: String, offset: Int, sortBy: String, sortDir: String, transactionType: String!): TapTradeOfferList!
+  getTapOffers(assetId: String!, limit: Int, minAmount: String, offset: Int, sortBy: TapOfferSortBy, sortDir: TapOfferSortDir, transactionType: TapTransactionType!): TapTradeOfferList!
   getTapSupportedAssets: TapSupportedAssetList!
   getTapTransfers: TapTransferList!
   getTapUniverseAssets: TapUniverseAssetList!
@@ -814,6 +814,16 @@ type TapMintResponse {
   batchKey: String
 }
 
+enum TapOfferSortBy {
+  AVAILABLE
+  RATE
+}
+
+enum TapOfferSortDir {
+  ASC
+  DESC
+}
+
 type TapSupportedAsset {
   assetId: String
   description: String
@@ -852,6 +862,11 @@ type TapTradeOfferList {
 type TapTradeOfferNode {
   alias: String
   pubkey: String
+}
+
+enum TapTransactionType {
+  PURCHASE
+  SALE
 }
 
 type TapTransfer {

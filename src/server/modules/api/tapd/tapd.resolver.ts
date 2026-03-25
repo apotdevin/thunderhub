@@ -37,7 +37,27 @@ import {
   TapUniverseInfo,
   TapSupportedAssetList,
   TapUniverseStats,
+  TapTransactionType,
+  TapOfferSortBy,
+  TapOfferSortDir,
 } from './tapd.types';
+
+// Internal shapes matching the trade API GraphQL responses
+
+interface TradeApiOffer {
+  id: string;
+  node?: { alias?: string; pubkey?: string };
+  rate?: { display_amount?: string; full_amount?: string };
+  available?: { display_amount?: string; full_amount?: string };
+}
+
+interface TradeApiSupportedAsset {
+  id: string;
+  symbol?: string;
+  description?: string;
+  precision?: number;
+  taproot_asset_details?: { asset_id?: string; group_key?: string };
+}
 import {
   bufToHex,
   buildXCoordToFullKeyMap,
@@ -572,9 +592,12 @@ export class TapdResolver {
     @CurrentUser() _user: UserId,
     @Context() { ambossAuth }: ContextType,
     @Args('assetId') assetId: string,
-    @Args('transactionType') transactionType: string,
-    @Args('sortBy', { nullable: true }) sortBy?: string,
-    @Args('sortDir', { nullable: true }) sortDir?: string,
+    @Args('transactionType', { type: () => TapTransactionType })
+    transactionType: TapTransactionType,
+    @Args('sortBy', { type: () => TapOfferSortBy, nullable: true })
+    sortBy?: TapOfferSortBy,
+    @Args('sortDir', { type: () => TapOfferSortDir, nullable: true })
+    sortDir?: TapOfferSortDir,
     @Args('minAmount', { nullable: true }) minAmount?: string,
     @Args('limit', { type: () => Int, nullable: true }) limit?: number,
     @Args('offset', { type: () => Int, nullable: true }) offset?: number
@@ -589,7 +612,7 @@ export class TapdResolver {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       public: {
         offers: {
-          list: any[];
+          list: TradeApiOffer[];
           total_count: number;
         };
       };
@@ -619,7 +642,7 @@ export class TapdResolver {
     const offers = data.public.offers;
 
     return {
-      list: offers.list.map((o: any) => ({
+      list: offers.list.map(o => ({
         id: o.id,
         node: {
           alias: o.node?.alias,
@@ -654,7 +677,7 @@ export class TapdResolver {
       public: {
         assets: {
           supported: {
-            list: any[];
+            list: TradeApiSupportedAsset[];
             total_count: number;
           };
         };
@@ -670,7 +693,7 @@ export class TapdResolver {
     const assets = data.public.assets.supported;
 
     return {
-      list: assets.list.map((a: any) => ({
+      list: assets.list.map(a => ({
         id: a.id,
         symbol: a.symbol,
         description: a.description,

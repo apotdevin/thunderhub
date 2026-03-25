@@ -1146,6 +1146,21 @@ export enum TapBalanceGroupBy {
   GroupKey = 'GROUP_KEY',
 }
 
+export enum TapTransactionType {
+  Purchase = 'PURCHASE',
+  Sale = 'SALE',
+}
+
+export enum TapOfferSortBy {
+  Available = 'AVAILABLE',
+  Rate = 'RATE',
+}
+
+export enum TapOfferSortDir {
+  Asc = 'ASC',
+  Desc = 'DESC',
+}
+
 export type TapBalances = {
   __typename?: 'TapBalances';
   balances: Array<TapAssetBalanceEntry>;

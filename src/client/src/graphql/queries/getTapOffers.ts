@@ -3,9 +3,9 @@ import { gql } from '@apollo/client';
 export const GET_TAP_OFFERS = gql`
   query GetTapOffers(
     $assetId: String!
-    $transactionType: String!
-    $sortBy: String
-    $sortDir: String
+    $transactionType: TapTransactionType!
+    $sortBy: TapOfferSortBy
+    $sortDir: TapOfferSortDir
     $minAmount: String
     $limit: Int
     $offset: Int
