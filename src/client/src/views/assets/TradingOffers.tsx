@@ -150,9 +150,13 @@ export const TradingOffers: FC = () => {
           ))}
         </div>
 
-        <div className="flex gap-1 ml-2">
+        <div className="flex gap-1 ml-2 items-center">
           {assetsLoading ? (
             <Loader2 className="animate-spin text-muted-foreground" size={16} />
+          ) : supportedAssets.length === 0 && txType === 'SALE' ? (
+            <span className="text-sm text-muted-foreground">
+              You don&#39;t have any supported assets to sell
+            </span>
           ) : (
             supportedAssets.map(a => {
               const value = a.assetId || a.id;
