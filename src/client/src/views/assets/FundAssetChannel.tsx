@@ -51,11 +51,13 @@ export const FundAssetChannel: FC = () => {
     }
     fundChannel({
       variables: {
-        peerPubkey,
-        assetAmount: parseInt(assetAmount, 10),
-        groupKey: selectedGroup,
-        feeRateSatPerVbyte: feeRate ? parseInt(feeRate, 10) : null,
-        pushSat: pushSat ? parseInt(pushSat, 10) : null,
+        input: {
+          peerPubkey,
+          assetAmount,
+          groupKey: selectedGroup,
+          feeRateSatPerVbyte: feeRate ? parseInt(feeRate, 10) : undefined,
+          pushSat: pushSat ? parseInt(pushSat, 10) : undefined,
+        },
       },
     });
   };

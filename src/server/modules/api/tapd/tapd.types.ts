@@ -1,4 +1,10 @@
-import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
 
 // ─── Enums ──────────────────────────────────────────────────────
 
@@ -268,6 +274,48 @@ export class TapFederationServerList {
 export class TapSyncResult {
   @Field(() => [String])
   syncedUniverses: string[];
+}
+
+@InputType()
+export class TapAssetInvoiceInput {
+  @Field()
+  assetAmount: string;
+
+  @Field({ nullable: true })
+  assetId?: string;
+
+  @Field({ nullable: true })
+  groupKey?: string;
+
+  @Field({ nullable: true })
+  peerPubkey?: string;
+
+  @Field({ nullable: true })
+  memo?: string;
+
+  @Field(() => Int, { nullable: true })
+  expiry?: number;
+}
+
+@InputType()
+export class TapFundChannelInput {
+  @Field()
+  peerPubkey: string;
+
+  @Field()
+  assetAmount: string;
+
+  @Field({ nullable: true })
+  groupKey?: string;
+
+  @Field({ nullable: true })
+  assetId?: string;
+
+  @Field(() => Int, { nullable: true })
+  feeRateSatPerVbyte?: number;
+
+  @Field(() => Int, { nullable: true })
+  pushSat?: number;
 }
 
 @ObjectType()
