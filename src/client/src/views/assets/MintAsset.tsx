@@ -6,15 +6,13 @@ import { Button } from '@/components/ui/button';
 import { useMintTapAssetMutation } from '../../graphql/mutations/__generated__/mintTapAsset.generated';
 import { useFinalizeTapBatchMutation } from '../../graphql/mutations/__generated__/finalizeTapBatch.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
-import { TapBalanceGroupBy } from '../../graphql/types';
+import { TapAssetType, TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
 
 export const MintAsset: FC = () => {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
-  const [assetType, setAssetType] = useState<'NORMAL' | 'COLLECTIBLE'>(
-    'NORMAL'
-  );
+  const [assetType, setAssetType] = useState(TapAssetType.Normal);
   const [grouped, setGrouped] = useState(true);
   const [groupKey, setGroupKey] = useState('');
   const [batchKey, setBatchKey] = useState<string | null>(null);
@@ -146,13 +144,11 @@ export const MintAsset: FC = () => {
             </label>
             <select
               value={assetType}
-              onChange={e =>
-                setAssetType(e.target.value as 'NORMAL' | 'COLLECTIBLE')
-              }
+              onChange={e => setAssetType(e.target.value as TapAssetType)}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             >
-              <option value="NORMAL">Normal</option>
-              <option value="COLLECTIBLE">Collectible</option>
+              <option value={TapAssetType.Normal}>Normal</option>
+              <option value={TapAssetType.Collectible}>Collectible</option>
             </select>
           </div>
           <div className="flex gap-2">

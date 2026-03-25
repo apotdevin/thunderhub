@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useFundTapAssetChannelMutation } from '../../graphql/mutations/__generated__/fundTapAssetChannel.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
+import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
 
 export const FundAssetChannel: FC = () => {
@@ -15,14 +16,14 @@ export const FundAssetChannel: FC = () => {
   const [pushSat, setPushSat] = useState('');
 
   const { data: balancesData } = useGetTapBalancesQuery({
-    variables: { groupBy: 'groupKey' },
+    variables: { groupBy: TapBalanceGroupBy.GroupKey },
   });
 
   const knownGroups = (balancesData?.getTapBalances?.balances || [])
     .filter(b => b.groupKey && b.balance && Number(b.balance) > 0)
     .map(b => ({
       groupKey: b.groupKey!,
-      name: b.name || 'Unknown',
+      name: b.names?.[0] || 'Unknown',
       balance: b.balance!,
     }));
 

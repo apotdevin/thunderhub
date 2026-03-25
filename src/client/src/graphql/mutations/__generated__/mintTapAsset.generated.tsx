@@ -56,6 +56,7 @@ export type MintTapAssetMutationFn = Apollo.MutationFunction<
  *      name: // value for 'name'
  *      amount: // value for 'amount'
  *      assetType: // value for 'assetType'
+ *      grouped: // value for 'grouped'
  *      groupKey: // value for 'groupKey'
  *   },
  * });
