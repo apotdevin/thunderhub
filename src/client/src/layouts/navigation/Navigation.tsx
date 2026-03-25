@@ -28,9 +28,6 @@ import {
 import { useGetNodeCapabilitiesQuery } from '../../graphql/queries/__generated__/getNodeCapabilities.generated';
 import { SideSettings } from './sideSettings/SideSettings';
 
-const TAPD_TOOLTIP =
-  'Enable Trading by running Lightning Terminal with Taproot Assets. Trading powered by RailsX By Amboss';
-
 type Icon = FC<LucideProps>;
 
 const HOME = '/';
@@ -56,6 +53,9 @@ interface NavItem {
   disabledTooltip?: string;
 }
 
+const TAPD_TOOLTIP =
+  'Enable Trading by running Lightning Terminal with Taproot Assets. Trading powered by RailsX By Amboss';
+
 const mainNav: NavItem[] = [
   { title: 'Home', link: HOME, icon: Home },
   { title: 'Dashboard', link: DASHBOARD, icon: Grid },
@@ -66,8 +66,6 @@ const mainNav: NavItem[] = [
   { title: 'Chain', link: CHAIN_TRANS, icon: LinkIcon },
   { title: 'Tools', link: TOOLS, icon: Shield },
 ];
-
-const TAPD_LINKS = new Set([ASSETS, TRADING]);
 
 interface NavigationProps {
   isBurger?: boolean;
@@ -91,11 +89,13 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     capData?.getNodeCapabilities?.capabilities?.includes('taproot_assets') ??
     false;
 
-  const secondaryNav: NavItem[] = secondaryNavItems.map(item =>
-    TAPD_LINKS.has(item.link) && !tapdAvailable
-      ? { ...item, disabled: true, disabledTooltip: TAPD_TOOLTIP }
-      : item
-  );
+  const secondaryNav: NavItem[] = secondaryNavItems
+    .filter(item => item.link !== ASSETS || tapdAvailable)
+    .map(item =>
+      item.link === TRADING && !tapdAvailable
+        ? { ...item, disabled: true, disabledTooltip: TAPD_TOOLTIP }
+        : item
+    );
 
   const renderNavButton = (item: NavItem, open = true) => {
     const isActive = pathname === item.link;
