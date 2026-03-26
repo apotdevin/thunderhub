@@ -11,7 +11,6 @@ export const GET_TAP_SUPPORTED_ASSETS = gql`
         assetId
         groupKey
       }
-      totalCount
     }
   }
 `;

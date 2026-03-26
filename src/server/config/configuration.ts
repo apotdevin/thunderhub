@@ -98,6 +98,23 @@ const VALID_NODE_TYPES = ['lnd', 'litd'];
 const getValidNodeType = (value: string | undefined): string =>
   value && VALID_NODE_TYPES.includes(value) ? value : 'lnd';
 
+const ALLOWED_TRADE_HOSTS = ['rails.amboss.tech', 'rails-dev.amboss.tech'];
+
+const getValidTradeUrl = (
+  value: string | undefined,
+  isProduction: boolean
+): string => {
+  const url = value || 'https://rails.amboss.tech/graphql';
+  try {
+    const parsed = new URL(url);
+    if (isProduction && parsed.protocol !== 'https:') return '';
+    if (!ALLOWED_TRADE_HOSTS.includes(parsed.hostname)) return '';
+    return url;
+  } catch {
+    return '';
+  }
+};
+
 export default (): ConfigType => {
   const isProduction = process.env.NODE_ENV === 'production';
 
@@ -125,7 +142,7 @@ export default (): ConfigType => {
     ticker: 'https://blockchain.info/ticker',
     github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
     boltz: 'https://api.boltz.exchange',
-    trade: process.env.TRADE_API_URL || 'https://rails.amboss.tech/graphql',
+    trade: getValidTradeUrl(process.env.TRADE_API_URL, isProduction),
   };
 
   const npmVersion = process.env.npm_package_version || '0.0.0';

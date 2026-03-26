@@ -59,8 +59,8 @@ describe('TapdResolver', () => {
     mockLogger.error.mockClear();
     resolver = new TapdResolver(
       service as never,
-      {} as never,
-      {} as never,
+      { graphqlFetchWithProxy: jest.fn() } as never,
+      { get: jest.fn() } as never,
       mockLogger as never
     );
   });
@@ -534,7 +534,7 @@ describe('TapdResolver', () => {
 
 describe('TapdResolver trading queries', () => {
   const userId = { id: 'test-user-id' };
-  const tradeUrl = 'http://trade.example.com/graphql';
+  const tradeUrl = 'https://rails.amboss.tech/graphql';
   const ambossContext = { ambossAuth: 'token123' };
 
   const mockFetchService = { graphqlFetchWithProxy: jest.fn() };
@@ -611,6 +611,18 @@ describe('TapdResolver trading queries', () => {
       expect(mockFetchService.graphqlFetchWithProxy).not.toHaveBeenCalled();
     });
 
+    it('returns empty list when ambossAuth is missing', async () => {
+      const result = await resolver.getTapOffers(
+        userId,
+        { ambossAuth: undefined } as never,
+        'asset123',
+        TapTransactionType.PURCHASE
+      );
+
+      expect(result).toEqual({ list: [], totalCount: 0 });
+      expect(mockFetchService.graphqlFetchWithProxy).not.toHaveBeenCalled();
+    });
+
     it('returns empty list and logs error when fetch fails', async () => {
       mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
         data: undefined,
@@ -656,7 +668,7 @@ describe('TapdResolver trading queries', () => {
   });
 
   describe('getTapSupportedAssets', () => {
-    it('maps API response to supported asset list', async () => {
+    it('maps grouped asset with group_key only', async () => {
       mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
         data: {
           public: {
@@ -669,7 +681,6 @@ describe('TapdResolver trading queries', () => {
                     description: 'USD Hyperinflation',
                     precision: 2,
                     taproot_asset_details: {
-                      asset_id: 'tapAssetId1',
                       group_key: 'tapGroupKey1',
                     },
                   },
@@ -688,14 +699,53 @@ describe('TapdResolver trading queries', () => {
       );
 
       expect(result.totalCount).toBe(1);
-      expect(result.list).toHaveLength(1);
       expect(result.list[0]).toEqual({
         id: 'asset-1',
         symbol: 'USDH',
         description: 'USD Hyperinflation',
         precision: 2,
-        assetId: 'tapAssetId1',
+        assetId: undefined,
         groupKey: 'tapGroupKey1',
+      });
+    });
+
+    it('maps ungrouped asset with asset_id only', async () => {
+      mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
+        data: {
+          public: {
+            assets: {
+              supported: {
+                list: [
+                  {
+                    id: 'asset-2',
+                    symbol: 'NFT',
+                    description: 'Collectible',
+                    precision: 0,
+                    taproot_asset_details: {
+                      asset_id: 'tapAssetId2',
+                    },
+                  },
+                ],
+                total_count: 1,
+              },
+            },
+          },
+        },
+        error: undefined,
+      });
+
+      const result = await resolver.getTapSupportedAssets(
+        userId,
+        ambossContext as never
+      );
+
+      expect(result.list[0]).toEqual({
+        id: 'asset-2',
+        symbol: 'NFT',
+        description: 'Collectible',
+        precision: 0,
+        assetId: 'tapAssetId2',
+        groupKey: undefined,
       });
     });
 
@@ -753,7 +803,7 @@ describe('TapdResolver trading queries', () => {
         id: 'asset-2',
         symbol: 'BTC',
         description: undefined,
-        precision: undefined,
+        precision: 0,
         assetId: undefined,
         groupKey: undefined,
       });

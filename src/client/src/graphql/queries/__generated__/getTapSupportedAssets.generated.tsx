@@ -11,13 +11,12 @@ export type GetTapSupportedAssetsQuery = {
   __typename?: 'Query';
   getTapSupportedAssets: {
     __typename?: 'TapSupportedAssetList';
-    totalCount: number;
     list: Array<{
       __typename?: 'TapSupportedAsset';
       id: string;
-      symbol?: string | null;
+      symbol: string;
       description?: string | null;
-      precision?: number | null;
+      precision: number;
       assetId?: string | null;
       groupKey?: string | null;
     }>;
@@ -35,7 +34,6 @@ export const GetTapSupportedAssetsDocument = gql`
         assetId
         groupKey
       }
-      totalCount
     }
   }
 `;

@@ -738,7 +738,7 @@ type SingleChannel {
 type TapAddress {
   amount: String!
   assetId: String!
-  assetType: String
+  assetType: String!
   encoded: String!
   groupKey: String
   internalKey: String!
@@ -793,7 +793,7 @@ type TapBalances {
 
 type TapFederationServer {
   host: String!
-  id: Int
+  id: Int!
 }
 
 type TapFederationServerList {
@@ -802,7 +802,7 @@ type TapFederationServerList {
 }
 
 type TapFinalizeBatchResponse {
-  batchKey: String
+  batchKey: String!
 }
 
 type TapFundChannelResponse {
@@ -811,7 +811,7 @@ type TapFundChannelResponse {
 }
 
 type TapMintResponse {
-  batchKey: String
+  batchKey: String!
 }
 
 enum TapOfferSortBy {
@@ -829,8 +829,8 @@ type TapSupportedAsset {
   description: String
   groupKey: String
   id: String!
-  precision: Float
-  symbol: String
+  precision: Int!
+  symbol: String!
 }
 
 type TapSupportedAssetList {
@@ -851,7 +851,7 @@ type TapTradeOffer {
 
 type TapTradeOfferAmount {
   displayAmount: String
-  fullAmount: String
+  fullAmount: String!
 }
 
 type TapTradeOfferList {
@@ -861,7 +861,7 @@ type TapTradeOfferList {
 
 type TapTradeOfferNode {
   alias: String
-  pubkey: String
+  pubkey: String!
 }
 
 enum TapTransactionType {
@@ -874,7 +874,7 @@ type TapTransfer {
   anchorTxHash: String!
   anchorTxHeightHint: Int!
   inputs: [TapTransferInput!]!
-  label: String
+  label: String!
   outputs: [TapTransferOutput!]!
   transferTimestamp: String!
 }
@@ -900,7 +900,7 @@ type TapUniverseAsset {
   assetId: String
   groupKey: String
   name: String
-  proofType: String
+  proofType: String!
   totalSupply: String!
 }
 

@@ -216,7 +216,7 @@ export class TapdResolver {
       anchorTxHeightHint: t.anchorTxHeightHint,
       anchorTxChainFees: t.anchorTxChainFees.toString(),
       transferTimestamp: t.transferTimestamp.toString(),
-      label: t.label || null,
+      label: t.label || '',
       inputs: (t.inputs || []).map((i: TransferInput) => ({
         anchorPoint: i.anchorPoint,
         assetId: bufToHex(i.assetId) || '',
@@ -262,7 +262,9 @@ export class TapdResolver {
     return {
       encoded: result.encoded,
       assetId: bufToHex(result.assetId) || '',
+      groupKey: bufToHex(result.groupKey) || null,
       amount: result.amount.toString(),
+      assetType: result.assetType?.toString() || '',
       scriptKey: bufToHex(result.scriptKey) || '',
       internalKey: bufToHex(result.internalKey) || '',
       taprootOutputKey: bufToHex(result.taprootOutputKey) || '',
@@ -284,7 +286,7 @@ export class TapdResolver {
     return {
       encoded: result.encoded,
       assetId: bufToHex(result.assetId) || '',
-      groupKey: bufToHex(result.groupKey),
+      groupKey: bufToHex(result.groupKey) || null,
       amount: result.amount.toString(),
       assetType: result.assetType.toString(),
       scriptKey: bufToHex(result.scriptKey) || '',
@@ -422,7 +424,7 @@ export class TapdResolver {
       name: string | null;
       assetId: string | null;
       groupKey: string | null;
-      proofType: string | null;
+      proofType: string;
       totalSupply: string;
     }[] = [];
     const seen = new Set<string>();
@@ -449,7 +451,7 @@ export class TapdResolver {
         name: root.assetName || null,
         assetId,
         groupKey: fullGroupKey,
-        proofType: uid.proofType || null,
+        proofType: uid.proofType || '',
         totalSupply: totalSupply.toString(),
       });
     }
@@ -603,11 +605,11 @@ export class TapdResolver {
     @Args('offset', { type: () => Int, nullable: true }) offset?: number
   ) {
     const tradeUrl = this.configService.get<string>('urls.trade');
-    if (!tradeUrl) {
+    if (!tradeUrl || !ambossAuth) {
       return { list: [], totalCount: 0 };
     }
 
-    const headers = ambossAuth ? { authorization: `Bearer ${ambossAuth}` } : {};
+    const headers = { authorization: `Bearer ${ambossAuth}` };
 
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       public: {
@@ -646,15 +648,15 @@ export class TapdResolver {
         id: o.id,
         node: {
           alias: o.node?.alias,
-          pubkey: o.node?.pubkey,
+          pubkey: o.node?.pubkey || '',
         },
         rate: {
           displayAmount: o.rate?.display_amount,
-          fullAmount: o.rate?.full_amount,
+          fullAmount: o.rate?.full_amount || '0',
         },
         available: {
           displayAmount: o.available?.display_amount,
-          fullAmount: o.available?.full_amount,
+          fullAmount: o.available?.full_amount || '0',
         },
       })),
       totalCount: offers.total_count,
@@ -667,11 +669,11 @@ export class TapdResolver {
     @Context() { ambossAuth }: ContextType
   ) {
     const tradeUrl = this.configService.get<string>('urls.trade');
-    if (!tradeUrl) {
+    if (!tradeUrl || !ambossAuth) {
       return { list: [], totalCount: 0 };
     }
 
-    const headers = ambossAuth ? { authorization: `Bearer ${ambossAuth}` } : {};
+    const headers = { authorization: `Bearer ${ambossAuth}` };
 
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       public: {
@@ -695,9 +697,9 @@ export class TapdResolver {
     return {
       list: assets.list.map(a => ({
         id: a.id,
-        symbol: a.symbol,
+        symbol: a.symbol || '',
         description: a.description,
-        precision: a.precision,
+        precision: a.precision ?? 0,
         assetId: a.taproot_asset_details?.asset_id,
         groupKey: a.taproot_asset_details?.group_key,
       })),

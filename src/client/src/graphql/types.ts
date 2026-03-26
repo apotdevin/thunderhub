@@ -1195,8 +1195,8 @@ export type TapSupportedAsset = {
   description?: Maybe<Scalars['String']['output']>;
   groupKey?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
-  precision?: Maybe<Scalars['Float']['output']>;
-  symbol?: Maybe<Scalars['String']['output']>;
+  precision: Scalars['Int']['output'];
+  symbol: Scalars['String']['output'];
 };
 
 export type TapSupportedAssetList = {
@@ -1221,7 +1221,7 @@ export type TapTradeOffer = {
 export type TapTradeOfferAmount = {
   __typename?: 'TapTradeOfferAmount';
   displayAmount?: Maybe<Scalars['String']['output']>;
-  fullAmount?: Maybe<Scalars['String']['output']>;
+  fullAmount: Scalars['String']['output'];
 };
 
 export type TapTradeOfferList = {
@@ -1233,7 +1233,7 @@ export type TapTradeOfferList = {
 export type TapTradeOfferNode = {
   __typename?: 'TapTradeOfferNode';
   alias?: Maybe<Scalars['String']['output']>;
-  pubkey?: Maybe<Scalars['String']['output']>;
+  pubkey: Scalars['String']['output'];
 };
 
 export enum TapTransactionType {

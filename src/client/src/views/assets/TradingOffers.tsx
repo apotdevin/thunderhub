@@ -1,9 +1,10 @@
 import { FC, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Loader2, Info, ArrowUpDown } from 'lucide-react';
+import { Loader2, Info, ArrowUpDown, ArrowLeftRight } from 'lucide-react';
 import { useGetTapOffersQuery } from '../../graphql/queries/__generated__/getTapOffers.generated';
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
+import { useGetNodeCapabilitiesQuery } from '../../graphql/queries/__generated__/getNodeCapabilities.generated';
 import { useLoginAmbossMutation } from '../../graphql/mutations/__generated__/loginAmboss.generated';
 import { useAmbossUser } from '../../hooks/UseAmbossUser';
 import { getErrorContent } from '../../utils/error';
@@ -17,6 +18,40 @@ import {
 } from '../../graphql/types';
 
 export const TradingOffers: FC = () => {
+  const { data: capData, loading: capLoading } = useGetNodeCapabilitiesQuery();
+  const tapdAvailable =
+    capData?.getNodeCapabilities?.capabilities?.includes('taproot_assets') ??
+    false;
+
+  if (capLoading) {
+    return (
+      <div className="flex justify-center py-16">
+        <Loader2 className="animate-spin text-muted-foreground" size={20} />
+      </div>
+    );
+  }
+
+  if (!tapdAvailable) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
+        <ArrowLeftRight size={40} className="text-muted-foreground/40" />
+        <div className="space-y-2">
+          <h2 className="text-lg font-semibold">
+            Trading requires Taproot Assets
+          </h2>
+          <p className="text-sm text-muted-foreground max-w-md">
+            To trade Taproot Assets, run your node with Lightning Terminal
+            (litd) which includes the Taproot Assets daemon.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return <TradingOffersContent />;
+};
+
+const TradingOffersContent: FC = () => {
   const [selectedAsset, setSelectedAsset] = useState('');
   const [txType, setTxType] = useState<TapTransactionType>(
     TapTransactionType.Purchase

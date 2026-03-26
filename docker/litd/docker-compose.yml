@@ -201,6 +201,7 @@ services:
       - COOKIE_PATH=/tmp/cookie-alice
       - TRADE_API_URL=${TRADE_API_URL:-http://host.docker.internal:3006/graphql}
       - AMBOSS_AUTH_URL=${AMBOSS_AUTH_URL:-http://host.docker.internal:3007/graphql}
+    # host-gateway resolves to the host IP on all platforms (Docker 20.10+)
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
