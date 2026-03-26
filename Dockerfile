@@ -16,7 +16,7 @@ RUN apk add --update --no-cache \
 
 # Install app dependencies
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm npm ci
 
 # ---------------
 # Build App
@@ -33,7 +33,7 @@ ENV NODE_ENV=${NODE_ENV}
 
 # Build the NestJS and Vite application
 COPY . .
-RUN npm run build:nest && npm run build:client
+RUN npm run build:nest & npm run build:client & wait
 
 # Remove non production necessary modules
 RUN npm prune --omit=dev
