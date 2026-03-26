@@ -1,0 +1,11 @@
+services:
+  thunderhub:
+    build: .
+    restart: on-failure
+    ports:
+      - 3000:3000
+    volumes:
+      - ./local_data:/data
+    environment:
+      LOG_LEVEL: "debug"
+      ACCOUNT_CONFIG_PATH: "/data/thubConfig.yaml"
