@@ -165,7 +165,7 @@ export const TradingOffers: FC = () => {
           ) : supportedAssets.length === 0 &&
             txType === TapTransactionType.Sale ? (
             <span className="text-sm text-muted-foreground">
-              You don&#39;t have any supported assets to sell
+              You don't have any supported assets to sell
             </span>
           ) : (
             supportedAssets.map(a => {

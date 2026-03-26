@@ -1033,9 +1033,9 @@ export type QueryGetTapOffersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   minAmount?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  sortBy?: InputMaybe<Scalars['String']['input']>;
-  sortDir?: InputMaybe<Scalars['String']['input']>;
-  transactionType: Scalars['String']['input'];
+  sortBy?: InputMaybe<TapOfferSortBy>;
+  sortDir?: InputMaybe<TapOfferSortDir>;
+  transactionType: TapTransactionType;
 };
 
 export type QueryRecoverFundsArgs = {
@@ -1146,21 +1146,6 @@ export enum TapBalanceGroupBy {
   GroupKey = 'GROUP_KEY',
 }
 
-export enum TapTransactionType {
-  Purchase = 'PURCHASE',
-  Sale = 'SALE',
-}
-
-export enum TapOfferSortBy {
-  Available = 'AVAILABLE',
-  Rate = 'RATE',
-}
-
-export enum TapOfferSortDir {
-  Asc = 'ASC',
-  Desc = 'DESC',
-}
-
 export type TapBalances = {
   __typename?: 'TapBalances';
   balances: Array<TapAssetBalanceEntry>;
@@ -1193,6 +1178,16 @@ export type TapMintResponse = {
   __typename?: 'TapMintResponse';
   batchKey?: Maybe<Scalars['String']['output']>;
 };
+
+export enum TapOfferSortBy {
+  Available = 'AVAILABLE',
+  Rate = 'RATE',
+}
+
+export enum TapOfferSortDir {
+  Asc = 'ASC',
+  Desc = 'DESC',
+}
 
 export type TapSupportedAsset = {
   __typename?: 'TapSupportedAsset';
@@ -1240,6 +1235,11 @@ export type TapTradeOfferNode = {
   alias?: Maybe<Scalars['String']['output']>;
   pubkey?: Maybe<Scalars['String']['output']>;
 };
+
+export enum TapTransactionType {
+  Purchase = 'PURCHASE',
+  Sale = 'SALE',
+}
 
 export type TapTransfer = {
   __typename?: 'TapTransfer';

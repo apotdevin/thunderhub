@@ -41,23 +41,6 @@ import {
   TapOfferSortBy,
   TapOfferSortDir,
 } from './tapd.types';
-
-// Internal shapes matching the trade API GraphQL responses
-
-interface TradeApiOffer {
-  id: string;
-  node?: { alias?: string; pubkey?: string };
-  rate?: { display_amount?: string; full_amount?: string };
-  available?: { display_amount?: string; full_amount?: string };
-}
-
-interface TradeApiSupportedAsset {
-  id: string;
-  symbol?: string;
-  description?: string;
-  precision?: number;
-  taproot_asset_details?: { asset_id?: string; group_key?: string };
-}
 import {
   bufToHex,
   buildXCoordToFullKeyMap,
@@ -75,6 +58,23 @@ import {
   SyncedUniverse,
 } from '@lightningpolar/tapd-api';
 import { getOffersQuery, getSupportedAssetsQuery } from './tapd.gql';
+
+// Internal shapes matching the trade API GraphQL responses
+
+interface TradeApiOffer {
+  id: string;
+  node?: { alias?: string; pubkey?: string };
+  rate?: { display_amount?: string; full_amount?: string };
+  available?: { display_amount?: string; full_amount?: string };
+}
+
+interface TradeApiSupportedAsset {
+  id: string;
+  symbol?: string;
+  description?: string;
+  precision?: number;
+  taproot_asset_details?: { asset_id?: string; group_key?: string };
+}
 
 const ASSET_TYPE_MAP: Record<string, TapAssetType> = {
   NORMAL: TapAssetType.NORMAL,
