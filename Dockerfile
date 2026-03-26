@@ -16,6 +16,7 @@ RUN apk add --update --no-cache \
 
 # Install app dependencies
 COPY package.json package-lock.json ./
+COPY patches/ ./patches/
 RUN --mount=type=cache,target=/root/.npm npm ci
 
 # ---------------
