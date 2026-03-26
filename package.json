@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.8",
-    "@apollo/server": "^5.4.0",
+    "@apollo/server": "^5.5.0",
     "@as-integrations/express5": "^1.1.2",
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@fontsource-variable/noto-sans": "^5.2.10",
