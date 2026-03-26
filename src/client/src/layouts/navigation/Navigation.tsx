@@ -13,6 +13,7 @@ import {
   Grid,
   Globe,
   Gem,
+  ArrowLeftRight,
   LucideProps,
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
@@ -24,6 +25,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '../../components/ui/tooltip';
+import { useGetNodeCapabilitiesQuery } from '../../graphql/queries/__generated__/getNodeCapabilities.generated';
 import { SideSettings } from './sideSettings/SideSettings';
 
 type Icon = FC<LucideProps>;
@@ -41,6 +43,7 @@ const SETTINGS = '/settings';
 const SWAP = '/swap';
 const AMBOSS = '/amboss';
 const ASSETS = '/assets';
+const TRADING = '/trading';
 
 interface NavItem {
   title: string;
@@ -59,21 +62,31 @@ const mainNav: NavItem[] = [
   { title: 'Tools', link: TOOLS, icon: Shield },
 ];
 
-const secondaryNav: NavItem[] = [
-  { title: 'Assets', link: ASSETS, icon: Gem },
-  { title: 'Amboss', link: AMBOSS, icon: Globe },
-  { title: 'Swap', link: SWAP, icon: Shuffle },
-  { title: 'Stats', link: STATS, icon: BarChart2 },
-];
-
 interface NavigationProps {
   isBurger?: boolean;
   setOpen?: (state: boolean) => void;
 }
 
+const secondaryNavItems: NavItem[] = [
+  { title: 'Assets', link: ASSETS, icon: Gem },
+  { title: 'Trading', link: TRADING, icon: ArrowLeftRight },
+  { title: 'Amboss', link: AMBOSS, icon: Globe },
+  { title: 'Swap', link: SWAP, icon: Shuffle },
+  { title: 'Stats', link: STATS, icon: BarChart2 },
+];
+
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const { pathname } = useLocation();
   const { sidebar } = useConfigState();
+
+  const { data: capData } = useGetNodeCapabilitiesQuery();
+  const tapdAvailable =
+    capData?.getNodeCapabilities?.capabilities?.includes('taproot_assets') ??
+    false;
+
+  const secondaryNav: NavItem[] = secondaryNavItems.filter(
+    item => item.link !== ASSETS || tapdAvailable
+  );
 
   const renderNavButton = (item: NavItem, open = true) => {
     const isActive = pathname === item.link;

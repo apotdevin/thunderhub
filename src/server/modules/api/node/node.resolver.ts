@@ -13,6 +13,7 @@ import {
   Balances,
   LightningBalance,
   Node,
+  NodeCapabilities,
   NodeInfo,
   OnChainBalance,
 } from './node.types';
@@ -143,6 +144,14 @@ export class NodeResolver {
     @Args('publicKey') publicKey: string
   ) {
     return { publicKey, withoutChannels };
+  }
+
+  @Query(() => NodeCapabilities)
+  async getNodeCapabilities(
+    @CurrentUser() { id }: UserId
+  ): Promise<NodeCapabilities> {
+    const capabilities = this.nodeService.getCapabilities(id);
+    return { capabilities: [...capabilities] };
   }
 
   @Query(() => NodeInfo)

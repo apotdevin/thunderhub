@@ -39,6 +39,11 @@ export class NodeService {
     return { account, provider };
   }
 
+  getCapabilities(id: string): Set<string> {
+    const { provider } = this.getAccountAndProvider(id);
+    return provider.getCapabilities();
+  }
+
   async getWalletInfo(id: string) {
     const { account, provider } = this.getAccountAndProvider(id);
     return provider.getWalletInfo(account.connection);

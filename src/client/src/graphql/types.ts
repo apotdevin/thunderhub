@@ -718,6 +718,11 @@ export type Node = {
   node?: Maybe<NodeType>;
 };
 
+export type NodeCapabilities = {
+  __typename?: 'NodeCapabilities';
+  capabilities: Array<Scalars['String']['output']>;
+};
+
 export type NodeInfo = {
   __typename?: 'NodeInfo';
   active_channels_count: Scalars['Float']['output'];
@@ -946,6 +951,7 @@ export type Query = {
   getNetworkInfo: NetworkInfo;
   getNode: Node;
   getNodeBalances: Balances;
+  getNodeCapabilities: NodeCapabilities;
   getNodeInfo: NodeInfo;
   getNodeSocialInfo: LightningNodeSocialInfo;
   getPayments: GetPaymentsType;
@@ -955,6 +961,8 @@ export type Query = {
   getTapAssets: TapAssetList;
   getTapBalances: TapBalances;
   getTapFederationServers: TapFederationServerList;
+  getTapOffers: TapTradeOfferList;
+  getTapSupportedAssets: TapSupportedAssetList;
   getTapTransfers: TapTransferList;
   getTapUniverseAssets: TapUniverseAssetList;
   getTapUniverseInfo: TapUniverseInfo;
@@ -1018,6 +1026,16 @@ export type QueryGetPaymentsArgs = {
 
 export type QueryGetTapBalancesArgs = {
   groupBy?: InputMaybe<TapBalanceGroupBy>;
+};
+
+export type QueryGetTapOffersArgs = {
+  assetId: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  minAmount?: InputMaybe<Scalars['String']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<TapOfferSortBy>;
+  sortDir?: InputMaybe<TapOfferSortDir>;
+  transactionType: TapTransactionType;
 };
 
 export type QueryRecoverFundsArgs = {
@@ -1161,10 +1179,67 @@ export type TapMintResponse = {
   batchKey?: Maybe<Scalars['String']['output']>;
 };
 
+export enum TapOfferSortBy {
+  Available = 'AVAILABLE',
+  Rate = 'RATE',
+}
+
+export enum TapOfferSortDir {
+  Asc = 'ASC',
+  Desc = 'DESC',
+}
+
+export type TapSupportedAsset = {
+  __typename?: 'TapSupportedAsset';
+  assetId?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  groupKey?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  precision: Scalars['Int']['output'];
+  symbol: Scalars['String']['output'];
+};
+
+export type TapSupportedAssetList = {
+  __typename?: 'TapSupportedAssetList';
+  list: Array<TapSupportedAsset>;
+  totalCount: Scalars['Float']['output'];
+};
+
 export type TapSyncResult = {
   __typename?: 'TapSyncResult';
   syncedUniverses: Array<Scalars['String']['output']>;
 };
+
+export type TapTradeOffer = {
+  __typename?: 'TapTradeOffer';
+  available: TapTradeOfferAmount;
+  id: Scalars['String']['output'];
+  node: TapTradeOfferNode;
+  rate: TapTradeOfferAmount;
+};
+
+export type TapTradeOfferAmount = {
+  __typename?: 'TapTradeOfferAmount';
+  displayAmount?: Maybe<Scalars['String']['output']>;
+  fullAmount: Scalars['String']['output'];
+};
+
+export type TapTradeOfferList = {
+  __typename?: 'TapTradeOfferList';
+  list: Array<TapTradeOffer>;
+  totalCount: Scalars['Float']['output'];
+};
+
+export type TapTradeOfferNode = {
+  __typename?: 'TapTradeOfferNode';
+  alias?: Maybe<Scalars['String']['output']>;
+  pubkey: Scalars['String']['output'];
+};
+
+export enum TapTransactionType {
+  Purchase = 'PURCHASE',
+  Sale = 'SALE',
+}
 
 export type TapTransfer = {
   __typename?: 'TapTransfer';
