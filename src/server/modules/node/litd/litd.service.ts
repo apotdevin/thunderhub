@@ -48,7 +48,7 @@ export class LitdService implements LightningProvider, TaprootAssetsProvider {
     const tapd = TapClient.create({
       socket: config.socket,
       macaroon: config.macaroon || '',
-      cert: config.cert || '',
+      cert: config.cert,
     });
 
     return { lnd, tapd, mode: 'grpc' };

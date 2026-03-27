@@ -22,6 +22,27 @@ export enum TapBalanceGroupBy {
 
 registerEnumType(TapBalanceGroupBy, { name: 'TapBalanceGroupBy' });
 
+export enum TapTransactionType {
+  PURCHASE = 'PURCHASE',
+  SALE = 'SALE',
+}
+
+registerEnumType(TapTransactionType, { name: 'TapTransactionType' });
+
+export enum TapOfferSortBy {
+  RATE = 'RATE',
+  AVAILABLE = 'AVAILABLE',
+}
+
+registerEnumType(TapOfferSortBy, { name: 'TapOfferSortBy' });
+
+export enum TapOfferSortDir {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+
+registerEnumType(TapOfferSortDir, { name: 'TapOfferSortDir' });
+
 // ─── Asset Genesis ──────────────────────────────────────────────
 
 @ObjectType()
@@ -119,8 +140,8 @@ export class TapAddress {
   @Field()
   amount: string;
 
-  @Field({ nullable: true })
-  assetType?: string;
+  @Field()
+  assetType: string;
 
   @Field()
   scriptKey: string;
@@ -175,8 +196,8 @@ export class TapTransfer {
   @Field()
   transferTimestamp: string;
 
-  @Field({ nullable: true })
-  label?: string;
+  @Field()
+  label: string;
 
   @Field(() => [TapTransferInput])
   inputs: TapTransferInput[];
@@ -195,14 +216,14 @@ export class TapTransferList {
 
 @ObjectType()
 export class TapMintResponse {
-  @Field({ nullable: true })
-  batchKey?: string;
+  @Field()
+  batchKey: string;
 }
 
 @ObjectType()
 export class TapFinalizeBatchResponse {
-  @Field({ nullable: true })
-  batchKey?: string;
+  @Field()
+  batchKey: string;
 }
 
 // ─── Universe ───────────────────────────────────────────────────
@@ -239,8 +260,8 @@ export class TapUniverseAsset {
   @Field({ nullable: true })
   groupKey?: string;
 
-  @Field({ nullable: true })
-  proofType?: string;
+  @Field()
+  proofType: string;
 
   @Field()
   totalSupply: string;
@@ -257,8 +278,8 @@ export class TapFederationServer {
   @Field()
   host: string;
 
-  @Field(() => Int, { nullable: true })
-  id?: number;
+  @Field(() => Int)
+  id: number;
 }
 
 @ObjectType()
@@ -349,4 +370,78 @@ export class TapFundChannelResponse {
 
   @Field(() => Int)
   outputIndex: number;
+}
+
+// ─── Trading Offers ─────────────────────────────────────────────
+
+@ObjectType()
+export class TapTradeOfferNode {
+  @Field({ nullable: true })
+  alias?: string;
+
+  @Field()
+  pubkey: string;
+}
+
+@ObjectType()
+export class TapTradeOfferAmount {
+  @Field({ nullable: true })
+  displayAmount?: string;
+
+  @Field()
+  fullAmount: string;
+}
+
+@ObjectType()
+export class TapTradeOffer {
+  @Field()
+  id: string;
+
+  @Field(() => TapTradeOfferNode)
+  node: TapTradeOfferNode;
+
+  @Field(() => TapTradeOfferAmount)
+  rate: TapTradeOfferAmount;
+
+  @Field(() => TapTradeOfferAmount)
+  available: TapTradeOfferAmount;
+}
+
+@ObjectType()
+export class TapTradeOfferList {
+  @Field(() => [TapTradeOffer])
+  list: TapTradeOffer[];
+
+  @Field()
+  totalCount: number;
+}
+
+@ObjectType()
+export class TapSupportedAsset {
+  @Field()
+  id: string;
+
+  @Field()
+  symbol: string;
+
+  @Field({ nullable: true })
+  description?: string;
+
+  @Field(() => Int)
+  precision: number;
+
+  @Field({ nullable: true })
+  assetId?: string;
+
+  @Field({ nullable: true })
+  groupKey?: string;
+}
+
+@ObjectType()
+export class TapSupportedAssetList {
+  @Field(() => [TapSupportedAsset])
+  list: TapSupportedAsset[];
+
+  @Field()
+  totalCount: number;
 }

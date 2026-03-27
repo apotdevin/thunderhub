@@ -466,6 +466,10 @@ type Node {
   node: NodeType
 }
 
+type NodeCapabilities {
+  capabilities: [String!]!
+}
+
 type NodeInfo {
   active_channels_count: Float!
   alias: String!
@@ -677,6 +681,7 @@ type Query {
   getNetworkInfo: NetworkInfo!
   getNode(publicKey: String!, withoutChannels: Boolean): Node!
   getNodeBalances: Balances!
+  getNodeCapabilities: NodeCapabilities!
   getNodeInfo: NodeInfo!
   getNodeSocialInfo(pubkey: String!): LightningNodeSocialInfo!
   getPayments(token: String): GetPaymentsType!
@@ -686,6 +691,8 @@ type Query {
   getTapAssets: TapAssetList!
   getTapBalances(groupBy: TapBalanceGroupBy = GROUP_KEY): TapBalances!
   getTapFederationServers: TapFederationServerList!
+  getTapOffers(assetId: String!, limit: Int, minAmount: String, offset: Int, sortBy: TapOfferSortBy, sortDir: TapOfferSortDir, transactionType: TapTransactionType!): TapTradeOfferList!
+  getTapSupportedAssets: TapSupportedAssetList!
   getTapTransfers: TapTransferList!
   getTapUniverseAssets: TapUniverseAssetList!
   getTapUniverseInfo: TapUniverseInfo!
@@ -732,7 +739,7 @@ type SingleChannel {
 type TapAddress {
   amount: String!
   assetId: String!
-  assetType: String
+  assetType: String!
   encoded: String!
   groupKey: String
   internalKey: String!
@@ -806,7 +813,7 @@ type TapBalances {
 
 type TapFederationServer {
   host: String!
-  id: Int
+  id: Int!
 }
 
 type TapFederationServerList {
@@ -815,7 +822,7 @@ type TapFederationServerList {
 }
 
 type TapFinalizeBatchResponse {
-  batchKey: String
+  batchKey: String!
 }
 
 input TapFundChannelInput {
@@ -833,11 +840,62 @@ type TapFundChannelResponse {
 }
 
 type TapMintResponse {
-  batchKey: String
+  batchKey: String!
+}
+
+enum TapOfferSortBy {
+  AVAILABLE
+  RATE
+}
+
+enum TapOfferSortDir {
+  ASC
+  DESC
+}
+
+type TapSupportedAsset {
+  assetId: String
+  description: String
+  groupKey: String
+  id: String!
+  precision: Int!
+  symbol: String!
+}
+
+type TapSupportedAssetList {
+  list: [TapSupportedAsset!]!
+  totalCount: Float!
 }
 
 type TapSyncResult {
   syncedUniverses: [String!]!
+}
+
+type TapTradeOffer {
+  available: TapTradeOfferAmount!
+  id: String!
+  node: TapTradeOfferNode!
+  rate: TapTradeOfferAmount!
+}
+
+type TapTradeOfferAmount {
+  displayAmount: String
+  fullAmount: String!
+}
+
+type TapTradeOfferList {
+  list: [TapTradeOffer!]!
+  totalCount: Float!
+}
+
+type TapTradeOfferNode {
+  alias: String
+  pubkey: String!
+}
+
+enum TapTransactionType {
+  PURCHASE
+  SALE
 }
 
 type TapTransfer {
@@ -845,7 +903,7 @@ type TapTransfer {
   anchorTxHash: String!
   anchorTxHeightHint: Int!
   inputs: [TapTransferInput!]!
-  label: String
+  label: String!
   outputs: [TapTransferOutput!]!
   transferTimestamp: String!
 }
@@ -871,7 +929,7 @@ type TapUniverseAsset {
   assetId: String
   groupKey: String
   name: String
-  proofType: String
+  proofType: String!
   totalSupply: String!
 }
 

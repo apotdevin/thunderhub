@@ -51,6 +51,12 @@ export class NodeInfo {
 }
 
 @ObjectType()
+export class NodeCapabilities {
+  @Field(() => [String])
+  capabilities: string[];
+}
+
+@ObjectType()
 export class OnChainBalance {
   @Field()
   confirmed: string;

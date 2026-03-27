@@ -1,0 +1,35 @@
+diff --git a/node_modules/@lightningpolar/tapd-api/dist/index.d.ts b/node_modules/@lightningpolar/tapd-api/dist/index.d.ts
+index 3bc0be7..6041fcf 100644
+--- a/node_modules/@lightningpolar/tapd-api/dist/index.d.ts
++++ b/node_modules/@lightningpolar/tapd-api/dist/index.d.ts
+@@ -19,7 +19,7 @@ export interface TapdClientOptions {
+     /**
+      * @cert tapd's TLS certificate in HEX format.
+      */
+-    cert: string;
++    cert?: string;
+ }
+ /**
+  * @TaprootAssetsRpcApis The tapd RPC APIs.
+diff --git a/node_modules/@lightningpolar/tapd-api/dist/proto.js b/node_modules/@lightningpolar/tapd-api/dist/proto.js
+index 22bb802..ba6f149 100644
+--- a/node_modules/@lightningpolar/tapd-api/dist/proto.js
++++ b/node_modules/@lightningpolar/tapd-api/dist/proto.js
+@@ -36,8 +36,15 @@ const loadProto = (protoFileName, options) => {
+         metadata.add('macaroon', options.macaroon);
+         return callback(null, metadata);
+     });
+-    const channelCredentials = grpc.credentials.createSsl(Buffer.from(options.cert, 'hex'));
+-    const credentials = grpc.credentials.combineChannelCredentials(channelCredentials, callCredentials);
++    let credentials;
++    if (options.cert) {
++        const channelCredentials = grpc.credentials.createSsl(Buffer.from(options.cert, 'hex'));
++        credentials = grpc.credentials.combineChannelCredentials(channelCredentials, callCredentials);
++    }
++    else {
++        const channelCredentials = grpc.credentials.createSsl();
++        credentials = grpc.credentials.combineChannelCredentials(channelCredentials, callCredentials);
++    }
+     const params = {
+         'grpc.max_receive_message_length': -1,
+         'grpc.max_send_message_length': -1,
