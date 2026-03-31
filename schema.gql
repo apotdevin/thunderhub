@@ -389,6 +389,7 @@ type MessageType {
 
 type Mutation {
   addPeer(isTemporary: Boolean, publicKey: String, socket: String, url: String): Boolean!
+  addTapAssetInvoice(input: TapAssetInvoiceInput!): TapAssetInvoiceResponse!
   addTapFederationServer(host: String!): Boolean!
   burnTapAsset(amount: Int!, assetId: String!): Boolean!
   cancelTapBatch: Boolean!
@@ -400,7 +401,7 @@ type Mutation {
   createMacaroon(permissions: NetworkInfoInput!): CreateMacaroon!
   fetchLnUrl(url: String!): LnUrlRequest!
   finalizeTapBatch: TapFinalizeBatchResponse!
-  fundTapAssetChannel(assetAmount: Int!, assetId: String, feeRateSatPerVbyte: Int, groupKey: String, peerPubkey: String!, pushSat: Int): TapFundChannelResponse!
+  fundTapAssetChannel(input: TapFundChannelInput!): TapFundChannelResponse!
   getAuthToken(cookie: String): Boolean!
   getSessionToken(id: String!, password: String!, token: String): String!
   keysend(destination: String, message: String, tokens: Float!): PayInvoice!
@@ -773,6 +774,25 @@ type TapAssetGenesis {
   outputIndex: Int!
 }
 
+input TapAssetInvoiceInput {
+  assetAmount: String!
+  assetId: String
+  expiry: Int
+  groupKey: String
+  memo: String
+  peerPubkey: String
+}
+
+type TapAssetInvoiceResponse {
+  addIndex: String!
+  assetAmount: String!
+  assetId: String
+  groupKey: String
+  paymentAddr: String!
+  paymentRequest: String!
+  rHash: String!
+}
+
 type TapAssetList {
   assets: [TapAsset!]!
 }
@@ -803,6 +823,15 @@ type TapFederationServerList {
 
 type TapFinalizeBatchResponse {
   batchKey: String!
+}
+
+input TapFundChannelInput {
+  assetAmount: String!
+  assetId: String
+  feeRateSatPerVbyte: Int
+  groupKey: String
+  peerPubkey: String!
+  pushSat: Int
 }
 
 type TapFundChannelResponse {

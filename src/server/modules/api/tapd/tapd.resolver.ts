@@ -26,9 +26,12 @@ import {
   TapAssetType,
   TapBalanceGroupBy,
   TapBalances,
+  TapAssetInvoiceInput,
+  TapAssetInvoiceResponse,
   TapFederationServerList,
   TapFinalizeBatchResponse,
   TapMintResponse,
+  TapFundChannelInput,
   TapFundChannelResponse,
   TapSyncResult,
   TapTradeOfferList,
@@ -547,30 +550,92 @@ export class TapdResolver {
     return { syncedUniverses };
   }
 
+  // ── Asset Invoices ──
+
+  @Mutation(() => TapAssetInvoiceResponse)
+  async addTapAssetInvoice(
+    @CurrentUser() { id }: UserId,
+    @Args('input') input: TapAssetInvoiceInput
+  ) {
+    const { assetAmount, assetId, groupKey, peerPubkey, memo, expiry } = input;
+
+    if (!assetId && !groupKey) {
+      throw new GraphQLError(
+        'At least one of assetId or groupKey must be provided'
+      );
+    }
+
+    const parsedAmount = Number(assetAmount);
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      throw new GraphQLError('assetAmount must be a positive number');
+    }
+
+    const [result, error] = await toWithError(
+      this.tapdNodeService.addAssetInvoice({
+        id,
+        assetId: assetId || undefined,
+        groupKey: groupKey || undefined,
+        assetAmount: parsedAmount,
+        peerPubkey: peerPubkey || undefined,
+        memo: memo || undefined,
+        expiry: expiry || undefined,
+      })
+    );
+    if (error || !result) {
+      this.logger.error('Failed to create asset invoice', { error });
+      throw new GraphQLError('Failed to create asset invoice');
+    }
+
+    const invoiceResult = result.invoiceResult;
+    const quote = result.acceptedBuyQuote;
+
+    return {
+      paymentRequest: invoiceResult?.paymentRequest || '',
+      rHash: invoiceResult?.rHash
+        ? Buffer.from(invoiceResult.rHash).toString('hex')
+        : '',
+      addIndex: invoiceResult?.addIndex || '0',
+      paymentAddr: invoiceResult?.paymentAddr
+        ? Buffer.from(invoiceResult.paymentAddr).toString('hex')
+        : '',
+      assetId: bufToHex(quote?.assetSpec?.id),
+      groupKey: bufToHex(quote?.assetSpec?.groupPubKey),
+      assetAmount: quote?.assetMaxAmount || assetAmount,
+    };
+  }
+
   // ── Asset Channels ──
 
   @Mutation(() => TapFundChannelResponse)
   async fundTapAssetChannel(
     @CurrentUser() { id }: UserId,
-    @Args('peerPubkey') peerPubkey: string,
-    @Args('assetAmount', { type: () => Int }) assetAmount: number,
-    @Args('groupKey', { nullable: true }) groupKey?: string,
-    @Args('assetId', { nullable: true }) assetId?: string,
-    @Args('feeRateSatPerVbyte', { type: () => Int, nullable: true })
-    feeRateSatPerVbyte?: number,
-    @Args('pushSat', { type: () => Int, nullable: true }) pushSat?: number
+    @Args('input') input: TapFundChannelInput
   ) {
+    const {
+      peerPubkey,
+      assetAmount,
+      groupKey,
+      assetId,
+      feeRateSatPerVbyte,
+      pushSat,
+    } = input;
+
     if ((!assetId && !groupKey) || (assetId && groupKey)) {
       throw new GraphQLError(
         'Exactly one of assetId or groupKey must be provided'
       );
     }
 
+    const parsedAmount = Number(assetAmount);
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      throw new GraphQLError('assetAmount must be a positive number');
+    }
+
     const [result, error] = await toWithError(
       this.tapdNodeService.fundAssetChannel({
         id,
         peerPubkey,
-        assetAmount,
+        assetAmount: parsedAmount,
         groupKey: groupKey || undefined,
         assetId: assetId || undefined,
         feeRateSatPerVbyte: feeRateSatPerVbyte || undefined,

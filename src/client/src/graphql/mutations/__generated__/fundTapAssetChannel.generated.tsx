@@ -4,12 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type FundTapAssetChannelMutationVariables = Types.Exact<{
-  peerPubkey: Types.Scalars['String']['input'];
-  assetAmount: Types.Scalars['Int']['input'];
-  groupKey?: Types.InputMaybe<Types.Scalars['String']['input']>;
-  assetId?: Types.InputMaybe<Types.Scalars['String']['input']>;
-  feeRateSatPerVbyte?: Types.InputMaybe<Types.Scalars['Int']['input']>;
-  pushSat?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  input: Types.TapFundChannelInput;
 }>;
 
 export type FundTapAssetChannelMutation = {
@@ -22,22 +17,8 @@ export type FundTapAssetChannelMutation = {
 };
 
 export const FundTapAssetChannelDocument = gql`
-  mutation FundTapAssetChannel(
-    $peerPubkey: String!
-    $assetAmount: Int!
-    $groupKey: String
-    $assetId: String
-    $feeRateSatPerVbyte: Int
-    $pushSat: Int
-  ) {
-    fundTapAssetChannel(
-      peerPubkey: $peerPubkey
-      assetAmount: $assetAmount
-      groupKey: $groupKey
-      assetId: $assetId
-      feeRateSatPerVbyte: $feeRateSatPerVbyte
-      pushSat: $pushSat
-    ) {
+  mutation FundTapAssetChannel($input: TapFundChannelInput!) {
+    fundTapAssetChannel(input: $input) {
       txid
       outputIndex
     }
@@ -61,12 +42,7 @@ export type FundTapAssetChannelMutationFn = Apollo.MutationFunction<
  * @example
  * const [fundTapAssetChannelMutation, { data, loading, error }] = useFundTapAssetChannelMutation({
  *   variables: {
- *      peerPubkey: // value for 'peerPubkey'
- *      assetAmount: // value for 'assetAmount'
- *      groupKey: // value for 'groupKey'
- *      assetId: // value for 'assetId'
- *      feeRateSatPerVbyte: // value for 'feeRateSatPerVbyte'
- *      pushSat: // value for 'pushSat'
+ *      input: // value for 'input'
  *   },
  * });
  */

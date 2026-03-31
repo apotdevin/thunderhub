@@ -41,6 +41,7 @@ const mockService = () => ({
   addFederationServer: jest.fn(),
   deleteFederationServer: jest.fn(),
   syncUniverse: jest.fn(),
+  addAssetInvoice: jest.fn(),
   fundAssetChannel: jest.fn(),
   getAccount: jest.fn(),
 });
@@ -385,17 +386,193 @@ describe('TapdResolver', () => {
     });
   });
 
+  describe('addTapAssetInvoice', () => {
+    it('throws when neither assetId nor groupKey is provided', async () => {
+      await expect(
+        resolver.addTapAssetInvoice(userId, { assetAmount: '100' })
+      ).rejects.toThrow(GraphQLError);
+    });
+
+    it('throws when assetAmount is zero', async () => {
+      await expect(
+        resolver.addTapAssetInvoice(userId, {
+          assetAmount: '0',
+          assetId: 'asset1',
+        })
+      ).rejects.toThrow('assetAmount must be a positive number');
+    });
+
+    it('throws when assetAmount is negative', async () => {
+      await expect(
+        resolver.addTapAssetInvoice(userId, {
+          assetAmount: '-5',
+          assetId: 'asset1',
+        })
+      ).rejects.toThrow('assetAmount must be a positive number');
+    });
+
+    it('throws when assetAmount is not a valid number', async () => {
+      await expect(
+        resolver.addTapAssetInvoice(userId, {
+          assetAmount: 'abc',
+          assetId: 'asset1',
+        })
+      ).rejects.toThrow('assetAmount must be a positive number');
+    });
+
+    it('returns invoice response with assetId', async () => {
+      service.addAssetInvoice.mockResolvedValue({
+        invoiceResult: {
+          paymentRequest: 'lntap1...',
+          rHash: Buffer.from('aabb', 'hex'),
+          addIndex: '42',
+          paymentAddr: Buffer.from('ccdd', 'hex'),
+        },
+        acceptedBuyQuote: {
+          assetSpec: {
+            id: Buffer.from('ee', 'hex'),
+            groupPubKey: null,
+          },
+          assetMaxAmount: '100',
+        },
+      });
+
+      const result = await resolver.addTapAssetInvoice(userId, {
+        assetAmount: '100',
+        assetId: 'asset1',
+      });
+
+      expect(result.paymentRequest).toBe('lntap1...');
+      expect(result.rHash).toBe('aabb');
+      expect(result.addIndex).toBe('42');
+      expect(result.paymentAddr).toBe('ccdd');
+      expect(result.assetId).toBe('ee');
+      expect(result.assetAmount).toBe('100');
+    });
+
+    it('returns invoice response with groupKey', async () => {
+      service.addAssetInvoice.mockResolvedValue({
+        invoiceResult: {
+          paymentRequest: 'lntap1...',
+          rHash: Buffer.from('1122', 'hex'),
+          addIndex: '1',
+          paymentAddr: Buffer.from('3344', 'hex'),
+        },
+        acceptedBuyQuote: {
+          assetSpec: {
+            id: null,
+            groupPubKey: Buffer.from('ff', 'hex'),
+          },
+          assetMaxAmount: '200',
+        },
+      });
+
+      const result = await resolver.addTapAssetInvoice(userId, {
+        assetAmount: '200',
+        groupKey: 'group1',
+      });
+
+      expect(result.groupKey).toBe('ff');
+      expect(result.assetAmount).toBe('200');
+      expect(service.addAssetInvoice).toHaveBeenCalledWith({
+        id: userId.id,
+        assetId: undefined,
+        groupKey: 'group1',
+        assetAmount: 200,
+        peerPubkey: undefined,
+        memo: undefined,
+        expiry: undefined,
+      });
+    });
+
+    it('falls back to empty strings when invoice fields are missing', async () => {
+      service.addAssetInvoice.mockResolvedValue({
+        invoiceResult: null,
+        acceptedBuyQuote: null,
+      });
+
+      const result = await resolver.addTapAssetInvoice(userId, {
+        assetAmount: '50',
+        assetId: 'asset1',
+      });
+
+      expect(result.paymentRequest).toBe('');
+      expect(result.rHash).toBe('');
+      expect(result.addIndex).toBe('0');
+      expect(result.paymentAddr).toBe('');
+      expect(result.assetAmount).toBe('50');
+    });
+
+    it('throws GraphQLError when the service call fails', async () => {
+      service.addAssetInvoice.mockRejectedValue(new Error('rpc failed'));
+      await expect(
+        resolver.addTapAssetInvoice(userId, {
+          assetAmount: '100',
+          assetId: 'asset1',
+        })
+      ).rejects.toThrow(GraphQLError);
+    });
+
+    it('passes optional peerPubkey, memo, and expiry', async () => {
+      service.addAssetInvoice.mockResolvedValue({
+        invoiceResult: {
+          paymentRequest: 'lntap1...',
+          rHash: Buffer.from('aa', 'hex'),
+          addIndex: '1',
+          paymentAddr: Buffer.from('bb', 'hex'),
+        },
+        acceptedBuyQuote: { assetSpec: {}, assetMaxAmount: '100' },
+      });
+
+      await resolver.addTapAssetInvoice(userId, {
+        assetAmount: '100',
+        assetId: 'asset1',
+        peerPubkey: 'peer1',
+        memo: 'test memo',
+        expiry: 3600,
+      });
+
+      expect(service.addAssetInvoice).toHaveBeenCalledWith({
+        id: userId.id,
+        assetId: 'asset1',
+        groupKey: undefined,
+        assetAmount: 100,
+        peerPubkey: 'peer1',
+        memo: 'test memo',
+        expiry: 3600,
+      });
+    });
+  });
+
   describe('fundTapAssetChannel', () => {
     it('throws when both assetId and groupKey are provided', async () => {
       await expect(
-        resolver.fundTapAssetChannel(userId, 'pubkey', 100, 'group1', 'asset1')
+        resolver.fundTapAssetChannel(userId, {
+          peerPubkey: 'pubkey',
+          assetAmount: '100',
+          groupKey: 'group1',
+          assetId: 'asset1',
+        })
       ).rejects.toThrow(GraphQLError);
     });
 
     it('throws when neither assetId nor groupKey is provided', async () => {
       await expect(
-        resolver.fundTapAssetChannel(userId, 'pubkey', 100)
+        resolver.fundTapAssetChannel(userId, {
+          peerPubkey: 'pubkey',
+          assetAmount: '100',
+        })
       ).rejects.toThrow(GraphQLError);
+    });
+
+    it('throws when assetAmount is not a valid number', async () => {
+      await expect(
+        resolver.fundTapAssetChannel(userId, {
+          peerPubkey: 'pubkey',
+          assetAmount: 'abc',
+          groupKey: 'group1',
+        })
+      ).rejects.toThrow('assetAmount must be a positive number');
     });
 
     it('funds a channel with groupKey', async () => {
@@ -404,12 +581,11 @@ describe('TapdResolver', () => {
         outputIndex: 0,
       });
 
-      const result = await resolver.fundTapAssetChannel(
-        userId,
-        'pubkey',
-        100,
-        'group1'
-      );
+      const result = await resolver.fundTapAssetChannel(userId, {
+        peerPubkey: 'pubkey',
+        assetAmount: '100',
+        groupKey: 'group1',
+      });
 
       expect(result).toEqual({ txid: 'txid123', outputIndex: 0 });
     });
