@@ -153,7 +153,15 @@ export const AssetsList: FC = () => {
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     <span className="text-lg font-semibold">
-                      {entry.balance || '0'}
+                      {priceEntry
+                        ? (
+                            Number(entry.balance) /
+                            10 ** priceEntry.precision
+                          ).toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })
+                        : entry.balance || '0'}
                     </span>
                     {usdValue != null && (
                       <span className="text-xs text-muted-foreground">
