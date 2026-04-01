@@ -47,6 +47,10 @@ export const getSupportedAssetsQuery = gql`
             description
             precision
             type
+            prices {
+              id
+              usd
+            }
             taproot_asset_details {
               asset_id
               group_key

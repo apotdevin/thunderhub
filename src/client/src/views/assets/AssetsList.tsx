@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useGetTapAssetsQuery } from '../../graphql/queries/__generated__/getTapAssets.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
+import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
 import { cn } from '../../lib/utils';
@@ -54,6 +55,17 @@ export const AssetsList: FC = () => {
       variables: { groupBy },
       onError: error => toast.error(getErrorContent(error)),
     });
+
+  const { data: supportedData } = useGetTapSupportedAssetsQuery();
+
+  const priceMap = new Map<string, { usd: number; precision: number }>();
+  for (const asset of supportedData?.getTapSupportedAssets?.list || []) {
+    const price = asset.prices?.usd;
+    if (price == null) continue;
+    const entry = { usd: price, precision: asset.precision };
+    if (asset.assetId) priceMap.set(asset.assetId, entry);
+    if (asset.groupKey) priceMap.set(asset.groupKey, entry);
+  }
 
   if (assetsLoading || balancesLoading) {
     return (
@@ -112,6 +124,15 @@ export const AssetsList: FC = () => {
           const keyLabel =
             groupBy === TapBalanceGroupBy.GroupKey ? 'Group key' : 'Asset ID';
 
+          const priceEntry =
+            priceMap.get(entry.groupKey || '') ||
+            priceMap.get(entry.assetId || '');
+          const usdValue =
+            priceEntry && entry.balance
+              ? (Number(entry.balance) / 10 ** priceEntry.precision) *
+                priceEntry.usd
+              : null;
+
           return (
             <Card key={`${keyValue}-${i}`}>
               <CardContent className="p-4">
@@ -134,6 +155,15 @@ export const AssetsList: FC = () => {
                     <span className="text-lg font-semibold">
                       {entry.balance || '0'}
                     </span>
+                    {usdValue != null && (
+                      <span className="text-xs text-muted-foreground">
+                        ≈ $
+                        {usdValue.toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </span>
+                    )}
                   </div>
                 </div>
               </CardContent>

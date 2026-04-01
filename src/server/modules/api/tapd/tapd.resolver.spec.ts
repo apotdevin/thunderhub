@@ -882,6 +882,7 @@ describe('TapdResolver trading queries', () => {
         precision: 2,
         assetId: undefined,
         groupKey: 'tapGroupKey1',
+        prices: null,
       });
     });
 
@@ -922,6 +923,7 @@ describe('TapdResolver trading queries', () => {
         precision: 0,
         assetId: 'tapAssetId2',
         groupKey: undefined,
+        prices: null,
       });
     });
 
@@ -982,6 +984,7 @@ describe('TapdResolver trading queries', () => {
         precision: 0,
         assetId: undefined,
         groupKey: undefined,
+        prices: null,
       });
     });
   });
