@@ -68,4 +68,5 @@ module.exports = defineConfig([{
     "**/node_modules",
     "**/dist",
     "**/*.generated.tsx",
+    "drizzle.config.ts",
 ])]);
