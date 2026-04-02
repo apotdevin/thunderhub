@@ -68,6 +68,7 @@ export type ClientConfig = {
   logoutUrl: string;
   disable2FA: boolean;
   npmVersion: string;
+  dbEnabled: boolean;
 };
 
 type SqliteConfig = {
@@ -214,6 +215,7 @@ export default (): ConfigType => {
     logoutUrl: process.env.LOGOUT_URL || '',
     disable2FA: process.env.DISABLE_TWOFA === 'true',
     npmVersion,
+    dbEnabled: !!process.env.DB_TYPE,
   };
 
   const config: ConfigType = {

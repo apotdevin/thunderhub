@@ -36,6 +36,7 @@ import SettingsPage from './pages/SettingsPage';
 import AmbossPage from './pages/AmbossPage';
 import AssetsPage from './pages/AssetsPage';
 import TradingPage from './pages/TradingPage';
+import SetupPage from './pages/SetupPage';
 
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const SettingsDashboardPage = lazy(
@@ -51,7 +52,11 @@ const NotAuthenticated: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate(config.logoutUrl || '/login');
+    if (config.needsSetup) {
+      navigate('/setup');
+    } else {
+      navigate(config.logoutUrl || '/login');
+    }
   }, [navigate]);
 
   return null;
@@ -83,12 +88,13 @@ const Wrapper: FC<{ children?: ReactNode }> = ({ children }) => {
     applyTheme(theme === 'dark' ? 'dark' : 'light');
   }, [theme]);
 
+  const isRoot =
+    pathname === '/login' || pathname === '/sso' || pathname === '/setup';
+
   const { data, loading, error } = useGetNodeInfoQuery({
     fetchPolicy: 'network-only',
-    skip: pathname === '/login' || pathname === '/sso',
+    skip: isRoot,
   });
-
-  const isRoot = pathname === '/login' || pathname === '/sso';
   const authenticated = !isRoot && !loading && !error && !!data?.getNodeInfo;
   const checking = !isRoot && loading;
 
@@ -154,6 +160,7 @@ const AuthenticatedRoutes = () => (
     <Route path="/trading" element={<TradingPage />} />
     <Route path="/login" element={<LoginPage />} />
     <Route path="/sso" element={<SsoPage />} />
+    <Route path="/setup" element={<SetupPage />} />
     <Route path="*" element={<HomePage />} />
   </Routes>
 );

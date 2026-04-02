@@ -7,20 +7,28 @@ import { migrate as migratePg } from 'drizzle-orm/postgres-js/migrator';
 import Database from 'better-sqlite3';
 import postgres from 'postgres';
 import { join } from 'path';
+import * as sqliteSchema from './schema/sqlite';
+import * as pgSchema from './schema/pg';
 
 export const DRIZZLE = Symbol('DRIZZLE');
 
 export type DrizzleDB =
   | ReturnType<typeof drizzleSqlite>
-  | ReturnType<typeof drizzlePg>
-  | null;
+  | ReturnType<typeof drizzlePg>;
+
+export type DbSchema = typeof sqliteSchema | typeof pgSchema;
+
+export type DrizzleProvider = {
+  db: DrizzleDB;
+  schema: DbSchema;
+} | null;
 
 const logger = new Logger('DatabaseProvider');
 
-export const DrizzleProvider: FactoryProvider = {
+export const drizzleProvider: FactoryProvider = {
   provide: DRIZZLE,
   inject: [ConfigService],
-  useFactory: async (config: ConfigService): Promise<DrizzleDB> => {
+  useFactory: async (config: ConfigService): Promise<DrizzleProvider> => {
     const dbType = config.get<string>('database.type');
 
     if (!dbType) return null;
@@ -34,9 +42,11 @@ export const DrizzleProvider: FactoryProvider = {
       }
       const db = drizzlePg(postgres(url));
       logger.log('Running PostgreSQL migrations...');
-      await migratePg(db, { migrationsFolder: join(migrationsRoot, 'pg') });
+      await migratePg(db, {
+        migrationsFolder: join(migrationsRoot, 'pg'),
+      });
       logger.log('PostgreSQL migrations complete.');
-      return db;
+      return { db, schema: pgSchema };
     }
 
     if (dbType === 'sqlite') {
@@ -50,7 +60,7 @@ export const DrizzleProvider: FactoryProvider = {
         migrationsFolder: join(migrationsRoot, 'sqlite'),
       });
       logger.log('SQLite migrations complete.');
-      return db;
+      return { db, schema: sqliteSchema };
     }
 
     throw new Error(`Unsupported DB_TYPE: ${dbType}`);

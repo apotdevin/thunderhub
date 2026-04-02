@@ -11,7 +11,7 @@ export type FinalizeTapBatchMutation = {
   __typename?: 'Mutation';
   finalizeTapBatch: {
     __typename?: 'TapFinalizeBatchResponse';
-    batchKey?: string | null;
+    batchKey: string;
   };
 };
 

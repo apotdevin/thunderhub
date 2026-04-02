@@ -251,6 +251,12 @@ type CreateBoltzReverseSwapType {
   timeoutBlockHeight: Float!
 }
 
+type CreateInitialUserResult {
+  email: String!
+  id: String!
+  role: String!
+}
+
 type CreateInvoice {
   chain_address: String
   created_at: String!
@@ -415,6 +421,7 @@ type Mutation {
   newTapAddress(amt: Int, assetId: String, groupKey: String): TapAddress!
   openChannel(input: OpenChannelParams!): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
+  public: PublicMutation!
   purchaseLiquidity(amount_cents: String!): Boolean!
   pushBackup: Boolean!
   removePeer(publicKey: String): Boolean!
@@ -653,6 +660,10 @@ type Policy {
   min_htlc_mtokens: String
   public_key: String!
   updated_at: String
+}
+
+type PublicMutation {
+  create_initial_user(email: String!, password: String!): CreateInitialUserResult!
 }
 
 type Query {

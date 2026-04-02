@@ -17,7 +17,7 @@ export type GetTapTransfersQuery = {
       anchorTxHeightHint: number;
       anchorTxChainFees: string;
       transferTimestamp: string;
-      label?: string | null;
+      label: string;
       inputs: Array<{
         __typename?: 'TapTransferInput';
         anchorPoint: string;

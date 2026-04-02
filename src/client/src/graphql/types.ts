@@ -302,6 +302,13 @@ export type CreateBoltzReverseSwapType = {
   timeoutBlockHeight: Scalars['Float']['output'];
 };
 
+export type CreateInitialUserResult = {
+  __typename?: 'CreateInitialUserResult';
+  email: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  role: Scalars['String']['output'];
+};
+
 export type CreateInvoice = {
   __typename?: 'CreateInvoice';
   chain_address?: Maybe<Scalars['String']['output']>;
@@ -481,6 +488,7 @@ export type Mutation = {
   newTapAddress: TapAddress;
   openChannel: OpenOrCloseChannel;
   pay: Scalars['Boolean']['output'];
+  public: PublicMutation;
   purchaseLiquidity: Scalars['Boolean']['output'];
   pushBackup: Scalars['Boolean']['output'];
   removePeer: Scalars['Boolean']['output'];
@@ -924,6 +932,16 @@ export type Policy = {
   updated_at?: Maybe<Scalars['String']['output']>;
 };
 
+export type PublicMutation = {
+  __typename?: 'PublicMutation';
+  create_initial_user: CreateInitialUserResult;
+};
+
+export type PublicMutationCreate_Initial_UserArgs = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
 export type Query = {
   __typename?: 'Query';
   decodeTapAddress: TapAddress;
@@ -1093,7 +1111,7 @@ export type TapAddress = {
   __typename?: 'TapAddress';
   amount: Scalars['String']['output'];
   assetId: Scalars['String']['output'];
-  assetType?: Maybe<Scalars['String']['output']>;
+  assetType: Scalars['String']['output'];
   encoded: Scalars['String']['output'];
   groupKey?: Maybe<Scalars['String']['output']>;
   internalKey: Scalars['String']['output'];
@@ -1174,7 +1192,7 @@ export type TapBalances = {
 export type TapFederationServer = {
   __typename?: 'TapFederationServer';
   host: Scalars['String']['output'];
-  id?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
 };
 
 export type TapFederationServerList = {
@@ -1185,7 +1203,7 @@ export type TapFederationServerList = {
 
 export type TapFinalizeBatchResponse = {
   __typename?: 'TapFinalizeBatchResponse';
-  batchKey?: Maybe<Scalars['String']['output']>;
+  batchKey: Scalars['String']['output'];
 };
 
 export type TapFundChannelInput = {
@@ -1205,7 +1223,7 @@ export type TapFundChannelResponse = {
 
 export type TapMintResponse = {
   __typename?: 'TapMintResponse';
-  batchKey?: Maybe<Scalars['String']['output']>;
+  batchKey: Scalars['String']['output'];
 };
 
 export enum TapOfferSortBy {
@@ -1276,7 +1294,7 @@ export type TapTransfer = {
   anchorTxHash: Scalars['String']['output'];
   anchorTxHeightHint: Scalars['Int']['output'];
   inputs: Array<TapTransferInput>;
-  label?: Maybe<Scalars['String']['output']>;
+  label: Scalars['String']['output'];
   outputs: Array<TapTransferOutput>;
   transferTimestamp: Scalars['String']['output'];
 };
@@ -1306,7 +1324,7 @@ export type TapUniverseAsset = {
   assetId?: Maybe<Scalars['String']['output']>;
   groupKey?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  proofType?: Maybe<Scalars['String']['output']>;
+  proofType: Scalars['String']['output'];
   totalSupply: Scalars['String']['output'];
 };
 
