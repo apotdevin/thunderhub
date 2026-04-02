@@ -812,6 +812,11 @@ type TapAssetList {
   assets: [TapAsset!]!
 }
 
+type TapAssetPrice {
+  id: String
+  usd: Float
+}
+
 enum TapAssetType {
   COLLECTIBLE
   NORMAL
@@ -874,6 +879,7 @@ type TapSupportedAsset {
   groupKey: String
   id: String!
   precision: Int!
+  prices: TapAssetPrice
   symbol: String!
 }
 

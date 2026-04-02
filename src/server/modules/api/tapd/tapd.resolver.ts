@@ -77,6 +77,7 @@ interface TradeApiSupportedAsset {
   description?: string;
   precision?: number;
   taproot_asset_details?: { asset_id?: string; group_key?: string };
+  prices?: { id?: string; usd?: number };
 }
 
 const ASSET_TYPE_MAP: Record<string, TapAssetType> = {
@@ -767,6 +768,7 @@ export class TapdResolver {
         precision: a.precision ?? 0,
         assetId: a.taproot_asset_details?.asset_id,
         groupKey: a.taproot_asset_details?.group_key,
+        prices: a.prices ?? null,
       })),
       totalCount: assets.total_count,
     };
