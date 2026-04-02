@@ -1,5 +1,8 @@
 # Litd + ThunderHub Docker Setup
 
+> [!TIP]
+> For a deep dive into how these components interact, see the [Official ThunderHub + Litd Integration Guide](https://docs.thunderhub.io/litd).
+
 Two-node local development environment with Bitcoin Core (regtest), two Lightning Terminal (litd) nodes (Alice & Bob), and two ThunderHub instances.
 
 Alice is configured with a public universe (`--taproot-assets.universe.public-access=rw`), allowing other nodes to sync assets from her.
