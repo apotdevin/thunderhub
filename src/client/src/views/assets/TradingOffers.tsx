@@ -1,6 +1,14 @@
 import { FC, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Loader2, Info, ArrowUpDown, ArrowLeftRight } from 'lucide-react';
+import {
+  Loader2,
+  Info,
+  ArrowUpDown,
+  ArrowLeftRight,
+  ExternalLink,
+  ChevronDown,
+  ChevronUp,
+} from 'lucide-react';
 import { useGetTapOffersQuery } from '../../graphql/queries/__generated__/getTapOffers.generated';
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
@@ -32,23 +40,67 @@ export const TradingOffers: FC = () => {
   }
 
   if (!tapdAvailable) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
-        <ArrowLeftRight size={40} className="text-muted-foreground/40" />
-        <div className="space-y-2">
-          <h2 className="text-lg font-semibold">
+    return <LitdSetupInfo />;
+  }
+
+  return <TradingOffersContent />;
+};
+
+const LITD_DOCS_URL = 'https://docs.thunderhub.io/litd';
+
+const LitdSetupInfo: FC = () => {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
+  return (
+    <div className="mx-auto w-full max-w-lg px-4 py-16">
+      <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+        <div className="mb-4 flex flex-col items-center text-center">
+          <ArrowLeftRight size={40} className="mb-3 text-muted-foreground/40" />
+          <h2 className="text-lg font-semibold text-foreground">
             Trading requires Taproot Assets
           </h2>
-          <p className="text-sm text-muted-foreground max-w-md">
+          <p className="mt-1 text-sm text-muted-foreground max-w-md">
             To trade Taproot Assets, run your node with Lightning Terminal
             (litd) which includes the Taproot Assets daemon.
           </p>
         </div>
-      </div>
-    );
-  }
 
-  return <TradingOffersContent />;
+        <a
+          href={LITD_DOCS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-1.5 text-sm text-primary hover:underline"
+        >
+          View setup instructions
+          <ExternalLink size={12} />
+        </a>
+
+        <div className="mt-4 border-t border-border pt-4">
+          <button
+            className="flex w-full cursor-pointer items-center justify-between bg-transparent p-0 text-xs text-muted-foreground"
+            onClick={() => setDetailsOpen(p => !p)}
+          >
+            What is litd?
+            {detailsOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+          {detailsOpen && (
+            <div className="mt-3 flex flex-col gap-2 text-xs text-muted-foreground">
+              <p>
+                Lightning Terminal (litd) is an all-in-one daemon by Lightning
+                Labs that bundles LND, Loop, Pool, Faraday, and the Taproot
+                Assets daemon into a single binary.
+              </p>
+              <p>
+                ThunderHub connects to litd's embedded LND gRPC endpoint and
+                uses the Taproot Assets daemon to enable asset minting,
+                transfers, and trading on the Lightning Network.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const TradingOffersContent: FC = () => {
