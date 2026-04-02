@@ -4,18 +4,12 @@ const dbType = process.env.DB_TYPE || 'sqlite';
 
 export default dbType === 'postgres'
   ? defineConfig({
-      schema: './src/server/modules/database/schema/*',
-      out: './drizzle',
+      schema: './src/server/modules/database/schema/pg/*',
+      out: './drizzle/pg',
       dialect: 'postgresql',
-      dbCredentials: {
-        url: process.env.DB_POSTGRES_URL!,
-      },
     })
   : defineConfig({
-      schema: './src/server/modules/database/schema/*',
-      out: './drizzle',
+      schema: './src/server/modules/database/schema/sqlite/*',
+      out: './drizzle/sqlite',
       dialect: 'sqlite',
-      dbCredentials: {
-        url: process.env.DB_SQLITE_PATH!,
-      },
     });
