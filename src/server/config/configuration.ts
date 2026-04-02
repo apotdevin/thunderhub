@@ -81,7 +81,10 @@ type PostgresConfig = {
   url?: string;
 };
 
-type DatabaseConfig = SqliteConfig | PostgresConfig | undefined;
+type DatabaseConfig =
+  | (SqliteConfig & { encryptionKey?: string })
+  | (PostgresConfig & { encryptionKey?: string })
+  | undefined;
 
 type ConfigType = {
   basePath: string;
@@ -244,10 +247,12 @@ export default (): ConfigType => {
         ? {
             type: 'postgres' as const,
             url: process.env.DB_POSTGRES_URL,
+            encryptionKey: process.env.DB_ENCRYPTION_KEY,
           }
         : {
             type: 'sqlite' as const,
             path: process.env.DB_SQLITE_PATH,
+            encryptionKey: process.env.DB_ENCRYPTION_KEY,
           }
       : undefined,
   };

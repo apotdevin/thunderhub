@@ -8,6 +8,13 @@
       "when": 1775074089419,
       "tag": "0000_new_adam_warlock",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1775160645885,
+      "tag": "0001_jazzy_ezekiel",
+      "breakpoints": true
     }
   ]
 }
