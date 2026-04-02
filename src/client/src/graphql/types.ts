@@ -302,6 +302,13 @@ export type CreateBoltzReverseSwapType = {
   timeoutBlockHeight: Scalars['Float']['output'];
 };
 
+export type CreateInitialUserResult = {
+  __typename?: 'CreateInitialUserResult';
+  email: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  role: Scalars['String']['output'];
+};
+
 export type CreateInvoice = {
   __typename?: 'CreateInvoice';
   chain_address?: Maybe<Scalars['String']['output']>;
@@ -468,8 +475,6 @@ export type Mutation = {
   fetchLnUrl: LnUrlRequest;
   finalizeTapBatch: TapFinalizeBatchResponse;
   fundTapAssetChannel: TapFundChannelResponse;
-  getAuthToken: Scalars['Boolean']['output'];
-  getSessionToken: Scalars['String']['output'];
   keysend: PayInvoice;
   lnUrlAuth: AuthResponse;
   lnUrlChannel: Scalars['String']['output'];
@@ -481,6 +486,7 @@ export type Mutation = {
   newTapAddress: TapAddress;
   openChannel: OpenOrCloseChannel;
   pay: Scalars['Boolean']['output'];
+  public: PublicMutation;
   purchaseLiquidity: Scalars['Boolean']['output'];
   pushBackup: Scalars['Boolean']['output'];
   removePeer: Scalars['Boolean']['output'];
@@ -558,16 +564,6 @@ export type MutationFetchLnUrlArgs = {
 
 export type MutationFundTapAssetChannelArgs = {
   input: TapFundChannelInput;
-};
-
-export type MutationGetAuthTokenArgs = {
-  cookie?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type MutationGetSessionTokenArgs = {
-  id: Scalars['String']['input'];
-  password: Scalars['String']['input'];
-  token?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MutationKeysendArgs = {
@@ -924,6 +920,33 @@ export type Policy = {
   updated_at?: Maybe<Scalars['String']['output']>;
 };
 
+export type PublicMutation = {
+  __typename?: 'PublicMutation';
+  create_initial_user: CreateInitialUserResult;
+  get_auth_token: Scalars['Boolean']['output'];
+  get_session_token: Scalars['String']['output'];
+};
+
+export type PublicMutationCreate_Initial_UserArgs = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+export type PublicMutationGet_Auth_TokenArgs = {
+  cookie?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PublicMutationGet_Session_TokenArgs = {
+  id: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  token?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PublicQueries = {
+  __typename?: 'PublicQueries';
+  get_server_accounts: Array<ServerAccount>;
+};
+
 export type Query = {
   __typename?: 'Query';
   decodeTapAddress: TapAddress;
@@ -957,7 +980,6 @@ export type Query = {
   getPayments: GetPaymentsType;
   getPeers: Array<Peer>;
   getPendingChannels: Array<PendingChannel>;
-  getServerAccounts: Array<ServerAccount>;
   getTapAssets: TapAssetList;
   getTapBalances: TapBalances;
   getTapFederationServers: TapFederationServerList;
@@ -972,6 +994,7 @@ export type Query = {
   getUtxos: Array<Utxo>;
   getVolumeHealth: ChannelsHealth;
   getWalletInfo: Wallet;
+  public: PublicQueries;
   recoverFunds: Scalars['Boolean']['output'];
   signMessage: Scalars['String']['output'];
   verifyBackup: Scalars['Boolean']['output'];
@@ -1093,7 +1116,7 @@ export type TapAddress = {
   __typename?: 'TapAddress';
   amount: Scalars['String']['output'];
   assetId: Scalars['String']['output'];
-  assetType?: Maybe<Scalars['String']['output']>;
+  assetType: Scalars['String']['output'];
   encoded: Scalars['String']['output'];
   groupKey?: Maybe<Scalars['String']['output']>;
   internalKey: Scalars['String']['output'];
@@ -1174,7 +1197,7 @@ export type TapBalances = {
 export type TapFederationServer = {
   __typename?: 'TapFederationServer';
   host: Scalars['String']['output'];
-  id?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
 };
 
 export type TapFederationServerList = {
@@ -1185,7 +1208,7 @@ export type TapFederationServerList = {
 
 export type TapFinalizeBatchResponse = {
   __typename?: 'TapFinalizeBatchResponse';
-  batchKey?: Maybe<Scalars['String']['output']>;
+  batchKey: Scalars['String']['output'];
 };
 
 export type TapFundChannelInput = {
@@ -1205,7 +1228,7 @@ export type TapFundChannelResponse = {
 
 export type TapMintResponse = {
   __typename?: 'TapMintResponse';
-  batchKey?: Maybe<Scalars['String']['output']>;
+  batchKey: Scalars['String']['output'];
 };
 
 export enum TapOfferSortBy {
@@ -1276,7 +1299,7 @@ export type TapTransfer = {
   anchorTxHash: Scalars['String']['output'];
   anchorTxHeightHint: Scalars['Int']['output'];
   inputs: Array<TapTransferInput>;
-  label?: Maybe<Scalars['String']['output']>;
+  label: Scalars['String']['output'];
   outputs: Array<TapTransferOutput>;
   transferTimestamp: Scalars['String']['output'];
 };
@@ -1306,7 +1329,7 @@ export type TapUniverseAsset = {
   assetId?: Maybe<Scalars['String']['output']>;
   groupKey?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  proofType?: Maybe<Scalars['String']['output']>;
+  proofType: Scalars['String']['output'];
   totalSupply: Scalars['String']['output'];
 };
 

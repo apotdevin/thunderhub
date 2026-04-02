@@ -15,7 +15,7 @@ export type GetTapFederationServersQuery = {
     servers: Array<{
       __typename?: 'TapFederationServer';
       host: string;
-      id?: number | null;
+      id: number;
     }>;
   };
 };

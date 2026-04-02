@@ -33,10 +33,10 @@ export const useCheckAuthToken = () => {
 
   useEffect(() => {
     if (!cookieParam || !data) return;
-    if (data.getAuthToken) {
+    if (data.public.get_auth_token) {
       window.location.href = `${basePath}/`;
     }
-    if (!data.getAuthToken) {
+    if (!data.public.get_auth_token) {
       toast.error('Unable to SSO. Check your logs.');
       safeRedirect(logoutUrl || loginFallback, loginFallback);
     }

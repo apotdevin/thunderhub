@@ -68,7 +68,20 @@ export type ClientConfig = {
   logoutUrl: string;
   disable2FA: boolean;
   npmVersion: string;
+  dbEnabled: boolean;
 };
+
+type SqliteConfig = {
+  type: 'sqlite';
+  path?: string;
+};
+
+type PostgresConfig = {
+  type: 'postgres';
+  url?: string;
+};
+
+type DatabaseConfig = SqliteConfig | PostgresConfig | undefined;
 
 type ConfigType = {
   basePath: string;
@@ -91,6 +104,7 @@ type ConfigType = {
   subscriptions: SubscriptionsConfig;
   amboss: AmbossConfig;
   clientConfig: ClientConfig;
+  database?: DatabaseConfig;
 };
 
 const VALID_NODE_TYPES = ['lnd', 'litd'];
@@ -201,6 +215,7 @@ export default (): ConfigType => {
     logoutUrl: process.env.LOGOUT_URL || '',
     disable2FA: process.env.DISABLE_TWOFA === 'true',
     npmVersion,
+    dbEnabled: !!process.env.DB_TYPE,
   };
 
   const config: ConfigType = {
@@ -224,6 +239,17 @@ export default (): ConfigType => {
     subscriptions,
     amboss,
     clientConfig,
+    database: process.env.DB_TYPE
+      ? process.env.DB_TYPE === 'postgres'
+        ? {
+            type: 'postgres' as const,
+            url: process.env.DB_POSTGRES_URL,
+          }
+        : {
+            type: 'sqlite' as const,
+            path: process.env.DB_SQLITE_PATH,
+          }
+      : undefined,
   };
 
   if (!isProduction) {

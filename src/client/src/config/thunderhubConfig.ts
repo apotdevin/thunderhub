@@ -11,6 +11,8 @@ interface ThunderhubConfig {
   logoutUrl: string;
   disable2FA: boolean;
   npmVersion: string;
+  dbEnabled: boolean;
+  needsSetup: boolean;
 }
 
 export const config: ThunderhubConfig = {
@@ -26,6 +28,8 @@ export const config: ThunderhubConfig = {
   logoutUrl: '',
   disable2FA: false,
   npmVersion: '0.0.1',
+  dbEnabled: false,
+  needsSetup: false,
 };
 
 export function initConfig(data: Partial<ThunderhubConfig>): void {
