@@ -34,9 +34,9 @@ export const Login = ({ account }: LoginProps) => {
         'ThunderHub supports LND version 0.11.0 and higher. Please update your node, you are in risk of losing funds.'
       );
     } else {
-      window.location.href = `${config.basePath}/`;
+      window.location.href = `${config.basePath}/${account.slug}/home`;
     }
-  }, [data, loading]);
+  }, [data, loading, account.slug]);
 
   if (!account) return null;
 

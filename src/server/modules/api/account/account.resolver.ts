@@ -29,6 +29,7 @@ export class AccountResolver {
       return {
         name: 'SSO Account',
         id: 'sso',
+        slug: 'sso',
         loggedIn: true,
         type: 'sso',
         twofaEnabled: false,
@@ -38,6 +39,7 @@ export class AccountResolver {
     return {
       name: currentAccount.name,
       id: user.id,
+      slug: currentAccount.slug || user.id.slice(0, 8),
       loggedIn: true,
       type: 'server',
       twofaEnabled: !!currentAccount.twofaSecret,
@@ -75,6 +77,7 @@ export class PublicQueriesResolver {
           mapped.push({
             name,
             id: hash,
+            slug: key === 'sso' ? 'sso' : account.slug || hash.slice(0, 8),
             loggedIn: currentAccount?.hash === key,
             type: key === 'sso' ? 'sso' : 'server',
             twofaEnabled: false,

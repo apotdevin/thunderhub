@@ -69,6 +69,8 @@ const RenderIntro = () => {
 export const Accounts = () => {
   const navigate = useNavigate();
   const [newAccount, setNewAccount] = useState<ServerAccount | null>(null);
+  const [connectingAccount, setConnectingAccount] =
+    useState<ServerAccount | null>(null);
 
   const [logout] = useLogoutMutation({ refetchQueries: ['GetServerAccounts'] });
 
@@ -84,10 +86,10 @@ export const Accounts = () => {
   });
 
   useEffect(() => {
-    if (!loading && data && data.getNodeInfo) {
-      navigate('/');
+    if (!loading && data && data.getNodeInfo && connectingAccount) {
+      navigate(`/${connectingAccount.slug}/home`);
     }
-  }, [data, loading, navigate]);
+  }, [data, loading, navigate, connectingAccount]);
 
   if (loadingData) {
     return (
@@ -103,8 +105,10 @@ export const Accounts = () => {
 
   const handleClick = (account: ServerAccount) => () => {
     if (account.type === 'sso') {
+      setConnectingAccount(account);
       getCanConnect();
     } else if (account.type === 'server' && account.loggedIn) {
+      setConnectingAccount(account);
       getCanConnect();
     } else {
       setNewAccount(account);

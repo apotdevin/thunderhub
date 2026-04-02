@@ -20,10 +20,18 @@ function createApolloClient(authToken: string) {
   });
 
   const authLink = setContext((_, { headers }) => {
+    // Extract node slug from the current URL path: /:nodeSlug/...
+    const segments = window.location.pathname
+      .replace(config.basePath, '')
+      .split('/')
+      .filter(Boolean);
+    const nodeSlug = segments[0] || '';
+
     return {
       headers: {
         ...headers,
         authorization: authToken ? `Bearer ${authToken}` : '',
+        ...(nodeSlug && { 'x-node-slug': nodeSlug }),
       },
     };
   });

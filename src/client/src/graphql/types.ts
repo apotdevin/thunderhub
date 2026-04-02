@@ -1096,6 +1096,7 @@ export type ServerAccount = {
   id: Scalars['String']['output'];
   loggedIn: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
   twofaEnabled: Scalars['Boolean']['output'];
   type: Scalars['String']['output'];
 };
@@ -1179,6 +1180,12 @@ export type TapAssetList = {
   assets: Array<TapAsset>;
 };
 
+export type TapAssetPrice = {
+  __typename?: 'TapAssetPrice';
+  id?: Maybe<Scalars['String']['output']>;
+  usd?: Maybe<Scalars['Float']['output']>;
+};
+
 export enum TapAssetType {
   Collectible = 'COLLECTIBLE',
   Normal = 'NORMAL',
@@ -1248,6 +1255,7 @@ export type TapSupportedAsset = {
   groupKey?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   precision: Scalars['Int']['output'];
+  prices?: Maybe<TapAssetPrice>;
   symbol: Scalars['String']['output'];
 };
 

@@ -7,6 +7,8 @@ export class ServerAccount {
   @Field()
   id: string;
   @Field()
+  slug: string;
+  @Field()
   loggedIn: boolean;
   @Field()
   type: string;

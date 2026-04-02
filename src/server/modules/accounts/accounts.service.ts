@@ -66,6 +66,7 @@ export class AccountsService implements OnModuleInit {
       this.accounts['sso'] = {
         ...sso,
         hash: 'sso',
+        slug: 'sso',
         connection,
       };
     }

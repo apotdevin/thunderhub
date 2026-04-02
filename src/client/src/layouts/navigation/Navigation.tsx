@@ -16,10 +16,10 @@ import {
   ArrowLeftRight,
   LucideProps,
 } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { useConfigState } from '../../context/ConfigContext';
 import { Link } from '../../components/link/Link';
+import { useNodePath } from '../../hooks/useNodeSlug';
 import {
   Tooltip,
   TooltipContent,
@@ -30,7 +30,7 @@ import { SideSettings } from './sideSettings/SideSettings';
 
 type Icon = FC<LucideProps>;
 
-const HOME = '/';
+const HOME = '/home';
 const DASHBOARD = '/dashboard';
 const PEERS = '/peers';
 const CHANNEL = '/channels';
@@ -76,7 +76,7 @@ const secondaryNavItems: NavItem[] = [
 ];
 
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
-  const { pathname } = useLocation();
+  const nodePath = useNodePath();
   const { sidebar } = useConfigState();
 
   const { data: capData } = useGetNodeCapabilitiesQuery();
@@ -89,7 +89,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   );
 
   const renderNavButton = (item: NavItem, open = true) => {
-    const isActive = pathname === item.link;
+    const isActive = nodePath === item.link;
     const NavIcon = item.icon;
 
     const button = (
@@ -124,7 +124,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   };
 
   const renderBurgerNav = (item: NavItem) => {
-    const isActive = pathname === item.link;
+    const isActive = nodePath === item.link;
     const NavIcon = item.icon;
 
     return (

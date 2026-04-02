@@ -1,6 +1,9 @@
 import { FC, ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useNodeSlug } from '@/hooks/useNodeSlug';
+
+const PUBLIC_PATHS = ['/login', '/sso', '/setup'];
 
 interface LinkProps {
   href?: string;
@@ -40,6 +43,8 @@ export const Link: FC<LinkProps> = ({
   noStyling,
   newTab,
 }) => {
+  const { buildPath, nodeSlug } = useNodeSlug();
+
   if (!href && !to) return null;
 
   const className = getLinkClass({ inheritColor, color, fullWidth, noStyling });
@@ -59,8 +64,14 @@ export const Link: FC<LinkProps> = ({
   }
 
   if (to) {
+    const isPublic = PUBLIC_PATHS.some(p => to.startsWith(p));
+    const resolvedTo =
+      nodeSlug && !isPublic && !to.startsWith(`/${nodeSlug}`)
+        ? buildPath(to)
+        : to;
+
     return (
-      <RouterLink to={to} style={{ textDecoration: 'none' }}>
+      <RouterLink to={resolvedTo} style={{ textDecoration: 'none' }}>
         <span className={className} style={style}>
           {children}
         </span>

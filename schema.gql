@@ -736,6 +736,7 @@ type ServerAccount {
   id: String!
   loggedIn: Boolean!
   name: String!
+  slug: String!
   twofaEnabled: Boolean!
   type: String!
 }
