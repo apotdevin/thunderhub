@@ -11,12 +11,14 @@ export type GetSessionTokenMutationVariables = Types.Exact<{
 
 export type GetSessionTokenMutation = {
   __typename?: 'Mutation';
-  getSessionToken: string;
+  public: { __typename?: 'PublicMutation'; get_session_token: string };
 };
 
 export const GetSessionTokenDocument = gql`
   mutation GetSessionToken($id: String!, $password: String!, $token: String) {
-    getSessionToken(id: $id, password: $password, token: $token)
+    public {
+      get_session_token(id: $id, password: $password, token: $token)
+    }
   }
 `;
 export type GetSessionTokenMutationFn = Apollo.MutationFunction<

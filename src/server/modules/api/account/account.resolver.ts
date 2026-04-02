@@ -1,12 +1,12 @@
-import { Context, Query, Resolver } from '@nestjs/graphql';
+import { Context, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { ContextType } from 'src/server/app.module';
 import { AccountsService } from '../../accounts/accounts.service';
 import { CurrentUser, Public } from '../../security/security.decorators';
-import { ServerAccount } from './account.types';
+import { PublicQueries, ServerAccount } from './account.types';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { Inject } from '@nestjs/common';
-import { UserId } from '../../security/security.types';
+import { UserId, parseSubject } from '../../security/security.types';
 import { Throttle, seconds } from '@nestjs/throttler';
 
 @Resolver()
@@ -46,11 +46,22 @@ export class AccountResolver {
 
   @Public()
   @Throttle({ default: { limit: 4, ttl: seconds(10) } })
-  @Query(() => [ServerAccount])
-  async getServerAccounts(
+  @Query(() => PublicQueries)
+  async public() {
+    return {};
+  }
+}
+
+@Resolver(() => PublicQueries)
+export class PublicQueriesResolver {
+  constructor(private accountsService: AccountsService) {}
+
+  @ResolveField(() => [ServerAccount])
+  async get_server_accounts(
     @Context() { authToken }: ContextType
   ): Promise<ServerAccount[]> {
-    const currentAccount = this.accountsService.getAccount(authToken?.sub);
+    const parsed = authToken?.sub ? parseSubject(authToken.sub) : undefined;
+    const currentAccount = this.accountsService.getAccount(parsed?.id);
     const accounts = this.accountsService.getAllAccounts();
 
     const mapped: ServerAccount[] = [];

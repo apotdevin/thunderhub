@@ -2,7 +2,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtObjectType, UserId } from './security.types';
+import { JwtObjectType, UserId, parseSubject } from './security.types';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import * as cookie from 'cookie';
@@ -37,10 +37,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new Error('Unauthorized token');
     }
 
-    const id: UserId = {
-      id: payload.sub || '',
-    };
+    const { authType, id } = parseSubject(payload.sub);
 
-    return id;
+    return { id, authType };
   }
 }

@@ -22,6 +22,7 @@ import { InvoicesModule } from './invoices/invoices.module';
 import { BoltzModule } from './boltz/boltz.module';
 import { UserConfigModule } from './userConfig/userConfig.module';
 import { TapdApiModule } from './tapd/tapd.module';
+import { PublicModule } from './public/public.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { TapdApiModule } from './tapd/tapd.module';
     InvoicesModule,
     BoltzModule,
     TapdApiModule,
+    PublicModule,
   ],
 })
 export class ApiModule {}

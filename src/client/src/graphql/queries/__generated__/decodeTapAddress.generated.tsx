@@ -15,7 +15,7 @@ export type DecodeTapAddressQuery = {
     assetId: string;
     groupKey?: string | null;
     amount: string;
-    assetType?: string | null;
+    assetType: string;
   };
 };
 

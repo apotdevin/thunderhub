@@ -17,7 +17,7 @@ import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.
 import { useGetNodeInfoLazyQuery } from '../../graphql/queries/__generated__/getNodeInfo.generated';
 import { Login } from './Login';
 
-type ServerAccount = GetServerAccountsQuery['getServerAccounts'][0];
+type ServerAccount = GetServerAccountsQuery['public']['get_server_accounts'][0];
 
 const RenderIntro = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -97,7 +97,7 @@ export const Accounts = () => {
     );
   }
 
-  if (!accountData?.getServerAccounts?.length) {
+  if (!accountData?.public?.get_server_accounts?.length) {
     return <RenderIntro />;
   }
 
@@ -122,7 +122,7 @@ export const Accounts = () => {
           </h3>
 
           <div className="flex flex-col gap-1.5">
-            {accountData?.getServerAccounts?.map((account, index) => {
+            {accountData?.public?.get_server_accounts?.map((account, index) => {
               if (!account) return null;
               const isActive = newAccount?.id === account.id;
               const isThisLoading = isActive && loading;

@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { config } from '../../config/thunderhubConfig';
 import { GetServerAccountsQuery } from '../../graphql/queries/__generated__/getServerAccounts.generated';
 
-type ServerAccount = GetServerAccountsQuery['getServerAccounts'][0];
+type ServerAccount = GetServerAccountsQuery['public']['get_server_accounts'][0];
 
 type LoginProps = {
   account: ServerAccount;
@@ -27,8 +27,8 @@ export const Login = ({ account }: LoginProps) => {
   });
 
   useEffect(() => {
-    if (loading || !data?.getSessionToken) return;
-    const { mayor, minor } = getVersion(data.getSessionToken);
+    if (loading || !data?.public?.get_session_token) return;
+    const { mayor, minor } = getVersion(data.public.get_session_token);
     if (mayor <= 0 && minor < 11) {
       toast.error(
         'ThunderHub supports LND version 0.11.0 and higher. Please update your node, you are in risk of losing funds.'

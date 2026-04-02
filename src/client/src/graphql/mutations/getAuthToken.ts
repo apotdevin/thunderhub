@@ -2,6 +2,8 @@ import { gql } from '@apollo/client';
 
 export const GET_AUTH_TOKEN = gql`
   mutation GetAuthToken($cookie: String) {
-    getAuthToken(cookie: $cookie)
+    public {
+      get_auth_token(cookie: $cookie)
+    }
   }
 `;
