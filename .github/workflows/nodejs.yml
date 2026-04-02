@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.2
 
       - name: Cache node modules
         id: cache-npm
-        uses: actions/cache@v5
+        uses: actions/cache@v5.0.4
         env:
           cache-name: cache-node-modules
         with:
@@ -43,11 +43,11 @@ jobs:
 
       - name: Setup Docker Buildx Driver
         id: docker_driver_setup
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@v4.0.0
 
       - name: Run docker build
         id: docker_build
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@v7.0.0
         with:
           context: ./
           file: ./Dockerfile
