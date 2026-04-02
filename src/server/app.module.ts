@@ -38,6 +38,7 @@ export type ContextType = {
   tokenAuth: string | null;
   ambossAuth: string | null;
   loaders: DataloaderTypes;
+  nodeSlug?: string;
 };
 
 export type JwtObjectType = {
@@ -92,6 +93,8 @@ export type JwtObjectType = {
           const tokenAuth = cookies[appConstants.tokenCookieName];
           const ambossAuth = cookies[appConstants.ambossCookieName];
 
+          const nodeSlug = (req.headers['x-node-slug'] as string) || undefined;
+
           const loaders = dataloaderService.createLoaders();
 
           const context = {
@@ -100,6 +103,7 @@ export type JwtObjectType = {
             tokenAuth,
             ambossAuth,
             loaders,
+            nodeSlug,
           };
 
           if (!token) return context;
