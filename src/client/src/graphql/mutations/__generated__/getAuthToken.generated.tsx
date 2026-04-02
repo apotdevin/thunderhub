@@ -9,12 +9,14 @@ export type GetAuthTokenMutationVariables = Types.Exact<{
 
 export type GetAuthTokenMutation = {
   __typename?: 'Mutation';
-  getAuthToken: boolean;
+  public: { __typename?: 'PublicMutation'; get_auth_token: boolean };
 };
 
 export const GetAuthTokenDocument = gql`
   mutation GetAuthToken($cookie: String) {
-    getAuthToken(cookie: $cookie)
+    public {
+      get_auth_token(cookie: $cookie)
+    }
   }
 `;
 export type GetAuthTokenMutationFn = Apollo.MutationFunction<

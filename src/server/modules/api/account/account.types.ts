@@ -13,3 +13,9 @@ export class ServerAccount {
   @Field()
   twofaEnabled: boolean;
 }
+
+@ObjectType()
+export class PublicQueries {
+  @Field(() => [ServerAccount])
+  get_server_accounts: ServerAccount[];
+}

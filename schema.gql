@@ -408,8 +408,6 @@ type Mutation {
   fetchLnUrl(url: String!): LnUrlRequest!
   finalizeTapBatch: TapFinalizeBatchResponse!
   fundTapAssetChannel(input: TapFundChannelInput!): TapFundChannelResponse!
-  getAuthToken(cookie: String): Boolean!
-  getSessionToken(id: String!, password: String!, token: String): String!
   keysend(destination: String, message: String, tokens: Float!): PayInvoice!
   lnUrlAuth(url: String!): AuthResponse!
   lnUrlChannel(callback: String!, k1: String!, uri: String!): String!
@@ -664,6 +662,12 @@ type Policy {
 
 type PublicMutation {
   create_initial_user(email: String!, password: String!): CreateInitialUserResult!
+  get_auth_token(cookie: String): Boolean!
+  get_session_token(id: String!, password: String!, token: String): String!
+}
+
+type PublicQueries {
+  get_server_accounts: [ServerAccount!]!
 }
 
 type Query {
@@ -698,7 +702,6 @@ type Query {
   getPayments(token: String): GetPaymentsType!
   getPeers: [Peer!]!
   getPendingChannels: [PendingChannel!]!
-  getServerAccounts: [ServerAccount!]!
   getTapAssets: TapAssetList!
   getTapBalances(groupBy: TapBalanceGroupBy = GROUP_KEY): TapBalances!
   getTapFederationServers: TapFederationServerList!
@@ -713,6 +716,7 @@ type Query {
   getUtxos: [Utxo!]!
   getVolumeHealth: ChannelsHealth!
   getWalletInfo: Wallet!
+  public: PublicQueries!
   recoverFunds(backup: String!): Boolean!
   signMessage(message: String!): String!
   verifyBackup(backup: String!): Boolean!

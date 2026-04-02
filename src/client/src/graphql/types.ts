@@ -475,8 +475,6 @@ export type Mutation = {
   fetchLnUrl: LnUrlRequest;
   finalizeTapBatch: TapFinalizeBatchResponse;
   fundTapAssetChannel: TapFundChannelResponse;
-  getAuthToken: Scalars['Boolean']['output'];
-  getSessionToken: Scalars['String']['output'];
   keysend: PayInvoice;
   lnUrlAuth: AuthResponse;
   lnUrlChannel: Scalars['String']['output'];
@@ -566,16 +564,6 @@ export type MutationFetchLnUrlArgs = {
 
 export type MutationFundTapAssetChannelArgs = {
   input: TapFundChannelInput;
-};
-
-export type MutationGetAuthTokenArgs = {
-  cookie?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type MutationGetSessionTokenArgs = {
-  id: Scalars['String']['input'];
-  password: Scalars['String']['input'];
-  token?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MutationKeysendArgs = {
@@ -935,11 +923,28 @@ export type Policy = {
 export type PublicMutation = {
   __typename?: 'PublicMutation';
   create_initial_user: CreateInitialUserResult;
+  get_auth_token: Scalars['Boolean']['output'];
+  get_session_token: Scalars['String']['output'];
 };
 
 export type PublicMutationCreate_Initial_UserArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type PublicMutationGet_Auth_TokenArgs = {
+  cookie?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PublicMutationGet_Session_TokenArgs = {
+  id: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  token?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PublicQueries = {
+  __typename?: 'PublicQueries';
+  get_server_accounts: Array<ServerAccount>;
 };
 
 export type Query = {
@@ -975,7 +980,6 @@ export type Query = {
   getPayments: GetPaymentsType;
   getPeers: Array<Peer>;
   getPendingChannels: Array<PendingChannel>;
-  getServerAccounts: Array<ServerAccount>;
   getTapAssets: TapAssetList;
   getTapBalances: TapBalances;
   getTapFederationServers: TapFederationServerList;
@@ -990,6 +994,7 @@ export type Query = {
   getUtxos: Array<Utxo>;
   getVolumeHealth: ChannelsHealth;
   getWalletInfo: Wallet;
+  public: PublicQueries;
   recoverFunds: Scalars['Boolean']['output'];
   signMessage: Scalars['String']['output'];
   verifyBackup: Scalars['Boolean']['output'];

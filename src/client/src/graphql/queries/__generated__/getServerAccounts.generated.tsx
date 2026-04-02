@@ -9,22 +9,27 @@ export type GetServerAccountsQueryVariables = Types.Exact<{
 
 export type GetServerAccountsQuery = {
   __typename?: 'Query';
-  getServerAccounts: Array<{
-    __typename?: 'ServerAccount';
-    name: string;
-    id: string;
-    loggedIn: boolean;
-    type: string;
-  }>;
+  public: {
+    __typename?: 'PublicQueries';
+    get_server_accounts: Array<{
+      __typename?: 'ServerAccount';
+      name: string;
+      id: string;
+      loggedIn: boolean;
+      type: string;
+    }>;
+  };
 };
 
 export const GetServerAccountsDocument = gql`
   query GetServerAccounts {
-    getServerAccounts {
-      name
-      id
-      loggedIn
-      type
+    public {
+      get_server_accounts {
+        name
+        id
+        loggedIn
+        type
+      }
     }
   }
 `;

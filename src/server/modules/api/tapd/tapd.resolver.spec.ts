@@ -53,7 +53,7 @@ const mockLogger = { error: jest.fn(), warn: jest.fn(), info: jest.fn() };
 describe('TapdResolver', () => {
   let resolver: TapdResolver;
   let service: MockService;
-  const userId = { id: 'test-user-id' };
+  const userId = { id: 'test-user-id' } as any;
 
   beforeEach(() => {
     service = mockService();
@@ -709,7 +709,7 @@ describe('TapdResolver', () => {
 });
 
 describe('TapdResolver trading queries', () => {
-  const userId = { id: 'test-user-id' };
+  const userId = { id: 'test-user-id' } as any;
   const tradeUrl = 'https://rails.amboss.tech/graphql';
   const ambossContext = { ambossAuth: 'token123' };
 
