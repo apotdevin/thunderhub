@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { AssetsList } from './AssetsList';
+import { PortfolioDistribution } from './PortfolioDistribution';
 import { MintAsset } from './MintAsset';
 import { BurnAsset } from './BurnAsset';
 import { SendAsset } from './SendAsset';
@@ -52,7 +53,12 @@ export const AssetsView = () => {
         ))}
       </div>
 
-      {activeTab === 'assets' && <AssetsList />}
+      {activeTab === 'assets' && (
+        <div className="flex flex-col gap-4">
+          <PortfolioDistribution />
+          <AssetsList />
+        </div>
+      )}
       {activeTab === 'send' && <SendAsset />}
       {activeTab === 'receive' && <ReceiveAsset />}
       {activeTab === 'channels' && <FundAssetChannel />}
