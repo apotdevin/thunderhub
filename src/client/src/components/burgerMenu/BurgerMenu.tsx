@@ -14,6 +14,7 @@ import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 import { usePriceState } from '../../context/PriceContext';
+import { NodeSwitcher } from '../nodeManager/NodeSwitcher';
 
 interface BurgerProps {
   setOpen: (state: boolean) => void;
@@ -36,6 +37,10 @@ export const BurgerMenu = ({
     <div className="flex flex-col h-full pt-10">
       <div className="px-4 py-4">
         <NodeInfo isBurger={true} />
+      </div>
+      <Separator />
+      <div className="px-4 py-2">
+        <NodeSwitcher />
       </div>
       <Separator />
       <div className="flex-1 overflow-y-auto">

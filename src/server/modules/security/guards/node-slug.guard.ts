@@ -20,11 +20,13 @@ export class NodeSlugGuard implements CanActivate {
 
     if (isPublic) return true;
 
+    if (context.getType<string>() !== 'graphql') return true;
+
     const ctx = GqlExecutionContext.create(context);
     const { nodeSlug } = ctx.getContext();
     const req = ctx.getContext().req;
 
-    if (!req.user || !nodeSlug) return true;
+    if (!req?.user || !nodeSlug) return true;
 
     if (req.user.authType === AuthType.YAML) {
       const account = this.accountsService.getAccountBySlug(nodeSlug);
@@ -37,6 +39,7 @@ export class NodeSlugGuard implements CanActivate {
         req.user.id
       );
       if (account) {
+        req.user.userId = req.user.id;
         req.user.id = account.hash;
       }
     }

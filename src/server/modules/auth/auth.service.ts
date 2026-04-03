@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { AccountsService } from '../accounts/accounts.service';
+import { AuthType, parseSubject } from '../security/security.types';
 
 @Injectable()
 export class AuthenticationService {
@@ -17,7 +18,13 @@ export class AuthenticationService {
       const payload = this.jwtService.verify(token);
 
       if (payload.sub) {
-        const account = this.accountsService.getAccount(payload.sub);
+        const parsed = parseSubject(payload.sub);
+
+        if (parsed.authType === AuthType.USER) {
+          return parsed.id;
+        }
+
+        const account = this.accountsService.getAccount(parsed.id);
 
         if (account) {
           return payload.sub;

@@ -22,4 +22,7 @@ export class PublicMutation {
 
   @Field(() => String)
   get_session_token: string;
+
+  @Field(() => Boolean)
+  get_db_session_token: boolean;
 }

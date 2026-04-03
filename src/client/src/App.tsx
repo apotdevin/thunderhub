@@ -46,6 +46,7 @@ import AmbossPage from './pages/AmbossPage';
 import AssetsPage from './pages/AssetsPage';
 import TradingPage from './pages/TradingPage';
 import SetupPage from './pages/SetupPage';
+import NodeSetupPage from './pages/NodeSetupPage';
 
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const SettingsDashboardPage = lazy(
@@ -110,6 +111,10 @@ const RootRedirect: FC = () => {
     return <Navigate to="/login" replace />;
   }
 
+  if (data.getAccount.hasNode === false) {
+    return <Navigate to="/node-setup" replace />;
+  }
+
   return <Navigate to={`/${data.getAccount.slug}/home`} replace />;
 };
 
@@ -153,7 +158,10 @@ const Wrapper: FC<{ children?: ReactNode }> = ({ children }) => {
   }, [theme]);
 
   const isRoot =
-    pathname === '/login' || pathname === '/sso' || pathname === '/setup';
+    pathname === '/login' ||
+    pathname === '/sso' ||
+    pathname === '/setup' ||
+    pathname === '/node-setup';
 
   const { data, loading, error } = useGetNodeInfoQuery({
     fetchPolicy: 'cache-and-network',
@@ -256,6 +264,7 @@ const AppRoutes = () => (
       <Route path="/login" element={<LoginPage />} />
       <Route path="/sso" element={<SsoPage />} />
       <Route path="/setup" element={<SetupPage />} />
+      <Route path="/node-setup" element={<NodeSetupPage />} />
     </Route>
 
     {/* Legacy bare paths → redirect to /:nodeSlug/path */}

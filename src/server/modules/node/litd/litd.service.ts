@@ -58,6 +58,18 @@ export class LitdService implements LightningProvider, TaprootAssetsProvider {
     return connection.tapd;
   }
 
+  async verifyConnection(connection: LitdConnection): Promise<void> {
+    await this.lndService.verifyConnection(this.getLnd(connection));
+
+    try {
+      await connection.tapd.taprootAssets.listAssets({ includeSpent: false });
+    } catch {
+      throw new Error(
+        'Node does not appear to be a LiTD node. LND connected but Taproot Assets daemon is not reachable.'
+      );
+    }
+  }
+
   getSubscriptionConnection(connection: LitdConnection) {
     return connection.lnd;
   }
