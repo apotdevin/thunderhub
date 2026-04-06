@@ -9,6 +9,7 @@ export const GET_ACCOUNT = gql`
       loggedIn
       type
       twofaEnabled
+      hasNode
     }
   }
 `;

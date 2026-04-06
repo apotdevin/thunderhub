@@ -27,6 +27,19 @@ export type Scalars = {
   Float: { input: number; output: number };
 };
 
+export type AddNodeInput = {
+  litd?: InputMaybe<LitdInput>;
+  lnd?: InputMaybe<LndInput>;
+  name: Scalars['String']['input'];
+};
+
+export type AddNodeResult = {
+  __typename?: 'AddNodeResult';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+};
+
 export type AggregatedChannelForwards = {
   __typename?: 'AggregatedChannelForwards';
   channel?: Maybe<Scalars['String']['output']>;
@@ -452,7 +465,19 @@ export type LightningNodeSocialInfo = {
   socials?: Maybe<NodeSocial>;
 };
 
+export type LitdInput = {
+  cert?: InputMaybe<Scalars['String']['input']>;
+  macaroon: Scalars['String']['input'];
+  socket: Scalars['String']['input'];
+};
+
 export type LnUrlRequest = ChannelRequest | PayRequest | WithdrawRequest;
+
+export type LndInput = {
+  cert?: InputMaybe<Scalars['String']['input']>;
+  macaroon: Scalars['String']['input'];
+  socket: Scalars['String']['input'];
+};
 
 export type MessageType = {
   __typename?: 'MessageType';
@@ -495,6 +520,7 @@ export type Mutation = {
   sendTapAsset: Scalars['Boolean']['output'];
   sendToAddress: ChainAddressSend;
   syncTapUniverse: TapSyncResult;
+  team: TeamMutations;
   toggleConfig: Scalars['Boolean']['output'];
   updateFees: Scalars['Boolean']['output'];
   updateMultipleFees: Scalars['Boolean']['output'];
@@ -924,6 +950,7 @@ export type PublicMutation = {
   __typename?: 'PublicMutation';
   create_initial_user: CreateInitialUserResult;
   get_auth_token: Scalars['Boolean']['output'];
+  get_db_session_token: Scalars['Boolean']['output'];
   get_session_token: Scalars['String']['output'];
 };
 
@@ -934,6 +961,11 @@ export type PublicMutationCreate_Initial_UserArgs = {
 
 export type PublicMutationGet_Auth_TokenArgs = {
   cookie?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PublicMutationGet_Db_Session_TokenArgs = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 export type PublicMutationGet_Session_TokenArgs = {
@@ -997,6 +1029,7 @@ export type Query = {
   public: PublicQueries;
   recoverFunds: Scalars['Boolean']['output'];
   signMessage: Scalars['String']['output'];
+  user: UserQueries;
   verifyBackup: Scalars['Boolean']['output'];
   verifyBackups: Scalars['Boolean']['output'];
   verifyMessage: Scalars['String']['output'];
@@ -1093,6 +1126,7 @@ export type Route = {
 
 export type ServerAccount = {
   __typename?: 'ServerAccount';
+  hasNode?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['String']['output'];
   loggedIn: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
@@ -1359,6 +1393,15 @@ export type TapUniverseStats = {
   numTotalSyncs: Scalars['Int']['output'];
 };
 
+export type TeamMutations = {
+  __typename?: 'TeamMutations';
+  add_node: AddNodeResult;
+};
+
+export type TeamMutationsAdd_NodeArgs = {
+  input: AddNodeInput;
+};
+
 export type TwofaResult = {
   __typename?: 'TwofaResult';
   secret: Scalars['String']['output'];
@@ -1381,6 +1424,18 @@ export type UserBackupInfo = {
   last_update?: Maybe<Scalars['String']['output']>;
   last_update_size?: Maybe<Scalars['String']['output']>;
   total_size_saved: Scalars['String']['output'];
+};
+
+export type UserNode = {
+  __typename?: 'UserNode';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+};
+
+export type UserQueries = {
+  __typename?: 'UserQueries';
+  get_nodes: Array<UserNode>;
 };
 
 export type Utxo = {

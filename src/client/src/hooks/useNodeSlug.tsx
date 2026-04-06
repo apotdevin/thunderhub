@@ -1,12 +1,15 @@
 import {
   createContext,
   useContext,
+  useEffect,
+  useRef,
   FC,
   ReactNode,
   useMemo,
   useCallback,
 } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useApolloClient } from '@apollo/client';
 
 interface NodeSlugContextType {
   nodeSlug: string;
@@ -23,6 +26,15 @@ const NodeSlugContext = createContext<NodeSlugContextType>({
 export const NodeSlugProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { nodeSlug = '' } = useParams<{ nodeSlug: string }>();
   const navigate = useNavigate();
+  const client = useApolloClient();
+  const prevSlug = useRef(nodeSlug);
+
+  useEffect(() => {
+    if (prevSlug.current && nodeSlug && prevSlug.current !== nodeSlug) {
+      client.resetStore();
+    }
+    prevSlug.current = nodeSlug;
+  }, [nodeSlug, client]);
 
   const buildPath = useCallback(
     (path: string) => {

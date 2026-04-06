@@ -150,6 +150,57 @@ export class PublicResolver {
     return false;
   }
 
+  @ResolveField(() => Boolean)
+  async get_db_session_token(
+    @Args('email') email: string,
+    @Args('password') password: string,
+    @Context() { res }: ContextType
+  ): Promise<boolean> {
+    if (!this.userService.isDbEnabled()) {
+      throw new Error('Database is not enabled');
+    }
+
+    const user = await this.userService.getUserByEmail(email);
+
+    if (!user) {
+      this.logger.debug(`DB user not found for email: ${email}`);
+      throw new Error('Wrong credentials for login');
+    }
+
+    const isValid = await this.userService.verifyPassword(
+      user.password_hash,
+      password
+    );
+
+    if (!isValid) {
+      this.logger.error('DB authentication failed - invalid password');
+      throw new Error('Wrong credentials for login');
+    }
+
+    const jwtSecret = this.configService.get('jwtSecret');
+    const useHttps = this.configService.get('useHttps');
+
+    const jwtToken = jwt.sign(
+      { sub: `${AUTH_PREFIX[AuthType.USER]}${user.id}` },
+      jwtSecret,
+      { algorithm: 'HS256', expiresIn: '24h' }
+    );
+
+    res.setHeader(
+      'Set-Cookie',
+      cookieLib.serialize(appConstants.cookieName, jwtToken, {
+        httpOnly: true,
+        sameSite: true,
+        path: '/',
+        secure: useHttps,
+      })
+    );
+
+    this.logger.debug(`DB session token created for user ${user.id}`);
+
+    return true;
+  }
+
   @ResolveField(() => String)
   async get_session_token(
     @Args('id') id: string,

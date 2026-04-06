@@ -127,9 +127,11 @@ export class AccountsService implements OnModuleInit {
   ): Promise<EnrichedAccount | null> {
     if (!slug || !this.drizzle) return null;
 
-    // Check cache first
-    const cacheKey = `db:${slug}`;
-    if (this.accounts[cacheKey]) return this.accounts[cacheKey];
+    // Check cache first (try slug-based lookup)
+    for (const key of Object.keys(this.accounts)) {
+      const acct = this.accounts[key];
+      if (acct.slug === slug) return acct;
+    }
 
     const { db, schema } = this.drizzle;
 
@@ -141,7 +143,7 @@ export class AccountsService implements OnModuleInit {
         eq(schema.userNodes.node_id, schema.nodes.id)
       )
       .where(eq(schema.userNodes.user_id, userId))
-      .where(sql`LEFT(${schema.nodes.id}::text, 8) = ${slug}`)
+      .where(sql`SUBSTR(${schema.nodes.id}, 1, 8) = ${slug}`)
       .limit(1);
 
     const row = rows[0];
@@ -194,7 +196,7 @@ export class AccountsService implements OnModuleInit {
       connection,
     };
 
-    this.accounts[cacheKey] = enriched;
+    this.accounts[node.id] = enriched;
 
     return enriched;
   }

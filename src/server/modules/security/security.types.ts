@@ -42,4 +42,7 @@ export class UserId {
   id: string;
 
   authType: AuthType = AuthType.YAML;
+
+  /** Original DB user ID, preserved when NodeSlugGuard swaps id to node hash */
+  userId?: string;
 }

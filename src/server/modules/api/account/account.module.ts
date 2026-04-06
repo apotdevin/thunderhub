@@ -1,9 +1,24 @@
 import { Module } from '@nestjs/common';
 import { AccountsModule } from '../../accounts/accounts.module';
-import { AccountResolver, PublicQueriesResolver } from './account.resolver';
+import { ProviderRegistryModule } from '../../node/provider-registry.module';
+import {
+  AccountResolver,
+  PublicQueriesResolver,
+  UserQueryRoot,
+  TeamMutationRoot,
+  TeamMutationsResolver,
+  UserQueriesResolver,
+} from './account.resolver';
 
 @Module({
-  imports: [AccountsModule],
-  providers: [AccountResolver, PublicQueriesResolver],
+  imports: [AccountsModule, ProviderRegistryModule],
+  providers: [
+    AccountResolver,
+    PublicQueriesResolver,
+    UserQueryRoot,
+    TeamMutationRoot,
+    TeamMutationsResolver,
+    UserQueriesResolver,
+  ],
 })
 export class AccountModule {}
