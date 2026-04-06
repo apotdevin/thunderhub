@@ -42,7 +42,7 @@ export const AssetsView = () => {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={cn(
-              'px-3 py-2 text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap',
+              'px-3 py-2 text-sm font-medium transition-colors border-b-2 whitespace-nowrap',
               activeTab === tab.id
                 ? 'border-primary text-primary'
                 : 'border-transparent text-muted-foreground hover:text-foreground'

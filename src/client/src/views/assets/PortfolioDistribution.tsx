@@ -148,6 +148,7 @@ export const PortfolioDistribution: FC = () => {
                       backgroundColor: asset.color,
                     }}
                     className="h-full transition-opacity hover:opacity-80 cursor-default"
+                    aria-label={`${asset.symbol}: ${asset.percentage.toFixed(1)}%`}
                   />
                 </TooltipTrigger>
                 <TooltipContent side="top">
