@@ -1,23 +1,68 @@
-import { Context, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Mutation,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { ContextType } from 'src/server/app.module';
 import { AccountsService } from '../../accounts/accounts.service';
 import { CurrentUser, Public } from '../../security/security.decorators';
-import { PublicQueries, ServerAccount } from './account.types';
+import {
+  AddNodeInput,
+  AddNodeResult,
+  PublicQueries,
+  ServerAccount,
+  TeamMutations,
+  UserQueries,
+  UserNode,
+} from './account.types';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { Inject } from '@nestjs/common';
-import { UserId, parseSubject } from '../../security/security.types';
+import { UserId, AuthType, parseSubject } from '../../security/security.types';
 import { Throttle, seconds } from '@nestjs/throttler';
+import { UserService } from '../../user/user.service';
+import { ProviderRegistryService } from '../../node/provider-registry.service';
 
 @Resolver()
 export class AccountResolver {
   constructor(
     private accountsService: AccountsService,
+    private userService: UserService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
   @Query(() => ServerAccount)
   async getAccount(@CurrentUser() user: UserId): Promise<ServerAccount> {
+    if (user.authType === AuthType.USER) {
+      const dbUserId = user.userId ?? user.id;
+      const nodes = await this.userService.getUserNodeSlugs(dbUserId);
+
+      if (!nodes.length) {
+        return {
+          name: 'Account',
+          id: user.id,
+          slug: 'db',
+          loggedIn: true,
+          type: 'db',
+          twofaEnabled: false,
+          hasNode: false,
+        };
+      }
+
+      return {
+        name: nodes[0].name,
+        id: user.id,
+        slug: nodes[0].slug,
+        loggedIn: true,
+        type: 'db',
+        twofaEnabled: false,
+        hasNode: true,
+      };
+    }
+
     const currentAccount = this.accountsService.getAccount(user.id);
 
     if (!currentAccount) {
@@ -29,6 +74,7 @@ export class AccountResolver {
       return {
         name: 'SSO Account',
         id: 'sso',
+        slug: 'sso',
         loggedIn: true,
         type: 'sso',
         twofaEnabled: false,
@@ -38,6 +84,7 @@ export class AccountResolver {
     return {
       name: currentAccount.name,
       id: user.id,
+      slug: currentAccount.slug || user.id.slice(0, 8),
       loggedIn: true,
       type: 'server',
       twofaEnabled: !!currentAccount.twofaSecret,
@@ -52,9 +99,112 @@ export class AccountResolver {
   }
 }
 
+@Resolver()
+export class UserQueryRoot {
+  @Query(() => UserQueries)
+  async user(@CurrentUser() user: UserId): Promise<UserQueries> {
+    if (user.authType !== AuthType.USER) {
+      throw new Error('Only database accounts can access user queries');
+    }
+    return {} as any;
+  }
+}
+
+@Resolver()
+export class TeamMutationRoot {
+  @Mutation(() => TeamMutations)
+  async team(@CurrentUser() user: UserId): Promise<TeamMutations> {
+    if (user.authType !== AuthType.USER) {
+      throw new Error('Only database accounts can access team mutations');
+    }
+    return {} as any;
+  }
+}
+
+@Resolver(() => TeamMutations)
+export class TeamMutationsResolver {
+  constructor(
+    private userService: UserService,
+    private providerRegistry: ProviderRegistryService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+  ) {}
+
+  @ResolveField(() => AddNodeResult)
+  async add_node(
+    @CurrentUser() user: UserId,
+    @Args('input') input: AddNodeInput
+  ): Promise<AddNodeResult> {
+    const { name, lnd, litd } = input;
+
+    const configs = [
+      lnd && { type: 'lnd' as const, ...lnd },
+      litd && { type: 'litd' as const, ...litd },
+    ].filter(Boolean);
+
+    if (configs.length !== 1) {
+      throw new Error('Exactly one node type (lnd or litd) must be provided');
+    }
+
+    const config = configs[0]!;
+
+    // Test connection before saving
+    const provider = this.providerRegistry.getProvider(config.type);
+    try {
+      const connection = provider.connect({
+        socket: config.socket,
+        macaroon: config.macaroon,
+        cert: config.cert,
+      });
+      await provider.verifyConnection(connection);
+    } catch (error: any) {
+      throw new Error(
+        `Failed to connect to node: ${error.message || 'Unknown error'}`
+      );
+    }
+
+    const dbUserId = user.userId ?? user.id;
+
+    this.logger.info('Adding node for DB user', {
+      userId: dbUserId,
+      name,
+      type: config.type,
+      socket: config.socket,
+    });
+
+    const node = await this.userService.addNode(dbUserId, {
+      name,
+      type: config.type,
+      socket: config.socket,
+      macaroon: config.macaroon,
+      cert: config.cert,
+    });
+
+    return {
+      id: node.id,
+      slug: node.id.slice(0, 8),
+      name: node.name,
+    };
+  }
+}
+
+@Resolver(() => UserQueries)
+export class UserQueriesResolver {
+  constructor(private userService: UserService) {}
+
+  @ResolveField(() => [UserNode])
+  async get_nodes(@CurrentUser() user: UserId): Promise<UserNode[]> {
+    const dbUserId = user.userId ?? user.id;
+    const nodes = await this.userService.getUserNodeSlugs(dbUserId);
+    return nodes.map(n => ({ id: n.slug, slug: n.slug, name: n.name }));
+  }
+}
+
 @Resolver(() => PublicQueries)
 export class PublicQueriesResolver {
-  constructor(private accountsService: AccountsService) {}
+  constructor(
+    private accountsService: AccountsService,
+    private userService: UserService
+  ) {}
 
   @ResolveField(() => [ServerAccount])
   async get_server_accounts(
@@ -75,12 +225,28 @@ export class PublicQueriesResolver {
           mapped.push({
             name,
             id: hash,
+            slug: key === 'sso' ? 'sso' : account.slug || hash.slice(0, 8),
             loggedIn: currentAccount?.hash === key,
             type: key === 'sso' ? 'sso' : 'server',
             twofaEnabled: false,
           });
         }
       }
+    }
+
+    // Add a DB account entry when the database has users
+    const dbHasUsers = await this.userService.hasUsers();
+    if (dbHasUsers) {
+      const isDbLoggedIn = !!parsed && parsed.authType === AuthType.USER;
+
+      mapped.push({
+        name: 'Account Login',
+        id: 'db',
+        slug: 'db',
+        loggedIn: isDbLoggedIn,
+        type: 'db',
+        twofaEnabled: false,
+      });
     }
 
     return mapped;

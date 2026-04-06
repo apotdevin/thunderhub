@@ -15,6 +15,7 @@ export type GetServerAccountsQuery = {
       __typename?: 'ServerAccount';
       name: string;
       id: string;
+      slug: string;
       loggedIn: boolean;
       type: string;
     }>;
@@ -27,6 +28,7 @@ export const GetServerAccountsDocument = gql`
       get_server_accounts {
         name
         id
+        slug
         loggedIn
         type
       }

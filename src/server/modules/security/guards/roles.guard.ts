@@ -27,8 +27,10 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const gqlCtx = GqlExecutionContext.create(ctx);
-    const { req } = gqlCtx.getContext();
+    const req =
+      ctx.getType<string>() === 'graphql'
+        ? GqlExecutionContext.create(ctx).getContext().req
+        : ctx.switchToHttp().getRequest();
 
     const user: UserId | undefined = req?.user;
 
@@ -41,7 +43,9 @@ export class RolesGuard implements CanActivate {
   }
 
   getRequest(context: ExecutionContext) {
-    const ctx = GqlExecutionContext.create(context);
-    return ctx.getContext().req;
+    if (context.getType<string>() === 'graphql') {
+      return GqlExecutionContext.create(context).getContext().req;
+    }
+    return context.switchToHttp().getRequest();
   }
 }

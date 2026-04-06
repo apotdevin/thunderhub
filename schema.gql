@@ -2,6 +2,18 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddNodeInput {
+  litd: LitdInput
+  lnd: LndInput
+  name: String!
+}
+
+type AddNodeResult {
+  id: String!
+  name: String!
+  slug: String!
+}
+
 type AggregatedChannelForwards {
   channel: String
   channel_info: ChannelInfo
@@ -387,7 +399,19 @@ type LightningNodeSocialInfo {
   socials: NodeSocial
 }
 
+input LitdInput {
+  cert: String
+  macaroon: String!
+  socket: String!
+}
+
 union LnUrlRequest = ChannelRequest | PayRequest | WithdrawRequest
+
+input LndInput {
+  cert: String
+  macaroon: String!
+  socket: String!
+}
 
 type MessageType {
   message: String
@@ -428,6 +452,7 @@ type Mutation {
   sendTapAsset(tapAddrs: [String!]!): Boolean!
   sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
   syncTapUniverse(host: String!): TapSyncResult!
+  team: TeamMutations!
   toggleConfig(field: ConfigFields!): Boolean!
   updateFees(base_fee_tokens: Float, cltv_delta: Float, fee_rate: Float, max_htlc_mtokens: String, min_htlc_mtokens: String, transaction_id: String, transaction_vout: Float): Boolean!
   updateMultipleFees(channels: [UpdateRoutingFeesParams!]!): Boolean!
@@ -663,6 +688,7 @@ type Policy {
 type PublicMutation {
   create_initial_user(email: String!, password: String!): CreateInitialUserResult!
   get_auth_token(cookie: String): Boolean!
+  get_db_session_token(email: String!, password: String!): Boolean!
   get_session_token(id: String!, password: String!, token: String): String!
 }
 
@@ -719,6 +745,7 @@ type Query {
   public: PublicQueries!
   recoverFunds(backup: String!): Boolean!
   signMessage(message: String!): String!
+  user: UserQueries!
   verifyBackup(backup: String!): Boolean!
   verifyBackups(backup: String!): Boolean!
   verifyMessage(message: String!, signature: String!): String!
@@ -733,9 +760,11 @@ type Route {
 }
 
 type ServerAccount {
+  hasNode: Boolean
   id: String!
   loggedIn: Boolean!
   name: String!
+  slug: String!
   twofaEnabled: Boolean!
   type: String!
 }
@@ -812,6 +841,11 @@ type TapAssetList {
   assets: [TapAsset!]!
 }
 
+type TapAssetPrice {
+  id: String
+  usd: Float
+}
+
 enum TapAssetType {
   COLLECTIBLE
   NORMAL
@@ -874,6 +908,7 @@ type TapSupportedAsset {
   groupKey: String
   id: String!
   precision: Int!
+  prices: TapAssetPrice
   symbol: String!
 }
 
@@ -963,6 +998,10 @@ type TapUniverseStats {
   numTotalSyncs: Int!
 }
 
+type TeamMutations {
+  add_node(input: AddNodeInput!): AddNodeResult!
+}
+
 type TwofaResult {
   secret: String!
   url: String!
@@ -983,6 +1022,16 @@ type UserBackupInfo {
   last_update: String
   last_update_size: String
   total_size_saved: String!
+}
+
+type UserNode {
+  id: String!
+  name: String!
+  slug: String!
+}
+
+type UserQueries {
+  get_nodes: [UserNode!]!
 }
 
 type Utxo {

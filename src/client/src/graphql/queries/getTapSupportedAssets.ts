@@ -10,6 +10,9 @@ export const GET_TAP_SUPPORTED_ASSETS = gql`
         precision
         assetId
         groupKey
+        prices {
+          usd
+        }
       }
     }
   }

@@ -5,9 +5,11 @@ export const GET_ACCOUNT = gql`
     getAccount {
       name
       id
+      slug
       loggedIn
       type
       twofaEnabled
+      hasNode
     }
   }
 `;

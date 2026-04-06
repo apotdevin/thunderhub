@@ -18,7 +18,7 @@ import {
 } from '../components/ui/dialog';
 import { OpenChannel } from '../views/home/liquidity/OpenChannel';
 import { DetailsChange } from '../components/details/detailsChange';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNodeSlug, useNodePath } from '../hooks/useNodeSlug';
 
 type ChannelTab = 'open' | 'pending' | 'closed';
 
@@ -34,16 +34,16 @@ const tabRoutes: Record<ChannelTab, string> = {
   closed: '/channels/closed',
 };
 
-const routeToTab = (pathname: string): ChannelTab => {
-  if (pathname === '/channels/pending') return 'pending';
-  if (pathname === '/channels/closed') return 'closed';
+const routeToTab = (path: string): ChannelTab => {
+  if (path === '/channels/pending') return 'pending';
+  if (path === '/channels/closed') return 'closed';
   return 'open';
 };
 
 const ChannelView = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const activeTab = routeToTab(location.pathname);
+  const { navigateToNode } = useNodeSlug();
+  const nodePath = useNodePath();
+  const activeTab = routeToTab(nodePath);
 
   const [openDialog, setOpenDialog] = useState<'open' | 'details' | null>(null);
   const [amounts, setAmounts] = useState({
@@ -88,7 +88,7 @@ const ChannelView = () => {
             size="sm"
             value={activeTab}
             onValueChange={value => {
-              if (value) navigate(tabRoutes[value as ChannelTab]);
+              if (value) navigateToNode(tabRoutes[value as ChannelTab]);
             }}
           >
             {tabs.map(tab => (

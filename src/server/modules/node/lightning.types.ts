@@ -264,4 +264,7 @@ export interface LightningProvider {
     macaroon?: string;
     authToken?: string;
   }): any;
+
+  /** Verify the connection is valid and the node matches this provider type */
+  verifyConnection(connection: any): Promise<void>;
 }

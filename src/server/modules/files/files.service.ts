@@ -344,6 +344,7 @@ export class FilesService {
       name: name || '',
       socket: serverUrl || '',
       hash,
+      slug: hash.slice(0, 8),
       macaroon: macaroon || '',
       cert: cert || '',
       password: password || masterPassword || '',
@@ -389,7 +390,7 @@ export class FilesService {
       .map((account, index) =>
         this.getParsedAccount(account, index, finalMasterPassword, network)
       )
-      .filter(Boolean);
+      .filter(Boolean) as ParsedAccount[];
 
     this.logger.info(
       `Server accounts that will be available: ${parsedAccounts
@@ -397,7 +398,7 @@ export class FilesService {
         .join(', ')}`
     );
 
-    return parsedAccounts as ParsedAccount[];
+    return parsedAccounts;
   }
 
   readMacaroons(macaroonPath: string): string | null {

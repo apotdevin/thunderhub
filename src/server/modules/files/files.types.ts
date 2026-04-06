@@ -46,6 +46,7 @@ export type ParsedAccount = {
   index: number;
   name: string;
   hash: string;
+  slug: string;
   socket: string;
   macaroon: string;
   cert: string;

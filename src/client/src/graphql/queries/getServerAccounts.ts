@@ -6,6 +6,7 @@ export const GET_SERVER_ACCOUNTS = gql`
       get_server_accounts {
         name
         id
+        slug
         loggedIn
         type
       }

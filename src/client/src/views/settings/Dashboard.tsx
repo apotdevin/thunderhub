@@ -1,10 +1,10 @@
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ChevronRight } from 'lucide-react';
+import { useNodeSlug } from '@/hooks/useNodeSlug';
 
 export const DashboardSettings = () => {
-  const navigate = useNavigate();
+  const { navigateToNode } = useNodeSlug();
 
   return (
     <div className="flex flex-col gap-4">
@@ -16,7 +16,7 @@ export const DashboardSettings = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => navigate('/settings/dashboard')}
+              onClick={() => navigateToNode('/settings/dashboard')}
             >
               Customize <ChevronRight size={16} />
             </Button>

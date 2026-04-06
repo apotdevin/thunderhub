@@ -8,6 +8,13 @@
       "when": 1775074036636,
       "tag": "0000_premium_pixie",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1775160646270,
+      "tag": "0001_fixed_nightshade",
+      "breakpoints": true
     }
   ]
 }

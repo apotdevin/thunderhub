@@ -6,6 +6,9 @@ import { Logger } from 'winston';
 import { EnrichedAccount } from './accounts.types';
 import { ProviderRegistryService } from '../node/provider-registry.service';
 import { NodeType } from '../node/lightning.types';
+import { DRIZZLE, DrizzleProvider } from '../database/drizzle.provider';
+import { decryptValue } from '../../utils/encryption/field-encryption';
+import { eq, sql } from 'drizzle-orm';
 
 @Injectable()
 export class AccountsService implements OnModuleInit {
@@ -15,7 +18,8 @@ export class AccountsService implements OnModuleInit {
     private configService: ConfigService,
     private filesService: FilesService,
     private providerRegistry: ProviderRegistryService,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    @Inject(DRIZZLE) private readonly drizzle: DrizzleProvider
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -66,6 +70,7 @@ export class AccountsService implements OnModuleInit {
       this.accounts['sso'] = {
         ...sso,
         hash: 'sso',
+        slug: 'sso',
         connection,
       };
     }
@@ -103,6 +108,97 @@ export class AccountsService implements OnModuleInit {
   getAccount(id: string) {
     if (!id) return null;
     return this.accounts[id] || null;
+  }
+
+  getAccountBySlug(slug: string): EnrichedAccount | null {
+    if (!slug) return null;
+    for (const key of Object.keys(this.accounts)) {
+      const account = this.accounts[key];
+      if (account.slug === slug) {
+        return account;
+      }
+    }
+    return null;
+  }
+
+  async getDbNodeBySlug(
+    slug: string,
+    userId: string
+  ): Promise<EnrichedAccount | null> {
+    if (!slug || !this.drizzle) return null;
+
+    // Check cache first (try slug-based lookup)
+    for (const key of Object.keys(this.accounts)) {
+      const acct = this.accounts[key];
+      if (acct.slug === slug) return acct;
+    }
+
+    const { db, schema } = this.drizzle;
+
+    const rows = await (db as any)
+      .select()
+      .from(schema.nodes)
+      .innerJoin(
+        schema.userNodes,
+        eq(schema.userNodes.node_id, schema.nodes.id)
+      )
+      .where(eq(schema.userNodes.user_id, userId))
+      .where(sql`SUBSTR(${schema.nodes.id}, 1, 8) = ${slug}`)
+      .limit(1);
+
+    const row = rows[0];
+    if (!row) return null;
+
+    const node = row.nodes;
+    const nodeType = (node.type as NodeType) || NodeType.LND;
+
+    if (!this.providerRegistry.hasProvider(nodeType)) {
+      this.logger.error(
+        `No provider registered for DB node type "${nodeType}" (node: ${node.name})`
+      );
+      return null;
+    }
+
+    const encryptionKey = this.configService.get<string>(
+      'database.encryptionKey'
+    );
+
+    const macaroon =
+      node.encrypted_macaroon && encryptionKey
+        ? decryptValue(node.encrypted_macaroon, encryptionKey)
+        : undefined;
+
+    const cert =
+      node.encrypted_cert && encryptionKey
+        ? decryptValue(node.encrypted_cert, encryptionKey)
+        : undefined;
+
+    const provider = this.providerRegistry.getProvider(nodeType);
+    const connection = provider.connect({
+      socket: node.socket,
+      cert,
+      macaroon,
+    });
+
+    const enriched: EnrichedAccount = {
+      type: nodeType,
+      index: 0,
+      name: node.name,
+      hash: node.id,
+      slug: node.id.slice(0, 8),
+      socket: node.socket,
+      macaroon: macaroon || '',
+      cert: cert || '',
+      password: '',
+      encrypted: false,
+      encryptedMacaroon: '',
+      twofaSecret: '',
+      connection,
+    };
+
+    this.accounts[node.id] = enriched;
+
+    return enriched;
   }
 
   getAllAccounts() {

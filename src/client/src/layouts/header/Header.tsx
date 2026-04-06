@@ -13,7 +13,7 @@ import {
   ArrowDownToLine,
   ArrowUpFromLine,
 } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useNodePath } from '../../hooks/useNodeSlug';
 import { LogoutButton } from '../../components/logoutButton';
 import {
   useDonate,
@@ -37,6 +37,7 @@ import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 import { usePriceState } from '../../context/PriceContext';
 import { NodeInfoBar } from './NodeInfoBar';
 import { BalancesContent } from '../sidebar/BalancesContent';
+import { NodeSwitcher } from '../../components/nodeManager/NodeSwitcher';
 
 export type Icon = FC<LucideProps>;
 
@@ -45,7 +46,7 @@ const MAIN = '/login';
 const SETTINGS = '/settings';
 
 export const Header = () => {
-  const { pathname } = useLocation();
+  const nodePath = useNodePath();
   const [open, setOpen] = useState(false);
   const [balancesOpen, setBalancesOpen] = useState(false);
 
@@ -72,7 +73,7 @@ export const Header = () => {
     closeWithdraw,
   } = useWithdraw();
 
-  const isRoot = pathname === MAIN || pathname === SSO;
+  const isRoot = nodePath === MAIN || nodePath === SSO;
 
   const renderLoggedIn = () => (
     <>
@@ -269,14 +270,22 @@ export const Header = () => {
             isRoot && 'max-w-[1000px] mx-auto border-transparent'
           )}
         >
-          <Link to={!isRoot ? '/' : '/login'} noStyling>
-            <div className="flex items-center gap-2 font-bold text-sm tracking-tight hover:opacity-80 transition-opacity">
-              <div className="flex items-center justify-center w-6 h-6 rounded-md bg-primary/10 text-primary">
-                <Cpu size={14} />
+          <div className="flex items-center gap-1">
+            <Link to={!isRoot ? '/home' : '/login'} noStyling>
+              <div className="flex items-center gap-2 font-bold text-sm tracking-tight hover:opacity-80 transition-opacity">
+                <div className="flex items-center justify-center w-6 h-6 rounded-md bg-primary/10 text-primary">
+                  <Cpu size={14} />
+                </div>
+                <span>ThunderHub</span>
               </div>
-              <span>ThunderHub</span>
-            </div>
-          </Link>
+            </Link>
+            {!isRoot && (
+              <>
+                <div className="w-px h-4 bg-border mx-1" />
+                <NodeSwitcher />
+              </>
+            )}
+          </div>
           {!isRoot && renderLoggedIn()}
         </div>
         {!isRoot && (

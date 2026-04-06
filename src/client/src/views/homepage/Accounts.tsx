@@ -16,6 +16,7 @@ import {
 import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.generated';
 import { useGetNodeInfoLazyQuery } from '../../graphql/queries/__generated__/getNodeInfo.generated';
 import { Login } from './Login';
+import { DbLogin } from './DbLogin';
 
 type ServerAccount = GetServerAccountsQuery['public']['get_server_accounts'][0];
 
@@ -69,6 +70,8 @@ const RenderIntro = () => {
 export const Accounts = () => {
   const navigate = useNavigate();
   const [newAccount, setNewAccount] = useState<ServerAccount | null>(null);
+  const [connectingAccount, setConnectingAccount] =
+    useState<ServerAccount | null>(null);
 
   const [logout] = useLogoutMutation({ refetchQueries: ['GetServerAccounts'] });
 
@@ -84,10 +87,10 @@ export const Accounts = () => {
   });
 
   useEffect(() => {
-    if (!loading && data && data.getNodeInfo) {
-      navigate('/');
+    if (!loading && data && data.getNodeInfo && connectingAccount) {
+      navigate(`/${connectingAccount.slug}/home`);
     }
-  }, [data, loading, navigate]);
+  }, [data, loading, navigate, connectingAccount]);
 
   if (loadingData) {
     return (
@@ -97,14 +100,20 @@ export const Accounts = () => {
     );
   }
 
-  if (!accountData?.public?.get_server_accounts?.length) {
+  const allAccounts = accountData?.public?.get_server_accounts ?? [];
+  const hasDbAccount = allAccounts.some(a => a?.type === 'db');
+  const yamlAccounts = allAccounts.filter(a => a && a.type !== 'db');
+
+  if (!allAccounts.length) {
     return <RenderIntro />;
   }
 
   const handleClick = (account: ServerAccount) => () => {
     if (account.type === 'sso') {
+      setConnectingAccount(account);
       getCanConnect();
     } else if (account.type === 'server' && account.loggedIn) {
+      setConnectingAccount(account);
       getCanConnect();
     } else {
       setNewAccount(account);
@@ -113,55 +122,71 @@ export const Accounts = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {newAccount && <Login account={newAccount} />}
+      {hasDbAccount && !newAccount && <DbLogin />}
 
-      <div className="mx-auto w-full max-w-md px-4">
-        <div className="rounded-lg border border-border bg-card p-5 shadow-sm">
-          <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            {newAccount ? 'Other Accounts' : 'Accounts'}
-          </h3>
+      {newAccount && (
+        <Login
+          account={newAccount}
+          onBack={hasDbAccount ? () => setNewAccount(null) : undefined}
+        />
+      )}
 
-          <div className="flex flex-col gap-1.5">
-            {accountData?.public?.get_server_accounts?.map((account, index) => {
-              if (!account) return null;
-              const isActive = newAccount?.id === account.id;
-              const isThisLoading = isActive && loading;
+      {yamlAccounts.length > 0 && (
+        <div className="mx-auto w-full max-w-md px-4">
+          <div className="rounded-lg border border-border bg-card p-5 shadow-sm">
+            <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              {hasDbAccount
+                ? 'Server Accounts'
+                : newAccount
+                  ? 'Other Accounts'
+                  : 'Accounts'}
+            </h3>
 
-              return (
-                <button
-                  key={`${account.id}-${index}`}
-                  className={`flex w-full cursor-pointer items-center justify-between rounded-md border bg-transparent px-3 py-2.5 transition-colors ${
-                    isActive
-                      ? 'border-primary/30 bg-primary/5'
-                      : 'border-border hover:border-primary/30'
-                  }`}
-                  disabled={isActive || loading}
-                  onClick={handleClick(account)}
-                >
-                  <div className="flex items-center gap-2">
-                    {account.loggedIn ? (
-                      <Unlock size={13} className="text-green-500" />
+            <div className="flex flex-col gap-1.5">
+              {yamlAccounts.map((account, index) => {
+                if (!account) return null;
+                const isActive = newAccount?.id === account.id;
+                const isThisLoading = isActive && loading;
+
+                return (
+                  <button
+                    key={`${account.id}-${index}`}
+                    className={`flex w-full cursor-pointer items-center justify-between rounded-md border bg-transparent px-3 py-2.5 transition-colors ${
+                      isActive
+                        ? 'border-primary/30 bg-primary/5'
+                        : 'border-border hover:border-primary/30'
+                    }`}
+                    disabled={isActive || loading}
+                    onClick={handleClick(account)}
+                  >
+                    <div className="flex items-center gap-2">
+                      {account.loggedIn ? (
+                        <Unlock size={13} className="text-green-500" />
+                      ) : (
+                        <Lock size={13} className="text-muted-foreground" />
+                      )}
+                      <span className="text-sm font-medium text-foreground">
+                        {account.type === 'sso' ? 'SSO Account' : account.name}
+                      </span>
+                    </div>
+
+                    {isThisLoading ? (
+                      <Loader2
+                        className="animate-spin text-primary"
+                        size={14}
+                      />
                     ) : (
-                      <Lock size={13} className="text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">
+                        {account.loggedIn ? 'Connect' : 'Login'}
+                      </span>
                     )}
-                    <span className="text-sm font-medium text-foreground">
-                      {account.type === 'sso' ? 'SSO Account' : account.name}
-                    </span>
-                  </div>
-
-                  {isThisLoading ? (
-                    <Loader2 className="animate-spin text-primary" size={14} />
-                  ) : (
-                    <span className="text-xs text-muted-foreground">
-                      {account.loggedIn ? 'Connect' : 'Login'}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

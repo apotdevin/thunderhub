@@ -1,5 +1,6 @@
 import {
   Field,
+  Float,
   InputType,
   Int,
   ObjectType,
@@ -417,6 +418,15 @@ export class TapTradeOfferList {
 }
 
 @ObjectType()
+export class TapAssetPrice {
+  @Field({ nullable: true })
+  id?: string;
+
+  @Field(() => Float, { nullable: true })
+  usd?: number;
+}
+
+@ObjectType()
 export class TapSupportedAsset {
   @Field()
   id: string;
@@ -435,6 +445,9 @@ export class TapSupportedAsset {
 
   @Field({ nullable: true })
   groupKey?: string;
+
+  @Field(() => TapAssetPrice, { nullable: true })
+  prices?: TapAssetPrice;
 }
 
 @ObjectType()

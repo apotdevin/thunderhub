@@ -11,9 +11,11 @@ export type GetAccountQuery = {
     __typename?: 'ServerAccount';
     name: string;
     id: string;
+    slug: string;
     loggedIn: boolean;
     type: string;
     twofaEnabled: boolean;
+    hasNode?: boolean | null;
   };
 };
 
@@ -22,9 +24,11 @@ export const GetAccountDocument = gql`
     getAccount {
       name
       id
+      slug
       loggedIn
       type
       twofaEnabled
+      hasNode
     }
   }
 `;

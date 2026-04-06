@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
-import { Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { getVersion } from '../../utils/version';
 import { useGetSessionTokenMutation } from '../../graphql/mutations/__generated__/getSessionToken.generated';
 import { Button } from '@/components/ui/button';
@@ -13,9 +13,10 @@ type ServerAccount = GetServerAccountsQuery['public']['get_server_accounts'][0];
 
 type LoginProps = {
   account: ServerAccount;
+  onBack?: () => void;
 };
 
-export const Login = ({ account }: LoginProps) => {
+export const Login = ({ account, onBack }: LoginProps) => {
   const [pass, setPass] = useState('');
   const [token, setToken] = useState('');
 
@@ -34,9 +35,9 @@ export const Login = ({ account }: LoginProps) => {
         'ThunderHub supports LND version 0.11.0 and higher. Please update your node, you are in risk of losing funds.'
       );
     } else {
-      window.location.href = `${config.basePath}/`;
+      window.location.href = `${config.basePath}/${account.slug}/home`;
     }
-  }, [data, loading]);
+  }, [data, loading, account.slug]);
 
   if (!account) return null;
 
@@ -50,6 +51,15 @@ export const Login = ({ account }: LoginProps) => {
   return (
     <div className="mx-auto w-full max-w-md px-4">
       <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+        {onBack && (
+          <button
+            className="mb-3 flex cursor-pointer items-center gap-1 bg-transparent p-0 text-xs text-muted-foreground hover:text-foreground"
+            onClick={onBack}
+          >
+            <ArrowLeft size={12} />
+            Account Login
+          </button>
+        )}
         <div className="mb-5 text-center">
           <h2 className="text-lg font-semibold text-foreground">
             {account.name}
