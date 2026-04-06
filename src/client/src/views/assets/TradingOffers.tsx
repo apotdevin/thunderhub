@@ -1,6 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Loader2, Info, ArrowUpDown, ArrowLeftRight } from 'lucide-react';
+import {
+  Loader2,
+  Info,
+  ArrowUpDown,
+  ArrowLeftRight,
+  ExternalLink,
+} from 'lucide-react';
 import { useGetTapOffersQuery } from '../../graphql/queries/__generated__/getTapOffers.generated';
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
@@ -32,24 +38,35 @@ export const TradingOffers: FC = () => {
   }
 
   if (!tapdAvailable) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
-        <ArrowLeftRight size={40} className="text-muted-foreground/40" />
-        <div className="space-y-2">
-          <h2 className="text-lg font-semibold">
-            Trading requires Taproot Assets
-          </h2>
-          <p className="text-sm text-muted-foreground max-w-md">
-            To trade Taproot Assets, run your node with Lightning Terminal
-            (litd) which includes the Taproot Assets daemon.
-          </p>
-        </div>
-      </div>
-    );
+    return <LitdSetupInfo />;
   }
 
   return <TradingOffersContent />;
 };
+
+const LITD_DOCS_URL = 'https://docs.thunderhub.io/litd';
+
+const LitdSetupInfo: FC = () => (
+  <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
+    <ArrowLeftRight size={40} className="text-muted-foreground/40" />
+    <div className="space-y-2">
+      <h2 className="text-lg font-semibold">Trading requires Taproot Assets</h2>
+      <p className="text-sm text-muted-foreground max-w-md">
+        To trade Taproot Assets, run your node with Lightning Terminal (litd)
+        which includes the Taproot Assets daemon.
+      </p>
+    </div>
+    <a
+      href={LITD_DOCS_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-1.5 text-sm text-primary hover:underline"
+    >
+      View setup instructions
+      <ExternalLink size={12} />
+    </a>
+  </div>
+);
 
 const TradingOffersContent: FC = () => {
   const [selectedAsset, setSelectedAsset] = useState('');
