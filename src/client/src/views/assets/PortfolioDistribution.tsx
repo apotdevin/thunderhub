@@ -11,6 +11,8 @@ import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated
 import { useGetNodeBalancesQuery } from '../../graphql/queries/__generated__/getNodeBalances.generated';
 import { usePriceState } from '../../context/PriceContext';
 import { TapBalanceGroupBy } from '../../graphql/types';
+import { colorFromString } from '@/lib/colorFromString';
+import { formatUsd } from '@/lib/formatUsd';
 
 const ASSET_COLORS: Record<string, string> = {
   BTC: '#FB923C',
@@ -18,14 +20,6 @@ const ASSET_COLORS: Record<string, string> = {
   USDC: '#2563EB',
   EURX: '#7C19F7',
 };
-
-const FALLBACK_COLORS = ['#94A3B8', '#F472B6', '#34D399', '#FBBF24'];
-
-const formatUsd = (n: number) =>
-  n.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
 
 type PortfolioAsset = {
   symbol: string;
@@ -90,7 +84,6 @@ export const PortfolioDistribution: FC = () => {
 
   // Compute taproot asset USD values
   const tapAssets: Omit<PortfolioAsset, 'percentage'>[] = [];
-  let fallbackIndex = 0;
 
   for (const entry of balancesData?.getTapBalances?.balances || []) {
     const priceEntry =
@@ -102,9 +95,7 @@ export const PortfolioDistribution: FC = () => {
     if (usdValue <= 0) continue;
 
     const symbol = priceEntry.symbol || entry.names?.[0] || 'Unknown';
-    const color =
-      ASSET_COLORS[symbol] ??
-      FALLBACK_COLORS[fallbackIndex++ % FALLBACK_COLORS.length];
+    const color = ASSET_COLORS[symbol] ?? colorFromString(symbol);
 
     tapAssets.push({ symbol, usdValue, color });
   }
