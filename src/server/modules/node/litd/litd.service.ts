@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { authenticatedLndGrpc } from 'lightning';
 import { TapClient, TapdRpcApis } from '@lightningpolar/tapd-api';
 import EventEmitter from 'events';
@@ -24,10 +24,15 @@ import {
 import { LndService } from '../lnd/lnd.service';
 import { TaprootAssetsProvider } from '../tapd/taproot-assets.types';
 import { LitdConnection } from './litd.types';
+import { Logger } from 'winston';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 @Injectable()
 export class LitdService implements LightningProvider, TaprootAssetsProvider {
-  constructor(private readonly lndService: LndService) {}
+  constructor(
+    private readonly lndService: LndService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+  ) {}
 
   getCapabilities(): Set<Capability> {
     return new Set(Object.values(Capability));
@@ -63,7 +68,8 @@ export class LitdService implements LightningProvider, TaprootAssetsProvider {
 
     try {
       await connection.tapd.taprootAssets.listAssets({ includeSpent: false });
-    } catch {
+    } catch (error) {
+      this.logger.error('Error connecting to TA node', { error });
       throw new Error(
         'Node does not appear to be a LiTD node. LND connected but Taproot Assets daemon is not reachable.'
       );

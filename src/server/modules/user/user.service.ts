@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DRIZZLE, DrizzleProvider } from '../database/drizzle.provider';
-import { asc, count, eq } from 'drizzle-orm';
+import { and, asc, count, eq, sql } from 'drizzle-orm';
 import { hash, verify } from '@node-rs/argon2';
 import { encryptValue } from '../../utils/encryption/field-encryption';
 
@@ -204,6 +204,104 @@ export class UserService {
     });
 
     this.logger.log(`Node "${input.name}" added for user ${userId}`);
+
+    return node;
+  }
+
+  async deleteNode(userId: string, slug: string): Promise<string> {
+    if (!this.drizzle) {
+      throw new Error('Database is not enabled');
+    }
+
+    const { db, schema } = this.drizzle;
+
+    // Find the node by slug (first 8 chars of id) and verify user owns it
+    const rows = await (db as any)
+      .select({ node_id: schema.userNodes.node_id })
+      .from(schema.userNodes)
+      .innerJoin(schema.nodes, eq(schema.nodes.id, schema.userNodes.node_id))
+      .where(
+        and(
+          eq(schema.userNodes.user_id, userId),
+          sql`SUBSTR(${schema.nodes.id}, 1, 8) = ${slug}`
+        )
+      )
+      .limit(1);
+
+    const row = rows[0];
+    if (!row) {
+      throw new Error('Node not found');
+    }
+
+    const nodeId = row.node_id;
+
+    // Delete user-node link first, then the node
+    await (db as any)
+      .delete(schema.userNodes)
+      .where(eq(schema.userNodes.node_id, nodeId));
+
+    await (db as any).delete(schema.nodes).where(eq(schema.nodes.id, nodeId));
+
+    this.logger.log(`Node ${nodeId} deleted by user ${userId}`);
+
+    return nodeId;
+  }
+
+  async editNode(
+    userId: string,
+    slug: string,
+    input: { name?: string }
+  ): Promise<{ id: string; name: string }> {
+    if (!this.drizzle) {
+      throw new Error('Database is not enabled');
+    }
+
+    const { db, schema } = this.drizzle;
+
+    // Find the node by slug and verify user owns it
+    const rows = await (db as any)
+      .select({
+        node_id: schema.userNodes.node_id,
+        name: schema.nodes.name,
+      })
+      .from(schema.userNodes)
+      .innerJoin(schema.nodes, eq(schema.nodes.id, schema.userNodes.node_id))
+      .where(
+        and(
+          eq(schema.userNodes.user_id, userId),
+          sql`SUBSTR(${schema.nodes.id}, 1, 8) = ${slug}`
+        )
+      )
+      .limit(1);
+
+    const row = rows[0];
+    if (!row) {
+      throw new Error('Node not found');
+    }
+
+    const nodeId = row.node_id;
+    const updates: Record<string, any> = {};
+
+    if (input.name !== undefined) {
+      updates.name = input.name;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return { id: nodeId, name: row.name };
+    }
+
+    const updated = await (db as any)
+      .update(schema.nodes)
+      .set(updates)
+      .where(eq(schema.nodes.id, nodeId))
+      .returning({ id: schema.nodes.id, name: schema.nodes.name });
+
+    const node = updated[0];
+    if (!node) {
+      throw new Error('Failed to update node');
+    }
+
+    this.logger.log(`Node ${nodeId} updated by user ${userId}`);
 
     return node;
   }

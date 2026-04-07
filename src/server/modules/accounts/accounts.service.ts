@@ -205,6 +205,10 @@ export class AccountsService implements OnModuleInit {
     return this.accounts;
   }
 
+  removeAccount(id: string): void {
+    delete this.accounts[id];
+  }
+
   updateAccountMacaroon(id: string, macaroon: string): void {
     if (this.accounts?.[id]) {
       const account = this.accounts[id];
