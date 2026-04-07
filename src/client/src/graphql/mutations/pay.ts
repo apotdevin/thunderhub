@@ -7,6 +7,29 @@ export const PAY = gql`
     $out: [String!]
     $request: String!
   ) {
-    pay(max_fee: $max_fee, max_paths: $max_paths, out: $out, request: $request)
+    pay(
+      max_fee: $max_fee
+      max_paths: $max_paths
+      out: $out
+      request: $request
+    ) {
+      fee
+      fee_mtokens
+      hops {
+        channel
+        channel_capacity
+        fee_mtokens
+        forward_mtokens
+        timeout
+      }
+      id
+      is_confirmed
+      is_outgoing
+      mtokens
+      safe_fee
+      safe_tokens
+      secret
+      tokens
+    }
   }
 `;

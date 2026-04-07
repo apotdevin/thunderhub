@@ -113,7 +113,7 @@ export class InvoicesResolver {
     });
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => PayInvoice)
   async pay(
     @CurrentUser() user: UserId,
     @Args('max_fee') max_fee: number,
@@ -134,6 +134,6 @@ export class InvoicesResolver {
     const response = await this.nodeService.pay(user.id, props);
 
     this.logger.debug('Paid invoice', response);
-    return true;
+    return response;
   }
 }

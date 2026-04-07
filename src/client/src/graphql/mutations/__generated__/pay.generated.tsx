@@ -12,7 +12,30 @@ export type PayMutationVariables = Types.Exact<{
   request: Types.Scalars['String'];
 }>;
 
-export type PayMutation = { __typename?: 'Mutation'; pay: boolean };
+export type PayMutation = {
+  __typename?: 'Mutation';
+  pay: {
+    __typename?: 'PayInvoice';
+    fee: number;
+    fee_mtokens: string;
+    hops: {
+      __typename?: 'Hops';
+      channel: string;
+      channel_capacity: number;
+      fee_mtokens: string;
+      forward_mtokens: string;
+      timeout: number;
+    }[];
+    id: string;
+    is_confirmed: boolean;
+    is_outgoing: boolean;
+    mtokens: string;
+    safe_fee: number;
+    safe_tokens: number;
+    secret: string;
+    tokens: number;
+  };
+};
 
 export const PayDocument = gql`
   mutation Pay(
@@ -21,7 +44,30 @@ export const PayDocument = gql`
     $out: [String!]
     $request: String!
   ) {
-    pay(max_fee: $max_fee, max_paths: $max_paths, out: $out, request: $request)
+    pay(
+      max_fee: $max_fee
+      max_paths: $max_paths
+      out: $out
+      request: $request
+    ) {
+      fee
+      fee_mtokens
+      hops {
+        channel
+        channel_capacity
+        fee_mtokens
+        forward_mtokens
+        timeout
+      }
+      id
+      is_confirmed
+      is_outgoing
+      mtokens
+      safe_fee
+      safe_tokens
+      secret
+      tokens
+    }
   }
 `;
 export type PayMutationFn = Apollo.MutationFunction<

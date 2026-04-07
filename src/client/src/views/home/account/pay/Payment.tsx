@@ -68,7 +68,7 @@ export const PayCard = ({ setOpen }: { setOpen: () => void }) => {
           </ResponsiveLine>
         );
       default:
-        return <Pay />;
+        return <Pay doneCallback={() => setOpen()} />;
     }
   };
 

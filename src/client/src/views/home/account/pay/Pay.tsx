@@ -7,19 +7,28 @@ import { ChannelSelect } from '../../../../components/select/specific/ChannelSel
 import { useDecodeRequestLazyQuery } from '../../../../graphql/queries/__generated__/decodeRequest.generated';
 import { renderLine } from '../../../../components/generic/helpers';
 import { Price } from '../../../../components/price/Price';
-import { usePayMutation } from '../../../../graphql/mutations/__generated__/pay.generated';
+import {
+  usePayMutation,
+  PayMutation,
+} from '../../../../graphql/mutations/__generated__/pay.generated';
 import { Separation } from '../../../../components/generic/Styled';
 
 interface PayProps {
   predefinedRequest?: string;
   payCallback?: () => void;
+  doneCallback?: () => void;
 }
 
-export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
+export const Pay: React.FC<PayProps> = ({
+  predefinedRequest,
+  payCallback,
+  doneCallback,
+}) => {
   const [request, setRequest] = useState<string>(predefinedRequest || '');
   const [peers, setPeers] = useState<string[]>([]);
   const [fee, setFee] = useState<number>(10);
   const [paths, setPaths] = useState<number>(1);
+  const [payResult, setPayResult] = useState<PayMutation['pay'] | null>(null);
 
   const [decode, { data, loading: decodeLoading }] = useDecodeRequestLazyQuery({
     fetchPolicy: 'network-only',
@@ -27,10 +36,10 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
   });
 
   const [pay, { loading }] = usePayMutation({
-    onCompleted: () => {
-      payCallback && payCallback();
+    onCompleted: data => {
+      setPayResult(data.pay);
+      if (payCallback) payCallback();
       toast.success('Payment Sent');
-      setRequest('');
     },
     onError: error => toast.error(getErrorContent(error)),
   });
@@ -73,6 +82,51 @@ export const Pay: React.FC<PayProps> = ({ predefinedRequest, payCallback }) => {
       </>
     );
   };
+
+  if (payResult) {
+    return (
+      <>
+        {renderLine('Amount', <Price amount={payResult.tokens} />)}
+        {renderLine('Fee', <Price amount={payResult.safe_fee} />)}
+        <Separation />
+        {payResult.hops.length > 0 && (
+          <>
+            {renderLine(
+              'Route',
+              `${payResult.hops.length} hop${
+                payResult.hops.length !== 1 ? 's' : ''
+              }`
+            )}
+            {payResult.hops.map((hop, i) =>
+              renderLine(
+                `Hop ${i + 1}`,
+                `${hop.channel}${
+                  Number(hop.fee_mtokens) > 0
+                    ? ` (fee: ${(Number(hop.fee_mtokens) / 1000).toFixed(
+                        Number(hop.fee_mtokens) % 1000 === 0 ? 0 : 3
+                      )} sat)`
+                    : ''
+                }`,
+                i
+              )
+            )}
+            <Separation />
+          </>
+        )}
+        <ColorButton
+          withMargin={'16px 0 0 0'}
+          fullWidth={true}
+          onClick={() => {
+            setPayResult(null);
+            setRequest(predefinedRequest || '');
+            if (doneCallback) doneCallback();
+          }}
+        >
+          Done
+        </ColorButton>
+      </>
+    );
+  }
 
   return (
     <>
