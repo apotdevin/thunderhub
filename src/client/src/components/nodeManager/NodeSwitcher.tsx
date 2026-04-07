@@ -1,9 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronsUpDown, Plus, Server, Check } from 'lucide-react';
+import {
+  ChevronsUpDown,
+  Plus,
+  Server,
+  Check,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useNodeSlug } from '@/hooks/useNodeSlug';
 import { useGetUserNodesQuery } from '@/graphql/queries/__generated__/getUserNodes.generated';
 import { useGetAccountQuery } from '@/graphql/queries/__generated__/getAccount.generated';
+import { useDeleteNodeMutation } from '@/graphql/mutations/__generated__/deleteNode.generated';
+import { GetUserNodesDocument } from '@/graphql/queries/__generated__/getUserNodes.generated';
+import { getErrorContent } from '@/utils/error';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -12,12 +23,18 @@ import {
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { AddNodeDialog } from './AddNodeDialog';
+import { EditNodeDialog } from './EditNodeDialog';
 
 export const NodeSwitcher = () => {
   const navigate = useNavigate();
   const { nodeSlug } = useNodeSlug();
   const [open, setOpen] = useState(false);
   const [addNodeOpen, setAddNodeOpen] = useState(false);
+  const [editNode, setEditNode] = useState<{
+    slug: string;
+    name: string;
+  } | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   const { data: accountData } = useGetAccountQuery({
     fetchPolicy: 'cache-first',
@@ -28,6 +45,10 @@ export const NodeSwitcher = () => {
   const { data, loading } = useGetUserNodesQuery({
     skip: !isDbUser,
     fetchPolicy: 'cache-and-network',
+  });
+
+  const [deleteNodeMutation, { loading: deleting }] = useDeleteNodeMutation({
+    refetchQueries: [{ query: GetUserNodesDocument }],
   });
 
   if (!isDbUser) return null;
@@ -47,6 +68,26 @@ export const NodeSwitcher = () => {
   const handleNodeAdded = (slug: string) => {
     setAddNodeOpen(false);
     navigate(`/${slug}/home`);
+  };
+
+  const handleDelete = async (slug: string) => {
+    try {
+      await deleteNodeMutation({ variables: { slug } });
+      toast.success('Node deleted');
+      setConfirmDelete(null);
+
+      if (slug === nodeSlug) {
+        const remaining = nodes.filter(n => n.slug !== slug);
+        if (remaining.length > 0) {
+          navigate(`/${remaining[0].slug}/home`);
+        } else {
+          navigate('/');
+        }
+      }
+    } catch (err: any) {
+      toast.error(getErrorContent(err));
+      setConfirmDelete(null);
+    }
   };
 
   return (
@@ -79,26 +120,78 @@ export const NodeSwitcher = () => {
             ) : (
               <div className="flex flex-col gap-0.5">
                 {nodes.map(node => (
-                  <button
-                    key={node.slug}
-                    onClick={() => handleSwitch(node.slug)}
-                    className={cn(
-                      'flex items-center gap-2 w-full rounded-sm px-2 py-1.5 text-left text-xs transition-colors',
-                      node.slug === nodeSlug
-                        ? 'bg-primary/10 text-primary font-medium'
-                        : 'text-foreground hover:bg-accent'
-                    )}
-                  >
-                    <Server size={12} className="shrink-0" />
-                    <span className="flex-1 truncate">{node.name}</span>
-                    {node.slug === nodeSlug && (
-                      <Check size={12} className="shrink-0" />
-                    )}
-                  </button>
+                  <div key={node.slug} className="group flex items-center">
+                    <button
+                      onClick={() => handleSwitch(node.slug)}
+                      className={cn(
+                        'flex items-center gap-2 flex-1 min-w-0 rounded-sm px-2 py-1.5 text-left text-xs transition-colors',
+                        node.slug === nodeSlug
+                          ? 'bg-primary/10 text-primary font-medium'
+                          : 'text-foreground hover:bg-accent'
+                      )}
+                    >
+                      <Server size={12} className="shrink-0" />
+                      <span className="flex-1 truncate">{node.name}</span>
+                      {node.slug === nodeSlug && (
+                        <Check size={12} className="shrink-0" />
+                      )}
+                    </button>
+                    <div className="flex shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          setOpen(false);
+                          setEditNode({ slug: node.slug, name: node.name });
+                        }}
+                        className="p-1 rounded-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                        title="Edit node"
+                      >
+                        <Pencil size={10} />
+                      </button>
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          setConfirmDelete(node.slug);
+                        }}
+                        className="p-1 rounded-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                        title="Delete node"
+                      >
+                        <Trash2 size={10} />
+                      </button>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}
           </div>
+
+          {confirmDelete && (
+            <div className="border-t border-border/60 p-2">
+              <div className="text-xs text-destructive font-medium px-2 py-1">
+                Delete this node?
+              </div>
+              <div className="flex gap-1 px-2 pt-1">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="h-6 text-[10px] flex-1"
+                  disabled={deleting}
+                  onClick={() => handleDelete(confirmDelete)}
+                >
+                  {deleting ? 'Deleting...' : 'Delete'}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 text-[10px] flex-1"
+                  onClick={() => setConfirmDelete(null)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+
           <div className="border-t border-border/60 p-2">
             <button
               onClick={() => {
@@ -118,6 +211,14 @@ export const NodeSwitcher = () => {
         open={addNodeOpen}
         onOpenChange={setAddNodeOpen}
         onNodeAdded={handleNodeAdded}
+      />
+
+      <EditNodeDialog
+        open={!!editNode}
+        onOpenChange={open => {
+          if (!open) setEditNode(null);
+        }}
+        node={editNode}
       />
     </>
   );
