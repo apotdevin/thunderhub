@@ -27,7 +27,7 @@ export const config: ThunderhubConfig = {
   noVersionCheck: false,
   logoutUrl: '',
   disable2FA: false,
-  npmVersion: '0.0.1',
+  npmVersion: '0.0.0',
   dbEnabled: false,
   needsSetup: false,
 };

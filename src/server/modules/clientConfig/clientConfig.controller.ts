@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SkipThrottle } from '@nestjs/throttler';
 import { Public } from '../security/security.decorators';
@@ -9,6 +9,8 @@ import { UserService } from '../user/user.service';
 @Public()
 @SkipThrottle()
 export class ClientConfigController {
+  private readonly logger = new Logger(ClientConfigController.name);
+
   constructor(
     private configService: ConfigService,
     private userService: UserService
@@ -19,6 +21,10 @@ export class ClientConfigController {
     const clientConfig = this.configService.get<ClientConfig>('clientConfig');
 
     const needsSetup = await this.userService.needsSetup();
+
+    this.logger.log(
+      `Serving client config with npmVersion=${clientConfig?.npmVersion}, basePath=${clientConfig?.basePath || '/'}`
+    );
 
     return { ...clientConfig, needsSetup };
   }
