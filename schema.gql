@@ -301,6 +301,21 @@ type DecodeInvoice {
   tokens: Float!
 }
 
+type DeleteNodeResult {
+  success: Boolean!
+}
+
+input EditNodeInput {
+  name: String
+  slug: String!
+}
+
+type EditNodeResult {
+  id: String!
+  name: String!
+  slug: String!
+}
+
 type FeeHealth {
   base: String
   baseOver: Boolean
@@ -1000,6 +1015,8 @@ type TapUniverseStats {
 
 type TeamMutations {
   add_node(input: AddNodeInput!): AddNodeResult!
+  delete_node(slug: String!): DeleteNodeResult!
+  edit_node(input: EditNodeInput!): EditNodeResult!
 }
 
 type TwofaResult {

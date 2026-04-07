@@ -357,6 +357,23 @@ export type DecodeInvoice = {
   tokens: Scalars['Float']['output'];
 };
 
+export type DeleteNodeResult = {
+  __typename?: 'DeleteNodeResult';
+  success: Scalars['Boolean']['output'];
+};
+
+export type EditNodeInput = {
+  name?: InputMaybe<Scalars['String']['input']>;
+  slug: Scalars['String']['input'];
+};
+
+export type EditNodeResult = {
+  __typename?: 'EditNodeResult';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+};
+
 export type FeeHealth = {
   __typename?: 'FeeHealth';
   base?: Maybe<Scalars['String']['output']>;
@@ -1396,10 +1413,20 @@ export type TapUniverseStats = {
 export type TeamMutations = {
   __typename?: 'TeamMutations';
   add_node: AddNodeResult;
+  delete_node: DeleteNodeResult;
+  edit_node: EditNodeResult;
 };
 
 export type TeamMutationsAdd_NodeArgs = {
   input: AddNodeInput;
+};
+
+export type TeamMutationsDelete_NodeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+export type TeamMutationsEdit_NodeArgs = {
+  input: EditNodeInput;
 };
 
 export type TwofaResult = {

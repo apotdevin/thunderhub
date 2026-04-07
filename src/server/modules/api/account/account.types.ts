@@ -74,10 +74,38 @@ export class UserQueries {
   get_nodes: UserNode[];
 }
 
+@InputType()
+export class EditNodeInput {
+  @Field()
+  slug: string;
+  @Field({ nullable: true })
+  name?: string;
+}
+
+@ObjectType()
+export class EditNodeResult {
+  @Field()
+  id: string;
+  @Field()
+  slug: string;
+  @Field()
+  name: string;
+}
+
+@ObjectType()
+export class DeleteNodeResult {
+  @Field()
+  success: boolean;
+}
+
 @ObjectType()
 export class TeamMutations {
   @Field(() => AddNodeResult)
   add_node: AddNodeResult;
+  @Field(() => EditNodeResult)
+  edit_node: EditNodeResult;
+  @Field(() => DeleteNodeResult)
+  delete_node: DeleteNodeResult;
 }
 
 @ObjectType()

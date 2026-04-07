@@ -12,6 +12,9 @@ import { CurrentUser, Public } from '../../security/security.decorators';
 import {
   AddNodeInput,
   AddNodeResult,
+  DeleteNodeResult,
+  EditNodeInput,
+  EditNodeResult,
   PublicQueries,
   ServerAccount,
   TeamMutations,
@@ -125,6 +128,7 @@ export class TeamMutationRoot {
 export class TeamMutationsResolver {
   constructor(
     private userService: UserService,
+    private accountsService: AccountsService,
     private providerRegistry: ProviderRegistryService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
@@ -184,6 +188,43 @@ export class TeamMutationsResolver {
       slug: node.id.slice(0, 8),
       name: node.name,
     };
+  }
+
+  @ResolveField(() => EditNodeResult)
+  async edit_node(
+    @CurrentUser() user: UserId,
+    @Args('input') input: EditNodeInput
+  ): Promise<EditNodeResult> {
+    const dbUserId = user.userId ?? user.id;
+    const node = await this.userService.editNode(dbUserId, input.slug, {
+      name: input.name,
+    });
+
+    return {
+      id: node.id,
+      slug: node.id.slice(0, 8),
+      name: node.name,
+    };
+  }
+
+  @ResolveField(() => DeleteNodeResult)
+  async delete_node(
+    @CurrentUser() user: UserId,
+    @Args('slug') slug: string
+  ): Promise<DeleteNodeResult> {
+    const dbUserId = user.userId ?? user.id;
+
+    this.logger.info('Deleting node for DB user', {
+      userId: dbUserId,
+      slug,
+    });
+
+    const nodeId = await this.userService.deleteNode(dbUserId, slug);
+
+    // Evict cached connection
+    this.accountsService.removeAccount(nodeId);
+
+    return { success: true };
   }
 }
 
