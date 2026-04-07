@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { AssetsList } from './AssetsList';
+import { PortfolioDistribution } from './PortfolioDistribution';
 import { MintAsset } from './MintAsset';
 import { BurnAsset } from './BurnAsset';
 import { SendAsset } from './SendAsset';
@@ -41,7 +42,7 @@ export const AssetsView = () => {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={cn(
-              'px-3 py-2 text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap',
+              'px-3 py-2 text-sm font-medium transition-colors border-b-2 whitespace-nowrap',
               activeTab === tab.id
                 ? 'border-primary text-primary'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -52,7 +53,12 @@ export const AssetsView = () => {
         ))}
       </div>
 
-      {activeTab === 'assets' && <AssetsList />}
+      {activeTab === 'assets' && (
+        <div className="flex flex-col gap-4">
+          <PortfolioDistribution />
+          <AssetsList />
+        </div>
+      )}
       {activeTab === 'send' && <SendAsset />}
       {activeTab === 'receive' && <ReceiveAsset />}
       {activeTab === 'channels' && <FundAssetChannel />}
