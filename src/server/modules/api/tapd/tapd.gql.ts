@@ -6,9 +6,11 @@ export const getOffersQuery = gql`
       offers(input: $input) {
         list {
           id
+          magma_offer_id
           node {
             alias
             pubkey
+            sockets
           }
           rate {
             display_amount
@@ -30,6 +32,31 @@ export const getOffersQuery = gql`
         pagination {
           limit
           offset
+        }
+      }
+    }
+  }
+`;
+
+export const createMagmaOrderMutation = gql`
+  mutation CreateManualOrder($input: CreateManualOrderInput!) {
+    market {
+      order {
+        create(input: $input) {
+          id
+          status
+          size
+          payment {
+            lightning {
+              invoice
+              pending
+            }
+          }
+          fees {
+            buyer {
+              sats
+            }
+          }
         }
       }
     }

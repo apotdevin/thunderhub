@@ -1,16 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import {
-  Loader2,
-  Info,
-  ArrowUpDown,
-  ArrowLeftRight,
-  ExternalLink,
-} from 'lucide-react';
+import { Loader2, Info, ArrowUpDown } from 'lucide-react';
 import { useGetTapOffersQuery } from '../../graphql/queries/__generated__/getTapOffers.generated';
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
-import { useGetNodeCapabilitiesQuery } from '../../graphql/queries/__generated__/getNodeCapabilities.generated';
 import { useLoginAmbossMutation } from '../../graphql/mutations/__generated__/loginAmboss.generated';
 import { useAmbossUser } from '../../hooks/UseAmbossUser';
 import { getErrorContent } from '../../utils/error';
@@ -22,53 +15,18 @@ import {
   TapOfferSortBy,
   TapOfferSortDir,
 } from '../../graphql/types';
+import { TradeSheet } from './TradeSheet';
 
-export const TradingOffers: FC = () => {
-  const { data: capData, loading: capLoading } = useGetNodeCapabilitiesQuery();
-  const tapdAvailable =
-    capData?.getNodeCapabilities?.capabilities?.includes('taproot_assets') ??
-    false;
-
-  if (capLoading) {
-    return (
-      <div className="flex justify-center py-16">
-        <Loader2 className="animate-spin text-muted-foreground" size={20} />
-      </div>
-    );
-  }
-
-  if (!tapdAvailable) {
-    return <LitdSetupInfo />;
-  }
-
-  return <TradingOffersContent />;
+type OfferRow = {
+  id: string;
+  magmaOfferId: string;
+  node: { alias?: string | null; pubkey?: string | null; sockets: string[] };
+  rate: { displayAmount?: string | null; fullAmount?: string | null };
+  available: { displayAmount?: string | null; fullAmount?: string | null };
 };
 
-const LITD_DOCS_URL = 'https://docs.thunderhub.io/litd';
-
-const LitdSetupInfo: FC = () => (
-  <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
-    <ArrowLeftRight size={40} className="text-muted-foreground/40" />
-    <div className="space-y-2">
-      <h2 className="text-lg font-semibold">Trading requires Taproot Assets</h2>
-      <p className="text-sm text-muted-foreground max-w-md">
-        To trade Taproot Assets, run your node with Lightning Terminal (litd)
-        which includes the Taproot Assets daemon.
-      </p>
-    </div>
-    <a
-      href={LITD_DOCS_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex items-center gap-1.5 text-sm text-primary hover:underline"
-    >
-      View setup instructions
-      <ExternalLink size={12} />
-    </a>
-  </div>
-);
-
-const TradingOffersContent: FC = () => {
+export const TradingOffers: FC = () => {
+  const [selectedOffer, setSelectedOffer] = useState<OfferRow | null>(null);
   const [selectedAsset, setSelectedAsset] = useState('');
   const [txType, setTxType] = useState<TapTransactionType>(
     TapTransactionType.Purchase
@@ -113,9 +71,9 @@ const TradingOffersContent: FC = () => {
       ? allSupported.filter(a => a.groupKey && ownedGroupKeys.has(a.groupKey))
       : allSupported;
 
-  const selectedSymbol =
-    supportedAssets.find(a => (a.assetId || a.id) === selectedAsset)?.symbol ||
-    '';
+  const selectedAssetData = supportedAssets.find(a => a.id === selectedAsset);
+  const selectedSymbol = selectedAssetData?.symbol || '';
+  const selectedPrecision = selectedAssetData?.precision ?? 0;
 
   const {
     data: offersData,
@@ -189,7 +147,7 @@ const TradingOffersContent: FC = () => {
                 // Clear selection if switching to Sell and current asset isn't owned
                 if (t === TapTransactionType.Sale && selectedAsset) {
                   const selected = allSupported.find(
-                    a => (a.assetId || a.id) === selectedAsset
+                    a => a.id === selectedAsset
                   );
                   if (
                     !selected?.groupKey ||
@@ -221,7 +179,7 @@ const TradingOffersContent: FC = () => {
             </span>
           ) : (
             supportedAssets.map(a => {
-              const value = a.assetId || a.id;
+              const value = a.id;
               const label = a.symbol || a.id.slice(0, 8);
               const isActive = selectedAsset === value;
               return (
@@ -321,7 +279,8 @@ const TradingOffersContent: FC = () => {
               {offers.map(offer => (
                 <tr
                   key={offer.id}
-                  className="border-b border-border/50 hover:bg-muted/30 transition-colors"
+                  className="border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer"
+                  onClick={() => setSelectedOffer(offer)}
                 >
                   <td className="py-3 px-3 font-mono text-xs">
                     {offer.node.alias || offer.node.pubkey?.slice(0, 16)}
@@ -356,6 +315,18 @@ const TradingOffersContent: FC = () => {
       <div className="text-xs text-muted-foreground text-center pt-2">
         Trading powered by RailsX By Amboss
       </div>
+
+      <TradeSheet
+        offer={selectedOffer}
+        assetId={selectedAsset}
+        assetSymbol={selectedSymbol}
+        assetPrecision={selectedPrecision}
+        transactionType={txType}
+        open={!!selectedOffer}
+        onOpenChange={open => {
+          if (!open) setSelectedOffer(null);
+        }}
+      />
     </div>
   );
 };

@@ -466,6 +466,7 @@ type Mutation {
   removeTwofaSecret(token: String!): Boolean!
   sendTapAsset(tapAddrs: [String!]!): Boolean!
   sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
+  setupTradePartner(input: SetupTradePartnerInput!): SetupTradePartnerResult!
   syncTapUniverse(host: String!): TapSyncResult!
   team: TeamMutations!
   toggleConfig(field: ConfigFields!): Boolean!
@@ -784,6 +785,27 @@ type ServerAccount {
   type: String!
 }
 
+input SetupTradePartnerInput {
+  amount: String!
+  assetId: String!
+  assetRate: String!
+  magmaOfferId: String!
+  swapNodePubkey: String!
+  swapNodeSockets: [String!]
+  transactionType: TapTransactionType!
+}
+
+type SetupTradePartnerResult {
+  magmaOrderAmountAsset: String
+  magmaOrderAmountSats: String
+  magmaOrderFeeSats: String
+  magmaOrderId: String
+  magmaOrderStatus: String
+  outboundChannelOutputIndex: Int
+  outboundChannelTxid: String
+  success: Boolean!
+}
+
 type SingleChannel {
   capacity: Float!
   id: String!
@@ -939,13 +961,14 @@ type TapSyncResult {
 type TapTradeOffer {
   available: TapTradeOfferAmount!
   id: String!
+  magmaOfferId: String!
   node: TapTradeOfferNode!
   rate: TapTradeOfferAmount!
 }
 
 type TapTradeOfferAmount {
   displayAmount: String
-  fullAmount: String!
+  fullAmount: String
 }
 
 type TapTradeOfferList {
@@ -955,7 +978,8 @@ type TapTradeOfferList {
 
 type TapTradeOfferNode {
   alias: String
-  pubkey: String!
+  pubkey: String
+  sockets: [String!]!
 }
 
 enum TapTransactionType {

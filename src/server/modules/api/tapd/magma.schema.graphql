@@ -1,0 +1,712 @@
+type AccountMutations {
+  node: NodeMutations!
+  subscriptions: SubscriptionMutations!
+}
+
+type AccountNode {
+  alias: String
+  created_at: String!
+  id: String!
+  pubkey: String!
+}
+
+type AmbossNodeInfo {
+  id: String!
+  min_channel_size: String
+}
+
+type AssetAmount {
+  display: String!
+  full: String!
+  id: String!
+}
+
+type BuyerStats {
+  id: String!
+  total_channels: Float!
+  total_purchased: SatoshiValue!
+}
+
+input CancelOrderInput {
+  cancellation_reason: OrderCancellationReason!
+  order_id: String!
+}
+
+type CancelOrderResult {
+  success: Boolean!
+}
+
+type ChannelAsset {
+  amount: AssetAmount
+  id: String!
+  precision: Int!
+  symbol: String!
+  taproot_asset_details: TaprootAssetDetails
+  type: ChannelAssetType!
+}
+
+enum ChannelAssetType {
+  BASE_ASSET
+  TAPROOT_ASSET
+}
+
+type ConnectNode {
+  success: Boolean!
+}
+
+input ConnectNodeInput {
+  identifier: String!
+  signature: String!
+}
+
+input CreateManualOrderInput {
+  offer_id: String!
+  options: LiquidityOptionsInput
+  payment_method: PaymentMethod!
+  pubkey: String!
+  referrer: String
+  size: String!
+}
+
+type CreateOffer {
+  offer_id: String!
+}
+
+input CreateOfferInput {
+  base_fee: Float
+  base_fee_cap: Float
+  conditions: [OfferConditionsInput!]
+  fee_rate: Float
+  fee_rate_cap: Float
+  max_size: Float
+  min_block_length: Float!
+  min_size: Float
+  onchain_multiplier: Float
+  onchain_priority: OnchainPriority
+  pubkey: String!
+  total_size: Float!
+}
+
+type LiquidityOptions {
+  asset: ChannelAsset!
+  id: String!
+  is_private: Boolean!
+  is_rails_cluster: Boolean!
+}
+
+input LiquidityOptionsInput {
+  asset_id: String
+  private: Boolean
+  rails_cluster_only: Boolean
+}
+
+type LiquidityOrder {
+  account: User!
+  order: LiquidityOrderDetails!
+  payment: LiquidityOrderPayment!
+}
+
+type LiquidityOrderDetails {
+  transaction_id: String!
+  usd_cents: String!
+}
+
+input LiquidityOrderInput {
+  connection_uri: String!
+  options: LiquidityOptionsInput
+  redirect_url: String
+  usd_cents: String!
+}
+
+type LiquidityOrderPayment {
+  amount: SatoshiValue
+  lightning_invoice: String
+  redirect_url: String!
+}
+
+type LiquidityQueries {
+  id: String!
+  liquidity_per_usd: SatoshiValue!
+}
+
+type LiquiditySubscription {
+  id: String!
+  node_pubkey: SimpleNode!
+  payment_reliability_report: Boolean!
+}
+
+input LiquiditySubscriptionInput {
+  connection_uri: String
+  monthly_cents: Float!
+  payment_reliability_report: Boolean!
+  referral_code: String
+}
+
+type LiquiditySubscriptionResult {
+  account: SimpleAccount!
+  external_url: String!
+}
+
+type MarketMutations {
+  offer: OfferMutations!
+  order: OrderMutations!
+}
+
+type MarketOffer {
+  asset: ChannelAsset!
+  conditions: [OfferConditions!]
+  created_at: String!
+  fees: MarketOfferFees!
+  filled_orders: Float!
+  id: String!
+  is_owner: Boolean!
+  locked_amount: SizeValue!
+  locked_size: SatoshiValue! @deprecated(reason: "Use locked_amount instead")
+  max_amount: SizeValue!
+  max_size: SatoshiValue! @deprecated(reason: "Use max_amount instead")
+  min_amount: SizeValue!
+  min_size: SatoshiValue! @deprecated(reason: "Use min_amount instead")
+  node: SimpleNode!
+  onchain_multiplier: Float
+  onchain_priority: OnchainPriority
+  orders(page: PageInput = {limit: 10, offset: 0}): MarketOrderList!
+  promises: MarketOfferPromises!
+  status: OfferStatus!
+  total_amount: SizeValue!
+  total_size: SatoshiValue! @deprecated(reason: "Use total_amount instead")
+}
+
+type MarketOfferFees {
+  amboss: SatoshiValue!
+  fixed: SatoshiValue!
+  id: String!
+  variable: SatoshiValue!
+}
+
+type MarketOfferList {
+  id: String!
+  list: [SimpleMarketOffer!]!
+  pagination: Pagination!
+  total: Float!
+}
+
+type MarketOfferPromises {
+  base_fee_cap: String
+  fee_rate_cap: String
+  id: String!
+  min_block_length: Float!
+}
+
+type MarketOffers {
+  get_offer(offer_id: String!): MarketOffer!
+  id: String!
+  offers(page: PageInput = {limit: 10, offset: 0}): MarketOfferList!
+}
+
+type MarketOrder {
+  amount: SizeValue!
+  asset: ChannelAsset
+  blocks_until_can_be_closed: Int
+  channel_id: String
+  confirmations: TxConfirmations
+  created_at: String!
+  destination: Node!
+  fees: MarketOrderFees!
+  id: String!
+  is_private: Boolean! @deprecated(reason: "This field has been deprecated, please use `options` instead instead.")
+  is_seller: Boolean!
+  options: LiquidityOptions
+  payment: OrderPayment
+  payment_status: MarketOrderPaymentStatus
+  promises: OrderPromises!
+  simple_offer: SimpleMarketOffer
+  size: String! @deprecated(reason: "Use amount instead")
+  source: Node!
+  status: MarketOrderStatus!
+  timeout: String
+  transaction_id: String
+}
+
+type MarketOrderFees {
+  amboss: SatoshiValue!
+  buyer: SatoshiValue!
+  fixed: SatoshiValue!
+  id: String!
+  seller: SatoshiValue!
+  variable: SatoshiValue!
+}
+
+type MarketOrderList {
+  id: String!
+  list: [SimpleMarketOrder!]!
+  pagination: Pagination!
+  total: Float!
+}
+
+enum MarketOrderPaymentStatus {
+  HODL_INVOICE_TIMEOUT
+  INVALID_PAYMENT_SECRET
+  PAYMENT_FAILED
+  PAYMENT_REJECTED_BY_DESTINATION
+  PENDING_PAYMENT
+  SELLER_INVOICE_EXPIRED
+  SUCCESSFUL_PAYMENT
+}
+
+enum MarketOrderStatus {
+  ADMIN_CLOSED
+  BUYER_FAILED_TO_PAY
+  BUYER_REJECTED
+  CHANNEL_MONITORING_FINISHED
+  INVALID_CHANNEL_OPENING
+  ON_CHAIN_CONFIRMATION
+  SELLER_FAILED_TO_OPEN_CHANNEL
+  SELLER_FAILED_TO_REACT
+  SELLER_FAILED_TO_SEND_SWAP
+  SELLER_OPENED_CHANNEL
+  SELLER_REJECTED
+  SELLER_SENT_TRANSACTION
+  VALID_CHANNEL_OPENING
+  WAITING_FOR_BUYER_PAYMENT
+  WAITING_FOR_CHANNEL_OPEN
+  WAITING_FOR_ON_CHAIN_CONFIRMATION
+  WAITING_FOR_SELLER_APPROVAL
+}
+
+type MarketOrders {
+  get_order(order_id: String!): MarketOrder!
+  id: String!
+  purchases(input: OrderInput, page: PageInput = {limit: 10, offset: 0}): MarketOrderList!
+  sales(input: OrderInput, page: PageInput = {limit: 10, offset: 0}): MarketOrderList!
+}
+
+type MarketQueries {
+  id: String!
+  liquidity: LiquidityQueries!
+  offer: OfferQueries!
+  transaction: TransactionQueries!
+}
+
+type Mutation {
+  account: AccountMutations!
+  liquidity: PublicLiquidityMutations!
+  market: MarketMutations!
+}
+
+type Node {
+  alias: String
+  id: String!
+  pubkey: String!
+  sockets: [String!]!
+}
+
+type NodeIdentifierInfo {
+  id: String!
+  identifier: String!
+  message: String!
+}
+
+type NodeInfo {
+  amboss: AmbossNodeInfo!
+  id: String!
+  pubkey: String!
+  visible_in_graph: Boolean!
+}
+
+type NodeMutations {
+  connect(input: ConnectNodeInput!): ConnectNode!
+}
+
+type NodeQueries {
+  id: String!
+  identifier_info: NodeIdentifierInfo!
+  node_info(connection_uri: String!): NodeInfo!
+}
+
+type OfferBook {
+  chart(resolution: Float = 0.002): [OfferDepthPoint!]!
+  id: String!
+}
+
+enum OfferCondition {
+  NODE_CAPACITY
+  NODE_CHANNELS
+  NODE_SOCKETS
+  PARALLEL_CHANNELS
+  TERMINAL_WEB_RANK
+}
+
+enum OfferConditionOperator {
+  CONTAINS
+  DOES_NOT_CONTAIN
+  EQUAL_TO
+  GREATER_THAN
+  GREATER_THAN_OR_EQUAL_TO
+  LESS_THAN
+  LESS_THAN_OR_EQUAL_TO
+  NOT_EQUAL_TO
+}
+
+type OfferConditions {
+  condition: OfferCondition!
+  operator: OfferConditionOperator!
+  value: String!
+}
+
+input OfferConditionsInput {
+  condition: OfferCondition!
+  operator: OfferConditionOperator!
+  value: String!
+}
+
+type OfferDepthPoint {
+  apr: String!
+  depth: SatoshiValue!
+  id: String!
+}
+
+type OfferMutations {
+  create(input: CreateOfferInput!): CreateOffer!
+  toggle(input: ToggleOfferInput!): ToggleOffer!
+  update(input: UpdateOfferInput!): UpdateOffer!
+}
+
+type OfferQueries {
+  get_offer(offer_id: String!): MarketOffer!
+  offer_book: OfferBook!
+  offers(page: PageInput = {limit: 10, offset: 0}): MarketOfferList!
+}
+
+type OfferStats {
+  active_count: Float!
+  available_size: SatoshiValue!
+  id: String!
+}
+
+enum OfferStatus {
+  ADMIN_DISABLED
+  DISABLED
+  ENABLED
+}
+
+enum OnchainPriority {
+  HIGH
+  LOW
+  MEDIUM
+}
+
+enum OrderCancellationReason {
+  CHANNEL_SIZE_OUT_OF_BOUNDS
+  UNABLE_TO_CONNECT_TO_NODE
+  UNABLE_TO_PAY
+}
+
+input OrderInput {
+  action_needed: Boolean
+}
+
+type OrderLightningPayment {
+  id: String!
+  invoice: String!
+  pending: Boolean!
+}
+
+type OrderMutations {
+  cancel(input: CancelOrderInput!): CancelOrderResult!
+  create(input: CreateManualOrderInput!): MarketOrder!
+  seller: SellerOrdersMutations!
+}
+
+type OrderPayment {
+  id: String!
+  lightning: OrderLightningPayment
+  pending: Boolean!
+}
+
+type OrderPromises {
+  id: String!
+  locked_base_fee_cap: SatoshiValue!
+  locked_fee_rate_cap: SatoshiValue!
+  locked_min_block_length: Float!
+}
+
+type OrderStats {
+  id: String!
+  purchased: BuyerStats!
+  sold: SellerStats!
+}
+
+input PageInput {
+  limit: Float!
+  offset: Float!
+}
+
+type Pagination {
+  limit: Float!
+  offset: Float!
+}
+
+enum PaymentMethod {
+  AMBUCKS
+  SATS
+}
+
+type PublicLiquidityMutations {
+  buy(input: LiquidityOrderInput!): LiquidityOrder!
+  create_subscription(input: LiquiditySubscriptionInput!): LiquiditySubscriptionResult!
+}
+
+type Query {
+  hello: String!
+  market: MarketQueries!
+  node: NodeQueries!
+  user: User!
+}
+
+type SatoshiValue {
+  btc: String!
+  historical_usd: String
+  id: String!
+  sats: String!
+  usd: String!
+}
+
+type SellerAcceptOrderResult {
+  success: Boolean!
+}
+
+input SellerAcceptOrdersInput {
+  order_id: String!
+  payment_request: String!
+}
+
+input SellerAddTransactionInput {
+  order_id: String!
+  tx_id: String!
+}
+
+type SellerAddTransactionResult {
+  success: Boolean!
+}
+
+type SellerOrdersMutations {
+  accept(input: SellerAcceptOrdersInput!): SellerAcceptOrderResult!
+  add_transaction(input: SellerAddTransactionInput!): SellerAddTransactionResult!
+  reject(input: SellerRejectOrdersInput!): SellerRejectOrderResult!
+}
+
+type SellerRejectOrderResult {
+  success: Boolean!
+}
+
+input SellerRejectOrdersInput {
+  order_id: String!
+}
+
+type SellerStats {
+  id: String!
+  total_channels: Float!
+  total_sold: SatoshiValue!
+}
+
+type SimpleAccount {
+  account_id: String!
+  session_key: String
+}
+
+type SimpleMarketOffer {
+  asset: ChannelAsset!
+  created_at: String!
+  fees: MarketOfferFees!
+  filled_orders: Float!
+  id: String!
+  locked_amount: SizeValue!
+  locked_size: SatoshiValue! @deprecated(reason: "Use locked_amount instead")
+  node: SimpleNode!
+  promises: MarketOfferPromises!
+  status: OfferStatus!
+  total_amount: SizeValue!
+  total_size: SatoshiValue! @deprecated(reason: "Use total_amount instead")
+}
+
+type SimpleMarketOrder {
+  amount: SizeValue!
+  asset: ChannelAsset
+  channel_id: String
+  created_at: String!
+  destination: SimpleNode!
+  fees: MarketOrderFees!
+  id: String!
+  is_private: Boolean! @deprecated(reason: "This field has been deprecated, please use `options` instead instead.")
+  options: LiquidityOptions
+  payment_status: MarketOrderPaymentStatus
+  size: String! @deprecated(reason: "Use amount instead")
+  source: SimpleNode!
+  status: MarketOrderStatus!
+  timeout: String
+}
+
+type SimpleNode {
+  alias: String
+  id: String!
+  pubkey: String!
+}
+
+type SizeValue {
+  asset: AssetAmount
+  id: String!
+  satoshi: SatoshiValue
+}
+
+type StatsQueries {
+  id: String!
+  offer: OfferStats!
+  order: OrderStats!
+}
+
+type SubscriptionMutations {
+  toggle(id: String!): ToggleSubscriptionResult!
+}
+
+enum SubscriptionType {
+  LIQUIDITY_SUBSCRIPTION
+}
+
+type TaprootAssetDetails {
+  asset_id: String
+  group_key: String
+  id: String!
+}
+
+type ToggleOffer {
+  status: OfferStatus!
+}
+
+input ToggleOfferInput {
+  offer_id: String!
+}
+
+type ToggleSubscriptionResult {
+  success: Boolean!
+}
+
+enum TransactionCurrency {
+  BITCOIN_SAT
+  FIAT_USD_CENT
+}
+
+type TransactionOutput {
+  id: String!
+  output_amount: String!
+  output_index: Float!
+}
+
+type TransactionQueries {
+  get_outputs(tx_id: String!): [TransactionOutput!]!
+  id: String!
+}
+
+enum TransactionStatus {
+  CANCELLED
+  CONFIRMED
+  FAILED
+  PENDING
+}
+
+type TxConfirmations {
+  confirmations: Float!
+  id: String!
+}
+
+type UpdateOffer {
+  success: Boolean!
+}
+
+input UpdateOfferInput {
+  base_fee: Float
+  base_fee_cap: Float
+  conditions: [OfferConditionsInput!]
+  fee_rate: Float
+  fee_rate_cap: Float
+  max_size: Float
+  min_block_length: Float
+  min_size: Float
+  offer_id: String!
+  onchain_multiplier: Float
+  onchain_priority: OnchainPriority
+  total_size: Float
+}
+
+type User {
+  email: String
+  id: String!
+  market: UserMarket!
+  nodes: [AccountNode!]!
+  session_key: String
+  subscriptions: UserSubscriptions!
+  telegram_username: String
+  transactions: UserTransactions!
+}
+
+type UserMarket {
+  id: String!
+  offers: MarketOffers!
+  orders: MarketOrders!
+  recent_nodes: [SimpleNode!]!
+  stats: StatsQueries!
+}
+
+type UserSubscription {
+  active: Boolean!
+  cancel_at_period_end: Boolean!
+  created_at: String!
+  id: String!
+  liquidity: LiquiditySubscription
+  monthly_amount: String!
+  period_end: String!
+  type: SubscriptionType!
+}
+
+type UserSubscriptions {
+  get_one(subId: String!): UserSubscription!
+  id: String!
+  list: [UserSubscription!]!
+}
+
+type UserTransaction {
+  amount: SatoshiValue
+  amount_usd: String
+  created_at: String!
+  currency: TransactionCurrency!
+  description: String!
+  id: String!
+  is_private: Boolean! @deprecated(reason: "This field has been deprecated, please use `options` instead instead.")
+  node: SimpleNode!
+  options: UserTransactionOptions
+  payment_url: String
+  status: TransactionStatus!
+  type: UserTransactionType!
+}
+
+type UserTransactionList {
+  id: String!
+  list: [UserTransaction!]!
+  pagination: Pagination!
+  total: Float!
+}
+
+type UserTransactionOptions {
+  id: String!
+  liquidity: LiquidityOptions
+}
+
+enum UserTransactionType {
+  LIQUIDITY_ORDER
+  LIQUIDITY_SUBSCRIPTION
+}
+
+type UserTransactions {
+  get_one(transaction_id: String!): UserTransaction!
+  id: String!
+  transaction_list(page: PageInput = {limit: 10, offset: 0}): UserTransactionList!
+}

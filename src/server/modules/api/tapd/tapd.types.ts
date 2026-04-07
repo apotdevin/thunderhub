@@ -380,8 +380,11 @@ export class TapTradeOfferNode {
   @Field({ nullable: true })
   alias?: string;
 
-  @Field()
-  pubkey: string;
+  @Field({ nullable: true })
+  pubkey?: string;
+
+  @Field(() => [String])
+  sockets: string[];
 }
 
 @ObjectType()
@@ -389,14 +392,17 @@ export class TapTradeOfferAmount {
   @Field({ nullable: true })
   displayAmount?: string;
 
-  @Field()
-  fullAmount: string;
+  @Field({ nullable: true })
+  fullAmount?: string;
 }
 
 @ObjectType()
 export class TapTradeOffer {
   @Field()
   id: string;
+
+  @Field()
+  magmaOfferId: string;
 
   @Field(() => TapTradeOfferNode)
   node: TapTradeOfferNode;
@@ -458,3 +464,73 @@ export class TapSupportedAssetList {
   @Field()
   totalCount: number;
 }
+
+// ─── Trade Partner Setup ───────────────────────────────────────
+
+@InputType()
+export class SetupTradePartnerInput {
+  @Field()
+  magmaOfferId: string;
+
+  @Field()
+  assetId: string;
+
+  @Field()
+  amount: string;
+
+  @Field()
+  assetRate: string;
+
+  @Field(() => TapTransactionType)
+  transactionType: TapTransactionType;
+
+  @Field()
+  swapNodePubkey: string;
+
+  @Field(() => [String], { nullable: true })
+  swapNodeSockets?: string[];
+}
+
+@ObjectType()
+export class SetupTradePartnerResult {
+  @Field()
+  success: boolean;
+
+  @Field({ nullable: true })
+  magmaOrderId?: string;
+
+  @Field({ nullable: true })
+  magmaOrderStatus?: string;
+
+  @Field({ nullable: true })
+  magmaOrderAmountSats?: string;
+
+  @Field({ nullable: true })
+  magmaOrderAmountAsset?: string;
+
+  @Field({ nullable: true })
+  magmaOrderFeeSats?: string;
+
+  @Field({ nullable: true })
+  outboundChannelTxid?: string;
+
+  @Field(() => Int, { nullable: true })
+  outboundChannelOutputIndex?: number;
+}
+
+export type SetupTradePartnerAuto = {
+  validate: void;
+  nodeInfo: { publicKey: string };
+  ambossJwt: string;
+  peer: void;
+  magmaOrder: {
+    id: string;
+    status: string;
+    invoice: string;
+    amountSats?: string;
+    amountAsset?: string;
+    feeSats?: number;
+  };
+  payMagma: void;
+  outboundChannel: { txid: string; outputIndex: number };
+};
