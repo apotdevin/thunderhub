@@ -97,8 +97,7 @@ const TradingOffersContent: FC = () => {
       : allSupported;
 
   const selectedSymbol =
-    supportedAssets.find(a => (a.assetId || a.id) === selectedAsset)?.symbol ||
-    '';
+    supportedAssets.find(a => a.id === selectedAsset)?.symbol || '';
 
   const {
     data: offersData,
@@ -204,7 +203,7 @@ const TradingOffersContent: FC = () => {
             </span>
           ) : (
             supportedAssets.map(a => {
-              const value = a.assetId || a.id;
+              const value = a.id;
               const label = a.symbol || a.id.slice(0, 8);
               const isActive = selectedAsset === value;
               return (
