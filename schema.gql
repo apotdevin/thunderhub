@@ -724,7 +724,7 @@ type Query {
   getChainTransactions: [ChainTransaction!]!
   getChannel(id: String!): SingleChannel!
   getChannelReport: ChannelReport!
-  getChannels(active: Boolean): [Channel!]!
+  getChannels(active: Boolean, partner_public_key: String): [Channel!]!
   getClosedChannels: [ClosedChannel!]!
   getConfigState: ConfigState!
   getFeeHealth: ChannelsFeeHealth!

@@ -14,6 +14,9 @@ export type SetupTradePartnerMutation = {
     success: boolean;
     magmaOrderId?: string | null;
     magmaOrderStatus?: string | null;
+    magmaOrderAmountSats?: string | null;
+    magmaOrderAmountAsset?: string | null;
+    magmaOrderFeeSats?: string | null;
     outboundChannelTxid?: string | null;
     outboundChannelOutputIndex?: number | null;
   };
@@ -25,6 +28,9 @@ export const SetupTradePartnerDocument = gql`
       success
       magmaOrderId
       magmaOrderStatus
+      magmaOrderAmountSats
+      magmaOrderAmountAsset
+      magmaOrderFeeSats
       outboundChannelTxid
       outboundChannelOutputIndex
     }
@@ -35,6 +41,23 @@ export type SetupTradePartnerMutationFn = Apollo.MutationFunction<
   SetupTradePartnerMutationVariables
 >;
 
+/**
+ * __useSetupTradePartnerMutation__
+ *
+ * To run a mutation, you first call `useSetupTradePartnerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetupTradePartnerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setupTradePartnerMutation, { data, loading, error }] = useSetupTradePartnerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
 export function useSetupTradePartnerMutation(
   baseOptions?: Apollo.MutationHookOptions<
     SetupTradePartnerMutation,

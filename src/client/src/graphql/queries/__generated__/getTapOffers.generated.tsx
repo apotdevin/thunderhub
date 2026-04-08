@@ -24,17 +24,17 @@ export type GetTapOffersQuery = {
       node: {
         __typename?: 'TapTradeOfferNode';
         alias?: string | null;
-        pubkey: string;
+        pubkey?: string | null;
       };
       rate: {
         __typename?: 'TapTradeOfferAmount';
         displayAmount?: string | null;
-        fullAmount: string;
+        fullAmount?: string | null;
       };
       available: {
         __typename?: 'TapTradeOfferAmount';
         displayAmount?: string | null;
-        fullAmount: string;
+        fullAmount?: string | null;
       };
     }>;
   };
