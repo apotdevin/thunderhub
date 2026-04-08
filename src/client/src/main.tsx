@@ -4,10 +4,9 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { config, initConfig } from './config/thunderhubConfig';
-import { appendBasePath } from '@/utils/basePath';
 
 async function bootstrap() {
-  const configUrl = appendBasePath('/api/config');
+  const configUrl = `${import.meta.env.BASE_URL}api/config`;
   try {
     const res = await fetch(configUrl);
     if (res.ok) {
