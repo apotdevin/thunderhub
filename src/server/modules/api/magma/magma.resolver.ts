@@ -1,4 +1,4 @@
-import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
@@ -17,11 +17,10 @@ import { toWithError } from '../../../utils/async';
 import { appConstants } from '../../../utils/appConstants';
 import { ONE_MONTH_SECONDS } from '../amboss/amboss.service';
 import {
+  GetTapOffersInput,
   TapTradeOfferList,
   TapSupportedAssetList,
   TapTransactionType,
-  TapOfferSortBy,
-  TapOfferSortDir,
   SetupTradePartnerInput,
   SetupTradePartnerResult,
   SetupTradePartnerAuto,
@@ -68,16 +67,7 @@ export class MagmaResolver {
   async getTapOffers(
     @CurrentUser() _user: UserId,
     @Context() { ambossAuth }: ContextType,
-    @Args('assetId') assetId: string,
-    @Args('transactionType', { type: () => TapTransactionType })
-    transactionType: TapTransactionType,
-    @Args('sortBy', { type: () => TapOfferSortBy, nullable: true })
-    sortBy?: TapOfferSortBy,
-    @Args('sortDir', { type: () => TapOfferSortDir, nullable: true })
-    sortDir?: TapOfferSortDir,
-    @Args('minAmount', { nullable: true }) minAmount?: string,
-    @Args('limit', { type: () => Int, nullable: true }) limit?: number,
-    @Args('offset', { type: () => Int, nullable: true }) offset?: number
+    @Args('input') input: GetTapOffersInput
   ) {
     const tradeUrl = this.configService.get<string>('urls.trade');
     if (!tradeUrl) {
@@ -98,13 +88,18 @@ export class MagmaResolver {
       getOffersQuery,
       {
         input: {
-          asset_id: assetId,
-          transaction_type: transactionType,
-          ...(sortBy ? { sort_by: sortBy } : {}),
-          ...(sortDir ? { sort_dir: sortDir } : {}),
-          ...(minAmount ? { min_amount: minAmount } : {}),
-          ...(limit || offset
-            ? { page: { limit: limit || 20, offset: offset || 0 } }
+          asset_id: input.assetId,
+          transaction_type: input.transactionType,
+          ...(input.sortBy ? { sort_by: input.sortBy } : {}),
+          ...(input.sortDir ? { sort_dir: input.sortDir } : {}),
+          ...(input.minAmount ? { min_amount: input.minAmount } : {}),
+          ...(input.limit || input.offset
+            ? {
+                page: {
+                  limit: input.limit || 20,
+                  offset: input.offset || 0,
+                },
+              }
             : {}),
         },
       },

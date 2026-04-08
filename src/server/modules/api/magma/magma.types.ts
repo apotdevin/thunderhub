@@ -32,6 +32,30 @@ registerEnumType(TapOfferSortDir, { name: 'TapOfferSortDir' });
 
 // ─── Trading Offers ─────────────────────────────────────────────
 
+@InputType()
+export class GetTapOffersInput {
+  @Field()
+  assetId: string;
+
+  @Field(() => TapTransactionType)
+  transactionType: TapTransactionType;
+
+  @Field(() => TapOfferSortBy, { nullable: true })
+  sortBy?: TapOfferSortBy;
+
+  @Field(() => TapOfferSortDir, { nullable: true })
+  sortDir?: TapOfferSortDir;
+
+  @Field({ nullable: true })
+  minAmount?: string;
+
+  @Field(() => Int, { nullable: true })
+  limit?: number;
+
+  @Field(() => Int, { nullable: true })
+  offset?: number;
+}
+
 @ObjectType()
 export class TapTradeOfferNode {
   @Field({ nullable: true })

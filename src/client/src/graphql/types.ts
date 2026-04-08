@@ -1108,13 +1108,7 @@ export type QueryGetTapBalancesArgs = {
 };
 
 export type QueryGetTapOffersArgs = {
-  assetId: Scalars['String']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  minAmount?: InputMaybe<Scalars['String']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  sortBy?: InputMaybe<TapOfferSortBy>;
-  sortDir?: InputMaybe<TapOfferSortDir>;
-  transactionType: TapTransactionType;
+  input: GetTapOffersInput;
 };
 
 export type QueryRecoverFundsArgs = {
@@ -1156,6 +1150,16 @@ export type ServerAccount = {
   slug: Scalars['String']['output'];
   twofaEnabled: Scalars['Boolean']['output'];
   type: Scalars['String']['output'];
+};
+
+export type GetTapOffersInput = {
+  assetId: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  minAmount?: InputMaybe<Scalars['String']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<TapOfferSortBy>;
+  sortDir?: InputMaybe<TapOfferSortDir>;
+  transactionType: TapTransactionType;
 };
 
 export type SetupTradePartnerInput = {

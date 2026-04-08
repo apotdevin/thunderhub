@@ -73,10 +73,12 @@ describe('MagmaResolver', () => {
       const result = await resolver.getTapOffers(
         userId,
         ambossContext as never,
-        'asset123',
-        TapTransactionType.PURCHASE,
-        TapOfferSortBy.RATE,
-        TapOfferSortDir.ASC
+        {
+          assetId: 'asset123',
+          transactionType: TapTransactionType.PURCHASE,
+          sortBy: TapOfferSortBy.RATE,
+          sortDir: TapOfferSortDir.ASC,
+        }
       );
 
       expect(result.totalCount).toBe(1);
@@ -96,8 +98,10 @@ describe('MagmaResolver', () => {
       const result = await resolver.getTapOffers(
         userId,
         ambossContext as never,
-        'asset123',
-        TapTransactionType.PURCHASE
+        {
+          assetId: 'asset123',
+          transactionType: TapTransactionType.PURCHASE,
+        }
       );
 
       expect(result).toEqual({ list: [], totalCount: 0 });
@@ -113,8 +117,10 @@ describe('MagmaResolver', () => {
       const result = await resolver.getTapOffers(
         userId,
         ambossContext as never,
-        'asset123',
-        TapTransactionType.SALE
+        {
+          assetId: 'asset123',
+          transactionType: TapTransactionType.SALE,
+        }
       );
 
       expect(result).toEqual({ list: [], totalCount: 0 });
@@ -132,12 +138,10 @@ describe('MagmaResolver', () => {
         error: undefined,
       });
 
-      await resolver.getTapOffers(
-        userId,
-        ambossContext as never,
-        'asset123',
-        TapTransactionType.PURCHASE
-      );
+      await resolver.getTapOffers(userId, ambossContext as never, {
+        assetId: 'asset123',
+        transactionType: TapTransactionType.PURCHASE,
+      });
 
       expect(mockFetchService.graphqlFetchWithProxy).toHaveBeenCalledWith(
         tradeUrl,

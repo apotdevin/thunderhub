@@ -81,11 +81,13 @@ export const TradingOffers: FC = () => {
     error,
   } = useGetTapOffersQuery({
     variables: {
-      assetId: selectedAsset,
-      transactionType: txType,
-      sortBy,
-      sortDir,
-      ...(minAmount ? { minAmount } : {}),
+      input: {
+        assetId: selectedAsset,
+        transactionType: txType,
+        sortBy,
+        sortDir,
+        ...(minAmount ? { minAmount } : {}),
+      },
     },
     skip: !selectedAsset,
     onError: err => toast.error(getErrorContent(err)),
