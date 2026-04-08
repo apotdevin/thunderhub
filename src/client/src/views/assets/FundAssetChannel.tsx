@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useFundTapAssetChannelMutation } from '../../graphql/mutations/__generated__/fundTapAssetChannel.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
+import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
 
@@ -18,6 +19,8 @@ export const FundAssetChannel: FC = () => {
   const { data: balancesData } = useGetTapBalancesQuery({
     variables: { groupBy: TapBalanceGroupBy.GroupKey },
   });
+
+  const { data: supportedData } = useGetTapSupportedAssetsQuery();
 
   const knownGroups = (balancesData?.getTapBalances?.balances || [])
     .filter(b => b.groupKey && b.balance && Number(b.balance) > 0)
@@ -49,6 +52,10 @@ export const FundAssetChannel: FC = () => {
       toast.error('Peer pubkey, asset group, and amount are required');
       return;
     }
+    const universeHost = (
+      supportedData?.getTapSupportedAssets?.list || []
+    ).find(a => a.groupKey === selectedGroup)?.universeHost;
+
     fundChannel({
       variables: {
         input: {
@@ -57,6 +64,7 @@ export const FundAssetChannel: FC = () => {
           groupKey: selectedGroup,
           feeRateSatPerVbyte: feeRate ? parseInt(feeRate, 10) : undefined,
           pushSat: pushSat ? parseInt(pushSat, 10) : undefined,
+          universeHost: universeHost || undefined,
         },
       },
     });

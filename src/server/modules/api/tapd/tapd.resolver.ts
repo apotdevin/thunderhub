@@ -76,7 +76,11 @@ interface TradeApiSupportedAsset {
   symbol?: string;
   description?: string;
   precision?: number;
-  taproot_asset_details?: { asset_id?: string; group_key?: string };
+  taproot_asset_details?: {
+    asset_id?: string;
+    group_key?: string;
+    universe?: string;
+  };
   prices?: { id?: string; usd?: number };
 }
 
@@ -619,6 +623,7 @@ export class TapdResolver {
       assetId,
       feeRateSatPerVbyte,
       pushSat,
+      universeHost,
     } = input;
 
     if ((!assetId && !groupKey) || (assetId && groupKey)) {
@@ -630,6 +635,21 @@ export class TapdResolver {
     const parsedAmount = Number(assetAmount);
     if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
       throw new GraphQLError('assetAmount must be a positive number');
+    }
+
+    if (universeHost) {
+      const [, syncError] = await toWithError(
+        this.tapdNodeService.syncUniverse({ id, host: universeHost })
+      );
+      if (syncError) {
+        this.logger.error('Failed to sync universe before funding channel', {
+          error: syncError,
+          universeHost,
+        });
+        throw new GraphQLError(
+          'Failed to sync universe before funding channel'
+        );
+      }
     }
 
     const [result, error] = await toWithError(
@@ -768,6 +788,7 @@ export class TapdResolver {
         precision: a.precision ?? 0,
         assetId: a.taproot_asset_details?.asset_id,
         groupKey: a.taproot_asset_details?.group_key,
+        universeHost: a.taproot_asset_details?.universe,
         prices: a.prices ?? null,
       })),
       totalCount: assets.total_count,
