@@ -1165,6 +1165,7 @@ export type GetTapOffersInput = {
 export type SetupTradePartnerInput = {
   amount: Scalars['String']['input'];
   assetId: Scalars['String']['input'];
+  assetPrecision: Scalars['Int']['input'];
   assetRate: Scalars['String']['input'];
   magmaOfferId: Scalars['String']['input'];
   swapNodePubkey: Scalars['String']['input'];

@@ -350,3 +350,24 @@ export class TapFundChannelResponse {
   @Field(() => Int)
   outputIndex: number;
 }
+
+@ObjectType()
+export class TapAssetChannelBalance {
+  @Field()
+  channelPoint: string;
+
+  @Field()
+  partnerPublicKey: string;
+
+  @Field()
+  assetId: string;
+
+  @Field()
+  localBalance: string;
+
+  @Field()
+  remoteBalance: string;
+
+  @Field()
+  capacity: string;
+}

@@ -159,6 +159,11 @@ export class AmbossResolver {
     return true;
   }
 
+  @Query(() => Boolean)
+  async isAmbossAuthenticated(@Context() { ambossAuth }: ContextType) {
+    return !!ambossAuth;
+  }
+
   @Query(() => AmbossUser, { nullable: true })
   async getAmbossUser(@Context() { ambossAuth }: ContextType) {
     if (!ambossAuth) return null;

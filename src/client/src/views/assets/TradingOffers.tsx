@@ -321,6 +321,7 @@ export const TradingOffers: FC = () => {
       <TradeSheet
         offer={selectedOffer}
         assetId={selectedAsset}
+        tapdAssetId={selectedAssetData?.assetId || ''}
         assetSymbol={selectedSymbol}
         assetPrecision={selectedPrecision}
         transactionType={txType}

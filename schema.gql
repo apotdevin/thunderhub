@@ -355,6 +355,16 @@ type GetPaymentsType {
   payments: [PaymentType!]!
 }
 
+input GetTapOffersInput {
+  assetId: String!
+  limit: Int
+  minAmount: String
+  offset: Int
+  sortBy: TapOfferSortBy
+  sortDir: TapOfferSortDir
+  transactionType: TapTransactionType!
+}
+
 type Hops {
   channel: String!
   channel_capacity: Float!
@@ -744,10 +754,11 @@ type Query {
   getPayments(token: String): GetPaymentsType!
   getPeers: [Peer!]!
   getPendingChannels: [PendingChannel!]!
+  getTapAssetChannelBalances(peerPubkey: String): [TapAssetChannelBalance!]!
   getTapAssets: TapAssetList!
   getTapBalances(groupBy: TapBalanceGroupBy = GROUP_KEY): TapBalances!
   getTapFederationServers: TapFederationServerList!
-  getTapOffers(assetId: String!, limit: Int, minAmount: String, offset: Int, sortBy: TapOfferSortBy, sortDir: TapOfferSortDir, transactionType: TapTransactionType!): TapTradeOfferList!
+  getTapOffers(input: GetTapOffersInput!): TapTradeOfferList!
   getTapSupportedAssets: TapSupportedAssetList!
   getTapTransfers: TapTransferList!
   getTapUniverseAssets: TapUniverseAssetList!
@@ -758,6 +769,7 @@ type Query {
   getUtxos: [Utxo!]!
   getVolumeHealth: ChannelsHealth!
   getWalletInfo: Wallet!
+  isAmbossAuthenticated: Boolean!
   public: PublicQueries!
   recoverFunds(backup: String!): Boolean!
   signMessage(message: String!): String!
@@ -788,6 +800,7 @@ type ServerAccount {
 input SetupTradePartnerInput {
   amount: String!
   assetId: String!
+  assetPrecision: Int!
   assetRate: String!
   magmaOfferId: String!
   swapNodePubkey: String!
@@ -844,6 +857,15 @@ type TapAssetBalanceEntry {
   balance: String!
   groupKey: String
   names: [String!]
+}
+
+type TapAssetChannelBalance {
+  assetId: String!
+  capacity: String!
+  channelPoint: String!
+  localBalance: String!
+  partnerPublicKey: String!
+  remoteBalance: String!
 }
 
 type TapAssetGenesis {

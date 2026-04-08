@@ -162,6 +162,9 @@ export class SetupTradePartnerInput {
   @Field()
   assetRate: string;
 
+  @Field(() => Int)
+  assetPrecision: number;
+
   @Field(() => TapTransactionType)
   transactionType: TapTransactionType;
 

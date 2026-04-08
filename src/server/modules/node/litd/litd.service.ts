@@ -44,6 +44,7 @@ export class LitdService implements LightningProvider, TaprootAssetsProvider {
     macaroon?: string;
     authToken?: string;
   }): LitdConnection {
+    console.log({ config });
     const { lnd } = authenticatedLndGrpc({
       socket: config.socket,
       cert: config.cert,

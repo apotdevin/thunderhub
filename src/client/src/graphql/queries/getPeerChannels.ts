@@ -9,6 +9,8 @@ export const GET_PEER_CHANNELS = gql`
       remote_balance
       is_active
       partner_public_key
+      transaction_id
+      transaction_vout
     }
   }
 `;

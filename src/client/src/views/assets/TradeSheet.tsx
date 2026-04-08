@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { TapTransactionType } from '../../graphql/types';
 import { useSetupTradePartnerMutation } from '../../graphql/mutations/__generated__/setupTradePartner.generated';
 import { useGetPeerChannelsQuery } from '../../graphql/queries/__generated__/getPeerChannels.generated';
+import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
 import { getErrorContent } from '../../utils/error';
 
 type Offer = {
@@ -32,6 +33,7 @@ type Offer = {
 type TradeSheetProps = {
   offer: Offer | null;
   assetId: string;
+  tapdAssetId: string;
   assetSymbol: string;
   assetPrecision: number;
   transactionType: TapTransactionType;
@@ -39,15 +41,16 @@ type TradeSheetProps = {
   onOpenChange: (open: boolean) => void;
 };
 
-const satsToAsset = (sats: string, rate: string): string => {
+// Converts display asset units to sats using the atomic rate
+const displayAssetToSats = (
+  displayAmount: string,
+  rate: string,
+  precision: number
+): string => {
   if (!rate || rate === '0') return '0';
-  return ((BigInt(sats) * BigInt(rate)) / BigInt(100_000_000)).toString();
-};
-
-const assetToSats = (assetAmount: string, rate: string): string => {
-  if (!rate || rate === '0') return '0';
+  const multiplier = BigInt(10 ** precision);
   return (
-    (BigInt(assetAmount) * BigInt(100_000_000)) /
+    (BigInt(displayAmount) * multiplier * BigInt(100_000_000)) /
     BigInt(rate)
   ).toString();
 };
@@ -61,6 +64,7 @@ const atomicToDisplay = (atomic: string, precision: number): string => {
 export const TradeSheet: FC<TradeSheetProps> = ({
   offer,
   assetId,
+  tapdAssetId,
   assetSymbol,
   assetPrecision,
   transactionType,
@@ -75,7 +79,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       const result = data.setupTradePartner;
       if (result.success) {
         const amountLabel = result.magmaOrderAmountAsset
-          ? `${result.magmaOrderAmountAsset} ${assetSymbol}`
+          ? `${atomicToDisplay(result.magmaOrderAmountAsset, assetPrecision)} ${assetSymbol}`
           : result.magmaOrderAmountSats
             ? `${Number(result.magmaOrderAmountSats).toLocaleString()} sats`
             : '';
@@ -101,6 +105,11 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       skip: !offer?.node.pubkey || !open,
     });
 
+  const { data: assetChannelsData } = useGetTapAssetChannelBalancesQuery({
+    variables: { peerPubkey: offer?.node.pubkey || '' },
+    skip: !offer?.node.pubkey || !open,
+  });
+
   if (!offer) return null;
 
   const isBuy = transactionType === TapTransactionType.Purchase;
@@ -111,36 +120,52 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const rate = offer.rate.fullAmount || '0';
 
   const peerChannels = channelsData?.getChannels || [];
-  const totalLocalBalance = peerChannels.reduce(
+  const allAssetChannels = assetChannelsData?.getTapAssetChannelBalances || [];
+  const assetChannels = allAssetChannels.filter(
+    ac => ac.assetId === tapdAssetId
+  );
+
+  const assetChannelPoints = new Set(
+    allAssetChannels.map(ac => ac.channelPoint)
+  );
+
+  const btcOnlyChannels = peerChannels.filter(
+    ch => !assetChannelPoints.has(`${ch.transaction_id}:${ch.transaction_vout}`)
+  );
+
+  const totalBtcLocal = btcOnlyChannels.reduce(
     (sum, ch) => sum + ch.local_balance,
     0
   );
-  const totalRemoteBalance = peerChannels.reduce(
+  const totalAssetLocal = assetChannels.reduce(
+    (sum, ac) => sum + BigInt(ac.localBalance),
+    BigInt(0)
+  );
+  const totalAssetRemote = assetChannels.reduce(
+    (sum, ac) => sum + BigInt(ac.remoteBalance),
+    BigInt(0)
+  );
+  const totalBtcRemote = btcOnlyChannels.reduce(
     (sum, ch) => sum + ch.remote_balance,
     0
   );
 
-  // For PURCHASE (buying asset): outbound = BTC (local), inbound = asset (remote)
-  // For SALE (selling asset): outbound = asset (local), inbound = BTC (remote)
-  const hasOutbound = totalLocalBalance > 0;
-  const hasInbound = totalRemoteBalance > 0;
+  const hasOutbound = isBuy ? totalBtcLocal > 0 : totalAssetLocal > BigInt(0);
+  const hasInbound = isBuy ? totalAssetRemote > BigInt(0) : totalBtcRemote > 0;
 
   const isValid = amount && Number(amount) > 0;
 
-  // Compute both channel sizes from the input
-  // PURCHASE: input is sats → outbound BTC = sats, Magma inbound asset = sats * rate / 1e8
-  // SALE: input is asset → outbound asset = amount, Magma inbound BTC = amount * 1e8 / rate
-  const outboundSize = amount;
-  const outboundUnit = isBuy ? 'sats' : assetSymbol;
-  const magmaSizeRaw = isValid
-    ? isBuy
-      ? satsToAsset(amount, rate)
-      : assetToSats(amount, rate)
+  // Input is always in asset display units
+  // rate is in atomic-asset-units per BTC (full_amount from trade API)
+  const satsAmount = isValid
+    ? displayAssetToSats(amount, rate, assetPrecision)
     : '0';
-  // satsToAsset returns atomic asset units — convert to display units
-  const magmaSize = isBuy
-    ? atomicToDisplay(magmaSizeRaw, assetPrecision)
-    : magmaSizeRaw;
+
+  // For channel setup: BUY outbound = BTC (sats), magma inbound = asset
+  // SELL outbound = asset, magma inbound = BTC (sats)
+  const outboundSize = isBuy ? satsAmount : amount;
+  const outboundUnit = isBuy ? 'sats' : assetSymbol;
+  const magmaSize = isBuy ? amount : satsAmount;
   const magmaUnit = isBuy ? assetSymbol : 'sats';
 
   const handleSubmit = () => {
@@ -151,8 +176,9 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         input: {
           magmaOfferId: offer.magmaOfferId,
           assetId,
-          amount,
+          amount: isBuy ? satsAmount : amount,
           assetRate: rate,
+          assetPrecision,
           transactionType,
           swapNodePubkey: offer.node.pubkey,
           swapNodeSockets: offer.node.sockets,
@@ -190,18 +216,22 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 <span className="text-muted-foreground">Node</span>
                 <span className="font-mono text-xs">{nodeLabel}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Rate</span>
-                <span>
-                  {rateDisplay} {assetSymbol}/BTC
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Available</span>
-                <span>
-                  {Number(availableDisplay || 0).toLocaleString()} {assetSymbol}
-                </span>
-              </div>
+              {rateDisplay && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Rate</span>
+                  <span>
+                    {rateDisplay} {assetSymbol}/BTC
+                  </span>
+                </div>
+              )}
+              {availableDisplay && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Available</span>
+                  <span>
+                    {Number(availableDisplay).toLocaleString()} {assetSymbol}
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Existing channels with peer */}
@@ -212,13 +242,13 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                   <Loader2 className="h-3 w-3 animate-spin" />
                   Checking channels...
                 </div>
-              ) : peerChannels.length === 0 ? (
+              ) : btcOnlyChannels.length === 0 && assetChannels.length === 0 ? (
                 <div className="text-xs text-muted-foreground">
                   No channels with this node
                 </div>
               ) : (
                 <div className="flex flex-col gap-1 text-xs">
-                  {peerChannels.map(ch => (
+                  {btcOnlyChannels.map(ch => (
                     <div
                       key={ch.id}
                       className="flex justify-between rounded-md border border-border bg-muted/20 px-2 py-1.5"
@@ -229,6 +259,21 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       <span>
                         {Number(ch.local_balance).toLocaleString()} /{' '}
                         {Number(ch.remote_balance).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                  {assetChannels.map(ac => (
+                    <div
+                      key={ac.channelPoint}
+                      className="flex justify-between rounded-md border border-border bg-muted/20 px-2 py-1.5"
+                    >
+                      <span className="text-muted-foreground">
+                        {atomicToDisplay(ac.capacity, assetPrecision)}{' '}
+                        {assetSymbol}
+                      </span>
+                      <span>
+                        {atomicToDisplay(ac.localBalance, assetPrecision)} /{' '}
+                        {atomicToDisplay(ac.remoteBalance, assetPrecision)}
                       </span>
                     </div>
                   ))}
@@ -251,7 +296,9 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       Outbound ({isBuy ? 'BTC' : assetSymbol})
                       {hasOutbound ? (
                         <span className="text-muted-foreground ml-1">
-                          {totalLocalBalance.toLocaleString()} sats
+                          {isBuy
+                            ? `${totalBtcLocal.toLocaleString()} sats`
+                            : `${atomicToDisplay(totalAssetLocal.toString(), assetPrecision)} ${assetSymbol}`}
                         </span>
                       ) : (
                         <span className="text-yellow-500 ml-1">missing</span>
@@ -268,7 +315,9 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       Inbound ({isBuy ? assetSymbol : 'BTC'})
                       {hasInbound ? (
                         <span className="text-muted-foreground ml-1">
-                          {totalRemoteBalance.toLocaleString()} sats
+                          {isBuy
+                            ? `${atomicToDisplay(totalAssetRemote.toString(), assetPrecision)} ${assetSymbol}`
+                            : `${totalBtcRemote.toLocaleString()} sats`}
                         </span>
                       ) : (
                         <span className="text-yellow-500 ml-1">
@@ -286,7 +335,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 htmlFor="trade-amount"
                 className="text-sm text-muted-foreground"
               >
-                Amount ({isBuy ? 'sats' : assetSymbol})
+                Amount ({assetSymbol})
               </label>
               <div className="relative">
                 <input
@@ -301,7 +350,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                   className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-16"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-                  {isBuy ? 'sats' : assetSymbol}
+                  {assetSymbol}
                 </span>
               </div>
             </div>
@@ -315,12 +364,14 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 <span className="text-muted-foreground">Node</span>
                 <span className="font-mono text-xs">{nodeLabel}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Rate</span>
-                <span>
-                  {rateDisplay} {assetSymbol}/BTC
-                </span>
-              </div>
+              {rateDisplay && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Rate</span>
+                  <span>
+                    {rateDisplay} {assetSymbol}/BTC
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col gap-2">

@@ -286,8 +286,12 @@ export class MagmaResolver {
         > => {
           const magmaUrl = this.configService.get<string>('urls.amboss.magma');
 
-          // For PURCHASE: user inputs sats, Magma opens inbound asset channel → convert to asset units
-          // For SALE: user inputs asset amount, Magma opens inbound BTC channel → convert to sats
+          // rate (assetRate) is in atomic-asset-units per BTC (full_amount from trade API)
+          // For PURCHASE: user inputs sats → Magma inbound asset channel size in atomic units
+          //   atomic_asset = sats * rate / 1e8
+          // For SALE: user inputs display asset units → Magma inbound BTC channel size in sats
+          //   Convert display units to atomic first, then to sats: sats = (amount * 10^precision) * 1e8 / rate
+          const precisionMultiplier = BigInt(10 ** input.assetPrecision);
           const magmaSize =
             input.transactionType === TapTransactionType.PURCHASE
               ? (
@@ -295,7 +299,9 @@ export class MagmaResolver {
                   BigInt(100_000_000)
                 ).toString()
               : (
-                  (BigInt(input.amount) * BigInt(100_000_000)) /
+                  (BigInt(input.amount) *
+                    precisionMultiplier *
+                    BigInt(100_000_000)) /
                   BigInt(input.assetRate)
                 ).toString();
 

@@ -17,6 +17,8 @@ export type GetPeerChannelsQuery = {
     remote_balance: number;
     is_active: boolean;
     partner_public_key: string;
+    transaction_id: string;
+    transaction_vout: number;
   }>;
 };
 
@@ -29,6 +31,8 @@ export const GetPeerChannelsDocument = gql`
       remote_balance
       is_active
       partner_public_key
+      transaction_id
+      transaction_vout
     }
   }
 `;
