@@ -20,19 +20,8 @@ export const getOffersQuery = gql`
             display_amount
             full_amount
           }
-          asset {
-            id
-            symbol
-            description
-            precision
-            type
-          }
         }
         total_count
-        pagination {
-          limit
-          offset
-        }
       }
     }
   }

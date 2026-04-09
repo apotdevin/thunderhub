@@ -10,10 +10,7 @@ jest.mock('../../node/tapd/tapd-node.service', () => ({
 jest.mock('../../node/node.service', () => ({
   NodeService: jest.fn(),
 }));
-jest.mock('../amboss/amboss.service', () => ({
-  AmbossService: jest.fn(),
-  ONE_MONTH_SECONDS: 2592000,
-}));
+
 jest.mock('../../security/security.decorators', () => ({
   CurrentUser: () => () => undefined,
 }));
@@ -39,7 +36,6 @@ describe('MagmaResolver', () => {
       {} as never,
       {} as never,
       mockFetchService as never,
-      {} as never,
       mockConfigService as never,
       mockLogger as never
     );

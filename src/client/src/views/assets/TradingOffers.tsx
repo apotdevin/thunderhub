@@ -157,12 +157,13 @@ export const TradingOffers: FC = () => {
                   const selected = allSupported.find(
                     a => a.id === selectedAsset
                   );
-                  if (
-                    !selected?.groupKey ||
-                    !ownedGroupKeys.has(selected.groupKey)
-                  ) {
-                    setSelectedAsset('');
-                  }
+                  const isOwned =
+                    (selected?.groupKey &&
+                      ownedGroupKeys.has(selected.groupKey)) ||
+                    (!selected?.groupKey &&
+                      selected?.assetId &&
+                      ownedAssetIds.has(selected.assetId));
+                  if (!isOwned) setSelectedAsset('');
                 }
               }}
               className={cn(

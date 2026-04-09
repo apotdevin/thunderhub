@@ -9,7 +9,6 @@ import { ContextType } from '../../../app.module';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
 import { NodeService } from '../../node/node.service';
 import { FetchService } from '../../fetch/fetch.service';
-import { AmbossService } from '../amboss/amboss.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { toWithError } from '../../../utils/async';
@@ -27,6 +26,40 @@ import {
   getSupportedAssetsQuery,
   createMagmaOrderMutation,
 } from './magma.gql';
+
+/**
+ * Computes the Magma channel order size from the user-facing amount.
+ *
+ * The Magma "size" field semantics differ by direction:
+ *   - PURCHASE: atomic asset units (rate is atomic-assets-per-BTC)
+ *   - SALE: sats (converting display asset units via the rate)
+ *
+ * When `skipOutboundChannel` is true the client already passed the amount
+ * in atomic asset units directly (avoids the sats round-trip rounding error).
+ */
+function computeMagmaOrderSize(
+  transactionType: TapTransactionType,
+  amount: string,
+  assetRate: string,
+  assetPrecision: number,
+  skipOutboundChannel?: boolean
+): string {
+  if (transactionType === TapTransactionType.PURCHASE) {
+    if (skipOutboundChannel) return amount;
+    // sats * rate / 1e8 = atomic asset units
+    return (
+      (BigInt(amount) * BigInt(assetRate)) /
+      BigInt(100_000_000)
+    ).toString();
+  }
+
+  // SALE: display_amount * 10^precision * 1e8 / rate = sats
+  const precisionMultiplier = BigInt(10 ** assetPrecision);
+  return (
+    (BigInt(amount) * precisionMultiplier * BigInt(100_000_000)) /
+    BigInt(assetRate)
+  ).toString();
+}
 
 // Internal shapes matching the trade API GraphQL responses
 
@@ -53,7 +86,6 @@ export class MagmaResolver {
     private tapdNodeService: TapdNodeService,
     private nodeService: NodeService,
     private fetchService: FetchService,
-    private ambossService: AmbossService,
     private configService: ConfigService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
@@ -261,25 +293,13 @@ export class MagmaResolver {
         > => {
           const magmaUrl = this.configService.get<string>('urls.amboss.magma');
 
-          // rate (assetRate) is in atomic-asset-units per BTC (full_amount from trade API)
-          // For PURCHASE + skipOutboundChannel: amount is already atomic asset units (avoids rounding)
-          // For PURCHASE normal: user inputs sats → atomic_asset = sats * rate / 1e8
-          // For SALE: user inputs display asset units → sats = (amount * 10^precision) * 1e8 / rate
-          const precisionMultiplier = BigInt(10 ** input.assetPrecision);
-          const magmaSize =
-            input.transactionType === TapTransactionType.PURCHASE
-              ? input.skipOutboundChannel
-                ? input.amount
-                : (
-                    (BigInt(input.amount) * BigInt(input.assetRate)) /
-                    BigInt(100_000_000)
-                  ).toString()
-              : (
-                  (BigInt(input.amount) *
-                    precisionMultiplier *
-                    BigInt(100_000_000)) /
-                  BigInt(input.assetRate)
-                ).toString();
+          const magmaSize = computeMagmaOrderSize(
+            input.transactionType,
+            input.amount,
+            input.assetRate,
+            input.assetPrecision,
+            input.skipOutboundChannel
+          );
           const { data, error } =
             await this.fetchService.graphqlFetchWithProxy<{
               market: {
