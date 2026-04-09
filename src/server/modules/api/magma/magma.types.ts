@@ -213,9 +213,6 @@ export class SetupTradePartnerResult {
   magmaOrderAmountSats?: string;
 
   @Field({ nullable: true })
-  magmaOrderAmountAsset?: string;
-
-  @Field({ nullable: true })
   magmaOrderFeeSats?: string;
 
   @Field({ nullable: true })
@@ -234,7 +231,6 @@ export type SetupTradePartnerAuto = {
     status: string;
     invoice: string;
     amountSats?: string;
-    amountAsset?: string;
     feeSats?: number;
   };
   payMagma: void;

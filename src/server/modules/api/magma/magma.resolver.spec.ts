@@ -3,6 +3,7 @@ import {
   TapOfferSortBy,
   TapOfferSortDir,
 } from './magma.types';
+import { UserId } from '../../security/security.types';
 
 jest.mock('../../node/tapd/tapd-node.service', () => ({
   TapdNodeService: jest.fn(),
@@ -19,12 +20,12 @@ jest.mock('../../security/security.types', () => ({}));
 import { MagmaResolver } from './magma.resolver';
 
 describe('MagmaResolver', () => {
-  const userId = { id: 'test-user-id' } as any;
+  const userId = { id: 'test-user-id' } as UserId;
   const tradeUrl = 'http://trade.example.com/graphql';
   const ambossContext = { ambossAuth: 'token123' };
 
   const mockFetchService = { graphqlFetchWithProxy: jest.fn() };
-  const mockConfigService = { get: jest.fn() };
+  const mockConfigService = { get: jest.fn(), getOrThrow: jest.fn() };
   const mockLogger = { error: jest.fn(), warn: jest.fn(), info: jest.fn() };
 
   let resolver: MagmaResolver;
@@ -312,7 +313,7 @@ describe('MagmaResolver', () => {
         outputIndex: 1,
       });
 
-      mockConfigService.get.mockImplementation((key: string) => {
+      mockConfigService.getOrThrow.mockImplementation((key: string) => {
         if (key === 'urls.amboss.magma') return magmaUrl;
         return tradeUrl;
       });

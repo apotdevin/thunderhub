@@ -128,7 +128,14 @@ export class MagmaResolver {
     });
 
     if (error || !data?.public?.offers) {
-      if (error) this.logger.error('Error fetching trade offers', { error });
+      if (error) {
+        this.logger.error('Error fetching trade offers', { error });
+      } else {
+        this.logger.warn(
+          'Trade API returned unexpected data shape for offers',
+          { data }
+        );
+      }
       return { list: [], totalCount: 0 };
     }
 
@@ -180,8 +187,14 @@ export class MagmaResolver {
     }>(tradeUrl, getSupportedAssetsQuery, undefined, headers);
 
     if (error || !data?.public?.assets?.supported) {
-      if (error)
+      if (error) {
         this.logger.error('Error fetching supported assets', { error });
+      } else {
+        this.logger.warn(
+          'Trade API returned unexpected data shape for supported assets',
+          { data }
+        );
+      }
       return { list: [], totalCount: 0 };
     }
 
@@ -211,6 +224,11 @@ export class MagmaResolver {
   ): Promise<SetupTradePartnerResult> {
     const result = await auto<SetupTradePartnerAuto>({
       validate: async (): Promise<SetupTradePartnerAuto['validate']> => {
+        if (!ambossAuth) {
+          throw new GraphQLError(
+            'Amboss authentication is required to set up a trade partner'
+          );
+        }
         if (input.transactionType == TapTransactionType.SALE) {
           throw new GraphQLError(`Selling not implemented yet`);
         }
@@ -233,7 +251,7 @@ export class MagmaResolver {
           this.nodeService.getWalletInfo(user.id)
         );
         if (error || !info) {
-          if (error) this.logger.error(error);
+          this.logger.error('Failed to get node wallet info', { error });
           throw new GraphQLError('Error getting node information');
         }
         return { publicKey: info.public_key };
@@ -272,8 +290,9 @@ export class MagmaResolver {
             if (!err) return;
           }
 
-          this.logger.debug('Peer connection attempts failed — continuing', {
+          this.logger.warn('All peer connection attempts failed — continuing', {
             pubkey: input.swapNodePubkey,
+            attemptedSockets: sockets,
           });
         },
       ],
@@ -286,7 +305,8 @@ export class MagmaResolver {
         }: Pick<SetupTradePartnerAuto, 'nodeInfo'>): Promise<
           SetupTradePartnerAuto['magmaOrder']
         > => {
-          const magmaUrl = this.configService.get<string>('urls.amboss.magma');
+          const magmaUrl =
+            this.configService.getOrThrow<string>('urls.amboss.magma');
 
           const magmaSize = computeMagmaOrderSize(
             input.transactionType,
@@ -376,15 +396,17 @@ export class MagmaResolver {
           // If pay() fails immediately, the payment race leg rejects and we
           // surface the error. Otherwise the channel-opening leg wins.
 
+          const payPromise = this.nodeService.pay(user.id, {
+            request: magmaOrder.invoice,
+          });
+
           // Only rejects on immediate payment failure; never resolves
           // (payment confirmation happens long after we've returned).
           const payFailureGuard = new Promise<never>((_, reject) => {
-            this.nodeService
-              .pay(user.id, { request: magmaOrder.invoice })
-              .catch(err => {
-                this.logger.error('Failed to pay Magma invoice', { err });
-                reject(new GraphQLError('Failed to pay Magma invoice'));
-              });
+            payPromise.catch(err => {
+              this.logger.error('Failed to pay Magma invoice', { err });
+              reject(new GraphQLError('Failed to pay Magma invoice'));
+            });
           });
 
           await Promise.race([
@@ -395,6 +417,22 @@ export class MagmaResolver {
             ),
             payFailureGuard,
           ]);
+
+          // Suppress the now-detached payFailureGuard rejection and log the
+          // eventual settlement outcome for observability.
+          payFailureGuard.catch(() => {});
+          payPromise
+            .then(() => {
+              this.logger.info('Magma HODL invoice settled', {
+                orderId: magmaOrder.id,
+              });
+            })
+            .catch(err => {
+              this.logger.error(
+                'Magma HODL invoice failed after channel detection',
+                { orderId: magmaOrder.id, err }
+              );
+            });
 
           this.logger.info('Magma channel opening detected', {
             orderId: magmaOrder.id,
@@ -462,7 +500,6 @@ export class MagmaResolver {
       magmaOrderId: result.magmaOrder.id,
       magmaOrderStatus: result.magmaOrder.status,
       magmaOrderAmountSats: result.magmaOrder.amountSats,
-      magmaOrderAmountAsset: result.magmaOrder.amountAsset,
       magmaOrderFeeSats:
         result.magmaOrder.feeSats != null
           ? String(result.magmaOrder.feeSats)
