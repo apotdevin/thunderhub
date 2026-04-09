@@ -22,6 +22,7 @@ import { InvoicesModule } from './invoices/invoices.module';
 import { BoltzModule } from './boltz/boltz.module';
 import { UserConfigModule } from './userConfig/userConfig.module';
 import { TapdApiModule } from './tapd/tapd.module';
+import { MagmaModule } from './magma/magma.module';
 import { PublicModule } from './public/public.module';
 
 @Module({
@@ -49,6 +50,7 @@ import { PublicModule } from './public/public.module';
     InvoicesModule,
     BoltzModule,
     TapdApiModule,
+    MagmaModule,
     PublicModule,
   ],
 })

@@ -65,12 +65,17 @@ export class ChannelsResolver {
   @Query(() => [Channel])
   async getChannels(
     @CurrentUser() { id }: UserId,
-    @Args('active', { nullable: true }) is_active?: boolean
+    @Args('active', { nullable: true }) is_active?: boolean,
+    @Args('partner_public_key', { nullable: true })
+    partner_public_key?: string
   ) {
     const { public_key, current_block_height } =
       await this.nodeService.getWalletInfo(id);
 
-    const { channels } = await this.nodeService.getChannels(id, { is_active });
+    const { channels } = await this.nodeService.getChannels(id, {
+      is_active,
+      ...(partner_public_key ? { partner_public_key } : {}),
+    });
 
     return channels.map(channel => ({
       ...channel,

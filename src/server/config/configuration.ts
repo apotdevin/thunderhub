@@ -125,7 +125,8 @@ const getValidTradeUrl = (
   try {
     const parsed = new URL(url);
     if (isProduction && parsed.protocol !== 'https:') return '';
-    if (!ALLOWED_TRADE_HOSTS.includes(parsed.hostname)) return '';
+    if (isProduction && !ALLOWED_TRADE_HOSTS.includes(parsed.hostname))
+      return '';
     return url;
   } catch {
     return '';
@@ -152,7 +153,7 @@ export default (): ConfigType => {
       space: 'https://api.amboss.space/graphql',
       auth:
         process.env.AMBOSS_AUTH_URL || 'https://account.amboss.tech/graphql',
-      magma: 'https://magma.amboss.tech/graphql',
+      magma: process.env.MAGMA_API_URL || 'https://magma.amboss.tech/graphql',
     },
     fees: `${mempool}/api/v1/fees/recommended`,
     blockHeight: `${mempool}/api/blocks/tip/height`,
