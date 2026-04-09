@@ -19,8 +19,10 @@ import { Button } from '@/components/ui/button';
 import { TapTransactionType } from '../../graphql/types';
 import { useSetupTradePartnerMutation } from '../../graphql/mutations/__generated__/setupTradePartner.generated';
 import { useOpenChannelMutation } from '../../graphql/mutations/__generated__/openChannel.generated';
+import { useExecuteTradeMutation } from '../../graphql/mutations/__generated__/executeTrade.generated';
 import { useGetPeerChannelsQuery } from '../../graphql/queries/__generated__/getPeerChannels.generated';
 import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
+import { useGetTradeQuoteLazyQuery } from '../../graphql/queries/__generated__/getTradeQuote.generated';
 import { getErrorContent } from '../../utils/error';
 import { atomicToDisplay, displayAssetToSats } from './trade.helpers';
 
@@ -44,6 +46,30 @@ type TradeSheetProps = {
   onOpenChange: (open: boolean) => void;
 };
 
+// Converts a decimal display string (e.g. "1.5") to atomic BigInt units
+const displayToAtomic = (display: string, precision: number): bigint => {
+  const [whole, frac = ''] = display.split('.');
+  const padded = frac.padEnd(precision, '0').slice(0, precision);
+  return BigInt(whole || '0') * BigInt(10 ** precision) + BigInt(padded || '0');
+};
+
+// Converts display asset units to sats using the atomic rate
+const displayAssetToSats = (
+  displayAmount: string,
+  rate: string,
+  precision: number
+): string => {
+  if (!rate || rate === '0') return '0';
+  const atomic = displayToAtomic(displayAmount, precision);
+  return ((atomic * BigInt(100_000_000)) / BigInt(rate)).toString();
+};
+
+const atomicToDisplay = (atomic: string, precision: number): string => {
+  if (precision === 0) return atomic;
+  const divisor = 10 ** precision;
+  return (Number(atomic) / divisor).toFixed(precision);
+};
+
 export const TradeSheet: FC<TradeSheetProps> = ({
   offer,
   assetId,
@@ -57,6 +83,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
 }) => {
   const [amount, setAmount] = useState('');
   const [step, setStep] = useState<'input' | 'confirm'>('input');
+  const [quotedSats, setQuotedSats] = useState<string | null>(null);
 
   const [openChannel, { loading: openChannelLoading }] = useOpenChannelMutation(
     {
@@ -91,12 +118,35 @@ export const TradeSheet: FC<TradeSheetProps> = ({
           onOpenChange(false);
           setAmount('');
           setStep('input');
+          setQuotedSats(null);
         }
       },
       onError: err => toast.error(getErrorContent(err)),
     });
 
-  const loading = openChannelLoading || setupLoading;
+  const [executeTrade, { loading: tradeLoading }] = useExecuteTradeMutation({
+    onCompleted: data => {
+      const result = data.executeTrade;
+      if (result.success) {
+        const satsInfo = result.amountSats
+          ? ` for ${Number(result.amountSats).toLocaleString()} sats`
+          : '';
+        const feeLabel = result.feeSats
+          ? ` (fee: ${Number(result.feeSats).toLocaleString()} sats)`
+          : '';
+        toast.success(`Trade executed successfully${satsInfo}${feeLabel}`);
+        onOpenChange(false);
+        setAmount('');
+        setStep('input');
+        setQuotedSats(null);
+      }
+    },
+    onError: err => toast.error(getErrorContent(err)),
+  });
+
+  const [fetchQuote, { loading: quoteLoading }] = useGetTradeQuoteLazyQuery({
+    fetchPolicy: 'network-only',
+  });
 
   const { data: channelsData, loading: channelsLoading } =
     useGetPeerChannelsQuery({
@@ -168,7 +218,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
 
   const atomicTradeAmount =
     isValid && !needsOnlyOutboundBtc
-      ? BigInt(amount) * BigInt(10 ** assetPrecision)
+      ? displayToAtomic(amount, assetPrecision)
       : BigInt(0);
 
   // Amount-aware capacity checks: passes only if existing channels cover the
@@ -193,6 +243,17 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         ? totalAssetRemote > BigInt(0)
         : totalBtcRemote > 0;
 
+  const readyToTrade = hasOutbound && hasInbound;
+  const loading = openChannelLoading || setupLoading || tradeLoading;
+  const hasRate = !!rate && rate !== '0';
+
+  const displaySats = quotedSats || (hasRate ? satsAmount : null);
+  const satsLabel = displaySats
+    ? `${Number(displaySats).toLocaleString()} sats`
+    : 'fetching quote...';
+  const sendLabel = isBuy ? satsLabel : `${amount} ${assetSymbol}`;
+  const receiveLabel = isBuy ? `${amount} ${assetSymbol}` : satsLabel;
+
   // For channel setup: BUY outbound = BTC (sats), magma inbound = asset
   // SELL outbound = asset, magma inbound = BTC (sats)
   const outboundSize = isAssetPurchase ? satsAmount : amount;
@@ -212,6 +273,13 @@ export const TradeSheet: FC<TradeSheetProps> = ({
           },
         },
       });
+      return;
+    }
+
+    if (!offer.magmaOfferId) {
+      toast.error(
+        'Channel setup requires a Magma offer — select a peer from the offers list'
+      );
       return;
     }
 
@@ -243,10 +311,52 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     });
   };
 
+  const handleReviewTrade = async () => {
+    if (!amount || !offer.node.pubkey) return;
+    setQuotedSats(null);
+    setStep('confirm');
+    const assetAtomicAmount = String(displayToAtomic(amount, assetPrecision));
+    const { data, error } = await fetchQuote({
+      variables: {
+        input: {
+          tapdAssetId,
+          assetAmount: assetAtomicAmount,
+          transactionType,
+          peerPubkey: offer.node.pubkey,
+        },
+      },
+    });
+    if (error) {
+      toast.error(getErrorContent(error));
+      setStep('input');
+      return;
+    }
+    if (data?.getTradeQuote.amountSats) {
+      setQuotedSats(data.getTradeQuote.amountSats);
+    }
+  };
+
+  const handleTrade = () => {
+    if (!amount || !offer.node.pubkey) return;
+    const assetAtomicAmount = String(displayToAtomic(amount, assetPrecision));
+    executeTrade({
+      variables: {
+        input: {
+          tapdAssetId,
+          assetAmount: assetAtomicAmount,
+          satsAmount: displaySats || '0',
+          transactionType,
+          peerPubkey: offer.node.pubkey,
+        },
+      },
+    });
+  };
+
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       setStep('input');
       setAmount('');
+      setQuotedSats(null);
     }
     onOpenChange(open);
   };
@@ -259,12 +369,14 @@ export const TradeSheet: FC<TradeSheetProps> = ({
             {isAssetPurchase ? 'Buy' : 'Sell'} {assetSymbol}
           </SheetTitle>
           <SheetDescription>
-            {hasOutbound && hasInbound
-              ? `Ready to trade with ${nodeLabel}`
-              : step === 'input'
-                ? needsOnlyOutboundBtc
+            {step === 'input'
+              ? readyToTrade
+                ? `Trade with ${nodeLabel}`
+                : needsOnlyOutboundBtc
                   ? `Open outbound BTC channel to ${nodeLabel}`
                   : `Set up trading channels with ${nodeLabel}`
+              : readyToTrade
+                ? 'Review trade before executing'
                 : needsOnlyOutboundBtc
                   ? 'Review BTC channel before opening'
                   : 'Review channel setup before proceeding'}
@@ -392,39 +504,39 @@ export const TradeSheet: FC<TradeSheetProps> = ({
               </div>
             )}
 
-            {!hasOutbound || !hasInbound ? (
-              <div className="flex flex-col gap-1.5">
-                <label
-                  htmlFor="trade-amount"
-                  className="text-sm text-muted-foreground"
-                >
-                  {needsOnlyOutboundBtc
-                    ? 'Channel size (sats)'
-                    : `Amount (${assetSymbol})`}
-                </label>
-                <div className="relative">
-                  <input
-                    id="trade-amount"
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="Enter amount"
-                    value={amount}
-                    onChange={e =>
-                      setAmount(e.target.value.replace(/[^0-9]/g, ''))
-                    }
-                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-16"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-                    {needsOnlyOutboundBtc ? 'sats' : assetSymbol}
-                  </span>
-                </div>
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="trade-amount"
+                className="text-sm text-muted-foreground"
+              >
+                {needsOnlyOutboundBtc
+                  ? 'Channel size (sats)'
+                  : `Amount (${assetSymbol})`}
+              </label>
+              <div className="relative">
+                <input
+                  id="trade-amount"
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="Enter amount"
+                  value={amount}
+                  onChange={e => {
+                    const v = e.target.value.replace(/[^0-9.]/g, '');
+                    // Allow only one decimal point
+                    const parts = v.split('.');
+                    setAmount(
+                      parts.length > 2
+                        ? `${parts[0]}.${parts.slice(1).join('')}`
+                        : v
+                    );
+                  }}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-16"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+                  {needsOnlyOutboundBtc ? 'sats' : assetSymbol}
+                </span>
               </div>
-            ) : (
-              <div className="rounded-md border border-green-500/20 bg-green-500/5 p-3 flex items-center gap-2 text-sm text-green-500">
-                <CheckCircle2 className="h-4 w-4 shrink-0" />
-                Ready for trading
-              </div>
-            )}
+            </div>
           </div>
         )}
 
@@ -445,100 +557,155 @@ export const TradeSheet: FC<TradeSheetProps> = ({
               )}
             </div>
 
-            <div className="flex flex-col gap-2">
-              <span className="text-sm font-medium">Channels to open</span>
+            {readyToTrade ? (
               <div className="flex flex-col gap-2">
-                {needsOnlyOutboundBtc ? (
+                <span className="text-sm font-medium">Trade summary</span>
+                <div className="flex flex-col gap-2">
                   <div className="rounded-md border border-border bg-muted/20 p-3">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                       <ArrowRight className="h-3.5 w-3.5" />
                       <span className="font-medium text-foreground">
-                        Outbound BTC channel
+                        You send
+                      </span>
+                    </div>
+                    <div className="text-sm font-mono ml-5.5">{sendLabel}</div>
+                  </div>
+                  <div className="rounded-md border border-border bg-muted/20 p-3">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                      <ArrowLeft className="h-3.5 w-3.5" />
+                      <span className="font-medium text-foreground">
+                        You receive
                       </span>
                     </div>
                     <div className="text-sm font-mono ml-5.5">
-                      {Number(amount).toLocaleString()} sats
+                      {receiveLabel}
                     </div>
                   </div>
-                ) : (
-                  <>
-                    {!hasOutbound && (
-                      <div className="rounded-md border border-border bg-muted/20 p-3">
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                          <ArrowRight className="h-3.5 w-3.5" />
-                          <span className="font-medium text-foreground">
-                            Outbound {isAssetPurchase ? 'BTC' : assetSymbol}{' '}
-                            channel
-                          </span>
-                        </div>
-                        <div className="text-sm font-mono ml-5.5">
-                          {Number(outboundSize).toLocaleString()} {outboundUnit}
-                        </div>
-                      </div>
-                    )}
-                    {!hasInbound && (
-                      <div className="rounded-md border border-border bg-muted/20 p-3">
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                          <ArrowLeft className="h-3.5 w-3.5" />
-                          <span className="font-medium text-foreground">
-                            Inbound {isAssetPurchase ? assetSymbol : 'BTC'}{' '}
-                            channel (Magma)
-                          </span>
-                        </div>
-                        <div className="text-sm font-mono ml-5.5">
-                          {Number(magmaSize).toLocaleString()} {magmaUnit}
-                        </div>
-                      </div>
-                    )}
-                    {hasOutbound && hasInbound && (
-                      <div className="rounded-md border border-green-500/20 bg-green-500/5 p-3 text-sm">
-                        Both channels already exist — ready to trade
-                      </div>
-                    )}
-                  </>
-                )}
+                </div>
               </div>
-            </div>
+            ) : needsOnlyOutboundBtc ? (
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-medium">Channel to open</span>
+                <div className="rounded-md border border-border bg-muted/20 p-3">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                    <span className="font-medium text-foreground">
+                      Outbound BTC channel
+                    </span>
+                  </div>
+                  <div className="text-sm font-mono ml-5.5">
+                    {Number(amount).toLocaleString()} sats
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-medium">Channels to open</span>
+                <div className="flex flex-col gap-2">
+                  {!hasOutbound && (
+                    <div className="rounded-md border border-border bg-muted/20 p-3">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                        <ArrowRight className="h-3.5 w-3.5" />
+                        <span className="font-medium text-foreground">
+                          Outbound {isBuy ? 'BTC' : assetSymbol} channel
+                        </span>
+                      </div>
+                      <div className="text-sm font-mono ml-5.5">
+                        {Number(outboundSize).toLocaleString()} {outboundUnit}
+                      </div>
+                    </div>
+                  )}
+                  {!hasInbound && (
+                    <div className="rounded-md border border-border bg-muted/20 p-3">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                        <ArrowLeft className="h-3.5 w-3.5" />
+                        <span className="font-medium text-foreground">
+                          Inbound {isBuy ? assetSymbol : 'BTC'} channel (Magma)
+                        </span>
+                      </div>
+                      <div className="text-sm font-mono ml-5.5">
+                        {Number(magmaSize).toLocaleString()} {magmaUnit}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
         <SheetFooter className="flex gap-2">
-          {(step === 'input' && !hasOutbound) ||
-          (step === 'input' && !hasInbound) ? (
+          {step === 'input' && (
             <Button
-              onClick={() => setStep('confirm')}
-              disabled={!isValid}
+              onClick={
+                readyToTrade ? handleReviewTrade : () => setStep('confirm')
+              }
+              disabled={
+                !isValid ||
+                (!readyToTrade && !needsOnlyOutboundBtc && !offer.magmaOfferId)
+              }
               className="w-full"
             >
-              {needsOnlyOutboundBtc ? 'Review Channel' : 'Review Setup'}
+              {readyToTrade
+                ? 'Review Trade'
+                : needsOnlyOutboundBtc
+                  ? 'Review Channel'
+                  : !offer.magmaOfferId
+                    ? 'No offer available for setup'
+                    : 'Review Setup'}
             </Button>
-          ) : null}
+          )}
           {step === 'confirm' && (
             <>
               <Button
                 variant="outline"
-                onClick={() => setStep('input')}
+                onClick={() => {
+                  setStep('input');
+                  setQuotedSats(null);
+                }}
                 disabled={loading}
                 className="flex-1"
               >
                 Back
               </Button>
-              <Button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="flex-1"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {needsOnlyOutboundBtc ? 'Opening...' : 'Setting up...'}
-                  </>
-                ) : needsOnlyOutboundBtc ? (
-                  'Open Channel'
-                ) : (
-                  'Confirm'
-                )}
-              </Button>
+              {readyToTrade ? (
+                <Button
+                  onClick={handleTrade}
+                  disabled={loading || quoteLoading || !displaySats}
+                  className="flex-1"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Trading...
+                    </>
+                  ) : quoteLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Getting quote...
+                    </>
+                  ) : (
+                    'Execute Trade'
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="flex-1"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {needsOnlyOutboundBtc ? 'Opening...' : 'Setting up...'}
+                    </>
+                  ) : needsOnlyOutboundBtc ? (
+                    'Open Channel'
+                  ) : (
+                    'Confirm'
+                  )}
+                </Button>
+              )}
             </>
           )}
         </SheetFooter>

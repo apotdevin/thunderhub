@@ -295,6 +295,7 @@ export class MagmaResolver {
             input.assetPrecision,
             input.skipOutboundChannel
           );
+
           const { data, error } =
             await this.fetchService.graphqlFetchWithProxy<{
               market: {
