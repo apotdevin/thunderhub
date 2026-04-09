@@ -603,6 +603,25 @@ describe('MagmaResolver', () => {
       ).rejects.toThrow('Failed to pay Magma invoice');
     });
 
+    it('does not open outbound channel when inbound channel never arrives', async () => {
+      // waitForChannelFromPeer rejects (timeout) and pay never settles
+      mockNodeService.waitForChannelFromPeer.mockRejectedValue(
+        new Error('Timed out waiting for channel from peer')
+      );
+
+      await expect(
+        setupResolver.setupTradePartner(
+          userId,
+          ambossContext as never,
+          purchaseInput
+        )
+      ).rejects.toThrow('Timed out waiting for channel from peer');
+
+      // Outbound channel must NOT have been opened
+      expect(mockNodeService.openChannel).not.toHaveBeenCalled();
+      expect(mockTapdNodeService.fundAssetChannel).not.toHaveBeenCalled();
+    });
+
     it('throws when amount is zero', async () => {
       await expect(
         setupResolver.setupTradePartner(userId, ambossContext as never, {
