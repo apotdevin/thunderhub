@@ -802,6 +802,7 @@ input SetupTradePartnerInput {
   assetPrecision: Int!
   assetRate: String!
   magmaOfferId: String!
+  skipOutboundChannel: Boolean
   swapNodePubkey: String!
   swapNodeSockets: [String!]
   transactionType: TapTransactionType!

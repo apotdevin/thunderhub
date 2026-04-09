@@ -262,24 +262,24 @@ export class MagmaResolver {
           const magmaUrl = this.configService.get<string>('urls.amboss.magma');
 
           // rate (assetRate) is in atomic-asset-units per BTC (full_amount from trade API)
-          // For PURCHASE: user inputs sats → Magma inbound asset channel size in atomic units
-          //   atomic_asset = sats * rate / 1e8
-          // For SALE: user inputs display asset units → Magma inbound BTC channel size in sats
-          //   Convert display units to atomic first, then to sats: sats = (amount * 10^precision) * 1e8 / rate
+          // For PURCHASE + skipOutboundChannel: amount is already atomic asset units (avoids rounding)
+          // For PURCHASE normal: user inputs sats → atomic_asset = sats * rate / 1e8
+          // For SALE: user inputs display asset units → sats = (amount * 10^precision) * 1e8 / rate
           const precisionMultiplier = BigInt(10 ** input.assetPrecision);
           const magmaSize =
             input.transactionType === TapTransactionType.PURCHASE
-              ? (
-                  (BigInt(input.amount) * BigInt(input.assetRate)) /
-                  BigInt(100_000_000)
-                ).toString()
+              ? input.skipOutboundChannel
+                ? input.amount
+                : (
+                    (BigInt(input.amount) * BigInt(input.assetRate)) /
+                    BigInt(100_000_000)
+                  ).toString()
               : (
                   (BigInt(input.amount) *
                     precisionMultiplier *
                     BigInt(100_000_000)) /
                   BigInt(input.assetRate)
                 ).toString();
-
           const { data, error } =
             await this.fetchService.graphqlFetchWithProxy<{
               market: {
@@ -349,19 +349,38 @@ export class MagmaResolver {
             orderId: magmaOrder.id,
           });
 
-          const [payResult, error] = await toWithError(
-            this.nodeService.pay(user.id, { request: magmaOrder.invoice })
-          );
+          // Magma uses a HODL invoice: payment stays in-flight until the
+          // inbound channel is confirmed on-chain. Waiting for pay() to
+          // resolve would block for ~10 minutes.
+          //
+          // Instead we race two signals:
+          //   1. channel_opening from the trade peer → return early (fast)
+          //   2. pay() immediate failure → surface the error (fast)
+          //
+          // If pay() fails immediately, the payment race leg rejects and we
+          // surface the error. Otherwise the channel-opening leg wins.
 
-          if (error || !payResult?.is_confirmed) {
-            this.logger.error('Failed to pay Magma invoice', {
-              error,
-              payResult,
-            });
-            throw new GraphQLError('Failed to pay Magma invoice');
-          }
+          // Only rejects on immediate payment failure; never resolves
+          // (payment confirmation happens long after we've returned).
+          const payFailureGuard = new Promise<never>((_, reject) => {
+            this.nodeService
+              .pay(user.id, { request: magmaOrder.invoice })
+              .catch(err => {
+                this.logger.error('Failed to pay Magma invoice', { err });
+                reject(new GraphQLError('Failed to pay Magma invoice'));
+              });
+          });
 
-          this.logger.info('Magma invoice paid', {
+          await Promise.race([
+            this.nodeService.waitForChannelFromPeer(
+              user.id,
+              input.swapNodePubkey,
+              120_000
+            ),
+            payFailureGuard,
+          ]);
+
+          this.logger.info('Magma channel opening detected', {
             orderId: magmaOrder.id,
           });
         },
@@ -371,6 +390,10 @@ export class MagmaResolver {
         'peer',
         'payMagma',
         async (): Promise<SetupTradePartnerAuto['outboundChannel']> => {
+          if (input.skipOutboundChannel) {
+            return undefined;
+          }
+
           if (input.transactionType === TapTransactionType.PURCHASE) {
             const [channelResult, error] = await toWithError(
               this.nodeService.openChannel(user.id, {
@@ -426,8 +449,8 @@ export class MagmaResolver {
         result.magmaOrder.feeSats != null
           ? String(result.magmaOrder.feeSats)
           : undefined,
-      outboundChannelTxid: result.outboundChannel.txid,
-      outboundChannelOutputIndex: result.outboundChannel.outputIndex,
+      outboundChannelTxid: result.outboundChannel?.txid,
+      outboundChannelOutputIndex: result.outboundChannel?.outputIndex,
     };
   }
 }

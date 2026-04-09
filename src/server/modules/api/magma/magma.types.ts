@@ -173,6 +173,14 @@ export class SetupTradePartnerInput {
 
   @Field(() => [String], { nullable: true })
   swapNodeSockets?: string[];
+
+  /**
+   * When true, skip opening the outbound channel (it already exists).
+   * In this case `amount` is the Magma order size in atomic asset units
+   * rather than sats, avoiding rounding errors from the sats round-trip.
+   */
+  @Field({ nullable: true })
+  skipOutboundChannel?: boolean;
 }
 
 @ObjectType()
@@ -215,5 +223,5 @@ export type SetupTradePartnerAuto = {
     feeSats?: number;
   };
   payMagma: void;
-  outboundChannel: { txid: string; outputIndex: number };
+  outboundChannel: { txid: string; outputIndex: number } | undefined;
 };
