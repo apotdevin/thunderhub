@@ -1185,6 +1185,7 @@ export type TradeQuoteInput = {
   assetAmount: Scalars['String']['input'];
   peerPubkey: Scalars['String']['input'];
   tapdAssetId: Scalars['String']['input'];
+  tapdGroupKey?: InputMaybe<Scalars['String']['input']>;
   transactionType: TapTransactionType;
 };
 
@@ -1200,6 +1201,7 @@ export type ExecuteTradeInput = {
   peerPubkey: Scalars['String']['input'];
   satsAmount: Scalars['String']['input'];
   tapdAssetId: Scalars['String']['input'];
+  tapdGroupKey?: InputMaybe<Scalars['String']['input']>;
   transactionType: TapTransactionType;
 };
 

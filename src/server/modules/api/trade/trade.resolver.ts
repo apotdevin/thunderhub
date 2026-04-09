@@ -70,11 +70,18 @@ export class TradeResolver {
 
     // Decode the invoice to get the sats amount
     const paymentRequest = invoice.invoiceResult?.paymentRequest || '';
-    const [decoded] = await toWithError(
+    const [decoded, decodeError] = await toWithError(
       this.nodeService.decodePaymentRequest(id, paymentRequest)
     );
 
-    const sats = decoded?.tokens != null ? String(decoded.tokens) : undefined;
+    if (decodeError || decoded == null) {
+      this.logger.error('Failed to decode asset invoice payment request', {
+        error: decodeError,
+      });
+      throw new GraphQLError('Failed to decode asset invoice');
+    }
+
+    const sats = decoded.tokens != null ? String(decoded.tokens) : undefined;
 
     return {
       amountSats: sats || '0',
@@ -113,7 +120,7 @@ export class TradeResolver {
 
     const assetAmt = BigInt(input.assetAmount);
     const coeff = BigInt(rate.coefficient);
-    const scaleMult = BigInt(10 ** rate.scale);
+    const scaleMult = BigInt(10) ** BigInt(rate.scale);
     const msatAmount = (assetAmt * BigInt(100_000_000_000) * scaleMult) / coeff;
     const sats = ((msatAmount + BigInt(999)) / BigInt(1000)).toString();
 
@@ -159,6 +166,7 @@ export class TradeResolver {
 
     this.logger.info('Asset invoice created for trade', {
       assetAmount: input.assetAmount,
+      invoicePrefix: paymentRequest.slice(0, 20),
     });
 
     // 2. Pay the asset invoice with sats via LND
@@ -169,6 +177,7 @@ export class TradeResolver {
     if (payError || !payResult?.is_confirmed) {
       this.logger.error('Failed to pay asset invoice', {
         error: payError,
+        invoicePrefix: paymentRequest.slice(0, 20),
         payResult,
       });
       throw new GraphQLError('Failed to pay asset invoice with sats');
