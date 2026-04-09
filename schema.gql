@@ -805,6 +805,8 @@ input SetupTradePartnerInput {
   skipOutboundChannel: Boolean
   swapNodePubkey: String!
   swapNodeSockets: [String!]
+  tapdAssetId: String
+  tapdGroupKey: String
   transactionType: TapTransactionType!
 }
 

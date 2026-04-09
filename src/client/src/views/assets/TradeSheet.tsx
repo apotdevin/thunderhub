@@ -35,6 +35,7 @@ type TradeSheetProps = {
   offer: Offer | null;
   assetId: string;
   tapdAssetId: string;
+  tapdGroupKey: string;
   assetSymbol: string;
   assetPrecision: number;
   transactionType: TapTransactionType;
@@ -66,6 +67,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   offer,
   assetId,
   tapdAssetId,
+  tapdGroupKey,
   assetSymbol,
   assetPrecision,
   transactionType,
@@ -137,9 +139,11 @@ export const TradeSheet: FC<TradeSheetProps> = ({
 
   const peerChannels = channelsData?.getChannels || [];
   const allAssetChannels = assetChannelsData?.getTapAssetChannelBalances || [];
-  const assetChannels = allAssetChannels.filter(
-    ac => ac.assetId === tapdAssetId
-  );
+  // When tapdAssetId is empty (grouped asset), all returned channels belong to
+  // the correct peer — the query already scopes by peerPubkey.
+  const assetChannels = tapdAssetId
+    ? allAssetChannels.filter(ac => ac.assetId === tapdAssetId)
+    : allAssetChannels;
 
   const assetChannelPoints = new Set(
     allAssetChannels.map(ac => ac.channelPoint)
@@ -166,14 +170,13 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     0
   );
 
-  const hasOutbound = isBuy ? totalBtcLocal > 0 : totalAssetLocal > BigInt(0);
-  const hasInbound = isBuy ? totalAssetRemote > BigInt(0) : totalBtcRemote > 0;
-
-  // When buying and inbound asset channel already exists but outbound BTC is
-  // missing, just open a direct BTC channel — no Magma order needed.
-  const needsOnlyOutboundBtc = isBuy && hasInbound && !hasOutbound;
-
   const isValid = amount && Number(amount) > 0;
+
+  // Determine input mode from raw capacity to avoid circular dependency.
+  // When buying with existing asset inbound but no BTC outbound, the user
+  // opens a direct BTC channel (amount = sats) instead of a Magma order.
+  const needsOnlyOutboundBtc =
+    isBuy && totalAssetRemote > BigInt(0) && !(totalBtcLocal > 0);
 
   // Input is asset display units unless needsOnlyOutboundBtc (sats directly).
   // rate is in atomic-asset-units per BTC (full_amount from trade API)
@@ -181,6 +184,33 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     isValid && !needsOnlyOutboundBtc
       ? displayAssetToSats(amount, rate, assetPrecision)
       : '0';
+
+  const atomicTradeAmount =
+    isValid && !needsOnlyOutboundBtc
+      ? BigInt(amount) * BigInt(10 ** assetPrecision)
+      : BigInt(0);
+
+  // Amount-aware capacity checks: passes only if existing channels cover the
+  // requested trade size. Falls back to > 0 when no amount has been entered.
+  const hasOutbound = needsOnlyOutboundBtc
+    ? false
+    : isValid
+      ? isBuy
+        ? totalBtcLocal >= Number(satsAmount)
+        : totalAssetLocal >= atomicTradeAmount
+      : isBuy
+        ? totalBtcLocal > 0
+        : totalAssetLocal > BigInt(0);
+
+  const hasInbound = needsOnlyOutboundBtc
+    ? true
+    : isValid
+      ? isBuy
+        ? totalAssetRemote >= atomicTradeAmount
+        : totalBtcRemote >= Number(satsAmount)
+      : isBuy
+        ? totalAssetRemote > BigInt(0)
+        : totalBtcRemote > 0;
 
   // For channel setup: BUY outbound = BTC (sats), magma inbound = asset
   // SELL outbound = asset, magma inbound = BTC (sats)
@@ -207,21 +237,24 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     // hasOutbound && !hasInbound && isBuy: skip channel opening, pass atomic
     // asset units directly to avoid sats round-trip rounding errors.
     const magmaOnlyBuy = isBuy && hasInbound === false && hasOutbound === true;
-    const atomicAmount = (
-      BigInt(amount) * BigInt(10 ** assetPrecision)
-    ).toString();
 
     setupPartner({
       variables: {
         input: {
           magmaOfferId: offer.magmaOfferId,
           assetId,
-          amount: magmaOnlyBuy ? atomicAmount : isBuy ? satsAmount : amount,
+          amount: magmaOnlyBuy
+            ? atomicTradeAmount.toString()
+            : isBuy
+              ? satsAmount
+              : amount,
           assetRate: rate,
           assetPrecision,
           transactionType,
           swapNodePubkey: offer.node.pubkey,
           swapNodeSockets: offer.node.sockets,
+          tapdAssetId: tapdAssetId || undefined,
+          tapdGroupKey: tapdGroupKey || undefined,
           skipOutboundChannel: magmaOnlyBuy || undefined,
         },
       },

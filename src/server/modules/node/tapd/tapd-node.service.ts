@@ -91,6 +91,16 @@ export class TapdNodeService {
     id: string;
     groupBy?: 'groupKey' | 'assetId';
   }): Promise<ListBalancesResponse> {
+    const account = this.getAccount(opts.id);
+    const provider = this.providerRegistry.getProvider(account.type);
+    if (!provider.getCapabilities().has(Capability.TAPROOT_ASSETS)) {
+      return {
+        assetBalances: {},
+        assetGroupBalances: {},
+        unconfirmedTransfers: '',
+      };
+    }
+
     const tapd = this.getTapd(opts.id);
     const { groupBy = 'groupKey' } = opts;
 

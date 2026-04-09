@@ -175,6 +175,21 @@ export class SetupTradePartnerInput {
   swapNodeSockets?: string[];
 
   /**
+   * Taproot Assets hex asset ID (for ungrouped assets). Used for the sell-side
+   * outbound channel — the Amboss marketplace `assetId` is different from the
+   * tapd hex ID required by `fundAssetChannel`.
+   */
+  @Field({ nullable: true })
+  tapdAssetId?: string;
+
+  /**
+   * Taproot Assets hex group key (for grouped assets). Used for the sell-side
+   * outbound channel when the asset has a group key instead of a bare asset ID.
+   */
+  @Field({ nullable: true })
+  tapdGroupKey?: string;
+
+  /**
    * When true, skip opening the outbound channel (it already exists).
    * In this case `amount` is the Magma order size in atomic asset units
    * rather than sats, avoiding rounding errors from the sats round-trip.

@@ -59,16 +59,22 @@ export const TradingOffers: FC = () => {
   });
 
   const allSupported = supportedData?.getTapSupportedAssets?.list || [];
+  const balances = balancesData?.getTapBalances?.balances || [];
   const ownedGroupKeys = new Set(
-    (balancesData?.getTapBalances?.balances || [])
-      .filter(b => b.groupKey)
-      .map(b => b.groupKey!)
+    balances.filter(b => b.groupKey).map(b => b.groupKey!)
+  );
+  const ownedAssetIds = new Set(
+    balances.filter(b => !b.groupKey && b.assetId).map(b => b.assetId!)
   );
 
-  // For SALE, only show assets the node owns (match by group key)
+  // For SALE, only show assets the node owns (match by group key or asset ID)
   const supportedAssets =
     txType === TapTransactionType.Sale
-      ? allSupported.filter(a => a.groupKey && ownedGroupKeys.has(a.groupKey))
+      ? allSupported.filter(
+          a =>
+            (a.groupKey && ownedGroupKeys.has(a.groupKey)) ||
+            (!a.groupKey && a.assetId && ownedAssetIds.has(a.assetId))
+        )
       : allSupported;
 
   const selectedAssetData = supportedAssets.find(a => a.id === selectedAsset);
@@ -322,6 +328,7 @@ export const TradingOffers: FC = () => {
         offer={selectedOffer}
         assetId={selectedAsset}
         tapdAssetId={selectedAssetData?.assetId || ''}
+        tapdGroupKey={selectedAssetData?.groupKey || ''}
         assetSymbol={selectedSymbol}
         assetPrecision={selectedPrecision}
         transactionType={txType}

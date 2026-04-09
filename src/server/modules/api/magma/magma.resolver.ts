@@ -420,7 +420,9 @@ export class MagmaResolver {
               id: user.id,
               peerPubkey: input.swapNodePubkey,
               assetAmount: Number(input.amount),
-              assetId: input.assetId,
+              ...(input.tapdGroupKey
+                ? { groupKey: input.tapdGroupKey }
+                : { assetId: input.tapdAssetId }),
             })
           );
 
