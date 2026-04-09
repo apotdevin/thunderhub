@@ -1,4 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import EventEmitter from 'events';
 import { subscribeToChannels } from 'lightning';
 import { AccountsService } from '../accounts/accounts.service';
@@ -28,7 +30,8 @@ import {
 export class NodeService {
   constructor(
     private accountsService: AccountsService,
-    private providerRegistry: ProviderRegistryService
+    private providerRegistry: ProviderRegistryService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
   private getAccountAndProvider(id: string): {
@@ -280,6 +283,7 @@ export class NodeService {
         if (done) return;
         done = true;
         sub.removeAllListeners();
+        (sub as { destroy?: () => void }).destroy?.();
         clearTimeout(timer);
         if (err) reject(err);
         else resolve();
@@ -297,7 +301,13 @@ export class NodeService {
           provider.getPendingChannels(account.connection)
         );
 
-        if (err || !result) return;
+        if (err || !result) {
+          this.logger.warn(
+            'getPendingChannels failed during channel_opening check',
+            { err }
+          );
+          return;
+        }
 
         const isPeerOpening = result.pending_channels.some(
           ch => ch.is_opening && ch.partner_public_key === partnerPubkey
