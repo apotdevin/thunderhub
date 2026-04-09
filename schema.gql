@@ -787,7 +787,6 @@ type Query {
   getUtxos: [Utxo!]!
   getVolumeHealth: ChannelsHealth!
   getWalletInfo: Wallet!
-  isAmbossAuthenticated: Boolean!
   public: PublicQueries!
   recoverFunds(backup: String!): Boolean!
   signMessage(message: String!): String!
@@ -830,7 +829,6 @@ input SetupTradePartnerInput {
 }
 
 type SetupTradePartnerResult {
-  magmaOrderAmountAsset: String
   magmaOrderAmountSats: String
   magmaOrderFeeSats: String
   magmaOrderId: String
