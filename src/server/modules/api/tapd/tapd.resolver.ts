@@ -638,17 +638,17 @@ export class TapdResolver {
     }
 
     if (universeHost) {
-      const [, syncError] = await toWithError(
-        this.tapdNodeService.syncUniverse({ id, host: universeHost })
+      const [, joinError] = await toWithError(
+        this.tapdNodeService.addFederationServer({
+          id,
+          host: universeHost,
+        })
       );
-      if (syncError) {
-        this.logger.error('Failed to sync universe before funding channel', {
-          error: syncError,
+      if (joinError) {
+        this.logger.warn('Failed to join federation before funding channel', {
+          error: joinError,
           universeHost,
         });
-        throw new GraphQLError(
-          'Failed to sync universe before funding channel'
-        );
       }
     }
 
