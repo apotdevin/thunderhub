@@ -71,7 +71,7 @@ export const TradingOffers: FC = () => {
     const map = new Map<string, Set<string>>();
     for (const ac of allAssetChannelsData?.getTapAssetChannelBalances || []) {
       if (!map.has(ac.assetId)) map.set(ac.assetId, new Set());
-      map.get(ac.assetId)!.add(ac.partnerPublicKey);
+      map.get(ac.assetId)?.add(ac.partnerPublicKey);
     }
     return map;
   }, [allAssetChannelsData]);

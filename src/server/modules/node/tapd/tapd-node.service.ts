@@ -534,6 +534,15 @@ export class TapdNodeService {
     return new Promise<LnrpcPayment>((resolve, reject) => {
       let finalPayment: LnrpcPayment | null = null;
 
+      const timeout = setTimeout(() => {
+        reject(new Error('Asset payment stream timed out'));
+      }, 90_000);
+
+      const settle = (fn: () => void) => {
+        clearTimeout(timeout);
+        fn();
+      };
+
       stream.on(
         'data',
         (response: {
@@ -549,21 +558,25 @@ export class TapdNodeService {
       stream.on('end', () => {
         if (finalPayment) {
           if (finalPayment.status === 'SUCCEEDED') {
-            resolve(finalPayment);
+            settle(() => resolve(finalPayment as LnrpcPayment));
           } else {
-            reject(
-              new Error(
-                `Asset payment failed with status: ${finalPayment.status}`
+            settle(() =>
+              reject(
+                new Error(
+                  `Asset payment failed with status: ${finalPayment?.status}`
+                )
               )
             );
           }
         } else {
-          reject(new Error('Asset payment stream ended without a result'));
+          settle(() =>
+            reject(new Error('Asset payment stream ended without a result'))
+          );
         }
       });
 
       stream.on('error', (err: Error) => {
-        reject(err);
+        settle(() => reject(err));
       });
     });
   }

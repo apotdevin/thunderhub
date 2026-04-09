@@ -139,6 +139,9 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         setAmount('');
         setStep('input');
         setQuotedSats(null);
+      } else {
+        toast.error('Trade did not complete — please try again');
+        setStep('input');
       }
     },
     onError: err => toast.error(getErrorContent(err)),
@@ -314,12 +317,12 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const handleReviewTrade = async () => {
     if (!amount || !offer.node.pubkey) return;
     setQuotedSats(null);
-    setStep('confirm');
     const assetAtomicAmount = String(displayToAtomic(amount, assetPrecision));
     const { data, error } = await fetchQuote({
       variables: {
         input: {
           tapdAssetId,
+          tapdGroupKey: tapdGroupKey || undefined,
           assetAmount: assetAtomicAmount,
           transactionType,
           peerPubkey: offer.node.pubkey,
@@ -328,23 +331,33 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     });
     if (error) {
       toast.error(getErrorContent(error));
-      setStep('input');
       return;
     }
-    if (data?.getTradeQuote.amountSats) {
-      setQuotedSats(data.getTradeQuote.amountSats);
+    const quotedAmount = data?.getTradeQuote.amountSats;
+    if (!quotedAmount || quotedAmount === '0') {
+      toast.error(
+        'Could not get a valid quote from the peer — please try again'
+      );
+      return;
     }
+    setQuotedSats(quotedAmount);
+    setStep('confirm');
   };
 
   const handleTrade = () => {
     if (!amount || !offer.node.pubkey) return;
+    if (!displaySats || displaySats === '0') {
+      toast.error('No valid quote available — please go back and try again');
+      return;
+    }
     const assetAtomicAmount = String(displayToAtomic(amount, assetPrecision));
     executeTrade({
       variables: {
         input: {
           tapdAssetId,
+          tapdGroupKey: tapdGroupKey || undefined,
           assetAmount: assetAtomicAmount,
-          satsAmount: displaySats || '0',
+          satsAmount: displaySats,
           transactionType,
           peerPubkey: offer.node.pubkey,
         },
