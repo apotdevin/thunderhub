@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Loader2, Info, Copy, Check } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useGetTapAssetsQuery } from '../../graphql/queries/__generated__/getTapAssets.generated';
@@ -59,12 +60,16 @@ export const AssetsList: FC = () => {
   const { data: supportedData } = useGetTapSupportedAssetsQuery();
 
   const priceMap = new Map<string, { usd: number; precision: number }>();
+  const supportedKeys = new Set<string>();
   for (const asset of supportedData?.getTapSupportedAssets?.list || []) {
     const price = asset.prices?.usd;
-    if (price == null) continue;
-    const entry = { usd: price, precision: asset.precision };
-    if (asset.assetId) priceMap.set(asset.assetId, entry);
-    if (asset.groupKey) priceMap.set(asset.groupKey, entry);
+    if (price != null) {
+      const entry = { usd: price, precision: asset.precision };
+      if (asset.assetId) priceMap.set(asset.assetId, entry);
+      if (asset.groupKey) priceMap.set(asset.groupKey, entry);
+    }
+    if (asset.assetId) supportedKeys.add(asset.assetId);
+    if (asset.groupKey) supportedKeys.add(asset.groupKey);
   }
 
   if (assetsLoading || balancesLoading) {
@@ -133,14 +138,27 @@ export const AssetsList: FC = () => {
                 priceEntry.usd
               : null;
 
+          const isAmbossListed =
+            supportedKeys.has(entry.assetId || '') ||
+            supportedKeys.has(entry.groupKey || '');
+
           return (
             <Card key={`${keyValue}-${i}`}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex flex-col gap-1">
-                    <span className="font-semibold">
-                      {entry.names?.length ? entry.names.join(', ') : 'Unknown'}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">
+                        {entry.names?.length
+                          ? entry.names.join(', ')
+                          : 'Unknown'}
+                      </span>
+                      {isAmbossListed && (
+                        <Badge variant="outline" className="text-primary">
+                          Amboss Listed
+                        </Badge>
+                      )}
+                    </div>
                     {keyValue && (
                       <CopyableKey label={keyLabel} value={keyValue} />
                     )}
