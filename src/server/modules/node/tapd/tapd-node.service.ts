@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { TapdRpcApis } from '@lightningpolar/tapd-api';
 import {
   Addr,
@@ -40,7 +42,8 @@ export class TapdNodeService {
   constructor(
     private accountsService: AccountsService,
     private providerRegistry: ProviderRegistryService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
   getAccount(id: string): EnrichedAccount {
@@ -438,8 +441,11 @@ export class TapdNodeService {
                 remoteBalance: String(data.remote_balance ?? 0),
                 capacity: String(data.capacity ?? 0),
               });
-            } catch {
-              // Not JSON or invalid — skip
+            } catch (err) {
+              this.logger.warn('Failed to parse custom_channel_data', {
+                channelPoint: ch.channel_point,
+                err,
+              });
             }
           }
 
