@@ -205,7 +205,6 @@ export class SetupTradePartnerResult {
 export type SetupTradePartnerAuto = {
   validate: void;
   nodeInfo: { publicKey: string };
-  ambossJwt: string;
   peer: void;
   magmaOrder: {
     id: string;

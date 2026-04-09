@@ -5,7 +5,6 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { GraphQLError } from 'graphql';
 import { auto } from 'async';
-import * as cookie from 'cookie';
 import { ContextType } from '../../../app.module';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
 import { NodeService } from '../../node/node.service';
@@ -14,8 +13,6 @@ import { AmbossService } from '../amboss/amboss.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { toWithError } from '../../../utils/async';
-import { appConstants } from '../../../utils/appConstants';
-import { ONE_MONTH_SECONDS } from '../amboss/amboss.service';
 import {
   GetTapOffersInput,
   TapTradeOfferList,
@@ -185,7 +182,7 @@ export class MagmaResolver {
   @Mutation(() => SetupTradePartnerResult)
   async setupTradePartner(
     @CurrentUser() user: UserId,
-    @Context() { ambossAuth, res }: ContextType,
+    @Context() { ambossAuth }: ContextType,
     @Args('input') input: SetupTradePartnerInput
   ): Promise<SetupTradePartnerResult> {
     const result = await auto<SetupTradePartnerAuto>({
@@ -213,26 +210,6 @@ export class MagmaResolver {
           throw new GraphQLError('Error getting node information');
         }
         return { publicKey: info.public_key };
-      },
-
-      ambossJwt: async (): Promise<SetupTradePartnerAuto['ambossJwt']> => {
-        if (ambossAuth) return ambossAuth;
-
-        const jwt = await this.ambossService.getAmbossJWT(user.id);
-        const useHttps = this.configService.get('useHttps');
-
-        res.setHeader(
-          'Set-Cookie',
-          cookie.serialize(appConstants.ambossCookieName, jwt, {
-            maxAge: ONE_MONTH_SECONDS,
-            httpOnly: true,
-            sameSite: true,
-            path: '/',
-            secure: useHttps,
-          })
-        );
-
-        return jwt;
       },
 
       peer: [
@@ -276,12 +253,10 @@ export class MagmaResolver {
 
       magmaOrder: [
         'nodeInfo',
-        'ambossJwt',
         'peer',
         async ({
           nodeInfo,
-          ambossJwt,
-        }: Pick<SetupTradePartnerAuto, 'nodeInfo' | 'ambossJwt'>): Promise<
+        }: Pick<SetupTradePartnerAuto, 'nodeInfo'>): Promise<
           SetupTradePartnerAuto['magmaOrder']
         > => {
           const magmaUrl = this.configService.get<string>('urls.amboss.magma');
@@ -334,7 +309,7 @@ export class MagmaResolver {
                   options: { asset_id: input.assetId },
                 },
               },
-              { authorization: `Bearer ${ambossJwt}` }
+              { authorization: `Bearer ${ambossAuth}` }
             );
 
           const order = data?.market?.order?.create;
