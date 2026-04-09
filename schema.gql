@@ -316,6 +316,22 @@ type EditNodeResult {
   slug: String!
 }
 
+input ExecuteTradeInput {
+  assetAmount: String!
+  peerPubkey: String!
+  satsAmount: String!
+  tapdAssetId: String!
+  tapdGroupKey: String
+  transactionType: TapTransactionType!
+}
+
+type ExecuteTradeResult {
+  amountSats: String
+  feeSats: String
+  paymentPreimage: String
+  success: Boolean!
+}
+
 type FeeHealth {
   base: String
   baseOver: Boolean
@@ -454,6 +470,7 @@ type Mutation {
   createBoltzReverseSwap(address: String, amount: Float!): CreateBoltzReverseSwapType!
   createInvoice(amount: Float!, description: String, includePrivate: Boolean, secondsUntil: Float): CreateInvoice!
   createMacaroon(permissions: NetworkInfoInput!): CreateMacaroon!
+  executeTrade(input: ExecuteTradeInput!): ExecuteTradeResult!
   fetchLnUrl(url: String!): LnUrlRequest!
   finalizeTapBatch: TapFinalizeBatchResponse!
   fundTapAssetChannel(input: TapFundChannelInput!): TapFundChannelResponse!
@@ -765,10 +782,12 @@ type Query {
   getTapUniverseInfo: TapUniverseInfo!
   getTapUniverseStats: TapUniverseStats!
   getTimeHealth: ChannelsTimeHealth!
+  getTradeQuote(input: TradeQuoteInput!): TradeQuoteResult!
   getTwofaSecret: TwofaResult!
   getUtxos: [Utxo!]!
   getVolumeHealth: ChannelsHealth!
   getWalletInfo: Wallet!
+  isAmbossAuthenticated: Boolean!
   public: PublicQueries!
   recoverFunds(backup: String!): Boolean!
   signMessage(message: String!): String!
@@ -1066,6 +1085,20 @@ type TeamMutations {
   add_node(input: AddNodeInput!): AddNodeResult!
   delete_node(slug: String!): DeleteNodeResult!
   edit_node(input: EditNodeInput!): EditNodeResult!
+}
+
+input TradeQuoteInput {
+  assetAmount: String!
+  peerPubkey: String!
+  tapdAssetId: String!
+  tapdGroupKey: String
+  transactionType: TapTransactionType!
+}
+
+type TradeQuoteResult {
+  amountSats: String!
+  assetAmount: String!
+  rateFixed: String
 }
 
 type TwofaResult {

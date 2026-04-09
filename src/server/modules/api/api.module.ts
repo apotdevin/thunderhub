@@ -23,6 +23,7 @@ import { BoltzModule } from './boltz/boltz.module';
 import { UserConfigModule } from './userConfig/userConfig.module';
 import { TapdApiModule } from './tapd/tapd.module';
 import { MagmaModule } from './magma/magma.module';
+import { TradeModule } from './trade/trade.module';
 import { PublicModule } from './public/public.module';
 
 @Module({
@@ -51,6 +52,7 @@ import { PublicModule } from './public/public.module';
     BoltzModule,
     TapdApiModule,
     MagmaModule,
+    TradeModule,
     PublicModule,
   ],
 })
