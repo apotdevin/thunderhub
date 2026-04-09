@@ -702,6 +702,10 @@ export type MutationSendToAddressArgs = {
   tokens?: InputMaybe<Scalars['Float']['input']>;
 };
 
+export type MutationExecuteTradeArgs = {
+  input: ExecuteTradeInput;
+};
+
 export type MutationSetupTradePartnerArgs = {
   input: SetupTradePartnerInput;
 };
@@ -1167,6 +1171,45 @@ export type ServerAccount = {
   type: Scalars['String']['output'];
 };
 
+export type GetTapOffersInput = {
+  assetId: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  minAmount?: InputMaybe<Scalars['String']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<TapOfferSortBy>;
+  sortDir?: InputMaybe<TapOfferSortDir>;
+  transactionType: TapTransactionType;
+};
+
+export type TradeQuoteInput = {
+  assetAmount: Scalars['String']['input'];
+  peerPubkey: Scalars['String']['input'];
+  tapdAssetId: Scalars['String']['input'];
+  transactionType: TapTransactionType;
+};
+
+export type TradeQuoteResult = {
+  __typename?: 'TradeQuoteResult';
+  amountSats: Scalars['String']['output'];
+  assetAmount: Scalars['String']['output'];
+  rateFixed?: Maybe<Scalars['String']['output']>;
+};
+
+export type ExecuteTradeInput = {
+  assetAmount: Scalars['String']['input'];
+  peerPubkey: Scalars['String']['input'];
+  satsAmount: Scalars['String']['input'];
+  tapdAssetId: Scalars['String']['input'];
+  transactionType: TapTransactionType;
+};
+
+export type ExecuteTradeResult = {
+  __typename?: 'ExecuteTradeResult';
+  amountSats?: Maybe<Scalars['String']['output']>;
+  feeSats?: Maybe<Scalars['String']['output']>;
+  paymentPreimage?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
 export type SetupTradePartnerInput = {
   ambossAssetId: Scalars['String']['input'];
   assetAmount: Scalars['String']['input'];

@@ -28,6 +28,7 @@ import {
   AddFederationServerResponse,
 } from '@lightningpolar/tapd-api';
 import { AddInvoiceResponse as TapAddInvoiceResponse } from '@lightningpolar/tapd-api/dist/types/tapchannelrpc/AddInvoiceResponse';
+import { Payment as LnrpcPayment } from '@lightningpolar/tapd-api/dist/types/lnrpc/Payment';
 import { AccountsService } from '../../accounts/accounts.service';
 import { EnrichedAccount } from '../../accounts/accounts.types';
 import { ProviderRegistryService } from '../provider-registry.service';
@@ -451,6 +452,125 @@ export class TapdNodeService {
           resolve(results);
         }
       );
+    });
+  }
+
+  async getSellQuote(opts: {
+    id: string;
+    assetId?: string;
+    groupKey?: string;
+    paymentMaxAmtMsat: string;
+    peerPubkey: string;
+  }): Promise<{
+    rfqId: Buffer;
+    assetAmount: string;
+    bidAssetRate: { coefficient: string; scale: number } | null;
+    scid: string;
+    minTransportableMsat: string;
+  }> {
+    const tapd = this.getTapd(opts.id);
+
+    const result = await tapd.rfq.addAssetSellOrder({
+      assetSpecifier: opts.groupKey
+        ? { groupKeyStr: opts.groupKey }
+        : { assetIdStr: opts.assetId || '' },
+      paymentMaxAmt: opts.paymentMaxAmtMsat,
+      peerPubKey: Buffer.from(opts.peerPubkey, 'hex'),
+      timeoutSeconds: 30,
+      priceOracleMetadata: JSON.stringify({
+        swapNodePubkey: opts.peerPubkey,
+      }),
+    });
+
+    if (result.response === 'invalidQuote' || result.invalidQuote) {
+      throw new Error(
+        `Invalid sell quote: ${JSON.stringify(result.invalidQuote)}`
+      );
+    }
+    if (result.response === 'rejectedQuote' || result.rejectedQuote) {
+      throw new Error(
+        `Sell quote rejected: ${JSON.stringify(result.rejectedQuote)}`
+      );
+    }
+
+    const quote = result.acceptedQuote;
+    if (!quote) {
+      throw new Error('No accepted sell quote returned');
+    }
+
+    return {
+      rfqId: Buffer.from(quote.id),
+      assetAmount: quote.assetAmount,
+      bidAssetRate: quote.bidAssetRate,
+      scid: quote.scid,
+      minTransportableMsat: quote.minTransportableMsat,
+    };
+  }
+
+  async sendAssetPayment(opts: {
+    id: string;
+    assetId?: string;
+    groupKey?: string;
+    assetAmount?: string;
+    paymentRequest: string;
+    peerPubkey?: string;
+  }): Promise<LnrpcPayment> {
+    const tapd = this.getTapd(opts.id);
+
+    const stream = tapd.channels.sendPayment({
+      ...(opts.groupKey
+        ? { groupKey: Buffer.from(opts.groupKey, 'hex') }
+        : { assetId: Buffer.from(opts.assetId || '', 'hex') }),
+      ...(opts.assetAmount ? { assetAmount: opts.assetAmount } : {}),
+      ...(opts.peerPubkey
+        ? { peerPubkey: Buffer.from(opts.peerPubkey, 'hex') }
+        : {}),
+      allowOverpay: true,
+      priceOracleMetadata: JSON.stringify({
+        swapNodePubkey: opts.peerPubkey,
+      }),
+      paymentRequest: {
+        paymentRequest: opts.paymentRequest,
+        allowSelfPayment: true,
+        feeLimitSat: '10',
+        timeoutSeconds: 60,
+      },
+    });
+
+    return new Promise<LnrpcPayment>((resolve, reject) => {
+      let finalPayment: LnrpcPayment | null = null;
+
+      stream.on(
+        'data',
+        (response: {
+          result?: string;
+          paymentResult?: LnrpcPayment | null;
+        }) => {
+          if (response.result === 'paymentResult' && response.paymentResult) {
+            finalPayment = response.paymentResult;
+          }
+        }
+      );
+
+      stream.on('end', () => {
+        if (finalPayment) {
+          if (finalPayment.status === 'SUCCEEDED') {
+            resolve(finalPayment);
+          } else {
+            reject(
+              new Error(
+                `Asset payment failed with status: ${finalPayment.status}`
+              )
+            );
+          }
+        } else {
+          reject(new Error('Asset payment stream ended without a result'));
+        }
+      });
+
+      stream.on('error', (err: Error) => {
+        reject(err);
+      });
     });
   }
 

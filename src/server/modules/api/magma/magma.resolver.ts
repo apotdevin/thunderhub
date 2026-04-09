@@ -307,6 +307,7 @@ export class MagmaResolver {
             input.assetAmount,
             input.assetRate
           );
+
           const { data, error } =
             await this.fetchService.graphqlFetchWithProxy<{
               market: {

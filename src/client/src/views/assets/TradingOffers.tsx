@@ -1,9 +1,11 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Loader2, Info, ArrowUpDown } from 'lucide-react';
+import { Loader2, Info, ArrowUpDown, Zap } from 'lucide-react';
 import { useGetTapOffersQuery } from '../../graphql/queries/__generated__/getTapOffers.generated';
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
+import { useGetChannelsWithPeersQuery } from '../../graphql/queries/__generated__/getChannels.generated';
+import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
 import { useLoginAmbossMutation } from '../../graphql/mutations/__generated__/loginAmboss.generated';
 import { useAmbossUser } from '../../hooks/UseAmbossUser';
 import { getErrorContent } from '../../utils/error';
@@ -50,6 +52,11 @@ export const TradingOffers: FC = () => {
     variables: { groupBy: TapBalanceGroupBy.GroupKey },
   });
 
+  const { data: allChannelsData } = useGetChannelsWithPeersQuery({
+    variables: { active: true },
+  });
+  const { data: allAssetChannelsData } = useGetTapAssetChannelBalancesQuery();
+
   const allSupported = supportedData?.getTapSupportedAssets?.list || [];
   const balances = balancesData?.getTapBalances?.balances || [];
   const ownedGroupKeys = new Set(
@@ -59,19 +66,88 @@ export const TradingOffers: FC = () => {
     balances.filter(b => !b.groupKey && b.assetId).map(b => b.assetId!)
   );
 
-  // For SALE, only show assets the node owns (match by group key or asset ID)
+  // Build asset channel data for trading partner detection
+  const assetChannelsByAssetId = useMemo(() => {
+    const map = new Map<string, Set<string>>();
+    for (const ac of allAssetChannelsData?.getTapAssetChannelBalances || []) {
+      if (!map.has(ac.assetId)) map.set(ac.assetId, new Set());
+      map.get(ac.assetId)!.add(ac.partnerPublicKey);
+    }
+    return map;
+  }, [allAssetChannelsData]);
+
+  const btcChannelPubkeys = useMemo(() => {
+    const assetChannelCountByPubkey = new Map<string, number>();
+    for (const ac of allAssetChannelsData?.getTapAssetChannelBalances || []) {
+      assetChannelCountByPubkey.set(
+        ac.partnerPublicKey,
+        (assetChannelCountByPubkey.get(ac.partnerPublicKey) || 0) + 1
+      );
+    }
+    const totalChannelCountByPubkey = new Map<string, number>();
+    for (const ch of allChannelsData?.getChannels || []) {
+      totalChannelCountByPubkey.set(
+        ch.partner_public_key,
+        (totalChannelCountByPubkey.get(ch.partner_public_key) || 0) + 1
+      );
+    }
+    const pubkeys = new Set<string>();
+    for (const [pubkey, total] of totalChannelCountByPubkey) {
+      const assetCount = assetChannelCountByPubkey.get(pubkey) || 0;
+      if (total > assetCount) pubkeys.add(pubkey);
+    }
+    return pubkeys;
+  }, [allChannelsData, allAssetChannelsData]);
+
+  const aliasMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const ch of allChannelsData?.getChannels || []) {
+      const alias = ch.partner_node_info?.node?.alias;
+      if (alias && ch.partner_public_key) {
+        map.set(ch.partner_public_key, alias);
+      }
+    }
+    return map;
+  }, [allChannelsData]);
+
+  const assetChannelAssetIds = useMemo(
+    () => new Set(assetChannelsByAssetId.keys()),
+    [assetChannelsByAssetId]
+  );
+
+  // For SALE, show assets the node owns (match by group key or asset ID) OR has asset channels for
   const supportedAssets =
     txType === TapTransactionType.Sale
       ? allSupported.filter(
           a =>
             (a.groupKey && ownedGroupKeys.has(a.groupKey)) ||
-            (!a.groupKey && a.assetId && ownedAssetIds.has(a.assetId))
+            (!a.groupKey && a.assetId && ownedAssetIds.has(a.assetId)) ||
+            (a.assetId && assetChannelAssetIds.has(a.assetId))
         )
       : allSupported;
 
   const selectedAssetData = supportedAssets.find(a => a.id === selectedAsset);
   const selectedSymbol = selectedAssetData?.symbol || '';
   const selectedPrecision = selectedAssetData?.precision ?? 0;
+  const selectedTapdAssetId = selectedAssetData?.assetId || '';
+
+  // Find trading partners: peers with both BTC + asset channels for selected asset
+  const tradingPartners = useMemo(() => {
+    if (!selectedTapdAssetId) return [];
+    const assetPeers = assetChannelsByAssetId.get(selectedTapdAssetId);
+    if (!assetPeers) return [];
+    return Array.from(assetPeers)
+      .filter(pubkey => btcChannelPubkeys.has(pubkey))
+      .map(pubkey => ({
+        pubkey,
+        alias: aliasMap.get(pubkey) || null,
+      }));
+  }, [
+    selectedTapdAssetId,
+    assetChannelsByAssetId,
+    btcChannelPubkeys,
+    aliasMap,
+  ]);
 
   const {
     data: offersData,
@@ -103,6 +179,16 @@ export const TradingOffers: FC = () => {
       setSortBy(field);
       setSortDir(TapOfferSortDir.Asc);
     }
+  };
+
+  const selectPartner = (pubkey: string, alias: string | null) => {
+    setSelectedOffer({
+      id: `partner-${pubkey}`,
+      magmaOfferId: '',
+      node: { alias, pubkey, sockets: [] },
+      rate: { displayAmount: null, fullAmount: null },
+      available: { displayAmount: null, fullAmount: null },
+    });
   };
 
   const SortIcon: FC<{ field: TapOfferSortBy }> = ({ field }) => (
@@ -144,7 +230,6 @@ export const TradingOffers: FC = () => {
               key={t}
               onClick={() => {
                 setTxType(t);
-                // Clear selection if switching to Sell and current asset isn't owned
                 if (t === TapTransactionType.Sale && selectedAsset) {
                   const selected = allSupported.find(
                     a => a.id === selectedAsset
@@ -155,7 +240,10 @@ export const TradingOffers: FC = () => {
                     (!selected?.groupKey &&
                       selected?.assetId &&
                       ownedAssetIds.has(selected.assetId));
-                  if (!isOwned) setSelectedAsset('');
+                  const hasAssetChannels =
+                    selected?.assetId &&
+                    assetChannelAssetIds.has(selected.assetId);
+                  if (!isOwned && !hasAssetChannels) setSelectedAsset('');
                 }
               }}
               className={cn(
@@ -202,6 +290,30 @@ export const TradingOffers: FC = () => {
         </div>
       </div>
 
+      {/* Trading partners */}
+      {selectedAsset && tradingPartners.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-medium flex items-center gap-1.5">
+            <Zap size={14} className="text-green-500" />
+            Trading partners
+          </span>
+          <div className="flex flex-col gap-1">
+            {tradingPartners.map(p => (
+              <button
+                key={p.pubkey}
+                onClick={() => selectPartner(p.pubkey, p.alias)}
+                className="flex items-center justify-between rounded-md border border-border bg-muted/20 px-3 py-2 text-sm hover:bg-muted/40 transition-colors text-left"
+              >
+                <span className="font-mono text-xs">
+                  {p.alias || p.pubkey.slice(0, 16)}
+                </span>
+                <span className="text-xs text-green-500">Ready to trade</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Trade amount input */}
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
@@ -244,12 +356,16 @@ export const TradingOffers: FC = () => {
       )}
 
       {/* Empty */}
-      {selectedAsset && !loading && !error && offers.length === 0 && (
-        <div className="flex items-center justify-center p-8 text-muted-foreground">
-          <Info className="mr-2" size={16} />
-          No offers available
-        </div>
-      )}
+      {selectedAsset &&
+        !loading &&
+        !error &&
+        offers.length === 0 &&
+        tradingPartners.length === 0 && (
+          <div className="flex items-center justify-center p-8 text-muted-foreground">
+            <Info className="mr-2" size={16} />
+            No offers available
+          </div>
+        )}
 
       {/* Offers table */}
       {offers.length > 0 && (
