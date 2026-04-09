@@ -254,4 +254,362 @@ describe('MagmaResolver', () => {
       });
     });
   });
+
+  // ── setupTradePartner ──────────────────────────────────────────
+
+  describe('setupTradePartner', () => {
+    const swapPubkey = 'ab'.repeat(33);
+    const myPubkey = 'cd'.repeat(33);
+    const magmaUrl = 'https://magma.test/graphql';
+
+    // assetRate = 1M atomic units per BTC, precision = 0 (1:1 display ↔ atomic)
+    // PURCHASE: 100k sats → magmaSize = 100000 * 1000000 / 1e8 = 1000 atomic
+    // SALE: 1000 units → magmaSize = 1000 * 1 * 1e8 / 1000000 = 100000 sats
+    const assetRate = '1000000';
+    const assetPrecision = 0;
+
+    const mockNodeService = {
+      getWalletInfo: jest.fn(),
+      getNode: jest.fn(),
+      addPeer: jest.fn(),
+      pay: jest.fn(),
+      waitForChannelFromPeer: jest.fn(),
+      openChannel: jest.fn(),
+    };
+
+    const mockTapdNodeService = {
+      fundAssetChannel: jest.fn(),
+    };
+
+    let setupResolver: MagmaResolver;
+
+    const magmaOrderResponse = (size = '1000') => ({
+      data: {
+        market: {
+          order: {
+            create: {
+              id: 'order-1',
+              status: 'WAITING',
+              size,
+              payment: { lightning: { invoice: 'lnbc1invoice' } },
+              fees: { buyer: { sats: 500 } },
+            },
+          },
+        },
+      },
+      error: undefined,
+    });
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+
+      mockNodeService.getWalletInfo.mockResolvedValue({
+        public_key: myPubkey,
+      });
+      mockNodeService.addPeer.mockResolvedValue(undefined);
+      // HODL invoice: pay() never settles; only rejects on immediate failure
+      mockNodeService.pay.mockReturnValue(new Promise(() => {}));
+      mockNodeService.waitForChannelFromPeer.mockResolvedValue(undefined);
+      mockNodeService.openChannel.mockResolvedValue({
+        transaction_id: 'btc-txid',
+        transaction_vout: 0,
+      });
+
+      mockTapdNodeService.fundAssetChannel.mockResolvedValue({
+        txid: 'asset-txid',
+        outputIndex: 1,
+      });
+
+      mockConfigService.get.mockImplementation((key: string) => {
+        if (key === 'urls.amboss.magma') return magmaUrl;
+        return tradeUrl;
+      });
+
+      mockFetchService.graphqlFetchWithProxy.mockResolvedValue(
+        magmaOrderResponse()
+      );
+
+      setupResolver = new MagmaResolver(
+        mockTapdNodeService as never,
+        mockNodeService as never,
+        mockFetchService as never,
+        mockConfigService as never,
+        mockLogger as never
+      );
+    });
+
+    const purchaseInput = {
+      magmaOfferId: 'offer-1',
+      assetId: 'marketplace-asset-1',
+      amount: '100000',
+      assetRate,
+      assetPrecision,
+      transactionType: TapTransactionType.PURCHASE,
+      swapNodePubkey: swapPubkey,
+      swapNodeSockets: ['127.0.0.1:9735'],
+    };
+
+    const saleInput = {
+      magmaOfferId: 'offer-2',
+      assetId: 'marketplace-asset-1',
+      amount: '1000',
+      assetRate,
+      assetPrecision,
+      transactionType: TapTransactionType.SALE,
+      swapNodePubkey: swapPubkey,
+      swapNodeSockets: ['127.0.0.1:9735'],
+      tapdAssetId: 'deadbeef'.repeat(8),
+    };
+
+    // ── Case 1: no channels — full setup ──
+
+    describe('no existing channels (full setup)', () => {
+      it('PURCHASE: buys inbound asset channel via Magma + opens BTC outbound', async () => {
+        const result = await setupResolver.setupTradePartner(
+          userId,
+          ambossContext as never,
+          purchaseInput
+        );
+
+        // Magma order created with correct size (100k sats → 1000 atomic)
+        expect(mockFetchService.graphqlFetchWithProxy).toHaveBeenCalledWith(
+          magmaUrl,
+          expect.anything(),
+          expect.objectContaining({
+            input: expect.objectContaining({ size: '1000' }),
+          }),
+          expect.any(Object)
+        );
+
+        // Invoice paid and channel opening detected
+        expect(mockNodeService.pay).toHaveBeenCalledWith(userId.id, {
+          request: 'lnbc1invoice',
+        });
+        expect(mockNodeService.waitForChannelFromPeer).toHaveBeenCalledWith(
+          userId.id,
+          swapPubkey,
+          120_000
+        );
+
+        // BTC outbound channel opened
+        expect(mockNodeService.openChannel).toHaveBeenCalledWith(userId.id, {
+          local_tokens: 100000,
+          partner_public_key: swapPubkey,
+        });
+
+        // Asset channel NOT opened
+        expect(mockTapdNodeService.fundAssetChannel).not.toHaveBeenCalled();
+
+        expect(result).toEqual({
+          success: true,
+          magmaOrderId: 'order-1',
+          magmaOrderStatus: 'WAITING',
+          magmaOrderAmountSats: '1000',
+          magmaOrderAmountAsset: undefined,
+          magmaOrderFeeSats: '500',
+          outboundChannelTxid: 'btc-txid',
+          outboundChannelOutputIndex: 0,
+        });
+      });
+
+      it('SALE: buys inbound BTC channel via Magma + opens asset outbound', async () => {
+        mockFetchService.graphqlFetchWithProxy.mockResolvedValue(
+          magmaOrderResponse('100000')
+        );
+
+        const result = await setupResolver.setupTradePartner(
+          userId,
+          ambossContext as never,
+          saleInput
+        );
+
+        // Magma order created with correct size (1000 units → 100k sats)
+        expect(mockFetchService.graphqlFetchWithProxy).toHaveBeenCalledWith(
+          magmaUrl,
+          expect.anything(),
+          expect.objectContaining({
+            input: expect.objectContaining({ size: '100000' }),
+          }),
+          expect.any(Object)
+        );
+
+        // Asset outbound channel opened with tapd hex ID
+        expect(mockTapdNodeService.fundAssetChannel).toHaveBeenCalledWith({
+          id: userId.id,
+          peerPubkey: swapPubkey,
+          assetAmount: 1000,
+          assetId: saleInput.tapdAssetId,
+        });
+
+        // BTC channel NOT opened
+        expect(mockNodeService.openChannel).not.toHaveBeenCalled();
+
+        expect(result.outboundChannelTxid).toBe('asset-txid');
+        expect(result.outboundChannelOutputIndex).toBe(1);
+      });
+
+      it('SALE with grouped asset: passes groupKey to fundAssetChannel', async () => {
+        const groupedSaleInput = {
+          ...saleInput,
+          tapdAssetId: undefined,
+          tapdGroupKey: 'cafebabe'.repeat(8),
+        };
+
+        mockFetchService.graphqlFetchWithProxy.mockResolvedValue(
+          magmaOrderResponse('100000')
+        );
+
+        await setupResolver.setupTradePartner(
+          userId,
+          ambossContext as never,
+          groupedSaleInput
+        );
+
+        expect(mockTapdNodeService.fundAssetChannel).toHaveBeenCalledWith(
+          expect.objectContaining({
+            groupKey: groupedSaleInput.tapdGroupKey,
+          })
+        );
+        // Should NOT contain assetId when groupKey is provided
+        expect(
+          mockTapdNodeService.fundAssetChannel.mock.calls[0][0]
+        ).not.toHaveProperty('assetId');
+      });
+    });
+
+    // ── Case 2: has outbound, needs inbound only ──
+
+    describe('outbound exists — inbound only (skipOutboundChannel)', () => {
+      it('PURCHASE: buys inbound asset channel, skips BTC outbound', async () => {
+        const result = await setupResolver.setupTradePartner(
+          userId,
+          ambossContext as never,
+          {
+            ...purchaseInput,
+            // Client passes atomic amount directly to avoid rounding
+            amount: '1000',
+            skipOutboundChannel: true,
+          }
+        );
+
+        // Magma size is the raw amount (no sats conversion)
+        expect(mockFetchService.graphqlFetchWithProxy).toHaveBeenCalledWith(
+          magmaUrl,
+          expect.anything(),
+          expect.objectContaining({
+            input: expect.objectContaining({ size: '1000' }),
+          }),
+          expect.any(Object)
+        );
+
+        // No outbound channel opened
+        expect(mockNodeService.openChannel).not.toHaveBeenCalled();
+        expect(mockTapdNodeService.fundAssetChannel).not.toHaveBeenCalled();
+
+        expect(result.outboundChannelTxid).toBeUndefined();
+        expect(result.outboundChannelOutputIndex).toBeUndefined();
+        expect(result.magmaOrderId).toBe('order-1');
+      });
+
+      it('SALE: buys inbound BTC channel, skips asset outbound', async () => {
+        mockFetchService.graphqlFetchWithProxy.mockResolvedValue(
+          magmaOrderResponse('100000')
+        );
+
+        const result = await setupResolver.setupTradePartner(
+          userId,
+          ambossContext as never,
+          { ...saleInput, skipOutboundChannel: true }
+        );
+
+        expect(mockNodeService.openChannel).not.toHaveBeenCalled();
+        expect(mockTapdNodeService.fundAssetChannel).not.toHaveBeenCalled();
+
+        expect(result.outboundChannelTxid).toBeUndefined();
+        expect(result.magmaOrderId).toBe('order-1');
+      });
+    });
+
+    // ── Peer connection ──
+
+    it('connects to peer before creating Magma order', async () => {
+      await setupResolver.setupTradePartner(
+        userId,
+        ambossContext as never,
+        purchaseInput
+      );
+
+      expect(mockNodeService.addPeer).toHaveBeenCalledWith(
+        userId.id,
+        swapPubkey,
+        '127.0.0.1:9735',
+        false
+      );
+    });
+
+    it('looks up sockets from graph when none provided', async () => {
+      mockNodeService.getNode.mockResolvedValue({
+        sockets: [{ socket: '10.0.0.1:9735' }],
+      });
+
+      await setupResolver.setupTradePartner(userId, ambossContext as never, {
+        ...purchaseInput,
+        swapNodeSockets: undefined,
+      });
+
+      expect(mockNodeService.getNode).toHaveBeenCalledWith(
+        userId.id,
+        swapPubkey,
+        true
+      );
+      expect(mockNodeService.addPeer).toHaveBeenCalledWith(
+        userId.id,
+        swapPubkey,
+        '10.0.0.1:9735',
+        false
+      );
+    });
+
+    // ── Error cases ──
+
+    it('throws when Magma order creation fails', async () => {
+      mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
+        data: undefined,
+        error: new Error('service unavailable'),
+      });
+
+      await expect(
+        setupResolver.setupTradePartner(
+          userId,
+          ambossContext as never,
+          purchaseInput
+        )
+      ).rejects.toThrow('Failed to create Magma channel order');
+    });
+
+    it('throws when invoice payment fails immediately', async () => {
+      mockNodeService.pay.mockRejectedValue(new Error('insufficient balance'));
+      // Channel detection never resolves — pay rejection wins the race
+      mockNodeService.waitForChannelFromPeer.mockReturnValue(
+        new Promise(() => {})
+      );
+
+      await expect(
+        setupResolver.setupTradePartner(
+          userId,
+          ambossContext as never,
+          purchaseInput
+        )
+      ).rejects.toThrow('Failed to pay Magma invoice');
+    });
+
+    it('throws when amount is zero', async () => {
+      await expect(
+        setupResolver.setupTradePartner(userId, ambossContext as never, {
+          ...purchaseInput,
+          amount: '0',
+        })
+      ).rejects.toThrow('Amount must be greater than zero');
+    });
+  });
 });
