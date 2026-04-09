@@ -199,6 +199,9 @@ services:
       - ACCOUNT_CONFIG_PATH=/config/thubConfig.yaml
       - LOG_LEVEL=debug
       - COOKIE_PATH=/tmp/cookie-alice
+      - DB_TYPE=sqlite
+      - DB_ENCRYPTION_KEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+      - DB_SQLITE_PATH=/data/thunderhub/thunderhub.db
       - TRADE_API_URL=${TRADE_API_URL:-http://host.docker.internal:3006/graphql}
       - AMBOSS_AUTH_URL=${AMBOSS_AUTH_URL:-http://host.docker.internal:3007/graphql}
     # host-gateway resolves to the host IP on all platforms (Docker 20.10+)
@@ -210,6 +213,7 @@ services:
       - ./alice-thubConfig.yaml:/config/thubConfig.yaml
       - ./data/alice-litd:/data/litd:ro
       - ./data/alice-lnd:/data/lnd:ro
+      - ./data/alice-thunderhub:/data/thunderhub
     networks:
       - litd-net
 
@@ -227,6 +231,9 @@ services:
       - ACCOUNT_CONFIG_PATH=/config/thubConfig.yaml
       - LOG_LEVEL=debug
       - COOKIE_PATH=/tmp/cookie-bob
+      - DB_TYPE=sqlite
+      - DB_ENCRYPTION_KEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+      - DB_SQLITE_PATH=/data/thunderhub/thunderhub.db
       - TRADE_API_URL=${TRADE_API_URL:-http://host.docker.internal:3006/graphql}
       - AMBOSS_AUTH_URL=${AMBOSS_AUTH_URL:-http://host.docker.internal:3007/graphql}
     extra_hosts:
@@ -237,6 +244,7 @@ services:
       - ./bob-thubConfig.yaml:/config/thubConfig.yaml
       - ./data/bob-litd:/data/litd:ro
       - ./data/bob-lnd:/data/lnd:ro
+      - ./data/bob-thunderhub:/data/thunderhub
     networks:
       - litd-net
 
