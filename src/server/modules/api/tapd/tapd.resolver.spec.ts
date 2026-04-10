@@ -869,7 +869,7 @@ describe('TapdResolver trading queries', () => {
         error: undefined,
       });
 
-      const result = await resolver.getTapSupportedAssets(userId);
+      const result = await resolver.getTapSupportedAssets();
 
       expect(result.totalCount).toBe(1);
       expect(result.list[0]).toEqual({
@@ -909,7 +909,7 @@ describe('TapdResolver trading queries', () => {
         error: undefined,
       });
 
-      const result = await resolver.getTapSupportedAssets(userId);
+      const result = await resolver.getTapSupportedAssets();
 
       expect(result.list[0]).toEqual({
         id: 'asset-2',
@@ -926,7 +926,7 @@ describe('TapdResolver trading queries', () => {
     it('returns empty list when trade URL is not configured', async () => {
       mockConfigService.get.mockReturnValue(undefined);
 
-      const result = await resolver.getTapSupportedAssets(userId);
+      const result = await resolver.getTapSupportedAssets();
 
       expect(result).toEqual({ list: [], totalCount: 0 });
       expect(mockFetchService.graphqlFetchWithProxy).not.toHaveBeenCalled();
@@ -938,7 +938,7 @@ describe('TapdResolver trading queries', () => {
         error: new Error('timeout'),
       });
 
-      const result = await resolver.getTapSupportedAssets(userId);
+      const result = await resolver.getTapSupportedAssets();
 
       expect(result).toEqual({ list: [], totalCount: 0 });
       expect(mockLogger.error).toHaveBeenCalledWith(
@@ -962,7 +962,7 @@ describe('TapdResolver trading queries', () => {
         error: undefined,
       });
 
-      const result = await resolver.getTapSupportedAssets(userId);
+      const result = await resolver.getTapSupportedAssets();
 
       expect(result.list[0]).toEqual({
         id: 'asset-2',

@@ -734,7 +734,7 @@ export class TapdResolver {
   }
 
   @Query(() => TapSupportedAssetList)
-  async getTapSupportedAssets(@CurrentUser() { id }: UserId) {
+  async getTapSupportedAssets() {
     const tradeUrl = this.configService.get<string>('urls.trade');
     if (!tradeUrl) {
       return { list: [], totalCount: 0 };
@@ -758,28 +758,6 @@ export class TapdResolver {
     }
 
     const assets = data.public.assets.supported;
-
-    // Join the federation for each asset's universe so tapd
-    // can automatically sync proofs when opening channels.
-    const universeHosts = [
-      ...new Set(
-        assets.list
-          .map(a => a.taproot_asset_details?.universe)
-          .filter((h): h is string => !!h)
-      ),
-    ];
-
-    for (const host of universeHosts) {
-      const [, joinError] = await toWithError(
-        this.tapdNodeService.addFederationServer({ id, host })
-      );
-      if (joinError) {
-        this.logger.warn('Failed to join federation for universe', {
-          error: joinError,
-          host,
-        });
-      }
-    }
 
     return {
       list: assets.list.map(a => ({
