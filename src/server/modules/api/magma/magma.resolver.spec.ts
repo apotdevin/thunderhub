@@ -397,7 +397,6 @@ describe('MagmaResolver', () => {
           success: true,
           magmaOrderId: 'order-1',
           magmaOrderStatus: 'WAITING',
-          magmaOrderAmountSats: undefined,
           magmaOrderAmountAsset: '1000',
           magmaOrderFeeSats: '500',
           outboundChannelTxid: 'btc-txid',
