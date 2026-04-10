@@ -318,7 +318,9 @@ type EditNodeResult {
 
 input ExecuteTradeInput {
   assetAmount: String!
+  paymentRequest: String
   peerPubkey: String!
+  rfqId: String
   satsAmount: String!
   tapdAssetId: String!
   tapdGroupKey: String
@@ -326,9 +328,9 @@ input ExecuteTradeInput {
 }
 
 type ExecuteTradeResult {
-  amountSats: String
   feeSats: String
   paymentPreimage: String
+  satsAmount: String
   success: Boolean!
 }
 
@@ -1095,9 +1097,12 @@ input TradeQuoteInput {
 }
 
 type TradeQuoteResult {
-  amountSats: String!
   assetAmount: String!
+  expiryEpoch: String
+  paymentRequest: String
   rateFixed: String
+  rfqId: String
+  satsAmount: String!
 }
 
 type TwofaResult {

@@ -1,6 +1,15 @@
 import Big from 'big.js';
 
 /**
+ * Converts a decimal display string (e.g. "1.5") to atomic BigInt units.
+ */
+export const displayToAtomic = (display: string, precision: number): bigint => {
+  const [whole, frac = ''] = display.split('.');
+  const padded = frac.padEnd(precision, '0').slice(0, precision);
+  return BigInt(whole || '0') * BigInt(10 ** precision) + BigInt(padded || '0');
+};
+
+/**
  * Converts display asset units to satoshis using the atomic rate.
  * rate is in atomic-asset-units per BTC (full_amount from trade API).
  */
@@ -10,11 +19,8 @@ export const displayAssetToSats = (
   precision: number
 ): string => {
   if (!rate || rate === '0') return '0';
-  const multiplier = BigInt(10 ** precision);
-  return (
-    (BigInt(displayAmount) * multiplier * BigInt(100_000_000)) /
-    BigInt(rate)
-  ).toString();
+  const atomic = displayToAtomic(displayAmount, precision);
+  return ((atomic * BigInt(100_000_000)) / BigInt(rate)).toString();
 };
 
 /**

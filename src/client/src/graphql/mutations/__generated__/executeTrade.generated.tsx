@@ -13,7 +13,7 @@ export type ExecuteTradeMutation = {
     __typename?: 'ExecuteTradeResult';
     success: boolean;
     paymentPreimage?: string | null;
-    amountSats?: string | null;
+    satsAmount?: string | null;
     feeSats?: string | null;
   };
 };
@@ -23,7 +23,7 @@ export const ExecuteTradeDocument = gql`
     executeTrade(input: $input) {
       success
       paymentPreimage
-      amountSats
+      satsAmount
       feeSats
     }
   }
