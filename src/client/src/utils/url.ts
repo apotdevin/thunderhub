@@ -58,5 +58,5 @@ export const decodeLnUrl = (url: string): string => {
   // Otherwise, try bech32 decoding (LNURL1...)
   const { words } = bech32.decode(cleaned.toLowerCase(), 500);
   const bytes = bech32.fromWords(words);
-  return new String(Buffer.from(bytes)).toString();
+  return new TextDecoder().decode(new Uint8Array(bytes));
 };
