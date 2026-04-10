@@ -623,7 +623,6 @@ export class TapdResolver {
       assetId,
       feeRateSatPerVbyte,
       pushSat,
-      universeHost,
     } = input;
 
     if ((!assetId && !groupKey) || (assetId && groupKey)) {
@@ -635,21 +634,6 @@ export class TapdResolver {
     const parsedAmount = Number(assetAmount);
     if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
       throw new GraphQLError('assetAmount must be a positive number');
-    }
-
-    if (universeHost) {
-      const [, joinError] = await toWithError(
-        this.tapdNodeService.addFederationServer({
-          id,
-          host: universeHost,
-        })
-      );
-      if (joinError) {
-        this.logger.warn('Failed to join federation before funding channel', {
-          error: joinError,
-          universeHost,
-        });
-      }
     }
 
     const [result, error] = await toWithError(
@@ -750,16 +734,11 @@ export class TapdResolver {
   }
 
   @Query(() => TapSupportedAssetList)
-  async getTapSupportedAssets(
-    @CurrentUser() _user: UserId,
-    @Context() { ambossAuth }: ContextType
-  ) {
+  async getTapSupportedAssets(@CurrentUser() { id }: UserId) {
     const tradeUrl = this.configService.get<string>('urls.trade');
-    if (!tradeUrl || !ambossAuth) {
+    if (!tradeUrl) {
       return { list: [], totalCount: 0 };
     }
-
-    const headers = { authorization: `Bearer ${ambossAuth}` };
 
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       public: {
@@ -770,7 +749,7 @@ export class TapdResolver {
           };
         };
       };
-    }>(tradeUrl, getSupportedAssetsQuery, undefined, headers);
+    }>(tradeUrl, getSupportedAssetsQuery);
 
     if (error || !data?.public?.assets?.supported) {
       if (error)
@@ -779,6 +758,28 @@ export class TapdResolver {
     }
 
     const assets = data.public.assets.supported;
+
+    // Join the federation for each asset's universe so tapd
+    // can automatically sync proofs when opening channels.
+    const universeHosts = [
+      ...new Set(
+        assets.list
+          .map(a => a.taproot_asset_details?.universe)
+          .filter((h): h is string => !!h)
+      ),
+    ];
+
+    for (const host of universeHosts) {
+      const [, joinError] = await toWithError(
+        this.tapdNodeService.addFederationServer({ id, host })
+      );
+      if (joinError) {
+        this.logger.warn('Failed to join federation for universe', {
+          error: joinError,
+          host,
+        });
+      }
+    }
 
     return {
       list: assets.list.map(a => ({
