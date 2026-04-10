@@ -22,8 +22,9 @@ import { useOpenChannelMutation } from '../../graphql/mutations/__generated__/op
 import { useGetPeerChannelsQuery } from '../../graphql/queries/__generated__/getPeerChannels.generated';
 import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
 import { getErrorContent } from '../../utils/error';
+import { atomicToDisplay, displayAssetToSats } from './trade.helpers';
 
-type Offer = {
+export type Offer = {
   id: string;
   magmaOfferId: string;
   node: { alias?: string | null; pubkey?: string | null; sockets: string[] };
@@ -43,26 +44,6 @@ type TradeSheetProps = {
   onOpenChange: (open: boolean) => void;
 };
 
-// Converts display asset units to sats using the atomic rate
-const displayAssetToSats = (
-  displayAmount: string,
-  rate: string,
-  precision: number
-): string => {
-  if (!rate || rate === '0') return '0';
-  const multiplier = BigInt(10 ** precision);
-  return (
-    (BigInt(displayAmount) * multiplier * BigInt(100_000_000)) /
-    BigInt(rate)
-  ).toString();
-};
-
-const atomicToDisplay = (atomic: string, precision: number): string => {
-  if (precision === 0) return atomic;
-  const divisor = 10 ** precision;
-  return (Number(atomic) / divisor).toFixed(precision);
-};
-
 export const TradeSheet: FC<TradeSheetProps> = ({
   offer,
   assetId,
@@ -80,7 +61,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const [openChannel, { loading: openChannelLoading }] = useOpenChannelMutation(
     {
       onCompleted: () => {
-        toast.success('Outbound BTC channel opened successfully');
+        toast.success('Outbound channel opened successfully');
         onOpenChange(false);
         setAmount('');
         setStep('input');
@@ -130,7 +111,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
 
   if (!offer) return null;
 
-  const isBuy = transactionType === TapTransactionType.Purchase;
+  const isAssetPurchase = transactionType === TapTransactionType.Purchase;
   const nodeLabel = offer.node.alias || offer.node.pubkey?.slice(0, 16);
   const rateDisplay = offer.rate.displayAmount || offer.rate.fullAmount;
   const availableDisplay =
@@ -170,13 +151,13 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     0
   );
 
-  const isValid = amount && Number(amount) > 0;
+  const isValid = amount && BigInt(amount) > 0n;
 
   // Determine input mode from raw capacity to avoid circular dependency.
   // When buying with existing asset inbound but no BTC outbound, the user
   // opens a direct BTC channel (amount = sats) instead of a Magma order.
   const needsOnlyOutboundBtc =
-    isBuy && totalAssetRemote > BigInt(0) && !(totalBtcLocal > 0);
+    isAssetPurchase && totalAssetRemote > BigInt(0) && !(totalBtcLocal > 0);
 
   // Input is asset display units unless needsOnlyOutboundBtc (sats directly).
   // rate is in atomic-asset-units per BTC (full_amount from trade API)
@@ -195,29 +176,29 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const hasOutbound = needsOnlyOutboundBtc
     ? false
     : isValid
-      ? isBuy
+      ? isAssetPurchase
         ? totalBtcLocal >= Number(satsAmount)
         : totalAssetLocal >= atomicTradeAmount
-      : isBuy
+      : isAssetPurchase
         ? totalBtcLocal > 0
         : totalAssetLocal > BigInt(0);
 
   const hasInbound = needsOnlyOutboundBtc
     ? true
     : isValid
-      ? isBuy
+      ? isAssetPurchase
         ? totalAssetRemote >= atomicTradeAmount
         : totalBtcRemote >= Number(satsAmount)
-      : isBuy
+      : isAssetPurchase
         ? totalAssetRemote > BigInt(0)
         : totalBtcRemote > 0;
 
   // For channel setup: BUY outbound = BTC (sats), magma inbound = asset
   // SELL outbound = asset, magma inbound = BTC (sats)
-  const outboundSize = isBuy ? satsAmount : amount;
-  const outboundUnit = isBuy ? 'sats' : assetSymbol;
-  const magmaSize = isBuy ? amount : satsAmount;
-  const magmaUnit = isBuy ? assetSymbol : 'sats';
+  const outboundSize = isAssetPurchase ? satsAmount : amount;
+  const outboundUnit = isAssetPurchase ? 'sats' : assetSymbol;
+  const magmaSize = isAssetPurchase ? amount : satsAmount;
+  const magmaUnit = isAssetPurchase ? assetSymbol : 'sats';
 
   const handleSubmit = () => {
     if (!amount || !offer.node.pubkey) return;
@@ -234,9 +215,10 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       return;
     }
 
-    // hasOutbound && !hasInbound && isBuy: skip channel opening, pass atomic
+    // hasOutbound && !hasInbound && isAssetPurchase: skip channel opening, pass atomic
     // asset units directly to avoid sats round-trip rounding errors.
-    const magmaOnlyBuy = isBuy && hasInbound === false && hasOutbound === true;
+    const magmaOnlyBuy =
+      isAssetPurchase && hasInbound === false && hasOutbound === true;
 
     setupPartner({
       variables: {
@@ -245,7 +227,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
           assetId,
           amount: magmaOnlyBuy
             ? atomicTradeAmount.toString()
-            : isBuy
+            : isAssetPurchase
               ? satsAmount
               : amount,
           assetRate: rate,
@@ -274,7 +256,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       <SheetContent side="right" className="w-[360px] sm:max-w-[400px]">
         <SheetHeader>
           <SheetTitle>
-            {isBuy ? 'Buy' : 'Sell'} {assetSymbol}
+            {isAssetPurchase ? 'Buy' : 'Sell'} {assetSymbol}
           </SheetTitle>
           <SheetDescription>
             {hasOutbound && hasInbound
@@ -373,10 +355,10 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       <AlertCircle className="h-3.5 w-3.5 text-yellow-500" />
                     )}
                     <span>
-                      Outbound ({isBuy ? 'BTC' : assetSymbol})
+                      Outbound ({isAssetPurchase ? 'BTC' : assetSymbol})
                       {hasOutbound ? (
                         <span className="text-muted-foreground ml-1">
-                          {isBuy
+                          {isAssetPurchase
                             ? `${totalBtcLocal.toLocaleString()} sats`
                             : `${atomicToDisplay(totalAssetLocal.toString(), assetPrecision)} ${assetSymbol}`}
                         </span>
@@ -392,10 +374,10 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       <AlertCircle className="h-3.5 w-3.5 text-yellow-500" />
                     )}
                     <span>
-                      Inbound ({isBuy ? assetSymbol : 'BTC'})
+                      Inbound ({isAssetPurchase ? assetSymbol : 'BTC'})
                       {hasInbound ? (
                         <span className="text-muted-foreground ml-1">
-                          {isBuy
+                          {isAssetPurchase
                             ? `${atomicToDisplay(totalAssetRemote.toString(), assetPrecision)} ${assetSymbol}`
                             : `${totalBtcRemote.toLocaleString()} sats`}
                         </span>
@@ -485,7 +467,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                         <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                           <ArrowRight className="h-3.5 w-3.5" />
                           <span className="font-medium text-foreground">
-                            Outbound {isBuy ? 'BTC' : assetSymbol} channel
+                            Outbound {isAssetPurchase ? 'BTC' : assetSymbol}{' '}
+                            channel
                           </span>
                         </div>
                         <div className="text-sm font-mono ml-5.5">
@@ -498,8 +481,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                         <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                           <ArrowLeft className="h-3.5 w-3.5" />
                           <span className="font-medium text-foreground">
-                            Inbound {isBuy ? assetSymbol : 'BTC'} channel
-                            (Magma)
+                            Inbound {isAssetPurchase ? assetSymbol : 'BTC'}{' '}
+                            channel (Magma)
                           </span>
                         </div>
                         <div className="text-sm font-mono ml-5.5">

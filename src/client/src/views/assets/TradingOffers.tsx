@@ -15,18 +15,10 @@ import {
   TapOfferSortBy,
   TapOfferSortDir,
 } from '../../graphql/types';
-import { TradeSheet } from './TradeSheet';
-
-type OfferRow = {
-  id: string;
-  magmaOfferId: string;
-  node: { alias?: string | null; pubkey?: string | null; sockets: string[] };
-  rate: { displayAmount?: string | null; fullAmount?: string | null };
-  available: { displayAmount?: string | null; fullAmount?: string | null };
-};
+import { TradeSheet, Offer } from './TradeSheet';
 
 export const TradingOffers: FC = () => {
-  const [selectedOffer, setSelectedOffer] = useState<OfferRow | null>(null);
+  const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [selectedAsset, setSelectedAsset] = useState('');
   const [txType, setTxType] = useState<TapTransactionType>(
     TapTransactionType.Purchase

@@ -73,11 +73,52 @@ export function useGetTapAssetChannelBalancesLazyQuery(
     GetTapAssetChannelBalancesQueryVariables
   >(GetTapAssetChannelBalancesDocument, options);
 }
+// @ts-ignore
+export function useGetTapAssetChannelBalancesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetTapAssetChannelBalancesQuery,
+    GetTapAssetChannelBalancesQueryVariables
+  >
+): Apollo.UseSuspenseQueryResult<
+  GetTapAssetChannelBalancesQuery,
+  GetTapAssetChannelBalancesQueryVariables
+>;
+export function useGetTapAssetChannelBalancesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTapAssetChannelBalancesQuery,
+        GetTapAssetChannelBalancesQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetTapAssetChannelBalancesQuery | undefined,
+  GetTapAssetChannelBalancesQueryVariables
+>;
+export function useGetTapAssetChannelBalancesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTapAssetChannelBalancesQuery,
+        GetTapAssetChannelBalancesQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetTapAssetChannelBalancesQuery,
+    GetTapAssetChannelBalancesQueryVariables
+  >(GetTapAssetChannelBalancesDocument, options);
+}
 export type GetTapAssetChannelBalancesQueryHookResult = ReturnType<
   typeof useGetTapAssetChannelBalancesQuery
 >;
 export type GetTapAssetChannelBalancesLazyQueryHookResult = ReturnType<
   typeof useGetTapAssetChannelBalancesLazyQuery
+>;
+export type GetTapAssetChannelBalancesSuspenseQueryHookResult = ReturnType<
+  typeof useGetTapAssetChannelBalancesSuspenseQuery
 >;
 export type GetTapAssetChannelBalancesQueryResult = Apollo.QueryResult<
   GetTapAssetChannelBalancesQuery,

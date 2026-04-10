@@ -95,15 +95,12 @@ export class MagmaResolver {
   @Query(() => TapTradeOfferList)
   async getTapOffers(
     @CurrentUser() _user: UserId,
-    @Context() { ambossAuth }: ContextType,
     @Args('input') input: GetTapOffersInput
   ) {
     const tradeUrl = this.configService.get<string>('urls.trade');
     if (!tradeUrl) {
       return { list: [], totalCount: 0 };
     }
-
-    const headers = ambossAuth ? { authorization: `Bearer ${ambossAuth}` } : {};
 
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       public: {
@@ -112,28 +109,23 @@ export class MagmaResolver {
           total_count: number;
         };
       };
-    }>(
-      tradeUrl,
-      getOffersQuery,
-      {
-        input: {
-          asset_id: input.assetId,
-          transaction_type: input.transactionType,
-          ...(input.sortBy ? { sort_by: input.sortBy } : {}),
-          ...(input.sortDir ? { sort_dir: input.sortDir } : {}),
-          ...(input.minAmount ? { min_amount: input.minAmount } : {}),
-          ...(input.limit || input.offset
-            ? {
-                page: {
-                  limit: input.limit || 20,
-                  offset: input.offset || 0,
-                },
-              }
-            : {}),
-        },
+    }>(tradeUrl, getOffersQuery, {
+      input: {
+        asset_id: input.assetId,
+        transaction_type: input.transactionType,
+        ...(input.sortBy ? { sort_by: input.sortBy } : {}),
+        ...(input.sortDir ? { sort_dir: input.sortDir } : {}),
+        ...(input.minAmount ? { min_amount: input.minAmount } : {}),
+        ...(input.limit || input.offset
+          ? {
+              page: {
+                limit: input.limit || 20,
+                offset: input.offset || 0,
+              },
+            }
+          : {}),
       },
-      headers
-    );
+    });
 
     if (error || !data?.public?.offers) {
       if (error) this.logger.error('Error fetching trade offers', { error });
@@ -219,6 +211,9 @@ export class MagmaResolver {
   ): Promise<SetupTradePartnerResult> {
     const result = await auto<SetupTradePartnerAuto>({
       validate: async (): Promise<SetupTradePartnerAuto['validate']> => {
+        if (input.transactionType == TapTransactionType.SALE) {
+          throw new GraphQLError(`Selling not implemented yet`);
+        }
         if (!input.amount || BigInt(input.amount) <= 0) {
           throw new GraphQLError('Amount must be greater than zero');
         }
@@ -352,7 +347,7 @@ export class MagmaResolver {
             id: order.id,
             status: order.status,
             invoice,
-            amountSats: order.size,
+            amountAsset: order.size,
             feeSats: order.fees?.buyer?.sats,
           };
         },
