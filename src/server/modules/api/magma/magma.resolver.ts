@@ -365,8 +365,7 @@ export class MagmaResolver {
           });
 
           const isAssetAmount =
-            input.transactionType === TapTransactionType.PURCHASE &&
-            !input.skipOutboundChannel;
+            input.transactionType === TapTransactionType.PURCHASE;
 
           return {
             id: order.id,
