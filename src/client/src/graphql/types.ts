@@ -374,6 +374,23 @@ export type EditNodeResult = {
   slug: Scalars['String']['output'];
 };
 
+export type ExecuteTradeInput = {
+  assetAmount: Scalars['String']['input'];
+  peerPubkey: Scalars['String']['input'];
+  satsAmount: Scalars['String']['input'];
+  tapdAssetId: Scalars['String']['input'];
+  tapdGroupKey?: InputMaybe<Scalars['String']['input']>;
+  transactionType: TapTransactionType;
+};
+
+export type ExecuteTradeResult = {
+  __typename?: 'ExecuteTradeResult';
+  amountSats?: Maybe<Scalars['String']['output']>;
+  feeSats?: Maybe<Scalars['String']['output']>;
+  paymentPreimage?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
 export type FeeHealth = {
   __typename?: 'FeeHealth';
   base?: Maybe<Scalars['String']['output']>;
@@ -524,6 +541,7 @@ export type Mutation = {
   createBoltzReverseSwap: CreateBoltzReverseSwapType;
   createInvoice: CreateInvoice;
   createMacaroon: CreateMacaroon;
+  executeTrade: ExecuteTradeResult;
   fetchLnUrl: LnUrlRequest;
   finalizeTapBatch: TapFinalizeBatchResponse;
   fundTapAssetChannel: TapFundChannelResponse;
@@ -610,6 +628,10 @@ export type MutationCreateInvoiceArgs = {
 
 export type MutationCreateMacaroonArgs = {
   permissions: NetworkInfoInput;
+};
+
+export type MutationExecuteTradeArgs = {
+  input: ExecuteTradeInput;
 };
 
 export type MutationFetchLnUrlArgs = {
@@ -700,10 +722,6 @@ export type MutationSendToAddressArgs = {
   sendAll?: InputMaybe<Scalars['Boolean']['input']>;
   target?: InputMaybe<Scalars['Float']['input']>;
   tokens?: InputMaybe<Scalars['Float']['input']>;
-};
-
-export type MutationExecuteTradeArgs = {
-  input: ExecuteTradeInput;
 };
 
 export type MutationSetupTradePartnerArgs = {
@@ -1059,6 +1077,7 @@ export type Query = {
   getTapUniverseInfo: TapUniverseInfo;
   getTapUniverseStats: TapUniverseStats;
   getTimeHealth: ChannelsTimeHealth;
+  getTradeQuote: TradeQuoteResult;
   getTwofaSecret: TwofaResult;
   getUtxos: Array<Utxo>;
   getVolumeHealth: ChannelsHealth;
@@ -1128,6 +1147,10 @@ export type QueryGetTapBalancesArgs = {
 
 export type QueryGetTapOffersArgs = {
   input: GetTapOffersInput;
+};
+
+export type QueryGetTradeQuoteArgs = {
+  input: TradeQuoteInput;
 };
 
 export type QueryRecoverFundsArgs = {
@@ -1527,6 +1550,21 @@ export type TeamMutationsDelete_NodeArgs = {
 
 export type TeamMutationsEdit_NodeArgs = {
   input: EditNodeInput;
+};
+
+export type TradeQuoteInput = {
+  assetAmount: Scalars['String']['input'];
+  peerPubkey: Scalars['String']['input'];
+  tapdAssetId: Scalars['String']['input'];
+  tapdGroupKey?: InputMaybe<Scalars['String']['input']>;
+  transactionType: TapTransactionType;
+};
+
+export type TradeQuoteResult = {
+  __typename?: 'TradeQuoteResult';
+  amountSats: Scalars['String']['output'];
+  assetAmount: Scalars['String']['output'];
+  rateFixed?: Maybe<Scalars['String']['output']>;
 };
 
 export type TwofaResult = {
