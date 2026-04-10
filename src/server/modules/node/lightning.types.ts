@@ -78,6 +78,7 @@ export type PayOptions = {
   max_fee_mtokens?: string;
   outgoing_channel?: string;
   tokens?: number;
+  is_allow_self_payment?: boolean;
 };
 
 export type CreateInvoiceOptions = {

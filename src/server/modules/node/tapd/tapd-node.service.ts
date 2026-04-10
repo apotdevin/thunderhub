@@ -473,6 +473,7 @@ export class TapdNodeService {
     bidAssetRate: { coefficient: string; scale: number } | null;
     scid: string;
     minTransportableMsat: string;
+    expiry: string;
   }> {
     const tapd = this.getTapd(opts.id);
 
@@ -510,6 +511,7 @@ export class TapdNodeService {
       bidAssetRate: quote.bidAssetRate,
       scid: quote.scid,
       minTransportableMsat: quote.minTransportableMsat,
+      expiry: quote.expiry,
     };
   }
 
@@ -520,6 +522,7 @@ export class TapdNodeService {
     assetAmount?: string;
     paymentRequest: string;
     peerPubkey?: string;
+    rfqId?: string;
   }): Promise<LnrpcPayment> {
     const tapd = this.getTapd(opts.id);
 
@@ -531,14 +534,14 @@ export class TapdNodeService {
       ...(opts.peerPubkey
         ? { peerPubkey: Buffer.from(opts.peerPubkey, 'hex') }
         : {}),
-      allowOverpay: true,
+      ...(opts.rfqId ? { rfqId: Buffer.from(opts.rfqId, 'hex') } : {}),
       priceOracleMetadata: JSON.stringify({
         swapNodePubkey: opts.peerPubkey,
       }),
       paymentRequest: {
         paymentRequest: opts.paymentRequest,
         allowSelfPayment: true,
-        feeLimitSat: '10',
+        feeLimitSat: '100',
         timeoutSeconds: 60,
       },
     });
