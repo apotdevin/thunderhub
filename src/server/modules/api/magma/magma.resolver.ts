@@ -376,11 +376,16 @@ export class MagmaResolver {
             feeSats: order.fees?.buyer?.sats,
           });
 
+          const isAssetAmount =
+            input.transactionType === TapTransactionType.PURCHASE &&
+            !input.skipOutboundChannel;
+
           return {
             id: order.id,
             status: order.status,
             invoice,
-            amountAsset: order.size,
+            amountSats: isAssetAmount ? undefined : order.size,
+            amountAsset: isAssetAmount ? order.size : undefined,
             feeSats: order.fees?.buyer?.sats,
           };
         },
@@ -513,6 +518,7 @@ export class MagmaResolver {
       magmaOrderId: result.magmaOrder.id,
       magmaOrderStatus: result.magmaOrder.status,
       magmaOrderAmountSats: result.magmaOrder.amountSats,
+      magmaOrderAmountAsset: result.magmaOrder.amountAsset,
       magmaOrderFeeSats:
         result.magmaOrder.feeSats != null
           ? String(result.magmaOrder.feeSats)
