@@ -5,7 +5,7 @@ export const EXECUTE_TRADE = gql`
     executeTrade(input: $input) {
       success
       paymentPreimage
-      amountSats
+      satsAmount
       feeSats
     }
   }

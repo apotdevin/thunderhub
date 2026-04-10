@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   Loader2,
@@ -24,7 +24,11 @@ import { useGetPeerChannelsQuery } from '../../graphql/queries/__generated__/get
 import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
 import { useGetTradeQuoteLazyQuery } from '../../graphql/queries/__generated__/getTradeQuote.generated';
 import { getErrorContent } from '../../utils/error';
-import { atomicToDisplay, displayAssetToSats } from './trade.helpers';
+import {
+  atomicToDisplay,
+  displayAssetToSats,
+  displayToAtomic,
+} from './trade.helpers';
 
 export type Offer = {
   id: string;
@@ -46,30 +50,6 @@ type TradeSheetProps = {
   onOpenChange: (open: boolean) => void;
 };
 
-// Converts a decimal display string (e.g. "1.5") to atomic BigInt units
-const displayToAtomic = (display: string, precision: number): bigint => {
-  const [whole, frac = ''] = display.split('.');
-  const padded = frac.padEnd(precision, '0').slice(0, precision);
-  return BigInt(whole || '0') * BigInt(10 ** precision) + BigInt(padded || '0');
-};
-
-// Converts display asset units to sats using the atomic rate
-const displayAssetToSats = (
-  displayAmount: string,
-  rate: string,
-  precision: number
-): string => {
-  if (!rate || rate === '0') return '0';
-  const atomic = displayToAtomic(displayAmount, precision);
-  return ((atomic * BigInt(100_000_000)) / BigInt(rate)).toString();
-};
-
-const atomicToDisplay = (atomic: string, precision: number): string => {
-  if (precision === 0) return atomic;
-  const divisor = 10 ** precision;
-  return (Number(atomic) / divisor).toFixed(precision);
-};
-
 export const TradeSheet: FC<TradeSheetProps> = ({
   offer,
   assetId,
@@ -84,6 +64,12 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const [amount, setAmount] = useState('');
   const [step, setStep] = useState<'input' | 'confirm'>('input');
   const [quotedSats, setQuotedSats] = useState<string | null>(null);
+  const [quotePaymentRequest, setQuotePaymentRequest] = useState<string | null>(
+    null
+  );
+  const [quoteRfqId, setQuoteRfqId] = useState<string | null>(null);
+  const [quoteExpiry, setQuoteExpiry] = useState<number | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
 
   const [openChannel, { loading: openChannelLoading }] = useOpenChannelMutation(
     {
@@ -119,6 +105,9 @@ export const TradeSheet: FC<TradeSheetProps> = ({
           setAmount('');
           setStep('input');
           setQuotedSats(null);
+          setQuotePaymentRequest(null);
+          setQuoteRfqId(null);
+          setQuoteExpiry(null);
         }
       },
       onError: err => toast.error(getErrorContent(err)),
@@ -128,8 +117,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     onCompleted: data => {
       const result = data.executeTrade;
       if (result.success) {
-        const satsInfo = result.amountSats
-          ? ` for ${Number(result.amountSats).toLocaleString()} sats`
+        const satsInfo = result.satsAmount
+          ? ` for ${Number(result.satsAmount).toLocaleString()} sats`
           : '';
         const feeLabel = result.feeSats
           ? ` (fee: ${Number(result.feeSats).toLocaleString()} sats)`
@@ -139,6 +128,9 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         setAmount('');
         setStep('input');
         setQuotedSats(null);
+        setQuotePaymentRequest(null);
+        setQuoteRfqId(null);
+        setQuoteExpiry(null);
       } else {
         toast.error('Trade did not complete — please try again');
         setStep('input');
@@ -150,6 +142,32 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const [fetchQuote, { loading: quoteLoading }] = useGetTradeQuoteLazyQuery({
     fetchPolicy: 'network-only',
   });
+
+  // Countdown timer for quote expiry
+  useEffect(() => {
+    if (quoteExpiry == null) {
+      setSecondsLeft(null);
+      return;
+    }
+    const tick = () => {
+      const remaining = Math.max(
+        0,
+        Math.floor(quoteExpiry - Date.now() / 1000)
+      );
+      setSecondsLeft(remaining);
+      if (remaining <= 0) {
+        setQuotedSats(null);
+        setQuotePaymentRequest(null);
+        setQuoteRfqId(null);
+        setQuoteExpiry(null);
+      }
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [quoteExpiry]);
+
+  const quoteExpired = secondsLeft != null && secondsLeft <= 0;
 
   const { data: channelsData, loading: channelsLoading } =
     useGetPeerChannelsQuery({
@@ -254,8 +272,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const satsLabel = displaySats
     ? `${Number(displaySats).toLocaleString()} sats`
     : 'fetching quote...';
-  const sendLabel = isBuy ? satsLabel : `${amount} ${assetSymbol}`;
-  const receiveLabel = isBuy ? `${amount} ${assetSymbol}` : satsLabel;
+  const sendLabel = isAssetPurchase ? satsLabel : `${amount} ${assetSymbol}`;
+  const receiveLabel = isAssetPurchase ? `${amount} ${assetSymbol}` : satsLabel;
 
   // For channel setup: BUY outbound = BTC (sats), magma inbound = asset
   // SELL outbound = asset, magma inbound = BTC (sats)
@@ -317,6 +335,9 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const handleReviewTrade = async () => {
     if (!amount || !offer.node.pubkey) return;
     setQuotedSats(null);
+    setQuotePaymentRequest(null);
+    setQuoteRfqId(null);
+    setQuoteExpiry(null);
     const assetAtomicAmount = String(displayToAtomic(amount, assetPrecision));
     const { data, error } = await fetchQuote({
       variables: {
@@ -333,7 +354,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       toast.error(getErrorContent(error));
       return;
     }
-    const quotedAmount = data?.getTradeQuote.amountSats;
+    const quote = data?.getTradeQuote;
+    const quotedAmount = quote?.satsAmount;
     if (!quotedAmount || quotedAmount === '0') {
       toast.error(
         'Could not get a valid quote from the peer — please try again'
@@ -341,6 +363,11 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       return;
     }
     setQuotedSats(quotedAmount);
+    setQuotePaymentRequest(quote?.paymentRequest || null);
+    setQuoteRfqId(quote?.rfqId || null);
+    if (quote?.expiryEpoch) {
+      setQuoteExpiry(Number(quote.expiryEpoch));
+    }
     setStep('confirm');
   };
 
@@ -360,16 +387,25 @@ export const TradeSheet: FC<TradeSheetProps> = ({
           satsAmount: displaySats,
           transactionType,
           peerPubkey: offer.node.pubkey,
+          paymentRequest: quotePaymentRequest || undefined,
+          rfqId: quoteRfqId || undefined,
         },
       },
     });
+  };
+
+  const clearQuoteState = () => {
+    setQuotedSats(null);
+    setQuotePaymentRequest(null);
+    setQuoteRfqId(null);
+    setQuoteExpiry(null);
   };
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       setStep('input');
       setAmount('');
-      setQuotedSats(null);
+      clearQuoteState();
     }
     onOpenChange(open);
   };
@@ -572,29 +608,44 @@ export const TradeSheet: FC<TradeSheetProps> = ({
 
             {readyToTrade ? (
               <div className="flex flex-col gap-2">
-                <span className="text-sm font-medium">Trade summary</span>
-                <div className="flex flex-col gap-2">
-                  <div className="rounded-md border border-border bg-muted/20 p-3">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                      <ArrowRight className="h-3.5 w-3.5" />
-                      <span className="font-medium text-foreground">
-                        You send
-                      </span>
-                    </div>
-                    <div className="text-sm font-mono ml-5.5">{sendLabel}</div>
-                  </div>
-                  <div className="rounded-md border border-border bg-muted/20 p-3">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                      <ArrowLeft className="h-3.5 w-3.5" />
-                      <span className="font-medium text-foreground">
-                        You receive
-                      </span>
-                    </div>
-                    <div className="text-sm font-mono ml-5.5">
-                      {receiveLabel}
-                    </div>
-                  </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Trade summary</span>
+                  {secondsLeft != null && secondsLeft > 0 && (
+                    <span className="text-xs text-muted-foreground tabular-nums">
+                      Quote expires in {secondsLeft}s
+                    </span>
+                  )}
                 </div>
+                {quoteExpired ? (
+                  <div className="rounded-md border border-yellow-500/20 bg-yellow-500/5 p-3 text-sm text-yellow-600">
+                    Quote expired — go back and request a new quote
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    <div className="rounded-md border border-border bg-muted/20 p-3">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                        <ArrowRight className="h-3.5 w-3.5" />
+                        <span className="font-medium text-foreground">
+                          You send
+                        </span>
+                      </div>
+                      <div className="text-sm font-mono ml-5.5">
+                        {sendLabel}
+                      </div>
+                    </div>
+                    <div className="rounded-md border border-border bg-muted/20 p-3">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                        <ArrowLeft className="h-3.5 w-3.5" />
+                        <span className="font-medium text-foreground">
+                          You receive
+                        </span>
+                      </div>
+                      <div className="text-sm font-mono ml-5.5">
+                        {receiveLabel}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : needsOnlyOutboundBtc ? (
               <div className="flex flex-col gap-2">
@@ -620,7 +671,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                         <ArrowRight className="h-3.5 w-3.5" />
                         <span className="font-medium text-foreground">
-                          Outbound {isBuy ? 'BTC' : assetSymbol} channel
+                          Outbound {isAssetPurchase ? 'BTC' : assetSymbol}{' '}
+                          channel
                         </span>
                       </div>
                       <div className="text-sm font-mono ml-5.5">
@@ -633,7 +685,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                         <ArrowLeft className="h-3.5 w-3.5" />
                         <span className="font-medium text-foreground">
-                          Inbound {isBuy ? assetSymbol : 'BTC'} channel (Magma)
+                          Inbound {isAssetPurchase ? assetSymbol : 'BTC'}{' '}
+                          channel (Magma)
                         </span>
                       </div>
                       <div className="text-sm font-mono ml-5.5">
@@ -674,7 +727,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 variant="outline"
                 onClick={() => {
                   setStep('input');
-                  setQuotedSats(null);
+                  clearQuoteState();
                 }}
                 disabled={loading}
                 className="flex-1"
@@ -684,7 +737,9 @@ export const TradeSheet: FC<TradeSheetProps> = ({
               {readyToTrade ? (
                 <Button
                   onClick={handleTrade}
-                  disabled={loading || quoteLoading || !displaySats}
+                  disabled={
+                    loading || quoteLoading || !displaySats || quoteExpired
+                  }
                   className="flex-1"
                 >
                   {loading ? (

@@ -22,13 +22,22 @@ export class TradeQuoteInput {
 @ObjectType()
 export class TradeQuoteResult {
   @Field()
-  amountSats: string;
+  satsAmount: string;
 
   @Field()
   assetAmount: string;
 
   @Field({ nullable: true })
   rateFixed?: string;
+
+  @Field({ nullable: true })
+  paymentRequest?: string;
+
+  @Field({ nullable: true })
+  rfqId?: string;
+
+  @Field({ nullable: true })
+  expiryEpoch?: string;
 }
 
 @InputType()
@@ -50,6 +59,12 @@ export class ExecuteTradeInput {
 
   @Field()
   peerPubkey: string;
+
+  @Field({ nullable: true })
+  paymentRequest?: string;
+
+  @Field({ nullable: true })
+  rfqId?: string;
 }
 
 @ObjectType()
@@ -61,7 +76,7 @@ export class ExecuteTradeResult {
   paymentPreimage?: string;
 
   @Field({ nullable: true })
-  amountSats?: string;
+  satsAmount?: string;
 
   @Field({ nullable: true })
   feeSats?: string;

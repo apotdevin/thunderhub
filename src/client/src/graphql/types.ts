@@ -376,7 +376,9 @@ export type EditNodeResult = {
 
 export type ExecuteTradeInput = {
   assetAmount: Scalars['String']['input'];
+  paymentRequest?: InputMaybe<Scalars['String']['input']>;
   peerPubkey: Scalars['String']['input'];
+  rfqId?: InputMaybe<Scalars['String']['input']>;
   satsAmount: Scalars['String']['input'];
   tapdAssetId: Scalars['String']['input'];
   tapdGroupKey?: InputMaybe<Scalars['String']['input']>;
@@ -385,9 +387,9 @@ export type ExecuteTradeInput = {
 
 export type ExecuteTradeResult = {
   __typename?: 'ExecuteTradeResult';
-  amountSats?: Maybe<Scalars['String']['output']>;
   feeSats?: Maybe<Scalars['String']['output']>;
   paymentPreimage?: Maybe<Scalars['String']['output']>;
+  satsAmount?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
 };
 
@@ -1194,47 +1196,6 @@ export type ServerAccount = {
   type: Scalars['String']['output'];
 };
 
-export type GetTapOffersInput = {
-  assetId: Scalars['String']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  minAmount?: InputMaybe<Scalars['String']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  sortBy?: InputMaybe<TapOfferSortBy>;
-  sortDir?: InputMaybe<TapOfferSortDir>;
-  transactionType: TapTransactionType;
-};
-
-export type TradeQuoteInput = {
-  assetAmount: Scalars['String']['input'];
-  peerPubkey: Scalars['String']['input'];
-  tapdAssetId: Scalars['String']['input'];
-  tapdGroupKey?: InputMaybe<Scalars['String']['input']>;
-  transactionType: TapTransactionType;
-};
-
-export type TradeQuoteResult = {
-  __typename?: 'TradeQuoteResult';
-  amountSats: Scalars['String']['output'];
-  assetAmount: Scalars['String']['output'];
-  rateFixed?: Maybe<Scalars['String']['output']>;
-};
-
-export type ExecuteTradeInput = {
-  assetAmount: Scalars['String']['input'];
-  peerPubkey: Scalars['String']['input'];
-  satsAmount: Scalars['String']['input'];
-  tapdAssetId: Scalars['String']['input'];
-  tapdGroupKey?: InputMaybe<Scalars['String']['input']>;
-  transactionType: TapTransactionType;
-};
-
-export type ExecuteTradeResult = {
-  __typename?: 'ExecuteTradeResult';
-  amountSats?: Maybe<Scalars['String']['output']>;
-  feeSats?: Maybe<Scalars['String']['output']>;
-  paymentPreimage?: Maybe<Scalars['String']['output']>;
-  success: Scalars['Boolean']['output'];
-};
 export type SetupTradePartnerInput = {
   amount: Scalars['String']['input'];
   assetId: Scalars['String']['input'];
@@ -1560,9 +1521,12 @@ export type TradeQuoteInput = {
 
 export type TradeQuoteResult = {
   __typename?: 'TradeQuoteResult';
-  amountSats: Scalars['String']['output'];
   assetAmount: Scalars['String']['output'];
+  expiryEpoch?: Maybe<Scalars['String']['output']>;
+  paymentRequest?: Maybe<Scalars['String']['output']>;
   rateFixed?: Maybe<Scalars['String']['output']>;
+  rfqId?: Maybe<Scalars['String']['output']>;
+  satsAmount: Scalars['String']['output'];
 };
 
 export type TwofaResult = {
