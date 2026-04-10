@@ -27,6 +27,22 @@ export const GetTradeQuoteDocument = gql`
   }
 `;
 
+/**
+ * __useGetTradeQuoteQuery__
+ *
+ * To run a query within a React component, call `useGetTradeQuoteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTradeQuoteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTradeQuoteQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
 export function useGetTradeQuoteQuery(
   baseOptions: Apollo.QueryHookOptions<
     GetTradeQuoteQuery,
@@ -55,11 +71,52 @@ export function useGetTradeQuoteLazyQuery(
     options
   );
 }
+// @ts-ignore
+export function useGetTradeQuoteSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetTradeQuoteQuery,
+    GetTradeQuoteQueryVariables
+  >
+): Apollo.UseSuspenseQueryResult<
+  GetTradeQuoteQuery,
+  GetTradeQuoteQueryVariables
+>;
+export function useGetTradeQuoteSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTradeQuoteQuery,
+        GetTradeQuoteQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetTradeQuoteQuery | undefined,
+  GetTradeQuoteQueryVariables
+>;
+export function useGetTradeQuoteSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTradeQuoteQuery,
+        GetTradeQuoteQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetTradeQuoteQuery,
+    GetTradeQuoteQueryVariables
+  >(GetTradeQuoteDocument, options);
+}
 export type GetTradeQuoteQueryHookResult = ReturnType<
   typeof useGetTradeQuoteQuery
 >;
 export type GetTradeQuoteLazyQueryHookResult = ReturnType<
   typeof useGetTradeQuoteLazyQuery
+>;
+export type GetTradeQuoteSuspenseQueryHookResult = ReturnType<
+  typeof useGetTradeQuoteSuspenseQuery
 >;
 export type GetTradeQuoteQueryResult = Apollo.QueryResult<
   GetTradeQuoteQuery,

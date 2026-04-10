@@ -828,6 +828,7 @@ input SetupTradePartnerInput {
 }
 
 type SetupTradePartnerResult {
+  magmaOrderAmountAsset: String
   magmaOrderAmountSats: String
   magmaOrderFeeSats: String
   magmaOrderId: String
