@@ -991,8 +991,8 @@ type TapTradeOffer {
 }
 
 type TapTradeOfferAmount {
-  displayAmount: String
-  fullAmount: String
+  displayAmount: String!
+  fullAmount: String!
 }
 
 type TapTradeOfferList {

@@ -70,11 +70,11 @@ export class TapTradeOfferNode {
 
 @ObjectType()
 export class TapTradeOfferAmount {
-  @Field({ nullable: true })
-  displayAmount?: string;
+  @Field()
+  displayAmount: string;
 
-  @Field({ nullable: true })
-  fullAmount?: string;
+  @Field()
+  fullAmount: string;
 }
 
 @ObjectType()
