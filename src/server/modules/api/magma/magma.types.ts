@@ -35,7 +35,7 @@ registerEnumType(TapOfferSortDir, { name: 'TapOfferSortDir' });
 @InputType()
 export class GetTapOffersInput {
   @Field()
-  assetId: string;
+  ambossAssetId: string;
 
   @Field(() => TapTransactionType)
   transactionType: TapTransactionType;
@@ -154,7 +154,7 @@ export class SetupTradePartnerInput {
   magmaOfferId: string;
 
   @Field()
-  assetId: string;
+  ambossAssetId: string;
 
   @Field()
   amount: string;

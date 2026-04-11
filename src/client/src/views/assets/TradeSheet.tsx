@@ -34,7 +34,7 @@ export type Offer = {
 
 type TradeSheetProps = {
   offer: Offer | null;
-  assetId: string;
+  ambossAssetId: string;
   tapdAssetId: string;
   tapdGroupKey: string;
   assetSymbol: string;
@@ -46,7 +46,7 @@ type TradeSheetProps = {
 
 export const TradeSheet: FC<TradeSheetProps> = ({
   offer,
-  assetId,
+  ambossAssetId,
   tapdAssetId,
   tapdGroupKey,
   assetSymbol,
@@ -224,7 +224,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       variables: {
         input: {
           magmaOfferId: offer.magmaOfferId,
-          assetId,
+          ambossAssetId,
           amount: magmaOnlyBuy
             ? atomicTradeAmount.toString()
             : isAssetPurchase

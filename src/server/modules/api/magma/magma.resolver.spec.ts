@@ -67,7 +67,7 @@ describe('MagmaResolver', () => {
       });
 
       const result = await resolver.getTapOffers(userId, {
-        assetId: 'asset123',
+        ambossAssetId: 'asset123',
         transactionType: TapTransactionType.PURCHASE,
         sortBy: TapOfferSortBy.RATE,
         sortDir: TapOfferSortDir.ASC,
@@ -88,7 +88,7 @@ describe('MagmaResolver', () => {
       mockConfigService.get.mockReturnValue(undefined);
 
       const result = await resolver.getTapOffers(userId, {
-        assetId: 'asset123',
+        ambossAssetId: 'asset123',
         transactionType: TapTransactionType.PURCHASE,
       });
 
@@ -103,7 +103,7 @@ describe('MagmaResolver', () => {
       });
 
       const result = await resolver.getTapOffers(userId, {
-        assetId: 'asset123',
+        ambossAssetId: 'asset123',
         transactionType: TapTransactionType.SALE,
       });
 
@@ -123,7 +123,7 @@ describe('MagmaResolver', () => {
       });
 
       await resolver.getTapOffers(userId, {
-        assetId: 'asset123',
+        ambossAssetId: 'asset123',
         transactionType: TapTransactionType.PURCHASE,
       });
 
@@ -332,7 +332,7 @@ describe('MagmaResolver', () => {
 
     const purchaseInput = {
       magmaOfferId: 'offer-1',
-      assetId: 'marketplace-asset-1',
+      ambossAssetId: 'marketplace-asset-1',
       amount: '100000',
       assetRate,
       assetPrecision,
@@ -344,7 +344,7 @@ describe('MagmaResolver', () => {
 
     const saleInput = {
       magmaOfferId: 'offer-2',
-      assetId: 'marketplace-asset-1',
+      ambossAssetId: 'marketplace-asset-1',
       amount: '1000',
       assetRate,
       assetPrecision,

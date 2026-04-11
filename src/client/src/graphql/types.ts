@@ -419,7 +419,7 @@ export type GetPaymentsType = {
 };
 
 export type GetTapOffersInput = {
-  assetId: Scalars['String']['input'];
+  ambossAssetId: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   minAmount?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1168,8 +1168,8 @@ export type ServerAccount = {
 };
 
 export type SetupTradePartnerInput = {
+  ambossAssetId: Scalars['String']['input'];
   amount: Scalars['String']['input'];
-  assetId: Scalars['String']['input'];
   assetPrecision: Scalars['Int']['input'];
   assetRate: Scalars['String']['input'];
   magmaOfferId: Scalars['String']['input'];

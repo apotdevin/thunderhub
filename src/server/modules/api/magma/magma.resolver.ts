@@ -111,7 +111,7 @@ export class MagmaResolver {
       };
     }>(tradeUrl, getOffersQuery, {
       input: {
-        asset_id: input.assetId,
+        asset_id: input.ambossAssetId,
         transaction_type: input.transactionType,
         ...(input.sortBy ? { sort_by: input.sortBy } : {}),
         ...(input.sortDir ? { sort_dir: input.sortDir } : {}),
@@ -326,7 +326,7 @@ export class MagmaResolver {
                   pubkey: nodeInfo.publicKey,
                   size: magmaSize,
                   payment_method: 'SATS',
-                  options: { asset_id: input.assetId },
+                  options: { asset_id: input.ambossAssetId },
                 },
               },
               { authorization: `Bearer ${ambossAuth}` }
