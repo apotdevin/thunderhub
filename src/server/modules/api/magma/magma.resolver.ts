@@ -226,6 +226,11 @@ export class MagmaResolver {
         if (!input.swapNodePubkey) {
           throw new GraphQLError('Swap node pubkey is required');
         }
+        if (!input.tapdAssetId && !input.tapdGroupKey) {
+          throw new GraphQLError(
+            'Either tapdAssetId or tapdGroupKey must be provided'
+          );
+        }
       },
 
       nodeInfo: async (): Promise<SetupTradePartnerAuto['nodeInfo']> => {

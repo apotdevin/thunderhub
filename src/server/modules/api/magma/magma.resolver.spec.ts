@@ -339,6 +339,7 @@ describe('MagmaResolver', () => {
       transactionType: TapTransactionType.PURCHASE,
       swapNodePubkey: swapPubkey,
       swapNodeSockets: ['127.0.0.1:9735'],
+      tapdAssetId: 'deadbeef'.repeat(8),
     };
 
     const saleInput = {
@@ -570,6 +571,16 @@ describe('MagmaResolver', () => {
           amount: '0',
         })
       ).rejects.toThrow('Amount must be greater than zero');
+    });
+
+    it('throws when neither tapdAssetId nor tapdGroupKey is provided', async () => {
+      await expect(
+        setupResolver.setupTradePartner(userId, ambossContext as never, {
+          ...purchaseInput,
+          tapdAssetId: undefined,
+          tapdGroupKey: undefined,
+        })
+      ).rejects.toThrow('Either tapdAssetId or tapdGroupKey must be provided');
     });
   });
 });
