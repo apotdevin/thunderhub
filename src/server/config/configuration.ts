@@ -115,21 +115,23 @@ const VALID_NODE_TYPES = ['lnd', 'litd'];
 const getValidNodeType = (value: string | undefined): string =>
   value && VALID_NODE_TYPES.includes(value) ? value : 'lnd';
 
-const ALLOWED_TRADE_HOSTS = ['rails.amboss.tech', 'rails-dev.amboss.tech'];
-
 const getValidTradeUrl = (
   value: string | undefined,
   isProduction: boolean
 ): string => {
-  const url = value || 'https://rails.amboss.tech/graphql';
+  const defaultUrl = isProduction
+    ? 'https://rails.amboss.tech/graphql'
+    : 'https://rails-dev.amboss.tech/graphql';
+
+  if (!value) return defaultUrl;
+
   try {
-    const parsed = new URL(url);
-    if (isProduction && parsed.protocol !== 'https:') return '';
-    if (!ALLOWED_TRADE_HOSTS.includes(parsed.hostname)) return '';
-    return url;
+    new URL(value);
   } catch {
-    return '';
+    throw new Error('Invalid TRADE_API_URL URL value provided');
   }
+
+  return value;
 };
 
 export default (): ConfigType => {
