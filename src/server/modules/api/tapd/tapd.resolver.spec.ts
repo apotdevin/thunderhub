@@ -62,6 +62,7 @@ describe('TapdResolver', () => {
       service as never,
       { graphqlFetchWithProxy: jest.fn() } as never,
       { get: jest.fn() } as never,
+      { syncForAccount: jest.fn() } as never,
       mockLogger as never
     );
   });
@@ -715,6 +716,9 @@ describe('TapdResolver trading queries', () => {
 
   const mockFetchService = { graphqlFetchWithProxy: jest.fn() };
   const mockConfigService = { get: jest.fn() };
+  const mockFederationService = {
+    syncForAccount: jest.fn().mockResolvedValue(undefined),
+  };
   const mockLogger = { error: jest.fn(), warn: jest.fn(), info: jest.fn() };
 
   let resolver: TapdResolver;
@@ -726,6 +730,7 @@ describe('TapdResolver trading queries', () => {
       {} as never,
       mockFetchService as never,
       mockConfigService as never,
+      mockFederationService as never,
       mockLogger as never
     );
   });
@@ -869,7 +874,7 @@ describe('TapdResolver trading queries', () => {
         error: undefined,
       });
 
-      const result = await resolver.getTapSupportedAssets();
+      const result = await resolver.getTapSupportedAssets(userId);
 
       expect(result.totalCount).toBe(1);
       expect(result.list[0]).toEqual({
@@ -909,7 +914,7 @@ describe('TapdResolver trading queries', () => {
         error: undefined,
       });
 
-      const result = await resolver.getTapSupportedAssets();
+      const result = await resolver.getTapSupportedAssets(userId);
 
       expect(result.list[0]).toEqual({
         id: 'asset-2',
@@ -926,7 +931,7 @@ describe('TapdResolver trading queries', () => {
     it('returns empty list when trade URL is not configured', async () => {
       mockConfigService.get.mockReturnValue(undefined);
 
-      const result = await resolver.getTapSupportedAssets();
+      const result = await resolver.getTapSupportedAssets(userId);
 
       expect(result).toEqual({ list: [], totalCount: 0 });
       expect(mockFetchService.graphqlFetchWithProxy).not.toHaveBeenCalled();
@@ -938,7 +943,7 @@ describe('TapdResolver trading queries', () => {
         error: new Error('timeout'),
       });
 
-      const result = await resolver.getTapSupportedAssets();
+      const result = await resolver.getTapSupportedAssets(userId);
 
       expect(result).toEqual({ list: [], totalCount: 0 });
       expect(mockLogger.error).toHaveBeenCalledWith(
@@ -962,7 +967,7 @@ describe('TapdResolver trading queries', () => {
         error: undefined,
       });
 
-      const result = await resolver.getTapSupportedAssets();
+      const result = await resolver.getTapSupportedAssets(userId);
 
       expect(result.list[0]).toEqual({
         id: 'asset-2',

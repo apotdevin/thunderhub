@@ -61,6 +61,7 @@ import {
   SyncedUniverse,
 } from '@lightningpolar/tapd-api';
 import { getOffersQuery, getSupportedAssetsQuery } from './tapd.gql';
+import { TapFederationService } from './tapd-federation.service';
 
 // Internal shapes matching the trade API GraphQL responses
 
@@ -126,6 +127,7 @@ export class TapdResolver {
     private tapdNodeService: TapdNodeService,
     private fetchService: FetchService,
     private configService: ConfigService,
+    private tapFederationService: TapFederationService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -734,7 +736,7 @@ export class TapdResolver {
   }
 
   @Query(() => TapSupportedAssetList)
-  async getTapSupportedAssets() {
+  async getTapSupportedAssets(@CurrentUser() { id }: UserId) {
     const tradeUrl = this.configService.get<string>('urls.trade');
     if (!tradeUrl) {
       return { list: [], totalCount: 0 };
@@ -758,6 +760,20 @@ export class TapdResolver {
     }
 
     const assets = data.public.assets.supported;
+
+    const universeHosts = [
+      ...new Set(
+        assets.list
+          .map(a => a.taproot_asset_details?.universe)
+          .filter((h): h is string => !!h)
+      ),
+    ];
+
+    if (universeHosts.length) {
+      this.tapFederationService
+        .syncForAccount(id, universeHosts)
+        .catch(() => {});
+    }
 
     return {
       list: assets.list.map(a => ({

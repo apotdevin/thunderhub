@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TapdModule } from '../../node/tapd/tapd.module';
 import { FetchModule } from '../../fetch/fetch.module';
-import { AccountsModule } from '../../accounts/accounts.module';
-import { ProviderRegistryModule } from '../../node/provider-registry.module';
 import {
   TapdResolver,
   TapAssetGenesisResolver,
@@ -11,7 +9,7 @@ import {
 import { TapFederationService } from './tapd-federation.service';
 
 @Module({
-  imports: [TapdModule, FetchModule, AccountsModule, ProviderRegistryModule],
+  imports: [TapdModule, FetchModule],
   providers: [
     TapdResolver,
     TapAssetGenesisResolver,
