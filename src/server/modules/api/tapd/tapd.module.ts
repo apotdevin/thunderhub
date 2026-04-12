@@ -6,9 +6,15 @@ import {
   TapAssetGenesisResolver,
   TapAssetResolver,
 } from './tapd.resolver';
+import { TapFederationService } from './tapd-federation.service';
 
 @Module({
   imports: [TapdModule, FetchModule],
-  providers: [TapdResolver, TapAssetGenesisResolver, TapAssetResolver],
+  providers: [
+    TapdResolver,
+    TapAssetGenesisResolver,
+    TapAssetResolver,
+    TapFederationService,
+  ],
 })
 export class TapdApiModule {}

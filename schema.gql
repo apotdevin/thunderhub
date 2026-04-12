@@ -896,6 +896,7 @@ input TapFundChannelInput {
   groupKey: String
   peerPubkey: String!
   pushSat: Int
+  universeHost: String
 }
 
 type TapFundChannelResponse {
@@ -925,6 +926,7 @@ type TapSupportedAsset {
   precision: Int!
   prices: TapAssetPrice
   symbol: String!
+  universeHost: String
 }
 
 type TapSupportedAssetList {

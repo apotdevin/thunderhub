@@ -19,6 +19,7 @@ export type GetTapSupportedAssetsQuery = {
       precision: number;
       assetId?: string | null;
       groupKey?: string | null;
+      universeHost?: string | null;
       prices?: { __typename?: 'TapAssetPrice'; usd?: number | null } | null;
     }>;
   };
@@ -34,6 +35,7 @@ export const GetTapSupportedAssetsDocument = gql`
         precision
         assetId
         groupKey
+        universeHost
         prices {
           usd
         }

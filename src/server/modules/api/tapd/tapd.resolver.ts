@@ -61,6 +61,7 @@ import {
   SyncedUniverse,
 } from '@lightningpolar/tapd-api';
 import { getOffersQuery, getSupportedAssetsQuery } from './tapd.gql';
+import { TapFederationService } from './tapd-federation.service';
 
 // Internal shapes matching the trade API GraphQL responses
 
@@ -76,7 +77,11 @@ interface TradeApiSupportedAsset {
   symbol?: string;
   description?: string;
   precision?: number;
-  taproot_asset_details?: { asset_id?: string; group_key?: string };
+  taproot_asset_details?: {
+    asset_id?: string;
+    group_key?: string;
+    universe?: string;
+  };
   prices?: { id?: string; usd?: number };
 }
 
@@ -122,6 +127,7 @@ export class TapdResolver {
     private tapdNodeService: TapdNodeService,
     private fetchService: FetchService,
     private configService: ConfigService,
+    private tapFederationService: TapFederationService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -730,16 +736,11 @@ export class TapdResolver {
   }
 
   @Query(() => TapSupportedAssetList)
-  async getTapSupportedAssets(
-    @CurrentUser() _user: UserId,
-    @Context() { ambossAuth }: ContextType
-  ) {
+  async getTapSupportedAssets(@CurrentUser() { id }: UserId) {
     const tradeUrl = this.configService.get<string>('urls.trade');
-    if (!tradeUrl || !ambossAuth) {
+    if (!tradeUrl) {
       return { list: [], totalCount: 0 };
     }
-
-    const headers = { authorization: `Bearer ${ambossAuth}` };
 
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       public: {
@@ -750,7 +751,7 @@ export class TapdResolver {
           };
         };
       };
-    }>(tradeUrl, getSupportedAssetsQuery, undefined, headers);
+    }>(tradeUrl, getSupportedAssetsQuery);
 
     if (error || !data?.public?.assets?.supported) {
       if (error)
@@ -760,6 +761,20 @@ export class TapdResolver {
 
     const assets = data.public.assets.supported;
 
+    const universeHosts = [
+      ...new Set(
+        assets.list
+          .map(a => a.taproot_asset_details?.universe)
+          .filter((h): h is string => !!h)
+      ),
+    ];
+
+    if (universeHosts.length) {
+      this.tapFederationService
+        .syncForAccount(id, universeHosts)
+        .catch(() => {});
+    }
+
     return {
       list: assets.list.map(a => ({
         id: a.id,
@@ -768,6 +783,7 @@ export class TapdResolver {
         precision: a.precision ?? 0,
         assetId: a.taproot_asset_details?.asset_id,
         groupKey: a.taproot_asset_details?.group_key,
+        universeHost: a.taproot_asset_details?.universe,
         prices: a.prices ?? null,
       })),
       totalCount: assets.total_count,
