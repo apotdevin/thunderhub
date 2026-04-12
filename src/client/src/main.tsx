@@ -6,8 +6,9 @@ import App from './App';
 import { config, initConfig } from './config/thunderhubConfig';
 
 async function bootstrap() {
+  const configUrl = `${import.meta.env.BASE_URL}api/config`;
   try {
-    const res = await fetch('./api/config');
+    const res = await fetch(configUrl);
     if (res.ok) {
       const data = await res.json();
       initConfig(data);

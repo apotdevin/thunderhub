@@ -1,4 +1,6 @@
 import crypto from 'crypto';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 type SSOConfig = {
   serverUrl: string;
@@ -134,6 +136,22 @@ const getValidTradeUrl = (
   return value;
 };
 
+const getPackageVersion = (): string => {
+  if (process.env.npm_package_version) {
+    return process.env.npm_package_version;
+  }
+
+  try {
+    const packageJson = JSON.parse(
+      readFileSync(join(process.cwd(), 'package.json'), 'utf8')
+    ) as { version?: string };
+
+    return packageJson.version || '0.0.0';
+  } catch {
+    return '0.0.0';
+  }
+};
+
 export default (): ConfigType => {
   const isProduction = process.env.NODE_ENV === 'production';
 
@@ -164,7 +182,7 @@ export default (): ConfigType => {
     trade: getValidTradeUrl(process.env.TRADE_API_URL, isProduction),
   };
 
-  const npmVersion = process.env.npm_package_version || '0.0.0';
+  const npmVersion = getPackageVersion();
 
   const headers = {
     'apollographql-client-name': 'thunderhub',
