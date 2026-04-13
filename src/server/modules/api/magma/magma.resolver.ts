@@ -1,11 +1,10 @@
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { GraphQLError } from 'graphql';
 import { auto } from 'async';
-import { ContextType } from '../../../app.module';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
 import { NodeService } from '../../node/node.service';
 import { FetchService } from '../../fetch/fetch.service';
@@ -13,6 +12,8 @@ import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { toWithError } from '../../../utils/async';
 import { TapFederationService } from '../tapd/tapd-federation.service';
+import { AmbossTokenService } from '../amboss/amboss-token.service';
+import { AmbossService } from '../amboss/amboss.service';
 import {
   GetTapOffersInput,
   TapTradeOfferList,
@@ -93,6 +94,8 @@ export class MagmaResolver {
     private fetchService: FetchService,
     private configService: ConfigService,
     private tapFederationService: TapFederationService,
+    private ambossTokenService: AmbossTokenService,
+    private ambossService: AmbossService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -170,16 +173,11 @@ export class MagmaResolver {
   }
 
   @Query(() => TapSupportedAssetList)
-  async getTapSupportedAssets(
-    @CurrentUser() _user: UserId,
-    @Context() { ambossAuth }: ContextType
-  ) {
+  async getTapSupportedAssets(@CurrentUser() _user: UserId) {
     const tradeUrl = this.configService.get<string>('urls.trade');
     if (!tradeUrl) {
       return { list: [], totalCount: 0 };
     }
-
-    const headers = ambossAuth ? { authorization: `Bearer ${ambossAuth}` } : {};
 
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       public: {
@@ -190,7 +188,7 @@ export class MagmaResolver {
           };
         };
       };
-    }>(tradeUrl, getSupportedAssetsQuery, undefined, headers);
+    }>(tradeUrl, getSupportedAssetsQuery);
 
     if (error || !data?.public?.assets?.supported) {
       if (error) {
@@ -240,16 +238,11 @@ export class MagmaResolver {
   @Mutation(() => SetupTradePartnerResult)
   async setupTradePartner(
     @CurrentUser() user: UserId,
-    @Context() { ambossAuth }: ContextType,
     @Args('input') input: SetupTradePartnerInput
   ): Promise<SetupTradePartnerResult> {
+    const ambossAuth = await this.ambossTokenService.getOrCreate(user);
     const result = await auto<SetupTradePartnerAuto>({
       validate: async (): Promise<SetupTradePartnerAuto['validate']> => {
-        if (!ambossAuth) {
-          throw new GraphQLError(
-            'Amboss authentication is required to set up a trade partner'
-          );
-        }
         if (input.transactionType == TapTransactionType.SALE) {
           throw new GraphQLError(`Selling not implemented yet`);
         }
@@ -331,8 +324,7 @@ export class MagmaResolver {
         }: Pick<SetupTradePartnerAuto, 'nodeInfo'>): Promise<
           SetupTradePartnerAuto['magmaOrder']
         > => {
-          const magmaUrl =
-            this.configService.getOrThrow<string>('urls.amboss.magma');
+          const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
 
           const magmaSize = computeMagmaOrderSize(
             input.transactionType,

@@ -8,6 +8,8 @@ const chains = {
     '000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943',
   btctestnet4:
     '00000000da84f2bafbbc53dee25a72ae507ff4914b867c565be350b0da8bf043',
+  // Mutinynet shares its genesis with standard Bitcoin signet
+  btcsignet: '00000008819873e925422c1ff0f99f7cc9bbb232af63a077a480a3633bee1ef6',
 };
 
 export const getNetwork = (chain: string) => {
@@ -20,4 +22,59 @@ export const getNetwork = (chain: string) => {
   });
 
   return network;
+};
+
+const AMBOSS_AUTH_URLS: Record<string, string> = {
+  btc: 'https://account.amboss.tech/graphql',
+  btcsignet: 'https://account-dev.amboss.tech/graphql',
+};
+
+const AMBOSS_SPACE_URLS: Record<string, string> = {
+  btc: 'https://api.amboss.space/graphql',
+  btcsignet: 'https://api-dev.amboss.space/graphql',
+};
+
+const AMBOSS_MAGMA_URLS: Record<string, string> = {
+  btc: 'https://magma.amboss.tech/graphql',
+  btcsignet: 'https://magma-dev.amboss.tech/graphql',
+};
+
+/**
+ * Returns the Amboss auth API URL for the given network.
+ * Only mainnet and mutinynet/signet are supported — Amboss has no
+ * production or dev environment for testnet/testnet4/regtest.
+ */
+export const getAmbossAuthUrl = (network: string | undefined): string => {
+  if (!network || !(network in AMBOSS_AUTH_URLS)) {
+    throw new Error(
+      `Amboss authentication is not supported on the current network (${network ?? 'unknown'})`
+    );
+  }
+  return AMBOSS_AUTH_URLS[network];
+};
+
+/**
+ * Returns the Amboss Space API URL for the given network.
+ * Mainnet → api.amboss.space, mutinynet/signet → api-dev.amboss.space.
+ */
+export const getAmbossSpaceUrl = (network: string | undefined): string => {
+  if (!network || !(network in AMBOSS_SPACE_URLS)) {
+    throw new Error(
+      `Amboss is not supported on the current network (${network ?? 'unknown'})`
+    );
+  }
+  return AMBOSS_SPACE_URLS[network];
+};
+
+/**
+ * Returns the Magma API URL for the given network.
+ * Mainnet → magma.amboss.tech, mutinynet/signet → magma-dev.amboss.tech.
+ */
+export const getAmbossMagmaUrl = (network: string | undefined): string => {
+  if (!network || !(network in AMBOSS_MAGMA_URLS)) {
+    throw new Error(
+      `Magma is not supported on the current network (${network ?? 'unknown'})`
+    );
+  }
+  return AMBOSS_MAGMA_URLS[network];
 };

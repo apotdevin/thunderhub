@@ -28,6 +28,7 @@ import { UserId, AuthType, parseSubject } from '../../security/security.types';
 import { Throttle, seconds } from '@nestjs/throttler';
 import { UserService } from '../../user/user.service';
 import { ProviderRegistryService } from '../../node/provider-registry.service';
+import { getNetwork } from '../../../utils/network';
 
 @Resolver()
 export class AccountResolver {
@@ -151,8 +152,9 @@ export class TeamMutationsResolver {
 
     const config = configs[0]!;
 
-    // Test connection before saving
+    // Test connection before saving and detect the node's network
     const provider = this.providerRegistry.getProvider(config.type);
+    let network: string | undefined;
     try {
       const connection = provider.connect({
         socket: config.socket,
@@ -160,6 +162,8 @@ export class TeamMutationsResolver {
         cert: config.cert,
       });
       await provider.verifyConnection(connection);
+      const walletInfo = await provider.getWalletInfo(connection);
+      network = getNetwork(walletInfo?.chains?.[0] || '');
     } catch (error: any) {
       throw new Error(
         `Failed to connect to node: ${error.message || 'Unknown error'}`
@@ -173,6 +177,7 @@ export class TeamMutationsResolver {
       name,
       type: config.type,
       socket: config.socket,
+      network,
     });
 
     const node = await this.userService.addNode(dbUserId, {
@@ -181,6 +186,7 @@ export class TeamMutationsResolver {
       socket: config.socket,
       macaroon: config.macaroon,
       cert: config.cert,
+      network,
     });
 
     return {
@@ -196,8 +202,31 @@ export class TeamMutationsResolver {
     @Args('input') input: EditNodeInput
   ): Promise<EditNodeResult> {
     const dbUserId = user.userId ?? user.id;
+
+    // Re-detect the node's network from its live connection so the stored
+    // value stays truthful (e.g. a mis-detected mainnet node that's actually
+    // mutinynet will self-correct on the next edit).
+    let network: string | undefined;
+    try {
+      const account = await this.accountsService.getDbNodeBySlug(
+        input.slug,
+        dbUserId
+      );
+      if (account) {
+        const provider = this.providerRegistry.getProvider(account.type);
+        const walletInfo = await provider.getWalletInfo(account.connection);
+        network = getNetwork(walletInfo?.chains?.[0] || '');
+      }
+    } catch (err) {
+      this.logger.warn('Failed to re-detect network during edit_node', {
+        slug: input.slug,
+        err,
+      });
+    }
+
     const node = await this.userService.editNode(dbUserId, input.slug, {
       name: input.name,
+      network,
     });
 
     return {

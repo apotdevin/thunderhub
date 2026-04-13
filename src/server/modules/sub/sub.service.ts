@@ -14,7 +14,7 @@ import { SseService } from '../sse/sse.service';
 import { ConfigService } from '@nestjs/config';
 import { NodeService } from '../node/node.service';
 import { UserConfigService } from '../api/userConfig/userConfig.service';
-import { getNetwork } from 'src/server/utils/network';
+import { getAmbossSpaceUrl, getNetwork } from 'src/server/utils/network';
 import { AmbossService } from '../api/amboss/amboss.service';
 import { ProviderRegistryService } from '../node/provider-registry.service';
 
@@ -441,7 +441,11 @@ export class SubService implements OnApplicationBootstrap {
                         const { signature } =
                           await this.nodeService.signMessage(node.id, backup);
 
-                        await this.ambossService.pushBackup(backup, signature);
+                        await this.ambossService.pushBackup(
+                          getAmbossSpaceUrl('btc'),
+                          backup,
+                          signature
+                        );
                       }, restartSubscriptionTimeMs);
 
                       return;

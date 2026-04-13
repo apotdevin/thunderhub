@@ -169,10 +169,13 @@ export default (): ConfigType => {
     mempool,
     blockstream: 'https://blockstream.info',
     amboss: {
-      space: 'https://api.amboss.space/graphql',
-      auth:
-        process.env.AMBOSS_AUTH_URL || 'https://account.amboss.tech/graphql',
-      magma: process.env.MAGMA_API_URL || 'https://magma.amboss.tech/graphql',
+      // Auth, magma, and space URLs are all derived from the node's network
+      // at request time (mainnet → *.amboss.tech/space, mutinynet →
+      // *-dev.amboss.tech/space). Env vars below override the derivation and
+      // are primarily useful for pointing at local dev backends.
+      space: process.env.SPACE_API_URL || '',
+      auth: process.env.AMBOSS_AUTH_URL || '',
+      magma: process.env.MAGMA_API_URL || '',
     },
     fees: `${mempool}/api/v1/fees/recommended`,
     blockHeight: `${mempool}/api/blocks/tip/height`,
