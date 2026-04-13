@@ -161,9 +161,10 @@ export class SetupTradePartnerInput {
 
   /**
    * The trade's asset amount in atomic units (UI's display input × 10^precision).
-   * Used directly as the Magma order size for PURCHASE, and as the outbound asset
-   * channel size for SALE. For SALE, converted to sats via `assetRate` to derive
-   * the Magma order size.
+   *
+   * - PURCHASE (buying an asset channel): used directly as the Magma order size.
+   * - SALE (buying a sats channel): the Magma order size in sats is derived from
+   *   this via `assetRate`; this value is also the outbound asset channel size.
    */
   @Field()
   assetAmount: string;

@@ -169,7 +169,7 @@ export default (): ConfigType => {
     mempool,
     blockstream: 'https://blockstream.info',
     amboss: {
-      space: 'https://api.amboss.space/graphql',
+      space: process.env.SPACE_API_URL || 'https://api.amboss.space/graphql',
       auth:
         process.env.AMBOSS_AUTH_URL || 'https://account.amboss.tech/graphql',
       magma: process.env.MAGMA_API_URL || 'https://magma.amboss.tech/graphql',
