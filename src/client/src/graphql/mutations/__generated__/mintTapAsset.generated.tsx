@@ -5,7 +5,7 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type MintTapAssetMutationVariables = Types.Exact<{
   name: Types.Scalars['String']['input'];
-  amount: Types.Scalars['Int']['input'];
+  amount: Types.Scalars['String']['input'];
   assetType?: Types.InputMaybe<Types.TapAssetType>;
   grouped?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
   groupKey?: Types.InputMaybe<Types.Scalars['String']['input']>;
@@ -19,7 +19,7 @@ export type MintTapAssetMutation = {
 export const MintTapAssetDocument = gql`
   mutation MintTapAsset(
     $name: String!
-    $amount: Int!
+    $amount: String!
     $assetType: TapAssetType
     $grouped: Boolean
     $groupKey: String
