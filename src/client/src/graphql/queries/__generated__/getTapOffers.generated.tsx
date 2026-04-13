@@ -24,13 +24,13 @@ export type GetTapOffersQuery = {
       };
       rate: {
         __typename?: 'TapTradeOfferAmount';
-        displayAmount?: string | null;
-        fullAmount?: string | null;
+        displayAmount: string;
+        fullAmount: string;
       };
       available: {
         __typename?: 'TapTradeOfferAmount';
-        displayAmount?: string | null;
-        fullAmount?: string | null;
+        displayAmount: string;
+        fullAmount: string;
       };
     }>;
   };

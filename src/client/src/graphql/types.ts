@@ -591,7 +591,7 @@ export type MutationAddTapFederationServerArgs = {
 };
 
 export type MutationBurnTapAssetArgs = {
-  amount: Scalars['Int']['input'];
+  amount: Scalars['String']['input'];
   assetId: Scalars['String']['input'];
 };
 
@@ -674,7 +674,7 @@ export type MutationLnUrlWithdrawArgs = {
 };
 
 export type MutationMintTapAssetArgs = {
-  amount: Scalars['Int']['input'];
+  amount: Scalars['String']['input'];
   assetType?: TapAssetType;
   groupKey?: InputMaybe<Scalars['String']['input']>;
   grouped?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1414,8 +1414,8 @@ export type TapTradeOffer = {
 
 export type TapTradeOfferAmount = {
   __typename?: 'TapTradeOfferAmount';
-  displayAmount?: Maybe<Scalars['String']['output']>;
-  fullAmount?: Maybe<Scalars['String']['output']>;
+  displayAmount: Scalars['String']['output'];
+  fullAmount: Scalars['String']['output'];
 };
 
 export type TapTradeOfferList = {
