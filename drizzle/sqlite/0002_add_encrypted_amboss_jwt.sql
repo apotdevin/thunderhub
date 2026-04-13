@@ -1,0 +1,1 @@
+ALTER TABLE `nodes` ADD `encrypted_amboss_jwt` text;
