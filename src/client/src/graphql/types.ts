@@ -1327,6 +1327,7 @@ export type TapFundChannelInput = {
   groupKey?: InputMaybe<Scalars['String']['input']>;
   peerPubkey: Scalars['String']['input'];
   pushSat?: InputMaybe<Scalars['Int']['input']>;
+  universeHost?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TapFundChannelResponse = {
@@ -1359,6 +1360,7 @@ export type TapSupportedAsset = {
   precision: Scalars['Int']['output'];
   prices?: Maybe<TapAssetPrice>;
   symbol: Scalars['String']['output'];
+  universeHost?: Maybe<Scalars['String']['output']>;
 };
 
 export type TapSupportedAssetList = {

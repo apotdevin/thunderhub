@@ -37,6 +37,7 @@ describe('MagmaResolver', () => {
       {} as never,
       mockFetchService as never,
       mockConfigService as never,
+      { syncForAccount: jest.fn() } as never,
       mockLogger as never
     );
   });
@@ -326,6 +327,7 @@ describe('MagmaResolver', () => {
         mockNodeService as never,
         mockFetchService as never,
         mockConfigService as never,
+        { syncForAccount: jest.fn() } as never,
         mockLogger as never
       );
     });

@@ -316,6 +316,9 @@ export class TapFundChannelInput {
 
   @Field(() => Int, { nullable: true })
   pushSat?: number;
+
+  @Field({ nullable: true })
+  universeHost?: string;
 }
 
 @ObjectType()

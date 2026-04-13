@@ -12,6 +12,7 @@ import { FetchService } from '../../fetch/fetch.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { toWithError } from '../../../utils/async';
+import { TapFederationService } from '../tapd/tapd-federation.service';
 import {
   GetTapOffersInput,
   TapTradeOfferList,
@@ -76,7 +77,11 @@ interface TradeApiSupportedAsset {
   symbol?: string;
   description?: string;
   precision?: number;
-  taproot_asset_details?: { asset_id?: string; group_key?: string };
+  taproot_asset_details?: {
+    asset_id?: string;
+    group_key?: string;
+    universe?: string;
+  };
   prices?: { id?: string; usd?: number };
 }
 
@@ -87,6 +92,7 @@ export class MagmaResolver {
     private nodeService: NodeService,
     private fetchService: FetchService,
     private configService: ConfigService,
+    private tapFederationService: TapFederationService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -187,6 +193,20 @@ export class MagmaResolver {
 
     const assets = data.public.assets.supported;
 
+    const universeHosts = [
+      ...new Set(
+        assets.list
+          .map(a => a.taproot_asset_details?.universe)
+          .filter((h): h is string => !!h)
+      ),
+    ];
+
+    if (universeHosts.length) {
+      this.tapFederationService
+        .syncForAccount(_user.id, universeHosts)
+        .catch(() => {});
+    }
+
     return {
       list: assets.list.map(a => ({
         id: a.id,
@@ -195,6 +215,7 @@ export class MagmaResolver {
         precision: a.precision ?? 0,
         assetId: a.taproot_asset_details?.asset_id,
         groupKey: a.taproot_asset_details?.group_key,
+        universeHost: a.taproot_asset_details?.universe,
         prices: a.prices ?? null,
       })),
       totalCount: assets.total_count,

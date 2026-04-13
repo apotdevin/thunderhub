@@ -1,4 +1,6 @@
 import crypto from 'crypto';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 type SSOConfig = {
   serverUrl: string;
@@ -115,21 +117,38 @@ const VALID_NODE_TYPES = ['lnd', 'litd'];
 const getValidNodeType = (value: string | undefined): string =>
   value && VALID_NODE_TYPES.includes(value) ? value : 'lnd';
 
-const ALLOWED_TRADE_HOSTS = ['rails.amboss.tech', 'rails-dev.amboss.tech'];
-
 const getValidTradeUrl = (
   value: string | undefined,
   isProduction: boolean
 ): string => {
-  const url = value || 'https://rails.amboss.tech/graphql';
+  const defaultUrl = isProduction
+    ? 'https://rails.amboss.tech/graphql'
+    : 'https://rails-dev.amboss.tech/graphql';
+
+  if (!value) return defaultUrl;
+
   try {
-    const parsed = new URL(url);
-    if (isProduction && parsed.protocol !== 'https:') return '';
-    if (isProduction && !ALLOWED_TRADE_HOSTS.includes(parsed.hostname))
-      return '';
-    return url;
+    new URL(value);
   } catch {
-    return '';
+    throw new Error('Invalid TRADE_API_URL URL value provided');
+  }
+
+  return value;
+};
+
+const getPackageVersion = (): string => {
+  if (process.env.npm_package_version) {
+    return process.env.npm_package_version;
+  }
+
+  try {
+    const packageJson = JSON.parse(
+      readFileSync(join(process.cwd(), 'package.json'), 'utf8')
+    ) as { version?: string };
+
+    return packageJson.version || '0.0.0';
+  } catch {
+    return '0.0.0';
   }
 };
 
@@ -163,7 +182,7 @@ export default (): ConfigType => {
     trade: getValidTradeUrl(process.env.TRADE_API_URL, isProduction),
   };
 
-  const npmVersion = process.env.npm_package_version || '0.0.0';
+  const npmVersion = getPackageVersion();
 
   const headers = {
     'apollographql-client-name': 'thunderhub',

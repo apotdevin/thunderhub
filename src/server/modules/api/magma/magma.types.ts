@@ -133,6 +133,9 @@ export class TapSupportedAsset {
   @Field({ nullable: true })
   groupKey?: string;
 
+  @Field({ nullable: true })
+  universeHost?: string;
+
   @Field(() => TapAssetPrice, { nullable: true })
   prices?: TapAssetPrice;
 }

@@ -52,6 +52,7 @@ import {
   TransferOutput,
   SyncedUniverse,
 } from '@lightningpolar/tapd-api';
+
 const ASSET_TYPE_MAP: Record<string, TapAssetType> = {
   NORMAL: TapAssetType.NORMAL,
   COLLECTIBLE: TapAssetType.COLLECTIBLE,
