@@ -60,7 +60,7 @@ export const MintAsset: FC = () => {
     mintAsset({
       variables: {
         name,
-        amount: parseInt(amount, 10),
+        amount,
         assetType,
         grouped,
         groupKey: groupKey || null,

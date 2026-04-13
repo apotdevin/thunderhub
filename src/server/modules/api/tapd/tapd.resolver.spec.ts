@@ -589,7 +589,7 @@ describe('TapdResolver', () => {
       const result = await resolver.mintTapAsset(
         userId,
         'TestCoin',
-        1000,
+        '1000',
         TapAssetType.NORMAL,
         true
       );
@@ -628,7 +628,7 @@ describe('TapdResolver', () => {
   describe('burnTapAsset', () => {
     it('returns true on success', async () => {
       service.burnAsset.mockResolvedValue({});
-      const result = await resolver.burnTapAsset(userId, 'assetId', 10);
+      const result = await resolver.burnTapAsset(userId, 'assetId', '10');
       expect(result).toBe(true);
     });
   });

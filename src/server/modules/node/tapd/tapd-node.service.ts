@@ -185,12 +185,12 @@ export class TapdNodeService {
   async burnAsset(opts: {
     id: string;
     assetId: string;
-    amountToBurn: number;
+    amountToBurn: string;
   }): Promise<BurnAssetResponse> {
     const tapd = this.getTapd(opts.id);
     return tapd.taprootAssets.burnAsset({
       assetIdStr: opts.assetId,
-      amountToBurn: String(opts.amountToBurn),
+      amountToBurn: opts.amountToBurn,
       confirmationText: 'assets will be destroyed',
     });
   }
@@ -200,7 +200,7 @@ export class TapdNodeService {
   async mintAsset(opts: {
     id: string;
     name: string;
-    amount: number;
+    amount: string;
     assetType: 'NORMAL' | 'COLLECTIBLE';
     grouped?: boolean;
     groupKey?: string;
@@ -211,7 +211,7 @@ export class TapdNodeService {
     return tapd.mint.mintAsset({
       asset: {
         name: opts.name,
-        amount: String(opts.amount),
+        amount: opts.amount,
         assetType: opts.assetType,
         ...(opts.groupKey
           ? {
