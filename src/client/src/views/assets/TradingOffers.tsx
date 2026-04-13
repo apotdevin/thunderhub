@@ -5,7 +5,7 @@ import { useGetTapOffersQuery } from '../../graphql/queries/__generated__/getTap
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
 import { useLoginAmbossMutation } from '../../graphql/mutations/__generated__/loginAmboss.generated';
-import { useAmbossUser } from '../../hooks/UseAmbossUser';
+import { useIsAmbossAuthenticatedQuery } from '../../graphql/queries/__generated__/isAmbossAuthenticated.generated';
 import { getErrorContent } from '../../utils/error';
 import { cn } from '../../lib/utils';
 import { Button } from '@/components/ui/button';
@@ -41,12 +41,19 @@ export const TradingOffers: FC = () => {
     return () => clearTimeout(timer);
   }, [minAmountInput]);
 
-  const { user: ambossUser, loading: ambossLoading } = useAmbossUser();
+  const { data: authData, loading: authLoading } =
+    useIsAmbossAuthenticatedQuery();
+  const isAmbossAuthed = authData?.isAmbossAuthenticated ?? false;
 
   const [loginAmboss, { loading: loginLoading }] = useLoginAmbossMutation({
     onCompleted: () => toast.success('Logged in to Amboss'),
     onError: () => toast.error('Error logging in to Amboss'),
-    refetchQueries: ['GetAmbossUser', 'GetTapSupportedAssets', 'GetTapOffers'],
+    refetchQueries: [
+      'IsAmbossAuthenticated',
+      'GetAmbossUser',
+      'GetTapSupportedAssets',
+      'GetTapOffers',
+    ],
   });
 
   const { data: supportedData, loading: assetsLoading } =
@@ -120,7 +127,7 @@ export const TradingOffers: FC = () => {
   return (
     <div className="flex flex-col gap-4">
       {/* Amboss login prompt */}
-      {!ambossUser && !ambossLoading && allSupported.length === 0 && (
+      {!isAmbossAuthed && !authLoading && allSupported.length === 0 && (
         <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 px-4 py-3">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Info size={16} />

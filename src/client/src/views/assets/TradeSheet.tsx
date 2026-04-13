@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { TapTransactionType } from '../../graphql/types';
 import { useSetupTradePartnerMutation } from '../../graphql/mutations/__generated__/setupTradePartner.generated';
 import { useGetPeerChannelsQuery } from '../../graphql/queries/__generated__/getPeerChannels.generated';
+import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
 import { getErrorContent } from '../../utils/error';
 
 type Offer = {
@@ -101,6 +102,11 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       skip: !offer?.node.pubkey || !open,
     });
 
+  const { data: assetChannelsData } = useGetTapAssetChannelBalancesQuery({
+    variables: { peerPubkey: offer?.node.pubkey || '' },
+    skip: !offer?.node.pubkey || !open,
+  });
+
   if (!offer) return null;
 
   const isBuy = transactionType === TapTransactionType.Purchase;
@@ -111,19 +117,31 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const rate = offer.rate.fullAmount || '0';
 
   const peerChannels = channelsData?.getChannels || [];
-  const totalLocalBalance = peerChannels.reduce(
+  const assetChannels = (
+    assetChannelsData?.getTapAssetChannelBalances || []
+  ).filter(ac => ac.assetId === assetId);
+
+  const totalBtcLocal = peerChannels.reduce(
     (sum, ch) => sum + ch.local_balance,
     0
   );
-  const totalRemoteBalance = peerChannels.reduce(
+  const totalBtcRemote = peerChannels.reduce(
     (sum, ch) => sum + ch.remote_balance,
     0
+  );
+  const totalAssetLocal = assetChannels.reduce(
+    (sum, ac) => sum + BigInt(ac.localBalance),
+    BigInt(0)
+  );
+  const totalAssetRemote = assetChannels.reduce(
+    (sum, ac) => sum + BigInt(ac.remoteBalance),
+    BigInt(0)
   );
 
   // For PURCHASE (buying asset): outbound = BTC (local), inbound = asset (remote)
   // For SALE (selling asset): outbound = asset (local), inbound = BTC (remote)
-  const hasOutbound = totalLocalBalance > 0;
-  const hasInbound = totalRemoteBalance > 0;
+  const hasOutbound = isBuy ? totalBtcLocal > 0 : totalAssetLocal > BigInt(0);
+  const hasInbound = isBuy ? totalAssetRemote > BigInt(0) : totalBtcRemote > 0;
 
   const isValid = amount && Number(amount) > 0;
 
@@ -251,7 +269,9 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       Outbound ({isBuy ? 'BTC' : assetSymbol})
                       {hasOutbound ? (
                         <span className="text-muted-foreground ml-1">
-                          {totalLocalBalance.toLocaleString()} sats
+                          {isBuy
+                            ? `${totalBtcLocal.toLocaleString()} sats`
+                            : `${atomicToDisplay(totalAssetLocal.toString(), assetPrecision)} ${assetSymbol}`}
                         </span>
                       ) : (
                         <span className="text-yellow-500 ml-1">missing</span>
@@ -268,7 +288,9 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       Inbound ({isBuy ? assetSymbol : 'BTC'})
                       {hasInbound ? (
                         <span className="text-muted-foreground ml-1">
-                          {totalRemoteBalance.toLocaleString()} sats
+                          {isBuy
+                            ? `${atomicToDisplay(totalAssetRemote.toString(), assetPrecision)} ${assetSymbol}`
+                            : `${totalBtcRemote.toLocaleString()} sats`}
                         </span>
                       ) : (
                         <span className="text-yellow-500 ml-1">

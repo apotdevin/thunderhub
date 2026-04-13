@@ -29,6 +29,7 @@ import {
   TapMintResponse,
   TapFundChannelInput,
   TapFundChannelResponse,
+  TapAssetChannelBalance,
   TapSyncResult,
   TapUniverseAssetList,
   TapTransferList,
@@ -620,5 +621,20 @@ export class TapdResolver {
       txid: result.txid,
       outputIndex: result.outputIndex,
     };
+  }
+
+  @Query(() => [TapAssetChannelBalance])
+  async getTapAssetChannelBalances(
+    @CurrentUser() { id }: UserId,
+    @Args('peerPubkey', { nullable: true }) peerPubkey?: string
+  ) {
+    const [result, error] = await toWithError(
+      this.tapdNodeService.getAssetChannelBalances({ id, peerPubkey })
+    );
+    if (error || !result) {
+      this.logger.error('Failed to get asset channel balances', { error });
+      throw new GraphQLError('Failed to get asset channel balances');
+    }
+    return result;
   }
 }
