@@ -314,19 +314,14 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         input: {
           magmaOfferId: offer.magmaOfferId,
           ambossAssetId,
-          amount: magmaOnlyBuy
-            ? atomicTradeAmount.toString()
-            : isAssetPurchase
-              ? satsAmount
-              : amount,
+          assetAmount: atomicTradeAmount.toString(),
           assetRate: rate,
-          assetPrecision,
           transactionType,
           swapNodePubkey: offer.node.pubkey,
           swapNodeSockets: offer.node.sockets,
           tapdAssetId: tapdAssetId || undefined,
           tapdGroupKey: tapdGroupKey || undefined,
-          skipOutboundChannel: magmaOnlyBuy || undefined,
+          satsAmount: skipOutboundBtc ? undefined : satsAmount,
         },
       },
     });

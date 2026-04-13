@@ -159,14 +159,17 @@ export class SetupTradePartnerInput {
   @Field()
   ambossAssetId: string;
 
+  /**
+   * The trade's asset amount in atomic units (UI's display input × 10^precision).
+   * Used directly as the Magma order size for PURCHASE, and as the outbound asset
+   * channel size for SALE. For SALE, converted to sats via `assetRate` to derive
+   * the Magma order size.
+   */
   @Field()
-  amount: string;
+  assetAmount: string;
 
   @Field()
   assetRate: string;
-
-  @Field(() => Int)
-  assetPrecision: number;
 
   @Field(() => TapTransactionType)
   transactionType: TapTransactionType;
@@ -193,12 +196,12 @@ export class SetupTradePartnerInput {
   tapdGroupKey?: string;
 
   /**
-   * When true, skip opening the outbound channel (it already exists).
-   * In this case `amount` is the Magma order size in atomic asset units
-   * rather than sats, avoiding rounding errors from the sats round-trip.
+   * Sats used to open the outbound BTC channel for a PURCHASE. Omit to skip
+   * opening the outbound channel (e.g. when the node already has sufficient
+   * BTC outbound with the peer). Unused for SALE.
    */
   @Field({ nullable: true })
-  skipOutboundChannel?: boolean;
+  satsAmount?: string;
 }
 
 @ObjectType()

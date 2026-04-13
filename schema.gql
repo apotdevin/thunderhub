@@ -818,11 +818,10 @@ type ServerAccount {
 
 input SetupTradePartnerInput {
   ambossAssetId: String!
-  amount: String!
-  assetPrecision: Int!
+  assetAmount: String!
   assetRate: String!
   magmaOfferId: String!
-  skipOutboundChannel: Boolean
+  satsAmount: String
   swapNodePubkey: String!
   swapNodeSockets: [String!]
   tapdAssetId: String
