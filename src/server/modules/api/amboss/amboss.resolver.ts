@@ -1,18 +1,14 @@
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FetchService } from '../../fetch/fetch.service';
-import { ContextType } from 'src/server/app.module';
-import { appConstants } from 'src/server/utils/appConstants';
 import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import * as cookie from 'cookie';
 import {
   AmbossUser,
   LightningNodeSocialInfo,
   OauthAuto,
   PurchaseAuto,
 } from './amboss.types';
-import { ConfigService } from '@nestjs/config';
 import { toWithError } from 'src/server/utils/async';
 import { NodeService } from '../../node/node.service';
 import { UserId } from '../../security/security.types';
@@ -26,7 +22,8 @@ import {
   getNodeSocialInfo,
   getUserQuery,
 } from './amboss.gql';
-import { AmbossService, ONE_MONTH_SECONDS } from './amboss.service';
+import { AmbossService } from './amboss.service';
+import { AmbossTokenService } from './amboss-token.service';
 import { auto } from 'async';
 import { GraphQLError } from 'graphql';
 
@@ -34,17 +31,18 @@ import { GraphQLError } from 'graphql';
 export class AmbossResolver {
   constructor(
     private nodeService: NodeService,
-    private configService: ConfigService,
     private fetchService: FetchService,
     private ambossService: AmbossService,
+    private ambossTokenService: AmbossTokenService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
   @Query(() => String)
-  async getLiquidityPerUsd() {
+  async getLiquidityPerUsd(@CurrentUser() user: UserId) {
+    const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       market: { liquidity: { liquidity_per_usd: { sats: string } } };
-    }>(this.configService.get('urls.amboss.magma'), GetLiquidityPerUsd);
+    }>(magmaUrl, GetLiquidityPerUsd);
 
     if (!data?.market.liquidity.liquidity_per_usd.sats || error) {
       throw new GraphQLError('Unable to get liquidity information');
@@ -56,9 +54,9 @@ export class AmbossResolver {
   @Mutation(() => Boolean)
   async purchaseLiquidity(
     @CurrentUser() user: UserId,
-    @Context() { ambossAuth, res }: ContextType,
     @Args('amount_cents') amount_cents: string
   ) {
+    const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
     await auto<PurchaseAuto>({
       nodeUri: async (): Promise<PurchaseAuto['nodeUri']> => {
         const [info, infoError] = await toWithError(
@@ -74,23 +72,7 @@ export class AmbossResolver {
       },
 
       ambossJwt: async (): Promise<PurchaseAuto['ambossJwt']> => {
-        if (ambossAuth) return ambossAuth;
-
-        const jwt = await this.ambossService.getAmbossJWT(user.id);
-        const useHttps = this.configService.get('useHttps');
-
-        res.setHeader(
-          'Set-Cookie',
-          cookie.serialize(appConstants.ambossCookieName, jwt, {
-            maxAge: ONE_MONTH_SECONDS,
-            httpOnly: true,
-            sameSite: true,
-            path: '/',
-            secure: useHttps,
-          })
-        );
-
-        return jwt;
+        return this.ambossTokenService.getOrCreate(user);
       },
 
       liquidityInvoice: [
@@ -106,7 +88,7 @@ export class AmbossResolver {
             await this.fetchService.graphqlFetchWithProxy<{
               liquidity: { buy: { payment: { lightning_invoice: string } } };
             }>(
-              this.configService.get('urls.amboss.magma'),
+              magmaUrl,
               PurchaseLiquidity,
               {
                 input: {
@@ -160,17 +142,30 @@ export class AmbossResolver {
   }
 
   @Query(() => AmbossUser, { nullable: true })
-  async getAmbossUser(@Context() { ambossAuth }: ContextType) {
-    if (!ambossAuth) return null;
+  async getAmbossUser(@CurrentUser() user: UserId) {
+    const ambossAuth = await this.ambossTokenService.get(user);
+    if (!ambossAuth) {
+      this.logger.debug('getAmbossUser: no stored Amboss token', {
+        userId: user.id,
+      });
+      return null;
+    }
 
+    const spaceUrl = await this.ambossService.resolveSpaceUrl(user);
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
-      this.configService.get('urls.amboss.space'),
+      spaceUrl,
       getUserQuery,
       undefined,
       { authorization: `Bearer ${ambossAuth}` }
     );
 
-    if (!data?.getUser || error) {
+    if (error) {
+      this.logger.warn('getAmbossUser: Amboss API returned error', { error });
+      return null;
+    }
+
+    if (!data?.getUser) {
+      this.logger.warn('getAmbossUser: Amboss API returned no user', { data });
       return null;
     }
 
@@ -182,11 +177,13 @@ export class AmbossResolver {
     @CurrentUser() user: UserId,
     @Args('redirect_url', { nullable: true }) redirect_url: string | null
   ) {
+    const authUrl = await this.ambossService.resolveAuthUrl(user);
+
     const info = await auto<OauthAuto>({
       signMessage: async (): Promise<OauthAuto['signMessage']> => {
         const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
           login: { node_login: { identifier: string; message: string } };
-        }>(this.configService.get('urls.amboss.auth'), NodeLoginInfo);
+        }>(authUrl, NodeLoginInfo);
 
         if (!data?.login.node_login || error) {
           if (error) this.logger.error(error);
@@ -215,7 +212,7 @@ export class AmbossResolver {
           const { data, error } =
             await this.fetchService.graphqlFetchWithProxy<{
               public: { node_login: { jwt: string } };
-            }>(this.configService.get('urls.amboss.auth'), NodeLogin, {
+            }>(authUrl, NodeLogin, {
               input: {
                 identifier: signMessage.identifier,
                 signature: signMessage.signature,
@@ -240,7 +237,7 @@ export class AmbossResolver {
                 authorize_domain: { token_url: string; has_access: string };
               };
             }>(
-              this.configService.get('urls.amboss.auth'),
+              authUrl,
               AuthorizeDomain,
               {
                 input: {
@@ -268,10 +265,13 @@ export class AmbossResolver {
   @Query(() => LightningNodeSocialInfo)
   async getNodeSocialInfo(
     @Args('pubkey') pubkey: string,
-    @Context() { ambossAuth }: ContextType
+    @CurrentUser() user: UserId
   ) {
+    const ambossAuth = await this.ambossTokenService.get(user);
+    const spaceUrl = await this.ambossService.resolveSpaceUrl(user);
+
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
-      this.configService.get('urls.amboss.space'),
+      spaceUrl,
       getNodeSocialInfo,
       { pubkey },
       { authorization: ambossAuth ? `Bearer ${ambossAuth}` : '' }
@@ -288,37 +288,31 @@ export class AmbossResolver {
   }
 
   @Mutation(() => Boolean)
-  async loginAmboss(
-    @Context() { res }: ContextType,
-    @CurrentUser() user: UserId
-  ) {
-    const jwt = await this.ambossService.getAmbossJWT(user.id);
-    const useHttps = this.configService.get('useHttps');
-
-    res.setHeader(
-      'Set-Cookie',
-      cookie.serialize(appConstants.ambossCookieName, jwt, {
-        maxAge: ONE_MONTH_SECONDS,
-        httpOnly: true,
-        sameSite: true,
-        path: '/',
-        secure: useHttps,
-      })
-    );
-
-    return true;
+  async loginAmboss(@CurrentUser() user: UserId) {
+    try {
+      const token = await this.ambossTokenService.forceRefresh(user);
+      this.logger.info('loginAmboss: stored Amboss token', {
+        userId: user.id,
+        tokenLength: token.length,
+      });
+      return true;
+    } catch (err) {
+      this.logger.error('loginAmboss: failed to create Amboss token', { err });
+      throw err;
+    }
   }
 
   @Mutation(() => Boolean)
-  async pushBackup(@CurrentUser() { id }: UserId) {
-    const backups = await this.nodeService.getBackups(id);
+  async pushBackup(@CurrentUser() user: UserId) {
+    const backups = await this.nodeService.getBackups(user.id);
 
     const { signature } = await this.nodeService.signMessage(
-      id,
+      user.id,
       backups.backup
     );
 
-    await this.ambossService.pushBackup(backups.backup, signature);
+    const spaceUrl = await this.ambossService.resolveSpaceUrl(user);
+    await this.ambossService.pushBackup(spaceUrl, backups.backup, signature);
 
     return true;
   }

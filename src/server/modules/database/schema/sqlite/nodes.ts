@@ -15,6 +15,7 @@ export const nodes = sqliteTable('nodes', {
   socket: text('socket').notNull(),
   encrypted_macaroon: text('encrypted_macaroon'),
   encrypted_cert: text('encrypted_cert'),
+  encrypted_amboss_jwt: text('encrypted_amboss_jwt'),
   created_at: text('created_at')
     .notNull()
     .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),

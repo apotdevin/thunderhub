@@ -20,15 +20,15 @@ import {
 import { GraphQLError } from 'graphql';
 import { auto } from 'async';
 import { FetchService } from '../../fetch/fetch.service';
-import { ConfigService } from '@nestjs/config';
 import { GetRecommendedNode } from '../amboss/amboss.gql';
+import { AmbossService } from '../amboss/amboss.service';
 
 @Resolver()
 export class ChannelsResolver {
   constructor(
     private nodeService: NodeService,
     private fetchService: FetchService,
-    private configService: ConfigService,
+    private ambossService: AmbossService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -183,7 +183,10 @@ export class ChannelsResolver {
                   sockets: string[];
                 };
               };
-            }>(this.configService.get('urls.amboss.space'), GetRecommendedNode);
+            }>(
+              await this.ambossService.resolveSpaceUrl(user),
+              GetRecommendedNode
+            );
 
           if (!data?.rails.get_recommended_node.sockets.length || error) {
             if (error) this.logger.error(error);

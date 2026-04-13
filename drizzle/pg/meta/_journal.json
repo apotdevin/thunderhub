@@ -15,6 +15,13 @@
       "when": 1775160645885,
       "tag": "0001_jazzy_ezekiel",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1776104485702,
+      "tag": "0002_add_encrypted_amboss_jwt",
+      "breakpoints": true
     }
   ]
 }

@@ -11,11 +11,9 @@ import { NodeModule } from './modules/node/node.module';
 import { ApiModule } from './modules/api/api.module';
 import { getAuthToken } from './utils/request';
 import { FetchModule } from './modules/fetch/fetch.module';
-import { appConstants } from './utils/appConstants';
 import { transports, format } from 'winston';
 import configuration from './config/configuration';
 import jwt from 'jsonwebtoken';
-import * as cookie from 'cookie';
 import { SseModule } from './modules/sse/sse.module';
 import { SubModule } from './modules/sub/sub.module';
 import { ClientConfigModule } from './modules/clientConfig/clientConfig.module';
@@ -35,8 +33,6 @@ export type ContextType = {
   req: any;
   res: any;
   authToken?: JwtObjectType;
-  tokenAuth: string | null;
-  ambossAuth: string | null;
   loaders: DataloaderTypes;
   nodeSlug?: string;
 };
@@ -86,12 +82,7 @@ export type JwtObjectType = {
         },
         path: `${config.get('basePath')}/graphql`,
         context: ({ req, res }): ContextType => {
-          const cookies = cookie.parse(req.headers.cookie ?? '') || {};
-
           const token = getAuthToken(req);
-
-          const tokenAuth = cookies[appConstants.tokenCookieName];
-          const ambossAuth = cookies[appConstants.ambossCookieName];
 
           const nodeSlug = (req.headers['x-node-slug'] as string) || undefined;
 
@@ -100,8 +91,6 @@ export type JwtObjectType = {
           const context = {
             req,
             res,
-            tokenAuth,
-            ambossAuth,
             loaders,
             nodeSlug,
           };

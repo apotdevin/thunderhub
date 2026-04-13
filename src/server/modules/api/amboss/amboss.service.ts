@@ -2,10 +2,17 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Interval } from '@nestjs/schedule';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { getNetwork } from 'src/server/utils/network';
+import {
+  getAmbossAuthUrl,
+  getAmbossMagmaUrl,
+  getAmbossSpaceUrl,
+  getNetwork,
+} from 'src/server/utils/network';
 import { Logger } from 'winston';
 import { AccountsService } from '../../accounts/accounts.service';
 import { FetchService } from '../../fetch/fetch.service';
+import { UserService } from '../../user/user.service';
+import { AuthType, UserId } from '../../security/security.types';
 import {
   CreateApiKey,
   NodeLogin,
@@ -26,11 +33,11 @@ import {
   mapEdgeResult,
   mapNodeResult,
 } from './amboss.helpers';
-import { EdgeInfo, LoginAuto, NodeAlias } from './amboss.types';
+import { EdgeInfo, NodeAlias } from './amboss.types';
 import { toWithError } from 'src/server/utils/async';
 
 const ONE_MINUTE = 60 * 1000;
-export const ONE_MONTH_SECONDS = 60 * 60 * 24 * 30;
+const SIX_MONTHS_SECONDS = 60 * 60 * 24 * 30 * 6;
 
 type AmbossNode = {
   id: string;
@@ -64,109 +71,136 @@ export class AmbossService {
     private configService: ConfigService,
     private accountsService: AccountsService,
     private userConfigService: UserConfigService,
+    private userService: UserService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
-  ambossUrl = this.configService.get('urls.amboss.space');
+  /**
+   * Resolves the network for the given user.
+   *
+   * Priority:
+   *   1. For DB users: the `network` column on the `nodes` table (recorded at
+   *      add_node/edit_node time from the node's actual chain genesis hash).
+   *   2. Fallback: live `getWalletInfo` on the node and derive from `chains[0]`.
+   */
+  async resolveNetwork(user: UserId): Promise<string | undefined> {
+    if (user.authType === AuthType.USER) {
+      const stored = await this.userService.getNodeNetwork(user.id);
+      if (stored === 'btc' || stored === 'btcsignet') return stored;
+    }
+    const walletInfo = await this.nodeService.getWalletInfo(user.id);
+    return getNetwork(walletInfo?.chains?.[0] || '');
+  }
 
-  async getAmbossJWT(userId: string): Promise<string> {
-    const info = await auto<LoginAuto>({
-      nodePubkey: async (): Promise<LoginAuto['nodePubkey']> => {
-        const [info, error] = await toWithError(
-          this.nodeService.getWalletInfo(userId)
-        );
+  /** Amboss Account/Auth URL for the user's network, or env override. */
+  async resolveAuthUrl(user: UserId): Promise<string> {
+    const override = this.configService.get<string>('urls.amboss.auth');
+    if (override) return override;
+    return getAmbossAuthUrl(await this.resolveNetwork(user));
+  }
 
-        if (!info.public_key || error) return { pubkey: undefined };
+  /** Amboss Space API URL for the user's network, or env override. */
+  async resolveSpaceUrl(user: UserId): Promise<string> {
+    const override = this.configService.get<string>('urls.amboss.space');
+    if (override) return override;
+    return getAmbossSpaceUrl(await this.resolveNetwork(user));
+  }
 
-        return { pubkey: info.public_key };
-      },
+  /** Magma API URL for the user's network, or env override. */
+  async resolveMagmaUrl(user: UserId): Promise<string> {
+    const override = this.configService.get<string>('urls.amboss.magma');
+    if (override) return override;
+    return getAmbossMagmaUrl(await this.resolveNetwork(user));
+  }
 
-      signMessage: async (): Promise<LoginAuto['signMessage']> => {
-        const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
-          login: { node_login: { identifier: string; message: string } };
-        }>(this.configService.get('urls.amboss.auth'), NodeLoginInfo);
+  async getAmbossJWT(user: UserId): Promise<string> {
+    const [walletInfo, walletError] = await toWithError(
+      this.nodeService.getWalletInfo(user.id)
+    );
 
-        if (!data?.login.node_login || error) {
-          if (error) this.logger.error(error);
-          throw new Error('Error getting login information from Amboss');
-        }
+    if (!walletInfo?.public_key || walletError) {
+      if (walletError) this.logger.error(walletError);
+      throw new Error('Error getting node information for Amboss login');
+    }
 
-        const { identifier, message } = data.login.node_login;
+    const override = this.configService.get<string>('urls.amboss.auth');
+    let authUrl = override;
+    if (!authUrl && user.authType === AuthType.USER) {
+      const stored = await this.userService.getNodeNetwork(user.id);
+      if (stored === 'btc' || stored === 'btcsignet') {
+        authUrl = getAmbossAuthUrl(stored);
+      }
+    }
+    if (!authUrl) {
+      authUrl = getAmbossAuthUrl(getNetwork(walletInfo.chains?.[0] || ''));
+    }
 
-        const [signedMessage, signError] = await toWithError<{
-          signature: string;
-        }>(this.nodeService.signMessage(userId, message));
+    // Step 1 — ask Amboss for a challenge tied to this node identifier.
+    const { data: loginInfo, error: loginInfoError } =
+      await this.fetchService.graphqlFetchWithProxy<{
+        login: { node_login: { identifier: string; message: string } };
+      }>(authUrl, NodeLoginInfo);
 
-        if (!signedMessage?.signature || signError) {
-          if (signError) this.logger.error(signError);
-          throw new Error('Error signing message to login');
-        }
+    if (!loginInfo?.login.node_login || loginInfoError) {
+      if (loginInfoError) this.logger.error(loginInfoError);
+      throw new Error('Error getting login information from Amboss');
+    }
 
-        this.logger.debug('Signed Amboss login message');
+    const { identifier, message } = loginInfo.login.node_login;
 
-        return { identifier, signature: signedMessage.signature };
-      },
+    // Step 2 — sign it with the node's key.
+    const [signed, signError] = await toWithError<{ signature: string }>(
+      this.nodeService.signMessage(user.id, message)
+    );
+    if (!signed?.signature || signError) {
+      if (signError) this.logger.error(signError);
+      throw new Error('Error signing message to login');
+    }
 
-      getAuthJwt: [
-        'signMessage',
-        async ({ signMessage }): Promise<LoginAuto['getAuthJwt']> => {
-          const { data, error } =
-            await this.fetchService.graphqlFetchWithProxy<{
-              public: { node_login: { jwt: string } };
-            }>(this.configService.get('urls.amboss.auth'), NodeLogin, {
-              input: {
-                identifier: signMessage.identifier,
-                signature: signMessage.signature,
-              },
-            });
+    // Step 3 — exchange the signature for a short-lived node-auth JWT.
+    const { data: loginData, error: loginError } =
+      await this.fetchService.graphqlFetchWithProxy<{
+        public: { node_login: { jwt: string } };
+      }>(authUrl, NodeLogin, {
+        input: { identifier, signature: signed.signature },
+      });
 
-          if (!data?.public.node_login.jwt || error) {
-            if (error) this.logger.error(error);
-            throw new Error('Error getting login information from Amboss');
-          }
+    if (!loginData?.public.node_login.jwt || loginError) {
+      if (loginError) this.logger.error(loginError);
+      throw new Error('Error getting login information from Amboss');
+    }
 
-          return { jwt: data.public.node_login.jwt };
+    const nodeAuthJwt = loginData.public.node_login.jwt;
+
+    // Step 4 — trade the short-lived JWT for a long-lived API key (6 months).
+    const { data: apiKeyData, error: apiKeyError } =
+      await this.fetchService.graphqlFetchWithProxy<{
+        api_keys: { create: { token: string } };
+      }>(
+        authUrl,
+        CreateApiKey,
+        {
+          input: {
+            details: 'ThunderHub',
+            seconds: SIX_MONTHS_SECONDS,
+            pubkey: walletInfo.public_key,
+          },
         },
-      ],
+        { authorization: `Bearer ${nodeAuthJwt}` }
+      );
 
-      createJwt: [
-        'nodePubkey',
-        'getAuthJwt',
-        async ({ nodePubkey, getAuthJwt }): Promise<LoginAuto['createJwt']> => {
-          const { data, error } =
-            await this.fetchService.graphqlFetchWithProxy<{
-              api_keys: { create: { token: string } };
-            }>(
-              this.configService.get('urls.amboss.auth'),
-              CreateApiKey,
-              {
-                input: {
-                  details: 'ThunderHub',
-                  seconds: ONE_MONTH_SECONDS,
-                  pubkey: nodePubkey.pubkey,
-                },
-              },
-              { authorization: `Bearer ${getAuthJwt.jwt}` }
-            );
+    if (!apiKeyData?.api_keys.create.token || apiKeyError) {
+      if (apiKeyError) this.logger.error(apiKeyError);
+      throw new Error('Error creating Amboss API key');
+    }
 
-          if (!data?.api_keys.create.token || error) {
-            if (error) this.logger.error(error);
-            throw new Error('Error getting login information from Amboss');
-          }
-
-          this.logger.debug('Got Amboss login token');
-
-          return { jwt: data.api_keys.create.token };
-        },
-      ],
-    });
-
-    return info.createJwt.jwt;
+    this.logger.debug('Got Amboss API key');
+    return apiKeyData.api_keys.create.token;
   }
 
   async getNodeAliasBatchQuery(pubkeys: string[]) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
-      this.configService.get('urls.amboss.space'),
+      getAmbossSpaceUrl('btc'),
       getNodeAliasBatchQuery,
       { pubkeys }
     );
@@ -194,7 +228,7 @@ export class AmbossService {
 
   async getEdgeInfoBatchQuery(ids: string[]) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
-      this.configService.get('urls.amboss.space'),
+      getAmbossSpaceUrl('btc'),
       getEdgeInfoBatchQuery,
       { ids }
     );
@@ -220,9 +254,9 @@ export class AmbossService {
     return mapEdgeResult(ids, edges);
   }
 
-  async pushBackup(backup: string, signature: string) {
+  async pushBackup(spaceUrl: string, backup: string, signature: string) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
-      this.ambossUrl,
+      spaceUrl,
       saveBackupMutation,
       { backup, signature }
     );
@@ -233,9 +267,13 @@ export class AmbossService {
     }
   }
 
-  async pingHealthCheck(timestamp: string, signature: string) {
+  async pingHealthCheck(
+    spaceUrl: string,
+    timestamp: string,
+    signature: string
+  ) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
-      this.ambossUrl,
+      spaceUrl,
       pingHealthCheckMutation,
       { timestamp, signature }
     );
@@ -249,9 +287,9 @@ export class AmbossService {
     }
   }
 
-  async pushBalancesToAmboss(input: ChannelBalanceInputType) {
+  async pushBalancesToAmboss(spaceUrl: string, input: ChannelBalanceInputType) {
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<any>(
-      this.ambossUrl,
+      spaceUrl,
       pushNodeBalancesMutation,
       { input }
     );
@@ -377,7 +415,11 @@ export class AmbossService {
               timestamp
             );
 
-            await this.pingHealthCheck(timestamp, signature);
+            await this.pingHealthCheck(
+              getAmbossSpaceUrl('btc'),
+              timestamp,
+              signature
+            );
           });
         },
       ],
@@ -606,7 +648,7 @@ export class AmbossService {
               signature,
             });
 
-            await this.pushBalancesToAmboss({
+            await this.pushBalancesToAmboss(getAmbossSpaceUrl('btc'), {
               timestamp,
               signature,
               pendingChannelBalance,
