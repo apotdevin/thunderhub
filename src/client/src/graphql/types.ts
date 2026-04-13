@@ -1169,11 +1169,10 @@ export type ServerAccount = {
 
 export type SetupTradePartnerInput = {
   ambossAssetId: Scalars['String']['input'];
-  amount: Scalars['String']['input'];
-  assetPrecision: Scalars['Int']['input'];
+  assetAmount: Scalars['String']['input'];
   assetRate: Scalars['String']['input'];
   magmaOfferId: Scalars['String']['input'];
-  skipOutboundChannel?: InputMaybe<Scalars['Boolean']['input']>;
+  satsAmount?: InputMaybe<Scalars['String']['input']>;
   swapNodePubkey: Scalars['String']['input'];
   swapNodeSockets?: InputMaybe<Array<Scalars['String']['input']>>;
   tapdAssetId?: InputMaybe<Scalars['String']['input']>;

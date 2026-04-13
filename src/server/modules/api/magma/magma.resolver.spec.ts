@@ -255,11 +255,11 @@ describe('MagmaResolver', () => {
     const myPubkey = 'cd'.repeat(33);
     const magmaUrl = 'https://magma.test/graphql';
 
-    // assetRate = 1M atomic units per BTC, precision = 0 (1:1 display ↔ atomic)
-    // PURCHASE: 100k sats → magmaSize = 100000 * 1000000 / 1e8 = 1000 atomic
-    // SALE: 1000 units → magmaSize = 1000 * 1 * 1e8 / 1000000 = 100000 sats
+    // assetRate = 1M atomic units per BTC.
+    // PURCHASE: assetAmount 1000 atomic → magmaSize = 1000 atomic (used directly).
+    //           satsAmount 100000 → outbound BTC channel size.
+    // SALE: assetAmount 1000 atomic → magmaSize = 1000 * 1e8 / 1000000 = 100000 sats.
     const assetRate = '1000000';
-    const assetPrecision = 0;
 
     const mockNodeService = {
       getWalletInfo: jest.fn(),
@@ -335,9 +335,9 @@ describe('MagmaResolver', () => {
     const purchaseInput = {
       magmaOfferId: 'offer-1',
       ambossAssetId: 'marketplace-asset-1',
-      amount: '100000',
+      assetAmount: '1000',
+      satsAmount: '100000',
       assetRate,
-      assetPrecision,
       transactionType: TapTransactionType.PURCHASE,
       swapNodePubkey: swapPubkey,
       swapNodeSockets: ['127.0.0.1:9735'],
@@ -347,9 +347,8 @@ describe('MagmaResolver', () => {
     const saleInput = {
       magmaOfferId: 'offer-2',
       ambossAssetId: 'marketplace-asset-1',
-      amount: '1000',
+      assetAmount: '1000',
       assetRate,
-      assetPrecision,
       transactionType: TapTransactionType.SALE,
       swapNodePubkey: swapPubkey,
       swapNodeSockets: ['127.0.0.1:9735'],
@@ -430,20 +429,15 @@ describe('MagmaResolver', () => {
 
     // ── Case 2: has outbound, needs inbound only ──
 
-    describe('outbound exists — inbound only (skipOutboundChannel)', () => {
+    describe('outbound exists — inbound only (no satsAmount)', () => {
       it('PURCHASE: buys inbound asset channel, skips BTC outbound', async () => {
         const result = await setupResolver.setupTradePartner(
           userId,
           ambossContext as never,
-          {
-            ...purchaseInput,
-            // Client passes atomic amount directly to avoid rounding
-            amount: '1000',
-            skipOutboundChannel: true,
-          }
+          { ...purchaseInput, satsAmount: undefined }
         );
 
-        // Magma size is the raw amount (no sats conversion)
+        // Magma size is the asset amount from the UI (atomic units, no derivation)
         expect(mockFetchService.graphqlFetchWithProxy).toHaveBeenCalledWith(
           magmaUrl,
           expect.anything(),
@@ -466,10 +460,11 @@ describe('MagmaResolver', () => {
 
       it('SALE: throws not-implemented error', async () => {
         await expect(
-          setupResolver.setupTradePartner(userId, ambossContext as never, {
-            ...saleInput,
-            skipOutboundChannel: true,
-          })
+          setupResolver.setupTradePartner(
+            userId,
+            ambossContext as never,
+            saleInput
+          )
         ).rejects.toThrow('Selling not implemented yet');
       });
     });
@@ -566,13 +561,13 @@ describe('MagmaResolver', () => {
       expect(mockTapdNodeService.fundAssetChannel).not.toHaveBeenCalled();
     });
 
-    it('throws when amount is zero', async () => {
+    it('throws when asset amount is zero', async () => {
       await expect(
         setupResolver.setupTradePartner(userId, ambossContext as never, {
           ...purchaseInput,
-          amount: '0',
+          assetAmount: '0',
         })
-      ).rejects.toThrow('Amount must be greater than zero');
+      ).rejects.toThrow('Asset amount must be greater than zero');
     });
 
     it('throws when neither tapdAssetId nor tapdGroupKey is provided', async () => {

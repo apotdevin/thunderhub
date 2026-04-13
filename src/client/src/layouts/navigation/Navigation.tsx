@@ -85,7 +85,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     false;
 
   const secondaryNav: NavItem[] = secondaryNavItems.filter(
-    item => (item.link !== ASSETS && item.link !== TRADING) || tapdAvailable
+    item => item.link !== ASSETS || tapdAvailable
   );
 
   const renderNavButton = (item: NavItem, open = true) => {
