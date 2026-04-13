@@ -29,10 +29,11 @@ import {
 } from './magma.gql';
 
 /**
- * Magma "size" semantics by direction:
- *   - PURCHASE (buying an asset channel): atomic asset units — `assetAmount` is used directly.
- *   - SALE (buying a sats channel): sats — derived from `assetAmount` via `assetRate`
- *     (which is atomic-assets-per-BTC).
+ * Computes the Magma channel order size from the UI's asset input.
+ *
+ * The Magma "size" field semantics differ by direction:
+ *   - PURCHASE: atomic asset units — used directly from the UI input, no derivation.
+ *   - SALE: sats — derived from the atomic asset amount via the rate.
  */
 function computeMagmaOrderSize(
   transactionType: TapTransactionType,
@@ -43,7 +44,7 @@ function computeMagmaOrderSize(
     return assetAmount;
   }
 
-  // SALE: atomic_asset_units * 1e8 / rate = sats
+  // SALE: atomic_asset_units * 1e8 / rate = sats  (rate is atomic-assets-per-BTC)
   return (
     (BigInt(assetAmount) * BigInt(100_000_000)) /
     BigInt(assetRate)
