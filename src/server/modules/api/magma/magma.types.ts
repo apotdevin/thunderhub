@@ -35,7 +35,7 @@ registerEnumType(TapOfferSortDir, { name: 'TapOfferSortDir' });
 @InputType()
 export class GetTapOffersInput {
   @Field()
-  assetId: string;
+  ambossAssetId: string;
 
   @Field(() => TapTransactionType)
   transactionType: TapTransactionType;
@@ -70,11 +70,11 @@ export class TapTradeOfferNode {
 
 @ObjectType()
 export class TapTradeOfferAmount {
-  @Field({ nullable: true })
-  displayAmount?: string;
+  @Field()
+  displayAmount: string;
 
-  @Field({ nullable: true })
-  fullAmount?: string;
+  @Field()
+  fullAmount: string;
 }
 
 @ObjectType()
@@ -133,6 +133,9 @@ export class TapSupportedAsset {
   @Field({ nullable: true })
   groupKey?: string;
 
+  @Field({ nullable: true })
+  universeHost?: string;
+
   @Field(() => TapAssetPrice, { nullable: true })
   prices?: TapAssetPrice;
 }
@@ -154,7 +157,7 @@ export class SetupTradePartnerInput {
   magmaOfferId: string;
 
   @Field()
-  assetId: string;
+  ambossAssetId: string;
 
   @Field()
   amount: string;

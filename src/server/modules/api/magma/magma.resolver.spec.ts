@@ -38,6 +38,7 @@ describe('MagmaResolver', () => {
       {} as never,
       mockFetchService as never,
       mockConfigService as never,
+      { syncForAccount: jest.fn() } as never,
       mockLogger as never
     );
   });
@@ -68,7 +69,7 @@ describe('MagmaResolver', () => {
       });
 
       const result = await resolver.getTapOffers(userId, {
-        assetId: 'asset123',
+        ambossAssetId: 'asset123',
         transactionType: TapTransactionType.PURCHASE,
         sortBy: TapOfferSortBy.RATE,
         sortDir: TapOfferSortDir.ASC,
@@ -89,7 +90,7 @@ describe('MagmaResolver', () => {
       mockConfigService.get.mockReturnValue(undefined);
 
       const result = await resolver.getTapOffers(userId, {
-        assetId: 'asset123',
+        ambossAssetId: 'asset123',
         transactionType: TapTransactionType.PURCHASE,
       });
 
@@ -104,7 +105,7 @@ describe('MagmaResolver', () => {
       });
 
       const result = await resolver.getTapOffers(userId, {
-        assetId: 'asset123',
+        ambossAssetId: 'asset123',
         transactionType: TapTransactionType.SALE,
       });
 
@@ -124,7 +125,7 @@ describe('MagmaResolver', () => {
       });
 
       await resolver.getTapOffers(userId, {
-        assetId: 'asset123',
+        ambossAssetId: 'asset123',
         transactionType: TapTransactionType.PURCHASE,
       });
 
@@ -327,24 +328,26 @@ describe('MagmaResolver', () => {
         mockNodeService as never,
         mockFetchService as never,
         mockConfigService as never,
+        { syncForAccount: jest.fn() } as never,
         mockLogger as never
       );
     });
 
     const purchaseInput = {
       magmaOfferId: 'offer-1',
-      assetId: 'marketplace-asset-1',
+      ambossAssetId: 'marketplace-asset-1',
       amount: '100000',
       assetRate,
       assetPrecision,
       transactionType: TapTransactionType.PURCHASE,
       swapNodePubkey: swapPubkey,
       swapNodeSockets: ['127.0.0.1:9735'],
+      tapdAssetId: 'deadbeef'.repeat(8),
     };
 
     const saleInput = {
       magmaOfferId: 'offer-2',
-      assetId: 'marketplace-asset-1',
+      ambossAssetId: 'marketplace-asset-1',
       amount: '1000',
       assetRate,
       assetPrecision,
@@ -570,6 +573,16 @@ describe('MagmaResolver', () => {
           amount: '0',
         })
       ).rejects.toThrow('Amount must be greater than zero');
+    });
+
+    it('throws when neither tapdAssetId nor tapdGroupKey is provided', async () => {
+      await expect(
+        setupResolver.setupTradePartner(userId, ambossContext as never, {
+          ...purchaseInput,
+          tapdAssetId: undefined,
+          tapdGroupKey: undefined,
+        })
+      ).rejects.toThrow('Either tapdAssetId or tapdGroupKey must be provided');
     });
   });
 });

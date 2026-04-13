@@ -156,7 +156,7 @@ export const TradingOffers: FC = () => {
   } = useGetTapOffersQuery({
     variables: {
       input: {
-        assetId: selectedAsset,
+        ambossAssetId: selectedAsset,
         transactionType: txType,
         sortBy,
         sortDir,
@@ -435,7 +435,7 @@ export const TradingOffers: FC = () => {
 
       <TradeSheet
         offer={selectedOffer}
-        assetId={selectedAsset}
+        ambossAssetId={selectedAsset}
         tapdAssetId={selectedAssetData?.assetId || ''}
         tapdGroupKey={selectedAssetData?.groupKey || ''}
         assetSymbol={selectedSymbol}

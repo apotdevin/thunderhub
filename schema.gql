@@ -374,7 +374,7 @@ type GetPaymentsType {
 }
 
 input GetTapOffersInput {
-  assetId: String!
+  ambossAssetId: String!
   limit: Int
   minAmount: String
   offset: Int
@@ -817,8 +817,8 @@ type ServerAccount {
 }
 
 input SetupTradePartnerInput {
+  ambossAssetId: String!
   amount: String!
-  assetId: String!
   assetPrecision: Int!
   assetRate: String!
   magmaOfferId: String!
@@ -962,6 +962,7 @@ input TapFundChannelInput {
   groupKey: String
   peerPubkey: String!
   pushSat: Int
+  universeHost: String
 }
 
 type TapFundChannelResponse {
@@ -991,6 +992,7 @@ type TapSupportedAsset {
   precision: Int!
   prices: TapAssetPrice
   symbol: String!
+  universeHost: String
 }
 
 type TapSupportedAssetList {
@@ -1011,8 +1013,8 @@ type TapTradeOffer {
 }
 
 type TapTradeOfferAmount {
-  displayAmount: String
-  fullAmount: String
+  displayAmount: String!
+  fullAmount: String!
 }
 
 type TapTradeOfferList {

@@ -70,6 +70,7 @@ export const getSupportedAssetsQuery = gql`
             taproot_asset_details {
               asset_id
               group_key
+              universe
             }
           }
           total_count
