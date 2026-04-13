@@ -30,35 +30,24 @@ import {
 } from './magma.gql';
 
 /**
- * Computes the Magma channel order size from the user-facing amount.
+ * Computes the Magma channel order size from the UI's asset input.
  *
  * The Magma "size" field semantics differ by direction:
- *   - PURCHASE: atomic asset units (rate is atomic-assets-per-BTC)
- *   - SALE: sats (converting display asset units via the rate)
- *
- * When `skipOutboundChannel` is true the client already passed the amount
- * in atomic asset units directly (avoids the sats round-trip rounding error).
+ *   - PURCHASE: atomic asset units — used directly from the UI input, no derivation.
+ *   - SALE: sats — derived from the atomic asset amount via the rate.
  */
 function computeMagmaOrderSize(
   transactionType: TapTransactionType,
-  amount: string,
-  assetRate: string,
-  assetPrecision: number,
-  skipOutboundChannel?: boolean
+  assetAmount: string,
+  assetRate: string
 ): string {
   if (transactionType === TapTransactionType.PURCHASE) {
-    if (skipOutboundChannel) return amount;
-    // sats * rate / 1e8 = atomic asset units
-    return (
-      (BigInt(amount) * BigInt(assetRate)) /
-      BigInt(100_000_000)
-    ).toString();
+    return assetAmount;
   }
 
-  // SALE: display_amount * 10^precision * 1e8 / rate = sats
-  const precisionMultiplier = BigInt(10 ** assetPrecision);
+  // SALE: atomic_asset_units * 1e8 / rate = sats  (rate is atomic-assets-per-BTC)
   return (
-    (BigInt(amount) * precisionMultiplier * BigInt(100_000_000)) /
+    (BigInt(assetAmount) * BigInt(100_000_000)) /
     BigInt(assetRate)
   ).toString();
 }
@@ -246,8 +235,8 @@ export class MagmaResolver {
         if (input.transactionType == TapTransactionType.SALE) {
           throw new GraphQLError(`Selling not implemented yet`);
         }
-        if (!input.amount || BigInt(input.amount) <= 0) {
-          throw new GraphQLError('Amount must be greater than zero');
+        if (!input.assetAmount || BigInt(input.assetAmount) <= 0) {
+          throw new GraphQLError('Asset amount must be greater than zero');
         }
         if (!input.assetRate || BigInt(input.assetRate) <= 0) {
           throw new GraphQLError('Asset rate must be greater than zero');
@@ -328,10 +317,8 @@ export class MagmaResolver {
 
           const magmaSize = computeMagmaOrderSize(
             input.transactionType,
-            input.amount,
-            input.assetRate,
-            input.assetPrecision,
-            input.skipOutboundChannel
+            input.assetAmount,
+            input.assetRate
           );
 
           const { data, error } =
@@ -466,14 +453,15 @@ export class MagmaResolver {
         'peer',
         'payMagma',
         async (): Promise<SetupTradePartnerAuto['outboundChannel']> => {
-          if (input.skipOutboundChannel) {
-            return undefined;
-          }
-
           if (input.transactionType === TapTransactionType.PURCHASE) {
+            // No sats provided → outbound BTC channel already exists, skip.
+            if (!input.satsAmount) {
+              return undefined;
+            }
+
             const [channelResult, error] = await toWithError(
               this.nodeService.openChannel(user.id, {
-                local_tokens: Number(input.amount),
+                local_tokens: Number(input.satsAmount),
                 partner_public_key: input.swapNodePubkey,
               })
             );
@@ -495,7 +483,7 @@ export class MagmaResolver {
             this.tapdNodeService.fundAssetChannel({
               id: user.id,
               peerPubkey: input.swapNodePubkey,
-              assetAmount: Number(input.amount),
+              assetAmount: Number(input.assetAmount),
               ...(input.tapdGroupKey
                 ? { groupKey: input.tapdGroupKey }
                 : { assetId: input.tapdAssetId }),
