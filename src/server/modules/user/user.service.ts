@@ -83,9 +83,14 @@ export class UserService {
     return userRows[0];
   }
 
-  async getUserNodeSlugs(
-    userId: string
-  ): Promise<{ slug: string; name: string }[]> {
+  async getUserNodeSlugs(userId: string): Promise<
+    {
+      slug: string;
+      name: string;
+      network?: string;
+      type?: string;
+    }[]
+  > {
     if (!this.drizzle) return [];
 
     const { db, schema } = this.drizzle;
@@ -93,6 +98,8 @@ export class UserService {
       .select({
         id: schema.nodes.id,
         name: schema.nodes.name,
+        network: schema.nodes.network,
+        type: schema.nodes.type,
       })
       .from(schema.nodes)
       .innerJoin(
@@ -102,10 +109,14 @@ export class UserService {
       .where(eq(schema.userNodes.user_id, userId))
       .orderBy(asc(schema.nodes.name));
 
-    return rows.map((r: { id: string; name: string }) => ({
-      slug: r.id.slice(0, 8),
-      name: r.name,
-    }));
+    return rows.map(
+      (r: { id: string; name: string; network?: string; type?: string }) => ({
+        slug: r.id.slice(0, 8),
+        name: r.name,
+        network: r.network,
+        type: r.type,
+      })
+    );
   }
 
   async getUserByEmail(email: string): Promise<{

@@ -1,11 +1,12 @@
 import { ReactNode } from 'react';
-import { Dialog, DialogContent } from '../ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 
 interface ModalProps {
   children: ReactNode;
   isOpen: boolean;
   noMinWidth?: boolean;
   closeCallback: () => void;
+  title?: string;
 }
 
 const Modal = ({
@@ -13,6 +14,7 @@ const Modal = ({
   isOpen,
   noMinWidth = false,
   closeCallback,
+  title = 'Dialog',
 }: ModalProps) => {
   return (
     <Dialog
@@ -23,12 +25,14 @@ const Modal = ({
     >
       <DialogContent
         showCloseButton={false}
+        aria-describedby={undefined}
         className={
           noMinWidth
             ? 'max-h-[80vh] overflow-y-auto'
             : 'max-h-[80vh] overflow-y-auto sm:max-w-[578px]'
         }
       >
+        <DialogTitle className="sr-only">{title}</DialogTitle>
         {children}
       </DialogContent>
     </Dialog>

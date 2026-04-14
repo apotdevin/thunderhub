@@ -72,6 +72,13 @@ type AuthResponse {
   status: String!
 }
 
+input BakeSuperMacaroonInput {
+  read_only: Boolean! = false
+
+  """LITD REST endpoint (e.g. https://host:8443)"""
+  rest_host: String!
+}
+
 type Balances {
   lightning: LightningBalance!
   onchain: OnChainBalance!
@@ -285,6 +292,13 @@ type CreateMacaroon {
   hex: String!
 }
 
+type CurrentNode {
+  created_at: String
+  id: String!
+  network: String
+  socket: String!
+}
+
 type DecodeInvoice {
   chain_address: String
   cltv_delta: Float
@@ -465,6 +479,7 @@ type Mutation {
   addPeer(isTemporary: Boolean, publicKey: String, socket: String, url: String): Boolean!
   addTapAssetInvoice(input: TapAssetInvoiceInput!): TapAssetInvoiceResponse!
   addTapFederationServer(host: String!): Boolean!
+  bakeSuperMacaroon(input: BakeSuperMacaroonInput!): SuperMacaroon!
   burnTapAsset(amount: String!, assetId: String!): Boolean!
   cancelTapBatch: Boolean!
   claimBoltzTransaction(destination: String!, fee: Float!, id: String!, lockupAddress: String!, preimage: String!, privateKey: String!, redeem: String!): String!
@@ -790,6 +805,7 @@ type Query {
   getUtxos: [Utxo!]!
   getVolumeHealth: ChannelsHealth!
   getWalletInfo: Wallet!
+  node: CurrentNode!
   public: PublicQueries!
   recoverFunds(backup: String!): Boolean!
   signMessage(message: String!): String!
@@ -850,6 +866,11 @@ type SingleChannel {
   transaction_id: String!
   transaction_vout: Float!
   updated_at: String
+}
+
+type SuperMacaroon {
+  base: String!
+  hex: String!
 }
 
 type TapAddress {
@@ -1132,7 +1153,9 @@ type UserBackupInfo {
 type UserNode {
   id: String!
   name: String!
+  network: String
   slug: String!
+  type: String
 }
 
 type UserQueries {

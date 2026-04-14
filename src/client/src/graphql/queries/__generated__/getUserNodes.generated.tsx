@@ -14,6 +14,8 @@ export type GetUserNodesQuery = {
       id: string;
       slug: string;
       name: string;
+      network?: string | null;
+      type?: string | null;
     }>;
   };
 };
@@ -25,6 +27,8 @@ export const GetUserNodesDocument = gql`
         id
         slug
         name
+        network
+        type
       }
     }
   }

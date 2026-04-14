@@ -66,6 +66,10 @@ export class UserNode {
   slug: string;
   @Field()
   name: string;
+  @Field({ nullable: true })
+  network?: string;
+  @Field({ nullable: true })
+  type?: string;
 }
 
 @ObjectType()

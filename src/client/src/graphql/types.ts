@@ -105,6 +105,12 @@ export type AuthResponse = {
   status: Scalars['String']['output'];
 };
 
+export type BakeSuperMacaroonInput = {
+  read_only?: Scalars['Boolean']['input'];
+  /** LITD REST endpoint (e.g. https://host:8443) */
+  rest_host: Scalars['String']['input'];
+};
+
 export type Balances = {
   __typename?: 'Balances';
   lightning: LightningBalance;
@@ -340,6 +346,14 @@ export type CreateMacaroon = {
   hex: Scalars['String']['output'];
 };
 
+export type CurrentNode = {
+  __typename?: 'CurrentNode';
+  created_at?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  network?: Maybe<Scalars['String']['output']>;
+  socket: Scalars['String']['output'];
+};
+
 export type DecodeInvoice = {
   __typename?: 'DecodeInvoice';
   chain_address?: Maybe<Scalars['String']['output']>;
@@ -536,6 +550,7 @@ export type Mutation = {
   addPeer: Scalars['Boolean']['output'];
   addTapAssetInvoice: TapAssetInvoiceResponse;
   addTapFederationServer: Scalars['Boolean']['output'];
+  bakeSuperMacaroon: SuperMacaroon;
   burnTapAsset: Scalars['Boolean']['output'];
   cancelTapBatch: Scalars['Boolean']['output'];
   claimBoltzTransaction: Scalars['String']['output'];
@@ -589,6 +604,10 @@ export type MutationAddTapAssetInvoiceArgs = {
 
 export type MutationAddTapFederationServerArgs = {
   host: Scalars['String']['input'];
+};
+
+export type MutationBakeSuperMacaroonArgs = {
+  input: BakeSuperMacaroonInput;
 };
 
 export type MutationBurnTapAssetArgs = {
@@ -1085,6 +1104,7 @@ export type Query = {
   getUtxos: Array<Utxo>;
   getVolumeHealth: ChannelsHealth;
   getWalletInfo: Wallet;
+  node: CurrentNode;
   public: PublicQueries;
   recoverFunds: Scalars['Boolean']['output'];
   signMessage: Scalars['String']['output'];
@@ -1232,6 +1252,12 @@ export type SingleChannel = {
   transaction_id: Scalars['String']['output'];
   transaction_vout: Scalars['Float']['output'];
   updated_at?: Maybe<Scalars['String']['output']>;
+};
+
+export type SuperMacaroon = {
+  __typename?: 'SuperMacaroon';
+  base: Scalars['String']['output'];
+  hex: Scalars['String']['output'];
 };
 
 export type TapAddress = {
@@ -1560,7 +1586,9 @@ export type UserNode = {
   __typename?: 'UserNode';
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
+  network?: Maybe<Scalars['String']['output']>;
   slug: Scalars['String']['output'];
+  type?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserQueries = {
