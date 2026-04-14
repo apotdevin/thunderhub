@@ -22,13 +22,13 @@ type Urls = {
     space: string;
     auth: string;
     magma: string;
+    trade: string;
   };
   ticker: string;
   fees: string;
   blockHeight: string;
   boltz: string;
   github: string;
-  trade: string;
 };
 
 type Headers = {
@@ -117,25 +117,6 @@ const VALID_NODE_TYPES = ['lnd', 'litd'];
 const getValidNodeType = (value: string | undefined): string =>
   value && VALID_NODE_TYPES.includes(value) ? value : 'lnd';
 
-const getValidTradeUrl = (
-  value: string | undefined,
-  isProduction: boolean
-): string => {
-  const defaultUrl = isProduction
-    ? 'https://rails.amboss.tech/graphql'
-    : 'https://rails-dev.amboss.tech/graphql';
-
-  if (!value) return defaultUrl;
-
-  try {
-    new URL(value);
-  } catch {
-    throw new Error('Invalid TRADE_API_URL URL value provided');
-  }
-
-  return value;
-};
-
 const getPackageVersion = (): string => {
   if (process.env.npm_package_version) {
     return process.env.npm_package_version;
@@ -176,13 +157,13 @@ export default (): ConfigType => {
       space: process.env.SPACE_API_URL || '',
       auth: process.env.AMBOSS_AUTH_URL || '',
       magma: process.env.MAGMA_API_URL || '',
+      trade: process.env.TRADE_API_URL || '',
     },
     fees: `${mempool}/api/v1/fees/recommended`,
     blockHeight: `${mempool}/api/blocks/tip/height`,
     ticker: 'https://blockchain.info/ticker',
     github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
     boltz: 'https://api.boltz.exchange',
-    trade: getValidTradeUrl(process.env.TRADE_API_URL, isProduction),
   };
 
   const npmVersion = getPackageVersion();

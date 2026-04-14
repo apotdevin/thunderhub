@@ -6,6 +6,7 @@ import {
   getAmbossAuthUrl,
   getAmbossMagmaUrl,
   getAmbossSpaceUrl,
+  getAmbossTradeUrl,
   getNetwork,
 } from 'src/server/utils/network';
 import { Logger } from 'winston';
@@ -111,6 +112,13 @@ export class AmbossService {
     const override = this.configService.get<string>('urls.amboss.magma');
     if (override) return override;
     return getAmbossMagmaUrl(await this.resolveNetwork(user));
+  }
+
+  /** Trade (Rails) API URL for the user's network, or env override. */
+  async resolveTradeUrl(user: UserId): Promise<string> {
+    const override = this.configService.get<string>('urls.amboss.trade');
+    if (override) return override;
+    return getAmbossTradeUrl(await this.resolveNetwork(user));
   }
 
   async getAmbossJWT(user: UserId): Promise<string> {

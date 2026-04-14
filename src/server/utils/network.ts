@@ -39,6 +39,11 @@ const AMBOSS_MAGMA_URLS: Record<string, string> = {
   btcsignet: 'https://magma-dev.amboss.tech/graphql',
 };
 
+const AMBOSS_TRADE_URLS: Record<string, string> = {
+  btc: 'https://rails.amboss.tech/graphql',
+  btcsignet: 'https://rails-dev.amboss.tech/graphql',
+};
+
 /**
  * Returns the Amboss auth API URL for the given network.
  * Only mainnet and mutinynet/signet are supported — Amboss has no
@@ -77,4 +82,17 @@ export const getAmbossMagmaUrl = (network: string | undefined): string => {
     );
   }
   return AMBOSS_MAGMA_URLS[network];
+};
+
+/**
+ * Returns the Amboss Trade (Rails) API URL for the given network.
+ * Mainnet → rails.amboss.tech, mutinynet/signet → rails-dev.amboss.tech.
+ */
+export const getAmbossTradeUrl = (network: string | undefined): string => {
+  if (!network || !(network in AMBOSS_TRADE_URLS)) {
+    throw new Error(
+      `Trade is not supported on the current network (${network ?? 'unknown'})`
+    );
+  }
+  return AMBOSS_TRADE_URLS[network];
 };

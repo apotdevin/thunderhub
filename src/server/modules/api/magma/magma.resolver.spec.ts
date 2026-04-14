@@ -30,7 +30,6 @@ describe('MagmaResolver', () => {
   const tradeUrl = 'http://trade.example.com/graphql';
 
   const mockFetchService = { graphqlFetchWithProxy: jest.fn() };
-  const mockConfigService = { get: jest.fn(), getOrThrow: jest.fn() };
   const mockLogger = { error: jest.fn(), warn: jest.fn(), info: jest.fn() };
   const mockAmbossTokenService = {
     get: jest.fn().mockResolvedValue('token123'),
@@ -40,6 +39,7 @@ describe('MagmaResolver', () => {
     resolveMagmaUrl: jest.fn(),
     resolveSpaceUrl: jest.fn(),
     resolveAuthUrl: jest.fn(),
+    resolveTradeUrl: jest.fn(),
   };
 
   let resolver: MagmaResolver;
@@ -48,12 +48,11 @@ describe('MagmaResolver', () => {
     jest.clearAllMocks();
     mockAmbossTokenService.get.mockResolvedValue('token123');
     mockAmbossTokenService.getOrCreate.mockResolvedValue('token123');
-    mockConfigService.get.mockReturnValue(tradeUrl);
+    mockAmbossService.resolveTradeUrl.mockResolvedValue(tradeUrl);
     resolver = new MagmaResolver(
       {} as never,
       {} as never,
       mockFetchService as never,
-      mockConfigService as never,
       { syncForAccount: jest.fn() } as never,
       mockAmbossTokenService as never,
       mockAmbossService as never,
@@ -102,18 +101,6 @@ describe('MagmaResolver', () => {
         rate: { displayAmount: '0.001', fullAmount: '100000' },
         available: { displayAmount: '500', fullAmount: '500000000' },
       });
-    });
-
-    it('returns empty list when trade URL is not configured', async () => {
-      mockConfigService.get.mockReturnValue(undefined);
-
-      const result = await resolver.getTapOffers(userId, {
-        ambossAssetId: 'asset123',
-        transactionType: TapTransactionType.PURCHASE,
-      });
-
-      expect(result).toEqual({ list: [], totalCount: 0 });
-      expect(mockFetchService.graphqlFetchWithProxy).not.toHaveBeenCalled();
     });
 
     it('returns empty list and logs error when fetch fails', async () => {
@@ -200,15 +187,6 @@ describe('MagmaResolver', () => {
         groupKey: 'tapGroupKey1',
         prices: null,
       });
-    });
-
-    it('returns empty list when trade URL is not configured', async () => {
-      mockConfigService.get.mockReturnValue(undefined);
-
-      const result = await resolver.getTapSupportedAssets(userId);
-
-      expect(result).toEqual({ list: [], totalCount: 0 });
-      expect(mockFetchService.graphqlFetchWithProxy).not.toHaveBeenCalled();
     });
 
     it('returns empty list and logs error when fetch fails', async () => {
@@ -320,21 +298,16 @@ describe('MagmaResolver', () => {
         outputIndex: 1,
       });
 
-      mockConfigService.getOrThrow.mockImplementation((key: string) => {
-        if (key === 'urls.amboss.magma') return magmaUrl;
-        return tradeUrl;
-      });
-
       mockFetchService.graphqlFetchWithProxy.mockResolvedValue(
         magmaOrderResponse()
       );
 
       mockAmbossService.resolveMagmaUrl.mockResolvedValue(magmaUrl);
+      mockAmbossService.resolveTradeUrl.mockResolvedValue(tradeUrl);
       setupResolver = new MagmaResolver(
         mockTapdNodeService as never,
         mockNodeService as never,
         mockFetchService as never,
-        mockConfigService as never,
         { syncForAccount: jest.fn() } as never,
         mockAmbossTokenService as never,
         mockAmbossService as never,
