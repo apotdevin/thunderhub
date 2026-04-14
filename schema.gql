@@ -456,6 +456,42 @@ input LndInput {
   socket: String!
 }
 
+type MagmaOrder {
+  amount: MagmaOrderAmount!
+  channelId: String
+  createdAt: String!
+  destination: MagmaOrderParty!
+  fees: MagmaOrderFees!
+  id: String!
+  paymentStatus: String
+  source: MagmaOrderParty!
+  status: String!
+  timeout: Int
+}
+
+type MagmaOrderAmount {
+  sats: String
+}
+
+type MagmaOrderFeeAmount {
+  sats: Int
+}
+
+type MagmaOrderFees {
+  buyer: MagmaOrderFeeAmount
+  seller: MagmaOrderFeeAmount
+}
+
+type MagmaOrderParty {
+  alias: String
+  pubkey: String
+}
+
+type MagmaPendingOrders {
+  purchases: [MagmaOrder!]!
+  sales: [MagmaOrder!]!
+}
+
 type MessageType {
   message: String
 }
@@ -773,6 +809,7 @@ type Query {
   getPayments(token: String): GetPaymentsType!
   getPeers: [Peer!]!
   getPendingChannels: [PendingChannel!]!
+  getPendingMagmaOrders: MagmaPendingOrders
   getTapAssetChannelBalances(peerPubkey: String): [TapAssetChannelBalance!]!
   getTapAssets: TapAssetList!
   getTapBalances(groupBy: TapBalanceGroupBy = GROUP_KEY): TapBalances!
