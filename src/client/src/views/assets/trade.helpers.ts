@@ -4,7 +4,10 @@ import Big from 'big.js';
  * Converts a decimal display string (e.g. "1.5") to atomic BigInt units.
  */
 export const displayToAtomic = (display: string, precision: number): bigint => {
-  const [whole, frac = ''] = display.split('.');
+  const [whole] = display.split('.');
+  if (precision === 0) return BigInt(whole || '0');
+
+  const frac = display.split('.')[1] || '';
   const padded = frac.padEnd(precision, '0').slice(0, precision);
   return BigInt(whole || '0') * BigInt(10 ** precision) + BigInt(padded || '0');
 };

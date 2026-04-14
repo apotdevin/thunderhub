@@ -376,6 +376,7 @@ export type EditNodeResult = {
 
 export type ExecuteTradeInput = {
   assetAmount: Scalars['String']['input'];
+  expiryEpoch?: InputMaybe<Scalars['String']['input']>;
   paymentRequest?: InputMaybe<Scalars['String']['input']>;
   peerPubkey: Scalars['String']['input'];
   rfqId?: InputMaybe<Scalars['String']['input']>;

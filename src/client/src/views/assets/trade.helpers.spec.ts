@@ -1,4 +1,8 @@
-import { atomicToDisplay, displayAssetToSats } from './trade.helpers';
+import {
+  atomicToDisplay,
+  displayAssetToSats,
+  displayToAtomic,
+} from './trade.helpers';
 
 describe('atomicToDisplay', () => {
   it('returns atomic value unchanged when precision is 0', () => {
@@ -22,6 +26,20 @@ describe('atomicToDisplay', () => {
 
   it('handles zero', () => {
     expect(atomicToDisplay('0', 8)).toBe('0.00000000');
+  });
+});
+
+describe('displayToAtomic', () => {
+  it('truncates fractional part when precision is 0', () => {
+    expect(displayToAtomic('1.5', 0)).toBe(BigInt(1));
+  });
+
+  it('returns whole number when precision is 0 and no decimal', () => {
+    expect(displayToAtomic('42', 0)).toBe(BigInt(42));
+  });
+
+  it('converts display with fractional part at precision 8', () => {
+    expect(displayToAtomic('1.5', 8)).toBe(BigInt(150000000));
   });
 });
 

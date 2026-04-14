@@ -318,6 +318,7 @@ type EditNodeResult {
 
 input ExecuteTradeInput {
   assetAmount: String!
+  expiryEpoch: String
   paymentRequest: String
   peerPubkey: String!
   rfqId: String

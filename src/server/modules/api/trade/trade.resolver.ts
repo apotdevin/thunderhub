@@ -16,6 +16,9 @@ import {
   ExecuteTradeResult,
 } from './trade.types';
 
+const HEX_PUBKEY_RE = /^[0-9a-f]{66}$/;
+const HEX_ASSET_ID_RE = /^[0-9a-f]{64}$/;
+
 @Resolver()
 export class TradeResolver {
   constructor(
@@ -29,6 +32,8 @@ export class TradeResolver {
     @CurrentUser() { id }: UserId,
     @Args('input') input: TradeQuoteInput
   ): Promise<TradeQuoteResult> {
+    this.validateIdentifiers(input);
+
     if (input.transactionType === TapTransactionType.PURCHASE) {
       return this.getBuyQuote(id, input);
     }
@@ -40,6 +45,15 @@ export class TradeResolver {
     @CurrentUser() { id }: UserId,
     @Args('input') input: ExecuteTradeInput
   ): Promise<ExecuteTradeResult> {
+    this.validateIdentifiers(input);
+
+    if (input.expiryEpoch) {
+      const expirySec = Number(input.expiryEpoch);
+      if (expirySec > 0 && Date.now() / 1000 > expirySec) {
+        throw new GraphQLError('Quote has expired — request a new quote');
+      }
+    }
+
     if (input.transactionType === TapTransactionType.PURCHASE) {
       return this.executePurchase(id, input);
     }
@@ -134,16 +148,11 @@ export class TradeResolver {
       throw new GraphQLError('Peer returned invalid rate in sell quote');
     }
 
-    const assetAmt = BigInt(input.assetAmount);
-    const coeff = BigInt(rate.coefficient);
-    const scaleMult = BigInt(10) ** BigInt(rate.scale);
-    const msatAmount = (assetAmt * BigInt(100_000_000_000) * scaleMult) / coeff;
-    const sats = ((msatAmount + BigInt(999)) / BigInt(1000)).toString();
-
-    const minMsat = BigInt(quote.minTransportableMsat || '0');
-    const minSats =
-      minMsat > BigInt(0) ? Number((minMsat + BigInt(999)) / BigInt(1000)) : 0;
-    const quoteSats = Math.max(Number(sats), minSats);
+    const quoteSats = this.deriveSatsFromRate(
+      input.assetAmount,
+      rate,
+      quote.minTransportableMsat
+    );
     const rfqIdHex = quote.rfqId.toString('hex');
 
     this.logger.info('Sell quote received', {
@@ -166,35 +175,12 @@ export class TradeResolver {
     id: string,
     input: ExecuteTradeInput
   ): Promise<ExecuteTradeResult> {
-    let paymentRequest = input.paymentRequest;
+    const { paymentRequest } = input;
 
     if (!paymentRequest) {
-      // Fallback: create a fresh invoice (loses rate binding)
-      this.logger.warn(
-        'executePurchase called without paymentRequest — creating new invoice'
+      throw new GraphQLError(
+        'paymentRequest is required - please generate an asset invoice first'
       );
-      const [invoice, invoiceError] = await toWithError(
-        this.tapdNodeService.addAssetInvoice({
-          id,
-          assetId: input.tapdAssetId || undefined,
-          groupKey: input.tapdGroupKey || undefined,
-          assetAmount: Number(input.assetAmount),
-          peerPubkey: input.peerPubkey,
-        })
-      );
-
-      if (invoiceError || !invoice) {
-        this.logger.error('Failed to create asset invoice for trade', {
-          error: invoiceError,
-        });
-        throw new GraphQLError('Failed to create asset invoice');
-      }
-
-      paymentRequest = invoice.invoiceResult?.paymentRequest || '';
-    }
-
-    if (!paymentRequest) {
-      throw new GraphQLError('Asset invoice returned no payment request');
     }
 
     this.logger.info('Executing buy trade', {
@@ -234,10 +220,43 @@ export class TradeResolver {
     id: string,
     input: ExecuteTradeInput
   ): Promise<ExecuteTradeResult> {
-    const invoiceSats = Number(input.satsAmount);
+    const { rfqId } = input;
 
-    if (!invoiceSats || invoiceSats <= 0) {
-      throw new GraphQLError('Invalid sats amount for sale');
+    if (!rfqId) {
+      throw new GraphQLError(
+        'rfqId is required for sells — call getTradeQuote first'
+      );
+    }
+
+    // Re-derive satsAmount server-side from the accepted quote instead of
+    // trusting the client-provided value.
+    const [quote, quoteError] = await toWithError(
+      this.tapdNodeService.queryAcceptedSellQuote({ id, rfqId })
+    );
+
+    if (quoteError || !quote) {
+      this.logger.error('Failed to look up accepted sell quote', {
+        error: quoteError,
+        rfqId,
+      });
+      throw new GraphQLError(
+        'Failed to look up accepted sell quote — it may have expired'
+      );
+    }
+
+    const rate = quote.bidAssetRate;
+    if (!rate || !rate.coefficient || rate.coefficient === '0') {
+      throw new GraphQLError('Accepted quote has invalid rate');
+    }
+
+    const invoiceSats = this.deriveSatsFromRate(
+      input.assetAmount,
+      rate,
+      quote.minTransportableMsat
+    );
+
+    if (invoiceSats <= 0) {
+      throw new GraphQLError('Derived sats amount is zero or negative');
     }
 
     const [invoice, invoiceError] = await toWithError(
@@ -254,7 +273,7 @@ export class TradeResolver {
     this.logger.info('Executing sell trade', {
       assetAmount: input.assetAmount,
       invoiceSats,
-      rfqId: input.rfqId ? 'present' : 'missing',
+      quote,
     });
 
     const [payResult, payError] = await toWithError(
@@ -265,15 +284,13 @@ export class TradeResolver {
         assetAmount: input.assetAmount,
         paymentRequest: invoice.request,
         peerPubkey: input.peerPubkey,
-        rfqId: input.rfqId || undefined,
+        rfqId,
       })
     );
 
     if (payError || !payResult) {
-      const details =
-        payError instanceof Error ? payError.message : String(payError);
       this.logger.error('Failed to execute sell trade', { error: payError });
-      throw new GraphQLError(`Failed to execute sell trade: ${details}`);
+      throw new GraphQLError('Failed to execute sell trade');
     }
 
     return {
@@ -282,5 +299,46 @@ export class TradeResolver {
       satsAmount: String(invoiceSats),
       feeSats: payResult.feeSat ? String(payResult.feeSat) : undefined,
     };
+  }
+
+  /**
+   * Derives the sats amount from an RFQ rate and asset amount.
+   * The rate is a fixed-point number: coefficient × 10^(-scale) gives the
+   * number of asset units per BTC. We convert to msat, then ceil to sats.
+   */
+  private deriveSatsFromRate(
+    assetAmount: string,
+    rate: { coefficient: string; scale: number },
+    minTransportableMsat: string
+  ): number {
+    const assetAmt = BigInt(assetAmount);
+    const coeff = BigInt(rate.coefficient);
+    const scaleMult = BigInt(10) ** BigInt(rate.scale);
+    const msatAmount = (assetAmt * BigInt(100_000_000_000) * scaleMult) / coeff;
+    const sats = Number((msatAmount + BigInt(999)) / BigInt(1000));
+
+    const minMsat = BigInt(minTransportableMsat || '0');
+    const minSats =
+      minMsat > BigInt(0) ? Number((minMsat + BigInt(999)) / BigInt(1000)) : 0;
+
+    return Math.max(sats, minSats);
+  }
+
+  /**
+   * Validates hex-encoded identifiers at the resolver entry points.
+   * Rejects malformed pubkeys / asset IDs before they reach tapd.
+   */
+  private validateIdentifiers(
+    input: Pick<TradeQuoteInput, 'peerPubkey' | 'tapdAssetId' | 'tapdGroupKey'>
+  ): void {
+    if (!HEX_PUBKEY_RE.test(input.peerPubkey)) {
+      throw new GraphQLError('Invalid peerPubkey: expected 66-char hex');
+    }
+    if (input.tapdAssetId && !HEX_ASSET_ID_RE.test(input.tapdAssetId)) {
+      throw new GraphQLError('Invalid tapdAssetId: expected 64-char hex');
+    }
+    if (input.tapdGroupKey && !HEX_PUBKEY_RE.test(input.tapdGroupKey)) {
+      throw new GraphQLError('Invalid tapdGroupKey: expected 66-char hex');
+    }
   }
 }
