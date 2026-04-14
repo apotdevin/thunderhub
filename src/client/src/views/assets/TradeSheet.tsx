@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   Loader2,
@@ -19,10 +19,16 @@ import { Button } from '@/components/ui/button';
 import { TapTransactionType } from '../../graphql/types';
 import { useSetupTradePartnerMutation } from '../../graphql/mutations/__generated__/setupTradePartner.generated';
 import { useOpenChannelMutation } from '../../graphql/mutations/__generated__/openChannel.generated';
+import { useExecuteTradeMutation } from '../../graphql/mutations/__generated__/executeTrade.generated';
 import { useGetPeerChannelsQuery } from '../../graphql/queries/__generated__/getPeerChannels.generated';
 import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
+import { useGetTradeQuoteLazyQuery } from '../../graphql/queries/__generated__/getTradeQuote.generated';
 import { getErrorContent } from '../../utils/error';
-import { atomicToDisplay, displayAssetToSats } from './trade.helpers';
+import {
+  atomicToDisplay,
+  displayAssetToSats,
+  displayToAtomic,
+} from './trade.helpers';
 
 export type Offer = {
   id: string;
@@ -57,6 +63,13 @@ export const TradeSheet: FC<TradeSheetProps> = ({
 }) => {
   const [amount, setAmount] = useState('');
   const [step, setStep] = useState<'input' | 'confirm'>('input');
+  const [quotedSats, setQuotedSats] = useState<string | null>(null);
+  const [quotePaymentRequest, setQuotePaymentRequest] = useState<string | null>(
+    null
+  );
+  const [quoteRfqId, setQuoteRfqId] = useState<string | null>(null);
+  const [quoteExpiry, setQuoteExpiry] = useState<number | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
 
   const [openChannel, { loading: openChannelLoading }] = useOpenChannelMutation(
     {
@@ -91,12 +104,70 @@ export const TradeSheet: FC<TradeSheetProps> = ({
           onOpenChange(false);
           setAmount('');
           setStep('input');
+          setQuotedSats(null);
+          setQuotePaymentRequest(null);
+          setQuoteRfqId(null);
+          setQuoteExpiry(null);
         }
       },
       onError: err => toast.error(getErrorContent(err)),
     });
 
-  const loading = openChannelLoading || setupLoading;
+  const [executeTrade, { loading: tradeLoading }] = useExecuteTradeMutation({
+    onCompleted: data => {
+      const result = data.executeTrade;
+      if (result.success) {
+        const satsInfo = result.satsAmount
+          ? ` for ${Number(result.satsAmount).toLocaleString()} sats`
+          : '';
+        const feeLabel = result.feeSats
+          ? ` (fee: ${Number(result.feeSats).toLocaleString()} sats)`
+          : '';
+        toast.success(`Trade executed successfully${satsInfo}${feeLabel}`);
+        onOpenChange(false);
+        setAmount('');
+        setStep('input');
+        setQuotedSats(null);
+        setQuotePaymentRequest(null);
+        setQuoteRfqId(null);
+        setQuoteExpiry(null);
+      } else {
+        toast.error('Trade did not complete — please try again');
+        setStep('input');
+      }
+    },
+    onError: err => toast.error(getErrorContent(err)),
+  });
+
+  const [fetchQuote, { loading: quoteLoading }] = useGetTradeQuoteLazyQuery({
+    fetchPolicy: 'network-only',
+  });
+
+  // Countdown timer for quote expiry
+  useEffect(() => {
+    if (quoteExpiry == null) {
+      setSecondsLeft(null);
+      return;
+    }
+    const tick = () => {
+      const remaining = Math.max(
+        0,
+        Math.floor(quoteExpiry - Date.now() / 1000)
+      );
+      setSecondsLeft(remaining);
+      if (remaining <= 0) {
+        setQuotedSats(null);
+        setQuotePaymentRequest(null);
+        setQuoteRfqId(null);
+        setQuoteExpiry(null);
+      }
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [quoteExpiry]);
+
+  const quoteExpired = secondsLeft != null && secondsLeft <= 0;
 
   const { data: channelsData, loading: channelsLoading } =
     useGetPeerChannelsQuery({
@@ -170,7 +241,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
 
   const atomicTradeAmount =
     isValid && !needsOnlyOutboundBtc
-      ? BigInt(amount) * BigInt(10 ** assetPrecision)
+      ? displayToAtomic(amount, assetPrecision)
       : BigInt(0);
 
   // Amount-aware capacity checks: passes only if existing channels cover the
@@ -194,6 +265,17 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       : isAssetPurchase
         ? totalAssetRemote > BigInt(0)
         : totalBtcRemote > 0;
+
+  const readyToTrade = hasOutbound && hasInbound;
+  const loading = openChannelLoading || setupLoading || tradeLoading;
+  const hasRate = !!rate && rate !== '0';
+
+  const displaySats = quotedSats || (hasRate ? satsAmount : null);
+  const satsLabel = displaySats
+    ? `${Number(displaySats).toLocaleString()} sats`
+    : 'fetching quote...';
+  const sendLabel = isAssetPurchase ? satsLabel : `${amount} ${assetSymbol}`;
+  const receiveLabel = isAssetPurchase ? `${amount} ${assetSymbol}` : satsLabel;
 
   // For channel setup: BUY outbound = BTC (sats), magma inbound = asset
   // SELL outbound = asset, magma inbound = BTC (sats)
@@ -239,28 +321,100 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     });
   };
 
+  const handleReviewTrade = async () => {
+    if (!amount || !offer.node.pubkey) return;
+    setQuotedSats(null);
+    setQuotePaymentRequest(null);
+    setQuoteRfqId(null);
+    setQuoteExpiry(null);
+    const assetAtomicAmount = String(displayToAtomic(amount, assetPrecision));
+    const { data, error } = await fetchQuote({
+      variables: {
+        input: {
+          tapdAssetId,
+          tapdGroupKey: tapdGroupKey || undefined,
+          assetAmount: assetAtomicAmount,
+          transactionType,
+          peerPubkey: offer.node.pubkey,
+        },
+      },
+    });
+    if (error) {
+      toast.error(getErrorContent(error));
+      return;
+    }
+    const quote = data?.getTradeQuote;
+    const quotedAmount = quote?.satsAmount;
+    if (!quotedAmount || quotedAmount === '0') {
+      toast.error(
+        'Could not get a valid quote from the peer — please try again'
+      );
+      return;
+    }
+    setQuotedSats(quotedAmount);
+    setQuotePaymentRequest(quote?.paymentRequest || null);
+    setQuoteRfqId(quote?.rfqId || null);
+    if (quote?.expiryEpoch) {
+      setQuoteExpiry(Number(quote.expiryEpoch));
+    }
+    setStep('confirm');
+  };
+
+  const handleTrade = () => {
+    if (!amount || !offer.node.pubkey) return;
+    if (!displaySats || displaySats === '0') {
+      toast.error('No valid quote available — please go back and try again');
+      return;
+    }
+    const assetAtomicAmount = String(displayToAtomic(amount, assetPrecision));
+    executeTrade({
+      variables: {
+        input: {
+          tapdAssetId,
+          tapdGroupKey: tapdGroupKey || undefined,
+          assetAmount: assetAtomicAmount,
+          satsAmount: displaySats,
+          transactionType,
+          peerPubkey: offer.node.pubkey,
+          paymentRequest: quotePaymentRequest || undefined,
+          rfqId: quoteRfqId || undefined,
+        },
+      },
+    });
+  };
+
+  const clearQuoteState = () => {
+    setQuotedSats(null);
+    setQuotePaymentRequest(null);
+    setQuoteRfqId(null);
+    setQuoteExpiry(null);
+  };
+
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       setStep('input');
       setAmount('');
+      clearQuoteState();
     }
     onOpenChange(open);
   };
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetContent side="right" className="w-[360px] sm:max-w-[400px]">
+      <SheetContent side="right" className="w-90 sm:max-w-100">
         <SheetHeader>
           <SheetTitle>
             {isAssetPurchase ? 'Buy' : 'Sell'} {assetSymbol}
           </SheetTitle>
           <SheetDescription>
-            {hasOutbound && hasInbound
-              ? `Ready to trade with ${nodeLabel}`
-              : step === 'input'
-                ? needsOnlyOutboundBtc
+            {step === 'input'
+              ? readyToTrade
+                ? `Trade with ${nodeLabel}`
+                : needsOnlyOutboundBtc
                   ? `Open outbound BTC channel to ${nodeLabel}`
                   : `Set up trading channels with ${nodeLabel}`
+              : readyToTrade
+                ? 'Review trade before executing'
                 : needsOnlyOutboundBtc
                   ? 'Review BTC channel before opening'
                   : 'Review channel setup before proceeding'}
@@ -388,39 +542,39 @@ export const TradeSheet: FC<TradeSheetProps> = ({
               </div>
             )}
 
-            {!hasOutbound || !hasInbound ? (
-              <div className="flex flex-col gap-1.5">
-                <label
-                  htmlFor="trade-amount"
-                  className="text-sm text-muted-foreground"
-                >
-                  {needsOnlyOutboundBtc
-                    ? 'Channel size (sats)'
-                    : `Amount (${assetSymbol})`}
-                </label>
-                <div className="relative">
-                  <input
-                    id="trade-amount"
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="Enter amount"
-                    value={amount}
-                    onChange={e =>
-                      setAmount(e.target.value.replace(/[^0-9]/g, ''))
-                    }
-                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-16"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-                    {needsOnlyOutboundBtc ? 'sats' : assetSymbol}
-                  </span>
-                </div>
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="trade-amount"
+                className="text-sm text-muted-foreground"
+              >
+                {needsOnlyOutboundBtc
+                  ? 'Channel size (sats)'
+                  : `Amount (${assetSymbol})`}
+              </label>
+              <div className="relative">
+                <input
+                  id="trade-amount"
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="Enter amount"
+                  value={amount}
+                  onChange={e => {
+                    const v = e.target.value.replace(/[^0-9.]/g, '');
+                    // Allow only one decimal point
+                    const parts = v.split('.');
+                    setAmount(
+                      parts.length > 2
+                        ? `${parts[0]}.${parts.slice(1).join('')}`
+                        : v
+                    );
+                  }}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-16"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+                  {needsOnlyOutboundBtc ? 'sats' : assetSymbol}
+                </span>
               </div>
-            ) : (
-              <div className="rounded-md border border-green-500/20 bg-green-500/5 p-3 flex items-center gap-2 text-sm text-green-500">
-                <CheckCircle2 className="h-4 w-4 shrink-0" />
-                Ready for trading
-              </div>
-            )}
+            </div>
           </div>
         )}
 
@@ -441,100 +595,177 @@ export const TradeSheet: FC<TradeSheetProps> = ({
               )}
             </div>
 
-            <div className="flex flex-col gap-2">
-              <span className="text-sm font-medium">Channels to open</span>
+            {readyToTrade ? (
               <div className="flex flex-col gap-2">
-                {needsOnlyOutboundBtc ? (
-                  <div className="rounded-md border border-border bg-muted/20 p-3">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                      <ArrowRight className="h-3.5 w-3.5" />
-                      <span className="font-medium text-foreground">
-                        Outbound BTC channel
-                      </span>
-                    </div>
-                    <div className="text-sm font-mono ml-5.5">
-                      {Number(amount).toLocaleString()} sats
-                    </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Trade summary</span>
+                  {secondsLeft != null && secondsLeft > 0 && (
+                    <span className="text-xs text-muted-foreground tabular-nums">
+                      Quote expires in {secondsLeft}s
+                    </span>
+                  )}
+                </div>
+                {quoteExpired ? (
+                  <div className="rounded-md border border-yellow-500/20 bg-yellow-500/5 p-3 text-sm text-yellow-600">
+                    Quote expired — go back and request a new quote
                   </div>
                 ) : (
-                  <>
-                    {!hasOutbound && (
-                      <div className="rounded-md border border-border bg-muted/20 p-3">
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                          <ArrowRight className="h-3.5 w-3.5" />
-                          <span className="font-medium text-foreground">
-                            Outbound {isAssetPurchase ? 'BTC' : assetSymbol}{' '}
-                            channel
-                          </span>
-                        </div>
-                        <div className="text-sm font-mono ml-5.5">
-                          {Number(outboundSize).toLocaleString()} {outboundUnit}
-                        </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="rounded-md border border-border bg-muted/20 p-3">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                        <ArrowRight className="h-3.5 w-3.5" />
+                        <span className="font-medium text-foreground">
+                          You send
+                        </span>
                       </div>
-                    )}
-                    {!hasInbound && (
-                      <div className="rounded-md border border-border bg-muted/20 p-3">
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                          <ArrowLeft className="h-3.5 w-3.5" />
-                          <span className="font-medium text-foreground">
-                            Inbound {isAssetPurchase ? assetSymbol : 'BTC'}{' '}
-                            channel (Magma)
-                          </span>
-                        </div>
-                        <div className="text-sm font-mono ml-5.5">
-                          {Number(magmaSize).toLocaleString()} {magmaUnit}
-                        </div>
+                      <div className="text-sm font-mono ml-5.5">
+                        {sendLabel}
                       </div>
-                    )}
-                    {hasOutbound && hasInbound && (
-                      <div className="rounded-md border border-green-500/20 bg-green-500/5 p-3 text-sm">
-                        Both channels already exist — ready to trade
+                    </div>
+                    <div className="rounded-md border border-border bg-muted/20 p-3">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                        <ArrowLeft className="h-3.5 w-3.5" />
+                        <span className="font-medium text-foreground">
+                          You receive
+                        </span>
                       </div>
-                    )}
-                  </>
+                      <div className="text-sm font-mono ml-5.5">
+                        {receiveLabel}
+                      </div>
+                    </div>
+                  </div>
                 )}
               </div>
-            </div>
+            ) : needsOnlyOutboundBtc ? (
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-medium">Channel to open</span>
+                <div className="rounded-md border border-border bg-muted/20 p-3">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                    <span className="font-medium text-foreground">
+                      Outbound BTC channel
+                    </span>
+                  </div>
+                  <div className="text-sm font-mono ml-5.5">
+                    {Number(amount).toLocaleString()} sats
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-medium">Channels to open</span>
+                <div className="flex flex-col gap-2">
+                  {!hasOutbound && (
+                    <div className="rounded-md border border-border bg-muted/20 p-3">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                        <ArrowRight className="h-3.5 w-3.5" />
+                        <span className="font-medium text-foreground">
+                          Outbound {isAssetPurchase ? 'BTC' : assetSymbol}{' '}
+                          channel
+                        </span>
+                      </div>
+                      <div className="text-sm font-mono ml-5.5">
+                        {Number(outboundSize).toLocaleString()} {outboundUnit}
+                      </div>
+                    </div>
+                  )}
+                  {!hasInbound && (
+                    <div className="rounded-md border border-border bg-muted/20 p-3">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                        <ArrowLeft className="h-3.5 w-3.5" />
+                        <span className="font-medium text-foreground">
+                          Inbound {isAssetPurchase ? assetSymbol : 'BTC'}{' '}
+                          channel (Magma)
+                        </span>
+                      </div>
+                      <div className="text-sm font-mono ml-5.5">
+                        {Number(magmaSize).toLocaleString()} {magmaUnit}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
-        <SheetFooter className="flex gap-2">
-          {(step === 'input' && !hasOutbound) ||
-          (step === 'input' && !hasInbound) ? (
+        <SheetFooter className="flex-row gap-2 p-4">
+          {step === 'input' && (
             <Button
-              onClick={() => setStep('confirm')}
-              disabled={!isValid}
+              onClick={
+                readyToTrade ? handleReviewTrade : () => setStep('confirm')
+              }
+              disabled={
+                !isValid ||
+                (!readyToTrade && !needsOnlyOutboundBtc && !offer.magmaOfferId)
+              }
               className="w-full"
             >
-              {needsOnlyOutboundBtc ? 'Review Channel' : 'Review Setup'}
+              {readyToTrade
+                ? 'Review Trade'
+                : needsOnlyOutboundBtc
+                  ? 'Review Channel'
+                  : !offer.magmaOfferId
+                    ? 'No offer available for setup'
+                    : 'Review Setup'}
             </Button>
-          ) : null}
+          )}
           {step === 'confirm' && (
             <>
               <Button
                 variant="outline"
-                onClick={() => setStep('input')}
+                size="lg"
+                onClick={() => {
+                  setStep('input');
+                  clearQuoteState();
+                }}
                 disabled={loading}
                 className="flex-1"
               >
                 Back
               </Button>
-              <Button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="flex-1"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {needsOnlyOutboundBtc ? 'Opening...' : 'Setting up...'}
-                  </>
-                ) : needsOnlyOutboundBtc ? (
-                  'Open Channel'
-                ) : (
-                  'Confirm'
-                )}
-              </Button>
+              {readyToTrade ? (
+                <Button
+                  size="lg"
+                  onClick={handleTrade}
+                  disabled={
+                    loading || quoteLoading || !displaySats || quoteExpired
+                  }
+                  className="flex-1"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Trading...
+                    </>
+                  ) : quoteLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Getting quote...
+                    </>
+                  ) : (
+                    'Execute Trade'
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  size="lg"
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="flex-1"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {needsOnlyOutboundBtc ? 'Opening...' : 'Setting up...'}
+                    </>
+                  ) : needsOnlyOutboundBtc ? (
+                    'Open Channel'
+                  ) : (
+                    'Confirm'
+                  )}
+                </Button>
+              )}
             </>
           )}
         </SheetFooter>

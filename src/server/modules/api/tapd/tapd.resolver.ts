@@ -293,7 +293,7 @@ export class TapdResolver {
   async burnTapAsset(
     @CurrentUser() { id }: UserId,
     @Args('assetId') assetId: string,
-    @Args('amount', { type: () => Int }) amount: number
+    @Args('amount') amount: string
   ) {
     const [, error] = await toWithError(
       this.tapdNodeService.burnAsset({ id, assetId, amountToBurn: amount })
@@ -311,7 +311,7 @@ export class TapdResolver {
   async mintTapAsset(
     @CurrentUser() { id }: UserId,
     @Args('name') name: string,
-    @Args('amount', { type: () => Int }) amount: number,
+    @Args('amount') amount: string,
     @Args('assetType', {
       type: () => TapAssetType,
       defaultValue: TapAssetType.NORMAL,

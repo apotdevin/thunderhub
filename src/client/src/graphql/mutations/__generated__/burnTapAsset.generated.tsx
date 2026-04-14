@@ -5,7 +5,7 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type BurnTapAssetMutationVariables = Types.Exact<{
   assetId: Types.Scalars['String']['input'];
-  amount: Types.Scalars['Int']['input'];
+  amount: Types.Scalars['String']['input'];
 }>;
 
 export type BurnTapAssetMutation = {
@@ -14,7 +14,7 @@ export type BurnTapAssetMutation = {
 };
 
 export const BurnTapAssetDocument = gql`
-  mutation BurnTapAsset($assetId: String!, $amount: Int!) {
+  mutation BurnTapAsset($assetId: String!, $amount: String!) {
     burnTapAsset(assetId: $assetId, amount: $amount)
   }
 `;

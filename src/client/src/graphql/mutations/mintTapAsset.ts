@@ -3,7 +3,7 @@ import { gql } from '@apollo/client';
 export const MINT_TAP_ASSET = gql`
   mutation MintTapAsset(
     $name: String!
-    $amount: Int!
+    $amount: String!
     $assetType: TapAssetType
     $grouped: Boolean
     $groupKey: String

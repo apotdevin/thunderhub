@@ -15,6 +15,13 @@
       "when": 1775160646270,
       "tag": "0001_fixed_nightshade",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1776104481313,
+      "tag": "0002_add_encrypted_amboss_jwt",
+      "breakpoints": true
     }
   ]
 }

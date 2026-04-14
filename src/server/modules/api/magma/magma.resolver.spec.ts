@@ -3,6 +3,7 @@ import {
   TapOfferSortBy,
   TapOfferSortDir,
 } from './magma.types';
+import { UserId } from '../../security/security.types';
 
 jest.mock('../../node/tapd/tapd-node.service', () => ({
   TapdNodeService: jest.fn(),
@@ -15,22 +16,38 @@ jest.mock('../../security/security.decorators', () => ({
   CurrentUser: () => () => undefined,
 }));
 jest.mock('../../security/security.types', () => ({}));
+jest.mock('../amboss/amboss-token.service', () => ({
+  AmbossTokenService: jest.fn(),
+}));
+jest.mock('../amboss/amboss.service', () => ({
+  AmbossService: jest.fn(),
+}));
 
 import { MagmaResolver } from './magma.resolver';
 
 describe('MagmaResolver', () => {
-  const userId = { id: 'test-user-id' } as any;
+  const userId = { id: 'test-user-id' } as UserId;
   const tradeUrl = 'http://trade.example.com/graphql';
-  const ambossContext = { ambossAuth: 'token123' };
 
   const mockFetchService = { graphqlFetchWithProxy: jest.fn() };
-  const mockConfigService = { get: jest.fn() };
+  const mockConfigService = { get: jest.fn(), getOrThrow: jest.fn() };
   const mockLogger = { error: jest.fn(), warn: jest.fn(), info: jest.fn() };
+  const mockAmbossTokenService = {
+    get: jest.fn().mockResolvedValue('token123'),
+    getOrCreate: jest.fn().mockResolvedValue('token123'),
+  };
+  const mockAmbossService = {
+    resolveMagmaUrl: jest.fn(),
+    resolveSpaceUrl: jest.fn(),
+    resolveAuthUrl: jest.fn(),
+  };
 
   let resolver: MagmaResolver;
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockAmbossTokenService.get.mockResolvedValue('token123');
+    mockAmbossTokenService.getOrCreate.mockResolvedValue('token123');
     mockConfigService.get.mockReturnValue(tradeUrl);
     resolver = new MagmaResolver(
       {} as never,
@@ -38,6 +55,8 @@ describe('MagmaResolver', () => {
       mockFetchService as never,
       mockConfigService as never,
       { syncForAccount: jest.fn() } as never,
+      mockAmbossTokenService as never,
+      mockAmbossService as never,
       mockLogger as never
     );
   });
@@ -168,10 +187,7 @@ describe('MagmaResolver', () => {
         error: undefined,
       });
 
-      const result = await resolver.getTapSupportedAssets(
-        userId,
-        ambossContext as never
-      );
+      const result = await resolver.getTapSupportedAssets(userId);
 
       expect(result.totalCount).toBe(1);
       expect(result.list).toHaveLength(1);
@@ -189,10 +205,7 @@ describe('MagmaResolver', () => {
     it('returns empty list when trade URL is not configured', async () => {
       mockConfigService.get.mockReturnValue(undefined);
 
-      const result = await resolver.getTapSupportedAssets(
-        userId,
-        ambossContext as never
-      );
+      const result = await resolver.getTapSupportedAssets(userId);
 
       expect(result).toEqual({ list: [], totalCount: 0 });
       expect(mockFetchService.graphqlFetchWithProxy).not.toHaveBeenCalled();
@@ -204,10 +217,7 @@ describe('MagmaResolver', () => {
         error: new Error('timeout'),
       });
 
-      const result = await resolver.getTapSupportedAssets(
-        userId,
-        ambossContext as never
-      );
+      const result = await resolver.getTapSupportedAssets(userId);
 
       expect(result).toEqual({ list: [], totalCount: 0 });
       expect(mockLogger.error).toHaveBeenCalledWith(
@@ -231,10 +241,7 @@ describe('MagmaResolver', () => {
         error: undefined,
       });
 
-      const result = await resolver.getTapSupportedAssets(
-        userId,
-        ambossContext as never
-      );
+      const result = await resolver.getTapSupportedAssets(userId);
 
       expect(result.list[0]).toEqual({
         id: 'asset-2',
@@ -313,7 +320,7 @@ describe('MagmaResolver', () => {
         outputIndex: 1,
       });
 
-      mockConfigService.get.mockImplementation((key: string) => {
+      mockConfigService.getOrThrow.mockImplementation((key: string) => {
         if (key === 'urls.amboss.magma') return magmaUrl;
         return tradeUrl;
       });
@@ -322,12 +329,15 @@ describe('MagmaResolver', () => {
         magmaOrderResponse()
       );
 
+      mockAmbossService.resolveMagmaUrl.mockResolvedValue(magmaUrl);
       setupResolver = new MagmaResolver(
         mockTapdNodeService as never,
         mockNodeService as never,
         mockFetchService as never,
         mockConfigService as never,
         { syncForAccount: jest.fn() } as never,
+        mockAmbossTokenService as never,
+        mockAmbossService as never,
         mockLogger as never
       );
     });
@@ -361,7 +371,6 @@ describe('MagmaResolver', () => {
       it('PURCHASE: buys inbound asset channel via Magma + opens BTC outbound', async () => {
         const result = await setupResolver.setupTradePartner(
           userId,
-          ambossContext as never,
           purchaseInput
         );
 
@@ -398,7 +407,6 @@ describe('MagmaResolver', () => {
           success: true,
           magmaOrderId: 'order-1',
           magmaOrderStatus: 'WAITING',
-          magmaOrderAmountSats: undefined,
           magmaOrderAmountAsset: '1000',
           magmaOrderFeeSats: '500',
           outboundChannelTxid: 'btc-txid',
@@ -408,17 +416,13 @@ describe('MagmaResolver', () => {
 
       it('SALE: throws not-implemented error', async () => {
         await expect(
-          setupResolver.setupTradePartner(
-            userId,
-            ambossContext as never,
-            saleInput
-          )
+          setupResolver.setupTradePartner(userId, saleInput)
         ).rejects.toThrow('Selling not implemented yet');
       });
 
       it('SALE with grouped asset: throws not-implemented error', async () => {
         await expect(
-          setupResolver.setupTradePartner(userId, ambossContext as never, {
+          setupResolver.setupTradePartner(userId, {
             ...saleInput,
             tapdAssetId: undefined,
             tapdGroupKey: 'cafebabe'.repeat(8),
@@ -431,11 +435,10 @@ describe('MagmaResolver', () => {
 
     describe('outbound exists — inbound only (no satsAmount)', () => {
       it('PURCHASE: buys inbound asset channel, skips BTC outbound', async () => {
-        const result = await setupResolver.setupTradePartner(
-          userId,
-          ambossContext as never,
-          { ...purchaseInput, satsAmount: undefined }
-        );
+        const result = await setupResolver.setupTradePartner(userId, {
+          ...purchaseInput,
+          satsAmount: undefined,
+        });
 
         // Magma size is the asset amount from the UI (atomic units, no derivation)
         expect(mockFetchService.graphqlFetchWithProxy).toHaveBeenCalledWith(
@@ -460,11 +463,10 @@ describe('MagmaResolver', () => {
 
       it('SALE: throws not-implemented error', async () => {
         await expect(
-          setupResolver.setupTradePartner(
-            userId,
-            ambossContext as never,
-            saleInput
-          )
+          setupResolver.setupTradePartner(userId, {
+            ...saleInput,
+            satsAmount: undefined,
+          })
         ).rejects.toThrow('Selling not implemented yet');
       });
     });
@@ -472,11 +474,7 @@ describe('MagmaResolver', () => {
     // ── Peer connection ──
 
     it('connects to peer before creating Magma order', async () => {
-      await setupResolver.setupTradePartner(
-        userId,
-        ambossContext as never,
-        purchaseInput
-      );
+      await setupResolver.setupTradePartner(userId, purchaseInput);
 
       expect(mockNodeService.addPeer).toHaveBeenCalledWith(
         userId.id,
@@ -491,7 +489,7 @@ describe('MagmaResolver', () => {
         sockets: [{ socket: '10.0.0.1:9735' }],
       });
 
-      await setupResolver.setupTradePartner(userId, ambossContext as never, {
+      await setupResolver.setupTradePartner(userId, {
         ...purchaseInput,
         swapNodeSockets: undefined,
       });
@@ -518,11 +516,7 @@ describe('MagmaResolver', () => {
       });
 
       await expect(
-        setupResolver.setupTradePartner(
-          userId,
-          ambossContext as never,
-          purchaseInput
-        )
+        setupResolver.setupTradePartner(userId, purchaseInput)
       ).rejects.toThrow('Failed to create Magma channel order');
     });
 
@@ -534,11 +528,7 @@ describe('MagmaResolver', () => {
       );
 
       await expect(
-        setupResolver.setupTradePartner(
-          userId,
-          ambossContext as never,
-          purchaseInput
-        )
+        setupResolver.setupTradePartner(userId, purchaseInput)
       ).rejects.toThrow('Failed to pay Magma invoice');
     });
 
@@ -549,11 +539,7 @@ describe('MagmaResolver', () => {
       );
 
       await expect(
-        setupResolver.setupTradePartner(
-          userId,
-          ambossContext as never,
-          purchaseInput
-        )
+        setupResolver.setupTradePartner(userId, purchaseInput)
       ).rejects.toThrow('Timed out waiting for channel from peer');
 
       // Outbound channel must NOT have been opened
@@ -563,7 +549,7 @@ describe('MagmaResolver', () => {
 
     it('throws when asset amount is zero', async () => {
       await expect(
-        setupResolver.setupTradePartner(userId, ambossContext as never, {
+        setupResolver.setupTradePartner(userId, {
           ...purchaseInput,
           assetAmount: '0',
         })
@@ -572,7 +558,7 @@ describe('MagmaResolver', () => {
 
     it('throws when neither tapdAssetId nor tapdGroupKey is provided', async () => {
       await expect(
-        setupResolver.setupTradePartner(userId, ambossContext as never, {
+        setupResolver.setupTradePartner(userId, {
           ...purchaseInput,
           tapdAssetId: undefined,
           tapdGroupKey: undefined,

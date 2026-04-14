@@ -146,6 +146,7 @@ export class UserService {
       socket: string;
       macaroon: string;
       cert?: string;
+      network?: string;
     }
   ): Promise<{ id: string; name: string }> {
     if (!this.drizzle) {
@@ -185,7 +186,7 @@ export class UserService {
         team_id: teamId,
         name: input.name,
         type: input.type,
-        network: 'mainnet',
+        network: input.network || 'unknown',
         socket: input.socket,
         encrypted_macaroon: encryptedMacaroon,
         encrypted_cert: encryptedCert,
@@ -206,6 +207,19 @@ export class UserService {
     this.logger.log(`Node "${input.name}" added for user ${userId}`);
 
     return node;
+  }
+
+  async getNodeNetwork(nodeId: string): Promise<string | null> {
+    if (!this.drizzle) return null;
+    const { db, schema } = this.drizzle;
+
+    const rows = await (db as any)
+      .select({ network: schema.nodes.network })
+      .from(schema.nodes)
+      .where(eq(schema.nodes.id, nodeId))
+      .limit(1);
+
+    return rows[0]?.network ?? null;
   }
 
   async deleteNode(userId: string, slug: string): Promise<string> {
@@ -250,7 +264,7 @@ export class UserService {
   async editNode(
     userId: string,
     slug: string,
-    input: { name?: string }
+    input: { name?: string; network?: string }
   ): Promise<{ id: string; name: string }> {
     if (!this.drizzle) {
       throw new Error('Database is not enabled');
@@ -284,6 +298,10 @@ export class UserService {
 
     if (input.name !== undefined) {
       updates.name = input.name;
+    }
+
+    if (input.network !== undefined) {
+      updates.network = input.network;
     }
 
     if (Object.keys(updates).length === 0) {

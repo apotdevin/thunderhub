@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { TapdRpcApis } from '@lightningpolar/tapd-api';
 import {
   Addr,
@@ -28,18 +30,24 @@ import {
   AddFederationServerResponse,
 } from '@lightningpolar/tapd-api';
 import { AddInvoiceResponse as TapAddInvoiceResponse } from '@lightningpolar/tapd-api/dist/types/tapchannelrpc/AddInvoiceResponse';
+import { Payment as LnrpcPayment } from '@lightningpolar/tapd-api/dist/types/lnrpc/Payment';
 import { AccountsService } from '../../accounts/accounts.service';
 import { EnrichedAccount } from '../../accounts/accounts.types';
 import { ProviderRegistryService } from '../provider-registry.service';
 import { Capability } from '../lightning.types';
 import { isTaprootAssetsProvider } from './taproot-assets.types';
 
+/** Timeout for sendPayment RPC before the stream-level guard kicks in. */
+const SEND_PAYMENT_TIMEOUT_SECONDS = 60;
+const FEE_LIMIT_MAX = 100;
+
 @Injectable()
 export class TapdNodeService {
   constructor(
     private accountsService: AccountsService,
     private providerRegistry: ProviderRegistryService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
   getAccount(id: string): EnrichedAccount {
@@ -181,12 +189,12 @@ export class TapdNodeService {
   async burnAsset(opts: {
     id: string;
     assetId: string;
-    amountToBurn: number;
+    amountToBurn: string;
   }): Promise<BurnAssetResponse> {
     const tapd = this.getTapd(opts.id);
     return tapd.taprootAssets.burnAsset({
       assetIdStr: opts.assetId,
-      amountToBurn: String(opts.amountToBurn),
+      amountToBurn: opts.amountToBurn,
       confirmationText: 'assets will be destroyed',
     });
   }
@@ -196,7 +204,7 @@ export class TapdNodeService {
   async mintAsset(opts: {
     id: string;
     name: string;
-    amount: number;
+    amount: string;
     assetType: 'NORMAL' | 'COLLECTIBLE';
     grouped?: boolean;
     groupKey?: string;
@@ -207,7 +215,7 @@ export class TapdNodeService {
     return tapd.mint.mintAsset({
       asset: {
         name: opts.name,
-        amount: String(opts.amount),
+        amount: opts.amount,
         assetType: opts.assetType,
         ...(opts.groupKey
           ? {
@@ -431,8 +439,7 @@ export class TapdNodeService {
               const assetId = fundingAsset?.asset_genesis?.asset_id || '';
               if (!assetId) continue;
 
-              const groupKey =
-                fundingAsset?.asset_group?.tweaked_group_key || '';
+              const groupKey = data.group_key;
 
               results.push({
                 channelPoint: ch.channel_point,
@@ -443,14 +450,180 @@ export class TapdNodeService {
                 remoteBalance: String(data.remote_balance ?? 0),
                 capacity: String(data.capacity ?? 0),
               });
-            } catch {
-              // Not JSON or invalid — skip
+            } catch (err) {
+              this.logger.warn('Failed to parse custom_channel_data', {
+                channelPoint: ch.channel_point,
+                err,
+              });
             }
           }
 
           resolve(results);
         }
       );
+    });
+  }
+
+  async getSellQuote(opts: {
+    id: string;
+    assetId?: string;
+    groupKey?: string;
+    paymentMaxAmtMsat: string;
+    peerPubkey: string;
+  }): Promise<{
+    rfqId: Buffer;
+    assetAmount: string;
+    bidAssetRate: { coefficient: string; scale: number } | null;
+    scid: string;
+    minTransportableMsat: string;
+    expiry: string;
+  }> {
+    const tapd = this.getTapd(opts.id);
+
+    const result = await tapd.rfq.addAssetSellOrder({
+      assetSpecifier: opts.groupKey
+        ? { groupKeyStr: opts.groupKey }
+        : { assetIdStr: opts.assetId || '' },
+      paymentMaxAmt: opts.paymentMaxAmtMsat,
+      peerPubKey: Buffer.from(opts.peerPubkey, 'hex'),
+      timeoutSeconds: 30,
+      priceOracleMetadata: JSON.stringify({
+        swapNodePubkey: opts.peerPubkey,
+      }),
+    });
+
+    if (result.response === 'invalidQuote' || result.invalidQuote) {
+      throw new Error(
+        `Invalid sell quote: ${JSON.stringify(result.invalidQuote)}`
+      );
+    }
+    if (result.response === 'rejectedQuote' || result.rejectedQuote) {
+      throw new Error(
+        `Sell quote rejected: ${JSON.stringify(result.rejectedQuote)}`
+      );
+    }
+
+    const quote = result.acceptedQuote;
+    if (!quote) {
+      throw new Error('No accepted sell quote returned');
+    }
+
+    return {
+      rfqId: Buffer.from(quote.id),
+      assetAmount: quote.assetAmount,
+      bidAssetRate: quote.bidAssetRate,
+      scid: quote.scid,
+      minTransportableMsat: quote.minTransportableMsat,
+      expiry: quote.expiry,
+    };
+  }
+
+  async queryAcceptedSellQuote(opts: { id: string; rfqId: string }): Promise<{
+    bidAssetRate: { coefficient: string; scale: number } | null;
+    assetAmount: string;
+    minTransportableMsat: string;
+    expiry: string;
+  }> {
+    const tapd = this.getTapd(opts.id);
+    const response = await tapd.rfq.queryPeerAcceptedQuotes();
+
+    const rfqIdBuf = Buffer.from(opts.rfqId, 'hex');
+    const quote = response.sellQuotes.find(q =>
+      Buffer.from(q.id).equals(rfqIdBuf)
+    );
+
+    if (!quote) {
+      throw new Error(`No accepted sell quote found for rfqId: ${opts.rfqId}`);
+    }
+
+    return {
+      bidAssetRate: quote.bidAssetRate,
+      assetAmount: quote.assetAmount,
+      minTransportableMsat: quote.minTransportableMsat,
+      expiry: quote.expiry,
+    };
+  }
+
+  async sendAssetPayment(opts: {
+    id: string;
+    assetId?: string;
+    groupKey?: string;
+    assetAmount?: string;
+    paymentRequest: string;
+    peerPubkey?: string;
+    rfqId?: string;
+  }): Promise<LnrpcPayment> {
+    const tapd = this.getTapd(opts.id);
+
+    const stream = tapd.channels.sendPayment({
+      ...(opts.groupKey
+        ? { groupKey: Buffer.from(opts.groupKey, 'hex') }
+        : { assetId: Buffer.from(opts.assetId || '', 'hex') }),
+      ...(opts.assetAmount ? { assetAmount: opts.assetAmount } : {}),
+      ...(opts.peerPubkey
+        ? { peerPubkey: Buffer.from(opts.peerPubkey, 'hex') }
+        : {}),
+      ...(opts.rfqId ? { rfqId: Buffer.from(opts.rfqId, 'hex') } : {}),
+      priceOracleMetadata: JSON.stringify({
+        swapNodePubkey: opts.peerPubkey,
+      }),
+      paymentRequest: {
+        paymentRequest: opts.paymentRequest,
+        // Required: asset sale is a self-payment loop — assets flow out via the
+        // asset channel while sats return via the BTC channel on the same node.
+        allowSelfPayment: true,
+        feeLimitSat: FEE_LIMIT_MAX,
+        timeoutSeconds: SEND_PAYMENT_TIMEOUT_SECONDS,
+      },
+    });
+
+    return new Promise<LnrpcPayment>((resolve, reject) => {
+      let finalPayment: LnrpcPayment | null = null;
+
+      const timeout = setTimeout(() => {
+        reject(new Error('Asset payment stream timed out'));
+      }, 90_000);
+
+      const settle = (fn: () => void) => {
+        clearTimeout(timeout);
+        fn();
+      };
+
+      stream.on(
+        'data',
+        (response: {
+          result?: string;
+          paymentResult?: LnrpcPayment | null;
+        }) => {
+          if (response.result === 'paymentResult' && response.paymentResult) {
+            finalPayment = response.paymentResult;
+          }
+        }
+      );
+
+      stream.on('end', () => {
+        if (finalPayment) {
+          if (finalPayment.status === 'SUCCEEDED') {
+            settle(() => resolve(finalPayment as LnrpcPayment));
+          } else {
+            settle(() =>
+              reject(
+                new Error(
+                  `Asset payment failed with status: ${finalPayment?.status}`
+                )
+              )
+            );
+          }
+        } else {
+          settle(() =>
+            reject(new Error('Asset payment stream ended without a result'))
+          );
+        }
+      });
+
+      stream.on('error', (err: Error) => {
+        settle(() => reject(err));
+      });
     });
   }
 

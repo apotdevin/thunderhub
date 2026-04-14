@@ -316,6 +316,25 @@ type EditNodeResult {
   slug: String!
 }
 
+input ExecuteTradeInput {
+  assetAmount: String!
+  expiryEpoch: String
+  paymentRequest: String
+  peerPubkey: String!
+  rfqId: String
+  satsAmount: String!
+  tapdAssetId: String!
+  tapdGroupKey: String
+  transactionType: TapTransactionType!
+}
+
+type ExecuteTradeResult {
+  feeSats: String
+  paymentPreimage: String
+  satsAmount: String
+  success: Boolean!
+}
+
 type FeeHealth {
   base: String
   baseOver: Boolean
@@ -446,7 +465,7 @@ type Mutation {
   addPeer(isTemporary: Boolean, publicKey: String, socket: String, url: String): Boolean!
   addTapAssetInvoice(input: TapAssetInvoiceInput!): TapAssetInvoiceResponse!
   addTapFederationServer(host: String!): Boolean!
-  burnTapAsset(amount: Int!, assetId: String!): Boolean!
+  burnTapAsset(amount: String!, assetId: String!): Boolean!
   cancelTapBatch: Boolean!
   claimBoltzTransaction(destination: String!, fee: Float!, id: String!, lockupAddress: String!, preimage: String!, privateKey: String!, redeem: String!): String!
   closeChannel(forceClose: Boolean, id: String!, targetConfirmations: Float, tokensPerVByte: Float): OpenOrCloseChannel!
@@ -454,6 +473,7 @@ type Mutation {
   createBoltzReverseSwap(address: String, amount: Float!): CreateBoltzReverseSwapType!
   createInvoice(amount: Float!, description: String, includePrivate: Boolean, secondsUntil: Float): CreateInvoice!
   createMacaroon(permissions: NetworkInfoInput!): CreateMacaroon!
+  executeTrade(input: ExecuteTradeInput!): ExecuteTradeResult!
   fetchLnUrl(url: String!): LnUrlRequest!
   finalizeTapBatch: TapFinalizeBatchResponse!
   fundTapAssetChannel(input: TapFundChannelInput!): TapFundChannelResponse!
@@ -464,7 +484,7 @@ type Mutation {
   lnUrlWithdraw(amount: Float!, callback: String!, description: String, k1: String!): String!
   loginAmboss: Boolean!
   logout: Boolean!
-  mintTapAsset(amount: Int!, assetType: TapAssetType! = NORMAL, groupKey: String, grouped: Boolean = true, name: String!): TapMintResponse!
+  mintTapAsset(amount: String!, assetType: TapAssetType! = NORMAL, groupKey: String, grouped: Boolean = true, name: String!): TapMintResponse!
   newTapAddress(amt: Int, assetId: String, groupKey: String): TapAddress!
   openChannel(input: OpenChannelParams!): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
@@ -765,6 +785,7 @@ type Query {
   getTapUniverseInfo: TapUniverseInfo!
   getTapUniverseStats: TapUniverseStats!
   getTimeHealth: ChannelsTimeHealth!
+  getTradeQuote(input: TradeQuoteInput!): TradeQuoteResult!
   getTwofaSecret: TwofaResult!
   getUtxos: [Utxo!]!
   getVolumeHealth: ChannelsHealth!
@@ -1067,6 +1088,23 @@ type TeamMutations {
   add_node(input: AddNodeInput!): AddNodeResult!
   delete_node(slug: String!): DeleteNodeResult!
   edit_node(input: EditNodeInput!): EditNodeResult!
+}
+
+input TradeQuoteInput {
+  assetAmount: String!
+  peerPubkey: String!
+  tapdAssetId: String!
+  tapdGroupKey: String
+  transactionType: TapTransactionType!
+}
+
+type TradeQuoteResult {
+  assetAmount: String!
+  expiryEpoch: String
+  paymentRequest: String
+  rateFixed: String
+  rfqId: String
+  satsAmount: String!
 }
 
 type TwofaResult {

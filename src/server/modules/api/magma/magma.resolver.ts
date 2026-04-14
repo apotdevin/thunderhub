@@ -1,11 +1,10 @@
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { GraphQLError } from 'graphql';
 import { auto } from 'async';
-import { ContextType } from '../../../app.module';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
 import { NodeService } from '../../node/node.service';
 import { FetchService } from '../../fetch/fetch.service';
@@ -13,6 +12,8 @@ import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { toWithError } from '../../../utils/async';
 import { TapFederationService } from '../tapd/tapd-federation.service';
+import { AmbossTokenService } from '../amboss/amboss-token.service';
+import { AmbossService } from '../amboss/amboss.service';
 import {
   GetTapOffersInput,
   TapTradeOfferList,
@@ -81,6 +82,8 @@ export class MagmaResolver {
     private fetchService: FetchService,
     private configService: ConfigService,
     private tapFederationService: TapFederationService,
+    private ambossTokenService: AmbossTokenService,
+    private ambossService: AmbossService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -122,7 +125,14 @@ export class MagmaResolver {
     });
 
     if (error || !data?.public?.offers) {
-      if (error) this.logger.error('Error fetching trade offers', { error });
+      if (error) {
+        this.logger.error('Error fetching trade offers', { error });
+      } else {
+        this.logger.warn(
+          'Trade API returned unexpected data shape for offers',
+          { data }
+        );
+      }
       return { list: [], totalCount: 0 };
     }
 
@@ -151,16 +161,11 @@ export class MagmaResolver {
   }
 
   @Query(() => TapSupportedAssetList)
-  async getTapSupportedAssets(
-    @CurrentUser() _user: UserId,
-    @Context() { ambossAuth }: ContextType
-  ) {
+  async getTapSupportedAssets(@CurrentUser() _user: UserId) {
     const tradeUrl = this.configService.get<string>('urls.trade');
     if (!tradeUrl) {
       return { list: [], totalCount: 0 };
     }
-
-    const headers = ambossAuth ? { authorization: `Bearer ${ambossAuth}` } : {};
 
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       public: {
@@ -171,11 +176,17 @@ export class MagmaResolver {
           };
         };
       };
-    }>(tradeUrl, getSupportedAssetsQuery, undefined, headers);
+    }>(tradeUrl, getSupportedAssetsQuery);
 
     if (error || !data?.public?.assets?.supported) {
-      if (error)
+      if (error) {
         this.logger.error('Error fetching supported assets', { error });
+      } else {
+        this.logger.warn(
+          'Trade API returned unexpected data shape for supported assets',
+          { data }
+        );
+      }
       return { list: [], totalCount: 0 };
     }
 
@@ -215,9 +226,9 @@ export class MagmaResolver {
   @Mutation(() => SetupTradePartnerResult)
   async setupTradePartner(
     @CurrentUser() user: UserId,
-    @Context() { ambossAuth }: ContextType,
     @Args('input') input: SetupTradePartnerInput
   ): Promise<SetupTradePartnerResult> {
+    const ambossAuth = await this.ambossTokenService.getOrCreate(user);
     const result = await auto<SetupTradePartnerAuto>({
       validate: async (): Promise<SetupTradePartnerAuto['validate']> => {
         if (input.transactionType == TapTransactionType.SALE) {
@@ -247,7 +258,7 @@ export class MagmaResolver {
           this.nodeService.getWalletInfo(user.id)
         );
         if (error || !info) {
-          if (error) this.logger.error(error);
+          this.logger.error('Failed to get node wallet info', { error });
           throw new GraphQLError('Error getting node information');
         }
         return { publicKey: info.public_key };
@@ -286,8 +297,9 @@ export class MagmaResolver {
             if (!err) return;
           }
 
-          this.logger.debug('Peer connection attempts failed — continuing', {
+          this.logger.warn('All peer connection attempts failed — continuing', {
             pubkey: input.swapNodePubkey,
+            attemptedSockets: sockets,
           });
         },
       ],
@@ -300,13 +312,14 @@ export class MagmaResolver {
         }: Pick<SetupTradePartnerAuto, 'nodeInfo'>): Promise<
           SetupTradePartnerAuto['magmaOrder']
         > => {
-          const magmaUrl = this.configService.get<string>('urls.amboss.magma');
+          const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
 
           const magmaSize = computeMagmaOrderSize(
             input.transactionType,
             input.assetAmount,
             input.assetRate
           );
+
           const { data, error } =
             await this.fetchService.graphqlFetchWithProxy<{
               market: {
@@ -355,11 +368,15 @@ export class MagmaResolver {
             feeSats: order.fees?.buyer?.sats,
           });
 
+          const isAssetAmount =
+            input.transactionType === TapTransactionType.PURCHASE;
+
           return {
             id: order.id,
             status: order.status,
             invoice,
-            amountAsset: order.size,
+            amountSats: isAssetAmount ? undefined : order.size,
+            amountAsset: isAssetAmount ? order.size : undefined,
             feeSats: order.fees?.buyer?.sats,
           };
         },
@@ -387,15 +404,17 @@ export class MagmaResolver {
           // If pay() fails immediately, the payment race leg rejects and we
           // surface the error. Otherwise the channel-opening leg wins.
 
+          const payPromise = this.nodeService.pay(user.id, {
+            request: magmaOrder.invoice,
+          });
+
           // Only rejects on immediate payment failure; never resolves
           // (payment confirmation happens long after we've returned).
           const payFailureGuard = new Promise<never>((_, reject) => {
-            this.nodeService
-              .pay(user.id, { request: magmaOrder.invoice })
-              .catch(err => {
-                this.logger.error('Failed to pay Magma invoice', { err });
-                reject(new GraphQLError('Failed to pay Magma invoice'));
-              });
+            payPromise.catch(err => {
+              this.logger.error('Failed to pay Magma invoice', { err });
+              reject(new GraphQLError('Failed to pay Magma invoice'));
+            });
           });
 
           await Promise.race([
@@ -406,6 +425,22 @@ export class MagmaResolver {
             ),
             payFailureGuard,
           ]);
+
+          // Suppress the now-detached payFailureGuard rejection and log the
+          // eventual settlement outcome for observability.
+          payFailureGuard.catch(() => {});
+          payPromise
+            .then(() => {
+              this.logger.info('Magma HODL invoice settled', {
+                orderId: magmaOrder.id,
+              });
+            })
+            .catch(err => {
+              this.logger.error(
+                'Magma HODL invoice failed after channel detection',
+                { orderId: magmaOrder.id, err }
+              );
+            });
 
           this.logger.info('Magma channel opening detected', {
             orderId: magmaOrder.id,

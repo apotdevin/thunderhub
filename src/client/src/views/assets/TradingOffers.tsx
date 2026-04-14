@@ -1,14 +1,21 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, Fragment, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Loader2, Info, ArrowUpDown } from 'lucide-react';
+import {
+  Loader2,
+  Info,
+  ArrowUpDown,
+  Zap,
+  CheckCircle2,
+  Circle,
+  ChevronRight,
+} from 'lucide-react';
 import { useGetTapOffersQuery } from '../../graphql/queries/__generated__/getTapOffers.generated';
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
-import { useLoginAmbossMutation } from '../../graphql/mutations/__generated__/loginAmboss.generated';
-import { useAmbossUser } from '../../hooks/UseAmbossUser';
+import { useGetChannelsWithPeersQuery } from '../../graphql/queries/__generated__/getChannels.generated';
+import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
 import { getErrorContent } from '../../utils/error';
 import { cn } from '../../lib/utils';
-import { Button } from '@/components/ui/button';
 import {
   TapBalanceGroupBy,
   TapTransactionType,
@@ -16,6 +23,12 @@ import {
   TapOfferSortDir,
 } from '../../graphql/types';
 import { TradeSheet, Offer } from './TradeSheet';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export const TradingOffers: FC = () => {
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
@@ -33,14 +46,6 @@ export const TradingOffers: FC = () => {
     return () => clearTimeout(timer);
   }, [minAmountInput]);
 
-  const { user: ambossUser, loading: ambossLoading } = useAmbossUser();
-
-  const [loginAmboss, { loading: loginLoading }] = useLoginAmbossMutation({
-    onCompleted: () => toast.success('Logged in to Amboss'),
-    onError: () => toast.error('Error logging in to Amboss'),
-    refetchQueries: ['GetAmbossUser', 'GetTapSupportedAssets', 'GetTapOffers'],
-  });
-
   const { data: supportedData, loading: assetsLoading } =
     useGetTapSupportedAssetsQuery({
       onError: err => toast.error(getErrorContent(err)),
@@ -49,6 +54,11 @@ export const TradingOffers: FC = () => {
   const { data: balancesData } = useGetTapBalancesQuery({
     variables: { groupBy: TapBalanceGroupBy.GroupKey },
   });
+
+  const { data: allChannelsData } = useGetChannelsWithPeersQuery({
+    variables: { active: true },
+  });
+  const { data: allAssetChannelsData } = useGetTapAssetChannelBalancesQuery();
 
   const allSupported = supportedData?.getTapSupportedAssets?.list || [];
   const balances = balancesData?.getTapBalances?.balances || [];
@@ -59,19 +69,103 @@ export const TradingOffers: FC = () => {
     balances.filter(b => !b.groupKey && b.assetId).map(b => b.assetId!)
   );
 
-  // For SALE, only show assets the node owns (match by group key or asset ID)
+  // Build asset channel indexes for trading partner detection
+  const { assetChannelsByAssetId, assetChannelsByGroupKey } = useMemo(() => {
+    const byAssetId = new Map<string, Set<string>>();
+    const byGroupKey = new Map<string, Set<string>>();
+    for (const ac of allAssetChannelsData?.getTapAssetChannelBalances || []) {
+      if (!byAssetId.has(ac.assetId)) byAssetId.set(ac.assetId, new Set());
+      byAssetId.get(ac.assetId)?.add(ac.partnerPublicKey);
+      if (ac.groupKey) {
+        if (!byGroupKey.has(ac.groupKey))
+          byGroupKey.set(ac.groupKey, new Set());
+        byGroupKey.get(ac.groupKey)?.add(ac.partnerPublicKey);
+      }
+    }
+    return {
+      assetChannelsByAssetId: byAssetId,
+      assetChannelsByGroupKey: byGroupKey,
+    };
+  }, [allAssetChannelsData]);
+
+  const btcChannelPubkeys = useMemo(() => {
+    const assetChannelCountByPubkey = new Map<string, number>();
+    for (const ac of allAssetChannelsData?.getTapAssetChannelBalances || []) {
+      assetChannelCountByPubkey.set(
+        ac.partnerPublicKey,
+        (assetChannelCountByPubkey.get(ac.partnerPublicKey) || 0) + 1
+      );
+    }
+    const totalChannelCountByPubkey = new Map<string, number>();
+    for (const ch of allChannelsData?.getChannels || []) {
+      totalChannelCountByPubkey.set(
+        ch.partner_public_key,
+        (totalChannelCountByPubkey.get(ch.partner_public_key) || 0) + 1
+      );
+    }
+    const pubkeys = new Set<string>();
+    for (const [pubkey, total] of totalChannelCountByPubkey) {
+      const assetCount = assetChannelCountByPubkey.get(pubkey) || 0;
+      if (total > assetCount) pubkeys.add(pubkey);
+    }
+    return pubkeys;
+  }, [allChannelsData, allAssetChannelsData]);
+
+  const aliasMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const ch of allChannelsData?.getChannels || []) {
+      const alias = ch.partner_node_info?.node?.alias;
+      if (alias && ch.partner_public_key) {
+        map.set(ch.partner_public_key, alias);
+      }
+    }
+    return map;
+  }, [allChannelsData]);
+
+  const assetChannelAssetIds = useMemo(
+    () => new Set(assetChannelsByAssetId.keys()),
+    [assetChannelsByAssetId]
+  );
+
+  // For SALE, show assets the node owns (match by group key or asset ID) OR has asset channels for
   const supportedAssets =
     txType === TapTransactionType.Sale
       ? allSupported.filter(
           a =>
             (a.groupKey && ownedGroupKeys.has(a.groupKey)) ||
-            (!a.groupKey && a.assetId && ownedAssetIds.has(a.assetId))
+            (!a.groupKey && a.assetId && ownedAssetIds.has(a.assetId)) ||
+            (a.assetId && assetChannelAssetIds.has(a.assetId))
         )
       : allSupported;
 
   const selectedAssetData = supportedAssets.find(a => a.id === selectedAsset);
   const selectedSymbol = selectedAssetData?.symbol || '';
   const selectedPrecision = selectedAssetData?.precision ?? 0;
+  const selectedTapdAssetId = selectedAssetData?.assetId || '';
+  const selectedTapdGroupKey = selectedAssetData?.groupKey || '';
+
+  // Find trading partners: peers with both BTC + asset channels for selected asset
+  const tradingPartners = useMemo(() => {
+    const assetPeers = selectedTapdGroupKey
+      ? assetChannelsByGroupKey.get(selectedTapdGroupKey)
+      : selectedTapdAssetId
+        ? assetChannelsByAssetId.get(selectedTapdAssetId)
+        : undefined;
+    if (!assetPeers) return [];
+    return Array.from(assetPeers)
+      .filter(pubkey => btcChannelPubkeys.has(pubkey))
+      .map(pubkey => ({
+        pubkey,
+        alias: aliasMap.get(pubkey) || null,
+      }));
+  }, [
+    selectedTapdAssetId,
+    selectedTapdGroupKey,
+    assetChannelsByAssetId,
+    assetChannelsByGroupKey,
+    btcChannelPubkeys,
+    aliasMap,
+  ]);
 
   const {
     data: offersData,
@@ -105,6 +199,16 @@ export const TradingOffers: FC = () => {
     }
   };
 
+  const selectPartner = (pubkey: string, alias: string | null) => {
+    setSelectedOffer({
+      id: `partner-${pubkey}`,
+      magmaOfferId: '',
+      node: { alias, pubkey, sockets: [] },
+      rate: { displayAmount: null, fullAmount: null },
+      available: { displayAmount: null, fullAmount: null },
+    });
+  };
+
   const SortIcon: FC<{ field: TapOfferSortBy }> = ({ field }) => (
     <ArrowUpDown
       size={12}
@@ -117,20 +221,50 @@ export const TradingOffers: FC = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Amboss login prompt */}
-      {!ambossUser && !ambossLoading && (
-        <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 px-4 py-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Info size={16} />
-            Log in with Amboss to access trading offers
-          </div>
-          <Button
-            size="sm"
-            onClick={() => loginAmboss()}
-            disabled={loginLoading}
-          >
-            {loginLoading ? 'Logging in...' : 'Login with Amboss'}
-          </Button>
+      {/* Step guide */}
+      {!selectedOffer && (
+        <div className="flex items-center gap-1.5 text-xs flex-wrap">
+          {(
+            [
+              {
+                label: 'Select asset',
+                done: !!selectedAsset,
+                active: !selectedAsset,
+              },
+              {
+                label: 'Select offer',
+                done: false,
+                active: !!selectedAsset,
+              },
+              { label: 'Trade', done: false, active: false },
+            ] as const
+          ).map((s, i) => (
+            <Fragment key={s.label}>
+              {i > 0 && (
+                <ChevronRight
+                  size={10}
+                  className="text-muted-foreground/30 shrink-0"
+                />
+              )}
+              <span
+                className={cn(
+                  'flex items-center gap-1',
+                  s.done
+                    ? 'text-muted-foreground/50'
+                    : s.active
+                      ? 'text-foreground font-medium'
+                      : 'text-muted-foreground/30'
+                )}
+              >
+                {s.done ? (
+                  <CheckCircle2 size={11} className="text-green-500 shrink-0" />
+                ) : (
+                  <Circle size={11} className="shrink-0" />
+                )}
+                {s.label}
+              </span>
+            </Fragment>
+          ))}
         </div>
       )}
 
@@ -144,7 +278,6 @@ export const TradingOffers: FC = () => {
               key={t}
               onClick={() => {
                 setTxType(t);
-                // Clear selection if switching to Sell and current asset isn't owned
                 if (t === TapTransactionType.Sale && selectedAsset) {
                   const selected = allSupported.find(
                     a => a.id === selectedAsset
@@ -155,7 +288,10 @@ export const TradingOffers: FC = () => {
                     (!selected?.groupKey &&
                       selected?.assetId &&
                       ownedAssetIds.has(selected.assetId));
-                  if (!isOwned) setSelectedAsset('');
+                  const hasAssetChannels =
+                    selected?.assetId &&
+                    assetChannelAssetIds.has(selected.assetId);
+                  if (!isOwned && !hasAssetChannels) setSelectedAsset('');
                 }
               }}
               className={cn(
@@ -202,6 +338,42 @@ export const TradingOffers: FC = () => {
         </div>
       </div>
 
+      {/* Trading partners */}
+      {selectedAsset && tradingPartners.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-medium flex items-center gap-1.5">
+            <Zap size={14} className="text-green-500" />
+            Trading partners
+          </span>
+          <div className="flex flex-col gap-1">
+            {tradingPartners.map(p => (
+              <button
+                key={p.pubkey}
+                onClick={() => selectPartner(p.pubkey, p.alias)}
+                className="flex items-center justify-between rounded-md border border-border bg-muted/20 px-3 py-2 text-sm hover:bg-muted/40 transition-colors text-left"
+              >
+                <span className="font-mono text-xs">
+                  {p.alias || p.pubkey.slice(0, 16)}
+                </span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="text-xs text-green-500 cursor-default">
+                        Ready to trade
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent side="left">
+                      You already have both a BTC and an asset channel with this
+                      peer — trades execute immediately without channel setup.
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Trade amount input */}
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
@@ -244,12 +416,17 @@ export const TradingOffers: FC = () => {
       )}
 
       {/* Empty */}
-      {selectedAsset && !loading && !error && offers.length === 0 && (
-        <div className="flex items-center justify-center p-8 text-muted-foreground">
-          <Info className="mr-2" size={16} />
-          No offers available
-        </div>
-      )}
+      {selectedAsset &&
+        !loading &&
+        !error &&
+        offers.length === 0 &&
+        tradingPartners.length === 0 && (
+          <div className="flex items-center justify-center p-8 text-muted-foreground">
+            <Info className="mr-2" size={16} />
+            No offers found for this asset. Try adjusting filters or check back
+            later.
+          </div>
+        )}
 
       {/* Offers table */}
       {offers.length > 0 && (
@@ -274,6 +451,7 @@ export const TradingOffers: FC = () => {
                   Available
                   <SortIcon field={TapOfferSortBy.Available} />
                 </th>
+                <th className="py-3 px-3 w-8" />
               </tr>
             </thead>
             <tbody>
@@ -300,6 +478,9 @@ export const TradingOffers: FC = () => {
                         {selectedSymbol}
                       </span>
                     )}
+                  </td>
+                  <td className="py-3 px-3 text-muted-foreground/50">
+                    <ChevronRight size={14} />
                   </td>
                 </tr>
               ))}

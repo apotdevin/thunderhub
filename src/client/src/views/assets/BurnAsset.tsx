@@ -43,7 +43,7 @@ export const BurnAsset: FC = () => {
   const handleBurn = () => {
     if (!selectedAsset || !amount || !confirmed) return;
     burnAsset({
-      variables: { assetId: selectedAsset, amount: parseInt(amount, 10) },
+      variables: { assetId: selectedAsset, amount },
     });
   };
 
