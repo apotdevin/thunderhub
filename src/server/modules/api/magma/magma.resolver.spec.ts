@@ -437,9 +437,7 @@ describe('MagmaResolver', () => {
       it('PURCHASE: buys inbound asset channel, skips BTC outbound', async () => {
         const result = await setupResolver.setupTradePartner(userId, {
           ...purchaseInput,
-          // Client passes atomic amount directly to avoid rounding
-          amount: '1000',
-          skipOutboundChannel: true,
+          satsAmount: undefined,
         });
 
         // Magma size is the asset amount from the UI (atomic units, no derivation)
@@ -467,7 +465,7 @@ describe('MagmaResolver', () => {
         await expect(
           setupResolver.setupTradePartner(userId, {
             ...saleInput,
-            skipOutboundChannel: true,
+            satsAmount: undefined,
           })
         ).rejects.toThrow('Selling not implemented yet');
       });
