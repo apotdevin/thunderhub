@@ -720,6 +720,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
             <>
               <Button
                 variant="outline"
+                size="lg"
                 onClick={() => {
                   setStep('input');
                   clearQuoteState();
@@ -731,6 +732,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
               </Button>
               {readyToTrade ? (
                 <Button
+                  size="lg"
                   onClick={handleTrade}
                   disabled={
                     loading || quoteLoading || !displaySats || quoteExpired
@@ -753,6 +755,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 </Button>
               ) : (
                 <Button
+                  size="lg"
                   onClick={handleSubmit}
                   disabled={loading}
                   className="flex-1"

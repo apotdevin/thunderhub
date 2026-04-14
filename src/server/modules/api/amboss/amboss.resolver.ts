@@ -303,6 +303,24 @@ export class AmbossResolver {
   }
 
   @Mutation(() => Boolean)
+  async logoutAmboss(@Context() { res }: ContextType) {
+    const useHttps = this.configService.get('useHttps');
+
+    res.setHeader(
+      'Set-Cookie',
+      cookie.serialize(appConstants.ambossCookieName, '', {
+        maxAge: 0,
+        httpOnly: true,
+        sameSite: true,
+        path: '/',
+        secure: useHttps,
+      })
+    );
+
+    return true;
+  }
+
+  @Mutation(() => Boolean)
   async pushBackup(@CurrentUser() user: UserId) {
     const backups = await this.nodeService.getBackups(user.id);
 
