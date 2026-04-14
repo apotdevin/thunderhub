@@ -401,7 +401,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetContent side="right" className="w-[360px] sm:max-w-[400px]">
+      <SheetContent side="right" className="w-90 sm:max-w-100">
         <SheetHeader>
           <SheetTitle>
             {isAssetPurchase ? 'Buy' : 'Sell'} {assetSymbol}
@@ -689,7 +689,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
           </div>
         )}
 
-        <SheetFooter className="flex gap-2">
+        <SheetFooter className="flex-row gap-2 p-4">
           {step === 'input' && (
             <Button
               onClick={
