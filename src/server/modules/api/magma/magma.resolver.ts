@@ -1,6 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { GraphQLError } from 'graphql';
@@ -88,7 +87,6 @@ export class MagmaResolver {
     private tapdNodeService: TapdNodeService,
     private nodeService: NodeService,
     private fetchService: FetchService,
-    private configService: ConfigService,
     private tapFederationService: TapFederationService,
     private ambossTokenService: AmbossTokenService,
     private ambossService: AmbossService,
@@ -99,13 +97,10 @@ export class MagmaResolver {
 
   @Query(() => TapTradeOfferList)
   async getTapOffers(
-    @CurrentUser() _user: UserId,
+    @CurrentUser() user: UserId,
     @Args('input') input: GetTapOffersInput
   ) {
-    const tradeUrl = this.configService.get<string>('urls.trade');
-    if (!tradeUrl) {
-      return { list: [], totalCount: 0 };
-    }
+    const tradeUrl = await this.ambossService.resolveTradeUrl(user);
 
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       public: {
@@ -169,11 +164,8 @@ export class MagmaResolver {
   }
 
   @Query(() => TapSupportedAssetList)
-  async getTapSupportedAssets(@CurrentUser() _user: UserId) {
-    const tradeUrl = this.configService.get<string>('urls.trade');
-    if (!tradeUrl) {
-      return { list: [], totalCount: 0 };
-    }
+  async getTapSupportedAssets(@CurrentUser() user: UserId) {
+    const tradeUrl = await this.ambossService.resolveTradeUrl(user);
 
     const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
       public: {
@@ -210,7 +202,7 @@ export class MagmaResolver {
 
     if (universeHosts.length) {
       this.tapFederationService
-        .syncForAccount(_user.id, universeHosts)
+        .syncForAccount(user.id, universeHosts)
         .catch(() => {});
     }
 
