@@ -495,7 +495,7 @@ export const TradingOffers: FC = () => {
       )}
 
       <div className="text-xs text-muted-foreground text-center pt-2">
-        Trading powered by RailsX By Amboss
+        Trading powered by RailsX by Amboss
       </div>
 
       <TradeSheet

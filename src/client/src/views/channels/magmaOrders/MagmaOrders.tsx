@@ -1,8 +1,12 @@
-import { ExternalLink } from 'lucide-react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { ExternalLink, X } from 'lucide-react';
 import {
   useGetPendingMagmaOrdersQuery,
   GetPendingMagmaOrdersQuery,
 } from '../../../graphql/queries/__generated__/getPendingMagmaOrders.generated';
+import { useCancelMagmaOrderMutation } from '../../../graphql/mutations/__generated__/cancelMagmaOrder.generated';
+import { getErrorContent } from '../../../utils/error';
 import { Price } from '../../../components/price/Price';
 import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
@@ -54,6 +58,12 @@ const STATUS_VARIANTS: Record<
   WAITING_FOR_CHANNEL_OPEN: 'secondary',
 };
 
+const BUYER_CANCELLABLE = new Set([
+  'WAITING_FOR_SELLER_APPROVAL',
+  'WAITING_FOR_BUYER_PAYMENT',
+]);
+const SELLER_CANCELLABLE = new Set(['WAITING_FOR_CHANNEL_OPEN']);
+
 function statusLabel(status: string): string {
   return STATUS_LABELS[status] ?? status;
 }
@@ -76,11 +86,23 @@ function peerName(
 function OrderTable({
   orders,
   role,
+  confirmingId,
+  cancelling,
+  onCancelRequest,
+  onCancelConfirm,
+  onCancelDismiss,
 }: {
   orders: PendingOrder[];
   role: 'buyer' | 'seller';
+  confirmingId: string | null;
+  cancelling: boolean;
+  onCancelRequest: (id: string) => void;
+  onCancelConfirm: (id: string) => void;
+  onCancelDismiss: () => void;
 }) {
   if (!orders.length) return null;
+
+  const cancellable = role === 'buyer' ? BUYER_CANCELLABLE : SELLER_CANCELLABLE;
 
   return (
     <div className="space-y-2">
@@ -113,6 +135,8 @@ function OrderTable({
             const created = order.createdAt
               ? new Date(order.createdAt).toLocaleDateString()
               : '-';
+            const canCancel = cancellable.has(order.status);
+            const isConfirming = confirmingId === order.id;
 
             return (
               <TableRow key={order.id}>
@@ -132,18 +156,56 @@ function OrderTable({
                   {created}
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="sm" asChild>
-                    <a
-                      href="https://amboss.space/magma"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <ExternalLink className="mr-1 size-3.5" />
-                      {order.status === 'WAITING_FOR_BUYER_PAYMENT'
-                        ? 'Pay on Amboss'
-                        : 'View on Amboss'}
-                    </a>
-                  </Button>
+                  <div className="flex items-center justify-end gap-1">
+                    {canCancel && !isConfirming && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="cursor-pointer text-destructive hover:text-destructive"
+                        onClick={() => onCancelRequest(order.id)}
+                      >
+                        <X className="mr-1 size-3.5" />
+                        Cancel
+                      </Button>
+                    )}
+                    {isConfirming && (
+                      <>
+                        <span className="text-sm text-muted-foreground">
+                          Sure?
+                        </span>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          disabled={cancelling}
+                          onClick={() => onCancelConfirm(order.id)}
+                        >
+                          Yes, cancel
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          disabled={cancelling}
+                          onClick={onCancelDismiss}
+                        >
+                          No
+                        </Button>
+                      </>
+                    )}
+                    {!isConfirming && (
+                      <Button variant="ghost" size="sm" asChild>
+                        <a
+                          href="https://amboss.space/magma"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="mr-1 size-3.5" />
+                          {order.status === 'WAITING_FOR_BUYER_PAYMENT'
+                            ? 'Pay on Amboss'
+                            : 'View on Amboss'}
+                        </a>
+                      </Button>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             );
@@ -155,7 +217,11 @@ function OrderTable({
 }
 
 export const MagmaOrders = () => {
-  const { data } = useGetPendingMagmaOrdersQuery();
+  const { data, refetch } = useGetPendingMagmaOrdersQuery();
+  const [cancelOrder, { loading: cancelling }] = useCancelMagmaOrderMutation({
+    onError: err => toast.error(getErrorContent(err)),
+  });
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
   const orders = data?.getPendingMagmaOrders;
   if (!orders) return null;
@@ -165,14 +231,37 @@ export const MagmaOrders = () => {
 
   if (!purchases.length && !sales.length) return null;
 
+  const handleConfirm = async (orderId: string) => {
+    const { data } = await cancelOrder({
+      variables: {
+        input: {
+          orderId,
+          cancellationReason: 'UNABLE_TO_CONNECT_TO_NODE',
+        },
+      },
+    });
+    if (data?.cancelMagmaOrder.success) {
+      setConfirmingId(null);
+      refetch();
+    }
+  };
+
+  const tableProps = {
+    confirmingId,
+    cancelling,
+    onCancelRequest: setConfirmingId,
+    onCancelConfirm: handleConfirm,
+    onCancelDismiss: () => setConfirmingId(null),
+  };
+
   return (
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-base">Pending Magma Orders</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <OrderTable orders={purchases} role="buyer" />
-        <OrderTable orders={sales} role="seller" />
+        <OrderTable orders={purchases} role="buyer" {...tableProps} />
+        <OrderTable orders={sales} role="seller" {...tableProps} />
       </CardContent>
     </Card>
   );

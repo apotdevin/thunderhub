@@ -26,12 +26,15 @@ import {
   MagmaOrder,
   AmbossOrderRaw,
   AmbossOrderList,
+  CancelMagmaOrderInput,
+  CancelMagmaOrderResult,
 } from './magma.types';
 import {
   getOffersQuery,
   getSupportedAssetsQuery,
   createMagmaOrderMutation,
   getPendingOrdersQuery,
+  cancelMagmaOrderMutation,
 } from './magma.gql';
 
 /**
@@ -283,6 +286,42 @@ export class MagmaResolver {
       purchases: purchases.list.map(mapOrder),
       sales: sales.list.map(mapOrder),
     };
+  }
+
+  @Mutation(() => CancelMagmaOrderResult)
+  async cancelMagmaOrder(
+    @CurrentUser() user: UserId,
+    @Args('input') input: CancelMagmaOrderInput
+  ): Promise<CancelMagmaOrderResult> {
+    const ambossAuth = await this.ambossTokenService.get(user);
+    if (!ambossAuth) throw new GraphQLError('Not authenticated with Amboss');
+
+    const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
+
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
+      market: { order: { cancel: { success: boolean } } };
+    }>(
+      magmaUrl,
+      cancelMagmaOrderMutation,
+      {
+        input: {
+          order_id: input.orderId,
+          cancellation_reason: input.cancellationReason,
+        },
+      },
+      { authorization: `Bearer ${ambossAuth}` }
+    );
+
+    if (error || !data?.market?.order?.cancel) {
+      this.logger.error('Error cancelling Magma order', { error });
+      throw new GraphQLError(
+        typeof error === 'string'
+          ? `Failed to cancel order: ${error}`
+          : 'Failed to cancel order'
+      );
+    }
+
+    return { success: data.market.order.cancel.success };
   }
 
   // ── Trade Partner Setup ──

@@ -52,6 +52,18 @@ export const createMagmaOrderMutation = gql`
   }
 `;
 
+export const cancelMagmaOrderMutation = gql`
+  mutation CancelOrder($input: CancelOrderInput!) {
+    market {
+      order {
+        cancel(input: $input) {
+          success
+        }
+      }
+    }
+  }
+`;
+
 export const getPendingOrdersQuery = gql`
   query GetPendingOrders($page: PageInput) {
     getUser {

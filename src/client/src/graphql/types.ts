@@ -132,6 +132,16 @@ export type BoltzInfoType = {
   min: Scalars['Float']['output'];
 };
 
+export type CancelMagmaOrderInput = {
+  cancellationReason: OrderCancellationReason;
+  orderId: Scalars['String']['input'];
+};
+
+export type CancelMagmaOrderResult = {
+  __typename?: 'CancelMagmaOrderResult';
+  success: Scalars['Boolean']['output'];
+};
+
 export type ChainAddressSend = {
   __typename?: 'ChainAddressSend';
   confirmationCount: Scalars['Float']['output'];
@@ -578,6 +588,7 @@ export type Mutation = {
   addTapAssetInvoice: TapAssetInvoiceResponse;
   addTapFederationServer: Scalars['Boolean']['output'];
   burnTapAsset: Scalars['Boolean']['output'];
+  cancelMagmaOrder: CancelMagmaOrderResult;
   cancelTapBatch: Scalars['Boolean']['output'];
   claimBoltzTransaction: Scalars['String']['output'];
   closeChannel: OpenOrCloseChannel;
@@ -635,6 +646,10 @@ export type MutationAddTapFederationServerArgs = {
 export type MutationBurnTapAssetArgs = {
   amount: Scalars['String']['input'];
   assetId: Scalars['String']['input'];
+};
+
+export type MutationCancelMagmaOrderArgs = {
+  input: CancelMagmaOrderInput;
 };
 
 export type MutationClaimBoltzTransactionArgs = {
@@ -920,6 +935,12 @@ export type OpenOrCloseChannel = {
   transactionId: Scalars['String']['output'];
   transactionOutputIndex: Scalars['String']['output'];
 };
+
+export enum OrderCancellationReason {
+  ChannelSizeOutOfBounds = 'CHANNEL_SIZE_OUT_OF_BOUNDS',
+  UnableToConnectToNode = 'UNABLE_TO_CONNECT_TO_NODE',
+  UnableToPay = 'UNABLE_TO_PAY',
+}
 
 export type PayInvoice = {
   __typename?: 'PayInvoice';

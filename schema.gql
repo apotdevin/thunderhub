@@ -95,6 +95,15 @@ type BoltzInfoType {
   min: Float!
 }
 
+input CancelMagmaOrderInput {
+  cancellationReason: OrderCancellationReason!
+  orderId: String!
+}
+
+type CancelMagmaOrderResult {
+  success: Boolean!
+}
+
 type ChainAddressSend {
   confirmationCount: Float!
   id: String!
@@ -501,6 +510,7 @@ type Mutation {
   addTapAssetInvoice(input: TapAssetInvoiceInput!): TapAssetInvoiceResponse!
   addTapFederationServer(host: String!): Boolean!
   burnTapAsset(amount: String!, assetId: String!): Boolean!
+  cancelMagmaOrder(input: CancelMagmaOrderInput!): CancelMagmaOrderResult!
   cancelTapBatch: Boolean!
   claimBoltzTransaction(destination: String!, fee: Float!, id: String!, lockupAddress: String!, preimage: String!, privateKey: String!, redeem: String!): String!
   closeChannel(forceClose: Boolean, id: String!, targetConfirmations: Float, tokensPerVByte: Float): OpenOrCloseChannel!
@@ -650,6 +660,12 @@ input OpenChannelParams {
 type OpenOrCloseChannel {
   transactionId: String!
   transactionOutputIndex: String!
+}
+
+enum OrderCancellationReason {
+  CHANNEL_SIZE_OUT_OF_BOUNDS
+  UNABLE_TO_CONNECT_TO_NODE
+  UNABLE_TO_PAY
 }
 
 type PayInvoice {

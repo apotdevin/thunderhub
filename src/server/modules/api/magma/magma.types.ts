@@ -113,6 +113,31 @@ export class MagmaPendingOrders {
   sales: MagmaOrder[];
 }
 
+// ─── Cancel Order ────────────────────────────────────────────────
+
+export enum OrderCancellationReason {
+  UNABLE_TO_CONNECT_TO_NODE = 'UNABLE_TO_CONNECT_TO_NODE',
+  UNABLE_TO_PAY = 'UNABLE_TO_PAY',
+  CHANNEL_SIZE_OUT_OF_BOUNDS = 'CHANNEL_SIZE_OUT_OF_BOUNDS',
+}
+
+registerEnumType(OrderCancellationReason, { name: 'OrderCancellationReason' });
+
+@InputType()
+export class CancelMagmaOrderInput {
+  @Field()
+  orderId: string;
+
+  @Field(() => OrderCancellationReason)
+  cancellationReason: OrderCancellationReason;
+}
+
+@ObjectType()
+export class CancelMagmaOrderResult {
+  @Field()
+  success: boolean;
+}
+
 // ─── Enums ──────────────────────────────────────────────────────
 
 export enum TapTransactionType {
