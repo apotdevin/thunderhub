@@ -355,6 +355,16 @@ type GetPaymentsType {
   payments: [PaymentType!]!
 }
 
+input GetTapOffersInput {
+  ambossAssetId: String!
+  limit: Int
+  minAmount: String
+  offset: Int
+  sortBy: TapOfferSortBy
+  sortDir: TapOfferSortDir
+  transactionType: TapTransactionType!
+}
+
 type Hops {
   channel: String!
   channel_capacity: Float!
@@ -466,6 +476,7 @@ type Mutation {
   removeTwofaSecret(token: String!): Boolean!
   sendTapAsset(tapAddrs: [String!]!): Boolean!
   sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
+  setupTradePartner(input: SetupTradePartnerInput!): SetupTradePartnerResult!
   syncTapUniverse(host: String!): TapSyncResult!
   team: TeamMutations!
   toggleConfig(field: ConfigFields!): Boolean!
@@ -723,7 +734,7 @@ type Query {
   getChainTransactions: [ChainTransaction!]!
   getChannel(id: String!): SingleChannel!
   getChannelReport: ChannelReport!
-  getChannels(active: Boolean): [Channel!]!
+  getChannels(active: Boolean, partner_public_key: String): [Channel!]!
   getClosedChannels: [ClosedChannel!]!
   getConfigState: ConfigState!
   getFeeHealth: ChannelsFeeHealth!
@@ -743,10 +754,11 @@ type Query {
   getPayments(token: String): GetPaymentsType!
   getPeers: [Peer!]!
   getPendingChannels: [PendingChannel!]!
+  getTapAssetChannelBalances(peerPubkey: String): [TapAssetChannelBalance!]!
   getTapAssets: TapAssetList!
   getTapBalances(groupBy: TapBalanceGroupBy = GROUP_KEY): TapBalances!
   getTapFederationServers: TapFederationServerList!
-  getTapOffers(assetId: String!, limit: Int, minAmount: String, offset: Int, sortBy: TapOfferSortBy, sortDir: TapOfferSortDir, transactionType: TapTransactionType!): TapTradeOfferList!
+  getTapOffers(input: GetTapOffersInput!): TapTradeOfferList!
   getTapSupportedAssets: TapSupportedAssetList!
   getTapTransfers: TapTransferList!
   getTapUniverseAssets: TapUniverseAssetList!
@@ -782,6 +794,30 @@ type ServerAccount {
   slug: String!
   twofaEnabled: Boolean!
   type: String!
+}
+
+input SetupTradePartnerInput {
+  ambossAssetId: String!
+  assetAmount: String!
+  assetRate: String!
+  magmaOfferId: String!
+  satsAmount: String
+  swapNodePubkey: String!
+  swapNodeSockets: [String!]
+  tapdAssetId: String
+  tapdGroupKey: String
+  transactionType: TapTransactionType!
+}
+
+type SetupTradePartnerResult {
+  magmaOrderAmountAsset: String
+  magmaOrderAmountSats: String
+  magmaOrderFeeSats: String
+  magmaOrderId: String
+  magmaOrderStatus: String
+  outboundChannelOutputIndex: Int
+  outboundChannelTxid: String
+  success: Boolean!
 }
 
 type SingleChannel {
@@ -822,6 +858,16 @@ type TapAssetBalanceEntry {
   balance: String!
   groupKey: String
   names: [String!]
+}
+
+type TapAssetChannelBalance {
+  assetId: String!
+  capacity: String!
+  channelPoint: String!
+  groupKey: String
+  localBalance: String!
+  partnerPublicKey: String!
+  remoteBalance: String!
 }
 
 type TapAssetGenesis {
@@ -941,12 +987,13 @@ type TapSyncResult {
 type TapTradeOffer {
   available: TapTradeOfferAmount!
   id: String!
+  magmaOfferId: String!
   node: TapTradeOfferNode!
   rate: TapTradeOfferAmount!
 }
 
 type TapTradeOfferAmount {
-  displayAmount: String
+  displayAmount: String!
   fullAmount: String!
 }
 
@@ -957,7 +1004,8 @@ type TapTradeOfferList {
 
 type TapTradeOfferNode {
   alias: String
-  pubkey: String!
+  pubkey: String
+  sockets: [String!]!
 }
 
 enum TapTransactionType {

@@ -1,6 +1,5 @@
 import {
   Args,
-  Context,
   Int,
   Mutation,
   Parent,
@@ -9,13 +8,10 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { GraphQLError } from 'graphql';
-import { ContextType } from '../../../app.module';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
-import { FetchService } from '../../fetch/fetch.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import {
@@ -33,16 +29,12 @@ import {
   TapMintResponse,
   TapFundChannelInput,
   TapFundChannelResponse,
+  TapAssetChannelBalance,
   TapSyncResult,
-  TapTradeOfferList,
   TapUniverseAssetList,
   TapTransferList,
   TapUniverseInfo,
-  TapSupportedAssetList,
   TapUniverseStats,
-  TapTransactionType,
-  TapOfferSortBy,
-  TapOfferSortDir,
 } from './tapd.types';
 import {
   bufToHex,
@@ -60,30 +52,6 @@ import {
   TransferOutput,
   SyncedUniverse,
 } from '@lightningpolar/tapd-api';
-import { getOffersQuery, getSupportedAssetsQuery } from './tapd.gql';
-import { TapFederationService } from './tapd-federation.service';
-
-// Internal shapes matching the trade API GraphQL responses
-
-interface TradeApiOffer {
-  id: string;
-  node?: { alias?: string; pubkey?: string };
-  rate?: { display_amount?: string; full_amount?: string };
-  available?: { display_amount?: string; full_amount?: string };
-}
-
-interface TradeApiSupportedAsset {
-  id: string;
-  symbol?: string;
-  description?: string;
-  precision?: number;
-  taproot_asset_details?: {
-    asset_id?: string;
-    group_key?: string;
-    universe?: string;
-  };
-  prices?: { id?: string; usd?: number };
-}
 
 const ASSET_TYPE_MAP: Record<string, TapAssetType> = {
   NORMAL: TapAssetType.NORMAL,
@@ -125,9 +93,6 @@ export class TapAssetResolver {
 export class TapdResolver {
   constructor(
     private tapdNodeService: TapdNodeService,
-    private fetchService: FetchService,
-    private configService: ConfigService,
-    private tapFederationService: TapFederationService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -659,134 +624,18 @@ export class TapdResolver {
     };
   }
 
-  // ── Trading Offers ──
-
-  @Query(() => TapTradeOfferList)
-  async getTapOffers(
-    @CurrentUser() _user: UserId,
-    @Context() { ambossAuth }: ContextType,
-    @Args('assetId') assetId: string,
-    @Args('transactionType', { type: () => TapTransactionType })
-    transactionType: TapTransactionType,
-    @Args('sortBy', { type: () => TapOfferSortBy, nullable: true })
-    sortBy?: TapOfferSortBy,
-    @Args('sortDir', { type: () => TapOfferSortDir, nullable: true })
-    sortDir?: TapOfferSortDir,
-    @Args('minAmount', { nullable: true }) minAmount?: string,
-    @Args('limit', { type: () => Int, nullable: true }) limit?: number,
-    @Args('offset', { type: () => Int, nullable: true }) offset?: number
+  @Query(() => [TapAssetChannelBalance])
+  async getTapAssetChannelBalances(
+    @CurrentUser() { id }: UserId,
+    @Args('peerPubkey', { nullable: true }) peerPubkey?: string
   ) {
-    const tradeUrl = this.configService.get<string>('urls.trade');
-    if (!tradeUrl || !ambossAuth) {
-      return { list: [], totalCount: 0 };
-    }
-
-    const headers = { authorization: `Bearer ${ambossAuth}` };
-
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
-      public: {
-        offers: {
-          list: TradeApiOffer[];
-          total_count: number;
-        };
-      };
-    }>(
-      tradeUrl,
-      getOffersQuery,
-      {
-        input: {
-          asset_id: assetId,
-          transaction_type: transactionType,
-          ...(sortBy ? { sort_by: sortBy } : {}),
-          ...(sortDir ? { sort_dir: sortDir } : {}),
-          ...(minAmount ? { min_amount: minAmount } : {}),
-          ...(limit || offset
-            ? { page: { limit: limit || 20, offset: offset || 0 } }
-            : {}),
-        },
-      },
-      headers
+    const [result, error] = await toWithError(
+      this.tapdNodeService.getAssetChannelBalances({ id, peerPubkey })
     );
-
-    if (error || !data?.public?.offers) {
-      if (error) this.logger.error('Error fetching trade offers', { error });
-      return { list: [], totalCount: 0 };
+    if (error || !result) {
+      this.logger.error('Failed to get asset channel balances', { error });
+      throw new GraphQLError('Failed to get asset channel balances');
     }
-
-    const offers = data.public.offers;
-
-    return {
-      list: offers.list.map(o => ({
-        id: o.id,
-        node: {
-          alias: o.node?.alias,
-          pubkey: o.node?.pubkey || '',
-        },
-        rate: {
-          displayAmount: o.rate?.display_amount,
-          fullAmount: o.rate?.full_amount || '0',
-        },
-        available: {
-          displayAmount: o.available?.display_amount,
-          fullAmount: o.available?.full_amount || '0',
-        },
-      })),
-      totalCount: offers.total_count,
-    };
-  }
-
-  @Query(() => TapSupportedAssetList)
-  async getTapSupportedAssets(@CurrentUser() { id }: UserId) {
-    const tradeUrl = this.configService.get<string>('urls.trade');
-    if (!tradeUrl) {
-      return { list: [], totalCount: 0 };
-    }
-
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
-      public: {
-        assets: {
-          supported: {
-            list: TradeApiSupportedAsset[];
-            total_count: number;
-          };
-        };
-      };
-    }>(tradeUrl, getSupportedAssetsQuery);
-
-    if (error || !data?.public?.assets?.supported) {
-      if (error)
-        this.logger.error('Error fetching supported assets', { error });
-      return { list: [], totalCount: 0 };
-    }
-
-    const assets = data.public.assets.supported;
-
-    const universeHosts = [
-      ...new Set(
-        assets.list
-          .map(a => a.taproot_asset_details?.universe)
-          .filter((h): h is string => !!h)
-      ),
-    ];
-
-    if (universeHosts.length) {
-      this.tapFederationService
-        .syncForAccount(id, universeHosts)
-        .catch(() => {});
-    }
-
-    return {
-      list: assets.list.map(a => ({
-        id: a.id,
-        symbol: a.symbol || '',
-        description: a.description,
-        precision: a.precision ?? 0,
-        assetId: a.taproot_asset_details?.asset_id,
-        groupKey: a.taproot_asset_details?.group_key,
-        universeHost: a.taproot_asset_details?.universe,
-        prices: a.prices ?? null,
-      })),
-      totalCount: assets.total_count,
-    };
+    return result;
   }
 }

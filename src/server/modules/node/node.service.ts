@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import EventEmitter from 'events';
+import { subscribeToChannels } from 'lightning';
 import { AccountsService } from '../accounts/accounts.service';
+import { toWithError } from '../../utils/async';
 import { ProviderRegistryService } from './provider-registry.service';
 import { EnrichedAccount } from '../accounts/accounts.types';
 import { LightningProvider } from './lightning.types';
@@ -254,5 +256,57 @@ export class NodeService {
   async getIdentity(id: string) {
     const { account, provider } = this.getAccountAndProvider(id);
     return provider.getIdentity(account.connection);
+  }
+
+  /**
+   * Resolves as soon as LND reports a pending channel opening (channel_opening
+   * event) from the given peer. Used to detect Magma inbound channels without
+   * waiting for on-chain confirmation.
+   *
+   * Rejects after `timeoutMs` if no channel from the peer appears.
+   */
+  waitForChannelFromPeer(
+    id: string,
+    partnerPubkey: string,
+    timeoutMs: number
+  ): Promise<void> {
+    const { account, provider } = this.getAccountAndProvider(id);
+    const lnd = provider.getSubscriptionConnection(account.connection);
+
+    return new Promise<void>((resolve, reject) => {
+      let done = false;
+
+      const finish = (err?: Error) => {
+        if (done) return;
+        done = true;
+        sub.removeAllListeners();
+        clearTimeout(timer);
+        if (err) reject(err);
+        else resolve();
+      };
+
+      const timer = setTimeout(
+        () => finish(new Error('Timed out waiting for channel from peer')),
+        timeoutMs
+      );
+
+      const sub = subscribeToChannels({ lnd });
+
+      sub.on('channel_opening', async () => {
+        const [result, err] = await toWithError(
+          provider.getPendingChannels(account.connection)
+        );
+
+        if (err || !result) return;
+
+        const isPeerOpening = result.pending_channels.some(
+          ch => ch.is_opening && ch.partner_public_key === partnerPubkey
+        );
+
+        if (isPeerOpening) finish();
+      });
+
+      sub.on('error', (err: Error) => finish(err));
+    });
   }
 }

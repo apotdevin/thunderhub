@@ -1,6 +1,5 @@
 import {
   Field,
-  Float,
   InputType,
   Int,
   ObjectType,
@@ -22,27 +21,6 @@ export enum TapBalanceGroupBy {
 }
 
 registerEnumType(TapBalanceGroupBy, { name: 'TapBalanceGroupBy' });
-
-export enum TapTransactionType {
-  PURCHASE = 'PURCHASE',
-  SALE = 'SALE',
-}
-
-registerEnumType(TapTransactionType, { name: 'TapTransactionType' });
-
-export enum TapOfferSortBy {
-  RATE = 'RATE',
-  AVAILABLE = 'AVAILABLE',
-}
-
-registerEnumType(TapOfferSortBy, { name: 'TapOfferSortBy' });
-
-export enum TapOfferSortDir {
-  ASC = 'ASC',
-  DESC = 'DESC',
-}
-
-registerEnumType(TapOfferSortDir, { name: 'TapOfferSortDir' });
 
 // ─── Asset Genesis ──────────────────────────────────────────────
 
@@ -376,91 +354,26 @@ export class TapFundChannelResponse {
   outputIndex: number;
 }
 
-// ─── Trading Offers ─────────────────────────────────────────────
-
 @ObjectType()
-export class TapTradeOfferNode {
-  @Field({ nullable: true })
-  alias?: string;
+export class TapAssetChannelBalance {
+  @Field()
+  channelPoint: string;
 
   @Field()
-  pubkey: string;
-}
-
-@ObjectType()
-export class TapTradeOfferAmount {
-  @Field({ nullable: true })
-  displayAmount?: string;
+  partnerPublicKey: string;
 
   @Field()
-  fullAmount: string;
-}
-
-@ObjectType()
-export class TapTradeOffer {
-  @Field()
-  id: string;
-
-  @Field(() => TapTradeOfferNode)
-  node: TapTradeOfferNode;
-
-  @Field(() => TapTradeOfferAmount)
-  rate: TapTradeOfferAmount;
-
-  @Field(() => TapTradeOfferAmount)
-  available: TapTradeOfferAmount;
-}
-
-@ObjectType()
-export class TapTradeOfferList {
-  @Field(() => [TapTradeOffer])
-  list: TapTradeOffer[];
-
-  @Field()
-  totalCount: number;
-}
-
-@ObjectType()
-export class TapAssetPrice {
-  @Field({ nullable: true })
-  id?: string;
-
-  @Field(() => Float, { nullable: true })
-  usd?: number;
-}
-
-@ObjectType()
-export class TapSupportedAsset {
-  @Field()
-  id: string;
-
-  @Field()
-  symbol: string;
-
-  @Field({ nullable: true })
-  description?: string;
-
-  @Field(() => Int)
-  precision: number;
-
-  @Field({ nullable: true })
-  assetId?: string;
+  assetId: string;
 
   @Field({ nullable: true })
   groupKey?: string;
 
-  @Field({ nullable: true })
-  universeHost?: string;
-
-  @Field(() => TapAssetPrice, { nullable: true })
-  prices?: TapAssetPrice;
-}
-
-@ObjectType()
-export class TapSupportedAssetList {
-  @Field(() => [TapSupportedAsset])
-  list: TapSupportedAsset[];
+  @Field()
+  localBalance: string;
 
   @Field()
-  totalCount: number;
+  remoteBalance: string;
+
+  @Field()
+  capacity: string;
 }

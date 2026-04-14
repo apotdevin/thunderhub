@@ -418,6 +418,16 @@ export type GetPaymentsType = {
   payments: Array<PaymentType>;
 };
 
+export type GetTapOffersInput = {
+  ambossAssetId: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  minAmount?: InputMaybe<Scalars['String']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<TapOfferSortBy>;
+  sortDir?: InputMaybe<TapOfferSortDir>;
+  transactionType: TapTransactionType;
+};
+
 export type Hops = {
   __typename?: 'Hops';
   channel: Scalars['String']['output'];
@@ -536,6 +546,7 @@ export type Mutation = {
   removeTwofaSecret: Scalars['Boolean']['output'];
   sendTapAsset: Scalars['Boolean']['output'];
   sendToAddress: ChainAddressSend;
+  setupTradePartner: SetupTradePartnerResult;
   syncTapUniverse: TapSyncResult;
   team: TeamMutations;
   toggleConfig: Scalars['Boolean']['output'];
@@ -689,6 +700,10 @@ export type MutationSendToAddressArgs = {
   sendAll?: InputMaybe<Scalars['Boolean']['input']>;
   target?: InputMaybe<Scalars['Float']['input']>;
   tokens?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type MutationSetupTradePartnerArgs = {
+  input: SetupTradePartnerInput;
 };
 
 export type MutationSyncTapUniverseArgs = {
@@ -1029,6 +1044,7 @@ export type Query = {
   getPayments: GetPaymentsType;
   getPeers: Array<Peer>;
   getPendingChannels: Array<PendingChannel>;
+  getTapAssetChannelBalances: Array<TapAssetChannelBalance>;
   getTapAssets: TapAssetList;
   getTapBalances: TapBalances;
   getTapFederationServers: TapFederationServerList;
@@ -1066,6 +1082,7 @@ export type QueryGetChannelArgs = {
 
 export type QueryGetChannelsArgs = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
+  partner_public_key?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type QueryGetForwardsArgs = {
@@ -1097,18 +1114,16 @@ export type QueryGetPaymentsArgs = {
   token?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type QueryGetTapAssetChannelBalancesArgs = {
+  peerPubkey?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type QueryGetTapBalancesArgs = {
   groupBy?: InputMaybe<TapBalanceGroupBy>;
 };
 
 export type QueryGetTapOffersArgs = {
-  assetId: Scalars['String']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  minAmount?: InputMaybe<Scalars['String']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  sortBy?: InputMaybe<TapOfferSortBy>;
-  sortDir?: InputMaybe<TapOfferSortDir>;
-  transactionType: TapTransactionType;
+  input: GetTapOffersInput;
 };
 
 export type QueryRecoverFundsArgs = {
@@ -1150,6 +1165,31 @@ export type ServerAccount = {
   slug: Scalars['String']['output'];
   twofaEnabled: Scalars['Boolean']['output'];
   type: Scalars['String']['output'];
+};
+
+export type SetupTradePartnerInput = {
+  ambossAssetId: Scalars['String']['input'];
+  assetAmount: Scalars['String']['input'];
+  assetRate: Scalars['String']['input'];
+  magmaOfferId: Scalars['String']['input'];
+  satsAmount?: InputMaybe<Scalars['String']['input']>;
+  swapNodePubkey: Scalars['String']['input'];
+  swapNodeSockets?: InputMaybe<Array<Scalars['String']['input']>>;
+  tapdAssetId?: InputMaybe<Scalars['String']['input']>;
+  tapdGroupKey?: InputMaybe<Scalars['String']['input']>;
+  transactionType: TapTransactionType;
+};
+
+export type SetupTradePartnerResult = {
+  __typename?: 'SetupTradePartnerResult';
+  magmaOrderAmountAsset?: Maybe<Scalars['String']['output']>;
+  magmaOrderAmountSats?: Maybe<Scalars['String']['output']>;
+  magmaOrderFeeSats?: Maybe<Scalars['String']['output']>;
+  magmaOrderId?: Maybe<Scalars['String']['output']>;
+  magmaOrderStatus?: Maybe<Scalars['String']['output']>;
+  outboundChannelOutputIndex?: Maybe<Scalars['Int']['output']>;
+  outboundChannelTxid?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
 };
 
 export type SingleChannel = {
@@ -1194,6 +1234,17 @@ export type TapAssetBalanceEntry = {
   balance: Scalars['String']['output'];
   groupKey?: Maybe<Scalars['String']['output']>;
   names?: Maybe<Array<Scalars['String']['output']>>;
+};
+
+export type TapAssetChannelBalance = {
+  __typename?: 'TapAssetChannelBalance';
+  assetId: Scalars['String']['output'];
+  capacity: Scalars['String']['output'];
+  channelPoint: Scalars['String']['output'];
+  groupKey?: Maybe<Scalars['String']['output']>;
+  localBalance: Scalars['String']['output'];
+  partnerPublicKey: Scalars['String']['output'];
+  remoteBalance: Scalars['String']['output'];
 };
 
 export type TapAssetGenesis = {
@@ -1327,13 +1378,14 @@ export type TapTradeOffer = {
   __typename?: 'TapTradeOffer';
   available: TapTradeOfferAmount;
   id: Scalars['String']['output'];
+  magmaOfferId: Scalars['String']['output'];
   node: TapTradeOfferNode;
   rate: TapTradeOfferAmount;
 };
 
 export type TapTradeOfferAmount = {
   __typename?: 'TapTradeOfferAmount';
-  displayAmount?: Maybe<Scalars['String']['output']>;
+  displayAmount: Scalars['String']['output'];
   fullAmount: Scalars['String']['output'];
 };
 
@@ -1346,7 +1398,8 @@ export type TapTradeOfferList = {
 export type TapTradeOfferNode = {
   __typename?: 'TapTradeOfferNode';
   alias?: Maybe<Scalars['String']['output']>;
-  pubkey: Scalars['String']['output'];
+  pubkey?: Maybe<Scalars['String']['output']>;
+  sockets: Array<Scalars['String']['output']>;
 };
 
 export enum TapTransactionType {

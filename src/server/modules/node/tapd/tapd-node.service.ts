@@ -91,6 +91,16 @@ export class TapdNodeService {
     id: string;
     groupBy?: 'groupKey' | 'assetId';
   }): Promise<ListBalancesResponse> {
+    const account = this.getAccount(opts.id);
+    const provider = this.providerRegistry.getProvider(account.type);
+    if (!provider.getCapabilities().has(Capability.TAPROOT_ASSETS)) {
+      return {
+        assetBalances: {},
+        assetGroupBalances: {},
+        unconfirmedTransfers: '',
+      };
+    }
+
     const tapd = this.getTapd(opts.id);
     const { groupBy = 'groupKey' } = opts;
 
@@ -342,7 +352,12 @@ export class TapdNodeService {
         : { assetId: Buffer.from(opts.assetId || '', 'hex') }),
       assetAmount: String(opts.assetAmount),
       ...(opts.peerPubkey
-        ? { peerPubkey: Buffer.from(opts.peerPubkey, 'hex') }
+        ? {
+            peerPubkey: Buffer.from(opts.peerPubkey, 'hex'),
+            priceOracleMetadata: JSON.stringify({
+              swapNodePubkey: opts.peerPubkey,
+            }),
+          }
         : {}),
       invoiceRequest: {
         ...(opts.memo ? { memo: opts.memo } : {}),
@@ -352,6 +367,92 @@ export class TapdNodeService {
   }
 
   // ── Asset Channels ──
+
+  async getAssetChannelBalances(opts: {
+    id: string;
+    peerPubkey?: string;
+  }): Promise<
+    {
+      channelPoint: string;
+      partnerPublicKey: string;
+      assetId: string;
+      groupKey: string;
+      localBalance: string;
+      remoteBalance: string;
+      capacity: string;
+    }[]
+  > {
+    const account = this.getAccount(opts.id);
+    const provider = this.providerRegistry.getProvider(account.type);
+    const capabilities = provider.getCapabilities();
+
+    if (!capabilities.has(Capability.TAPROOT_ASSETS)) {
+      return [];
+    }
+
+    const connection = account.connection;
+    const lnd = connection.lnd ?? connection;
+
+    return new Promise((resolve, reject) => {
+      lnd.default.listChannels(
+        {
+          peer: opts.peerPubkey
+            ? Buffer.from(opts.peerPubkey, 'hex')
+            : undefined,
+        },
+        (
+          err: Error | null,
+          res: {
+            channels: {
+              channel_point: string;
+              remote_pubkey: string;
+              custom_channel_data: Buffer;
+            }[];
+          }
+        ) => {
+          if (err) return reject(err);
+
+          const results: {
+            channelPoint: string;
+            partnerPublicKey: string;
+            assetId: string;
+            groupKey: string;
+            localBalance: string;
+            remoteBalance: string;
+            capacity: string;
+          }[] = [];
+
+          for (const ch of res.channels || []) {
+            if (!ch.custom_channel_data?.length) continue;
+
+            try {
+              const data = JSON.parse(ch.custom_channel_data.toString('utf8'));
+              const fundingAsset = data.funding_assets?.[0];
+              const assetId = fundingAsset?.asset_genesis?.asset_id || '';
+              if (!assetId) continue;
+
+              const groupKey =
+                fundingAsset?.asset_group?.tweaked_group_key || '';
+
+              results.push({
+                channelPoint: ch.channel_point,
+                partnerPublicKey: ch.remote_pubkey,
+                assetId,
+                groupKey,
+                localBalance: String(data.local_balance ?? 0),
+                remoteBalance: String(data.remote_balance ?? 0),
+                capacity: String(data.capacity ?? 0),
+              });
+            } catch {
+              // Not JSON or invalid — skip
+            }
+          }
+
+          resolve(results);
+        }
+      );
+    });
+  }
 
   async fundAssetChannel(opts: {
     id: string;

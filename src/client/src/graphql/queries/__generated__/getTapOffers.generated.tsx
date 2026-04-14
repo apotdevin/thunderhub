@@ -4,13 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetTapOffersQueryVariables = Types.Exact<{
-  assetId: Types.Scalars['String']['input'];
-  transactionType: Types.TapTransactionType;
-  sortBy?: Types.InputMaybe<Types.TapOfferSortBy>;
-  sortDir?: Types.InputMaybe<Types.TapOfferSortDir>;
-  minAmount?: Types.InputMaybe<Types.Scalars['String']['input']>;
-  limit?: Types.InputMaybe<Types.Scalars['Int']['input']>;
-  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  input: Types.GetTapOffersInput;
 }>;
 
 export type GetTapOffersQuery = {
@@ -21,19 +15,21 @@ export type GetTapOffersQuery = {
     list: Array<{
       __typename?: 'TapTradeOffer';
       id: string;
+      magmaOfferId: string;
       node: {
         __typename?: 'TapTradeOfferNode';
         alias?: string | null;
-        pubkey: string;
+        pubkey?: string | null;
+        sockets: Array<string>;
       };
       rate: {
         __typename?: 'TapTradeOfferAmount';
-        displayAmount?: string | null;
+        displayAmount: string;
         fullAmount: string;
       };
       available: {
         __typename?: 'TapTradeOfferAmount';
-        displayAmount?: string | null;
+        displayAmount: string;
         fullAmount: string;
       };
     }>;
@@ -41,29 +37,15 @@ export type GetTapOffersQuery = {
 };
 
 export const GetTapOffersDocument = gql`
-  query GetTapOffers(
-    $assetId: String!
-    $transactionType: TapTransactionType!
-    $sortBy: TapOfferSortBy
-    $sortDir: TapOfferSortDir
-    $minAmount: String
-    $limit: Int
-    $offset: Int
-  ) {
-    getTapOffers(
-      assetId: $assetId
-      transactionType: $transactionType
-      sortBy: $sortBy
-      sortDir: $sortDir
-      minAmount: $minAmount
-      limit: $limit
-      offset: $offset
-    ) {
+  query GetTapOffers($input: GetTapOffersInput!) {
+    getTapOffers(input: $input) {
       list {
         id
+        magmaOfferId
         node {
           alias
           pubkey
+          sockets
         }
         rate {
           displayAmount
@@ -91,13 +73,7 @@ export const GetTapOffersDocument = gql`
  * @example
  * const { data, loading, error } = useGetTapOffersQuery({
  *   variables: {
- *      assetId: // value for 'assetId'
- *      transactionType: // value for 'transactionType'
- *      sortBy: // value for 'sortBy'
- *      sortDir: // value for 'sortDir'
- *      minAmount: // value for 'minAmount'
- *      limit: // value for 'limit'
- *      offset: // value for 'offset'
+ *      input: // value for 'input'
  *   },
  * });
  */
