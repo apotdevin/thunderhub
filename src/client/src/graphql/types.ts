@@ -525,6 +525,48 @@ export type LndInput = {
   socket: Scalars['String']['input'];
 };
 
+export type MagmaOrder = {
+  __typename?: 'MagmaOrder';
+  amount: MagmaOrderAmount;
+  channelId?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  destination: MagmaOrderParty;
+  fees: MagmaOrderFees;
+  id: Scalars['String']['output'];
+  paymentStatus?: Maybe<Scalars['String']['output']>;
+  source: MagmaOrderParty;
+  status: Scalars['String']['output'];
+  timeout?: Maybe<Scalars['Int']['output']>;
+};
+
+export type MagmaOrderAmount = {
+  __typename?: 'MagmaOrderAmount';
+  sats?: Maybe<Scalars['String']['output']>;
+};
+
+export type MagmaOrderFeeAmount = {
+  __typename?: 'MagmaOrderFeeAmount';
+  sats?: Maybe<Scalars['Int']['output']>;
+};
+
+export type MagmaOrderFees = {
+  __typename?: 'MagmaOrderFees';
+  buyer?: Maybe<MagmaOrderFeeAmount>;
+  seller?: Maybe<MagmaOrderFeeAmount>;
+};
+
+export type MagmaOrderParty = {
+  __typename?: 'MagmaOrderParty';
+  alias?: Maybe<Scalars['String']['output']>;
+  pubkey?: Maybe<Scalars['String']['output']>;
+};
+
+export type MagmaPendingOrders = {
+  __typename?: 'MagmaPendingOrders';
+  purchases: Array<MagmaOrder>;
+  sales: Array<MagmaOrder>;
+};
+
 export type MessageType = {
   __typename?: 'MessageType';
   message?: Maybe<Scalars['String']['output']>;
@@ -1068,6 +1110,7 @@ export type Query = {
   getPayments: GetPaymentsType;
   getPeers: Array<Peer>;
   getPendingChannels: Array<PendingChannel>;
+  getPendingMagmaOrders?: Maybe<MagmaPendingOrders>;
   getTapAssetChannelBalances: Array<TapAssetChannelBalance>;
   getTapAssets: TapAssetList;
   getTapBalances: TapBalances;

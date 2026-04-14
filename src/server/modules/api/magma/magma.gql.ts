@@ -52,6 +52,77 @@ export const createMagmaOrderMutation = gql`
   }
 `;
 
+export const getPendingOrdersQuery = gql`
+  query GetPendingOrders($page: PageInput) {
+    getUser {
+      market {
+        orders {
+          purchases(input: { action_needed: true }, page: $page) {
+            total
+            list {
+              id
+              created_at
+              status
+              payment_status
+              source {
+                pubkey
+                alias
+              }
+              destination {
+                pubkey
+                alias
+              }
+              amount {
+                sats
+              }
+              fees {
+                seller {
+                  sats
+                }
+                buyer {
+                  sats
+                }
+              }
+              timeout
+              channel_id
+            }
+          }
+          sales(input: { action_needed: true }, page: $page) {
+            total
+            list {
+              id
+              created_at
+              status
+              payment_status
+              source {
+                pubkey
+                alias
+              }
+              destination {
+                pubkey
+                alias
+              }
+              amount {
+                sats
+              }
+              fees {
+                seller {
+                  sats
+                }
+                buyer {
+                  sats
+                }
+              }
+              timeout
+              channel_id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const getSupportedAssetsQuery = gql`
   query GetSupportedAssets($input: SupportedAssetsInput) {
     public {

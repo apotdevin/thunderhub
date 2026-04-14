@@ -22,11 +22,16 @@ import {
   SetupTradePartnerInput,
   SetupTradePartnerResult,
   SetupTradePartnerAuto,
+  MagmaPendingOrders,
+  MagmaOrder,
+  AmbossOrderRaw,
+  AmbossOrderList,
 } from './magma.types';
 import {
   getOffersQuery,
   getSupportedAssetsQuery,
   createMagmaOrderMutation,
+  getPendingOrdersQuery,
 } from './magma.gql';
 
 /**
@@ -218,6 +223,65 @@ export class MagmaResolver {
         prices: a.prices ?? null,
       })),
       totalCount: assets.total_count,
+    };
+  }
+
+  // ── Pending Orders ──
+
+  @Query(() => MagmaPendingOrders, { nullable: true })
+  async getPendingMagmaOrders(
+    @CurrentUser() user: UserId
+  ): Promise<MagmaPendingOrders | null> {
+    const ambossAuth = await this.ambossTokenService.get(user);
+    if (!ambossAuth) return null;
+
+    const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
+
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
+      getUser: {
+        market: {
+          orders: {
+            purchases: AmbossOrderList;
+            sales: AmbossOrderList;
+          };
+        };
+      };
+    }>(
+      magmaUrl,
+      getPendingOrdersQuery,
+      { page: { offset: 0, limit: 50 } },
+      { authorization: `Bearer ${ambossAuth}` }
+    );
+
+    if (error || !data?.getUser?.market?.orders) {
+      if (error)
+        this.logger.error('Error fetching pending Magma orders', { error });
+      return null;
+    }
+
+    const mapOrder = (o: AmbossOrderRaw): MagmaOrder => ({
+      id: o.id,
+      createdAt: o.created_at,
+      status: o.status,
+      paymentStatus: o.payment_status,
+      source: { pubkey: o.source?.pubkey, alias: o.source?.alias },
+      destination: {
+        pubkey: o.destination?.pubkey,
+        alias: o.destination?.alias,
+      },
+      amount: { sats: o.amount?.sats },
+      fees: {
+        seller: o.fees?.seller ? { sats: o.fees.seller.sats } : undefined,
+        buyer: o.fees?.buyer ? { sats: o.fees.buyer.sats } : undefined,
+      },
+      timeout: o.timeout,
+      channelId: o.channel_id,
+    });
+
+    const { purchases, sales } = data.getUser.market.orders;
+    return {
+      purchases: purchases.list.map(mapOrder),
+      sales: sales.list.map(mapOrder),
     };
   }
 
