@@ -279,7 +279,7 @@ export const TradingOffers: FC = () => {
       )}
 
       {/* Amboss login prompt */}
-      {!ambossUser && !ambossLoading && (
+      {!ambossUser && !ambossLoading && allSupported.length === 0 && (
         <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 px-4 py-3">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Info size={16} />

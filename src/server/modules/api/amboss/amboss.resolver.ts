@@ -303,20 +303,8 @@ export class AmbossResolver {
   }
 
   @Mutation(() => Boolean)
-  async logoutAmboss(@Context() { res }: ContextType) {
-    const useHttps = this.configService.get('useHttps');
-
-    res.setHeader(
-      'Set-Cookie',
-      cookie.serialize(appConstants.ambossCookieName, '', {
-        maxAge: 0,
-        httpOnly: true,
-        sameSite: true,
-        path: '/',
-        secure: useHttps,
-      })
-    );
-
+  async logoutAmboss(@CurrentUser() user: UserId) {
+    await this.ambossTokenService.clear(user);
     return true;
   }
 
