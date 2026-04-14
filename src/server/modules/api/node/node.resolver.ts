@@ -11,6 +11,7 @@ import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import {
   Balances,
+  CurrentNode,
   LightningBalance,
   Node,
   NodeCapabilities,
@@ -24,6 +25,7 @@ import { toWithError } from 'src/server/utils/async';
 import { ContextType } from 'src/server/app.module';
 import { ConfigService } from '@nestjs/config';
 import { FetchService } from '../../fetch/fetch.service';
+import { AccountsService } from '../../accounts/accounts.service';
 
 @Resolver(LightningBalance)
 export class LightningBalanceResolver {
@@ -130,8 +132,18 @@ export class NodeInfoResolver {
 export class NodeResolver {
   constructor(
     private nodeService: NodeService,
+    private accountsService: AccountsService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
+
+  @Query(() => CurrentNode, { name: 'node' })
+  async node(@CurrentUser() { id }: UserId): Promise<CurrentNode> {
+    const node = await this.accountsService.getNodeDetails(id);
+    if (!node) {
+      throw new Error('Account not found');
+    }
+    return node;
+  }
 
   @Query(() => Balances)
   async getNodeBalances() {

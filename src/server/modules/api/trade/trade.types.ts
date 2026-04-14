@@ -65,6 +65,9 @@ export class ExecuteTradeInput {
 
   @Field({ nullable: true })
   rfqId?: string;
+
+  @Field({ nullable: true })
+  expiryEpoch?: string;
 }
 
 @ObjectType()

@@ -1,6 +1,22 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 @InputType()
+export class BakeSuperMacaroonInput {
+  @Field({ description: 'LITD REST endpoint (e.g. https://host:8443)' })
+  rest_host: string;
+  @Field({ defaultValue: false })
+  read_only: boolean;
+}
+
+@ObjectType()
+export class SuperMacaroon {
+  @Field()
+  base: string;
+  @Field()
+  hex: string;
+}
+
+@InputType()
 export class NetworkInfoInput {
   @Field()
   is_ok_to_adjust_peers: boolean;

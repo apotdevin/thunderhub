@@ -226,6 +226,51 @@ export class AccountsService implements OnModuleInit {
     }
   }
 
+  async getNodeDetails(id: string): Promise<{
+    id: string;
+    socket: string;
+    created_at?: string;
+    network?: string;
+  } | null> {
+    const account = this.getAccount(id);
+    if (!account) return null;
+
+    const base = {
+      id: account.hash,
+      socket: account.socket,
+    };
+
+    if (!this.drizzle) return base;
+
+    const { db, schema } = this.drizzle;
+
+    try {
+      const rows = await (db as any)
+        .select({
+          id: schema.nodes.id,
+          network: schema.nodes.network,
+          created_at: schema.nodes.created_at,
+          socket: schema.nodes.socket,
+        })
+        .from(schema.nodes)
+        .where(eq(schema.nodes.id, account.hash))
+        .limit(1);
+
+      if (rows[0]) {
+        return {
+          id: rows[0].id,
+          socket: rows[0].socket,
+          created_at: rows[0].created_at,
+          network: rows[0].network,
+        };
+      }
+    } catch {
+      // DB not available or node not in DB (YAML account)
+    }
+
+    return base;
+  }
+
   updateAccountSecret(id: string, secret: string): void {
     if (this.accounts?.[id]) {
       this.accounts[id].twofaSecret = secret;

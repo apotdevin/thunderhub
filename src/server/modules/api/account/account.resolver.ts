@@ -265,7 +265,13 @@ export class UserQueriesResolver {
   async get_nodes(@CurrentUser() user: UserId): Promise<UserNode[]> {
     const dbUserId = user.userId ?? user.id;
     const nodes = await this.userService.getUserNodeSlugs(dbUserId);
-    return nodes.map(n => ({ id: n.slug, slug: n.slug, name: n.name }));
+    return nodes.map(n => ({
+      id: n.slug,
+      slug: n.slug,
+      name: n.name,
+      network: n.network,
+      type: n.type,
+    }));
   }
 }
 

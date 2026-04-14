@@ -7,6 +7,8 @@ export const GET_USER_NODES = gql`
         id
         slug
         name
+        network
+        type
       }
     }
   }

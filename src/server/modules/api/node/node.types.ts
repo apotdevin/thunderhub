@@ -51,6 +51,18 @@ export class NodeInfo {
 }
 
 @ObjectType()
+export class CurrentNode {
+  @Field()
+  id: string;
+  @Field({ nullable: true })
+  created_at?: string;
+  @Field({ nullable: true })
+  network?: string;
+  @Field()
+  socket: string;
+}
+
+@ObjectType()
 export class NodeCapabilities {
   @Field(() => [String])
   capabilities: string[];

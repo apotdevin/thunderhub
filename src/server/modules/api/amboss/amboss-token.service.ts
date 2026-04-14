@@ -134,6 +134,11 @@ export class AmbossTokenService {
     const { db, schema } = this.drizzle;
 
     const key = this.configService.get<string>('database.encryptionKey');
+    if (!key) {
+      this.logger.warn(
+        'No database.encryptionKey configured — Amboss JWT stored in plaintext'
+      );
+    }
     const value = key ? encryptValue(token, key) : token;
 
     await (db as any)

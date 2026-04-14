@@ -58,6 +58,45 @@ export const NodeSwitcher = () => {
   const currentNode = nodes.find(n => n.slug === nodeSlug);
   const currentName = currentNode?.name ?? accountData?.getAccount?.name ?? '';
 
+  const networkLabel = (network?: string | null) => {
+    if (!network) return 'Unknown';
+    const labels: Record<string, string> = {
+      btc: 'Mainnet',
+      mainnet: 'Mainnet',
+      btctestnet: 'Testnet',
+      btctestnet4: 'Testnet4',
+      btcsignet: 'Signet',
+      btcregtest: 'Regtest',
+    };
+    return labels[network] ?? network;
+  };
+
+  const groupedByNetwork = nodes.reduce<Record<string, typeof nodes>>(
+    (acc, node) => {
+      const key = networkLabel(node.network);
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(node);
+      return acc;
+    },
+    {}
+  );
+
+  const networkOrder = [
+    'Mainnet',
+    'Signet',
+    'Testnet',
+    'Testnet4',
+    'Regtest',
+    'Unknown',
+  ];
+  const sortedNetworks = Object.keys(groupedByNetwork).sort(
+    (a, b) =>
+      (networkOrder.indexOf(a) === -1 ? 99 : networkOrder.indexOf(a)) -
+      (networkOrder.indexOf(b) === -1 ? 99 : networkOrder.indexOf(b))
+  );
+
+  const hasMultipleNetworks = sortedNetworks.length > 1;
+
   const handleSwitch = (slug: string) => {
     setOpen(false);
     if (slug !== nodeSlug) {
@@ -101,6 +140,23 @@ export const NodeSwitcher = () => {
           >
             <Server size={12} className="shrink-0" />
             <span className="max-w-[120px] truncate">{currentName}</span>
+            {currentNode?.type && (
+              <span
+                className={cn(
+                  'shrink-0 rounded px-1 py-0.5 text-[9px] font-medium uppercase',
+                  currentNode.type === 'litd'
+                    ? 'bg-violet-500/15 text-violet-500'
+                    : 'bg-blue-500/15 text-blue-500'
+                )}
+              >
+                {currentNode.type}
+              </span>
+            )}
+            {currentNode?.network && (
+              <span className="shrink-0 text-[9px] uppercase text-muted-foreground/60">
+                {networkLabel(currentNode.network)}
+              </span>
+            )}
             <ChevronsUpDown size={12} className="shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -119,46 +175,70 @@ export const NodeSwitcher = () => {
               </div>
             ) : (
               <div className="flex flex-col gap-0.5">
-                {nodes.map(node => (
-                  <div key={node.slug} className="group flex items-center">
-                    <button
-                      onClick={() => handleSwitch(node.slug)}
-                      className={cn(
-                        'flex items-center gap-2 flex-1 min-w-0 rounded-sm px-2 py-1.5 text-left text-xs transition-colors',
-                        node.slug === nodeSlug
-                          ? 'bg-primary/10 text-primary font-medium'
-                          : 'text-foreground hover:bg-accent'
-                      )}
-                    >
-                      <Server size={12} className="shrink-0" />
-                      <span className="flex-1 truncate">{node.name}</span>
-                      {node.slug === nodeSlug && (
-                        <Check size={12} className="shrink-0" />
-                      )}
-                    </button>
-                    <div className="flex shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        onClick={e => {
-                          e.stopPropagation();
-                          setOpen(false);
-                          setEditNode({ slug: node.slug, name: node.name });
-                        }}
-                        className="p-1 rounded-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                        title="Edit node"
-                      >
-                        <Pencil size={10} />
-                      </button>
-                      <button
-                        onClick={e => {
-                          e.stopPropagation();
-                          setConfirmDelete(node.slug);
-                        }}
-                        className="p-1 rounded-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                        title="Delete node"
-                      >
-                        <Trash2 size={10} />
-                      </button>
-                    </div>
+                {sortedNetworks.map(network => (
+                  <div key={network}>
+                    {hasMultipleNetworks && (
+                      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-2 pt-2 pb-0.5">
+                        {network}
+                      </div>
+                    )}
+                    {groupedByNetwork[network].map(node => (
+                      <div key={node.slug} className="group flex items-center">
+                        <button
+                          onClick={() => handleSwitch(node.slug)}
+                          className={cn(
+                            'flex items-center gap-2 flex-1 min-w-0 rounded-sm px-2 py-1.5 text-left text-xs transition-colors',
+                            node.slug === nodeSlug
+                              ? 'bg-primary/10 text-primary font-medium'
+                              : 'text-foreground hover:bg-accent'
+                          )}
+                        >
+                          <Server size={12} className="shrink-0" />
+                          <span className="flex-1 truncate">{node.name}</span>
+                          {node.type && (
+                            <span
+                              className={cn(
+                                'shrink-0 rounded px-1 py-0.5 text-[9px] font-medium uppercase',
+                                node.type === 'litd'
+                                  ? 'bg-teal-500/15 text-teal-500'
+                                  : 'bg-blue-500/15 text-blue-500'
+                              )}
+                            >
+                              {node.type}
+                            </span>
+                          )}
+                          {node.slug === nodeSlug && (
+                            <Check size={12} className="shrink-0" />
+                          )}
+                        </button>
+                        <div className="flex shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={e => {
+                              e.stopPropagation();
+                              setOpen(false);
+                              setEditNode({
+                                slug: node.slug,
+                                name: node.name,
+                              });
+                            }}
+                            className="p-1 rounded-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                            title="Edit node"
+                          >
+                            <Pencil size={10} />
+                          </button>
+                          <button
+                            onClick={e => {
+                              e.stopPropagation();
+                              setConfirmDelete(node.slug);
+                            }}
+                            className="p-1 rounded-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                            title="Delete node"
+                          >
+                            <Trash2 size={10} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
@@ -168,7 +248,12 @@ export const NodeSwitcher = () => {
           {confirmDelete && (
             <div className="border-t border-border/60 p-2">
               <div className="text-xs text-destructive font-medium px-2 py-1">
-                Delete this node?
+                Delete{' '}
+                <span className="font-semibold">
+                  {nodes.find(n => n.slug === confirmDelete)?.name ??
+                    confirmDelete}
+                </span>
+                ?
               </div>
               <div className="flex gap-1 px-2 pt-1">
                 <Button

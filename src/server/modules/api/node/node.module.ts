@@ -9,9 +9,10 @@ import {
   OnChainBalanceResolver,
 } from './node.resolver';
 import { FetchModule } from '../../fetch/fetch.module';
+import { AccountsModule } from '../../accounts/accounts.module';
 
 @Module({
-  imports: [NodeServiceModule, FetchModule],
+  imports: [NodeServiceModule, FetchModule, AccountsModule],
   providers: [
     NodeResolver,
     BalancesResolver,

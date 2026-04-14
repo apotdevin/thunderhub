@@ -37,6 +37,10 @@ import { ProviderRegistryService } from '../provider-registry.service';
 import { Capability } from '../lightning.types';
 import { isTaprootAssetsProvider } from './taproot-assets.types';
 
+/** Timeout for sendPayment RPC before the stream-level guard kicks in. */
+const SEND_PAYMENT_TIMEOUT_SECONDS = 60;
+const FEE_LIMIT_MAX = 100;
+
 @Injectable()
 export class TapdNodeService {
   constructor(
@@ -514,6 +518,32 @@ export class TapdNodeService {
     };
   }
 
+  async queryAcceptedSellQuote(opts: { id: string; rfqId: string }): Promise<{
+    bidAssetRate: { coefficient: string; scale: number } | null;
+    assetAmount: string;
+    minTransportableMsat: string;
+    expiry: string;
+  }> {
+    const tapd = this.getTapd(opts.id);
+    const response = await tapd.rfq.queryPeerAcceptedQuotes();
+
+    const rfqIdBuf = Buffer.from(opts.rfqId, 'hex');
+    const quote = response.sellQuotes.find(q =>
+      Buffer.from(q.id).equals(rfqIdBuf)
+    );
+
+    if (!quote) {
+      throw new Error(`No accepted sell quote found for rfqId: ${opts.rfqId}`);
+    }
+
+    return {
+      bidAssetRate: quote.bidAssetRate,
+      assetAmount: quote.assetAmount,
+      minTransportableMsat: quote.minTransportableMsat,
+      expiry: quote.expiry,
+    };
+  }
+
   async sendAssetPayment(opts: {
     id: string;
     assetId?: string;
@@ -539,9 +569,11 @@ export class TapdNodeService {
       }),
       paymentRequest: {
         paymentRequest: opts.paymentRequest,
+        // Required: asset sale is a self-payment loop — assets flow out via the
+        // asset channel while sats return via the BTC channel on the same node.
         allowSelfPayment: true,
-        feeLimitSat: '100',
-        timeoutSeconds: 60,
+        feeLimitSat: FEE_LIMIT_MAX,
+        timeoutSeconds: SEND_PAYMENT_TIMEOUT_SECONDS,
       },
     });
 
