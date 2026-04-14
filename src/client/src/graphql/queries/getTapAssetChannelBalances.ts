@@ -6,6 +6,7 @@ export const GET_TAP_ASSET_CHANNEL_BALANCES = gql`
       channelPoint
       partnerPublicKey
       assetId
+      groupKey
       localBalance
       remoteBalance
       capacity

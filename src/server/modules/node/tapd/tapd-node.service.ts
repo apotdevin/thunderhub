@@ -376,6 +376,7 @@ export class TapdNodeService {
       channelPoint: string;
       partnerPublicKey: string;
       assetId: string;
+      groupKey: string;
       localBalance: string;
       remoteBalance: string;
       capacity: string;
@@ -415,6 +416,7 @@ export class TapdNodeService {
             channelPoint: string;
             partnerPublicKey: string;
             assetId: string;
+            groupKey: string;
             localBalance: string;
             remoteBalance: string;
             capacity: string;
@@ -425,14 +427,18 @@ export class TapdNodeService {
 
             try {
               const data = JSON.parse(ch.custom_channel_data.toString('utf8'));
-              const assetId =
-                data.funding_assets?.[0]?.asset_genesis?.asset_id || '';
+              const fundingAsset = data.funding_assets?.[0];
+              const assetId = fundingAsset?.asset_genesis?.asset_id || '';
               if (!assetId) continue;
+
+              const groupKey =
+                fundingAsset?.asset_group?.tweaked_group_key || '';
 
               results.push({
                 channelPoint: ch.channel_point,
                 partnerPublicKey: ch.remote_pubkey,
                 assetId,
+                groupKey,
                 localBalance: String(data.local_balance ?? 0),
                 remoteBalance: String(data.remote_balance ?? 0),
                 capacity: String(data.capacity ?? 0),

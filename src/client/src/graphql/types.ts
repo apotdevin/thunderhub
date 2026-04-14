@@ -1241,6 +1241,7 @@ export type TapAssetChannelBalance = {
   assetId: Scalars['String']['output'];
   capacity: Scalars['String']['output'];
   channelPoint: Scalars['String']['output'];
+  groupKey?: Maybe<Scalars['String']['output']>;
   localBalance: Scalars['String']['output'];
   partnerPublicKey: Scalars['String']['output'];
   remoteBalance: Scalars['String']['output'];
@@ -1384,8 +1385,8 @@ export type TapTradeOffer = {
 
 export type TapTradeOfferAmount = {
   __typename?: 'TapTradeOfferAmount';
-  displayAmount?: Maybe<Scalars['String']['output']>;
-  fullAmount?: Maybe<Scalars['String']['output']>;
+  displayAmount: Scalars['String']['output'];
+  fullAmount: Scalars['String']['output'];
 };
 
 export type TapTradeOfferList = {

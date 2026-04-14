@@ -365,6 +365,9 @@ export class TapAssetChannelBalance {
   @Field()
   assetId: string;
 
+  @Field({ nullable: true })
+  groupKey?: string;
+
   @Field()
   localBalance: string;
 

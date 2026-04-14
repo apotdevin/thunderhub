@@ -14,6 +14,7 @@ export type GetTapAssetChannelBalancesQuery = {
     channelPoint: string;
     partnerPublicKey: string;
     assetId: string;
+    groupKey?: string | null;
     localBalance: string;
     remoteBalance: string;
     capacity: string;
@@ -26,6 +27,7 @@ export const GetTapAssetChannelBalancesDocument = gql`
       channelPoint
       partnerPublicKey
       assetId
+      groupKey
       localBalance
       remoteBalance
       capacity

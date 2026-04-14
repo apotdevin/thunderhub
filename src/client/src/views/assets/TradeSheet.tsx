@@ -122,9 +122,11 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const allAssetChannels = assetChannelsData?.getTapAssetChannelBalances || [];
   // When tapdAssetId is empty (grouped asset), all returned channels belong to
   // the correct peer — the query already scopes by peerPubkey.
-  const assetChannels = tapdAssetId
-    ? allAssetChannels.filter(ac => ac.assetId === tapdAssetId)
-    : allAssetChannels;
+  const assetChannels = tapdGroupKey
+    ? allAssetChannels.filter(ac => ac.groupKey === tapdGroupKey)
+    : tapdAssetId
+      ? allAssetChannels.filter(ac => ac.assetId === tapdAssetId)
+      : allAssetChannels;
 
   const assetChannelPoints = new Set(
     allAssetChannels.map(ac => ac.channelPoint)

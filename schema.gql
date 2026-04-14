@@ -864,6 +864,7 @@ type TapAssetChannelBalance {
   assetId: String!
   capacity: String!
   channelPoint: String!
+  groupKey: String
   localBalance: String!
   partnerPublicKey: String!
   remoteBalance: String!
