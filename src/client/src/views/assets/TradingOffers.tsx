@@ -14,12 +14,8 @@ import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
 import { useGetChannelsWithPeersQuery } from '../../graphql/queries/__generated__/getChannels.generated';
 import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
-import { useLoginAmbossMutation } from '../../graphql/mutations/__generated__/loginAmboss.generated';
-import { useLogoutAmbossMutation } from '../../graphql/mutations/__generated__/logoutAmboss.generated';
-import { useAmbossUser } from '../../hooks/UseAmbossUser';
 import { getErrorContent } from '../../utils/error';
 import { cn } from '../../lib/utils';
-import { Button } from '@/components/ui/button';
 import {
   TapBalanceGroupBy,
   TapTransactionType,
@@ -49,20 +45,6 @@ export const TradingOffers: FC = () => {
     const timer = setTimeout(() => setMinAmount(minAmountInput), 300);
     return () => clearTimeout(timer);
   }, [minAmountInput]);
-
-  const { user: ambossUser, loading: ambossLoading } = useAmbossUser();
-
-  const [loginAmboss, { loading: loginLoading }] = useLoginAmbossMutation({
-    onCompleted: () => toast.success('Logged in to Amboss'),
-    onError: () => toast.error('Error logging in to Amboss'),
-    refetchQueries: ['GetAmbossUser', 'GetTapSupportedAssets', 'GetTapOffers'],
-  });
-
-  const [logoutAmboss, { loading: logoutLoading }] = useLogoutAmbossMutation({
-    onCompleted: () => toast.success('Logged out of Amboss'),
-    onError: () => toast.error('Error logging out of Amboss'),
-    refetchQueries: ['GetAmbossUser', 'GetTapSupportedAssets'],
-  });
 
   const { data: supportedData, loading: assetsLoading } =
     useGetTapSupportedAssetsQuery({
@@ -230,21 +212,14 @@ export const TradingOffers: FC = () => {
           {(
             [
               {
-                label: 'Login',
-                done: !!ambossUser || allSupported.length > 0,
-                active: !ambossUser && allSupported.length === 0,
-              },
-              {
                 label: 'Select asset',
                 done: !!selectedAsset,
-                active:
-                  (!!ambossUser || allSupported.length > 0) && !selectedAsset,
+                active: !selectedAsset,
               },
               {
                 label: 'Select offer',
                 done: false,
-                active:
-                  (!!ambossUser || allSupported.length > 0) && !!selectedAsset,
+                active: !!selectedAsset,
               },
               { label: 'Trade', done: false, active: false },
             ] as const
@@ -275,41 +250,6 @@ export const TradingOffers: FC = () => {
               </span>
             </Fragment>
           ))}
-        </div>
-      )}
-
-      {/* Amboss login prompt */}
-      {!ambossUser && !ambossLoading && allSupported.length === 0 && (
-        <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 px-4 py-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Info size={16} />
-            Log in with Amboss to access trading offers
-          </div>
-          <Button
-            size="sm"
-            onClick={() => loginAmboss()}
-            disabled={loginLoading}
-          >
-            {loginLoading ? 'Logging in...' : 'Login with Amboss'}
-          </Button>
-        </div>
-      )}
-
-      {/* Amboss logout */}
-      {(!!ambossUser || allSupported.length > 0) && (
-        <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 px-4 py-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Info size={16} />
-            Connected to Amboss
-          </div>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => logoutAmboss()}
-            disabled={logoutLoading}
-          >
-            {logoutLoading ? 'Logging out...' : 'Logout'}
-          </Button>
         </div>
       )}
 

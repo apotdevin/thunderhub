@@ -303,12 +303,6 @@ export class AmbossResolver {
   }
 
   @Mutation(() => Boolean)
-  async logoutAmboss(@CurrentUser() user: UserId) {
-    await this.ambossTokenService.clear(user);
-    return true;
-  }
-
-  @Mutation(() => Boolean)
   async pushBackup(@CurrentUser() user: UserId) {
     const backups = await this.nodeService.getBackups(user.id);
 
