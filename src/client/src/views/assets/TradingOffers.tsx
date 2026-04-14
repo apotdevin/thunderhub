@@ -375,22 +375,24 @@ export const TradingOffers: FC = () => {
       )}
 
       {/* Trade amount input */}
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <input
-            type="text"
-            placeholder="Min trade amount"
-            value={minAmountInput}
-            onChange={e => setMinAmountInput(e.target.value)}
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-20"
-          />
-          {selectedSymbol && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-              {selectedSymbol}
-            </span>
-          )}
+      {selectedAsset && (
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <input
+              type="text"
+              placeholder="Minimum trade amount"
+              value={minAmountInput}
+              onChange={e => setMinAmountInput(e.target.value)}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-20"
+            />
+            {selectedSymbol && (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+                {selectedSymbol}
+              </span>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* No asset selected */}
       {!selectedAsset && (
