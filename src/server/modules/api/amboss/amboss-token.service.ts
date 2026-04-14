@@ -61,6 +61,15 @@ export class AmbossTokenService {
     this.yamlTokens.set(user.id, token);
   }
 
+  /** Removes any stored token, effectively logging the node out of Amboss. */
+  async clear(user: UserId): Promise<void> {
+    if (user.authType === AuthType.USER) {
+      await this.clearDbToken(user.id);
+      return;
+    }
+    this.yamlTokens.delete(user.id);
+  }
+
   private async readStored(user: UserId): Promise<string | null> {
     if (user.authType === AuthType.USER) {
       return this.readDbToken(user.id);
@@ -108,6 +117,16 @@ export class AmbossTokenService {
       });
       return null;
     }
+  }
+
+  private async clearDbToken(nodeId: string): Promise<void> {
+    if (!this.drizzle) return;
+    const { db, schema } = this.drizzle;
+
+    await (db as any)
+      .update(schema.nodes)
+      .set({ encrypted_amboss_jwt: null })
+      .where(eq(schema.nodes.id, nodeId));
   }
 
   private async writeDbToken(nodeId: string, token: string): Promise<void> {

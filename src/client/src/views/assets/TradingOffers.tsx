@@ -1,16 +1,21 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, Fragment, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Loader2, Info, ArrowUpDown, Zap } from 'lucide-react';
+import {
+  Loader2,
+  Info,
+  ArrowUpDown,
+  Zap,
+  CheckCircle2,
+  Circle,
+  ChevronRight,
+} from 'lucide-react';
 import { useGetTapOffersQuery } from '../../graphql/queries/__generated__/getTapOffers.generated';
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
 import { useGetChannelsWithPeersQuery } from '../../graphql/queries/__generated__/getChannels.generated';
 import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
-import { useLoginAmbossMutation } from '../../graphql/mutations/__generated__/loginAmboss.generated';
-import { useAmbossUser } from '../../hooks/UseAmbossUser';
 import { getErrorContent } from '../../utils/error';
 import { cn } from '../../lib/utils';
-import { Button } from '@/components/ui/button';
 import {
   TapBalanceGroupBy,
   TapTransactionType,
@@ -18,6 +23,12 @@ import {
   TapOfferSortDir,
 } from '../../graphql/types';
 import { TradeSheet, Offer } from './TradeSheet';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export const TradingOffers: FC = () => {
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
@@ -34,14 +45,6 @@ export const TradingOffers: FC = () => {
     const timer = setTimeout(() => setMinAmount(minAmountInput), 300);
     return () => clearTimeout(timer);
   }, [minAmountInput]);
-
-  const { user: ambossUser, loading: ambossLoading } = useAmbossUser();
-
-  const [loginAmboss, { loading: loginLoading }] = useLoginAmbossMutation({
-    onCompleted: () => toast.success('Logged in to Amboss'),
-    onError: () => toast.error('Error logging in to Amboss'),
-    refetchQueries: ['GetAmbossUser', 'GetTapSupportedAssets', 'GetTapOffers'],
-  });
 
   const { data: supportedData, loading: assetsLoading } =
     useGetTapSupportedAssetsQuery({
@@ -203,20 +206,50 @@ export const TradingOffers: FC = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Amboss login prompt */}
-      {!ambossUser && !ambossLoading && (
-        <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 px-4 py-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Info size={16} />
-            Log in with Amboss to access trading offers
-          </div>
-          <Button
-            size="sm"
-            onClick={() => loginAmboss()}
-            disabled={loginLoading}
-          >
-            {loginLoading ? 'Logging in...' : 'Login with Amboss'}
-          </Button>
+      {/* Step guide */}
+      {!selectedOffer && (
+        <div className="flex items-center gap-1.5 text-xs flex-wrap">
+          {(
+            [
+              {
+                label: 'Select asset',
+                done: !!selectedAsset,
+                active: !selectedAsset,
+              },
+              {
+                label: 'Select offer',
+                done: false,
+                active: !!selectedAsset,
+              },
+              { label: 'Trade', done: false, active: false },
+            ] as const
+          ).map((s, i) => (
+            <Fragment key={s.label}>
+              {i > 0 && (
+                <ChevronRight
+                  size={10}
+                  className="text-muted-foreground/30 shrink-0"
+                />
+              )}
+              <span
+                className={cn(
+                  'flex items-center gap-1',
+                  s.done
+                    ? 'text-muted-foreground/50'
+                    : s.active
+                      ? 'text-foreground font-medium'
+                      : 'text-muted-foreground/30'
+                )}
+              >
+                {s.done ? (
+                  <CheckCircle2 size={11} className="text-green-500 shrink-0" />
+                ) : (
+                  <Circle size={11} className="shrink-0" />
+                )}
+                {s.label}
+              </span>
+            </Fragment>
+          ))}
         </div>
       )}
 
@@ -307,7 +340,19 @@ export const TradingOffers: FC = () => {
                 <span className="font-mono text-xs">
                   {p.alias || p.pubkey.slice(0, 16)}
                 </span>
-                <span className="text-xs text-green-500">Ready to trade</span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="text-xs text-green-500 cursor-default">
+                        Ready to trade
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent side="left">
+                      You already have both a BTC and an asset channel with this
+                      peer — trades execute immediately without channel setup.
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </button>
             ))}
           </div>
@@ -363,7 +408,8 @@ export const TradingOffers: FC = () => {
         tradingPartners.length === 0 && (
           <div className="flex items-center justify-center p-8 text-muted-foreground">
             <Info className="mr-2" size={16} />
-            No offers available
+            No offers found for this asset. Try adjusting filters or check back
+            later.
           </div>
         )}
 
@@ -390,6 +436,7 @@ export const TradingOffers: FC = () => {
                   Available
                   <SortIcon field={TapOfferSortBy.Available} />
                 </th>
+                <th className="py-3 px-3 w-8" />
               </tr>
             </thead>
             <tbody>
@@ -416,6 +463,9 @@ export const TradingOffers: FC = () => {
                         {selectedSymbol}
                       </span>
                     )}
+                  </td>
+                  <td className="py-3 px-3 text-muted-foreground/50">
+                    <ChevronRight size={14} />
                   </td>
                 </tr>
               ))}
