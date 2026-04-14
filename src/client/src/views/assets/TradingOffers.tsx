@@ -69,14 +69,23 @@ export const TradingOffers: FC = () => {
     balances.filter(b => !b.groupKey && b.assetId).map(b => b.assetId!)
   );
 
-  // Build asset channel data for trading partner detection
-  const assetChannelsByAssetId = useMemo(() => {
-    const map = new Map<string, Set<string>>();
+  // Build asset channel indexes for trading partner detection
+  const { assetChannelsByAssetId, assetChannelsByGroupKey } = useMemo(() => {
+    const byAssetId = new Map<string, Set<string>>();
+    const byGroupKey = new Map<string, Set<string>>();
     for (const ac of allAssetChannelsData?.getTapAssetChannelBalances || []) {
-      if (!map.has(ac.assetId)) map.set(ac.assetId, new Set());
-      map.get(ac.assetId)?.add(ac.partnerPublicKey);
+      if (!byAssetId.has(ac.assetId)) byAssetId.set(ac.assetId, new Set());
+      byAssetId.get(ac.assetId)?.add(ac.partnerPublicKey);
+      if (ac.groupKey) {
+        if (!byGroupKey.has(ac.groupKey))
+          byGroupKey.set(ac.groupKey, new Set());
+        byGroupKey.get(ac.groupKey)?.add(ac.partnerPublicKey);
+      }
     }
-    return map;
+    return {
+      assetChannelsByAssetId: byAssetId,
+      assetChannelsByGroupKey: byGroupKey,
+    };
   }, [allAssetChannelsData]);
 
   const btcChannelPubkeys = useMemo(() => {
@@ -133,11 +142,15 @@ export const TradingOffers: FC = () => {
   const selectedSymbol = selectedAssetData?.symbol || '';
   const selectedPrecision = selectedAssetData?.precision ?? 0;
   const selectedTapdAssetId = selectedAssetData?.assetId || '';
+  const selectedTapdGroupKey = selectedAssetData?.groupKey || '';
 
   // Find trading partners: peers with both BTC + asset channels for selected asset
   const tradingPartners = useMemo(() => {
-    if (!selectedTapdAssetId) return [];
-    const assetPeers = assetChannelsByAssetId.get(selectedTapdAssetId);
+    const assetPeers = selectedTapdGroupKey
+      ? assetChannelsByGroupKey.get(selectedTapdGroupKey)
+      : selectedTapdAssetId
+        ? assetChannelsByAssetId.get(selectedTapdAssetId)
+        : undefined;
     if (!assetPeers) return [];
     return Array.from(assetPeers)
       .filter(pubkey => btcChannelPubkeys.has(pubkey))
@@ -147,7 +160,9 @@ export const TradingOffers: FC = () => {
       }));
   }, [
     selectedTapdAssetId,
+    selectedTapdGroupKey,
     assetChannelsByAssetId,
+    assetChannelsByGroupKey,
     btcChannelPubkeys,
     aliasMap,
   ]);

@@ -435,8 +435,7 @@ export class TapdNodeService {
               const assetId = fundingAsset?.asset_genesis?.asset_id || '';
               if (!assetId) continue;
 
-              const groupKey =
-                fundingAsset?.asset_group?.tweaked_group_key || '';
+              const groupKey = data.group_key;
 
               results.push({
                 channelPoint: ch.channel_point,
