@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type AccessIds {
-  ids: [Float!]!
+  ids: [String!]!
 }
 
 input AddNodeInput {

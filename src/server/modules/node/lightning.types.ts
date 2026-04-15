@@ -147,6 +147,16 @@ export type GrantAccessOptions = {
   is_ok_to_verify_messages?: boolean;
 };
 
+export type BakeMacaroonOptions = {
+  permissions: { entity: string; action: string }[];
+  root_key_id?: string;
+  allow_external_permissions?: boolean;
+};
+
+export type BakeMacaroonResult = {
+  macaroon: string;
+};
+
 export type DiffieHellmanComputeSecretOptions = {
   partner_public_key: string;
   key_family?: number;
@@ -247,6 +257,10 @@ export interface LightningProvider {
   // ── Access ──
   grantAccess(connection: any, permissions: GrantAccessOptions): Promise<any>;
   getAccessIds(connection: any): Promise<any>;
+  bakeMacaroon(
+    connection: any,
+    options: BakeMacaroonOptions
+  ): Promise<BakeMacaroonResult>;
 
   // ── Crypto ──
   diffieHellmanComputeSecret(

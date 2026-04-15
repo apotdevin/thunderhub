@@ -19,6 +19,8 @@ import {
   UpdateRoutingFeesOptions,
   VerifyBackupsOptions,
   GrantAccessOptions,
+  BakeMacaroonOptions,
+  BakeMacaroonResult,
   DiffieHellmanComputeSecretOptions,
 } from '../lightning.types';
 import { LndService } from '../lnd/lnd.service';
@@ -320,6 +322,13 @@ export class LitdService implements LightningProvider, TaprootAssetsProvider {
 
   async getAccessIds(connection: LitdConnection) {
     return this.lndService.getAccessIds(this.getLnd(connection));
+  }
+
+  async bakeMacaroon(
+    connection: LitdConnection,
+    options: BakeMacaroonOptions
+  ): Promise<BakeMacaroonResult> {
+    return this.lndService.bakeMacaroon(this.getLnd(connection), options);
   }
 
   // ── Crypto ──

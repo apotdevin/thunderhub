@@ -27,6 +27,11 @@ export type Scalars = {
   Float: { input: number; output: number };
 };
 
+export type AccessIds = {
+  __typename?: 'AccessIds';
+  ids: Array<Scalars['String']['output']>;
+};
+
 export type AddNodeInput = {
   litd?: InputMaybe<LitdInput>;
   lnd?: InputMaybe<LndInput>;
@@ -441,11 +446,6 @@ export type Forward = {
   tokens: Scalars['Float']['output'];
 };
 
-export type GetAccessIds = {
-  __typename?: 'GetAccessIds';
-  ids: Array<Scalars['Float']['output']>;
-};
-
 export type GetForwards = {
   __typename?: 'GetForwards';
   by_channel: Array<AggregatedChannelForwards>;
@@ -539,6 +539,11 @@ export type LightningBalance = {
 export type LightningNodeSocialInfo = {
   __typename?: 'LightningNodeSocialInfo';
   socials?: Maybe<NodeSocial>;
+};
+
+export type LightningQueries = {
+  __typename?: 'LightningQueries';
+  get_access_ids: AccessIds;
 };
 
 export type LitdInput = {
@@ -1142,7 +1147,6 @@ export type PublicQueries = {
 export type Query = {
   __typename?: 'Query';
   decodeTapAddress: TapAddress;
-  getAccessIds: GetAccessIds;
   getAccount: ServerAccount;
   getAmbossLoginToken: Scalars['String']['output'];
   getAmbossUser?: Maybe<AmbossUser>;
@@ -1189,6 +1193,7 @@ export type Query = {
   getUtxos: Array<Utxo>;
   getVolumeHealth: ChannelsHealth;
   getWalletInfo: Wallet;
+  lightning: LightningQueries;
   magma: MagmaQueries;
   node: CurrentNode;
   public: PublicQueries;

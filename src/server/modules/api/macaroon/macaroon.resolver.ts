@@ -12,14 +12,13 @@ import {
 } from './macaroon.types';
 import { CurrentUser } from '../../security/security.decorators';
 import { FetchService } from '../../fetch/fetch.service';
-import { AccountsService } from '../../accounts/accounts.service';
+import { GraphQLError } from 'graphql/error';
 
 @Resolver()
 export class MacaroonResolver {
   constructor(
     private nodeService: NodeService,
     private fetchService: FetchService,
-    private accountsService: AccountsService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -47,27 +46,45 @@ export class MacaroonResolver {
   ) {
     const { rest_host, read_only } = input;
 
-    const account = this.accountsService.getAccount(id);
-    if (!account) {
-      throw new Error('Account not found');
+    // Verify the LiT super macaroon root key ID is in the node's access IDs
+    const SUPER_MACAROON_ROOT_KEY_ID = '18441921392371826688';
+    const { ids } = await this.nodeService.getAccessIds(id);
+
+    const litRootKey = ids.find(
+      (k: string) => k === SUPER_MACAROON_ROOT_KEY_ID
+    );
+
+    if (!litRootKey) {
+      throw new GraphQLError(
+        `Root key ID ${SUPER_MACAROON_ROOT_KEY_ID} is not in this node's access IDs. ` +
+          'Ensure the node is running LiTD with a super macaroon root key.'
+      );
     }
 
-    // Normalize the stored macaroon to hex for the REST header
-    const storedMacaroon = account.macaroon;
-    let macaroonHex: string;
-    if (/^[0-9a-fA-F]+$/.test(storedMacaroon)) {
-      macaroonHex = storedMacaroon;
-    } else {
-      macaroonHex = Buffer.from(storedMacaroon, 'base64').toString('hex');
-    }
+    // Step 1: Bake an intermediate macaroon via LND gRPC with only
+    // the BakeSuperMacaroon permission, using the LiT root key
+    const { macaroon: intermediateMacaroon } =
+      await this.nodeService.bakeMacaroon(id, {
+        permissions: [
+          { entity: 'uri', action: '/litrpc.Proxy/BakeSuperMacaroon' },
+        ],
+        root_key_id: litRootKey,
+        allow_external_permissions: true,
+      });
 
+    const intermediateMacaroonHex = Buffer.from(
+      intermediateMacaroon,
+      'base64'
+    ).toString('hex');
+
+    // Step 2: Call LITD super macaroon endpoint with the intermediate macaroon
     const url = `${rest_host}/v1/proxy/supermacaroon`;
 
     const response = await this.fetchService.fetchWithProxy(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Grpc-Metadata-macaroon': macaroonHex,
+        'Grpc-Metadata-macaroon': intermediateMacaroonHex,
       },
       body: JSON.stringify({
         root_key_id_suffix: '0',
@@ -81,13 +98,13 @@ export class MacaroonResolver {
         status: response.status,
         text,
       });
-      throw new Error(`LITD returned ${response.status}: ${text}`);
+      throw new GraphQLError(`LITD returned ${response.status}: ${text}`);
     }
 
     const data = (await response.json()) as { macaroon?: string };
 
     if (!data.macaroon) {
-      throw new Error('No macaroon returned from LITD');
+      throw new GraphQLError('No macaroon returned from LITD');
     }
 
     // LITD returns hex-encoded macaroon

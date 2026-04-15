@@ -62,6 +62,8 @@ import {
   UpdateRoutingFeesOptions,
   VerifyBackupsOptions,
   GrantAccessOptions,
+  BakeMacaroonOptions,
+  BakeMacaroonResult,
   DiffieHellmanComputeSecretOptions,
 } from '../lightning.types';
 
@@ -176,6 +178,34 @@ export class LndService implements LightningProvider {
 
   async getAccessIds(lnd: AuthenticatedLnd) {
     return to(getAccessIds({ lnd }));
+  }
+
+  async bakeMacaroon(
+    lnd: AuthenticatedLnd,
+    options: BakeMacaroonOptions
+  ): Promise<BakeMacaroonResult> {
+    return new Promise((resolve, reject) => {
+      (lnd as any).default.bakeMacaroon(
+        {
+          permissions: options.permissions,
+          root_key_id: options.root_key_id || undefined,
+          allow_external_permissions: options.allow_external_permissions,
+        },
+        (err: any, res: any) => {
+          if (err) {
+            return reject(new Error(err.details || 'Failed to bake macaroon'));
+          }
+
+          if (!res?.macaroon) {
+            return reject(new Error('No macaroon returned'));
+          }
+
+          const macaroon = Buffer.from(res.macaroon, 'hex').toString('base64');
+
+          return resolve({ macaroon });
+        }
+      );
+    });
   }
 
   async getNetworkInfo(lnd: AuthenticatedLnd) {

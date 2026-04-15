@@ -18,6 +18,8 @@ import {
   GetInvoicesOptions,
   GetPaymentsOptions,
   GrantAccessOptions,
+  BakeMacaroonOptions,
+  BakeMacaroonResult,
   OpenChannelOptions,
   PayOptions,
   PayViaPaymentDetailsOptions,
@@ -137,6 +139,14 @@ export class NodeService {
   async getAccessIds(id: string) {
     const { account, provider } = this.getAccountAndProvider(id);
     return provider.getAccessIds(account.connection);
+  }
+
+  async bakeMacaroon(
+    id: string,
+    options: BakeMacaroonOptions
+  ): Promise<BakeMacaroonResult> {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.bakeMacaroon(account.connection, options);
   }
 
   async getNetworkInfo(id: string) {

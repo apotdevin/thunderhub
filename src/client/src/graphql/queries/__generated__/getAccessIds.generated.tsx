@@ -9,7 +9,7 @@ export type GetAccessIdsQuery = {
   __typename?: 'Query';
   lightning: {
     __typename?: 'LightningQueries';
-    get_access_ids: { __typename?: 'AccessIds'; ids: Array<number> };
+    get_access_ids: { __typename?: 'AccessIds'; ids: Array<string> };
   };
 };
 

@@ -2,8 +2,8 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class AccessIds {
-  @Field(() => [Number])
-  ids: number[];
+  @Field(() => [String])
+  ids: string[];
 }
 
 @ObjectType()

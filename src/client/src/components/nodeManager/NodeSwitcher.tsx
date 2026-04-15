@@ -145,7 +145,7 @@ export const NodeSwitcher = () => {
                 className={cn(
                   'shrink-0 rounded px-1 py-0.5 text-[9px] font-medium uppercase',
                   currentNode.type === 'litd'
-                    ? 'bg-violet-500/15 text-violet-500'
+                    ? 'bg-teal-500/15 text-teal-500'
                     : 'bg-blue-500/15 text-blue-500'
                 )}
               >
