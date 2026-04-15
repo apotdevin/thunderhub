@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/button';
 import { useSendTapAssetMutation } from '../../graphql/mutations/__generated__/sendTapAsset.generated';
 import { useDecodeTapAddressLazyQuery } from '../../graphql/queries/__generated__/decodeTapAddress.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
+import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
+import { atomicToDisplay } from './trade.helpers';
 
 export const SendAsset: FC = () => {
   const [address, setAddress] = useState('');
@@ -20,6 +22,8 @@ export const SendAsset: FC = () => {
     variables: { groupBy: TapBalanceGroupBy.GroupKey },
   });
 
+  const { data: supportedData } = useGetTapSupportedAssetsQuery();
+
   const nameMap = new Map(
     (balancesData?.getTapBalances?.balances || [])
       .filter(b => b.assetId || b.groupKey)
@@ -31,6 +35,12 @@ export const SendAsset: FC = () => {
         return entries;
       })
   );
+
+  const precisionMap = new Map<string, number>();
+  for (const asset of supportedData?.getTapSupportedAssets?.list || []) {
+    if (asset.assetId) precisionMap.set(asset.assetId, asset.precision);
+    if (asset.groupKey) precisionMap.set(asset.groupKey, asset.precision);
+  }
 
   const [sendAsset, { loading }] = useSendTapAssetMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -106,6 +116,17 @@ export const SendAsset: FC = () => {
                 (addrInfo.assetId && nameMap.get(addrInfo.assetId)) ||
                 null;
 
+              const precision =
+                (addrInfo.assetId
+                  ? precisionMap.get(addrInfo.assetId)
+                  : undefined) ??
+                (addrInfo.groupKey
+                  ? precisionMap.get(addrInfo.groupKey)
+                  : undefined) ??
+                0;
+
+              const displayAmount = atomicToDisplay(addrInfo.amount, precision);
+
               return (
                 <div className="rounded-md bg-muted p-3 text-xs flex flex-col gap-1.5">
                   {assetName && (
@@ -116,7 +137,7 @@ export const SendAsset: FC = () => {
                   )}
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Amount</span>
-                    <span className="font-semibold">{addrInfo.amount}</span>
+                    <span className="font-semibold">{displayAmount}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Type</span>
