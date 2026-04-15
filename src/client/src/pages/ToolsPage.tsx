@@ -1,4 +1,5 @@
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
+import { AccessIds } from '../views/tools/accessIds/AccessIds';
 import { Bakery } from '../views/tools/bakery/Bakery';
 import { BackupsView } from '../views/tools/backups/Backups';
 import { MessagesView } from '../views/tools/messages/Messages';
@@ -9,6 +10,7 @@ const ToolsView = () => (
     <BackupsView />
     <MessagesView />
     <Bakery />
+    <AccessIds />
     <WalletVersion />
   </div>
 );

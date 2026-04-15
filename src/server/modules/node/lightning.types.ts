@@ -246,6 +246,7 @@ export interface LightningProvider {
 
   // ── Access ──
   grantAccess(connection: any, permissions: GrantAccessOptions): Promise<any>;
+  getAccessIds(connection: any): Promise<any>;
 
   // ── Crypto ──
   diffieHellmanComputeSecret(

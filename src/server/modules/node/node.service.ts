@@ -134,6 +134,11 @@ export class NodeService {
     return provider.grantAccess(account.connection, permissions);
   }
 
+  async getAccessIds(id: string) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getAccessIds(account.connection);
+  }
+
   async getNetworkInfo(id: string) {
     const { account, provider } = this.getAccountAndProvider(id);
     return provider.getNetworkInfo(account.connection);

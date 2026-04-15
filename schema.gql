@@ -2,6 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AccessIds {
+  ids: [Float!]!
+}
+
 input AddNodeInput {
   litd: LitdInput
   lnd: LndInput
@@ -466,6 +470,10 @@ type LightningNodeSocialInfo {
   socials: NodeSocial
 }
 
+type LightningQueries {
+  get_access_ids: AccessIds!
+}
+
 input LitdInput {
   cert: String
   macaroon: String!
@@ -870,6 +878,7 @@ type Query {
   getUtxos: [Utxo!]!
   getVolumeHealth: ChannelsHealth!
   getWalletInfo: Wallet!
+  lightning: LightningQueries!
   magma: MagmaQueries!
   node: CurrentNode!
   public: PublicQueries!

@@ -441,6 +441,11 @@ export type Forward = {
   tokens: Scalars['Float']['output'];
 };
 
+export type GetAccessIds = {
+  __typename?: 'GetAccessIds';
+  ids: Array<Scalars['Float']['output']>;
+};
+
 export type GetForwards = {
   __typename?: 'GetForwards';
   by_channel: Array<AggregatedChannelForwards>;
@@ -1137,6 +1142,7 @@ export type PublicQueries = {
 export type Query = {
   __typename?: 'Query';
   decodeTapAddress: TapAddress;
+  getAccessIds: GetAccessIds;
   getAccount: ServerAccount;
   getAmbossLoginToken: Scalars['String']['output'];
   getAmbossUser?: Maybe<AmbossUser>;

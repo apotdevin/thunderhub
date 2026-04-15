@@ -8,6 +8,7 @@ import { MainModule } from './main/main.module';
 import { GithubModule } from './github/github.module';
 import { WalletModule } from './wallet/wallet.module';
 import { ToolsModule } from './tools/tools.module';
+import { LightningModule } from './lightning/lightning.module';
 import { MacaroonModule } from './macaroon/macaroon.module';
 import { NetworkModule } from './network/network.module';
 import { PeerModule } from './peer/peer.module';
@@ -38,6 +39,7 @@ import { PublicModule } from './public/public.module';
     GithubModule,
     WalletModule,
     ToolsModule,
+    LightningModule,
     MacaroonModule,
     NetworkModule,
     PeerModule,

@@ -18,6 +18,7 @@ import {
   verifyMessage,
   signMessage,
   grantAccess,
+  getAccessIds,
   getNetworkInfo,
   getPeers,
   addPeer,
@@ -171,6 +172,10 @@ export class LndService implements LightningProvider {
 
   async grantAccess(lnd: AuthenticatedLnd, permissions: GrantAccessOptions) {
     return to(grantAccess({ lnd, ...permissions }));
+  }
+
+  async getAccessIds(lnd: AuthenticatedLnd) {
+    return to(getAccessIds({ lnd }));
   }
 
   async getNetworkInfo(lnd: AuthenticatedLnd) {

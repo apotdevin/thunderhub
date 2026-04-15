@@ -318,6 +318,10 @@ export class LitdService implements LightningProvider, TaprootAssetsProvider {
     return this.lndService.grantAccess(this.getLnd(connection), permissions);
   }
 
+  async getAccessIds(connection: LitdConnection) {
+    return this.lndService.getAccessIds(this.getLnd(connection));
+  }
+
   // ── Crypto ──
 
   async diffieHellmanComputeSecret(
