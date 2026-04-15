@@ -9,13 +9,18 @@ export type CancelMagmaOrderMutationVariables = Types.Exact<{
 
 export type CancelMagmaOrderMutation = {
   __typename?: 'Mutation';
-  cancelMagmaOrder: { __typename?: 'CancelMagmaOrderResult'; success: boolean };
+  magma: {
+    __typename?: 'MagmaMutations';
+    cancel_order: { __typename?: 'CancelMagmaOrderResult'; success: boolean };
+  };
 };
 
 export const CancelMagmaOrderDocument = gql`
   mutation CancelMagmaOrder($input: CancelMagmaOrderInput!) {
-    cancelMagmaOrder(input: $input) {
-      success
+    magma {
+      cancel_order(input: $input) {
+        success
+      }
     }
   }
 `;

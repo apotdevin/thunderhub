@@ -64,12 +64,12 @@ export const cancelMagmaOrderMutation = gql`
   }
 `;
 
-export const getPendingOrdersQuery = gql`
-  query GetPendingOrders($page: PageInput) {
-    getUser {
+export const getOrdersQuery = gql`
+  query GetOrders($page: PageInput) {
+    user {
       market {
         orders {
-          purchases(input: { action_needed: true }, page: $page) {
+          purchases(page: $page) {
             total
             list {
               id
@@ -85,7 +85,9 @@ export const getPendingOrdersQuery = gql`
                 alias
               }
               amount {
-                sats
+                satoshi {
+                  sats
+                }
               }
               fees {
                 seller {
@@ -99,7 +101,7 @@ export const getPendingOrdersQuery = gql`
               channel_id
             }
           }
-          sales(input: { action_needed: true }, page: $page) {
+          sales(page: $page) {
             total
             list {
               id
@@ -115,7 +117,9 @@ export const getPendingOrdersQuery = gql`
                 alias
               }
               amount {
-                sats
+                satoshi {
+                  sats
+                }
               }
               fees {
                 seller {

@@ -19,7 +19,6 @@ import {
 import { OpenChannel } from '../views/home/liquidity/OpenChannel';
 import { DetailsChange } from '../components/details/detailsChange';
 import { useNodeSlug, useNodePath } from '../hooks/useNodeSlug';
-import { MagmaOrders } from '../views/channels/magmaOrders/MagmaOrders';
 
 type ChannelTab = 'open' | 'pending' | 'closed';
 
@@ -131,8 +130,6 @@ const ChannelView = () => {
           {activeTab === 'closed' && <ClosedChannels />}
         </CardContent>
       </Card>
-
-      <MagmaOrders />
 
       <Dialog
         open={openDialog === 'open'}

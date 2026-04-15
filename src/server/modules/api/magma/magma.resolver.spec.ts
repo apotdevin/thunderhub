@@ -23,7 +23,7 @@ jest.mock('../amboss/amboss.service', () => ({
   AmbossService: jest.fn(),
 }));
 
-import { MagmaResolver } from './magma.resolver';
+import { MagmaResolver, MagmaOrderQueriesResolver } from './magma.resolver';
 
 describe('MagmaResolver', () => {
   const userId = { id: 'test-user-id' } as UserId;
@@ -540,10 +540,11 @@ describe('MagmaResolver', () => {
     });
   });
 
-  // ── getPendingMagmaOrders ──────────────────────────────────────
+  // ── magma.orders.find_many ──────────────────────────────
 
-  describe('getPendingMagmaOrders', () => {
+  describe('MagmaOrderQueriesResolver.find_many', () => {
     const magmaUrl = 'https://magma.test/graphql';
+    let ordersResolver: MagmaOrderQueriesResolver;
 
     const rawOrder = {
       id: 'order-1',
@@ -552,20 +553,26 @@ describe('MagmaResolver', () => {
       payment_status: 'UNPAID',
       source: { pubkey: 'srcpub', alias: 'Alice' },
       destination: { pubkey: 'dstpub', alias: 'Bob' },
-      amount: { sats: '100000' },
+      amount: { satoshi: { sats: '100000' } },
       fees: { seller: { sats: 200 }, buyer: { sats: 300 } },
-      timeout: 3600,
+      timeout: '2026-04-21T23:56:42.000Z',
       channel_id: 'chan-1',
     };
 
     beforeEach(() => {
       mockAmbossService.resolveMagmaUrl.mockResolvedValue(magmaUrl);
+      ordersResolver = new MagmaOrderQueriesResolver(
+        mockFetchService as never,
+        mockAmbossTokenService as never,
+        mockAmbossService as never,
+        mockLogger as never
+      );
     });
 
     it('maps purchases and sales from the API response', async () => {
       mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
         data: {
-          getUser: {
+          user: {
             market: {
               orders: {
                 purchases: { total: 1, list: [rawOrder] },
@@ -577,7 +584,7 @@ describe('MagmaResolver', () => {
         error: undefined,
       });
 
-      const result = await resolver.getPendingMagmaOrders(userId);
+      const result = await ordersResolver.find_many(userId);
 
       expect(result).not.toBeNull();
       expect(result!.purchases).toHaveLength(1);
@@ -590,18 +597,21 @@ describe('MagmaResolver', () => {
         destination: { pubkey: 'dstpub', alias: 'Bob' },
         amount: { sats: '100000' },
         fees: { seller: { sats: 200 }, buyer: { sats: 300 } },
-        timeout: 3600,
+        timeout: '2026-04-21T23:56:42.000Z',
         channelId: 'chan-1',
       });
       expect(result!.sales[0].id).toBe('order-2');
+      expect(result!.magmaUrl).toBe('https://magma.test');
     });
 
-    it('returns null when no auth token is available', async () => {
-      mockAmbossTokenService.get.mockResolvedValue(null);
+    it('throws when auth token creation fails', async () => {
+      mockAmbossTokenService.getOrCreate.mockRejectedValue(
+        new Error('auth failed')
+      );
 
-      const result = await resolver.getPendingMagmaOrders(userId);
-
-      expect(result).toBeNull();
+      await expect(ordersResolver.find_many(userId)).rejects.toThrow(
+        'auth failed'
+      );
       expect(mockFetchService.graphqlFetchWithProxy).not.toHaveBeenCalled();
     });
 
@@ -611,22 +621,22 @@ describe('MagmaResolver', () => {
         error: new Error('network error'),
       });
 
-      const result = await resolver.getPendingMagmaOrders(userId);
+      const result = await ordersResolver.find_many(userId);
 
       expect(result).toBeNull();
       expect(mockLogger.error).toHaveBeenCalledWith(
-        'Error fetching pending Magma orders',
+        'Error fetching Magma orders',
         expect.any(Object)
       );
     });
 
     it('returns null when the API response has no orders data', async () => {
       mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
-        data: { getUser: null },
+        data: { user: null },
         error: undefined,
       });
 
-      const result = await resolver.getPendingMagmaOrders(userId);
+      const result = await ordersResolver.find_many(userId);
 
       expect(result).toBeNull();
     });
@@ -643,7 +653,7 @@ describe('MagmaResolver', () => {
       };
       mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
         data: {
-          getUser: {
+          user: {
             market: {
               orders: {
                 purchases: { total: 1, list: [sparse] },
@@ -655,7 +665,7 @@ describe('MagmaResolver', () => {
         error: undefined,
       });
 
-      const result = await resolver.getPendingMagmaOrders(userId);
+      const result = await ordersResolver.find_many(userId);
 
       expect(result).not.toBeNull();
       expect(result!.purchases[0]).toMatchObject({

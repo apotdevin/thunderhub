@@ -27,12 +27,12 @@ export type AmbossOrderRaw = {
   payment_status?: string;
   source: AmbossOrderParty;
   destination: AmbossOrderParty;
-  amount?: { sats?: string };
+  amount?: { satoshi?: { sats?: string } };
   fees?: {
     seller?: AmbossOrderFeeAmount;
     buyer?: AmbossOrderFeeAmount;
   };
-  timeout?: number;
+  timeout?: string;
   channel_id?: string;
 };
 
@@ -97,8 +97,8 @@ export class MagmaOrder {
   @Field(() => MagmaOrderFees)
   fees: MagmaOrderFees;
 
-  @Field(() => Int, { nullable: true })
-  timeout?: number;
+  @Field({ nullable: true })
+  timeout?: string;
 
   @Field({ nullable: true })
   channelId?: string;
@@ -111,6 +111,9 @@ export class MagmaPendingOrders {
 
   @Field(() => [MagmaOrder])
   sales: MagmaOrder[];
+
+  @Field()
+  magmaUrl: string;
 }
 
 // ─── Cancel Order ────────────────────────────────────────────────
@@ -136,6 +139,26 @@ export class CancelMagmaOrderInput {
 export class CancelMagmaOrderResult {
   @Field()
   success: boolean;
+}
+
+// ─── Namespace types ─────────────────────────────────────────────
+
+@ObjectType()
+export class MagmaOrderQueries {
+  @Field(() => MagmaPendingOrders, { nullable: true })
+  find_many?: MagmaPendingOrders;
+}
+
+@ObjectType()
+export class MagmaQueries {
+  @Field(() => MagmaOrderQueries)
+  orders: MagmaOrderQueries;
+}
+
+@ObjectType()
+export class MagmaMutations {
+  @Field(() => CancelMagmaOrderResult)
+  cancel_order: CancelMagmaOrderResult;
 }
 
 // ─── Enums ──────────────────────────────────────────────────────

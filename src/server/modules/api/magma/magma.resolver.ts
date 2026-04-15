@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
@@ -27,12 +27,15 @@ import {
   AmbossOrderList,
   CancelMagmaOrderInput,
   CancelMagmaOrderResult,
+  MagmaQueries,
+  MagmaOrderQueries,
+  MagmaMutations,
 } from './magma.types';
 import {
   getOffersQuery,
   getSupportedAssetsQuery,
   createMagmaOrderMutation,
-  getPendingOrdersQuery,
+  getOrdersQuery,
   cancelMagmaOrderMutation,
 } from './magma.gql';
 
@@ -219,101 +222,6 @@ export class MagmaResolver {
       })),
       totalCount: assets.total_count,
     };
-  }
-
-  // ── Pending Orders ──
-
-  @Query(() => MagmaPendingOrders, { nullable: true })
-  async getPendingMagmaOrders(
-    @CurrentUser() user: UserId
-  ): Promise<MagmaPendingOrders | null> {
-    const ambossAuth = await this.ambossTokenService.get(user);
-    if (!ambossAuth) return null;
-
-    const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
-
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
-      getUser: {
-        market: {
-          orders: {
-            purchases: AmbossOrderList;
-            sales: AmbossOrderList;
-          };
-        };
-      };
-    }>(
-      magmaUrl,
-      getPendingOrdersQuery,
-      { page: { offset: 0, limit: 50 } },
-      { authorization: `Bearer ${ambossAuth}` }
-    );
-
-    if (error || !data?.getUser?.market?.orders) {
-      if (error)
-        this.logger.error('Error fetching pending Magma orders', { error });
-      return null;
-    }
-
-    const mapOrder = (o: AmbossOrderRaw): MagmaOrder => ({
-      id: o.id,
-      createdAt: o.created_at,
-      status: o.status,
-      paymentStatus: o.payment_status,
-      source: { pubkey: o.source?.pubkey, alias: o.source?.alias },
-      destination: {
-        pubkey: o.destination?.pubkey,
-        alias: o.destination?.alias,
-      },
-      amount: { sats: o.amount?.sats },
-      fees: {
-        seller: o.fees?.seller ? { sats: o.fees.seller.sats } : undefined,
-        buyer: o.fees?.buyer ? { sats: o.fees.buyer.sats } : undefined,
-      },
-      timeout: o.timeout,
-      channelId: o.channel_id,
-    });
-
-    const { purchases, sales } = data.getUser.market.orders;
-    return {
-      purchases: purchases.list.map(mapOrder),
-      sales: sales.list.map(mapOrder),
-    };
-  }
-
-  @Mutation(() => CancelMagmaOrderResult)
-  async cancelMagmaOrder(
-    @CurrentUser() user: UserId,
-    @Args('input') input: CancelMagmaOrderInput
-  ): Promise<CancelMagmaOrderResult> {
-    const ambossAuth = await this.ambossTokenService.get(user);
-    if (!ambossAuth) throw new GraphQLError('Not authenticated with Amboss');
-
-    const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
-
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
-      market: { order: { cancel: { success: boolean } } };
-    }>(
-      magmaUrl,
-      cancelMagmaOrderMutation,
-      {
-        input: {
-          order_id: input.orderId,
-          cancellation_reason: input.cancellationReason,
-        },
-      },
-      { authorization: `Bearer ${ambossAuth}` }
-    );
-
-    if (error || !data?.market?.order?.cancel) {
-      this.logger.error('Error cancelling Magma order', { error });
-      throw new GraphQLError(
-        typeof error === 'string'
-          ? `Failed to cancel order: ${error}`
-          : 'Failed to cancel order'
-      );
-    }
-
-    return { success: data.market.order.cancel.success };
   }
 
   // ── Trade Partner Setup ──
@@ -612,5 +520,142 @@ export class MagmaResolver {
       outboundChannelTxid: result.outboundChannel?.txid,
       outboundChannelOutputIndex: result.outboundChannel?.outputIndex,
     };
+  }
+}
+
+// ── Magma Query Namespace ──
+
+@Resolver()
+export class MagmaQueryRoot {
+  @Query(() => MagmaQueries)
+  magma(): MagmaQueries {
+    return {} as any;
+  }
+}
+
+@Resolver(() => MagmaQueries)
+export class MagmaQueriesResolver {
+  @ResolveField(() => MagmaOrderQueries)
+  orders(): MagmaOrderQueries {
+    return {} as any;
+  }
+}
+
+@Resolver(() => MagmaOrderQueries)
+export class MagmaOrderQueriesResolver {
+  constructor(
+    private fetchService: FetchService,
+    private ambossTokenService: AmbossTokenService,
+    private ambossService: AmbossService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+  ) {}
+
+  @ResolveField(() => MagmaPendingOrders, { nullable: true })
+  async find_many(
+    @CurrentUser() user: UserId
+  ): Promise<MagmaPendingOrders | null> {
+    const ambossAuth = await this.ambossTokenService.getOrCreate(user);
+    const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
+
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
+      user: {
+        market: {
+          orders: {
+            purchases: AmbossOrderList;
+            sales: AmbossOrderList;
+          };
+        };
+      };
+    }>(
+      magmaUrl,
+      getOrdersQuery,
+      { page: { offset: 0, limit: 999 } },
+      { authorization: `Bearer ${ambossAuth}` }
+    );
+
+    if (error || !data?.user?.market?.orders) {
+      if (error) this.logger.error('Error fetching Magma orders', { error });
+      return null;
+    }
+
+    const mapOrder = (o: AmbossOrderRaw): MagmaOrder => ({
+      id: o.id,
+      createdAt: o.created_at,
+      status: o.status,
+      paymentStatus: o.payment_status,
+      source: { pubkey: o.source?.pubkey, alias: o.source?.alias },
+      destination: {
+        pubkey: o.destination?.pubkey,
+        alias: o.destination?.alias,
+      },
+      amount: { sats: o.amount?.satoshi?.sats },
+      fees: {
+        seller: o.fees?.seller ? { sats: o.fees.seller.sats } : undefined,
+        buyer: o.fees?.buyer ? { sats: o.fees.buyer.sats } : undefined,
+      },
+      timeout: o.timeout,
+      channelId: o.channel_id,
+    });
+
+    const { purchases, sales } = data.user.market.orders;
+    return {
+      purchases: purchases.list.map(mapOrder),
+      sales: sales.list.map(mapOrder),
+      magmaUrl: magmaUrl.replace('/graphql', ''),
+    };
+  }
+}
+
+// ── Magma Mutation Namespace ──
+
+@Resolver()
+export class MagmaMutationRoot {
+  @Mutation(() => MagmaMutations)
+  magma(): MagmaMutations {
+    return {} as any;
+  }
+}
+
+@Resolver(() => MagmaMutations)
+export class MagmaMutationsResolver {
+  constructor(
+    private fetchService: FetchService,
+    private ambossTokenService: AmbossTokenService,
+    private ambossService: AmbossService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+  ) {}
+
+  @ResolveField(() => CancelMagmaOrderResult)
+  async cancel_order(
+    @CurrentUser() user: UserId,
+    @Args('input') input: CancelMagmaOrderInput
+  ): Promise<CancelMagmaOrderResult> {
+    const ambossAuth = await this.ambossTokenService.getOrCreate(user);
+    const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
+
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
+      market: { order: { cancel: { success: boolean } } };
+    }>(
+      magmaUrl,
+      cancelMagmaOrderMutation,
+      {
+        input: {
+          order_id: input.orderId,
+          cancellation_reason: input.cancellationReason,
+        },
+      },
+      { authorization: `Bearer ${ambossAuth}` }
+    );
+
+    if (error || !data?.market?.order?.cancel) {
+      this.logger.error('Error cancelling Magma order', { error });
+      throw new GraphQLError(
+        typeof error === 'string'
+          ? `Failed to cancel order: ${error}`
+          : 'Failed to cancel order'
+      );
+    }
+
+    return { success: data.market.order.cancel.success };
   }
 }

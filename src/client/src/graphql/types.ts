@@ -550,6 +550,15 @@ export type LndInput = {
   socket: Scalars['String']['input'];
 };
 
+export type MagmaMutations = {
+  __typename?: 'MagmaMutations';
+  cancel_order: CancelMagmaOrderResult;
+};
+
+export type MagmaMutationsCancel_OrderArgs = {
+  input: CancelMagmaOrderInput;
+};
+
 export type MagmaOrder = {
   __typename?: 'MagmaOrder';
   amount: MagmaOrderAmount;
@@ -561,7 +570,7 @@ export type MagmaOrder = {
   paymentStatus?: Maybe<Scalars['String']['output']>;
   source: MagmaOrderParty;
   status: Scalars['String']['output'];
-  timeout?: Maybe<Scalars['Int']['output']>;
+  timeout?: Maybe<Scalars['String']['output']>;
 };
 
 export type MagmaOrderAmount = {
@@ -586,10 +595,21 @@ export type MagmaOrderParty = {
   pubkey?: Maybe<Scalars['String']['output']>;
 };
 
+export type MagmaOrderQueries = {
+  __typename?: 'MagmaOrderQueries';
+  find_many?: Maybe<MagmaPendingOrders>;
+};
+
 export type MagmaPendingOrders = {
   __typename?: 'MagmaPendingOrders';
+  magmaUrl: Scalars['String']['output'];
   purchases: Array<MagmaOrder>;
   sales: Array<MagmaOrder>;
+};
+
+export type MagmaQueries = {
+  __typename?: 'MagmaQueries';
+  orders: MagmaOrderQueries;
 };
 
 export type MessageType = {
@@ -604,7 +624,6 @@ export type Mutation = {
   addTapFederationServer: Scalars['Boolean']['output'];
   bakeSuperMacaroon: SuperMacaroon;
   burnTapAsset: Scalars['Boolean']['output'];
-  cancelMagmaOrder: CancelMagmaOrderResult;
   cancelTapBatch: Scalars['Boolean']['output'];
   claimBoltzTransaction: Scalars['String']['output'];
   closeChannel: OpenOrCloseChannel;
@@ -623,6 +642,7 @@ export type Mutation = {
   lnUrlWithdraw: Scalars['String']['output'];
   loginAmboss: Scalars['Boolean']['output'];
   logout: Scalars['Boolean']['output'];
+  magma: MagmaMutations;
   mintTapAsset: TapMintResponse;
   newTapAddress: TapAddress;
   openChannel: OpenOrCloseChannel;
@@ -666,10 +686,6 @@ export type MutationBakeSuperMacaroonArgs = {
 export type MutationBurnTapAssetArgs = {
   amount: Scalars['String']['input'];
   assetId: Scalars['String']['input'];
-};
-
-export type MutationCancelMagmaOrderArgs = {
-  input: CancelMagmaOrderInput;
 };
 
 export type MutationClaimBoltzTransactionArgs = {
@@ -1151,7 +1167,6 @@ export type Query = {
   getPayments: GetPaymentsType;
   getPeers: Array<Peer>;
   getPendingChannels: Array<PendingChannel>;
-  getPendingMagmaOrders?: Maybe<MagmaPendingOrders>;
   getTapAssetChannelBalances: Array<TapAssetChannelBalance>;
   getTapAssets: TapAssetList;
   getTapBalances: TapBalances;
@@ -1168,6 +1183,7 @@ export type Query = {
   getUtxos: Array<Utxo>;
   getVolumeHealth: ChannelsHealth;
   getWalletInfo: Wallet;
+  magma: MagmaQueries;
   node: CurrentNode;
   public: PublicQueries;
   recoverFunds: Scalars['Boolean']['output'];

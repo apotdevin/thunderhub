@@ -480,6 +480,10 @@ input LndInput {
   socket: String!
 }
 
+type MagmaMutations {
+  cancel_order(input: CancelMagmaOrderInput!): CancelMagmaOrderResult!
+}
+
 type MagmaOrder {
   amount: MagmaOrderAmount!
   channelId: String
@@ -490,7 +494,7 @@ type MagmaOrder {
   paymentStatus: String
   source: MagmaOrderParty!
   status: String!
-  timeout: Int
+  timeout: String
 }
 
 type MagmaOrderAmount {
@@ -511,9 +515,18 @@ type MagmaOrderParty {
   pubkey: String
 }
 
+type MagmaOrderQueries {
+  find_many: MagmaPendingOrders
+}
+
 type MagmaPendingOrders {
+  magmaUrl: String!
   purchases: [MagmaOrder!]!
   sales: [MagmaOrder!]!
+}
+
+type MagmaQueries {
+  orders: MagmaOrderQueries!
 }
 
 type MessageType {
@@ -526,7 +539,6 @@ type Mutation {
   addTapFederationServer(host: String!): Boolean!
   bakeSuperMacaroon(input: BakeSuperMacaroonInput!): SuperMacaroon!
   burnTapAsset(amount: String!, assetId: String!): Boolean!
-  cancelMagmaOrder(input: CancelMagmaOrderInput!): CancelMagmaOrderResult!
   cancelTapBatch: Boolean!
   claimBoltzTransaction(destination: String!, fee: Float!, id: String!, lockupAddress: String!, preimage: String!, privateKey: String!, redeem: String!): String!
   closeChannel(forceClose: Boolean, id: String!, targetConfirmations: Float, tokensPerVByte: Float): OpenOrCloseChannel!
@@ -545,6 +557,7 @@ type Mutation {
   lnUrlWithdraw(amount: Float!, callback: String!, description: String, k1: String!): String!
   loginAmboss: Boolean!
   logout: Boolean!
+  magma: MagmaMutations!
   mintTapAsset(amount: String!, assetType: TapAssetType! = NORMAL, groupKey: String, grouped: Boolean = true, name: String!): TapMintResponse!
   newTapAddress(amt: Int, assetId: String, groupKey: String): TapAddress!
   openChannel(input: OpenChannelParams!): OpenOrCloseChannel!
@@ -841,7 +854,6 @@ type Query {
   getPayments(token: String): GetPaymentsType!
   getPeers: [Peer!]!
   getPendingChannels: [PendingChannel!]!
-  getPendingMagmaOrders: MagmaPendingOrders
   getTapAssetChannelBalances(peerPubkey: String): [TapAssetChannelBalance!]!
   getTapAssets: TapAssetList!
   getTapBalances(groupBy: TapBalanceGroupBy = GROUP_KEY): TapBalances!
@@ -858,6 +870,7 @@ type Query {
   getUtxos: [Utxo!]!
   getVolumeHealth: ChannelsHealth!
   getWalletInfo: Wallet!
+  magma: MagmaQueries!
   node: CurrentNode!
   public: PublicQueries!
   recoverFunds(backup: String!): Boolean!
