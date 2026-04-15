@@ -777,11 +777,7 @@ export type MutationLnUrlWithdrawArgs = {
 };
 
 export type MutationMintTapAssetArgs = {
-  amount: Scalars['String']['input'];
-  assetType?: TapAssetType;
-  groupKey?: InputMaybe<Scalars['String']['input']>;
-  grouped?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
+  input: TapMintAssetInput;
 };
 
 export type MutationNewTapAddressArgs = {
@@ -1481,6 +1477,15 @@ export type TapFundChannelResponse = {
   __typename?: 'TapFundChannelResponse';
   outputIndex: Scalars['Int']['output'];
   txid: Scalars['String']['output'];
+};
+
+export type TapMintAssetInput = {
+  amount: Scalars['String']['input'];
+  assetType?: TapAssetType;
+  groupKey?: InputMaybe<Scalars['String']['input']>;
+  grouped?: Scalars['Boolean']['input'];
+  name: Scalars['String']['input'];
+  precision: Scalars['Int']['input'];
 };
 
 export type TapMintResponse = {

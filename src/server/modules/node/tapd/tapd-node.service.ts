@@ -206,6 +206,7 @@ export class TapdNodeService {
     name: string;
     amount: string;
     assetType: 'NORMAL' | 'COLLECTIBLE';
+    decimalDisplay: number;
     grouped?: boolean;
     groupKey?: string;
   }): Promise<MintAssetResponse> {
@@ -217,6 +218,7 @@ export class TapdNodeService {
         name: opts.name,
         amount: opts.amount,
         assetType: opts.assetType,
+        decimalDisplay: opts.decimalDisplay,
         ...(opts.groupKey
           ? {
               groupedAsset: true,
