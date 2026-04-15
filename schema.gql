@@ -566,7 +566,7 @@ type Mutation {
   loginAmboss: Boolean!
   logout: Boolean!
   magma: MagmaMutations!
-  mintTapAsset(amount: String!, assetType: TapAssetType! = NORMAL, groupKey: String, grouped: Boolean = true, name: String!, precision: Int): TapMintResponse!
+  mintTapAsset(amount: String!, assetType: TapAssetType! = NORMAL, groupKey: String, grouped: Boolean = true, name: String!, precision: Int!): TapMintResponse!
   newTapAddress(amt: Int, assetId: String, groupKey: String): TapAddress!
   openChannel(input: OpenChannelParams!): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!

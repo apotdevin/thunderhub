@@ -9,7 +9,7 @@ export type MintTapAssetMutationVariables = Types.Exact<{
   assetType?: Types.InputMaybe<Types.TapAssetType>;
   grouped?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
   groupKey?: Types.InputMaybe<Types.Scalars['String']['input']>;
-  precision?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  precision: Types.Scalars['Int']['input'];
 }>;
 
 export type MintTapAssetMutation = {
@@ -24,7 +24,7 @@ export const MintTapAssetDocument = gql`
     $assetType: TapAssetType
     $grouped: Boolean
     $groupKey: String
-    $precision: Int
+    $precision: Int!
   ) {
     mintTapAsset(
       name: $name

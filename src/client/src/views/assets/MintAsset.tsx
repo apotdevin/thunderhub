@@ -55,18 +55,18 @@ export const MintAsset: FC = () => {
   });
 
   const handleMint = () => {
-    if (!name || !amount) {
-      toast.error('Name and amount are required');
+    if (!name || !amount || precision === '') {
+      toast.error('Name, amount, and precision are required');
       return;
     }
-    let precisionValue: number | null = null;
-    if (precision !== '') {
-      const parsed = Number(precision);
-      if (!Number.isInteger(parsed) || parsed < 0 || parsed > 18) {
-        toast.error('Precision must be an integer between 0 and 18');
-        return;
-      }
-      precisionValue = parsed;
+    const parsedPrecision = Number(precision);
+    if (
+      !Number.isInteger(parsedPrecision) ||
+      parsedPrecision < 0 ||
+      parsedPrecision > 18
+    ) {
+      toast.error('Precision must be an integer between 0 and 18');
+      return;
     }
     mintAsset({
       variables: {
@@ -75,7 +75,7 @@ export const MintAsset: FC = () => {
         assetType,
         grouped,
         groupKey: groupKey || null,
-        precision: precisionValue,
+        precision: parsedPrecision,
       },
     });
   };
@@ -141,7 +141,7 @@ export const MintAsset: FC = () => {
           </div>
           <div>
             <label className="text-xs text-muted-foreground mb-1 block">
-              Precision (optional)
+              Precision
             </label>
             <input
               type="number"
@@ -173,7 +173,7 @@ export const MintAsset: FC = () => {
           <div className="flex gap-2">
             <Button
               onClick={handleMint}
-              disabled={minting || !name || !amount}
+              disabled={minting || !name || !amount || precision === ''}
               size="sm"
             >
               {minting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

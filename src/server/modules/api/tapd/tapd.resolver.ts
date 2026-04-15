@@ -318,13 +318,11 @@ export class TapdResolver {
     })
     assetType: TapAssetType,
     @Args('grouped', { nullable: true, defaultValue: true }) grouped: boolean,
-    @Args('groupKey', { nullable: true }) groupKey?: string,
-    @Args('precision', { nullable: true, type: () => Int }) precision?: number
+    @Args('precision', { type: () => Int }) precision: number,
+    @Args('groupKey', { nullable: true }) groupKey?: string
   ) {
-    if (precision != null) {
-      if (!Number.isInteger(precision) || precision < 0 || precision > 18) {
-        throw new GraphQLError('precision must be an integer between 0 and 18');
-      }
+    if (!Number.isInteger(precision) || precision < 0 || precision > 18) {
+      throw new GraphQLError('precision must be an integer between 0 and 18');
     }
 
     const typeStr =
@@ -337,7 +335,7 @@ export class TapdResolver {
         assetType: typeStr,
         grouped,
         groupKey,
-        ...(precision != null ? { decimalDisplay: precision } : {}),
+        decimalDisplay: precision,
       })
     );
     if (error || !result) {

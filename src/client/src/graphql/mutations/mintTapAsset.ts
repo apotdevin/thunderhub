@@ -7,7 +7,7 @@ export const MINT_TAP_ASSET = gql`
     $assetType: TapAssetType
     $grouped: Boolean
     $groupKey: String
-    $precision: Int
+    $precision: Int!
   ) {
     mintTapAsset(
       name: $name
