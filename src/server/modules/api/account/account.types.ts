@@ -39,8 +39,6 @@ export class ServerAccount {
   @Field()
   slug: string;
   @Field()
-  loggedIn: boolean;
-  @Field()
   type: string;
   @Field()
   twofaEnabled: boolean;
@@ -113,7 +111,23 @@ export class TeamMutations {
 }
 
 @ObjectType()
+export class SessionInfo {
+  @Field()
+  loggedIn: boolean;
+  @Field({ nullable: true })
+  type?: string;
+  @Field({ nullable: true })
+  name?: string;
+  @Field({ nullable: true })
+  slug?: string;
+}
+
+@ObjectType()
 export class PublicQueries {
+  @Field()
+  id: string;
   @Field(() => [ServerAccount])
   get_server_accounts: ServerAccount[];
+  @Field(() => SessionInfo)
+  get_session_info: SessionInfo;
 }

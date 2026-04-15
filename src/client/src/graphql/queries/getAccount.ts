@@ -6,7 +6,6 @@ export const GET_ACCOUNT = gql`
       name
       id
       slug
-      loggedIn
       type
       twofaEnabled
       hasNode

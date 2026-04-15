@@ -1148,6 +1148,8 @@ export type PublicMutationGet_Session_TokenArgs = {
 export type PublicQueries = {
   __typename?: 'PublicQueries';
   get_server_accounts: Array<ServerAccount>;
+  get_session_info: SessionInfo;
+  id: Scalars['String']['output'];
 };
 
 export type Query = {
@@ -1307,11 +1309,18 @@ export type ServerAccount = {
   __typename?: 'ServerAccount';
   hasNode?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['String']['output'];
-  loggedIn: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   slug: Scalars['String']['output'];
   twofaEnabled: Scalars['Boolean']['output'];
   type: Scalars['String']['output'];
+};
+
+export type SessionInfo = {
+  __typename?: 'SessionInfo';
+  loggedIn: Scalars['Boolean']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  slug?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
 };
 
 export type SetupTradePartnerInput = {

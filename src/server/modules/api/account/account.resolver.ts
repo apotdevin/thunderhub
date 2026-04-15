@@ -17,6 +17,7 @@ import {
   EditNodeResult,
   PublicQueries,
   ServerAccount,
+  SessionInfo,
   TeamMutations,
   UserQueries,
   UserNode,
@@ -29,6 +30,31 @@ import { Throttle, seconds } from '@nestjs/throttler';
 import { UserService } from '../../user/user.service';
 import { ProviderRegistryService } from '../../node/provider-registry.service';
 import { getNetwork } from '../../../utils/network';
+import { v5 as uuidv5 } from 'uuid';
+
+// Mask the middle of a string, keeping the first character and padding the
+// rest with a fixed number of bullets so the original length isn't leaked.
+const maskSegment = (value: string): string => {
+  if (!value) return '';
+  return `${value[0]}${'•'.repeat(4)}`;
+};
+
+const obfuscateName = (name: string): string => {
+  if (!name) return '';
+  // Email: mask local part and domain name but keep the TLD as a hint.
+  const atIndex = name.indexOf('@');
+  if (atIndex > 0) {
+    const local = name.slice(0, atIndex);
+    const domain = name.slice(atIndex + 1);
+    const dotIndex = domain.lastIndexOf('.');
+    const maskedDomain =
+      dotIndex > 0
+        ? `${maskSegment(domain)}${domain.slice(dotIndex)}`
+        : maskSegment(domain);
+    return `${maskSegment(local)}@${maskedDomain}`;
+  }
+  return maskSegment(name);
+};
 
 @Resolver()
 export class AccountResolver {
@@ -49,7 +75,6 @@ export class AccountResolver {
           name: 'Account',
           id: user.id,
           slug: 'db',
-          loggedIn: true,
           type: 'db',
           twofaEnabled: false,
           hasNode: false,
@@ -60,7 +85,6 @@ export class AccountResolver {
         name: nodes[0].name,
         id: user.id,
         slug: nodes[0].slug,
-        loggedIn: true,
         type: 'db',
         twofaEnabled: false,
         hasNode: true,
@@ -79,7 +103,6 @@ export class AccountResolver {
         name: 'SSO Account',
         id: 'sso',
         slug: 'sso',
-        loggedIn: true,
         type: 'sso',
         twofaEnabled: false,
       };
@@ -89,7 +112,6 @@ export class AccountResolver {
       name: currentAccount.name,
       id: user.id,
       slug: currentAccount.slug || user.id.slice(0, 8),
-      loggedIn: true,
       type: 'server',
       twofaEnabled: !!currentAccount.twofaSecret,
     };
@@ -302,7 +324,6 @@ export class PublicQueriesResolver {
             name,
             id: hash,
             slug: key === 'sso' ? 'sso' : account.slug || hash.slice(0, 8),
-            loggedIn: currentAccount?.hash === key,
             type: key === 'sso' ? 'sso' : 'server',
             twofaEnabled: false,
           });
@@ -313,18 +334,66 @@ export class PublicQueriesResolver {
     // Add a DB account entry when the database has users
     const dbHasUsers = await this.userService.hasUsers();
     if (dbHasUsers) {
-      const isDbLoggedIn = !!parsed && parsed.authType === AuthType.USER;
-
       mapped.push({
         name: 'Account Login',
         id: 'db',
         slug: 'db',
-        loggedIn: isDbLoggedIn,
         type: 'db',
         twofaEnabled: false,
       });
     }
 
     return mapped;
+  }
+
+  @ResolveField(() => String)
+  id(): string {
+    // Distinct cache ID per query so Apollo caches each PublicQueries
+    // response separately instead of merging partial field sets.
+    return uuidv5(PublicQueriesResolver.name, uuidv5.URL);
+  }
+
+  @ResolveField(() => SessionInfo)
+  async get_session_info(
+    @Context() { authToken }: ContextType
+  ): Promise<SessionInfo> {
+    const parsed = authToken?.sub ? parseSubject(authToken.sub) : undefined;
+
+    if (!parsed) {
+      return { loggedIn: false };
+    }
+
+    if (parsed.authType === AuthType.USER) {
+      const user = await this.userService.getUserById(parsed.id);
+      if (!user) {
+        return { loggedIn: false };
+      }
+      return {
+        loggedIn: true,
+        type: 'db',
+        name: obfuscateName(user.email),
+      };
+    }
+
+    const account = this.accountsService.getAccount(parsed.id);
+    if (!account) {
+      return { loggedIn: false };
+    }
+
+    if (account.hash === 'sso') {
+      return {
+        loggedIn: true,
+        type: 'sso',
+        name: 'SSO Account',
+        slug: 'sso',
+      };
+    }
+
+    return {
+      loggedIn: true,
+      type: 'server',
+      name: obfuscateName(account.name),
+      slug: account.slug || account.hash.slice(0, 8),
+    };
   }
 }

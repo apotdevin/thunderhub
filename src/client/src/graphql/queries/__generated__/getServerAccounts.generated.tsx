@@ -11,12 +11,12 @@ export type GetServerAccountsQuery = {
   __typename?: 'Query';
   public: {
     __typename?: 'PublicQueries';
+    id: string;
     get_server_accounts: Array<{
       __typename?: 'ServerAccount';
       name: string;
       id: string;
       slug: string;
-      loggedIn: boolean;
       type: string;
     }>;
   };
@@ -25,11 +25,11 @@ export type GetServerAccountsQuery = {
 export const GetServerAccountsDocument = gql`
   query GetServerAccounts {
     public {
+      id
       get_server_accounts {
         name
         id
         slug
-        loggedIn
         type
       }
     }

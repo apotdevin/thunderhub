@@ -12,7 +12,6 @@ export type GetAccountQuery = {
     name: string;
     id: string;
     slug: string;
-    loggedIn: boolean;
     type: string;
     twofaEnabled: boolean;
     hasNode?: boolean | null;
@@ -25,7 +24,6 @@ export const GetAccountDocument = gql`
       name
       id
       slug
-      loggedIn
       type
       twofaEnabled
       hasNode

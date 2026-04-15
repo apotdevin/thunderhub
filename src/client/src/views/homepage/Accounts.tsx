@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import {
   Lock,
-  Unlock,
   ChevronDown,
   ChevronUp,
   Loader2,
   ExternalLink,
+  UserCircle2,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -15,10 +15,16 @@ import {
 } from '../../graphql/queries/__generated__/getServerAccounts.generated';
 import { useLogoutMutation } from '../../graphql/mutations/__generated__/logout.generated';
 import { useGetNodeInfoLazyQuery } from '../../graphql/queries/__generated__/getNodeInfo.generated';
+import {
+  GetSessionInfoQuery,
+  useGetSessionInfoQuery,
+} from '../../graphql/queries/__generated__/getSessionInfo.generated';
+import { Button } from '@/components/ui/button';
 import { Login } from './Login';
 import { DbLogin } from './DbLogin';
 
 type ServerAccount = GetServerAccountsQuery['public']['get_server_accounts'][0];
+type SessionInfo = GetSessionInfoQuery['public']['get_session_info'];
 
 const RenderIntro = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -67,16 +73,76 @@ const RenderIntro = () => {
   );
 };
 
+const ContinueCard = ({
+  session,
+  onContinue,
+  onSwitch,
+  loading,
+}: {
+  session: SessionInfo;
+  onContinue: () => void;
+  onSwitch: () => void;
+  loading: boolean;
+}) => {
+  const label =
+    session.name ??
+    (session.type === 'db'
+      ? 'Account Login'
+      : session.type === 'sso'
+        ? 'SSO Account'
+        : 'your account');
+
+  return (
+    <div className="mx-auto w-full max-w-md px-4">
+      <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+        <div className="mb-5 flex flex-col items-center text-center">
+          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+            <UserCircle2 size={28} className="text-primary" />
+          </div>
+          <h2 className="text-lg font-semibold text-foreground">
+            You&apos;re already signed in
+          </h2>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            Continue as{' '}
+            <span className="font-medium text-foreground">{label}</span>
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Button disabled={loading} onClick={onContinue} className="w-full">
+            {loading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              'Continue'
+            )}
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={onSwitch}
+            disabled={loading}
+            className="w-full"
+          >
+            Log in with another account
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const Accounts = () => {
   const navigate = useNavigate();
   const [newAccount, setNewAccount] = useState<ServerAccount | null>(null);
-  const [connectingAccount, setConnectingAccount] =
-    useState<ServerAccount | null>(null);
+  const [connectingSlug, setConnectingSlug] = useState<string | null>(null);
+  const [switchMode, setSwitchMode] = useState(false);
 
   const [logout] = useLogoutMutation({ refetchQueries: ['GetServerAccounts'] });
 
   const { data: accountData, loading: loadingData } =
     useGetServerAccountsQuery();
+
+  const { data: sessionData, loading: loadingSession } =
+    useGetSessionInfoQuery();
 
   const [getCanConnect, { data, loading }] = useGetNodeInfoLazyQuery({
     fetchPolicy: 'network-only',
@@ -87,12 +153,12 @@ export const Accounts = () => {
   });
 
   useEffect(() => {
-    if (!loading && data && data.getNodeInfo && connectingAccount) {
-      navigate(`/${connectingAccount.slug}/home`);
+    if (!loading && data && data.getNodeInfo && connectingSlug) {
+      navigate(`/${connectingSlug}/home`);
     }
-  }, [data, loading, navigate, connectingAccount]);
+  }, [data, loading, navigate, connectingSlug]);
 
-  if (loadingData) {
+  if (loadingData || loadingSession) {
     return (
       <div className="flex justify-center py-8">
         <Loader2 className="animate-spin text-white/60" size={24} />
@@ -103,6 +169,7 @@ export const Accounts = () => {
   const allAccounts = accountData?.public?.get_server_accounts ?? [];
   const hasDbAccount = allAccounts.some(a => a?.type === 'db');
   const yamlAccounts = allAccounts.filter(a => a && a.type !== 'db');
+  const session = sessionData?.public?.get_session_info;
 
   if (!allAccounts.length) {
     return <RenderIntro />;
@@ -110,15 +177,37 @@ export const Accounts = () => {
 
   const handleClick = (account: ServerAccount) => () => {
     if (account.type === 'sso') {
-      setConnectingAccount(account);
-      getCanConnect();
-    } else if (account.type === 'server' && account.loggedIn) {
-      setConnectingAccount(account);
+      setConnectingSlug(account.slug);
       getCanConnect();
     } else {
       setNewAccount(account);
     }
   };
+
+  if (session?.loggedIn && !switchMode) {
+    const handleContinue = () => {
+      if (
+        (session.type === 'server' || session.type === 'sso') &&
+        session.slug
+      ) {
+        // Verify LND connection before navigating; reuse yaml connect flow.
+        setConnectingSlug(session.slug);
+        getCanConnect();
+        return;
+      }
+      // For db or unknown: let RootRedirect resolve the target route.
+      navigate('/');
+    };
+
+    return (
+      <ContinueCard
+        session={session}
+        onContinue={handleContinue}
+        onSwitch={() => setSwitchMode(true)}
+        loading={loading}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -160,11 +249,7 @@ export const Accounts = () => {
                     onClick={handleClick(account)}
                   >
                     <div className="flex items-center gap-2">
-                      {account.loggedIn ? (
-                        <Unlock size={13} className="text-green-500" />
-                      ) : (
-                        <Lock size={13} className="text-muted-foreground" />
-                      )}
+                      <Lock size={13} className="text-muted-foreground" />
                       <span className="text-sm font-medium text-foreground">
                         {account.type === 'sso' ? 'SSO Account' : account.name}
                       </span>
@@ -177,7 +262,7 @@ export const Accounts = () => {
                       />
                     ) : (
                       <span className="text-xs text-muted-foreground">
-                        {account.loggedIn ? 'Connect' : 'Login'}
+                        Login
                       </span>
                     )}
                   </button>

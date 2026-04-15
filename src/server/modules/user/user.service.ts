@@ -119,6 +119,25 @@ export class UserService {
     );
   }
 
+  async getUserById(userId: string): Promise<{
+    id: string;
+    email: string;
+  } | null> {
+    if (!this.drizzle) return null;
+
+    const { db, schema } = this.drizzle;
+    const rows = await (db as any)
+      .select({
+        id: schema.users.id,
+        email: schema.users.email,
+      })
+      .from(schema.users)
+      .where(eq(schema.users.id, userId))
+      .limit(1);
+
+    return rows[0] || null;
+  }
+
   async getUserByEmail(email: string): Promise<{
     id: string;
     email: string;

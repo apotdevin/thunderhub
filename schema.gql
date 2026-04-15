@@ -837,6 +837,8 @@ type PublicMutation {
 
 type PublicQueries {
   get_server_accounts: [ServerAccount!]!
+  get_session_info: SessionInfo!
+  id: String!
 }
 
 type Query {
@@ -910,11 +912,17 @@ type Route {
 type ServerAccount {
   hasNode: Boolean
   id: String!
-  loggedIn: Boolean!
   name: String!
   slug: String!
   twofaEnabled: Boolean!
   type: String!
+}
+
+type SessionInfo {
+  loggedIn: Boolean!
+  name: String
+  slug: String
+  type: String
 }
 
 input SetupTradePartnerInput {
