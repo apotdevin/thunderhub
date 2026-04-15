@@ -581,19 +581,20 @@ describe('TapdResolver', () => {
   });
 
   describe('mintTapAsset', () => {
+    const baseInput = {
+      name: 'TestCoin',
+      amount: '1000',
+      assetType: TapAssetType.NORMAL,
+      grouped: true,
+      precision: 0,
+    };
+
     it('returns batchKey as hex', async () => {
       service.mintAsset.mockResolvedValue({
         pendingBatch: { batchKey: Buffer.from('aabb', 'hex') },
       });
 
-      const result = await resolver.mintTapAsset(
-        userId,
-        'TestCoin',
-        '1000',
-        TapAssetType.NORMAL,
-        true,
-        0
-      );
+      const result = await resolver.mintTapAsset(userId, baseInput);
 
       expect(result.batchKey).toBe('aabb');
     });
@@ -603,14 +604,7 @@ describe('TapdResolver', () => {
         pendingBatch: { batchKey: Buffer.from('aabb', 'hex') },
       });
 
-      await resolver.mintTapAsset(
-        userId,
-        'TestCoin',
-        '1000',
-        TapAssetType.NORMAL,
-        true,
-        2
-      );
+      await resolver.mintTapAsset(userId, { ...baseInput, precision: 2 });
 
       expect(service.mintAsset).toHaveBeenCalledWith(
         expect.objectContaining({ decimalDisplay: 2 })
@@ -619,28 +613,14 @@ describe('TapdResolver', () => {
 
     it('rejects precision above 18', async () => {
       await expect(
-        resolver.mintTapAsset(
-          userId,
-          'TestCoin',
-          '1000',
-          TapAssetType.NORMAL,
-          true,
-          19
-        )
+        resolver.mintTapAsset(userId, { ...baseInput, precision: 19 })
       ).rejects.toThrow(GraphQLError);
       expect(service.mintAsset).not.toHaveBeenCalled();
     });
 
     it('rejects negative precision', async () => {
       await expect(
-        resolver.mintTapAsset(
-          userId,
-          'TestCoin',
-          '1000',
-          TapAssetType.NORMAL,
-          true,
-          -1
-        )
+        resolver.mintTapAsset(userId, { ...baseInput, precision: -1 })
       ).rejects.toThrow(GraphQLError);
       expect(service.mintAsset).not.toHaveBeenCalled();
     });

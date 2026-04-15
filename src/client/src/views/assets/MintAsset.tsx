@@ -70,12 +70,14 @@ export const MintAsset: FC = () => {
     }
     mintAsset({
       variables: {
-        name,
-        amount,
-        assetType,
-        grouped,
-        groupKey: groupKey || null,
-        precision: parsedPrecision,
+        input: {
+          name,
+          amount,
+          assetType,
+          grouped,
+          groupKey: groupKey || null,
+          precision: parsedPrecision,
+        },
       },
     });
   };
