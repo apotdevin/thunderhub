@@ -342,21 +342,6 @@ export class TradeResolver {
       return undefined;
     }
 
-    // Taproot Asset channels use LND's SIMPLE_TAPROOT_OVERLAY commitment type,
-    // which the `lightning` package does not map — it leaves `type` undefined.
-    // BTC channels map to "anchor", "simplified_taproot", etc. Filtering by a
-    // truthy `type` isolates BTC channels.
-    const btcChannel = channelsResult.channels.find(
-      (ch: { type?: string; id: string }) => !!ch.type
-    );
-
-    if (!btcChannel) {
-      this.logger.warn('No BTC channel with peer; omitting return hint', {
-        peerPubkey,
-      });
-      return undefined;
-    }
-
     const [identity, identityError] = await toWithError(
       this.nodeService.getIdentity(id)
     );
@@ -368,17 +353,49 @@ export class TradeResolver {
       return undefined;
     }
 
-    // Hop fees in the hint are an upper bound for sender-side pathfinding.
-    // The edge charges its actual policy at HTLC time, so overestimating here
-    // is safe and avoids hard-coding the peer's exact fee schedule.
+    // Taproot Asset channels use LND's SIMPLE_TAPROOT_OVERLAY commitment type,
+    // which the `lightning` package does not map — it leaves `type` undefined.
+    // BTC channels map to "anchor", "simplified_taproot", etc. Filtering by a
+    // truthy `type` isolates BTC channels. Sort by `remote_balance` descending
+    // so the return leg uses the channel with the most peer-side capacity.
+    const btcChannels = channelsResult.channels
+      .filter(
+        (ch: { type?: string; id: string; remote_balance: number }) => !!ch.type
+      )
+      .sort(
+        (a: { remote_balance: number }, b: { remote_balance: number }) =>
+          b.remote_balance - a.remote_balance
+      );
+
+    const btcChannel = btcChannels[0];
+
+    if (!btcChannel) {
+      this.logger.warn('No BTC channel with peer; omitting return hint', {
+        peerPubkey,
+      });
+      return undefined;
+    }
+
+    // Pull the peer's gossiped policy for this channel so the hint reflects the
+    // fees they actually advertise. Falls back to a conservative upper bound
+    // when gossip isn't available (e.g. private or freshly opened channel) —
+    // LND only uses the hint to budget routes; the peer re-applies its real
+    // policy at HTLC time.
+    const [channelInfo] = await toWithError(
+      this.nodeService.getChannel(id, btcChannel.id)
+    );
+    const peerPolicy = channelInfo?.policies?.find(
+      (policy: { public_key: string }) => policy.public_key === peerPubkey
+    );
+
     return [
       { public_key: peerPubkey },
       {
         public_key: identity.public_key,
         channel: btcChannel.id,
-        base_fee_mtokens: '1000',
-        fee_rate: 100,
-        cltv_delta: 40,
+        base_fee_mtokens: peerPolicy?.base_fee_mtokens ?? '1000',
+        fee_rate: peerPolicy?.fee_rate ?? 2500, // parts per million
+        cltv_delta: peerPolicy?.cltv_delta ?? 40,
       },
     ];
   }
