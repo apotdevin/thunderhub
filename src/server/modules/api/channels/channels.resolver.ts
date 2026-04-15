@@ -22,6 +22,7 @@ import { auto } from 'async';
 import { FetchService } from '../../fetch/fetch.service';
 import { GetRecommendedNode } from '../amboss/amboss.gql';
 import { AmbossService } from '../amboss/amboss.service';
+import { TapdNodeService } from '../../node/tapd/tapd-node.service';
 
 @Resolver()
 export class ChannelsResolver {
@@ -29,6 +30,7 @@ export class ChannelsResolver {
     private nodeService: NodeService,
     private fetchService: FetchService,
     private ambossService: AmbossService,
+    private tapdNodeService: TapdNodeService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -77,12 +79,38 @@ export class ChannelsResolver {
       ...(partner_public_key ? { partner_public_key } : {}),
     });
 
-    return channels.map(channel => ({
-      ...channel,
-      partner_fee_info: { localKey: public_key },
-      channel_age: getChannelAge(channel.id, current_block_height),
-      partner_node_info: { publicKey: channel.partner_public_key },
-    }));
+    const [assetChannels] = await toWithError(
+      this.tapdNodeService.getAssetChannelBalances({
+        id,
+        ...(partner_public_key ? { peerPubkey: partner_public_key } : {}),
+      })
+    );
+
+    const assetByChannelPoint = new Map(
+      (assetChannels || []).map(ac => [ac.channelPoint, ac])
+    );
+
+    return channels.map(channel => {
+      const channelPoint = `${channel.transaction_id}:${channel.transaction_vout}`;
+      const asset = assetByChannelPoint.get(channelPoint);
+      return {
+        ...channel,
+        partner_fee_info: { localKey: public_key },
+        channel_age: getChannelAge(channel.id, current_block_height),
+        partner_node_info: { publicKey: channel.partner_public_key },
+        ...(asset
+          ? {
+              asset: {
+                assetId: asset.assetId,
+                groupKey: asset.groupKey,
+                localBalance: asset.localBalance,
+                remoteBalance: asset.remoteBalance,
+                capacity: asset.capacity,
+              },
+            }
+          : {}),
+      };
+    });
   }
 
   @Query(() => [ClosedChannel])
