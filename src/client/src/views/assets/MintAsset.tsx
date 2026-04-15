@@ -12,6 +12,7 @@ import { getErrorContent } from '../../utils/error';
 export const MintAsset: FC = () => {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
+  const [precision, setPrecision] = useState('');
   const [assetType, setAssetType] = useState(TapAssetType.Normal);
   const [grouped, setGrouped] = useState(true);
   const [groupKey, setGroupKey] = useState('');
@@ -46,6 +47,7 @@ export const MintAsset: FC = () => {
       setBatchKey(null);
       setName('');
       setAmount('');
+      setPrecision('');
       setGrouped(true);
       setGroupKey('');
     },
@@ -53,17 +55,29 @@ export const MintAsset: FC = () => {
   });
 
   const handleMint = () => {
-    if (!name || !amount) {
-      toast.error('Name and amount are required');
+    if (!name || !amount || precision === '') {
+      toast.error('Name, amount, and precision are required');
+      return;
+    }
+    const parsedPrecision = Number(precision);
+    if (
+      !Number.isInteger(parsedPrecision) ||
+      parsedPrecision < 0 ||
+      parsedPrecision > 18
+    ) {
+      toast.error('Precision must be an integer between 0 and 18');
       return;
     }
     mintAsset({
       variables: {
-        name,
-        amount,
-        assetType,
-        grouped,
-        groupKey: groupKey || null,
+        input: {
+          name,
+          amount,
+          assetType,
+          grouped,
+          groupKey: groupKey || null,
+          precision: parsedPrecision,
+        },
       },
     });
   };
@@ -129,6 +143,24 @@ export const MintAsset: FC = () => {
           </div>
           <div>
             <label className="text-xs text-muted-foreground mb-1 block">
+              Precision
+            </label>
+            <input
+              type="number"
+              value={precision}
+              onChange={e => setPrecision(e.target.value)}
+              min={0}
+              max={18}
+              step={1}
+              placeholder="e.g. 2 for cent-like units"
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Number of decimal places to display. 0–18.
+            </p>
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground mb-1 block">
               Type
             </label>
             <select
@@ -143,7 +175,7 @@ export const MintAsset: FC = () => {
           <div className="flex gap-2">
             <Button
               onClick={handleMint}
-              disabled={minting || !name || !amount}
+              disabled={minting || !name || !amount || precision === ''}
               size="sm"
             >
               {minting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

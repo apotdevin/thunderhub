@@ -4,11 +4,7 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type MintTapAssetMutationVariables = Types.Exact<{
-  name: Types.Scalars['String']['input'];
-  amount: Types.Scalars['String']['input'];
-  assetType?: Types.InputMaybe<Types.TapAssetType>;
-  grouped?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
-  groupKey?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  input: Types.TapMintAssetInput;
 }>;
 
 export type MintTapAssetMutation = {
@@ -17,20 +13,8 @@ export type MintTapAssetMutation = {
 };
 
 export const MintTapAssetDocument = gql`
-  mutation MintTapAsset(
-    $name: String!
-    $amount: String!
-    $assetType: TapAssetType
-    $grouped: Boolean
-    $groupKey: String
-  ) {
-    mintTapAsset(
-      name: $name
-      amount: $amount
-      assetType: $assetType
-      grouped: $grouped
-      groupKey: $groupKey
-    ) {
+  mutation MintTapAsset($input: TapMintAssetInput!) {
+    mintTapAsset(input: $input) {
       batchKey
     }
   }
@@ -53,11 +37,7 @@ export type MintTapAssetMutationFn = Apollo.MutationFunction<
  * @example
  * const [mintTapAssetMutation, { data, loading, error }] = useMintTapAssetMutation({
  *   variables: {
- *      name: // value for 'name'
- *      amount: // value for 'amount'
- *      assetType: // value for 'assetType'
- *      grouped: // value for 'grouped'
- *      groupKey: // value for 'groupKey'
+ *      input: // value for 'input'
  *   },
  * });
  */

@@ -26,6 +26,7 @@ import {
   TapAssetInvoiceResponse,
   TapFederationServerList,
   TapFinalizeBatchResponse,
+  TapMintAssetInput,
   TapMintResponse,
   TapFundChannelInput,
   TapFundChannelResponse,
@@ -310,16 +311,14 @@ export class TapdResolver {
   @Mutation(() => TapMintResponse)
   async mintTapAsset(
     @CurrentUser() { id }: UserId,
-    @Args('name') name: string,
-    @Args('amount') amount: string,
-    @Args('assetType', {
-      type: () => TapAssetType,
-      defaultValue: TapAssetType.NORMAL,
-    })
-    assetType: TapAssetType,
-    @Args('grouped', { nullable: true, defaultValue: true }) grouped: boolean,
-    @Args('groupKey', { nullable: true }) groupKey?: string
+    @Args('input') input: TapMintAssetInput
   ) {
+    const { name, amount, assetType, grouped, groupKey, precision } = input;
+
+    if (!Number.isInteger(precision) || precision < 0 || precision > 18) {
+      throw new GraphQLError('precision must be an integer between 0 and 18');
+    }
+
     const typeStr =
       assetType === TapAssetType.NORMAL ? 'NORMAL' : 'COLLECTIBLE';
     const [result, error] = await toWithError(
@@ -330,6 +329,7 @@ export class TapdResolver {
         assetType: typeStr,
         grouped,
         groupKey,
+        decimalDisplay: precision,
       })
     );
     if (error || !result) {
