@@ -173,11 +173,13 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     useGetPeerChannelsQuery({
       variables: { partner_public_key: offer?.node.pubkey || '' },
       skip: !offer?.node.pubkey || !open,
+      fetchPolicy: 'network-only',
     });
 
   const { data: assetChannelsData } = useGetTapAssetChannelBalancesQuery({
     variables: { peerPubkey: offer?.node.pubkey || '' },
     skip: !offer?.node.pubkey || !open,
+    fetchPolicy: 'network-only',
   });
 
   if (!offer) return null;
@@ -463,30 +465,47 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                   {btcOnlyChannels.map(ch => (
                     <div
                       key={ch.id}
-                      className="flex justify-between rounded-md border border-border bg-muted/20 px-2 py-1.5"
+                      className="flex flex-col gap-0.5 rounded-md border border-border bg-muted/20 px-2 py-1.5"
                     >
-                      <span className="text-muted-foreground">
-                        {Number(ch.capacity).toLocaleString()} sats
-                      </span>
-                      <span>
-                        {Number(ch.local_balance).toLocaleString()} /{' '}
-                        {Number(ch.remote_balance).toLocaleString()}
-                      </span>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">
+                          {Number(ch.capacity).toLocaleString()} sats
+                        </span>
+                        <span>
+                          {Number(ch.local_balance).toLocaleString()} /{' '}
+                          {Number(ch.remote_balance).toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                        <span className="font-mono">{ch.id}</span>
+                        <span
+                          className={
+                            ch.is_active ? 'text-green-500' : 'text-yellow-500'
+                          }
+                        >
+                          {ch.is_active ? 'active' : 'inactive'}
+                        </span>
+                      </div>
                     </div>
                   ))}
                   {assetChannels.map(ac => (
                     <div
                       key={ac.channelPoint}
-                      className="flex justify-between rounded-md border border-border bg-muted/20 px-2 py-1.5"
+                      className="flex flex-col gap-0.5 rounded-md border border-border bg-muted/20 px-2 py-1.5"
                     >
-                      <span className="text-muted-foreground">
-                        {atomicToDisplay(ac.capacity, assetPrecision)}{' '}
-                        {assetSymbol}
-                      </span>
-                      <span>
-                        {atomicToDisplay(ac.localBalance, assetPrecision)} /{' '}
-                        {atomicToDisplay(ac.remoteBalance, assetPrecision)}
-                      </span>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">
+                          {atomicToDisplay(ac.capacity, assetPrecision)}{' '}
+                          {assetSymbol}
+                        </span>
+                        <span>
+                          {atomicToDisplay(ac.localBalance, assetPrecision)} /{' '}
+                          {atomicToDisplay(ac.remoteBalance, assetPrecision)}
+                        </span>
+                      </div>
+                      <div className="text-[10px] text-muted-foreground font-mono break-all">
+                        {ac.channelPoint}
+                      </div>
                     </div>
                   ))}
                 </div>
