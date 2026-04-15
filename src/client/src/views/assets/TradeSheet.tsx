@@ -270,6 +270,15 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const loading = openChannelLoading || setupLoading || tradeLoading;
   const hasRate = !!rate && rate !== '0';
 
+  // Safeguard: the quoted sats amount can exceed our BTC liquidity with the
+  // peer (e.g. rate changed since the balance checks above). For buys the
+  // trader pays out via their local BTC balance; for sells the sats leg comes
+  // back via the peer's local balance (our remote).
+  const quotedSatsNum = quotedSats ? Number(quotedSats) : 0;
+  const btcBalanceForTrade = isAssetPurchase ? totalBtcLocal : totalBtcRemote;
+  const quotedSatsInsufficient =
+    quotedSatsNum > 0 && btcBalanceForTrade < quotedSatsNum;
+
   const displaySats = quotedSats || (hasRate ? satsAmount : null);
   const satsLabel = displaySats
     ? `${Number(displaySats).toLocaleString()} sats`
@@ -364,6 +373,12 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     if (!amount || !offer.node.pubkey) return;
     if (!displaySats || displaySats === '0') {
       toast.error('No valid quote available — please go back and try again');
+      return;
+    }
+    if (quotedSatsInsufficient) {
+      toast.error(
+        `Quoted ${quotedSatsNum.toLocaleString()} sats exceeds available BTC liquidity with peer`
+      );
       return;
     }
     const assetAtomicAmount = String(displayToAtomic(amount, assetPrecision));
@@ -633,6 +648,15 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                         {receiveLabel}
                       </div>
                     </div>
+                    {quotedSatsInsufficient && (
+                      <div className="rounded-md border border-red-500/30 bg-red-500/5 p-3 text-sm text-red-600">
+                        Quoted {quotedSatsNum.toLocaleString()} sats exceeds
+                        available {isAssetPurchase ? 'outbound' : 'inbound'} BTC
+                        liquidity with this peer (
+                        {btcBalanceForTrade.toLocaleString()} sats). Rebalance
+                        or reduce trade size.
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -729,7 +753,11 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                   size="lg"
                   onClick={handleTrade}
                   disabled={
-                    loading || quoteLoading || !displaySats || quoteExpired
+                    loading ||
+                    quoteLoading ||
+                    !displaySats ||
+                    quoteExpired ||
+                    quotedSatsInsufficient
                   }
                   className="flex-1"
                 >
