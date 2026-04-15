@@ -3,6 +3,7 @@ import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { GraphQLError } from 'graphql';
+import type { Route } from 'lightning';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
@@ -259,8 +260,20 @@ export class TradeResolver {
       throw new GraphQLError('Derived sats amount is zero or negative');
     }
 
+    // Self-payment loop: assets leave via the TA channel (forced first hop by
+    // tapd/RFQ) and the sats return leg comes back via the BTC channel. If we
+    // let LND auto-include private channel hints (is_including_private_channels),
+    // the TA channel also gets advertised — htlcswitch then rejects the forward
+    // with "same incoming and outgoing channel" because tapd already picked the
+    // TA channel for the outgoing hop. Build an explicit BTC-only route hint
+    // instead so pathfinding only sees the valid return path.
+    const btcHopHint = await this.buildBtcReturnHint(id, input.peerPubkey);
+
     const [invoice, invoiceError] = await toWithError(
-      this.nodeService.createInvoice(id, { tokens: invoiceSats })
+      this.nodeService.createInvoice(id, {
+        tokens: invoiceSats,
+        routes: btcHopHint ? [btcHopHint] : undefined,
+      })
     );
 
     if (invoiceError || !invoice?.request) {
@@ -299,6 +312,75 @@ export class TradeResolver {
       satsAmount: String(invoiceSats),
       feeSats: payResult.feeSat ? String(payResult.feeSat) : undefined,
     };
+  }
+
+  /**
+   * Builds a single-hop BOLT11 route hint covering the BTC return leg from
+   * the edge peer back to the trader. Skips the Taproot Asset channel so the
+   * self-payment loop does not try to return funds over the same channel that
+   * carried the outgoing asset HTLC.
+   *
+   * Returns undefined when no suitable BTC channel is found; the caller omits
+   * the hint entirely in that case.
+   */
+  private async buildBtcReturnHint(
+    id: string,
+    peerPubkey: string
+  ): Promise<Route | undefined> {
+    const [channelsResult, channelsError] = await toWithError(
+      this.nodeService.getChannels(id, {
+        partner_public_key: peerPubkey,
+        is_active: true,
+      })
+    );
+
+    if (channelsError || !channelsResult?.channels?.length) {
+      this.logger.warn(
+        'Could not fetch channels for BTC return hint; omitting hint',
+        { error: channelsError, peerPubkey }
+      );
+      return undefined;
+    }
+
+    // Taproot Asset channels use LND's SIMPLE_TAPROOT_OVERLAY commitment type,
+    // which the `lightning` package does not map — it leaves `type` undefined.
+    // BTC channels map to "anchor", "simplified_taproot", etc. Filtering by a
+    // truthy `type` isolates BTC channels.
+    const btcChannel = channelsResult.channels.find(
+      (ch: { type?: string; id: string }) => !!ch.type
+    );
+
+    if (!btcChannel) {
+      this.logger.warn('No BTC channel with peer; omitting return hint', {
+        peerPubkey,
+      });
+      return undefined;
+    }
+
+    const [identity, identityError] = await toWithError(
+      this.nodeService.getIdentity(id)
+    );
+
+    if (identityError || !identity?.public_key) {
+      this.logger.warn('Could not fetch identity for return hint; omitting', {
+        error: identityError,
+      });
+      return undefined;
+    }
+
+    // Hop fees in the hint are an upper bound for sender-side pathfinding.
+    // The edge charges its actual policy at HTLC time, so overestimating here
+    // is safe and avoids hard-coding the peer's exact fee schedule.
+    return [
+      { public_key: peerPubkey },
+      {
+        public_key: identity.public_key,
+        channel: btcChannel.id,
+        base_fee_mtokens: '1000',
+        fee_rate: 100,
+        cltv_delta: 40,
+      },
+    ];
   }
 
   /**

@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+import { Routes } from 'lightning';
 
 // ─── Account types ───────────────────────────────────────────────
 
@@ -89,6 +90,7 @@ export type CreateInvoiceOptions = {
   is_including_private_channels?: boolean;
   is_fallback_included?: boolean;
   secret?: string;
+  routes?: Routes;
 };
 
 export type PayViaPaymentDetailsOptions = {
