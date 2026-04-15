@@ -298,6 +298,27 @@ export class TapAssetInvoiceInput {
 }
 
 @InputType()
+export class TapMintAssetInput {
+  @Field()
+  name: string;
+
+  @Field()
+  amount: string;
+
+  @Field(() => Int)
+  precision: number;
+
+  @Field(() => TapAssetType, { defaultValue: TapAssetType.NORMAL })
+  assetType: TapAssetType;
+
+  @Field({ defaultValue: true })
+  grouped: boolean;
+
+  @Field({ nullable: true })
+  groupKey?: string;
+}
+
+@InputType()
 export class TapFundChannelInput {
   @Field()
   peerPubkey: string;
