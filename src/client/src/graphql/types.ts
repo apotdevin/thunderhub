@@ -180,6 +180,7 @@ export type ChainTransaction = {
 
 export type Channel = {
   __typename?: 'Channel';
+  asset?: Maybe<ChannelAsset>;
   capacity: Scalars['Float']['output'];
   channel_age: Scalars['Float']['output'];
   commit_transaction_fee: Scalars['Float']['output'];
@@ -207,6 +208,15 @@ export type Channel = {
   transaction_id: Scalars['String']['output'];
   transaction_vout: Scalars['Float']['output'];
   unsettled_balance: Scalars['Float']['output'];
+};
+
+export type ChannelAsset = {
+  __typename?: 'ChannelAsset';
+  assetId: Scalars['String']['output'];
+  capacity: Scalars['String']['output'];
+  groupKey?: Maybe<Scalars['String']['output']>;
+  localBalance: Scalars['String']['output'];
+  remoteBalance: Scalars['String']['output'];
 };
 
 export type ChannelFeeHealth = {
