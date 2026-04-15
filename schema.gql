@@ -102,6 +102,15 @@ type BoltzInfoType {
   min: Float!
 }
 
+input CancelMagmaOrderInput {
+  cancellationReason: OrderCancellationReason!
+  orderId: String!
+}
+
+type CancelMagmaOrderResult {
+  success: Boolean!
+}
+
 type ChainAddressSend {
   confirmationCount: Float!
   id: String!
@@ -471,6 +480,55 @@ input LndInput {
   socket: String!
 }
 
+type MagmaMutations {
+  cancel_order(input: CancelMagmaOrderInput!): CancelMagmaOrderResult!
+}
+
+type MagmaOrder {
+  amount: MagmaOrderAmount!
+  channelId: String
+  createdAt: String!
+  destination: MagmaOrderParty!
+  fees: MagmaOrderFees!
+  id: String!
+  paymentStatus: String
+  source: MagmaOrderParty!
+  status: String!
+  timeout: String
+}
+
+type MagmaOrderAmount {
+  sats: String
+}
+
+type MagmaOrderFeeAmount {
+  sats: Int
+}
+
+type MagmaOrderFees {
+  buyer: MagmaOrderFeeAmount
+  seller: MagmaOrderFeeAmount
+}
+
+type MagmaOrderParty {
+  alias: String
+  pubkey: String
+}
+
+type MagmaOrderQueries {
+  find_many: MagmaPendingOrders
+}
+
+type MagmaPendingOrders {
+  magmaUrl: String!
+  purchases: [MagmaOrder!]!
+  sales: [MagmaOrder!]!
+}
+
+type MagmaQueries {
+  orders: MagmaOrderQueries!
+}
+
 type MessageType {
   message: String
 }
@@ -499,6 +557,7 @@ type Mutation {
   lnUrlWithdraw(amount: Float!, callback: String!, description: String, k1: String!): String!
   loginAmboss: Boolean!
   logout: Boolean!
+  magma: MagmaMutations!
   mintTapAsset(amount: String!, assetType: TapAssetType! = NORMAL, groupKey: String, grouped: Boolean = true, name: String!): TapMintResponse!
   newTapAddress(amt: Int, assetId: String, groupKey: String): TapAddress!
   openChannel(input: OpenChannelParams!): OpenOrCloseChannel!
@@ -630,6 +689,12 @@ input OpenChannelParams {
 type OpenOrCloseChannel {
   transactionId: String!
   transactionOutputIndex: String!
+}
+
+enum OrderCancellationReason {
+  CHANNEL_SIZE_OUT_OF_BOUNDS
+  UNABLE_TO_CONNECT_TO_NODE
+  UNABLE_TO_PAY
 }
 
 type PayInvoice {
@@ -805,6 +870,7 @@ type Query {
   getUtxos: [Utxo!]!
   getVolumeHealth: ChannelsHealth!
   getWalletInfo: Wallet!
+  magma: MagmaQueries!
   node: CurrentNode!
   public: PublicQueries!
   recoverFunds(backup: String!): Boolean!

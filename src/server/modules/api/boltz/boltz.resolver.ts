@@ -87,7 +87,7 @@ export class BoltzResolver {
         error,
         boltzError: info,
       });
-      throw new GraphQLError('Error getting swap informaion from Boltz');
+      throw new GraphQLError('Error getting swap information from Boltz');
     }
 
     const btcPair = info?.BTC?.BTC;

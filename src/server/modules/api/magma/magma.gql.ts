@@ -52,6 +52,93 @@ export const createMagmaOrderMutation = gql`
   }
 `;
 
+export const cancelMagmaOrderMutation = gql`
+  mutation CancelOrder($input: CancelOrderInput!) {
+    market {
+      order {
+        cancel(input: $input) {
+          success
+        }
+      }
+    }
+  }
+`;
+
+export const getOrdersQuery = gql`
+  query GetOrders($page: PageInput) {
+    user {
+      market {
+        orders {
+          purchases(page: $page) {
+            total
+            list {
+              id
+              created_at
+              status
+              payment_status
+              source {
+                pubkey
+                alias
+              }
+              destination {
+                pubkey
+                alias
+              }
+              amount {
+                satoshi {
+                  sats
+                }
+              }
+              fees {
+                seller {
+                  sats
+                }
+                buyer {
+                  sats
+                }
+              }
+              timeout
+              channel_id
+            }
+          }
+          sales(page: $page) {
+            total
+            list {
+              id
+              created_at
+              status
+              payment_status
+              source {
+                pubkey
+                alias
+              }
+              destination {
+                pubkey
+                alias
+              }
+              amount {
+                satoshi {
+                  sats
+                }
+              }
+              fees {
+                seller {
+                  sats
+                }
+                buyer {
+                  sats
+                }
+              }
+              timeout
+              channel_id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const getSupportedAssetsQuery = gql`
   query GetSupportedAssets($input: SupportedAssetsInput) {
     public {

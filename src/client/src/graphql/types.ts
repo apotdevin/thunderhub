@@ -138,6 +138,16 @@ export type BoltzInfoType = {
   min: Scalars['Float']['output'];
 };
 
+export type CancelMagmaOrderInput = {
+  cancellationReason: OrderCancellationReason;
+  orderId: Scalars['String']['input'];
+};
+
+export type CancelMagmaOrderResult = {
+  __typename?: 'CancelMagmaOrderResult';
+  success: Scalars['Boolean']['output'];
+};
+
 export type ChainAddressSend = {
   __typename?: 'ChainAddressSend';
   confirmationCount: Scalars['Float']['output'];
@@ -540,6 +550,68 @@ export type LndInput = {
   socket: Scalars['String']['input'];
 };
 
+export type MagmaMutations = {
+  __typename?: 'MagmaMutations';
+  cancel_order: CancelMagmaOrderResult;
+};
+
+export type MagmaMutationsCancel_OrderArgs = {
+  input: CancelMagmaOrderInput;
+};
+
+export type MagmaOrder = {
+  __typename?: 'MagmaOrder';
+  amount: MagmaOrderAmount;
+  channelId?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  destination: MagmaOrderParty;
+  fees: MagmaOrderFees;
+  id: Scalars['String']['output'];
+  paymentStatus?: Maybe<Scalars['String']['output']>;
+  source: MagmaOrderParty;
+  status: Scalars['String']['output'];
+  timeout?: Maybe<Scalars['String']['output']>;
+};
+
+export type MagmaOrderAmount = {
+  __typename?: 'MagmaOrderAmount';
+  sats?: Maybe<Scalars['String']['output']>;
+};
+
+export type MagmaOrderFeeAmount = {
+  __typename?: 'MagmaOrderFeeAmount';
+  sats?: Maybe<Scalars['Int']['output']>;
+};
+
+export type MagmaOrderFees = {
+  __typename?: 'MagmaOrderFees';
+  buyer?: Maybe<MagmaOrderFeeAmount>;
+  seller?: Maybe<MagmaOrderFeeAmount>;
+};
+
+export type MagmaOrderParty = {
+  __typename?: 'MagmaOrderParty';
+  alias?: Maybe<Scalars['String']['output']>;
+  pubkey?: Maybe<Scalars['String']['output']>;
+};
+
+export type MagmaOrderQueries = {
+  __typename?: 'MagmaOrderQueries';
+  find_many?: Maybe<MagmaPendingOrders>;
+};
+
+export type MagmaPendingOrders = {
+  __typename?: 'MagmaPendingOrders';
+  magmaUrl: Scalars['String']['output'];
+  purchases: Array<MagmaOrder>;
+  sales: Array<MagmaOrder>;
+};
+
+export type MagmaQueries = {
+  __typename?: 'MagmaQueries';
+  orders: MagmaOrderQueries;
+};
+
 export type MessageType = {
   __typename?: 'MessageType';
   message?: Maybe<Scalars['String']['output']>;
@@ -570,6 +642,7 @@ export type Mutation = {
   lnUrlWithdraw: Scalars['String']['output'];
   loginAmboss: Scalars['Boolean']['output'];
   logout: Scalars['Boolean']['output'];
+  magma: MagmaMutations;
   mintTapAsset: TapMintResponse;
   newTapAddress: TapAddress;
   openChannel: OpenOrCloseChannel;
@@ -899,6 +972,12 @@ export type OpenOrCloseChannel = {
   transactionOutputIndex: Scalars['String']['output'];
 };
 
+export enum OrderCancellationReason {
+  ChannelSizeOutOfBounds = 'CHANNEL_SIZE_OUT_OF_BOUNDS',
+  UnableToConnectToNode = 'UNABLE_TO_CONNECT_TO_NODE',
+  UnableToPay = 'UNABLE_TO_PAY',
+}
+
 export type PayInvoice = {
   __typename?: 'PayInvoice';
   fee: Scalars['Float']['output'];
@@ -1104,6 +1183,7 @@ export type Query = {
   getUtxos: Array<Utxo>;
   getVolumeHealth: ChannelsHealth;
   getWalletInfo: Wallet;
+  magma: MagmaQueries;
   node: CurrentNode;
   public: PublicQueries;
   recoverFunds: Scalars['Boolean']['output'];

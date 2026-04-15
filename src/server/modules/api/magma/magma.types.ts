@@ -7,6 +7,160 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 
+// ─── Pending Orders ─────────────────────────────────────────────
+
+// Raw shapes returned by the Amboss Magma API (before mapping to GQL types)
+
+export type AmbossOrderParty = {
+  pubkey?: string;
+  alias?: string;
+};
+
+export type AmbossOrderFeeAmount = {
+  sats?: number;
+};
+
+export type AmbossOrderRaw = {
+  id: string;
+  created_at: string;
+  status: string;
+  payment_status?: string;
+  source: AmbossOrderParty;
+  destination: AmbossOrderParty;
+  amount?: { satoshi?: { sats?: string } };
+  fees?: {
+    seller?: AmbossOrderFeeAmount;
+    buyer?: AmbossOrderFeeAmount;
+  };
+  timeout?: string;
+  channel_id?: string;
+};
+
+export type AmbossOrderList = {
+  total: number;
+  list: AmbossOrderRaw[];
+};
+
+@ObjectType()
+export class MagmaOrderParty {
+  @Field({ nullable: true })
+  pubkey?: string;
+
+  @Field({ nullable: true })
+  alias?: string;
+}
+
+@ObjectType()
+export class MagmaOrderAmount {
+  @Field({ nullable: true })
+  sats?: string;
+}
+
+@ObjectType()
+export class MagmaOrderFeeAmount {
+  @Field(() => Int, { nullable: true })
+  sats?: number;
+}
+
+@ObjectType()
+export class MagmaOrderFees {
+  @Field(() => MagmaOrderFeeAmount, { nullable: true })
+  seller?: MagmaOrderFeeAmount;
+
+  @Field(() => MagmaOrderFeeAmount, { nullable: true })
+  buyer?: MagmaOrderFeeAmount;
+}
+
+@ObjectType()
+export class MagmaOrder {
+  @Field()
+  id: string;
+
+  @Field()
+  createdAt: string;
+
+  @Field()
+  status: string;
+
+  @Field({ nullable: true })
+  paymentStatus?: string;
+
+  @Field(() => MagmaOrderParty)
+  source: MagmaOrderParty;
+
+  @Field(() => MagmaOrderParty)
+  destination: MagmaOrderParty;
+
+  @Field(() => MagmaOrderAmount)
+  amount: MagmaOrderAmount;
+
+  @Field(() => MagmaOrderFees)
+  fees: MagmaOrderFees;
+
+  @Field({ nullable: true })
+  timeout?: string;
+
+  @Field({ nullable: true })
+  channelId?: string;
+}
+
+@ObjectType()
+export class MagmaPendingOrders {
+  @Field(() => [MagmaOrder])
+  purchases: MagmaOrder[];
+
+  @Field(() => [MagmaOrder])
+  sales: MagmaOrder[];
+
+  @Field()
+  magmaUrl: string;
+}
+
+// ─── Cancel Order ────────────────────────────────────────────────
+
+export enum OrderCancellationReason {
+  UNABLE_TO_CONNECT_TO_NODE = 'UNABLE_TO_CONNECT_TO_NODE',
+  UNABLE_TO_PAY = 'UNABLE_TO_PAY',
+  CHANNEL_SIZE_OUT_OF_BOUNDS = 'CHANNEL_SIZE_OUT_OF_BOUNDS',
+}
+
+registerEnumType(OrderCancellationReason, { name: 'OrderCancellationReason' });
+
+@InputType()
+export class CancelMagmaOrderInput {
+  @Field()
+  orderId: string;
+
+  @Field(() => OrderCancellationReason)
+  cancellationReason: OrderCancellationReason;
+}
+
+@ObjectType()
+export class CancelMagmaOrderResult {
+  @Field()
+  success: boolean;
+}
+
+// ─── Namespace types ─────────────────────────────────────────────
+
+@ObjectType()
+export class MagmaOrderQueries {
+  @Field(() => MagmaPendingOrders, { nullable: true })
+  find_many?: MagmaPendingOrders;
+}
+
+@ObjectType()
+export class MagmaQueries {
+  @Field(() => MagmaOrderQueries)
+  orders: MagmaOrderQueries;
+}
+
+@ObjectType()
+export class MagmaMutations {
+  @Field(() => CancelMagmaOrderResult)
+  cancel_order: CancelMagmaOrderResult;
+}
+
 // ─── Enums ──────────────────────────────────────────────────────
 
 export enum TapTransactionType {

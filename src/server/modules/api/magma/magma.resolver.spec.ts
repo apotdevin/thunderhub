@@ -23,7 +23,7 @@ jest.mock('../amboss/amboss.service', () => ({
   AmbossService: jest.fn(),
 }));
 
-import { MagmaResolver } from './magma.resolver';
+import { MagmaResolver, MagmaOrderQueriesResolver } from './magma.resolver';
 
 describe('MagmaResolver', () => {
   const userId = { id: 'test-user-id' } as UserId;
@@ -537,6 +537,145 @@ describe('MagmaResolver', () => {
           tapdGroupKey: undefined,
         })
       ).rejects.toThrow('Either tapdAssetId or tapdGroupKey must be provided');
+    });
+  });
+
+  // ── magma.orders.find_many ──────────────────────────────
+
+  describe('MagmaOrderQueriesResolver.find_many', () => {
+    const magmaUrl = 'https://magma.test/graphql';
+    let ordersResolver: MagmaOrderQueriesResolver;
+
+    const rawOrder = {
+      id: 'order-1',
+      created_at: '2026-01-01T00:00:00Z',
+      status: 'WAITING_FOR_BUYER_PAYMENT',
+      payment_status: 'UNPAID',
+      source: { pubkey: 'srcpub', alias: 'Alice' },
+      destination: { pubkey: 'dstpub', alias: 'Bob' },
+      amount: { satoshi: { sats: '100000' } },
+      fees: { seller: { sats: 200 }, buyer: { sats: 300 } },
+      timeout: '2026-04-21T23:56:42.000Z',
+      channel_id: 'chan-1',
+    };
+
+    beforeEach(() => {
+      mockAmbossService.resolveMagmaUrl.mockResolvedValue(magmaUrl);
+      ordersResolver = new MagmaOrderQueriesResolver(
+        mockFetchService as never,
+        mockAmbossTokenService as never,
+        mockAmbossService as never,
+        mockLogger as never
+      );
+    });
+
+    it('maps purchases and sales from the API response', async () => {
+      mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
+        data: {
+          user: {
+            market: {
+              orders: {
+                purchases: { total: 1, list: [rawOrder] },
+                sales: { total: 1, list: [{ ...rawOrder, id: 'order-2' }] },
+              },
+            },
+          },
+        },
+        error: undefined,
+      });
+
+      const result = await ordersResolver.find_many(userId);
+
+      expect(result).not.toBeNull();
+      expect(result!.purchases).toHaveLength(1);
+      expect(result!.purchases[0]).toEqual({
+        id: 'order-1',
+        createdAt: '2026-01-01T00:00:00Z',
+        status: 'WAITING_FOR_BUYER_PAYMENT',
+        paymentStatus: 'UNPAID',
+        source: { pubkey: 'srcpub', alias: 'Alice' },
+        destination: { pubkey: 'dstpub', alias: 'Bob' },
+        amount: { sats: '100000' },
+        fees: { seller: { sats: 200 }, buyer: { sats: 300 } },
+        timeout: '2026-04-21T23:56:42.000Z',
+        channelId: 'chan-1',
+      });
+      expect(result!.sales[0].id).toBe('order-2');
+      expect(result!.magmaUrl).toBe('https://magma.test');
+    });
+
+    it('throws when auth token creation fails', async () => {
+      mockAmbossTokenService.getOrCreate.mockRejectedValue(
+        new Error('auth failed')
+      );
+
+      await expect(ordersResolver.find_many(userId)).rejects.toThrow(
+        'auth failed'
+      );
+      expect(mockFetchService.graphqlFetchWithProxy).not.toHaveBeenCalled();
+    });
+
+    it('returns null and logs error when the fetch fails', async () => {
+      mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
+        data: undefined,
+        error: new Error('network error'),
+      });
+
+      const result = await ordersResolver.find_many(userId);
+
+      expect(result).toBeNull();
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        'Error fetching Magma orders',
+        expect.any(Object)
+      );
+    });
+
+    it('returns null when the API response has no orders data', async () => {
+      mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
+        data: { user: null },
+        error: undefined,
+      });
+
+      const result = await ordersResolver.find_many(userId);
+
+      expect(result).toBeNull();
+    });
+
+    it('handles orders with missing optional fields', async () => {
+      const sparse = {
+        id: 'order-3',
+        created_at: '2026-02-01T00:00:00Z',
+        status: 'WAITING_FOR_SELLER_APPROVAL',
+        source: {},
+        destination: {},
+        amount: {},
+        fees: {},
+      };
+      mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
+        data: {
+          user: {
+            market: {
+              orders: {
+                purchases: { total: 1, list: [sparse] },
+                sales: { total: 0, list: [] },
+              },
+            },
+          },
+        },
+        error: undefined,
+      });
+
+      const result = await ordersResolver.find_many(userId);
+
+      expect(result).not.toBeNull();
+      expect(result!.purchases[0]).toMatchObject({
+        id: 'order-3',
+        paymentStatus: undefined,
+        channelId: undefined,
+        timeout: undefined,
+        fees: { seller: undefined, buyer: undefined },
+      });
+      expect(result!.sales).toHaveLength(0);
     });
   });
 });

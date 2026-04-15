@@ -45,6 +45,7 @@ import SettingsPage from './pages/SettingsPage';
 import AmbossPage from './pages/AmbossPage';
 import AssetsPage from './pages/AssetsPage';
 import TradingPage from './pages/TradingPage';
+import MagmaPage from './pages/MagmaPage';
 import SetupPage from './pages/SetupPage';
 import NodeSetupPage from './pages/NodeSetupPage';
 
@@ -232,6 +233,8 @@ const AUTHENTICATED_ROUTES = (
     <Route path="amboss" element={<AmbossPage />} />
     <Route path="assets" element={<AssetsPage />} />
     <Route path="trading" element={<TradingPage />} />
+    <Route path="magma" element={<MagmaPage />} />
+    <Route path="magma/sales" element={<MagmaPage />} />
     <Route path="*" element={<Navigate to="home" replace />} />
   </>
 );
@@ -255,6 +258,8 @@ const LEGACY_PATHS = [
   'amboss',
   'assets',
   'trading',
+  'magma',
+  'magma/sales',
 ];
 
 const AppRoutes = () => (

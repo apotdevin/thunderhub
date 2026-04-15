@@ -14,6 +14,7 @@ import {
   Globe,
   Gem,
   ArrowLeftRight,
+  Flame,
   LucideProps,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
@@ -44,6 +45,7 @@ const SWAP = '/swap';
 const AMBOSS = '/amboss';
 const ASSETS = '/assets';
 const TRADING = '/trading';
+const MAGMA = '/magma';
 
 interface NavItem {
   title: string;
@@ -70,6 +72,7 @@ interface NavigationProps {
 const secondaryNavItems: NavItem[] = [
   { title: 'Assets', link: ASSETS, icon: Gem },
   { title: 'Trading', link: TRADING, icon: ArrowLeftRight },
+  { title: 'Magma', link: MAGMA, icon: Flame },
   { title: 'Amboss', link: AMBOSS, icon: Globe },
   { title: 'Swap', link: SWAP, icon: Shuffle },
   { title: 'Stats', link: STATS, icon: BarChart2 },
