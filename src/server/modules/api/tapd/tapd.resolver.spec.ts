@@ -596,6 +596,73 @@ describe('TapdResolver', () => {
 
       expect(result.batchKey).toBe('aabb');
     });
+
+    it('forwards precision as decimalDisplay to the service', async () => {
+      service.mintAsset.mockResolvedValue({
+        pendingBatch: { batchKey: Buffer.from('aabb', 'hex') },
+      });
+
+      await resolver.mintTapAsset(
+        userId,
+        'TestCoin',
+        '1000',
+        TapAssetType.NORMAL,
+        true,
+        undefined,
+        2
+      );
+
+      expect(service.mintAsset).toHaveBeenCalledWith(
+        expect.objectContaining({ decimalDisplay: 2 })
+      );
+    });
+
+    it('omits decimalDisplay when precision is not provided', async () => {
+      service.mintAsset.mockResolvedValue({
+        pendingBatch: { batchKey: Buffer.from('aabb', 'hex') },
+      });
+
+      await resolver.mintTapAsset(
+        userId,
+        'TestCoin',
+        '1000',
+        TapAssetType.NORMAL,
+        true
+      );
+
+      const call = service.mintAsset.mock.calls[0][0];
+      expect(call).not.toHaveProperty('decimalDisplay');
+    });
+
+    it('rejects precision above 18', async () => {
+      await expect(
+        resolver.mintTapAsset(
+          userId,
+          'TestCoin',
+          '1000',
+          TapAssetType.NORMAL,
+          true,
+          undefined,
+          19
+        )
+      ).rejects.toThrow(GraphQLError);
+      expect(service.mintAsset).not.toHaveBeenCalled();
+    });
+
+    it('rejects negative precision', async () => {
+      await expect(
+        resolver.mintTapAsset(
+          userId,
+          'TestCoin',
+          '1000',
+          TapAssetType.NORMAL,
+          true,
+          undefined,
+          -1
+        )
+      ).rejects.toThrow(GraphQLError);
+      expect(service.mintAsset).not.toHaveBeenCalled();
+    });
   });
 
   describe('finalizeTapBatch', () => {

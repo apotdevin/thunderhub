@@ -12,6 +12,7 @@ import { getErrorContent } from '../../utils/error';
 export const MintAsset: FC = () => {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
+  const [precision, setPrecision] = useState('');
   const [assetType, setAssetType] = useState(TapAssetType.Normal);
   const [grouped, setGrouped] = useState(true);
   const [groupKey, setGroupKey] = useState('');
@@ -46,6 +47,7 @@ export const MintAsset: FC = () => {
       setBatchKey(null);
       setName('');
       setAmount('');
+      setPrecision('');
       setGrouped(true);
       setGroupKey('');
     },
@@ -57,6 +59,15 @@ export const MintAsset: FC = () => {
       toast.error('Name and amount are required');
       return;
     }
+    let precisionValue: number | null = null;
+    if (precision !== '') {
+      const parsed = Number(precision);
+      if (!Number.isInteger(parsed) || parsed < 0 || parsed > 18) {
+        toast.error('Precision must be an integer between 0 and 18');
+        return;
+      }
+      precisionValue = parsed;
+    }
     mintAsset({
       variables: {
         name,
@@ -64,6 +75,7 @@ export const MintAsset: FC = () => {
         assetType,
         grouped,
         groupKey: groupKey || null,
+        precision: precisionValue,
       },
     });
   };
@@ -126,6 +138,24 @@ export const MintAsset: FC = () => {
               placeholder="1000"
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground mb-1 block">
+              Precision (optional)
+            </label>
+            <input
+              type="number"
+              value={precision}
+              onChange={e => setPrecision(e.target.value)}
+              min={0}
+              max={18}
+              step={1}
+              placeholder="e.g. 2 for cent-like units"
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Number of decimal places to display. 0–18.
+            </p>
           </div>
           <div>
             <label className="text-xs text-muted-foreground mb-1 block">

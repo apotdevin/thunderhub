@@ -782,6 +782,7 @@ export type MutationMintTapAssetArgs = {
   groupKey?: InputMaybe<Scalars['String']['input']>;
   grouped?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
+  precision?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type MutationNewTapAddressArgs = {

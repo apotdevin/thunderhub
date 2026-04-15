@@ -7,6 +7,7 @@ export const MINT_TAP_ASSET = gql`
     $assetType: TapAssetType
     $grouped: Boolean
     $groupKey: String
+    $precision: Int
   ) {
     mintTapAsset(
       name: $name
@@ -14,6 +15,7 @@ export const MINT_TAP_ASSET = gql`
       assetType: $assetType
       grouped: $grouped
       groupKey: $groupKey
+      precision: $precision
     ) {
       batchKey
     }

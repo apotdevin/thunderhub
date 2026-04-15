@@ -9,6 +9,7 @@ export type MintTapAssetMutationVariables = Types.Exact<{
   assetType?: Types.InputMaybe<Types.TapAssetType>;
   grouped?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
   groupKey?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  precision?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 export type MintTapAssetMutation = {
@@ -23,6 +24,7 @@ export const MintTapAssetDocument = gql`
     $assetType: TapAssetType
     $grouped: Boolean
     $groupKey: String
+    $precision: Int
   ) {
     mintTapAsset(
       name: $name
@@ -30,6 +32,7 @@ export const MintTapAssetDocument = gql`
       assetType: $assetType
       grouped: $grouped
       groupKey: $groupKey
+      precision: $precision
     ) {
       batchKey
     }
@@ -58,6 +61,7 @@ export type MintTapAssetMutationFn = Apollo.MutationFunction<
  *      assetType: // value for 'assetType'
  *      grouped: // value for 'grouped'
  *      groupKey: // value for 'groupKey'
+ *      precision: // value for 'precision'
  *   },
  * });
  */
