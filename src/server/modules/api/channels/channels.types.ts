@@ -92,6 +92,20 @@ export class SingleChannel {
 }
 
 @ObjectType()
+export class ChannelAsset {
+  @Field()
+  assetId: string;
+  @Field({ nullable: true })
+  groupKey?: string;
+  @Field()
+  localBalance: string;
+  @Field()
+  remoteBalance: string;
+  @Field()
+  capacity: string;
+}
+
+@ObjectType()
 export class Channel {
   @Field()
   capacity: number;
@@ -147,6 +161,8 @@ export class Channel {
   pending_payments: PendingPayment[];
   @Field(() => PendingResume)
   pending_resume: PendingResume;
+  @Field(() => ChannelAsset, { nullable: true })
+  asset?: ChannelAsset;
 }
 
 export type SingleChannelParentType = {

@@ -21,7 +21,6 @@ import { useSetupTradePartnerMutation } from '../../graphql/mutations/__generate
 import { useOpenChannelMutation } from '../../graphql/mutations/__generated__/openChannel.generated';
 import { useExecuteTradeMutation } from '../../graphql/mutations/__generated__/executeTrade.generated';
 import { useGetPeerChannelsQuery } from '../../graphql/queries/__generated__/getPeerChannels.generated';
-import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
 import { useGetTradeQuoteLazyQuery } from '../../graphql/queries/__generated__/getTradeQuote.generated';
 import { getErrorContent } from '../../utils/error';
 import {
@@ -173,12 +172,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     useGetPeerChannelsQuery({
       variables: { partner_public_key: offer?.node.pubkey || '' },
       skip: !offer?.node.pubkey || !open,
+      fetchPolicy: 'network-only',
     });
-
-  const { data: assetChannelsData } = useGetTapAssetChannelBalancesQuery({
-    variables: { peerPubkey: offer?.node.pubkey || '' },
-    skip: !offer?.node.pubkey || !open,
-  });
 
   if (!offer) return null;
 
@@ -190,33 +185,28 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const rate = offer.rate.fullAmount || '0';
 
   const peerChannels = channelsData?.getChannels || [];
-  const allAssetChannels = assetChannelsData?.getTapAssetChannelBalances || [];
-  // When tapdAssetId is empty (grouped asset), all returned channels belong to
-  // the correct peer — the query already scopes by peerPubkey.
-  const assetChannels = tapdGroupKey
-    ? allAssetChannels.filter(ac => ac.groupKey === tapdGroupKey)
-    : tapdAssetId
-      ? allAssetChannels.filter(ac => ac.assetId === tapdAssetId)
-      : allAssetChannels;
 
-  const assetChannelPoints = new Set(
-    allAssetChannels.map(ac => ac.channelPoint)
-  );
+  const btcOnlyChannels = peerChannels.filter(ch => !ch.asset);
+  const allPeerAssetChannels = peerChannels.filter(ch => ch.asset);
 
-  const btcOnlyChannels = peerChannels.filter(
-    ch => !assetChannelPoints.has(`${ch.transaction_id}:${ch.transaction_vout}`)
-  );
+  // Filter to the requested asset. When tapdGroupKey/tapdAssetId is empty,
+  // include all asset channels with this peer.
+  const assetChannels = allPeerAssetChannels.filter(ch => {
+    if (tapdGroupKey) return ch.asset?.groupKey === tapdGroupKey;
+    if (tapdAssetId) return ch.asset?.assetId === tapdAssetId;
+    return true;
+  });
 
   const totalBtcLocal = btcOnlyChannels.reduce(
     (sum, ch) => sum + ch.local_balance,
     0
   );
   const totalAssetLocal = assetChannels.reduce(
-    (sum, ac) => sum + BigInt(ac.localBalance),
+    (sum, ch) => sum + BigInt(ch.asset?.localBalance || '0'),
     BigInt(0)
   );
   const totalAssetRemote = assetChannels.reduce(
-    (sum, ac) => sum + BigInt(ac.remoteBalance),
+    (sum, ch) => sum + BigInt(ch.asset?.remoteBalance || '0'),
     BigInt(0)
   );
   const totalBtcRemote = btcOnlyChannels.reduce(
@@ -478,30 +468,61 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                   {btcOnlyChannels.map(ch => (
                     <div
                       key={ch.id}
-                      className="flex justify-between rounded-md border border-border bg-muted/20 px-2 py-1.5"
+                      className="flex flex-col gap-0.5 rounded-md border border-border bg-muted/20 px-2 py-1.5"
                     >
-                      <span className="text-muted-foreground">
-                        {Number(ch.capacity).toLocaleString()} sats
-                      </span>
-                      <span>
-                        {Number(ch.local_balance).toLocaleString()} /{' '}
-                        {Number(ch.remote_balance).toLocaleString()}
-                      </span>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">
+                          {Number(ch.capacity).toLocaleString()} sats
+                        </span>
+                        <span>
+                          {Number(ch.local_balance).toLocaleString()} /{' '}
+                          {Number(ch.remote_balance).toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                        <span className="font-mono">{ch.id}</span>
+                        <span
+                          className={
+                            ch.is_active ? 'text-green-500' : 'text-yellow-500'
+                          }
+                        >
+                          {ch.is_active ? 'active' : 'inactive'}
+                        </span>
+                      </div>
                     </div>
                   ))}
-                  {assetChannels.map(ac => (
+                  {assetChannels.map(ch => (
                     <div
-                      key={ac.channelPoint}
-                      className="flex justify-between rounded-md border border-border bg-muted/20 px-2 py-1.5"
+                      key={ch.id}
+                      className="flex flex-col gap-0.5 rounded-md border border-border bg-muted/20 px-2 py-1.5"
                     >
-                      <span className="text-muted-foreground">
-                        {atomicToDisplay(ac.capacity, assetPrecision)}{' '}
-                        {assetSymbol}
-                      </span>
-                      <span>
-                        {atomicToDisplay(ac.localBalance, assetPrecision)} /{' '}
-                        {atomicToDisplay(ac.remoteBalance, assetPrecision)}
-                      </span>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">
+                          {atomicToDisplay(ch.asset!.capacity, assetPrecision)}{' '}
+                          {assetSymbol}
+                        </span>
+                        <span>
+                          {atomicToDisplay(
+                            ch.asset!.localBalance,
+                            assetPrecision
+                          )}{' '}
+                          /{' '}
+                          {atomicToDisplay(
+                            ch.asset!.remoteBalance,
+                            assetPrecision
+                          )}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                        <span className="font-mono">{ch.id}</span>
+                        <span
+                          className={
+                            ch.is_active ? 'text-green-500' : 'text-yellow-500'
+                          }
+                        >
+                          {ch.is_active ? 'active' : 'inactive'}
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>

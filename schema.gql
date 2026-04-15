@@ -139,6 +139,7 @@ type ChainTransaction {
 }
 
 type Channel {
+  asset: ChannelAsset
   capacity: Float!
   channel_age: Float!
   commit_transaction_fee: Float!
@@ -166,6 +167,14 @@ type Channel {
   transaction_id: String!
   transaction_vout: Float!
   unsettled_balance: Float!
+}
+
+type ChannelAsset {
+  assetId: String!
+  capacity: String!
+  groupKey: String
+  localBalance: String!
+  remoteBalance: String!
 }
 
 type ChannelFeeHealth {

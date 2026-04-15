@@ -11,6 +11,13 @@ export const GET_PEER_CHANNELS = gql`
       partner_public_key
       transaction_id
       transaction_vout
+      asset {
+        assetId
+        groupKey
+        localBalance
+        remoteBalance
+        capacity
+      }
     }
   }
 `;
