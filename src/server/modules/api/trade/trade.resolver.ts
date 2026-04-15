@@ -3,6 +3,7 @@ import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { GraphQLError } from 'graphql';
+import type { Route } from 'lightning';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
@@ -183,6 +184,27 @@ export class TradeResolver {
       );
     }
 
+    // Decode the invoice so we know the exact sats leg before paying it,
+    // then verify we actually have enough local BTC liquidity with the peer.
+    // Fails fast with a friendly error instead of letting the payment stall.
+    const [decoded, decodeError] = await toWithError(
+      this.nodeService.decodePaymentRequest(id, paymentRequest)
+    );
+
+    if (decodeError || decoded?.tokens == null) {
+      this.logger.error('Failed to decode asset invoice before buy', {
+        error: decodeError,
+      });
+      throw new GraphQLError('Failed to decode asset invoice');
+    }
+
+    await this.assertBtcLiquidity(
+      id,
+      input.peerPubkey,
+      decoded.tokens,
+      'local'
+    );
+
     this.logger.info('Executing buy trade', {
       assetAmount: input.assetAmount,
       invoicePrefix: paymentRequest.slice(0, 20),
@@ -259,8 +281,25 @@ export class TradeResolver {
       throw new GraphQLError('Derived sats amount is zero or negative');
     }
 
+    // Self-payment loop: assets leave via the TA channel (forced first hop by
+    // tapd/RFQ) and the sats return leg comes back via the BTC channel. If we
+    // let LND auto-include private channel hints (is_including_private_channels),
+    // the TA channel also gets advertised — htlcswitch then rejects the forward
+    // with "same incoming and outgoing channel" because tapd already picked the
+    // TA channel for the outgoing hop. Build an explicit BTC-only route hint
+    // instead so pathfinding only sees the valid return path.
+    const btcHopHint = await this.buildBtcReturnHint(id, input.peerPubkey);
+
+    // For sells, the sats return leg comes from the peer's local balance (our
+    // remote). Check that up front so we fail with a clear message instead of
+    // triggering a routing failure partway through.
+    await this.assertBtcLiquidity(id, input.peerPubkey, invoiceSats, 'remote');
+
     const [invoice, invoiceError] = await toWithError(
-      this.nodeService.createInvoice(id, { tokens: invoiceSats })
+      this.nodeService.createInvoice(id, {
+        tokens: invoiceSats,
+        routes: btcHopHint ? [btcHopHint] : undefined,
+      })
     );
 
     if (invoiceError || !invoice?.request) {
@@ -299,6 +338,155 @@ export class TradeResolver {
       satsAmount: String(invoiceSats),
       feeSats: payResult.feeSat ? String(payResult.feeSat) : undefined,
     };
+  }
+
+  /**
+   * Builds a single-hop BOLT11 route hint covering the BTC return leg from
+   * the edge peer back to the trader. Skips the Taproot Asset channel so the
+   * self-payment loop does not try to return funds over the same channel that
+   * carried the outgoing asset HTLC.
+   *
+   * Returns undefined when no suitable BTC channel is found; the caller omits
+   * the hint entirely in that case.
+   */
+  private async buildBtcReturnHint(
+    id: string,
+    peerPubkey: string
+  ): Promise<Route | undefined> {
+    const [channelsResult, channelsError] = await toWithError(
+      this.nodeService.getChannels(id, {
+        partner_public_key: peerPubkey,
+        is_active: true,
+      })
+    );
+
+    if (channelsError || !channelsResult?.channels?.length) {
+      this.logger.warn(
+        'Could not fetch channels for BTC return hint; omitting hint',
+        { error: channelsError, peerPubkey }
+      );
+      return undefined;
+    }
+
+    const [identity, identityError] = await toWithError(
+      this.nodeService.getIdentity(id)
+    );
+
+    if (identityError || !identity?.public_key) {
+      this.logger.warn('Could not fetch identity for return hint; omitting', {
+        error: identityError,
+      });
+      return undefined;
+    }
+
+    // Taproot Asset channels use LND's SIMPLE_TAPROOT_OVERLAY commitment type,
+    // which the `lightning` package does not map — it leaves `type` undefined.
+    // BTC channels map to "anchor", "simplified_taproot", etc. Filtering by a
+    // truthy `type` isolates BTC channels. Sort by `remote_balance` descending
+    // so the return leg uses the channel with the most peer-side capacity.
+    const btcChannels = channelsResult.channels
+      .filter(
+        (ch: { type?: string; id: string; remote_balance: number }) => !!ch.type
+      )
+      .sort(
+        (a: { remote_balance: number }, b: { remote_balance: number }) =>
+          b.remote_balance - a.remote_balance
+      );
+
+    const btcChannel = btcChannels[0];
+
+    if (!btcChannel) {
+      this.logger.warn('No BTC channel with peer; omitting return hint', {
+        peerPubkey,
+      });
+      return undefined;
+    }
+
+    // Pull the peer's gossiped policy for this channel so the hint reflects the
+    // fees they actually advertise. Falls back to a conservative upper bound
+    // when gossip isn't available (e.g. private or freshly opened channel) —
+    // LND only uses the hint to budget routes; the peer re-applies its real
+    // policy at HTLC time.
+    const [channelInfo] = await toWithError(
+      this.nodeService.getChannel(id, btcChannel.id)
+    );
+    const peerPolicy = channelInfo?.policies?.find(
+      (policy: { public_key: string }) => policy.public_key === peerPubkey
+    );
+
+    return [
+      { public_key: peerPubkey },
+      {
+        public_key: identity.public_key,
+        channel: btcChannel.id,
+        base_fee_mtokens: peerPolicy?.base_fee_mtokens ?? '1000',
+        fee_rate: peerPolicy?.fee_rate ?? 2500, // parts per million
+        cltv_delta: peerPolicy?.cltv_delta ?? 40,
+      },
+    ];
+  }
+
+  /*
+   * Finds all active BTC channels with the given peer. Taproot Asset channels
+   * use SIMPLE_TAPROOT_OVERLAY, which the `lightning` package does not map —
+   * it leaves `type` undefined. BTC channels map to "anchor",
+   * "simplified_taproot", etc. Filtering by a truthy `type` isolates BTC.
+   */
+  private async getBtcChannelsWithPeer(
+    id: string,
+    peerPubkey: string
+  ): Promise<Array<{ local_balance: number; remote_balance: number }>> {
+    const [channelsResult, channelsError] = await toWithError(
+      this.nodeService.getChannels(id, {
+        partner_public_key: peerPubkey,
+        is_active: true,
+      })
+    );
+
+    if (channelsError || !channelsResult?.channels?.length) {
+      return [];
+    }
+
+    return channelsResult.channels.filter(
+      (ch: { type?: string }) => !!ch.type
+    ) as Array<{ local_balance: number; remote_balance: number }>;
+  }
+
+  /**
+   * Pre-flight BTC liquidity check for the self-payment trade loop. A single
+   * Lightning payment has to flow through one channel, so we compare against
+   * the biggest balance across BTC channels with the peer (not the sum).
+   * - 'local': the trader needs enough outbound (their balance) to pay sats
+   *   out — used for buys.
+   * - 'remote': the trader needs enough inbound (peer's balance) to receive
+   *   the sats leg back — used for sells.
+   */
+  private async assertBtcLiquidity(
+    id: string,
+    peerPubkey: string,
+    requiredSats: number,
+    direction: 'local' | 'remote'
+  ): Promise<void> {
+    const channels = await this.getBtcChannelsWithPeer(id, peerPubkey);
+
+    if (channels.length === 0) {
+      throw new GraphQLError(
+        'No active BTC channel with trade partner — cannot execute trade'
+      );
+    }
+
+    const available = channels.reduce((max, ch) => {
+      const balance =
+        direction === 'local' ? ch.local_balance : ch.remote_balance;
+      return balance > max ? balance : max;
+    }, 0);
+
+    if (available < requiredSats) {
+      const label = direction === 'local' ? 'outbound' : 'inbound';
+      throw new GraphQLError(
+        `Insufficient ${label} BTC liquidity with trade partner: need ${requiredSats} sats, have ${available} sats`
+      );
+    }
   }
 
   /**
