@@ -7,6 +7,7 @@ import {
   Zap,
   CheckCircle2,
   Circle,
+  Clock,
   ChevronRight,
 } from 'lucide-react';
 import { useGetTapOffersQuery } from '../../graphql/queries/__generated__/getTapOffers.generated';
@@ -14,6 +15,7 @@ import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
 import { useGetChannelsWithPeersQuery } from '../../graphql/queries/__generated__/getChannels.generated';
 import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
+import { useGetPendingChannelsQuery } from '../../graphql/queries/__generated__/getPendingChannels.generated';
 import { getErrorContent } from '../../utils/error';
 import { cn } from '../../lib/utils';
 import {
@@ -29,6 +31,21 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+
+type ChannelStatus = { hasBtc: boolean; hasAsset: boolean; pending: boolean };
+
+const SortIcon: FC<{
+  field: TapOfferSortBy;
+  activeSortBy: TapOfferSortBy;
+}> = ({ field, activeSortBy }) => (
+  <ArrowUpDown
+    size={12}
+    className={cn(
+      'inline ml-1',
+      activeSortBy === field ? 'text-foreground' : 'text-muted-foreground/40'
+    )}
+  />
+);
 
 export const TradingOffers: FC = () => {
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
@@ -59,6 +76,7 @@ export const TradingOffers: FC = () => {
     variables: { active: true },
   });
   const { data: allAssetChannelsData } = useGetTapAssetChannelBalancesQuery();
+  const { data: pendingData } = useGetPendingChannelsQuery();
 
   const allSupported =
     supportedData?.rails?.get_tap_supported_assets?.list || [];
@@ -147,28 +165,77 @@ export const TradingOffers: FC = () => {
   const selectedTapdAssetId = selectedAssetData?.assetId || '';
   const selectedTapdGroupKey = selectedAssetData?.groupKey || '';
 
+  const assetPeersForSelectedAsset = useMemo(
+    () =>
+      selectedTapdGroupKey
+        ? assetChannelsByGroupKey.get(selectedTapdGroupKey)
+        : selectedTapdAssetId
+          ? assetChannelsByAssetId.get(selectedTapdAssetId)
+          : undefined,
+    [
+      selectedTapdGroupKey,
+      selectedTapdAssetId,
+      assetChannelsByGroupKey,
+      assetChannelsByAssetId,
+    ]
+  );
+
+  // Per-pubkey channel status for the selected asset
+  const channelStatusByPubkey = useMemo(() => {
+    const map = new Map<string, ChannelStatus>();
+
+    const ensure = (pk: string) => {
+      if (!map.has(pk))
+        map.set(pk, { hasBtc: false, hasAsset: false, pending: false });
+      return map.get(pk)!;
+    };
+
+    for (const pk of btcChannelPubkeys) {
+      ensure(pk).hasBtc = true;
+    }
+
+    for (const pk of assetPeersForSelectedAsset || []) {
+      ensure(pk).hasAsset = true;
+    }
+
+    for (const ch of pendingData?.getPendingChannels || []) {
+      if (!ch.is_opening) continue;
+      const s = ensure(ch.partner_public_key);
+      if (ch.asset) {
+        const match = selectedTapdGroupKey
+          ? ch.asset.groupKey === selectedTapdGroupKey
+          : selectedTapdAssetId
+            ? ch.asset.assetId === selectedTapdAssetId
+            : false;
+        if (match) {
+          s.hasAsset = true;
+          s.pending = true;
+        }
+      } else {
+        s.hasBtc = true;
+        s.pending = true;
+      }
+    }
+
+    return map;
+  }, [
+    btcChannelPubkeys,
+    assetPeersForSelectedAsset,
+    selectedTapdAssetId,
+    selectedTapdGroupKey,
+    pendingData,
+  ]);
+
   // Find trading partners: peers with both BTC + asset channels for selected asset
   const tradingPartners = useMemo(() => {
-    const assetPeers = selectedTapdGroupKey
-      ? assetChannelsByGroupKey.get(selectedTapdGroupKey)
-      : selectedTapdAssetId
-        ? assetChannelsByAssetId.get(selectedTapdAssetId)
-        : undefined;
-    if (!assetPeers) return [];
-    return Array.from(assetPeers)
+    if (!assetPeersForSelectedAsset) return [];
+    return Array.from(assetPeersForSelectedAsset)
       .filter(pubkey => btcChannelPubkeys.has(pubkey))
       .map(pubkey => ({
         pubkey,
         alias: aliasMap.get(pubkey) || null,
       }));
-  }, [
-    selectedTapdAssetId,
-    selectedTapdGroupKey,
-    assetChannelsByAssetId,
-    assetChannelsByGroupKey,
-    btcChannelPubkeys,
-    aliasMap,
-  ]);
+  }, [assetPeersForSelectedAsset, btcChannelPubkeys, aliasMap]);
 
   const {
     data: offersData,
@@ -211,16 +278,6 @@ export const TradingOffers: FC = () => {
       available: { displayAmount: null, fullAmount: null },
     });
   };
-
-  const SortIcon: FC<{ field: TapOfferSortBy }> = ({ field }) => (
-    <ArrowUpDown
-      size={12}
-      className={cn(
-        'inline ml-1',
-        sortBy === field ? 'text-foreground' : 'text-muted-foreground/40'
-      )}
-    />
-  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -377,7 +434,7 @@ export const TradingOffers: FC = () => {
         </div>
       )}
 
-      {/* Trade amount input */}
+      {/* Minimum amount filter */}
       {selectedAsset && (
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
@@ -447,48 +504,88 @@ export const TradingOffers: FC = () => {
                   onClick={() => toggleSort(TapOfferSortBy.Rate)}
                 >
                   {selectedSymbol ? `${selectedSymbol}/BTC` : 'Rate'}
-                  <SortIcon field={TapOfferSortBy.Rate} />
+                  <SortIcon field={TapOfferSortBy.Rate} activeSortBy={sortBy} />
                 </th>
                 <th
                   className="text-left py-3 px-3 font-medium cursor-pointer select-none"
                   onClick={() => toggleSort(TapOfferSortBy.Available)}
                 >
                   Available
-                  <SortIcon field={TapOfferSortBy.Available} />
+                  <SortIcon
+                    field={TapOfferSortBy.Available}
+                    activeSortBy={sortBy}
+                  />
                 </th>
+                <th className="text-left py-3 px-3 font-medium">Channels</th>
                 <th className="py-3 px-3 w-8" />
               </tr>
             </thead>
             <tbody>
-              {offers.map(offer => (
-                <tr
-                  key={offer.id}
-                  className="border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer"
-                  onClick={() => setSelectedOffer(offer)}
-                >
-                  <td className="py-3 px-3 font-mono text-xs">
-                    {offer.node.alias || offer.node.pubkey?.slice(0, 16)}
-                  </td>
-                  <td className="py-3 px-3">
-                    {offer.rate.displayAmount || offer.rate.fullAmount}
-                  </td>
-                  <td className="py-3 px-3">
-                    {Number(
-                      offer.available.displayAmount ||
-                        offer.available.fullAmount ||
-                        0
-                    ).toLocaleString()}
-                    {selectedSymbol && (
-                      <span className="text-muted-foreground ml-1">
-                        {selectedSymbol}
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-3 px-3 text-muted-foreground/50">
-                    <ChevronRight size={14} />
-                  </td>
-                </tr>
-              ))}
+              {offers.map(offer => {
+                const status = offer.node.pubkey
+                  ? channelStatusByPubkey.get(offer.node.pubkey)
+                  : undefined;
+                return (
+                  <tr
+                    key={offer.id}
+                    className="border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer"
+                    onClick={() => setSelectedOffer(offer)}
+                  >
+                    <td className="py-3 px-3 font-mono text-xs">
+                      {offer.node.alias || offer.node.pubkey?.slice(0, 16)}
+                    </td>
+                    <td className="py-3 px-3">
+                      {offer.rate.displayAmount || offer.rate.fullAmount}
+                    </td>
+                    <td className="py-3 px-3">
+                      {Number(
+                        offer.available.displayAmount ||
+                          offer.available.fullAmount ||
+                          0
+                      ).toLocaleString()}
+                      {selectedSymbol && (
+                        <span className="text-muted-foreground ml-1">
+                          {selectedSymbol}
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3 px-3">
+                      {status ? (
+                        <div className="flex items-center gap-1.5 text-[10px]">
+                          <span
+                            className={
+                              status.hasBtc
+                                ? 'text-green-500'
+                                : 'text-muted-foreground/40'
+                            }
+                          >
+                            BTC
+                          </span>
+                          <span
+                            className={
+                              status.hasAsset
+                                ? 'text-green-500'
+                                : 'text-muted-foreground/40'
+                            }
+                          >
+                            {selectedSymbol || 'Asset'}
+                          </span>
+                          {status.pending && (
+                            <Clock size={10} className="text-blue-500" />
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-[10px] text-muted-foreground/40">
+                          none
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3 px-3 text-muted-foreground/50">
+                      <ChevronRight size={14} />
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
           {totalCount > offers.length && (

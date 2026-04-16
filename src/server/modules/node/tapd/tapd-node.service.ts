@@ -37,6 +37,16 @@ import { ProviderRegistryService } from '../provider-registry.service';
 import { Capability } from '../lightning.types';
 import { isTaprootAssetsProvider } from './taproot-assets.types';
 
+type AssetChannelInfo = {
+  channelPoint: string;
+  partnerPublicKey: string;
+  assetId: string;
+  groupKey: string;
+  localBalance: string;
+  remoteBalance: string;
+  capacity: string;
+};
+
 /** Timeout for sendPayment RPC before the stream-level guard kicks in. */
 const SEND_PAYMENT_TIMEOUT_SECONDS = 60;
 const FEE_LIMIT_MAX = 100;
@@ -381,17 +391,7 @@ export class TapdNodeService {
   async getAssetChannelBalances(opts: {
     id: string;
     peerPubkey?: string;
-  }): Promise<
-    {
-      channelPoint: string;
-      partnerPublicKey: string;
-      assetId: string;
-      groupKey: string;
-      localBalance: string;
-      remoteBalance: string;
-      capacity: string;
-    }[]
-  > {
+  }): Promise<AssetChannelInfo[]> {
     const account = this.getAccount(opts.id);
     const provider = this.providerRegistry.getProvider(account.type);
     const capabilities = provider.getCapabilities();
@@ -422,15 +422,7 @@ export class TapdNodeService {
         ) => {
           if (err) return reject(err);
 
-          const results: {
-            channelPoint: string;
-            partnerPublicKey: string;
-            assetId: string;
-            groupKey: string;
-            localBalance: string;
-            remoteBalance: string;
-            capacity: string;
-          }[] = [];
+          const results: AssetChannelInfo[] = [];
 
           for (const ch of res.channels || []) {
             if (!ch.custom_channel_data?.length) continue;
@@ -457,6 +449,74 @@ export class TapdNodeService {
                 channelPoint: ch.channel_point,
                 err,
               });
+            }
+          }
+
+          resolve(results);
+        }
+      );
+    });
+  }
+
+  async getPendingAssetChannels(opts: {
+    id: string;
+  }): Promise<AssetChannelInfo[]> {
+    const account = this.getAccount(opts.id);
+    const provider = this.providerRegistry.getProvider(account.type);
+    const capabilities = provider.getCapabilities();
+
+    if (!capabilities.has(Capability.TAPROOT_ASSETS)) {
+      return [];
+    }
+
+    const connection = account.connection;
+    const lnd = connection.lnd ?? connection;
+
+    return new Promise((resolve, reject) => {
+      lnd.default.pendingChannels(
+        {},
+        (
+          err: Error | null,
+          res: {
+            pending_open_channels: {
+              channel: {
+                channel_point: string;
+                remote_node_pub: string;
+                custom_channel_data: Buffer;
+              };
+            }[];
+          }
+        ) => {
+          if (err) return reject(err);
+
+          const results: AssetChannelInfo[] = [];
+
+          for (const entry of res.pending_open_channels || []) {
+            const ch = entry.channel;
+            if (!ch?.custom_channel_data?.length) continue;
+
+            try {
+              const data = JSON.parse(ch.custom_channel_data.toString('utf8'));
+              const fundingAsset = data.funding_assets?.[0];
+              const assetId = fundingAsset?.asset_genesis?.asset_id || '';
+              if (!assetId) continue;
+
+              const groupKey = data.group_key;
+
+              results.push({
+                channelPoint: ch.channel_point,
+                partnerPublicKey: ch.remote_node_pub,
+                assetId,
+                groupKey,
+                localBalance: String(data.local_balance ?? 0),
+                remoteBalance: String(data.remote_balance ?? 0),
+                capacity: String(data.capacity ?? 0),
+              });
+            } catch (parseErr) {
+              this.logger.warn(
+                'Failed to parse custom_channel_data for pending channel',
+                { channelPoint: ch.channel_point, err: parseErr }
+              );
             }
           }
 

@@ -725,6 +725,7 @@ type Peer {
 }
 
 type PendingChannel {
+  asset: ChannelAsset
   close_transaction_id: String
   is_active: Boolean!
   is_closing: Boolean!
