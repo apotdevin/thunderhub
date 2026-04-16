@@ -42,6 +42,7 @@ import {
   resolveFullGroupKey,
 } from '../../../utils/string';
 import { toWithError } from '../../../utils/async';
+import { grpcErrorMessage } from '../../../utils/grpcError';
 import {
   Asset,
   AssetBalance,
@@ -115,7 +116,7 @@ export class TaprootAssetsQueriesResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to list assets', { error });
-      throw new GraphQLError('Failed to list assets');
+      throw new GraphQLError(grpcErrorMessage('Failed to list assets', error));
     }
     return { assets: (result.assets || []).map(mapAsset) };
   }
@@ -140,7 +141,9 @@ export class TaprootAssetsQueriesResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to list balances', { error });
-      throw new GraphQLError('Failed to list balances');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to list balances', error)
+      );
     }
 
     if (mode === 'assetId') {
@@ -194,7 +197,9 @@ export class TaprootAssetsQueriesResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to list transfers', { error });
-      throw new GraphQLError('Failed to list transfers');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to list transfers', error)
+      );
     }
     const transfers = (result.transfers || []).map((t: AssetTransfer) => ({
       anchor_tx_hash: bufToHex(t.anchorTxHash) || '',
@@ -227,7 +232,9 @@ export class TaprootAssetsQueriesResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to decode tap address', { error });
-      throw new GraphQLError('Failed to decode tap address');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to decode tap address', error)
+      );
     }
     return {
       encoded: result.encoded,
@@ -250,7 +257,9 @@ export class TaprootAssetsQueriesResolver {
       this.logger.error('Failed to list universe asset roots', {
         error: rootsError,
       });
-      throw new GraphQLError('Failed to list universe asset roots');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to list universe asset roots', rootsError)
+      );
     }
 
     const [assetsResult, assetsError] = await toWithError(
@@ -260,7 +269,12 @@ export class TaprootAssetsQueriesResolver {
       this.logger.error('Failed to list assets for universe lookup', {
         error: assetsError,
       });
-      throw new GraphQLError('Failed to list assets for universe lookup');
+      throw new GraphQLError(
+        grpcErrorMessage(
+          'Failed to list assets for universe lookup',
+          assetsError
+        )
+      );
     }
 
     const roots = rootsResult.universeRoots || {};
@@ -313,7 +327,9 @@ export class TaprootAssetsQueriesResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to get universe info', { error });
-      throw new GraphQLError('Failed to get universe info');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to get universe info', error)
+      );
     }
     return { runtime_id: result.runtimeId };
   }
@@ -325,7 +341,9 @@ export class TaprootAssetsQueriesResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to get universe stats', { error });
-      throw new GraphQLError('Failed to get universe stats');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to get universe stats', error)
+      );
     }
     return {
       num_total_assets: Number(result.numTotalAssets ?? 0),
@@ -343,7 +361,9 @@ export class TaprootAssetsQueriesResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to list federation servers', { error });
-      throw new GraphQLError('Failed to list federation servers');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to list federation servers', error)
+      );
     }
     return {
       node_address: account.socket || null,
@@ -364,7 +384,9 @@ export class TaprootAssetsQueriesResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to get asset channel balances', { error });
-      throw new GraphQLError('Failed to get asset channel balances');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to get asset channel balances', error)
+      );
     }
     return result.map(b => ({
       channel_point: b.channelPoint,
@@ -410,7 +432,9 @@ export class TaprootAssetsMutationsResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to create tap address', { error });
-      throw new GraphQLError('Failed to create tap address');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to create tap address', error)
+      );
     }
     return {
       encoded: result.encoded,
@@ -434,7 +458,7 @@ export class TaprootAssetsMutationsResolver {
     );
     if (error) {
       this.logger.error('Failed to send asset', { error });
-      throw new GraphQLError('Failed to send asset');
+      throw new GraphQLError(grpcErrorMessage('Failed to send asset', error));
     }
     return true;
   }
@@ -454,7 +478,7 @@ export class TaprootAssetsMutationsResolver {
     );
     if (error) {
       this.logger.error('Failed to burn asset', { error });
-      throw new GraphQLError('Failed to burn asset');
+      throw new GraphQLError(grpcErrorMessage('Failed to burn asset', error));
     }
     return true;
   }
@@ -485,7 +509,7 @@ export class TaprootAssetsMutationsResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to mint asset', { error });
-      throw new GraphQLError('Failed to mint asset');
+      throw new GraphQLError(grpcErrorMessage('Failed to mint asset', error));
     }
     return {
       batch_key: bufToHex(result.pendingBatch.batchKey),
@@ -499,7 +523,9 @@ export class TaprootAssetsMutationsResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to finalize batch', { error });
-      throw new GraphQLError('Failed to finalize batch');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to finalize batch', error)
+      );
     }
     return {
       batch_key: bufToHex(result.batch.batchKey),
@@ -513,7 +539,7 @@ export class TaprootAssetsMutationsResolver {
     );
     if (error) {
       this.logger.error('Failed to cancel batch', { error });
-      throw new GraphQLError('Failed to cancel batch');
+      throw new GraphQLError(grpcErrorMessage('Failed to cancel batch', error));
     }
     return true;
   }
@@ -528,7 +554,9 @@ export class TaprootAssetsMutationsResolver {
     );
     if (error) {
       this.logger.error('Failed to add federation server', { error });
-      throw new GraphQLError('Failed to add federation server');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to add federation server', error)
+      );
     }
     return true;
   }
@@ -543,7 +571,9 @@ export class TaprootAssetsMutationsResolver {
     );
     if (error) {
       this.logger.error('Failed to remove federation server', { error });
-      throw new GraphQLError('Failed to remove federation server');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to remove federation server', error)
+      );
     }
     return true;
   }
@@ -558,7 +588,9 @@ export class TaprootAssetsMutationsResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to sync universe', { error });
-      throw new GraphQLError('Failed to sync universe');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to sync universe', error)
+      );
     }
     const synced_universes = (result.syncedUniverses || []).map(
       (u: SyncedUniverse) => bufToHex(u.newAssetRoot?.id?.assetId) || 'unknown'
@@ -598,7 +630,9 @@ export class TaprootAssetsMutationsResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to create asset invoice', { error });
-      throw new GraphQLError('Failed to create asset invoice');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to create asset invoice', error)
+      );
     }
 
     const invoiceResult = result.invoiceResult;
@@ -657,7 +691,9 @@ export class TaprootAssetsMutationsResolver {
     );
     if (error || !result) {
       this.logger.error('Failed to fund asset channel', { error });
-      throw new GraphQLError('Failed to fund asset channel');
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to fund asset channel', error)
+      );
     }
     return {
       txid: result.txid,
