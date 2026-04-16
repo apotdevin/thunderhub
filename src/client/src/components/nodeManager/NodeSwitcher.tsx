@@ -71,6 +71,18 @@ export const NodeSwitcher = () => {
     return labels[network] ?? network;
   };
 
+  const networkBadgeClass = (network?: string | null) => {
+    const label = networkLabel(network);
+    const styles: Record<string, string> = {
+      Mainnet: 'bg-amber-500/15 text-amber-500',
+      Signet: 'bg-purple-500/15 text-purple-500',
+      Testnet: 'bg-green-500/15 text-green-500',
+      Testnet4: 'bg-green-500/15 text-green-500',
+      Regtest: 'bg-slate-500/15 text-slate-500',
+    };
+    return styles[label] ?? 'bg-muted text-muted-foreground';
+  };
+
   const groupedByNetwork = nodes.reduce<Record<string, typeof nodes>>(
     (acc, node) => {
       const key = networkLabel(node.network);
@@ -153,7 +165,12 @@ export const NodeSwitcher = () => {
               </span>
             )}
             {currentNode?.network && (
-              <span className="shrink-0 text-[9px] uppercase text-muted-foreground/60">
+              <span
+                className={cn(
+                  'shrink-0 rounded px-1 py-0.5 text-[9px] font-medium uppercase',
+                  networkBadgeClass(currentNode.network)
+                )}
+              >
                 {networkLabel(currentNode.network)}
               </span>
             )}
