@@ -214,7 +214,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     0
   );
 
-  const isValid = amount && BigInt(amount) > 0n;
+  const isValid = amount && Number(amount) > 0;
 
   // Determine input mode from raw capacity to avoid circular dependency.
   // When buying with existing asset inbound but no BTC outbound, the user
