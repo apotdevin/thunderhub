@@ -392,6 +392,8 @@ export class MagmaOrderQueries {
 
 @ObjectType()
 export class MagmaQueries {
+  @Field()
+  id: string;
   @Field(() => MagmaOrderQueries)
   orders: MagmaOrderQueries;
 
@@ -407,6 +409,8 @@ export class MagmaMutations {
 
 @ObjectType()
 export class RailsQueries {
+  @Field()
+  id: string;
   @Field(() => TapSupportedAssetList)
   get_tap_supported_assets: TapSupportedAssetList;
 }

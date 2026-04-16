@@ -11,6 +11,7 @@ export type GetTapSupportedAssetsQuery = {
   __typename?: 'Query';
   rails: {
     __typename?: 'RailsQueries';
+    id: string;
     get_tap_supported_assets: {
       __typename?: 'TapSupportedAssetList';
       list: Array<{
@@ -31,6 +32,7 @@ export type GetTapSupportedAssetsQuery = {
 export const GetTapSupportedAssetsDocument = gql`
   query GetTapSupportedAssets {
     rails {
+      id
       get_tap_supported_assets {
         list {
           id

@@ -11,6 +11,7 @@ export type GetTapBalancesQuery = {
   __typename?: 'Query';
   taproot_assets: {
     __typename?: 'TaprootAssetsQueries';
+    id: string;
     get_balances: {
       __typename?: 'TapBalances';
       balances: Array<{
@@ -27,6 +28,7 @@ export type GetTapBalancesQuery = {
 export const GetTapBalancesDocument = gql`
   query GetTapBalances($group_by: TapBalanceGroupBy) {
     taproot_assets {
+      id
       get_balances(group_by: $group_by) {
         balances {
           asset_id

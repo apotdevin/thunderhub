@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export const GET_MAGMA_ORDERS = gql`
   query GetMagmaOrders {
     magma {
+      id
       orders {
         find_many {
           magmaUrl

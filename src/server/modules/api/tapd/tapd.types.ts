@@ -402,7 +402,10 @@ export class TapAssetChannelBalance {
 // ─── Namespace containers ───────────────────────────────────────
 
 @ObjectType()
-export class TaprootAssetsQueries {}
+export class TaprootAssetsQueries {
+  @Field()
+  id: string;
+}
 
 @ObjectType()
 export class TaprootAssetsMutations {}

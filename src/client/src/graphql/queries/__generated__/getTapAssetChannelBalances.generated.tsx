@@ -11,6 +11,7 @@ export type GetTapAssetChannelBalancesQuery = {
   __typename?: 'Query';
   taproot_assets: {
     __typename?: 'TaprootAssetsQueries';
+    id: string;
     get_asset_channel_balances: Array<{
       __typename?: 'TapAssetChannelBalance';
       channel_point: string;
@@ -27,6 +28,7 @@ export type GetTapAssetChannelBalancesQuery = {
 export const GetTapAssetChannelBalancesDocument = gql`
   query GetTapAssetChannelBalances($peer_pubkey: String) {
     taproot_assets {
+      id
       get_asset_channel_balances(peer_pubkey: $peer_pubkey) {
         channel_point
         partner_public_key

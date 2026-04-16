@@ -9,6 +9,7 @@ export type GetAccessIdsQuery = {
   __typename?: 'Query';
   lightning: {
     __typename?: 'LightningQueries';
+    id: string;
     get_access_ids: { __typename?: 'AccessIds'; ids: Array<string> };
   };
 };
@@ -16,6 +17,7 @@ export type GetAccessIdsQuery = {
 export const GetAccessIdsDocument = gql`
   query GetAccessIds {
     lightning {
+      id
       get_access_ids {
         ids
       }

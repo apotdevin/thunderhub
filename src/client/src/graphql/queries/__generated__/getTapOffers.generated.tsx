@@ -11,6 +11,7 @@ export type GetTapOffersQuery = {
   __typename?: 'Query';
   magma: {
     __typename?: 'MagmaQueries';
+    id: string;
     get_tap_offers: {
       __typename?: 'TapTradeOfferList';
       totalCount: number;
@@ -42,6 +43,7 @@ export type GetTapOffersQuery = {
 export const GetTapOffersDocument = gql`
   query GetTapOffers($input: GetTapOffersInput!) {
     magma {
+      id
       get_tap_offers(input: $input) {
         list {
           id

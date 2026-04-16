@@ -55,7 +55,10 @@
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
-    }
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!.*uuid/)"
+    ]
   },
   "dependencies": {
     "@apollo/client": "^3.8.8",

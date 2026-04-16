@@ -9,6 +9,7 @@ export type GetUserNodesQuery = {
   __typename?: 'Query';
   user: {
     __typename?: 'UserQueries';
+    id: string;
     get_nodes: Array<{
       __typename?: 'UserNode';
       id: string;
@@ -23,6 +24,7 @@ export type GetUserNodesQuery = {
 export const GetUserNodesDocument = gql`
   query GetUserNodes {
     user {
+      id
       get_nodes {
         id
         slug

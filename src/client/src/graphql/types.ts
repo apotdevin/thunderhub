@@ -498,6 +498,7 @@ export type LightningNodeSocialInfo = {
 export type LightningQueries = {
   __typename?: 'LightningQueries';
   get_access_ids: AccessIds;
+  id: Scalars['String']['output'];
 };
 
 export type LitdInput = {
@@ -574,6 +575,7 @@ export type MagmaPendingOrders = {
 export type MagmaQueries = {
   __typename?: 'MagmaQueries';
   get_tap_offers: TapTradeOfferList;
+  id: Scalars['String']['output'];
   orders: MagmaOrderQueries;
 };
 
@@ -1170,6 +1172,7 @@ export type QueryVerifyMessageArgs = {
 export type RailsQueries = {
   __typename?: 'RailsQueries';
   get_tap_supported_assets: TapSupportedAssetList;
+  id: Scalars['String']['output'];
 };
 
 export type Route = {
@@ -1577,6 +1580,7 @@ export type TaprootAssetsQueries = {
   get_universe_assets: TapUniverseAssetList;
   get_universe_info: TapUniverseInfo;
   get_universe_stats: TapUniverseStats;
+  id: Scalars['String']['output'];
 };
 
 export type TaprootAssetsQueriesDecode_AddressArgs = {
@@ -1664,6 +1668,7 @@ export type UserNode = {
 export type UserQueries = {
   __typename?: 'UserQueries';
   get_nodes: Array<UserNode>;
+  id: Scalars['String']['output'];
 };
 
 export type Utxo = {

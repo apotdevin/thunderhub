@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export const GET_TAP_OFFERS = gql`
   query GetTapOffers($input: GetTapOffersInput!) {
     magma {
+      id
       get_tap_offers(input: $input) {
         list {
           id

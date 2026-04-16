@@ -11,6 +11,7 @@ export type DecodeTapAddressQuery = {
   __typename?: 'Query';
   taproot_assets: {
     __typename?: 'TaprootAssetsQueries';
+    id: string;
     decode_address: {
       __typename?: 'TapAddress';
       encoded: string;
@@ -25,6 +26,7 @@ export type DecodeTapAddressQuery = {
 export const DecodeTapAddressDocument = gql`
   query DecodeTapAddress($addr: String!) {
     taproot_assets {
+      id
       decode_address(addr: $addr) {
         encoded
         asset_id

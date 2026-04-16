@@ -11,6 +11,7 @@ export type GetTapTransfersQuery = {
   __typename?: 'Query';
   taproot_assets: {
     __typename?: 'TaprootAssetsQueries';
+    id: string;
     get_transfers: {
       __typename?: 'TapTransferList';
       transfers: Array<{
@@ -41,6 +42,7 @@ export type GetTapTransfersQuery = {
 export const GetTapTransfersDocument = gql`
   query GetTapTransfers {
     taproot_assets {
+      id
       get_transfers {
         transfers {
           anchor_tx_hash

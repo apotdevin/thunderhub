@@ -283,6 +283,11 @@ export class TeamMutationsResolver {
 export class UserQueriesResolver {
   constructor(private userService: UserService) {}
 
+  @ResolveField(() => String)
+  id(): string {
+    return uuidv5(UserQueriesResolver.name, uuidv5.URL);
+  }
+
   @ResolveField(() => [UserNode])
   async get_nodes(@CurrentUser() user: UserId): Promise<UserNode[]> {
     const dbUserId = user.userId ?? user.id;

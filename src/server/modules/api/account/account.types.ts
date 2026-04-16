@@ -72,6 +72,8 @@ export class UserNode {
 
 @ObjectType()
 export class UserQueries {
+  @Field()
+  id: string;
   @Field(() => [UserNode])
   get_nodes: UserNode[];
 }

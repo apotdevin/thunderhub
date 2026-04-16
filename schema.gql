@@ -432,6 +432,7 @@ type LightningNodeSocialInfo {
 
 type LightningQueries {
   get_access_ids: AccessIds!
+  id: String!
 }
 
 input LitdInput {
@@ -495,6 +496,7 @@ type MagmaPendingOrders {
 
 type MagmaQueries {
   get_tap_offers(input: GetTapOffersInput!): TapTradeOfferList!
+  id: String!
   orders: MagmaOrderQueries!
 }
 
@@ -832,6 +834,7 @@ type Query {
 
 type RailsQueries {
   get_tap_supported_assets: TapSupportedAssetList!
+  id: String!
 }
 
 type Route {
@@ -1163,6 +1166,7 @@ type TaprootAssetsQueries {
   get_universe_assets: TapUniverseAssetList!
   get_universe_info: TapUniverseInfo!
   get_universe_stats: TapUniverseStats!
+  id: String!
 }
 
 type TeamMutations {
@@ -1220,6 +1224,7 @@ type UserNode {
 
 type UserQueries {
   get_nodes: [UserNode!]!
+  id: String!
 }
 
 type Utxo {

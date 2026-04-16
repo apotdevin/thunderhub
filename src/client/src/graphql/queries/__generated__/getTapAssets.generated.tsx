@@ -9,6 +9,7 @@ export type GetTapAssetsQuery = {
   __typename?: 'Query';
   taproot_assets: {
     __typename?: 'TaprootAssetsQueries';
+    id: string;
     get_assets: {
       __typename?: 'TapAssetList';
       assets: Array<{
@@ -37,6 +38,7 @@ export type GetTapAssetsQuery = {
 export const GetTapAssetsDocument = gql`
   query GetTapAssets {
     taproot_assets {
+      id
       get_assets {
         assets {
           asset_genesis {

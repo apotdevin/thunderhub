@@ -8,6 +8,8 @@ export class AccessIds {
 
 @ObjectType()
 export class LightningQueries {
+  @Field()
+  id: string;
   @Field(() => AccessIds)
   get_access_ids: AccessIds;
 }

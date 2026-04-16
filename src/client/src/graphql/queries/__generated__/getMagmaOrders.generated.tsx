@@ -11,6 +11,7 @@ export type GetMagmaOrdersQuery = {
   __typename?: 'Query';
   magma: {
     __typename?: 'MagmaQueries';
+    id: string;
     orders: {
       __typename?: 'MagmaOrderQueries';
       find_many?: {
@@ -86,6 +87,7 @@ export type GetMagmaOrdersQuery = {
 export const GetMagmaOrdersDocument = gql`
   query GetMagmaOrders {
     magma {
+      id
       orders {
         find_many {
           magmaUrl

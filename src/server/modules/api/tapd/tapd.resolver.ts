@@ -10,6 +10,7 @@ import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { GraphQLError } from 'graphql';
+import { v5 as uuidv5 } from 'uuid';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
@@ -108,6 +109,11 @@ export class TaprootAssetsQueriesResolver {
     private tapdNodeService: TapdNodeService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
+
+  @ResolveField(() => String)
+  id(): string {
+    return uuidv5(TaprootAssetsQueriesResolver.name, uuidv5.URL);
+  }
 
   @ResolveField(() => TapAssetList)
   async get_assets(@CurrentUser() { id }: UserId) {

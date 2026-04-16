@@ -11,6 +11,7 @@ export type GetTapFederationServersQuery = {
   __typename?: 'Query';
   taproot_assets: {
     __typename?: 'TaprootAssetsQueries';
+    id: string;
     get_federation_servers: {
       __typename?: 'TapFederationServerList';
       node_address?: string | null;
@@ -26,6 +27,7 @@ export type GetTapFederationServersQuery = {
 export const GetTapFederationServersDocument = gql`
   query GetTapFederationServers {
     taproot_assets {
+      id
       get_federation_servers {
         node_address
         servers {

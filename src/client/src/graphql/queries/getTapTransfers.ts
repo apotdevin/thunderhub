@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export const GET_TAP_TRANSFERS = gql`
   query GetTapTransfers {
     taproot_assets {
+      id
       get_transfers {
         transfers {
           anchor_tx_hash

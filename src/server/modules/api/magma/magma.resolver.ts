@@ -4,6 +4,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { GraphQLError } from 'graphql';
 import { auto } from 'async';
+import { v5 as uuidv5 } from 'uuid';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
 import { NodeService } from '../../node/node.service';
 import { FetchService } from '../../fetch/fetch.service';
@@ -413,6 +414,11 @@ export class MagmaQueriesResolver {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
+  @ResolveField(() => String)
+  id(): string {
+    return uuidv5(MagmaQueriesResolver.name, uuidv5.URL);
+  }
+
   @ResolveField(() => MagmaOrderQueries)
   orders(): MagmaOrderQueries {
     return {} as any;
@@ -505,6 +511,11 @@ export class RailsQueriesResolver {
     private ambossService: AmbossService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
+
+  @ResolveField(() => String)
+  id(): string {
+    return uuidv5(RailsQueriesResolver.name, uuidv5.URL);
+  }
 
   @ResolveField(() => TapSupportedAssetList)
   async get_tap_supported_assets(@CurrentUser() user: UserId) {
