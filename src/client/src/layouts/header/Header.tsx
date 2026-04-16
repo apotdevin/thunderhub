@@ -280,10 +280,10 @@ export const Header = () => {
               </div>
             </Link>
             {!isRoot && (
-              <>
+              <div className="hidden md:flex items-center">
                 <div className="w-px h-4 bg-border mx-1" />
                 <NodeSwitcher />
-              </>
+              </div>
             )}
           </div>
           {!isRoot && renderLoggedIn()}

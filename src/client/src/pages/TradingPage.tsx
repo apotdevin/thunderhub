@@ -3,8 +3,7 @@ import { Button } from '@/components/ui/button';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
 import { TradingOffers } from '../views/assets/TradingOffers';
 import { useGetNodeCapabilitiesQuery } from '../graphql/queries/__generated__/getNodeCapabilities.generated';
-
-const LITD_SETUP_DOCS_URL = 'https://docs.thunderhub.io/litd';
+import { LITD_SETUP_DOCS_URL } from '../utils/externalLinks';
 
 const TapdSetupPrompt = () => (
   <div className="flex flex-col items-center gap-4 rounded-md border border-border bg-muted/30 px-6 py-10 text-center">
