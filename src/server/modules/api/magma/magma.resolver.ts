@@ -358,7 +358,7 @@ export class MagmaResolver {
             this.tapdNodeService.fundAssetChannel({
               id: user.id,
               peerPubkey: input.swapNodePubkey,
-              assetAmount: Number(input.assetAmount),
+              assetAmount: input.assetAmount,
               ...(input.tapdGroupKey
                 ? { groupKey: input.tapdGroupKey }
                 : { assetId: input.tapdAssetId }),

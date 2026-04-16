@@ -75,7 +75,7 @@ export class TradeResolver {
         id,
         assetId: input.tapdAssetId || undefined,
         groupKey: input.tapdGroupKey || undefined,
-        assetAmount: Number(input.assetAmount),
+        assetAmount: input.assetAmount,
         peerPubkey: input.peerPubkey,
       })
     );
