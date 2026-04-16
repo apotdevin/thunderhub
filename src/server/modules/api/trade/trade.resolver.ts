@@ -105,8 +105,7 @@ export class TradeResolver {
     this.logger.info('Buy quote received', {
       assetAmount: input.assetAmount,
       sats,
-      rfqId: quote?.id ? Buffer.from(quote.id).toString('hex') : undefined,
-      expiry: quote?.expiry,
+      rfqId: Buffer.from(quote.id).toString('hex'),
       quote,
     });
 
@@ -198,23 +197,36 @@ export class TradeResolver {
       throw new GraphQLError('Failed to decode asset invoice');
     }
 
-    await this.assertBtcLiquidity(
-      id,
-      input.peerPubkey,
-      decoded.tokens,
-      'local'
+    const btcChannels = await this.getBtcChannelsWithPeer(id, input.peerPubkey);
+
+    if (btcChannels.length === 0) {
+      throw new GraphQLError(
+        'No active BTC channel with trade partner — cannot execute trade'
+      );
+    }
+
+    const sortedByLocal = [...btcChannels].sort(
+      (a, b) => b.local_balance - a.local_balance
     );
+    const bestChannel = sortedByLocal[0];
+
+    if (bestChannel.local_balance < decoded.tokens) {
+      throw new GraphQLError(
+        `Insufficient outbound BTC liquidity with trade partner: need ${decoded.tokens} sats, have ${bestChannel.local_balance} sats`
+      );
+    }
 
     this.logger.info('Executing buy trade', {
       assetAmount: input.assetAmount,
-      invoicePrefix: paymentRequest.slice(0, 20),
+      invoicePrefix: paymentRequest,
+      outgoingChannel: bestChannel.id,
     });
 
     const [payResult, payError] = await toWithError(
       this.nodeService.pay(id, {
         request: paymentRequest,
         is_allow_self_payment: true,
-        max_fee: 1000,
+        outgoing_channel: bestChannel.id,
       })
     );
 
@@ -435,7 +447,9 @@ export class TradeResolver {
   private async getBtcChannelsWithPeer(
     id: string,
     peerPubkey: string
-  ): Promise<Array<{ local_balance: number; remote_balance: number }>> {
+  ): Promise<
+    Array<{ id: string; local_balance: number; remote_balance: number }>
+  > {
     const [channelsResult, channelsError] = await toWithError(
       this.nodeService.getChannels(id, {
         partner_public_key: peerPubkey,
@@ -449,7 +463,7 @@ export class TradeResolver {
 
     return channelsResult.channels.filter(
       (ch: { type?: string }) => !!ch.type
-    ) as Array<{ local_balance: number; remote_balance: number }>;
+    ) as Array<{ id: string; local_balance: number; remote_balance: number }>;
   }
 
   /**
